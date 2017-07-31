@@ -1,0 +1,101 @@
+@font-face {
+  font-family: 'Pricedown';
+  src: url('../fonts/pdown.ttf') /* TTF file for CSS3 browsers */
+}
+
+@font-face {
+  font-family: 'bankgothic';
+  src: url('../fonts/bankgothic.ttf') /* TTF file for CSS3 browsers */
+}
+
+html {
+  overflow: hidden;
+}
+
+#cursor {
+  position: absolute;
+  z-index: 999999;
+  display:  none;
+}
+
+#hud {
+  position   : absolute;
+  font-family: 'Pricedown';
+  font-size  : 35px;
+  color      : white;
+  padding    : 4px;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+
+  text-align: right;
+  top       : 80;
+  right     : 40;
+}
+
+#inventory_notifications {
+  font-family: bankgothic; 
+  position   : absolute; 
+  right      : 40;
+  bottom     : 40;
+  font-size  : 2em;
+  font-weight: bold;
+  color      : #FFF;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
+.menu {
+    font-family: 'Open Sans', sans-serif;
+    min-width       : 400px;
+    min-height:     : 250px;
+    color           : #fff;
+    position        : absolute;
+    left            : 40;
+    top             : 0; 
+}
+
+.menu .head {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 28px;
+  padding: 10px;
+  background: #1A1A1A;
+  border-bottom: 3px solid #BC1635;
+  border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
+  -moz-border-radius: 10px 10px 0 0;
+  -o-border-radius: 10px 10px 0 0;
+  box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+  -webkit-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+  -moz-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+  -o-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 1px 1px 10px 4px rgba(0, 0, 0, 0.4);
+}
+.menu .head span {
+  font-family: 'Pricedown';
+  font-size: 28px;
+  padding-left: 15px; 
+  padding-top: 6px; 
+}
+
+.menu .menu-items .menu-item {
+  font-family     : 'Open Sans', sans-serif;
+  font-size       : 14px;
+  height          : 40px;
+  display         : block;
+  background-color: #f1f1f1;
+  box-shadow      : inset 1px 0px 0px 1px #b8b8b8;
+  height          : 32px;
+  line-height     : 32px;
+  color           : #3A3A3A;
+	text-align      :  center;
+}
+
+.menu .menu-items .menu-item.selected {
+	background-color: #ccc;
+}
