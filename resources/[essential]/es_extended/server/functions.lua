@@ -1,15 +1,15 @@
-local charset = {}
+local Charset = {}
 
-for i = 48,  57 do table.insert(charset, string.char(i)) end
-for i = 65,  90 do table.insert(charset, string.char(i)) end
-for i = 97, 122 do table.insert(charset, string.char(i)) end
+for i = 48,  57 do table.insert(Charset, string.char(i)) end
+for i = 65,  90 do table.insert(Charset, string.char(i)) end
+for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX.GetRandomString = function(length)
 
   math.randomseed(os.time())
 
   if length > 0 then
-    return ESX.GetRandomString(length - 1) .. charset[math.random(1, #charset)]
+    return ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)]
   else
     return ''
   end
@@ -32,42 +32,54 @@ ESX.SavePlayer = function(xPlayer, cb)
 	-- User accounts
 	for i=1, #xPlayer.accounts, 1 do
 
-		table.insert(asyncTasks, function(cb)
+		if ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] ~= xPlayer.accounts[i].money then
 
-			MySQL.Async.execute(
-				'UPDATE user_accounts SET `money` = @money WHERE identifier = @identifier AND name = @name',
-				{
-					['@money']      = xPlayer.accounts[i].money,
-					['@identifier'] = xPlayer.identifier,
-					['@name']       = xPlayer.accounts[i].name
-				},
-				function(rowsChanged)
-					cb()
-				end
-			)
+			table.insert(asyncTasks, function(cb)
 
-		end)
+				MySQL.Async.execute(
+					'UPDATE user_accounts SET `money` = @money WHERE identifier = @identifier AND name = @name',
+					{
+						['@money']      = xPlayer.accounts[i].money,
+						['@identifier'] = xPlayer.identifier,
+						['@name']       = xPlayer.accounts[i].name
+					},
+					function(rowsChanged)
+						cb()
+					end
+				)
+
+			end)
+
+			ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] = xPlayer.accounts[i].money
+
+		end
 
 	end
 
 	-- Inventory items
 	for i=1, #xPlayer.inventory, 1 do
 
-		table.insert(asyncTasks, function(cb)
+		if ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] ~= xPlayer.inventory[i].count then
 
-			MySQL.Async.execute(
-				'UPDATE user_inventory SET `count` = @count WHERE identifier = @identifier AND item = @item',
-				{
-					['@count']      = xPlayer.inventory[i].count,
-					['@identifier'] = xPlayer.identifier,
-					['@item']       = xPlayer.inventory[i].name
-				},
-				function(rowsChanged)
-					cb()
-				end
-			)
+			table.insert(asyncTasks, function(cb)
 
-		end)
+				MySQL.Async.execute(
+					'UPDATE user_inventory SET `count` = @count WHERE identifier = @identifier AND item = @item',
+					{
+						['@count']      = xPlayer.inventory[i].count,
+						['@identifier'] = xPlayer.identifier,
+						['@item']       = xPlayer.inventory[i].name
+					},
+					function(rowsChanged)
+						cb()
+					end
+				)
+
+			end)
+
+			ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] = xPlayer.inventory[i].count
+
+		end
 
 	end
 
@@ -164,7 +176,7 @@ end
 
 RegisterServerEvent('esx:clientLog')
 AddEventHandler('esx:clientLog', function(msg)
-	RconPrint(msg)
+	RconPrint(msg .. "\n")
 end)
 
 RegisterServerEvent('esx:triggerServerCallback')

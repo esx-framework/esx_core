@@ -265,7 +265,8 @@ AddEventHandler('playerDropped', function()
 		TriggerEvent('esx:playerDropped', _source)
 		
 		ESX.SavePlayer(xPlayer, function()
-			ESX.Players[_source] = nil
+			ESX.Players[_source]        = nil
+			ESX.LastPlayerData[_source] = nil
 		end)
 
 	end

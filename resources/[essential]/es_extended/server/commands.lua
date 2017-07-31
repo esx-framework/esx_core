@@ -46,3 +46,4 @@ TriggerEvent('es:addGroupCommand', 'car', 'admin', function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
 end, {help = 'Spawn un véhicule'})
+
