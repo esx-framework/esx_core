@@ -1,0 +1,12 @@
+[submodule "resources/[esx]/[ui]/fxserver-esx_menu_default"]
+	path = resources/[esx]/[ui]/fxserver-esx_menu_default
+	url = https://github.com/FXServer-ESX/fxserver-esx_menu_default
+[submodule "resources/[esx]/[ui]/fxserver-esx_menu_list"]
+	path = resources/[esx]/[ui]/fxserver-esx_menu_list
+	url = https://github.com/FXServer-ESX/fxserver-esx_menu_list
+[submodule "resources/[esx]/[ui]/fxserver-esx_menu_dialog"]
+	path = resources/[esx]/[ui]/fxserver-esx_menu_dialog
+	url = https://github.com/FXServer-ESX/fxserver-esx_menu_dialog
+[submodule "resources/fxserver-async"]
+	path = resources/fxserver-async
+	url = https://github.com/FXServer-ESX/fxserver-async
