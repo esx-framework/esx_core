@@ -350,7 +350,7 @@ ESX.Game.GetClosestPlayer = function()
 		
 		local target = GetPlayerPed(players[i])
 		
-		-- if target ~= playerPed then
+		if target ~= playerPed then
 			
 			local targetCoords = GetEntityCoords(target)
 			local distance     = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, playerCoords.x, playerCoords.y, playerCoords.z, true)
@@ -360,7 +360,7 @@ ESX.Game.GetClosestPlayer = function()
 				closestDistance = distance
 			end
 
-		-- end
+		end
 
 	end
 	
