@@ -8,7 +8,8 @@ ESX AddonAccount
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_addonaccount esx_addonaccount
 ```
-3) Add this in your server.cfg :
+3) Import esx_addonaccount.sql in your database
+4) Add this in your server.cfg :
 
 ```
 start esx_addonaccount
