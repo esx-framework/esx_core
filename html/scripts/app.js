@@ -361,6 +361,35 @@
 		showAddContact();
 	});
 
+	$('.phone-icon').click(function(event) {
+
+		let id = $(this).attr('id');
+
+		switch(id) {
+
+			case 'phone-icon-rep' : {
+				showRepertoire();
+				break;
+			}
+
+			case 'phone-icon-msg' : {
+				showMessages();
+				break;
+			}
+
+			default : {
+				
+				let number = $(this).data('number');
+				let name   = $(this).data('name');
+
+				showNewMessage(number, name);
+
+				break;
+			}
+		}
+
+	});
+
 	window.onData = function(data){
 
 		if(data.scroll === true){
@@ -395,7 +424,7 @@
 
 		if(data.addSpecialContact === true){
 			addSpecialContact(data.name, data.number, data.base64Icon);
-			renderSpecialContacts()
+			renderSpecialContacts();
 		}
 
 		if(data.move && isPhoneShowed){
