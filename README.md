@@ -42,17 +42,16 @@ local skin = {
 	pants_2      = 0,
 	shoes_1      = 0,
 	shoes_2      = 0,
-  mask_1       = 0,
-  mask_2       = 0,
-  bproof_1     = 0,
-  bproof_2     = 0,
-  chain_1      = 0,
-  chain_2      = 0,
+	mask_1       = 0,
+	mask_2       = 0,
+	bproof_1     = 0,
+	bproof_2     = 0,
+	chain_1      = 0,
+	chain_2      = 0,
 	helmet_1     = 0,
 	helmet_2     = 0,
 	glasses_1    = 0,
 	glasses_2    = 0,
-	}
 }
 
 -- Load freemode model
