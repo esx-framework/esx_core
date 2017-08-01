@@ -1,4 +1,8 @@
-USE `gta5_gamemode_essential`
+USE `gta5_gamemode_essential`;
+
+ALTER TABLE `users` 
+	ADD COLUMN `last_property` VARCHAR(255) NULL
+;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
   ('property_black_money','Argent Sale Propriété',0)
