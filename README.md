@@ -8,7 +8,8 @@ ESX AddonInventory
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_addoninventory esx_addoninventory
 ```
-3) Add this in your server.cfg :
+3) Import esx_addoninventory.sql in your database
+1) Add this in your server.cfg :
 
 ```
 start esx_addoninventory
