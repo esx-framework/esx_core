@@ -1,0 +1,2 @@
+# fxserver-skinchanger
+FXServer SkinChanger
