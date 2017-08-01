@@ -19,7 +19,7 @@ start esx_addonaccount
 There is two types of accounts : shared and not shared.
 
 - Shared accounts dont belong to a specific user. Example : society account.
-- Not shared accounts are created for every user in the server. Example : property black money
+- Not shared accounts are created for every user in the server. They are created in db when player is loaded, Example : property black money
 
 You must create the account in the database (addon_account) before using it :
 
