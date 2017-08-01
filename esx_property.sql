@@ -1,3 +1,17 @@
+USE `gta5_gamemode_essential`
+
+INSERT INTO `addon_account` (name, label, shared) VALUES
+  ('property_black_money','Argent Sale Propriété',0)
+;
+
+INSERT INTO `addon_inventory` (name, label, shared) VALUES
+  ('property','Propriété',0)
+;
+
+INSERT INTO `datastore` (name, label, shared) VALUES
+  (1,'property','Propriété',0)
+;
+
 CREATE TABLE `owned_properties` (
   
   `id` int(11) NOT NULL AUTO_INCREMENT,
