@@ -157,7 +157,7 @@ AddEventHandler('esx_phone:reload', function(phoneNumber)
 
 			end
 			
-			xPlayer['contacts'] = contacts
+			xPlayer.set('contacts', contacts)
 
 			TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
 
