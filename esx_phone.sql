@@ -8,4 +8,4 @@ CREATE TABLE `user_contacts` (
 ALTER TABLE `user_contacts` ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `users` 
-ADD COLUMN `phone_number` INT NULL AFTER `position`;
+ADD COLUMN `phone_number` INT NULL;
