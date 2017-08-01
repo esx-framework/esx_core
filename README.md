@@ -14,7 +14,7 @@ git clone https://github.com/FXServer-ESX/fxserver-skinchanger skinchanger
 start skinchanger
 ```
 
-[HOWTO]
+[USAGE]
 
 ```
 local isMale = true
