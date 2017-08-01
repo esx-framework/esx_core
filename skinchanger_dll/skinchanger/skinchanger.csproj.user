@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReferencePath>C:\Users\NGD\AppData\Local\FiveM\FiveM.app\citizen\clr2\lib\mono\4.5\</ReferencePath>
+  </PropertyGroup>
+</Project>
