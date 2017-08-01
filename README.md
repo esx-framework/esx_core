@@ -3,7 +3,7 @@ FXServer ESX DataStore
 
 [INSTALLATION]
 
-1) CD in your resources/[ESX] folder
+1) CD in your resources/[esx] folder
 2) Clone the repository
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_datastore esx_datastore
