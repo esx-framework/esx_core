@@ -25,7 +25,7 @@ start esx_menu_dialog
 4) Create a resource or add this in an existing resource :
 
 ```
-`server.lua
+server.lua
 
 TriggerEvent('es:setDefaultSettings', {
 	nativeMoneySystem = false,
