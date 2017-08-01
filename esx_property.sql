@@ -9,7 +9,7 @@ INSERT INTO `addon_inventory` (name, label, shared) VALUES
 ;
 
 INSERT INTO `datastore` (name, label, shared) VALUES
-  (1,'property','Propriété',0)
+  ('property','Propriété',0)
 ;
 
 CREATE TABLE `owned_properties` (
