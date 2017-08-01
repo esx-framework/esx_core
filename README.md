@@ -7,7 +7,7 @@ Original script by FiveDev => https://github.com/FiveDev-FR/esx_phone-by-FiveDev
 
 [INSTALLATION]
 
-1) CD in your resources folder
+1) CD in your resources/[ESX] folder
 2) Clone the repository
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_phone esx_phone
