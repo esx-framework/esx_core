@@ -19,7 +19,7 @@ start esx_addoninventory
 There is two types of inventories : shared and not shared.
 
 - Shared inventories dont belong to a specific user. Example : foodstore items.
-- Not shared inventories are created for every user in the server. They are created in db when player is loaded, Example : property items money
+- Not shared inventories are created for every user in the server. They are created in db when player is loaded, Example : property items
 
 You must create the inventory in the database (addon_inventory) before using it :
 
