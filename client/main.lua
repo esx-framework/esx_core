@@ -22,6 +22,8 @@ local HasAlreadyEnteredMarker = false
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
+local FirstSpawn              = true
+local PlayerLoaded            = false
 
 function DrawSub(text, time)
   ClearPrints()
@@ -791,21 +793,32 @@ function OpenPlayerInventoryMenu(property)
 
 end
 
-local FirstSpawn = true
-
 AddEventHandler('playerSpawned', function()
 
 	if FirstSpawn then
 
-		ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
-			if propertyName ~= nil then
-				EnterProperty(propertyName)
+		Citizen.CreateThread(function()
+
+			while not PlayerLoaded do
+				Citizen.Wait(0)
 			end
+
+			ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
+				if propertyName ~= nil then
+					EnterProperty(propertyName)
+				end
+			end)
+
 		end)
 
 		FirstSpawn = false
 	end
 
+end)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	PlayerLoaded = true
 end)
 
 AddEventHandler('esx_property:getProperties', function(cb)
