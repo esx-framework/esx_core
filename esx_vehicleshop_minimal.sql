@@ -47,19 +47,19 @@ CREATE TABLE `vehicle_categories` (
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO `vehicle_categories` VALUES 
-	(1,'compacts','Compacts'),
-	(2,'coupes','Coupés'),
-	(3,'sedans','Sedans'),
-	(4,'sports','Sports'),
-	(5,'sportsclassics','Sports Classics'),
-	(6,'super','Super'),
-	(7,'muscle','Muscle'),
-	(8,'offroad','Off Road'),
-	(9,'suvs','SUVs'),
-	(10,'vans','Vans'),
-	(11,'sedans','Sedans'),
-	(12,'motorcycles','Motos')
+INSERT INTO `vehicle_categories` (name, label) VALUES 
+	('compacts','Compacts'),
+	('coupes','Coupés'),
+	('sedans','Sedans'),
+	('sports','Sports'),
+	('sportsclassics','Sports Classics'),
+	('super','Super'),
+	('muscle','Muscle'),
+	('offroad','Off Road'),
+	('suvs','SUVs'),
+	('vans','Vans'),
+	('sedans','Sedans'),
+	('motorcycles','Motos')
 ;
 
 CREATE TABLE `vehicles` (
