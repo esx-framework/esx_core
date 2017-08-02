@@ -21,7 +21,7 @@ start esx_society
 ```
 [EXPLANATION]
 
-ESX Society works with addon accounts named 'society_xxx' like 'society_taxi' or 'society_realestateagnt'.
+ESX Society works with addon accounts named 'society_xxx' like 'society_taxi' or 'society_realestateagent'.
 If you job grade is 'boss', you will see the society_xxx money of your job showed in the HUD.
 
 [USAGE]
