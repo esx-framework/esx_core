@@ -17,8 +17,8 @@ No need to download another resource
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_taxijob esx_taxijob
 ```
-3) - Auto mode         : Import esx_taxijob_minimal.sql in your database
-   - Player management : Import esx_taxijob_full.sql in your database
+3) * Auto mode : Import esx_taxijob_minimal.sql in your database
+   * Player management : Import esx_taxijob_full.sql in your database
 
 4) Add this in your server.cfg :
 
