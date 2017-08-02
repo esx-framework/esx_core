@@ -868,7 +868,9 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
 	end
 
 	if part == 'exit' then
-		ExitProperty(name)
+		CurrentAction     = 'room_exit'
+		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour sortir de la propriété'
+		CurrentActionData = {propertyName = name}
 	end
 
 	if part == 'roomMenu' then
@@ -1024,6 +1026,10 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'room_menu' then
 					OpenRoomMenu(CurrentActionData.property)
+				end
+
+				if CurrentAction == 'room_exit' then
+					ExitProperty(CurrentActionData.propertyName)
 				end
 
 				CurrentAction = nil
