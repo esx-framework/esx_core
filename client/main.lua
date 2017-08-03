@@ -139,9 +139,16 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
-									if CurrentVehicle ~= nil then
-										DeleteVehicle(CurrentVehicle)
-										CurrentVehicle = nil
+									if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+											
+										local vehicle = ESX.Game.GetClosestVehicle({
+											x = Config.Zones.ShopInside.Pos.x,
+											y = Config.Zones.ShopInside.Pos.y,
+											z = Config.Zones.ShopInside.Pos.z
+										})
+											
+										DeleteVehicle(vehicle)
+									
 									end
 
 									ESX.Game.SpawnVehicle(vehicleData.model, {
@@ -176,8 +183,8 @@ function OpenShopMenu()
 					end
 
 				end,
-				function(data, menu)
-
+				function(data2, menu2)
+					menu2.close()
 				end
 			)
 
@@ -188,16 +195,21 @@ function OpenShopMenu()
 
 			local playerPed = GetPlayerPed(-1)
 
-			menu.close()
-
-			if CurrentVehicle ~= nil then
-				DeleteVehicle(CurrentVehicle)
-				CurrentVehicle = nil
-			end
-
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
 			CurrentActionData = {}
+
+			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+					
+				local vehicle = ESX.Game.GetClosestVehicle({
+					x = Config.Zones.ShopInside.Pos.x,
+					y = Config.Zones.ShopInside.Pos.y,
+					z = Config.Zones.ShopInside.Pos.z
+				})
+					
+				DeleteVehicle(vehicle)
+			
+			end
 
 			FreezeEntityPosition(playerPed, false)
 			SetEntityVisible(playerPed, true)
@@ -214,9 +226,16 @@ function OpenShopMenu()
 			local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
 			local playerPed   = GetPlayerPed(-1)
 
-			if CurrentVehicle ~= nil then
-				DeleteVehicle(CurrentVehicle)
-				CurrentVehicle = nil
+			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+					
+				local vehicle = ESX.Game.GetClosestVehicle({
+					x = Config.Zones.ShopInside.Pos.x,
+					y = Config.Zones.ShopInside.Pos.y,
+					z = Config.Zones.ShopInside.Pos.z
+				})
+					
+				DeleteVehicle(vehicle)
+			
 			end
 
 			ESX.Game.SpawnLocalVehicle(vehicleData.model, {
@@ -232,9 +251,16 @@ function OpenShopMenu()
 		end
 	)
 
-	if CurrentVehicle ~= nil then
-		DeleteVehicle(CurrentVehicle)
-		CurrentVehicle = nil
+	if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+			
+		local vehicle = ESX.Game.GetClosestVehicle({
+			x = Config.Zones.ShopInside.Pos.x,
+			y = Config.Zones.ShopInside.Pos.y,
+			z = Config.Zones.ShopInside.Pos.z
+		})
+			
+		DeleteVehicle(vehicle)
+	
 	end
 
 	ESX.Game.SpawnLocalVehicle(firstVehicleData.model, {
@@ -259,11 +285,11 @@ function OpenResellerMenu()
 			title    = 'Concessionnaire',
 			align    = 'top-left',
 			elements = {
-		  	{label = 'Sortir véhicule',               value = 'pop_vehicle'},
-		  	{label = 'Rentrer véhicule',              value = 'depop_vehicle'},
-		  	{label = 'Créer facture',                 value = 'create_bill'},
-		  	{label = 'Véhicules en location',         value = 'get_rented_vehicles'},	
-		  	{label = 'Attribuer véhicule [Vente]',    value = 'set_vehicle_owner_sell'},		
+		  	{label = 'Sortir véhicule',              value = 'pop_vehicle'},
+		  	{label = 'Rentrer véhicule',             value = 'depop_vehicle'},
+		  	{label = 'Créer facture',                value = 'create_bill'},
+		  	{label = 'Véhicules en location',        value = 'get_rented_vehicles'},	
+		  	{label = 'Attribuer véhicule [Vente]',   value = 'set_vehicle_owner_sell'},		
 		  	{label = 'Attribuer véhicule [Location]', value = 'set_vehicle_owner_rent'},
 			}
 		},
@@ -275,8 +301,9 @@ function OpenResellerMenu()
 
 			if data.current.value == 'depop_vehicle' then
 
-				if CurrentVehicle ~= nil then
-					DeleteVehicle(CurrentVehicle)
+				if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+					local vehicle = GetClosestVehicle(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0, 0, 71)
+					DeleteVehicle(vehicle)
 				end
 
 			end
@@ -436,7 +463,7 @@ function OpenPersonnalVehicleMenu()
 					z = coords.z
 				}, heading, function(vehicle)
 					ESX.Game.SetVehicleProperties(vehicle, vehicleData)
-					TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 				end)
 			end,
 			function(data, menu)
@@ -469,8 +496,9 @@ function OpenPopVehicleMenu()
 
 				local model = data.current.value
 
-				if CurrentVehicle ~= nil then
-					DeleteVehicle(CurrentVehicle)
+				if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
+					local vehicle = GetClosestVehicle(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0, 0, 71)
+					DeleteVehicle(vehicle)
 				end
 
 				ESX.Game.SpawnLocalVehicle(model, {
@@ -536,10 +564,10 @@ function OpenBossActionsMenu()
 			title    = 'Concessionnaire - Patron',
 			align    = 'top-left',
 			elements = {
-		  	{label = 'Acheter véhicule',       value = 'buy_vehicle'},
+		  	{label = 'Acheter véhicule',      value = 'buy_vehicle'},
 		  	{label = 'Retirer argent société', value = 'withdraw_society_money'},
-		  	{label = 'Déposer argent ',        value = 'deposit_money'},
-		  	{label = 'Blanchir argent',        value = 'wash_money'}
+		  	{label = 'Déposer argent ',       value = 'deposit_money'},
+		  	{label = 'Blanchir argent',       value = 'wash_money'}
 			}
 		},
 		function(data, menu)
@@ -697,11 +725,13 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 
 	if zone == 'ShopEntering' then
 
-		if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' then
+		if Config.EnablePlayerManagement then
 
-			CurrentAction     = 'reseller_menu'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
-			CurrentActionData = {}
+			if PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' then
+				CurrentAction     = 'reseller_menu'
+				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+				CurrentActionData = {}
+			end
 
 		else
 
@@ -717,9 +747,9 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 
 		local playerPed = GetPlayerPed(-1)
 
-		if IsPedInAnyVehicle(playerPed,  false) then
+		if IsPedInAnyVehicle(playerPed, false) then
 			
-			local vehicle = GetVehiclePedIsIn(playerPed,  false)
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
 
 			CurrentAction     = 'give_back_vehicle'
 			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour rendre votre véhicule'
@@ -736,9 +766,9 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 
 		local playerPed = GetPlayerPed(-1)
 
-		if IsPedInAnyVehicle(playerPed,  false) then
+		if IsPedInAnyVehicle(playerPed, false) then
 
-			local vehicle     = GetVehiclePedIsIn(playerPed,  false)
+			local vehicle     = GetVehiclePedIsIn(playerPed, false)
 			local vehicleData = nil
 
 			for i=1, #Vehicles, 1 do
@@ -869,7 +899,7 @@ Citizen.CreateThread(function()
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
+			if IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
 				
 				if CurrentAction == 'shop_menu' then
 					OpenShopMenu()
