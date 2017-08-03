@@ -141,13 +141,15 @@ function OpenShopMenu()
 
 									if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
 											
-										local vehicle = ESX.Game.GetClosestVehicle({
+										local vehicle, distance = ESX.Game.GetClosestVehicle({
 											x = Config.Zones.ShopInside.Pos.x,
 											y = Config.Zones.ShopInside.Pos.y,
 											z = Config.Zones.ShopInside.Pos.z
 										})
-											
-										DeleteVehicle(vehicle)
+										
+										if distance <= 3.0 then
+											DeleteVehicle(vehicle)
+										end
 									
 									end
 
@@ -201,13 +203,15 @@ function OpenShopMenu()
 
 			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
 					
-				local vehicle = ESX.Game.GetClosestVehicle({
+				local vehicle, distance = ESX.Game.GetClosestVehicle({
 					x = Config.Zones.ShopInside.Pos.x,
 					y = Config.Zones.ShopInside.Pos.y,
 					z = Config.Zones.ShopInside.Pos.z
 				})
-					
-				DeleteVehicle(vehicle)
+				
+				if distance <= 3.0 then
+					DeleteVehicle(vehicle)
+				end
 			
 			end
 
@@ -228,13 +232,15 @@ function OpenShopMenu()
 
 			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
 					
-				local vehicle = ESX.Game.GetClosestVehicle({
+				local vehicle, distance = ESX.Game.GetClosestVehicle({
 					x = Config.Zones.ShopInside.Pos.x,
 					y = Config.Zones.ShopInside.Pos.y,
 					z = Config.Zones.ShopInside.Pos.z
 				})
-					
-				DeleteVehicle(vehicle)
+				
+				if distance <= 3.0 then
+					DeleteVehicle(vehicle)
+				end
 			
 			end
 
@@ -253,13 +259,15 @@ function OpenShopMenu()
 
 	if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
 			
-		local vehicle = ESX.Game.GetClosestVehicle({
+		local vehicle, distance = ESX.Game.GetClosestVehicle({
 			x = Config.Zones.ShopInside.Pos.x,
 			y = Config.Zones.ShopInside.Pos.y,
 			z = Config.Zones.ShopInside.Pos.z
 		})
-			
-		DeleteVehicle(vehicle)
+		
+		if distance <= 3.0 then
+			DeleteVehicle(vehicle)
+		end
 	
 	end
 
