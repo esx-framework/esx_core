@@ -1,8 +1,8 @@
-local charset = {}
+local Charset = {}
 
-for i = 48,  57 do table.insert(charset, string.char(i)) end
-for i = 65,  90 do table.insert(charset, string.char(i)) end
-for i = 97, 122 do table.insert(charset, string.char(i)) end
+for i = 48,  57 do table.insert(Charset, string.char(i)) end
+for i = 65,  90 do table.insert(Charset, string.char(i)) end
+for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX                           = {}
 ESX.CurrentRequestId          = 0
@@ -21,7 +21,7 @@ ESX.GetRandomString = function(length)
   math.randomseed(GetGameTimer())
 
   if length > 0 then
-    return ESX.GetRandomString(length - 1) .. charset[math.random(1, #charset)]
+    return ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)]
   else
     return ''
   end
@@ -267,8 +267,7 @@ end
 
 ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 
-  local playerPed = GetPlayerPed(-1)
-  local model     = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
+  local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
 
 	Citizen.CreateThread(function()
 
@@ -279,9 +278,10 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 		end
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
-		
+		local id      = NetworkGetNetworkIdFromEntity(vehicle)
+
 		SetNetworkIdCanMigrate(id, true)
-		SetEntityAsMissionEntity(vehicle,  true,  true)
+		SetEntityAsMissionEntity(vehicle,  true,  false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
 		SetModelAsNoLongerNeeded(model)
 
@@ -291,8 +291,6 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 			RequestCollisionAtCoord(coords.x, coords.x, coords.x)
 			Citizen.Wait(0)
 		end
-
-		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
 		if cb ~= nil then
 			cb(vehicle)
@@ -304,8 +302,7 @@ end
 
 ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 
-  local playerPed = GetPlayerPed(-1)
-  local model     = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
+  local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
 
 	Citizen.CreateThread(function()
 
@@ -319,7 +316,7 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		local id      = NetworkGetNetworkIdFromEntity(vehicle)
 
 		SetNetworkIdCanMigrate(id, true)
-		SetEntityAsMissionEntity(vehicle,  true,  true)
+		SetEntityAsMissionEntity(vehicle,  true,  false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
 		SetModelAsNoLongerNeeded(model)
 
@@ -385,6 +382,64 @@ ESX.Game.GetPlayersInArea = function(coords, area)
 	end
 	
 	return playersInArea
+end
+
+ESX.Game.GetVehicles = function()
+
+	local vehicles        = {}
+	local handle, vehicle = FindFirstVehicle()
+	local success         = nil
+
+	repeat
+		table.insert(vehicles, vehicle)
+		success, vehicle = FindNextVehicle(handle)
+	until not success
+
+	EndFindVehicle(handle)
+
+	return vehicles
+
+end
+
+ESX.Game.GetClosestVehicle = function(coords)
+	
+	local vehicles         = ESX.Game.GetVehicles()
+	local closestDistance = -1
+	local closestPlayer   = -1
+	
+	for i=1, #vehicles, 1 do
+		
+		local vehicleCoords = GetEntityCoords(vehicles[i])
+		local distance      = GetDistanceBetweenCoords(vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, coords.x, coords.y, coords.z, true)
+		
+		if closestDistance == -1 or closestDistance > distance then
+			closestVehicle  = vehicles[i]
+			closestDistance = distance
+		end
+
+	end
+	
+	return closestVehicle, closestDistance
+
+end
+
+ESX.Game.GetVehiclesInArea = function(coords, area)
+	
+	local vehicles       = ESX.Game.GetVehicles()
+	local vehiclesInArea = {}
+	
+	for i=1, #vehicles, 1 do
+		
+		local vehicleCoords = GetEntityCoords(vehicles[i])
+		local distance      = GetDistanceBetweenCoords(vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, coords.x, coords.y, coords.z, true)
+
+		if distance <= area then
+			table.insert(vehiclesInArea, vehicles[i])
+		end
+
+	end
+	
+	return vehiclesInArea
 end
 
 ESX.Game.GetVehicleProperties = function(vehicle)
