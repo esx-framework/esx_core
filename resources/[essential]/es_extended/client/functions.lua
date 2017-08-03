@@ -247,6 +247,23 @@ ESX.GetWeaponLabel = function(name)
 
 end
 
+ESX.Game.Teleport = function(entity, coords, cb)
+	
+	RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+	
+	while not HasCollisionLoadedAroundEntity(entity) do
+		RequestCollisionAtCoord(coords.x, coords.x, coords.x)
+		Citizen.Wait(0)
+	end
+
+	SetEntityCoords(entity,  coords.x,  coords.y,  coords.z)
+
+	if cb ~= nil then
+		cb()
+	end
+
+end
+
 ESX.Game.GetPlayers = function()
 	
 	local maxPlayers = Config.MaxPlayers
