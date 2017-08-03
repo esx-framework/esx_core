@@ -313,9 +313,7 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		end
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
-		local id      = NetworkGetNetworkIdFromEntity(vehicle)
 
-		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle,  true,  false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
 		SetModelAsNoLongerNeeded(model)
