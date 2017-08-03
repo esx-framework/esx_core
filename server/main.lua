@@ -96,6 +96,11 @@ AddEventHandler('instance:create', function()
 	CreateInstance(source)
 end)
 
+RegisterServerEvent('instance:close')
+AddEventHandler('instance:close', function()
+	CloseInstance(source)
+end)
+
 RegisterServerEvent('instance:enter')
 AddEventHandler('instance:enter', function(instance)
 	AddPlayerToInstance(instance, source)

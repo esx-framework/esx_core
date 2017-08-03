@@ -30,6 +30,10 @@ function CreateInstance()
 	TriggerServerEvent('instance:create')
 end
 
+function CloseInstance()
+	TriggerServerEvent('instance:close')
+end
+
 function EnterInstance(instance)
 	TriggerServerEvent('instance:enter', InstanceInvite.host)
 end
@@ -57,6 +61,10 @@ end)
 
 AddEventHandler('instance:create', function()
 	CreateInstance()
+end)
+
+AddEventHandler('instance:close', function()
+	CloseInstance()
 end)
 
 AddEventHandler('instance:enter', function(instance)
