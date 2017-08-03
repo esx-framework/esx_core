@@ -335,22 +335,28 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 
 end
 
-ESX.Game.GetClosestPlayer = function()
+ESX.Game.GetClosestPlayer = function(coords)
 	
 	local players         = ESX.Game.GetPlayers()
 	local closestDistance = -1
 	local closestPlayer   = -1
-	local playerPed       = GetPlayerPed(-1)
-	local playerCoords    = GetEntityCoords(playerPed)
-	
+	local coords          = coords
+	local usePlayerPed    = false
+
+	if coords == nil then
+		usePlayerPed    = true
+		local playerPed = GetPlayerPed(-1)
+		coords          = GetEntityCoords(playerPed)
+	end
+
 	for i=1, #players, 1 do
 		
 		local target = GetPlayerPed(players[i])
 		
-		if target ~= playerPed then
+		if not usePlayerPed or (usePlayerPed and target ~= playerPed) then
 			
 			local targetCoords = GetEntityCoords(target)
-			local distance     = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, playerCoords.x, playerCoords.y, playerCoords.z, true)
+			local distance     = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, coords.x, coords.y, coords.z, true)
 			
 			if closestDistance == -1 or closestDistance > distance then
 				closestPlayer   = players[i]
@@ -403,10 +409,16 @@ end
 
 ESX.Game.GetClosestVehicle = function(coords)
 	
-	local vehicles         = ESX.Game.GetVehicles()
+	local vehicles        = ESX.Game.GetVehicles()
 	local closestDistance = -1
 	local closestPlayer   = -1
-	
+	local coords          = coords
+
+	if coords == nil then
+		local playerPed = GetPlayerPed(-1)
+		coords          = GetEntityCoords(playerPed)
+	end
+
 	for i=1, #vehicles, 1 do
 		
 		local vehicleCoords = GetEntityCoords(vehicles[i])
