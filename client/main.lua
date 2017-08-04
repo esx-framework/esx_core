@@ -49,14 +49,12 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-						Citizen.CreateThread(function()
+						for i=1, #garage.Parkings, 1 do
+							for j=1, #vehicles, 1 do
 
-							for i=1, #garage.Parkings, 1 do
-								for j=1, #vehicles, 1 do
-
-									if i == vehicles[j].zone then
+								if i == vehicles[j].zone then
 										
-										local vehicleLoaded = false
+									local spawn = function(j)
 
 										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
 											x = garage.Parkings[i].Pos.x,
@@ -64,19 +62,16 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 											z = garage.Parkings[i].Pos.z											
 										}, garage.Parkings[i].Heading, function(vehicle)
 											ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
-											vehicleLoaded = true
 										end)
-
-										while not vehicleLoaded do
-											Citizen.Wait(0)
-										end
 
 									end
 
-								end
-							end
+									spawn(j)
 
-						end)
+								end
+
+							end
+						end
 
 					end, name)
 
@@ -220,7 +215,6 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part, parking)
 	if part == 'Parking' then
 
 		local playerPed = GetPlayerPed(-1)
-		local garage    = Config.Garages[name]
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 			TriggerServerEvent('esx_garage:setParking', name, parking, false)
@@ -274,7 +268,7 @@ Citizen.CreateThread(function()
 
 				if(GetDistanceBetweenCoords(coords, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, true) < Config.DrawDistance) then
 					DrawMarker(Config.MarkerType, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-				end	
+				end
 
 			end
 
@@ -299,8 +293,9 @@ end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
+
 	while true do
-		
+
 		Wait(0)
 
 		local playerPed      = GetPlayerPed(-1)
@@ -345,6 +340,10 @@ Citizen.CreateThread(function()
 
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastGarage ~= currentGarage or LastPart ~= currentPart) ) then
 			
+			if LastGarage ~= currentGarage or LastPart ~= currentPart then
+				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
+			end
+
 			HasAlreadyEnteredMarker = true
 			LastGarage              = currentGarage
 			LastPart                = currentPart
