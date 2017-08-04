@@ -96,34 +96,29 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 				ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-					Citizen.CreateThread(function()
+					for i=1, #garage.Parkings, 1 do
+						for j=1, #vehicles, 1 do
 
-						for i=1, #garage.Parkings, 1 do
-							for j=1, #vehicles, 1 do
-
-								if i == vehicles[j].zone then
+							if i == vehicles[j].zone then
 									
-									local vehicleLoaded = false
+								local spawn = function(j)
 
-										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
-											x = garage.Parkings[i].Pos.x,
-											y = garage.Parkings[i].Pos.y,
-											z = garage.Parkings[i].Pos.z											
-										}, garage.Parkings[i].Heading, function(vehicle)
-											ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
-											vehicleLoaded = true
-										end)
-
-									while not vehicleLoaded do
-										Citizen.Wait(0)
-									end
+									ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
+										x = garage.Parkings[i].Pos.x,
+										y = garage.Parkings[i].Pos.y,
+										z = garage.Parkings[i].Pos.z											
+									}, garage.Parkings[i].Heading, function(vehicle)
+										ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
+									end)
 
 								end
 
-							end
-						end
+								spawn(j)
 
-					end)
+							end
+
+						end
+					end
 
 				end, name)
 
