@@ -357,11 +357,12 @@ ESX.Game.GetClosestPlayer = function(coords)
 	local closestPlayer   = -1
 	local coords          = coords
 	local usePlayerPed    = false
+	local playerPed       = nil
 
 	if coords == nil then
-		usePlayerPed    = true
-		local playerPed = GetPlayerPed(-1)
-		coords          = GetEntityCoords(playerPed)
+		usePlayerPed = true
+		playerPed    = GetPlayerPed(-1)
+		coords       = GetEntityCoords(playerPed)
 	end
 
 	for i=1, #players, 1 do
