@@ -1,6 +1,10 @@
 # fxserver-es_extended [WIP]
 FXServer ES Extended
 
+[DISCORD]
+
+https://discord.gg/8P7zjMF
+
 [REQUIREMENTS]
 
 - essentialmode-mysql : https://github.com/FXServer-ESX/fxserver-essentialmode-mysql
