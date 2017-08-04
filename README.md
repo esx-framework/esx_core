@@ -8,7 +8,8 @@ FXServer ESX Garage
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_garage esx_garage
 ```
-3) Add this in your server.cfg :
+3) Import esx_garage.sql in your database
+4) Add this in your server.cfg :
 
 ```
 start esx_garage
