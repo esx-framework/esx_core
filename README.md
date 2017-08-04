@@ -1,6 +1,10 @@
 # fxserver-esx_garage
 FXServer ESX Garage
 
+[REQUIREMENTS]
+
+- instance => https://github.com/FXServer-ESX/fxserver-instance
+
 [INSTALLATION]
 
 1) CD in your resources/[esx] folder
