@@ -705,7 +705,7 @@ Citizen.CreateThread(function()
 
 		end
 
-		if IsControlPressed(0,  Keys['F6']) and Config.EnablePlayerManagement and (GetGameTimer() - GUI.Time) > 150 then
+		if IsControlPressed(0,  Keys['F6']) and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 150 then
 			OpenMobileTaxiActionsMenu()
 			GUI.Time = GetGameTimer()
 		end
