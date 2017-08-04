@@ -1,6 +1,10 @@
 # fxserver-esx_clotheshop
 FXServer ESX ClotheShop
 
+[REQUIREMENTS]
+
+- esx_skin => https://github.com/FXServer-ESX/fxserver-esx_skin
+
 [INSTALLATION]
 
 1) CD in your resources/[esx] folder
