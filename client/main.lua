@@ -1,6 +1,7 @@
 ESX                  = nil
 local HasLoadedModel = false
 local LastSkin       = nil
+local PlayerLoaded   = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -10,6 +11,8 @@ Citizen.CreateThread(function()
 end)
 
 function OpenMenu(submitCb, cancelCb, restrict)
+
+	local playerPed = GetPlayerPed(-1)
 
 	TriggerEvent('skinchanger:getSkin', function(skin)
 		LastSkin = skin
@@ -45,11 +48,18 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 		-- Insert elements
 		for i=1, #_components, 1 do
-							
+			
+			local value = _components[i].value
+
+			if _components[i].componentId ~= nil then
+				value = GetPedPropIndex(playerPed,  _components[i].componentId)
+			end
+
 			local data = {
 				label     = _components[i].label,
-				name      = _components[i].name,	
-				value     = _components[i].value,
+				name      = _components[i].name,
+				value     = value,
+				min       = _components[i].min,
 				textureof = _components[i].textureof,
 				type      = 'slider'
 			}
@@ -148,6 +158,11 @@ AddEventHandler('playerSpawned', function()
 	TriggerEvent('skinchanger:loadDefaultModel', true)
 end)
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	PlayerLoaded = true
+end)
+
 AddEventHandler('esx_skin:getLastSkin', function(cb)
 	cb(LastSkin)
 end)
@@ -176,15 +191,23 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	
 	if not HasLoadedModel then
 		
-		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+		Citizen.CreateThread(function()
 
-			HasLoadedModel = true
-
-			if skin == nil then
-				OpenSaveableMenu(nil, nil, nil)
-			else
-				TriggerEvent('skinchanger:loadSkin', skin)
+			while not PlayerLoaded do
+				Citizen.Wait(0)
 			end
+
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+				HasLoadedModel = true
+
+				if skin == nil then
+					OpenSaveableMenu(nil, nil, nil)
+				else
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end
+
+			end)
 
 		end)
 
