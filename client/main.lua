@@ -338,9 +338,9 @@ Citizen.CreateThread(function()
 
 		end
 
-		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastGarage ~= currentGarage or LastPart ~= currentPart) ) then
+		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking) ) then
 			
-			if LastGarage ~= currentGarage or LastPart ~= currentPart then
+			if LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking then
 				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
 			end
 
