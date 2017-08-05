@@ -283,6 +283,11 @@ ESX.Game.GetPlayers = function()
 
 end
 
+ESX.Game.DeleteVehicle = function(vehicle)
+	SetEntityAsMissionEntity(vehicle,  false,  true)
+	DeleteVehicle(vehicle)
+end
+
 ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 
   local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
@@ -670,7 +675,6 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size)
     SetTextScale(0.0 * scale, 0.55 * scale)
     SetTextFont(0)
     SetTextProportional(1)
-    -- SetTextScale(0.0, 0.55)
     SetTextColour(255, 255, 255, 255)
     SetTextDropshadow(0, 0, 0, 0, 255)
     SetTextEdge(2, 0, 0, 0, 150)
