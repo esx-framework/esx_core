@@ -36,7 +36,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 					z = garage.InteriorSpawnPoint.Pos.z
 				}
 
-				DeleteVehicle(vehicle)
+				ESX.Game.DeleteVehicle(vehicle)
 
 				ESX.Game.Teleport(playerPed, spawnCoords, function()
 
@@ -147,7 +147,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 					z = garage.ExteriorSpawnPoint.Pos.z
 				}
 
-				DeleteVehicle(vehicle)
+				ESX.Game.DeleteVehicle(vehicle)
 
 				ESX.Game.Teleport(playerPed, spawnCoords, function()
 
@@ -183,7 +183,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 			})
 
 			if distance <= 2.0 then
-				DeleteVehicle(vehicle)
+				ESX.Game.DeleteVehicle(vehicle)
 			end
 
 		end
