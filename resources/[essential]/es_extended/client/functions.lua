@@ -15,6 +15,7 @@ ESX.UI.Menu                   = {}
 ESX.UI.Menu.RegisteredTypes   = {}
 ESX.UI.Menu.Opened            = {}
 ESX.Game                      = {}
+ESX.Game.Utils                = {}
 
 ESX.GetRandomString = function(length)
 
@@ -646,6 +647,42 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	if props.modBackWheels ~= nil then
 		SetVehicleMod(vehicle, 24, props.modBackWheels, false)
 	end
+
+end
+
+ESX.Game.Utils.DrawText3D = function(coords, text, size)
+    
+  local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
+  local camCoords      = GetGameplayCamCoords()
+  local dist           = GetDistanceBetweenCoords(camCoords.x, camCoords.y, camCoords.z, coords.x, coords.y, coords.z, 1)
+  local size           = size
+
+  if size == nil then
+  	size = 1
+  end
+
+  local scale = (size / dist) * 2
+  local fov   = (1 / GetGameplayCamFov()) * 100
+  local scale = scale * fov
+   
+  if onScreen then
+      
+    SetTextScale(0.0 * scale, 0.55 * scale)
+    SetTextFont(0)
+    SetTextProportional(1)
+    -- SetTextScale(0.0, 0.55)
+    SetTextColour(255, 255, 255, 255)
+    SetTextDropshadow(0, 0, 0, 0, 255)
+    SetTextEdge(2, 0, 0, 0, 150)
+    SetTextDropShadow()
+    SetTextOutline()
+    SetTextEntry('STRING')
+    SetTextCentre(1)
+    
+    AddTextComponentString(text)
+    
+    DrawText(x, y)
+  end
 
 end
 
