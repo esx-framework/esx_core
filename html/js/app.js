@@ -268,7 +268,9 @@
 
 							case 'slider' : {
 							
-								if(elem.value > 0){
+								let min = (typeof elem.min == 'undefined') ? 0 : elem.min;
+
+								if(elem.value > min){
 									elem.value--;
 									ESX_MENU.change(focused.namespace, focused.name, elem)
 								}
