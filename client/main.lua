@@ -1,36 +1,36 @@
-local Components = {
-	{label = 'Sexe',               name = 'sex',          value = 0},
-	{label = 'Visage',             name = 'face',         value = 0},
-	{label = 'Peau',               name = 'skin',         value = 0},
-	{label = 'Type Barbe',         name = 'beard_1',      value = 0},
-	{label = 'Taille barbe',       name = 'beard_2',      value = 0},
-	{label = 'Couleur barbe 1',    name = 'beard_3',      value = 0},
-	{label = 'Couleur barbe 2',    name = 'beard_4',      value = 0},
-	{label = 'Cheveux 1',          name = 'hair_1',       value = 0},
-	{label = 'Cheveux 2',          name = 'hair_2',       value = 0},
-	{label = 'Couleur cheveux 1',  name = 'hair_color_1', value = 0},
-	{label = 'Couleur cheveux 2',  name = 'hair_color_2', value = 0},
-	{label = 'T-Shirt 1',          name = 'tshirt_1',     value = 0},
-	{label = 'T-Shirt 2',          name = 'tshirt_2',     value = 0, textureof = 'tshirt_1'},
-	{label = 'Torse 1',            name = 'torso_1',      value = 0},
-	{label = 'Torse 2',            name = 'torso_2',      value = 0, textureof = 'torso_1'},
-	{label = 'Calques 1',          name = 'decals_1',     value = 0},
-	{label = 'Calques 2',          name = 'decals_2',     value = 0, textureof = 'decals_1'},
-	{label = 'Bras',               name = 'arms',         value = 0},
-	{label = 'Jambes 1',           name = 'pants_1',      value = 0},
-	{label = 'Jambes 2',           name = 'pants_2',      value = 0, textureof = 'pants_1'},
-	{label = 'Chaussures 1',       name = 'shoes_1',      value = 0},
-	{label = 'Chaussures 2',       name = 'shoes_2',      value = 0, textureof = 'shoes_1'},
-	{label = 'Masque 1',           name = 'mask_1',       value = 0},
-	{label = 'Masque 2',           name = 'mask_2',       value = 0, textureof = 'mask_1'},
-	{label = 'Gilet pare-balle 1', name = 'bproof_1',     value = 0},
-	{label = 'Gilet pare-balle 2', name = 'bproof_2',     value = 0, textureof = 'bproof_1'},
-	{label = 'Chaine 1',           name = 'chain_1',      value = 0},
-	{label = 'Chaine 2',           name = 'chain_2',      value = 0, textureof = 'chain_1'},
-	{label = 'Casque 1',           name = 'helmet_1',     value = 0},
-	{label = 'Casque 2',           name = 'helmet_2',     value = 0, textureof = 'helmet_1'},
-	{label = 'Lunettes 1',         name = 'glasses_1',    value = 0},
-	{label = 'Lunettes 2',         name = 'glasses_2',    value = 0, textureof = 'glasses_1'},
+local Components = { 
+	{label = 'Sexe',               name = 'sex',          value = 0,  min = 0 },
+	{label = 'Visage',             name = 'face',         value = 0,  min = 0 },
+	{label = 'Peau',               name = 'skin',         value = 0,  min = 0 },
+	{label = 'Type Barbe',         name = 'beard_1',      value = 0,  min = 0 },
+	{label = 'Taille barbe',       name = 'beard_2',      value = 0,  min = 0 },
+	{label = 'Couleur barbe 1',    name = 'beard_3',      value = 0,  min = 0 },
+	{label = 'Couleur barbe 2',    name = 'beard_4',      value = 0,  min = 0 },
+	{label = 'Cheveux 1',          name = 'hair_1',       value = 0,  min = 0 },
+	{label = 'Cheveux 2',          name = 'hair_2',       value = 0,  min = 0 },
+	{label = 'Couleur cheveux 1',  name = 'hair_color_1', value = 0,  min = 0 },
+	{label = 'Couleur cheveux 2',  name = 'hair_color_2', value = 0,  min = 0 },
+	{label = 'T-Shirt 1',          name = 'tshirt_1',     value = 0,  min = 0 },
+	{label = 'T-Shirt 2',          name = 'tshirt_2',     value = 0,  min = 0 , textureof = 'tshirt_1'},
+	{label = 'Torse 1',            name = 'torso_1',      value = 0,  min = 0 },
+	{label = 'Torse 2',            name = 'torso_2',      value = 0,  min = 0 , textureof = 'torso_1'},
+	{label = 'Calques 1',          name = 'decals_1',     value = 0,  min = 0 },
+	{label = 'Calques 2',          name = 'decals_2',     value = 0,  min = 0 , textureof = 'decals_1'},
+	{label = 'Bras',               name = 'arms',         value = 0,  min = 0 },
+	{label = 'Jambes 1',           name = 'pants_1',      value = 0,  min = 0 },
+	{label = 'Jambes 2',           name = 'pants_2',      value = 0,  min = 0 , textureof = 'pants_1'},
+	{label = 'Chaussures 1',       name = 'shoes_1',      value = 0,  min = 0 },
+	{label = 'Chaussures 2',       name = 'shoes_2',      value = 0,  min = 0 , textureof = 'shoes_1'},
+	{label = 'Masque 1',           name = 'mask_1',       value = 0,  min = 0 },
+	{label = 'Masque 2',           name = 'mask_2',       value = 0,  min = 0 , textureof = 'mask_1'},
+	{label = 'Gilet pare-balle 1', name = 'bproof_1',     value = 0,  min = 0 },
+	{label = 'Gilet pare-balle 2', name = 'bproof_2',     value = 0,  min = 0 , textureof = 'bproof_1'},
+	{label = 'Chaine 1',           name = 'chain_1',      value = 0,  min = 0 },
+	{label = 'Chaine 2',           name = 'chain_2',      value = 0,  min = 0 , textureof = 'chain_1'},
+	{label = 'Casque 1',           name = 'helmet_1',     value = -1, min = -1, componentId = 0},
+	{label = 'Casque 2',           name = 'helmet_2',     value = 0,  min = 0 , textureof = 'helmet_1'},
+	{label = 'Lunettes 1',         name = 'glasses_1',    value = 0,  min = 0 },
+	{label = 'Lunettes 2',         name = 'glasses_2',    value = 0,  min = 0 , textureof = 'glasses_1'},
 }
 
 local LastSex     = 0
@@ -162,7 +162,13 @@ function ApplySkin(skin, clothes)
 	SetPedComponentVariation(playerPed, 1, Character['mask_1'], Character['mask_2'], 2) 			  -- mask
 	SetPedComponentVariation(playerPed, 9, Character['bproof_1'], Character['bproof_2'], 2) 	  -- bulletproof
 	SetPedComponentVariation(playerPed, 7, Character['chain_1'], Character['chain_2'], 2) 	    -- chain
-	SetPedPropIndex(playerPed, 0, Character['helmet_1'], Character['helmet_2'], 2)              -- Helmet
+	
+	if Character['helmet_1'] == -1 then
+		ClearPedProp(playerPed,  0)
+	else
+		SetPedPropIndex(playerPed, 0, Character['helmet_1'], Character['helmet_2'], 2)              -- Helmet
+	end
+
 	SetPedPropIndex(playerPed, 1, Character['glasses_1'], Character['glasses_2'], 2)            -- Glasses
 
 end
