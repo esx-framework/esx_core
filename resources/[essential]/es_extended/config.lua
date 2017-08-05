@@ -84,6 +84,8 @@ Config.Weapons = {
 	{name = 'WEAPON_PIPEBOMB', label = 'Bombe tuyau'},
 	{name = 'WEAPON_POOLCUE', label = 'Queue de billard'},
 	{name = 'WEAPON_WRENCH', label = 'Clé'},
+	{name = 'WEAPON_FLASHLIGHT', label = 'Lampe torche'},
+	{name = 'WEAPON_FIREEXTINGUISHER', label = 'Extincteur'},
 	{name = 'GADGET_NIGHTVISION', label = 'Vision nocturne'},
 	{name = 'GADGET_PARACHUTE', label = 'Parachute'},
 }
