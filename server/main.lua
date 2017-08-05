@@ -49,7 +49,9 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 	if phoneNumber == 'taxi' then
 		for k, v in pairs(xPlayers) do
 			if v.job.name == 'taxi' then
-				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Appel Taxi')
+				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
+					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Appel Taxi', requestId)
+				end)
 			end
 		end
 	end
