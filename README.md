@@ -3,7 +3,7 @@ FXServer ES Extended
 
 [DISCORD]
 
-https://discord.gg/8P7zjMF
+https://discord.me/fivem_esx
 
 [REQUIREMENTS]
 
