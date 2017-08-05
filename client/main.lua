@@ -145,7 +145,7 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 end
 
 AddEventHandler('playerSpawned', function()
-	TriggerEvent('skinchanger:LoadDefaultModel', true)
+	TriggerEvent('skinchanger:loadDefaultModel', true)
 end)
 
 AddEventHandler('esx_skin:getLastSkin', function(cb)
