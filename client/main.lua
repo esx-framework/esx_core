@@ -255,6 +255,6 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 		LoadDefaultModel(false)
 	end
 
-	LastSex = skin['sex']
+	LastSex = playerSkin['sex']
 
 end)
