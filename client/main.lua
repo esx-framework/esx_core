@@ -42,6 +42,39 @@ for i=1, #Components, 1 do
 	Character[Components[i].name] = Components[i].value
 end
 
+function LoadDefaultModel(loadMale)
+	
+	local playerPed = GetPlayerPed(-1)
+  local characterModel
+
+  if loadMale then
+    characterModel = GetHashKey('mp_m_freemode_01')
+  else
+    characterModel = GetHashKey('mp_f_freemode_01');
+   end
+
+  RequestModel(characterModel)
+
+  Citizen.CreateThread(function()
+  	
+  	while not HasModelLoaded(characterModel) do
+  		RequestModel(characterModel)
+  		Citizen.Wait(0)
+  	end
+
+	  if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
+	  	SetPlayerModel(PlayerId(), characterModel)
+	  	SetPedDefaultComponentVariation(playerPed)
+	  end
+
+	  SetModelAsNoLongerNeeded(characterModel)
+
+	  TriggerEvent('skinchanger:modelLoaded')
+
+  end)
+
+end
+
 function GetMaxVals()
 
   local playerPed = GetPlayerPed(-1)
@@ -134,6 +167,10 @@ function ApplySkin(skin, clothes)
 
 end
 
+AddEventHandler('skinchanger:loadDefaultModel', function(loadMale)
+	LoadDefaultModel(loadMale)
+end)
+
 AddEventHandler('skinchanger:getData', function(cb)
 	
 	local components = json.decode(json.encode(Components))
@@ -189,9 +226,9 @@ AddEventHandler('skinchanger:loadSkin', function(skin)
 	LoadSkin = skin
 
 	if skin['sex'] == 0 then
-		TriggerEvent('skinchanger:LoadDefaultModel', true)
+		LoadDefaultModel(true)
 	else
-		TriggerEvent('skinchanger:LoadDefaultModel', false)
+		LoadDefaultModel(false)
 	end
 
 	LastSex = skin['sex']
@@ -207,9 +244,9 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 	}
 
 	if playerSkin['sex'] == 0 then
-		TriggerEvent('skinchanger:LoadDefaultModel', true)
+		LoadDefaultModel(true)
 	else
-		TriggerEvent('skinchanger:LoadDefaultModel', false)
+		LoadDefaultModel(false)
 	end
 
 	LastSex = skin['sex']
