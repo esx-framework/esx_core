@@ -49,9 +49,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 		-- Insert elements
 		for i=1, #_components, 1 do
 			
-			local value = _components[i].value
-
-			if _components[i].componentId ~= nil then
+			local value       = _components[i].value
+			local componentId = _components[i].componentId
+			
+			if componentId == 0 then
 				value = GetPedPropIndex(playerPed,  _components[i].componentId)
 			end
 
