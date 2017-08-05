@@ -284,9 +284,8 @@ ESX.Game.GetPlayers = function()
 end
 
 ESX.Game.DeleteVehicle = function(vehicle)
-	SetEntityAsMissionEntity(vehicle,  false,  true)
-	SetEntityAsNoLongerNeeded(vehicle)
-	DeleteVehicle(vehicle)
+	SetEntityAsMissionEntity(CurrentActionData.vehicle,  false,  true)
+	DeleteVehicle(CurrentActionData.vehicle)
 end
 
 ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
