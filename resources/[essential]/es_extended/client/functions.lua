@@ -285,6 +285,7 @@ end
 
 ESX.Game.DeleteVehicle = function(vehicle)
 	SetEntityAsMissionEntity(vehicle,  false,  true)
+	SetEntityAsNoLongerNeeded(vehicle)
 	DeleteVehicle(vehicle)
 end
 
