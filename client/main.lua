@@ -2,6 +2,11 @@ ESX                  = nil
 local HasLoadedModel = false
 local LastSkin       = nil
 local PlayerLoaded   = false
+local cam 			 = nil
+local isCameraActive = false
+local zoomOffset	 = 0.0
+local camOffset 	 = 0.0
+local heading 		 = 90.0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -62,6 +67,8 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				value     = value,
 				min       = _components[i].min,
 				textureof = _components[i].textureof,
+				zoomOffset= _components[i].zoomOffset,
+				camOffset = _components[i].camOffset,
 				type      = 'slider'
 			}
 
@@ -75,6 +82,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 		end
 
+		CreateSkinCam()
+		zoomOffset = _components[1].zoomOffset
+		camOffset = _components[1].camOffset
+
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'skin',
 			{
@@ -87,6 +98,8 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				
 				menu.close()
 
+				DeleteSkinCam()
+
 				TriggerEvent('skinchanger:loadSkin', LastSkin)
 
 				if cancelCb ~= nil then
@@ -97,6 +110,9 @@ function OpenMenu(submitCb, cancelCb, restrict)
 			function(data, menu)
 
 				TriggerEvent('skinchanger:getSkin', function(skin)
+
+					zoomOffset = data.current.zoomOffset
+					camOffset = data.current.camOffset
 					
 					if skin[data.current.name] ~= data.current.value then
 
@@ -131,6 +147,97 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 end
 
+function CreateSkinCam()
+	if not DoesCamExist(cam) then
+		cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
+	end
+	SetCamActive(cam, true)
+	RenderScriptCams(true, true, 500, true, true)
+	isCameraActive = true
+	SetCamRot(cam, 0.0, 0.0, 270.0, true)
+	SetEntityHeading(playerPed, 90.0)
+end
+
+function DeleteSkinCam()
+	isCameraActive = false
+	SetCamActive(cam, false)
+	RenderScriptCams(false, true, 500, true, true)
+	cam = nil
+end
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		if isCameraActive then
+			DisableControlAction(2, 30, true)
+			DisableControlAction(2, 31, true)
+			DisableControlAction(2, 32, true)
+			DisableControlAction(2, 33, true)
+			DisableControlAction(2, 34, true)
+			DisableControlAction(2, 35, true)
+
+			DisableControlAction(0, 25,   true) -- Input Aim
+    		DisableControlAction(0, 24,   true) -- Input Attack
+
+			local playerPed = GetPlayerPed(-1)
+			local coords    = GetEntityCoords(playerPed)
+
+			local angle = heading * math.pi / 180.0
+			local theta = {
+				x = math.cos(angle),
+				y = math.sin(angle)
+			}
+			local pos = {
+				x = coords.x + (zoomOffset * theta.x),
+				y = coords.y + (zoomOffset * theta.y),
+			}
+
+			local angleToLook = heading - 140.0
+			if angleToLook > 360 then
+				angleToLook = angleToLook - 360
+			elseif angleToLook < 0 then
+				angleToLook = angleToLook + 360
+			end
+			angleToLook = angleToLook * math.pi / 180.0
+			local thetaToLook = {
+				x = math.cos(angleToLook),
+				y = math.sin(angleToLook)
+			}
+			local posToLook = {
+				x = coords.x + (zoomOffset * thetaToLook.x),
+				y = coords.y + (zoomOffset * thetaToLook.y),
+			}
+
+			SetCamCoord(cam, pos.x, pos.y, coords.z + camOffset)
+			PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
+
+			SetTextComponentFormat("STRING")
+			AddTextComponentString("Utilisez ~INPUT_VEH_FLY_ROLL_LEFT_ONLY~ et ~INPUT_VEH_FLY_ROLL_RIGHT_ONLY~ pour tourner la vue.")
+			DisplayHelpTextFromStringLabel(0, 0, 0, -1)
+		end
+	end
+end)
+
+Citizen.CreateThread(function()
+	local angle = 90
+	while true do
+		Citizen.Wait(0)
+		if isCameraActive then
+			if IsControlPressed(0, 108) then
+				angle = angle - 1
+			elseif IsControlPressed(0, 109) then
+				angle = angle + 1
+			end
+			if angle > 360 then
+				angle = angle - 360
+			elseif angle < 0 then
+				angle = angle + 360
+			end
+			heading = angle + 0.0
+		end
+	end
+end)
+
 function OpenSaveableMenu(submitCb, cancelCb, restrict)
 
 	TriggerEvent('skinchanger:getSkin', function(skin)
@@ -140,6 +247,8 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 	OpenMenu(function(data, menu)
 
 		menu.close()
+
+		DeleteSkinCam()
 
 		TriggerEvent('skinchanger:getSkin', function(skin)
 
