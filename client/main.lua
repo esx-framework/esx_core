@@ -18,7 +18,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 		local coords    = GetEntityCoords(playerPed)
 		local garage    = Config.Garages[name]
 
-		if IsPedInAnyVehicle(playerPed,  false) then
+		if IsPedInAnyVehicle(playerPed,  false) and GetPedInVehicleSeat(vehicle,  -1) == playerPed then
 
 			local vehicle, distance = ESX.Game.GetClosestVehicle({
 				x = coords.x,
