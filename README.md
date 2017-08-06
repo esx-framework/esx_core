@@ -13,7 +13,7 @@ https://discord.me/fivem_esx
 
 Add support for accounts (bank / black money) you can also add others accounts
 
-Add support for inventory (press F5 ingame) => Players can now remove items from inventory
+Add support for inventory (press F2 ingame) => Players can now remove items from inventory
 
 Add support for jobs
 
