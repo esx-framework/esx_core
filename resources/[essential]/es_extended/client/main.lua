@@ -85,7 +85,7 @@ AddEventHandler('playerSpawned', function()
 
 end)
 
-AddEventHandler('skinchanger:LoadDefaultModel', function()
+AddEventHandler('skinchanger:loadDefaultModel', function()
 	LoadoutLoaded = false
 end)
 
