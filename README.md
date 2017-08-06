@@ -7,7 +7,8 @@ https://discord.me/fivem_esx
 
 [REQUIREMENTS]
 
-- essentialmode-mysql : https://github.com/FXServer-ESX/fxserver-essentialmode-mysql
+- essentialmode => https://forum.fivem.net/t/release-essentialmode-base/3665
+- esplugin_mysql => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
 
 [INSTALLATION]
 
