@@ -18,7 +18,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 		local coords    = GetEntityCoords(playerPed)
 		local garage    = Config.Garages[name]
 
-		if IsPedInAnyVehicle(playerPed,  false) and GetPedInVehicleSeat(vehicle,  -1) == playerPed then
+		if IsPedInAnyVehicle(playerPed,  false) then
 
 			local vehicle, distance = ESX.Game.GetClosestVehicle({
 				x = coords.x,
@@ -28,54 +28,98 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 			if distance <= 2.0 then
 
-				local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+				if GetPedInVehicleSeat(vehicle,  -1) == playerPed then
 
-				local spawnCoords  = {
-					x = garage.InteriorSpawnPoint.Pos.x,
-					y = garage.InteriorSpawnPoint.Pos.y,
-					z = garage.InteriorSpawnPoint.Pos.z
-				}
+					local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
-				ESX.Game.DeleteVehicle(vehicle)
+					local spawnCoords  = {
+						x = garage.InteriorSpawnPoint.Pos.x,
+						y = garage.InteriorSpawnPoint.Pos.y,
+						z = garage.InteriorSpawnPoint.Pos.z
+					}
 
-				ESX.Game.Teleport(playerPed, spawnCoords, function()
+					ESX.Game.DeleteVehicle(vehicle)
 
-					TriggerEvent('instance:create')
+					ESX.Game.Teleport(playerPed, spawnCoords, function()
 
-					ESX.Game.SpawnLocalVehicle(vehicleProps.model, spawnCoords, garage.InteriorSpawnPoint.Heading, function(vehicle)
-						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-					end)
+						TriggerEvent('instance:create')
 
-					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
+						ESX.Game.SpawnLocalVehicle(vehicleProps.model, spawnCoords, garage.InteriorSpawnPoint.Heading, function(vehicle)
+							TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+							ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+						end)
 
-						for i=1, #garage.Parkings, 1 do
-							for j=1, #vehicles, 1 do
+						ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-								if i == vehicles[j].zone then
-										
-									local spawn = function(j)
+							for i=1, #garage.Parkings, 1 do
+								for j=1, #vehicles, 1 do
 
-										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
-											x = garage.Parkings[i].Pos.x,
-											y = garage.Parkings[i].Pos.y,
-											z = garage.Parkings[i].Pos.z											
-										}, garage.Parkings[i].Heading, function(vehicle)
-											ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
-										end)
+									if i == vehicles[j].zone then
+											
+										local spawn = function(j)
+
+											ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
+												x = garage.Parkings[i].Pos.x,
+												y = garage.Parkings[i].Pos.y,
+												z = garage.Parkings[i].Pos.z											
+											}, garage.Parkings[i].Heading, function(vehicle)
+												ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
+											end)
+
+										end
+
+										spawn(j)
 
 									end
 
-									spawn(j)
+								end
+							end
+
+						end, name)
+
+					end)
+
+				else
+
+					ESX.Game.Teleport(playerPed, {
+						x = garage.InteriorSpawnPoint.Pos.x,
+						y = garage.InteriorSpawnPoint.Pos.y,
+						z = garage.InteriorSpawnPoint.Pos.z
+					}, function()
+
+						TriggerEvent('instance:create')
+
+						ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
+
+							for i=1, #garage.Parkings, 1 do
+								for j=1, #vehicles, 1 do
+
+									if i == vehicles[j].zone then
+											
+										local spawn = function(j)
+
+											ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
+												x = garage.Parkings[i].Pos.x,
+												y = garage.Parkings[i].Pos.y,
+												z = garage.Parkings[i].Pos.z											
+											}, garage.Parkings[i].Heading, function(vehicle)
+												ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
+											end)
+
+										end
+
+										spawn(j)
+
+									end
 
 								end
-
 							end
-						end
 
-					end, name)
+						end, name)
 
-				end)
+					end)
+
+				end
 
 			end
 
