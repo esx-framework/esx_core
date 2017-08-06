@@ -294,9 +294,9 @@ AddEventHandler('skinchanger:loadSkin', function(skin)
 	LoadSkin = skin
 
 	if skin['sex'] == 0 then
-		LoadDefaultModel(true)
+		TriggerEvent('skinchanger:loadDefaultModel', true)
 	else
-		LoadDefaultModel(false)
+		TriggerEvent('skinchanger:loadDefaultModel', false)
 	end
 	
 	LastSex = skin['sex']
@@ -312,9 +312,9 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 	}
 
 	if playerSkin['sex'] == 0 then
-		LoadDefaultModel(true)
+		TriggerEvent('skinchanger:loadDefaultModel', true)
 	else
-		LoadDefaultModel(false)
+		TriggerEvent('skinchanger:loadDefaultModel', false)
 	end
 
 	LastSex = playerSkin['sex']
