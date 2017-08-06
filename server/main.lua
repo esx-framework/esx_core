@@ -23,7 +23,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 	else
 
 		MySQL.Async.execute(
-			'DELETE FROM `user_parkings` WHERE `identifier` = @identifier AND `garage` = @garage AND zone = @zone; INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
+			'INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
 			{
 				['@identifier'] = xPlayer.identifier,
 				['@garage']     = garage;
