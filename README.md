@@ -1,6 +1,10 @@
 # fxserver-esx_skin
 FXServer ESX Skin
 
+[REQUIREMENTS]
+
+- skinchanger => https://github.com/FXServer-ESX/fxserver-skinchanger
+
 [INSTALLATION]
 
 1) CD in your resources/[esx] folder
