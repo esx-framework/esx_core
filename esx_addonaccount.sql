@@ -1,3 +1,5 @@
+USE `essentialmode`;
+
 CREATE TABLE `addon_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
