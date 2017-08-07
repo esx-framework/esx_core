@@ -1,6 +1,7 @@
 local GUI          			  = {}
 local hasAlreadyEnteredMarker = false
-GUI.MenuIsShowed   			  = false
+local isInATMMarker 			  = false
+local menuIsShowed   		  = false
 
 ESX = nil
 
@@ -11,10 +12,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
+TriggerEvent('es:setDefaultSettings', {
+    nativeMoneySystem = false,
+})
+
 RegisterNetEvent('esx_atm:closeATM')
 AddEventHandler('esx_atm:closeATM', function()
 	SetNuiFocus(false)
-	GUI.MenuIsShowed = false
+	menuIsShowed = false
 	SendNUIMessage({
 		hideAll = true
 	})
@@ -67,24 +72,23 @@ end)
 Citizen.CreateThread(function()
 	while true do		
 		Wait(0)		
-		local coords     = GetEntityCoords(GetPlayerPed(-1))
-		local isInMarker = false
+		local coords = GetEntityCoords(GetPlayerPed(-1))
+		isInATMMarker = false
 		for i=1, #Config.ATMS, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.ZoneSize.x / 2) then
-				isInMarker = true
+				isInATMMarker = true
 				SetTextComponentFormat('STRING')
 				AddTextComponentString('Appuyez sur ~INPUT_PICKUP~ pour déposer ou retirer du ~g~cash~s~.')
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 			end
 		end
-		if isInMarker and not hasAlreadyEnteredMarker then
+		if isInATMMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
-			--TriggerEvent('esx_atm:hasEnteredMarker')
 		end
-		if not isInMarker and hasAlreadyEnteredMarker then
+		if not isInATMMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
 			SetNuiFocus(false)	
-				GUI.MenuIsShowed = false	
+				menuIsShowed = false	
 				SendNUIMessage({
 					hideAll = true
 			})
@@ -96,7 +100,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 	  	Wait(0)
-	    if GUI.MenuIsShowed then
+	    if menuIsShowed then
 			DisableControlAction(0, 1,   true) -- LookLeftRight
 			DisableControlAction(0, 2,   true) -- LookUpDown
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
@@ -107,8 +111,8 @@ Citizen.CreateThread(function()
 				})
 			end
 	    else
-		  	if IsControlJustReleased(0, 38) then
-		  		GUI.MenuIsShowed = true
+		  	if IsControlJustReleased(0, 38) and isInATMMarker then
+		  		menuIsShowed = true
 				ESX.TriggerServerCallback('esx:getPlayerData', function(data)				    
 				    SendNUIMessage({
 						showMenu = true,
