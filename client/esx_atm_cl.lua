@@ -11,10 +11,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-TriggerEvent('es:setDefaultSettings', {
-    nativeMoneySystem = false,
-})
-
 RegisterNetEvent('esx_atm:closeATM')
 AddEventHandler('esx_atm:closeATM', function()
 	SetNuiFocus(false)
