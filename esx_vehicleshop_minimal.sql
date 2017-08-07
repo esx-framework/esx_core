@@ -1,3 +1,5 @@
+USE `essentialmode`;
+
 INSERT INTO `jobs` (name, label) VALUES
   ('cardealer','Concessionnaire')
 ;
