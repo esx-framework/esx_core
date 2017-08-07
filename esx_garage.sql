@@ -1,4 +1,4 @@
-USE `gta5_gamemode_essential`;
+USE `essentialmode`;
 
 CREATE TABLE `user_parkings` (
   
