@@ -1,4 +1,4 @@
-USE `gta5_gamemode_essential`;
+USE `essentialmode`;
 
 ALTER TABLE `users` 
 ADD COLUMN `name` VARCHAR(255) NULL DEFAULT '' AFTER `money`,
