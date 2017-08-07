@@ -1,3 +1,5 @@
+USE `essentialmode`;
+
 INSERT INTO `addon_account` VALUES (name, label, shared)
   ('society_cardealer','Concessionnaire',1)
 ;
