@@ -9,7 +9,7 @@ CREATE TABLE `datastore` (
 CREATE TABLE `datastore_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `owner` varchar(255) NOT NULL,
+  `owner` varchar(255),
   `data` longtext,
   PRIMARY KEY (`id`)
 );

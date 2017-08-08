@@ -2,7 +2,7 @@ ESX                    = nil
 Items                  = {}
 local DataStoresIndex  = {}
 local DataStores       = {}
-local SharedDatastores = {}
+local SharedDataStores = {}
 
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -44,13 +44,25 @@ AddEventHandler('onMySQLReady', function()
 
 		else
 
-			local items = {}
+			local data = nil
 
-			local storeName  = result2[1].name
-			local storeData  = (result2[1].data == nil and {} or json.decode(result2[1].data))
+			if #result2 == 0 then
 
-			local dataStore   = CreateDataStore(storeName, nil, storeData)
-			SharedDatastores[name] = dataStore
+				MySQL.Sync.execute(
+					'INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')',
+					{
+						['@name'] = name,
+					}
+				)
+
+				data = {}
+
+			else
+				data = json.decode(result2[1].data)
+			end
+
+			local dataStore   = CreateDataStore(name, nil, data)
+			SharedDataStores[name] = dataStore
 
 		end
 
