@@ -348,7 +348,7 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'vehicle_interaction',
 					{
-						title    = 'Interaction Csitoyen',
+						title    = 'Interaction véhicule',
 						align    = 'top-left',
 						elements = {
 					  	{label = 'Infos véhicule',      value = 'vehicle_infos'},
@@ -420,7 +420,7 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Interaction Csitoyen',
+						title    = 'Interaction voirie',
 						align    = 'top-left',
 						elements = {
 					    {label = 'Plot',     value = 'prop_roadcone02a'},
