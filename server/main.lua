@@ -34,10 +34,18 @@ ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, nam
 	if inServiceCount >= MaxInService[name] then
 		cb(false, MaxInService[name], inServiceCount)
 	else
-		InService[name][source] = enable
+		InService[name][source] = true
 		cb(true, MaxInService[name], inServiceCount)
 	end
 
 end)
 
+AddEventHandler('playerDropped', function(source)
 
+	for k,v in pairs(InService) do
+		if v[source] == true then
+			v[source] = nil
+		end
+	end
+
+end)
