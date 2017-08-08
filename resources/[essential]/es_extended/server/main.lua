@@ -490,6 +490,11 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
 end)
 
+RegisterServerEvent('esx:useItem')
+AddEventHandler('esx:useItem', function(item)
+	ESX.UseItem(source, item)
+end)
+
 ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 
 	local xPlayer = ESX.GetPlayerFromId(source)

@@ -858,7 +858,7 @@ ESX.ShowInventory = function()
 				local elements = {}
 
 				if data.current.usable then
-					table.insert(elements, {label = 'Utiliser', action = 'use',   type = data.current.type, value = data.current.value})
+					table.insert(elements, {label = 'Utiliser', action = 'use', type = data.current.type, value = data.current.value})
 				end
 
 				table.insert(elements, {label = 'Donner', action = 'give',   type = data.current.type, value = data.current.value})
@@ -940,6 +940,10 @@ ESX.ShowInventory = function()
 								)
 
 							end
+
+						elseif data.current.action == 'use' then
+
+							TriggerServerEvent('esx:useItem', data.current.value)
 
 						elseif data.current.action == 'return' then
 							ESX.UI.Menu.CloseAll()
