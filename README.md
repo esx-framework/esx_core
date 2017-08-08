@@ -15,7 +15,7 @@ FXServer ESX Police Job
 1) CD in your resources/[esx] folder
 2) Clone the repository
 ```
-git clone https://github.com/FXServer-ESX/fxserver-esx_taxijob esx_taxijob
+git clone https://github.com/FXServer-ESX/fxserver-esx_policejob esx_policejob
 ```
 3) * Auto mode : Import esx_policejob_minimal.sql in your database
    * Player / Armory management : Import esx_policejob_full.sql in your database
