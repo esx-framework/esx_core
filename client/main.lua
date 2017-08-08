@@ -295,7 +295,7 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Interaction Csitoyen',
+						title    = 'Interaction Citoyen',
 						align    = 'top-left',
 						elements = {
 							{label = 'Carte d\'identité',     value = 'identity_card'},
