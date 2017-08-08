@@ -381,7 +381,7 @@ ESX.Game.GetClosestObject = function(filter, coords)
 	
 	local objects         = ESX.Game.GetObjects()
 	local closestDistance = -1
-	local closestPlayer   = -1
+	local closestObject   = -1
 	local filter          = filter
 	local coords          = coords
 
@@ -527,7 +527,7 @@ ESX.Game.GetClosestVehicle = function(coords)
 	
 	local vehicles        = ESX.Game.GetVehicles()
 	local closestDistance = -1
-	local closestPlayer   = -1
+	local closestVehicle  = -1
 	local coords          = coords
 
 	if coords == nil then
