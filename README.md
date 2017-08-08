@@ -4,6 +4,7 @@
 The bail is not given back when the player disconnect or timeout.
 
 [FEATURES]
+- Jobs: Slaughterer, Miner, Fisherman, Journalist, etc...
 - Bails
 - Easy system to create jobs (samples in jobs folder)
 - Item farming jobs
