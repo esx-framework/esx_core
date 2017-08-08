@@ -265,21 +265,25 @@ ESX.Game.Teleport = function(entity, coords, cb)
 
 end
 
-ESX.Game.GetPlayers = function()
-	
-	local maxPlayers = Config.MaxPlayers
-	local players    = {}
+ESX.Game.SpawnObject = function(model, coords, radius, cb)
 
-	for i=0, maxPlayers, 1 do
+	local model = (type(model) == 'number' and model or GetHashKey(model))
 
-		local ped = GetPlayerPed(i)
+	Citizen.CreateThread(function()
 
-		if DoesEntityExist(ped) then
-			table.insert(players, i)
+		RequestModel(model)
+
+		while not HasModelLoaded(model) do
+			Citizen.Wait(0)
 		end
-	end
 
-	return players
+		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, true, true)
+
+		if cb ~= nil then
+			cb(obj)
+		end
+
+	end)
 
 end
 
@@ -353,6 +357,96 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		end
 
 	end)
+
+end
+
+ESX.Game.GetObjects = function()
+
+	local objects        = {}
+	local handle, object = FindFirstObject()
+	local success        = nil
+
+	repeat
+		table.insert(objects, object)
+		success, object = FindNextObject(handle)
+	until not success
+
+	EndFindObject(handle)
+
+	return objects
+
+end
+
+ESX.Game.GetClosestObject = function(filter, coords)
+	
+	local objects         = ESX.Game.GetObjects()
+	local closestDistance = -1
+	local closestPlayer   = -1
+	local filter          = filter
+	local coords          = coords
+
+	if type(filter) == 'string' then
+		if filter ~= '' then
+			filter = {filter}
+		end
+	end
+
+	if coords == nil then
+		local playerPed = GetPlayerPed(-1)
+		coords          = GetEntityCoords(playerPed)
+	end
+
+	for i=1, #objects, 1 do
+		
+		local foundObject = false
+
+		if filter == nil or (type(filter) == 'table' and #filter == 0) then
+			foundObject = true
+		else
+
+			local objectModel = GetEntityModel(objects[i])
+
+			for j=1, #filter, 1 do
+				if objectModel == GetHashKey(filter[j]) then
+					foundObject = true
+				end
+			end
+
+		end 
+
+		if foundObject then
+
+			local objectCoords = GetEntityCoords(objects[i])
+			local distance     = GetDistanceBetweenCoords(objectCoords.x, objectCoords.y, objectCoords.z, coords.x, coords.y, coords.z, true)
+			
+			if closestDistance == -1 or closestDistance > distance then
+				closestObject   = objects[i]
+				closestDistance = distance
+			end
+
+		end
+
+	end
+	
+	return closestObject, closestDistance
+
+end
+
+ESX.Game.GetPlayers = function()
+	
+	local maxPlayers = Config.MaxPlayers
+	local players    = {}
+
+	for i=0, maxPlayers, 1 do
+
+		local ped = GetPlayerPed(i)
+
+		if DoesEntityExist(ped) then
+			table.insert(players, i)
+		end
+	end
+
+	return players
 
 end
 

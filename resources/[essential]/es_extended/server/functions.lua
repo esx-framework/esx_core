@@ -174,6 +174,23 @@ ESX.UseItem = function(source, item)
 	ESX.UsableItemsCallbacks[item](source)
 end
 
+ESX.GetWeaponList = function()
+	return Config.Weapons
+end
+
+ESX.GetWeaponLabel = function(name)
+	
+	name          = string.upper(name)
+	local weapons = ESX.GetWeaponList()
+	
+	for i=1, #weapons, 1 do
+		if weapons[i].name == name then
+			return weapons[i].label
+		end
+	end
+
+end
+
 RegisterServerEvent('esx:clientLog')
 AddEventHandler('esx:clientLog', function(msg)
 	RconPrint(msg .. "\n")
