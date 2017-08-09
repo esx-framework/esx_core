@@ -245,7 +245,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 									end
 								end
 								
-								TriggerClientEvent('esx_phone:addContact', source, contactName, phoneNumber, isOnline)
+								TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber, isOnline)
 							end
 						)
 						
