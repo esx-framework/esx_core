@@ -1,7 +1,7 @@
 USE `essentialmode`;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
-  ('caution','Caution',1)
+  ('caution', 'Caution', 0)
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
