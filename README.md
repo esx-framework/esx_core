@@ -1,10 +1,6 @@
 # fxserver-esx_jobs
 [REQUIRES]
 - fxserver-esx_addonaccount: https://github.com/FXServer-ESX/fxserver-esx_addonaccount
-- in the addin_account table add a field like this:
-	name: caution
-	label: Caution
-	shared: 0
 
 [KNOWN BUGS]
 
