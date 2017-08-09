@@ -181,7 +181,8 @@ end)
 RegisterServerEvent('esx_phone:addPlayerContact')
 AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
-	local xPlayer     = ESX.GetPlayerFromId(source)
+	local _source     = source
+	local xPlayer     = ESX.GetPlayerFromId(_source)
 	local xPlayers    = ESX.GetPlayers()
 	local foundNumber = false
 	local foundPlayer = nil
