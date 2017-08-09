@@ -55,7 +55,7 @@ local skin = {
 }
 
 -- Load freemode model
-TriggerEvent('skinchanger:LoadDefaultModel', isMale)
+TriggerEvent('skinchanger:loadDefaultModel', isMale)
 
 -- Load skin
 TriggerEvent('skinchanger:loadSkin', skin)
