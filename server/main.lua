@@ -181,6 +181,7 @@ end)
 RegisterServerEvent('esx_phone:addPlayerContact')
 AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
+	local xPlayer     = ESX.GetPlayerFromId(source)
 	local xPlayers    = ESX.GetPlayers()
 	local foundNumber = false
 	local foundPlayer = nil
@@ -197,8 +198,6 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 			end
 
 			if foundNumber then
-
-				local xPlayer = ESX.GetPlayerFromId(source)
 					
 				if phoneNumber == xPlayer.get('phoneNumber') then
 					TriggerClientEvent('esx:showNotification', _source, 'Vous ne pouvez pas vous ajouter vous-même')
