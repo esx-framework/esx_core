@@ -126,8 +126,6 @@ ESX.UI.HUD.UpdateElement = function(name, data)
 end
 
 ESX.UI.Menu.RegisterType = function(type, open, close)
-	
-	print('ESX.UI.Menu.RegisterType => ' .. type)
 
 	ESX.UI.Menu.RegisteredTypes[type] = {
 		open   = open,
