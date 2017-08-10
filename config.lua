@@ -2,7 +2,7 @@ Config                           = {}
 Config.DrawDistance              = 100.0
 Config.MarkerColor               = {r = 102, g = 0, b = 102}
 Config.MarkerSize                = {x = 1.5, y = 1.5, z = 1.0}
-Config.RespawnDelayAfterRPDeath  = 5 * 1000
+Config.RespawnDelayAfterRPDeath  = 10 * 60 * 1000
 Config.RemoveWeaponsAfterRPDeath = true
 Config.RemoveCashAfterRPDeath    = true
 Config.RemoveItemsAfterRPDeath   = true
