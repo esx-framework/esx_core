@@ -17,6 +17,10 @@ ESX.UI.Menu.Opened            = {}
 ESX.Game                      = {}
 ESX.Game.Utils                = {}
 
+ESX.GetConfig = function()
+	return Config
+end
+
 ESX.GetRandomString = function(length)
 
   math.randomseed(GetGameTimer())
@@ -123,6 +127,8 @@ end
 
 ESX.UI.Menu.RegisterType = function(type, open, close)
 	
+	print('ESX.UI.Menu.RegisterType => ' .. type)
+
 	ESX.UI.Menu.RegisteredTypes[type] = {
 		open   = open,
 		close  = close,
@@ -749,6 +755,27 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 
 end
 
+ESX.Game.TeleportEntity = function(entity, coords, cb)
+
+	Citizen.CreateThread(function()
+
+		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+	
+		while not HasCollisionLoadedAroundEntity(entity) do
+			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+			Citizen.Wait(0)
+		end
+
+		SetEntityCoords(entity, coords.x, coords.y, coords.z)
+
+		if cb ~= nil then
+			cb()
+		end
+
+	end)
+
+end
+
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
     
   local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
@@ -966,10 +993,6 @@ ESX.ShowInventory = function()
 	end)
 
 end
-
-AddEventHandler('esx:getSharedObject', function(cb)
-	cb(ESX)
-end)
 
 RegisterNetEvent('esx:serverCallback')
 AddEventHandler('esx:serverCallback', function(requestId, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)

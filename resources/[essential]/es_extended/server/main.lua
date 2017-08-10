@@ -279,6 +279,13 @@ AddEventHandler('esx:updateLoadout', function(loadout)
 	xPlayer.loadout = loadout
 end)
 
+RegisterServerEvent('esx:updateLastPosition')
+AddEventHandler('esx:updateLastPosition', function(position)
+	local xPlayer        = ESX.GetPlayerFromId(source)
+	xPlayer.lastPosition = position
+end)
+
+
 RegisterServerEvent('esx:giveInventoryItem')
 AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
 

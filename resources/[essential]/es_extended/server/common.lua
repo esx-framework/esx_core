@@ -9,6 +9,10 @@ AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
 end)
 
+function getSharedObject()
+	return ESX
+end
+
 AddEventHandler('onMySQLReady', function ()
 
 	MySQL.Async.fetchAll(
