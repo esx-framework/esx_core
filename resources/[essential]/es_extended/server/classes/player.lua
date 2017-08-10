@@ -300,6 +300,22 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	end
 
+	self.setInventoryItem = function(name, count)
+		
+		local item     = self.getInventoryItem(name)
+		local oldCount = item.count
+		item.count     = count
+
+		if oldCount > item.count  then
+			TriggerEvent("esx:onRemoveInventoryItem", self.source, item, oldCount - item.count )
+			TriggerClientEvent("esx:removeInventoryItem", self.source, item, oldCount - item.count )
+		else
+			TriggerEvent("esx:onAddInventoryItem", self.source, item, item.count  - oldCount)
+			TriggerClientEvent("esx:addInventoryItem", self.source, item, item.count  - oldCount)
+		end
+
+	end
+
 	self.setJob = function(name, grade)
 		
 		MySQL.Async.fetchAll(
@@ -358,6 +374,22 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			end
 		end
 
+		local foundWeapon = false
+
+		for i=1, #self.loadout, 1 do
+			if self.loadout[i].name == weaponName then
+				foundWeapon = true
+			end
+		end
+
+		if not foundWeapon then
+			table.insert(self.loadout, {
+				name  = weaponName,
+				ammo  = ammon,
+				label = weaponLabel
+			})
+		end
+
 		TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
 		TriggerClientEvent("esx:addInventoryItem", self.source, {label = weaponLabel}, 1)
 	end
@@ -369,6 +401,15 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		for i=1, #Config.Weapons, 1 do
 			if Config.Weapons[i].name == weaponName then
 				weaponLabel = Config.Weapons[i].label
+				break
+			end
+		end
+
+		local foundWeapon = false
+
+		for i=1, #self.loadout, 1 do
+			if self.loadout[i].name == weaponName then
+				table.remove(self.loadout, i)
 				break
 			end
 		end
