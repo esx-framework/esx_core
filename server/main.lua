@@ -36,6 +36,8 @@ AddEventHandler('esx_realestateagentjob:sell', function(target, property, price)
 	
 	local xPlayer = ESX.GetPlayerFromId(target)
 
+	xPlayer.removeMoney(price)
+
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
 		account.addMoney(price)
 	end)
