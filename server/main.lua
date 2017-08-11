@@ -263,43 +263,8 @@ end)
 
 AddEventHandler('esx_phone:ready', function()
 	TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-		
-		local xPlayer  = ESX.GetPlayerFromId(source)
-		local xPlayers = ESX.GetPlayers()
-		local job      = 'player'
-
+		local xPlayer = ESX.GetPlayerFromId(source)
 		print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
-
-		for k, v in pairs(xPlayers) do
-			
-			if phoneNumber == "police" then
-				
-				if v.job.name == 'cop' then
-					job = "ALERTE POLICE"
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, GetDistpatchRequestId())
-				end
-			
-			elseif phoneNumber == "ambulance" then
-				
-				if v.job.name == 'ambulance' then						
-					job = "ALERTE AMBULANCE"
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, GetDistpatchRequestId())
-				
-				end
-
-			elseif phoneNumber == "depanneur" then
-				
-				if v.job.name == 'depanneur' then
-					job = "APPEL DÉPANNEUR"
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, GetDistpatchRequestId())
-				end
-			
-			elseif v.get('phoneNumber') == phoneNumber then
-				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)
-			end
-			
-		end
-		
 	end)
 end)
 
