@@ -261,3 +261,20 @@ ESX.RegisterServerCallback('esx_policejob:buy', function(source, cb, amount)
 	end)
 
 end)
+
+TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
+
+	local xPlayer  = ESX.GetPlayerFromId(source)
+	local xPlayers = ESX.GetPlayers()
+
+	if phoneNumber == 'police' then
+		for k, v in pairs(xPlayers) do
+			if v.job.name == 'police' then
+				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
+					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Alerte police', requestId)
+				end)
+			end
+		end
+	end
+	
+end)
