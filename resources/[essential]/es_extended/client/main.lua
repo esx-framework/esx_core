@@ -91,6 +91,10 @@ end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
 	
+	while not PlayerLoaded do
+		Citizen.Wait(0)
+	end
+	
 	-- Restore loadout
 	ESX.TriggerServerCallback('esx:getPlayerData', function(data)
 
