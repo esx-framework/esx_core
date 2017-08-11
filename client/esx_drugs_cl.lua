@@ -20,6 +20,7 @@ local weedQTE					= 0
 local weed_poochQTE 			= 0
 local methQTE					= 0
 local meth_poochQTE 			= 0
+local myJob 				= nil
 local PlayerData 				= {}
 local GUI 						= {}
 local HasAlreadyEnteredMarker   = false
