@@ -77,7 +77,7 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 
     if zone == 'MethTreatment' then
     	if myJob ~= "police" then
-        	if cokeQTE >= 5 then
+        	if methQTE >= 5 then
             	CurrentAction     = 'meth_treatment'
 				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour traiter la meth'
 				CurrentActionData = {}
@@ -87,7 +87,7 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 
     if zone == 'MethResell' then
     	if myJob ~= "police" then
-        	if coke_poochQTE >= 1 then
+        	if meth_poochQTE >= 1 then
         		CurrentAction     = 'meth_resell'
 				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour vendre la meth'
 				CurrentActionData = {}
@@ -105,7 +105,7 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 
     if zone == 'WeedTreatment' then
     	if myJob ~= "police" then
-        	if cokeQTE >= 5 then
+        	if weedQTE >= 5 then
             	CurrentAction     = 'weed_treatment'
 				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour traiter la weed'
 				CurrentActionData = {}
@@ -115,7 +115,7 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 
     if zone == 'WeedResell' then
     	if myJob ~= "police" then
-        	if coke_poochQTE >= 1 then
+        	if weed_poochQTE >= 1 then
         		CurrentAction     = 'weed_resell'
 				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour vendre la weed'
 				CurrentActionData = {}
