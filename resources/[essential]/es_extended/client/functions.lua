@@ -176,10 +176,12 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change)
 				end
 			end
 
-			ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
-
 		end
 
+	end
+
+	menu.refresh = function()
+		ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
 	end
 
 	menu.setElement = function(i, key, val)
