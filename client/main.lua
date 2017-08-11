@@ -121,6 +121,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 						-- Update max values
 						TriggerEvent('skinchanger:getData', function(components, maxVals)
+							
 							for i=1, #elements, 1 do
 								if elements[i].textureof ~= nil then
 									
@@ -134,6 +135,9 @@ function OpenMenu(submitCb, cancelCb, restrict)
 									
 								end
 							end
+
+							menu.refresh()
+
 						end)
 
 					end
