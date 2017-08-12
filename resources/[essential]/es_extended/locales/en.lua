@@ -1,4 +1,4 @@
-Locales.en = {
+Locales['en'] = {
 	['inventory']    = 'inventory',
 	['use']          = 'use',
 	['give']         = 'give',
