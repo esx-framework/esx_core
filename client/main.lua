@@ -487,7 +487,7 @@ function OpenPopVehicleMenu()
 
 				DeleteShopInsideVehicle(function()
 
-					ESX.Game.SpawnLocalVehicle(model, {
+					ESX.Game.SpawnVehicle(model, {
 						x = Config.Zones.ShopInside.Pos.x,
 						y = Config.Zones.ShopInside.Pos.y,
 						z = Config.Zones.ShopInside.Pos.z
