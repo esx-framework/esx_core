@@ -479,8 +479,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
 	elseif type == 'item_weapon' then
 
-		local xPlayer = ESX.GetPlayerFromId(source)
-
+		local xPlayer      = ESX.GetPlayerFromId(source)
 		local weaponLabel  = itemName
 		local weaponName   = nil
 		local weaponPickup = nil

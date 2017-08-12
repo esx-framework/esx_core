@@ -940,7 +940,10 @@ ESX.ShowInventory = function()
 						elseif data.current.action == 'remove' then
 
 							if type == 'item_weapon' then
+							
 								TriggerServerEvent('esx:removeInventoryItem', type, item, 1)
+								menu.close()
+								
 							else
 
 								ESX.UI.Menu.Open(
