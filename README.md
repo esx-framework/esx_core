@@ -7,7 +7,8 @@ FXServer ESX Status
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_status esx_status
 ```
-3) Add this in your server.cfg :
+3) Import esx_status.sql in your database
+4) Add this in your server.cfg :
 
 ```
 start esx_status
