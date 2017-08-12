@@ -915,7 +915,7 @@ ESX.ShowInventory = function()
 									{
 										title = 'Quantité'
 									},
-									function(data2, menu)
+									function(data2, menu2)
 
 										local quantity                       = tonumber(data2.value)
 										local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
@@ -926,9 +926,11 @@ ESX.ShowInventory = function()
 											TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
 										end
 
+										menu2.close()
 										menu.close()
+
 									end,
-									function(data2, menu)
+									function(data2, menu2)
 										menu.close()
 									end
 								)
@@ -946,23 +948,22 @@ ESX.ShowInventory = function()
 									{
 										title = 'Quantité'
 									},
-									function(data2, menu)
+									function(data2, menu2)
 
 										local quantity = tonumber(data2.value)
 
 										if quantity == nil then
 											ESX.ShowNotification('Montant invalide')
 										else
-											
-											menu.close()
-							
 											TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
-
 										end
+
+										menu2.close()
+										menu.close()
 										
 									end,
-									function(data2, menu)
-										menu.close()
+									function(data2, menu2)
+										menu2.close()
 									end
 								)
 
@@ -971,6 +972,9 @@ ESX.ShowInventory = function()
 						elseif data.current.action == 'use' then
 
 							TriggerServerEvent('esx:useItem', data.current.value)
+
+							menu2.close()
+							menu.close()
 
 						elseif data.current.action == 'return' then
 							ESX.UI.Menu.CloseAll()
