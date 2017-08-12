@@ -41,6 +41,24 @@ Citizen.CreateThread(function()
 
 end)
 
+function DeleteShopInsideVehicle()
+		
+	if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0) then
+			
+		local vehicle, distance = ESX.Game.GetClosestVehicle({
+			x = Config.Zones.ShopInside.Pos.x,
+			y = Config.Zones.ShopInside.Pos.y,
+			z = Config.Zones.ShopInside.Pos.z
+		})
+		
+		if distance <= 5.0 then
+			DeleteVehicle(vehicle)
+		end
+	
+	end
+
+end
+
 function OpenShopMenu()
 
 	ESX.UI.Menu.CloseAll()
@@ -139,19 +157,7 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
-									if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-											
-										local vehicle, distance = ESX.Game.GetClosestVehicle({
-											x = Config.Zones.ShopInside.Pos.x,
-											y = Config.Zones.ShopInside.Pos.y,
-											z = Config.Zones.ShopInside.Pos.z
-										})
-										
-										if distance <= 3.0 then
-											DeleteVehicle(vehicle)
-										end
-									
-									end
+									DeleteShopInsideVehicle()
 
 									ESX.Game.SpawnVehicle(vehicleData.model, {
 										x = Config.Zones.ShopOutside.Pos.x,
@@ -201,19 +207,7 @@ function OpenShopMenu()
 			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
 			CurrentActionData = {}
 
-			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-					
-				local vehicle, distance = ESX.Game.GetClosestVehicle({
-					x = Config.Zones.ShopInside.Pos.x,
-					y = Config.Zones.ShopInside.Pos.y,
-					z = Config.Zones.ShopInside.Pos.z
-				})
-				
-				if distance <= 3.0 then
-					DeleteVehicle(vehicle)
-				end
-			
-			end
+
 
 			FreezeEntityPosition(playerPed, false)
 			SetEntityVisible(playerPed, true)
@@ -230,19 +224,7 @@ function OpenShopMenu()
 			local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
 			local playerPed   = GetPlayerPed(-1)
 
-			if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-					
-				local vehicle, distance = ESX.Game.GetClosestVehicle({
-					x = Config.Zones.ShopInside.Pos.x,
-					y = Config.Zones.ShopInside.Pos.y,
-					z = Config.Zones.ShopInside.Pos.z
-				})
-				
-				if distance <= 3.0 then
-					DeleteVehicle(vehicle)
-				end
-			
-			end
+			DeleteShopInsideVehicle()
 
 			ESX.Game.SpawnLocalVehicle(vehicleData.model, {
 				x = Config.Zones.ShopInside.Pos.x,
@@ -257,19 +239,7 @@ function OpenShopMenu()
 		end
 	)
 
-	if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-			
-		local vehicle, distance = ESX.Game.GetClosestVehicle({
-			x = Config.Zones.ShopInside.Pos.x,
-			y = Config.Zones.ShopInside.Pos.y,
-			z = Config.Zones.ShopInside.Pos.z
-		})
-		
-		if distance <= 3.0 then
-			DeleteVehicle(vehicle)
-		end
-	
-	end
+	DeleteShopInsideVehicle()
 
 	ESX.Game.SpawnLocalVehicle(firstVehicleData.model, {
 		x = Config.Zones.ShopInside.Pos.x,
@@ -308,12 +278,7 @@ function OpenResellerMenu()
 			end
 
 			if data.current.value == 'depop_vehicle' then
-
-				if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-					local vehicle = GetClosestVehicle(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0, 0, 71)
-					DeleteVehicle(vehicle)
-				end
-
+				DeleteShopInsideVehicle()
 			end
 
 			if data.current.value == 'create_bill' then
@@ -391,7 +356,7 @@ function OpenResellerMenu()
 
 							local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-							if closestPlayer == -1 or closestDistance > 3.0 then
+							if closestPlayer == -1 or closestDistance > 5.0 then
 								ESX.ShowNotification('Aucun joueur à proximité')
 							else
 
@@ -504,10 +469,7 @@ function OpenPopVehicleMenu()
 
 				local model = data.current.value
 
-				if IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0) then
-					local vehicle = GetClosestVehicle(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 3.0, 0, 71)
-					DeleteVehicle(vehicle)
-				end
+				DeleteShopInsideVehicle()
 
 				ESX.Game.SpawnLocalVehicle(model, {
 					x = Config.Zones.ShopInside.Pos.x,
