@@ -418,10 +418,5 @@ Citizen.CreateThread(function()
 
 		end
 
-		if IsControlPressed(0,  Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'banker' and (GetGameTimer() - GUI.Time) > 150 then
-			OpenMobileAmbulanceActionsMenu()
-			GUI.Time = GetGameTimer()
-		end
-
 	end
 end)
