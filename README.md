@@ -22,6 +22,7 @@ git clone https://github.com/FXServer-ESX/fxserver-esx_ambulancejob esx_ambulanc
 4) Add this in your server.cfg :
 
 ```
+start baseevents
 start esx_ambulancejob
 ```
 5) * If you want player management you have to set Config.EnablePlayerManagement to true in config.lua
