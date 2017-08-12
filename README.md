@@ -3,6 +3,7 @@ FXServer ESX BankerJob
 
 [REQUIREMENTS]
 
+- cron => https://github.com/FXServer-ESX/fxserver-cron
 - esx_addonaccount => https://github.com/FXServer-ESX/fxserver-esx_addonaccount
 - esx_society => https://github.com/FXServer-ESX/fxserver-esx_society
 
