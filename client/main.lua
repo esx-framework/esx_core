@@ -138,8 +138,6 @@ function OpenShopMenu()
 				},
 				function(data2, menu2)
 
-					menu2.close()
-
 					if data2.current.value == 'yes' then
 
 						if Config.EnablePlayerManagement then
@@ -147,6 +145,10 @@ function OpenShopMenu()
 							ESX.TriggerServerCallback('esx_vehicleshop:buyVehicleSociety', function(hasEnoughMoney)
 
 								if hasEnoughMoney then
+
+									menu.close()
+									menu2.close()
+
 									ESX.ShowNotification('Vous avez acheté un véhicule')
 								else
 									ESX.ShowNotification('Vous n\'avez pas assez d\'argent sur votre compte société')
@@ -156,12 +158,12 @@ function OpenShopMenu()
 
 						else
 
-							menu2.close()
-							menu.close()
-
 							ESX.TriggerServerCallback('esx_vehicleshop:buyVehicle', function(hasEnoughMoney)
 
 								if hasEnoughMoney then
+
+									menu.close()
+									menu2.close()
 
 									DeleteShopInsideVehicle(function()
 
