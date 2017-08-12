@@ -1,5 +1,6 @@
 # fxserver-esx_bankerjob
 FXServer ESX BankerJob
+
 [REQUIREMENTS]
 
 - esx_addonaccount => https://github.com/FXServer-ESX/fxserver-esx_addonaccount
