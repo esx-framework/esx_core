@@ -1,6 +1,6 @@
-USE `gta5_gamemode_essential`;
+USE `essentialmode`;
 
-INSERT INTO `addon_account` (account_name, label, shared) VALUES 
+INSERT INTO `addon_account` (name, label, shared) VALUES 
 	('society_banker','Banque',1),
 	('bank_savings','Livret Bleu',0)
 ;
