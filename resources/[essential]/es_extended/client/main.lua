@@ -374,3 +374,12 @@ if Config.DisableWantedLevel then
 	end)
 
 end
+
+-- Pickup Weapon
+RegisterNetEvent('esx:pickupWeapon')
+AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName)
+	local ped = GetPlayerPed(-1)
+	local playerPedPos    = GetEntityCoords(ped, true)
+	CreateAmbientPickup(GetHashKey(weaponPickup), playerPedPos.x + 2.0, playerPedPos.y, playerPedPos.z + 0.5, 0, 999, 1, false, true)
+
+end)
