@@ -2,7 +2,7 @@ function CreateStatus(xPlayer, name, default, color, visible, tickCallback, clie
 		
 	local self = {}
 
-	self.val           = default
+	self.val          = default
 	self.xPlayer      = xPlayer
 	self.name         = name
 	self.default      = default
@@ -29,7 +29,7 @@ function CreateStatus(xPlayer, name, default, color, visible, tickCallback, clie
 
 	self.add = function(val)
 		if self.val + val > Config.StatusMax then
-			self.val = StatusMax
+			self.val = Config.StatusMax
 		else
 			self.val = self.val + val
 		end
