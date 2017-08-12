@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css" />
+		<link rel="stylesheet" href="css/app.css" type="text/css" />
+	</head>
+	<body>
+
+		<img id="cursor" src="img/cursor.png">
+
+		<div class="row" id="customers">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Banque <span id="bank-money"></span>
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<table id="customer-list"></table>
+				</form>
+			</div>
+		</div>
+
+		<div class="row amount-dialog" id="transfer-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="hidden" id="transfer-dialog-identifier"/>
+					<input type="text" id="transfer-dialog-amount"/>
+					<button id="transfer-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row amount-dialog" id="withdraw-bank-savings-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="hidden" id="withdraw-bank-savings-dialog-identifier"/>
+					<input type="text" id="withdraw-bank-savings-dialog-amount"/>
+					<button id="withdraw-bank-savings-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row amount-dialog" id="billing-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="text" id="billing-dialog-amount"/>
+					<button id="billing-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row amount-dialog" id="withdraw-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="text" id="withdraw-dialog-amount"/>
+					<button id="withdraw-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row amount-dialog" id="washmoney-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="text" id="washmoney-dialog-amount"/>
+					<button id="washmoney-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="row amount-dialog" id="withdraw-society-money-dialog">
+			<div class="head" style="height: 75px">
+				<h4>
+					<i class="fa fa-user"></i>
+					Montant ?
+				</h4>
+			</div>
+			<div class="head-content">
+				<form data-toggle="validator" role="form">
+					<input type="text" id="withdraw-society-money-dialog-amount"/>
+					<button id="withdraw-society-money-dialog-send" class="btn btn-default btn-block" style="width: 100%; margin-top: 15px; border-radius: 6px">Valider</button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="menu" id="menu_banque_actions"></div>
+		<div class="menu" id="menu_banque"></div>
+
+		<div id="controls">
+			<div class="controls" id="ctl_banque_actions"><img src="img/keys/return.png"/>&nbsp;Banque</div>
+			<div class="controls" id="ctl_banque"><img src="img/keys/enter.png"/>&nbsp;Banque</div>
+			<div class="controls" id="ctl_return"><img src="img/keys/return.png"/>&nbsp;Retour</div>
+		</div>
+
+	  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+		<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+		<script src="scripts/bootstrap.js"></script>
+		<script src="scripts/mustache.min.js"></script>
+		<script src="scripts/app.js"></script>
+	</body>
+</html>
