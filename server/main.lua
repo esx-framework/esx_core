@@ -33,7 +33,7 @@ function RemoveOwnedVehicle(plate)
 
 end
 
--- AddEventHandler('onMySQLReady', function()
+AddEventHandler('onMySQLReady', function()
 
 	Categories       = MySQL.Sync.fetchAll('SELECT * FROM vehicle_categories')
 	local vehicles   = MySQL.Sync.fetchAll('SELECT * FROM vehicles')
@@ -52,7 +52,7 @@ end
 
 	end
 
--- end)
+end)
 
 RegisterServerEvent('esx_vehicleshop:setVehicleOwned')
 AddEventHandler('esx_vehicleshop:setVehicleOwned', function(vehicleProps)
