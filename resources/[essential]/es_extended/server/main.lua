@@ -479,17 +479,26 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
 	elseif type == 'item_weapon' then
 
+		local xPlayer = ESX.GetPlayerFromId(source)
+
 		local weaponLabel = itemName
+		local weaponName = nil
+		local weaponPickup = nil
 
 		for i=1, #Config.Weapons, 1 do
 			if Config.Weapons[i].name == itemName then
 				weaponLabel = Config.Weapons[i].label
+				weaponName = Config.Weapons[i].name
+				weaponPickup = 'PICKUP_'..weaponName
 				break
 			end
 		end
 
 		SetTimeout(Config.RemoveInventoryItemDelay, function()
 			xPlayer.removeWeapon(itemName)
+			if Config.EnableWeaponPickup then
+				TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, weaponName)
+			end
 			TriggerClientEvent('esx:showNotification', _source, 'Vous avez ~r~jeté~s~ x1 ' .. ' ~g~' .. weaponLabel)
 		end)
 
