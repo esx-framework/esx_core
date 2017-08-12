@@ -1,3 +1,7 @@
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
 TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F', 
 	function(status)
 		return true
@@ -35,7 +39,7 @@ AddEventHandler('esx_basicneeds:resetStatus', function()
 
 end)
 
-TriggerEvent('esx:registerUsableItem', 'bread', function(source)
+ESX.RegisterUsableItem('bread', function(source)
 
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -54,7 +58,7 @@ TriggerEvent('esx:registerUsableItem', 'bread', function(source)
 
 end)
 
-TriggerEvent('esx:registerUsableItem', 'water', function(source)
+ESX.RegisterUsableItem('water', function(source)
 
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
