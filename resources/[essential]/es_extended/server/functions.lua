@@ -24,8 +24,8 @@ ESX.RegisterServerCallback = function(name, cb)
 	ESX.ServerCallbacks[name] = cb
 end
 
-ESX.TriggerServerCallback = function(name, requestId, source, cb, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
-	ESX.ServerCallbacks[name](source, cb, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
+ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
+	ESX.ServerCallbacks[name](source, cb, ...)
 end
 
 ESX.SavePlayer = function(xPlayer, cb)
@@ -194,16 +194,3 @@ ESX.GetWeaponLabel = function(name)
 	end
 
 end
-
-RegisterServerEvent('esx:clientLog')
-AddEventHandler('esx:clientLog', function(msg)
-	RconPrint(msg .. "\n")
-end)
-
-RegisterServerEvent('esx:triggerServerCallback')
-AddEventHandler('esx:triggerServerCallback', function(name, requestId, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
-	local _source = source
-	ESX.TriggerServerCallback(name, requestID, _source, function(a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
-		TriggerClientEvent('esx:serverCallback', _source, requestId, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
-	end, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
-end)

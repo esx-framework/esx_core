@@ -54,3 +54,19 @@ AddEventHandler('esx:playerLoaded', function(source)
 	}
 
 end)
+
+RegisterServerEvent('esx:clientLog')
+AddEventHandler('esx:clientLog', function(msg)
+	RconPrint(msg .. "\n")
+end)
+
+RegisterServerEvent('esx:triggerServerCallback')
+AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
+	
+	local _source = source
+	
+	ESX.TriggerServerCallback(name, requestID, _source, function(...)
+		TriggerClientEvent('esx:serverCallback', _source, requestId, ...)
+	end, ...)
+
+end)

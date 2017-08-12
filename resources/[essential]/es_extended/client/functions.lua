@@ -46,11 +46,11 @@ ESX.ShowNotification = function(msg)
 	DrawNotification(0,1)
 end
 
-ESX.TriggerServerCallback = function(name, cb, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
+ESX.TriggerServerCallback = function(name, cb, ...)
 	
 	ESX.ServerCallbacks[ESX.CurrentRequestId] = cb
 	
-	TriggerServerEvent('esx:triggerServerCallback', name, ESX.CurrentRequestId, a, b, c, d, e, f, g ,h ,i ,j ,k, l, m, n, o, p, q, r, s, t, u ,v ,w, x ,y ,z)
+	TriggerServerEvent('esx:triggerServerCallback', name, ESX.CurrentRequestId, ...)
 	
 	if ESX.CurrentRequestId < 65535 then
 		ESX.CurrentRequestId = ESX.CurrentRequestId + 1
