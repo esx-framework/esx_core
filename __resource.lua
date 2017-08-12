@@ -21,3 +21,7 @@ files {
 	'html/img/keys/enter.png',
 	'html/img/keys/return.png',
 }
+
+dependencies {
+	'es_extended'
+}
