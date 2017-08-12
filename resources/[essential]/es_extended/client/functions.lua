@@ -874,7 +874,7 @@ ESX.ShowInventory = function()
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'inventory',
 			{
-				title    = 'Inventaire',
+				title    = _U('inventory'),
 				align    = 'bottom-right',
 				elements = elements,
 			},
@@ -885,17 +885,17 @@ ESX.ShowInventory = function()
 				local elements = {}
 
 				if data.current.usable then
-					table.insert(elements, {label = 'Utiliser', action = 'use', type = data.current.type, value = data.current.value})
+					table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
 				end
 
-				table.insert(elements, {label = 'Donner', action = 'give',   type = data.current.type, value = data.current.value})
-				table.insert(elements, {label = 'Jeter',  action = 'remove', type = data.current.type, value = data.current.value})
-				table.insert(elements, {label = 'Retour', action = 'return'})
+				table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+				table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
+				table.insert(elements, {label = _U('return'), action = 'return'})
 
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'inventory_item',
 					{
-						title    = 'Inventaire',
+						title    = _U('inventory'),
 						align    = 'bottom-right',
 						elements = elements,
 					},

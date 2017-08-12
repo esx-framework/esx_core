@@ -6,6 +6,10 @@ server_scripts {
 	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'config.lua',
+	'locale.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'config.weapons.lua',
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',
@@ -15,6 +19,10 @@ server_scripts {
 
 client_scripts {
 	'config.lua',
+	'locale.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'config.weapons.lua',
 	'client/common.lua',
 	'client/functions.lua',
 	'client/main.lua'
