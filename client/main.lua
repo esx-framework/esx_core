@@ -21,7 +21,7 @@ local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local Categories              = {}
 local Vehicles                = {}
-local CurrentVehicle          = nil
+local LastVehicles            = {}
 local CurrentVehicleData      = nil
 
 Citizen.CreateThread(function()
@@ -43,25 +43,33 @@ end)
 
 function DeleteShopInsideVehicle(cb)
 		
-	Citizen.CreateThread(function()
+	-- Citizen.CreateThread(function()
 
-		while IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0) do
+	-- 	while IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0) do
 				
-			local vehicle, distance = ESX.Game.GetClosestVehicle(Config.Zones.ShopInside.Pos)
+	-- 		local vehicle, distance = ESX.Game.GetClosestVehicle(Config.Zones.ShopInside.Pos)
 			
-			if distance <= 5.0 then
-				ESX.Game.DeleteVehicle(vehicle)
-			end
+	-- 		if distance <= 5.0 then
+	-- 			ESX.Game.DeleteVehicle(vehicle)
+	-- 		end
 
-			Citizen.Wait(0)
+	-- 		Citizen.Wait(0)
 
-		end
+	-- 	end
 
-		if cb ~= nil then
-			cb()
-		end
+	-- 	if cb ~= nil then
+	-- 		cb()
+	-- 	end
 
-	end)
+	-- end)
+
+	while #LastVehicles > 0 do
+		local vehicle = LastVehicles[1]
+		ESX.Game.DeleteVehicle(vehicle)
+		table.remove(LastVehicles, 1)
+	end
+
+	cb()
 
 end
 
@@ -146,8 +154,8 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
-									menu.close()
 									menu2.close()
+									menu.close()
 
 									ESX.ShowNotification('Vous avez acheté un véhicule')
 								else
@@ -162,8 +170,8 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
-									menu.close()
 									menu2.close()
+									menu.close()
 
 									DeleteShopInsideVehicle(function()
 
@@ -243,7 +251,7 @@ function OpenShopMenu()
 					y = Config.Zones.ShopInside.Pos.y,
 					z = Config.Zones.ShopInside.Pos.z
 				}, 90.0, function(vehicle)
-					CurrentVehicle = vehicle
+					table.insert(LastVehicles, vehicle)
 					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 					FreezeEntityPosition(vehicle, true)
 				end)
@@ -260,7 +268,7 @@ function OpenShopMenu()
 			y = Config.Zones.ShopInside.Pos.y,
 			z = Config.Zones.ShopInside.Pos.z
 		}, 90.0, function(vehicle)
-			CurrentVehicle = vehicle
+			table.insert(LastVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
 		end)
@@ -344,7 +352,7 @@ function OpenResellerMenu()
 					ESX.ShowNotification('Aucun joueur à proximité')
 				else
 
-					local vehicleProps = ESX.Game.GetVehicleProperties(CurrentVehicle)
+					local vehicleProps = ESX.Game.GetVehicleProperties(LastVehicles[#LastVehicles])
 					local model        = CurrentVehicleData.model
 
 					TriggerServerEvent('esx_vehicleshop:sellVehicle', model)
@@ -376,9 +384,9 @@ function OpenResellerMenu()
 								ESX.ShowNotification('Aucun joueur à proximité')
 							else
 
-								SetVehicleNumberPlateText(CurrentVehicle, 'LOC ' .. ESX.GetRandomString(5))
+								SetVehicleNumberPlateText(LastVehicles[#LastVehicles], 'LOC ' .. ESX.GetRandomString(5))
 
-								local vehicleProps = ESX.Game.GetVehicleProperties(CurrentVehicle)
+								local vehicleProps = ESX.Game.GetVehicleProperties(LastVehicles[#LastVehicles])
 								local model        = CurrentVehicleData.model
 
 								TriggerServerEvent('esx_vehicleshop:rentVehicle', model, vehicleProps.plate, GetPlayerName(closestPlayer), CurrentVehicleData.price, amount, GetPlayerServerId(closestPlayer))
@@ -493,7 +501,7 @@ function OpenPopVehicleMenu()
 						z = Config.Zones.ShopInside.Pos.z
 					}, 90.0, function(vehicle)
 						
-						CurrentVehicle = vehicle
+						table.insert(LastVehicles, vehicle)
 
 						for i=1, #Vehicles, 1 do
 							if model == Vehicles[i].model then
@@ -780,7 +788,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 
 	end
 
-	if zone == 'BossActions' and PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' and PlayerData.job.grade_name == 'boss' then
+	if zone == 'BossActions' and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' and PlayerData.job.grade_name == 'boss' then
 
 		CurrentAction     = 'boss_actions_menu'
 		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
