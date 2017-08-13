@@ -1,7 +1,7 @@
 USE `essentialmode`;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES 
-  ('society_ambulance', 'Ambulance', 1),
+  ('society_ambulance', 'Ambulance', 1)
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
