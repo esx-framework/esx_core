@@ -40,11 +40,13 @@ ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, nam
 
 end)
 
-AddEventHandler('playerDropped', function(source)
+AddEventHandler('playerDropped', function()
 
+	local _source = source
+		
 	for k,v in pairs(InService) do
-		if v[source] == true then
-			v[source] = nil
+		if v[_source] == true then
+			v[_source] = nil
 		end
 	end
 
