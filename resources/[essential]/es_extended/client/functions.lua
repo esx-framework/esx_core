@@ -578,7 +578,7 @@ end
 
 ESX.Game.GetVehicleProperties = function(vehicle)
 
-	local colour1, colour2             = GetVehicleColours(vehicle)
+	local color1, color2               = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 	
 	return {
@@ -591,8 +591,6 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		health           = GetEntityHealth(vehicle),
 		dirtLevel        = GetVehicleDirtLevel(vehicle),
 
-		color1           = colour1,
-		color2           = colour2,
 		pearlescentColor = pearlescentColor,
 		wheelColor       = wheelColor,
 		
@@ -657,12 +655,12 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.color1 ~= nil then
-		local colour1, colour2 = GetVehicleColours(vehicle)
+		local color1, color2 = GetVehicleColours(vehicle)
 		SetVehicleColours(vehicle, props.color1, color2)
 	end
 
 	if props.color2 ~= nil then
-		local colour1, colour2 = GetVehicleColours(vehicle)
+		local color1, color2 = GetVehicleColours(vehicle)
 		SetVehicleColours(vehicle, color1, props.color2)
 	end
 
