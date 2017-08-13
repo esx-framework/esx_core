@@ -14,5 +14,5 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('banker',1,'banker','Banquier',20,'{}','{}'),
 	('banker',2,'business_banker','Banquier daffaire',30,'{}','{}'),
 	('banker',3,'trader','Trader',40,'{}','{}'),
-	('banker',4,'boss','Patron',0,'{}','{}'),
+	('banker',4,'boss','Patron',0,'{}','{}')
 ;
