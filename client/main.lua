@@ -420,7 +420,7 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Interactions Voirie',
+						title    = 'Interaction Voirie',
 						align    = 'top-left',
 						elements = {
 					    {label = 'Plot',     value = 'prop_roadcone02a'},
@@ -1343,6 +1343,15 @@ end)
 
 -- Enter / Exit entity zone events
 Citizen.CreateThread(function()
+	
+	local trackedEntities = {
+		'prop_roadcone02a',
+		'prop_barrier_work06a',
+		'p_ld_stinger_s',
+		'prop_boxpile_07d',
+		'hei_prop_cash_crate_half_full'
+	}
+
 	while true do
 
 		Citizen.Wait(0)
@@ -1350,19 +1359,32 @@ Citizen.CreateThread(function()
 		local playerPed = GetPlayerPed(-1)
 		local coords    = GetEntityCoords(playerPed)
 
-		local entity, distance = ESX.Game.GetClosestObject({
-			'prop_roadcone02a',
-			'prop_barrier_work06a',
-			'p_ld_stinger_s',
-			'prop_boxpile_07d',
-			'hei_prop_cash_crate_half_full'
-		})
+		local closestDistance = -1
+		local closestEntity   = nil
 
-		if distance ~= -1 and distance <= 3.0 then
+		for i=1, #trackedEntities, 1 do
+			
+			local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
+			
+			if DoesEntityExist(object) then
 
- 			if LastEntity ~= entity then
-				TriggerEvent('esx_policejob:hasEnteredEntityZone', entity)
-				LastEntity = entity
+				local objCoords = GetEntityCoords(object)
+				local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
+
+				if closestDistance == -1 or closestDistance > distance then
+					closestDistance = distance
+					closestEntity   = object
+				end
+
+			end
+
+		end
+
+		if closestDistance ~= -1 and closestDistance <= 3.0 then
+
+ 			if LastEntity ~= closestEntity then
+				TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
+				LastEntity = closestEntity
 			end
 
 		else
