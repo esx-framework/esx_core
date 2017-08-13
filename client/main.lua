@@ -20,108 +20,101 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			})
+			local vehicle = GetVehiclePedIsIn(playerPed,  false)
 
-			if distance <= 2.0 then
+			if GetPedInVehicleSeat(vehicle,  -1) == playerPed then
 
-				if GetPedInVehicleSeat(vehicle,  -1) == playerPed then
+				local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
-					local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+				local spawnCoords  = {
+					x = garage.InteriorSpawnPoint.Pos.x,
+					y = garage.InteriorSpawnPoint.Pos.y,
+					z = garage.InteriorSpawnPoint.Pos.z
+				}
 
-					local spawnCoords  = {
-						x = garage.InteriorSpawnPoint.Pos.x,
-						y = garage.InteriorSpawnPoint.Pos.y,
-						z = garage.InteriorSpawnPoint.Pos.z
-					}
+				ESX.Game.DeleteVehicle(vehicle)
 
-					ESX.Game.DeleteVehicle(vehicle)
+				ESX.Game.Teleport(playerPed, spawnCoords, function()
 
-					ESX.Game.Teleport(playerPed, spawnCoords, function()
+					TriggerEvent('instance:create')
 
-						TriggerEvent('instance:create')
+					ESX.Game.SpawnLocalVehicle(vehicleProps.model, spawnCoords, garage.InteriorSpawnPoint.Heading, function(vehicle)
+						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+					end)
 
-						ESX.Game.SpawnLocalVehicle(vehicleProps.model, spawnCoords, garage.InteriorSpawnPoint.Heading, function(vehicle)
-							TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-							ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-						end)
+					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-						ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
+						for i=1, #garage.Parkings, 1 do
+							for j=1, #vehicles, 1 do
 
-							for i=1, #garage.Parkings, 1 do
-								for j=1, #vehicles, 1 do
+								if i == vehicles[j].zone then
+										
+									local spawn = function(j)
 
-									if i == vehicles[j].zone then
-											
-										local spawn = function(j)
-
-											ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
-												x = garage.Parkings[i].Pos.x,
-												y = garage.Parkings[i].Pos.y,
-												z = garage.Parkings[i].Pos.z											
-											}, garage.Parkings[i].Heading, function(vehicle)
-												ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
-											end)
-
-										end
-
-										spawn(j)
+										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
+											x = garage.Parkings[i].Pos.x,
+											y = garage.Parkings[i].Pos.y,
+											z = garage.Parkings[i].Pos.z											
+										}, garage.Parkings[i].Heading, function(vehicle)
+											ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
+										end)
 
 									end
 
+									spawn(j)
+
 								end
+
 							end
+						end
 
-						end, name)
+					end, name)
 
-					end)
+				end)
 
-				else
+			else
 
-					ESX.Game.Teleport(playerPed, {
-						x = garage.InteriorSpawnPoint.Pos.x,
-						y = garage.InteriorSpawnPoint.Pos.y,
-						z = garage.InteriorSpawnPoint.Pos.z
-					}, function()
+				ESX.Game.Teleport(playerPed, {
+					x = garage.InteriorSpawnPoint.Pos.x,
+					y = garage.InteriorSpawnPoint.Pos.y,
+					z = garage.InteriorSpawnPoint.Pos.z
+				}, function()
 
-						TriggerEvent('instance:create')
+					TriggerEvent('instance:create')
 
-						ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
+					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-							for i=1, #garage.Parkings, 1 do
-								for j=1, #vehicles, 1 do
+						for i=1, #garage.Parkings, 1 do
+							for j=1, #vehicles, 1 do
 
-									if i == vehicles[j].zone then
-											
-										local spawn = function(j)
+								if i == vehicles[j].zone then
+										
+									local spawn = function(j)
 
-											ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
-												x = garage.Parkings[i].Pos.x,
-												y = garage.Parkings[i].Pos.y,
-												z = garage.Parkings[i].Pos.z											
-											}, garage.Parkings[i].Heading, function(vehicle)
-												ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
-											end)
-
-										end
-
-										spawn(j)
+										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
+											x = garage.Parkings[i].Pos.x,
+											y = garage.Parkings[i].Pos.y,
+											z = garage.Parkings[i].Pos.z											
+										}, garage.Parkings[i].Heading, function(vehicle)
+											ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
+										end)
 
 									end
 
+									spawn(j)
+
 								end
+
 							end
+						end
 
-						end, name)
+					end, name)
 
-					end)
-
-				end
+				end)
 
 			end
+
 
 		else
 
@@ -175,36 +168,28 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			})
+			local vehicle      = GetVehiclePedIsIn(playerPed,  false)
+			local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+			
+			local spawnCoords  = {
+				x = garage.ExteriorSpawnPoint.Pos.x,
+				y = garage.ExteriorSpawnPoint.Pos.y,
+				z = garage.ExteriorSpawnPoint.Pos.z
+			}
 
-			if distance <= 2.0 then
+			ESX.Game.DeleteVehicle(vehicle)
 
-				local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
-				
-				local spawnCoords  = {
-					x = garage.ExteriorSpawnPoint.Pos.x,
-					y = garage.ExteriorSpawnPoint.Pos.y,
-					z = garage.ExteriorSpawnPoint.Pos.z
-				}
+			ESX.Game.Teleport(playerPed, spawnCoords, function()
 
-				ESX.Game.DeleteVehicle(vehicle)
+				TriggerEvent('instance:close')
 
-				ESX.Game.Teleport(playerPed, spawnCoords, function()
-
-					TriggerEvent('instance:close')
-
-					ESX.Game.SpawnVehicle(vehicleProps.model, spawnCoords, garage.ExteriorSpawnPoint.Heading, function(vehicle)
-						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-					end)
-
+				ESX.Game.SpawnVehicle(vehicleProps.model, spawnCoords, garage.ExteriorSpawnPoint.Heading, function(vehicle)
+					TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 				end)
 
-			end
+			end)
+
 
 		else
 
@@ -220,13 +205,9 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 		for i=1, #garage.Parkings, 1 do
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = garage.Parkings[i].Pos.x,
-				y = garage.Parkings[i].Pos.y,
-				z = garage.Parkings[i].Pos.z
-			})
+			local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
 
-			if distance <= 2.0 then
+			if DoesEntityExist(vehicle) then
 				ESX.Game.DeleteVehicle(vehicle)
 			end
 
@@ -241,12 +222,10 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle()
-			local vehicleProps      = ESX.Game.GetVehicleProperties(vehicle)
+			local vehicle       = GetVehiclePedIsIn(playerPed,  false)
+			local vehicleProps  = ESX.Game.GetVehicleProperties(vehicle)
 
-			if distance <= 2.0 then
-				TriggerServerEvent('esx_garage:setParking', name, parking, vehicleProps)
-			end
+			TriggerServerEvent('esx_garage:setParking', name, parking, vehicleProps)
 
 		end
 
