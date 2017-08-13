@@ -931,7 +931,7 @@ ESX.ShowInventory = function()
 
 									end,
 									function(data2, menu2)
-										menu.close()
+										menu2.close()
 									end
 								)
 

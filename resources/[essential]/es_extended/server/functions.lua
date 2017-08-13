@@ -25,7 +25,13 @@ ESX.RegisterServerCallback = function(name, cb)
 end
 
 ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
-	ESX.ServerCallbacks[name](source, cb, ...)
+	
+	if ESX.ServerCallbacks[name] ~= nil then
+		ESX.ServerCallbacks[name](source, cb, ...)
+	else
+		print('TriggerServerCallback => [' .. name .. '] does not exists')
+	end
+
 end
 
 ESX.SavePlayer = function(xPlayer, cb)
