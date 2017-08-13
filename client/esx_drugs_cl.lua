@@ -260,7 +260,7 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'weed_harvest' then
 					TriggerServerEvent('esx_drugs:startHarvestWeed')
 				end
-				if CurrentAction == 'wedd_treatment' then
+				if CurrentAction == 'weed_treatment' then
 					TriggerServerEvent('esx_drugs:startTransformWeed')
 				end
 				if CurrentAction == 'weed_resell' then
