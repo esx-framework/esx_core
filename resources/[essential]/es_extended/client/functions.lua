@@ -591,6 +591,9 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		health           = GetEntityHealth(vehicle),
 		dirtLevel        = GetVehicleDirtLevel(vehicle),
 
+		color1           = color1,
+		color2           = color2,
+
 		pearlescentColor = pearlescentColor,
 		wheelColor       = wheelColor,
 		
@@ -601,8 +604,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			IsVehicleNeonLightEnabled(vehicle, 0),
 			IsVehicleNeonLightEnabled(vehicle, 1),
 			IsVehicleNeonLightEnabled(vehicle, 2),
-			IsVehicleNeonLightEnabled(vehicle, 3)
-		}
+			IsVehicleNeonLightEnabled(vehicle, 3),
+		},
 
 		neonColor        = table.pack(GetVehicleNeonLightsColour(vehicle)),
 		
