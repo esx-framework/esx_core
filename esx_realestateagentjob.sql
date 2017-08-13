@@ -1,4 +1,4 @@
-USE `gta5_gamemode_essential`;
+USE `essentialmode`;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
   ('society_realestateagent','Agent Immobilier',1)
