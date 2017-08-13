@@ -667,8 +667,14 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		SetVehicleColours(vehicle, color1, props.color2)
 	end
 
-	if props.pearlescentColor ~= nil and props.wheelColor ~= nil then
-		SetVehicleExtraColours(vehicle,  props.pearlescentColor,  props.wheelColor)
+	if props.pearlescentColor ~= nil then
+		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		SetVehicleExtraColours(vehicle,  props.pearlescentColor,  wheelColor)
+	end
+
+	if props.wheelColor ~= nil then
+		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		SetVehicleExtraColours(vehicle,  pearlescentColor,  props.wheelColor)
 	end
 
 	if props.wheels ~= nil then
