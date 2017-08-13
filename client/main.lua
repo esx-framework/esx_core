@@ -41,35 +41,13 @@ Citizen.CreateThread(function()
 
 end)
 
-function DeleteShopInsideVehicle(cb)
-		
-	-- Citizen.CreateThread(function()
-
-	-- 	while IsAnyVehicleNearPoint(Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0) do
-				
-	-- 		local vehicle, distance = ESX.Game.GetClosestVehicle(Config.Zones.ShopInside.Pos)
-			
-	-- 		if distance <= 5.0 then
-	-- 			ESX.Game.DeleteVehicle(vehicle)
-	-- 		end
-
-	-- 		Citizen.Wait(0)
-
-	-- 	end
-
-	-- 	if cb ~= nil then
-	-- 		cb()
-	-- 	end
-
-	-- end)
+function DeleteShopInsideVehicles()
 
 	while #LastVehicles > 0 do
 		local vehicle = LastVehicles[1]
 		ESX.Game.DeleteVehicle(vehicle)
 		table.remove(LastVehicles, 1)
 	end
-
-	cb()
 
 end
 
@@ -173,26 +151,24 @@ function OpenShopMenu()
 									menu2.close()
 									menu.close()
 
-									DeleteShopInsideVehicle(function()
+									DeleteShopInsideVehicles()
 
-										ESX.Game.SpawnVehicle(vehicleData.model, {
-											x = Config.Zones.ShopOutside.Pos.x,
-											y = Config.Zones.ShopOutside.Pos.y,
-											z = Config.Zones.ShopOutside.Pos.z
-										}, -20.0, function(vehicle)
-											
-											TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+									ESX.Game.SpawnVehicle(vehicleData.model, {
+										x = Config.Zones.ShopOutside.Pos.x,
+										y = Config.Zones.ShopOutside.Pos.y,
+										z = Config.Zones.ShopOutside.Pos.z
+									}, -20.0, function(vehicle)
+										
+										TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
-											local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+										local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
-											TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
-
-										end)
-
-										FreezeEntityPosition(playerPed, false)
-										SetEntityVisible(playerPed, true)
+										TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
 
 									end)
+
+									FreezeEntityPosition(playerPed, false)
+									SetEntityVisible(playerPed, true)
 
 								else
 									ESX.ShowNotification('Vous n\'avez pas assez d\'argent')
@@ -219,24 +195,22 @@ function OpenShopMenu()
 			
 			menu.close()
 
-			DeleteShopInsideVehicle(function()
+			DeleteShopInsideVehicles()
 
-				local playerPed = GetPlayerPed(-1)
+			local playerPed = GetPlayerPed(-1)
 
-				CurrentAction     = 'shop_menu'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
-				CurrentActionData = {}
+			CurrentAction     = 'shop_menu'
+			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+			CurrentActionData = {}
 
-				FreezeEntityPosition(playerPed, false)
-				SetEntityVisible(playerPed, true)
+			FreezeEntityPosition(playerPed, false)
+			SetEntityVisible(playerPed, true)
 
-				if Config.EnablePlayerManagement then
-					SetEntityCoords(playerPed, Config.Zones.BossActions.Pos.x, Config.Zones.BossActions.Pos.y, Config.Zones.BossActions.Pos.z)
-				else
-					SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos.x, Config.Zones.ShopEntering.Pos.y, Config.Zones.ShopEntering.Pos.z)
-				end
-
-			end)
+			if Config.EnablePlayerManagement then
+				SetEntityCoords(playerPed, Config.Zones.BossActions.Pos.x, Config.Zones.BossActions.Pos.y, Config.Zones.BossActions.Pos.z)
+			else
+				SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos.x, Config.Zones.ShopEntering.Pos.y, Config.Zones.ShopEntering.Pos.z)
+			end
 
 		end,
 		function(data, menu)
@@ -244,35 +218,31 @@ function OpenShopMenu()
 			local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
 			local playerPed   = GetPlayerPed(-1)
 
-			DeleteShopInsideVehicle(function()
+			DeleteShopInsideVehicles()
 
-				ESX.Game.SpawnLocalVehicle(vehicleData.model, {
-					x = Config.Zones.ShopInside.Pos.x,
-					y = Config.Zones.ShopInside.Pos.y,
-					z = Config.Zones.ShopInside.Pos.z
-				}, 90.0, function(vehicle)
-					table.insert(LastVehicles, vehicle)
-					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-					FreezeEntityPosition(vehicle, true)
-				end)
-
+			ESX.Game.SpawnLocalVehicle(vehicleData.model, {
+				x = Config.Zones.ShopInside.Pos.x,
+				y = Config.Zones.ShopInside.Pos.y,
+				z = Config.Zones.ShopInside.Pos.z
+			}, 90.0, function(vehicle)
+				table.insert(LastVehicles, vehicle)
+				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				FreezeEntityPosition(vehicle, true)
 			end)
 
 		end
 	)
 
-	DeleteShopInsideVehicle(function()
+	DeleteShopInsideVehicles()
 
-		ESX.Game.SpawnLocalVehicle(firstVehicleData.model, {
-			x = Config.Zones.ShopInside.Pos.x,
-			y = Config.Zones.ShopInside.Pos.y,
-			z = Config.Zones.ShopInside.Pos.z
-		}, 90.0, function(vehicle)
-			table.insert(LastVehicles, vehicle)
-			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-			FreezeEntityPosition(vehicle, true)
-		end)
-
+	ESX.Game.SpawnLocalVehicle(firstVehicleData.model, {
+		x = Config.Zones.ShopInside.Pos.x,
+		y = Config.Zones.ShopInside.Pos.y,
+		z = Config.Zones.ShopInside.Pos.z
+	}, 90.0, function(vehicle)
+		table.insert(LastVehicles, vehicle)
+		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		FreezeEntityPosition(vehicle, true)
 	end)
 
 end
@@ -302,7 +272,7 @@ function OpenResellerMenu()
 			end
 
 			if data.current.value == 'depop_vehicle' then
-				DeleteShopInsideVehicle()
+				DeleteShopInsideVehicles()
 			end
 
 			if data.current.value == 'create_bill' then
@@ -493,23 +463,21 @@ function OpenPopVehicleMenu()
 
 				local model = data.current.value
 
-				DeleteShopInsideVehicle(function()
+				DeleteShopInsideVehicles()
 
-					ESX.Game.SpawnVehicle(model, {
-						x = Config.Zones.ShopInside.Pos.x,
-						y = Config.Zones.ShopInside.Pos.y,
-						z = Config.Zones.ShopInside.Pos.z
-					}, 90.0, function(vehicle)
-						
-						table.insert(LastVehicles, vehicle)
+				ESX.Game.SpawnVehicle(model, {
+					x = Config.Zones.ShopInside.Pos.x,
+					y = Config.Zones.ShopInside.Pos.y,
+					z = Config.Zones.ShopInside.Pos.z
+				}, 90.0, function(vehicle)
+					
+					table.insert(LastVehicles, vehicle)
 
-						for i=1, #Vehicles, 1 do
-							if model == Vehicles[i].model then
-								CurrentVehicleData = Vehicles[i]
-							end
+					for i=1, #Vehicles, 1 do
+						if model == Vehicles[i].model then
+							CurrentVehicleData = Vehicles[i]
 						end
-
-					end)
+					end
 
 				end)
 
