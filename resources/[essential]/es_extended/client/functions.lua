@@ -673,9 +673,9 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.neonEnabled ~= nil then
-		SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1]),
-		SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2]),
-		SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3]),
+		SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1])
+		SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
+		SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
 		SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
 	end
 
