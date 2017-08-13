@@ -114,7 +114,7 @@ function WarpPedInClosestVehicle(ped)
   	end
 
   else
-  	ESX.ShowNotification('Aucun véhicule à proximité')
+  	ESX.ShowNotification(_U('no_vehicles'))
   end
 
 end
@@ -122,12 +122,12 @@ end
 function OpenAmbulanceActionsMenu()
 
 	local elements = {
-		{label = 'Vestiaire', value = 'cloakroom'}
+		{label = _U('cloakroom'), value = 'cloakroom'}
 	}
 
 	if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = 'Retirer argent société', value = 'withdraw_society_money'})
-		table.insert(elements, {label = 'Déposer argent',         value = 'deposit_society_money'})
+		table.insert(elements, {label = _U('withdraw_society'), value = 'withdraw_society_money'})
+		table.insert(elements, {label = _U('deposit_society'), value = 'deposit_society_money'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -135,7 +135,7 @@ function OpenAmbulanceActionsMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'ambulance_actions',
 		{
-			title    = 'Ambulance',
+			title    = _U('ambulance'),
 			elements = elements
 		},
 		function(data, menu)
@@ -149,14 +149,14 @@ function OpenAmbulanceActionsMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'withdraw_society_money_amount',
 					{
-						title = 'Montant du retrait'
+						title = _U('money_withdraw')
 					},
 					function(data, menu)
 
 						local amount = tonumber(data.value)
 
 						if amount == nil then
-							ESX.ShowNotification('Montant invalide')
+							ESX.ShowNotification(_U('invalid_amount'))
 						else
 							menu.close()
 							TriggerServerEvent('esx_society:withdrawMoney', 'ambulance', amount)
@@ -175,14 +175,14 @@ function OpenAmbulanceActionsMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'deposit_money_amount',
 					{
-						title = 'Montant du dépôt'
+						title = _U('deposit_amount')
 					},
 					function(data, menu)
 
 						local amount = tonumber(data.value)
 
 						if amount == nil then
-							ESX.ShowNotification('Montant invalide')
+							ESX.ShowNotification(_U('invalid_amount'))
 						else
 							menu.close()
 							TriggerServerEvent('esx_society:depositMoney', 'ambulance', amount)
@@ -202,7 +202,7 @@ function OpenAmbulanceActionsMenu()
 			menu.close()
 
 			CurrentAction     = 'ambulance_actions_menu'
-			CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu'
+			CurrentActionMsg  = _U('open_menu')
 			CurrentActionData = {}
 
 		end
@@ -217,9 +217,9 @@ function OpenMobileAmbulanceActionsMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'mobile_ambulance_actions',
 		{
-			title    = 'Ambulance',
+			title    = _U('ambulance'),
 			elements = {
-				{label = 'Interaction citoyen', value = 'citizen_interaction'},
+				{label = _U('ems_menu'), value = 'citizen_interaction'},
 			}
 		},
 		function(data, menu)
@@ -229,10 +229,10 @@ function OpenMobileAmbulanceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Ambulance - Interactions Citoyen',
+						title    = _U('ems_menu_title'),
 						elements = {
-					  	{label = 'Réanimer',             value = 'revive'},
-					  	{label = 'Mettre dans véhicule', value = 'put_in_vehicle'},
+					  	{label = _U('ems_menu_revive'),             value = 'revive'},
+					  	{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'},
 						}
 					},
 					function(data, menu)
@@ -244,7 +244,7 @@ function OpenMobileAmbulanceActionsMenu()
 							local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 							if closestPlayer == -1 or closestDistance > 3.0 then
-								ESX.ShowNotification('Aucun joueur à proximité')
+								ESX.ShowNotification(_U('no_players'))
 							else
 
 								local ped    = GetPlayerPed(closestPlayer)
@@ -257,7 +257,7 @@ function OpenMobileAmbulanceActionsMenu()
 
 								Citizen.CreateThread(function()
 									
-									ESX.ShowNotification('Réanimation en cours')
+									ESX.ShowNotification(_U('revive_inprogress'))
 
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 									Citizen.Wait(10000)
@@ -265,15 +265,15 @@ function OpenMobileAmbulanceActionsMenu()
 
 									if GetEntityHealth(closestPlayerPed) == 0 then
 										TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
-										ESX.ShowNotification('Vous avez réanimé ' .. GetPlayerName(closestPlayer))
+										ESX.ShowNotification(_U('revive_complete') .. GetPlayerName(closestPlayer))
 									else
-										ESX.ShowNotification(GetPlayerName(closestPlayer) .. ' a succombé')
+										ESX.ShowNotification(GetPlayerName(closestPlayer) .. _U('isdead'))
 									end
 
 								end)
 
 								else
-									ESX.ShowNotification(GetPlayerName(closestPlayer) .. ' n\'est pas inconscient')
+									ESX.ShowNotification(GetPlayerName(closestPlayer) .. _U('unconscious'))
 								end
 
 							end
@@ -306,11 +306,11 @@ function OpenCloakroomMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'cloakroom',
 		{
-			title    = 'Vestiaire',
+			title    = _U('cloakroom'),
 			align    = 'top-left',
 			elements = {
-				{label = 'Tenue Civil',       value = 'citizen_wear'},
-				{label = 'Tenue Ambulancier', value = 'ambulance_wear'},
+				{label = _U('ems_clothes_civil'), value = 'citizen_wear'},
+				{label = _U('ems_clothes_ems'), value = 'ambulance_wear'},
 			},
 		},
 		function(data, menu)
@@ -340,7 +340,7 @@ function OpenCloakroomMenu()
 			end
 
 			CurrentAction     = 'ambulance_actions_menu'
-			CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu'
+			CurrentActionMsg  = _U('open_menu')
 			CurrentActionData = {}
 
 		end,
@@ -356,11 +356,11 @@ function OpenVehicleSpawnerMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'cloakroom',
 		{
-			title    = 'Véhicule',
+			title    = _U('veh_menu'),
 			align    = 'top-left',
 			elements = {
-				{label = 'Ambulance',   value = 'ambulance'},
-				{label = 'Hélicoptère', value = 'polmav'},
+				{label = _U('ambulance'),   value = 'ambulance'},
+				{label = _U('helicopter'), value = 'polmav'},
 			},
 		},
 		function(data, menu)
@@ -388,7 +388,7 @@ function OpenVehicleSpawnerMenu()
 			menu.close()
 
 			CurrentAction     = 'vehicle_spawner_menu'
-			CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour sortir un véhicule'
+			CurrentActionMsg  = _U('veh_spawn')
 			CurrentActionData = {}
 
 		end
@@ -533,13 +533,13 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 
 	if zone == 'AmbulanceActions' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
 		CurrentAction     = 'ambulance_actions_menu'
-		CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu'
+		CurrentActionMsg  = _U('open_menu')
 		CurrentActionData = {}
 	end
 
 	if zone == 'VehicleSpawner' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
 		CurrentAction     = 'vehicle_spawner_menu'
-		CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour sortir un véhicule'
+		CurrentActionMsg  = _U('veh_spawn')
 		CurrentActionData = {}
 	end
 
@@ -559,7 +559,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 			if distance ~= -1 and distance <= 1.0 then
 
 				CurrentAction     = 'delete_vehicle'
-				CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour ranger le véhicule'
+				CurrentActionMsg  = _U('store_veh')
 				CurrentActionData = {vehicle = vehicle}
 
 			end
@@ -585,7 +585,7 @@ Citizen.CreateThread(function()
   SetBlipAsShortRange(blip, true)
 	
 	BeginTextCommandSetBlipName("STRING")
-  AddTextComponentString("Hôpital")
+  AddTextComponentString(_U('hospital'))
   EndTextCommandSetBlipName(blip)
 
 end)
