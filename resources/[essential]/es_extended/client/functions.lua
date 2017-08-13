@@ -599,6 +599,13 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		wheels           = GetVehicleWheelType(vehicle),
 		windowTint       = GetVehicleWindowTint(vehicle),
 		
+		neonEnabled      = {
+			IsVehicleNeonLightEnabled(vehicle, 0),
+			IsVehicleNeonLightEnabled(vehicle, 1),
+			IsVehicleNeonLightEnabled(vehicle, 2),
+			IsVehicleNeonLightEnabled(vehicle, 3)
+		}
+
 		neonColor        = table.pack(GetVehicleNeonLightsColour(vehicle)),
 		
 		modSpoilers      = GetVehicleMod(vehicle, 0),
@@ -663,6 +670,13 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 
 	if props.windowTint ~= nil then
 		SetVehicleWindowTint(vehicle,  props.windowTint)
+	end
+
+	if props.neonEnabled ~= nil then
+		SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1]),
+		SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2]),
+		SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3]),
+		SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
 	end
 
 	if props.neonColor ~= nil then
