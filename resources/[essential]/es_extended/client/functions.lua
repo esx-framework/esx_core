@@ -656,8 +656,14 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		SetVehicleDirtLevel(vehicle,  props.dirtLevel)
 	end
 
-	if props.color1 ~= nil and props.color2 ~= nil then
-		SetVehicleColours(vehicle, props.color1, props.color2)
+	if props.color1 ~= nil then
+		local colour1, colour2 = GetVehicleColours(vehicle)
+		SetVehicleColours(vehicle, props.color1, color2)
+	end
+
+	if props.color2 ~= nil then
+		local colour1, colour2 = GetVehicleColours(vehicle)
+		SetVehicleColours(vehicle, color1, props.color2)
 	end
 
 	if props.pearlescentColor ~= nil and props.wheelColor ~= nil then
