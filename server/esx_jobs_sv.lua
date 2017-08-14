@@ -4,7 +4,7 @@ local Players = {}
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('esx:playerDropped', function()
+AddEventHandler('esx:playerDropped', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local caution = xPlayer.get('caution')
