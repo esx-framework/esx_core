@@ -5,8 +5,9 @@ Config.ZoneSize     = {x = 3.0, y = 3.0, z = 0.3}
 Config.MarkerColor  = {r = 100, g = 100, b = 204}
 Config.ZDiff        = 2.0
 Config.BlipSprite   = 431
+Config.Locale       = 'fr'
 
-  Config.ATMS = {
+Config.ATMS = {
   { ['x'] = -386.733,  ['y'] = 6045.953,  ['z'] = 31.501},
   { ['x'] = -110.753,  ['y'] = 6467.703,  ['z'] = 31.784},
   { ['x'] = 155.4300,  ['y'] = 6641.991,  ['z'] = 31.784},

@@ -74,7 +74,7 @@ Citizen.CreateThread(function()
 			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.ZoneSize.x / 2) then
 				isInATMMarker = true
 				SetTextComponentFormat('STRING')
-				AddTextComponentString('Appuyez sur ~INPUT_PICKUP~ pour déposer ou retirer du ~g~cash~s~.')
+				AddTextComponentString(_U('press_e_atm'))
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 			end
 		end
