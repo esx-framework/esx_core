@@ -52,11 +52,11 @@ function OpenCloakroomMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'cloakroom',
 		{
-			title    = 'Vestiaire',
+			title    = _U('cloakroom'),
 			align    = 'top-left',
 			elements = {
-				{label = 'Tenue Civil',    value = 'citizen_wear'},
-				{label = 'Tenue Policier', value = 'police_wear'},
+				{label = _U('citizen_wear'), value = 'citizen_wear'},
+				{label = _U('police_wear'), value = 'police_wear'},
 			},
 		},
 		function(data, menu)
@@ -86,7 +86,7 @@ function OpenCloakroomMenu()
 			end	
 
 			CurrentAction     = 'menu_cloakroom'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour vous changer'
+			CurrentActionMsg  = _U('open_cloackroom')
 			CurrentActionData = {}
 
 		end,
@@ -95,7 +95,7 @@ function OpenCloakroomMenu()
 			menu.close()
 
 			CurrentAction     = 'menu_cloakroom'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour vous changer'
+			CurrentActionMsg  = _U('open_cloackroom')
 			CurrentActionData = {}
 		end
 	)
@@ -107,12 +107,12 @@ function OpenArmoryMenu(station)
 	if Config.EnableArmoryManagement then
 
 		local elements = {
-			{label = 'Prendre Arme', value = 'get_weapon'},
-			{label = 'Déposer Arme', value = 'put_weapon'}
+			{label = _U('get_weapon'), value = 'get_weapon'},
+			{label = _U('put_weapon'), value = 'put_weapon'}
 		}
 
 		if PlayerData.job.grade_name == 'boss' then
-			table.insert(elements, {label = 'Acheter Armes', value = 'buy_weapons'})
+			table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
 		end
 
 		ESX.UI.Menu.CloseAll()
@@ -120,7 +120,7 @@ function OpenArmoryMenu(station)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'armory',
 			{
-				title    = 'Armurerie',
+				title    = _U('armory'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -144,7 +144,7 @@ function OpenArmoryMenu(station)
 				menu.close()
 
 				CurrentAction     = 'menu_armory'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder à l\'armurerie'
+				CurrentActionMsg  = _U('open_armory')
 				CurrentActionData = {station = station}
 			end
 		)
@@ -163,7 +163,7 @@ function OpenArmoryMenu(station)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'armory',
 			{
-				title    = 'Armurerie',
+				title    = _U('armory'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -176,7 +176,7 @@ function OpenArmoryMenu(station)
 				menu.close()
 
 				CurrentAction     = 'menu_armory'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder à l\'armurerie'
+				CurrentActionMsg  = _U('open_armory')
 				CurrentActionData = {station = station}
 
 			end
@@ -201,7 +201,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'vehicle_spawner',
 		{
-			title    = 'Véhicule',
+			title    = _U('vehicle_menu'),
 			align    = 'top-left',
 			elements = elements,
 		},
@@ -248,7 +248,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 							end)
 
 						else
-							ESX.ShowNotification('Service complet : ' .. inServiceCount .. '/' .. maxInService)
+							ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
 						end
 
 					end, 'police')
@@ -256,7 +256,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 				end
 
 			else
-				ESX.ShowNotification('Il y a déja un véhicule de sorti')
+				ESX.ShowNotification(_U('vehicle_out'))
 			end
 
 		end,
@@ -265,7 +265,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 			menu.close()
 
 			CurrentAction     = 'menu_vehicle_spawner'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour sortir un véhicule'
+			CurrentActionMsg  = _U('vehicle_spawner')
 			CurrentActionData = {station = station, partNum = partNum}
 
 		end
@@ -283,9 +283,9 @@ function OpenPoliceActionsMenu()
 			title    = 'Police',
 			align    = 'top-left',
 			elements = {
-		  	{label = 'Interaction citoyen',  value = 'citizen_interaction'},
-		  	{label = 'Interaction véhicule', value = 'vehicle_interaction'},
-		  	{label = 'Placer objets',        value = 'object_spawner'},
+		  	{label = _U('citizen_interaction'), value = 'citizen_interaction'},
+		  	{label = _U('vehicle_interaction'), value = 'vehicle_interaction'},
+		  	{label = _U('object_spawner'),      value = 'object_spawner'},
 			},
 		},
 		function(data, menu)
@@ -295,14 +295,14 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Interaction Citoyen',
+						title    = _U('citizen_interaction'),
 						align    = 'top-left',
 						elements = {
-							{label = 'Carte d\'identité',     value = 'identity_card'},
-							{label = 'Fouiller',              value = 'body_search'},
-							{label = 'Menotter / Démenotter', value = 'handcuff'},
-							{label = 'Mettre dans véhicule',  value = 'put_in_vehicle'},
-							{label = 'Amende',                value = 'fine'}
+							{label = _U('id_card'),     	value = 'identity_card'},
+							{label = _U('search'),      	value = 'body_search'},
+							{label = _U('handcuff'), 		value = 'handcuff'},
+							{label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
+							{label = _U('fine'),            value = 'fine'}
 						},
 					},
 					function(data2, menu2)
@@ -332,7 +332,7 @@ function OpenPoliceActionsMenu()
 							end
 
 						else
-							ESX.ShowNotification('Aucun joueur à proximité')
+							ESX.ShowNotification(_U('no_players_nearby'))
 						end
 
 					end,
@@ -348,11 +348,11 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'vehicle_interaction',
 					{
-						title    = 'Interaction Véhicule',
+						title    = _U('vehicle_interaction'),
 						align    = 'top-left',
 						elements = {
-					  	{label = 'Infos véhicule',      value = 'vehicle_infos'},
-					  	{label = 'Crocheter véhicule',  value = 'hijack_vehicle'},
+					  	{label = _U('vehicle_info'), value = 'vehicle_infos'},
+					  	{label = _U('pick_lock'),  	 value = 'hijack_vehicle'},
 						},
 					},
 					function(data2, menu2)
@@ -393,7 +393,7 @@ function OpenPoliceActionsMenu()
 						        	SetVehicleDoorsLocked(vehicle, 1)
 					            SetVehicleDoorsLockedForAllPlayers(vehicle, false)
 
-					            TriggerEvent('esx:showNotification', 'Véhicule ~g~déverouillé~s~')
+					            TriggerEvent('esx:showNotification', _U('vehicle_unlocked'))
 
 					        	end)
 
@@ -404,7 +404,7 @@ function OpenPoliceActionsMenu()
 							end
 
 						else
-							ESX.ShowNotification('Aucun véhicule à proximité')
+							ESX.ShowNotification(_U('no_vehicles_nearby'))
 						end
 
 					end,
@@ -420,14 +420,14 @@ function OpenPoliceActionsMenu()
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'citizen_interaction',
 					{
-						title    = 'Interaction Voirie',
+						title    = _U('traffic_interaction'),
 						align    = 'top-left',
 						elements = {
-					    {label = 'Plot',     value = 'prop_roadcone02a'},
-					    {label = 'Barrière', value = 'prop_barrier_work06a'},
-					    {label = 'Herse',    value = 'p_ld_stinger_s'},
-					    {label = 'Caisse',   value = 'prop_boxpile_07d'},
-					    {label = 'Caisse',   value = 'hei_prop_cash_crate_half_full'}
+					    {label = _U('cone'),     value = 'prop_roadcone02a'},
+					    {label = _U('barrier'), value = 'prop_barrier_work06a'},
+					    {label = _U('spikestrips'),    value = 'p_ld_stinger_s'},
+					    {label = _U('box'),   value = 'prop_boxpile_07d'},
+					    {label = _U('cash'),   value = 'hei_prop_cash_crate_half_full'}
 						},
 					},
 					function(data2, menu2)
@@ -483,12 +483,12 @@ function OpenIdentityCardMenu(player)
 		end
 
 		local elements = {
-			{label = 'Nom : ' .. data.name, value = nil},
+			{label = _U('name') .. data.name, value = nil},
 			{label = jobLabel,              value = nil},
 		}
 
 		if data.drunk ~= nil then
-			table.insert(elements, {label = 'Alcoolémie : ' .. data.drunk .. '%', value = nil})
+			table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
 		end
 
 		if data.licenses ~= nil then
@@ -504,7 +504,7 @@ function OpenIdentityCardMenu(player)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'citizen_interaction',
 			{
-				title    = 'Interaction Citoyen',
+				title    = _U('citizen_interaction'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -535,7 +535,7 @@ function OpenBodySearchMenu(player)
 		end
 
 		table.insert(elements, {
-			label          = 'Confisquer argent sale : $' .. blackMoney,
+			label          = _U('confiscate_dirty') .. blackMoney,
 			value          = 'black_money',
 			itemType       = 'item_account',
 			amount         = blackMoney
@@ -545,19 +545,19 @@ function OpenBodySearchMenu(player)
 
 		for i=1, #data.weapons, 1 do
 			table.insert(elements, {
-				label          = 'Confisquer ' .. ESX.GetWeaponLabel(data.weapons[i].name),
+				label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
 				value          = data.weapons[i].name,
 				itemType       = 'item_weapon',
 				amount         = data.ammo,
 			})
 		end
 
-		table.insert(elements, {label = '--- Inventaire ---', value = nil})
+		table.insert(elements, {label = _U('inventory_label'), value = nil})
 
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
 				table.insert(elements, {
-					label          = 'Confisquer x' .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
+					label          = _U('confiscate_inv') .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
 					value          = data.inventory[i].name,
 					itemType       = 'item_standard',
 					amount         = data.inventory[i].count,
@@ -569,7 +569,7 @@ function OpenBodySearchMenu(player)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'body_search',
 			{
-				title    = 'Fouille',
+				title    = _U('search'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -602,13 +602,13 @@ function OpenFineMenu(player)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'fine',
 		{
-			title    = 'Amende',
+			title    = _U('fine'),
 			align    = 'top-left',
 			elements = {
-		  	{label = 'Code de la route', value = 0},
-		  	{label = 'Délit mineur',     value = 1},
-		  	{label = 'Délit moyen',      value = 2},
-		  	{label = 'Délit grave',      value = 3}
+		  	{label = _U('traffic_offense'),   value = 0},
+		  	{label = _U('minor_offense'),     value = 1},
+		  	{label = _U('average_offense'),   value = 2},
+		  	{label = _U('major_offense'),     value = 3}
 			},
 		},
 		function(data, menu)
@@ -641,7 +641,7 @@ function OpenFineCategoryMenu(player, category)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'fine_category',
 			{
-				title    = 'Amende',
+				title    = _U('fine'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -653,9 +653,9 @@ function OpenFineCategoryMenu(player, category)
 				menu.close()
 
 				if Config.EnablePlayerManagement then
-					TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', 'Amende : ' .. label, amount)
+					TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total') .. label, amount)
 				else
-					TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', 'Amende : ' .. label, amount)
+					TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total') .. label, amount)
 				end
 
 				ESX.SetTimeout(300, function()
@@ -678,18 +678,18 @@ function OpenVehicleInfosMenu(vehicleData)
 
 		local elements = {}
 
-		table.insert(elements, {label = 'N°: ' .. infos.plate, value = nil})
+		table.insert(elements, {label = _U('plate') .. infos.plate, value = nil})
 
 		if infos.owner == nil then
-			table.insert(elements, {label = 'Propriétaire : Inconnu', value = nil})
+			table.insert(elements, {label = _U('owner_unknown'), value = nil})
 		else
-			table.insert(elements, {label = 'Propriétaire : ' .. infos.owner, value = nil})
+			table.insert(elements, {label = _U('owner') .. infos.owner, value = nil})
 		end
 
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'vehicle_infos',
 			{
-				title    = 'Infos Véhicule',
+				title    = _U('vehicle_info'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -718,7 +718,7 @@ function OpenGetWeaponMenu()
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'armory_get_weapon',
 			{
-				title    = 'Armurerie - Prendre Arme',
+				title    = _U('get_weapon_menu'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -760,7 +760,7 @@ function OpenPutWeaponMenu()
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'armory_put_weapon',
 		{
-			title    = 'Armurerie - Déposer Arme',
+			title    = _U('put_weapon_menu'),
 			align    = 'top-left',
 			elements = elements,
 		},
@@ -805,7 +805,7 @@ function OpenBuyWeaponsMenu(station)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'armory_buy_weapons',
 			{
-				title    = 'Armurerie - Acheter Armes',
+				title    = _U('buy_weapon_menu'),
 				align    = 'top-left',
 				elements = elements,
 			},
@@ -818,7 +818,7 @@ function OpenBuyWeaponsMenu(station)
 							OpenBuyWeaponsMenu(station)
 						end, data.current.value)
 					else
-						ESX.ShowNotification('Vous n\'avez pas assez d\'argent')
+						ESX.ShowNotification(_U('not_enough_money'))
 					end
 
 				end, data.current.price)
@@ -842,8 +842,8 @@ function OpenBossActionsMenu()
 		{
 			title    = PlayerData.job.grade_label,
 			elements = {
-				{label = 'Retirer argent société', value = 'withdraw_society_money'},
-				{label = 'Déposer argent',         value = 'deposit_money'},
+				{label = _U('take_company_money'), value = 'withdraw_society_money'},
+				{label = _U('deposit_money'),         value = 'deposit_money'},
 			}
 		},
 		function(data, menu)
@@ -853,14 +853,14 @@ function OpenBossActionsMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'withdraw_society_money_amount',
 					{
-						title = 'Montant du retrait'
+						title = _U('amount_of_withdrawal')
 					},
 					function(data, menu)
 
 						local amount = tonumber(data.value)
 
 						if amount == nil then
-							ESX.ShowNotification('Montant invalide')
+							ESX.ShowNotification(_U('invalid_amount'))
 						else
 							menu.close()
 							TriggerServerEvent('esx_society:withdrawMoney', 'police', amount)
@@ -879,14 +879,14 @@ function OpenBossActionsMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'deposit_money_amount',
 					{
-						title = 'Montant du dépôt'
+						title = _U('amount_of_deposit')
 					},
 					function(data, menu)
 
 						local amount = tonumber(data.value)
 
 						if amount == nil then
-							ESX.ShowNotification('Montant invalide')
+							ESX.ShowNotification(_U('invalid_amount'))
 						else
 							menu.close()
 							TriggerServerEvent('esx_society:depositMoney', 'police', amount)
@@ -906,7 +906,7 @@ function OpenBossActionsMenu()
 			menu.close()
 
 			CurrentAction     = 'menu_boss_actions'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour ouvrir le menu'
+			CurrentActionMsg  = _U('open_bossmenu')
 			CurrentActionData = {}
 
 		end
@@ -941,19 +941,19 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
 	if part == 'Cloakroom' then
 		CurrentAction     = 'menu_cloakroom'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour vous changer'
+		CurrentActionMsg  = _U('open_cloackroom')
 		CurrentActionData = {}
 	end
 
 	if part == 'Armory' then
 		CurrentAction     = 'menu_armory'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder à l\'armurerie'
+		CurrentActionMsg  = _U('open_armory')
 		CurrentActionData = {station = station}
 	end
 
 	if part == 'VehicleSpawner' then
 		CurrentAction     = 'menu_vehicle_spawner'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour sortir un véhicule'
+		CurrentActionMsg  = _U('vehicle_spawner')
 		CurrentActionData = {station = station, partNum = partNum}
 	end
 
@@ -992,7 +992,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
 			if distance <= 2.0 then
 				CurrentAction     = 'delete_vehicle'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour ranger le véhicule'
+				CurrentActionMsg  = _U('store_vehicle')
 				CurrentActionData = {vehicle = vehicle}
 			end
 
@@ -1002,7 +1002,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
 	if part == 'BossActions' then
 		CurrentAction     = 'menu_boss_actions'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour ouvrir le menu'
+		CurrentActionMsg  = _U('open_bossmenu')
 		CurrentActionData = {}
 	end
 
@@ -1018,7 +1018,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
 	if PlayerData.job ~= nil and PlayerData.job.name == 'police' and not IsPedInAnyVehicle(playerPed, false) then
 		CurrentAction     = 'remove_entity'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour enlever l\'objet'
+		CurrentActionMsg  = _U('remove_object')
 		CurrentActionData = {entity = entity}
 	end
 
@@ -1152,7 +1152,7 @@ Citizen.CreateThread(function()
 	  SetBlipAsShortRange(blip, true)
 		
 		BeginTextCommandSetBlipName("STRING")
-	  AddTextComponentString("Commissariat")
+	  AddTextComponentString(_U('map_blip'))
 	  EndTextCommandSetBlipName(blip)
 
 	end
