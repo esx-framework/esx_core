@@ -4,6 +4,11 @@ local Players = {}
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+AddEventHandler('esx:playerLodaded', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.set('caution', 0)
+end)
+
 AddEventHandler('esx:playerDropped', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -37,13 +42,6 @@ AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
 	else
 		TriggerClientEvent('esx:showNotification', _source, "Vous n'aviez pas de caution")
 	end
-end)
-
-RegisterServerEvent('esx_jobs:setCaution')
-AddEventHandler('esx_jobs:setCaution', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.set('caution', 0)
 end)
 
 local function Work(source, item)
