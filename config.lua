@@ -7,6 +7,7 @@ Config.RemoveWeaponsAfterRPDeath = true
 Config.RemoveCashAfterRPDeath    = true
 Config.RemoveItemsAfterRPDeath   = true
 Config.EnablePlayerManagement    = false
+Config.Locale                   = 'fr'
 
 Config.Zones = {
 
