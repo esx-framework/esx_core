@@ -93,7 +93,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				align = 'top-left',
 				elements = elements
 			},
-			submitCb,
+			function(data, menu)
+				submitCb(data, menu)
+				DeleteSkinCam()
+			end,
 			function(data, menu)
 				
 				menu.close()
