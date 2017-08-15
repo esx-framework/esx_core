@@ -263,8 +263,18 @@ end)
 
 AddEventHandler('esx_phone:ready', function()
 	TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-		local xPlayer = ESX.GetPlayerFromId(source)
+		
+		local xPlayer  = ESX.GetPlayerFromId(source)
+		local xPlayers = ESX.GetPlayers()
+
 		print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
+
+		for k, v in pairs(xPlayers) do
+ 			if v.get('phoneNumber') == phoneNumber then		
+ 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)		
+ 			end	
+ 		end	
+
 	end)
 end)
 
