@@ -168,7 +168,7 @@ ESX.StartPayCheck = function()
 
 			if v.job.grade_salary > 0 then
 				v.addMoney(v.job.grade_salary)
-				TriggerClientEvent('esx:showNotification', v.source, 'Vous avez reçu votre salaire : ~g~$' .. v.job.grade_salary)
+				TriggerClientEvent('esx:showNotification', v.source, _U('rec_salary') .. '~g~$' .. v.job.grade_salary)
 			end
 
 		end
