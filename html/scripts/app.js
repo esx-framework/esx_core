@@ -206,9 +206,9 @@
 					okNumberData   : fromNumber,
 					gpsLocationX   : (messages[i].job == 'player') ? '' : messages[i].position.x,
 					gpsLocationY   : (messages[i].job == 'player') ? '' : messages[i].position.y,
-					activeGPS      : (messages[i].job == 'player') ? '' : "active",
+					activeGPS      : (messages[i].job == 'player') ? '' : (messages[i].position) ? 'active' : '',
 					jobData        : (messages[i].job == 'player') ? '' : messages[i].job,
-					showOK         : (messages[i].job == 'player') ? '' : "showOK"
+					showOK         : (messages[i].job == 'player') ? '' : 'showOK'
 				}
 				
 				let html = Mustache.render(MessageTpl, view);
@@ -249,17 +249,40 @@
 			element.scrollTop += 100;
 	}
 
-	window.addSpecialContact = function(name, number, base64Icon){
-	
-		specialContacts.push({
-			name      : name,
-			number    : number,
-			base64Icon: base64Icon
-		});
+	let addSpecialContact = function(name, number, base64Icon){
+		
+		let found = false
 
-		specialContacts.sort((a,b) => {
-			return a.name.localeCompare(b.name);
-		});
+		for(let i=0; i<specialContacts.length; i++)
+			if(specialContacts[i].number == number)
+				found = true;
+
+		if(!found){
+
+			specialContacts.push({
+				name      : name,
+				number    : number,
+				base64Icon: base64Icon
+			});
+
+			specialContacts.sort((a,b) => {
+				return a.name.localeCompare(b.name);
+			});
+
+			renderSpecialContacts();
+
+		}
+
+	}
+
+	let removeSpecialContact = function(number){
+
+		for(let i=0; i<specialContacts.length; i++){
+			if(specialContacts[i].number == number){
+				specialContacts.splice(i, 1);
+				break;
+			}
+		}
 
 		renderSpecialContacts();
 
@@ -424,7 +447,10 @@
 
 		if(data.addSpecialContact === true){
 			addSpecialContact(data.name, data.number, data.base64Icon);
-			renderSpecialContacts();
+		}
+
+		if(data.removeSpecialContact === true){
+			removeSpecialContact(data.number);
 		}
 
 		if(data.move && isPhoneShowed){

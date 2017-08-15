@@ -108,6 +108,16 @@ AddEventHandler('esx_phone:addSpecialContact', function(name, phoneNumber, base6
 
 end)
 
+RegisterNetEvent('esx_phone:removeSpecialContact')
+AddEventHandler('esx_phone:removeSpecialContact', function(phoneNumber)
+	
+	SendNUIMessage({
+		removeSpecialContact = true,
+		number               = phoneNumber
+	})
+
+end)
+
 RegisterNUICallback('add_contact', function(data, cb)
 	
 	local phoneNumber = tonumber(data.phoneNumber)
@@ -167,7 +177,7 @@ AddEventHandler('esx_phone:stopDispatch', function(dispatchRequestId, playerName
 
 end)
 
-RegisterNUICallback('setGPS', function(data)	
+RegisterNUICallback('setGPS', function(data)
 	SetNewWaypoint(data.x,  data.y)
 	ESX.ShowNotification('Position entrée dans le GPS')
 end)
