@@ -75,7 +75,11 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		}
 
 		TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
-			data.drunk = status:getPercent()
+
+			if status ~= nil then
+				data.drunk = status.getPercent()
+			end
+			
 		end)
 
 		TriggerEvent('esx_license:getLicenses', _source, function(licenses)
