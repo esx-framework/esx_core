@@ -1,4 +1,4 @@
-server_script{
+server_scripts {
     '@es_extended/locale.lua',
     'locales/en.lua',
     'locales/fr.lua',
@@ -6,7 +6,7 @@ server_script{
     'server/esx_atm_sv.lua'
 }
 
-client_script{
+client_scripts {
     '@es_extended/locale.lua',
     'locales/en.lua',
     'locales/fr.lua',
@@ -16,7 +16,7 @@ client_script{
 
 ui_page 'html/ui.html'
 
-files{
+files {
     'html/ui.html',
     'html/pdown.ttf',
     'html/img/cursor.png',
