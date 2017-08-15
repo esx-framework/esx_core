@@ -940,7 +940,7 @@ ESX.ShowInventory = function()
 								ESX.UI.Menu.Open(
 									'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
 									{
-										title = 'Quantité'
+										title = _U('amount')
 									},
 									function(data2, menu2)
 
@@ -948,7 +948,7 @@ ESX.ShowInventory = function()
 										local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 										if closestPlayer == -1 or closestDistance > 3.0 then
-											ESX.ShowNotification('Aucun joueur à proximité')
+											ESX.ShowNotification(_U('players_nearby'))
 										else
 											TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
 										end
@@ -976,14 +976,14 @@ ESX.ShowInventory = function()
 								ESX.UI.Menu.Open(
 									'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
 									{
-										title = 'Quantité'
+										title = _U('amount')
 									},
 									function(data2, menu2)
 
 										local quantity = tonumber(data2.value)
 
 										if quantity == nil then
-											ESX.ShowNotification('Montant invalide')
+											ESX.ShowNotification(_U('amount_invalid'))
 										else
 											TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 										end
