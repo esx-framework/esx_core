@@ -50,7 +50,7 @@ ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 end)
 
 RegisterServerEvent('esx_weashop:buyItem')
-AddEventHandler('esx_weashop:buyItem', function(itemName, price,zone)
+AddEventHandler('esx_weashop:buyItem', function(itemName, price, zone)
 	
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
@@ -61,10 +61,10 @@ AddEventHandler('esx_weashop:buyItem', function(itemName, price,zone)
 
 		xPlayer.removeAccountMoney('black_money', price)
 		xPlayer.addWeapon(itemName, 42)
-		TriggerClientEvent('esx:showNotification', _source, 'Vous avez acheté ~b~1x ' .. ItemsLabels[itemName])
+		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ItemsLabels[itemName])
 
 	else
-		TriggerClientEvent('esx:showNotification', _source, 'Vous n\'avez ~r~pas assez~s~ d\'argent sale')
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough_black'))
 	end	
 
 	else if xPlayer.get('money') >= price then
@@ -72,10 +72,10 @@ AddEventHandler('esx_weashop:buyItem', function(itemName, price,zone)
 		xPlayer.removeMoney(price)
 		xPlayer.addWeapon(itemName, 42)
 
-		TriggerClientEvent('esx:showNotification', _source, 'Vous avez acheté ~b~1x ' .. ItemsLabels[itemName])
+		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ItemsLabels[itemName])
 
 	else
-		TriggerClientEvent('esx:showNotification', _source, 'Vous n\'avez ~r~pas assez~s~ d\'argent.')
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
 	end
 	end
 

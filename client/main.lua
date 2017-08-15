@@ -45,7 +45,7 @@ function OpenShopMenu(zone)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'shop',
 		{
-			title  = 'Magasin',
+			title  = _U('shop'),
 			elements = elements
 		},
 		function(data, menu)				
@@ -56,7 +56,7 @@ function OpenShopMenu(zone)
 			menu.close()
 			
 			CurrentAction     = 'shop_menu'
-			CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au magasin.'
+			CurrentActionMsg  = _U('shop_menu')
 			CurrentActionData = {zone = zone}
 		end
 	)
@@ -65,7 +65,7 @@ end
 AddEventHandler('esx_weashop:hasEnteredMarker', function(zone)
 	
 	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au magasin.'
+	CurrentActionMsg  = _U('shop_menu')
 	CurrentActionData = {zone = zone}
 
 end)
@@ -89,7 +89,7 @@ Citizen.CreateThread(function()
 		SetBlipColour (blip, 2)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("GunShop")
+		AddTextComponentString(_U('map_blip'))
 		EndTextCommandSetBlipName(blip)
 		end
 		end
