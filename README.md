@@ -15,5 +15,5 @@ git clone https://github.com/FXServer-ESX/fxserver-esx_clotheshop clotheshop
 3) Add this in your server.cfg :
 
 ```
-start clotheshop
+start esx_clotheshop
 ```
