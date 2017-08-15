@@ -15,7 +15,7 @@ Locales['en'] = {
 		['vehicle_out'] = 'there is already a car out of the garage',
 		['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
 		['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
-		['service_max'] = 'Max officers in service : ',
+		['service_max'] = 'Max officers in service: ',
 	--Action Menu
 		['citizen_interaction'] = 'citizen Interaction',
 		['vehicle_interaction'] = 'vehicle Interaction',
@@ -42,7 +42,7 @@ Locales['en'] = {
 		['name'] = 'name : ',
 		['bac'] = 'bAC : ',
 	--Body Search Menu
-		['confiscate_dirty'] = 'confiscate dirty money : $',
+		['confiscate_dirty'] = 'confiscate dirty money: $',
 		['guns_label'] = '--- Guns ---',
 		['confiscate'] = 'confiscate ',
 		['inventory_label'] = '--- Inventory ---',
@@ -52,11 +52,11 @@ Locales['en'] = {
 		['minor_offense'] = 'minor Offense',
 		['average_offense'] = 'average Offense',
 		['major_offense'] = 'major Offense',
-		['fine_total'] = 'fine : ',
+		['fine_total'] = 'fine: ',
 	--Vehicle Info Menu
 		['plate'] = 'Plate: ',
-		['owner_unknown'] = 'owner : Unknown',
-		['owner'] = 'owner : ',
+		['owner_unknown'] = 'owner: Unknown',
+		['owner'] = 'owner: ',
 	--Weapons Menus
 		['get_weapon_menu'] = 'armory - Take Weapon',
 		['put_weapon_menu'] = 'armory - Put Weapon',
