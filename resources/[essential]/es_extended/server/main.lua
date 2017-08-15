@@ -510,8 +510,17 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 end)
 
 RegisterServerEvent('esx:useItem')
-AddEventHandler('esx:useItem', function(item)
-	ESX.UseItem(source, item)
+AddEventHandler('esx:useItem', function(itemName)
+
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local count   = xPlayer.getInventoryItem(itemName).count
+
+	if count > 0 then
+		ESX.UseItem(source, itemName)
+	else
+		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Action impossible')
+	end
+
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
@@ -547,3 +556,4 @@ end)
 TriggerEvent("es:addGroup", "jobmaster", "user", function(group) end)
 
 ESX.StartDBSync()
+ESX.StartPayCheck()

@@ -158,6 +158,29 @@ ESX.StartDBSync = function()
 
 end
 
+ESX.StartPayCheck = function()
+	
+	function payCheck()
+
+		local xPlayers = ESX.GetPlayers()
+
+		for k,v in pairs(xPlayers) do
+
+			if v.job.grade_salary > 0 then
+				v.addMoney(v.job.grade_salary)
+				TriggerClientEvent('esx:showNotification', v.source, 'Vous avez reçu votre salaire : ~g~$' .. v.job.grade_salary)
+			end
+
+		end
+
+		SetTimeout(Config.PaycheckInterval, payCheck)
+
+	end
+
+	SetTimeout(Config.PaycheckInterval, payCheck)
+
+end
+
 ESX.GetPlayers = function()
 	return ESX.Players
 end

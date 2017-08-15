@@ -1003,12 +1003,11 @@ ESX.ShowInventory = function()
 
 							TriggerServerEvent('esx:useItem', data.current.value)
 
-							menu2.close()
-							menu.close()
-
 						elseif data.current.action == 'return' then
+							
 							ESX.UI.Menu.CloseAll()
 							ESX.ShowInventory()
+						
 						end
 						
 					end,
