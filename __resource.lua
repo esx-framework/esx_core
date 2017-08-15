@@ -1,7 +1,21 @@
 description 'esx_drugs'
 
-server_script 'server/esx_drugs_sv.lua'
-server_script 'config.lua'
+server_scripts {
 
-client_script 'config.lua'
-client_script 'client/esx_drugs_cl.lua'
+    '@es_extended/locale.lua',
+    'locales/en.lua',
+    'locales/fr.lua',
+    'server/esx_drugs_sv.lua',
+    'config.lua'
+
+}
+
+client_scripts {
+
+    '@es_extended/locale.lua',
+    'locales/en.lua',
+    'locales/fr.lua',
+    'config.lua',
+    'client/esx_drugs_cl.lua'
+
+}
