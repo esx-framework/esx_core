@@ -25,8 +25,8 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		targetXPlayer.removeInventoryItem(itemName, amount)
 		sourceXPlayer.addInventoryItem(itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, 'Vous avez confisqué ~y~x' .. amount .. ' ' .. label .. '~s~ à ~b~' .. targetXPlayer.name)
-		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. '~s~ vous a confisqué ~y~x' .. amount .. ' ' .. label )
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
+		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
 
 	end
 
@@ -35,8 +35,8 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		targetXPlayer.removeAccountMoney(itemName, amount)
 		sourceXPlayer.addAccountMoney(itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, 'Vous avez confisqué ~y~$' .. amount .. '~s~ à ~b~' .. targetXPlayer.name)
-		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. '~s~ vous a confisqué ~y~$' .. amount)
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confdm') .. amount .. _U('from') .. targetXPlayer.name)
+		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. _U('confdm') .. amount)
 
 	end
 
@@ -45,8 +45,8 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		targetXPlayer.removeWeapon(itemName)
 		sourceXPlayer.addWeapon(itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, 'Vous avez confisqué ~y~x1 ' .. ESX.GetWeaponLabel(itemName) .. '~s~ à ~b~' .. targetXPlayer.name)
-		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. '~s~ vous a confisqué ~y~x1 ' .. ESX.GetWeaponLabel(itemName))
+		TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confweapon') .. ESX.GetWeaponLabel(itemName) .. _U('from') .. targetXPlayer.name)
+		TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. _U('confweapon') .. ESX.GetWeaponLabel(itemName))
 
 	end
 
@@ -271,7 +271,7 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 		for k, v in pairs(xPlayers) do
 			if v.job.name == 'police' then
 				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Alerte police', requestId)
+					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _('alert_police'), requestId)
 				end)
 			end
 		end
