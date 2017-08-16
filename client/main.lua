@@ -53,10 +53,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 		-- Insert elements
 		for i=1, #_components, 1 do
-			
+
 			local value       = _components[i].value
 			local componentId = _components[i].componentId
-			
+
 			if componentId == 0 then
 				value = GetPedPropIndex(playerPed,  _components[i].componentId)
 			end
@@ -89,7 +89,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'skin',
 			{
-				title = 'Skin Menu',
+				title = _U('skin_menu'),
 				align = 'top-left',
 				elements = elements
 			},
@@ -98,7 +98,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				DeleteSkinCam()
 			end,
 			function(data, menu)
-				
+
 				menu.close()
 
 				DeleteSkinCam()
@@ -116,7 +116,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 					zoomOffset = data.current.zoomOffset
 					camOffset = data.current.camOffset
-					
+
 					if skin[data.current.name] ~= data.current.value then
 
 						-- Change skin element
@@ -124,10 +124,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 						-- Update max values
 						TriggerEvent('skinchanger:getData', function(components, maxVals)
-							
+
 							for i=1, #elements, 1 do
 								if elements[i].textureof ~= nil then
-									
+
 									local newData = {max = maxVals[elements[i].name]}
 
 									if data.current.name == elements[i].textureof then
@@ -135,7 +135,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 									end
 
 									menu.update({name = elements[i].name}, newData)
-									
+
 								end
 							end
 
@@ -219,7 +219,7 @@ Citizen.CreateThread(function()
 			PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
 
 			SetTextComponentFormat("STRING")
-			AddTextComponentString("Utilisez ~INPUT_VEH_FLY_ROLL_LEFT_ONLY~ et ~INPUT_VEH_FLY_ROLL_RIGHT_ONLY~ pour tourner la vue.")
+			AddTextComponentString(_U('use_rotate_view'))
 			DisplayHelpTextFromStringLabel(0, 0, 0, -1)
 		end
 	end
@@ -305,9 +305,9 @@ AddEventHandler('esx_skin:openSaveableRestrictedMenu', function(submitCb, cancel
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
-	
+
 	if not HasLoadedModel then
-		
+
 		Citizen.CreateThread(function()
 
 			while not PlayerLoaded do
@@ -333,9 +333,9 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Citizen.Wait(0)
-		
+
 		local playerPed = GetPlayerPed(-1)
 
 		if IsEntityDead(playerPed) then
