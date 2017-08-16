@@ -8,7 +8,7 @@ end
 
 RegisterServerEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
-  
+
 	local xPlayer        = ESX.GetPlayerFromId(source)
   local total          = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max);
   local societyAccount = nil
@@ -29,16 +29,16 @@ AddEventHandler('esx_taxijob:success', function()
 	  xPlayer.addMoney(playerMoney)
 	  societyAccount.addMoney(societyMoney)
 
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez gagné ~g~$'.. playerMoney)
-	  TriggerClientEvent('esx:showNotification', xPlayer.source, 'Votre société a gagné ~g~$'.. societyMoney)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned') .. playerMoney)
+	  TriggerClientEvent('esx:showNotification', xPlayer.source, _U('comp_earned') .. societyMoney)
 
 	else
 
 		xPlayer.addMoney(total)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez gagné ~g~$'.. total)
-	
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned') .. total)
+
 	end
- 	
+
 end)
 
 TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
@@ -55,5 +55,5 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 			end
 		end
 	end
-	
+
 end)
