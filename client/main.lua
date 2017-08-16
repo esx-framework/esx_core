@@ -382,6 +382,7 @@ AddEventHandler('esx_realestateagentjob:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_realestateagentjob:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
