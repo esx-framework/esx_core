@@ -162,6 +162,7 @@ AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
