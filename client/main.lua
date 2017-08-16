@@ -767,6 +767,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_vehicleshop:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
