@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F', 
+TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F',
 	function(status)
 		return true
 	end,
@@ -12,7 +12,7 @@ TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F',
 	{remove = 200}
 )
 
-TriggerEvent('esx_status:registerStatus', 'thirst', 1000000, '#0C98F1', 
+TriggerEvent('esx_status:registerStatus', 'thirst', 1000000, '#0C98F1',
 	function(status)
 		return true
 	end,
@@ -50,9 +50,9 @@ ESX.RegisterUsableItem('bread', function(source)
 
 		status.add(200000)
 		status.updateClient()
-		
+
 		TriggerClientEvent('esx_basicneeds:onEat', _source)
-		TriggerClientEvent('esx:showNotification', _source, 'Vous avez utilisé 1x pain')
+		TriggerClientEvent('esx:showNotification', _source, _U('used_bread'))
 
 	end)
 
@@ -71,7 +71,7 @@ ESX.RegisterUsableItem('water', function(source)
 		status.updateClient()
 
 		TriggerClientEvent('esx_basicneeds:onDrink', _source)
-		TriggerClientEvent('esx:showNotification', _source, 'Vous avez utilisé 1x Eau')
+		TriggerClientEvent('esx:showNotification', _source, _U('used_water'))
 
 	end)
 
