@@ -978,7 +978,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle = GetVehicelPedIsIn(playerPed, false)
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
 
 			if DoesEntityExist(vehicle) then
 				CurrentAction     = 'delete_vehicle'
