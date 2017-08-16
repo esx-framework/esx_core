@@ -30,7 +30,7 @@ ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 
 			local user = users[1]
 			local skin = nil
-			
+
 			local jobSkin = {
 				skin_male   = xPlayer.job.skin_male,
 				skin_female = xPlayer.job.skin_female
@@ -51,5 +51,5 @@ end)
 TriggerEvent('es:addGroupCommand', 'skin', "admin", function(source, args, user)
 	TriggerClientEvent('esx_skin:openSaveableMenu', source)
 end, function(source, args, user)
-	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, 'Insufficienct permissions!')
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, 'Insufficient permissions!')
 end)
