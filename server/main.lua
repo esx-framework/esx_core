@@ -17,6 +17,17 @@ AddEventHandler('esx_skin:save', function(skin)
 
 end)
 
+RegisterServerEvent('esx_skin:responseSaveSkin')
+AddEventHandler('esx_skin:responseSaveSkin', function(skin)
+
+	local file = io.open('resources/[esx]/esx_skin/skins.txt', "a")
+	
+	file:write(json.encode(skin) .. "\n\n")
+	file:flush()
+	file:close()
+	
+end)
+
 ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -48,8 +59,14 @@ ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 end)
 
 -- Commands
-TriggerEvent('es:addGroupCommand', 'skin', "admin", function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'skin', 'admin', function(source, args, user)
 	TriggerClientEvent('esx_skin:openSaveableMenu', source)
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, 'Insufficient permissions!')
-end)
+end, {help = _U('skin')})
+
+TriggerEvent('es:addGroupCommand', 'saveskin', 'admin', function(source, args, user)
+	TriggerClientEvent('esx_skin:requestSaveSkin', source)
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = _U('saveskin')})

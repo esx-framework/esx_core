@@ -304,6 +304,13 @@ AddEventHandler('esx_skin:openSaveableRestrictedMenu', function(submitCb, cancel
 	OpenSaveableMenu(submitCb, cancelCb, restrict)
 end)
 
+RegisterNetEvent('esx_skin:requestSaveSkin')
+AddEventHandler('esx_skin:requestSaveSkin', function()
+	TriggerEvent('skinchanger:getSkin', function(skin)
+		TriggerServerEvent('esx_skin:responseSaveSkin', skin)
+	end)
+end)
+
 AddEventHandler('skinchanger:modelLoaded', function()
 
 	if not HasLoadedModel then
