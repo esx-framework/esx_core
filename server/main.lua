@@ -9,10 +9,10 @@ AddEventHandler('onMySQLReady', function()
 		'SELECT * FROM items',
 		{},
 		function(result)
-			
+
 			for i=1, #result, 1 do
 				ItemsLabels[result[i].name] = result[i].label
-			end-- 
+			end--
 
 		end
 	)
@@ -25,7 +25,7 @@ ESX.RegisterServerCallback('esx_shop:requestDBItems', function(source, cb)
 		'SELECT * FROM shops',
 		{},
 		function(result)
-			
+
 			local shopItems  = {}
 
 			for i=1, #result, 1 do
@@ -51,7 +51,7 @@ end)
 
 RegisterServerEvent('esx_shop:buyItem')
 AddEventHandler('esx_shop:buyItem', function(itemName, price)
-	
+
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
@@ -60,10 +60,10 @@ AddEventHandler('esx_shop:buyItem', function(itemName, price)
 		xPlayer.removeMoney(price)
 		xPlayer.addInventoryItem(itemName, 1)
 
-		TriggerClientEvent('esx:showNotification', _source, 'Vous avez acheté ~b~1x ' .. ItemsLabels[itemName])
+		TriggerClientEvent('esx:showNotification', _source, _U('bought') .. ItemsLabels[itemName])
 
 	else
-		TriggerClientEvent('esx:showNotification', _source, 'Vous n\'avez ~r~pas assez~s~ d\'argent.')
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
 	end
 
 end)

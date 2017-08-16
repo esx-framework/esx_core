@@ -4,6 +4,7 @@ Config.DrawDistance = 100
 Config.Size         = {x = 1.5, y = 1.5, z = 1.5}
 Config.Color        = {r = 0, g = 128, b = 255}
 Config.Type         = 1
+Config.Locale = 'fr'
 
 Config.Zones = {
 
@@ -35,7 +36,7 @@ Config.Zones = {
             {x = -559.906,  y = 287.093,   z = 82.176}  --Bahamamas
         }
     },
-    
+
     LTDgasoline = {
         Items = {},
         Pos = {
