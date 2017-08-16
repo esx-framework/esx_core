@@ -211,13 +211,9 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
 			local model = data.current.value
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = vehicles[partNum].SpawnPoint.x, 
-				y = vehicles[partNum].SpawnPoint.y, 
-				z = vehicles[partNum].SpawnPoint.z
-			})
+			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-			if distance > 3.0 then
+			if DoesEntityExist(vehicle) then
 
 				local playerPed = GetPlayerPed(-1)
 
@@ -357,9 +353,11 @@ function OpenPoliceActionsMenu()
 					},
 					function(data2, menu2)
 
-						local vehicle, distance = ESX.Game.GetClosestVehicle()
+						local playerPed = GetPlayerPed(-1)
+						local coords    = GetEntityCoords(playerPed)
+						local vehicle   = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
 
-						if distance ~= -1 and distance <= 3.0 then
+						if DoesEntityExist(vehicle) then
 
 							local vehicleData = ESX.Game.GetVehicleProperties(vehicle)
 
@@ -372,14 +370,10 @@ function OpenPoliceActionsMenu()
 					      local playerPed = GetPlayerPed(-1)
 					      local coords    = GetEntityCoords(playerPed)
 
-					      if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
+					      if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 3.0) then
 
-					        local vehicle, distance = ESX.Game.GetClosestVehicle({
-					        	x = coords.x,
-					        	y = coords.y,
-					        	z = coords.z
-					        })
-
+									local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
+					        
 					        if DoesEntityExist(vehicle) then
 
 					        	Citizen.CreateThread(function()
@@ -960,14 +954,9 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 	if part == 'HelicopterSpawner' then
 
 		local helicopters = Config.PoliceStations[station].Helicopters
-		
-		local vehicle, distance = ESX.Game.GetClosestVehicle({
-			x = helicopters[partNum].SpawnPoint.x, 
-			y = helicopters[partNum].SpawnPoint.y, 
-			z = helicopters[partNum].SpawnPoint.z
-		})
+		local vehicle     = GetClosestVehicle(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-		if distance > 3.0 then
+		if DoesEntityExist(vehicle) then
 
 			ESX.Game.SpawnVehicle('polmav', {
 				x = helicopters[partNum].SpawnPoint.x, 
@@ -985,12 +974,13 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 	if part == 'VehicleDeleter' then
 
 		local playerPed = GetPlayerPed(-1)
+		local coords    = GetEntityCoords(playerPed)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle()
+			local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z,  3.0,  0,  71)
 
-			if distance <= 2.0 then
+			if DoesEntityExist(vehicle) then
 				CurrentAction     = 'delete_vehicle'
 				CurrentActionMsg  = _U('store_vehicle')
 				CurrentActionData = {vehicle = vehicle}
@@ -1029,18 +1019,10 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			})
+			local vehicle = GetVehiclePedIsIn(playerPed)
 
-			if distance <= 1.0 then
-
-				for i=0, 7, 1 do
-					SetVehicleTyreBurst(vehicle,  i,  true,  1000)
-				end
-
+			for i=0, 7, 1 do
+				SetVehicleTyreBurst(vehicle,  i,  true,  1000)
 			end
 
 		end
@@ -1098,12 +1080,8 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 
   if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 
-    local vehicle, distance = ESX.Game.GetClosestVehicle({
-    	x = coords.x,
-    	y = coords.y,
-    	z = coords.z
-    })
-
+		local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
+    
     if DoesEntityExist(vehicle) then
 
     	local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
