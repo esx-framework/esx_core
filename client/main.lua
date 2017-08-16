@@ -24,7 +24,7 @@ local Components = {
 	{label = 'Epaisseur Lipstick', name = 'lipstick_2',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = 'Couleur Lipstick 1', name = 'lipstick_3',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = 'Couleur Lipstick 2', name = 'lipstick_4',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = 'Accessoire Oreilles',name = 'ears_1',   	  value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = 'Accessoire Oreilles',name = 'ears_1',   	  value = -1, min = -1, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = 'Couleur Accessoire', name = 'ears_2',       value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65, textureof = 'ears_1'}, --
 	{label = 'T-Shirt 1',          name = 'tshirt_1',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
 	{label = 'T-Shirt 2',          name = 'tshirt_2',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'tshirt_1'}, --
@@ -211,7 +211,13 @@ function ApplySkin(skin, clothes)
 	SetPedHeadOverlayColor(playerPed,  2,  1,  Character['lipstick_3'],  Character['lipstick_4'])		-- Lipstick Color
 	SetPedComponentVariation(playerPed, 2, Character['hair_1'], Character['hair_2'], 2)	      	-- Hair
 	SetPedHairColor(playerPed, Character['hair_color_1'], Character['hair_color_2']) 		    -- Hair Color
-	SetPedPropIndex(playerPed, 2, Character['ears_1'], Character['ears_2'], 2)          		-- Ears Accessories
+	
+	if Character['ears_1'] == -1 then
+		ClearPedProp(playerPed,  2)
+	else
+		SetPedPropIndex(playerPed, 2, Character['ears_1'], Character['ears_2'], 2)               -- Ears Accessories
+	end
+	
 	SetPedComponentVariation(playerPed, 8,  Character['tshirt_1'],Character['tshirt_2'], 2)     -- Tshirt
 	SetPedComponentVariation(playerPed, 11, Character['torso_1'], Character['torso_2'], 2)      -- torso parts
 	SetPedComponentVariation(playerPed, 3, Character['arms'], 0, 2)                             -- torso
@@ -222,11 +228,13 @@ function ApplySkin(skin, clothes)
 	SetPedComponentVariation(playerPed, 9, Character['bproof_1'], Character['bproof_2'], 2) 	-- bulletproof
 	SetPedComponentVariation(playerPed, 7, Character['chain_1'], Character['chain_2'], 2) 	    -- chain
 	SetPedComponentVariation(playerPed, 5, Character['bags_1'], Character['bags_2'], 2) 		-- Bag
+	
 	if Character['helmet_1'] == -1 then
 		ClearPedProp(playerPed,  0)
 	else
 		SetPedPropIndex(playerPed, 0, Character['helmet_1'], Character['helmet_2'], 2)              -- Helmet
 	end
+	
 	SetPedPropIndex(playerPed, 1, Character['glasses_1'], Character['glasses_2'], 2)            -- Glasses
 
 end
