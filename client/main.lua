@@ -571,6 +571,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_ambulancejob:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
