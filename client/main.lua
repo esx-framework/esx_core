@@ -472,7 +472,7 @@ Citizen.CreateThread(function()
 
 				if IsPedInAnyVehicle(playerPed,  false) and GetEntitySpeed(playerPed) > 0 then
 
-					local waitUntil = GetGameTimer() + GetRandomIntInRange(1000,  120000)
+					local waitUntil = GetGameTimer() + GetRandomIntInRange(1000,  30000)
 
 					while OnJob and waitUntil > GetGameTimer() do
 						Citizen.Wait(0)
@@ -587,9 +587,9 @@ Citizen.CreateThread(function()
 							local msg    = nil
 
 							if street[2] ~= 0 and street[2] ~= nil then
-								msg = string.format(_U('take_me_to_near'), GetStreetNameFromHashKey(street[1]),GetStreetNameFromHashKey(street[2]))
+								msg = string.format(_U('take_me_to_near', GetStreetNameFromHashKey(street[1]),GetStreetNameFromHashKey(street[2])))
 							else
-								msg = string.format(_U('take_me_to'), GetStreetNameFromHashKey(street[1]))
+								msg = string.format(_U('take_me_to', GetStreetNameFromHashKey(street[1])))
 							end
 
 							ESX.ShowNotification(msg)
