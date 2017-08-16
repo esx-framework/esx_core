@@ -213,7 +213,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
 			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-			if DoesEntityExist(vehicle) then
+			if not DoesEntityExist(vehicle) then
 
 				local playerPed = GetPlayerPed(-1)
 
