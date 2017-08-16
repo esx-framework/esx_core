@@ -16,7 +16,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 				['@garage']     = garage;
 				['@zone']       = zone
 			}, function(rowsChanged)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, 'Véhicule ~g~sorti')
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('veh_released'))
 			end
 		)
 
@@ -30,7 +30,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 				['@zone']       = zone,
 				['vehicle']     = json.encode(vehicleProps)
 			}, function(rowsChanged)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, 'Véhicule ~g~rangé')
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('veh_stored'))
 			end
 		)
 
