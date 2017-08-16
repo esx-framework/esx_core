@@ -12,5 +12,5 @@ git clone https://github.com/FXServer-ESX/fxserver-esx_weashops.git esx_weashops
 4) Add this in your server.cfg :
 
 ```
-start esx_shops
+start esx_weashops
 ```
