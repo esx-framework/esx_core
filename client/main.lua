@@ -365,6 +365,7 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_taxijob:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
