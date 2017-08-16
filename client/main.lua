@@ -4,7 +4,7 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-    
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -13,7 +13,7 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('onClientMapStart', function()
-	
+
 	ESX.TriggerServerCallback('esx_shop:requestDBItems', function(ShopItems)
 		for k,v in pairs(ShopItems) do
 			Config.Zones[k].Items = v
@@ -45,27 +45,27 @@ function OpenShopMenu(zone)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'shop',
 		{
-			title  = 'Magasin',
+			title  = _U('shop'),
 			elements = elements
 		},
-		function(data, menu)				
+		function(data, menu)
 			TriggerServerEvent('esx_shop:buyItem', data.current.value, data.current.price)
 		end,
 		function(data, menu)
-			
+
 			menu.close()
-			
+
 			CurrentAction     = 'shop_menu'
-			CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au magasin.'
+			CurrentActionMsg  = _U('press_menu')
 			CurrentActionData = {zone = zone}
 		end
 	)
 end
 
 AddEventHandler('esx_shop:hasEnteredMarker', function(zone)
-	
+
 	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au magasin.'
+	CurrentActionMsg  = _U('press_menu')
 	CurrentActionData = {zone = zone}
 
 end)
@@ -88,7 +88,7 @@ Citizen.CreateThread(function()
 		SetBlipColour (blip, 2)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Magasins")
+		AddTextComponentString(_U('shops'))
 		EndTextCommandSetBlipName(blip)
 		end
 	end
@@ -96,15 +96,15 @@ end)
 
 -- Display markers
 Citizen.CreateThread(function()
-  while true do    
+  while true do
     Wait(0)
-    local coords = GetEntityCoords(GetPlayerPed(-1))      
+    local coords = GetEntityCoords(GetPlayerPed(-1))
     for k,v in pairs(Config.Zones) do
       for i = 1, #v.Pos, 1 do
         if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
           DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
         end
-      end      
+      end
     end
   end
 end)
@@ -143,19 +143,19 @@ Citizen.CreateThread(function()
   while true do
     Citizen.Wait(0)
     if CurrentAction ~= nil then
-      
+
       SetTextComponentFormat('STRING')
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-      
-      if IsControlJustReleased(0, 38) then        
-        
+
+      if IsControlJustReleased(0, 38) then
+
         if CurrentAction == 'shop_menu' then
           OpenShopMenu(CurrentActionData.zone)
         end
-        
-        CurrentAction = nil         
-      
+
+        CurrentAction = nil
+
       end
 
     end
