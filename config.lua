@@ -6,6 +6,7 @@ Config.ZoneSize     = {x = 5.0, y = 5.0, z = 3.0}
 Config.RequiredCopsCoke = 2
 Config.RequiredCopsMeth = 2
 Config.RequiredCopsWeed = 0
+Config.Locale = 'fr'
 
 Config.Zones = {
 	CokeFarm = 		{x=2448.9228515625,  y=-1836.8076171875, z=51.953701019287},
