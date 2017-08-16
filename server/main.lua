@@ -26,7 +26,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 								['@amount']      = amount
 							},
 							function(rowsChanged)
-								TriggerClientEvent('esx:showNotification', v.source, 'Vous avez ~r~reçu~s~ une facture')
+								TriggerClientEvent('esx:showNotification', v.source, _U('received_invoice'))
 							end
 						)
 
@@ -51,7 +51,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 								['@amount']      = amount
 							},
 							function(rowsChanged)
-								TriggerClientEvent('esx:showNotification', v.source, 'Vous avez ~r~reçu~s~ une facture')
+								TriggerClientEvent('esx:showNotification', v.source, _U('received_invoice'))
 							end
 						)
 
@@ -114,7 +114,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 			local target      = result[1].target
 			local amount      = result[1].amount
 			local xPlayers    = ESX.GetPlayers()
-			local foundPlayer = nil	
+			local foundPlayer = nil
 
 			for k,v in pairs(xPlayers) do
 				if v.identifier == sender then
@@ -126,7 +126,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 			if targetType == 'player' then
 
 				if foundPlayer ~= nil then
-					
+
 					if xPlayer.get('money') >= amount then
 
 						MySQL.Async.execute(
@@ -139,8 +139,8 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 								xPlayer.removeMoney(amount)
 								foundPlayer.addMoney(amount)
 
-								TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~payé~s~ une facture de ~r~$' .. amount)
-								TriggerClientEvent('esx:showNotification', foundPlayer.source, 'Vous avez ~g~reçu~s~ un paiement de ~g~$' .. amount)
+								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
+								TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
 
 								cb()
 
@@ -148,7 +148,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 						)
 
 					else
-						TriggerClientEvent('esx:showNotification', _source, 'Le joueur n\'est pas connecté')
+						TriggerClientEvent('esx:showNotification', _source, _U('player_not_logged'))
 						cb()
 					end
 
@@ -168,17 +168,17 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 							xPlayer.removeMoney(amount)
 							account.addMoney(amount)
 
-							TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~payé~s~ une facture de ~r~$' .. amount)
-							
+							TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
+
 							if foundPlayer ~= nil then
-								TriggerClientEvent('esx:showNotification', foundPlayer.source, 'Vous avez ~g~reçu~s~ un paiement de ~g~$' .. amount)
+								TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
 							end
 
 							cb()
 
 						end
 					)
-						
+
 				end)
 
 			end
