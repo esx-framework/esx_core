@@ -115,7 +115,7 @@ function OpenRealestateAgentMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'wash_money_amount',
 					{
-						title = _U('amount_wash')
+						title = _U('amount_launder')
 					},
 					function(data, menu)
 
