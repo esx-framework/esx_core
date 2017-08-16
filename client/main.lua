@@ -145,9 +145,9 @@ function GetMaxVals()
 	  	bags_1       = GetNumberOfPedDrawableVariations(playerPed, 5) - 1,
 		bags_2       = GetNumberOfPedTextureVariations(playerPed, 5, Character['bags_1']) - 1,
 		helmet_1     = GetNumberOfPedPropDrawableVariations(playerPed, 0) - 1,
-		helmet_2     = GetNumberOfPedTextureVariations(playerPed, 0, Character['helmet_1']) - 1,
+		helmet_2     = GetNumberOfPedPropTextureVariations(playerPed, 0, Character['helmet_1']) - 1,
 		glasses_1    = GetNumberOfPedPropDrawableVariations(playerPed, 1) - 1,
-		glasses_2    = GetNumberOfPedTextureVariations(playerPed, 1, Character['glasses_1'] - 1),
+		glasses_2    = GetNumberOfPedPropTextureVariations(playerPed, 1, Character['glasses_1'] - 1),
 	}
 
 	return data
