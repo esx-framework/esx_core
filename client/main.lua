@@ -19,6 +19,7 @@ local PlayerData              = {}
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
+local IsInShopMenu            = false
 local Categories              = {}
 local Vehicles                = {}
 local LastVehicles            = {}
@@ -52,6 +53,8 @@ function DeleteShopInsideVehicles()
 end
 
 function OpenShopMenu()
+
+	IsInShopMenu = true
 
 	ESX.UI.Menu.CloseAll()
 
@@ -148,6 +151,8 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
+									IsInShopMenu = false
+
 									menu2.close()
 									menu.close()
 
@@ -211,6 +216,8 @@ function OpenShopMenu()
 			else
 				SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos.x, Config.Zones.ShopEntering.Pos.y, Config.Zones.ShopEntering.Pos.z)
 			end
+
+			IsInShopMenu = false
 
 		end,
 		function(data, menu)
@@ -767,7 +774,11 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_vehicleshop:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
+
+	if not IsInShopMenu then
+		ESX.UI.Menu.CloseAll()
+	end
+
 	CurrentAction = nil
 end)
 
