@@ -129,7 +129,8 @@ end)
 RegisterServerEvent('esx_phone:reload')
 AddEventHandler('esx_phone:reload', function(phoneNumber)
 
-	local xPlayer  = ESX.GetPlayerFromId(source)
+	local _source  = source
+	local xPlayer  = ESX.GetPlayerFromId(_source)
 	local contacts = {}
 
 	MySQL.Async.fetchAll(
@@ -159,7 +160,7 @@ AddEventHandler('esx_phone:reload', function(phoneNumber)
 			
 			xPlayer.set('contacts', contacts)
 
-			TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
+			TriggerClientEvent('esx_phone:loaded', _source, phoneNumber, contacts)
 
 		end
 	)
@@ -173,8 +174,11 @@ end)
 
 RegisterServerEvent('esx_phone:send')
 AddEventHandler('esx_phone:send', function(phoneNumber, message, anon)
+
+	local _source = source
+
 	for i=1, #RegisteredCallbacks, 1 do
-		RegisteredCallbacks[i](source, phoneNumber, message, anon)
+		RegisteredCallbacks[i](_source, phoneNumber, message, anon)
 	end
 end)
 
