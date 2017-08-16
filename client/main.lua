@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -41,14 +41,14 @@ function CreateBlips()
 		if property.entering ~= nil then
 
 			Blips[property.name] = AddBlipForCoord(property.entering.x, property.entering.y, property.entering.z)
-		  
+
 		  SetBlipSprite (Blips[property.name], 369)
 		  SetBlipDisplay(Blips[property.name], 4)
 		  SetBlipScale  (Blips[property.name], 1.0)
 		  SetBlipAsShortRange(Blips[property.name], true)
-			
+
 			BeginTextCommandSetBlipName("STRING")
-		  AddTextComponentString("Propriété libre")
+		  AddTextComponentString(_U('free_prop'))
 		  EndTextCommandSetBlipName(Blips[property.name])
 
 		end
@@ -127,9 +127,9 @@ function EnterProperty(name)
 		end
 
 	  for i=1, #property.ipls, 1 do
-	  	
+
 	  	RequestIpl(property.ipls[i])
-	  	
+
 	  	while not IsIplActive(property.ipls[i]) do
 	  		Citizen.Wait(0)
 	  	end
@@ -215,9 +215,9 @@ function SetPropertyOwned(name, owned)
 
 		SetBlipSprite(Blips[enteringName], 357)
 		SetBlipAsShortRange(Blips[enteringName], true)
-		
+
 		BeginTextCommandSetBlipName("STRING")
-	  AddTextComponentString("Propriété")
+	  AddTextComponentString(_U('property'))
 	  EndTextCommandSetBlipName(Blips[enteringName])
 
 	else
@@ -232,7 +232,7 @@ function SetPropertyOwned(name, owned)
 			local _gateway  = GetGateway(_property)
 
 			if _gateway ~= nil then
-				
+
 				if _gateway.name == enteringName then
 					found = true
 					break
@@ -251,7 +251,7 @@ function SetPropertyOwned(name, owned)
 			SetBlipAsShortRange(Blips[enteringName], true)
 
 			BeginTextCommandSetBlipName("STRING")
-		  AddTextComponentString("Propriété libre")
+		  AddTextComponentString(_U('free_prop'))
 		  EndTextCommandSetBlipName(Blips[enteringName])
 
 		 end
@@ -269,22 +269,22 @@ function OpenPropertyMenu(property)
 	local elements = {}
 
 	if PropertyIsOwned(property) then
-		
-		table.insert(elements, {label = 'Entrer', value = 'enter'})
+
+		table.insert(elements, {label = _U('enter'), value = 'enter'})
 
 		if not Config.EnablePlayerManagement then
-			table.insert(elements, {label = 'Rendre', value = 'leave'})
+			table.insert(elements, {label = _U('leave'), value = 'leave'})
 		end
 
 	else
 
 		if not Config.EnablePlayerManagement then
-			table.insert(elements, {label = 'Acheter', value = 'buy'})
-			table.insert(elements, {label = 'Louer',   value = 'rent'})
+			table.insert(elements, {label = _U('buy'), value = 'buy'})
+			table.insert(elements, {label = _U('rent'),   value = 'rent'})
 		end
 
-		table.insert(elements, {label = 'Visiter', value = 'visit'})
-	
+		table.insert(elements, {label = _U('visit'), value = 'visit'})
+
 	end
 
 	ESX.UI.Menu.Open(
@@ -295,9 +295,9 @@ function OpenPropertyMenu(property)
 			elements = elements,
 		},
 		function(data2, menu)
-			
+
 			menu.close()
-			
+
 			if data2.current.value == 'enter' then
 				EnterProperty(property.name)
 			end
@@ -324,7 +324,7 @@ function OpenPropertyMenu(property)
 				menu.close()
 
 				CurrentAction     = 'property_menu'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+				CurrentActionMsg  = _U('press_to_menu')
 				CurrentActionData = {property = property}
 		end
 	)
@@ -332,7 +332,7 @@ function OpenPropertyMenu(property)
 end
 
 function OpenGatewayMenu(property)
-	
+
 	if Config.EnablePlayerManagement then
 		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
 	else
@@ -343,8 +343,8 @@ function OpenGatewayMenu(property)
 				title    = property.name,
 				align    = 'top-left',
 				elements = {
-					{label = 'Propriétés acquises',    value = 'owned_properties'},
-					{label = 'Propriétés disponibles', value = 'available_properties'},
+					{label = _U('owned_properties'),    value = 'owned_properties'},
+					{label = _U('available_properties'), value = 'available_properties'},
 				}
 			},
 			function(data, menu)
@@ -359,11 +359,11 @@ function OpenGatewayMenu(property)
 
 			end,
 			function(data, menu)
-				
+
 				menu.close()
 
 				CurrentAction     = 'gateway_menu'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+				CurrentActionMsg  = _U('press_to_menu')
 				CurrentActionData = {property = property}
 
 			end
@@ -379,7 +379,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 	local elements          = {}
 
 	for i=1, #gatewayProperties, 1 do
-		
+
 		if PropertyIsOwned(gatewayProperties[i]) then
 			table.insert(elements, {
 				label = gatewayProperties[i].label,
@@ -392,20 +392,20 @@ function OpenGatewayOwnedPropertiesMenu(property)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'gateway_owned_properties',
 		{
-			title    = property.name .. ' - Propriétés Acquises',
+			title    = property.name .. ' - ' .. _U('owned_properties'),
 			align    = 'top-left',
 			elements = elements,
 		},
 		function(data, menu)
-			
+
 			menu.close()
 
 			local elements = {
-				{label = 'Entrer', value = 'enter'}
+				{label = _U('enter'), value = 'enter'}
 			}
 
 			if not Config.EnablePlayerManagement then
-				table.insert(elements, {label = 'Rendre', value = 'leave'})
+				table.insert(elements, {label = _U('leave'), value = 'leave'})
 			end
 
 			ESX.UI.Menu.Open(
@@ -416,9 +416,9 @@ function OpenGatewayOwnedPropertiesMenu(property)
 					elements = elements,
 				},
 				function(data2, menu)
-					
+
 					menu.close()
-					
+
 					if data2.current.value == 'enter' then
 						EnterProperty(data.current.value)
 					end
@@ -442,12 +442,12 @@ function OpenGatewayOwnedPropertiesMenu(property)
 end
 
 function OpenGatewayAvailablePropertiesMenu(property)
-	
+
 	local gatewayProperties = GetGatewayProperties(property)
 	local elements          = {}
 
 	for i=1, #gatewayProperties, 1 do
-		
+
 		if not PropertyIsOwned(gatewayProperties[i]) then
 			table.insert(elements, {
 				label = gatewayProperties[i].label .. ' $' .. gatewayProperties[i].price,
@@ -461,12 +461,12 @@ function OpenGatewayAvailablePropertiesMenu(property)
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'gateway_available_properties',
 		{
-			title    = property.name.. ' - Propriétés Disponbibles',
+			title    = property.name.. ' - ' .. _U('available_properties'),
 			align    = 'top-left',
 			elements = elements,
 		},
 		function(data, menu)
-			
+
 			menu.close()
 
 			ESX.UI.Menu.Open(
@@ -475,9 +475,9 @@ function OpenGatewayAvailablePropertiesMenu(property)
 					title    = property.name,
 					align    = 'top-left',
 					elements = {
-						{label = 'Acheter', value = 'buy'},
-						{label = 'Louer',   value = 'rent'},
-						{label = 'Visiter', value = 'visit'},
+						{label = _U('buy'), value = 'buy'},
+						{label = _U('rent'),   value = 'rent'},
+						{label = _U('visit'), value = 'visit'},
 					},
 				},
 				function(data2, menu)
@@ -526,14 +526,14 @@ function OpenRoomMenu(property)
 			title    = property.label,
 			align    = 'top-left',
 			elements = {
-				{label = 'Inviter un joueur', value = 'invite_player'},
-				{label = 'Dressing',          value = 'player_dressing'},
-				{label = 'Retirer objet',     value = 'room_inventory'},
-				{label = 'Déposer objet',     value = 'player_inventory'},
+				{label = _U('invite_player'), value = 'invite_player'},
+				{label = _U('player_clothes'),          value = 'player_dressing'},
+				{label = _U('remove_object'),     value = 'room_inventory'},
+				{label = _U('deposit_object'),     value = 'player_inventory'},
 			},
 		},
 		function(data, menu)
-			
+
 			if data.current.value == 'invite_player' then
 
 				local playersInArea = ESX.Game.GetPlayersInArea(entering, 10.0)
@@ -548,7 +548,7 @@ function OpenRoomMenu(property)
 				ESX.UI.Menu.Open(
 					'default', GetCurrentResourceName(), 'room_invite',
 					{
-						title    = property.label .. ' - Invite',
+						title    = property.label .. ' - ' .. _U('invite'),
 						align    = 'top-left',
 						elements = elements,
 					},
@@ -563,7 +563,7 @@ function OpenRoomMenu(property)
 			end
 
 			if data.current.value == 'player_dressing' then
-				
+
 				ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
 
 					local elements = {}
@@ -575,14 +575,14 @@ function OpenRoomMenu(property)
 					ESX.UI.Menu.Open(
 						'default', GetCurrentResourceName(), 'player_dressing',
 						{
-							title    = property.label .. ' - Dressing',
+							title    = property.label .. ' - ' .. _U('player_clothes'),
 							align    = 'top-left',
 							elements = elements,
 						},
 						function(data, menu)
 
 							TriggerEvent('skinchanger:getSkin', function(skin)
-								
+
 								TriggerEvent('skinchanger:loadClothes', skin, data.current.value)
 
 								TriggerEvent('skinchanger:getSkin', function(skin)
@@ -615,7 +615,7 @@ function OpenRoomMenu(property)
 			menu.close()
 
 			CurrentAction     = 'room_menu'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+			CurrentActionMsg  = _U('press_to_menu')
 			CurrentActionData = {property = property}
 		end
 	)
@@ -628,10 +628,10 @@ function OpenRoomInventoryMenu(property)
 
 		local elements = {}
 
-		table.insert(elements, {label = 'Argent sale $' .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+		table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
 
 		for i=1, #inventory.items, 1 do
-			
+
 			local item = inventory.items[i]
 
 			if item.count > 0 then
@@ -648,18 +648,18 @@ function OpenRoomInventoryMenu(property)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'room_inventory',
 			{
-				title    = property.label .. ' - Inventaire',
+				title    = property.label .. ' - ' .. _U('inventory'),
 				align    = 'top-left',
 				elements = elements,
 			},
 			function(data, menu)
 
 				if data.current.type == 'item_weapon' then
-					
+
 					menu.close()
 
 					TriggerServerEvent('esx_property:getItem', data.current.type, data.current.value, data.current.ammo)
-					
+
 					ESX.SetTimeout(300, function()
 						OpenRoomInventoryMenu(property)
 					end)
@@ -669,20 +669,20 @@ function OpenRoomInventoryMenu(property)
 					ESX.UI.Menu.Open(
 						'dialog', GetCurrentResourceName(), 'get_item_count',
 						{
-							title = 'Quantité ?',
+							title = _U('amount'),
 						},
 						function(data2, menu)
-							
+
 							local quantity = tonumber(data2.value)
 
 							if quantity == nil then
-								ESX.ShowNotification('Montant invalide')
+								ESX.ShowNotification(_U('amount_invalid'))
 							else
-								
+
 								menu.close()
 
 								TriggerServerEvent('esx_property:getItem', data.current.type, data.current.value, quantity)
-								
+
 								ESX.SetTimeout(300, function()
 									OpenRoomInventoryMenu(property)
 								end)
@@ -713,16 +713,16 @@ function OpenPlayerInventoryMenu(property)
 
 		local elements = {}
 
-		table.insert(elements, {label = 'Argent sale $' .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+		table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
 
 		for i=1, #inventory.items, 1 do
-			
+
 			local item = inventory.items[i]
-			
+
 			if item.count > 0 then
 				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
 			end
-			
+
 		end
 
 		local playerPed  = GetPlayerPed(-1)
@@ -742,35 +742,35 @@ function OpenPlayerInventoryMenu(property)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'player_inventory',
 			{
-				title    = property.label .. ' - Inventaire',
+				title    = property.label .. ' - ' .. _U('inventory'),
 				align    = 'top-left',
 				elements = elements,
 			},
 			function(data, menu)
-				
+
 				if data.current.type == 'item_weapon' then
-					
+
 					menu.close()
 
 					TriggerServerEvent('esx_property:putItem', data.current.type, data.current.value, data.current.ammo)
-					
+
 					ESX.SetTimeout(300, function()
 						OpenPlayerInventoryMenu(property)
 					end)
-		
+
 				else
 
 					ESX.UI.Menu.Open(
 						'dialog', GetCurrentResourceName(), 'put_item_count',
 						{
-							title = 'Quantité ?',
+							title = _U('amount'),
 						},
 						function(data2, menu)
-							
+
 							menu.close()
 
 							TriggerServerEvent('esx_property:putItem', data.current.type, data.current.value, tonumber(data2.value))
-							
+
 							ESX.SetTimeout(300, function()
 								OpenPlayerInventoryMenu(property)
 							end)
@@ -840,7 +840,7 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	
+
 	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
 		for i=1, #ownedProperties, 1 do
 			SetPropertyOwned(ownedProperties[i], true)
@@ -850,18 +850,18 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
-	
+
 	local property = GetProperty(name)
 
 	if part == 'entering' then
 
 		if property.isSingle then
 			CurrentAction     = 'property_menu'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+			CurrentActionMsg  = _U('press_to_menu')
 			CurrentActionData = {property = property}
 		else
 			CurrentAction     = 'gateway_menu'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+			CurrentActionMsg  = _U('press_to_menu')
 			CurrentActionData = {property = property}
 		end
 
@@ -869,13 +869,13 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
 
 	if part == 'exit' then
 		CurrentAction     = 'room_exit'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour sortir de la propriété'
+		CurrentActionMsg  = _U('press_to_exit')
 		CurrentActionData = {propertyName = name}
 	end
 
 	if part == 'roomMenu' then
 		CurrentAction     = 'room_menu'
-		CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+		CurrentActionMsg  = _U('press_to_menu')
 		CurrentActionData = {property = property}
 	end
 
@@ -888,7 +888,7 @@ end)
 
 -- Init
 Citizen.CreateThread(function()
-	
+
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
@@ -904,11 +904,11 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
-		
+
 		local coords = GetEntityCoords(GetPlayerPed(-1))
-		
+
 		for i=1, #Config.Properties, 1 do
 
 			local property = Config.Properties[i]
@@ -933,7 +933,7 @@ end)
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
 
 		local coords          = GetEntityCoords(GetPlayerPed(-1))
@@ -978,18 +978,18 @@ Citizen.CreateThread(function()
 		end
 
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastProperty ~= currentProperty or LastPart ~= currentPart) ) then
-			
+
 			HasAlreadyEnteredMarker = true
 			LastProperty            = currentProperty
 			LastPart                = currentPart
-			
+
 			TriggerEvent('esx_property:hasEnteredMarker', currentProperty, currentPart)
 		end
 
 		if not isInMarker and HasAlreadyEnteredMarker then
-			
+
 			HasAlreadyEnteredMarker = false
-			
+
 			TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
 		end
 
@@ -1009,7 +1009,7 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
-				
+
 				if CurrentAction == 'property_menu' then
 					OpenPropertyMenu(CurrentActionData.property)
 				end
@@ -1034,7 +1034,7 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
-				
+
 			end
 
 		end

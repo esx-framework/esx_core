@@ -15,7 +15,7 @@ end
 function SetPropertyOwned(name, price, rented, owner)
 
 	MySQL.Async.execute(
-		'INSERT INTO owned_properties (name, price, rented, owner) VALUES (@name, @price, @rented, @owner)', 
+		'INSERT INTO owned_properties (name, price, rented, owner) VALUES (@name, @price, @rented, @owner)',
 		{
 			['@name']   = name,
 			['@price']  = price,
@@ -28,13 +28,13 @@ function SetPropertyOwned(name, price, rented, owner)
 
 			for k,v in pairs(xPlayers) do
 				if v.identifier == owner then
-					
+
 					TriggerClientEvent('esx_property:setPropertyOwned', v.source, name, true)
 
 					if rented then
-						TriggerClientEvent('esx:showNotification', v.source, 'Vous avez loué une propriété pour $' .. price)
+						TriggerClientEvent('esx:showNotification', v.source, _U('rented_for') .. price)
 					else
-						TriggerClientEvent('esx:showNotification', v.source, 'Vous avez acheté une propriété pour $' .. price)
+						TriggerClientEvent('esx:showNotification', v.source, _U('purchased_for') .. price)
 					end
 
 					break
@@ -61,7 +61,7 @@ function RemoveOwnedProperty(name, owner)
 			for k,v in pairs(xPlayers) do
 				if v.identifier == owner then
 					TriggerClientEvent('esx_property:setPropertyOwned', v.source, name, false)
-					TriggerClientEvent('esx:showNotification', v.source, 'Vous avez rendu une propriété')
+					TriggerClientEvent('esx:showNotification', v.source, _U('made_property'))
 					break
 				end
 			end
@@ -74,7 +74,7 @@ end
 AddEventHandler('onMySQLReady', function ()
 
 	MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
-		
+
 		for i=1, #properties, 1 do
 
 			local entering  = nil
@@ -183,10 +183,10 @@ end)
 
 RegisterServerEvent('esx_property:rentProperty')
 AddEventHandler('esx_property:rentProperty', function(propertyName)
-	
+
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
-	
+
 	SetPropertyOwned(propertyName, property.price / 200, true, xPlayer.identifier)
 
 end)
@@ -203,16 +203,16 @@ AddEventHandler('esx_property:buyProperty', function(propertyName)
 		SetPropertyOwned(propertyName, property.price, false, xPlayer.identifier)
 
 	else
-		TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez pas assez d\'argent')
+		TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
 	end
 
 end)
 
 RegisterServerEvent('esx_property:removeOwnedProperty')
 AddEventHandler('esx_property:removeOwnedProperty', function(propertyName)
-	
+
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	RemoveOwnedProperty(propertyName, xPlayer.identifier)
 
 end)
@@ -223,9 +223,9 @@ end)
 
 RegisterServerEvent('esx_property:saveLastProperty')
 AddEventHandler('esx_property:saveLastProperty', function(property)
-	
+
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	MySQL.Async.execute(
 		'UPDATE users SET last_property = @last_property WHERE identifier = @identifier',
 		{
@@ -239,7 +239,7 @@ end)
 RegisterServerEvent('esx_property:deleteLastProperty')
 AddEventHandler('esx_property:deleteLastProperty', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	MySQL.Async.execute(
 		'UPDATE users SET last_property = NULL WHERE identifier = @identifier',
 		{
@@ -256,14 +256,14 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 	if type == 'item_standard' then
 
 		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayer.identifier, function(inventory)
-			
+
 			local roomItemCount = inventory.getItem(item).count
-		
+
 			if roomItemCount >= count then
 				inventory.removeItem(item, count)
 				xPlayer.addInventoryItem(item, count)
 			else
-				TriggerClientEvent('esx:showNotification', source, 'Quantité invalide')
+				TriggerClientEvent('esx:showNotification', source, _U('invalid_quantity'))
 			end
 
 		end)
@@ -273,14 +273,14 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 	if type == 'item_account' then
 
 		TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayer.identifier, function(account)
-			
+
 			local roomAccountMoney = account.money
-		
+
 			if roomAccountMoney >= count then
 				account.removeMoney(count)
 				xPlayer.addAccountMoney(item, count)
 			else
-				TriggerClientEvent('esx:showNotification', source, 'Montant invalide')
+				TriggerClientEvent('esx:showNotification', source, _U('amount_invalid'))
 			end
 
 		end)
@@ -290,7 +290,7 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 	if type == 'item_weapon' then
 
 		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-			
+
 			local storeWeapons = store.get('weapons')
 
 			if storeWeapons == nil then
@@ -302,12 +302,12 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 
 			for i=1, #storeWeapons, 1 do
 				if storeWeapons[i].name == item then
-					
+
 					weaponName = storeWeapons[i].name
 					ammo       = storeWeapons[i].ammo
-					
+
 					table.remove(storeWeapons, i)
-					
+
 					break
 				end
 			end
@@ -340,7 +340,7 @@ AddEventHandler('esx_property:putItem', function(type, item, count)
 			end)
 
 		else
-			TriggerClientEvent('esx:showNotification', source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', source, _U('invalid_quantity'))
 		end
 
 	end
@@ -358,7 +358,7 @@ AddEventHandler('esx_property:putItem', function(type, item, count)
 			end)
 
 		else
-			TriggerClientEvent('esx:showNotification', source, 'Montant invalide')
+			TriggerClientEvent('esx:showNotification', source, _U('amount_invalid'))
 		end
 
 	end
@@ -366,7 +366,7 @@ AddEventHandler('esx_property:putItem', function(type, item, count)
 	if type == 'item_weapon' then
 
 		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-			
+
 			local storeWeapons = store.get('weapons')
 
 			if storeWeapons == nil then
@@ -447,7 +447,7 @@ ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source,
 	end)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		
+
 		local storeWeapons = store.get('weapons')
 
 		if storeWeapons ~= nil then
@@ -520,8 +520,8 @@ function PayRent(d, h, m)
 				if foundPlayer then
 
 					xPlayer.removeMoney(result[i].price)
-					TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~payé~s~ votre loyer : ~g~$' .. result[i].price)
-				
+					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent') .. result[i].price)
+
 				else
 
 					MySQL.Async.fetchAll(
