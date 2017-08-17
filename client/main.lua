@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -37,11 +37,11 @@ function OpenShopMenu()
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'shop_confirm',
 			{
-				title = 'Valider cet achat ?',
+				title = _U('valid_this_purchase'),
 				align = 'top-left',
 				elements = {
-					{label = 'Oui', value = 'yes'},
-					{label = 'Non', value = 'no'},
+					{label = _U('yes'), value = 'yes'},
+					{label = _U('no'), value = 'no'},
 				}
 			},
 			function(data, menu)
@@ -67,10 +67,10 @@ function OpenShopMenu()
 									ESX.UI.Menu.Open(
 										'dialog', GetCurrentResourceName(), 'outfit_name',
 										{
-											title = 'Nom de la tenue ?',
+											title = _U('name_outfit'),
 										},
 										function(data, menu)
-											
+
 											menu.close()
 
 											TriggerEvent('skinchanger:getSkin', function(skin)
@@ -93,8 +93,8 @@ function OpenShopMenu()
 								TriggerEvent('skinchanger:loadSkin', skin)
 							end)
 
-							ESX.ShowNotification('Vous n\'avez pas assez d\'argent')
-						
+							ESX.ShowNotification(_U('not_enough_money'))
+
 						end
 
 					end)
@@ -110,7 +110,7 @@ function OpenShopMenu()
 				end
 
 				CurrentAction     = 'shop_menu'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+				CurrentActionMsg  = _U('press_menu')
 				CurrentActionData = {}
 
 			end,
@@ -119,7 +119,7 @@ function OpenShopMenu()
 				menu.close()
 
 				CurrentAction     = 'shop_menu'
-				CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+				CurrentActionMsg  = _U('press_menu')
 				CurrentActionData = {}
 
 			end
@@ -130,7 +130,7 @@ function OpenShopMenu()
 			menu.close()
 
 			CurrentAction     = 'shop_menu'
-			CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+			CurrentActionMsg  = _U('press_menu')
 			CurrentActionData = {}
 
 	end, {
@@ -145,8 +145,8 @@ function OpenShopMenu()
 		'pants_2',
 		'shoes_1',
 		'shoes_2',
-	  'chain_1',
-	  'chain_2',
+	  	'chain_1',
+	  	'chain_2',
 		'helmet_1',
 		'helmet_2',
 		'glasses_1',
@@ -157,7 +157,7 @@ end
 
 AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+	CurrentActionMsg  = _U('press_menu')
 	CurrentActionData = {}
 end)
 
@@ -168,9 +168,9 @@ end)
 
 -- Create Blips
 Citizen.CreateThread(function()
-	
+
 	for i=1, #Config.Shops, 1 do
-		
+
 		local blip = AddBlipForCoord(Config.Shops[i].x, Config.Shops[i].y, Config.Shops[i].z)
 
 		SetBlipSprite (blip, 73)
@@ -180,7 +180,7 @@ Citizen.CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Vêtements")
+		AddTextComponentString(_U('clothes'))
 		EndTextCommandSetBlipName(blip)
 	end
 
@@ -189,11 +189,11 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
-		
+
 		local coords = GetEntityCoords(GetPlayerPed(-1))
-		
+
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
@@ -206,9 +206,9 @@ end)
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
-		
+
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local isInMarker  = false
 		local currentZone = nil
@@ -247,14 +247,14 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
-				
+
 				if CurrentAction == 'shop_menu' then
 					OpenShopMenu()
 				end
 
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
-				
+
 			end
 
 		end

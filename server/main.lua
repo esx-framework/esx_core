@@ -9,7 +9,7 @@ AddEventHandler('esx_clotheshop:pay', function()
 
 	xPlayer.removeMoney(Config.Price)
 
-	TriggerClientEvent('esx:showNotification', source, 'Vous avez payé $' .. Config.Price)
+	TriggerClientEvent('esx:showNotification', source, _U('you_paid') .. Config.Price)
 
 end)
 
@@ -19,7 +19,7 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		
+
 		local dressing = store.get('dressing')
 
 		if dressing == nil then
