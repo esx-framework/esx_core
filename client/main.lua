@@ -24,6 +24,7 @@ local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local FirstSpawn              = true
 local PlayerLoaded            = false
+local Instance                = {}
 
 function DrawSub(text, time)
   ClearPrints()
@@ -112,12 +113,6 @@ function EnterProperty(name)
 
 	TriggerServerEvent('esx_property:saveLastProperty', name)
 
-	TriggerEvent('instance:get', function(instance)
-		if instance.host == nil then
-			TriggerEvent('instance:create')
-		end
-	end)
-
 	Citizen.CreateThread(function()
 
 		DoScreenFadeOut(800)
@@ -169,12 +164,6 @@ function ExitProperty(name)
 		end
 
 	  SetEntityCoords(playerPed, outside.x,  outside.y,  outside.z)
-
-		TriggerEvent('instance:get', function(instance)
-			if instance.host ~= nil then
-				TriggerEvent('instance:leave')
-			end
-		end)
 
 	  for i=1, #property.ipls, 1 do
 	  	RemoveIpl(property.ipls[i])
@@ -299,7 +288,7 @@ function OpenPropertyMenu(property)
 			menu.close()
 
 			if data2.current.value == 'enter' then
-				EnterProperty(property.name)
+				TriggerEvent('instance:create', 'property', {property = property.name})
 			end
 
 			if data2.current.value == 'leave' then
@@ -315,7 +304,7 @@ function OpenPropertyMenu(property)
 			end
 
 			if data2.current.value == 'visit' then
-				EnterProperty(property.name)
+				TriggerEvent('instance:create', 'property', {property = property.name})
 			end
 
 		end,
@@ -420,7 +409,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 					menu.close()
 
 					if data2.current.value == 'enter' then
-						EnterProperty(data.current.value)
+						TriggerEvent('instance:create', 'property', {property = data.current.value})
 					end
 
 					if data2.current.value == 'leave' then
@@ -492,7 +481,7 @@ function OpenGatewayAvailablePropertiesMenu(property)
 					end
 
 					if data2.current.value == 'visit' then
-						EnterProperty(data.current.value)
+						TriggerEvent('instance:create', 'property', {property = data.current.value})
 					end
 
 				end,
@@ -553,7 +542,8 @@ function OpenRoomMenu(property)
 						elements = elements,
 					},
 					function(data, menu)
-						TriggerEvent('instance:invite', GetPlayerServerId(data.current.value), property.inside)
+						TriggerEvent('instance:invite', 'property', GetPlayerServerId(data.current.value), {property = property.name})
+						ESX.ShowNotification(_U('you_invited', GetPlayerName(data.current.value)))
 					end,
 					function(data, menu)
 						menu.close()
@@ -793,6 +783,15 @@ function OpenPlayerInventoryMenu(property)
 
 end
 
+TriggerEvent('instance:registerType', 'property',
+	function(instance)
+		EnterProperty(instance.data.property)
+	end,
+	function(instance)
+		ExitProperty(instance.data.property)
+	end
+)
+
 AddEventHandler('playerSpawned', function()
 
 	if FirstSpawn then
@@ -805,7 +804,7 @@ AddEventHandler('playerSpawned', function()
 
 			ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
 				if propertyName ~= nil then
-					EnterProperty(propertyName)
+					TriggerEvent('instance:create', 'property', {property = propertyName})
 				end
 			end)
 
@@ -847,6 +846,22 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 		end
 	end)
 
+end)
+
+RegisterNetEvent('instance:onCreate')
+AddEventHandler('instance:onCreate', function(instance)
+
+	if instance.type == 'property' then
+		TriggerEvent('instance:enter', instance)
+	end
+
+end)
+
+RegisterNetEvent('instance:onPlayerLeft')
+AddEventHandler('instance:onPlayerLeft', function(instance, player)
+	if player == instance.host then
+		ExitProperty(instance.data.property)
+	end
 end)
 
 AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
@@ -1029,7 +1044,9 @@ Citizen.CreateThread(function()
 				end
 
 				if CurrentAction == 'room_exit' then
-					ExitProperty(CurrentActionData.propertyName)
+					TriggerEvent('instance:get', function(instance)
+						TriggerEvent('instance:leave')
+					end)
 				end
 
 				CurrentAction = nil

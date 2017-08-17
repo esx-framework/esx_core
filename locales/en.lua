@@ -11,6 +11,7 @@ Locales['en'] = {
 	['owned_properties'] = 'acquired properties',
 	['available_properties'] = 'available properties',
 	['invite_player'] = 'invite a player',
+	['you_invited'] = 'you invited %s',
 	['player_clothes'] = 'clothes',
 	['remove_object'] = 'remove object',
 	['deposit_object'] = 'deposit object',
