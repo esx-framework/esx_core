@@ -14,10 +14,10 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 			account.removeMoney(amount)
 			xPlayer.addMoney(amount)
 
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré ~g~$' .. amount)
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. amount)
 
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Montant invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 		end
 
 	end)
@@ -36,10 +36,10 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 			account.addMoney(amount)
 		end)
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez déposé ~r~$' .. amount)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited') .. amount)
 
 	else
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Montant invalide')
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 	end
 
 end)
@@ -62,12 +62,12 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 					['@amount']     = amount
 				},
 				function(rowsChanged)
-					TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~$' .. amount .. '~s~ en attente de ~r~blanchiement~s~ (24h)')
+					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have') .. amount .. '~s~ en attente de ~r~blanchiement~s~ (24h)')
 				end
 			)
 
 	else
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Montant invalide')
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 	end
 
 end)
@@ -104,7 +104,7 @@ function WashMoneyCRON(d, h, m)
 				end)
 
 				if foundPlayer then
-					TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~r~blanchi~s~ votre argent : ~g~$' .. result[i].amount)
+					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered') .. result[i].amount)
 				end
 
 				MySQL.Async.execute(
