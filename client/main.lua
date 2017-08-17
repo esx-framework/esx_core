@@ -10,6 +10,17 @@ Citizen.CreateThread(function()
 	end
 end)
 
+TriggerEvent('instance:registerType', 'garage')
+
+RegisterNetEvent('instance:onCreate')
+AddEventHandler('instance:onCreate', function(instance)
+
+	if instance.type == 'garage' then
+		TriggerEvent('instance:enter', instance)
+	end
+
+end)
+
 AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 	
 	if part == 'ExteriorEntryPoint' then
@@ -36,7 +47,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 				ESX.Game.Teleport(playerPed, spawnCoords, function()
 
-					TriggerEvent('instance:create')
+					TriggerEvent('instance:create', 'garage')
 
 					ESX.Game.SpawnLocalVehicle(vehicleProps.model, spawnCoords, garage.InteriorSpawnPoint.Heading, function(vehicle)
 						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
@@ -81,7 +92,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 					z = garage.InteriorSpawnPoint.Pos.z
 				}, function()
 
-					TriggerEvent('instance:create')
+					TriggerEvent('instance:create', 'garage')
 
 					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
@@ -124,7 +135,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 				z = garage.InteriorSpawnPoint.Pos.z
 			}, function()
 
-				TriggerEvent('instance:create')
+				TriggerEvent('instance:create', 'garage')
 
 				ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
