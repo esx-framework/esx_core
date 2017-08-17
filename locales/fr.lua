@@ -16,7 +16,7 @@ Locales['fr'] = {
 	['alarm_triggered'] = 'l\'alarme à été déclenché',
 	['hold_pos'] = 'tenez la position pendant 5min et l\'argent est à vous!',
 	['robbery_complete'] = '~r~ Braquage terminé.~s~ ~h~ Fuie!',
-	['robbery_complete_at'] = '~r~ Braquage terminé à: ~b~'
+	['robbery_complete_at'] = '~r~ Braquage terminé à: ~b~',
 	['min_two_police'] = 'il faut minimum ~b~2 policiers~s~ en ville pour braquer.',
 	['robbery_already'] = '~r~Un braquage est déjà en cours.',
 
