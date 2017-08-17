@@ -1,3 +1,6 @@
+Config = {}
+Config.Locale = 'fr'
+
 Stores = {
 	--[["paleto_twentyfourseven"] = {
 		position = { ['x'] = 1736.32092285156, ['y'] = 6419.4970703125, ['z'] = 35.037223815918 },

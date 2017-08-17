@@ -57,7 +57,7 @@ end)
 RegisterNetEvent('esx_holdup:toofarlocal')
 AddEventHandler('esx_holdup:toofarlocal', function(robb)
 	holdingup = false
-	ESX.ShowNotification('Le braquage vas être annulé, vous ne gagnerez rien!')
+	ESX.ShowNotification(_U('robbery_cancelled'))
 	robbingName = ""
 	secondsRemaining = 0
 	incircle = false
@@ -67,7 +67,7 @@ end)
 RegisterNetEvent('esx_holdup:robberycomplete')
 AddEventHandler('esx_holdup:robberycomplete', function(robb)
 	holdingup = false
-	ESX.ShowNotification('Braquage réussi vous avez gagné ~g~$' .. Stores[store].reward)
+	ESX.ShowNotification(_U('robbery_cancelled') .. Stores[store].reward)
 	store = ""
 	secondsRemaining = 0
 	incircle = false
@@ -94,7 +94,7 @@ Citizen.CreateThread(function()
 		SetBlipScale(blip, 0.8)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Braquage magasin")
+		AddTextComponentString(_U('shop_robbery'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
@@ -110,10 +110,10 @@ Citizen.CreateThread(function()
 			if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 15.0)then
 				if not holdingup then
 					DrawMarker(1, v.position.x, v.position.y, v.position.z - 1, 0, 0, 0, 0, 0, 0, 1.0001, 1.0001, 1.5001, 1555, 0, 0,255, 0, 0, 0,0)
-					
+
 					if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 1.0)then
 						if (incircle == false) then
-							DisplayHelpText("Appuyer sur ~INPUT_CONTEXT~ pour braquer ~b~" .. v.nameofstore)
+							DisplayHelpText(_U('press_to_rob') .. v.nameofstore)
 						end
 						incircle = true
 						if IsControlJustReleased(1, 51) then
@@ -128,8 +128,8 @@ Citizen.CreateThread(function()
 
 		if holdingup then
 
-			drawTxt(0.66, 1.44, 1.0,1.0,0.4, "Braquage de magasin: ~r~" .. secondsRemaining .. "~w~ secondes restantes", 255, 255, 255, 255)
-			
+			drawTxt(0.66, 1.44, 1.0,1.0,0.4, _U('robbery_of') .. secondsRemaining .. _U('seconds_remaining'), 255, 255, 255, 255)
+
 			local pos2 = Stores[store].position
 
 			if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) > 7.5)then
