@@ -1,4 +1,4 @@
-Locales['ptbr'] = {
+Locales['br'] = {
 	['invalid_amount']    = '~r~Quantidade inválida',
 	['deposit_money']          = 'Você depósitou ~g~$',
 	['withdraw_money']         = 'Você retirou ~g~$', 
