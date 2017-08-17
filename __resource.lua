@@ -4,6 +4,7 @@ description 'ESX Skin'
 
 server_scripts {
 	'@es_extended/locale.lua',
+	'config.lua',
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
@@ -13,6 +14,7 @@ server_scripts {
 
 client_scripts {
 	'@es_extended/locale.lua',
+	'config.lua',
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
