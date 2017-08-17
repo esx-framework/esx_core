@@ -16,7 +16,8 @@ Config.Zones = {
             
         }
     },
-	blackweashop = {
+    
+	BlackWeashop = {
 		legal=1,
         Items = {},
         Pos = {

@@ -3,22 +3,6 @@ local ItemsLabels = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('onMySQLReady', function()
-
-	MySQL.Async.fetchAll(
-		'SELECT * FROM items',
-		{},
-		function(result)
-			
-			for i=1, #result, 1 do
-				ItemsLabels[result[i].name] = result[i].label
-			end-- 
-
-		end
-	)
-
-end)
-
 ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 
 	MySQL.Async.fetchAll(
@@ -61,7 +45,7 @@ AddEventHandler('esx_weashop:buyItem', function(itemName, price, zone)
 
 		xPlayer.removeAccountMoney('black_money', price)
 		xPlayer.addWeapon(itemName, 42)
-		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ItemsLabels[itemName])
+		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ESX.GetWeaponLabel(itemName))
 
 	else
 		TriggerClientEvent('esx:showNotification', _source, _U('not_enough_black'))
@@ -72,7 +56,7 @@ AddEventHandler('esx_weashop:buyItem', function(itemName, price, zone)
 		xPlayer.removeMoney(price)
 		xPlayer.addWeapon(itemName, 42)
 
-		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ItemsLabels[itemName])
+		TriggerClientEvent('esx:showNotification', _source, _U('buy') .. ESX.GetWeaponLabel(itemName))
 
 	else
 		TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
