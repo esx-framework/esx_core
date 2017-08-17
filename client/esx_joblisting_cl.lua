@@ -31,7 +31,7 @@ function ShowJobListingMenu(data)
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'joblisting',
 			{
-				title    = 'POLE EMPLOI',
+				title    = _U('job_center'),
 				elements = elements
 			},
 			function(data, menu)
