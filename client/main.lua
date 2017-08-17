@@ -10,32 +10,40 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local GUI              = {}
-GUI.Time               = 0
-local Instance         = {}
-local InstanceInvite   = nil
-local InstancedPlayers = {}
+local GUI                     = {}
+GUI.Time                      = 0
+local Instance                = {}
+local InstanceInvite          = nil
+local InstancedPlayers        = {}
+local RegisteredInstanceTypes = {}
 
 function ShowNotification(msg)
 	SetNotificationTextEntry('STRING')
 	AddTextComponentString(msg)
-	DrawNotification(0,1)
+	DrawNotification(0, 1)
 end
 
 function GetInstance()
 	return Instance
 end
 
-function CreateInstance()
-	TriggerServerEvent('instance:create')
+function CreateInstance(type, data)
+	TriggerServerEvent('instance:create', type, data)
 end
 
 function CloseInstance()
+	Instance = {}
 	TriggerServerEvent('instance:close')
 end
 
 function EnterInstance(instance)
-	TriggerServerEvent('instance:enter', InstanceInvite.host)
+	
+	TriggerServerEvent('instance:enter', instance.host)
+
+	if RegisteredInstanceTypes[instance.type].enter ~= nil then
+		RegisteredInstanceTypes[instance.type].enter(instance)
+	end
+
 end
 
 function LeaveInstance()
@@ -46,21 +54,32 @@ function LeaveInstance()
 			TriggerEvent('esx:showNotification', _U('left_instance'))
 		end
 
+		if RegisteredInstanceTypes[Instance.type].exit ~= nil then
+			RegisteredInstanceTypes[Instance.type].exit(Instance)
+		end
+
 		TriggerServerEvent('instance:leave', Instance.host)
 	end
 
 end
 
-function InviteToInstance(player, pos)
-	TriggerServerEvent('instance:invite', Instance.host, player, pos)
+function InviteToInstance(type, player, pos)
+	TriggerServerEvent('instance:invite', Instance.host, type, player, pos)
+end
+
+function RegisterInstanceType(type, enter, exit)
+	RegisteredInstanceTypes[type] = {
+		enter = enter,
+		exit  = exit
+	}
 end
 
 AddEventHandler('instance:get', function(cb)
 	cb(GetInstance())
 end)
 
-AddEventHandler('instance:create', function()
-	CreateInstance()
+AddEventHandler('instance:create', function(type, data)
+	CreateInstance(type, data)
 end)
 
 AddEventHandler('instance:close', function()
@@ -75,13 +94,12 @@ AddEventHandler('instance:leave', function()
 	LeaveInstance()
 end)
 
-AddEventHandler('instance:invite', function(player, pos)
-	InviteToInstance(player, pos)
+AddEventHandler('instance:invite', function(type, player, pos)
+	InviteToInstance(type, player, pos)
 end)
 
-RegisterNetEvent('instance:onData')
-AddEventHandler('instance:onData', function(instance)
-	Instance = instance
+AddEventHandler('instance:registerType', function(name, enter, exit)
+	RegisterInstanceType(name, enter, exit)
 end)
 
 RegisterNetEvent('instance:onInstancedPlayersData')
@@ -89,12 +107,45 @@ AddEventHandler('instance:onInstancedPlayersData', function(instancedPlayers)
 	InstancedPlayers = instancedPlayers
 end)
 
+RegisterNetEvent('instance:onCreate')
+AddEventHandler('instance:onCreate', function(instance)
+	Instance = {}
+end)
+
+RegisterNetEvent('instance:onEnter')
+AddEventHandler('instance:onEnter', function(instance)
+	Instance = instance
+end)
+
+RegisterNetEvent('instance:onLeave')
+AddEventHandler('instance:onClose', function(instance)
+	Instance = {}
+end)
+
+RegisterNetEvent('instance:onClose')
+AddEventHandler('instance:onClose', function(instance)
+	Instance = {}
+end)
+
+RegisterNetEvent('instance:onPlayerEntered')
+AddEventHandler('instance:onPlayerEntered', function(instance, player)
+	Instance = instance
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. ' est entré dans l\'instance')
+end)
+
+RegisterNetEvent('instance:onPlayerLeft')
+AddEventHandler('instance:onPlayerLeft', function(instance, player)
+	Instance = instance
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. ' est sorti dans l\'instance')
+end)
+
 RegisterNetEvent('instance:onInvite')
-AddEventHandler('instance:onInvite', function(instance, pos)
+AddEventHandler('instance:onInvite', function(instance, type, data)
 
 	InstanceInvite = {
+		type = type,
 		host = instance,
-		pos  = pos
+		data = data
 	}
 
 	Citizen.CreateThread(function()
@@ -109,6 +160,8 @@ AddEventHandler('instance:onInvite', function(instance, pos)
 	end)
 
 end)
+
+RegisterInstanceType('default')
 
 -- Input invites
 Citizen.CreateThread(function()
@@ -135,9 +188,7 @@ Citizen.CreateThread(function()
 
 			local playerPed = GetPlayerPed(-1)
 
-			EnterInstance(InstanceInvite.host)
-
-			SetEntityCoords(playerPed,  InstanceInvite.pos.x,  InstanceInvite.pos.y,  InstanceInvite.pos.z)
+			EnterInstance(InstanceInvite)
 
 			ShowNotification(_U('entered_instance'))
 

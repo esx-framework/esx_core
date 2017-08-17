@@ -14,14 +14,16 @@ function GetInstancedPlayers()
 
 end
 
-function CreateInstance(player)
-	
+function CreateInstance(type, player, data)
+
 	Instances[player] = {
+		type    = type,
 		host    = player,
-		players = {player}
+		players = {},
+		data    = data
 	}
 
-	TriggerClientEvent('instance:onData', player, Instances[player])
+	TriggerClientEvent('instance:onCreate', player, Instances[player])
 	TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
 
 end
@@ -29,7 +31,7 @@ end
 function CloseInstance(instance)
 
 	for i=1, #Instances[instance].players, 1 do
-		TriggerClientEvent('instance:onData', Instances[instance].players[i], {})
+		TriggerClientEvent('instance:onClose', Instances[instance].players[i])
 	end
 
 	Instances[instance] = nil
@@ -53,8 +55,13 @@ function AddPlayerToInstance(instance, player)
 		table.insert(Instances[instance].players, player)
 	end
 
+	TriggerClientEvent('instance:onEnter', player, Instances[instance])
+
 	for i=1, #Instances[instance].players, 1 do
-		TriggerClientEvent('instance:onData', Instances[instance].players[i], Instances[instance])
+		if Instances[instance].players[i] ~= player then
+			TriggerClientEvent('instance:onPlayerEntered', Instances[instance].players[i], Instances[instance], player)
+		end
+
 	end
 
 	TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
@@ -63,37 +70,50 @@ end
 
 function RemovePlayerFromInstance(instance, player)
 
-	if Instances[instance].host == player then
-		
-		CloseInstance(instance)
-	
-	else
+	if Instances[instance] ~= nil then
 
-		for i=1, #Instances[instance].players, 1 do
-			if Instances[instance].players[i] == player then
-				Instances[instance].players[i] = nil
+		TriggerClientEvent('instance:onLeave', player, Instances[instance])
+
+		if Instances[instance].host == player then
+			
+			for i=1, #Instances[instance].players, 1 do
+				if Instances[instance].players[i] ~= player then
+					TriggerClientEvent('instance:onPlayerLeft', Instances[instance].players[i], Instances[instance], player)
+				end
 			end
+
+			CloseInstance(instance)
+		
+		else
+
+			for i=1, #Instances[instance].players, 1 do
+				if Instances[instance].players[i] == player then
+					Instances[instance].players[i] = nil
+				end
+			end
+
+			for i=1, #Instances[instance].players, 1 do
+				if Instances[instance].players[i] ~= player then
+					TriggerClientEvent('instance:onPlayerLeft', Instances[instance].players[i], Instances[instance], player)
+				end
+			
+			end
+
+			TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
+
 		end
-
-		TriggerClientEvent('instance:onData', player, {})
-
-		for i=1, #Instances[instance].players, 1 do
-			TriggerClientEvent('instance:onData', Instances[instance].players[i], Instances[instance])
-		end
-
-		TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
 
 	end
 
 end
 
-function InvitePlayerToInstance(instance, player, pos)
-	TriggerClientEvent('instance:onInvite', player, instance, pos)
+function InvitePlayerToInstance(instance, type, player, data)
+	TriggerClientEvent('instance:onInvite', player, instance, type, data)
 end
 
 RegisterServerEvent('instance:create')
-AddEventHandler('instance:create', function()
-	CreateInstance(source)
+AddEventHandler('instance:create', function(type, data)
+	CreateInstance(type, source, data)
 end)
 
 RegisterServerEvent('instance:close')
@@ -112,22 +132,7 @@ AddEventHandler('instance:leave', function(instance)
 end)
 
 RegisterServerEvent('instance:invite')
-AddEventHandler('instance:invite', function(instance, player, pos)
-	InvitePlayerToInstance(instance, player, pos)
+AddEventHandler('instance:invite', function(instance, type, player, data)
+	InvitePlayerToInstance(instance, type, player, data)
 end)
 
-TriggerEvent('es:addCommand', 'instance_create', function(source, args, user)
-	CreateInstance(source)
-end)
-
-TriggerEvent('es:addCommand', 'instance_invite', function(source, args, user)
-	InvitePlayerToInstance(tonumber(args[2]), tonumber(args[3]), {
-		x = tonumber(args[4]),
-		y = tonumber(args[5]),
-		z = tonumber(args[6]),
-	})
-end)
-
-TriggerEvent('es:addCommand', 'instance_enter', function(source, args, user)
-	AddPlayerToInstance(source, tonumber(args[2]))
-end)
