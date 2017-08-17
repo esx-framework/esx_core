@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -41,9 +41,9 @@ end
 function LeaveInstance()
 
 	if Instance.host ~= nil then
-		
+
 		if #Instance.players > 1 then
-			TriggerEvent('esx:showNotification', 'Vous avez quitté l\'instance')
+			TriggerEvent('esx:showNotification', _U('left_instance'))
 		end
 
 		TriggerServerEvent('instance:leave', Instance.host)
@@ -91,18 +91,18 @@ end)
 
 RegisterNetEvent('instance:onInvite')
 AddEventHandler('instance:onInvite', function(instance, pos)
-	
+
 	InstanceInvite = {
 		host = instance,
 		pos  = pos
 	}
 
 	Citizen.CreateThread(function()
-		
+
 		Citizen.Wait(10000)
 
 		if InstanceInvite ~= nil then
-			ShowNotification('Invitation expirée')
+			ShowNotification(_U('invite_expired'))
 			InstanceInvite = nil
 		end
 
@@ -118,7 +118,7 @@ Citizen.CreateThread(function()
 
 		if InstanceInvite ~= nil then
 			SetTextComponentFormat('STRING')
-			AddTextComponentString('Appuyez sur ~INPUT_CONTEXT~ pour entrer dans l\'instance')
+			AddTextComponentString(_U('press_to_enter'))
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 		end
 
@@ -139,8 +139,8 @@ Citizen.CreateThread(function()
 
 			SetEntityCoords(playerPed,  InstanceInvite.pos.x,  InstanceInvite.pos.y,  InstanceInvite.pos.z)
 
-			ShowNotification('Vous êtes entré dans l\'instance')
-			
+			ShowNotification(_U('entered_instance'))
+
 			InstanceInvite = nil
 			GUI.Time       = GetGameTimer()
 
@@ -162,11 +162,11 @@ Citizen.CreateThread(function()
 			local playerPed = GetPlayerPed(-1)
 
 			for i=0, 32, 1 do
-					
+
 				local found = false
 
 				for j=1, #Instance.players, 1 do
-					
+
 					instancePlayer = GetPlayerFromServerId(Instance.players[j])
 
 					if i == instancePlayer then
@@ -190,11 +190,11 @@ Citizen.CreateThread(function()
 			local playerPed = GetPlayerPed(-1)
 
 			for i=0, 32, 1 do
-					
+
 				local found = false
 
 				for j=1, #InstancedPlayers, 1 do
-					
+
 					instancePlayer = GetPlayerFromServerId(InstancedPlayers[j])
 
 					if i == instancePlayer then
