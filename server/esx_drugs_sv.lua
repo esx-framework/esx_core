@@ -490,7 +490,7 @@ local function SellWeed(source)
 			if poochQuantity == 0 then
 				TriggerClientEvent('esx:showNotification', source, _U('no_pouches_sale'))
 			else
-				xPlayer:removeInventoryItem('weed_pooch', 1)
+				xPlayer.removeInventoryItem('weed_pooch', 1)
                 if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 108)
                     TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
