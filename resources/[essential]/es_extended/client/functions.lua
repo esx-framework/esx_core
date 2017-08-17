@@ -608,6 +608,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		},
 
 		neonColor        = table.pack(GetVehicleNeonLightsColour(vehicle)),
+		tyreSmokeColor   = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 		
 		modSpoilers      = GetVehicleMod(vehicle, 0),
 		modFrontBumper   = GetVehicleMod(vehicle, 1),
@@ -629,6 +630,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		modArmor         = GetVehicleMod(vehicle, 16),
 
 		modTurbo         = IsToggleModOn(vehicle,  18),
+		modSmokeEnabled  = IsToggleModOn(vehicle,  20),
 		modXenon         = IsToggleModOn(vehicle,  22),
 
 		modFrontWheels   = GetVehicleMod(vehicle, 23),
@@ -696,6 +698,14 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		SetVehicleNeonLightsColour(vehicle,  props.neonColor[1], props.neonColor[2], props.neonColor[3])
 	end
 
+	if props.modSmokeEnabled ~= nil then	
+		ToggleVehicleMod(vehicle, 20, true)
+	end
+
+	if props.tyreSmokeColor ~= nil then
+		SetVehicleTyreSmokeColor(vehicle,  props.tyreSmokeColor[1], props.tyreSmokeColor[2], props.tyreSmokeColor[3])
+	end
+	
 	if props.modSpoilers ~= nil then
 		SetVehicleMod(vehicle, 0, props.modSpoilers, false)
 	end
