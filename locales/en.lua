@@ -1,7 +1,7 @@
 Locales['en'] = {
 
 	['new_message'] = '~b~New message',
-	['press_take_call'] = ' - Press to take the call',
+	['press_take_call'] = ' - Press ~INPUT_CONTEXT~ to take the call',
 	['taken_call'] = ' has taken the call',
 	['gps_position'] = 'destination entered into the GPS',
 	['message_sent'] = 'message sent',
