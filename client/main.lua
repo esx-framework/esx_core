@@ -41,7 +41,7 @@ local Components = {
 	{label = _U('mask_2'),           name = 'mask_2',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'mask_1'}, --
 	{label = _U('bproof_1'), name = 'bproof_1',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
 	{label = _U('bproof_2'), name = 'bproof_2',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bproof_1'}, --
-	{label = U('chain_1'),           name = 'chain_1',      value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('chain_1'),           name = 'chain_1',      value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('chain_2'),           name = 'chain_2',      value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'chain_1'}, --
 	{label = _U('helmet_1'),           name = 'helmet_1',     value = -1, min = -1, componentId = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('helmet_2'),           name = 'helmet_2',     value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'helmet_1'}, --
