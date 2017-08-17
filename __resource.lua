@@ -4,6 +4,7 @@ description 'ESX Police Job'
 
 server_scripts {
     '@es_extended/locale.lua',
+	'locales/br.lua',
     'locales/en.lua',
     'locales/fr.lua',
 	'@mysql-async/lib/MySQL.lua',
@@ -13,6 +14,7 @@ server_scripts {
 
 client_scripts {
     '@es_extended/locale.lua',
+	'locales/br.lua',
     'locales/en.lua',
     'locales/fr.lua',
 	'config.lua',
