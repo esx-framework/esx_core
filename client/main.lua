@@ -37,7 +37,7 @@ function CloseInstance()
 end
 
 function EnterInstance(instance)
-	
+
 	TriggerServerEvent('instance:enter', instance.host)
 
 	if RegisteredInstanceTypes[instance.type].enter ~= nil then
@@ -130,13 +130,13 @@ end)
 RegisterNetEvent('instance:onPlayerEntered')
 AddEventHandler('instance:onPlayerEntered', function(instance, player)
 	Instance = instance
-	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. ' est entré dans l\'instance')
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _U('entered_into'))
 end)
 
 RegisterNetEvent('instance:onPlayerLeft')
 AddEventHandler('instance:onPlayerLeft', function(instance, player)
 	Instance = instance
-	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. ' est sorti dans l\'instance')
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _U('left_out'))
 end)
 
 RegisterNetEvent('instance:onInvite')
