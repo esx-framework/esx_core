@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -25,7 +25,7 @@ local CurrentActionData          = {}
 local CurrentDispatchRequestId   = -1
 
 Citizen.CreateThread(function()
-	
+
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
@@ -38,12 +38,12 @@ end)
 function OpenPhone()
 
 	TriggerServerEvent('esx_phone:reload', PhoneData.phoneNumber)
-          
+
   SendNUIMessage({
     showPhone = true,
     phoneData = PhoneData
   })
-  
+
   GUI.PhoneIsShowed = true
 
   ESX.SetTimeout(200, function()
@@ -59,21 +59,21 @@ function ClosePhone()
   })
 
   SetNuiFocus(false)
-	
+
 	GUI.PhoneIsShowed = false
 
 end
 
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
-	
+
 	PhoneData.phoneNumber = phoneNumber
 	PhoneData.contacts = {}
-	
+
 	for i=1, #contacts, 1 do
 		table.insert(PhoneData.contacts, contacts[i])
 	end
-	
+
 	SendNUIMessage({
 		reloadPhone = true,
 		phoneData   = PhoneData
@@ -83,7 +83,7 @@ end)
 
 RegisterNetEvent('esx_phone:addContact')
 AddEventHandler('esx_phone:addContact', function(name, phoneNumber, isOnline)
-	
+
 	table.insert(PhoneData.contacts, {
 		name   = name,
 		number = phoneNumber,
@@ -98,7 +98,7 @@ end)
 
 RegisterNetEvent('esx_phone:addSpecialContact')
 AddEventHandler('esx_phone:addSpecialContact', function(name, phoneNumber, base64Icon)
-	
+
 	SendNUIMessage({
 		addSpecialContact = true,
 		name              = name,
@@ -110,7 +110,7 @@ end)
 
 RegisterNetEvent('esx_phone:removeSpecialContact')
 AddEventHandler('esx_phone:removeSpecialContact', function(phoneNumber)
-	
+
 	SendNUIMessage({
 		removeSpecialContact = true,
 		number               = phoneNumber
@@ -119,10 +119,10 @@ AddEventHandler('esx_phone:removeSpecialContact', function(phoneNumber)
 end)
 
 RegisterNUICallback('add_contact', function(data, cb)
-	
+
 	local phoneNumber = tonumber(data.phoneNumber)
   local contactName = tostring(data.contactName)
-	
+
 	if phoneNumber then
 		TriggerServerEvent('esx_phone:addPlayerContact', phoneNumber, contactName)
 	end
@@ -132,9 +132,9 @@ end)
 
 RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)
-	
-	ESX.ShowNotification('~b~Nouveau message')
-	
+
+	ESX.ShowNotification(_U('new_message'))
+
 	SendNUIMessage({
 		newMessage  = true,
 		phoneNumber = phoneNumber,
@@ -147,9 +147,9 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 	if dispatchRequestId then
 
 		CurrentAction            = 'dispatch'
-		CurrentActionMsg         = job .. ' - Appuez sur ~INPUT_CONTEXT~ pour prendre l\'appel'
+		CurrentActionMsg         = job .. _U('press_take_call')
 		CurrentDispatchRequestId = dispatchRequestId
-		
+
 		CurrentActionData = {
 			phoneNumber       = phoneNumber,
 			message           = message,
@@ -172,31 +172,31 @@ AddEventHandler('esx_phone:stopDispatch', function(dispatchRequestId, playerName
 
 	if CurrentDispatchRequestId == dispatchRequestId and CurrentAction == 'dispatch' then
 		CurrentAction = nil
-		ESX.ShowNotification(playerName .. ' a pris l\'appel')
+		ESX.ShowNotification(playerName .. _U('taken_call'))
 	end
 
 end)
 
 RegisterNUICallback('setGPS', function(data)
 	SetNewWaypoint(data.x,  data.y)
-	ESX.ShowNotification('Position entrée dans le GPS')
+	ESX.ShowNotification(_U('gps_position'))
 end)
 
-RegisterNUICallback('send', function(data)	
-	
+RegisterNUICallback('send', function(data)
+
 	local phoneNumber = data.number
 
 	if tonumber(phoneNumber) ~= nil then
 		phoneNumber = tonumber(phoneNumber)
 	end
 
-	TriggerServerEvent('esx_phone:send', phoneNumber, data.message, data.anonyme)	
-	
+	TriggerServerEvent('esx_phone:send', phoneNumber, data.message, data.anonyme)
+
 	SendNUIMessage({
 		showMessageEditor = false
 	})
 
-	ESX.ShowNotification('Message envoyé')
+	ESX.ShowNotification(_U('message_sent'))
 
 end)
 
@@ -206,9 +206,9 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-   	
+
    	Wait(0)
-    
+
     if GUI.PhoneIsShowed then -- codes here: https://pastebin.com/guYd0ht4
       DisableControlAction(0, 1,    true) -- LookLeftRight
       DisableControlAction(0, 2,    true) -- LookUpDown
@@ -221,7 +221,7 @@ Citizen.CreateThread(function()
       DisableControlAction(0, 142,  true) -- Melee Attack Alternate
       DisableControlAction(0, 257,  true) -- Input Attack 2
       DisableControlAction(0, 263,  true) -- Input Melee Attack
-      DisableControlAction(0, 264,  true) -- Input Melee Attack 2			
+      DisableControlAction(0, 264,  true) -- Input Melee Attack 2
 
       DisableControlAction(0, 12,   true) -- Weapon Wheel Up Down
       DisableControlAction(0, 14,   true) -- Weapon Wheel Next
@@ -231,7 +231,7 @@ Citizen.CreateThread(function()
     else
 
       if IsControlPressed(0, Keys['F1']) and (GetGameTimer() - GUI.Time) > 150 then
-        
+
         if not ESX.UI.Menu.IsOpen('phone', GetCurrentResourceName(), 'main') then
         	ESX.UI.Menu.CloseAll()
         	ESX.UI.Menu.Open('phone', GetCurrentResourceName(), 'main')
@@ -258,7 +258,7 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
-				
+
 				if CurrentAction == 'dispatch' then
 					TriggerServerEvent('esx_phone:stopDispatch', CurrentDispatchRequestId)
 					SetNewWaypoint(CurrentActionData.position.x,  CurrentActionData.position.y)
@@ -266,7 +266,7 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
-				
+
 			end
 
 		end

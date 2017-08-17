@@ -8,14 +8,14 @@ local RegisteredCallbacks = {}
 local DisptachRequestId   = 0
 
 function GenerateUniquePhoneNumber()
-	
+
 	local foundNumber = false
 	local phoneNumber = nil
-	
+
 	while not foundNumber do
-		
+
 		phoneNumber = math.random(10000, 99999)
-		
+
 		local result = MySQL.Sync.fetchAll(
 			'SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber',
 			{
@@ -24,7 +24,7 @@ function GenerateUniquePhoneNumber()
 		)
 
 		local count  = tonumber(result[1].count)
-		
+
 		if count == 0 then
 			foundNumber = true
 		end
@@ -72,9 +72,9 @@ AddEventHandler('esx:playerLoaded', function(source)
 			local phoneNumber = result[1].phone_number
 
 			if phoneNumber == nil then
-				
+
 				phoneNumber = GenerateUniquePhoneNumber()
-				
+
 				MySQL.Async.execute(
 					'UPDATE users SET phone_number = @phone_number WHERE identifier = @identifier',
 					{
@@ -83,9 +83,9 @@ AddEventHandler('esx:playerLoaded', function(source)
 					}
 				)
 			end
-			
+
 			xPlayer.set('phoneNumber', phoneNumber)
-			
+
 			local contacts = {}
 
 			MySQL.Async.fetchAll(
@@ -96,13 +96,13 @@ AddEventHandler('esx:playerLoaded', function(source)
 				function(result2)
 
 					for i=1, #result2, 1 do
-						
+
 						table.insert(contacts, {
 							name   = result2[i].name,
 							number = result2[i].number,
 							online = false
 						})
-						
+
 						local xPlayers = ESX.GetPlayers()
 
 						for k, v in pairs(xPlayers) do
@@ -112,9 +112,9 @@ AddEventHandler('esx:playerLoaded', function(source)
 						end
 
 					end
-					
+
 					xPlayer.set('contacts', contacts)
-					
+
 					TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
 
 				end
@@ -141,13 +141,13 @@ AddEventHandler('esx_phone:reload', function(phoneNumber)
 		function(result2)
 
 			for i=1, #result2, 1 do
-				
+
 				table.insert(contacts, {
 					name   = result2[i].name,
 					number = result2[i].number,
 					online = false
 				})
-				
+
 				local xPlayers = ESX.GetPlayers()
 
 				for k, v in pairs(xPlayers) do
@@ -157,7 +157,7 @@ AddEventHandler('esx_phone:reload', function(phoneNumber)
 				end
 
 			end
-			
+
 			xPlayer.set('contacts', contacts)
 
 			TriggerClientEvent('esx_phone:loaded', _source, phoneNumber, contacts)
@@ -192,7 +192,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 	local foundPlayer = nil
 
 	MySQL.Async.fetchAll(
-		'SELECT phone_number FROM users WHERE phone_number = @number', 
+		'SELECT phone_number FROM users WHERE phone_number = @number',
 		{
 			['@number'] = phoneNumber
 		},
@@ -203,14 +203,14 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 			end
 
 			if foundNumber then
-					
+
 				if phoneNumber == xPlayer.get('phoneNumber') then
-					TriggerClientEvent('esx:showNotification', _source, 'Vous ne pouvez pas vous ajouter vous-même')
+					TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
 				else
 
 					local hasAlreadyAdded = false
 					local contacts        = xPlayer.get('contacts')
-					
+
 					for i=1, #contacts, 1 do
 						if contacts[i].number == phoneNumber then
 							hasAlreadyAdded = true
@@ -218,9 +218,9 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 					end
 
 					if hasAlreadyAdded then
-						TriggerClientEvent('esx:showNotification', _source, 'Ce numéro est déja dans votre liste de contacts')
+						TriggerClientEvent('esx:showNotification', _source, _U('number_in_contacts'))
 					else
-						
+
 						table.insert(contacts, {
 							name   = contactName,
 							number = phoneNumber,
@@ -237,27 +237,27 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 							},
 							function(rowsChanged)
 
-								TriggerClientEvent('esx:showNotification', _source, 'Contact ajouté')
-								
+								TriggerClientEvent('esx:showNotification', _source, _U('contact_added'))
+
 								local xPlayers = ESX.GetPlayers()
 								local isOnline = false
-								
+
 								for k,v in pairs(xPlayers) do
 									if v.get('phoneNumber') == phoneNumber then
 										isOnline = true
 										break
 									end
 								end
-								
+
 								TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber, isOnline)
 							end
 						)
-						
+
 					end
 				end
 
 			else
-				TriggerClientEvent('esx:showNotification', source, 'Ce numéro n\'est pas attribué...')
+				TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
 			end
 
 		end
@@ -267,17 +267,17 @@ end)
 
 AddEventHandler('esx_phone:ready', function()
 	TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-		
+
 		local xPlayer  = ESX.GetPlayerFromId(source)
 		local xPlayers = ESX.GetPlayers()
 
 		print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
 
 		for k, v in pairs(xPlayers) do
- 			if v.get('phoneNumber') == phoneNumber then		
- 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)		
- 			end	
- 		end	
+ 			if v.get('phoneNumber') == phoneNumber then
+ 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)
+ 			end
+ 		end
 
 	end)
 end)
