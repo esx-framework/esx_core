@@ -275,7 +275,7 @@ AddEventHandler('esx_phone:ready', function()
 
 		for k, v in pairs(xPlayers) do
  			if v.get('phoneNumber') == phoneNumber then
- 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)
+ 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, false, anon, 'player', false)
  			end
  		end
 
