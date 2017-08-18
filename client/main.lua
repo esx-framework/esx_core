@@ -431,7 +431,7 @@ function OpenPersonnalVehicleMenu()
 
 				menu.close()
 
-				ESX.Game.SpawnLocalVehicle(vehicleData.model, {
+				ESX.Game.SpawnVehicle(vehicleData.model, {
 					x = coords.x,
 					y = coords.y,
 					z = coords.z
