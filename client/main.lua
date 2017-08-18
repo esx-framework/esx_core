@@ -1,12 +1,12 @@
 DoScreenFadeIn(0)
 
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -33,8 +33,8 @@ end)
 
 function RespawnPed(ped, coords)
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
-	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, false) 
-	SetPlayerInvincible(ped, false) 
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, false)
+	SetPlayerInvincible(ped, false)
 	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z, coords.heading)
 	ClearPedBloodDamage(ped)
 	ESX.UI.Menu.CloseAll()
@@ -45,12 +45,12 @@ function StartRespawnToHospitalMenuTimer()
 	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
 
 		Citizen.Trace('menu should appear')
-		
+
 		if IsDead then
 
 			local elements = {}
 
-			table.insert(elements, {label = 'OUI', value = 'yes'})
+			table.insert(elements, {label = _U('yes'), value = 'yes'})
 
 			ESX.UI.Menu.Open(
 				'default', GetCurrentResourceName(), 'menuName',
@@ -63,13 +63,13 @@ function StartRespawnToHospitalMenuTimer()
 		                menu.close()
 
 		                Citizen.CreateThread(function()
-				
+
 							DoScreenFadeOut(800)
-							
+
 							while not IsScreenFadedOut() do
 								Citizen.Wait(0)
 							end
-							
+
 							ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
 								TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
@@ -88,8 +88,8 @@ function StartRespawnToHospitalMenuTimer()
 		                --print(data.current.value)
 		        end
 			)
-			
-			
+
+
 		end
 
 	end)
@@ -99,17 +99,17 @@ end
 function StartRespawnTimer()
 
 	ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
-		
+
 		if IsDead then
-			
+
 			Citizen.CreateThread(function()
-				
+
 				DoScreenFadeOut(800)
-				
+
 				while not IsScreenFadedOut() do
 					Citizen.Wait(0)
 				end
-				
+
 				ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
 					TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
@@ -129,9 +129,9 @@ end
 function TeleportFadeEffect(entity, coords)
 
 	Citizen.CreateThread(function()
-		
+
 		DoScreenFadeOut(800)
-		
+
 		while not IsScreenFadedOut() do
 			Citizen.Wait(0)
 		end
@@ -255,7 +255,7 @@ function OpenAmbulanceActionsMenu()
 
 		end,
 		function(data, menu)
-			
+
 			menu.close()
 
 			CurrentAction     = 'ambulance_actions_menu'
@@ -313,7 +313,7 @@ function OpenMobileAmbulanceActionsMenu()
 								local closestPlayerPed = GetPlayerPed(closestPlayer)
 
 								Citizen.CreateThread(function()
-									
+
 									ESX.ShowNotification(_U('revive_inprogress'))
 
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
@@ -334,7 +334,7 @@ function OpenMobileAmbulanceActionsMenu()
 								end
 
 							end
-							
+
 						end
 
 						if data.current.value == 'put_in_vehicle' then
@@ -371,11 +371,11 @@ function OpenCloakroomMenu()
 			},
 		},
 		function(data, menu)
-			
+
 			menu.close()
 
 			if data.current.value == 'citizen_wear' then
-				
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
@@ -391,7 +391,7 @@ function OpenCloakroomMenu()
 					else
 						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 					end
-					
+
 				end)
 
 			end
@@ -421,7 +421,7 @@ function OpenVehicleSpawnerMenu()
 			},
 		},
 		function(data, menu)
-			
+
 			menu.close()
 
 			local model = data.current.value
@@ -441,7 +441,7 @@ function OpenVehicleSpawnerMenu()
 
 		end,
 		function(data, menu)
-			
+
 			menu.close()
 
 			CurrentAction     = 'vehicle_spawner_menu'
@@ -544,13 +544,13 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	local coords    = GetEntityCoords(playerPed)
 
 	Citizen.CreateThread(function()
-		
+
 		DoScreenFadeOut(800)
-		
+
 		while not IsScreenFadedOut() do
 			Citizen.Wait(0)
 		end
-		
+
 		TriggerServerEvent('esx:updateLastPosition', {
 			x = coords.x,
 			y = coords.y,
@@ -602,7 +602,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 	end
 
 	if zone == 'VehicleDeleter' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
-		
+
 		local playerPed = GetPlayerPed(-1)
 		local coords    = GetEntityCoords(playerPed)
 
@@ -637,12 +637,12 @@ end)
 Citizen.CreateThread(function()
 
 	local blip = AddBlipForCoord(Config.Zones.HospitalInteriorOutside1.Pos.x, Config.Zones.HospitalInteriorOutside1.Pos.y, Config.Zones.HospitalInteriorOutside1.Pos.z)
-  
+
   SetBlipSprite (blip, 61)
   SetBlipDisplay(blip, 4)
   SetBlipScale  (blip, 1.2)
   SetBlipAsShortRange(blip, true)
-	
+
 	BeginTextCommandSetBlipName("STRING")
   AddTextComponentString(_U('hospital'))
   EndTextCommandSetBlipName(blip)
@@ -652,11 +652,11 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
-		
+
 		local coords = GetEntityCoords(GetPlayerPed(-1))
-		
+
 		for k,v in pairs(Config.Zones) do
 
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
@@ -670,8 +670,8 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		
-		Wait(0)	
+
+		Wait(0)
 
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local isInMarker  = false
@@ -711,7 +711,7 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0,  Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' and (GetGameTimer() - GUI.Time) > 150 then
-				
+
 				if CurrentAction == 'ambulance_actions_menu' then
 					OpenAmbulanceActionsMenu()
 				end
@@ -726,7 +726,7 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
-				
+
 			end
 
 		end

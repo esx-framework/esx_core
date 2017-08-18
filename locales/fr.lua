@@ -34,4 +34,5 @@ Locales['fr'] = {
 		['alert_ambulance'] = 'alerte Ambulance',
 	-- Death
 		['respawn_at_hospital'] = 'voulez-vous être transporté à l\'hôpital ?',
+		['yes'] = 'oui',
 }

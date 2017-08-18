@@ -32,4 +32,7 @@ Locales['en'] = {
 		['ems_menu_putincar'] = 'put in Vehicle',
 	-- Phone
 		['alert_ambulance'] = 'alert Ambulance',
+	-- Death
+		['respawn_at_hospital'] = 'do you want to be tranported to the hospital?',
+		['yes'] = 'yes',
 }
