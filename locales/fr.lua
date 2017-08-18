@@ -30,4 +30,6 @@ Locales['fr'] = {
 		['ems_menu_title'] = 'ambulance - Interactions Citoyen',
 		['ems_menu_revive'] = 'réanimer',
 		['ems_menu_putincar'] = 'mettre dans véhicule',
+	-- Phone
+		['alert_ambulance'] = 'alerte Ambulance',
 }

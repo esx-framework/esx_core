@@ -43,10 +43,10 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 		for k, v in pairs(xPlayers) do
 			if v.job.name == 'ambulance' then
 				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Alerte Ambulance', requestId)
+					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _U('alert_ambulance'), requestId)
 				end)
 			end
 		end
 	end
-	
+
 end)

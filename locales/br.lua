@@ -30,4 +30,6 @@ Locales['br'] = {
 		['ems_menu_title'] = 'Paramedico - EMS Menu',
 		['ems_menu_revive'] = 'Reviver jogador',
 		['ems_menu_putincar'] = 'Colocar no veículo',
+	-- Phone
+		['alert_ambulance'] = 'ambulância de alerta',
 }
