@@ -2,6 +2,7 @@ Config                           = {}
 Config.DrawDistance              = 100.0
 Config.MarkerColor               = {r = 102, g = 0, b = 102}
 Config.RespawnDelayAfterRPDeath  = 10 * 60 * 1000
+Config.MenuRespawnToHospitalDelay= 1 * 60 * 1000
 Config.RemoveWeaponsAfterRPDeath = true
 Config.RemoveCashAfterRPDeath    = true
 Config.RemoveItemsAfterRPDeath   = true
