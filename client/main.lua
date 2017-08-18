@@ -484,28 +484,32 @@ Citizen.CreateThread(function()
 
 							local ped = GetRandomPed()
 
-							if IsPedHuman(ped) and IsPedWalking(ped) then
+							if DoesEntityExist(ped) IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
 								CurrentCustomer = ped
 							end
 
 						end
 
-						CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
+						if DoesEntityExist(ped) then
 
-						SetBlipAsFriendly(CurrentCustomerBlip, 1)
-						SetBlipColour(CurrentCustomerBlip, 2)
-						SetBlipCategory(CurrentCustomerBlip, 3)
-						SetBlipRoute(CurrentCustomerBlip,  true)
+							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
-						SetEntityAsMissionEntity(CurrentCustomer,  true)
-						ClearPedTasksImmediately(CurrentCustomer)
-						SetBlockingOfNonTemporaryEvents(CurrentCustomer, 1)
+							SetBlipAsFriendly(CurrentCustomerBlip, 1)
+							SetBlipColour(CurrentCustomerBlip, 2)
+							SetBlipCategory(CurrentCustomerBlip, 3)
+							SetBlipRoute(CurrentCustomerBlip,  true)
 
-						local standTime = GetRandomIntInRange(60000,  180000)
+							SetEntityAsMissionEntity(CurrentCustomer,  true, false)
+							ClearPedTasksImmediately(CurrentCustomer)
+							SetBlockingOfNonTemporaryEvents(CurrentCustomer, 1)
 
-						TaskStandStill(CurrentCustomer, standTime)
+							local standTime = GetRandomIntInRange(60000,  180000)
 
-						ESX.ShowNotification(_U('customer_found'))
+							TaskStandStill(CurrentCustomer, standTime)
+
+							ESX.ShowNotification(_U('customer_found'))
+
+						end
 
 					end
 
@@ -525,7 +529,7 @@ Citizen.CreateThread(function()
 						RemoveBlip(DestinationBlip)
 					end
 
-					SetEntityAsMissionEntity(CurrentCustomer,  false)
+					SetEntityAsMissionEntity(CurrentCustomer,  false, true)
 
 					CurrentCustomer           = nil
 					CurrentCustomerBlip       = nil
@@ -557,7 +561,7 @@ Citizen.CreateThread(function()
 								ESX.ShowNotification(_U('arrive_dest'))
 
 								TaskGoStraightToCoord(CurrentCustomer,  TargetCoords.x,  TargetCoords.y,  TargetCoords.z,  1.0,  -1,  0.0,  0.0)
-								SetEntityAsMissionEntity(CurrentCustomer,  false)
+								SetEntityAsMissionEntity(CurrentCustomer,  false, true)
 
 								TriggerServerEvent('esx_taxijob:success')
 
