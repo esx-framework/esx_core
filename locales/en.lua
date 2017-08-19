@@ -33,6 +33,6 @@ Locales['en'] = {
 	-- Phone
 		['alert_ambulance'] = 'alert Ambulance',
 	-- Death
-		['respawn_at_hospital'] = 'do you want to be tranported to the hospital?',
+		['respawn_at_hospital'] = 'do you want to be transported to the hospital?',
 		['yes'] = 'yes',
 }

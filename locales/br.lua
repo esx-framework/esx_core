@@ -32,4 +32,7 @@ Locales['br'] = {
 		['ems_menu_putincar'] = 'Colocar no veículo',
 	-- Phone
 		['alert_ambulance'] = 'ambulância de alerta',
+	-- Death
+		['respawn_at_hospital'] = 'você quer ser transportado para o hospital?',
+		['yes'] = 'sim',
 }
