@@ -634,7 +634,31 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		modXenon         = IsToggleModOn(vehicle,  22),
 
 		modFrontWheels   = GetVehicleMod(vehicle, 23),
-		modBackWheels    = GetVehicleMod(vehicle, 24)
+		modBackWheels    = GetVehicleMod(vehicle, 24),
+
+		modPlateHolder   	= GetVehicleMod(vehicle, 25),
+		modVanityPlate   	= GetVehicleMod(vehicle, 26),
+		modTrimA    		= GetVehicleMod(vehicle, 27),
+		modOrnaments    	= GetVehicleMod(vehicle, 28),
+		modDashboard    	= GetVehicleMod(vehicle, 29),
+		modDial    			= GetVehicleMod(vehicle, 30),
+		modDoorSpeaker    	= GetVehicleMod(vehicle, 31),
+		modSeats    		= GetVehicleMod(vehicle, 32),
+		modSteeringWheel    = GetVehicleMod(vehicle, 33),
+		modShifterLeavers   = GetVehicleMod(vehicle, 34),
+		modAPlate    		= GetVehicleMod(vehicle, 35),
+		modSpeakers    		= GetVehicleMod(vehicle, 36),
+		modTrunk    		= GetVehicleMod(vehicle, 37),
+		modHydrolic    		= GetVehicleMod(vehicle, 38),
+		modEngineBlock    	= GetVehicleMod(vehicle, 39),
+		modAirFilter    	= GetVehicleMod(vehicle, 40),
+		modStruts    		= GetVehicleMod(vehicle, 41),
+		modArchCover    	= GetVehicleMod(vehicle, 42),
+		modAerials    		= GetVehicleMod(vehicle, 43),
+		modTrimB    		= GetVehicleMod(vehicle, 44),
+		modTank    			= GetVehicleMod(vehicle, 45),
+		modWindows    		= GetVehicleMod(vehicle, 46),
+		modLivery    		= GetVehicleMod(vehicle, 48)
 	}
 
 end
@@ -788,6 +812,98 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 
 	if props.modBackWheels ~= nil then
 		SetVehicleMod(vehicle, 24, props.modBackWheels, false)
+	end
+
+	if props.modPlateHolder ~= nil then
+		SetVehicleMod(vehicle, 25, props.modPlateHolder , false)
+	end
+
+	if props.modVanityPlate ~= nil then
+		SetVehicleMod(vehicle, 26, props.modVanityPlate , false)
+	end
+
+	if props.modTrimA ~= nil then
+		SetVehicleMod(vehicle, 27, props.modTrimA , false)
+	end
+
+	if props.modOrnaments ~= nil then
+		SetVehicleMod(vehicle, 28, props.modOrnaments , false)
+	end
+
+	if props.modDashboard ~= nil then
+		SetVehicleMod(vehicle, 29, props.modDashboard , false)
+	end
+
+	if props.modDial ~= nil then
+		SetVehicleMod(vehicle, 30, props.modDial , false)
+	end
+
+	if props.modDoorSpeaker ~= nil then
+		SetVehicleMod(vehicle, 31, props.modDoorSpeaker , false)
+	end
+
+	if props.modSeats ~= nil then
+		SetVehicleMod(vehicle, 32, props.modSeats , false)
+	end
+
+	if props.modSteeringWheel ~= nil then
+		SetVehicleMod(vehicle, 33, props.modSteeringWheel , false)
+	end
+
+	if props.modShifterLeavers ~= nil then
+		SetVehicleMod(vehicle, 34, props.modShifterLeavers , false)
+	end
+
+	if props.modAPlate ~= nil then
+		SetVehicleMod(vehicle, 35, props.modAPlate , false)
+	end
+
+	if props.modSpeakers ~= nil then
+		SetVehicleMod(vehicle, 36, props.modSpeakers , false)
+	end
+
+	if props.modTrunk ~= nil then
+		SetVehicleMod(vehicle, 37, props.modTrunk , false)
+	end
+
+	if props.modHydrolic ~= nil then
+		SetVehicleMod(vehicle, 38, props.modHydrolic , false)
+	end
+
+	if props.modEngineBlock ~= nil then
+		SetVehicleMod(vehicle, 39, props.modEngineBlock , false)
+	end
+
+	if props.modAirFilter ~= nil then
+		SetVehicleMod(vehicle, 40, props.modAirFilter , false)
+	end
+
+	if props.modStruts ~= nil then
+		SetVehicleMod(vehicle, 41, props.modStruts , false)
+	end
+
+	if props.modArchCover ~= nil then
+		SetVehicleMod(vehicle, 42, props.modArchCover , false)
+	end
+
+	if props.modAerials ~= nil then
+		SetVehicleMod(vehicle, 43, props.modAerials , false)
+	end
+
+	if props.modTrimB ~= nil then
+		SetVehicleMod(vehicle, 44, props.modTrimB , false)
+	end
+
+	if props.modTank ~= nil then
+		SetVehicleMod(vehicle, 45, props.modTank , false)
+	end
+
+	if props.modWindows ~= nil then
+		SetVehicleMod(vehicle, 46, props.modWindows , false)
+	end
+	
+	if props.modLivery ~= nil then
+		SetVehicleMod(vehicle, 48, props.modLivery , false)
 	end
 
 end
