@@ -22,12 +22,14 @@ client_scripts {
 ui_page 'html/ui.html'
 
 files {
-	'html/ui.html',
+	'html/ui.html', -- FR
+	--'html/ui_en.html', -- EN
 	'html/bankgothic.ttf',
 	'html/pdown.ttf',
 	'html/css/app.css',
 	'html/scripts/mustache.min.js',
-	'html/scripts/app.js',
+	'html/scripts/app.js', -- FR
+	--'html/scripts/app_en.js', -- EN
 	'html/img/cursor.png',
 	'html/img/keys/enter.png',
 	'html/img/keys/return.png',
