@@ -71,11 +71,13 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					
 					for i=1, #inventory, 1 do
 						table.insert(userData.inventory, {
-							name   = inventory[i].item,
-							count  = inventory[i].count,
-							label  = ESX.Items[inventory[i].item].label,
-							limit  = ESX.Items[inventory[i].item].limit,
-							usable = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil
+							name      = inventory[i].item,
+							count     = inventory[i].count,
+							label     = ESX.Items[inventory[i].item].label,
+							limit     = ESX.Items[inventory[i].item].limit,
+							usable    = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
+							rare      = ESX.Items[inventory[i].item].rare,
+							canRemove = ESX.Items[inventory[i].item].canRemove,
 						})
 					end
 
@@ -93,11 +95,13 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 						if not found then
 							
 							table.insert(userData.inventory, {
-								name   = k,
-								count  = 0,
-								label  = ESX.Items[k].label,
-								limit  = ESX.Items[k].limit,
-								usable = ESX.UsableItemsCallbacks[k] ~= nil
+								name      = k,
+								count     = 0,
+								label     = ESX.Items[k].label,
+								limit     = ESX.Items[k].limit,
+								usable    = ESX.UsableItemsCallbacks[k] ~= nil,
+								rare      = ESX.Items[k].rare,
+								canRemove = ESX.Items[k].canRemove,
 							})
 
 							MySQL.Async.execute(

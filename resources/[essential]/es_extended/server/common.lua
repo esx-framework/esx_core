@@ -22,8 +22,10 @@ AddEventHandler('onMySQLReady', function ()
 
 			for i=1, #result, 1 do
 				ESX.Items[result[i].name] = {
-					label = result[i].label,
-					limit = result[i].limit
+					label     = result[i].label,
+					limit     = result[i].limit,
+					rare      = (result[i].rare       == 1 and true or false),
+					canRemove = (result[i].can_remove == 1 and true or false),
 				}
 			end
 

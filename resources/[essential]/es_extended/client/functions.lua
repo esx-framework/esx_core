@@ -972,20 +972,24 @@ ESX.ShowInventory = function()
 		local elements  = {}
 
 		table.insert(elements, {
-			label  = '[Cash] $' .. data.money,
-			count  = data.money,
-			type   = 'item_money',
-			value  = 'money',
-			usable = false
+			label     = '[Cash] $' .. data.money,
+			count     = data.money,
+			type      = 'item_money',
+			value     = 'money',
+			usable    = false,
+			rare      = false,
+			canRemove = true
 		})
 
 		for i=1, #data.accounts, 1 do
 			table.insert(elements, {
-				label  = '[' .. data.accounts[i].label .. '] $' .. data.accounts[i].money,
-				count  = data.accounts[i].money,
-				type   = 'item_account',
-				value  =  data.accounts[i].name,
-				usable = false
+				label     = '[' .. data.accounts[i].label .. '] $' .. data.accounts[i].money,
+				count     = data.accounts[i].money,
+				type      = 'item_account',
+				value     =  data.accounts[i].name,
+				usable    = false,
+				rare      = false,
+				canRemove = true
 			})
 		end
 
@@ -993,11 +997,13 @@ ESX.ShowInventory = function()
 
 			if data.inventory[i].count > 0 then
 				table.insert(elements, {
-					label  = data.inventory[i].label .. ' x' .. data.inventory[i].count,
-					count  = data.inventory[i].count,
-					type   = 'item_standard',
-					value  = data.inventory[i].name,
-					usable = data.inventory[i].usable
+					label     = data.inventory[i].label .. ' x' .. data.inventory[i].count,
+					count     = data.inventory[i].count,
+					type      = 'item_standard',
+					value     = data.inventory[i].name,
+					usable    = data.inventory[i].usable,
+					rare      = data.inventory[i].rare,
+					canRemove = data.inventory[i].canRemove,
 				})
 			end
 
@@ -1012,11 +1018,13 @@ ESX.ShowInventory = function()
 				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 				
 				table.insert(elements, {
-					label  = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
-					count  = 1,
-					type   = 'item_weapon',
-					value  = Config.Weapons[i].name,
-					usable = false
+					label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
+					count     = 1,
+					type      = 'item_weapon',
+					value     = Config.Weapons[i].name,
+					usable    = false,
+					rare      = false,
+					canRemove = true
 				})
 
 			end
@@ -1041,8 +1049,11 @@ ESX.ShowInventory = function()
 					table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
 				end
 
-				table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
-				table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
+				if data.current.canRemove then
+					table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+					table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
+				end
+
 				table.insert(elements, {label = _U('return'), action = 'return'})
 
 				ESX.UI.Menu.Open(

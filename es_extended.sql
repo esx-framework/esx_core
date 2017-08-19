@@ -1,12 +1,13 @@
 USE `essentialmode`;
 
 ALTER TABLE `users` 
-ADD COLUMN `name` VARCHAR(255) NULL DEFAULT '' AFTER `money`,
-ADD COLUMN `skin` LONGTEXT NULL AFTER `name`,
-ADD COLUMN `job` varchar(255) NULL DEFAULT 'unemployed' AFTER `skin`,
-ADD COLUMN `job_grade` INT NULL DEFAULT 0 AFTER `job`,
-ADD COLUMN `loadout` LONGTEXT NULL AFTER `job_grade`,
-ADD COLUMN `position` VARCHAR(255) NULL AFTER `loadout`;
+	ADD COLUMN `name` VARCHAR(255) NULL DEFAULT '' AFTER `money`,
+	ADD COLUMN `skin` LONGTEXT NULL AFTER `name`,
+	ADD COLUMN `job` varchar(255) NULL DEFAULT 'unemployed' AFTER `skin`,
+	ADD COLUMN `job_grade` INT NULL DEFAULT 0 AFTER `job`,
+	ADD COLUMN `loadout` LONGTEXT NULL AFTER `job_grade`,
+	ADD COLUMN `position` VARCHAR(255) NULL AFTER `loadout`
+;
 
 CREATE TABLE `items` (
   
@@ -14,7 +15,9 @@ CREATE TABLE `items` (
   `name` varchar(255) NOT NULL,
   `label` varchar(255) NOT NULL,
   `limit` int(11) NOT NULL DEFAULT '-1',
-  
+  `rare` int(11) NOT NULL DEFAULT '0',
+  `can_remove` int(11) NOT NULL DEFAULT '1',
+
   PRIMARY KEY (`id`)
 );
 
