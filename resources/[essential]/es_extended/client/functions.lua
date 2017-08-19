@@ -271,7 +271,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 
 end
 
-ESX.Game.SpawnObject = function(model, coords, radius, cb)
+ESX.Game.SpawnObject = function(model, coords, cb)
 
 	local model = (type(model) == 'number' and model or GetHashKey(model))
 
@@ -293,7 +293,7 @@ ESX.Game.SpawnObject = function(model, coords, radius, cb)
 
 end
 
-ESX.Game.SpawnLocalObject = function(model, coords, radius, cb)
+ESX.Game.SpawnLocalObject = function(model, coords, cb)
 
 	local model = (type(model) == 'number' and model or GetHashKey(model))
 
