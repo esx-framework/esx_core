@@ -293,6 +293,28 @@ ESX.Game.SpawnObject = function(model, coords, radius, cb)
 
 end
 
+ESX.Game.SpawnLocalObject = function(model, coords, radius, cb)
+
+	local model = (type(model) == 'number' and model or GetHashKey(model))
+
+	Citizen.CreateThread(function()
+
+		RequestModel(model)
+
+		while not HasModelLoaded(model) do
+			Citizen.Wait(0)
+		end
+
+		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, true, true)
+
+		if cb ~= nil then
+			cb(obj)
+		end
+
+	end)
+
+end
+
 ESX.Game.DeleteVehicle = function(vehicle)
 	SetEntityAsMissionEntity(vehicle,  false,  true)
 	DeleteVehicle(vehicle)
