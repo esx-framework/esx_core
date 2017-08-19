@@ -1,6 +1,16 @@
 # fxserver-es_extended [WIP]
 FXServer ES Extended
 
+[UPDATE]
+
+Since commit : https://github.com/FXServer-ESX/fxserver-es_extended/commit/ec1e8c0852b7461472dc9c332464ad55c81682e7 you have to add this SQL if you have already installed es_extended :
+```sql
+ALTER TABLE `items`
+	ADD COLUMN `rare` int(11) NOT NULL DEFAULT '0',
+	ADD COLUMN `can_remove` int(11) NOT NULL DEFAULT '1'
+;
+```
+
 [DISCORD]
 
 https://discord.me/fivem_esx
