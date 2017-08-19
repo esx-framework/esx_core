@@ -1,12 +1,12 @@
 ESX                  = nil
-local HasLoadedModel = false
+local FirstSpawn     = true
 local LastSkin       = nil
 local PlayerLoaded   = false
-local cam 			 = nil
+local cam 			     = nil
 local isCameraActive = false
-local zoomOffset	 = 0.0
-local camOffset 	 = 0.0
-local heading 		 = 90.0
+local zoomOffset	   = 0.0
+local camOffset 	   = 0.0
+local heading 		   = 90.0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -272,7 +272,31 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 end
 
 AddEventHandler('playerSpawned', function()
-	TriggerEvent('skinchanger:loadDefaultModel', true)
+
+	Citizen.CreateThread(function()
+
+		while not PlayerLoaded do
+			Citizen.Wait(0)
+		end
+
+		if FirstSpawn then
+
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+				if skin == nil then
+					OpenSaveableMenu(nil, nil, nil)
+				else
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end
+
+			end)
+
+			FirstSpawn = false
+
+		end
+
+	end)
+
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -309,33 +333,6 @@ AddEventHandler('esx_skin:requestSaveSkin', function()
 	TriggerEvent('skinchanger:getSkin', function(skin)
 		TriggerServerEvent('esx_skin:responseSaveSkin', skin)
 	end)
-end)
-
-AddEventHandler('skinchanger:modelLoaded', function()
-
-	if not HasLoadedModel then
-
-		Citizen.CreateThread(function()
-
-			while not PlayerLoaded do
-				Citizen.Wait(0)
-			end
-
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-
-				HasLoadedModel = true
-
-				if skin == nil then
-					OpenSaveableMenu(nil, nil, nil)
-				else
-					TriggerEvent('skinchanger:loadSkin', skin)
-				end
-
-			end)
-
-		end)
-
-	end
 end)
 
 Citizen.CreateThread(function()
