@@ -38,9 +38,9 @@ AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
 
 	if caution > 0 then
 		xPlayer.addAccountMoney('bank', value)
-		TriggerClientEvent('esx:showNotification', _source, 'Une caution de ~g~'.. value .. '$ ~s~vous a été rendue suite à votre évanouissment.')
+		TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_g').. value .. _U('bank_deposit2'))
 	else
-		TriggerClientEvent('esx:showNotification', _source, "Vous n'aviez pas de caution")
+		TriggerClientEvent('esx:showNotification', _source, _U('bank_nodeposit'))
 	end
 end)
 
@@ -53,7 +53,7 @@ local function Work(source, item)
 
 			for i=1, #item, 1 do
 				local itemQtty = 0
-				if item[i].name ~= "Livraison" then
+				if item[i].name ~= _U('lj_delivery') then
 					itemQtty = xPlayer.getInventoryItem(item[i].db_name).count
 				end
 
@@ -62,10 +62,10 @@ local function Work(source, item)
 					requiredItemQtty = xPlayer.getInventoryItem(item[1].requires).count
 				end
 
-				if item[i].name ~= "Livraison" and itemQtty >= item[i].max then
-					TriggerClientEvent('esx:showNotification', source, 'Vous avez le maximum de: ' .. item[i].name)
+				if item[i].name ~= _U('lj_delivery') and itemQtty >= item[i].max then
+					TriggerClientEvent('esx:showNotification', source, _U('max_limit') .. item[i].name)
 				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
-					TriggerClientEvent('esx:showNotification', source, "Vous n'avez plus assez de " .. item[1].requires_name .. " pour continuer cette tâche.")
+					TriggerClientEvent('esx:showNotification', source, _U('not_enough') .. item[1].requires_name .. _U('not_enough2'))
 				else
 					if item[i].name ~= "Livraison" then
 						-- Chances to drop the item
@@ -116,11 +116,11 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 	if cautionType == "take" then
 		xPlayer.removeAccountMoney('bank', cautionAmount)
 		xPlayer.set('caution', cautionAmount)
-		TriggerClientEvent('esx:showNotification', source, 'Une caution de ~r~'.. cautionAmount .. '$ ~s~vous a été prélevée.')
+		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_r') .. cautionAmount .. _U('caution_taken'))
 		TriggerClientEvent('esx_jobs:spawnJobVehicle', source, spawnPoint, vehicle)
 	elseif cautionType == "give_back" then
 		xPlayer.addAccountMoney('bank', cautionAmount)
 		xPlayer.set('caution', 0)
-		TriggerClientEvent('esx:showNotification', source, 'Une caution de ~g~'.. cautionAmount .. '$ ~s~vous a été rendue.')
+		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_g') .. cautionAmount .. _U('caution_returned'))
 	end
 end)

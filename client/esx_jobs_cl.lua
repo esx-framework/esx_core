@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -68,17 +68,17 @@ end)
 
 AddEventHandler('esx_jobs:action', function(job, zone)
 	menuIsShowed = true
-	if zone.Type == "cloakroom" then		
+	if zone.Type == "cloakroom" then
 		SendNUIMessage({
 			showMenu = true,
 			menu     = 'cloakroom'
-		})		
+		})
 	elseif zone.Type == "work" then
 		hintToDisplay = "no hint to display"
 		hintIsShowed = false
 		local playerPed = GetPlayerPed(-1)
 		if IsPedInAnyVehicle(playerPed, 0) then
-			TriggerEvent('esx:showNotification', 'Vous devez être à pied pour pouvoir travailler.')
+			TriggerEvent('esx:showNotification', _U('foot_work'))
 		else
 			TriggerServerEvent('esx_jobs:startWork', zone.Item)
 		end
@@ -187,7 +187,7 @@ function nextStep(gps)
 		end
 		Blips['delivery'] = AddBlipForCoord(gps.x, gps.y, gps.z)
 		SetBlipRoute(Blips['delivery'], true)
-		TriggerEvent('esx:showNotification', 'Rendez-vous à la prochaine étape après avoir complété celle-ci.')
+		TriggerEvent('esx:showNotification', _U('next_point'))
 	end
 end
 
@@ -319,7 +319,7 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 		table.insert(myPlate, plate)
 		plate = string.gsub(plate, " ", "")
 		TriggerEvent('esx_vehiclelock:updatePlayerCars', "add", plate)
-		SetVehRadioStation(veh, "OFF")		
+		SetVehRadioStation(veh, "OFF")
 		TaskWarpPedIntoVehicle(playerPed, veh, -1)
 		isJobVehicleDestroyed = false
 
@@ -360,10 +360,10 @@ Citizen.CreateThread(function()
 			local coords = GetEntityCoords(GetPlayerPed(-1))
 			for k,v in pairs(zones) do
 				if onDuty or v.Type == "cloakroom" or PlayerData.job.name == "reporter" then
-					if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then	
+					if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 						DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 					end
-				end				
+				end
 			end
 		end
 	end
@@ -375,16 +375,16 @@ Citizen.CreateThread(function()
 		Wait(0)
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		for k,v in pairs(Config.PublicZones) do
-			if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then	
+			if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
-			end		
+			end
 		end
 	end
 end)
 
 -- Activate public marker
 Citizen.CreateThread(function()
-	while true do		
+	while true do
 		Wait(0)
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local position    = nil
@@ -420,7 +420,7 @@ end)
 
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
-	while true do		
+	while true do
 		Wait(0)
 
 		if PlayerData.job ~= nil and PlayerData.job.name ~= 'unemployed' then
@@ -473,20 +473,20 @@ Citizen.CreateThread(function()
 						for i=1, #myPlate, 1 do
 							Citizen.Trace(myPlate[i])
 							if (myPlate[i] == plate) and (playerPed == driverPed) then
-								hintToDisplay = zone.Hint .. "\n" .. "La caution rendue sera de ~g~" .. cautionVehicleInCaseofDrop .. "$~s~."
+								hintToDisplay = zone.Hint .. "\n" .. _U('security_deposit') .. cautionVehicleInCaseofDrop .. "~s~."
 								isVehicleOwner = true
 								break
 							end
 						end
 						if not isVehicleOwner then
-							hintToDisplay = "Ce n'est pas votre véhicule ou vous devez être conducteur."
+							hintToDisplay = _U('not_your_vehicle')
 						end
 					else
-						hintToDisplay = "Vous devez être dans un véhicule."
+						hintToDisplay = _U('in_vehicle')
 					end
 					hintIsShowed = true
 				elseif onDuty and zone.Spawner ~= spawner then
-					hintToDisplay = "Vous n'êtes pas au bon point de livraison."
+					hintToDisplay = _U('wrong_point')
 					hintIsShowed = true
 				else
 					if not isInPublicMarker then

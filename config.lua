@@ -1,5 +1,6 @@
 Config              = {}
 Config.DrawDistance = 1000.0
+Config.Locale       = 'fr'
 
 Config.Plates = {
 	taxi = "TAXI",
@@ -17,7 +18,7 @@ Config.Plates = {
 
 Config.Jobs = {}
 
-Config.PublicZones = {	
+Config.PublicZones = {
 	EnterBuilding = {
 		Pos   = { x = -118.21381378174, y = -607.14227294922, z = 35.280723571777 },
 		Size  = {x = 3.0, y = 3.0, z = 0.2},

@@ -18,9 +18,9 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Vestiaire",
+			Name  = _U('lj_cr_title'),
 			Type  = "cloakroom",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour vous changer."
+			Hint  = _U('lj_cloakroom')
 		},
 
 		Wood = {
@@ -29,11 +29,11 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Tas de bois",
+			Name  = _U('lj_mapblip'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Bois",
+					name   = _U('lj_wood'),
 					db_name= "wood",
 					time   = 3000,
 					max    = 20,
@@ -44,7 +44,7 @@ Config.Jobs.lumberjack = {
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour récupérer du bois."
+			Hint  = _U('lj_pickup')
 		},
 
 		CuttedWood = {
@@ -53,22 +53,22 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Découpe du bois",
+			Name  = _U('lj_cutwood'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Bois coupé",
+					name   = _U('lj_cutwood'),
 					db_name= "cutted_wood",
 					time   = 5000,
 					max    = 20,
 					add    = 1,
 					remove = 1,
 					requires = "wood",
-					requires_name = "Bois",
+					requires_name = _U('lj_wood'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour couper du bois."
+			Hint  = _U('lj_cutwood_button')
 		},
 
 		Planks = {
@@ -77,22 +77,22 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Planches",
+			Name  = _U('lj_board'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Paquet de planche",
+					name   = _U('lj_planks'),
 					db_name= "packaged_plank",
 					time   = 4000,
 					max    = 100,
 					add    = 5,
 					remove = 1,
 					requires = "cutted_wood",
-					requires_name = "Bois coupé",
+					requires_name = _U('lj_cutwood'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour récupérer des planches."
+			Hint  = _U('lj_pick_boards')
 		},
 
 		VehicleSpawner = {
@@ -101,10 +101,10 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Spawner véhicule de fonction",
+			Name  = _U('lj_spawn_veh'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour appeler le véhicule de livraison.",
+			Hint  = _U('lj_spawn_veh_button'),
 			Caution = 2000
 		},
 
@@ -113,21 +113,21 @@ Config.Jobs.lumberjack = {
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Véhicule de fonction",
+			Name  = _U('lj_service_vh'),
 			Type  = "vehspawnpt",
 			Spawner = 1,
 			Heading = 285.1
 		},
-		
+
 		VehicleDeletePoint = {
 			Pos   = {x = 1216.8983154297, y = -1229.2396240234, z = 34.403507232666},
 			Size  = {x = 5.0, y = 5.0, z = 1.0},
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du véhicule",
+			Name  = _U('lj_return_vh'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.",
+			Hint  = _U('lj_return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -140,22 +140,22 @@ Config.Jobs.lumberjack = {
 			Size  = {x = 5.0, y = 5.0, z = 3.0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Point de livraison",
-			Type  = "delivery",				
+			Name  = _U('lj_delivery_point'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('lj_delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 13,
 					requires = "packaged_plank",
-					requires_name = "Paquet de planche",
+					requires_name = _U('lj_planks'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer les planches."
+			Hint  = _U('lj_deliver_button')
 		}
 	}
 }
