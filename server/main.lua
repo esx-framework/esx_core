@@ -417,3 +417,76 @@ if Config.EnablePvCommand then
 	end, {help = 'Sortir un véhicule personnel'})
 
 end
+
+function PayRent(d, h, m)
+
+	MySQL.Async.fetchAll(
+		'SELECT * FROM users',
+		{},
+		function(_users)
+
+			local prevMoney = {}
+			local newMoney  = {}
+
+			for i=1, #_users, 1 do
+				prevMoney[_users[i].identifier] = _users[i].money
+				newMoney[_users[i].identifier]  = _users[i].money
+			end
+
+			MySQL.Async.fetchAll(
+				'SELECT * FROM rented_vehicles',
+				{},
+				function(result)
+
+					local xPlayers = ESX.GetPlayers()
+
+					for i=1, #result, 1 do
+
+						local foundPlayer = false
+						local xPlayer     = nil
+
+						for k,v in pairs(xPlayers) do
+							if v.identifier == result[i].owner then
+								foundPlayer = true
+								xPlayer     = v
+							end
+						end
+
+						if foundPlayer then
+
+							xPlayer.removeMoney(result[i].rent_price)
+							TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~payé~s~ votre location de véhicule : ~g~$' .. result[i].rent_price)
+						
+						else
+							newMoney[result[i].owner] = newMoney[result[i].owner] - result[i].rent_price
+						end
+
+						TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+							account.addMoney(result[i].rent_price)
+						end)
+
+					end
+
+					for k,v in pairs(prevMoney) do
+						if v ~= newMoney[k] then
+
+							MySQL.Async.execute(
+								'UPDATE users SET money = @money WHERE identifier = @identifier',
+								{
+									['@money']      = newMoney[k],
+									['@identifier'] = k
+								}
+							)
+
+						end
+					end
+
+				end
+			)
+
+		end
+	)
+
+end
+
+TriggerEvent('cron:runAt', 22, 00, PayRent)
