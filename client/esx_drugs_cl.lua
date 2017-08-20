@@ -255,7 +255,7 @@ Citizen.CreateThread(function()
 					TriggerServerEvent('esx_drugs:startTransformMeth')
 				end
 				if CurrentAction == 'meth_resell' then
-					TriggerServerEvent('esx_drugs:startSellCoke')
+					TriggerServerEvent('esx_drugs:startSellMeth')
 				end
 				if CurrentAction == 'weed_harvest' then
 					TriggerServerEvent('esx_drugs:startHarvestWeed')
