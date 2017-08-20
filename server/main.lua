@@ -48,5 +48,17 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 			end
 		end
 	end
-
+	
 end)
+
+TriggerEvent('es:addGroupCommand', 'respawn', 'admin', function(source, args, user)
+	
+	if args[2] ~= nil then
+		TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[2]))
+	else
+		TriggerClientEvent('esx_ambulancejob:revive', source)
+	end
+
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = 'Respawn', params = {{name = 'id'}}})
