@@ -18,9 +18,9 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Vestiaire",
+			Name  = _U('cloakroom'),
 			Type  = "cloakroom",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour vous changer.",
+			Hint  = _U('cloak_change'),
 			GPS = {x = 884.86889648438, y = -2176.5102539063, z = 29.519346237183}
 		},
 
@@ -30,11 +30,11 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Rocher",
+			Name  = _U('m_rock'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Rocher",
+					name   = _U('m_rock'),
 					db_name= "stone",
 					time   = 3000,
 					max    = 7,
@@ -45,7 +45,7 @@ Config.Jobs.miner = {
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour récupérer des rochers.",
+			Hint  = _U('m_pickrocks'),
 			GPS = {x = 289.244, y = 2862.9, z = 42.6424}
 		},
 
@@ -55,22 +55,22 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Roche lavé",
+			Name  = _U('m_washrock'),
 			Type  = "work",
-			Item  = { 
+			Item  = {
 				{
-					name   = "Roche lavé",
+					name   = _U('m_washrock'),
 					db_name= "washed_stone",
 					time   = 5000,
 					max    = 7,
 					add    = 1,
 					remove = 1,
 					requires = "stone",
-					requires_name = "Rocher",
+					requires_name = _U('m_rock'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour laver les roches.",
+			Hint  = _U('m_rock_button'),
 			GPS = {x = 1109.14, y = -2007.87, z = 30.0188}
 		},
 
@@ -80,43 +80,43 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Fonderie",
+			Name  = _U('m_rock_smelting'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Cuivre",
+					name   = _U('m_copper'),
 					db_name= "copper",
 					time   = 4000,
 					max    = 56,
 					add    = 8,
 					remove = 1,
 					requires = "washed_stone",
-					requires_name = "Roche lavé",
+					requires_name = _U('m_washrock'),
 					drop   = 100
 				},
 				{
-					name   = "Fer",
+					name   = _U('m_iron'),
 					db_name= "iron",
 					max    = 42,
 					add    = 6,
 					drop   = 100
 				},
 				{
-					name   = "Or",
+					name   = _U('m_gold'),
 					db_name= "gold",
 					max    = 21,
 					add    = 3,
 					drop   = 100
 				},
 				{
-					name   = "Diamant",
+					name   = _U('m_diamond'),
 					db_name= "diamond",
 					max    = 50,
 					add    = 1,
 					drop   = 5
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour fondre les roches.",
+			Hint  = _U('m_melt_button'),
 			GPS = {x = -169.481, y = -2659.16, z = 5.00103}
 		},
 
@@ -126,10 +126,10 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Spawner véhicule de fonction",
+			Name  = _U('spawn_veh'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour appeler le véhicule de livraison.",
+			Hint  = _U('spawn_veh_button'),
 			Caution = 2000,
 			GPS = {x = 2962.4, y = 2746.2, z = 42.398}
 		},
@@ -139,22 +139,22 @@ Config.Jobs.miner = {
 			Size  = {x = 5.0, y = 5.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Véhicule de fonction",
-			Type  = "vehspawnpt",	
+			Name  = _U('service_vh'),
+			Type  = "vehspawnpt",
 			Spawner = 1,
 			Heading = 90.1,
 			GPS = 0
 		},
-		
+
 		VehicleDeletePoint = {
 			Pos   = {x = 881.93725585938, y = -2198.0151367188, z = 29.519351959229},
 			Size  = {x = 5.0, y = 5.0, z = 1.0},
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du véhicule",
+			Name  = _U('return_vh'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.",
+			Hint  = _U('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -167,22 +167,22 @@ Config.Jobs.miner = {
 			Size  = {x = 5.0, y = 5.0, z = 3.0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Revente de cuivre",
-			Type  = "delivery",				
+			Name  = _U('m_sell_copper'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 56, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 5,
 					requires = "copper",
-					requires_name = "Cuivre",
+					requires_name = _U('m_copper'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer le cuivre.",
+			Hint  = _U('m_deliver_copper'),
 			GPS = {x = -148.782, y = -1040.38, z = 26.2736}
 		},
 
@@ -193,25 +193,25 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Revente de fer",
-			Type  = "delivery",				
+			Name  = _U('m_sell_iron'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 42, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 9,
 					requires = "iron",
-					requires_name = "Fer",
+					requires_name = _U('m_iron'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer le fer.",
+			Hint  = _U('m_deliver_iron'),
 			GPS = {x = 261.487, y = 207.354, z = 109.287}
 		},
-		
+
 		GoldDelivery = {
 			Pos   = {x = 261.487, y = 207.354, z = 109.287},
 			Color = {r = 204, g = 204, b = 0},
@@ -219,25 +219,25 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Revente d'or",
-			Type  = "delivery",				
+			Name  = _U('m_sell_gold'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 21, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 25,
 					requires = "gold",
-					requires_name = "Or",
+					requires_name = _U('m_gold'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer l'or'.",
+			Hint  = _U('m_deliver_gold'),
 			GPS = {x = -621.046, y = -228.532, z = 37.0571}
 		},
-		
+
 		DiamondDelivery = {
 			Pos   = {x = -621.046, y = -228.532, z = 37.0571},
 			Color = {r = 204, g = 204, b = 0},
@@ -245,22 +245,22 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Revente de diamants",
-			Type  = "delivery",				
+			Name  = _U('m_sell_diamond'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 50, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 250,
 					requires = "diamond",
-					requires_name = "Diamant",
+					requires_name = _U('m_diamond'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer les diamants.",
+			Hint  = _U('m_deliver_diamond'),
 			GPS = {x = 2962.4, y = 2746.2, z = 42.398}
 		}
 	}

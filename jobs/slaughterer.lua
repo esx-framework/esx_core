@@ -18,9 +18,9 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Vestiaire",
+			Name  = _U('cloakroom'),
 			Type  = "cloakroom",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour vous changer."
+			Hint  = _U('cloak_change'),
 		},
 
 		AliveChicken = {
@@ -29,11 +29,11 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Poulailler",
+			Name  = _U('s_hen'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Poulet vivant",
+					name   = _U('s_alive_chicken'),
 					db_name= "alive_chicken",
 					time   = 3000,
 					max    = 20,
@@ -44,7 +44,7 @@ Config.Jobs.slaughterer = {
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour attrapper des poulets vivants."
+			Hint  = _U('s_catch_hen')
 		},
 
 		SlaughterHouse = {
@@ -53,22 +53,22 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Abattoir",
+			Name  = _U('s_slaughtered'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Poulet à conditionner",
+					name   = _U('s_slaughtered_chicken'),
 					db_name= "slaughtered_chicken",
 					time   = 5000,
 					max    = 20,
 					add    = 1,
 					remove = 1,
 					requires = "alive_chicken",
-					requires_name = "Poulet vivant",
+					requires_name = _U('s_alive_chicken'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour dépecer les poulets."
+			Hint  = _U('s_chop_animal')
 		},
 
 		Packaging = {
@@ -77,22 +77,22 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Emballage",
+			Name  = _U('s_package'),
 			Type  = "work",
-			Item  = { 
+			Item  = {
 				{
-					name   = "Poulet en barquette",
+					name   = _U('s_packagechicken'),
 					db_name= "packaged_chicken",
 					time   = 4000,
 					max    = 100,
 					add    = 5,
 					remove = 1,
 					requires = "slaughtered_chicken",
-					requires_name = "Poulet à conditionner",
+					requires_name = _U('s_unpackaged'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour conditionner le poulet en barquette."
+			Hint  = _U('s_unpackaged_button')
 		},
 
 		VehicleSpawner = {
@@ -101,10 +101,10 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Spawner véhicule de fonction",
+			Name  = _U('spawn_veh'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour appeler le véhicule de livraison.",
+			Hint  = _U('spawn_veh_button'),
 			Caution = 2000
 		},
 
@@ -113,21 +113,21 @@ Config.Jobs.slaughterer = {
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Véhicule de fonction",
+			Name  = _U('service_vh'),
 			Type  = "vehspawnpt",
 			Spawner = 1,
 			Heading = 130.1
 		},
-		
+
 		VehicleDeletePoint = {
 			Pos   = {x = -1061.5164794922, y = -2008.3552246094, z = 12.161584854126},
 			Size  = {x = 5.0, y = 5.0, z = 1.0},
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du véhicule",
+			Name  = _U('return_vh'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.",
+			Hint  = _U('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -140,22 +140,22 @@ Config.Jobs.slaughterer = {
 			Size  = {x = 5.0, y = 5.0, z = 1.0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Point de livraison",
-			Type  = "delivery",				
+			Name  = _U('delivery_point'),
+			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 11,
 					requires = "packaged_chicken",
-					requires_name = "Poulet en barquette",
+					requires_name = _U('s_packagechicken'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer les barquettes de poulet."
+			Hint  = _U('s_deliver')
 		}
 	}
 }
