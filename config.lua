@@ -1,6 +1,6 @@
 Config              = {}
 Config.DrawDistance = 1000.0
-Config.Locale       = 'en'
+Config.Locale       = 'fr'
 
 Config.Plates = {
 	taxi = "TAXI",
