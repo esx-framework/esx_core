@@ -261,15 +261,15 @@ local function TransformMeth(source)
 			local xPlayer  = ESX.GetPlayerFromId(source)
 
 			local methQuantity = xPlayer.getInventoryItem('meth').count
-			local pochonQuantity = xPlayer.getInventoryItem('meth_pooch').count
+			local poochQuantity = xPlayer.getInventoryItem('meth_pooch').count
 
-			if pochonQuantity > 35 then
+			if poochQuantity > 35 then
 				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif methQuantity < 5 then
 				TriggerClientEvent('esx:showNotification', source, _U('not_enough_meth'))
 			else
 				xPlayer.removeInventoryItem('meth', 5)
-				xPlayer.addInventoryItem('meth_pochon', 1)
+				xPlayer.addInventoryItem('meth_pooch', 1)
 				
 				TransformMeth(source)
 			end
@@ -313,12 +313,12 @@ local function SellMeth(source)
 
 			local xPlayer  = ESX.GetPlayerFromId(source)
 
-			local pochonQuantity = xPlayer.getInventoryItem('meth_pooch').count
+			local poochQuantity = xPlayer.getInventoryItem('meth_pooch').count
 
-			if pochonQuantity == 0 then
+			if poochQuantity == 0 then
 				TriggerClientEvent('esx:showNotification', source, _U('no_pouches_sale'))
 			else
-				xPlayer.removeInventoryItem('meth_pochon', 1)
+				xPlayer.removeInventoryItem('meth_pooch', 1)
 				if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 276)
                     TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
