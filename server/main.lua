@@ -568,6 +568,3 @@ function PayRent(d, h, m)
 end
 
 TriggerEvent('cron:runAt', 22, 0, PayRent)
-
-
-AddEventHandler('onMySQLReady', PayRent)
