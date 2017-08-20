@@ -135,6 +135,20 @@ function OpenShopMenu()
 
 								if hasEnoughMoney then
 
+									IsInShopMenu = false
+
+									DeleteShopInsideVehicles()
+
+									local playerPed = GetPlayerPed(-1)
+									
+									CurrentAction     = 'shop_menu'
+									CurrentActionMsg  = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu'
+									CurrentActionData = {}
+
+									FreezeEntityPosition(playerPed, false)
+									SetEntityVisible(playerPed, true)
+									SetEntityCoords(playerPed, Config.Zones.BossActions.Pos.x, Config.Zones.BossActions.Pos.y, Config.Zones.BossActions.Pos.z)
+
 									menu2.close()
 									menu.close()
 
@@ -304,7 +318,7 @@ function OpenResellerMenu()
 							if closestPlayer == -1 or closestDistance > 3.0 then
 								ESX.ShowNotification('Aucun joueur à proximité')
 							else
-								TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_realestateagent', 'Concessionnaire', tonumber(data2.value))
+								TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_cardealer', 'Concessionnaire', tonumber(data2.value))
 							end
 
 						end
