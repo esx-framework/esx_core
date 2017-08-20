@@ -18,10 +18,10 @@ Config.Jobs.reporter = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Le Maclerait Libéré",
+			Name  = _U('reporter_name'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour descendre au garage.",
+			Hint  = _U('reporter_garage'),
 			Caution = 2000
 		},
 
@@ -30,7 +30,7 @@ Config.Jobs.reporter = {
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Véhicule de fonction",
+			Name  = _U('service_vh'),
 			Type  = "vehspawnpt",
 			Spawner = 1,
 			Heading = 200.1
@@ -42,9 +42,9 @@ Config.Jobs.reporter = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du véhicule",
+			Name  = _U('return_vh'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.",
+			Hint  = _U('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,

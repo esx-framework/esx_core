@@ -18,9 +18,9 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('lj_cr_title'),
+			Name  = _U('cloakroom'),
 			Type  = "cloakroom",
-			Hint  = _U('lj_cloakroom')
+			Hint  = _U('cloak_change'),
 		},
 
 		Wood = {
@@ -101,10 +101,10 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = _U('lj_spawn_veh'),
+			Name  = _U('spawn_veh'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = _U('lj_spawn_veh_button'),
+			Hint  = _U('spawn_veh_button'),
 			Caution = 2000
 		},
 
@@ -113,7 +113,7 @@ Config.Jobs.lumberjack = {
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = _U('lj_service_vh'),
+			Name  = _U('service_vh'),
 			Type  = "vehspawnpt",
 			Spawner = 1,
 			Heading = 285.1
@@ -125,9 +125,9 @@ Config.Jobs.lumberjack = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = _U('lj_return_vh'),
+			Name  = _U('return_vh'),
 			Type  = "vehdelete",
-			Hint  = _U('lj_return_vh_button'),
+			Hint  = _U('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -140,12 +140,12 @@ Config.Jobs.lumberjack = {
 			Size  = {x = 5.0, y = 5.0, z = 3.0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('lj_delivery_point'),
+			Name  = _U('delivery_point'),
 			Type  = "delivery",
 			Spawner = 1,
 			Item  = {
 				{
-					name   = _U('lj_delivery'),
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua

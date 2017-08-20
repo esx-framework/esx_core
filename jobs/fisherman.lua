@@ -24,9 +24,9 @@ Config.Jobs.fisherman = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Vestiaire",
+			Name  = _U('cloakroom'),
 			Type  = "cloakroom",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour vous changer.",
+			Hint  = _U('cloak_change'),
 			GPS = {x = 880.74462890625, y = -1663.9635009766, z = 29.370491027832}
 		},
 
@@ -36,11 +36,11 @@ Config.Jobs.fisherman = {
 			Size  = {x = 110.0, y = 110.0, z = 10.0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Zone de pêche",
+			Name  = _U('fm_fish_area'),
 			Type  = "work",
 			Item  = {
 				{
-					name   = "Poisson",
+					name   = _U('fm_fish'),
 					db_name= "fish",
 					time   = 2000,
 					max    = 100,
@@ -51,7 +51,7 @@ Config.Jobs.fisherman = {
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour pêcher.",
+			Hint  = _U('fm_fish_button'),
 			GPS = {x = 3859.43, y = 4448.83, z = 0.39994}
 		},
 
@@ -61,10 +61,10 @@ Config.Jobs.fisherman = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Spawner bateau",
+			Name  = _U('fm_spawnboat_title'),
 			Type  = "vehspawner",
 			Spawner = 2,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour appeler le bateau.",
+			Hint  = _U('fm_spawnboat'),
 			Caution = 0,
 			GPS = {x = 4435.21, y = 4829.6, z = 0.3439}
 		},
@@ -74,7 +74,7 @@ Config.Jobs.fisherman = {
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Bateau",
+			Name  = _U('fm_boat_title'),
 			Type  = "vehspawnpt",
 			Spawner = 2,
 			GPS = 0,
@@ -87,9 +87,9 @@ Config.Jobs.fisherman = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du bateau",
+			Name  = _U('fm_boat_return_title'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le bateau.",
+			Hint  = _U('fm_boat_return_button'),
 			Spawner = 2,
 			Caution = 0,
 			GPS = {x = -1012.64758300781, y = -1354.62634277344, z = 5.54292726516724},
@@ -103,10 +103,10 @@ Config.Jobs.fisherman = {
 	        Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Spawner véhicule de fonction",
+			Name  = _U('spawn_veh'),
 			Type  = "vehspawner",
 			Spawner = 1,
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour appeler le véhicule de livraison.",
+			Hint  = _U('spawn_veh_button'),
 			Caution = 2000,
 			GPS = {x = 3867.44, y = 4463.62, z = 1.72386}
 		},
@@ -116,7 +116,7 @@ Config.Jobs.fisherman = {
 	        Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker= -1,
 			Blip  = false,
-			Name  = "Véhicule de fonction",
+			Name  = _U('service_vh'),
 			Type  = "vehspawnpt",
 			Spawner = 1,
 			GPS = 0,
@@ -129,9 +129,9 @@ Config.Jobs.fisherman = {
 	        Color = {r = 255, g = 0, b = 0},
 			Marker= 1,
 			Blip  = false,
-			Name  = "Supression du véhicule",
+			Name  = _U('return_vh'),
 			Type  = "vehdelete",
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.",
+			Hint  = _U('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -145,22 +145,22 @@ Config.Jobs.fisherman = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = "Point de livraison",
-			Type  = "delivery",				
+			Name  = _U('delivery_point'),
+			Type  = "delivery",
 			Spawner = 2,
 			Item  = {
 				{
-					name   = "Livraison",
+					name   = _U('delivery'),
 					time   = 500,
 					remove = 1,
 					max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 11,
 					requires = "fish",
-					requires_name = "Poisson",
+					requires_name = _U('fm_fish'),
 					drop   = 100
 				}
 			},
-			Hint  = "Appuyez sur ~INPUT_PICKUP~ pour livrer le poisson.",
+			Hint  = _U('fm_deliver_fish'),
 			GPS = {x = 3867.44, y = 4463.62, z = 1.72386}
 		}
 	}
