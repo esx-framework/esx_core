@@ -127,11 +127,12 @@ end
 ESX.SavePlayers = function(cb)
 
 	local asyncTasks = {}
-	local players    = ESX.GetPlayers()
+	local xPlayers   = ESX.GetPlayers()
 
-	for k,v in pairs(players) do
+	for i=1, #xPlayers, 1 do
 		table.insert(asyncTasks, function(cb)
-			ESX.SavePlayer(v, cb)
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+			ESX.SavePlayer(v, xPlayer)
 		end)
 	end
 
@@ -164,11 +165,13 @@ ESX.StartPayCheck = function()
 
 		local xPlayers = ESX.GetPlayers()
 
-		for k,v in pairs(xPlayers) do
+		for i=1, #xPlayers, 1 do
 
-			if v.job.grade_salary > 0 then
-				v.addMoney(v.job.grade_salary)
-				TriggerClientEvent('esx:showNotification', v.source, _U('rec_salary') .. '~g~$' .. v.job.grade_salary)
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+			if xPlayer.job.grade_salary > 0 then
+				xPlayer.addMoney(xPlayer.job.grade_salary)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rec_salary') .. '~g~$' .. xPlayer.job.grade_salary)
 			end
 
 		end
@@ -182,8 +185,16 @@ ESX.StartPayCheck = function()
 end
 
 ESX.GetPlayers = function()
-	return ESX.Players
+
+	local sources = {}
+
+	for k,v in pairs(ESX.Players) do
+		table.insert(source, k)
+	end
+
+	return sources
 end
+
 
 ESX.GetPlayerFromId = function(source)
 	return ESX.Players[tonumber(source)]
