@@ -270,12 +270,12 @@ AddEventHandler('esx:spawnObject', function(model)
 end)
 
 RegisterNetEvent('esx:pickup')
-AddEventHandler('esx:pickup', function(id, label)
+AddEventHandler('esx:pickup', function(id, label, coords)
 
-	local playerPed = GetPlayerPed(-1)
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * -2.0)
+	local ped     = GetPlayerPed(GetPlayerFromServerId(player))
+	local coords  = GetEntityCoords(ped)
+	local forward = GetEntityForwardVector(ped)
+	local x, y, z = table.unpack(coords + forward * -2.0)
 
 	ESX.Game.SpawnLocalObject('prop_money_bag_01', {
 			x = x,
