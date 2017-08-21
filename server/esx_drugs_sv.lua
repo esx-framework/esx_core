@@ -18,8 +18,9 @@ function CountCops()
 
 	CopsConnected = 0
 
-	for k,v in pairs(xPlayers) do
-		if v.job.name == 'police' then
+	for i=1, #xPlayers, 1 do
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		if xPlayer.job.name == 'police' then
 			CopsConnected = CopsConnected + 1
 		end
 	end
@@ -65,7 +66,7 @@ AddEventHandler('esx_drugs:startHarvestCoke', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 
-	HarvestCoke(source)
+	HarvestCoke(_source)
 
 end)
 
@@ -118,7 +119,7 @@ AddEventHandler('esx_drugs:startTransformCoke', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 
-	TransformCoke(source)
+	TransformCoke(_source)
 
 end)
 
@@ -186,7 +187,7 @@ AddEventHandler('esx_drugs:startSellCoke', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 
-	SellCoke(source)
+	SellCoke(_source)
 
 end)
 
@@ -234,7 +235,7 @@ AddEventHandler('esx_drugs:startHarvestMeth', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 
-	HarvestMeth(source)
+	HarvestMeth(_source)
 
 end)
 
@@ -287,7 +288,7 @@ AddEventHandler('esx_drugs:startTransformMeth', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 
-	TransformMeth(source)
+	TransformMeth(_source)
 
 end)
 
@@ -358,7 +359,7 @@ AddEventHandler('esx_drugs:startSellMeth', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 
-	SellMeth(source)
+	SellMeth(_source)
 
 end)
 
@@ -406,7 +407,7 @@ AddEventHandler('esx_drugs:startHarvestWeed', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 
-	HarvestWeed(source)
+	HarvestWeed(_source)
 
 end)
 
@@ -459,7 +460,7 @@ AddEventHandler('esx_drugs:startTransformWeed', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 
-	TransformWeed(source)
+	TransformWeed(_source)
 
 end)
 
@@ -524,7 +525,7 @@ AddEventHandler('esx_drugs:startSellWeed', function()
 
 	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 
-	SellWeed(source)
+	SellWeed(_source)
 
 end)
 
@@ -542,9 +543,17 @@ RegisterServerEvent('esx_drugs:GetUserInventory')
 AddEventHandler('esx_drugs:GetUserInventory', function(currentZone)
 	local _source = source
     local xPlayer  = ESX.GetPlayerFromId(_source)
-    TriggerClientEvent('esx_drugs:ReturnInventory', _source, xPlayer.getInventoryItem('coke').count, xPlayer.getInventoryItem('coke_pooch').count,
-    														 xPlayer.getInventoryItem('meth').count, xPlayer.getInventoryItem('meth_pooch').count, 
-    														 xPlayer.getInventoryItem('weed').count, xPlayer.getInventoryItem('weed_pooch').count, xPlayer.job.name, currentZone)
+    TriggerClientEvent('esx_drugs:ReturnInventory', 
+    	_source, 
+    	xPlayer.getInventoryItem('coke').count, 
+		xPlayer.getInventoryItem('coke_pooch').count,
+		xPlayer.getInventoryItem('meth').count, 
+		xPlayer.getInventoryItem('meth_pooch').count, 
+		xPlayer.getInventoryItem('weed').count, 
+		xPlayer.getInventoryItem('weed_pooch').count, 
+		xPlayer.job.name, 
+		currentZone
+    )
 end)
 
 -- Register Usable Item
