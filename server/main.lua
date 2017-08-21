@@ -26,15 +26,18 @@ function SetPropertyOwned(name, price, rented, owner)
 
 			local xPlayers = ESX.GetPlayers()
 
-			for k,v in pairs(xPlayers) do
-				if v.identifier == owner then
+			for i=1, #xPlayers, 1 do
 
-					TriggerClientEvent('esx_property:setPropertyOwned', v.source, name, true)
+				local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+				
+				if xPlayer.identifier == owner then
+
+					TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true)
 
 					if rented then
-						TriggerClientEvent('esx:showNotification', v.source, _U('rented_for') .. price)
+						TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rented_for') .. price)
 					else
-						TriggerClientEvent('esx:showNotification', v.source, _U('purchased_for') .. price)
+						TriggerClientEvent('esx:showNotification', xPlayer.source, _U('purchased_for') .. price)
 					end
 
 					break
@@ -58,10 +61,13 @@ function RemoveOwnedProperty(name, owner)
 
 			local xPlayers = ESX.GetPlayers()
 
-			for k,v in pairs(xPlayers) do
-				if v.identifier == owner then
-					TriggerClientEvent('esx_property:setPropertyOwned', v.source, name, false)
-					TriggerClientEvent('esx:showNotification', v.source, _U('made_property'))
+			for i=1, #xPlayers, 1 do
+
+				local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+				
+				if xPlayer.identifier == owner then
+					TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, false)
+					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('made_property'))
 					break
 				end
 			end
@@ -523,10 +529,13 @@ function PayRent(d, h, m)
 						local foundPlayer = false
 						local xPlayer     = nil
 
-						for k,v in pairs(xPlayers) do
-							if v.identifier == result[i].owner then
+						for j=1, #xPlayers, 1 do
+
+							local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
+							
+							if xPlayer2.identifier == result[i].owner then
 								foundPlayer = true
-								xPlayer     = v
+								xPlayer     = xPlayer2
 							end
 						end
 
