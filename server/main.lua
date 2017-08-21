@@ -272,10 +272,11 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 	local xPlayers = ESX.GetPlayers()
 
 	if phoneNumber == 'police' then
-		for k, v in pairs(xPlayers) do
-			if v.job.name == 'police' then
+		 for i=1, #xPlayers, 1 do
+		 	local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+			if xPlayer2.job.name == 'police' then
 				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _('alert_police'), requestId)
+					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _('alert_police'), requestId)
 				end)
 			end
 		end
