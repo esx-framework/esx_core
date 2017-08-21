@@ -484,7 +484,7 @@ Citizen.CreateThread(function()
 
 							local ped = GetRandomPed()
 
-							if DoesEntityExist(ped) IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
+							if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
 								CurrentCustomer = ped
 							end
 
