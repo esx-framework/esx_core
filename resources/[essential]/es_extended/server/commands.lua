@@ -47,6 +47,12 @@ end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
 end, {help = _U('spawn_car'), params = {{name = "car", help = _U('spawn_car_param')}}})
 
+TriggerEvent('es:addGroupCommand', 'spawnobject', 'admin', function(source, args, user)
+	TriggerClientEvent('esx:spawnObject', source, args[2])
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = _U('spawn_object'), params = {{name = "name"}}})
+
 TriggerEvent('es:addGroupCommand', 'givemoney', 'admin', function(source, args, user)
 	
 	local _source = source

@@ -29,6 +29,7 @@ Locales['en'] = {
 	['play_emote'] = 'play emote',
 	['spawn_car'] = 'spawn a car',
 	['spawn_car_param'] = 'name of car',
+	['spawn_object'] = 'spawn object',
 	['givemoney'] = 'give money',
 	['money_amount'] = 'amount of money',
 	['invalid_account'] = 'invalid account',

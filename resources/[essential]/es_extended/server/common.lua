@@ -4,6 +4,8 @@ ESX.UsableItemsCallbacks = {}
 ESX.Items                = {}
 ESX.ServerCallbacks      = {}
 ESX.LastPlayerData       = {}
+ESX.Pickups              = {}
+ESX.PickupId             = 0
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)

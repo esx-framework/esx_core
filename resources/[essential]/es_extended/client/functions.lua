@@ -320,6 +320,11 @@ ESX.Game.DeleteVehicle = function(vehicle)
 	DeleteVehicle(vehicle)
 end
 
+ESX.Game.DeleteObject = function(object)
+	SetEntityAsMissionEntity(object,  false,  true)
+	DeleteObject(object)
+end
+
 ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 
   local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))

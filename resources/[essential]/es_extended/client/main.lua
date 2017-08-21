@@ -16,6 +16,7 @@ local PlayerLoaded  = false
 local LoadoutLoaded = false
 local IsPaused      = false
 local LastLoadout   = {}
+local Pickups       = {}
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -249,7 +250,65 @@ AddEventHandler('esx:spawnVehicle', function(model)
 
 end)
 
--- Pickup Weapon
+RegisterNetEvent('esx:spawnObject')
+AddEventHandler('esx:spawnObject', function(model)
+
+	local playerPed = GetPlayerPed(-1)
+	local coords    = GetEntityCoords(playerPed)
+	local forward   = GetEntityForwardVector(playerPed)
+	local x, y, z   = table.unpack(coords + forward * 1.0)
+
+	ESX.Game.SpawnObject(model, {
+		x = x,
+		y = y,
+		z = z
+	}, function(obj)
+		SetEntityHeading(obj, GetEntityHeading(playerPed))
+		PlaceObjectOnGroundProperly(obj)
+	end)
+
+end)
+
+RegisterNetEvent('esx:pickup')
+AddEventHandler('esx:pickup', function(id, label)
+
+	local playerPed = GetPlayerPed(-1)
+	local coords    = GetEntityCoords(playerPed)
+	local forward   = GetEntityForwardVector(playerPed)
+	local x, y, z   = table.unpack(coords + forward * -2.0)
+
+	ESX.Game.SpawnLocalObject('prop_money_bag_01', {
+			x = x,
+			y = y,
+			z = z - 2.0,
+		}, function(obj)
+		
+		SetEntityAsMissionEntity(obj,  true,  false)
+
+		PlaceObjectOnGroundProperly(obj)
+		
+		Pickups[id] = {
+			id = id,
+			obj = obj,
+			label = label,
+			inRange = false,
+			coords = {
+				x = x,
+				y = y,
+				z = z
+			},
+		}
+
+	end)
+
+end)
+
+RegisterNetEvent('esx:removePickup')
+AddEventHandler('esx:removePickup', function(id)
+	ESX.Game.DeleteObject(Pickups[id].obj)
+	Pickups[id] = nil
+end)
+
 RegisterNetEvent('esx:pickupWeapon')
 AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName)
 	
@@ -386,3 +445,35 @@ if Config.DisableWantedLevel then
 
 end
 
+-- Pickups
+Citizen.CreateThread(function()
+	while true do
+
+		Citizen.Wait(0)
+
+		local playerPed = GetPlayerPed(-1)
+		local coords    = GetEntityCoords(playerPed)
+
+		for k,v in pairs(Pickups) do
+
+			local distance = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  v.coords.x,  v.coords.y,  v.coords.z,  true)
+
+			if distance <= 5.0 then
+				
+				ESX.Game.Utils.DrawText3D({
+					x = v.coords.x,
+					y = v.coords.y,
+					z = v.coords.z + 0.25
+				}, v.label)
+
+			end
+
+			if distance <= 1.0 and not v.inRange then
+				TriggerServerEvent('esx:onPickup', v.id)
+				v.inRange = true
+			end
+
+		end
+
+	end
+end)

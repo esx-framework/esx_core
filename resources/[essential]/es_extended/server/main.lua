@@ -404,6 +404,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 					
 					if total > 0 then
 						xPlayer.removeInventoryItem(itemName, total)
+						ESX.CreatePickup('item_standard', itemName, total, foundItem.label)
 						TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' ' .. foundItem.label .. ' x' .. total)
 					end
 
@@ -438,6 +439,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 					
 					if total > 0 then
 						xPlayer.removeMoney(total)
+						ESX.CreatePickup('item_money', 'money', total, 'Cash')
 						TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' [Cash] $' .. total)
 					end
 
@@ -472,6 +474,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 					
 					if total > 0 then
 						xPlayer.removeAccountMoney(itemName, total)
+						ESX.CreatePickup('item_account', itemName, total, 'Cash')
 						TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' [Cash] $' .. total)
 					end
 
@@ -524,6 +527,24 @@ AddEventHandler('esx:useItem', function(itemName)
 	else
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('act_imp'))
 	end
+
+end)
+
+RegisterServerEvent('esx:onPickup')
+AddEventHandler('esx:onPickup', function(id)
+
+	local pickup  = ESX.Pickups[id]
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if pickup.type == 'item_standard' then
+		xPlayer.addInventoryItem(pickup.name, pickup.count)
+	elseif pickup.type == 'item_money' then
+		xPlayer.addMoney(pickup.count)
+	elseif pickup.type == 'item_account' then
+		xPlayer.addAccountMoney(pickup.name, pickup.count)
+	end
+
+	TriggerClientEvent('esx:removePickup', -1, id)
 
 end)
 

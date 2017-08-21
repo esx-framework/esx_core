@@ -223,3 +223,19 @@ ESX.GetWeaponLabel = function(name)
 	end
 
 end
+
+ESX.CreatePickup = function(type, name, count, label)
+
+	local pickupId = (ESX.PickupId == 65635 and 0 or ESX.PickupId + 1)
+
+	ESX.Pickups[pickupId] = {
+		type  = type,
+		name  = name,
+		count = count
+	}
+
+	TriggerClientEvent('esx:pickup', -1, pickupId, label)
+
+	ESX.PickupId = pickupId
+
+end

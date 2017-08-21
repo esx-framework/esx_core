@@ -29,6 +29,7 @@ Locales['br'] = {
 	['play_emote'] = 'reproduzir emote',
 	['spawn_car'] = 'fazer aparecer um carro',
 	['spawn_car_param'] = 'nome do carro',
+	['spawn_object'] = 'gerar um objeto',
 	['givemoney'] = 'dar dinheiro',
 	['money_amount'] = 'quantia do dinheiro',
 	['invalid_account'] = 'conta inválida',
