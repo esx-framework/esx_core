@@ -19,9 +19,12 @@ AddEventHandler('esx_phone:ready', function()
 
 		if phoneNumber == "realestateagent" then
 
-			for k, v in pairs(xPlayers) do
-				if v.job.name == 'realestateagent' then
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job)
+			for i=1, #xPlayers, 1 do
+
+				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+				
+				if xPlayer2.job.name == 'realestateagent' then
+					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job)
 				end
 			end
 
@@ -59,9 +62,12 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 	local xPlayers = ESX.GetPlayers()
 
 	if phoneNumber == 'realestateagent' then
-		for k, v in pairs(xPlayers) do
-			if v.job.name == 'realestateagent' then
-				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'player')
+		for i=1, #xPlayers, 1 do
+
+			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+			
+			if xPlayer2.job.name == 'realestateagent' then
+				TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'player')
 			end
 		end
 	end
@@ -76,10 +82,13 @@ ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(sourc
 		local customers = {}
 
 		for i=1, #properties, 1 do
-			for k,v in pairs(xPlayers) do
-				if v.identifier == properties[i].owner then
+			for j=1, #xPlayers, 1 do
+
+				local xPlayer = ESX.GetPlayerFromId(xPlayers[j])
+				
+				if xPlayer.identifier == properties[i].owner then
 					table.insert(customers, {
-						name           = v.name,
+						name           = xPlayer.name,
 						propertyOwner  = properties[i].owner,
 						propertyRented = properties[i].rented,
 						propertyId     = properties[i].id,
