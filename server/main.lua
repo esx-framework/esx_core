@@ -130,16 +130,15 @@ function TickStatus()
 
 	local xPlayers = ESX.GetPlayers()
 
-	for k,v in pairs(xPlayers) do
+	for i=1, #xPlayers, 1 do
 
-		local status = v.get('status')
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		local status  = xPlayer.get('status')
 
 		if status ~= nil then
-
 			for i=1, #status, 1 do
 				status[i]._get('onTick')()
 			end
-
 		end
 
 	end
@@ -152,8 +151,9 @@ function UpdateClients()
 
 	local xPlayers = ESX.GetPlayers()
 	
-	for k,v in pairs(xPlayers) do
-		TriggerEvent('esx_status:updateClient', v.source)
+	for i=1, #xPlayers, 1 do
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		TriggerEvent('esx_status:updateClient', xPlayer.source)
 	end
 
 	SetTimeout(Config.UpdateClientTime, UpdateClients)
@@ -164,10 +164,11 @@ function SaveData()
 
 	local xPlayers = ESX.GetPlayers()
 
-	for k,v in pairs(xPlayers) do
+	for i=1, #xPlayers, 1 do
 
-		local data   = {}
-		local status = v.get('status')
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		local data    = {}
+		local status  = xPlayer.get('status')
 
 		for i=1, #status, 1 do
 			
@@ -183,7 +184,7 @@ function SaveData()
 			'UPDATE users SET status = @status WHERE identifier = @identifier',
 		 	{
 		 		['@status']     = json.encode(data),
-		 		['@identifier'] = v.identifier
+		 		['@identifier'] = xPlayer.identifier
 		 	}
 		)
 	

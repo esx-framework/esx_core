@@ -43,6 +43,10 @@ function CreateStatus(xPlayer, name, default, color, visible, tickCallback, clie
 		end
 	end
 
+	self.getPercent = function()
+		return (self.val / Config.StatusMax) * 100
+	end
+
 	self.updateClient = function()
 		TriggerEvent('esx_status:updateClient', self.xPlayer.source)
 	end
