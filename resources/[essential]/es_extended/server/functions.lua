@@ -132,7 +132,7 @@ ESX.SavePlayers = function(cb)
 	for i=1, #xPlayers, 1 do
 		table.insert(asyncTasks, function(cb)
 			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-			ESX.SavePlayer(v, xPlayer)
+			ESX.SavePlayer(xPlayer, cb)
 		end)
 	end
 
