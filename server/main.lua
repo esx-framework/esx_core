@@ -12,13 +12,16 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 
 		if account == nil then
 
-			for k, v in pairs(xPlayers) do
-				if v.source == playerId then
+			for i=1, #xPlayers, 1 do
+
+				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+
+				if xPlayer2.source == playerId then
 
 						MySQL.Async.execute(
 							'INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)',
 							{
-								['@identifier']  = v.identifier,
+								['@identifier']  = xPlayer2.identifier,
 								['@sender']      = xPlayer.identifier,
 								['@target_type'] = 'player',
 								['@target']      = xPlayer.identifier,
@@ -26,7 +29,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 								['@amount']      = amount
 							},
 							function(rowsChanged)
-								TriggerClientEvent('esx:showNotification', v.source, _U('received_invoice'))
+								TriggerClientEvent('esx:showNotification', xPlayer2.source, _U('received_invoice'))
 							end
 						)
 
@@ -36,14 +39,16 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 
 		else
 
-			for k, v in pairs(xPlayers) do
+			for i=1, #xPlayers, 1 do
 
-				if v.source == playerId then
+				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+
+				if xPlayer2.source == playerId then
 
 						MySQL.Async.execute(
 							'INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)',
 							{
-								['@identifier']  = v.identifier,
+								['@identifier']  = xPlayer2.identifier,
 								['@sender']      = xPlayer.identifier,
 								['@target_type'] = 'society',
 								['@target']      = sharedAccountName,
@@ -51,7 +56,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 								['@amount']      = amount
 							},
 							function(rowsChanged)
-								TriggerClientEvent('esx:showNotification', v.source, _U('received_invoice'))
+								TriggerClientEvent('esx:showNotification', xPlayer2.source, _U('received_invoice'))
 							end
 						)
 
@@ -116,9 +121,12 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 			local xPlayers    = ESX.GetPlayers()
 			local foundPlayer = nil
 
-			for k,v in pairs(xPlayers) do
-				if v.identifier == sender then
-					foundPlayer = v
+			for i=1, #xPlayers, 1 do
+
+				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+				
+				if xPlayer2.identifier == sender then
+					foundPlayer = xPlayer2
 					break
 				end
 			end
