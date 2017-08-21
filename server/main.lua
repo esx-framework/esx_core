@@ -37,12 +37,14 @@ ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function(source, cb)
 	local xPlayers  = ESX.GetPlayers()
 	local customers = {}
 
-	for k,v in pairs(xPlayers) do
+	for i=1, #xPlayers, 1 do
 
-		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', v.identifier, function(account)
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
 			table.insert(customers, {
-				source      = v.source,
-				name        = GetPlayerName(v.source),
+				source      = xPlayer.source,
+				name        = GetPlayerName(xPlayer.source),
 				bankSavings = account.money
 			})
 		end)
@@ -59,10 +61,11 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 	local xPlayers = ESX.GetPlayers()
 
 	if phoneNumber == 'banker' then
-		for k, v in pairs(xPlayers) do
-			if v.job.name == 'banker' then
+		for i=1, #xPlayers, 1 do
+			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+			if xPlayer2.job.name == 'banker' then
 				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Client Banque')
+					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Client Banque')
 				end)
 			end
 		end
@@ -87,10 +90,11 @@ function CalculateBankSavings(d, h, m)
 				local foundPlayer = false
 				local xPlayer     = nil
 
-				for k,v in pairs(xPlayers) do
-					if v.identifier == result[i].owner then
+				for i=1, #xPlayers, 1 do
+					local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+					if xPlayer2.identifier == result[i].owner then
 						foundPlayer = true
-						xPlayer     = v
+						xPlayer     = xPlayer2
 					end
 				end
 
