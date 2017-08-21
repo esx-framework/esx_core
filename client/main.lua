@@ -118,12 +118,117 @@ function StartRespawnTimer()
 					StopScreenEffect('DeathFailOut')
 					DoScreenFadeIn(800)
 				end)
-
 			end)
 		end
-
 	end)
+end
 
+function RespawnTimer()
+
+local timer = Config.RespawnDelayAfterRPDeath
+local allowRespawn = Config.RespawnDelayAfterRPDeath/2
+local enoughMoney = false
+local money = 0
+
+	if IsDead and Config.ShowDeathTimer then
+		ESX.TriggerServerCallback('esx_ambulancejob:getBankMoney', function(money)
+			if money >= Config.EarlyRespawnFineAmount then
+				enoughMoney = true
+			else
+				enoughMoney = false
+			end
+		end)
+		Citizen.CreateThread(function()
+
+			while timer > 0 and IsDead do
+				raw_seconds = timer/1000
+				raw_minutes = raw_seconds/60
+				minutes = stringsplit(raw_minutes, ".")[1]
+				seconds = stringsplit(raw_seconds-(minutes*60), ".")[1]
+
+				if Config.EarlyRespawn and Config.EarlyRespawnFine and enoughMoney then
+					SetTextFont(4)
+					SetTextProportional(0)
+					SetTextScale(0.0, 0.5)
+					SetTextColour(255, 255, 255, 255)
+					SetTextDropshadow(0, 0, 0, 0, 255)
+					SetTextEdge(1, 0, 0, 0, 255)
+					SetTextDropShadow()
+					SetTextOutline()
+					SetTextEntry("STRING")
+					AddTextComponentString(_U('please_wait') .. minutes .. _U('minutes') .. seconds .. _U('seconds_fine') .. Config.EarlyRespawnFineAmount .. _U('press_respawn_fine'))
+					SetTextCentre(true)
+					DrawText(0.5, 0.8)
+					timer = timer - 15
+					Citizen.Wait(0)
+					if IsControlPressed(0,  Keys['E']) then
+						DoScreenFadeOut(800)
+
+						while not IsScreenFadedOut() do
+							Citizen.Wait(0)
+						end
+
+						ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeathRemoveMoney', function()
+
+							TriggerServerEvent('esx_ambulancejob:removeAccountMoney', source)
+							TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+
+							RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+							StopScreenEffect('DeathFailOut')
+							DoScreenFadeIn(800)
+						end)
+					end
+				else
+					SetTextFont(4)
+					SetTextProportional(0)
+					SetTextScale(0.0, 0.5)
+					SetTextColour(255, 255, 255, 255)
+					SetTextDropshadow(0, 0, 0, 0, 255)
+					SetTextEdge(1, 0, 0, 0, 255)
+					SetTextDropShadow()
+					SetTextOutline()
+					SetTextEntry("STRING")
+					AddTextComponentString(_U('please_wait') .. minutes .. _U('minutes') .. seconds .. _U('seconds'))
+					SetTextCentre(true)
+					DrawText(0.5, 0.8)
+					timer = timer - 15
+					Citizen.Wait(0)
+				end
+			end
+
+			while timer <= 0 and IsDead do
+				SetTextFont(4)
+				SetTextProportional(0)
+				SetTextScale(0.0, 0.5)
+				SetTextColour(255, 255, 255, 255)
+				SetTextDropshadow(0, 0, 0, 0, 255)
+				SetTextEdge(1, 0, 0, 0, 255)
+				SetTextDropShadow()
+				SetTextOutline()
+				SetTextEntry("STRING")
+				AddTextComponentString(_U('press_respawn'))
+				SetTextCentre(true)
+				DrawText(0.5, 0.8)
+				Citizen.Wait(0)
+				if IsControlPressed(0,  Keys['E']) then
+					DoScreenFadeOut(800)
+
+					while not IsScreenFadedOut() do
+						Citizen.Wait(0)
+					end
+
+					ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+
+						TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+
+						RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+						--StopScreenEffect('DeathFailOut')
+						DoScreenFadeIn(800)
+					end)
+				end
+			end
+		end)
+	end
 end
 
 function TeleportFadeEffect(entity, coords)
@@ -531,10 +636,14 @@ AddEventHandler('esx_ambulancejob:onPlayerDeath', function()
 
 	IsDead = true
 
-	StartRespawnTimer()
-	StartRespawnToHospitalMenuTimer()
+	if Config.ShowDeathTimer == true then
+		RespawnTimer()
+	else
+		StartRespawnTimer()
+		StartRespawnToHospitalMenuTimer()
+		StartScreenEffect('DeathFailOut',  0,  false)
+	end
 
-	StartScreenEffect('DeathFailOut',  0,  false)
 end)
 
 RegisterNetEvent('esx_ambulancejob:revive')
@@ -745,3 +854,16 @@ Citizen.CreateThread(function()
   EnableMpDlcMaps(true)
   RequestIpl('Coroner_Int_on') -- Morgue
 end)
+
+-- String string
+function stringsplit(inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t={} ; i=1
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        t[i] = str
+        i = i + 1
+    end
+    return t
+end
