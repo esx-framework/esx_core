@@ -51,7 +51,7 @@ local Components = {
 	{label = _U('bag_color'),        		name = 'bags_2',       value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bags_1'}
 }
 
-local LastSex     = 0
+local LastSex     = -1
 local LoadSkin    = nil
 local LoadClothes = nil
 local Character   = {}
@@ -299,12 +299,18 @@ end)
 RegisterNetEvent('skinchanger:loadSkin')
 AddEventHandler('skinchanger:loadSkin', function(skin)
 
-	LoadSkin = skin
+	if skin['sex'] ~= LastSex then
 
-	if skin['sex'] == 0 then
-		TriggerEvent('skinchanger:loadDefaultModel', true)
+		LoadSkin = skin
+
+		if skin['sex'] == 0 then
+			TriggerEvent('skinchanger:loadDefaultModel', true)
+		else
+			TriggerEvent('skinchanger:loadDefaultModel', false)
+		end
+
 	else
-		TriggerEvent('skinchanger:loadDefaultModel', false)
+		ApplySkin(skin)
 	end
 
 	LastSex = skin['sex']
@@ -314,15 +320,21 @@ end)
 RegisterNetEvent('skinchanger:loadClothes')
 AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 
-	LoadClothes = {
-		playerSkin  = playerSkin,
-		clothesSkin = clothesSkin
-	}
+	if playerSkin['sex'] ~= LastSex then
 
-	if playerSkin['sex'] == 0 then
-		TriggerEvent('skinchanger:loadDefaultModel', true)
+		LoadClothes = {
+			playerSkin  = playerSkin,
+			clothesSkin = clothesSkin
+		}
+
+		if playerSkin['sex'] == 0 then
+			TriggerEvent('skinchanger:loadDefaultModel', true)
+		else
+			TriggerEvent('skinchanger:loadDefaultModel', false)
+		end
+
 	else
-		TriggerEvent('skinchanger:loadDefaultModel', false)
+		ApplySkin(playerSkin, clothesSkin)
 	end
 
 	LastSex = playerSkin['sex']
