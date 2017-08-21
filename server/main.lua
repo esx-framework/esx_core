@@ -92,10 +92,11 @@ function WashMoneyCRON(d, h, m)
 				local foundPlayer = false
 				local xPlayer     = nil
 
-				for k,v in pairs(xPlayers) do
-					if v.identifier == result[i].identifier then
+				for i=1, #xPlayers, 1 do
+					local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+					if xPlayer2.identifier == result[i].identifier then
 						foundPlayer = true
-						xPlayer     = v
+						xPlayer     = xPlayer2
 					end
 				end
 
