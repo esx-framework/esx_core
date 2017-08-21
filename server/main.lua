@@ -105,8 +105,11 @@ AddEventHandler('esx:playerLoaded', function(source)
 
 						local xPlayers = ESX.GetPlayers()
 
-						for k, v in pairs(xPlayers) do
-							if v.get('phoneNumber') == contacts[i].number then
+						for i=1, #xPlayers, 1 do
+
+							local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+							
+							if xPlayer2.get('phoneNumber') == contacts[i].number then
 								contacts[i].online = true
 							end
 						end
@@ -150,8 +153,11 @@ AddEventHandler('esx_phone:reload', function(phoneNumber)
 
 				local xPlayers = ESX.GetPlayers()
 
-				for k, v in pairs(xPlayers) do
-					if v.get('phoneNumber') == contacts[i].number then
+				for i=1, #xPlayers, 1 do
+
+					local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+					
+					if xPlayer2.get('phoneNumber') == contacts[i].number then
 						contacts[i].online = true
 					end
 				end
@@ -174,7 +180,7 @@ end)
 
 RegisterServerEvent('esx_phone:send')
 AddEventHandler('esx_phone:send', function(phoneNumber, message, anon)
-
+	
 	local _source = source
 
 	for i=1, #RegisteredCallbacks, 1 do
@@ -187,7 +193,6 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
 	local _source     = source
 	local xPlayer     = ESX.GetPlayerFromId(_source)
-	local xPlayers    = ESX.GetPlayers()
 	local foundNumber = false
 	local foundPlayer = nil
 
@@ -242,8 +247,11 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 								local xPlayers = ESX.GetPlayers()
 								local isOnline = false
 
-								for k,v in pairs(xPlayers) do
-									if v.get('phoneNumber') == phoneNumber then
+								for i=1, #xPlayers, 1 do
+
+									local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+									
+									if xPlayer2.get('phoneNumber') == phoneNumber then
 										isOnline = true
 										break
 									end
@@ -273,9 +281,12 @@ AddEventHandler('esx_phone:ready', function()
 
 		print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
 
-		for k, v in pairs(xPlayers) do
- 			if v.get('phoneNumber') == phoneNumber then
- 				TriggerClientEvent('esx_phone:onMessage', v.source, xPlayer.get('phoneNumber'), message, false, anon, 'player', false)
+		for i=1, #xPlayers, 1 do
+
+			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+ 			
+ 			if xPlayer2.get('phoneNumber') == phoneNumber then
+ 				TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, false, anon, 'player', false)
  			end
  		end
 
