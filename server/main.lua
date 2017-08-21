@@ -105,9 +105,9 @@ AddEventHandler('esx:playerLoaded', function(source)
 
 						local xPlayers = ESX.GetPlayers()
 
-						for i=1, #xPlayers, 1 do
+						for j=1, #xPlayers, 1 do
 
-							local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
+							local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
 							
 							if xPlayer2.get('phoneNumber') == contacts[i].number then
 								contacts[i].online = true
