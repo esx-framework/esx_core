@@ -189,7 +189,7 @@ ESX.GetPlayers = function()
 	local sources = {}
 
 	for k,v in pairs(ESX.Players) do
-		table.insert(source, k)
+		table.insert(sources, k)
 	end
 
 	return sources
