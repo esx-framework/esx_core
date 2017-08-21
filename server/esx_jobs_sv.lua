@@ -53,7 +53,7 @@ local function Work(source, item)
 
 			for i=1, #item, 1 do
 				local itemQtty = 0
-				if item[i].name ~= _U('lj_delivery') then
+				if item[i].name ~= _U('delivery') then
 					itemQtty = xPlayer.getInventoryItem(item[i].db_name).count
 				end
 
@@ -62,7 +62,7 @@ local function Work(source, item)
 					requiredItemQtty = xPlayer.getInventoryItem(item[1].requires).count
 				end
 
-				if item[i].name ~= _U('lj_delivery') and itemQtty >= item[i].max then
+				if item[i].name ~= _U('delivery') and itemQtty >= item[i].max then
 					TriggerClientEvent('esx:showNotification', source, _U('max_limit') .. item[i].name)
 				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
 					TriggerClientEvent('esx:showNotification', source, _U('not_enough') .. item[1].requires_name .. _U('not_enough2'))
