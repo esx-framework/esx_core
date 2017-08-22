@@ -66,7 +66,7 @@ local function Work(source, item)
 				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
 					TriggerClientEvent('esx:showNotification', source, _U('not_enough') .. item[1].requires_name .. _U('not_enough2'))
 				else
-					if item[i].name ~= "Livraison" then
+					if item[i].name ~= _U('delivery') then
 						-- Chances to drop the item
 						if item[i].drop == 100 then
 							xPlayer.addInventoryItem(item[i].db_name, item[i].add)
