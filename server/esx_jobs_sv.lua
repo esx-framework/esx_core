@@ -30,7 +30,7 @@ RegisterServerEvent('esx_jobs:giveBackCautionInCaseOfDrop')
 AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
+
 	TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
 		local caution = account.money
 		account.removeMoney(caution)

@@ -24,7 +24,7 @@ Config.Jobs.fisherman = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('cloakroom'),
+			Name  = _U('fm_fish_locker'),
 			Type  = "cloakroom",
 			Hint  = _U('cloak_change'),
 			GPS = {x = 880.74462890625, y = -1663.9635009766, z = 29.370491027832}

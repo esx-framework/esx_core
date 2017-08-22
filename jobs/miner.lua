@@ -18,7 +18,7 @@ Config.Jobs.miner = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('cloakroom'),
+			Name  = _U('m_miner_locker'),
 			Type  = "cloakroom",
 			Hint  = _U('cloak_change'),
 			GPS = {x = 884.86889648438, y = -2176.5102539063, z = 29.519346237183}

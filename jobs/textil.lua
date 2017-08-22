@@ -18,7 +18,7 @@ Config.Jobs.textil = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('cloakroom'),
+			Name  = _U('dd_dress_locker'),
 			Type  = "cloakroom",
 			Hint  = _U('cloak_change'),
 			GPS = {x = 740.808776855469, y = -970.066650390625, z = 23.4693908691406}

@@ -18,7 +18,7 @@ Config.Jobs.slaughterer = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
-			Name  = _U('cloakroom'),
+			Name  = _U('s_slaughter_locker'),
 			Type  = "cloakroom",
 			Hint  = _U('cloak_change'),
 		},
