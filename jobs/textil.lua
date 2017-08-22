@@ -157,7 +157,7 @@ Config.Jobs.textil = {
 					max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price  = 40,
 					requires = "clothe",
-					requires_name = _U('dd_clothing')
+					requires_name = _U('dd_clothing'),
 					drop   = 100
 				}
 			},
