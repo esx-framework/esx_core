@@ -18,6 +18,7 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
+local HasPayed                = false
 
 Citizen.CreateThread(function()
 
@@ -29,6 +30,8 @@ Citizen.CreateThread(function()
 end)
 
 function OpenShopMenu()
+
+	HasPayed = false
 
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 
@@ -59,6 +62,8 @@ function OpenShopMenu()
 							end)
 
 							TriggerServerEvent('esx_clotheshop:pay')
+
+							HasPayed = true
 
 							ESX.TriggerServerCallback('esx_clotheshop:checkPropertyDataStore', function(foundStore)
 
@@ -145,8 +150,8 @@ function OpenShopMenu()
 		'pants_2',
 		'shoes_1',
 		'shoes_2',
-	  	'chain_1',
-	  	'chain_2',
+	  'chain_1',
+	  'chain_2',
 		'helmet_1',
 		'helmet_2',
 		'glasses_1',
@@ -162,8 +167,18 @@ AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
+	
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
+
+	if not HasPayed then
+
+		TriggerEvent('esx_skin:getLastSkin', function(skin)
+			TriggerEvent('skinchanger:loadSkin', skin)
+		end)
+
+	end
+
 end)
 
 -- Create Blips
