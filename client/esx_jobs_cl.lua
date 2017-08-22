@@ -434,77 +434,78 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			local coords      = GetEntityCoords(GetPlayerPed(-1))
-			local currentZone = nil
-			local zone 		  = nil
-			local lastZone    = nil
+			if zones ~= nil then
+				local coords      = GetEntityCoords(GetPlayerPed(-1))
+				local currentZone = nil
+				local zone 		  = nil
+				local lastZone    = nil
 
-			for k,v in pairs(zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-					isInMarker  = true
-					currentZone = k
-					zone        = v
-					break
-				else
-					isInMarker  = false
-				end
-			end
-
-			if IsControlJustReleased(0, Keys["E"]) and not menuIsShowed and isInMarker then
-				if onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter" then
-					TriggerEvent('esx_jobs:action', job, zone)
-				end
-			end
-
-			-- hide or show top left zone hints
-			if isInMarker and not menuIsShowed then
-				hintIsShowed = true
-				if (onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
-					hintToDisplay = zone.Hint
-					hintIsShowed = true
-				elseif zone.Type == "vehdelete" and (onDuty or PlayerData.job.name == "reporter") then
-					local playerPed = GetPlayerPed(-1)
-					if IsPedInAnyVehicle(playerPed, 0) then
-						local vehicle = GetVehiclePedIsIn(playerPed)
-						local driverPed = GetPedInVehicleSeat(vehicle, -1)
-						local isVehicleOwner = false
-						local plate = GetVehicleNumberPlateText(vehicle)
-						plate = string.gsub(plate, " ", "")
-						for i=1, #myPlate, 1 do
-							Citizen.Trace(myPlate[i])
-							if (myPlate[i] == plate) and (playerPed == driverPed) then
-								hintToDisplay = zone.Hint .. "\n" .. _U('security_deposit') .. cautionVehicleInCaseofDrop .. "~s~."
-								isVehicleOwner = true
-								break
-							end
-						end
-						if not isVehicleOwner then
-							hintToDisplay = _U('not_your_vehicle')
-						end
+				for k,v in pairs(zones) do
+					if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+						isInMarker  = true
+						currentZone = k
+						zone        = v
+						break
 					else
-						hintToDisplay = _U('in_vehicle')
-					end
-					hintIsShowed = true
-				elseif onDuty and zone.Spawner ~= spawner then
-					hintToDisplay = _U('wrong_point')
-					hintIsShowed = true
-				else
-					if not isInPublicMarker then
-						hintToDisplay = "no hint to display"
-						hintIsShowed = false
+						isInMarker  = false
 					end
 				end
-			end
 
-			if isInMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-			end
+				if IsControlJustReleased(0, Keys["E"]) and not menuIsShowed and isInMarker then
+					if onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter" then
+						TriggerEvent('esx_jobs:action', job, zone)
+					end
+				end
 
-			if not isInMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-				TriggerEvent('esx_jobs:hasExitedMarker', zone)
-			end
+				-- hide or show top left zone hints
+				if isInMarker and not menuIsShowed then
+					hintIsShowed = true
+					if (onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
+						hintToDisplay = zone.Hint
+						hintIsShowed = true
+					elseif zone.Type == "vehdelete" and (onDuty or PlayerData.job.name == "reporter") then
+						local playerPed = GetPlayerPed(-1)
+						if IsPedInAnyVehicle(playerPed, 0) then
+							local vehicle = GetVehiclePedIsIn(playerPed)
+							local driverPed = GetPedInVehicleSeat(vehicle, -1)
+							local isVehicleOwner = false
+							local plate = GetVehicleNumberPlateText(vehicle)
+							plate = string.gsub(plate, " ", "")
+							for i=1, #myPlate, 1 do
+								Citizen.Trace(myPlate[i])
+								if (myPlate[i] == plate) and (playerPed == driverPed) then
+									hintToDisplay = zone.Hint .. "\n" .. _U('security_deposit') .. cautionVehicleInCaseofDrop .. "~s~."
+									isVehicleOwner = true
+									break
+								end
+							end
+							if not isVehicleOwner then
+								hintToDisplay = _U('not_your_vehicle')
+							end
+						else
+							hintToDisplay = _U('in_vehicle')
+						end
+						hintIsShowed = true
+					elseif onDuty and zone.Spawner ~= spawner then
+						hintToDisplay = _U('wrong_point')
+						hintIsShowed = true
+					else
+						if not isInPublicMarker then
+							hintToDisplay = "no hint to display"
+							hintIsShowed = false
+						end
+					end
+				end
 
+				if isInMarker and not hasAlreadyEnteredMarker then
+					hasAlreadyEnteredMarker = true
+				end
+
+				if not isInMarker and hasAlreadyEnteredMarker then
+					hasAlreadyEnteredMarker = false
+					TriggerEvent('esx_jobs:hasExitedMarker', zone)
+				end
+			end
 		end
 	end
 end)
