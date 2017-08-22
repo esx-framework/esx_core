@@ -2,6 +2,8 @@ Locales['fr'] = {
 	--Global menus
 		['cloakroom'] = 'vestiaire',
 		['cloak_change'] = 'appuyez sur ~INPUT_PICKUP~ pour vous changer.',
+		['citizen_wear'] = 'Tenue civile',
+		['job_wear'] = 'Tenue de travail',
 		['bank_deposit'] = 'une caution de ~g~',
 		['bank_deposit_r'] = 'une caution de ~g~$',
 		['bank_deposit2'] = '$ ~s~vous a été rendue suite à votre évanouissment.',

@@ -66,13 +66,47 @@ AddEventHandler('esx_jobs:publicTeleports', function(position)
 	SetEntityCoords(GetPlayerPed(-1), position.x, position.y, position.z)
 end)
 
+function OpenMenu()
+	ESX.UI.Menu.CloseAll()
+
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'cloakroom',
+		{
+			title    = _U('cloakroom'),
+			elements = {
+				{label = _U('job_wear'), value = 'job_wear'},
+				{label = _U('citizen_wear'), value = 'citizen_wear'}
+			}
+		},
+		function(data, menu)
+			if data.current.value == 'citizen_wear' then
+				onDuty = false
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+	    			TriggerEvent('skinchanger:loadSkin', skin)
+				end)
+			end
+			if data.current.value == 'job_wear' then
+				onDuty = true
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+	    			if skin.sex == 0 then
+	    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
+					else
+	    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+					end
+				end)
+			end
+			menu.close()
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)
+end
+
 AddEventHandler('esx_jobs:action', function(job, zone)
 	menuIsShowed = true
 	if zone.Type == "cloakroom" then
-		SendNUIMessage({
-			showMenu = true,
-			menu     = 'cloakroom'
-		})
+		OpenMenu()
 	elseif zone.Type == "work" then
 		hintToDisplay = "no hint to display"
 		hintIsShowed = false
@@ -246,29 +280,6 @@ function refreshBlips()
 		end
 	end
 end
-
--- #########################
-RegisterNUICallback('select', function(data, cb)
-	if data.menu == 'cloakroom' then
-		if data.val == 'citizen_wear' then
-			onDuty = false
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-    			TriggerEvent('skinchanger:loadSkin', skin)
-			end)
-		end
-		if data.val == 'job_wear' then
-			onDuty = true
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-    			if skin.sex == 0 then
-    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
-				else
-    				TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-				end
-			end)
-		end
-	end
-	cb('ok')
-end)
 
 function spawncar(spawnPoint, vehicle)
 	hintToDisplay = "no hint to display"

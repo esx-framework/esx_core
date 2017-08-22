@@ -2,13 +2,9 @@
 [REQUIRES]
 - fxserver-esx_addonaccount: https://github.com/FXServer-ESX/fxserver-esx_addonaccount
 
-[KNOWN BUGS]
-
-The bail is not given back when the player disconnect or timeout.
-
 [FEATURES]
 - Jobs: Slaughterer, Miner, Fisherman, Journalist, etc...
-- Bails
+- Security deposit when renting a job vehicle (given back in case of crash, to the amount of damage the vehicle has already taken)
 - Easy system to create jobs (samples in jobs folder)
 - Item farming jobs
 - On Duty system

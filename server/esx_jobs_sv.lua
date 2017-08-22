@@ -5,7 +5,8 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler('esx:playerLoaded', function(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.set('caution', 0)
 end)
 
@@ -29,19 +30,17 @@ RegisterServerEvent('esx_jobs:giveBackCautionInCaseOfDrop')
 AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-
-	local caution = 0
+	
 	TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
-		caution = account.money
+		local caution = account.money
 		account.removeMoney(caution)
+		if caution > 0 then
+			xPlayer.addAccountMoney('bank', caution)
+			TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_g').. caution .. _U('bank_deposit2'))
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('bank_nodeposit'))
+		end
 	end)
-
-	if caution > 0 then
-		xPlayer.addAccountMoney('bank', value)
-		TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_g').. value .. _U('bank_deposit2'))
-	else
-		TriggerClientEvent('esx:showNotification', _source, _U('bank_nodeposit'))
-	end
 end)
 
 local function Work(source, item)
