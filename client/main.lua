@@ -46,7 +46,7 @@ function OpenPhone()
 
   GUI.PhoneIsShowed = true
 
-  ESX.SetTimeout(200, function()
+  ESX.SetTimeout(250, function()
   	SetNuiFocus(true, true)
   end)
 
