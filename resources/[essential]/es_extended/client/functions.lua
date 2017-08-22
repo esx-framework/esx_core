@@ -134,7 +134,7 @@ ESX.UI.Menu.RegisterType = function(type, open, close)
 
 end
 
-ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change)
+ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change, close)
 	
 	local menu = {}
 
@@ -154,6 +154,10 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change)
 			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
 				ESX.UI.Menu.Opened[i] = nil
 			end
+		end
+
+		if close ~= nil then
+			close()
 		end
 
 	end
@@ -191,6 +195,8 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change)
 	table.insert(ESX.UI.Menu.Opened, menu)
 
 	ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
+
+	return menu
 
 end
 
