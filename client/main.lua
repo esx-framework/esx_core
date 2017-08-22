@@ -139,6 +139,7 @@ AddEventHandler('esx_barbershop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_barbershop:hasExitedMarker', function(zone)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
