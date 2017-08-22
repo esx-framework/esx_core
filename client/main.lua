@@ -70,21 +70,44 @@ function OpenShopMenu()
 								if foundStore then
 
 									ESX.UI.Menu.Open(
-										'dialog', GetCurrentResourceName(), 'outfit_name',
+										'default', GetCurrentResourceName(), 'save_dressing',
 										{
-											title = _U('name_outfit'),
+											title = _U('save_in_dressing'),
+											align = 'top-left',
+											elements = {
+												{label = _U('yes'), value = 'yes'},
+												{label = _U('no'),  value = 'no'},
+											}
 										},
-										function(data, menu)
+										function(data2, menu2)
 
-											menu.close()
+											menu2.close()
 
-											TriggerEvent('skinchanger:getSkin', function(skin)
-												TriggerServerEvent('esx_clotheshop:saveOutfit', data.value, skin)
-											end)
+											if data2.current.value == 'yes' then
 
-										end,
-										function(data2,menu)
-											menu.close()
+												ESX.UI.Menu.Open(
+													'dialog', GetCurrentResourceName(), 'outfit_name',
+													{
+														title = _U('name_outfit'),
+													},
+													function(data3, menu3)
+
+														menu3.close()
+
+														TriggerEvent('skinchanger:getSkin', function(skin)
+															TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
+														end)
+
+														ESX.ShowNotification(_U('saved_outfit'))
+
+													end,
+													function(data3, menu3)
+														menu3.close()
+													end
+												)
+
+											end
+
 										end
 									)
 
