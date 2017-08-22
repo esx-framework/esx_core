@@ -21,6 +21,7 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
+local RespawnToHospitalMenu   = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -35,20 +36,26 @@ function RespawnPed(ped, coords)
 	SetPlayerInvincible(ped, false)
 	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z, coords.heading)
 	ClearPedBloodDamage(ped)
+	if RespawnToHospitalMenu ~= nil then
+		RespawnToHospitalMenu.close()
+		RespawnToHospitalMenu = nil
+	end
 	ESX.UI.Menu.CloseAll()
 end
 
 function StartRespawnToHospitalMenuTimer()
+	Citizen.Trace('player IsDead')
 
 	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
 
+		Citizen.Trace('timer started')
 		if IsDead then
 
 			local elements = {}
 
 			table.insert(elements, {label = _U('yes'), value = 'yes'})
 
-			ESX.UI.Menu.Open(
+			RespawnToHospitalMenu = ESX.UI.Menu.Open(
 				'default', GetCurrentResourceName(), 'menuName',
 				{
 					title = _U('respawn_at_hospital'),
@@ -56,41 +63,39 @@ function StartRespawnToHospitalMenuTimer()
 					elements = elements
 				},
 		        function(data, menu) --Submit Cb
-		          	
-		          menu.close()
-		                
-		          Citizen.CreateThread(function()
 
-								DoScreenFadeOut(800)
+		        	menu.close()
 
-								while not IsScreenFadedOut() do
-									Citizen.Wait(0)
-								end
+		         	Citizen.CreateThread(function()
 
-								ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+						DoScreenFadeOut(800)
 
-								TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+						while not IsScreenFadedOut() do
+							Citizen.Wait(0)
+						end
 
-								RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
-								StopScreenEffect('DeathFailOut')
-								DoScreenFadeIn(800)
-							end)
+						ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
+							TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+
+							RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+							StopScreenEffect('DeathFailOut')
+							DoScreenFadeIn(800)
 						end)
+					end)
 		        end,
 		        function(data, menu) --Cancel Cb
 		                --menu.close()
 		        end,
 		        function(data, menu) --Change Cb
 		                --print(data.current.value)
+		        end,
+		        function(data, menu) --Close Cb
+		            RespawnToHospitalMenu = nil
 		        end
 			)
-
-
 		end
-
 	end)
-
 end
 
 function StartRespawnTimer()
@@ -630,12 +635,14 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
 end)
 
 AddEventHandler('esx_ambulancejob:onPlayerDeath', function()
-
+	Citizen.Trace('player died')
 	IsDead = true
 
 	if Config.ShowDeathTimer == true then
+		Citizen.Trace('player died: true')
 		RespawnTimer()
 	else
+		Citizen.Trace('player died: false')
 		StartRespawnTimer()
 		StartRespawnToHospitalMenuTimer()
 		StartScreenEffect('DeathFailOut',  0,  false)
