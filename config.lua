@@ -14,19 +14,19 @@ Config.Zones = {
 }
 
 Config.Colors = {
-	{ label = 'Noir', value = 'black'},
-	{ label = 'Blanc', value = 'white'},
-	{ label = 'Gris', value = 'grey'},
-	{ label = 'Rouge', value = 'red'},
-	{ label = 'Rose', value = 'pink'},
-	{ label = 'Bleu', value = 'blue'},
-	{ label = 'Jaune', value = 'yellow'},
-	{ label = 'Vert', value = 'green'},
-	{ label = 'Orange', value = 'orange'},
-	{ label = 'Marron', value = 'brown'},
-	{ label = 'Violet', value = 'purple'},
-	{ label = 'Chrome', value = 'chrome'},
-	{ label = 'Or', value = 'gold'},
+	{ label = _U('black'), value = 'black'},
+	{ label = _U('white'), value = 'white'},
+	{ label = _U('grey'), value = 'grey'},
+	{ label = _U('red'), value = 'red'},
+	{ label = _U('pink'), value = 'pink'},
+	{ label = _U('blue'), value = 'blue'},
+	{ label = _U('yellow'), value = 'yellow'},
+	{ label = _U('green'), value = 'green'},
+	{ label = _U('orange'), value = 'orange'},
+	{ label = _U('brown'), value = 'brown'},
+	{ label = _U('purple'), value = 'purple'},
+	{ label = _U('chrome'), value = 'chrome'},
+	{ label = _U('gold'), value = 'gold'},
 }
 
 function GetColors(color)
