@@ -24,7 +24,7 @@ AddEventHandler('esx_phone:ready', function()
 				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
 				
 				if xPlayer2.job.name == 'realestateagent' then
-					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job)
+					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)
 				end
 			end
 
