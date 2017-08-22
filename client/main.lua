@@ -147,6 +147,9 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
 				end)
 
+			end,
+			function()
+				DeleteSkinCam()
 			end
 		)
 
