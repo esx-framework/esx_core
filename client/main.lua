@@ -1,5 +1,3 @@
-DoScreenFadeIn(0)
-
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
 	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
@@ -41,10 +39,8 @@ function RespawnPed(ped, coords)
 end
 
 function StartRespawnToHospitalMenuTimer()
-	Citizen.Trace('starting timer')
-	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
 
-		Citizen.Trace('menu should appear')
+	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
 
 		if IsDead then
 
@@ -60,17 +56,18 @@ function StartRespawnToHospitalMenuTimer()
 					elements = elements
 				},
 		        function(data, menu) --Submit Cb
-		                menu.close()
+		          	
+		          menu.close()
+		                
+		          Citizen.CreateThread(function()
 
-		                Citizen.CreateThread(function()
+								DoScreenFadeOut(800)
 
-							DoScreenFadeOut(800)
+								while not IsScreenFadedOut() do
+									Citizen.Wait(0)
+								end
 
-							while not IsScreenFadedOut() do
-								Citizen.Wait(0)
-							end
-
-							ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+								ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
 								TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
