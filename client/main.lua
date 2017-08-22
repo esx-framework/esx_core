@@ -40,14 +40,14 @@ function OpenLSMenu(elems, menuname, menutitle, parent)
 			local found = false
 			for k,v in pairs(Config.Menus) do
 				if k == data.current.modType or isRimMod then
-					if data.current.label == "Par défaut" or string.match(data.current.label, "Installé") then
-						ESX.ShowNotification("Vous possédez déjà: ~b~" .. data.current.label)
+					if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
+						ESX.ShowNotification(_U('already_own') .. data.current.label)
 					else
 						if isRimMod then
 							TriggerServerEvent("esx_lscustom:buyMod", data.current.price)
 						else
 							TriggerServerEvent("esx_lscustom:buyMod", v.price)
-						end						
+						end
 					end
 					menu.close()
 					found = true
@@ -64,7 +64,7 @@ function OpenLSMenu(elems, menuname, menutitle, parent)
 			if parent == nil then
 				lsMenuIsShowed = false
 				local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-				FreezeEntityPosition(vehicle, false) 
+				FreezeEntityPosition(vehicle, false)
 				myCar = nil
 			end
 		end,
@@ -122,16 +122,16 @@ function GetAction(data)
 			if v.modType ~= nil then
 
 				if v.modType == 22 then
-					table.insert(elements, {label = " Par défaut", modType = k, modNum = false})
+					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = false})
 				else
-					table.insert(elements, {label = " Par défaut", modType = k, modNum = -1})
+					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = -1})
 				end
 
 				if v.modType == 14 then -- HORNS
 					for j = 0, 51, 1 do
 						local _label = ''
 						if j == currentMods.modHorns then
-							_label = GetHornName(j) .. ' - <span style="color:cornflowerblue;">Installé</span>'
+							_label = GetHornName(j) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
 							_label = GetHornName(j) .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 						end
@@ -141,7 +141,7 @@ function GetAction(data)
 					for j = 0, 4, 1 do
 						local _label = ''
 						if j == currentMods.plateIndex then
-							_label = GetPlatesName(j) .. ' - <span style="color:cornflowerblue;">Installé</span>'
+							_label = GetPlatesName(j) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
 							_label = GetPlatesName(j) .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 						end
@@ -150,7 +150,7 @@ function GetAction(data)
 				elseif v.modType == 22 then -- XENON
 					local _label = ''
 					if currentMods.modXenon then
-						_label = 'Xénon - <span style="color:cornflowerblue;">Installé</span>'
+						_label = 'Xénon - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 					else
 						_label = 'Xénon - <span style="color:green;">$' .. v.price .. ' </span>'
 					end
@@ -177,7 +177,7 @@ function GetAction(data)
 					for j = 1, 5, 1 do
 						local _label = ''
 						if j == currentMods.modHorns then
-							_label = GetWindowName(j) .. ' - <span style="color:cornflowerblue;">Installé</span>'
+							_label = GetWindowName(j) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
 							_label = GetWindowName(j) .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 						end
@@ -195,7 +195,7 @@ function GetAction(data)
 						if modName ~= nil then
 							local _label = ''
 							if j == currentMods.modFrontWheels then
-								_label = GetLabelText(modName) .. ' - <span style="color:cornflowerblue;">Installé</span>'
+								_label = GetLabelText(modName) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 							else
 								_label = GetLabelText(modName) .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 							end
@@ -207,7 +207,7 @@ function GetAction(data)
 					for j = 0, modCount-1, 1 do
 						local _label = ''
 						if j == currentMods[k] then
-							_label = 'Niveau ' .. j .. ' - <span style="color:cornflowerblue;">Installé</span>'
+							_label = 'Niveau ' .. j .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
 							_label = 'Niveau ' .. j .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 						end
@@ -220,7 +220,7 @@ function GetAction(data)
 						if modName ~= nil then
 							local _label = ''
 							if j == currentMods[k] then
-								_label = GetLabelText(modName) .. ' - <span style="color:cornflowerblue;">Installé</span>'
+								_label = GetLabelText(modName) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 							else
 								_label = GetLabelText(modName) .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 							end
@@ -236,12 +236,12 @@ function GetAction(data)
 						elseif data.value == 'secondaryRespray' then
 							table.insert(elements, {label = Config.Colors[i].label, value = 'color2', color = Config.Colors[i].value})
 						elseif data.value == 'pearlescentRespray' then
-							table.insert(elements, {label = Config.Colors[i].label, value = 'pearlescentColor', color = Config.Colors[i].value})						
+							table.insert(elements, {label = Config.Colors[i].label, value = 'pearlescentColor', color = Config.Colors[i].value})
 						elseif data.value == 'modFrontWheelsColor' then
 							table.insert(elements, {label = Config.Colors[i].label, value = 'wheelColor', color = Config.Colors[i].value})
 						end
 					end
-				else					
+				else
 					for l,w in pairs(v) do
 						if l ~= 'label' and l ~= 'parent' then
 							table.insert(elements, {label = w, value = l})
@@ -298,12 +298,12 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlJustReleased(0, 38) and not lsMenuIsShowed and isInLSMarker then				
+			if IsControlJustReleased(0, 38) and not lsMenuIsShowed and isInLSMarker then
 				lsMenuIsShowed = true
 
 				local vehicle = GetVehiclePedIsIn(playerPed, false)
 
-				--SetVehicleUndriveable(vehicle, true) 
+				--SetVehicleUndriveable(vehicle, true)
 				FreezeEntityPosition(vehicle, true)
 
 				myCar = ESX.Game.GetVehicleProperties(vehicle)

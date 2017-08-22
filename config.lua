@@ -1,14 +1,15 @@
 Config              = {}
 Config.DrawDistance = 100.0
+Config.Locale = 'fr'
 
-Config.Zones = {	
+Config.Zones = {
 	ls1 = {
 		Pos   = { x = -362.7962, y = -132.4005, z = 38.25239},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
 		Name  = "LS CUSTOM",
-		Hint  = "Appuyez sur ~INPUT_PICKUP~ pour personnaliser le véhicule."
+		Hint  = _U('press_custom')
 	}
 }
 
@@ -31,7 +32,7 @@ Config.Colors = {
 function GetColors(color)
     local colors = {}
 	if color == 'black' then
-		colors = {		
+		colors = {
 			{ index = 0, label = 'Noir'},
 			{ index = 1, label = 'Graphite'},
 			{ index = 2, label = 'Noir Métallisé'},
@@ -41,10 +42,10 @@ function GetColors(color)
 			{ index = 15, label = 'Nuit Sombre'},
 			{ index = 16, label = 'Noir Profond'},
 			{ index = 21, label = 'Pétrol'},
-			{ index = 147, label = 'Carbon'}			
+			{ index = 147, label = 'Carbon'}
 		}
 	elseif color == 'white' then
-		colors = {		
+		colors = {
 			{ index = 106, label = 'Vanille'},
 			{ index = 107, label = 'Crème'},
 			{ index = 111, label = 'Blanc'},
@@ -54,10 +55,10 @@ function GetColors(color)
 			{ index = 122, label = 'Neige'},
 			{ index = 131, label = 'Coton'},
 			{ index = 132, label = 'Albâtre'},
-			{ index = 134, label = 'Blanc Pure'}			
+			{ index = 134, label = 'Blanc Pure'}
 		}
 	elseif color == 'grey' then
-		colors = {		
+		colors = {
 			{ index = 4, label = 'Argenté'},
 			{ index = 5, label = 'Gris Métallisé'},
 			{ index = 6, label = 'Acier Laminé'},
@@ -79,10 +80,10 @@ function GetColors(color)
 			{ index = 66, label = 'Acier Bleui'},
 			{ index = 93, label = 'Champagne'},
 			{ index = 144, label = 'Gris Chasseur'},
-			{ index = 156, label = 'Gris'}			
-		}	
+			{ index = 156, label = 'Gris'}
+		}
 	elseif color == 'red' then
-		colors = {		
+		colors = {
 			{ index = 27, label = 'Rouge'},
 			{ index = 28, label = 'Rouge Turin'},
 			{ index = 29, label = 'Coquelicot'},
@@ -98,16 +99,16 @@ function GetColors(color)
 			{ index = 44, label = 'Rouge Brillant'},
 			{ index = 46, label = 'Rouge Pale'},
 			{ index = 143, label = 'Rouge Vin'},
-			{ index = 150, label = 'Volcano'}			
+			{ index = 150, label = 'Volcano'}
 		}
 	elseif color == 'pink' then
-		colors = {		
+		colors = {
 			{ index = 135, label = 'Rose Electrique'},
 			{ index = 136, label = 'Rose Saumon'},
-			{ index = 137, label = 'Rose Dragée'}	
-		}	
+			{ index = 137, label = 'Rose Dragée'}
+		}
 	elseif color == 'blue' then
-		colors = {		
+		colors = {
 			{ index = 54, label = 'Topaze'},
 			{ index = 60, label = 'Bleu Clair'},
 			{ index = 61, label = 'Bleu Galaxy'},
@@ -137,17 +138,17 @@ function GetColors(color)
 			{ index = 141, label = 'Bleu Minuit'},
 			{ index = 146, label = 'Bleu Interdit'},
 			{ index = 157, label = 'Bleu Glacier'}
-		}	
+		}
 	elseif color == 'yellow' then
-		colors = {		
+		colors = {
 			{ index = 42, label = 'Jaune'},
 			{ index = 88, label = 'Jaune Blé'},
 			{ index = 89, label = 'Jaune Rally'},
 			{ index = 91, label = 'Jaune Clair'},
-			{ index = 126, label = 'Jaune Pale'}				
-		}	
+			{ index = 126, label = 'Jaune Pale'}
+		}
 	elseif color == 'green' then
-		colors = {		
+		colors = {
 			{ index = 49, label = 'Vert Foncé'},
 			{ index = 50, label = 'Vert Rally'},
 			{ index = 51, label = 'Vert Sapin'},
@@ -164,20 +165,20 @@ function GetColors(color)
 			{ index = 133, label = 'Vert Army'},
 			{ index = 151, label = 'Vert Sombre'},
 			{ index = 152, label = 'Vert Chasseur'},
-			{ index = 155, label = 'Amarylisse'}	
+			{ index = 155, label = 'Amarylisse'}
 		}
 	elseif color == 'orange' then
-		colors = {		
+		colors = {
 			{ index = 36, label = 'Tangerine'},
 			{ index = 38, label = 'Orange'},
 			{ index = 41, label = 'Orange Mat'},
 			{ index = 123, label = 'Orange Clair'},
 			{ index = 124, label = 'Pèche'},
 			{ index = 130, label = 'Citrouille'},
-			{ index = 138, label = 'Orange Lambo'}				
+			{ index = 138, label = 'Orange Lambo'}
 		}
 	elseif color == 'brown' then
-		colors = {		
+		colors = {
 			{ index = 45, label = 'Cuivre'},
 			{ index = 47, label = 'Marron clair'},
 			{ index = 48, label = 'Marron Foncé'},
@@ -202,7 +203,7 @@ function GetColors(color)
 			{ index = 116, label = 'Blond'},
 			{ index = 129, label = 'Gravillon'},
 			{ index = 153, label = 'Terre Foncé'},
-			{ index = 154, label = 'Désert'}		
+			{ index = 154, label = 'Désert'}
 		}
 	elseif color == 'purple' then
 		colors = {
@@ -213,7 +214,7 @@ function GetColors(color)
 			{ index = 142, label = 'Violet Mystique'},
 			{ index = 145, label = 'Violet Métallisé'},
 			{ index = 148, label = 'Vilot Mat'},
-			{ index = 149, label = 'Violet Profond Mat'}				
+			{ index = 149, label = 'Violet Profond Mat'}
 		}
 	elseif color == 'chrome' then
 		colors = {
@@ -229,7 +230,7 @@ function GetColors(color)
 			{ index = 159, label = 'Or Brossé'},
 			{ index = 160, label = 'Or Clair'}
 		}
-	end	
+	end
     return colors
 end
 
@@ -361,7 +362,7 @@ end
 
 function GetNeons()
 	local neons = {
-	    { label = "white", 			r = 255, 	g = 255, 	b = 255}, 
+	    { label = "white", 			r = 255, 	g = 255, 	b = 255},
 	    { label = "slate_gray", 	r = 112, 	g = 128, 	b = 144},
 	    { label = "blue", 			r = 0, 		g = 0, 		b = 255},
 	    { label = "light_blue", 	r = 0, 		g = 150, 	b = 255},
@@ -538,7 +539,7 @@ Config.Menus = {
 		wheelType = 7,
 		price = 500
 	},
-	modFrontWheelsColor = {	
+	modFrontWheelsColor = {
 		label = 'Peinture Jantes',
 		parent = 'wheels'
 	},
