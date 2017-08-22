@@ -1,7 +1,8 @@
 Config = {}
 
 Config.accounts                 = {'bank',   'black_money'}
-Config.accountLabels            = {'Banque', 'Argent Sale'}
+Config.accountLabels            = {'Banque', 'Argent Sale'} -- FR
+--Config.accountLabels			= {'Bank', 'Dirty Money'} -- EN
 Config.PaycheckInterval         = 7 * 60000
 Config.ShowDotAbovePlayer       = false
 Config.RemoveInventoryItemDelay = 5 * 60000
