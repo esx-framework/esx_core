@@ -49,7 +49,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeathRemoveMoney'
 
 	if Config.RemoveItemsAfterRPDeath then
 		for i=1, #xPlayer.inventory, 1 do
-			if xPlayer.inventory[i].count > 0 then
+			if xPlayer.inventory[i].count > 0 and not xPlayer.inventory[i].rare then
 				xPlayer.setInventoryItem(xPlayer.inventory[i].name, 0)
 			end
 		end
