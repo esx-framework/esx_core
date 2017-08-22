@@ -472,7 +472,7 @@ Citizen.CreateThread(function()
 
 				if IsPedInAnyVehicle(playerPed,  false) and GetEntitySpeed(playerPed) > 0 then
 
-					local waitUntil = GetGameTimer() + GetRandomIntInRange(1000,  30000)
+					local waitUntil = GetGameTimer() + GetRandomIntInRange(30000,  45000)
 
 					while OnJob and waitUntil > GetGameTimer() do
 						Citizen.Wait(0)
@@ -490,7 +490,7 @@ Citizen.CreateThread(function()
 
 						end
 
-						if DoesEntityExist(ped) then
+						if DoesEntityExist(CurrentCustomer) then
 
 							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
