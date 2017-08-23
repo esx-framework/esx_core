@@ -134,6 +134,8 @@ ESX.UI.Menu.RegisterType = function(type, open, close)
 
 end
 
+local _type = type
+
 ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change, close)
 	
 	local menu = {}
@@ -151,9 +153,13 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 		ESX.UI.Menu.RegisteredTypes[type].close(namespace, name)
 		
 		for i=1, #ESX.UI.Menu.Opened, 1 do
-			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-				ESX.UI.Menu.Opened[i] = nil
+
+			if ESX.UI.Menu.Opened[i] ~= nil then
+				if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
+					ESX.UI.Menu.Opened[i] = nil
+				end
 			end
+
 		end
 
 		if close ~= nil then
@@ -203,9 +209,11 @@ end
 ESX.UI.Menu.Close = function(type, namespace, name)
 	
 	for i=1, #ESX.UI.Menu.Opened, 1 do
-		if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-			ESX.UI.Menu.Opened[i].close()
-			ESX.UI.Menu.Opened[i] = nil
+		if ESX.UI.Menu.Opened[i] ~= nil then
+			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
+				ESX.UI.Menu.Opened[i].close()
+				ESX.UI.Menu.Opened[i] = nil
+			end
 		end
 	end
 
