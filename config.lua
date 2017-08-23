@@ -33,29 +33,29 @@ function GetColors(color)
     local colors = {}
 	if color == 'black' then
 		colors = {
-			{ index = 0, label = 'Noir'},
-			{ index = 1, label = 'Graphite'},
-			{ index = 2, label = 'Noir Métallisé'},
-			{ index = 3, label = 'Acier Fondu'},
-			{ index = 11, label = 'Noir Anthracite'},
-			{ index = 12, label = 'Noir Mat'},
-			{ index = 15, label = 'Nuit Sombre'},
-			{ index = 16, label = 'Noir Profond'},
-			{ index = 21, label = 'Pétrol'},
-			{ index = 147, label = 'Carbon'}
+			{ index = 0, label = _U('black')},
+			{ index = 1, label = _U('graphite')},
+			{ index = 2, label = _U('black_metallic')},
+			{ index = 3, label = _U('caststeel')},
+			{ index = 11, label = _U('black_anth')},
+			{ index = 12, label = _U('matteblack')},
+			{ index = 15, label = _U('darknight')},
+			{ index = 16, label = _U('deepblack')},
+			{ index = 21, label = _U('oil')},
+			{ index = 147, label = _U('carbon')}
 		}
 	elseif color == 'white' then
 		colors = {
-			{ index = 106, label = 'Vanille'},
-			{ index = 107, label = 'Crème'},
-			{ index = 111, label = 'Blanc'},
-			{ index = 112, label = 'Blanc Polair'},
-			{ index = 113, label = 'Beige'},
-			{ index = 121, label = 'Blanc Mat'},
-			{ index = 122, label = 'Neige'},
-			{ index = 131, label = 'Coton'},
-			{ index = 132, label = 'Albâtre'},
-			{ index = 134, label = 'Blanc Pure'}
+			{ index = 106, label = _U('vanilla')},
+			{ index = 107, label = _U('creme')},
+			{ index = 111, label = _U('white')},
+			{ index = 112, label = _U('polarwhite')},
+			{ index = 113, label = _U('beige')},
+			{ index = 121, label = _U('mattewhite')},
+			{ index = 122, label = _U('snow')},
+			{ index = 131, label = _U('cotton')},
+			{ index = 132, label = _U('alabaster')},
+			{ index = 134, label = _U('purewhite')}
 		}
 	elseif color == 'grey' then
 		colors = {
@@ -80,11 +80,11 @@ function GetColors(color)
 			{ index = 66, label = 'Acier Bleui'},
 			{ index = 93, label = 'Champagne'},
 			{ index = 144, label = 'Gris Chasseur'},
-			{ index = 156, label = 'Gris'}
+			{ index = 156, label = _U('grey')}
 		}
 	elseif color == 'red' then
 		colors = {
-			{ index = 27, label = 'Rouge'},
+			{ index = 27, label = _U('red')},
 			{ index = 28, label = 'Rouge Turin'},
 			{ index = 29, label = 'Coquelicot'},
 			{ index = 30, label = 'Rouge Cuivré'},
@@ -103,9 +103,9 @@ function GetColors(color)
 		}
 	elseif color == 'pink' then
 		colors = {
-			{ index = 135, label = 'Rose Electrique'},
-			{ index = 136, label = 'Rose Saumon'},
-			{ index = 137, label = 'Rose Dragée'}
+			{ index = 135, label = _U('electricpink')},
+			{ index = 136, label = _U('salmon')},
+			{ index = 137, label = _U('sugarplum')}
 		}
 	elseif color == 'blue' then
 		colors = {
@@ -141,11 +141,11 @@ function GetColors(color)
 		}
 	elseif color == 'yellow' then
 		colors = {
-			{ index = 42, label = 'Jaune'},
-			{ index = 88, label = 'Jaune Blé'},
-			{ index = 89, label = 'Jaune Rally'},
-			{ index = 91, label = 'Jaune Clair'},
-			{ index = 126, label = 'Jaune Pale'}
+			{ index = 42, label = _U('yellow')},
+			{ index = 88, label = _U('wheat')},
+			{ index = 89, label = _U('raceyellow')},
+			{ index = 91, label = _U('paleyellow')},
+			{ index = 126, label = _U('lightyellow')}
 		}
 	elseif color == 'green' then
 		colors = {
@@ -169,66 +169,66 @@ function GetColors(color)
 		}
 	elseif color == 'orange' then
 		colors = {
-			{ index = 36, label = 'Tangerine'},
-			{ index = 38, label = 'Orange'},
-			{ index = 41, label = 'Orange Mat'},
-			{ index = 123, label = 'Orange Clair'},
-			{ index = 124, label = 'Pèche'},
-			{ index = 130, label = 'Citrouille'},
-			{ index = 138, label = 'Orange Lambo'}
+			{ index = 36, label = _U('tangerine')},
+			{ index = 38, label = _U('orange')},
+			{ index = 41, label = _U('matteorange')},
+			{ index = 123, label = _U('lightorange')},
+			{ index = 124, label = _U('peach')},
+			{ index = 130, label = _U('pumpkin')},
+			{ index = 138, label = _U('orangelambo')}
 		}
 	elseif color == 'brown' then
 		colors = {
-			{ index = 45, label = 'Cuivre'},
-			{ index = 47, label = 'Marron clair'},
-			{ index = 48, label = 'Marron Foncé'},
-			{ index = 90, label = 'Bronze'},
-			{ index = 94, label = 'Marron Métallisé'},
-			{ index = 95, label = 'Expresso'},
-			{ index = 96, label = 'Chocolat'},
-			{ index = 97, label = 'Terre Cuite'},
-			{ index = 98, label = 'Marbre'},
-			{ index = 99, label = 'Sable'},
-			{ index = 100, label = 'Sépia'},
-			{ index = 101, label = 'Bison'},
-			{ index = 102, label = 'Palmier'},
-			{ index = 103, label = 'Caramel'},
-			{ index = 104, label = 'Rouille'},
-			{ index = 105, label = 'Chataigne'},
-			{ index = 108, label = 'Brun'},
-			{ index = 109, label = 'Noisette'},
-			{ index = 110, label = 'Coquillage'},
-			{ index = 114, label = 'Acajou'},
-			{ index = 115, label = 'Chaudron'},
-			{ index = 116, label = 'Blond'},
-			{ index = 129, label = 'Gravillon'},
-			{ index = 153, label = 'Terre Foncé'},
-			{ index = 154, label = 'Désert'}
+			{ index = 45, label = _U('copper')},
+			{ index = 47, label = _U('lightbrown')},
+			{ index = 48, label = _U('darkbrown')},
+			{ index = 90, label = _U('bronze')},
+			{ index = 94, label = _U('brownmetallic')},
+			{ index = 95, label = _U('Expresso')},
+			{ index = 96, label = _U('chocolate')},
+			{ index = 97, label = _U('terracotta')},
+			{ index = 98, label = _U('marble')},
+			{ index = 99, label = _U('sand')},
+			{ index = 100, label = _U('sepia')},
+			{ index = 101, label = _U('bison')},
+			{ index = 102, label = _U('palm')},
+			{ index = 103, label = _U('caramel')},
+			{ index = 104, label = _U('rust')},
+			{ index = 105, label = _U('chestnut')},
+			{ index = 108, label = _U('brown')},
+			{ index = 109, label = _U('hazelnut')},
+			{ index = 110, label = _U('shell')},
+			{ index = 114, label = _U('mahogany')},
+			{ index = 115, label = _U('cauldron')},
+			{ index = 116, label = _U('blond')},
+			{ index = 129, label = _U('gravel')},
+			{ index = 153, label = _U('darkearth')},
+			{ index = 154, label = _U('desert')}
 		}
 	elseif color == 'purple' then
 		colors = {
-			{ index = 71, label = 'Indigo'},
-			{ index = 72, label = 'Violet Profond'},
-			{ index = 76, label = 'Violet Foncé'},
-			{ index = 81, label = 'Améthyste'},
-			{ index = 142, label = 'Violet Mystique'},
-			{ index = 145, label = 'Violet Métallisé'},
-			{ index = 148, label = 'Vilot Mat'},
-			{ index = 149, label = 'Violet Profond Mat'}
+			{ index = 71, label = _U('indigo')},
+			{ index = 72, label = _U('deeppurple')},
+			{ index = 76, label = _U('darkviolet')},
+			{ index = 81, label = _U('amethyst')},
+			{ index = 142, label = _U('mysticalviolet')},
+			{ index = 145, label = _U('purplemetallic')},
+			{ index = 148, label = _U('matteviolet')},
+			{ index = 149, label = _U('mattedeeppurple')}
 		}
 	elseif color == 'chrome' then
 		colors = {
-			{ index = 117, label = 'Chrome Brossé'},
-			{ index = 118, label = 'Chrome Noir'},
-			{ index = 119, label = 'Aluminum Brossé'},
-			{ index = 120, label = 'Chrome'}
+			{ index = 117, label = _U('brushechrome')},
+			{ index = 118, label = _U('blackchrome')},
+			{ index = 119, label = _U('brushedaluminum')},
+			{ index = 120, label = _U('chrome')}
 		}
 	elseif color == 'gold' then
 		colors = {
-			{ index = 37, label = 'Or'},
-			{ index = 158, label = 'Or Pure'},
-			{ index = 159, label = 'Or Brossé'},
-			{ index = 160, label = 'Or Clair'}
+			{ index = 37, label = _U('gold')},
+			{ index = 158, label = _U('puregold')},
+			{ index = 159, label = _U('brushedgold')},
+			{ index = 160, label = _U('lightgold')}
 		}
 	end
     return colors
@@ -362,40 +362,40 @@ end
 
 function GetNeons()
 	local neons = {
-	    { label = "white", 			r = 255, 	g = 255, 	b = 255},
-	    { label = "slate_gray", 	r = 112, 	g = 128, 	b = 144},
-	    { label = "blue", 			r = 0, 		g = 0, 		b = 255},
-	    { label = "light_blue", 	r = 0, 		g = 150, 	b = 255},
-	    { label = "navy_blue", 		r = 0, 		g = 0, 		b = 128},
-	    { label = "sky_blue", 		r = 135, 	g = 206, 	b = 235},
-	    { label = "turquoise", 		r = 0, 		g = 245, 	b = 255},
-	    { label = "mint_green", 	r = 50, 	g = 255, 	b = 155},
-	    { label = "lime_green", 	r = 0, 		g = 255, 	b = 0},
-	    { label = "olive", 			r = 128, 	g = 128, 	b = 0},
-	    { label = "yellow", 		r = 255, 	g = 255, 	b = 0},
-	    { label = "gold", 			r = 255, 	g = 215, 	b = 0},
-	    { label = "orange", 		r = 255, 	g = 165, 	b = 0},
-	    { label = "wheat", 			r = 245, 	g = 222, 	b = 179},
-	    { label = "red", 			r = 255, 	g = 0, 		b = 0},
-	    { label = "pink", 			r = 255, 	g = 161, 	b = 211},
-	    { label = "bright_pink", 	r = 255, 	g = 0, 		b = 255},
-	    { label = "purple", 		r = 153, 	g = 0, 		b = 153},
-	    { label = "ivory", 			r = 41, 	g = 36, 	b = 33}
+	    { label = _U('white'), 			r = 255, 	g = 255, 	b = 255},
+	    { label = "Slate Gray", 	r = 112, 	g = 128, 	b = 144},
+	    { label = "Blue", 			r = 0, 		g = 0, 		b = 255},
+	    { label = "Light Blue", 	r = 0, 		g = 150, 	b = 255},
+	    { label = "Navy Blue", 		r = 0, 		g = 0, 		b = 128},
+	    { label = "Sky Blue", 		r = 135, 	g = 206, 	b = 235},
+	    { label = "Turquoise", 		r = 0, 		g = 245, 	b = 255},
+	    { label = "Mint Green", 	r = 50, 	g = 255, 	b = 155},
+	    { label = "Lime Green", 	r = 0, 		g = 255, 	b = 0},
+	    { label = "Olive", 			r = 128, 	g = 128, 	b = 0},
+	    { label = _U('yellow'), 		r = 255, 	g = 255, 	b = 0},
+	    { label = _U('gold'), 			r = 255, 	g = 215, 	b = 0},
+	    { label = _U('orange'), 		r = 255, 	g = 165, 	b = 0},
+	    { label = _U('wheat'), 			r = 245, 	g = 222, 	b = 179},
+	    { label = _U('red'), 			r = 255, 	g = 0, 		b = 0},
+	    { label = _U('pink'), 			r = 255, 	g = 161, 	b = 211},
+	    { label = _U('brightpink'), 	r = 255, 	g = 0, 		b = 255},
+	    { label = _U('purple'), 		r = 153, 	g = 0, 		b = 153},
+	    { label = "Ivory", 			r = 41, 	g = 36, 	b = 33}
    	}
    	return neons
 end
 
 function GetPlatesName(index)
 	if (index == 0) then
-		return "Bleu sur fond Blanc 1"
+		return _U('blue_on_white_1')
 	elseif (index == 1) then
-		return "Jaune sur fond Noir"
+		return _U('yellow_on_black')
 	elseif (index == 2) then
-		return "Jaune sur fond Bleu"
+		return _U('yellow_blue')
 	elseif (index == 3) then
-		return "Bleu sur fond Blanc 2"
+		return _U('blue_on_white_2')
 	elseif (index == 4) then
-		return "Bleu sur fond Blanc 3"
+		return _U('blue_on_white_3')
 	end
 end
 
@@ -403,137 +403,137 @@ Config.Menus = {
 	main = {
 		label = 'LS CUSTOM',
 		parent = nil,
-		upgrades = 'Upgrades',
-		cosmetics = 'Cosmétiques'
+		upgrades = _U('upgrades'),
+		cosmetics = _U('cosmetics')
 	},
 	upgrades = {
-		label = 'Upgrades',
+		label = _U('upgrades'),
 		parent = 'main',
-		modEngine = "Moteur",
-		modBrakes = "Freins",
-		modTransmission = "Transmission",
-		modSuspension = "Suspension",
-		modArmor = "Armure",
-		modTurbo = "Turbo"
+		modEngine = _U('engine'),
+		modBrakes = _U('brakes'),
+		modTransmission = _U('transmission'),
+		modSuspension = _U('suspension'),
+		modArmor = _U('armor'),
+		modTurbo = _U('turbo')
 	},
 	modEngine = {
-		label = 'Moteur',
+		label = _U('engine'),
 		parent = 'modEngine',
 		modType = 11,
 		price = 500
 	},
 	modBrakes = {
-		label = 'Freins',
+		label = _U('brakes'),
 		parent = 'modBrakes',
 		modType = 12,
 		price = 500
 	},
 	modTransmission = {
-		label = 'Transmission',
+		label = _U('transmission'),
 		parent = 'modTransmission',
 		modType = 13,
 		price = 500
 	},
 	modSuspension = {
-		label = 'Suspension',
+		label = _U('suspension'),
 		parent = 'modSuspension',
 		modType = 15,
 		price = 500
 	},
 	modArmor = {
-		label = 'Armure',
+		label = _U('armor'),
 		parent = 'modArmor',
 		modType = 16,
 		price = 500
 	},
 	modTurbo = {
-		label = 'Turbo',
+		label = _U('turbo'),
 		parent = 'modTurbo',
 		modType = 18,
 		price = 500
 	},
 	cosmetics = {
-		label = 'Cosmétiques',
+		label = _U('cosmetics'),
 		parent = 'main',
-		bodyparts = 'Carosserie', --
-		windowTint = 'Fenêtres', --
-		modHorns = 'Klaxon', --
-		neonColor = "Néons", --
-		resprays = 'Peinture', --
-		modXenon = 'Phares', --
-		plateIndex = 'Plaque', --
-		wheels = 'Roues' --
+		bodyparts = _U('bodyparts'),
+		windowTint = _U('windowtint'),
+		modHorns = _U('horns'),
+		neonColor = _U('neons'),
+		resprays = _U('respray'),
+		modXenon = _U('headlights'),
+		plateIndex = _U('licenseplates'),
+		wheels = _U('wheels')
 	},
 	wheels = {
-		label = 'Roues',
+		label = _U('wheels'),
 		parent = 'cosmetics',
-		modFrontWheelsTypes = "Types de Jantes",
-		modFrontWheelsColor = "Couleurs jantes",
-		tyreSmokeColor = "Fumée des pneus"
+		modFrontWheelsTypes = _U('wheel_type'),
+		modFrontWheelsColor = _U('wheel_color'),
+		tyreSmokeColor = _U('tiresmoke')
 	},
 	modFrontWheelsTypes = {
-		label               = 'Types de Jantes',
+		label               = _U('wheel_type'),
 		parent              = 'wheels',
-		modFrontWheelsType0 = 'Jantes Sport',
-		modFrontWheelsType1 = 'Jantes Muscle',
-		modFrontWheelsType2 = 'Jantes Lowrider',
-		modFrontWheelsType3 = 'Jantes SUV',
-		modFrontWheelsType4 = 'Jantes Tout-terrain',
-		modFrontWheelsType5 = 'Jantes Tuning',
-		modFrontWheelsType6 = 'Jantes Moto',
-		modFrontWheelsType7 = 'Jantes Haut de gamme'
+		modFrontWheelsType0 = _U('sport'),
+		modFrontWheelsType1 = _U('muscle'),
+		modFrontWheelsType2 = _U('lowrider'),
+		modFrontWheelsType3 = _U('suv'),
+		modFrontWheelsType4 = _U('allterain'),
+		modFrontWheelsType5 = _U('tuning'),
+		modFrontWheelsType6 = _U('motorcycle'),
+		modFrontWheelsType7 = _U('highend')
 	},
 	modFrontWheelsType0 = {
-		label = 'Jantes Sport',
+		label = _U('sport'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 0,
 		price = 500
 	},
 	modFrontWheelsType1 = {
-		label = 'Jantes Muscle',
+		label = _U('muscle'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 1,
 		price = 500
 	},
 	modFrontWheelsType2 = {
-		label = 'Jantes Lowrider',
+		label = _U('lowrider'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 2,
 		price = 500
 	},
 	modFrontWheelsType3 = {
-		label = 'Jantes SUV',
+		label = _U('suv'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 3,
 		price = 500
 	},
 	modFrontWheelsType4 = {
-		label = 'Jantes Tout-terrain',
+		label = _U('allterain'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 4,
 		price = 500
 	},
 	modFrontWheelsType5 = {
-		label = 'Jantes Tuning',
+		label = _U('tuning'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 5,
 		price = 500
 	},
 	modFrontWheelsType6 = {
-		label = 'Jantes Moto',
+		label = _U('motorcycle'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 6,
 		price = 500
 	},
 	modFrontWheelsType7 = {
-		label = 'Jantes Haut de gamme',
+		label = _U('highend'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 7,
@@ -550,145 +550,145 @@ Config.Menus = {
 		price = 500
 	},
 	plateIndex = {
-		label = 'Plaque',
+		label = _U('licenseplates'),
 		parent = 'cosmetics',
 		modType = 'plateIndex',
 		price = 500
 	},
 	resprays = {
-		label = 'Peinture',
+		label = _U('respray'),
 		parent = 'cosmetics',
-		primaryRespray = 'Primaire',
-		secondaryRespray = 'Secondaire',
-		pearlescentRespray = 'Nacré',
+		primaryRespray = _U('primary'),
+		secondaryRespray = _U('secondary'),
+		pearlescentRespray = _U('pearlescent'),
 	},
 	primaryRespray = {
-		label = 'Primaire',
+		label = _U('primary'),
 		parent = 'resprays',
 	},
 	secondaryRespray = {
-		label = 'Secondaire',
+		label = _U('secondary'),
 		parent = 'resprays',
 	},
 	pearlescentRespray = {
-		label = 'Nacré',
+		label = _U('pearlescent'),
 		parent = 'resprays',
 	},
 	color1 = {
-		label = 'Primaire',
+		label = _U('primary'),
 		parent = 'primaryRespray',
 		modType = 'color1',
 		price = 500
 	},
 	color2 = {
-		label = 'Secondaire',
+		label = _U('secondary'),
 		parent = 'secondaryRespray',
 		modType = 'color2',
 		price = 500
 	},
 	pearlescentColor = {
-		label = 'Nacré',
+		label = _U('pearlescent'),
 		parent = 'pearlescentRespray',
 		modType = 'pearlescentColor',
 		price = 500
 	},
 	modXenon = {
-		label = 'Phares',
+		label = _U('headlights'),
 		parent = 'cosmetics',
 		modType = 22,
 		price = 500
 	},
 	bodyparts = {
-		label = 'Carosserie',
+		label = _U('bodyparts'),
 		parent = 'cosmetics',
-		modFender = 'Aile gauche',
-		modRightFender = 'Aile droite',
-		modSpoilers = 'Aileron',
-		modSideSkirt = 'Bas de caisse',
-		modFrame = 'Cage',
-		modHood = 'Capot',
-		modGrille = 'Grille',
-		modRearBumper = 'Pare-choc arrière',
-		modFrontBumper = 'Pare-choc avant',
-		modExhaust = 'Pot d\'échappement',
-		modRoof = 'Toit'
+		modFender = _U('leftfender'),
+		modRightFender = _U('rightfender'),
+		modSpoilers = _U('spoilers'),
+		modSideSkirt = _U('sideskirt'),
+		modFrame = _U('cage'),
+		modHood = _U('hood'),
+		modGrille = _U('grille'),
+		modRearBumper = _U('rearbumper'),
+		modFrontBumper = _U('frontbumper'),
+		modExhaust = _U('exhaust'),
+		modRoof = _U('roof')
 	},
 	modSpoilers = {
-		label = 'Aileron',
+		label = _U('spoilers'),
 		parent = 'bodyparts',
 		modType = 0,
 		price = 500
 	},
 	modFrontBumper = {
-		label = 'Pare-choc avant',
+		label = _U('frontbumper'),
 		modType = 1,
 		price = 500
 	},
 	modRearBumper = {
-		label = 'Pare-choc arrière',
+		label = _U('rearbumper'),
 		modType = 2,
 		price = 500
 	},
 	modSideSkirt = {
-		label = 'Bas de caisse',
+		label = _U('sideskirt'),
 		modType = 3,
 		price = 500
 	},
 	modExhaust = {
-		label = 'Pot d\'échappement',
+		label = _U('exhaust'),
 		modType = 4,
 		price = 500
 	},
 	modFrame = {
-		label = 'Cage',
+		label = _U('cage'),
 		modType = 5,
 		price = 500
 	},
 	modGrille = {
-		label = 'Grille',
+		label = _U('grille'),
 		modType = 6,
 		price = 500
 	},
 	modHood = {
-		label = 'Capot',
+		label = _U('hood'),
 		modType = 7,
 		price = 500
 	},
 	modFender = {
-		label = 'Aile gauche',
+		label = _U('leftfender'),
 		modType = 8,
 		price = 500
 	},
 	modRightFender = {
-		label = 'Aile droite',
+		label = _U('rightfender'),
 		modType = 9,
 		price = 500
 	},
 	modRoof = {
-		label = 'Toit',
+		label = _U('roof'),
 		modType = 10,
 		price = 500
 	},
 	windowTint = {
-		label = 'Fenêtres',
+		label = _U('windowTint'),
 		parent = 'cosmetics',
 		modType = 'windowTint',
 		price = 500
 	},
 	modHorns = {
-		label = 'Klaxon',
+		label = _U('horns'),
 		parent = 'cosmetics',
 		modType = 14,
 		price = 500
 	},
 	neonColor = {
-		label = 'Néons',
+		label = _U('neons'),
 		parent = 'cosmetics',
 		modType = 'neonColor',
 		price = 500
 	},
 	tyreSmokeColor = {
-		label = 'Fumée des pneus',
+		label = _U('tiresmoke'),
 		parent = 'wheels',
 		modType = 'tyreSmokeColor',
 		price = 500
