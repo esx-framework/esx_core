@@ -65,7 +65,7 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
 			if xPlayer2.job.name == 'banker' then
 				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'Client Banque', false)
+					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _U('bank_customer'), false)
 				end)
 			end
 		end

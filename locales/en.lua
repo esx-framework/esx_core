@@ -18,4 +18,5 @@ Locales['en'] = {
 	['withdraw']                         = 'withdraw',
 	['withdraw_amount']                  = 'withdraw amount',
 	['withdraw_society_money']           = 'withdraw society money',
+	['bank_customer']					 = 'bank Customer',
 }
