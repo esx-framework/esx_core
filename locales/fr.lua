@@ -31,6 +31,27 @@ Locales['fr'] = {
 	['purewhite'] = 'blanc Pure',
 	-- Grey
 	['grey'] = 'gris',
+	['silver'] = 'Argenté',
+	['metallicgrey'] = 'Gris Métallisé',
+	['laminatedsteel'] = 'Acier Laminé',
+	['darkgray'] = 'Gris Foncé',
+	['rockygray'] = 'Gris Rocheux',
+	['graynight'] = 'Gris Nuit'
+	['aluminum'] = 'Aluminium',
+	['graymat'] = 'Gris Mat',
+	['lightgrey'] = 'Gris Clair',
+	['asphaltgray'] = 'Gris Bitume',
+	['grayconcrete'] = 'Gris Béton',
+	['darksilver'] = 'Argent Sombre',
+	['magnesite'] = 'Magnésite',
+	['nickel'] = 'nickel',
+	['zinc'] = 'zinc',
+	['dolomite'] = 'dolomite',
+	['bluesilver'] = 'Argent Bleuté',
+	['titanium'] = 'Titane',
+	['steelblue'] = 'Acier Bleui',
+	['champagne'] = 'Champagne',
+	['grayhunter'] = 'Gris Chasseur',
 	-- Red
 	['red'] = 'rouge',
 	-- Pink

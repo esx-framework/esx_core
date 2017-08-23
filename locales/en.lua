@@ -10,7 +10,7 @@ Locales['en'] = {
 	-- Black
 	['black'] = 'black',
 	['graphite'] = 'graphite',
-	['black_metallic'] = 'black Setallic',
+	['black_metallic'] = 'black Metallic',
 	['caststeel'] = 'cast Steel',
 	['black_anth'] = 'black Anthracite',
 	['matteblack'] = 'matte Black',
@@ -31,6 +31,27 @@ Locales['en'] = {
 	['purewhite'] = 'pure White',
 	-- Grey
 	['grey'] = 'grey',
+	['silver'] = 'silver',
+	['metallicgrey'] = 'metallic Grey',
+	['laminatedsteel'] = 'laminated Steel',
+	['darkgray'] = 'dark Grey',
+	['rockygray'] = 'rocky Grey',
+	['graynight'] = 'gray Night'
+	['aluminum'] = 'aluminum',
+	['graymat'] = 'matte Grey',
+	['lightgrey'] = 'light Grey',
+	['asphaltgray'] = 'asphalt Grey',
+	['grayconcrete'] = 'concrete Grey',
+	['darksilver'] = 'dark Silver',
+	['magnesite'] = 'magnesite',
+	['nickel'] = 'nickel',
+	['zinc'] = 'zinc',
+	['dolomite'] = 'dolomite',
+	['bluesilver'] = 'blue Silver',
+	['titanium'] = 'titanium',
+	['steelblue'] = 'steel Blue',
+	['champagne'] = 'champagne',
+	['grayhunter'] = 'grey Hunter',
 	-- Red
 	['red'] = 'red',
 	-- Pink
