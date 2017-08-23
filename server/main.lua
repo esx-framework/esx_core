@@ -75,6 +75,8 @@ end)
 
 function CalculateBankSavings(d, h, m)
 
+	local asyncTasks = {}
+
 	MySQL.Async.fetchAll(
 		'SELECT * FROM addon_account_data WHERE account_name = @account_name',
 		{
@@ -115,14 +117,27 @@ function CalculateBankSavings(d, h, m)
 					local newMoney  = result[i].money + interests;
 					bankInterests   = bankInterests + interests
 
-					MySQL.Async.execute(
-						'UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name',
-						{
-							['@money']        = newMoney,
-							['@owner']        = result[i].owner,
-							['@account_name'] = 'bank_savings'
-						}
-					)
+					local scope = function(newMoney, owner)
+
+						table.insert(asyncTasks, function(cb)
+
+							MySQL.Async.execute(
+								'UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name',
+								{
+									['@money']        = newMoney,
+									['@owner']        = owner,
+									['@account_name'] = 'bank_savings'
+								},
+								function(rowsChanged)
+									cb()
+								end
+							)
+
+						end)
+
+					end
+
+					scope(newMoney, result[i].owner)
 
 				end
 
@@ -132,9 +147,15 @@ function CalculateBankSavings(d, h, m)
 				account.addMoney(bankInterests)
 			end)
 
+			Async.parallelLimit(asyncTasks, 5, function(results)
+				print('[BANK] Calculated interests')
+			end)
+
 		end
 	)
 
 end
 
-TriggerEvent('cron:runAt', 22, 00, CalculateBankSavings)
+TriggerEvent('cron:runAt', 22, 0, CalculateBankSavings)
+
+
