@@ -46,7 +46,7 @@ Citizen.CreateThread(function()
 
   		if Status[i].clientAction.add ~= nil then
 
-  			local val = Status[i].clientAction.add
+  			local val = math.floor(Status[i].clientAction.add / (Config.TickTime / Config.ClientTickTime))
 
 				if Status[i].val + val > Config.StatusMax then
 					Status[i].val = StatusMax
@@ -58,7 +58,7 @@ Citizen.CreateThread(function()
 
   		if Status[i].clientAction.remove ~= nil then
 				
-  			local val = Status[i].clientAction.remove
+  			local val = math.floor(Status[i].clientAction.remove / (Config.TickTime / Config.ClientTickTime))
 
 				if Status[i].val - val < 0 then
 					Status[i].val = 0
@@ -75,7 +75,7 @@ Citizen.CreateThread(function()
 			status = Status
 		})
 
-    Citizen.Wait(Config.TickTime)
+    Citizen.Wait(Config.ClientqTickTime)
 
   end
 end)
