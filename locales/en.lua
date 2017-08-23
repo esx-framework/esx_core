@@ -36,7 +36,7 @@ Locales['en'] = {
 	['laminatedsteel'] = 'laminated Steel',
 	['darkgray'] = 'dark Grey',
 	['rockygray'] = 'rocky Grey',
-	['graynight'] = 'gray Night'
+	['graynight'] = 'gray Night',
 	['aluminum'] = 'aluminum',
 	['graymat'] = 'matte Grey',
 	['lightgrey'] = 'light Grey',
@@ -76,7 +76,7 @@ Locales['en'] = {
 	['matteorange'] = 'Matte Orange',
 	['lightorange'] = 'Light Orange',
 	['peach'] = 'Peach',
-	['pumpkin'] = 'Pumpkin'
+	['pumpkin'] = 'Pumpkin',
 	['orangelambo'] = 'Orange Lambo',
 	-- Brown
 	['brown'] = 'brown',
@@ -107,7 +107,7 @@ Locales['en'] = {
 	-- Purple
 	['purple'] = 'purple',
 	['indigo'] = 'Indigo',
-	['deeppurple'] = 'Deep Purple'
+	['deeppurple'] = 'Deep Purple',
 	['darkviolet'] = 'Dark Violet',
 	['amethyst'] = 'Amethyst',
 	['mysticalviolet'] = 'Mystic Violet',
@@ -118,7 +118,7 @@ Locales['en'] = {
 	['chrome'] = 'chrome',
 	['brushedchrome'] = 'brushed Chrome',
 	['blackchrome'] = 'black Chrome',
-	['brushedaluminum'] = 'brushed Aluminum'
+	['brushedaluminum'] = 'brushed Aluminum',
 	-- Metal
 	['gold'] = 'gold',
 	['puregold'] = 'pure Gold',
