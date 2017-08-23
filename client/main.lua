@@ -82,7 +82,7 @@ function OpenBankActionsMenu()
 							
 							local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-							if closestPlayer == -1 or closestDistance > 3.0 then
+							if closestPlayer == -1 or closestDistance > 5.0 then
 								ESX.ShowNotification(_U('no_player_nearby'))
 							else
 								TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_banker', 'Banque', amount)
