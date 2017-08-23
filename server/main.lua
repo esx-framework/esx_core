@@ -7,9 +7,9 @@ TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F',
 		return true
 	end,
 	function(status)
-		status.remove(200)
+		status.remove(6000)
 	end,
-	{remove = 200}
+	{remove = 6000}
 )
 
 TriggerEvent('esx_status:registerStatus', 'thirst', 1000000, '#0C98F1',
@@ -17,9 +17,9 @@ TriggerEvent('esx_status:registerStatus', 'thirst', 1000000, '#0C98F1',
 		return true
 	end,
 	function(status)
-		status.remove(250)
+		status.remove(7500)
 	end,
-	{remove = 250}
+	{remove = 7500}
 )
 
 RegisterServerEvent('esx_basicneeds:resetStatus')
