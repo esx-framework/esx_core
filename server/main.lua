@@ -67,7 +67,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwned', function(vehicleProps)
 			['@owner']   = xPlayer.identifier
 		},
 		function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', _source, 'Le véhicule ' .. vehicleProps.plate .. ' vous appartient désormais')
+			TriggerClientEvent('esx:showNotification', _source, _U('vehicle').. vehicleProps.plate .. _('belongs'))
 		end
 	)
 
@@ -85,7 +85,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, ve
 			['@owner']   = xPlayer.identifier
 		},
 		function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', playerId, 'Le véhicule ' .. vehicleProps.plate .. ' vous appartient désormais')
+			TriggerClientEvent('esx:showNotification', playerId, _U('vehicle').. vehicleProps.plate .. _('belongs'))
 		end
 	)
 
@@ -93,7 +93,7 @@ end)
 
 RegisterServerEvent('esx_vehicleshop:sellVehicle')
 AddEventHandler('esx_vehicleshop:sellVehicle', function(vehicle)
-	
+
 	MySQL.Async.fetchAll(
 		'SELECT * FROM cardealer_vehicles WHERE vehicle = @vehicle LIMIT 1',
 		{
@@ -138,7 +138,7 @@ AddEventHandler('esx_vehicleshop:rentVehicle', function(vehicle, plate, playerNa
 					['@id'] = id
 				}
 			)
-			
+
 			MySQL.Async.execute(
 				'INSERT INTO rented_vehicles (vehicle, plate, player_name, base_price, rent_price, owner) VALUES (@vehicle, @plate, @player_name, @base_price, @rent_price, @owner)',
 				{
@@ -170,7 +170,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:getVehicles', function(source, cb)
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, vehicleModel)
-	
+
 	local xPlayer     = ESX.GetPlayerFromId(source)
 	local vehicleData = nil
 
@@ -191,7 +191,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, ve
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function(source, cb, vehicleModel)
-	
+
 	local vehicleData = nil
 
 	for i=1, #Vehicles, 1 do
@@ -379,7 +379,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 
 							xPlayer.addMoney(price)
 							RemoveOwnedVehicle(plate)
-							
+
 							cb(true)
 
 						else
@@ -408,14 +408,14 @@ TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message
 			end
 		end
 	end
-	
+
 end)
 
 if Config.EnablePvCommand then
 
 	TriggerEvent('es:addCommand', 'pv', function(source, args, user)
 		TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
-	end, {help = 'Sortir un véhicule personnel'})
+	end, {help = _U('leaving')})
 
 end
 
@@ -457,8 +457,8 @@ function PayRent(d, h, m)
 						if foundPlayer then
 
 							xPlayer.removeMoney(result[i].rent_price)
-							TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ~g~payé~s~ votre location de véhicule : ~g~$' .. result[i].rent_price)
-						
+							TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental') .. result[i].rent_price)
+
 						else
 							newMoney[result[i].owner] = newMoney[result[i].owner] - result[i].rent_price
 						end
