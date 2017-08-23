@@ -243,7 +243,7 @@ function TeleportFadeEffect(entity, coords)
 			Citizen.Wait(0)
 		end
 
-		ESX.Game.TeleportEntity(entity, coords, function()
+		ESX.Game.Teleport(entity, coords, function()
 			DoScreenFadeIn(800)
 		end)
 
