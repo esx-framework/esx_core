@@ -23,6 +23,7 @@ AddEventHandler('esx_service:activateService', function(name, max)
 	MaxInService[name] = max
 end)
 
+RegisterServerEvent('esx_service:disableService')
 AddEventHandler('esx_service:disableService', function(name)
 	InService[name][source] = nil
 end)
