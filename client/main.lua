@@ -490,7 +490,7 @@ Citizen.CreateThread(function()
 
 						end
 
-						if DoesEntityExist(CurrentCustomer) then
+						if DoesEntityExist(CurrentCustomer) and IsEntityAPed(CurrentCustomer) then
 
 							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
@@ -509,6 +509,8 @@ Citizen.CreateThread(function()
 
 							ESX.ShowNotification(_U('customer_found'))
 
+						else
+							CurrentCustomer = nil
 						end
 
 					end
@@ -567,6 +569,14 @@ Citizen.CreateThread(function()
 
 								RemoveBlip(DestinationBlip)
 
+								local scope = function(customer)
+									ESX.SetTimeout(5000, function()
+										DeletePed(customer)
+									end)
+								end
+
+								scope(CurrentCustomer)
+
 								CurrentCustomer           = nil
 								CurrentCustomerBlip       = nil
 								DestinationBlip           = nil
@@ -614,9 +624,7 @@ Citizen.CreateThread(function()
 
 					else
 
-						if not CustomerIsEnteringVehicle then
-							DrawMarker(1, customerCoords.x, customerCoords.y, customerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 4.0, 4.0, 2.0, 178, 236, 93, 155, 0, 0, 2, 0, 0, 0, 0)
-						end
+						DrawMarker(1, customerCoords.x, customerCoords.y, customerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 4.0, 4.0, 2.0, 178, 236, 93, 155, 0, 0, 2, 0, 0, 0, 0)
 
 						if not CustomerEnteredVehicle then
 
@@ -629,7 +637,7 @@ Citizen.CreateThread(function()
 
 							end
 
-							if customerDistance <= 10.0 then
+							if customerDistance <= 100.0 then
 
 								if not CustomerIsEnteringVehicle then
 
