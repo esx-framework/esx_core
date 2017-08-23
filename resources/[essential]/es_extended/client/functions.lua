@@ -941,27 +941,6 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 
 end
 
-ESX.Game.TeleportEntity = function(entity, coords, cb)
-
-	Citizen.CreateThread(function()
-
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-	
-		while not HasCollisionLoadedAroundEntity(entity) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-			Citizen.Wait(0)
-		end
-
-		SetEntityCoords(entity, coords.x, coords.y, coords.z)
-
-		if cb ~= nil then
-			cb()
-		end
-
-	end)
-
-end
-
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
     
   local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
