@@ -30,13 +30,17 @@ end
 
 function CloseInstance(instance)
 
-	for i=1, #Instances[instance].players, 1 do
-		TriggerClientEvent('instance:onClose', Instances[instance].players[i])
+	if Instances[instance] ~= nil then
+
+		for i=1, #Instances[instance].players, 1 do
+			TriggerClientEvent('instance:onClose', Instances[instance].players[i])
+		end
+
+		Instances[instance] = nil
+
+		TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
+
 	end
-
-	Instances[instance] = nil
-
-	TriggerClientEvent('instance:onInstancedPlayersData', -1, GetInstancedPlayers())
 
 end
 
