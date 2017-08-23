@@ -90,7 +90,7 @@ Config.Jobs.textil = {
 					max    = 40,
 					add    = 1,
 					remove = 2,
-					requires = "farbric",
+					requires = "fabric",
 					requires_name = _U('dd_fabric'),
 					drop   = 100
 				}
