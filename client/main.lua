@@ -570,7 +570,7 @@ Citizen.CreateThread(function()
 								RemoveBlip(DestinationBlip)
 
 								local scope = function(customer)
-									ESX.SetTimeout(5000, function()
+									ESX.SetTimeout(60000, function()
 										DeletePed(customer)
 									end)
 								end
