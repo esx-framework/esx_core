@@ -56,14 +56,18 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 					ESX.TriggerServerCallback('esx_vehicleshop:getVehiclesInGarage', function(vehicles)
 
-						print('')
-
 						for i=1, #garage.Parkings, 1 do
 							for j=1, #vehicles, 1 do
 
 								if i == vehicles[j].zone then
 										
 									local spawn = function(j)
+
+										local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
+
+										if DoesEntityExist(vehicle) then
+											ESX.Game.DeleteVehicle(vehicle)
+										end
 
 										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
 											x = garage.Parkings[i].Pos.x,
@@ -104,6 +108,12 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 								if i == vehicles[j].zone then
 										
 									local spawn = function(j)
+
+										local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
+
+										if DoesEntityExist(vehicle) then
+											ESX.Game.DeleteVehicle(vehicle)
+										end
 
 										ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
 											x = garage.Parkings[i].Pos.x,
@@ -147,6 +157,12 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 							if i == vehicles[j].zone then
 									
 								local spawn = function(j)
+
+									local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
+
+									if DoesEntityExist(vehicle) then
+										ESX.Game.DeleteVehicle(vehicle)
+									end
 
 									ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
 										x = garage.Parkings[i].Pos.x,
