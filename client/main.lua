@@ -41,6 +41,8 @@ function ShowBillsMenu()
 			},
 			function(data, menu)
 
+				menu.close()
+
 				local billId = data.current.value
 
 				ESX.TriggerServerCallback('esx_billing:payBill', function()
