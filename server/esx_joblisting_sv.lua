@@ -3,7 +3,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 ESX.RegisterServerCallback('esx_joblisting:getJobsList', function(source, cb)
 	MySQL.Async.fetchAll(
-		'SELECT * FROM jobs',
+		'SELECT * FROM jobs WHERE whitelisted = false',
 		{},
 		function(result)
 			local data = {}
