@@ -293,7 +293,7 @@ function OpenCustomersMenu()
 				cols = {
 					customers[i].name,
 					customers[i].propertyName,
-					(customers[i].rented and _U('rent') or _U('sell')),
+					(customers[i].propertyRented and _U('rent') or _U('sell')),
 					_U('contract')
 				}
 			})
