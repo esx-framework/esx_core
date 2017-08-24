@@ -222,8 +222,10 @@ end
 ESX.UI.Menu.CloseAll = function()
 	
 	for i=1, #ESX.UI.Menu.Opened, 1 do
-		ESX.UI.Menu.Opened[i].close()
-		ESX.UI.Menu.Opened[i] = nil
+		if ESX.UI.Menu.Opened[i] ~= nil then
+			ESX.UI.Menu.Opened[i].close()
+			ESX.UI.Menu.Opened[i] = nil
+		end
 	end
 
 end
@@ -231,8 +233,10 @@ end
 ESX.UI.Menu.GetOpened = function(type, namespace, name)
 
 	for i=1, #ESX.UI.Menu.Opened, 1 do
-		if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-			return ESX.UI.Menu.Opened[i]
+		if ESX.UI.Menu.Opened[i] ~= nil then
+			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
+				return ESX.UI.Menu.Opened[i]
+			end
 		end
 	end
 
@@ -1215,9 +1219,13 @@ Citizen.CreateThread(function()
 
 		for i=1, #ESX.TimeoutCallbacks, 1 do
 
-			if currTime >= ESX.TimeoutCallbacks[i].time then
-				ESX.TimeoutCallbacks[i].cb()
-				ESX.TimeoutCallbacks[i] = nil
+			if ESX.TimeoutCallbacks[i] ~= nil then
+
+				if currTime >= ESX.TimeoutCallbacks[i].time then
+					ESX.TimeoutCallbacks[i].cb()
+					ESX.TimeoutCallbacks[i] = nil
+				end
+
 			end
 
 		end
