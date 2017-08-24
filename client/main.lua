@@ -44,11 +44,9 @@ function RespawnPed(ped, coords)
 end
 
 function StartRespawnToHospitalMenuTimer()
-	Citizen.Trace('player IsDead')
 
 	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
 
-		Citizen.Trace('timer started')
 		if IsDead then
 
 			local elements = {}
@@ -127,10 +125,10 @@ end
 
 function RespawnTimer()
 
-local timer = Config.RespawnDelayAfterRPDeath
-local allowRespawn = Config.RespawnDelayAfterRPDeath/2
-local enoughMoney = false
-local money = 0
+	local timer = Config.RespawnDelayAfterRPDeath
+	local allowRespawn = Config.RespawnDelayAfterRPDeath/2
+	local enoughMoney = false
+	local money = 0
 
 	if IsDead and Config.ShowDeathTimer then
 		ESX.TriggerServerCallback('esx_ambulancejob:getBankMoney', function(money)
@@ -635,18 +633,17 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
 end)
 
 AddEventHandler('esx_ambulancejob:onPlayerDeath', function()
-	Citizen.Trace('player died')
+
 	IsDead = true
 
 	if Config.ShowDeathTimer == true then
-		Citizen.Trace('player died: true')
 		RespawnTimer()
 	else
-		Citizen.Trace('player died: false')
 		StartRespawnTimer()
 		StartRespawnToHospitalMenuTimer()
-		StartScreenEffect('DeathFailOut',  0,  false)
 	end
+
+	StartScreenEffect('DeathFailOut',  0,  false)
 
 end)
 
