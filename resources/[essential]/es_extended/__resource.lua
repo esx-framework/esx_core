@@ -26,6 +26,7 @@ client_scripts {
 	'locales/en.lua',
 	'config.weapons.lua',
 	'client/common.lua',
+	'client/entityiter.lua',
 	'client/functions.lua',
 	'client/main.lua'
 }

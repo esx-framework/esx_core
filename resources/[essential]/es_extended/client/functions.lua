@@ -409,16 +409,11 @@ end
 
 ESX.Game.GetObjects = function()
 
-	local objects        = {}
-	local handle, object = FindFirstObject()
-	local success        = nil
+	local objects = {}
 
-	repeat
+	for object in EnumerateObjects() do
 		table.insert(objects, object)
-		success, object = FindNextObject(handle)
-	until not success
-
-	EndFindObject(handle)
+	end
 
 	return objects
 
@@ -555,16 +550,11 @@ end
 
 ESX.Game.GetVehicles = function()
 
-	local vehicles        = {}
-	local handle, vehicle = FindFirstVehicle()
-	local success         = nil
+	local vehicles = {}
 
-	repeat
+	for vehicle in EnumerateVehicles() do
 		table.insert(vehicles, vehicle)
-		success, vehicle = FindNextVehicle(handle)
-	until not success
-
-	EndFindVehicle(handle)
+	end
 
 	return vehicles
 
@@ -615,6 +605,18 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 	end
 	
 	return vehiclesInArea
+end
+
+ESX.Game.GetPeds = function()
+
+	local peds = {}
+
+	for ped in EnumeratePeds() do
+		table.insert(peds, ped)
+	end
+
+	return peds
+
 end
 
 ESX.Game.GetVehicleProperties = function(vehicle)
