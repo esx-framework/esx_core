@@ -222,7 +222,7 @@ function RespawnTimer()
 						TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 						RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
-						--StopScreenEffect('DeathFailOut')
+						StopScreenEffect('DeathFailOut')
 						DoScreenFadeIn(800)
 					end)
 				end
