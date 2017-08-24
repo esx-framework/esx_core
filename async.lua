@@ -45,6 +45,7 @@ function Async.parallelLimit(tasks, limit, cb)
 	local function processQueue()
 
 		if #queue == 0 then
+			cb(results)
 			return
 		end
 
