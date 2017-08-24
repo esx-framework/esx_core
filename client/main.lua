@@ -53,21 +53,19 @@ function ShowLoadingPromt(msg, time, type)
 	end)
 end
 
-function GetRandomPed()
+function GetRandomWalkingNPC()
 
-	local peds        = {}
-	local handle, ped = FindFirstPed()
-	local success     = nil
+	local search = {}
+	local peds   = ESX.Game.GetPeds()
 
-	repeat
-		table.insert(peds, ped)
-		success, ped = FindNextPed(handle)
-	until not success
+	for i=1, #peds, 1 do
+		if IsPedHuman(peds[i]) and IsPedWalking(peds[i]) and not IsPedAPlayer(peds[i]) then
+			table.insert(search, peds[i])
+		end
+	end
 
-	EndFindPed(handle)
-
-	if #peds > 0 then
-		return peds[GetRandomIntInRange(1, #peds)]
+	if #search > 0 then
+		return search[GetRandomIntInRange(1, #search)]
 	end
 
 end
@@ -480,17 +478,9 @@ Citizen.CreateThread(function()
 
 					if OnJob and IsPedInAnyVehicle(playerPed,  false) and GetEntitySpeed(playerPed) > 0 then
 
-						while CurrentCustomer == nil do
+						CurrentCustomer = GetRandomWalkingNPC()
 
-							local ped = GetRandomPed()
-
-							if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
-								CurrentCustomer = ped
-							end
-
-						end
-
-						if DoesEntityExist(CurrentCustomer) and IsEntityAPed(CurrentCustomer) then
+						if CurrentCustomer ~= nil then
 
 							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
@@ -509,8 +499,6 @@ Citizen.CreateThread(function()
 
 							ESX.ShowNotification(_U('customer_found'))
 
-						else
-							CurrentCustomer = nil
 						end
 
 					end
