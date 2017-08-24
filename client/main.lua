@@ -504,7 +504,7 @@ function OpenMobileMecanoActionsMenu()
 						if model == 'prop_roadcone02a' then
 							z = z - 2.0
 						elseif model == 'prop_toolchest_01' then
-							z = z - 3.0
+							z = z - 2.0
 						end
 
 						ESX.Game.SpawnObject(model, {
