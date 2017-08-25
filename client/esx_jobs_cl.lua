@@ -232,10 +232,6 @@ AddEventHandler('esx_jobs:hasExitedMarker', function(zone)
 	menuIsShowed = false
 	hintIsShowed = false
 	isInMarker = false
-	SendNUIMessage({
-		showControls = false,
-		showMenu     = false,
-	})
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -245,15 +241,15 @@ AddEventHandler('esx:setJob', function(job)
 	myPlate = {} -- loosing vehicle caution in case player changes job.
 	isJobVehicleDestroyed = false
 	spawner = 0
-	--deleteBlips()
-	--refreshBlips()
+	deleteBlips()
+	refreshBlips()
 end)
 
 function deleteBlips()
 	if JobBlips[1] ~= nil then
 		for i=1, #JobBlips, 1 do
 			RemoveBlip(JobBlips[i])
-			table.remove(JobBlips, i)
+			JobBlips[i] = nil
 		end
 	end
 end
@@ -261,24 +257,30 @@ end
 function refreshBlips()
 	local zones = {}
 	local blipInfo = {}
+	
 	if PlayerData.job ~= nil then
 		for jobKey,jobValues in pairs(Config.Jobs) do
-			for zoneKey,zoneValues in pairs(jobValues.Zones) do
-				if zoneValues.Blip then
-					local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
-					SetBlipSprite (blip, jobValues.BlipInfos.Sprite)
-					SetBlipDisplay(blip, 4)
-					SetBlipScale  (blip, 1.2)
-					SetBlipColour (blip, jobValues.BlipInfos.Color)
-					SetBlipAsShortRange(blip, true)
-					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(zoneValues.Name)
-					EndTextCommandSetBlipName(blip)
-					table.insert(JobBlips, blip)
+			
+			if jobKey == PlayerData.job.name then
+				for zoneKey,zoneValues in pairs(jobValues.Zones) do
+					if zoneValues.Blip then
+						local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
+						SetBlipSprite (blip, jobValues.BlipInfos.Sprite)
+						SetBlipDisplay(blip, 4)
+						SetBlipScale  (blip, 1.2)
+						SetBlipColour (blip, jobValues.BlipInfos.Color)
+						SetBlipAsShortRange(blip, true)
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString(zoneValues.Name)
+						EndTextCommandSetBlipName(blip)
+						table.insert(JobBlips, blip)
+					end
 				end
 			end
+
 		end
 	end
+
 end
 
 function spawncar(spawnPoint, vehicle)
@@ -548,26 +550,6 @@ Citizen.CreateThread(function()
 					TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', cautionValue)
 				end
 			end
-		end
-	end
-end)
-
--- Menu Controls
-Citizen.CreateThread(function()
-	while true do
-		Wait(0)
-		if IsControlJustReleased(0, Keys['ENTER']) or IsControlJustReleased(0, Keys['E']) then
-			SendNUIMessage({ enterPressed = true })
-		elseif IsControlJustReleased(0, Keys['BACKSPACE']) then
-			SendNUIMessage({ backspacePressed = true })
-		elseif IsControlJustReleased(0, Keys['LEFT']) then
-			SendNUIMessage({ move = 'LEFT' })
-		elseif IsControlJustReleased(0, Keys['RIGHT']) then
-			SendNUIMessage({ move = 'RIGHT' })
-		elseif IsControlJustReleased(0, Keys['TOP']) then
-			SendNUIMessage({ move = 'UP' })
-		elseif IsControlJustReleased(0, Keys['DOWN']) then
-			SendNUIMessage({ move = 'DOWN' })
 		end
 	end
 end)
