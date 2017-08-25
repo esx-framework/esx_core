@@ -264,6 +264,8 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 
 			TriggerServerEvent('esx_skin:save', skin)
 
+			LastSkin = skin
+
 			if submitCb ~= nil then
 				submitCb(data, menu)
 			end
