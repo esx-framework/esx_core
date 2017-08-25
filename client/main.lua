@@ -94,6 +94,11 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				elements = elements
 			},
 			function(data, menu)
+
+				TriggerEvent('skinchanger:getSkin', function(skin)
+					LastSkin = skin
+				end)
+
 				submitCb(data, menu)
 				DeleteSkinCam()
 			end,
@@ -263,8 +268,6 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 		TriggerEvent('skinchanger:getSkin', function(skin)
 
 			TriggerServerEvent('esx_skin:save', skin)
-
-			LastSkin = skin
 
 			if submitCb ~= nil then
 				submitCb(data, menu)
