@@ -571,3 +571,18 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+Citizen.CreateThread(function()
+
+	-- Slaughterer
+	RemoveIpl("CS1_02_cf_offmission")
+	RequestIpl("CS1_02_cf_onmission1")
+	RequestIpl("CS1_02_cf_onmission2")
+	RequestIpl("CS1_02_cf_onmission3")
+	RequestIpl("CS1_02_cf_onmission4")
+
+	-- Textil
+	RequestIpl("id2_14_during_door")
+	RequestIpl("id2_14_during1")
+
+end)
