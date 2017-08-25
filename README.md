@@ -3,4 +3,4 @@ FR - Pôle Emploi
 
 Update SQL database for job whitelist:
 
-ALTER TABLE jobs add whitelist BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE jobs add whitelisted BOOLEAN NOT NULL DEFAULT FALSE;
