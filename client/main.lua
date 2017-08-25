@@ -1,4 +1,5 @@
-ESX = nil
+ESX            = nil
+local Timeouts = {}
 
 Citizen.CreateThread(function()
 
@@ -26,6 +27,10 @@ Citizen.CreateThread(function()
 
 	local openMenu = function(namespace, name, data)
 
+		for i=1, #Timeouts, 1 do
+			ESX.ClearTimeout(Timeouts[i])
+		end
+
 		OpenedMenus[namespace .. '_' .. name] = true
 
 		SendNUIMessage({
@@ -35,9 +40,11 @@ Citizen.CreateThread(function()
 			data      = data,
 		})
 
-		ESX.SetTimeout(200, function()
+		local timeoutId = ESX.SetTimeout(200, function()
 			SetNuiFocus(true, true)
 		end)
+
+		table.insert(Timeouts, timeoutId)
 
 	end
 
