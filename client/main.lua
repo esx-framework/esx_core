@@ -63,7 +63,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 										
 									local spawn = function(j)
 
-										local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
+										local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
 
 										if DoesEntityExist(vehicle) then
 											ESX.Game.DeleteVehicle(vehicle)
