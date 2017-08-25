@@ -38,6 +38,11 @@ ESX.SetTimeout = function(msec, cb)
 		time = GetGameTimer() + msec,
 		cb   = cb
 	})
+	return #ESX.TimeoutCallbacks
+end
+
+ESX.ClearTimeout = function(i)
+	ESX.TimeoutCallbacks[i] = nil
 end
 
 ESX.ShowNotification = function(msg)
