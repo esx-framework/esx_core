@@ -8,6 +8,9 @@ Locales['br'] = {
     ['press_sell_meth'] = 'Pressione ~INPUT_CONTEXT~ para vender metanfetamina',
     ['press_collect_weed'] = 'Pressione ~INPUT_CONTEXT~ para coletar erva',
     ['press_process_weed'] = 'Pressione ~INPUT_CONTEXT~ para processar erva',
+    ['press_sell_opium'] = 'Pressione ~INPUT_CONTEXT~ para vender ópio',
+	['press_collect_opium'] = 'Pressione ~INPUT_CONTEXT~ para coletar ópio',
+    ['press_process_opium'] = 'Pressione ~INPUT_CONTEXT~ para processar ópio',
     ['press_sell_weed'] = 'Pressione ~INPUT_CONTEXT~ para vender erva',
     ['act_imp_police'] = 'Ação ~r~impossivel~s~, ~b~polícia~s~: ',
     ['inv_full_coke'] = 'Você não pode mais coletar a Cocaína, seu estoque está ~r~cheio~s~',
@@ -25,5 +28,9 @@ Locales['br'] = {
     ['not_enough_weed'] = 'Você não tem erva suficiente para ~r~embalar~s~',
     ['sold_one_weed'] = 'Você vendeu ~g~x1 Trouxinha de erva~s~',
     ['used_one_weed'] = 'Você usou 1 trouxinha de ~b~erva',
+	['inv_full_opium'] = 'Você não pode mais coletar ópio, seu inventário está ~r~cheio~s~',
+    ['not_enough_opium'] = 'Você não tem ópio suficiente para ~r~embalar~s~',
+    ['sold_one_opium'] = 'Você vendeu ~g~x1 Trouxinha de ópio~s~',
+    ['used_one_opium'] = 'Você usou 1 trouxinha de ~b~ópio',
 
 }

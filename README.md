@@ -5,7 +5,17 @@ FXserver ESX Drugs
 
   * esx_policejob => https://github.com/FXServer-ESX/fxserver-esx_policejob
 
-[INSTALLATION]
+
+  [UPDATE]
+  to install opium :
+```
+INSERT INTO `items` (name, label) VALUES
+	('opium', 'Opium'),
+	('opium_pooch', 'Pochon de opium')
+;
+```
+  
+  [INSTALLATION]
 
 1) CD in your resources/[esx] folder
 2) Clone the repository

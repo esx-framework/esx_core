@@ -20,6 +20,8 @@ local weedQTE					= 0
 local weed_poochQTE 			= 0
 local methQTE					= 0
 local meth_poochQTE 			= 0
+local opiumQTE					= 0
+local opium_poochQTE 			= 0
 local myJob 				= nil
 local PlayerData 				= {}
 local GUI 						= {}
@@ -39,7 +41,8 @@ end)
 AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
     
 	ESX.UI.Menu.CloseAll()
-
+	
+	--coke
     if zone == 'CokeFarm' then
     	if myJob ~= "police" then
 			CurrentAction     = 'coke_harvest'
@@ -67,7 +70,8 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
             end
         end
     end
-
+	
+	--meth
     if zone == 'MethFarm' then
     	if myJob ~= "police" then
 			CurrentAction     = 'meth_harvest'
@@ -95,7 +99,8 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
             end
         end
     end
-
+	
+	--weed
     if zone == 'WeedFarm' then
     	if myJob ~= "police" then
 			CurrentAction     = 'weed_harvest'
@@ -123,6 +128,35 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
             end
         end
     end
+	
+	--opium
+	if zone == 'OpiumFarm' then
+    	if myJob ~= "police" then
+			CurrentAction     = 'opium_harvest'
+			CurrentActionMsg  = _U('press_collect_opium')
+			CurrentActionData = {}
+		end
+	end
+
+    if zone == 'OpiumTreatment' then
+    	if myJob ~= "police" then
+        	if opiumQTE >= 5 then
+            	CurrentAction     = 'opium_treatment'
+				CurrentActionMsg  = _U('press_process_opium')
+				CurrentActionData = {}
+            end
+        end
+    end
+
+    if zone == 'OpiumResell' then
+    	if myJob ~= "police" then
+        	if opium_poochQTE >= 1 then
+        		CurrentAction     = 'opium_resell'
+				CurrentActionMsg  = _U('press_sell_opium')
+				CurrentActionData = {}
+            end
+        end
+    end
 end)
 
 AddEventHandler('esx_drugs:hasExitedMarker', function(zone)
@@ -139,6 +173,9 @@ AddEventHandler('esx_drugs:hasExitedMarker', function(zone)
 	TriggerServerEvent('esx_drugs:stopHarvestWeed')
 	TriggerServerEvent('esx_drugs:stopTransformWeed')
 	TriggerServerEvent('esx_drugs:stopSellWeed')
+	TriggerServerEvent('esx_drugs:stopHarvestOpium')
+	TriggerServerEvent('esx_drugs:stopTransformOpium')
+	TriggerServerEvent('esx_drugs:stopSellOpium')
 end)
 
 -- Weed Effect
@@ -188,13 +225,15 @@ end)
 
 -- RETURN NUMBER OF ITEMS FROM SERVER
 RegisterNetEvent('esx_drugs:ReturnInventory')
-AddEventHandler('esx_drugs:ReturnInventory', function(cokeNbr, cokepNbr, methNbr, methpNbr, weedNbr, weedpNbr, jobName, currentZone)
+AddEventHandler('esx_drugs:ReturnInventory', function(cokeNbr, cokepNbr, methNbr, methpNbr, weedNbr, weedpNbr,opiumNbr, opiumpNbr, jobName, currentZone)
 	cokeQTE       = cokeNbr
 	coke_poochQTE = cokepNbr
 	methQTE 	  = methNbr
 	meth_poochQTE = methpNbr
 	weedQTE 	  = weedNbr
-	weed_poochQTE = weedpNbr 	
+	weed_poochQTE = weedpNbr 
+	opiumQTE       = opiumbr
+	opium_poochQTE = opiumpNbr
 	myJob         = jobName
 	TriggerEvent('esx_drugs:hasEnteredMarker', currentZone)
 end)
@@ -265,6 +304,15 @@ Citizen.CreateThread(function()
 				end
 				if CurrentAction == 'weed_resell' then
 					TriggerServerEvent('esx_drugs:startSellWeed')
+				end
+				if CurrentAction == 'opium_harvest' then
+					TriggerServerEvent('esx_drugs:startHarvestOpium')
+				end
+				if CurrentAction == 'opium_treatment' then
+					TriggerServerEvent('esx_drugs:startTransformOpium')
+				end
+				if CurrentAction == 'opium_resell' then
+					TriggerServerEvent('esx_drugs:startSellOpium')
 				end
 				CurrentAction = nil				
 			end

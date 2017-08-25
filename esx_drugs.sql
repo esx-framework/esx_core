@@ -4,5 +4,7 @@ INSERT INTO `items` (name, label) VALUES
 	('coke', 'Coke'),
 	('coke_pooch', 'Pochon de coke'),
 	('meth', 'Meth'),
-	('meth_pooch', 'Pochon de meth')
+	('meth_pooch', 'Pochon de meth'),
+	('opium', 'Opium'),
+	('opium_pooch', 'Pochon de opium')
 ;
