@@ -9,6 +9,9 @@ Locales['fr'] = {
     ['press_collect_weed'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter la weed',
     ['press_process_weed'] = 'appuyez sur ~INPUT_CONTEXT~ pour traiter la weed',
     ['press_sell_weed'] = 'appuyez sur ~INPUT_CONTEXT~ pour vendre la weed',
+	['press_collect_opium'] = "appuyez sur ~INPUT_CONTEXT~ pour récolter l'opium",
+    ['press_process_opium'] = "appuyez sur ~INPUT_CONTEXT~ pour traiter l'opium",
+    ['press_sell_opium'] = "appuyez sur ~INPUT_CONTEXT~ pour vendre l'opium",
     ['act_imp_police'] = 'action ~r~impossible~s~, ~b~policiers~s~: ',
     ['inv_full_coke'] = 'vous ne pouvez plus ramasser de Cocaine, votre inventaire est ~r~plein~s~',
     ['pickup_in_prog'] = '~y~Ramassage en cours~s~...',
@@ -25,5 +28,9 @@ Locales['fr'] = {
     ['not_enough_weed'] = 'vous n\'avez pas assez de weed à ~r~conditionner~s~',
     ['sold_one_weed'] = 'vous avez vendu ~g~x1 Pochon de weed~s~',
     ['used_one_weed'] = 'Vous avez utilisé 1 Pochon de ~b~weed',
+	['inv_full_opium'] = 'vous ne pouvez plus ramasser de weed, votre inventaire est ~r~plein~s~',
+    ['not_enough_opium'] = 'vous n\'avez pas assez de opium à ~r~conditionner~s~',
+    ['sold_one_opium'] = 'vous avez vendu ~g~x1 Pochon de opium~s~',
+    ['used_one_opium'] = 'Vous avez utilisé 1 Pochon de ~b~opium',
 
 }

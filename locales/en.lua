@@ -9,6 +9,9 @@ Locales['en'] = {
     ['press_collect_weed'] = 'press ~INPUT_CONTEXT~ to collect weed',
     ['press_process_weed'] = 'press ~INPUT_CONTEXT~ to process weed',
     ['press_sell_weed'] = 'press ~INPUT_CONTEXT~ to sell weed',
+	['press_collect_opium'] = 'press ~INPUT_CONTEXT~ to collect opium',
+    ['press_process_opium'] = 'press ~INPUT_CONTEXT~ to process opium',
+    ['press_sell_opium'] = 'press ~INPUT_CONTEXT~ to sell opium',
     ['act_imp_police'] = 'action ~r~impossible~s~, ~b~police~s~: ',
     ['inv_full_coke'] = 'you can no longer collect Cocaine, your inventory is ~r~full~s~',
     ['pickup_in_prog'] = '~y~Pickup in progress~s~...',
@@ -25,5 +28,9 @@ Locales['en'] = {
     ['not_enough_weed'] = 'you do not have enough Weed to ~r~pack~s~',
     ['sold_one_weed'] = 'you\'ve sold ~g~x1 Weed Pouch~s~',
     ['used_one_weed'] = 'you used 1 pouch of ~b~weed',
+	['inv_full_opium'] = 'you can no longer collect opium, your inventory is ~r~full~s~',
+    ['not_enough_opium'] = 'you do not have enough opium to ~r~pack~s~',
+    ['sold_one_opium'] = 'you\'ve sold ~g~x1 opium Pouch~s~',
+    ['used_one_opium'] = 'you used 1 pouch of ~b~opium',
 
 }
