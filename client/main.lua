@@ -999,6 +999,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 end)
 
 AddEventHandler('esx_policejob:hasExitedMarker', function(station, part, partNum)
+	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
