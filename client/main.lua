@@ -316,6 +316,10 @@ AddEventHandler('esx_skin:getLastSkin', function(cb)
 	cb(LastSkin)
 end)
 
+AddEventHandler('esx_skin:setLastSkin', function(skin)
+	LastSkin = skin
+end)
+
 RegisterNetEvent('esx_skin:openMenu')
 AddEventHandler('esx_skin:openMenu', function(submitCb, cancelCb)
 	OpenMenu(submitCb, cancelCb, nil)
