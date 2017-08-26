@@ -346,6 +346,27 @@ AddEventHandler('esx:spawnPed', function(model)
 
 end)
 
+RegisterNetEvent('esx:deleteVehicle')
+AddEventHandler('esx:deleteVehicle', function()
+
+	local playerPed = GetPlayerPed(-1)
+	local coords    = GetEntityCoords(playerPed)
+
+	if IsPedInAnyVehicle(playerPed,  false) then
+		
+		local vehicle = GetVehiclePedIsIn(playerPed,  false)
+		ESX.Game.DeleteVehicle(vehicle)
+	
+	elseif IsAnyVehicleNearPoint(coords.x,  coords.y,  coords.z,  5.0) then
+		
+		local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
+		ESX.Game.DeleteVehicle(vehicle)
+	
+	end
+
+end)
+
+
 -- Pause menu disable HUD display
 Citizen.CreateThread(function()
   while true do
