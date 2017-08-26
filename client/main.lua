@@ -182,7 +182,9 @@ function OpenShopMenu()
 
 										local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
-										TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
+										if Config.EnableOwnedVehicles then
+											TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
+										end
 
 									end)
 
@@ -347,7 +349,11 @@ function OpenResellerMenu()
 					local model        = CurrentVehicleData.model
 
 					TriggerServerEvent('esx_vehicleshop:sellVehicle', model)
-					TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
+
+					if Config.EnableOwnedVehicles then
+						TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
+					end
+
 				end
 
 			end
@@ -381,7 +387,11 @@ function OpenResellerMenu()
 								local model        = CurrentVehicleData.model
 
 								TriggerServerEvent('esx_vehicleshop:rentVehicle', model, vehicleProps.plate, GetPlayerName(closestPlayer), CurrentVehicleData.price, amount, GetPlayerServerId(closestPlayer))
-								TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
+
+								if Config.EnableOwnedVehicles then
+									TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
+								end
+								
 								TriggerServerEvent('esx_vehicleshop:setVehicleForAllPlayers', vehicleProps, Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0)
 							end
 
