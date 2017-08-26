@@ -270,7 +270,7 @@ AddEventHandler('esx:spawnObject', function(model)
 end)
 
 RegisterNetEvent('esx:pickup')
-AddEventHandler('esx:pickup', function(id, label, coords)
+AddEventHandler('esx:pickup', function(id, label, player)
 
 	local ped     = GetPlayerPed(GetPlayerFromServerId(player))
 	local coords  = GetEntityCoords(ped)
