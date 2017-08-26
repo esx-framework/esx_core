@@ -107,7 +107,9 @@ function CalculateBankSavings(d, h, m)
 						local interests = math.floor(account.money / 100 * Config.BankSavingPercentage)
 						bankInterests   = bankInterests + interests
 
-						account.addMoney(interests)
+						table.insert(asyncTasks, function(cb)
+							account.addMoney(interests)
+						end)
 
 					end)
 				
