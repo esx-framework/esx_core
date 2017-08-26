@@ -4,6 +4,7 @@ description 'ESX RealestateAgentJob'
 
 server_scripts {
 	'@es_extended/locale.lua',
+	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
@@ -14,6 +15,7 @@ server_scripts {
 
 client_scripts {
 	'@es_extended/locale.lua',
+	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
