@@ -319,6 +319,33 @@ AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName)
 
 end)
 
+RegisterNetEvent('esx:spawnPed')
+AddEventHandler('esx:spawnPed', function(model)
+
+	model           = (tonumber(model) ~= nil and tonumber(model) or GetHashKey(model))
+	local playerPed = GetPlayerPed(-1)
+	local coords    = GetEntityCoords(playerPed)
+	local forward   = GetEntityForwardVector(playerPed)
+	local x, y, z   = table.unpack(coords + forward * 1.0)
+
+	Citizen.CreateThread(function()
+
+		print(model)
+
+		RequestModel(model)
+
+		while not HasModelLoaded(model)  do
+		  Citizen.Wait(0)
+		end
+
+		print('LOADED')
+
+		CreatePed(5,  model,  x,  y,  z,  0.0,  true,  false)
+
+	end)
+
+end)
+
 -- Pause menu disable HUD display
 Citizen.CreateThread(function()
   while true do
