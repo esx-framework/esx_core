@@ -209,6 +209,8 @@
 
 						if(pos > 0)
 							ESX_MENU.pos[focused.namespace][focused.name]--;
+						else
+							ESX_MENU.pos[focused.namespace][focused.name] = menu.elements.length - 1;
 
 						let elem = menu.elements[ESX_MENU.pos[focused.namespace][focused.name]];
 
@@ -237,6 +239,8 @@
 
 						if(pos < length - 1)
 							ESX_MENU.pos[focused.namespace][focused.name]++;
+						else
+							ESX_MENU.pos[focused.namespace][focused.name] = 0;
 
 						let elem = menu.elements[ESX_MENU.pos[focused.namespace][focused.name]];
 
