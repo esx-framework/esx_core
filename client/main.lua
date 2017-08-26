@@ -1028,7 +1028,7 @@ Citizen.CreateThread(function()
 
 	          if GetGameTimer() - NPCLastCancel > 5 * 60000 then
 	            StopNPCJob(true)
-	            -- NPCLastCancel = GetGameTimer()
+	            NPCLastCancel = GetGameTimer()
 	          else
 	            ESX.ShowNotification('Vous devez ~r~attendre~s~ 5 minutes')
 	          end
