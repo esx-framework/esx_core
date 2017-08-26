@@ -574,6 +574,7 @@ function OpenRoomMenu(property)
 							TriggerEvent('skinchanger:getSkin', function(skin)
 
 								TriggerEvent('skinchanger:loadClothes', skin, data.current.value)
+								TriggerEvent('esx_skin:setLastSkin', skin)
 
 								TriggerEvent('skinchanger:getSkin', function(skin)
 									TriggerServerEvent('esx_skin:save', skin)
