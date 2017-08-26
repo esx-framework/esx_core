@@ -233,6 +233,27 @@ AddEventHandler('esx_mecanojob:stopCraft3', function()
 	PlayersCrafting3[_source] = false
 end)
 
+---------------------------- NPC Job Earnings ------------------------------------------------------
+
+RegisterServerEvent('esx_mecanojob:onNPCJobMissionCompleted')
+AddEventHandler('esx_mecanojob:onNPCJobMissionCompleted', function()
+
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+  local total   = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max);
+
+  if xPlayer.job.grade >= 3 then
+  	total = total * 2
+  end
+
+  TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mecano', function(account)
+  	account.addMoney(total)
+  end)
+ 	
+ 	TriggerClientEvent("esx:showNotification", _source, "Votre société a ~g~gagné~s~ ~g~$".. total)
+
+end)
+
 ---------------------------- register usable item --------------------------------------------------
 ESX.RegisterUsableItem('blowpipe', function(source)
 

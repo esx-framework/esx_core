@@ -1,14 +1,34 @@
-ESX                             = nil
-local PlayerData                = {}
-local GUI                       = {}
-GUI.Time                        = 0
-local HasAlreadyEnteredMarker   = false
-local LastZone                  = nil
-local CurrentAction             = nil
-local CurrentActionMsg          = ''
-local CurrentActionData         = {}
-local OnJob                     = false
-local TargetCoords              = nil
+local Keys = {
+  ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
+  ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+  ["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
+  ["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
+  ["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
+  ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+  ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
+  ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
+  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
+}
+
+ESX                           = nil
+local PlayerData              = {}
+local GUI                     = {}
+GUI.Time                      = 0
+local HasAlreadyEnteredMarker = false
+local LastZone                = nil
+local CurrentAction           = nil
+local CurrentActionMsg        = ''
+local CurrentActionData       = {}
+local OnJob                   = false
+local TargetCoords            = nil
+local CurrentlyTowedVehicle   = nil
+local Blips                   = {}
+local NPCOnJob                = false
+local NPCTargetTowable         = nil
+local NPCTargetTowableZone     = nil
+local NPCHasSpawnedTowable    = false
+local NPCLastCancel           = GetGameTimer() - 5 * 60000
+local NPCHasBeenNextToTowable = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -16,6 +36,60 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 end)
+
+function SelectRandomTowable()
+
+  local index = GetRandomIntInRange(1,  #Config.Towables)
+
+  for k,v in pairs(Config.Zones) do
+    if v.Pos.x == Config.Towables[index].x and v.Pos.y == Config.Towables[index].y and v.Pos.z == Config.Towables[index].z then
+      return k
+    end
+  end
+
+end
+
+function StartNPCJob()
+
+  NPCOnJob = true
+
+  NPCTargetTowableZone = SelectRandomTowable()
+  local zone       = Config.Zones[NPCTargetTowableZone]
+
+  Blips['NPCTargetTowableZone'] = AddBlipForCoord(zone.Pos.x,  zone.Pos.y,  zone.Pos.z)
+  SetBlipRoute(Blips['NPCTargetTowableZone'], true)
+
+  ESX.ShowNotification('~y~Conduisez~s~ jusqu\'à l\'endroit indiqué')
+end
+
+function StopNPCJob(cancel)
+
+  if Blips['NPCTargetTowableZone'] ~= nil then
+    RemoveBlip(Blips['NPCTargetTowableZone'])
+    Blips['NPCTargetTowableZone'] = nil
+  end
+
+  if Blips['NPCDelivery'] ~= nil then
+    RemoveBlip(Blips['NPCDelivery'])
+    Blips['NPCDelivery'] = nil
+  end
+
+
+  Config.Zones.VehicleDelivery.Type = -1
+
+  NPCOnJob                = false
+  NPCTargetTowable        = nil
+  NPCTargetTowableZone    = nil
+  NPCHasSpawnedTowable    = false
+	NPCHasBeenNextToTowable = false
+
+  if cancel then
+    ESX.ShowNotification('Mission ~r~annulée~s~')
+  else
+    TriggerServerEvent('esx_mecanojob:onNPCJobCompleted')
+  end
+
+end
 
 function OpenMecanoActionsMenu()
 
@@ -344,7 +418,7 @@ function OpenMobileMecanoActionsMenu()
 							SetVehicleDoorsLocked(vehicle, 1)
 							SetVehicleDoorsLockedForAllPlayers(vehicle, false)
 							ClearPedTasksImmediately(playerPed)
-							TriggerEvent('esx:showNotification', 'Véhicule ~g~déverouillé')
+							ESX.ShowNotification('Véhicule ~g~déverouillé')
 						end)
 					end
 
@@ -376,7 +450,7 @@ function OpenMobileMecanoActionsMenu()
 							SetVehicleUndriveable(vehicle, false)
 							SetVehicleEngineOn(vehicle,  true,  true)
 							ClearPedTasksImmediately(playerPed)
-							TriggerEvent('esx:showNotification', 'Véhicule ~g~réparé')
+							ESX.ShowNotification('Véhicule ~g~réparé')
 						end)
 					end
 				end
@@ -403,7 +477,7 @@ function OpenMobileMecanoActionsMenu()
 							Citizen.Wait(10000)
 							SetVehicleDirtLevel(vehicle, 0)
 							ClearPedTasksImmediately(playerPed)
-							TriggerEvent('esx:showNotification', 'Véhicule ~g~néttoyé')
+							ESX.ShowNotification('Véhicule ~g~néttoyé')
 						end)
 					end
 				end
@@ -420,11 +494,11 @@ function OpenMobileMecanoActionsMenu()
 						local vehicle = GetVehiclePedIsIn( ped, false )
 
 						if ( GetPedInVehicleSeat( vehicle, -1 ) == ped ) then 
-							TriggerEvent('esx:showNotification', 'Vehicule ~r~mis en fourrière')
+							ESX.ShowNotification('Vehicule ~r~mis en fourrière')
 							SetEntityAsMissionEntity( vehicle, true, true )
 							deleteCar( vehicle )
 						else 
-							TriggerEvent('esx:showNotification', 'Vous devez être assis du ~r~côté conducteur!')
+							ESX.ShowNotification('Vous devez être assis du ~r~côté conducteur!')
 						end 
 					else
 						local playerPos = GetEntityCoords( ped, 1 )
@@ -432,11 +506,11 @@ function OpenMobileMecanoActionsMenu()
 						local vehicle = GetVehicleInDirection( playerPos, inFrontOfPlayer )
 
 						if ( DoesEntityExist( vehicle ) ) then
-							TriggerEvent('esx:showNotification', 'Vehicule ~r~mis en fourrière')
+							ESX.ShowNotification('Vehicule ~r~mis en fourrière')
 							SetEntityAsMissionEntity( vehicle, true, true )
 							deleteCar( vehicle )
 						else 
-							TriggerEvent('esx:showNotification', 'Vous devez être ~r~près d\'un véhicule~s~ pour le mettre en fourrière')
+							ESX.ShowNotification('Vous devez être ~r~près d\'un véhicule~s~ pour le mettre en fourrière')
 						end 
 					end 
 				end
@@ -456,28 +530,65 @@ function OpenMobileMecanoActionsMenu()
 					local coordB = GetOffsetFromEntityInWorldCoords(playerped, 0.0, 5.0, 0.0)
 					local targetVehicle = getVehicleInDirection(coordA, coordB)
 		
-					if currentlyTowedVehicle == nil then
+					if CurrentlyTowedVehicle == nil then
 						if targetVehicle ~= 0 then
 							if not IsPedInAnyVehicle(playerped, true) then
 								if vehicle ~= targetVehicle then
 									AttachEntityToEntity(targetVehicle, vehicle, 20, -0.5, -5.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
-									currentlyTowedVehicle = targetVehicle
-									TriggerEvent('esx:showNotification', 'Vehicule ~b~attaché~s~ avec succès!')
+									CurrentlyTowedVehicle = targetVehicle
+									ESX.ShowNotification('Vehicule ~b~attaché~s~ avec succès!')
+								
+									if NPCOnJob then
+
+										if NPCTargetTowable == targetVehicle then
+											ESX.ShowNotification('Veuillez déposer le véhicule à la concession')
+
+				              Config.Zones.VehicleDelivery.Type = 1
+
+				              if Blips['NPCTargetTowableZone'] ~= nil then
+				                RemoveBlip(Blips['NPCTargetTowableZone'])
+				                Blips['NPCTargetTowableZone'] = nil
+				              end
+
+				              Blips['NPCDelivery'] = AddBlipForCoord(Config.Zones.VehicleDelivery.Pos.x,  Config.Zones.VehicleDelivery.Pos.y,  Config.Zones.VehicleDelivery.Pos.z)
+				              
+				              SetBlipRoute(Blips['NPCDelivery'], true)
+
+										end
+
+									end
+
 								else
-									TriggerEvent('esx:showNotification', '~r~Impossible~s~ d\'attacher votre propre dépanneuse')
+									ESX.ShowNotification('~r~Impossible~s~ d\'attacher votre propre dépanneuse')
 								end
 							end
 						else
-							TriggerEvent('esx:showNotification', 'Il n\'y a ~r~pas de véhicule~s~ à attacher')
+							ESX.ShowNotification('Il n\'y a ~r~pas de véhicule~s~ à attacher')
 						end
 					else
-						AttachEntityToEntity(currentlyTowedVehicle, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
-						DetachEntity(currentlyTowedVehicle, true, true)
-						currentlyTowedVehicle = nil
-						TriggerEvent('esx:showNotification', 'Vehicule ~b~détattaché~s~ avec succès!')
+
+						AttachEntityToEntity(CurrentlyTowedVehicle, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
+						DetachEntity(CurrentlyTowedVehicle, true, true)
+						
+						if NPCOnJob then
+
+							if CurrentlyTowedVehicle == NPCTargetTowable then
+								ESX.Game.DeleteVehicle(NPCTargetTowable)
+								TriggerServerEvent('esx_mecanojob:onNPCJobMissionCompleted')
+								StopNPCJob()
+
+							else
+								ESX.ShowNotification('Ce n\'est pas le bon véhicule')
+							end
+
+						end
+
+						CurrentlyTowedVehicle = nil
+
+						ESX.ShowNotification('Vehicule ~b~détattaché~s~ avec succès!')
 					end
 				else
-					TriggerEvent('esx:showNotification', '~r~Impossible! ~s~Vous devez avoir un ~b~Flatbed ~s~pour ça')
+					ESX.ShowNotification('~r~Impossible! ~s~Vous devez avoir un ~b~Flatbed ~s~pour ça')
 				end
 			end
 
@@ -562,9 +673,9 @@ AddEventHandler('esx_mecanojob:onHijack', function()
 					SetVehicleDoorsLocked(vehicle, 1)
 					SetVehicleDoorsLockedForAllPlayers(vehicle, false)
 					ClearPedTasksImmediately(playerPed)
-					TriggerEvent('esx:showNotification', '~g~Véhicule déverouillé')
+					ESX.ShowNotification('~g~Véhicule déverouillé')
 				else
-					TriggerEvent('esx:showNotification', '~r~Crochetage raté')
+					ESX.ShowNotification('~r~Crochetage raté')
 					ClearPedTasksImmediately(playerPed)
 				end
 			end)
@@ -595,7 +706,7 @@ AddEventHandler('esx_mecanojob:onCarokit', function()
 				SetVehicleFixed(vehicle)
 				SetVehicleDeformationFixed(vehicle)
 				ClearPedTasksImmediately(playerPed)
-				TriggerEvent('esx:showNotification', '~g~Carosserie réparée')
+				ESX.ShowNotification('~g~Carosserie réparée')
 			end)
 		end
 	end
@@ -624,7 +735,7 @@ AddEventHandler('esx_mecanojob:onFixkit', function()
 				SetVehicleDeformationFixed(vehicle)
 				SetVehicleUndriveable(vehicle, false)
 				ClearPedTasksImmediately(playerPed)
-				TriggerEvent('esx:showNotification', '~g~Véhicule réparé')
+				ESX.ShowNotification('~g~Véhicule réparé')
 			end)
 		end
 	end
@@ -656,21 +767,29 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 AddEventHandler('esx_mecanojob:hasEnteredMarker', function(zone)
+	
+	if zone == NPCJobTargetTowable then
+
+	end
+
 	if zone == 'MecanoActions' then
 		CurrentAction     = 'mecano_actions_menu'
 		CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au menu.'
 		CurrentActionData = {}
 	end
+	
 	if zone == 'Garage' then
 		CurrentAction     = 'mecano_harvest_menu'
 		CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au menu de récolte.'
 		CurrentActionData = {}
 	end
+	
 	if zone == 'Craft' then
 		CurrentAction     = 'mecano_craft_menu'
 		CurrentActionMsg  = 'Appuyez sur ~INPUT_CONTEXT~ pour accéder au menu établi.'
 		CurrentActionData = {}
 	end
+	
 	if zone == 'VehicleDeleter' then
 		local playerPed = GetPlayerPed(-1)
 		if IsPedInAnyVehicle(playerPed,  false) then
@@ -679,6 +798,7 @@ AddEventHandler('esx_mecanojob:hasEnteredMarker', function(zone)
 			CurrentActionData = {}
 		end
 	end
+
 end)
 
 AddEventHandler('esx_mecanojob:hasExitedMarker', function(zone)
@@ -727,6 +847,46 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 		base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAA4BJREFUWIXtll9oU3cUx7/nJA02aSSlFouWMnXVB0ejU3wcRteHjv1puoc9rA978cUi2IqgRYWIZkMwrahUGfgkFMEZUdg6C+u21z1o3fbgqigVi7NzUtNcmsac40Npltz7S3rvUHzxQODec87vfD+/e0/O/QFv7Q0beV3QeXqmgV74/7H7fZJvuLwv8q/Xeux1gUrNBpN/nmtavdaqDqBK8VT2RDyV2VHmF1lvLERSBtCVynzYmcp+A9WqT9kcVKX4gHUehF0CEVY+1jYTTIwvt7YSIQnCTvsSUYz6gX5uDt7MP7KOKuQAgxmqQ+neUA+I1B1AiXi5X6ZAvKrabirmVYFwAMRT2RMg7F9SyKspvk73hfrtbkMPyIhA5FVqi0iBiEZMMQdAui/8E4GPv0oAJkpc6Q3+6goAAGpWBxNQmTLFmgL3jSJNgQdGv4pMts2EKm7ICJB/aG0xNdz74VEk13UYCx1/twPR8JjDT8wttyLZtkoAxSb8ZDCz0gdfKxWkFURf2v9qTYH7SK7rQIDn0P3nA0ehixvfwZwE0X9vBE/mW8piohhl1WH18UQBhYnre8N/L8b8xQvlx4ACbB4NnzaeRYDnKm0EALCMLXy84hwuTCXL/ExoB1E7qcK/8NCLIq5HcTT0i6u8TYbXUM1cAyyveVq8Xls7XhYrvY/4n3gC8C+dsmAzL1YUiyfWxvHzsy/w/dNd+KjhW2yvv/RfXr7x9QDcmo1he2RBiCCI1Q8jVj9szPNixVfgz+UiIGyDSrcoRu2J16d3I6e1VYvNSQjXpnucAcEPUOkGYZs/l4uUhowt/3kqu1UIv9n90fAY9jT3YBlbRvFTD4fw++wHjhiTRL/bG75t0jI2ITcHb5om4Xgmhv57xpGOg3d/NIqryOR7z+r+MC6qBJB/ZB2t9Om1D5lFm843G/3E3HI7Yh1xDRAfzLQr5EClBf/HBHK462TG2J0OABXeyWDPZ8VqxmBWYscpyghwtTd4EKpDTjCZdCNmzFM9k+4LHXIFACJN94Z6FiFEpKDQw9HndWsEuhnADVMhAUaYJBp9XrcGQKJ4qFE9k+6r2+MG3k5N8VQ22TVglbX2ZwOzX2VvNKr91zmY6S7N6zqZicVT2WNLyVSehESaBhxnOALfMeYX+K/S2yv7wmMAlvwyuR7FxQUyf0fgc/jztfkJr7XeGgC8BJJgWNV8ImT+AAAAAElFTkSuQmCC'
 	}
 	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
+end)
+
+-- Pop NPC mission vehicle when inside area
+Citizen.CreateThread(function()
+  while true do
+    
+    Wait(0)
+    
+    if NPCTargetTowableZone ~= nil and not NPCHasSpawnedTowable then
+
+      local coords = GetEntityCoords(GetPlayerPed(-1))
+      local zone   = Config.Zones[NPCTargetTowableZone]
+
+      if GetDistanceBetweenCoords(coords, zone.Pos.x, zone.Pos.y, zone.Pos.z, true) < Config.NPCSpawnDistance then
+
+        local model = Config.Vehicles[GetRandomIntInRange(1,  #Config.Vehicles)]
+
+        ESX.Game.SpawnVehicle(model, zone.Pos, 0, function(vehicle)
+        	NPCTargetTowable = vehicle
+        end)
+
+        NPCHasSpawnedTowable = true
+
+      end
+
+    end
+
+    if NPCTargetTowableZone ~= nil and NPCHasSpawnedTowable and not NPCHasBeenNextToTowable then
+
+      local coords = GetEntityCoords(GetPlayerPed(-1))
+      local zone   = Config.Zones[NPCTargetTowableZone]
+
+      if(GetDistanceBetweenCoords(coords, zone.Pos.x, zone.Pos.y, zone.Pos.z, true) < Config.NPCNextToDistance) then
+        ESX.ShowNotification('Veuillez ~y~remorquer~s~ le véhicule')
+        NPCHasBeenNextToTowable = true
+      end
+
+    end
+
+  end
 end)
 
 -- Create Blips
@@ -823,6 +983,7 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
+
         if CurrentAction ~= nil then
             SetTextComponentFormat('STRING')
             AddTextComponentString(CurrentActionMsg)
@@ -857,8 +1018,34 @@ Citizen.CreateThread(function()
             end
         end
 
-        if IsControlJustReleased(0, 167) and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
+        if IsControlJustReleased(0, Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
             OpenMobileMecanoActionsMenu()
         end
+
+	      if IsControlJustReleased(0, Keys['DELETE']) and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
+
+	        if NPCOnJob then
+
+	          if GetGameTimer() - NPCLastCancel > 5 * 60000 then
+	            StopNPCJob(true)
+	            -- NPCLastCancel = GetGameTimer()
+	          else
+	            ESX.ShowNotification('Vous devez ~r~attendre~s~ 5 minutes')
+	          end
+
+	        else
+
+	          local playerPed = GetPlayerPed(-1)
+
+	          if IsPedInAnyVehicle(playerPed,  false) and IsVehicleModel(GetVehiclePedIsIn(playerPed,  false), GetHashKey("flatbed")) then
+	            StartNPCJob()
+	          else
+	          	ESX.ShowNotification('Vous devez être en flatbed pour commencer la mission')
+	          end
+
+	        end
+
+	      end
+
     end
 end)
