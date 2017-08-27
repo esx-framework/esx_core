@@ -37,6 +37,7 @@ function ShowBillsMenu()
 			'default', GetCurrentResourceName(), 'billing',
 			{
 				title    = _U('invoices'),
+				align = 'top-left',
 				elements = elements
 			},
 			function(data, menu)
