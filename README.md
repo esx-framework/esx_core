@@ -17,10 +17,10 @@ Just take example on the files in the jobs folder.
 1. CD in your resources/[esx] folder
 2. Clone the repository
  ```
- git clone https://github.com/FXServer-ESX/fxserver-esx_jobs esx_drugs
+ git clone https://github.com/FXServer-ESX/fxserver-esx_jobs esx_jobs
  ```
 3. Import esx_jobs.sql into your database
 4. Add this into your server.cfg
 ```
-start esx_drugs
+start esx_jobs
 ```
