@@ -257,6 +257,10 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 			TriggerServerEvent('esx_garage:setParking', name, parking, vehicleProps)
 
+			if Config.EnableOwnedVehicles then
+				TriggerServerEvent('esx_garage:updateOwnedVehicle', vehicleProps)
+			end
+
 		end
 
 	end
