@@ -33,7 +33,7 @@ end
 
 function Async.parallelLimit(tasks, limit, cb)
 
-	if #tasks = 0 then
+	if #tasks == 0 then
 		cb({})
 	end
 
