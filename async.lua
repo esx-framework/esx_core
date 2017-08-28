@@ -34,7 +34,7 @@ end
 function Async.parallelLimit(tasks, limit, cb)
 
 	if #tasks = 0 then
-		cb(results)
+		cb({})
 	end
 
 	local remaining = #tasks
