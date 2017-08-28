@@ -33,6 +33,10 @@ end
 
 function Async.parallelLimit(tasks, limit, cb)
 
+	if #tasks = 0 then
+		cb(results)
+	end
+
 	local remaining = #tasks
 	local running   = 0
 	local queue     = {}
