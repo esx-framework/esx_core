@@ -11,4 +11,16 @@
 
 This addon is an easy way to have farming jobs on your server. 
 There is no player management. 
-Just take exemple on the files in the jobs folder.
+Just take example on the files in the jobs folder.
+
+[INSTALLATION]
+1. CD in your resources/[esx] folder
+2. Clone the repository
+ ```
+ git clone https://github.com/FXServer-ESX/fxserver-esx_jobs esx_jobs
+ ```
+3. Import esx_jobs.sql into your database
+4. Add this into your server.cfg
+```
+start esx_jobs
+```
