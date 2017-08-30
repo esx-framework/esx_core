@@ -15,6 +15,7 @@ RegisterNetEvent('esx_lscustom:installMod')
 AddEventHandler('esx_lscustom:installMod', function()
 	local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 	myCar = ESX.Game.GetVehicleProperties(vehicle)
+	TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
 end)
 
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
