@@ -74,7 +74,7 @@ function StartRespawnToHospitalMenuTimer()
 
 						ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
-							ESX.PlayerData.lastPosition = Config.Zones.HospitalInteriorInside1.Pos
+							ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 							TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 							RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
@@ -113,6 +113,7 @@ function StartRespawnTimer()
 
 				ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
+					ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 					TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 					RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
@@ -172,6 +173,7 @@ function RespawnTimer()
 						ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeathRemoveMoney', function()
 
 							TriggerServerEvent('esx_ambulancejob:removeAccountMoney', source)
+							ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 							TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 							RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
@@ -220,6 +222,7 @@ function RespawnTimer()
 
 					ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
+						ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 						TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 						RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
@@ -662,6 +665,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 			Citizen.Wait(0)
 		end
 
+		ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 		TriggerServerEvent('esx:updateLastPosition', {
 			x = coords.x,
 			y = coords.y,

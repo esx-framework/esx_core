@@ -7,11 +7,11 @@ Config.RemoveWeaponsAfterRPDeath = true
 Config.RemoveCashAfterRPDeath    = true
 Config.RemoveItemsAfterRPDeath   = true
 Config.EnablePlayerManagement    = false
-Config.ShowDeathTimer			 = false
-Config.EarlyRespawn				 = false
-Config.EarlyRespawnFine			 = false
-Config.EarlyRespawnFineAmount	 = 500
-Config.Locale                   = 'fr'
+Config.ShowDeathTimer			       = true
+Config.EarlyRespawn				       = true
+Config.EarlyRespawnFine			     = true
+Config.EarlyRespawnFineAmount	   = 500
+Config.Locale                    = 'fr'
 
 Config.Zones = {
 
