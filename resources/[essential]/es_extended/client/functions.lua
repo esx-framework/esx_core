@@ -55,6 +55,10 @@ ESX.GetPlayerData = function()
 	return ESX.PlayerData
 end
 
+ESX.SetPlayerData = function(key, val)
+	ESX.PlayerData[key] = val
+end
+
 ESX.ShowNotification = function(msg)
 	SetNotificationTextEntry('STRING')
 	AddTextComponentString(msg)
