@@ -5,6 +5,7 @@ for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX                           = {}
+ESX.PlayerData                = {}
 ESX.CurrentRequestId          = 0
 ESX.ServerCallbacks           = {}
 ESX.TimeoutCallbacks          = {}
@@ -996,210 +997,206 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size)
 end
 
 ESX.ShowInventory = function()
-	
-	ESX.TriggerServerCallback('esx:getPlayerData', function(data)
 
-		local playerPed = GetPlayerPed(-1)
-		local elements  = {}
+	local playerPed = GetPlayerPed(-1)
+	local elements  = {}
 
+	table.insert(elements, {
+		label     = '[Cash] $' .. ESX.PlayerData.money,
+		count     = ESX.PlayerData.money,
+		type      = 'item_money',
+		value     = 'money',
+		usable    = false,
+		rare      = false,
+		canRemove = true
+	})
+
+	for i=1, #ESX.PlayerData.accounts, 1 do
 		table.insert(elements, {
-			label     = '[Cash] $' .. data.money,
-			count     = data.money,
-			type      = 'item_money',
-			value     = 'money',
+			label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
+			count     = ESX.PlayerData.accounts[i].money,
+			type      = 'item_account',
+			value     =  ESX.PlayerData.accounts[i].name,
 			usable    = false,
 			rare      = false,
 			canRemove = true
 		})
+	end
 
-		for i=1, #data.accounts, 1 do
+	for i=1, #ESX.PlayerData.inventory, 1 do
+
+		if ESX.PlayerData.inventory[i].count > 0 then
 			table.insert(elements, {
-				label     = '[' .. data.accounts[i].label .. '] $' .. data.accounts[i].money,
-				count     = data.accounts[i].money,
-				type      = 'item_account',
-				value     =  data.accounts[i].name,
+				label     = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
+				count     = ESX.PlayerData.inventory[i].count,
+				type      = 'item_standard',
+				value     = ESX.PlayerData.inventory[i].name,
+				usable    = ESX.PlayerData.inventory[i].usable,
+				rare      = ESX.PlayerData.inventory[i].rare,
+				canRemove = ESX.PlayerData.inventory[i].canRemove,
+			})
+		end
+
+	end
+
+	for i=1, #Config.Weapons, 1 do
+		
+		local weaponHash = GetHashKey(Config.Weapons[i].name)
+
+		if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
+
+			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+			
+			table.insert(elements, {
+				label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
+				count     = 1,
+				type      = 'item_weapon',
+				value     = Config.Weapons[i].name,
 				usable    = false,
 				rare      = false,
 				canRemove = true
 			})
+
 		end
+	end
 
-		for i=1, #data.inventory, 1 do
+	ESX.UI.Menu.CloseAll()
 
-			if data.inventory[i].count > 0 then
-				table.insert(elements, {
-					label     = data.inventory[i].label .. ' x' .. data.inventory[i].count,
-					count     = data.inventory[i].count,
-					type      = 'item_standard',
-					value     = data.inventory[i].name,
-					usable    = data.inventory[i].usable,
-					rare      = data.inventory[i].rare,
-					canRemove = data.inventory[i].canRemove,
-				})
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'inventory',
+		{
+			title    = _U('inventory'),
+			align    = 'bottom-right',
+			elements = elements,
+		},
+		function(data, menu)
+
+			menu.close()
+
+			local elements = {}
+
+			if data.current.usable then
+				table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
 			end
 
-		end
-
-		for i=1, #Config.Weapons, 1 do
-			
-			local weaponHash = GetHashKey(Config.Weapons[i].name)
-
-			if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
-
-				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-				
-				table.insert(elements, {
-					label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
-					count     = 1,
-					type      = 'item_weapon',
-					value     = Config.Weapons[i].name,
-					usable    = false,
-					rare      = false,
-					canRemove = true
-				})
-
+			if data.current.canRemove then
+				table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+				table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
 			end
-		end
 
-		ESX.UI.Menu.CloseAll()
+			table.insert(elements, {label = _U('return'), action = 'return'})
 
-		ESX.UI.Menu.Open(
-			'default', GetCurrentResourceName(), 'inventory',
-			{
-				title    = _U('inventory'),
-				align    = 'bottom-right',
-				elements = elements,
-			},
-			function(data, menu)
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'inventory_item',
+				{
+					title    = _U('inventory'),
+					align    = 'bottom-right',
+					elements = elements,
+				},
+				function(data, menu)
 
-				menu.close()
+					local item = data.current.value
+					local type = data.current.type
 
-				local elements = {}
+					if data.current.action == 'give' then
 
-				if data.current.usable then
-					table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
-				end
+						if type == 'item_weapon' then
 
-				if data.current.canRemove then
-					table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
-					table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
-				end
+							local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-				table.insert(elements, {label = _U('return'), action = 'return'})
+							if closestPlayer == -1 or closestDistance > 3.0 then
+								ESX.ShowNotification(_U('players_nearby'))
+							else
+								TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 1)
+							end
 
-				ESX.UI.Menu.Open(
-					'default', GetCurrentResourceName(), 'inventory_item',
-					{
-						title    = _U('inventory'),
-						align    = 'bottom-right',
-						elements = elements,
-					},
-					function(data, menu)
+						else
 
-						local item = data.current.value
-						local type = data.current.type
+							ESX.UI.Menu.Open(
+								'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
+								{
+									title = _U('amount')
+								},
+								function(data2, menu2)
 
-						if data.current.action == 'give' then
+									local quantity                       = tonumber(data2.value)
+									local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-							if type == 'item_weapon' then
+									if closestPlayer == -1 or closestDistance > 3.0 then
+										ESX.ShowNotification(_U('players_nearby'))
+									else
+										TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
+									end
 
-								local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+									menu2.close()
+									menu.close()
 
-								if closestPlayer == -1 or closestDistance > 3.0 then
-									ESX.ShowNotification(_U('players_nearby'))
-								else
-									TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 1)
+								end,
+								function(data2, menu2)
+									menu2.close()
 								end
+							)
 
-							else
-
-								ESX.UI.Menu.Open(
-									'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-									{
-										title = _U('amount')
-									},
-									function(data2, menu2)
-
-										local quantity                       = tonumber(data2.value)
-										local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
-										if closestPlayer == -1 or closestDistance > 3.0 then
-											ESX.ShowNotification(_U('players_nearby'))
-										else
-											TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
-										end
-
-										menu2.close()
-										menu.close()
-
-									end,
-									function(data2, menu2)
-										menu2.close()
-									end
-								)
-
-							end
-
-						elseif data.current.action == 'remove' then
-
-							if type == 'item_weapon' then
-							
-								TriggerServerEvent('esx:removeInventoryItem', type, item, 1)
-								menu.close()
-								
-							else
-
-								ESX.UI.Menu.Open(
-									'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
-									{
-										title = _U('amount')
-									},
-									function(data2, menu2)
-
-										local quantity = tonumber(data2.value)
-
-										if quantity == nil then
-											ESX.ShowNotification(_U('amount_invalid'))
-										else
-											TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
-										end
-
-										menu2.close()
-										menu.close()
-										
-									end,
-									function(data2, menu2)
-										menu2.close()
-									end
-								)
-
-							end
-
-						elseif data.current.action == 'use' then
-
-							TriggerServerEvent('esx:useItem', data.current.value)
-
-						elseif data.current.action == 'return' then
-							
-							ESX.UI.Menu.CloseAll()
-							ESX.ShowInventory()
-						
 						end
+
+					elseif data.current.action == 'remove' then
+
+						if type == 'item_weapon' then
 						
-					end,
-					function(data, menu)
+							TriggerServerEvent('esx:removeInventoryItem', type, item, 1)
+							menu.close()
+							
+						else
+
+							ESX.UI.Menu.Open(
+								'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
+								{
+									title = _U('amount')
+								},
+								function(data2, menu2)
+
+									local quantity = tonumber(data2.value)
+
+									if quantity == nil then
+										ESX.ShowNotification(_U('amount_invalid'))
+									else
+										TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+									end
+
+									menu2.close()
+									menu.close()
+									
+								end,
+								function(data2, menu2)
+									menu2.close()
+								end
+							)
+
+						end
+
+					elseif data.current.action == 'use' then
+
+						TriggerServerEvent('esx:useItem', data.current.value)
+
+					elseif data.current.action == 'return' then
+						
 						ESX.UI.Menu.CloseAll()
 						ESX.ShowInventory()
+					
 					end
-				)
+					
+				end,
+				function(data, menu)
+					ESX.UI.Menu.CloseAll()
+					ESX.ShowInventory()
+				end
+			)
 
-			end,
-			function(data, menu)
-				menu.close()
-			end
-		)
-
-	end)
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)
 
 end
 

@@ -3,6 +3,7 @@ ESX.Players              = {}
 ESX.UsableItemsCallbacks = {}
 ESX.Items                = {}
 ESX.ServerCallbacks      = {}
+ESX.TimeoutCallbacks     = {}
 ESX.LastPlayerData       = {}
 ESX.Pickups              = {}
 ESX.PickupId             = 0
@@ -73,4 +74,28 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
 		TriggerClientEvent('esx:serverCallback', _source, requestId, ...)
 	end, ...)
 
+end)
+
+-- SetTimeout
+CreateThread(function()
+	while true do
+
+		Wait(0)
+
+		local currTime = os.clock() * 1000
+
+		for i=1, #ESX.TimeoutCallbacks, 1 do
+
+			if ESX.TimeoutCallbacks[i] ~= nil then
+
+				if currTime >= ESX.TimeoutCallbacks[i].time then
+					ESX.TimeoutCallbacks[i].cb()
+					ESX.TimeoutCallbacks[i] = nil
+				end
+
+			end
+
+		end
+
+	end
 end)
