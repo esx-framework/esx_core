@@ -74,6 +74,7 @@ function StartRespawnToHospitalMenuTimer()
 
 						ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
+							ESX.PlayerData.lastPosition = Config.Zones.HospitalInteriorInside1.Pos
 							TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
 							RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
