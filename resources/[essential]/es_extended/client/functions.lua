@@ -617,15 +617,51 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 	return vehiclesInArea
 end
 
-ESX.Game.GetPeds = function()
-
-	local peds = {}
+ESX.Game.GetPeds = function(ignoreList)
+	
+	local ignoreList = ignoreList or {}
+	local peds       = {}
 
 	for ped in EnumeratePeds() do
-		table.insert(peds, ped)
+		
+		local found = false
+
+		for j=1, #ignoreList, 1 do
+			if ignoreList[j] == ped then
+				found = true
+			end
+		end
+
+		if not found then
+			table.insert(peds, ped)
+		end
+
 	end
 
 	return peds
+
+end
+
+ESX.Game.GetClosestPed = function(coords, ignoreList)
+
+	local ignoreList      = ignoreList or {}
+	local peds            = ESX.Game.GetPeds(ignoreList)
+	local closestDistance = -1
+	local closestPed      = -1
+
+	for i=1, #peds, 1 do
+		
+		local pedCoords = GetEntityCoords(peds[i])
+		local distance  = GetDistanceBetweenCoords(pedCoords.x, pedCoords.y, pedCoords.z, coords.x, coords.y, coords.z, true)
+		
+		if closestDistance == -1 or closestDistance > distance then
+			closestPed      = peds[i]
+			closestDistance = distance
+		end
+
+	end
+	
+	return closestPed, closestDistance
 
 end
 
