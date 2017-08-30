@@ -47,6 +47,10 @@ ESX.ClearTimeout = function(i)
 	ESX.TimeoutCallbacks[i] = nil
 end
 
+ESX.IsPlayerLoaded = function()
+	return ESX.PlayerLoaded
+end
+
 ESX.ShowNotification = function(msg)
 	SetNotificationTextEntry('STRING')
 	AddTextComponentString(msg)
