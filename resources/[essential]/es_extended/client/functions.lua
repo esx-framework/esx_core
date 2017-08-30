@@ -6,6 +6,7 @@ for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX                           = {}
 ESX.PlayerData                = {}
+ESX.PlayerLoaded              = false
 ESX.CurrentRequestId          = 0
 ESX.ServerCallbacks           = {}
 ESX.TimeoutCallbacks          = {}

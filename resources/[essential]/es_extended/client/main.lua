@@ -12,7 +12,6 @@ local Keys = {
 
 local GUI           = {}
 GUI.Time            = 0
-local PlayerLoaded  = false
 local LoadoutLoaded = false
 local IsPaused      = false
 local LastLoadout   = {}
@@ -21,8 +20,8 @@ local Pickups       = {}
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 
-	PlayerLoaded   = true
-	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded  = true
+	ESX.PlayerData    = xPlayer
 
 	for i=1, #xPlayer.accounts, 1 do
 
@@ -60,7 +59,7 @@ AddEventHandler('playerSpawned', function()
 
 	Citizen.CreateThread(function()
 
-		while not PlayerLoaded do
+		while not ESX.PlayerLoaded do
 			Citizen.Wait(0)
 		end
 
@@ -89,7 +88,7 @@ end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
 	
-	while not PlayerLoaded do
+	while not ESX.PlayerLoaded do
 		Citizen.Wait(0)
 	end
 	
