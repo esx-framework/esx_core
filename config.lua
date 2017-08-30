@@ -418,37 +418,37 @@ Config.Menus = {
 	},
 	modEngine = {
 		label = _U('engine'),
-		parent = 'modEngine',
+		parent = 'upgrades',
 		modType = 11,
 		price = 500
 	},
 	modBrakes = {
 		label = _U('brakes'),
-		parent = 'modBrakes',
+		parent = 'upgrades',
 		modType = 12,
 		price = 500
 	},
 	modTransmission = {
 		label = _U('transmission'),
-		parent = 'modTransmission',
+		parent = 'upgrades',
 		modType = 13,
 		price = 500
 	},
 	modSuspension = {
 		label = _U('suspension'),
-		parent = 'modSuspension',
+		parent = 'upgrades',
 		modType = 15,
 		price = 500
 	},
 	modArmor = {
 		label = _U('armor'),
-		parent = 'modArmor',
+		parent = 'upgrades',
 		modType = 16,
 		price = 500
 	},
 	modTurbo = {
 		label = _U('turbo'),
-		parent = 'modTurbo',
+		parent = 'upgrades',
 		modType = 18,
 		price = 500
 	},
@@ -621,51 +621,61 @@ Config.Menus = {
 	},
 	modFrontBumper = {
 		label = _U('frontbumper'),
+		parent = 'bodyparts',
 		modType = 1,
 		price = 500
 	},
 	modRearBumper = {
 		label = _U('rearbumper'),
+		parent = 'bodyparts',
 		modType = 2,
 		price = 500
 	},
 	modSideSkirt = {
 		label = _U('sideskirt'),
+		parent = 'bodyparts',
 		modType = 3,
 		price = 500
 	},
 	modExhaust = {
 		label = _U('exhaust'),
+		parent = 'bodyparts',
 		modType = 4,
 		price = 500
 	},
 	modFrame = {
 		label = _U('cage'),
+		parent = 'bodyparts',
 		modType = 5,
 		price = 500
 	},
 	modGrille = {
 		label = _U('grille'),
+		parent = 'bodyparts',
 		modType = 6,
 		price = 500
 	},
 	modHood = {
 		label = _U('hood'),
+		parent = 'bodyparts',
 		modType = 7,
 		price = 500
 	},
 	modFender = {
 		label = _U('leftfender'),
+		parent = 'bodyparts',
 		modType = 8,
 		price = 500
 	},
 	modRightFender = {
 		label = _U('rightfender'),
+		parent = 'bodyparts',
 		modType = 9,
 		price = 500
 	},
 	modRoof = {
 		label = _U('roof'),
+		parent = 'bodyparts',
 		modType = 10,
 		price = 500
 	},

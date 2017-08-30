@@ -110,8 +110,7 @@ function GetAction(data)
 	local vehicle = GetVehiclePedIsIn(playerPed, false)
 	local currentMods = ESX.Game.GetVehicleProperties(vehicle)
 
-	for k,v in pairs(Config
-		.Menus) do
+	for k,v in pairs(Config.Menus) do
 
 		if data.value == k then
 
@@ -123,6 +122,9 @@ function GetAction(data)
 
 				if v.modType == 22 then
 					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = false})
+				elseif v.modType == 'color1' or v.modType == 'color2' or v.modType == 'pearlescentColor' or v.modType == 'wheelColor' then
+					local num = myCar[v.modType]
+					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = num})
 				else
 					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = -1})
 				end
