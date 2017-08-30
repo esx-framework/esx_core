@@ -51,6 +51,10 @@ ESX.IsPlayerLoaded = function()
 	return ESX.PlayerLoaded
 end
 
+ESX.GetPlayerData = function()
+	return ESX.PlayerData
+end
+
 ESX.ShowNotification = function(msg)
 	SetNotificationTextEntry('STRING')
 	AddTextComponentString(msg)
