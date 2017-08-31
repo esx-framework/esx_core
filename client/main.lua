@@ -956,7 +956,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 		local helicopters = Config.PoliceStations[station].Helicopters
 		local vehicle     = GetClosestVehicle(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-		if DoesEntityExist(vehicle) then
+		if not DoesEntityExist(vehicle) then
 
 			ESX.Game.SpawnVehicle('polmav', {
 				x = helicopters[partNum].SpawnPoint.x, 
