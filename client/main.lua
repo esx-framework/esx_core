@@ -669,8 +669,8 @@ AddEventHandler('esx_ambulancejob:revive', function()
 			x = coords.x,
 			y = coords.y,
 			z = coords.z
-		)
-		
+		})
+
 		TriggerServerEvent('esx:updateLastPosition', {
 			x = coords.x,
 			y = coords.y,
