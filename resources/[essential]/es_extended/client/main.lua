@@ -14,6 +14,7 @@ local GUI           = {}
 GUI.Time            = 0
 local LoadoutLoaded = false
 local IsPaused      = false
+local PlayerSpawned = false
 local LastLoadout   = {}
 local Pickups       = {}
 
@@ -77,6 +78,7 @@ AddEventHandler('playerSpawned', function()
 		end
 
 		LoadoutLoaded = true
+		PlayerSpawned = true
 
 	end)
 
@@ -352,15 +354,11 @@ AddEventHandler('esx:spawnPed', function(model)
 
 	Citizen.CreateThread(function()
 
-		print(model)
-
 		RequestModel(model)
 
 		while not HasModelLoaded(model)  do
 		  Citizen.Wait(0)
 		end
-
-		print('LOADED')
 
 		CreatePed(5,  model,  x,  y,  z,  0.0,  true,  false)
 
@@ -551,11 +549,12 @@ end)
 
 -- Last position
 Citizen.CreateThread(function()
+	
 	while true do
 
 		Citizen.Wait(1000)
 
-		if ESX ~= nil and ESX.PlayerLoaded then
+		if ESX ~= nil and ESX.PlayerLoaded and PlayerSpawned then
 
 			local playerPed = GetPlayerPed(-1)
 			local coords    = GetEntityCoords(playerPed)
@@ -567,4 +566,20 @@ Citizen.CreateThread(function()
 		end
 
 	end
+
+end)
+
+Citizen.CreateThread(function()
+
+	while true do
+
+		Citizen.Wait(0)
+
+		local playerPed = GetPlayerPed(-1)
+
+		if IsEntityDead(playerPed) and PlayerSpawned then
+			PlayerSpawned = false
+		end
+	end
+
 end)
