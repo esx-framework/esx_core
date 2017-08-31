@@ -665,7 +665,12 @@ AddEventHandler('esx_ambulancejob:revive', function()
 			Citizen.Wait(0)
 		end
 
-		ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+		ESX.SetPlayerData('lastPosition', {
+			x = coords.x,
+			y = coords.y,
+			z = coords.z
+		)
+		
 		TriggerServerEvent('esx:updateLastPosition', {
 			x = coords.x,
 			y = coords.y,
