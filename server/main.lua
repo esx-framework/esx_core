@@ -7,6 +7,8 @@ AddEventHandler('esx_ambulancejob:revive', function(target)
 	TriggerClientEvent('esx_ambulancejob:revive', target)
 end)
 
+TriggerEvent('esx_phone:registerNumber', 'ambulance', _('alert_ambulance'), true, true)
+
 ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(source, cb)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -71,26 +73,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:getBankMoney', function(source, cb)
     local money = xPlayer.getAccount('bank').money
 
     cb(money)
-end)
-
-TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-
-	local xPlayer  = ESX.GetPlayerFromId(source)
-	local xPlayers = ESX.GetPlayers()
-
-	if phoneNumber == 'ambulance' then
-		for i=1, #xPlayers, 1 do
-
-			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-
-			if xPlayer2.job.name == 'ambulance' then
-				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _U('alert_ambulance'), requestId)
-				end)
-			end
-		end
-	end
-
 end)
 
 TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
