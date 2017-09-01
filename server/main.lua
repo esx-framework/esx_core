@@ -4,6 +4,8 @@ local Vehicles   = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+TriggerEvent('esx_phone:registerNumber', 'cardealer', 'Client concession', false, false)
+
 function RemoveOwnedVehicle(plate)
 
 	MySQL.Async.fetchAll(
@@ -392,22 +394,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 			end
 		end
 	)
-
-end)
-
-TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-
-	local xPlayer  = ESX.GetPlayerFromId(source)
-	local xPlayers = ESX.GetPlayers()
-
-	if phoneNumber == 'cardealer' then
-		for i=1, #xPlayers, 1 do
-            local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-			if xPlayer2.job.name == 'cardealer' then
-				TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'player')
-			end
-		end
-	end
 
 end)
 
