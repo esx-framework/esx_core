@@ -1,6 +1,6 @@
 Locales['br'] = {
 
-	['new_message'] = '~b~Nova mensagem',
+	['new_message'] = '~b~Nova mensagem :~s~ %s',
 	['press_take_call'] = ' - Pressione ~INPUT_CONTEXT~ para aceitar a chamada',
 	['taken_call'] = ' recebeu uma chamada',
 	['gps_position'] = 'Destino inserido no GPS',

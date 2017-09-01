@@ -23,6 +23,7 @@ local CurrentAction              = nil
 local CurrentActionMsg           = ''
 local CurrentActionData          = {}
 local CurrentDispatchRequestId   = -1
+local PhoneNumberSources         = {}
 
 Citizen.CreateThread(function()
 
@@ -71,6 +72,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	PhoneData.contacts = {}
 
 	for i=1, #contacts, 1 do
+		contacts[i].online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number]))),
 		table.insert(PhoneData.contacts, contacts[i])
 	end
 
@@ -82,12 +84,12 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 end)
 
 RegisterNetEvent('esx_phone:addContact')
-AddEventHandler('esx_phone:addContact', function(name, phoneNumber, isOnline)
+AddEventHandler('esx_phone:addContact', function(name, phoneNumber)
 
 	table.insert(PhoneData.contacts, {
 		name   = name,
 		number = phoneNumber,
-		online = isOnline
+		online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number]))),
 	})
 	-- CALL HERE RELOADCONTACT
 	SendNUIMessage({
@@ -133,7 +135,7 @@ end)
 RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)
 
-	ESX.ShowNotification(_U('new_message'))
+	ESX.ShowNotification(_U('new_message', message))
 
 	SendNUIMessage({
 		newMessage  = true,
@@ -177,6 +179,16 @@ AddEventHandler('esx_phone:stopDispatch', function(dispatchRequestId, playerName
 
 end)
 
+RegisterNetEvent('esx_phone:setPhoneNumberSource')
+AddEventHandler('esx_phone:setPhoneNumberSource', function(phoneNumber, source)
+
+	if source == -1 then
+		PhoneNumberSources[phoneNumber] = nil
+	else
+		PhoneNumberSources[phoneNumber] = source
+	end
+end)
+
 RegisterNUICallback('setGPS', function(data)
 	SetNewWaypoint(data.x,  data.y)
 	ESX.ShowNotification(_U('gps_position'))
@@ -185,12 +197,18 @@ end)
 RegisterNUICallback('send', function(data)
 
 	local phoneNumber = data.number
+	local playerPed   = GetPlayerPed(-1)
+	local coords      = GetEntityCoords(playerPed)
 
 	if tonumber(phoneNumber) ~= nil then
 		phoneNumber = tonumber(phoneNumber)
 	end
 
-	TriggerServerEvent('esx_phone:send', phoneNumber, data.message, data.anonyme)
+	TriggerServerEvent('esx_phone:send', phoneNumber, data.message, data.anonyme, {
+		x = coords.x,
+		y = coords.y,
+		z = coords.z
+	})
 
 	SendNUIMessage({
 		showMessageEditor = false

@@ -36,6 +36,7 @@
 	
 	let showMain = function() {
 		$('.screen').removeClass('active');
+		$('.screen *').attr('disabled', 'disabled');
 	}
 	
 	let showRepertoire = function() {
@@ -58,6 +59,8 @@
 	
 	let showAddContact = function() {
 		$('#contact').addClass('active');
+		$('.screen *').attr('disabled', 'disabled');
+		$('.screen.active *').removeAttr('disabled');
 	}
 	
 	let hideAddContact = function() {
@@ -70,6 +73,8 @@
 		$('#writer').addClass('active');
 		$('#writer_number').val(cnum);
 		$('#writer .header-title').html(cname);
+		$('.screen *').attr('disabled', 'disabled');
+		$('.screen.active *').removeAttr('disabled');
 	}
 
 	let hideNewMessage = function() {		
@@ -145,6 +150,7 @@
 	let showPhone = function(phoneData){
 		reloadPhone(phoneData);
 		$('#phone').show();
+		showMain();
 		isPhoneShowed = true;
 	}
 
