@@ -318,6 +318,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.setJob = function(name, grade)
 		
+		local lastJob = json.decode(json.encode(self.job))
+
 		MySQL.Async.fetchAll(
 			'SELECT * FROM `jobs` WHERE `name` = @name',
 			{
@@ -353,6 +355,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 							self.job['skin_female'] = json.decode(result[1].skin_female)
 						end
 
+						TriggerEvent("esx:setJob", self.source, self.job, lastJob)
 						TriggerClientEvent("esx:setJob", self.source, self.job)
 
 					end
