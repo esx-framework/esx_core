@@ -2,6 +2,8 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+TriggerEvent('esx_phone:registerNumber', 'banker', _('bank_customer'), false, false)
+
 RegisterServerEvent('esx_bankerjob:customerDeposit')
 AddEventHandler('esx_bankerjob:customerDeposit', function(target, amount)
 
@@ -53,24 +55,6 @@ ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function(source, cb)
 
 	cb(customers)
 
-end)
-
-TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-
-	local xPlayer  = ESX.GetPlayerFromId(source)
-	local xPlayers = ESX.GetPlayers()
-
-	if phoneNumber == 'banker' then
-		for i=1, #xPlayers, 1 do
-			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-			if xPlayer2.job.name == 'banker' then
-				TriggerEvent('esx_phone:getDistpatchRequestId', function(requestId)
-					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, _U('bank_customer'), false)
-				end)
-			end
-		end
-	end
-	
 end)
 
 function CalculateBankSavings(d, h, m)
