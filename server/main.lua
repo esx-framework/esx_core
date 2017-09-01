@@ -4,34 +4,11 @@ TriggerEvent('esx:getSharedObject', function(obj)
 	ESX = obj
 end)
 
+TriggerEvent('esx_phone:registerNumber', 'realestateagent', 'Client immo', false, false)
+
 RegisterServerEvent('esx_realestateagentjob:revoke')
 AddEventHandler('esx_realestateagentjob:revoke', function(property, owner)
 	TriggerEvent('esx_property:removeOwnedPropertyIdentifier', property, owner)
-end)
-
-AddEventHandler('esx_phone:ready', function()
-
-	TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-		
-		local xPlayer  = ESX.GetPlayerFromId(source)
-		local xPlayers = ESX.GetPlayers()
-		local job      = 'Client immobilier'
-
-		if phoneNumber == "realestateagent" then
-
-			for i=1, #xPlayers, 1 do
-
-				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-				
-				if xPlayer2.job.name == 'realestateagent' then
-					TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, job, false)
-				end
-			end
-
-		end
-		
-	end)
-
 end)
 
 RegisterServerEvent('esx_realestateagentjob:sell')
@@ -54,24 +31,6 @@ AddEventHandler('esx_realestateagentjob:rent', function(target, property, price)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	TriggerEvent('esx_property:setPropertyOwned', property, price, true, xPlayer.identifier)
-end)
-
-TriggerEvent('esx_phone:registerCallback', function(source, phoneNumber, message, anon)
-
-	local xPlayer  = ESX.GetPlayerFromId(source)
-	local xPlayers = ESX.GetPlayers()
-
-	if phoneNumber == 'realestateagent' then
-		for i=1, #xPlayers, 1 do
-
-			local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-			
-			if xPlayer2.job.name == 'realestateagent' then
-				TriggerClientEvent('esx_phone:onMessage', xPlayer2.source, xPlayer.get('phoneNumber'), message, xPlayer.get('coords'), anon, 'player')
-			end
-		end
-	end
-	
 end)
 
 ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(source, cb)
