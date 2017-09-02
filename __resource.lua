@@ -5,12 +5,12 @@ description 'ESX Status'
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
 	'config.lua',
-	'server/classes/status.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'config.lua',
+	'client/classes/status.lua',
 	'client/main.lua'
 }
 

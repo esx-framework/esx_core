@@ -3,19 +3,6 @@ local RegisteredStatus = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('esx_status:registerStatus', function(name, default, color, visible, tickCallback, clientAction)
-
-	table.insert(RegisteredStatus, {
-		name         = name,
-		default      = default,
-		color        = color,
-		visible      = visible,
-		tickCallback = tickCallback,
-		clientAction = clientAction
-	})
-
-end)
-
 AddEventHandler('esx:playerLoaded', function(source)
 
 	local _source        = source
@@ -28,36 +15,15 @@ AddEventHandler('esx:playerLoaded', function(source)
 		},
 		function(result)
 
-			local data           = {}
-			local savedStatus    = {}
+			local data = {}
 
 			if result[1].status ~= nil then
 				data = json.decode(result[1].status)
 			end
 
-			for i=1, #data, 1 do
-				savedStatus[data[i].name] = data[i]
-			end
+			xPlayer.set('status', data)
 
-			local status = {}
-
-			for i=1, #RegisteredStatus, 1 do
-				
-				local s       = RegisteredStatus[i]
-				local default = nil
-
-				if savedStatus[s.name] ~= nil then
-					default = savedStatus[s.name].val
-				else
-					default = s.default
-				end
-
-				table.insert(status, CreateStatus(xPlayer, s.name, default, s.color, s.visible, s.tickCallback, s.clientAction))
-			end
-
-			xPlayer.set('status', status)
-
-			TriggerEvent('esx_status:updateClient', _source)
+			TriggerClientEvent('esx_status:load', _source, data)
 
 		end
 	)
@@ -71,20 +37,10 @@ AddEventHandler('esx:playerDropped', function(source)
 	local data   = {}
 	local status = xPlayer.get('status')
 
-	for i=1, #status, 1 do
-		
-		local s = status[i]
-		
-		table.insert(data, {
-			name = s._get('name'),
-			val  = s._get('val')
-		})
-	end 
-
 	MySQL.Async.execute(
 		'UPDATE users SET status = @status WHERE identifier = @identifier',
 		{
-			['@status']     = json.encode(data),
+			['@status']     = json.encode(status),
 			['@identifier'] = xPlayer.identifier
 		}
 	)
@@ -97,7 +53,7 @@ AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
 	local status  = xPlayer.get('status')
 
 	for i=1, #status, 1 do
-		if status[i]._get('name') == statusName then
+		if status[i].name == statusName then
 			cb(status[i])
 			break
 		end
@@ -105,60 +61,15 @@ AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
 
 end)
 
-AddEventHandler('esx_status:updateClient', function(playerId)
-
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local data    = {}
-	local status  = xPlayer.get('status')
-
-	for i=1, #status, 1 do
-		table.insert(data, {
-			name         = status[i]._get('name'),
-			val          = status[i]._get('val'),
-			color        = status[i]._get('color'),
-			visible      = status[i]._get('visible')(status[i]),
-			clientAction = status[i]._get('clientAction'),
-			max          = Config.StatusMax
-		})
-	end
-
-	TriggerClientEvent('esx_status:update', playerId, data)
+RegisterServerEvent('esx_status:update')
+AddEventHandler('esx_status:update', function(status)
+	
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	
+	xPlayer.set('status', status)
 
 end)
-
-function TickStatus()
-
-	local xPlayers = ESX.GetPlayers()
-
-	for i=1, #xPlayers, 1 do
-
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		local status  = xPlayer.get('status')
-
-		if status ~= nil then
-			for i=1, #status, 1 do
-				status[i]._get('onTick')()
-			end
-		end
-
-	end
-
-	SetTimeout(Config.TickTime, TickStatus)
-
-end
-
-function UpdateClients()
-
-	local xPlayers = ESX.GetPlayers()
-	
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		TriggerEvent('esx_status:updateClient', xPlayer.source)
-	end
-
-	SetTimeout(Config.UpdateClientTime, UpdateClients)
-
-end
 
 function SaveData()
 
@@ -170,30 +81,18 @@ function SaveData()
 		local data    = {}
 		local status  = xPlayer.get('status')
 
-		for i=1, #status, 1 do
-			
-			local s = status[i]
-			
-			table.insert(data, {
-				name = s._get('name'),
-				val  = s._get('val')
-			})
-		end 
-
 		MySQL.Async.execute(
 			'UPDATE users SET status = @status WHERE identifier = @identifier',
 		 	{
-		 		['@status']     = json.encode(data),
+		 		['@status']     = json.encode(status),
 		 		['@identifier'] = xPlayer.identifier
 		 	}
 		)
 	
 	end
 
-	SetTimeout(60000, SaveData)
+	SetTimeout(10 * 60 * 1000, SaveData)
 
 end
 
-TickStatus()
-UpdateClients()
 SaveData()
