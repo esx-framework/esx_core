@@ -8,16 +8,40 @@ Citizen.CreateThread(function()
 	end
 end)
 
+AddEventHandler('esx_basicneeds:resetStatus', function()
+	TriggerEvent('esx_status:set', 'hunger', 500000)
+	TriggerEvent('esx_status:set', 'thirst', 500000)
+
+end)
+
 AddEventHandler('playerSpawned', function()
 
 	if IsDead then
-		TriggerServerEvent('esx_basicneeds:resetStatus')
+		TriggerEvent('esx_basicneeds:resetStatus')
 	end
 
 	IsDead = false
 end)
 
 AddEventHandler('esx_status:loaded', function(status)
+
+	TriggerEvent('esx_status:registerStatus', 'hunger', 1000000, '#CFAD0F',
+		function(status)
+			return true
+		end,
+		function(status)
+			status.remove(200)
+		end
+	)
+
+	TriggerEvent('esx_status:registerStatus', 'thirst', 1000000, '#0C98F1',
+		function(status)
+			return true
+		end,
+		function(status)
+			status.remove(250)
+		end
+	)
 
 	Citizen.CreateThread(function()
 
