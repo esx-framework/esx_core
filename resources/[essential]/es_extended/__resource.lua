@@ -15,6 +15,7 @@ server_scripts {
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',
+	'server/paycheck.lua',
 	'server/main.lua',
 	'server/commands.lua'
 }

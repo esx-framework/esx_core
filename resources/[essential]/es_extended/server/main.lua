@@ -305,7 +305,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 		if itemCount > 0 and sourceItem.count >= itemCount then
 
-			if targetItem.limit ~= -1 and (targetItem.count + sourceItem.count) > targetItem.limit then
+			if targetItem.limit ~= -1 and (targetItem.count + itemCount) > targetItem.limit then
 				TriggerClientEvent('esx:showNotification', target, _U('ex_inv_lim') .. targetXPlayer.name)
 			else
 				sourceXPlayer.removeInventoryItem(itemName, itemCount)
