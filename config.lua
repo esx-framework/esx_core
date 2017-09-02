@@ -8,7 +8,7 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "LS CUSTOM",
+		Name  = "LS CUSTOMS",
 		Hint  = _U('press_custom')
 	}
 }
@@ -85,21 +85,21 @@ function GetColors(color)
 	elseif color == 'red' then
 		colors = {
 			{ index = 27, label = _U('red')},
-			{ index = 28, label = 'Rouge Turin'},
-			{ index = 29, label = 'Coquelicot'},
-			{ index = 30, label = 'Rouge Cuivré'},
-			{ index = 31, label = 'Rouge Cardinal'},
-			{ index = 32, label = 'Rouge Brique'},
-			{ index = 33, label = 'Grenat'},
-			{ index = 34, label = 'Pourpre'},
-			{ index = 35, label = 'Framboise'},
-			{ index = 39, label = 'Rouge Mat'},
-			{ index = 40, label = 'Rouge Foncé'},
-			{ index = 43, label = 'Rouge Pulpeux'},
-			{ index = 44, label = 'Rouge Brillant'},
-			{ index = 46, label = 'Rouge Pale'},
-			{ index = 143, label = 'Rouge Vin'},
-			{ index = 150, label = 'Volcano'}
+			{ index = 28, label = _U('torino_red')},
+			{ index = 29, label = _U('poppy')},
+			{ index = 30, label = _U('copper_red')},
+			{ index = 31, label = _U('cardinal')},
+			{ index = 32, label = _U('brick')},
+			{ index = 33, label = _U('garnet')},
+			{ index = 34, label = _U('cabernet')},
+			{ index = 35, label = _U('candy')},
+			{ index = 39, label = _U('matte_red')},
+			{ index = 40, label = _U('dark_red')},
+			{ index = 43, label = _U('red_pulp')},
+			{ index = 44, label = _U('bril_red')},
+			{ index = 46, label = _U('pale_red')},
+			{ index = 143, label = _U('wine_red')},
+			{ index = 150, label = _U('volcano')}
 		}
 	elseif color == 'pink' then
 		colors = {
@@ -109,35 +109,35 @@ function GetColors(color)
 		}
 	elseif color == 'blue' then
 		colors = {
-			{ index = 54, label = 'Topaze'},
-			{ index = 60, label = 'Bleu Clair'},
-			{ index = 61, label = 'Bleu Galaxy'},
-			{ index = 62, label = 'Bleu Foncé'},
-			{ index = 63, label = 'Bleu Azur'},
-			{ index = 64, label = 'Bleu Marine'},
-			{ index = 65, label = 'Lapis Lazuli'},
-			{ index = 67, label = 'Bleu Diamant'},
-			{ index = 68, label = 'Surfer'},
-			{ index = 69, label = 'Pastel'},
-			{ index = 70, label = 'Bleu Celeste'},
-			{ index = 73, label = 'Bleu Rally'},
-			{ index = 74, label = 'Bleu Paradis'},
-			{ index = 75, label = 'Bleu Nuit'},
-			{ index = 77, label = 'Bleu Cyan'},
-			{ index = 78, label = 'Cobalt'},
-			{ index = 79, label = 'Bleu Electrique'},
-			{ index = 80, label = 'Bleu Horizon'},
-			{ index = 82, label = 'Bleu Métallisé'},
-			{ index = 83, label = 'Aigue Marine '},
-			{ index = 84, label = 'Bleu Agathe'},
-			{ index = 85, label = 'Zirconium'},
-			{ index = 86, label = 'Spinelle'},
-			{ index = 87, label = 'Tourmaline'},
-			{ index = 127, label = 'Paradis'},
-			{ index = 140, label = 'Bubble Gum'},
-			{ index = 141, label = 'Bleu Minuit'},
-			{ index = 146, label = 'Bleu Interdit'},
-			{ index = 157, label = 'Bleu Glacier'}
+			{ index = 54, label = _U('topaz')},
+			{ index = 60, label = _U('light_blue')},
+			{ index = 61, label = _U('galaxy_blue')},
+			{ index = 62, label = _U('dark_blue')},
+			{ index = 63, label = _U('azure')},
+			{ index = 64, label = _U('navy_blue')},
+			{ index = 65, label = _U('lapis')},
+			{ index = 67, label = _U('blue_diamond')},
+			{ index = 68, label = _U('surfer')},
+			{ index = 69, label = _U('pastel_blue')},
+			{ index = 70, label = _U('celeste_blue')},
+			{ index = 73, label = _U('rally_blue')},
+			{ index = 74, label = _U('blue_paradise')},
+			{ index = 75, label = _U('blue_night')},
+			{ index = 77, label = _U('cyan_blue')},
+			{ index = 78, label = _U('cobalt')},
+			{ index = 79, label = _U('electric_blue')},
+			{ index = 80, label = _U('horizon_blue')},
+			{ index = 82, label = _U('metallic_blue')},
+			{ index = 83, label = _U('aquamarine')},
+			{ index = 84, label = _U('blue_agathe')},
+			{ index = 85, label = _U('zirconium')},
+			{ index = 86, label = _U('spinel')},
+			{ index = 87, label = _U('tourmaline')},
+			{ index = 127, label = _U('paradise')},
+			{ index = 140, label = _U('bubble_gum')},
+			{ index = 141, label = _U('midnight_blue')},
+			{ index = 146, label = _U('forbidden_blue')},
+			{ index = 157, label = _U('glacier_blue')}
 		}
 	elseif color == 'yellow' then
 		colors = {
@@ -149,23 +149,23 @@ function GetColors(color)
 		}
 	elseif color == 'green' then
 		colors = {
-			{ index = 49, label = 'Vert Foncé'},
-			{ index = 50, label = 'Vert Rally'},
-			{ index = 51, label = 'Vert Sapin'},
-			{ index = 52, label = 'Vert Olive'},
-			{ index = 53, label = 'Vert Clair'},
-			{ index = 55, label = 'Vert Lime'},
-			{ index = 56, label = 'Vert Forêt'},
-			{ index = 57, label = 'Vert Pelouse'},
-			{ index = 58, label = 'Vert Impérial'},
-			{ index = 59, label = 'Vert Bouteille'},
-			{ index = 92, label = 'Vert Citrus'},
-			{ index = 125, label = 'Vert Anis'},
-			{ index = 128, label = 'Kaki'},
-			{ index = 133, label = 'Vert Army'},
-			{ index = 151, label = 'Vert Sombre'},
-			{ index = 152, label = 'Vert Chasseur'},
-			{ index = 155, label = 'Amarylisse'}
+			{ index = 49, label = _U('met_dark_green')},
+			{ index = 50, label = _U('rally_green')},
+			{ index = 51, label = _U('pine_green')},
+			{ index = 52, label = _U('olive_green')},
+			{ index = 53, label = _U('light_green')},
+			{ index = 55, label = _U('lime_green')},
+			{ index = 56, label = _U('forest_green')},
+			{ index = 57, label = _U('lawn_green')},
+			{ index = 58, label = _U('imperial_green')},
+			{ index = 59, label = _U('green_bottle')},
+			{ index = 92, label = _U('citrus_green')},
+			{ index = 125, label = _U('green_anis')},
+			{ index = 128, label = _U('khaki')},
+			{ index = 133, label = _U('army_green')},
+			{ index = 151, label = _U('dark_green')},
+			{ index = 152, label = _U('hunter_green')},
+			{ index = 155, label = _U('matte_foilage_green')}
 		}
 	elseif color == 'orange' then
 		colors = {
@@ -401,7 +401,7 @@ end
 
 Config.Menus = {
 	main = {
-		label = 'LS CUSTOM',
+		label = 'LS CUSTOMS',
 		parent = nil,
 		upgrades = _U('upgrades'),
 		cosmetics = _U('cosmetics')
