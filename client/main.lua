@@ -1466,7 +1466,7 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'menu_boss_actions' then
 					
-					ESX.UI.menu.CloseAll()
+					ESX.UI.Menu.CloseAll()
 
 					TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
 
