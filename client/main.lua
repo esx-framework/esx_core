@@ -284,8 +284,8 @@ function OpenRecruitMenu(society)
 					{
 						title    = _U('do_you_want_to_recruit', data.current.name),
 						elements = {
-							{label = _U('yes'), value = 'no'},
-							{label = _U('no'),  value = 'yes'},
+							{label = _U('yes'), value = 'yes'},
+							{label = _U('no'),  value = 'no'},
 						}
 					},
 					function(data2, menu2)
