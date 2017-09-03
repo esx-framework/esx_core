@@ -89,7 +89,7 @@ Locales['en'] = {
 	['pastel_blue'] = 'pastel Blue',
 	['celeste_blue'] = 'celeste Blue',
 	['rally_blue'] = 'rally Blue',
-	['blue_paradise'] = 'blue Paradise'
+	['blue_paradise'] = 'blue Paradise',
 	['blue_night'] = 'blue Night',
 	['cyan_blue'] = 'cyan Blue',
 	['cobalt'] = 'cobalt',
@@ -116,7 +116,7 @@ Locales['en'] = {
 	['green'] = 'green',
 	['met_dark_green'] = 'metallic Dark Green',
 	['rally_green'] = 'Rally Green',
-	['pine_green'] = 'pine Green'
+	['pine_green'] = 'pine Green',
 	['olive_green'] = 'olive Green',
 	['light_green'] = 'Light Green',
 	['lime_green'] = 'lime green',
@@ -239,5 +239,4 @@ Locales['en'] = {
 	['tuning'] = 'tuning',
 	['motorcycle'] = 'motorcycle',
 	['highend'] = 'high end',
-
-
+}
