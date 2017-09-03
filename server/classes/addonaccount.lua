@@ -12,7 +12,7 @@ function CreateAddonAccount(name, owner, money)
 
 		self.save()
 
-		TriggerClientEvent('esx_addonAccount:setMoney', -1,  self.name, self.money)
+		TriggerClientEvent('esx_addonaccount:setMoney', -1,  self.name, self.money)
 	end
 
 	self.removeMoney = function(m)
@@ -21,7 +21,7 @@ function CreateAddonAccount(name, owner, money)
 		
 		self.save()
 		
-		TriggerClientEvent('esx_addonAccount:setMoney', -1,  self.name, self.money)
+		TriggerClientEvent('esx_addonaccount:setMoney', -1,  self.name, self.money)
 	end
 
 	self.setMoney = function(m)
@@ -30,7 +30,7 @@ function CreateAddonAccount(name, owner, money)
 
 		self.save()
 		
-		TriggerClientEvent('esx_addonAccount:setMoney', -1,  self.name, self.money)
+		TriggerClientEvent('esx_addonaccount:setMoney', -1,  self.name, self.money)
 	end
 
 	self.save = function()
