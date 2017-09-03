@@ -4,7 +4,7 @@ local Vehicles   = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-TriggerEvent('esx_phone:registerNumber', 'cardealer', 'Client concession', false, false)
+TriggerEvent('esx_phone:registerNumber', 'cardealer', _U('dealer_customers'), false, false)
 
 function RemoveOwnedVehicle(plate)
 
@@ -176,10 +176,10 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 			inventory.removeItem(itemName, count)
 			xPlayer.addInventoryItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. 'x' .. count .. ' ' .. item.label)
 
 	end)
 
@@ -198,10 +198,10 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. 'x' .. count .. ' ' .. item.label)
 
 	end)
 
@@ -465,7 +465,7 @@ if Config.EnablePvCommand then
 
 	TriggerEvent('es:addCommand', 'pv', function(source, args, user)
 		TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
-	end, {help = _U('leaving')})
+	end, {help = _U('remove_pv')})
 
 end
 
