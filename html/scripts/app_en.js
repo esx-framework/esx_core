@@ -237,7 +237,7 @@
 		
 		$('.message .ok-btn').click(function() {
 			$.post('http://esx_phone/send', JSON.stringify({
-				message: $(this).attr('data-contact-job') + ": Received !",
+				message: $(this).attr('data-contact-job') + ": Received!",
 				number : $(this).attr('data-contact-number'),
 				anonyme: false
 			}))
