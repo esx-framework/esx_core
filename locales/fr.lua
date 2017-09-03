@@ -27,5 +27,11 @@ Locales['fr'] = {
 	['yes']                    = 'oui',
 	['you_have']               = 'vous avez ~g~$',
 	['you_have_laundered']     = 'vous avez ~r~blanchi~s~ votre argent : ~g~$',
+	['you_have_hired']         = 'Vous avez recruté %s',
+  ['you_have_been_hired']    = 'Vous avez été recruté dans la société %s',
+  ['you_have_fired']         = 'Vous avez viré %s',
+  ['you_have_been_fired']    = 'Vous avez été viré de la société %s',
+  ['you_have_promoted']      = 'Vous avez promu %s en tant que %s',
+  ['you_have_been_promoted'] = 'Vous avez été promu',
 
 }
