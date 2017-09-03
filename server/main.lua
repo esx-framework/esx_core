@@ -6,7 +6,7 @@ if Config.MaxInService ~= -1 then
 	TriggerEvent('esx_service:activateService', 'taxi', Config.MaxInService)
 end
 
-TriggerEvent('esx_phone:registerNumber', 'taxi', 'Client taxi', true, true)
+TriggerEvent('esx_phone:registerNumber', 'taxi', _U('taxi_client'), true, true)
 
 RegisterServerEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
@@ -58,10 +58,10 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 			inventory.removeItem(itemName, count)
 			xPlayer.addInventoryItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
 
 	end)
 
@@ -88,10 +88,10 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
 
 	end)
 

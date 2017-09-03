@@ -28,5 +28,15 @@ Locales['en'] = {
 	['must_in_vehicle'] = 'you must be in a vehicle to begin the mission',
 	['have_earned'] = 'you have earned ~g~$',
 	['comp_earned'] = 'your company has earned ~g~$',
+	['deposit_stock'] = 'deposit Stock',
+	['take_stock'] = 'take Stock',
+	['boss_actions'] = 'boss Actions',
+	['mission_complete'] = 'mission Completed',
+	['quantity'] = 'quantity',
+	['quantity_invalid'] = 'invalid Quantity',
+	['inventory'] = 'inventory',
+	['taxi_client'] = 'taxi Client',
+	['have_withdrawn'] = 'you have withdrawn x',
+	['added'] = 'you added x',
 
 }

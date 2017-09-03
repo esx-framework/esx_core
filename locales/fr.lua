@@ -28,5 +28,15 @@ Locales['fr'] = {
 	['must_in_vehicle'] = 'vous devez être dans un véhicule pour commencer la mission',
 	['have_earned'] = 'vous avez gagné ~g~$',
 	['comp_earned'] = 'votre société a gagné ~g~$',
+	['deposit_stock'] = 'Déposer Stock',
+	['take_stock'] = 'Prendre Stock',
+	['boss_actions'] = 'action Patron',
+	['mission_complete'] = 'Mission terminée',
+	['quantity'] = 'Quantité',
+	['quantity_invalid'] = 'Quantité invalide',
+	['inventory'] = 'Inventaire',
+	['taxi_client'] = 'client Taxi',
+	['have_withdrawn'] = 'Vous avez retiré x',
+	['added'] = 'Vous avez ajouté x',
 
 }
