@@ -44,7 +44,7 @@ function OpenBankActionsMenu()
 	}
 
 	if PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = 'Action Patron', value = 'boss_actions'})
+		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
