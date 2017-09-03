@@ -168,7 +168,7 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function(inventory)
 
 		local item = inventory.getItem(itemName)
 
@@ -190,7 +190,7 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function(inventory)
 
 		local item = inventory.getItem(itemName)
 
@@ -444,7 +444,7 @@ end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getStockItems', function(source, cb)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function(inventory)
 		cb(inventory.items)
 	end)
 
