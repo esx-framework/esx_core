@@ -1,5 +1,9 @@
 USE `essentialmode`;
 
+INSERT INTO `addon_inventory` (name, label, shared) VALUES
+  ('society_mecano','Mécano',1)
+;
+
 INSERT INTO `jobs` (name, label) VALUES
   ('mecano','Mécano')
 ;
