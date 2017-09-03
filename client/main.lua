@@ -186,6 +186,8 @@ function OpenShopMenu()
 											TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
 										end
 
+										ESX.ShowNotification(_U('vehicle_purchased'))
+
 									end)
 
 									FreezeEntityPosition(playerPed, false)
@@ -362,6 +364,9 @@ function OpenResellerMenu()
 
 					if Config.EnableOwnedVehicles then
 						TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
+						ESX.ShowNotification(_U('vehicle_set_owned', vehicleProps.plate, GetPlayerName(closestPlayer)))
+					else
+						ESX.ShowNotification(_U('vehicle_sold_to', vehicleProps.plate, GetPlayerName(closestPlayer)))
 					end
 
 				end
@@ -401,6 +406,8 @@ function OpenResellerMenu()
 								if Config.EnableOwnedVehicles then
 									TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
 								end
+
+								ESX.ShowNotification(_U('vehicle_set_rented', vehicleProps.plate, GetPlayerName(closestPlayer)))
 								
 								TriggerServerEvent('esx_vehicleshop:setVehicleForAllPlayers', vehicleProps, Config.Zones.ShopInside.Pos.x, Config.Zones.ShopInside.Pos.y, Config.Zones.ShopInside.Pos.z, 5.0)
 							end
