@@ -239,5 +239,4 @@ Locales['en'] = {
 	['tuning'] = 'tuning',
 	['motorcycle'] = 'motorcycle',
 	['highend'] = 'high end',
-
-
+}
