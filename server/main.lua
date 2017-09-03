@@ -1,6 +1,24 @@
-ESX = nil
+ESX  = nil
+Jobs = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+AddEventHandler('onMySQLReady', function()
+
+	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
+
+	for i=1, #result, 1 do
+		Jobs[result[i].name]        = result[i]
+		Jobs[result[i].name].grades = {}
+	end
+
+	local result2 = MySQL.Sync.fetchAll('SELECT * FROM job_grades', {})
+
+	for i=1, #result2, 1 do
+		Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
+	end
+
+end)
 
 RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(society, amount)
@@ -76,6 +94,137 @@ ESX.RegisterServerCallback('esx_society:getAccountMoney', function(source, cb, a
 	TriggerEvent('esx_addonaccount:getSharedAccount', account, function(account)
 		cb(account.money)
 	end)
+end)
+
+ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
+
+	MySQL.Async.fetchAll(
+		'SELECT * FROM users WHERE job = @job ORDER BY job_grade DESC',
+		{
+			['@job'] = society
+		},
+		function(result)
+
+			local employees = {}
+
+			for i=1, #result, 1 do
+
+				table.insert(employees, {
+					name        = result[i].name,
+					identifier  = result[i].identifier,
+					job = {
+						name        = result[i].job,
+						label       = Jobs[result[i].job].label,
+						grade       = result[i].job_grade,
+						grade_name  = Jobs[result[i].job].grades[tostring(result[i].job_grade)].name,
+						grade_label = Jobs[result[i].job].grades[tostring(result[i].job_grade)].label,
+					}
+				})
+			end
+
+			cb(employees)
+
+		end
+	)
+
+end)
+
+ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
+
+	local job    = json.decode(json.encode(Jobs[society]))
+	local grades = {}
+
+	for k,v in pairs(job.grades) do
+		table.insert(grades, v)
+	end
+
+	table.sort(grades, function(a, b)
+		return a.grade < b.grade
+	end)
+
+	job.grades = grades
+
+	cb(job)
+
+end)
+
+
+ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade)
+
+	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+
+	if xPlayer == nil then
+
+		MySQL.Async.execute(
+			'UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
+			{
+				['@job']        = job,
+				['@job_grade']  = grade,
+				['@identifier'] = identifier
+			},
+			function(rowsChanged)
+				cb()
+			end
+		)
+
+	else
+		xPlayer.setJob(job, grade)
+		cb()
+	end
+
+end)
+
+ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
+
+	MySQL.Async.execute(
+		'UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade',
+		{
+			['@salary']   = salary,
+			['@job_name'] = job,
+			['@grade']    = grade
+		},
+		function(rowsChanged)
+
+			Jobs[job].grades[tostring(grade)].salary = salary
+
+			local xPlayers = ESX.GetPlayers()
+
+			for i=1, #xPlayers, 1 do
+
+				local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+				if xPlayer.job.name == job and xPlayer.job.grade == grade then
+					xPlayer.setJob(job, grade)
+				end
+
+			end
+
+			cb()
+		end
+	)
+
+end)
+
+ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
+
+	local xPlayers = ESX.GetPlayers()
+	local players  = {}
+
+	for i=1, #xPlayers, 1 do
+
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+		table.insert(players, {
+			source     = xPlayer.source,
+			identifier = xPlayer.identifier,
+			name       = xPlayer.name,
+			job        = xPlayer.job
+		})
+
+	end
+
+	cb(players)
+
 end)
 
 function WashMoneyCRON(d, h, m)
