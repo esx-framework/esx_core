@@ -6,6 +6,10 @@ INSERT INTO `datastore` (name, label, shared) VALUES
 	('society_police','Police',1)
 ;
 
+INSERT INTO `addon_inventory` (name, label, shared) VALUES 
+	('society_police', 'Police', 1)
+;
+
 INSERT INTO `jobs` (name, label) VALUES 
 	('police','LSPD')
 ;
