@@ -7,7 +7,7 @@ AddEventHandler('esx_ambulancejob:revive', function(target)
 	TriggerClientEvent('esx_ambulancejob:revive', target)
 end)
 
-TriggerEvent('esx_phone:registerNumber', 'ambulance', _('alert_ambulance'), true, true)
+TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
 
 ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(source, cb)
 

@@ -20,6 +20,7 @@ Locales['en'] = {
 	--Boss Menu
 		['deposit_society'] = 'eMS Deposit',
 		['withdraw_society'] = 'eMS Withdraw',
+		['boss_actions'] = 'boss Actions',
 	--Misc
 		['invalid_amount'] = '~r~invalid amount',
 		['open_menu'] = 'press ~INPUT_CONTEXT~ to open the menu',

@@ -20,6 +20,7 @@ Locales['fr'] = {
 	--Boss Menu
 		['deposit_society'] = 'déposer argent',
 		['withdraw_society'] = 'retirer argent société',
+		['boss_actions'] = 'action Patron',
 	--Misc
 		['invalid_amount'] = '~r~montant invalide',
 		['open_menu'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu',
