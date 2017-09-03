@@ -19,5 +19,7 @@ Locales['en'] = {
     ['rent'] = 'rent',
     ['sell'] = 'sell',
     ['realtors'] = 'real Estate Agents',
+    ['client'] = 'real Estate Client',
+    ['boss_action'] = 'boss Actions',
 
 }

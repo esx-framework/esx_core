@@ -4,7 +4,7 @@ TriggerEvent('esx:getSharedObject', function(obj)
 	ESX = obj
 end)
 
-TriggerEvent('esx_phone:registerNumber', 'realestateagent', 'Client immo', false, false)
+TriggerEvent('esx_phone:registerNumber', 'realestateagent', _U('client'), false, false)
 
 RegisterServerEvent('esx_realestateagentjob:revoke')
 AddEventHandler('esx_realestateagentjob:revoke', function(property, owner)

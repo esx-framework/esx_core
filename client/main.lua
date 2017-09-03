@@ -35,7 +35,7 @@ function OpenRealestateAgentMenu()
 	}
 
 	if PlayerData.job ~= nil and PlayerData.job.name == 'realestateagent' and PlayerData.job.grade_name == 'boss' then
-  	table.insert(elements, {label = 'Action Patron', value = 'boss_actions'})
+  	table.insert(elements, {label = _U('boss_action'), value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
