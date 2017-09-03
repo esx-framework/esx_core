@@ -6,6 +6,7 @@ Locales['en'] = {
 	['not_enough_money'] = 'you do not have enough money!',
 	['purchased'] = 'purchased!',
 	['press_custom'] = 'press ~INPUT_PICKUP~ to personalize your vehicle.',
+	['level'] = 'level ',
 -- Paint Colors
 	-- Black
 	['black'] = 'black',
@@ -207,7 +208,7 @@ Locales['en'] = {
 	['rightfender'] = 'right fender',
 	['spoilers'] = 'spoilers',
 	['sideskirt'] = 'side skirts',
-	['frame'] = 'cage',
+	['cage'] = 'cage',
 	['hood'] = 'hood',
 	['grille'] = 'grille',
 	['rearbumper'] = 'rear bumper',

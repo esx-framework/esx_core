@@ -6,6 +6,7 @@ Locales['fr'] = {
 	['not_enough_money'] = 'vous n\'avez pas assez d\'argent !',
 	['purchased'] = 'achat effectué !',
 	['press_custom'] = 'appuyez sur ~INPUT_PICKUP~ pour personnaliser le véhicule.',
+	['level'] = 'niveau ',
 -- Paint Colors
 	-- Black
 	['black'] = 'noir',
@@ -207,7 +208,7 @@ Locales['fr'] = {
 	['rightfender'] = 'aile droite',
 	['spoilers'] = 'aileron',
 	['sideskirt'] = 'bas de caisse',
-	['frame'] = 'cage',
+	['cage'] = 'cage',
 	['hood'] = 'capot',
 	['grille'] = 'grille',
 	['rearbumper'] = 'pare-choc arrière',

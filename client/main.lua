@@ -210,9 +210,9 @@ function GetAction(data)
 					for j = 0, modCount-1, 1 do
 						local _label = ''
 						if j == currentMods[k] then
-							_label = 'Niveau ' .. j .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+							_label = _U('level') .. j .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
-							_label = 'Niveau ' .. j .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
+							_label = _U('level') .. j .. ' - <span style="color:green;">$' .. v.price .. ' </span>'
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 					end
