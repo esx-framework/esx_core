@@ -163,6 +163,50 @@ AddEventHandler('esx_vehicleshop:setVehicleForAllPlayers', function(props, x, y,
 	TriggerClientEvent('esx_vehicleshop:setVehicle', -1, props, x, y, z, radius)
 end)
 
+RegisterServerEvent('esx_vehicleshop:getStockItem')
+AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
+
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+
+		local item = inventory.getItem(itemName)
+
+		if item.count >= count then
+			inventory.removeItem(itemName, count)
+			xPlayer.addInventoryItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+		end
+
+		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+
+	end)
+
+end)
+
+RegisterServerEvent('esx_vehicleshop:putStockItems')
+AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
+
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+
+		local item = inventory.getItem(itemName)
+
+		if item.count >= 0 then
+			xPlayer.removeInventoryItem(itemName, count)
+			inventory.addItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+		end
+
+		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+
+	end)
+
+end)
+
 ESX.RegisterServerCallback('esx_vehicleshop:getCategories', function(source, cb)
 	cb(Categories)
 end)
@@ -394,6 +438,26 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 			end
 		end
 	)
+
+end)
+
+
+ESX.RegisterServerCallback('esx_vehicleshop:getStockItems', function(source, cb)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_vehicleshop', function(inventory)
+		cb(inventory.items)
+	end)
+
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:getPlayerInventory', function(source, cb)
+
+	local xPlayer    = ESX.GetPlayerFromId(source)
+	local items      = xPlayer.inventory
+
+	cb({
+		items      = items
+	})
 
 end)
 
