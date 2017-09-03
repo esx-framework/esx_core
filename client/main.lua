@@ -128,9 +128,7 @@ function OpenTaxiActionsMenu()
 	}
 
 	if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.grade_name == 'boss' then
-  	table.insert(elements, {label = _U('remove_comp_money'), value = 'withdraw_society_money'})
-  	table.insert(elements, {label = _U('deposit_money'),        value = 'deposit_money'})
-  	table.insert(elements, {label = _U('launder_money'),        value = 'wash_money'})
+  	table.insert(elements, {label = 'Action Patron', value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -142,6 +140,14 @@ function OpenTaxiActionsMenu()
 			elements = elements
 		},
 		function(data, menu)
+
+			if data.current.value == 'put_stock' then
+		    OpenPutStocksMenu()
+	    end	
+
+	    if data.current.value == 'get_stock' then
+		    OpenGetStocksMenu()
+	    end
 
 			if data.current.value == 'spawn_vehicle' then
 
@@ -181,82 +187,10 @@ function OpenTaxiActionsMenu()
 
 			end
 
-			if data.current.value == 'withdraw_society_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'withdraw_society_money_amount',
-					{
-						title = _U('withdraw_amount')
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('amount_invalid'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:withdrawMoney', 'taxi', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
-			end
-
-			if data.current.value == 'deposit_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'deposit_money_amount',
-					{
-						title = _U('deposit_amount')
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('amount_invalid'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:depositMoney', 'taxi', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
-			end
-
-			if data.current.value == 'wash_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'wash_money_amount',
-					{
-						title = _U('launder_amount')
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('amount_invalid'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:washMoney', 'taxi', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
+			if data.current.value == 'boss_actions' then
+				TriggerEvent('esx_society:openBossMenu', 'taxi', function(data, menu)
+					menu.close()
+				end)
 			end
 
 		end,
@@ -329,6 +263,125 @@ function OpenMobileTaxiActionsMenu()
 	)
 
 end
+
+function OpenGetStocksMenu()
+
+	ESX.TriggerServerCallback('esx_taxijob:getStockItems', function(items)
+
+		print(json.encode(items))
+
+		local elements = {}
+
+		for i=1, #items, 1 do
+			table.insert(elements, {label = 'x' .. items[i].count .. ' ' .. items[i].label, value = items[i].name})
+		end
+
+	  ESX.UI.Menu.Open(
+	    'default', GetCurrentResourceName(), 'stocks_menu',
+	    {
+	      title    = 'Taxi Stock',
+	      elements = elements
+	    },
+	    function(data, menu)
+
+	    	local itemName = data.current.value
+
+				ESX.UI.Menu.Open(
+					'dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count',
+					{
+						title = 'Quantité'
+					},
+					function(data2, menu2)
+
+						local count = tonumber(data2.value)
+
+						if count == nil then
+							ESX.ShowNotification('Quantité invalide')
+						else
+							menu2.close()
+				    	menu.close()
+				    	OpenGetStocksMenu()
+
+							TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
+						end
+
+					end,
+					function(data2, menu2)
+						menu2.close()
+					end
+				)
+
+	    end,
+	    function(data, menu)
+	    	menu.close()
+	    end
+	  )
+
+	end)
+
+end
+
+function OpenPutStocksMenu()
+
+	ESX.TriggerServerCallback('esx_taxijob:getPlayerInventory', function(inventory)
+
+		local elements = {}
+
+		for i=1, #inventory.items, 1 do
+
+			local item = inventory.items[i]
+
+			if item.count > 0 then
+				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+			end
+
+		end
+
+	  ESX.UI.Menu.Open(
+	    'default', GetCurrentResourceName(), 'stocks_menu',
+	    {
+	      title    = 'Inventaire',
+	      elements = elements
+	    },
+	    function(data, menu)
+
+	    	local itemName = data.current.value
+
+				ESX.UI.Menu.Open(
+					'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
+					{
+						title = 'Quantité'
+					},
+					function(data2, menu2)
+
+						local count = tonumber(data2.value)
+
+						if count == nil then
+							ESX.ShowNotification('Quantité invalide')
+						else
+							menu2.close()
+				    	menu.close()
+				    	OpenPutStocksMenu()
+
+							TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
+						end
+
+					end,
+					function(data2, menu2)
+						menu2.close()
+					end
+				)
+
+	    end,
+	    function(data, menu)
+	    	menu.close()
+	    end
+	  )
+
+	end)
+
+end
+
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)

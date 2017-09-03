@@ -44,3 +44,66 @@ AddEventHandler('esx_taxijob:success', function()
 	end
 
 end)
+
+RegisterServerEvent('esx_taxijob:getStockItem')
+AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
+
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+
+		local item = inventory.getItem(itemName)
+
+		if item.count >= count then
+			inventory.removeItem(itemName, count)
+			xPlayer.addInventoryItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+		end
+
+		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+
+	end)
+
+end)
+
+ESX.RegisterServerCallback('esx_taxijob:getStockItems', function(source, cb)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+		cb(inventory.items)
+	end)
+
+end)
+
+RegisterServerEvent('esx_taxijob:putStockItems')
+AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
+
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+
+		local item = inventory.getItem(itemName)
+
+		if item.count >= 0 then
+			xPlayer.removeInventoryItem(itemName, count)
+			inventory.addItem(itemName, count)
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+		end
+
+		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+
+	end)
+
+end)
+
+ESX.RegisterServerCallback('esx_taxijob:getPlayerInventory', function(source, cb)
+
+	local xPlayer    = ESX.GetPlayerFromId(source)
+	local items      = xPlayer.inventory
+
+	cb({
+		items      = items
+	})
+
+end)
