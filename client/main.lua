@@ -242,9 +242,11 @@ function OpenEmployeeList(society)
 
 				if data.value == 'fire' then
 
+          TriggerEvent('esx:showNotification', _U('you_have_fired', employee.name))
+
 					ESX.TriggerServerCallback('esx_society:setJob', function()
 						OpenEmployeeList(society)
-					end, employee.identifier, 'unemployed', 0)
+					end, employee.identifier, 'unemployed', 0, 'fire')
 
 				end
 
@@ -294,9 +296,11 @@ function OpenRecruitMenu(society)
 
 						if data2.current.value == 'yes' then
 
+              TriggerEvent('esx:showNotification', _U('you_have_hired', data.current.name))
+
 							ESX.TriggerServerCallback('esx_society:setJob', function()
 								OpenRecruitMenu(society)
-							end, data.current.identifier, society, 0)
+							end, data.current.identifier, society, 0, 'hire')
 
 						end
 
@@ -336,9 +340,11 @@ function OpenPromoteMenu(society, employee)
 			function(data, menu)
 				menu.close()
 
+        TriggerEvent('esx:showNotification', _U('you_have_promoted', employee.name, data.current.label))
+
 				ESX.TriggerServerCallback('esx_society:setJob', function()
 					OpenEmployeeList(society)
-				end, employee.identifier, society, data.current.value)
+				end, employee.identifier, society, data.current.value, promote)
 
 			end,
 			function(data, menu)
