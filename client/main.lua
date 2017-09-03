@@ -44,9 +44,7 @@ function OpenBankActionsMenu()
 	}
 
 	if PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
-  	table.insert(elements, {label = _U('deposit_society_money'),  value = 'deposit_society_money'})
-  	table.insert(elements, {label = _U('wash_money'),             value = 'wash_money'})
+		table.insert(elements, {label = 'Action Patron', value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -98,82 +96,10 @@ function OpenBankActionsMenu()
 
 			end
 
-			if data.current.value == 'withdraw_society_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'withdraw_society_money_amount',
-					{
-						title = _U('withdraw_amount')
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:withdrawMoney', 'banker', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
-			end
-
-			if data.current.value == 'deposit_society_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'deposit_money_amount',
-					{
-						title = _U('deposit_amount')
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:depositMoney', 'banker', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
-			end
-
-			if data.current.value == 'wash_money' then
-
-				ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'wash_money_amount',
-					{
-						title = 'Montant à blanchir'
-					},
-					function(data, menu)
-
-						local amount = tonumber(data.value)
-
-						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
-						else
-							menu.close()
-							TriggerServerEvent('esx_society:washMoney', 'banker', amount)
-						end
-
-					end,
-					function(data, menu)
-						menu.close()
-					end
-				)
-
+			if data.current.value == 'boss_actions' then
+				TriggerEvent('esx_society:openBossMenu', 'banker', function(data, menu)
+					menu.close()
+				end, {wash = false})
 			end
 
 		end,
