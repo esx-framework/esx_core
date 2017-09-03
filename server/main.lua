@@ -6,7 +6,7 @@ if Config.MaxInService ~= -1 then
 	TriggerEvent('esx_service:activateService', 'police', Config.MaxInService)
 end
 
-TriggerEvent('esx_phone:registerNumber', 'police', _('alert_police'), true, true)
+TriggerEvent('esx_phone:registerNumber', 'police', _U('alert_police'), true, true)
 
 RegisterServerEvent('esx_policejob:giveWeapon')
 AddEventHandler('esx_policejob:giveWeapon', function(weapon, ammo)
@@ -77,10 +77,10 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 			inventory.removeItem(itemName, count)
 			xPlayer.addInventoryItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
 
 	end)
 
@@ -99,10 +99,10 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
 
 	end)
 

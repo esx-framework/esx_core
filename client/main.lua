@@ -850,7 +850,7 @@ function OpenGetStocksMenu()
 	  ESX.UI.Menu.Open(
 	    'default', GetCurrentResourceName(), 'stocks_menu',
 	    {
-	      title    = 'Police Stock',
+	      title    = _U('police_stock'),
 	      elements = elements
 	    },
 	    function(data, menu)
@@ -860,14 +860,14 @@ function OpenGetStocksMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count',
 					{
-						title = 'Quantité'
+						title = _U('quantity')
 					},
 					function(data2, menu2)
 
 						local count = tonumber(data2.value)
 
 						if count == nil then
-							ESX.ShowNotification('Quantité invalide')
+							ESX.ShowNotification(_U('quantity_invalid'))
 						else
 							menu2.close()
 				    	menu.close()
@@ -911,7 +911,7 @@ function OpenPutStocksMenu()
 	  ESX.UI.Menu.Open(
 	    'default', GetCurrentResourceName(), 'stocks_menu',
 	    {
-	      title    = 'Inventaire',
+	      title    = _U('inventory'),
 	      elements = elements
 	    },
 	    function(data, menu)
@@ -921,14 +921,14 @@ function OpenPutStocksMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
 					{
-						title = 'Quantité'
+						title = _U('quantity')
 					},
 					function(data2, menu2)
 
 						local count = tonumber(data2.value)
 
 						if count == nil then
-							ESX.ShowNotification('Quantité invalide')
+							ESX.ShowNotification(_U('quantity_invalid'))
 						else
 							menu2.close()
 				    	menu.close()

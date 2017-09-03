@@ -69,6 +69,12 @@ Locales['en'] = {
 		['invalid_amount'] = 'amount Invalid',
 		['amount_of_deposit'] = 'amount of Deposit',
 		['open_bossmenu'] = 'press ~INPUT_CONTEXT~ to open the menu',
+		['quantity_invalid'] = 'invalid quantity',
+		['have_withdraw'] = 'you have withdrawn x',
+		['added'] = 'you added x',
+		['quantity'] = 'quantity',
+		['inventory'] = 'inventory',
+		['police_stock'] = 'Police Stock',
 	--Misc
 		['remove_object'] = 'press ~INPUT_CONTEXT~ to delete the object',
 		['map_blip'] = 'police Station',
