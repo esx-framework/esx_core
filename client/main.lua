@@ -124,7 +124,9 @@ end
 function OpenTaxiActionsMenu()
 
 	local elements = {
-		{label = _U('spawn_veh'), value = 'spawn_vehicle'}
+		{label = _U('spawn_veh'), value = 'spawn_vehicle'},
+		{label = 'Déposer Stock', value = 'put_stock'},
+ 		{label = 'Prendre Stock', value = 'get_stock'}
 	}
 
 	if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.grade_name == 'boss' then
