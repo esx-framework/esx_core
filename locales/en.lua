@@ -24,6 +24,7 @@ Locales['en'] = {
 		['id_card'] = 'iD Card',
 		['search'] = 'search',
 		['handcuff'] = 'cuff / Uncuff',
+		['drag'] = 'drag',
 		['put_in_vehicle'] = 'put in Vehicle',
 		['fine'] = 'fine',
 		['no_players_nearby'] = 'no players nearby',
