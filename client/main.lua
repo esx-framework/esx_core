@@ -344,7 +344,7 @@ function OpenPromoteMenu(society, employee)
 
 				ESX.TriggerServerCallback('esx_society:setJob', function()
 					OpenEmployeeList(society)
-				end, employee.identifier, society, data.current.value, promote)
+				end, employee.identifier, society, data.current.value, 'promote')
 
 			end,
 			function(data, menu)
