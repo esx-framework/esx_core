@@ -59,6 +59,12 @@ AddEventHandler('esx_policejob:handcuff', function(target)
 	TriggerClientEvent('esx_policejob:handcuff', target)
 end)
 
+RegisterServerEvent('esx_policejob:drag')
+AddEventHandler('esx_policejob:drag', function(target)
+	local _source = source
+	TriggerClientEvent('esx_policejob:drag', target, _source)
+end)
+
 RegisterServerEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function(target)
 	TriggerClientEvent('esx_policejob:putInVehicle', target)

@@ -23,6 +23,8 @@ local CurrentAction             = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local IsHandcuffed              = false
+local IsDragged		            = false
+local CopPed   					= 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -305,6 +307,7 @@ function OpenPoliceActionsMenu()
 							{label = _U('id_card'),     	value = 'identity_card'},
 							{label = _U('search'),      	value = 'body_search'},
 							{label = _U('handcuff'), 		value = 'handcuff'},
+							{label = _U('drag'), 			value = 'drag'},
 							{label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
 							{label = _U('fine'),            value = 'fine'}
 						},
@@ -325,6 +328,10 @@ function OpenPoliceActionsMenu()
 
 							if data2.current.value == 'handcuff' then
 								TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(player))
+							end
+
+							if data2.current.value == 'drag' then
+								TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(player))
 							end
 
 							if data2.current.value == 'put_in_vehicle' then
@@ -1115,6 +1122,28 @@ AddEventHandler('esx_policejob:handcuff', function()
 		end
 
 	end)
+end)
+
+RegisterNetEvent('esx_policejob:drag')
+AddEventHandler('esx_policejob:drag', function(cop)
+	TriggerServerEvent('esx:clientLog', 'starting dragging')
+	IsDragged = not IsDragged
+	CopPed = tonumber(cop)
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Wait(0)
+		if IsHandcuffed then
+			if IsDragged then
+				local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
+				local myped = GetPlayerPed(-1)
+				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)		
+			else
+				DetachEntity(GetPlayerPed(-1), true, false)	
+			end
+		end
+	end
 end)
 
 RegisterNetEvent('esx_policejob:putInVehicle')

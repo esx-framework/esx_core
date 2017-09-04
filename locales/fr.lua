@@ -24,6 +24,7 @@ Locales['fr'] = {
 		['id_card'] = 'carte d\'identité',
 		['search'] = 'fouiller',
 		['handcuff'] = 'menotter / Démenotter',
+		['drag'] = 'escorter',
 		['put_in_vehicle'] = 'mettre dans véhicule',
 		['fine'] = 'Amende',
 		['no_players_nearby'] = 'aucun joueur à proximité',
