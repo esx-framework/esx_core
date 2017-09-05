@@ -481,51 +481,103 @@ end
 
 function OpenIdentityCardMenu(player)
 
-	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
+	if Config.EnableGCIdentity then
+	
+		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
-		local jobLabel = nil
+			local jobLabel = nil
 
-		if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
-			jobLabel = 'Job : ' .. data.job.label .. ' - ' .. data.job.grade_label
-		else
-			jobLabel = 'Job : ' .. data.job.label
-		end
+			if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
+				jobLabel = 'Job : ' .. data.job.label .. ' - ' .. data.job.grade_label
+			else
+				jobLabel = 'Job : ' .. data.job.label
+			end
+		
+			local elements = {
+				{label = _U('name') .. data.firstname .. " " .. data.lastname, value = nil},
+				{label = jobLabel,              value = nil},
+			}
 
-		local elements = {
-			{label = _U('name') .. data.name, value = nil},
-			{label = jobLabel,              value = nil},
-		}
-
-		if data.drunk ~= nil then
-			table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
-		end
-
-		if data.licenses ~= nil then
-
-			table.insert(elements, {label = '--- Licenses ---', value = nil})
-
-			for i=1, #data.licenses, 1 do
-				table.insert(elements, {label = data.licenses[i].label, value = nil})
+			if data.drunk ~= nil then
+				table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
 			end
 
-		end
+			if data.licenses ~= nil then
 
-		ESX.UI.Menu.Open(
-			'default', GetCurrentResourceName(), 'citizen_interaction',
-			{
-				title    = _U('citizen_interaction'),
-				align    = 'top-left',
-				elements = elements,
-			},
-			function(data, menu)
+				table.insert(elements, {label = '--- Licenses ---', value = nil})
 
-			end,
-			function(data, menu)
-				menu.close()
+				for i=1, #data.licenses, 1 do
+					table.insert(elements, {label = data.licenses[i].label, value = nil})
+				end
+
 			end
-		)
 
-	end, GetPlayerServerId(player))
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'citizen_interaction',
+				{
+					title    = _U('citizen_interaction'),
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
+
+				end,
+				function(data, menu)
+					menu.close()
+				end
+			)
+
+		end, GetPlayerServerId(player))
+		
+	else
+
+		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
+
+			local jobLabel = nil
+
+			if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
+				jobLabel = 'Job : ' .. data.job.label .. ' - ' .. data.job.grade_label
+			else
+				jobLabel = 'Job : ' .. data.job.label
+			end
+		
+				local elements = {
+					{label = _U('name') .. data.name, value = nil},
+					{label = jobLabel,              value = nil},
+				}
+
+			if data.drunk ~= nil then
+				table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
+			end
+
+			if data.licenses ~= nil then
+
+				table.insert(elements, {label = '--- Licenses ---', value = nil})
+
+				for i=1, #data.licenses, 1 do
+					table.insert(elements, {label = data.licenses[i].label, value = nil})
+				end
+
+			end
+
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'citizen_interaction',
+				{
+					title    = _U('citizen_interaction'),
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
+
+				end,
+				function(data, menu)
+					menu.close()
+				end
+			)
+
+		end, GetPlayerServerId(player))
+		
+	end
 
 end
 
