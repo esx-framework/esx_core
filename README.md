@@ -17,9 +17,9 @@ FXServer ESX Property
 git clone https://github.com/FXServer-ESX/fxserver-esx_property esx_property
 ```
 3) Import esx_property.sql in your database
-4) Add this in your server.cfg :
+4) Import esx_offices.sql in your database if you want the offices to added in your server(The Arcadius Business Centre is not included because realstateagentjob)
+5) Add this in your server.cfg :
 
 ```
 start esx_property
 ```
-
