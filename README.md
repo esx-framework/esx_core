@@ -23,4 +23,3 @@ git clone https://github.com/FXServer-ESX/fxserver-esx_property esx_property
 ```
 start esx_property
 ```
--
