@@ -580,6 +580,7 @@ function OpenIdentityCardMenu(player)
 	end
 
 end
+
 function OpenBodySearchMenu(player)
 
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
