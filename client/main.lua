@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -49,29 +49,66 @@ end
 
 function OpenCloakroomMenu()
 
+	local elements = {
+    {label = _U('citizen_wear'), value = 'citizen_wear'},
+    {label = _U('police_wear'), value = 'police_wear'}
+}
+
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'cloakroom',
-		{
-			title    = _U('cloakroom'),
-			align    = 'top-left',
-			elements = {
-				{label = _U('citizen_wear'), value = 'citizen_wear'},
-				{label = _U('police_wear'), value = 'police_wear'},
-			},
-		},
-		function(data, menu)
-			
+	if Config.EnableNonFreemodePeds then
+		    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear'})
+				table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
+				table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
+		end
+
+		ESX.UI.Menu.Open(
+			'default', GetCurrentResourceName(), 'cloakroom',
+			{
+				title    = _U('cloakroom'),
+				align    = 'top-left',
+				elements = elements,
+				},
+
+				function(data, menu)
+
 			menu.close()
 
-			if data.current.value == 'citizen_wear' then
-				
-				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-					TriggerEvent('skinchanger:loadSkin', skin)
-				end)
+			--Taken from SuperCoolNinja
+			if data.current.value == 'citizen_wear'  then --Ajout de tenue par grades
 
-			end
+            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+            if skin.sex == 0 then
+
+                local model = GetHashKey("mp_m_freemode_01")  --[FR]--Pour changer de Skin Male veuillez changer Ici !
+                                                          																					--[EN]--Here for change Ped Skin Model Here is for Man
+                    RequestModel(model)
+                    while not HasModelLoaded(model) do
+                        RequestModel(model)
+                        Citizen.Wait(0)
+                    end
+
+                    SetPlayerModel(PlayerId(), model)
+                    SetModelAsNoLongerNeeded(model)
+                    TriggerEvent('skinchanger:loadSkin', skin)
+            else
+                    local model = GetHashKey("mp_f_freemode_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
+                                                             																					--[EN]--Here for change Ped Skin Model Here is for Girl
+
+                    RequestModel(model)
+                    while not HasModelLoaded(model) do
+                        RequestModel(model)
+                        Citizen.Wait(0)
+                    end
+
+                    SetPlayerModel(PlayerId(), model)
+                    SetModelAsNoLongerNeeded(model)
+                    TriggerEvent('skinchanger:loadSkin', skin)
+                    end
+
+                end)
+            end
 
 			if data.current.value == 'police_wear' then
 
@@ -82,10 +119,109 @@ function OpenCloakroomMenu()
 					else
 						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 					end
-					
+
 				end)
 
-			end	
+end
+			--Taken from SuperCoolNinja
+			if data.current.value == 'sheriff_wear' then
+
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+				if skin.sex == 0 then
+
+					local model = GetHashKey("s_m_y_sheriff_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
+																  																												--[EN]--Here for change Ped Skin Model Here is for Man
+
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+			else
+					local model = GetHashKey("s_f_y_sheriff_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
+																  																											--[EN]--Here for change Ped Skin Model Here is for Girl
+
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+					end
+
+				end)
+			end
+			--Taken from SuperCoolNinja
+			if data.current.value == 'lieutenant_wear' then --Ajout de tenue par grades
+
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+				if skin.sex == 0 then
+					local model = GetHashKey("s_m_y_swat_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
+																																											--[EN]--Here for change Ped Skin Model Here is for Man
+
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+			else
+					local model = GetHashKey("s_m_y_swat_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
+																 																											--[EN]--Here for change Ped Skin Model Here is for Girl
+
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+					end
+
+				end)
+			end
+			--Taken from SuperCoolNinja
+			if data.current.value == 'commandant_wear'  then --Ajout de tenue par grades
+
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+
+					if skin.sex == 0 then
+					local model = GetHashKey("ig_fbisuit_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
+																																									--[EN]--Here for change Ped Skin Model Here is for Man
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+			else
+					local model = GetHashKey("ig_fbisuit_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
+																																									--[EN]--Here for change Ped Skin Model Here is for Girl
+
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						RequestModel(model)
+						Citizen.Wait(0)
+					end
+
+					SetPlayerModel(PlayerId(), model)
+					SetModelAsNoLongerNeeded(model)
+					end
+
+				end)
+			end
 
 			CurrentAction     = 'menu_cloakroom'
 			CurrentActionMsg  = _U('open_cloackroom')
@@ -93,7 +229,7 @@ function OpenCloakroomMenu()
 
 		end,
 		function(data, menu)
-			
+
 			menu.close()
 
 			CurrentAction     = 'menu_cloakroom'
@@ -138,11 +274,11 @@ function OpenArmoryMenu(station)
 
 				if data.current.value == 'buy_weapons' then
 					OpenBuyWeaponsMenu(station)
-				end	
+				end
 
 				if data.current.value == 'put_stock' then
 	        OpenPutStocksMenu()
-        end	
+        end
 
         if data.current.value == 'get_stock' then
 	        OpenGetStocksMenu()
@@ -150,7 +286,7 @@ function OpenArmoryMenu(station)
 
 			end,
 			function(data, menu)
-				
+
 				menu.close()
 
 				CurrentAction     = 'menu_armory'
@@ -230,8 +366,8 @@ function OpenVehicleSpawnerMenu(station, partNum)
 				if Config.MaxInService == -1 then
 
 					ESX.Game.SpawnVehicle(model, {
-						x = vehicles[partNum].SpawnPoint.x, 
-						y = vehicles[partNum].SpawnPoint.y, 
+						x = vehicles[partNum].SpawnPoint.x,
+						y = vehicles[partNum].SpawnPoint.y,
 						z = vehicles[partNum].SpawnPoint.z
 					}, vehicles[partNum].Heading, function(vehicle)
 						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
@@ -245,8 +381,8 @@ function OpenVehicleSpawnerMenu(station, partNum)
 						if canTakeService then
 
 							ESX.Game.SpawnVehicle(model, {
-								x = vehicles[partNum].SpawnPoint.x, 
-								y = vehicles[partNum].SpawnPoint.y, 
+								x = vehicles[partNum].SpawnPoint.x,
+								y = vehicles[partNum].SpawnPoint.y,
 								z = vehicles[partNum].SpawnPoint.z
 							}, vehicles[partNum].Heading, function(vehicle)
 								TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
@@ -280,7 +416,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 end
 
 function OpenPoliceActionsMenu()
-	
+
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open(
@@ -388,7 +524,7 @@ function OpenPoliceActionsMenu()
 					      if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 3.0) then
 
 									local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
-					        
+
 					        if DoesEntityExist(vehicle) then
 
 					        	Citizen.CreateThread(function()
@@ -471,7 +607,7 @@ function OpenPoliceActionsMenu()
 
 		end,
 		function(data, menu)
-			
+
 			menu.close()
 
 		end
@@ -482,7 +618,7 @@ end
 function OpenIdentityCardMenu(player)
 
 	if Config.EnableGCIdentity then
-	
+
 		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
 			local jobLabel = nil
@@ -492,7 +628,7 @@ function OpenIdentityCardMenu(player)
 			else
 				jobLabel = 'Job : ' .. data.job.label
 			end
-		
+
 			local elements = {
 				{label = _U('name') .. data.firstname .. " " .. data.lastname, value = nil},
 				{label = jobLabel,              value = nil},
@@ -528,7 +664,7 @@ function OpenIdentityCardMenu(player)
 			)
 
 		end, GetPlayerServerId(player))
-		
+
 	else
 
 		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
@@ -540,7 +676,7 @@ function OpenIdentityCardMenu(player)
 			else
 				jobLabel = 'Job : ' .. data.job.label
 			end
-		
+
 				local elements = {
 					{label = _U('name') .. data.name, value = nil},
 					{label = jobLabel,              value = nil},
@@ -576,7 +712,7 @@ function OpenIdentityCardMenu(player)
 			)
 
 		end, GetPlayerServerId(player))
-		
+
 	end
 
 end
@@ -586,7 +722,7 @@ function OpenBodySearchMenu(player)
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
 		local elements = {}
-		
+
 		local blackMoney = 0
 
 		for i=1, #data.accounts, 1 do
@@ -625,8 +761,8 @@ function OpenBodySearchMenu(player)
 				})
 			end
 		end
-		
-		
+
+
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'body_search',
 			{
@@ -673,7 +809,7 @@ function OpenFineMenu(player)
 			},
 		},
 		function(data, menu)
-			
+
 			OpenFineCategoryMenu(player, data.current.value)
 
 		end,
@@ -689,7 +825,7 @@ function OpenFineCategoryMenu(player, category)
 	ESX.TriggerServerCallback('esx_policejob:getFineList', function(fines)
 
 		local elements = {}
-		
+
 		for i=1, #fines, 1 do
 			table.insert(elements, {
 				label     = fines[i].label .. ' $' .. fines[i].amount,
@@ -796,7 +932,7 @@ function OpenGetWeaponMenu()
 				menu.close()
 			end
 		)
-		
+
 	end)
 
 end
@@ -826,7 +962,7 @@ function OpenPutWeaponMenu()
 			elements = elements,
 		},
 		function(data, menu)
-			
+
 			menu.close()
 
 			ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
@@ -848,7 +984,7 @@ function OpenBuyWeaponsMenu(station)
 		local elements = {}
 
 		for i=1, #Config.PoliceStations[station].AuthorizedWeapons, 1 do
-			
+
 			local weapon = Config.PoliceStations[station].AuthorizedWeapons[i]
 			local count  = 0
 
@@ -860,7 +996,7 @@ function OpenBuyWeaponsMenu(station)
 			end
 
 			table.insert(elements, {label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.name) .. ' $' .. weapon.price, value = weapon.name, price = weapon.price})
-		
+
 		end
 
 		ESX.UI.Menu.Open(
@@ -873,7 +1009,7 @@ function OpenBuyWeaponsMenu(station)
 			function(data, menu)
 
 				ESX.TriggerServerCallback('esx_policejob:buy', function(hasEnoughMoney)
-					
+
 					if hasEnoughMoney then
 						ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
 							OpenBuyWeaponsMenu(station)
@@ -1014,7 +1150,7 @@ end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-  PlayerData = xPlayer 
+  PlayerData = xPlayer
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -1062,8 +1198,8 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 		if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0) then
 
 			ESX.Game.SpawnVehicle('polmav', {
-				x = helicopters[partNum].SpawnPoint.x, 
-				y = helicopters[partNum].SpawnPoint.y, 
+				x = helicopters[partNum].SpawnPoint.x,
+				y = helicopters[partNum].SpawnPoint.y,
 				z = helicopters[partNum].SpawnPoint.z
 			}, helicopters[partNum].Heading, function(vehicle)
 				SetVehicleModKit(vehicle, 0)
@@ -1152,25 +1288,25 @@ AddEventHandler('esx_policejob:handcuff', function()
 	Citizen.CreateThread(function()
 
 		if IsHandcuffed then
-			
+
 			RequestAnimDict('mp_arresting')
-			
+
 			while not HasAnimDictLoaded('mp_arresting') do
 				Wait(100)
 			end
-			
+
 			TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
 			SetEnableHandcuffs(playerPed, true)
 			SetPedCanPlayGestureAnims(playerPed, false)
 			FreezeEntityPosition(playerPed,  true)
-		
+
 		else
-			
+
 			ClearPedSecondaryTask(playerPed)
 			SetEnableHandcuffs(playerPed, false)
 			SetPedCanPlayGestureAnims(playerPed,  true)
 			FreezeEntityPosition(playerPed, false)
-		
+
 		end
 
 	end)
@@ -1190,9 +1326,9 @@ Citizen.CreateThread(function()
 			if IsDragged then
 				local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
 				local myped = GetPlayerPed(-1)
-				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)		
+				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 			else
-				DetachEntity(GetPlayerPed(-1), true, false)	
+				DetachEntity(GetPlayerPed(-1), true, false)
 			end
 		end
 	end
@@ -1207,7 +1343,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
   if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 
 		local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
-    
+
     if DoesEntityExist(vehicle) then
 
     	local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
@@ -1226,7 +1362,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 
     end
 
-  end	
+  end
 
 end)
 
@@ -1248,13 +1384,13 @@ Citizen.CreateThread(function()
 	for k,v in pairs(Config.PoliceStations) do
 
 		local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
-	  
+
 	  SetBlipSprite (blip, 60)
 	  SetBlipDisplay(blip, 4)
 	  SetBlipScale  (blip, 1.2)
 	  SetBlipColour (blip, v.Blip.Color)
 	  SetBlipAsShortRange(blip, true)
-		
+
 		BeginTextCommandSetBlipName("STRING")
 	  AddTextComponentString(_U('map_blip'))
 	  EndTextCommandSetBlipName(blip)
@@ -1266,14 +1402,14 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		
+
 		Wait(0)
-		
+
 		if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
 			local playerPed = GetPlayerPed(-1)
 			local coords    = GetEntityCoords(playerPed)
-			
+
 			for k,v in pairs(Config.PoliceStations) do
 
 				for i=1, #v.Cloakrooms, 1 do
@@ -1354,7 +1490,7 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.Vehicles, 1 do
-					
+
 					if GetDistanceBetweenCoords(coords,  v.Vehicles[i].Spawner.x,  v.Vehicles[i].Spawner.y,  v.Vehicles[i].Spawner.z,  true) < Config.MarkerSize.x then
 						isInMarker     = true
 						currentStation = k
@@ -1372,7 +1508,7 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.Helicopters, 1 do
-					
+
 					if GetDistanceBetweenCoords(coords,  v.Helicopters[i].Spawner.x,  v.Helicopters[i].Spawner.y,  v.Helicopters[i].Spawner.z,  true) < Config.MarkerSize.x then
 						isInMarker     = true
 						currentStation = k
@@ -1416,7 +1552,7 @@ Citizen.CreateThread(function()
 			local hasExited = false
 
 			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
-				
+
 				if
 					(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
 					(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
@@ -1429,14 +1565,14 @@ Citizen.CreateThread(function()
 				LastStation             = currentStation
 				LastPart                = currentPart
 				LastPartNum             = currentPartNum
-				
+
 				TriggerEvent('esx_policejob:hasEnteredMarker', currentStation, currentPart, currentPartNum)
 			end
 
 			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-				
+
 				HasAlreadyEnteredMarker = false
-				
+
 				TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
 			end
 
@@ -1447,7 +1583,7 @@ end)
 
 -- Enter / Exit entity zone events
 Citizen.CreateThread(function()
-	
+
 	local trackedEntities = {
 		'prop_roadcone02a',
 		'prop_barrier_work06a',
@@ -1467,9 +1603,9 @@ Citizen.CreateThread(function()
 		local closestEntity   = nil
 
 		for i=1, #trackedEntities, 1 do
-			
+
 			local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
-			
+
 			if DoesEntityExist(object) then
 
 				local objCoords = GetEntityCoords(object)
@@ -1541,12 +1677,12 @@ Citizen.CreateThread(function()
 					then
 						TriggerServerEvent('esx_service:disableService', 'police')
 					end
-					
+
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 				end
 
 				if CurrentAction == 'menu_boss_actions' then
-					
+
 					ESX.UI.Menu.CloseAll()
 
 					TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
@@ -1567,7 +1703,7 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
-				
+
 			end
 
 		end

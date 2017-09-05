@@ -3,6 +3,11 @@ Locales['fr'] = {
 		['cloakroom'] = 'vestiaire',
 		['citizen_wear'] = 'tenue Civil',
 		['police_wear'] = 'tenue Policier',
+		['sheriff_wear'] = 'sheriff Outfit',
+		['lieutenant_wear'] = 'Swatt outfit ',
+		['commandant_wear'] = 'Fbi outfit',
+		['statepd_wear'] = 'State Police outfit',
+		['specops_wear'] = 'Spec OPS outfit',
 		['open_cloackroom'] = 'appuez sur ~INPUT_CONTEXT~ pour vous changer',
 	--Armory
 		['get_weapon'] = 'prendre Arme',

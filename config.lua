@@ -6,11 +6,12 @@ Config.MarkerColor            = {r = 50, g = 50, b = 204}
 Config.EnablePlayerManagement = false
 Config.EnableArmoryManagement = false
 Config.EnableGCIdentity       = false
+Config.EnableNonFreemodePeds  = false -- turn this on if you want custom peds
 Config.MaxInService           = -1
-Config.Locale       		      = 'fr'
+Config.Locale       		  = 'fr'
 
 Config.PoliceStations = {
-	
+
 	LSPD = {
 
 		Blip = {
