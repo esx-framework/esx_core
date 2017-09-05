@@ -135,7 +135,11 @@ end)
 RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)
 
-	ESX.ShowNotification(_U('new_message', message))
+	if job == 'player' then
+		ESX.ShowNotification(_U('new_message', message))
+	else
+		ESX.ShowNotification('~b~' .. job .. ': ~s~' .. message)
+	end
 
 	SendNUIMessage({
 		newMessage  = true,
