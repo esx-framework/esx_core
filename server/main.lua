@@ -116,16 +116,30 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
 
+	if Config.EnableGCIdentity then
+	
 		local xPlayer = ESX.GetPlayerFromId(target)
-
+		
+		local identifier = GetPlayerIdentifiers(target)[1]
+		
+		local result = MySQL.Sync.fetchAll("SELECT firstname, lastname, sex, dateofbirth, height FROM users WHERE identifier = @identifier", {
+			['@identifier'] = identifier
+		})
+			
+		local user 			= result[1]
+		local firstname 	= user['firstname']
+		local lastname  	= user['lastname']
+		
 		local data = {
-			name       = GetPlayerName(target),
-			job        = xPlayer.job,
-			inventory  = xPlayer.inventory,
-			accounts   = xPlayer.accounts,
-			weapons    = xPlayer.loadout
+			name       	= GetPlayerName(target),
+			job        	= xPlayer.job,
+			inventory  	= xPlayer.inventory,
+			accounts   	= xPlayer.accounts,
+			weapons    	= xPlayer.loadout,
+			firstname  	= firstname,
+			lastname   	= lastname		
 		}
-
+		
 		TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
 
 			if status ~= nil then
@@ -139,6 +153,34 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		end)
 
 		cb(data)
+	
+	else
+	
+		local xPlayer = ESX.GetPlayerFromId(target)
+
+		local data = {
+			name       = GetPlayerName(target),
+			job        = xPlayer.job,
+			inventory  = xPlayer.inventory,
+			accounts   = xPlayer.accounts,
+			weapons    = xPlayer.loadout
+		}
+			
+		TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
+
+			if status ~= nil then
+				data.drunk = status.getPercent()
+			end
+			
+		end)
+
+		TriggerEvent('esx_license:getLicenses', _source, function(licenses)
+			data.licenses = licenses
+		end)
+
+		cb(data)
+		
+	end
 
 end)
 
