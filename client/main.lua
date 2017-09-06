@@ -623,7 +623,7 @@ function OpenIdentityCardMenu(player)
 
 			local jobLabel 		= nil
 			local sexLabel 		= nil
-			local sex 			= nil
+			local sex 		= nil
 			local dobLabel 		= nil
 			local heightLabel 	= nil
 			local idLabel 		= nil
