@@ -621,17 +621,55 @@ function OpenIdentityCardMenu(player)
 
 		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
-			local jobLabel = nil
-
+			local jobLabel 		= nil
+			local sexLabel 		= nil
+			local sex 			= nil
+			local dobLabel 		= nil
+			local heightLabel 	= nil
+			local idLabel 		= nil
+			
 			if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
 				jobLabel = 'Job : ' .. data.job.label .. ' - ' .. data.job.grade_label
 			else
 				jobLabel = 'Job : ' .. data.job.label
 			end
 
+			if data.sex ~= nil then
+				if (data.sex == 'm') or (data.sex == 'M') then
+					sex = 'Male'
+				else
+					sex = 'Female'
+				end				
+				sexLabel = 'Sex : ' .. sex
+			else
+				sexLabel = 'Sex : Unknown'
+			end
+			
+			if data.dob ~= nil then
+				dobLabel = 'DOB : ' .. data.dob
+			else
+				dobLabel = 'DOB : Unknown'
+			end
+			
+			if data.height ~= nil then
+				heightLabel = 'Height : ' .. data.height
+			else
+				heightLabel = 'Height : Unknown'
+			end
+			
+			if data.name ~= nil then
+				idLabel = 'ID : ' .. data.name
+			else
+				idLabel = 'ID : Unknown'
+			end
+				
 			local elements = {
 				{label = _U('name') .. data.firstname .. " " .. data.lastname, value = nil},
+				{label = sexLabel,              value = nil},
+				{label = dobLabel,              value = nil},
+				{label = heightLabel,           value = nil},
 				{label = jobLabel,              value = nil},
+				{label = idLabel,		        value = nil},
 			}
 
 			if data.drunk ~= nil then
