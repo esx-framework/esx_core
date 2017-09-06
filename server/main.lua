@@ -127,8 +127,14 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		})
 			
 		local user 			= result[1]
-		local firstname 	= user['firstname']
-		local lastname  	= user['lastname']
+		local firstname 		= user['firstname']
+		local lastname  		= user['lastname']
+		local sex           		= user['sex']
+		local dob           		= tostring(user['dateofbirth'])
+		local heightInit    		= user['height']	
+		local heightFeet 		= tonumber(string.format("%.0f",heightInit / 12, 0))
+		local heightInches 		= heightInit % 12
+		local height 	   		= heightFeet .. "\' " .. heightInches .. "\""
 		
 		local data = {
 			name       	= GetPlayerName(target),
@@ -137,7 +143,10 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 			accounts   	= xPlayer.accounts,
 			weapons    	= xPlayer.loadout,
 			firstname  	= firstname,
-			lastname   	= lastname		
+			lastname   	= lastname,
+			sex         	= sex,
+			dob         	= dob,
+			height      	= height
 		}
 		
 		TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
