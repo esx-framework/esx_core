@@ -209,55 +209,113 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)
 
-	MySQL.Async.fetchAll(
-		'SELECT * FROM owned_vehicles',
-		{},
-		function(result)
+	if Config.EnableGCIdentity then
+	
+		MySQL.Async.fetchAll(
+			'SELECT * FROM owned_vehicles',
+			{},
+			function(result)
 			
-			local foundIdentifier = nil
+				local foundIdentifier = nil
 
-			for i=1, #result, 1 do
+				for i=1, #result, 1 do
 				
-				local vehicleData = json.decode(result[i].vehicle)
+					local vehicleData = json.decode(result[i].vehicle)
 
-				if vehicleData.plate == plate then
-					foundIdentifier = result[i].owner
-					break
+					if vehicleData.plate == plate then
+						foundIdentifier = result[i].owner
+						break
+					end
+
+				end
+
+				if foundIdentifier ~= nil then
+
+					MySQL.Async.fetchAll(
+						'SELECT * FROM users WHERE identifier = @identifier',
+						{
+							['@identifier'] = foundIdentifier
+						},
+						function(result)
+							
+							local ownerName = result[1].firstname .. " " .. result[1].lastname
+
+							local infos = {
+								plate = plate,
+								owner = ownerName
+							}
+
+							cb(infos)
+
+						end
+					)
+			
+				else
+
+					local infos = {
+					plate = plate
+					}
+
+					cb(infos)
+
 				end
 
 			end
-
-			if foundIdentifier ~= nil then
-
-				MySQL.Async.fetchAll(
-					'SELECT * FROM users WHERE identifier = @identifier',
-					{
-						['@identifier'] = foundIdentifier
-					},
-					function(result)
-
-						local infos = {
-							plate = plate,
-							owner = result[1].name
-						}
-
-						cb(infos)
-
-					end
-				)
+		)	
+	
+	else
+	
+		MySQL.Async.fetchAll(
+			'SELECT * FROM owned_vehicles',
+			{},
+			function(result)
 			
-			else
+				local foundIdentifier = nil
 
-				local infos = {
+				for i=1, #result, 1 do
+				
+					local vehicleData = json.decode(result[i].vehicle)
+
+					if vehicleData.plate == plate then
+						foundIdentifier = result[i].owner
+						break
+					end
+
+				end
+
+				if foundIdentifier ~= nil then
+
+					MySQL.Async.fetchAll(
+						'SELECT * FROM users WHERE identifier = @identifier',
+						{
+							['@identifier'] = foundIdentifier
+						},
+						function(result)
+
+							local infos = {
+								plate = plate,
+								owner = result[1].name
+							}
+
+							cb(infos)
+
+						end
+					)
+			
+				else
+
+					local infos = {
 					plate = plate
-				}
+					}
 
-				cb(infos)
+					cb(infos)
+
+				end
 
 			end
-
-		end
-	)
+		)
+		
+	end
 
 end)
 
