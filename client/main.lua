@@ -669,7 +669,7 @@ function OpenIdentityCardMenu(player)
 				{label = dobLabel,              value = nil},
 				{label = heightLabel,           value = nil},
 				{label = jobLabel,              value = nil},
-				{label = idLabel,		        value = nil},
+				{label = idLabel,		value = nil},
 			}
 
 			if data.drunk ~= nil then
