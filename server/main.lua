@@ -40,7 +40,7 @@ AddEventHandler('esx_weashop:buyItem', function(itemName, price, zone)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local account = xPlayer.getAccount('black_money')
 	
-	if zone=="blackweashop" then 
+	if zone=="BlackWeashop" then 
 		if account.money >= price then
 
 		xPlayer.removeAccountMoney('black_money', price)
