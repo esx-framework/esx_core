@@ -478,7 +478,7 @@ Config.Menus = {
 		modFrontWheelsType1 = _U('muscle'),
 		modFrontWheelsType2 = _U('lowrider'),
 		modFrontWheelsType3 = _U('suv'),
-		modFrontWheelsType4 = _U('allterain'),
+		modFrontWheelsType4 = _U('allterrain'),
 		modFrontWheelsType5 = _U('tuning'),
 		modFrontWheelsType6 = _U('motorcycle'),
 		modFrontWheelsType7 = _U('highend')
@@ -512,7 +512,7 @@ Config.Menus = {
 		price = 500
 	},
 	modFrontWheelsType4 = {
-		label = _U('allterain'),
+		label = _U('allterrain'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 4,
