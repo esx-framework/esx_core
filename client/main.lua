@@ -57,10 +57,10 @@ function OpenCloakroomMenu()
 	ESX.UI.Menu.CloseAll()
 
 	if Config.EnableNonFreemodePeds then
-		    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear'})
-				table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
-				table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
-		end
+	    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear'})
+		table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
+		table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
+	end
 
 		ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'cloakroom',
@@ -75,14 +75,13 @@ function OpenCloakroomMenu()
 			menu.close()
 
 			--Taken from SuperCoolNinja
-			if data.current.value == 'citizen_wear'  then --Ajout de tenue par grades
+			if data.current.value == 'citizen_wear'  then
 
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
             if skin.sex == 0 then
 
-                local model = GetHashKey("mp_m_freemode_01")  --[FR]--Pour changer de Skin Male veuillez changer Ici !
-                                                          																					--[EN]--Here for change Ped Skin Model Here is for Man
+                local model = GetHashKey("mp_m_freemode_01")
                     RequestModel(model)
                     while not HasModelLoaded(model) do
                         RequestModel(model)
@@ -93,8 +92,7 @@ function OpenCloakroomMenu()
                     SetModelAsNoLongerNeeded(model)
                     TriggerEvent('skinchanger:loadSkin', skin)
             else
-                    local model = GetHashKey("mp_f_freemode_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
-                                                             																					--[EN]--Here for change Ped Skin Model Here is for Girl
+                    local model = GetHashKey("mp_f_freemode_01")
 
                     RequestModel(model)
                     while not HasModelLoaded(model) do
@@ -122,16 +120,15 @@ function OpenCloakroomMenu()
 
 				end)
 
-end
-			--Taken from SuperCoolNinja
+			end
+
 			if data.current.value == 'sheriff_wear' then
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
 				if skin.sex == 0 then
 
-					local model = GetHashKey("s_m_y_sheriff_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
-																  																												--[EN]--Here for change Ped Skin Model Here is for Man
+					local model = GetHashKey("s_m_y_sheriff_01")
 
 					RequestModel(model)
 					while not HasModelLoaded(model) do
@@ -142,8 +139,7 @@ end
 					SetPlayerModel(PlayerId(), model)
 					SetModelAsNoLongerNeeded(model)
 			else
-					local model = GetHashKey("s_f_y_sheriff_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
-																  																											--[EN]--Here for change Ped Skin Model Here is for Girl
+					local model = GetHashKey("s_f_y_sheriff_01")
 
 					RequestModel(model)
 					while not HasModelLoaded(model) do
@@ -157,14 +153,13 @@ end
 
 				end)
 			end
-			--Taken from SuperCoolNinja
-			if data.current.value == 'lieutenant_wear' then --Ajout de tenue par grades
+
+			if data.current.value == 'lieutenant_wear' then
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
 				if skin.sex == 0 then
-					local model = GetHashKey("s_m_y_swat_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
-																																											--[EN]--Here for change Ped Skin Model Here is for Man
+					local model = GetHashKey("s_m_y_swat_01")
 
 					RequestModel(model)
 					while not HasModelLoaded(model) do
@@ -175,8 +170,7 @@ end
 					SetPlayerModel(PlayerId(), model)
 					SetModelAsNoLongerNeeded(model)
 			else
-					local model = GetHashKey("s_m_y_swat_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
-																 																											--[EN]--Here for change Ped Skin Model Here is for Girl
+					local model = GetHashKey("s_m_y_swat_01")
 
 					RequestModel(model)
 					while not HasModelLoaded(model) do
@@ -190,14 +184,14 @@ end
 
 				end)
 			end
-			--Taken from SuperCoolNinja
-			if data.current.value == 'commandant_wear'  then --Ajout de tenue par grades
+
+			if data.current.value == 'commandant_wear' then
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
-					if skin.sex == 0 then
-					local model = GetHashKey("ig_fbisuit_01") --[FR]--Pour changer de Mal Male veuillez changer Ici !
-																																									--[EN]--Here for change Ped Skin Model Here is for Man
+				if skin.sex == 0 then
+					local model = GetHashKey("s_m_y_swat_01")
+
 					RequestModel(model)
 					while not HasModelLoaded(model) do
 						RequestModel(model)
@@ -207,8 +201,7 @@ end
 					SetPlayerModel(PlayerId(), model)
 					SetModelAsNoLongerNeeded(model)
 			else
-					local model = GetHashKey("ig_fbisuit_01") --[FR]--Pour changer de Femal Male veuillez changer Ici !
-																																									--[EN]--Here for change Ped Skin Model Here is for Girl
+					local model = GetHashKey("s_m_y_swat_01")
 
 					RequestModel(model)
 					while not HasModelLoaded(model) do
@@ -222,6 +215,7 @@ end
 
 				end)
 			end
+
 
 			CurrentAction     = 'menu_cloakroom'
 			CurrentActionMsg  = _U('open_cloackroom')
@@ -277,12 +271,12 @@ function OpenArmoryMenu(station)
 				end
 
 				if data.current.value == 'put_stock' then
-	        OpenPutStocksMenu()
-        end
+	        		OpenPutStocksMenu()
+        		end
 
-        if data.current.value == 'get_stock' then
-	        OpenGetStocksMenu()
-        end
+        		if data.current.value == 'get_stock' then
+	        		OpenGetStocksMenu()
+        		end
 
 			end,
 			function(data, menu)
@@ -445,6 +439,7 @@ function OpenPoliceActionsMenu()
 							{label = _U('handcuff'), 		value = 'handcuff'},
 							{label = _U('drag'), 			value = 'drag'},
 							{label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
+							{label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
 							{label = _U('fine'),            value = 'fine'}
 						},
 					},
@@ -472,6 +467,10 @@ function OpenPoliceActionsMenu()
 
 							if data2.current.value == 'put_in_vehicle' then
 								TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(player))
+							end
+
+							if data2.current.value == 'out_the_vehicle' then
+							    TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(player))
 							end
 
 							if data2.current.value == 'fine' then
@@ -623,7 +622,7 @@ function OpenIdentityCardMenu(player)
 
 			local jobLabel 		= nil
 			local sexLabel 		= nil
-			local sex 		= nil
+			local sex 			= nil
 			local dobLabel 		= nil
 			local heightLabel 	= nil
 			local idLabel 		= nil
@@ -669,7 +668,7 @@ function OpenIdentityCardMenu(player)
 				{label = dobLabel,              value = nil},
 				{label = heightLabel,           value = nil},
 				{label = jobLabel,              value = nil},
-				{label = idLabel,		value = nil},
+				{label = idLabel,				value = nil},
 			}
 
 			if data.drunk ~= nil then
@@ -937,6 +936,17 @@ function OpenVehicleInfosMenu(vehicleData)
 	end, vehicleData.plate)
 
 end
+
+RegisterNetEvent('esx_policejob:OutVehicle')
+AddEventHandler('esx_policejob:OutVehicle', function(t)
+    local ped = GetPlayerPed(t)
+    ClearPedTasksImmediately(ped)
+    plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
+    local xnew = plyPos.x+2
+    local ynew = plyPos.y+2
+   
+    SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
+end)
 
 function OpenGetWeaponMenu()
 

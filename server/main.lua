@@ -70,6 +70,11 @@ AddEventHandler('esx_policejob:putInVehicle', function(target)
 	TriggerClientEvent('esx_policejob:putInVehicle', target)
 end)
 
+RegisterServerEvent('esx_policejob:OutVehicle')
+AddEventHandler('esx_policejob:OutVehicle', function(target)
+    TriggerClientEvent('esx_policejob:OutVehicle', target)
+end)
+
 RegisterServerEvent('esx_policejob:getStockItem')
 AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 

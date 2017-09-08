@@ -31,6 +31,7 @@ Locales['fr'] = {
 		['handcuff'] = 'menotter / Démenotter',
 		['drag'] = 'escorter',
 		['put_in_vehicle'] = 'mettre dans véhicule',
+		['out_the_vehicle'] = 'sortir du véhicule',
 		['fine'] = 'Amende',
 		['no_players_nearby'] = 'aucun joueur à proximité',
 

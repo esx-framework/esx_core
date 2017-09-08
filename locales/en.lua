@@ -31,6 +31,7 @@ Locales['en'] = {
 		['handcuff'] = 'cuff / Uncuff',
 		['drag'] = 'drag',
 		['put_in_vehicle'] = 'put in Vehicle',
+		['out_the_vehicle'] = 'take ou of vehicle',
 		['fine'] = 'fine',
 		['no_players_nearby'] = 'no players nearby',
 
