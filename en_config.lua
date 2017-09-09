@@ -1,14 +1,15 @@
-Config                        = {}
-Config.DrawDistance           = 100.0
-Config.MarkerType             = 1
-Config.MarkerSize             = {x = 1.5, y = 1.5, z = 1.0}
-Config.MarkerColor            = {r = 50, g = 50, b = 204}
-Config.EnablePlayerManagement = false
-Config.EnableArmoryManagement = false
-Config.EnableGCIdentity       = false
-Config.EnableNonFreemodePeds  = false -- turn this on if you want custom peds
-Config.MaxInService           = -1
-Config.Locale       		  = 'en'
+Config                            = {}
+Config.DrawDistance               = 100.0
+Config.MarkerType                 = 1
+Config.MarkerSize                 = {x = 1.5, y = 1.5, z = 1.0}
+Config.MarkerColor                = {r = 50, g = 50, b = 204}
+Config.EnablePlayerManagement     = false
+Config.EnableArmoryManagement     = false
+Config.EnableGCIdentity           = false
+Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+Config.EnableSocietyOwnedVehicles = false
+Config.MaxInService               = -1
+Config.Locale       		          = 'en'
 
 Config.PoliceStations = {
 

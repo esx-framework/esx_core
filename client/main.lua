@@ -23,8 +23,8 @@ local CurrentAction             = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local IsHandcuffed              = false
-local IsDragged		            = false
-local CopPed   					= 0
+local IsDragged		              = false
+local CopPed   					        = 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -52,7 +52,7 @@ function OpenCloakroomMenu()
 	local elements = {
     {label = _U('citizen_wear'), value = 'citizen_wear'},
     {label = _U('police_wear'), value = 'police_wear'}
-}
+	}
 
 	ESX.UI.Menu.CloseAll()
 
@@ -328,84 +328,134 @@ end
 
 function OpenVehicleSpawnerMenu(station, partNum)
 
-	local elements = {}
 	local vehicles = Config.PoliceStations[station].Vehicles
-
-	for i=1, #Config.PoliceStations[station].AuthorizedVehicles, 1 do
-		local vehicle = Config.PoliceStations[station].AuthorizedVehicles[i]
-		table.insert(elements, {label = vehicle.label, value = vehicle.name})
-	end
 
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'vehicle_spawner',
-		{
-			title    = _U('vehicle_menu'),
-			align    = 'top-left',
-			elements = elements,
-		},
-		function(data, menu)
+	if Config.EnableSocietyOwnedVehicles then
 
-			menu.close()
+		local elements = {}
 
-			local model = data.current.value
+		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(garageVehicles)
 
-			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
-
-			if not DoesEntityExist(vehicle) then
-
-				local playerPed = GetPlayerPed(-1)
-
-				if Config.MaxInService == -1 then
-
-					ESX.Game.SpawnVehicle(model, {
-						x = vehicles[partNum].SpawnPoint.x,
-						y = vehicles[partNum].SpawnPoint.y,
-						z = vehicles[partNum].SpawnPoint.z
-					}, vehicles[partNum].Heading, function(vehicle)
-						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-						SetVehicleMaxMods(vehicle)
-					end)
-
-				else
-
-					ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
-
-						if canTakeService then
-
-							ESX.Game.SpawnVehicle(model, {
-								x = vehicles[partNum].SpawnPoint.x,
-								y = vehicles[partNum].SpawnPoint.y,
-								z = vehicles[partNum].SpawnPoint.z
-							}, vehicles[partNum].Heading, function(vehicle)
-								TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-								SetVehicleMaxMods(vehicle)
-							end)
-
-						else
-							ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
-						end
-
-					end, 'police')
-
-				end
-
-			else
-				ESX.ShowNotification(_U('vehicle_out'))
+			for i=1, #garageVehicles, 1 do
+				table.insert(elements, {label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']', value = garageVehicles[i]})
 			end
 
-		end,
-		function(data, menu)
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'vehicle_spawner',
+				{
+					title    = _U('vehicle_menu'),
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
 
-			menu.close()
+					menu.close()
 
-			CurrentAction     = 'menu_vehicle_spawner'
-			CurrentActionMsg  = _U('vehicle_spawner')
-			CurrentActionData = {station = station, partNum = partNum}
+					local vehicleProps = data.current.value
 
+					ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, 270.0, function(vehicle)
+						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+						local playerPed = GetPlayerPed(-1)
+						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+					end)
+
+					TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
+
+				end,
+				function(data, menu)
+
+					menu.close()
+
+					CurrentAction     = 'menu_vehicle_spawner'
+					CurrentActionMsg  = _U('vehicle_spawner')
+					CurrentActionData = {station = station, partNum = partNum}
+
+				end
+			)
+
+		end, 'police')
+
+	else
+
+		local elements = {}
+
+		for i=1, #Config.PoliceStations[station].AuthorizedVehicles, 1 do
+			local vehicle = Config.PoliceStations[station].AuthorizedVehicles[i]
+			table.insert(elements, {label = vehicle.label, value = vehicle.name})
 		end
-	)
+
+		ESX.UI.Menu.Open(
+			'default', GetCurrentResourceName(), 'vehicle_spawner',
+			{
+				title    = _U('vehicle_menu'),
+				align    = 'top-left',
+				elements = elements,
+			},
+			function(data, menu)
+
+				menu.close()
+
+				local model = data.current.value
+
+				local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
+
+				if not DoesEntityExist(vehicle) then
+
+					local playerPed = GetPlayerPed(-1)
+
+					if Config.MaxInService == -1 then
+
+						ESX.Game.SpawnVehicle(model, {
+							x = vehicles[partNum].SpawnPoint.x, 
+							y = vehicles[partNum].SpawnPoint.y, 
+							z = vehicles[partNum].SpawnPoint.z
+						}, vehicles[partNum].Heading, function(vehicle)
+							TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+							SetVehicleMaxMods(vehicle)
+						end)
+
+					else
+
+						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
+
+							if canTakeService then
+
+								ESX.Game.SpawnVehicle(model, {
+									x = vehicles[partNum].SpawnPoint.x, 
+									y = vehicles[partNum].SpawnPoint.y, 
+									z = vehicles[partNum].SpawnPoint.z
+								}, vehicles[partNum].Heading, function(vehicle)
+									TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+									SetVehicleMaxMods(vehicle)
+								end)
+
+							else
+								ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
+							end
+
+						end, 'police')
+
+					end
+
+				else
+					ESX.ShowNotification(_U('vehicle_out'))
+				end
+
+			end,
+			function(data, menu)
+
+				menu.close()
+
+				CurrentAction     = 'menu_vehicle_spawner'
+				CurrentActionMsg  = _U('vehicle_spawner')
+				CurrentActionData = {station = station, partNum = partNum}
+
+			end
+		)
+
+	end
 
 end
 
@@ -1715,15 +1765,24 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'delete_vehicle' then
 
-					if
-						GetEntityModel(vehicle) == GetHashKey('police')  or
-						GetEntityModel(vehicle) == GetHashKey('police2') or
-						GetEntityModel(vehicle) == GetHashKey('police3') or
-						GetEntityModel(vehicle) == GetHashKey('police4') or
-						GetEntityModel(vehicle) == GetHashKey('policeb') or
-						GetEntityModel(vehicle) == GetHashKey('policet')
-					then
-						TriggerServerEvent('esx_service:disableService', 'police')
+					if Config.EnableSocietyOwnedVehicles then
+
+						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+						TriggerServerEvent('esx_society:putVehicleInGarage', 'police', vehicleProps)
+
+					else
+
+						if
+							GetEntityModel(vehicle) == GetHashKey('police')  or
+							GetEntityModel(vehicle) == GetHashKey('police2') or
+							GetEntityModel(vehicle) == GetHashKey('police3') or
+							GetEntityModel(vehicle) == GetHashKey('police4') or
+							GetEntityModel(vehicle) == GetHashKey('policeb') or
+							GetEntityModel(vehicle) == GetHashKey('policet')
+						then
+							TriggerServerEvent('esx_service:disableService', 'police')
+						end
+						
 					end
 
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
