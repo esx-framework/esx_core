@@ -472,46 +472,97 @@ end
 
 function OpenVehicleSpawnerMenu()
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'cloakroom',
-		{
-			title    = _U('veh_menu'),
-			align    = 'top-left',
-			elements = {
-				{label = _U('ambulance'),   value = 'ambulance'},
-				{label = _U('helicopter'), value = 'polmav'},
-			},
-		},
-		function(data, menu)
+	ESX.UI.Menu.CloseAll()
 
-			menu.close()
+	if Config.EnableSocietyOwnedVehicles then
 
-			local model = data.current.value
+		local elements = {}
 
-			ESX.Game.SpawnVehicle(model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
+		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
 
-				local playerPed = GetPlayerPed(-1)
+			for i=1, #vehicles, 1 do
+				table.insert(elements, {label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']', value = vehicles[i]})
+			end
 
-				if model == 'polmav' then
-					SetVehicleModKit(vehicle, 0)
-					SetVehicleLivery(vehicle, 1)
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'vehicle_spawner',
+				{
+					title    = _U('veh_menu'),
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
+
+					menu.close()
+
+					local vehicleProps = data.current.value
+
+					ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
+						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+						local playerPed = GetPlayerPed(-1)
+						TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+					end)
+
+					TriggerServerEvent('esx_society:removeVehicleFromGarage', 'ambulance', vehicleProps)
+
+				end,
+				function(data, menu)
+
+					menu.close()
+
+					CurrentAction     = 'vehicle_spawner_menu'
+					CurrentActionMsg  = _U('veh_spawn')
+					CurrentActionData = {}
+
 				end
+			)
 
-				TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+		end, 'ambulance')
 
-			end)
+	else
 
-		end,
-		function(data, menu)
+		ESX.UI.Menu.Open(
+			'default', GetCurrentResourceName(), 'vehicle_spawner',
+			{
+				title    = _U('veh_menu'),
+				align    = 'top-left',
+				elements = {
+					{label = _U('ambulance'),  value = 'ambulance'},
+					{label = _U('helicopter'), value = 'polmav'},
+				},
+			},
+			function(data, menu)
 
-			menu.close()
+				menu.close()
 
-			CurrentAction     = 'vehicle_spawner_menu'
-			CurrentActionMsg  = _U('veh_spawn')
-			CurrentActionData = {}
+				local model = data.current.value
 
-		end
-	)
+				ESX.Game.SpawnVehicle(model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
+
+					local playerPed = GetPlayerPed(-1)
+
+					if model == 'polmav' then
+						SetVehicleModKit(vehicle, 0)
+						SetVehicleLivery(vehicle, 1)
+					end
+
+					TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+
+				end)
+
+			end,
+			function(data, menu)
+
+				menu.close()
+
+				CurrentAction     = 'vehicle_spawner_menu'
+				CurrentActionMsg  = _U('veh_spawn')
+				CurrentActionData = {}
+
+			end
+		)
+
+	end
 
 end
 
@@ -794,6 +845,12 @@ Citizen.CreateThread(function()
 				end
 
 				if CurrentAction == 'delete_vehicle' then
+
+					if Config.EnableSocietyOwnedVehicles then
+						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+						TriggerServerEvent('esx_society:putVehicleInGarage', 'ambulance', vehicleProps)
+					end
+
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 				end
 
