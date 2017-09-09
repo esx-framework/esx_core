@@ -87,7 +87,26 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, ve
 			['@owner']   = xPlayer.identifier
 		},
 		function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', playerId, _U('vehicle').. vehicleProps.plate .. _('belongs'))
+			TriggerClientEvent('esx:showNotification', playerId, _U('vehicle') .. vehicleProps.plate .. _('belongs'))
+		end
+	)
+
+end)
+
+RegisterServerEvent('esx_vehicleshop:setVehicleOwnedSociety')
+AddEventHandler('esx_vehicleshop:setVehicleOwnedSociety', function(society, vehicleProps)
+
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.execute(
+		'INSERT INTO owned_vehicles (vehicle, owner) VALUES (@vehicle, @owner)',
+		{
+			['@vehicle'] = json.encode(vehicleProps),
+			['@owner']   = 'society:' .. society
+		},
+		function(rowsChanged)
+
 		end
 	)
 
@@ -176,10 +195,10 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 			inventory.removeItem(itemName, count)
 			xPlayer.addInventoryItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. 'x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. ' x' .. count .. ' ' .. item.label)
 
 	end)
 
@@ -198,10 +217,10 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. 'x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. ' x' .. count .. ' ' .. item.label)
 
 	end)
 
@@ -236,7 +255,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, ve
 
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function(source, cb, vehicleModel)
+ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function(source, cb, society, vehicleModel)
 
 	local vehicleData = nil
 
@@ -247,7 +266,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function(source,
 		end
 	end
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. society, function(account)
 
 		if account.money >= vehicleData.price then
 
@@ -429,7 +448,47 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 							cb(true)
 
 						else
-							cb(false)
+
+							if xPlayer.job.grade_name == 'boss' then
+
+								MySQL.Async.fetchAll(
+									'SELECT * FROM owned_vehicles WHERE owner = @owner',
+									{
+										['@owner'] = 'society:' .. xPlayer.job.name
+									},
+									function(result)
+
+										local found = false
+
+										for i=1, #result, 1 do
+
+											local vehicleProps = json.decode(result[i].vehicle)
+
+											if vehicleProps.plate == plate then
+												found = true
+												break
+											end
+
+										end
+
+										if found then
+
+											xPlayer.addMoney(price)
+											RemoveOwnedVehicle(plate)
+
+											cb(true)
+
+										else
+											cb(false)
+										end
+
+									end
+								)
+
+							else
+								cb(false)
+							end
+
 						end
 
 					end
@@ -465,7 +524,7 @@ if Config.EnablePvCommand then
 
 	TriggerEvent('es:addCommand', 'pv', function(source, args, user)
 		TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
-	end, {help = _U('remove_pv')})
+	end, {help = _U('leaving')})
 
 end
 
