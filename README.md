@@ -17,8 +17,7 @@ FXServer ESX Vehicle Shop
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_vehicleshop esx_vehicleshop
 ```
-3) * Auto mode : Import esx_vehicleshop_minimal.sql in your database
-   * Player management : Import esx_vehicleshop_full.sql in your database
+3) Import esx_vehicleshop.sql in your database
 
 4) Add this in your server.cfg :
 
