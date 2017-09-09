@@ -18,8 +18,7 @@ FXServer ESX Mecano Job
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_mecanojob esx_mecanojob
 ```
-3) * Auto mode : Import esx_mecanojob_minimal.sql in your database
-   * Player management : Import esx_mecanojob_full.sql in your database
+3) Import esx_mecanojob.sql in your database
 
 4) Add this in your server.cfg :
 
