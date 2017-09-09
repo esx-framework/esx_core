@@ -17,8 +17,7 @@ FXServer ESX Police Job
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_policejob esx_policejob
 ```
-3) * Auto mode : Import esx_policejob_minimal.sql in your database
-   * Player / Armory management : Import esx_policejob_full.sql in your database
+3) Import esx_policejob.sql in your database
 
 4) Add this in your server.cfg :
 
