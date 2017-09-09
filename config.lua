@@ -3,14 +3,46 @@ Config.DrawDistance = 100.0
 Config.Locale = 'fr'
 
 Config.Zones = {
-	ls1 = {
-		Pos   = { x = -362.7962, y = -132.4005, z = 38.25239},
-		Size  = {x = 3.0, y = 3.0, z = 0.2},
-		Color = {r = 204, g = 204, b = 0},
-		Marker= 1,
-		Name  = "LS CUSTOMS",
-		Hint  = _U('press_custom')
-	}
+    ls1 = {
+        Pos   = { x = -337.3863, y = -136.9247, z = 38.5737},
+        Size  = {x = 3.0, y = 3.0, z = 0.2},
+        Color = {r = 204, g = 204, b = 0},
+        Marker= 1,
+        Name  = "Los Santos Customs",
+        Hint  = _U('press_custom')
+    },
+     ls2 = {
+	Pos   = { x = -1155.536, y = -2007.183, z = 12.744},
+	Size  = {x = 3.0, y = 3.0, z = 0.2},
+	Color = {r = 204, g = 204, b = 0},
+	Marker= 1,
+	Name  = "Los Santos Customs",
+	Hint  = _U('press_custom')
+    },
+     ls3 = {
+	Pos   = { x = 731.8163, y = -1088.822, z = 21.733},
+	Size  = {x = 3.0, y = 3.0, z = 0.2},
+	Color = {r = 204, g = 204, b = 0},
+	Marker= 1,
+	Name  = "Los Santos Customs",
+	Hint  = _U('press_custom')
+    },
+     ls4 = {
+	Pos   = { x = 1175.04, y = 2640.216, z = 37.32177},
+	Size  = {x = 3.0, y = 3.0, z = 0.2},
+	Color = {r = 204, g = 204, b = 0},
+	Marker= 1,
+	Name  = "Los Santos Customs",
+	Hint  = _U('press_custom')
+    },
+     ls5 = {
+	Pos   = { x = 110.99, y = 6626.39, z = 30.89},
+	Size  = {x = 3.0, y = 3.0, z = 0.2},
+	Color = {r = 204, g = 204, b = 0},
+	Marker= 1,
+	Name  = "Los Santos Customs",
+	Hint  = _U('press_custom')
+    },
 }
 
 Config.Colors = {
