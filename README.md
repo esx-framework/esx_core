@@ -16,8 +16,7 @@ FXServer ESX Ambulance Job
 ```
 git clone https://github.com/FXServer-ESX/fxserver-esx_ambulancejob esx_ambulancejob
 ```
-3) * Auto mode : Import esx_ambulancejob_minimal.sql in your database
-   * Player management : Import esx_ambulancejob_full.sql in your database
+3) Import esx_ambulancejob.sql in your database
 
 4) Add this in your server.cfg :
 
