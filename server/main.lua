@@ -3,6 +3,18 @@ Jobs = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+function stringsplit(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t={} ; i=1
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    t[i] = str
+    i = i + 1
+  end
+  return t
+end
+
 AddEventHandler('onMySQLReady', function()
 
 	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
@@ -19,6 +31,35 @@ AddEventHandler('onMySQLReady', function()
 	end
 
 end)
+
+AddEventHandler('esx_society:getSocieties', function(cb)
+
+	MySQL.Async.fetchAll(
+		'SELECT * FROM addon_account WHERE name LIKE "%society_%"',
+		{},
+		function(results)
+
+			local societies = {}
+
+			for i=1, #results, 1 do
+
+				local buff    = stringsplit(results[i].name, '_')
+				local society = buff[2]
+
+				table.insert(societies, {
+					name  = society,
+					label = results[i].label
+				})
+
+			end
+
+			cb(societies)
+
+		end
+	)
+
+end)
+
 
 RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(society, amount)
@@ -87,6 +128,37 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 	else
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 	end
+
+end)
+
+RegisterServerEvent('esx_society:putVehicleInGarage')
+AddEventHandler('esx_society:putVehicleInGarage', function(society, vehicle)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+		local garage = store.get('garage') or {}
+		table.insert(garage, vehicle)
+		store.set('garage', garage)
+	end)
+
+end)
+
+RegisterServerEvent('esx_society:removeVehicleFromGarage')
+AddEventHandler('esx_society:removeVehicleFromGarage', function(society, vehicle)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+		
+		local garage = store.get('garage') or {}
+
+		for i=1, #garage, 1 do
+			if garage[i].plate == vehicle.plate then
+				table.remove(garage, i)
+				break
+			end
+		end
+
+		store.set('garage', garage)
+
+	end)
 
 end)
 
@@ -229,6 +301,15 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	end
 
 	cb(players)
+
+end)
+
+ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, society)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+		local garage = store.get('garage') or {}
+		cb(garage)
+	end)
 
 end)
 
