@@ -68,6 +68,18 @@ function GetRandomWalkingNPC()
 		return search[GetRandomIntInRange(1, #search)]
 	end
 
+	print('Using fallback code to find walking ped')
+
+	while true do
+
+		local ped = GetRandomPedAtCoord(0.0,  0.0,  0.0,  math.huge + 0.0,  math.huge + 0.0,  math.huge + 0.0,  26)
+
+		if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
+			return ped
+		end
+
+	end
+
 end
 
 function ClearCurrentMission()
@@ -151,37 +163,80 @@ function OpenTaxiActionsMenu()
 
 			if data.current.value == 'spawn_vehicle' then
 
-				menu.close()
+				if Config.EnableSocietyOwnedVehicles then
 
-				if Config.MaxInService == -1 then
+					local elements = {}
 
-					local playerPed = GetPlayerPed(-1)
-					local coords    = Config.Zones.VehicleSpawnPoint.Pos
+					ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
 
-					ESX.Game.SpawnVehicle('taxi', coords, 225.0, function(vehicle)
-						TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
-					end)
+						for i=1, #vehicles, 1 do
+							table.insert(elements, {label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']', value = vehicles[i]})
+						end
+
+						ESX.UI.Menu.Open(
+							'default', GetCurrentResourceName(), 'vehicle_spawner',
+							{
+								title    = _U('spawn_veh'),
+								align    = 'top-left',
+								elements = elements,
+							},
+							function(data, menu)
+
+								menu.close()
+
+								local vehicleProps = data.current.value
+
+								ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
+									ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+									local playerPed = GetPlayerPed(-1)
+									TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+								end)
+
+								TriggerServerEvent('esx_society:removeVehicleFromGarage', 'taxi', vehicleProps)
+
+							end,
+							function(data, menu)
+								menu.close()
+							end
+						)
+
+					end, 'taxi')
 
 				else
 
-					ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
+					menu.close()
 
-						if canTakeService then
+					if Config.MaxInService == -1 then
 
-							local playerPed = GetPlayerPed(-1)
-							local coords    = Config.Zones.VehicleSpawnPoint.Pos
+						local playerPed = GetPlayerPed(-1)
+						local coords    = Config.Zones.VehicleSpawnPoint.Pos
 
-							ESX.Game.SpawnVehicle('taxi', coords, 225.0, function(vehicle)
-								TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
-							end)
+						ESX.Game.SpawnVehicle('taxi', coords, 225.0, function(vehicle)
+							TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
+						end)
 
-						else
+					else
 
-							ESX.ShowNotification(_U('full_service') .. inServiceCount .. '/' .. maxInService)
+						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
 
-						end
+							if canTakeService then
 
-					end, 'taxi')
+								local playerPed = GetPlayerPed(-1)
+								local coords    = Config.Zones.VehicleSpawnPoint.Pos
+
+								ESX.Game.SpawnVehicle('taxi', coords, 225.0, function(vehicle)
+									TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
+								end)
+
+							else
+
+								ESX.ShowNotification(_U('full_service') .. inServiceCount .. '/' .. maxInService)
+
+							end
+
+						end, 'taxi')
+
+					end
 
 				end
 
@@ -739,18 +794,19 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'delete_vehicle' then
 
 					local playerPed = GetPlayerPed(-1)
-					local vehicle   = GetVehiclePedIsIn(playerPed,  false)
 
-					if GetEntityModel(vehicle) == GetHashKey('taxi') then
-
-						if Config.MaxInService ~= -1 then
-							TriggerServerEvent('esx_service:disableService', 'taxi')
-						end
-
-						DeleteVehicle(vehicle)
+					if Config.EnableSocietyOwnedVehicles then
+						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+						TriggerServerEvent('esx_society:putVehicleInGarage', 'taxi', vehicleProps)
 					else
-						ESX.ShowNotification(_U('only_taxi'))
+						if GetEntityModel(CurrentActionData.vehicle) == GetHashKey('taxi') then
+							if Config.MaxInService ~= -1 then
+								TriggerServerEvent('esx_service:disableService', 'taxi')
+							end
+						end
 					end
+
+					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 
 				end
 
