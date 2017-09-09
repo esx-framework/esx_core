@@ -712,7 +712,7 @@ Config.Menus = {
 		price = 500
 	},
 	windowTint = {
-		label = _U('windowTint'),
+		label = _U('windowtint'),
 		parent = 'cosmetics',
 		modType = 'windowTint',
 		price = 500
