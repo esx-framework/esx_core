@@ -3,6 +3,7 @@ Locales['en'] = {
 	['actions']                = 'actions',
 	['deposit_amount']         = 'deposit amount',
 	['deposit_society_money']  = 'deposit society money',
+	['do_you_want_to_recruit'] = 'do you want to recruit %s?',
 	['employee']               = 'employee',
 	['employee_list']          = 'employee list',
 	['employee_management']    = 'employee management',
@@ -26,5 +27,11 @@ Locales['en'] = {
 	['yes']                    = 'yes',
 	['you_have']               = 'you have ~g~$',
 	['you_have_laundered']     = 'you have ~r~laundered~s~ your money: ~g~$',
+	['you_have_hired']         = 'you have recruited %s', 
+  	['you_have_been_hired']    = 'you have been hired by %s', 
+ 	['you_have_fired']         = 'you have fired %s', 
+  	['you_have_been_fired']    = 'you have been fired from %s', 
+  	['you_have_promoted']      = 'you have promoted %s as %s', 
+  	['you_have_been_promoted'] = 'you have been promoted', 
 
 }
