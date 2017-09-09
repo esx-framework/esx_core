@@ -15,4 +15,5 @@ git clone https://github.com/FXServer-ESX/fxserver-esx_sit esx_sit
 start esx_sit
 ```
 [CREDITS]
-Original code by CmJustice https://github.com/CmJustice
+
+- Original code by CmJustice https://github.com/CmJustice
