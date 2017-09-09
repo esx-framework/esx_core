@@ -129,18 +129,20 @@ function StopTaxiJob()
 
 	OnJob = false
 
-	DrawSub('Mission terminée', 5000)
+	DrawSub(_U('mission_complete'), 5000)
 
 end
 
 function OpenTaxiActionsMenu()
 
 	local elements = {
-		{label = _U('spawn_veh'), value = 'spawn_vehicle'}
+		{label = _U('spawn_veh'), value = 'spawn_vehicle'},
+		{label = _U('deposit_stock'), value = 'put_stock'},
+ 		{label = _U('take_stock'), value = 'get_stock'}
 	}
 
 	if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.grade_name == 'boss' then
-  	table.insert(elements, {label = 'Action Patron', value = 'boss_actions'})
+  	table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -344,14 +346,14 @@ function OpenGetStocksMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count',
 					{
-						title = 'Quantité'
+						title = _U('quantity')
 					},
 					function(data2, menu2)
 
 						local count = tonumber(data2.value)
 
 						if count == nil then
-							ESX.ShowNotification('Quantité invalide')
+							ESX.ShowNotification(_U('quantity_invalid'))
 						else
 							menu2.close()
 				    	menu.close()
@@ -395,7 +397,7 @@ function OpenPutStocksMenu()
 	  ESX.UI.Menu.Open(
 	    'default', GetCurrentResourceName(), 'stocks_menu',
 	    {
-	      title    = 'Inventaire',
+	      title    = _U('inventory'),
 	      elements = elements
 	    },
 	    function(data, menu)
@@ -405,14 +407,14 @@ function OpenPutStocksMenu()
 				ESX.UI.Menu.Open(
 					'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
 					{
-						title = 'Quantité'
+						title = _U('quantity')
 					},
 					function(data2, menu2)
 
 						local count = tonumber(data2.value)
 
 						if count == nil then
-							ESX.ShowNotification('Quantité invalide')
+							ESX.ShowNotification(_U('quantity_invalid'))
 						else
 							menu2.close()
 				    	menu.close()
