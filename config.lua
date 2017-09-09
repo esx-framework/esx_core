@@ -1,10 +1,11 @@
-Config                        = {}
-Config.DrawDistance           = 100.0
-Config.MaxInService           = -1
-Config.EnablePlayerManagement = true
-Config.NPCSpawnDistance       = 500.0
-Config.NPCNextToDistance      = 25.0
-Config.NPCJobEarnings         = {min = 15, max = 40}
+Config                            = {}
+Config.DrawDistance               = 100.0
+Config.MaxInService               = -1
+Config.EnablePlayerManagement     = false
+Config.EnableSocietyOwnedVehicles = false
+Config.NPCSpawnDistance           = 500.0
+Config.NPCNextToDistance          = 25.0
+Config.NPCJobEarnings             = {min = 15, max = 40}
 
 Config.Zones = {
 
