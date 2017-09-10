@@ -679,6 +679,7 @@ function OpenPoliceActionsMenu()
 					    {label = _U('domobile'),      value = 'mobile'},
 					    {label = _U('aacoffe'),       value = 'coffe'},
 					    {label = _U('push_ups'),      value = 'pushups'},
+					    {label = _U('cancel_emote'),  value = 'emotecancel'},
 						},
 					},
                                         function(data2, menu2)
@@ -874,6 +875,16 @@ function OpenPoliceActionsMenu()
                                                     Wait(20000)
                                                     ClearPedTasksImmediately(playerPed)
                                                     TriggerEvent('esx:showNotification', _U('exercise'))
+
+                                                end)
+
+                                            end
+						
+                                         if data2.current.value == 'emotecancel' then
+
+                                                Citizen.CreateThread(function()
+                                                    ClearPedTasksImmediately(GetPlayerPed(-1))
+                                                    TriggerEvent('esx:showNotification', _U('emotecanceled'))
 
                                                 end)
 
