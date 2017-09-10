@@ -255,13 +255,15 @@ AddEventHandler('esx_property:deleteLastProperty', function()
 end)
 
 RegisterServerEvent('esx_property:getItem')
-AddEventHandler('esx_property:getItem', function(type, item, count)
+AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source      = source
+	local xPlayer      = ESX.GetPlayerFromId(_source)
+	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
 	if type == 'item_standard' then
 
-		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayer.identifier, function(inventory)
+		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 
 			local roomItemCount = inventory.getItem(item).count
 
@@ -269,7 +271,7 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 				inventory.removeItem(item, count)
 				xPlayer.addInventoryItem(item, count)
 			else
-				TriggerClientEvent('esx:showNotification', source, _U('invalid_quantity'))
+				TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
 			end
 
 		end)
@@ -278,7 +280,7 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 
 	if type == 'item_account' then
 
-		TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayer.identifier, function(account)
+		TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayerOwner.identifier, function(account)
 
 			local roomAccountMoney = account.money
 
@@ -286,7 +288,7 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 				account.removeMoney(count)
 				xPlayer.addAccountMoney(item, count)
 			else
-				TriggerClientEvent('esx:showNotification', source, _U('amount_invalid'))
+				TriggerClientEvent('esx:showNotification', _source, _U('amount_invalid'))
 			end
 
 		end)
@@ -295,7 +297,7 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 
 	if type == 'item_weapon' then
 
-		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
 
 			local storeWeapons = store.get('weapons')
 
@@ -329,9 +331,11 @@ AddEventHandler('esx_property:getItem', function(type, item, count)
 end)
 
 RegisterServerEvent('esx_property:putItem')
-AddEventHandler('esx_property:putItem', function(type, item, count)
+AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source      = source
+	local xPlayer      = ESX.GetPlayerFromId(_source)
+	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
 	if type == 'item_standard' then
 
@@ -341,12 +345,12 @@ AddEventHandler('esx_property:putItem', function(type, item, count)
 
 			xPlayer.removeInventoryItem(item, count)
 
-			TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayer.identifier, function(inventory)
+			TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 				inventory.addItem(item, count)
 			end)
 
 		else
-			TriggerClientEvent('esx:showNotification', source, _U('invalid_quantity'))
+			TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
 		end
 
 	end
@@ -359,19 +363,19 @@ AddEventHandler('esx_property:putItem', function(type, item, count)
 
 			xPlayer.removeAccountMoney(item, count)
 
-			TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayer.identifier, function(account)
+			TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayerOwner.identifier, function(account)
 				account.addMoney(count)
 			end)
 
 		else
-			TriggerClientEvent('esx:showNotification', source, _U('amount_invalid'))
+			TriggerClientEvent('esx:showNotification', _source, _U('amount_invalid'))
 		end
 
 	end
 
 	if type == 'item_weapon' then
 
-		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
 
 			local storeWeapons = store.get('weapons')
 
@@ -437,9 +441,9 @@ ESX.RegisterServerCallback('esx_property:getLastProperty', function(source, cb)
 
 end)
 
-ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source, cb)
+ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source, cb, owner)
 
-	local xPlayer    = ESX.GetPlayerFromId(source)
+	local xPlayer    = ESX.GetPlayerFromIdentifier(owner)
 	local blackMoney = 0
 	local items      = {}
 	local weapons    = {}
