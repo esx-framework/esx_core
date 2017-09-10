@@ -74,6 +74,8 @@ Locales['en'] = {
 		['aacoffe'] = 'Morning coffe',
 		['push_ups'] = 'Exercise a little',
 		['exercise'] = 'Im tired',
+		['cancel_emote'] = 'Cancel animation',
+		['emotecanceled'] = 'Animation stoped',
 	--ID Card Menu
 		['name'] = 'name : ',
 		['bac'] = 'bAC : ',
