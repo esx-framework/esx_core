@@ -241,12 +241,13 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 				TriggerEvent('esx:playerLoaded', _source)
 				
 				TriggerClientEvent('esx:playerLoaded', _source, {
+					identifier   = xPlayer.identifier,
 					accounts     = xPlayer.getAccounts(),
 					inventory    = xPlayer.getInventory(),
 					job          = xPlayer.getJob(),
 					loadout      = xPlayer.getLoadout(),
 					lastPosition = xPlayer.getLastPosition(),
-					money        = xPlayer.player.get('money')
+					money        = xPlayer.get('money')
 				})
 				
 				xPlayer.player.displayMoney(xPlayer.get('money'))
@@ -553,12 +554,13 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	cb({
+		identifier   = xPlayer.identifier,
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
 		loadout      = xPlayer.getLoadout(),
 		lastPosition = xPlayer.getLastPosition(),
-		money        = xPlayer.player.get('money')
+		money        = xPlayer.get('money')
 	})
 
 end)
@@ -568,12 +570,13 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	cb({
+		identifier   = xPlayer.identifier,
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
 		loadout      = xPlayer.getLoadout(),
 		lastPosition = xPlayer.getLastPosition(),
-		money        = xPlayer.player.get('money')
+		money        = xPlayer.get('money')
 	})
 
 end)
