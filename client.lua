@@ -11,7 +11,7 @@ local Keys = {
 }
 
 ESX = nil
-local ped = GetPlayerPed(-1)
+--local ped = GetPlayerPed(-1)
 local sitting = false
 local lastPos = nil
 local currentSitObj = nil
@@ -39,6 +39,7 @@ Citizen.CreateThread(function()
 	while true do
 		Wait(0)
 		--local object, distance = ESX.Game.GetClosestObject(objects)
+		local ped = GetPlayerPed(-1)
 		local list = {}
 		for k,v in pairs(objects) do
 			local obj = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 3.0, GetHashKey(v), false, true ,true)
@@ -82,6 +83,7 @@ end)
 
 function sit(object)
 	local isOccupied = nil
+	local ped = GetPlayerPed(-1)
 	ESX.TriggerServerCallback('sit:getOccupied', function(occupied)
 		isOccupied = false
 		for k,v in pairs(occupied) do
