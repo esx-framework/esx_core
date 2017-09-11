@@ -32,7 +32,8 @@ end)
 
 AddEventHandler('esx:playerDropped', function(source)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 
 	local data   = {}
 	local status = xPlayer.get('status')
