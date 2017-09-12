@@ -80,7 +80,7 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_policestock', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 
 		local item = inventory.getItem(itemName)
 
@@ -102,7 +102,7 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_policestock', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 
 		local item = inventory.getItem(itemName)
 
@@ -434,7 +434,7 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getStockItems', function(source, cb)
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_policestock', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 		cb(inventory.items)
 	end)
 
