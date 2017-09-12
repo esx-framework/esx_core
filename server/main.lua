@@ -12,7 +12,7 @@ if Config.MaxInService ~= -1 then
 	TriggerEvent('esx_service:activateService', 'mecano', Config.MaxInService)
 end
 
-TriggerEvent('esx_phone:registerNumber', 'mecano', 'Client mecano', true, true)
+TriggerEvent('esx_phone:registerNumber', 'mecano', _U('mechanic_customer'), true, true)
 
 -------------- Récupération bouteille de gaz -------------
 ---- Sqlut je teste ------
@@ -26,10 +26,10 @@ local function Harvest(source)
 			local GazBottleQuantity = xPlayer.getInventoryItem('gazbottle').count
 
 			if GazBottleQuantity >= 5 then
-				TriggerClientEvent('esx:showNotification', source, '~r~Vous n\'avez plus de place')		
-			else   
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_room'))
+			else
                 xPlayer.addInventoryItem('gazbottle', 1)
-					
+
 				Harvest(source)
 			end
 		end
@@ -40,7 +40,7 @@ RegisterServerEvent('esx_mecanojob:startHarvest')
 AddEventHandler('esx_mecanojob:startHarvest', function()
 	local _source = source
 	PlayersHarvesting[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Récupération de ~b~bouteille de gaz~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('recovery_gas_can'))
 	Harvest(source)
 end)
 
@@ -59,10 +59,10 @@ local function Harvest2(source)
 			local xPlayer  = ESX.GetPlayerFromId(source)
 			local FixToolQuantity  = xPlayer.getInventoryItem('fixtool').count
 			if FixToolQuantity >= 5 then
-				TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez ~r~plus de place')				
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_room'))
 			else
                 xPlayer.addInventoryItem('fixtool', 1)
-					
+
 				Harvest2(source)
 			end
 		end
@@ -73,7 +73,7 @@ RegisterServerEvent('esx_mecanojob:startHarvest2')
 AddEventHandler('esx_mecanojob:startHarvest2', function()
 	local _source = source
 	PlayersHarvesting2[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Récupération d\'~b~Outils réparation~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('recovery_repair_tools'))
 	Harvest2(_source)
 end)
 
@@ -92,10 +92,10 @@ local function Harvest3(source)
 			local xPlayer  = ESX.GetPlayerFromId(source)
 			local CaroToolQuantity  = xPlayer.getInventoryItem('carotool').count
             if CaroToolQuantity >= 5 then
-				TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez ~r~plus de place')					
+				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_room'))
 			else
                 xPlayer.addInventoryItem('carotool', 1)
-					
+
 				Harvest3(source)
 			end
 		end
@@ -106,7 +106,7 @@ RegisterServerEvent('esx_mecanojob:startHarvest3')
 AddEventHandler('esx_mecanojob:startHarvest3', function()
 	local _source = source
 	PlayersHarvesting3[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Récupération d\'~b~Outils carosserie~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('recovery_body_tools'))
 	Harvest3(_source)
 end)
 
@@ -126,11 +126,11 @@ local function Craft(source)
 			local GazBottleQuantity = xPlayer.getInventoryItem('gazbottle').count
 
 			if GazBottleQuantity <= 0 then
-				TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez ~r~pas assez~s~ de bouteille de gaz')		
-			else   
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_gas_can'))
+			else
                 xPlayer.removeInventoryItem('gazbottle', 1)
                 xPlayer.addInventoryItem('blowpipe', 1)
-					
+
 				Craft(source)
 			end
 		end
@@ -141,7 +141,7 @@ RegisterServerEvent('esx_mecanojob:startCraft')
 AddEventHandler('esx_mecanojob:startCraft', function()
 	local _source = source
 	PlayersCrafting[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Assemblage de ~b~Chalumeaux~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('assembling_blowtorch'))
 	Craft(_source)
 end)
 
@@ -160,11 +160,11 @@ local function Craft2(source)
 			local xPlayer  = ESX.GetPlayerFromId(source)
 			local FixToolQuantity  = xPlayer.getInventoryItem('fixtool').count
 			if FixToolQuantity <= 0 then
-				TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez ~r~pas assez~s~ d\'outils réparation')				
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_repair_tools'))
 			else
                 xPlayer.removeInventoryItem('fixtool', 1)
                 xPlayer.addInventoryItem('fixkit', 1)
-					
+
 				Craft2(source)
 			end
 		end
@@ -175,7 +175,7 @@ RegisterServerEvent('esx_mecanojob:startCraft2')
 AddEventHandler('esx_mecanojob:startCraft2', function()
 	local _source = source
 	PlayersCrafting2[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Assemblage de ~b~Kit réparation~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('assembling_blowtorch'))
 	Craft2(_source)
 end)
 
@@ -194,11 +194,11 @@ local function Craft3(source)
 			local xPlayer  = ESX.GetPlayerFromId(source)
 			local CaroToolQuantity  = xPlayer.getInventoryItem('carotool').count
             if CaroToolQuantity <= 0 then
-				TriggerClientEvent('esx:showNotification', source, 'Vous n\'avez ~r~pas assez~s~ d\'outils carosserie')					
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_body_tools'))
 			else
                 xPlayer.removeInventoryItem('carotool', 1)
                 xPlayer.addInventoryItem('carokit', 1)
-					
+
 				Craft3(source)
 			end
 		end
@@ -209,7 +209,7 @@ RegisterServerEvent('esx_mecanojob:startCraft3')
 AddEventHandler('esx_mecanojob:startCraft3', function()
 	local _source = source
 	PlayersCrafting3[_source] = true
-	TriggerClientEvent('esx:showNotification', _source, 'Assemblage de ~b~kit carosserie~s~...')
+	TriggerClientEvent('esx:showNotification', _source, _U('assembling_body_kit'))
 	Craft3(_source)
 end)
 
@@ -235,8 +235,8 @@ AddEventHandler('esx_mecanojob:onNPCJobMissionCompleted', function()
   TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mecano', function(account)
   	account.addMoney(total)
   end)
- 	
- 	TriggerClientEvent("esx:showNotification", _source, "Votre société a ~g~gagné~s~ ~g~$".. total)
+
+ 	TriggerClientEvent("esx:showNotification", _source, _U('your_comp_earned').. total)
 
 end)
 
@@ -249,7 +249,7 @@ ESX.RegisterUsableItem('blowpipe', function(source)
 	xPlayer.removeInventoryItem('blowpipe', 1)
 
 	TriggerClientEvent('esx_mecanojob:onHijack', _source)
-    TriggerClientEvent('esx:showNotification', _source, 'Vous avez utilisé un ~b~Chalumeau')
+    TriggerClientEvent('esx:showNotification', _source, _U('you_used_blowtorch'))
 
 end)
 
@@ -261,7 +261,7 @@ ESX.RegisterUsableItem('fixkit', function(source)
 	xPlayer.removeInventoryItem('fixkit', 1)
 
 	TriggerClientEvent('esx_mecanojob:onFixkit', _source)
-    TriggerClientEvent('esx:showNotification', _source, 'Vous avez utilisé un ~b~Kit de réparation')
+    TriggerClientEvent('esx:showNotification', _source, _U('you_used_repair_kit'))
 
 end)
 
@@ -273,7 +273,7 @@ ESX.RegisterUsableItem('carokit', function(source)
 	xPlayer.removeInventoryItem('carokit', 1)
 
 	TriggerClientEvent('esx_mecanojob:onCarokit', _source)
-    TriggerClientEvent('esx:showNotification', _source, 'Vous avez utilisé un ~b~Kit de carosserie')
+    TriggerClientEvent('esx:showNotification', _source, _U('you_used_body_kit'))
 
 end)
 
@@ -294,10 +294,10 @@ AddEventHandler('esx_mecanojob:getStockItem', function(itemName, count)
 			inventory.removeItem(itemName, count)
 			xPlayer.addInventoryItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_quantity'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez retiré x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_removed') .. count .. ' ' .. item.label)
 
 	end)
 
@@ -328,10 +328,10 @@ AddEventHandler('esx_mecanojob:putStockItems', function(itemName, count)
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_quantity'))
 		end
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez ajouté x' .. count .. ' ' .. item.label)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_added') .. count .. ' ' .. item.label)
 
 	end)
 
