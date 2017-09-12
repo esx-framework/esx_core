@@ -668,7 +668,7 @@ end
 
 function OpenIdentityCardMenu(player)
 
-	if Config.EnableGCIdentity then
+	if Config.EnableESXIdentity then
 
 		ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
