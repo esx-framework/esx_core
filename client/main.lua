@@ -240,7 +240,9 @@ function OpenArmoryMenu(station)
 
 		local elements = {
 			{label = _U('get_weapon'), value = 'get_weapon'},
-			{label = _U('put_weapon'), value = 'put_weapon'}
+			{label = _U('put_weapon'), value = 'put_weapon'},
+			{label = 'Prendre Objet',  value = 'get_stock'},
+			{label = 'Déposer objet',  value = 'put_stock'}
 		}
 
 		if PlayerData.job.grade_name == 'boss' then
@@ -657,240 +659,240 @@ function OpenPoliceActionsMenu()
 			
 			if data.current.value == 'animations' then
 
-                                ESX.UI.Menu.Open(
-      	                                'default', GetCurrentResourceName(), 'police_animations',
-                                        {
-           				        title    = _U('police_animations'),
-                                                align    = 'top-left',
-                                                elements = {
-                                            {label = _U('dotraffic'),     value = 'traffic'},
-                                            {label = _U('take_note'),     value = 'take_notes'},
-					    {label = _U('dobinoculars'),  value = 'binoculars'},
-					    {label = _U('stand_by'),      value = 'standbycop'},
-					    {label = _U('stand_by_2'),    value = 'standbycop2'},
-					    {label = _U('stand_by_3'),    value = 'standbycop3'},
-					    {label = _U('crowd_control'), value = 'crowdcontrol'},
-					    {label = _U('doinvestigate'), value = 'investigate'},
-					    {label = _U('docrouch'),      value = 'crouch'},
-					    {label = _U('hang_out'),      value = 'hangout'},
-					    {label = _U('doleaning'),     value = 'leaning'},
-					    {label = _U('dosmoking'),     value = 'smoking'},
-					    {label = _U('dodrinking'),    value = 'drinking'},
-					    {label = _U('domobile'),      value = 'mobile'},
-					    {label = _U('aacoffe'),       value = 'coffe'},
-					    {label = _U('push_ups'),      value = 'pushups'},
-					    {label = _U('cancel_emote'),  value = 'emotecancel'},
+        ESX.UI.Menu.Open(
+      	  'default', GetCurrentResourceName(), 'police_animations',
+              title    = _U('police_animations'),
+              align    = 'top-left',
+              elements = {
+	              {label = _U('dotraffic'),     value = 'traffic'},
+	              {label = _U('take_note'),     value = 'take_notes'},
+						    {label = _U('dobinoculars'),  value = 'binoculars'},
+						    {label = _U('stand_by'),      value = 'standbycop'},
+						    {label = _U('stand_by_2'),    value = 'standbycop2'},
+						    {label = _U('stand_by_3'),    value = 'standbycop3'},
+						    {label = _U('crowd_control'), value = 'crowdcontrol'},
+						    {label = _U('doinvestigate'), value = 'investigate'},
+						    {label = _U('docrouch'),      value = 'crouch'},
+						    {label = _U('hang_out'),      value = 'hangout'},
+						    {label = _U('doleaning'),     value = 'leaning'},
+						    {label = _U('dosmoking'),     value = 'smoking'},
+						    {label = _U('dodrinking'),    value = 'drinking'},
+						    {label = _U('domobile'),      value = 'mobile'},
+						    {label = _U('aacoffe'),       value = 'coffe'},
+						    {label = _U('push_ups'),      value = 'pushups'},
+						    {label = _U('cancel_emote'),  value = 'emotecancel'},
+							},
 						},
-					},
-                                        function(data2, menu2)
 
-                                            local playerPed = GetPlayerPed(-1)
+          	function(data2, menu2)
 
-                                            if data2.current.value == 'traffic' then
+              local playerPed = GetPlayerPed(-1)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_CAR_PARK_ATTENDANT", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('dealing_with_traffic'))
+              if data2.current.value == 'traffic' then
 
-                                                end)
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_CAR_PARK_ATTENDANT", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('dealing_with_traffic'))
 
-                                            end
-            
-                                            if data2.current.value == 'take_notes' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_CLIPBOARD", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('taking_notes'))
+              end
 
-                                                end)
+              if data2.current.value == 'take_notes' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_CLIPBOARD", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('taking_notes'))
 
-                                          if data2.current.value == 'binoculars' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_BINOCULARS", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('use_binoculars'))
+              end
 
-                                                end)
+            if data2.current.value == 'binoculars' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_BINOCULARS", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('use_binoculars'))
 
+                  end)
 
-                                           if data2.current.value == 'standbycop' then
+              end
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_COP_IDLES", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('standing_cop'))
 
-                                                end)
+             if data2.current.value == 'standbycop' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_COP_IDLES", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('standing_cop'))
 
-                                          if data2.current.value == 'standbycop2' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_GUARD_STAND", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('standing_cop_2'))
+              end
 
-                                                end)
+            if data2.current.value == 'standbycop2' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_GUARD_STAND", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('standing_cop_2'))
 
-                                         if data2.current.value == 'standbycop3' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_GUARD_PATROL", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('standing_cop_3'))
+              end
 
-                                                end)
+           if data2.current.value == 'standbycop3' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_GUARD_PATROL", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('standing_cop_3'))
 
+                  end)
 
-                                         if data2.current.value == 'crowdcontrol' then
+              end
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_POLICE_CROWD_CONTROL", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('do_crowd_control'))
 
-                                                end)
+           if data2.current.value == 'crowdcontrol' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_POLICE_CROWD_CONTROL", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('do_crowd_control'))
 
-                                         if data2.current.value == 'investigate' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_POLICE_INVESTIGATE", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('investigate_done'))
+              end
 
-                                                end)
+           if data2.current.value == 'investigate' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_POLICE_INVESTIGATE", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('investigate_done'))
 
-                                         if data2.current.value == 'crouch' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_MEDIC_KNEEL", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('kneel'))
+              end
 
-                                                end)
+           if data2.current.value == 'crouch' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_MEDIC_KNEEL", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('kneel'))
 
-                                         if data2.current.value == 'hangout' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_HANG_OUT_STREET", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'hangout' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_HANG_OUT_STREET", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'leaning' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_LEANING", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'leaning' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_LEANING", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'smoking' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_SMOKING", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'smoking' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_SMOKING", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'drinking' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_DRINKING", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'drinking' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_DRINKING", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'mobile' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_STAND_MOBILE", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'mobile' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_STAND_MOBILE", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'coffe' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_AA_COFFEE", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('hanging_out'))
+              end
 
-                                                end)
+           if data2.current.value == 'coffe' then
 
-                                            end
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_AA_COFFEE", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('hanging_out'))
 
-                                         if data2.current.value == 'pushups' then
+                  end)
 
-                                                Citizen.CreateThread(function()
-                                                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_PUSH_UPS", 0, true)
-                                                    Wait(20000)
-                                                    ClearPedTasksImmediately(playerPed)
-                                                    TriggerEvent('esx:showNotification', _U('exercise'))
+              end
 
-                                                end)
+           if data2.current.value == 'pushups' then
 
-                                            end
-						
-                                         if data2.current.value == 'emotecancel' then
+                  Citizen.CreateThread(function()
+                      TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_PUSH_UPS", 0, true)
+                      Wait(20000)
+                      ClearPedTasksImmediately(playerPed)
+                      TriggerEvent('esx:showNotification', _U('exercise'))
 
-                                                Citizen.CreateThread(function()
-                                                    ClearPedTasksImmediately(GetPlayerPed(-1))
-                                                    TriggerEvent('esx:showNotification', _U('emotecanceled'))
+                  end)
 
-                                                end)
+              end
 
-                                            end
+           if data2.current.value == 'emotecancel' then
 
-                                        end,
+                  Citizen.CreateThread(function()
+                      ClearPedTasksImmediately(GetPlayerPed(-1))
+                      TriggerEvent('esx:showNotification', _U('emotecanceled'))
+
+                  end)
+
+              end
+
+          end,
 					function(data2, menu2)
 						menu2.close()
  			                end
@@ -1230,17 +1232,6 @@ function OpenVehicleInfosMenu(vehicleData)
 	end, vehicleData.plate)
 
 end
-
-RegisterNetEvent('esx_policejob:OutVehicle')
-AddEventHandler('esx_policejob:OutVehicle', function(t)
-    local ped = GetPlayerPed(t)
-    ClearPedTasksImmediately(ped)
-    plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
-    local xnew = plyPos.x+2
-    local ynew = plyPos.y+2
-   
-    SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
-end)
 
 function OpenGetWeaponMenu()
 
@@ -1706,6 +1697,17 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 
   end
 
+end)
+
+RegisterNetEvent('esx_policejob:OutVehicle')
+AddEventHandler('esx_policejob:OutVehicle', function(t)
+  local ped = GetPlayerPed(t)
+  ClearPedTasksImmediately(ped)
+  plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
+  local xnew = plyPos.x+2
+  local ynew = plyPos.y+2
+ 
+  SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 end)
 
 -- Handcuff
