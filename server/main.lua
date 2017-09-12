@@ -121,13 +121,13 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
 
-	if Config.EnableGCIdentity then
+	if Config.EnableESXIdentity then
 	
 		local xPlayer = ESX.GetPlayerFromId(target)
 		
 		local identifier = GetPlayerIdentifiers(target)[1]
 		
-		local result = MySQL.Sync.fetchAll("SELECT firstname, lastname, sex, dateofbirth, height FROM users WHERE identifier = @identifier", {
+		local result = MySQL.Sync.fetchAll("SELECT * FROM characters WHERE identifier = @identifier", {
 			['@identifier'] = identifier
 		})
 			
@@ -135,10 +135,10 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		local firstname 		= user['firstname']
 		local lastname  		= user['lastname']
 		local sex           		= user['sex']
-		local dob           		= tostring(user['dateofbirth'])
+		local dob           		= user['dateofbirth']
 		local heightInit    		= user['height']	
 		local heightFeet 		= tonumber(string.format("%.0f",heightInit / 12, 0))
-		local heightInches 		= heightInit % 12
+		local heightInches 		= tonumber(string.format("%.0f",heightInit % 12, 0))
 		local height 	   		= heightFeet .. "\' " .. heightInches .. "\""
 		
 		local data = {
@@ -214,7 +214,7 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)
 
-	if Config.EnableGCIdentity then
+	if Config.EnableESXIdentity then
 	
 		MySQL.Async.fetchAll(
 			'SELECT * FROM owned_vehicles',
@@ -237,7 +237,7 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 				if foundIdentifier ~= nil then
 
 					MySQL.Async.fetchAll(
-						'SELECT * FROM users WHERE identifier = @identifier',
+						'SELECT * FROM characters WHERE identifier = @identifier',
 						{
 							['@identifier'] = foundIdentifier
 						},
