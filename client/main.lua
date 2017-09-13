@@ -422,9 +422,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 		
 		EnableSocietyMoneyHUDElement()
 	
-		ESX.TriggerServerCallback('esx_society:getAccountMoney', function(money)
+		ESX.TriggerServerCallback('esx_society:getSocietyMoney', function(money)
 			UpdateSocietyMoneyHUDElement(money)
-		end, 'society_' .. PlayerData.job.name)
+		end, PlayerData.job.name)
 
 	end
 
@@ -441,9 +441,9 @@ AddEventHandler('esx:setJob', function(job)
 		
 		EnableSocietyMoneyHUDElement()
 	
-		ESX.TriggerServerCallback('esx_society:getAccountMoney', function(money)
+		ESX.TriggerServerCallback('esx_society:getSocietyMoney', function(money)
 			UpdateSocietyMoneyHUDElement(money)
-		end, 'society_' .. PlayerData.job.name)
+		end, PlayerData.job.name)
 
 	end
 

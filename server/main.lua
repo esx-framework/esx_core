@@ -1,5 +1,6 @@
-ESX  = nil
-Jobs = {}
+ESX                 = nil
+Jobs                = {}
+RegisteredSocieties = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -13,6 +14,14 @@ function stringsplit(inputstr, sep)
     i = i + 1
   end
   return t
+end
+
+function GetSociety(name)
+	for i=1, #RegisteredSocieties, 1 do
+		if RegisteredSocieties[i].name == name then
+			return RegisteredSocieties[i]
+		end
+	end
 end
 
 AddEventHandler('onMySQLReady', function()
@@ -32,41 +41,48 @@ AddEventHandler('onMySQLReady', function()
 
 end)
 
-AddEventHandler('esx_society:getSocieties', function(cb)
+AddEventHandler('esx_society:registerSociety', function(name, label, account, datastore, inventory, data)
 
-	MySQL.Async.fetchAll(
-		'SELECT * FROM addon_account WHERE name LIKE "%society_%"',
-		{},
-		function(results)
+	local found = false
 
-			local societies = {}
+	local society = {
+		name      = name,
+		label     = label,
+		account   = account,
+		datastore = datastore,
+		inventory = inventory,
+		data      = data,
+	}
 
-			for i=1, #results, 1 do
-
-				local buff    = stringsplit(results[i].name, '_')
-				local society = buff[2]
-
-				table.insert(societies, {
-					name  = society,
-					label = results[i].label
-				})
-
-			end
-
-			cb(societies)
-
+	for i=1, #RegisteredSocieties, 1 do
+		if RegisteredSocieties[i].name == name then
+			found                  = true
+			RegisteredSocieties[i] = society
+			break
 		end
-	)
+	end
+
+	if not found then
+		table.insert(RegisteredSocieties, society)
+	end
 
 end)
 
+AddEventHandler('esx_society:getSocieties', function(cb)
+	cb(RegisteredSocieties)
+end)
+
+AddEventHandler('esx_society:getSociety', function(name, cb)
+	cb(GetSociety(name))
+end)
 
 RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = GetSociety(society)
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. society, function(account)
+	TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 
 		if amount > 0 and account.money >= amount then
 
@@ -87,10 +103,11 @@ RegisterServerEvent('esx_society:depositMoney')
 AddEventHandler('esx_society:depositMoney', function(society, amount)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = GetSociety(society)
 
 	if amount > 0 and xPlayer.get('money') >= amount then
 
-		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. society, function(account)
+		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			xPlayer.removeMoney(amount)
 			account.addMoney(amount)
 		end)
@@ -132,9 +149,11 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 end)
 
 RegisterServerEvent('esx_society:putVehicleInGarage')
-AddEventHandler('esx_society:putVehicleInGarage', function(society, vehicle)
+AddEventHandler('esx_society:putVehicleInGarage', function(societyName, vehicle)
 
-	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+	local society = GetSociety(societyName)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
 		table.insert(garage, vehicle)
 		store.set('garage', garage)
@@ -143,9 +162,11 @@ AddEventHandler('esx_society:putVehicleInGarage', function(society, vehicle)
 end)
 
 RegisterServerEvent('esx_society:removeVehicleFromGarage')
-AddEventHandler('esx_society:removeVehicleFromGarage', function(society, vehicle)
+AddEventHandler('esx_society:removeVehicleFromGarage', function(societyName, vehicle)
 
-	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+	local society = GetSociety(societyName)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		
 		local garage = store.get('garage') or {}
 
@@ -162,10 +183,20 @@ AddEventHandler('esx_society:removeVehicleFromGarage', function(society, vehicle
 
 end)
 
-ESX.RegisterServerCallback('esx_society:getAccountMoney', function(source, cb, account)
-	TriggerEvent('esx_addonaccount:getSharedAccount', account, function(account)
-		cb(account.money)
-	end)
+ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, societyName)
+
+	local society = GetSociety(societyName)
+
+	if society ~= nil then
+
+		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
+			cb(account.money)
+		end)
+
+	else
+		cb(0)
+	end
+
 end)
 
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
@@ -304,9 +335,11 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 
 end)
 
-ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, society)
+ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, societyName)
 
-	TriggerEvent('esx_datastore:getSharedDataStore', 'society_' .. society, function(store)
+	local society = GetSociety(societyName)
+
+	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
 		cb(garage)
 	end)
@@ -326,6 +359,7 @@ function WashMoneyCRON(d, h, m)
 
 				local foundPlayer = false
 				local xPlayer     = nil
+				local society     = GetSociety(result[i].society)
 
 				for j=1, #xPlayers, 1 do
 					local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
@@ -335,7 +369,7 @@ function WashMoneyCRON(d, h, m)
 					end
 				end
 
-				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. result[i].society, function(account)
+				TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 					account.addMoney(result[i].amount)
 				end)
 
