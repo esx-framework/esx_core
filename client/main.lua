@@ -24,6 +24,7 @@ local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local FirstSpawn              = true
+local HasChest                = false
 
 function DrawSub(text, time)
   ClearPrints()
@@ -868,6 +869,29 @@ AddEventHandler('instance:onCreate', function(instance)
 
 end)
 
+RegisterNetEvent('instance:onEnter')
+AddEventHandler('instance:onEnter', function(instance)
+	
+	if instance.type == 'property' then
+
+		local property = GetProperty(instance.data.property)
+		local isHost   = GetPlayerFromServerId(instance.host) == PlayerId()
+		local isOwned  = false
+
+		if PropertyIsOwned(property) == true then
+			isOwned = true
+		end
+
+		if(isOwned or not isHost) then
+			HasChest = true
+		else
+			HasChest = false
+		end
+
+	end
+
+end)
+
 RegisterNetEvent('instance:onPlayerLeft')
 AddEventHandler('instance:onPlayerLeft', function(instance, player)
 	if player == instance.host then
@@ -938,6 +962,7 @@ Citizen.CreateThread(function()
 		for i=1, #Config.Properties, 1 do
 
 			local property = Config.Properties[i]
+			local isHost   = false
 
 			if(property.entering ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true) < Config.DrawDistance) then
 				DrawMarker(Config.MarkerType, property.entering.x, property.entering.y, property.entering.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
@@ -947,7 +972,7 @@ Citizen.CreateThread(function()
 				DrawMarker(Config.MarkerType, property.exit.x, property.exit.y, property.exit.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 			end
 
-			if(property.roomMenu ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.DrawDistance) then
+			if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.DrawDistance) then
 				DrawMarker(Config.MarkerType, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.RoomMenuMarkerColor.r, Config.RoomMenuMarkerColor.g, Config.RoomMenuMarkerColor.b, 100, false, true, 2, false, false, false, false)
 			end
 
@@ -995,7 +1020,7 @@ Citizen.CreateThread(function()
 				currentPart     = 'outside'
 			end
 
-			if(property.roomMenu ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.MarkerSize.x) then
+			if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.MarkerSize.x) then
 				isInMarker      = true
 				currentProperty = property.name
 				currentPart     = 'roomMenu'
