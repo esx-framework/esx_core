@@ -37,7 +37,7 @@ function CloseInstance()
 end
 
 function EnterInstance(instance)
-
+	
 	TriggerServerEvent('instance:enter', instance.host)
 
 	if RegisteredInstanceTypes[instance.type].enter ~= nil then
@@ -63,8 +63,8 @@ function LeaveInstance()
 
 end
 
-function InviteToInstance(type, player, pos)
-	TriggerServerEvent('instance:invite', Instance.host, type, player, pos)
+function InviteToInstance(type, player, data)
+	TriggerServerEvent('instance:invite', Instance.host, type, player, data)
 end
 
 function RegisterInstanceType(type, enter, exit)
@@ -94,8 +94,8 @@ AddEventHandler('instance:leave', function()
 	LeaveInstance()
 end)
 
-AddEventHandler('instance:invite', function(type, player, pos)
-	InviteToInstance(type, player, pos)
+AddEventHandler('instance:invite', function(type, player, data)
+	InviteToInstance(type, player, data)
 end)
 
 AddEventHandler('instance:registerType', function(name, enter, exit)
@@ -130,13 +130,13 @@ end)
 RegisterNetEvent('instance:onPlayerEntered')
 AddEventHandler('instance:onPlayerEntered', function(instance, player)
 	Instance = instance
-	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _U('entered_into'))
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('entered_into'))
 end)
 
 RegisterNetEvent('instance:onPlayerLeft')
 AddEventHandler('instance:onPlayerLeft', function(instance, player)
 	Instance = instance
-	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _U('left_out'))
+	ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('left_out'))
 end)
 
 RegisterNetEvent('instance:onInvite')
@@ -268,4 +268,8 @@ Citizen.CreateThread(function()
 
 	end
 
+end)
+
+Citizen.CreateThread(function()
+	TriggerEvent('instance:loaded')
 end)
