@@ -3,6 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 TriggerEvent('esx_phone:registerNumber', 'banker', _('bank_customer'), false, false)
+TriggerEvent('esx_society:registerSociety', 'banker', 'Banquier', 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
 
 RegisterServerEvent('esx_bankerjob:customerDeposit')
 AddEventHandler('esx_bankerjob:customerDeposit', function(target, amount)
