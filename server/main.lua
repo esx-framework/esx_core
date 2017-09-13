@@ -78,12 +78,28 @@ function GetDataStore(name, owner)
 	end
 end
 
+function GetDataStoreOwners(name)
+	
+	local identifiers = {}
+
+	for i=1, #DataStores[name], 1 do
+		table.insert(identifiers, DataStores[name][i].owner)
+	end
+
+	return identifiers
+
+end
+
 function GetSharedDataStore(name)
 	return SharedDataStores[name]
 end
 
 AddEventHandler('esx_datastore:getDataStore', function(name, owner, cb)
 	cb(GetDataStore(name, owner))
+end)
+
+AddEventHandler('esx_datastore:getDataStoreOwners', function(name, cb)
+	cb(GetDataStoreOwners(name))
 end)
 
 AddEventHandler('esx_datastore:getSharedDataStore', function(name, cb)
