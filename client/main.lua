@@ -75,38 +75,29 @@ function OpenCloakroomMenu()
 			menu.close()
 
 			--Taken from SuperCoolNinja
-			if data.current.value == 'citizen_wear'  then
+			if data.current.value == 'citizen_wear' then
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          local model = nil
 
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+       		if skin.sex == 0 then
+            model = GetHashKey("mp_m_freemode_01")
+          else
+            model = GetHashKey("mp_f_freemode_01")
+          end
 
-            if skin.sex == 0 then
+          RequestModel(model)
+          while not HasModelLoaded(model) do
+            RequestModel(model)
+            Citizen.Wait(1)
+          end
 
-                local model = GetHashKey("mp_m_freemode_01")
-                    RequestModel(model)
-                    while not HasModelLoaded(model) do
-                        RequestModel(model)
-                        Citizen.Wait(0)
-                    end
+          SetPlayerModel(PlayerId(), model)
+          SetModelAsNoLongerNeeded(model)
 
-                    SetPlayerModel(PlayerId(), model)
-                    SetModelAsNoLongerNeeded(model)
-                    TriggerEvent('skinchanger:loadSkin', skin)
-            else
-                    local model = GetHashKey("mp_f_freemode_01")
-
-                    RequestModel(model)
-                    while not HasModelLoaded(model) do
-                        RequestModel(model)
-                        Citizen.Wait(0)
-                    end
-
-                    SetPlayerModel(PlayerId(), model)
-                    SetModelAsNoLongerNeeded(model)
-                    TriggerEvent('skinchanger:loadSkin', skin)
-                    end
-
-                end)
-            end
+          TriggerEvent('skinchanger:loadSkin', skin)
+          TriggerEvent('esx:restoreLoadout')
+        end)
+      end
 
 			if data.current.value == 'police_wear' then
 
