@@ -18,15 +18,20 @@ function getIdentity(source)
 		local identity = result[1]
 	
 		return {
-			identifier = identity['identifier'],
-			firstname = identity['firstname'],
-			lastname = identity['lastname'],
-			dateofbirth = identity['dateofbirth'],
-			sex = identity['sex'],
-			height = identity['height']
+			firstname 	= identity['firstname'],
+			lastname	= identity['lastname'],
+			dateofbirth	= identity['dateofbirth'],
+			sex		= identity['sex'],
+			height		= identity['height']
 		}
 	else
-		return nil
+		return {
+			firstname 	= '',
+			lastname	= '',
+			dateofbirth	= '',
+			sex		= '',
+			height		= ''
+		}	
     end
 end
 
@@ -37,12 +42,12 @@ function createIdentity(identifier, data)
 	MySQL.Sync.execute(
 		'INSERT INTO characters (identifier, firstname, lastname, dateofbirth, sex, height) VALUES (@identifier, @firstname, @lastname, @dateofbirth, @sex, @height)',
 		{
-			['@identifier'] = identifier,
-			['@firstname']  = data.firstname,
-			['@lastname'] 	= data.lastname,
-			['@dateofbirth'] = data.dateofbirth,
+			['@identifier'] 	= identifier,
+			['@firstname']  	= data.firstname,
+			['@lastname'] 		= data.lastname,
+			['@dateofbirth'] 	= data.dateofbirth,
 			['@sex']		= data.sex,
-			['@height'] 	= data.height
+			['@height'] 		= data.height
 		})
 end
 
@@ -59,9 +64,10 @@ end)
 --===============================================
 AddEventHandler('es:playerLoaded', function(source)
 	local result = getIdentity(source)
-	if result ~= nil then
-        TriggerClientEvent('esx_identity:showRegisterIdentity', source)
-    else
-    end
+	if result.firstname == '' then
+		Wait(500)
+        	TriggerClientEvent('esx_identity:showRegisterIdentity', source)
+    	else
+		print('Player Has An Identity. Continuing.')
+    	end
 end)
-
