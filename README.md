@@ -9,6 +9,9 @@ FXServer ESX Police Job
 * Player management (boss actions and armory with buyable weapons)
   * esx_society => https://github.com/FXServer-ESX/fxserver-esx_society
   * esx_datastore => https://github.com/FXServer-ESX/fxserver-esx_datastore
+  
+* ESX Identity Support
+  * esx_identity => https://github.com/ArkSeyonet/fxserver-esx_identity
 
 [INSTALLATION]
 
