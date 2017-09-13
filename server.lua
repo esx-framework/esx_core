@@ -11,22 +11,19 @@
 --===============================================
 function getIdentity(source)
     local identifier = GetPlayerIdentifiers(source)[1]
-    local result = MySQL.Sync.fetchAll("SELECT * FROM characters WHERE identifier = @identifier", {
+    local result = MySQL.Sync.fetchAll("SELECT firstname, lastname FROM characters WHERE identifier = @identifier", {
         ['@identifier'] = identifier
     })
 	if result[1] ~= nil then
 		local identity = result[1]
 	
 		return {
-			identifier = identity['identifier'],
-			firstname = identity['firstname'],
-			lastname = identity['lastname'],
-			dateofbirth = identity['dateofbirth'],
-			sex = identity['sex'],
-			height = identity['height']
+			firstname 		= identity['firstname']
 		}
 	else
-		return nil
+		return {
+			firstname 	= ''
+		}	
     end
 end
 
@@ -59,9 +56,11 @@ end)
 --===============================================
 AddEventHandler('es:playerLoaded', function(source)
 	local result = getIdentity(source)
-	if result ~= nil then
+	if result.firstname == '' then
+		print('Player Does Not Have An Identity')
+		Wait(2000)
         TriggerClientEvent('esx_identity:showRegisterIdentity', source)
     else
+		print('Player Has An Identity')
     end
 end)
-
