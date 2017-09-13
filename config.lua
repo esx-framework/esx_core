@@ -8,6 +8,7 @@ Config.EnableArmoryManagement     = false
 Config.EnableGCIdentity           = false
 Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
 Config.EnableSocietyOwnedVehicles = false
+Config.EnableLicenses             = false
 Config.MaxInService               = -1
 Config.Locale       		          = 'fr'
 
