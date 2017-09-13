@@ -6,6 +6,7 @@ server_scripts {
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
+	'locales/es.lua',
 	'server/esx_joblisting_sv.lua'
 }
 
@@ -16,5 +17,6 @@ client_scripts {
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fr.lua',
+	'locales/es.lua',
 	'client/esx_joblisting_cl.lua'
 }
