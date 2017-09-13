@@ -18,11 +18,11 @@ function getIdentity(source)
 		local identity = result[1]
 	
 		return {
-			firstname 		= identity['firstname'],
-			lastname		= identity['lastname'],
-			dateofbirth		= identity['dateofbirth'],
-			sex			= identity['sex'],
-			height			= identity['height']
+			firstname 	= identity['firstname'],
+			lastname	= identity['lastname'],
+			dateofbirth	= identity['dateofbirth'],
+			sex		= identity['sex'],
+			height		= identity['height']
 		}
 	else
 		return {
