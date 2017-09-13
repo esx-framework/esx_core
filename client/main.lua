@@ -38,6 +38,8 @@ end)
 
 function OpenPhone()
 
+	local playerPed = GetPlayerPed(-1)
+
 	TriggerServerEvent('esx_phone:reload', PhoneData.phoneNumber)
 
   SendNUIMessage({
@@ -51,9 +53,15 @@ function OpenPhone()
   	SetNuiFocus(true, true)
   end)
 
+	if not IsPedInAnyVehicle(playerPed,  false) then
+		TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_STAND_MOBILE", 0, true);
+	end
+
 end
 
 function ClosePhone()
+
+	local playerPed = GetPlayerPed(-1)
 
   SendNUIMessage({
   	showPhone = false
@@ -62,6 +70,8 @@ function ClosePhone()
   SetNuiFocus(false)
 
 	GUI.PhoneIsShowed = false
+
+	ClearPedTasks(playerPed)
 
 end
 
@@ -136,9 +146,9 @@ RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)
 
 	if job == 'player' then
-		ESX.ShowNotification(_U('new_message', message))
+	  ESX.ShowNotification(_U('new_message', message))
 	else
-		ESX.ShowNotification('~b~' .. job .. ': ~s~' .. message)
+	  ESX.ShowNotification('~b~' .. job .. ': ~s~' .. message)
 	end
 
 	SendNUIMessage({

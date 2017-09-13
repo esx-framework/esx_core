@@ -61,10 +61,10 @@ AddEventHandler('esx:playerLoaded', function(source)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	for k,v in pairs(PhoneNumbers) do
+	for num,v in pairs(PhoneNumbers) do
 		if tonumber(k) == k then -- If phonenumber is a player phone number
-			for i=1, #v.sources, 1 do
-				TriggerClientEvent('esx_phone:setPhoneNumberSource', source, k, v.sources[i])
+			for src,_ in pairs(v.sources) do
+				TriggerClientEvent('esx_phone:setPhoneNumberSource', source, num, tonumber(src))
 			end
 		end
 	end
@@ -99,7 +99,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 				sharePos      = false,
 				hideNumber    = false,
 				hidePosIfAnon = false,
-				sources       = {source}
+				sources       = {[source] = true}
 			}
 
 			xPlayer.set('phoneNumber', phoneNumber)
@@ -184,27 +184,23 @@ AddEventHandler('esx_phone:send', function(phoneNumber, message, anon, position)
 
 	if PhoneNumbers[phoneNumber] ~= nil then
 
-		for i=1, #PhoneNumbers[phoneNumber].sources, 1 do
+		for k,v in pairs(PhoneNumbers[phoneNumber].sources) do
 
-			if PhoneNumbers[phoneNumber].sources[i] ~= nil then
+			local numType          = PhoneNumbers[phoneNumber].type
+			local numHasDispatch   = PhoneNumbers[phoneNumber].hasDispatch
+			local numHide          = PhoneNumbers[phoneNumber].hideNumber
+			local numHidePosIfAnon = PhoneNumbers[phoneNumber].hidePosIfAnon
+			local numPosition      = (PhoneNumbers[phoneNumber].sharePos and position or false)
+			local numSource        = tonumber(k)
 
-				local numType          = PhoneNumbers[phoneNumber].type
-				local numHasDispatch   = PhoneNumbers[phoneNumber].hasDispatch
-				local numHide          = PhoneNumbers[phoneNumber].hideNumber
-				local numHidePosIfAnon = PhoneNumbers[phoneNumber].hidePosIfAnon
-				local numPosition      = (PhoneNumbers[phoneNumber].sharePos and position or false)
-				local numSource        = PhoneNumbers[phoneNumber].sources[i]
+			if numHidePosIfAnon and anon then
+				numPosition = false
+			end
 
-				if numHidePosIfAnon and anon then
-					numPosition = false
-				end
-
-				if numHasDispatch then
-					TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, GetDistpatchRequestId())
-				else
-					TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, false)
-				end
-
+			if numHasDispatch then
+				TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, GetDistpatchRequestId())
+			else
+				TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, false)
 			end
 
 		end
@@ -230,30 +226,11 @@ AddEventHandler('esx_phone:registerNumber', function(number, type, sharePos, has
 end)
 
 AddEventHandler('esx_phone:addSource', function(number, source)
-	
-	local found = false
-
-	for i=1, #PhoneNumbers[number].sources, 1 do
-		if PhoneNumbers[number].sources[i] == source then
-			found = true
-			break
-		end
-	end
-
-	if not found then
-		table.insert(PhoneNumbers[number].sources, source)
-	end
-
+	PhoneNumbers[number].sources[tostring(source)] = true
 end)
 
 AddEventHandler('esx_phone:removeSource', function(number, source)
-	
-	for i=1, #PhoneNumbers[number].sources, 1 do
-		if PhoneNumbers[number].sources[i] == source then
-			PhoneNumbers[number].sources[i] = nil
-		end
-	end
-
+	PhoneNumbers[number].sources[tostring(source)] = nil
 end)
 
 RegisterServerEvent('esx_phone:addPlayerContact')
