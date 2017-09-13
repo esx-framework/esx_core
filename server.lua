@@ -59,7 +59,7 @@ end)
 --===============================================
 AddEventHandler('es:playerLoaded', function(source)
 	local result = getIdentity(source)
-	if result == nil then
+	if result ~= nil then
         TriggerClientEvent('esx_identity:showRegisterIdentity', source)
     else
     end
