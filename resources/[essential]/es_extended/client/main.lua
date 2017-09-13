@@ -89,13 +89,14 @@ AddEventHandler('skinchanger:loadDefaultModel', function()
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
-	
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(0)
 	end
 	
-	-- Restore loadout
+	TriggerEvent('esx:restoreLoadout')
+end)
 
+AddEventHandler('esx:restoreLoadout', function ()
 	local playerPed = GetPlayerPed(-1)
 
 	for i=1, #ESX.PlayerData.loadout, 1 do
@@ -104,7 +105,6 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	end
 
 	LoadoutLoaded = true
-
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
