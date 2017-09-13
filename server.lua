@@ -11,18 +11,26 @@
 --===============================================
 function getIdentity(source)
     local identifier = GetPlayerIdentifiers(source)[1]
-    local result = MySQL.Sync.fetchAll("SELECT firstname, lastname FROM characters WHERE identifier = @identifier", {
+    local result = MySQL.Sync.fetchAll("SELECT * FROM characters WHERE identifier = @identifier", {
         ['@identifier'] = identifier
     })
 	if result[1] ~= nil then
 		local identity = result[1]
 	
 		return {
-			firstname 		= identity['firstname']
+			firstname 		= identity['firstname'],
+			lastname		= identity['lastname'],
+			dateofbirth		= identity['dateofbirth'],
+			sex			= identity['sex'],
+			height			= identity['height']
 		}
 	else
 		return {
-			firstname 	= ''
+			firstname 	= '',
+			lastname	= '',
+			dateofbirth	= '',
+			sex		= '',
+			height		= ''
 		}	
     end
 end
