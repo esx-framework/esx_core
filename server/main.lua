@@ -9,132 +9,132 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler('onMySQLReady', function()
 
-	local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
+  local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
 
-	for i=1, #result, 1 do
+  for i=1, #result, 1 do
 
-		local name   = result[i].name
-		local label  = result[i].label
-		local shared = result[i].shared
+    local name   = result[i].name
+    local label  = result[i].label
+    local shared = result[i].shared
 
-		local result2 = MySQL.Sync.fetchAll(
-			'SELECT * FROM datastore_data WHERE name = @name',
-			{
-				['@name'] = name
-			}
-		)
+    local result2 = MySQL.Sync.fetchAll(
+      'SELECT * FROM datastore_data WHERE name = @name',
+      {
+        ['@name'] = name
+      }
+    )
 
-		if shared == 0 then
+    if shared == 0 then
 
-			table.insert(DataStoresIndex, name)
+      table.insert(DataStoresIndex, name)
 
-			DataStores[name] = {}
+      DataStores[name] = {}
 
-			for j=1, #result2, 1 do
+      for j=1, #result2, 1 do
 
-				local storeName  = result2[j].name
-				local storeOwner = result2[j].owner
-				local storeData  = (result2[j].data == nil and {} or json.decode(result2[j].data))
+        local storeName  = result2[j].name
+        local storeOwner = result2[j].owner
+        local storeData  = (result2[j].data == nil and {} or json.decode(result2[j].data))
 
-				local dataStore = CreateDataStore(storeName, storeOwner, storeData)
-				
-				table.insert(DataStores[name], dataStore)
+        local dataStore = CreateDataStore(storeName, storeOwner, storeData)
 
-			end
+        table.insert(DataStores[name], dataStore)
 
-		else
+      end
 
-			local data = nil
+    else
 
-			if #result2 == 0 then
+      local data = nil
 
-				MySQL.Sync.execute(
-					'INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')',
-					{
-						['@name'] = name,
-					}
-				)
+      if #result2 == 0 then
 
-				data = {}
+        MySQL.Sync.execute(
+          'INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')',
+          {
+            ['@name'] = name,
+          }
+        )
 
-			else
-				data = json.decode(result2[1].data)
-			end
+        data = {}
 
-			local dataStore   = CreateDataStore(name, nil, data)
-			SharedDataStores[name] = dataStore
+      else
+        data = json.decode(result2[1].data)
+      end
 
-		end
+      local dataStore   = CreateDataStore(name, nil, data)
+      SharedDataStores[name] = dataStore
 
-	end
+    end
+
+  end
 
 end)
 
 function GetDataStore(name, owner)
-	for i=1, #DataStores[name], 1 do
-		if DataStores[name][i].owner == owner then
-			return DataStores[name][i]
-		end
-	end
+  for i=1, #DataStores[name], 1 do
+    if DataStores[name][i].owner == owner then
+      return DataStores[name][i]
+    end
+  end
 end
 
 function GetDataStoreOwners(name)
-	
-	local identifiers = {}
 
-	for i=1, #DataStores[name], 1 do
-		table.insert(identifiers, DataStores[name][i].owner)
-	end
+  local identifiers = {}
 
-	return identifiers
+  for i=1, #DataStores[name], 1 do
+    table.insert(identifiers, DataStores[name][i].owner)
+  end
+
+  return identifiers
 
 end
 
 function GetSharedDataStore(name)
-	return SharedDataStores[name]
+  return SharedDataStores[name]
 end
 
 AddEventHandler('esx_datastore:getDataStore', function(name, owner, cb)
-	cb(GetDataStore(name, owner))
+  cb(GetDataStore(name, owner))
 end)
 
 AddEventHandler('esx_datastore:getDataStoreOwners', function(name, cb)
-	cb(GetDataStoreOwners(name))
+  cb(GetDataStoreOwners(name))
 end)
 
 AddEventHandler('esx_datastore:getSharedDataStore', function(name, cb)
-	cb(GetSharedDataStore(name))
+  cb(GetSharedDataStore(name))
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
 
-	local xPlayer    = ESX.GetPlayerFromId(source)
-	local dataStores = {}
+  local xPlayer    = ESX.GetPlayerFromId(source)
+  local dataStores = {}
 
-	for i=1, #DataStoresIndex, 1 do
+  for i=1, #DataStoresIndex, 1 do
 
-		local name      = DataStoresIndex[i]
-		local dataStore = GetDataStore(name, xPlayer.identifier)
-		
-		if dataStore == nil then
+    local name      = DataStoresIndex[i]
+    local dataStore = GetDataStore(name, xPlayer.identifier)
 
-			MySQL.Async.execute(
-				'INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)',
-				{
-					['@name']  = name,
-					['@owner'] = xPlayer.identifier,
-					['@data']  = '{}'
-				}
-			)
+    if dataStore == nil then
 
-			dataStore = CreateDataStore(name, xPlayer.identifier, {})
-			table.insert(DataStores[name], dataStore)
-		end
+      MySQL.Async.execute(
+        'INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)',
+        {
+          ['@name']  = name,
+          ['@owner'] = xPlayer.identifier,
+          ['@data']  = '{}'
+        }
+      )
 
-		table.insert(dataStores, dataStore)
+      dataStore = CreateDataStore(name, xPlayer.identifier, {})
+      table.insert(DataStores[name], dataStore)
+    end
 
-	end
+    table.insert(dataStores, dataStore)
 
-	xPlayer.set('dataStores', dataStores)
+  end
+
+  xPlayer.set('dataStores', dataStores)
 
 end)
