@@ -71,14 +71,18 @@ function GetRandomWalkingNPC()
 
   print('Using fallback code to find walking ped')
 
-  while true do
+  for i=1, 250, 1 do
 
     local ped = GetRandomPedAtCoord(0.0,  0.0,  0.0,  math.huge + 0.0,  math.huge + 0.0,  math.huge + 0.0,  26)
 
     if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
-      return ped
+      table.insert(search, ped)
     end
 
+  end
+
+  if #search > 0 then
+    return search[GetRandomIntInRange(1, #search)]
   end
 
 end
