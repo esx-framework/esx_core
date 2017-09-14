@@ -3,21 +3,21 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 description 'ESX Taxi Job'
 
 client_scripts {
-	'@es_extended/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fr.lua',
-	'config.lua',
-	'client/main.lua'
+  '@es_extended/locale.lua',
+  'locales/de.lua',
+  'locales/br.lua',
+  'locales/en.lua',
+  'locales/fr.lua',
+  'config.lua',
+  'client/main.lua'
 }
 
 server_scripts {
-	'@es_extended/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fr.lua',
-	'config.lua',
-	'server/main.lua'
+  '@es_extended/locale.lua',
+  'locales/de.lua',
+  'locales/br.lua',
+  'locales/en.lua',
+  'locales/fr.lua',
+  'config.lua',
+  'server/main.lua'
 }
