@@ -666,9 +666,9 @@ function OpenIdentityCardMenu(player)
 
       local jobLabel    = nil
       local sexLabel    = nil
-      local sex       = nil
+      local sex         = nil
       local dobLabel    = nil
-      local heightLabel   = nil
+      local heightLabel = nil
       local idLabel     = nil
 
       if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
@@ -708,11 +708,11 @@ function OpenIdentityCardMenu(player)
 
       local elements = {
         {label = _U('name') .. data.firstname .. " " .. data.lastname, value = nil},
-        {label = sexLabel,              value = nil},
-        {label = dobLabel,              value = nil},
-        {label = heightLabel,           value = nil},
-        {label = jobLabel,              value = nil},
-        {label = idLabel,       value = nil},
+        {label = sexLabel,    value = nil},
+        {label = dobLabel,    value = nil},
+        {label = heightLabel, value = nil},
+        {label = jobLabel,    value = nil},
+        {label = idLabel,     value = nil},
       }
 
       if data.drunk ~= nil then
