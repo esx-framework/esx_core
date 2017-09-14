@@ -41,16 +41,16 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
       disposeFunc(iter)
       return
     end
-    
+
     local enum = {handle = iter, destructor = disposeFunc}
     setmetatable(enum, entityEnumerator)
-    
+
     local next = true
     repeat
       coroutine.yield(id)
       next, id = moveFunc(iter)
     until not next
-    
+
     enum.destructor, enum.handle = nil, nil
     disposeFunc(iter)
   end)
