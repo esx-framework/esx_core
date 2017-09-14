@@ -1,2 +1,3 @@
-Config = {}
-Config.Locale = 'fr'
+Config                    = {}
+Config.Locale             = 'fr'
+Config.EnableESXIdentity  = true
