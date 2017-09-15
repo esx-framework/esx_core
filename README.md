@@ -1,15 +1,5 @@
-# fxserver-es_extended [WIP]
+# es_extended
 FXServer ES Extended
-
-[UPDATE]
-
-Since commit : https://github.com/FXServer-ESX/fxserver-es_extended/commit/ec1e8c0852b7461472dc9c332464ad55c81682e7 you have to add this SQL if you have already installed es_extended :
-```sql
-ALTER TABLE `items`
-	ADD COLUMN `rare` int(11) NOT NULL DEFAULT '0',
-	ADD COLUMN `can_remove` int(11) NOT NULL DEFAULT '1'
-;
-```
 
 [DISCORD]
 
@@ -39,15 +29,16 @@ Positions are saved in database and restored on spawn
 [INSTALLATION]
 
 ```
-git clone https://github.com/FXServer-ESX/fxserver-es_extended
-cd fxserver-es_extended
-git submodule init
-git submodule update --recursive
+cd in your ressources directory
+git clone https://github.com/ESX-Org/es_extended [esssential]/es_extended
+git clone https://github.com/ESX-Org/esx_menu-core [esx]/[ui]/esx_menu-core
+git clone https://github.com/ESX-Org/esx_menu-list [esx]/[ui]/esx_menu-list
+git clone https://github.com/ESX-Org/esx_menu-dialog [esx]/[ui]/esx_menu-dialog
+
 ```
 
-1) Copy all folders inside resources to your server resources folder
-2) Import es_extended.sql in your database
-3) Add this in your server.cfg :
+1) Import es_extended.sql in your database
+2) Add this in your server.cfg :
 
 ```
 start es_extended
