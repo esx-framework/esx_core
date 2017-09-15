@@ -40,13 +40,13 @@ fvm install --save --folder=esx ESX-Org/esx_menu-list
 2) Manually
 ```
 - Download https://github.com/ESX-Org/es_extended/releases/latest
-- Put in in [essential] directory
+- Put it in [essential] directory
 - Download https://github.com/ESX-Org/esx_menu-default/release/latest
-- Put in in [esx] directory
+- Put it in [esx] directory
 - Download https://github.com/ESX-Org/esx_menu-dialog/release/latest
-- Put in in [esx] directory
+- Put it in [esx] directory
 - Download https://github.com/ESX-Org/esx_menu-list/release/latest
-- Put in in [esx] directory
+- Put it in [esx] directory
 ```
 
 1) Import es_extended.sql in your database
