@@ -1,5 +1,7 @@
 description 'ESX Mecano Job'
 
+version '1.0.0'
+
 client_scripts {
 	'@es_extended/locale.lua',
 	'locales/de.lua',
