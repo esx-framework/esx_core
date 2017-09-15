@@ -5,6 +5,8 @@ function loadWhiteList ()
     'SELECT * FROM whitelist',
     {},
     function (identifiers)
+      Whitelist = {}
+
       for i=1, #identifiers, 1 do
         table.insert(WhiteList, tostring(identifiers[i].identifier))
       end
