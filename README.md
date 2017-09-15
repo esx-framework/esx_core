@@ -41,11 +41,11 @@ fvm install --save --folder=esx ESX-Org/esx_menu-list
 ```
 - Download https://github.com/ESX-Org/es_extended/releases/latest
 - Put it in [essential] directory
-- Download https://github.com/ESX-Org/esx_menu-default/release/latest
+- Download https://github.com/ESX-Org/esx_menu-default/releases/latest
 - Put it in [esx] directory
-- Download https://github.com/ESX-Org/esx_menu-dialog/release/latest
+- Download https://github.com/ESX-Org/esx_menu-dialog/releases/latest
 - Put it in [esx] directory
-- Download https://github.com/ESX-Org/esx_menu-list/release/latest
+- Download https://github.com/ESX-Org/esx_menu-list/releases/latest
 - Put it in [esx] directory
 ```
 
