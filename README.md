@@ -43,8 +43,8 @@ git clone https://github.com/ESX-Org/esx_menu-dialog [esx]/[ui]/esx_menu-dialog
 ```
 start es_extended
 
-start esx_menu_default
-start esx_menu_list
-start esx_menu_dialog
+start esx_menu-core
+start esx_menu-list
+start esx_menu-dialog
 ```
 
