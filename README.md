@@ -30,7 +30,7 @@ Positions are saved in database and restored on spawn
 
 ```
 cd in your ressources directory
-git clone https://github.com/ESX-Org/es_extended [esssential]/es_extended
+git clone https://github.com/ESX-Org/es_extended [essential]/es_extended
 git clone https://github.com/ESX-Org/esx_menu-core [esx]/[ui]/esx_menu-core
 git clone https://github.com/ESX-Org/esx_menu-list [esx]/[ui]/esx_menu-list
 git clone https://github.com/ESX-Org/esx_menu-dialog [esx]/[ui]/esx_menu-dialog
