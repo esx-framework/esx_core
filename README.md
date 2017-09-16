@@ -25,10 +25,12 @@ Positions are saved in database and restored on spawn
 
 - essentialmode + es_admin => https://forum.fivem.net/t/release-essentialmode-base/3665
 - esplugin_mysql => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
+- mysql-async => https://github.com/brouznouf/fivem-mysql-async/releases/latest
+- async => https://github.com/ESX-Org/async/releases/latest
 
 [INSTALLATION]
 
-1) Using fvm
+1) Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
 fvm install --save --folder=essential ESX-Org/es_extended
 fvm install --save --folder=esx ESX-Org/esx_menu_default
