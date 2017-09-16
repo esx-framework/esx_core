@@ -31,9 +31,9 @@ Positions are saved in database and restored on spawn
 1) Using fvm
 ```
 fvm install --save --folder=essential ESX-Org/es_extended
-fvm install --save --folder=esx ESX-Org/esx_menu-default
-fvm install --save --folder=esx ESX-Org/esx_menu-dialog
-fvm install --save --folder=esx ESX-Org/esx_menu-list
+fvm install --save --folder=esx ESX-Org/esx_menu_default
+fvm install --save --folder=esx ESX-Org/esx_menu_dialog
+fvm install --save --folder=esx ESX-Org/esx_menu_list
 
 ```
 
@@ -41,11 +41,11 @@ fvm install --save --folder=esx ESX-Org/esx_menu-list
 ```
 - Download https://github.com/ESX-Org/es_extended/releases/latest
 - Put it in [essential] directory
-- Download https://github.com/ESX-Org/esx_menu-default/releases/latest
+- Download https://github.com/ESX-Org/esx_menu_default/releases/latest
 - Put it in [esx] directory
-- Download https://github.com/ESX-Org/esx_menu-dialog/releases/latest
+- Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
 - Put it in [esx] directory
-- Download https://github.com/ESX-Org/esx_menu-list/releases/latest
+- Download https://github.com/ESX-Org/esx_menu_list/releases/latest
 - Put it in [esx] directory
 ```
 
@@ -55,8 +55,8 @@ fvm install --save --folder=esx ESX-Org/esx_menu-list
 ```
 start es_extended
 
-start esx_menu-default
-start esx_menu-list
-start esx_menu-dialog
+start esx_menu_default
+start esx_menu_list
+start esx_menu_dialog
 ```
 
