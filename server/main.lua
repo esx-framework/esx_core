@@ -10,11 +10,15 @@ AddEventHandler('esx_bankerjob:customerDeposit', function (target, amount)
   local xPlayer = ESX.GetPlayerFromId(target)
 
   TriggerEvent('esx_addonaccount:getSharedAccount', 'society_banker', function (account)
-    account.removeMoney(amount)
-  end)
+    if amount > 0 and account.money >= amount then
+      account.removeMoney(amount)
 
-  TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function (account)
-    account.addMoney(amount)
+      TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function (account)
+        account.addMoney(amount)
+      end)
+    else
+      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+    end
   end)
 end)
 
@@ -23,11 +27,15 @@ AddEventHandler('esx_bankerjob:customerWithdraw', function (target, amount)
   local xPlayer = ESX.GetPlayerFromId(target)
 
   TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function (account)
-    account.removeMoney(amount)
-  end)
+    if amount > 0 and account.money >= amount then
+      account.removeMoney(amount)
 
-  TriggerEvent('esx_addonaccount:getSharedAccount', 'society_banker', function (account)
-    account.addMoney(amount)
+      TriggerEvent('esx_addonaccount:getSharedAccount', 'society_banker', function (account)
+        account.addMoney(amount)
+      end)
+    else
+      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+    end
   end)
 end)
 
