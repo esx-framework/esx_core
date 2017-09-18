@@ -176,7 +176,7 @@ function OpenShopMenu ()
                             x = Config.Zones.ShopOutside.Pos.x,
                             y = Config.Zones.ShopOutside.Pos.y,
                             z = Config.Zones.ShopOutside.Pos.z
-                          }, -20.0, function (vehicle)
+                          }, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -213,7 +213,7 @@ function OpenShopMenu ()
                             x = Config.Zones.ShopOutside.Pos.x,
                             y = Config.Zones.ShopOutside.Pos.y,
                             z = Config.Zones.ShopOutside.Pos.z
-                          }, -20.0, function (vehicle)
+                          }, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -252,7 +252,7 @@ function OpenShopMenu ()
                       x = Config.Zones.ShopOutside.Pos.x,
                       y = Config.Zones.ShopOutside.Pos.y,
                       z = Config.Zones.ShopOutside.Pos.z
-                    }, -20.0, function (vehicle)
+                    }, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                       TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -320,7 +320,7 @@ function OpenShopMenu ()
         x = Config.Zones.ShopInside.Pos.x,
         y = Config.Zones.ShopInside.Pos.y,
         z = Config.Zones.ShopInside.Pos.z
-      }, 90.0, function(vehicle)
+      }, Config.Zones.ShopInside.Heading, function(vehicle)
         table.insert(LastVehicles, vehicle)
         TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         FreezeEntityPosition(vehicle, true)
@@ -334,7 +334,7 @@ function OpenShopMenu ()
     x = Config.Zones.ShopInside.Pos.x,
     y = Config.Zones.ShopInside.Pos.y,
     z = Config.Zones.ShopInside.Pos.z
-  }, 90.0, function (vehicle)
+  }, Config.Zones.ShopInside.Heading, function (vehicle)
     table.insert(LastVehicles, vehicle)
     TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
     FreezeEntityPosition(vehicle, true)
@@ -584,7 +584,7 @@ function OpenPopVehicleMenu ()
           x = Config.Zones.ShopInside.Pos.x,
           y = Config.Zones.ShopInside.Pos.y,
           z = Config.Zones.ShopInside.Pos.z
-        }, 90.0, function (vehicle)
+        }, Config.Zones.ShopInside.Heading, function (vehicle)
 
           table.insert(LastVehicles, vehicle)
 
