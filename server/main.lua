@@ -34,6 +34,7 @@ AddEventHandler('playerConnecting', function (playerName, setKickReason)
   for i = 1, #WhiteList, 1 do
     if (tostring(WhiteList[i]) == tostring(steamID)) then
       whitelisted = true
+      break
     end
   end
 
