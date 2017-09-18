@@ -1,6 +1,6 @@
 description 'ESX Whitelist'
 
-version '1.0.1'
+version '1.0.2'
 
 server_scripts {
   '@mysql-async/lib/MySQL.lua',
@@ -9,5 +9,5 @@ server_scripts {
   'locales/en.lua',
   'locales/fr.lua',
   'server/main.lua',
-  'server/commands.lua'
+  'server/commands.lua',
 }
