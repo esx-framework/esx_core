@@ -16,6 +16,13 @@ Config.Locale                     = 'fr'
 
 Config.Zones = {
 
+  Blip = {
+    Pos     = { x = 425.130, y = -979.558, z = 30.711 },
+    Sprite  = 61,
+    Display = 4,
+    Scale   = 1.2,
+    Colour   = 2,
+  },
 
   HospitalInteriorEntering1 = {
     Pos  = { x = 1151.447, y = -1529.491, z = 34.375 },
