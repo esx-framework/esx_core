@@ -21,7 +21,7 @@ Config.PoliceStations = {
       Sprite  = 60,
       Display = 4,
       Scale   = 1.2,
-      Color   = 29,
+      Colour  = 29,
     },
 
     AuthorizedWeapons = {

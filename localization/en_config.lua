@@ -14,9 +14,13 @@ Config.Locale                     = 'en'
 Config.PoliceStations = {
 
   LSPD1 = {
+
     Blip = {
-      Pos   = {x = 425.130, y = -979.558, z = 30.711},
-      Color = 29
+      Pos     = { x = 425.130, y = -979.558, z = 30.711 },
+      Sprite  = 60,
+      Display = 4,
+      Scale   = 1.2,
+      Colour  = 29,
     },
 
     AuthorizedWeapons = {
