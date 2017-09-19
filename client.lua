@@ -1,8 +1,7 @@
 --==================================================================================
---======               ESX_IDENTITY BY ARKSEYONET @Ark                    ======
+--======               ESX_IDENTITY BY ARKSEYONET @Ark                        ======
 --======    YOU CAN FIND ME ON MY DISCORD @Ark - https://discord.gg/cGHHxPX   ======
 --======    IF YOU ALTER THIS VERSION OF THE SCRIPT, PLEASE GIVE ME CREDIT    ======
---======            Special Thanks To COSHAREK FOR THE UI Design              ======
 --======     Special Thanks To Alphakush and CMD.Telhada For Help Testing     ======
 --==================================================================================
 
@@ -46,7 +45,7 @@ end)
 --===============================================
 RegisterNUICallback('register', function(data, cb)
   myIdentity = data
-  TriggerServerEvent('esx_identity:createIdentity', data)
+  TriggerServerEvent('esx_identity:setIdentity', data)
   EnableGui(false)
   Wait (500)
   TriggerEvent('esx_skin:openSaveableMenu')
