@@ -203,7 +203,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 
   if Config.EnableESXIdentity then
     MySQL.Async.fetchAll(
-      'SELECT characters.*, users.job, users.job_grade FROM characters JOIN users ON characters.identifier = users.identifier WHERE users.job = @job ORDER BY users.job_grade DESC',
+      'SELECT * FROM users WHERE job = @job ORDER BY job_grade DESC',
       { ['@job'] = society },
       function (results)
         local employees = {}
