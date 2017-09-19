@@ -128,19 +128,16 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 
     local identifier = GetPlayerIdentifiers(target)[1]
 
-    local result = MySQL.Sync.fetchAll("SELECT * FROM characters WHERE identifier = @identifier", {
+    local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {
       ['@identifier'] = identifier
     })
 
     local user      = result[1]
     local firstname     = user['firstname']
     local lastname      = user['lastname']
-    local sex               = user['sex']
-    local dob               = user['dateofbirth']
-    local heightInit        = user['height']
-    local heightFeet    = tonumber(string.format("%.0f",heightInit / 12, 0))
-    local heightInches    = tonumber(string.format("%.0f",heightInit % 12, 0))
-    local height        = heightFeet .. "\' " .. heightInches .. "\""
+    local sex           = user['sex']
+    local dob           = user['dateofbirth']
+    local height        = user['height'] .. " Inches"
 
     local data = {
       name        = GetPlayerName(target),
@@ -150,9 +147,9 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
       weapons     = xPlayer.loadout,
       firstname   = firstname,
       lastname    = lastname,
-      sex           = sex,
-      dob           = dob,
-      height        = height
+      sex         = sex,
+      dob         = dob,
+      height      = height
     }
 
     TriggerEvent('esx_status:getStatus', source, 'drunk', function(status)
@@ -243,7 +240,7 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
         if foundIdentifier ~= nil then
 
           MySQL.Async.fetchAll(
-            'SELECT * FROM characters WHERE identifier = @identifier',
+            'SELECT * FROM users WHERE identifier = @identifier',
             {
               ['@identifier'] = foundIdentifier
             },
