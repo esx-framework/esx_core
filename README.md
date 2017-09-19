@@ -3,8 +3,6 @@ FXServer ESX License
 
 [INSTALLATION]
 
-[INSTALLATION]
-
 1) Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
 fvm install --save --folder=esx esx-org/esx_license
