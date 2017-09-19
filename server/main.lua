@@ -137,7 +137,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
     local lastname      = user['lastname']
     local sex           = user['sex']
     local dob           = user['dateofbirth']
-    local height        = user['height']
+    local height        = user['height'] .. " Inches"
 
     local data = {
       name        = GetPlayerName(target),
