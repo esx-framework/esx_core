@@ -4,11 +4,12 @@ FXServer ESX Identity
 [REQUIREMENTS]
 
 * Dependencies For Full Functionality
-  * esx_policejob => https://github.com/FXServer-ESX/fxserver-esx_policejob
+  * esx_policejob => https://github.com/ESX-Org/esx_policejob
+  * esx_society => https://github.com/ESX-Org/esx_society
 
 [INSTALLATION]
 
-1) Install To resources/esx_identity
+1) Install To resources/[esx]/esx_identity
 `<< MUST BE INSTALLED HERE`
 2) Import esx_identity.sql in your database
 
@@ -17,8 +18,11 @@ FXServer ESX Identity
 ```
 start esx_identity
 ```
-4) If you are using esx_policejob, you need to change Config.EnableESXIdentity = true in esx_policejob/config.lua
+4) If you are using esx_policejob or esx_society, you need to enable the following in the files config.lua:
 ```Config.EnableESXIdentity          = true```
+
+Notice:
+`Drop the characters table, it is no longer used`
 
 Credits:
 `Script Created By: ArkSeyonet @Ark`
