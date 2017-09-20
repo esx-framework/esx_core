@@ -14,18 +14,18 @@ Config.EarlyRespawnFine           = true
 Config.EarlyRespawnFineAmount     = 500
 Config.Locale                     = 'fr'
 
+Config.Blip = {
+  Pos     = { x = 1153.364, y = -979.558, z = 30.711 },
+  Sprite  = 61,
+  Display = 4,
+  Scale   = 1.2,
+  Colour  = 2,
+},
+
 Config.Zones = {
 
-  Blip = {
-    Pos     = { x = 425.130, y = -979.558, z = 30.711 },
-    Sprite  = 61,
-    Display = 4,
-    Scale   = 1.2,
-    Colour   = 2,
-  },
-
   HospitalInteriorEntering1 = {
-    Pos  = { x = 1151.447, y = -1529.491, z = 34.375 },
+    Pos  = { x = 1151.447, y = -1525.731, z = 33.843 },
     Size = { x = 1.5, y = 1.5, z = 1.0 },
     Type = 1
   },

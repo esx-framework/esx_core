@@ -760,15 +760,15 @@ end)
 -- Create blips
 Citizen.CreateThread(function()
 
-	local blip = AddBlipForCoord(Config.Zones.HospitalInteriorOutside1.Pos.x, Config.Zones.HospitalInteriorOutside1.Pos.y, Config.Zones.HospitalInteriorOutside1.Pos.z)
+  local blip = AddBlipForCoord(Config.Blip.Pos.x, Config.Blip.Pos.y, Config.Blip.Pos.z)
 
-  SetBlipSprite (blip, Config.Zones.Blip.Sprite)
-  SetBlipDisplay(blip, Config.Zones.Blip.Display)
-  SetBlipScale  (blip, Config.Zones.Blip.Scale)
-  SetBlipColour (blip, Config.Zones.Blip.Colour)
+  SetBlipSprite (blip, Config.Blip.Sprite)
+  SetBlipDisplay(blip, Config.Blip.Display)
+  SetBlipScale  (blip, Config.Blip.Scale)
+  SetBlipColour (blip, Config.Blip.Colour)
   SetBlipAsShortRange(blip, true)
 
-	BeginTextCommandSetBlipName("STRING")
+  BeginTextCommandSetBlipName("STRING")
   AddTextComponentString(_U('hospital'))
   EndTextCommandSetBlipName(blip)
 
