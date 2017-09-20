@@ -20,7 +20,7 @@ Config.Blip = {
   Display = 4,
   Scale   = 1.2,
   Colour  = 2,
-},
+}
 
 Config.Zones = {
 
