@@ -17,6 +17,7 @@ Locales['en'] = {
   ['delete_five_min'] = '~r~delete~s~ in 5 minutes',
   ['threw'] = 'you ~r~threw~s~',
   ['rec_salary'] = 'you received your salary: ',
+  ['rec_help'] = 'you recieved your welfare check: ',
   ['act_imp'] = 'action impossible',
   -- Commands
   ['setjob'] = 'assign a job to a user',
