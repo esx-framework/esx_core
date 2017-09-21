@@ -15,11 +15,25 @@ FXServer ESX Identity
 
 3) Add this in your server.cfg :
 
+Notice:
+`If you were already using the latest version of esx_identity before the update, you can just import esx_identity_update.sql`
+
 ```
 start esx_identity
 ```
 4) If you are using esx_policejob or esx_society, you need to enable the following in the files config.lua:
 ```Config.EnableESXIdentity          = true```
+
+```
+Commands:
+
+/identityhelp
+/register
+/charlist
+/charselect 1,2,3
+/delchar 1,2,3
+```
+
 
 Notice:
 `Drop the characters table, it is no longer used`
