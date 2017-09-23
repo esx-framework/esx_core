@@ -15,8 +15,15 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
   local xPlayer = ESX.GetPlayerFromId(source)
 
   if Config.RemoveCashAfterRPDeath then
-    xPlayer.removeMoney(xPlayer.getMoney())
-    xPlayer.setAccountMoney('black_money', 0)
+
+    if xPlayer.getMoney() > 0 then
+      xPlayer.removeMoney(xPlayer.getMoney())
+    end
+
+    if xPlayer.getAccount('black_money').money > 0 then
+      xPlayer.setAccountMoney('black_money', 0)
+    end
+
   end
 
   if Config.RemoveItemsAfterRPDeath then
@@ -42,8 +49,15 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeathRemoveMoney'
   local xPlayer = ESX.GetPlayerFromId(source)
 
   if Config.RemoveCashAfterRPDeath then
-    xPlayer.removeMoney(xPlayer.getMoney())
-    xPlayer.setAccountMoney('black_money', 0)
+
+    if xPlayer.getMoney() > 0 then
+      xPlayer.removeMoney(xPlayer.getMoney())
+    end
+
+    if xPlayer.getAccount('black_money').money > 0 then
+      xPlayer.setAccountMoney('black_money', 0)
+    end
+
   end
 
   if Config.EarlyRespawn and Config.EarlyRespawnFine then
