@@ -55,10 +55,10 @@ fvm install --save --folder=esx esx-org/esx_menu_list
 
 ```
 cd resources
-git clone https://github.com/ESX-Org/es_extended
-git clone https://github.com/ESX-Org/esx_menu_default
-git clone https://github.com/ESX-Org/esx_menu_dialog
-git clone https://github.com/ESX-Org/esx_menu_list
+git clone https://github.com/ESX-Org/es_extended [essential]/es_extended
+git clone https://github.com/ESX-Org/esx_menu_default [esx]/[ui]/esx_menu_default
+git clone https://github.com/ESX-Org/esx_menu_dialog [esx]/[ui]/esx_menu_dialog
+git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 ```
 
 ## Installation
