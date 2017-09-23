@@ -71,10 +71,7 @@ AddEventHandler('playerSpawned', function()
     end
 
     -- Restore loadout
-    for i=1, #ESX.PlayerData.loadout, 1 do
-      local weaponHash = GetHashKey(ESX.PlayerData.loadout[i].name)
-      GiveWeaponToPed(playerPed, weaponHash, ESX.PlayerData.loadout[i].ammo, false, false)
-    end
+    TriggerEvent('esx:restoreLoadout')
 
     PlayerSpawned = true
 
@@ -93,6 +90,8 @@ end)
 AddEventHandler('esx:restoreLoadout', function ()
 
   local playerPed = GetPlayerPed(-1)
+
+  RemoveAllPedWeapons(playerPed, true)
 
   for i=1, #ESX.PlayerData.loadout, 1 do
     local weaponHash = GetHashKey(ESX.PlayerData.loadout[i].name)
