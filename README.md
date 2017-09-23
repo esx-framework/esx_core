@@ -1,15 +1,15 @@
 # es_extended
 FXServer ES Extended
 
-[DISCORD]
+## DISCORD
 
 https://discord.me/fivem_esx
 
-[SCREENSHOT]
+## SCREENSHOT
 
 ![screenshot](http://i.imgur.com/aPFdJl3.jpg)
 
-[DESCRIPTION]
+## DESCRIPTION
 
 Add support for accounts (bank / black money) you can also add others accounts
 
@@ -21,16 +21,17 @@ Loadouts are saved in database and restored on spawn
 
 Positions are saved in database and restored on spawn
 
-[REQUIREMENTS]
+## Requirements
 
-- essentialmode + es_admin => https://forum.fivem.net/t/release-essentialmode-base/3665
-- esplugin_mysql => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
-- mysql-async => https://github.com/brouznouf/fivem-mysql-async/releases/latest
-- async => https://github.com/esx-org/async/releases/latest
+- **essentialmode** + **es_admin** => https://forum.fivem.net/t/release-essentialmode-base/3665
+- **esplugin_mysql** => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
+- **mysql-async** => https://github.com/brouznouf/fivem-mysql-async/releases/latest
+- **async** => https://github.com/esx-org/async/releases/latest
 
-[INSTALLATION]
+## Download
 
-1) Using [fvm](https://github.com/qlaffont/fvm-installer)
+**1) Using [fvm](https://github.com/qlaffont/fvm-installer)**
+
 ```
 fvm install --save --folder=essential esx-org/es_extended
 fvm install --save --folder=esx esx-org/esx_menu_default
@@ -39,17 +40,28 @@ fvm install --save --folder=esx esx-org/esx_menu_list
 
 ```
 
-2) Manually
+**2) Manually**
 
 - Download https://github.com/ESX-Org/es_extended/releases/latest
-- Put it in [essential] directory
+- Put it in resource/[essential] directory
 - Download https://github.com/ESX-Org/esx_menu_default/releases/latest
-- Put it in [esx] directory
+- Put it in resource/[esx] directory
 - Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
-- Put it in [esx] directory
+- Put it in resource/[esx] directory
 - Download https://github.com/ESX-Org/esx_menu_list/releases/latest
-- Put it in [esx] directory
+- Put it in resource/[esx] directory
 
+**3) Using git**
+
+```
+cd resources
+git clone https://github.com/ESX-Org/es_extended
+git clone https://github.com/ESX-Org/esx_menu_default
+git clone https://github.com/ESX-Org/esx_menu_dialog
+git clone https://github.com/ESX-Org/esx_menu_list
+```
+
+## Installation
 
 1) Import es_extended.sql in your database
 2) Add this in your server.cfg :
@@ -61,4 +73,3 @@ start esx_menu_default
 start esx_menu_list
 start esx_menu_dialog
 ```
-
