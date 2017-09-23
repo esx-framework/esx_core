@@ -3,7 +3,7 @@ FXServer ESX Voice
 
 
 #### Description
-This is a proximity voice controller script. The default control for this is `Left Control + H` (QWERTY).
+This is a proximity voice controller script. The default control for this is `Left Shift + H` (QWERTY).
 
 #### Download
 
