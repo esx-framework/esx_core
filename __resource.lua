@@ -1,6 +1,4 @@
-version '1.0.0'
-
-dependency 'essentialmode'
+version '1.0.1'
 
 client_scripts {
 	'config.lua',

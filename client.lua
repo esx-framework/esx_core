@@ -11,7 +11,7 @@ local Keys = {
 }
 
 ESX = nil
---local ped = GetPlayerPed(-1)
+
 local sitting = false
 local lastPos = nil
 local currentSitObj = nil
@@ -23,13 +23,11 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
 function headsUp(text)
 	SetTextComponentFormat('STRING')
 	AddTextComponentString(text)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
-
 
 Citizen.CreateThread(function()
 	local objects = {}
@@ -58,14 +56,14 @@ Citizen.CreateThread(function()
 		local object = closest.object
 
 		if distance < Config.MaxDistance and sitting == false and DoesEntityExist(object) then
-			headsUp('You are near an object you can sit on! Press ~INPUT_CONTEXT~ to sit!')
+			headsUp('Appuyez sur ~INPUT_CONTEXT~ pouyr vous asseoir.')
 			DrawMarker(0, GetEntityCoords(object).x, GetEntityCoords(object).y, GetEntityCoords(object).z+1.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.5, 0.5, 0.5, 0, 255, 0, 100, false, true, 2, false, false, false, false)
 			if IsControlJustPressed(0, Keys['E']) then
 				sit(object)
 			end
 		end
 		if sitting then
-			headsUp('Press ~INPUT_VEH_DUCK~ get up.')
+			headsUp('Appuyez sur ~INPUT_VEH_DUCK~ pour vous lever.')
 			if IsControlJustPressed(0, Keys['X']) then
 				ClearPedTasks(ped)
 				sitting = false
@@ -78,8 +76,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
 
 function sit(object)
 	local isOccupied = nil
@@ -107,10 +103,9 @@ function sit(object)
 			end
 		end
 		local objloc = GetEntityCoords(object)
-		SetEntityCoords(ped, objloc.x, objloc.y, objloc.z+objinfo.verticalOffset)
-		SetEntityHeading(ped, GetEntityHeading(object)+180.0)
-		FreezeEntityPosition(ped, true)
+
 		sitting = true
-		TaskStartScenarioInPlace(ped, objinfo.scenario, 0, true)
+
+		TaskStartScenarioAtPosition(ped, objinfo.scenario, objloc.x, objloc.y, objloc.z-objinfo.verticalOffset, GetEntityHeading(object)+180.0, 0, true, true)
 	end
 end
