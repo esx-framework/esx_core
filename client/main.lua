@@ -1,31 +1,31 @@
 local Components = {
 	{label = _U('sex'),               		name = 'sex',          value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('face'),             		name = 'face',         value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('face'),             		  name = 'face',         value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('skin'),               		name = 'skin',         value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('wrinkles'),              	name = 'age_1',        value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('wrinkles'),              name = 'age_1',        value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = _U('wrinkle_thickness'),    	name = 'age_2',        value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = _U('beard_type'),         		name = 'beard_1',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('beard_size'),       		name = 'beard_2',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('beard_color_1'),    		name = 'beard_3',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('beard_color_2'),    		name = 'beard_4',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('hair_1'),          		name = 'hair_1',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('hair_2'),          		name = 'hair_2',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('hair_color_1'),  			name = 'hair_color_1', value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('hair_color_2'),  			name = 'hair_color_2', value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('eyebrow_type'),	   		name = 'eyebrows_1',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('eyebrow_size'),    		name = 'eyebrows_2',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('eyebrow_color_1'), 		name = 'eyebrows_3',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('eyebrow_color_2'), 		name = 'eyebrows_4',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('makeup_type'),	     		name = 'makeup_1',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('makeup_thickness'), 		name = 'makeup_2',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('makeup_color_1'), 			name = 'makeup_3',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('makeup_color_2'), 			name = 'makeup_4',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('lipstick_type'),	   		name = 'lipstick_1',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('beard_size'),       		  name = 'beard_2',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('beard_color_1'),    		  name = 'beard_3',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('beard_color_2'),    			name = 'beard_4',      value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('hair_1'),          			name = 'hair_1',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('hair_2'),          			name = 'hair_2',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('hair_color_1'),  				name = 'hair_color_1', value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('hair_color_2'),  				name = 'hair_color_2', value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('eyebrow_type'),	   			name = 'eyebrows_1',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('eyebrow_size'),    			name = 'eyebrows_2',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('eyebrow_color_1'), 			name = 'eyebrows_3',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('eyebrow_color_2'), 			name = 'eyebrows_4',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('makeup_type'),	     			name = 'makeup_1',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('makeup_thickness'), 			name = 'makeup_2',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('makeup_color_1'), 				name = 'makeup_3',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('makeup_color_2'), 				name = 'makeup_4',     value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('lipstick_type'),	   			name = 'lipstick_1',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
 	{label = _U('lipstick_thickness'), 		name = 'lipstick_2',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('lipstick_color_1'), 		name = 'lipstick_3',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('lipstick_color_2'), 		name = 'lipstick_4',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('ear_accessories'),  		name = 'ears_1',   	   value = -1, min = -1, zoomOffset = 0.4, camOffset = 0.65}, --
-	{label = _U('ear_accessories_color'), 	name = 'ears_2',       value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65, textureof = 'ears_1'}, --
+	{label = _U('lipstick_color_1'), 			name = 'lipstick_3',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('lipstick_color_2'), 			name = 'lipstick_4',   value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('ear_accessories'),  		  name = 'ears_1',   	   value = -1, min = -1, zoomOffset = 0.4, camOffset = 0.65}, --
+	{label = _U('ear_accessories_color'), name = 'ears_2',       value = 0, min = 0, zoomOffset = 0.4, camOffset = 0.65, textureof = 'ears_1'}, --
 	{label = _U('tshirt_1'),          		name = 'tshirt_1',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
 	{label = _U('tshirt_2'),          		name = 'tshirt_2',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'tshirt_1'}, --
 	{label = _U('torso_1'),            		name = 'torso_1',      value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
@@ -35,20 +35,20 @@ local Components = {
 	{label = _U('arms'),               		name = 'arms',         value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
 	{label = _U('pants_1'),           		name = 'pants_1',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.5}, --
 	{label = _U('pants_2'),           		name = 'pants_2',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.5, textureof = 'pants_1'}, --
-	{label = _U('shoes_1'),       			name = 'shoes_1',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.8},
-	{label = _U('shoes_2'),       			name = 'shoes_2',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.8, textureof = 'shoes_1'},
-	{label = _U('mask_1'),           		name = 'mask_1',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
-	{label = _U('mask_2'),           		name = 'mask_2',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'mask_1'}, --
-	{label = _U('bproof_1'), 				name = 'bproof_1',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
-	{label = _U('bproof_2'), 				name = 'bproof_2',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bproof_1'}, --
+	{label = _U('shoes_1'),       				name = 'shoes_1',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.8},
+	{label = _U('shoes_2'),       				name = 'shoes_2',      value = 0, min = 0, zoomOffset = 0.8, camOffset = -0.8, textureof = 'shoes_1'},
+	{label = _U('mask_1'),           			name = 'mask_1',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
+	{label = _U('mask_2'),           			name = 'mask_2',       value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'mask_1'}, --
+	{label = _U('bproof_1'), 							name = 'bproof_1',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15}, --
+	{label = _U('bproof_2'), 							name = 'bproof_2',     value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bproof_1'}, --
 	{label = _U('chain_1'),           		name = 'chain_1',      value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('chain_2'),           		name = 'chain_2',      value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'chain_1'}, --
 	{label = _U('helmet_1'),           		name = 'helmet_1',     value = -1, min = -1, componentId = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('helmet_2'),           		name = 'helmet_2',     value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'helmet_1'}, --
 	{label = _U('glasses_1'),         		name = 'glasses_1',    value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65}, --
 	{label = _U('glasses_2'),         		name = 'glasses_2',    value = 0, min = 0, zoomOffset = 0.6, camOffset = 0.65, textureof = 'glasses_1'}, --
-	{label = _U('bag'),         	   		name = 'bags_1',       value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15},
-	{label = _U('bag_color'),        		name = 'bags_2',       value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bags_1'}
+	{label = _U('bag'),         	   			name = 'bags_1',       value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15},
+	{label = _U('bag_color'),        			name = 'bags_2',       value = 0, min = 0, zoomOffset = 0.75, camOffset = 0.15, textureof = 'bags_1'}
 }
 
 local LastSex     = -1
@@ -60,7 +60,7 @@ for i=1, #Components, 1 do
 	Character[Components[i].name] = Components[i].value
 end
 
-function LoadDefaultModel(loadMale)
+function LoadDefaultModel(loadMale, cb)
 
 	local playerPed = GetPlayerPed(-1)
  	local characterModel
@@ -86,6 +86,10 @@ function LoadDefaultModel(loadMale)
 		end
 
 		SetModelAsNoLongerNeeded(characterModel)
+
+		if cb ~= nil then
+			cb()
+		end
 
 		TriggerEvent('skinchanger:modelLoaded')
 
@@ -239,8 +243,8 @@ function ApplySkin(skin, clothes)
 
 end
 
-AddEventHandler('skinchanger:loadDefaultModel', function(loadMale)
-	LoadDefaultModel(loadMale)
+AddEventHandler('skinchanger:loadDefaultModel', function(loadMale, cb)
+	LoadDefaultModel(loadMale, cb)
 end)
 
 AddEventHandler('skinchanger:getData', function(cb)
@@ -297,20 +301,26 @@ AddEventHandler('skinchanger:modelLoaded', function()
 end)
 
 RegisterNetEvent('skinchanger:loadSkin')
-AddEventHandler('skinchanger:loadSkin', function(skin)
+AddEventHandler('skinchanger:loadSkin', function(skin, cb)
 
 	if skin['sex'] ~= LastSex then
 
 		LoadSkin = skin
 
 		if skin['sex'] == 0 then
-			TriggerEvent('skinchanger:loadDefaultModel', true)
+			TriggerEvent('skinchanger:loadDefaultModel', true, cb)
 		else
-			TriggerEvent('skinchanger:loadDefaultModel', false)
+			TriggerEvent('skinchanger:loadDefaultModel', false, cb)
 		end
 
 	else
+		
 		ApplySkin(skin)
+		
+		if cb ~= nil then
+			cb()
+		end
+
 	end
 
 	LastSex = skin['sex']
