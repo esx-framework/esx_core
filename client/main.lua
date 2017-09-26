@@ -131,17 +131,17 @@ function OpenMenu(submitCb, cancelCb, restrict)
 						TriggerEvent('skinchanger:getData', function(components, maxVals)
 
 							for i=1, #elements, 1 do
-								if elements[i].textureof ~= nil then
 
-									local newData = {max = maxVals[elements[i].name]}
+								local newData = {}
+								
+								newData.max = maxVals[elements[i].name]
 
-									if data.current.name == elements[i].textureof then
-										newData.value = 0
-									end
-
-									menu.update({name = elements[i].name}, newData)
-
+								if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
+									newData.value = 0
 								end
+
+								menu.update({name = elements[i].name}, newData)
+
 							end
 
 							menu.refresh()
@@ -292,7 +292,7 @@ AddEventHandler('playerSpawned', function()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
 				if skin == nil then
-					OpenSaveableMenu(nil, nil, nil)
+					TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
 				else
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
