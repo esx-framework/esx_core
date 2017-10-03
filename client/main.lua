@@ -129,6 +129,10 @@ function GetAction(data)
 				else
 					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = -1})
 				end
+				
+				if v.modType == 17 then
+					table.insert(elements, {label = " " .. _U('no_turbo'), modType = k, modNum = false})
+				end
 
 				if v.modType == 14 then -- HORNS
 					for j = 0, 51, 1 do
@@ -205,7 +209,7 @@ function GetAction(data)
 							table.insert(elements, {label = _label, modType = 'modFrontWheels', modNum = j, wheelType = v.wheelType, price = v.price})
 						end
 					end
-				elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 or v.modType == 18 then
+				elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
 					local modCount = GetNumVehicleMods(vehicle, v.modType) -- UPGRADES
 					for j = 0, modCount-1, 1 do
 						local _label = ''
@@ -216,6 +220,14 @@ function GetAction(data)
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 					end
+				elseif v.modType == 17 then -- TURBO
+					local _label = ''
+					if currentMods.modTurbo then
+						_label = 'Turbo - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+					else
+						_label = 'Turbo - <span style="color:green;">$' .. v.price .. ' </span>'
+					end
+					table.insert(elements, {label = _label, modType = k, modNum = true})
 				else
 					local modCount = GetNumVehicleMods(vehicle, v.modType) -- BODYPARTS
 					for j = 0, modCount, 1 do

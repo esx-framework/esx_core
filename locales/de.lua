@@ -138,6 +138,7 @@ Locales['de'] = {
 	['suspension'] = 'suspension',
 	['armor'] = 'armor',
 	['turbo'] = 'turbo',
+	['no_turbo'] = 'keine turbo',
 -- Cosmetics
 	['cosmetics'] = 'cosmetics',
 	-- Body Parts
