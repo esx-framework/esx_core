@@ -10,12 +10,13 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local GUI                    = {}
-GUI.Time                     = 0
-local IsPaused               = false
-local PlayerSpawned          = false
-local PlayerShootingTimeouts = {}
-local Pickups                = {}
+local GUI           = {}
+GUI.Time            = 0
+local LoadoutLoaded = false
+local IsPaused      = false
+local PlayerSpawned = false
+local LastLoadout   = {}
+local Pickups       = {}
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -73,10 +74,15 @@ AddEventHandler('playerSpawned', function()
     -- Restore loadout
     TriggerEvent('esx:restoreLoadout')
 
+    LoadoutLoaded = true
     PlayerSpawned = true
 
   end)
 
+end)
+
+AddEventHandler('skinchanger:loadDefaultModel', function()
+  LoadoutLoaded = false
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
@@ -88,7 +94,6 @@ AddEventHandler('skinchanger:modelLoaded', function()
 end)
 
 AddEventHandler('esx:restoreLoadout', function ()
-
   local playerPed = GetPlayerPed(-1)
 
   RemoveAllPedWeapons(playerPed, true)
@@ -98,6 +103,7 @@ AddEventHandler('esx:restoreLoadout', function ()
     GiveWeaponToPed(playerPed, weaponHash, ESX.PlayerData.loadout[i].ammo, false, false)
   end
 
+  LoadoutLoaded = true
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
@@ -399,52 +405,53 @@ end)
 -- Save loadout
 Citizen.CreateThread(function()
 
-  while ESX == nil and not ESX.PlayerLoaded do
-    Citizen.Wait(0)
-  end
-
   while true do
 
-    Citizen.Wait(0)
+    Wait(0)
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed      = GetPlayerPed(-1)
+    local loadout        = {}
+    local loadoutChanged = false
 
-    if IsPedShooting(playerPed) then
+    if IsPedDeadOrDying(playerPed) then
+      LoadoutLoaded = false
+    end
 
-      for i=1, #PlayerShootingTimeouts, 1 do
-        ESX.ClearTimeout(PlayerShootingTimeouts[i])
-      end
+    for i=1, #Config.Weapons, 1 do
 
-      PlayerShootingTimeouts = {}
+      local weaponHash = GetHashKey(Config.Weapons[i].name)
 
-      local timeout = ESX.SetTimeout(1000, function()
+      if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
 
-        local loadout = {}
+        local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 
-        for i=1, #Config.Weapons, 1 do
-
-          local weaponHash = GetHashKey(Config.Weapons[i].name)
-
-          if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
-
-            table.insert(loadout, {
-              name  = Config.Weapons[i].name,
-              ammo  = GetAmmoInPedWeapon(playerPed, weaponHash),
-              label = Config.Weapons[i].label
-            })
-
-          end
-
+        if LastLoadout[Config.Weapons[i].name] == nil or LastLoadout[Config.Weapons[i].name] ~= ammo then
+          loadoutChanged = true
         end
 
-        ESX.PlayerData.loadout = loadout
+        LastLoadout[Config.Weapons[i].name] = ammo
 
-        TriggerServerEvent('esx:updateLoadout', loadout)
+        table.insert(loadout, {
+          name  = Config.Weapons[i].name,
+          ammo  = ammo,
+          label = Config.Weapons[i].label
+        })
 
-      end)
+      else
 
-      table.insert(PlayerShootingTimeouts, timeout)
+        if LastLoadout[Config.Weapons[i].name] ~= nil then
+          loadoutChanged = true
+        end
 
+        LastLoadout[Config.Weapons[i].name] = nil
+
+      end
+
+    end
+
+    if loadoutChanged and LoadoutLoaded then
+      ESX.PlayerData.loadout = loadout
+      TriggerServerEvent('esx:updateLoadout', loadout)
     end
 
   end
