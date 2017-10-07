@@ -466,11 +466,12 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
   if zone == 'VehicleDeleter' then
 
     local playerPed = GetPlayerPed(-1)
+    local vehicle = GetVehiclePedIsIn(playerPed, false)
 
     if IsPedInAnyVehicle(playerPed,  false) then
       CurrentAction     = 'delete_vehicle'
       CurrentActionMsg  = _U('store_veh')
-      CurrentActionData = {}
+      CurrentActionData = { vehicle = vehicle }
     end
 
   end
