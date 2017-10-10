@@ -41,5 +41,5 @@ Licensing:
 `This script uses GNU GPLv3`
 
 Notice:
-`This version is not compatible with ES5, you must use https://github.com/ArkSeyonet/esx_identity_es5 if you are using es5`
+``This version is not compatible with ES5, you must use https://github.com/ArkSeyonet/esx_identity_es5 if you are using es5
 
