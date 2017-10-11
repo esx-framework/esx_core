@@ -200,6 +200,7 @@ Locales['fr'] = {
 	['suspension'] = 'suspension',
 	['armor'] = 'armure',
 	['turbo'] = 'turbo',
+	['no_turbo'] = 'pas de turbo',
 -- Cosmetics
 	['cosmetics'] = 'cosmétiques',
 	-- Body Parts
