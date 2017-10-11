@@ -34,13 +34,11 @@ Commands:
 /delchar 1,2,3
 ```
 
-
-Notice:
-`Drop the characters table, it is no longer used`
-
 Credits:
 `Script Created By: ArkSeyonet @Ark`
 
 Licensing:
 `This script uses GNU GPLv3`
+
+This version is not compatible with ES5, you must use the new version if you are using es5 => https://github.com/ArkSeyonet/esx_identity_es5
 
