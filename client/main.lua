@@ -74,27 +74,25 @@ function OpenCloakroomMenu()
     table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
   end
 
+  if Config.EnableNonFreemodePeds then
+    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear_freemode'})
+    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear_freemode'})
+    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear_freemode'})
+  end
+
   table.insert(elements, {label = _U('veste_wear'), value = 'veste_wear'})
   table.insert(elements, {label = _U('gilet_wear'), value = 'gilet_wear'})
 
   ESX.UI.Menu.CloseAll()
 
-  if Config.EnableNonFreemodePeds then
-      table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear'})
-    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
-    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
-  end
-
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'cloakroom',
-      {
-        title    = _U('cloakroom'),
-        align    = 'top-left',
-        elements = elements,
-        },
-
-        function(data, menu)
-
+  ESX.UI.Menu.Open(
+    'default', GetCurrentResourceName(), 'cloakroom',
+    {
+      title    = _U('cloakroom'),
+      align    = 'top-left',
+      elements = elements,
+    },
+    function(data, menu)
       menu.close()
 
       --Taken from SuperCoolNinja
@@ -251,8 +249,7 @@ function OpenCloakroomMenu()
         end)
       end
 
-      if data.current.value == 'sheriff_wear' then
-
+      if data.current.value == 'sheriff_wear_freemode' then
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
         if skin.sex == 0 then
@@ -283,7 +280,7 @@ function OpenCloakroomMenu()
         end)
       end
 
-      if data.current.value == 'lieutenant_wear' then
+      if data.current.value == 'lieutenant_wear_freemode' then
 
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
@@ -314,7 +311,7 @@ function OpenCloakroomMenu()
         end)
       end
 
-      if data.current.value == 'commandant_wear' then
+      if data.current.value == 'commandant_wear_freemode' then
 
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
