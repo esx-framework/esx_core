@@ -1,6 +1,6 @@
-description 'ESX Mecano Job'
+description 'ESX Weashop'
 
-version '1.0.0'
+version '1.0.1'
 
 client_scripts {
   '@es_extended/locale.lua',
