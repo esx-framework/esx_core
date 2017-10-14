@@ -51,9 +51,31 @@ end
 function OpenCloakroomMenu()
 
   local elements = {
-    {label = _U('citizen_wear'), value = 'citizen_wear'},
-    {label = _U('police_wear'), value = 'police_wear'}
+    { label = _U('citizen_wear'), value = 'citizen_wear' }
   }
+
+  if PlayerData.job.grade_name == 'recruit' then
+    table.insert(elements, {label = _U('cadet_wear'), value = 'cadet_wear'})
+  end
+
+  if PlayerData.job.grade_name == 'officer' then
+    table.insert(elements, {label = _U('police_wear'), value = 'police_wear'})
+  end
+
+  if PlayerData.job.grade_name == 'sergeant' then
+    table.insert(elements, {label = _U('sergent_wear'), value = 'sergent_wear'})
+  end
+
+  if PlayerData.job.grade_name == 'lieutenant' then
+    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
+  end
+
+  if PlayerData.job.grade_name == 'boss' then
+    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
+  end
+
+  table.insert(elements, {label = _U('veste_wear'), value = 'veste_wear'})
+  table.insert(elements, {label = _U('gilet_wear'), value = 'gilet_wear'})
 
   ESX.UI.Menu.CloseAll()
 
@@ -100,18 +122,133 @@ function OpenCloakroomMenu()
         end)
       end
 
-      if data.current.value == 'police_wear' then
-
+      if data.current.value == 'cadet_wear' then
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-
           if skin.sex == 0 then
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
+            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0) --Gants
+            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0) --Jean
+            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0) --Chaussure
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0) --mattraque
+            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
+            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 0) --Grade
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 59, 0, 0) --GiletJaune
+            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
+            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)           --Oreillete
+            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)           --Montre
+
+            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
           else
             TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
           end
-
         end)
+      end
 
+      if data.current.value == 'police_wear' then
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          if skin.sex == 0 then
+            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
+            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
+            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
+            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
+            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 0)--Grade
+            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
+            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
+            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
+
+            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
+          else
+            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+          end
+        end)
+      end
+
+      if data.current.value == 'sergent_wear' then --Ajout de tenue par grades
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          if skin.sex == 0 then
+            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
+            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
+            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
+            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
+            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 1, 0)--Grade
+            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
+            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
+            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
+
+            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
+          else
+            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+          end
+        end)
+      end
+
+      if data.current.value == 'lieutenant_wear' then --Ajout de tenue par grades
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          if skin.sex == 0 then
+            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
+            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
+            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
+            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
+            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 2, 0)--Grade
+            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
+            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
+            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
+
+            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
+          else
+            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+          end
+        end)
+      end
+
+      if data.current.value == 'commandant_wear' then
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          if skin.sex == 0 then
+            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
+            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
+            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
+            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
+            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
+            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 3, 0)--Grade
+            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
+            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
+            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
+
+            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
+          else
+            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+          end
+        end)
+      end
+
+      if data.current.value == 'veste_wear' then
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
+          SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
+          local playerPed = GetPlayerPed(-1)
+          SetPedArmour(playerPed, 100)
+          ClearPedBloodDamage(playerPed)
+          ResetPedVisibleDamage(playerPed)
+          ClearPedLastWeaponDamage(playerPed)
+        end)
+      end
+
+      if data.current.value == 'veste_wear' then
+          ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
+            SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
+          end)
+      end
+
+      if data.current.value == 'gilet_wear' then
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
+          SetPedComponentVariation(GetPlayerPed(-1), 9, 14, 1, 2)--Sans Gilet
+          local playerPed = GetPlayerPed(-1)
+          SetPedArmour(playerPed, 0)
+          ClearPedBloodDamage(playerPed)
+          ResetPedVisibleDamage(playerPed)
+          ClearPedLastWeaponDamage(playerPed)
+        end)
       end
 
       if data.current.value == 'sheriff_wear' then
