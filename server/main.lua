@@ -3,6 +3,35 @@ local ItemsLabels = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+function LoadLicenses (source)
+  TriggerEvent('esx_license:getLicenses', source, function (licenses)
+    TriggerClientEvent('esx_weashop:loadLicenses', source, licenses)
+  end)
+end
+
+if Config.EnableLicense == true then
+  AddEventHandler('esx:playerLoaded', function (source)
+    LoadLicenses(source)
+  end)
+end
+
+RegisterServerEvent('esx_weashop:buyLicense')
+AddEventHandler('esx_weashop:buyLicense', function ()
+  local _source = source
+  local xPlayer = ESX.GetPlayerFromId(source)
+
+  if xPlayer.get('money') >= Config.LicensePrice then
+    xPlayer.removeMoney(Config.LicensePrice)
+
+    TriggerEvent('esx_license:addLicense', _source, 'weapon', function ()
+      LoadLicenses(_source)
+    end)
+  else
+    TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
+  end
+end)
+
+
 ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 
   MySQL.Async.fetchAll(

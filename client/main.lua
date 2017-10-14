@@ -4,6 +4,7 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
+local Licenses                = {}
 
 Citizen.CreateThread(function()
   while ESX == nil do
@@ -12,15 +13,45 @@ Citizen.CreateThread(function()
   end
 end)
 
-AddEventHandler('onClientMapStart', function()
+RegisterNetEvent('esx_weashop:loadLicenses')
+AddEventHandler('esx_weashop:loadLicenses', function (licenses)
+  for i = 0, #licenses, 1 do
+    Licenses[licenses[i].type] = true
+  end
+end)
 
+AddEventHandler('onClientMapStart', function()
   ESX.TriggerServerCallback('esx_weashop:requestDBItems', function(ShopItems)
     for k,v in pairs(ShopItems) do
       Config.Zones[k].Items = v
     end
   end)
-
 end)
+
+function OpenBuyLicenseMenu (zone)
+  ESX.UI.Menu.CloseAll()
+
+  ESX.UI.Menu.Open(
+    'default', GetCurrentResourceName(), 'shop_license',
+    {
+      title = _U('buy_license'),
+      elements = {
+        { label = _U('yes') .. ' ($' .. Config.LicensePrice .. ')', value = 'yes' },
+        { label = _U('no'), value = 'no' },
+      }
+    },
+    function (data, menu)
+      if data.current.value == 'yes' then
+        TriggerServerEvent('esx_weashop:buyLicense')
+      end
+
+      menu.close()
+    end,
+    function (data, menu)
+      menu.close()
+    end
+  )
+end
 
 function OpenShopMenu(zone)
 
@@ -153,7 +184,15 @@ Citizen.CreateThread(function()
       if IsControlJustReleased(0, 38) then
 
         if CurrentAction == 'shop_menu' then
-          OpenShopMenu(CurrentActionData.zone)
+          if Config.EnableLicense == true then
+            if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
+              OpenShopMenu(CurrentActionData.zone)
+            else
+              OpenBuyLicenseMenu()
+            end
+          else
+            OpenShopMenu(CurrentActionData.zone)
+          end
         end
 
         CurrentAction = nil

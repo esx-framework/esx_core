@@ -1,5 +1,8 @@
 Locales ['fr'] = {
 
+  ['buy_license'] = 'acheter une license ?',
+  ['yes'] = 'oui',
+  ['no'] = 'non',
   ['buy'] = 'vous avez acheté ~b~1x ',
   ['not_enough_black'] = 'Vous n\'avez ~r~pas assez~s~ d\'argent sale',
   ['not_enough'] = 'vous n\'avez ~r~pas assez~s~ d\'argent',
