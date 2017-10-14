@@ -15,7 +15,7 @@ end)
 
 RegisterNetEvent('esx_weashop:loadLicenses')
 AddEventHandler('esx_weashop:loadLicenses', function (licenses)
-  for i = 0, #licenses, 1 do
+  for i = 1, #licenses, 1 do
     Licenses[licenses[i].type] = true
   end
 end)
