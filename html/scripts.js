@@ -14,29 +14,21 @@ var nbQuestionToAnswer = 10; // don't forget to change the progress bar max valu
 var nbAnswerNeeded = 1; // out of nbQuestionToAnswer
 var nbPossibleQuestions = 10; //number of questions in database questions.js
 var lastClick = 0;
-/*
-var nbQuestionToAnswer = 10; // don't forget to change the progress bar max value in html
-var nbAnswerNeeded = 8; // out of nbQuestionToAnswer
-var nbPossibleQuestions = 15; //number of questions in database questions.js
-*/
 
 function getRandomQuestion() {
-  var continuer = true;
-  var random;
-  while (continuer){
-    continuer=false; // do not continue loop
-    random = Math.floor(Math.random() * nbPossibleQuestions) ; // number of possible questions
-    if(questionNumber==1){
-      return random;
+  var random = Math.floor(Math.random() * nbPossibleQuestions)
+
+  while (true) {
+    if (questionUsed.indexOf(random) === -1) {
+      break
     }
-    for(i=0; i<questionNumber-1; i++){
-      if (random == questionUsed[i]) {
-        continuer=true; // continue loop only if random is already used
-      }
-    }
+
+    random = Math.floor(Math.random() * nbPossibleQuestions)
   }
-  questionUsed.push(random);
-  return random;
+
+  questionUsed.push(random)
+
+  return random
 }
 
 // Partial Functions
