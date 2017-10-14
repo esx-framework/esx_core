@@ -152,7 +152,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
       height      = height
     }
 
-    TriggerEvent('esx_status:getStatus', source, 'drunk', function(status)
+    TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
 
       if status ~= nil then
         data.drunk = math.floor(status.percent)
@@ -183,7 +183,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
       weapons    = xPlayer.loadout
     }
 
-    TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
+    TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
 
       if status ~= nil then
         data.drunk = status.getPercent()
@@ -191,7 +191,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 
     end)
 
-    TriggerEvent('esx_license:getLicenses', _source, function(licenses)
+    TriggerEvent('esx_license:getLicenses', target, function(licenses)
       data.licenses = licenses
     end)
 
