@@ -512,9 +512,47 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
     local elements = {}
 
-    for i=1, #Config.PoliceStations[station].AuthorizedVehicles, 1 do
-      local vehicle = Config.PoliceStations[station].AuthorizedVehicles[i]
-      table.insert(elements, {label = vehicle.label, value = vehicle.name})
+    table.insert(elements, { label = 'Vélo', value = 'fixter' })
+    table.insert(elements, { label = 'Cruiser', value = 'police' })
+    table.insert(elements, { label = 'Sheriff Cruiser', value = 'sheriff' })
+
+    if PlayerData.job.grade_name == 'officer' then
+      table.insert(elements, { label = 'Interceptor', value = 'police3'})
+    end
+
+    if PlayerData.job.grade_name == 'sergean' then
+      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
+      table.insert(elements, { label = 'Interceptor', value = 'police3'})
+      table.insert(elements, { label = 'Buffalo', value = 'police2'})
+      table.insert(elements, { label = 'Moto', value = 'policeb'})
+      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
+      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
+      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
+    end
+
+    if PlayerData.job.grade_name == 'lieutenant' then
+      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
+      table.insert(elements, { label = 'Interceptor', value = 'police3'})
+      table.insert(elements, { label = 'Buffalo', value = 'police2'})
+      table.insert(elements, { label = 'Moto', value = 'policeb'})
+      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
+      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
+      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
+      table.insert(elements, { label = 'FBI', value = 'fbi'})
+      table.insert(elements, { label = 'FBI SUV', value = 'fbi2'})
+    end
+
+    if PlayerData.job.grade_name == 'boss' then
+      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
+      table.insert(elements, { label = 'Interceptor', value = 'police3'})
+      table.insert(elements, { label = 'Buffalo', value = 'police2'})
+      table.insert(elements, { label = 'Moto', value = 'policeb'})
+      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
+      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
+      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
+      table.insert(elements, { label = 'FBI', value = 'fbi'})
+      table.insert(elements, { label = 'FBI SUV', value = 'fbi2'})
+      table.insert(elements, { label = 'Voiture Banalisée ', value = 'police4'})
     end
 
     ESX.UI.Menu.Open(
