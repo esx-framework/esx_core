@@ -162,7 +162,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 
     if Config.EnableLicenses then
 
-      TriggerEvent('esx_license:getLicenses', source, function(licenses)
+      TriggerEvent('esx_license:getLicenses', target, function(licenses)
         data.licenses = licenses
         cb(data)
       end)
