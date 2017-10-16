@@ -138,3 +138,4 @@ AddEventHandler('esx:playerLoaded', function(source)
   xPlayer.set('dataStores', dataStores)
 
 end)
+

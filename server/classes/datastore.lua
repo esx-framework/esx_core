@@ -1,3 +1,15 @@
+function stringsplit(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t={} ; i=1
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    t[i] = str
+    i = i + 1
+  end
+  return t
+end
+
 function CreateDataStore(name, owner, data)
 
   local self = {}
@@ -13,8 +25,42 @@ function CreateDataStore(name, owner, data)
     self.save()
   end
 
-  self.get = function(key)
-    return data[key]
+  self.get = function(key, i)
+
+    local path = stringsplit(key, '.')
+    local obj  = self.data
+
+    for i=1, #path, 1 do
+      obj = obj[path[i]]
+    end
+
+    if i == nil then
+      return obj
+    else
+      return obj[i]
+    end
+
+  end
+
+  self.count = function(key, i)
+
+    local path = stringsplit(key, '.')
+    local obj  = self.data
+
+    for i=1, #path, 1 do
+      obj = obj[path[i]]
+    end
+
+    if i ~= nil then
+      obj = obj[i]
+    end
+
+    if obj == nil then
+      return 0
+    else
+      return #obj
+    end
+
   end
 
   self.save = function()
