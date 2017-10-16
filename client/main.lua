@@ -566,7 +566,7 @@ function OpenRoomMenu(property, owner)
           local elements = {}
 
           for i=1, #dressing, 1 do
-            table.insert(elements, {label = dressing[i].label, value = dressing[i].skin})
+            table.insert(elements, {label = dressing[i], value = i})
           end
 
           ESX.UI.Menu.Open(
@@ -580,12 +580,16 @@ function OpenRoomMenu(property, owner)
 
               TriggerEvent('skinchanger:getSkin', function(skin)
 
-                TriggerEvent('skinchanger:loadClothes', skin, data.current.value)
-                TriggerEvent('esx_skin:setLastSkin', skin)
+                ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
 
-                TriggerEvent('skinchanger:getSkin', function(skin)
-                  TriggerServerEvent('esx_skin:save', skin)
-                end)
+                  TriggerEvent('skinchanger:loadClothes', skin, clothes)
+                  TriggerEvent('esx_skin:setLastSkin', skin)
+
+                  TriggerEvent('skinchanger:getSkin', function(skin)
+                    TriggerServerEvent('esx_skin:save', skin)
+                  end)
+
+                end, data.current.value)
 
               end)
 
