@@ -44,16 +44,26 @@ function RespawnPed(ped, coords)
   ESX.UI.Menu.CloseAll()
 end
 
+RegisterNetEvent('esx_ambulancejob:heal')
+AddEventHandler('esx_ambulancejob:heal', function(_type)
+    local playerPed = GetPlayerPed(-1)
+    local maxHealth = GetEntityMaxHealth(playerPed)
+    if _type == 'small' then
+        local health = GetEntityHealth(playerPed)
+        local newHealth = math.min(maxHealth , math.floor(health + maxHealth/8))
+        SetEntityHealth(playerPed, newHealth)
+    elseif _type == 'big' then
+        SetEntityHealth(playerPed, maxHealth)
+    end
+    ESX.ShowNotification(_U('healed'))
+end)
+
+
 function StartRespawnToHospitalMenuTimer()
-
   ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
-
     if IsDead then
-
       local elements = {}
-
       table.insert(elements, {label = _U('yes'), value = 'yes'})
-
       RespawnToHospitalMenu = ESX.UI.Menu.Open(
         'default', GetCurrentResourceName(), 'menuName',
         {
@@ -61,175 +71,112 @@ function StartRespawnToHospitalMenuTimer()
           align = 'top-left',
           elements = elements
         },
-            function(data, menu) --Submit Cb
-
-              menu.close()
-
-               Citizen.CreateThread(function()
-
-            DoScreenFadeOut(800)
-
-            while not IsScreenFadedOut() do
-              Citizen.Wait(0)
-            end
-
-            ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
-
-              ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-              ESX.SetPlayerData('loadout', {})
-
-              TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-
-              RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
-              StopScreenEffect('DeathFailOut')
-              DoScreenFadeIn(800)
-            end)
-          end)
-            end,
-            function(data, menu) --Cancel Cb
-                    --menu.close()
-            end,
-            function(data, menu) --Change Cb
-                    --print(data.current.value)
-            end,
-            function(data, menu) --Close Cb
-                RespawnToHospitalMenu = nil
-            end
+        function(data, menu) --Submit Cb
+          menu.close()
+          Citizen.CreateThread(function()
+                  RemoveItemsAfterRPDeath()
+                    end)
+        end,
+        function(data, menu) --Cancel Cb
+          --menu.close()
+        end,
+        function(data, menu) --Change Cb
+          --print(data.current.value)
+        end,
+        function(data, menu) --Close Cb
+          RespawnToHospitalMenu = nil
+        end
       )
     end
   end)
 end
 
 function StartRespawnTimer()
-
   ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
-
     if IsDead then
-
-      Citizen.CreateThread(function()
-
-        DoScreenFadeOut(800)
-
-        while not IsScreenFadedOut() do
-          Citizen.Wait(0)
-        end
-
-        ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
-
-          ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-          ESX.SetPlayerData('loadout', {})
-
-          TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-
-          RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
-          StopScreenEffect('DeathFailOut')
-          DoScreenFadeIn(800)
-        end)
-      end)
+      RemoveItemsAfterRPDeath()
     end
   end)
 end
 
-function RespawnTimer()
-
+function ShowTimer()
   local timer = Config.RespawnDelayAfterRPDeath
-  local allowRespawn = Config.RespawnDelayAfterRPDeath/2
-  local enoughMoney = false
-  local money = 0
+  Citizen.CreateThread(function()
 
-  if IsDead and Config.ShowDeathTimer then
-    ESX.TriggerServerCallback('esx_ambulancejob:getBankMoney', function(money)
-      if money >= Config.EarlyRespawnFineAmount then
-        enoughMoney = true
-      else
-        enoughMoney = false
-      end
-    end)
-    Citizen.CreateThread(function()
+    while timer > 0 and IsDead do
+            Wait(0)
 
-      while timer > 0 and IsDead do
-        raw_seconds = timer/1000
-        raw_minutes = raw_seconds/60
-        minutes = stringsplit(raw_minutes, ".")[1]
-        seconds = stringsplit(raw_seconds-(minutes*60), ".")[1]
+      raw_seconds = timer/1000
+      raw_minutes = raw_seconds/60
+      minutes = stringsplit(raw_minutes, ".")[1]
+      seconds = stringsplit(raw_seconds-(minutes*60), ".")[1]
 
-        if Config.EarlyRespawn and Config.EarlyRespawnFine and enoughMoney then
-          SetTextFont(4)
-          SetTextProportional(0)
-          SetTextScale(0.0, 0.5)
-          SetTextColour(255, 255, 255, 255)
-          SetTextDropshadow(0, 0, 0, 0, 255)
-          SetTextEdge(1, 0, 0, 0, 255)
-          SetTextDropShadow()
-          SetTextOutline()
-          SetTextEntry("STRING")
-          AddTextComponentString(_U('please_wait') .. minutes .. _U('minutes') .. seconds .. _U('seconds_fine') .. Config.EarlyRespawnFineAmount .. _U('press_respawn_fine'))
-          SetTextCentre(true)
-          DrawText(0.5, 0.8)
-          timer = timer - 15
-          Citizen.Wait(0)
-          if IsControlPressed(0,  Keys['E']) then
-            DoScreenFadeOut(800)
+            SetTextFont(4)
+            SetTextProportional(0)
+            SetTextScale(0.0, 0.5)
+            SetTextColour(255, 255, 255, 255)
+            SetTextDropshadow(0, 0, 0, 0, 255)
+            SetTextEdge(1, 0, 0, 0, 255)
 
-            while not IsScreenFadedOut() do
-              Citizen.Wait(0)
+            SetTextDropShadow()
+            SetTextOutline()
+            SetTextEntry("STRING")
+
+            local text = _U('please_wait') .. minutes .. _U('minutes') .. seconds .. _U('seconds')
+
+            if Config.EarlyRespawn then
+                text = text .. '\n[~b~E~w~]'
             end
 
-            ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeathRemoveMoney', function()
+            AddTextComponentString(text)
+            SetTextCentre(true)
+            DrawText(0.5, 0.8)
 
-              TriggerServerEvent('esx_ambulancejob:removeAccountMoney', source)
-
-              ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-              ESX.SetPlayerData('loadout', {})
-
-              TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-
-              RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
-
-              StopScreenEffect('DeathFailOut')
-              DoScreenFadeIn(800)
-            end)
-          end
-        else
-          SetTextFont(4)
-          SetTextProportional(0)
-          SetTextScale(0.0, 0.5)
-          SetTextColour(255, 255, 255, 255)
-          SetTextDropshadow(0, 0, 0, 0, 255)
-          SetTextEdge(1, 0, 0, 0, 255)
-          SetTextDropShadow()
-          SetTextOutline()
-          SetTextEntry("STRING")
-          AddTextComponentString(_U('please_wait') .. minutes .. _U('minutes') .. seconds .. _U('seconds'))
-          SetTextCentre(true)
-          DrawText(0.5, 0.8)
-          timer = timer - 15
-          Citizen.Wait(0)
+      if Config.EarlyRespawn then
+        if IsControlPressed(0, Keys['E']) then
+                    RemoveItemsAfterRPDeath()
+                    break
         end
       end
+            timer = timer - 15
+    end
 
-      while timer <= 0 and IsDead do
-        SetTextFont(4)
-        SetTextProportional(0)
-        SetTextScale(0.0, 0.5)
-        SetTextColour(255, 255, 255, 255)
-        SetTextDropshadow(0, 0, 0, 0, 255)
-        SetTextEdge(1, 0, 0, 0, 255)
-        SetTextDropShadow()
-        SetTextOutline()
-        SetTextEntry("STRING")
-        AddTextComponentString(_U('press_respawn'))
-        SetTextCentre(true)
-        DrawText(0.5, 0.8)
-        Citizen.Wait(0)
-        if IsControlPressed(0,  Keys['E']) then
-          DoScreenFadeOut(800)
+        if Config.EarlyRespawn then
+        while timer <= 0 and IsDead do
+          Wait(0)
 
-          while not IsScreenFadedOut() do
-            Citizen.Wait(0)
+                SetTextFont(4)
+                SetTextProportional(0)
+                SetTextScale(0.0, 0.5)
+                SetTextColour(255, 255, 255, 255)
+                SetTextDropshadow(0, 0, 0, 0, 255)
+                SetTextEdge(1, 0, 0, 0, 255)
+
+                SetTextDropShadow()
+                SetTextOutline()
+                SetTextEntry("STRING")
+
+                AddTextComponentString(_U('press_respawn'))
+                SetTextCentre(true)
+                DrawText(0.5, 0.8)
+
+          if IsControlPressed(0, Keys['E']) then
+            RemoveItemsAfterRPDeath()
+                    break
           end
+        end
+        end
 
-          ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+  end)
+end
+
+function RemoveItemsAfterRPDeath()
+    Citizen.CreateThread(function()
+        DoScreenFadeOut(800)
+        while not IsScreenFadedOut() do
+            Citizen.Wait(0)
+        end
+        ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
             ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
             ESX.SetPlayerData('loadout', {})
@@ -237,13 +184,23 @@ function RespawnTimer()
             TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
 
             RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+
             StopScreenEffect('DeathFailOut')
             DoScreenFadeIn(800)
-          end)
-        end
-      end
+        end)
     end)
-  end
+end
+
+function OnPlayerDeath()
+    IsDead = true
+    if Config.ShowDeathTimer == true then
+        ShowTimer()
+    end
+    StartRespawnTimer()
+    if Config.RespawnToHospitalMenuTimer == true then
+        StartRespawnToHospitalMenuTimer()
+    end
+    StartScreenEffect('DeathFailOut',  0,  false)
 end
 
 function TeleportFadeEffect(entity, coords)
@@ -280,14 +237,14 @@ function WarpPedInClosestVehicle(ped)
     local freeSeat = nil
 
     for i=maxSeats - 1, 0, -1 do
-      if IsVehicleSeatFree(vehicle,  i) then
+      if IsVehicleSeatFree(vehicle, i) then
         freeSeat = i
         break
       end
     end
 
     if freeSeat ~= nil then
-      TaskWarpPedIntoVehicle(ped,  vehicle,  freeSeat)
+      TaskWarpPedIntoVehicle(ped, vehicle, freeSeat)
     end
 
   else
@@ -361,54 +318,98 @@ function OpenMobileAmbulanceActionsMenu()
           {
             title    = _U('ems_menu_title'),
             elements = {
-              {label = _U('ems_menu_revive'),             value = 'revive'},
-              {label = _U('ems_menu_putincar'), value = 'put_in_vehicle'},
+              {label = _U('ems_menu_revive'),     value = 'revive'},
+                            {label = _U('ems_menu_small'),      value = 'small'},
+                            {label = _U('ems_menu_big'),        value = 'big'},
+              {label = _U('ems_menu_putincar'),   value = 'put_in_vehicle'},
             }
           },
           function(data, menu)
 
             if data.current.value == 'revive' then
-
               menu.close()
-
               local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
               if closestPlayer == -1 or closestDistance > 3.0 then
                 ESX.ShowNotification(_U('no_players'))
               else
-
-                local ped    = GetPlayerPed(closestPlayer)
-                local health = GetEntityHealth(ped)
-
-                if health == 0 then
-
-                local playerPed        = GetPlayerPed(-1)
-                local closestPlayerPed = GetPlayerPed(closestPlayer)
-
-                Citizen.CreateThread(function()
-
-                  ESX.ShowNotification(_U('revive_inprogress'))
-
-                  TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
-                  Citizen.Wait(10000)
-                  ClearPedTasks(playerPed)
-
-                  if GetEntityHealth(closestPlayerPed) == 0 then
-                    TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
-                    ESX.ShowNotification(_U('revive_complete') .. GetPlayerName(closestPlayer))
-                  else
-                    ESX.ShowNotification(GetPlayerName(closestPlayer) .. _U('isdead'))
-                  end
-
-                end)
-
-                else
-                  ESX.ShowNotification(GetPlayerName(closestPlayer) .. _U('unconscious'))
-                end
-
+                                ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(qtty)
+                                    if qtty > 0 then
+                        local closestPlayerPed = GetPlayerPed(closestPlayer)
+                        local health = GetEntityHealth(closestPlayerPed)
+                        if health == 0 then
+                            local playerPed = GetPlayerPed(-1)
+                            Citizen.CreateThread(function()
+                              ESX.ShowNotification(_U('revive_inprogress'))
+                              TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
+                              Wait(10000)
+                              ClearPedTasks(playerPed)
+                              if GetEntityHealth(closestPlayerPed) == 0 then
+                                                    TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
+                                TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
+                                ESX.ShowNotification(_U('revive_complete'))
+                              else
+                                ESX.ShowNotification(_U('isdead'))
+                              end
+                            end)
+                        else
+                          ESX.ShowNotification(_U('unconscious'))
+                        end
+                                    else
+                                        ESX.ShowNotification(_U('not_enough_medikit'))
+                                    end
+                                end, 'medikit')
               end
-
             end
+
+                        if data.current.value == 'small' then
+                            menu.close()
+                            local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+                            if closestPlayer == -1 or closestDistance > 3.0 then
+                                ESX.ShowNotification(_U('no_players'))
+                            else
+                                ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(qtty)
+                                    if qtty > 0 then
+                                        local playerPed = GetPlayerPed(-1)
+                                        Citizen.CreateThread(function()
+                                            ESX.ShowNotification(_U('heal_inprogress'))
+                                            TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
+                                            Wait(10000)
+                                            ClearPedTasks(playerPed)
+                                            TriggerServerEvent('esx_ambulancejob:removeItem', 'bandage')
+                                            TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'small')
+                                            ESX.ShowNotification(_U('heal_complete'))
+                                        end)
+                                    else
+                                        ESX.ShowNotification(_U('not_enough_bandage'))
+                                    end
+                                end, 'bandage')
+                            end
+                        end
+
+                        if data.current.value == 'big' then
+                            menu.close()
+                            local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+                            if closestPlayer == -1 or closestDistance > 3.0 then
+                                ESX.ShowNotification(_U('no_players'))
+                            else
+                                ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(qtty)
+                                    if qtty > 0 then
+                                        local playerPed = GetPlayerPed(-1)
+                                        Citizen.CreateThread(function()
+                                            ESX.ShowNotification(_U('heal_inprogress'))
+                                            TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
+                                            Wait(10000)
+                                            ClearPedTasks(playerPed)
+                                            TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
+                                            TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'big')
+                                            ESX.ShowNotification(_U('heal_complete'))
+                                        end)
+                                    else
+                                        ESX.ShowNotification(_U('not_enough_medikit'))
+                                    end
+                                end, 'medikit')
+                            end
+                        end
 
             if data.current.value == 'put_in_vehicle' then
               menu.close()
@@ -538,43 +539,52 @@ function OpenVehicleSpawnerMenu()
         title    = _U('veh_menu'),
         align    = 'top-left',
         elements = {
-          {label = _U('ambulance'),  value = 'ambulance'},
-          {label = _U('helicopter'), value = 'polmav'},
+          {label = _U('ambulance'),  value = 'ambulance'}
         },
       },
       function(data, menu)
-
         menu.close()
-
         local model = data.current.value
-
-        ESX.Game.SpawnVehicle(model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
-
+        ESX.Game.SpawnVehicle(model, Config.Zones.VehicleSpawnPoint.Pos, 230.0, function(vehicle)
           local playerPed = GetPlayerPed(-1)
-
-          if model == 'polmav' then
-            SetVehicleModKit(vehicle, 0)
-            SetVehicleLivery(vehicle, 1)
-          end
-
-          TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-
+          TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         end)
-
       end,
       function(data, menu)
-
         menu.close()
-
         CurrentAction     = 'vehicle_spawner_menu'
         CurrentActionMsg  = _U('veh_spawn')
         CurrentActionData = {}
-
       end
     )
 
   end
 
+end
+
+function OpenPharmacyMenu()
+    ESX.UI.Menu.CloseAll()
+
+    ESX.UI.Menu.Open(
+        'default', GetCurrentResourceName(), 'pharmacy',
+        {
+            title    = _U('pharmacy_menu_title'),
+            align    = 'top-left',
+            elements = {
+                {label = _U('pharmacy_take') .. ' ' .. _('medikit'),  value = 'medikit'},
+                {label = _U('pharmacy_take') .. ' ' .. _('bandage'),  value = 'bandage'}
+            },
+        },
+        function(data, menu)
+            TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)
+        end,
+        function(data, menu)
+            menu.close()
+            CurrentAction     = 'pharmacy'
+            CurrentActionMsg  = _U('open_pharmacy')
+            CurrentActionData = {}
+        end
+    )
 end
 
 AddEventHandler('playerSpawned', function()
@@ -590,44 +600,12 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-
   PlayerData = xPlayer
-
-  if PlayerData.job.name == 'ambulance' then
-
-    Config.Zones.AmbulanceActions.Type = 1
-    Config.Zones.VehicleSpawner.Type   = 1
-    Config.Zones.VehicleDeleter.Type   = 1
-
-  else
-
-    Config.Zones.AmbulanceActions.Type = -1
-    Config.Zones.VehicleSpawner.Type   = -1
-    Config.Zones.VehicleDeleter.Type   = -1
-
-  end
-
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-
   PlayerData.job = job
-
-  if PlayerData.job.name == 'ambulance' then
-
-    Config.Zones.AmbulanceActions.Type = 1
-    Config.Zones.VehicleSpawner.Type   = 1
-    Config.Zones.VehicleDeleter.Type   = 1
-
-  else
-
-    Config.Zones.AmbulanceActions.Type = -1
-    Config.Zones.VehicleSpawner.Type   = -1
-    Config.Zones.VehicleDeleter.Type   = -1
-
-  end
-
 end)
 
 RegisterNetEvent('esx_phone:loaded')
@@ -644,26 +622,11 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 end)
 
 AddEventHandler('baseevents:onPlayerDied', function(killerType, coords)
-  TriggerEvent('esx_ambulancejob:onPlayerDeath')
+  OnPlayerDeath()
 end)
 
 AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
-  TriggerEvent('esx_ambulancejob:onPlayerDeath')
-end)
-
-AddEventHandler('esx_ambulancejob:onPlayerDeath', function()
-
-  IsDead = true
-
-  if Config.ShowDeathTimer == true then
-    RespawnTimer()
-  else
-    StartRespawnTimer()
-    StartRespawnToHospitalMenuTimer()
-  end
-
-  StartScreenEffect('DeathFailOut',  0,  false)
-
+  OnPlayerDeath()
 end)
 
 RegisterNetEvent('esx_ambulancejob:revive')
@@ -717,6 +680,20 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
   end
 
   if zone == 'HospitalInteriorEntering2' then
+        local heli = Config.HelicopterSpawner
+
+        if not IsAnyVehicleNearPoint(heli.SpawnPoint.x, heli.SpawnPoint.y, heli.SpawnPoint.z, 3.0)
+            and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+            ESX.Game.SpawnVehicle('polmav', {
+                x = heli.SpawnPoint.x,
+                y = heli.SpawnPoint.y,
+                z = heli.SpawnPoint.z
+            }, heli.Heading, function(vehicle)
+                SetVehicleModKit(vehicle, 0)
+                SetVehicleLivery(vehicle, 1)
+            end)
+
+        end
     TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside2.Pos)
   end
 
@@ -724,19 +701,45 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
     TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorOutside2.Pos)
   end
 
-  if zone == 'AmbulanceActions' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+    if zone == 'ParkingDoorGoOutInside' then
+        TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoOutOutside.Pos)
+    end
+
+    if zone == 'ParkingDoorGoInOutside' then
+        TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoInInside.Pos)
+    end
+
+    if zone == 'StairsGoTopBottom' then
+        CurrentAction     = 'fast_travel_goto_top'
+        CurrentActionMsg  = _U('fast_travel')
+        CurrentActionData = {pos = Config.Zones.StairsGoTopTop.Pos}
+    end
+
+    if zone == 'StairsGoBottomTop' then
+        CurrentAction     = 'fast_travel_goto_bottom'
+        CurrentActionMsg  = _U('fast_travel')
+        CurrentActionData = {pos = Config.Zones.StairsGoBottomBottom.Pos}
+    end
+
+  if zone == 'AmbulanceActions' then
     CurrentAction     = 'ambulance_actions_menu'
     CurrentActionMsg  = _U('open_menu')
     CurrentActionData = {}
   end
 
-  if zone == 'VehicleSpawner' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+  if zone == 'VehicleSpawner' then
     CurrentAction     = 'vehicle_spawner_menu'
     CurrentActionMsg  = _U('veh_spawn')
     CurrentActionData = {}
   end
 
-  if zone == 'VehicleDeleter' and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+    if zone == 'Pharmacy' then
+        CurrentAction     = 'pharmacy'
+        CurrentActionMsg  = _U('open_pharmacy')
+        CurrentActionData = {}
+    end
+
+  if zone == 'VehicleDeleter' then
 
     local playerPed = GetPlayerPed(-1)
     local coords    = GetEntityCoords(playerPed)
@@ -759,9 +762,13 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 
     end
 
-    end
+  end
 
 end)
+
+function FastTravel(pos)
+    TeleportFadeEffect(GetPlayerPed(-1), pos)
+end
 
 AddEventHandler('esx_ambulancejob:hasExitedMarker', function(zone)
   ESX.UI.Menu.CloseAll()
@@ -788,49 +795,52 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
   while true do
-
     Wait(0)
 
     local coords = GetEntityCoords(GetPlayerPed(-1))
-
     for k,v in pairs(Config.Zones) do
-
       if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-        DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+                if PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+                    DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+                elseif k ~= 'AmbulanceActions' and k ~= 'VehicleSpawner' and k ~= 'VehicleDeleter'
+                    and k ~= 'Pharmacy' and k ~= 'StairsGoTopBottom' and k ~= 'StairsGoBottomTop' then
+                    DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+                end
       end
     end
-
   end
 end)
 
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
   while true do
-
     Wait(0)
-
     local coords      = GetEntityCoords(GetPlayerPed(-1))
     local isInMarker  = false
     local currentZone = nil
-
     for k,v in pairs(Config.Zones) do
-      if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-        isInMarker  = true
-        currentZone = k
-      end
+            if PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
+                if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+                    isInMarker  = true
+                    currentZone = k
+                end
+            elseif k ~= 'AmbulanceActions' and k ~= 'VehicleSpawner' and k ~= 'VehicleDeleter'
+                and k ~= 'Pharmacy' and k ~= 'StairsGoTopBottom' and k ~= 'StairsGoBottomTop' then
+                if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+                    isInMarker  = true
+                    currentZone = k
+                end
+            end
     end
-
     if isInMarker and not hasAlreadyEnteredMarker then
       hasAlreadyEnteredMarker = true
       lastZone                = currentZone
       TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentZone)
     end
-
     if not isInMarker and hasAlreadyEnteredMarker then
       hasAlreadyEnteredMarker = false
       TriggerEvent('esx_ambulancejob:hasExitedMarker', lastZone)
     end
-
   end
 end)
 
@@ -846,7 +856,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' and (GetGameTimer() - GUI.Time) > 150 then
+      if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
 
         if CurrentAction == 'ambulance_actions_menu' then
           OpenAmbulanceActionsMenu()
@@ -856,26 +866,30 @@ Citizen.CreateThread(function()
           OpenVehicleSpawnerMenu()
         end
 
-        if CurrentAction == 'delete_vehicle' then
+                if CurrentAction == 'pharmacy' then
+                    OpenPharmacyMenu()
+                end
 
+                if CurrentAction == 'fast_travel_goto_top' or CurrentAction == 'fast_travel_goto_bottom' then
+                    FastTravel(CurrentActionData.pos)
+                end
+
+        if CurrentAction == 'delete_vehicle' then
           if Config.EnableSocietyOwnedVehicles then
             local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
             TriggerServerEvent('esx_society:putVehicleInGarage', 'ambulance', vehicleProps)
           end
-
           ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
         end
 
         CurrentAction = nil
-        GUI.Time      = GetGameTimer()
 
       end
 
     end
 
-    if IsControlPressed(0,  Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlJustReleased(0, Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
       OpenMobileAmbulanceActionsMenu()
-      GUI.Time = GetGameTimer()
     end
 
   end
@@ -890,13 +904,13 @@ end)
 
 -- String string
 function stringsplit(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t={} ; i=1
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        t[i] = str
-        i = i + 1
-    end
-    return t
+  if sep == nil then
+      sep = "%s"
+  end
+  local t={} ; i=1
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+      t[i] = str
+      i = i + 1
+  end
+  return t
 end
