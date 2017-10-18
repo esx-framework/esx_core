@@ -63,7 +63,7 @@ function OpenCloakroomMenu()
   end
 
   if PlayerData.job.grade_name == 'sergeant' then
-    table.insert(elements, {label = _U('sergent_wear'), value = 'sergent_wear'})
+    table.insert(elements, {label = _U('sergeant_wear'), value = 'sergeant_wear'})
   end
 
   if PlayerData.job.grade_name == 'lieutenant' then
@@ -161,7 +161,7 @@ function OpenCloakroomMenu()
         end)
       end
 
-      if data.current.value == 'sergent_wear' then --Ajout de tenue par grades
+      if data.current.value == 'sergeant_wear' then --Ajout de tenue par grades
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
           if skin.sex == 0 then
             SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
@@ -517,7 +517,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
       table.insert(elements, { label = 'Interceptor', value = 'police3'})
     end
 
-    if PlayerData.job.grade_name == 'sergean' then
+    if PlayerData.job.grade_name == 'sergeant' then
       table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
       table.insert(elements, { label = 'Interceptor', value = 'police3'})
       table.insert(elements, { label = 'Buffalo', value = 'police2'})
