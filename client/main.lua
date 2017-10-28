@@ -1,5 +1,6 @@
 ESX = nil
 local Vehicles = {}
+local PlayerData                = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -13,10 +14,17 @@ local isInLSMarker	 = false
 local myCar 		 = {}
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function()
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+  	PlayerData = xPlayer
 	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
 		Vehicles = vehicles
 	end)
+end)
+
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+  PlayerData.job = job
 end)
 
 RegisterNetEvent('esx_lscustom:installMod')
@@ -341,6 +349,7 @@ end
 
 -- Blips
 Citizen.CreateThread(function()
+
 	for k,v in pairs(Config.Zones)do
 		local blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
 		SetBlipSprite(blip, 72)
@@ -362,18 +371,19 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 			local zone 		  = nil
 			local lastZone    = nil
+			if (PlayerData.job ~= nil and PlayerData.job.name == 'mecano') or Config.IsMecanoJobOnly == false then
+				for k,v in pairs(Config.Zones) do
+					if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+						isInLSMarker  = true
 
-			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-					isInLSMarker  = true
+						SetTextComponentFormat("STRING")
+						AddTextComponentString(v.Hint)
+						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-					SetTextComponentFormat("STRING")
-					AddTextComponentString(v.Hint)
-					DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
-					break
-				else
-					isInLSMarker  = false
+						break
+					else
+						isInLSMarker  = false
+					end
 				end
 			end
 
