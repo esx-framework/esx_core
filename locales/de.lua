@@ -11,13 +11,14 @@ Locales['de'] = {
     ['already_robbed'] = 'dieser Laden wurde bereits ausgeraubt. Bitte warte: ',
     ['seconds'] = 'sekunden.',
     ['rob_in_prog'] = '~r~ Raub im gange bei: ~b~',
-    ['started_to_rob'] = 'du hast einen Raub gestartet ',
-    ['do_not_move'] = ', laufe nicht weg!',
+    ['started_to_rob'] = 'du hast einen Raub gestartet ~b~',
+    ['do_not_move'] = '~s~, laufe nicht weg!',
     ['alarm_triggered'] = 'der Alarm wurde ausgelöst',
     ['hold_pos'] = 'halte 5 Minuten lang durch, und die Beute gehört dir!',
     ['robbery_complete'] = '~r~ Raub erfolgreich.~s~ ~h~ LAUF!',
     ['robbery_complete_at'] = '~r~ Raub erfolgreich bei: ~b~',
-    ['min_two_police'] = 'es müssen mindestens ~b~2 Polizisten~s~ im Dienst sein um einen Raub starten zu können.',
+    ['min_police'] = 'there must be at least ~b~',
+    ['in_city'] = '~s~ policemen in town to rob.',
     ['robbery_already'] = '~r~Ein Raub ist bereits im gange.',
 
 }

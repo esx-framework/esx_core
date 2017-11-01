@@ -11,13 +11,14 @@ Locales['en'] = {
     ['already_robbed'] = 'this store has already been robbed. Please wait: ',
     ['seconds'] = 'seconds.',
     ['rob_in_prog'] = '~r~ robbery in progress at: ~b~',
-    ['started_to_rob'] = 'you started to rob ',
-    ['do_not_move'] = ', do not move away!',
+    ['started_to_rob'] = 'you started to rob ~b~',
+    ['do_not_move'] = '~s~, do not move away!',
     ['alarm_triggered'] = 'the alarm has been triggered',
     ['hold_pos'] = 'hold for 5 minutes and the money is yours!',
     ['robbery_complete'] = '~r~ Robbery complete.~s~ ~h~ Run!',
     ['robbery_complete_at'] = '~r~ Robbery complete at: ~b~',
-    ['min_two_police'] = 'there must be at least ~b~2 policemen~s~ in town to rob.',
+    ['min_police'] = 'there must be at least ~b~',
+    ['in_city'] = '~s~ policemen in town to rob.',
     ['robbery_already'] = '~r~A robbery is already in progress.',
 
 }

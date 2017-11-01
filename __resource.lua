@@ -1,6 +1,5 @@
-version '1.0.0'
+version '1.1.0'
 
-dependency 'essentialmode'
 
 client_scripts {
     '@es_extended/locale.lua',
@@ -9,7 +8,7 @@ client_scripts {
     'locales/en.lua',
     'locales/fr.lua',
     'config.lua',
-    'client/esx_holdup_cl.lua'
+    'client/main.lua'
 }
 
 server_scripts {
@@ -19,5 +18,5 @@ server_scripts {
     'locales/en.lua',
     'locales/fr.lua',
     'config.lua',
-    'server/esx_holdup_sv.lua'
+    'server/main.lua'
 }
