@@ -27,15 +27,25 @@ ESX.GetRandomString = function(length)
 end
 
 ESX.SetTimeout = function(msec, cb)
-  table.insert(ESX.TimeoutCallbacks, {
-    time = os.clock() * 1000 + msec,
-    cb   = cb
-  })
-  return #ESX.TimeoutCallbacks
+
+  local id = ESX.TimeoutCount + 1
+
+  SetTimeout(msec, function()
+
+    if ESX.CancelledTimeouts[id] then
+      ESX.CancelledTimeouts[id] = nil
+    else
+      cb()
+    end
+
+  end)
+
+  return id
+
 end
 
-ESX.ClearTimeout = function(i)
-  ESX.TimeoutCallbacks[i] = nil
+ESX.ClearTimeout = function(id)
+  ESX.CancelledTimeouts[id] = true
 end
 
 ESX.RegisterServerCallback = function(name, cb)
