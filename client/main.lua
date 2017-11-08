@@ -27,6 +27,7 @@ local NPCTargetTowableZone     = nil
 local NPCHasSpawnedTowable    = false
 local NPCLastCancel           = GetGameTimer() - 5 * 60000
 local NPCHasBeenNextToTowable = false
+local NPCTargetDeleterZone    = false
 
 ESX                           = nil
 GUI.Time                      = 0
@@ -567,13 +568,20 @@ function OpenMobileMecanoActionsMenu()
 
             if NPCOnJob then
 
-              if CurrentlyTowedVehicle == NPCTargetTowable then
-                ESX.Game.DeleteVehicle(NPCTargetTowable)
-                TriggerServerEvent('esx_mecanojob:onNPCJobMissionCompleted')
-                StopNPCJob()
+              if NPCTargetDeleterZone then
+
+                if CurrentlyTowedVehicle == NPCTargetTowable then
+                  ESX.Game.DeleteVehicle(NPCTargetTowable)
+                  TriggerServerEvent('esx_mecanojob:onNPCJobMissionCompleted')
+                  StopNPCJob()
+                  NPCTargetDeleterZone = false
+
+                else
+                  ESX.ShowNotification(_U('not_right_veh'))
+                end
 
               else
-                ESX.ShowNotification(_U('not_right_veh'))
+                ESX.ShowNotification(_U('not_right_place'))
               end
 
             end
@@ -886,6 +894,10 @@ AddEventHandler('esx_mecanojob:hasEnteredMarker', function(zone)
 
   end
 
+  if zone =='VehicleDelivery' then
+    NPCTargetDeleterZone = true
+  end
+
   if zone == 'MecanoActions' then
     CurrentAction     = 'mecano_actions_menu'
     CurrentActionMsg  = _U('open_actions')
@@ -921,6 +933,10 @@ AddEventHandler('esx_mecanojob:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_mecanojob:hasExitedMarker', function(zone)
+
+  if zone =='VehicleDelivery' then
+    NPCTargetDeleterZone = false
+  end
 
   if zone == 'Craft' then
     TriggerServerEvent('esx_mecanojob:stopCraft')
