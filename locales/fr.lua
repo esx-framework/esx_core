@@ -62,6 +62,7 @@ Locales['fr'] = {
   ['please_tow']                = 'veuillez ~y~remorquer~s~ le véhicule',
   ['wait_five']                 = 'Vous devez ~r~attendre~s~ 5 minutes',
   ['must_in_flatbed']           = 'Vous devez être en flatbed pour commencer la mission',
+  ['not_right_place']           = 'Vous devez être au bon endroit pour faire cela',
   ['mechanic_customer']         = 'client mecano',
   ['you_do_not_room']           = '~r~Vous n\'avez plus de place',
   ['recovery_gas_can']          = 'Récupération de ~b~bouteille de gaz~s~...',
