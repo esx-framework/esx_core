@@ -92,8 +92,8 @@ end)
 
 TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
   print('revive by /revive')
-  if args[2] ~= nil then
-    TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[2]))
+  if args[1] ~= nil then
+    TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[1]))
   else
     TriggerClientEvent('esx_ambulancejob:revive', source)
   end
