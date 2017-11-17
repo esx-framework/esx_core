@@ -19,6 +19,21 @@ Citizen.CreateThread(function()
 	end
 end)
 
+function startAttitude(lib, anim)
+ 	Citizen.CreateThread(function()
+	
+	    local playerPed = GetPlayerPed(-1)
+	
+	    RequestAnimSet(anim)
+	      
+	    while not HasAnimSetLoaded(anim) do
+	        Citizen.Wait(0)
+	    end
+	    SetPedMovementClipset(playerPed, anim, true)
+	end)
+
+end
+
 function startAnim(lib, anim)
  	
 	Citizen.CreateThread(function()
@@ -100,7 +115,11 @@ function OpenAnimationsSubMenu(menu)
 			if type == 'scenario' then
 				startScenario(anim)
 			else
-				startAnim(lib, anim)
+				if type == 'attitude' then
+					startAttitude(lib, anim)
+				else
+					startAnim(lib, anim)
+				end
 			end
 
 		end,
