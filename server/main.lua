@@ -41,7 +41,7 @@ function Tick()
 		LastTime = time
 	end
 
-	SetTimeout(1000, Tick)
+	SetTimeout(60000, Tick)
 end
 
 LastTime = GetTime()
