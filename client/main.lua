@@ -81,9 +81,10 @@ end
 
 function OpenShopMenu(accessory)
 
+    local _accessory = string.lower(accessory)
     local restrict = {}
 
-    restrict = { string.lower(accessory) .. '_1', string.lower(accessory) .. '_2' }
+    restrict = { _accessory .. '_1', _accessory .. '_2' }
     
     TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 
@@ -123,11 +124,11 @@ function OpenShopMenu(accessory)
                         TriggerEvent('skinchanger:loadSkin', skin)
                     end)
                     if accessory == "Ears" then
-                        ClearPedProp(Player, 2)
+                        ClearPedProp(player, 2)
                     elseif accessory == "Mask" then
                         SetPedComponentVariation(player, 1, 0 ,0 ,2)
                     elseif accessory == "Helmet" then
-                        ClearPedProp(Player, 0)
+                        ClearPedProp(player, 0)
                     elseif accessory == "Glasses" then
                         SetPedPropIndex(player, 1, -1, 0, 0)
                     end
@@ -198,7 +199,7 @@ Citizen.CreateThread(function()
                 SetBlipAsShortRange(blip, true)
 
                 BeginTextCommandSetBlipName("STRING")
-                AddTextComponentString(_U('store') .. ' ' .. _U(string.lower(k)))
+                AddTextComponentString(_U('shop') .. ' ' .. _U(string.lower(k)))
                 EndTextCommandSetBlipName(blip)
             end
         end
