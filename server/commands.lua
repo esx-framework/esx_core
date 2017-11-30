@@ -9,7 +9,7 @@ end, function (source, args, user)
 end, { help = _U('help_whitelist_load') })
 
 TriggerEvent('es:addGroupCommand', 'whitelist:add', 'admin', function (source, args, user)
-  local steamID = 'steam:' .. args[2]
+  local steamID = 'steam:' .. args[1]
 
   MySQL.Async.execute(
     'INSERT INTO whitelist (identifier) VALUES (@identifier)',
