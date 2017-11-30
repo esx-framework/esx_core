@@ -291,6 +291,14 @@ ESX.GetWeaponLabel = function(name)
 
 end
 
+ESX.Game.GetPedMugshot = function(ped)
+  mugshot = RegisterPedheadshot(ped)
+  while not IsPedheadshotReady(mugshot) do
+    Wait(0)
+  end
+  return mugshot, GetPedheadshotTxdString(mugshot)
+end
+
 ESX.Game.Teleport = function(entity, coords, cb)
 
   RequestCollisionAtCoord(coords.x, coords.y, coords.z)
