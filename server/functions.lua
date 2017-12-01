@@ -40,6 +40,8 @@ ESX.SetTimeout = function(msec, cb)
 
   end)
 
+  ESX.TimeoutCount = id
+
   return id
 
 end
