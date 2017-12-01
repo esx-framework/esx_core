@@ -514,6 +514,7 @@ function OpenRoomMenu(property, owner)
 
   if CurrentPropertyOwner == owner then
     table.insert(elements, {label = _U('player_clothes'), value = 'player_dressing'})
+    table.insert(elements, {label = _U('remove_cloth'), value = 'remove_cloth'})
   end
 
   table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
@@ -601,6 +602,33 @@ function OpenRoomMenu(property, owner)
 
         end)
 
+      end
+        
+      if data.current.value == 'remove_cloth' then
+          ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
+              local elements = {}
+      
+              for i=1, #dressing, 1 do
+                  table.insert(elements, {label = dressing[i].label, value = i})
+              end
+              
+              ESX.UI.Menu.Open(
+              'default', GetCurrentResourceName(), 'remove_cloth',
+              {
+                title    = property.label .. ' - ' .. _U('remove_cloth'),
+                align    = 'top-left',
+                elements = elements,
+              },
+              function(data, menu)
+                  menu.close()
+                  TriggerServerEvent('esx_property:removeOutfit', data.current.value)
+                  ESX.ShowNotification(_U('removed_cloth'))
+              end,
+              function(data, menu)
+                menu.close()
+              end
+            )
+          end)
       end
 
       if data.current.value == 'room_inventory' then
