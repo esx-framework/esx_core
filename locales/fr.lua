@@ -8,6 +8,8 @@ Locales['fr'] = {
   ['commandant_wear'] = 'Fbi outfit',
   ['statepd_wear'] = 'State Police outfit',
   ['specops_wear'] = 'Spec OPS outfit',
+  ['gilet_wear'] = 'Gilet orange',
+  ['bullet_wear'] = 'Gilet pare-balles',
   ['open_cloackroom'] = 'appuez sur ~INPUT_CONTEXT~ pour vous changer',
   -- Armory
   ['get_weapon'] = 'prendre Arme',
