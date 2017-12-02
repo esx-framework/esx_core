@@ -42,6 +42,7 @@ Citizen.CreateThread(function()
 		for k,v in pairs(objects) do
 			local obj = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 3.0, GetHashKey(v), false, true ,true)
 			local dist = GetDistanceBetweenCoords(GetEntityCoords(ped), GetEntityCoords(obj), true)
+			FreezeEntityPosition(obj, false)
 			table.insert(list, {object = obj, distance = dist})
 		end
 
