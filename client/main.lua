@@ -55,7 +55,7 @@ function OpenCloakroomMenu()
   }
 
   if PlayerData.job.grade_name == 'recruit' then
-    table.insert(elements, {label = _U('cadet_wear'), value = 'cadet_wear'})
+    table.insert(elements, {label = _U('police_wear'), value = 'cadet_wear'})
   end
 
   if PlayerData.job.grade_name == 'officer' then
@@ -63,15 +63,15 @@ function OpenCloakroomMenu()
   end
 
   if PlayerData.job.grade_name == 'sergeant' then
-    table.insert(elements, {label = _U('sergeant_wear'), value = 'sergeant_wear'})
+    table.insert(elements, {label = _U('police_wear'), value = 'sergeant_wear'})
   end
 
   if PlayerData.job.grade_name == 'lieutenant' then
-    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear'})
+    table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
   end
 
   if PlayerData.job.grade_name == 'boss' then
-    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear'})
+    table.insert(elements, {label = _U('police_wear'), value = 'commandant_wear'})
   end
 
   if Config.EnableNonFreemodePeds then
@@ -80,7 +80,7 @@ function OpenCloakroomMenu()
     table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear_freemode'})
   end
 
-  table.insert(elements, {label = _U('veste_wear'), value = 'veste_wear'})
+  table.insert(elements, {label = _U('bullet_wear'), value = 'bullet_wear'})
   table.insert(elements, {label = _U('gilet_wear'), value = 'gilet_wear'})
 
   ESX.UI.Menu.CloseAll()
@@ -95,7 +95,6 @@ function OpenCloakroomMenu()
     function(data, menu)
       menu.close()
 
-      --Taken from SuperCoolNinja
       if data.current.value == 'citizen_wear' then
         ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
           local model = nil
@@ -117,135 +116,287 @@ function OpenCloakroomMenu()
 
           TriggerEvent('skinchanger:loadSkin', skin)
           TriggerEvent('esx:restoreLoadout')
-        end)
-      end
-
-      if data.current.value == 'cadet_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0) --Gants
-            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0) --Jean
-            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0) --Chaussure
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0) --mattraque
-            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
-            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 0) --Grade
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 59, 0, 0) --GiletJaune
-            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
-            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)           --Oreillete
-            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)           --Montre
-
-            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
-          else
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-          end
-        end)
-      end
-
-      if data.current.value == 'police_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
-            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
-            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
-            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
-            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 0, 0)--Grade
-            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
-            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
-            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
-
-            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
-          else
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-          end
-        end)
-      end
-
-      if data.current.value == 'sergeant_wear' then --Ajout de tenue par grades
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
-            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
-            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
-            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
-            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 1, 0)--Grade
-            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
-            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
-            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
-
-            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
-          else
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-          end
-        end)
-      end
-
-      if data.current.value == 'lieutenant_wear' then --Ajout de tenue par grades
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
-            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
-            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
-            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
-            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 2, 0)--Grade
-            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
-            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
-            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
-
-            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
-          else
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-          end
-        end)
-      end
-
-      if data.current.value == 'commandant_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
-            SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
-            SetPedComponentVariation(GetPlayerPed(-1), 6, 24, 0, 0)--Chaussure
-            SetPedComponentVariation(GetPlayerPed(-1), 8, 58, 0, 0)--mattraque
-            SetPedComponentVariation(GetPlayerPed(-1), 11, 55, 0, 0)--Veste
-            SetPedComponentVariation(GetPlayerPed(-1), 10, 8, 3, 0)--Grade
-            SetPedComponentVariation(GetPlayerPed(-1), 5, 0, 0, 2)  --Bag
-            SetPedPropIndex(GetPlayerPed(-1), 2, 2, 0, 1)--Oreillete
-            SetPedPropIndex(GetPlayerPed(-1), 6, 3, 0, 1)--Montre
-
-            ClearPedProp(GetPlayerPed(-1),  0)  -- Helmet
-          else
-            TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
-          end
-        end)
-      end
-
-      if data.current.value == 'veste_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
-          SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
-          local playerPed = GetPlayerPed(-1)
-          SetPedArmour(playerPed, 100)
-          ClearPedBloodDamage(playerPed)
-          ResetPedVisibleDamage(playerPed)
-          ClearPedLastWeaponDamage(playerPed)
-        end)
-      end
-
-      if data.current.value == 'veste_wear' then
-          ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
-            SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
-          end)
-      end
-
-      if data.current.value == 'gilet_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
-          SetPedComponentVariation(GetPlayerPed(-1), 9, 14, 1, 2)--Sans Gilet
           local playerPed = GetPlayerPed(-1)
           SetPedArmour(playerPed, 0)
           ClearPedBloodDamage(playerPed)
           ResetPedVisibleDamage(playerPed)
           ClearPedLastWeaponDamage(playerPed)
+        end)
+      end
+
+      if data.current.value == 'cadet_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 59, ['tshirt_2'] = 1,
+                    ['torso_1'] = 55, ['torso_2'] = 0,
+                    ['decals_1'] = 0, ['decals_2'] = 0,
+                    ['arms'] = 41,
+                    ['pants_1'] = 25, ['pants_2'] = 0,
+                    ['shoes_1'] = 25, ['shoes_2'] = 0,
+                    ['helmet_1'] = 46, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 36, ['tshirt_2'] = 1,
+                    ['torso_1'] = 48, ['torso_2'] = 0,
+                    ['decals_1'] = 0, ['decals_2'] = 0,
+                    ['arms'] = 44,
+                    ['pants_1'] = 34, ['pants_2'] = 0,
+                    ['shoes_1'] = 27, ['shoes_2'] = 0,
+                    ['helmet_1'] = 45, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'police_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 58, ['tshirt_2'] = 0,
+                    ['torso_1'] = 55, ['torso_2'] = 0,
+                    ['decals_1'] = 0, ['decals_2'] = 0,
+                    ['arms'] = 41,
+                    ['pants_1'] = 25, ['pants_2'] = 0,
+                    ['shoes_1'] = 25, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 35, ['tshirt_2'] = 0,
+                    ['torso_1'] = 48, ['torso_2'] = 0,
+                    ['decals_1'] = 0, ['decals_2'] = 0,
+                    ['arms'] = 44,
+                    ['pants_1'] = 34, ['pants_2'] = 0,
+                    ['shoes_1'] = 27, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'sergeant_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 58, ['tshirt_2'] = 0,
+                    ['torso_1'] = 55, ['torso_2'] = 0,
+                    ['decals_1'] = 8, ['decals_2'] = 1,
+                    ['arms'] = 41,
+                    ['pants_1'] = 25, ['pants_2'] = 0,
+                    ['shoes_1'] = 25, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 35, ['tshirt_2'] = 0,
+                    ['torso_1'] = 48, ['torso_2'] = 0,
+                    ['decals_1'] = 7, ['decals_2'] = 1,
+                    ['arms'] = 44,
+                    ['pants_1'] = 34, ['pants_2'] = 0,
+                    ['shoes_1'] = 27, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'lieutenant_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 58, ['tshirt_2'] = 0,
+                    ['torso_1'] = 55, ['torso_2'] = 0,
+                    ['decals_1'] = 8, ['decals_2'] = 2,
+                    ['arms'] = 41,
+                    ['pants_1'] = 25, ['pants_2'] = 0,
+                    ['shoes_1'] = 25, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 35, ['tshirt_2'] = 0,
+                    ['torso_1'] = 48, ['torso_2'] = 0,
+                    ['decals_1'] = 7, ['decals_2'] = 2,
+                    ['arms'] = 44,
+                    ['pants_1'] = 34, ['pants_2'] = 0,
+                    ['shoes_1'] = 27, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'commandant_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 58, ['tshirt_2'] = 0,
+                    ['torso_1'] = 55, ['torso_2'] = 0,
+                    ['decals_1'] = 8, ['decals_2'] = 3,
+                    ['arms'] = 41,
+                    ['pants_1'] = 25, ['pants_2'] = 0,
+                    ['shoes_1'] = 25, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 35, ['tshirt_2'] = 0,
+                    ['torso_1'] = 48, ['torso_2'] = 0,
+                    ['decals_1'] = 7, ['decals_2'] = 3,
+                    ['arms'] = 44,
+                    ['pants_1'] = 34, ['pants_2'] = 0,
+                    ['shoes_1'] = 27, ['shoes_2'] = 0,
+                    ['helmet_1'] = -1, ['helmet_2'] = 0,
+                    ['chain_1'] = 0, ['chain_2'] = 0,
+                    ['ears_1'] = 2, ['ears_2'] = 0
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'bullet_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['bproof_1'] = 11, ['bproof_2'] = 1
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['bproof_1'] = 13, ['bproof_2'] = 1
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 100)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
+        end)
+      end
+
+      if data.current.value == 'gilet_wear' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+        
+            if skin.sex == 0 then
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 59, ['tshirt_2'] = 1
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            else
+
+                local clothesSkin = {
+                    ['tshirt_1'] = 36, ['tshirt_2'] = 1
+                }
+                TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
+
+            end
+
+            local playerPed = GetPlayerPed(-1)
+            SetPedArmour(playerPed, 0)
+            ClearPedBloodDamage(playerPed)
+            ResetPedVisibleDamage(playerPed)
+            ClearPedLastWeaponDamage(playerPed)
+            
         end)
       end
 
@@ -341,7 +492,6 @@ function OpenCloakroomMenu()
 
         end)
       end
-
 
       CurrentAction     = 'menu_cloakroom'
       CurrentActionMsg  = _U('open_cloackroom')
