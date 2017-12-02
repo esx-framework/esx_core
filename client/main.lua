@@ -116,11 +116,16 @@ function OpenCloakroomMenu()
 
           TriggerEvent('skinchanger:loadSkin', skin)
           TriggerEvent('esx:restoreLoadout')
+          local playerPed = GetPlayerPed(-1)
+          SetPedArmour(playerPed, 0)
+          ClearPedBloodDamage(playerPed)
+          ResetPedVisibleDamage(playerPed)
+          ClearPedLastWeaponDamage(playerPed)
         end)
       end
 
       if data.current.value == 'cadet_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -164,7 +169,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'police_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -208,7 +213,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'sergeant_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -252,7 +257,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'lieutenant_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -296,7 +301,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'commandant_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -340,7 +345,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'bullet_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -368,7 +373,7 @@ function OpenCloakroomMenu()
       end
 
       if data.current.value == 'gilet_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+        TriggerEvent('skinchanger:getSkin', function(skin)
         
             if skin.sex == 0 then
 
@@ -487,7 +492,6 @@ function OpenCloakroomMenu()
 
         end)
       end
-
 
       CurrentAction     = 'menu_cloakroom'
       CurrentActionMsg  = _U('open_cloackroom')
