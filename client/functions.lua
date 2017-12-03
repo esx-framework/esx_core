@@ -261,6 +261,10 @@ ESX.UI.Menu.GetOpened = function(type, namespace, name)
 
 end
 
+ESX.UI.Menu.GetOpenedMenus = function()
+  return ESX.UI.Menu.Opened
+end
+
 ESX.UI.Menu.IsOpen = function(type, namespace, name)
   return ESX.UI.Menu.GetOpened(type, namespace, name) ~= nil
 end
