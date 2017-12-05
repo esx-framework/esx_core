@@ -18,6 +18,9 @@ Locales['en'] = {
   ['threw'] = 'you ~r~threw~s~',
   ['rec_salary'] = 'you received your salary: ',
   ['rec_help'] = 'you recieved your welfare check: ',
+  ['company_paid'] = 'Company paycheck received',
+  ['company_nomoney'] = 'Your company is broke!',
+  ['state_paid'] = 'You received a state check',
   ['act_imp'] = 'action impossible',
   -- Commands
   ['setjob'] = 'assign a job to a user',
