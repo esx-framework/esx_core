@@ -18,6 +18,9 @@ Locales['fr'] = {
   ['threw'] = 'vous avez ~r~jeté~s~',
   ['rec_salary'] = 'vous avez reçu votre salaire : ',
   ['rec_help'] = 'vous avez reçu une aide de l\'état : ',
+  ['company_paid'] = 'Votre entreprise vous a payé ',
+  ['company_nomoney'] = 'Votre entreprise n\'a plus d\'argent pour vous payer !',
+  ['state_paid'] = 'L\'état vous a payé ',
   ['act_imp'] = 'action impossible',
   -- Commands
   ['setjob'] = 'assigner job',
