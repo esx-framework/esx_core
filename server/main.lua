@@ -422,7 +422,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
           if total > 0 then
             xPlayer.removeInventoryItem(itemName, total)
-            ESX.CreatePickup('item_standard', itemName, total, foundItem.label, _source)
+            ESX.CreatePickup('item_standard', itemName, total, foundItem.label .. ' [' .. itemCount .. ']', _source)
             TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' ' .. foundItem.label .. ' x' .. total)
           end
 
@@ -457,7 +457,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
           if total > 0 then
             xPlayer.removeMoney(total)
-            ESX.CreatePickup('item_money', 'money', total, 'Cash', _source)
+            ESX.CreatePickup('item_money', 'money', total, 'Cash' .. ' [' .. itemCount .. ']', _source)
             TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' [Cash] $' .. total)
           end
 
@@ -492,7 +492,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 
           if total > 0 then
             xPlayer.removeAccountMoney(itemName, total)
-            ESX.CreatePickup('item_account', itemName, total, 'Cash', _source)
+            ESX.CreatePickup('item_account', itemName, total, Config.AccountLabels[itemName] .. ' [' .. itemCount .. ']', _source)
             TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' [Cash] $' .. total)
           end
 
@@ -551,18 +551,35 @@ end)
 RegisterServerEvent('esx:onPickup')
 AddEventHandler('esx:onPickup', function(id)
 
+  local _source = source
   local pickup  = ESX.Pickups[id]
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local xPlayer = ESX.GetPlayerFromId(_source)
 
   if pickup.type == 'item_standard' then
-    xPlayer.addInventoryItem(pickup.name, pickup.count)
+
+    local item      = xPlayer.getInventoryItem(pickup.name)
+    local canTake   = (item.limit - item.count > 0) and (item.limit - item.count) or 0
+    local total     = pickup.count < canTake and pickup.count or canTake
+    local remaining = pickup.count - total
+
+    TriggerClientEvent('esx:removePickup', -1, id)
+
+    if total > 0 then
+      xPlayer.addInventoryItem(pickup.name, total)
+    end
+
+    if remaining > 0 then
+      TriggerClientEvent('esx:showNotification', _source, 'Vous n\'avez plus de place pour ~b~' .. item.label .. '~s~')
+      ESX.CreatePickup('item_standard', pickup.name, remaining, item.label .. ' [' .. remaining .. ']', _source)
+    end
+
   elseif pickup.type == 'item_money' then
+    TriggerClientEvent('esx:removePickup', -1, id)
     xPlayer.addMoney(pickup.count)
   elseif pickup.type == 'item_account' then
+    TriggerClientEvent('esx:removePickup', -1, id)
     xPlayer.addAccountMoney(pickup.name, pickup.count)
   end
-
-  TriggerClientEvent('esx:removePickup', -1, id)
 
 end)
 
