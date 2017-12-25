@@ -387,7 +387,7 @@ function OpenManageGradesMenu(society)
 
             if amount == nil then
               ESX.ShowNotification(_U('invalid_amount'))
-            elseif amount >= 3001 then
+            elseif amount >= Config.MaxSalary then
               ESX.ShowNotification(_U('invalid_amount_max'))
             else
               menu2.close()
