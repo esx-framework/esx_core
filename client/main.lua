@@ -536,7 +536,7 @@ Citizen.CreateThread(function()
 
       end
 
-      if distance <= 1.0 and not v.inRange then
+      if distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
         TriggerServerEvent('esx:onPickup', v.id)
         v.inRange = true
       end
