@@ -3,6 +3,8 @@
 This script allow you to sit almost everywhere.
 If the player has many props around him, the game camera might become crazy.
 
+SHIFT + E to sit, gamepad protected so player can't interact with gamepads.
+
 [INSTALLATION]
 
 1) CD in your resources/[esx] folder
