@@ -53,7 +53,7 @@ end
 
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(0)
 
 		if #debugProps > 0 then
 			for i=1, #debugProps, 1 do
