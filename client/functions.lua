@@ -1159,17 +1159,24 @@ ESX.ShowInventory = function()
           local item = data.current.value
           local type = data.current.type
 
-          if data.current.action == 'give' then
+           if data.current.action == 'give' then
 
             if type == 'item_weapon' then
 
               local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+              local closestPed = GetPlayerPed(closestPlayer)
 
-              if closestPlayer == -1 or closestDistance > 3.0 then
-                ESX.ShowNotification(_U('players_nearby'))
-              else
+              if closestPlayer ~= -1 or closestDistance > 3.0 then
+               -- PERSONNE
+               if not IsPedSittingInAnyVehicle(closestPed) then
                 TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 1)
+               else
+                ESX.ShowNotification(_U("in_vehicle"))
+               end
+              else
+                ESX.ShowNotification(_U('players_nearby'))
               end
+              menu.close()
 
             else
 
@@ -1182,11 +1189,15 @@ ESX.ShowInventory = function()
 
                   local quantity                       = tonumber(data2.value)
                   local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
-                  if closestPlayer == -1 or closestDistance > 3.0 then
-                    ESX.ShowNotification(_U('players_nearby'))
+                  local closestPed = GetPlayerPed(closestPlayer)
+                  if not IsPedSittingInAnyVehicle(closestPed) then
+                    if closestPlayer ~= -1 or closestDistance < 3.0 then
+                      TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
+                    else
+                      ESX.ShowNotification(_U('players_nearby'))
+                    end
                   else
-                    TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
+                    ESX.ShowNotification(_U("in_vehicle"))
                   end
 
                   menu2.close()
