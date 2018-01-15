@@ -22,6 +22,7 @@ Locales['en'] = {
   ['company_nomoney'] = 'Your company is broke!',
   ['state_paid'] = 'You received a state check',
   ['act_imp'] = 'action impossible',
+  ['in_vehicle'] = 'You can\'t give anything to someone in vehicle
   -- Commands
   ['setjob'] = 'assign a job to a user',
   ['id_param'] = 'the ID of the player',
