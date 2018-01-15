@@ -22,6 +22,7 @@ Locales['fr'] = {
   ['company_nomoney'] = 'Votre entreprise n\'a plus d\'argent pour vous payer !',
   ['state_paid'] = 'L\'état vous a payé ',
   ['act_imp'] = 'action impossible',
+  ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule'
   -- Commands
   ['setjob'] = 'assigner job',
   ['id_param'] = 'identification du joueur',
