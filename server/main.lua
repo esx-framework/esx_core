@@ -24,9 +24,14 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
   if itemType == 'item_standard' then
 
     local label = sourceXPlayer.getInventoryItem(itemName).label
+    local playerItemCount = targetXPlayer.getInventoryItem(itemName).count
 
-    targetXPlayer.removeInventoryItem(itemName, amount)
-    sourceXPlayer.addInventoryItem(itemName, amount)
+    if playerItemCount <= amount then
+      targetXPlayer.removeInventoryItem(itemName, amount)
+      sourceXPlayer.addInventoryItem(itemName, amount)
+    else
+      TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
+    end
 
     TriggerClientEvent('esx:showNotification', sourceXPlayer.source, _U('you_have_confinv') .. amount .. ' ' .. label .. _U('from') .. targetXPlayer.name)
     TriggerClientEvent('esx:showNotification', targetXPlayer.source, '~b~' .. targetXPlayer.name .. _U('confinv') .. amount .. ' ' .. label )
