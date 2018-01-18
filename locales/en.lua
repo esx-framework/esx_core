@@ -10,6 +10,7 @@ Locales['en'] = {
   ['specops_wear'] = 'Spec OPS outfit',
   ['gilet_wear'] = 'orange reflective jacket',
   ['bullet_wear'] = 'bulletproof vest',
+  ['no_outfit'] = 'there\'s no uniform to fit you...',
   ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change',
   -- Armory
   ['get_weapon'] = 'get Weapon',
