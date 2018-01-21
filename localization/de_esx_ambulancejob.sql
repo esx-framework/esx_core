@@ -14,3 +14,8 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 INSERT INTO `jobs` (name, label) VALUES
   ('ambulance','Notdienst')
 ;
+
+INSERT INTO `items` (name, label, `limit`) VALUES
+  ('bandage','Bandage', 20),
+  ('medikit','Medikit', 5)
+;

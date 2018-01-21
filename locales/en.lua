@@ -26,11 +26,20 @@ Locales['en'] = {
   ['open_menu'] = 'press ~INPUT_CONTEXT~ to open the menu',
   ['deposit_amount'] = 'deposit Amount',
   ['money_withdraw'] = 'amount withdrawn',
+  ['fast_travel'] = 'Press on ~INPUT_CONTEXT~ to fast travel.',
+  ['open_pharmacy'] = 'Press on ~INPUT_CONTEXT~ to open the pharmacy.',
+  ['pharmacy_menu_title'] = 'Pharmacy',
+  ['pharmacy_take'] = 'Take',
+  ['medikit'] = 'medikit',
+  ['bandage'] = 'bandage',
+  ['max_item'] = 'You are already carrying enough on yourself.',
   -- F6 Menu
   ['ems_menu'] = 'eMS Menu',
   ['ems_menu_title'] = 'ambulance - EMS Menu',
   ['ems_menu_revive'] = 'revive Player',
   ['ems_menu_putincar'] = 'put in Vehicle',
+  ['ems_menu_small'] = 'heal small wounds',
+  ['ems_menu_big'] = 'treat serious injuries',
   -- Phone
   ['alert_ambulance'] = 'alert Ambulance',
   -- Death
@@ -44,4 +53,11 @@ Locales['en'] = {
   ['press_respawn'] = 'press [~b~E~w~] to respawn.',
   -- Revive
   ['revive_help'] = 'revive a player',
+  -- Item
+  ['used_medikit'] = 'You have used 1x medikit',
+  ['used_bandage'] = 'You have used  1x bandage',
+  ['not_enough_medikit'] = 'You do not have ~b~medikit~w~.',
+  ['not_enough_bandage'] = 'You do not have ~b~bandage~w~.',
+  ['healed'] = 'you have been treated.',
+  -- Misc
 }
