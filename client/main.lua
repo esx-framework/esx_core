@@ -78,8 +78,11 @@ function OpenLSMenu(elems, menuname, menutitle, parent)
 						if isRimMod then
 							price = math.floor(vehiclePrice * data.current.price / 100)
 							TriggerServerEvent("esx_lscustom:buyMod", price)
-						elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 or v.modType == 17 then
+						elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
 							price = math.floor(vehiclePrice * v.price[data.current.modNum + 1] / 100)
+							TriggerServerEvent("esx_lscustom:buyMod", price)
+						elseif v.modType == 17 then
+							price = math.floor(vehiclePrice * v.price[1] / 100)
 							TriggerServerEvent("esx_lscustom:buyMod", price)
 						else
 							price = math.floor(vehiclePrice * v.price / 100)
@@ -303,10 +306,10 @@ function GetAction(data)
 					end
 				elseif v.modType == 17 then -- TURBO
 					local _label = ''
-					if currentMods.modTurbo then
+					if currentMods[k] then
 						_label = 'Turbo - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 					else
-						_label = 'Turbo - <span style="color:green;">$' .. v.price .. ' </span>'
+						_label = 'Turbo - <span style="color:green;">$' .. v.price[1] .. ' </span>'
 					end
 					table.insert(elements, {label = _label, modType = k, modNum = true})
 				else
