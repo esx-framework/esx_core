@@ -374,7 +374,7 @@ function OpenMobileMecanoActionsMenu()
           },
           function(data, menu)
             local amount = tonumber(data.value)
-            if amount == nil then
+            if amount == nil or amount < 0 then
               ESX.ShowNotification(_U('amount_invalid'))
             else
               menu.close()
