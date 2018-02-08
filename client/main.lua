@@ -309,7 +309,7 @@ function GetAction(data)
 					if currentMods[k] then
 						_label = 'Turbo - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 					else
-						_label = 'Turbo - <span style="color:green;">$' .. v.price[1] .. ' </span>'
+						_label = 'Turbo - <span style="color:green;">$' .. math.floor(vehiclePrice * v.price[1] / 100) .. ' </span>'
 					end
 					table.insert(elements, {label = _label, modType = k, modNum = true})
 				else
