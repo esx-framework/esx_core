@@ -388,11 +388,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
     if not foundWeapon then
       table.insert(self.loadout, {
         name  = weaponName,
-        ammo  = ammon,
+        ammo  = ammo,
         label = weaponLabel
       })
     end
-
     TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
     TriggerClientEvent("esx:addInventoryItem", self.source, {label = weaponLabel}, 1)
   end

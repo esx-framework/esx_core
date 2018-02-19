@@ -309,7 +309,7 @@ end)
 
 
 RegisterServerEvent('esx:giveInventoryItem')
-AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
+AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount,ammotogive)
 
   local _source = source
 
@@ -366,10 +366,10 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
     end
 
   elseif type == 'item_weapon' then
-
+    
     sourceXPlayer.removeWeapon(itemName)
     targetXPlayer.addWeapon(itemName, itemCount)
-
+    
     local weaponLabel = itemName
 
     for i=1, #Config.Weapons, 1 do
@@ -523,10 +523,10 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
       xPlayer.removeWeapon(itemName)
 
       if Config.EnableWeaponPickup then
-        TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, weaponName)
+        TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, weaponName,itemCount)
       end
 
-      TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' x1 ~g~' .. weaponLabel)
+      TriggerClientEvent('esx:showNotification', _source, _U('threw') .. ' x1 ~g~' .. weaponLabel .. _U('withammo').. '~r~' .. itemCount .. _U('ammogiven'))
 
     end)
 
