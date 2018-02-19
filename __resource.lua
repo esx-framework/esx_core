@@ -2,7 +2,7 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ES Extended'
 
-version '1.0.11'
+version '1.0.12'
 
 server_scripts {
   '@async/async.lua',
