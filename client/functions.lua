@@ -1147,7 +1147,7 @@ ESX.ShowInventory = function()
       end
 
       if data.current.type == "item_weapon" then
-        table.insert(elements, {label = --[[_U('giveammo')]]"Give ammo", action = 'giveammo', type = data.current.type, value = data.current.value})
+        table.insert(elements, {label = _U('giveammo'), action = 'giveammo', type = data.current.type, value = data.current.value})
       end
 
       table.insert(elements, {label = _U('return'), action = 'return'})
