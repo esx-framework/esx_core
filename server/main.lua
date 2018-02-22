@@ -6,12 +6,15 @@ RegisterServerEvent('esx_billing:sendBill')
 AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, label, amount)
 
 	local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(_source)
 	local xPlayers = ESX.GetPlayers()
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', sharedAccountName, function(account)
 
-		if account == nil then
+		if amount < 0 then
+			print('esx_billing: ' .. GetPlayerName(_source) .. ' tried sending a negative bill!')
+			TriggerClientEvent('esx:showNotification', _source, _U('negative_bill'))
+		elseif account == nil then
 
 			for i=1, #xPlayers, 1 do
 
@@ -37,9 +40,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 					break
 				end
 			end
-
 		else
-
 			for i=1, #xPlayers, 1 do
 
 				local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
@@ -64,9 +65,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 					break
 				end
 			end
-
 		end
-
 	end)
 
 end)

@@ -5,5 +5,6 @@ Locales['sv'] = {
 	['received_payment'] = 'du har ~y~mottagit~w~ en räkning på ~g~$',
 	['player_not_logged'] = 'spelaren är inte online',
 	['no_money'] = 'du har ~r~inte råd~w~ för att kunna betala räkningen',
-	['target_no_money'] = 'Spelaren har ~r~inte råd~w~ för att betala räkningen'
+	['target_no_money'] = 'Spelaren har ~r~inte råd~w~ för att betala räkningen',
+	['negative_bill'] = 'Du kan inte skicka negativa räkningar!'
 }
