@@ -5,7 +5,8 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterServerEvent('esx_billing:sendBill')
 AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, label, amount)
 
-	local xPlayer  = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 	local xPlayers = ESX.GetPlayers()
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', sharedAccountName, function(account)
@@ -72,7 +73,8 @@ end)
 
 ESX.RegisterServerCallback('esx_billing:getBills', function(source, cb)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 
 	MySQL.Async.fetchAll(
 		'SELECT * FROM billing WHERE identifier = @identifier',
@@ -105,7 +107,8 @@ end)
 
 ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 
 	MySQL.Async.fetchAll(
 		'SELECT * FROM billing WHERE id = @id',
