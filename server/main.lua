@@ -108,7 +108,8 @@ end)
 
 AddEventHandler('esx:playerLoaded', function(source)
 
-  local xPlayer    = ESX.GetPlayerFromId(source)
+  local _source = source
+  local xPlayer = ESX.GetPlayerFromId(_source)
   local dataStores = {}
 
   for i=1, #DataStoresIndex, 1 do
