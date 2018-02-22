@@ -5,7 +5,8 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterServerEvent('esx_garage:setParking')
 AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = _source
+	local xPlayer  = ESX.GetPlayerFromId(_source)
 
 	if vehicleProps == false then
 
@@ -83,7 +84,8 @@ RegisterServerEvent('esx_garage:updateOwnedVehicle')
 
 ESX.RegisterServerCallback('esx_vehicleshop:getVehiclesInGarage', function(source, cb, garage)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = _source
+	local xPlayer  = ESX.GetPlayerFromId(_source)
 
 	MySQL.Async.fetchAll(
 		'SELECT * FROM `user_parkings` WHERE `identifier` = @identifier AND garage = @garage',
