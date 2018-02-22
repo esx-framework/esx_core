@@ -184,6 +184,9 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 						end)
 					else
 						TriggerClientEvent('esx:showNotification', xPlayer.source, _U('no_money'))
+						if foundPlayer ~= nil then
+							TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('target_no_money'))
+						end
 					end
 				end)
 
