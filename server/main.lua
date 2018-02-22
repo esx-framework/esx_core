@@ -102,8 +102,8 @@ AddEventHandler('esx_addoninventory:getSharedInventory', function(name, cb)
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
-
-	local xPlayer          = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 	local addonInventories = {}
 
 	for i=1, #InventoriesIndex, 1 do
