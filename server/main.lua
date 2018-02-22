@@ -4,7 +4,8 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 ESX.RegisterUsableItem('bread', function(source)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 
 	xPlayer.removeInventoryItem('bread', 1)
 
@@ -16,7 +17,8 @@ end)
 
 ESX.RegisterUsableItem('water', function(source)
 
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 
 	xPlayer.removeInventoryItem('water', 1)
 
