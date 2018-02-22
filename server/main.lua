@@ -163,30 +163,25 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 				end
 
 			else
-
 				TriggerEvent('esx_addonaccount:getSharedAccount', target, function(account)
-
-					MySQL.Async.execute(
-						'DELETE from billing WHERE id = @id',
-						{
-							['@id'] = id
-						},
-						function(rowsChanged)
-
-							xPlayer.removeMoney(amount)
-							account.addMoney(amount)
-
-							TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
-
-							if foundPlayer ~= nil then
-								TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
-							end
-
+					if xPlayer.get('money') >= amount then
+						MySQL.Async.execute(
+							'DELETE from billing WHERE id = @id',
+							{
+								['@id'] = id
+							},
+								function(rowsChanged)
+								xPlayer.removeMoney(amount)
+								account.addMoney(amount)
+								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
+								if foundPlayer ~= nil then
+									TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
+								end
 							cb()
-
-						end
-					)
-
+						end)
+					else
+						TriggerClientEvent('esx:showNotification', xPlayer.source, _U('no_money'))
+					end
 				end)
 
 			end
