@@ -35,26 +35,26 @@ end
 CountCops()
 
 --coke
-local function HarvestCoke(_source)
+local function HarvestCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
 		return
 	end
 
 	SetTimeout(5000, function()
 
-		if PlayersHarvestingCoke[_source] == true then
+		if PlayersHarvestingCoke[source] == true then
 
-			local xPlayer  = ESX.GetPlayerFromId(_source)
+			local xPlayer  = ESX.GetPlayerFromId(source)
 
 			local coke = xPlayer.getInventoryItem('coke')
 
 			if coke.limit ~= -1 and coke.count >= coke.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('inv_full_coke'))
+				TriggerClientEvent('esx:showNotification', source, _U('inv_full_coke'))
 			else
 				xPlayer.addInventoryItem('coke', 1)
-				HarvestCoke(_source)
+				HarvestCoke(source)
 			end
 
 		end
@@ -64,7 +64,7 @@ end
 RegisterServerEvent('esx_drugs:startHarvestCoke')
 AddEventHandler('esx_drugs:startHarvestCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingCoke[_source] = true
 
@@ -77,38 +77,38 @@ end)
 RegisterServerEvent('esx_drugs:stopHarvestCoke')
 AddEventHandler('esx_drugs:stopHarvestCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingCoke[_source] = false
 
 end)
 
-local function TransformCoke(_source)
+local function TransformCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
 		return
 	end
 
 	SetTimeout(10000, function()
 
-		if PlayersTransformingCoke[_source] == true then
+		if PlayersTransformingCoke[source] == true then
 
-			  local _source = _source
+			  local _source = source
   			  local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local cokeQuantity = xPlayer.getInventoryItem('coke').count
 			local poochQuantity = xPlayer.getInventoryItem('coke_pooch').count
 
 			if poochQuantity > 35 then
-				TriggerClientEvent('esx:showNotification', _source, _U('too_many_pouches'))
+				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif cokeQuantity < 5 then
-				TriggerClientEvent('esx:showNotification', _source, _U('not_enough_coke'))
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_coke'))
 			else
 				xPlayer.removeInventoryItem('coke', 5)
 				xPlayer.addInventoryItem('coke_pooch', 1)
 			
-				TransformCoke(_source)
+				TransformCoke(source)
 			end
 
 		end
@@ -118,7 +118,7 @@ end
 RegisterServerEvent('esx_drugs:startTransformCoke')
 AddEventHandler('esx_drugs:startTransformCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingCoke[_source] = true
 
@@ -131,53 +131,53 @@ end)
 RegisterServerEvent('esx_drugs:stopTransformCoke')
 AddEventHandler('esx_drugs:stopTransformCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingCoke[_source] = false
 
 end)
 
-local function SellCoke(_source)
+local function SellCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
 		return
 	end
 
 	SetTimeout(7500, function()
 
-		if PlayersSellingCoke[_source] == true then
+		if PlayersSellingCoke[source] == true then
 
-			  local _source = _source
+			  local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local poochQuantity = xPlayer.getInventoryItem('coke_pooch').count
 
 			if poochQuantity == 0 then
-				TriggerClientEvent('esx:showNotification', _source, _U('no_pouches_sale'))
+				TriggerClientEvent('esx:showNotification', source, _U('no_pouches_sale'))
 			else
 				xPlayer.removeInventoryItem('coke_pooch', 1)
 				if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 198)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 elseif CopsConnected == 1 then
                     xPlayer.addAccountMoney('black_money', 258)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 elseif CopsConnected == 2 then
                     xPlayer.addAccountMoney('black_money', 308)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 elseif CopsConnected == 3 then
                     xPlayer.addAccountMoney('black_money', 358)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 elseif CopsConnected == 4 then
                     xPlayer.addAccountMoney('black_money', 396)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 elseif CopsConnected >= 5 then
                     xPlayer.addAccountMoney('black_money', 428)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_coke'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_coke'))
                 end
 				
-				SellCoke(_source)
+				SellCoke(source)
 			end
 
 		end
@@ -187,7 +187,7 @@ end
 RegisterServerEvent('esx_drugs:startSellCoke')
 AddEventHandler('esx_drugs:startSellCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingCoke[_source] = true
 
@@ -200,34 +200,34 @@ end)
 RegisterServerEvent('esx_drugs:stopSellCoke')
 AddEventHandler('esx_drugs:stopSellCoke', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingCoke[_source] = false
 
 end)
 
 --meth
-local function HarvestMeth(_source)
+local function HarvestMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
 		return
 	end
 	
 	SetTimeout(5000, function()
 
-		if PlayersHarvestingMeth[_source] == true then
+		if PlayersHarvestingMeth[source] == true then
 
-			  local _source = _source
+			  local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local meth = xPlayer.getInventoryItem('meth')
 
 			if meth.limit ~= -1 and meth.count >= meth.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('inv_full_meth'))
+				TriggerClientEvent('esx:showNotification', source, _U('inv_full_meth'))
 			else
 				xPlayer.addInventoryItem('meth', 1)
-				HarvestMeth(_source)
+				HarvestMeth(source)
 			end
 
 		end
@@ -237,7 +237,7 @@ end
 RegisterServerEvent('esx_drugs:startHarvestMeth')
 AddEventHandler('esx_drugs:startHarvestMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingMeth[_source] = true
 
@@ -250,38 +250,38 @@ end)
 RegisterServerEvent('esx_drugs:stopHarvestMeth')
 AddEventHandler('esx_drugs:stopHarvestMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingMeth[_source] = false
 
 end)
 
-local function TransformMeth(_source)
+local function TransformMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
 		return
 	end
 
 	SetTimeout(12000, function()
 
-		if PlayersTransformingMeth[_source] == true then
+		if PlayersTransformingMeth[source] == true then
 
-			  local _source = _source
+			  local _source = source
   local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local methQuantity = xPlayer.getInventoryItem('meth').count
 			local poochQuantity = xPlayer.getInventoryItem('meth_pooch').count
 
 			if poochQuantity > 35 then
-				TriggerClientEvent('esx:showNotification', _source, _U('too_many_pouches'))
+				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif methQuantity < 5 then
-				TriggerClientEvent('esx:showNotification', _source, _U('not_enough_meth'))
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_meth'))
 			else
 				xPlayer.removeInventoryItem('meth', 5)
 				xPlayer.addInventoryItem('meth_pooch', 1)
 				
-				TransformMeth(_source)
+				TransformMeth(source)
 			end
 
 		end
@@ -291,7 +291,7 @@ end
 RegisterServerEvent('esx_drugs:startTransformMeth')
 AddEventHandler('esx_drugs:startTransformMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingMeth[_source] = true
 
@@ -304,24 +304,24 @@ end)
 RegisterServerEvent('esx_drugs:stopTransformMeth')
 AddEventHandler('esx_drugs:stopTransformMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingMeth[_source] = false
 
 end)
 
-local function SellMeth(_source)
+local function SellMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
 		return
 	end
 
 	SetTimeout(7500, function()
 
-		if PlayersSellingMeth[_source] == true then
+		if PlayersSellingMeth[source] == true then
 
-			  local _source = _source
+			  local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local poochQuantity = xPlayer.getInventoryItem('meth_pooch').count
@@ -332,28 +332,28 @@ local function SellMeth(_source)
 				xPlayer.removeInventoryItem('meth_pooch', 1)
 				if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 276)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected == 1 then
                     xPlayer.addAccountMoney('black_money', 374)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected == 2 then
                     xPlayer.addAccountMoney('black_money', 474)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected == 3 then
                     xPlayer.addAccountMoney('black_money', 552)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected == 4 then
                     xPlayer.addAccountMoney('black_money', 616)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected == 5 then
                     xPlayer.addAccountMoney('black_money', 654)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 elseif CopsConnected >= 6 then
                     xPlayer.addAccountMoney('black_money', 686)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_meth'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_meth'))
                 end
 				
-				SellMeth(_source)
+				SellMeth(source)
 			end
 
 		end
@@ -363,7 +363,7 @@ end
 RegisterServerEvent('esx_drugs:startSellMeth')
 AddEventHandler('esx_drugs:startSellMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingMeth[_source] = true
 
@@ -376,34 +376,34 @@ end)
 RegisterServerEvent('esx_drugs:stopSellMeth')
 AddEventHandler('esx_drugs:stopSellMeth', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingMeth[_source] = false
 
 end)
 
 --weed
-local function HarvestWeed(_source)
+local function HarvestWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
 		return
 	end
 
 	SetTimeout(5000, function()
 
-		if PlayersHarvestingWeed[_source] == true then
+		if PlayersHarvestingWeed[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local weed = xPlayer.getInventoryItem('weed')
 
 			if weed.limit ~= -1 and weed.count >= weed.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('inv_full_weed'))
+				TriggerClientEvent('esx:showNotification', source, _U('inv_full_weed'))
 			else
 				xPlayer.addInventoryItem('weed', 1)
-				HarvestWeed(_source)
+				HarvestWeed(source)
 			end
 
 		end
@@ -413,7 +413,7 @@ end
 RegisterServerEvent('esx_drugs:startHarvestWeed')
 AddEventHandler('esx_drugs:startHarvestWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingWeed[_source] = true
 
@@ -426,37 +426,37 @@ end)
 RegisterServerEvent('esx_drugs:stopHarvestWeed')
 AddEventHandler('esx_drugs:stopHarvestWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingWeed[_source] = false
 
 end)
 
-local function TransformWeed(_source)
+local function TransformWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
 		return
 	end
 
 	SetTimeout(7500, function()
 
-		if PlayersTransformingWeed[_source] == true then
+		if PlayersTransformingWeed[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 			local weedQuantity = xPlayer.getInventoryItem('weed').count
 			local poochQuantity = xPlayer.getInventoryItem('weed_pooch').count
 
 			if poochQuantity > 35 then
-				TriggerClientEvent('esx:showNotification', _source, _U('too_many_pouches'))
+				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif weedQuantity < 5 then
-				TriggerClientEvent('esx:showNotification', _source, _U('not_enough_weed'))
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_weed'))
 			else
 				xPlayer.removeInventoryItem('weed', 5)
 				xPlayer.addInventoryItem('weed_pooch', 1)
 				
-				TransformWeed(_source)
+				TransformWeed(source)
 			end
 
 		end
@@ -466,7 +466,7 @@ end
 RegisterServerEvent('esx_drugs:startTransformWeed')
 AddEventHandler('esx_drugs:startTransformWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingWeed[_source] = true
 
@@ -479,50 +479,50 @@ end)
 RegisterServerEvent('esx_drugs:stopTransformWeed')
 AddEventHandler('esx_drugs:stopTransformWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingWeed[_source] = false
 
 end)
 
-local function SellWeed(_source)
+local function SellWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx_weedjob:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx_weedjob:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
 		return
 	end
 
 	SetTimeout(7500, function()
 
-		if PlayersSellingWeed[_source] == true then
+		if PlayersSellingWeed[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local poochQuantity = xPlayer.getInventoryItem('weed_pooch').count
 
 			if poochQuantity == 0 then
-				TriggerClientEvent('esx:showNotification', _source, _U('no_pouches_sale'))
+				TriggerClientEvent('esx:showNotification', source, _U('no_pouches_sale'))
 			else
 				xPlayer.removeInventoryItem('weed_pooch', 1)
                 if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 108)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_weed'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
                 elseif CopsConnected == 1 then
                     xPlayer.addAccountMoney('black_money', 128)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_weed'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
                 elseif CopsConnected == 2 then
                     xPlayer.addAccountMoney('black_money', 152)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_weed'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
                 elseif CopsConnected == 3 then
                     xPlayer.addAccountMoney('black_money', 165)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_weed'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
                 elseif CopsConnected >= 4 then
                     xPlayer.addAccountMoney('black_money', 180)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_weed'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_weed'))
                 end
 				
-				SellWeed(_source)
+				SellWeed(source)
 			end
 
 		end
@@ -532,7 +532,7 @@ end
 RegisterServerEvent('esx_drugs:startSellWeed')
 AddEventHandler('esx_drugs:startSellWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingWeed[_source] = true
 
@@ -545,7 +545,7 @@ end)
 RegisterServerEvent('esx_drugs:stopSellWeed')
 AddEventHandler('esx_drugs:stopSellWeed', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingWeed[_source] = false
 
@@ -554,27 +554,27 @@ end)
 
 --opium
 
-local function HarvestOpium(_source)
+local function HarvestOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
 		return
 	end
 
 	SetTimeout(5000, function()
 
-		if PlayersHarvestingOpium[_source] == true then
+		if PlayersHarvestingOpium[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local opium = xPlayer.getInventoryItem('opium')
 
 			if opium.limit ~= -1 and opium.count >= opium.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('inv_full_opium'))
+				TriggerClientEvent('esx:showNotification', source, _U('inv_full_opium'))
 			else
 				xPlayer.addInventoryItem('opium', 1)
-				HarvestOpium(_source)
+				HarvestOpium(source)
 			end
 
 		end
@@ -584,7 +584,7 @@ end
 RegisterServerEvent('esx_drugs:startHarvestOpium')
 AddEventHandler('esx_drugs:startHarvestOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingOpium[_source] = true
 
@@ -597,38 +597,38 @@ end)
 RegisterServerEvent('esx_drugs:stopHarvestOpium')
 AddEventHandler('esx_drugs:stopHarvestOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersHarvestingOpium[_source] = false
 
 end)
 
-local function TransformOpium(_source)
+local function TransformOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
 		return
 	end
 
 	SetTimeout(10000, function()
 
-		if PlayersTransformingOpium[_source] == true then
+		if PlayersTransformingOpium[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local opiumQuantity = xPlayer.getInventoryItem('opium').count
 			local poochQuantity = xPlayer.getInventoryItem('opium_pooch').count
 
 			if poochQuantity > 35 then
-				TriggerClientEvent('esx:showNotification', _source, _U('too_many_pouches'))
+				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif opiumQuantity < 5 then
-				TriggerClientEvent('esx:showNotification', _source, _U('not_enough_opium'))
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_opium'))
 			else
 				xPlayer.removeInventoryItem('opium', 5)
 				xPlayer.addInventoryItem('opium_pooch', 1)
 			
-				TransformOpium(_source)
+				TransformOpium(source)
 			end
 
 		end
@@ -638,7 +638,7 @@ end
 RegisterServerEvent('esx_drugs:startTransformOpium')
 AddEventHandler('esx_drugs:startTransformOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingOpium[_source] = true
 
@@ -651,53 +651,53 @@ end)
 RegisterServerEvent('esx_drugs:stopTransformOpium')
 AddEventHandler('esx_drugs:stopTransformOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersTransformingOpium[_source] = false
 
 end)
 
-local function SellOpium(_source)
+local function SellOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', _source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
 		return
 	end
 
 	SetTimeout(7500, function()
 
-		if PlayersSellingOpium[_source] == true then
+		if PlayersSellingOpium[source] == true then
 
-			local _source = _source
+			local _source = source
   			local xPlayer = ESX.GetPlayerFromId(_source)
 
 			local poochQuantity = xPlayer.getInventoryItem('opium_pooch').count
 
 			if poochQuantity == 0 then
-				TriggerClientEvent('esx:showNotification', _source, _U('no_pouches_sale'))
+				TriggerClientEvent('esx:showNotification', source, _U('no_pouches_sale'))
 			else
 				xPlayer.removeInventoryItem('opium_pooch', 1)
 				if CopsConnected == 0 then
                     xPlayer.addAccountMoney('black_money', 300)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 elseif CopsConnected == 1 then
                     xPlayer.addAccountMoney('black_money', 500)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 elseif CopsConnected == 2 then
                     xPlayer.addAccountMoney('black_money', 700)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 elseif CopsConnected == 3 then
                     xPlayer.addAccountMoney('black_money', 800)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 elseif CopsConnected == 4 then
                     xPlayer.addAccountMoney('black_money', 900)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 elseif CopsConnected >= 5 then
                     xPlayer.addAccountMoney('black_money', 1000)
-                    TriggerClientEvent('esx:showNotification', _source, _U('sold_one_opium'))
+                    TriggerClientEvent('esx:showNotification', source, _U('sold_one_opium'))
                 end
 				
-				SellOpium(_source)
+				SellOpium(source)
 			end
 
 		end
@@ -707,7 +707,7 @@ end
 RegisterServerEvent('esx_drugs:startSellOpium')
 AddEventHandler('esx_drugs:startSellOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingOpium[_source] = true
 
@@ -720,7 +720,7 @@ end)
 RegisterServerEvent('esx_drugs:stopSellOpium')
 AddEventHandler('esx_drugs:stopSellOpium', function()
 
-	local _source = _source
+	local _source = source
 
 	PlayersSellingOpium[_source] = false
 
@@ -730,7 +730,7 @@ end)
 -- RETURN INVENTORY TO CLIENT
 RegisterServerEvent('esx_drugs:GetUserInventory')
 AddEventHandler('esx_drugs:GetUserInventory', function(currentZone)
-	local _source = _source
+	local _source = source
     local xPlayer  = ESX.GetPlayerFromId(_source)
     TriggerClientEvent('esx_drugs:ReturnInventory', 
     	_source, 
@@ -748,10 +748,10 @@ AddEventHandler('esx_drugs:GetUserInventory', function(currentZone)
 end)
 
 -- Register Usable Item
-ESX.RegisterUsableItem('weed', function(_source)
+ESX.RegisterUsableItem('weed', function(source)
 
-	local _source = _source
-	local xPlayer  = ESX.GetPlayerFromId(_source)
+	local _source = source
+	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	xPlayer.removeInventoryItem('weed', 1)
 
