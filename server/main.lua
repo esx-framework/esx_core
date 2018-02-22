@@ -86,8 +86,8 @@ AddEventHandler('esx_addonaccount:getSharedAccount', function(name, cb)
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
-
-	local xPlayer       = ESX.GetPlayerFromId(source)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 	local addonAccounts = {}
 
 	for i=1, #AccountsIndex, 1 do
