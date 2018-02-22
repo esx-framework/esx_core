@@ -17,8 +17,8 @@ TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), tru
 TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_ambulance', 'society_ambulance', 'society_ambulance', {type = 'public'})
 
 ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(source, cb)
-
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
 
   if Config.RemoveCashAfterRPDeath then
 
@@ -55,7 +55,8 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 end)
 
 ESX.RegisterServerCallback('esx_ambulancejob:getItemAmount', function(source, cb, item)
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
   local qtty = xPlayer.getInventoryItem(item).count
   cb(qtty)
 end)
@@ -102,14 +103,16 @@ end, function(source, args, user)
 end, {help = _U('revive_help'), params = {{name = 'id'}}})
 
 ESX.RegisterUsableItem('medikit', function(source)
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
   xPlayer.removeInventoryItem('medikit', 1)
   TriggerClientEvent('esx_ambulancejob:heal', source, 'big')
   TriggerClientEvent('esx:showNotification', source, _U('used_medikit'))
 end)
 
 ESX.RegisterUsableItem('bandage', function(source)
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
   xPlayer.removeInventoryItem('bandage', 1)
   TriggerClientEvent('esx_ambulancejob:heal', source, 'small')
   TriggerClientEvent('esx:showNotification', source, _U('used_bandage'))
