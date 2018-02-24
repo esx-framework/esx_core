@@ -1,4 +1,9 @@
 Locales['de'] = {
+  ['amountammo'] = 'anzahl der Munition',
+  ['noammo'] = 'Du hast keine Munition !',
+  ['withammo'] = '~s~ mit x',
+  ['ammogiven'] = '~s~ Kugeln',
+  ['giveammo'] = 'Munition geben',
   ['inventory'] = 'Inventar',
   ['use'] = 'benutzen',
   ['give'] = 'geben',

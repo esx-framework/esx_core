@@ -333,13 +333,13 @@ AddEventHandler('esx:removePickup', function(id)
 end)
 
 RegisterNetEvent('esx:pickupWeapon')
-AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName)
+AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName,ammo)
 
   local ped          = GetPlayerPed(-1)
   local playerPedPos = GetEntityCoords(ped, true)
-
-  CreateAmbientPickup(GetHashKey(weaponPickup), playerPedPos.x + 2.0, playerPedPos.y, playerPedPos.z + 0.5, 0, 1000, 1, false, true)
-
+  print(ammo)
+  CreateAmbientPickup(GetHashKey(weaponPickup), playerPedPos.x + 2.0, playerPedPos.y, playerPedPos.z + 0.5, 0, ammo, 1, false, true)
+  
 end)
 
 RegisterNetEvent('esx:spawnPed')
