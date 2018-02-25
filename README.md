@@ -11,7 +11,7 @@ FXServer ESX Police Job
   * esx_datastore => https://github.com/FXServer-ESX/fxserver-esx_datastore
   
 * ESX Identity Support
-  * esx_identity => https://github.com/ArkSeyonet/fxserver-esx_identity
+  * esx_identity => https://github.com/ArkSeyonet/esx_identity_es5
 
 [INSTALLATION]
 
