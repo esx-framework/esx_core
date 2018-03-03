@@ -167,7 +167,7 @@ AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 					id     = result[i].id,
 					name   = result[i].name,
 					price  = result[i].price,
-					rented = (rented == 1 and true or false),
+					rented = (result[i].rented == 1 and true or false),
 					owner  = result[i].owner,
 				})
 			end
