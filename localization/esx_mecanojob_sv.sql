@@ -13,11 +13,11 @@ INSERT INTO `jobs` (name, label) VALUES
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-  ('mecano',0,'Rekryt','Recruit',12,'{}','{}'),
-  ('mecano',1,'Nyanställd','Novice',24,'{}','{}'),
-  ('mecano',2,'Erfaren','Experienced',36,'{}','{}'),
-  ('mecano',3,'Chef','Leader',48,'{}','{}'),
-  ('mecano',4,'Bossen','Boss',0,'{}','{}')
+  ('mecano',0,'recrue','Rekryt',12,'{}','{}'),
+  ('mecano',1,'novice','Nyanställd',24,'{}','{}'),
+  ('mecano',2,'experimente','Erfaren',36,'{}','{}'),
+  ('mecano',3,'chief','Chef',48,'{}','{}'),
+  ('mecano',4,'boss','Bossen',0,'{}','{}')
 ;
 
 INSERT INTO `items` (name, label) VALUES
