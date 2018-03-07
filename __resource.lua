@@ -7,6 +7,7 @@ server_scripts {
   'locales/de.lua',
   'locales/en.lua',
   'locales/fr.lua',
+  'locales/sv.lua',
   'config.lua',
   'server/esx_jobs_sv.lua'
 }
@@ -17,6 +18,7 @@ client_scripts {
   'locales/de.lua',
   'locales/en.lua',
   'locales/fr.lua',
+  'locales/sv.lua',
   'config.lua',
   'jobs/fisherman.lua',
   'jobs/fuel.lua',
