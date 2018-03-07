@@ -1788,6 +1788,9 @@ Citizen.CreateThread(function()
       DisableControlAction(0, 142, true) -- MeleeAttackAlternate
       DisableControlAction(0, 30,  true) -- MoveLeftRight
       DisableControlAction(0, 31,  true) -- MoveUpDown
+      DisableControlAction(0, 24,  true) -- Shoot 
+      DisableControlAction(0, 92,  true) -- Shoot in car
+      DisableControlAction(0, 75,  true) -- Leave Vehicle
     end
   end
 end)
