@@ -390,7 +390,7 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
     local id      = NetworkGetNetworkIdFromEntity(vehicle)
 
     SetNetworkIdCanMigrate(id, true)
-    SetEntityAsMissionEntity(vehicle,  true,  false)
+    --SetEntityAsMissionEntity(vehicle,  true,  false)
     SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
     SetModelAsNoLongerNeeded(model)
 
@@ -423,7 +423,7 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 
     local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
 
-    SetEntityAsMissionEntity(vehicle,  true,  false)
+    --SetEntityAsMissionEntity(vehicle,  true,  false)
     SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
     SetModelAsNoLongerNeeded(model)
 
@@ -1182,7 +1182,7 @@ ESX.ShowInventory = function()
                     function(data2, menu2)
                       local quantity = tonumber(data2.value)
                       if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                        local ammobefore = GetAmmoInPedWeapon(playerPed, item) 
+                        local ammobefore = GetAmmoInPedWeapon(playerPed, item)
                         TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
                         local finalammo = math.floor(ammobefore - quantity)
                         SetPedAmmo(playerPed, item, finalammo)
@@ -1255,7 +1255,7 @@ ESX.ShowInventory = function()
                   local quantity = tonumber(data2.value)
 
                   if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                    local ammobefore = GetAmmoInPedWeapon(playerPed, item) 
+                    local ammobefore = GetAmmoInPedWeapon(playerPed, item)
                     TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
                     local finalammo = math.floor(ammobefore - quantity)
                     SetPedAmmo(playerPed, item, finalammo)
@@ -1324,7 +1324,7 @@ ESX.ShowInventory = function()
                   function(data2, menu2)
                     local quantity = tonumber(data2.value)
                     if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                      local ammobefore2 = GetAmmoInPedWeapon(closestPed, item) 
+                      local ammobefore2 = GetAmmoInPedWeapon(closestPed, item)
                       local finalammo = math.floor(pedammo - quantity)
                       local finalammo2 = math.floor(ammobefore2 + quantity)
                       SetPedAmmo(playerPed, item, finalammo)
