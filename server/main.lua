@@ -269,7 +269,7 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 			if count > 0 and inventory.getItem(item).count >= count then
 			
 				-- can the player carry the said amount of x item?
-				if sourceItem.limit ~= -1 and (sourceItem.count + item) > sourceItem.limit then
+				if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 					TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
 				else
 					inventory.removeItem(item, count)
