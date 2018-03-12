@@ -9,7 +9,7 @@ INSERT INTO `jobs` (name, label) VALUES
   ('fisherman', 'Fisherman'),
   ('miner', 'Miner'),
   ('lumberjack', 'Lumberjack'),
-  ('fuel', 'Fueler'),
+  ('fueler', 'Fueler'),
   ('reporter', 'Reporter'),
   ('tailor', 'Tailor')
 ;

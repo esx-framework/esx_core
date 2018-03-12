@@ -9,7 +9,7 @@ INSERT INTO `jobs` (name, label) VALUES
   ('fisherman', 'Fischerei'),
   ('miner', 'Bergbau'),
   ('lumberjack', 'Holzbetrieb'),
-  ('fuel', 'Raffinerie'),
+  ('fueler', 'Raffinerie'),
   ('reporter', 'Kanal 7'),
   ('textil', 'Schneiderei')
 ;
@@ -19,7 +19,7 @@ ALTER TABLE jobs ADD whitelisted BOOLEAN NOT NULL DEFAULT FALSE;
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
   ('lumberjack', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
   ('fisherman', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
-  ('fuel', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
+  ('fueler', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
   ('reporter', 0, 'employee', 'Mitarbeiter', 0, '{}', '{}'),
   ('textil', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
   ('miner', 0, 'interim', 'Mitarbeiter', 0, '{}', '{}'),
