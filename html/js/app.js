@@ -142,19 +142,19 @@
 	}
 
 	ESX_MENU.submit = function(namespace, name, data){
-		$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify({
+		SendMessage(ESX_MENU.ResourceName, 'menu_submit', {
 			_namespace: namespace,
 			_name     : name,
 			data      : data.data,
 			value     : data.value
-		}));
+		});
 	}
 
 	ESX_MENU.cancel = function(namespace, name){
-		$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify({
+		SendMessage(ESX_MENU.ResourceName, 'menu_cancel', {
 			_namespace: namespace,
 			_name     : name
-		}));
+		});
 	}
 
 	ESX_MENU.getFocused = function(){
