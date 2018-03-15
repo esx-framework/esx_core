@@ -33,6 +33,7 @@ client_scripts {
   'client/common.lua',
   'client/entityiter.lua',
   'client/functions.lua',
+  'client/wrapper.lua',
   'client/main.lua'
 }
 
@@ -46,6 +47,7 @@ files {
   'html/css/app.css',
 
   'html/js/mustache.min.js',
+  'html/js/wrapper.js',
   'html/js/app.js',
 
   'html/fonts/pdown.ttf',
