@@ -140,5 +140,11 @@ Locales['fr'] = {
   ['weapon_specialcarabine_mk2'] = 'SP Carabine MK2',
   ['weapon_bullpruprifle_mk2'] = 'Bullprup Rifle MK2',
   ['weapon_pumpshotgun_mk2'] = 'Pompe MK2',
-  ['weapon_marksmanrifle_mk2'] = 'MarksMan Rifle MK2',    
+  ['weapon_marksmanrifle_mk2'] = 'MarksMan Rifle MK2',
+  ['weapon_assaultrifle_mk2'] = 'Assault MK2',  
+  ['weapon_carbinerifle_mk2'] = 'Rifle Carabine MK2',  
+  ['weapon_combatmg_mk2'] = 'Mitrailleuse MK2',  
+  ['weapon_heavysniper_mk2'] = 'Heavy Sniper MK2',  
+  ['weapon_pistol_mk2'] = 'Pistol MK2',  
+  ['weapon_smg_mk2'] = 'SMG MK2',    
 }
