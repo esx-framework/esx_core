@@ -138,7 +138,7 @@ Locales['fr'] = {
   ['weapon_revolver_mk2'] = 'Revolver MK2',
   ['weapon_doubleaction'] = 'Revolver DoubleAction',
   ['weapon_specialcarabine_mk2'] = 'SP Carabine MK2',
-  ['weapon_bullpruprifle_mk2'] = 'Rifle MK2',
+  ['weapon_bullpruprifle_mk2'] = 'Bullprup Rifle MK2',
   ['weapon_pumpshotgun_mk2'] = 'Pompe MK2',
-  ['weapon_marksmanrifle_mk2'] = 'Rifle MK2',    
+  ['weapon_marksmanrifle_mk2'] = 'MarksMan Rifle MK2',    
 }
