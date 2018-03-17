@@ -84,6 +84,6 @@ Config.Weapons = {
   { name = 'WEAPON_SPECIALCARBINE_MK2', label = _U('weapon_specialcarabine_mk2') },  
   { name = 'WEAPON_BULLPUPRIFLE_MK2', label = _U('weapon_bullpruprifle_mk2') },   
   { name = 'WEAPON_PUMPSHOTGUN_MK2', label = _U('weapon_pumpshotgun_mk2') },
-  { name = 'WEAPON_MARKSMANRIFLE_MK2 ', label = _U('weapon_marksmanrifle_mk2') },  
+  { name = 'WEAPON_MARKSMANRIFLE_MK2', label = _U('weapon_marksmanrifle_mk2') },  
  
 }
