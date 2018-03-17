@@ -77,4 +77,13 @@ Config.Weapons = {
   { name = 'WEAPON_FLASHLIGHT', label = _U('weapon_flashlight') },
   { name = 'GADGET_NIGHTVISION', label = _U('gadget_nightvision') },
   { name = 'GADGET_PARACHUTE', label = _U('gadget_parachute') },
+  { name = 'WEAPON_FLARE', label = _U('weapon_flare') }, 
+  { name = 'WEAPON_SNSPISTOL_MK2', label = _U('weapon_snspistol_mk2') }, 
+  { name = 'WEAPON_REVOLVER_MK2', label = _U('weapon_revolver_mk2') },  
+  { name = 'WEAPON_DOUBLEACTION', label = _U('weapon_doubleaction') },    
+  { name = 'WEAPON_SPECIALCARBINE_MK2', label = _U('weapon_specialcarabine_mk2') },  
+  { name = 'WEAPON_BULLPUPRIFLE_MK2', label = _U('weapon_bullpruprifle_mk2') },   
+  { name = 'WEAPON_PUMPSHOTGUN_MK2', label = _U('weapon_pumpshotgun_mk2') },
+  { name = 'WEAPON_MARKSMANRIFLE_MK2 ', label = _U('weapon_marksmanrifle_mk2') },  
+ 
 }
