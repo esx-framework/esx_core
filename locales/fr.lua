@@ -133,4 +133,12 @@ Locales['fr'] = {
   ['weapon_flashlight'] = 'lampe torche',
   ['gadget_nightvision'] = 'vision nocturne',
   ['gadget_parachute'] = 'parachute',
+  ['weapon_flare'] = 'Fusée Détresse',
+  ['weapon_snspistol_mk2'] = 'Snspistol MK2',
+  ['weapon_revolver_mk2'] = 'Revolver MK2',
+  ['weapon_doubleaction'] = 'Revolver DoubleAction',
+  ['weapon_specialcarabine_mk2'] = 'SP Carabine MK2',
+  ['weapon_bullpruprifle_mk2'] = 'Rifle MK2',
+  ['weapon_pumpshotgun_mk2'] = 'Pompe MK2',
+  ['weapon_marksmanrifle_mk2'] = 'Rifle MK2',    
 }
