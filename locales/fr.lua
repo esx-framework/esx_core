@@ -54,16 +54,16 @@ Locales['fr'] = {
   ['fm_deliver_fish']           = 'appuyez sur ~INPUT_PICKUP~ pour livrer le poisson.',
 
   -- Fuel
-  ['f_oil_refiner']             = 'oil Refiner Locker Room',
-  ['f_drill_oil']               = 'drill for oil',
-  ['f_fuel']                    = 'pétrol',
-  ['f_drillbutton']             = 'appuyez sur ~INPUT_PICKUP~ pour forer.',
+  ['f_oil_refiner']             = 'Vestiaire du raffineur',
+  ['f_drill_oil']               = 'Extraction le pétrole',
+  ['f_fuel']                    = 'pétrole',
+  ['f_drillbutton']             = 'Appuyez sur ~INPUT_PICKUP~ pour forer.',
   ['f_fuel_refine']             = 'pétrol raffiné',
-  ['f_refine_fuel_button']      = 'press ~ INPUT_PICKUP ~ to refine.',
-  ['f_fuel_mixture']            = 'mélange',
-  ['f_gas']                     = 'essence',
-  ['f_fuel_mixture_button']     = 'appuyez sur ~INPUT_PICKUP~ pour mélanger.',
-  ['f_deliver_gas']             = "appuyez sur ~INPUT_PICKUP~ pour livrer l'essence.",
+  ['f_refine_fuel_button']      = 'Appuyez sur ~ INPUT_PICKUP ~ pour raffiner le pétrole.',
+  ['f_fuel_mixture']            = 'Mélange',
+  ['f_gas']                     = 'Essence',
+  ['f_fuel_mixture_button']     = 'Appuyez sur ~INPUT_PICKUP~ pour mélanger.',
+  ['f_deliver_gas']             = "Appuyez sur ~INPUT_PICKUP~ pour livrer l'essence.",
 
   -- Miner
   ['m_miner_locker']            = "miner's Locker Room",
