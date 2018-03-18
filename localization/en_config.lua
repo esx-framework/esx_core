@@ -8,6 +8,7 @@ Config.EnableArmoryManagement     = false
 Config.EnableESXIdentity          = false -- only turn this on if you are using esx_identity
 Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
 Config.EnableSocietyOwnedVehicles = false
+Config.EnableLicenses             = false -- only turn this on if you are using esx_license
 Config.MaxInService               = -1
 Config.Locale                     = 'en'
 
