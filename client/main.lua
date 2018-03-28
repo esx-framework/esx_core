@@ -1150,7 +1150,7 @@ Citizen.CreateThread(function()
 
                 if
                   GetEntityModel(vehicle) == GetHashKey('flatbed')   or
-                  GetEntityModel(vehicle) == GetHashKey('towtrcuk2') or
+                  GetEntityModel(vehicle) == GetHashKey('towtruck2') or
                   GetEntityModel(vehicle) == GetHashKey('slamvan3')
                 then
                   TriggerServerEvent('esx_service:disableService', 'mecano')
