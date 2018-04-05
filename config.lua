@@ -1,6 +1,6 @@
-Config              = {}
-Config.DrawDistance = 100.0
-Config.Locale = 'fr'
+Config                 = {}
+Config.DrawDistance    = 100.0
+Config.Locale          = 'en'
 Config.IsMecanoJobOnly = false
 
 Config.Zones = {
@@ -477,7 +477,7 @@ Config.Menus = {
 		label = _U('armor'),
 		parent = 'upgrades',
 		modType = 16,
-		price = {69.77, 116.28, 6666666.6, 6666666.6, 6666666.6, 6666666.6}
+		price = {69.77, 116.28, 130.00, 150.00, 180.00, 190.00}
 	},
 	modTurbo = {
 		label = _U('turbo'),
@@ -496,165 +496,165 @@ Config.Menus = {
 		modXenon = _U('headlights'),
 		plateIndex = _U('licenseplates'),
 		wheels = _U('wheels'),
-		modPlateHolder   	= 'Plaque - Contour',
-		modVanityPlate   	= 'Plaque - Avant',
-		modTrimA    		= 'Intérieur',
-		modOrnaments    	= 'Ornements',
-		modDashboard    	= 'Tableau de bord',
-		modDial    			= 'Compteur de vitesse',
-		modDoorSpeaker    	= 'Sono portière',
-		modSeats    		= 'Sièges',
-		modSteeringWheel    = 'Volant',
-		modShifterLeavers   = 'Levier de vitesse',
-		modAPlate    		= 'Plage arrière',
-		modSpeakers    		= 'Sono',
-		modTrunk    		= 'Coffre',
-		modHydrolic    		= 'Hydrolique',
-		modEngineBlock    	= 'Bloc moteur',
-		modAirFilter    	= 'Filtre à air',
-		modStruts    		= 'Struts',
-		modArchCover    	= 'Cache-roues',
-		modAerials    		= 'Antennes',
-		modTrimB    		= 'Ailes',
-		modTank    			= 'Réservoir',
-		modWindows    		= 'Fenêtres',
-		modLivery    		= 'Stickers'
+		modPlateHolder   	= _U('modplateholder'),
+		modVanityPlate   	= _U('modvanityplate'),
+		modTrimA    		= _U('interior'),
+		modOrnaments    	= _U('trim'),
+		modDashboard    	= _U('dashboard'),
+		modDial    			= _U('speedometer'),
+		modDoorSpeaker    	= _U('door_speakers'),
+		modSeats    		= _U('seats'),
+		modSteeringWheel    = _U('steering_wheel'),
+		modShifterLeavers   = _U('gear_lever'),
+		modAPlate    		= _U('quarter_deck'),
+		modSpeakers    		= _U('speakers'),
+		modTrunk    		= _U('trunk'),
+		modHydrolic    		= _U('hydraulic'),
+		modEngineBlock    	= _U('engine_block'),
+		modAirFilter    	= _U('air_filter'),
+		modStruts    		= _U('struts'),
+		modArchCover    	= _U('arch_cover'),
+		modAerials    		= _U('aerials'),
+		modTrimB    		= _U('wings'),
+		modTank    			= _U('fuel_tank'),
+		modWindows    		= _U('windows'),
+		modLivery    		= _U('stickers')
 	},
 
 	modPlateHolder = {
-		label = 'Plaque - Contour',
+		label = _U('modplateholder'),
 		parent = 'cosmetics',
 		modType = 25,
 		price = 3.49
 	},
 	modVanityPlate = {
-		label = 'Plaque - Avant',
+		label = _U('modvanityplate'),
 		parent = 'cosmetics',
 		modType = 26,
 		price = 1.1
 	},
 	modTrimA = {
-		label = 'Intérieur',
+		label = _U('interior'),
 		parent = 'cosmetics',
 		modType = 27,
 		price = 6.98
 	},
 	modOrnaments = {
-		label = 'Ornements',
+		label = _U('trim'),
 		parent = 'cosmetics',
 		modType = 28,
 		price = 0.9
 	},
 	modDashboard = {
-		label = 'Tableau de bord',
+		label = _U('dashboard'),
 		parent = 'cosmetics',
 		modType = 29,
 		price = 4.65
 	},
 	modDial = {
-		label = 'Compteur de vitesse',
+		label = _U('speedometer'),
 		parent = 'cosmetics',
 		modType = 30,
 		price = 4.19
 	},
 	modDoorSpeaker = {
-		label = 'Sono portière',
+		label = _U('door_speakers'),
 		parent = 'cosmetics',
 		modType = 31,
 		price = 5.58
 	},
 	modSeats = {
-		label = 'Siège',
+		label = _U('seats'),
 		parent = 'cosmetics',
 		modType = 32,
 		price = 4.65
 	},
 	modSteeringWheel = {
-		label = 'Volant',
+		label = _U('steering_wheel'),
 		parent = 'cosmetics',
 		modType = 33,
 		price = 4.19
 	},
 	modShifterLeavers = {
-		label = 'Levier de vitesse',
+		label = _U('gear_lever'),
 		parent = 'cosmetics',
 		modType = 34,
 		price = 3.26
 	},
 	modAPlate = {
-		label = 'Plage arrière',
+		label = _U('quarter_deck'),
 		parent = 'cosmetics',
 		modType = 35,
 		price = 4.19
 	},
 	modSpeakers = {
-		label = 'Sono',
+		label = _U('speakers'),
 		parent = 'cosmetics',
 		modType = 36,
 		price = 6.98
 	},
 	modTrunk = {
-		label = 'Coffre',
+		label = _U('trunk'),
 		parent = 'cosmetics',
 		modType = 37,
 		price = 5.58
 	},
 	modHydrolic = {
-		label = 'Hydrolique',
+		label = _U('hydraulic'),
 		parent = 'cosmetics',
 		modType = 38,
 		price = 5.12
 	},
 	modEngineBlock = {
-		label = 'Bloc moteur',
+		label = _U('engine_block'),
 		parent = 'cosmetics',
 		modType = 39,
 		price = 5.12
 	},
 	modAirFilter = {
-		label = 'Filtre a air',
+		label = _U('air_filter'),
 		parent = 'cosmetics',
 		modType = 40,
 		price = 3.72
 	},
 	modStruts = {
-		label = 'Struts',
+		label = _U('struts'),
 		parent = 'cosmetics',
 		modType = 41,
 		price = 6.51
 	},
 	modArchCover = {
-		label = 'Cache-roues',
+		label = _U('arch_cover'),
 		parent = 'cosmetics',
 		modType = 42,
 		price = 4.19
 	},
 	modAerials = {
-		label = 'Antennes',
+		label = _U('aerials'),
 		parent = 'cosmetics',
 		modType = 43,
 		price = 1.12
 	},
 	modTrimB = {
-		label = 'Ailes',
+		label = _U('wings'),
 		parent = 'cosmetics',
 		modType = 44,
 		price = 6.05
 	},
 	modTank = {
-		label = 'Réservoir',
+		label = _U('fuel_tank'),
 		parent = 'cosmetics',
 		modType = 45,
 		price = 4.19
 	},
 	modWindows = {
-		label = 'Fenêtres',
+		label = _U('windows'),
 		parent = 'cosmetics',
 		modType = 46,
 		price = 4.19
 	},
 	modLivery = {
-		label = 'Stickers',
+		label = _U('stickers'),
 		parent = 'cosmetics',
 		modType = 48,
 		price = 9.3
