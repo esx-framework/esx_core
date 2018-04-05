@@ -5,15 +5,15 @@ ALTER TABLE `users`
 ;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
-  ('property_black_money','Argent Sale Propriété',0)
+  ('property_black_money','Schwarzgeld',0)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
-  ('property','Propriété',0)
+  ('property','Immobilien',0)
 ;
 
 INSERT INTO `datastore` (name, label, shared) VALUES
-  ('property','Propriété',0)
+  ('property','Immobilien',0)
 ;
 
 CREATE TABLE `owned_properties` (
