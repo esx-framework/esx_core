@@ -23,38 +23,31 @@ AddEventHandler('onClientMapStart', function()
 end)
 
 function OpenShopMenu(zone)
-
 	local elements = {}
-
 	for i=1, #Config.Zones[zone].Items, 1 do
-
+	
 		local item = Config.Zones[zone].Items[i]
-
 		table.insert(elements, {
-			label     = item.label .. ' - <span style="color:green;">$' .. item.price .. ' </span>',
+			label     = item.label .. ' - <span style="color: green;">' .. item.price .. '$</span>',
 			realLabel = item.label,
 			value     = item.name,
 			price     = item.price
 		})
-
 	end
 
-
 	ESX.UI.Menu.CloseAll()
-
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'shop',
 		{
-			title  = _U('shop'),
+			title    = _U('shop'),
+			align    = 'bottom-right',
 			elements = elements
 		},
 		function(data, menu)
 			TriggerServerEvent('esx_shop:buyItem', data.current.value, data.current.price)
 		end,
 		function(data, menu)
-
 			menu.close()
-
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = _U('press_menu')
 			CurrentActionData = {zone = zone}
@@ -97,7 +90,7 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(10)
     local coords = GetEntityCoords(GetPlayerPed(-1))
     for k,v in pairs(Config.Zones) do
       for i = 1, #v.Pos, 1 do
@@ -112,7 +105,7 @@ end)
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(10)
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local isInMarker  = false
 		local currentZone = nil
@@ -141,7 +134,7 @@ end)
 -- Key Controls
 Citizen.CreateThread(function()
   while true do
-    Citizen.Wait(0)
+    Citizen.Wait(10)
     if CurrentAction ~= nil then
 
       SetTextComponentFormat('STRING')
