@@ -23,6 +23,8 @@ local CurrentActionData         = {}
 local IsHandcuffed              = false
 local IsDragged                 = false
 local CopPed                    = 0
+local hasAlreadyJoined          = false
+local blipsCops                 = {}
 
 ESX                             = nil
 GUI.Time                        = 0
@@ -1211,7 +1213,10 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-  PlayerData.job = job
+	PlayerData.job = job
+	
+	Citizen.Wait(5000)
+	TriggerServerEvent('esx_policejob:forceBlip')
 end)
 
 RegisterNetEvent('esx_phone:loaded')
@@ -1793,4 +1798,57 @@ Citizen.CreateThread(function()
     end
 
   end
+end)
+
+function createBlip(id)
+	ped = GetPlayerPed(id)
+	blip = GetBlipFromEntity(ped)
+	
+	if not DoesBlipExist(blip) then -- Add blip and create head display on player
+		blip = AddBlipForEntity(ped)
+		SetBlipSprite(blip, 1)
+		Citizen.InvokeNative(0x5FBCA48327B914DF, blip, true) -- Player Blip indicator
+		SetBlipRotation(blip, math.ceil(GetEntityHeading(veh))) -- update rotation
+		SetBlipNameToPlayerName(blip, id) -- update blip name
+		SetBlipScale(blip, 0.85) -- set scale
+		SetBlipAsShortRange(blip, true)
+		
+		table.insert(blipsCops, blip) -- add blip to array so we can remove it later
+	end
+end
+
+RegisterNetEvent('esx_policejob:updateBlip')
+AddEventHandler('esx_policejob:updateBlip', function()
+	
+	-- Refresh all blips
+	for k, existingBlip in pairs(blipsCops) do
+		RemoveBlip(existingBlip)
+	end
+	
+	-- Clean the blip table
+	blipsCops = {}
+	
+	ESX.TriggerServerCallback('esx_policejob:isCop', function(isCop)
+		if isCop then
+			ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
+				for i=1, #players, 1 do
+					if players[i].job.name == 'police' then
+						for id = 0, 32 do
+							if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= GetPlayerPed(-1) and GetPlayerName(id) == players[i].name then
+								createBlip(id)
+							end
+						end
+					end
+				end
+			end)
+		end
+	end) -- You don't need to specify source
+
+end)
+
+AddEventHandler('playerSpawned', function(spawn)
+	if not hasAlreadyJoined then
+		TriggerServerEvent('esx_policejob:spawned')
+	end
+	hasAlreadyJoined = true
 end)
