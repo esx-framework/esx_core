@@ -163,14 +163,14 @@ AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 
       for i=1, #result, 1 do
 
-        table.insert(properties, {
-          id     = result[i].id,
-          name   = result[i].name,
-          price  = result[i].price,
-          rented = (rented == 1 and true or false),
-          owner  = result[i].owner,
-        })
-      end
+				table.insert(properties, {
+					id     = result[i].id,
+					name   = result[i].name,
+					price  = result[i].price,
+					rented = (result[i].rented == 1 and true or false),
+					owner  = result[i].owner,
+				})
+			end
 
       cb(properties)
 
