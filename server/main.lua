@@ -4,7 +4,6 @@ local RegisteredStatus = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler('esx:playerLoaded', function(source)
-
 	local _source        = source
 	local xPlayer        = ESX.GetPlayerFromId(_source)
 
@@ -31,7 +30,6 @@ AddEventHandler('esx:playerLoaded', function(source)
 end)
 
 AddEventHandler('esx:playerDropped', function(source)
-
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
@@ -49,7 +47,6 @@ AddEventHandler('esx:playerDropped', function(source)
 end)
 
 AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
-
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 	local status  = xPlayer.get('status')
 
@@ -64,18 +61,17 @@ end)
 
 RegisterServerEvent('esx_status:update')
 AddEventHandler('esx_status:update', function(status)
-	
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	
-	xPlayer.set('status', status)
-
+	if xPlayer ~= nil then
+		xPlayer.set('status', status)
+	end
 end)
 
 function SaveData()
-
 	local xPlayers = ESX.GetPlayers()
-
+	
 	for i=1, #xPlayers, 1 do
 
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
@@ -93,7 +89,6 @@ function SaveData()
 	end
 
 	SetTimeout(10 * 60 * 1000, SaveData)
-
 end
 
 SaveData()
