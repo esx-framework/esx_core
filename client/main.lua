@@ -77,12 +77,28 @@ Citizen.CreateThread(function()
 	RegisterNUICallback('menu_submit', function(data, cb)
 		
 		local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+		local post = true
 		
 		if menu.submit ~= nil then
-			if(type(data.value) == "number") then
-				data.value = math.floor(tonumber(data.value))
+			
+			-- Is the submitted data a number?
+			if tonumber(data.value) ~= nil then
+				
+				-- Round float values
+				data.value = round(tonumber(data.value))
+				
+				-- Check for negative value
+				if tonumber(data.value) <= 0 then
+					post = false
+				end
 			end
-			menu.submit(data, menu)
+			
+			-- Don't post if the value is negative or if it's 0
+			if post then
+				menu.submit(data, menu)
+			else
+				ESX.ShowNotification('That input is invalid!')
+			end
 		end
 		
 		cb('OK')
@@ -142,3 +158,7 @@ Citizen.CreateThread(function()
 	end)
 
 end)
+
+function round(x)
+	return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
+end
