@@ -89,7 +89,7 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
       account.removeMoney(amount)
       xPlayer.addMoney(amount)
 
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. amount)
+      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', amount))
 
     else
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
@@ -112,7 +112,7 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
       account.addMoney(amount)
     end)
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited') .. amount)
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', amount))
 
   else
     TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
@@ -138,7 +138,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
           ['@amount']     = amount
         },
         function(rowsChanged)
-          TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have') .. amount .. '~s~ en attente de ~r~blanchiement~s~ (24h)')
+          TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have', amount))
         end
       )
 
@@ -210,7 +210,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 
         for i=1, #results, 1 do
           table.insert(employees, {
-            name                 = results[i].firstname .. ' ' .. results[i].lastname,
+            name        = results[i].firstname .. ' ' .. results[i].lastname,
             identifier  = results[i].identifier,
             job = {
               name        = results[i].job,
@@ -274,31 +274,31 @@ end)
 
 ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, type)
 
-  local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
 
-  if type == 'hire' then
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_hired', job))
-  elseif type == 'promote' then
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_promoted'))
-  elseif type == 'fire' then
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_fired', xPlayer.getJob().label))
-  end
+	if xPlayer ~= nil then
+		xPlayer.setJob(job, grade)
+		
+		if type == 'hire' then
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_hired', job))
+		elseif type == 'promote' then
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_promoted'))
+		elseif type == 'fire' then
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_fired', xPlayer.getJob().label))
+		end
+	end
 
-  if xPlayer ~= nil then
-    xPlayer.setJob(job, grade)
-  end
-
-  MySQL.Async.execute(
-    'UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
-    {
-      ['@job']        = job,
-      ['@job_grade']  = grade,
-      ['@identifier'] = identifier
-    },
-    function(rowsChanged)
-      cb()
-    end
-  )
+	MySQL.Async.execute(
+		'UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
+		{
+			['@job']        = job,
+			['@job_grade']  = grade,
+			['@identifier'] = identifier
+		},
+		function(rowsChanged)
+			cb()
+		end
+	)
 
 end)
 
@@ -394,7 +394,7 @@ function WashMoneyCRON(d, h, m)
         end)
 
         if foundPlayer then
-          TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered') .. result[i].amount)
+          TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', result[i].amount))
         end
 
         MySQL.Async.execute(
