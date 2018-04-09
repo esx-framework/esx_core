@@ -170,10 +170,10 @@ function OpenArmoryMenu(station)
   if Config.EnableArmoryManagement then
 
     local elements = {
-      {label = _U('get_weapon'), value = 'get_weapon'},
-      {label = _U('put_weapon'), value = 'put_weapon'},
-      {label = 'Prendre Objet',  value = 'get_stock'},
-      {label = 'Déposer objet',  value = 'put_stock'}
+      {label = _U('get_weapon'),     value = 'get_weapon'},
+      {label = _U('put_weapon'),     value = 'put_weapon'},
+      {label = _U('remove_object'),  value = 'get_stock'},
+      {label = _U('deposit_object'), value = 'put_stock'}
     }
 
     if PlayerData.job.grade_name == 'boss' then
@@ -204,12 +204,12 @@ function OpenArmoryMenu(station)
         end
 
         if data.current.value == 'put_stock' then
-              OpenPutStocksMenu()
-            end
+          OpenPutStocksMenu()
+        end
 
-            if data.current.value == 'get_stock' then
-              OpenGetStocksMenu()
-            end
+        if data.current.value == 'get_stock' then
+          OpenGetStocksMenu()
+        end
 
       end,
       function(data, menu)
@@ -455,13 +455,14 @@ function OpenPoliceActionsMenu()
             title    = _U('citizen_interaction'),
             align    = 'top-left',
             elements = {
-              {label = _U('id_card'),       value = 'identity_card'},
-              {label = _U('search'),        value = 'body_search'},
-              {label = _U('handcuff'),    value = 'handcuff'},
-              {label = _U('drag'),      value = 'drag'},
+              {label = _U('id_card'),         value = 'identity_card'},
+              {label = _U('search'),          value = 'body_search'},
+              {label = _U('handcuff'),        value = 'handcuff'},
+              {label = _U('drag'),            value = 'drag'},
               {label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
               {label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
-              {label = _U('fine'),            value = 'fine'}
+              {label = _U('fine'),            value = 'fine'},
+              {label = _U('license_check'),   value = 'license'}
             },
           },
           function(data2, menu2)
@@ -469,33 +470,24 @@ function OpenPoliceActionsMenu()
             local player, distance = ESX.Game.GetClosestPlayer()
 
             if distance ~= -1 and distance <= 3.0 then
+              local action = data2.current.value
 
-              if data2.current.value == 'identity_card' then
+              if action == 'identity_card' then
                 OpenIdentityCardMenu(player)
-              end
-
-              if data2.current.value == 'body_search' then
+              elseif action == 'body_search' then
                 OpenBodySearchMenu(player)
-              end
-
-              if data2.current.value == 'handcuff' then
+              elseif action == 'handcuff' then
                 TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(player))
-              end
-
-              if data2.current.value == 'drag' then
+              elseif action == 'drag' then
                 TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(player))
-              end
-
-              if data2.current.value == 'put_in_vehicle' then
+              elseif action == 'put_in_vehicle' then
                 TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(player))
-              end
-
-              if data2.current.value == 'out_the_vehicle' then
+              elseif action == 'out_the_vehicle' then
                   TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(player))
-              end
-
-              if data2.current.value == 'fine' then
+              elseif action == 'fine' then
                 OpenFineMenu(player)
+              elseif action == 'license' then
+                ShowPlayerLicense(player)
               end
 
             else
@@ -926,6 +918,46 @@ function OpenFineCategoryMenu(player, category)
   end, category)
 
 end
+
+function ShowPlayerLicense(player)
+	local elements = {}
+	local targetName
+	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
+		if data.licenses ~= nil then
+			for i=1, #data.licenses, 1 do
+				if data.licenses[i].label ~= nil and data.licenses[i].type ~= nil then
+					table.insert(elements, {label = data.licenses[i].label, value = data.licenses[i].type})
+				end
+			end
+		end
+		
+		targetName = data.firstname .. ' ' .. data.lastname
+		
+		ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'manage_license',
+		{
+			title    = _U('license_revoke'),
+			align    = 'top-left',
+			elements = elements,
+		},
+		function(data, menu)
+			TriggerEvent('esx:showNotification', _U('licence_you_revoked', data.current.label, targetName))
+			--TriggerEvent('esx:showNotification', GetPlayerServerId(player), _U('license_revoked', data.current.label))
+			
+			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.value)
+			
+			ESX.SetTimeout(300, function()
+				ShowPlayerLicense(player)
+			end)
+		end,
+		function(data, menu)
+			menu.close()
+		end
+		)
+
+	end, GetPlayerServerId(player))
+end
+
 
 function OpenVehicleInfosMenu(vehicleData)
 

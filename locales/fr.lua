@@ -13,6 +13,8 @@ Locales['fr'] = {
   ['no_outfit'] = 'Il n\'y a pas d\'uniforme à votre taille...',
   ['open_cloackroom'] = 'appuyez sur ~INPUT_CONTEXT~ pour vous changer',
   -- Armory
+  ['remove_object'] = 'prendre Objet',
+  ['deposit_object'] = 'déposer objet',
   ['get_weapon'] = 'prendre Arme',
   ['put_weapon'] = 'déposer Arme',
   ['buy_weapons'] = 'acheter Armes',
@@ -36,6 +38,10 @@ Locales['fr'] = {
   ['put_in_vehicle'] = 'mettre dans véhicule',
   ['out_the_vehicle'] = 'sortir du véhicule',
   ['fine'] = 'Amende',
+  ['license_check'] = 'manage license',
+  ['license_revoke'] = 'revoke license',
+  ['license_revoked'] = 'your ~b~%s~s~ has been ~y~revoked~s~!',
+  ['licence_you_revoked'] = 'you revoked a ~b~%s~s~ which belonged to ~y~%s~s~',
   ['no_players_nearby'] = 'aucun joueur à proximité',
 
   ['vehicle_info'] = 'infos véhicule',

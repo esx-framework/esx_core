@@ -1,5 +1,5 @@
 Locales['en'] = {
-  -- Cloackroom
+  -- Cloakroom
   ['cloakroom'] = 'locker room',
   ['citizen_wear'] = 'civilian Outfit',
   ['police_wear'] = 'police Outfit',
@@ -10,12 +10,14 @@ Locales['en'] = {
   ['specops_wear'] = 'Spec OPS outfit',
   ['gilet_wear'] = 'orange reflective jacket',
   ['bullet_wear'] = 'bulletproof vest',
-  ['no_outfit'] = 'there\'s no uniform to fit you...',
-  ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change',
+  ['no_outfit'] = 'there\'s no uniform that fits you!',
+  ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change ~y~clothes~s~.',
   -- Armory
-  ['get_weapon'] = 'get Weapon',
-  ['put_weapon'] = 'put Weapon',
-  ['buy_weapons'] = 'buy Weapons',
+  ['remove_object'] = 'take object',
+  ['deposit_object'] = 'deposit object',
+  ['get_weapon'] = 'take weapon',
+  ['put_weapon'] = 'put weapon',
+  ['buy_weapons'] = 'buy weapons',
   ['armory'] = 'armory',
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to access the armory',
   -- Vehicles
@@ -36,6 +38,10 @@ Locales['en'] = {
   ['put_in_vehicle'] = 'put in Vehicle',
   ['out_the_vehicle'] = 'take out of vehicle',
   ['fine'] = 'fine',
+  ['license_check'] = 'manage license',
+  ['license_revoke'] = 'revoke license',
+  ['license_revoked'] = 'your ~b~%s~s~ has been ~y~revoked~s~!',
+  ['licence_you_revoked'] = 'you revoked a ~b~%s~s~ which belonged to ~y~%s~s~',
   ['no_players_nearby'] = 'no players nearby',
 
   ['vehicle_info'] = 'vehicle Info',
