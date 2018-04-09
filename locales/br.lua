@@ -133,5 +133,18 @@
       ['weapon_flashlight'] = 'laterna',
       ['gadget_nightvision'] = 'visão noturna',
       ['gadget_parachute'] = 'paraquedas',
-    }
-
+      ['weapon_flare'] = 'Flare',
+      ['weapon_snspistol_mk2'] = 'Pistola SNS  Mk II',
+      ['weapon_revolver_mk2'] = 'Revolver Pesada Mk II',
+      ['weapon_doubleaction'] = 'Revolver Dupla-acao',
+      ['weapon_specialcarabine_mk2'] = 'Carabina Especial Mk II',
+      ['weapon_bullpruprifle_mk2'] = 'Bullpup Rifle Mk II',
+      ['weapon_pumpshotgun_mk2'] = 'Espingarda Mk II',
+      ['weapon_marksmanrifle_mk2'] = 'Rifle Marksman Mk II',  
+      ['weapon_assaultrifle_mk2'] = 'Rifle de assalto Mk II ',  
+      ['weapon_carbinerifle_mk2'] = 'Carabina Mk II ',  
+      ['weapon_combatmg_mk2'] = 'MG de Combate Mk II',  
+      ['weapon_heavysniper_mk2'] = 'Sniper pesada Mk II',  
+      ['weapon_pistol_mk2'] = 'Pistola Mk II',  
+      ['weapon_smg_mk2'] = 'SMG Mk II', 
+}
