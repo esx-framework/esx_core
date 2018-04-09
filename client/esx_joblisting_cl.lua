@@ -2,10 +2,10 @@ local Keys = {
 	["ESC"] = 322, ["BACKSPACE"] = 177, ["E"] = 38, ["ENTER"] = 18,	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173
 }
 
-local menuIsShowed				  = false
-local hasAlreadyEnteredMarker     = false
-local lastZone                    = nil
-local isInJoblistingMarker 		  = false
+local menuIsShowed 				 = false
+local hasAlreadyEnteredMarker 	 = false
+local lastZone 					 = nil
+local isInJoblistingMarker 		 = false
 
 ESX = nil
 
@@ -54,7 +54,7 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(10)
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		for i=1, #Config.Zones, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.Zones[i].x, Config.Zones[i].y, Config.Zones[i].z, true) < Config.DrawDistance) then
@@ -67,7 +67,7 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(10)
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		isInJoblistingMarker  = false
 		local currentZone = nil
@@ -75,8 +75,8 @@ Citizen.CreateThread(function()
 			if(GetDistanceBetweenCoords(coords, Config.Zones[i].x, Config.Zones[i].y, Config.Zones[i].z, true) < Config.ZoneSize.x / 2) then
 				isInJoblistingMarker  = true
 				SetTextComponentFormat('STRING')
-            	AddTextComponentString(_U('access_job_center'))
-            	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+				AddTextComponentString(_U('access_job_center'))
+				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 			end
 		end
 		if isInJoblistingMarker and not hasAlreadyEnteredMarker then
@@ -107,7 +107,7 @@ end)
 -- Menu Controls
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(10)
 		if IsControlJustReleased(0, Keys['E']) and isInJoblistingMarker and not menuIsShowed then
 			ShowJobListingMenu()
 		end

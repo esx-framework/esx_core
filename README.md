@@ -1,8 +1,6 @@
-# fxserver-esx_joblisting
-FR - Pôle Emploi
+# esx_joblisting
+Simple job listing script, you can specify what jobs you want to be whitelisted.
 
-Update SQL database for job whitelist:
-
-ALTER TABLE jobs add whitelisted BOOLEAN NOT NULL DEFAULT FALSE;
-
-You can show (0) or hide (1) a job in the joblisting by changing the value in the DB of the field whitelisted
+### Update
+If you have an outdated version of ES Extended, you might need to run the following on your SQL server:
+`ALTER TABLE jobs add whitelisted BOOLEAN NOT NULL DEFAULT FALSE;`
