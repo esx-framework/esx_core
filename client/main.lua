@@ -125,21 +125,21 @@ function OpenDMVSchoolMenu()
   local elements = {}
 
   if not ownedLicenses['dmv'] then
-    table.insert(elements, {label = _U('theory_test') .. Config.Prices['dmv'], value = 'theory_test'})
+    table.insert(elements, {label = _U('theory_test') .. ' $<span style="color: green;">' .. Config.Prices['dmv'] .. '</span>', value = 'theory_test'})
   end
 
   if ownedLicenses['dmv'] then
 
     if not ownedLicenses['drive'] then
-      table.insert(elements, {label = _U('road_test_car') .. Config.Prices['drive'], value = 'drive_test', type = 'drive'})
+      table.insert(elements, {label = _U('road_test_car') .. ' $<span style="color: green;">' .. Config.Prices['drive'] .. '</span>', value = 'drive_test', type = 'drive'})
     end
 
     if not ownedLicenses['drive_bike'] then
-      table.insert(elements, {label = _U('road_test_bike') .. Config.Prices['drive_bike'], value = 'drive_test', type = 'drive_bike'})
+      table.insert(elements, {label = _U('road_test_bike') .. ' $<span style="color: green;">' .. Config.Prices['drive_bike'] .. '</span>', value = 'drive_test', type = 'drive_bike'})
     end
 
     if not ownedLicenses['drive_truck'] then
-      table.insert(elements, {label = _U('road_test_truck') .. Config.Prices['drive_truck'], value = 'drive_test', type = 'drive_truck'})
+      table.insert(elements, {label = _U('road_test_truck') .. ' $<span style="color: green;">' .. Config.Prices['drive_truck'] .. '</span>', value = 'drive_test', type = 'drive_truck'})
     end
 
   end
@@ -239,7 +239,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     local coords = GetEntityCoords(GetPlayerPed(-1))
 
@@ -256,7 +256,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     local coords      = GetEntityCoords(GetPlayerPed(-1))
     local isInMarker  = false
@@ -287,7 +287,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentTest == 'theory' then
 
@@ -308,7 +308,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentAction ~= nil then
 
@@ -335,7 +335,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentTest == 'drive' then
 
@@ -394,7 +394,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentTest == 'drive' then
 
@@ -416,8 +416,8 @@ Citizen.CreateThread(function()
               DriveErrors       = DriveErrors + 1
               IsAboveSpeedLimit = true
 
-              ESX.ShowNotification(_U('driving_too_fast') .. v .. 'km/h')
-              ESX.ShowNotification(_U('errors') .. DriveErrors .. '~s~/' .. Config.MaxErrors)
+              ESX.ShowNotification(_U('driving_too_fast', v))
+              ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
 
             end
 
@@ -435,9 +435,8 @@ Citizen.CreateThread(function()
           DriveErrors = DriveErrors + 1
 
           ESX.ShowNotification(_U('you_damaged_veh'))
-          ESX.ShowNotification(_U('errors') .. DriveErrors .. '~s~/' .. Config.MaxErrors)
-                    LastVehicleHealth = health
-
+          ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
+          LastVehicleHealth = health
         end
 
       end

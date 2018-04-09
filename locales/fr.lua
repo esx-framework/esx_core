@@ -1,6 +1,6 @@
 Locales['fr'] = {
 
-  ['you_paid'] = 'vous avez payé ~g~$',
+  ['you_paid'] = 'vous avez payé ~g~$%s~s~',
   ['go_next_point'] = 'allez vers le prochain passage !',
   ['in_town_speed'] = 'entrée en ville, attention à votre vitesse ! Vitesse limite : ~y~',
   ['next_point_speed'] = 'allez vers le prochain passage ! Vitesse limite : ~y~',
@@ -14,16 +14,16 @@ Locales['fr'] = {
   ['gratz_stay_alert'] = 'bravo, restez vigiliant!',
   ['passed_test'] = 'vous avez ~g~réussi~s~ le test',
   ['failed_test'] = 'vous avez ~r~raté~s~ le test',
-  ['theory_test'] = 'examen du code $',
-  ['road_test_car'] = 'examen de conduite [voiture] $',
-  ['road_test_bike'] = 'examen de conduite [moto] $',
-  ['road_test_truck'] = 'examen de conduite [camion] $',
+  ['theory_test'] = 'examen du code',
+  ['road_test_car'] = 'examen de conduite [voiture]',
+  ['road_test_bike'] = 'examen de conduite [moto]',
+  ['road_test_truck'] = 'examen de conduite [camion]',
   ['driving_school'] = 'ecole de conduite',
   ['press_open_menu'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu',
   ['driving_school_blip'] = 'auto-école',
   ['driving_test_complete'] = 'test de conduite terminé',
-  ['driving_too_fast'] = 'vous roulez trop vite, vitesse limite : ~y~',
-  ['errors'] = 'erreurs : ~r~',
+  ['driving_too_fast'] = 'vous roulez trop vite, vitesse limite: ~y~%s~s~ km/h!',
+  ['errors'] = 'erreurs : ~r~%s~s~/%s',
   ['you_damaged_veh'] = 'vous avez endommagé votre véhicule',
 
 }
