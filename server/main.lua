@@ -19,7 +19,7 @@ AddEventHandler('onMySQLReady', function()
 
 end)
 
-ESX.RegisterServerCallback('esx_shop:requestDBItems', function(source, cb)
+ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
 
 	MySQL.Async.fetchAll(
 		'SELECT * FROM shops',
@@ -43,11 +43,11 @@ ESX.RegisterServerCallback('esx_shop:requestDBItems', function(source, cb)
 
 end)
 
-RegisterServerEvent('esx_shop:buyItem')
-AddEventHandler('esx_shop:buyItem', function(itemName, price)
+RegisterServerEvent('esx_shops:buyItem')
+AddEventHandler('esx_shops:buyItem', function(itemName, price)
 
 	local _source = source
-	local xPlayer  = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(_source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	-- can the player afford this item?

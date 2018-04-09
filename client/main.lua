@@ -14,7 +14,7 @@ end)
 
 AddEventHandler('onClientMapStart', function()
 
-	ESX.TriggerServerCallback('esx_shop:requestDBItems', function(ShopItems)
+	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
 		for k,v in pairs(ShopItems) do
 			Config.Zones[k].Items = v
 		end
@@ -44,7 +44,7 @@ function OpenShopMenu(zone)
 			elements = elements
 		},
 		function(data, menu)
-			TriggerServerEvent('esx_shop:buyItem', data.current.value, data.current.price)
+			TriggerServerEvent('esx_shops:buyItem', data.current.value, data.current.price)
 		end,
 		function(data, menu)
 			menu.close()
@@ -55,7 +55,7 @@ function OpenShopMenu(zone)
 	)
 end
 
-AddEventHandler('esx_shop:hasEnteredMarker', function(zone)
+AddEventHandler('esx_shops:hasEnteredMarker', function(zone)
 
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_menu')
@@ -63,7 +63,7 @@ AddEventHandler('esx_shop:hasEnteredMarker', function(zone)
 
 end)
 
-AddEventHandler('esx_shop:hasExitedMarker', function(zone)
+AddEventHandler('esx_shops:hasExitedMarker', function(zone)
 
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
@@ -122,11 +122,11 @@ Citizen.CreateThread(function()
 		end
 		if isInMarker and not HasAlreadyEnteredMarker then
 			HasAlreadyEnteredMarker = true
-			TriggerEvent('esx_shop:hasEnteredMarker', currentZone)
+			TriggerEvent('esx_shops:hasEnteredMarker', currentZone)
 		end
 		if not isInMarker and HasAlreadyEnteredMarker then
 			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_shop:hasExitedMarker', LastZone)
+			TriggerEvent('esx_shops:hasExitedMarker', LastZone)
 		end
 	end
 end)
