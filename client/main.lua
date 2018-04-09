@@ -1341,7 +1341,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
   if PlayerData.job ~= nil and PlayerData.job.name == 'police' and not IsPedInAnyVehicle(playerPed, false) then
     CurrentAction     = 'remove_entity'
-    CurrentActionMsg  = _U('remove_object')
+    CurrentActionMsg  = _U('remove_prop')
     CurrentActionData = {entity = entity}
   end
 
