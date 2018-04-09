@@ -83,7 +83,7 @@ Locales['es'] = {
   ['inventory'] = 'inventario',
   ['police_stock'] = 'Almacen Policial',
   -- Misc
-  ['remove_object'] = 'Presionar ~INPUT_CONTEXT~ para eliminar el objeto',
+  ['remove_prop'] = 'Presionar ~INPUT_CONTEXT~ para eliminar el objeto',
   ['map_blip'] = 'Comisaría de policía',
   -- Notifications
   ['from'] = '~s~ de ~b~',
