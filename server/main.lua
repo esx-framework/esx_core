@@ -5,7 +5,7 @@ local Vehicles   = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 TriggerEvent('esx_phone:registerNumber', 'cardealer', _U('dealer_customers'), false, false)
-TriggerEvent('esx_society:registerSociety', 'cardealer', 'Concessionnaire', 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
+TriggerEvent('esx_society:registerSociety', 'cardealer', _U('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
 
 function RemoveOwnedVehicle (plate)
   MySQL.Async.fetchAll(
@@ -55,7 +55,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwned', function (vehicleProps)
       ['@owner']   = xPlayer.identifier,
     },
     function (rowsChanged)
-      TriggerClientEvent('esx:showNotification', _source, _U('vehicle').. vehicleProps.plate .. _('belongs'))
+      TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', vehicleProps.plate))
     end
   )
 end)
@@ -71,7 +71,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function (playerId, v
       ['@owner']   = xPlayer.identifier,
     },
     function (rowsChanged)
-      TriggerClientEvent('esx:showNotification', playerId, _U('vehicle') .. vehicleProps.plate .. _('belongs'))
+      TriggerClientEvent('esx:showNotification', playerId, _U('vehicle_belongs', vehicleProps.plate))
     end
   )
 end)
@@ -149,38 +149,46 @@ end)
 
 RegisterServerEvent('esx_vehicleshop:getStockItem')
 AddEventHandler('esx_vehicleshop:getStockItem', function (itemName, count)
-  local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local sourceItem = xPlayer.getInventoryItem(itemName)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function (inventory)
-    local item = inventory.getItem(itemName)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function (inventory)
+		local item = inventory.getItem(itemName)
 
-    if item.count >= count then
-      inventory.removeItem(itemName, count)
-      xPlayer.addInventoryItem(itemName, count)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
-    end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. ' x' .. count .. ' ' .. item.label)
-  end)
+		-- is there enough in the society?
+		if count > 0 and item.count >= count then
+		
+			-- can the player carry the said amount of x item?
+			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
+				TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
+			else
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				TriggerClientEvent('esx:showNotification', _source, _U('have_withdrawn', count, item.label))
+			end
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_in_society'))
+		end
+	end)
 end)
 
 RegisterServerEvent('esx_vehicleshop:putStockItems')
 AddEventHandler('esx_vehicleshop:putStockItems', function (itemName, count)
-  local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function (inventory)
-    local item = inventory.getItem(itemName)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function (inventory)
+		local item = inventory.getItem(itemName)
 
-    if item.count >= 0 then
-      xPlayer.removeInventoryItem(itemName, count)
-      inventory.addItem(itemName, count)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, 'Quantité invalide')
-    end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. ' x' .. count .. ' ' .. item.label)
-  end)
+		if item.count >= 0 then
+			xPlayer.removeInventoryItem(itemName, count)
+			inventory.addItem(itemName, count)
+			TriggerClientEvent('esx:showNotification', _source, _U('have_deposited', count, item.label))
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('invalid_amount'))
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getCategories', function (source, cb)

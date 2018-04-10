@@ -72,12 +72,11 @@ INSERT INTO `vehicle_categories` (name, label) VALUES
 ;
 
 CREATE TABLE `vehicles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `model` varchar(60) NOT NULL,
   `price` int(11) NOT NULL,
   `category` varchar(60) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`model`)
 );
 
 INSERT INTO `vehicles` (name, model, price, category) VALUES
