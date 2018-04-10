@@ -2,6 +2,7 @@ Config                            = {}
 Config.DrawDistance               = 100.0
 Config.MarkerColor                = { r = 102, g = 0, b = 102 }
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
+Config.ReviveReward               = 700
 
 local second = 1000
 local minute = 60 * second
