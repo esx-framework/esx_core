@@ -149,6 +149,7 @@ Config.Zones = {
   },
 
   StairsGoBottomBottom = {
+    Pos  = { x = 235.45, y = -1372.89, z = 26.30 },
     Type = -1
   }
 
