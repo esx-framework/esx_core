@@ -43,12 +43,12 @@ Locales['en'] = {
   -- Phone
   ['alert_ambulance'] = 'alert Ambulance',
   -- Death
-  ['respawn_at_hospital'] = 'do you want to be transported to the hospital?',
+  ['respawn_at_hospital'] = 'do you want to force respawn and spawn in the hospital?',
   ['yes'] = 'yes',
-  ['please_wait'] = 'please wait ~b~',
+  ['please_wait'] = 'You are unconscious and will bleed out in ~b~',
   ['minutes'] = ' minutes ',
-  ['seconds_fine'] = ' seconds ~w~to respawn \nRespawn now for ~g~$',
-  ['seconds'] = ' seconds ~w~to respawn.',
+  ['seconds_fine'] = ' seconds ~w~to respawn \nForce respawn now by pressing ~g~$',
+  ['seconds'] = ' seconds',
   ['press_respawn_fine'] = '~w~ [Press ~b~E~w~]',
   ['press_respawn'] = 'press [~b~E~w~] to respawn.',
   -- Revive
