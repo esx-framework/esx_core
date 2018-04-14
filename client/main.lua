@@ -58,7 +58,6 @@ AddEventHandler('esx_ambulancejob:heal', function(_type)
     ESX.ShowNotification(_U('healed'))
 end)
 
-
 function StartRespawnToHospitalMenuTimer()
   ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
     if IsDead then
@@ -621,12 +620,8 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 
 end)
 
-AddEventHandler('baseevents:onPlayerDied', function(killerType, coords)
-  OnPlayerDeath()
-end)
-
-AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
-  OnPlayerDeath()
+AddEventHandler('esx:onPlayerDeath', function()
+	OnPlayerDeath()
 end)
 
 RegisterNetEvent('esx_ambulancejob:revive')
