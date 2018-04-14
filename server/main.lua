@@ -492,7 +492,8 @@ AddEventHandler('esx_policejob:forceBlip', function()
 end)
 
 ESX.RegisterServerCallback('esx_policejob:isCop', function(source, cb)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 	cb(xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police')
 end)
 
