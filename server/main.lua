@@ -121,3 +121,28 @@ ESX.RegisterUsableItem('bandage', function(source)
   TriggerClientEvent('esx_ambulancejob:heal', _source, 'small')
   TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
 end)
+
+RegisterServerEvent('esx_ambulancejob:firstSpawn')
+AddEventHandler('esx_ambulancejob:firstSpawn', function()
+	local _source    = source
+	local identifier = GetPlayerIdentifiers(_source)[1]
+	MySQL.Async.fetchScalar('SELECT isDead FROM users WHERE identifier=@identifier',
+	{
+		['@identifier'] = identifier
+	}, function(isDead)
+		if isDead == 1 then
+			print('esx_ambulancejob: ' .. GetPlayerName(_source) .. ' (' .. identifier .. ') attempted combat logging!')
+			TriggerClientEvent('esx_ambulancejob:requestDeath', _source)
+		end
+	end)
+end)
+
+RegisterServerEvent('esx_ambulancejob:setDeathStatus')
+AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
+	local _source = source
+	MySQL.Sync.execute("UPDATE users SET isDead=@isDead WHERE identifier=@identifier",
+	{
+		['@identifier'] = GetPlayerIdentifiers(_source)[1],
+		['@isDead'] = isDead
+	})
+end)

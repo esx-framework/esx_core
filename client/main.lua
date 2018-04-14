@@ -103,7 +103,7 @@ function ShowTimer()
   Citizen.CreateThread(function()
 
     while timer > 0 and IsDead do
-            Wait(0)
+            Citizen.Wait(0)
 
       raw_seconds = timer/1000
       raw_minutes = raw_seconds/60
@@ -142,7 +142,7 @@ function ShowTimer()
 
         if Config.EarlyRespawn then
         while timer <= 0 and IsDead do
-          Wait(0)
+          Citizen.Wait(0)
 
                 SetTextFont(4)
                 SetTextProportional(0)
@@ -161,7 +161,7 @@ function ShowTimer()
 
           if IsControlPressed(0, Keys['E']) then
             RemoveItemsAfterRPDeath()
-                    break
+            break
           end
         end
         end
@@ -170,10 +170,11 @@ function ShowTimer()
 end
 
 function RemoveItemsAfterRPDeath()
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
     Citizen.CreateThread(function()
         DoScreenFadeOut(800)
         while not IsScreenFadedOut() do
-            Citizen.Wait(0)
+            Citizen.Wait(1)
         end
         ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
@@ -191,15 +192,17 @@ function RemoveItemsAfterRPDeath()
 end
 
 function OnPlayerDeath()
-    IsDead = true
-    if Config.ShowDeathTimer == true then
-        ShowTimer()
-    end
-    StartRespawnTimer()
-    if Config.RespawnToHospitalMenuTimer == true then
-        StartRespawnToHospitalMenuTimer()
-    end
-    StartScreenEffect('DeathFailOut',  0,  false)
+	IsDead = true
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 1)
+	
+	if Config.ShowDeathTimer == true then
+		ShowTimer()
+	end
+	StartRespawnTimer()
+	if Config.RespawnToHospitalMenuTimer == true then
+		StartRespawnToHospitalMenuTimer()
+	end
+	StartScreenEffect('DeathFailOut',  0,  false)
 end
 
 function TeleportFadeEffect(entity, coords)
@@ -318,8 +321,8 @@ function OpenMobileAmbulanceActionsMenu()
             title    = _U('ems_menu_title'),
             elements = {
               {label = _U('ems_menu_revive'),     value = 'revive'},
-                            {label = _U('ems_menu_small'),      value = 'small'},
-                            {label = _U('ems_menu_big'),        value = 'big'},
+              {label = _U('ems_menu_small'),      value = 'small'},
+              {label = _U('ems_menu_big'),        value = 'big'},
               {label = _U('ems_menu_putincar'),   value = 'put_in_vehicle'},
             }
           },
@@ -587,14 +590,13 @@ function OpenPharmacyMenu()
 end
 
 AddEventHandler('playerSpawned', function()
+	IsDead = false
 
-  IsDead = false
-
-  if FirstSpawn then
-    exports.spawnmanager:setAutoSpawn(false)
-    FirstSpawn = false
-  end
-
+	if FirstSpawn then
+		TriggerServerEvent('esx_ambulancejob:firstSpawn')
+		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
+		FirstSpawn = false
+	end
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -629,7 +631,8 @@ AddEventHandler('esx_ambulancejob:revive', function()
 
   local playerPed = GetPlayerPed(-1)
   local coords    = GetEntityCoords(playerPed)
-
+  TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
+  
   Citizen.CreateThread(function()
 
     DoScreenFadeOut(800)
@@ -696,25 +699,25 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
     TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorOutside2.Pos)
   end
 
-    if zone == 'ParkingDoorGoOutInside' then
-        TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoOutOutside.Pos)
-    end
+  if zone == 'ParkingDoorGoOutInside' then
+    TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoOutOutside.Pos)
+  end
 
-    if zone == 'ParkingDoorGoInOutside' then
-        TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoInInside.Pos)
-    end
+  if zone == 'ParkingDoorGoInOutside' then
+    TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoInInside.Pos)
+  end
 
-    if zone == 'StairsGoTopBottom' then
-        CurrentAction     = 'fast_travel_goto_top'
-        CurrentActionMsg  = _U('fast_travel')
-        CurrentActionData = {pos = Config.Zones.StairsGoTopTop.Pos}
-    end
+  if zone == 'StairsGoTopBottom' then
+    CurrentAction     = 'fast_travel_goto_top'
+    CurrentActionMsg  = _U('fast_travel')
+    CurrentActionData = {pos = Config.Zones.StairsGoTopTop.Pos}
+  end
 
-    if zone == 'StairsGoBottomTop' then
-        CurrentAction     = 'fast_travel_goto_bottom'
-        CurrentActionMsg  = _U('fast_travel')
-        CurrentActionData = {pos = Config.Zones.StairsGoBottomBottom.Pos}
-    end
+  if zone == 'StairsGoBottomTop' then
+    CurrentAction     = 'fast_travel_goto_bottom'
+    CurrentActionMsg  = _U('fast_travel')
+    CurrentActionData = {pos = Config.Zones.StairsGoBottomBottom.Pos}
+  end
 
   if zone == 'AmbulanceActions' then
     CurrentAction     = 'ambulance_actions_menu'
@@ -728,11 +731,11 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
     CurrentActionData = {}
   end
 
-    if zone == 'Pharmacy' then
-        CurrentAction     = 'pharmacy'
-        CurrentActionMsg  = _U('open_pharmacy')
-        CurrentActionData = {}
-    end
+  if zone == 'Pharmacy' then
+    CurrentAction     = 'pharmacy'
+    CurrentActionMsg  = _U('open_pharmacy')
+    CurrentActionData = {}
+  end
 
   if zone == 'VehicleDeleter' then
 
@@ -790,7 +793,7 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
 
     local coords = GetEntityCoords(GetPlayerPed(-1))
     for k,v in pairs(Config.Zones) do
@@ -809,7 +812,7 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
     local coords      = GetEntityCoords(GetPlayerPed(-1))
     local isInMarker  = false
     local currentZone = nil
@@ -843,7 +846,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentAction ~= nil then
 
@@ -861,13 +864,13 @@ Citizen.CreateThread(function()
           OpenVehicleSpawnerMenu()
         end
 
-                if CurrentAction == 'pharmacy' then
-                    OpenPharmacyMenu()
-                end
+        if CurrentAction == 'pharmacy' then
+          OpenPharmacyMenu()
+        end
 
-                if CurrentAction == 'fast_travel_goto_top' or CurrentAction == 'fast_travel_goto_bottom' then
-                    FastTravel(CurrentActionData.pos)
-                end
+        if CurrentAction == 'fast_travel_goto_top' or CurrentAction == 'fast_travel_goto_bottom' then
+           FastTravel(CurrentActionData.pos)
+        end
 
         if CurrentAction == 'delete_vehicle' then
           if Config.EnableSocietyOwnedVehicles then

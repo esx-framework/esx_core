@@ -19,3 +19,5 @@ INSERT INTO `items` (name, label, `limit`) VALUES
   ('bandage','Bandage', 20),
   ('medikit','Medikit', 5)
 ;
+
+ALTER TABLE `users` ADD `isDead` BIT(1) DEFAULT b'0'
