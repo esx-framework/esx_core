@@ -29,4 +29,4 @@ start esx_policejob
 ```
 5) * If you want player management you have to set Config.EnablePlayerManagement to true in config.lua
    * If you want armory management you have to set Config.EnableArmoryManagement to true in config.lua
-
+   * If you want license management you have to set Config.EnableLicenses to true in config.lua

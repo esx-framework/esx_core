@@ -448,22 +448,27 @@ function OpenPoliceActionsMenu()
     function(data, menu)
 
       if data.current.value == 'citizen_interaction' then
-
+        local elements = {
+          {label = _U('id_card'),         value = 'identity_card'},
+          {label = _U('search'),          value = 'body_search'},
+          {label = _U('handcuff'),        value = 'handcuff'},
+          {label = _U('drag'),            value = 'drag'},
+          {label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
+          {label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
+          {label = _U('fine'),            value = 'fine'},
+          {label = _U('license_check'),   value = 'license'}
+        }
+        
+        if Config.EnableLicenses then
+          table.insert(elements, { label = _U('license_check'), value = 'license' })
+        end
+        
         ESX.UI.Menu.Open(
           'default', GetCurrentResourceName(), 'citizen_interaction',
           {
             title    = _U('citizen_interaction'),
             align    = 'top-left',
-            elements = {
-              {label = _U('id_card'),         value = 'identity_card'},
-              {label = _U('search'),          value = 'body_search'},
-              {label = _U('handcuff'),        value = 'handcuff'},
-              {label = _U('drag'),            value = 'drag'},
-              {label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
-              {label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
-              {label = _U('fine'),            value = 'fine'},
-              {label = _U('license_check'),   value = 'license'}
-            },
+            elements = elements
           },
           function(data2, menu2)
 
