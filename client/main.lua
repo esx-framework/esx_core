@@ -240,7 +240,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(10)
 
     if GUI.PhoneIsShowed then -- codes here: https://pastebin.com/guYd0ht4
       DisableControlAction(0, 1,    true) -- LookLeftRight
@@ -282,7 +282,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentAction ~= nil then
 
@@ -290,7 +290,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
+      if IsControlPressed(0,  Keys['E']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 300 then
 
         if CurrentAction == 'dispatch' then
           TriggerServerEvent('esx_phone:stopDispatch', CurrentDispatchRequestId)
