@@ -17,6 +17,7 @@ local IsPaused      = false
 local PlayerSpawned = false
 local LastLoadout   = {}
 local Pickups       = {}
+local isDead        = false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -57,28 +58,22 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 AddEventHandler('playerSpawned', function()
+	while not ESX.PlayerLoaded do
+		Citizen.Wait(1)
+	end
 
-  Citizen.CreateThread(function()
+	local playerPed = GetPlayerPed(-1)
 
-    while not ESX.PlayerLoaded do
-      Citizen.Wait(1)
-    end
+	-- Restore position
+	if ESX.PlayerData.lastPosition ~= nil then
+		SetEntityCoords(playerPed,  ESX.PlayerData.lastPosition.x,  ESX.PlayerData.lastPosition.y,  ESX.PlayerData.lastPosition.z)
+	end
 
-    local playerPed = GetPlayerPed(-1)
+	TriggerEvent('esx:restoreLoadout') -- restore loadout
 
-    -- Restore position
-    if ESX.PlayerData.lastPosition ~= nil then
-      SetEntityCoords(playerPed,  ESX.PlayerData.lastPosition.x,  ESX.PlayerData.lastPosition.y,  ESX.PlayerData.lastPosition.z)
-    end
-
-    -- Restore loadout
-    TriggerEvent('esx:restoreLoadout')
-
-    LoadoutLoaded = true
-    PlayerSpawned = true
-
-  end)
-
+	LoadoutLoaded = true
+	PlayerSpawned = true
+	isDead = false
 end)
 
 AddEventHandler('baseevents:onPlayerDied', function(killerType, coords)
@@ -87,6 +82,10 @@ end)
 
 AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
 	TriggerEvent('esx:onPlayerDeath')
+end)
+
+AddEventHandler('esx:onPlayerDeath', function()
+	isDead = true
 end)
 
 AddEventHandler('skinchanger:loadDefaultModel', function()
@@ -472,7 +471,7 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(10)
 
-    if IsControlPressed(0, Keys["F2"]) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlPressed(0, Keys["F2"]) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') and (GetGameTimer() - GUI.Time) > 150 then
       ESX.ShowInventory()
       GUI.Time  = GetGameTimer()
     end

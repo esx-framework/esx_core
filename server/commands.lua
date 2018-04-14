@@ -1,14 +1,20 @@
 TriggerEvent('es:addGroupCommand', 'tp', 'admin', function(source, args, user)
-
-  TriggerClientEvent("esx:teleport", source, {
-    x = tonumber(args[1]),
-    y = tonumber(args[2]),
-    z = tonumber(args[3])
-  })
-
+	local x = tonumber(args[1])
+	local y = tonumber(args[2])
+	local z = tonumber(args[3])
+	
+	if x and y and z then
+		TriggerClientEvent("esx:teleport", source, {
+			x = x,
+			y = y,
+			z = z
+		})
+	else
+		TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Invalid coordinates!")
+	end
 end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
-end)
+end, {help = "Teleport to coordinates", params = {{name = "x", help = "X coords"}, {name = "y", help = "Y coords"}, {name = "z", help = "Z coords"}}})
 
 TriggerEvent('es:addGroupCommand', 'setjob', 'jobmaster', function(source, args, user)
   local xPlayer = ESX.GetPlayerFromId(args[1])
@@ -66,21 +72,36 @@ end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
 end, {help = _U('spawn_object'), params = {{name = "name"}}})
 
-TriggerEvent('es:addGroupCommand', 'givemoney', 'admin', function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'setmoney', 'admin', function(source, args, user)
+	local _source = source
+	
+	local target = tonumber(args[1])
+	local money_type = args[2]
+	local money_amount = tonumber(args[3])
+	
+	local xTarget = ESX.GetPlayerFromId(target)
 
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(args[1])
-  local amount  = tonumber(args[2])
-
-  if amount ~= nil then
-    xPlayer.addMoney(amount)
-  else
-    TriggerClientEvent('esx:showNotification', _source, _U('amount_invalid'))
-  end
-
+	if target and money_type and money_amount and xTarget ~= nil then
+		if money_type == 'cash' then
+			xTarget.setMoney(money_amount)
+		elseif money_type == 'bank' then
+			xTarget.setAccountMoney('bank', money_amount)
+		elseif money_type == 'black' then
+			xTarget.setAccountMoney('black_money', money_amount)
+		else
+			TriggerClientEvent('chatMessage', _source, "SYSTEM", {255, 0, 0}, "^2" .. money_type .. " ^0 is not a valid money type!")
+			return
+		end
+	else
+		TriggerClientEvent('chatMessage', _source, "SYSTEM", {255, 0, 0}, "Invalid arguments.")
+		return
+	end
+	
+	print('es_extended: ' .. GetPlayerName(source) .. ' just set $' .. money_amount .. ' (' .. money_type .. ') to ' .. xTarget.name)
+	TriggerClientEvent('esx:showNotification', xTarget.source, _U('money_set', money_amount, money_type))
 end, function(source, args, user)
-  TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
-end, {help = _U('givemoney'), params = {{name = "id", help = _U('id_param')}, {name = "amount", help = _U('money_amount')}}})
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = _U('setmoney'), params = {{name = "id", help = _U('id_param')}, {name = "money type", help = _U('money_type')}, {name = "amount", help = _U('money_amount')}}})
 
 TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source, args, user)
 
@@ -134,3 +155,15 @@ TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args,
 end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
 end, {help = _U('giveweapon'), params = {{name = "id", help = _U('id_param')}, {name = "weapon", help = _U('weapon')}}})
+
+TriggerEvent('es:addGroupCommand', 'disc', 'admin', function(source, args, user)
+	DropPlayer(source, 'You have been disconnected')
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = _U('disconnect')})
+
+TriggerEvent('es:addGroupCommand', 'disconnect', 'admin', function(source, args, user)
+	DropPlayer(source, 'You have been disconnected')
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
+end, {help = _U('disconnect')})

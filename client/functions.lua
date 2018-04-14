@@ -1063,26 +1063,30 @@ ESX.ShowInventory = function()
   local playerPed = GetPlayerPed(-1)
   local elements  = {}
 
-  table.insert(elements, {
-    label     = '[Cash] $' .. ESX.PlayerData.money,
-    count     = ESX.PlayerData.money,
-    type      = 'item_money',
-    value     = 'money',
-    usable    = false,
-    rare      = false,
-    canRemove = true
-  })
-
-  for i=1, #ESX.PlayerData.accounts, 1 do
+  if ESX.PlayerData.money > 0 then
     table.insert(elements, {
-      label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
-      count     = ESX.PlayerData.accounts[i].money,
-      type      = 'item_account',
-      value     =  ESX.PlayerData.accounts[i].name,
+      label     = '[Cash] $' .. ESX.PlayerData.money,
+      count     = ESX.PlayerData.money,
+      type      = 'item_money',
+      value     = 'money',
       usable    = false,
       rare      = false,
       canRemove = true
     })
+  end
+
+  for i=1, #ESX.PlayerData.accounts, 1 do
+    if ESX.PlayerData.accounts[i].money > 0 then
+      table.insert(elements, {
+        label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
+        count     = ESX.PlayerData.accounts[i].money,
+        type      = 'item_account',
+        value     =  ESX.PlayerData.accounts[i].name,
+        usable    = false,
+        rare      = false,
+        canRemove = true
+      })
+    end
   end
 
   for i=1, #ESX.PlayerData.inventory, 1 do
@@ -1132,9 +1136,9 @@ ESX.ShowInventory = function()
       elements = elements,
     },
     function(data, menu)
-
       menu.close()
 
+      local player, distance = ESX.Game.GetClosestPlayer()
       local elements = {}
 
       if data.current.usable then
@@ -1142,7 +1146,9 @@ ESX.ShowInventory = function()
       end
 
       if data.current.canRemove then
-        table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+        if player ~= -1 and distance <= 3.0 then
+          table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+        end
         table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
       end
 
@@ -1155,7 +1161,7 @@ ESX.ShowInventory = function()
       ESX.UI.Menu.Open(
         'default', GetCurrentResourceName(), 'inventory_item',
         {
-          title    = _U('inventory'),
+          title    = data.current.label,
           align    = 'bottom-right',
           elements = elements,
         },
@@ -1301,14 +1307,12 @@ ESX.ShowInventory = function()
             end
 
           elseif data.current.action == 'use' then
-
             TriggerServerEvent('esx:useItem', data.current.value)
 
           elseif data.current.action == 'return' then
 
             ESX.UI.Menu.CloseAll()
             ESX.ShowInventory()
-
           elseif data.current.action == 'giveammo' then
             local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
             local closestPed = GetPlayerPed(closestPlayer)
