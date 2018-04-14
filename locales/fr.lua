@@ -28,6 +28,7 @@ Locales['fr'] = {
   ['state_paid'] = 'L\'état vous a payé ',
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
+  ['cannot_pickup_room'] = 'vous n\'avez plus de place pour ~y~%s~s~!',
   -- Commands
   ['setjob'] = 'assigner job',
   ['id_param'] = 'identification du joueur',

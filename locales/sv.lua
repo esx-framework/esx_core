@@ -22,6 +22,7 @@ Locales['sv'] = {
   ['company_nomoney'] = 'Ditt företag är för fattigt!!',
   ['state_paid'] = 'Du fick en statlig check',
   ['act_imp'] = 'åtgärd omöjlig',
+  ['cannot_pickup_room'] = 'du har inte plats för att plocka upp ~y~%s~s~!',
   -- Commands
   ['setjob'] = 'tilldela ett jobb till en användare',
   ['id_param'] = 'spelarens ID',

@@ -569,7 +569,7 @@ AddEventHandler('esx:onPickup', function(id)
     end
 
     if remaining > 0 then
-      TriggerClientEvent('esx:showNotification', _source, 'Vous n\'avez plus de place pour ~b~' .. item.label .. '~s~')
+      TriggerClientEvent('esx:showNotification', _source, _U('cannot_pickup_room', item.label))
       ESX.CreatePickup('item_standard', pickup.name, remaining, item.label .. ' [' .. remaining .. ']', _source)
     end
 

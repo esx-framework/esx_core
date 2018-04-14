@@ -61,7 +61,7 @@ AddEventHandler('playerSpawned', function()
   Citizen.CreateThread(function()
 
     while not ESX.PlayerLoaded do
-      Citizen.Wait(0)
+      Citizen.Wait(1)
     end
 
     local playerPed = GetPlayerPed(-1)
@@ -81,13 +81,21 @@ AddEventHandler('playerSpawned', function()
 
 end)
 
+AddEventHandler('baseevents:onPlayerDied', function(killerType, coords)
+	TriggerEvent('esx:onPlayerDeath')
+end)
+
+AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
+	TriggerEvent('esx:onPlayerDeath')
+end)
+
 AddEventHandler('skinchanger:loadDefaultModel', function()
-  LoadoutLoaded = false
+	LoadoutLoaded = false
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
   while not ESX.PlayerLoaded do
-    Citizen.Wait(0)
+    Citizen.Wait(1)
   end
 
   TriggerEvent('esx:restoreLoadout')
@@ -194,7 +202,7 @@ AddEventHandler('esx:teleport', function(pos)
 
   while not HasCollisionLoadedAroundEntity(GetPlayerPed(-1)) do
     RequestCollisionAtCoord(pos.x, pos.y, pos.z)
-    Citizen.Wait(0)
+    Citizen.Wait(1)
   end
 
   SetEntityCoords(GetPlayerPed(-1), pos.x, pos.y, pos.z)
@@ -239,7 +247,7 @@ AddEventHandler('esx:playAnim', function(dict, anim)
     RequestAnimDict(dict)
 
     while not HasAnimDictLoaded(dict) do
-      Wait(0)
+      Citizen.Wait(1)
     end
 
     TaskPlayAnim(pid, dict, anim, 1.0, -1.0, 20000, 0, 1, true, true, true)
@@ -256,7 +264,7 @@ AddEventHandler('esx:playEmote', function(emote)
     local playerPed = GetPlayerPed(-1)
 
     TaskStartScenarioInPlace(playerPed, emote, 0, false);
-    Wait(20000)
+    Citizen.Wait(20000)
     ClearPedTasks(playerPed)
 
   end)
@@ -357,7 +365,7 @@ AddEventHandler('esx:spawnPed', function(model)
     RequestModel(model)
 
     while not HasModelLoaded(model)  do
-      Citizen.Wait(0)
+      Citizen.Wait(1)
     end
 
     CreatePed(5,  model,  x,  y,  z,  0.0,  true,  false)
@@ -408,7 +416,7 @@ Citizen.CreateThread(function()
 
   while true do
 
-    Wait(0)
+    Citizen.Wait(1)
 
     local playerPed      = GetPlayerPed(-1)
     local loadout        = {}
@@ -462,7 +470,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(10)
 
     if IsControlPressed(0, Keys["F2"]) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') and (GetGameTimer() - GUI.Time) > 150 then
       ESX.ShowInventory()
@@ -500,7 +508,7 @@ if Config.DisableWantedLevel then
   Citizen.CreateThread(function()
     while true do
 
-      Citizen.Wait(0)
+      Citizen.Wait(10)
 
       local playerId = PlayerId()
 
@@ -573,7 +581,7 @@ Citizen.CreateThread(function()
 
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     local playerPed = GetPlayerPed(-1)
 
