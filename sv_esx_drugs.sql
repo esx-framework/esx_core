@@ -1,10 +1,10 @@
 INSERT INTO `items` (name, label) VALUES
-	('weed', 'Weed'),
-	('weed_pooch', 'Väska med weed'),
-	('coke', 'Coke'),
-	('coke_pooch', 'väska med coke'),
+	('weed', 'Cannabis'),
+	('weed_pooch', 'Väska med cannabis'),
+	('coke', 'Kokain'),
+	('coke_pooch', 'Väska med kokain'),
 	('meth', 'Meth'),
-	('meth_pooch', 'väska med meth'),
+	('meth_pooch', 'Väska med meth'),
 	('opium', 'Opium'),
-	('opium_pooch', 'väska med opium')
+	('opium_pooch', 'Väska med opium')
 ;
