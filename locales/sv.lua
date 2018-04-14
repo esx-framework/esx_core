@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['sv'] = {
 
 	['press_collect_coke'] = 'klicka ~INPUT_CONTEXT~ för att plocka coke',
 	['press_process_coke'] = 'klicka ~INPUT_CONTEXT~ för att bearbeta coke',
