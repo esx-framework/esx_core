@@ -893,6 +893,14 @@ Citizen.CreateThread(function()
   end
 end)
 
+RegisterNetEvent('esx_ambulancejob:requestDeath')
+AddEventHandler('esx_ambulancejob:requestDeath', function()
+	if Config.AntiCombatLog then
+		Citizen.Wait(5000)
+		SetEntityHealth(GetPlayerPed(-1), 0)
+	end
+end)
+
 -- Load unloaded IPLs
 Citizen.CreateThread(function()
   LoadMpDlcMaps()

@@ -2,8 +2,8 @@ Config                            = {}
 Config.DrawDistance               = 100.0
 Config.MarkerColor                = { r = 102, g = 0, b = 102 }
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
-Config.ReviveReward               = 700
-
+Config.ReviveReward               = 700  -- revive reward, set to 0 if you don't want it enabled
+Config.AntiCombatLog              = true -- enable anti-combat logging?
 local second = 1000
 local minute = 60 * second
 
