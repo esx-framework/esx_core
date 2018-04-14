@@ -70,7 +70,7 @@ Locales['de'] = {
   ['amount_of_deposit'] = 'Betrag zum einzahlen',
   ['open_bossmenu'] = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
   -- Misc
-  ['remove_object'] = 'Drücke ~INPUT_CONTEXT~ um das Objekt zu entfernen',
+  ['remove_prop'] = 'Drücke ~INPUT_CONTEXT~ um das Objekt zu entfernen',
   ['map_blip'] = 'Polizeistation',
   -- Notifications
   ['from'] = '~s~ von ~b~',
