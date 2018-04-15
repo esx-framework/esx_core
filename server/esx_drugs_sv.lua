@@ -38,7 +38,7 @@ CountCops()
 local function HarvestCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsCoke))
 		return
 	end
 
@@ -86,7 +86,7 @@ end)
 local function TransformCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsCoke))
 		return
 	end
 
@@ -140,7 +140,7 @@ end)
 local function SellCoke(source)
 
 	if CopsConnected < Config.RequiredCopsCoke then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsCoke)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsCoke))
 		return
 	end
 
@@ -210,7 +210,7 @@ end)
 local function HarvestMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsMeth))
 		return
 	end
 	
@@ -259,7 +259,7 @@ end)
 local function TransformMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsMeth))
 		return
 	end
 
@@ -313,7 +313,7 @@ end)
 local function SellMeth(source)
 
 	if CopsConnected < Config.RequiredCopsMeth then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsMeth)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsMeth))
 		return
 	end
 
@@ -386,7 +386,7 @@ end)
 local function HarvestWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsWeed))
 		return
 	end
 
@@ -435,7 +435,7 @@ end)
 local function TransformWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsWeed))
 		return
 	end
 
@@ -488,7 +488,7 @@ end)
 local function SellWeed(source)
 
 	if CopsConnected < Config.RequiredCopsWeed then
-		TriggerClientEvent('esx_weedjob:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsWeed)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsWeed))
 		return
 	end
 
@@ -557,7 +557,7 @@ end)
 local function HarvestOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsOpium))
 		return
 	end
 
@@ -606,7 +606,7 @@ end)
 local function TransformOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsOpium))
 		return
 	end
 
@@ -660,7 +660,7 @@ end)
 local function SellOpium(source)
 
 	if CopsConnected < Config.RequiredCopsOpium then
-		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police') .. CopsConnected .. '/' .. Config.RequiredCopsOpium)
+		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsOpium))
 		return
 	end
 
