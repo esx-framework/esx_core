@@ -547,74 +547,44 @@ end)
 function PayRent(d, h, m)
 
   MySQL.Async.fetchAll(
-    'SELECT * FROM users',
-    {},
-    function(_users)
+  'SELECT * FROM owned_properties WHERE rented = 1',
+  {
 
-      local prevMoney = {}
-      local newMoney  = {}
+  }, function (result)
+    local xPlayers = ESX.GetPlayers()
 
-      for i=1, #_users, 1 do
-        prevMoney[_users[i].identifier] = _users[i].money
-        newMoney[_users[i].identifier]  = _users[i].money
+    for i=1, #result, 1 do
+
+      local foundPlayer = false
+      local xPlayer     = nil
+
+      for j=1, #xPlayers, 1 do
+
+        local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
+
+        if xPlayer2.identifier == result[i].owner then
+          foundPlayer = true
+          xPlayer     = xPlayer2
+        end
       end
 
-      MySQL.Async.fetchAll(
-        'SELECT * FROM owned_properties WHERE rented = 1',
-        {},
-        function(result)
+      if foundPlayer then
+        xPlayer.removeMoney(result[i].price)
+        TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent') .. result[i].price)
+      else
+        MySQL.Sync.execute(
+        'UPDATE users SET money = money - @money WHERE identifier = @identifier',
+        {
+          ['@money']      = result[i].price,
+          ['@identifier'] = result[i].owner
+        })
+      end
 
-          local xPlayers = ESX.GetPlayers()
-
-          for i=1, #result, 1 do
-
-            local foundPlayer = false
-            local xPlayer     = nil
-
-            for j=1, #xPlayers, 1 do
-
-              local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
-
-              if xPlayer2.identifier == result[i].owner then
-                foundPlayer = true
-                xPlayer     = xPlayer2
-              end
-            end
-
-            if foundPlayer then
-
-              xPlayer.removeMoney(result[i].price)
-              TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent') .. result[i].price)
-
-            else
-              newMoney[result[i].owner] = newMoney[result[i].owner] - result[i].price
-            end
-
-            TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
-              account.addMoney(result[i].price)
-            end)
-
-          end
-
-          for k,v in pairs(prevMoney) do
-            if v ~= newMoney[k] then
-
-              MySQL.Async.execute(
-                'UPDATE users SET money = @money WHERE identifier = @identifier',
-                {
-                  ['@money']      = newMoney[k],
-                  ['@identifier'] = k
-                }
-              )
-
-            end
-          end
-
-        end
-      )
-
+      TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
+        account.addMoney(result[i].price)
+      end)
     end
-  )
+  end)
 
 end
 
