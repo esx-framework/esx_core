@@ -1,18 +1,3 @@
---==================================================================================
---======               ESX_IDENTITY BY ARKSEYONET @Ark                        ======
---======    YOU CAN FIND ME ON MY DISCORD @Ark - https://discord.gg/cGHHxPX   ======
---======    IF YOU ALTER THIS VERSION OF THE SCRIPT, PLEASE GIVE ME CREDIT    ======
---======            Special Thanks To COSHAREK FOR THE UI Design              ======
---======     Special Thanks To Alphakush and CMD.Telhada For Help Testing     ======
---==================================================================================
-
---===================================================================
---==                        MAIN FUNCTIONS                         ==
---===================================================================
-
---===============================================
---==     Get The Player's Identification       ==
---===============================================
 function getIdentity(source, callback)
   local identifier = GetPlayerIdentifiers(source)[1]
     MySQL.Async.fetchAll("SELECT * FROM `users` WHERE `identifier` = @identifier",
@@ -46,9 +31,6 @@ function getIdentity(source, callback)
   end)
 end
 
---===============================================
---==     Get The Player's Identification       ==
---===============================================
 function getCharacters(source, callback)
   local identifier = GetPlayerIdentifiers(source)[1]
     MySQL.Async.fetchAll("SELECT * FROM `characters` WHERE `identifier` = @identifier",
@@ -144,9 +126,6 @@ function getCharacters(source, callback)
   end)
 end
 
---===============================================
---==    Set The Player's Identification        ==
---===============================================
 function setIdentity(identifier, data, callback)
   MySQL.Async.execute("UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier",
     {
@@ -175,9 +154,6 @@ function setIdentity(identifier, data, callback)
     })
 end
 
---===============================================
---==  Update The Player's Identification       ==
---===============================================
 function updateIdentity(identifier, data, callback)
   MySQL.Async.execute("UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier",
     {
@@ -195,9 +171,6 @@ function updateIdentity(identifier, data, callback)
   end)
 end
 
---===============================================
---==  Delete The Player's Identification       ==
---===============================================
 function deleteIdentity(identifier, data, callback)
   MySQL.Async.execute("DELETE FROM `characters` WHERE identifier = @identifier AND firstname = @firstname AND lastname = @lastname AND dateofbirth = @dateofbirth AND sex = @sex AND height = @height",
     {
@@ -215,9 +188,6 @@ function deleteIdentity(identifier, data, callback)
   end)
 end
 
---===============================================
---==       Server Event Set Identity           ==
---===============================================
 RegisterServerEvent('esx_identity:setIdentity')
 AddEventHandler('esx_identity:setIdentity', function(data)
   local identifier = GetPlayerIdentifiers(source)[1]
@@ -230,9 +200,6 @@ AddEventHandler('esx_identity:setIdentity', function(data)
   end)
 end)
 
---===============================================
---==       Player Loaded Event Handler         ==
---===============================================
 AddEventHandler('es:playerLoaded', function(source)
   getIdentity(source, function(data)
     if data.firstname == '' then
@@ -243,13 +210,6 @@ AddEventHandler('es:playerLoaded', function(source)
   end)
 end)
 
---===================================================================
---==                         MAIN COMMANDS                         ==
---===================================================================
-
---===============================================
---==      /charlist - Show Your Characters     ==
---===============================================
 TriggerEvent('es:addGroupCommand', 'idhelp', "user", function(source, args, user)
   TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "ESX_IDENTITY Commands")
   TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "/register - Register A New Character")
@@ -261,9 +221,6 @@ end, function(source, args, user)
 end, {help = "List Your Characters"})
 
 
---===============================================
---==      /register - Open Registration        ==
---===============================================
 TriggerEvent('es:addCommand', 'register', function(source, args, user)
   getCharacters(source, function(data)
     if data.firstname3 ~= '' then
@@ -274,9 +231,6 @@ TriggerEvent('es:addCommand', 'register', function(source, args, user)
   end)
 end)
 
---===============================================
---==      /char - Show Active Character        ==
---===============================================
 TriggerEvent('es:addGroupCommand', 'char', "user", function(source, args, user)
   getIdentity(source, function(data)
     if data.firstname == '' then
@@ -289,9 +243,6 @@ end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
 end, {help = "List Your Current Active Character"})
 
---===============================================
---==      /charlist - Show Your Characters     ==
---===============================================
 TriggerEvent('es:addGroupCommand', 'charlist', "user", function(source, args, user)
   getCharacters(source, function(data)
     if data.firstname1 ~= '' then
@@ -310,9 +261,6 @@ end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
 end, {help = "List Your Characters"})
 
---===============================================
---== /charselect 1,2,3 Select Your Active Char ==
---===============================================
 TriggerEvent('es:addCommand', 'charselect', function(source, args, user)
   table.remove(args, 1)
   local charNumber = tonumber(table.concat(args, " "))
@@ -387,9 +335,6 @@ TriggerEvent('es:addCommand', 'charselect', function(source, args, user)
   end)
 end)
 
---===============================================
---== /charselect 1,2,3 Select Your Active Char ==
---===============================================
 TriggerEvent('es:addCommand', 'delchar', function(source, args, user)
   table.remove(args, 1)
   local charNumber = tonumber(table.concat(args, " "))

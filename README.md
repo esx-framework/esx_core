@@ -17,18 +17,15 @@ This version is not compatible with ES5, use [esx_identity_es5](https://github.c
 
 3) Add this in your server.cfg :
 
-Notice:
-`If you were already using the latest version of esx_identity before the update, you can just import esx_identity_update.sql`
-
 ```
 start esx_identity
 ```
+
 4) If you are using esx_policejob or esx_society, you need to enable the following in the files config.lua:
 ```Config.EnableESXIdentity          = true```
 
+### Commands
 ```
-Commands:
-
 /identityhelp
 /register
 /charlist
@@ -37,4 +34,4 @@ Commands:
 ```
 
 ### License
-This script is licensed under GPLv3, see the [license](license.txt)
+This script is licensed under GPLv3, see the [license](LICENSE)

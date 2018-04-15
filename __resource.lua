@@ -1,15 +1,24 @@
-version '1.0.2'
+-- https://wiki.fivem.net/wiki/Resource_manifest
 
-client_script('client.lua')
+resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-server_script "@mysql-async/lib/MySQL.lua"
-server_script "server.lua"
+description 'ESX Identity'
 
-ui_page('html/index.html')
+version '1.0.4'
 
-files({
-  'html/index.html',
-  'html/script.js',
-  'html/style.css',
-  'html/cursor.png',
-})
+client_script 'client/main.lua'
+
+server_scripts {
+	"@mysql-async/lib/MySQL.lua",
+	"@es_extended/locale.lua",
+	"server/main.lua",
+}
+
+ui_page 'html/index.html'
+
+files {
+	'html/index.html',
+	'html/script.js',
+	'html/style.css',
+	'html/cursor.png',
+}

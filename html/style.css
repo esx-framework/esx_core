@@ -1,52 +1,52 @@
 body {
-    font-family: sans-serif;
-    overflow: hidden;
-    display: none;
+	font-family: sans-serif;
+	overflow: hidden;
+	display: none;
 }
 
 #cursor {
-    position: absolute;
-    z-index: 999999;
-    display: none;
+	position: absolute;
+	z-index: 999999;
+	display: none;
 }
 
 .dialog {
-    width: 300px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+	width: 300px;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 form {
-    margin: 0;
+	margin: 0;
 }
 
 input[type=text] {
-    width: 100%;
-    padding: 10px;
+	width: 100%;
+	padding: 10px;
 	text-align: center;
 }
 
 button {
-    display: block;
-    margin-top: 5px;
-    padding: 10px;
-    background-color: Blue;
-    border: 0;
-    color: #fff;
-    width: 100%;
+	display: block;
+	margin-top: 5px;
+	padding: 10px;
+	background-color: Blue;
+	border: 0;
+	color: #fff;
+	width: 100%;
 }
 
 h1 {
-    display: block;
-    margin-top: 5px;
+	display: block;
+	margin-top: 5px;
 	margin-right: 5px;
-    padding: 10px;
-    background-color: Blue;
-    border: 0;
-    color: #fff;
-    width: 93%;
+	padding: 10px;
+	background-color: Blue;
+	border: 0;
+	color: #fff;
+	width: 93%;
 	text-align: center;
 }
