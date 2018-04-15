@@ -1,11 +1,13 @@
-# fxserver-esx_identity
-FXServer ESX Identity
+# esx_identity
+
+### Important message
+This version is not compatible with ES5, use [esx_identity_es5](https://github.com/ArkSeyonet/esx_identity_es5)
 
 [REQUIREMENTS]
 
 * Dependencies For Full Functionality
-  * esx_policejob => https://github.com/ESX-Org/esx_policejob
-  * esx_society => https://github.com/ESX-Org/esx_society
+  * [esx_policejob](https://github.com/ESX-Org/esx_policejob)
+  * [esx_society](https://github.com/ESX-Org/esx_society)
 
 [INSTALLATION]
 
@@ -34,11 +36,5 @@ Commands:
 /delchar 1,2,3
 ```
 
-Credits:
-`Script Created By: ArkSeyonet @Ark`
-
-Licensing:
-`This script uses GNU GPLv3`
-
-This version is not compatible with ES5, you must use the new version if you are using es5 => https://github.com/ArkSeyonet/esx_identity_es5
-
+### License
+This script is licensed under GPLv3, see the [license](license.txt)
