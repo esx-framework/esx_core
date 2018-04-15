@@ -1118,6 +1118,7 @@ ESX.ShowInventory = function()
         count     = 1,
         type      = 'item_weapon',
         value     = Config.Weapons[i].name,
+        ammo      = ammo,
         usable    = false,
         rare      = false,
         canRemove = true
@@ -1152,7 +1153,7 @@ ESX.ShowInventory = function()
         table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
       end
 
-      if data.current.type == "item_weapon" then
+      if data.current.type == "item_weapon" and data.current.ammo > 0 and player ~= -1 and distance <= 3.0 then
         table.insert(elements, {label = _U('giveammo'), action = 'giveammo', type = data.current.type, value = data.current.value})
       end
 
@@ -1176,10 +1177,10 @@ ESX.ShowInventory = function()
             if type == 'item_weapon' then
               local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
               local closestPed = GetPlayerPed(closestPlayer)
-              local pedammo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
+              local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
               if not IsPedSittingInAnyVehicle(closestPed) then
                 if closestPlayer ~= -1 and closestDistance < 3.0 then
-                  if pedammo > 0 then
+                  if pedAmmo > 0 then
                     ESX.UI.Menu.Open(
                     'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
                     {
@@ -1187,19 +1188,17 @@ ESX.ShowInventory = function()
                     },
                     function(data2, menu2)
                       local quantity = tonumber(data2.value)
-                      if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                        local ammobefore = GetAmmoInPedWeapon(playerPed, item)
+                      if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
                         TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
-                        local finalammo = math.floor(ammobefore - quantity)
+                        local finalammo = math.floor(pedAmmo - quantity)
                         SetPedAmmo(playerPed, item, finalammo)
                         menu2.close()
                         menu.close()
                       else
-                        ESX.ShowNotification(_U("noammo"))
+                        ESX.ShowNotification(_U('noammo'))
                       end
 
-                    end,
-                    function(data2, menu2)
+                    end, function(data2, menu2)
                       menu2.close()
                     end
                   )
@@ -1250,33 +1249,34 @@ ESX.ShowInventory = function()
           elseif data.current.action == 'remove' then
 
             if type == 'item_weapon' then
-              local pedammo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
-              ESX.UI.Menu.Open(
-                'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
-                {
-                  title = _U('amount')
-                },
-                function(data2, menu2)
+				local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
+				
+				-- does the player have any ammo for the weapon?
+				if pedAmmo > 0 then
+					ESX.UI.Menu.Open(
+					'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
+					{
+						title = _U('amount')
+					}, function(data2, menu2)
+						local quantity = tonumber(data2.value)
 
-                  local quantity = tonumber(data2.value)
-
-                  if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                    local ammobefore = GetAmmoInPedWeapon(playerPed, item)
-                    TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
-                    local finalammo = math.floor(ammobefore - quantity)
-                    SetPedAmmo(playerPed, item, finalammo)
-                  else
-                    ESX.ShowNotification(_U("noammo"))
-                  end
-
-                  menu2.close()
-                  menu.close()
-
-                end,
-                function(data2, menu2)
-                  menu2.close()
-                end
-              )
+						if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
+							local finalammo = math.floor(pedAmmo - quantity)
+							
+							SetPedAmmo(playerPed, item, finalammo)
+							TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+						else
+							ESX.ShowNotification(_U('noammo'))
+						end
+						menu2.close()
+						menu.close()
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				else
+					TriggerServerEvent('esx:removeInventoryItem', type, item, 0)
+					menu.close()
+				end
 
             else
 
@@ -1316,10 +1316,10 @@ ESX.ShowInventory = function()
           elseif data.current.action == 'giveammo' then
             local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
             local closestPed = GetPlayerPed(closestPlayer)
-            local pedammo = GetAmmoInPedWeapon(playerPed,GetHashKey(item))
+            local pedAmmo = GetAmmoInPedWeapon(playerPed,GetHashKey(item))
             if not IsPedSittingInAnyVehicle(closestPed) then
               if closestPlayer ~= -1 and closestDistance < 3.0 then
-                if pedammo > 0 then
+                if pedAmmo > 0 then
                   ESX.UI.Menu.Open(
                   'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
                   {
@@ -1327,18 +1327,16 @@ ESX.ShowInventory = function()
                   },
                   function(data2, menu2)
                     local quantity = tonumber(data2.value)
-                    if quantity <= pedammo and quantity >= 0 and quantity ~= nil then
-                      local ammobefore2 = GetAmmoInPedWeapon(closestPed, item)
-                      local finalammo = math.floor(pedammo - quantity)
-                      local finalammo2 = math.floor(ammobefore2 + quantity)
-                      SetPedAmmo(playerPed, item, finalammo)
-                      Citizen.invokeNative(0x78F0424C34306220,closestPed, item, finalammo2)
-                      --SetPedAmmo(closestPed, item, finalammo2)
-                      ESX.ShowNotification(_U('yougave') .. "x~r~ " .. quantity .. _U('ammogiven') )
+                    if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
+                      local finalAmmoSource = math.floor(pedAmmo - quantity)
+                      SetPedAmmo(playerPed, item, finalAmmoSource)
+                      AddAmmoToPed(closestPed, item, quantity)
+                      ESX.ShowNotification(_U('gave_ammo', quantity))
+                      -- todo notify target that he recived ammo
                       menu2.close()
                       menu.close()
                     else
-                      ESX.ShowNotification(_U("noammo"))
+                      ESX.ShowNotification(_U('noammo'))
                     end
 
                   end,

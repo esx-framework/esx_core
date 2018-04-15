@@ -150,11 +150,11 @@ TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args,
   local xPlayer    = ESX.GetPlayerFromId(args[1])
   local weaponName = string.upper(args[2])
 
-  xPlayer.addWeapon(weaponName, 1000)
+  xPlayer.addWeapon(weaponName, tonumber(args[3]))
 
 end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
-end, {help = _U('giveweapon'), params = {{name = "id", help = _U('id_param')}, {name = "weapon", help = _U('weapon')}}})
+end, {help = _U('giveweapon'), params = {{name = "id", help = _U('id_param')}, {name = "weapon", help = _U('weapon')}, {name = "ammo", help = _U('amountammo')}}})
 
 TriggerEvent('es:addGroupCommand', 'disc', 'admin', function(source, args, user)
 	DropPlayer(source, 'You have been disconnected')
