@@ -1,5 +1,4 @@
-# fxserver-esx_accessories
-FXServer ESX Accessories
+# esx_accessories
 
 Shops with accessories (hat/helmet, glasses, masks, ears accessories). You can put on or take off the accessories with a menu. Accessories saved in database.
 
@@ -8,8 +7,8 @@ Shops with accessories (hat/helmet, glasses, masks, ears accessories). You can p
 
 ## REQUIREMENTS
 
-- esx_skin => https://github.com/ESX-Org/esx_skin
-- esx_datastore => https://github.com/ESX-Org/esx_datastore
+- [esx_skin](https://github.com/ESX-Org/esx_skin)
+- [esx_datastore](https://github.com/ESX-Org/esx_datastore)
 
 ## INSTALLATION
 

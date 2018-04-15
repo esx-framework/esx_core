@@ -10,13 +10,13 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 	
-ESX														= nil
-local HasAlreadyEnteredMarker = false
-local LastZone								= nil
-local CurrentAction						= nil
+ESX									= nil
+local HasAlreadyEnteredMarker		= false
+local LastZone						= nil
+local CurrentAction					= nil
 local CurrentActionMsg				= ''
 local CurrentActionData				= {}
-local isDead									= false
+local isDead						= false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -76,7 +76,6 @@ function SetUnsetAccessory(accessory)
 		end
 
 	end, accessory)
-	
 end
 
 function OpenShopMenu(accessory)
@@ -149,7 +148,7 @@ function OpenShopMenu(accessory)
 	end, 
 	function(data, menu)
 		menu.close()
-		CurrentAction	 = 'shop_menu'
+		CurrentAction     = 'shop_menu'
 		CurrentActionMsg  = _U('press_access')
 		CurrentActionData = {}
 	end, restrict)
@@ -165,11 +164,9 @@ AddEventHandler('esx:onPlayerDeath', function()
 end)
 
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
-
-	CurrentAction	 = 'shop_menu'
+	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_access')
 	CurrentActionData = { accessory = zone }
-
 end)
 
 AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
@@ -216,10 +213,8 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		
 		Citizen.Wait(10)
-		
-		local coords	  = GetEntityCoords(GetPlayerPed(-1))
+		local coords      = GetEntityCoords(GetPlayerPed(-1))
 		local isInMarker  = false
 		local currentZone = nil
 		for k,v in pairs(Config.Zones) do
@@ -233,7 +228,7 @@ Citizen.CreateThread(function()
 
 		if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
 			HasAlreadyEnteredMarker = true
-			LastZone				= currentZone
+			LastZone = currentZone
 			TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
 		end
 
@@ -249,9 +244,8 @@ end)
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(10)
-
+		
 		if CurrentAction ~= nil then
 			SetTextComponentFormat('STRING')
 			AddTextComponentString(CurrentActionMsg)
@@ -264,7 +258,7 @@ Citizen.CreateThread(function()
 		end
 
 		if Config.EnableControls then
-			if IsControlJustReleased(0, Keys['K']) and not isDead then
+			if IsControlJustReleased(0, Keys['K']) and GetLastInputMethod(2) and not isDead then
 				OpenAccessoryMenu()
 			end
 		end
