@@ -133,7 +133,7 @@ function setIdentity(identifier, data, callback)
       ['@firstname']    = data.firstname,
       ['@lastname']     = data.lastname,
       ['@dateofbirth']  = data.dateofbirth,
-      ['@sex']        = data.sex,
+      ['@sex']          = data.sex,
       ['@height']       = data.height
     },
   function(done)
@@ -203,6 +203,7 @@ end)
 AddEventHandler('es:playerLoaded', function(source)
   getIdentity(source, function(data)
     if data.firstname == '' then
+		print('do not register!')
       TriggerClientEvent('esx_identity:showRegisterIdentity', source)
     else
       print('Successfully Loaded Identity For ' .. data.firstname .. ' ' .. data.lastname)
@@ -220,16 +221,16 @@ end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "IDHelp", {255, 0, 0}, "Insufficienct permissions!")
 end, {help = "List Your Characters"})
 
-
 TriggerEvent('es:addCommand', 'register', function(source, args, user)
+
   getCharacters(source, function(data)
     if data.firstname3 ~= '' then
       TriggerClientEvent('chatMessage', source, 'REGISTER', {255, 0, 0}, "You Can Only Have 3 Characters.")
     else
-      TriggerClientEvent('esx_identity:showRegisterIdentity', source, {})
+      TriggerClientEvent('esx_identity:showRegisterIdentity', source)
     end
   end)
-end)
+end, {help = "Register a new character"})
 
 TriggerEvent('es:addGroupCommand', 'char', "user", function(source, args, user)
   getIdentity(source, function(data)
@@ -241,7 +242,7 @@ TriggerEvent('es:addGroupCommand', 'char', "user", function(source, args, user)
   end)
 end, function(source, args, user)
   TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
-end, {help = "List Your Current Active Character"})
+end, {help = "List your current character"})
 
 TriggerEvent('es:addGroupCommand', 'charlist', "user", function(source, args, user)
   getCharacters(source, function(data)
@@ -403,4 +404,4 @@ TriggerEvent('es:addCommand', 'delchar', function(source, args, user)
       TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "Failed To Delete Identity!")
     end
   end)
-end)
+end, {help = "Delete your character"})
