@@ -25,37 +25,38 @@ local IsDragged                 = false
 local CopPed                    = 0
 local hasAlreadyJoined          = false
 local blipsCops                 = {}
+local isDead                    = false
 
 ESX                             = nil
 GUI.Time                        = 0
 
 Citizen.CreateThread(function()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+	
+	PlayerData = ESX.GetPlayerData()
 end)
 
 function SetVehicleMaxMods(vehicle)
-
-  local props = {
-    modEngine       = 2,
-    modBrakes       = 2,
-    modTransmission = 2,
-    modSuspension   = 3,
-    modTurbo        = true,
-  }
-
-  ESX.Game.SetVehicleProperties(vehicle, props)
-
+	local props = {
+		modEngine       = 2,
+		modBrakes       = 2,
+		modTransmission = 2,
+		modSuspension   = 3,
+		modTurbo        = true,
+	}
+	
+	ESX.Game.SetVehicleProperties(vehicle, props)
 end
 
 function cleanPlayer(playerPed)
-  SetPedArmour(playerPed, 0)
-  ClearPedBloodDamage(playerPed)
-  ResetPedVisibleDamage(playerPed)
-  ClearPedLastWeaponDamage(playerPed)
-  ResetPedMovementClipset(playerPed, 0)
+	SetPedArmour(playerPed, 0)
+	ClearPedBloodDamage(playerPed)
+	ResetPedVisibleDamage(playerPed)
+	ClearPedLastWeaponDamage(playerPed)
+	ResetPedMovementClipset(playerPed, 0)
 end
 
 function setUniform(job, playerPed)
@@ -1243,11 +1244,6 @@ function OpenPutStocksMenu()
 
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-  PlayerData = xPlayer
-end)
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
@@ -1828,8 +1824,8 @@ Citizen.CreateThread(function()
       end
 
     end
-
-    if IsControlPressed(0,  Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') and (GetGameTimer() - GUI.Time) > 150 then
+    
+    if IsControlPressed(0,  Keys['F6']) and not isDead and PlayerData.job ~= nil and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') and (GetGameTimer() - GUI.Time) > 150 then
       OpenPoliceActionsMenu()
       GUI.Time = GetGameTimer()
     end
@@ -1865,27 +1861,31 @@ AddEventHandler('esx_policejob:updateBlip', function()
 	-- Clean the blip table
 	blipsCops = {}
 	
-	ESX.TriggerServerCallback('esx_policejob:isCop', function(isCop)
-		if isCop then
-			ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
-				for i=1, #players, 1 do
-					if players[i].job.name == 'police' then
-						for id = 0, 32 do
-							if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= GetPlayerPed(-1) and GetPlayerName(id) == players[i].name then
-								createBlip(id)
-							end
+	-- Is the player a cop? In that case show all the blips for other cops
+	if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
+		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
+			for i=1, #players, 1 do
+				if players[i].job.name == 'police' then
+					for id = 0, 32 do
+						if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= GetPlayerPed(-1) and GetPlayerName(id) == players[i].name then
+							createBlip(id)
 						end
 					end
 				end
-			end)
-		end
-	end) -- You don't need to specify source
+			end
+		end)
+	end
 
 end)
 
 AddEventHandler('playerSpawned', function(spawn)
+	isDead = false
 	if not hasAlreadyJoined then
 		TriggerServerEvent('esx_policejob:spawned')
 	end
 	hasAlreadyJoined = true
+end)
+
+AddEventHandler('esx:onPlayerDeath', function()
+	isDead = true
 end)

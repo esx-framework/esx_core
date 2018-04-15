@@ -491,12 +491,6 @@ AddEventHandler('esx_policejob:forceBlip', function()
 	TriggerClientEvent('esx_policejob:updateBlip', -1)
 end)
 
-ESX.RegisterServerCallback('esx_policejob:isCop', function(source, cb)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	cb(xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police')
-end)
-
 AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		Citizen.Wait(5000)
