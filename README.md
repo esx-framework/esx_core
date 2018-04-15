@@ -1,34 +1,33 @@
 # es_extended
-FXServer ES Extended
+es_extended is an extention that is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the EssentialMode Extended framework for FiveM.
 
-## DISCORD
+### Links & Read more
+- [Official Discord community](https://discord.me/fivem_esx)
+- [ESX Documentation](https://esx-org.github.io/) (things are missing!)
+- [ES Documentation](https://docs.essentialmode.com/)
 
-https://discord.me/fivem_esx
-
-## SCREENSHOT
+### Screenshot preview (todo)
 
 ![screenshot](http://i.imgur.com/aPFdJl3.jpg)
 
-## DESCRIPTION
+### Features
+- Accounts (bank / black money) you can also add others accounts
+- Advanced inventory system (press `F2` ingame)
+- Job system
+- Loadouts and position synced in database
+- The best framework out there for RP servers
+- i18n (locate) system
+- Loads of plugins available
 
-Add support for accounts (bank / black money) you can also add others accounts
+### Requirements
+This order also applies in the startup order.
+- Base events
+- [mysql-async](https://github.com/brouznouf/fivem-mysql-async/releases/latest)
+- [EssentialMode](https://essentialmode.com/) (es_admin2 included, a basic admin tool)
+- [esplugin_mysql](https://forum.fivem.net/t/release-essentialmode-base/3665/1181)
+- [async](https://github.com/ESX-Org/async/releases/latest)
 
-Add support for inventory (press F2 ingame) => Players can now remove items from inventory
-
-Add support for jobs
-
-Loadouts are saved in database and restored on spawn
-
-Positions are saved in database and restored on spawn
-
-## Requirements
-
-- **essentialmode** + **es_admin** => https://forum.fivem.net/t/release-essentialmode-base/3665
-- **esplugin_mysql** => https://forum.fivem.net/t/release-essentialmode-base/3665/1181
-- **mysql-async** => https://github.com/brouznouf/fivem-mysql-async/releases/latest
-- **async** => https://github.com/esx-org/async/releases/latest
-
-## Download
+### Download & Installation
 
 **1) Using [fvm](https://github.com/qlaffont/fvm-installer)**
 
@@ -43,13 +42,13 @@ fvm install --save --folder=esx esx-org/esx_menu_list
 **2) Manually**
 
 - Download https://github.com/ESX-Org/es_extended/releases/latest
-- Put it in resource/[essential] directory
+- Put it in the resource/[essential] directory
 - Download https://github.com/ESX-Org/esx_menu_default/releases/latest
-- Put it in resource/[esx] directory
+- Put it in the resource/[esx]/[ui] directory
 - Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
-- Put it in resource/[esx] directory
+- Put it in the resource/[esx]/[ui] directory
 - Download https://github.com/ESX-Org/esx_menu_list/releases/latest
-- Put it in resource/[esx] directory
+- Put it in the resource/[esx]/[ui] directory
 
 **3) Using git**
 
@@ -64,9 +63,16 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 ## Installation
 
 1) Import es_extended.sql in your database
-2) Add this in your server.cfg :
+2) Configure your `server.cfg` to look like this
 
 ```
+start baseevents
+
+start mysql-async
+start essentialmode
+start esplugin_mysql
+start es_admin2
+
 start es_extended
 
 start esx_menu_default
