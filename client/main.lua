@@ -456,8 +456,7 @@ function OpenPoliceActionsMenu()
           {label = _U('drag'),            value = 'drag'},
           {label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
           {label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
-          {label = _U('fine'),            value = 'fine'},
-          {label = _U('license_check'),   value = 'license'}
+          {label = _U('fine'),            value = 'fine'}
         }
         
         if Config.EnableLicenses then
