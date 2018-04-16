@@ -46,6 +46,13 @@
 			name     : name
 		});
 		
+		
+	document.onkeyup = function (key) {
+		if (key.which == 27) { // Escape key
+			$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify(data));
+		}
+	};
+		
 		ESX_MENU.render();
 	}
 
