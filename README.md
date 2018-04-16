@@ -1,5 +1,5 @@
 # es_extended
-es_extended is an extention that is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the EssentialMode Extended framework for FiveM.
+es_extended is an extention that is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the **Es**sentialMode **E**xtended framework for FiveM.
 
 ### Links & Read more
 - [Official Discord community](https://discord.me/fivem_esx)
