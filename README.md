@@ -1,2 +1,2 @@
-# fxserver-esx_menu_dialog
-FXServer ESX Menu Dialog
+# esx_menu_dialog
+Simple script used for inputs.
