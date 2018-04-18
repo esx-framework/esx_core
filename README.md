@@ -32,4 +32,4 @@ start esx_policejob
 
 # Legal
 ### License
-The project is licensed under GPLv3, see the [license](LICENSE.TXT) for more information.
+The project is licensed under GPLv3, read the [license](LICENSE.txt) for more information.
