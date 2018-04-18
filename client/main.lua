@@ -1,5 +1,7 @@
 local guiEnabled = false
 local myIdentity = {}
+local myIdentifiers = {}
+local hasIdentity = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -24,8 +26,22 @@ AddEventHandler("esx_identity:showRegisterIdentity", function()
 	EnableGui(true)
 end)
 
+RegisterNetEvent("esx_identity:identityCheck")
+AddEventHandler("esx_identity:identityCheck", function(identityCheck)
+	hasIdentity = identityCheck
+end)
+
+RegisterNetEvent("esx_identity:saveID")
+AddEventHandler("esx_identity:saveID", function(data)
+	myIdentifiers = data
+end)
+
 RegisterNUICallback('escape', function(data, cb)
-	EnableGui(false)
+	if hasIdentity == true then
+		EnableGui(false)
+	else
+		TriggerEvent("chatMessage", "^1[IDENTITY]", {255, 255, 0}, "You must create your first identity in order to play.")
+	end
 end)
 
 RegisterNUICallback('register', function(data, cb)
@@ -58,10 +74,10 @@ RegisterNUICallback('register', function(data, cb)
 	end
 	
 	if reason == "" then
-		--TriggerServerEvent('esx_identity:setIdentity', data)
+		TriggerServerEvent('esx_identity:setIdentity', data, myIdentifiers)
 		EnableGui(false)
 		Citizen.Wait(500)
-		--TriggerEvent('esx_skin:openSaveableMenu')
+		TriggerEvent('esx_skin:openSaveableMenu', myIdentifiers.id)
 	else
 		ESX.ShowNotification(reason)
 	end
@@ -70,10 +86,26 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		if guiEnabled then
-			DisableControlAction(0, 1, guiEnabled)        -- LookLeftRight
-			DisableControlAction(0, 2, guiEnabled)        -- LookUpDown
-			DisableControlAction(0, 142, guiEnabled)      -- MeleeAttackAlternate
-			DisableControlAction(0, 106, guiEnabled)      -- VehicleMouseControlOverride
+			DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
+			DisableControlAction(0, 2, guiEnabled) -- LookUpDown
+			DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
+			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
+			DisableControlAction(0, 30,  true) -- MoveLeftRight
+			DisableControlAction(0, 31,  true) -- MoveUpDown
+			DisableControlAction(0, 21,  true) -- disable sprint
+			DisableControlAction(0, 24,  true) -- disable attack
+			DisableControlAction(0, 25,  true) -- disable aim
+			DisableControlAction(0, 47,  true) -- disable weapon
+			DisableControlAction(0, 58,  true) -- disable weapon
+			DisableControlAction(0, 263, true) -- disable melee
+			DisableControlAction(0, 264, true) -- disable melee
+			DisableControlAction(0, 257, true) -- disable melee
+			DisableControlAction(0, 140, true) -- disable melee
+			DisableControlAction(0, 141, true) -- disable melee
+			DisableControlAction(0, 143, true) -- disable melee
+			DisableControlAction(0, 75,  true) -- disable exit vehicle
+			DisableControlAction(27, 75, true) -- disable exit vehicle
+			
 			if IsDisabledControlJustReleased(0, 142) then -- MeleeAttackAlternate
 				SendNUIMessage({
 					type = "click"

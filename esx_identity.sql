@@ -9,7 +9,6 @@ ALTER TABLE `users`
 ;
 
 CREATE TABLE `characters` (
-
 	`identifier` varchar(255) NOT NULL,
 	`firstname` varchar(255) NOT NULL,
 	`lastname` varchar(255) NOT NULL,

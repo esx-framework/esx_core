@@ -189,219 +189,244 @@ function deleteIdentity(identifier, data, callback)
 end
 
 RegisterServerEvent('esx_identity:setIdentity')
-AddEventHandler('esx_identity:setIdentity', function(data)
-  local identifier = GetPlayerIdentifiers(source)[1]
-    setIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-    if callback == true then
-      print('Successfully Set Identity For ' .. identifier)
-    else
-      print('Failed To Set Identity.')
-    end
-  end)
+AddEventHandler('esx_identity:setIdentity', function(data, myIdentifiers)
+	setIdentity(myIdentifiers.steamid, data, function(callback)
+		if callback then
+			TriggerClientEvent('esx_identity:identityCheck', myIdentifiers.playerid, true)
+		else
+			TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Set Identity!")
+		end
+	end)
 end)
 
+
 AddEventHandler('es:playerLoaded', function(source)
-  getIdentity(source, function(data)
-    if data.firstname == '' then
-		print('do not register!')
-      TriggerClientEvent('esx_identity:showRegisterIdentity', source)
-    else
-      print('Successfully Loaded Identity For ' .. data.firstname .. ' ' .. data.lastname)
-    end
-  end)
+	local myID = {
+		steamid = GetPlayerIdentifiers(source)[1],
+		playerid = source
+	}
+	
+	TriggerClientEvent('esx_identity:saveID', source, myID)
+	getIdentity(source, function(data)
+		if data.firstname == '' then
+			TriggerClientEvent('esx_identity:identityCheck', source, false)
+			TriggerClientEvent('esx_identity:showRegisterIdentity', source)
+		else
+			TriggerClientEvent('esx_identity:identityCheck', source, true)
+		end
+	end)
 end)
 
 TriggerEvent('es:addGroupCommand', 'idhelp', "user", function(source, args, user)
-  TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "ESX_IDENTITY Commands")
-  TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "/register - Register A New Character")
-  TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "/charlist - List Your Characters")
-  TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "/charselect 1,2,3 - Change Your Active Character")
-  TriggerClientEvent('chatMessage', source, 'IDHelp', {255, 0, 0}, "/delchar 1,2,3 - Delete A Character")
+	TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "Commands List")
+	TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "/register - Register A New Character") 
+	TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "/charlist - List Your Characters") 
+	TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "/charselect 1,2,3 - Change Your Active Character") 
+	TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "/delchar 1,2,3 - Delete A Character")
 end, function(source, args, user)
-  TriggerClientEvent('chatMessage', source, "IDHelp", {255, 0, 0}, "Insufficienct permissions!")
-end, {help = "List Your Characters"})
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
+end, {help = "List all the identity-related commands"})
 
 TriggerEvent('es:addCommand', 'register', function(source, args, user)
-
-  getCharacters(source, function(data)
-    if data.firstname3 ~= '' then
-      TriggerClientEvent('chatMessage', source, 'REGISTER', {255, 0, 0}, "You Can Only Have 3 Characters.")
-    else
-      TriggerClientEvent('esx_identity:showRegisterIdentity', source)
-    end
-  end)
+	getCharacters(source, function(data)
+		if data.firstname3 ~= '' then
+			TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "You Can Only Have 3 Characters.")
+		else
+			TriggerClientEvent('esx_identity:showRegisterIdentity', source, {})
+		end
+	end)
 end, {help = "Register a new character"})
 
 TriggerEvent('es:addGroupCommand', 'char', "user", function(source, args, user)
-  getIdentity(source, function(data)
-    if data.firstname == '' then
-      TriggerClientEvent('chatMessage', source, 'CHAR', {255, 0, 0}, "You Have No Active Character.")
-    else
-      TriggerClientEvent('chatMessage', source, 'CHAR', {255, 0, 0}, "Active Character: " .. data.firstname .. " " .. data.lastname)
-    end
-  end)
+	getIdentity(source, function(data)
+		if data.firstname == '' then
+			TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "You Have No Active Character.")
+		else
+			TriggerClientEvent('chatMessage', source, '[IDENTITY] Active Character:', {255, 0, 0}, data.firstname .. " " .. data.lastname)
+		end
+	end)
 end, function(source, args, user)
-  TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
-end, {help = "List your current character"})
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
+end, {help = "List Your Current Active Character"})
 
 TriggerEvent('es:addGroupCommand', 'charlist', "user", function(source, args, user)
-  getCharacters(source, function(data)
-    if data.firstname1 ~= '' then
-      TriggerClientEvent('chatMessage', source, 'CHARLIST', {255, 0, 0}, "Character 1: " .. data.firstname1 .. " " .. data.lastname1)
-      if data.firstname2 ~= '' then
-        TriggerClientEvent('chatMessage', source, 'CHARLIST', {255, 0, 0}, "Character 2: " .. data.firstname2 .. " " .. data.lastname2)
-        if data.firstname3 ~= '' then
-          TriggerClientEvent('chatMessage', source, 'CHARLIST', {255, 0, 0}, "Character 3: " .. data.firstname3 .. " " .. data.lastname3)
-        end
-      end
-    else
-      TriggerClientEvent('chatMessage', source, 'CHARLIST', {255, 0, 0}, "You Have No Characters. Please use the /register command.")
-    end
-  end)
+	getCharacters(source, function(data)
+		if data.firstname1 ~= '' then
+			TriggerClientEvent('chatMessage', source, '[IDENTITY] Character 1:', {255, 0, 0}, data.firstname1 .. " " .. data.lastname1)
+			
+			if data.firstname2 ~= '' then
+				TriggerClientEvent('chatMessage', source, '[IDENTITY] Character 2:', {255, 0, 0}, data.firstname2 .. " " .. data.lastname2)
+				
+				if dada.firstname3 ~= '' then
+					TriggerClientEvent('chatMessage', source, '[IDENTITY] Character 3:', {255, 0, 0}, data.firstname3 .. " " .. data.lastname3)
+				end
+			end
+		else
+			TriggerClientEvent('chatMessage', source, '[IDENTITY]', {255, 0, 0}, "You Have No Characters. Please use the /register command.")
+		end
+	end)
 end, function(source, args, user)
-  TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
 end, {help = "List Your Characters"})
 
-TriggerEvent('es:addCommand', 'charselect', function(source, args, user)
-  table.remove(args, 1)
-  local charNumber = tonumber(table.concat(args, " "))
-  getCharacters(source, function(data)
-    if charNumber == 1 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname1,
-        lastname  = data.lastname1,
-        dateofbirth  = data.dateofbirth1,
-        sex      = data.sex1,
-        height    = data.height1
-      }
+TriggerEvent('es:addGroupCommand', 'charselect', "user", function(source, args, user)
+	local charNumber = tonumber(args[1])
+	
+	getCharacters(source, function(data)
+		if charNumber == 1 then
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname1,
+				lastname  = data.lastname1,
+				dateofbirth  = data.dateofbirth1,
+				sex      = data.sex1,
+				height    = data.height1
+			}
 
-      if data.firstname ~= '' then
-        updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-          if callback == true then
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Failed To Update Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "You don\'t have a character in slot 1!")
-      end
-    elseif charNumber == 2 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname2,
-        lastname  = data.lastname2,
-        dateofbirth  = data.dateofbirth2,
-        sex      = data.sex2,
-        height    = data.height2
-      }
+			if data.firstname ~= '' then
+				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Update Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 1!")
+			end
+		elseif charNumber == 2 then
+		
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname2,
+				lastname  = data.lastname2,
+				dateofbirth  = data.dateofbirth2,
+				sex      = data.sex2,
+				height    = data.height2
+			}
 
-      if data.firstname ~= '' then
-        updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+			if data.firstname ~= '' then
+				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
 
-          if callback == true then
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Failed To Update Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "You don\'t have a character in slot 2!")
-      end
-    elseif charNumber == 3 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname3,
-        lastname  = data.lastname3,
-        dateofbirth  = data.dateofbirth3,
-        sex      = data.sex3,
-        height    = data.height3
-      }
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Update Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 2!")
+			end
+		elseif charNumber == 3 then
+	
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname3,
+				lastname  = data.lastname3,
+				dateofbirth  = data.dateofbirth3,
+				sex      = data.sex3,
+				height    = data.height3
+			}
 
-      if data.firstname ~= '' then
-        updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-          if callback == true then
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Failed To Update Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "You don\'t have a character in slot 3!")
-      end
-    else
-      TriggerClientEvent('chatMessage', source, "CHARSELECT", {255, 0, 0}, "Failed To Update Identity!")
-    end
-  end)
-end)
+			if data.firstname ~= '' then
+				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Updated your active character to " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Update Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 3!")
+			end
+		else
+			TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Update Identity!")
+		end
 
-TriggerEvent('es:addCommand', 'delchar', function(source, args, user)
-  table.remove(args, 1)
-  local charNumber = tonumber(table.concat(args, " "))
-  getCharacters(source, function(data)
-    if charNumber == 1 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname1,
-        lastname  = data.lastname1,
-        dateofbirth  = data.dateofbirth1,
-        sex      = data.sex1,
-        height    = data.height1
-      }
-      if data.firstname ~= '' then
-        deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-          if callback == true then
-          TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "Failed To Delete Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You don\'t have a character in slot 1!")
-      end
-    elseif charNumber == 2 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname2,
-        lastname  = data.lastname2,
-        dateofbirth  = data.dateofbirth2,
-        sex      = data.sex2,
-        height    = data.height2
-      }
-      if data.firstname ~= '' then
-        deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-          if callback == true then
-            TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "Failed To Delete Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You don\'t have a character in slot 2!")
-      end
-    elseif charNumber == 3 then
-      local data = {
-        identifier   = data.identifier,
-        firstname  = data.firstname3,
-        lastname  = data.lastname3,
-        dateofbirth  = data.dateofbirth3,
-        sex      = data.sex3,
-        height    = data.height3
-      }
-      if data.firstname ~= '' then
-        deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
-          if callback == true then
-            TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
-          else
-            TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "Failed To Delete Identity!")
-          end
-        end)
-      else
-        TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "You don\'t have a character in slot 3!")
-      end
-    else
-      TriggerClientEvent('chatMessage', source, "DELCHAR", {255, 0, 0}, "Failed To Delete Identity!")
-    end
-  end)
-end, {help = "Delete your character"})
+	end)
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficienct permissions!")
+end, {help = "/charselect 1,2,3"})
+
+TriggerEvent('es:addGroupCommand', 'delchar', "user", function(source, args, user)
+
+	local charNumber = tonumber(args[1])
+	
+	getCharacters(source, function(data)
+	
+		if charNumber == 1 then
+	
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname1,
+				lastname  = data.lastname1,
+				dateofbirth  = data.dateofbirth1,
+				sex      = data.sex1,
+				height    = data.height1
+			}
+			
+			if data.firstname ~= '' then
+				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Delete Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 1!")
+			end
+			
+		elseif charNumber == 2 then
+	
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname2,
+				lastname  = data.lastname2,
+				dateofbirth  = data.dateofbirth2,
+				sex      = data.sex2,
+				height    = data.height2
+			}
+			
+			if data.firstname ~= '' then
+				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Delete Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 2!")
+			end
+			
+		elseif charNumber == 3 then
+	
+			local data = {
+				identifier   = data.identifier,
+				firstname  = data.firstname3,
+				lastname  = data.lastname3,
+				dateofbirth  = data.dateofbirth3,
+				sex      = data.sex3,
+				height    = data.height3
+			}
+	  
+			if data.firstname ~= '' then
+	  
+				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+					if callback then
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You Have Deleted " .. data.firstname .. " " .. data.lastname .. "!")
+					else
+						TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Delete Identity!")
+					end
+				end)
+			else
+				TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "You don\'t have a character in slot 3!")
+			end
+		else
+			TriggerClientEvent('chatMessage', source, "[IDENTITY]", {255, 0, 0}, "Failed To Delete Identity!")
+		end
+	end)
+end, function(source, args, user)
+	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient permissions!")
+end, {help = "/delchar 1,2,3"})

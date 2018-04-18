@@ -1,11 +1,9 @@
 # esx_identity
 
-### Important message
-This version is not compatible with ES5, use [esx_identity_es5](https://github.com/ArkSeyonet/esx_identity_es5)
-
 [REQUIREMENTS]
 
 * Dependencies For Full Functionality
+  * [esx_skin](https://github.com/ESX-Org/esx_skin)
   * [esx_policejob](https://github.com/ESX-Org/esx_policejob)
   * [esx_society](https://github.com/ESX-Org/esx_society)
 
