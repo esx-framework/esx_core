@@ -1,17 +1,16 @@
-# fxserver-esx_policejob
-FXServer ESX Police Job
+# esx_policejob
 
 [REQUIREMENTS]
 
 * Auto mode
-  * esx_billing => https://github.com/FXServer-ESX/fxserver-esx_billing
+  * [esx_billing](https://github.com/FXServer-ESX/fxserver-esx_billing)
 
 * Player management (boss actions and armory with buyable weapons)
-  * esx_society => https://github.com/FXServer-ESX/fxserver-esx_society
-  * esx_datastore => https://github.com/FXServer-ESX/fxserver-esx_datastore
+  * [esx_society](https://github.com/FXServer-ESX/fxserver-esx_society)
+  * [esx_datastore](https://github.com/FXServer-ESX/fxserver-esx_datastore)
   
 * ESX Identity Support
-  * esx_identity => https://github.com/ArkSeyonet/esx_identity_es5
+  * [esx_identity](https://github.com/ESX-Org/esx_identity)
 
 [INSTALLATION]
 
@@ -30,3 +29,7 @@ start esx_policejob
 5) * If you want player management you have to set Config.EnablePlayerManagement to true in config.lua
    * If you want armory management you have to set Config.EnableArmoryManagement to true in config.lua
    * If you want license management you have to set Config.EnableLicenses to true in config.lua
+
+# Legal
+### License
+The project is licensed under GPLv3, see the [license](LICENSE.TXT) for more information.
