@@ -47,6 +47,9 @@ local function Work(source, item)
     if PlayersWorking[source] == true then
 
       local xPlayer = ESX.GetPlayerFromId(source)
+      if xPlayer == nil then
+        return
+      end
 
       for i=1, #item, 1 do
         local itemQtty = 0

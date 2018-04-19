@@ -26,6 +26,8 @@ Locales['br'] = {
   ['return_vh_button']          = 'pressione ~INPUT_PICKUP~ para devolver o veiculo.',
   ['delivery_point']            = 'ponto de entrega',
   ['delivery']                  = 'Entrega',
+  ['public_enter']              = 'pressione ~INPUT_PICKUP~ para entrar no prédio.',
+  ['public_leave']              = 'pressione ~INPUT_PICKUP~ para ir à entrada do edifício.',
 
   -- Trabalho de Lenhador
   ['lj_locker_room']            = "Vestiario Lenhador",

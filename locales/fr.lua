@@ -4,7 +4,7 @@ Locales['fr'] = {
   ['cloak_change']              = 'appuyez sur ~INPUT_PICKUP~ pour vous changer.',
   ['citizen_wear']              = 'tenue civile',
   ['job_wear']                  = 'tenue de travail',
-  ['bank_deposit']              = 'une caution de ~g~',
+  ['bank_deposit_g']            = 'une caution de ~g~',
   ['bank_deposit_r']            = 'une caution de ~g~$',
   ['bank_deposit2']             = '$ ~s~vous a été rendue suite à votre évanouissment.',
   ['foot_work']                 = 'vous devez être à pied pour pouvoir travailler.',
@@ -26,6 +26,8 @@ Locales['fr'] = {
   ['return_vh_button']          = 'appuyez sur ~INPUT_PICKUP~ pour rendre le véhicule.',
   ['delivery_point']            = 'point de livraison',
   ['delivery']                  = 'livraison',
+  ['public_enter']              = 'appuyez sur ~INPUT_PICKUP~ pour entrer dans l\'immeuble.',
+  ['public_leave']              = 'appuyez sur ~INPUT_PICKUP~ pour aller à l\'entrée de l\'immeuble.',
 
   -- Lumber Jack job
   ['lj_locker_room']            = "lumberjack's Locker Room",

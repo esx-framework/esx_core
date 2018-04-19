@@ -23,9 +23,11 @@ Locales['sv'] = {
   ['spawn_truck_button']        = 'tryck ~INPUT_PICKUP~ för att spawna bilen.',
   ['service_vh']                = 'service vehicle',
   ['return_vh']                 = 'vehicle return',
-  ['return_vh_button']          = 'tryck ~INPUT_PICKUP~ to return the vehicle.',
+  ['return_vh_button']          = 'tryck ~INPUT_PICKUP~ för att ge tillbaka fordonet.',
   ['delivery_point']            = 'delivery point',
   ['delivery']                  = 'delivery',
+  ['public_enter']              = 'tryck ~INPUT_PICKUP~ för att gå in i byggnaden.',
+  ['public_leave']              = 'tryck ~INPUT_PICKUP~ för att lämna byggnaden.',
 
   -- Lumber Jack job
   ['lj_locker_room']            = "Skogshuggare omklädningsrum",
@@ -38,7 +40,7 @@ Locales['sv'] = {
   ['lj_planks']                 = 'brädpaket',
   ['lj_cutwood']                = 'hugg trä',
   ['lj_pick_boards']            = 'tryck ~INPUT_PICKUP~ för att hämta brädorna.',
-  ['lj_deliver_button']         = 'tryck ~INPUT_PICKUP~ för att leverera brädorna.',
+  ['lj_deliver_button']         = 'tryck ~INPUT_PICKUP~ för att sälja brädorna.',
 
   -- Fisherman
   ['fm_fish_locker']            = "Fiskarens Omklädningsrum",
@@ -50,7 +52,7 @@ Locales['sv'] = {
   ['fm_boat_title']             = 'båt',
   ['fm_boat_return_title']      = 'boat return',
   ['fm_boat_return_button']     = 'tryck ~INPUT_PICKUP~ för att återvända båten.',
-  ['fm_deliver_fish']           = 'tryck ~INPUT_PICKUP~ för att leverera fisken.',
+  ['fm_deliver_fish']           = 'tryck ~INPUT_PICKUP~ för att sälja fisk.',
 
   -- Fuel
   ['f_oil_refiner']             = 'Oljeraffinaderi Omklädningsrum',
@@ -63,31 +65,31 @@ Locales['sv'] = {
   ['f_gas']                     = 'gas',
   ['f_fuel_mixture_button']     = 'tryck ~INPUT_PICKUP~ för att mixa',
   ['f_deliver_gas']             = 'deliver Gas',
-  ['f_deliver_gas_button']      = "tryck ~INPUT_PICKUP~ för att leverera bensin",
+  ['f_deliver_gas_button']      = "tryck ~INPUT_PICKUP~ för att sälja bensin",
 
   -- Miner
   ['m_miner_locker']            = "Gruvarbetarnas Omklädningsrum",
-  ['m_rock']                    = ' sten',
+  ['m_rock']                    = 'sten',
   ['m_pickrocks']               = 'tryck ~INPUT_PICKUP~ för att hämta sten.',
-  ['m_washrock']                = ' tvättad sten ',
-  ['m_rock_button']             = 'tryck ~INPUT_PICKUP~ för att tvätta stenarna.',
-  ['m_rock_smelting']           = 'smälter',
-  ['m_copper']                  = ' coppar',
-  ['m_sell_copper']             = 'sälj coppar',
-  ['m_deliver_copper']          = 'tryck ~INPUT_PICKUP~ för att leverera coppar.',
-  ['m_iron']                    = ' järn',
-  ['m_sell_iron']               = 'sälj järn',
-  ['m_deliver_iron']            = 'tryck ~INPUT_PICKUP~ för att leverera järn.',
-  ['m_gold']                    = ' guld',
-  ['m_sell_gold']               = "sälj guld",
-  ['m_deliver_gold']            = 'tryck ~INPUT_PICKUP~ för att leverera guld.',
-  ['m_diamond']                 = ' diamant',
-  ['m_sell_diamond']            = 'sälj diamant',
-  ['m_deliver_diamond']         = 'tryck ~INPUT_PICKUP~ för att leverera diamant.',
-  ['m_melt_button']             = 'tryck ~INPUT_PICKUP~ för att smälta stenen.',
+  ['m_washrock']                = 'sten tvättning',
+  ['m_rock_button']             = 'tryck ~INPUT_PICKUP~ för att tvätta sten.',
+  ['m_rock_smelting']           = 'stensmältning',
+  ['m_copper']                  = 'koppar',
+  ['m_sell_copper']             = 'kopparsäljare',
+  ['m_deliver_copper']          = 'tryck ~INPUT_PICKUP~ för att sälja koppar.',
+  ['m_iron']                    = 'järn',
+  ['m_sell_iron']               = 'järnsäljare',
+  ['m_deliver_iron']            = 'tryck ~INPUT_PICKUP~ för att sälja järn.',
+  ['m_gold']                    = 'guld',
+  ['m_sell_gold']               = "guldsäljare",
+  ['m_deliver_gold']            = 'tryck ~INPUT_PICKUP~ för att sälja guld.',
+  ['m_diamond']                 = 'diamant',
+  ['m_sell_diamond']            = 'diamantsäljare',
+  ['m_deliver_diamond']         = 'tryck ~INPUT_PICKUP~ för att sälja diamant.',
+  ['m_melt_button']             = 'tryck ~INPUT_PICKUP~ för att smälta sten.',
 
   -- Reporter
-  ['reporter_name']             = 'Dala City Times',
+  ['reporter_name']             = 'Aftonbladet',
   ['reporter_garage']           = 'tryck ~INPUT_PICKUP~ för att gå ner till garaget.',
 
   -- Slaughterer
@@ -102,7 +104,7 @@ Locales['sv'] = {
   ['s_packagechicken']          = 'kyckling i förpackning',
   ['s_unpackaged']              = 'kyckling väntar på att förpackas',
   ['s_unpackaged_button']       = 'tryck ~INPUT_PICKUP~ för att förpacka kycklingen.',
-  ['s_deliver']                 = 'tryck ~INPUT_PICKUP~ för att leverera kycklingsförpackningen.',
+  ['s_deliver']                 = 'tryck ~INPUT_PICKUP~ för att sälja kycklingsförpackningen.',
 
   -- Dress Designer
   ['dd_dress_locker']           = "Klädesdesigners Omklädningsrum",
@@ -112,5 +114,5 @@ Locales['sv'] = {
   ['dd_makefabric']             = 'tryck ~INPUT_PICKUP~ för att göra tyg.',
   ['dd_clothing']               = 'kläder',
   ['dd_makeclothing']           = 'tryck ~INPUT_PICKUP~ för att hämta kläder.',
-  ['dd_deliver_clothes']        = 'tryck ~INPUT_PICKUP~ för att leverera kläder.',
+  ['dd_deliver_clothes']        = 'tryck ~INPUT_PICKUP~ för att sälja kläder.',
   }

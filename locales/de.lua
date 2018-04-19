@@ -1,6 +1,6 @@
 Locales['de'] = {
   -- Global menus
-  ['bank_deposit'] = 'eine Kaution von ~g~',
+  ['bank_deposit_g'] = 'eine Kaution von ~g~',
   ['bank_deposit_r'] = 'eine Kaution von ~g~$',
   ['bank_deposit2'] = '$ ~s~wurde nach deiner Ohmacht getätigt.',
   ['foot_work'] = 'du musst zu Fuß sein um arbeiten zu können.',
@@ -14,6 +14,9 @@ Locales['de'] = {
   ['not_enough2'] = ' umd die Aktion fortzuführen.',
   ['caution_taken'] = ' ~s~wurde von dir abgezogen.',
   ['caution_returned'] = ' ~s~wurde dir zurück gegeben.',
+  ['public_enter']       = 'drücke ~INPUT_PICKUP~ um das Gebäude zu betreten.',
+  ['public_leave']       = 'drücke ~INPUT_PICKUP~ um das Gebäude zu verlassen.',
+  ['reporter_name']      = 'arbeitsamt',
 
   -- Lumber Jack job
   ['lj_cr_title'] = 'Garderobe',

@@ -11,10 +11,8 @@ local Keys = {
 }
 
 local PlayerData              = {}
-local menuIsShowed        = false
-local hintIsShowed        = false
-
-
+local menuIsShowed            = false
+local hintIsShowed            = false
 local hasAlreadyEnteredMarker = false
 local Blips                   = {}
 local JobBlips                = {}
@@ -30,19 +28,17 @@ local isInPublicMarker        = false
 local newTask                 = false
 local hintToDisplay           = "no hint to display"
 local jobDone                 = false
-local onDuty          = false
-local moneyInBank       = 0
-
-local spawner           = 0
+local onDuty                  = false
+local moneyInBank             = 0
+local spawner                 = 0
 local myPlate                 = {}
-
 local isJobVehicleDestroyed   = false
 
-local cautionVehicleInCaseofDrop  = 0
+local cautionVehicleInCaseofDrop    = 0
 local maxCautionVehicleInCaseofDrop = 0
-local vehicleObjInCaseofDrop    = nil
-local vehicleInCaseofDrop       = nil
-local vehicleHashInCaseofDrop     = nil
+local vehicleObjInCaseofDrop        = nil
+local vehicleInCaseofDrop           = nil
+local vehicleHashInCaseofDrop       = nil
 local vehicleMaxHealthInCaseofDrop  = nil
 local vehicleOldHealthInCaseofDrop  = nil
 
@@ -173,7 +169,6 @@ AddEventHandler('esx_jobs:action', function(job, zone)
                     SetEntityCoords(GetPlayerPed(-1), w.Teleport.x, w.Teleport.y, w.Teleport.z)
                   end
 
-                  TriggerEvent('esx_vehiclelock:updatePlayerCars', "remove", myPlate[i])
                   table.remove(myPlate, i)
 
                   if vehicleObjInCaseofDrop.HasCaution then
@@ -322,17 +317,10 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
     SetNetworkIdCanMigrate(id, true)
 
     local platePrefix = "WORK"
-    for k,v in pairs(Config.Plates) do
-      if PlayerData.job.name == k then
-        platePrefix = v
-      end
-    end
-
     plate = platePrefix .. plate
     SetVehicleNumberPlateText(veh, plate)
     table.insert(myPlate, plate)
     plate = string.gsub(plate, " ", "")
-    TriggerEvent('esx_vehiclelock:updatePlayerCars', "add", plate)
     SetVehRadioStation(veh, "OFF")
     TaskWarpPedIntoVehicle(playerPed, veh, -1)
     isJobVehicleDestroyed = false
