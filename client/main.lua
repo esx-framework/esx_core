@@ -40,7 +40,7 @@ RegisterNUICallback('escape', function(data, cb)
 	if hasIdentity == true then
 		EnableGui(false)
 	else
-		TriggerEvent("chatMessage", "^1[IDENTITY]", {255, 255, 0}, "You must create your first identity in order to play.")
+		TriggerEvent("chatMessage", "^1[IDENTITY]", {255, 255, 0}, "You must create your first character in order to play.")
 	end
 end)
 

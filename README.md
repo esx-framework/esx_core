@@ -24,11 +24,10 @@ start esx_identity
 
 ### Commands
 ```
-/identityhelp
 /register
 /charlist
-/charselect 1,2,3
-/delchar 1,2,3
+/charselect
+/chardel
 ```
 
 ### License

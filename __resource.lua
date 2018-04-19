@@ -4,7 +4,7 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ESX Identity'
 
-version '1.0.4'
+version '1.0.3'
 
 client_script 'client/main.lua'
 
