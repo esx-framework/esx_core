@@ -3,7 +3,6 @@ Locales['de'] = {
   ['bank_deposit'] = 'eine Kaution von ~g~',
   ['bank_deposit_r'] = 'eine Kaution von ~g~$',
   ['bank_deposit2'] = '$ ~s~wurde nach deiner Ohmacht getätigt.',
-  ['bank_nodeposit'] = "du hast keine Sicherheiten",
   ['foot_work'] = 'du musst zu Fuß sein um arbeiten zu können.',
   ['next_point'] = 'gehe zum nächsten Schritt wenn du hier fertig bist.',
   ['security_deposit'] = 'die Kaution beträgt ~g~$',

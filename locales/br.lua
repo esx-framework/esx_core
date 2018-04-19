@@ -7,7 +7,6 @@ Locales['br'] = {
   ['bank_deposit']              = 'um depósito de segurança de ~g~',
   ['bank_deposit_r']            = 'um depósito de segurança de ~g~$',
   ['bank_deposit2']             = '$ ~s~foi feito para você depois do seu desmaio.',
-  ['bank_nodeposit']            = "você não tinha um depósito de segurança",
   ['foot_work']                 = 'você deve estar a pé para poder trabalhar.',
   ['next_point']                = 'vá para o próximo passo depois de completar este.',
   ['security_deposit']          = 'a segurança dada será ~g~$',

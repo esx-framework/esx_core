@@ -7,7 +7,6 @@ Locales['sv'] = {
   ['bank_deposit_g']              = 'en deposition på ~g~$',
   ['bank_deposit_r']            = 'en deposition på ~r~$',
   ['bank_deposit2']             = '$ ~s~was made to you after your fainting.',
-  ['bank_nodeposit']            = "du hade ingen deposition",
   ['foot_work']                 = 'du måste vara till fots för att kunna arbeta.',
   ['next_point']                = 'gå till nästa steg efter att du har avslutat det här steget.',
   ['security_deposit']          = 'säkerheten kommer att ges ~g~$',

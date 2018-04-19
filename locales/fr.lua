@@ -7,7 +7,6 @@ Locales['fr'] = {
   ['bank_deposit']              = 'une caution de ~g~',
   ['bank_deposit_r']            = 'une caution de ~g~$',
   ['bank_deposit2']             = '$ ~s~vous a été rendue suite à votre évanouissment.',
-  ['bank_nodeposit']            = "vous n'aviez pas de caution",
   ['foot_work']                 = 'vous devez être à pied pour pouvoir travailler.',
   ['next_point']                = 'rendez-vous à la prochaine étape après avoir complété celle-ci.',
   ['security_deposit']          = 'la caution rendue sera de ~g~$',

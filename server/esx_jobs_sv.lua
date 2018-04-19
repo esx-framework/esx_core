@@ -37,8 +37,6 @@ AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
     if caution > 0 then
       xPlayer.addAccountMoney('bank', caution)
       TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_g').. caution .. _U('bank_deposit2'))
-    else
-      TriggerClientEvent('esx:showNotification', _source, _U('bank_nodeposit'))
     end
   end)
 end)

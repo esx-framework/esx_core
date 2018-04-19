@@ -7,7 +7,6 @@ Locales['en'] = {
   ['bank_deposit_g']              = 'a security deposit of ~g~$',
   ['bank_deposit_r']            = 'a security deposit of ~r~$',
   ['bank_deposit2']             = '$ ~s~was made to you after your fainting.',
-  ['bank_nodeposit']            = "you did not have a security deposit",
   ['foot_work']                 = 'you have to be on foot to be able to work.',
   ['next_point']                = 'go to the next step after completing this one.',
   ['security_deposit']          = 'the security given will be ~g~$',
