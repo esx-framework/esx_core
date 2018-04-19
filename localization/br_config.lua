@@ -3,17 +3,13 @@ Config.DrawDistance = 100.0
 Config.Locale       = 'br'
 
 Config.Plates = {
-  taxi = "TAXI",
   fisherman = "PESCA",
-  cop = "LSPD",
-  ambulance = "SAMU",
-  depanneur = "MECA",
-  fuel = "REFINA",
+  fueler = "REFINA",
   lumberjack = "LENHA",
   miner = "MINE",
   reporter = "JORN",
   slaughterer = "ABAT",
-  textil = "COST"
+  tailor = "COST"
 }
 
 Config.Jobs = {}

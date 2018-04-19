@@ -49,10 +49,12 @@ local vehicleOldHealthInCaseofDrop  = nil
 ESX = nil
 
 Citizen.CreateThread(function()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+	
+	PlayerData = ESX.GetPlayerData()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -225,7 +227,6 @@ function nextStep(gps)
   end
 end
 
--- #########################
 AddEventHandler('esx_jobs:hasExitedMarker', function(zone)
   TriggerServerEvent('esx_jobs:stopWork')
   hintToDisplay = "no hint to display"
@@ -349,7 +350,7 @@ end)
 -- Show top left hint
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(10)
     if hintIsShowed == true then
       SetTextComponentFormat("STRING")
       AddTextComponentString(hintToDisplay)
@@ -361,7 +362,7 @@ end)
 -- Display markers (only if on duty and the player's job ones)
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
     local zones = {}
     if PlayerData.job ~= nil then
       for k,v in pairs(Config.Jobs) do
@@ -385,7 +386,7 @@ end)
 -- Display public markers
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
     local coords = GetEntityCoords(GetPlayerPed(-1))
     for k,v in pairs(Config.PublicZones) do
       if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
@@ -398,7 +399,7 @@ end)
 -- Activate public marker
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
     local coords      = GetEntityCoords(GetPlayerPed(-1))
     local position    = nil
     local zone        = nil
@@ -434,7 +435,7 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
 
     if PlayerData.job ~= nil and PlayerData.job.name ~= 'unemployed' then
       local zones = nil
@@ -526,7 +527,7 @@ end)
 -- VEHICLE CAUTION
 Citizen.CreateThread(function()
   while true do
-    Wait(0)
+    Citizen.Wait(0)
     if vehicleInCaseofDrop ~= nil then
       if onDuty and IsVehicleModel(vehicleInCaseofDrop, vehicleHashInCaseofDrop) then
         local vehicleHealth = GetEntityHealth(vehicleInCaseofDrop)
