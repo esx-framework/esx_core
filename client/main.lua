@@ -86,9 +86,9 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		if guiEnabled then
-			DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
-			DisableControlAction(0, 2, guiEnabled) -- LookUpDown
-			DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
+			DisableControlAction(0, 1,   true) -- LookLeftRight
+			DisableControlAction(0, 2,   true) -- LookUpDown
+			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 30,  true) -- MoveLeftRight
 			DisableControlAction(0, 31,  true) -- MoveUpDown
