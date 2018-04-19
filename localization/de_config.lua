@@ -1,5 +1,5 @@
 Config              = {}
-Config.DrawDistance = 1000.0
+Config.DrawDistance = 100.0
 Config.Locale       = 'de'
 
 Config.Plates = {

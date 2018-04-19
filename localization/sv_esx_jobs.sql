@@ -9,12 +9,10 @@ INSERT INTO `jobs` (name, label) VALUES
   ('fisherman', 'Fiskare'),
   ('miner', 'Gruvarbetare'),
   ('lumberjack', 'Skogshuggare'),
-  ('fuel', 'Bensintankare'),
+  ('fueler', 'Bensintankare'),
   ('reporter', 'Reporter'),
   ('tailor', 'Skräddare')
 ;
-
-ALTER TABLE jobs ADD whitelisted BOOLEAN NOT NULL DEFAULT FALSE;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
   ('lumberjack', 0, 'interim', 'Anställd', 0, '{}', '{}'),

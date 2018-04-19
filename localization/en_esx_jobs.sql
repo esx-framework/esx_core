@@ -14,8 +14,6 @@ INSERT INTO `jobs` (name, label) VALUES
   ('tailor', 'Tailor')
 ;
 
-ALTER TABLE jobs ADD whitelisted BOOLEAN NOT NULL DEFAULT FALSE;
-
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
   ('lumberjack', 0, 'interim', 'Employee', 0, '{}', '{}'),
   ('fisherman', 0, 'interim', 'Employee', 0, '{}', '{}'),
