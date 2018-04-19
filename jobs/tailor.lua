@@ -1,4 +1,4 @@
-Config.Jobs.textil = {
+Config.Jobs.tailor = {
   BlipInfos = {
     Sprite = 366,
     Color = 4

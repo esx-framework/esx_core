@@ -1,4 +1,4 @@
-Config.Jobs.fuel = {
+Config.Jobs.fueler = {
   BlipInfos = {
     Sprite = 436,
     Color = 5
