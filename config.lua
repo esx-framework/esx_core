@@ -43,7 +43,6 @@ Config.Animations = {
 	    {label = "Police : circulation", type = "scenario", data = {anim = "WORLD_HUMAN_CAR_PARK_ATTENDANT"}},
 	    {label = "Police : jumelles", type = "scenario", data = {anim = "WORLD_HUMAN_BINOCULARS"}},
 	    {label = "Agriculture : récolter", type = "scenario", data = {anim = "world_human_gardener_plant"}},
-	    {label = "Dépanneur : réparer sous véhicule", type = "scenario", data = {anim = "world_human_vehicle_mechanic"}},
 	    {label = "Dépanneur : réparer le moteur", type = "anim", data = {lib = "mini@repair", anim = "fixing_a_ped"}},
 	    {label = "Médecin : observer", type = "scenario", data = {anim = "CODE_HUMAN_MEDIC_KNEEL"}},
 	    {label = "Taxi : parler au client", type = "anim", data = {lib = "oddjobs@taxi@driver", anim = "leanover_idle"}},
@@ -102,7 +101,6 @@ Config.Animations = {
 		items = {
 	    {label = "Boire un café", type = "anim", data = {lib = "amb@world_human_aa_coffee@idle_a", anim = "idle_a"}},
 	    {label = "S'asseoir", type = "anim", data = {lib = "anim@heists@prison_heistunfinished_biztarget_idle", anim = "target_idle"}},
-	    {label = "S'asseoir (Par terre)", type = "scenario", data = {anim = "WORLD_HUMAN_PICNIC"}},
 	    {label = "Attendre contre un mur", type = "scenario", data = {anim = "world_human_leaning"}},
 	    {label = "Couché sur le dos", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE_BACK"}},
 	    {label = "Couché sur le ventre", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE"}},

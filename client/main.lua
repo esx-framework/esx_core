@@ -10,6 +10,7 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
+local isDead = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -19,54 +20,54 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function startAttitude(lib, anim)
- 	Citizen.CreateThread(function()
-	
-	    local playerPed = GetPlayerPed(-1)
-	
-	    RequestAnimSet(anim)
-	      
-	    while not HasAnimSetLoaded(anim) do
-	        Citizen.Wait(0)
-	    end
-	    SetPedMovementClipset(playerPed, anim, true)
-	end)
+AddEventHandler('esx:onPlayerDeath', function()
+	isDead = true
+end)
 
+AddEventHandler('playerSpawned', function(spawn)
+	isDead = false
+end)
+
+function startAttitude(lib, anim)
+	Citizen.CreateThread(function()
+	
+		local playerPed = GetPlayerPed(-1)
+		RequestAnimSet(anim)
+		
+		while not HasAnimSetLoaded(anim) do
+			Citizen.Wait(1)
+		end
+		SetPedMovementClipset(playerPed, anim, true)
+	end)
 end
 
 function startAnim(lib, anim)
- 	
 	Citizen.CreateThread(function()
+		RequestAnimDict(lib)
+		while not HasAnimDictLoaded( lib) do
+			Citizen.Wait(1)
+		end
 
-	  RequestAnimDict(lib)
-	  
-	  while not HasAnimDictLoaded( lib) do
-	    Citizen.Wait(0)
-	  end
-
-	  TaskPlayAnim(GetPlayerPed(-1), lib ,anim ,8.0, -8.0, -1, 0, 0, false, false, false )
-
+		TaskPlayAnim(GetPlayerPed(-1), lib ,anim ,8.0, -8.0, -1, 0, 0, false, false, false )
 	end)
-
 end
 
 function startScenario(anim)
-  TaskStartScenarioInPlace(GetPlayerPed(-1), anim, 0, false)
+	TaskStartScenarioInPlace(GetPlayerPed(-1), anim, 0, false)
 end
 
 function OpenAnimationsMenu()
-
 	local elements = {}
 
 	for i=1, #Config.Animations, 1 do
 		table.insert(elements, {label = Config.Animations[i].label, value = Config.Animations[i].name})
 	end
 
-
 	ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'animations',
 		{
 			title    = 'Animations',
+			align    = 'top-left',
 			elements = elements
 		},
 		function(data, menu)
@@ -76,18 +77,15 @@ function OpenAnimationsMenu()
 			menu.close()
 		end
 	)
-
 end
 
 function OpenAnimationsSubMenu(menu)
-
 	local title    = nil
 	local elements = {}
 
 	for i=1, #Config.Animations, 1 do
-		
+	
 		if Config.Animations[i].name == menu then
-
 			title = Config.Animations[i].label
 
 			for j=1, # Config.Animations[i].items, 1 do
@@ -104,10 +102,9 @@ function OpenAnimationsSubMenu(menu)
 		'default', GetCurrentResourceName(), 'animations_sub',
 		{
 			title    = title,
+			align    = 'top-left',
 			elements = elements
-		},
-		function(data, menu)
-
+		}, function(data, menu)
 			local type = data.current.type
 			local lib  = data.current.value.lib
 			local anim = data.current.value.anim
@@ -122,61 +119,25 @@ function OpenAnimationsSubMenu(menu)
 				end
 			end
 
-		end,
-		function(data, menu)
+		end, function(data, menu)
 			menu.close()
 		end
 	)
 
 end
 
-local function startPointing()
-  
-  local playerPed = GetPlayerPed(-1)
-
-  RequestAnimDict("anim@mp_point")
-  
-  while not HasAnimDictLoaded("anim@mp_point") do
-    Citizen.Wait(0)
-  end
-  
-  SetPedCurrentWeaponVisible(playerPed, 0, 1, 1, 1)
-  SetPedConfigFlag(playerPed, 36, 1)
-  
-  Citizen.InvokeNative(0x2D537BA194896636, playerPed, "task_mp_pointing", 0.5, 0, "anim@mp_point", 24)
-end
-
-local function stopPointing()
-
-    local playerPed = GetPlayerPed(-1)
-
-    Citizen.InvokeNative(0xD01015C7316AE176, playerPed, "Stop")
-   
-    if not IsPedInjured(playerPed) then
-      ClearPedSecondaryTask(playerPed)
-    end
-
-    if not IsPedInAnyVehicle(playerPed, 1) then
-      SetPedCurrentWeaponVisible(playerPed, 1, 1, 1, 1)
-    end
-
-    SetPedConfigFlag(playerPed, 36, 0)
-    
-    ClearPedSecondaryTask(PlayerPedId())
-end
-
 -- Key Controls
 Citizen.CreateThread(function()
-  while true do
-  Citizen.Wait(0)
+	while true do
+		Citizen.Wait(10)
 
-	  if IsControlJustReleased(0, Keys['F3']) then
-	  	OpenAnimationsMenu()
-	  end
+		if IsControlJustReleased(0, Keys['F3']) and GetLastInputMethod(2) and not isDead then
+			OpenAnimationsMenu()
+		end
 
-	  if IsControlJustReleased(0, Keys['X']) then
-	  	ClearPedTasks(GetPlayerPed(-1))
-	  end
+		if IsControlJustReleased(0, Keys['X']) and GetLastInputMethod(2) and not isDead then
+			ClearPedTasks(GetPlayerPed(-1))
+		end
 
-  end
+	end
 end)
