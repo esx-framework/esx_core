@@ -936,7 +936,11 @@ function ShowPlayerLicense(player)
 			end
 		end
 		
-		targetName = data.firstname .. ' ' .. data.lastname
+		if Config.EnableESXIdentity then
+			targetName = data.firstname .. ' ' .. data.lastname
+		else
+			targetName = data.name
+		end
 		
 		ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'manage_license',
@@ -946,8 +950,8 @@ function ShowPlayerLicense(player)
 			elements = elements,
 		},
 		function(data, menu)
-			TriggerEvent('esx:showNotification', _U('licence_you_revoked', data.current.label, targetName))
-			--TriggerEvent('esx:showNotification', GetPlayerServerId(player), _U('license_revoked', data.current.label))
+			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
+			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
 			
 			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.value)
 			

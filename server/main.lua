@@ -497,3 +497,8 @@ AddEventHandler('onResourceStart', function(resource)
 		TriggerClientEvent('esx_policejob:updateBlip', -1)
 	end
 end)
+
+RegisterServerEvent('esx_policejob:message')
+AddEventHandler('esx_policejob:message', function(target, msg)
+	TriggerClientEvent('esx:showNotification', target, msg)
+end)
