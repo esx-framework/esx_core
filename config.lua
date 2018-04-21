@@ -4,46 +4,46 @@ Config.Locale          = 'en'
 Config.IsMecanoJobOnly = false
 
 Config.Zones = {
-    ls1 = {
-        Pos   = { x = -337.3863, y = -136.9247, z = 38.5737},
-        Size  = {x = 3.0, y = 3.0, z = 0.2},
-        Color = {r = 204, g = 204, b = 0},
-        Marker= 1,
-        Name  = "Los Santos Customs",
-        Hint  = _U('press_custom')
-    },
-     ls2 = {
+	ls1 = {
+		Pos   = { x = -337.3863, y = -136.9247, z = 38.5737},
+		Size  = {x = 3.0, y = 3.0, z = 0.2},
+		Color = {r = 204, g = 204, b = 0},
+		Marker= 1,
+		Name  = "Los Santos Customs",
+		Hint  = _U('press_custom')
+	},
+	 ls2 = {
 		Pos   = { x = -1155.536, y = -2007.183, z = 12.744},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
 		Name  = "Los Santos Customs",
 		Hint  = _U('press_custom')
-    },
-     ls3 = {
+	},
+	 ls3 = {
 		Pos   = { x = 731.8163, y = -1088.822, z = 21.733},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
 		Name  = "Los Santos Customs",
 		Hint  = _U('press_custom')
-    },
-     ls4 = {
+	},
+	 ls4 = {
 		Pos   = { x = 1175.04, y = 2640.216, z = 37.32177},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
 		Name  = "Los Santos Customs",
 		Hint  = _U('press_custom')
-    },
-     ls5 = {
+	},
+	 ls5 = {
 		Pos   = { x = 110.99, y = 6626.39, z = 30.89},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
 		Name  = "Los Santos Customs",
 		Hint  = _U('press_custom')
-    },
+	},
 }
 
 Config.Colors = {
@@ -63,7 +63,7 @@ Config.Colors = {
 }
 
 function GetColors(color)
-    local colors = {}
+	local colors = {}
 	if color == 'black' then
 		colors = {
 			{ index = 0, label = _U('black')},
@@ -264,7 +264,7 @@ function GetColors(color)
 			{ index = 160, label = _U('lightgold')}
 		}
 	end
-    return colors
+	return colors
 end
 
 function GetWindowName(index)
@@ -395,27 +395,28 @@ end
 
 function GetNeons()
 	local neons = {
-	    { label = _U('white'), 			r = 255, 	g = 255, 	b = 255},
-	    { label = "Slate Gray", 	r = 112, 	g = 128, 	b = 144},
-	    { label = "Blue", 			r = 0, 		g = 0, 		b = 255},
-	    { label = "Light Blue", 	r = 0, 		g = 150, 	b = 255},
-	    { label = "Navy Blue", 		r = 0, 		g = 0, 		b = 128},
-	    { label = "Sky Blue", 		r = 135, 	g = 206, 	b = 235},
-	    { label = "Turquoise", 		r = 0, 		g = 245, 	b = 255},
-	    { label = "Mint Green", 	r = 50, 	g = 255, 	b = 155},
-	    { label = "Lime Green", 	r = 0, 		g = 255, 	b = 0},
-	    { label = "Olive", 			r = 128, 	g = 128, 	b = 0},
-	    { label = _U('yellow'), 		r = 255, 	g = 255, 	b = 0},
-	    { label = _U('gold'), 			r = 255, 	g = 215, 	b = 0},
-	    { label = _U('orange'), 		r = 255, 	g = 165, 	b = 0},
-	    { label = _U('wheat'), 			r = 245, 	g = 222, 	b = 179},
-	    { label = _U('red'), 			r = 255, 	g = 0, 		b = 0},
-	    { label = _U('pink'), 			r = 255, 	g = 161, 	b = 211},
-	    { label = _U('brightpink'), 	r = 255, 	g = 0, 		b = 255},
-	    { label = _U('purple'), 		r = 153, 	g = 0, 		b = 153},
-	    { label = "Ivory", 			r = 41, 	g = 36, 	b = 33}
-   	}
-   	return neons
+		{ label = _U('white'),		r = 255, 	g = 255, 	b = 255},
+		{ label = "Slate Gray",		r = 112, 	g = 128, 	b = 144},
+		{ label = "Blue",			r = 0, 		g = 0, 		b = 255},
+		{ label = "Light Blue",		r = 0, 		g = 150, 	b = 255},
+		{ label = "Navy Blue", 		r = 0, 		g = 0, 		b = 128},
+		{ label = "Sky Blue", 		r = 135, 	g = 206, 	b = 235},
+		{ label = "Turquoise", 		r = 0, 		g = 245, 	b = 255},
+		{ label = "Mint Green", 	r = 50, 	g = 255, 	b = 155},
+		{ label = "Lime Green", 	r = 0, 		g = 255, 	b = 0},
+		{ label = "Olive", 			r = 128, 	g = 128, 	b = 0},
+		{ label = _U('yellow'), 	r = 255, 	g = 255, 	b = 0},
+		{ label = _U('gold'), 		r = 255, 	g = 215, 	b = 0},
+		{ label = _U('orange'), 	r = 255, 	g = 165, 	b = 0},
+		{ label = _U('wheat'), 		r = 245, 	g = 222, 	b = 179},
+		{ label = _U('red'), 		r = 255, 	g = 0, 		b = 0},
+		{ label = _U('pink'), 		r = 255, 	g = 161, 	b = 211},
+		{ label = _U('brightpink'),	r = 255, 	g = 0, 		b = 255},
+		{ label = _U('purple'), 	r = 153, 	g = 0, 		b = 153},
+		{ label = "Ivory", 			r = 41, 	g = 36, 	b = 33}
+	}
+
+	return neons
 end
 
 function GetPlatesName(index)
@@ -434,20 +435,20 @@ end
 
 Config.Menus = {
 	main = {
-		label = 'LS CUSTOMS',
-		parent = nil,
-		upgrades = _U('upgrades'),
-		cosmetics = _U('cosmetics')
+		label		= 'LS CUSTOMS',
+		parent		= nil,
+		upgrades	= _U('upgrades'),
+		cosmetics	= _U('cosmetics')
 	},
 	upgrades = {
-		label = _U('upgrades'),
-		parent = 'main',
-		modEngine = _U('engine'),
-		modBrakes = _U('brakes'),
-		modTransmission = _U('transmission'),
-		modSuspension = _U('suspension'),
-		modArmor = _U('armor'),
-		modTurbo = _U('turbo')
+		label			= _U('upgrades'),
+		parent			= 'main',
+		modEngine		= _U('engine'),
+		modBrakes		= _U('brakes'),
+		modTransmission	= _U('transmission'),
+		modSuspension	= _U('suspension'),
+		modArmor		= _U('armor'),
+		modTurbo		= _U('turbo')
 	},
 	modEngine = {
 		label = _U('engine'),
@@ -486,39 +487,39 @@ Config.Menus = {
 		price = {55.81}
 	},
 	cosmetics = {
-		label = _U('cosmetics'),
-		parent = 'main',
-		bodyparts = _U('bodyparts'),
-		windowTint = _U('windowtint'),
-		modHorns = _U('horns'),
-		neonColor = _U('neons'),
-		resprays = _U('respray'),
-		modXenon = _U('headlights'),
-		plateIndex = _U('licenseplates'),
-		wheels = _U('wheels'),
-		modPlateHolder   	= _U('modplateholder'),
-		modVanityPlate   	= _U('modvanityplate'),
-		modTrimA    		= _U('interior'),
-		modOrnaments    	= _U('trim'),
-		modDashboard    	= _U('dashboard'),
-		modDial    			= _U('speedometer'),
-		modDoorSpeaker    	= _U('door_speakers'),
-		modSeats    		= _U('seats'),
-		modSteeringWheel    = _U('steering_wheel'),
-		modShifterLeavers   = _U('gear_lever'),
-		modAPlate    		= _U('quarter_deck'),
-		modSpeakers    		= _U('speakers'),
-		modTrunk    		= _U('trunk'),
-		modHydrolic    		= _U('hydraulic'),
-		modEngineBlock    	= _U('engine_block'),
-		modAirFilter    	= _U('air_filter'),
-		modStruts    		= _U('struts'),
-		modArchCover    	= _U('arch_cover'),
-		modAerials    		= _U('aerials'),
-		modTrimB    		= _U('wings'),
-		modTank    			= _U('fuel_tank'),
-		modWindows    		= _U('windows'),
-		modLivery    		= _U('stickers')
+		label				= _U('cosmetics'),
+		parent				= 'main',
+		bodyparts			= _U('bodyparts'),
+		windowTint			= _U('windowtint'),
+		modHorns			= _U('horns'),
+		neonColor			= _U('neons'),
+		resprays			= _U('respray'),
+		modXenon			= _U('headlights'),
+		plateIndex			= _U('licenseplates'),
+		wheels				= _U('wheels'),
+		modPlateHolder		= _U('modplateholder'),
+		modVanityPlate		= _U('modvanityplate'),
+		modTrimA			= _U('interior'),
+		modOrnaments		= _U('trim'),
+		modDashboard		= _U('dashboard'),
+		modDial				= _U('speedometer'),
+		modDoorSpeaker		= _U('door_speakers'),
+		modSeats			= _U('seats'),
+		modSteeringWheel	= _U('steering_wheel'),
+		modShifterLeavers	= _U('gear_lever'),
+		modAPlate			= _U('quarter_deck'),
+		modSpeakers			= _U('speakers'),
+		modTrunk			= _U('trunk'),
+		modHydrolic			= _U('hydraulic'),
+		modEngineBlock		= _U('engine_block'),
+		modAirFilter		= _U('air_filter'),
+		modStruts			= _U('struts'),
+		modArchCover		= _U('arch_cover'),
+		modAerials			= _U('aerials'),
+		modTrimB			= _U('wings'),
+		modTank				= _U('fuel_tank'),
+		modWindows			= _U('windows'),
+		modLivery			= _U('stickers')
 	},
 
 	modPlateHolder = {
@@ -668,16 +669,16 @@ Config.Menus = {
 		tyreSmokeColor = _U('tiresmoke')
 	},
 	modFrontWheelsTypes = {
-		label               = _U('wheel_type'),
-		parent              = 'wheels',
-		modFrontWheelsType0 = _U('sport'),
-		modFrontWheelsType1 = _U('muscle'),
-		modFrontWheelsType2 = _U('lowrider'),
-		modFrontWheelsType3 = _U('suv'),
-		modFrontWheelsType4 = _U('allterrain'),
-		modFrontWheelsType5 = _U('tuning'),
-		modFrontWheelsType6 = _U('motorcycle'),
-		modFrontWheelsType7 = _U('highend')
+		label				= _U('wheel_type'),
+		parent				= 'wheels',
+		modFrontWheelsType0	= _U('sport'),
+		modFrontWheelsType1	= _U('muscle'),
+		modFrontWheelsType2	= _U('lowrider'),
+		modFrontWheelsType3	= _U('suv'),
+		modFrontWheelsType4	= _U('allterrain'),
+		modFrontWheelsType5	= _U('tuning'),
+		modFrontWheelsType6	= _U('motorcycle'),
+		modFrontWheelsType7	= _U('highend')
 	},
 	modFrontWheelsType0 = {
 		label = _U('sport'),
