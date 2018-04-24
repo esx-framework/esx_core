@@ -12,11 +12,11 @@ Locales['br'] = {
   -- Action Menu
   ['hospital'] = 'Hôspital',
   ['revive_inprogress'] = 'Reanimação em andamento',
-  ['revive_complete'] = 'Você ressuscitou ',
+  ['revive_complete'] = 'você ressuscitou ~y~%s~s~',
+  ['revive_complete_award'] = 'você ressuscitou ~y~%s~s~, ~g~$%s~s~',
   ['no_players'] = 'Nenhum jogador nas proximidades',
   ['no_vehicles'] = 'Sem veículos nas proximidades',
-  ['isdead'] = 'Está morto',
-  ['unconscious'] = 'Não está inconsciente',
+  ['player_not_unconscious'] = 'Não está inconsciente',
   -- Boss Menu
   ['deposit_society'] = 'Depositar dinheiro',
   ['withdraw_society'] = 'Retirar dinheiro da empresa',
@@ -45,12 +45,9 @@ Locales['br'] = {
   -- Death
   ['respawn_at_hospital'] = 'Você quer ser transportado para o hospital ?',
   ['yes'] = 'Sim',
-  ['please_wait'] = 'Você será automaticamente transportado para o hospital em ~b~',
-  ['minutes'] = ' minutos ',
-  ['seconds_fine'] = ' segundos ~w~ para renascer \nRenascer agora ~g~$',
-  ['seconds'] = ' segundos ~w~.',
-  ['press_respawn_fine'] = 'Você pagará ~g~',
+  ['please_wait'] = 'Você será automaticamente transportado para o hospital em ~b~%s minutos %s segundos~s~',
   ['press_respawn'] = 'Aperte [~b~E~w~] para renascer.',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ for respawning.',
   -- Revive
   ['revive_help'] = 'reviver um jogador',
   -- Item

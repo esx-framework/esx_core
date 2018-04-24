@@ -51,6 +51,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
   end
 
   if Config.RespawnFine then
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.RespawnFineAmount))
     xPlayer.removeAccountMoney('bank', Config.RespawnFineAmount)
   end
 

@@ -11,12 +11,12 @@ Locales['en'] = {
   ['helicopter'] = 'helicopter',
   -- Action Menu
   ['hospital'] = 'hospital',
-  ['revive_inprogress'] = 'revive in progress',
-  ['revive_complete'] = 'you have been revived ',
+  ['revive_inprogress'] = 'a revive is in progress!',
+  ['revive_complete'] = 'you have revived ~y~%s~s~',
+  ['revive_complete_award'] = 'you have revived ~y~%s~s~ and earned ~g~$%s~s~!',
   ['no_players'] = 'no players nearby',
   ['no_vehicles'] = 'no vehicles nearby',
-  ['isdead'] = 'is dead',
-  ['unconscious'] = 'is not unconscious',
+  ['player_not_unconscious'] = 'that player is not unconscious!',
   -- Boss Menu
   ['deposit_society'] = 'eMS Deposit',
   ['withdraw_society'] = 'eMS Withdraw',
@@ -45,12 +45,9 @@ Locales['en'] = {
   -- Death
   ['respawn_at_hospital'] = 'do you want to force respawn and spawn in the hospital?',
   ['yes'] = 'yes',
-  ['please_wait'] = 'You are unconscious and will bleed out in ~b~',
-  ['minutes'] = ' minutes ',
-  ['seconds_fine'] = ' seconds ~w~to respawn \nForce respawn now by pressing ~g~$',
-  ['seconds'] = ' seconds',
-  ['press_respawn_fine'] = '~w~ [Press ~b~E~w~]',
+  ['please_wait'] = 'you are unconscious and will bleed out in ~b~%s minutes and %s seconds~s~',
   ['press_respawn'] = 'press [~b~E~w~] to respawn.',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ for respawning.',
   -- Revive
   ['revive_help'] = 'revive a player',
   -- Item

@@ -12,11 +12,11 @@ Locales['sv'] = {
   -- Action Menu
   ['hospital'] = 'Sjukhus',
   ['revive_inprogress'] = 'Återupplivning pågår...',
-  ['revive_complete'] = 'Du har återupplivat ~y~%s~w~ och tjärnat ~g~$2000~w~ i processen, bra jobbat!',
+  ['revive_complete'] = 'du har återupplivat ~y~%s~s~, bra jobbat!',
+  ['revive_complete_award'] = 'du har återupplivat ~y~%s~s~ och tjärnat ~g~$%s~s~ i processen, bra jobbat!',
   ['no_players'] = 'Inga spelare i närheten!',
   ['no_vehicles'] = 'Inga fordon i närheten!',
-  ['isdead'] = 'är död',
-  ['unconscious'] = 'är medvetslös',
+  ['player_not_unconscious'] = 'spelaren är inte medvetslös!',
   -- Boss Menu
   ['deposit_society'] = 'Sjukvårdens insättning',
   ['withdraw_society'] = 'Sjukvårdens uttagning',
@@ -45,19 +45,16 @@ Locales['sv'] = {
   -- Death
   ['respawn_at_hospital'] = 'Vill du snabbresa till sjukhuset?',
   ['yes'] = 'Ja!',
-  ['please_wait'] = 'Du är medvetslös och kommer att dö om ~b~',
-  ['minutes'] = ' minuter ',
-  ['seconds_fine'] = ' sekunder ~w~till respawn \nForce respawna nu genom att trycka på ~g~$',
-  ['seconds'] = ' sekunder',
-  ['press_respawn_fine'] = '~w~ [Tryck ~b~E~w~]',
+  ['please_wait'] = 'du är medvetslös och kommer att dö om ~b~%s minuter och %s sekunder~s~',
   ['press_respawn'] = 'Tryck [~b~E~w~] för att respawna.',
+  ['respawn_fine'] = 'du betalade ~r~$%s~s~ för att respawna.',
   -- Revive
   ['revive_help'] = 'Återuppliva en spelare',
   -- Item
-  ['used_medikit'] = 'Du har använt 1x Medecinkit',
-  ['used_bandage'] = 'Du har använt  1x Bandage',
+  ['used_medikit'] = 'Du har använt ~y~1x~s~ ~b~Medecinkit~s~',
+  ['used_bandage'] = 'Du har använt ~y~1x~s~ ~b~Bandage~s~',
   ['not_enough_medikit'] = 'Du har inget ~b~Medecinkit~w~.',
   ['not_enough_bandage'] = 'Du har inget ~b~Bandage~w~.',
-  ['healed'] = 'Du har blivit upplivad.',
+  ['healed'] = 'Du har blivit återupplivad.',
   -- Misc
 }
