@@ -36,6 +36,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 	
+	Citizen.Wait(5000)
 	PlayerData = ESX.GetPlayerData()
 end)
 
