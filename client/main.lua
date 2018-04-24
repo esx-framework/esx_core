@@ -85,7 +85,7 @@ AddEventHandler('esx_weashop:hasEnteredMarker', function(zone)
 	CurrentActionData = {zone = zone}
 end)
 
-AddEventHandler('esx_weashop:hasExitedMarker', function(zone)´
+AddEventHandler('esx_weashop:hasExitedMarker', function(zone)
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
 end)
