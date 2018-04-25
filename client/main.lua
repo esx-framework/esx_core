@@ -65,7 +65,7 @@ AddEventHandler('esx_holdup:setblip', function(position)
 end)
 
 RegisterNetEvent('esx_holdup:toofarlocal')
-AddEventHandler('esx_holdup:toofarlocal', function(robb)
+AddEventHandler('esx_holdup:toofarlocal', function()
 	holdingup = false
 	ESX.ShowNotification(_U('robbery_cancelled'))
 	robbingName = ""
@@ -74,16 +74,16 @@ end)
 
 
 RegisterNetEvent('esx_holdup:robberycomplete')
-AddEventHandler('esx_holdup:robberycomplete', function(robb)
+AddEventHandler('esx_holdup:robberycomplete', function(award)
 	holdingup = false
-	ESX.ShowNotification(_U('robbery_complete'))
+	ESX.ShowNotification(_U('robbery_complete', award))
 	store = ""
 	incircle = false
 end)
 
 
 RegisterNetEvent('esx_holdup:starttimer')
-AddEventHandler('esx_holdup:starttimer', function(source)
+AddEventHandler('esx_holdup:starttimer', function()
 	timer = Stores[store].secondsRemaining
 	Citizen.CreateThread(function()
 		while timer > 0 do
@@ -136,7 +136,7 @@ Citizen.CreateThread(function()
 
 					if(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 1.0)then
 						if (incircle == false) then
-							DisplayHelpText(_U('press_to_rob') .. v.nameofstore)
+							DisplayHelpText(_U('press_to_rob', v.nameofstore))
 						end
 						incircle = true
 						if IsControlJustReleased(0, Keys['E']) then
