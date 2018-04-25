@@ -14,9 +14,12 @@ Locales['de'] = {
   ['revive_inprogress'] = 'wiederbeleben im Gange',
   ['revive_complete'] = 'du wurdest wiederbelebt ~y~%s~s~',
   ['revive_complete_award'] = 'du wurdest wiederbelebt ~y~%s~s~, ~g~$%s~s~',
+  ['heal_inprogress'] = 'you are healing!',
+  ['heal_complete'] = 'you have healed ~y~%s~s~',
   ['no_players'] = 'keine Spieler in der Nähe',
   ['no_vehicles'] = 'keine Fahrzeuge in der Nähe',
   ['player_not_unconscious'] = 'ist nicht im Koma',
+  ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu
   ['deposit_society'] = 'Notdienst einzahlen',
   ['withdraw_society'] = 'Notdienst abheben',

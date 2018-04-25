@@ -14,9 +14,12 @@ Locales['en'] = {
   ['revive_inprogress'] = 'a revive is in progress!',
   ['revive_complete'] = 'you have revived ~y~%s~s~',
   ['revive_complete_award'] = 'you have revived ~y~%s~s~ and earned ~g~$%s~s~!',
+  ['heal_inprogress'] = 'you are healing!',
+  ['heal_complete'] = 'you have healed ~y~%s~s~',
   ['no_players'] = 'no players nearby',
   ['no_vehicles'] = 'no vehicles nearby',
   ['player_not_unconscious'] = 'that player is not unconscious!',
+  ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu
   ['deposit_society'] = 'eMS Deposit',
   ['withdraw_society'] = 'eMS Withdraw',

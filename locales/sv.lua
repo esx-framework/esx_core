@@ -14,9 +14,12 @@ Locales['sv'] = {
   ['revive_inprogress'] = 'Återupplivning pågår...',
   ['revive_complete'] = 'du har återupplivat ~y~%s~s~, bra jobbat!',
   ['revive_complete_award'] = 'du har återupplivat ~y~%s~s~ och tjärnat ~g~$%s~s~ i processen, bra jobbat!',
+  ['heal_inprogress'] = 'du behandlar patienten!',
+  ['heal_complete'] = 'du har behandlat ~y~%s~s~',
   ['no_players'] = 'Inga spelare i närheten!',
   ['no_vehicles'] = 'Inga fordon i närheten!',
   ['player_not_unconscious'] = 'spelaren är inte medvetslös!',
+  ['player_not_conscious'] = 'spelaren är inte vid medvetande!',
   -- Boss Menu
   ['deposit_society'] = 'Sjukvårdens insättning',
   ['withdraw_society'] = 'Sjukvårdens uttagning',
@@ -55,6 +58,6 @@ Locales['sv'] = {
   ['used_bandage'] = 'Du har använt ~y~1x~s~ ~b~Bandage~s~',
   ['not_enough_medikit'] = 'Du har inget ~b~Medecinkit~w~.',
   ['not_enough_bandage'] = 'Du har inget ~b~Bandage~w~.',
-  ['healed'] = 'Du har blivit återupplivad.',
+  ['healed'] = 'dina skador har blivit behandlade.',
   -- Misc
 }
