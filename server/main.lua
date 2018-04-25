@@ -51,12 +51,6 @@ AddEventHandler('esx_phone:getDistpatchRequestId', function(cb)
   cb(GetDistpatchRequestId())
 end)
 
-AddEventHandler('onResourceStart', function(ressource)
-  if ressource == 'esx_phone' then
-    TriggerEvent('esx_phone:ready')
-  end
-end)
-
 AddEventHandler('esx:playerLoaded', function(source)
 
   local xPlayer = ESX.GetPlayerFromId(source)

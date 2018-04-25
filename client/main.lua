@@ -263,7 +263,7 @@ Citizen.CreateThread(function()
       DisableControlAction(0, 17,   true) -- Select Prev Weapon
     else
 
-      if IsControlPressed(0, Keys['F1']) and (GetGameTimer() - GUI.Time) > 150 then
+      if IsControlPressed(0, Keys['F1']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
 
         if not ESX.UI.Menu.IsOpen('phone', GetCurrentResourceName(), 'main') then
           ESX.UI.Menu.CloseAll()
