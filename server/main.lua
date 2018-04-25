@@ -72,9 +72,8 @@ AddEventHandler('esx_holdup:rob', function(robb)
 						rob = false
 						if xPlayer then
 							local award = store.reward
-							
-							TriggerClientEvent('esx_holdup:robberycomplete', savedSource, reward)
-							xPlayer.addAccountMoney('black_money', reward)
+							TriggerClientEvent('esx_holdup:robberycomplete', savedSource, award)
+							xPlayer.addAccountMoney('black_money', award)
 							
 							local xPlayers = ESX.GetPlayers()
 							for i=1, #xPlayers, 1 do
