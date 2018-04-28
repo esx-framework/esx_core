@@ -15,11 +15,11 @@ Locales['fr'] = {
   ['revive_complete'] = 'vous avez réanimé ~y~%s~s~',
   ['revive_complete_award'] = 'vous avez réanimé ~y~%s~s~, ~g~$%s~s~',
   ['heal_inprogress'] = 'you are healing!',
-  ['heal_complete'] = 'you have healed ~y~%s~s~',
+  ['heal_complete'] = 'vous avez soigné ~y~%s~s~',
   ['no_players'] = 'aucun joueur à proximité',
   ['no_vehicles'] = 'aucun véhicule à proximité',
   ['player_not_unconscious'] = 'n\'est pas inconscient',
-  ['player_not_conscious'] = 'that player is not conscious!',
+  ['player_not_conscious'] = 'Cette personne est inconsciente!',
   -- Boss Menu
   ['deposit_society'] = 'déposer argent',
   ['withdraw_society'] = 'retirer argent société',
@@ -33,7 +33,7 @@ Locales['fr'] = {
   ['open_pharmacy'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir la pharmacie.',
   ['pharmacy_menu_title'] = 'Pharmacie',
   ['pharmacy_take'] = 'Prendre',
-  ['medikit'] = 'medikit',
+  ['medikit'] = 'kit de soin',
   ['bandage'] = 'bandage',
   ['max_item'] = 'vous en portez déjà assez sur vous.',
   -- F6 Menu
@@ -50,13 +50,13 @@ Locales['fr'] = {
   ['yes'] = 'oui',
   ['please_wait'] = 'Vous serez automatiquement transporté à l\'hôpital dans ~b~%s minutes %s secondes~s~',
   ['press_respawn'] = 'appuyez sur [~b~E~w~] pour réapparaître.',
-  ['respawn_fine'] = 'you paid ~r~$%s~s~ for respawning.',
+  ['respawn_fine'] = 'vous avez payer ~r~$%s~s~ pour réapparaître.',
   -- Revive
   ['revive_help'] = 'relancer un joueur',
   -- Item
-  ['used_medikit'] = 'vous avez utilisé 1x medikit',
+  ['used_medikit'] = 'vous avez utilisé 1x kit de soin',
   ['used_bandage'] = 'vous avez utilisé 1x bandage',
-  ['not_enough_medikit'] = 'vous n\'avez pas de ~b~medikit~w~.',
+  ['not_enough_medikit'] = 'vous n\'avez pas de ~b~kit de soin~w~.',
   ['not_enough_bandage'] = 'vous n\'avez pas de ~b~bandage~w~.',
   ['healed'] = 'vous avez été soigné.',
   -- Misc
