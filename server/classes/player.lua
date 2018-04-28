@@ -14,7 +14,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   self.identifier = self.player.get('identifier')
 
   self.setMoney = function(m)
-    self.player.setMoney(m)
+    if m >= 0 then
+      self.player.setMoney(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 cash balance)')
+    end
   end
 
   self.getMoney = function()
@@ -22,7 +26,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   end
 
   self.setBankBalance = function(m)
-    self.player.setBankBalance(m)
+    if m >= 0 then
+      self.player.setBankBalance(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 bank balance)')
+    end
   end
 
   self.getBank = function()
@@ -42,19 +50,35 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   end
 
   self.addMoney = function(m)
-    self.player.addMoney(m)
+    if m >= 0 then
+      self.player.addMoney(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 cash balance)')
+    end
   end
 
   self.removeMoney = function(m)
-    self.player.removeMoney(m)
+    if m >= 0 then
+      self.player.removeMoney(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 cash balance)')
+    end
   end
 
   self.addBank = function(m)
-    self.player.addBank(m)
+    if m >= 0 then
+      self.player.addBank(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 bank balance)')
+    end
   end
 
   self.removeBank = function(m)
-    self.player.removeBank(m)
+    if m >= 0 then
+      self.player.removeBank(m)
+    else
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 bank balance)')
+    end
   end
 
   self.displayMoney = function(m)
@@ -227,6 +251,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   end
 
   self.setAccountMoney = function(a, m)
+    if m < 0 then
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 account balance)')
+      return
+    end
 
     local account   = self.getAccount(a)
     local prevMoney = account.money
@@ -242,6 +270,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   end
 
   self.addAccountMoney = function(a, m)
+    if m < 0 then
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 account balance)')
+      return
+    end
 
     local account  = self.getAccount(a)
     local newMoney = account.money + m
@@ -256,6 +288,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
   end
 
   self.removeAccountMoney = function(a, m)
+    if m < 0 then
+      print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 account balance)')
+      return
+    end
+
     local account  = self.getAccount(a)
     local newMoney = account.money - m
 
