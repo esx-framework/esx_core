@@ -1082,23 +1082,45 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
+
+  local trackedEntities = {
+      'prop_roadcone02a',
+      'prop_toolchest_01'
+  }
+
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     local playerPed = GetPlayerPed(-1)
     local coords    = GetEntityCoords(playerPed)
 
-    local entity, distance = ESX.Game.GetClosestObject({
-      'prop_roadcone02a',
-      'prop_toolchest_01'
-    })
+    local closestDistance = -1
+    local closestEntity   = nil
 
-    if distance ~= -1 and distance <= 3.0 then
+    for i=1, #trackedEntities, 1 do
 
-      if LastEntity ~= entity then
-        TriggerEvent('esx_mecanojob:hasEnteredEntityZone', entity)
-        LastEntity = entity
+      local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
+
+      if DoesEntityExist(object) then
+
+        local objCoords = GetEntityCoords(object)
+        local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
+
+        if closestDistance == -1 or closestDistance > distance then
+          closestDistance = distance
+          closestEntity   = object
+        end
+
+      end
+
+    end
+
+    if closestDistance ~= -1 and closestDistance <= 3.0 then
+
+      if LastEntity ~= closestEntity then
+        TriggerEvent('esx_mecanojob:hasEnteredEntityZone', closestEntity)
+        LastEntity = closestEntity
       end
 
     else
@@ -1112,7 +1134,6 @@ Citizen.CreateThread(function()
 
   end
 end)
-
 
 -- Key Controls
 Citizen.CreateThread(function()
