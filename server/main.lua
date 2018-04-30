@@ -248,7 +248,8 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
       if foundNumber then
 
-        if phoneNumber == xPlayer.get('phoneNumber') then
+        -- if phoneNumber == xPlayer.get('phoneNumber') then
+        if false then
           TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
         else
 
@@ -290,6 +291,60 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
           end
         end
 
+      else
+        TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
+      end
+
+    end
+  )
+
+end)
+
+RegisterServerEvent('esx_phone:removePlayerContact')
+AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactName)
+
+  local _source     = source
+  local xPlayer     = ESX.GetPlayerFromId(_source)
+  local foundNumber = false
+  local foundPlayer = nil
+
+  MySQL.Async.fetchAll(
+    'SELECT phone_number FROM users WHERE phone_number = @number',
+    {
+      ['@number'] = phoneNumber
+    },
+    function(result)
+
+      if result[1] ~= nil then
+        foundNumber = true
+      end
+
+      if foundNumber then
+
+        local contacts        = xPlayer.get('contacts')
+
+        for key, value in pairs(contacts) do
+          if value.name == contactName and value.number == phoneNumber then
+            table.remove(contacts,key)
+          end
+        end
+
+        xPlayer.set('contacts', contacts)
+
+        MySQL.Async.execute(
+          'DELETE FROM user_contacts WHERE identifier=@identifier AND name=@name AND number=@number',
+          {
+            ['@identifier'] = xPlayer.identifier,
+            ['@name']       = contactName,
+            ['@number']     = phoneNumber
+          },
+          function(rowsChanged)
+
+            TriggerClientEvent('esx:showNotification', _source, _U('contact_removed'))
+
+            TriggerClientEvent('esx_phone:removeContact', _source, contactName, phoneNumber)
+          end
+        )
       else
         TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
       end

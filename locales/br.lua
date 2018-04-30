@@ -7,5 +7,6 @@ Locales['br'] = {
   ['cannot_add_self'] = 'Você não pode se adicionar',
   ['number_in_contacts'] = 'Este número já está na sua lista de contatos',
   ['contact_added'] = 'Contato adicionado',
+  ['contact_removed'] = 'the contact has been removed!',
   ['number_not_assigned'] = 'Este número não foi atribuído...',
 }
