@@ -22,21 +22,25 @@ local TargetCoords            = nil
 local CurrentlyTowedVehicle   = nil
 local Blips                   = {}
 local NPCOnJob                = false
-local NPCTargetTowable         = nil
-local NPCTargetTowableZone     = nil
+local NPCTargetTowable        = nil
+local NPCTargetTowableZone    = nil
 local NPCHasSpawnedTowable    = false
 local NPCLastCancel           = GetGameTimer() - 5 * 60000
 local NPCHasBeenNextToTowable = false
 local NPCTargetDeleterZone    = false
+local IsDead                  = false
 
 ESX                           = nil
 GUI.Time                      = 0
 
 Citizen.CreateThread(function()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+	
+	Citizen.Wait(5000)
+	PlayerData = ESX.GetPlayerData()
 end)
 
 function SelectRandomTowable()
@@ -112,6 +116,7 @@ function OpenMecanoActionsMenu()
     'default', GetCurrentResourceName(), 'mecano_actions',
     {
       title    = _U('mechanic'),
+      align    = 'top-left',
       elements = elements
     },
     function(data, menu)
@@ -174,6 +179,7 @@ function OpenMecanoActionsMenu()
               'default', GetCurrentResourceName(), 'spawn_vehicle',
               {
                 title    = _U('service_vehicle'),
+                align    = 'top-left',
                 elements = elements
               },
               function(data, menu)
@@ -270,6 +276,7 @@ function OpenMecanoHarvestMenu()
       'default', GetCurrentResourceName(), 'mecano_harvest',
       {
         title    = _U('harvest'),
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -316,6 +323,7 @@ function OpenMecanoCraftMenu()
       'default', GetCurrentResourceName(), 'mecano_craft',
       {
         title    = _U('craft'),
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -355,6 +363,7 @@ function OpenMobileMecanoActionsMenu()
     'default', GetCurrentResourceName(), 'mobile_mecano_actions',
     {
       title    = _U('mechanic'),
+      align    = 'top-left',
       elements = {
         {label = _U('billing'),    value = 'billing'},
         {label = _U('hijack'),     value = 'hijack_vehicle'},
@@ -662,6 +671,7 @@ function OpenGetStocksMenu()
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = _U('mechanic_stock'),
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -723,6 +733,7 @@ ESX.TriggerServerCallback('esx_mecanojob:getPlayerInventory', function(inventory
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = _U('inventory'),
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -1190,11 +1201,11 @@ Citizen.CreateThread(function()
           end
         end
 
-        if IsControlJustReleased(0, Keys['F6']) and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
+        if IsControlJustReleased(0, Keys['F6']) and not IsDead and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
             OpenMobileMecanoActionsMenu()
         end
 
-        if IsControlJustReleased(0, Keys['DELETE']) and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
+        if IsControlJustReleased(0, Keys['DELETE']) and not IsDead and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
 
           if NPCOnJob then
 
@@ -1220,4 +1231,12 @@ Citizen.CreateThread(function()
         end
 
     end
+end)
+
+AddEventHandler('esx:onPlayerDeath', function()
+	IsDead = true
+end)
+
+AddEventHandler('playerSpawned', function(spawn)
+	IsDead = false
 end)

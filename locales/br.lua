@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['br'] = {
   ['mechanic']                  = 'Mecânico',
   ['drive_to_indicated']        = '~y~Dirija~s~ para a localização indicada.',
   ['mission_canceled']          = 'Missão ~r~cancelada~s~',
