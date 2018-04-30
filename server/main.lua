@@ -3,52 +3,53 @@ local ItemsLabels = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('onMySQLReady', function()
-
+-- Load item labels
+Citizen.CreateThread(function()
+	Citizen.Wait(5000)
+	
 	MySQL.Async.fetchAll(
-		'SELECT * FROM items',
-		{},
-		function(result)
-
-			for i=1, #result, 1 do
-				ItemsLabels[result[i].name] = result[i].label
-			end
-
+	'SELECT * FROM items',
+	{},
+	function(result)
+		for i=1, #result, 1 do
+			ItemsLabels[result[i].name] = result[i].label
 		end
-	)
-
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
 
 	MySQL.Async.fetchAll(
-		'SELECT * FROM shops',
-		{},
-		function(result)
-			local shopItems  = {}
-			for i=1, #result, 1 do
-				if shopItems[result[i].name] == nil then
-					shopItems[result[i].name] = {}
-				end
-				
-				table.insert(shopItems[result[i].name], {
-					name  = result[i].item,
-					price = result[i].price,
-					label = ItemsLabels[result[i].item]
-				})
+	'SELECT * FROM shops',
+	{},
+	function(result)
+		local shopItems  = {}
+		for i=1, #result, 1 do
+			if shopItems[result[i].name] == nil then
+				shopItems[result[i].name] = {}
 			end
-			cb(shopItems)
+			
+			table.insert(shopItems[result[i].name], {
+				name  = result[i].item,
+				price = result[i].price,
+				label = ItemsLabels[result[i].item]
+			})
 		end
-	)
-
+		cb(shopItems)
+	end)
 end)
 
 RegisterServerEvent('esx_shops:buyItem')
 AddEventHandler('esx_shops:buyItem', function(itemName, price)
-
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
+	
+	-- is the player trying to cheat?
+	if price < 0 then
+		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to cheat money!')
+		return
+	end
 
 	-- can the player afford this item?
 	if xPlayer.getMoney() >= price then

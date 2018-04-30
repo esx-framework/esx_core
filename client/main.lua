@@ -10,17 +10,16 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-end)
-
-AddEventHandler('onClientMapStart', function()
-
+	
+	Citizen.Wait(5000)
+	
 	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
 		for k,v in pairs(ShopItems) do
 			Config.Zones[k].Items = v
 		end
 	end)
-
 end)
+
 
 function OpenShopMenu(zone)
 	local elements = {}
@@ -28,7 +27,7 @@ function OpenShopMenu(zone)
 	
 		local item = Config.Zones[zone].Items[i]
 		table.insert(elements, {
-			label     = item.label .. ' - <span style="color: green;">' .. item.price .. '$</span>',
+			label     = item.label .. ' - <span style="color: green;">$' .. item.price .. '</span>',
 			realLabel = item.label,
 			value     = item.name,
 			price     = item.price
