@@ -16,12 +16,14 @@ local Instance                = {}
 local InstanceInvite          = nil
 local InstancedPlayers        = {}
 local RegisteredInstanceTypes = {}
+local InsideInstance          = false
+ESX                           = nil
 
-function ShowNotification(msg)
-  SetNotificationTextEntry('STRING')
-  AddTextComponentString(msg)
-  DrawNotification(0, 1)
-end
+Citizen.CreateThread(function()
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+end)
 
 function GetInstance()
   return Instance
@@ -37,7 +39,7 @@ function CloseInstance()
 end
 
 function EnterInstance(instance)
-
+  InsideInstance = true
   TriggerServerEvent('instance:enter', instance.host)
 
   if RegisteredInstanceTypes[instance.type].enter ~= nil then
@@ -60,7 +62,7 @@ function LeaveInstance()
 
     TriggerServerEvent('instance:leave', Instance.host)
   end
-
+  InsideInstance = false
 end
 
 function InviteToInstance(type, player, data)
@@ -130,13 +132,13 @@ end)
 RegisterNetEvent('instance:onPlayerEntered')
 AddEventHandler('instance:onPlayerEntered', function(instance, player)
   Instance = instance
-  ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('entered_into'))
+  ESX.ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('entered_into'))
 end)
 
 RegisterNetEvent('instance:onPlayerLeft')
 AddEventHandler('instance:onPlayerLeft', function(instance, player)
   Instance = instance
-  ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('left_out'))
+  ESX.ShowNotification(GetPlayerName(GetPlayerFromServerId(player)) .. _('left_out'))
 end)
 
 RegisterNetEvent('instance:onInvite')
@@ -153,7 +155,7 @@ AddEventHandler('instance:onInvite', function(instance, type, data)
     Citizen.Wait(10000)
 
     if InstanceInvite ~= nil then
-      ShowNotification(_U('invite_expired'))
+      ESX.ShowNotification(_U('invite_expired'))
       InstanceInvite = nil
     end
 
@@ -167,7 +169,7 @@ RegisterInstanceType('default')
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(0)
 
     if InstanceInvite ~= nil then
       SetTextComponentFormat('STRING')
@@ -182,7 +184,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(10)
 
     if InstanceInvite ~= nil and IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
 
@@ -190,7 +192,7 @@ Citizen.CreateThread(function()
 
       EnterInstance(InstanceInvite)
 
-      ShowNotification(_U('entered_instance'))
+      ESX.ShowNotification(_U('entered_instance'))
 
       InstanceInvite = nil
       GUI.Time       = GetGameTimer()
@@ -206,13 +208,13 @@ Citizen.CreateThread(function()
 
   while true do
 
-    Wait(0)
+    Citizen.Wait(0)
 
     if Instance.host ~= nil then
 
       local playerPed = GetPlayerPed(-1)
 
-      for i=0, 32, 1 do
+      for i=0, Config.MaxPlayers, 1 do
 
         local found = false
 
@@ -240,7 +242,7 @@ Citizen.CreateThread(function()
 
       local playerPed = GetPlayerPed(-1)
 
-      for i=0, 32, 1 do
+      for i=0, Config.MaxPlayers, 1 do
 
         local found = false
 
@@ -272,4 +274,20 @@ end)
 
 Citizen.CreateThread(function()
   TriggerEvent('instance:loaded')
+end)
+
+-- Fix vehicles randomly spawning nearby the player inside an instance
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0) -- must be run every frame
+		
+		if InsideInstance then
+			SetVehicleDensityMultiplierThisFrame(0.0)
+			SetParkedVehicleDensityMultiplierThisFrame(0.0)
+			local pos = GetEntityCoords(GetPlayerPed(-1))
+			RemoveVehiclesFromGeneratorsInArea(pos['x'] - 900.0, pos['y'] - 900.0, pos['z'] - 900.0, pos['x'] + 900.0, pos['y'] + 900.0, pos['z'] + 900.0);
+		else
+			Citizen.Wait(1000)
+		end
+	end
 end)

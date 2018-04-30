@@ -1,5 +1,4 @@
-# fxserver-instance
-FXServer Instance
+# instance
 
 [INSTALLATION]
 
