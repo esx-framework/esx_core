@@ -29,20 +29,18 @@ function ShowJobListingMenu(data)
 		ESX.UI.Menu.CloseAll()
 
 		ESX.UI.Menu.Open(
-			'default', GetCurrentResourceName(), 'joblisting',
-			{
-				title    = _U('job_center'),
-				elements = elements
-			},
-			function(data, menu)
-				TriggerServerEvent('esx_joblisting:setJob', data.current.value)
-				ESX.ShowNotification(_U('new_job'))
-				menu.close()
-			end,
-			function(data, menu)
-				menu.close()
-			end
-		)
+		'default', GetCurrentResourceName(), 'joblisting',
+		{
+			title    = _U('job_center'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+			TriggerServerEvent('esx_joblisting:setJob', data.current.value)
+			ESX.ShowNotification(_U('new_job'))
+			menu.close()
+		end, function(data, menu)
+			menu.close()
+		end)
 
 	end)
 end
