@@ -27,4 +27,5 @@ Locales['de'] = {
   ['must_in_vehicle'] = 'Du musst in einem Fahrzeug sein um die Mission starten zu können',
   ['have_earned'] = 'verdient ~g~$',
   ['comp_earned'] = 'Die Firma verdient ~g~$',
+  ['player_cannot_hold'] = 'you do ~r~not~w~ have enough ~y~free space~w~ in your inventory!',
 }

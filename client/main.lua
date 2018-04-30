@@ -25,15 +25,19 @@ local IsNearCustomer            = false
 local CustomerIsEnteringVehicle = false
 local CustomerEnteredVehicle    = false
 local TargetCoords              = nil
+local IsDead                    = false
 
 ESX                             = nil
 GUI.Time                        = 0
 
 Citizen.CreateThread(function()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+	
+	Citizen.Wait(5000)
+	PlayerData = ESX.GetPlayerData()
 end)
 
 function DrawSub(msg, time)
@@ -68,8 +72,6 @@ function GetRandomWalkingNPC()
   if #search > 0 then
     return search[GetRandomIntInRange(1, #search)]
   end
-
-  print('Using fallback code to find walking ped')
 
   for i=1, 250, 1 do
 
@@ -156,6 +158,7 @@ function OpenTaxiActionsMenu()
     'default', GetCurrentResourceName(), 'taxi_actions',
     {
       title    = 'Taxi',
+      align    = 'top-left',
       elements = elements
     },
     function(data, menu)
@@ -185,7 +188,7 @@ function OpenTaxiActionsMenu()
               {
                 title    = _U('spawn_veh'),
                 align    = 'top-left',
-                elements = elements,
+                elements = elements
               },
               function(data, menu)
 
@@ -277,6 +280,7 @@ function OpenMobileTaxiActionsMenu()
     'default', GetCurrentResourceName(), 'mobile_taxi_actions',
     {
       title    = 'Taxi',
+      align    = 'top-left',
       elements = {
         {label = _U('billing'), value = 'billing'}
       }
@@ -329,9 +333,6 @@ end
 function OpenGetStocksMenu()
 
   ESX.TriggerServerCallback('esx_taxijob:getStockItems', function(items)
-
-    print(json.encode(items))
-
     local elements = {}
 
     for i=1, #items, 1 do
@@ -342,6 +343,7 @@ function OpenGetStocksMenu()
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = 'Taxi Stock',
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -362,9 +364,10 @@ function OpenGetStocksMenu()
             else
               menu2.close()
               menu.close()
-              OpenGetStocksMenu()
-
               TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
+
+              Citizen.Wait(1000)
+              OpenGetStocksMenu()
             end
 
           end,
@@ -403,6 +406,7 @@ function OpenPutStocksMenu()
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = _U('inventory'),
+        align    = 'top-left',
         elements = elements
       },
       function(data, menu)
@@ -423,9 +427,10 @@ function OpenPutStocksMenu()
             else
               menu2.close()
               menu.close()
-              OpenPutStocksMenu()
-
               TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
+
+              Citizen.Wait(1000)
+              OpenPutStocksMenu()
             end
 
           end,
@@ -443,7 +448,6 @@ function OpenPutStocksMenu()
   end)
 
 end
-
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -793,7 +797,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 300 then
+      if IsControlPressed(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 300 then
 
         if CurrentAction == 'taxi_actions_menu' then
           OpenTaxiActionsMenu()
@@ -825,12 +829,12 @@ Citizen.CreateThread(function()
 
     end
 
-    if IsControlPressed(0,  Keys['F6']) and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlPressed(0, Keys['F6']) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 150 then
       OpenMobileTaxiActionsMenu()
       GUI.Time = GetGameTimer()
     end
 
-    if IsControlPressed(0,  Keys['DELETE']) and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlPressed(0, Keys['DELETE']) and not IsDead and (GetGameTimer() - GUI.Time) > 150 then
 
       if OnJob then
         StopTaxiJob()
@@ -873,4 +877,12 @@ Citizen.CreateThread(function()
     end
 
   end
+end)
+
+AddEventHandler('esx:onPlayerDeath', function()
+	IsDead = true
+end)
+
+AddEventHandler('playerSpawned', function(spawn)
+	IsDead = false
 end)

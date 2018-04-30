@@ -37,4 +37,5 @@ Locales['fr'] = {
   ['taxi_client'] = 'client Taxi',
   ['have_withdrawn'] = 'Vous avez retiré x',
   ['added'] = 'Vous avez ajouté x',
+  ['player_cannot_hold'] = 'you do ~r~not~w~ have enough ~y~free space~w~ in your inventory!',
 }

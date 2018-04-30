@@ -27,4 +27,5 @@ Locales['br'] = {
   ['must_in_vehicle'] = 'Você deve estar em um veículo para começar a missão',
   ['have_earned'] = 'Você ganhou ~g~$',
   ['comp_earned'] = 'Sua empresa ganhou ~g~$',
+  ['player_cannot_hold'] = 'you do ~r~not~w~ have enough ~y~free space~w~ in your inventory!',
 }
