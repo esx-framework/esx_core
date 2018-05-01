@@ -370,17 +370,9 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
     sourceXPlayer.removeWeapon(itemName)
     targetXPlayer.addWeapon(itemName, itemCount)
     
-    local weaponLabel = itemName
-
-    for i=1, #Config.Weapons, 1 do
-      if Config.Weapons[i].name == itemName then
-        weaponLabel = Config.Weapons[i].label
-        break
-      end
-    end
-
+    local weaponLabel = ESX.GetWeaponLabel(itemName)
     TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon', weaponLabel, itemCount, targetXPlayer.name))
-    TriggerClientEvent('esx:showNotification', target, _U('recived_weapon', weaponLabel, itemCount, sourceXPlayer.name))
+    TriggerClientEvent('esx:showNotification', target,  _U('recived_weapon', weaponLabel, itemCount, sourceXPlayer.name))
   end
 
 end)
@@ -505,18 +497,9 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
   elseif type == 'item_weapon' then
 
     local xPlayer      = ESX.GetPlayerFromId(source)
-    local weaponLabel  = itemName
-    local weaponName   = nil
-    local weaponPickup = nil
-
-    for i=1, #Config.Weapons, 1 do
-      if Config.Weapons[i].name == itemName then
-        weaponLabel = Config.Weapons[i].label
-        weaponName = Config.Weapons[i].name
-        weaponPickup = 'PICKUP_'..weaponName
-        break
-      end
-    end
+    local weaponName   = itemName
+    local weaponLabel  = ESX.GetWeaponLabel(weaponName)
+    local weaponPickup = 'PICKUP_' .. weaponName
     
     TriggerClientEvent('esx:showNotification', _source, _U('delete_five_min'))
     

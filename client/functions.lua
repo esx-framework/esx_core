@@ -1177,7 +1177,7 @@ ESX.ShowInventory = function()
             if type == 'item_weapon' then
               local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
               local closestPed = GetPlayerPed(closestPlayer)
-              local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
+              local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1), GetHashKey(item))
               if not IsPedSittingInAnyVehicle(closestPed) then
                 if closestPlayer ~= -1 and closestDistance < 3.0 then
                   if pedAmmo > 0 then
