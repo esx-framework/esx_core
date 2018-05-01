@@ -109,6 +109,21 @@ AddEventHandler('esx_phone:addContact', function(name, phoneNumber)
   })
 end)
 
+RegisterNetEvent('esx_phone:removeContact')
+AddEventHandler('esx_phone:removeContact', function(name, phoneNumber)
+
+  for key, value in pairs(PhoneData.contacts) do
+    if value.name == name and value.number == phoneNumber then
+      table.remove(PhoneData.contacts,key)
+    end
+  end
+  -- CALL HERE RELOADCONTACT
+  SendNUIMessage({
+    contactRemoved = true,
+    phoneData      = PhoneData
+  })
+end)
+
 RegisterNetEvent('esx_phone:addSpecialContact')
 AddEventHandler('esx_phone:addSpecialContact', function(name, phoneNumber, base64Icon)
 
@@ -142,6 +157,16 @@ RegisterNUICallback('add_contact', function(data, cb)
 
 end)
 
+RegisterNUICallback('remove_contact', function(data, cb)
+
+  local phoneNumber = tonumber(data.phoneNumber)
+  local contactName = tostring(data.contactName)
+
+  if phoneNumber then
+    TriggerServerEvent('esx_phone:removePlayerContact', phoneNumber, contactName)
+  end
+
+end)
 
 RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)

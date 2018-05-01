@@ -305,7 +305,7 @@ html, body {
 	display: block;
 }
 
-.actions .new-msg:hover, .actions .gps:hover, .actions .ok-btn:hover {
+.actions .new-msg:hover, .actions .gps:hover, .actions .ok-btn:hover, .actions .del-contact:hover {
 	background-color: #f1f1f1;
 }
 
