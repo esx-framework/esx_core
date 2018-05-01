@@ -1,12 +1,7 @@
 # esx_rpchat
-FXServer ESX RP Chat
-
 
 #### Description
-This is a proximity chat script. With a few commands such as Twitter, OOC, Local Me, and Local Do.
-
-#### Requirements
-- [esx_identity](https://github.com/ESX-Org/esx_identity)
+This is a proximity chat script. With a few commands such as Twitter, OOC and Local Me
 
 #### Download
 

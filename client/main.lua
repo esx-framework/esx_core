@@ -1,38 +1,27 @@
---[[
-
-  ESX RP Chat
-
---]]
-
-RegisterNetEvent('sendProximityMessage')
-AddEventHandler('sendProximityMessage', function(id, name, message)
-  local myId = PlayerId()
-  local pid = GetPlayerFromServerId(id)
-  if pid == myId then
-    TriggerEvent('chatMessage', "^4" .. name .. "", {0, 153, 204}, "^7 " .. message)
-  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
-    TriggerEvent('chatMessage', "^4" .. name .. "", {0, 153, 204}, "^7 " .. message)
-  end
+RegisterNetEvent('esx_rpchat:sendProximityMessage')
+AddEventHandler('esx_rpchat:sendProximityMessage', function(id, prefix, message, color)
+	local _source = PlayerId()
+	local target = GetPlayerFromServerId(id)
+	
+	if target == _source then
+		TriggerEvent('chatMessage', prefix, color, message)
+	elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(_source)), GetEntityCoords(GetPlayerPed(target)), true) < 19.999 then
+		TriggerEvent('chatMessage', prefix, color, message)
+	end
 end)
 
-RegisterNetEvent('sendProximityMessageMe')
-AddEventHandler('sendProximityMessageMe', function(id, name, message)
-  local myId = PlayerId()
-  local pid = GetPlayerFromServerId(id)
-  if pid == myId then
-    TriggerEvent('chatMessage', "", {255, 0, 0}, " ^6 " .. name .." ".."^6 " .. message)
-  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
-    TriggerEvent('chatMessage', "", {255, 0, 0}, " ^6 " .. name .." ".."^6 " .. message)
-  end
+Citizen.CreateThread(function()
+	TriggerEvent('chat:addSuggestion', '/ooc',  _U('ooc_help'),  {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/news', _U('news_help'), {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
 end)
 
-RegisterNetEvent('sendProximityMessageDo')
-AddEventHandler('sendProximityMessageDo', function(id, name, message)
-  local myId = PlayerId()
-  local pid = GetPlayerFromServerId(id)
-  if pid == myId then
-    TriggerEvent('chatMessage', "", {255, 0, 0}, " ^0* " .. name .."  ".."^0  " .. message)
-  elseif GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(myId)), GetEntityCoords(GetPlayerPed(pid)), true) < 19.999 then
-    TriggerEvent('chatMessage', "", {255, 0, 0}, " ^0* " .. name .."  ".."^0  " .. message)
-  end
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		TriggerEvent('chat:removeSuggestion', '/ooc')
+		TriggerEvent('chat:removeSuggestion', '/twt')
+		TriggerEvent('chat:removeSuggestion', '/me')
+		TriggerEvent('chat:removeSuggestion', '/news')
+	end
 end)
