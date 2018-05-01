@@ -315,7 +315,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  Keys['E']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 300 then
+      if IsControlPressed(0, Keys['E']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 300 then
 
         if CurrentAction == 'dispatch' then
           TriggerServerEvent('esx_phone:stopDispatch', CurrentDispatchRequestId)

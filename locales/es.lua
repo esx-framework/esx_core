@@ -8,5 +8,5 @@ Locales['es'] = {
   ['number_in_contacts'] = 'Este número ya está en tu lista de contactos',
   ['contact_added'] = 'Contacto añadido',
   ['contact_removed'] = 'the contact has been removed!',
-  ['number_not_assigned'] = 'El número no se ha añadido todavía...',
+  ['number_not_assigned'] = 'el número no se ha añadido todavía...',
 }

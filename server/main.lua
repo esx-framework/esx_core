@@ -248,8 +248,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
       if foundNumber then
 
-        -- if phoneNumber == xPlayer.get('phoneNumber') then
-        if false then
+        if phoneNumber == xPlayer.get('phoneNumber') then
           TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
         else
 
