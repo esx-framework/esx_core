@@ -1331,7 +1331,7 @@ ESX.ShowInventory = function()
                       local finalAmmoSource = math.floor(pedAmmo - quantity)
                       SetPedAmmo(playerPed, item, finalAmmoSource)
                       AddAmmoToPed(closestPed, item, quantity)
-                      ESX.ShowNotification(_U('gave_ammo', quantity))
+                      ESX.ShowNotification(_U('gave_ammo', quantity, GetPlayerName(closestPlayer)))
                       -- todo notify target that he recived ammo
                       menu2.close()
                       menu.close()
