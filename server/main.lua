@@ -204,108 +204,99 @@ AddEventHandler('esx_phone:send', function(phoneNumber, message, anon, position)
 end)
 
 AddEventHandler('esx_phone:registerNumber', function(number, type, sharePos, hasDispatch, hideNumber, hidePosIfAnon)
+	local hideNumber    = hideNumber    or false
+	local hidePosIfAnon = hidePosIfAnon or false
 
-  local hideNumber    = hideNumber    or false
-  local hidePosIfAnon = hidePosIfAnon or false
-
-  PhoneNumbers[number] = {
-    type          = type,
-    sharePos      = sharePos,
-    hasDispatch   = (hasDispatch or false),
-    hideNumber    = hideNumber,
-    hidePosIfAnon = hidePosIfAnon,
-    sources       = {}
-  }
-
+	PhoneNumbers[number] = {
+		type          = type,
+		sharePos      = sharePos,
+		hasDispatch   = (hasDispatch or false),
+		hideNumber    = hideNumber,
+		hidePosIfAnon = hidePosIfAnon,
+		sources       = {}
+	}
 end)
 
 AddEventHandler('esx_phone:addSource', function(number, source)
-  PhoneNumbers[number].sources[tostring(source)] = true
+	PhoneNumbers[number].sources[tostring(source)] = true
 end)
 
 AddEventHandler('esx_phone:removeSource', function(number, source)
-  PhoneNumbers[number].sources[tostring(source)] = nil
+	PhoneNumbers[number].sources[tostring(source)] = nil
 end)
 
 RegisterServerEvent('esx_phone:addPlayerContact')
 AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
+	local _source     = source
+	local xPlayer     = ESX.GetPlayerFromId(_source)
+	local foundNumber = false
+	phoneNumber = tonumber(phoneNumber)
+	
+	-- is the player trying to enter something else into the database?
+	if phoneNumber == nil then
+		print('esx_phone: ' .. xPlayer.identifier .. ' attempted to crash the database!')
+		return
+	end
 
-  local _source     = source
-  local xPlayer     = ESX.GetPlayerFromId(_source)
-  local foundNumber = false
-  local foundPlayer = nil
+	MySQL.Async.fetchAll(
+	'SELECT phone_number FROM users WHERE phone_number = @number',
+	{
+		['@number'] = phoneNumber
+	}, function(result)
+		if result[1] ~= nil then
+			foundNumber = true
+		end
+	end)
 
-  MySQL.Async.fetchAll(
-    'SELECT phone_number FROM users WHERE phone_number = @number',
-    {
-      ['@number'] = phoneNumber
-    },
-    function(result)
+	if foundNumber then
+		if phoneNumber == xPlayer.get('phoneNumber') then
+			TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
+		else
+			local hasAlreadyAdded = false
+			local contacts        = xPlayer.get('contacts')
 
-      if result[1] ~= nil then
-        foundNumber = true
-      end
+			for i=1, #contacts, 1 do
+				if contacts[i].number == phoneNumber then
+					hasAlreadyAdded = true
+					break
+				end
+			end
 
-      if foundNumber then
+			if hasAlreadyAdded then
+				TriggerClientEvent('esx:showNotification', _source, _U('number_in_contacts'))
+			else
 
-        if phoneNumber == xPlayer.get('phoneNumber') then
-          TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
-        else
+			table.insert(contacts, {
+				name   = contactName,
+				number = phoneNumber,
+			})
 
-          local hasAlreadyAdded = false
-          local contacts        = xPlayer.get('contacts')
+			xPlayer.set('contacts', contacts)
 
-          for i=1, #contacts, 1 do
-            if contacts[i].number == phoneNumber then
-              hasAlreadyAdded = true
-            end
-          end
-
-          if hasAlreadyAdded then
-            TriggerClientEvent('esx:showNotification', _source, _U('number_in_contacts'))
-          else
-
-            table.insert(contacts, {
-              name   = contactName,
-              number = phoneNumber,
-            })
-
-            xPlayer.set('contacts', contacts)
-
-            MySQL.Async.execute(
-              'INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
-              {
-                ['@identifier'] = xPlayer.identifier,
-                ['@name']       = contactName,
-                ['@number']     = phoneNumber
-              },
-              function(rowsChanged)
-
-                TriggerClientEvent('esx:showNotification', _source, _U('contact_added'))
-
-                TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber)
-              end
-            )
-
-          end
-        end
-
-      else
-        TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
-      end
-
-    end
-  )
+			MySQL.Async.execute(
+			'INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
+			{
+				['@identifier'] = xPlayer.identifier,
+				['@name']       = contactName,
+				['@number']     = phoneNumber
+			}, function(rowsChanged)
+				TriggerClientEvent('esx:showNotification', _source, _U('contact_added'))
+				TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber)
+			end)
+			
+			end
+		end
+	else
+		TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
+	end
 
 end)
 
 RegisterServerEvent('esx_phone:removePlayerContact')
 AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactName)
-
   local _source     = source
   local xPlayer     = ESX.GetPlayerFromId(_source)
   local foundNumber = false
-  local foundPlayer = nil
 
   MySQL.Async.fetchAll(
     'SELECT phone_number FROM users WHERE phone_number = @number',
