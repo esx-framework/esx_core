@@ -332,6 +332,23 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 
 end)
 
+ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source, cb, plate)
+	MySQL.Async.fetchAll(
+		'SELECT * FROM owned_vehicles WHERE plate = @plate', 
+		{
+			['@plate'] = plate
+		},
+		function(result)
+			if result[1] ~= nil then
+				local playerName = ESX.GetPlayerFromIdentifier(result[1].owner).name
+				cb(playerName, true)
+			else
+				cb('unknown', false)
+			end
+		end
+	)
+end)
+
 ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb)
 
   TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
