@@ -1,5 +1,4 @@
 Locales['en'] = {
-
   ['sex'] = 'sex',
   ['face'] = 'face',
   ['skin'] = 'skin',
@@ -50,5 +49,4 @@ Locales['en'] = {
   ['glasses_2'] = 'glasses 2',
   ['bag'] = 'bag',
   ['bag_color'] = 'bag color',
-
 }
