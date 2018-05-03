@@ -20,7 +20,7 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('mecano',4,'boss','Ägare',0,'{}','{}')
 ;
 
-INSERT INTO `items` (name, label, limit) VALUES
+INSERT INTO `items` (name, label, `limit`) VALUES
 	('gazbottle', 'Gas Flaska', 11),
 	('fixtool', 'Reparationsverktyg', 6),
 	('carotool', 'Verktyg', 4),
