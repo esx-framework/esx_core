@@ -1,36 +1,39 @@
-# fxserver-esx_drugs
-FXserver ESX Drugs
+# esx_drugs
+## Requirements
+ - [esx_policejob](https://github.com/ESX-Org/esx_policejob)
 
-[REQUIREMENTS]
+## Download & Installation
 
-  * esx_policejob => https://github.com/FXServer-ESX/fxserver-esx_policejob
-
-
-  [UPDATE]
-  to install opium :
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-INSERT INTO `items` (name, label) VALUES
-	('opium', 'Opium'),
-	('opium_pooch', 'Pochon de opium')
-;
+fvm install --save --folder=esx esx-org/esx_drugs
 ```
-  
-  [INSTALLATION]
 
-1) CD in your resources/[esx] folder
-2) Clone the repository
+### Using Git
 ```
-git clone https://github.com/FXServer-ESX/fxserver-esx_drugs esx_drugs
+cd resources
+git clone https://github.com/ESX-Org/esx_drugs [esx]/esx_drugs
 ```
-3) * Import esx_drugs.sql in your database
 
-4) Add this in your server.cfg :
+### Manually
+- Download https://github.com/ESX-Org/esx_drugs/archive/master.zip
+- Put it in the `[esx]` directory
+
+- Import `esx_drugs.sql` in your database
+- Add this in your `server.cfg`:
 
 ```
 start esx_drugs
 ```
 
-[FEATURES]
-* Use weed
-* Cops can't see or interact with the drugs zones
-* In the config.lua change the Config.RequiredCop to block the drugs zone in function of the cops count conected
+# Legal
+### License
+esx_drugs - drugs job
+
+Copyright (C) 2015-2018 Jérémie N'gadi
+
+This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
+
+This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
+
+You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.

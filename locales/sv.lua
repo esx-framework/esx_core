@@ -1,5 +1,4 @@
 Locales['sv'] = {
-
 	['press_collect_coke'] = 'klicka ~INPUT_CONTEXT~ för att plocka kokain',
 	['press_process_coke'] = 'klicka ~INPUT_CONTEXT~ för att bearbeta kokain',
 	['press_sell_coke'] = 'klicka ~INPUT_CONTEXT~ för att sälja coke',
@@ -32,5 +31,18 @@ Locales['sv'] = {
 	['not_enough_opium'] = 'Du har inte tillräckligt med opium för att ~r~bearbeta~s~',
 	['sold_one_opium'] = 'du har sålt ~y~1x~s~ ~b~väska med opium~s~',
 	['used_one_opium'] = 'Du använde 1 väska ~b~opium',
-
+	['exit_marker'] = 'tryck ~INPUT_CONTEXT~ för att avbryta pågående process',
+	-- Blips
+	['coke_field'] = 'coke field',
+	['coke_processing'] = 'coke processing',
+	['coke_dealer'] = 'coke dealer',
+	['meth_field'] = 'meth field',
+	['meth_processing'] = 'meth processing',
+	['meth_dealer'] = 'meth dealer',
+	['weed_field'] = 'weed field',
+	['weed_processing'] = 'weed processing',
+	['weed_dealer'] = 'weed dealer',
+	['opium_field'] = 'opium field',
+	['opium_processing'] = 'opium processing',
+	['opium_dealer'] = 'opium dealer',
 }
