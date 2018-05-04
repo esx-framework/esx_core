@@ -29,7 +29,7 @@ Locales['fr'] = {
   ['made_property'] = 'vous avez rendu une propriété',
   ['not_enough'] = 'vous n\'avez pas assez d\'argent',
   ['invalid_quantity'] = 'quantité invalide',
-  ['paid_rent'] = 'vous avez ~g~payé~s~ votre loyer : ~g~$',
+  ['paid_rent'] = 'vous avez ~g~payé~s~ votre loyer: ~g~$%s~s~',
   ['not_enough_in_property'] = 'there\'s not enough of ~r~that item~s~ in the property!',
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
 }
