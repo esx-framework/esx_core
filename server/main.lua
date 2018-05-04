@@ -423,70 +423,36 @@ ESX.RegisterServerCallback('esx_vehicleshop:getPlayerInventory', function (sourc
 end)
 
 if Config.EnablePvCommand then
-  TriggerEvent('es:addCommand', 'pv', function (source, args, user)
-    TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
-  end, {help = _U('leaving')})
+	TriggerEvent('es:addGroupCommand', 'pv', 'user', function(source, args, user)
+		TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
+	end, {help = _U('leaving')})
 end
 
-function PayRent (d, h, m)
-  MySQL.Async.fetchAll(
-    'SELECT * FROM users',
-    {},
-    function (_users)
-      local prevMoney = {}
-      local newMoney  = {}
+function PayRent()
+	MySQL.Async.fetchAll(
+	'SELECT * FROM rented_vehicles', {},
+	function (result)
+		for i=1, #result, 1 do
+			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
-      for i=1, #_users, 1 do
-        prevMoney[_users[i].identifier] = _users[i].money
-        newMoney[_users[i].identifier]  = _users[i].money
-      end
+			-- message player if connected
+			if xPlayer ~= nil then
+				xPlayer.removeBank(result[i].rent_price)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental', result[i].rent_price))
+			else -- pay rent either way
+				MySQL.Sync.execute(
+				'UPDATE users SET bank = bank - @bank WHERE identifier = @identifier',
+				{
+					['@bank']       = result[i].rent_price,
+					['@identifier'] = result[i].owner
+				})
+			end
 
-      MySQL.Async.fetchAll(
-        'SELECT * FROM rented_vehicles',
-        {},
-        function (result)
-          local xPlayers = ESX.GetPlayers()
-
-          for i=1, #result, 1 do
-            local foundPlayer = false
-            local xPlayer     = nil
-
-            for i=1, #xPlayers, 1 do
-              local xPlayer2 = ESX.GetPlayerFromId(xPlayers[i])
-
-              if xPlayer2.identifier == result[i].owner then
-                foundPlayer = true
-                xPlayer     = xPlayer2
-              end
-            end
-
-            if foundPlayer then
-              xPlayer.removeMoney(result[i].rent_price)
-              TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental') .. result[i].rent_price)
-            else
-              newMoney[result[i].owner] = newMoney[result[i].owner] - result[i].rent_price
-            end
-
-            TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
-              account.addMoney(result[i].rent_price)
-            end)
-          end
-
-          for k,v in pairs(prevMoney) do
-            if v ~= newMoney[k] then
-              MySQL.Async.execute(
-                'UPDATE users SET money = @money WHERE identifier = @identifier',
-                {
-                  ['@money']      = newMoney[k],
-                  ['@identifier'] = k,
-                }
-              )
-            end
-          end
-        end
-      )
-    end
-  )
+			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+				account.addMoney(result[i].rent_price)
+			end)
+		end
+	end)
 end
 
 TriggerEvent('cron:runAt', 22, 00, PayRent)

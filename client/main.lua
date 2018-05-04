@@ -420,6 +420,7 @@ function OpenResellerMenu ()
         if closestPlayer == -1 or closestDistance > 3.0 then
           ESX.ShowNotification(_U('no_players'))
         else
+          SetVehicleNumberPlateText(LastVehicles[#LastVehicles], string.upper(ESX.GetRandomString(8)))
           local vehicleProps = ESX.Game.GetVehicleProperties(LastVehicles[#LastVehicles])
           local model        = CurrentVehicleData.model
 
@@ -441,6 +442,7 @@ function OpenResellerMenu ()
           ESX.ShowNotification(_U('no_players'))
         else
           ESX.TriggerServerCallback('esx:getOtherPlayerData', function (xPlayer)
+            SetVehicleNumberPlateText(LastVehicles[#LastVehicles], string.upper(ESX.GetRandomString(8)))
             local vehicleProps = ESX.Game.GetVehicleProperties(LastVehicles[#LastVehicles])
             local model        = CurrentVehicleData.model
 
@@ -475,8 +477,7 @@ function OpenResellerMenu ()
               if closestPlayer == -1 or closestDistance > 5.0 then
                 ESX.ShowNotification(_U('no_players'))
               else
-                SetVehicleNumberPlateText(LastVehicles[#LastVehicles], 'LOC ' .. ESX.GetRandomString(5))
-
+                SetVehicleNumberPlateText(LastVehicles[#LastVehicles], 'RENT' .. string.upper(ESX.GetRandomString(4)))
                 local vehicleProps = ESX.Game.GetVehicleProperties(LastVehicles[#LastVehicles])
                 local model        = CurrentVehicleData.model
 
