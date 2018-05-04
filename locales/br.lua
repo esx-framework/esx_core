@@ -1,5 +1,6 @@
 Locales['br'] = {
-
+  ['have_withdrawn'] = 'you have withdrawn ~y~x%s~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~x%s~s~ ~b~%s~s~',
   ['free_prop'] = 'Propriedade gratuita',
   ['property'] = 'Propriedade',
   ['enter'] = 'Entrar',
@@ -11,7 +12,10 @@ Locales['br'] = {
   ['owned_properties'] = 'Propriedades adquiridas',
   ['available_properties'] = 'Propriedades disponíveis',
   ['invite_player'] = 'Convidar um jogador',
+  ['you_invited'] = 'you invited ~y~%s~s~ to your property',
   ['player_clothes'] = 'Roupas',
+  ['remove_cloth'] = 'remove clothing',
+  ['removed_cloth'] = 'the outfit has been removed from your wardrobe!',
   ['remove_object'] = 'Remover objeto',
   ['deposit_object'] = 'Depositar objeto',
   ['invite'] = 'Convidar',
@@ -25,6 +29,7 @@ Locales['br'] = {
   ['made_property'] = 'Você criou uma propriedade',
   ['not_enough'] = 'Você não tem dinheiro suficiente',
   ['invalid_quantity'] = 'Quantidade inválida',
-  ['paid_rent'] = 'Você ~g~pagou~s~ seu aluguel: ~g~$',
-
+  ['paid_rent'] = 'Você ~g~pagou~s~ seu aluguel: ~g~$%s~s~',
+  ['not_enough_in_property'] = 'there\'s not enough of ~r~that item~s~ in the property!',
+  ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
 }

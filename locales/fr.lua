@@ -1,5 +1,6 @@
 Locales['fr'] = {
-
+  ['have_withdrawn'] = 'you have withdrawn ~y~x%s~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~x%s~s~ ~b~%s~s~',
   ['free_prop'] = 'propriété libre',
   ['property'] = 'propriété',
   ['enter'] = 'entrer',
@@ -29,5 +30,6 @@ Locales['fr'] = {
   ['not_enough'] = 'vous n\'avez pas assez d\'argent',
   ['invalid_quantity'] = 'quantité invalide',
   ['paid_rent'] = 'vous avez ~g~payé~s~ votre loyer : ~g~$',
-
+  ['not_enough_in_property'] = 'there\'s not enough of ~r~that item~s~ in the property!',
+  ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
 }
