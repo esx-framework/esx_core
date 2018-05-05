@@ -227,10 +227,9 @@ end)
 
 RegisterServerEvent('esx_phone:addPlayerContact')
 AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
-	local _source     = source
-	local xPlayer     = ESX.GetPlayerFromId(_source)
-	local foundNumber = false
-	phoneNumber = tonumber(phoneNumber)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	phoneNumber   = tonumber(phoneNumber)
 	
 	-- is the player trying to enter something else into the database?
 	if phoneNumber == nil then
@@ -244,52 +243,41 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 		['@number'] = phoneNumber
 	}, function(result)
 		if result[1] ~= nil then
-			foundNumber = true
+			if phoneNumber == xPlayer.get('phoneNumber') then
+				TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
+			else
+				local contacts  = xPlayer.get('contacts')
+
+				for i=1, #contacts, 1 do
+					if contacts[i].number == phoneNumber then
+						TriggerClientEvent('esx:showNotification', _source, _U('number_in_contacts'))
+						return
+					end
+				end
+
+				table.insert(contacts, {
+					name   = contactName,
+					number = phoneNumber,
+				})
+
+				xPlayer.set('contacts', contacts)
+
+				MySQL.Async.execute(
+				'INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
+				{
+					['@identifier'] = xPlayer.identifier,
+					['@name']       = contactName,
+					['@number']     = phoneNumber
+				}, function(rowsChanged)
+					TriggerClientEvent('esx:showNotification', _source, _U('contact_added'))
+					TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber)
+				end)
+			end
+		-- there's a bug with mysql-async where some statements will break everything...
+		--else
+			--TriggerClientEvent('esx:showNotification', _source, _U('number_not_assigned'))
 		end
 	end)
-
-	if foundNumber then
-		if phoneNumber == xPlayer.get('phoneNumber') then
-			TriggerClientEvent('esx:showNotification', _source, _U('cannot_add_self'))
-		else
-			local hasAlreadyAdded = false
-			local contacts        = xPlayer.get('contacts')
-
-			for i=1, #contacts, 1 do
-				if contacts[i].number == phoneNumber then
-					hasAlreadyAdded = true
-					break
-				end
-			end
-
-			if hasAlreadyAdded then
-				TriggerClientEvent('esx:showNotification', _source, _U('number_in_contacts'))
-			else
-
-			table.insert(contacts, {
-				name   = contactName,
-				number = phoneNumber,
-			})
-
-			xPlayer.set('contacts', contacts)
-
-			MySQL.Async.execute(
-			'INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
-			{
-				['@identifier'] = xPlayer.identifier,
-				['@name']       = contactName,
-				['@number']     = phoneNumber
-			}, function(rowsChanged)
-				TriggerClientEvent('esx:showNotification', _source, _U('contact_added'))
-				TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber)
-			end)
-			
-			end
-		end
-	else
-		TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
-	end
-
 end)
 
 RegisterServerEvent('esx_phone:removePlayerContact')
