@@ -390,7 +390,6 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
     local id      = NetworkGetNetworkIdFromEntity(vehicle)
 
     SetNetworkIdCanMigrate(id, true)
-    --SetEntityAsMissionEntity(vehicle,  true,  false)
     SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
     SetModelAsNoLongerNeeded(model)
 
@@ -400,6 +399,8 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
       RequestCollisionAtCoord(coords.x, coords.y, coords.z)
       Citizen.Wait(0)
     end
+
+    SetVehRadioStation(vehicle, 'OFF')
 
     if cb ~= nil then
       cb(vehicle)
@@ -423,7 +424,6 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 
     local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
 
-    --SetEntityAsMissionEntity(vehicle,  true,  false)
     SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
     SetModelAsNoLongerNeeded(model)
 
@@ -433,6 +433,8 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
       RequestCollisionAtCoord(coords.x, coords.y, coords.z)
       Citizen.Wait(0)
     end
+
+    SetVehRadioStation(vehicle, 'OFF')
 
     if cb ~= nil then
       cb(vehicle)
@@ -640,6 +642,16 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
   end
 
   return vehiclesInArea
+end
+
+ESX.Game.GetVehicleInDirection = function()
+	local playerPed    = GetPlayerPed(-1)
+	local playerCoords = GetEntityCoords(playerPed, 1)
+	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
+	local rayHandle    = CastRayPointToPoint(playerCoords.x, playerCoords.y, playerCoords.z, inDirection.x, inDirection.y, inDirection.z, 10, playerPed, 0)
+	local a, b, c, d, vehicle = GetRaycastResult(rayHandle)
+
+	return vehicle
 end
 
 ESX.Game.GetPeds = function(ignoreList)
