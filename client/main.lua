@@ -490,30 +490,26 @@ function OpenMobileMecanoActionsMenu()
 
       if data.current.value == 'del_vehicle' then
 
-        local ped = GetPlayerPed( -1 )
+        local ped = GetPlayerPed(-1)
 
-        if ( DoesEntityExist( ped ) and not IsEntityDead( ped ) ) then
+        if DoesEntityExist(ped) and not IsEntityDead(ped) then
           local pos = GetEntityCoords( ped )
 
-          if ( IsPedSittingInAnyVehicle( ped ) ) then
+          if IsPedSittingInAnyVehicle(ped) then
             local vehicle = GetVehiclePedIsIn( ped, false )
 
-            if ( GetPedInVehicleSeat( vehicle, -1 ) == ped ) then
+            if GetPedInVehicleSeat(vehicle, -1) == ped then
               ESX.ShowNotification(_U('vehicle_impounded'))
-              SetEntityAsMissionEntity( vehicle, true, true )
-              deleteCar( vehicle )
+              ESX.Game.DeleteVehicle(vehicle)
             else
               ESX.ShowNotification(_U('must_seat_driver'))
             end
           else
-            local playerPos = GetEntityCoords( ped, 1 )
-            local inFrontOfPlayer = GetOffsetFromEntityInWorldCoords( ped, 0.0, distanceToCheck, 0.0 )
-            local vehicle = GetVehicleInDirection( playerPos, inFrontOfPlayer )
+            local vehicle = ESX.Game.GetVehicleInDirection()
 
-            if ( DoesEntityExist( vehicle ) ) then
+            if DoesEntityExist(vehicle) then
               ESX.ShowNotification(_U('vehicle_impounded'))
-              SetEntityAsMissionEntity( vehicle, true, true )
-              deleteCar( vehicle )
+              ESX.Game.DeleteVehicle(vehicle)
             else
               ESX.ShowNotification(_U('must_near'))
             end
@@ -530,10 +526,7 @@ function OpenMobileMecanoActionsMenu()
         local isVehicleTow = IsVehicleModel(vehicle, towmodel)
 
         if isVehicleTow then
-
-          local coordA = GetEntityCoords(playerped, 1)
-          local coordB = GetOffsetFromEntityInWorldCoords(playerped, 0.0, 5.0, 0.0)
-          local targetVehicle = getVehicleInDirection(coordA, coordB)
+          local targetVehicle = ESX.Game.GetVehicleInDirection()
 
           if CurrentlyTowedVehicle == nil then
             if targetVehicle ~= 0 then
@@ -656,11 +649,7 @@ function OpenMobileMecanoActionsMenu()
 end
 
 function OpenGetStocksMenu()
-
   ESX.TriggerServerCallback('esx_mecanojob:getStockItems', function(items)
-
-    print(json.encode(items))
-
     local elements = {}
 
     for i=1, #items, 1 do
@@ -692,9 +681,10 @@ function OpenGetStocksMenu()
             else
               menu2.close()
               menu.close()
-              OpenGetStocksMenu()
-
               TriggerServerEvent('esx_mecanojob:getStockItem', itemName, count)
+
+              Citizen.Wait(1000)
+              OpenGetStocksMenu()
             end
 
           end,
@@ -754,9 +744,10 @@ ESX.TriggerServerCallback('esx_mecanojob:getPlayerInventory', function(inventory
             else
               menu2.close()
               menu.close()
-              OpenPutStocksMenu()
-
               TriggerServerEvent('esx_mecanojob:putStockItems', itemName, count)
+
+              Citizen.Wait(1000)
+              OpenPutStocksMenu()
             end
 
           end,
@@ -873,21 +864,6 @@ AddEventHandler('esx_mecanojob:onFixkit', function()
     end
   end
 end)
-
-function setEntityHeadingFromEntity ( vehicle, playerPed )
-    local heading = GetEntityHeading(vehicle)
-    SetEntityHeading( playerPed, heading )
-end
-
-function getVehicleInDirection(coordFrom, coordTo)
-  local rayHandle = CastRayPointToPoint(coordFrom.x, coordFrom.y, coordFrom.z, coordTo.x, coordTo.y, coordTo.z, 10, GetPlayerPed(-1), 0)
-  local a, b, c, d, vehicle = GetRaycastResult(rayHandle)
-  return vehicle
-end
-
-function deleteCar( entity )
-    Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
-end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)

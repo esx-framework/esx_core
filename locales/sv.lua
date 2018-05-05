@@ -78,5 +78,6 @@ Locales['sv'] = {
   ['you_used_repair_kit']       = 'du har använt en ~b~reparationssats~s~',
   ['you_used_body_kit']         = 'du har använt en ~b~karossverktyg~s~',
   ['you_removed']               = 'du har ~r~tagit bort~s~ x',
-  ['you_added']                 = 'du ~y~la till~s~ x'
+  ['you_added']                 = 'du ~y~la till~s~ x',
+  ['player_cannot_hold']        = 'du har ~r~inte~w~ tillräckligt med ~y~utrymme~w~ för att hålla det!',
 }

@@ -79,4 +79,5 @@ Locales['en'] = {
   ['you_used_body_kit']         = 'you used a ~b~Body Kit',
   ['you_removed']               = 'you have removed x',
   ['you_added']                 = 'you have added x',
+  ['player_cannot_hold']        = 'you do ~r~not~w~ have enough ~y~free space~w~ in your inventory!',
 }
