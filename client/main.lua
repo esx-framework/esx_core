@@ -110,22 +110,20 @@ function OpenPropertyMenu()
             {
               title = _U('amount')
             },
-            function(data2, menu)
+            function(data2, menu2)
 
               local amount = tonumber(data2.value)
 
               if amount == nil then
                 ESX.ShowNotification(_U('invalid_amount'))
               else
-
-                menu.close()
-
                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
                 if closestPlayer == -1 or closestDistance > 3.0 then
                   ESX.ShowNotification(_U('no_play_near'))
                 else
                   TriggerServerEvent('esx_realestateagentjob:sell', GetPlayerServerId(closestPlayer), data.data.name, amount)
+                  menu2.close()
                 end
 
                 OpenPropertyMenu()
@@ -133,8 +131,8 @@ function OpenPropertyMenu()
               end
 
             end,
-            function(data2, menu)
-              menu.close()
+            function(data2, menu2)
+              menu2.close()
             end
           )
 
@@ -149,22 +147,20 @@ function OpenPropertyMenu()
             {
               title = _U('amount')
             },
-            function(data2, menu)
+            function(data2, menu2)
 
               local amount = tonumber(data2.value)
 
               if amount == nil then
                 ESX.ShowNotification(_U('invalid_amount'))
               else
-
-                menu.close()
-
                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
                 if closestPlayer == -1 or closestDistance > 3.0 then
                   ESX.ShowNotification(_U('no_play_near'))
                 else
                   TriggerServerEvent('esx_realestateagentjob:rent', GetPlayerServerId(closestPlayer), data.data.name, amount)
+                  menu2.close()
                 end
 
                 OpenPropertyMenu()
@@ -172,8 +168,8 @@ function OpenPropertyMenu()
               end
 
             end,
-            function(data2, menu)
-              menu.close()
+            function(data2, menu2)
+              menu2.close()
             end
           )
 
