@@ -366,49 +366,30 @@ ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, c
 
 end)
 
-function WashMoneyCRON(d, h, m)
+function WashMoneyCRON()
+	MySQL.Async.fetchAll(
+	'SELECT * FROM society_moneywash', {},
+	function(result)
+		for i=1, #result, 1 do
 
-  MySQL.Async.fetchAll(
-    'SELECT * FROM society_moneywash',
-    {},
-    function(result)
+			-- add society money
+			local society = GetSociety(result[i].society)
+			TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
+				account.addMoney(result[i].amount)
+			end)
 
-      local xPlayers = ESX.GetPlayers()
+			-- send notification if player is online
+			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
+			if xPlayer ~= nil then
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', result[i].amount))
+			end
 
-      for i=1, #result, 1 do
-
-        local foundPlayer = false
-        local xPlayer     = nil
-        local society     = GetSociety(result[i].society)
-
-        for j=1, #xPlayers, 1 do
-          local xPlayer2 = ESX.GetPlayerFromId(xPlayers[j])
-          if xPlayer2.identifier == result[i].identifier then
-            foundPlayer = true
-            xPlayer     = xPlayer2
-          end
-        end
-
-        TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
-          account.addMoney(result[i].amount)
-        end)
-
-        if foundPlayer then
-          TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', result[i].amount))
-        end
-
-        MySQL.Async.execute(
-          'DELETE FROM society_moneywash WHERE id = @id',
-          {
-            ['@id'] = result[i].id
-          }
-        )
-
-      end
-
-    end
-  )
-
+			MySQL.Async.execute('DELETE FROM society_moneywash WHERE id = @id',
+			{
+				['@id'] = result[i].id
+			})
+		end
+	end)
 end
 
 TriggerEvent('cron:runAt', 3, 0, WashMoneyCRON)
