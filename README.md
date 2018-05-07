@@ -1,27 +1,27 @@
-# fxserver-cron
-FXServer CRON
+# cron
 
-# fxserver-esx_addonaccount
-ESX AddonAccount
+## Download & Installation
 
-[INSTALLATION]
-
-1) CD in your resources folder
-2) Clone the repository
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-git clone https://github.com/FXServer-ESX/fxserver-cron cron
-```
-3) Add this in your server.cfg :
-
-```
-start cron
+fvm install --save --folder=esx esx-org/cron
 ```
 
-[USAGE]
-
+### Using Git
+```
+cd resources
+git clone https://github.com/ESX-Org/cron cron
 ```
 
--- Execute task every 5:10
+### Manually
+- Download https://github.com/ESX-Org/cron/archive/master.zip
+- Put it in your resource directory
+
+
+## Usage
+```lua
+
+-- Execute task 5:10, every day
 function CronTask(d, h, m)
   print('Task done')
 end
@@ -38,3 +38,15 @@ end
 TriggerEvent('cron:runAt', 18, 30, CronTask)
 
 ```
+
+# Legal
+### License
+cron - do stuff in a specified time
+
+Copyright (C) 2015-2018 Jérémie N'gadi
+
+This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
+
+This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
+
+You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.

@@ -51,5 +51,3 @@ Tick()
 AddEventHandler('cron:runAt', function(h, m, cb)
 	RunAt(h, m, cb)
 end)
-
-print('CRON STARTED [' .. os.date('%H:%M', os.time()) .. ']')
