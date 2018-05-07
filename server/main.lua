@@ -3,7 +3,7 @@ AddEventHandler('chatMessage', function(source, name, msg)
 	
 	if command == "/ooc" then
 		CancelEvent()
-		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('ooc_prefix', name), string.sub(msg, 5), { 128, 128, 128 })
+		TriggerClientEvent('chatMessage', -1, _U('ooc_prefix', name), { 128, 128, 128 }, string.sub(msg, 5))
 	elseif command == "/twt" then
 		CancelEvent()
 		TriggerClientEvent('chatMessage', -1, _U('twt_prefix', name), { 0, 153, 204 }, string.sub(msg, 5))

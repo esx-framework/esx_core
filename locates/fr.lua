@@ -1,5 +1,4 @@
 Locales['fr'] = {
-	-- ooc chat
 	['ooc_help'] = 'ecrit un message hors du personnage',
 	['ooc_prefix'] = 'hrp | %s',
 	['twt_help'] = 'envoie un tweet',

@@ -1,5 +1,4 @@
 Locales['sv'] = {
-	-- ooc chat
 	['ooc_help'] = 'skicka ett meddelande som inte kopplat till din karaktär',
 	['ooc_prefix'] = 'OOC | %s',
 	['twt_help'] = 'skicka en tweet',

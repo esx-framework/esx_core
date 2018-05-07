@@ -1,5 +1,4 @@
 Locales['en'] = {
-	-- ooc chat
 	['ooc_help'] = 'type an out of character message',
 	['ooc_prefix'] = 'OOC | %s',
 	['twt_help'] = 'send a tweet',
