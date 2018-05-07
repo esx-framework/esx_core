@@ -54,6 +54,7 @@ function OpenBankActionsMenu ()
     'default', GetCurrentResourceName(), 'bank_actions',
     {
       title    = _U('bank'),
+      align    = 'top-left',
       elements = elements,
     },
     function (data, menu)
@@ -291,7 +292,7 @@ end)
 -- Key Controls
 Citizen.CreateThread(function ()
   while true do
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentAction ~= nil then
       SetTextComponentFormat('STRING')
