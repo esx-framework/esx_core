@@ -5,6 +5,7 @@ description 'ESX RP Chat'
 version '1.1.0'
 
 server_scripts {
+	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locates/sv.lua',
 	'locates/en.lua',
