@@ -1,4 +1,10 @@
 Locales['de'] = {
+  ['inventory'] = 'Inventar',
+  ['use'] = 'benutzen',
+  ['give'] = 'geben',
+  ['remove'] = 'entfernen',
+  ['return'] = 'zurück',
+  ['amount'] = 'Betrag',
   ['amountammo'] = 'anzahl der Munition',
   ['noammo'] = 'du hast keine Munition!',
   ['threw_weapon'] = 'you ~r~threw~s~ ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets!',
@@ -7,12 +13,6 @@ Locales['de'] = {
   ['gave_ammo'] = 'you gave ~o~%sx~s~ bullets to ~y~%s~s~.',
   ['recived_ammo'] = 'you recived ~o~%sx~s~ bullets from ~b~%s~s~.',
   ['giveammo'] = 'Munition geben',
-  ['inventory'] = 'Inventar',
-  ['use'] = 'benutzen',
-  ['give'] = 'geben',
-  ['remove'] = 'entfernen',
-  ['return'] = 'zurück',
-  ['amount'] = 'Betrag',
   ['amount_invalid'] = 'ungültiger Betrag',
   ['players_nearby'] = 'keine Spieler in der Nähe',
   ['ex_inv_lim'] = 'Aktion nicht möglich, inventarlimit überschritten für ~b~',
@@ -24,7 +24,13 @@ Locales['de'] = {
   ['imp_invalid_amount'] = 'Aktion nicht möglich, ungültiger Betrag',
   ['delete_five_min'] = '~r~löschen~s~ in 5 Minuten',
   ['threw'] = 'du ~r~wirfst weg~s~',
-  ['rec_salary'] = 'du hast dein Gehalt erhalten: ',
+  -- Salary related
+  ['recived_salary'] = 'du hast dein Gehalt erhalten: ~g~$%s~s~',
+  ['recived_help'] = 'you recieved your welfare check: ~g~$%s~s~',
+  ['company_nomoney'] = 'the company you\'re employeed at is too poor to pay out your salary.',
+  ['recived_money'] = 'recived money',
+  ['bank'] = 'bank',
+
   ['act_imp'] = 'Aktion nicht möglich',
   -- Commands
   ['setjob'] = 'assign a job to a user',

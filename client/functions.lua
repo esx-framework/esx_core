@@ -65,6 +65,13 @@ ESX.ShowNotification = function(msg)
   DrawNotification(0,1)
 end
 
+ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
+	SetNotificationTextEntry('STRING')
+	AddTextComponentString(msg)
+	SetNotificationMessage(icon, icon, false, iconType, title, subject)
+	DrawNotification(false, false)
+end
+
 ESX.TriggerServerCallback = function(name, cb, ...)
 
   ESX.ServerCallbacks[ESX.CurrentRequestId] = cb
@@ -1392,6 +1399,11 @@ end)
 RegisterNetEvent('esx:showNotification')
 AddEventHandler('esx:showNotification', function(msg)
   ESX.ShowNotification(msg)
+end)
+
+RegisterNetEvent('esx:showAdvancedNotification')
+AddEventHandler('esx:showAdvancedNotification', function(title, subject, msg, icon, iconType)
+	ESX.ShowAdvancedNotification(title, subject, msg, icon, iconType)
 end)
 
 -- SetTimeout

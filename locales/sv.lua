@@ -24,11 +24,13 @@ Locales['sv'] = {
   ['imp_invalid_amount'] = 'åtgärd omöjlig, ogiltig belopp',
   ['delete_five_min'] = 'objektet kommer att ~r~tas bort~s~ om 5 minuter!',
   ['threw'] = 'du ~r~kastade~s~',
-  ['rec_salary'] = 'du fick din lön: ',
-  ['rec_help'] = 'du fick din välfärdskontroll: ',
-  ['company_paid'] = 'Företags lön mottaget',
-  ['company_nomoney'] = 'Ditt företag är för fattigt!!',
-  ['state_paid'] = 'Du fick en statlig check',
+  -- Salary related
+  ['recived_salary'] = 'du har mottagit din lön på ~g~$%s~s~',
+  ['recived_help'] = 'du har mottagit bidrag på ~g~$%s~s~',
+  ['company_nomoney'] = 'företaget du är anställt hos har inte råd att betala ut din lön.',
+  ['recived_money'] = 'mottagit pengar',
+  ['bank'] = 'bank',
+
   ['act_imp'] = 'åtgärd omöjlig',
   ['in_vehicle'] = 'du kan inte ge saker till en som sitter i ett fordon!',
   ['cannot_pickup_room'] = 'du har inte plats för att plocka upp ~y~%s~s~!',

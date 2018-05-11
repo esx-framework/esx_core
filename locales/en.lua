@@ -24,11 +24,13 @@ Locales['en'] = {
   ['imp_invalid_amount'] = 'action impossible, invalid amount',
   ['delete_five_min'] = 'the item will be ~r~thrown~s~ in 5 minutes',
   ['threw'] = 'you ~r~threw~s~',
-  ['rec_salary'] = 'you received your salary: ',
-  ['rec_help'] = 'you recieved your welfare check: ',
-  ['company_paid'] = 'company paycheck received',
-  ['company_nomoney'] = 'your company is broke!',
-  ['state_paid'] = 'You received a state check',
+  -- Salary related
+  ['recived_salary'] = 'you received your salary: ~g~$%s~s~',
+  ['recived_help'] = 'you recieved your welfare check: ~g~$%s~s~',
+  ['company_nomoney'] = 'the company you\'re employeed at is too poor to pay out your salary.',
+  ['recived_money'] = 'recived money',
+  ['bank'] = 'bank',
+  
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'you can\'t give anything to someone in a vehicle',
   ['cannot_pickup_room'] = 'you do not have enough space in your inventory to pick up ~y~%s~s~!',

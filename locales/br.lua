@@ -24,11 +24,14 @@ Locales['br'] = {
   ['imp_invalid_amount'] = 'ação impossível, valor inválido',
   ['delete_five_min'] = '~r~excluir~s~ em 5 minutos',
   ['threw'] = 'você ~r~jogou~s~',
-  ['rec_salary'] = 'você recebeu seu salário: ',
-  ['rec_help'] = 'você recebeu seu cheque de bem-estar: ',
-  ['company_paid'] = 'Cheque de pagamento da empresa recebido',
-  ['company_nomoney'] = 'Sua empresa está falida!',
-  ['state_paid'] = 'Você recebeu um cheque de estado',
+  -- Salary related
+  ['recived_salary'] = 'você recebeu seu salário: ',
+  ['recived_help'] = 'você recebeu seu cheque de bem-estar: ',
+  ['company_nomoney'] = 'Sua empresa está falida!', -- incorrect translation
+  ['recived_money'] = 'recived money',
+  ['bank'] = 'bank',
+
+
   ['act_imp'] = 'ação impossível',
   ['in_vehicle'] = 'Você não pode dar nada para alguém no veículo',
   ['cannot_pickup_room'] = 'you do not have enough space in your inventory to pick up ~y~%s~s~!',

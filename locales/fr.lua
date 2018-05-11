@@ -24,11 +24,13 @@ Locales['fr'] = {
   ['imp_invalid_amount'] = 'action impossible, ~r~montant invalide',
   ['delete_five_min'] = '~r~suppression~s~ dans 5 minutes',
   ['threw'] = 'vous avez ~r~jeté~s~',
-  ['rec_salary'] = 'vous avez reçu votre salaire : ',
-  ['rec_help'] = 'vous avez reçu une aide de l\'état : ',
-  ['company_paid'] = 'Votre entreprise vous a payé ',
-  ['company_nomoney'] = 'Votre entreprise n\'a plus d\'argent pour vous payer !',
-  ['state_paid'] = 'L\'état vous a payé ',
+  -- Salary related
+  ['recived_salary'] = 'vous avez reçu votre salaire: ~g~$%s~s~',
+  ['recived_help'] = 'vous avez reçu une aide de l\'état: ~g~$%s~s~',
+  ['company_nomoney'] = 'votre entreprise n\'a plus d\'argent pour vous payer!', -- fix translation
+  ['recived_money'] = 'recived money',
+  ['bank'] = 'bank',
+
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
   ['cannot_pickup_room'] = 'vous n\'avez plus de place pour ~y~%s~s~!',
