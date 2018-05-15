@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['sv'] = {
   ['sex'] = 'kön',
   ['face'] = 'ansikte',
   ['skin'] = 'hud',
