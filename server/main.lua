@@ -542,7 +542,7 @@ AddEventHandler('esx:onPickup', function(id)
   if pickup.type == 'item_standard' then
 
     local item      = xPlayer.getInventoryItem(pickup.name)
-    local canTake   = (item.limit - item.count > 0) and (item.limit - item.count) or 0
+    local canTake   = ((item.limit == -1) and (pickup.count)) or ((item.limit - item.count > 0) and (item.limit - item.count)) or 0
     local total     = pickup.count < canTake and pickup.count or canTake
     local remaining = pickup.count - total
 
