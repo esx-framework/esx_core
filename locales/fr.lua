@@ -29,7 +29,8 @@ Locales['fr'] = {
   ['recived_help'] = 'vous avez reçu une aide de l\'état: ~g~$%s~s~',
   ['company_nomoney'] = 'votre entreprise n\'a plus d\'argent pour vous payer!', -- fix translation
   ['recived_money'] = 'recived money',
-  ['bank'] = 'bank',
+  ['bank'] = 'banque',
+  ['black_money'] = 'argent Sale',
 
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',

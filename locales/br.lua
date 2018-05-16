@@ -30,7 +30,7 @@ Locales['br'] = {
   ['company_nomoney'] = 'Sua empresa está falida!', -- incorrect translation
   ['recived_money'] = 'recived money',
   ['bank'] = 'bank',
-
+  ['black_money'] = 'dirty Money',
 
   ['act_imp'] = 'ação impossível',
   ['in_vehicle'] = 'Você não pode dar nada para alguém no veículo',

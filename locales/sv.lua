@@ -22,7 +22,7 @@ Locales['sv'] = {
   ['by'] = '~s~ av ~b~',
   ['imp_invalid_quantity'] = 'åtgärd omöjlig, ogiltig mängd',
   ['imp_invalid_amount'] = 'åtgärd omöjlig, ogiltig belopp',
-  ['delete_five_min'] = 'objektet kommer att ~r~tas bort~s~ om 5 minuter!',
+  ['delete_five_min'] = 'objektet kommer att ~r~kastas~s~ om 5 minuter!',
   ['threw'] = 'du ~r~kastade~s~',
   -- Salary related
   ['recived_salary'] = 'du har mottagit din lön på ~g~$%s~s~',
@@ -30,6 +30,7 @@ Locales['sv'] = {
   ['company_nomoney'] = 'företaget du är anställt hos har inte råd att betala ut din lön.',
   ['recived_money'] = 'mottagit pengar',
   ['bank'] = 'bank',
+  ['black_money'] = 'svarta pengar',
 
   ['act_imp'] = 'åtgärd omöjlig',
   ['in_vehicle'] = 'du kan inte ge saker till en som sitter i ett fordon!',
