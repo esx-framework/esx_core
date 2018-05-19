@@ -1048,7 +1048,7 @@ function OpenPutWeaponMenu()
 
       ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
         OpenPutWeaponMenu()
-      end, data.current.value)
+      end, data.current.value, true)
 
     end,
     function(data, menu)
@@ -1094,7 +1094,7 @@ function OpenBuyWeaponsMenu(station)
           if hasEnoughMoney then
             ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
               OpenBuyWeaponsMenu(station)
-            end, data.current.value)
+            end, data.current.value, false)
           else
             ESX.ShowNotification(_U('not_enough_money'))
           end

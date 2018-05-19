@@ -362,11 +362,13 @@ ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb
 
 end)
 
-ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb, weaponName)
+ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb, weaponName, removeWeapon)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  xPlayer.removeWeapon(weaponName)
+  if removeWeapon then
+   xPlayer.removeWeapon(weaponName)
+  end
 
   TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
 
