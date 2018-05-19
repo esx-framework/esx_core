@@ -36,7 +36,7 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-	
+
 	Citizen.Wait(5000)
 	PlayerData = ESX.GetPlayerData()
 end)
@@ -49,7 +49,7 @@ function SetVehicleMaxMods(vehicle)
 		modSuspension   = 3,
 		modTurbo        = true,
 	}
-	
+
 	ESX.Game.SetVehicleProperties(vehicle, props)
 end
 
@@ -294,7 +294,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
           ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, 270.0, function(vehicle)
             ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
             local playerPed = GetPlayerPed(-1)
-            TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+            TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
           end)
 
           TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
@@ -315,51 +315,12 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
   else
 
-    local elements = {}
-
-    table.insert(elements, { label = 'Vélo', value = 'fixter' })
-    table.insert(elements, { label = 'Cruiser', value = 'police' })
-    table.insert(elements, { label = 'Sheriff Cruiser', value = 'sheriff' })
-
-    if PlayerData.job.grade_name == 'officer' then
-      table.insert(elements, { label = 'Interceptor', value = 'police3'})
+    local elements = Config.AuthorizedVehicles.Shared
+    local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
+    
+    for i=1, #authorizedVehicles, 1 do
+      table.insert(elements, { label = authorizedVehicles[i].label, model = authorizedVehicles[i].model})
     end
-
-    if PlayerData.job.grade_name == 'sergeant' then
-      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
-      table.insert(elements, { label = 'Interceptor', value = 'police3'})
-      table.insert(elements, { label = 'Buffalo', value = 'police2'})
-      table.insert(elements, { label = 'Moto', value = 'policeb'})
-      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
-      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
-      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
-    end
-
-    if PlayerData.job.grade_name == 'lieutenant' then
-      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
-      table.insert(elements, { label = 'Interceptor', value = 'police3'})
-      table.insert(elements, { label = 'Buffalo', value = 'police2'})
-      table.insert(elements, { label = 'Moto', value = 'policeb'})
-      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
-      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
-      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
-      table.insert(elements, { label = 'FBI', value = 'fbi'})
-      table.insert(elements, { label = 'FBI SUV', value = 'fbi2'})
-    end
-
-    if PlayerData.job.grade_name == 'boss' then
-      table.insert(elements, { label = 'Sheriff SUV', value = 'sheriff2'})
-      table.insert(elements, { label = 'Interceptor', value = 'police3'})
-      table.insert(elements, { label = 'Buffalo', value = 'police2'})
-      table.insert(elements, { label = 'Moto', value = 'policeb'})
-      table.insert(elements, { label = 'Bus pénitentiaire', value = 'pbus'})
-      table.insert(elements, { label = 'Bus de transport', value = 'policet'})
-      table.insert(elements, { label = 'Antiémeute', value = 'riot'})
-      table.insert(elements, { label = 'FBI', value = 'fbi'})
-      table.insert(elements, { label = 'FBI SUV', value = 'fbi2'})
-      table.insert(elements, { label = 'Voiture Banalisée ', value = 'police4'})
-    end
-
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'vehicle_spawner',
       {
@@ -371,7 +332,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
         menu.close()
 
-        local model = data.current.value
+        local model = data.current.model
 
         local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
 
@@ -470,26 +431,26 @@ function OpenPoliceActionsMenu()
 				align    = 'top-left',
 				elements = elements
 			}, function(data2, menu2)
-				local player, distance = ESX.Game.GetClosestPlayer()
-				if distance ~= -1 and distance <= 3.0 then
+				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+				if closestPlayer ~= -1 and closestDistance <= 3.0 then
 					local action = data2.current.value
 
 					if action == 'identity_card' then
-						OpenIdentityCardMenu(player)
+						OpenIdentityCardMenu(closestPlayer)
 					elseif action == 'body_search' then
-						OpenBodySearchMenu(player)
+						OpenBodySearchMenu(closestPlayer)
 					elseif action == 'handcuff' then
-						TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(player))
+						TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(closestPlayer))
 					elseif action == 'drag' then
-						TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(player))
+						TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(closestPlayer))
 					elseif action == 'put_in_vehicle' then
-						TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(player))
+						TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(closestPlayer))
 					elseif action == 'out_the_vehicle' then
-						TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(player))
+						TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(closestPlayer))
 					elseif action == 'fine' then
-						OpenFineMenu(player)
+						OpenFineMenu(closestPlayer)
 					elseif action == 'license' then
-						ShowPlayerLicense(player)
+						ShowPlayerLicense(closestPlayer)
 					end
 
 				else
@@ -548,7 +509,7 @@ function OpenPoliceActionsMenu()
 						end
 						
 						SetTextComponentFormat('STRING')
-						AddTextComponentString(_U('impound_prompt')) --press ~INPUT_CONTEXT~ to cancel the impound
+						AddTextComponentString(_U('impound_prompt'))
 						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 						
 						TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
