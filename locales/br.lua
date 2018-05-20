@@ -7,11 +7,11 @@ Locales['br'] = {
   ['amount'] = 'quantidade',
   ['amountammo'] = 'quantidade de munição',
   ['noammo'] = 'Você não tem todas essas munições!',
-  ['threw_weapon'] = 'you ~r~threw~s~ ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets!',
-  ['gave_weapon'] = 'you gave ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets to ~y~%s~s~.',
-  ['recived_weapon'] = 'you recived ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets from ~b~%s~s~.',
-  ['gave_ammo'] = 'you gave ~o~%sx~s~ bullets to ~y~%s~s~.',
-  ['recived_ammo'] = 'you recived ~o~%sx~s~ bullets from ~b~%s~s~.',
+  ['threw_weapon'] = 'você ~r~jogou~s~ ~y~1x~s~ ~b~%s~s~ com ~o~%sx~s~ balas!', -- fix on update v1.0.14
+  ['gave_weapon'] = 'você deu ~y~1x~s~ ~b~%s~s~ com ~o~%sx~s~ balas para ~y~%s~s~.', -- fix on update v1.0.14
+  ['recived_weapon'] = 'você recebeu ~y~1x~s~ ~b~%s~s~ com ~o~%sx~s~ balas de ~b~%s~s~.', -- fix on update v1.0.14
+  ['gave_ammo'] = 'você deu ~o~%sx~s~ balas para ~y~%s~s~.', -- fix on update v1.0.14
+  ['recived_ammo'] = 'você recebeu ~o~%sx~s~ balas de ~b~%s~s~.', -- fix on update v1.0.14
   ['giveammo'] = 'Dar munição',
   ['amount_invalid'] = 'quantidade inválida',
   ['players_nearby'] = 'nenhum jogador por perto',
@@ -24,18 +24,17 @@ Locales['br'] = {
   ['imp_invalid_amount'] = 'ação impossível, valor inválido',
   ['delete_five_min'] = '~r~excluir~s~ em 5 minutos',
   ['threw'] = 'você ~r~jogou~s~',
-  -- Salary related
+  -- Relacionado com salário
   ['recived_salary'] = 'você recebeu seu salário: ',
   ['recived_help'] = 'você recebeu seu cheque de bem-estar: ',
-  ['company_nomoney'] = 'Sua empresa está falida!', -- incorrect translation
-  ['recived_money'] = 'recived money',
-  ['bank'] = 'bank',
-  ['black_money'] = 'dirty Money',
-
+  ['company_nomoney'] = 'a empresa em que você está empregado esta muito pobre para pagar seu salário.', -- fix on update v1.0.14
+  ['recived_money'] = 'recebeu dinheiro', -- fix on update v1.0.14
+  ['bank'] = 'banco', -- fix on update v1.0.14
+  ['black_money'] = 'dinheiro sujo', -- fix on update v1.0.14
   ['act_imp'] = 'ação impossível',
   ['in_vehicle'] = 'Você não pode dar nada para alguém no veículo',
-  ['cannot_pickup_room'] = 'you do not have enough space in your inventory to pick up ~y~%s~s~!',
-  -- Commands
+  ['cannot_pickup_room'] = 'você não tem espaço suficiente no seu inventário para pegar ~y~%s~s~!', -- fix on update v1.0.14
+  -- Comandos
   ['setjob'] = 'atribuir um trabalho a um usuário',
   ['id_param'] = 'o ID do jogador',
   ['setjob_param2'] = 'o trabalho que você deseja atribuir',
@@ -61,7 +60,7 @@ Locales['br'] = {
   ['giveitem'] = 'dar item',
   ['weapon'] = 'arma',
   ['giveweapon'] = 'dar arma',
-  -- Weapons
+  -- Armas
   ['weapon_knife'] = 'faca',
   ['weapon_nightstick'] = 'cacetete',
   ['weapon_hammer'] = 'martelo',
