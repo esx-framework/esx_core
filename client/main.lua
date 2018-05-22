@@ -1470,6 +1470,9 @@ Citizen.CreateThread(function()
 			DisableControlAction(2, Keys['Q'], true) -- Cover
 			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
 			DisableControlAction(2, Keys['F'], true) -- Also 'enter'?
+			DisableControlAction(2, Keys['F1'], true) -- Disable phone
+			DisableControlAction(2, Keys['F2'], true) -- Inventory
+			DisableControlAction(2, Keys['F3'], true) -- Animations
 		else
 			Citizen.Wait(1000)
 		end
