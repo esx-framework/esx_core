@@ -1460,12 +1460,18 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		if IsHandcuffed then
-			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-			DisableControlAction(0, 30,  true) -- MoveLeftRight
-			DisableControlAction(0, 31,  true) -- MoveUpDown
-			DisableControlAction(0, 24,  true) -- Shoot 
-			DisableControlAction(0, 92,  true) -- Shoot in car
-			DisableControlAction(0, 75,  true) -- Leave Vehicle
+			DisableControlAction(2, 24, true) -- Attack
+			DisableControlAction(2, 257, true) -- Attack 2
+			DisableControlAction(2, 25, true) -- Aim
+			DisableControlAction(2, 263, true) -- Melee Attack 1
+			DisableControlAction(2, Keys['R'], true) -- Reload
+			DisableControlAction(2, Keys['TOP'], true) -- Open phone (not needed?)
+			DisableControlAction(2, Keys['SPACE'], true) -- Jump
+			DisableControlAction(2, Keys['Q'], true) -- Cover
+			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
+			DisableControlAction(2, Keys['F'], true) -- Also 'enter'?
+		else
+			Citizen.Wait(1000)
 		end
 	end
 end)
