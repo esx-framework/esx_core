@@ -118,9 +118,9 @@ function OpenCloakroomMenu()
   end
 
   if Config.EnableNonFreemodePeds then
-    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear_freemode'})
-    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear_freemode'})
-    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear_freemode'})
+    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear_freemode', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
+    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear_freemode', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
+    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear_freemode', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
   end
 
   ESX.UI.Menu.CloseAll()
@@ -152,6 +152,30 @@ function OpenCloakroomMenu()
         data.current.value == 'gilet_wear'
       then
         setUniform(data.current.value, playerPed)
+      end
+
+      if
+        data.current.value == 'sheriff_wear_freemode' or
+        data.current.value == 'lieutenant_wear_freemode' or
+        data.current.value == 'commandant_wear_freemode'
+      then
+        local model = nil
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+          if skin.sex == 0 then
+            model = GetHashKey(data.current.maleModel)
+          else
+            model = GetHashKey(data.current.femaleModel)
+          end
+        end)
+      
+        RequestModel(model)
+        while not HasModelLoaded(model) do
+          RequestModel(model)
+          Citizen.Wait(1)
+        end
+      
+        SetPlayerModel(PlayerId(), model)
+        SetModelAsNoLongerNeeded(model)
       end
 
       CurrentAction     = 'menu_cloakroom'
