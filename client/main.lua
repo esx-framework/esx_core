@@ -37,6 +37,7 @@ end
 function CloseInstance()
   Instance = {}
   TriggerServerEvent('instance:close')
+  InsideInstance = false
 end
 
 function EnterInstance(instance)
@@ -282,13 +283,13 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0) -- must be run every frame
 		
-		if InsideInstance then
+    if InsideInstance then
 			SetVehicleDensityMultiplierThisFrame(0.0)
 			SetParkedVehicleDensityMultiplierThisFrame(0.0)
 			local pos = GetEntityCoords(GetPlayerPed(-1))
-			RemoveVehiclesFromGeneratorsInArea(pos['x'] - 900.0, pos['y'] - 900.0, pos['z'] - 900.0, pos['x'] + 900.0, pos['y'] + 900.0, pos['z'] + 900.0);
+			RemoveVehiclesFromGeneratorsInArea(pos.x - 900.0, pos.y - 900.0, pos.z - 900.0, pos.x + 900.0, pos.y + 900.0, pos.z + 900.0);
 		else
-			Citizen.Wait(1000)
+			Citizen.Wait(5000)
 		end
 	end
 end)
