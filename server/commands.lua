@@ -20,7 +20,7 @@ TriggerEvent('es:addGroupCommand', 'setjob', 'jobmaster', function(source, args,
 	if tonumber(args[1]) and args[2] and tonumber(args[3]) then
 		local xPlayer = ESX.GetPlayerFromId(args[1])
 		if xPlayer ~= nil then
-			xPlayer.setJob(args[2], args[3])
+			xPlayer.setJob(args[2], tonumber(args[3]))
 		else
 			TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Player not online.")
 		end
