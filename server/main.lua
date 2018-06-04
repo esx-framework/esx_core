@@ -13,7 +13,6 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 
 		if amount < 0 then
 			print('esx_billing: ' .. GetPlayerName(_source) .. ' tried sending a negative bill!')
-			TriggerClientEvent('esx:showNotification', _source, _U('negative_bill'))
 		elseif account == nil then
 
 			for i=1, #xPlayers, 1 do
@@ -149,8 +148,8 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 								xPlayer.removeMoney(amount)
 								foundPlayer.addMoney(amount)
 
-								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
-								TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
+								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice', amount))
+								TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment', amount))
 
 								cb()
 
@@ -175,9 +174,9 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 								function(rowsChanged)
 								xPlayer.removeMoney(amount)
 								account.addMoney(amount)
-								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice') .. amount)
+								TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice', amount))
 								if foundPlayer ~= nil then
-									TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment') .. amount)
+									TriggerClientEvent('esx:showNotification', foundPlayer.source, _U('received_payment', amount))
 								end
 							cb()
 						end)
