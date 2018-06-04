@@ -37,10 +37,10 @@ AddEventHandler("esx_identity:saveID", function(data)
 end)
 
 RegisterNUICallback('escape', function(data, cb)
-	if hasIdentity == true then
+	if hasIdentity then
 		EnableGui(false)
 	else
-		TriggerEvent("chatMessage", "^1[IDENTITY]", {255, 255, 0}, "You must create your first character in order to play.")
+		TriggerEvent('chat:addMessage', { args = { '^1[IDENTITY]', '^1You must create your first character in order to play' } })
 	end
 end)
 
@@ -119,7 +119,7 @@ end)
 function verifyName(name)
 	-- Don't allow short user names
 	local nameLength = string.len(name)
-	if nameLength > 25 or nameLength < 5 then
+	if nameLength > 25 or nameLength < 2 then
 		return 'Your player name is either too short or too long.'
 	end
 	
