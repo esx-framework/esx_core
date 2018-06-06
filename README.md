@@ -4,18 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/skinchanger
+fvm install --save esx-org/skinchanger
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/skinchanger [esx]/skinchanger
+git clone https://github.com/ESX-Org/skinchanger skinchanger
 ```
 
 ### Manually
 - Download https://github.com/ESX-Org/skinchanger/archive/master.zip
-- Put it in the `[esx]` directory
 
 ## Installation
 - Add this to your `server.cfg`:

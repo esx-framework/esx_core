@@ -60,15 +60,15 @@ for i=1, #Components, 1 do
   Character[Components[i].name] = Components[i].value
 end
 
-function LoadDefaultModel(loadMale, cb)
+function LoadDefaultModel(malePed, cb)
 
   local playerPed = GetPlayerPed(-1)
-   local characterModel
+  local characterModel
 
-  if loadMale then
+  if malePed then
     characterModel = GetHashKey('mp_m_freemode_01')
   else
-    characterModel = GetHashKey('mp_f_freemode_01');
+    characterModel = GetHashKey('mp_f_freemode_01')
   end
 
   RequestModel(characterModel)
