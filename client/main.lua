@@ -77,8 +77,8 @@ function StartRespawnToHospitalMenuTimer()
         function(data, menu) --Submit Cb
           menu.close()
           Citizen.CreateThread(function()
-                  RemoveItemsAfterRPDeath()
-                    end)
+            RemoveItemsAfterRPDeath()
+          end)
         end,
         function(data, menu) --Cancel Cb
           --menu.close()
@@ -195,14 +195,18 @@ end
 function OnPlayerDeath()
 	IsDead = true
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 1)
-	
+
 	if Config.ShowDeathTimer == true then
 		ShowTimer()
 	end
+
 	StartRespawnTimer()
+
 	if Config.RespawnToHospitalMenuTimer == true then
 		StartRespawnToHospitalMenuTimer()
 	end
+
+	ClearPedTasksImmediately(GetPlayerPed(-1))
 	StartScreenEffect('DeathFailOut',  0,  false)
 end
 
@@ -272,6 +276,7 @@ function OpenAmbulanceActionsMenu()
     'default', GetCurrentResourceName(), 'ambulance_actions',
     {
       title    = _U('ambulance'),
+      align    = 'top-left',
       elements = elements
     },
     function(data, menu)
@@ -897,11 +902,13 @@ AddEventHandler('esx_ambulancejob:requestDeath', function()
 end)
 
 -- Load unloaded IPLs
-Citizen.CreateThread(function()
-  LoadMpDlcMaps()
-  EnableMpDlcMaps(true)
-  RequestIpl('Coroner_Int_on') -- Morgue
-end)
+if Config.LoadIpl then
+	Citizen.CreateThread(function()
+		LoadMpDlcMaps()
+		EnableMpDlcMaps(true)
+		RequestIpl('Coroner_Int_on') -- Morgue
+	end)
+end
 
 -- String string
 function stringsplit(inputstr, sep)
