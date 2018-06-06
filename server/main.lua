@@ -547,7 +547,7 @@ AddEventHandler('esx_property:removeOutfit', function(label)
 
 end)
 
-function PayRent()
+function PayRent(d, h, m)
 	MySQL.Async.fetchAll(
 	'SELECT * FROM owned_properties WHERE rented = 1', {},
 	function (result)
