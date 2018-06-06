@@ -25,13 +25,14 @@ git clone https://github.com/ESX-Org/esx_ambulancejob [esx]/esx_ambulancejob
 - Download https://github.com/ESX-Org/esx_ambulancejob/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Import `esx_ambulancejob.sql` in your database
+- If you want player management you have to set `Config.EnablePlayerManagement` to `true` in `config.lua`
 - Add this in your `server.cfg`:
 
 ```
 start esx_ambulancejob
 ```
-- If you want player management you have to set `Config.EnablePlayerManagement` to `true` in `config.lua`
 
 # Legal
 ### License
