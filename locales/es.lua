@@ -38,9 +38,13 @@ Locales['es'] = {
   -- Death
   ['respawn_at_hospital'] = '¿Quieres ser transportado al hospital?',
   ['yes'] = 'oui',
+  ['no'] = 'no',
   ['please_wait'] = 's\'por favor, espere ~b~%s minutos %s segundos para reparecer~s~',
   ['press_respawn'] = 'presione [~b~E~w~] para reparecer.',
   ['respawn_fine'] = 'you paid ~r~$%s~s~ for respawning.',
+  ['distress_send'] = 'press ~b~[G]~s~ to send distress signal',
+  ['distress_sent'] = 'distress signal has been sent to available units!',
+  ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
   ['revive_help'] = 'reviver un jugador',
 }

@@ -19,7 +19,6 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-local RespawnToHospitalMenu   = nil
 
 ESX                           = nil
 GUI.Time                      = 0
@@ -29,7 +28,7 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-	
+
 	Citizen.Wait(5000)
 	PlayerData = ESX.GetPlayerData()
 end)
@@ -40,11 +39,7 @@ function RespawnPed(ped, coords)
 	SetPlayerInvincible(ped, false)
 	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z, coords.heading)
 	ClearPedBloodDamage(ped)
-	if RespawnToHospitalMenu ~= nil then
-		RespawnToHospitalMenu.close()
-		RespawnToHospitalMenu = nil
-	end
-	
+
 	ESX.UI.Menu.CloseAll()
 end
 
@@ -63,43 +58,69 @@ AddEventHandler('esx_ambulancejob:heal', function(_type)
 end)
 
 function StartRespawnToHospitalMenuTimer()
-  ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
-    if IsDead then
-      local elements = {}
-      table.insert(elements, {label = _U('yes'), value = 'yes'})
-      RespawnToHospitalMenu = ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'menuName',
-        {
-          title = _U('respawn_at_hospital'),
-          align = 'top-left',
-          elements = elements
-        },
-        function(data, menu) --Submit Cb
-          menu.close()
-          Citizen.CreateThread(function()
-            RemoveItemsAfterRPDeath()
-          end)
-        end,
-        function(data, menu) --Cancel Cb
-          --menu.close()
-        end,
-        function(data, menu) --Change Cb
-          --print(data.current.value)
-        end,
-        function(data, menu) --Close Cb
-          RespawnToHospitalMenu = nil
-        end
-      )
-    end
-  end)
+	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
+		ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'respawn_hospital',
+		{
+			title = _U('respawn_at_hospital'),
+			align = 'top-left',
+			elements = {
+				{label = _U('no'),  value = 'no'},
+				{label = _U('yes'), value = 'yes'}
+			}
+		}, function(data, menu)
+			if data.current.value == 'yes' then
+				RemoveItemsAfterRPDeath()
+			end
+			menu.close()
+		end)
+	end)
 end
 
 function StartRespawnTimer()
-  ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
-    if IsDead then
-      RemoveItemsAfterRPDeath()
-    end
-  end)
+	ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
+		RemoveItemsAfterRPDeath()
+	end)
+end
+
+function StartDistressSignal()
+	Citizen.CreateThread(function()
+		local timer = Config.RespawnDelayAfterRPDeath
+
+		while timer > 0 and IsDead do
+			Citizen.Wait(2)
+			timer = timer - 30
+
+			SetTextFont(4)
+			SetTextProportional(1)
+			SetTextScale(0.45, 0.45)
+			SetTextColour(185, 185, 185, 255)
+			SetTextDropShadow(0, 0, 0, 0, 255)
+			SetTextEdge(1, 0, 0, 0, 255)
+			SetTextDropShadow()
+			SetTextOutline()
+			BeginTextCommandDisplayText('STRING')
+			AddTextComponentSubstringPlayerName(_U('distress_send'))
+			EndTextCommandDisplayText(0.175, 0.805)
+
+			if IsControlPressed(0, Keys['G']) then
+				SendDistressSignal()
+				break
+			end
+		end
+	end)
+end
+
+function SendDistressSignal()
+	local playerPed = GetPlayerPed(-1)
+	local coords    = GetEntityCoords(playerPed)
+
+	ESX.ShowNotification(_U('distress_sent'))
+	TriggerServerEvent('esx_phone:send', 'ambulance', _U('distress_message'), false, {
+		x = coords.x,
+		y = coords.y,
+		z = coords.z
+	})
 end
 
 function ShowTimer()
@@ -113,7 +134,7 @@ function ShowTimer()
 			raw_minutes = raw_seconds/60
 			minutes = stringsplit(raw_minutes, ".")[1]
 			seconds = stringsplit(raw_seconds-(minutes*60), ".")[1]
-			
+
 			SetTextFont(4)
 			SetTextProportional(0)
 			SetTextScale(0.0, 0.5)
@@ -122,7 +143,6 @@ function ShowTimer()
 			SetTextEdge(1, 0, 0, 0, 255)
 			SetTextDropShadow()
 			SetTextOutline()
-			SetTextEntry("STRING")
 
 			local text = _U('please_wait', minutes, seconds)
 
@@ -130,9 +150,10 @@ function ShowTimer()
 				text = text .. '\n[~b~E~s~]'
 			end
 
-			AddTextComponentString(text)
 			SetTextCentre(true)
-			DrawText(0.5, 0.8)
+			BeginTextCommandDisplayText("STRING")
+			AddTextComponentSubstringPlayerName(text)
+			EndTextCommandDisplayText(0.5, 0.8)
 
 			if Config.EarlyRespawn then
 				if IsControlPressed(0, Keys['E']) then
@@ -155,11 +176,11 @@ function ShowTimer()
 				SetTextEdge(1, 0, 0, 0, 255)
 				SetTextDropShadow()
 				SetTextOutline()
-				SetTextEntry("STRING")
-
-				AddTextComponentString(_U('press_respawn'))
 				SetTextCentre(true)
-				DrawText(0.5, 0.8)
+
+				BeginTextCommandDisplayText("STRING")
+				AddTextComponentSubstringPlayerName(_U('press_respawn'))
+				EndTextCommandDisplayText(0.5, 0.8)
 
 				if IsControlPressed(0, Keys['E']) then
 					RemoveItemsAfterRPDeath()
@@ -172,24 +193,24 @@ end
 
 function RemoveItemsAfterRPDeath()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
-    Citizen.CreateThread(function()
-        DoScreenFadeOut(800)
-        while not IsScreenFadedOut() do
-            Citizen.Wait(1)
-        end
-        ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 
-            ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-            ESX.SetPlayerData('loadout', {})
+	Citizen.CreateThread(function()
+		DoScreenFadeOut(800)
+		while not IsScreenFadedOut() do
+			Citizen.Wait(10)
+		end
 
-            TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
+			ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+			ESX.SetPlayerData('loadout', {})
 
-            RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+			TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+			RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
 
-            StopScreenEffect('DeathFailOut')
-            DoScreenFadeIn(800)
-        end)
-    end)
+			StopScreenEffect('DeathFailOut')
+			DoScreenFadeIn(800)
+		end)
+	end)
 end
 
 function OnPlayerDeath()
@@ -201,13 +222,14 @@ function OnPlayerDeath()
 	end
 
 	StartRespawnTimer()
+	StartDistressSignal()
 
-	if Config.RespawnToHospitalMenuTimer == true then
+	if Config.RespawnToHospitalMenuTimer then
 		StartRespawnToHospitalMenuTimer()
 	end
 
 	ClearPedTasksImmediately(GetPlayerPed(-1))
-	StartScreenEffect('DeathFailOut',  0,  false)
+	StartScreenEffect('DeathFailOut', 0, false)
 end
 
 function TeleportFadeEffect(entity, coords)
