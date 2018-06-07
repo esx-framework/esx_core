@@ -118,7 +118,8 @@ Citizen.CreateThread(function()
 						}
 					})
 				end)
-				SetNuiFocus(true)
+				-- Open UI and display Native Cursor
+				SetNuiFocus(true, true)
 			end
 	    end
 	end
