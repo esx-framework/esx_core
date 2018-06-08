@@ -2,21 +2,27 @@
 	<head>
 		<meta charset="utf-8"/>
 		<link rel="stylesheet" href="css/app.css" type="text/css" />
-		<link href="https://fonts.googleapis.com/css?family=Catamaran:400,700" rel="stylesheet">
 	</head>
 	<body>
-		<div id="container">		
+		<div id="container">
+			<div id="header">
+				<img id="logo" src="img/fleeca.png"/>
+			</div>
+			<div id="welcome-text">
+				Hi, <br/>
+                Thank you for using our Fleece Bank terminals
+			</div>
 			<div id="menu">
 				<div>
-					<input type="text" id="deposit_amount"/>
+					<input type="number" id="deposit_amount"/>
 					<button id="deposit_btn">Deposit</button>
 				</div>
 				<br><br>
 				<div>
-					<input type="text" id="withdraw_amount"/>
+					<input type="number" id="withdraw_amount"/>
 					<button id="withdraw_btn">Withdraw</button>
 				</div>
-			</div>
+            </div>
 		</div>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
