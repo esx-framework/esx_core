@@ -115,11 +115,6 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 2,   true) -- LookUpDown
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-			if IsDisabledControlJustReleased(0, 142) then -- MeleeAttackAlternate
-				SendNUIMessage({
-					click = true
-				})
-			end
 		else
 			if IsControlJustReleased(0, Keys['E']) and isInATMMarker then
 				menuIsShowed = true
