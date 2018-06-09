@@ -339,12 +339,18 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
   else
 
-    local elements = Config.AuthorizedVehicles.Shared
-    local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
-    
-    for i=1, #authorizedVehicles, 1 do
-      table.insert(elements, { label = authorizedVehicles[i].label, model = authorizedVehicles[i].model})
-    end
+	local elements = {}
+
+	local sharedVehicles = Config.AuthorizedVehicles.Shared
+	for i=1, #sharedVehicles, 1 do
+		table.insert(elements, { label = sharedVehicles[i].label, model = sharedVehicles[i].model})
+	end
+
+	local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
+	for i=1, #authorizedVehicles, 1 do
+		table.insert(elements, { label = authorizedVehicles[i].label, model = authorizedVehicles[i].model})
+	end
+
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'vehicle_spawner',
       {
@@ -1831,6 +1837,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
+-- Create blip for colleagues
 function createBlip(id)
 	ped = GetPlayerPed(id)
 	blip = GetBlipFromEntity(ped)
@@ -1838,7 +1845,7 @@ function createBlip(id)
 	if not DoesBlipExist(blip) then -- Add blip and create head display on player
 		blip = AddBlipForEntity(ped)
 		SetBlipSprite(blip, 1)
-		Citizen.InvokeNative(0x5FBCA48327B914DF, blip, true) -- Player Blip indicator
+		ShowHeadingIndicatorOnBlip(blip, true) -- Player Blip indicator
 		SetBlipRotation(blip, math.ceil(GetEntityHeading(veh))) -- update rotation
 		SetBlipNameToPlayerName(blip, id) -- update blip name
 		SetBlipScale(blip, 0.85) -- set scale
