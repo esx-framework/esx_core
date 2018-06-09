@@ -16,9 +16,9 @@ body {
     display: none;
 }
 
-#container {
+#container{
     position: absolute;
-    background: linear-gradient(#0c3b97, #3458ae);
+    background: linear-gradient(#0c3b97,#3458ae);
     height: 500px;
     width: 600px;
     top: 50%;
@@ -27,7 +27,7 @@ body {
     cursor: default;
 }
 
-#header {
+#header{
     position: absolute;
     display: block;
     width: 100%;
@@ -96,7 +96,6 @@ button:hover {
     width: 250px;
     height: 50px;
     font-size: 2em;
-
 }
 
 #deposit_amount {
@@ -106,13 +105,13 @@ button:hover {
 }
 
 #withdraw_btn {
-    width: 250px;
+    width : 250px;
     height: 50px;
-    font-size: 2em;
+    font-size:  2em;
 }
 
 #withdraw_amount {
-    width: 250px;
-    height: 50px;
-    font-size: 2em;
+    width    : 250px;
+    height   : 50px;
+    font-size:  2em;
 }
