@@ -34,10 +34,29 @@ $(window).ready(function () {
 		$('#deposit_amount').val(0);
 	})
 
+	$('#deposit_amount').on("keyup", function(e) {
+		if (e.keyCode == 13) {
+			$.post('http://esx_atm/deposit', JSON.stringify({
+				amount: $('#deposit_amount').val()
+			}));
+			$('#deposit_amount').val(0);
+		}
+	});
+
 	$('#withdraw_btn').on('click', function () {
 		$.post('http://esx_atm/withdraw', JSON.stringify({
 			amount: $('#withdraw_amount').val()
 		}));
 		$('#withdraw_amount').val(0);
 	});
+
+	$('#withdraw_amount').on("keyup", function(e) {
+		if (e.keyCode == 13) {
+			$.post('http://esx_atm/withdraw', JSON.stringify({
+				amount: $('#withdraw_amount').val()
+			}));
+			$('#withdraw_amount').val(0);
+		}
+	});
+
 });

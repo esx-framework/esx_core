@@ -133,3 +133,12 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+-- close the menu when script is restarting to avoid being stuck in NUI focus
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		if menuIsShowed then
+			TriggerEvent('esx_atm:closeATM')
+		end
+	end
+end)

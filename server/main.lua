@@ -6,6 +6,8 @@ AddEventHandler('esx_atm:deposit', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	amount = tonumber(amount)
+
+	if not tonumber(amount) then return end
 	amount = round(amount)
 	if amount == nil or amount <= 0 or amount > xPlayer.getMoney() then
 		TriggerClientEvent('esx:showNotification', _source, _U('invalid_amount'))
@@ -21,6 +23,8 @@ AddEventHandler('esx_atm:withdraw', function(amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	amount = tonumber(amount)
+
+	if not tonumber(amount) then return end
 	amount = round(amount)
 	local accountMoney = 0
 	accountMoney = xPlayer.getAccount('bank').money
