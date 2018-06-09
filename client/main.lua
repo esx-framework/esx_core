@@ -60,7 +60,7 @@ Citizen.CreateThread(function()
 		SetBlipColour (blip, 2)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("ATM")
+		AddTextComponentString(_U('atm'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
@@ -121,7 +121,7 @@ Citizen.CreateThread(function()
 				ESX.TriggerServerCallback('esx:getPlayerData', function(data)
 					SendNUIMessage({
 						showMenu = true,
-						player   = {
+						player = {
 							money = data.money,
 							accounts = data.accounts
 						}
