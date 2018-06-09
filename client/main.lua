@@ -11,13 +11,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function EnableGui(enable)
-	SetNuiFocus(enable)
-	guiEnabled = enable
+function EnableGui(state)
+	SetNuiFocus(state, state)
+	guiEnabled = state
 
 	SendNUIMessage({
 		type = "enableui",
-		enable = enable
+		enable = state
 	})
 end
 
@@ -105,12 +105,6 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 143, true) -- disable melee
 			DisableControlAction(0, 75,  true) -- disable exit vehicle
 			DisableControlAction(27, 75, true) -- disable exit vehicle
-			
-			if IsDisabledControlJustReleased(0, 142) then -- MeleeAttackAlternate
-				SendNUIMessage({
-					type = "click"
-				})
-			end
 		end
 		Citizen.Wait(10)
 	end
