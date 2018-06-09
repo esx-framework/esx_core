@@ -58,29 +58,33 @@ AddEventHandler('esx_ambulancejob:heal', function(_type)
 end)
 
 function StartRespawnToHospitalMenuTimer()
-	ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
-		ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'respawn_hospital',
-		{
-			title = _U('respawn_at_hospital'),
-			align = 'top-left',
-			elements = {
-				{label = _U('no'),  value = 'no'},
-				{label = _U('yes'), value = 'yes'}
-			}
-		}, function(data, menu)
-			if data.current.value == 'yes' then
-				RemoveItemsAfterRPDeath()
-			end
-			menu.close()
-		end)
-	end)
+    ESX.SetTimeout(Config.MenuRespawnToHospitalDelay, function()
+      if IsDead then
+        ESX.UI.Menu.Open(
+        'default', GetCurrentResourceName(), 'respawn_hospital',
+        {
+            title = _U('respawn_at_hospital'),
+            align = 'bottom-right',
+            elements = {
+                {label = _U('no'),  value = 'no'},
+                {label = _U('yes'), value = 'yes'}
+            }
+        }, function(data, menu)
+            if data.current.value == 'yes' then
+                RemoveItemsAfterRPDeath()
+            end
+            menu.close()
+        end)
+      end
+    end)
 end
 
 function StartRespawnTimer()
-	ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
-		RemoveItemsAfterRPDeath()
-	end)
+    ESX.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
+      if IsDead then
+        RemoveItemsAfterRPDeath()
+      end
+  end)
 end
 
 function StartDistressSignal()
