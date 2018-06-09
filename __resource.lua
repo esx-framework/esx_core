@@ -13,7 +13,7 @@ server_scripts {
 	'locales/es.lua',
 	'locales/sv.lua',
 	'config.lua',
-	'server/esx_atm_sv.lua'
+	'server/main.lua'
 }
 
 client_scripts {
@@ -25,7 +25,7 @@ client_scripts {
 	'locales/es.lua',
 	'locales/sv.lua',
 	'config.lua',
-	'client/esx_atm_cl.lua'
+	'client/main.lua'
 }
 
 ui_page 'html/ui.html'
