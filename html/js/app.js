@@ -3,7 +3,7 @@
 	let MenuTpl =
 		'<div id="menu_{{_namespace}}_{{_name}}" class="dialog {{#isBig}}big{{/isBig}}">' +
 			'<div class="head"><span>{{title}}</span></div>' +
-				'{{#isDefault}}<input type="text" name="value"/>{{/isDefault}}' +
+				'{{#isDefault}}<input type="text" name="value" id="inputText"/>{{/isDefault}}' +
 				'{{#isBig}}<textarea name="value"/>{{/isBig}}' +
 				'<button type="button" name="submit">Envoyer</button>' +
 				'<button type="button" name="cancel">Annuler</button>'
@@ -17,7 +17,7 @@
 	ESX_MENU.focus        = [];
 	ESX_MENU.pos          = {};
 
-	ESX_MENU.open = function(namespace, name, data){
+	ESX_MENU.open = function(namespace, name, data) {
 
 		if(typeof ESX_MENU.opened[namespace] == 'undefined')
 			ESX_MENU.opened[namespace] = {};
@@ -45,18 +45,19 @@
 			namespace: namespace,
 			name     : name
 		});
-		
-		
-	document.onkeyup = function (key) {
-		if (key.which == 27) { // Escape key
-			$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify(data));
-		}
-	};
-		
+
+		document.onkeyup = function (key) {
+			if (key.which == 27) { // Escape key
+				$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify(data));
+			} else if (key.which == 13) { // Enter key
+				$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify(data));
+			}
+		};
+
 		ESX_MENU.render();
 	}
 
-	ESX_MENU.close = function(namespace, name){
+	ESX_MENU.close = function(namespace, name) {
 		
 		delete ESX_MENU.opened[namespace][name];
 
@@ -70,7 +71,7 @@
 		ESX_MENU.render();
 	}
 
-	ESX_MENU.render = function(){
+	ESX_MENU.render = function() {
 
 		let menuContainer = $('#menus')[0];
 		
@@ -101,7 +102,6 @@
 					}
 
 					default : break;
-
 				}
 
 				let menu = $(Mustache.render(MenuTpl, view))[0];
@@ -129,21 +129,22 @@
 		}
 
 		$(menuContainer).show();
+		$("#inputText").focus();
 	}
 
-	ESX_MENU.submit = function(namespace, name, data){
+	ESX_MENU.submit = function(namespace, name, data) {
 		$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify(data));
 	}
 
-	ESX_MENU.cancel = function(namespace, name, data){
+	ESX_MENU.cancel = function(namespace, name, data) {
 		$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify(data));
 	}
 
-	ESX_MENU.change = function(namespace, name, data){
+	ESX_MENU.change = function(namespace, name, data) {
 		$.post('http://' + ESX_MENU.ResourceName + '/menu_change', JSON.stringify(data));
 	}
 
-	ESX_MENU.getFocused = function(){
+	ESX_MENU.getFocused = function() {
 		return ESX_MENU.focus[ESX_MENU.focus.length - 1];
 	}
 

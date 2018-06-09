@@ -8,12 +8,6 @@
   src: url('../fonts/pdown.ttf');
 }
 
-#cursor {
-  position: absolute;
-  z-index: 999999999;
-  display:  none;
-}
-
 #controls {
   font-family   : pcdown;
   font-size     : 3em;
