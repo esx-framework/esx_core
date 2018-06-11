@@ -18,7 +18,6 @@ git clone https://github.com/ESX-Org/esx_atm [esx]/esx_atm
 - Put it in the `[esx]` directory
 
 ## Installation
-- Import `esx_atm.sql` in your database
 - Add this to your `server.cfg`:
 
 ```
