@@ -1,16 +1,15 @@
 USE `essentialmode`;
 
 CREATE TABLE `shops` (
-  
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `price` int(11) NOT NULL,
-  
-  PRIMARY KEY (`id`)
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`store` varchar(100) NOT NULL,
+	`item` varchar(100) NOT NULL,
+	`price` int(11) NOT NULL,
+
+	PRIMARY KEY (`id`)
 );
 
-INSERT INTO `shops` (name, item, price) VALUES
+INSERT INTO `shops` (store, item, price) VALUES
 	('TwentyFourSeven','bread',30),
 	('TwentyFourSeven','water',15),
 	('RobsLiquor','bread',30),

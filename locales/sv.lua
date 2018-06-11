@@ -1,8 +1,11 @@
 Locales['sv'] = {
 	['shop'] = 'affär',
 	['shops'] = 'affärer',
-	['press_menu'] = 'tryck ~INPUT_CONTEXT~ för att ~y~handla prylar~w~.',
-	['bought'] = 'du har köpt ~y~1x~w~ ~b~%s~w~ för ~r~$%s~w~',
-	['not_enough'] = 'du har inte ~r~tillräckligt~s~ med pengar, det ~y~saknas~w~ ~r~$%s~w~!',
-	['player_cannot_hold'] = 'du har ~r~inte~w~ tillräckligt med ~y~utrymme~w~ för att hålla det!',
+	['press_menu'] = 'tryck ~INPUT_CONTEXT~ för att ~y~handla prylar~s~.',
+	['bought'] = 'du har köpt ~y~%sx~s~ ~b~%s~s~ för ~r~$%s~s~',
+	['not_enough'] = 'du har inte ~r~tillräckligt~s~ med pengar, det ~y~saknas~s~ ~r~$%s~s~!',
+	['player_cannot_hold'] = 'du har ~r~inte~s~ tillräckligt med ~y~utrymme~s~ för att hålla det!',
+	['shop_confirm'] = 'köpa %sx %s för $%s?',
+	['no'] = 'nej',
+	['yes'] = 'ja',
 }
