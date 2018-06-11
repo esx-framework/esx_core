@@ -17,6 +17,7 @@ git clone https://github.com/ESX-Org/esx_shops [esx]/esx_shops
 - Download https://github.com/ESX-Org/esx_shops/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Import `esx_shops.sql` to your database
 - Add this in your `server.cfg`:
 
