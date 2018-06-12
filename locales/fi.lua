@@ -1,5 +1,5 @@
 Locales['fi'] = {
 	
-	['used_beer'] = 'sinä käytit 1x ~y~Olutr~s~',
+	['used_beer'] = 'sinä joit 1x ~y~Olut~s~',
 
 }
