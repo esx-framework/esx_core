@@ -1,4 +1,5 @@
 Locales['sv'] = {
+  ['cash'] = 'kontanter $ ',
   ['inventory'] = 'Mitt förråd',
   ['use'] = 'använd',
   ['give'] = 'ge',
