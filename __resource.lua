@@ -8,6 +8,7 @@ dependencies {
 
 client_scripts {
   '@es_extended/locale.lua',
+  'locales/fi.lua',
   'locales/fr.lua',
   'locales/en.lua',
   'locales/ge.lua',
