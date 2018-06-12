@@ -1,4 +1,5 @@
 Locales['fr'] = {
+  ['cash'] = 'espèces $ ',
   ['inventory'] = 'inventaire',
   ['use'] = 'utiliser',
   ['give'] = 'donner',
