@@ -5,7 +5,6 @@ local MaxInService = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function GetInServiceCount(name)
-
 	local count = 0
 
 	for k,v in pairs(InService[name]) do
@@ -15,7 +14,6 @@ function GetInServiceCount(name)
 	end
 
 	return count
-
 end
 
 AddEventHandler('esx_service:activateService', function(name, max)
@@ -29,7 +27,6 @@ AddEventHandler('esx_service:disableService', function(name)
 end)
 
 ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, name)
-
 	local inServiceCount = GetInServiceCount(name)
 
 	if inServiceCount >= MaxInService[name] then
@@ -38,11 +35,9 @@ ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, nam
 		InService[name][source] = true
 		cb(true, MaxInService[name], inServiceCount)
 	end
-
 end)
 
 AddEventHandler('playerDropped', function()
-
 	local _source = source
 		
 	for k,v in pairs(InService) do
@@ -50,5 +45,4 @@ AddEventHandler('playerDropped', function()
 			v[_source] = nil
 		end
 	end
-
 end)
