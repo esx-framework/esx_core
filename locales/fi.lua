@@ -100,7 +100,7 @@ Locales['fi'] = {
   ['inventory'] = 'varasto',
   ['police_stock'] = 'Poliisin Varasto',
   -- Misc
-  ['remove_object'] = 'Paina ~INPUT_CONTEXT~ poistaaksesi objektin',
+  ['remove_prop'] = 'Paina ~INPUT_CONTEXT~ poistaaksesi objektin',
   ['map_blip'] = 'Poliisilaitos',
   -- Notifications
   ['from'] = '~s~ henkilöltä ~b~',
