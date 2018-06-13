@@ -493,7 +493,7 @@ function OpenPoliceActionsMenu()
 			local elements = {}
 			local playerPed = GetPlayerPed(-1)
 			local coords    = GetEntityCoords(playerPed)
-			local vehicle   = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
+			local vehicle   = ESX.Game.GetVehicleInDirection()
 			
 			if DoesEntityExist(vehicle) then
 				table.insert(elements, {label = _U('vehicle_info'),	value = 'vehicle_infos'})
@@ -511,7 +511,7 @@ function OpenPoliceActionsMenu()
 				elements = elements
 			}, function(data2, menu2)
 				coords    = GetEntityCoords(playerPed)
-				vehicle   = GetClosestVehicle(coords.x, coords.y, coords.z, 3.0,  0, 71)
+				vehicle   = ESX.Game.GetVehicleInDirection()
 				action    = data2.current.value
 				
 				if action == 'search_database' then
@@ -1422,7 +1422,6 @@ end)
 
 RegisterNetEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(cop)
-  TriggerServerEvent('esx:clientLog', 'starting dragging')
   IsDragged = not IsDragged
   CopPed = tonumber(cop)
 end)
@@ -1889,6 +1888,7 @@ AddEventHandler('playerSpawned', function(spawn)
 		TriggerServerEvent('esx_policejob:spawned')
 	end
 	hasAlreadyJoined = true
+	IsHandcuffed = false
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
