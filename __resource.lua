@@ -7,3 +7,5 @@ version '1.0.0'
 server_scripts {
 	'server/main.lua'
 }
+
+dependency 'es_extended'
