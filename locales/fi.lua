@@ -1,16 +1,16 @@
 Locales['fi'] = {
   -- Global menus
-  ['cloakroom']                 = 'Vaatelokero',
-  ['cloak_change']              = 'Paina ~INPUT_PICKUP~ vaihtaaksesi vaatteet',
-  ['citizen_wear']              = 'Siviili vaatteet',
-  ['job_wear']                  = 'työ vaatteet',
+  ['cloakroom']                 = 'vaatelokero',
+  ['cloak_change']              = 'paina ~INPUT_PICKUP~ vaihtaaksesi vaatteet',
+  ['citizen_wear']              = 'siviilivaatteet',
+  ['job_wear']                  = 'työvaatteet',
   ['bank_deposit_g']            = 'vakuuden summa ~g~€',
   ['bank_deposit_r']            = 'vakuuden summa ~r~€',
   ['bank_deposit2']             = '€ ~s~annettiin sinulle pyörtymisen jälkeen',
   ['foot_work']                 = 'sinun täytyy olla jalan, jotta voit työskennellä',
   ['next_point']                = 'mene seuraavaan pisteeseen kun olet valmis täällä',
   ['security_deposit']          = 'vakuus joka annetaan on ~g~€',
-  ['not_your_vehicle']          = "Tämä ei ole sinun ajoneuvo tai et ole sen kuski",
+  ['not_your_vehicle']          = "tämä ei ole sinun ajoneuvo tai et ole sen kuski",
   ['in_vehicle']                = 'sinun täytyy olla ajoneuvossa',
   ['wrong_point']               = "et ole oikeassa paikassa",
   ['max_limit']                 = 'sinulla on jo maksimi määrä: ',
@@ -64,7 +64,7 @@ Locales['fi'] = {
   ['f_fuel_mixture']            = 'sekoita puhdistettu öljy',
   ['f_gas']                     = 'Polttoöljy',
   ['f_fuel_mixture_button']     = 'paina ~INPUT_PICKUP~ sekoita',
-  ['f_deliver_gas']             = 'kuljeta Polttoöljy',
+  ['f_deliver_gas']             = 'toimita polttoöljy',
   ['f_deliver_gas_button']      = "paina ~INPUT_PICKUP~ myydäksesi Polttoöljyä",
 
   -- Miner
@@ -86,14 +86,14 @@ Locales['fi'] = {
   ['m_diamond']                 = 'timantti',
   ['m_sell_diamond']            = "myy timantti",
   ['m_deliver_diamond']         = 'paina ~INPUT_PICKUP~ myydäksesi timantit',
-  ['m_melt_button']             = 'paina ~INPUT_PICKUP~ sulata kivet',
+  ['m_melt_button']             = 'paina ~INPUT_PICKUP~ sulattaaksesi kivet',
 
   -- Reporter
   ['reporter_name']             = 'san Andreas Times',
-  ['reporter_garage']           = 'paina ~INPUT_PICKUP~ mennäksesi alas talliin.',
+  ['reporter_garage']           = 'paina ~INPUT_PICKUP~ mennäksesi alas talliin',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = "Teurastajan Pukulokero",
+  ['s_slaughter_locker']        = "teurastajan Pukulokero",
   ['s_hen']                     = 'kanakoppi',
   ['s_alive_chicken']           = 'elävä kana',
   ['s_catch_hen']               = 'paina ~INPUT_PICKUP~ ottaaksesi kana kiinni',
@@ -107,12 +107,12 @@ Locales['fi'] = {
   ['s_deliver']                 = 'paina ~INPUT_PICKUP~  myydäksesi kananfileet',
 
   -- Dress Designer
-  ['dd_dress_locker']           = "Vaatevalmistajan Pukulokero",
+  ['dd_dress_locker']           = "vaatevalmistajan Pukulokero",
   ['dd_wool']                   = 'villa',
   ['dd_pickup']                 = 'paina ~INPUT_PICKUP~ kerätäksesi villaa',
   ['dd_fabric']                 = 'kangas',
   ['dd_makefabric']             = 'paina ~INPUT_PICKUP~ tehdäksesi kangasta',
   ['dd_clothing']               = 'asuste',
-  ['dd_makeclothing']           = 'paina ~INPUT_PICKUP~ tehdäksesi asusteita.',
+  ['dd_makeclothing']           = 'paina ~INPUT_PICKUP~ tehdäksesi asusteita',
   ['dd_deliver_clothes']        = 'paina ~INPUT_PICKUP~ myydäksesi asusteita',
   }
