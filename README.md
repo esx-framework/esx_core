@@ -23,6 +23,7 @@ git clone https://github.com/ESX-Org/esx_bankerjob [esx]/esx_bankerjob
 - Download https://github.com/ESX-Org/esx_bankerjob/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Import `esx_bankerjob.sql` in your database
 - Add this in your `server.cfg`:
 
