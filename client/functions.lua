@@ -397,7 +397,8 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
     local id      = NetworkGetNetworkIdFromEntity(vehicle)
 
     SetNetworkIdCanMigrate(id, true)
-    SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
+    SetEntityAsMissionEntity(vehicle, true, false)
+    SetVehicleHasBeenOwnedByPlayer(vehicle, true)
     SetModelAsNoLongerNeeded(model)
 
     RequestCollisionAtCoord(coords.x, coords.y, coords.z)
@@ -431,7 +432,8 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 
     local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
 
-    SetVehicleHasBeenOwnedByPlayer(vehicle,  true)
+    SetEntityAsMissionEntity(vehicle, true, false)
+    SetVehicleHasBeenOwnedByPlayer(vehicle, true)
     SetModelAsNoLongerNeeded(model)
 
     RequestCollisionAtCoord(coords.x, coords.y, coords.z)
