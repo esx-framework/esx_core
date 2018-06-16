@@ -12,12 +12,6 @@ html {
   overflow: hidden;
 }
 
-#cursor {
-  position: absolute;
-  z-index: 999999;
-  display:  none;
-}
-
 #hud {
   position   : absolute;
   font-family: 'Pricedown';
