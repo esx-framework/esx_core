@@ -1,5 +1,5 @@
 Locales['fi'] = {
-  ['cash']    = 'käteinen $ ',
+  ['cash']    = 'käteinen $%s',
   ['inventory']    = 'reppu',
   ['use']          = 'käytä',
   ['give']         = 'anna',

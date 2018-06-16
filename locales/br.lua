@@ -1,5 +1,5 @@
 Locales['br'] = {
-  ['cash'] = 'efectivo $ ',
+  ['cash'] = 'efectivo $%s',
   ['inventory'] = 'inventario',
   ['use'] = 'usar',
   ['give'] = 'dar',
