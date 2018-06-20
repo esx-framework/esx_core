@@ -21,42 +21,53 @@ TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), tru
 TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_ambulance', 'society_ambulance', 'society_ambulance', {type = 'public'})
 
 ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	if Config.RemoveCashAfterRPDeath then
+		if xPlayer.getMoney() > 0 then
+			xPlayer.removeMoney(xPlayer.getMoney())
+		end
 
-  if Config.RemoveCashAfterRPDeath then
+		if xPlayer.getAccount('black_money').money > 0 then
+			xPlayer.setAccountMoney('black_money', 0)
+		end
+	end
 
-    if xPlayer.getMoney() > 0 then
-      xPlayer.removeMoney(xPlayer.getMoney())
-    end
+	if Config.RemoveItemsAfterRPDeath then
+		for i=1, #xPlayer.inventory, 1 do
+			if xPlayer.inventory[i].count > 0 then
+				xPlayer.setInventoryItem(xPlayer.inventory[i].name, 0)
+			end
+		end
+	end
 
-    if xPlayer.getAccount('black_money').money > 0 then
-      xPlayer.setAccountMoney('black_money', 0)
-    end
+	local playerLoadout = {}
+	if Config.RemoveWeaponsAfterRPDeath then
+		for i=1, #xPlayer.loadout, 1 do
+			xPlayer.removeWeapon(xPlayer.loadout[i].name)
+		end
+	else -- save weapons & restore em' since
+		for i=1, #xPlayer.loadout, 1 do
+			table.insert(playerLoadout, xPlayer.loadout[i])
+		end
 
-  end
+		-- give back wepaons after a couple of seconds
+		Citizen.CreateThread(function()
+			Citizen.Wait(5000)
+			for i=1, #playerLoadout, 1 do
+				if playerLoadout[i].label ~= nil then
+					xPlayer.addWeapon(playerLoadout[i].name, playerLoadout[i].ammo)
+				end
+			end
+		end)
+	end
 
-  if Config.RemoveItemsAfterRPDeath then
-    for i=1, #xPlayer.inventory, 1 do
-      if xPlayer.inventory[i].count > 0 then
-        xPlayer.setInventoryItem(xPlayer.inventory[i].name, 0)
-      end
-    end
-  end
+	if Config.RespawnFine then
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.RespawnFineAmount))
+		xPlayer.removeAccountMoney('bank', Config.RespawnFineAmount)
+	end
 
-  if Config.RemoveWeaponsAfterRPDeath then
-    for i=1, #xPlayer.loadout, 1 do
-      xPlayer.removeWeapon(xPlayer.loadout[i].name)
-    end
-  end
-
-  if Config.RespawnFine then
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.RespawnFineAmount))
-    xPlayer.removeAccountMoney('bank', Config.RespawnFineAmount)
-  end
-
-  cb()
-
+	cb()
 end)
 
 ESX.RegisterServerCallback('esx_ambulancejob:getItemAmount', function(source, cb, item)

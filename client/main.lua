@@ -647,7 +647,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 
 end)
 
-AddEventHandler('esx:onPlayerDeath', function()
+AddEventHandler('esx:onPlayerDeath', function(reason)
 	OnPlayerDeath()
 end)
 
