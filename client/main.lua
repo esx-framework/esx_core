@@ -101,22 +101,27 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
         submitCb(data, menu)
         DeleteSkinCam()
-      end,
-      function(data, menu)
+      end, function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'confirm_escape', {
+			title = _U('confirm_escape'),
+			align = 'bottom-right',
+			elements = {
+				{label = _U('no'),  value = 'no'},
+				{label = _U('yes'), value = 'yes'}
+			}
+		}, function(data2, menu2)
+			if data2.current.value == 'yes' then
+				menu.close()
+				DeleteSkinCam()
+				TriggerEvent('skinchanger:loadSkin', LastSkin)
+			end
+			menu2.close()
+		end)
 
-        menu.close()
-
-        DeleteSkinCam()
-
-        TriggerEvent('skinchanger:loadSkin', LastSkin)
-
-        if cancelCb ~= nil then
-          cancelCb(data, menu)
-        end
-
-      end,
-      function(data, menu)
-
+		if cancelCb ~= nil then
+			cancelCb(data, menu)
+		end
+      end,function(data, menu)
         TriggerEvent('skinchanger:getSkin', function(skin)
 
           zoomOffset = data.current.zoomOffset
@@ -345,18 +350,4 @@ AddEventHandler('esx_skin:requestSaveSkin', function()
   TriggerEvent('skinchanger:getSkin', function(skin)
     TriggerServerEvent('esx_skin:responseSaveSkin', skin)
   end)
-end)
-
-Citizen.CreateThread(function()
-  while true do
-
-    Citizen.Wait(0)
-
-    local playerPed = GetPlayerPed(-1)
-
-    if IsEntityDead(playerPed) then
-      HasLoadedModel = false
-    end
-
-  end
 end)
