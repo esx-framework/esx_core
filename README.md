@@ -20,6 +20,7 @@ git clone https://github.com/ESX-Org/esx_skin [esx]/esx_skin
 - Download https://github.com/ESX-Org/esx_skin/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Add this in your `server.cfg`:
 
 ```
