@@ -1,5 +1,4 @@
 Locales['br'] = {
-
     ['robbery_cancelled'] = 'O roubo será cancelado, você não ganhará nada!',
     ['robbery_successful'] = 'O roubo foi um sucesso. Você ganhou ~g~$',
     ['shop_robbery'] = 'Loja roubavel',
@@ -20,5 +19,5 @@ Locales['br'] = {
     ['min_police'] = 'there must be at least ~b~',
     ['in_city'] = '~s~ policemen in town to rob.',
     ['robbery_already'] = '~r~Um assalto já está em andamento.',
-
+    ['no_threat'] = 'you do not pose a threat to the store',
 }

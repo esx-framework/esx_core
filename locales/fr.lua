@@ -12,4 +12,5 @@ Locales['fr'] = {
 	['robbery_cancelled_at'] = '~r~Braquage annulé à: ~b~%s~s~',
 	['min_police'] = 'il faut minimum ~b~%s policiers~s~ en ville pour braquer.',
 	['robbery_already'] = '~r~Un braquage est déjà en cours.',
+	['no_threat'] = 'you do not pose a threat to the store',
 }

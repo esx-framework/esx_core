@@ -125,6 +125,7 @@ incircle = false
 
 Citizen.CreateThread(function()
 	while true do
+		Citizen.Wait(1)
 		local pos = GetEntityCoords(GetPlayerPed(-1), true)
 
 		for k,v in pairs(Stores)do
@@ -140,7 +141,11 @@ Citizen.CreateThread(function()
 						end
 						incircle = true
 						if IsControlJustReleased(0, Keys['E']) then
-							TriggerServerEvent('esx_holdup:rob', k)
+							if IsPedArmed(GetPlayerPed(-1), 4) then
+								TriggerServerEvent('esx_holdup:rob', k)
+							else
+								ESX.ShowNotification(_U('no_threat'))
+							end
 						end
 					elseif(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) > 1.0)then
 						incircle = false
@@ -157,7 +162,6 @@ Citizen.CreateThread(function()
 				TriggerServerEvent('esx_holdup:toofar', store)
 			end
 		end
-
-		Citizen.Wait(0)
 	end
 end)
+	

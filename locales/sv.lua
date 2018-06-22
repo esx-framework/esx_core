@@ -12,4 +12,5 @@ Locales['sv'] = {
 	['robbery_cancelled_at'] = '~r~Rånet~s~ vid ~b~%s~s~ har avbrutits!',
 	['min_police'] = 'det måste vara minst ~b~%s poliser~s~ inne för att du ska kunna ~o~råna butiker~s~.',
 	['robbery_already'] = '~r~Ett rån pågår redan.',
+	['no_threat'] = 'du kan inte hota utan ett vapen',
 }
