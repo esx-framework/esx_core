@@ -296,7 +296,6 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
     Citizen.Wait(0)
   end
 
-  local plate = math.random(100, 900)
   if not IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
     local veh = CreateVehicle(vehicleModel, coords.x, coords.y, coords.z, spawnPoint.Heading, true, false)
 
@@ -316,11 +315,11 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
     local id = NetworkGetNetworkIdFromEntity(veh)
     SetNetworkIdCanMigrate(id, true)
 
-    local platePrefix = "WORK"
-    plate = platePrefix .. plate
+    local plate = 'WORK' .. math.random(100, 900)
     SetVehicleNumberPlateText(veh, plate)
     table.insert(myPlate, plate)
     plate = string.gsub(plate, " ", "")
+
     SetVehRadioStation(veh, "OFF")
     TaskWarpPedIntoVehicle(playerPed, veh, -1)
     isJobVehicleDestroyed = false
