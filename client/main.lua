@@ -104,7 +104,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
       end, function(data, menu)
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'confirm_escape', {
 			title = _U('confirm_escape'),
-			align = 'bottom-right',
+			align = 'top-left',
 			elements = {
 				{label = _U('no'),  value = 'no'},
 				{label = _U('yes'), value = 'yes'}
