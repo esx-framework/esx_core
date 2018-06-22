@@ -1,9 +1,11 @@
+USE `essentialmode`;
+
 INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_police','Poliisi',1)
+	('society_police', 'Poliisi', 1)
 ;
 
 INSERT INTO `datastore` (name, label, shared) VALUES
-	('society_police','Poliisi',1)
+	('society_police', 'Poliisi', 1)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
@@ -11,7 +13,7 @@ INSERT INTO `addon_inventory` (name, label, shared) VALUES
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
-	('police','Poliisi')
+	('police', 'Poliisi')
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES

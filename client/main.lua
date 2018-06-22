@@ -397,7 +397,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
                 end)
 
               else
-                ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
+                ESX.ShowNotification(_U('service_max', inServiceCount, maxInService) .. inServiceCount .. '/' .. maxInService)
               end
 
             end, 'police')
@@ -774,17 +774,17 @@ function OpenBodySearchMenu(player)
     end
 
     table.insert(elements, {
-      label          = _U('confiscate_dirty') .. blackMoney,
+      label          = _U('confiscate_dirty', blackMoney),
       value          = 'black_money',
       itemType       = 'item_account',
       amount         = blackMoney
     })
 
-    table.insert(elements, {label = '--- Armes ---', value = nil})
+    table.insert(elements, {label = _U('guns_label'), value = nil})
 
     for i=1, #data.weapons, 1 do
       table.insert(elements, {
-        label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
+        label          = _U('confiscate', ESX.GetWeaponLabel(data.weapons[i].name)),
         value          = data.weapons[i].name,
         itemType       = 'item_weapon',
         amount         = data.ammo,
@@ -796,7 +796,7 @@ function OpenBodySearchMenu(player)
     for i=1, #data.inventory, 1 do
       if data.inventory[i].count > 0 then
         table.insert(elements, {
-          label          = _U('confiscate_inv') .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
+          label          = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
           value          = data.inventory[i].name,
           itemType       = 'item_standard',
           amount         = data.inventory[i].count,
@@ -892,9 +892,9 @@ function OpenFineCategoryMenu(player, category)
         menu.close()
 
         if Config.EnablePlayerManagement then
-          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total') .. label, amount)
+          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total', label), amount)
         else
-          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total') .. label, amount)
+          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', label), amount)
         end
 
         ESX.SetTimeout(300, function()
@@ -986,12 +986,12 @@ function OpenVehicleInfosMenu(vehicleData)
 
     local elements = {}
 
-    table.insert(elements, {label = _U('plate') .. infos.plate, value = nil})
+    table.insert(elements, {label = _U('plate', infos.plate), value = nil})
 
     if infos.owner == nil then
       table.insert(elements, {label = _U('owner_unknown'), value = nil})
     else
-      table.insert(elements, {label = _U('owner') .. infos.owner, value = nil})
+      table.insert(elements, {label = _U('owner', infos.owner), value = nil})
     end
 
     ESX.UI.Menu.Open(
@@ -1059,7 +1059,7 @@ function OpenPutWeaponMenu()
     local weaponHash = GetHashKey(weaponList[i].name)
 
     if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-      local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+      --local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
       table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
     end
 

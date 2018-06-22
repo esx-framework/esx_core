@@ -1,9 +1,11 @@
+USE `essentialmode`;
+
 INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_police','Polis',1)
+	('society_police', 'Polis', 1)
 ;
 
 INSERT INTO `datastore` (name, label, shared) VALUES
-	('society_police','Polis',1)
+	('society_police', 'Polis', 1)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
@@ -11,7 +13,7 @@ INSERT INTO `addon_inventory` (name, label, shared) VALUES
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
-	('police','Polis')
+	('police', 'Polis')
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
@@ -36,11 +38,11 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Missbruk av tuta',30,0),
 	('Köra över heldragen linje',40,0),
 	('Kört i motsatt riktning i rondell',250,0),
-	('Olaglig U-Sväng',250,0),
-	('Olovlig körning i skogen',170,0),
+	('Olaglig u-sväng',250,0),
+	('Olovlig körning i terräng',170,0),
 	('Kört för nära bil framför',30,0),
-	('Trafikfarligt stopp',150,0),
-	('olaglig parkering',70,0),
+	('Trafikfarlig stopp',150,0),
+	('Olaglig parkering',70,0),
 	('Använder inte högerregeln',70,0),
 	('Aktar sig inte för tjänstefordon i utryckning',90,0),
 	('Kört förbi stoppskylt',105,0),
@@ -48,7 +50,7 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Farlig omkörning',100,0),
 	('Fordon i dåligt skick',100,0),
 	('Kört utan körkort',1500,0),
-	('smitning från olycka',800,0),
+	('Smitning från olycka',800,0),
 	('Kört för fort < 5 kmh',90,0),
 	('Kört för fort 5-15 kmh',120,0),
 	('Kört för fort 15-30 kmh',180,0),
@@ -75,14 +77,14 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Hålla gisslan/Hålla person mot dess vilja',1500,2),
 	('Kidnappa en tjänsteman',2000,2),
 	('Rån',650,2),
-	('butiksrån',650,2),
-	('bankrån',1500,2),
+	('Butiksrån',650,2),
+	('Bankrån',1500,2),
 	('Skjutit en person',2000,3),
 	('Skjutit en tjänsteman',2500,3),
-	('mordförsök',3000,3),
-	('Mordförsök på tjänsteman',5000,3),
-	('mord',10000,3),
-	('mord på tjänsteman',30000,3),
-	('dråp',1800,3),
+	('Mordförsök',3000,3),
+	('Mordförsök på tjänsteman',6000,3),
+	('Mord',10000,3),
+	('Mord på tjänsteman',30000,3),
+	('Dråp',1800,3),
 	('Olagliga aktiviteter inom ett företag',2000,2)
 ;

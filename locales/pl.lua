@@ -22,8 +22,7 @@ Locales['pl'] = {
   ['vehicle_out'] = 'Masz już pojazd poza garażem',
   ['vehicle_spawner'] = 'Naciśnij ~INPUT_CONTEXT~ żeby wziąć pojazd',
   ['store_vehicle'] = 'Naciśnij ~INPUT_CONTEXT~ żeby przechować pojazd',
-  ['service_max'] = 'Maksymalna ilość policjantów na służbie: ',
-
+  ['service_max'] = 'maksymalna ilość policjantów na służbie: %s/%s',
   -- Action Menu
   ['citizen_interaction'] = 'Interakcja z cywilami',
   ['vehicle_interaction'] = 'Interakcja z pojazdami',
@@ -64,24 +63,29 @@ Locales['pl'] = {
   ['box'] = 'Pudła',
   ['cash'] = 'Paleta z pieniędzmi',
   -- ID Card Menu
-  ['name'] = 'Nazwa : ',
-  ['bac'] = 'bAC : ',
+  ['name'] = 'nazwa: %s',
+  ['bac'] = 'BAC: %s',
   -- Body Search Menu
-  ['confiscate_dirty'] = 'Skonfiskuj brudne pieniądze: $',
   ['guns_label'] = '--- Bronie ---',
-  ['confiscate'] = 'Skonfiskuj ',
   ['inventory_label'] = '--- Ekwipunek ---',
-  ['confiscate_inv'] = 'Skonfiskuj x',
-
+  ['confiscate'] = 'skonfiskuj %s',
+  ['confiscate_inv'] = 'skonfiskuj %sx %s',
+  ['confiscate_dirty'] = 'skonfiskuj brudne pieniądze: <span style="color:red;">$%s</span>',
+  ['you_confiscated'] = 'you confiscated ~y~%sx~s~ ~b~%s~s~ from ~b~%s~s~',
+  ['got_confiscated'] = '~y~%sx~s~ ~b~%s~s~ were confiscated by ~y~%s~s~',
+  ['you_confiscated_account'] = 'you confiscated ~g~$%s~s~ (%s) from ~b~%s~s~',
+  ['got_confiscated_account'] = '~g~$%s~s~ (%s) was confiscated by ~y~%s~s~',
+  ['you_confiscated_weapon'] = 'you confiscated ~b~%s~s~ from ~b~%s~s~ with ~o~%s~s~ bullets',
+  ['got_confiscated_weapon'] = 'your ~b~%s~s~ with ~o~%s~s~ bullets was confiscated by ~y~%s~s~',
   ['traffic_offense'] = 'Wykroczenia drogowe',
   ['minor_offense'] = 'Niewielkie wykroczenia',
   ['average_offense'] = 'Średnie wykroczenia',
   ['major_offense'] = 'Duże wykroczenia',
-  ['fine_total'] = 'Mandat: ',
+  ['fine_total'] = 'mandat: %s',
   -- Vehicle Info Menu
-  ['plate'] = 'Tablica rejestracyjna: ',
-  ['owner_unknown'] = 'Właściciel: Nieznany',
-  ['owner'] = 'Właściciel: ',
+  ['plate'] = 'tablica rejestracyjna: %s',
+  ['owner_unknown'] = 'właściciel: Nieznany',
+  ['owner'] = 'właściciel: %s',
   -- Weapons Menus
   ['get_weapon_menu'] = 'Zbrojownia - Weź broń',
   ['put_weapon_menu'] = 'Zbrojownia - Odłóż broń',
@@ -106,12 +110,5 @@ Locales['pl'] = {
   ['remove_prop'] = 'Naciśnij ~INPUT_CONTEXT~ aby usunąć ten obiekt',
   ['map_blip'] = 'Komisariat Policji',
   -- Notifications
-  ['from'] = '~s~ od ~b~',
-  ['you_have_confinv'] = 'Skonfiskowałeś ~y~x',
-  ['confinv'] = '~s~ skonfiskowane przez Ciebie ~y~x',
-  ['you_have_confdm'] = 'Skonfiskowałeś ~y~$',
-  ['confdm'] = '~s~ skonfiskowane przez Ciebie ~y~$',
-  ['you_have_confweapon'] = 'Skonfiskowałeś ~y~x1 ',
-  ['confweapon'] = '~s~ skonfiskowane przez Ciebie ~y~x1 ',
   ['alert_police'] = 'Ostrzeż policję',
 }
