@@ -430,10 +430,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
       })
     end
     TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
-    TriggerClientEvent("esx:addInventoryItem", self.source, {label = weaponLabel}, 1)
+    TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
   end
 
-  self.removeWeapon = function(weaponName)
+  self.removeWeapon = function(weaponName, ammo)
 
     local weaponLabel = weaponName
 
@@ -453,8 +453,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
       end
     end
 
-    TriggerClientEvent('esx:removeWeapon', self.source, weaponName)
-    TriggerClientEvent("esx:removeInventoryItem", self.source, {label = weaponLabel}, 1)
+    TriggerClientEvent('esx:removeWeapon', self.source, weaponName, ammo)
+    TriggerClientEvent('esx:removeInventoryItem', self.source, {label = weaponLabel}, 1)
   end
 
   return self
