@@ -21,6 +21,7 @@ git clone https://github.com/ESX-Org/esx_society [esx]/esx_society
 - Download https://github.com/ESX-Org/esx_society/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Import `esx_society.sql` in your database
 - Add this in your `server.cfg`:
 
@@ -39,6 +40,11 @@ local amount  = 100
 TriggerServerEvent('esx_society:withdrawMoney', society, amount)
 TriggerServerEvent('esx_society:depositMoney', society, amount)
 TriggerServerEvent('esx_society:washMoney', society, amount)
+
+
+TriggerEvent('esx_society:openBossMenu', society, function (data, menu)
+	menu.close()
+end, {wash = false}) -- set custom options, e.g disable washing
 ```
 
 # Legal
