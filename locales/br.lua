@@ -64,7 +64,7 @@ Locales['br'] = {
   ['cash'] = 'Caixa de dinheiro',
   -- ID Card Menu
   ['name'] = 'Nome: %s',
-  ['bac'] = 'BAC: %s',
+  ['bac'] = 'BAC: %s %',
   -- Body Search Menu
   ['guns_label'] = '--- Armas ---',
   ['inventory_label'] = '--- Inventário ---',

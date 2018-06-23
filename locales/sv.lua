@@ -64,7 +64,7 @@ Locales['sv'] = {
   ['cash'] = 'låda med pengar',
   -- ID Card Menu
   ['name'] ='namn: %s',
-  ['bac'] = 'procent alkohol i blodet: %s',
+  ['bac'] = 'alkohol i blodet: %s %',
   -- Body Search Menu
   ['guns_label'] = '--- Vapen ---',
   ['inventory_label'] = '--- Inventory ---',

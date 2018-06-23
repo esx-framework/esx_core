@@ -64,7 +64,7 @@ Locales['fi'] = {
   ['cash'] = 'rahalaatikko',
   -- ID Card Menu
   ['name'] = 'nimi: %s',
-  ['bac'] = 'alkometri: %s',
+  ['bac'] = 'alkometri: %s %',
   -- Body Search Menu
   ['guns_label'] = '--- Aseet ---',
   ['inventory_label'] = '--- Reppu ---',

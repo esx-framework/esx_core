@@ -668,7 +668,7 @@ function OpenIdentityCardMenu(player)
       end
 
       local elements = {
-        {label = _U('name') .. data.firstname .. " " .. data.lastname, value = nil},
+        {label = _U('name', data.firstname .. ' ' .. data.lastname), value = nil},
         {label = sexLabel,    value = nil},
         {label = dobLabel,    value = nil},
         {label = heightLabel, value = nil},
@@ -677,7 +677,7 @@ function OpenIdentityCardMenu(player)
       }
 
       if data.drunk ~= nil then
-        table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
+        table.insert(elements, {label = _U('bac', data.drunk), value = nil})
       end
 
       if data.licenses ~= nil then
