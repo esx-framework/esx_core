@@ -50,11 +50,11 @@ end
 function ShowLoadingPromt(msg, time, type)
   Citizen.CreateThread(function()
     Citizen.Wait(0)
-    N_0xaba17d7ce615adbf("STRING")
+    BeginTextCommandBusyString("STRING")
     AddTextComponentString(msg)
-    N_0xbd12f8228410d9b4(type)
+    EndTextCommandBusyString(type)
     Citizen.Wait(time)
-    N_0x10d373323e5b9c0d()
+    RemoveLoadingPrompt()
   end)
 end
 
