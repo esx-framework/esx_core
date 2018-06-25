@@ -32,7 +32,7 @@ Locales['sv'] = {
   ['received_salary'] = 'du har mottagit din lön på ~g~$%s~s~',
   ['received_help'] = 'du har mottagit bidrag på ~g~$%s~s~',
   ['company_nomoney'] = 'företaget du är anställt hos har inte råd att betala ut din lön.',
-  ['received_money'] = 'mottagit pengar',
+  ['received_paycheck'] = 'mottagit lön',
   ['bank'] = 'bank',
   ['black_money'] = 'svarta pengar',
 

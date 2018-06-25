@@ -32,7 +32,7 @@ Locales['en'] = {
   ['received_salary'] = 'you received your salary: ~g~$%s~s~',
   ['received_help'] = 'you recieved your welfare check: ~g~$%s~s~',
   ['company_nomoney'] = 'the company you\'re employeed at is too poor to pay out your salary.',
-  ['received_money'] = 'received money',
+  ['received_paycheck'] = 'received paycheck',
   ['bank'] = 'bank',
   ['black_money'] = 'dirty Money',
   
