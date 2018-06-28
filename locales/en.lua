@@ -11,7 +11,6 @@ Locales['en'] = {
   ['have_deposited']         = 'you have deposited ~r~$%s~s~',
   ['have_withdrawn']         = 'you have withdrawn ~g~$%s~s~',
   ['invalid_amount']         = 'invalid amount',
-  ['invalid_amount']         = 'invalid amount',
   ['no']                     = 'no',
   ['promote']                = 'promote',
   ['promote_employee']       = 'promote %s',
