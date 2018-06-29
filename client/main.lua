@@ -21,18 +21,18 @@ function EnableGui(state)
 	})
 end
 
-RegisterNetEvent("esx_identity:showRegisterIdentity")
-AddEventHandler("esx_identity:showRegisterIdentity", function()
+RegisterNetEvent('esx_identity:showRegisterIdentity')
+AddEventHandler('esx_identity:showRegisterIdentity', function()
 	EnableGui(true)
 end)
 
-RegisterNetEvent("esx_identity:identityCheck")
-AddEventHandler("esx_identity:identityCheck", function(identityCheck)
+RegisterNetEvent('esx_identity:identityCheck')
+AddEventHandler('esx_identity:identityCheck', function(identityCheck)
 	hasIdentity = identityCheck
 end)
 
-RegisterNetEvent("esx_identity:saveID")
-AddEventHandler("esx_identity:saveID", function(data)
+RegisterNetEvent('esx_identity:saveID')
+AddEventHandler('esx_identity:saveID', function(data)
 	myIdentifiers = data
 end)
 
