@@ -1,18 +1,11 @@
-// Mouse Controls
-var documentWidth = document.documentElement.clientWidth;
-var documentHeight = document.documentElement.clientHeight;
-var cursor = $('#cursor');
-var cursorX = documentWidth / 2;
-var cursorY = documentHeight / 2;
-
-//question variables
+// question variables
 var questionNumber = 1;
 var userAnswer = [];
 var goodAnswer = [];
 var questionUsed = [];
 var nbQuestionToAnswer = 10; // don't forget to change the progress bar max value in html
-var nbAnswerNeeded = 1; // out of nbQuestionToAnswer
-var nbPossibleQuestions = 10; //number of questions in database questions.js
+var nbAnswerNeeded = 5; // out of nbQuestionToAnswer
+var nbPossibleQuestions = 10; // number of questions in database questions.js
 var lastClick = 0;
 
 function getRandomQuestion() {
@@ -62,11 +55,9 @@ function openResultBad() {
 }
 function openContainer() {
   $(".question-container").css("display", "block");
-  $("#cursor").css("display", "block");
 }
 function closeContainer() {
   $(".question-container").css("display", "none");
-  $("#cursor").css("display", "none");
 }
 
 // Listen for NUI Events

@@ -3,12 +3,6 @@ html {
   font-family: 'Open Sans', sans-serif;
 }
 
-#cursor {
-  position: absolute;
-  z-index: 99999999;
-  display: none;
-}
-
 .full-screen {
   width: 100%;
   height:100%;
