@@ -1,6 +1,4 @@
 Locales['br'] = {
-
-	['used_bread'] = 'Você comeu 1x pão',
-	['used_water'] = 'Você tomou 1x água',
-
+	['used_bread'] = 'você comeu ~y~1x~s~ ~b~pão~s~',
+	['used_water'] = 'você tomou ~y~1x~s~ ~b~água~s~',
 }
