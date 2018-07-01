@@ -1,4 +1,5 @@
 ESX = nil
+local hasSqlRun = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -77,80 +78,90 @@ function RemoveOwnedProperty(name, owner)
 
 end
 
-AddEventHandler('onMySQLReady', function ()
-
-  MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
-
-    for i=1, #properties, 1 do
-
-      local entering  = nil
-      local exit      = nil
-      local inside    = nil
-      local outside   = nil
-      local isSingle  = nil
-      local isRoom    = nil
-      local isGateway = nil
-      local roomMenu  = nil
-
-      if properties[i].entering ~= nil then
-        entering = json.decode(properties[i].entering)
-      end
-
-      if properties[i].exit ~= nil then
-        exit = json.decode(properties[i].exit)
-      end
-
-      if properties[i].inside ~= nil then
-        inside = json.decode(properties[i].inside)
-      end
-
-      if properties[i].outside ~= nil then
-        outside = json.decode(properties[i].outside)
-      end
-
-      if properties[i].is_single == 0 then
-        isSingle = false
-      else
-        isSingle = true
-      end
-
-      if properties[i].is_room == 0 then
-        isRoom = false
-      else
-        isRoom = true
-      end
-
-      if properties[i].is_gateway == 0 then
-        isGateway = false
-      else
-        isGateway = true
-      end
-
-      if properties[i].room_menu ~= nil then
-        roomMenu = json.decode(properties[i].room_menu)
-      end
-
-      table.insert(Config.Properties, {
-        name      = properties[i].name,
-        label     = properties[i].label,
-        entering  = entering,
-        exit      = exit,
-        inside    = inside,
-        outside   = outside,
-        ipls      = json.decode(properties[i].ipls),
-        gateway   = properties[i].gateway,
-        isSingle  = isSingle,
-        isRoom    = isRoom,
-        isGateway = isGateway,
-        roomMenu  = roomMenu,
-        price     = properties[i].price
-      })
-
-    end
-
-  end)
-
+AddEventHandler('onMySQLReady', function()
+	hasSqlRun = true
+	LoadSql()
 end)
+
+-- extremely useful when restarting script mid-game
+Citizen.CreateThread(function()
+	Citizen.Wait(20000) -- hopefully enough for connection to the SQL server
+
+	if not hasSqlRun then
+		LoadSql()
+		hasSqlRun = true
+	end
+end)
+
+function LoadSql()
+	MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
+		for i=1, #properties, 1 do
+
+			local entering  = nil
+			local exit      = nil
+			local inside    = nil
+			local outside   = nil
+			local isSingle  = nil
+			local isRoom    = nil
+			local isGateway = nil
+			local roomMenu  = nil
+
+			if properties[i].entering ~= nil then
+				entering = json.decode(properties[i].entering)
+			end
+
+			if properties[i].exit ~= nil then
+				exit = json.decode(properties[i].exit)
+			end
+
+			if properties[i].inside ~= nil then
+				inside = json.decode(properties[i].inside)
+			end
+
+			if properties[i].outside ~= nil then
+				outside = json.decode(properties[i].outside)
+			end
+
+			if properties[i].is_single == 0 then
+				isSingle = false
+			else
+				isSingle = true
+			end
+
+			if properties[i].is_room == 0 then
+				isRoom = false
+			else
+				isRoom = true
+			end
+
+			if properties[i].is_gateway == 0 then
+				isGateway = false
+			else
+				isGateway = true
+			end
+
+			if properties[i].room_menu ~= nil then
+				roomMenu = json.decode(properties[i].room_menu)
+			end
+
+			table.insert(Config.Properties, {
+				name      = properties[i].name,
+				label     = properties[i].label,
+				entering  = entering,
+				exit      = exit,
+				inside    = inside,
+				outside   = outside,
+				ipls      = json.decode(properties[i].ipls),
+				gateway   = properties[i].gateway,
+				isSingle  = isSingle,
+				isRoom    = isRoom,
+				isGateway = isGateway,
+				roomMenu  = roomMenu,
+				price     = properties[i].price
+			})
+		end
+	end)
+end
 
 AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 
@@ -556,7 +567,7 @@ function PayRent(d, h, m)
 
 			-- message player if connected
 			if xPlayer ~= nil then
-				xPlayer.removeBank(result[i].price)
+				xPlayer.removeAccountMoney('bank', result[i].price)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', result[i].price))
 			else -- pay rent either way
 				MySQL.Sync.execute(

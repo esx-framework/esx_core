@@ -11,8 +11,6 @@ local Keys = {
 }
 
 ESX                           = nil
-local GUI                     = {}
-GUI.Time                      = 0
 local OwnedProperties         = {}
 local Blips                   = {}
 local CurrentProperty         = nil
@@ -861,7 +859,13 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-  PlayerLoaded = true
+	PlayerLoaded = true
+
+	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
+		for i=1, #ownedProperties, 1 do
+			SetPropertyOwned(ownedProperties[i], true)
+		end
+	end)
 end)
 
 AddEventHandler('esx_property:getProperties', function(cb)
@@ -879,17 +883,6 @@ end)
 RegisterNetEvent('esx_property:setPropertyOwned')
 AddEventHandler('esx_property:setPropertyOwned', function(name, owned)
   SetPropertyOwned(name, owned)
-end)
-
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-
-  ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
-    for i=1, #ownedProperties, 1 do
-      SetPropertyOwned(ownedProperties[i], true)
-    end
-  end)
-
 end)
 
 RegisterNetEvent('instance:onCreate')
@@ -987,7 +980,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(1)
 
     local coords = GetEntityCoords(GetPlayerPed(-1))
 
@@ -1017,7 +1010,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Wait(0)
+    Citizen.Wait(1)
 
     local coords          = GetEntityCoords(GetPlayerPed(-1))
     local isInMarker      = false
@@ -1083,7 +1076,7 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    Citizen.Wait(10)
 
     if CurrentAction ~= nil then
 
@@ -1091,7 +1084,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
+      if IsControlJustReleased(0, Keys['E']) then
 
         if CurrentAction == 'property_menu' then
           OpenPropertyMenu(CurrentActionData.property)
@@ -1116,7 +1109,6 @@ Citizen.CreateThread(function()
         end
 
         CurrentAction = nil
-        GUI.Time      = GetGameTimer()
 
       end
 
