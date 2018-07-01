@@ -32,8 +32,8 @@ Locales['fi'] = {
   ['received_salary'] = 'sinä vastaanotit palkkaa: ~g~$%s~s~',
   ['received_help'] = 'sinä vastaanotit valtion tukea: ~g~$%s~s~',
   ['company_nomoney'] = 'yritys jolle teet töitä on köyhä eikä voi maksaa palkkaasi.',
-  ['received_paycheck'] = 'sai rahaa',
-  ['bank'] = 'Pankki',
+  ['received_paycheck'] = 'sait palkan',
+  ['bank'] = 'pankki',
   ['black_money'] = 'likainen Raha',
 
   ['act_imp'] = 'toiminto mahdoton',
