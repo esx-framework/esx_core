@@ -1074,45 +1074,43 @@ end)
 
 -- Key controls
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Citizen.Wait(10)
+		Citizen.Wait(10)
 
-    if CurrentAction ~= nil then
+		if CurrentAction ~= nil then
 
-      SetTextComponentFormat('STRING')
-      AddTextComponentString(CurrentActionMsg)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			SetTextComponentFormat('STRING')
+			AddTextComponentString(CurrentActionMsg)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlJustReleased(0, Keys['E']) then
+			if IsControlJustReleased(0, Keys['E']) then
 
-        if CurrentAction == 'property_menu' then
-          OpenPropertyMenu(CurrentActionData.property)
-        end
+				if CurrentAction == 'property_menu' then
+					OpenPropertyMenu(CurrentActionData.property)
+				end
 
-        if CurrentAction == 'gateway_menu' then
+				if CurrentAction == 'gateway_menu' then
+					if Config.EnablePlayerManagement then
+						OpenGatewayOwnedPropertiesMenu(CurrentActionData.property)
+					else
+						OpenGatewayMenu(CurrentActionData.property)
+					end
+				end
 
-          if Config.EnablePlayerManagement then
-            OpenGatewayOwnedPropertiesMenu(CurrentActionData.property)
-          else
-            OpenGatewayMenu(CurrentActionData.property)
-          end
+				if CurrentAction == 'room_menu' then
+					OpenRoomMenu(CurrentActionData.property, CurrentActionData.owner)
+				end
 
-        end
+				if CurrentAction == 'room_exit' then
+					TriggerEvent('instance:leave')
+				end
 
-        if CurrentAction == 'room_menu' then
-          OpenRoomMenu(CurrentActionData.property, CurrentActionData.owner)
-        end
+				CurrentAction = nil
+			end
 
-        if CurrentAction == 'room_exit' then
-          TriggerEvent('instance:leave')
-        end
-
-        CurrentAction = nil
-
-      end
-
-    end
-
-  end
+		else -- no current action, sleep mode
+			Citizen.Wait(500)
+		end
+	end
 end)

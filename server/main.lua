@@ -260,7 +260,7 @@ AddEventHandler('esx_property:deleteLastProperty', function()
   MySQL.Async.execute(
     'UPDATE users SET last_property = NULL WHERE identifier = @identifier',
     {
-      ['@identifier']    = xPlayer.identifier
+      ['@identifier'] = xPlayer.identifier
     }
   )
 end)
