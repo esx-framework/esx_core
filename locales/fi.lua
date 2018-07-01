@@ -69,8 +69,8 @@ Locales['fi'] = {
   ['weapon'] = 'ase',
   ['giveweapon'] = 'anna ase',
   ['disconnect'] = 'poistu serveriltä',
-  ['chat_clear'] = 'clear the chat',
-  ['chat_clear_all'] = 'clear the chat for everyone',
+  ['chat_clear'] = 'tyhjennä chatti',
+  ['chat_clear_all'] = 'tyhjennä chatti kaikilta',
   -- Weapons
   ['weapon_knife'] = 'veitsi',
   ['weapon_nightstick'] = 'pamppu',
