@@ -19,6 +19,7 @@ git clone https://github.com/ESX-Org/esx_drugs [esx]/esx_drugs
 - Download https://github.com/ESX-Org/esx_drugs/archive/master.zip
 - Put it in the `[esx]` directory
 
+## Installation
 - Import `esx_drugs.sql` in your database
 - Add this in your `server.cfg`:
 
