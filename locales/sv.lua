@@ -69,6 +69,8 @@ Locales['sv'] = {
   ['weapon'] = 'vapen',
   ['giveweapon'] = 'ge vapen',
   ['disconnect'] = 'koppla från servern',
+  ['chat_clear'] = 'töm chatten',
+  ['chat_clear_all'] = 'töm chatten för alla',
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',

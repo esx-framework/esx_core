@@ -719,32 +719,32 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
   return {
 
-    model            = GetEntityModel(vehicle),
+    model             = GetEntityModel(vehicle),
 
-    plate            = GetVehicleNumberPlateText(vehicle),
-    plateIndex       = GetVehicleNumberPlateTextIndex(vehicle),
+    plate             = GetVehicleNumberPlateText(vehicle),
+    plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
-    health           = GetEntityHealth(vehicle),
-    dirtLevel        = GetVehicleDirtLevel(vehicle),
+    health            = GetEntityHealth(vehicle),
+    dirtLevel         = GetVehicleDirtLevel(vehicle),
 
-    color1           = color1,
-    color2           = color2,
+    color1            = color1,
+    color2            = color2,
 
-    pearlescentColor = pearlescentColor,
-    wheelColor       = wheelColor,
+    pearlescentColor  = pearlescentColor,
+    wheelColor        = wheelColor,
 
-    wheels           = GetVehicleWheelType(vehicle),
-    windowTint       = GetVehicleWindowTint(vehicle),
+    wheels            = GetVehicleWheelType(vehicle),
+    windowTint        = GetVehicleWindowTint(vehicle),
 
-    neonEnabled      = {
+    neonEnabled       = {
       IsVehicleNeonLightEnabled(vehicle, 0),
       IsVehicleNeonLightEnabled(vehicle, 1),
       IsVehicleNeonLightEnabled(vehicle, 2),
       IsVehicleNeonLightEnabled(vehicle, 3),
     },
 
-    neonColor        = table.pack(GetVehicleNeonLightsColour(vehicle)),
-    tyreSmokeColor   = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+    neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
+    tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
     modSpoilers       = GetVehicleMod(vehicle, 0),
     modFrontBumper    = GetVehicleMod(vehicle, 1),
@@ -1082,315 +1082,285 @@ end
 
 ESX.ShowInventory = function()
 
-  local playerPed = GetPlayerPed(-1)
-  local elements  = {}
+	local playerPed = GetPlayerPed(-1)
+	local elements  = {}
 
-  if ESX.PlayerData.money > 0 then
-    table.insert(elements, {
-      label     = _U('cash', ESX.PlayerData.money),
-      count     = ESX.PlayerData.money,
-      type      = 'item_money',
-      value     = 'money',
-      usable    = false,
-      rare      = false,
-      canRemove = true
-    })
-  end
+	if ESX.PlayerData.money > 0 then
+		table.insert(elements, {
+		label     = _U('cash', ESX.PlayerData.money),
+		count     = ESX.PlayerData.money,
+		type      = 'item_money',
+		value     = 'money',
+		usable    = false,
+		rare      = false,
+		canRemove = true
+		})
+	end
 
-  for i=1, #ESX.PlayerData.accounts, 1 do
-    if ESX.PlayerData.accounts[i].money > 0 then
-      table.insert(elements, {
-        label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
-        count     = ESX.PlayerData.accounts[i].money,
-        type      = 'item_account',
-        value     =  ESX.PlayerData.accounts[i].name,
-        usable    = false,
-        rare      = false,
-        canRemove = true
-      })
-    end
-  end
+	for i=1, #ESX.PlayerData.accounts, 1 do
+		if ESX.PlayerData.accounts[i].money > 0 then
+			table.insert(elements, {
+				label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
+				count     = ESX.PlayerData.accounts[i].money,
+				type      = 'item_account',
+				value     =  ESX.PlayerData.accounts[i].name,
+				usable    = false,
+				rare      = false,
+				canRemove = true
+			})
+		end
+	end
 
-  for i=1, #ESX.PlayerData.inventory, 1 do
+	for i=1, #ESX.PlayerData.inventory, 1 do
 
-    if ESX.PlayerData.inventory[i].count > 0 then
-      table.insert(elements, {
-        label     = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
-        count     = ESX.PlayerData.inventory[i].count,
-        type      = 'item_standard',
-        value     = ESX.PlayerData.inventory[i].name,
-        usable    = ESX.PlayerData.inventory[i].usable,
-        rare      = ESX.PlayerData.inventory[i].rare,
-        canRemove = ESX.PlayerData.inventory[i].canRemove,
-      })
-    end
+		if ESX.PlayerData.inventory[i].count > 0 then
+			table.insert(elements, {
+				label     = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
+				count     = ESX.PlayerData.inventory[i].count,
+				type      = 'item_standard',
+				value     = ESX.PlayerData.inventory[i].name,
+				usable    = ESX.PlayerData.inventory[i].usable,
+				rare      = ESX.PlayerData.inventory[i].rare,
+				canRemove = ESX.PlayerData.inventory[i].canRemove,
+			})
+		end
 
-  end
+	end
 
-  for i=1, #Config.Weapons, 1 do
+	for i=1, #Config.Weapons, 1 do
 
-    local weaponHash = GetHashKey(Config.Weapons[i].name)
+		local weaponHash = GetHashKey(Config.Weapons[i].name)
 
-    if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
+		if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
+			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+			table.insert(elements, {
+				label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
+				count     = 1,
+				type      = 'item_weapon',
+				value     = Config.Weapons[i].name,
+				ammo      = ammo,
+				usable    = false,
+				rare      = false,
+				canRemove = true
+			})
+		end
+	end
 
-      local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+	ESX.UI.Menu.CloseAll()
 
-      table.insert(elements, {
-        label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
-        count     = 1,
-        type      = 'item_weapon',
-        value     = Config.Weapons[i].name,
-        ammo      = ammo,
-        usable    = false,
-        rare      = false,
-        canRemove = true
-      })
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory',
+	{
+		title    = _U('inventory'),
+		align    = 'bottom-right',
+		elements = elements,
+	}, function(data, menu)
+		menu.close()
 
-    end
-  end
+		local player, distance = ESX.Game.GetClosestPlayer()
+		local elements = {}
 
-  ESX.UI.Menu.CloseAll()
+		if data.current.usable then
+			table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
+		end
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'inventory',
-    {
-      title    = _U('inventory'),
-      align    = 'bottom-right',
-      elements = elements,
-    },
-    function(data, menu)
-      menu.close()
+		if data.current.canRemove then
+			if player ~= -1 and distance <= 3.0 then
+			table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+			end
+			table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
+		end
 
-      local player, distance = ESX.Game.GetClosestPlayer()
-      local elements = {}
+		if data.current.type == 'item_weapon' and data.current.ammo > 0 and player ~= -1 and distance <= 3.0 then
+			table.insert(elements, {label = _U('giveammo'), action = 'giveammo', type = data.current.type, value = data.current.value})
+		end
 
-      if data.current.usable then
-        table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
-      end
+		table.insert(elements, {label = _U('return'), action = 'return'})
 
-      if data.current.canRemove then
-        if player ~= -1 and distance <= 3.0 then
-          table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
-        end
-        table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
-      end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory_item',
+		{
+			title    = data.current.label,
+			align    = 'bottom-right',
+			elements = elements,
+		}, function(data, menu)
 
-      if data.current.type == "item_weapon" and data.current.ammo > 0 and player ~= -1 and distance <= 3.0 then
-        table.insert(elements, {label = _U('giveammo'), action = 'giveammo', type = data.current.type, value = data.current.value})
-      end
+			local item = data.current.value
+			local type = data.current.type
+			local playerPed = GetPlayerPed(-1)
 
-      table.insert(elements, {label = _U('return'), action = 'return'})
+			if data.current.action == 'give' then
 
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'inventory_item',
-        {
-          title    = data.current.label,
-          align    = 'bottom-right',
-          elements = elements,
-        },
-        function(data, menu)
+				if type == 'item_weapon' then
+					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+					local closestPed = GetPlayerPed(closestPlayer)
+					local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1), GetHashKey(item))
 
-          local item = data.current.value
-          local type = data.current.type
-          local playerPed = GetPlayerPed(-1)
+					if not IsPedSittingInAnyVehicle(closestPed) then
+						if closestPlayer ~= -1 and closestDistance < 3.0 then
+							if pedAmmo > 0 then
+								ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give',
+								{
+									title = _U('amountammo')
+								}, function(data2, menu2)
+									local quantity = tonumber(data2.value)
+									if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
+										TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
+										local finalammo = math.floor(pedAmmo - quantity)
+										SetPedAmmo(playerPed, item, finalammo)
+										menu2.close()
+										menu.close()
+									else
+										ESX.ShowNotification(_U('noammo'))
+									end
+								end, function(data2, menu2)
+									menu2.close()
+								end)
+							else
+								TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 0)
+								menu.close()
+							end
+						else
+							ESX.ShowNotification(_U('players_nearby'))
+						end
+					else
+						ESX.ShowNotification(_U('in_vehicle'))
+					end
 
-           if data.current.action == 'give' then
+				else -- type: item_standard
 
-            if type == 'item_weapon' then
-              local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-              local closestPed = GetPlayerPed(closestPlayer)
-              local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1), GetHashKey(item))
-              if not IsPedSittingInAnyVehicle(closestPed) then
-                if closestPlayer ~= -1 and closestDistance < 3.0 then
-                  if pedAmmo > 0 then
-                    ESX.UI.Menu.Open(
-                    'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-                    {
-                      title = _U('amountammo')
-                    },
-                    function(data2, menu2)
-                      local quantity = tonumber(data2.value)
-                      if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
-                        TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
-                        local finalammo = math.floor(pedAmmo - quantity)
-                        SetPedAmmo(playerPed, item, finalammo)
-                        menu2.close()
-                        menu.close()
-                      else
-                        ESX.ShowNotification(_U('noammo'))
-                      end
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give',
+					{
+						title = _U('amount')
+					}, function(data2, menu2)
+						local quantity = tonumber(data2.value)
+						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+						local closestPed = GetPlayerPed(closestPlayer)
 
-                    end, function(data2, menu2)
-                      menu2.close()
-                    end
-                  )
-                  else
-                    TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 0)
-                    menu.close()
-                  end
-                else
-                  ESX.ShowNotification(_U('players_nearby'))
-                end
-              else
-                ESX.ShowNotification(_U("in_vehicle"))
-              end
+						if not IsPedSittingInAnyVehicle(closestPed) then
+							if closestPlayer ~= -1 and closestDistance < 3.0 then
+								TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
+							else
+								ESX.ShowNotification(_U('players_nearby'))
+							end
+						else
+							ESX.ShowNotification(_U('in_vehicle'))
+						end
 
-            else
+						menu2.close()
+						menu.close()
 
-               ESX.UI.Menu.Open(
-                'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-                {
-                  title = _U('amount')
-                },
-                function(data2, menu2)
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				end
 
-                  local quantity                       = tonumber(data2.value)
-                  local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-                  local closestPed = GetPlayerPed(closestPlayer)
-                  if not IsPedSittingInAnyVehicle(closestPed) then
-                    if closestPlayer ~= -1 and closestDistance < 3.0 then
-                      TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, quantity)
-                    else
-                      ESX.ShowNotification(_U('players_nearby'))
-                    end
-                  else
-                    ESX.ShowNotification(_U("in_vehicle"))
-                  end
+			elseif data.current.action == 'remove' then
 
-                  menu2.close()
-                  menu.close()
+				if type == 'item_weapon' then
+					local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
+			
+					-- does the player have any ammo for the weapon?
+					if pedAmmo > 0 then
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
+						{
+							title = _U('amount')
+						}, function(data2, menu2)
+							local quantity = tonumber(data2.value)
 
-                end,
-                function(data2, menu2)
-                  menu2.close()
-                end
-              )
+							if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
+								local finalammo = math.floor(pedAmmo - quantity)
+					
+								SetPedAmmo(playerPed, item, finalammo)
+								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+							else
+								ESX.ShowNotification(_U('noammo'))
+							end
+							menu2.close()
+							menu.close()
+						end, function(data2, menu2)
+							menu2.close()
+						end)
+					else
+						TriggerServerEvent('esx:removeInventoryItem', type, item, 0)
+						menu.close()
+					end
 
-            end
+				else -- type: item_standard
 
-          elseif data.current.action == 'remove' then
-
-            if type == 'item_weapon' then
-				local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
-				
-				-- does the player have any ammo for the weapon?
-				if pedAmmo > 0 then
-					ESX.UI.Menu.Open(
-					'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
 					{
 						title = _U('amount')
 					}, function(data2, menu2)
 						local quantity = tonumber(data2.value)
 
-						if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
-							local finalammo = math.floor(pedAmmo - quantity)
-							
-							SetPedAmmo(playerPed, item, finalammo)
-							TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+						if quantity == nil then
+							ESX.ShowNotification(_U('amount_invalid'))
 						else
-							ESX.ShowNotification(_U('noammo'))
+							TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 						end
+
 						menu2.close()
 						menu.close()
 					end, function(data2, menu2)
 						menu2.close()
 					end)
-				else
-					TriggerServerEvent('esx:removeInventoryItem', type, item, 0)
-					menu.close()
 				end
 
-            else
+			elseif data.current.action == 'use' then
+				TriggerServerEvent('esx:useItem', data.current.value)
 
-              ESX.UI.Menu.Open(
-                'dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
-                {
-                  title = _U('amount')
-                },
-                function(data2, menu2)
+			elseif data.current.action == 'return' then
 
-                  local quantity = tonumber(data2.value)
+				ESX.UI.Menu.CloseAll()
+				ESX.ShowInventory()
+			elseif data.current.action == 'giveammo' then
+				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+				local closestPed = GetPlayerPed(closestPlayer)
+				local pedAmmo = GetAmmoInPedWeapon(playerPed,GetHashKey(item))
+				if not IsPedSittingInAnyVehicle(closestPed) then
+					if closestPlayer ~= -1 and closestDistance < 3.0 then
+						if pedAmmo > 0 then
+							ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give',
+							{
+								title = _U('amountammo')
+							}, function(data2, menu2)
+								local quantity = tonumber(data2.value)
+								if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
 
-                  if quantity == nil then
-                    ESX.ShowNotification(_U('amount_invalid'))
-                  else
-                    TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
-                  end
+									local finalAmmoSource = math.floor(pedAmmo - quantity)
+									SetPedAmmo(playerPed, item, finalAmmoSource)
+									AddAmmoToPed(closestPed, item, quantity)
 
-                  menu2.close()
-                  menu.close()
+									ESX.ShowNotification(_U('gave_ammo', quantity, GetPlayerName(closestPlayer)))
+									-- todo notify target that he received ammo
+									menu2.close()
+									menu.close()
+								else
+									ESX.ShowNotification(_U('noammo'))
+								end
 
-                end,
-                function(data2, menu2)
-                  menu2.close()
-                end
-              )
+							end, function(data2, menu2)
+								menu2.close()
+							end)
+						else
+							TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 0)
+							menu.close()
+						end
+					else
+						ESX.ShowNotification(_U('players_nearby'))
+					end
+				else
+					ESX.ShowNotification(_U('in_vehicle'))
+				end
+			end
 
-            end
+		end, function(data, menu)
+			ESX.UI.Menu.CloseAll()
+			ESX.ShowInventory()
+		end)
 
-          elseif data.current.action == 'use' then
-            TriggerServerEvent('esx:useItem', data.current.value)
-
-          elseif data.current.action == 'return' then
-
-            ESX.UI.Menu.CloseAll()
-            ESX.ShowInventory()
-          elseif data.current.action == 'giveammo' then
-            local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-            local closestPed = GetPlayerPed(closestPlayer)
-            local pedAmmo = GetAmmoInPedWeapon(playerPed,GetHashKey(item))
-            if not IsPedSittingInAnyVehicle(closestPed) then
-              if closestPlayer ~= -1 and closestDistance < 3.0 then
-                if pedAmmo > 0 then
-                  ESX.UI.Menu.Open(
-                  'dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-                  {
-                    title = _U('amountammo')
-                  },
-                  function(data2, menu2)
-                    local quantity = tonumber(data2.value)
-                    if quantity <= pedAmmo and quantity >= 0 and quantity ~= nil then
-                      local finalAmmoSource = math.floor(pedAmmo - quantity)
-                      SetPedAmmo(playerPed, item, finalAmmoSource)
-                      AddAmmoToPed(closestPed, item, quantity)
-                      ESX.ShowNotification(_U('gave_ammo', quantity, GetPlayerName(closestPlayer)))
-                      -- todo notify target that he received ammo
-                      menu2.close()
-                      menu.close()
-                    else
-                      ESX.ShowNotification(_U('noammo'))
-                    end
-
-                  end,
-                  function(data2, menu2)
-                    menu2.close()
-                  end
-                )
-                else
-                  TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), type, item, 0)
-                  menu.close()
-                end
-              else
-                ESX.ShowNotification(_U('players_nearby'))
-              end
-            else
-              ESX.ShowNotification(_U("in_vehicle"))
-            end
-          end
-
-        end,
-        function(data, menu)
-          ESX.UI.Menu.CloseAll()
-          ESX.ShowInventory()
-        end
-      )
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 RegisterNetEvent('esx:serverCallback')

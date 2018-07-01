@@ -64,6 +64,9 @@ Locales['br'] = {
   ['giveitem'] = 'dar item',
   ['weapon'] = 'arma',
   ['giveweapon'] = 'dar arma',
+  ['disconnect'] = 'disconnect from the server',
+  ['chat_clear'] = 'clear the chat',
+  ['chat_clear_all'] = 'clear the chat for everyone',
   -- Weapons
   ['weapon_knife'] = 'faca',
   ['weapon_nightstick'] = 'cacetete',

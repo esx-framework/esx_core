@@ -69,6 +69,8 @@ Locales['en'] = {
   ['weapon'] = 'weapon',
   ['giveweapon'] = 'give weapon',
   ['disconnect'] = 'disconnect from the server',
+  ['chat_clear'] = 'clear the chat',
+  ['chat_clear_all'] = 'clear the chat for everyone',
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',
