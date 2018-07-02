@@ -159,7 +159,9 @@ function LoadSql()
 				roomMenu  = roomMenu,
 				price     = properties[i].price
 			})
-		end
+    end
+    
+    TriggerClientEvent('esx_property:broadcastProperties', -1, Config.Properties)
 	end)
 end
 
@@ -413,10 +415,6 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 
   end
 
-end)
-
-ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
-  cb(Config.Properties)
 end)
 
 ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, cb)

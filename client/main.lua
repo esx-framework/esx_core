@@ -24,6 +24,25 @@ local CurrentActionData       = {}
 local FirstSpawn              = true
 local HasChest                = false
 
+Citizen.CreateThread(function()
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+end)
+
+RegisterNetEvent('esx_property:sendProperties')
+AddEventHandler('esx_property:sendProperties', function(properties)
+	Config.Properties = properties
+	CreateBlips()
+
+	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
+		for i=1, #ownedProperties, 1 do
+			SetPropertyOwned(ownedProperties[i], true)
+		end
+	end)
+end)
+
 function DrawSub(text, time)
   ClearPrints()
   SetTextEntry_2('STRING')
@@ -857,17 +876,6 @@ AddEventHandler('playerSpawned', function()
 
 end)
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerLoaded = true
-
-	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
-		for i=1, #ownedProperties, 1 do
-			SetPropertyOwned(ownedProperties[i], true)
-		end
-	end)
-end)
-
 AddEventHandler('esx_property:getProperties', function(cb)
   cb(GetProperties())
 end)
@@ -959,21 +967,6 @@ end)
 AddEventHandler('esx_property:hasExitedMarker', function(name, part)
   ESX.UI.Menu.CloseAll()
   CurrentAction = nil
-end)
-
--- Init
-Citizen.CreateThread(function()
-
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
-
-  ESX.TriggerServerCallback('esx_property:getProperties', function(properties)
-    Config.Properties = properties
-    CreateBlips()
-  end)
-
 end)
 
 -- Display markers
