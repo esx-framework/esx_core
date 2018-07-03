@@ -24,7 +24,7 @@ Config.Jobs.tailor = {
       GPS = {x = 740.808776855469, y = -970.066650390625, z = 23.4693908691406}
     },
 
-    Whool = {
+    Wool = {
       Pos   = {x = 1978.92407226563, y = 5171.70166015625, z = 46.6391181945801},
       Size  = {x = 3.0, y = 3.0, z = 1.0},
       Color = {r = 204, g = 204, b = 0},
@@ -35,7 +35,7 @@ Config.Jobs.tailor = {
       Item  = {
         {
           name   = _U('dd_wool'),
-          db_name= "whool",
+          db_name= "wool",
           time   = 3000,
           max    = 40,
           add    = 1,
@@ -65,7 +65,7 @@ Config.Jobs.tailor = {
           max    = 80,
           add    = 2,
           remove = 1,
-          requires = "whool",
+          requires = "wool",
           requires_name = _U('dd_wool'),
           drop   = 100
         }

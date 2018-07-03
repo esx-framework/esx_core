@@ -41,7 +41,7 @@ INSERT INTO `items` (`name`, `label`) VALUES
   ('petrol', 'Petroleo', 24),
   ('petrol_raffin', 'Petroleo Refinado', 24),
   ('essence', 'Gasolina', 24),
-  ('whool', 'Lã', 40),
+  ('wool', 'Lã', 40),
   ('fabric', 'Tecido', 80),
   ('clothe', 'Roupa', 40)
 ;

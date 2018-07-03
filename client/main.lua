@@ -60,10 +60,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     refreshBlips()
 end)
 
-AddEventHandler('esx_jobs:publicTeleports', function(position)
-  SetEntityCoords(GetPlayerPed(-1), position.x, position.y, position.z)
-end)
-
 function OpenMenu()
   ESX.UI.Menu.CloseAll()
 
@@ -336,14 +332,16 @@ end)
 
 -- Show top left hint
 Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(10)
-    if hintIsShowed == true then
-      SetTextComponentFormat("STRING")
-      AddTextComponentString(hintToDisplay)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-    end
-  end
+	while true do
+		Citizen.Wait(10)
+		if hintIsShowed then
+			SetTextComponentFormat("STRING")
+			AddTextComponentString(hintToDisplay)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+		else
+			Citizen.Wait(1000)
+		end
+	end
 end)
 
 -- Display markers (only if on duty and the player's job ones)
@@ -372,51 +370,52 @@ end)
 
 -- Display public markers
 Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(0)
-    local coords = GetEntityCoords(GetPlayerPed(-1))
-    for k,v in pairs(Config.PublicZones) do
-      if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-        DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
-      end
-    end
-  end
+	while true do
+		Citizen.Wait(0)
+		local coords = GetEntityCoords(GetPlayerPed(-1))
+		for k,v in pairs(Config.PublicZones) do
+			if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+				DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+			end
+		end
+	end
 end)
 
 -- Activate public marker
 Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(0)
-    local coords      = GetEntityCoords(GetPlayerPed(-1))
-    local position    = nil
-    local zone        = nil
+	while true do
+		Citizen.Wait(10)
+		local coords      = GetEntityCoords(GetPlayerPed(-1))
+		local position    = nil
+		local zone        = nil
 
-    for k,v in pairs(Config.PublicZones) do
-      if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-        isInPublicMarker = true
-        position = v.Teleport
-        zone = v
-        break
-      else
-        isInPublicMarker  = false
-      end
-    end
+		for k,v in pairs(Config.PublicZones) do
+			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				isInPublicMarker = true
+				position = v.Teleport
+				zone = v
+				break
+			else
+				isInPublicMarker  = false
+			end
+		end
 
-    if IsControlJustReleased(0, Keys["E"]) and isInPublicMarker then
-      TriggerEvent('esx_jobs:publicTeleports', position)
-    end
+		if IsControlJustReleased(0, Keys['E']) and isInPublicMarker then
+			ESX.Game.Teleport(GetPlayerPed(-1), position)
+			isInPublicMarker = false
+		end
 
-    -- hide or show top left zone hints
-    if isInPublicMarker then
-      hintToDisplay = zone.Hint
-      hintIsShowed = true
-    else
-      if not isInMarker then
-        hintToDisplay = "no hint to display"
-        hintIsShowed = false
-      end
-    end
-  end
+		-- hide or show top left zone hints
+		if isInPublicMarker then
+			hintToDisplay = zone.Hint
+			hintIsShowed = true
+		else
+			if not isInMarker then
+				hintToDisplay = "no hint to display"
+				hintIsShowed = false
+			end
+		end
+	end
 end)
 
 -- Activate menu when player is inside marker
@@ -513,46 +512,47 @@ end)
 
 -- VEHICLE CAUTION
 Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(0)
-    if vehicleInCaseofDrop ~= nil then
-      if onDuty and IsVehicleModel(vehicleInCaseofDrop, vehicleHashInCaseofDrop) then
-        local vehicleHealth = GetEntityHealth(vehicleInCaseofDrop)
-        if vehicleOldHealthInCaseofDrop ~= vehicleHealth then
-          local cautionValue = 0
-            vehicleOldHealthInCaseofDrop = vehicleHealth
-            if vehicleHealth == vehicleMaxHealthInCaseofDrop then
-              cautionValue = maxCautionVehicleInCaseofDrop
-              cautionVehicleInCaseofDrop = cautionValue
-            else
-            local healthPct = (vehicleHealth * 100) / vehicleMaxHealthInCaseofDrop
-            local damagePct = 100 - healthPct
-            cautionValue =  math.ceil(cautionVehicleInCaseofDrop - cautionVehicleInCaseofDrop * damagePct * 2.5 / 100)
-            if cautionValue < 0 then
-                cautionValue = 0
-            elseif cautionValue >= cautionVehicleInCaseofDrop then
-                cautionValue = cautionVehicleInCaseofDrop
-            end
-            cautionVehicleInCaseofDrop = cautionValue
-          end
-          TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', cautionValue)
-        end
-      end
-    end
-  end
+	while true do
+		Citizen.Wait(0)
+		if vehicleInCaseofDrop ~= nil then
+			if onDuty and IsVehicleModel(vehicleInCaseofDrop, vehicleHashInCaseofDrop) then
+				local vehicleHealth = GetEntityHealth(vehicleInCaseofDrop)
+
+				if vehicleOldHealthInCaseofDrop ~= vehicleHealth then
+					local cautionValue = 0
+					vehicleOldHealthInCaseofDrop = vehicleHealth
+					if vehicleHealth == vehicleMaxHealthInCaseofDrop then
+						cautionValue = maxCautionVehicleInCaseofDrop
+						cautionVehicleInCaseofDrop = cautionValue
+					else
+						local healthPct = (vehicleHealth * 100) / vehicleMaxHealthInCaseofDrop
+						local damagePct = 100 - healthPct
+						cautionValue =  math.ceil(cautionVehicleInCaseofDrop - cautionVehicleInCaseofDrop * damagePct * 2.5 / 100)
+						if cautionValue < 0 then
+							cautionValue = 0
+						elseif cautionValue >= cautionVehicleInCaseofDrop then
+							cautionValue = cautionVehicleInCaseofDrop
+						end
+						cautionVehicleInCaseofDrop = cautionValue
+					end
+					TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', cautionValue)
+				end
+			end
+		else
+			Citizen.Wait(1000)
+		end
+	end
 end)
 
 Citizen.CreateThread(function()
+	-- Slaughterer
+	RemoveIpl("CS1_02_cf_offmission")
+	RequestIpl("CS1_02_cf_onmission1")
+	RequestIpl("CS1_02_cf_onmission2")
+	RequestIpl("CS1_02_cf_onmission3")
+	RequestIpl("CS1_02_cf_onmission4")
 
-  -- Slaughterer
-  RemoveIpl("CS1_02_cf_offmission")
-  RequestIpl("CS1_02_cf_onmission1")
-  RequestIpl("CS1_02_cf_onmission2")
-  RequestIpl("CS1_02_cf_onmission3")
-  RequestIpl("CS1_02_cf_onmission4")
-
-  -- Textil
-  RequestIpl("id2_14_during_door")
-  RequestIpl("id2_14_during1")
-
+	-- Textil
+	RequestIpl("id2_14_during_door")
+	RequestIpl("id2_14_during1")
 end)

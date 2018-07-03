@@ -41,7 +41,7 @@ INSERT INTO `items` (`name`, `label`, `limit`) VALUES
   ('petrol', 'Öljy', 24),
   ('petrol_raffin', 'Prosessoitu Öljy', 24),
   ('essence', 'Polttoöljy', 24),
-  ('whool', 'Villa', 40),
+  ('wool', 'Villa', 40),
   ('fabric', 'Kangas', 80),
   ('clothe', 'Vaate', 40)
 ;
