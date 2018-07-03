@@ -48,7 +48,7 @@ function startAnim(lib, anim)
 			Citizen.Wait(1)
 		end
 
-		TaskPlayAnim(GetPlayerPed(-1), lib ,anim ,8.0, -8.0, -1, 0, 0, false, false, false )
+		TaskPlayAnim(GetPlayerPed(-1), lib ,anim ,8.0, -8.0, -1, 0, 0, false, false, false)
 	end)
 end
 
@@ -135,6 +135,7 @@ Citizen.CreateThread(function()
 			OpenAnimationsMenu()
 		end
 
+		-- todo: if not cuffed? or any other action
 		if IsControlJustReleased(0, Keys['X']) and GetLastInputMethod(2) and not isDead then
 			ClearPedTasks(GetPlayerPed(-1))
 		end
