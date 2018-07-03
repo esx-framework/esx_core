@@ -1,13 +1,12 @@
 Locales['sv'] = {
-
-	['valid_this_purchase'] = 'bekräfta detta köp?',
+	['valid_this_purchase'] = 'vill du köpa dessa kläder?',
 	['yes'] = 'ja',
 	['no'] = 'nej',
-	['name_outfit'] = 'namn på outfit?',
-	['not_enough_money'] = 'du har inte tillräckligt med pengar',
-	['press_menu'] = 'tryck på ~INPUT_CONTEXT~ för att komma åt menyn',
+	['not_enough_money'] = 'du har ~r~inte råd~s~ för att köpa detta',
+	['press_menu'] = 'tryck ~INPUT_CONTEXT~ för att komma åt menyn',
 	['clothes'] = 'kläder',
-	['you_paid'] = 'du betalade $',
-	['save_in_dressing'] = 'Vill du namnge din outfit?',
-
+	['you_paid'] = 'du har betalat ~g~$%s~s~',
+	['save_in_dressing'] = 'vill du spara outfiten i din fastighet?',
+	['name_outfit'] = 'vad ska din outfit heta?',
+	['saved_outfit'] = 'outfit har sparats!',
 }
