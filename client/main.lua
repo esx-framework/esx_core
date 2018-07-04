@@ -31,6 +31,21 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.TriggerServerCallback('esx_property:getProperties', function(properties)
+		Config.Properties = properties
+		CreateBlips()
+	end)
+
+	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(ownedProperties)
+		for i=1, #ownedProperties, 1 do
+			SetPropertyOwned(ownedProperties[i], true)
+		end
+	end)
+end)
+
+-- only used when script is restarting mid-session
 RegisterNetEvent('esx_property:sendProperties')
 AddEventHandler('esx_property:sendProperties', function(properties)
 	Config.Properties = properties
@@ -854,26 +869,25 @@ AddEventHandler('instance:loaded', function()
 end)
 
 AddEventHandler('playerSpawned', function()
+	if FirstSpawn then
 
-  if FirstSpawn then
+		Citizen.CreateThread(function()
 
-    Citizen.CreateThread(function()
+			while not ESX.IsPlayerLoaded() do
+				Citizen.Wait(0)
+			end
 
-      while not ESX.IsPlayerLoaded() do
-        Citizen.Wait(0)
-      end
+			ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
+				if propertyName ~= nil then
+					if propertyName ~= '' then
+						TriggerEvent('instance:create', 'property', {property = propertyName, owner = ESX.GetPlayerData().identifier})
+					end
+				end
+			end)
+		end)
 
-      ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
-        if propertyName ~= nil then
-          TriggerEvent('instance:create', 'property', {property = propertyName, owner = ESX.GetPlayerData().identifier})
-        end
-      end)
-
-    end)
-
-    FirstSpawn = false
-  end
-
+		FirstSpawn = false
+	end
 end)
 
 AddEventHandler('esx_property:getProperties', function(cb)
@@ -904,7 +918,6 @@ end)
 
 RegisterNetEvent('instance:onEnter')
 AddEventHandler('instance:onEnter', function(instance)
-
   if instance.type == 'property' then
 
     local property = GetProperty(instance.data.property)

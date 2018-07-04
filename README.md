@@ -26,7 +26,7 @@ git clone https://github.com/ESX-Org/esx_property [esx]/esx_property
 
 ## Installation
 - Import `esx_property.sql` in your database
-- Import `esx_offices.sql` in your database if you want the offices to added in your server (The Arcadius Business Centre is not included because realstateagentjob)
+- Import `esx_offices.sql` in your database if you want offices (The Arcadius Business Centre is not included because realstateagentjob)
 - Add this to your `server.cfg`:
 
 ```
