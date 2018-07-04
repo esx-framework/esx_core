@@ -71,6 +71,7 @@ TriggerEvent('skinchanger:loadSkin', skin)
 
 -- you can also load only some components :
 TriggerEvent('skinchanger:loadSkin', {
+	sex          = 0,
 	beard_1      = 0,
 	beard_2      = 0,
 })
