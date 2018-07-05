@@ -25,7 +25,7 @@ Locales['pl'] = {
   ['withdraw_society'] = 'wyjmij z depozytu EMS',
   ['boss_actions'] = 'akcje szefa',
   -- Misc
-  ['invalid_amount'] = '~r~nieprawidłowa kwota',
+  ['invalid_amount'] = '~r~Nieprawidłowa kwota',
   ['open_menu'] = 'naciśnij ~INPUT_CONTEXT~ aby otworzyc menu',
   ['deposit_amount'] = 'kwota depozytu',
   ['money_withdraw'] = 'wycofana kwota',
