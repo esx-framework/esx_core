@@ -58,7 +58,6 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 - Download https://github.com/ESX-Org/esx_menu_list/releases/latest
 - Put it in the `resource/[esx]/[ui]` directory
 
-
 ## Installation
 - Import `es_extended.sql` in your database
 - Configure your `server.cfg` to look like this

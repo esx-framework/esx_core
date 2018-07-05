@@ -10,8 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local GUI           = {}
-GUI.Time            = 0
 local LoadoutLoaded = false
 local IsPaused      = false
 local PlayerSpawned = false
@@ -76,11 +74,12 @@ AddEventHandler('playerSpawned', function()
 	isDead = false
 end)
 
-AddEventHandler('baseevents:onPlayerDied', function(killerType, coords)
+AddEventHandler('baseevents:onPlayerDied', function(killerType, deathCoords)
 	TriggerEvent('esx:onPlayerDeath')
 end)
 
-AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
+-- handle death client side (could have been server side...)
+AddEventHandler('baseevents:onPlayerKilled', function(killerPed, data)
 	TriggerEvent('esx:onPlayerDeath')
 end)
 
@@ -100,7 +99,7 @@ AddEventHandler('skinchanger:modelLoaded', function()
   TriggerEvent('esx:restoreLoadout')
 end)
 
-AddEventHandler('esx:restoreLoadout', function ()
+AddEventHandler('esx:restoreLoadout', function()
   local playerPed = GetPlayerPed(-1)
 
   RemoveAllPedWeapons(playerPed, true)
@@ -199,7 +198,6 @@ end)
 -- Commands
 RegisterNetEvent('esx:teleport')
 AddEventHandler('esx:teleport', function(pos)
-
   pos.x = pos.x + 0.0
   pos.y = pos.y + 0.0
   pos.z = pos.z + 0.0
@@ -478,9 +476,8 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(10)
 
-    if IsControlPressed(0, Keys["F2"]) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlJustReleased(0, Keys["F2"]) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
       ESX.ShowInventory()
-      GUI.Time  = GetGameTimer()
     end
 
   end
@@ -492,14 +489,14 @@ if Config.ShowDotAbovePlayer then
   Citizen.CreateThread(function()
     while true do
 
-      Citizen.Wait(0)
+      Citizen.Wait(1)
 
       local players = ESX.Game.GetPlayers()
 
       for i = 1, #players, 1 do
         if players[i] ~= PlayerId() then
           local ped    = GetPlayerPed(players[i])
-          local headId = Citizen.InvokeNative(0xBFEFE3321A3F5015, ped, ('·'), false, false, '', false)
+          local headId = CreateMpGamerTag(ped, ('·'), false, false, '', false)
         end
       end
 
@@ -587,7 +584,7 @@ Citizen.CreateThread(function()
 
   while true do
 
-    Citizen.Wait(10)
+    Citizen.Wait(1000)
 
     local playerPed = GetPlayerPed(-1)
 
