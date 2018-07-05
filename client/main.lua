@@ -11,7 +11,6 @@ local Keys = {
 }
 
 local PlayerData                = {}
-local GUI                       = {}
 local HasAlreadyEnteredMarker   = false
 local LastZone                  = nil
 local CurrentAction             = nil
@@ -28,7 +27,6 @@ local TargetCoords              = nil
 local IsDead                    = false
 
 ESX                             = nil
-GUI.Time                        = 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -797,7 +795,7 @@ Citizen.CreateThread(function()
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 300 then
+      if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 
         if CurrentAction == 'taxi_actions_menu' then
           OpenTaxiActionsMenu()
@@ -823,18 +821,16 @@ Citizen.CreateThread(function()
         end
 
         CurrentAction = nil
-        GUI.Time      = GetGameTimer()
 
       end
 
     end
 
-    if IsControlPressed(0, Keys['F6']) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlJustReleased(0, Keys['F6']) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
       OpenMobileTaxiActionsMenu()
-      GUI.Time = GetGameTimer()
     end
 
-    if IsControlPressed(0, Keys['DELETE']) and not IsDead and (GetGameTimer() - GUI.Time) > 150 then
+    if IsControlJustReleased(0, Keys['DELETE']) and not IsDead then
 
       if OnJob then
         StopTaxiJob()
@@ -846,7 +842,7 @@ Citizen.CreateThread(function()
 
           if IsPedInAnyVehicle(playerPed,  false) then
 
-            local vehicle = GetVehiclePedIsIn(playerPed,  false)
+            local vehicle = GetVehiclePedIsIn(playerPed, false)
 
             if PlayerData.job.grade >= 3 then
               StartTaxiJob()
@@ -871,8 +867,6 @@ Citizen.CreateThread(function()
         end
 
       end
-
-      GUI.Time = GetGameTimer()
 
     end
 
