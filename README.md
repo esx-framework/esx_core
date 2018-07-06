@@ -20,14 +20,13 @@ git clone https://github.com/ESX-Org/esx_billing [esx]/esx_billing
 
 ## Installation
 - Import `esx_billing.sql` in your database
-- Add this in your server.cfg :
+- Add this to your `server.cfg`:
 
 ```
 start esx_billing
 ```
 
 ## Usage
-
 Press `[F7]` To show the billing menu
 
 ```lua
