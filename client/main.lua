@@ -898,7 +898,7 @@ end)
 -- Display markers
 Citizen.CreateThread(function ()
   while true do
-    Citizen.Wait(10)
+    Citizen.Wait(0)
 
     local coords = GetEntityCoords(GetPlayerPed(-1))
 
@@ -913,7 +913,7 @@ end)
 -- Enter / Exit marker events
 Citizen.CreateThread(function ()
   while true do
-    Citizen.Wait(10)
+    Citizen.Wait(0)
 
     local coords      = GetEntityCoords(GetPlayerPed(-1))
     local isInMarker  = false
