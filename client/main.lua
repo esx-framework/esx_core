@@ -29,6 +29,10 @@ function OpenShopMenu(zone)
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
+		if item.limit == -1 then
+			item.limit = 100
+		end
+
 		table.insert(elements, {
 			label      = item.label .. ' - <span style="color: green;">$' .. item.price .. '</span>',
 			label_real = item.label,
@@ -74,18 +78,14 @@ function OpenShopMenu(zone)
 end
 
 AddEventHandler('esx_shops:hasEnteredMarker', function(zone)
-
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_menu')
 	CurrentActionData = {zone = zone}
-
 end)
 
 AddEventHandler('esx_shops:hasExitedMarker', function(zone)
-
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
-
 end)
 
 -- Create Blips
