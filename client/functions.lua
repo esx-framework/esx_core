@@ -1,38 +1,22 @@
-local Charset = {}
-
-for i = 48,  57 do table.insert(Charset, string.char(i)) end
-for i = 65,  90 do table.insert(Charset, string.char(i)) end
-for i = 97, 122 do table.insert(Charset, string.char(i)) end
-
 ESX                           = {}
 ESX.PlayerData                = {}
 ESX.PlayerLoaded              = false
 ESX.CurrentRequestId          = 0
 ESX.ServerCallbacks           = {}
 ESX.TimeoutCallbacks          = {}
+
 ESX.UI                        = {}
 ESX.UI.HUD                    = {}
 ESX.UI.HUD.RegisteredElements = {}
 ESX.UI.Menu                   = {}
 ESX.UI.Menu.RegisteredTypes   = {}
 ESX.UI.Menu.Opened            = {}
+
 ESX.Game                      = {}
 ESX.Game.Utils                = {}
 
 ESX.GetConfig = function()
   return Config
-end
-
-ESX.GetRandomString = function(length)
-
-  math.randomseed(GetGameTimer())
-
-  if length > 0 then
-    return ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)]
-  else
-    return ''
-  end
-
 end
 
 ESX.SetTimeout = function(msec, cb)
@@ -60,9 +44,9 @@ ESX.SetPlayerData = function(key, val)
 end
 
 ESX.ShowNotification = function(msg)
-  SetNotificationTextEntry('STRING')
-  AddTextComponentString(msg)
-  DrawNotification(0,1)
+	SetNotificationTextEntry('STRING')
+	AddTextComponentString(msg)
+	DrawNotification(false, true)
 end
 
 ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
@@ -70,6 +54,14 @@ ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
 	AddTextComponentString(msg)
 	SetNotificationMessage(icon, icon, false, iconType, title, subject)
 	DrawNotification(false, false)
+end
+
+ESX.ShowHelpNotification = function(msg)
+	if not IsHelpMessageOnScreen() then
+		SetTextComponentFormat('STRING')
+		AddTextComponentString(msg)
+		DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+	end
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -1377,6 +1369,11 @@ end)
 RegisterNetEvent('esx:showAdvancedNotification')
 AddEventHandler('esx:showAdvancedNotification', function(title, subject, msg, icon, iconType)
 	ESX.ShowAdvancedNotification(title, subject, msg, icon, iconType)
+end)
+
+RegisterNetEvent('esx:showHelpNotification')
+AddEventHandler('esx:showHelpNotification', function(msg)
+	ESX.ShowHelpNotification(msg)
 end)
 
 -- SetTimeout

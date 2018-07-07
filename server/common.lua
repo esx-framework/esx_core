@@ -17,7 +17,7 @@ function getSharedObject()
   return ESX
 end
 
-AddEventHandler('onMySQLReady', function ()
+AddEventHandler('onMySQLReady', function()
 
   MySQL.Async.fetchAll(
     'SELECT * FROM items',

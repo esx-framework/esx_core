@@ -59,7 +59,7 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
   if ESX.ServerCallbacks[name] ~= nil then
     ESX.ServerCallbacks[name](source, cb, ...)
   else
-    print('TriggerServerCallback => [' .. name .. '] does not exists')
+    print('TriggerServerCallback => [' .. name .. '] does not exist')
   end
 
 end
@@ -223,6 +223,12 @@ ESX.UseItem = function(source, item)
   ESX.UsableItemsCallbacks[item](source)
 end
 
+ESX.GetItemLabel = function(item)
+	if ESX.Items[item] ~= nil then
+		return ESX.Items[item].label
+	end
+end
+
 ESX.GetWeaponList = function()
   return Config.Weapons
 end
@@ -255,4 +261,3 @@ ESX.CreatePickup = function(type, name, count, label, player)
   ESX.PickupId = pickupId
 
 end
-
