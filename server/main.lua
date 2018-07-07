@@ -102,7 +102,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 			local target      = result[1].target
 			local amount      = result[1].amount
 
-			local xTarget = ESX.GetPlayerFromId(sender)
+			local xTarget = ESX.GetPlayerFromIdentifier(sender)
 
 			if targetType == 'player' then
 
