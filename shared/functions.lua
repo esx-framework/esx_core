@@ -24,7 +24,7 @@ ESX.TableContainsValue = function(table, value)
 	return false
 end
 
-ESX.TableToString = function(table, nb)
+ESX.DumpTable = function(table, nb)
 	if nb == nil then
 		nb = 0
 	end
@@ -41,7 +41,7 @@ ESX.TableToString = function(table, nb)
 			for i = 1, nb, 1 do
 				s = s .. "    "
 			end
-			s = s .. '['..k..'] = ' .. ESX.TableToString(v, nb + 1) .. ',\n'
+			s = s .. '['..k..'] = ' .. ESX.DumpTable(v, nb + 1) .. ',\n'
 		end
 
 		for i = 1, nb, 1 do
