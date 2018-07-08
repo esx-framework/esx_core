@@ -1247,6 +1247,10 @@ ESX.ShowInventory = function()
 
 			elseif data.current.action == 'remove' then
 
+				if IsPedSittingInAnyVehicle(playerPed) then
+					menu.close()
+				end
+
 				if type == 'item_weapon' then
 					local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
 			
