@@ -47,7 +47,7 @@ AddEventHandler('esx_mecanojob:stopHarvest', function()
   local _source = source
   PlayersHarvesting[_source] = false
 end)
------------- Récupération Outils Réparation --------------
+
 local function Harvest2(source)
 
   SetTimeout(4000, function()
@@ -317,7 +317,7 @@ AddEventHandler('esx_mecanojob:putStockItems', function(itemName, count)
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_quantity'))
     end
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_added') .. count .. ' ' .. item.label)
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', count, item.label))
 
   end)
 
