@@ -11,14 +11,12 @@ local Keys = {
 }
 
 local PlayerData              = {}
-local GUI                     = {}
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local OnJob                   = false
-local TargetCoords            = nil
 local CurrentlyTowedVehicle   = nil
 local Blips                   = {}
 local NPCOnJob                = false
@@ -31,7 +29,6 @@ local NPCTargetDeleterZone    = false
 local IsDead                  = false
 
 ESX                           = nil
-GUI.Time                      = 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -164,7 +161,7 @@ function OpenMecanoActionsMenu()
           else
 
             local elements = {
-              {label = _U('flat_bed'), value = 'flatbed'},
+              {label = _U('flat_bed'),  value = 'flatbed'},
               {label = _U('tow_truck'), value = 'towtruck2'}
             }
 
@@ -365,12 +362,12 @@ function OpenMobileMecanoActionsMenu()
       title    = _U('mechanic'),
       align    = 'top-left',
       elements = {
-        {label = _U('billing'),    value = 'billing'},
-        {label = _U('hijack'),     value = 'hijack_vehicle'},
-        {label = _U('repair'),       value = 'fix_vehicle'},
-        {label = _U('clean'),      value = 'clean_vehicle'},
-        {label = _U('imp_veh'),     value = 'del_vehicle'},
-        {label = _U('flat_bed'),       value = 'dep_vehicle'},
+        {label = _U('billing'),       value = 'billing'},
+        {label = _U('hijack'),        value = 'hijack_vehicle'},
+        {label = _U('repair'),        value = 'fix_vehicle'},
+        {label = _U('clean'),         value = 'clean_vehicle'},
+        {label = _U('imp_veh'),       value = 'del_vehicle'},
+        {label = _U('flat_bed'),      value = 'dep_vehicle'},
         {label = _U('place_objects'), value = 'object_spawner'}
       }
     },
@@ -1196,7 +1193,7 @@ Citizen.CreateThread(function()
 
             local playerPed = GetPlayerPed(-1)
 
-            if IsPedInAnyVehicle(playerPed,  false) and IsVehicleModel(GetVehiclePedIsIn(playerPed,  false), GetHashKey("flatbed")) then
+            if IsPedInAnyVehicle(playerPed, false) and IsVehicleModel(GetVehiclePedIsIn(playerPed, false), GetHashKey("flatbed")) then
               StartNPCJob()
             else
               ESX.ShowNotification(_U('must_in_flatbed'))

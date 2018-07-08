@@ -16,7 +16,7 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('mecano',0,'recrue','Recrue',12,'{}','{}'),
 	('mecano',1,'novice','Novice',24,'{}','{}'),
 	('mecano',2,'experimente','Experimente',36,'{}','{}'),
-	('mecano',3,'chief','Chef d\'équipe',48,'{}','{}'),
+	('mecano',3,'chief',"Chef d\'équipe",48,'{}','{}'),
 	('mecano',4,'boss','Patron',0,'{}','{}')
 ;
 
