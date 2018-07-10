@@ -100,7 +100,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerPed, data)
 
 	table.insert(data, {
 		victimCoords = victimCoords,
-		weaponHash   = weaponHash
+		weaponHash   = weaponHash,
 		deathCause   = GetPedCauseOfDeath(playerPed)
 	})
 
