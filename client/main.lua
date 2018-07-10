@@ -75,12 +75,56 @@ AddEventHandler('playerSpawned', function()
 end)
 
 AddEventHandler('baseevents:onPlayerDied', function(killerType, deathCoords)
-	TriggerEvent('esx:onPlayerDeath')
+	local playerPed = GetPlayerPed(-1)
+
+	local data = {
+		killed      = false,
+		killerType  = killerType,
+		deathCoords = deathCoords,
+		deathCause  = GetPedCauseOfDeath(playerPed)
+	}
+
+	TriggerEvent('esx:onPlayerDeath', data)
+	TriggerServerEvent('esx:onPlayerDeath', data)
 end)
 
--- handle death client side (could have been server side...)
 AddEventHandler('baseevents:onPlayerKilled', function(killerPed, data)
-	TriggerEvent('esx:onPlayerDeath')
+	local playerPed = GetPlayerPed(-1)
+
+	-- corrected table childs
+	local victimCoords = data.killerpos
+	local weaponHash   = data.weaponhash
+
+	data.killerpos  = nil
+	data.weaponhash = nil
+
+	table.insert(data, {
+		victimCoords = victimCoords,
+		weaponHash   = weaponHash
+		deathCause   = GetPedCauseOfDeath(playerPed)
+	})
+
+	if killerPed ~= -1 then -- if the killer isn't AI
+		local killerCoords = GetEntityCoords(killerPed)
+		local distance     = GetDistanceBetweenCoords(table.unpack(killerCoords), table.unpack(data.victimCoords), false)
+
+		table.insert(data, {
+			killed       = true,
+			killerPed    = killerPed,
+			killerCoords = killerCoords,
+			distance     = ESX.Round(distance)
+		})
+
+	else -- player died by AI, we cannot provide as much info because of baseevents setting 'killerPed' to '-1'
+
+		table.insert(data, {
+			killed = false
+		})
+
+	end
+
+	TriggerEvent('esx:onPlayerDeath', data)
+	TriggerServerEvent('esx:onPlayerDeath', data)
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
