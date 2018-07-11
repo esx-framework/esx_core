@@ -3,27 +3,25 @@
 #### Description
 This is a proximity chat script. With a few commands such as Twitter, OOC and Local Me
 
-#### Download
+## Download & Installation
 
-**1) Using [fvm](https://github.com/qlaffont/fvm-installer)**
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
 fvm install --save --folder=esx esx-org/esx_rpchat
 ```
 
-**2) Manually**
-- Download https://github.com/ESX-Org/esx_rpchat/releases/latest
-- Put it in resource/[esx] directory
-
-**3) Using Git**
-
+### Using Git
 ```
-cd resouces
-git clone https://github.com/ESX-Org/esx_rpchat
+cd resources
+git clone https://github.com/ESX-Org/esx_rpchat [esx]/esx_rpchat
 ```
 
-#### Installation
+### Manually
+- Download https://github.com/ESX-Org/esx_rpchat/archive/master.zip
+- Put it in the `[esx]` directory
 
-1) Add `start esx_rpchat` to your server.cfg
+## Installation
+- Add `start esx_rpchat` to your server.cfg
 
 # Legal
 ### License

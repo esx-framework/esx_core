@@ -7,18 +7,20 @@ version '1.2.0'
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
-	'locates/sv.lua',
-	'locates/en.lua',
-	'locates/fr.lua',
+	'locales/sv.lua',
+	'locales/en.lua',
+	'locales/fr.lua',
 	'config.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locates/sv.lua',
-	'locates/en.lua',
-	'locates/fr.lua',
+	'locales/sv.lua',
+	'locales/en.lua',
+	'locales/fr.lua',
 	'config.lua',
 	'client/main.lua'
 }
+
+dependency 'es_extended'
