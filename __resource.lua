@@ -19,6 +19,7 @@ client_scripts {
 
 server_scripts {
 	'@es_extended/locale.lua',
+	'@mysql-async/lib/MySQL.lua',
 	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
@@ -26,7 +27,9 @@ server_scripts {
 	'locales/fr.lua',
 	'locales/es.lua',
 	'locales/sv.lua',
-	'@mysql-async/lib/MySQL.lua',
+	
 	'config.lua',
 	'server/main.lua'
 }
+
+dependency 'es_extended'

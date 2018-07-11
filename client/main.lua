@@ -91,16 +91,16 @@ end)
 -- Create Blips
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
-  	for i = 1, #v.Pos, 1 do
-		local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
-		SetBlipSprite (blip, 52)
-		SetBlipDisplay(blip, 4)
-		SetBlipScale  (blip, 1.0)
-		SetBlipColour (blip, 2)
-		SetBlipAsShortRange(blip, true)
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('shops'))
-		EndTextCommandSetBlipName(blip)
+		for i = 1, #v.Pos, 1 do
+			local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+			SetBlipSprite (blip, 52)
+			SetBlipDisplay(blip, 4)
+			SetBlipScale  (blip, 1.0)
+			SetBlipColour (blip, 2)
+			SetBlipAsShortRange(blip, true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(_U('shops'))
+			EndTextCommandSetBlipName(blip)
 		end
 	end
 end)
@@ -151,24 +151,27 @@ end)
 
 -- Key Controls
 Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(10)
-    if CurrentAction ~= nil then
+	while true do
+		Citizen.Wait(10)
 
-      SetTextComponentFormat('STRING')
-      AddTextComponentString(CurrentActionMsg)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+		if CurrentAction ~= nil then
 
-      if IsControlJustReleased(0, 38) then
+			SetTextComponentFormat('STRING')
+			AddTextComponentString(CurrentActionMsg)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-        if CurrentAction == 'shop_menu' then
-          OpenShopMenu(CurrentActionData.zone)
-        end
+			if IsControlJustReleased(0, 38) then
 
-        CurrentAction = nil
+				if CurrentAction == 'shop_menu' then
+					OpenShopMenu(CurrentActionData.zone)
+				end
 
-      end
+				CurrentAction = nil
 
-    end
-  end
+			end
+
+		else
+			Citizen.Wait(500)
+		end
+	end
 end)
