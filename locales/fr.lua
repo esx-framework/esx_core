@@ -107,6 +107,7 @@ Locales['fr'] = {
   -- Misc
   ['remove_prop'] = 'appuyez sur ~INPUT_CONTEXT~ pour enlever l\'objet',
   ['map_blip'] = 'Commissariat',
+  ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'alerte police',
 }

@@ -107,6 +107,7 @@ Locales['fi'] = {
   -- Misc
   ['remove_prop'] = 'Paina ~INPUT_CONTEXT~ poistaaksesi objektin',
   ['map_blip'] = 'Poliisilaitos',
+  ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'hälyytys Poliisi',
 }

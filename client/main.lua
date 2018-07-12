@@ -10,26 +10,25 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData                = {}
-local GUI                       = {}
-local HasAlreadyEnteredMarker   = false
-local LastStation               = nil
-local LastPart                  = nil
-local LastPartNum               = nil
-local LastEntity                = nil
-local CurrentAction             = nil
-local CurrentActionMsg          = ''
-local CurrentActionData         = {}
-local IsHandcuffed              = false
-local IsDragged                 = false
-local CopPed                    = 0
-local hasAlreadyJoined          = false
-local blipsCops                 = {}
-local isDead                    = false
-CurrentTask                     = {}
+local PlayerData              = {}
+local HasAlreadyEnteredMarker = false
+local LastStation             = nil
+local LastPart                = nil
+local LastPartNum             = nil
+local LastEntity              = nil
+local CurrentAction           = nil
+local CurrentActionMsg        = ''
+local CurrentActionData       = {}
+local IsHandcuffed            = false
+local HandcuffTimer           = nil
+local IsDragged               = false
+local CopPed                  = 0
+local hasAlreadyJoined        = false
+local blipsCops               = {}
+local isDead                  = false
+local CurrentTask             = {}
 
-ESX                             = nil
-GUI.Time                        = 0
+ESX                           = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -89,7 +88,7 @@ end
 
 function OpenCloakroomMenu()
 
-  local playerPed = GetPlayerPed(-1)
+  local playerPed = PlayerPedId()
 
   local elements = {
     { label = _U('citizen_wear'), value = 'citizen_wear' },
@@ -317,7 +316,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
           ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, 270.0, function(vehicle)
             ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-            local playerPed = GetPlayerPed(-1)
+            local playerPed = PlayerPedId()
             TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
           end)
 
@@ -368,7 +367,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
         if not DoesEntityExist(vehicle) then
 
-          local playerPed = GetPlayerPed(-1)
+          local playerPed = PlayerPedId()
 
           if Config.MaxInService == -1 then
 
@@ -491,7 +490,7 @@ function OpenPoliceActionsMenu()
 			end)
 		elseif data.current.value == 'vehicle_interaction' then
 			local elements = {}
-			local playerPed = GetPlayerPed(-1)
+			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 			local vehicle   = ESX.Game.GetVehicleInDirection()
 			
@@ -591,7 +590,7 @@ function OpenPoliceActionsMenu()
 				}
 			}, function(data2, menu2)
 				local model     = data2.current.value
-				local playerPed = GetPlayerPed(-1)
+				local playerPed = PlayerPedId()
 				local coords    = GetEntityCoords(playerPed)
 				local forward   = GetEntityForwardVector(playerPed)
 				local x, y, z   = table.unpack(coords + forward * 1.0)
@@ -1051,7 +1050,7 @@ end
 function OpenPutWeaponMenu()
 
   local elements   = {}
-  local playerPed  = GetPlayerPed(-1)
+  local playerPed  = PlayerPedId()
   local weaponList = ESX.GetWeaponList()
 
   for i=1, #weaponList, 1 do
@@ -1320,7 +1319,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
   if part == 'VehicleDeleter' then
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
     local coords    = GetEntityCoords(playerPed)
 
     if IsPedInAnyVehicle(playerPed,  false) then
@@ -1352,7 +1351,7 @@ end)
 
 AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
-  local playerPed = GetPlayerPed(-1)
+  local playerPed = PlayerPedId()
 
   if PlayerData.job ~= nil and PlayerData.job.name == 'police' and not IsPedInAnyVehicle(playerPed, false) then
     CurrentAction     = 'remove_entity'
@@ -1362,7 +1361,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
   if GetEntityModel(entity) == GetHashKey('p_ld_stinger_s') then
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
     local coords    = GetEntityCoords(playerPed)
 
     if IsPedInAnyVehicle(playerPed,  false) then
@@ -1389,67 +1388,93 @@ end)
 
 RegisterNetEvent('esx_policejob:handcuff')
 AddEventHandler('esx_policejob:handcuff', function()
+	IsHandcuffed    = not IsHandcuffed
+	local playerPed = PlayerPedId()
 
-  IsHandcuffed    = not IsHandcuffed;
-  local playerPed = GetPlayerPed(-1)
+	Citizen.CreateThread(function()
+		if IsHandcuffed then
 
-  Citizen.CreateThread(function()
+			RequestAnimDict('mp_arresting')
+			while not HasAnimDictLoaded('mp_arresting') do
+				Citizen.Wait(100)
+			end
 
-    if IsHandcuffed then
+			TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
 
-      RequestAnimDict('mp_arresting')
+			SetEnableHandcuffs(playerPed, true)
+			DisablePlayerFiring(playerPed, true)
+			SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+			SetPedCanPlayGestureAnims(playerPed, false)
+			FreezeEntityPosition(playerPed, true)
 
-      while not HasAnimDictLoaded('mp_arresting') do
-        Wait(100)
-      end
+			if Config.EnableHandcuffTimer then
+				if HandcuffTimer then
+					ESX.ClearTimeout(HandcuffTimer)
+				end
 
-      TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
-      SetEnableHandcuffs(playerPed, true)
-      SetPedCanPlayGestureAnims(playerPed, false)
-      FreezeEntityPosition(playerPed,  true)
+				StartHandcuffTimer()
+			end
 
-    else
+		else
 
-      ClearPedSecondaryTask(playerPed)
-      SetEnableHandcuffs(playerPed, false)
-      SetPedCanPlayGestureAnims(playerPed,  true)
-      FreezeEntityPosition(playerPed, false)
+			if Config.EnableHandcuffTimer and HandcuffTimer then
+				ESX.ClearTimeout(HandcuffTimer)
+			end
+			ClearPedSecondaryTask(playerPed)
+			SetEnableHandcuffs(playerPed, false)
+			DisablePlayerFiring(playerPed, false)
+			SetPedCanPlayGestureAnims(playerPed, true)
+			FreezeEntityPosition(playerPed, false)
+		end
+	end)
 
-    end
+end)
 
-  end)
+AddEventHandler('esx_policejob:unrestrain', function()
+	if IsHandcuffed then
+		local playerPed = PlayerPedId()
+		IsHandcuffed = false
+
+		ClearPedSecondaryTask(playerPed)
+		SetEnableHandcuffs(playerPed, false)
+		DisablePlayerFiring(playerPed, false)
+		SetPedCanPlayGestureAnims(playerPed, true)
+		FreezeEntityPosition(playerPed, false)
+	end
 end)
 
 RegisterNetEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(cop)
-  IsDragged = not IsDragged
-  CopPed = tonumber(cop)
+	IsDragged = not IsDragged
+	CopPed = tonumber(cop)
 end)
 
 Citizen.CreateThread(function()
-  while true do
-    Wait(0)
-    if IsHandcuffed then
-      if IsDragged then
-        local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
-        local myped = GetPlayerPed(-1)
-        AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
-      else
-        DetachEntity(GetPlayerPed(-1), true, false)
-      end
-    end
-  end
+	while true do
+		Citizen.Wait(1)
+		if IsHandcuffed then
+			if IsDragged then
+				local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
+				local myped = PlayerPedId()
+				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			else
+				DetachEntity(PlayerPedId(), true, false)
+			end
+		else
+			Citizen.Wait(500)
+		end
+	end
 end)
 
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
 
-  local playerPed = GetPlayerPed(-1)
+  local playerPed = PlayerPedId()
   local coords    = GetEntityCoords(playerPed)
 
   if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 
-    local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
+    local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
 
     if DoesEntityExist(vehicle) then
 
@@ -1457,14 +1482,14 @@ AddEventHandler('esx_policejob:putInVehicle', function()
       local freeSeat = nil
 
       for i=maxSeats - 1, 0, -1 do
-        if IsVehicleSeatFree(vehicle,  i) then
+        if IsVehicleSeatFree(vehicle, i) then
           freeSeat = i
           break
         end
       end
 
       if freeSeat ~= nil then
-        TaskWarpPedIntoVehicle(playerPed,  vehicle,  freeSeat)
+        TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
       end
 
     end
@@ -1477,18 +1502,21 @@ RegisterNetEvent('esx_policejob:OutVehicle')
 AddEventHandler('esx_policejob:OutVehicle', function(t)
 	local ped = GetPlayerPed(t)
 	ClearPedTasksImmediately(ped)
-	plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
+	plyPos = GetEntityCoords(PlayerPedId(),  true)
 	local xnew = plyPos.x+2
 	local ynew = plyPos.y+2
 
-	SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
+	SetEntityCoords(PlayerPedId(), xnew, ynew, plyPos.z)
 end)
 
 -- Handcuff
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(1)
 		if IsHandcuffed then
+			DisplayRadar(false)
+			DisableControlAction(2, 1, true) -- Disable pan
+			DisableControlAction(2, 2, true) -- Disable tilt
 			DisableControlAction(2, 24, true) -- Attack
 			DisableControlAction(2, 257, true) -- Attack 2
 			DisableControlAction(2, 25, true) -- Aim
@@ -1502,8 +1530,21 @@ Citizen.CreateThread(function()
 			DisableControlAction(2, Keys['F1'], true) -- Disable phone
 			DisableControlAction(2, Keys['F2'], true) -- Inventory
 			DisableControlAction(2, Keys['F3'], true) -- Animations
+			DisableControlAction(2, Keys['V'], true) -- Disable changing view
+			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
+			DisableControlAction(2, 59, true) -- Disable steering in vehicle
+			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
+			DisableControlAction(0, 47, true)  -- Disable weapon
+			DisableControlAction(0, 264, true) -- Disable melee
+			DisableControlAction(0, 257, true) -- Disable melee
+			DisableControlAction(0, 140, true) -- Disable melee
+			DisableControlAction(0, 141, true) -- Disable melee
+			DisableControlAction(0, 142, true) -- Disable melee
+			DisableControlAction(0, 143, true) -- Disable melee
+			DisableControlAction(0, 75, true)  -- Disable exit vehicle
+			DisableControlAction(27, 75, true) -- Disable exit vehicle
 		else
-			Citizen.Wait(1000)
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -1537,7 +1578,7 @@ Citizen.CreateThread(function()
 
     if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
-      local playerPed = GetPlayerPed(-1)
+      local playerPed = PlayerPedId()
       local coords    = GetEntityCoords(playerPed)
 
       for k,v in pairs(Config.PoliceStations) do
@@ -1592,7 +1633,7 @@ Citizen.CreateThread(function()
 
     if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
-      local playerPed      = GetPlayerPed(-1)
+      local playerPed      = PlayerPedId()
       local coords         = GetEntityCoords(playerPed)
       local isInMarker     = false
       local currentStation = nil
@@ -1726,7 +1767,7 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(0)
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
     local coords    = GetEntityCoords(playerPed)
 
     local closestDistance = -1
@@ -1780,7 +1821,7 @@ Citizen.CreateThread(function()
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-			if IsControlPressed(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'police' and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
@@ -1817,19 +1858,17 @@ Citizen.CreateThread(function()
 				end
 				
 				CurrentAction = nil
-				GUI.Time      = GetGameTimer()
 			end
 		end -- CurrentAction end
 		
-		if IsControlPressed(0, Keys['F6']) and not isDead and PlayerData.job ~= nil and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') and (GetGameTimer() - GUI.Time) > 150 then
+		if IsControlJustReleased(0, Keys['F6']) and not isDead and PlayerData.job ~= nil and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
 			OpenPoliceActionsMenu()
-			GUI.Time = GetGameTimer()
 		end
 		
-		if IsControlPressed(0, Keys['E']) and CurrentTask.Busy then
+		if IsControlJustReleased(0, Keys['E']) and CurrentTask.Busy then
 			ESX.ShowNotification(_U('impound_canceled'))
 			ESX.ClearTimeout(CurrentTask.Task)
-			ClearPedTasks(GetPlayerPed(-1))
+			ClearPedTasks(PlayerPedId())
 			
 			CurrentTask.Busy = false
 		end
@@ -1871,7 +1910,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 			for i=1, #players, 1 do
 				if players[i].job.name == 'police' then
 					for id = 0, 32 do
-						if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= GetPlayerPed(-1) and GetPlayerName(id) == players[i].name then
+						if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() and GetPlayerName(id) == players[i].name then
 							createBlip(id)
 						end
 					end
@@ -1884,16 +1923,37 @@ end)
 
 AddEventHandler('playerSpawned', function(spawn)
 	isDead = false
+	TriggerEvent('esx_policejob:unrestrain')
+	
 	if not hasAlreadyJoined then
 		TriggerServerEvent('esx_policejob:spawned')
 	end
 	hasAlreadyJoined = true
-	IsHandcuffed = false
 end)
 
-AddEventHandler('esx:onPlayerDeath', function()
+AddEventHandler('esx:onPlayerDeath', function(data)
 	isDead = true
 end)
+
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		TriggerEvent('esx_policejob:unrestrain')
+	end
+end)
+
+-- handcuff timer, unrestrain the player after an certain amount of time
+function StartHandcuffTimer()
+	if Config.EnableHandcuffTimer and HandcuffTimer then
+		ESX.ClearTimeout(HandcuffTimer)
+	end
+
+	HandcuffTimer = ESX.SetTimeout(Config.HandcuffTimer, function()
+		ESX.ShowNotification(_U('unrestrained_timer'))
+		TriggerEvent('esx_policejob:unrestrain')
+	end)
+
+	HandcuffTimer = nil
+end
 
 -- TODO
 --   - return to garage if owned

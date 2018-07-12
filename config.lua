@@ -1,14 +1,20 @@
 Config                            = {}
+
 Config.DrawDistance               = 100.0
 Config.MarkerType                 = 1
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
 Config.MarkerColor                = { r = 50, g = 50, b = 204 }
+
 Config.EnablePlayerManagement     = false
 Config.EnableArmoryManagement     = false
 Config.EnableESXIdentity          = false -- only turn this on if you are using esx_identity
 Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
 Config.EnableSocietyOwnedVehicles = false
 Config.EnableLicenses             = false -- only turn this on if you are using esx_license
+
+Config.EnableHandcuffTimer        = true -- enable handcuff timer? will unrestrain player after the time ends
+Config.HandcuffTimer              = 10 * 60000 -- 10 mins
+
 Config.MaxInService               = -1
 Config.Locale                     = 'fr'
 

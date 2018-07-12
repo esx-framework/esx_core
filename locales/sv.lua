@@ -107,6 +107,7 @@ Locales['sv'] = {
   -- Misc
   ['remove_prop'] = 'tryck ~INPUT_CONTEXT~ för att ta bort obejektet',
   ['map_blip'] = 'Polisstation',
+  ['unrestrained_timer'] = 'dina handklovar har försvunnit',
   -- Notifications
   ['alert_police'] = 'Meddela polisen',
 }
