@@ -2,9 +2,10 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ESX Police Job'
 
-version '1.1.0'
+version '1.2.0'
 
 server_scripts {
+	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/de.lua',
@@ -14,7 +15,6 @@ server_scripts {
 	'locales/fi.lua',
 	'locales/es.lua',
 	'locales/sv.lua',
-	'@mysql-async/lib/MySQL.lua',
 	'config.lua',
 	'server/main.lua'
 }
@@ -33,4 +33,7 @@ client_scripts {
 	'client/main.lua'
 }
 
-dependency 'es_extended'
+dependencies {
+	'es_extended',
+	'esx_billing'
+}
