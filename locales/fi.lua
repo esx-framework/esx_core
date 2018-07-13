@@ -10,7 +10,6 @@ Locales['fi'] = {
   ['have_deposited']         = 'sinä talletit ~r~€',
   ['have_withdrawn']         = 'sinä nostit ~g~€',
   ['invalid_amount']         = 'virheellinen summa',
-  ['invalid_amount']         = 'virheellinen summa',
   ['no']                     = 'ei',
   ['promote']                = 'ylennä',
   ['promote_employee']       = 'ylennä henkilö %s',

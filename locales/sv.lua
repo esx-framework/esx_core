@@ -11,7 +11,6 @@ Locales['sv'] = {
   ['have_deposited']         = 'du har satt in ~r~$%s~s~',
   ['have_withdrawn']         = 'du har tagit ut ~g~$%s~s~',
   ['invalid_amount']         = 'Ogiltigt belopp',
-  ['invalid_amount']         = 'Ogiltigt belopp',
   ['no']                     = 'nej',
   ['promote']                = 'befodra',
   ['promote_employee']       = 'befodra %s',
