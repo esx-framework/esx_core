@@ -1430,6 +1430,7 @@ AddEventHandler('esx_policejob:handcuff', function()
 
 end)
 
+RegisterNetEvent('esx_policejob:unrestrain')
 AddEventHandler('esx_policejob:unrestrain', function()
 	if IsHandcuffed then
 		local playerPed = PlayerPedId()
@@ -1440,6 +1441,11 @@ AddEventHandler('esx_policejob:unrestrain', function()
 		DisablePlayerFiring(playerPed, false)
 		SetPedCanPlayGestureAnims(playerPed, true)
 		FreezeEntityPosition(playerPed, false)
+
+		-- end timer
+		if Config.EnableHandcuffTimer and HandcuffTimer then
+			ESX.ClearTimeout(HandcuffTimer)
+		end
 	end
 end)
 
