@@ -86,6 +86,37 @@ ESX.RegisterServerCallback('esx_billing:getBills', function(source, cb)
 
 end)
 
+ESX.RegisterServerCallback('esx_billing:getTargetBills', function(source, cb, target)
+	local xPlayer = ESX.GetPlayerFromId(target)
+
+	MySQL.Async.fetchAll(
+		'SELECT * FROM billing WHERE identifier = @identifier',
+		{
+			['@identifier'] = xPlayer.identifier
+		},
+		function(result)
+
+			local bills = {}
+
+			for i=1, #result, 1 do
+				table.insert(bills, {
+					id         = result[i].id,
+					identifier = result[i].identifier,
+					sender     = result[i].sender,
+					targetType = result[i].target_type,
+					target     = result[i].target,
+					label      = result[i].label,
+					amount     = result[i].amount
+				})
+			end
+
+			cb(bills)
+
+		end
+	)
+
+end)
+
 
 ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 	local xPlayer = ESX.GetPlayerFromId(source)

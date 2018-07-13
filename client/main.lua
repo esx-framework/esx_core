@@ -69,7 +69,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddEventHandler('esx:onPlayerDeath', function()
+AddEventHandler('esx:onPlayerDeath', function(data)
 	isDead = true
 end)
 
