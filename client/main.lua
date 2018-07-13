@@ -1406,6 +1406,7 @@ AddEventHandler('esx_policejob:handcuff', function()
 			SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
 			SetPedCanPlayGestureAnims(playerPed, false)
 			FreezeEntityPosition(playerPed, true)
+			DisplayRadar(false)
 
 			if Config.EnableHandcuffTimer then
 				if HandcuffTimer then
@@ -1425,6 +1426,7 @@ AddEventHandler('esx_policejob:handcuff', function()
 			DisablePlayerFiring(playerPed, false)
 			SetPedCanPlayGestureAnims(playerPed, true)
 			FreezeEntityPosition(playerPed, false)
+			DisplayRadar(true)
 		end
 	end)
 
@@ -1441,6 +1443,7 @@ AddEventHandler('esx_policejob:unrestrain', function()
 		DisablePlayerFiring(playerPed, false)
 		SetPedCanPlayGestureAnims(playerPed, true)
 		FreezeEntityPosition(playerPed, false)
+		DisplayRadar(true)
 
 		-- end timer
 		if Config.EnableHandcuffTimer and HandcuffTimer then
@@ -1520,7 +1523,6 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
 		if IsHandcuffed then
-			DisplayRadar(false)
 			DisableControlAction(2, 1, true) -- Disable pan
 			DisableControlAction(2, 2, true) -- Disable tilt
 			DisableControlAction(2, 24, true) -- Attack
