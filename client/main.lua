@@ -29,7 +29,7 @@ function ShowBillsMenu()
 		local elements = {}
 
 		for i=1, #bills, 1 do
-			table.insert(elements, {label = bills[i].label .. ' $' .. bills[i].amount, value = bills[i].id})
+			table.insert(elements, {label = bills[i].label .. ' - <span style="color: red;">$' .. bills[i].amount .. '</span>', value = bills[i].id})
 		end
 
 		ESX.UI.Menu.Open(
