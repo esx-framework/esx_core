@@ -169,7 +169,7 @@ RegisterServerEvent('esx_mecanojob:startCraft2')
 AddEventHandler('esx_mecanojob:startCraft2', function()
   local _source = source
   PlayersCrafting2[_source] = true
-  TriggerClientEvent('esx:showNotification', _source, _U('assembling_blowtorch'))
+  TriggerClientEvent('esx:showNotification', _source, _U('assembling_repair_kit'))
   Craft2(_source)
 end)
 
