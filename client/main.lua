@@ -242,6 +242,7 @@ end)
 -- Commands
 RegisterNetEvent('esx:teleport')
 AddEventHandler('esx:teleport', function(pos)
+-- heading?!
   pos.x = pos.x + 0.0
   pos.y = pos.y + 0.0
   pos.z = pos.z + 0.0
@@ -416,7 +417,7 @@ AddEventHandler('esx:spawnPed', function(model)
       Citizen.Wait(1)
     end
 
-    CreatePed(5,  model,  x,  y,  z,  0.0,  true,  false)
+    CreatePed(5, model, x, y, z, 0.0, true, false)
 
   end)
 
@@ -520,7 +521,7 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(10)
 
-    if IsControlJustReleased(0, Keys["F2"]) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+    if IsControlJustReleased(0, Keys['F2']) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
       ESX.ShowInventory()
     end
 
@@ -571,35 +572,39 @@ end
 
 -- Pickups
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Citizen.Wait(0)
+		Citizen.Wait(0)
 
-    local playerPed = GetPlayerPed(-1)
-    local coords    = GetEntityCoords(playerPed)
+		local playerPed = GetPlayerPed(-1)
+		local coords    = GetEntityCoords(playerPed)
+		
+		-- if there's no nearby pickups we can wait a bit to save performance
+		if next(Pickups) == nil then
+			Citizen.Wait(500)
+		end
 
-    for k,v in pairs(Pickups) do
+		for k,v in pairs(Pickups) do
 
-      local distance = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  v.coords.x,  v.coords.y,  v.coords.z,  true)
+			local distance = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  v.coords.x,  v.coords.y,  v.coords.z,  true)
+			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-      if distance <= 5.0 then
+			if distance <= 5.0 then
+				ESX.Game.Utils.DrawText3D({
+					x = v.coords.x,
+					y = v.coords.y,
+					z = v.coords.z + 0.25
+				}, v.label)
+			end
 
-        ESX.Game.Utils.DrawText3D({
-          x = v.coords.x,
-          y = v.coords.y,
-          z = v.coords.z + 0.25
-        }, v.label)
+			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
+				TriggerServerEvent('esx:onPickup', v.id)
+				v.inRange = true
+			end
 
-      end
+		end
 
-      if distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
-        TriggerServerEvent('esx:onPickup', v.id)
-        v.inRange = true
-      end
-
-    end
-
-  end
+	end
 end)
 
 -- Last position
