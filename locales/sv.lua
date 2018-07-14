@@ -6,6 +6,7 @@ Locales['sv'] = {
   ['give'] = 'ge',
   ['remove'] = 'kasta',
   ['return'] = 'gå tillbaka',
+  ['give_to'] = 'ge till',
   ['amount'] = 'antal',
   ['giveammo'] = 'ge ammunition',
   ['amountammo'] = 'mängd ammunition',

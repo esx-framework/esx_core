@@ -6,6 +6,7 @@ Locales['br'] = {
   ['give'] = 'dar',
   ['remove'] = 'remover',
   ['return'] = 'voltar',
+  ['give_to'] = 'give to',
   ['amount'] = 'quantidade',
   ['giveammo'] = 'Dar muniçao',
   ['amountammo'] = 'quantidade de muniçao',
