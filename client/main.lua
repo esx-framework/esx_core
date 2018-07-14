@@ -446,7 +446,8 @@ function OpenPoliceActionsMenu()
 				{label = _U('drag'),			value = 'drag'},
 				{label = _U('put_in_vehicle'),	value = 'put_in_vehicle'},
 				{label = _U('out_the_vehicle'),	value = 'out_the_vehicle'},
-				{label = _U('fine'),			value = 'fine'}
+				{label = _U('fine'),			value = 'fine'},
+				{label = _U('unpaid_bills'),	value = 'unpaid_bills'}
 			}
 		
 			if Config.EnableLicenses then
@@ -480,6 +481,8 @@ function OpenPoliceActionsMenu()
 						OpenFineMenu(closestPlayer)
 					elseif action == 'license' then
 						ShowPlayerLicense(closestPlayer)
+					elseif action == 'unpaid_bills' then
+						OpenUnpaidBillsMenu(closestPlayer)
 					end
 
 				else
@@ -620,141 +623,94 @@ end
 
 function OpenIdentityCardMenu(player)
 
-  if Config.EnableESXIdentity then
+	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
-    ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
-
-      local jobLabel    = nil
-      local sexLabel    = nil
-      local sex         = nil
-      local dobLabel    = nil
-      local heightLabel = nil
-      local idLabel     = nil
-
-      if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
-        jobLabel = 'Job: ' .. data.job.label .. ' - ' .. data.job.grade_label
-      else
-        jobLabel = 'Job: ' .. data.job.label
-      end
-
-      if data.sex ~= nil then
-        if (data.sex == 'm') or (data.sex == 'M') then
-          sex = 'Male'
-        else
-          sex = 'Female'
-        end
-        sexLabel = 'Sex: ' .. sex
-      else
-        sexLabel = 'Sex: Unknown'
-      end
-
-      if data.dob ~= nil then
-        dobLabel = 'DOB: ' .. data.dob
-      else
-        dobLabel = 'DOB: Unknown'
-      end
-
-      if data.height ~= nil then
-        heightLabel = 'Height: ' .. data.height
-      else
-        heightLabel = 'Height: Unknown'
-      end
-
-      if data.name ~= nil then
-        idLabel = 'ID: ' .. data.name
-      else
-        idLabel = 'ID: Unknown'
-      end
-
-      local elements = {
-        {label = _U('name', data.firstname .. ' ' .. data.lastname), value = nil},
-        {label = sexLabel,    value = nil},
-        {label = dobLabel,    value = nil},
-        {label = heightLabel, value = nil},
-        {label = jobLabel,    value = nil},
-        {label = idLabel,     value = nil},
-      }
-
-      if data.drunk ~= nil then
-        table.insert(elements, {label = _U('bac', data.drunk), value = nil})
-      end
-
-      if data.licenses ~= nil then
-
-        table.insert(elements, {label = '--- Licenses ---', value = nil})
-
-        for i=1, #data.licenses, 1 do
-          table.insert(elements, {label = data.licenses[i].label, value = nil})
-        end
-
-      end
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'citizen_interaction',
-        {
-          title    = _U('citizen_interaction'),
-          align    = 'top-left',
-          elements = elements,
-        },
-        function(data, menu)
-
-        end,
-        function(data, menu)
-          menu.close()
-        end
-      )
-
-    end, GetPlayerServerId(player))
-
-  else
-
-    ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
-
-      local jobLabel = nil
-
-      if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
-        jobLabel = 'Job: ' .. data.job.label .. ' - ' .. data.job.grade_label
-      else
-        jobLabel = 'Job: ' .. data.job.label
-      end
-
-        local elements = {
-          {label = _U('name') .. data.name, value = nil},
-          {label = jobLabel,              value = nil},
-        }
-
-      if data.drunk ~= nil then
-        table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
-      end
-
-      if data.licenses ~= nil then
-
-        table.insert(elements, {label = '--- Licenses ---', value = nil})
-
-        for i=1, #data.licenses, 1 do
-          table.insert(elements, {label = data.licenses[i].label, value = nil})
-        end
-
-      end
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'citizen_interaction',
-        {
-          title    = _U('citizen_interaction'),
-          align    = 'top-left',
-          elements = elements,
-        },
-        function(data, menu)
-
-        end,
-        function(data, menu)
-          menu.close()
-        end
-      )
-
-    end, GetPlayerServerId(player))
-
-  end
+		local elements    = {}
+		local nameLabel   = _U('name', data.name)
+		local jobLabel    = nil
+		local sexLabel    = nil
+		local dobLabel    = nil
+		local heightLabel = nil
+		local idLabel     = nil
+	
+		if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
+			jobLabel = _U('job', data.job.label .. ' - ' .. data.job.grade_label)
+		else
+			jobLabel = _U('job', data.job.label)
+		end
+	
+		if Config.EnableESXIdentity then
+	
+			nameLabel = _U('name', data.firstname .. ' ' .. data.lastname)
+	
+			if data.sex ~= nil then
+				if string.lower(data.sex) == 'm' then
+					sexLabel = _U('sex', _U('male'))
+				else
+					sexLabel = _U('sex', _U('female'))
+				end
+			else
+				sexLabel = _U('sex', _U('unknown'))
+			end
+	
+			if data.dob ~= nil then
+				dobLabel = _U('dob', data.dob)
+			else
+				dobLabel = _U('dob', _U('unknown'))
+			end
+	
+			if data.height ~= nil then
+				heightLabel = _U('height', data.height)
+			else
+				heightLabel = _U('height', _U('unknown'))
+			end
+	
+			if data.name ~= nil then
+				idLabel = _U('id', data.name)
+			else
+				idLabel = _U('id', _U('unknown'))
+			end
+	
+		end
+	
+		local elements = {
+			{label = nameLabel, value = nil},
+			{label = jobLabel,  value = nil},
+		}
+	
+		if Config.EnableESXIdentity then
+			table.insert(elements, {label = sexLabel, value = nil})
+			table.insert(elements, {label = dobLabel, value = nil})
+			table.insert(elements, {label = heightLabel, value = nil})
+			table.insert(elements, {label = idLabel, value = nil})
+		end
+	
+		if data.drunk ~= nil then
+			table.insert(elements, {label = _U('bac', data.drunk), value = nil})
+		end
+	
+		if data.licenses ~= nil then
+	
+			table.insert(elements, {label = _U('license_label'), value = nil})
+	
+			for i=1, #data.licenses, 1 do
+				table.insert(elements, {label = data.licenses[i].label, value = nil})
+			end
+	
+		end
+	
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction',
+		{
+			title    = _U('citizen_interaction'),
+			align    = 'top-left',
+			elements = elements,
+		}, function(data, menu)
+	
+		end, function(data, menu)
+			menu.close()
+		end)
+	
+	end, GetPlayerServerId(player))
 
 end
 
@@ -975,6 +931,28 @@ function ShowPlayerLicense(player)
 		end
 		)
 
+	end, GetPlayerServerId(player))
+end
+
+function OpenUnpaidBillsMenu(player)
+
+	local elements = {}
+
+	ESX.TriggerServerCallback('esx_billing:getTargetBills', function(bills)
+		for i=1, #bills, 1 do
+			table.insert(elements, {label = bills[i].label .. ' - <span style="color: red;">$' .. bills[i].amount .. '</span>', value = bills[i].id})
+		end
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing',
+		{
+			title    = _U('unpaid_bills'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+	
+		end, function(data, menu)
+			menu.close()
+		end)
 	end, GetPlayerServerId(player))
 end
 

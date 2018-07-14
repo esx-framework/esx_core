@@ -135,7 +135,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
       ['@identifier'] = identifier
     })
 
-    local user      = result[1]
+    local user          = result[1]
     local firstname     = user['firstname']
     local lastname      = user['lastname']
     local sex           = user['sex']
