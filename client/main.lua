@@ -742,7 +742,7 @@ function OpenBodySearchMenu(player)
         label          = _U('confiscate', ESX.GetWeaponLabel(data.weapons[i].name)),
         value          = data.weapons[i].name,
         itemType       = 'item_weapon',
-        amount         = data.ammo,
+        amount         = data.ammo
       })
     end
 
@@ -754,7 +754,7 @@ function OpenBodySearchMenu(player)
           label          = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
           value          = data.inventory[i].name,
           itemType       = 'item_standard',
-          amount         = data.inventory[i].count,
+          amount         = data.inventory[i].count
         })
       end
     end

@@ -189,7 +189,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
     TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
 
       if status ~= nil then
-        data.drunk = status.getPercent()
+        data.drunk = math.floor(status.percent)
       end
 
     end)
