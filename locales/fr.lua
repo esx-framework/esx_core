@@ -79,6 +79,7 @@ Locales['fr'] = {
   ['inventory_label'] = '--- Inventaire ---',
   ['license_label'] = ' --- Licenses ---',
   ['confiscate'] = 'confisquer %s',
+  ['confiscate_weapon'] = 'confiscate %s with %s bullets',
   ['confiscate_inv'] = 'confisquer %sx %s',
   ['confiscate_dirty'] = 'confisquer argent sale: <span style="color:red;">€%s</span>',
   ['you_confiscated'] = 'you confiscated ~y~%sx~s~ ~b~%s~s~ from ~b~%s~s~',

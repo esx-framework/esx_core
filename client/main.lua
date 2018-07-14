@@ -716,78 +716,77 @@ end
 
 function OpenBodySearchMenu(player)
 
-  ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
+	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 
-    local elements = {}
+		local elements = {}
 
-    local blackMoney = 0
+		local blackMoney = 0
 
-    for i=1, #data.accounts, 1 do
-      if data.accounts[i].name == 'black_money' then
-        blackMoney = data.accounts[i].money
-      end
-    end
+		for i=1, #data.accounts, 1 do
+			if data.accounts[i].money > 0 then
+				if data.accounts[i].name == 'black_money' then
+					blackMoney = data.accounts[i].money
 
-    table.insert(elements, {
-      label          = _U('confiscate_dirty', blackMoney),
-      value          = 'black_money',
-      itemType       = 'item_account',
-      amount         = blackMoney
-    })
+					table.insert(elements, {
+						label    = _U('confiscate_dirty', ESX.Round(blackMoney)),
+						value    = 'black_money',
+						itemType = 'item_account',
+						amount   = blackMoney
+					})
 
-    table.insert(elements, {label = _U('guns_label'), value = nil})
+					break
+				end
+			end
 
-    for i=1, #data.weapons, 1 do
-      table.insert(elements, {
-        label          = _U('confiscate', ESX.GetWeaponLabel(data.weapons[i].name)),
-        value          = data.weapons[i].name,
-        itemType       = 'item_weapon',
-        amount         = data.ammo
-      })
-    end
+		end
 
-    table.insert(elements, {label = _U('inventory_label'), value = nil})
+		table.insert(elements, {label = _U('guns_label'), value = nil})
 
-    for i=1, #data.inventory, 1 do
-      if data.inventory[i].count > 0 then
-        table.insert(elements, {
-          label          = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
-          value          = data.inventory[i].name,
-          itemType       = 'item_standard',
-          amount         = data.inventory[i].count
-        })
-      end
-    end
+		for i=1, #data.weapons, 1 do
+			table.insert(elements, {
+				label    = _U('confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo),
+				value    = data.weapons[i].name,
+				itemType = 'item_weapon',
+				amount   = data.weapons[i].ammo
+			})
+		end
+
+		table.insert(elements, {label = _U('inventory_label'), value = nil})
+
+		for i=1, #data.inventory, 1 do
+			if data.inventory[i].count > 0 then
+				table.insert(elements, {
+				label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
+				value    = data.inventory[i].name,
+				itemType = 'item_standard',
+				amount   = data.inventory[i].count
+				})
+			end
+		end
 
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'body_search',
-      {
-        title    = _U('search'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search',
+		{
+			title    = _U('search'),
+			align    = 'top-left',
+			elements = elements,
+		},
+		function(data, menu)
 
-        local itemType = data.current.itemType
-        local itemName = data.current.value
-        local amount   = data.current.amount
+			local itemType = data.current.itemType
+			local itemName = data.current.value
+			local amount   = data.current.amount
 
-        if data.current.value ~= nil then
+			if data.current.value ~= nil then
+				TriggerServerEvent('esx_policejob:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amount)
+				OpenBodySearchMenu(player)
+			end
 
-          TriggerServerEvent('esx_policejob:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amount)
+		end, function(data, menu)
+			menu.close()
+		end)
 
-          OpenBodySearchMenu(player)
-
-        end
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end, GetPlayerServerId(player))
+	end, GetPlayerServerId(player))
 
 end
 

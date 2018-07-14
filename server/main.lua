@@ -30,7 +30,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		
 			-- can the player carry the said amount of x item?
 			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
+				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
 				targetXPlayer.removeInventoryItem(itemName, amount)
 				sourceXPlayer.addInventoryItem   (itemName, amount)
@@ -38,7 +38,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 				TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
+			TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_account' then

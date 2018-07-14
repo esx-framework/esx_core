@@ -79,6 +79,7 @@ Locales['fi'] = {
   ['inventory_label'] = '--- Reppu ---',
   ['license_label'] = ' --- Lisenssit ---',
   ['confiscate'] = 'takavarikoi %s',
+  ['confiscate_weapon'] = 'confiscate %s with %s bullets',
   ['confiscate_inv'] = 'takavarikoi %sx %s',
   ['confiscate_dirty'] = 'takavarikoi likainen raha: <span style="color:red;">€%s</span>',
   ['you_confiscated'] = 'you confiscated ~y~%sx~s~ ~b~%s~s~ from ~b~%s~s~',
