@@ -104,21 +104,24 @@ AddEventHandler('baseevents:onPlayerKilled', function(killerPed, data)
 		deathCause   = GetPedCauseOfDeath(playerPed)
 	})
 
-	if killerPed ~= -1 then -- if the killer isn't AI
+	if killerPed == -1 then -- player died by AI, we cannot provide as much info because of baseevents setting 'killerPed' to '-1'
+
+		table.insert(data, {
+			killed = false
+		})
+
+	else -- if the killer isn't AI
+
+		killerPed          = GetPlayerPed(GetPlayerFromServerId(killerPed))
 		local killerCoords = GetEntityCoords(killerPed)
-		local distance     = GetDistanceBetweenCoords(table.unpack(killerCoords), table.unpack(data.victimCoords), false)
+		--local distance     = GetDistanceBetweenCoords(table.unpack(killerCoords), table.unpack(data.victimCoords), false)
+		local distance = 2
 
 		table.insert(data, {
 			killed       = true,
 			killerPed    = killerPed,
 			killerCoords = killerCoords,
 			distance     = ESX.Round(distance)
-		})
-
-	else -- player died by AI, we cannot provide as much info because of baseevents setting 'killerPed' to '-1'
-
-		table.insert(data, {
-			killed = false
 		})
 
 	end
