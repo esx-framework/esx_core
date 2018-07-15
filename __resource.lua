@@ -47,6 +47,8 @@ client_scripts {
 	'client/wrapper.lua',
 	'client/main.lua',
 
+	'client/modules/scaleform.lua',
+
 	'shared/functions.lua'
 }
 

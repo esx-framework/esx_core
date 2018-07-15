@@ -15,6 +15,9 @@ ESX.UI.Menu.Opened            = {}
 ESX.Game                      = {}
 ESX.Game.Utils                = {}
 
+ESX.Scaleform                 = {}
+ESX.Scaleform.Utils           = {}
+
 ESX.GetConfig = function()
   return Config
 end
