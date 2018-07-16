@@ -20,9 +20,9 @@ local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local IsHandcuffed            = false
-local HandcuffTimer           = nil
-local IsDragged               = false
-local CopPed                  = 0
+local HandcuffTimer           = {}
+local DragStatus              = {}
+DragStatus.IsDragged          = false
 local hasAlreadyJoined        = false
 local blipsCops               = {}
 local isDead                  = false
@@ -396,7 +396,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
                 end)
 
               else
-                ESX.ShowNotification(_U('service_max', inServiceCount, maxInService) .. inServiceCount .. '/' .. maxInService)
+                ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
               end
 
             end, 'police')
@@ -720,22 +720,18 @@ function OpenBodySearchMenu(player)
 
 		local elements = {}
 
-		local blackMoney = 0
-
 		for i=1, #data.accounts, 1 do
-			if data.accounts[i].money > 0 then
-				if data.accounts[i].name == 'black_money' then
-					blackMoney = data.accounts[i].money
 
-					table.insert(elements, {
-						label    = _U('confiscate_dirty', ESX.Round(blackMoney)),
-						value    = 'black_money',
-						itemType = 'item_account',
-						amount   = blackMoney
-					})
+			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
 
-					break
-				end
+				table.insert(elements, {
+					label    = _U('confiscate_dirty', ESX.Round(data.accounts[i].money)),
+					value    = 'black_money',
+					itemType = 'item_account',
+					amount   = data.accounts[i].money
+				})
+
+				break
 			end
 
 		end
@@ -798,10 +794,10 @@ function OpenFineMenu(player)
       title    = _U('fine'),
       align    = 'top-left',
       elements = {
-        {label = _U('traffic_offense'),   value = 0},
-        {label = _U('minor_offense'),     value = 1},
-        {label = _U('average_offense'),   value = 2},
-        {label = _U('major_offense'),     value = 3}
+        {label = _U('traffic_offense'), value = 0},
+        {label = _U('minor_offense'),   value = 1},
+        {label = _U('average_offense'), value = 2},
+        {label = _U('major_offense'),   value = 3}
       },
     },
     function(data, menu)
@@ -824,7 +820,7 @@ function OpenFineCategoryMenu(player, category)
 
     for i=1, #fines, 1 do
       table.insert(elements, {
-        label     = fines[i].label .. ' $' .. fines[i].amount,
+        label     = fines[i].label .. ' <span style="color: green;">$' .. fines[i].amount .. '</span>',
         value     = fines[i].id,
         amount    = fines[i].amount,
         fineLabel = fines[i].label
@@ -866,11 +862,10 @@ function OpenFineCategoryMenu(player, category)
 end
 
 function LookupVehicle()
-	ESX.UI.Menu.Open(
-	'dialog', GetCurrentResourceName(), 'lookup_vehicle',
+	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'lookup_vehicle',
 	{
 		title = _U('search_database_title'),
-	}, function (data, menu)
+	}, function(data, menu)
 		local length = string.len(data.value)
 		if data.value == nil or length < 8 or length > 13 then
 			ESX.ShowNotification(_U('search_database_error_invalid'))
@@ -884,10 +879,9 @@ function LookupVehicle()
 			end, data.value)
 			menu.close()
 		end
-	end, function (data, menu)
+	end, function(data, menu)
 		menu.close()
-	end
-	)
+	end)
 end
 
 function ShowPlayerLicense(player)
@@ -954,7 +948,6 @@ function OpenUnpaidBillsMenu(player)
 		end)
 	end, GetPlayerServerId(player))
 end
-
 
 function OpenVehicleInfosMenu(vehicleData)
 
@@ -1386,8 +1379,9 @@ AddEventHandler('esx_policejob:handcuff', function()
 			DisplayRadar(false)
 
 			if Config.EnableHandcuffTimer then
-				if HandcuffTimer then
-					ESX.ClearTimeout(HandcuffTimer)
+
+				if HandcuffTimer.Active then
+					ESX.ClearTimeout(HandcuffTimer.Task)
 				end
 
 				StartHandcuffTimer()
@@ -1395,9 +1389,10 @@ AddEventHandler('esx_policejob:handcuff', function()
 
 		else
 
-			if Config.EnableHandcuffTimer and HandcuffTimer then
-				ESX.ClearTimeout(HandcuffTimer)
+			if Config.EnableHandcuffTimer and HandcuffTimer.Active then
+				ESX.ClearTimeout(HandcuffTimer.Task)
 			end
+
 			ClearPedSecondaryTask(playerPed)
 			SetEnableHandcuffs(playerPed, false)
 			DisablePlayerFiring(playerPed, false)
@@ -1423,28 +1418,45 @@ AddEventHandler('esx_policejob:unrestrain', function()
 		DisplayRadar(true)
 
 		-- end timer
-		if Config.EnableHandcuffTimer and HandcuffTimer then
-			ESX.ClearTimeout(HandcuffTimer)
+		if Config.EnableHandcuffTimer and HandcuffTimer.Active then
+			ESX.ClearTimeout(HandcuffTimer.Task)
 		end
 	end
 end)
 
 RegisterNetEvent('esx_policejob:drag')
-AddEventHandler('esx_policejob:drag', function(cop)
-	IsDragged = not IsDragged
-	CopPed = tonumber(cop)
+AddEventHandler('esx_policejob:drag', function(copID)
+	if not IsHandcuffed then
+		return
+	end
+
+	DragStatus.IsDragged = not DragStatus.IsDragged
+	DragStatus.CopId     = tonumber(copID)
 end)
 
 Citizen.CreateThread(function()
+	local playerPed
+	local targetPed
+
 	while true do
 		Citizen.Wait(1)
+
 		if IsHandcuffed then
-			if IsDragged then
-				local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
-				local myped = PlayerPedId()
-				AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			playerPed = PlayerPedId()
+
+			if DragStatus.IsDragged then
+				targetPed = GetPlayerPed(GetPlayerFromServerId(DragStatus.CopId))
+
+				-- undrag if target is in an vehicle
+				if not IsPedSittingInAnyVehicle(targetPed) then
+					AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+				else
+					DragStatus.IsDragged = false
+					DetachEntity(playerPed, true, false)
+				end
+
 			else
-				DetachEntity(PlayerPedId(), true, false)
+				DetachEntity(playerPed, true, false)
 			end
 		else
 			Citizen.Wait(500)
@@ -1486,14 +1498,20 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 end)
 
 RegisterNetEvent('esx_policejob:OutVehicle')
-AddEventHandler('esx_policejob:OutVehicle', function(t)
-	local ped = GetPlayerPed(t)
-	ClearPedTasksImmediately(ped)
-	plyPos = GetEntityCoords(PlayerPedId(),  true)
-	local xnew = plyPos.x+2
-	local ynew = plyPos.y+2
+AddEventHandler('esx_policejob:OutVehicle', function(targetID)
+	local playerPed = PlayerPedId()
+	local targetPed = GetPlayerPed(targetID)
 
-	SetEntityCoords(PlayerPedId(), xnew, ynew, plyPos.z)
+	if not IsPedSittingInAnyVehicle(playerPed) then
+		return
+	end
+
+	ClearPedTasksImmediately(targetPed)
+	targetPos = GetEntityCoords(playerPed, true)
+
+	local newX = plyPos.x+2
+	local newY = plyPos.y+2
+	SetEntityCoords(playerPed, newX, newY, targetPos.z)
 end)
 
 -- Handcuff
@@ -1924,21 +1942,26 @@ end)
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
 		TriggerEvent('esx_policejob:unrestrain')
+
+		if Config.EnableHandcuffTimer and HandcuffTimer.Active then
+			ESX.ClearTimeout(HandcuffTimer.Task)
+		end
 	end
 end)
 
 -- handcuff timer, unrestrain the player after an certain amount of time
 function StartHandcuffTimer()
-	if Config.EnableHandcuffTimer and HandcuffTimer then
-		ESX.ClearTimeout(HandcuffTimer)
+	if Config.EnableHandcuffTimer and HandcuffTimer.Active then
+		ESX.ClearTimeout(HandcuffTimer.Task)
 	end
 
-	HandcuffTimer = ESX.SetTimeout(Config.HandcuffTimer, function()
+	HandcuffTimer.Active = true
+
+	HandcuffTimer.Task = ESX.SetTimeout(Config.HandcuffTimer, function()
 		ESX.ShowNotification(_U('unrestrained_timer'))
 		TriggerEvent('esx_policejob:unrestrain')
+		HandcuffTimer.Active = false
 	end)
-
-	HandcuffTimer = nil
 end
 
 -- TODO
