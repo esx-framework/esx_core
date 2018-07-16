@@ -1476,6 +1476,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 
       if freeSeat ~= nil then
         TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
+        IsDragged = false
       end
 
     end
