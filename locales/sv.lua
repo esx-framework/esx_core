@@ -35,6 +35,7 @@ Locales['sv'] = {
   ['put_in_vehicle'] = 'sätt in i fordon',
   ['out_the_vehicle'] = 'dra ut ur fordon',
   ['fine'] = 'Ge böter',
+  ['unpaid_bills'] = 'se obetalda räkningar',
   ['license_check'] = 'se licenser',
   ['license_revoke'] = 'återkalla licenser',
   ['license_revoked'] = 'Ditt ~b~%s~s~ har blivit ~y~återkallat~s~!',

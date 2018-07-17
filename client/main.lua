@@ -1468,35 +1468,37 @@ end)
 
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
+	local playerPed = PlayerPedId()
+	local coords    = GetEntityCoords(playerPed)
 
-  local playerPed = PlayerPedId()
-  local coords    = GetEntityCoords(playerPed)
+	if not IsHandcuffed then
+		return
+	end
 
-  if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
+	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 
-    local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
+		local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
 
-    if DoesEntityExist(vehicle) then
+		if DoesEntityExist(vehicle) then
 
-      local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
-      local freeSeat = nil
+			local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
+			local freeSeat = nil
 
-      for i=maxSeats - 1, 0, -1 do
-        if IsVehicleSeatFree(vehicle, i) then
-          freeSeat = i
-          break
-        end
-      end
+			for i=maxSeats - 1, 0, -1 do
+				if IsVehicleSeatFree(vehicle, i) then
+					freeSeat = i
+					break
+				end
+			end
 
-      if freeSeat ~= nil then
-        TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
-        DragStatus.IsDragged = false
-      end
+			if freeSeat ~= nil then
+				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
+				DragStatus.IsDragged = false
+			end
 
-    end
+		end
 
-  end
-
+	end
 end)
 
 RegisterNetEvent('esx_policejob:OutVehicle')
