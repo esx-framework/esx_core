@@ -1146,9 +1146,10 @@ function OpenGetStocksMenu()
             else
               menu2.close()
               menu.close()
-              OpenGetStocksMenu()
-
               TriggerServerEvent('esx_policejob:getStockItem', itemName, count)
+
+              Citizen.Wait(300)
+              OpenGetStocksMenu()
             end
 
           end,
@@ -1208,9 +1209,10 @@ function OpenPutStocksMenu()
             else
               menu2.close()
               menu.close()
-              OpenPutStocksMenu()
-
               TriggerServerEvent('esx_policejob:putStockItems', itemName, count)
+
+              Citizen.Wait(300)
+              OpenPutStocksMenu()
             end
 
           end,
