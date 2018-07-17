@@ -4,7 +4,7 @@ Locales['br'] = {
   ['citizen_wear'] = 'Roupa casual',
   ['police_wear'] = 'Uniforme da Polícia',
   ['sheriff_wear'] = 'sheriff Outfit',
-  ['lieutenant_wear'] = 'Swatt outfit ',
+  ['lieutenant_wear'] = 'Swatt outfit',
   ['gilet_wear'] = 'orange reflective jacket',
   ['bullet_wear'] = 'bulletproof vest',
   ['no_outfit'] = 'there\'s no uniform that fits you!',
@@ -109,10 +109,17 @@ Locales['br'] = {
   ['invalid_amount'] = 'Quantidade inválida',
   ['amount_of_deposit'] = 'Quantidade de depósito',
   ['open_bossmenu'] = 'Pressione ~INPUT_CONTEXT~ para abrir o menu',
+  ['quantity_invalid'] = 'invalid quantity',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
+  ['quantity'] = 'quantity',
+  ['inventory'] = 'inventory',
+  ['police_stock'] = 'police Stock',
   -- Misc
   ['remove_prop'] = 'Pressione ~INPUT_CONTEXT~ para remover o objeto',
   ['map_blip'] = 'Departamento de Polícia',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'Alerta da Polícia',
+  ['phone_police'] = 'police',
 }

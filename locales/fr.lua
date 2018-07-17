@@ -109,16 +109,17 @@ Locales['fr'] = {
   ['invalid_amount'] = 'montant invalide',
   ['amount_of_deposit'] = 'montant du dépôt',
   ['open_bossmenu'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir le menu',
-  ['quantity_invalid'] = 'Quantité invalide',
-  ['have_withdrawn'] = 'Vous avez retiré x',
-  ['added'] = 'Vous avez ajouté x',
-  ['quantity'] = 'Quantité',
+  ['quantity_invalid'] = 'quantité invalide',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
+  ['quantity'] = 'quantité',
   ['inventory'] = 'inventaire',
-  ['police_stock'] = 'Police Stock',
+  ['police_stock'] = 'police Stock',
   -- Misc
   ['remove_prop'] = 'appuyez sur ~INPUT_CONTEXT~ pour enlever l\'objet',
   ['map_blip'] = 'Commissariat',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'alerte police',
+  ['phone_police'] = 'police',
 }

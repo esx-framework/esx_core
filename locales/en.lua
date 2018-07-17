@@ -110,17 +110,16 @@ Locales['en'] = {
   ['amount_of_deposit'] = 'amount of deposit',
   ['open_bossmenu'] = 'press ~INPUT_CONTEXT~ to open the menu',
   ['quantity_invalid'] = 'invalid quantity',
-  ['have_withdrawn'] = 'you have withdrawn x',
-  ['not_enough_in_society'] = 'there\'s not enough of ~r~that item~s~ in the society!',
-  ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
-  ['added'] = 'you added x',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
   ['quantity'] = 'quantity',
   ['inventory'] = 'inventory',
-  ['police_stock'] = 'Police Stock',
+  ['police_stock'] = 'police Stock',
   -- Misc
   ['remove_prop'] = 'press ~INPUT_CONTEXT~ to delete the object',
   ['map_blip'] = 'police Station',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'alert police',
+  ['phone_police'] = 'police',
 }

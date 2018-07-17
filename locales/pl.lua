@@ -111,10 +111,8 @@ Locales['pl'] = {
   ['amount_of_deposit'] = 'wartość depozytu',
   ['open_bossmenu'] = 'naciśnij ~INPUT_CONTEXT~ aby otworzyć menu',
   ['quantity_invalid'] = 'nieprawidłowa ilość',
-  ['have_withdrawn'] = 'wypłaciłeś x',
-  ['not_enough_in_society'] = 'niewystarczająca ilość przedmiotu w społeczeństwie!',
-  ['player_cannot_hold'] = '~r~Nie masz~w~ wystarczająco ~y~wolnego miejsca~w~ w ekwipunku!',
-  ['added'] = 'dodałeś x',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
   ['quantity'] = 'ilość',
   ['inventory'] = 'ekwipunek',
   ['police_stock'] = 'zapasy policji',
@@ -124,4 +122,5 @@ Locales['pl'] = {
   ['unrestrained_timer'] = 'czujesz, że twoje kajdanki powoli tracą przyczepność i znikają.',
   -- Notifications
   ['alert_police'] = 'ostrzeż policję',
+  ['phone_police'] = 'police',
 }

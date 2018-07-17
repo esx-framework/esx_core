@@ -110,8 +110,8 @@ Locales['fi'] = {
   ['amount_of_deposit'] = 'talletuksen määrä',
   ['open_bossmenu'] = 'paina ~INPUT_CONTEXT~ avataksesi valikon',
   ['quantity_invalid'] = 'invalid quantity',
-  ['have_withdrawn'] = 'sinä nostit x',
-  ['added'] = 'sinä lisäsit varastoon x',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
   ['quantity'] = 'määrä',
   ['inventory'] = 'varasto',
   ['police_stock'] = 'Poliisin Varasto',
@@ -121,4 +121,5 @@ Locales['fi'] = {
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'hälyytys Poliisi',
+  ['phone_police'] = 'poliisi',
 }

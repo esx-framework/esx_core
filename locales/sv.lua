@@ -109,8 +109,8 @@ Locales['sv'] = {
   ['amount_of_deposit'] = 'belopp att lägga in',
   ['open_bossmenu'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn',
   ['quantity_invalid'] = 'otillgängligt antal',
-  ['have_withdraw'] = 'Du har tagit ut x',
-  ['added'] = 'Du la in x',
+  ['have_withdrawn'] = 'du har tagit ut ~y~x%s~s~ ~b~%s~s~',
+  ['have_deposited'] = 'du har lagrat ~y~x%s~s~ ~b~%s~s~',
   ['quantity'] = 'Antal',
   ['inventory'] = 'Förråd',
   ['police_stock'] = 'Polisförråd',
@@ -120,4 +120,5 @@ Locales['sv'] = {
   ['unrestrained_timer'] = 'dina handklovar har försvunnit',
   -- Notifications
   ['alert_police'] = 'Meddela polisen',
+  ['phone_police'] = 'polisen',
 }

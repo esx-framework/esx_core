@@ -109,10 +109,17 @@ Locales['de'] = {
   ['invalid_amount'] = 'ungültiger Betrag',
   ['amount_of_deposit'] = 'Betrag zum einzahlen',
   ['open_bossmenu'] = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
+  ['quantity_invalid'] = 'invalid quantity',
+  ['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
+  ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
+  ['quantity'] = 'quantity',
+  ['inventory'] = 'inventory',
+  ['police_stock'] = 'police Stock',
   -- Misc
   ['remove_prop'] = 'Drücke ~INPUT_CONTEXT~ um das Objekt zu entfernen',
   ['map_blip'] = 'Polizeistation',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
   ['alert_police'] = 'Polizei alamieren',
+  ['phone_police'] = 'police',
 }
