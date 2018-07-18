@@ -9,5 +9,5 @@ Locales['fr'] = {
 	['news_prefix'] = 'info | %s',
 	['ooc_argument_name'] = 'message',
 	['ooc_argument_help'] = 'le message',
-	['ooc_unknown_command'] = '^1%s^0 n\'est pas une commande valide!',
+	['ooc_unknown_command'] = '^3%s^0 n\'est pas une commande valide!',
 }

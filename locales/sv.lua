@@ -9,5 +9,5 @@ Locales['sv'] = {
 	['news_prefix'] = 'TV4 Stockholm',
 	['ooc_argument_name'] = 'meddelande',
 	['ooc_argument_help'] = 'det meddelandet du vill skicka',
-	['ooc_unknown_command'] = '^1%s^0 är inte ett giltigt kommando!',
+	['ooc_unknown_command'] = '^3%s^0 är inte ett giltigt kommando!',
 }

@@ -1,39 +1,43 @@
-AddEventHandler('chatMessage', function(source, name, msg)
-	local command = stringsplit(msg, " ")[1];
+AddEventHandler('chatMessage', function(source, author, message)
 
-	if command == "/ooc" then
+	if string.sub(message, 1, 1) == "/" then
 		CancelEvent()
-		if Config.EnableESXIdentity then name = GetCharacterName(source) end
-		TriggerClientEvent('chatMessage', -1, _U('ooc_prefix', name), { 128, 128, 128 }, string.sub(msg, 5))
-	elseif command == "/twt" then
-		CancelEvent()
-		if Config.EnableESXIdentity then name = GetCharacterName(source) end
-		TriggerClientEvent('chatMessage', -1, _U('twt_prefix', name), { 0, 153, 204 }, string.sub(msg, 5))
-	elseif command == "/me" then
-		CancelEvent()
-		if Config.EnableESXIdentity then name = GetCharacterName(source) end
-		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('me_prefix', name), string.sub(msg, 4), { 255, 0, 0 })
-	elseif command == "/news" then
-		CancelEvent()
-		if Config.EnableESXIdentity then name = GetCharacterName(source) end
-		TriggerClientEvent('chatMessage', -1, _U('news_prefix', name), { 249, 166, 0 }, string.sub(msg, 6))
-	elseif string.sub(command, 1, 1) == "/" then
-		CancelEvent()
-		TriggerClientEvent('chatMessage', source, '', {132, 13, 37}, _U('ooc_unknown_command', command))
+		TriggerClientEvent('chat:addMessage', -1, { args = { '^1SYSTEM', _U('ooc_unknown_command', message) } })
 	end
+
 end)
 
-function stringsplit(inputstr, sep)
-	if sep == nil then
-		sep = "%s"
-	end
-	local t={} ; i=1
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-		t[i] = str
-		i = i + 1
-	end
-	return t
-end
+RegisterCommand('ooc', function(source, args, rawCommand)
+	rawCommand = string.sub(rawCommand, 4)
+	local name = GetPlayerName(source)
+	if Config.EnableESXIdentity then name = GetCharacterName(source) end
+
+	TriggerClientEvent('chat:addMessage', -1, { args = { _U('ooc_prefix', name), rawCommand }, color = { 128, 128, 128 } })
+end, false)
+
+RegisterCommand('twt', function(source, args, rawCommand)
+	rawCommand = string.sub(rawCommand, 4)
+	local name = GetPlayerName(source)
+	if Config.EnableESXIdentity then name = GetCharacterName(source) end
+
+	TriggerClientEvent('chat:addMessage', -1, { args = { _U('twt_prefix', name), rawCommand }, color = { 0, 153, 204 } })
+end, false)
+
+RegisterCommand('me', function(source, args, rawCommand)
+	rawCommand = string.sub(rawCommand, 3)
+	local name = GetPlayerName(source)
+	if Config.EnableESXIdentity then name = GetCharacterName(source) end
+
+	TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('me_prefix', name), rawCommand, { 255, 0, 0 })
+end, false)
+
+RegisterCommand('news', function(source, args, rawCommand)
+	rawCommand = string.sub(rawCommand, 5)
+	local name = GetPlayerName(source)
+	if Config.EnableESXIdentity then name = GetCharacterName(source) end
+
+	TriggerClientEvent('chat:addMessage', -1, { args = { _U('news_prefix', name), rawCommand }, color = { 249, 166, 0 } })
+end, false)
 
 function GetCharacterName(source)
 	-- fetch identity in sync

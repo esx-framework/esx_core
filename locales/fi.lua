@@ -9,5 +9,5 @@ Locales['fi'] = {
 	['news_prefix'] = 'news | %s',
 	['ooc_argument_name'] = 'viesti',
 	['ooc_argument_help'] = 'viestin sisältö',
-	['ooc_unknown_command'] = '^1%s^0 ei ole validi komento!',
+	['ooc_unknown_command'] = '^3%s^0 ei ole validi komento!',
 }
