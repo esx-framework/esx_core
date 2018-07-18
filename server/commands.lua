@@ -4,7 +4,7 @@ TriggerEvent('es:addGroupCommand', 'tp', 'admin', function(source, args, user)
 	local z = tonumber(args[3])
 	
 	if x and y and z then
-		TriggerClientEvent("esx:teleport", source, {
+		TriggerClientEvent('esx:teleport', source, {
 			x = x,
 			y = y,
 			z = z
@@ -66,7 +66,6 @@ TriggerEvent('es:addGroupCommand', 'dv', 'admin', function(source, args, user)
 end, function(source, args, user)
   TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = _U('delete_vehicle'), params = {{name = "car", help = _U('delete_veh_param')}}})
-
 
 TriggerEvent('es:addGroupCommand', 'spawnped', 'admin', function(source, args, user)
   TriggerClientEvent('esx:spawnPed', source, args[1])
@@ -171,7 +170,7 @@ TriggerEvent('es:addGroupCommand', 'disc', 'admin', function(source, args, user)
 	DropPlayer(source, 'You have been disconnected')
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('disconnect')})
+end)
 
 TriggerEvent('es:addGroupCommand', 'disconnect', 'admin', function(source, args, user)
 	DropPlayer(source, 'You have been disconnected')
@@ -189,16 +188,16 @@ TriggerEvent('es:addGroupCommand', 'cls', 'user', function(source, args, user)
 	TriggerClientEvent('chat:clear', source)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('chat_clear')})
+end)
 
 TriggerEvent('es:addGroupCommand', 'clsall', 'admin', function(source, args, user)
-	TriggerClientEvent('chat:clear')
+	TriggerClientEvent('chat:clear', -1)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('chat_clear_all')})
+end)
 
 TriggerEvent('es:addGroupCommand', 'clearall', 'admin', function(source, args, user)
-	TriggerClientEvent('chat:clear')
+	TriggerClientEvent('chat:clear', -1)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = _U('chat_clear_all')})
