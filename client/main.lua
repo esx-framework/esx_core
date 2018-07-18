@@ -75,7 +75,7 @@ AddEventHandler('playerSpawned', function()
 end)
 
 AddEventHandler('baseevents:onPlayerDied', function(killerType, deathCoords)
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 
 	local data = {
 		killed      = false,
@@ -88,46 +88,33 @@ AddEventHandler('baseevents:onPlayerDied', function(killerType, deathCoords)
 	TriggerServerEvent('esx:onPlayerDeath', data)
 end)
 
-AddEventHandler('baseevents:onPlayerKilled', function(killerPed, data)
-	local playerPed = GetPlayerPed(-1)
+AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
+	local playerPed = PlayerPedId()
 
-	-- corrected table childs
+	-- snake text; killerpos actually is the victim
 	local victimCoords = data.killerpos
 	local weaponHash   = data.weaponhash
 
 	data.killerpos  = nil
 	data.weaponhash = nil
 
+	local killerPed    = GetPlayerPed(GetPlayerFromServerId(killerId))
+	local killerCoords = GetEntityCoords(killerPed)
+	local distance     = GetDistanceBetweenCoords(victimCoords[1], victimCoords[2], victimCoords[3], killerCoords, false)
+
 	table.insert(data, {
 		victimCoords = victimCoords,
 		weaponHash   = weaponHash,
-		deathCause   = GetPedCauseOfDeath(playerPed)
+		deathCause   = GetPedCauseOfDeath(playerPed),
+		killed       = true,
+		killerId     = killerId,
+		killerCoords = { table.unpack(killerCoords) },
+		distance     = ESX.Round(distance)
 	})
-
-	if killerPed == -1 then -- player died by AI, we cannot provide as much info because of baseevents setting 'killerPed' to '-1'
-
-		table.insert(data, {
-			killed = false
-		})
-
-	else -- if the killer isn't AI
-
-		killerPed          = GetPlayerPed(GetPlayerFromServerId(killerPed))
-		local killerCoords = GetEntityCoords(killerPed)
-		--local distance     = GetDistanceBetweenCoords(table.unpack(killerCoords), table.unpack(data.victimCoords), false)
-		local distance = 2
-
-		table.insert(data, {
-			killed       = true,
-			killerPed    = killerPed,
-			killerCoords = killerCoords,
-			distance     = ESX.Round(distance)
-		})
-
-	end
 
 	TriggerEvent('esx:onPlayerDeath', data)
 	TriggerServerEvent('esx:onPlayerDeath', data)
+
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
