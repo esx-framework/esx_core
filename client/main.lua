@@ -11,10 +11,10 @@ AddEventHandler('esx_rpchat:sendProximityMessage', function(id, title, message, 
 end)
 
 Citizen.CreateThread(function()
-	TriggerEvent('chat:addSuggestion', '/ooc',  _U('ooc_help'),  {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/news', _U('news_help'), {{name=_U('ooc_argument_name'), help=_U('ooc_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/ooc',  _U('ooc_help'),  { { name = _U('ooc_argument_name'), help = _U('ooc_argument_help') } } )
+	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  { { name = _U('ooc_argument_name'), help = _U('ooc_argument_help') } } )
+	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   { { name = _U('ooc_argument_name'), help = _U('ooc_argument_help') } } )
+	TriggerEvent('chat:addSuggestion', '/news', _U('news_help'), { { name = _U('ooc_argument_name'), help = _U('ooc_argument_help') } } )
 end)
 
 AddEventHandler('onResourceStop', function(resource)

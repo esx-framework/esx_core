@@ -2,7 +2,7 @@ AddEventHandler('chatMessage', function(source, author, message)
 
 	if string.sub(message, 1, 1) == "/" then
 		CancelEvent()
-		TriggerClientEvent('chat:addMessage', -1, { args = { '^1SYSTEM', _U('ooc_unknown_command', message) } })
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', message) } })
 	end
 
 end)
