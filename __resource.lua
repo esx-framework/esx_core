@@ -48,6 +48,7 @@ client_scripts {
 	'client/main.lua',
 
 	'client/modules/scaleform.lua',
+	'client/modules/streaming.lua',
 
 	'shared/functions.lua'
 }

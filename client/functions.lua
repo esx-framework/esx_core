@@ -18,6 +18,8 @@ ESX.Game.Utils                = {}
 ESX.Scaleform                 = {}
 ESX.Scaleform.Utils           = {}
 
+ESX.Streaming                 = {}
+
 ESX.GetConfig = function()
   return Config
 end
