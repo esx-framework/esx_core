@@ -17,8 +17,8 @@ es_extended is a roleplay framework for FiveM. It is developed on top of [Essent
 - Job system
 - Loadouts and position synced in database
 - The best framework out there for RP servers
-- i18n (locate) system
-- Loads of plugins available
+- i18n (locale) system
+- Plenty of plugins available
 
 ### Requirements
 This order also applies in the startup order.
