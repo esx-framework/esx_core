@@ -37,6 +37,16 @@ ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, nam
 	end
 end)
 
+ESX.RegisterServerCallback('esx_service:isInService', function(source, cb, name)
+	local isInService = false
+
+	if InService[name][source] then
+		isInService = true
+	end
+
+	cb(isInService)
+end)
+
 AddEventHandler('playerDropped', function()
 	local _source = source
 		
