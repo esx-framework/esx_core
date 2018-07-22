@@ -22,7 +22,14 @@ Locales['br'] = {
   ['vehicle_out'] = 'Já existe um carro fora da garagem',
   ['vehicle_spawner'] = 'Pressione ~INPUT_CONTEXT~ para escolher um veículo',
   ['store_vehicle'] = 'Pressione ~INPUT_CONTEXT~ para guardar o veículo',
-  ['service_max'] = 'maximo de oficiais em serviço: %s/%s',
+  -- Service
+  ['service_max'] = 'you cannot enter service, max officers in service: %s/%s',
+  ['service_not'] = 'you have not entered service! You\'ll have to get changed first.',
+  ['service_anonunce'] = 'service information',
+  ['service_in'] = 'you\'ve entered service, welcome!',
+  ['service_in_announce'] = 'operator ~y~%s~s~ has entered service!',
+  ['service_out'] = 'you have left service.',
+  ['service_out_announce'] = 'operator ~y~%s~s~ has left their service.',
   -- Action Menu
   ['citizen_interaction'] = 'Interagir com o cidadão',
   ['vehicle_interaction'] = 'Interagir com o veículo',

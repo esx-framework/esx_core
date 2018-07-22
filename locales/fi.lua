@@ -22,7 +22,14 @@ Locales['fi'] = {
   ['vehicle_out'] = 'ajoneuvo on jo ulkona tallista',
   ['vehicle_spawner'] = 'paina ~INPUT_CONTEXT~ ottaaksesi auton ulos',
   ['store_vehicle'] = 'paina ~INPUT_CONTEXT~ laittaaksesi auto talliin',
-  ['service_max'] = 'maksimi määrä poliiseja: %s/%s',
+  -- Service
+  ['service_max'] = 'you cannot enter service, max officers in service: %s/%s',
+  ['service_not'] = 'you have not entered service! You\'ll have to get changed first.',
+  ['service_anonunce'] = 'service information',
+  ['service_in'] = 'you\'ve entered service, welcome!',
+  ['service_in_announce'] = 'operator ~y~%s~s~ has entered service!',
+  ['service_out'] = 'you have left service.',
+  ['service_out_announce'] = 'operator ~y~%s~s~ has left their service.',
   -- Action Menu
   ['citizen_interaction'] = 'siviilin vuorovaikutus',
   ['vehicle_interaction'] = 'ajoneuvon vuorovaikutus',

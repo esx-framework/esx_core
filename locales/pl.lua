@@ -23,7 +23,14 @@ Locales['pl'] = {
   ['vehicle_out'] = 'masz już pojazd poza garażem',
   ['vehicle_spawner'] = 'naciśnij ~INPUT_CONTEXT~ żeby wziąć pojazd',
   ['store_vehicle'] = 'naciśnij ~INPUT_CONTEXT~ żeby przechować pojazd',
-  ['service_max'] = 'maksymalna ilość policjantów na służbie: %s/%s',
+  -- Service
+  ['service_max'] = 'you cannot enter service, max officers in service: %s/%s',
+  ['service_not'] = 'you have not entered service! You\'ll have to get changed first.',
+  ['service_anonunce'] = 'service information',
+  ['service_in'] = 'you\'ve entered service, welcome!',
+  ['service_in_announce'] = 'operator ~y~%s~s~ has entered service!',
+  ['service_out'] = 'you have left service.',
+  ['service_out_announce'] = 'operator ~y~%s~s~ has left their service.',
   -- Action Menu
   ['citizen_interaction'] = 'interakcja z cywilami',
   ['vehicle_interaction'] = 'interakcja z pojazdami',

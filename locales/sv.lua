@@ -18,14 +18,21 @@ Locales['sv'] = {
   ['armory'] = 'vapenförråd',
   ['open_armory'] = 'tryck ~INPUT_CONTEXT~ för att komma åt förrådet',
   -- Vehicles
-  ['vehicle_menu'] = 'Bilar',
-  ['vehicle_out'] = 'Det finns redan en bil ute!',
-  ['vehicle_spawner'] = 'Tryck ~INPUT_CONTEXT~ för att ta ut en bil',
-  ['store_vehicle'] = 'Tryck ~INPUT_CONTEXT~ för att parkera bilen',
-  ['service_max'] = 'max antal poliser i tjänst: %s/%s',
+  ['vehicle_menu'] = 'bilar',
+  ['vehicle_out'] = 'det finns redan en bil ute!',
+  ['vehicle_spawner'] = 'tryck ~INPUT_CONTEXT~ för att ta ut en bil',
+  ['store_vehicle'] = 'tryck ~INPUT_CONTEXT~ för att parkera bilen',
+  -- Service
+  ['service_max'] = 'du kan inte gå tjänst, poliser i tjänst: %s/%s',
+  ['service_not'] = 'du är inte i tjänst! Byt om för att gå in i tjänst.',
+  ['service_anonunce'] = 'tjänsteinformation',
+  ['service_in'] = 'du deltog i tjänst, välkommen!',
+  ['service_in_announce'] = 'operatör ~y~%s~s~ har deltagit tjänst!',
+  ['service_out'] = 'du har lämnat tjänst.',
+  ['service_out_announce'] = 'operatör ~y~%s~s~ har lämnat deras tjänst.',
   -- Action Menu
-  ['citizen_interaction'] = 'Handlingar mot civila',
-  ['vehicle_interaction'] = 'Handlingar på bilar',
+  ['citizen_interaction'] = 'handlingar mot civila',
+  ['vehicle_interaction'] = 'handlingar på bilar',
   ['object_spawner'] = 'ta fram ett objekt',
 
   ['id_card'] = 'ID-Kort',
@@ -112,14 +119,14 @@ Locales['sv'] = {
   ['quantity_invalid'] = 'otillgängligt antal',
   ['have_withdrawn'] = 'du har tagit ut ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'du har lagrat ~y~x%s~s~ ~b~%s~s~',
-  ['quantity'] = 'Antal',
-  ['inventory'] = 'Förråd',
-  ['police_stock'] = 'Polisförråd',
+  ['quantity'] = 'antal',
+  ['inventory'] = 'förråd',
+  ['police_stock'] = 'polisförråd',
   -- Misc
   ['remove_prop'] = 'tryck ~INPUT_CONTEXT~ för att ta bort obejektet',
-  ['map_blip'] = 'Polisstation',
+  ['map_blip'] = 'polisstation',
   ['unrestrained_timer'] = 'dina handklovar har försvunnit',
   -- Notifications
-  ['alert_police'] = 'Meddela polisen',
+  ['alert_police'] = 'meddela polisen',
   ['phone_police'] = 'polisen',
 }
