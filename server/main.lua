@@ -26,6 +26,15 @@ AddEventHandler('esx_service:disableService', function(name)
 	InService[name][source] = nil
 end)
 
+RegisterServerEvent('esx_service:notifyAllInService')
+AddEventHandler('esx_service:notifyAllInService', function(notification, name)
+	for k,v in pairs(InService[name]) do
+		if v == true then
+			TriggerClientEvent('esx_service:notifyAllInService', k, notification, source)
+		end
+	end
+end)
+
 ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, name)
 	local inServiceCount = GetInServiceCount(name)
 
@@ -45,6 +54,10 @@ ESX.RegisterServerCallback('esx_service:isInService', function(source, cb, name)
 	end
 
 	cb(isInService)
+end)
+
+ESX.RegisterServerCallback('esx_service:getInServiceList', function(source, cb, name)
+	cb(InService[name])
 end)
 
 AddEventHandler('playerDropped', function()
