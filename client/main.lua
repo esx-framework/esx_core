@@ -27,6 +27,7 @@ local hasAlreadyJoined        = false
 local blipsCops               = {}
 local isDead                  = false
 local CurrentTask             = {}
+local playerInService         = false
 
 ESX                           = nil
 
@@ -61,134 +62,191 @@ function cleanPlayer(playerPed)
 end
 
 function setUniform(job, playerPed)
-  TriggerEvent('skinchanger:getSkin', function(skin)
 
-    if skin.sex == 0 then
-      if Config.Uniforms[job].male ~= nil then
-        TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].male)
-      else
-        ESX.ShowNotification(_U('no_outfit'))
-      end
-      if job == 'bullet_wear' then
-        SetPedArmour(playerPed, 100)
-      end
-    else
-      if Config.Uniforms[job].female ~= nil then
-        TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].female)
-      else
-        ESX.ShowNotification(_U('no_outfit'))
-      end
-      if job == 'bullet_wear' then
-        SetPedArmour(playerPed, 100)
-      end
-    end
+	TriggerEvent('skinchanger:getSkin', function(skin)
 
-  end)
+		if skin.sex == 0 then
+
+			if Config.Uniforms[job].male ~= nil then
+				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].male)
+			else
+				ESX.ShowNotification(_U('no_outfit'))
+			end
+
+			if job == 'bullet_wear' then
+				SetPedArmour(playerPed, 100)
+			end
+
+		else
+
+			if Config.Uniforms[job].female ~= nil then
+				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].female)
+			else
+				ESX.ShowNotification(_U('no_outfit'))
+			end
+
+			if job == 'bullet_wear' then
+				SetPedArmour(playerPed, 100)
+			end
+
+		end
+
+	end)
 end
 
 function OpenCloakroomMenu()
 
-  local playerPed = PlayerPedId()
+	local playerPed = PlayerPedId()
 
-  local elements = {
-    { label = _U('citizen_wear'), value = 'citizen_wear' },
-    { label = _U('bullet_wear'), value = 'bullet_wear' },
-    { label = _U('gilet_wear'), value = 'gilet_wear' }
-  }
+	local elements = {
+		{ label = _U('citizen_wear'), value = 'citizen_wear' },
+		{ label = _U('bullet_wear'), value = 'bullet_wear' },
+		{ label = _U('gilet_wear'), value = 'gilet_wear' }
+	}
 
-  if PlayerData.job.grade_name == 'recruit' then
-    table.insert(elements, {label = _U('police_wear'), value = 'cadet_wear'})
-  end
+	if PlayerData.job.grade_name == 'recruit' then
+		table.insert(elements, {label = _U('police_wear'), value = 'recruit_wear'})
+	elseif PlayerData.job.grade_name == 'officer' then
+		table.insert(elements, {label = _U('police_wear'), value = 'officer_wear'})
+	elseif PlayerData.job.grade_name == 'sergeant' then
+		table.insert(elements, {label = _U('police_wear'), value = 'sergeant_wear'})
+	elseif PlayerData.job.grade_name == 'intendent' then
+		table.insert(elements, {label = _U('police_wear'), value = 'intendent_wear'})
+	elseif PlayerData.job.grade_name == 'lieutenant' then
+		table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
+	elseif PlayerData.job.grade_name == 'chef' then
+		table.insert(elements, {label = _U('police_wear'), value = 'chef_wear'})
+	elseif PlayerData.job.grade_name == 'boss' then
+		table.insert(elements, {label = _U('police_wear'), value = 'boss_wear'})
+	end
 
-  if PlayerData.job.grade_name == 'officer' then
-    table.insert(elements, {label = _U('police_wear'), value = 'police_wear'})
-  end
+	if Config.EnableNonFreemodePeds then
+		table.insert(elements, {label = _U('sheriff_wear'), value = 'freemode_ped', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
+		table.insert(elements, {label = _U('lieutenant_wear'), value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
+		table.insert(elements, {label = _U('commandant_wear'), value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
+	end
 
-  if PlayerData.job.grade_name == 'sergeant' then
-    table.insert(elements, {label = _U('police_wear'), value = 'sergeant_wear'})
-  end
+	ESX.UI.Menu.CloseAll()
 
-  if PlayerData.job.grade_name == 'lieutenant' then
-    table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
-  end
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom',
+	{
+		title    = _U('cloakroom'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
 
-  if PlayerData.job.grade_name == 'boss' then
-    table.insert(elements, {label = _U('police_wear'), value = 'commandant_wear'})
-  end
+		cleanPlayer(playerPed)
 
-  if Config.EnableNonFreemodePeds then
-    table.insert(elements, {label = _U('sheriff_wear'), value = 'sheriff_wear_freemode', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
-    table.insert(elements, {label = _U('lieutenant_wear'), value = 'lieutenant_wear_freemode', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
-    table.insert(elements, {label = _U('commandant_wear'), value = 'commandant_wear_freemode', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
-  end
+		if data.current.value == 'citizen_wear' then
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+				TriggerEvent('skinchanger:loadSkin', skin)
+			end)
 
-  ESX.UI.Menu.CloseAll()
+			if Config.MaxInService ~= -1 then
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'cloakroom',
-    {
-      title    = _U('cloakroom'),
-      align    = 'top-left',
-      elements = elements,
-    },
-    function(data, menu)
+				ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
+					if isInService then
 
-      cleanPlayer(playerPed)
+						local notification = {
+							title    = _U('service_anonunce'),
+							subject  = '',
+							msg      = _U('service_out_announce', GetPlayerName(PlayerId())),
+							iconType = 1
+						}
 
-      if data.current.value == 'citizen_wear' then
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-          TriggerEvent('skinchanger:loadSkin', skin)
-        end)
-      end
+						TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 
-      if
-        data.current.value == 'cadet_wear' or
-        data.current.value == 'police_wear' or
-        data.current.value == 'sergeant_wear' or
-        data.current.value == 'lieutenant_wear' or
-        data.current.value == 'commandant_wear' or
-        data.current.value == 'bullet_wear' or
-        data.current.value == 'gilet_wear'
-      then
-        setUniform(data.current.value, playerPed)
-      end
+						TriggerServerEvent('esx_service:disableService', 'police')
+						ESX.ShowNotification(_U('service_out'))
+						playerInService = false
+					end
+				end, 'police')
+			end
 
-      if
-        data.current.value == 'sheriff_wear_freemode' or
-        data.current.value == 'lieutenant_wear_freemode' or
-        data.current.value == 'commandant_wear_freemode'
-      then
-        local model = nil
-        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-          if skin.sex == 0 then
-            model = GetHashKey(data.current.maleModel)
-          else
-            model = GetHashKey(data.current.femaleModel)
-          end
-        end)
-      
-        RequestModel(model)
-        while not HasModelLoaded(model) do
-          RequestModel(model)
-          Citizen.Wait(1)
-        end
-      
-        SetPlayerModel(PlayerId(), model)
-        SetModelAsNoLongerNeeded(model)
-      end
+			menu.close()
+		end
 
-      CurrentAction     = 'menu_cloakroom'
-      CurrentActionMsg  = _U('open_cloackroom')
-      CurrentActionData = {}
+		if Config.MaxInService ~= -1 and data.current.value ~= 'citizen_wear' then
+			local serviceOk = 'waiting'
 
-    end,
-    function(data, menu)
-      menu.close()
-      CurrentAction     = 'menu_cloakroom'
-      CurrentActionMsg  = _U('open_cloackroom')
-      CurrentActionData = {}
-    end
-  )
+			ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
+				if not isInService then
+
+					ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
+						if not canTakeService then
+							ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
+						else
+
+							local notification = {
+								title    = _U('service_anonunce'),
+								subject  = '',
+								msg      = _U('service_in_announce', GetPlayerName(PlayerId())),
+								iconType = 1
+							}
+	
+							TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
+							ESX.ShowNotification(_U('service_in'))
+							serviceOk = true
+							playerInService = true
+						end
+					end, 'police')
+
+				else
+					serviceOk = true
+				end
+			end, 'police')
+
+			while type(serviceOk) == 'string' do
+				Citizen.Wait(5)
+			end
+
+			-- if we couldn't enter service don't let the player get changed
+			if not serviceOk then
+				return
+			end
+		end
+
+		if
+			data.current.value == 'recruit_wear' or
+			data.current.value == 'officer_wear' or
+			data.current.value == 'sergeant_wear' or
+			data.current.value == 'intendent_wear' or
+			data.current.value == 'lieutenant_wear' or
+			data.current.value == 'chef_wear' or
+			data.current.value == 'boss_wear' or
+			data.current.value == 'bullet_wear' or
+			data.current.value == 'gilet_wear'
+		then
+			setUniform(data.current.value, playerPed)
+		end
+
+		if data.current.value == 'freemode_ped' then
+			local model = nil
+
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+				if skin.sex == 0 then
+					model = GetHashKey(data.current.maleModel)
+				else
+					model = GetHashKey(data.current.femaleModel)
+				end
+			end)
+		
+			ESX.Streaming.RequestModel(model)
+			SetPlayerModel(PlayerId(), model)
+			SetModelAsNoLongerNeeded(model)
+		end
+
+		CurrentAction     = 'menu_cloakroom'
+		CurrentActionMsg  = _U('open_cloackroom')
+		CurrentActionData = {}
+
+	end, function(data, menu)
+		menu.close()
+
+		CurrentAction     = 'menu_cloakroom'
+		CurrentActionMsg  = _U('open_cloackroom')
+		CurrentActionData = {}
+	end)
 end
 
 function OpenArmoryMenu(station)
@@ -287,140 +345,110 @@ end
 
 function OpenVehicleSpawnerMenu(station, partNum)
 
-  local vehicles = Config.PoliceStations[station].Vehicles
+	local vehicles = Config.PoliceStations[station].Vehicles
+	ESX.UI.Menu.CloseAll()
 
-  ESX.UI.Menu.CloseAll()
+	if Config.EnableSocietyOwnedVehicles then
 
-  if Config.EnableSocietyOwnedVehicles then
+		local elements = {}
 
-    local elements = {}
+		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(garageVehicles)
 
-    ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(garageVehicles)
+			for i=1, #garageVehicles, 1 do
+				table.insert(elements, {label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']', value = garageVehicles[i]})
+			end
 
-      for i=1, #garageVehicles, 1 do
-        table.insert(elements, {label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']', value = garageVehicles[i]})
-      end
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
+			{
+				title    = _U('vehicle_menu'),
+				align    = 'top-left',
+				elements = elements
+			}, function(data, menu)
+				menu.close()
 
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'vehicle_spawner',
-        {
-          title    = _U('vehicle_menu'),
-          align    = 'top-left',
-          elements = elements,
-        },
-        function(data, menu)
+				local vehicleProps = data.current.value
 
-          menu.close()
+				ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
+					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+					local playerPed = PlayerPedId()
+					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				end)
 
-          local vehicleProps = data.current.value
+				TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
+			end, function(data, menu)
+				menu.close()
 
-          ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, 270.0, function(vehicle)
-            ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-            local playerPed = PlayerPedId()
-            TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
-          end)
+				CurrentAction     = 'menu_vehicle_spawner'
+				CurrentActionMsg  = _U('vehicle_spawner')
+				CurrentActionData = {station = station, partNum = partNum}
+			end)
 
-          TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
+		end, 'police')
 
-        end,
-        function(data, menu)
+	else
 
-          menu.close()
+		local elements = {}
 
-          CurrentAction     = 'menu_vehicle_spawner'
-          CurrentActionMsg  = _U('vehicle_spawner')
-          CurrentActionData = {station = station, partNum = partNum}
+		local sharedVehicles = Config.AuthorizedVehicles.Shared
+		for i=1, #sharedVehicles, 1 do
+			table.insert(elements, { label = sharedVehicles[i].label, model = sharedVehicles[i].model})
+		end
 
-        end
-      )
+		local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
+		for i=1, #authorizedVehicles, 1 do
+			table.insert(elements, { label = authorizedVehicles[i].label, model = authorizedVehicles[i].model})
+		end
 
-    end, 'police')
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
+		{
+			title    = _U('vehicle_menu'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+			menu.close()
 
-  else
+			local model   = data.current.model
+			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x, vehicles[partNum].SpawnPoint.y, vehicles[partNum].SpawnPoint.z, 3.0, 0, 71)
 
-	local elements = {}
+			if not DoesEntityExist(vehicle) then
 
-	local sharedVehicles = Config.AuthorizedVehicles.Shared
-	for i=1, #sharedVehicles, 1 do
-		table.insert(elements, { label = sharedVehicles[i].label, model = sharedVehicles[i].model})
+				local playerPed = PlayerPedId()
+
+				if Config.MaxInService == -1 then
+
+					ESX.Game.SpawnVehicle(model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
+						TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+						SetVehicleMaxMods(vehicle)
+					end)
+				else
+
+					ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
+						if isInService then
+
+							ESX.Game.SpawnVehicle(model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
+								TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+								SetVehicleMaxMods(vehicle)
+							end)
+						else
+							ESX.ShowNotification(_U('service_not'))
+						end
+					end, 'police')
+				end
+
+			else
+				ESX.ShowNotification(_U('vehicle_out'))
+			end
+
+		end, function(data, menu)
+			menu.close()
+
+			CurrentAction     = 'menu_vehicle_spawner'
+			CurrentActionMsg  = _U('vehicle_spawner')
+			CurrentActionData = {station = station, partNum = partNum}
+
+		end)
+
 	end
-
-	local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
-	for i=1, #authorizedVehicles, 1 do
-		table.insert(elements, { label = authorizedVehicles[i].label, model = authorizedVehicles[i].model})
-	end
-
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'vehicle_spawner',
-      {
-        title    = _U('vehicle_menu'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
-
-        menu.close()
-
-        local model = data.current.model
-
-        local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
-
-        if not DoesEntityExist(vehicle) then
-
-          local playerPed = PlayerPedId()
-
-          if Config.MaxInService == -1 then
-
-            ESX.Game.SpawnVehicle(model, {
-              x = vehicles[partNum].SpawnPoint.x,
-              y = vehicles[partNum].SpawnPoint.y,
-              z = vehicles[partNum].SpawnPoint.z
-            }, vehicles[partNum].Heading, function(vehicle)
-              TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-              SetVehicleMaxMods(vehicle)
-            end)
-
-          else
-
-            ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
-
-              if canTakeService then
-
-                ESX.Game.SpawnVehicle(model, {
-                  x = vehicles[partNum].SpawnPoint.x,
-                  y = vehicles[partNum].SpawnPoint.y,
-                  z = vehicles[partNum].SpawnPoint.z
-                }, vehicles[partNum].Heading, function(vehicle)
-                  TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
-                  SetVehicleMaxMods(vehicle)
-                end)
-
-              else
-                ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
-              end
-
-            end, 'police')
-
-          end
-
-        else
-          ESX.ShowNotification(_U('vehicle_out'))
-        end
-
-      end,
-      function(data, menu)
-
-        menu.close()
-
-        CurrentAction     = 'menu_vehicle_spawner'
-        CurrentActionMsg  = _U('vehicle_spawner')
-        CurrentActionData = {station = station, partNum = partNum}
-
-      end
-    )
-
-  end
-
 end
 
 function OpenPoliceActionsMenu()
@@ -1241,16 +1269,26 @@ end)
 
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
+	local specialContact = {
+		name       = _U('phone_police'),
+		number     = 'police',
+		base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDFGQTJDRkI0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDFGQTJDRkM0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0MUZBMkNGOTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MUZBMkNGQTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoW66EYAAAjGSURBVHjapJcLcFTV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'
+	}
 
-  local specialContact = {
-    name       = _U('phone_police'),
-    number     = 'police',
-    base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDFGQTJDRkI0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDFGQTJDRkM0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0MUZBMkNGOTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MUZBMkNGQTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoW66EYAAAjGSURBVHjapJcLcFTVGcd/u3cfSXaTLEk2j80TCI8ECI9ABCyoiBqhBVQqVG2ppVKBQqUVgUl5OU7HKqNOHUHU0oHamZZWoGkVS6cWAR2JPJuAQBPy2ISEvLN57+v2u2E33e4k6Ngz85+9d++95/zP9/h/39GpqsqiRYsIGz8QZAq28/8PRfC+4HT4fMXFxeiH+GC54NeCbYLLATLpYe/ECx4VnBTsF0wWhM6lXY8VbBE0Ch4IzLcpfDFD2P1TgrdC7nMCZLRxQ9AkiAkQCn77DcH3BC2COoFRkCSIG2JzLwqiQi0RSmCD4JXbmNKh0+kc/X19tLtc9Ll9sk9ZS1yoU71YIk3xsbEx8QaDEc2ttxmaJSKC1ggSKBK8MKwTFQVXRzs3WzpJGjmZgvxcMpMtWIwqsjztvSrlzjYul56jp+46qSmJmMwR+P3+4aZ8TtCprRkk0DvUW7JjmV6lsqoKW/pU1q9YQOE4Nxkx4ladE7zd8ivuVmJQfXZKW5dx5EwPRw4fxNx2g5SUVLw+33AkzoRaQDP9SkFu6OKqz0uF8yaz7vsOL6ycQVLkcSg/BlWNsjuFoKE1knqDSl5aNnmPLmThrE0UvXqQqvJPyMrMGorEHwQfEha57/3P7mXS684GFjy8kreLppPUuBXfyd/ibeoS2kb0mWPANhJdYjb61AxUvx5PdT3+4y+Tb3mTd19ZSebE+VTXVGNQlHAC7w4VhH8TbA36vKq6ilnzlvPSunHw6Trc7XpZ14AyfgYeyz18crGN1Alz6e3qwNNQSv4dZox1h/BW9+O7eIaEsVv41Y4XeHJDG83Nl4mLTwzGhJYtx0PzNTjOB9KMTlc7Nkcem39YAGU7cbeBKVLMPGMVf296nMd2VbBq1wmizHoqqm/wrS1/Zf0+N19YN2PIu1fcIda4Vk66Zx/rVi+jo9eIX9wZGGcFXUMR6BHUa76/2ezioYcXMtpyAl91DSaTfDxlJbtLprHm2ecpObqPuTPzSNV9yKz4a4zJSuLo71/j8Q17ON69EmXiPIlNMe6FoyzOqWPW/MU03Lw5EFcyKghTrNDh7+/vw545mcJcWbTiGKpRdGPMXbx90sGmDaux6sXk+kimjU+BjnMkx3kYP34cXrFuZ+3nrHi6iDMt92JITcPjk3R3naRwZhpuNSqoD93DKaFVU7j2dhcF8+YzNlpErbIBTVh8toVccbaysPB+4pMcuPw25kwSsau7BIlmHpy3guaOPtISYyi/UkaJM5Lpc5agq5Xkcl6gIHkmqaMn0dtylcjIyPThCNyhaXyfR2W0I1our0v6qBii07ih5rDtGSOxNVdk1y4R2SR8jR/g7hQD9l1jUeY/WLJB5m39AlZN4GZyIQ1fFJNsEgt0duBIc5GRkcZF53mNwIzhXPDgQPoZIkiMkbTxtstDMVnmFA4cOsbz2/aKjSQjev4Mp9ZAg+hIpFhB3EH5Yal16+X+Kq3dGfxkzRY+KauBjBzREvGN0kNCTARu94AejBLMHorAQ7cEQMGs2cXvkWshYLDi6e9l728O8P1XW6hKeB2yv42q18tjj+iFTGoSi+X9jJM9RTxS9E+OHT0krhNiZqlbqraoT7RAU5bBGrEknEBhgJks7KXbLS8qERI0ErVqF/Y4K6NHZfLZB+/wzJvncacvFd91oXO3o/O40MfZKJOKu/rne+mRQByXM4lYreb1tUnkizVVA/0SpfpbWaCNBeEE5gb/UH19NLqEgDF+oNDQWcn41Cj0EXFEWqzkOIyYekslFkThsvMxpIyE2hIc6lXGZ6cPyK7Nnk5OipixRdxgUESAYmhq68VsGgy5CYKCUAJTg0+izApXne3CJFmUTwg4L3FProFxU+6krqmXu3MskkhSD2av41jLdzlnfFrSdCZxyqfMnppN6ZUa7pwt0h3fiK9DCt4IO9e7YqisvI7VYgmNv7mhBKKD/9psNi5dOMv5ZjukjsLdr0ffWsyTi6eSlfcA+dmiVyOXs+/sHNZu3M6PdxzgVO9GmDSHsSNqmTz/R6y6Xxqma4fwaS5Mn85n1ZE0Vl3CHBER3lUNEhiURpPJRFdTOcVnpUJnPIhR7cZXfoH5UYc5+E4RzRH3sfSnl9m2dSMjE+Tz9msse+o5dr7UwcQ5T3HwlWUkNuzG3dKFSTbsNs7m/Y8vExOlC29UWkMJlAxKoRQMR3IC7x85zOn6fHS50+U/2Untx2R1voinu5no+DQmz7yPXmMKZnsu0wrm0Oe3YhOVHdm8A09dBQYhTv4T7C+xUPrZh8Qn2MMr4qcDSRfoirWgKAvtgOpv1JI8Zi77X15G7L+fxeOUOiUFxZiULD5fSlNzNM62W+k1yq5gjajGX/ZHvOIyxd+Fkj+P092rWP/si0Qr7VisMaEWuCiYonXFwbAUTWWPYLV245NITnGkUXnpI9butLJn2y6iba+hlp7C09qBcvoN7FYL9mhxo1/y/LoEXK8Pv6qIC8WbBY/xr9YlPLf9dZT+OqKTUwfmDBm/GOw7ws4FWpuUP2gJEZvKqmocuXPZuWYJMzKuSsH+SNwh3bo0p6hao6HeEqwYEZ2M6aKWd3PwTCy7du/D0F1DsmzE6/WGLr5LsDF4LggnYBacCOboQLHQ3FFfR58SR+HCR1iQH8ukhA5s5o5AYZMwUqOp74nl8xvRHDlRTsnxYpJsUjtsceHt2C8Fm0MPJrphTkZvBc4It9RKLOFx91Pf0Igu0k7W2MmkOewS2QYJUJVWVz9VNbXUVVwkyuAmKTFJayrDo/4Jwe/CT0aGYTrWVYEeUfsgXssMRcpyenraQJa0VX9O3ZU+Ma1fax4xGxUsUVFkOUbcama1hf+7+LmA9juHWshwmwOE1iMmCFYEzg1jtIm1BaxW6wCGGoFdewPfvyE4ertTiv4rHC73B855dwp2a23bbd4tC1hvhOCbX7b4VyUQKhxrtSOaYKngasizvwi0RmOS4O1QZf2yYfiaR+73AvhTQEVf+rpn9/8IMAChKDrDzfsdIQAAAABJRU5ErkJggg=='
-  }
-
-  TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
-
+	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
 end)
+
+-- don't show dispatches if the player isn't in service
+AddEventHandler('esx_phone:cancelMessage', function(dispatchNumber)
+
+	if type(PlayerData.job.name) == 'string' and PlayerData.job.name == 'police' and PlayerData.job.name == dispatchNumber then
+		-- if esx_service is enabled
+		if Config.MaxInService ~= -1 and not playerInService then
+			CancelEvent()
+		end
+	end
+end)
+
 
 AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNum)
 
@@ -1278,11 +1316,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
     if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0) then
 
-      ESX.Game.SpawnVehicle('polmav', {
-        x = helicopters[partNum].SpawnPoint.x,
-        y = helicopters[partNum].SpawnPoint.y,
-        z = helicopters[partNum].SpawnPoint.z
-      }, helicopters[partNum].Heading, function(vehicle)
+      ESX.Game.SpawnVehicle('polmav', helicopters[partNum].SpawnPoint, helicopters[partNum].Heading, function(vehicle)
         SetVehicleModKit(vehicle, 0)
         SetVehicleLivery(vehicle, 0)
       end)
@@ -1831,23 +1865,19 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
 				elseif CurrentAction == 'menu_armory' then
-					OpenArmoryMenu(CurrentActionData.station)
+					if Config.MaxInService == -1 then
+						OpenArmoryMenu(CurrentActionData.station)
+					elseif playerInService then
+						OpenArmoryMenu(CurrentActionData.station)
+					else
+						ESX.ShowNotification(_U('service_not'))
+					end
 				elseif CurrentAction == 'menu_vehicle_spawner' then
 					OpenVehicleSpawnerMenu(CurrentActionData.station, CurrentActionData.partNum)
 				elseif CurrentAction == 'delete_vehicle' then
 					if Config.EnableSocietyOwnedVehicles then
 						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'police', vehicleProps)
-					else
-						if GetEntityModel(vehicle) == GetHashKey('police') or
-							GetEntityModel(vehicle) == GetHashKey('police2') or
-							GetEntityModel(vehicle) == GetHashKey('police3') or
-							GetEntityModel(vehicle) == GetHashKey('police4') or
-							GetEntityModel(vehicle) == GetHashKey('policeb') or
-							GetEntityModel(vehicle) == GetHashKey('policet')
-						then
-							TriggerServerEvent('esx_service:disableService', 'police')
-						end
 					end
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 				elseif CurrentAction == 'menu_boss_actions' then
@@ -1867,7 +1897,13 @@ Citizen.CreateThread(function()
 		end -- CurrentAction end
 		
 		if IsControlJustReleased(0, Keys['F6']) and not isDead and PlayerData.job ~= nil and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
-			OpenPoliceActionsMenu()
+			if Config.MaxInService == -1 then
+				OpenPoliceActionsMenu()
+			elseif playerInService then
+				OpenPoliceActionsMenu()
+			else
+				ESX.ShowNotification(_U('service_not'))
+			end
 		end
 		
 		if IsControlJustReleased(0, Keys['E']) and CurrentTask.Busy then
@@ -1943,6 +1979,8 @@ end)
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
 		TriggerEvent('esx_policejob:unrestrain')
+		TriggerEvent('esx_phone:removeSpecialContact', 'police')
+		TriggerServerEvent('esx_service:disableService', 'police')
 
 		if Config.EnableHandcuffTimer and HandcuffTimer.Active then
 			ESX.ClearTimeout(HandcuffTimer.Task)
