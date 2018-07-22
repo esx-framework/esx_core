@@ -1952,7 +1952,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 		return
 	end
 
-	if not Config.EnableJobBlip the
+	if not Config.EnableJobBlip then
 		return
 	end
 	
