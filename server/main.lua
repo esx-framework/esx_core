@@ -7,200 +7,173 @@ TriggerEvent('esx:getSharedObject', function(obj)
 end)
 
 function GenerateUniquePhoneNumber()
+	local foundNumber = false
+	local phoneNumber = nil
 
-  local foundNumber = false
-  local phoneNumber = nil
+	while not foundNumber do
+		Citizen.Wait(20)
+		phoneNumber = math.random(10000, 99999)
 
-  while not foundNumber do
+		local result = MySQL.Sync.fetchAll('SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber',
+		{
+			['@phoneNumber'] = phoneNumber
+		})
 
-    phoneNumber = math.random(10000, 99999)
+		local count = tonumber(result[1].count)
 
-    local result = MySQL.Sync.fetchAll(
-      'SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber',
-      {
-        ['@phoneNumber'] = phoneNumber
-      }
-    )
+		-- if the result is empty, aka the phone number is available
+		if count == 0 then
+		foundNumber = true
+		end
 
-    local count  = tonumber(result[1].count)
+	end
 
-    if count == 0 then
-      foundNumber = true
-    end
-
-  end
-
-  return phoneNumber
+	return phoneNumber
 end
 
 function GetDistpatchRequestId()
+	local requestId = DisptachRequestId
 
-  local requestId = DisptachRequestId
+	if DisptachRequestId < 65535 then
+		DisptachRequestId = DisptachRequestId + 1
+	else
+		DisptachRequestId = 0
+	end
 
-  if DisptachRequestId < 65535 then
-    DisptachRequestId = DisptachRequestId + 1
-  else
-    DisptachRequestId = 0
-  end
-
-  return requestId
-
+	return requestId
 end
 
 AddEventHandler('esx_phone:getDistpatchRequestId', function(cb)
-  cb(GetDistpatchRequestId())
+	cb(GetDistpatchRequestId())
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	for num,v in pairs(PhoneNumbers) do
+		if tonumber(num) == num then -- If phonenumber is a player phone number
+			for src,_ in pairs(v.sources) do
+				TriggerClientEvent('esx_phone:setPhoneNumberSource', source, num, tonumber(src))
+			end
+		end
+	end
 
-  for num,v in pairs(PhoneNumbers) do
-    if tonumber(num) == num then -- If phonenumber is a player phone number
-      for src,_ in pairs(v.sources) do
-        TriggerClientEvent('esx_phone:setPhoneNumberSource', source, num, tonumber(src))
-      end
-    end
-  end
+	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
+	{
+		['@identifier'] = xPlayer.identifier
+	}, function(result)
+		local phoneNumber = result[1].phone_number
 
-  MySQL.Async.fetchAll(
-    'SELECT * FROM users WHERE identifier = @identifier',
-    {
-      ['@identifier'] = xPlayer.identifier
-    },
-    function(result)
+		if phoneNumber == nil then
+			phoneNumber = GenerateUniquePhoneNumber()
 
-      local phoneNumber = result[1].phone_number
+			MySQL.Async.execute('UPDATE users SET phone_number = @phone_number WHERE identifier = @identifier',
+			{
+				['@identifier']   = xPlayer.identifier,
+				['@phone_number'] = phoneNumber
+			})
+		end
 
-      if phoneNumber == nil then
+		TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, phoneNumber, source)
 
-        phoneNumber = GenerateUniquePhoneNumber()
+		PhoneNumbers[phoneNumber] = {
+			type          = 'player',
+			hashDispatch  = false,
+			sharePos      = false,
+			hideNumber    = false,
+			hidePosIfAnon = false,
+			sources       = {[source] = true}
+		}
 
-        MySQL.Async.execute(
-          'UPDATE users SET phone_number = @phone_number WHERE identifier = @identifier',
-          {
-            ['@identifier']   = xPlayer.identifier,
-            ['@phone_number'] = phoneNumber
-          }
-        )
-      end
+		xPlayer.set('phoneNumber', phoneNumber)
 
-      TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, phoneNumber, source)
+		if PhoneNumbers[xPlayer.job.name] ~= nil then
+			TriggerEvent('esx_phone:addSource', xPlayer.job.name, source)
+		end
 
-      PhoneNumbers[phoneNumber] = {
-        type          = 'player',
-        hashDispatch  = false,
-        sharePos      = false,
-        hideNumber    = false,
-        hidePosIfAnon = false,
-        sources       = {[source] = true}
-      }
+		local contacts = {}
 
-      xPlayer.set('phoneNumber', phoneNumber)
+		MySQL.Async.fetchAll('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC',
+		{
+			['@identifier'] = xPlayer.identifier
+		}, function(result2)
 
-      if PhoneNumbers[xPlayer.job.name] ~= nil then
-        TriggerEvent('esx_phone:addSource', xPlayer.job.name, source)
-      end
+			for i=1, #result2, 1 do
 
-      local contacts = {}
+				table.insert(contacts, {
+					name   = result2[i].name,
+					number = result2[i].number,
+				})
+			end
 
-      MySQL.Async.fetchAll(
-        'SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC',
-        {
-          ['@identifier'] = xPlayer.identifier
-        },
-        function(result2)
-
-          for i=1, #result2, 1 do
-
-            table.insert(contacts, {
-              name   = result2[i].name,
-              number = result2[i].number,
-            })
-          end
-
-          xPlayer.set('contacts', contacts)
-
-          TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
-
-        end
-      )
-
-    end
-  )
+			xPlayer.set('contacts', contacts)
+			TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
+		end)
+	end)
 
 end)
 
 AddEventHandler('esx:playerDropped', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, xPlayer.get('phoneNumber'), -1)
+	PhoneNumbers[xPlayer.get('phoneNumber')] = nil
 
-  TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, xPlayer.get('phoneNumber'), -1)
-
-  PhoneNumbers[xPlayer.get('phoneNumber')] = nil
-
-  if PhoneNumbers[xPlayer.job.name] ~= nil then
-    TriggerEvent('esx_phone:removeSource', xPlayer.job.name, source)
-  end
-
+	if PhoneNumbers[xPlayer.job.name] ~= nil then
+		TriggerEvent('esx_phone:removeSource', xPlayer.job.name, source)
+	end
 end)
 
 AddEventHandler('esx:setJob', function(source, job, lastJob)
+	if PhoneNumbers[lastJob.name] ~= nil then
+		TriggerEvent('esx_phone:removeSource', lastJob.name, source)
+	end
 
-  if PhoneNumbers[lastJob.name] ~= nil then
-    TriggerEvent('esx_phone:removeSource', lastJob.name, source)
-  end
-
-  if PhoneNumbers[job.name] ~= nil then
-    TriggerEvent('esx_phone:addSource', job.name, source)
-  end
-
+	if PhoneNumbers[job.name] ~= nil then
+		TriggerEvent('esx_phone:addSource', job.name, source)
+	end
 end)
 
 RegisterServerEvent('esx_phone:reload')
 AddEventHandler('esx_phone:reload', function(phoneNumber)
+	local _source  = source
+	local xPlayer  = ESX.GetPlayerFromId(_source)
+	local contacts = xPlayer.get('contacts')
 
-  local _source  = source
-  local xPlayer  = ESX.GetPlayerFromId(_source)
-  local contacts = xPlayer.get('contacts')
-
-  TriggerClientEvent('esx_phone:loaded', _source, phoneNumber, contacts)
-
+	TriggerClientEvent('esx_phone:loaded', _source, phoneNumber, contacts)
 end)
 
 RegisterServerEvent('esx_phone:send')
 AddEventHandler('esx_phone:send', function(phoneNumber, message, anon, position)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(_source)
+	print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
 
-  print('MESSAGE => ' .. xPlayer.name .. '@' .. phoneNumber .. ' : ' .. message)
+	if PhoneNumbers[phoneNumber] ~= nil then
 
-  if PhoneNumbers[phoneNumber] ~= nil then
+		for k,v in pairs(PhoneNumbers[phoneNumber].sources) do
 
-    for k,v in pairs(PhoneNumbers[phoneNumber].sources) do
+			local numType          = PhoneNumbers[phoneNumber].type
+			local numHasDispatch   = PhoneNumbers[phoneNumber].hasDispatch
+			local numHide          = PhoneNumbers[phoneNumber].hideNumber
+			local numHidePosIfAnon = PhoneNumbers[phoneNumber].hidePosIfAnon
+			local numPosition      = (PhoneNumbers[phoneNumber].sharePos and position or false)
+			local numSource        = tonumber(k)
 
-      local numType          = PhoneNumbers[phoneNumber].type
-      local numHasDispatch   = PhoneNumbers[phoneNumber].hasDispatch
-      local numHide          = PhoneNumbers[phoneNumber].hideNumber
-      local numHidePosIfAnon = PhoneNumbers[phoneNumber].hidePosIfAnon
-      local numPosition      = (PhoneNumbers[phoneNumber].sharePos and position or false)
-      local numSource        = tonumber(k)
+			if numHidePosIfAnon and anon then
+				numPosition = false
+			end
 
-      if numHidePosIfAnon and anon then
-        numPosition = false
-      end
+			if numHasDispatch then
+				TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, GetDistpatchRequestId(), phoneNumber)
+			else
+				TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, false)
+			end
 
-      if numHasDispatch then
-        TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, GetDistpatchRequestId())
-      else
-        TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, false)
-      end
+		end
 
-    end
-
-  end
-
+	end
 end)
 
 AddEventHandler('esx_phone:registerNumber', function(number, type, sharePos, hasDispatch, hideNumber, hidePosIfAnon)
@@ -215,6 +188,10 @@ AddEventHandler('esx_phone:registerNumber', function(number, type, sharePos, has
 		hidePosIfAnon = hidePosIfAnon,
 		sources       = {}
 	}
+end)
+
+AddEventHandler('esx_phone:removeNumber', function(number)
+	PhoneNumbers[number] = nil
 end)
 
 AddEventHandler('esx_phone:addSource', function(number, source)
@@ -282,57 +259,49 @@ end)
 
 RegisterServerEvent('esx_phone:removePlayerContact')
 AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactName)
-  local _source     = source
-  local xPlayer     = ESX.GetPlayerFromId(_source)
-  local foundNumber = false
+	local _source     = source
+	local xPlayer     = ESX.GetPlayerFromId(_source)
+	local foundNumber = false
 
-  MySQL.Async.fetchAll(
-    'SELECT phone_number FROM users WHERE phone_number = @number',
-    {
-      ['@number'] = phoneNumber
-    },
-    function(result)
+	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE phone_number = @number',
+	{
+		['@number'] = phoneNumber
+	}, function(result)
 
-      if result[1] ~= nil then
-        foundNumber = true
-      end
+		if result[1] ~= nil then
+			foundNumber = true
+		end
 
-      if foundNumber then
+		if foundNumber then
 
-        local contacts        = xPlayer.get('contacts')
+			local contacts = xPlayer.get('contacts')
 
-        for key, value in pairs(contacts) do
-          if value.name == contactName and value.number == phoneNumber then
-            table.remove(contacts,key)
-          end
-        end
+			for key, value in pairs(contacts) do
+				if value.name == contactName and value.number == phoneNumber then
+					table.remove(contacts, key)
+				end
+			end
 
-        xPlayer.set('contacts', contacts)
+			xPlayer.set('contacts', contacts)
 
-        MySQL.Async.execute(
-          'DELETE FROM user_contacts WHERE identifier=@identifier AND name=@name AND number=@number',
-          {
-            ['@identifier'] = xPlayer.identifier,
-            ['@name']       = contactName,
-            ['@number']     = phoneNumber
-          },
-          function(rowsChanged)
+			MySQL.Async.execute('DELETE FROM user_contacts WHERE identifier=@identifier AND name=@name AND number=@number',
+			{
+				['@identifier'] = xPlayer.identifier,
+				['@name']       = contactName,
+				['@number']     = phoneNumber
+			}, function(rowsChanged)
+				TriggerClientEvent('esx:showNotification', _source, _U('contact_removed'))
+				TriggerClientEvent('esx_phone:removeContact', _source, contactName, phoneNumber)
+			end)
+		else
+			TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
+		end
 
-            TriggerClientEvent('esx:showNotification', _source, _U('contact_removed'))
-
-            TriggerClientEvent('esx_phone:removeContact', _source, contactName, phoneNumber)
-          end
-        )
-      else
-        TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
-      end
-
-    end
-  )
+	end)
 
 end)
 
 RegisterServerEvent('esx_phone:stopDispatch')
 AddEventHandler('esx_phone:stopDispatch', function(dispatchRequestId)
-  TriggerClientEvent('esx_phone:stopDispatch', -1, dispatchRequestId, GetPlayerName(source))
+	TriggerClientEvent('esx_phone:stopDispatch', -1, dispatchRequestId, GetPlayerName(source))
 end)

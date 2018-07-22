@@ -9,6 +9,4 @@ CREATE TABLE `user_contacts` (
 	PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `users`
-	ADD COLUMN `phone_number` INT NULL
-;
+ALTER TABLE `users`ADD COLUMN `phone_number` INT NULL;

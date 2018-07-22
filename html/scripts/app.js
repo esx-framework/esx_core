@@ -50,12 +50,12 @@
 		$('#repertoire').removeClass('active');
 	}
 	
-	let showMessages = function(){	
+	let showMessages = function(){
 		$('#messages').addClass('active');
 		isMessagesOpen = true;
 	}
 
-	let hideMessages = function(){		
+	let hideMessages = function(){
 		$('#messages').removeClass('active');
 		isMessagesOpen = false;
 	}
@@ -80,7 +80,7 @@
 		$('.screen.active *').removeAttr('disabled');
 	}
 
-	let hideNewMessage = function() {		
+	let hideNewMessage = function() {
 		$('#writer').removeClass('active');
 		$('#writer_number').val('');
 		$('#writer_message').val('');
@@ -167,7 +167,7 @@
 		isPhoneShowed = true;
 	}
 
-	let hidePhone = function(){		
+	let hidePhone = function(){
 		$('#phone').hide();
 		isPhoneShowed = false;
 	}

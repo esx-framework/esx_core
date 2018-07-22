@@ -10,21 +10,18 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local GUI                        = {}
-local PhoneData                  = { phoneNumber = 0, contacts = {} }
-local RegisteredMessageCallbacks = {}
-local ContactJustAdded           = false
-local CurrentAction              = nil
-local CurrentActionMsg           = ''
-local CurrentActionData          = {}
-local CurrentDispatchRequestId   = -1
-local PhoneNumberSources         = {}
+local GUI                      = {}
+local PhoneData                = { phoneNumber = 0, contacts = {} }
+local CurrentAction            = nil
+local CurrentActionMsg         = ''
+local CurrentActionData        = {}
+local CurrentDispatchRequestId = -1
+local PhoneNumberSources       = {}
 
-ESX                              = nil
-GUI.Time                         = 0
-GUI.PhoneIsShowed                = false
-GUI.MessagesIsShowed             = false
-GUI.AddContactIsShowed           = false
+ESX                            = nil
+GUI.PhoneIsShowed              = false
+GUI.MessagesIsShowed           = false
+GUI.AddContactIsShowed         = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -36,7 +33,7 @@ Citizen.CreateThread(function()
 end)
 
 function OpenPhone()
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 
 	TriggerServerEvent('esx_phone:reload', PhoneData.phoneNumber)
 
@@ -51,13 +48,13 @@ function OpenPhone()
 		SetNuiFocus(true, true)
 	end)
 
-	if not IsPedInAnyVehicle(playerPed,  false) then
-		TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_STAND_MOBILE", 0, true);
+	if not IsPedInAnyVehicle(playerPed, false) then
+		TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_STAND_MOBILE', 0, true)
 	end
 end
 
 function ClosePhone()
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 
 	SendNUIMessage({
 		showPhone = false
@@ -102,7 +99,7 @@ RegisterNetEvent('esx_phone:removeContact')
 AddEventHandler('esx_phone:removeContact', function(name, phoneNumber)
 	for key, value in pairs(PhoneData.contacts) do
 		if value.name == name and value.number == phoneNumber then
-			table.remove(PhoneData.contacts,key)
+			table.remove(PhoneData.contacts, key)
 			break
 		end
 	end
@@ -152,7 +149,16 @@ RegisterNUICallback('remove_contact', function(data, cb)
 end)
 
 RegisterNetEvent('esx_phone:onMessage')
-AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId)
+AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId, dispatchNumber)
+
+	if dispatchNumber then
+		TriggerEvent('esx_phone:cancelMessage', dispatchNumber)
+
+		if WasEventCanceled() then
+			return
+		end
+	end
+
 	if job == 'player' then
 		ESX.ShowNotification(_U('new_message', message))
 	else
@@ -212,7 +218,7 @@ end)
 
 RegisterNUICallback('send', function(data)
 	local phoneNumber = data.number
-	local playerPed   = GetPlayerPed(-1)
+	local playerPed   = PlayerPedId()
 	local coords      = GetEntityCoords(playerPed)
 
 	if tonumber(phoneNumber) ~= nil then
@@ -262,12 +268,11 @@ Citizen.CreateThread(function()
 		else
 			-- open phone
 			-- todo: is player busy (handcuffed, etc)
-			if IsControlPressed(0, Keys['F1']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlJustReleased(0, Keys['F1']) and GetLastInputMethod(2) then
 				if not ESX.UI.Menu.IsOpen('phone', GetCurrentResourceName(), 'main') then
 					ESX.UI.Menu.CloseAll()
 					ESX.UI.Menu.Open('phone', GetCurrentResourceName(), 'main')
 				end
-				GUI.Time = GetGameTimer()
 			end
 		end
 	end
@@ -284,14 +289,13 @@ Citizen.CreateThread(function()
 			AddTextComponentString(CurrentActionMsg)
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-			if IsControlPressed(0, Keys['E']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 300 then
+			if IsControlJustReleased(0, Keys['E']) and GetLastInputMethod(2) then
 
 				if CurrentAction == 'dispatch' then
 					TriggerServerEvent('esx_phone:stopDispatch', CurrentDispatchRequestId)
 					SetNewWaypoint(CurrentActionData.position.x,  CurrentActionData.position.y)
 				end
 				CurrentAction = nil
-				GUI.Time      = GetGameTimer()
 			end
 
 		end
