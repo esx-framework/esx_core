@@ -118,7 +118,7 @@
 			}
 
 		} else {
-			contactHTML = '<div class="contact no-item online"><p class="no-item">No contacts</p></div>';
+			contactHTML = '<div class="contact no-item online"><p class="no-item">Brak Kontaktów</p></div>';
 		}
 		
 		$('#phone #repertoire .repertoire-list').html(contactHTML);
@@ -235,7 +235,7 @@
 				messageHTML = html + messageHTML;
 			}
 		} else {
-			messageHTML = '<div class="message no-item"><p class="no-item">No messages</p></div>';
+			messageHTML = '<div class="message no-item"><p class="no-item">Brak wiadomości</p></div>';
 		}
 		
 		$('#phone #messages .messages-list').html(messageHTML);
@@ -250,7 +250,7 @@
 		
 		$('.message .ok-btn').click(function() {
 			$.post('http://esx_phone/send', JSON.stringify({
-				message: $(this).attr('data-contact-job') + ": Received!",
+				message: $(this).attr('data-contact-job') + ": Otrzymane!",
 				number : $(this).attr('data-contact-number'),
 				anonyme: false
 			}))
@@ -312,8 +312,8 @@
 		$('.phone-icon').unbind('click');
 
 		$('#phone .menu .home').html(
-			'<li class="phone-icon" id="phone-icon-rep">Contacts</li>' +
-			'<li class="phone-icon" id="phone-icon-msg">Messages</li>'
+			'<li class="phone-icon" id="phone-icon-rep">Kontakty</li>' +
+			'<li class="phone-icon" id="phone-icon-msg">Wiadomości</li>'
 		);
 
 		for(let i=0; i<specialContacts.length; i++){
@@ -396,7 +396,7 @@
 	});
 	
 	$('#btn-head-new-message').click(function() {
-		showNewMessage('', 'New message');
+		showNewMessage('', 'Nowa wiadomosc');
 	});
 	
 	$('#btn-head-new-contact').click(function() {
