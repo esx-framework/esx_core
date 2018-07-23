@@ -147,6 +147,8 @@ function OpenCloakroomMenu()
 				ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
 					if isInService then
 
+						playerInService = false
+
 						local notification = {
 							title    = _U('service_anonunce'),
 							subject  = '',
@@ -159,7 +161,6 @@ function OpenCloakroomMenu()
 						TriggerServerEvent('esx_service:disableService', 'police')
 						TriggerEvent('esx_policejob:updateBlip')
 						ESX.ShowNotification(_U('service_out'))
-						playerInService = false
 					end
 				end, 'police')
 			end
@@ -178,6 +179,9 @@ function OpenCloakroomMenu()
 							ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
 						else
 
+							serviceOk = true
+							playerInService = true
+
 							local notification = {
 								title    = _U('service_anonunce'),
 								subject  = '',
@@ -188,8 +192,6 @@ function OpenCloakroomMenu()
 							TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 							TriggerEvent('esx_policejob:updateBlip')
 							ESX.ShowNotification(_U('service_in'))
-							serviceOk = true
-							playerInService = true
 						end
 					end, 'police')
 
