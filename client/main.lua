@@ -1992,7 +1992,10 @@ AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
 		TriggerEvent('esx_policejob:unrestrain')
 		TriggerEvent('esx_phone:removeSpecialContact', 'police')
-		TriggerServerEvent('esx_service:disableService', 'police')
+
+		if Config.MaxInService ~= -1 then
+			TriggerServerEvent('esx_service:disableService', 'police')
+		end
 
 		if Config.EnableHandcuffTimer and HandcuffTimer.Active then
 			ESX.ClearTimeout(HandcuffTimer.Task)
