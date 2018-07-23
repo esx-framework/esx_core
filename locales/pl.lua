@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['pl'] = {
 	['new_message'] = '~b~masz nową wiadomość:~s~ %s',
 	['press_take_call'] = '%s - wciśnij ~INPUT_CONTEXT~ aby odebrać telefon',
 	['taken_call'] = '~y~%s~s~ odebrał telefon',
