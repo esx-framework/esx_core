@@ -1,5 +1,5 @@
 Locales['pl'] = {
-	['new_message'] = '~b~masz nową wiadomość:~s~ %s',
+	['new_message'] = '~b~Masz nową wiadomość:~s~ %s',
 	['press_take_call'] = '%s - wciśnij ~INPUT_CONTEXT~ aby odebrać telefon',
 	['taken_call'] = '~y~%s~s~ odebrał telefon',
 	['gps_position'] = 'cel podróży został dodany do GPS\'a',
