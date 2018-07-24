@@ -36,12 +36,11 @@ end)
 
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
 AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(myCar)
-	MySQL.Async.execute(
-		'UPDATE `owned_vehicles` SET `vehicle` = @vehicle WHERE `vehicle` LIKE "%' .. myCar.plate .. '%"',
-		{
-			['@vehicle'] = json.encode(myCar)
-		}
-	)
+	MySQL.Async.execute('UPDATE `owned_vehicles` SET `vehicle` = @vehicle WHERE `plate` = @plate',
+	{
+		['@plate']   = myCar.plate,
+		['@vehicle'] = json.encode(myCar)
+	})
 end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
