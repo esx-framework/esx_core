@@ -1,11 +1,13 @@
 Locales['de'] = {
-
 	['by_default'] = 'default',
 	['installed'] = 'installiert',
 	['already_own'] = 'du besitzt bereits: ~b~',
 	['not_enough_money'] = 'du hast nicht genug Geld!',
 	['purchased'] = 'gekauft!',
 	['press_custom'] = 'Drücke ~INPUT_PICKUP~ um dein Fahrzeug zu modifizieren.',
+	['open_command'] = 'open LS Customs',
+	['level'] = 'level ',
+	['neon'] = 'neon',
 -- Paint Colors
 	-- Black
 	['black'] = 'black',

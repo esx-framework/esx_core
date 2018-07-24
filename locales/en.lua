@@ -5,6 +5,7 @@ Locales['en'] = {
 	['not_enough_money'] = 'you do not have enough money!',
 	['purchased'] = 'you have purchased the mod!',
 	['press_custom'] = 'press ~INPUT_PICKUP~ to personalize your vehicle.',
+	['open_command'] = 'open LS Customs',
 	['level'] = 'level ',
 	['neon'] = 'neon',
 -- Paint Colors

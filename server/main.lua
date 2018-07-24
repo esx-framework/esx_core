@@ -37,7 +37,7 @@ end)
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
 AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(myCar)
 	MySQL.Async.execute(
-		'UPDATE `owned_vehicles` SET `vehicle` = @vehicle WHERE `vehicle` LIKE "%' .. myCar['plate'] .. '%"',
+		'UPDATE `owned_vehicles` SET `vehicle` = @vehicle WHERE `vehicle` LIKE "%' .. myCar.plate .. '%"',
 		{
 			['@vehicle'] = json.encode(myCar)
 		}
