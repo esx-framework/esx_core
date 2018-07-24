@@ -175,7 +175,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 									ESX.Game.SpawnLocalVehicle(vehicles[j].vehicle.model, {
 										x = garage.Parkings[i].Pos.x,
 										y = garage.Parkings[i].Pos.y,
-										z = garage.Parkings[i].Pos.z + Config.ZDiff										
+										z = garage.Parkings[i].Pos.z + Config.ZDiff
 									}, garage.Parkings[i].Heading, function(vehicle)
 										ESX.Game.SetVehicleProperties(vehicle, vehicles[j].vehicle)
 									end)
