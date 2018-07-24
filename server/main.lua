@@ -31,7 +31,7 @@ function LoadVehicles()
 		for j=1, #Categories, 1 do
 			if Categories[j].name == vehicle.category then
 				vehicle.categoryLabel = Categories[j].label
-				break --todo confirm
+				break
 			end
 		end
 
@@ -369,6 +369,14 @@ ESX.RegisterServerCallback('esx_vehicleshop:getPlayerInventory', function (sourc
 	local items   = xPlayer.inventory
 
 	cb({ items = items })
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:isPlateTaken', function (source, cb, plate)
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE @plate = plate', {
+		['@plate'] = plate
+	}, function (result)
+		cb(result[1] ~= nil)
+	end)
 end)
 
 if Config.EnablePvCommand then
