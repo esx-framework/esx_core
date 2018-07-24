@@ -1,6 +1,7 @@
 ESX              = nil
 local Categories = {}
 local Vehicles   = {}
+local hasSqlRun  = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -14,7 +15,13 @@ function RemoveOwnedVehicle (plate)
 	})
 end
 
-AddEventHandler('onMySQLReady', function ()
+AddEventHandler('onMySQLReady', function()
+	LoadVehicles()
+end)
+
+function LoadVehicles()
+	hasSqlRun = true
+
 	Categories     = MySQL.Sync.fetchAll('SELECT * FROM vehicle_categories')
 	local vehicles = MySQL.Sync.fetchAll('SELECT * FROM vehicles')
 
@@ -29,6 +36,15 @@ AddEventHandler('onMySQLReady', function ()
 		end
 
 		table.insert(Vehicles, vehicle)
+	end
+end
+
+-- extremely useful when restarting script mid-game
+Citizen.CreateThread(function()
+	Citizen.Wait(100) -- hopefully enough for connection to the SQL server
+
+	if not hasSqlRun then
+		LoadVehicles()
 	end
 end)
 

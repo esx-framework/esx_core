@@ -13,7 +13,6 @@ local Keys = {
 local GUI                     = {}
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
-local PlayerData              = {}
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
@@ -27,18 +26,34 @@ ESX                           = nil
 GUI.Time                      = 0
 
 Citizen.CreateThread(function ()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
 
-  ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function (categories)
-    Categories = categories
-  end)
+	Citizen.Wait(300)
 
-  ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function (vehicles)
-    Vehicles = vehicles
-  end)
+	ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function (categories)
+		Categories = categories
+	end)
+
+	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function (vehicles)
+		Vehicles = vehicles
+	end)
+
+	if Config.EnablePlayerManagement then
+		if ESX.PlayerData.job.name == 'cardealer' then
+			Config.Zones.ShopEntering.Type = 1
+
+			if ESX.PlayerData.job.grade_name == 'boss' then
+				Config.Zones.BossActions.Type = 1
+			end
+
+		else
+			Config.Zones.ShopEntering.Type = -1
+			Config.Zones.BossActions.Type  = -1
+		end
+	end
 end)
 
 function DeleteShopInsideVehicles ()
@@ -84,7 +99,7 @@ function OpenShopMenu ()
         firstVehicleData = vehicle
       end
 
-      table.insert(options, vehicle.name .. ' $' .. vehicle.price)
+      table.insert(options, vehicle.name .. ' <span style="color: green;">$' .. vehicle.price .. '</span>')
     end
 
     table.insert(elements, {
@@ -172,11 +187,7 @@ function OpenShopMenu ()
 
                           DeleteShopInsideVehicles()
 
-                          ESX.Game.SpawnVehicle(vehicleData.model, {
-                            x = Config.Zones.ShopOutside.Pos.x,
-                            y = Config.Zones.ShopOutside.Pos.y,
-                            z = Config.Zones.ShopOutside.Pos.z
-                          }, Config.Zones.ShopOutside.Heading, function (vehicle)
+                          ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -209,11 +220,7 @@ function OpenShopMenu ()
 
                           DeleteShopInsideVehicles()
 
-                          ESX.Game.SpawnVehicle(vehicleData.model, {
-                            x = Config.Zones.ShopOutside.Pos.x,
-                            y = Config.Zones.ShopOutside.Pos.y,
-                            z = Config.Zones.ShopOutside.Pos.z
-                          }, Config.Zones.ShopOutside.Heading, function (vehicle)
+                          ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -248,11 +255,7 @@ function OpenShopMenu ()
 
                     DeleteShopInsideVehicles()
 
-                    ESX.Game.SpawnVehicle(vehicleData.model, {
-                      x = Config.Zones.ShopOutside.Pos.x,
-                      y = Config.Zones.ShopOutside.Pos.y,
-                      z = Config.Zones.ShopOutside.Pos.z
-                    }, Config.Zones.ShopOutside.Heading, function (vehicle)
+                    ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
 
                       TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -311,11 +314,7 @@ function OpenShopMenu ()
 
       DeleteShopInsideVehicles()
 
-      ESX.Game.SpawnLocalVehicle(vehicleData.model, {
-        x = Config.Zones.ShopInside.Pos.x,
-        y = Config.Zones.ShopInside.Pos.y,
-        z = Config.Zones.ShopInside.Pos.z
-      }, Config.Zones.ShopInside.Heading, function(vehicle)
+      ESX.Game.SpawnLocalVehicle(firstVehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
         table.insert(LastVehicles, vehicle)
         TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         FreezeEntityPosition(vehicle, true)
@@ -325,11 +324,7 @@ function OpenShopMenu ()
 
   DeleteShopInsideVehicles()
 
-  ESX.Game.SpawnLocalVehicle(firstVehicleData.model, {
-    x = Config.Zones.ShopInside.Pos.x,
-    y = Config.Zones.ShopInside.Pos.y,
-    z = Config.Zones.ShopInside.Pos.z
-  }, Config.Zones.ShopInside.Heading, function (vehicle)
+  ESX.Game.SpawnLocalVehicle(firstVehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
     table.insert(LastVehicles, vehicle)
     TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
     FreezeEntityPosition(vehicle, true)
@@ -526,7 +521,7 @@ function OpenPersonnalVehicleMenu ()
     end
 
     for i=1, #vehicles, 1 do
-      table.insert(elements, {label = vehicles[i].name .. ' [' .. vehicles[i].plate .. ']', value = vehicles[i]})
+      table.insert(elements, {label = vehicles[i].name .. ' [<span style="color: orange;">' .. vehicles[i].plate .. '</span>]', value = vehicles[i]})
     end
 
     ESX.UI.Menu.Open(
@@ -544,11 +539,11 @@ function OpenPersonnalVehicleMenu ()
 
         menu.close()
 
-        ESX.Game.SpawnVehicle(vehicleData.model, {
-          x = coords.x,
-          y = coords.y,
-          z = coords.z
-        }, heading, function (vehicle)
+		ESX.Game.SpawnVehicle(vehicleData.model, {
+			x = coords.x,
+			y = coords.y,
+			z = coords.z
+		  }, heading, function (vehicle)
           ESX.Game.SetVehicleProperties(vehicle, vehicleData)
           TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         end)
@@ -565,7 +560,7 @@ function OpenPopVehicleMenu ()
     local elements = {}
 
     for i=1, #vehicles, 1 do
-      table.insert(elements, {label = vehicles[i].name .. ' $' .. vehicles[i].price, value = vehicles[i].name})
+      table.insert(elements, {label = vehicles[i].name .. ' [MSRP <span style="color: green;">$' .. vehicles[i].price .. '</span>]', value = vehicles[i].name})
     end
 
     ESX.UI.Menu.Open(
@@ -580,11 +575,7 @@ function OpenPopVehicleMenu ()
 
         DeleteShopInsideVehicles()
 
-        ESX.Game.SpawnVehicle(model, {
-          x = Config.Zones.ShopInside.Pos.x,
-          y = Config.Zones.ShopInside.Pos.y,
-          z = Config.Zones.ShopInside.Pos.z
-        }, Config.Zones.ShopInside.Heading, function (vehicle)
+        ESX.Game.SpawnVehicle(model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
 
           table.insert(LastVehicles, vehicle)
 
@@ -667,7 +658,8 @@ function OpenGetStocksMenu ()
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = _U('dealership_stock'),
-        elements = elements,
+        align    = 'top-left',
+        elements = elements
       },
       function (data, menu)
         local itemName = data.current.value
@@ -683,11 +675,12 @@ function OpenGetStocksMenu ()
             if count == nil then
               ESX.ShowNotification(_U('quantity_invalid'))
             else
+              TriggerServerEvent('esx_vehicleshop:getStockItem', itemName, count)
               menu2.close()
               menu.close()
               OpenGetStocksMenu()
 
-              TriggerServerEvent('esx_vehicleshop:getStockItem', itemName, count)
+              
             end
           end,
           function (data2, menu2)
@@ -718,7 +711,8 @@ function OpenPutStocksMenu ()
       'default', GetCurrentResourceName(), 'stocks_menu',
       {
         title    = _U('inventory'),
-        elements = elements,
+        align    = 'top-left',
+        elements = elements
       },
       function (data, menu)
         local itemName = data.current.value
@@ -734,11 +728,10 @@ function OpenPutStocksMenu ()
             if count == nil then
               ESX.ShowNotification(_U('quantity_invalid'))
             else
+              TriggerServerEvent('esx_vehicleshop:putStockItems', itemName, count)
               menu2.close()
               menu.close()
               OpenPutStocksMenu()
-
-              TriggerServerEvent('esx_vehicleshop:putStockItems', itemName, count)
             end
 
           end,
@@ -754,42 +747,23 @@ function OpenPutStocksMenu ()
   end)
 end
 
-
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function (xPlayer)
-  PlayerData = xPlayer
-
-  if Config.EnablePlayerManagement then
-    if PlayerData.job.name == 'cardealer' then
-      Config.Zones.ShopEntering.Type = 1
-
-      if PlayerData.job.grade_name == 'boss' then
-        Config.Zones.BossActions.Type = 1
-      end
-    else
-      Config.Zones.ShopEntering.Type = -1
-      Config.Zones.BossActions.Type  = -1
-    end
-  end
-end)
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function (job)
-  PlayerData.job = job
+	ESX.PlayerData.job = job
 
-  if Config.EnablePlayerManagement then
-    if PlayerData.job.name == 'cardealer' then
-      Config.Zones.ShopEntering.Type = 1
+	if Config.EnablePlayerManagement then
+		if ESX.PlayerData.job.name == 'cardealer' then
+			Config.Zones.ShopEntering.Type = 1
 
-      if PlayerData.job.grade_name == 'boss' then
-        Config.Zones.BossActions.Type = 1
-      end
+			if ESX.PlayerData.job.grade_name == 'boss' then
+				Config.Zones.BossActions.Type = 1
+			end
 
-    else
-      Config.Zones.ShopEntering.Type = -1
-      Config.Zones.BossActions.Type  = -1
-    end
-  end
+		else
+			Config.Zones.ShopEntering.Type = -1
+			Config.Zones.BossActions.Type  = -1
+		end
+	end
 end)
 
 RegisterNetEvent('esx_vehicleshop:openPersonnalVehicleMenu')
@@ -800,7 +774,7 @@ end)
 AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
   if zone == 'ShopEntering' then
     if Config.EnablePlayerManagement then
-      if PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' then
+      if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'cardealer' then
         CurrentAction     = 'reseller_menu'
         CurrentActionMsg  = _U('shop_menu')
         CurrentActionData = {}
@@ -853,7 +827,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
     end
   end
 
-  if zone == 'BossActions' and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'cardealer' and PlayerData.job.grade_name == 'boss' then
+  if zone == 'BossActions' and Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'cardealer' and ESX.PlayerData.job.grade_name == 'boss' then
     CurrentAction     = 'boss_actions_menu'
     CurrentActionMsg  = _U('shop_menu')
     CurrentActionData = {}
