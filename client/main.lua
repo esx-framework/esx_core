@@ -117,7 +117,7 @@ function OpenShopMenu ()
     {
       title    = _U('car_dealer'),
       align    = 'top-left',
-      elements = elements,
+      elements = elements
     },
     function (data, menu)
       local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
@@ -314,7 +314,7 @@ function OpenShopMenu ()
 
       DeleteShopInsideVehicles()
 
-      ESX.Game.SpawnLocalVehicle(firstVehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
+      ESX.Game.SpawnLocalVehicle(vehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
         table.insert(LastVehicles, vehicle)
         TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         FreezeEntityPosition(vehicle, true)
@@ -375,7 +375,11 @@ function OpenResellerMenu ()
       end
 
       if data.current.value == 'create_bill' then
-
+        local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+        if closestPlayer == -1 or closestDistance > 3.0 then
+          ESX.ShowNotification(_U('no_players'))
+          return
+        end
         ESX.UI.Menu.Open(
           'dialog', GetCurrentResourceName(), 'set_vehicle_owner_sell_amount',
           {
@@ -393,7 +397,7 @@ function OpenResellerMenu ()
               local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
               if closestPlayer == -1 or closestDistance > 3.0 then
-                ESX.ShowNotification(_U('invoice_amount'))
+                ESX.ShowNotification(_U('no_players'))
               else
                 TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_cardealer', _U('car_dealer'), tonumber(data2.value))
               end
@@ -544,7 +548,7 @@ function OpenPersonnalVehicleMenu ()
 			y = coords.y,
 			z = coords.z
 		  }, heading, function (vehicle)
-          ESX.Game.SetVehicleProperties(vehicle, vehicleData)
+		  ESX.Game.SetVehicleProperties(vehicle, vehicleData)
           TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
         end)
       end,
@@ -568,7 +572,7 @@ function OpenPopVehicleMenu ()
       {
         title    = _U('vehicle_dealer'),
         align    = 'top-left',
-        elements = elements,
+        elements = elements
       },
       function (data, menu)
         local model = data.current.value
@@ -606,7 +610,7 @@ function OpenRentedVehiclesMenu ()
       {
         title    = _U('rent_vehicle'),
         align    = 'top-left',
-        elements = elements,
+        elements = elements
       },
       nil,
       function (data, menu)
@@ -925,9 +929,7 @@ Citizen.CreateThread(function ()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
-				if CurrentAction == 'shop_menu' then
-					OpenShopMenu()
-				elseif CurrentAction == 'reseller_menu' then
+				if CurrentAction == 'reseller_menu' then
 					OpenResellerMenu()
 				elseif CurrentAction == 'give_back_vehicle' then
 					ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function (isRentedVehicle)
