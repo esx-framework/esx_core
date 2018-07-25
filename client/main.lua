@@ -10,7 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local GUI                     = {}
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
 local CurrentAction           = nil
@@ -23,7 +22,6 @@ local LastVehicles            = {}
 local CurrentVehicleData      = nil
 
 ESX                           = nil
-GUI.Time                      = 0
 
 Citizen.CreateThread(function ()
 	while ESX == nil do
@@ -31,7 +29,7 @@ Citizen.CreateThread(function ()
 		Citizen.Wait(0)
 	end
 
-	Citizen.Wait(300)
+	Citizen.Wait(5000)
 
 	ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function (categories)
 		Categories = categories
@@ -54,6 +52,16 @@ Citizen.CreateThread(function ()
 			Config.Zones.BossActions.Type  = -1
 		end
 	end
+end)
+
+RegisterNetEvent('esx_vehicleshop:sendCategories')
+AddEventHandler('esx_vehicleshop:sendCategories', function (categories)
+	Categories = categories
+end)
+
+RegisterNetEvent('esx_vehicleshop:sendVehicles')
+AddEventHandler('esx_vehicleshop:sendVehicles', function (vehicles)
+	Vehicles = vehicles
 end)
 
 function DeleteShopInsideVehicles ()

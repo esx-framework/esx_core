@@ -37,11 +37,15 @@ function LoadVehicles()
 
 		table.insert(Vehicles, vehicle)
 	end
+
+	-- send information after db has loaded, making sure everyone gets vehicle information
+	TriggerClientEvent('esx_vehicleshop:sendCategories', -1, Categories)
+	TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, Vehicles)
 end
 
 -- extremely useful when restarting script mid-game
 Citizen.CreateThread(function()
-	Citizen.Wait(100) -- hopefully enough for connection to the SQL server
+	Citizen.Wait(10000) -- hopefully enough for connection to the SQL server
 
 	if not hasSqlRun then
 		LoadVehicles()

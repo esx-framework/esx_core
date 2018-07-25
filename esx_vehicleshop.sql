@@ -27,9 +27,9 @@ CREATE TABLE `cardealer_vehicles` (
 );
 
 CREATE TABLE `owned_vehicles` (
-	`owner` varchar(30) DEFAULT NULL,
-	`plate` varchar(12) DEFAULT NULL,
-	`vehicle` longtext DEFAULT NULL,
+	`owner` varchar(30) NOT NULL,
+	`plate` varchar(12) NOT NULL,
+	`vehicle` longtext,
 
 	PRIMARY KEY (`plate`)
 );
