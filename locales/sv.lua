@@ -48,6 +48,7 @@ Locales['sv'] = {
   ['license_revoked'] = 'Ditt ~b~%s~s~ har blivit ~y~återkallat~s~!',
   ['licence_you_revoked'] = 'du återkallade ett ~b~%s~s~ som tillhörde ~y~%s~s~',
   ['no_players_nearby'] = 'det finns ingen i närheten',
+  ['being_searched'] = 'du blir ~y~visiterad~s~ av ~b~Polisen~s~',
   -- Vehicle interaction
   ['vehicle_info'] = 'fordon',
   ['pick_lock'] = 'bryt upp fordon',

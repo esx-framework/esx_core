@@ -466,7 +466,7 @@ function OpenPoliceActionsMenu()
 		elements = {
 			{label = _U('citizen_interaction'),	value = 'citizen_interaction'},
 			{label = _U('vehicle_interaction'),	value = 'vehicle_interaction'},
-			{label = _U('object_spawner'),		value = 'object_spawner'},
+			{label = _U('object_spawner'),		value = 'object_spawner'}
 		}
 	}, function(data, menu)
 
@@ -500,6 +500,7 @@ function OpenPoliceActionsMenu()
 					if action == 'identity_card' then
 						OpenIdentityCardMenu(closestPlayer)
 					elseif action == 'body_search' then
+						TriggerServerEvent('esx_policejob:message', GetPlayerServerId(closestPlayer), _U('being_searched'))
 						OpenBodySearchMenu(closestPlayer)
 					elseif action == 'handcuff' then
 						TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(closestPlayer))
@@ -524,7 +525,7 @@ function OpenPoliceActionsMenu()
 				menu2.close()
 			end)
 		elseif data.current.value == 'vehicle_interaction' then
-			local elements = {}
+			local elements  = {}
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 			local vehicle   = ESX.Game.GetVehicleInDirection()
@@ -535,7 +536,7 @@ function OpenPoliceActionsMenu()
 				table.insert(elements, {label = _U('impound'),		value = 'impound'})
 			end
 			
-			--table.insert(elements, {label = _U('search_database'), value = 'search_database'})
+			table.insert(elements, {label = _U('search_database'), value = 'search_database'})
 
 			ESX.UI.Menu.Open(
 			'default', GetCurrentResourceName(), 'vehicle_interaction',
@@ -544,9 +545,9 @@ function OpenPoliceActionsMenu()
 				align    = 'top-left',
 				elements = elements
 			}, function(data2, menu2)
-				coords    = GetEntityCoords(playerPed)
-				vehicle   = ESX.Game.GetVehicleInDirection()
-				action    = data2.current.value
+				coords  = GetEntityCoords(playerPed)
+				vehicle = ESX.Game.GetVehicleInDirection()
+				action  = data2.current.value
 				
 				if action == 'search_database' then
 					LookupVehicle()
@@ -899,7 +900,7 @@ function LookupVehicle()
 		title = _U('search_database_title'),
 	}, function(data, menu)
 		local length = string.len(data.value)
-		if data.value == nil or length < 8 or length > 13 then
+		if data.value == nil or length < 2 or length > 13 then
 			ESX.ShowNotification(_U('search_database_error_invalid'))
 		else
 			ESX.TriggerServerCallback('esx_policejob:getVehicleFromPlate', function(owner, found)
@@ -983,32 +984,28 @@ end
 
 function OpenVehicleInfosMenu(vehicleData)
 
-  ESX.TriggerServerCallback('esx_policejob:getVehicleInfos', function(infos)
+	ESX.TriggerServerCallback('esx_policejob:getVehicleInfos', function(retrivedInfo)
 
-    local elements = {}
+		local elements = {}
 
-    table.insert(elements, {label = _U('plate', infos.plate), value = nil})
+		table.insert(elements, {label = _U('plate', retrivedInfo.plate), value = nil})
 
-    if infos.owner == nil then
-      table.insert(elements, {label = _U('owner_unknown'), value = nil})
-    else
-      table.insert(elements, {label = _U('owner', infos.owner), value = nil})
-    end
+		if retrivedInfo.owner == nil then
+			table.insert(elements, {label = _U('owner_unknown'), value = nil})
+		else
+			table.insert(elements, {label = _U('owner', retrivedInfo.owner), value = nil})
+		end
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'vehicle_infos',
-      {
-        title    = _U('vehicle_info'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      nil,
-      function(data, menu)
-        menu.close()
-      end
-    )
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_infos',
+		{
+			title    = _U('vehicle_info'),
+			align    = 'top-left',
+			elements = elements
+		}, nil, function(data, menu)
+			menu.close()
+		end)
 
-  end, vehicleData.plate)
+	end, vehicleData.plate)
 
 end
 
@@ -1029,7 +1026,7 @@ function OpenGetWeaponMenu()
       {
         title    = _U('get_weapon_menu'),
         align    = 'top-left',
-        elements = elements,
+        elements = elements
       },
       function(data, menu)
 
@@ -1060,7 +1057,6 @@ function OpenPutWeaponMenu()
     local weaponHash = GetHashKey(weaponList[i].name)
 
     if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-      --local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
       table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
     end
 
@@ -1071,7 +1067,7 @@ function OpenPutWeaponMenu()
     {
       title    = _U('put_weapon_menu'),
       align    = 'top-left',
-      elements = elements,
+      elements = elements
     },
     function(data, menu)
 

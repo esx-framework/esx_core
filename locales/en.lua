@@ -47,7 +47,8 @@ Locales['en'] = {
   ['license_revoke'] = 'revoke license',
   ['license_revoked'] = 'your ~b~%s~s~ has been ~y~revoked~s~!',
   ['licence_you_revoked'] = 'you revoked a ~b~%s~s~ which belonged to ~y~%s~s~',
-  ['no_players_nearby'] = 'no players nearby',
+  ['no_players_nearby'] = 'there is no player(s) nearby!',
+  ['being_searched'] = 'you are being ~y~searched~s~ by the ~b~Police~s~',
   -- Vehicle interaction
   ['vehicle_info'] = 'vehicle Info',
   ['pick_lock'] = 'lockpick Vehicle',

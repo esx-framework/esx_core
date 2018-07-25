@@ -48,6 +48,7 @@ Locales['fi'] = {
   ['license_revoked'] = 'sinun ~b~%s~s~ ~y~kumottiin~s~!',
   ['licence_you_revoked'] = 'sinä kumosit ~b~%s~s~ mikä kuului henkilölle ~y~%s~s~',
   ['no_players_nearby'] = 'ei pelaajia lähettyvillä',
+  ['being_searched'] = 'you are being ~y~searched~s~ by the ~b~Police~s~',
   -- Vehicle interaction
   ['vehicle_info'] = 'ajoneuvon tiedot',
   ['pick_lock'] = 'tiirikoi ovet',

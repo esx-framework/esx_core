@@ -31,7 +31,7 @@ Config.PoliceStations = {
 			Scale   = 1.2,
 			Colour  = 29,
 		},
-		-- https://wiki.fivem.net/wiki/Weapons
+		-- https://wiki.rage.mp/index.php?title=Weapons
 		AuthorizedWeapons = {
 			{ name = 'WEAPON_NIGHTSTICK',       price = 200 },
 			{ name = 'WEAPON_COMBATPISTOL',     price = 300 },
@@ -83,7 +83,7 @@ Config.PoliceStations = {
 
 }
 
--- https://wiki.fivem.net/wiki/Vehicles
+-- https://wiki.rage.mp/index.php?title=Vehicles
 Config.AuthorizedVehicles = {
 	Shared = {
 		{
@@ -118,6 +118,10 @@ Config.AuthorizedVehicles = {
 		}
 	},
 
+	intendent = {
+
+	},
+
 	lieutenant = {
 		{
 			model = 'riot',
@@ -127,6 +131,10 @@ Config.AuthorizedVehicles = {
 			model = 'fbi2',
 			label = 'FIB SUV'
 		}
+	},
+
+	chef = {
+
 	},
 
 	boss = {

@@ -226,114 +226,32 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)
 
-  if Config.EnableESXIdentity then
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE @plate = plate', {
+		['@plate'] = plate
+	}, function(result)
 
-    MySQL.Async.fetchAll(
-      'SELECT * FROM owned_vehicles',
-      {},
-      function(result)
+		local retrivedInfo = {
+			plate = plate
+		}
 
-        local foundIdentifier = nil
+		if result[1] then
 
-        for i=1, #result, 1 do
+			MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',  {
+				['@identifier'] = result[1].owner
+			}, function(result2)
 
-          local vehicleData = json.decode(result[i].vehicle)
+				if Config.EnableESXIdentity then
+					retrivedInfo.owner = result2[1].firstname .. ' ' .. result2[1].lastname
+				else
+					retrivedInfo.owner = result2[1].name
+				end
 
-          if vehicleData.plate == plate then
-            foundIdentifier = result[i].owner
-            break
-          end
-
-        end
-
-        if foundIdentifier ~= nil then
-
-          MySQL.Async.fetchAll(
-            'SELECT * FROM users WHERE identifier = @identifier',
-            {
-              ['@identifier'] = foundIdentifier
-            },
-            function(result)
-
-              local ownerName = result[1].firstname .. " " .. result[1].lastname
-
-              local infos = {
-                plate = plate,
-                owner = ownerName
-              }
-
-              cb(infos)
-
-            end
-          )
-
-        else
-
-          local infos = {
-          plate = plate
-          }
-
-          cb(infos)
-
-        end
-
-      end
-    )
-
-  else
-
-    MySQL.Async.fetchAll(
-      'SELECT * FROM owned_vehicles',
-      {},
-      function(result)
-
-        local foundIdentifier = nil
-
-        for i=1, #result, 1 do
-
-          local vehicleData = json.decode(result[i].vehicle)
-
-          if vehicleData.plate == plate then
-            foundIdentifier = result[i].owner
-            break
-          end
-
-        end
-
-        if foundIdentifier ~= nil then
-
-          MySQL.Async.fetchAll(
-            'SELECT * FROM users WHERE identifier = @identifier',
-            {
-              ['@identifier'] = foundIdentifier
-            },
-            function(result)
-
-              local infos = {
-                plate = plate,
-                owner = result[1].name
-              }
-
-              cb(infos)
-
-            end
-          )
-
-        else
-
-          local infos = {
-          plate = plate
-          }
-
-          cb(infos)
-
-        end
-
-      end
-    )
-
-  end
-
+				cb(retrivedInfo)
+			end)
+		else
+			cb(retrivedInfo)
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source, cb, plate)
@@ -344,10 +262,20 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source,
 		},
 		function(result)
 			if result[1] ~= nil then
-				local playerName = ESX.GetPlayerFromIdentifier(result[1].owner).name
-				cb(playerName, true)
+
+				MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',  {
+					['@identifier'] = result[1].owner
+				}, function(result2)
+	
+					if Config.EnableESXIdentity then
+						cb(result2[1].firstname .. ' ' .. result2[1].lastname, true)
+					else
+						cb(result2[1].name, true)
+					end
+
+				end)
 			else
-				cb('unknown', false)
+				cb(_U('unknown'), false)
 			end
 		end
 	)
