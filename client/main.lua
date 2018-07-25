@@ -29,7 +29,7 @@ Citizen.CreateThread(function ()
 		Citizen.Wait(0)
 	end
 
-	Citizen.Wait(5000)
+	Citizen.Wait(10000)
 
 	ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function (categories)
 		Categories = categories
@@ -38,6 +38,25 @@ Citizen.CreateThread(function ()
 	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function (vehicles)
 		Vehicles = vehicles
 	end)
+
+	if Config.EnablePlayerManagement then
+		if ESX.PlayerData.job.name == 'cardealer' then
+			Config.Zones.ShopEntering.Type = 1
+
+			if ESX.PlayerData.job.grade_name == 'boss' then
+				Config.Zones.BossActions.Type = 1
+			end
+
+		else
+			Config.Zones.ShopEntering.Type = -1
+			Config.Zones.BossActions.Type  = -1
+		end
+	end
+end)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
 
 	if Config.EnablePlayerManagement then
 		if ESX.PlayerData.job.name == 'cardealer' then
