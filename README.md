@@ -1,37 +1,61 @@
-# fxserver-esx_addonaccount
-ESX AddonAccount
+# esx_addonaccount
 
-[INSTALLATION]
+## Download & Installation
 
-1) CD in your resources/[esx] folder
-2) Clone the repository
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-git clone https://github.com/FXServer-ESX/fxserver-esx_addonaccount esx_addonaccount
+fvm install --save --folder=esx esx-org/esx_addonaccount
 ```
-3) Import esx_addonaccount.sql in your database
-4) Add this in your server.cfg :
+
+### Using Git
+```
+cd resources
+git clone https://github.com/ESX-Org/esx_addonaccount [esx]/esx_addonaccount
+```
+
+### Manually
+- Download https://github.com/ESX-Org/esx_addonaccount/archive/master.zip
+- Put it in the `[esx]` directory
+
+## Installation
+- Import `esx_addonaccount.sql` in your database
+- Add this in your `server.cfg`:
 
 ```
 start esx_addonaccount
 ```
 
-[USAGE]
+## Usage
+There is two types of accounts: shared and not shared.
 
-There is two types of accounts : shared and not shared.
+- Shared accounts doesn't belong to a specific user. Example: society accounts.
+- None-shared accounts are created for every user in the server. They are created in db when player is loaded, Example: property black money
 
-- Shared accounts dont belong to a specific user. Example : society account.
-- Not shared accounts are created for every user in the server. They are created in db when player is loaded, Example : property black money
+### `addon_account` database information
+You must create an account in the database
 
-You must create the account in the database (addon_account) before using it :
+| `name`   | `label` | `shared` |
+| -------- | ------- | -------- |
+| name of the account | label of the account (not used) | is the account shared with others? (boolean either `0` or `1`) |
 
-name = name of the account, label = label of the account, shared (0 or 1) = Is account shared
-
-```
+```lua
 TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
-  account.addMoney(500)
+	account.addMoney(500)
 end)
 
 TriggerEvent('esx_addonaccount:getAccount', 'property_black_money', 'steam:0123456789', function(account)
-  account.removeMoney(500)
+	account.removeMoney(500)
 end)
 ```
+
+# Legal
+### License
+esx_addonaccount - addon account for ESX
+
+Copyright (C) 2015-2018 Jérémie N'gadi
+
+This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
+
+This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
+
+You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.

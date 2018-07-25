@@ -9,3 +9,5 @@ server_scripts {
 	'server/classes/addonaccount.lua',
 	'server/main.lua'
 }
+
+dependency 'es_extended'
