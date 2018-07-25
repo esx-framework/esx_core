@@ -91,6 +91,38 @@ function DeleteShopInsideVehicles ()
   end
 end
 
+function ReturnVehicleProvider()
+	ESX.TriggerServerCallback('esx_vehicleshop:getCommercialVehicles', function (vehicles)
+		local elements = {}
+		local returnPrice
+		for i=1, #vehicles, 1 do
+			returnPrice = ESX.Round(vehicles[i].price * 0.75)
+
+			table.insert(elements, {
+				label = vehicles[i].name .. ' [<span style="color: orange;">$' .. returnPrice .. '</span>]',
+				value = vehicles[i].name
+			})
+		end
+	
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'return_provider_menu',
+		{
+			title    = _U('return_provider_menu'),
+			align    = 'top-left',
+			elements = elements
+		}, function (data, menu)
+			TriggerServerEvent('esx_vehicleshop:returnProvider', data.current.value)
+
+			Citizen.Wait(300)
+			menu.close()
+
+			ReturnVehicleProvider()
+		end, function (data, menu)
+			menu.close()
+		end)
+	end)
+
+end
+
 function OpenShopMenu ()
   IsInShopMenu = true
 
@@ -218,7 +250,10 @@ function OpenShopMenu ()
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
+                            local newPlate     = GeneratePlate()
                             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+                            vehicleProps.plate = newPlate
+                            SetVehicleNumberPlateText(vehicle, newPlate)
 
                             if Config.EnableOwnedVehicles then
                               TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
@@ -251,7 +286,10 @@ function OpenShopMenu ()
 
                             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
+                            local newPlate     = GeneratePlate()
                             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+                            vehicleProps.plate = newPlate
+                            SetVehicleNumberPlateText(vehicle, newPlate)
 
                             TriggerServerEvent('esx_vehicleshop:setVehicleOwnedSociety', playerData.job.name, vehicleProps)
 
@@ -286,7 +324,10 @@ function OpenShopMenu ()
 
                       TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 
+                      local newPlate     = GeneratePlate()
                       local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+                      vehicleProps.plate = newPlate
+                      SetVehicleNumberPlateText(vehicle, newPlate)
 
                       if Config.EnableOwnedVehicles then
                         TriggerServerEvent('esx_vehicleshop:setVehicleOwned', vehicleProps)
@@ -372,6 +413,7 @@ function OpenResellerMenu ()
         {label = _U('buy_vehicle'),                    value = 'buy_vehicle'},
         {label = _U('pop_vehicle'),                    value = 'pop_vehicle'},
         {label = _U('depop_vehicle'),                  value = 'depop_vehicle'},
+        {label = _U('return_provider'),                value = 'return_provider'},
         {label = _U('create_bill'),                    value = 'create_bill'},
         {label = _U('get_rented_vehicles'),            value = 'get_rented_vehicles'},
         {label = _U('set_vehicle_owner_sell'),         value = 'set_vehicle_owner_sell'},
@@ -382,26 +424,21 @@ function OpenResellerMenu ()
       }
     },
     function (data, menu)
-      if data.current.value == 'buy_vehicle' then
+      local action = data.current.value
+
+      if action == 'buy_vehicle' then
         OpenShopMenu()
-      end
-      if data.current.value == 'put_stock' then
+      elseif action == 'put_stock' then
         OpenPutStocksMenu()
-      end
-
-      if data.current.value == 'get_stock' then
+      elseif action == 'get_stock' then
         OpenGetStocksMenu()
-      end
-
-      if data.current.value == 'pop_vehicle' then
+      elseif action == 'pop_vehicle' then
         OpenPopVehicleMenu()
-      end
-
-      if data.current.value == 'depop_vehicle' then
+      elseif action == 'depop_vehicle' then
         DeleteShopInsideVehicles()
-      end
-
-      if data.current.value == 'create_bill' then
+      elseif action == 'return_provider' then
+        ReturnVehicleProvider()
+      elseif action == 'create_bill' then
         local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
         if closestPlayer == -1 or closestDistance > 3.0 then
           ESX.ShowNotification(_U('no_players'))
@@ -434,13 +471,9 @@ function OpenResellerMenu ()
             menu.close()
           end
         )
-      end
-
-      if data.current.value == 'get_rented_vehicles' then
+      elseif action == 'get_rented_vehicles' then
         OpenRentedVehiclesMenu()
-      end
-
-      if data.current.value == 'set_vehicle_owner_sell' then
+      elseif action == 'set_vehicle_owner_sell' then
         local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
         if closestPlayer == -1 or closestDistance > 3.0 then
@@ -463,9 +496,7 @@ function OpenResellerMenu ()
             ESX.ShowNotification(_U('vehicle_sold_to', vehicleProps.plate, GetPlayerName(closestPlayer)))
           end
         end
-      end
-
-      if data.current.value == 'set_vehicle_owner_sell_society' then
+      elseif action == 'set_vehicle_owner_sell_society' then
         local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
         if closestPlayer == -1 or closestDistance > 3.0 then
@@ -488,9 +519,7 @@ function OpenResellerMenu ()
             end
           end, GetPlayerServerId(closestPlayer))
         end
-      end
-
-      if data.current.value == 'set_vehicle_owner_rent' then
+     elseif action == 'set_vehicle_owner_rent' then
         ESX.UI.Menu.Open(
           'dialog', GetCurrentResourceName(), 'set_vehicle_owner_rent_amount',
           {
@@ -596,41 +625,40 @@ function OpenPersonnalVehicleMenu ()
 end
 
 function OpenPopVehicleMenu ()
-  ESX.TriggerServerCallback('esx_vehicleshop:getCommercialVehicles', function (vehicles)
-    local elements = {}
+	ESX.TriggerServerCallback('esx_vehicleshop:getCommercialVehicles', function (vehicles)
+		local elements = {}
 
-    for i=1, #vehicles, 1 do
-      table.insert(elements, {label = vehicles[i].name .. ' [MSRP <span style="color: green;">$' .. vehicles[i].price .. '</span>]', value = vehicles[i].name})
-    end
+		for i=1, #vehicles, 1 do
+			table.insert(elements, {
+				label = vehicles[i].name .. ' [MSRP <span style="color: green;">$' .. vehicles[i].price .. '</span>]',
+				value = vehicles[i].name
+			})
+		end
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'commercial_vehicles',
-      {
-        title    = _U('vehicle_dealer'),
-        align    = 'top-left',
-        elements = elements
-      },
-      function (data, menu)
-        local model = data.current.value
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'commercial_vehicles',
+		{
+			title    = _U('vehicle_dealer'),
+			align    = 'top-left',
+			elements = elements
+		}, function (data, menu)
+			local model = data.current.value
 
-        DeleteShopInsideVehicles()
+			DeleteShopInsideVehicles()
 
-        ESX.Game.SpawnVehicle(model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
+			ESX.Game.SpawnVehicle(model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
+				table.insert(LastVehicles, vehicle)
 
-          table.insert(LastVehicles, vehicle)
+				for i=1, #Vehicles, 1 do
+					if model == Vehicles[i].model then
+						CurrentVehicleData = Vehicles[i]
+					end
+				end
+			end)
 
-          for i=1, #Vehicles, 1 do
-            if model == Vehicles[i].model then
-              CurrentVehicleData = Vehicles[i]
-            end
-          end
-        end)
-      end,
-      function (data, menu)
-        menu.close()
-      end
-    )
-  end)
+		end, function (data, menu)
+			menu.close()
+		end)
+	end)
 end
 
 function OpenRentedVehiclesMenu ()
@@ -965,7 +993,9 @@ Citizen.CreateThread(function ()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
-				if CurrentAction == 'reseller_menu' then
+				if CurrentAction == 'shop_menu' then
+					OpenShopMenu()
+				elseif CurrentAction == 'reseller_menu' then
 					OpenResellerMenu()
 				elseif CurrentAction == 'give_back_vehicle' then
 					ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function (isRentedVehicle)

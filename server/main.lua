@@ -275,6 +275,35 @@ ESX.RegisterServerCallback('esx_vehicleshop:getCommercialVehicles', function (so
 	end)
 end)
 
+
+RegisterServerEvent('esx_vehicleshop:returnProvider')
+AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
+	local _source = source
+
+	MySQL.Async.fetchAll('SELECT * FROM cardealer_vehicles WHERE vehicle = @vehicle LIMIT 1', {
+		['@vehicle'] = vehicleModel
+	}, function (result)
+
+		if result[1] then
+			local id    = result[1].id
+			local price = ESX.Round(result[1].price * 0.75)
+
+			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+				account.addMoney(price)
+			end)
+
+			MySQL.Async.execute('DELETE FROM cardealer_vehicles WHERE id = @id', {
+				['@id'] = id
+			})
+
+			TriggerClientEvent('esx:showNotification', _source, _U('vehicle_sold_for', vehicleModel, price))
+		else
+			print('esx_vehicleshop: ' .. GetPlayerIdentifiers(_source)[1] .. ' attempted selling an invalid vehicle!')
+		end
+
+	end)
+end)
+
 ESX.RegisterServerCallback('esx_vehicleshop:getRentedVehicles', function (source, cb)
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles ORDER BY player_name ASC', {}, function (result)
 		local vehicles = {}
