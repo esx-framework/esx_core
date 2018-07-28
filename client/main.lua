@@ -97,6 +97,7 @@ end
 function OpenCloakroomMenu()
 
 	local playerPed = PlayerPedId()
+	local grade = PlayerData.job.grade_name
 
 	local elements = {
 		{ label = _U('citizen_wear'), value = 'citizen_wear' },
@@ -104,26 +105,26 @@ function OpenCloakroomMenu()
 		{ label = _U('gilet_wear'), value = 'gilet_wear' }
 	}
 
-	if PlayerData.job.grade_name == 'recruit' then
+	if grade == 'recruit' then
 		table.insert(elements, {label = _U('police_wear'), value = 'recruit_wear'})
-	elseif PlayerData.job.grade_name == 'officer' then
+	elseif grade == 'officer' then
 		table.insert(elements, {label = _U('police_wear'), value = 'officer_wear'})
-	elseif PlayerData.job.grade_name == 'sergeant' then
+	elseif grade == 'sergeant' then
 		table.insert(elements, {label = _U('police_wear'), value = 'sergeant_wear'})
-	elseif PlayerData.job.grade_name == 'intendent' then
+	elseif grade == 'intendent' then
 		table.insert(elements, {label = _U('police_wear'), value = 'intendent_wear'})
-	elseif PlayerData.job.grade_name == 'lieutenant' then
+	elseif grade == 'lieutenant' then
 		table.insert(elements, {label = _U('police_wear'), value = 'lieutenant_wear'})
-	elseif PlayerData.job.grade_name == 'chef' then
+	elseif grade == 'chef' then
 		table.insert(elements, {label = _U('police_wear'), value = 'chef_wear'})
-	elseif PlayerData.job.grade_name == 'boss' then
+	elseif grade == 'boss' then
 		table.insert(elements, {label = _U('police_wear'), value = 'boss_wear'})
 	end
 
-	if Config.EnableNonFreemodePeds then
-		table.insert(elements, {label = _U('sheriff_wear'), value = 'freemode_ped', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
-		table.insert(elements, {label = _U('lieutenant_wear'), value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
-		table.insert(elements, {label = _U('commandant_wear'), value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
+	if Config.EnableFreemodePeds then
+		table.insert(elements, {label = 'Sheriff wear', value = 'freemode_ped', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
+		table.insert(elements, {label = 'Police wear', value = 'freemode_ped', maleModel = 's_m_y_cop_01', femaleModel = 's_f_y_cop_01'})
+		table.insert(elements, {label = 'Swat wear', value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -138,9 +139,21 @@ function OpenCloakroomMenu()
 		cleanPlayer(playerPed)
 
 		if data.current.value == 'citizen_wear' then
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-				TriggerEvent('skinchanger:loadSkin', skin)
-			end)
+			
+			if Config.EnableFreemodePeds then
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+					local isMale = skin.sex == 0
+
+					TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
+						ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+							TriggerEvent('skinchanger:loadSkin', skin)
+						end)
+					end)
+
+				end)
+			end
+
+
 
 			if Config.MaxInService ~= -1 then
 
@@ -165,7 +178,6 @@ function OpenCloakroomMenu()
 				end, 'police')
 			end
 
-			menu.close()
 		end
 
 		if Config.MaxInService ~= -1 and data.current.value ~= 'citizen_wear' then
@@ -225,24 +237,24 @@ function OpenCloakroomMenu()
 		end
 
 		if data.current.value == 'freemode_ped' then
-			local model = nil
+			local modelHash = ''
 
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin.sex == 0 then
-					model = GetHashKey(data.current.maleModel)
+					modelHash = GetHashKey(data.current.maleModel)
 				else
-					model = GetHashKey(data.current.femaleModel)
+					modelHash = GetHashKey(data.current.femaleModel)
 				end
+
+				ESX.Streaming.RequestModel(modelHash, function()
+					SetPlayerModel(PlayerId(), modelHash)
+					SetModelAsNoLongerNeeded(modelHash)
+				end)
 			end)
-		
-			ESX.Streaming.RequestModel(model)
-			SetPlayerModel(PlayerId(), model)
-			SetModelAsNoLongerNeeded(model)
+
 		end
 
-		CurrentAction     = 'menu_cloakroom'
-		CurrentActionMsg  = _U('open_cloackroom')
-		CurrentActionData = {}
+
 
 	end, function(data, menu)
 		menu.close()
