@@ -1,7 +1,7 @@
 Locales['pl'] = {
   -- Menu Salonu
   ['not_enough_in_society']   = 'brak tego ~r~przedmiotu~s~ w firmie!',
-  ['player_cannot_hold']      = '~r~nie masz~s~ wystarczająco ~y~wolnego~s~ miejsca w ekwipunku!',
+  ['player_cannot_hold']      = '~r~Nie masz~s~ wystarczająco ~y~wolnego~s~ miejsca w ekwipunku!',
   ['vehicle_belongs']         = 'pojazd z rejestracją ~y~%s~s~ teraz należy do ~b~ciebie~s~',
   ['bleach amount']           = 'ilosc do wyprania',
   ['broke_company']           = 'twoja firma nie ma wystarczająco pieniedzy',
