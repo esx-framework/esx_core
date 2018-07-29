@@ -199,22 +199,25 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Create blips
-Citizen.CreateThread(function()
-	for k,v in pairs(Config.Zones) do
-		local blip = AddBlipForCoord(v.x, v.y, v.z)
+if Config.ShowBlips then
+	-- Create blips
+	Citizen.CreateThread(function()
+		for k,v in pairs(Config.Zones) do
+			local blip = AddBlipForCoord(v.x, v.y, v.z)
 
-		SetBlipSprite (blip, v.sprite)
-		SetBlipDisplay(blip, 4)
-		SetBlipScale  (blip, 0.9)
-		SetBlipColour (blip, v.color)
-		SetBlipAsShortRange(blip, true)
+			SetBlipSprite (blip, v.sprite)
+			SetBlipDisplay(blip, 4)
+			SetBlipScale  (blip, 0.9)
+			SetBlipColour (blip, v.color)
+			SetBlipAsShortRange(blip, true)
 
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(v.name)
-		EndTextCommandSetBlipName(blip)
-	end
-end)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(v.name)
+			EndTextCommandSetBlipName(blip)
+		end
+	end)
+end
+
 
 -- RETURN NUMBER OF ITEMS FROM SERVER
 RegisterNetEvent('esx_drugs:ReturnInventory')
