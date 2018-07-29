@@ -39,8 +39,7 @@ AddEventHandler('esx_garage:updateOwnedVehicle', function(vehicleProps)
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getVehiclesInGarage', function(source, cb, garage)
-	local _source = source
-	local xPlayer  = ESX.GetPlayerFromId(_source)
+	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchAll('SELECT * FROM `user_parkings` WHERE `identifier` = @identifier AND garage = @garage',
 	{

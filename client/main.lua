@@ -14,18 +14,16 @@ TriggerEvent('instance:registerType', 'garage')
 
 RegisterNetEvent('instance:onCreate')
 AddEventHandler('instance:onCreate', function(instance)
-
 	if instance.type == 'garage' then
 		TriggerEvent('instance:enter', instance)
 	end
-
 end)
 
 AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 	
 	if part == 'ExteriorEntryPoint' then
 
-		local playerPed = GetPlayerPed(-1)
+		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 		local garage    = Config.Garages[name]
 
@@ -37,7 +35,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 			local healthPercent = (health / maxHealth) * 100
 
 			if healthPercent < Config.MinimumHealthPercent then
-				ESX.ShowNotification('Vous devez d\'abord réparer votre véhicule')
+				ESX.ShowNotification(_U('veh_health'))
 			else
 
 				if GetPedInVehicleSeat(vehicle,  -1) == playerPed then
@@ -199,7 +197,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 	if part == 'InteriorExitPoint' then
 
-		local playerPed = GetPlayerPed(-1)
+		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 		local garage    = Config.Garages[name]
 
@@ -221,7 +219,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 				TriggerEvent('instance:close')
 
 				ESX.Game.SpawnVehicle(vehicleProps.model, spawnCoords, garage.ExteriorSpawnPoint.Heading, function(vehicle)
-					TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
+					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 				end)
 
@@ -230,11 +228,7 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 		else
 
-			ESX.Game.Teleport(playerPed, {
-				x = garage.ExteriorSpawnPoint.Pos.x,
-				y = garage.ExteriorSpawnPoint.Pos.y,
-				z = garage.ExteriorSpawnPoint.Pos.z
-			}, function()
+			ESX.Game.Teleport(playerPed,garage.ExteriorSpawnPoint.Pos.x, function()
 				TriggerEvent('instance:close')
 			end)
 
@@ -254,13 +248,13 @@ AddEventHandler('esx_property:hasEnteredMarker', function(name, part, parking)
 
 	if part == 'Parking' then
 
-		local playerPed  = GetPlayerPed(-1)
+		local playerPed  = PlayerPedId()
 		local garage     = Config.Garages[name]
 		local parkingPos = garage.Parkings[parking].Pos
 
 		if IsPedInAnyVehicle(playerPed,  false) and not IsAnyVehicleNearPoint(parkingPos.x,  parkingPos.y,  parkingPos.z,  1.0) then
 
-			local vehicle       = GetVehiclePedIsIn(playerPed,  false)
+			local vehicle       = GetVehiclePedIsIn(playerPed, false)
 			local vehicleProps  = ESX.Game.GetVehicleProperties(vehicle)
 
 			TriggerServerEvent('esx_garage:setParking', name, parking, vehicleProps)
@@ -279,11 +273,11 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part, parking)
 
 	if part == 'Parking' then
 
-		local playerPed  = GetPlayerPed(-1)
+		local playerPed  = PlayerPedId()
 		local garage     = Config.Garages[name]
 		local parkingPos = garage.Parkings[parking].Pos
 
-		if IsPedInAnyVehicle(playerPed,  false) and not IsAnyVehicleNearPoint(parkingPos.x,  parkingPos.y,  parkingPos.z,  1.0) then
+		if IsPedInAnyVehicle(playerPed, false) and not IsAnyVehicleNearPoint(parkingPos.x, parkingPos.y, parkingPos.z, 1.0) then
 			TriggerServerEvent('esx_garage:setParking', name, parking, false)
 		end
 
@@ -300,15 +294,15 @@ Citizen.CreateThread(function()
 
 			local blip = AddBlipForCoord(v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z)
 
-		  SetBlipSprite (blip, 357)
-		  SetBlipDisplay(blip, 4)
-		  SetBlipScale  (blip, 1.2)
-		  SetBlipColour (blip, 3)
-		  SetBlipAsShortRange(blip, true)
-			
+			SetBlipSprite (blip, 357)
+			SetBlipDisplay(blip, 4)
+			SetBlipScale  (blip, 1.2)
+			SetBlipColour (blip, 3)
+			SetBlipAsShortRange(blip, true)
+
 			BeginTextCommandSetBlipName("STRING")
-		  AddTextComponentString("Garage")
-		  EndTextCommandSetBlipName(blip)
+			AddTextComponentString("Garage")
+			EndTextCommandSetBlipName(blip)
 
 		end
 
@@ -320,9 +314,9 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		
-		Wait(0)
+		Citizen.Wait(0)
 		
-		local playerPed = GetPlayerPed(-1)
+		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 		
 		for k,v in pairs(Config.Garages) do
@@ -339,7 +333,7 @@ Citizen.CreateThread(function()
 
 			end
 
-			if IsPedInAnyVehicle(playerPed,  false) then
+			if IsPedInAnyVehicle(playerPed, false) then
 
 				for i=1, #v.Parkings, 1 do
 
@@ -365,7 +359,7 @@ Citizen.CreateThread(function()
 
 		Wait(0)
 
-		local playerPed      = GetPlayerPed(-1)
+		local playerPed      = PlayerPedId()
 		local coords         = GetEntityCoords(playerPed)
 		local isInMarker     = false
 		local currentGarage  = nil
