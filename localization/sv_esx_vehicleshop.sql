@@ -53,17 +53,17 @@ CREATE TABLE `vehicle_categories` (
 );
 
 INSERT INTO `vehicle_categories` (name, label) VALUES
-	('compacts','Compacts'),
+	('compacts','Småbil'),
 	('coupes','Coupés'),
 	('sedans','Sedans'),
-	('sports','Sports'),
-	('sportsclassics','Sports Classics'),
+	('sports','Sportbil'),
+	('sportsclassics','Klassik sportbil'),
 	('super','Super'),
-	('muscle','Muscle'),
+	('muscle','Muskel'),
 	('offroad','Off Road'),
 	('suvs','SUVs'),
 	('vans','Vans'),
-	('motorcycles','Motos')
+	('motorcycles','Motorcykel')
 ;
 
 CREATE TABLE `vehicles` (
