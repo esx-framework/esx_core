@@ -29,3 +29,5 @@ client_scripts {
 	'client/utils.lua',
 	'client/main.lua'
 }
+
+export 'GeneratePlate'
