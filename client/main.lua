@@ -20,8 +20,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 
-	while ESX.GetPlayerData() == nil do
-		print('playerdata nil!! (boat)')
+	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(10)
 	end
 
@@ -41,7 +40,7 @@ function OpenBoatShop(shop)
 			label = (string.format ('%s - <span style="color: green;">$%i</span>', Config.Vehicles[i].label, Config.Vehicles[i].price)),
 			name  = Config.Vehicles[i].label,
 			model = Config.Vehicles[i].model,
-			price = Config.Vehicles[i].price,
+			price = Config.Vehicles[i].price
 		})
 	end
 
@@ -64,11 +63,11 @@ function OpenBoatShop(shop)
 
 			if data2.current.value == 'yes' then
 
-				local plate   = exports['esx_vehicleshop']:GeneratePlate()
-				local vehicle = GetVehiclePedIsIn(playerPed, false)
-				local props   = ESX.Game.GetVehicleProperties(vehicle)
-				props.plate   = plate
-				print(props.model)
+				local plate    = exports['esx_vehicleshop']:GeneratePlate()
+				local vehicle  = GetVehiclePedIsIn(playerPed, false)
+				local props    = ESX.Game.GetVehicleProperties(vehicle)
+				props.plate    = plate
+				props.modelAlt = data.current.model
 
 				ESX.TriggerServerCallback('esx_boat:buyBoat', function (bought)
 
@@ -89,7 +88,7 @@ function OpenBoatShop(shop)
 						menu2.close()
 					end
 					
-				end, props, data.current.model)
+				end, props)
 
 			else
 				menu2.close()
@@ -99,10 +98,7 @@ function OpenBoatShop(shop)
 			menu2.close()
 		end)
 
-
-
 	end, function (data, menu)
-		-- exit menu
 		menu.close()
 
 		DeleteSpawnedVehicles()
@@ -122,8 +118,6 @@ function OpenBoatShop(shop)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
 		end)
-	end, function (data, menu)
-
 	end)
 
 	-- spawn first vehicle
@@ -134,6 +128,66 @@ function OpenBoatShop(shop)
 		FreezeEntityPosition(vehicle, true)
 	end)
 end
+
+function OpenBoatGarage(garage)
+
+	ESX.TriggerServerCallback('esx_boat:getGarage', function (ownedBoats)
+
+		if #ownedBoats == 0 then
+			ESX.ShowNotification(_U('garage_noboats'))
+		else
+
+			-- get all available boats
+			local elements = {}
+			for i=1, #ownedBoats, 1 do
+				table.insert(elements, {
+					label        = getVehicleModelFromHash(ownedBoats[i].model),
+					vehicleProps = ownedBoats[i]
+				})
+			end
+
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boat_garage',
+			{
+				title    = _U('garage'),
+				align    = 'top-left',
+				elements = elements
+			}, function (data, menu)
+
+				-- make sure the spawn point isn't blocked
+				local closestVehicle = GetClosestVehicle(garage.SpawnPoint.x, garage.SpawnPoint.y, garage.SpawnPoint.z, 3.0, 0, 71)
+				local playerPed      = PlayerPedId()
+				local vehicleProps   = data.current.vehicleProps
+
+				if not DoesEntityExist(closestVehicle) then
+					TriggerServerEvent('esx_boat:takeOutVehicle', vehicleProps.plate)
+					ESX.ShowNotification(_U('garage_taken'))
+
+					ESX.Game.SpawnVehicle(vehicleProps.model, garage.SpawnPoint, 20, function(vehicle)
+						TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+					end)
+
+					menu.close()
+				else
+					ESX.ShowNotification(_U('garage_blocked'))
+				end
+
+				
+			end, function (data, menu)
+				menu.close()
+
+				CurrentAction     = 'garage_out'
+				CurrentActionMsg  = _U('garage_open')
+			end)
+		end
+
+	end)
+end
+
+function StoreBoatInGarage(vehicle)
+
+end
+
 
 -- Key controls
 Citizen.CreateThread(function()
@@ -150,20 +204,19 @@ Citizen.CreateThread(function()
 end)
 
 function DeleteSpawnedVehicles()
-
 	while #spawnedVehicles > 0 do
-
 		local vehicle = spawnedVehicles[1]
 		ESX.Game.DeleteVehicle(vehicle)
 		table.remove(spawnedVehicles, 1)
-
 	end
 end
 
+function getVehicleModelFromHash(hash)
+	for i=1, #Config.Vehicles, 1 do
+		if Config.Vehicles[i].hash == hash then
+			return Config.Vehicles[i].model
+		end
+	end
 
-
-AddEventHandler('onResourceStop', function(resource)
-	--if resource == GetCurrentResourceName() and ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'boat_shop') then
-		ESX.UI.Menu.CloseAll()
---	end
-end)
+	return 'Unknown hash [' .. hash .. ']'
+end

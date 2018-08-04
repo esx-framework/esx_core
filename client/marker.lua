@@ -10,9 +10,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 
-		if CurrentAction == nil then
-			Citizen.Wait(200)
-		else
+		if CurrentAction ~= nil then
 
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
@@ -20,10 +18,17 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'boat_shop' then
 					OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
+				elseif CurentAction == 'garage_out' then
+					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
+				elseif CrurentAction == 'garage_in' then
+					StoreBoatInGarage(CurrentActionData.vehicle)
 				end
 
 				CurrentAction = nil
+				
 			end
+		else
+			Citizen.Wait(200)
 		end
 	end
 end)
@@ -36,6 +41,24 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 		CurrentAction     = 'boat_shop'
 		CurrentActionMsg  = _U('boat_shop_open')
 		CurrentActionData = { zoneNum = zoneNum }
+	elseif zone == 'garage_out' then
+		CurrentAction     = 'garage_out'
+		CurrentActionMsg  = _U('garage_open')
+		CurrentActionData = { zoneNum = zoneNum }
+	elseif zone == 'garage_in' then
+		local playerPed = PlayerPedId()
+		local coords    = GetEntityCoords(playerPed)
+	
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
+	
+			if DoesEntityExist(vehicle) then
+				CurrentAction     = 'garage_in'
+				CurrentActionMsg  = _U('garage_store')
+				CurrentActionData = {vehicle = vehicle}
+			end
+	
+		end
 	end
 end)
 
@@ -59,7 +82,21 @@ Citizen.CreateThread(function()
 		for i=1, #Config.Zones.BoatShops, 1 do
 			local zone = Config.Zones.BoatShops[i].Outside
 			if GetDistanceBetweenCoords(coords, zone.x, zone.y, zone.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
+			end
+		end
+
+		for i=1, #Config.Zones.Garages, 1 do
+			local zoneOut = Config.Zones.Garages[i].GaragePos
+			if GetDistanceBetweenCoords(coords, zoneOut.x, zoneOut.y, zoneOut.z, true) < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, zoneOut.x, zoneOut.y, zoneOut.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
+			end
+		end
+
+		for i=1, #Config.Zones.Garages, 1 do
+			local zoneIn = Config.Zones.Garages[i].StorePos
+			if GetDistanceBetweenCoords(coords, zoneIn.x, zoneIn.y, zoneIn.z, true) < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, zoneIn.x, zoneIn.y, zoneIn.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
 
@@ -79,26 +116,31 @@ Citizen.CreateThread(function()
 		local currentZone    = nil
 		local currentZoneNum = nil
 
-			for i=1, #Config.Zones.BoatShops, 1 do
+		for i=1, #Config.Zones.BoatShops, 1 do
 
-				if GetDistanceBetweenCoords(coords, Config.Zones.BoatShops[i].Outside.x, Config.Zones.BoatShops[i].Outside.y, Config.Zones.BoatShops[i].Outside.z,  true) < Config.MarkerSize.x then
-					isInMarker     = true
-					currentZone    = 'boat_shop'
-					currentZoneNum = i
-				end
-
---[[
-					if GetDistanceBetweenCoords(coords,  v.Helicopters[i].SpawnPoint.x,  v.Helicopters[i].SpawnPoint.y,  v.Helicopters[i].SpawnPoint.z,  true) < Config.MarkerSize.x then
-					isInMarker     = true
-					currentZone    = 'HelicopterSpawnPoint'
-					currentZoneNum = i
-				end
-				extra för garage
-]] 
-
-			
-
+			if GetDistanceBetweenCoords(coords, Config.Zones.BoatShops[i].Outside.x, Config.Zones.BoatShops[i].Outside.y, Config.Zones.BoatShops[i].Outside.z,  true) < Config.Marker.x then
+				isInMarker     = true
+				currentZone    = 'boat_shop'
+				currentZoneNum = i
 			end
+
+		end
+
+		for i=1, #Config.Zones.Garages, 1 do
+
+			if GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].GaragePos.x, Config.Zones.Garages[i].GaragePos.y, Config.Zones.Garages[i].GaragePos.z, true) < Config.Marker.x then
+				isInMarker     = true
+				currentZone    = 'garage_out'
+				currentZoneNum = i
+			end
+
+			if GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].StorePos.x, Config.Zones.Garages[i].StorePos.y, Config.Zones.Garages[i].StorePos.z, true) < Config.StoreMarker.x then
+				isInMarker     = true
+				currentZone    = 'garage_in'
+				currentZoneNum = i
+			end
+
+		end
 
 		local hasExited = false
 
@@ -127,3 +169,48 @@ Citizen.CreateThread(function()
 
 	end
 end)
+
+-- Blips
+Citizen.CreateThread(function()
+
+	local blipList = {}
+
+	for i=1, #Config.Zones.Garages, 1 do
+		table.insert(blipList, {
+			coords = { Config.Zones.Garages[i].GaragePos.x, Config.Zones.Garages[i].GaragePos.y },
+			text   = _U('blip_garage'),
+			sprite = 356,
+			color  = 3,
+			scale  = 1.0
+		})
+	end
+
+	for i=1, #Config.Zones.BoatShops, 1 do
+		table.insert(blipList, {
+			coords = { Config.Zones.BoatShops[i].Outside.x, Config.Zones.BoatShops[i].Outside.y },
+			text   = _U('blip_shop'),
+			sprite = 427,
+			color  = 3,
+			scale  = 1.0
+		})
+	end
+
+	for i=1, #blipList, 1 do
+		CreateBlip(blipList[i].coords, blipList[i].text, blipList[i].sprite, blipList[i].color, blipList[i].scale)
+	end
+
+end)
+
+function CreateBlip(coords, text, sprite, color, scale)
+	local blip = AddBlipForCoord( table.unpack(coords) )
+
+	SetBlipSprite(blip, sprite)
+	SetBlipScale(blip, scale)
+	SetBlipColour(blip, color)
+
+	SetBlipAsShortRange(blip, true)
+
+	BeginTextCommandSetBlipName('STRING')
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandSetBlipName(blip)
+end
