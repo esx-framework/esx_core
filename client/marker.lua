@@ -18,13 +18,10 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'boat_shop' then
 					OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
-				elseif CurentAction == 'garage_out' then
+				elseif CurrentAction == 'garage_out' then
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
-				elseif CrurentAction == 'garage_in' then
+				elseif CurrentAction == 'garage_in' then
 					StoreBoatInGarage(CurrentActionData.vehicle)
-
-				else
-					print('unknown') -- what's going on?!?!
 				end
 
 				CurrentAction = nil

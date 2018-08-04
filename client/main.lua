@@ -162,7 +162,7 @@ function OpenBoatGarage(garage)
 					TriggerServerEvent('esx_boat:takeOutVehicle', vehicleProps.plate)
 					ESX.ShowNotification(_U('garage_taken'))
 
-					ESX.Game.SpawnVehicle(vehicleProps.model, garage.SpawnPoint, 20, function(vehicle)
+					ESX.Game.SpawnVehicle(vehicleProps.model, garage.SpawnPoint, garage.Heading, function(vehicle)
 						TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 					end)

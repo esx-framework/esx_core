@@ -19,12 +19,47 @@ Config.StoreMarker = {
 Config.Zones = {
 	
 	Garages = {
+
 		{
 			GaragePos  = { x = -772.42, y = -1430.90, z = 0.55 },
-			SpawnPoint = { x = -785.39, y = -1426.30, z = -0.47 },
+			SpawnPoint = { x = -785.39, y = -1426.30, z = 0.00 },
 			StorePos   = { x = -798.45, y = -1456.03, z = 0.00 },
-			Heading    = 150.0
-		}
+			Heading    = 146.0
+		},
+
+		{
+			GaragePos  = { x = 3864.93, y = 4463.98, z = 1.65 },
+			SpawnPoint = { x = 3854.40, y = 4477.28, z = 0.00 },
+			StorePos   = { x = 3857.04, y = 4446.94, z = 0.00 },
+			Heading    = 273.0
+		},
+
+		{
+			GaragePos  = { x = -1614.03, y = 5260.10, z = 2.80 },
+			SpawnPoint = { x = -1622.52, y = 5247.12, z = 0.00 },
+			StorePos   = { x = -1600.37, y = 5261.91, z = 0.00 },
+			Heading    = 21.0
+		},
+
+		{
+			GaragePos  = { x = 712.67, y = 4093.31, z = 33.70 },
+			SpawnPoint = { x = 712.89, y = 4080.20, z = 29.35 },
+			StorePos   = { x = 705.16, y = 4110.16, z = 30.20 },
+			Heading    = 181.0
+		},
+
+		{
+			GaragePos  = { x = 23.87, y = -2806.82, z = 4.80 },
+			SpawnPoint = { x = 23.35, y = -2828.69, z = 0.81 },
+			StorePos   = { x = -1.03, y = -2799.20, z = 0.50 },
+			Heading    = 181.0
+		},
+		{
+			GaragePos  = { x = -3427.36, y = 956.94, z = 7.35 },
+			SpawnPoint = { x = -3448.97, y = 953.80, z = 0.00 },
+			StorePos   = { x = -3436.55, y = 946.67, z = 0.30 },
+			Heading    = 75.0
+		},
 
 	},
 
@@ -44,16 +79,79 @@ Config.Vehicles = {
 
 	{
 		model = 'seashark',
-		label = 'Seashark',
+		label = 'Seashark (Random Color)',
 		hash  = -1030275036,
-		price = 15000
+		price = 7500
+	},
+
+	{
+		model = 'seashark3',
+		label = 'Seashark (Dark Blue)',
+		hash  = -311022263,
+		price = 7500
+	},
+
+	{
+		model = 'suntrap',
+		label = 'Suntrap',
+		hash  = -282946103,
+		price = 10000
+	},
+
+	{
+		model = 'jetmax',
+		label = 'Jetmax',
+		hash  = 861409633,
+		price = 45000
+	},
+
+	{
+		model = 'tropic2',
+		label = 'Tropic',
+		hash  = 1448677353,
+		price = 65000
+	},
+
+	{
+		model = 'dinghy2',
+		label = 'Dinghy (Black)',
+		hash  = 276773164,
+		price = 32500
+	},
+
+	{
+		model = 'dinghy',
+		label = 'Dinghy 2 (Random Color)',
+		hash  = 1033245328,
+		price = 40000
 	},
 
 	{
 		model = 'speeder',
 		label = 'Speeder',
 		hash  = 231083307,
-		price = 10000
+		price = 85000
+	},
+
+	{
+		model = 'squalo',
+		label = 'Squalo (Random Color)',
+		hash  = 400514754,
+		price = 61000
+	},
+
+	{
+		model = 'toro',
+		label = 'Toro',
+		hash  = 1070967343,
+		price = 200000
+	},
+
+	{
+		model = 'submersible',
+		label = 'Submersible',
+		hash  = 771711535,
+		price = 750000
 	}
 
 }
