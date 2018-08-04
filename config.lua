@@ -22,7 +22,7 @@ Config.Zones = {
 		{
 			GaragePos  = { x = -772.42, y = -1430.90, z = 0.55 },
 			SpawnPoint = { x = -785.39, y = -1426.30, z = -0.47 },
-			StorePos   = { x = -798.45, y = -1456.03, z = -0.47 },
+			StorePos   = { x = -798.45, y = -1456.03, z = 0.00 },
 			Heading    = 150.0
 		}
 

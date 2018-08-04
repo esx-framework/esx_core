@@ -43,16 +43,28 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProp
 end)
 
 RegisterServerEvent('esx_boat:takeOutVehicle')
-AddEventHandler('esx_boat:takeOutVehicle', function(plate)
-		MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE owner = @owner AND plate = @plate',
-		{
-			['@stored'] = false,
-			['@owner']  = GetPlayerIdentifiers(source)[1],
-			['@plate']  = plate
-		}, function (rowsChanged)
-			print(rowsChanged)
-		end)
+AddEventHandler('esx_boat:takeOutVehicle', function (plate)
+	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE owner = @owner AND plate = @plate',
+	{
+		['@stored'] = false,
+		['@owner']  = GetPlayerIdentifiers(source)[1],
+		['@plate']  = plate
+	}, function (rowsChanged)
+		if rowsChanged == 0 then
+			print(('esx_boat: %s exploited the garage!'):format(GetPlayerIdentifiers(source)[1]))
+		end
+	end)
+end)
 
+ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
+	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE owner = @owner AND plate = @plate',
+	{
+		['@stored'] = true,
+		['@owner']  = GetPlayerIdentifiers(source)[1],
+		['@plate']  = plate
+	}, function (rowsChanged)
+		cb(rowsChanged)
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_boat:getGarage', function (source, cb)

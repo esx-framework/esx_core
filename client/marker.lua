@@ -22,6 +22,9 @@ Citizen.CreateThread(function()
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
 				elseif CrurentAction == 'garage_in' then
 					StoreBoatInGarage(CurrentActionData.vehicle)
+
+				else
+					print('unknown') -- what's going on?!?!
 				end
 
 				CurrentAction = nil
@@ -34,9 +37,6 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
-	print(zone)
-	print(zoneNum)
-
 	if zone == 'boat_shop' then
 		CurrentAction     = 'boat_shop'
 		CurrentActionMsg  = _U('boat_shop_open')

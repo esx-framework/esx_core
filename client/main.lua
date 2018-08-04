@@ -186,6 +186,13 @@ end
 
 function StoreBoatInGarage(vehicle)
 
+	local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+
+	ESX.TriggerServerCallback('esx_boat:storeVehicle', function (rowsChanged)
+		ESX.Game.DeleteVehicle(vehicle)
+		ESX.ShowNotification(_U('garage_stored'))
+	end, vehicleProps.plate)
+
 end
 
 
