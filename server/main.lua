@@ -2,16 +2,21 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-
---[[
 AddEventHandler('onMySQLReady', function()
-	MySQL.Async.execute('UPDATE owned_vehicles SET stored = true WHERE stored = false', {}, function (rowsChanged)
+	ParkBoats()
+end)
+
+function ParkBoats()
+	MySQL.Async.execute('UPDATE owned_vehicles SET stored = true WHERE stored = @stored AND vehicleType = @vehicleType',
+	{
+		['@stored']      = false,
+		['@vehicleType'] = 'boat'
+	}, function (rowsChanged)
 		if rowsChanged > 0 then
-			print('esx_boat: all boats have been stored!')
+			print(('esx_boat: %s boat(s) have been stored!'):format(rowsChanged))
 		end
 	end)
-end)
-]]
+end
 
 ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
