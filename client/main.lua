@@ -75,6 +75,7 @@ function OpenBoatShop(shop)
 						ESX.ShowNotification(_U('boat_shop_bought', data.current.model, data.current.price))
 
 						DeleteSpawnedVehicles()
+						isInShopMenu = false
 						ESX.UI.Menu.CloseAll()
 
 						CurrentAction     = 'boat_shop'
@@ -100,7 +101,7 @@ function OpenBoatShop(shop)
 
 	end, function (data, menu)
 		menu.close()
-
+		isInShopMenu = false
 		DeleteSpawnedVehicles()
 
 		CurrentAction     = 'boat_shop'
@@ -141,7 +142,7 @@ function OpenBoatGarage(garage)
 			local elements = {}
 			for i=1, #ownedBoats, 1 do
 				table.insert(elements, {
-					label        = getVehicleModelFromHash(ownedBoats[i].model),
+					label        = getVehicleLabelFromHash(ownedBoats[i].model),
 					vehicleProps = ownedBoats[i]
 				})
 			end
@@ -254,10 +255,10 @@ function DeleteSpawnedVehicles()
 	end
 end
 
-function getVehicleModelFromHash(hash)
+function getVehicleLabelFromHash(hash)
 	for i=1, #Config.Vehicles, 1 do
 		if Config.Vehicles[i].hash == hash then
-			return Config.Vehicles[i].model
+			return Config.Vehicles[i].label
 		end
 	end
 
