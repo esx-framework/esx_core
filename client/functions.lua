@@ -661,6 +661,12 @@ ESX.Game.GetVehicleInDirection = function()
 	return vehicle
 end
 
+ESX.Game.IsSpawnPointClear = function(coords, radius)
+	local vehicles = ESX.Game.GetVehiclesInArea(coords, radius)
+
+	return #vehicles == 0
+end
+
 ESX.Game.GetPeds = function(ignoreList)
 
   local ignoreList = ignoreList or {}
