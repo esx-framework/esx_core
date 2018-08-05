@@ -39,9 +39,9 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProp
 			['@plate']       = vehicleProps.plate,
 			['@vehicle']     = json.encode(vehicleProps),
 			['@vehicleType'] = 'boat'
-		})
-
-		cb(true)
+		}, function (rowsChanged)
+			cb(true)
+		end)
 	else
 		cb(false)
 	end
@@ -73,7 +73,6 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 end)
 
 ESX.RegisterServerCallback('esx_boat:getGarage', function (source, cb)
-
 	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND vehicleType = @vehicleType AND stored = @stored',
 	{
 		['@owner']       = GetPlayerIdentifiers(source)[1],

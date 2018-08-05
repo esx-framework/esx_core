@@ -16,6 +16,7 @@ Locales['en'] = {
 	['garage_stored'] = 'the boat has been safely stored in your garage!',
 	['garage_noboats'] = 'you don\'t have any stored boats! Visit the ~y~boat shop~s~ to buy one.',
 	['garage_blocked'] = 'the boat cannot be taken out because another vehicle is blocking the spawn point!',
+	['garage_notowner'] = 'you don\'t own this boat!',
 
 	-- license
 	['license_menu'] = 'buy Boat License?',

@@ -63,10 +63,10 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 		if IsPedInAnyVehicle(playerPed, false) then
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
 	
-			if DoesEntityExist(vehicle) then
+			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				CurrentAction     = 'garage_in'
 				CurrentActionMsg  = _U('garage_store')
-				CurrentActionData = {vehicle = vehicle}
+				CurrentActionData = { vehicle = vehicle }
 			end
 	
 		end

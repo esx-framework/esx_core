@@ -154,11 +154,10 @@ function OpenBoatGarage(garage)
 			}, function (data, menu)
 
 				-- make sure the spawn point isn't blocked
-				local closestVehicle = GetClosestVehicle(garage.SpawnPoint.x, garage.SpawnPoint.y, garage.SpawnPoint.z, 3.0, 0, 71)
-				local playerPed      = PlayerPedId()
-				local vehicleProps   = data.current.vehicleProps
+				local playerPed    = PlayerPedId()
+				local vehicleProps = data.current.vehicleProps
 
-				if not DoesEntityExist(closestVehicle) then
+				if ESX.Game.IsSpawnPointClear(garage.SpawnPoint, 4.0) then
 					TriggerServerEvent('esx_boat:takeOutVehicle', vehicleProps.plate)
 					ESX.ShowNotification(_U('garage_taken'))
 
@@ -222,8 +221,12 @@ function StoreBoatInGarage(vehicle)
 	local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
 	ESX.TriggerServerCallback('esx_boat:storeVehicle', function (rowsChanged)
-		ESX.Game.DeleteVehicle(vehicle)
-		ESX.ShowNotification(_U('garage_stored'))
+		if rowsChanged > 0 then
+			ESX.Game.DeleteVehicle(vehicle)
+			ESX.ShowNotification(_U('garage_stored'))
+		else
+			ESX.ShowNotification(_U('garage_notowner'))
+		end
 	end, vehicleProps.plate)
 
 end
