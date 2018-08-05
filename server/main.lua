@@ -87,6 +87,20 @@ ESX.RegisterServerCallback('esx_boat:getGarage', function (source, cb)
 
 end)
 
+ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function (source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.getMoney() >= Config.LicensePrice then
+		xPlayer.removeMoney(Config.LicensePrice)
+
+		TriggerEvent('esx_license:addLicense', source, 'boat', function()
+			cb(true)
+		end)
+	else
+		cb(false)
+	end
+end)
+
 function getPriceFromModel(model)
 	for i=1, #Config.Vehicles, 1 do
 		if Config.Vehicles[i].model == model then

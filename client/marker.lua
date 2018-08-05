@@ -17,7 +17,21 @@ Citizen.CreateThread(function()
 			if IsControlJustReleased(0, Keys['E']) then
 
 				if CurrentAction == 'boat_shop' then
-					OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
+
+					if not Config.EnableLicense then
+						OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
+					else -- check for license
+
+						ESX.TriggerServerCallback('esx_license:checkLicense', function (hasBoatLicense)
+							if hasBoatLicense then
+								OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
+							else
+								OpenLicenceMenu(Config.Zones.BoatShops[CurrentActionData.zoneNum])
+							end
+						end, GetPlayerServerId(PlayerId()), 'boat')
+
+					end
+					
 				elseif CurrentAction == 'garage_out' then
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
 				elseif CurrentAction == 'garage_in' then
@@ -28,7 +42,7 @@ Citizen.CreateThread(function()
 				
 			end
 		else
-			Citizen.Wait(200)
+			Citizen.Wait(500)
 		end
 	end
 end)

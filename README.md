@@ -21,7 +21,6 @@ git clone https://github.com/ESX-Org/esx_boat [esx]/esx_boat
 - Download https://github.com/ESX-Org/esx_boat/archive/master.zip
 - Put it in the `[esx]` directory
 
-
 ## Installation
 - Import `esx_boat.sql` in your database
 - Add this to your `server.cfg`:

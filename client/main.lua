@@ -184,6 +184,39 @@ function OpenBoatGarage(garage)
 	end)
 end
 
+function OpenLicenceMenu(shop)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boat_license',
+	{
+		title    = _U('license_menu'),
+		align    = 'top-left',
+		elements = {
+			{ label = _U('license_buy_no'), value = 'no' },
+			{ label = _U('license_buy_yes', Config.LicensePrice), value = 'yes' }
+		}
+	}, function (data, menu)
+		if data.current.value == 'yes' then
+			ESX.TriggerServerCallback('esx_boat:buyBoatLicense', function (boughtLicense)
+				if boughtLicense then
+					ESX.ShowNotification(_U('license_bought', Config.LicensePrice))
+					menu.close()
+
+					OpenBoatShop(shop) -- parse current shop
+				else
+					ESX.ShowNotification(_U('license_nomoney'))
+				end
+			end)
+		else
+			CurrentAction     = 'boat_shop'
+			CurrentActionMsg  = _U('boat_shop_open')
+			menu.close()
+		end
+	end, function (data, menu)
+		CurrentAction     = 'boat_shop'
+		CurrentActionMsg  = _U('boat_shop_open')
+		menu.close()
+	end)
+end
+
 function StoreBoatInGarage(vehicle)
 
 	local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)

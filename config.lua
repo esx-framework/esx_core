@@ -1,9 +1,12 @@
-Config = {}
+Config               = {}
 
-Config.Locale = 'en'
+Config.Locale        = 'en'
 
-Config.MarkerType   = 1
-Config.DrawDistance = 100.0
+Config.EnableLicense = true -- enable boat license?
+Config.LicensePrice  = 50000
+
+Config.MarkerType    = 1
+Config.DrawDistance  = 100.0
 
 Config.Marker = {
 	r = 100, g = 204, b = 100, -- blue-ish color, standard size circle
@@ -14,7 +17,6 @@ Config.StoreMarker = {
 	r = 255, g = 0, b = 0,
 	x = 5.0, y = 5.0, z = 1.0 -- big circle for storing boat
 }
-
 
 Config.Zones = {
 	
@@ -54,6 +56,7 @@ Config.Zones = {
 			StorePos   = { x = -1.03, y = -2799.20, z = 0.50 },
 			Heading    = 181.0
 		},
+
 		{
 			GaragePos  = { x = -3427.36, y = 956.94, z = 7.35 },
 			SpawnPoint = { x = -3448.97, y = 953.80, z = 0.00 },
