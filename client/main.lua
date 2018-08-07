@@ -631,7 +631,7 @@ function OpenPoliceActionsMenu()
 				align    = 'top-left',
 				elements = {
 					{label = _U('cone'),		value = 'prop_roadcone02a'},
-					{label = _U('barrier'),		value = 'prop_barrier_work06a'},
+					{label = _U('barrier'),		value = 'prop_barrier_work05'},
 					{label = _U('spikestrips'),	value = 'p_ld_stinger_s'},
 					{label = _U('box'),			value = 'prop_boxpile_07d'},
 					{label = _U('cash'),		value = 'hei_prop_cash_crate_half_full'}
@@ -1808,7 +1808,7 @@ Citizen.CreateThread(function()
 
   local trackedEntities = {
     'prop_roadcone02a',
-    'prop_barrier_work06a',
+    'prop_barrier_work05',
     'p_ld_stinger_s',
     'prop_boxpile_07d',
     'hei_prop_cash_crate_half_full'
