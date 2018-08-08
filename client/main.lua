@@ -256,11 +256,13 @@ function DeleteSpawnedVehicles()
 end
 
 function getVehicleLabelFromHash(hash)
+	local model = string.lower(GetDisplayNameFromVehicleModel(hash))
+
 	for i=1, #Config.Vehicles, 1 do
-		if Config.Vehicles[i].hash == hash then
+		if Config.Vehicles[i].model == model then
 			return Config.Vehicles[i].label
 		end
 	end
 
-	return 'Unknown hash [' .. hash .. ']'
+	return 'Unknown model [' .. model .. ']'
 end

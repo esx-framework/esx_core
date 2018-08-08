@@ -83,77 +83,66 @@ Config.Vehicles = {
 	{
 		model = 'seashark',
 		label = 'Seashark (Random Color)',
-		hash  = -1030275036,
 		price = 7500
 	},
 
 	{
 		model = 'seashark3',
 		label = 'Seashark (Dark Blue)',
-		hash  = -311022263,
 		price = 7500
 	},
 
 	{
 		model = 'suntrap',
 		label = 'Suntrap',
-		hash  = -282946103,
 		price = 10000
 	},
 
 	{
 		model = 'jetmax',
 		label = 'Jetmax',
-		hash  = 861409633,
 		price = 45000
 	},
 
 	{
 		model = 'tropic2',
 		label = 'Tropic',
-		hash  = 1448677353,
 		price = 65000
 	},
 
 	{
 		model = 'dinghy2',
 		label = 'Dinghy (Black)',
-		hash  = 276773164,
 		price = 32500
 	},
 
 	{
 		model = 'dinghy',
 		label = 'Dinghy 2 (Random Color)',
-		hash  = 1033245328,
 		price = 40000
 	},
 
 	{
 		model = 'speeder',
 		label = 'Speeder',
-		hash  = 231083307,
 		price = 85000
 	},
 
 	{
 		model = 'squalo',
 		label = 'Squalo (Random Color)',
-		hash  = 400514754,
 		price = 61000
 	},
 
 	{
 		model = 'toro',
 		label = 'Toro',
-		hash  = 1070967343,
 		price = 200000
 	},
 
 	{
 		model = 'submersible',
 		label = 'Submersible',
-		hash  = 771711535,
 		price = 750000
 	}
 
