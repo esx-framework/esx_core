@@ -35,11 +35,10 @@ Citizen.CreateThread(function()
 				elseif CurrentAction == 'garage_out' then
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
 				elseif CurrentAction == 'garage_in' then
-					StoreBoatInGarage(CurrentActionData.vehicle)
+					StoreBoatInGarage(CurrentActionData.vehicle, Config.Zones.Garages[CurrentActionData.zoneNum].StoreTP)
 				end
 
 				CurrentAction = nil
-				
 			end
 		else
 			Citizen.Wait(500)
@@ -66,7 +65,7 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				CurrentAction     = 'garage_in'
 				CurrentActionMsg  = _U('garage_store')
-				CurrentActionData = { vehicle = vehicle }
+				CurrentActionData = { vehicle = vehicle, zoneNum = zoneNum }
 			end
 	
 		end

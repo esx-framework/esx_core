@@ -72,7 +72,7 @@ function OpenBoatShop(shop)
 				ESX.TriggerServerCallback('esx_boat:buyBoat', function (bought)
 
 					if bought then
-						ESX.ShowNotification(_U('boat_shop_bought', data.current.model, data.current.price))
+						ESX.ShowNotification(_U('boat_shop_bought', data.current.name, data.current.price))
 
 						DeleteSpawnedVehicles()
 						isInShopMenu = false
@@ -114,7 +114,7 @@ function OpenBoatShop(shop)
 	end, function (data, menu)
 		DeleteSpawnedVehicles()
 		
-		ESX.Game.SpawnLocalVehicle(data.current.model, shop.Inside, shop.Heading, function (vehicle)
+		ESX.Game.SpawnLocalVehicle(data.current.model, shop.Inside, shop.Inside.h, function (vehicle)
 			table.insert(spawnedVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
@@ -123,7 +123,7 @@ function OpenBoatShop(shop)
 
 	-- spawn first vehicle
 	DeleteSpawnedVehicles()
-	ESX.Game.SpawnLocalVehicle(Config.Vehicles[1].model, shop.Inside, shop.Heading, function (vehicle)
+	ESX.Game.SpawnLocalVehicle(Config.Vehicles[1].model, shop.Inside, shop.Inside.h, function (vehicle)
 		table.insert(spawnedVehicles, vehicle)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
@@ -162,7 +162,7 @@ function OpenBoatGarage(garage)
 					TriggerServerEvent('esx_boat:takeOutVehicle', vehicleProps.plate)
 					ESX.ShowNotification(_U('garage_taken'))
 
-					ESX.Game.SpawnVehicle(vehicleProps.model, garage.SpawnPoint, garage.Heading, function(vehicle)
+					ESX.Game.SpawnVehicle(vehicleProps.model, garage.SpawnPoint, garage.SpawnPoint.h, function(vehicle)
 						TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 					end)
@@ -217,7 +217,7 @@ function OpenLicenceMenu(shop)
 	end)
 end
 
-function StoreBoatInGarage(vehicle)
+function StoreBoatInGarage(vehicle, teleportCoords)
 
 	local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 
@@ -225,13 +225,17 @@ function StoreBoatInGarage(vehicle)
 		if rowsChanged > 0 then
 			ESX.Game.DeleteVehicle(vehicle)
 			ESX.ShowNotification(_U('garage_stored'))
+			local playerPed = PlayerPedId()
+
+			ESX.Game.Teleport(playerPed, teleportCoords, function()
+				SetEntityHeading(playerPed, teleportCoords.h)
+			end)
 		else
 			ESX.ShowNotification(_U('garage_notowner'))
 		end
 	end, vehicleProps.plate)
 
 end
-
 
 -- Key controls
 Citizen.CreateThread(function()
