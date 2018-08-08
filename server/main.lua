@@ -68,6 +68,10 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 		['@owner']  = GetPlayerIdentifiers(source)[1],
 		['@plate']  = plate
 	}, function (rowsChanged)
+		if rowsChanged == 0 then
+			print(('esx_boat: %s attempted to store an boat they don\'t own!'):format(GetPlayerIdentifiers(source)[1]))
+		end
+
 		cb(rowsChanged)
 	end)
 end)
