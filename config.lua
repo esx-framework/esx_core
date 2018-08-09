@@ -2,20 +2,20 @@ Config               = {}
 
 Config.Locale        = 'en'
 
-Config.EnableLicense = true -- enable boat license?
+Config.LicenseEnable = true -- enable boat license? Requires esx_license
 Config.LicensePrice  = 50000
 
 Config.MarkerType    = 1
 Config.DrawDistance  = 100.0
 
 Config.Marker = {
-	r = 100, g = 204, b = 100, -- blue-ish color, standard size circle
-	x = 1.5, y = 1.5, z = 1.0
+	r = 100, g = 204, b = 100, -- blue-ish color
+	x = 1.5, y = 1.5, z = 1.0  -- standard size circle
 }
 
 Config.StoreMarker = {
-	r = 255, g = 0, b = 0,
-	x = 5.0, y = 5.0, z = 1.0 -- big circle for storing boat
+	r = 255, g = 0, b = 0,     -- red color
+	x = 5.0, y = 5.0, z = 1.0  -- big circle for storing boat
 }
 
 Config.Zones = {

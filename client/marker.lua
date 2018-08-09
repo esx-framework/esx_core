@@ -18,7 +18,7 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'boat_shop' then
 
-					if not Config.EnableLicense then
+					if not Config.LicenseEnable then
 						OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
 					else -- check for license
 
@@ -90,6 +90,7 @@ Citizen.CreateThread(function()
 		local coords    = GetEntityCoords(playerPed)
 
 		for i=1, #Config.Zones.BoatShops, 1 do
+			-- draw boat shop marker
 			local zone = Config.Zones.BoatShops[i].Outside
 			if GetDistanceBetweenCoords(coords, zone.x, zone.y, zone.z, true) < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
@@ -97,13 +98,13 @@ Citizen.CreateThread(function()
 		end
 
 		for i=1, #Config.Zones.Garages, 1 do
+			-- draw garage maker
 			local zoneOut = Config.Zones.Garages[i].GaragePos
 			if GetDistanceBetweenCoords(coords, zoneOut.x, zoneOut.y, zoneOut.z, true) < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, zoneOut.x, zoneOut.y, zoneOut.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
 			end
-		end
 
-		for i=1, #Config.Zones.Garages, 1 do
+			-- draw store marker
 			local zoneIn = Config.Zones.Garages[i].StorePos
 			if GetDistanceBetweenCoords(coords, zoneIn.x, zoneIn.y, zoneIn.z, true) < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, zoneIn.x, zoneIn.y, zoneIn.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, false, false, false)
