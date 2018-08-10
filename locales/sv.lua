@@ -46,15 +46,13 @@ Locales['sv'] = {
   -- Phone
   ['alert_ambulance'] = 'Ring ambulansen',
   -- Death
-  ['respawn_at_hospital'] = 'Vill du snabbresa till sjukhuset?',
-  ['yes'] = 'ja',
-  ['no'] = 'nej',
-  ['please_wait'] = 'du är medvetslös och kommer att dö om ~b~%s minuter och %s sekunder~s~',
-  ['press_respawn'] = 'tryck [~b~E~w~] för att respawna.',
-  ['respawn_fine'] = 'du betalade ~r~$%s~s~ för att respawna.',
-  ['distress_send'] = 'tryck ~b~[G]~s~ för att skicka nödsignal',
-  ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
-  ['distress_message'] = 'läkarvård krävs: medvetslös medborgare!',
+  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
+  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['distress_send'] = 'press [~b~G~s~] to send distress signal',
+  ['distress_sent'] = 'distress signal has been sent to available units!',
+  ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
   ['revive_help'] = 'Återuppliva en spelare',
   -- Item

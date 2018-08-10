@@ -46,22 +46,19 @@ Locales['en'] = {
   -- Phone
   ['alert_ambulance'] = 'alert Ambulance',
   -- Death
-  ['respawn_at_hospital'] = 'do you want to force respawn and spawn in the hospital?',
-  ['yes'] = 'yes',
-  ['no'] = 'no',
-  ['please_wait'] = 'you are unconscious and will bleed out in ~b~%s minutes and %s seconds~s~',
+  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
   ['press_respawn'] = 'press [~b~E~w~] to respawn.',
-  ['respawn_fine'] = 'you paid ~r~$%s~s~ for respawning.',
-  ['distress_send'] = 'press ~b~[G]~s~ to send distress signal',
+  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['distress_send'] = 'press [~b~G~s~] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
   ['revive_help'] = 'revive a player',
   -- Item
-  ['used_medikit'] = 'You have used 1x medikit',
-  ['used_bandage'] = 'You have used  1x bandage',
+  ['used_medikit'] = 'You have used ~y~1x~s~ medikit',
+  ['used_bandage'] = 'You have used ~y~1x~s~ bandage',
   ['not_enough_medikit'] = 'You do not have ~b~medikit~w~.',
   ['not_enough_bandage'] = 'You do not have ~b~bandage~w~.',
   ['healed'] = 'you have been treated.',
-  -- Misc
 }

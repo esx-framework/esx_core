@@ -6,14 +6,14 @@ RegisterServerEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function(target)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
+
 	xPlayer.addMoney(Config.ReviveReward)
 	TriggerClientEvent('esx_ambulancejob:revive', target)
 end)
 
 RegisterServerEvent('esx_ambulancejob:heal')
 AddEventHandler('esx_ambulancejob:heal', function(target, type)
-  TriggerClientEvent('esx_ambulancejob:heal', target, type)
+	TriggerClientEvent('esx_ambulancejob:heal', target, type)
 end)
 
 TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
@@ -62,47 +62,66 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 		end)
 	end
 
-	if Config.RespawnFine then
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.RespawnFineAmount))
-		xPlayer.removeAccountMoney('bank', Config.RespawnFineAmount)
-	end
-
 	cb()
 end)
 
+if Config.EarlyRespawn and Config.EarlyRespawnFine then
+	ESX.RegisterServerCallback('esx_ambulancejob:checkBalance', function(source, cb)
+
+		local xPlayer = ESX.GetPlayerFromId(source)
+		local bankBalance = xPlayer.getAccount('bank').money
+		local finePayable = false
+
+		if bankBalance >= Config.EarlyRespawnFineAmount then
+			finePayable = true
+		else
+			finePayable = false
+		end
+
+		cb(finePayable)
+	end)
+
+	ESX.RegisterServerCallback('esx_ambulancejob:payFine', function(source, cb)
+		local xPlayer = ESX.GetPlayerFromId(source)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.EarlyRespawnFineAmount))
+		xPlayer.removeAccountMoney('bank', Config.EarlyRespawnFineAmount)
+		cb()
+	end)
+end
+
 ESX.RegisterServerCallback('esx_ambulancejob:getItemAmount', function(source, cb, item)
-  local xPlayer = ESX.GetPlayerFromId(source)
-  local qtty = xPlayer.getInventoryItem(item).count
-  cb(qtty)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local qtty = xPlayer.getInventoryItem(item).count
+	cb(qtty)
 end)
 
 RegisterServerEvent('esx_ambulancejob:removeItem')
 AddEventHandler('esx_ambulancejob:removeItem', function(item)
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(_source)
-  xPlayer.removeInventoryItem(item, 1)
-  if item == 'bandage' then
-    TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
-  elseif item == 'medikit' then
-    TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
-  end
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeInventoryItem(item, 1)
+	if item == 'bandage' then
+		TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
+	elseif item == 'medikit' then
+		TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
+	end
 end)
 
 RegisterServerEvent('esx_ambulancejob:giveItem')
 AddEventHandler('esx_ambulancejob:giveItem', function(item)
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(_source)
-  local limit = xPlayer.getInventoryItem(item).limit
-  local delta = 1
-  local qtty = xPlayer.getInventoryItem(item).count
-  if limit ~= -1 then
-    delta = limit - qtty
-  end
-  if qtty < limit then
-    xPlayer.addInventoryItem(item, delta)
-  else
-    TriggerClientEvent('esx:showNotification', _source, _U('max_item'))
-  end
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local limit = xPlayer.getInventoryItem(item).limit
+	local delta = 1
+	local qtty = xPlayer.getInventoryItem(item).count
+	if limit ~= -1 then
+		delta = limit - qtty
+	end
+	if qtty < limit then
+		xPlayer.addInventoryItem(item, delta)
+	else
+		TriggerClientEvent('esx:showNotification', _source, _U('max_item'))
+	end
 end)
 
 TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
@@ -115,23 +134,23 @@ TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, use
 		TriggerClientEvent('esx_ambulancejob:revive', source)
 	end
 end, function(source, args, user)
-	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Insufficient Permissions.")
-end, {help = _U('revive_help'), params = {{name = 'id'}}})
+	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
+end, { help = _U('revive_help'), params = { { name = 'id' } } })
 
 ESX.RegisterUsableItem('medikit', function(source)
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(_source)
-  xPlayer.removeInventoryItem('medikit', 1)
-  TriggerClientEvent('esx_ambulancejob:heal', _source, 'big')
-  TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeInventoryItem('medikit', 1)
+	TriggerClientEvent('esx_ambulancejob:heal', _source, 'big')
+	TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
 end)
 
 ESX.RegisterUsableItem('bandage', function(source)
-  local _source = source
-  local xPlayer = ESX.GetPlayerFromId(_source)
-  xPlayer.removeInventoryItem('bandage', 1)
-  TriggerClientEvent('esx_ambulancejob:heal', _source, 'small')
-  TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	xPlayer.removeInventoryItem('bandage', 1)
+	TriggerClientEvent('esx_ambulancejob:heal', _source, 'small')
+	TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
 end)
 
 RegisterServerEvent('esx_ambulancejob:firstSpawn')

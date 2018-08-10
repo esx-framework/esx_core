@@ -46,11 +46,13 @@ Locales['pl'] = {
   -- Phone
   ['alert_ambulance'] = 'wezwij ambulans',
   -- Death
-  ['respawn_at_hospital'] = 'czy chcesz odrodzić się w szpitalu?',
-  ['yes'] = 'tak',
-  ['please_wait'] = 'jesteś nieprzytomny i będziesz się wykrwawiał ~b~%s minut i %s sekund~s~',
-  ['press_respawn'] = 'naciśnij [~b~E~w~] aby się odrodzić.',
-  ['respawn_fine'] = 'zapłaciłeś ~r~$%s~s~ za odrodzenie.',
+  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
+  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['distress_send'] = 'press [~b~G~s~] to send distress signal',
+  ['distress_sent'] = 'distress signal has been sent to available units!',
+  ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
   ['revive_help'] = 'ożyw gracza',
   -- Item

@@ -46,15 +46,13 @@ Locales['fi'] = {
   -- Phone
   ['alert_ambulance'] = 'hälyytys Ensihoidolle',
   -- Death
-  ['respawn_at_hospital'] = 'haluatko respawnata sairaalalle heti ?',
-  ['yes'] = 'kyllä',
-  ['no'] = 'ei',
-  ['please_wait'] = 'olet tajuton, vuodat kuiviin ~b~%s minuutin ja %s sekunnin~s~ kuluttua',
-  ['press_respawn'] = 'paina [~b~E~w~] respawnataksesi.',
-  ['respawn_fine'] = 'sinä maksoit ~r~$%s~s~ respawnaamisesta.',
-  ['distress_send'] = 'paina ~b~[G]~s~ lähettääksesi hätäsignaalin',
-  ['distress_sent'] = 'hätäsignaali lähetetty vapailla yksiköille.',
-  ['distress_message'] = 'tarvittava ensihoitoa: tajuton kansalainen!',
+  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
+  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['distress_send'] = 'press [~b~G~s~] to send distress signal',
+  ['distress_sent'] = 'distress signal has been sent to available units!',
+  ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
   ['revive_help'] = 'elvytä pelaaja',
   -- Item

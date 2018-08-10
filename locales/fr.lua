@@ -46,13 +46,11 @@ Locales['fr'] = {
   -- Phone
   ['alert_ambulance'] = 'alerte Ambulance',
   -- Death
-  ['respawn_at_hospital'] = 'voulez-vous être transporté à l\'hôpital ?',
-  ['yes'] = 'oui',
-  ['no'] = 'no',
-  ['please_wait'] = 'Vous serez automatiquement transporté à l\'hôpital dans ~b~%s minutes %s secondes~s~',
-  ['press_respawn'] = 'appuyez sur [~b~E~w~] pour réapparaître.',
-  ['respawn_fine'] = 'vous avez payer ~r~$%s~s~ pour réapparaître.',
-  ['distress_send'] = 'press ~b~[G]~s~ to send distress signal',
+  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
+  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
+  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['distress_send'] = 'press [~b~G~s~] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
   -- Revive
