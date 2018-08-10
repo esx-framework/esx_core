@@ -121,7 +121,7 @@ function OpenCloakroomMenu()
 		table.insert(elements, {label = _U('police_wear'), value = 'boss_wear'})
 	end
 
-	if Config.EnableFreemodePeds then
+	if Config.EnableNonFreemodePeds then
 		table.insert(elements, {label = 'Sheriff wear', value = 'freemode_ped', maleModel = 's_m_y_sheriff_01', femaleModel = 's_f_y_sheriff_01'})
 		table.insert(elements, {label = 'Police wear', value = 'freemode_ped', maleModel = 's_m_y_cop_01', femaleModel = 's_f_y_cop_01'})
 		table.insert(elements, {label = 'Swat wear', value = 'freemode_ped', maleModel = 's_m_y_swat_01', femaleModel = 's_m_y_swat_01'})
@@ -140,7 +140,7 @@ function OpenCloakroomMenu()
 
 		if data.current.value == 'citizen_wear' then
 			
-			if Config.EnableFreemodePeds then
+			if Config.EnableNonFreemodePeds then
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 					local isMale = skin.sex == 0
 
@@ -151,9 +151,11 @@ function OpenCloakroomMenu()
 					end)
 
 				end)
+			else
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end)
 			end
-
-
 
 			if Config.MaxInService ~= -1 then
 
