@@ -36,9 +36,9 @@ function SetPropertyOwned(name, price, rented, owner)
           TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true)
 
           if rented then
-            TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rented_for') .. price)
+            TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rented_for', price))
           else
-            TriggerClientEvent('esx:showNotification', xPlayer.source, _U('purchased_for') .. price)
+            TriggerClientEvent('esx:showNotification', xPlayer.source, _U('purchased_for', price))
           end
 
           break

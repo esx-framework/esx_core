@@ -686,172 +686,157 @@ end
 
 function OpenRoomInventoryMenu(property, owner)
 
-  ESX.TriggerServerCallback('esx_property:getPropertyInventory', function(inventory)
+	ESX.TriggerServerCallback('esx_property:getPropertyInventory', function(inventory)
 
-    local elements = {}
+		local elements = {}
 
-    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+		if inventory.blackMoney > 0 then
+			table.insert(elements, {label = _U('dirty_money', inventory.blackMoney), type = 'item_account', value = 'black_money'})
+		end
 
-    for i=1, #inventory.items, 1 do
+		for i=1, #inventory.items, 1 do
+			local item = inventory.items[i]
 
-      local item = inventory.items[i]
+			if item.count > 0 then
+				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+			end
+		end
 
-      if item.count > 0 then
-        table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
-      end
+		for i=1, #inventory.weapons, 1 do
+			local weapon = inventory.weapons[i]
+			table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. ']', type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
+		end
 
-    end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_inventory',
+		{
+			title    = property.label .. ' - ' .. _U('inventory'),
+			align    = 'top-left',
+			elements = elements,
+		}, function(data, menu)
 
-    for i=1, #inventory.weapons, 1 do
-      local weapon = inventory.weapons[i]
-      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. ']', type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
-    end
+			if data.current.type == 'item_weapon' then
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'room_inventory',
-      {
-        title    = property.label .. ' - ' .. _U('inventory'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+				menu.close()
 
-        if data.current.type == 'item_weapon' then
+				TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, data.current.ammo)
 
-          menu.close()
+				ESX.SetTimeout(300, function()
+					OpenRoomInventoryMenu(property, owner)
+				end)
 
-          TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, data.current.ammo)
+			else
 
-          ESX.SetTimeout(300, function()
-            OpenRoomInventoryMenu(property, owner)
-          end)
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'get_item_count',
+				{
+					title = _U('amount'),
+				}, function(data2, menu)
 
-        else
+					local quantity = tonumber(data2.value)
 
-          ESX.UI.Menu.Open(
-            'dialog', GetCurrentResourceName(), 'get_item_count',
-            {
-              title = _U('amount'),
-            },
-            function(data2, menu)
+					if quantity == nil then
+						ESX.ShowNotification(_U('amount_invalid'))
+					else
 
-              local quantity = tonumber(data2.value)
+						menu.close()
 
-              if quantity == nil then
-                ESX.ShowNotification(_U('amount_invalid'))
-              else
+						TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, quantity)
 
-                menu.close()
+						ESX.SetTimeout(300, function()
+							OpenRoomInventoryMenu(property, owner)
+						end)
 
-                TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, quantity)
+					end
 
-                ESX.SetTimeout(300, function()
-                  OpenRoomInventoryMenu(property, owner)
-                end)
+				end, function(data2,menu)
+					menu.close()
+				end)
 
-              end
+			end
 
-            end,
-            function(data2,menu)
-              menu.close()
-            end
-          )
+		end, function(data, menu)
+			menu.close()
+		end)
 
-        end
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end, owner)
+	end, owner)
 
 end
 
 function OpenPlayerInventoryMenu(property, owner)
 
-  ESX.TriggerServerCallback('esx_property:getPlayerInventory', function(inventory)
+	ESX.TriggerServerCallback('esx_property:getPlayerInventory', function(inventory)
 
-    local elements = {}
+		local elements = {}
 
-    table.insert(elements, {label = _U('dirty_money') .. inventory.blackMoney, type = 'item_account', value = 'black_money'})
+		if inventory.blackMoney > 0 then
+			table.insert(elements, {label = _U('dirty_money', inventory.blackMoney), type = 'item_account', value = 'black_money'})
+		end
 
-    for i=1, #inventory.items, 1 do
+		for i=1, #inventory.items, 1 do
+			local item = inventory.items[i]
+			if item.count > 0 then
+				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+			end
+		end
 
-      local item = inventory.items[i]
+		local playerPed  = GetPlayerPed(-1)
+		local weaponList = ESX.GetWeaponList()
 
-      if item.count > 0 then
-        table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
-      end
+		for i=1, #weaponList, 1 do
+			local weaponHash = GetHashKey(weaponList[i].name)
+			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
+				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+				table.insert(elements, {label = weaponList[i].label .. ' [' .. ammo .. ']', type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
+			end
+		end
 
-    end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_inventory',
+		{
+			title    = property.label .. ' - ' .. _U('inventory'),
+			align    = 'top-left',
+			elements = elements,
+		}, function(data, menu)
 
-    local playerPed  = GetPlayerPed(-1)
-    local weaponList = ESX.GetWeaponList()
+			if data.current.type == 'item_weapon' then
 
-    for i=1, #weaponList, 1 do
+				menu.close()
 
-      local weaponHash = GetHashKey(weaponList[i].name)
+				TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, data.current.ammo)
 
-      if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-        local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-        table.insert(elements, {label = weaponList[i].label .. ' [' .. ammo .. ']', type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
-      end
+				ESX.SetTimeout(300, function()
+					OpenPlayerInventoryMenu(property, owner)
+				end)
 
-    end
+			else
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'player_inventory',
-      {
-        title    = property.label .. ' - ' .. _U('inventory'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'put_item_count', {
+					title = _U('amount'),
+				}, function(data2, menu2)
 
-        if data.current.type == 'item_weapon' then
+					local quantity = tonumber(data2.value)
 
-          menu.close()
+					if quantity == nil then
+						ESX.ShowNotification(_U('amount_invalid'))
+					else
 
-          TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, data.current.ammo)
+						menu2.close()
 
-          ESX.SetTimeout(300, function()
-            OpenPlayerInventoryMenu(property, owner)
-          end)
+						TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, tonumber(data2.value))
+						ESX.SetTimeout(300, function()
+							OpenPlayerInventoryMenu(property, owner)
+						end)
+					end
 
-        else
+				end, function(data2, menu2)
+					menu2.close()
+				end)
 
-          ESX.UI.Menu.Open(
-            'dialog', GetCurrentResourceName(), 'put_item_count',
-            {
-              title = _U('amount'),
-            },
-            function(data2, menu)
+			end
 
-              menu.close()
+		end, function(data, menu)
+			menu.close()
+		end)
 
-              TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, tonumber(data2.value))
-
-              ESX.SetTimeout(300, function()
-                OpenPlayerInventoryMenu(property, owner)
-              end)
-
-            end,
-            function(data2,menu)
-              menu.close()
-            end
-          )
-
-        end
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end)
+	end)
 
 end
 
@@ -1094,21 +1079,15 @@ Citizen.CreateThread(function()
 
 				if CurrentAction == 'property_menu' then
 					OpenPropertyMenu(CurrentActionData.property)
-				end
-
-				if CurrentAction == 'gateway_menu' then
+				elseif CurrentAction == 'gateway_menu' then
 					if Config.EnablePlayerManagement then
 						OpenGatewayOwnedPropertiesMenu(CurrentActionData.property)
 					else
 						OpenGatewayMenu(CurrentActionData.property)
 					end
-				end
-
-				if CurrentAction == 'room_menu' then
+				elseif CurrentAction == 'room_menu' then
 					OpenRoomMenu(CurrentActionData.property, CurrentActionData.owner)
-				end
-
-				if CurrentAction == 'room_exit' then
+				elseif CurrentAction == 'room_exit' then
 					TriggerEvent('instance:leave')
 				end
 
