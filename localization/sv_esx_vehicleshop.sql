@@ -37,7 +37,7 @@ CREATE TABLE `owned_vehicles` (
 CREATE TABLE `rented_vehicles` (
 	`vehicle` varchar(60) NOT NULL,
 	`plate` varchar(12) NOT NULL,
-	`player_name` varchar(30) NOT NULL,
+	`player_name` varchar(255) NOT NULL,
 	`base_price` int(11) NOT NULL,
 	`rent_price` int(11) NOT NULL,
 	`owner` varchar(30) NOT NULL,
@@ -54,15 +54,15 @@ CREATE TABLE `vehicle_categories` (
 
 INSERT INTO `vehicle_categories` (name, label) VALUES
 	('compacts','Småbil'),
-	('coupes','Coupé'),
-	('sedans','Sedan'),
+	('coupes','Coupés'),
+	('sedans','Sedans'),
 	('sports','Sportbil'),
 	('sportsclassics','Klassik sportbil'),
 	('super','Super'),
 	('muscle','Muskel'),
 	('offroad','Off Road'),
 	('suvs','SUVs'),
-	('vans','VANs'),
+	('vans','Vans'),
 	('motorcycles','Motorcykel')
 ;
 
