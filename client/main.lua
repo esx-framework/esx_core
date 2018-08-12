@@ -117,25 +117,20 @@ function StartTaxiJob()
 end
 
 function StopTaxiJob()
+	local playerPed = GetPlayerPed(-1)
 
-  local playerPed = GetPlayerPed(-1)
+	if IsPedInAnyVehicle(playerPed, false) and CurrentCustomer ~= nil then
+		local vehicle = GetVehiclePedIsIn(playerPed,  false)
+		TaskLeaveVehicle(CurrentCustomer,  vehicle,  0)
 
-  if IsPedInAnyVehicle(playerPed, false) and CurrentCustomer ~= nil then
-    local vehicle = GetVehiclePedIsIn(playerPed,  false)
-    TaskLeaveVehicle(CurrentCustomer,  vehicle,  0)
+		if CustomerEnteredVehicle then
+			TaskGoStraightToCoord(CurrentCustomer,  TargetCoords.x,  TargetCoords.y,  TargetCoords.z,  1.0,  -1,  0.0,  0.0)
+		end
+	end
 
-    if CustomerEnteredVehicle then
-      TaskGoStraightToCoord(CurrentCustomer,  TargetCoords.x,  TargetCoords.y,  TargetCoords.z,  1.0,  -1,  0.0,  0.0)
-    end
-
-  end
-
-  ClearCurrentMission()
-
-  OnJob = false
-
-  DrawSub(_U('mission_complete'), 5000)
-
+	ClearCurrentMission()
+	OnJob = false
+	DrawSub(_U('mission_complete'), 5000)
 end
 
 function OpenTaxiActionsMenu()
@@ -785,92 +780,84 @@ end)
 
 -- Key Controls
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Citizen.Wait(0)
+		Citizen.Wait(0)
 
-    if CurrentAction ~= nil then
+		if CurrentAction ~= nil then
 
-      SetTextComponentFormat('STRING')
-      AddTextComponentString(CurrentActionMsg)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			SetTextComponentFormat('STRING')
+			AddTextComponentString(CurrentActionMsg)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+			if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 
-        if CurrentAction == 'taxi_actions_menu' then
-          OpenTaxiActionsMenu()
-        end
+				if CurrentAction == 'taxi_actions_menu' then
+					OpenTaxiActionsMenu()
+				elseif CurrentAction == 'delete_vehicle' then
 
-        if CurrentAction == 'delete_vehicle' then
+					local playerPed = PlayerPedId()
 
-          local playerPed = GetPlayerPed(-1)
+					if Config.EnableSocietyOwnedVehicles then
+						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+						TriggerServerEvent('esx_society:putVehicleInGarage', 'taxi', vehicleProps)
+					else
+						if GetEntityModel(CurrentActionData.vehicle) == GetHashKey('taxi') then
+							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 
-          if Config.EnableSocietyOwnedVehicles then
-            local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
-            TriggerServerEvent('esx_society:putVehicleInGarage', 'taxi', vehicleProps)
-          else
-            if GetEntityModel(CurrentActionData.vehicle) == GetHashKey('taxi') then
-              if Config.MaxInService ~= -1 then
-                TriggerServerEvent('esx_service:disableService', 'taxi')
-              end
-            end
-          end
+							if Config.MaxInService ~= -1 then
+								TriggerServerEvent('esx_service:disableService', 'taxi')
+							end
+						else
+							ESX.ShowNotification(_U('only_taxi'))
+						end
+					end
 
-          ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+				end
 
-        end
+				CurrentAction = nil
 
-        CurrentAction = nil
+			elseif IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+				OpenMobileTaxiActionsMenu()
+			elseif IsControlJustReleased(0, Keys['DELETE']) and GetLastInputMethod(2) and not IsDead then
 
-      end
+				if OnJob then
+					StopTaxiJob()
+				else
 
-    end
+					if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 
-    if IsControlJustReleased(0, Keys['F6']) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
-      OpenMobileTaxiActionsMenu()
-    end
+						local playerPed = PlayerPedId()
+						if IsPedInAnyVehicle(playerPed, false) then
 
-    if IsControlJustReleased(0, Keys['DELETE']) and not IsDead then
+							local vehicle = GetVehiclePedIsIn(playerPed, false)
+							if PlayerData.job.grade >= 3 then
+								StartTaxiJob()
+							else
+								if GetEntityModel(vehicle) == GetHashKey('taxi') then
+									StartTaxiJob()
+								else
+									ESX.ShowNotification(_U('must_in_taxi'))
+								end
+							end
 
-      if OnJob then
-        StopTaxiJob()
-      else
+						else
 
-        if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+							if PlayerData.job.grade >= 3 then
+								ESX.ShowNotification(_U('must_in_vehicle'))
+							else
+								ESX.ShowNotification(_U('must_in_taxi'))
+							end
 
-          local playerPed = GetPlayerPed(-1)
+						end
 
-          if IsPedInAnyVehicle(playerPed,  false) then
+					end
 
-            local vehicle = GetVehiclePedIsIn(playerPed, false)
+				end
 
-            if PlayerData.job.grade >= 3 then
-              StartTaxiJob()
-            else
-              if GetEntityModel(vehicle) == GetHashKey('taxi') then
-                StartTaxiJob()
-              else
-                ESX.ShowNotification(_U('must_in_taxi'))
-              end
-            end
-
-          else
-
-            if PlayerData.job.grade >= 3 then
-              ESX.ShowNotification(_U('must_in_vehicle'))
-            else
-              ESX.ShowNotification(_U('must_in_taxi'))
-            end
-
-          end
-
-        end
-
-      end
-
-    end
-
-  end
+			end
+		end
+	end
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()

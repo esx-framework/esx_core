@@ -3,7 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 if Config.MaxInService ~= -1 then
-  TriggerEvent('esx_service:activateService', 'taxi', Config.MaxInService)
+	TriggerEvent('esx_service:activateService', 'taxi', Config.MaxInService)
 end
 
 TriggerEvent('esx_phone:registerNumber', 'taxi', _U('taxi_client'), true, true)
@@ -11,38 +11,34 @@ TriggerEvent('esx_society:registerSociety', 'taxi', 'Taxi', 'society_taxi', 'soc
 
 RegisterServerEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
+	math.randomseed(os.time())
 
-  math.randomseed(os.time())
+	local xPlayer        = ESX.GetPlayerFromId(source)
+	local total          = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max)
+	local societyAccount = nil
 
-  local xPlayer        = ESX.GetPlayerFromId(source)
-  local total          = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max);
-  local societyAccount = nil
+	if xPlayer.job.grade >= 3 then
+		total = total * 2
+	end
 
-  if xPlayer.job.grade >= 3 then
-    total = total * 2
-  end
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_taxi', function(account)
+		societyAccount = account
+	end)
 
-  TriggerEvent('esx_addonaccount:getSharedAccount', 'society_taxi', function(account)
-    societyAccount = account
-  end)
+	if societyAccount ~= nil then
 
-  if societyAccount ~= nil then
+		local playerMoney  = math.floor(total / 100 * 30)
+		local societyMoney = math.floor(total / 100 * 70)
 
-    local playerMoney  = math.floor(total / 100 * 30)
-    local societyMoney = math.floor(total / 100 * 70)
+		xPlayer.addMoney(playerMoney)
+		societyAccount.addMoney(societyMoney)
 
-    xPlayer.addMoney(playerMoney)
-    societyAccount.addMoney(societyMoney)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('comp_earned', societyMoney, playerMoney))
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned') .. playerMoney)
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('comp_earned') .. societyMoney)
-
-  else
-
-    xPlayer.addMoney(total)
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned') .. total)
-
-  end
+	else
+		xPlayer.addMoney(total)
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned', total))
+	end
 
 end)
 
@@ -63,7 +59,7 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 			else
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', count, item.label))
 			end
 		else
 			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
@@ -72,42 +68,33 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 end)
 
 ESX.RegisterServerCallback('esx_taxijob:getStockItems', function(source, cb)
-
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
-    cb(inventory.items)
-  end)
-
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+		cb(inventory.items)
+	end)
 end)
 
 RegisterServerEvent('esx_taxijob:putStockItems')
 AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+		local item = inventory.getItem(itemName)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+		if item.count >= 0 then
+			xPlayer.removeInventoryItem(itemName, count)
+			inventory.addItem(itemName, count)
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', count, item.label))
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+		end
 
-    local item = inventory.getItem(itemName)
-
-    if item.count >= 0 then
-      xPlayer.removeInventoryItem(itemName, count)
-      inventory.addItem(itemName, count)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
-    end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('added') .. count .. ' ' .. item.label)
-
-  end)
+	end)
 
 end)
 
 ESX.RegisterServerCallback('esx_taxijob:getPlayerInventory', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local items   = xPlayer.inventory
 
-  local xPlayer    = ESX.GetPlayerFromId(source)
-  local items      = xPlayer.inventory
-
-  cb({
-    items      = items
-  })
-
+	cb( { items } )
 end)
