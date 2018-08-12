@@ -96,5 +96,5 @@ ESX.RegisterServerCallback('esx_taxijob:getPlayerInventory', function(source, cb
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local items   = xPlayer.inventory
 
-	cb( { items } )
+	cb( { items = items } )
 end)

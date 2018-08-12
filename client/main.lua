@@ -166,7 +166,7 @@ function OpenTaxiActionsMenu()
 
       if data.current.value == 'spawn_vehicle' then
 
-        if not ESX.Game.IsSpawnPointClear(Config.Zones.VehicleSpawnPoint.Pos, 3.0) then
+        if not ESX.Game.IsSpawnPointClear(Config.Zones.VehicleSpawnPoint.Pos, 5.0) then
             ESX.ShowNotification(_U('spawnpoint_blocked'))
             return
         end
