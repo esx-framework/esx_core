@@ -17,6 +17,7 @@ Locales['pl'] = {
   ['close_to_client'] = 'jesteś blisko klienta, podjedź do niego bliżej',
   ['return_to_veh'] = 'proszę wróć do swojego pojazdu aby kontynuować misję',
   ['only_taxi'] = 'możesz przechowywać tylko taksówki.',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'musisz być w taksówce aby rozpocząć misję',
   ['must_in_vehicle'] = 'musisz być w pojeździe aby rozpocząć misję',
   ['have_earned'] = 'zarobiłeś ~g~$%s~s~',

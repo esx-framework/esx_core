@@ -17,6 +17,7 @@ Locales['sv'] = {
   ['close_to_client'] = 'åk närmare din kund!',
   ['return_to_veh'] = 'vänligen återvänd till ditt fordon och återuppta körningen.',
   ['only_taxi'] = 'du kan endast lagra ~y~taxi fordon~s~ här..',
+  ['spawnpoint_blocked'] = 'det är ett fordon som blockerar spawnpointen!',
   ['must_in_taxi'] = 'du måste vara i en ~y~taxi~s~ för att starta uppdraget.',
   ['must_in_vehicle'] = 'du måste vara i ett ~b~fordon~s~ för att starta uppdraget.',
   ['have_earned'] = 'du har tjärnat ~g~%s SEK~s~',

@@ -17,6 +17,7 @@ Locales['fr'] = {
   ['close_to_client'] = 'vous êtes à proximité du client, approchez-vous de lui',
   ['return_to_veh'] = 'veuillez remonter dans votre véhicule pour continuer la mission',
   ['only_taxi'] = 'vous ne pouvez ranger que les taxi',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'vous devez être dans un taxi pour commencer la mission',
   ['must_in_vehicle'] = 'vous devez être dans un véhicule pour commencer la mission',
   ['have_earned'] = 'vous avez gagné ~g~$%s~s~',

@@ -17,6 +17,7 @@ Locales['fi'] = {
   ['close_to_client'] = 'Olet asiakkaan lähellä, mene lähemmäksi',
   ['return_to_veh'] = 'Mene takaisin ajoneuvoon, jatkaaksesi töitä',
   ['only_taxi'] = 'Voit vain tallettaa taxeja',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'Sinun pitää olla taxissa että voit alottaa työn',
   ['must_in_vehicle'] = 'Sinun pitää olla ajoneuvossa että voit alottaa työn',
   ['have_earned'] = 'Sinä tienasit ~g~€%s~s~',

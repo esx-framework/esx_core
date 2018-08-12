@@ -17,6 +17,7 @@ Locales['en'] = {
   ['close_to_client'] = 'you are too far from the client, get close to them',
   ['return_to_veh'] = 'please return to your vehicle to continue the mission',
   ['only_taxi'] = 'you can only store taxis.',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'you must be in a taxi to start the mission',
   ['must_in_vehicle'] = 'you must be in a vehicle to begin the mission',
   ['have_earned'] = 'you have earned ~g~$%s~s~',
