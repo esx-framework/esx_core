@@ -821,39 +821,39 @@ Citizen.CreateThread(function()
 				end
 
 				CurrentAction = nil
+			end
+		end
 
-			elseif IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
-				OpenMobileTaxiActionsMenu()
-			elseif IsControlJustReleased(0, Keys['DELETE']) and GetLastInputMethod(2) and not IsDead then
+		if IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+			OpenMobileTaxiActionsMenu()
+		elseif IsControlJustReleased(0, Keys['DELETE']) and GetLastInputMethod(2) and not IsDead then
 
-				if OnJob then
-					StopTaxiJob()
-				else
+			if OnJob then
+				StopTaxiJob()
+			else
 
-					if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+				if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 
-						local playerPed = PlayerPedId()
-						if IsPedInAnyVehicle(playerPed, false) then
+					local playerPed = PlayerPedId()
+					if IsPedInAnyVehicle(playerPed, false) then
 
-							local vehicle = GetVehiclePedIsIn(playerPed, false)
-							if PlayerData.job.grade >= 3 then
-								StartTaxiJob()
-							else
-								if GetEntityModel(vehicle) == GetHashKey('taxi') then
-									StartTaxiJob()
-								else
-									ESX.ShowNotification(_U('must_in_taxi'))
-								end
-							end
-
+						local vehicle = GetVehiclePedIsIn(playerPed, false)
+						if PlayerData.job.grade >= 3 then
+							StartTaxiJob()
 						else
-
-							if PlayerData.job.grade >= 3 then
-								ESX.ShowNotification(_U('must_in_vehicle'))
+							if GetEntityModel(vehicle) == GetHashKey('taxi') then
+								StartTaxiJob()
 							else
 								ESX.ShowNotification(_U('must_in_taxi'))
 							end
+						end
 
+					else
+
+						if PlayerData.job.grade >= 3 then
+							ESX.ShowNotification(_U('must_in_vehicle'))
+						else
+							ESX.ShowNotification(_U('must_in_taxi'))
 						end
 
 					end
