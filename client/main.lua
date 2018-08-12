@@ -290,8 +290,8 @@ function OpenRecruitMenu(society)
             title    = _U('do_you_want_to_recruit', data.current.name),
             align    = 'top-left',
             elements = {
-              {label = _U('yes'), value = 'yes'},
               {label = _U('no'),  value = 'no'},
+              {label = _U('yes'), value = 'yes'}
             }
           },
           function(data2, menu2)
@@ -364,58 +364,53 @@ end
 
 function OpenManageGradesMenu(society)
 
-  ESX.TriggerServerCallback('esx_society:getJob', function(job)
+	ESX.TriggerServerCallback('esx_society:getJob', function(job)
 
-    local elements = {}
+		local elements = {}
 
-    for i=1, #job.grades, 1 do
-      local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-      table.insert(elements, {label = gradeLabel .. ' $' .. job.grades[i].salary, value = job.grades[i].grade})
-    end
+		for i=1, #job.grades, 1 do
+			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
+			table.insert(elements, {
+				label = (string.format ('%s - <span style="color: green;">$%i</span>', gradeLabel, job.grades[i].salary)),
+				value = job.grades[i].grade
+			})
+		end
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'manage_grades_' .. society,
-      {
-        title    = _U('salary_management'),
-        align    = 'top-left',
-        elements = elements
-      },
-      function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society,
+		{
+			title    = _U('salary_management'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
 
-        ESX.UI.Menu.Open(
-          'dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society,
-          {
-            title = _U('salary_amount')
-          },
-          function(data2, menu2)
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society,
+			{
+				title = _U('salary_amount')
+			}, function(data2, menu2)
 
-            local amount = tonumber(data2.value)
+				local amount = tonumber(data2.value)
 
-            if amount == nil then
-              ESX.ShowNotification(_U('invalid_amount'))
-            elseif amount >= Config.MaxSalary then
-              ESX.ShowNotification(_U('invalid_amount_max'))
-            else
-              menu2.close()
+				if amount == nil then
+					ESX.ShowNotification(_U('invalid_amount'))
+				elseif amount >= Config.MaxSalary then
+					ESX.ShowNotification(_U('invalid_amount_max'))
+				else
+					menu2.close()
 
-              ESX.TriggerServerCallback('esx_society:setJobSalary', function()
-                OpenManageGradesMenu(society)
-              end, society, data.current.value, amount)
-            end
+					ESX.TriggerServerCallback('esx_society:setJobSalary', function()
+						OpenManageGradesMenu(society)
+					end, society, data.current.value, amount)
+				end
 
-          end,
-          function(data2, menu2)
-            menu2.close()
-          end
-        )
+			end, function(data2, menu2)
+				menu2.close()
+			end)
 
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
+		end, function(data, menu)
+			menu.close()
+		end)
 
-  end, society)
+	end, society)
 
 end
 
