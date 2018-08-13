@@ -10,7 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData                = {}
 local HasAlreadyEnteredMarker   = false
 local LastZone                  = nil
 local CurrentAction             = nil
@@ -33,9 +32,12 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-	
-	Citizen.Wait(1000)
-	PlayerData = ESX.GetPlayerData()
+
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(10)
+	end
+
+	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
 function DrawSub(msg, time)
@@ -245,7 +247,7 @@ function OpenTaxiActionsMenu()
 		{label = _U('take_stock'), value = 'get_stock'}
 	}
 
-	if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.grade_name == 'boss' then
+	if Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade_name == 'boss' then
 		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
 	end
 
@@ -322,13 +324,13 @@ function OpenMobileTaxiActionsMenu()
 				StopTaxiJob()
 			else
 
-				if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+				if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 
 					local playerPed = PlayerPedId()
 					if IsPedInAnyVehicle(playerPed, false) then
 
 						local vehicle = GetVehiclePedIsIn(playerPed, false)
-						if PlayerData.job.grade >= 3 then
+						if ESX.PlayerData.job.grade >= 3 then
 							StartTaxiJob()
 						else
 							if IsInAuthorizedVehicle() then
@@ -340,7 +342,7 @@ function OpenMobileTaxiActionsMenu()
 
 					else
 
-						if PlayerData.job.grade >= 3 then
+						if ESX.PlayerData.job.grade >= 3 then
 							ESX.ShowNotification(_U('must_in_vehicle'))
 						else
 							ESX.ShowNotification(_U('must_in_taxi'))
@@ -494,12 +496,12 @@ end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer
+	ESX.PlayerData = xPlayer
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	PlayerData.job = job
+	ESX.PlayerData.job = job
 end)
 
 AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
@@ -567,7 +569,7 @@ Citizen.CreateThread(function()
 
     Wait(0)
 
-    if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+    if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 
       local coords = GetEntityCoords(PlayerPedId())
 
@@ -588,7 +590,7 @@ Citizen.CreateThread(function()
 
     Wait(0)
 
-    if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+    if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 
       local coords      = GetEntityCoords(PlayerPedId())
       local isInMarker  = false
@@ -839,7 +841,7 @@ Citizen.CreateThread(function()
 
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+			if IsControlJustReleased(0, Keys['E']) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 
 				if CurrentAction == 'taxi_actions_menu' then
 					OpenTaxiActionsMenu()
@@ -873,7 +875,7 @@ Citizen.CreateThread(function()
 			end
 		end
 
-		if IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
+		if IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 			OpenMobileTaxiActionsMenu()
 		end
 	end
