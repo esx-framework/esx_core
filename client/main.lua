@@ -279,60 +279,98 @@ end
 
 function OpenMobileTaxiActionsMenu()
 
-  ESX.UI.Menu.CloseAll()
+	ESX.UI.Menu.CloseAll()
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'mobile_taxi_actions',
-    {
-      title    = 'Taxi',
-      align    = 'top-left',
-      elements = {
-        {label = _U('billing'), value = 'billing'}
-      }
-    },
-    function(data, menu)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mobile_taxi_actions',
+	{
+		title    = 'Taxi',
+		align    = 'top-left',
+		elements = {
+			{ label = _U('billing'),   value = 'billing' },
+			{ label = _U('start_job'), value = 'start_job' }
+		}
+	}, function(data, menu)
 
-      if data.current.value == 'billing' then
+		if data.current.value == 'billing' then
 
-        ESX.UI.Menu.Open(
-          'dialog', GetCurrentResourceName(), 'billing',
-          {
-            title = _U('invoice_amount')
-          },
-          function(data, menu)
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
+				title = _U('invoice_amount')
+			}, function(data, menu)
 
-            local amount = tonumber(data.value)
+				local amount = tonumber(data.value)
+				if amount == nil then
+					ESX.ShowNotification(_U('amount_invalid'))
+				else
+					menu.close()
+					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+					if closestPlayer == -1 or closestDistance > 3.0 then
+						ESX.ShowNotification(_U('no_players_near'))
+					else
+						TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_taxi', 'Taxi', amount)
+						ESX.ShowNotification(_U('billing_sent'))
+					end
 
-            if amount == nil then
-              ESX.ShowNotification(_U('amount_invalid'))
-            else
+				end
 
-              menu.close()
+			end, function(data, menu)
+				menu.close()
+			end)
 
-              local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+		elseif data.current.value == 'start_job' then
+			
+			if OnJob then
+				StopTaxiJob()
+			else
 
-              if closestPlayer == -1 or closestDistance > 3.0 then
-                ESX.ShowNotification(_U('no_players_near'))
-              else
-                TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_taxi', 'Taxi', amount)
-              end
+				if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 
-            end
+					local playerPed = PlayerPedId()
+					if IsPedInAnyVehicle(playerPed, false) then
 
-          end,
-          function(data, menu)
-            menu.close()
-          end
-        )
+						local vehicle = GetVehiclePedIsIn(playerPed, false)
+						if PlayerData.job.grade >= 3 then
+							StartTaxiJob()
+						else
+							if IsInAuthorizedVehicle() then
+								StartTaxiJob()
+							else
+								ESX.ShowNotification(_U('must_in_taxi'))
+							end
+						end
 
-      end
+					else
 
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
+						if PlayerData.job.grade >= 3 then
+							ESX.ShowNotification(_U('must_in_vehicle'))
+						else
+							ESX.ShowNotification(_U('must_in_taxi'))
+						end
 
+					end
+
+				end
+
+			end
+
+		end
+
+	end, function(data, menu)
+		menu.close()
+	end)
+
+end
+
+function IsInAuthorizedVehicle()
+	local playerPed = PlayerPedId()
+	local vehModel  = GetEntityModel(GetVehiclePedIsIn(playerPed, false))
+
+	for i=1, #Config.AuthorizedVehicles, 1 do
+		if vehModel == GetHashKey(Config.AuthorizedVehicles[i].model) then
+			return true
+		end
+	end
+	
+	return false
 end
 
 function OpenGetStocksMenu()
@@ -818,7 +856,7 @@ Citizen.CreateThread(function()
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'taxi', vehicleProps)
 						ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 					else
-						if GetEntityModel(CurrentActionData.vehicle) == GetHashKey('taxi') then
+						if IsInAuthorizedVehicle() then
 							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 
 							if Config.MaxInService ~= -1 then
@@ -837,41 +875,6 @@ Citizen.CreateThread(function()
 
 		if IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
 			OpenMobileTaxiActionsMenu()
-		elseif IsControlJustReleased(0, Keys['DELETE']) and GetLastInputMethod(2) and not IsDead then
-
-			if OnJob then
-				StopTaxiJob()
-			else
-
-				if PlayerData.job ~= nil and PlayerData.job.name == 'taxi' then
-
-					local playerPed = PlayerPedId()
-					if IsPedInAnyVehicle(playerPed, false) then
-
-						local vehicle = GetVehiclePedIsIn(playerPed, false)
-						if PlayerData.job.grade >= 3 then
-							StartTaxiJob()
-						else
-							if GetEntityModel(vehicle) == GetHashKey('taxi') then
-								StartTaxiJob()
-							else
-								ESX.ShowNotification(_U('must_in_taxi'))
-							end
-						end
-
-					else
-
-						if PlayerData.job.grade >= 3 then
-							ESX.ShowNotification(_U('must_in_vehicle'))
-						else
-							ESX.ShowNotification(_U('must_in_taxi'))
-						end
-
-					end
-
-				end
-
-			end
 		end
 	end
 end)
