@@ -1,13 +1,23 @@
 Locales['sv'] = {
-  ['taking_service'] = 'du deltog tjänst: ',
+  -- cloakroom
+  ['cloakroom_menu'] = 'omklädningsrum',
+  ['cloakroom_prompt'] = 'tryck ~INPUT_CONTEXT~ för att öppna ~y~omklädningsrummet~s~.',
+  ['wear_citizen'] = 'civila kläder',
+  ['wear_work'] = 'taxikläder',
+
+  -- garage
+  ['spawner_prompt'] = 'tryck ~INPUT_CONTEXT~ för att öppna ~y~garaget~s~.',
+  ['store_veh'] = 'tryck ~INPUT_CONTEXT~ för att ~y~spara~s~ fordonet.',
   ['spawn_veh'] = 'plocka ut taxi',
+  ['spawnpoint_blocked'] = 'det är ett fordon som blockerar spawnpointen!',
+  ['only_taxi'] = 'du kan endast lagra ~y~taxi fordon~s~ här..',
+  ['taking_service'] = 'du deltog tjänst: ',
   ['full_service'] = 'du kan inte delta tjänst: ',
   ['amount_invalid'] = 'ogiltig mängd!',
   ['press_to_open'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',
   ['billing'] = 'skapa räkning',
   ['invoice_amount'] = 'faktureringsbelopp',
   ['no_players_near'] = 'det finns ingen spelare i närheten!',
-  ['store_veh'] = 'tryck ~INPUT_CONTEXT~ för att ~y~spara~s~ fordonet.',
   ['drive_search_pass'] = 'åk runt för att hitta ~y~kunder~s~',
   ['customer_found'] = 'du har ~g~hittat~s~ en kund!',
   ['client_unconcious'] = 'din kund är ~r~medvetslös~s~. Hitta en ny.',
@@ -16,8 +26,6 @@ Locales['sv'] = {
   ['take_me_to'] = '~s~Ta mig till ~y~%s~s~',
   ['close_to_client'] = 'åk närmare din kund!',
   ['return_to_veh'] = 'vänligen återvänd till ditt fordon och återuppta körningen.',
-  ['only_taxi'] = 'du kan endast lagra ~y~taxi fordon~s~ här..',
-  ['spawnpoint_blocked'] = 'det är ett fordon som blockerar spawnpointen!',
   ['must_in_taxi'] = 'du måste vara i en ~y~taxi~s~ för att starta uppdraget.',
   ['must_in_vehicle'] = 'du måste vara i ett ~b~fordon~s~ för att starta uppdraget.',
   ['have_earned'] = 'du har tjärnat ~g~%s SEK~s~',
@@ -33,4 +41,5 @@ Locales['sv'] = {
   ['have_withdrawn'] = 'du har tagit ut ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'du har lagrat ~y~x%s~s~ ~b~%s~s~',
   ['player_cannot_hold'] = 'du har ~r~inte~s~ tillräckligt med ~y~utrymme~s~ för att hålla det!',
+  ['blip_taxi'] = 'taxifirman',
 }

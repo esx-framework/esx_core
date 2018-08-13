@@ -1,13 +1,24 @@
 Locales['br'] = {
-  ['taking_service'] = 'Pegando serviço: ',
+  -- cloakroom
+  ['cloakroom_menu'] = 'cloakroom',
+  ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~cloakroom~s~.',
+  ['wear_citizen'] = 'citizen wear',
+  ['wear_work'] = 'taxi wear',
+
+  -- garage
+  ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~garage~s~.',
+  ['store_veh'] = 'Pressione ~INPUT_CONTEXT~ para guardar o veículo',
   ['spawn_veh'] = 'pegar veículo',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
+  ['only_taxi'] = 'Você só pode guardar taxis.',
+
+  ['taking_service'] = 'Pegando serviço: ',
   ['full_service'] = 'Serviço completo: ',
   ['amount_invalid'] = 'Valor inválido',
   ['press_to_open'] = 'Pressione ~INPUT_CONTEXT~ para acessar o menu',
   ['billing'] = 'Faturamento',
   ['invoice_amount'] = 'Valor da fatura',
   ['no_players_near'] = 'Nenhum jogador nas proximidades',
-  ['store_veh'] = 'Pressione ~INPUT_CONTEXT~ para guardar o veículo',
   ['drive_search_pass'] = 'Dirigindo em busca de ~y~passageiros',
   ['customer_found'] = 'Você ~g~encontrou~s~ um passageiro, dirija até o destino',
   ['client_unconcious'] = 'Seu passageiro está ~r~insconsciente~w~. Procure por outro.',
@@ -16,8 +27,6 @@ Locales['br'] = {
   ['take_me_to'] = '~w~Leve me para~y~ %s',
   ['close_to_client'] = 'Você está perto do passageiro, aproximisse dele',
   ['return_to_veh'] = 'Volte para o seu veículo para continuar a missão',
-  ['only_taxi'] = 'Você só pode guardar taxis.',
-  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'Você deve estar em um táxi para começar a missão',
   ['must_in_vehicle'] = 'Você deve estar em um veículo para começar a missão',
   ['have_earned'] = 'Você ganhou ~g~$%s~s~',
@@ -33,4 +42,5 @@ Locales['br'] = {
   ['have_withdrawn'] = 'você retirou ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'você depositou ~y~x%s~s~ ~b~%s~s~',
   ['player_cannot_hold'] = 'você não tem espaço suficiente em seu inventário!',
+  ['blip_taxi'] = 'taxi',
 }

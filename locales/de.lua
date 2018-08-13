@@ -1,13 +1,24 @@
 Locales['de'] = {
-  ['taking_service'] = 'Service annehmen: ',
+  -- cloakroom
+  ['cloakroom_menu'] = 'cloakroom',
+  ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~cloakroom~s~.',
+  ['wear_citizen'] = 'citizen wear',
+  ['wear_work'] = 'taxi wear',
+
+  -- garage
+  ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~garage~s~.',
+  ['store_veh'] = 'Drücke ~INPUT_CONTEXT~ um das Fahrzeug zu parken',
   ['spawn_veh'] = 'Fahrzeug spawnen',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
+  ['only_taxi'] = 'Du kannst nur Taxis parken.',
+
+  ['taking_service'] = 'Service annehmen: ',
   ['full_service'] = 'Voller Service: ',
   ['amount_invalid'] = 'Betrag ungültig',
   ['press_to_open'] = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
   ['billing'] = 'Rechnung',
   ['invoice_amount'] = 'Rechnugsbetrag',
   ['no_players_near'] = 'Kein Spieler in der Nähe',
-  ['store_veh'] = 'Drücke ~INPUT_CONTEXT~ um das Fahrzeug zu parken',
   ['drive_search_pass'] = 'Auf der Suche nach ~y~Passagieren',
   ['customer_found'] = 'du hast einen Passagier ~g~gefunden~s~ , Fahre in zum Ziel',
   ['client_unconcious'] = 'dein Passagier ist ~r~bewusstlos~s~. Suche nach einem anderen.',
@@ -16,8 +27,6 @@ Locales['de'] = {
   ['take_me_to'] = '~s~Bring mich nach~y~ %s',
   ['close_to_client'] = 'du bist nahe an dem Passagier, du musst noch näher ran',
   ['return_to_veh'] = 'bitte kehre zu deinem Fahezeug zurück umd die Mission fortzuführen',
-  ['only_taxi'] = 'Du kannst nur Taxis parken.',
-  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'Du musst in einem Taxis sein umd die Mission starten zu können',
   ['must_in_vehicle'] = 'Du musst in einem Fahrzeug sein um die Mission starten zu können',
   ['have_earned'] = 'verdient ~g~$%s~s~',
@@ -33,4 +42,5 @@ Locales['de'] = {
   ['have_withdrawn'] = 'you have withdrawn ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'you have deposited ~y~x%s~s~ ~b~%s~s~',
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
+  ['blip_taxi'] = 'taxi',
 }

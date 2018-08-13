@@ -1,13 +1,24 @@
 Locales['en'] = {
-  ['taking_service'] = 'taking service: ',
+  -- cloakroom
+  ['cloakroom_menu'] = 'cloakroom',
+  ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~cloakroom~s~.',
+  ['wear_citizen'] = 'citizen wear',
+  ['wear_work'] = 'taxi wear',
+
+  -- garage
+  ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~garage~s~.',
+  ['store_veh'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
   ['spawn_veh'] = 'spawn vehicle',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
+  ['only_taxi'] = 'you can only store taxis.',
+
+  ['taking_service'] = 'taking service: ',
   ['full_service'] = 'full service: ',
   ['amount_invalid'] = 'amount invalid',
   ['press_to_open'] = 'press ~INPUT_CONTEXT~ to access the menu',
   ['billing'] = 'billing',
   ['invoice_amount'] = 'invoice amount',
   ['no_players_near'] = 'no players nearby',
-  ['store_veh'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
   ['drive_search_pass'] = 'driving in search of ~y~passengers',
   ['customer_found'] = 'you have ~g~found~s~ a customer, drive until last',
   ['client_unconcious'] = 'your client is ~r~unconscious~s~. Look for another one.',
@@ -16,8 +27,6 @@ Locales['en'] = {
   ['take_me_to'] = '~s~Take me to ~y~%s',
   ['close_to_client'] = 'you are too far from the client, get close to them',
   ['return_to_veh'] = 'please return to your vehicle to continue the mission',
-  ['only_taxi'] = 'you can only store taxis.',
-  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'you must be in a taxi to start the mission',
   ['must_in_vehicle'] = 'you must be in a vehicle to begin the mission',
   ['have_earned'] = 'you have earned ~g~$%s~s~',
@@ -33,4 +42,5 @@ Locales['en'] = {
   ['have_withdrawn'] = 'you have withdrawn ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'you have deposited ~y~x%s~s~ ~b~%s~s~',
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
+  ['blip_taxi'] = 'taxi',
 }

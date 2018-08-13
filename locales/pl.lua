@@ -1,13 +1,24 @@
 Locales['pl'] = {
-  ['taking_service'] = 'przyjmowanie usługi: ',
+  -- cloakroom
+  ['cloakroom_menu'] = 'cloakroom',
+  ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~cloakroom~s~.',
+  ['wear_citizen'] = 'citizen wear',
+  ['wear_work'] = 'taxi wear',
+
+  -- garage
+  ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~garage~s~.',
+  ['store_veh'] = 'naciśnij ~INPUT_CONTEXT~ aby zdać pojazd',
   ['spawn_veh'] = 'sprowadź pojazd',
+  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
+  ['only_taxi'] = 'możesz przechowywać tylko taksówki.',
+
+  ['taking_service'] = 'przyjmowanie usługi: ',
   ['full_service'] = 'pełny serwis: ',
   ['amount_invalid'] = 'wartość nieprawidłowa',
   ['press_to_open'] = 'naciśnij ~INPUT_CONTEXT~ aby wejść do menu',
   ['billing'] = 'rachunek',
   ['invoice_amount'] = 'wartość należności',
   ['no_players_near'] = 'brak graczy w pobliżu',
-  ['store_veh'] = 'naciśnij ~INPUT_CONTEXT~ aby zdać pojazd',
   ['drive_search_pass'] = 'jazda w poszukiwaniu ~y~pasażerów',
   ['customer_found'] = '~g~Znalazłeś~s~ klienta, jedź do niego',
   ['client_unconcious'] = 'twój jest ~r~nieprzytomny xD~s~. Poszukaj innego.',
@@ -16,8 +27,6 @@ Locales['pl'] = {
   ['take_me_to'] = '~s~Weź mnie do~y~ %s',
   ['close_to_client'] = 'jesteś blisko klienta, podjedź do niego bliżej',
   ['return_to_veh'] = 'proszę wróć do swojego pojazdu aby kontynuować misję',
-  ['only_taxi'] = 'możesz przechowywać tylko taksówki.',
-  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['must_in_taxi'] = 'musisz być w taksówce aby rozpocząć misję',
   ['must_in_vehicle'] = 'musisz być w pojeździe aby rozpocząć misję',
   ['have_earned'] = 'zarobiłeś ~g~$%s~s~',
@@ -33,4 +42,5 @@ Locales['pl'] = {
   ['have_withdrawn'] = 'wyciągnąłeś/aś ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited'] = 'zdeponowałeś/aś ~y~x%s~s~ ~b~%s~s~',
   ['player_cannot_hold'] = '~r~Nie~s~ masz wystarczająco ~y~wolnego miejsca~s~ w swoim ekwipunku!',
+  ['blip_taxi'] = 'taxi',
 }
