@@ -31,6 +31,14 @@ RegisterCommand('me', function(source, args, rawCommand)
 	TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('me_prefix', name), rawCommand, { 255, 0, 0 })
 end, false)
 
+RegisterCommand('do', function(source, args, rawCommand)
+	rawCommand = string.sub(rawCommand, 3)
+	local name = GetPlayerName(source)
+	if Config.EnableESXIdentity then name = GetCharacterName(source) end
+
+	TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('do_prefix', name), rawCommand, { 0, 0, 255 })
+end, false)
+
 RegisterCommand('news', function(source, args, rawCommand)
 	rawCommand = string.sub(rawCommand, 5)
 	local name = GetPlayerName(source)
