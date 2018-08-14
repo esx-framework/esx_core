@@ -9,14 +9,14 @@ local Keys = {
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
-	
-ESX									= nil
-local HasAlreadyEnteredMarker		= false
-local LastZone						= nil
-local CurrentAction					= nil
-local CurrentActionMsg				= ''
-local CurrentActionData				= {}
-local isDead						= false
+
+ESX								= nil
+local HasAlreadyEnteredMarker	= false
+local LastZone					= nil
+local CurrentAction				= nil
+local CurrentActionMsg			= ''
+local CurrentActionData			= {}
+local isDead					= false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -26,39 +26,33 @@ Citizen.CreateThread(function()
 end)
 
 function OpenAccessoryMenu()
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory',
+	{
+		title = _U('set_unset'),
+		align = 'top-left',
+		elements = {
+			{label = _U('helmet'), value = 'Helmet'},
+			{label = _U('ears'), value = 'Ears'},
+			{label = _U('mask'), value = 'Mask'},
+			{label = _U('glasses'), value = 'Glasses'},
+		}
+	}, function(data, menu)
+		menu.close()
+		SetUnsetAccessory(data.current.value)
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'set_unset_accessory',
-		{
-			title = _U('set_unset'),
-			align = 'top-left',
-			elements = {
-				{label = _U('helmet'), value = 'Helmet'},
-				{label = _U('ears'), value = 'Ears'},
-				{label = _U('mask'), value = 'Mask'},
-				{label = _U('glasses'), value = 'Glasses'},
-			}
-		},
-		function(data, menu)
-			menu.close()
-			SetUnsetAccessory(data.current.value)
-
-		end,
-		function(data, menu)
-			menu.close()
-		end
-	)
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 function SetUnsetAccessory(accessory)
-	
 	ESX.TriggerServerCallback('esx_accessories:get', function(hasAccessory, accessorySkin)
 		local _accessory = string.lower(accessory)
 
 		if hasAccessory then
 			TriggerEvent('skinchanger:getSkin', function(skin)
 				local mAccessory = -1
-				local mColor = 0	  
+				local mColor = 0
 				if _accessory == "mask" then
 					mAccessory = 0
 				end
@@ -79,7 +73,6 @@ function SetUnsetAccessory(accessory)
 end
 
 function OpenShopMenu(accessory)
-
 	local _accessory = string.lower(accessory)
 	local restrict = {}
 
@@ -89,70 +82,63 @@ function OpenShopMenu(accessory)
 
 		menu.close()
 
-		ESX.UI.Menu.Open(
-			'default', GetCurrentResourceName(), 'shop_confirm',
-			{
-				title = _U('valid_purchase'),
-				align = 'top-left',
-				elements = {
-					{label = _U('yes'), value = 'yes'},
-					{label = _U('no'), value = 'no'},
-				}
-			},
-			function(data, menu)
-				menu.close()
-				if data.current.value == 'yes' then
-					ESX.TriggerServerCallback('esx_accessories:checkMoney', function(hasEnoughMoney)
-						if hasEnoughMoney then
-							TriggerServerEvent('esx_accessories:pay')
-							TriggerEvent('skinchanger:getSkin', function(skin)
-								TriggerServerEvent('esx_accessories:save', skin, accessory)
-							end)
-						else
-							TriggerEvent('esx_skin:getLastSkin', function(skin)
-								TriggerEvent('skinchanger:loadSkin', skin)
-							end)
-							ESX.ShowNotification(_U('not_enough_money'))
-						end
-					end)
-				end
-
-				if data.current.value == 'no' then
-					local player = GetPlayerPed(-1)
-					TriggerEvent('esx_skin:getLastSkin', function(skin)
-						TriggerEvent('skinchanger:loadSkin', skin)
-					end)
-					if accessory == "Ears" then
-						ClearPedProp(player, 2)
-					elseif accessory == "Mask" then
-						SetPedComponentVariation(player, 1, 0 ,0 ,2)
-					elseif accessory == "Helmet" then
-						ClearPedProp(player, 0)
-					elseif accessory == "Glasses" then
-						SetPedPropIndex(player, 1, -1, 0, 0)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm',
+		{
+			title = _U('valid_purchase'),
+			align = 'top-left',
+			elements = {
+				{label = _U('no'), value = 'no'},
+				{label = _U('yes', Config.Price), value = 'yes'}
+			}
+		}, function(data, menu)
+			menu.close()
+			if data.current.value == 'yes' then
+				ESX.TriggerServerCallback('esx_accessories:checkMoney', function(hasEnoughMoney)
+					if hasEnoughMoney then
+						TriggerServerEvent('esx_accessories:pay')
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							TriggerServerEvent('esx_accessories:save', skin, accessory)
+						end)
+					else
+						TriggerEvent('esx_skin:getLastSkin', function(skin)
+							TriggerEvent('skinchanger:loadSkin', skin)
+						end)
+						ESX.ShowNotification(_U('not_enough_money'))
 					end
-				end
-				CurrentAction	 = 'shop_menu'
-				CurrentActionMsg  = _U('press_access')
-				CurrentActionData = {}
-			end,
-			function(data, menu)
-				menu.close()
-				CurrentAction	 = 'shop_menu'
-				CurrentActionMsg  = _U('press_access')
-				CurrentActionData = {}
-
+				end)
 			end
-		)
 
-	end, 
-	function(data, menu)
+			if data.current.value == 'no' then
+				local player = GetPlayerPed(-1)
+				TriggerEvent('esx_skin:getLastSkin', function(skin)
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end)
+				if accessory == "Ears" then
+					ClearPedProp(player, 2)
+				elseif accessory == "Mask" then
+					SetPedComponentVariation(player, 1, 0 ,0 ,2)
+				elseif accessory == "Helmet" then
+					ClearPedProp(player, 0)
+				elseif accessory == "Glasses" then
+					SetPedPropIndex(player, 1, -1, 0, 0)
+				end
+			end
+			CurrentAction     = 'shop_menu'
+			CurrentActionMsg  = _U('press_access')
+			CurrentActionData = {}
+		end, function(data, menu)
+			menu.close()
+			CurrentAction     = 'shop_menu'
+			CurrentActionMsg  = _U('press_access')
+			CurrentActionData = {}
+
+		end)
+	end, function(data, menu)
 		menu.close()
 		CurrentAction     = 'shop_menu'
 		CurrentActionMsg  = _U('press_access')
 		CurrentActionData = {}
 	end, restrict)
-
 end
 
 AddEventHandler('playerSpawned', function()
@@ -188,7 +174,7 @@ Citizen.CreateThread(function()
 				SetBlipAsShortRange(blip, true)
 
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString(_U('shop') .. ' ' .. _U(string.lower(k)))
+				AddTextComponentString(_U('shop', _U(string.lower(k))))
 				EndTextCommandSetBlipName(blip)
 			end
 		end
@@ -240,21 +226,22 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		
 		if CurrentAction ~= nil then
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-			if IsControlJustReleased(0, 38) and CurrentActionData.accessory ~= nil then
+			ESX.ShowHelpNotification(CurrentActionMsg)
+
+			if IsControlJustReleased(0, Keys['E']) and CurrentActionData.accessory then
 				OpenShopMenu(CurrentActionData.accessory)
 				CurrentAction = nil
 			end
+
+		elseif CurrentAction == nil and not Config.EnableControls then
+			Citizen.Wait(500)
 		end
 
 		if Config.EnableControls then

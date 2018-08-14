@@ -7,7 +7,7 @@ AddEventHandler('esx_accessories:pay', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeMoney(Config.Price)
-	TriggerClientEvent('esx:showNotification', _source, _U('you_paid') .. '$' .. Config.Price)
+	TriggerClientEvent('esx:showNotification', _source, _U('you_paid', Config.Price))
 
 end)
 
@@ -32,8 +32,7 @@ AddEventHandler('esx_accessories:save', function(skin, accessory)
 end)
 
 ESX.RegisterServerCallback('esx_accessories:get', function(source, cb, accessory)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'user_' .. string.lower(accessory), xPlayer.identifier, function(store)
 		
@@ -46,12 +45,8 @@ ESX.RegisterServerCallback('esx_accessories:get', function(source, cb, accessory
 
 end)
 
---===================================================================
---===================================================================
-
 ESX.RegisterServerCallback('esx_accessories:checkMoney', function(source, cb)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.get('money') >= Config.Price then
 		cb(true)
