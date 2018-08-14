@@ -432,3 +432,22 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+--Prevent Free Tunning Bug
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1)
+		if lsMenuIsShowed then
+			DisableControlAction(2, Keys['F1'], true)
+			DisableControlAction(2, Keys['F2'], true)
+			DisableControlAction(2, Keys['F3'], true)
+			DisableControlAction(2, Keys['F6'], true)
+			DisableControlAction(2, Keys['F7'], true)
+			DisableControlAction(2, Keys['F'], true)
+			DisableControlAction(0, 75, true)  -- Disable exit vehicle
+			DisableControlAction(27, 75, true) -- Disable exit vehicle
+		else
+			Citizen.Wait(500)
+		end
+	end
+end)
