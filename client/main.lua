@@ -327,7 +327,7 @@ function OpenMobileTaxiActionsMenu()
 				if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
 
 					local playerPed = PlayerPedId()
-					if IsPedInAnyVehicle(playerPed, false) then
+					if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 
 						local vehicle = GetVehiclePedIsIn(playerPed, false)
 						if ESX.PlayerData.job.grade >= 3 then
