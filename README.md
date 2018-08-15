@@ -1,5 +1,5 @@
 # esx_boat
-Adds boat shops and boat garages around San Andreas. Unlike esx_vehicleshop this script isn't built around a job.
+This resource for ESX adds boat shops and boat garages around San Andreas, the island has been populated with boat garages, and comes defaulted with one boat shop.
 
 ## Requirements
 - [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
