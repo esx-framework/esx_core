@@ -19,11 +19,9 @@ end)
 function ShowJobListingMenu(data)
 	ESX.TriggerServerCallback('esx_joblisting:getJobsList', function(data)
 		local elements = {}
+
 		for i = 1, #data, 1 do
-			table.insert(
-				elements,
-				{label = data[i].label, value = data[i].value}
-			)
+			table.insert(elements, {label = data[i].label, value = data[i].value})
 		end
 
 		ESX.UI.Menu.CloseAll()
@@ -52,7 +50,7 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(1)
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		for i=1, #Config.Zones, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.Zones[i].x, Config.Zones[i].y, Config.Zones[i].z, true) < Config.DrawDistance) then
@@ -65,10 +63,10 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
-		local coords      = GetEntityCoords(GetPlayerPed(-1))
-		isInJoblistingMarker  = false
-		local currentZone = nil
+		Citizen.Wait(1)
+		local coords         = GetEntityCoords(GetPlayerPed(-1))
+		isInJoblistingMarker = false
+		local currentZone    = nil
 		for i=1, #Config.Zones, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.Zones[i].x, Config.Zones[i].y, Config.Zones[i].z, true) < Config.ZoneSize.x / 2) then
 				isInJoblistingMarker  = true
