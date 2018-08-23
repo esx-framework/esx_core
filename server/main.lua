@@ -23,7 +23,7 @@ function GenerateUniquePhoneNumber()
 
 		-- if the result is empty, aka the phone number is available
 		if count == 0 then
-		foundNumber = true
+			foundNumber = true
 		end
 
 	end

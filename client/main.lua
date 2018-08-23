@@ -150,8 +150,7 @@ end)
 
 RegisterNetEvent('esx_phone:onMessage')
 AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, anon, job, dispatchRequestId, dispatchNumber)
-
-	if dispatchNumber then
+	if dispatchNumber and phoneNumber == PhoneData.phoneNumber then
 		TriggerEvent('esx_phone:cancelMessage', dispatchNumber)
 
 		if WasEventCanceled() then
