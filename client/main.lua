@@ -37,7 +37,10 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 
-	Citizen.Wait(5000)
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(10)
+	end
+
 	PlayerData = ESX.GetPlayerData()
 end)
 

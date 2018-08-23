@@ -31,6 +31,7 @@ Config.PoliceStations = {
 			Scale   = 1.2,
 			Colour  = 29,
 		},
+
 		-- https://wiki.rage.mp/index.php?title=Weapons
 		AuthorizedWeapons = {
 			{ name = 'WEAPON_NIGHTSTICK',       price = 200 },
@@ -58,7 +59,13 @@ Config.PoliceStations = {
 			{
 				Spawner    = { x = 454.69, y = -1017.4, z = 27.430 },
 				SpawnPoint = { x = 438.42, y = -1018.3, z = 27.757 },
-				Heading    = 90.0,
+				Heading    = 90.0
+			},
+
+			{
+				Spawner    = { x = 473.38, y = -1018.43, z = 27.00 },
+				SpawnPoint = { x = 475.98, y = -1021.65, z = 28.06 },
+				Heading    = 276.11
 			}
 		},
 
@@ -66,13 +73,14 @@ Config.PoliceStations = {
 			{
 				Spawner    = { x = 466.477, y = -982.819, z = 42.691 },
 				SpawnPoint = { x = 450.04, y = -981.14, z = 42.691 },
-				Heading    = 0.0,
+				Heading    = 0.0
 			}
 		},
 
 		VehicleDeleters = {
 			{ x = 462.74, y = -1014.4, z = 27.065 },
 			{ x = 462.40, y = -1019.7, z = 27.104 },
+			{ x = 469.12, y = -1024.52, z = 27.20 }
 		},
 
 		BossActions = {
