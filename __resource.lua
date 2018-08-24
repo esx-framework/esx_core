@@ -2,7 +2,7 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ESX DMV School'
 
-version '1.0.4'
+version '1.0.5'
 
 server_scripts {
 	'@es_extended/locale.lua',
@@ -11,6 +11,7 @@ server_scripts {
 	'locales/fr.lua',
 	'locales/en.lua',
 	'locales/pl.lua',
+	'locales/sv.lua',
 	'config.lua',
 	'server/main.lua'
 }
@@ -22,6 +23,7 @@ client_scripts {
 	'locales/fr.lua',
 	'locales/en.lua',
 	'locales/pl.lua',
+	'locales/sv.lua',
 	'config.lua',
 	'client/main.lua'
 }

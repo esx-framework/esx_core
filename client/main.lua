@@ -72,7 +72,7 @@ function StopTheoryTest(success)
 end
 
 function StartDriveTest(type)
-		ESX.Game.SpawnVehicle(Config.VehicleModels[type], Config.Zones.VehicleSpawnPoint.Pos, 317.0, function(vehicle)
+	ESX.Game.SpawnVehicle(Config.VehicleModels[type], Config.Zones.VehicleSpawnPoint.Pos, Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
 		CurrentTest       = 'drive'
 		CurrentTestType   = type
 		CurrentCheckPoint = 0
@@ -83,7 +83,7 @@ function StartDriveTest(type)
 		CurrentVehicle    = vehicle
 		LastVehicleHealth = GetEntityHealth(vehicle)
 
-		local playerPed   = GetPlayerPed(-1)
+		local playerPed   = PlayerPedId()
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 	end)
 
@@ -219,7 +219,7 @@ Citizen.CreateThread(function()
 
 		Citizen.Wait(10)
 
-		local coords = GetEntityCoords(GetPlayerPed(-1))
+		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
@@ -236,7 +236,7 @@ Citizen.CreateThread(function()
 
 		Citizen.Wait(10)
 
-		local coords      = GetEntityCoords(GetPlayerPed(-1))
+		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
 
@@ -266,7 +266,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1)
 
 		if CurrentTest == 'theory' then
-			local playerPed = GetPlayerPed(-1)
+			local playerPed = PlayerPedId()
 
 			DisableControlAction(0, 1, true) -- LookLeftRight
 			DisableControlAction(0, 2, true) -- LookUpDown
@@ -274,7 +274,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
 		else
-			Citizen.Wait(2000)
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -285,9 +285,8 @@ Citizen.CreateThread(function()
 		Citizen.Wait(10)
 
 		if CurrentAction ~= nil then
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'dmvschool_menu' then
@@ -296,6 +295,8 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 			end
+		else
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -307,7 +308,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(10)
 
 		if CurrentTest == 'drive' then
-			local playerPed      = GetPlayerPed(-1)
+			local playerPed      = PlayerPedId()
 			local coords         = GetEntityCoords(playerPed)
 			local nextCheckPoint = CurrentCheckPoint + 1
 
@@ -350,6 +351,9 @@ Citizen.CreateThread(function()
 					CurrentCheckPoint = CurrentCheckPoint + 1
 				end
 			end
+		else
+			-- not currently taking driver test
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -361,11 +365,11 @@ Citizen.CreateThread(function()
 
 		if CurrentTest == 'drive' then
 
-			local playerPed = GetPlayerPed(-1)
+			local playerPed = PlayerPedId()
 
-			if IsPedInAnyVehicle(playerPed,  false) then
+			if IsPedInAnyVehicle(playerPed, false) then
 
-				local vehicle      = GetVehiclePedIsIn(playerPed,  false)
+				local vehicle      = GetVehiclePedIsIn(playerPed, false)
 				local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
 				local tooMuchSpeed = false
 
@@ -388,7 +392,6 @@ Citizen.CreateThread(function()
 				end
 
 				local health = GetEntityHealth(vehicle)
-
 				if health < LastVehicleHealth then
 
 					DriveErrors = DriveErrors + 1
@@ -397,10 +400,13 @@ Citizen.CreateThread(function()
 					ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
 
 					-- avoid stacking faults
-					Citizen.Wait(1000)
 					LastVehicleHealth = health
+					Citizen.Wait(1500)
 				end
 			end
+		else
+			-- not currently taking driver test
+			Citizen.Wait(500)
 		end
 	end
 end)
