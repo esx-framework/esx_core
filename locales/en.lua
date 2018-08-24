@@ -10,12 +10,11 @@ Locales['en'] = {
   ['foot_work']                 = 'you have to be on foot to be able to work.',
   ['next_point']                = 'go to the next step after completing this one.',
   ['security_deposit']          = 'you will be given ~g~$',
-  ['not_your_vehicle']          = "this is not your vehicle or you must be a driver.",
+  ['not_your_vehicle']          = 'this is not your vehicle or you must be a driver.',
   ['in_vehicle']                = 'you must be in a vehicle.',
-  ['wrong_point']               = "you are not at the right point of delivery.",
-  ['max_limit']                 = 'you have the maximum: ',
-  ['not_enough']                = "you do not have enough",
-  ['not_enough2']               = ' to continue this task.',
+  ['wrong_point']               = 'you are not at the right point of delivery.',
+  ['max_limit']                 = 'you have cannot carry more: %s',
+  ['not_enough']                = 'you do not have enough %s to continue this task.',
   ['caution_taken']             = ' ~s~was taken from you.',
   ['caution_returned']          = ' ~s~was returned to you.',
   ['spawn_veh']                 = 'spawn vehicle',
@@ -30,7 +29,7 @@ Locales['en'] = {
   ['public_leave']              = 'press ~INPUT_PICKUP~ to go to the entrance of the building.',
 
   -- Lumber Jack job
-  ['lj_locker_room']            = "lumberjack's Locker Room",
+  ['lj_locker_room']            = 'lumberjack\'s Locker Room',
   ['lj_mapblip']                = 'wood pile',
   ['lj_wood']                   = 'wood',
   ['lj_pickup']                 = 'press ~INPUT_PICKUP~ to retrieve wood.',
@@ -43,7 +42,7 @@ Locales['en'] = {
   ['lj_deliver_button']         = 'press ~INPUT_PICKUP~ to deliver the boards.',
 
   -- Fisherman
-  ['fm_fish_locker']            = "fishermen's Locker Room",
+  ['fm_fish_locker']            = 'fishermen\'s Locker Room',
   ['fm_fish']                   = 'fish',
   ['fm_fish_area']              = 'fishing area',
   ['fm_fish_button']            = 'press ~INPUT_PICKUP~ to fish.',
@@ -65,10 +64,10 @@ Locales['en'] = {
   ['f_gas']                     = 'gas',
   ['f_fuel_mixture_button']     = 'press ~INPUT_PICKUP~ to mix.',
   ['f_deliver_gas']             = 'deliver Gas',
-  ['f_deliver_gas_button']      = "press ~INPUT_PICKUP~ to deliver gasoline.",
+  ['f_deliver_gas_button']      = 'press ~INPUT_PICKUP~ to deliver gasoline.',
 
   -- Miner
-  ['m_miner_locker']            = "miner's Locker Room",
+  ['m_miner_locker']            = 'miner\'s Locker Room',
   ['m_rock']                    = 'rock',
   ['m_pickrocks']               = 'press ~INPUT_PICKUP~ to retrieve rocks.',
   ['m_washrock']                = 'rock Washing',
@@ -81,7 +80,7 @@ Locales['en'] = {
   ['m_sell_iron']               = 'iron Seller',
   ['m_deliver_iron']            = 'press ~INPUT_PICKUP~ to deliver the iron.',
   ['m_gold']                    = 'gold',
-  ['m_sell_gold']               = "gold Seller",
+  ['m_sell_gold']               = 'gold Seller',
   ['m_deliver_gold']            = 'press ~INPUT_PICKUP~ to deliver the gold.',
   ['m_diamond']                 = 'diamond',
   ['m_sell_diamond']            = 'diamond Seller',
@@ -93,7 +92,7 @@ Locales['en'] = {
   ['reporter_garage']           = 'Press ~INPUT_PICKUP~ to go down to the garage.',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = "butcher's Locker Room",
+  ['s_slaughter_locker']        = 'butcher\'s Locker Room',
   ['s_hen']                     = 'chicken coop',
   ['s_alive_chicken']           = 'live Chicken',
   ['s_catch_hen']               = 'press ~INPUT_PICKUP~ to catch live chickens.',
@@ -107,7 +106,7 @@ Locales['en'] = {
   ['s_deliver']                 = 'press ~INPUT_PICKUP~ to deliver the chicken trays.',
 
   -- Dress Designer
-  ['dd_dress_locker']           = "dress Designer's Locker Room",
+  ['dd_dress_locker']           = 'dress Designer\'s Locker Room',
   ['dd_wool']                   = 'wool',
   ['dd_pickup']                 = 'press ~INPUT_PICKUP~ to retrieve wool.',
   ['dd_fabric']                 = 'fabric',

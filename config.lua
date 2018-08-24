@@ -4,6 +4,7 @@ Config.Locale       = 'fr'
 Config.Jobs         = {}
 
 Config.PublicZones = {
+
 	EnterBuilding = {
 		Pos   = { x = -118.21381378174, y = -607.14227294922, z = 35.280723571777 },
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
@@ -26,5 +27,6 @@ Config.PublicZones = {
 		Type  = "teleport",
 		Hint  = _U('public_leave'),
 		Teleport = { x = -113.07, y = -604.93, z = 35.28 },
-	},
+	}
+
 }
