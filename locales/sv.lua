@@ -1,8 +1,9 @@
 Locales['sv'] = {
-  ['actions']                = 'handlingar ',
+  ['actions']                = 'handlingar',
+  ['boss_menu']              = 'chefmeny',
   ['deposit_amount']         = 'insättningsbelopp',
   ['deposit_society_money']  = 'insätt samhälls pengar',
-  ['do_you_want_to_recruit'] = 'vill du anlita %s?',
+  ['do_you_want_to_recruit'] = 'vill du anställa %s?',
   ['employee']               = 'anställd',
   ['employee_list']          = 'anställningslista',
   ['employee_management']    = 'medarbetarhantering',

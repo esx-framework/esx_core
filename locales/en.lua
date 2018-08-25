@@ -1,5 +1,6 @@
 Locales['en'] = {
   ['actions']                = 'actions',
+  ['boss_menu']              = 'boss menu',
   ['deposit_amount']         = 'deposit amount',
   ['deposit_society_money']  = 'deposit society money',
   ['do_you_want_to_recruit'] = 'do you want to recruit %s?',
