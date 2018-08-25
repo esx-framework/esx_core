@@ -1,35 +1,32 @@
 Locales['br'] = {
-  -- Menus Geral
-  ['cloakroom']                 = 'Vestiário',
+  -- Global menus
+  ['cloakroom']                 = 'vestiário',
   ['cloak_change']              = 'pressione ~INPUT_PICKUP~ mudar de roupa.',
   ['citizen_wear']              = 'retirar uniforme',
   ['job_wear']                  = 'colocar uniforme',
-  ['bank_deposit']              = 'um depósito de segurança de ~g~',
-  ['bank_deposit_r']            = 'um depósito de segurança de ~g~$',
-  ['bank_deposit2']             = '$ ~s~foi feito para você depois do seu desmaio.',
+  ['bank_deposit_returned']     = 'um depósito de segurança de ~g~$%s~s~ foi devolvido a você.',
+  ['bank_deposit_taken']        = 'um depósito de segurança de ~g~$%s~s~ foi tirado de você.',
   ['foot_work']                 = 'você deve estar a pé para poder trabalhar.',
   ['next_point']                = 'vá para o próximo passo depois de completar este.',
-  ['security_deposit']          = 'a segurança dada será ~g~$',
+  ['security_deposit']          = '%s \nA segurança dada será ~g~$%s~s~',
   ['not_your_vehicle']          = 'este não é o seu veículo ou você deve ser um motorista.',
   ['in_vehicle']                = 'você deve estar em um veículo.',
   ['wrong_point']               = 'você não está no ponto certo de entrega.',
   ['max_limit']                 = 'você tem o máximo: %s',
   ['not_enough']                = 'você não tem o suficiente %s para continuar esta tarefa.',
-  ['caution_taken']             = ' ~s~foi tirado de você.',
-  ['caution_returned']          = ' ~s~foi devolvido a você.',
-  ['spawn_veh']                 = 'Veiculo Spawnado',
+  ['spawn_veh']                 = 'veiculo Spawnado',
   ['spawn_veh_button']          = 'pressione ~INPUT_PICKUP~ chamar o veículo de entrega.',
   ['spawn_truck_button']        = 'pressione ~INPUT_PICKUP~ spawnar o caminhão.',
   ['service_vh']                = 'veículo de serviço',
   ['return_vh']                 = 'veiculo devolvido',
   ['return_vh_button']          = 'pressione ~INPUT_PICKUP~ para devolver o veiculo.',
   ['delivery_point']            = 'ponto de entrega',
-  ['delivery']                  = 'Entrega',
+  ['delivery']                  = 'entrega',
   ['public_enter']              = 'pressione ~INPUT_PICKUP~ para entrar no prédio.',
   ['public_leave']              = 'pressione ~INPUT_PICKUP~ para ir à entrada do edifício.',
 
-  -- Trabalho de Lenhador
-  ['lj_locker_room']            = 'Vestiario Lenhador',
+  -- Lumber Jack job
+  ['lj_locker_room']            = 'vestiario Lenhador',
   ['lj_mapblip']                = 'pilha de madeira',
   ['lj_wood']                   = 'madeira',
   ['lj_pickup']                 = 'pressione ~INPUT_PICKUP~ para recuperar madeira.',
@@ -41,8 +38,8 @@ Locales['br'] = {
   ['lj_pick_boards']            = 'pressione ~INPUT_PICKUP~ para recuperar tábuas.',
   ['lj_deliver_button']         = 'pressione ~INPUT_PICKUP~ para entregar as tábuas.',
 
-  -- Pescador
-  ['fm_fish_locker']            = 'Vestiario Pescador',
+  -- Fisherman
+  ['fm_fish_locker']            = 'vestiario Pescador',
   ['fm_fish']                   = 'peixe',
   ['fm_fish_area']              = 'area de pesca',
   ['fm_fish_button']            = 'pressione ~INPUT_PICKUP~ para pescar.',
@@ -53,9 +50,9 @@ Locales['br'] = {
   ['fm_boat_return_button']     = 'Pressione ~INPUT_PICKUP~ para devolver o barco.',
   ['fm_deliver_fish']           = 'pressione ~INPUT_PICKUP~ para entregar os peixes.',
 
-  -- Refinador
-  ['f_oil_refiner']             = 'Vestiario Refinador',
-  ['f_drill_oil']               = 'Broca de óleo',
+  -- Fuel
+  ['f_oil_refiner']             = 'vestiario Refinador',
+  ['f_drill_oil']               = 'broca de óleo',
   ['f_fuel']                    = 'óleo',
   ['f_drillbutton']             = 'pressione ~INPUT_PICKUP~ para perfurar.',
   ['f_fuel_refine']             = 'refinar óleo',
@@ -66,8 +63,8 @@ Locales['br'] = {
   ['f_deliver_gas']             = 'Entregar Gasolina',
   ['f_deliver_gas_button']      = 'pressione ~INPUT_PICKUP~ para entregar a gasolina.',
 
-  -- Minerador
-  ['m_miner_locker']            = 'Vestiario Minerador',
+  -- Miner
+  ['m_miner_locker']            = 'vestiario Minerador',
   ['m_rock']                    = ' Pedregulho',
   ['m_pickrocks']               = 'pressione ~INPUT_PICKUP~ para obter pedras.',
   ['m_washrock']                = ' pedras limpas ',
@@ -87,11 +84,11 @@ Locales['br'] = {
   ['m_deliver_diamond']         = 'pressione ~INPUT_PICKUP~ para entregar diamantes.',
   ['m_melt_button']             = 'pressione ~INPUT_PICKUP~ para derreter as pedras.',
 
-  -- Jornalista
+  -- Reporter
   ['reporter_name']             = 'Globo News',
   ['reporter_garage']           = 'Pressione ~INPUT_PICKUP~ para descer à garagem.',
 
-  -- Abatedor
+  -- Slaughterer
   ['s_slaughter_locker']        = 'Vestiario Abatedor',
   ['s_hen']                     = 'galinheiro',
   ['s_alive_chicken']           = 'galinha viva',
@@ -105,7 +102,7 @@ Locales['br'] = {
   ['s_unpackaged_button']       = 'pressione ~INPUT_PICKUP~ para colocar o frango em uma bandeja.',
   ['s_deliver']                 = 'pressione ~INPUT_PICKUP~ para entregar as bandejas de frango.',
 
-  -- Costureiro
+  -- Dress Designer
   ['dd_dress_locker']           = 'Vestiario Costureiro',
   ['dd_wool']                   = 'lã',
   ['dd_pickup']                 = 'pressione ~INPUT_PICKUP~ para obter lã.',

@@ -36,7 +36,7 @@ AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
 		account.removeMoney(caution)
 		if caution > 0 then
 			xPlayer.addAccountMoney('bank', caution)
-			TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_g').. caution .. _U('bank_deposit2'))
+			TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_returned', caution))
 		end
 	end)
 end)
@@ -111,14 +111,15 @@ end)
 RegisterServerEvent('esx_jobs:caution')
 AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPoint, vehicle)
 	local xPlayer = ESX.GetPlayerFromId(source)
+
 	if cautionType == "take" then
 		xPlayer.removeAccountMoney('bank', cautionAmount)
 		xPlayer.set('caution', cautionAmount)
-		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_r') .. cautionAmount .. _U('caution_taken'))
+		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_taken', cautionAmount))
 		TriggerClientEvent('esx_jobs:spawnJobVehicle', source, spawnPoint, vehicle)
 	elseif cautionType == "give_back" then
 		xPlayer.addAccountMoney('bank', cautionAmount)
 		xPlayer.set('caution', 0)
-		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_g') .. cautionAmount .. _U('caution_returned'))
+		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', cautionAmount))
 	end
 end)

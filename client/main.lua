@@ -121,7 +121,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 		for k,v in pairs(Config.Jobs) do
 			if PlayerData.job.name == k then
 				for l,w in pairs(v.Zones) do
-					if (w.Type == "vehspawnpt") and (w.Spawner == zone.Spawner) then
+					if w.Type == "vehspawnpt" and w.Spawner == zone.Spawner then
 						spawnpt = w
 						spawner = w.Spawner
 					end
@@ -468,8 +468,8 @@ Citizen.CreateThread(function()
 							plate = string.gsub(plate, " ", "")
 
 							for i=1, #myPlate, 1 do
-								if (myPlate[i] == plate) and (playerPed == driverPed) then
-									hintToDisplay = zone.Hint .. "\n" .. _U('security_deposit') .. cautionVehicleInCaseofDrop .. "~s~."
+								if myPlate[i] == plate and playerPed == driverPed then
+									hintToDisplay  = _U('security_deposit', zone.Hint, cautionVehicleInCaseofDrop)
 									isVehicleOwner = true
 									break
 								end
