@@ -231,18 +231,25 @@ end)
 
 ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, type)
 
-	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
 
-	if xPlayer ~= nil then
-		xPlayer.setJob(job, grade)
+	if xPlayer.job.name ~= job or xPlayer.job.grade_name ~= 'boss' then
+		print(('esx_society: %s attempted to set job!'):format(xPlayer.identifier))
+		break
+	end
+
+	if xTarget ~= nil then
+		xTarget.setJob(job, grade)
 		
 		if type == 'hire' then
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_hired', job))
+			TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_hired', job))
 		elseif type == 'promote' then
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_promoted'))
+			TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_promoted'))
 		elseif type == 'fire' then
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_been_fired', xPlayer.getJob().label))
+			TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_fired', xTarget.getJob().label))
 		end
+
 	else
 
 		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
