@@ -9,9 +9,9 @@ Locales['fr'] = {
   ['foot_work']                 = 'vous devez être à pied pour pouvoir travailler.',
   ['next_point']                = 'rendez-vous à la prochaine étape après avoir complété celle-ci.',
   ['security_deposit']          = '%s \nLa caution rendue sera de ~g~$%s~s~',
-  ['not_your_vehicle']          = "ce n'est pas votre véhicule ou vous devez être conducteur.",
+  ['not_your_vehicle']          = 'ce n\'est pas votre véhicule ou vous devez être conducteur.',
   ['in_vehicle']                = 'vous devez être dans un véhicule.',
-  ['wrong_point']               = "vous n'êtes pas au bon point de livraison.",
+  ['wrong_point']               = 'vous n\'êtes pas au bon point de livraison.',
   ['max_limit']                 = 'vous avez le maximum de: %s',
   ['not_enough']                = 'vous n\'avez plus assez de %s pour continuer cette tâche.',
   ['spawn_veh']                 = 'spawner véhicule de fonction',
@@ -26,7 +26,7 @@ Locales['fr'] = {
   ['public_leave']              = 'appuyez sur ~INPUT_PICKUP~ pour aller à l\'entrée de l\'immeuble.',
 
   -- Lumber Jack job
-  ['lj_locker_room']            = "lumberjack's Locker Room",
+  ['lj_locker_room']            = 'lumberjack\'s Locker Room',
   ['lj_mapblip']                = 'tas de bois',
   ['lj_wood']                   = 'bois',
   ['lj_pickup']                 = 'appuyez sur ~INPUT_PICKUP~ pour récupérer du bois.',
@@ -39,7 +39,7 @@ Locales['fr'] = {
   ['lj_deliver_button']         = 'appuyez sur ~INPUT_PICKUP~ pour livrer les planches.',
 
   -- Fisherman
-  ['fm_fish_locker']            = "fishermen's Locker Room",
+  ['fm_fish_locker']            = 'fishermen\'s Locker Room',
   ['fm_fish']                   = 'poisson',
   ['fm_fish_area']              = 'zone de pêche',
   ['fm_fish_button']            = 'appuyez sur ~INPUT_PICKUP~ pour pêcher.',
@@ -60,10 +60,10 @@ Locales['fr'] = {
   ['f_fuel_mixture']            = 'Mélange',
   ['f_gas']                     = 'Essence',
   ['f_fuel_mixture_button']     = 'Appuyez sur ~INPUT_PICKUP~ pour mélanger.',
-  ['f_deliver_gas']             = "Appuyez sur ~INPUT_PICKUP~ pour livrer l'essence.",
+  ['f_deliver_gas']             = 'Appuyez sur ~INPUT_PICKUP~ pour livrer l\'essence.',
 
   -- Miner
-  ['m_miner_locker']            = "miner's Locker Room",
+  ['m_miner_locker']            = 'miner\'s Locker Room',
   ['m_rock']                    = 'rocher',
   ['m_pickrocks']               = 'appuyez sur ~INPUT_PICKUP~ pour récupérer des rochers.',
   ['m_washrock']                = 'roche lavé',
@@ -76,10 +76,10 @@ Locales['fr'] = {
   ['m_sell_iron']               = 'revente de fer',
   ['m_deliver_iron']            = 'appuyez sur ~INPUT_PICKUP~ pour livrer le fer.',
   ['m_gold']                    = 'or',
-  ['m_sell_gold']               = "revente d'or",
-  ['m_deliver_gold']            = "appuyez sur ~INPUT_PICKUP~ pour livrer l'or'.",
+  ['m_sell_gold']               = 'revente d\'or',
+  ['m_deliver_gold']            = 'appuyez sur ~INPUT_PICKUP~ pour livrer l\'or\'.',
   ['m_diamond']                 = 'diamant',
-  ['m_sell_diamond']            = "revente de diamants",
+  ['m_sell_diamond']            = 'revente de diamants',
   ['m_deliver_diamond']         = 'appuyez sur ~INPUT_PICKUP~ pour livrer les diamants.',
   ['m_melt_button']             = 'appuyez sur ~INPUT_PICKUP~ pour fondre les roches.',
 
@@ -88,7 +88,7 @@ Locales['fr'] = {
   ['reporter_garage']           = 'appuyez sur ~INPUT_PICKUP~ pour descendre au garage.',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = "butcher's Locker Room",
+  ['s_slaughter_locker']        = 'butcher\'s Locker Room',
   ['s_hen']                     = 'poulailler',
   ['s_alive_chicken']           = 'poulet vivant',
   ['s_catch_hen']               = 'appuyez sur ~INPUT_PICKUP~ pour attrapper des poulets vivants.',
@@ -102,7 +102,7 @@ Locales['fr'] = {
   ['s_deliver']                 = 'appuyez sur ~INPUT_PICKUP~ pour livrer les barquettes de poulet.',
 
   -- Dress Designer
-  ['dd_dress_locker']           = "dress Designer's Locker Room",
+  ['dd_dress_locker']           = 'dress Designer\'s Locker Room',
   ['dd_wool']                   = 'laine',
   ['dd_pickup']                 = 'appuyez sur ~INPUT_PICKUP~ pour récupérer de la laine.',
   ['dd_fabric']                 = 'tissu',

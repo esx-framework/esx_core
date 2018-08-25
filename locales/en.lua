@@ -51,7 +51,7 @@ Locales['en'] = {
   ['fm_deliver_fish']           = 'press ~INPUT_PICKUP~ to deliver the fish.',
 
   -- Fuel
-  ['f_oil_refiner']             = 'Oil Refiner Locker Room',
+  ['f_oil_refiner']             = 'oil Refiner Locker Room',
   ['f_drill_oil']               = 'drill for oil',
   ['f_fuel']                    = 'oil',
   ['f_drillbutton']             = 'press ~INPUT_PICKUP~ to drill.',
@@ -107,7 +107,7 @@ Locales['en'] = {
   ['dd_wool']                   = 'wool',
   ['dd_pickup']                 = 'press ~INPUT_PICKUP~ to retrieve wool.',
   ['dd_fabric']                 = 'fabric',
-  ['dd_makefabric']             = 'Press ~INPUT_PICKUP~ to make fabric.',
+  ['dd_makefabric']             = 'press ~INPUT_PICKUP~ to make fabric.',
   ['dd_clothing']               = 'clothing',
   ['dd_makeclothing']           = 'press ~INPUT_PICKUP~ to retrieve clothing.',
   ['dd_deliver_clothes']        = 'press ~INPUT_PICKUP~ to deliver the clothes.',

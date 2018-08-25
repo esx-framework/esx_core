@@ -9,9 +9,9 @@ Locales['fi'] = {
   ['foot_work']                 = 'sinun täytyy olla jalan, jotta voit työskennellä',
   ['next_point']                = 'mene seuraavaan pisteeseen kun olet valmis täällä',
   ['security_deposit']          = '%s \nVakuus joka annetaan on ~g~€%s~s~',
-  ['not_your_vehicle']          = "tämä ei ole sinun ajoneuvo tai et ole sen kuski",
+  ['not_your_vehicle']          = 'tämä ei ole sinun ajoneuvo tai et ole sen kuski',
   ['in_vehicle']                = 'sinun täytyy olla ajoneuvossa',
-  ['wrong_point']               = "et ole oikeassa paikassa",
+  ['wrong_point']               = 'et ole oikeassa paikassa',
   ['max_limit']                 = 'sinulla on jo maksimi määrä: %s',
   ['not_enough']                = 'sinulla ei ole tarpeeksi %s jatkaaksesi täällä.',
   ['spawn_veh']                 = 'spawnaa ajoneuvo',
@@ -26,7 +26,7 @@ Locales['fi'] = {
   ['public_leave']              = 'paina ~INPUT_PICKUP~ poistuaksesi talosta.',
 
   -- Lumber Jack job
-  ['lj_locker_room']            = "metsurin Pukulokero",
+  ['lj_locker_room']            = 'metsurin Pukulokero',
   ['lj_mapblip']                = 'Puukasa',
   ['lj_wood']                   = 'puu',
   ['lj_pickup']                 = 'paina ~INPUT_PICKUP~ kerätäksesi puita',
@@ -39,7 +39,7 @@ Locales['fi'] = {
   ['lj_deliver_button']         = 'paina ~INPUT_PICKUP~ toimitaaksesi lankut.',
 
   -- Fisherman
-  ['fm_fish_locker']            = "kalastajan Pukulokero",
+  ['fm_fish_locker']            = 'kalastajan Pukulokero',
   ['fm_fish']                   = 'kala',
   ['fm_fish_area']              = 'kalastus alue',
   ['fm_fish_button']            = 'paina ~INPUT_PICKUP~ kalastaaksesi',
@@ -61,10 +61,10 @@ Locales['fi'] = {
   ['f_gas']                     = 'Polttoöljy',
   ['f_fuel_mixture_button']     = 'paina ~INPUT_PICKUP~ sekoita',
   ['f_deliver_gas']             = 'toimita polttoöljy',
-  ['f_deliver_gas_button']      = "paina ~INPUT_PICKUP~ myydäksesi Polttoöljyä",
+  ['f_deliver_gas_button']      = 'paina ~INPUT_PICKUP~ myydäksesi Polttoöljyä',
 
   -- Miner
-  ['m_miner_locker']            = "Kaivostyöläisen Pukulokero",
+  ['m_miner_locker']            = 'Kaivostyöläisen Pukulokero',
   ['m_rock']                    = 'kivi',
   ['m_pickrocks']               = 'paina ~INPUT_PICKUP~ louhiaksesi kiviä.',
   ['m_washrock']                = 'puhdistettu kivi',
@@ -77,10 +77,10 @@ Locales['fi'] = {
   ['m_sell_iron']               = 'myy metalli',
   ['m_deliver_iron']            = 'paina ~INPUT_PICKUP~ myydäksesi metallit',
   ['m_gold']                    = 'kulta',
-  ['m_sell_gold']               = "myy kulta",
-  ['m_deliver_gold']            = "paina ~INPUT_PICKUP~ myydäksesi kullat",
+  ['m_sell_gold']               = 'myy kulta',
+  ['m_deliver_gold']            = 'paina ~INPUT_PICKUP~ myydäksesi kullat',
   ['m_diamond']                 = 'timantti',
-  ['m_sell_diamond']            = "myy timantti",
+  ['m_sell_diamond']            = 'myy timantti',
   ['m_deliver_diamond']         = 'paina ~INPUT_PICKUP~ myydäksesi timantit',
   ['m_melt_button']             = 'paina ~INPUT_PICKUP~ sulattaaksesi kivet',
 
@@ -89,7 +89,7 @@ Locales['fi'] = {
   ['reporter_garage']           = 'paina ~INPUT_PICKUP~ mennäksesi alas talliin',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = "teurastajan Pukulokero",
+  ['s_slaughter_locker']        = 'teurastajan Pukulokero',
   ['s_hen']                     = 'kanakoppi',
   ['s_alive_chicken']           = 'elävä kana',
   ['s_catch_hen']               = 'paina ~INPUT_PICKUP~ ottaaksesi kana kiinni',
@@ -103,7 +103,7 @@ Locales['fi'] = {
   ['s_deliver']                 = 'paina ~INPUT_PICKUP~  myydäksesi kananfileet',
 
   -- Dress Designer
-  ['dd_dress_locker']           = "vaatevalmistajan Pukulokero",
+  ['dd_dress_locker']           = 'vaatevalmistajan Pukulokero',
   ['dd_wool']                   = 'villa',
   ['dd_pickup']                 = 'paina ~INPUT_PICKUP~ kerätäksesi villaa',
   ['dd_fabric']                 = 'kangas',
