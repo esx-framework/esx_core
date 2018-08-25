@@ -236,7 +236,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 
 	if xPlayer.job.name ~= job or xPlayer.job.grade_name ~= 'boss' then
 		print(('esx_society: %s attempted to set job!'):format(xPlayer.identifier))
-		break
+		return
 	end
 
 	if xTarget ~= nil then
