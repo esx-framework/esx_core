@@ -6,6 +6,7 @@ Config.Jobs.fisherman = {
 	},
 
 	Vehicles = {
+
 		Truck = {
 			Spawner = 1,
 			Hash = "benson",
@@ -19,6 +20,7 @@ Config.Jobs.fisherman = {
 			Trailer = "none",
 			HasCaution = false
 		}
+
 	},
 
 	Zones = {
@@ -36,7 +38,7 @@ Config.Jobs.fisherman = {
 		},
 
 		FishingSpot = {
-			Pos   = {x = 4435.21, y = 4829.6, z = 0.34},
+			Pos   = {x = 4435.21, y = 4829.60, z = 0.34},
 			Color = {r = 204, g = 204, b = 0},
 			Size  = {x = 110.0, y = 110.0, z = 10.0},
 			Marker= 1,
@@ -72,7 +74,7 @@ Config.Jobs.fisherman = {
 			Spawner = 2,
 			Hint  = _U('fm_spawnboat'),
 			Caution = 0,
-			GPS = {x = 4435.21, y = 4829.6, z = 0.34}
+			GPS = {x = 4435.21, y = 4829.60, z = 0.34}
 		},
 
 		BoatSpawnPoint = {
@@ -166,7 +168,8 @@ Config.Jobs.fisherman = {
 				requires_name = _U('fm_fish'),
 				drop   = 100
 				}
-			},
+			}
 		}
+
 	}
 }

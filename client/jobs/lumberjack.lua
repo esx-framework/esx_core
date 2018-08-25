@@ -19,7 +19,7 @@ Config.Jobs.lumberjack = {
 	Zones = {
 
 		CloakRoom = {
-			Pos = {x = 1200.63, y = -1276.875, z = 34.38},
+			Pos = {x = 1200.63, y = -1276.87, z = 34.38},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
@@ -102,7 +102,7 @@ Config.Jobs.lumberjack = {
 		},
 
 		VehicleSpawner = {
-			Pos = {x = 1191.9681396484, y = -1261.7775878906, z = 34.170627593994},
+			Pos = {x = 1191.96, y = -1261.77, z = 34.17},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
@@ -115,7 +115,7 @@ Config.Jobs.lumberjack = {
 		},
 
 		VehicleSpawnPoint = {
-			Pos = {x = 1194.6257324219, y = -1286.955078125, z = 34.121524810791},
+			Pos = {x = 1194.62, y = -1286.95, z = 34.12},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
@@ -126,7 +126,7 @@ Config.Jobs.lumberjack = {
 		},
 
 		VehicleDeletePoint = {
-			Pos = {x = 1216.8983154297, y = -1229.2396240234, z = 34.403507232666},
+			Pos = {x = 1216.89, y = -1229.23, z = 34.40},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
@@ -141,7 +141,7 @@ Config.Jobs.lumberjack = {
 		},
 
 		Delivery = {
-			Pos = {x = 1201.3558349609, y = -1327.5159912109, z = 34.226093292236},
+			Pos = {x = 1201.35, y = -1327.51, z = 34.22},
 			Color = {r = 204, g = 204, b = 0},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
@@ -163,5 +163,6 @@ Config.Jobs.lumberjack = {
 			},
 			Hint = _U("lj_deliver_button")
 		}
+
 	}
 }
