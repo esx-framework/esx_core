@@ -19,13 +19,9 @@ local JobBlips                = {}
 
 local collectedItem           = nil
 local collectedQtty           = 0
-local collectedQttyUpToDate   = false
-local previousCollectedItem   = nil
-local previousCollectedQtty   = 0
 local isInMarker              = false
 local isInPublicMarker        = false
 
-local newTask                 = false
 local hintToDisplay           = "no hint to display"
 local jobDone                 = false
 local onDuty                  = false
@@ -55,6 +51,7 @@ Citizen.CreateThread(function()
 	end
 
 	PlayerData = ESX.GetPlayerData()
+	refreshBlips()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -113,39 +110,35 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 			TriggerServerEvent('esx_jobs:startWork', zone.Item)
 		end
 	elseif zone.Type == "vehspawner" then
-		TriggerServerEvent('esx_jobs:requestPlayerData', 'refresh_bank_account')
-		local spawnpt = nil
-		local deliverypt = nil
+		local spawnPoint = nil
 		local vehicle = nil
 
 		for k,v in pairs(Config.Jobs) do
 			if PlayerData.job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehspawnpt" and w.Spawner == zone.Spawner then
-						spawnpt = w
+						spawnPoint = w
 						spawner = w.Spawner
 					end
 				end
 
 				for m,x in pairs(v.Vehicles) do
-					if (x.Spawner == zone.Spawner) then
+					if x.Spawner == zone.Spawner then
 						vehicle = x
 					end
 				end
 			end
 		end
 
-		local caution = zone.Caution
+		if ESX.Game.IsSpawnPointClear(spawnPoint.Pos, 5.0) then
+			TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', zone.Caution)
+			cautionVehicleInCaseofDrop = zone.Caution
+			maxCautionVehicleInCaseofDrop = cautionVehicleInCaseofDrop
 
-		if deliverypt == nil then
-			deliverypt = 0
+			spawnVehicle(spawnPoint, vehicle)
+		else
+			ESX.ShowNotification(_U('spawn_blocked'))
 		end
-
-		TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', caution)
-		cautionVehicleInCaseofDrop = caution
-		maxCautionVehicleInCaseofDrop = cautionVehicleInCaseofDrop
-
-		spawncar(spawnpt, vehicle)
 
 	elseif zone.Type == "vehdelete" then
 		local looping = true
@@ -267,10 +260,11 @@ function refreshBlips()
 
 					if zoneValues.Blip then
 						local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
-						SetBlipSprite (blip, jobValues.BlipInfos.Sprite)
-						SetBlipDisplay(blip, 4)
-						SetBlipScale  (blip, 1.2)
-						SetBlipColour (blip, jobValues.BlipInfos.Color)
+						SetBlipSprite  (blip, jobValues.BlipInfos.Sprite)
+						SetBlipDisplay (blip, 4)
+						SetBlipScale   (blip, 1.2)
+						SetBlipCategory(blip, 3)
+						SetBlipColour  (blip, jobValues.BlipInfos.Color)
 						SetBlipAsShortRange(blip, true)
 
 						BeginTextCommandSetBlipName("STRING")
@@ -284,44 +278,41 @@ function refreshBlips()
 	end
 end
 
-function spawncar(spawnPoint, vehicle)
-  hintToDisplay = "no hint to display"
-  hintIsShowed = false
-  TriggerServerEvent('esx_jobs:caution', "take", cautionVehicleInCaseofDrop, spawnPoint, vehicle)
+function spawnVehicle(spawnPoint, vehicle)
+	hintToDisplay = "no hint to display"
+	hintIsShowed = false
+	TriggerServerEvent('esx_jobs:caution', "take", cautionVehicleInCaseofDrop, spawnPoint, vehicle)
 end
 
 RegisterNetEvent('esx_jobs:spawnJobVehicle')
 AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 	local playerPed = PlayerPedId()
 
-	if not IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
+	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.heading, function(spawnedVehicle)
 
-		ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.heading, function(spawnedVehicle)
+		if vehicle.Trailer ~= "none" then
+			ESX.Game.SpawnVehicle(vehicle.Trailer, spawnPoint.Pos, spawnPoint.heading, function(trailer)
+				AttachVehicleToTrailer(spawnedVehicle, trailer, 1.1)
+			end)
+		end
 
-			if vehicle.Trailer ~= "none" then
-				ESX.Game.SpawnVehicle(vehicle.Trailer, spawnPoint.Pos, spawnPoint.heading, function(trailer)
-					AttachVehicleToTrailer(spawnedVehicle, trailer, 1.1)
-				end)
-			end
+		-- save & set plate
+		local plate = 'WORK' .. math.random(100, 900)
+		SetVehicleNumberPlateText(spawnedVehicle, plate)
+		table.insert(myPlate, plate)
+		plate = string.gsub(plate, " ", "")
 
-			-- save & set plate
-			local plate = 'WORK' .. math.random(100, 900)
-			SetVehicleNumberPlateText(spawnedVehicle, plate)
-			table.insert(myPlate, plate)
-			plate = string.gsub(plate, " ", "")
+		TaskWarpPedIntoVehicle(playerPed, spawnedVehicle, -1)
+		isJobVehicleDestroyed = false
 
-			TaskWarpPedIntoVehicle(playerPed, spawnedVehicle, -1)
-			isJobVehicleDestroyed = false
-
-			if vehicle.HasCaution then
-				vehicleInCaseofDrop = spawnedVehicle
-				vehicleHashInCaseofDrop = vehicle.Hash
-				vehicleObjInCaseofDrop = vehicle
-				vehicleMaxHealthInCaseofDrop = GetEntityMaxHealth(spawnedVehicle)
-				vehicleOldHealthInCaseofDrop = vehicleMaxHealthInCaseofDrop
-			end
-		end)
-	end
+		if vehicle.HasCaution then
+			vehicleInCaseofDrop = spawnedVehicle
+			vehicleHashInCaseofDrop = vehicle.Hash
+			vehicleObjInCaseofDrop = vehicle
+			vehicleMaxHealthInCaseofDrop = GetEntityMaxHealth(spawnedVehicle)
+			vehicleOldHealthInCaseofDrop = vehicleMaxHealthInCaseofDrop
+		end
+	end)
 end)
 
 -- Show top left hint

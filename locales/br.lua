@@ -12,11 +12,12 @@ Locales['br'] = {
   ['not_your_vehicle']          = 'este não é o seu veículo ou você deve ser um motorista.',
   ['in_vehicle']                = 'você deve estar em um veículo.',
   ['wrong_point']               = 'você não está no ponto certo de entrega.',
-  ['max_limit']                 = 'você tem o máximo: %s',
-  ['not_enough']                = 'você não tem o suficiente %s para continuar esta tarefa.',
+  ['max_limit']                 = 'você tem o máximo ~y~%s~s~',
+  ['not_enough']                = 'você não tem o suficiente ~y~%s~s~ para continuar esta tarefa.',
   ['spawn_veh']                 = 'veiculo Spawnado',
   ['spawn_veh_button']          = 'pressione ~INPUT_PICKUP~ chamar o veículo de entrega.',
   ['spawn_truck_button']        = 'pressione ~INPUT_PICKUP~ spawnar o caminhão.',
+  ['spawn_blocked']             = 'an vehicle is blocking the spawnpoint!',
   ['service_vh']                = 'veículo de serviço',
   ['return_vh']                 = 'veiculo devolvido',
   ['return_vh_button']          = 'pressione ~INPUT_PICKUP~ para devolver o veiculo.',
@@ -30,7 +31,7 @@ Locales['br'] = {
   ['lj_mapblip']                = 'pilha de madeira',
   ['lj_wood']                   = 'madeira',
   ['lj_pickup']                 = 'pressione ~INPUT_PICKUP~ para recuperar madeira.',
-  ['lj_cutwood']                = 'Corte de Madeira',
+  ['lj_cutwood']                = 'corte de Madeira',
   ['lj_cutwood_button']         = 'pressione ~INPUT_PICKUP~ para cortar madeira.',
   ['lj_board']                  = 'tábua',
   ['lj_planks']                 = 'tábua embalada',
@@ -45,7 +46,7 @@ Locales['br'] = {
   ['fm_fish_button']            = 'pressione ~INPUT_PICKUP~ para pescar.',
   ['fm_spawnboat_title']        = 'Spawnar Barco',
   ['fm_spawnboat']              = 'pressione ~INPUT_PICKUP~ para chamar um barco.',
-  ['fm_boat_title']             = 'Barco',
+  ['fm_boat_title']             = 'barco',
   ['fm_boat_return_title']      = 'devolver barco',
   ['fm_boat_return_button']     = 'Pressione ~INPUT_PICKUP~ para devolver o barco.',
   ['fm_deliver_fish']           = 'pressione ~INPUT_PICKUP~ para entregar os peixes.',
@@ -57,10 +58,10 @@ Locales['br'] = {
   ['f_drillbutton']             = 'pressione ~INPUT_PICKUP~ para perfurar.',
   ['f_fuel_refine']             = 'refinar óleo',
   ['f_refine_fuel_button']      = 'pressione ~INPUT_PICKUP~ para refinar.',
-  ['f_fuel_mixture']            = 'Misturar o óleo refinado',
+  ['f_fuel_mixture']            = 'misturar o óleo refinado',
   ['f_gas']                     = 'gasolina',
   ['f_fuel_mixture_button']     = 'pressione ~INPUT_PICKUP~ para misturar.',
-  ['f_deliver_gas']             = 'Entregar Gasolina',
+  ['f_deliver_gas']             = 'entregar Gasolina',
   ['f_deliver_gas_button']      = 'pressione ~INPUT_PICKUP~ para entregar a gasolina.',
 
   -- Miner
@@ -69,7 +70,7 @@ Locales['br'] = {
   ['m_pickrocks']               = 'pressione ~INPUT_PICKUP~ para obter pedras.',
   ['m_washrock']                = 'pedras limpas ',
   ['m_rock_button']             = 'pressione ~INPUT_PICKUP~ para lavar as pedras.',
-  ['m_rock_smelting']           = 'Fundição',
+  ['m_rock_smelting']           = 'fundição',
   ['m_copper']                  = 'cobre',
   ['m_sell_copper']             = 'vender cobre',
   ['m_deliver_copper']          = 'pressione ~INPUT_PICKUP~ para entregar cobre.',
@@ -85,11 +86,11 @@ Locales['br'] = {
   ['m_melt_button']             = 'pressione ~INPUT_PICKUP~ para derreter as pedras.',
 
   -- Reporter
-  ['reporter_name']             = 'Globo News',
-  ['reporter_garage']           = 'Pressione ~INPUT_PICKUP~ para descer à garagem.',
+  ['reporter_name']             = 'globo News',
+  ['reporter_garage']           = 'pressione ~INPUT_PICKUP~ para descer à garagem.',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = 'Vestiario Abatedor',
+  ['s_slaughter_locker']        = 'vestiario Abatedor',
   ['s_hen']                     = 'galinheiro',
   ['s_alive_chicken']           = 'galinha viva',
   ['s_catch_hen']               = 'pressione ~INPUT_PICKUP~ para pegar galinha viva.',
@@ -103,7 +104,7 @@ Locales['br'] = {
   ['s_deliver']                 = 'pressione ~INPUT_PICKUP~ para entregar as bandejas de frango.',
 
   -- Dress Designer
-  ['dd_dress_locker']           = 'Vestiario Costureiro',
+  ['dd_dress_locker']           = 'vestiario Costureiro',
   ['dd_wool']                   = 'lã',
   ['dd_pickup']                 = 'pressione ~INPUT_PICKUP~ para obter lã.',
   ['dd_fabric']                 = 'tecido',

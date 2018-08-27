@@ -30,8 +30,8 @@ Config.Jobs.fueler = {
 			GPS = {x = 554.59, y = -2314.43, z = 4.86}
 		},
 
-		ChampPetrol = {
-			Pos = {x = 609.58, y = 2856.74, z = 39.49},
+		OilFarm = {
+			Pos = {x = 609.58, y = 2856.74, z = 38.90},
 			Size = {x = 20.0, y = 20.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
@@ -55,7 +55,7 @@ Config.Jobs.fueler = {
 			GPS = {x = 2736.94, y = 1417.99, z = 23.48}
 		},
 
-		Raffinerie = {
+		OilRefinement = {
 			Pos = {x = 2736.94, y = 1417.99, z = 23.48},
 			Size = {x = 10.0, y = 10.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
@@ -80,7 +80,7 @@ Config.Jobs.fueler = {
 			GPS = {x = 265.75, y = -3013.39, z = 4.73}
 		},
 
-		Melange = {
+		OilMix = {
 			Pos = {x = 265.75, y = -3013.39, z = 4.73},
 			Size = {x = 10.0, y = 10.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
@@ -168,7 +168,7 @@ Config.Jobs.fueler = {
 				}
 			},
 
-			Hint = _U("f_deliver_gas"),
+			Hint = _U("f_deliver_gas_button"),
 			GPS = {x = 609.58, y = 2856.74, z = 39.49}
 		}
 
