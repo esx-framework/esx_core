@@ -23,9 +23,7 @@ local isInMarker              = false
 local isInPublicMarker        = false
 
 local hintToDisplay           = "no hint to display"
-local jobDone                 = false
 local onDuty                  = false
-local moneyInBank             = 0
 local spawner                 = 0
 local myPlate                 = {}
 local isJobVehicleDestroyed   = false
