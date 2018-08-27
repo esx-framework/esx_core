@@ -250,6 +250,8 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 			TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_fired', xTarget.getJob().label))
 		end
 
+		cb()
+
 	else
 
 		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
