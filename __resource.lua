@@ -2,10 +2,9 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ESX Jobs'
 
-version '1.0.1'
+version '1.1.0'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/en.lua',
@@ -37,5 +36,6 @@ client_scripts {
 dependencies {
 	'es_extended',
 	'esx_addonaccount',
+	'skinchanger',
 	'esx_skin'
 }
