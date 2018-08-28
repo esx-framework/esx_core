@@ -1,45 +1,70 @@
-WhiteList = {}
+WhiteList       = {}
+local hasSqlRun = false
 
-function loadWhiteList ()
-  MySQL.Async.fetchAll(
-    'SELECT * FROM whitelist',
-    {},
-    function (identifiers)
-      Whitelist = {}
+function loadWhiteList(cb)
+	Whitelist = {}
 
-      for i=1, #identifiers, 1 do
-        table.insert(WhiteList, tostring(identifiers[i].identifier))
-      end
-    end
-  )
+	MySQL.Async.fetchAll('SELECT * FROM whitelist', {}, function (identifiers)
+		for i=1, #identifiers, 1 do
+			table.insert(WhiteList, tostring(identifiers[i].identifier):lower())
+		end
+
+		hasSqlRun = true
+
+		if cb ~= nil then
+			cb()
+		end
+	end)
 end
 
-MySQL.ready(function ()
-  loadWhiteList()
+AddEventHandler('onMySQLReady', function()
+	loadWhiteList()
 end)
 
-AddEventHandler('playerConnecting', function (playerName, setKickReason)
-  if (WhiteList == {}) then
-    Citizen.Wait(1000)
-  end
+Citizen.CreateThread(function()
+	Citizen.Wait(10000)
 
-  local whitelisted = false
-  local steamID = GetPlayerIdentifiers(source)[1] or false
+	if not hasSqlRun then
+		loadWhiteList()
+	end
+end)
 
-  if steamID == false then
-    setKickReason(_U('steamid_error'))
-    CancelEvent()
-  end
+AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
+	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
+	deferrals.defer()
 
-  for i = 1, #WhiteList, 1 do
-    if (tostring(WhiteList[i]) == tostring(steamID)) then
-      whitelisted = true
-      break
-    end
-  end
+	local _source = source
+	
+	-- Letting the user know what's going on.
+	deferrals.update(_U('whitelist_check'))
+	
+	-- Needed, not sure why.
+	Citizen.Wait(100)
 
-  if whitelisted == false then
-    setKickReason(_U('not_whitelisted'))
-    CancelEvent()
-  end
+	local whitelisted, kickReason, steamID = false, nil, GetPlayerIdentifiers(_source)[1]
+
+	if #WhiteList == 0 then
+		kickReason = _U('whitelist_empty')
+	elseif not string.match(steamID, 'steam:1') then
+		kickReason = _U('steamid_error')
+	else
+
+		for i = 1, #WhiteList, 1 do
+			if tostring(WhiteList[i]) == tostring(steamID) then
+				whitelisted = true
+				break
+			end
+		end
+
+		if not whitelisted then
+			kickReason = _U('not_whitelisted')
+		end
+
+	end
+
+	if whitelisted then
+		deferrals.done()
+	else
+		deferrals.done(kickReason)
+	end
 end)
