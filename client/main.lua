@@ -90,27 +90,35 @@ end)
 
 AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
 	local playerPed = PlayerPedId()
+	local killer    = GetPlayerFromServerId(killerId)
 
-	-- snake text; killerpos actually is the victim
-	local victimCoords = data.killerpos
-	local weaponHash   = data.weaponhash
+	if NetworkIsPlayerActive(killer) then
+		local victimCoords = data.killerpos
+		local weaponHash   = data.weaponhash
 
-	data.killerpos  = nil
-	data.weaponhash = nil
+		data.killerpos  = nil
+		data.weaponhash = nil
 
-	local killerPed    = GetPlayerPed(GetPlayerFromServerId(killerId))
-	local killerCoords = GetEntityCoords(killerPed)
-	local distance     = GetDistanceBetweenCoords(victimCoords[1], victimCoords[2], victimCoords[3], killerCoords, false)
+		local killerPed    = GetPlayerPed(killer)
+		local killerCoords = GetEntityCoords(killerPed)
+		local distance     = GetDistanceBetweenCoords(victimCoords[1], victimCoords[2], victimCoords[3], killerCoords, false)
 
-	table.insert(data, {
-		victimCoords = victimCoords,
-		weaponHash   = weaponHash,
-		deathCause   = GetPedCauseOfDeath(playerPed),
-		killed       = true,
-		killerId     = killerId,
-		killerCoords = { table.unpack(killerCoords) },
-		distance     = ESX.Round(distance)
-	})
+		table.insert(data, {
+			victimCoords = victimCoords,
+			weaponHash   = weaponHash,
+			deathCause   = GetPedCauseOfDeath(playerPed),
+			killed       = true,
+			killerId     = killerId,
+			killerCoords = { table.unpack(killerCoords) },
+			distance     = ESX.Round(distance)
+		})
+
+	else
+		table.insert(data, {
+			killed     = false,
+			deathCause = GetPedCauseOfDeath(playerPed)
+		})
+	end
 
 	TriggerEvent('esx:onPlayerDeath', data)
 	TriggerServerEvent('esx:onPlayerDeath', data)

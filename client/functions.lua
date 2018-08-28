@@ -480,7 +480,7 @@ ESX.Game.GetClosestObject = function(filter, coords)
   end
 
   if coords == nil then
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
     coords          = GetEntityCoords(playerPed)
   end
 
@@ -545,7 +545,7 @@ ESX.Game.GetClosestPlayer = function(coords)
   local closestPlayer   = -1
   local coords          = coords
   local usePlayerPed    = false
-  local playerPed       = GetPlayerPed(-1)
+  local playerPed       = PlayerPedId()
   local playerId        = PlayerId()
 
   if coords == nil then
@@ -614,7 +614,7 @@ ESX.Game.GetClosestVehicle = function(coords)
   local coords          = coords
 
   if coords == nil then
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
     coords          = GetEntityCoords(playerPed)
   end
 
@@ -654,7 +654,7 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 end
 
 ESX.Game.GetVehicleInDirection = function()
-	local playerPed    = GetPlayerPed(-1)
+	local playerPed    = PlayerPedId()
 	local playerCoords = GetEntityCoords(playerPed, 1)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
 	local rayHandle    = CastRayPointToPoint(playerCoords.x, playerCoords.y, playerCoords.z, inDirection.x, inDirection.y, inDirection.z, 10, playerPed, 0)
@@ -1086,7 +1086,7 @@ end
 
 ESX.ShowInventory = function()
 
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	local elements  = {}
 
 	if ESX.PlayerData.money > 0 then
@@ -1104,10 +1104,10 @@ ESX.ShowInventory = function()
 	for i=1, #ESX.PlayerData.accounts, 1 do
 		if ESX.PlayerData.accounts[i].money > 0 then
 			table.insert(elements, {
-				label     = '[' .. ESX.PlayerData.accounts[i].label .. '] $' .. ESX.PlayerData.accounts[i].money,
+				label     = ESX.PlayerData.accounts[i].label .. ' $' .. ESX.PlayerData.accounts[i].money,
 				count     = ESX.PlayerData.accounts[i].money,
 				type      = 'item_account',
-				value     =  ESX.PlayerData.accounts[i].name,
+				value     = ESX.PlayerData.accounts[i].name,
 				usable    = false,
 				rare      = false,
 				canRemove = true
@@ -1135,7 +1135,7 @@ ESX.ShowInventory = function()
 
 		local weaponHash = GetHashKey(Config.Weapons[i].name)
 
-		if HasPedGotWeapon(playerPed,  weaponHash,  false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
+		if HasPedGotWeapon(playerPed, weaponHash, false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
 			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 			table.insert(elements, {
 				label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
@@ -1169,7 +1169,7 @@ ESX.ShowInventory = function()
 
 		if data.current.canRemove then
 			if player ~= -1 and distance <= 3.0 then
-				table.insert(elements, {label = _U('give'),   action = 'give',   type = data.current.type, value = data.current.value})
+				table.insert(elements, {label = _U('give'), action = 'give', type = data.current.type, value = data.current.value})
 			end
 
 			table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
@@ -1190,7 +1190,7 @@ ESX.ShowInventory = function()
 
 			local item = data1.current.value
 			local type = data1.current.type
-			local playerPed = GetPlayerPed(-1)
+			local playerPed = PlayerPedId()
 
 			if data1.current.action == 'give' then
 
@@ -1241,7 +1241,7 @@ ESX.ShowInventory = function()
 
 						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 						local closestPed = GetPlayerPed(closestPlayer)
-						local sourceAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1), GetHashKey(item))
+						local sourceAmmo = GetAmmoInPedWeapon(PlayerPedId(), GetHashKey(item))
 
 						if IsPedSittingInAnyVehicle(closestPed) then
 							ESX.ShowNotification(_U('in_vehicle'))
@@ -1339,7 +1339,7 @@ ESX.ShowInventory = function()
 				end
 
 				if type == 'item_weapon' then
-					local pedAmmo = GetAmmoInPedWeapon(GetPlayerPed(-1),GetHashKey(item))
+					local pedAmmo = GetAmmoInPedWeapon(PlayerPedId(),GetHashKey(item))
 			
 					-- does the player have any ammo for the weapon?
 					if pedAmmo > 0 then
