@@ -737,11 +737,11 @@ Config.Menus = {
 		price = 5.12
 	},
 	modFrontWheelsColor = {
-		label = 'Peinture Jantes',
+		label = _U('wheel_color'),
 		parent = 'wheels'
 	},
 	wheelColor = {
-		label = 'Peinture Jantes',
+		label = _U('wheel_color'),
 		parent = 'modFrontWheelsColor',
 		modType = 'wheelColor',
 		price = 0.66
