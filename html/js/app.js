@@ -30,7 +30,6 @@
 				ESX.HUDElements[i].data = data;
 
 		ESX.refreshHUD();
-
 	}
 
 	ESX.deleteHUDElement = function(name){

@@ -14,6 +14,10 @@ ESX.GetRandomString = function(length)
 	end
 end
 
+ESX.GetConfig = function()
+	return Config
+end
+
 ESX.TableContainsValue = function(table, value)
 	for k, v in pairs(table) do
 		if v == value then
