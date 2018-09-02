@@ -331,7 +331,7 @@ function OpenMobileTaxiActionsMenu()
 
 					if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 
-						if ESX.PlayerData.job.grade >= 3 then
+						if tonumber(ESX.PlayerData.job.grade) >= 3 then
 							StartTaxiJob()
 						else
 							if IsInAuthorizedVehicle() then
@@ -343,7 +343,7 @@ function OpenMobileTaxiActionsMenu()
 
 					else
 
-						if ESX.PlayerData.job.grade >= 3 then
+						if tonumber(ESX.PlayerData.job.grade) >= 3 then
 							ESX.ShowNotification(_U('must_in_vehicle'))
 						else
 							ESX.ShowNotification(_U('must_in_taxi'))
