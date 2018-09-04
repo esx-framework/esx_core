@@ -21,8 +21,6 @@ Locales['fi'] = {
   ['player_not_unconscious'] = 'tämä pelaaja ei ole tajuton!',
   ['player_not_conscious'] = 'tämä pelaaja ei ole tajuissaan!',
   -- Boss Menu
-  ['deposit_society'] = 'ensihoito talletus',
-  ['withdraw_society'] = 'ensihoito nosto',
   ['boss_actions'] = 'pomovalikko',
   -- Misc
   ['invalid_amount'] = '~r~Virheellinen summa',

@@ -21,8 +21,6 @@ Locales['pl'] = {
   ['player_not_unconscious'] = 'ten gracz nie jest nieprzytomny!',
   ['player_not_conscious'] = 'ten gracz nie jest świadomy!',
   -- Boss Menu
-  ['deposit_society'] = 'zdeponuj do EMS',
-  ['withdraw_society'] = 'wyjmij z depozytu EMS',
   ['boss_actions'] = 'akcje szefa',
   -- Misc
   ['invalid_amount'] = '~r~Nieprawidłowa kwota',

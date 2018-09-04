@@ -21,8 +21,6 @@ Locales['en'] = {
   ['player_not_unconscious'] = 'that player is not unconscious!',
   ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu
-  ['deposit_society'] = 'eMS Deposit',
-  ['withdraw_society'] = 'eMS Withdraw',
   ['boss_actions'] = 'boss Actions',
   -- Misc
   ['invalid_amount'] = '~r~invalid amount',

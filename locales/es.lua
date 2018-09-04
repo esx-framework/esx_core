@@ -20,9 +20,8 @@ Locales['es'] = {
   ['no_vehicles'] = 'ningún vehículo cerca',
   ['player_not_unconscious'] = 'n\'estás inconsciente',
   ['player_not_conscious'] = 'that player is not conscious!',
-  -- oss Menu
-  ['deposit_society'] = 'depositar dinero',
-  ['withdraw_society'] = 'retirar dinero',
+  -- Boss Menu
+  ['boss_actions'] = 'boss Actions',
   -- Misc
   ['invalid_amount'] = '~r~cantidad no válida',
   ['open_menu'] = 'Presione ~INPUT_CONTEXT~ para abrir el menú',

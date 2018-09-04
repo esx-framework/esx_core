@@ -43,16 +43,18 @@ function RespawnPed(ped, coords)
 end
 
 RegisterNetEvent('esx_ambulancejob:heal')
-AddEventHandler('esx_ambulancejob:heal', function(_type)
-	local playerPed = GetPlayerPed(-1)
+AddEventHandler('esx_ambulancejob:heal', function(healType)
+	local playerPed = PlayerPedId()
 	local maxHealth = GetEntityMaxHealth(playerPed)
-	if _type == 'small' then
+
+	if healType == 'small' then
 		local health = GetEntityHealth(playerPed)
 		local newHealth = math.min(maxHealth , math.floor(health + maxHealth/8))
 		SetEntityHealth(playerPed, newHealth)
-	elseif _type == 'big' then
+	elseif healType == 'big' then
 		SetEntityHealth(playerPed, maxHealth)
 	end
+
 	ESX.ShowNotification(_U('healed'))
 end)
 
@@ -94,7 +96,7 @@ function StartDistressSignal()
 end
 
 function SendDistressSignal()
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	local coords	= GetEntityCoords(playerPed)
 
 	ESX.ShowNotification(_U('distress_sent'))
@@ -190,7 +192,7 @@ function RemoveItemsAfterRPDeath()
 			ESX.SetPlayerData('loadout', {})
 
 			TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-			RespawnPed(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+			RespawnPed(PlayerPedId(), Config.Zones.HospitalInteriorInside1.Pos)
 
 			StopScreenEffect('DeathFailOut')
 			DoScreenFadeIn(800)
@@ -215,7 +217,7 @@ function OnPlayerDeath()
 	StartRespawnTimer()
 	StartDistressSignal()
 
-	ClearPedTasksImmediately(GetPlayerPed(-1))
+	ClearPedTasksImmediately(PlayerPedId())
 	StartScreenEffect('DeathFailOut', 0, false)
 end
 
@@ -354,7 +356,7 @@ function OpenMobileAmbulanceActionsMenu()
 								local health = GetEntityHealth(closestPlayerPed)
 
 								if health == 0 then
-									local playerPed = GetPlayerPed(-1)
+									local playerPed = PlayerPedId()
 
 									IsBusy = true
 									ESX.ShowNotification(_U('revive_inprogress'))
@@ -392,7 +394,7 @@ function OpenMobileAmbulanceActionsMenu()
 								local health = GetEntityHealth(closestPlayerPed)
 
 								if health > 0 then
-									local playerPed = GetPlayerPed(-1)
+									local playerPed = PlayerPedId()
 
 									IsBusy = true
 									ESX.ShowNotification(_U('heal_inprogress'))
@@ -424,7 +426,7 @@ function OpenMobileAmbulanceActionsMenu()
 								local health = GetEntityHealth(closestPlayerPed)
 
 								if health > 0 then
-									local playerPed = GetPlayerPed(-1)
+									local playerPed = PlayerPedId()
 
 									IsBusy = true
 									ESX.ShowNotification(_U('heal_inprogress'))
@@ -540,7 +542,7 @@ function OpenVehicleSpawnerMenu()
 				local vehicleProps = data.current.value
 				ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
 					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-					local playerPed = GetPlayerPed(-1)
+					local playerPed = PlayerPedId()
 					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 				end)
 				TriggerServerEvent('esx_society:removeVehicleFromGarage', 'ambulance', vehicleProps)
@@ -565,7 +567,7 @@ function OpenVehicleSpawnerMenu()
 		}, function(data, menu)
 			menu.close()
 			ESX.Game.SpawnVehicle(data.current.model, Config.Zones.VehicleSpawnPoint.Pos, 230.0, function(vehicle)
-				local playerPed = GetPlayerPed(-1)
+				local playerPed = PlayerPedId()
 				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			end)
 		end, function(data, menu)
@@ -642,7 +644,7 @@ end)
 RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	local coords	= GetEntityCoords(playerPed)
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
 
@@ -683,11 +685,11 @@ end)
 AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 
 	if zone == 'HospitalInteriorEntering1' then
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside1.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorInside1.Pos)
 	end
 
 	if zone == 'HospitalInteriorExit1' then
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorOutside1.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorOutside1.Pos)
 	end
 
 	if zone == 'HospitalInteriorEntering2' then
@@ -704,19 +706,19 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 			end)
 
 		end
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorInside2.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorInside2.Pos)
 	end
 
 	if zone == 'HospitalInteriorExit2' then
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.HospitalInteriorOutside2.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorOutside2.Pos)
 	end
 
 	if zone == 'ParkingDoorGoOutInside' then
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoOutOutside.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.ParkingDoorGoOutOutside.Pos)
 	end
 
 	if zone == 'ParkingDoorGoInOutside' then
-		TeleportFadeEffect(GetPlayerPed(-1), Config.Zones.ParkingDoorGoInInside.Pos)
+		TeleportFadeEffect(PlayerPedId(), Config.Zones.ParkingDoorGoInInside.Pos)
 	end
 
 	if zone == 'StairsGoTopBottom' then
@@ -751,7 +753,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 
 	if zone == 'VehicleDeleter' then
 
-		local playerPed = GetPlayerPed(-1)
+		local playerPed = PlayerPedId()
 		local coords	= GetEntityCoords(playerPed)
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -777,7 +779,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
 end)
 
 function FastTravel(pos)
-		TeleportFadeEffect(GetPlayerPed(-1), pos)
+		TeleportFadeEffect(PlayerPedId(), pos)
 end
 
 AddEventHandler('esx_ambulancejob:hasExitedMarker', function(zone)
@@ -807,7 +809,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		local coords = GetEntityCoords(GetPlayerPed(-1))
+		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				if PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
@@ -825,7 +827,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 
-		local coords		= GetEntityCoords(GetPlayerPed(-1))
+		local coords		= GetEntityCoords(PlayerPedId())
 		local isInMarker	= false
 		local currentZone	= nil
 		for k,v in pairs(Config.Zones) do
@@ -909,7 +911,7 @@ RegisterNetEvent('esx_ambulancejob:requestDeath')
 AddEventHandler('esx_ambulancejob:requestDeath', function()
 	if Config.AntiCombatLog then
 		Citizen.Wait(5000)
-		SetEntityHealth(GetPlayerPed(-1), 0)
+		SetEntityHealth(PlayerPedId(), 0)
 	end
 end)
 

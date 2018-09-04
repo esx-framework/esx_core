@@ -21,8 +21,6 @@ Locales['br'] = {
   ['player_not_unconscious'] = 'Não está inconsciente',
   ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu
-  ['deposit_society'] = 'Depositar dinheiro',
-  ['withdraw_society'] = 'Retirar dinheiro da empresa',
   ['boss_actions'] = 'Menu Administração',
   -- Misc
   ['invalid_amount'] = '~r~Quantidade inválida',

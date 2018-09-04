@@ -21,8 +21,6 @@ Locales['de'] = {
   ['player_not_unconscious'] = 'ist nicht im Koma',
   ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu
-  ['deposit_society'] = 'Notdienst einzahlen',
-  ['withdraw_society'] = 'Notdienst abheben',
   ['boss_actions'] = 'boss actions',
   -- Misc
   ['invalid_amount'] = '~r~ungültiger Betrag',

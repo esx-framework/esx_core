@@ -21,8 +21,6 @@ Locales['fr'] = {
   ['player_not_unconscious'] = 'n\'est pas inconscient',
   ['player_not_conscious'] = 'Cette personne est inconsciente!',
   -- Boss Menu
-  ['deposit_society'] = 'déposer argent',
-  ['withdraw_society'] = 'retirer argent société',
   ['boss_actions'] = 'action Patron',
   -- Misc
   ['invalid_amount'] = '~r~montant invalide',
