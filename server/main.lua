@@ -234,11 +234,6 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
 
-	if xPlayer.job.name ~= job or xPlayer.job.grade_name ~= 'boss' then
-		print(('esx_society: %s attempted to set job!'):format(xPlayer.identifier))
-		return
-	end
-
 	if xTarget ~= nil then
 		xTarget.setJob(job, grade)
 		
@@ -251,9 +246,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 		end
 
 		cb()
-
 	else
-
 		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
 		{
 			['@job']        = job,
@@ -262,7 +255,6 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 		}, function(rowsChanged)
 			cb()
 		end)
-
 	end
 
 end)
