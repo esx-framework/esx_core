@@ -36,7 +36,7 @@ end)
 
 function TriggerCruiseControl ()
   if CruisedSpeed == 0 and IsDriving() then
-    if GetVehiculeSpeed() > 0 then
+    if GetVehiculeSpeed() > 0 and GetVehicleCurrentGear(GetVehicle()) > 0  then
       CruisedSpeed = GetVehiculeSpeed()
       CruisedSpeedKm = TransformToKm(CruisedSpeed)
 
