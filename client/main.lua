@@ -50,7 +50,7 @@ function SetVehicleMaxMods(vehicle)
 		modBrakes       = 2,
 		modTransmission = 2,
 		modSuspension   = 3,
-		modTurbo        = true,
+		modTurbo        = true
 	}
 
 	ESX.Game.SetVehicleProperties(vehicle, props)
@@ -150,6 +150,7 @@ function OpenCloakroomMenu()
 					TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
 						ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin)
+							TriggerEvent('esx:restoreLoadout')
 						end)
 					end)
 
@@ -254,6 +255,8 @@ function OpenCloakroomMenu()
 				ESX.Streaming.RequestModel(modelHash, function()
 					SetPlayerModel(PlayerId(), modelHash)
 					SetModelAsNoLongerNeeded(modelHash)
+
+					TriggerEvent('esx:restoreLoadout')
 				end)
 			end)
 
@@ -272,95 +275,76 @@ end
 
 function OpenArmoryMenu(station)
 
-  if Config.EnableArmoryManagement then
+	if Config.EnableArmoryManagement then
 
-    local elements = {
-      {label = _U('get_weapon'),     value = 'get_weapon'},
-      {label = _U('put_weapon'),     value = 'put_weapon'},
-      {label = _U('remove_object'),  value = 'get_stock'},
-      {label = _U('deposit_object'), value = 'put_stock'}
-    }
+		local elements = {
+			{label = _U('get_weapon'),     value = 'get_weapon'},
+			{label = _U('put_weapon'),     value = 'put_weapon'},
+			{label = _U('remove_object'),  value = 'get_stock'},
+			{label = _U('deposit_object'), value = 'put_stock'}
+		}
 
-    if PlayerData.job.grade_name == 'boss' then
-      table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
-    end
+		if PlayerData.job.grade_name == 'boss' then
+			table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
+		end
 
-    ESX.UI.Menu.CloseAll()
+		ESX.UI.Menu.CloseAll()
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'armory',
-      {
-        title    = _U('armory'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory',
+		{
+			title    = _U('armory'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
 
-        if data.current.value == 'get_weapon' then
-          OpenGetWeaponMenu()
-        end
+			if data.current.value == 'get_weapon' then
+				OpenGetWeaponMenu()
+			elseif data.current.value == 'put_weapon' then
+				OpenPutWeaponMenu()
+			elseif data.current.value == 'buy_weapons' then
+				OpenBuyWeaponsMenu(station)
+			elseif data.current.value == 'put_stock' then
+				OpenPutStocksMenu()
+			elseif data.current.value == 'get_stock' then
+				OpenGetStocksMenu()
+			end
 
-        if data.current.value == 'put_weapon' then
-          OpenPutWeaponMenu()
-        end
+		end, function(data, menu)
+			menu.close()
 
-        if data.current.value == 'buy_weapons' then
-          OpenBuyWeaponsMenu(station)
-        end
+			CurrentAction     = 'menu_armory'
+			CurrentActionMsg  = _U('open_armory')
+			CurrentActionData = {station = station}
+		end)
 
-        if data.current.value == 'put_stock' then
-          OpenPutStocksMenu()
-        end
+	else
 
-        if data.current.value == 'get_stock' then
-          OpenGetStocksMenu()
-        end
+		local elements = {}
 
-      end,
-      function(data, menu)
+		for i=1, #Config.PoliceStations[station].AuthorizedWeapons, 1 do
+			local weapon = Config.PoliceStations[station].AuthorizedWeapons[i]
+			table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name), value = weapon.name})
+		end
 
-        menu.close()
+		ESX.UI.Menu.CloseAll()
 
-        CurrentAction     = 'menu_armory'
-        CurrentActionMsg  = _U('open_armory')
-        CurrentActionData = {station = station}
-      end
-    )
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory',
+		{
+			title    = _U('armory'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+			local weapon = data.current.value
+			TriggerServerEvent('esx_policejob:giveWeapon', weapon,  1000)
+		end, function(data, menu)
+			menu.close()
 
-  else
+			CurrentAction     = 'menu_armory'
+			CurrentActionMsg  = _U('open_armory')
+			CurrentActionData = {station = station}
+		end)
 
-    local elements = {}
-
-    for i=1, #Config.PoliceStations[station].AuthorizedWeapons, 1 do
-      local weapon = Config.PoliceStations[station].AuthorizedWeapons[i]
-      table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name), value = weapon.name})
-    end
-
-    ESX.UI.Menu.CloseAll()
-
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'armory',
-      {
-        title    = _U('armory'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
-        local weapon = data.current.value
-        TriggerServerEvent('esx_policejob:giveWeapon', weapon,  1000)
-      end,
-      function(data, menu)
-
-        menu.close()
-
-        CurrentAction     = 'menu_armory'
-        CurrentActionMsg  = _U('open_armory')
-        CurrentActionData = {station = station}
-
-      end
-    )
-
-  end
+	end
 
 end
 
@@ -466,7 +450,6 @@ function OpenVehicleSpawnerMenu(station, partNum)
 			CurrentAction     = 'menu_vehicle_spawner'
 			CurrentActionMsg  = _U('vehicle_spawner')
 			CurrentActionData = {station = station, partNum = partNum}
-
 		end)
 
 	end
@@ -589,10 +572,8 @@ function OpenPoliceActionsMenu()
 						if CurrentTask.Busy then
 							return
 						end
-						
-						SetTextComponentFormat('STRING')
-						AddTextComponentString(_U('impound_prompt'))
-						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+
+						ESX.ShowHelpNotification(_U('impound_prompt'))
 						
 						TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 						
@@ -838,76 +819,66 @@ end
 
 function OpenFineMenu(player)
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'fine',
-    {
-      title    = _U('fine'),
-      align    = 'top-left',
-      elements = {
-        {label = _U('traffic_offense'), value = 0},
-        {label = _U('minor_offense'),   value = 1},
-        {label = _U('average_offense'), value = 2},
-        {label = _U('major_offense'),   value = 3}
-      },
-    },
-    function(data, menu)
-
-      OpenFineCategoryMenu(player, data.current.value)
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine',
+	{
+		title    = _U('fine'),
+		align    = 'top-left',
+		elements = {
+			{label = _U('traffic_offense'), value = 0},
+			{label = _U('minor_offense'),   value = 1},
+			{label = _U('average_offense'), value = 2},
+			{label = _U('major_offense'),   value = 3}
+		}
+	}, function(data, menu)
+		OpenFineCategoryMenu(player, data.current.value)
+	end, function(data, menu)
+		menu.close()
+	end)
 
 end
 
 function OpenFineCategoryMenu(player, category)
 
-  ESX.TriggerServerCallback('esx_policejob:getFineList', function(fines)
+	ESX.TriggerServerCallback('esx_policejob:getFineList', function(fines)
 
-    local elements = {}
+		local elements = {}
 
-    for i=1, #fines, 1 do
-      table.insert(elements, {
-        label     = fines[i].label .. ' <span style="color: green;">$' .. fines[i].amount .. '</span>',
-        value     = fines[i].id,
-        amount    = fines[i].amount,
-        fineLabel = fines[i].label
-      })
-    end
+		for i=1, #fines, 1 do
+			table.insert(elements, {
+				label     = fines[i].label .. ' <span style="color: green;">$' .. fines[i].amount .. '</span>',
+				value     = fines[i].id,
+				amount    = fines[i].amount,
+				fineLabel = fines[i].label
+			})
+		end
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'fine_category',
-      {
-        title    = _U('fine'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine_category',
+		{
+			title    = _U('fine'),
+			align    = 'top-left',
+			elements = elements,
+		}, function(data, menu)
 
-        local label  = data.current.fineLabel
-        local amount = data.current.amount
+			local label  = data.current.fineLabel
+			local amount = data.current.amount
 
-        menu.close()
+			menu.close()
 
-        if Config.EnablePlayerManagement then
-          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total', label), amount)
-        else
-          TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', label), amount)
-        end
+			if Config.EnablePlayerManagement then
+				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total', label), amount)
+			else
+				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', label), amount)
+			end
 
-        ESX.SetTimeout(300, function()
-          OpenFineCategoryMenu(player, category)
-        end)
+			ESX.SetTimeout(300, function()
+				OpenFineCategoryMenu(player, category)
+			end)
 
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
+		end, function(data, menu)
+			menu.close()
+		end)
 
-  end, category)
+	end, category)
 
 end
 
@@ -1028,251 +999,212 @@ end
 
 function OpenGetWeaponMenu()
 
-  ESX.TriggerServerCallback('esx_policejob:getArmoryWeapons', function(weapons)
+	ESX.TriggerServerCallback('esx_policejob:getArmoryWeapons', function(weapons)
+		local elements = {}
 
-    local elements = {}
+		for i=1, #weapons, 1 do
+			if weapons[i].count > 0 then
+				table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name), value = weapons[i].name})
+			end
+		end
 
-    for i=1, #weapons, 1 do
-      if weapons[i].count > 0 then
-        table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name), value = weapons[i].name})
-      end
-    end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_get_weapon',
+		{
+			title    = _U('get_weapon_menu'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'armory_get_weapon',
-      {
-        title    = _U('get_weapon_menu'),
-        align    = 'top-left',
-        elements = elements
-      },
-      function(data, menu)
+			menu.close()
 
-        menu.close()
+			ESX.TriggerServerCallback('esx_policejob:removeArmoryWeapon', function()
+				OpenGetWeaponMenu()
+			end, data.current.value)
 
-        ESX.TriggerServerCallback('esx_policejob:removeArmoryWeapon', function()
-          OpenGetWeaponMenu()
-        end, data.current.value)
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end)
+		end, function(data, menu)
+			menu.close()
+		end)
+	end)
 
 end
 
 function OpenPutWeaponMenu()
+	local elements   = {}
+	local playerPed  = PlayerPedId()
+	local weaponList = ESX.GetWeaponList()
 
-  local elements   = {}
-  local playerPed  = PlayerPedId()
-  local weaponList = ESX.GetWeaponList()
+	for i=1, #weaponList, 1 do
+		local weaponHash = GetHashKey(weaponList[i].name)
 
-  for i=1, #weaponList, 1 do
+		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
+			table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
+		end
+	end
 
-    local weaponHash = GetHashKey(weaponList[i].name)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_put_weapon',
+	{
+		title    = _U('put_weapon_menu'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
 
-    if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-      table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
-    end
+		menu.close()
 
-  end
+		ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
+			OpenPutWeaponMenu()
+		end, data.current.value, true)
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'armory_put_weapon',
-    {
-      title    = _U('put_weapon_menu'),
-      align    = 'top-left',
-      elements = elements
-    },
-    function(data, menu)
-
-      menu.close()
-
-      ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
-        OpenPutWeaponMenu()
-      end, data.current.value, true)
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 function OpenBuyWeaponsMenu(station)
 
-  ESX.TriggerServerCallback('esx_policejob:getArmoryWeapons', function(weapons)
+	ESX.TriggerServerCallback('esx_policejob:getArmoryWeapons', function(weapons)
 
-    local elements = {}
+		local elements = {}
 
-    for i=1, #Config.PoliceStations[station].AuthorizedWeapons, 1 do
+		for i=1, #Config.PoliceStations[station].AuthorizedWeapons, 1 do
+			local weapon = Config.PoliceStations[station].AuthorizedWeapons[i]
+			local count  = 0
 
-      local weapon = Config.PoliceStations[station].AuthorizedWeapons[i]
-      local count  = 0
+			for i=1, #weapons, 1 do
+				if weapons[i].name == weapon.name then
+					count = weapons[i].count
+					break
+				end
+			end
 
-      for i=1, #weapons, 1 do
-        if weapons[i].name == weapon.name then
-          count = weapons[i].count
-          break
-        end
-      end
+			table.insert(elements, {
+				label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.name) .. ' $' .. weapon.price,
+				value = weapon.name,
+				price = weapon.price
+			})
+		end
 
-      table.insert(elements, {label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.name) .. ' $' .. weapon.price, value = weapon.name, price = weapon.price})
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons',
+		{
+			title    = _U('buy_weapon_menu'),
+			align    = 'top-left',
+			elements = elements,
+		}, function(data, menu)
 
-    end
+			ESX.TriggerServerCallback('esx_policejob:buy', function(hasEnoughMoney)
+				if hasEnoughMoney then
+					ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
+						OpenBuyWeaponsMenu(station)
+					end, data.current.value, false)
+				else
+					ESX.ShowNotification(_U('not_enough_money'))
+				end
+			end, data.current.price)
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'armory_buy_weapons',
-      {
-        title    = _U('buy_weapon_menu'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
+		end, function(data, menu)
+			menu.close()
+		end)
 
-        ESX.TriggerServerCallback('esx_policejob:buy', function(hasEnoughMoney)
-
-          if hasEnoughMoney then
-            ESX.TriggerServerCallback('esx_policejob:addArmoryWeapon', function()
-              OpenBuyWeaponsMenu(station)
-            end, data.current.value, false)
-          else
-            ESX.ShowNotification(_U('not_enough_money'))
-          end
-
-        end, data.current.price)
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end)
+	end)
 
 end
 
 function OpenGetStocksMenu()
 
-  ESX.TriggerServerCallback('esx_policejob:getStockItems', function(items)
+	ESX.TriggerServerCallback('esx_policejob:getStockItems', function(items)
 
 
-    local elements = {}
+		local elements = {}
 
-    for i=1, #items, 1 do
-      table.insert(elements, {label = 'x' .. items[i].count .. ' ' .. items[i].label, value = items[i].name})
-    end
+		for i=1, #items, 1 do
+			table.insert(elements, {label = 'x' .. items[i].count .. ' ' .. items[i].label, value = items[i].name})
+		end
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'stocks_menu',
-      {
-        title    = _U('police_stock'),
-        align    = 'top-left',
-        elements = elements
-      },
-      function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu',
+		{
+			title    = _U('police_stock'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
 
-        local itemName = data.current.value
+			local itemName = data.current.value
 
-        ESX.UI.Menu.Open(
-          'dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count',
-          {
-            title = _U('quantity')
-          },
-          function(data2, menu2)
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count', {
+				title = _U('quantity')
+			}, function(data2, menu2)
 
-            local count = tonumber(data2.value)
+				local count = tonumber(data2.value)
 
-            if count == nil then
-              ESX.ShowNotification(_U('quantity_invalid'))
-            else
-              menu2.close()
-              menu.close()
-              TriggerServerEvent('esx_policejob:getStockItem', itemName, count)
+				if count == nil then
+					ESX.ShowNotification(_U('quantity_invalid'))
+				else
+					menu2.close()
+					menu.close()
+					TriggerServerEvent('esx_policejob:getStockItem', itemName, count)
 
-              Citizen.Wait(300)
-              OpenGetStocksMenu()
-            end
+					Citizen.Wait(300)
+					OpenGetStocksMenu()
+				end
 
-          end,
-          function(data2, menu2)
-            menu2.close()
-          end
-        )
+			end, function(data2, menu2)
+				menu2.close()
+			end)
 
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
+		end, function(data, menu)
+			menu.close()
+		end)
 
-  end)
+	end)
 
 end
 
 function OpenPutStocksMenu()
 
-  ESX.TriggerServerCallback('esx_policejob:getPlayerInventory', function(inventory)
+	ESX.TriggerServerCallback('esx_policejob:getPlayerInventory', function(inventory)
 
-    local elements = {}
+		local elements = {}
 
-    for i=1, #inventory.items, 1 do
+		for i=1, #inventory.items, 1 do
+			local item = inventory.items[i]
 
-      local item = inventory.items[i]
+			if item.count > 0 then
+				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+			end
+		end
 
-      if item.count > 0 then
-        table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
-      end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu',
+		{
+			title    = _U('inventory'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
 
-    end
+			local itemName = data.current.value
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'stocks_menu',
-      {
-        title    = _U('inventory'),
-        align    = 'top-left',
-        elements = elements
-      },
-      function(data, menu)
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count', {
+				title = _U('quantity')
+			}, function(data2, menu2)
 
-        local itemName = data.current.value
+				local count = tonumber(data2.value)
 
-        ESX.UI.Menu.Open(
-          'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
-          {
-            title = _U('quantity')
-          },
-          function(data2, menu2)
+				if count == nil then
+					ESX.ShowNotification(_U('quantity_invalid'))
+				else
+					menu2.close()
+					menu.close()
+					TriggerServerEvent('esx_policejob:putStockItems', itemName, count)
 
-            local count = tonumber(data2.value)
+					Citizen.Wait(300)
+					OpenPutStocksMenu()
+				end
 
-            if count == nil then
-              ESX.ShowNotification(_U('quantity_invalid'))
-            else
-              menu2.close()
-              menu.close()
-              TriggerServerEvent('esx_policejob:putStockItems', itemName, count)
+			end, function(data2, menu2)
+				menu2.close()
+			end)
 
-              Citizen.Wait(300)
-              OpenPutStocksMenu()
-            end
-
-          end,
-          function(data2, menu2)
-            menu2.close()
-          end
-        )
-
-      end,
-      function(data, menu)
-        menu.close()
-      end
-    )
-
-  end)
+		end, function(data, menu)
+			menu.close()
+		end)
+	end)
 
 end
 
@@ -1297,7 +1229,6 @@ end)
 
 -- don't show dispatches if the player isn't in service
 AddEventHandler('esx_phone:cancelMessage', function(dispatchNumber)
-
 	if type(PlayerData.job.name) == 'string' and PlayerData.job.name == 'police' and PlayerData.job.name == dispatchNumber then
 		-- if esx_service is enabled
 		if Config.MaxInService ~= -1 and not playerInService then
@@ -1309,106 +1240,93 @@ end)
 
 AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNum)
 
-  if part == 'Cloakroom' then
-    CurrentAction     = 'menu_cloakroom'
-    CurrentActionMsg  = _U('open_cloackroom')
-    CurrentActionData = {}
-  end
+	if part == 'Cloakroom' then
+		CurrentAction     = 'menu_cloakroom'
+		CurrentActionMsg  = _U('open_cloackroom')
+		CurrentActionData = {}
 
-  if part == 'Armory' then
-    CurrentAction     = 'menu_armory'
-    CurrentActionMsg  = _U('open_armory')
-    CurrentActionData = {station = station}
-  end
+	elseif part == 'Armory' then
 
-  if part == 'VehicleSpawner' then
-    CurrentAction     = 'menu_vehicle_spawner'
-    CurrentActionMsg  = _U('vehicle_spawner')
-    CurrentActionData = {station = station, partNum = partNum}
-  end
+		CurrentAction     = 'menu_armory'
+		CurrentActionMsg  = _U('open_armory')
+		CurrentActionData = {station = station}
 
-  if part == 'HelicopterSpawner' then
+	elseif part == 'VehicleSpawner' then
 
-    local helicopters = Config.PoliceStations[station].Helicopters
+		CurrentAction     = 'menu_vehicle_spawner'
+		CurrentActionMsg  = _U('vehicle_spawner')
+		CurrentActionData = {station = station, partNum = partNum}
 
-    if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0) then
+	elseif part == 'HelicopterSpawner' then
 
-      ESX.Game.SpawnVehicle('polmav', helicopters[partNum].SpawnPoint, helicopters[partNum].Heading, function(vehicle)
-        SetVehicleModKit(vehicle, 0)
-        SetVehicleLivery(vehicle, 0)
-      end)
+		local helicopters = Config.PoliceStations[station].Helicopters
 
-    end
+		if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0) then
+			ESX.Game.SpawnVehicle('polmav', helicopters[partNum].SpawnPoint, helicopters[partNum].Heading, function(vehicle)
+				SetVehicleModKit(vehicle, 0)
+				SetVehicleLivery(vehicle, 0)
+			end)
+		end
 
-  end
+	elseif part == 'VehicleDeleter' then
 
-  if part == 'VehicleDeleter' then
+		local playerPed = PlayerPedId()
+		local coords    = GetEntityCoords(playerPed)
 
-    local playerPed = PlayerPedId()
-    local coords    = GetEntityCoords(playerPed)
+		if IsPedInAnyVehicle(playerPed,  false) then
 
-    if IsPedInAnyVehicle(playerPed,  false) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
 
-      local vehicle = GetVehiclePedIsIn(playerPed, false)
+			if DoesEntityExist(vehicle) then
+				CurrentAction     = 'delete_vehicle'
+				CurrentActionMsg  = _U('store_vehicle')
+				CurrentActionData = {vehicle = vehicle}
+			end
 
-      if DoesEntityExist(vehicle) then
-        CurrentAction     = 'delete_vehicle'
-        CurrentActionMsg  = _U('store_vehicle')
-        CurrentActionData = {vehicle = vehicle}
-      end
+		end
 
-    end
+	elseif part == 'BossActions' then
 
-  end
+		CurrentAction     = 'menu_boss_actions'
+		CurrentActionMsg  = _U('open_bossmenu')
+		CurrentActionData = {}
 
-  if part == 'BossActions' then
-    CurrentAction     = 'menu_boss_actions'
-    CurrentActionMsg  = _U('open_bossmenu')
-    CurrentActionData = {}
-  end
+	end
 
 end)
 
 AddEventHandler('esx_policejob:hasExitedMarker', function(station, part, partNum)
-  ESX.UI.Menu.CloseAll()
-  CurrentAction = nil
+	ESX.UI.Menu.CloseAll()
+	CurrentAction = nil
 end)
 
 AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
+	local playerPed = PlayerPedId()
 
-  local playerPed = PlayerPedId()
+	if PlayerData.job ~= nil and PlayerData.job.name == 'police' and IsPedOnFoot(playerPed) then
+		CurrentAction     = 'remove_entity'
+		CurrentActionMsg  = _U('remove_prop')
+		CurrentActionData = {entity = entity}
+	end
 
-  if PlayerData.job ~= nil and PlayerData.job.name == 'police' and not IsPedInAnyVehicle(playerPed, false) then
-    CurrentAction     = 'remove_entity'
-    CurrentActionMsg  = _U('remove_prop')
-    CurrentActionData = {entity = entity}
-  end
+	if GetEntityModel(entity) == GetHashKey('p_ld_stinger_s') then
+		local playerPed = PlayerPedId()
+		local coords    = GetEntityCoords(playerPed)
 
-  if GetEntityModel(entity) == GetHashKey('p_ld_stinger_s') then
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle = GetVehiclePedIsIn(playerPed)
 
-    local playerPed = PlayerPedId()
-    local coords    = GetEntityCoords(playerPed)
-
-    if IsPedInAnyVehicle(playerPed,  false) then
-
-      local vehicle = GetVehiclePedIsIn(playerPed)
-
-      for i=0, 7, 1 do
-        SetVehicleTyreBurst(vehicle,  i,  true,  1000)
-      end
-
-    end
-
-  end
-
+			for i=0, 7, 1 do
+				SetVehicleTyreBurst(vehicle, i, true, 1000)
+			end
+		end
+	end
 end)
 
 AddEventHandler('esx_policejob:hasExitedEntityZone', function(entity)
-
-  if CurrentAction == 'remove_entity' then
-    CurrentAction = nil
-  end
-
+	if CurrentAction == 'remove_entity' then
+		CurrentAction = nil
+	end
 end)
 
 RegisterNetEvent('esx_policejob:handcuff')
@@ -1608,274 +1526,256 @@ end)
 -- Create blips
 Citizen.CreateThread(function()
 
-  for k,v in pairs(Config.PoliceStations) do
+	for k,v in pairs(Config.PoliceStations) do
+		local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
 
-    local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
+		SetBlipSprite (blip, v.Blip.Sprite)
+		SetBlipDisplay(blip, v.Blip.Display)
+		SetBlipScale  (blip, v.Blip.Scale)
+		SetBlipColour (blip, v.Blip.Colour)
+		SetBlipAsShortRange(blip, true)
 
-    SetBlipSprite (blip, v.Blip.Sprite)
-    SetBlipDisplay(blip, v.Blip.Display)
-    SetBlipScale  (blip, v.Blip.Scale)
-    SetBlipColour (blip, v.Blip.Colour)
-    SetBlipAsShortRange(blip, true)
-
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(_U('map_blip'))
-    EndTextCommandSetBlipName(blip)
-
-  end
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(_U('map_blip'))
+		EndTextCommandSetBlipName(blip)
+	end
 
 end)
 
 -- Display markers
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Wait(0)
+		Citizen.Wait(1)
 
-    if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
+		if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
-      local playerPed = PlayerPedId()
-      local coords    = GetEntityCoords(playerPed)
+			local playerPed = PlayerPedId()
+			local coords    = GetEntityCoords(playerPed)
 
-      for k,v in pairs(Config.PoliceStations) do
+			for k,v in pairs(Config.PoliceStations) do
 
-        for i=1, #v.Cloakrooms, 1 do
-          if GetDistanceBetweenCoords(coords,  v.Cloakrooms[i].x,  v.Cloakrooms[i].y,  v.Cloakrooms[i].z,  true) < Config.DrawDistance then
-            DrawMarker(Config.MarkerType, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-          end
-        end
+				for i=1, #v.Cloakrooms, 1 do
+					if GetDistanceBetweenCoords(coords, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, true) < Config.DrawDistance then
+						DrawMarker(Config.MarkerType, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					end
+				end
 
-        for i=1, #v.Armories, 1 do
-          if GetDistanceBetweenCoords(coords,  v.Armories[i].x,  v.Armories[i].y,  v.Armories[i].z,  true) < Config.DrawDistance then
-            DrawMarker(Config.MarkerType, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-          end
-        end
+				for i=1, #v.Armories, 1 do
+					if GetDistanceBetweenCoords(coords, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, true) < Config.DrawDistance then
+						DrawMarker(Config.MarkerType, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					end
+				end
 
-        for i=1, #v.Vehicles, 1 do
-          if GetDistanceBetweenCoords(coords,  v.Vehicles[i].Spawner.x,  v.Vehicles[i].Spawner.y,  v.Vehicles[i].Spawner.z,  true) < Config.DrawDistance then
-            DrawMarker(Config.MarkerType, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-          end
-        end
+				for i=1, #v.Vehicles, 1 do
+					if GetDistanceBetweenCoords(coords, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, true) < Config.DrawDistance then
+						DrawMarker(Config.MarkerType, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					end
+				end
 
-        for i=1, #v.VehicleDeleters, 1 do
-          if GetDistanceBetweenCoords(coords,  v.VehicleDeleters[i].x,  v.VehicleDeleters[i].y,  v.VehicleDeleters[i].z,  true) < Config.DrawDistance then
-            DrawMarker(Config.MarkerType, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-          end
-        end
+				for i=1, #v.VehicleDeleters, 1 do
+					if GetDistanceBetweenCoords(coords, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, true) < Config.DrawDistance then
+						DrawMarker(Config.MarkerType, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					end
+				end
 
-        if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'police' and PlayerData.job.grade_name == 'boss' then
+				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
+					for i=1, #v.BossActions, 1 do
+						if not v.BossActions[i].disabled and GetDistanceBetweenCoords(coords, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, true) < Config.DrawDistance then
+							DrawMarker(Config.MarkerType, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+						end
+					end
+				end
 
-          for i=1, #v.BossActions, 1 do
-            if not v.BossActions[i].disabled and GetDistanceBetweenCoords(coords,  v.BossActions[i].x,  v.BossActions[i].y,  v.BossActions[i].z,  true) < Config.DrawDistance then
-              DrawMarker(Config.MarkerType, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-            end
-          end
+			end
 
-        end
+		else
+			Citizen.Wait(500)
+		end
 
-      end
-
-    end
-
-  end
+	end
 end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 
-  while true do
+	while true do
 
-    Wait(0)
+		Citizen.Wait(10)
 
-    if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
+		if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
-      local playerPed      = PlayerPedId()
-      local coords         = GetEntityCoords(playerPed)
-      local isInMarker     = false
-      local currentStation = nil
-      local currentPart    = nil
-      local currentPartNum = nil
+			local playerPed      = PlayerPedId()
+			local coords         = GetEntityCoords(playerPed)
+			local isInMarker     = false
+			local currentStation = nil
+			local currentPart    = nil
+			local currentPartNum = nil
 
-      for k,v in pairs(Config.PoliceStations) do
+			for k,v in pairs(Config.PoliceStations) do
 
-        for i=1, #v.Cloakrooms, 1 do
-          if GetDistanceBetweenCoords(coords,  v.Cloakrooms[i].x,  v.Cloakrooms[i].y,  v.Cloakrooms[i].z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'Cloakroom'
-            currentPartNum = i
-          end
-        end
+				for i=1, #v.Cloakrooms, 1 do
+					if GetDistanceBetweenCoords(coords, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'Cloakroom'
+						currentPartNum = i
+					end
+				end
 
-        for i=1, #v.Armories, 1 do
-          if GetDistanceBetweenCoords(coords,  v.Armories[i].x,  v.Armories[i].y,  v.Armories[i].z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'Armory'
-            currentPartNum = i
-          end
-        end
+				for i=1, #v.Armories, 1 do
+					if GetDistanceBetweenCoords(coords, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'Armory'
+						currentPartNum = i
+					end
+				end
 
-        for i=1, #v.Vehicles, 1 do
+				for i=1, #v.Vehicles, 1 do
+					if GetDistanceBetweenCoords(coords, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'VehicleSpawner'
+						currentPartNum = i
+					end
 
-          if GetDistanceBetweenCoords(coords,  v.Vehicles[i].Spawner.x,  v.Vehicles[i].Spawner.y,  v.Vehicles[i].Spawner.z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'VehicleSpawner'
-            currentPartNum = i
-          end
+					if GetDistanceBetweenCoords(coords, v.Vehicles[i].SpawnPoint.x, v.Vehicles[i].SpawnPoint.y, v.Vehicles[i].SpawnPoint.z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'VehicleSpawnPoint'
+						currentPartNum = i
+					end
+				end
 
-          if GetDistanceBetweenCoords(coords,  v.Vehicles[i].SpawnPoint.x,  v.Vehicles[i].SpawnPoint.y,  v.Vehicles[i].SpawnPoint.z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'VehicleSpawnPoint'
-            currentPartNum = i
-          end
+				for i=1, #v.Helicopters, 1 do
+					if GetDistanceBetweenCoords(coords, v.Helicopters[i].Spawner.x, v.Helicopters[i].Spawner.y, v.Helicopters[i].Spawner.z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'HelicopterSpawner'
+						currentPartNum = i
+					end
 
-        end
+					if GetDistanceBetweenCoords(coords, v.Helicopters[i].SpawnPoint.x, v.Helicopters[i].SpawnPoint.y, v.Helicopters[i].SpawnPoint.z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'HelicopterSpawnPoint'
+						currentPartNum = i
+					end
+				end
 
-        for i=1, #v.Helicopters, 1 do
+				for i=1, #v.VehicleDeleters, 1 do
+					if GetDistanceBetweenCoords(coords, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, true) < Config.MarkerSize.x then
+						isInMarker     = true
+						currentStation = k
+						currentPart    = 'VehicleDeleter'
+						currentPartNum = i
+					end
+				end
 
-          if GetDistanceBetweenCoords(coords,  v.Helicopters[i].Spawner.x,  v.Helicopters[i].Spawner.y,  v.Helicopters[i].Spawner.z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'HelicopterSpawner'
-            currentPartNum = i
-          end
+				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
+					for i=1, #v.BossActions, 1 do
+						if GetDistanceBetweenCoords(coords, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, true) < Config.MarkerSize.x then
+							isInMarker     = true
+							currentStation = k
+							currentPart    = 'BossActions'
+							currentPartNum = i
+						end
+					end
+				end
 
-          if GetDistanceBetweenCoords(coords,  v.Helicopters[i].SpawnPoint.x,  v.Helicopters[i].SpawnPoint.y,  v.Helicopters[i].SpawnPoint.z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'HelicopterSpawnPoint'
-            currentPartNum = i
-          end
+			end
 
-        end
+			local hasExited = false
 
-        for i=1, #v.VehicleDeleters, 1 do
-          if GetDistanceBetweenCoords(coords,  v.VehicleDeleters[i].x,  v.VehicleDeleters[i].y,  v.VehicleDeleters[i].z,  true) < Config.MarkerSize.x then
-            isInMarker     = true
-            currentStation = k
-            currentPart    = 'VehicleDeleter'
-            currentPartNum = i
-          end
-        end
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
 
-        if Config.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.name == 'police' and PlayerData.job.grade_name == 'boss' then
+				if
+					(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+					(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+				then
+					TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
+					hasExited = true
+				end
 
-          for i=1, #v.BossActions, 1 do
-            if GetDistanceBetweenCoords(coords,  v.BossActions[i].x,  v.BossActions[i].y,  v.BossActions[i].z,  true) < Config.MarkerSize.x then
-              isInMarker     = true
-              currentStation = k
-              currentPart    = 'BossActions'
-              currentPartNum = i
-            end
-          end
+				HasAlreadyEnteredMarker = true
+				LastStation             = currentStation
+				LastPart                = currentPart
+				LastPartNum             = currentPartNum
 
-        end
+				TriggerEvent('esx_policejob:hasEnteredMarker', currentStation, currentPart, currentPartNum)
+			end
 
-      end
+			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
+			end
 
-      local hasExited = false
+		else
+			Citizen.Wait(500)
+		end
 
-      if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
-
-        if
-          (LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
-          (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
-        then
-          TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
-          hasExited = true
-        end
-
-        HasAlreadyEnteredMarker = true
-        LastStation             = currentStation
-        LastPart                = currentPart
-        LastPartNum             = currentPartNum
-
-        TriggerEvent('esx_policejob:hasEnteredMarker', currentStation, currentPart, currentPartNum)
-      end
-
-      if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-
-        HasAlreadyEnteredMarker = false
-
-        TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
-      end
-
-    end
-
-  end
+	end
 end)
 
 -- Enter / Exit entity zone events
 Citizen.CreateThread(function()
 
-  local trackedEntities = {
-    'prop_roadcone02a',
-    'prop_barrier_work05',
-    'p_ld_stinger_s',
-    'prop_boxpile_07d',
-    'hei_prop_cash_crate_half_full'
-  }
+	local trackedEntities = {
+		'prop_roadcone02a',
+		'prop_barrier_work05',
+		'p_ld_stinger_s',
+		'prop_boxpile_07d',
+		'hei_prop_cash_crate_half_full'
+	}
 
-  while true do
+	while true do
 
-    Citizen.Wait(0)
+		Citizen.Wait(500)
 
-    local playerPed = PlayerPedId()
-    local coords    = GetEntityCoords(playerPed)
+		local playerPed = PlayerPedId()
+		local coords    = GetEntityCoords(playerPed)
 
-    local closestDistance = -1
-    local closestEntity   = nil
+		local closestDistance = -1
+		local closestEntity   = nil
 
-    for i=1, #trackedEntities, 1 do
+		for i=1, #trackedEntities, 1 do
+			local object = GetClosestObjectOfType(coords.x, coords.y, coords.z, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
 
-      local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
+			if DoesEntityExist(object) then
+				local objCoords = GetEntityCoords(object)
+				local distance  = GetDistanceBetweenCoords(coords.x, coords.y, coords.z, objCoords.x, objCoords.y, objCoords.z, true)
 
-      if DoesEntityExist(object) then
+				if closestDistance == -1 or closestDistance > distance then
+					closestDistance = distance
+					closestEntity   = object
+				end
+			end
+		end
 
-        local objCoords = GetEntityCoords(object)
-        local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
+		if closestDistance ~= -1 and closestDistance <= 3.0 then
+			if LastEntity ~= closestEntity then
+				TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
+				LastEntity = closestEntity
+			end
+		else
+			if LastEntity ~= nil then
+				TriggerEvent('esx_policejob:hasExitedEntityZone', LastEntity)
+				LastEntity = nil
+			end
+		end
 
-        if closestDistance == -1 or closestDistance > distance then
-          closestDistance = distance
-          closestEntity   = object
-        end
-
-      end
-
-    end
-
-    if closestDistance ~= -1 and closestDistance <= 3.0 then
-
-      if LastEntity ~= closestEntity then
-        TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
-        LastEntity = closestEntity
-      end
-
-    else
-
-      if LastEntity ~= nil then
-        TriggerEvent('esx_policejob:hasExitedEntityZone', LastEntity)
-        LastEntity = nil
-      end
-
-    end
-
-  end
+	end
 end)
 
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(0)
+		Citizen.Wait(10)
 
 		if CurrentAction ~= nil then
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 
