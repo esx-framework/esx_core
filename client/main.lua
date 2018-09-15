@@ -1488,6 +1488,8 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
+		local playerPed = PlayerPedId()
+
 		if IsHandcuffed then
 			DisableControlAction(2, 1, true) -- Disable pan
 			DisableControlAction(2, 2, true) -- Disable tilt
@@ -1496,7 +1498,6 @@ Citizen.CreateThread(function()
 			DisableControlAction(2, 25, true) -- Aim
 			DisableControlAction(2, 263, true) -- Melee Attack 1
 			DisableControlAction(2, Keys['R'], true) -- Reload
-			DisableControlAction(2, Keys['TOP'], true) -- Open phone (not needed?)
 			DisableControlAction(2, Keys['SPACE'], true) -- Jump
 			DisableControlAction(2, Keys['Q'], true) -- Cover
 			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
@@ -1505,6 +1506,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(2, Keys['F2'], true) -- Inventory
 			DisableControlAction(2, Keys['F3'], true) -- Animations
 			DisableControlAction(2, Keys['V'], true) -- Disable changing view
+			DisableControlAction(2, Keys['X'], true) -- Disable clearing animation
 			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
 			DisableControlAction(2, 59, true) -- Disable steering in vehicle
 			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
@@ -1517,6 +1519,11 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 143, true) -- Disable melee
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
+			if not (IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) == 1) then
+				ESX.Streaming.RequestAnimDict('mp_arresting', function()
+					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
+				end)
+			end
 		else
 			Citizen.Wait(500)
 		end
