@@ -8,10 +8,9 @@ local Keys = {
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-  }
+}
 
 -- internal variables
-local GUI = {}
 local hasAlreadyEnteredMarker = false
 local isInATMMarker = false
 local menuIsShowed = false
@@ -69,7 +68,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		local coords = GetEntityCoords(GetPlayerPed(-1))
+		local coords = GetEntityCoords(PlayerPedId())
 		for i=1, #Config.ATMS, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.DrawDistance) then
 				DrawMarker(Config.MarkerType, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z - Config.ZDiff, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
@@ -81,26 +80,27 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1)
-		local coords = GetEntityCoords(GetPlayerPed(-1))
+		Citizen.Wait(10)
+		local coords = GetEntityCoords(PlayerPedId())
 		isInATMMarker = false
+
 		for i=1, #Config.ATMS, 1 do
 			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.ZoneSize.x / 2) then
 				isInATMMarker = true
-				SetTextComponentFormat('STRING')
-				AddTextComponentString(_U('press_e_atm'))
-				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+				ESX.ShowHelpNotification(_U('press_e_atm'))
 			end
 		end
+
 		if isInATMMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
 		end
+	
 		if not isInATMMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
 			SetNuiFocus(false)
-				menuIsShowed = false
-				SendNUIMessage({
-					hideAll = true
+			menuIsShowed = false
+			SendNUIMessage({
+				hideAll = true
 			})
 		end
 	end
@@ -116,7 +116,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
 		else
-			if IsControlJustReleased(0, Keys['E']) and isInATMMarker then
+			if IsControlJustReleased(0, Keys['E']) and isInATMMarker and IsPedOnFoot(PlayerPedId()) then
 				menuIsShowed = true
 				ESX.TriggerServerCallback('esx:getPlayerData', function(data)
 					SendNUIMessage({
