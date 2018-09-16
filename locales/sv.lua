@@ -1,4 +1,4 @@
 Locales['sv'] = {
-	['used_bread'] = 'du käkade upp ~y~1x~s~ ~b~bröd~s~',
-	['used_water'] = 'du drack ~y~1x~s~ ~b~vatten~s~',
+	['used_bread'] = 'du käkade upp en bit ~b~bröd~s~',
+	['used_water'] = 'du drack upp en ~b~vattenflaska~s~',
 }
