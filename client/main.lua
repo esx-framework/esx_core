@@ -59,629 +59,499 @@ AddEventHandler('esx_property:sendProperties', function(properties)
 end)
 
 function DrawSub(text, time)
-  ClearPrints()
-  SetTextEntry_2('STRING')
-  AddTextComponentString(text)
-  DrawSubtitleTimed(time, 1)
+	ClearPrints()
+	SetTextEntry_2('STRING')
+	AddTextComponentString(text)
+	DrawSubtitleTimed(time, 1)
 end
 
 function CreateBlips()
+	for i=1, #Config.Properties, 1 do
+		local property = Config.Properties[i]
 
-  for i=1, #Config.Properties, 1 do
+		if property.entering ~= nil then
+			Blips[property.name] = AddBlipForCoord(property.entering.x, property.entering.y, property.entering.z)
 
-    local property = Config.Properties[i]
+			SetBlipSprite (Blips[property.name], 369)
+			SetBlipDisplay(Blips[property.name], 4)
+			SetBlipScale  (Blips[property.name], 1.0)
+			SetBlipAsShortRange(Blips[property.name], true)
 
-    if property.entering ~= nil then
-
-      Blips[property.name] = AddBlipForCoord(property.entering.x, property.entering.y, property.entering.z)
-
-      SetBlipSprite (Blips[property.name], 369)
-      SetBlipDisplay(Blips[property.name], 4)
-      SetBlipScale  (Blips[property.name], 1.0)
-      SetBlipAsShortRange(Blips[property.name], true)
-
-      BeginTextCommandSetBlipName("STRING")
-      AddTextComponentString(_U('free_prop'))
-      EndTextCommandSetBlipName(Blips[property.name])
-
-    end
-  end
-
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(_U('free_prop'))
+			EndTextCommandSetBlipName(Blips[property.name])
+		end
+	end
 end
 
 function GetProperties()
-  return Config.Properties
+	return Config.Properties
 end
 
 function GetProperty(name)
-
-  for i=1, #Config.Properties, 1 do
-    if Config.Properties[i].name == name then
-      return Config.Properties[i]
-    end
-  end
-
+	for i=1, #Config.Properties, 1 do
+		if Config.Properties[i].name == name then
+			return Config.Properties[i]
+		end
+	end
 end
 
 function GetGateway(property)
+	for i=1, #Config.Properties, 1 do
+		local property2 = Config.Properties[i]
 
-  for i=1, #Config.Properties, 1 do
-
-    local property2 = Config.Properties[i]
-
-    if property2.isGateway and property2.name == property.gateway then
-      return property2
-    end
-
-  end
-
+		if property2.isGateway and property2.name == property.gateway then
+			return property2
+		end
+	end
 end
 
 function GetGatewayProperties(property)
+	local properties = {}
 
-  local properties = {}
+	for i=1, #Config.Properties, 1 do
+		if Config.Properties[i].gateway == property.name then
+			table.insert(properties, Config.Properties[i])
+		end
+	end
 
-  for i=1, #Config.Properties, 1 do
-    if Config.Properties[i].gateway == property.name then
-      table.insert(properties, Config.Properties[i])
-    end
-  end
-
-  return properties
-
+	return properties
 end
 
 function EnterProperty(name, owner)
+	local property       = GetProperty(name)
+	local playerPed      = PlayerPedId()
+	CurrentProperty      = property
+	CurrentPropertyOwner = owner
 
-  local property       = GetProperty(name)
-  local playerPed      = GetPlayerPed(-1)
-  CurrentProperty      = property
-  CurrentPropertyOwner = owner
+	for i=1, #Config.Properties, 1 do
+		if Config.Properties[i].name ~= name then
+			Config.Properties[i].disabled = true
+		end
+	end
 
-  for i=1, #Config.Properties, 1 do
-    if Config.Properties[i].name ~= name then
-      Config.Properties[i].disabled = true
-    end
-  end
+	TriggerServerEvent('esx_property:saveLastProperty', name)
 
-  TriggerServerEvent('esx_property:saveLastProperty', name)
+	Citizen.CreateThread(function()
+		DoScreenFadeOut(800)
 
-  Citizen.CreateThread(function()
+		while not IsScreenFadedOut() do
+			Citizen.Wait(0)
+		end
 
-    DoScreenFadeOut(800)
+		for i=1, #property.ipls, 1 do
+			RequestIpl(property.ipls[i])
 
-    while not IsScreenFadedOut() do
-      Citizen.Wait(0)
-    end
+			while not IsIplActive(property.ipls[i]) do
+				Citizen.Wait(0)
+			end
+		end
 
-    for i=1, #property.ipls, 1 do
-
-      RequestIpl(property.ipls[i])
-
-      while not IsIplActive(property.ipls[i]) do
-        Citizen.Wait(0)
-      end
-
-    end
-
-    SetEntityCoords(playerPed, property.inside.x,  property.inside.y,  property.inside.z)
-
-    DoScreenFadeIn(800)
-
-    DrawSub(property.label, 5000)
-  end)
+		SetEntityCoords(playerPed, property.inside.x,  property.inside.y,  property.inside.z)
+		DoScreenFadeIn(800)
+		DrawSub(property.label, 5000)
+	end)
 
 end
 
 function ExitProperty(name)
+	local property  = GetProperty(name)
+	local playerPed = PlayerPedId()
+	local outside   = nil
+	CurrentProperty = nil
 
-  local property  = GetProperty(name)
-  local playerPed = GetPlayerPed(-1)
-  local outside   = nil
-  CurrentProperty = nil
+	if property.isSingle then
+		outside = property.outside
+	else
+		outside = GetGateway(property).outside
+	end
 
-  if property.isSingle then
-    outside = property.outside
-  else
-    outside = GetGateway(property).outside
-  end
+	TriggerServerEvent('esx_property:deleteLastProperty')
 
-  TriggerServerEvent('esx_property:deleteLastProperty')
+	Citizen.CreateThread(function()
+		DoScreenFadeOut(800)
 
-  Citizen.CreateThread(function()
+		while not IsScreenFadedOut() do
+			Citizen.Wait(0)
+		end
 
-    DoScreenFadeOut(800)
+		SetEntityCoords(playerPed, outside.x, outside.y, outside.z)
 
-    while not IsScreenFadedOut() do
-      Citizen.Wait(0)
-    end
+		for i=1, #property.ipls, 1 do
+			RemoveIpl(property.ipls[i])
+		end
 
-    SetEntityCoords(playerPed, outside.x,  outside.y,  outside.z)
+		for i=1, #Config.Properties, 1 do
+			Config.Properties[i].disabled = false
+		end
 
-    for i=1, #property.ipls, 1 do
-      RemoveIpl(property.ipls[i])
-    end
-
-    for i=1, #Config.Properties, 1 do
-      Config.Properties[i].disabled = false
-    end
-
-    DoScreenFadeIn(800)
-
-  end)
-
+		DoScreenFadeIn(800)
+	end)
 end
 
 function SetPropertyOwned(name, owned)
+	local property     = GetProperty(name)
+	local entering     = nil
+	local enteringName = nil
 
-  local property     = GetProperty(name)
-  local entering     = nil
-  local enteringName = nil
+	if property.isSingle then
+		entering     = property.entering
+		enteringName = property.name
+	else
+		local gateway = GetGateway(property)
+		entering      = gateway.entering
+		enteringName  = gateway.name
+	end
 
-  if property.isSingle then
-    entering     = property.entering
-    enteringName = property.name
-  else
-    local gateway = GetGateway(property)
-    entering      = gateway.entering
-    enteringName  = gateway.name
-  end
+	if owned then
 
-  if owned then
+		OwnedProperties[name] = true
+		RemoveBlip(Blips[enteringName])
 
-    OwnedProperties[name] = true
+		Blips[enteringName] = AddBlipForCoord(entering.x, entering.y, entering.z)
+		SetBlipSprite(Blips[enteringName], 357)
+		SetBlipAsShortRange(Blips[enteringName], true)
 
-    RemoveBlip(Blips[enteringName])
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(_U('property'))
+		EndTextCommandSetBlipName(Blips[enteringName])
 
-    Blips[enteringName] = AddBlipForCoord(entering.x,  entering.y,  entering.z)
+	else
 
-    SetBlipSprite(Blips[enteringName], 357)
-    SetBlipAsShortRange(Blips[enteringName], true)
+		OwnedProperties[name] = nil
+		local found = false
 
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(_U('property'))
-    EndTextCommandSetBlipName(Blips[enteringName])
+		for k,v in pairs(OwnedProperties) do
+			local _property = GetProperty(k)
+			local _gateway  = GetGateway(_property)
 
-  else
+			if _gateway ~= nil then
+				if _gateway.name == enteringName then
+					found = true
+					break
+				end
+			end
+		end
 
-    OwnedProperties[name] = nil
+		if not found then
+			RemoveBlip(Blips[enteringName])
 
-    local found = false
+			Blips[enteringName] = AddBlipForCoord(entering.x, entering.y, entering.z)
+			SetBlipSprite(Blips[enteringName], 369)
+			SetBlipAsShortRange(Blips[enteringName], true)
 
-    for k,v in pairs(OwnedProperties) do
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString(_U('free_prop'))
+			EndTextCommandSetBlipName(Blips[enteringName])
+		end
 
-      local _property = GetProperty(k)
-      local _gateway  = GetGateway(_property)
-
-      if _gateway ~= nil then
-
-        if _gateway.name == enteringName then
-          found = true
-          break
-        end
-      end
-
-    end
-
-    if not found then
-
-      RemoveBlip(Blips[enteringName])
-
-      Blips[enteringName] = AddBlipForCoord(entering.x,  entering.y,  entering.z)
-
-      SetBlipSprite(Blips[enteringName], 369)
-      SetBlipAsShortRange(Blips[enteringName], true)
-
-      BeginTextCommandSetBlipName("STRING")
-      AddTextComponentString(_U('free_prop'))
-      EndTextCommandSetBlipName(Blips[enteringName])
-
-     end
-
-  end
+	end
 
 end
 
 function PropertyIsOwned(property)
-  return OwnedProperties[property.name] == true
+	return OwnedProperties[property.name] == true
 end
 
 function OpenPropertyMenu(property)
+	local elements = {}
 
-  local elements = {}
+	if PropertyIsOwned(property) then
+		table.insert(elements, {label = _U('enter'), value = 'enter'})
 
-  if PropertyIsOwned(property) then
+		if not Config.EnablePlayerManagement then
+			table.insert(elements, {label = _U('leave'), value = 'leave'})
+		end
+	else
+		if not Config.EnablePlayerManagement then
+			table.insert(elements, {label = _U('buy'), value = 'buy'})
+			table.insert(elements, {label = _U('rent'),   value = 'rent'})
+		end
 
-    table.insert(elements, {label = _U('enter'), value = 'enter'})
+		table.insert(elements, {label = _U('visit'), value = 'visit'})
+	end
 
-    if not Config.EnablePlayerManagement then
-      table.insert(elements, {label = _U('leave'), value = 'leave'})
-    end
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'property',
+	{
+		title    = property.label,
+		align    = 'top-left',
+		elements = elements,
+	}, function(data, menu)
+		menu.close()
 
-  else
+		if data.current.value == 'enter' then
+			TriggerEvent('instance:create', 'property', {property = property.name, owner = ESX.GetPlayerData().identifier})
+		elseif data.current.value == 'leave' then
+			TriggerServerEvent('esx_property:removeOwnedProperty', property.name)
+		elseif data.current.value == 'buy' then
+			TriggerServerEvent('esx_property:buyProperty', property.name)
+		elseif data.current.value == 'rent' then
+			TriggerServerEvent('esx_property:rentProperty', property.name)
+		elseif data.current.value == 'visit' then
+			TriggerEvent('instance:create', 'property', {property = property.name, owner = ESX.GetPlayerData().identifier})
+		end
+	end, function(data, menu)
+		menu.close()
 
-    if not Config.EnablePlayerManagement then
-      table.insert(elements, {label = _U('buy'), value = 'buy'})
-      table.insert(elements, {label = _U('rent'),   value = 'rent'})
-    end
-
-    table.insert(elements, {label = _U('visit'), value = 'visit'})
-
-  end
-
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'property',
-    {
-      title    = property.label,
-      align    = 'top-left',
-      elements = elements,
-    },
-    function(data2, menu)
-
-      menu.close()
-
-      if data2.current.value == 'enter' then
-        TriggerEvent('instance:create', 'property', {property = property.name, owner = ESX.GetPlayerData().identifier})
-      end
-
-      if data2.current.value == 'leave' then
-        TriggerServerEvent('esx_property:removeOwnedProperty', property.name)
-      end
-
-      if data2.current.value == 'buy' then
-        TriggerServerEvent('esx_property:buyProperty', property.name)
-      end
-
-      if data2.current.value == 'rent' then
-        TriggerServerEvent('esx_property:rentProperty', property.name)
-      end
-
-      if data2.current.value == 'visit' then
-        TriggerEvent('instance:create', 'property', {property = property.name, owner = ESX.GetPlayerData().identifier})
-      end
-
-    end,
-    function(data, menu)
-
-        menu.close()
-
-        CurrentAction     = 'property_menu'
-        CurrentActionMsg  = _U('press_to_menu')
-        CurrentActionData = {property = property}
-    end
-  )
-
+		CurrentAction     = 'property_menu'
+		CurrentActionMsg  = _U('press_to_menu')
+		CurrentActionData = {property = property}
+	end)
 end
 
 function OpenGatewayMenu(property)
+	if Config.EnablePlayerManagement then
+		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
+	else
 
-  if Config.EnablePlayerManagement then
-    OpenGatewayOwnedPropertiesMenu(gatewayProperties)
-  else
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway',
+		{
+			title    = property.name,
+			align    = 'top-left',
+			elements = {
+				{label = _U('owned_properties'),    value = 'owned_properties'},
+				{label = _U('available_properties'), value = 'available_properties'}
+			}
+		}, function(data, menu)
+			if data.current.value == 'owned_properties' then
+				OpenGatewayOwnedPropertiesMenu(property)
+			elseif data.current.value == 'available_properties' then
+				OpenGatewayAvailablePropertiesMenu(property)
+			end
+		end, function(data, menu)
+			menu.close()
 
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'gateway',
-      {
-        title    = property.name,
-        align    = 'top-left',
-        elements = {
-          {label = _U('owned_properties'),    value = 'owned_properties'},
-          {label = _U('available_properties'), value = 'available_properties'},
-        }
-      },
-      function(data, menu)
+			CurrentAction     = 'gateway_menu'
+			CurrentActionMsg  = _U('press_to_menu')
+			CurrentActionData = {property = property}
+		end)
 
-        if data.current.value == 'owned_properties' then
-          OpenGatewayOwnedPropertiesMenu(property)
-        end
-
-        if data.current.value == 'available_properties' then
-          OpenGatewayAvailablePropertiesMenu(property)
-        end
-
-      end,
-      function(data, menu)
-
-        menu.close()
-
-        CurrentAction     = 'gateway_menu'
-        CurrentActionMsg  = _U('press_to_menu')
-        CurrentActionData = {property = property}
-
-      end
-    )
-
-  end
-
+	end
 end
 
 function OpenGatewayOwnedPropertiesMenu(property)
+	local gatewayProperties = GetGatewayProperties(property)
+	local elements          = {}
 
-  local gatewayProperties = GetGatewayProperties(property)
-  local elements          = {}
+	for i=1, #gatewayProperties, 1 do
+		if PropertyIsOwned(gatewayProperties[i]) then
+			table.insert(elements, {
+				label = gatewayProperties[i].label,
+				value = gatewayProperties[i].name
+			})
+		end
+	end
 
-  for i=1, #gatewayProperties, 1 do
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties',
+	{
+		title    = property.name .. ' - ' .. _U('owned_properties'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+		menu.close()
 
-    if PropertyIsOwned(gatewayProperties[i]) then
-      table.insert(elements, {
-        label = gatewayProperties[i].label,
-        value = gatewayProperties[i].name
-      })
-    end
+		local elements = {
+			{label = _U('enter'), value = 'enter'}
+		}
 
-  end
+		if not Config.EnablePlayerManagement then
+			table.insert(elements, {label = _U('leave'), value = 'leave'})
+		end
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'gateway_owned_properties',
-    {
-      title    = property.name .. ' - ' .. _U('owned_properties'),
-      align    = 'top-left',
-      elements = elements,
-    },
-    function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions',
+		{
+			title    = data.current.label,
+			align    = 'top-left',
+			elements = elements
+		}, function(data2, menu2)
+			menu2.close()
 
-      menu.close()
+			if data2.current.value == 'enter' then
+				TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
+			elseif data2.current.value == 'leave' then
+				TriggerServerEvent('esx_property:removeOwnedProperty', data.current.value)
+			end
+		end, function(data2, menu2)
+			menu2.close()
+		end)
 
-      local elements = {
-        {label = _U('enter'), value = 'enter'}
-      }
-
-      if not Config.EnablePlayerManagement then
-        table.insert(elements, {label = _U('leave'), value = 'leave'})
-      end
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'gateway_owned_properties_actions',
-        {
-          title    = data.current.label,
-          align    = 'top-left',
-          elements = elements,
-        },
-        function(data2, menu)
-
-          menu.close()
-
-          if data2.current.value == 'enter' then
-            TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
-          end
-
-          if data2.current.value == 'leave' then
-            TriggerServerEvent('esx_property:removeOwnedProperty', data.current.value)
-          end
-
-        end,
-        function(data, menu)
-          menu.close()
-        end
-      )
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 function OpenGatewayAvailablePropertiesMenu(property)
+	local gatewayProperties = GetGatewayProperties(property)
+	local elements          = {}
 
-  local gatewayProperties = GetGatewayProperties(property)
-  local elements          = {}
+	for i=1, #gatewayProperties, 1 do
+		if not PropertyIsOwned(gatewayProperties[i]) then
+			table.insert(elements, {
+				label = gatewayProperties[i].label .. ' $' .. gatewayProperties[i].price,
+				value = gatewayProperties[i].name,
+				price = gatewayProperties[i].price
+			})
+		end
+	end
 
-  for i=1, #gatewayProperties, 1 do
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties',
+	{
+		title    = property.name.. ' - ' .. _U('available_properties'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
 
-    if not PropertyIsOwned(gatewayProperties[i]) then
-      table.insert(elements, {
-        label = gatewayProperties[i].label .. ' $' .. gatewayProperties[i].price,
-        value = gatewayProperties[i].name,
-        price = gatewayProperties[i].price
-      })
-    end
+		menu.close()
 
-  end
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties_actions',
+		{
+			title    = property.name,
+			align    = 'top-left',
+			elements = {
+				{label = _U('buy'), value = 'buy'},
+				{label = _U('rent'), value = 'rent'},
+				{label = _U('visit'), value = 'visit'}
+			}
+		}, function(data2, menu2)
+			menu2.close()
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'gateway_available_properties',
-    {
-      title    = property.name.. ' - ' .. _U('available_properties'),
-      align    = 'top-left',
-      elements = elements,
-    },
-    function(data, menu)
+			if data2.current.value == 'buy' then
+				TriggerServerEvent('esx_property:buyProperty', data.current.value)
+			elseif data2.current.value == 'rent' then
+				TriggerServerEvent('esx_property:rentProperty', data.current.value)
+			elseif data2.current.value == 'visit' then
+				TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
+			end
+		end, function(data2, menu2)
+			menu2.close()
+		end)
 
-      menu.close()
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'gateway_available_properties_actions',
-        {
-          title    = property.name,
-          align    = 'top-left',
-          elements = {
-            {label = _U('buy'), value = 'buy'},
-            {label = _U('rent'),   value = 'rent'},
-            {label = _U('visit'), value = 'visit'},
-          },
-        },
-        function(data2, menu)
-          menu.close()
-
-          if data2.current.value == 'buy' then
-            TriggerServerEvent('esx_property:buyProperty', data.current.value)
-          end
-
-          if data2.current.value == 'rent' then
-            TriggerServerEvent('esx_property:rentProperty', data.current.value)
-          end
-
-          if data2.current.value == 'visit' then
-            TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
-          end
-
-        end,
-        function(data, menu)
-          menu.close()
-        end
-      )
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 function OpenRoomMenu(property, owner)
+	local entering = nil
+	local elements = {}
 
-  local entering = nil
-  local elements = {}
+	if property.isSingle then
+		entering = property.entering
+	else
+		entering = GetGateway(property).entering
+	end
 
-  if property.isSingle then
-    entering = property.entering
-  else
-    entering = GetGateway(property).entering
-  end
+	table.insert(elements, {label = _U('invite_player'),  value = 'invite_player'})
 
-  table.insert(elements, {label = _U('invite_player'),  value = 'invite_player'})
+	if CurrentPropertyOwner == owner then
+		table.insert(elements, {label = _U('player_clothes'), value = 'player_dressing'})
+		table.insert(elements, {label = _U('remove_cloth'), value = 'remove_cloth'})
+	end
 
-  if CurrentPropertyOwner == owner then
-    table.insert(elements, {label = _U('player_clothes'), value = 'player_dressing'})
-    table.insert(elements, {label = _U('remove_cloth'), value = 'remove_cloth'})
-  end
+	table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
+	table.insert(elements, {label = _U('deposit_object'), value = 'player_inventory'})
 
-  table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
-  table.insert(elements, {label = _U('deposit_object'), value = 'player_inventory'})
+	ESX.UI.Menu.CloseAll()
 
-  ESX.UI.Menu.CloseAll()
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room',
+	{
+		title    = property.label,
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
 
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'room',
-    {
-      title    = property.label,
-      align    = 'top-left',
-      elements = elements,
-    },
-    function(data, menu)
+		if data.current.value == 'invite_player' then
 
-      if data.current.value == 'invite_player' then
+			local playersInArea = ESX.Game.GetPlayersInArea(entering, 10.0)
+			local elements      = {}
 
-        local playersInArea = ESX.Game.GetPlayersInArea(entering, 10.0)
-        local elements      = {}
+			for i=1, #playersInArea, 1 do
+				if playersInArea[i] ~= PlayerId() then
+					table.insert(elements, {label = GetPlayerName(playersInArea[i]), value = playersInArea[i]})
+				end
+			end
 
-        for i=1, #playersInArea, 1 do
-          if playersInArea[i] ~= PlayerId() then
-            table.insert(elements, {label = GetPlayerName(playersInArea[i]), value = playersInArea[i]})
-          end
-        end
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_invite',
+			{
+				title    = property.label .. ' - ' .. _U('invite'),
+				align    = 'top-left',
+				elements = elements,
+			}, function(data2, menu2)
+				TriggerEvent('instance:invite', 'property', GetPlayerServerId(data2.current.value), {property = property.name, owner = owner})
+				ESX.ShowNotification(_U('you_invited', GetPlayerName(data2.current.value)))
+			end, function(data2, menu2)
+				menu2.close()
+			end)
 
-        ESX.UI.Menu.Open(
-          'default', GetCurrentResourceName(), 'room_invite',
-          {
-            title    = property.label .. ' - ' .. _U('invite'),
-            align    = 'top-left',
-            elements = elements,
-          },
-          function(data, menu)
-            TriggerEvent('instance:invite', 'property', GetPlayerServerId(data.current.value), {property = property.name, owner = owner})
-            ESX.ShowNotification(_U('you_invited', GetPlayerName(data.current.value)))
-          end,
-          function(data, menu)
-            menu.close()
-          end
-        )
+		elseif data.current.value == 'player_dressing' then
 
-      end
+			ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
+				local elements = {}
 
-      if data.current.value == 'player_dressing' then
+				for i=1, #dressing, 1 do
+					table.insert(elements, {label = dressing[i], value = i})
+				end
 
-        ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
+				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing',
+				{
+					title    = property.label .. ' - ' .. _U('player_clothes'),
+					align    = 'top-left',
+					elements = elements
+				}, function(data2, menu2)
 
-          local elements = {}
+					TriggerEvent('skinchanger:getSkin', function(skin)
+						ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
+							TriggerEvent('skinchanger:loadClothes', skin, clothes)
+							TriggerEvent('esx_skin:setLastSkin', skin)
 
-          for i=1, #dressing, 1 do
-            table.insert(elements, {label = dressing[i], value = i})
-          end
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								TriggerServerEvent('esx_skin:save', skin)
+							end)
+						end, data2.current.value)
+					end)
 
-          ESX.UI.Menu.Open(
-            'default', GetCurrentResourceName(), 'player_dressing',
-            {
-              title    = property.label .. ' - ' .. _U('player_clothes'),
-              align    = 'top-left',
-              elements = elements,
-            },
-            function(data, menu)
+				end, function(data2, menu2)
+					menu2.close()
+				end)
+			end)
 
-              TriggerEvent('skinchanger:getSkin', function(skin)
+		elseif data.current.value == 'remove_cloth' then
 
-                ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
+			ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
+				local elements = {}
+		
+				for i=1, #dressing, 1 do
+					table.insert(elements, {label = dressing[i].label, value = i})
+				end
+				
+				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'remove_cloth',
+				{
+					title    = property.label .. ' - ' .. _U('remove_cloth'),
+					align    = 'top-left',
+					elements = elements
+				}, function(data2, menu2)
+					menu2.close()
+					TriggerServerEvent('esx_property:removeOutfit', data2.current.value)
+					ESX.ShowNotification(_U('removed_cloth'))
+				end,
+				function(data2, menu2)
+					menu2.close()
+				end)
+			end)
 
-                  TriggerEvent('skinchanger:loadClothes', skin, clothes)
-                  TriggerEvent('esx_skin:setLastSkin', skin)
+		elseif data.current.value == 'room_inventory' then
+			OpenRoomInventoryMenu(property, owner)
+		elseif data.current.value == 'player_inventory' then
+			OpenPlayerInventoryMenu(property, owner)
+		end
 
-                  TriggerEvent('skinchanger:getSkin', function(skin)
-                    TriggerServerEvent('esx_skin:save', skin)
-                  end)
+	end, function(data, menu)
+		menu.close()
 
-                end, data.current.value)
-
-              end)
-
-            end,
-            function(data, menu)
-              menu.close()
-            end
-          )
-
-        end)
-
-      end
-        
-      if data.current.value == 'remove_cloth' then
-          ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
-              local elements = {}
-      
-              for i=1, #dressing, 1 do
-                  table.insert(elements, {label = dressing[i].label, value = i})
-              end
-              
-              ESX.UI.Menu.Open(
-              'default', GetCurrentResourceName(), 'remove_cloth',
-              {
-                title    = property.label .. ' - ' .. _U('remove_cloth'),
-                align    = 'top-left',
-                elements = elements,
-              },
-              function(data, menu)
-                  menu.close()
-                  TriggerServerEvent('esx_property:removeOutfit', data.current.value)
-                  ESX.ShowNotification(_U('removed_cloth'))
-              end,
-              function(data, menu)
-                menu.close()
-              end
-            )
-          end)
-      end
-
-      if data.current.value == 'room_inventory' then
-        OpenRoomInventoryMenu(property, owner)
-      end
-
-      if data.current.value == 'player_inventory' then
-        OpenPlayerInventoryMenu(property, owner)
-      end
-
-    end,
-    function(data, menu)
-
-      menu.close()
-
-      CurrentAction     = 'room_menu'
-      CurrentActionMsg  = _U('press_to_menu')
-      CurrentActionData = {property = property, owner = owner}
-    end
-  )
-
+		CurrentAction     = 'room_menu'
+		CurrentActionMsg  = _U('press_to_menu')
+		CurrentActionData = {property = property, owner = owner}
+	end)
 end
 
 function OpenRoomInventoryMenu(property, owner)
@@ -711,7 +581,7 @@ function OpenRoomInventoryMenu(property, owner)
 		{
 			title    = property.label .. ' - ' .. _U('inventory'),
 			align    = 'top-left',
-			elements = elements,
+			elements = elements
 		}, function(data, menu)
 
 			if data.current.type == 'item_weapon' then
@@ -719,7 +589,6 @@ function OpenRoomInventoryMenu(property, owner)
 				menu.close()
 
 				TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, data.current.ammo)
-
 				ESX.SetTimeout(300, function()
 					OpenRoomInventoryMenu(property, owner)
 				end)
@@ -732,19 +601,15 @@ function OpenRoomInventoryMenu(property, owner)
 				}, function(data2, menu)
 
 					local quantity = tonumber(data2.value)
-
 					if quantity == nil then
 						ESX.ShowNotification(_U('amount_invalid'))
 					else
-
 						menu.close()
 
 						TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, quantity)
-
 						ESX.SetTimeout(300, function()
 							OpenRoomInventoryMenu(property, owner)
 						end)
-
 					end
 
 				end, function(data2,menu)
@@ -778,7 +643,7 @@ function OpenPlayerInventoryMenu(property, owner)
 			end
 		end
 
-		local playerPed  = GetPlayerPed(-1)
+		local playerPed  = PlayerPedId()
 		local weaponList = ESX.GetWeaponList()
 
 		for i=1, #weaponList, 1 do
@@ -793,7 +658,7 @@ function OpenPlayerInventoryMenu(property, owner)
 		{
 			title    = property.label .. ' - ' .. _U('inventory'),
 			align    = 'top-left',
-			elements = elements,
+			elements = elements
 		}, function(data, menu)
 
 			if data.current.type == 'item_weapon' then
@@ -841,16 +706,11 @@ function OpenPlayerInventoryMenu(property, owner)
 end
 
 AddEventHandler('instance:loaded', function()
-
-  TriggerEvent('instance:registerType', 'property',
-    function(instance)
-      EnterProperty(instance.data.property, instance.data.owner)
-    end,
-    function(instance)
-      ExitProperty(instance.data.property)
-    end
-  )
-
+	TriggerEvent('instance:registerType', 'property', function(instance)
+		EnterProperty(instance.data.property, instance.data.owner)
+	end, function(instance)
+		ExitProperty(instance.data.property)
+	end)
 end)
 
 AddEventHandler('playerSpawned', function()
@@ -876,191 +736,171 @@ AddEventHandler('playerSpawned', function()
 end)
 
 AddEventHandler('esx_property:getProperties', function(cb)
-  cb(GetProperties())
+	cb(GetProperties())
 end)
 
 AddEventHandler('esx_property:getProperty', function(name, cb)
-  cb(GetProperty(name))
+	cb(GetProperty(name))
 end)
 
 AddEventHandler('esx_property:getGateway', function(property, cb)
-  cb(GetGateway(property))
+	cb(GetGateway(property))
 end)
 
 RegisterNetEvent('esx_property:setPropertyOwned')
 AddEventHandler('esx_property:setPropertyOwned', function(name, owned)
-  SetPropertyOwned(name, owned)
+	SetPropertyOwned(name, owned)
 end)
 
 RegisterNetEvent('instance:onCreate')
 AddEventHandler('instance:onCreate', function(instance)
-
-  if instance.type == 'property' then
-    TriggerEvent('instance:enter', instance)
-  end
-
+	if instance.type == 'property' then
+		TriggerEvent('instance:enter', instance)
+	end
 end)
 
 RegisterNetEvent('instance:onEnter')
 AddEventHandler('instance:onEnter', function(instance)
-  if instance.type == 'property' then
+	if instance.type == 'property' then
+		local property = GetProperty(instance.data.property)
+		local isHost   = GetPlayerFromServerId(instance.host) == PlayerId()
+		local isOwned  = false
 
-    local property = GetProperty(instance.data.property)
-    local isHost   = GetPlayerFromServerId(instance.host) == PlayerId()
-    local isOwned  = false
+		if PropertyIsOwned(property) == true then
+			isOwned = true
+		end
 
-    if PropertyIsOwned(property) == true then
-      isOwned = true
-    end
-
-    if(isOwned or not isHost) then
-      HasChest = true
-    else
-      HasChest = false
-    end
-
-  end
-
+		if isOwned or not isHost then
+			HasChest = true
+		else
+			HasChest = false
+		end
+	end
 end)
 
 RegisterNetEvent('instance:onPlayerLeft')
 AddEventHandler('instance:onPlayerLeft', function(instance, player)
-  if player == instance.host then
-    TriggerEvent('instance:leave')
-  end
+	if player == instance.host then
+		TriggerEvent('instance:leave')
+	end
 end)
 
 AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
+	local property = GetProperty(name)
 
-  local property = GetProperty(name)
-
-  if part == 'entering' then
-
-    if property.isSingle then
-      CurrentAction     = 'property_menu'
-      CurrentActionMsg  = _U('press_to_menu')
-      CurrentActionData = {property = property}
-    else
-      CurrentAction     = 'gateway_menu'
-      CurrentActionMsg  = _U('press_to_menu')
-      CurrentActionData = {property = property}
-    end
-
-  end
-
-  if part == 'exit' then
-    CurrentAction     = 'room_exit'
-    CurrentActionMsg  = _U('press_to_exit')
-    CurrentActionData = {propertyName = name}
-  end
-
-  if part == 'roomMenu' then
-    CurrentAction     = 'room_menu'
-    CurrentActionMsg  = _U('press_to_menu')
-    CurrentActionData = {property = property, owner = CurrentPropertyOwner}
-  end
-
+	if part == 'entering' then
+		if property.isSingle then
+			CurrentAction     = 'property_menu'
+			CurrentActionMsg  = _U('press_to_menu')
+			CurrentActionData = {property = property}
+		else
+			CurrentAction     = 'gateway_menu'
+			CurrentActionMsg  = _U('press_to_menu')
+			CurrentActionData = {property = property}
+		end
+	elseif part == 'exit' then
+		CurrentAction     = 'room_exit'
+		CurrentActionMsg  = _U('press_to_exit')
+		CurrentActionData = {propertyName = name}
+	elseif part == 'roomMenu' then
+		CurrentAction     = 'room_menu'
+		CurrentActionMsg  = _U('press_to_menu')
+		CurrentActionData = {property = property, owner = CurrentPropertyOwner}
+	end
 end)
 
 AddEventHandler('esx_property:hasExitedMarker', function(name, part)
-  ESX.UI.Menu.CloseAll()
-  CurrentAction = nil
+	ESX.UI.Menu.CloseAll()
+	CurrentAction = nil
 end)
 
 -- Display markers
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Citizen.Wait(1)
+		Citizen.Wait(1)
 
-    local coords = GetEntityCoords(GetPlayerPed(-1))
+		local coords = GetEntityCoords(PlayerPedId())
 
-    for i=1, #Config.Properties, 1 do
+		for i=1, #Config.Properties, 1 do
+			local property = Config.Properties[i]
+			local isHost   = false
 
-      local property = Config.Properties[i]
-      local isHost   = false
+			if(property.entering ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true) < Config.DrawDistance) then
+				DrawMarker(Config.MarkerType, property.entering.x, property.entering.y, property.entering.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+			end
 
-      if(property.entering ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true) < Config.DrawDistance) then
-        DrawMarker(Config.MarkerType, property.entering.x, property.entering.y, property.entering.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-      end
+			if(property.exit ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true) < Config.DrawDistance) then
+				DrawMarker(Config.MarkerType, property.exit.x, property.exit.y, property.exit.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+			end
 
-      if(property.exit ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true) < Config.DrawDistance) then
-        DrawMarker(Config.MarkerType, property.exit.x, property.exit.y, property.exit.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-      end
+			if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.DrawDistance) then
+				DrawMarker(Config.MarkerType, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.RoomMenuMarkerColor.r, Config.RoomMenuMarkerColor.g, Config.RoomMenuMarkerColor.b, 100, false, true, 2, false, false, false, false)
+			end
+		end
 
-      if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.DrawDistance) then
-        DrawMarker(Config.MarkerType, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.RoomMenuMarkerColor.r, Config.RoomMenuMarkerColor.g, Config.RoomMenuMarkerColor.b, 100, false, true, 2, false, false, false, false)
-      end
-
-    end
-
-  end
+	end
 end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
-  while true do
+	while true do
 
-    Citizen.Wait(1)
+		Citizen.Wait(1)
 
-    local coords          = GetEntityCoords(GetPlayerPed(-1))
-    local isInMarker      = false
-    local currentProperty = nil
-    local currentPart     = nil
+		local coords          = GetEntityCoords(PlayerPedId())
+		local isInMarker      = false
+		local currentProperty = nil
+		local currentPart     = nil
 
-    for i=1, #Config.Properties, 1 do
+		for i=1, #Config.Properties, 1 do
+			local property = Config.Properties[i]
 
-      local property = Config.Properties[i]
+			if(property.entering ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true) < Config.MarkerSize.x) then
+				isInMarker      = true
+				currentProperty = property.name
+				currentPart     = 'entering'
+			end
 
-      if(property.entering ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true) < Config.MarkerSize.x) then
-        isInMarker      = true
-        currentProperty = property.name
-        currentPart     = 'entering'
-      end
+			if(property.exit ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true) < Config.MarkerSize.x) then
+				isInMarker      = true
+				currentProperty = property.name
+				currentPart     = 'exit'
+			end
 
-      if(property.exit ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true) < Config.MarkerSize.x) then
-        isInMarker      = true
-        currentProperty = property.name
-        currentPart     = 'exit'
-      end
+			if(property.inside ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.inside.x, property.inside.y, property.inside.z, true) < Config.MarkerSize.x) then
+				isInMarker      = true
+				currentProperty = property.name
+				currentPart     = 'inside'
+			end
 
-      if(property.inside ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.inside.x, property.inside.y, property.inside.z, true) < Config.MarkerSize.x) then
-        isInMarker      = true
-        currentProperty = property.name
-        currentPart     = 'inside'
-      end
+			if(property.outside ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.outside.x, property.outside.y, property.outside.z, true) < Config.MarkerSize.x) then
+				isInMarker      = true
+				currentProperty = property.name
+				currentPart     = 'outside'
+			end
 
-      if(property.outside ~= nil and not property.disabled and GetDistanceBetweenCoords(coords, property.outside.x, property.outside.y, property.outside.z, true) < Config.MarkerSize.x) then
-        isInMarker      = true
-        currentProperty = property.name
-        currentPart     = 'outside'
-      end
+			if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.MarkerSize.x) then
+				isInMarker      = true
+				currentProperty = property.name
+				currentPart     = 'roomMenu'
+			end
+		end
 
-      if(property.roomMenu ~= nil and HasChest and not property.disabled and GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true) < Config.MarkerSize.x) then
-        isInMarker      = true
-        currentProperty = property.name
-        currentPart     = 'roomMenu'
-      end
+		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastProperty ~= currentProperty or LastPart ~= currentPart) ) then
+			HasAlreadyEnteredMarker = true
+			LastProperty            = currentProperty
+			LastPart                = currentPart
 
-    end
+			TriggerEvent('esx_property:hasEnteredMarker', currentProperty, currentPart)
+		end
 
-    if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastProperty ~= currentProperty or LastPart ~= currentPart) ) then
+		if not isInMarker and HasAlreadyEnteredMarker then
+			HasAlreadyEnteredMarker = false
+			TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
+		end
 
-      HasAlreadyEnteredMarker = true
-      LastProperty            = currentProperty
-      LastPart                = currentPart
-
-      TriggerEvent('esx_property:hasEnteredMarker', currentProperty, currentPart)
-    end
-
-    if not isInMarker and HasAlreadyEnteredMarker then
-
-      HasAlreadyEnteredMarker = false
-
-      TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
-    end
-
-  end
+	end
 end)
 
 -- Key controls
@@ -1071,9 +911,7 @@ Citizen.CreateThread(function()
 
 		if CurrentAction ~= nil then
 
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
 
