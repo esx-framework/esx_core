@@ -60,7 +60,7 @@ AddEventHandler('playerSpawned', function()
 
 	-- Restore position
 	if ESX.PlayerData.lastPosition ~= nil then
-		SetEntityCoords(playerPed,  ESX.PlayerData.lastPosition.x,  ESX.PlayerData.lastPosition.y,  ESX.PlayerData.lastPosition.z)
+		SetEntityCoords(playerPed, ESX.PlayerData.lastPosition.x, ESX.PlayerData.lastPosition.y, ESX.PlayerData.lastPosition.z)
 	end
 
 	TriggerEvent('esx:restoreLoadout') -- restore loadout
@@ -401,7 +401,7 @@ end)
 -- Pause menu disable HUD display
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Citizen.Wait(500)
 
 		if IsPauseMenuActive() and not IsPaused then
 			IsPaused = true
@@ -419,7 +419,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(1)
+		Citizen.Wait(500)
 
 		local playerPed      = PlayerPedId()
 		local loadout        = {}
@@ -504,7 +504,6 @@ if Config.DisableWantedLevel then
 
 	Citizen.CreateThread(function()
 		while true do
-
 			Citizen.Wait(10)
 
 			local playerId = PlayerId()
@@ -512,7 +511,6 @@ if Config.DisableWantedLevel then
 				SetPlayerWantedLevel(playerId, 0, false)
 				SetPlayerWantedLevelNow(playerId, false)
 			end
-
 		end
 	end)
 

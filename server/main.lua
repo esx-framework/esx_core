@@ -251,16 +251,15 @@ end)
 
 RegisterServerEvent('esx:updateLoadout')
 AddEventHandler('esx:updateLoadout', function(loadout)
-  local xPlayer   = ESX.GetPlayerFromId(source)
-  xPlayer.loadout = loadout
+	local xPlayer   = ESX.GetPlayerFromId(source)
+	xPlayer.loadout = loadout
 end)
 
 RegisterServerEvent('esx:updateLastPosition')
 AddEventHandler('esx:updateLastPosition', function(position)
-  local xPlayer        = ESX.GetPlayerFromId(source)
-  xPlayer.lastPosition = position
+	local xPlayer        = ESX.GetPlayerFromId(source)
+	xPlayer.lastPosition = position
 end)
-
 
 RegisterServerEvent('esx:giveInventoryItem')
 AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)

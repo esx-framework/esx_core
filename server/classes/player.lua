@@ -12,11 +12,13 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
 
-	self.setMoney = function(m)
-		if m >= 0 then
-			self.player.setMoney(m)
+	self.setMoney = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.setMoney(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 cash balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried setting -1 cash balance)'):format(self.identifier))
 		end
 	end
 
@@ -24,11 +26,13 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		return self.player.get('money')
 	end
 
-	self.setBankBalance = function(m)
-		if m >= 0 then
-			self.player.setBankBalance(m)
+	self.setBankBalance = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.setBankBalance(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 bank balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried setting -1 bank balance)'):format(self.identifier))
 		end
 	end
 
@@ -48,44 +52,52 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		self.player.kick(r)
 	end
 
-	self.addMoney = function(m)
-		if m >= 0 then
-			self.player.addMoney(m)
+	self.addMoney = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.addMoney(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 cash balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried adding -1 cash balance)'):format(self.identifier))
 		end
 	end
 
-	self.removeMoney = function(m)
-		if m >= 0 then
-			self.player.removeMoney(m)
+	self.removeMoney = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.removeMoney(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 cash balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried removing -1 cash balance)'):format(self.identifier))
 		end
 	end
 
-	self.addBank = function(m)
-		if m >= 0 then
-			self.player.addBank(m)
+	self.addBank = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.addBank(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 bank balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried adding -1 bank balance)'):format(self.identifier))
 		end
 	end
 
-	self.removeBank = function(m)
-		if m >= 0 then
-			self.player.removeBank(m)
+	self.removeBank = function(money)
+		money = ESX.Round(money)
+
+		if money >= 0 then
+			self.player.removeBank(money)
 		else
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 bank balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried removing -1 bank balance)'):format(self.identifier))
 		end
 	end
 
-	self.displayMoney = function(m)
-		self.player.displayMoney(m)
+	self.displayMoney = function(money)
+		self.player.displayMoney(money)
 	end
 
-	self.displayBank = function(m)
-		self.player.displayBank(m)
+	self.displayBank = function(money)
+		self.player.displayBank(money)
 	end
 
 	self.setSessionVar = function(key, value)
@@ -190,13 +202,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
 			['@identifier'] = self.getIdentifier()
 		}, function(result)
-
 			local missingAccounts = {}
 
 			for i=1, #Config.Accounts, 1 do
-
 				if Config.Accounts[i] ~= 'bank' then
-
 					local found = false
 
 					for j=1, #result, 1 do
@@ -208,13 +217,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					if not found then
 						table.insert(missingAccounts, Config.Accounts[i])
 					end
-
 				end
-
 			end
 
 			cb(missingAccounts)
-
 		end)
 	end
 
@@ -232,37 +238,37 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		end
 	end
 
-	self.setAccountMoney = function(a, m)
-		if m < 0 then
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried setting -1 account balance)')
+	self.setAccountMoney = function(acc, money)
+		if money < 0 then
+			print(('es_extended: %s attempted exploiting! (reason: player tried setting -1 account balance)'):format(self.identifier))
 			return
 		end
 
-		local account   = self.getAccount(a)
+		local account   = self.getAccount(acc)
 		local prevMoney = account.money
-		local newMoney  = m
+		local newMoney  = ESX.Round(money)
 
 		account.money = newMoney
 
-		if a == 'bank' then
+		if acc == 'bank' then
 			self.set('bank', newMoney)
 		end
 
 		TriggerClientEvent('esx:setAccountMoney', self.source, account)
 	end
 
-	self.addAccountMoney = function(a, m)
-		if m < 0 then
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried adding -1 account balance)')
+	self.addAccountMoney = function(acc, money)
+		if money < 0 then
+			print(('es_extended: %s attempted exploiting! (reason: player tried adding -1 account balance)'):format(self.identifier))
 			return
 		end
 
-		local account  = self.getAccount(a)
-		local newMoney = account.money + m
+		local account  = self.getAccount(acc)
+		local newMoney = account.money + ESX.Round(money)
 
 		account.money = newMoney
 
-		if a == 'bank' then
+		if acc == 'bank' then
 			self.set('bank', newMoney)
 		end
 
@@ -271,7 +277,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.removeAccountMoney = function(a, m)
 		if m < 0 then
-			print('es_extended: ' .. self.name .. ' (' .. self.identifier .. ') attempted exploiting! (reason: player tried removing -1 account balance)')
+			print(('es_extended: %s attempted exploiting! (reason: player tried removing -1 account balance)'):format(self.identifier))
 			return
 		end
 
