@@ -281,22 +281,20 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		
-		if CurrentAction ~= nil then
 
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+		if CurrentAction ~= nil then
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) and GetLastInputMethod(2) then
-
 				if CurrentAction == 'dispatch' then
 					TriggerServerEvent('esx_phone:stopDispatch', CurrentDispatchRequestId)
-					SetNewWaypoint(CurrentActionData.position.x,  CurrentActionData.position.y)
+					SetNewWaypoint(CurrentActionData.position.x, CurrentActionData.position.y)
 				end
+
 				CurrentAction = nil
 			end
-
+		else
+			Citizen.Wait(500)
 		end
 	end
 end)

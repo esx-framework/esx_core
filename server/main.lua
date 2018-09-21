@@ -7,25 +7,21 @@ TriggerEvent('esx:getSharedObject', function(obj)
 end)
 
 function GenerateUniquePhoneNumber()
-	local foundNumber = false
-	local phoneNumber = nil
+	local foundNumber, phoneNumber = false, nil
 
 	while not foundNumber do
-		Citizen.Wait(20)
+		Citizen.Wait(100)
+
+		math.randomseed(GetGameTimer())
 		phoneNumber = math.random(10000, 99999)
 
-		local result = MySQL.Sync.fetchAll('SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber',
-		{
+		local result = MySQL.Sync.fetchAll('SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber', {
 			['@phoneNumber'] = phoneNumber
 		})
 
-		local count = tonumber(result[1].count)
-
-		-- if the result is empty, aka the phone number is available
-		if count == 0 then
+		if tonumber(result[1].count) == 0 then
 			foundNumber = true
 		end
-
 	end
 
 	return phoneNumber
@@ -58,8 +54,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 		end
 	end
 
-	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
-	{
+	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
 		local phoneNumber = result[1].phone_number
@@ -86,20 +81,16 @@ AddEventHandler('esx:playerLoaded', function(source)
 		}
 
 		xPlayer.set('phoneNumber', phoneNumber)
+		local contacts = {}
 
 		if PhoneNumbers[xPlayer.job.name] ~= nil then
 			TriggerEvent('esx_phone:addSource', xPlayer.job.name, source)
 		end
 
-		local contacts = {}
-
-		MySQL.Async.fetchAll('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC',
-		{
+		MySQL.Async.fetchAll('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result2)
-
 			for i=1, #result2, 1 do
-
 				table.insert(contacts, {
 					name   = result2[i].name,
 					number = result2[i].number,
@@ -153,7 +144,6 @@ AddEventHandler('esx_phone:send', function(phoneNumber, message, anon, position)
 	if PhoneNumbers[phoneNumber] ~= nil then
 
 		for k,v in pairs(PhoneNumbers[phoneNumber].sources) do
-
 			local numType          = PhoneNumbers[phoneNumber].type
 			local numHasDispatch   = PhoneNumbers[phoneNumber].hasDispatch
 			local numHide          = PhoneNumbers[phoneNumber].hideNumber
@@ -170,7 +160,6 @@ AddEventHandler('esx_phone:send', function(phoneNumber, message, anon, position)
 			else
 				TriggerClientEvent('esx_phone:onMessage', numSource, xPlayer.get('phoneNumber'), message, numPosition, (numHide and true or anon), numType, false)
 			end
-
 		end
 
 	end
@@ -214,9 +203,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 		return
 	end
 
-	MySQL.Async.fetchAll(
-	'SELECT phone_number FROM users WHERE phone_number = @number',
-	{
+	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE phone_number = @number', {
 		['@number'] = phoneNumber
 	}, function(result)
 		if result[1] ~= nil then
@@ -239,8 +226,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 
 				xPlayer.set('contacts', contacts)
 
-				MySQL.Async.execute(
-				'INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
+				MySQL.Async.execute('INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)',
 				{
 					['@identifier'] = xPlayer.identifier,
 					['@name']       = contactName,
@@ -267,13 +253,11 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 	{
 		['@number'] = phoneNumber
 	}, function(result)
-
 		if result[1] ~= nil then
 			foundNumber = true
 		end
 
 		if foundNumber then
-
 			local contacts = xPlayer.get('contacts')
 
 			for key, value in pairs(contacts) do
@@ -296,9 +280,7 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 		else
 			TriggerClientEvent('esx:showNotification', source, _U('number_not_assigned'))
 		end
-
 	end)
-
 end)
 
 RegisterServerEvent('esx_phone:stopDispatch')
