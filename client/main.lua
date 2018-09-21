@@ -11,6 +11,7 @@ local Keys = {
 }
 
 local isDead = false
+local inAnim = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -20,7 +21,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddEventHandler('esx:onPlayerDeath', function()
+AddEventHandler('esx:onPlayerDeath', function(data)
 	isDead = true
 end)
 
@@ -29,31 +30,19 @@ AddEventHandler('playerSpawned', function(spawn)
 end)
 
 function startAttitude(lib, anim)
-	Citizen.CreateThread(function()
-	
-		local playerPed = GetPlayerPed(-1)
-		RequestAnimSet(anim)
-		
-		while not HasAnimSetLoaded(anim) do
-			Citizen.Wait(1)
-		end
-		SetPedMovementClipset(playerPed, anim, true)
+	ESX.Streaming.RequestAnimSet(lib, function()
+		SetPedMovementClipset(PlayerPedId(), anim, true)
 	end)
 end
 
 function startAnim(lib, anim)
-	Citizen.CreateThread(function()
-		RequestAnimDict(lib)
-		while not HasAnimDictLoaded( lib) do
-			Citizen.Wait(1)
-		end
-
-		TaskPlayAnim(GetPlayerPed(-1), lib ,anim ,8.0, -8.0, -1, 0, 0, false, false, false)
+	ESX.Streaming.RequestAnimDict(lib, function()
+		TaskPlayAnim(PlayerPedId(), lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 	end)
 end
 
 function startScenario(anim)
-	TaskStartScenarioInPlace(GetPlayerPed(-1), anim, 0, false)
+	TaskStartScenarioInPlace(PlayerPedId(), anim, 0, false)
 end
 
 function OpenAnimationsMenu()
@@ -63,20 +52,16 @@ function OpenAnimationsMenu()
 		table.insert(elements, {label = Config.Animations[i].label, value = Config.Animations[i].name})
 	end
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'animations',
-		{
-			title    = 'Animations',
-			align    = 'top-left',
-			elements = elements
-		},
-		function(data, menu)
-			OpenAnimationsSubMenu(data.current.value)
-		end,
-		function(data, menu)
-			menu.close()
-		end
-	)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'animations',
+	{
+		title    = 'Animations',
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+		OpenAnimationsSubMenu(data.current.value)
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 function OpenAnimationsSubMenu(menu)
@@ -84,46 +69,42 @@ function OpenAnimationsSubMenu(menu)
 	local elements = {}
 
 	for i=1, #Config.Animations, 1 do
-	
 		if Config.Animations[i].name == menu then
 			title = Config.Animations[i].label
 
-			for j=1, # Config.Animations[i].items, 1 do
-				table.insert(elements, {label = Config.Animations[i].items[j].label, type = Config.Animations[i].items[j].type, value = Config.Animations[i].items[j].data})
+			for j=1, #Config.Animations[i].items, 1 do
+				table.insert(elements, {
+					label = Config.Animations[i].items[j].label,
+					type  = Config.Animations[i].items[j].type,
+					value = Config.Animations[i].items[j].data
+				})
 			end
 
 			break
 
 		end
-
 	end
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'animations_sub',
-		{
-			title    = title,
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			local type = data.current.type
-			local lib  = data.current.value.lib
-			local anim = data.current.value.anim
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'animations_sub',
+	{
+		title    = title,
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+		local type = data.current.type
+		local lib  = data.current.value.lib
+		local anim = data.current.value.anim
 
-			if type == 'scenario' then
-				startScenario(anim)
-			else
-				if type == 'attitude' then
-					startAttitude(lib, anim)
-				else
-					startAnim(lib, anim)
-				end
-			end
-
-		end, function(data, menu)
-			menu.close()
+		if type == 'scenario' then
+			startScenario(anim)
+		elseif type == 'attitude' then
+			startAttitude(lib, anim)
+		elseif type == 'anim' then
+			startAnim(lib, anim)
 		end
-	)
-
+	end, function(data, menu)
+		menu.close()
+	end)
 end
 
 -- Key Controls
@@ -135,9 +116,8 @@ Citizen.CreateThread(function()
 			OpenAnimationsMenu()
 		end
 
-		-- todo: if not cuffed? or any other action
 		if IsControlJustReleased(0, Keys['X']) and GetLastInputMethod(2) and not isDead then
-			ClearPedTasks(GetPlayerPed(-1))
+			ClearPedTasks(PlayerPedId())
 		end
 
 	end
