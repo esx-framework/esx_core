@@ -12,7 +12,7 @@ function GetSociety(name)
 	end
 end
 
-AddEventHandler('onMySQLReady', function()
+MySQL.ready(function()
 	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
 
 	for i=1, #result, 1 do
