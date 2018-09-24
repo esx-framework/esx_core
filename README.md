@@ -36,7 +36,7 @@ You must create the inventory in the database (addon_inventory) before using it 
 name = name of the inventory, label = label of the inventory, shared (0 or 1) = Is inventory shared
 
 ```lua
-TriggerEvent('esx_addoninventory:getSharedInventory', 'main_grocery', function(inventory)
+TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 	inventory.addItem('bread', 1)
 end)
 
