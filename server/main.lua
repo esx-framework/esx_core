@@ -1,26 +1,10 @@
 ESX             = nil
 local ShopItems = {}
-local hasSqlRun = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 -- Load items
-AddEventHandler('onMySQLReady', function()
-	hasSqlRun = true
-	LoadShop()
-end)
-
--- extremely useful when restarting script mid-game
-Citizen.CreateThread(function()
-	Citizen.Wait(2000) -- hopefully enough for connection to the SQL server
-
-	if not hasSqlRun then
-		LoadShop()
-		hasSqlRun = true
-	end
-end)
-
-function LoadShop()
+MySQL.ready(function()
 	local itemResult = MySQL.Sync.fetchAll('SELECT * FROM items')
 	local shopResult = MySQL.Sync.fetchAll('SELECT * FROM shops')
 
@@ -51,13 +35,9 @@ function LoadShop()
 			limit = itemInformation[shopResult[i].item].limit
 		})
 	end
-end
+end)
 
 ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
-	if not hasSqlRun then
-		TriggerClientEvent('esx:showNotification', source, 'The shop database has not been loaded yet, try again in a few moments.')
-	end
-
 	cb(ShopItems)
 end)
 
