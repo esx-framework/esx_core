@@ -1,5 +1,4 @@
 WhiteList       = {}
-local hasSqlRun = false
 
 function loadWhiteList(cb)
 	Whitelist = {}
@@ -9,24 +8,14 @@ function loadWhiteList(cb)
 			table.insert(WhiteList, tostring(identifiers[i].identifier):lower())
 		end
 
-		hasSqlRun = true
-
 		if cb ~= nil then
 			cb()
 		end
 	end)
 end
 
-AddEventHandler('onMySQLReady', function()
+MySQL.ready(function()
 	loadWhiteList()
-end)
-
-Citizen.CreateThread(function()
-	Citizen.Wait(10000)
-
-	if not hasSqlRun then
-		loadWhiteList()
-	end
 end)
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
