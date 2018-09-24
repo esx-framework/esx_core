@@ -16,7 +16,7 @@ Locales['sv'] = {
   ['delivered']               = 'fordonet ~g~lämnats tillbaka~s~ till bilförsäljaren',
   ['depop_vehicle']           = 'Ställ tillbaka fordonet',
   ['return_provider']         = 'sälj tillbaka fordon till leverantör',
-  ['deposit_amount']          = 'Belopp att lägga in',
+  ['deposit_amount']          = 'mängd att lägga in',
   ['deposit_money']           = 'Belopp att lägga in',
   ['experianced']             = 'Erfaren',
   ['get_rented_vehicles']     = 'Uthyrda fordon',
@@ -64,6 +64,3 @@ Locales['sv'] = {
   ['have_deposited']          = 'Du har lagt in ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'Chef handlingar',
 }
-
-
-

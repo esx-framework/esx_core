@@ -1,27 +1,19 @@
 ESX              = nil
 local Categories = {}
 local Vehicles   = {}
-local hasSqlRun  = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 TriggerEvent('esx_phone:registerNumber', 'cardealer', _U('dealer_customers'), false, false)
 TriggerEvent('esx_society:registerSociety', 'cardealer', _U('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
 
-function RemoveOwnedVehicle (plate)
-	MySQL.Async.execute('DELETE FROM owned_vehicles WHERE plate = @plate',
-	{
+function RemoveOwnedVehicle(plate)
+	MySQL.Async.execute('DELETE FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	})
 end
 
-AddEventHandler('onMySQLReady', function()
-	LoadVehicles()
-end)
-
-function LoadVehicles()
-	hasSqlRun = true
-
+MySQL.ready(function()
 	Categories     = MySQL.Sync.fetchAll('SELECT * FROM vehicle_categories')
 	local vehicles = MySQL.Sync.fetchAll('SELECT * FROM vehicles')
 
@@ -41,15 +33,6 @@ function LoadVehicles()
 	-- send information after db has loaded, making sure everyone gets vehicle information
 	TriggerClientEvent('esx_vehicleshop:sendCategories', -1, Categories)
 	TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, Vehicles)
-end
-
--- extremely useful when restarting script mid-game
-Citizen.CreateThread(function()
-	Citizen.Wait(10000) -- hopefully enough for connection to the SQL server
-
-	if not hasSqlRun then
-		LoadVehicles()
-	end
 end)
 
 RegisterServerEvent('esx_vehicleshop:setVehicleOwned')
