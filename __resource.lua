@@ -1,8 +1,8 @@
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-description 'ESX AddonAccount'
+description 'ESX Addon Account'
 
-version '1.0.0'
+version '1.0.1'
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
