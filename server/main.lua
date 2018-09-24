@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('onMySQLReady', function()
+MySQL.ready(function()
 	ParkBoats()
 end)
 
