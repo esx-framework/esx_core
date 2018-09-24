@@ -83,7 +83,6 @@ for i=1, #Components, 1 do
 end
 
 function LoadDefaultModel(malePed, cb)
-
 	local playerPed = PlayerPedId()
 	local characterModel
 
@@ -96,7 +95,6 @@ function LoadDefaultModel(malePed, cb)
 	RequestModel(characterModel)
 
 	Citizen.CreateThread(function()
-
 		while not HasModelLoaded(characterModel) do
 			RequestModel(characterModel)
 			Citizen.Wait(0)
@@ -114,13 +112,10 @@ function LoadDefaultModel(malePed, cb)
 		end
 
 		TriggerEvent('skinchanger:modelLoaded')
-
 	end)
-
 end
 
 function GetMaxVals()
-
 	local playerPed = PlayerPedId()
 
 	local data = {
@@ -195,15 +190,13 @@ function GetMaxVals()
 		watches_1		= GetNumberOfPedPropDrawableVariations	(playerPed, 6) - 1,
 		watches_2		= GetNumberOfPedPropTextureVariations	(playerPed, 6, Character['watches_1']) - 1,
 		bracelets_1		= GetNumberOfPedPropDrawableVariations	(playerPed, 7) - 1,
-		bracelets_2		= GetNumberOfPedPropTextureVariations	(playerPed, 7, Character['bracelets_1'] - 1),
-}
+		bracelets_2		= GetNumberOfPedPropTextureVariations	(playerPed, 7, Character['bracelets_1'] - 1)
+	}
 
 	return data
-
 end
 
 function ApplySkin(skin, clothes)
-
 	local playerPed = PlayerPedId()
 
 	for k,v in pairs(skin) do
@@ -211,7 +204,6 @@ function ApplySkin(skin, clothes)
 	end
 
 	if clothes ~= nil then
-
 		for k,v in pairs(clothes) do
 			if
 				k ~= 'sex'				and
@@ -256,11 +248,10 @@ function ApplySkin(skin, clothes)
 				k ~= 'chest_3'			and
 				k ~= 'bodyb_1'			and
 				k ~= 'bodyb_2'
-	then
+			then
 				Character[k] = v
 			end
 		end
-
 	end
 
 	SetPedHeadBlendData			(playerPed, Character['face'], Character['face'], Character['face'], Character['skin'], Character['skin'], Character['skin'], 1.0, 1.0, 1.0, true)
@@ -326,7 +317,6 @@ function ApplySkin(skin, clothes)
 	else
 		SetPedPropIndex			(playerPed, 7,		Character['bracelets_1'],		Character['bracelets_2'], 2)				-- Bracelets
 	end
-
 end
 
 AddEventHandler('skinchanger:loadDefaultModel', function(loadMale, cb)
@@ -334,7 +324,6 @@ AddEventHandler('skinchanger:loadDefaultModel', function(loadMale, cb)
 end)
 
 AddEventHandler('skinchanger:getData', function(cb)
-
 	local components = json.decode(json.encode(Components))
 
 	for k,v in pairs(Character) do
@@ -351,7 +340,6 @@ AddEventHandler('skinchanger:getData', function(cb)
 end)
 
 AddEventHandler('skinchanger:change', function(key, val)
-
 	Character[key] = val
 
 	if key == 'sex' then
@@ -359,7 +347,6 @@ AddEventHandler('skinchanger:change', function(key, val)
 	else
 		ApplySkin(Character)
 	end
-
 end)
 
 AddEventHandler('skinchanger:getSkin', function(cb)
@@ -367,30 +354,22 @@ AddEventHandler('skinchanger:getSkin', function(cb)
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
-
 	ClearPedProp(PlayerPedId(), 0)
 
 	if LoadSkin ~= nil then
-
 		ApplySkin(LoadSkin)
 		LoadSkin = nil
-
 	end
 
 	if LoadClothes ~= nil then
-
 		ApplySkin(LoadClothes.playerSkin, LoadClothes.clothesSkin)
 		LoadClothes = nil
-
 	end
-
 end)
 
 RegisterNetEvent('skinchanger:loadSkin')
 AddEventHandler('skinchanger:loadSkin', function(skin, cb)
-
 	if skin['sex'] ~= LastSex then
-
 		LoadSkin = skin
 
 		if skin['sex'] == 0 then
@@ -398,26 +377,20 @@ AddEventHandler('skinchanger:loadSkin', function(skin, cb)
 		else
 			TriggerEvent('skinchanger:loadDefaultModel', false, cb)
 		end
-
 	else
-
 		ApplySkin(skin)
 
 		if cb ~= nil then
 			cb()
 		end
-
 	end
 
 	LastSex = skin['sex']
-
 end)
 
 RegisterNetEvent('skinchanger:loadClothes')
 AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
-
 	if playerSkin['sex'] ~= LastSex then
-
 		LoadClothes = {
 			playerSkin	= playerSkin,
 			clothesSkin	= clothesSkin
@@ -428,11 +401,9 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 		else
 			TriggerEvent('skinchanger:loadDefaultModel', false)
 		end
-
 	else
 		ApplySkin(playerSkin, clothesSkin)
 	end
 
 	LastSex = playerSkin['sex']
-
 end)
