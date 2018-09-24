@@ -147,7 +147,7 @@ function EnterProperty(name, owner)
 			end
 		end
 
-		SetEntityCoords(playerPed, property.inside.x,  property.inside.y,  property.inside.z)
+		SetEntityCoords(playerPed, property.inside.x, property.inside.y, property.inside.z)
 		DoScreenFadeIn(800)
 		DrawSub(property.label, 5000)
 	end)
@@ -265,7 +265,7 @@ function OpenPropertyMenu(property)
 	else
 		if not Config.EnablePlayerManagement then
 			table.insert(elements, {label = _U('buy'), value = 'buy'})
-			table.insert(elements, {label = _U('rent'),   value = 'rent'})
+			table.insert(elements, {label = _U('rent'), value = 'rent'})
 		end
 
 		table.insert(elements, {label = _U('visit'), value = 'visit'})
@@ -595,8 +595,7 @@ function OpenRoomInventoryMenu(property, owner)
 
 			else
 
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'get_item_count',
-				{
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'get_item_count', {
 					title = _U('amount'),
 				}, function(data2, menu)
 

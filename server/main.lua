@@ -1,5 +1,4 @@
 ESX = nil
-local hasSqlRun = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -48,25 +47,10 @@ function RemoveOwnedProperty(name, owner)
 	end)
 end
 
-AddEventHandler('onMySQLReady', function()
-	hasSqlRun = true
-	LoadSql()
-end)
-
--- extremely useful when restarting script mid-game
-Citizen.CreateThread(function()
-	Citizen.Wait(20000) -- hopefully enough for connection to the SQL server
-
-	if not hasSqlRun then
-		LoadSql()
-		hasSqlRun = true
-	end
-end)
-
-function LoadSql()
+MySQL.ready(function()
 	MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
-		for i=1, #properties, 1 do
 
+		for i=1, #properties, 1 do
 			local entering  = nil
 			local exit      = nil
 			local inside    = nil
@@ -133,7 +117,8 @@ function LoadSql()
 
 		TriggerClientEvent('esx_property:sendProperties', -1, Config.Properties)
 	end)
-end
+
+end)
 
 ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
 	cb(Config.Properties)
