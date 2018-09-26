@@ -58,11 +58,14 @@ RegisterServerEvent('esx_drugs:startHarvestCoke')
 AddEventHandler('esx_drugs:startHarvestCoke', function()
 	local _source = source
 
-	PlayersHarvestingCoke[_source] = true
+	if not PlayersHarvestingCoke[_source] then
+		PlayersHarvestingCoke[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
-
-	HarvestCoke(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
+		HarvestCoke(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopHarvestCoke')
@@ -102,11 +105,14 @@ RegisterServerEvent('esx_drugs:startTransformCoke')
 AddEventHandler('esx_drugs:startTransformCoke', function()
 	local _source = source
 
-	PlayersTransformingCoke[_source] = true
+	if not PlayersTransformingCoke[_source] then
+		PlayersTransformingCoke[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
-
-	TransformCoke(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
+		TransformCoke(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopTransformCoke')
@@ -161,11 +167,14 @@ RegisterServerEvent('esx_drugs:startSellCoke')
 AddEventHandler('esx_drugs:startSellCoke', function()
 	local _source = source
 
-	PlayersSellingCoke[_source] = true
+	if not PlayersSellingCoke[_source] then
+		PlayersSellingCoke[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
-
-	SellCoke(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
+		SellCoke(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopSellCoke')
@@ -201,11 +210,14 @@ RegisterServerEvent('esx_drugs:startHarvestMeth')
 AddEventHandler('esx_drugs:startHarvestMeth', function()
 	local _source = source
 
-	PlayersHarvestingMeth[_source] = true
+	if not PlayersHarvestingMeth[_source] then
+		PlayersHarvestingMeth[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
-
-	HarvestMeth(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
+		HarvestMeth(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopHarvestMeth')
@@ -245,11 +257,14 @@ RegisterServerEvent('esx_drugs:startTransformMeth')
 AddEventHandler('esx_drugs:startTransformMeth', function()
 	local _source = source
 
-	PlayersTransformingMeth[_source] = true
+	if not PlayersTransformingMeth[_source] then
+		PlayersTransformingMeth[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
-
-	TransformMeth(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
+		TransformMeth(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopTransformMeth')
@@ -307,11 +322,14 @@ RegisterServerEvent('esx_drugs:startSellMeth')
 AddEventHandler('esx_drugs:startSellMeth', function()
 	local _source = source
 
-	PlayersSellingMeth[_source] = true
+	if not PlayersSellingMeth[_source] then
+		PlayersSellingMeth[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
-
-	SellMeth(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
+		SellMeth(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopSellMeth')
@@ -329,7 +347,7 @@ local function HarvestWeed(source)
 	end
 
 	SetTimeout(Config.TimeToFarm, function()
-		if PlayersHarvestingWeed[source] == true then
+		if PlayersHarvestingWeed[source] then
 			local _source = source
 			local xPlayer = ESX.GetPlayerFromId(_source)
 			local weed = xPlayer.getInventoryItem('weed')
@@ -348,11 +366,14 @@ RegisterServerEvent('esx_drugs:startHarvestWeed')
 AddEventHandler('esx_drugs:startHarvestWeed', function()
 	local _source = source
 
-	PlayersHarvestingWeed[_source] = true
+	if not PlayersHarvestingWeed[_source] then
+		PlayersHarvestingWeed[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
-
-	HarvestWeed(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
+		HarvestWeed(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopHarvestWeed')
@@ -393,11 +414,14 @@ RegisterServerEvent('esx_drugs:startTransformWeed')
 AddEventHandler('esx_drugs:startTransformWeed', function()
 	local _source = source
 
-	PlayersTransformingWeed[_source] = true
+	if not PlayersTransformingWeed[_source] then
+		PlayersTransformingWeed[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
-
-	TransformWeed(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
+		TransformWeed(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopTransformWeed')
@@ -450,11 +474,14 @@ RegisterServerEvent('esx_drugs:startSellWeed')
 AddEventHandler('esx_drugs:startSellWeed', function()
 	local _source = source
 
-	PlayersSellingWeed[_source] = true
+	if not PlayersSellingWeed[_source] then
+		PlayersSellingWeed[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
-
-	SellWeed(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
+		SellWeed(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopSellWeed')
@@ -464,9 +491,7 @@ AddEventHandler('esx_drugs:stopSellWeed', function()
 	PlayersSellingWeed[_source] = false
 end)
 
-
 --opium
-
 local function HarvestOpium(source)
 	if CopsConnected < Config.RequiredCopsOpium then
 		TriggerClientEvent('esx:showNotification', source, _U('act_imp_police', CopsConnected, Config.RequiredCopsOpium))
@@ -493,11 +518,14 @@ RegisterServerEvent('esx_drugs:startHarvestOpium')
 AddEventHandler('esx_drugs:startHarvestOpium', function()
 	local _source = source
 
-	PlayersHarvestingOpium[_source] = true
+	if not PlayersHarvestingOpium[_source] then
+		PlayersHarvestingOpium[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
-
-	HarvestOpium(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
+		HarvestOpium(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopHarvestOpium')
@@ -539,11 +567,14 @@ RegisterServerEvent('esx_drugs:startTransformOpium')
 AddEventHandler('esx_drugs:startTransformOpium', function()
 	local _source = source
 
-	PlayersTransformingOpium[_source] = true
+	if not PlayersTransformingOpium[_source] then
+		PlayersTransformingOpium[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
-
-	TransformOpium(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
+		TransformOpium(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopTransformOpium')
@@ -599,11 +630,14 @@ RegisterServerEvent('esx_drugs:startSellOpium')
 AddEventHandler('esx_drugs:startSellOpium', function()
 	local _source = source
 
-	PlayersSellingOpium[_source] = true
+	if not PlayersSellingOpium[_source] then
+		PlayersSellingOpium[_source] = true
 
-	TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
-
-	SellOpium(_source)
+		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
+		SellOpium(_source)
+	else
+		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_drugs:stopSellOpium')
