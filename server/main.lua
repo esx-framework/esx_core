@@ -99,8 +99,12 @@ end
 
 RegisterServerEvent('esx_jobs:startWork')
 AddEventHandler('esx_jobs:startWork', function(item)
-	PlayersWorking[source] = true
-	Work(source, item)
+	if not PlayersWorking[source] then
+		PlayersWorking[source] = true
+		Work(source, item)
+	else
+		print(('esx_jobs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(source)[1]))
+	end
 end)
 
 RegisterServerEvent('esx_jobs:stopWork')
