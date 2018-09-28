@@ -8,7 +8,8 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	price = tonumber(price)
 
-	if Config.IsMecanoJobOnly == true then
+	if Config.IsMecanoJobOnly then
+
 		local societyAccount = nil
 		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mecano', function(account)
 			societyAccount = account
@@ -23,6 +24,7 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 		end
 
 	else
+
 		if price < xPlayer.getMoney() then
 			TriggerClientEvent('esx_lscustom:installMod', _source)
 			TriggerClientEvent('esx:showNotification', _source, _U('purchased'))
@@ -31,6 +33,7 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', _source)
 			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_money'))
 		end
+
 	end
 end)
 
@@ -45,21 +48,19 @@ end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
 	if Vehicles == nil then
-		MySQL.Async.fetchAll(
-			'SELECT * FROM vehicles',
-			{},
-			function(result)
-				local vehicles = {}
-				for i=1, #result, 1 do
-					table.insert(vehicles,{
-						model = result[i].model,
-						price = result[i].price
-					})
-				end
-				Vehicles = vehicles
-				cb(Vehicles)
+		MySQL.Async.fetchAll('SELECT * FROM vehicles', {}, function(result)
+			local vehicles = {}
+
+			for i=1, #result, 1 do
+				table.insert(vehicles, {
+					model = result[i].model,
+					price = result[i].price
+				})
 			end
-		)
+
+			Vehicles = vehicles
+			cb(Vehicles)
+		end)
 	else
 		cb(Vehicles)
 	end

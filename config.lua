@@ -4,46 +4,52 @@ Config.Locale          = 'en'
 Config.IsMecanoJobOnly = false
 
 Config.Zones = {
+
 	ls1 = {
-		Pos   = { x = -337.3863, y = -136.9247, z = 38.5737},
+		Pos   = { x = -337.38, y = -136.92, z = 38.57},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "Los Santos Customs",
+		Name  = _U('blip_name'),
 		Hint  = _U('press_custom')
 	},
-	 ls2 = {
-		Pos   = { x = -1155.536, y = -2007.183, z = 12.744},
+
+	ls2 = {
+		Pos   = { x = -1155.53, y = -2007.18, z = 12.74},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "Los Santos Customs",
+		Name  = _U('blip_name'),
 		Hint  = _U('press_custom')
 	},
-	 ls3 = {
-		Pos   = { x = 731.8163, y = -1088.822, z = 21.733},
+
+	ls3 = {
+		Pos   = { x = 731.81, y = -1088.82, z = 21.73},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "Los Santos Customs",
+		Name  = _U('blip_name'),
 		Hint  = _U('press_custom')
 	},
-	 ls4 = {
-		Pos   = { x = 1175.04, y = 2640.216, z = 37.32177},
+
+	ls4 = {
+		Pos   = { x = 1175.04, y = 2640.21, z = 37.32},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "Los Santos Customs",
+		Name  = _U('blip_name'),
 		Hint  = _U('press_custom')
 	},
-	 ls5 = {
+
+	ls5 = {
 		Pos   = { x = 110.99, y = 6626.39, z = 30.89},
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = "Los Santos Customs",
+		Name  = _U('blip_name'),
 		Hint  = _U('press_custom')
-	},
+	}
+
 }
 
 Config.Colors = {
@@ -59,7 +65,7 @@ Config.Colors = {
 	{ label = _U('brown'), value = 'brown'},
 	{ label = _U('purple'), value = 'purple'},
 	{ label = _U('chrome'), value = 'chrome'},
-	{ label = _U('gold'), value = 'gold'},
+	{ label = _U('gold'), value = 'gold'}
 }
 
 function GetColors(color)

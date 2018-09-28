@@ -10,12 +10,12 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-ESX = 					nil
-local Vehicles = 		{}
-local PlayerData 		= {}
-local lsMenuIsShowed 	= false
+ESX =					nil
+local Vehicles =		{}
+local PlayerData		= {}
+local lsMenuIsShowed	= false
 local isInLSMarker		= false
-local myCar 			= {}
+local myCar				= {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -39,97 +39,94 @@ end)
 
 RegisterNetEvent('esx_lscustom:installMod')
 AddEventHandler('esx_lscustom:installMod', function()
-	local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 	myCar = ESX.Game.GetVehicleProperties(vehicle)
 	TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
 end)
 
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
 AddEventHandler('esx_lscustom:cancelInstallMod', function()
-	local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 	ESX.Game.SetVehicleProperties(vehicle, myCar)
 end)
 
-function OpenLSMenu(elems, menuname, menutitle, parent)
+function OpenLSMenu(elems, menuName, menuTitle, parent)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), menuName,
+	{
+		title    = menuTitle,
+		align    = 'top-left',
+		elements = elems
+	}, function(data, menu)
+		local isRimMod, found = false, false
+		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), menuname,
-		{
-			title = menutitle,
-			align = 'top-left',
-			elements = elems
-		},
-		function(data, menu) -- on validate
-			local isRimMod = false
-			if data.current.modType == "modFrontWheels" then
-				isRimMod = true
-			end
-			local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-			local found = false
-			for k,v in pairs(Config.Menus) do
-				if k == data.current.modType or isRimMod then
-					if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
-						ESX.ShowNotification(_U('already_own') .. data.current.label)
-						TriggerEvent('esx_lscustom:installMod')
-					else
-						local vehiclePrice = 50000
-
-						for i=1, #Vehicles, 1 do
-							if GetEntityModel(vehicle) == GetHashKey(Vehicles[i].model) then
-								vehiclePrice = Vehicles[i].price
-								break
-							end
-						end
-
-						if isRimMod then
-							price = math.floor(vehiclePrice * data.current.price / 100)
-							TriggerServerEvent("esx_lscustom:buyMod", price)
-						elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
-							price = math.floor(vehiclePrice * v.price[data.current.modNum + 1] / 100)
-							TriggerServerEvent("esx_lscustom:buyMod", price)
-						elseif v.modType == 17 then
-							price = math.floor(vehiclePrice * v.price[1] / 100)
-							TriggerServerEvent("esx_lscustom:buyMod", price)
-						else
-							price = math.floor(vehiclePrice * v.price / 100)
-							TriggerServerEvent("esx_lscustom:buyMod", price)
-						end
-
-					end
-					menu.close()
-					found = true
-					break
-				end
-			end
-			if not found then
-				GetAction(data.current)
-			end
-		end,
-		function(data, menu) -- on cancel
-			menu.close()
-			TriggerEvent('esx_lscustom:cancelInstallMod')
-
-			local playerPed = GetPlayerPed(-1)
-			local vehicle = GetVehiclePedIsIn(playerPed, false)
-
-			SetVehicleDoorsShut(vehicle, false)
-
-			if parent == nil then
-				lsMenuIsShowed = false
-				local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-				FreezeEntityPosition(vehicle, false)
-				myCar = {}
-			end
-		end,
-		function(data, menu) -- on change
-			UpdateMods(data.current)
+		if data.current.modType == "modFrontWheels" then
+			isRimMod = true
 		end
-	)
+
+		for k,v in pairs(Config.Menus) do
+
+			if k == data.current.modType or isRimMod then
+
+				if data.current.label == _U('by_default') or string.match(data.current.label, _U('installed')) then
+					ESX.ShowNotification(_U('already_own', data.current.label))
+					TriggerEvent('esx_lscustom:installMod')
+				else
+					local vehiclePrice = 50000
+
+					for i=1, #Vehicles, 1 do
+						if GetEntityModel(vehicle) == GetHashKey(Vehicles[i].model) then
+							vehiclePrice = Vehicles[i].price
+							break
+						end
+					end
+
+					if isRimMod then
+						price = math.floor(vehiclePrice * data.current.price / 100)
+						TriggerServerEvent("esx_lscustom:buyMod", price)
+					elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
+						price = math.floor(vehiclePrice * v.price[data.current.modNum + 1] / 100)
+						TriggerServerEvent("esx_lscustom:buyMod", price)
+					elseif v.modType == 17 then
+						price = math.floor(vehiclePrice * v.price[1] / 100)
+						TriggerServerEvent("esx_lscustom:buyMod", price)
+					else
+						price = math.floor(vehiclePrice * v.price / 100)
+						TriggerServerEvent("esx_lscustom:buyMod", price)
+					end
+				end
+
+				menu.close()
+				found = true
+				break
+			end
+
+		end
+
+		if not found then
+			GetAction(data.current)
+		end
+	end, function(data, menu) -- on cancel
+		menu.close()
+		TriggerEvent('esx_lscustom:cancelInstallMod')
+
+		local playerPed = PlayerPedId()
+		local vehicle = GetVehiclePedIsIn(playerPed, false)
+		SetVehicleDoorsShut(vehicle, false)
+
+		if parent == nil then
+			lsMenuIsShowed = false
+			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+			FreezeEntityPosition(vehicle, false)
+			myCar = {}
+		end
+	end, function(data, menu) -- on change
+		UpdateMods(data.current)
+	end)
 end
 
 function UpdateMods(data)
-
-	local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 
 	if data.modType ~= nil then
 		local props = {}
@@ -140,9 +137,9 @@ function UpdateMods(data)
 			props = {}
 		elseif data.modType == 'neonColor' then
 			if data.modNum[1] == 0 and data.modNum[2] == 0 and data.modNum[3] == 0 then
-				props['neonEnabled'] = {false, false, false, false}
+				props['neonEnabled'] = { false, false, false, false }
 			else
-				props['neonEnabled'] = {true, true, true, true}
+				props['neonEnabled'] = { true, true, true, true }
 			end
 			ESX.Game.SetVehicleProperties(vehicle, props)
 			props = {}
@@ -151,6 +148,7 @@ function UpdateMods(data)
 			ESX.Game.SetVehicleProperties(vehicle, props)
 			props = {}
 		end
+
 		props[data.modType] = data.modNum
 		ESX.Game.SetVehicleProperties(vehicle, props)
 	end
@@ -158,11 +156,11 @@ end
 
 function GetAction(data)
 	local elements  = {}
-	local menuname  = ''
-	local menutitle = ''
+	local menuName  = ''
+	local menuTitle = ''
 	local parent    = nil
 
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(playerPed, false)
 	local currentMods = ESX.Game.GetVehicleProperties(vehicle)
 
@@ -197,8 +195,8 @@ function GetAction(data)
 
 		if data.value == k then
 
-			menuname  = k
-			menutitle = v.label
+			menuName  = k
+			menuTitle = v.label
 			parent    = v.parent
 
 			if v.modType ~= nil then
@@ -251,13 +249,11 @@ function GetAction(data)
 					local neons = GetNeons()
 					price = math.floor(vehiclePrice * v.price / 100)
 					for i=1, #neons, 1 do
-						table.insert(elements,
-							{
-								label = '<span style="color:rgb(' .. neons[i].r .. ',' .. neons[i].g .. ',' .. neons[i].b .. ');">' .. neons[i].label .. ' - <span style="color:green;">$' .. price .. '</span>',
-								modType = k,
-								modNum = { neons[i].r, neons[i].g, neons[i].b }
-							}
-						)
+						table.insert(elements, {
+							label = '<span style="color:rgb(' .. neons[i].r .. ',' .. neons[i].g .. ',' .. neons[i].b .. ');">' .. neons[i].label .. ' - <span style="color:green;">$' .. price .. '</span>',
+							modType = k,
+							modNum = { neons[i].r, neons[i].g, neons[i].b }
+						})
 					end
 				elseif v.modType == 'color1' or v.modType == 'color2' or v.modType == 'pearlescentColor' or v.modType == 'wheelColor' then -- RESPRAYS
 					local colors = GetColors(data.color)
@@ -303,10 +299,10 @@ function GetAction(data)
 					for j = 0, modCount, 1 do
 						local _label = ''
 						if j == currentMods[k] then
-							_label = _U('level') .. j+1 .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
+							_label = _U('level', j+1) .. ' - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
 						else
 							price = math.floor(vehiclePrice * v.price[j+1] / 100)
-							_label = _U('level') .. j+1 .. ' - <span style="color:green;">$' .. price .. ' </span>'
+							_label = _U('level', j+1) .. ' - <span style="color:green;">$' .. price .. ' </span>'
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 						if j == modCount-1 then
@@ -345,7 +341,7 @@ function GetAction(data)
 						elseif data.value == 'secondaryRespray' then
 							table.insert(elements, {label = Config.Colors[i].label, value = 'color2', color = Config.Colors[i].value})
 						elseif data.value == 'pearlescentRespray' then
-							table.insert(elements, {label = Config.Colors[i].label, value = 'pearlescentColor', color = Config.Colors[i].value})						
+							table.insert(elements, {label = Config.Colors[i].label, value = 'pearlescentColor', color = Config.Colors[i].value})
 						elseif data.value == 'modFrontWheelsColor' then
 							table.insert(elements, {label = Config.Colors[i].label, value = 'wheelColor', color = Config.Colors[i].value})
 						end
@@ -366,13 +362,12 @@ function GetAction(data)
 		return a.label < b.label
 	end)
 
-	OpenLSMenu(elements, menuname, menutitle, parent)
+	OpenLSMenu(elements, menuName, menuTitle, parent)
 end
 
 -- Blips
 Citizen.CreateThread(function()
-
-	for k,v in pairs(Config.Zones)do
+	for k,v in pairs(Config.Zones) do
 		local blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
 		SetBlipSprite(blip, 72)
 		SetBlipScale(blip, 0.8)
@@ -387,20 +382,17 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		local playerPed = GetPlayerPed(-1)
+		local playerPed = PlayerPedId()
 		if IsPedInAnyVehicle(playerPed, false) then
-			local coords      = GetEntityCoords(GetPlayerPed(-1))
+			local coords      = GetEntityCoords(PlayerPedId())
 			local currentZone = nil
 			local zone 		  = nil
 			local lastZone    = nil
 			if (PlayerData.job ~= nil and PlayerData.job.name == 'mecano') or Config.IsMecanoJobOnly == false then
 				for k,v in pairs(Config.Zones) do
-					if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+					if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
 						isInLSMarker  = true
-
-						SetTextComponentFormat("STRING")
-						AddTextComponentString(v.Hint)
-						DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+						ESX.ShowHelpNotification(v.Hint)
 
 						break
 					else
@@ -410,15 +402,17 @@ Citizen.CreateThread(function()
 			end
 
 			if IsControlJustReleased(0, Keys['E']) and not lsMenuIsShowed and isInLSMarker then
-				lsMenuIsShowed = true
+				if (PlayerData.job ~= nil and PlayerData.job.name == 'mecano') or Config.IsMecanoJobOnly == false then
+					lsMenuIsShowed = true
 
-				local vehicle = GetVehiclePedIsIn(playerPed, false)
-				FreezeEntityPosition(vehicle, true)
+					local vehicle = GetVehiclePedIsIn(playerPed, false)
+					FreezeEntityPosition(vehicle, true)
 
-				myCar = ESX.Game.GetVehicleProperties(vehicle)
+					myCar = ESX.Game.GetVehicleProperties(vehicle)
 
-				ESX.UI.Menu.CloseAll()
-				GetAction({value = 'main'})
+					ESX.UI.Menu.CloseAll()
+					GetAction({value = 'main'})
+				end
 			end
 
 			if isInLSMarker and not hasAlreadyEnteredMarker then
@@ -433,7 +427,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
---Prevent Free Tunning Bug
+-- Prevent Free Tunning Bug
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
