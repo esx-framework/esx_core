@@ -19,36 +19,42 @@ local isDead        = false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerLoaded  = true
-	ESX.PlayerData    = xPlayer
+	ESX.PlayerLoaded = true
+	ESX.PlayerData   = xPlayer
 
-	for i=1, #xPlayer.accounts, 1 do
-		local accountTpl = '<div><img src="img/accounts/' .. xPlayer.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
+	if Config.EnableHud then
 
-		ESX.UI.HUD.RegisterElement('account_' .. xPlayer.accounts[i].name, i-1, 0, accountTpl, {
-			money = 0
+		for i=1, #xPlayer.accounts, 1 do
+			local accountTpl = '<div><img src="img/accounts/' .. xPlayer.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
+
+			ESX.UI.HUD.RegisterElement('account_' .. xPlayer.accounts[i].name, i-1, 0, accountTpl, {
+				money = 0
+			})
+
+			ESX.UI.HUD.UpdateElement('account_' .. xPlayer.accounts[i].name, {
+				money = xPlayer.accounts[i].money
+			})
+		end
+
+		local jobTpl = '<div>{{job_label}} - {{grade_label}}</div>'
+
+		if xPlayer.job.grade_label == '' then
+			jobTpl = '<div>{{job_label}}</div>'
+		end
+
+		ESX.UI.HUD.RegisterElement('job', #xPlayer.accounts, 0, jobTpl, {
+			job_label   = '',
+			grade_label = ''
 		})
 
-		ESX.UI.HUD.UpdateElement('account_' .. xPlayer.accounts[i].name, {
-			money = xPlayer.accounts[i].money
+		ESX.UI.HUD.UpdateElement('job', {
+			job_label   = xPlayer.job.label,
+			grade_label = xPlayer.job.grade_label
 		})
+
+	else
+		TriggerEvent('es:setMoneyDisplay', 0.0)
 	end
-
-	local jobTpl = '<div>{{job_label}} - {{grade_label}}</div>'
-
-	if xPlayer.job.grade_label == '' then
-		jobTpl = '<div>{{job_label}}</div>'
-	end
-
-	ESX.UI.HUD.RegisterElement('job', #xPlayer.accounts, 0, jobTpl, {
-		job_label   = '',
-		grade_label = ''
-	})
-
-	ESX.UI.HUD.UpdateElement('job', {
-		job_label   = xPlayer.job.label,
-		grade_label = xPlayer.job.grade_label
-	})
 end)
 
 AddEventHandler('playerSpawned', function()
@@ -153,13 +159,15 @@ RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
 	for i=1, #ESX.PlayerData.accounts, 1 do
 		if ESX.PlayerData.accounts[i].name == account.name then
-		ESX.PlayerData.accounts[i] = account
+			ESX.PlayerData.accounts[i] = account
 		end
 	end
 
-	ESX.UI.HUD.UpdateElement('account_' .. account.name, {
-		money = account.money
-	})
+	if Config.EnableHud then
+		ESX.UI.HUD.UpdateElement('account_' .. account.name, {
+			money = account.money
+		})
+	end
 end)
 
 RegisterNetEvent('es:activateMoney')
@@ -216,7 +224,7 @@ AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
 	local playerPed  = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
-	RemoveWeaponFromPed(playerPed,  weaponHash)
+	RemoveWeaponFromPed(playerPed, weaponHash)
 
 	if ammo then
 		local pedAmmo   = GetAmmoInPedWeapon(playerPed, weaponHash)
@@ -246,10 +254,12 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	ESX.UI.HUD.UpdateElement('job', {
-		job_label   = job.label,
-		grade_label = job.grade_label
-	})
+	if Config.EnableHud then
+		ESX.UI.HUD.UpdateElement('job', {
+			job_label   = job.label,
+			grade_label = job.grade_label
+		})
+	end
 end)
 
 RegisterNetEvent('esx:loadIPL')
@@ -399,21 +409,23 @@ end)
 
 
 -- Pause menu disable HUD display
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(500)
+if Config.EnableHud then
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(300)
 
-		if IsPauseMenuActive() and not IsPaused then
-			IsPaused = true
-			TriggerEvent('es:setMoneyDisplay', 0.0)
-			ESX.UI.HUD.SetDisplay(0.0)
-		elseif not IsPauseMenuActive() and IsPaused then
-			IsPaused = false
-			TriggerEvent('es:setMoneyDisplay', 1.0)
-			ESX.UI.HUD.SetDisplay(1.0)
+			if IsPauseMenuActive() and not IsPaused then
+				IsPaused = true
+				TriggerEvent('es:setMoneyDisplay', 0.0)
+				ESX.UI.HUD.SetDisplay(0.0)
+			elseif not IsPauseMenuActive() and IsPaused then
+				IsPaused = false
+				TriggerEvent('es:setMoneyDisplay', 1.0)
+				ESX.UI.HUD.SetDisplay(1.0)
+			end
 		end
-	end
-end)
+	end)
+end
 
 -- Save loadout
 Citizen.CreateThread(function()

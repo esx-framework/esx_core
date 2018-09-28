@@ -1023,7 +1023,6 @@ ESX.ShowInventory = function()
 	end
 
 	for i=1, #ESX.PlayerData.inventory, 1 do
-
 		if ESX.PlayerData.inventory[i].count > 0 then
 			table.insert(elements, {
 				label     = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
@@ -1035,11 +1034,9 @@ ESX.ShowInventory = function()
 				canRemove = ESX.PlayerData.inventory[i].canRemove,
 			})
 		end
-
 	end
 
 	for i=1, #Config.Weapons, 1 do
-
 		local weaponHash = GetHashKey(Config.Weapons[i].name)
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
