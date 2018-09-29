@@ -1,13 +1,16 @@
 AddEventHandler('chatMessage', function(source, author, message)
-
 	if string.sub(message, 1, 1) == "/" then
 		CancelEvent()
-		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', message) } })
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', message:match("^(%S+)")) } })
 	end
-
 end)
 
 RegisterCommand('ooc', function(source, args, rawCommand)
+	if source == 0 then
+		print('esx_rpchat: you can\'t use this command from rcon!')
+		return
+	end
+
 	rawCommand = string.sub(rawCommand, 4)
 	local name = GetPlayerName(source)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
@@ -16,6 +19,11 @@ RegisterCommand('ooc', function(source, args, rawCommand)
 end, false)
 
 RegisterCommand('twt', function(source, args, rawCommand)
+	if source == 0 then
+		print('esx_rpchat: you can\'t use this command from rcon!')
+		return
+	end
+
 	rawCommand = string.sub(rawCommand, 4)
 	local name = GetPlayerName(source)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
@@ -24,6 +32,11 @@ RegisterCommand('twt', function(source, args, rawCommand)
 end, false)
 
 RegisterCommand('me', function(source, args, rawCommand)
+	if source == 0 then
+		print('esx_rpchat: you can\'t use this command from rcon!')
+		return
+	end
+
 	rawCommand = string.sub(rawCommand, 3)
 	local name = GetPlayerName(source)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
@@ -32,6 +45,11 @@ RegisterCommand('me', function(source, args, rawCommand)
 end, false)
 
 RegisterCommand('do', function(source, args, rawCommand)
+	if source == 0 then
+		print('esx_rpchat: you can\'t use this command from rcon!')
+		return
+	end
+
 	rawCommand = string.sub(rawCommand, 3)
 	local name = GetPlayerName(source)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
@@ -40,6 +58,11 @@ RegisterCommand('do', function(source, args, rawCommand)
 end, false)
 
 RegisterCommand('news', function(source, args, rawCommand)
+	if source == 0 then
+		print('esx_rpchat: you can\'t use this command from rcon!')
+		return
+	end
+
 	rawCommand = string.sub(rawCommand, 5)
 	local name = GetPlayerName(source)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
