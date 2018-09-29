@@ -65,11 +65,8 @@ function cleanPlayer(playerPed)
 end
 
 function setUniform(job, playerPed)
-
 	TriggerEvent('skinchanger:getSkin', function(skin)
-
 		if skin.sex == 0 then
-
 			if Config.Uniforms[job].male ~= nil then
 				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].male)
 			else
@@ -79,9 +76,7 @@ function setUniform(job, playerPed)
 			if job == 'bullet_wear' then
 				SetPedArmour(playerPed, 100)
 			end
-
 		else
-
 			if Config.Uniforms[job].female ~= nil then
 				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].female)
 			else
@@ -91,9 +86,7 @@ function setUniform(job, playerPed)
 			if job == 'bullet_wear' then
 				SetPedArmour(playerPed, 100)
 			end
-
 		end
-
 	end)
 end
 
@@ -335,7 +328,7 @@ function OpenArmoryMenu(station)
 			elements = elements
 		}, function(data, menu)
 			local weapon = data.current.value
-			TriggerServerEvent('esx_policejob:giveWeapon', weapon,  1000)
+			TriggerServerEvent('esx_policejob:giveWeapon', weapon, 1000)
 		end, function(data, menu)
 			menu.close()
 
@@ -1447,11 +1440,9 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 	end
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
-
 		local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
 
 		if DoesEntityExist(vehicle) then
-
 			local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
 			local freeSeat = nil
 
@@ -1466,9 +1457,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
 				DragStatus.IsDragged = false
 			end
-
 		end
-
 	end
 end)
 
@@ -1491,25 +1480,39 @@ Citizen.CreateThread(function()
 		local playerPed = PlayerPedId()
 
 		if IsHandcuffed then
-			DisableControlAction(2, 1, true) -- Disable pan
-			DisableControlAction(2, 2, true) -- Disable tilt
-			DisableControlAction(2, 24, true) -- Attack
-			DisableControlAction(2, 257, true) -- Attack 2
-			DisableControlAction(2, 25, true) -- Aim
-			DisableControlAction(2, 263, true) -- Melee Attack 1
-			DisableControlAction(2, Keys['R'], true) -- Reload
-			DisableControlAction(2, Keys['SPACE'], true) -- Jump
-			DisableControlAction(2, Keys['Q'], true) -- Cover
-			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
-			DisableControlAction(2, Keys['F'], true) -- Also 'enter'?
-			DisableControlAction(2, Keys['F1'], true) -- Disable phone
-			DisableControlAction(2, Keys['F2'], true) -- Inventory
-			DisableControlAction(2, Keys['F3'], true) -- Animations
-			DisableControlAction(2, Keys['V'], true) -- Disable changing view
-			DisableControlAction(2, Keys['X'], true) -- Disable clearing animation
+			DisableControlAction(0, 1, true) -- Disable pan
+			DisableControlAction(0, 2, true) -- Disable tilt
+			DisableControlAction(0, 24, true) -- Attack
+			DisableControlAction(0, 257, true) -- Attack 2
+			DisableControlAction(0, 25, true) -- Aim
+			DisableControlAction(0, 263, true) -- Melee Attack 1
+			DisableControlAction(0, Keys['W'], true) -- W
+			DisableControlAction(0, Keys['A'], true) -- A
+			DisableControlAction(0, 31, true) -- S (fault in Keys table!)
+			DisableControlAction(0, 30, true) -- D (fault in Keys table!)
+
+			DisableControlAction(0, Keys['R'], true) -- Reload
+			DisableControlAction(0, Keys['SPACE'], true) -- Jump
+			DisableControlAction(0, Keys['Q'], true) -- Cover
+			DisableControlAction(0, Keys['TAB'], true) -- Select Weapon
+			DisableControlAction(0, Keys['F'], true) -- Also 'enter'?
+
+			DisableControlAction(0, Keys['F1'], true) -- Disable phone
+			DisableControlAction(0, Keys['F2'], true) -- Inventory
+			DisableControlAction(0, Keys['F3'], true) -- Animations
+			DisableControlAction(0, Keys['F6'], true) -- Job
+
+			DisableControlAction(0, Keys['V'], true) -- Disable changing view
+			DisableControlAction(0, Keys['C'], true) -- Disable looking behind
+			DisableControlAction(0, Keys['X'], true) -- Disable clearing animation
 			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
-			DisableControlAction(2, 59, true) -- Disable steering in vehicle
+
+			DisableControlAction(0, 59, true) -- Disable steering in vehicle
+			DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
+			DisableControlAction(0, 72, true) -- Disable reversing in vehicle
+
 			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
+
 			DisableControlAction(0, 47, true)  -- Disable weapon
 			DisableControlAction(0, 264, true) -- Disable melee
 			DisableControlAction(0, 257, true) -- Disable melee
@@ -1519,7 +1522,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 143, true) -- Disable melee
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
-			if not (IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) == 1) then
+			if IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) ~= 1 then
 				ESX.Streaming.RequestAnimDict('mp_arresting', function()
 					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
 				end)
@@ -1727,7 +1730,6 @@ end)
 
 -- Enter / Exit entity zone events
 Citizen.CreateThread(function()
-
 	local trackedEntities = {
 		'prop_roadcone02a',
 		'prop_barrier_work05',
@@ -1737,7 +1739,6 @@ Citizen.CreateThread(function()
 	}
 
 	while true do
-
 		Citizen.Wait(500)
 
 		local playerPed = PlayerPedId()
@@ -1771,7 +1772,6 @@ Citizen.CreateThread(function()
 				LastEntity = nil
 			end
 		end
-
 	end
 end)
 
