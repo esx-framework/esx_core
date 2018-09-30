@@ -62,6 +62,7 @@ ui_page {
 }
 
 files {
+	'locale.js',
 	'html/ui.html',
 
 	'html/css/app.css',
