@@ -1072,57 +1072,46 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
+	local trackedEntities = {
+		'prop_roadcone02a',
+		'prop_toolchest_01'
+	}
 
-  local trackedEntities = {
-      'prop_roadcone02a',
-      'prop_toolchest_01'
-  }
+	while true do
+		Citizen.Wait(500)
 
-  while true do
+		local playerPed = GetPlayerPed(-1)
+		local coords    = GetEntityCoords(playerPed)
 
-    Citizen.Wait(10)
+		local closestDistance = -1
+		local closestEntity   = nil
 
-    local playerPed = GetPlayerPed(-1)
-    local coords    = GetEntityCoords(playerPed)
+		for i=1, #trackedEntities, 1 do
+			local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
 
-    local closestDistance = -1
-    local closestEntity   = nil
+			if DoesEntityExist(object) then
+				local objCoords = GetEntityCoords(object)
+				local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
 
-    for i=1, #trackedEntities, 1 do
+				if closestDistance == -1 or closestDistance > distance then
+					closestDistance = distance
+					closestEntity   = object
+				end
+			end
+		end
 
-      local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
-
-      if DoesEntityExist(object) then
-
-        local objCoords = GetEntityCoords(object)
-        local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
-
-        if closestDistance == -1 or closestDistance > distance then
-          closestDistance = distance
-          closestEntity   = object
-        end
-
-      end
-
-    end
-
-    if closestDistance ~= -1 and closestDistance <= 3.0 then
-
-      if LastEntity ~= closestEntity then
-        TriggerEvent('esx_mecanojob:hasEnteredEntityZone', closestEntity)
-        LastEntity = closestEntity
-      end
-
-    else
-
-      if LastEntity ~= nil then
-        TriggerEvent('esx_mecanojob:hasExitedEntityZone', LastEntity)
-        LastEntity = nil
-      end
-
-    end
-
-  end
+		if closestDistance ~= -1 and closestDistance <= 3.0 then
+			if LastEntity ~= closestEntity then
+				TriggerEvent('esx_mecanojob:hasEnteredEntityZone', closestEntity)
+				LastEntity = closestEntity
+			end
+		else
+			if LastEntity ~= nil then
+				TriggerEvent('esx_mecanojob:hasExitedEntityZone', LastEntity)
+				LastEntity = nil
+			end
+		end
+	end
 end)
 
 -- Key Controls
