@@ -1,8 +1,6 @@
-AddEventHandler('chatMessage', function(source, author, message)
-	if string.sub(message, 1, 1) == "/" then
-		CancelEvent()
-		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', message:match("^(%S+)")) } })
-	end
+AddEventHandler('es:invalidCommandHandler', function(source, command_args, user)
+	CancelEvent()
+	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', command_args[1]) } })
 end)
 
 RegisterCommand('ooc', function(source, args, rawCommand)
