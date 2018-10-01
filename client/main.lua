@@ -286,10 +286,10 @@ RegisterNetEvent('esx_jobs:spawnJobVehicle')
 AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 	local playerPed = PlayerPedId()
 
-	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.heading, function(spawnedVehicle)
+	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.Heading, function(spawnedVehicle)
 
 		if vehicle.Trailer ~= "none" then
-			ESX.Game.SpawnVehicle(vehicle.Trailer, spawnPoint.Pos, spawnPoint.heading, function(trailer)
+			ESX.Game.SpawnVehicle(vehicle.Trailer, spawnPoint.Pos, spawnPoint.Heading, function(trailer)
 				AttachVehicleToTrailer(spawnedVehicle, trailer, 1.1)
 			end)
 		end

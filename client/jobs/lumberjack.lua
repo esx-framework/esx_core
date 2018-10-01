@@ -122,7 +122,7 @@ Config.Jobs.lumberjack = {
 			Name = _U("service_vh"),
 			Type = "vehspawnpt",
 			Spawner = 1,
-			Heading = 285.1
+			Heading = 264.40
 		},
 
 		VehicleDeletePoint = {
