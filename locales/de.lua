@@ -31,7 +31,6 @@ Locales['de'] = {
 	['not_enough_opium'] = 'du hast nicht genug Opium zum ~r~verarbeiten~s~',
 	['sold_one_opium'] = 'du verkaufst ~g~x1 Portion Opium~s~',
 	['used_one_opium'] = 'du benutzt 1x ~b~Opium',
-	['exit_marker'] = 'press ~INPUT_CONTEXT~ to cancel the ~y~process~s~',
 	-- Blips
 	['coke_field'] = 'cocaine Field',
 	['coke_processing'] = 'cocaine Processing',

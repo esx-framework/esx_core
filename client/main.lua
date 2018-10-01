@@ -22,7 +22,6 @@ local opium_poochQTE 			= 0
 local myJob 					= nil
 local HasAlreadyEnteredMarker   = false
 local LastZone                  = nil
-local isInZone                  = false
 local CurrentAction             = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
@@ -40,12 +39,6 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 	end
 
 	ESX.UI.Menu.CloseAll()
-	
-	if zone == 'exitMarker' then
-		CurrentAction     = zone
-		CurrentActionMsg  = _U('exit_marker')
-		CurrentActionData = {}
-	end
 	
 	if zone == 'CokeField' then
 		CurrentAction     = zone
@@ -191,7 +184,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 
 		for k,v in pairs(Config.Zones) do
-			if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance) then
+			if GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
@@ -222,15 +215,15 @@ end
 -- RETURN NUMBER OF ITEMS FROM SERVER
 RegisterNetEvent('esx_drugs:ReturnInventory')
 AddEventHandler('esx_drugs:ReturnInventory', function(cokeNbr, cokepNbr, methNbr, methpNbr, weedNbr, weedpNbr, opiumNbr, opiumpNbr, jobName, currentZone)
-	cokeQTE	   = cokeNbr
-	coke_poochQTE = cokepNbr
-	methQTE 	  = methNbr
-	meth_poochQTE = methpNbr
-	weedQTE 	  = weedNbr
-	weed_poochQTE = weedpNbr
-	opiumQTE	   = opiumNbr
-	opium_poochQTE = opiumpNbr
-	myJob		 = jobName
+	cokeQTE			= cokeNbr
+	coke_poochQTE	= cokepNbr
+	methQTE			= methNbr
+	meth_poochQTE	= methpNbr
+	weedQTE			= weedNbr
+	weed_poochQTE	= weedpNbr
+	opiumQTE		= opiumNbr
+	opium_poochQTE	= opiumpNbr
+	myJob			= jobName
 	TriggerEvent('esx_drugs:hasEnteredMarker', currentZone)
 end)
 
@@ -261,10 +254,6 @@ Citizen.CreateThread(function()
 			hasAlreadyEnteredMarker = false
 			TriggerEvent('esx_drugs:hasExitedMarker', lastZone)
 		end
-
-		if isInMarker and isInZone then
-			TriggerEvent('esx_drugs:hasEnteredMarker', 'exitMarker')
-		end
 	end
 end)
 
@@ -273,17 +262,10 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		if CurrentAction ~= nil then
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			ESX.ShowHelpNotification(CurrentActionMsg)
+
 			if IsControlJustReleased(0, Keys['E']) then
-				isInZone = true -- unless we set this boolean to false, we will always freeze the user
-				if CurrentAction == 'exitMarker' then
-					isInZone = false -- do not freeze user
-					TriggerEvent('esx_drugs:freezePlayer', false)
-					TriggerEvent('esx_drugs:hasExitedMarker', lastZone)
-					Citizen.Wait(15000)
-				elseif CurrentAction == 'CokeField' then
+				if CurrentAction == 'CokeField' then
 					TriggerServerEvent('esx_drugs:startHarvestCoke')
 				elseif CurrentAction == 'CokeProcessing' then
 					TriggerServerEvent('esx_drugs:startTransformCoke')
@@ -307,21 +289,10 @@ Citizen.CreateThread(function()
 					TriggerServerEvent('esx_drugs:startTransformOpium')
 				elseif CurrentAction == 'OpiumDealer' then
 					TriggerServerEvent('esx_drugs:startSellOpium')
-				else
-					isInZone = false -- not a esx_drugs zone
-				end
-				
-				if isInZone then
-					TriggerEvent('esx_drugs:freezePlayer', true)
 				end
 				
 				CurrentAction = nil
 			end
 		end
 	end
-end)
-
-RegisterNetEvent('esx_drugs:freezePlayer')
-AddEventHandler('esx_drugs:freezePlayer', function(freeze)
-	FreezeEntityPosition(GetPlayerPed(-1), freeze)
 end)
