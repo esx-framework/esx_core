@@ -85,7 +85,7 @@ local function TransformCoke(source)
 		if PlayersTransformingCoke[source] then
 			local xPlayer = ESX.GetPlayerFromId(source)
 			local cokeQuantity = xPlayer.getInventoryItem('coke').count
-			local pooch = xPlayer.getInventoryItem('coke_pooch').count
+			local pooch = xPlayer.getInventoryItem('coke_pooch')
 
 			if pooch.limit ~= -1 and pooch.count >= pooch.limit then
 				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
@@ -391,8 +391,7 @@ local function TransformWeed(source)
 
 	SetTimeout(Config.TimeToProcess, function()
 		if PlayersTransformingWeed[source] then
-			local _source = source
-			local xPlayer = ESX.GetPlayerFromId(_source)
+			local xPlayer = ESX.GetPlayerFromId(source)
 			local weedQuantity = xPlayer.getInventoryItem('weed').count
 			local pooch = xPlayer.getInventoryItem('weed_pooch')
 
@@ -543,21 +542,19 @@ local function TransformOpium(source)
 
 	SetTimeout(Config.TimeToProcess, function()
 		if PlayersTransformingOpium[source] then
-			local _source = source
-			local xPlayer = ESX.GetPlayerFromId(_source)
-
+			local xPlayer = ESX.GetPlayerFromId(source)
 			local opiumQuantity = xPlayer.getInventoryItem('opium').count
 			local pooch = xPlayer.getInventoryItem('opium_pooch')
 
 			if pooch.limit ~= -1 and pooch.count >= pooch.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('too_many_pouches'))
+				TriggerClientEvent('esx:showNotification', source, _U('too_many_pouches'))
 			elseif opiumQuantity < 5 then
-				TriggerClientEvent('esx:showNotification', _source, _U('not_enough_opium'))
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_opium'))
 			else
 				xPlayer.removeInventoryItem('opium', 5)
 				xPlayer.addInventoryItem('opium_pooch', 1)
 			
-				TransformOpium(_source)
+				TransformOpium(source)
 			end
 		end
 	end)

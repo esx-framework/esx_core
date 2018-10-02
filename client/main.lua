@@ -44,83 +44,61 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 		CurrentAction     = zone
 		CurrentActionMsg  = _U('press_collect_coke')
 		CurrentActionData = {}
-	end
-
-	if zone == 'CokeProcessing' then
+	elseif zone == 'CokeProcessing' then
 		if cokeQTE >= 5 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_process_coke')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'CokeDealer' then
+	elseif zone == 'CokeDealer' then
 		if coke_poochQTE >= 1 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_sell_coke')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'MethField' then
+	elseif zone == 'MethField' then
 		CurrentAction     = zone
 		CurrentActionMsg  = _U('press_collect_meth')
 		CurrentActionData = {}
-	end
-
-	if zone == 'MethProcessing' then
+	elseif zone == 'MethProcessing' then
 		if methQTE >= 5 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_process_meth')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'MethDealer' then
+	elseif zone == 'MethDealer' then
 		if meth_poochQTE >= 1 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_sell_meth')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'WeedField' then
+	elseif zone == 'WeedField' then
 		CurrentAction     = zone
 		CurrentActionMsg  = _U('press_collect_weed')
 		CurrentActionData = {}
-	end
-
-	if zone == 'WeedProcessing' then
+	elseif zone == 'WeedProcessing' then
 		if weedQTE >= 5 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_process_weed')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'WeedDealer' then
+	elseif zone == 'WeedDealer' then
 		if weed_poochQTE >= 1 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_sell_weed')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'OpiumField' then
+	elseif zone == 'OpiumField' then
 		CurrentAction     = zone
 		CurrentActionMsg  = _U('press_collect_opium')
 		CurrentActionData = {}
-	end
-
-	if zone == 'OpiumProcessing' then
+	elseif zone == 'OpiumProcessing' then
 		if opiumQTE >= 5 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_process_opium')
 			CurrentActionData = {}
 		end
-	end
-
-	if zone == 'OpiumDealer' then
+	elseif zone == 'OpiumDealer' then
 		if opium_poochQTE >= 1 then
 			CurrentAction     = zone
 			CurrentActionMsg  = _U('press_sell_opium')
@@ -133,18 +111,31 @@ AddEventHandler('esx_drugs:hasExitedMarker', function(zone)
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
 
-	TriggerServerEvent('esx_drugs:stopHarvestCoke')
+	if zone == 'CokeField' then
+		TriggerServerEvent('esx_drugs:stopHarvestCoke')
+	elseif zone == 'CokeProcessing' then
 	TriggerServerEvent('esx_drugs:stopTransformCoke')
-	TriggerServerEvent('esx_drugs:stopSellCoke')
-	TriggerServerEvent('esx_drugs:stopHarvestMeth')
-	TriggerServerEvent('esx_drugs:stopTransformMeth')
-	TriggerServerEvent('esx_drugs:stopSellMeth')
-	TriggerServerEvent('esx_drugs:stopHarvestWeed')
-	TriggerServerEvent('esx_drugs:stopTransformWeed')
-	TriggerServerEvent('esx_drugs:stopSellWeed')
-	TriggerServerEvent('esx_drugs:stopHarvestOpium')
-	TriggerServerEvent('esx_drugs:stopTransformOpium')
-	TriggerServerEvent('esx_drugs:stopSellOpium')
+	elseif zone == 'CokeDealer' then
+		TriggerServerEvent('esx_drugs:stopSellCoke')
+	elseif zone == 'MethField' then
+		TriggerServerEvent('esx_drugs:stopHarvestMeth')
+	elseif zone == 'MethProcessing' then
+		TriggerServerEvent('esx_drugs:stopTransformMeth')
+	elseif zone == 'MethDealer' then
+		TriggerServerEvent('esx_drugs:stopSellMeth')
+	elseif zone == 'WeedField' then
+		TriggerServerEvent('esx_drugs:stopHarvestWeed')
+	elseif zone == 'WeedProcessing' then
+		TriggerServerEvent('esx_drugs:stopTransformWeed')
+	elseif zone == 'WeedDealer' then
+		TriggerServerEvent('esx_drugs:stopSellWeed')
+	elseif zone == 'OpiumField' then
+		TriggerServerEvent('esx_drugs:stopHarvestOpium')
+	elseif zone == 'OpiumProcessing' then
+		TriggerServerEvent('esx_drugs:stopTransformOpium')
+	elseif zone == 'OpiumDealer' then
+		TriggerServerEvent('esx_drugs:stopSellOpium')
+	end
 end)
 
 -- Weed Effect
@@ -264,7 +255,7 @@ Citizen.CreateThread(function()
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) then
+			if IsControlJustReleased(0, Keys['E']) and IsPedOnFoot(PlayerPedId()) then
 				if CurrentAction == 'CokeField' then
 					TriggerServerEvent('esx_drugs:startHarvestCoke')
 				elseif CurrentAction == 'CokeProcessing' then
