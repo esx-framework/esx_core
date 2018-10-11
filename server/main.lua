@@ -2,15 +2,6 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent('esx_clotheshop:pay')
-AddEventHandler('esx_clotheshop:pay', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-
-	xPlayer.removeMoney(Config.Price)
-	TriggerClientEvent('esx:showNotification', _source, _U('you_paid', Config.Price))
-end)
-
 RegisterServerEvent('esx_clotheshop:saveOutfit')
 AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 	local _source = source
@@ -34,9 +25,16 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_clotheshop:checkMoney', function(source, cb)
+ESX.RegisterServerCallback('esx_clotheshop:buyClothes', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	cb(xPlayer.get('money') >= Config.Price)
+
+	if xPlayer.getMoney() >= Config.Price then
+		xPlayer.removeMoney(Config.Price)
+		TriggerClientEvent('esx:showNotification', source, _U('you_paid', Config.Price))
+		cb(true)
+	else
+		cb(false)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_clotheshop:checkPropertyDataStore', function(source, cb)

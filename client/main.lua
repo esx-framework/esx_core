@@ -16,149 +16,104 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-local HasPayed                = false
+local HasPaid                = false
 
 Citizen.CreateThread(function()
-
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-
 end)
 
 function OpenShopMenu()
-
-	HasPayed = false
+	HasPaid = false
 
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
-
 		menu.close()
 
-		ESX.UI.Menu.Open(
-			'default', GetCurrentResourceName(), 'shop_confirm',
-			{
-				title = _U('valid_this_purchase'),
-				align = 'top-left',
-				elements = {
-					{label = _U('yes'), value = 'yes'},
-					{label = _U('no'), value = 'no'},
-				}
-			},
-			function(data, menu)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm',
+		{
+			title = _U('valid_this_purchase'),
+			align = 'top-left',
+			elements = {
+				{label = _U('no'), value = 'no'},
+				{label = _U('yes'), value = 'yes'}
+			}
+		}, function(data, menu)
+			menu.close()
 
-				menu.close()
+			if data.current.value == 'yes' then
+				ESX.TriggerServerCallback('esx_clotheshop:buyClothes', function(bought)
+					if bought then
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							TriggerServerEvent('esx_skin:save', skin)
+						end)
 
-				if data.current.value == 'yes' then
+						HasPaid = true
 
-					ESX.TriggerServerCallback('esx_clotheshop:checkMoney', function(hasEnoughMoney)
+						ESX.TriggerServerCallback('esx_clotheshop:checkPropertyDataStore', function(foundStore)
+							if foundStore then
+								ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'save_dressing',
+								{
+									title = _U('save_in_dressing'),
+									align = 'top-left',
+									elements = {
+										{label = _U('no'),  value = 'no'},
+										{label = _U('yes'), value = 'yes'}
+									}
+								}, function(data2, menu2)
+									menu2.close()
 
-						if hasEnoughMoney then
+									if data2.current.value == 'yes' then
+										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'outfit_name', {
+											title = _U('name_outfit')
+										}, function(data3, menu3)
+											menu3.close()
 
-							TriggerEvent('skinchanger:getSkin', function(skin)
-								TriggerServerEvent('esx_skin:save', skin)
-							end)
+											TriggerEvent('skinchanger:getSkin', function(skin)
+												TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
+											end)
 
-							TriggerServerEvent('esx_clotheshop:pay')
+											ESX.ShowNotification(_U('saved_outfit'))
+										end, function(data3, menu3)
+											menu3.close()
+										end)
+									end
+								end)
+							end
+						end)
 
-							HasPayed = true
+					else
+						TriggerEvent('esx_skin:getLastSkin', function(skin)
+							TriggerEvent('skinchanger:loadSkin', skin)
+						end)
 
-							ESX.TriggerServerCallback('esx_clotheshop:checkPropertyDataStore', function(foundStore)
-
-								if foundStore then
-
-									ESX.UI.Menu.Open(
-										'default', GetCurrentResourceName(), 'save_dressing',
-										{
-											title = _U('save_in_dressing'),
-											align = 'top-left',
-											elements = {
-												{label = _U('yes'), value = 'yes'},
-												{label = _U('no'),  value = 'no'},
-											}
-										},
-										function(data2, menu2)
-
-											menu2.close()
-
-											if data2.current.value == 'yes' then
-
-												ESX.UI.Menu.Open(
-													'dialog', GetCurrentResourceName(), 'outfit_name',
-													{
-														title = _U('name_outfit'),
-													},
-													function(data3, menu3)
-
-														menu3.close()
-
-														TriggerEvent('skinchanger:getSkin', function(skin)
-															TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
-														end)
-
-														ESX.ShowNotification(_U('saved_outfit'))
-
-													end,
-													function(data3, menu3)
-														menu3.close()
-													end
-												)
-
-											end
-
-										end
-									)
-
-								end
-
-							end)
-
-						else
-
-							TriggerEvent('esx_skin:getLastSkin', function(skin)
-								TriggerEvent('skinchanger:loadSkin', skin)
-							end)
-
-							ESX.ShowNotification(_U('not_enough_money'))
-
-						end
-
-					end)
-
-				end
-
-				if data.current.value == 'no' then
-
-					TriggerEvent('esx_skin:getLastSkin', function(skin)
-						TriggerEvent('skinchanger:loadSkin', skin)
-					end)
-
-				end
-
-				CurrentAction     = 'shop_menu'
-				CurrentActionMsg  = _U('press_menu')
-				CurrentActionData = {}
-
-			end,
-			function(data, menu)
-
-				menu.close()
-
-				CurrentAction     = 'shop_menu'
-				CurrentActionMsg  = _U('press_menu')
-				CurrentActionData = {}
-
+						ESX.ShowNotification(_U('not_enough_money'))
+					end
+				end)
+			elseif data.current.value == 'no' then
+				TriggerEvent('esx_skin:getLastSkin', function(skin)
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end)
 			end
-		)
 
-	end, function(data, menu)
-
+			CurrentAction     = 'shop_menu'
+			CurrentActionMsg  = _U('press_menu')
+			CurrentActionData = {}
+		end, function(data, menu)
 			menu.close()
 
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = _U('press_menu')
 			CurrentActionData = {}
+		end)
 
+	end, function(data, menu)
+		menu.close()
+
+		CurrentAction     = 'shop_menu'
+		CurrentActionMsg  = _U('press_menu')
+		CurrentActionData = {}
 	end, {
 		'tshirt_1',
 		'tshirt_2',
@@ -176,7 +131,7 @@ function OpenShopMenu()
 		'helmet_1',
 		'helmet_2',
 		'glasses_1',
-		'glasses_2',
+		'glasses_2'
 	})
 
 end
@@ -188,25 +143,19 @@ AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
-	
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 
-	if not HasPayed then
-
+	if not HasPaid then
 		TriggerEvent('esx_skin:getLastSkin', function(skin)
 			TriggerEvent('skinchanger:loadSkin', skin)
 		end)
-
 	end
-
 end)
 
 -- Create Blips
 Citizen.CreateThread(function()
-
 	for i=1, #Config.Shops, 1 do
-
 		local blip = AddBlipForCoord(Config.Shops[i].x, Config.Shops[i].y, Config.Shops[i].z)
 
 		SetBlipSprite (blip, 73)
@@ -219,13 +168,11 @@ Citizen.CreateThread(function()
 		AddTextComponentString(_U('clothes'))
 		EndTextCommandSetBlipName(blip)
 	end
-
 end)
 
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(1)
 
 		local coords = GetEntityCoords(GetPlayerPed(-1))
@@ -235,14 +182,12 @@ Citizen.CreateThread(function()
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
-
 	end
 end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(10)
 
 		local coords      = GetEntityCoords(GetPlayerPed(-1))
@@ -266,35 +211,26 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_clotheshop:hasExitedMarker', LastZone)
 		end
-
 	end
 end)
 
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(10)
 
 		if CurrentAction ~= nil then
-
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
-
 				if CurrentAction == 'shop_menu' then
 					OpenShopMenu()
 				end
 
 				CurrentAction = nil
-
 			end
-
 		else
 			Citizen.Wait(500)
 		end
-
 	end
 end)
