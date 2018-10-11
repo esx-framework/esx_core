@@ -12,7 +12,7 @@ Locales['sv'] = {
   ['spawnpoint_blocked'] = 'det är ett fordon som blockerar spawnpointen!',
   ['only_taxi'] = 'du kan endast lagra ~y~taxi fordon~s~ här..',
 
-  ['taking_service'] = 'du deltog tjänst: ',
+  ['taking_service'] = 'du deltog tjänst: Taxi/Uber',
   ['full_service'] = 'du kan inte delta tjänst: ',
   ['amount_invalid'] = 'ogiltig mängd!',
   ['press_to_open'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',

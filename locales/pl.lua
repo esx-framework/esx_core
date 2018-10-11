@@ -4,13 +4,15 @@ Locales['pl'] = {
   ['cloakroom_prompt'] = 'naciśnij ~INPUT_CONTEXT~ aby użyć ~y~szatni~s~.',
   ['wear_citizen'] = 'strój cywilny',
   ['wear_work'] = 'strój pracownika taxi',
+
   -- garage
   ['spawner_prompt'] = 'naciśnij ~INPUT_CONTEXT~ aby otworzyć ~y~garaż~s~.',
   ['store_veh'] = 'naciśnij ~INPUT_CONTEXT~ aby zdać pojazd',
   ['spawn_veh'] = 'sprowadź pojazd',
   ['spawnpoint_blocked'] = 'jakiś pojazd blokuje wyjazd z garażu!',
   ['only_taxi'] = 'możesz przechowywać tylko taksówki.',
-  ['taking_service'] = 'przyjmowanie usługi: ',
+
+  ['taking_service'] = 'przyjmowanie usługi: Taxi/Uber',
   ['full_service'] = 'pełny serwis: ',
   ['amount_invalid'] = 'wartość nieprawidłowa',
   ['press_to_open'] = 'naciśnij ~INPUT_CONTEXT~ aby wejść do menu',

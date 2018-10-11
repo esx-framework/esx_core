@@ -12,7 +12,7 @@ Locales['br'] = {
   ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['only_taxi'] = 'Você só pode guardar taxis.',
 
-  ['taking_service'] = 'Pegando serviço: ',
+  ['taking_service'] = 'Pegando serviço: Taxi/Uber',
   ['full_service'] = 'Serviço completo: ',
   ['amount_invalid'] = 'Valor inválido',
   ['press_to_open'] = 'Pressione ~INPUT_CONTEXT~ para acessar o menu',

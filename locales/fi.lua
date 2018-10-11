@@ -12,7 +12,7 @@ Locales['fi'] = {
   ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
   ['only_taxi'] = 'Voit vain tallettaa taxeja',
 
-  ['taking_service'] = 'Aloitetaan työ: ',
+  ['taking_service'] = 'Aloitetaan työ: Taxi/Uber',
   ['full_service'] = 'täysi palvelu: ',
   ['amount_invalid'] = 'virheellinen summa',
   ['press_to_open'] = 'paina ~INPUT_CONTEXT~ avataksesi valikko',
