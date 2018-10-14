@@ -1,4 +1,4 @@
-local holdingup = false
+local holdingUp = false
 local store = ""
 local blipRobbery = nil
 ESX = nil
@@ -22,7 +22,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function drawTxt(x,y ,width,height,scale, text, r,g,b,a, outline)
+function drawTxt(x,y, width, height, scale, text, r,g,b,a, outline)
 	SetTextFont(0)
 	SetTextProportional(0)
 	SetTextScale(scale, scale)
@@ -31,56 +31,53 @@ function drawTxt(x,y ,width,height,scale, text, r,g,b,a, outline)
 	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	if outline then SetTextOutline() end
-	SetTextEntry("STRING")
-	AddTextComponentString(text)
-	DrawText(x - width/2, y - height/2 + 0.005)
+
+	BeginTextCommandDisplayText('STRING')
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandDisplayText(x - width/2, y - height/2 + 0.005)
 end
 
-RegisterNetEvent('esx_holdup:currentlyrobbing')
-AddEventHandler('esx_holdup:currentlyrobbing', function(robb)
-	holdingup = true
-	store = robb
+RegisterNetEvent('esx_holdup:currentlyRobbing')
+AddEventHandler('esx_holdup:currentlyRobbing', function(currentStore)
+	holdingUp, store = true, currentStore
 end)
 
-RegisterNetEvent('esx_holdup:killblip')
-AddEventHandler('esx_holdup:killblip', function()
+RegisterNetEvent('esx_holdup:killBlip')
+AddEventHandler('esx_holdup:killBlip', function()
 	RemoveBlip(blipRobbery)
 end)
 
-RegisterNetEvent('esx_holdup:setblip')
-AddEventHandler('esx_holdup:setblip', function(position)
+RegisterNetEvent('esx_holdup:setBlip')
+AddEventHandler('esx_holdup:setBlip', function(position)
 	blipRobbery = AddBlipForCoord(position.x, position.y, position.z)
-	SetBlipSprite(blipRobbery , 161)
-	SetBlipScale(blipRobbery , 2.0)
+
+	SetBlipSprite(blipRobbery, 161)
+	SetBlipScale(blipRobbery, 2.0)
 	SetBlipColour(blipRobbery, 3)
+
 	PulseBlip(blipRobbery)
 end)
 
-RegisterNetEvent('esx_holdup:toofarlocal')
-AddEventHandler('esx_holdup:toofarlocal', function()
-	holdingup = false
+RegisterNetEvent('esx_holdup:tooFar')
+AddEventHandler('esx_holdup:tooFar', function()
+	holdingUp, store = false, ''
 	ESX.ShowNotification(_U('robbery_cancelled'))
-	robbingName = ""
-	incircle = false
 end)
 
-
-RegisterNetEvent('esx_holdup:robberycomplete')
-AddEventHandler('esx_holdup:robberycomplete', function(award)
-	holdingup = false
+RegisterNetEvent('esx_holdup:robberyComplete')
+AddEventHandler('esx_holdup:robberyComplete', function(award)
+	holdingUp, store = false, ''
 	ESX.ShowNotification(_U('robbery_complete', award))
-	store = ""
-	incircle = false
 end)
 
+RegisterNetEvent('esx_holdup:startTimer')
+AddEventHandler('esx_holdup:startTimer', function()
+	local timer = Stores[store].secondsRemaining
 
-RegisterNetEvent('esx_holdup:starttimer')
-AddEventHandler('esx_holdup:starttimer', function()
-	timer = Stores[store].secondsRemaining
 	Citizen.CreateThread(function()
-		while timer > 0 do
-
+		while timer > 0 and holdingUp do
 			Citizen.Wait(1000)
+
 			if timer > 0 then
 				timer = timer - 1
 			end
@@ -88,23 +85,16 @@ AddEventHandler('esx_holdup:starttimer', function()
 	end)
 
 	Citizen.CreateThread(function()
-		while true do
+		while holdingUp do
 			Citizen.Wait(0)
-			if holdingup then
-				drawTxt(0.66, 1.44, 1.0,1.0,0.4, _U('robbery_timer', timer), 255, 255, 255, 255)
-			else
-				Citizen.Wait(1000)
-			end
+			drawTxt(0.66, 1.44, 1.0, 1.0, 0.4, _U('robbery_timer', timer), 255, 255, 255, 255)
 		end
 	end)
 end)
 
-
 Citizen.CreateThread(function()
 	for k,v in pairs(Stores) do
-		local ve = v.position
-
-		local blip = AddBlipForCoord(ve.x, ve.y, ve.z)
+		local blip = AddBlipForCoord(v.position.x, v.position.y, v.position.z)
 		SetBlipSprite(blip, 156)
 		SetBlipScale(blip, 0.8)
 		SetBlipAsShortRange(blip, true)
@@ -114,47 +104,39 @@ Citizen.CreateThread(function()
 		EndTextCommandSetBlipName(blip)
 	end
 end)
-incircle = false
-
 
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		local pos = GetEntityCoords(PlayerPedId(), true)
+		local playerPos = GetEntityCoords(PlayerPedId(), true)
 
-		for k,v in pairs(Stores)do
-			local pos2 = v.position
+		for k,v in pairs(Stores) do
+			local storePos = v.position
+			local distance = Vdist(playerPos.x, playerPos.y, playerPos.z, storePos.x, storePos.y, storePos.z)
 
-			if Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 15.0 then
-				if not holdingup then
-					DrawMarker(1, v.position.x, v.position.y, v.position.z - 1, 0, 0, 0, 0, 0, 0, 1.0001, 1.0001, 1.5001, 1555, 0, 0,255, 0, 0, 0,0)
+			if distance < Config.Marker.DrawDistance then
+				if not holdingUp then
+					DrawMarker(Config.Marker.Type, storePos.x, storePos.y, storePos.z - 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, false, false, false, false)
 
-					if Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) < 1.0 then
-						if not incirle then
-							ESX.ShowHelpNotification(_U('press_to_rob', v.nameofstore))
-						end
+					if distance < 0.5 then
+						ESX.ShowHelpNotification(_U('press_to_rob', v.nameOfStore))
 
-						incircle = true
 						if IsControlJustReleased(0, Keys['E']) then
 							if IsPedArmed(PlayerPedId(), 4) then
-								TriggerServerEvent('esx_holdup:rob', k)
+								TriggerServerEvent('esx_holdup:robberyStarted', k)
 							else
 								ESX.ShowNotification(_U('no_threat'))
 							end
 						end
-
-					elseif(Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) > 1.0)then
-						incircle = false
 					end
 				end
 			end
 		end
 
-		if holdingup then
-
-			local pos2 = Stores[store].position
-			if Vdist(pos.x, pos.y, pos.z, pos2.x, pos2.y, pos2.z) > Config.MaxDistance then
-				TriggerServerEvent('esx_holdup:toofar', store)
+		if holdingUp then
+			local storePos = Stores[store].position
+			if Vdist(playerPos.x, playerPos.y, playerPos.z, storePos.x, storePos.y, storePos.z) > Config.MaxDistance then
+				TriggerServerEvent('esx_holdup:tooFar', store)
 			end
 		end
 	end

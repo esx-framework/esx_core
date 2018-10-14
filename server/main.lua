@@ -4,37 +4,39 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent('esx_holdup:toofar')
-AddEventHandler('esx_holdup:toofar', function(robb)
+RegisterServerEvent('esx_holdup:tooFar')
+AddEventHandler('esx_holdup:tooFar', function(currentStore)
 	local _source = source
 	local xPlayers = ESX.GetPlayers()
 	rob = false
+
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 		
 		if xPlayer.job.name == 'police' then
-			TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_cancelled_at', Stores[robb].nameofstore))
-			TriggerClientEvent('esx_holdup:killblip', xPlayers[i])
+			TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_cancelled_at', Stores[currentStore].nameOfStore))
+			TriggerClientEvent('esx_holdup:killBlip', xPlayers[i])
 		end
 	end
+
 	if robbers[_source] then
-		TriggerClientEvent('esx_holdup:toofarlocal', _source)
+		TriggerClientEvent('esx_holdup:tooFar', _source)
 		robbers[_source] = nil
-		TriggerClientEvent('esx:showNotification', _source, _U('robbery_cancelled_at', Stores[robb].nameofstore))
+		TriggerClientEvent('esx:showNotification', _source, _U('robbery_cancelled_at', Stores[currentStore].nameOfStore))
 	end
 end)
 
-RegisterServerEvent('esx_holdup:rob')
-AddEventHandler('esx_holdup:rob', function(robb)
+RegisterServerEvent('esx_holdup:robberyStarted')
+AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 	local _source  = source
 	local xPlayer  = ESX.GetPlayerFromId(_source)
 	local xPlayers = ESX.GetPlayers()
 
-	if Stores[robb] then
-		local store = Stores[robb]
+	if Stores[currentStore] then
+		local store = Stores[currentStore]
 
-		if (os.time() - store.lastrobbed) < Config.TimerBeforeNewRob and store.lastrobbed ~= 0 then
-			TriggerClientEvent('esx:showNotification', _source, _U('recently_robbed', Config.TimerBeforeNewRob - (os.time() - store.lastrobbed)))
+		if (os.time() - store.lastRobbed) < Config.TimerBeforeNewRob and store.lastRobbed ~= 0 then
+			TriggerClientEvent('esx:showNotification', _source, _U('recently_robbed', Config.TimerBeforeNewRob - (os.time() - store.lastRobbed)))
 			return
 		end
 
@@ -53,40 +55,39 @@ AddEventHandler('esx_holdup:rob', function(robb)
 				for i=1, #xPlayers, 1 do
 					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 					if xPlayer.job.name == 'police' then
-						TriggerClientEvent('esx:showNotification', xPlayers[i], _U('rob_in_prog', store.nameofstore))
-						TriggerClientEvent('esx_holdup:setblip', xPlayers[i], Stores[robb].position)
+						TriggerClientEvent('esx:showNotification', xPlayers[i], _U('rob_in_prog', store.nameOfStore))
+						TriggerClientEvent('esx_holdup:setBlip', xPlayers[i], Stores[currentStore].position)
 					end
 				end
 
-				TriggerClientEvent('esx:showNotification', _source, _U('started_to_rob', store.nameofstore))
+				TriggerClientEvent('esx:showNotification', _source, _U('started_to_rob', store.nameOfStore))
 				TriggerClientEvent('esx:showNotification', _source, _U('alarm_triggered'))
 				
-				TriggerClientEvent('esx_holdup:currentlyrobbing', _source, robb)
-				TriggerClientEvent('esx_holdup:starttimer', _source)
+				TriggerClientEvent('esx_holdup:currentlyRobbing', _source, currentStore)
+				TriggerClientEvent('esx_holdup:startTimer', _source)
 				
-				Stores[robb].lastrobbed = os.time()
-				robbers[_source] = robb
-				local savedSource = _source
-				SetTimeout(store.secondsRemaining * 1000, function()
+				Stores[currentStore].lastRobbed = os.time()
+				robbers[_source] = currentStore
 
-					if robbers[savedSource] then
+				SetTimeout(store.secondsRemaining * 1000, function()
+					if robbers[_source] then
 						rob = false
 						if xPlayer then
-							local award = store.reward
-							TriggerClientEvent('esx_holdup:robberycomplete', savedSource, award)
+							TriggerClientEvent('esx_holdup:robberyComplete', _source, store.reward)
 
 							if Config.GiveBlackMoney then
-								xPlayer.addAccountMoney('black_money', award)
+								xPlayer.addAccountMoney('black_money', store.reward)
 							else
-								xPlayer.addMoney(award)
+								xPlayer.addMoney(store.reward)
 							end
 							
-							local xPlayers = ESX.GetPlayers()
+							local xPlayers, xPlayer = ESX.GetPlayers(), nil
 							for i=1, #xPlayers, 1 do
-								local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+								xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
 								if xPlayer.job.name == 'police' then
-									TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_complete_at', store.nameofstore))
-									TriggerClientEvent('esx_holdup:killblip', xPlayers[i])
+									TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_complete_at', store.nameOfStore))
+									TriggerClientEvent('esx_holdup:killBlip', xPlayers[i])
 								end
 							end
 						end

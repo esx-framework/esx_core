@@ -1,4 +1,6 @@
 # esx_holdup
+This resource for ESX adds stores around the island for criminals to rob!
+
 ### Requirements
 - [esx_policejob](https://github.com/ESX-Org/esx_policejob)
 

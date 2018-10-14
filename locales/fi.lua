@@ -12,4 +12,5 @@ Locales['fi'] = {
 	['robbery_cancelled_at'] = '~r~Ryöstö kohteessa ~b~%s~s~ keskeytyi!',
 	['min_police'] = 'kaupungissa pitää olla vähintää ~b~%s poliisia~s~ paikalla ryöstön aloitukseen.',
 	['robbery_already'] = '~r~Ryöstö on jo menossa.',
+	['no_threat'] = 'you do not pose a threat to the store keeper',
 }
