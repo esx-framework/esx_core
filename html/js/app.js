@@ -79,7 +79,7 @@
 
 	};
 
-	ESX_MENU.render = function(){
+	ESX_MENU.render = function() {
 
 		let menuContainer       = document.getElementById('menus');
 		let focused             = ESX_MENU.getFocused();
@@ -93,7 +93,7 @@
 				let menuData = ESX_MENU.opened[namespace][name];
 				let view     = JSON.parse(JSON.stringify(menuData));
 
-				for(let i=0; i<menuData.elements.length; i++){
+				for(let i=0; i<menuData.elements.length; i++) {
 
 					let element = view.elements[i];
 
@@ -132,32 +132,32 @@
 
 	};
 
-	ESX_MENU.submit = function(namespace, name, data){
-		SendMessage(ESX_MENU.ResourceName, 'menu_submit', {
+	ESX_MENU.submit = function(namespace, name, data) {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify({
 			_namespace: namespace,
 			_name     : name,
 			current   : data,
 			elements  : ESX_MENU.opened[namespace][name].elements
-		});
+		}));
 	};
 
-	ESX_MENU.cancel = function(namespace, name){
-		SendMessage(ESX_MENU.ResourceName, 'menu_cancel', {
+	ESX_MENU.cancel = function(namespace, name) {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify({
 			_namespace: namespace,
 			_name     : name
-		});
+		}));
 	};
 
-	ESX_MENU.change = function(namespace, name, data){
-		SendMessage(ESX_MENU.ResourceName, 'menu_change', {
+	ESX_MENU.change = function(namespace, name, data) {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_change', JSON.stringify({
 			_namespace: namespace,
 			_name     : name,
 			current   : data,
 			elements  : ESX_MENU.opened[namespace][name].elements
-		});
+		}));
 	};
 
-	ESX_MENU.getFocused = function(){
+	ESX_MENU.getFocused = function() {
 		return ESX_MENU.focus[ESX_MENU.focus.length - 1];
 	};
 
