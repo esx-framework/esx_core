@@ -1,2 +1,2 @@
-# fxserver-esx_menu_default
-FXServer ESX Menu Default
+# esx_menu_default
+ESX Menu Default
