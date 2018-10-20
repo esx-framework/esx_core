@@ -17,7 +17,7 @@ Locales['fr'] = {
   ['open_armory'] = 'appuyez sur ~INPUT_CONTEXT~ pour accéder à l\'armurerie',
   -- Vehicles
   ['vehicle_menu'] = 'véhicule',
-  ['vehicle_out'] = 'il y a déja un véhicule de sorti',
+  ['vehicle_blocked'] = 'il y a déja un véhicule de sorti',
   ['vehicle_spawner'] = 'appuyez sur ~INPUT_CONTEXT~ pour sortir un véhicule',
   ['store_vehicle'] = 'appuyez sur ~INPUT_CONTEXT~ pour ranger le véhicule',
   -- Service

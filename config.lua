@@ -57,15 +57,21 @@ Config.PoliceStations = {
 
 		Vehicles = {
 			{
-				Spawner    = { x = 454.69, y = -1017.4, z = 27.430 },
-				SpawnPoint = { x = 438.42, y = -1018.3, z = 27.757 },
-				Heading    = 90.0
+				Spawner    = { x = 454.69, y = -1017.40, z = 27.43 },
+				SpawnPoints = {
+					{ x = 438.42, y = -1018.30, z = 27.75, heading = 90.0, radius = 6.0 },
+					{ x = 441.08, y = -1024.23, z = 28.30, heading = 90.0, radius = 6.0 },
+					{ x = 453.53, y = -1022.20, z = 28.02, heading = 90.0, radius = 6.0 },
+					{ x = 450.97, y = -1016.55, z = 28.10, heading = 90.0, radius = 6.0 }
+				}
 			},
 
 			{
 				Spawner    = { x = 473.38, y = -1018.43, z = 27.00 },
-				SpawnPoint = { x = 475.98, y = -1021.65, z = 28.06 },
-				Heading    = 276.11
+				SpawnPoints = {
+					{ x = 475.98, y = -1021.65, z = 28.06, heading = 276.11, radius = 6.0 },
+					{ x = 484.10, y = -1023.19, z = 27.57, heading = 302.54, radius = 6.0 }
+				}
 			}
 		},
 

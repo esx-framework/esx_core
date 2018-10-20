@@ -17,7 +17,7 @@ Locales['sv'] = {
   ['open_armory'] = 'tryck ~INPUT_CONTEXT~ för att komma åt förrådet',
   -- Vehicles
   ['vehicle_menu'] = 'bilar',
-  ['vehicle_out'] = 'det finns redan en bil ute!',
+  ['vehicle_blocked'] = 'alla tillgänliga spawn points är blockerade!',
   ['vehicle_spawner'] = 'tryck ~INPUT_CONTEXT~ för att ta ut en bil',
   ['store_vehicle'] = 'tryck ~INPUT_CONTEXT~ för att parkera bilen',
   -- Service

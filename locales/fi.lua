@@ -17,7 +17,7 @@ Locales['fi'] = {
   ['open_armory'] = 'paina ~INPUT_CONTEXT~ avataksesi asevarasto',
   -- Vehicles
   ['vehicle_menu'] = 'ajoneuvo',
-  ['vehicle_out'] = 'ajoneuvo on jo ulkona tallista',
+  ['vehicle_blocked'] = 'ajoneuvo on jo ulkona tallista',
   ['vehicle_spawner'] = 'paina ~INPUT_CONTEXT~ ottaaksesi auton ulos',
   ['store_vehicle'] = 'paina ~INPUT_CONTEXT~ laittaaksesi auto talliin',
   -- Service

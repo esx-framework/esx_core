@@ -17,7 +17,7 @@ Locales['br'] = {
   ['open_armory'] = 'Pressione ~INPUT_CONTEXT~ para acessar o arsenal',
   -- Vehicles
   ['vehicle_menu'] = 'Veículo',
-  ['vehicle_out'] = 'Já existe um carro fora da garagem',
+  ['vehicle_blocked'] = 'Já existe um carro fora da garagem',
   ['vehicle_spawner'] = 'Pressione ~INPUT_CONTEXT~ para escolher um veículo',
   ['store_vehicle'] = 'Pressione ~INPUT_CONTEXT~ para guardar o veículo',
   -- Service

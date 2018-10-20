@@ -343,7 +343,6 @@ end
 
 function OpenVehicleSpawnerMenu(station, partNum)
 
-	local vehicles = Config.PoliceStations[station].Vehicles
 	ESX.UI.Menu.CloseAll()
 
 	if Config.EnableSocietyOwnedVehicles then
@@ -353,7 +352,10 @@ function OpenVehicleSpawnerMenu(station, partNum)
 		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(garageVehicles)
 
 			for i=1, #garageVehicles, 1 do
-				table.insert(elements, {label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']', value = garageVehicles[i]})
+				table.insert(elements, {
+					label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']',
+					value = garageVehicles[i]
+				})
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
@@ -365,14 +367,16 @@ function OpenVehicleSpawnerMenu(station, partNum)
 				menu.close()
 
 				local vehicleProps = data.current.value
+				local foundSpawnPoint, spawnPoint = GetAvailableVehicleSpawnPoint(station, partNum)
 
-				ESX.Game.SpawnVehicle(vehicleProps.model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
-					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-					local playerPed = PlayerPedId()
-					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-				end)
+				if foundSpawnPoint then
+					ESX.Game.SpawnVehicle(vehicleProps.model, spawnPoint, spawnPoint.heading, function(vehicle)
+						ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+						TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+					end)
 
-				TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
+					TriggerServerEvent('esx_society:removeVehicleFromGarage', 'police', vehicleProps)
+				end
 			end, function(data, menu)
 				menu.close()
 
@@ -405,36 +409,29 @@ function OpenVehicleSpawnerMenu(station, partNum)
 		}, function(data, menu)
 			menu.close()
 
-			local model   = data.current.model
-			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x, vehicles[partNum].SpawnPoint.y, vehicles[partNum].SpawnPoint.z, 3.0, 0, 71)
+			local foundSpawnPoint, spawnPoint = GetAvailableVehicleSpawnPoint(station, partNum)
 
-			if not DoesEntityExist(vehicle) then
-
-				local playerPed = PlayerPedId()
-
+			if foundSpawnPoint then
 				if Config.MaxInService == -1 then
-
-					ESX.Game.SpawnVehicle(model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
-						TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+					ESX.Game.SpawnVehicle(data.current.model, spawnPoint, spawnPoint.heading, function(vehicle)
+						TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
 						SetVehicleMaxMods(vehicle)
 					end)
 				else
 
 					ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
-						if isInService then
 
-							ESX.Game.SpawnVehicle(model, vehicles[partNum].SpawnPoint, vehicles[partNum].Heading, function(vehicle)
-								TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+						if isInService then
+							ESX.Game.SpawnVehicle(data.current.model, spawnPoint, spawnPoint.heading, function(vehicle)
+								TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
 								SetVehicleMaxMods(vehicle)
 							end)
 						else
 							ESX.ShowNotification(_U('service_not'))
 						end
+
 					end, 'police')
 				end
-
-			else
-				ESX.ShowNotification(_U('vehicle_out'))
 			end
 
 		end, function(data, menu)
@@ -448,11 +445,29 @@ function OpenVehicleSpawnerMenu(station, partNum)
 	end
 end
 
+function GetAvailableVehicleSpawnPoint(station, partNum)
+	local spawnPoints = Config.PoliceStations[station].Vehicles[partNum].SpawnPoints
+	local found, foundSpawnPoint = false, nil
+
+	for i=1, #spawnPoints, 1 do
+		if ESX.Game.IsSpawnPointClear(spawnPoints[i], spawnPoints[i].radius) then
+			found, foundSpawnPoint = true, spawnPoints[i]
+			break
+		end
+	end
+
+	if found then
+		return true, foundSpawnPoint
+	else
+		ESX.ShowNotification(_U('vehicle_blocked'))
+		return false
+	end
+end
+
 function OpenPoliceActionsMenu()
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open(
-	'default', GetCurrentResourceName(), 'police_actions',
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_actions',
 	{
 		title    = 'Police',
 		align    = 'top-left',
@@ -599,8 +614,7 @@ function OpenPoliceActionsMenu()
 
 			end, function(data2, menu2)
 				menu2.close()
-			end
-			)
+			end)
 
 		elseif data.current.value == 'object_spawner' then
 			ESX.UI.Menu.Open(
@@ -776,10 +790,10 @@ function OpenBodySearchMenu(player)
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
 				table.insert(elements, {
-				label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
-				value    = data.inventory[i].name,
-				itemType = 'item_standard',
-				amount   = data.inventory[i].count
+					label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
+					value    = data.inventory[i].name,
+					itemType = 'item_standard',
+					amount   = data.inventory[i].count
 				})
 			end
 		end
@@ -916,14 +930,12 @@ function ShowPlayerLicense(player)
 			targetName = data.name
 		end
 		
-		ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'manage_license',
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license',
 		{
 			title    = _U('license_revoke'),
 			align    = 'top-left',
 			elements = elements,
-		},
-		function(data, menu)
+		}, function(data, menu)
 			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
 			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
 			
@@ -932,17 +944,14 @@ function ShowPlayerLicense(player)
 			ESX.SetTimeout(300, function()
 				ShowPlayerLicense(player)
 			end)
-		end,
-		function(data, menu)
+		end, function(data, menu)
 			menu.close()
-		end
-		)
+		end)
 
 	end, GetPlayerServerId(player))
 end
 
 function OpenUnpaidBillsMenu(player)
-
 	local elements = {}
 
 	ESX.TriggerServerCallback('esx_billing:getTargetBills', function(bills)
@@ -1649,13 +1658,6 @@ Citizen.CreateThread(function()
 						currentPart    = 'VehicleSpawner'
 						currentPartNum = i
 					end
-
-					if GetDistanceBetweenCoords(coords, v.Vehicles[i].SpawnPoint.x, v.Vehicles[i].SpawnPoint.y, v.Vehicles[i].SpawnPoint.z, true) < Config.MarkerSize.x then
-						isInMarker     = true
-						currentStation = k
-						currentPart    = 'VehicleSpawnPoint'
-						currentPartNum = i
-					end
 				end
 
 				for i=1, #v.Helicopters, 1 do
@@ -1663,13 +1665,6 @@ Citizen.CreateThread(function()
 						isInMarker     = true
 						currentStation = k
 						currentPart    = 'HelicopterSpawner'
-						currentPartNum = i
-					end
-
-					if GetDistanceBetweenCoords(coords, v.Helicopters[i].SpawnPoint.x, v.Helicopters[i].SpawnPoint.y, v.Helicopters[i].SpawnPoint.z, true) < Config.MarkerSize.x then
-						isInMarker     = true
-						currentStation = k
-						currentPart    = 'HelicopterSpawnPoint'
 						currentPartNum = i
 					end
 				end

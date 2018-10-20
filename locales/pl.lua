@@ -17,7 +17,7 @@ Locales['pl'] = {
   ['open_armory'] = 'naciśnij ~INPUT_CONTEXT~ żeby uzyskać dostęp do zbrojowni',
   -- Vehicles
   ['vehicle_menu'] = 'pojazdy',
-  ['vehicle_out'] = 'masz już pojazd poza garażem',
+  ['vehicle_blocked'] = 'masz już pojazd poza garażem',
   ['vehicle_spawner'] = 'naciśnij ~INPUT_CONTEXT~ żeby wziąć pojazd',
   ['store_vehicle'] = 'naciśnij ~INPUT_CONTEXT~ żeby przechować pojazd',
   -- Service

@@ -17,7 +17,7 @@ Locales['en'] = {
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to access the armory',
   -- Vehicles
   ['vehicle_menu'] = 'vehicle',
-  ['vehicle_out'] = 'there is already a car out of the garage',
+  ['vehicle_blocked'] = 'all available spawn points are currently blocked!',
   ['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
   ['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
   -- Service

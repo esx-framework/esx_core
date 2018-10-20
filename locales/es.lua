@@ -17,7 +17,7 @@ Locales['es'] = {
   ['open_armory'] = 'Presionarr ~INPUT_CONTEXT~ para acceder a la armeria',
   -- Vehicles
   ['vehicle_menu'] = 'Vehículo',
-  ['vehicle_out'] = 'Ya tienes un vehículo fuera',
+  ['vehicle_blocked'] = 'Ya tienes un vehículo fuera',
   ['vehicle_spawner'] = 'Presionar ~INPUT_CONTEXT~ para sacar un vehículo',
   ['store_vehicle'] = 'Presionar ~INPUT_CONTEXT~ para guardar un vehículo',
   -- Service

@@ -17,7 +17,7 @@ Locales['de'] = {
   ['open_armory'] = 'Drücke ~INPUT_CONTEXT~ um die Waffenkammer zu öffnen',
   -- Vehicles
   ['vehicle_menu'] = 'Fahrzeug',
-  ['vehicle_out'] = 'es ist bereits ein Fahrzeug draussen',
+  ['vehicle_blocked'] = 'es ist bereits ein Fahrzeug draussen',
   ['vehicle_spawner'] = 'Drücke ~INPUT_CONTEXT~ um ein Fahrzeug zu holen',
   ['store_vehicle'] = 'Drücke ~INPUT_CONTEXT~ um das Fahrzeug zu parken',
   -- Service
