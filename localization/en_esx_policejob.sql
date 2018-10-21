@@ -18,7 +18,7 @@ INSERT INTO `jobs` (name, label) VALUES
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
 	('police',0,'recruit','Recruit',20,'{}','{}'),
-	('police',1,'officer','Officier',40,'{}','{}'),
+	('police',1,'officer','Officer',40,'{}','{}'),
 	('police',2,'sergeant','Sergeant',60,'{}','{}'),
 	('police',3,'lieutenant','Lieutenant',85,'{}','{}'),
 	('police',4,'boss','Chief',100,'{}','{}')
@@ -41,7 +41,7 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Illegal U-Turn', 250, 0),
 	('Illegally Driving Off-road', 170, 0),
 	('Refusing a Lawful Command', 30, 0),
-	('Illegally Stoped of a Vehicle', 150, 0),
+	('Illegally Stopping a Vehicle', 150, 0),
 	('Illegal Parking', 70, 0),
 	('Failing to Yield to the right', 70, 0),
 	('Failure to comply with Vehicle Information', 90, 0),
