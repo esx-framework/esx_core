@@ -103,7 +103,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
-			ESX.ShowNotification(U('foot_work'))
+			ESX.ShowNotification(_U('foot_work'))
 		else
 			TriggerServerEvent('esx_jobs:startWork', zone.Item)
 		end
