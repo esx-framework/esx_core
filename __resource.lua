@@ -1,8 +1,22 @@
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-description 'ESX Weaponshop'
+description 'ESX Weapon Shop'
 
 version '1.0.2'
+
+server_scripts {
+	'@mysql-async/lib/MySQL.lua',
+	'@es_extended/locale.lua',
+	'locales/de.lua',
+	'locales/br.lua',
+	'locales/en.lua',
+	'locales/fi.lua',
+	'locales/fr.lua',
+	'locales/es.lua',
+	'locales/pl.lua',
+	'config.lua',
+	'server/main.lua'
+}
 
 client_scripts {
 	'@es_extended/locale.lua',
@@ -15,18 +29,4 @@ client_scripts {
 	'locales/pl.lua',
 	'config.lua',
 	'client/main.lua'
-}
-
-server_scripts {
-	'@es_extended/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/pl.lua',
-	'@mysql-async/lib/MySQL.lua',
-	'config.lua',
-	'server/main.lua'
 }

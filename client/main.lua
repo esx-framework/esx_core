@@ -23,21 +23,19 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-end)
 
-RegisterNetEvent('esx_weashop:loadLicenses')
-AddEventHandler('esx_weashop:loadLicenses', function (licenses)
-	for i = 1, #licenses, 1 do
-		Licenses[licenses[i].type] = true
-	end
-end)
-
-AddEventHandler('onClientMapStart', function()
 	ESX.TriggerServerCallback('esx_weashop:requestDBItems', function(ShopItems)
 		for k,v in pairs(ShopItems) do
 			Config.Zones[k].Items = v
 		end
 	end)
+end)
+
+RegisterNetEvent('esx_weashop:loadLicenses')
+AddEventHandler('esx_weashop:loadLicenses', function(licenses)
+	for i = 1, #licenses, 1 do
+		Licenses[licenses[i].type] = true
+	end
 end)
 
 function OpenBuyLicenseMenu(zone)
@@ -46,7 +44,7 @@ function OpenBuyLicenseMenu(zone)
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_license', {
 		title = _U('buy_license'),
 		elements = {
-			{ label = _U('yes') .. ' ($' .. Config.LicensePrice .. ')', value = 'yes' },
+			{ label = _U('yes', ('<span style="color: green;">%s</span>'):format(ESX.Math.GroupDigits(_U('shop_menu_item', Config.LicensePrice)))), value = 'yes' },
 			{ label = _U('no'), value = 'no' }
 		}
 	}, function (data, menu)
@@ -66,10 +64,9 @@ function OpenShopMenu(zone)
 		local item = Config.Zones[zone].Items[i]
 
 		table.insert(elements, {
-			label     = item.label .. ' - <span style="color:green;">$' .. item.price .. ' </span>',
-			realLabel = item.label,
-			value     = item.name,
-			price     = item.price
+			label      = ('%s - <span style="color: green;">%s</span>'):format(item.label, ESX.Math.GroupDigits(_U('shop_menu_item', item.price))),
+			weaponName = item.item,
+			price      = item.price
 		})
 	end
 
@@ -79,20 +76,20 @@ function OpenShopMenu(zone)
 		title  = _U('shop'),
 		elements = elements
 	}, function(data, menu)
-		TriggerServerEvent('esx_weashop:buyItem', data.current.value, data.current.price, zone)
+		TriggerServerEvent('esx_weashop:buyItem', data.current.weaponName, data.current.price, zone)
 	end, function(data, menu)
 		menu.close()
 
 		CurrentAction     = 'shop_menu'
 		CurrentActionMsg  = _U('shop_menu')
-		CurrentActionData = {zone = zone}
+		CurrentActionData = { zone = zone }
 	end)
 end
 
 AddEventHandler('esx_weashop:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('shop_menu')
-	CurrentActionData = {zone = zone}
+	CurrentActionData = { zone = zone }
 end)
 
 AddEventHandler('esx_weashop:hasExitedMarker', function(zone)
@@ -107,10 +104,10 @@ Citizen.CreateThread(function()
 			for i = 1, #v.Pos, 1 do
 				local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
 
-				SetBlipSprite (blip, 154)
+				SetBlipSprite (blip, 110)
 				SetBlipDisplay(blip, 4)
 				SetBlipScale  (blip, 1.0)
-				SetBlipColour (blip, 2)
+				SetBlipColour (blip, 81)
 				SetBlipAsShortRange(blip, true)
 
 				BeginTextCommandSetBlipName("STRING")
@@ -124,8 +121,10 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-	Citizen.Wait(0)
-		local coords = GetEntityCoords(GetPlayerPed(-1))
+		Citizen.Wait(0)
+
+		local coords = GetEntityCoords(PlayerPedId())
+
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
@@ -140,7 +139,8 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local coords      = GetEntityCoords(GetPlayerPed(-1))
+
+		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
 
@@ -170,13 +170,13 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
-
 				if CurrentAction == 'shop_menu' then
-					if Config.EnableLicense == true then
+					if Config.EnableLicense then
 						if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
 							OpenShopMenu(CurrentActionData.zone)
 						else

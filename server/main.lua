@@ -20,7 +20,7 @@ AddEventHandler('esx_weashop:buyLicense', function ()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.get('money') >= Config.LicensePrice then
+	if xPlayer.getMoney() >= Config.LicensePrice then
 		xPlayer.removeMoney(Config.LicensePrice)
 
 		TriggerEvent('esx_license:addLicense', _source, 'weapon', function()
@@ -37,12 +37,12 @@ ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
 
 		for i=1, #result, 1 do
 
-			if shopItems[result[i].name] == nil then
-				shopItems[result[i].name] = {}
+			if shopItems[result[i].zone] == nil then
+				shopItems[result[i].zone] = {}
 			end
 
-			table.insert(shopItems[result[i].name], {
-				name  = result[i].item,
+			table.insert(shopItems[result[i].zone], {
+				item  = result[i].item,
 				price = result[i].price,
 				label = ESX.GetWeaponLabel(result[i].item)
 			})
@@ -55,25 +55,24 @@ end)
 
 RegisterServerEvent('esx_weashop:buyItem')
 AddEventHandler('esx_weashop:buyItem', function(itemName, price, zone)
-	local _source = source
-	local xPlayer  = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	local account = xPlayer.getAccount('black_money')
-	
+
 	if zone == "BlackWeashop" then
 		if account.money >= price then
 			xPlayer.removeAccountMoney('black_money', price)
 			xPlayer.addWeapon(itemName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(itemName)))
+			TriggerClientEvent('esx:showNotification', source, _U('buy', ESX.GetWeaponLabel(itemName)))
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_black'))
+			TriggerClientEvent('esx:showNotification', source, _U('not_enough_black'))
 		end
 	else
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
 			xPlayer.addWeapon(itemName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(itemName)))
+			TriggerClientEvent('esx:showNotification', source, _U('buy', ESX.GetWeaponLabel(itemName)))
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
+			TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
 		end
 	end
 end)

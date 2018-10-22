@@ -1,11 +1,12 @@
 Locales ['en'] = {
   ['buy_license'] = 'buy weapon license?',
-  ['yes'] = 'yes',
+  ['yes'] = '%s',
   ['no'] = 'no',
   ['buy'] = 'you bought %s',
   ['not_enough_black'] = 'you do not have enough dirty money',
   ['not_enough'] = 'you do not have enough money',
-  ['shop'] = 'shop',
-  ['shop_menu'] = 'Press ~INPUT_CONTEXT~ to access the shop.',
-  ['map_blip'] = 'gun shop',
+  ['shop'] = 'weapon shop',
+  ['shop_menu'] = 'press ~INPUT_CONTEXT~ to access the ~y~weapon store~s~.',
+  ['shop_menu_item'] = '$%s',
+  ['map_blip'] = 'weapon shop',
 }
