@@ -1,22 +1,21 @@
 USE `essentialmode`;
 
 CREATE TABLE `weashops` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`zone` varchar(255) NOT NULL,
+	`item` varchar(255) NOT NULL,
+	`price` int(11) NOT NULL,
 
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `price` int(11) NOT NULL,
-
-  PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`)
 );
 
-INSERT INTO `licenses` (type, label) VALUES
-  ('weapon', "Permis de port d'arme")
+INSERT INTO `licenses` (`type`, `label`) VALUES
+	('weapon', "Permis de port d'arme")
 ;
 
-INSERT INTO `weashops` (name, item, price) VALUES
-	('GunShop','WEAPON_PISTOL',300),
-	('BlackWeashop','WEAPON_PISTOL',500),
+INSERT INTO `weashops` (`zone` `item`, `price`) VALUES
+	('GunShop','WEAPON_PISTOL', 300),
+	('BlackWeashop','WEAPON_PISTOL', 500),
 	('GunShop', 'WEAPON_FLASHLIGHT', 60),
 	('BlackWeashop', 'WEAPON_FLASHLIGHT', 70),
 	('GunShop', 'WEAPON_MACHETE', 90),

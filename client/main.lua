@@ -47,12 +47,12 @@ function OpenBuyLicenseMenu(zone)
 			{ label = _U('yes', ('<span style="color: green;">%s</span>'):format(ESX.Math.GroupDigits(_U('shop_menu_item', Config.LicensePrice)))), value = 'yes' },
 			{ label = _U('no'), value = 'no' }
 		}
-	}, function (data, menu)
+	}, function(data, menu)
 		if data.current.value == 'yes' then
 			TriggerServerEvent('esx_weashop:buyLicense')
 		end
 		menu.close()
-	end, function (data, menu)
+	end, function(data, menu)
 		menu.close()
 	end)
 end
@@ -65,8 +65,7 @@ function OpenShopMenu(zone)
 
 		table.insert(elements, {
 			label      = ('%s - <span style="color: green;">%s</span>'):format(item.label, ESX.Math.GroupDigits(_U('shop_menu_item', item.price))),
-			weaponName = item.item,
-			price      = item.price
+			weaponName = item.item
 		})
 	end
 
@@ -76,7 +75,7 @@ function OpenShopMenu(zone)
 		title  = _U('shop'),
 		elements = elements
 	}, function(data, menu)
-		TriggerServerEvent('esx_weashop:buyItem', data.current.weaponName, data.current.price, zone)
+		TriggerServerEvent('esx_weashop:buyItem', data.current.weaponName, zone)
 	end, function(data, menu)
 		menu.close()
 
@@ -145,7 +144,7 @@ Citizen.CreateThread(function()
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
+			for i=1, #v.Pos, 1 do
 				if(GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.Size.x) then
 					isInMarker  = true
 					ShopItems   = v.Items
@@ -176,7 +175,7 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
-					if Config.EnableLicense then
+					if Config.LicenseEnable then
 						if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
 							OpenShopMenu(CurrentActionData.zone)
 						else

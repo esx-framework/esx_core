@@ -27,7 +27,7 @@ start esx_weashops
 
 # Legal
 ### License
-esx_weashops - Legal or illegal gun shop
+esx_weashops - Legal and illegal weapon shop
 
 Copyright (C) 2015-2018 Jérémie N'gadi
 
