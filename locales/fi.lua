@@ -72,6 +72,8 @@ Locales['fi'] = {
   ['disconnect'] = 'poistu serveriltä',
   ['chat_clear'] = 'tyhjennä chatti',
   ['chat_clear_all'] = 'tyhjennä chatti kaikilta',
+  -- Locale settings
+  ['locale_digit_grouping_symbol'] = ' ',
   -- Weapons
   ['weapon_knife'] = 'veitsi',
   ['weapon_nightstick'] = 'pamppu',

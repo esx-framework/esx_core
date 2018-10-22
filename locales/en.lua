@@ -72,6 +72,8 @@ Locales['en'] = {
   ['disconnect'] = 'disconnect from the server',
   ['chat_clear'] = 'clear the chat',
   ['chat_clear_all'] = 'clear the chat for everyone',
+  -- Locale settings
+  ['locale_digit_grouping_symbol'] = ',',
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',
@@ -95,7 +97,7 @@ Locales['en'] = {
   ['weapon_sawnoffshotgun'] = 'sawed off shotgun',
   ['weapon_assaultshotgun'] = 'assault shotgun',
   ['weapon_bullpupshotgun'] = 'bullpup shotgun',
-  ['weapon_stungun'] = 'tazer',
+  ['weapon_stungun'] = 'taser',
   ['weapon_sniperrifle'] = 'sniper rifle',
   ['weapon_heavysniper'] = 'heavy sniper',
   ['weapon_remotesniper'] = 'remote sniper',

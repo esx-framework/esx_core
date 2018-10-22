@@ -72,6 +72,8 @@ Locales['cs'] = {
   ['disconnect'] = 'odpojit od serveru',
   ['chat_clear'] = 'vyčistit chat',
   ['chat_clear_all'] = 'vyčistit chat pro všechny',
+  -- Locale settings
+  ['locale_digit_grouping_symbol'] = ' ',
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',

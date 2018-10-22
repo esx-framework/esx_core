@@ -68,7 +68,6 @@ start baseevents
 start mysql-async
 start essentialmode
 start esplugin_mysql
-start es_admin2
 
 start es_extended
 

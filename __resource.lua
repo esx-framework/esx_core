@@ -28,6 +28,7 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
+	'shared/modules/math.lua',
 	'shared/functions.lua'
 }
 

@@ -68,6 +68,8 @@ Locales['br'] = {
   ['disconnect'] = 'disconnect from the server',
   ['chat_clear'] = 'clear the chat',
   ['chat_clear_all'] = 'clear the chat for everyone',
+  -- Locale settings
+  ['locale_digit_grouping_symbol'] = ' ',
   -- Weapons
   ['weapon_knife'] = 'faca',
   ['weapon_nightstick'] = 'cacetete',

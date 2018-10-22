@@ -69,6 +69,8 @@ Locales['pl'] = {
   ['weapon'] = 'broń',
   ['giveweapon'] = 'daj broń',
   ['disconnect'] = 'odłącz się od serwera',
+  -- Locale settings
+  ['locale_digit_grouping_symbol'] = ' ',
   -- Weapons
   ['weapon_knife'] = 'nóż',
   ['weapon_nightstick'] = 'pałka',

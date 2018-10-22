@@ -59,7 +59,6 @@ ESX.DumpTable = function(table, nb)
 end
 
 
-ESX.Round = function(value)
-	return value >= 0 and math.floor(value + 0.5) or math.ceil(value - 0.5)
+ESX.Round = function(value, numDecimalPlaces)
+	return ESX.Math.Round(value, numDecimalPlaces)
 end
-
