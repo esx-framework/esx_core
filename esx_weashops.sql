@@ -13,7 +13,7 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 	('weapon', "Permis de port d'arme")
 ;
 
-INSERT INTO `weashops` (`zone` `item`, `price`) VALUES
+INSERT INTO `weashops` (`zone`, `item`, `price`) VALUES
 	('GunShop','WEAPON_PISTOL', 300),
 	('BlackWeashop','WEAPON_PISTOL', 500),
 	('GunShop', 'WEAPON_FLASHLIGHT', 60),
