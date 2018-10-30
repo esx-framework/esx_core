@@ -36,18 +36,13 @@ ui_page 'html/ui.html'
 files {
 	'html/ui.html',
 
-	'html/bankgothic.ttf',
-	'html/pdown.ttf',
-
 	'html/css/app.css',
 
 	'html/scripts/mustache.min.js',
 	'html/scripts/app.js',
 
-	'html/img/cursor.png',
-	'html/img/keys/enter.png',
-	'html/img/keys/return.png',
 	'html/img/phone.png',
+
 	'html/img/icons/signal.png',
 	'html/img/icons/rep.png',
 	'html/img/icons/msg.png',
