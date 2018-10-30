@@ -82,13 +82,13 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 end)
 
 RegisterNetEvent('esx_phone:addContact')
-AddEventHandler('esx_phone:addContact', function(name, phoneNumber)
+AddEventHandler('esx_phone:addContact', function(name, phoneNumber, playerOnline)
 	table.insert(PhoneData.contacts, {
 		name   = name,
 		number = phoneNumber,
-		online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number]))),
+		online = playerOnline
 	})
-	-- CALL HERE RELOADCONTACT
+
 	SendNUIMessage({
 		contactAdded = true,
 		phoneData    = PhoneData
@@ -103,7 +103,7 @@ AddEventHandler('esx_phone:removeContact', function(name, phoneNumber)
 			break
 		end
 	end
-	-- CALL HERE RELOADCONTACT
+
 	SendNUIMessage({
 		contactRemoved = true,
 		phoneData      = PhoneData
@@ -131,7 +131,7 @@ end)
 RegisterNUICallback('add_contact', function(data, cb)
 	local phoneNumber = tonumber(data.phoneNumber)
 	local contactName = tostring(data.contactName)
-	
+
 	if phoneNumber then
 		TriggerServerEvent('esx_phone:addPlayerContact', phoneNumber, contactName)
 	else
@@ -163,6 +163,8 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 	else
 		ESX.ShowNotification('~b~' .. job .. ': ~s~' .. message)
 	end
+
+	PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
 
 	SendNUIMessage({
 		newMessage  = true,
@@ -273,6 +275,14 @@ Citizen.CreateThread(function()
 					ESX.UI.Menu.Open('phone', GetCurrentResourceName(), 'main')
 				end
 			end
+		end
+	end
+end)
+
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		if GUI.PhoneIsShowed then
+			ESX.UI.Menu.CloseAll()
 		end
 	end
 end)
