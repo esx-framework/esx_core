@@ -44,10 +44,11 @@ Locales['sv'] = {
   -- Phone
   ['alert_ambulance'] = 'ambulanssamtal',
   -- Death
-  ['please_wait'] = 'du är medvetslös och kommer att dö om ~b~%s minuter och %s sekunder~s~\n',
-  ['press_respawn'] = 'tryck [~b~E~s~] för att respawna.',
-  ['respawn_now_fine'] = 'respawna nu för ~g~%s SEK~s~ [Tryck ~b~E~s~]',
-  ['respawn_fine'] = 'du betalade ~r~%s SEK~s~ för att respawna.',
+  ['respawn_available_in'] = 'respawn tillgänglig om ~b~%s:%s~s~',
+  ['respawn_bleedout_in'] = 'du kommer att blöda ut om ~b~%s:%s~s~\n',
+  ['respawn_bleedout_prompt'] = 'håll [~b~E~s~] för att respawna',
+  ['respawn_bleedout_fine'] = 'håll [~b~E~s~] för att respawna, kostar ~g~$%s~s~',
+  ['respawn_bleedout_fine_msg'] = 'du betalade ~r~%s SEK~s~ för att respawna.',
   ['distress_send'] = 'tryck ~b~[G]~s~ för att skicka nödsignal',
   ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
   ['distress_message'] = 'läkarvård krävs: medvetslös medborgare!',
@@ -59,5 +60,4 @@ Locales['sv'] = {
   ['not_enough_medikit'] = 'du har inget ~b~Medecinkit~s~.',
   ['not_enough_bandage'] = 'du har inget ~b~Bandage~s~.',
   ['healed'] = 'dina skador har blivit behandlade.',
-  -- Misc
 }

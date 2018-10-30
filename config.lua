@@ -11,31 +11,26 @@ Config.Locale                     = 'fr'
 local second = 1000
 local minute = 60 * second
 
--- How much time before auto respawn at hospital
-Config.RespawnDelayAfterRPDeath   = 10 * minute
+Config.EarlyRespawnTimer          = 2 * minute  -- Time til respawn is available
+Config.BleedoutTimer              = 10 * minute -- Time til the player bleeds out
 
-Config.EnablePlayerManagement       = false
-Config.EnableSocietyOwnedVehicles   = false
+Config.EnablePlayerManagement     = false
+Config.EnableSocietyOwnedVehicles = false
 
-Config.RemoveWeaponsAfterRPDeath    = true
-Config.RemoveCashAfterRPDeath       = true
-Config.RemoveItemsAfterRPDeath      = true
+Config.RemoveWeaponsAfterRPDeath  = true
+Config.RemoveCashAfterRPDeath     = true
+Config.RemoveItemsAfterRPDeath    = true
 
--- Will display a timer that shows RespawnDelayAfterRPDeath as a countdown
-Config.ShowDeathTimer               = true
-
--- Will allow respawn after half of RespawnDelayAfterRPDeath has elapsed.
-Config.EarlyRespawn                 = false
--- The player will be fined for respawning early (on bank account)
-Config.EarlyRespawnFine                  = false
-Config.EarlyRespawnFineAmount            = 500
+-- Let the player pay for respawning early, if he can afford it.
+Config.EarlyRespawnFine           = false
+Config.EarlyRespawnFineAmount     = 5000
 
 Config.Blip = {
 	Pos     = { x = 307.76, y = -1433.47, z = 28.97 },
 	Sprite  = 61,
 	Display = 4,
 	Scale   = 1.2,
-	Colour  = 2,
+	Colour  = 2
 }
 
 Config.HelicopterSpawner = {
@@ -43,7 +38,7 @@ Config.HelicopterSpawner = {
 	Heading    = 0.0
 }
 
--- https://wiki.fivem.net/wiki/Vehicles
+-- https://wiki.rage.mp/index.php?title=Vehicles
 Config.AuthorizedVehicles = {
 
 	{

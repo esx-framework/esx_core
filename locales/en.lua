@@ -2,7 +2,7 @@ Locales['en'] = {
   -- Cloakroom
   ['cloakroom'] = 'locker Room',
   ['ems_clothes_civil'] = 'civilian Clothes',
-  ['ems_clothes_ems'] = 'eMS Clothes',
+  ['ems_clothes_ems'] = 'EMS Clothes',
   -- Vehicles
   ['veh_menu'] = 'vehicle',
   ['veh_spawn'] = 'press ~INPUT_CONTEXT~ to get a Vehicle or Helicopter',
@@ -35,7 +35,7 @@ Locales['en'] = {
   ['bandage'] = 'bandage',
   ['max_item'] = 'You are already carrying enough on yourself.',
   -- F6 Menu
-  ['ems_menu'] = 'eMS Menu',
+  ['ems_menu'] = 'EMS Menu',
   ['ems_menu_title'] = 'ambulance - EMS Menu',
   ['ems_menu_revive'] = 'revive Player',
   ['ems_menu_putincar'] = 'put in Vehicle',
@@ -44,10 +44,11 @@ Locales['en'] = {
   -- Phone
   ['alert_ambulance'] = 'alert Ambulance',
   -- Death
-  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
-  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
-  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
-  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['respawn_available_in'] = 'respawn available in ~b~%s minutes %s seconds~s~',
+  ['respawn_bleedout_in'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['respawn_bleedout_prompt'] = 'hold [~b~E~s~] to respawn',
+  ['respawn_bleedout_fine'] = 'hold [~b~E~s~] to respawn for ~g~$%s~s~',
+  ['respawn_bleedout_fine_msg'] = 'you paid ~r~$%s~s~ to respawn.',
   ['distress_send'] = 'press [~b~G~s~] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
@@ -56,7 +57,7 @@ Locales['en'] = {
   -- Item
   ['used_medikit'] = 'You have used ~y~1x~s~ medikit',
   ['used_bandage'] = 'You have used ~y~1x~s~ bandage',
-  ['not_enough_medikit'] = 'You do not have ~b~medikit~w~.',
-  ['not_enough_bandage'] = 'You do not have ~b~bandage~w~.',
+  ['not_enough_medikit'] = 'You do not have ~b~medikit~s~.',
+  ['not_enough_bandage'] = 'You do not have ~b~bandage~s~.',
   ['healed'] = 'you have been treated.',
 }

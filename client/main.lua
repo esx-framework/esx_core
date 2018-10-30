@@ -52,11 +52,7 @@ function OnPlayerDeath()
 	IsDead = true
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 1)
 
-	if Config.ShowDeathTimer == true then
-		ShowDeathTimer()
-	end
-
-	StartRespawnTimer()
+	StartDeathTimer()
 	StartDistressSignal()
 
 	ClearPedTasksImmediately(PlayerPedId())
@@ -65,7 +61,7 @@ end
 
 function StartDistressSignal()
 	Citizen.CreateThread(function()
-		local timer = Config.RespawnDelayAfterRPDeath
+		local timer = Config.BleedoutTimer
 
 		while timer > 0 and IsDead do
 			Citizen.Wait(2)
@@ -103,74 +99,113 @@ function SendDistressSignal()
 	})
 end
 
-function ShowDeathTimer()
-	local respawnTimer = Config.RespawnDelayAfterRPDeath
-	local allowRespawn = Config.RespawnDelayAfterRPDeath/2
-	local fineAmount = Config.EarlyRespawnFineAmount
-	local payFine = false
+function DrawGenericTextThisFrame()
+	SetTextFont(4)
+	SetTextProportional(0)
+	SetTextScale(0.0, 0.5)
+	SetTextColour(255, 255, 255, 255)
+	SetTextDropshadow(0, 0, 0, 0, 255)
+	SetTextEdge(1, 0, 0, 0, 255)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextCentre(true)
+end
 
-	if Config.EarlyRespawn and Config.EarlyRespawnFine then
-		ESX.TriggerServerCallback('esx_ambulancejob:checkBalance', function(finePayable)
-			if finePayable then
-				payFine = true
-			else
-				payFine = false
-			end
+function secondsToClock(seconds)
+	local seconds, hours, mins, secs = tonumber(seconds), 0, 0, 0
+
+	if seconds <= 0 then
+		return 0, 0
+	else
+		local hours = string.format("%02.f", math.floor(seconds / 3600))
+		local mins = string.format("%02.f", math.floor(seconds / 60 - (hours * 60)))
+		local secs = string.format("%02.f", math.floor(seconds - hours * 3600 - mins * 60))
+
+		return mins, secs
+	end
+end
+
+function StartDeathTimer()
+	local canPayFine = false
+
+	if Config.EarlyRespawnFine then
+		ESX.TriggerServerCallback('esx_ambulancejob:checkBalance', function(canPay)
+			canPayFine = canPay
 		end)
 	end
 
+	local earlySpawnTimer = ESX.Round(Config.EarlyRespawnTimer / 1000)
+	local bleedoutTimer = ESX.Round(Config.BleedoutTimer / 1000)
+
 	Citizen.CreateThread(function()
-		while respawnTimer > 0 and IsDead do
-			Citizen.Wait(0)
+		-- early respawn timer
+		while earlySpawnTimer > 0 and IsDead do
+			Citizen.Wait(1000)
 
-			raw_seconds = respawnTimer/1000
-			raw_minutes = raw_seconds/60
-			minutes = stringsplit(raw_minutes, ".")[1]
-			seconds = stringsplit(raw_seconds-(minutes*60), ".")[1]
-
-			SetTextFont(4)
-			SetTextProportional(0)
-			SetTextScale(0.0, 0.5)
-			SetTextColour(255, 255, 255, 255)
-			SetTextDropshadow(0, 0, 0, 0, 255)
-			SetTextEdge(1, 0, 0, 0, 255)
-			SetTextDropShadow()
-			SetTextOutline()
-
-			local text = _U('please_wait', minutes, seconds)
-
-			if Config.EarlyRespawn then
-				if not Config.EarlyRespawnFine and respawnTimer <= allowRespawn then
-					text = text .. _U('press_respawn')
-				elseif Config.EarlyRespawnFine and respawnTimer <= allowRespawn and payFine then
-					text = text .. _U('respawn_now_fine', fineAmount)
-				else
-					text = text
-				end
+			if earlySpawnTimer > 0 then
+				earlySpawnTimer = earlySpawnTimer - 1
 			end
+		end
 
-			SetTextCentre(true)
+		-- bleedout timer
+		while bleedoutTimer > 0 and IsDead do
+			Citizen.Wait(1000)
+
+			if bleedoutTimer > 0 then
+				bleedoutTimer = bleedoutTimer - 1
+			end
+		end
+	end)
+
+	Citizen.CreateThread(function()
+		local text, timeHeld
+
+		-- early respawn timer
+		while earlySpawnTimer > 0 and IsDead do
+			Citizen.Wait(0)
+			text = _U('respawn_available_in', secondsToClock(earlySpawnTimer))
+
+			DrawGenericTextThisFrame()
+
 			SetTextEntry("STRING")
 			AddTextComponentString(text)
 			DrawText(0.5, 0.8)
+		end
 
-			if Config.EarlyRespawn then
-				if not Config.EarlyRespawnFine then
-					if IsControlPressed(0, Keys['E']) then
-						RemoveItemsAfterRPDeath()
-						break
-					end
-				elseif Config.EarlyRespawnFine then
-					if respawnTimer <= allowRespawn and payFine then
-						if IsControlPressed(0, Keys['E']) then
-							PayFine()
-							break
-						end
-					end
+		-- bleedout timer
+		while bleedoutTimer > 0 and IsDead do
+			Citizen.Wait(0)
+			text = _U('respawn_bleedout_in', secondsToClock(bleedoutTimer))
+
+			if not Config.EarlyRespawnFine then
+				text = text .. _U('respawn_bleedout_prompt')
+
+				if IsControlPressed(0, Keys['E']) and timeHeld > 60 then
+					break
+				end
+			elseif Config.EarlyRespawnFine and canPayFine then
+				text = text .. _U('respawn_bleedout_fine', ESX.Math.GroupDigits(Config.EarlyRespawnFineAmount))
+
+				if IsControlPressed(0, Keys['E']) and timeHeld > 60 then
+					TriggerServerEvent('esx_ambulancejob:payFine')
+					break
 				end
 			end
-			respawnTimer = respawnTimer - 15
+
+			if IsControlPressed(0, Keys['E']) then
+				timeHeld = timeHeld + 1
+			else
+				timeHeld = 0
+			end
+
+			DrawGenericTextThisFrame()
+
+			SetTextEntry("STRING")
+			AddTextComponentString(text)
+			DrawText(0.5, 0.8)
 		end
+
+		RemoveItemsAfterRPDeath()
 	end)
 end
 
@@ -196,12 +231,6 @@ function RemoveItemsAfterRPDeath()
 	end)
 end
 
-function PayFine()
-	ESX.TriggerServerCallback('esx_ambulancejob:payFine', function()
-		RemoveItemsAfterRPDeath()
-	end)
-end
-
 function RespawnPed(ped, coords)
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
 	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, false)
@@ -210,14 +239,6 @@ function RespawnPed(ped, coords)
 	ClearPedBloodDamage(ped)
 
 	ESX.UI.Menu.CloseAll()
-end
-
-function StartRespawnTimer()
-	Citizen.SetTimeout(Config.RespawnDelayAfterRPDeath, function()
-		if IsDead then
-			RemoveItemsAfterRPDeath()
-		end
-	end)
 end
 
 function TeleportFadeEffect(entity, coords)

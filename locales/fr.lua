@@ -44,10 +44,11 @@ Locales['fr'] = {
   -- Phone
   ['alert_ambulance'] = 'alerte Ambulance',
   -- Death
-  ['please_wait'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
-  ['press_respawn'] = 'press [~b~E~w~] to respawn.',
-  ['respawn_now_fine'] = 'respawn now for ~g~$%s ~w~[Press ~b~E~w~]',
-  ['respawn_fine'] = 'you paid ~r~$%s~s~ to respawn.',
+  ['respawn_available_in'] = 'respawn available in ~b~%s minutes %s seconds~s~',
+  ['respawn_bleedout_in'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
+  ['respawn_bleedout_prompt'] = 'hold [~b~E~s~] to respawn',
+  ['respawn_bleedout_fine'] = 'hold [~b~E~s~] to respawn for ~g~$%s~s~',
+  ['respawn_bleedout_fine_msg'] = 'you paid ~r~$%s~s~ to respawn.',
   ['distress_send'] = 'press [~b~G~s~] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
@@ -59,5 +60,4 @@ Locales['fr'] = {
   ['not_enough_medikit'] = 'vous n\'avez pas de ~b~kit de soin~w~.',
   ['not_enough_bandage'] = 'vous n\'avez pas de ~b~bandage~w~.',
   ['healed'] = 'vous avez été soigné.',
-  -- Misc
 }

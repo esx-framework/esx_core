@@ -71,7 +71,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 	cb()
 end)
 
-if Config.EarlyRespawn and Config.EarlyRespawnFine then
+if Config.EarlyRespawnFine then
 	ESX.RegisterServerCallback('esx_ambulancejob:checkBalance', function(source, cb)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local bankBalance = xPlayer.getAccount('bank').money
@@ -79,12 +79,13 @@ if Config.EarlyRespawn and Config.EarlyRespawnFine then
 		cb(bankBalance >= Config.EarlyRespawnFineAmount)
 	end)
 
-	ESX.RegisterServerCallback('esx_ambulancejob:payFine', function(source, cb)
+	RegisterServerEvent('esx_ambulancejob:payFine')
+	AddEventHandler('esx_ambulancejob:payFine', function()
 		local xPlayer = ESX.GetPlayerFromId(source)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_fine', Config.EarlyRespawnFineAmount))
-		xPlayer.removeAccountMoney('bank', Config.EarlyRespawnFineAmount)
+		local fineAmount = Config.EarlyRespawnFineAmount
 
-		cb()
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_bleedout_fine_msg', ESX.Math.GroupDigits(fineAmount)))
+		xPlayer.removeAccountMoney('bank', fineAmount)
 	end)
 end
 
