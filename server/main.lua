@@ -3,7 +3,7 @@ local DisptachRequestId   = 0
 local PhoneNumbers        = {}
 
 TriggerEvent('esx:getSharedObject', function(obj)
-  ESX = obj
+	ESX = obj
 end)
 
 function GenerateUniquePhoneNumber()
@@ -54,7 +54,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 		end
 	end
 
-	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
 		local phoneNumber = result[1].phone_number
@@ -106,9 +106,10 @@ end)
 
 AddEventHandler('esx:playerDropped', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
+	local phoneNumber = xPlayer.get('phoneNumber')
 
-	TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, xPlayer.get('phoneNumber'), -1)
-	PhoneNumbers[xPlayer.get('phoneNumber')] = nil
+	TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, phoneNumber, -1)
+	PhoneNumbers[phoneNumber] = nil
 
 	if PhoneNumbers[xPlayer.job.name] ~= nil then
 		TriggerEvent('esx_phone:removeSource', xPlayer.job.name, source)
@@ -236,9 +237,8 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 					TriggerClientEvent('esx_phone:addContact', _source, contactName, phoneNumber)
 				end)
 			end
-		-- there's a bug with mysql-async where some statements will break everything...
-		--else
-			--TriggerClientEvent('esx:showNotification', _source, _U('number_not_assigned'))
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('number_not_assigned'))
 		end
 	end)
 end)
@@ -249,8 +249,7 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 	local xPlayer     = ESX.GetPlayerFromId(_source)
 	local foundNumber = false
 
-	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE phone_number = @number',
-	{
+	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE phone_number = @number', {
 		['@number'] = phoneNumber
 	}, function(result)
 		if result[1] ~= nil then
