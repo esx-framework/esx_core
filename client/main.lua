@@ -48,6 +48,22 @@ AddEventHandler('playerSpawned', function()
 	end
 end)
 
+-- Disable most inputs when dead
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		if IsDead then
+			DisableAllControlActions(0)
+			EnableControlAction(0, Keys['G'], true)
+			EnableControlAction(0, Keys['T'], true)
+			EnableControlAction(0, Keys['E'], true)
+		else
+			Citizen.Wait(500)
+		end
+	end
+end)
+
 function OnPlayerDeath()
 	IsDead = true
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 1)
@@ -322,17 +338,4 @@ if Config.LoadIpl then
 		EnableMpDlcMaps(true)
 		RequestIpl('Coroner_Int_on') -- Morgue
 	end)
-end
-
--- String string
-function stringsplit(inputstr, sep)
-	if sep == nil then
-		sep = "%s"
-	end
-	local t={} ; i=1
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-		t[i] = str
-		i = i + 1
-	end
-	return t
 end
