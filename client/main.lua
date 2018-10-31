@@ -10,7 +10,6 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayeerData              = {}
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
 local CurrentAction           = nil
@@ -24,6 +23,18 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(100)
+	end
+
+	ESX.PlayerData = ESX.GetPlayerData()
+
+	if ESX.PlayerData.job.name == 'realestateagent' then
+		Config.Zones.OfficeActions.Type = 1
+	else
+		Config.Zones.OfficeActions.Type = -1
+	end
 end)
 
 function OpenRealestateAgentMenu()
@@ -32,7 +43,7 @@ function OpenRealestateAgentMenu()
 		{label = _U('clients'),    value = 'customers'},
 	}
 
-	if PlayerData.job ~= nil and PlayerData.job.name == 'realestateagent' and PlayerData.job.grade_name == 'boss' then
+	if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'realestateagent' and ESX.PlayerData.job.grade_name == 'boss' then
 		table.insert(elements, {
 			label = _U('boss_action'),
 			value = 'boss_actions'
@@ -202,22 +213,11 @@ function OpenCustomersMenu()
 	end)
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer
-
-	if PlayerData.job.name == 'realestateagent' then
-		Config.Zones.OfficeActions.Type = 1
-	else
-		Config.Zones.OfficeActions.Type = -1
-	end
-end)
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	PlayerData.job = job
+	ESX.PlayerData.job = job
 
-	if PlayerData.job.name == 'realestateagent' then
+	if ESX.PlayerData.job.name == 'realestateagent' then
 		Config.Zones.OfficeActions.Type = 1
 	else
 		Config.Zones.OfficeActions.Type = -1
@@ -231,7 +231,7 @@ AddEventHandler('esx_realestateagentjob:hasEnteredMarker', function(zone)
 	elseif zone == 'OfficeExit' then
 		local playerPed = PlayerPedId()
 		SetEntityCoords(playerPed, Config.Zones.OfficeOutside.Pos.x, Config.Zones.OfficeOutside.Pos.y, Config.Zones.OfficeOutside.Pos.z)
-	elseif zone == 'OfficeActions' and PlayerData.job ~= nil and PlayerData.job.name == 'realestateagent' then
+	elseif zone == 'OfficeActions' and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'realestateagent' then
 		CurrentAction     = 'realestateagent_menu'
 		CurrentActionMsg  = _U('press_to_access')
 		CurrentActionData = {}
