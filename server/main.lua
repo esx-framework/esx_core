@@ -7,19 +7,30 @@ TriggerEvent('esx_society:registerSociety', 'realestateagent', 'Agent immobilier
 
 RegisterServerEvent('esx_realestateagentjob:revoke')
 AddEventHandler('esx_realestateagentjob:revoke', function(property, owner)
-	TriggerEvent('esx_property:removeOwnedPropertyIdentifier', property, owner)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name == 'realestateagent' then
+		TriggerEvent('esx_property:removeOwnedPropertyIdentifier', property, owner)
+	else
+		print(('esx_realestateagentjob: %s attempted to revoke a property!'):format(xPlayer.identifier))
+	end
 end)
 
 RegisterServerEvent('esx_realestateagentjob:sell')
 AddEventHandler('esx_realestateagentjob:sell', function(target, property, price)
-	local xPlayer = ESX.GetPlayerFromId(target)
-	xPlayer.removeMoney(price)
+	local xPlayer, xTarget = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(target)
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
-		account.addMoney(price)
-	end)
+	if xPlayer.job.name == 'realestateagent' then
+		xTarget.removeMoney(price)
 
-	TriggerEvent('esx_property:setPropertyOwned', property, price, false, xPlayer.identifier)
+		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
+			account.addMoney(price)
+		end)
+	
+		TriggerEvent('esx_property:setPropertyOwned', property, price, false, xTarget.identifier)
+	else
+		print(('esx_realestateagentjob: %s attempted to sell a property!'):format(xPlayer.identifier))
+	end
 end)
 
 RegisterServerEvent('esx_realestateagentjob:rent')
@@ -31,7 +42,6 @@ end)
 
 ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(source, cb)
 	TriggerEvent('esx_ownedproperty:getOwnedProperties', function(properties)
-
 		local xPlayers  = ESX.GetPlayers()
 		local customers = {}
 
@@ -53,6 +63,5 @@ ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(sourc
 		end
 
 		cb(customers)
-
 	end)
 end)
