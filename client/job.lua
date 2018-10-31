@@ -420,7 +420,10 @@ function OpenVehicleSpawnerMenu()
 
 		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
 			for i=1, #vehicles, 1 do
-				table.insert(elements, {label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']', value = vehicles[i]})
+				table.insert(elements, {
+					label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']',
+					value = vehicles[i]
+				})
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
@@ -432,7 +435,7 @@ function OpenVehicleSpawnerMenu()
 				menu.close()
 
 				local vehicleProps = data.current.value
-				ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
+				ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 230.0, function(vehicle)
 					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 					local playerPed = PlayerPedId()
 					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
@@ -478,13 +481,14 @@ function OpenPharmacyMenu()
 		title		= _U('pharmacy_menu_title'),
 		align		= 'top-left',
 		elements = {
-			{label = _U('pharmacy_take') .. ' ' .. _('medikit'), value = 'medikit'},
-			{label = _U('pharmacy_take') .. ' ' .. _('bandage'), value = 'bandage'}
+			{label = _U('pharmacy_take', _U('medikit')), value = 'medikit'},
+			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
 		}
 	}, function(data, menu)
 		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)
 	end, function(data, menu)
 		menu.close()
+
 		CurrentAction		= 'pharmacy'
 		CurrentActionMsg	= _U('open_pharmacy')
 		CurrentActionData	= {}
@@ -526,7 +530,7 @@ AddEventHandler('esx_ambulancejob:heal', function(healType)
 
 	if healType == 'small' then
 		local health = GetEntityHealth(playerPed)
-		local newHealth = math.min(maxHealth , math.floor(health + maxHealth/8))
+		local newHealth = math.min(maxHealth, math.floor(health + maxHealth / 8))
 		SetEntityHealth(playerPed, newHealth)
 	elseif healType == 'big' then
 		SetEntityHealth(playerPed, maxHealth)
