@@ -1,5 +1,5 @@
 function CreateStatus(xPlayer, name, default, color, visible, tickCallback, clientAction)
-		
+
 	local self = {}
 
 	self.val          = default
