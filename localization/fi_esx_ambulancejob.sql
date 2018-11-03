@@ -28,4 +28,6 @@ INSERT INTO `items` (name, label, `limit`) VALUES
 	('medikit','Ensiapupakkaus', 5)
 ;
 
-ALTER TABLE `users` ADD `isDead` BIT(1) DEFAULT b'0'
+ALTER TABLE `users`
+	ADD `is_dead` TINYINT(1) NULL DEFAULT '0'
+;

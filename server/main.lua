@@ -183,10 +183,10 @@ RegisterServerEvent('esx_ambulancejob:firstSpawn')
 AddEventHandler('esx_ambulancejob:firstSpawn', function()
 	local _source    = source
 	local identifier = GetPlayerIdentifiers(_source)[1]
-	MySQL.Async.fetchScalar('SELECT isDead FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchScalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(isDead)
-		if isDead == 1 then
+		if isDead then
 			print(('esx_ambulancejob: %s attempted combat logging!'):format(identifier))
 			TriggerClientEvent('esx_ambulancejob:requestDeath', _source)
 		end
@@ -197,8 +197,7 @@ RegisterServerEvent('esx_ambulancejob:setDeathStatus')
 AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local identifier = GetPlayerIdentifiers(source)[1]
 
-	MySQL.Sync.execute("UPDATE users SET isDead=@isDead WHERE identifier = @identifier",
-	{
+	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
 		['@identifier'] = identifier,
 		['@isDead']     = isDead
 	})

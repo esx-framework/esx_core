@@ -296,7 +296,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 		DoScreenFadeOut(800)
 
 		while not IsScreenFadedOut() do
-			Citizen.Wait(0)
+			Citizen.Wait(50)
 		end
 
 		ESX.SetPlayerData('lastPosition', {
