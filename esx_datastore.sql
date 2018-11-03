@@ -15,5 +15,8 @@ CREATE TABLE `datastore_data` (
 	`owner` varchar(255),
 	`data` longtext,
 
+	INDEX index_datastore_name (`name`),
+	CONSTRAINT unique_datastore_owner_name UNIQUE (`owner`, `name`),
+
 	PRIMARY KEY (`id`)
 );
