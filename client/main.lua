@@ -65,7 +65,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 			local componentId = _components[i].componentId
 
 			if componentId == 0 then
-				value = GetPedPropIndex(playerPed,  _components[i].componentId)
+				value = GetPedPropIndex(playerPed, _components[i].componentId)
 			end
 
 			local data = {
@@ -94,11 +94,10 @@ function OpenMenu(submitCb, cancelCb, restrict)
 		camOffset = _components[1].camOffset
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'skin', {
-			title = _U('skin_menu'),
-			align = 'top-left',
+			title    = _U('skin_menu'),
+			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
-
 			TriggerEvent('skinchanger:getSkin', function(skin)
 				LastSkin = skin
 			end)
@@ -106,22 +105,9 @@ function OpenMenu(submitCb, cancelCb, restrict)
 			submitCb(data, menu)
 			DeleteSkinCam()
 		end, function(data, menu)
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'confirm_escape', {
-				title = _U('confirm_escape'),
-				align = 'top-left',
-				elements = {
-					{label = _U('no'),  value = 'no'},
-					{label = _U('yes'), value = 'yes'}
-				}
-			}, function(data2, menu2)
-				if data2.current.value == 'yes' then
-					menu.close()
-					DeleteSkinCam()
-					TriggerEvent('skinchanger:loadSkin', LastSkin)
-				end
-
-				menu2.close()
-			end)
+			menu.close()
+			DeleteSkinCam()
+			TriggerEvent('skinchanger:loadSkin', LastSkin)
 
 			if cancelCb ~= nil then
 				cancelCb(data, menu)
@@ -272,6 +258,7 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 
 		TriggerEvent('skinchanger:getSkin', function(skin)
 			TriggerServerEvent('esx_skin:save', skin)
+
 			if submitCb ~= nil then
 				submitCb(data, menu)
 			end
