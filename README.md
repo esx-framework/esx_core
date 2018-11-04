@@ -32,7 +32,7 @@ There is two types of accounts: shared and not shared.
 - None-shared accounts are created for every user in the server. They are created in db when player is loaded, Example: property black money
 
 ### `addon_account` database information
-You must create an account in the database
+An addon account must be configured in the database before using it. Don't forget to run a server restart afterwards (you can alternative restart the script and relog all clients)
 
 | `name`   | `label` | `shared` |
 | -------- | ------- | -------- |
