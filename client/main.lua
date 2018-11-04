@@ -306,7 +306,7 @@ RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
 	local coords	= GetEntityCoords(playerPed)
-	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
