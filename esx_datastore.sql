@@ -11,8 +11,8 @@ CREATE TABLE `datastore` (
 
 CREATE TABLE `datastore_data` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`owner` varchar(255),
+	`name` varchar(60) NOT NULL,
+	`owner` varchar(60),
 	`data` longtext,
 
 	INDEX index_datastore_name (`name`),
