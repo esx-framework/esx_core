@@ -10,7 +10,7 @@ Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local FirstSpawn, IsBusy = true, false
+local FirstSpawn, PlayerLoaded = true, false
 
 IsDead = false
 ESX = nil
@@ -25,12 +25,14 @@ Citizen.CreateThread(function()
 		Citizen.Wait(100)
 	end
 
+	PlayerLoaded = true
 	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
+	PlayerLoaded = true
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -42,9 +44,19 @@ AddEventHandler('playerSpawned', function()
 	IsDead = false
 
 	if FirstSpawn then
-		TriggerServerEvent('esx_ambulancejob:firstSpawn')
 		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
 		FirstSpawn = false
+
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+			if isDead and Config.AntiCombatLog then
+				while not PlayerLoaded do
+					Citizen.Wait(1000)
+				end
+
+				ESX.ShowNotification(_U('combatlog_message'))
+				RemoveItemsAfterRPDeath()
+			end
+		end)
 	end
 end)
 
@@ -66,7 +78,7 @@ end)
 
 function OnPlayerDeath()
 	IsDead = true
-	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 1)
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
 
 	StartDeathTimer()
 	StartDistressSignal()
@@ -226,7 +238,7 @@ function StartDeathTimer()
 end
 
 function RemoveItemsAfterRPDeath()
-	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
@@ -290,7 +302,7 @@ RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
 	local coords	= GetEntityCoords(playerPed)
-	TriggerServerEvent('esx_ambulancejob:setDeathStatus', 0)
+	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
@@ -320,15 +332,6 @@ AddEventHandler('esx_ambulancejob:revive', function()
 		StopScreenEffect('DeathFailOut')
 		DoScreenFadeIn(800)
 	end)
-end)
-
-
-RegisterNetEvent('esx_ambulancejob:requestDeath')
-AddEventHandler('esx_ambulancejob:requestDeath', function()
-	if Config.AntiCombatLog then
-		Citizen.Wait(5000)
-		SetEntityHealth(PlayerPedId(), 0)
-	end
 end)
 
 -- Load unloaded IPLs

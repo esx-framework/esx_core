@@ -1,4 +1,5 @@
 local HasAlreadyEnteredMarker, LastZone, CurrentAction, CurrentActionMsg, CurrentActionData = nil, nil, nil, '', {}
+local IsBusy = false
 
 function OpenAmbulanceActionsMenu()
 	local elements = {

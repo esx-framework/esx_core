@@ -52,6 +52,7 @@ Locales['sv'] = {
   ['distress_send'] = 'tryck ~b~[G]~s~ för att skicka nödsignal',
   ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
   ['distress_message'] = 'läkarvård krävs: medvetslös medborgare!',
+  ['combatlog_message'] = 'du har force-respawnats på grund av att du lämnat servern medans du var död',
   -- Revive
   ['revive_help'] = 'återuppliva en spelare',
   -- Item
