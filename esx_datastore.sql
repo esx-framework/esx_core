@@ -1,12 +1,11 @@
 USE `essentialmode`;
 
 CREATE TABLE `datastore` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
+	`name` varchar(60) NOT NULL,
 	`label` varchar(255) NOT NULL,
 	`shared` int(11) NOT NULL,
 
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`name`)
 );
 
 CREATE TABLE `datastore_data` (
