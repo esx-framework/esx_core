@@ -10,31 +10,24 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData              = {}
-local menuIsShowed            = false
-local hintIsShowed            = false
+local PlayerData = {}
+local menuIsShowed = false
+local hintIsShowed = false
 local hasAlreadyEnteredMarker = false
-local Blips                   = {}
-local JobBlips                = {}
+local Blips = {}
+local JobBlips = {}
+local isInMarker = false
+local isInPublicMarker = false
 
-local collectedItem           = nil
-local collectedQtty           = 0
-local isInMarker              = false
-local isInPublicMarker        = false
+local hintToDisplay = "no hint to display"
+local onDuty = false
+local spawner = 0
+local myPlate = {}
 
-local hintToDisplay           = "no hint to display"
-local onDuty                  = false
-local spawner                 = 0
-local myPlate                 = {}
-local isJobVehicleDestroyed   = false
+local vehicleObjInCaseofDrop = nil
+local vehicleInCaseofDrop = nil
 
-local cautionVehicleInCaseofDrop    = 0
-local maxCautionVehicleInCaseofDrop = 0
-local vehicleObjInCaseofDrop        = nil
-local vehicleInCaseofDrop           = nil
-local vehicleHashInCaseofDrop       = nil
-local vehicleMaxHealthInCaseofDrop  = nil
-local vehicleOldHealthInCaseofDrop  = nil
+local vehicleMaxHealth = nil
 
 ESX = nil
 
@@ -55,7 +48,6 @@ end)
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
-	TriggerServerEvent('esx_jobs:giveBackCautionInCaseOfDrop')
 	refreshBlips()
 end)
 
@@ -75,7 +67,6 @@ function OpenMenu()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
-
 		elseif data.current.value == 'job_wear' then
 			onDuty = true
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -129,11 +120,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 		end
 
 		if ESX.Game.IsSpawnPointClear(spawnPoint.Pos, 5.0) then
-			TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', zone.Caution)
-			cautionVehicleInCaseofDrop = zone.Caution
-			maxCautionVehicleInCaseofDrop = cautionVehicleInCaseofDrop
-
-			spawnVehicle(spawnPoint, vehicle)
+			spawnVehicle(spawnPoint, vehicle, zone.Caution)
 		else
 			ESX.ShowNotification(_U('spawn_blocked'))
 		end
@@ -146,37 +133,45 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehdelete" and w.Spawner == zone.Spawner then
 						local playerPed = PlayerPedId()
+
 						if IsPedInAnyVehicle(playerPed, false) then
-							local vehicle = GetVehiclePedIsIn(playerPed, 0)
+
+							local vehicle = GetVehiclePedIsIn(playerPed, false)
 							local plate = GetVehicleNumberPlateText(vehicle)
 							plate = string.gsub(plate, " ", "")
 							local driverPed = GetPedInVehicleSeat(vehicle, -1)
 
-							for i=1, #myPlate, 1 do
-								if myPlate[i] == plate and playerPed == driverPed then
-									TriggerServerEvent('esx_jobs:caution', "give_back", cautionVehicleInCaseofDrop, 0, 0)
-									DeleteVehicle(GetVehiclePedIsIn(playerPed, 0))
+							if playerPed == driverPed then
 
-									if w.Teleport ~= 0 then
-										SetEntityCoords(PlayerPedId(), w.Teleport.x, w.Teleport.y, w.Teleport.z)
+								for i=1, #myPlate, 1 do
+									if myPlate[i] == plate then
+
+										local vehicleHealth = GetVehicleEngineHealth(vehicleInCaseofDrop)
+										local giveBack = ESX.Math.Round(vehicleHealth / vehicleMaxHealth, 2)
+
+										TriggerServerEvent('esx_jobs:caution', "give_back", giveBack, 0, 0)
+										DeleteVehicle(GetVehiclePedIsIn(playerPed, false))
+
+										if w.Teleport ~= 0 then
+											ESX.Game.Teleport(playerPed, w.Teleport)
+										end
+
+										table.remove(myPlate, i)
+
+										if vehicleObjInCaseofDrop.HasCaution then
+											vehicleInCaseofDrop = nil
+											vehicleObjInCaseofDrop = nil
+											vehicleMaxHealth = nil
+										end
+
+										break
 									end
-
-									table.remove(myPlate, i)
-
-									if vehicleObjInCaseofDrop.HasCaution then
-										cautionVehicleInCaseofDrop = 0
-										maxCautionVehicleInCaseofDrop = 0
-										vehicleInCaseofDrop = nil
-										vehicleHashInCaseofDrop = nil
-										vehicleMaxHealthInCaseofDrop = nil
-										vehicleOldHealthInCaseofDrop = nil
-										vehicleObjInCaseofDrop = nil
-										TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', 0)
-									end
-
-									break
 								end
+
+							else
+								ESX.ShowNotification(_U('not_your_vehicle'))
 							end
+
 						end
 
 						looping = false
@@ -231,7 +226,6 @@ AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
 	onDuty = false
 	myPlate = {} -- loosing vehicle caution in case player changes job.
-	isJobVehicleDestroyed = false
 	spawner = 0
 	deleteBlips()
 	refreshBlips()
@@ -276,10 +270,10 @@ function refreshBlips()
 	end
 end
 
-function spawnVehicle(spawnPoint, vehicle)
-	hintToDisplay = "no hint to display"
+function spawnVehicle(spawnPoint, vehicle, vehicleCaution)
+	hintToDisplay = 'no hint to display'
 	hintIsShowed = false
-	TriggerServerEvent('esx_jobs:caution', "take", cautionVehicleInCaseofDrop, spawnPoint, vehicle)
+	TriggerServerEvent('esx_jobs:caution', 'take', vehicleCaution, spawnPoint, vehicle)
 end
 
 RegisterNetEvent('esx_jobs:spawnJobVehicle')
@@ -301,14 +295,11 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 		plate = string.gsub(plate, " ", "")
 
 		TaskWarpPedIntoVehicle(playerPed, spawnedVehicle, -1)
-		isJobVehicleDestroyed = false
 
 		if vehicle.HasCaution then
 			vehicleInCaseofDrop = spawnedVehicle
-			vehicleHashInCaseofDrop = vehicle.Hash
 			vehicleObjInCaseofDrop = vehicle
-			vehicleMaxHealthInCaseofDrop = GetEntityMaxHealth(spawnedVehicle)
-			vehicleOldHealthInCaseofDrop = vehicleMaxHealthInCaseofDrop
+			vehicleMaxHealth = GetVehicleEngineHealth(spawnedVehicle)
 		end
 	end)
 end)
@@ -317,6 +308,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
+
 		if hintIsShowed then
 			ESX.ShowHelpNotification(hintToDisplay)
 		else
@@ -367,18 +359,18 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		local coords      = GetEntityCoords(PlayerPedId())
-		local position    = nil
-		local zone        = nil
+		local coords   = GetEntityCoords(PlayerPedId())
+		local position = nil
+		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
-			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
 				isInPublicMarker = true
 				position = v.Teleport
 				zone = v
 				break
 			else
-				isInPublicMarker  = false
+				isInPublicMarker = false
 			end
 		end
 
@@ -450,21 +442,21 @@ Citizen.CreateThread(function()
 						local playerPed = PlayerPedId()
 
 						if IsPedInAnyVehicle(playerPed, false) then
-							local vehicle = GetVehiclePedIsIn(playerPed)
+							local vehicle = GetVehiclePedIsIn(playerPed, false)
 							local driverPed = GetPedInVehicleSeat(vehicle, -1)
-							local isVehicleOwner = false
 							local plate = GetVehicleNumberPlateText(vehicle)
 							plate = string.gsub(plate, " ", "")
 
-							for i=1, #myPlate, 1 do
-								if myPlate[i] == plate and playerPed == driverPed then
-									hintToDisplay  = _U('security_deposit', zone.Hint, cautionVehicleInCaseofDrop)
-									isVehicleOwner = true
-									break
-								end
-							end
+							if playerPed == driverPed then
 
-							if not isVehicleOwner then
+								for i=1, #myPlate, 1 do
+									if myPlate[i] == plate then
+										hintToDisplay = zone.Hint
+										break
+									end
+								end
+
+							else
 								hintToDisplay = _U('not_your_vehicle')
 							end
 						else
@@ -491,40 +483,6 @@ Citizen.CreateThread(function()
 					TriggerEvent('esx_jobs:hasExitedMarker', zone)
 				end
 			end
-		end
-	end
-end)
-
--- Vehicle caution
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		if vehicleInCaseofDrop ~= nil then
-			if onDuty and IsVehicleModel(vehicleInCaseofDrop, vehicleHashInCaseofDrop) then
-				local vehicleHealth = GetEntityHealth(vehicleInCaseofDrop)
-
-				if vehicleOldHealthInCaseofDrop ~= vehicleHealth then
-					local cautionValue = 0
-					vehicleOldHealthInCaseofDrop = vehicleHealth
-					if vehicleHealth == vehicleMaxHealthInCaseofDrop then
-						cautionValue = maxCautionVehicleInCaseofDrop
-						cautionVehicleInCaseofDrop = cautionValue
-					else
-						local healthPct = (vehicleHealth * 100) / vehicleMaxHealthInCaseofDrop
-						local damagePct = 100 - healthPct
-						cautionValue =  math.ceil(cautionVehicleInCaseofDrop - cautionVehicleInCaseofDrop * damagePct * 2.5 / 100)
-						if cautionValue < 0 then
-							cautionValue = 0
-						elseif cautionValue >= cautionVehicleInCaseofDrop then
-							cautionValue = cautionVehicleInCaseofDrop
-						end
-						cautionVehicleInCaseofDrop = cautionValue
-					end
-					TriggerServerEvent('esx_jobs:setCautionInCaseOfDrop', cautionValue)
-				end
-			end
-		else
-			Citizen.Wait(1000)
 		end
 	end
 end)

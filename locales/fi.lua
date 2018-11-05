@@ -8,7 +8,6 @@ Locales['fi'] = {
   ['bank_deposit_taken']        = 'vakuuden summa ~r~€%s~s~ otettiin sinulta.',
   ['foot_work']                 = 'sinun täytyy olla jalan, jotta voit työskennellä',
   ['next_point']                = 'mene seuraavaan pisteeseen kun olet valmis täällä',
-  ['security_deposit']          = '%s \nVakuus joka annetaan on ~g~€%s~s~',
   ['not_your_vehicle']          = 'tämä ei ole sinun ajoneuvo tai et ole sen kuski',
   ['in_vehicle']                = 'sinun täytyy olla ajoneuvossa',
   ['wrong_point']               = 'et ole oikeassa paikassa',

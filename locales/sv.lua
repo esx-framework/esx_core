@@ -8,7 +8,6 @@ Locales['sv'] = {
   ['bank_deposit_taken']        = 'en deposition på ~r~%s SEK~s~ togs från dig.',
   ['foot_work']                 = 'du måste vara till fots för att kunna arbeta.',
   ['next_point']                = 'gå till nästa steg efter att du har avslutat här.',
-  ['security_deposit']          = '%s \nDu kommer få tillbaka ~g~%s SEK~s~',
   ['not_your_vehicle']          = 'det här är inte ditt fordon eller så måste du vara föraren.',
   ['in_vehicle']                = 'du måste sitta i ett fordon!',
   ['wrong_point']               = 'du är inte på rätt leveranspunkt!',

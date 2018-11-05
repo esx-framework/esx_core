@@ -8,7 +8,6 @@ Locales['fr'] = {
   ['bank_deposit_taken']        = 'une caution de ~g~$%s~s~ vous a été prélevée.',
   ['foot_work']                 = 'vous devez être à pied pour pouvoir travailler.',
   ['next_point']                = 'rendez-vous à la prochaine étape après avoir complété celle-ci.',
-  ['security_deposit']          = '%s \nLa caution rendue sera de ~g~$%s~s~',
   ['not_your_vehicle']          = 'ce n\'est pas votre véhicule ou vous devez être conducteur.',
   ['in_vehicle']                = 'vous devez être dans un véhicule.',
   ['wrong_point']               = 'vous n\'êtes pas au bon point de livraison.',

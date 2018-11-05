@@ -8,7 +8,6 @@ Locales['br'] = {
   ['bank_deposit_taken']        = 'um depósito de segurança de ~g~$%s~s~ foi tirado de você.',
   ['foot_work']                 = 'você deve estar a pé para poder trabalhar.',
   ['next_point']                = 'vá para o próximo passo depois de completar este.',
-  ['security_deposit']          = '%s \nA segurança dada será ~g~$%s~s~',
   ['not_your_vehicle']          = 'este não é o seu veículo ou você deve ser um motorista.',
   ['in_vehicle']                = 'você deve estar em um veículo.',
   ['wrong_point']               = 'você não está no ponto certo de entrega.',

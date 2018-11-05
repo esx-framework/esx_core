@@ -1,45 +1,7 @@
 local PlayersWorking = {}
-local Players = {}
-
 ESX = nil
+
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
-AddEventHandler('esx:playerLoaded', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.set('caution', 0)
-end)
-
-AddEventHandler('esx:playerDropped', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	local caution = xPlayer.get('caution')
-	TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
-		account.addMoney(caution)
-	end)
-end)
-
-RegisterServerEvent('esx_jobs:setCautionInCaseOfDrop')
-AddEventHandler('esx_jobs:setCautionInCaseOfDrop', function(caution)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.set('caution', caution)
-end)
-
-RegisterServerEvent('esx_jobs:giveBackCautionInCaseOfDrop')
-AddEventHandler('esx_jobs:giveBackCautionInCaseOfDrop', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-
-	TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
-		local caution = account.money
-		account.removeMoney(caution)
-		if caution > 0 then
-			xPlayer.addAccountMoney('bank', caution)
-			TriggerClientEvent('esx:showNotification', _source, _U('bank_deposit_returned', caution))
-		end
-	end)
-end)
 
 local function Work(source, item)
 
@@ -117,13 +79,27 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if cautionType == "take" then
-		xPlayer.removeAccountMoney('bank', cautionAmount)
-		xPlayer.set('caution', cautionAmount)
-		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_taken', cautionAmount))
+		TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
+			xPlayer.removeAccountMoney('bank', cautionAmount)
+			account.addMoney(cautionAmount)
+		end)
+
+		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
 		TriggerClientEvent('esx_jobs:spawnJobVehicle', source, spawnPoint, vehicle)
 	elseif cautionType == "give_back" then
-		xPlayer.addAccountMoney('bank', cautionAmount)
-		xPlayer.set('caution', 0)
-		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', cautionAmount))
+
+		if cautionAmount > 1 then
+			print(('esx_jobs: %s is using cheat engine!'):format(xPlayer.identifier))
+			return
+		end
+
+		TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
+			local caution = account.money
+			local toGive = ESX.Math.Round(caution * cautionAmount)
+
+			xPlayer.addAccountMoney('bank', toGive)
+			account.removeMoney(toGive)
+			TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
+		end)
 	end
 end)
