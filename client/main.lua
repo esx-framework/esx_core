@@ -56,8 +56,6 @@ function SetUnsetAccessory(accessory)
 
 				if _accessory == "mask" then
 					mAccessory = 0
-				elseif _accessory == "glasses" then
-					mAccessory = 5
 				end
 
 				if skin[_accessory .. '_1'] == mAccessory then
