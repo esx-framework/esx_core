@@ -55,6 +55,7 @@ client_scripts {
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 
+	'shared/modules/math.lua',
 	'shared/functions.lua'
 }
 
