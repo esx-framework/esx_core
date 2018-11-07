@@ -132,6 +132,7 @@ AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 			table.insert(properties, {
 				id     = result[i].id,
 				name   = result[i].name,
+				label  = GetProperty(result[i].name).label,
 				price  = result[i].price,
 				rented = (result[i].rented == 1 and true or false),
 				owner  = result[i].owner
