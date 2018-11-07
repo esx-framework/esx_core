@@ -1,17 +1,26 @@
 Locales['de'] = {
   ['properties'] = 'Immobilien',
-  ['property'] = 'Immobilie',
-  ['clients'] = 'Kunden',
-  ['realtor'] = 'Makler',
-  ['amount_withdraw'] = 'Betrag zun abheben',
+  ['clients'] = 'kunden',
+  ['realtor'] = 'makler',
+  ['amount_withdraw'] = 'betrag zun abheben',
   ['invalid_amount'] = 'ungültiger Betrag',
-  ['press_to_access'] = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
-  ['property_actions'] = '{{Zuweisen [Verkaufen]|sell}} {{Zuweisen [Vermieten]|rent}} {{GPS|gps}}',
-  ['amount'] = 'Betrag',
-  ['no_play_near'] = 'Kein Spieler in der Nähe',
-  ['contract'] = '{{Revoke contract|revoke}} {{GPS|gps}}',
-  ['rent'] = 'Mieten',
-  ['sell'] = 'Verkaufen',
-  ['realtors'] = 'Makler',
+  ['press_to_access'] = 'drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
+  ['amount'] = 'betrag',
+  ['no_play_near'] = 'kein Spieler in der Nähe',
+  ['realtors'] = 'makler',
   ['boss_action'] = 'boss Actions',
+
+  -- Property menu
+  ['property_name'] = 'immobilie',
+  ['property_actions'] = 'actions',
+  ['property_actionbuttons'] = '{{Zuweisen [Verkaufen]|sell}} {{Zuweisen [Vermieten]|rent}} {{GPS|gps}}',
+
+  -- Customer menu
+  ['customer_client'] = 'kunden',
+  ['customer_property'] = 'immobilie',
+  ['customer_agreement'] = 'agreement',
+  ['customer_actions'] = 'actions',
+  ['customer_contractbuttons'] = '{{Revoke contract|revoke}} {{GPS|gps}}',
+  ['customer_rent'] = 'mieten',
+  ['customer_sell'] = 'verkaufen',
 }

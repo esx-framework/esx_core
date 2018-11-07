@@ -1,17 +1,26 @@
 Locales['sv'] = {
   ['properties'] = 'fastigheter',
-  ['property'] = 'fastighet',
   ['clients'] = 'klienter',
   ['realtor'] = 'mäklare',
   ['amount_withdraw'] = 'summa',
   ['invalid_amount'] = 'ogiltigt belopp',
   ['press_to_access'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',
-  ['property_actions'] = '{{Sälj fastighet|sell}} {Hyr ut fastighet|rent}} {{GPS|gps}}',
   ['amount'] = 'summa',
   ['no_play_near'] = 'det finns inga spelare i närheten!',
-  ['contract'] = '{{Återkalla kontrakt|revoke}} {{GPS|gps}}',
-  ['rent'] = 'hyra',
-  ['sell'] = 'sälj',
   ['realtors'] = 'mäklare',
   ['boss_action'] = 'chefmeny',
+
+  -- Property menu
+  ['property_name'] = 'fastighet',
+  ['property_actions'] = 'åtgärder',
+  ['property_actionbuttons'] = '{{Sälj fastighet|sell}} {{Hyr ut fastighet|rent}} {{GPS|gps}}',
+
+  -- Customer menu
+  ['customer_client'] = 'client',
+  ['customer_property'] = 'fastighet',
+  ['customer_agreement'] = 'överenskommelse',
+  ['customer_actions'] = 'åtgärder',
+  ['customer_contractbuttons'] = '{{Återkalla kontrakt|revoke}} {{GPS|gps}}',
+  ['customer_rent'] = 'hyrd',
+  ['customer_sell'] = 'såld',
 }

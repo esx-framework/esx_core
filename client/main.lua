@@ -54,6 +54,7 @@ function OpenRealestateAgentMenu()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'realestateagent', {
 		title    = _U('realtor'),
+		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
 
@@ -81,7 +82,7 @@ function OpenPropertyMenu()
 	TriggerEvent('esx_property:getProperties', function(properties)
 
 		local elements = {
-			head = {_U('property'), 'Actions'},
+			head = {_U('property_name'), _U('property_actions')},
 			rows = {}
 		}
 
@@ -90,7 +91,7 @@ function OpenPropertyMenu()
 				data = properties[i],
 				cols = {
 					properties[i].label,
-					_U('property_actions')
+					_U('property_actionbuttons')
 				}
 			})
 		end
@@ -174,7 +175,7 @@ end
 function OpenCustomersMenu()
 	ESX.TriggerServerCallback('esx_realestateagentjob:getCustomers', function(customers)
 		local elements = {
-			head = {'Client', _U('property'), 'Type', 'Actions'},
+			head = {_U('customer_client'), _U('customer_property'), _U('customer_agreement'), _U('customer_actions')},
 			rows = {}
 		}
 
@@ -184,8 +185,8 @@ function OpenCustomersMenu()
 				cols = {
 					customers[i].name,
 					customers[i].propertyLabel,
-					(customers[i].propertyRented and _U('rent') or _U('sell')),
-					_U('contract')
+					(customers[i].propertyRented and _U('customer_rent') or _U('customer_sell')),
+					_U('customer_contractbuttons')
 				}
 			})
 		end
