@@ -56,7 +56,8 @@ ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(sourc
 						propertyRented = properties[i].rented,
 						propertyId     = properties[i].id,
 						propertyPrice  = properties[i].price,
-						propertyName   = properties[i].name
+						propertyName   = properties[i].name,
+						propertyLabel  = properties[i].label
 					})
 				end
 			end

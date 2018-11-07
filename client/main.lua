@@ -63,7 +63,7 @@ function OpenRealestateAgentMenu()
 			OpenCustomersMenu()
 		elseif data.current.value == 'boss_actions' then
 			TriggerEvent('esx_society:openBossMenu', 'realestateagent', function(data, menu)
-			menu.close()
+				menu.close()
 			end)
 		end
 
@@ -183,7 +183,7 @@ function OpenCustomersMenu()
 				data = customers[i],
 				cols = {
 					customers[i].name,
-					customers[i].propertyName,
+					customers[i].propertyLabel,
 					(customers[i].propertyRented and _U('rent') or _U('sell')),
 					_U('contract')
 				}
