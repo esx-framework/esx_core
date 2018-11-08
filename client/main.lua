@@ -982,7 +982,7 @@ Citizen.CreateThread(function ()
 end)
 
 -- Key controls
-Citizen.CreateThread(function ()
+Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 
@@ -998,7 +998,7 @@ Citizen.CreateThread(function ()
 				elseif CurrentAction == 'reseller_menu' then
 					OpenResellerMenu()
 				elseif CurrentAction == 'give_back_vehicle' then
-					ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function (isRentedVehicle)
+					ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function(isRentedVehicle)
 						if isRentedVehicle then
 							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 							ESX.ShowNotification(_U('delivered'))
@@ -1007,7 +1007,7 @@ Citizen.CreateThread(function ()
 						end
 					end, GetVehicleNumberPlateText(CurrentActionData.vehicle))
 				elseif CurrentAction == 'resell_vehicle' then
-					ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function (isOwnedVehicle)
+					ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(isOwnedVehicle)
 						if isOwnedVehicle then
 							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 							ESX.ShowNotification(_U('vehicle_sold'))
@@ -1025,14 +1025,11 @@ Citizen.CreateThread(function ()
 	end
 end)
 
--- Load IPLS
-Citizen.CreateThread(function ()
-	RemoveIpl('v_carshowroom')
-	RemoveIpl('shutter_open')
-	RemoveIpl('shutter_closed')
-	RemoveIpl('shr_int')
-	RemoveIpl('csr_inMission')
-	RequestIpl('v_carshowroom')
-	RequestIpl('shr_int')
-	RequestIpl('shutter_closed')
+Citizen.CreateThread(function()
+	RequestIpl('shr_int') -- Load walls and floor
+
+	local interiorID = 7170
+	LoadInterior(interiorID)
+	EnableInteriorProp(interiorID, 'csr_beforeMission') -- Load large window
+	RefreshInterior(interiorID)
 end)
