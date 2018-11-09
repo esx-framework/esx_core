@@ -30,7 +30,7 @@ Locales['es'] = {
   ['fast_travel'] = 'Press ~INPUT_CONTEXT~ to fast travel.',
   ['open_pharmacy'] = 'Press ~INPUT_CONTEXT~ to open the pharmacy.',
   ['pharmacy_menu_title'] = 'Pharmacy',
-  ['pharmacy_take'] = 'take ~y~%s~s~',
+  ['pharmacy_take'] = 'take <span style="color:blue;">%s</span>',
   ['medikit'] = 'medikit',
   ['bandage'] = 'bandage',
   ['max_item'] = 'You are already carrying enough on yourself.',

@@ -30,7 +30,7 @@ Locales['br'] = {
   ['fast_travel'] = 'Aperte ~INPUT_CONTEXT~ para mover-se rapidamente.',
   ['open_pharmacy'] = 'Aperte ~INPUT_CONTEXT~ para abrir a farmácia.',
   ['pharmacy_menu_title'] = 'Farmácia',
-  ['pharmacy_take'] = 'tomar ~y~%s~s~',
+  ['pharmacy_take'] = 'tomar <span style="color:blue;">%s</span>',
   ['medikit'] = 'Seringa',
   ['bandage'] = 'Vendagem',
   ['max_item'] = 'você já carrega o suficiente sobre você.',

@@ -137,8 +137,8 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 	end
 
 	local xItem = xPlayer.getInventoryItem(itemName)
-
 	local count = 1
+
 	if xItem.limit ~= -1 then
 		count = xItem.limit - xItem.count
 	end
@@ -167,6 +167,7 @@ ESX.RegisterUsableItem('medikit', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem('medikit', 1)
+
 	TriggerClientEvent('esx_ambulancejob:heal', _source, 'big')
 	TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
 end)
@@ -175,6 +176,7 @@ ESX.RegisterUsableItem('bandage', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	xPlayer.removeInventoryItem('bandage', 1)
+
 	TriggerClientEvent('esx_ambulancejob:heal', _source, 'small')
 	TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
 end)

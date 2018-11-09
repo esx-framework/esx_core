@@ -23,14 +23,14 @@ Locales['sv'] = {
   -- Boss Menu
   ['boss_actions'] = 'chef meny',
   -- Misc
-  ['invalid_amount'] = '~r~ogiltig mängd',
+  ['invalid_amount'] = '~r~Ogiltig mängd',
   ['open_menu'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',
   ['deposit_amount'] = 'mängd att sätta in',
   ['money_withdraw'] = 'mängd att ta ut',
   ['fast_travel'] = 'tryck på ~INPUT_CONTEXT~ för att snabbresa.',
   ['open_pharmacy'] = 'tryck på ~INPUT_CONTEXT~ för att öppna apoteket.',
   ['pharmacy_menu_title'] = 'apotek',
-  ['pharmacy_take'] = 'ta ~y~%s~s~',
+  ['pharmacy_take'] = 'ta <span style="color:blue;">%s</span>',
   ['medikit'] = 'medicinkit',
   ['bandage'] = 'bandage',
   ['max_item'] = 'du har redan tillräckligt mycket på dig.',
