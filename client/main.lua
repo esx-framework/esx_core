@@ -10,7 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData              = {}
 local hasAlreadyEnteredMarker = false
 local lastZone                = nil
 local CurrentAction           = nil
@@ -25,26 +24,30 @@ Citizen.CreateThread(function ()
 		Citizen.Wait(0)
 	end
 
-	
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(100)
+	end
+
+	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function (xPlayer)
-	PlayerData = xPlayer
+	ESX.PlayerData = xPlayer
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function (job)
-	PlayerData.job = job
+	ESX.PlayerData.job = job
 end)
 
 function OpenBankActionsMenu()
 	local elements = {
 		{ label = _U('customers'), value = 'customers' },
-		{ label = _U('billing'),   value = 'billing' },
+		{ label = _U('billing'),   value = 'billing' }
 	}
 
-	if PlayerData.job.grade_name == 'boss' then
+	if ESX.PlayerData.job.grade_name == 'boss' then
 		table.insert(elements, { label = _U('boss_actions'), value = 'boss_actions' })
 	end
 
@@ -169,7 +172,7 @@ function OpenCustomersMenu()
 end
 
 AddEventHandler('esx_bankerjob:hasEnteredMarker', function (zone)
-	if zone == 'BankActions' and PlayerData.job ~= nil and PlayerData.job.name == 'banker' then
+	if zone == 'BankActions' and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'banker' then
 		CurrentAction     = 'bank_actions_menu'
 		CurrentActionMsg  = _U('press_input_context_to_open_menu')
 		CurrentActionData = {}
@@ -215,7 +218,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			if(PlayerData.job ~= nil and PlayerData.job.name == 'banker' and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'banker' and v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
@@ -227,7 +230,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 
-		if(PlayerData.job ~= nil and PlayerData.job.name == 'banker') then
+		if(ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'banker') then
 			local coords      = GetEntityCoords(PlayerPedId())
 			local isInMarker  = false
 			local currentZone = nil
@@ -262,14 +265,15 @@ Citizen.CreateThread(function ()
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'banker' then
+			if IsControlJustReleased(0, Keys['E']) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'banker' then
 				if CurrentAction == 'bank_actions_menu' then
 					OpenBankActionsMenu()
 				end
 
 				CurrentAction = nil
 			end
+		else
+			Citizen.Wait(500)
 		end
-
 	end
 end)
