@@ -1,7 +1,7 @@
 Locales['cs'] = {
 
-	['new_job'] = 'máte novou práci!',
-	['access_job_center'] = 'zmáčkněte ~INPUT_PICKUP~ pro přístup na ~b~Úřad práce~s~.',
-	['job_center'] = 'úřad práce',
+	['new_job'] = 'mate novou praci!',
+	['access_job_center'] = 'stiskni ~INPUT_PICKUP~ pro pristup na ~b~Urad prace~s~.',
+	['job_center'] = 'Urad prace',
 
 }
