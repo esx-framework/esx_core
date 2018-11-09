@@ -129,7 +129,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			-- Get job name, grade and last position
 			table.insert(tasks2, function(cb2)
 
-				MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `identifier` = @identifier', {
+				MySQL.Async.fetchAll('SELECT loadout, position FROM `users` WHERE `identifier` = @identifier', {
 					['@identifier'] = player.getIdentifier()
 				}, function(result)
 					userData.job['name']  = result[1].job
