@@ -26,7 +26,6 @@ git clone https://github.com/ESX-Org/esx_mecanojob [esx]/esx_mecanojob
 - Download https://github.com/ESX-Org/esx_mecanojob/archive/master.zip
 - Put it in the `[esx]` directory
 
-
 ## Installation
 - Import `esx_mecanojob.sql` in your database
 - If you want player management you have to set `Config.EnablePlayerManagement` to `true` in `config.lua`
