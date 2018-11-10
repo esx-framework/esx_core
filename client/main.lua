@@ -368,7 +368,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 
 			if data2.current.value == 'enter' then
 				TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
-				menu2.close()
+				ESX.UI.Menu.CloseAll()
 			elseif data2.current.value == 'leave' then
 				TriggerServerEvent('esx_property:removeOwnedProperty', data.current.value)
 			end
@@ -490,7 +490,10 @@ function OpenRoomMenu(property, owner)
 				local elements = {}
 
 				for i=1, #dressing, 1 do
-					table.insert(elements, {label = dressing[i], value = i})
+					table.insert(elements, {
+						label = dressing[i],
+						value = i
+					})
 				end
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing',
@@ -520,13 +523,15 @@ function OpenRoomMenu(property, owner)
 
 			ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
 				local elements = {}
-		
+
 				for i=1, #dressing, 1 do
-					table.insert(elements, {label = dressing[i].label, value = i})
+					table.insert(elements, {
+						label = dressing[i],
+						value = i
+					})
 				end
-				
-				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'remove_cloth',
-				{
+
+				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'remove_cloth', {
 					title    = property.label .. ' - ' .. _U('remove_cloth'),
 					align    = 'top-left',
 					elements = elements
@@ -534,8 +539,7 @@ function OpenRoomMenu(property, owner)
 					menu2.close()
 					TriggerServerEvent('esx_property:removeOutfit', data2.current.value)
 					ESX.ShowNotification(_U('removed_cloth'))
-				end,
-				function(data2, menu2)
+				end, function(data2, menu2)
 					menu2.close()
 				end)
 			end)
@@ -656,7 +660,7 @@ function OpenPlayerInventoryMenu(property, owner)
 
 		for i=1, #inventory.items, 1 do
 			local item = inventory.items[i]
-	
+
 			if item.count > 0 then
 				table.insert(elements, {
 					label = item.label .. ' x' .. item.count,
@@ -666,21 +670,15 @@ function OpenPlayerInventoryMenu(property, owner)
 			end
 		end
 
-		local playerPed  = PlayerPedId()
-		local weaponList = ESX.GetWeaponList()
+		for i=1, #inventory.weapons, 1 do
+			local weapon = inventory.weapons[i]
 
-		for i=1, #weaponList, 1 do
-			local weaponHash = GetHashKey(weaponList[i].name)
-			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-
-				table.insert(elements, {
-					label = weaponList[i].label .. ' [' .. ammo .. ']',
-					type  = 'item_weapon',
-					value = weaponList[i].name,
-					ammo  = ammo
-				})
-			end
+			table.insert(elements, {
+				label = weapon.label .. ' [' .. weapon.ammo .. ']',
+				type  = 'item_weapon',
+				value = weapon.name,
+				ammo  = weapon.ammo
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_inventory',

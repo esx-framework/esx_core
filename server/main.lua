@@ -212,10 +212,10 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 	if type == 'item_standard' then
 
 		local sourceItem = xPlayer.getInventoryItem(item)
-		
+
 		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 			local inventoryItem = inventory.getItem(item)
-			
+
 			-- is there enough in the property?
 			if count > 0 and inventoryItem.count >= count then
 			
@@ -380,7 +380,8 @@ ESX.RegisterServerCallback('esx_property:getPlayerInventory', function(source, c
 
 	cb({
 		blackMoney = blackMoney,
-		items      = items
+		items      = items,
+		weapons    = xPlayer.getLoadout()
 	})
 end)
 
@@ -388,8 +389,8 @@ ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		local count    = store.count('dressing')
-		local labels   = {}
+		local count  = store.count('dressing')
+		local labels = {}
 
 		for i=1, count, 1 do
 			local entry = store.get('dressing', i)
