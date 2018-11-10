@@ -5,7 +5,6 @@ description 'ESX Barber Shop'
 version '1.1.0'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/de.lua',
