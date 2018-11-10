@@ -18,20 +18,18 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-local HasPayed                = false
+local HasPaid                 = false
 
 Citizen.CreateThread(function()
-
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-
 end)
 
 function OpenShopMenu()
 
-	HasPayed = false
+	HasPaid = false
 
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 
@@ -43,45 +41,37 @@ function OpenShopMenu()
 				title = _U('valid_purchase'),
 				align = 'top-left',
 				elements = {
-					{label = _U('yes'), value = 'yes'},
-					{label = _U('no'), value = 'no'},
+					{label = _U('no'),  value = 'no'},
+					{label = _U('yes'), value = 'yes'}
 				}
 			},
 			function(data, menu)
-
 				menu.close()
 
 				if data.current.value == 'yes' then
 
 					ESX.TriggerServerCallback('esx_barbershop:checkMoney', function(hasEnoughMoney)
-
 						if hasEnoughMoney then
-
 							TriggerEvent('skinchanger:getSkin', function(skin)
 								TriggerServerEvent('esx_skin:save', skin)
 							end)
 
 							TriggerServerEvent('esx_barbershop:pay')
 
-							HasPayed = true
+							HasPaid = true
 						else
-
-							TriggerEvent('esx_skin:getLastSkin', function(skin)
-								TriggerEvent('skinchanger:loadSkin', skin)
+							ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+								TriggerEvent('skinchanger:loadSkin', skin) 
 							end)
 
 							ESX.ShowNotification(_U('not_enough_money'))
-						
 						end
-
 					end)
 
-				end
+				elseif data.current.value == 'no' then
 
-				if data.current.value == 'no' then
-
-					TriggerEvent('esx_skin:getLastSkin', function(skin)
-						TriggerEvent('skinchanger:loadSkin', skin)
+					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+						TriggerEvent('skinchanger:loadSkin', skin) 
 					end)
 
 				end
@@ -89,27 +79,20 @@ function OpenShopMenu()
 				CurrentAction     = 'shop_menu'
 				CurrentActionMsg  = _U('press_access')
 				CurrentActionData = {}
-
-			end,
-			function(data, menu)
-
+			end, function(data, menu)
 				menu.close()
 
 				CurrentAction     = 'shop_menu'
 				CurrentActionMsg  = _U('press_access')
 				CurrentActionData = {}
-
-			end
-		)
+			end)
 
 	end, function(data, menu)
-
 			menu.close()
 
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = _U('press_access')
 			CurrentActionData = {}
-
 	end, {
 		'beard_1',
 		'beard_2',
@@ -144,25 +127,20 @@ AddEventHandler('esx_barbershop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_barbershop:hasExitedMarker', function(zone)
-	
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 
-	if not HasPayed then
-
+	if not HasPaid then
 		TriggerEvent('esx_skin:getLastSkin', function(skin)
 			TriggerEvent('skinchanger:loadSkin', skin)
 		end)
-
 	end
-
 end)
 
 -- Create Blips
 Citizen.CreateThread(function()
-	
 	for i=1, #Config.Shops, 1 do
-		
+
 		local blip = AddBlipForCoord(Config.Shops[i].x, Config.Shops[i].y, Config.Shops[i].z)
 
 		SetBlipSprite (blip, 71)
@@ -174,39 +152,36 @@ Citizen.CreateThread(function()
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString(_U('barber_blip'))
 		EndTextCommandSetBlipName(blip)
-	end
 
+	end
 end)
 
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		
-		Wait(0)
-		
-		local coords = GetEntityCoords(GetPlayerPed(-1))
-		
+		Citizen.Wait(0)
+
+		local coords = GetEntityCoords(PlayerPedId())
+
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
-
 	end
 end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
+		Citizen.Wait(0)
 		
-		Wait(0)
-		
-		local coords      = GetEntityCoords(GetPlayerPed(-1))
+		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
 				isInMarker  = true
 				currentZone = k
 			end
@@ -222,34 +197,26 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_barbershop:hasExitedMarker', LastZone)
 		end
-
 	end
 end)
 
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			SetTextComponentFormat('STRING')
-			AddTextComponentString(CurrentActionMsg)
-			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
-			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 300 then
-				
+			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
 					OpenShopMenu()
 				end
 
 				CurrentAction = nil
-				GUI.Time      = GetGameTimer()
-				
 			end
-
+		else
+			Citizen.Wait(500)
 		end
-
 	end
 end)
