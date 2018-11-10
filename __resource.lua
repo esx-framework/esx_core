@@ -2,7 +2,7 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
 description 'ESX Barber Shop'
 
-version '1.0.1'
+version '1.1.0'
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
@@ -29,4 +29,7 @@ client_scripts {
 	'client/main.lua'
 }
 
-dependency 'es_extended'
+dependencies {
+	'es_extended',
+	'esx_skin'
+}
