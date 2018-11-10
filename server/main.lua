@@ -8,7 +8,6 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-
 		local dressing = store.get('dressing')
 
 		if dressing == nil then
@@ -21,7 +20,6 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 		})
 
 		store.set('dressing', dressing)
-
 	end)
 end)
 

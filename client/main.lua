@@ -84,7 +84,7 @@ function OpenShopMenu()
 						end)
 
 					else
-						TriggerEvent('esx_skin:getLastSkin', function(skin)
+						ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin)
 						end)
 
@@ -92,7 +92,7 @@ function OpenShopMenu()
 					end
 				end)
 			elseif data.current.value == 'no' then
-				TriggerEvent('esx_skin:getLastSkin', function(skin)
+				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 			end
