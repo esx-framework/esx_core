@@ -194,6 +194,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		return self.name
 	end
 
+	self.setName = function(newName)
+		self.name = newName
+	end
+
 	self.getLastPosition = function()
 		return self.lastPosition
 	end
