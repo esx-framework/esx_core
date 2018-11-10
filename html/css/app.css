@@ -1,11 +1,11 @@
 @font-face {
 	font-family: 'Pricedown';
-	src: url('../fonts/pdown.ttf')/* TTF file for CSS3 browsers */
+	src: url('../fonts/pdown.ttf')
 }
 
 @font-face {
 	font-family: 'bankgothic';
-	src: url('../fonts/bankgothic.ttf')/* TTF file for CSS3 browsers */
+	src: url('../fonts/bankgothic.ttf')
 }
 
 html {

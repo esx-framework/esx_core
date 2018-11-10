@@ -261,7 +261,7 @@ ESX.GetWeaponLabel = function(name)
 
 	for i=1, #weapons, 1 do
 		if weapons[i].name == name then
-		return weapons[i].label
+			return weapons[i].label
 		end
 	end
 end

@@ -160,6 +160,7 @@ AddEventHandler('esx:setAccountMoney', function(account)
 	for i=1, #ESX.PlayerData.accounts, 1 do
 		if ESX.PlayerData.accounts[i].name == account.name then
 			ESX.PlayerData.accounts[i] = account
+			break
 		end
 	end
 
@@ -179,7 +180,7 @@ RegisterNetEvent('esx:addInventoryItem')
 AddEventHandler('esx:addInventoryItem', function(item, count)
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].name == item.name then
-		ESX.PlayerData.inventory[i] = item
+			ESX.PlayerData.inventory[i] = item
 		end
 	end
 
@@ -194,7 +195,7 @@ RegisterNetEvent('esx:removeInventoryItem')
 AddEventHandler('esx:removeInventoryItem', function(item, count)
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].name == item.name then
-		ESX.PlayerData.inventory[i] = item
+			ESX.PlayerData.inventory[i] = item
 		end
 	end
 
@@ -407,7 +408,6 @@ AddEventHandler('esx:deleteVehicle', function()
 	end
 end)
 
-
 -- Pause menu disable HUD display
 if Config.EnableHud then
 	Citizen.CreateThread(function()
@@ -544,7 +544,7 @@ Citizen.CreateThread(function()
 
 		for k,v in pairs(Pickups) do
 
-			local distance = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  v.coords.x,  v.coords.y,  v.coords.z,  true)
+			local distance = GetDistanceBetweenCoords(coords.x, coords.y, coords.z, v.coords.x, v.coords.y, v.coords.z, true)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 			if distance <= 5.0 then
