@@ -275,7 +275,7 @@ function OpenPropertyMenu(property)
 	{
 		title    = property.label,
 		align    = 'top-left',
-		elements = elements,
+		elements = elements
 	}, function(data, menu)
 		menu.close()
 
@@ -387,7 +387,7 @@ function OpenGatewayAvailablePropertiesMenu(property)
 	for i=1, #gatewayProperties, 1 do
 		if not PropertyIsOwned(gatewayProperties[i]) then
 			table.insert(elements, {
-				label = gatewayProperties[i].label .. ' $' .. gatewayProperties[i].price,
+				label = gatewayProperties[i].label .. ' $' .. ESX.Math.GroupDigits(gatewayProperties[i].price),
 				value = gatewayProperties[i].name,
 				price = gatewayProperties[i].price
 			})

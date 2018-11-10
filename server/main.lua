@@ -24,9 +24,9 @@ function SetPropertyOwned(name, price, rented, owner)
 			TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true)
 
 			if rented then
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rented_for', price))
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rented_for', ESX.Math.GroupDigits(price)))
 			else
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('purchased_for', price))
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('purchased_for', ESX.Math.GroupDigits(price)))
 			end
 		end
 	end)
@@ -155,8 +155,9 @@ RegisterServerEvent('esx_property:rentProperty')
 AddEventHandler('esx_property:rentProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
+	local rent     = ESX.Math.Round(property.price / 200)
 
-	SetPropertyOwned(propertyName, property.price / 200, true, xPlayer.identifier)
+	SetPropertyOwned(propertyName, rent, true, xPlayer.identifier)
 end)
 
 RegisterServerEvent('esx_property:buyProperty')
@@ -428,7 +429,7 @@ function PayRent(d, h, m)
 			-- message player if connected
 			if xPlayer ~= nil then
 				xPlayer.removeAccountMoney('bank', result[i].price)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', result[i].price))
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
 			else -- pay rent either way
 				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier',
 				{
