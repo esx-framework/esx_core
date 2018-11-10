@@ -368,6 +368,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 
 			if data2.current.value == 'enter' then
 				TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
+				menu2.close()
 			elseif data2.current.value == 'leave' then
 				TriggerServerEvent('esx_property:removeOwnedProperty', data.current.value)
 			end
@@ -396,7 +397,7 @@ function OpenGatewayAvailablePropertiesMenu(property)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties',
 	{
-		title    = property.name.. ' - ' .. _U('available_properties'),
+		title    = property.name .. ' - ' .. _U('available_properties'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -405,7 +406,7 @@ function OpenGatewayAvailablePropertiesMenu(property)
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties_actions',
 		{
-			title    = property.name,
+			title    = property.label .. ' - ' .. _U('available_properties'),
 			align    = 'top-left',
 			elements = {
 				{label = _U('buy'), value = 'buy'},
@@ -561,20 +562,34 @@ function OpenRoomInventoryMenu(property, owner)
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
-			table.insert(elements, {label = _U('dirty_money', inventory.blackMoney), type = 'item_account', value = 'black_money'})
+			table.insert(elements, {
+				label = _U('dirty_money', ESX.Math.GroupDigits(inventory.blackMoney)),
+				type = 'item_account',
+				value = 'black_money'
+			})
 		end
 
 		for i=1, #inventory.items, 1 do
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+				table.insert(elements, {
+					label = item.label .. ' x' .. item.count,
+					type = 'item_standard',
+					value = item.name
+				})
 			end
 		end
 
 		for i=1, #inventory.weapons, 1 do
 			local weapon = inventory.weapons[i]
-			table.insert(elements, {label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. ']', type = 'item_weapon', value = weapon.name, ammo = weapon.ammo})
+
+			table.insert(elements, {
+				label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. ']',
+				type  = 'item_weapon',
+				value = weapon.name,
+				ammo  = weapon.ammo
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_inventory',
@@ -596,7 +611,7 @@ function OpenRoomInventoryMenu(property, owner)
 			else
 
 				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'get_item_count', {
-					title = _U('amount'),
+					title = _U('amount')
 				}, function(data2, menu)
 
 					local quantity = tonumber(data2.value)
@@ -632,13 +647,22 @@ function OpenPlayerInventoryMenu(property, owner)
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
-			table.insert(elements, {label = _U('dirty_money', inventory.blackMoney), type = 'item_account', value = 'black_money'})
+			table.insert(elements, {
+				label = _U('dirty_money', ESX.Math.GroupDigits(inventory.blackMoney)),
+				type  = 'item_account',
+				value = 'black_money'
+			})
 		end
 
 		for i=1, #inventory.items, 1 do
 			local item = inventory.items[i]
+	
 			if item.count > 0 then
-				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+				table.insert(elements, {
+					label = item.label .. ' x' .. item.count,
+					type  = 'item_standard',
+					value = item.name
+				})
 			end
 		end
 
@@ -649,7 +673,13 @@ function OpenPlayerInventoryMenu(property, owner)
 			local weaponHash = GetHashKey(weaponList[i].name)
 			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
 				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-				table.insert(elements, {label = weaponList[i].label .. ' [' .. ammo .. ']', type = 'item_weapon', value = weaponList[i].name, ammo = ammo})
+
+				table.insert(elements, {
+					label = weaponList[i].label .. ' [' .. ammo .. ']',
+					type  = 'item_weapon',
+					value = weaponList[i].name,
+					ammo  = ammo
+				})
 			end
 		end
 

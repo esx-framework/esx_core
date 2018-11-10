@@ -363,7 +363,7 @@ ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source,
 	end)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		local storeWeapons = store.get('weapons') or {}
+		weapons = store.get('weapons') or {}
 	end)
 
 	cb({
@@ -427,7 +427,7 @@ function PayRent(d, h, m)
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
 			-- message player if connected
-			if xPlayer ~= nil then
+			if xPlayer then
 				xPlayer.removeAccountMoney('bank', result[i].price)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
 			else -- pay rent either way
