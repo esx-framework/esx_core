@@ -69,21 +69,19 @@ RegisterCommand('news', function(source, args, rawCommand)
 end, false)
 
 function GetCharacterName(source)
-
-	MySQL.Async.fetchAll('SELECT firstname, lastname FROM users WHERE identifier = @identifier', {
+	-- fetch identity in sync
+	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
+	{
 		['@identifier'] = GetPlayerIdentifiers(source)[1]
-	}, function(result)
-		if result[1] ~= nil and result[1].firstname ~= nil and result[1].lastname ~= nil then
+	})
 
-			if Config.OnlyFirstname then
-				return result[1].firstname
-			else
-				return result[1].firstname .. ' ' .. result[1].lastname
-			end
-
+	if result[1] ~= nil and result[1].firstname ~= nil and result[1].lastname ~= nil then
+		if Config.OnlyFirstname then
+			return result[1].firstname
 		else
-			return GetPlayerName(source)
+			return result[1].firstname .. ' ' .. result[1].lastname
 		end
-	end)
-
+	else
+		return GetPlayerName(source)
+	end
 end
