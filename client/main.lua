@@ -24,11 +24,18 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 
-	ESX.TriggerServerCallback('esx_weashop:requestDBItems', function(ShopItems)
-		for k,v in pairs(ShopItems) do
+	ESX.TriggerServerCallback('esx_weashop:getShop', function(shopItems)
+		for k,v in pairs(shopItems) do
 			Config.Zones[k].Items = v
 		end
 	end)
+end)
+
+RegisterNetEvent('esx_weashop:sendShop')
+AddEventHandler('esx_weashop:sendShop', function(shopItems)
+	for k,v in pairs(shopItems) do
+		Config.Zones[k].Items = v
+	end
 end)
 
 RegisterNetEvent('esx_weashop:loadLicenses')
@@ -49,9 +56,13 @@ function OpenBuyLicenseMenu(zone)
 		}
 	}, function(data, menu)
 		if data.current.value == 'yes' then
-			TriggerServerEvent('esx_weashop:buyLicense')
+			ESX.TriggerServerCallback('esx_weashop:buyLicense', function(bought)
+				if bought then
+					menu.close()
+					OpenShopMenu(zone)
+				end
+			end)
 		end
-		menu.close()
 	end, function(data, menu)
 		menu.close()
 	end)
@@ -179,7 +190,7 @@ Citizen.CreateThread(function()
 						if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
 							OpenShopMenu(CurrentActionData.zone)
 						else
-							OpenBuyLicenseMenu()
+							OpenBuyLicenseMenu(CurrentActionData.zone)
 						end
 					else
 						OpenShopMenu(CurrentActionData.zone)

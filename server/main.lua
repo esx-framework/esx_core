@@ -1,6 +1,31 @@
 ESX = nil
+local shopItems = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+MySQL.ready(function()
+
+	MySQL.Async.fetchAll('SELECT * FROM weashops', {}, function(result)
+		for i=1, #result, 1 do
+			if shopItems[result[i].zone] == nil then
+				shopItems[result[i].zone] = {}
+			end
+
+			table.insert(shopItems[result[i].zone], {
+				item  = result[i].item,
+				price = result[i].price,
+				label = ESX.GetWeaponLabel(result[i].item)
+			})
+		end
+
+		TriggerClientEvent('esx_weashop:sendShop', -1, shopItems)
+	end)
+
+end)
+
+ESX.RegisterServerCallback('esx_weashop:getShop', function(source, cb)
+	cb(shopItems)
+end)
 
 function LoadLicenses(source)
 	TriggerEvent('esx_license:getLicenses', source, function(licenses)
@@ -14,42 +39,21 @@ if Config.LicenseEnable then
 	end)
 end
 
-RegisterServerEvent('esx_weashop:buyLicense')
-AddEventHandler('esx_weashop:buyLicense', function()
-	local _source = source
+ESX.RegisterServerCallback('esx_weashop:buyLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.LicensePrice then
 		xPlayer.removeMoney(Config.LicensePrice)
 
-		TriggerEvent('esx_license:addLicense', _source, 'weapon', function()
-			LoadLicenses(_source)
+		TriggerEvent('esx_license:addLicense', source, 'weapon', function()
+			LoadLicenses(source)
 		end)
+
+		cb(true)
 	else
-		TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
+		cb(false)
+		TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
 	end
-end)
-
-ESX.RegisterServerCallback('esx_weashop:requestDBItems', function(source, cb)
-	MySQL.Async.fetchAll('SELECT * FROM weashops', {}, function(result)
-		local shopItems  = {}
-
-		for i=1, #result, 1 do
-
-			if shopItems[result[i].zone] == nil then
-				shopItems[result[i].zone] = {}
-			end
-
-			table.insert(shopItems[result[i].zone], {
-				item  = result[i].item,
-				price = result[i].price,
-				label = ESX.GetWeaponLabel(result[i].item)
-			})
-
-		end
-
-		cb(shopItems)
-	end)
 end)
 
 RegisterServerEvent('esx_weashop:buyItem')
@@ -63,7 +67,7 @@ AddEventHandler('esx_weashop:buyItem', function(weaponName, zone)
 		return
 	end
 
-	if zone == "BlackWeashop" then
+	if zone == 'BlackWeashop' then
 
 		if xPlayer.getAccount('black_money').money >= price then
 			xPlayer.removeAccountMoney('black_money', price)
