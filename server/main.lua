@@ -58,12 +58,17 @@ AddEventHandler('esx_weashop:buyItem', function(weaponName, zone)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local price = GetPrice(weaponName, zone)
 
+	if xPlayer.hasWeapon(weaponName) then
+		TriggerClientEvent('esx:showNotification', _source, _U('already_owned'))
+		return
+	end
+
 	if zone == "BlackWeashop" then
 
 		if xPlayer.getAccount('black_money').money >= price then
 			xPlayer.removeAccountMoney('black_money', price)
 			xPlayer.addWeapon(weaponName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName)))
+			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName), price))
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_black'))
 		end
@@ -73,7 +78,7 @@ AddEventHandler('esx_weashop:buyItem', function(weaponName, zone)
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
 			xPlayer.addWeapon(weaponName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName)))
+			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName), price))
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
 		end
