@@ -51,8 +51,8 @@ end)
 Citizen.CreateThread(function()
 	if not Config.EnableBlips then return end
 
-	for i=1, #Config.ATMS, 1 do
-		local blip = AddBlipForCoord(Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z - Config.ZDiff)
+	for i=1, #Config.ATMLocations, 1 do
+		local blip = AddBlipForCoord(Config.ATMLocations[i].x, Config.ATMLocations[i].y, Config.ATMLocations[i].z - Config.ZDiff)
 		SetBlipSprite (blip, Config.BlipSprite)
 		SetBlipDisplay(blip, 4)
 		SetBlipScale  (blip, 0.9)
@@ -64,44 +64,40 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Render markers
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1)
-		local coords = GetEntityCoords(PlayerPedId())
-		for i=1, #Config.ATMS, 1 do
-			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.DrawDistance) then
-				DrawMarker(Config.MarkerType, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z - Config.ZDiff, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-			end
-		end
-	end
-end)
-
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		local coords = GetEntityCoords(PlayerPedId())
+		local canSleep = true
 		isInATMMarker = false
 
-		for i=1, #Config.ATMS, 1 do
-			if(GetDistanceBetweenCoords(coords, Config.ATMS[i].x, Config.ATMS[i].y, Config.ATMS[i].z, true) < Config.ZoneSize.x / 2) then
+		for k,v in pairs(Config.ATMLocations) do
+			if(GetDistanceBetweenCoords(coords, v.x, v.y, v.z, true) < Config.ZoneSize.x / 2) then
 				isInATMMarker = true
 				ESX.ShowHelpNotification(_U('press_e_atm'))
+				canSleep = false
 			end
 		end
 
 		if isInATMMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
+			canSleep = false
 		end
 	
 		if not isInATMMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
 			SetNuiFocus(false)
 			menuIsShowed = false
+			canSleep = false
+
 			SendNUIMessage({
 				hideAll = true
 			})
+		end
+
+		if canSleep then
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -109,27 +105,28 @@ end)
 -- Menu interactions
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Citizen.Wait(10)
+
 		if menuIsShowed then
 			DisableControlAction(0, 1,   true) -- LookLeftRight
 			DisableControlAction(0, 2,   true) -- LookUpDown
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-		else
-			if IsControlJustReleased(0, Keys['E']) and isInATMMarker and IsPedOnFoot(PlayerPedId()) then
-				menuIsShowed = true
-				ESX.TriggerServerCallback('esx:getPlayerData', function(data)
-					SendNUIMessage({
-						showMenu = true,
-						player = {
-							money = data.money,
-							accounts = data.accounts
-						}
-					})
-				end)
-				-- Open UI and display Native Cursor
-				SetNuiFocus(true, true)
-			end
+		elseif IsControlJustReleased(0, Keys['E']) and isInATMMarker and IsPedOnFoot(PlayerPedId()) then
+			menuIsShowed = true
+			ESX.TriggerServerCallback('esx:getPlayerData', function(data)
+				SendNUIMessage({
+					showMenu = true,
+					player = {
+						money = data.money,
+						accounts = data.accounts
+					}
+				})
+			end)
+
+			SetNuiFocus(true, true)
+		elseif (not isInATMMarker and not menuIsShowed) then
+			Citizen.Wait(500)
 		end
 	end
 end)
