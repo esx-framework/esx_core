@@ -23,7 +23,7 @@ Citizen.CreateThread(function()
 			action    = 'openMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 
 		local timeoutId = ESX.SetTimeout(200, function()
@@ -41,7 +41,7 @@ Citizen.CreateThread(function()
 			action    = 'closeMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 
 		for k,v in pairs(OpenedMenus) do
@@ -68,7 +68,7 @@ Citizen.CreateThread(function()
 			if tonumber(data.value) ~= nil then
 
 				-- Round float values
-				data.value = round(tonumber(data.value))
+				data.value = ESX.Math.Round(tonumber(data.value))
 
 				-- Check for negative value
 				if tonumber(data.value) <= 0 then
@@ -128,11 +128,9 @@ Citizen.CreateThread(function()
 				DisableControlAction(0, 15, true) -- WeaponWheelPrev
 				DisableControlAction(0, 16, true) -- SelectNextWeapon
 				DisableControlAction(0, 17, true) -- SelectPrevWeapon
+			else
+				Citizen.Wait(500)
 			end
 		end
 	end)
-
-	function round(x)
-		return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
-	end
 end)

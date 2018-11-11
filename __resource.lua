@@ -19,3 +19,5 @@ files {
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf'
 }
+
+dependency 'es_extended'
