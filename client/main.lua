@@ -125,21 +125,19 @@ AddEventHandler('esx_status:setDisplay', function(val)
 end)
 
 -- Pause menu disable hud display
-if ESX.GetConfig().EnableHud then
-	Citizen.CreateThread(function()
-		while true do
-			Citizen.Wait(300)
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(300)
 
-			if IsPauseMenuActive() and not isPaused then
-				isPaused = true
-				TriggerEvent('esx_status:setDisplay', 0.0)
-			elseif not IsPauseMenuActive() and isPaused then
-				isPaused = false 
-				TriggerEvent('esx_status:setDisplay', 0.5)
-			end
+		if IsPauseMenuActive() and not isPaused then
+			isPaused = true
+			TriggerEvent('esx_status:setDisplay', 0.0)
+		elseif not IsPauseMenuActive() and isPaused then
+			isPaused = false 
+			TriggerEvent('esx_status:setDisplay', 0.5)
 		end
-	end)
-end
+	end
+end)
 
 -- Loaded event
 Citizen.CreateThread(function()
