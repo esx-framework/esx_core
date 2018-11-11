@@ -211,12 +211,11 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function (source
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. society, function (account)
 		if account.money >= vehicleData.price then
-
 			account.removeMoney(vehicleData.price)
 			MySQL.Async.execute('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (@vehicle, @price)',
 			{
 				['@vehicle'] = vehicleData.model,
-				['@price']   = vehicleData.price,
+				['@price']   = vehicleData.price
 			})
 
 			cb(true)
@@ -317,7 +316,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function (source, 
 				['@price']   = basePrice
 			})
 
-			MySQL.Async.execute('DELETE FROM rented_vehicles WHERE plate = @plate',{
+			MySQL.Async.execute('DELETE FROM rented_vehicles WHERE plate = @plate', {
 				['@plate'] = plate
 			})
 
@@ -329,7 +328,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function (source, 
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, price)
+ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, price) -- todo: remove price
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function (result)
@@ -346,10 +345,14 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 				-- does the owner match?
 				if result[1] ~= nil then
+
+					-- todo: does model match?
 					xPlayer.addMoney(price)
 					RemoveOwnedVehicle(plate)
 					cb(true)
+
 				else
+
 					if xPlayer.job.grade_name == 'boss' then
 						MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate',
 						{
@@ -368,6 +371,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 						cb(false)
 					end
 				end
+
 			end)
 		end
 	end)
