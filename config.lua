@@ -1,7 +1,8 @@
 Config              = {}
-Config.ZoneSize     = {x = 3.0, y = 3.0, z = 0.3}
+
 Config.ZDiff        = 2.0
 Config.BlipSprite   = 431
+
 Config.Locale       = 'fr'
 
 Config.EnableBlips = false -- for some reason ATM blips are extremly buggy and will bug out the map
