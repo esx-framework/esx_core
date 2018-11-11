@@ -70,12 +70,12 @@ end, false)
 
 function GetCharacterName(source)
 	-- fetch identity in sync
-	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
+	local result = MySQL.Sync.fetchAll('SELECT firstname, lastname FROM users WHERE identifier = @identifier',
 	{
 		['@identifier'] = GetPlayerIdentifiers(source)[1]
 	})
 
-	if result[1] ~= nil and result[1].firstname ~= nil and result[1].lastname ~= nil then
+	if result[1] and result[1].firstname and result[1].lastname then
 		if Config.OnlyFirstname then
 			return result[1].firstname
 		else
