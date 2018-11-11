@@ -87,10 +87,10 @@ AddEventHandler('esx_weashop:buyItem', function(weaponName, zone)
 end)
 
 function GetPrice(weaponName, zone)
-	local result = MySQL.Sync.fetchAll('SELECT 1 FROM weashops WHERE zone = @zone AND item = @item', {
+	local result = MySQL.Sync.fetchAll('SELECT price FROM weashops WHERE zone = @zone AND item = @item', {
 		['@zone'] = zone,
 		['@item'] = weaponName
 	})
-	
+
 	return result[1].price
 end
