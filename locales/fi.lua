@@ -1,6 +1,6 @@
 Locales['fi'] = {
   -- Inventory
-  ['cash'] = 'käteinen $%s',
+  ['cash'] = 'käteinen',
   ['inventory'] = 'reppu',
   ['use'] = 'käytä',
   ['give'] = 'anna',
@@ -74,6 +74,7 @@ Locales['fi'] = {
   ['chat_clear_all'] = 'tyhjennä chatti kaikilta',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_currency'] = '$%s',
   -- Weapons
   ['weapon_knife'] = 'veitsi',
   ['weapon_nightstick'] = 'pamppu',

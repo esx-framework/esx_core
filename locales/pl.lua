@@ -1,6 +1,6 @@
 Locales['pl'] = {
   -- Inventory
-  ['cash'] = 'gotówka $%s',
+  ['cash'] = 'gotówka',
   ['inventory'] = 'ekwipunek',
   ['use'] = 'użyj',
   ['give'] = 'daj',
@@ -71,6 +71,7 @@ Locales['pl'] = {
   ['disconnect'] = 'odłącz się od serwera',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_currency'] = '$%s',
   -- Weapons
   ['weapon_knife'] = 'nóż',
   ['weapon_nightstick'] = 'pałka',

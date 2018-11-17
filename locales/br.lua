@@ -1,6 +1,6 @@
 Locales['br'] = {
   -- Inventory
-  ['cash'] = 'efectivo $%s',
+  ['cash'] = 'efectivo',
   ['inventory'] = 'inventario',
   ['use'] = 'usar',
   ['give'] = 'dar',
@@ -70,6 +70,7 @@ Locales['br'] = {
   ['chat_clear_all'] = 'clear the chat for everyone',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_currency'] = '$%s',
   -- Weapons
   ['weapon_knife'] = 'faca',
   ['weapon_nightstick'] = 'cacetete',

@@ -1,6 +1,6 @@
 Locales['cs'] = {
   -- Inventory
-  ['cash'] = 'hotovost $%s',
+  ['cash'] = 'hotovost',
   ['inventory'] = 'inventář',
   ['use'] = 'použít',
   ['give'] = 'dát',
@@ -74,6 +74,7 @@ Locales['cs'] = {
   ['chat_clear_all'] = 'vyčistit chat pro všechny',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_currency'] = '$%s',
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',

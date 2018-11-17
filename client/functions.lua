@@ -997,8 +997,10 @@ ESX.ShowInventory = function()
 	local elements  = {}
 
 	if ESX.PlayerData.money > 0 then
+		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.money))
+
 		table.insert(elements, {
-			label     = _U('cash', ESX.PlayerData.money),
+			label     = ('%s: <span style="color:green;">%s</span>'):format(_U('cash'), formattedMoney),
 			count     = ESX.PlayerData.money,
 			type      = 'item_money',
 			value     = 'money',
@@ -1010,8 +1012,10 @@ ESX.ShowInventory = function()
 
 	for i=1, #ESX.PlayerData.accounts, 1 do
 		if ESX.PlayerData.accounts[i].money > 0 then
+			local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+
 			table.insert(elements, {
-				label     = ESX.PlayerData.accounts[i].label .. ' $' .. ESX.PlayerData.accounts[i].money,
+				label     = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
 				count     = ESX.PlayerData.accounts[i].money,
 				type      = 'item_account',
 				value     = ESX.PlayerData.accounts[i].name,
@@ -1042,7 +1046,7 @@ ESX.ShowInventory = function()
 		if HasPedGotWeapon(playerPed, weaponHash, false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
 			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 			table.insert(elements, {
-				label     = Config.Weapons[i].label .. ' x1 [' .. ammo .. ']',
+				label     = Config.Weapons[i].label .. ' [' .. ammo .. ']',
 				count     = 1,
 				type      = 'item_weapon',
 				value     = Config.Weapons[i].name,

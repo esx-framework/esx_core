@@ -32,7 +32,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 			})
 
 			ESX.UI.HUD.UpdateElement('account_' .. xPlayer.accounts[i].name, {
-				money = xPlayer.accounts[i].money
+				money = ESX.Math.GroupDigits(xPlayer.accounts[i].money)
 			})
 		end
 
@@ -166,7 +166,7 @@ AddEventHandler('esx:setAccountMoney', function(account)
 
 	if Config.EnableHud then
 		ESX.UI.HUD.UpdateElement('account_' .. account.name, {
-			money = account.money
+			money = ESX.Math.GroupDigits(account.money)
 		})
 	end
 end)

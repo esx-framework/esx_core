@@ -1,6 +1,6 @@
 Locales['sv'] = {
   -- Inventory
-  ['cash'] = 'kontanter %s SEK',
+  ['cash'] = 'kontanter',
   ['inventory'] = 'mitt förråd',
   ['use'] = 'använd',
   ['give'] = 'ge',
@@ -74,6 +74,7 @@ Locales['sv'] = {
   ['chat_clear_all'] = 'töm chatten för alla',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_currency'] = '%s SEK',
   -- Weapons
   ['weapon_knife'] = 'kniv',
   ['weapon_nightstick'] = 'batong',
