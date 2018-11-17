@@ -76,56 +76,6 @@ AddEventHandler('playerSpawned', function()
 	isDead = false
 end)
 
-AddEventHandler('baseevents:onPlayerDied', function(killerType, deathCoords)
-	local playerPed = PlayerPedId()
-
-	local data = {
-		killed      = false,
-		killerType  = killerType,
-		deathCoords = deathCoords,
-		deathCause  = GetPedCauseOfDeath(playerPed)
-	}
-
-	TriggerEvent('esx:onPlayerDeath', data)
-	TriggerServerEvent('esx:onPlayerDeath', data)
-end)
-
-AddEventHandler('baseevents:onPlayerKilled', function(killerId, data)
-	local playerPed = PlayerPedId()
-	local killer    = GetPlayerFromServerId(killerId)
-
-	if NetworkIsPlayerActive(killer) then
-		local victimCoords = data.killerpos
-		local weaponHash   = data.weaponhash
-
-		data.killerpos  = nil
-		data.weaponhash = nil
-
-		local killerPed    = GetPlayerPed(killer)
-		local killerCoords = GetEntityCoords(killerPed)
-		local distance     = GetDistanceBetweenCoords(victimCoords[1], victimCoords[2], victimCoords[3], killerCoords, false)
-
-		table.insert(data, {
-			victimCoords = victimCoords,
-			weaponHash   = weaponHash,
-			deathCause   = GetPedCauseOfDeath(playerPed),
-			killed       = true,
-			killerId     = killerId,
-			killerCoords = { table.unpack(killerCoords) },
-			distance     = ESX.Round(distance)
-		})
-
-	else
-		table.insert(data, {
-			killed     = false,
-			deathCause = GetPedCauseOfDeath(playerPed)
-		})
-	end
-
-	TriggerEvent('esx:onPlayerDeath', data)
-	TriggerServerEvent('esx:onPlayerDeath', data)
-end)
-
 AddEventHandler('esx:onPlayerDeath', function()
 	isDead = true
 end)

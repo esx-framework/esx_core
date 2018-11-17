@@ -52,6 +52,7 @@ client_scripts {
 	'client/wrapper.lua',
 	'client/main.lua',
 
+	'client/modules/death.lua',
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 
@@ -91,6 +92,5 @@ server_exports {
 dependencies {
 	'essentialmode',
 	'mysql-async',
-	'async',
-	'baseevents'
+	'async'
 }

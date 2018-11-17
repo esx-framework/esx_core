@@ -63,8 +63,6 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 - Configure your `server.cfg` to look like this
 
 ```
-start baseevents
-
 start mysql-async
 start essentialmode
 start esplugin_mysql
