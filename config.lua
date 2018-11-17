@@ -5,12 +5,13 @@ Config.Color          = { r = 0, g = 128, b = 255 }
 Config.Type           = 1
 Config.Locale         = 'fr'
 Config.EnableLicense  = true -- only turn this on if you are using esx_license
+
 Config.LicensePrice   = 5000
 
 Config.Zones = {
 
 	GunShop = {
-		legal = 0,
+		legal = true,
 		Items = {},
 		Pos   = {
 			{ x = -662.180,   y = -934.961,   z = 20.829 },
@@ -27,7 +28,7 @@ Config.Zones = {
 	},
 
 	BlackWeashop = {
-		legal = 1,
+		legal = false,
 		Items = {},
 		Pos   = {
 			{ x = -1306.239,   y = -394.018,  z = 35.695 },

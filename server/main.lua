@@ -27,18 +27,6 @@ ESX.RegisterServerCallback('esx_weashop:getShop', function(source, cb)
 	cb(shopItems)
 end)
 
-function LoadLicenses(source)
-	TriggerEvent('esx_license:getLicenses', source, function(licenses)
-		TriggerClientEvent('esx_weashop:loadLicenses', source, licenses)
-	end)
-end
-
-if Config.LicenseEnable then
-	AddEventHandler('esx:playerLoaded', function(source)
-		LoadLicenses(source)
-	end)
-end
-
 ESX.RegisterServerCallback('esx_weashop:buyLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -46,10 +34,8 @@ ESX.RegisterServerCallback('esx_weashop:buyLicense', function(source, cb)
 		xPlayer.removeMoney(Config.LicensePrice)
 
 		TriggerEvent('esx_license:addLicense', source, 'weapon', function()
-			LoadLicenses(source)
+			cb(true)
 		end)
-
-		cb(true)
 	else
 		cb(false)
 		TriggerClientEvent('esx:showNotification', source, _U('not_enough'))

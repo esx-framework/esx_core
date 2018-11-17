@@ -16,7 +16,6 @@ local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
-local Licenses                = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -35,13 +34,6 @@ RegisterNetEvent('esx_weashop:sendShop')
 AddEventHandler('esx_weashop:sendShop', function(shopItems)
 	for k,v in pairs(shopItems) do
 		Config.Zones[k].Items = v
-	end
-end)
-
-RegisterNetEvent('esx_weashop:loadLicenses')
-AddEventHandler('esx_weashop:loadLicenses', function(licenses)
-	for i = 1, #licenses, 1 do
-		Licenses[licenses[i].type] = true
 	end
 end)
 
@@ -112,7 +104,7 @@ end)
 -- Create Blips
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
-		if v.legal==0 then
+		if v.legal then
 			for i = 1, #v.Pos, 1 do
 				local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
 
@@ -188,12 +180,14 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
-					if Config.LicenseEnable then
-						if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
-							OpenShopMenu(CurrentActionData.zone)
-						else
-							OpenBuyLicenseMenu(CurrentActionData.zone)
-						end
+					if Config.LicenseEnable and Config.Zones[CurrentActionData.zone].legal then
+						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
+							if hasWeaponLicense then
+								OpenShopMenu(CurrentActionData.zone)
+							else
+								OpenBuyLicenseMenu(CurrentActionData.zone)
+							end
+						end, GetPlayerServerId(PlayerId()), 'weapon')
 					else
 						OpenShopMenu(CurrentActionData.zone)
 					end
