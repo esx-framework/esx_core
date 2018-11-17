@@ -1,33 +1,33 @@
-# esx_weashops
+# esx_weaponshop
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_weashops
+fvm install --save --folder=esx esx-org/esx_weaponshop
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_weashops.git [esx]/esx_weashops
+git clone https://github.com/ESX-Org/esx_weaponshop.git [esx]/esx_weaponshop
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_weashops/archive/master.zip
+- Download https://github.com/ESX-Org/esx_weaponshop/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation
-- Import `esx_weashops.sql` in your database
+- Import `esx_weaponshop.sql` in your database
 - Add this to your `server.cfg`:
 
 ```
-start esx_weashops
+start esx_weaponshop
 ```
 
 # Legal
 ### License
-esx_weashops - Legal and illegal weapon shops
+esx_weaponshop - Legal and illegal weapon shops
 
 Copyright (C) 2015-2018 Jérémie N'gadi
 

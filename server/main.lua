@@ -18,16 +18,16 @@ MySQL.ready(function()
 			})
 		end
 
-		TriggerClientEvent('esx_weashop:sendShop', -1, shopItems)
+		TriggerClientEvent('esx_weaponshop:sendShop', -1, shopItems)
 	end)
 
 end)
 
-ESX.RegisterServerCallback('esx_weashop:getShop', function(source, cb)
+ESX.RegisterServerCallback('esx_weaponshop:getShop', function(source, cb)
 	cb(shopItems)
 end)
 
-ESX.RegisterServerCallback('esx_weashop:buyLicense', function(source, cb)
+ESX.RegisterServerCallback('esx_weaponshop:buyLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.LicensePrice then
@@ -42,8 +42,8 @@ ESX.RegisterServerCallback('esx_weashop:buyLicense', function(source, cb)
 	end
 end)
 
-RegisterServerEvent('esx_weashop:buyItem')
-AddEventHandler('esx_weashop:buyItem', function(weaponName, zone)
+RegisterServerEvent('esx_weaponshop:buyItem')
+AddEventHandler('esx_weaponshop:buyItem', function(weaponName, zone)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local price = GetPrice(weaponName, zone)
