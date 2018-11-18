@@ -22,7 +22,7 @@ es_extended is a roleplay framework for FiveM. It is developed on top of [Essent
 
 ### Requirements
 This order also applies in the startup order.
-- Base events
+
 - [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
 - [essentialmode](https://github.com/kanersps/essentialmode)
 - [esplugin_mysql](https://github.com/kanersps/esplugin_mysql)
