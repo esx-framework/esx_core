@@ -42,7 +42,7 @@ function OpenShopMenu(zone)
 		end
 
 		table.insert(elements, {
-			label      = item.label .. ' - <span style="color: green;">$' .. item.price .. '</span>',
+			label      = item.label .. ' - <span style="color: green;">$' .. ESX.Math.GroupDigits(item.price) .. '</span>',
 			label_real = item.label,
 			item       = item.item,
 			price      = item.price,

@@ -20,20 +20,24 @@ MySQL.ready(function()
 	end
 
 	for i=1, #shopResult, 1 do
-		if ShopItems[shopResult[i].store] == nil then
-			ShopItems[shopResult[i].store] = {}
-		end
+		if itemInformation[shopResult[i].item] then
+			if ShopItems[shopResult[i].store] == nil then
+				ShopItems[shopResult[i].store] = {}
+			end
 
-		if itemInformation[shopResult[i].item].limit == -1 then
-			itemInformation[shopResult[i].item].limit = 30
-		end
+			if itemInformation[shopResult[i].item].limit == -1 then
+				itemInformation[shopResult[i].item].limit = 30
+			end
 
-		table.insert(ShopItems[shopResult[i].store], {
-			label = itemInformation[shopResult[i].item].label,
-			item  = shopResult[i].item,
-			price = shopResult[i].price,
-			limit = itemInformation[shopResult[i].item].limit
-		})
+			table.insert(ShopItems[shopResult[i].store], {
+				label = itemInformation[shopResult[i].item].label,
+				item  = shopResult[i].item,
+				price = shopResult[i].price,
+				limit = itemInformation[shopResult[i].item].limit
+			})
+		else
+			print(('esx_shops: invalid item "%s" found!'):format(shopResult[i].item))
+		end
 	end
 end)
 
@@ -47,7 +51,7 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
-	amount = ESX.Round(amount)
+	amount = ESX.Math.Round(amount)
 
 	-- is the player trying to exploit?
 	if amount < 0 then
@@ -77,10 +81,10 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 		else
 			xPlayer.removeMoney(price)
 			xPlayer.addInventoryItem(itemName, amount)
-			TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, price))
+			TriggerClientEvent('esx:showNotification', _source, _U('bought', amount, itemLabel, ESX.Math.GroupDigits(price)))
 		end
 	else
 		local missingMoney = price - xPlayer.getMoney()
-		TriggerClientEvent('esx:showNotification', _source, _U('not_enough', missingMoney))
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough', ESX.Math.GroupDigits(missingMoney)))
 	end
 end)
