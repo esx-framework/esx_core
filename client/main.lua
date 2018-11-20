@@ -521,6 +521,7 @@ Citizen.CreateThread(function()
 	while true do
 
 		Citizen.Wait(1000)
+
 		if ESX ~= nil and ESX.PlayerLoaded and PlayerSpawned then
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
@@ -535,7 +536,6 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(1000)
 
 		local playerPed = PlayerPedId()

@@ -215,6 +215,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					for j=1, #result, 1 do
 						if Config.Accounts[i] == result[j].name then
 							found = true
+							break
 						end
 					end
 
