@@ -34,6 +34,7 @@ Locales['br'] = {
   ['set_vehicle_owner_rent']  = 'Atribuir veículo [Alugar]',
   ['set_vehicle_owner_sell']  = 'Veículos para [Venda]',
   ['shop_menu']               = 'pressione ~INPUT_CONTEXT~ para acessar o menu ~y~%s~s~ pela quantidade de ~g~$%s~s~',
+  ['generic_shopitem']        = '$%s',
   ['vehicle']                 = 'veículo ',
   ['vehicle_dealer']          = 'Veículo - Concessionária',
   ['vehicle_menu']            = 'Pressione ~INPUT_CONTEXT~ para fazer o seu veículo',

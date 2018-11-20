@@ -40,6 +40,7 @@ Locales['en'] = {
   ['set_vehicle_owner_sell']  = 'sell vehicle',
   ['set_vehicle_owner_sell_society']  = 'assign Vehicle [Sale] [Society]',
   ['shop_menu']               = 'press ~INPUT_CONTEXT~ to access the menu',
+  ['generic_shopitem']        = '$%s',
   ['vehicle_dealer']          = 'vehicle - Car Dealer',
   ['vehicle_menu']            = 'press ~INPUT_CONTEXT~ to give back the rented vehicle',
   ['vehicle_purchased']       = 'you bought a vehicle',

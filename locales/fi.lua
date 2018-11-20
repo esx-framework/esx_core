@@ -40,6 +40,7 @@ Locales['fi'] = {
   ['set_vehicle_owner_sell']  = 'myy ajoneuvo',
   ['set_vehicle_owner_sell_society']  = 'määritä ajoneuvon [Hinta] [Firma]',
   ['shop_menu']               = 'paina ~INPUT_CONTEXT~ avataksesi menu',
+  ['generic_shopitem']        = '$%s',
   ['vehicle_dealer']          = 'ajonevuo - Autokauppa',
   ['vehicle_menu']            = 'paina ~INPUT_CONTEXT~ tehdäksesi tästä sinun ajoneuvo',
   ['vehicle_purchased']       = 'sinä ostit ajoneuvon',

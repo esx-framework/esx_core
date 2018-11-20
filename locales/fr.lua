@@ -38,6 +38,7 @@ Locales['fr'] = {
   ['set_vehicle_owner_sell']          = 'Attribuer véhicule [Vente]',
   ['set_vehicle_owner_sell_society']  = 'Attribuer véhicule [Vente] [Société]',
   ['shop_menu']                       = 'Appuez sur ~INPUT_CONTEXT~ pour accéder au menu',
+  ['generic_shopitem']                = '$%s',
   ['vehicle']                         = 'Le véhicule',
   ['vehicle_dealer']                  = 'Concessionnaire - Véhicules',
   ['vehicle_menu']                    = 'Appuez sur ~INPUT_CONTEXT~ pour rendre votre véhicule',

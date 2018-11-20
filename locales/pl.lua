@@ -38,6 +38,7 @@ Locales['pl'] = {
   ['set_vehicle_owner_sell']  = 'zarejestruj pojazd [Kupno]',
   ['set_vehicle_owner_sell_society']  = 'zarejestruj pojazd [Firmowe]',
   ['shop_menu']               = 'wcisnij ~INPUT_CONTEXT~ aby wejść do menu',
+  ['generic_shopitem']        = '$%s',
   ['the_boss']                = 'szef',
   ['vehicle_dealer']          = 'pojazdy - Sprzedawca aut',
   ['vehicle_menu']            = 'wcisnij ~INPUT_CONTEXT~ aby wyjąć pojazd',

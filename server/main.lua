@@ -45,8 +45,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwned', function (vehicleProps)
 		['@owner']   = xPlayer.identifier,
 		['@plate']   = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps)
-	},
-	function (rowsChanged)
+	}, function (rowsChanged)
 		TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', vehicleProps.plate))
 	end)
 end)
@@ -60,8 +59,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function (playerId, v
 		['@owner']   = xPlayer.identifier,
 		['@plate']   = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps)
-	},
-	function (rowsChanged)
+	}, function (rowsChanged)
 		TriggerClientEvent('esx:showNotification', playerId, _U('vehicle_belongs', vehicleProps.plate))
 	end) 
 end)
@@ -76,8 +74,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedSociety', function (society, veh
 		['@owner']   = 'society:' .. society,
 		['@plate']   = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps),
-	},
-	function (rowsChanged)
+	}, function (rowsChanged)
 
 	end)
 end)
@@ -117,7 +114,7 @@ AddEventHandler('esx_vehicleshop:rentVehicle', function (vehicle, plate, playerN
 			['@player_name'] = playerName,
 			['@base_price']  = basePrice,
 			['@rent_price']  = rentPrice,
-			['@owner']       = owner,
+			['@owner']       = owner
 		})
 	end)
 end)
@@ -212,13 +209,15 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function (source
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_' .. society, function (account)
 		if account.money >= vehicleData.price then
 			account.removeMoney(vehicleData.price)
+
 			MySQL.Async.execute('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (@vehicle, @price)',
 			{
 				['@vehicle'] = vehicleData.model,
 				['@price']   = vehicleData.price
-			})
+			}, function(rowsChanged)
+				cb(true)
+			end)
 
-			cb(true)
 		else
 			cb(false)
 		end
@@ -278,9 +277,10 @@ AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 				['@id'] = id
 			})
 
-			TriggerClientEvent('esx:showNotification', _source, _U('vehicle_sold_for', vehicleModel, price))
+			TriggerClientEvent('esx:showNotification', _source, _U('vehicle_sold_for', vehicleModel, ESX.Math.GroupDigits(price)))
 		else
-			print('esx_vehicleshop: ' .. GetPlayerIdentifiers(_source)[1] .. ' attempted selling an invalid vehicle!')
+			
+			print(('esx_vehicleshop: %s attempted selling an invalid vehicle!'):format(GetPlayerIdentifiers(_source)[1]))
 		end
 
 	end)
@@ -413,7 +413,7 @@ function PayRent(d, h, m)
 			-- message player if connected
 			if xPlayer ~= nil then
 				xPlayer.removeAccountMoney('bank', result[i].rent_price)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental', result[i].rent_price))
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
 			else -- pay rent either way
 				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier',
 				{

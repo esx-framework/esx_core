@@ -35,6 +35,7 @@ Locales['de'] = {
   ['set_vehicle_owner_sell']          = 'Fahrzeuge [Verkauf]',
   ['set_vehicle_owner_sell_society']  = 'Fahrzeuge [Verkauf] [Society]',
   ['shop_menu']                       = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
+  ['generic_shopitem']                = '$%s',
   ['vehicle']                         = 'Fahrzeug ',
   ['vehicle_dealer']                  = 'Autohändler',
   ['vehicle_menu']                    = 'Drücke ~INPUT_CONTEXT~ um ein Fahrzeug zu übergeben',

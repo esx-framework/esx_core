@@ -101,7 +101,7 @@ function ReturnVehicleProvider()
 			returnPrice = ESX.Math.Round(vehicles[i].price * 0.75)
 
 			table.insert(elements, {
-				label = vehicles[i].name .. ' [<span style="color: orange;">$' .. returnPrice .. '</span>]',
+				label = ('%s [<span style="color:orange;">%s</span>]'):format(vehicles[i].name, _U('generic_shopitem', ESX.Math.GroupDigits(returnPrice))),
 				value = vehicles[i].name
 			})
 		end
@@ -161,7 +161,7 @@ function OpenShopMenu()
 				firstVehicleData = vehicle
 			end
 
-			table.insert(options, vehicle.name .. ' <span style="color: green;">$' .. vehicle.price .. '</span>')
+			table.insert(options, ('%s <span style="color:green;">%s</span>'):format(vehicle.name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicle.price))))
 		end
 
 		table.insert(elements, {
@@ -183,13 +183,13 @@ function OpenShopMenu()
 		local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('buy_vehicle_shop', vehicleData.name, vehicleData.price),
+			title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price)),
 			align = 'top-left',
 			elements = {
-				{label = _U('yes'), value = 'yes'},
 				{label = _U('no'),  value = 'no'},
+				{label = _U('yes'), value = 'yes'}
 			}
-		}, function (data2, menu2)
+		}, function(data2, menu2)
 			if data2.current.value == 'yes' then
 				if Config.EnablePlayerManagement then
 					ESX.TriggerServerCallback('esx_vehicleshop:buyVehicleSociety', function(hasEnoughMoney)
@@ -234,7 +234,7 @@ function OpenShopMenu()
 
 							if data3.current.value == 'personnal' then
 
-								ESX.TriggerServerCallback('esx_vehicleshop:buyVehicle', function (hasEnoughMoney)
+								ESX.TriggerServerCallback('esx_vehicleshop:buyVehicle', function(hasEnoughMoney)
 
 									if hasEnoughMoney then
 										IsInShopMenu = false
@@ -615,7 +615,7 @@ function OpenPopVehicleMenu()
 
 		for i=1, #vehicles, 1 do
 			table.insert(elements, {
-				label = vehicles[i].name .. ' [MSRP <span style="color: green;">$' .. vehicles[i].price .. '</span>]',
+				label = ('%s [MSRP <span style="color:green;">%s</span>]'):format(vehicles[i].name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicles[i].price))),
 				value = vehicles[i].name
 			})
 		end
@@ -636,6 +636,7 @@ function OpenPopVehicleMenu()
 				for i=1, #Vehicles, 1 do
 					if model == Vehicles[i].model then
 						CurrentVehicleData = Vehicles[i]
+						break
 					end
 				end
 			end)
@@ -651,7 +652,7 @@ function OpenRentedVehiclesMenu()
 
 		for i=1, #vehicles, 1 do
 			table.insert(elements, {
-				label = vehicles[i].playerName .. ' : ' .. vehicles[i].name .. ' - ' .. vehicles[i].plate,
+				label = ('%s: %s - <span style="color:orange;">%s</span>'):format(vehicles[i].playerName, vehicles[i].name, vehicles[i].plate),
 				value = vehicles[i].name
 			})
 		end
@@ -673,7 +674,7 @@ function OpenBossActionsMenu()
 		title    = _U('dealer_boss'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('boss_actions'),   value = 'boss_actions'}
+			{label = _U('boss_actions'), value = 'boss_actions'}
 		}
 	}, function (data, menu)
 		if data.current.value == 'boss_actions' then
@@ -697,7 +698,10 @@ function OpenGetStocksMenu()
 		local elements = {}
 
 		for i=1, #items, 1 do
-			table.insert(elements, {label = 'x' .. items[i].count .. ' ' .. items[i].label, value = items[i].name})
+			table.insert(elements, {
+				label = 'x' .. items[i].count .. ' ' .. items[i].label,
+				value = items[i].name
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
@@ -850,7 +854,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
 			local resellPrice = math.floor(vehicleData.price / 100 * Config.ResellPercentage)
 
 			CurrentAction     = 'resell_vehicle'
-			CurrentActionMsg  = _U('sell_menu', vehicleData.name, resellPrice)
+			CurrentActionMsg  = _U('sell_menu', vehicleData.name, ESX.Math.GroupDigits(resellPrice))
 
 			CurrentActionData = {
 				vehicle = vehicle,
