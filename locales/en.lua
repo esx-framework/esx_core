@@ -40,7 +40,6 @@ Locales['en'] = {
   ['vehicle_purchased']       = 'you bought a vehicle',
   ['vehicle_set_owned']       = 'vehicle ~y~%s~s~ has been assigned to ~b~%s~s~',
   ['vehicle_set_rented']      = 'vehicle ~y~%s~s~ has been rented to ~b~%s~s~',
-  ['vehicle_sold']            = 'the vehicle has been ~g~sold~s~',
   ['vehicle_sold_for']        = 'the ~b~%s~s~ has been ~y~sold~s~ for ~g~$%s~s~',
   ['vehicle_sold_to']         = 'the vehicle with plate ~y~%s~s~ has been sold to ~b~%s~s~',
   ['deposit_stock']           = 'deposit stock',

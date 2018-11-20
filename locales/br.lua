@@ -35,7 +35,6 @@ Locales['br'] = {
   ['vehicle_purchased']       = 'você comprou um veículo',
   ['vehicle_set_owned']       = 'Veículo ~y~%s~s~ foi atribuído a ~b~%s~s~',
   ['vehicle_set_rented']      = 'Veículo ~y~%s~s~ foi alugado para ~b~%s~s~',
-  ['vehicle_sold']            = 'Veículo ~g~vendido~s~',
   ['vehicle_sold_for']        = 'the ~b~%s~s~ has been ~y~sold~s~ for ~g~$%s~s~',
   ['vehicle_sold_to']         = 'Veículo ~y~%s~s~ vendido to ~b~%s~s~',
   ['deposit_stock']           = 'Colocar no estoque',

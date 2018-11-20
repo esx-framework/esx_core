@@ -40,7 +40,6 @@ Locales['sv'] = {
   ['vehicle_purchased']       = 'du köpte fordonet',
   ['vehicle_set_owned']       = 'fordonet ~y~%s~s~ har tilldelats till ~b~%s~s~',
   ['vehicle_set_rented']      = 'fordonet ~y~%s~s~ har hyrts ut till ~b~%s~s~',
-  ['vehicle_sold']            = 'fordonet har ~g~sålts~s~',
   ['vehicle_sold_for']        = '~b~%s~s~ har ~y~sålts~s~ för ~g~%s SEK~s~',
   ['vehicle_sold_to']         = '~y~%s~s~ har sålts till ~b~%s~s~',
   ['deposit_stock']           = 'lägg in i förråd',

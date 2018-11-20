@@ -40,7 +40,6 @@ Locales['fi'] = {
   ['vehicle_purchased']       = 'sinä ostit ajoneuvon',
   ['vehicle_set_owned']       = 'ajoneuvo ~y~%s~s~ on nyt määritetty henkilölle ~b~%s~s~',
   ['vehicle_set_rented']      = 'ajoneuvo ~y~%s~s~ on nyt vuokrattu henkilölle ~b~%s~s~',
-  ['vehicle_sold']            = 'ajoneuvo ~g~myyty~s~',
   ['vehicle_sold_for']        = 'the ~b~%s~s~ has been ~y~sold~s~ for ~g~$%s~s~',
   ['vehicle_sold_to']         = 'ajoneuvo ~y~%s~s~ myyty henkilölle ~b~%s~s~',
   ['deposit_stock']           = 'talleta firman varastoon',

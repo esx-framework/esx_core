@@ -311,44 +311,78 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function (source, 
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, price) -- todo: remove price
+ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, model)
+	local resellPrice
+
+	-- calculate the resell price
+	for i=1, #Vehicles, 1 do
+		if Vehicles[i].model == model then
+			resellPrice = ESX.Math.Round(Vehicles[i].price / 100 * Config.ResellPercentage)
+			break
+		end
+	end
+
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function (result)
-		if result[1] ~= nil then -- is it a rented vehicle?
+		if result[1] then -- is it a rented vehicle?
 			cb(false) -- it is, don't let the player sell it since he doesn't own it
 		else
 			local xPlayer = ESX.GetPlayerFromId(source)
 
-			MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate',
-			{
+			MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
 				['@owner'] = xPlayer.identifier,
 				['@plate'] = plate
 			}, function (result)
 
-				-- does the owner match?
-				if result[1] ~= nil then
+				if result[1] then -- does the owner match?
 
-					-- todo: does model match?
-					xPlayer.addMoney(price)
-					RemoveOwnedVehicle(plate)
-					cb(true)
+					local vehicle = json.decode(result[1].vehicle)
+
+					if vehicle.model == GetHashKey(model) then
+						if vehicle.plate == plate then
+							xPlayer.addMoney(resellPrice)
+							RemoveOwnedVehicle(plate)
+							cb(true)
+						else
+							print(('esx_vehicleshop: %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
+							cb(false)
+						end
+					else
+						print(('esx_vehicleshop: %s attempted to sell an vehicle with model mismatch!'):format(xPlayer.identifier))
+						cb(false)
+					end
 
 				else
 
 					if xPlayer.job.grade_name == 'boss' then
-						MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate',
-						{
+						MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
 							['@owner'] = 'society:' .. xPlayer.job.name,
 							['@plate'] = plate
 						}, function (result)
-							if result[1] ~= nil then
-								xPlayer.addMoney(price)
-								RemoveOwnedVehicle(plate)
-								cb(true)
+
+							if result[1] then
+
+								local vehicle = json.decode(result[1].vehicle)
+
+								if vehicle.model == GetHashKey(model) then
+									if vehicle.plate == plate then
+										xPlayer.addMoney(resellPrice)
+										RemoveOwnedVehicle(plate)
+										cb(true)
+									else
+										print(('esx_vehicleshop: %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
+										cb(false)
+									end
+								else
+									print(('esx_vehicleshop: %s attempted to sell an vehicle with model mismatch!'):format(xPlayer.identifier))
+									cb(false)
+								end
+
 							else
 								cb(false)
 							end
+
 						end)
 					else
 						cb(false)

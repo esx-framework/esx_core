@@ -800,26 +800,35 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
 
 		local playerPed = PlayerPedId()
 
-		if IsPedInAnyVehicle(playerPed, false) then
-			local vehicle     = GetVehiclePedIsIn(playerPed, false)
-			local vehicleData = nil
+		if IsPedSittingInAnyVehicle(playerPed) then
 
-			for i=1, #Vehicles, 1 do
-				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
-					vehicleData = Vehicles[i]
-					break
+			local vehicle     = GetVehiclePedIsIn(playerPed, false)
+			local vehicleData, model, resellPrice, plate
+
+			if GetPedInVehicleSeat(vehicle, -1) == playerPed then
+				for i=1, #Vehicles, 1 do
+					if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
+						vehicleData = Vehicles[i]
+						break
+					end
 				end
+	
+				resellPrice = ESX.Math.Round(vehicleData.price / 100 * Config.ResellPercentage)
+				model = string.lower(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)))
+				plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
+	
+				CurrentAction     = 'resell_vehicle'
+				CurrentActionMsg  = _U('sell_menu', vehicleData.name, ESX.Math.GroupDigits(resellPrice))
+	
+				CurrentActionData = {
+					vehicle = vehicle,
+					label = vehicleData.name,
+					price = resellPrice,
+					model = model,
+					plate = plate
+				}
 			end
 
-			local resellPrice = math.floor(vehicleData.price / 100 * Config.ResellPercentage)
-
-			CurrentAction     = 'resell_vehicle'
-			CurrentActionMsg  = _U('sell_menu', vehicleData.name, ESX.Math.GroupDigits(resellPrice))
-
-			CurrentActionData = {
-				vehicle = vehicle,
-				price   = resellPrice
-			}
 		end
 
 	elseif zone == 'BossActions' and Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'cardealer' and ESX.PlayerData.job.grade_name == 'boss' then
@@ -935,18 +944,20 @@ Citizen.CreateThread(function()
 						else
 							ESX.ShowNotification(_U('not_rental'))
 						end
-					end, GetVehicleNumberPlateText(CurrentActionData.vehicle))
+					end, ESX.Math.Trim(GetVehicleNumberPlateText(CurrentActionData.vehicle)))
 
 				elseif CurrentAction == 'resell_vehicle' then
 
-					ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(isOwnedVehicle)
-						if isOwnedVehicle then
+					ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
+
+						if vehicleSold then
 							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-							ESX.ShowNotification(_U('vehicle_sold'))
+							ESX.ShowNotification(_U('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
 						else
 							ESX.ShowNotification(_U('not_yours'))
 						end
-					end, GetVehicleNumberPlateText(CurrentActionData.vehicle), CurrentActionData.price)
+
+					end, CurrentActionData.plate, CurrentActionData.model)
 
 				elseif CurrentAction == 'boss_actions_menu' then
 					OpenBossActionsMenu()

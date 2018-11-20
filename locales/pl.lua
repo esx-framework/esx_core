@@ -39,7 +39,6 @@ Locales['pl'] = {
   ['vehicle_purchased']       = 'kupujesz pojazd',
   ['vehicle_set_owned']       = 'pojazd ~y~%s~s~ został zarejestrowany na ~b~%s~s~',
   ['vehicle_set_rented']      = 'pojazd ~y~%s~s~ został wynajęty przez ~b~%s~s~',
-  ['vehicle_sold']            = 'pojazd został ~g~sprzedany~s~',
   ['vehicle_sold_to']         = 'pojazd ~y~%s~s~ został sprzedany do ~b~%s~s~',
   ['deposit_stock']           = 'deponuj przedmioty',
   ['take_stock']              = 'wyciągnij przedmioty',
