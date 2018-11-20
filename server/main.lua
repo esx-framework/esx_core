@@ -12,7 +12,12 @@ TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police'
 RegisterServerEvent('esx_policejob:giveWeapon')
 AddEventHandler('esx_policejob:giveWeapon', function(weapon, ammo)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.addWeapon(weapon, ammo)
+
+	if xPlayer.job.name == 'police' then
+		xPlayer.addWeapon(weapon, ammo)
+	else
+		print(('esx_policejob: %s attempted to give weapon!'):format(xPlayer.identifier))
+	end
 end)
 
 RegisterServerEvent('esx_policejob:confiscatePlayerItem')
@@ -20,6 +25,11 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 	local _source = source
 	local sourceXPlayer = ESX.GetPlayerFromId(_source)
 	local targetXPlayer = ESX.GetPlayerFromId(target)
+
+	if sourceXPlayer.job.name ~= 'police' then
+		print(('esx_policejob: %s attempted to confiscate!'):format(xPlayer.identifier))
+		return
+	end
 
 	if itemType == 'item_standard' then
 		local targetItem = targetXPlayer.getInventoryItem(itemName)
@@ -71,12 +81,24 @@ end)
 
 RegisterServerEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(target)
-	TriggerClientEvent('esx_policejob:drag', target, source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name == 'police' then
+		TriggerClientEvent('esx_policejob:drag', target, source)
+	else
+		print(('esx_policejob: %s attempted to drag (not cop)!'):format(xPlayer.identifier))
+	end
 end)
 
 RegisterServerEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function(target)
-	TriggerClientEvent('esx_policejob:putInVehicle', target)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name == 'police' then
+		TriggerClientEvent('esx_policejob:putInVehicle', target)
+	else
+		print(('esx_policejob: %s attempted to put in vehicle (not cop)!'):format(xPlayer.identifier))
+	end
 end)
 
 RegisterServerEvent('esx_policejob:OutVehicle')
@@ -278,7 +300,6 @@ end)
 ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
-
 		local weapons = store.get('weapons')
 
 		if weapons == nil then
@@ -286,7 +307,6 @@ ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb
 		end
 
 		cb(weapons)
-
 	end)
 
 end)

@@ -956,7 +956,10 @@ function OpenUnpaidBillsMenu(player)
 
 	ESX.TriggerServerCallback('esx_billing:getTargetBills', function(bills)
 		for i=1, #bills, 1 do
-			table.insert(elements, {label = bills[i].label .. ' - <span style="color: red;">$' .. bills[i].amount .. '</span>', value = bills[i].id})
+			table.insert(elements, {
+				label = bills[i].label .. ' - <span style="color: red;">$' .. bills[i].amount .. '</span>',
+				value = bills[i].id
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing',
@@ -1006,7 +1009,10 @@ function OpenGetWeaponMenu()
 
 		for i=1, #weapons, 1 do
 			if weapons[i].count > 0 then
-				table.insert(elements, {label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name), value = weapons[i].name})
+				table.insert(elements, {
+					label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name),
+					value = weapons[i].name
+				})
 			end
 		end
 
@@ -1039,7 +1045,10 @@ function OpenPutWeaponMenu()
 		local weaponHash = GetHashKey(weaponList[i].name)
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-			table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
+			table.insert(elements, {
+				label = weaponList[i].label,
+				value = weaponList[i].name
+			})
 		end
 	end
 
@@ -1079,7 +1088,7 @@ function OpenBuyWeaponsMenu(station)
 			end
 
 			table.insert(elements, {
-				label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.name) .. ' $' .. weapon.price,
+				label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.name) .. ' $' .. ESX.Math.GroupDigits(weapon.price),
 				value = weapon.name,
 				price = weapon.price
 			})
@@ -1114,11 +1123,13 @@ function OpenGetStocksMenu()
 
 	ESX.TriggerServerCallback('esx_policejob:getStockItems', function(items)
 
-
 		local elements = {}
 
 		for i=1, #items, 1 do
-			table.insert(elements, {label = 'x' .. items[i].count .. ' ' .. items[i].label, value = items[i].name})
+			table.insert(elements, {
+				label = 'x' .. items[i].count .. ' ' .. items[i].label,
+				value = items[i].name
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu',
@@ -1169,7 +1180,11 @@ function OpenPutStocksMenu()
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
+				table.insert(elements, {
+					label = item.label .. ' x' .. item.count,
+					type = 'item_standard',
+					value = item.name
+				})
 			end
 		end
 
