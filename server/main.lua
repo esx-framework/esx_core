@@ -3,42 +3,29 @@ local ShopItems = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- Load items
 MySQL.ready(function()
-	local itemResult = MySQL.Sync.fetchAll('SELECT * FROM items')
-	local shopResult = MySQL.Sync.fetchAll('SELECT * FROM shops')
+	MySQL.Async.fetchAll('SELECT * FROM shops LEFT JOIN items ON items.name = shops.item', {}, function(shopResult)
+		for i=1, #shopResult, 1 do
+			if shopResult[i].name then
+				if ShopItems[shopResult[i].store] == nil then
+					ShopItems[shopResult[i].store] = {}
+				end
 
-	local itemInformation = {}
-	for i=1, #itemResult, 1 do
+				if shopResult[i].limit == -1 then
+					shopResult[i].limit = 30
+				end
 
-		if itemInformation[itemResult[i].name] == nil then
-			itemInformation[itemResult[i].name] = {}
-		end
-
-		itemInformation[itemResult[i].name].label = itemResult[i].label
-		itemInformation[itemResult[i].name].limit = itemResult[i].limit
-	end
-
-	for i=1, #shopResult, 1 do
-		if itemInformation[shopResult[i].item] then
-			if ShopItems[shopResult[i].store] == nil then
-				ShopItems[shopResult[i].store] = {}
+				table.insert(ShopItems[shopResult[i].store], {
+					label = shopResult[i].label,
+					item  = shopResult[i].item,
+					price = shopResult[i].price,
+					limit = shopResult[i].limit
+				})
+			else
+				print(('esx_shops: invalid item "%s" found!'):format(shopResult[i].item))
 			end
-
-			if itemInformation[shopResult[i].item].limit == -1 then
-				itemInformation[shopResult[i].item].limit = 30
-			end
-
-			table.insert(ShopItems[shopResult[i].store], {
-				label = itemInformation[shopResult[i].item].label,
-				item  = shopResult[i].item,
-				price = shopResult[i].price,
-				limit = itemInformation[shopResult[i].item].limit
-			})
-		else
-			print(('esx_shops: invalid item "%s" found!'):format(shopResult[i].item))
 		end
-	end
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
