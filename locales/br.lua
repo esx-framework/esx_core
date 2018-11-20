@@ -20,7 +20,6 @@ Locales['br'] = {
   ['not_rental']              = 'isso não é um ~r~veículo de aluguel~s~',
   ['not_yours']               = 'este veículo não pertence a você',
   ['paid_rental']             = 'Você tem ~g~pago~s~ para o seu aluguel de veiculos: ~g~$%s~s~',
-  ['personal_vehicle']        = 'veículo pessoal',
   ['pop_vehicle']             = 'sai do veiculo',
   ['rent_vehicle']            = 'Concessionária - Veículos para alugar',
   ['return_provider_menu']    = 'car Dealer - Return vehicle to provider',

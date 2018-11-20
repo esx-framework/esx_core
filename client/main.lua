@@ -574,55 +574,6 @@ function OpenResellerMenu()
 
 end
 
-function OpenPersonnalVehicleMenu()
-	ESX.UI.Menu.CloseAll()
-
-	ESX.TriggerServerCallback('esx_vehicleshop:getPersonnalVehicles', function (vehicles)
-		local elements = {}
-
-		for i=1, #vehicles, 1 do
-			for j=1, #Vehicles, 1 do
-				if vehicles[i].model == GetHashKey(Vehicles[j].model) then
-					vehicles[i].name = Vehicles[j].name
-					break
-				end
-			end
-		end
-
-		for i=1, #vehicles, 1 do
-			table.insert(elements, {
-				label = vehicles[i].name .. ' [<span style="color: orange;">' .. vehicles[i].plate .. '</span>]',
-				value = vehicles[i]
-			})
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'personnal_vehicle',
-		{
-			title    = _U('personal_vehicle'),
-			align    = 'top-left',
-			elements = elements,
-		}, function (data, menu)
-			local playerPed   = PlayerPedId()
-			local coords      = GetEntityCoords(playerPed)
-			local heading     = GetEntityHeading(playerPed)
-			local vehicleData = data.current.value
-
-			menu.close()
-
-			ESX.Game.SpawnVehicle(vehicleData.model, {
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			}, heading, function (vehicle)
-				ESX.Game.SetVehicleProperties(vehicle, vehicleData)
-				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-			end)
-		end, function (data, menu)
-			menu.close()
-		end)
-	end)
-end
-
 function OpenPopVehicleMenu()
 	ESX.TriggerServerCallback('esx_vehicleshop:getCommercialVehicles', function (vehicles)
 		local elements = {}
@@ -813,11 +764,6 @@ AddEventHandler('esx:setJob', function (job)
 			Config.Zones.BossActions.Type  = -1
 		end
 	end
-end)
-
-RegisterNetEvent('esx_vehicleshop:openPersonnalVehicleMenu')
-AddEventHandler('esx_vehicleshop:openPersonnalVehicleMenu', function ()
-	OpenPersonnalVehicleMenu()
 end)
 
 AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)

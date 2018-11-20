@@ -224,23 +224,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicleSociety', function (source
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:getPersonnalVehicles', function (source, cb)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner', {
-		['@owner'] = xPlayer.identifier
-	}, function (result)
-		local vehicles = {}
-
-		for i=1, #result, 1 do
-			local vehicleData = json.decode(result[i].vehicle)
-			table.insert(vehicles, vehicleData)
-		end
-
-		cb(vehicles)
-	end)
-end)
-
 ESX.RegisterServerCallback('esx_vehicleshop:getCommercialVehicles', function (source, cb)
 	MySQL.Async.fetchAll('SELECT * FROM cardealer_vehicles ORDER BY vehicle ASC', {}, function (result)
 		local vehicles = {}
@@ -398,12 +381,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:isPlateTaken', function (source, cb,
 		cb(result[1] ~= nil)
 	end)
 end)
-
-if Config.EnablePvCommand then
-	TriggerEvent('es:addGroupCommand', 'pv', 'user', function(source, args, user)
-		TriggerClientEvent('esx_vehicleshop:openPersonnalVehicleMenu', source)
-	end, {help = _U('leaving')})
-end
 
 function PayRent(d, h, m)
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles', {}, function (result)
