@@ -125,10 +125,24 @@ function ReturnVehicleProvider()
 
 end
 
+function StartShopRestriction()
+
+	Citizen.CreateThread(function()
+		while IsInShopMenu do
+			Citizen.Wait(1)
+	
+			DisableControlAction(0, 75,  true) -- Disable exit vehicle
+			DisableControlAction(27, 75, true) -- Disable exit vehicle
+		end
+	end)
+
+end
+
 function OpenShopMenu()
 
 	IsInShopMenu = true
 
+	StartShopRestriction()
 	ESX.UI.Menu.CloseAll()
 
 	local playerPed = PlayerPedId()
