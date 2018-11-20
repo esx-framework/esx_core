@@ -30,4 +30,6 @@ client_scripts {
 	'client/main.lua'
 }
 
+dependency 'es_extended'
+
 export 'GeneratePlate'
