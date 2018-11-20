@@ -440,7 +440,7 @@ function OpenResellerMenu()
 				local amount = tonumber(data2.value)
 
 				if amount == nil then
-					ESX.ShowNotification(_U('invoice_amount'))
+					ESX.ShowNotification(_U('invalid_amount'))
 				else
 					menu2.close()
 
