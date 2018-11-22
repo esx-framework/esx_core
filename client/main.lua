@@ -59,7 +59,7 @@ Citizen.CreateThread(function()
 		SetBlipColour (blip, 2)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('atm'))
+		AddTextComponentString(_U('atm_blip'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
