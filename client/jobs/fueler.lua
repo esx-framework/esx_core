@@ -120,7 +120,7 @@ Config.Jobs.fueler = {
 		},
 
 		VehicleSpawnPoint = {
-			Pos = {x = 580.54, y = -2309.70, z = 4.90},
+			Pos = {x = 570.54, y = -2309.70, z = 4.90},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
