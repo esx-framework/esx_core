@@ -70,7 +70,7 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 			account.removeMoney(amount)
 			xPlayer.addMoney(amount)
 
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', amount))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', ESX.Math.GroupDigits(amount)))
 		else
 			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 		end
@@ -89,7 +89,7 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 			account.addMoney(amount)
 		end)
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', amount))
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', ESX.Math.GroupDigits(amount)))
 
 	else
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
@@ -111,7 +111,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 			['@society']    = society,
 			['@amount']     = amount
 		}, function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have', amount))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have', ESX.Math.GroupDigits(amount)))
 		end)
 
 	else
@@ -236,7 +236,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 
 	if xTarget ~= nil then
 		xTarget.setJob(job, grade)
-		
+
 		if type == 'hire' then
 			TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_hired', job))
 		elseif type == 'promote' then
@@ -334,11 +334,10 @@ function WashMoneyCRON(d, h, m)
 			-- send notification if player is online
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
 			if xPlayer ~= nil then
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', result[i].amount))
+				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
 			end
 
-			MySQL.Async.execute('DELETE FROM society_moneywash WHERE id = @id',
-			{
+			MySQL.Async.execute('DELETE FROM society_moneywash WHERE id = @id', {
 				['@id'] = result[i].id
 			})
 		end

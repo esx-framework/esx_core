@@ -1,6 +1,7 @@
 Locales['sv'] = {
   ['actions']                = 'handlingar',
   ['boss_menu']              = 'chefmeny',
+  ['money_generic']          = '%s SEK',
   ['deposit_amount']         = 'insättningsbelopp',
   ['deposit_society_money']  = 'insätt samhälls pengar',
   ['do_you_want_to_recruit'] = 'vill du anställa %s?',

@@ -1,6 +1,7 @@
 Locales['fi'] = {
   ['actions']                = 'toiminnot',
   ['boss_menu']              = 'boss menu',
+  ['money_generic']          = '€%s',
   ['deposit_amount']         = 'talletus summa',
   ['deposit_society_money']  = 'talleta yritykselle rahaa',
   ['do_you_want_to_recruit'] = 'do you want to recruit %s?',
@@ -25,7 +26,7 @@ Locales['fi'] = {
   ['withdraw_amount']        = 'nostettava määrä',
   ['withdraw_society_money'] = 'nosta yrityksen rahoja',
   ['yes']                    = 'kyllä',
-  ['you_have']               = 'you have ~g~$%s~s~ waiting in ~y~money laundering~s~ (24h).',
+  ['you_have']               = 'you have ~g~€%s~s~ waiting in ~y~money laundering~s~ (24h).',
   ['you_have_laundered']     = 'olet ~r~pessyt~s~ rahojasi: ~g~€%s~s~',
   ['you_have_hired']         = 'sinä palkkasit henkilön %s',
   ['you_have_been_hired']    = 'sinut on palkattu pelaajan %s toimesta',

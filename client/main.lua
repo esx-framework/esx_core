@@ -23,7 +23,7 @@ end
 
 function UpdateSocietyMoneyHUDElement(money)
 	ESX.UI.HUD.UpdateElement('society_money', {
-		money = money
+		money = ESX.Math.GroupDigits(money)
 	})
 end
 
@@ -87,8 +87,7 @@ function OpenBossMenu(society, close, options)
 
 		if data.current.value == 'withdraw_society_money' then
 
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. society,
-			{
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. society, {
 				title = _U('withdraw_amount')
 			}, function(data, menu)
 
@@ -167,7 +166,7 @@ function OpenManageEmployeesMenu(society)
 		align    = 'top-left',
 		elements = {
 			{label = _U('employee_list'), value = 'employee_list'},
-			{label = _U('recruit'),       value = 'recruit'},
+			{label = _U('recruit'),       value = 'recruit'}
 		}
 	}, function(data, menu)
 
@@ -242,7 +241,12 @@ function OpenRecruitMenu(society)
 
 		for i=1, #players, 1 do
 			if players[i].job.name ~= society then
-				table.insert(elements, {label = players[i].name, value = players[i].source, name = players[i].name, identifier = players[i].identifier})
+				table.insert(elements, {
+					label = players[i].name,
+					value = players[i].source,
+					name = players[i].name,
+					identifier = players[i].identifier
+				})
 			end
 		end
 
@@ -295,7 +299,12 @@ function OpenPromoteMenu(society, employee)
 
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			table.insert(elements, {label = gradeLabel, value = job.grades[i].grade, selected = (employee.job.grade == job.grades[i].grade)})
+
+			table.insert(elements, {
+				label = gradeLabel,
+				value = job.grades[i].grade,
+				selected = (employee.job.grade == job.grades[i].grade)
+			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_employee_' .. society,
@@ -329,8 +338,9 @@ function OpenManageGradesMenu(society)
 
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
+
 			table.insert(elements, {
-				label = (string.format ('%s - <span style="color: green;">$%i</span>', gradeLabel, job.grades[i].salary)),
+				label = ('%s - <span style="color:green;">%s</span>'):format(gradeLabel, _U('money_generic', ESX.Math.GroupDigits(job.grades[i].salary))),
 				value = job.grades[i].grade
 			})
 		end
