@@ -83,7 +83,6 @@ function OnPlayerDeath()
 	StartDeathTimer()
 	StartDistressSignal()
 
-	ClearPedTasksImmediately(PlayerPedId())
 	StartScreenEffect('DeathFailOut', 0, false)
 end
 
