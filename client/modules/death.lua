@@ -16,7 +16,7 @@ Citizen.CreateThread(function()
 				local killerServerId = NetworkGetPlayerIndexFromPed(killer)
 		
 				if killer ~= playerPed and killerServerId ~= nil and NetworkIsPlayerActive(killerServerId) then
-					PlayerKilledByPlayer(killerServerId, GetPlayerServerId(killerServerId), killerWeapon)
+					PlayerKilledByPlayer(GetPlayerServerId(killerServerId), killerServerId, killerWeapon)
 				else
 					PlayerKilled()
 				end
@@ -30,7 +30,7 @@ end)
 
 function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
 	local victimCoords = GetEntityCoords(PlayerPedId())
-	local killerCoords = GetEntityCoords(killerPed)
+	local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
 	local distance     = GetDistanceBetweenCoords(victimCoords, killerCoords, true)
 
 	local data = {
