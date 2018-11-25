@@ -64,7 +64,7 @@ AddEventHandler('esx_drugs:startHarvestCoke', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 		HarvestCoke(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -111,7 +111,7 @@ AddEventHandler('esx_drugs:startTransformCoke', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 		TransformCoke(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -173,7 +173,7 @@ AddEventHandler('esx_drugs:startSellCoke', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 		SellCoke(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -216,7 +216,7 @@ AddEventHandler('esx_drugs:startHarvestMeth', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 		HarvestMeth(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -263,7 +263,7 @@ AddEventHandler('esx_drugs:startTransformMeth', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 		TransformMeth(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -328,7 +328,7 @@ AddEventHandler('esx_drugs:startSellMeth', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 		SellMeth(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -372,7 +372,7 @@ AddEventHandler('esx_drugs:startHarvestWeed', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 		HarvestWeed(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -419,7 +419,7 @@ AddEventHandler('esx_drugs:startTransformWeed', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 		TransformWeed(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -479,7 +479,7 @@ AddEventHandler('esx_drugs:startSellWeed', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 		SellWeed(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -523,7 +523,7 @@ AddEventHandler('esx_drugs:startHarvestOpium', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('pickup_in_prog'))
 		HarvestOpium(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -570,7 +570,7 @@ AddEventHandler('esx_drugs:startTransformOpium', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('packing_in_prog'))
 		TransformOpium(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
@@ -633,7 +633,7 @@ AddEventHandler('esx_drugs:startSellOpium', function()
 		TriggerClientEvent('esx:showNotification', _source, _U('sale_in_prog'))
 		SellOpium(_source)
 	else
-		print(('esx_drugs: %s attempted to exploit the marker!'):format(GetPlayerIdentifiers(_source)[1]))
+		print(('esx_drugs: %s attempted to exploit the zone!'):format(GetPlayerIdentifiers(_source)[1]))
 	end
 end)
 
