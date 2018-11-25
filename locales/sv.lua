@@ -1,5 +1,6 @@
 Locales['sv'] = {
 	['invoices'] = 'räkningar',
+	['invoices_item'] = '%s SEK',
 	['received_invoice'] = 'du har ~y~mottagit~s~ en räkning',
 	['paid_invoice'] = 'du ~y~betalade~s~ precis en räkning på ~g~%s SEK~s~',
 	['received_payment'] = 'du har ~y~mottagit~s~ en räkning på ~g~%s SEK~s~',

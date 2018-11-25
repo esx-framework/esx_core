@@ -1,5 +1,6 @@
 Locales['fi'] = {
 	['invoices'] = 'laskut',
+	['invoices_item'] = '$%s',
 	['received_invoice'] = 'sinä ~r~sait~s~ laskun',
 	['paid_invoice'] = 'sinä ~g~maksoit~s~ laskun suuruudelta ~r~$%s~s~',
 	['received_payment'] = 'sinä ~g~sait~s~ maksun suuruudelta ~r~$%s~s~',

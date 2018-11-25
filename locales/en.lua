@@ -1,5 +1,6 @@
 Locales['en'] = {
 	['invoices'] = 'invoices',
+	['invoices_item'] = '$%s',
 	['received_invoice'] = 'you have just ~r~received~s~ an invoice',
 	['paid_invoice'] = 'you ~g~paid~s~ an invoice of ~r~$%s~s~',
 	['received_payment'] = 'you ~g~received~s~ a payment of ~r~$%s~s~',
