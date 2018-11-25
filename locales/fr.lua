@@ -26,7 +26,7 @@ Locales['fr'] = {
   ['public_leave']              = 'appuyez sur ~INPUT_PICKUP~ pour aller à l\'entrée de l\'immeuble.',
 
   -- Lumber Jack job
-  ['lj_locker_room']            = 'lumberjack\'s Locker Room',
+  ['lj_locker_room']            = 'vestiaire du bûcheron',
   ['lj_mapblip']                = 'tas de bois',
   ['lj_wood']                   = 'bois',
   ['lj_pickup']                 = 'appuyez sur ~INPUT_PICKUP~ pour récupérer du bois.',
@@ -39,7 +39,7 @@ Locales['fr'] = {
   ['lj_deliver_button']         = 'appuyez sur ~INPUT_PICKUP~ pour livrer les planches.',
 
   -- Fisherman
-  ['fm_fish_locker']            = 'fishermen\'s Locker Room',
+  ['fm_fish_locker']            = 'vestiaire du pêcheur',
   ['fm_fish']                   = 'poisson',
   ['fm_fish_area']              = 'zone de pêche',
   ['fm_fish_button']            = 'appuyez sur ~INPUT_PICKUP~ pour pêcher.',
@@ -51,19 +51,20 @@ Locales['fr'] = {
   ['fm_deliver_fish']           = 'appuyez sur ~INPUT_PICKUP~ pour livrer le poisson.',
 
   -- Fuel
-  ['f_oil_refiner']             = 'Vestiaire du raffineur',
-  ['f_drill_oil']               = 'Extraction le pétrole',
+  ['f_oil_refiner']             = 'vestiaire du raffineur',
+  ['f_drill_oil']               = 'extraction le pétrole',
   ['f_fuel']                    = 'pétrole',
-  ['f_drillbutton']             = 'Appuyez sur ~INPUT_PICKUP~ pour forer.',
+  ['f_drillbutton']             = 'appuyez sur ~INPUT_PICKUP~ pour forer.',
   ['f_fuel_refine']             = 'pétrol raffiné',
-  ['f_refine_fuel_button']      = 'Appuyez sur ~ INPUT_PICKUP ~ pour raffiner le pétrole.',
-  ['f_fuel_mixture']            = 'Mélange',
-  ['f_gas']                     = 'Essence',
-  ['f_fuel_mixture_button']     = 'Appuyez sur ~INPUT_PICKUP~ pour mélanger.',
-  ['f_deliver_gas']             = 'Appuyez sur ~INPUT_PICKUP~ pour livrer l\'essence.',
+  ['f_refine_fuel_button']      = 'appuyez sur ~INPUT_PICKUP~ pour raffiner le pétrole.',
+  ['f_fuel_mixture']            = 'mélange',
+  ['f_gas']                     = 'essence',
+  ['f_fuel_mixture_button']     = 'appuyez sur ~INPUT_PICKUP~ pour mélanger.',
+  ['f_deliver_gas']             = 'livraison d\'essence.',
+  ['f_deliver_gas_button']      = 'appuyez sur ~INPUT_PICKUP~ pour livrer l\'essence.',
 
   -- Miner
-  ['m_miner_locker']            = 'miner\'s Locker Room',
+  ['m_miner_locker']            = 'vestiaire du mineur',
   ['m_rock']                    = 'rocher',
   ['m_pickrocks']               = 'appuyez sur ~INPUT_PICKUP~ pour récupérer des rochers.',
   ['m_washrock']                = 'roche lavé',
@@ -88,7 +89,7 @@ Locales['fr'] = {
   ['reporter_garage']           = 'appuyez sur ~INPUT_PICKUP~ pour descendre au garage.',
 
   -- Slaughterer
-  ['s_slaughter_locker']        = 'butcher\'s Locker Room',
+  ['s_slaughter_locker']        = 'vestiaire de l\'abatteur',
   ['s_hen']                     = 'poulailler',
   ['s_alive_chicken']           = 'poulet vivant',
   ['s_catch_hen']               = 'appuyez sur ~INPUT_PICKUP~ pour attrapper des poulets vivants.',
@@ -102,7 +103,7 @@ Locales['fr'] = {
   ['s_deliver']                 = 'appuyez sur ~INPUT_PICKUP~ pour livrer les barquettes de poulet.',
 
   -- Dress Designer
-  ['dd_dress_locker']           = 'dress Designer\'s Locker Room',
+  ['dd_dress_locker']           = 'vestiaire du couturier',
   ['dd_wool']                   = 'laine',
   ['dd_pickup']                 = 'appuyez sur ~INPUT_PICKUP~ pour récupérer de la laine.',
   ['dd_fabric']                 = 'tissu',
