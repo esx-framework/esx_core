@@ -433,29 +433,25 @@ function OpenMobileMecanoActionsMenu()
 
 	elseif data.current.value == 'del_vehicle' then
 
-		local ped = PlayerPedId()
+		local playerPed = PlayerPedId()
 
-		if DoesEntityExist(ped) and not IsEntityDead(ped) then
-			local pos = GetEntityCoords( ped )
+		if IsPedSittingInAnyVehicle(playerPed) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
 
-			if IsPedSittingInAnyVehicle(ped) then
-				local vehicle = GetVehiclePedIsIn( ped, false )
-
-				if GetPedInVehicleSeat(vehicle, -1) == ped then
-					ESX.ShowNotification(_U('vehicle_impounded'))
-					ESX.Game.DeleteVehicle(vehicle)
-				else
-					ESX.ShowNotification(_U('must_seat_driver'))
-				end
+			if GetPedInVehicleSeat(vehicle, -1) == playerPed then
+				ESX.ShowNotification(_U('vehicle_impounded'))
+				ESX.Game.DeleteVehicle(vehicle)
 			else
-				local vehicle = ESX.Game.GetVehicleInDirection()
+				ESX.ShowNotification(_U('must_seat_driver'))
+			end
+		else
+			local vehicle = ESX.Game.GetVehicleInDirection()
 
-				if DoesEntityExist(vehicle) then
-					ESX.ShowNotification(_U('vehicle_impounded'))
-					ESX.Game.DeleteVehicle(vehicle)
-				else
-					ESX.ShowNotification(_U('must_near'))
-				end
+			if DoesEntityExist(vehicle) then
+				ESX.ShowNotification(_U('vehicle_impounded'))
+				ESX.Game.DeleteVehicle(vehicle)
+			else
+				ESX.ShowNotification(_U('must_near'))
 			end
 		end
 
