@@ -131,6 +131,7 @@ AddEventHandler('esx:addInventoryItem', function(item, count)
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].name == item.name then
 			ESX.PlayerData.inventory[i] = item
+			break
 		end
 	end
 
@@ -146,6 +147,7 @@ AddEventHandler('esx:removeInventoryItem', function(item, count)
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].name == item.name then
 			ESX.PlayerData.inventory[i] = item
+			break
 		end
 	end
 

@@ -1109,7 +1109,11 @@ ESX.ShowInventory = function()
 				for i=1, #players, 1 do
 					if players[i] ~= PlayerId() then
 						foundPlayers = true
-						table.insert(elements, {label = GetPlayerName(players[i]), value = players[i]})
+
+						table.insert(elements, {
+							label = GetPlayerName(players[i]),
+							value = players[i]
+						})
 					end
 				end
 
@@ -1166,8 +1170,7 @@ ESX.ShowInventory = function()
 
 					else -- type: item_standard
 
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-						{
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
 							title = _U('amount')
 						}, function(data3, menu3)
 							local quantity = tonumber(data3.value)
@@ -1219,8 +1222,7 @@ ESX.ShowInventory = function()
 
 				else -- type: item_standard
 
-					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove',
-					{
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 						title = _U('amount')
 					}, function(data2, menu2)
 						local quantity = tonumber(data2.value)
@@ -1257,8 +1259,7 @@ ESX.ShowInventory = function()
 				if closestPlayer ~= -1 and closestDistance < 3.0 then
 					if pedAmmo > 0 then
 
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give',
-						{
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
 							title = _U('amountammo')
 						}, function(data2, menu2)
 

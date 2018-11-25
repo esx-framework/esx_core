@@ -15,11 +15,10 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 		-- Update user name in DB
 		table.insert(tasks, function(cb)
-			MySQL.Async.execute('UPDATE `users` SET `name` = @name WHERE `identifier` = @identifier',
-				{
-					['@identifier'] = player.getIdentifier(),
-					['@name']       = userData.playerName
-				}, function(rowsChanged)
+			MySQL.Async.execute('UPDATE `users` SET `name` = @name WHERE `identifier` = @identifier', {
+				['@identifier'] = player.getIdentifier(),
+				['@name']       = userData.playerName
+			}, function(rowsChanged)
 				cb()
 			end)
 		end)
@@ -291,13 +290,13 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 	elseif type == 'item_money' then
 
-		if itemCount > 0 and sourceXPlayer.player.get('money') >= itemCount then
+		if itemCount > 0 and sourceXPlayer.getMoney() >= itemCount then
 
 			sourceXPlayer.removeMoney(itemCount)
 			targetXPlayer.addMoney   (itemCount)
 
-			TriggerClientEvent('esx:showNotification', _source, _U('gave_money', itemCount, targetXPlayer.name))
-			TriggerClientEvent('esx:showNotification', target,  _U('received_money', itemCount, sourceXPlayer.name))
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_money', ESX.Math.GroupDigits(itemCount), targetXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target,  _U('received_money', ESX.Math.GroupDigits(itemCount), sourceXPlayer.name))
 
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
@@ -310,21 +309,35 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 			sourceXPlayer.removeAccountMoney(itemName, itemCount)
 			targetXPlayer.addAccountMoney   (itemName, itemCount)
 
-			TriggerClientEvent('esx:showNotification', _source, _U('gave_account_money', itemCount, Config.AccountLabels[itemName], targetXPlayer.name))
-			TriggerClientEvent('esx:showNotification', target,  _U('received_account_money', itemCount, Config.AccountLabels[itemName], sourceXPlayer.name))
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], targetXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target,  _U('received_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], sourceXPlayer.name))
 
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
 		end
 
 	elseif type == 'item_weapon' then
-		
-		sourceXPlayer.removeWeapon(itemName)
-		targetXPlayer.addWeapon(itemName, itemCount)
-		
-		local weaponLabel = ESX.GetWeaponLabel(itemName)
-		TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon', weaponLabel, itemCount, targetXPlayer.name))
-		TriggerClientEvent('esx:showNotification', target,  _U('received_weapon', weaponLabel, itemCount, sourceXPlayer.name))
+
+		if not targetXPlayer.hasWeapon(itemName) then
+
+			sourceXPlayer.removeWeapon(itemName)
+			targetXPlayer.addWeapon(itemName, itemCount)
+
+			local weaponLabel = ESX.GetWeaponLabel(itemName)
+
+			if itemCount > 0 then
+				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_ammo', weaponLabel, itemCount, targetXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon_ammo', weaponLabel, itemCount, sourceXPlayer.name))
+			else
+				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon', weaponLabel, targetXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon', weaponLabel, sourceXPlayer.name))
+			end
+
+		else
+			TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
+			TriggerClientEvent('esx:showNotification', _source, _U('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
+		end
+
 	end
 
 end)
@@ -345,6 +358,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 			for i=1, #xPlayer.inventory, 1 do
 				if xPlayer.inventory[i].name == itemName then
 					foundItem = xPlayer.inventory[i]
+					break
 				end
 			end
 
