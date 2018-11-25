@@ -92,6 +92,32 @@ AddEventHandler('esx_vehicleshop:sellVehicle', function (vehicle)
 	end)
 end)
 
+RegisterServerEvent('esx_vehicleshop:addToList')
+AddEventHandler('esx_vehicleshop:addToList', function(target, model, plate)
+	local xPlayer, xTarget = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(target)
+	local dateNow = os.date('%Y-%m-%d %H:%M')
+
+	if xPlayer.job.name ~= 'cardealer' then
+		print(('esx_vehicleshop: %s attempted to add a sold vehicle to list!'):format(xPlayer.identifier))
+		return
+	end
+
+	MySQL.Async.execute('INSERT INTO vehicle_sold (client, model, plate, soldby, date) VALUES (@client, @model, @plate, @soldby, @date)', {
+		['@client'] = xTarget.getName(),
+		['@model'] = model,
+		['@plate'] = plate,
+		['@soldby'] = xPlayer.getName(),
+		['@date'] = dateNow
+	})
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:getSoldVehicles', function (source, cb)
+
+	MySQL.Async.fetchAll('SELECT * FROM vehicle_sold', {}, function(result)
+		cb(result)
+	end)
+end)
+
 RegisterServerEvent('esx_vehicleshop:rentVehicle')
 AddEventHandler('esx_vehicleshop:rentVehicle', function (vehicle, plate, playerName, basePrice, rentPrice, target)
 	local xPlayer = ESX.GetPlayerFromId(target)
@@ -117,12 +143,6 @@ AddEventHandler('esx_vehicleshop:rentVehicle', function (vehicle, plate, playerN
 			['@owner']       = owner
 		})
 	end)
-end)
-
--- unused?
-RegisterServerEvent('esx_vehicleshop:setVehicleForAllPlayers')
-AddEventHandler('esx_vehicleshop:setVehicleForAllPlayers', function (props, x, y, z, radius)
-	TriggerClientEvent('esx_vehicleshop:setVehicle', -1, props, x, y, z, radius)
 end)
 
 RegisterServerEvent('esx_vehicleshop:getStockItem')

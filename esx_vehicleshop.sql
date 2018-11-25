@@ -26,6 +26,16 @@ CREATE TABLE `cardealer_vehicles` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `vehicle_sold` (
+	`client` VARCHAR(50) NOT NULL,
+	`model` VARCHAR(50) NOT NULL,
+	`plate` VARCHAR(50) NOT NULL,
+	`soldby` VARCHAR(50) NOT NULL,
+	`date` VARCHAR(50) NOT NULL,
+
+	PRIMARY KEY (`plate`)
+)
+
 CREATE TABLE `owned_vehicles` (
 	`owner` varchar(30) NOT NULL,
 	`plate` varchar(12) NOT NULL,

@@ -53,4 +53,12 @@ Locales['sv'] = {
   ['have_withdrawn']          = 'du har tagit ut ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']          = 'du har lagt in ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'chef handlingar',
+
+  -- sold vehicles
+  ['boss_sold']               = 'lista av sålda fordon',
+  ['customer_client']         = 'kund',
+  ['customer_model']          = 'bil modell',
+  ['customer_plate']          = 'registreringsnummer',
+  ['customer_soldby']         = 'såld av',
+  ['customer_date']           = 'datum',
 }

@@ -487,6 +487,7 @@ function OpenResellerMenu()
 				SetVehicleNumberPlateText(LastVehicles[#LastVehicles], newPlate)
 
 				TriggerServerEvent('esx_vehicleshop:sellVehicle', model)
+				TriggerServerEvent('esx_vehicleshop:addToList', GetPlayerServerId(closestPlayer), model, newPlate)
 
 				if Config.EnableOwnedVehicles then
 					TriggerServerEvent('esx_vehicleshop:setVehicleOwnedPlayerId', GetPlayerServerId(closestPlayer), vehicleProps)
@@ -513,6 +514,7 @@ function OpenResellerMenu()
 					SetVehicleNumberPlateText(LastVehicles[#LastVehicles], newPlate)
 
 					TriggerServerEvent('esx_vehicleshop:sellVehicle', model)
+					TriggerServerEvent('esx_vehicleshop:addToList', GetPlayerServerId(closestPlayer), model, newPlate)
 
 					if Config.EnableSocietyOwnedVehicles then
 						TriggerServerEvent('esx_vehicleshop:setVehicleOwnedSociety', xPlayer.job.name, vehicleProps)
@@ -639,12 +641,40 @@ function OpenBossActionsMenu()
 		title    = _U('dealer_boss'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('boss_actions'), value = 'boss_actions'}
+			{label = _U('boss_actions'), value = 'boss_actions'},
+			{label = _U('boss_sold'), value = 'sold_vehicles'}
 		}
 	}, function (data, menu)
 		if data.current.value == 'boss_actions' then
-			TriggerEvent('esx_society:openBossMenu', 'cardealer', function(data, menu)
-				menu.close()
+			TriggerEvent('esx_society:openBossMenu', 'cardealer', function(data2, menu2)
+				menu2.close()
+			end)
+		elseif data.current.value == 'sold_vehicles' then
+
+			ESX.TriggerServerCallback('esx_vehicleshop:getSoldVehicles', function(customers)
+				local elements = {
+					head = { _U('customer_client'), _U('customer_model'), _U('customer_plate'), _U('customer_soldby'), _U('customer_date') },
+					rows = {}
+				}
+		
+				for i=1, #customers, 1 do
+					table.insert(elements.rows, {
+						data = customers[i],
+						cols = {
+							customers[i].client,
+							customers[i].model,
+							customers[i].plate,
+							customers[i].soldby,
+							customers[i].date
+						}
+					})
+				end
+
+				ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'sold_vehicles', elements, function(data2, menu2)
+
+				end, function(data2, menu2)
+					menu2.close()
+				end)
 			end)
 		end
 
@@ -687,7 +717,7 @@ function OpenGetStocksMenu()
 					TriggerServerEvent('esx_vehicleshop:getStockItem', itemName, count)
 					menu2.close()
 					menu.close()
-					OpenGetStocksMenu()	
+					OpenGetStocksMenu()
 				end
 			end, function (data2, menu2)
 				menu2.close()

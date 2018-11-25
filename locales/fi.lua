@@ -53,4 +53,12 @@ Locales['fi'] = {
   ['have_withdrawn']          = 'sinä otit ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']          = 'sinä talletit ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'Pomo toiminnot',
+
+  -- sold vehicles
+  ['boss_sold']               = 'list of sold vehicles',
+  ['customer_client']         = 'customer name',
+  ['customer_model']          = 'car model',
+  ['customer_plate']          = 'car plate',
+  ['customer_soldby']         = 'sold by',
+  ['customer_date']           = 'date',
 }
