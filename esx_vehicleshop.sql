@@ -34,7 +34,7 @@ CREATE TABLE `vehicle_sold` (
 	`date` VARCHAR(50) NOT NULL,
 
 	PRIMARY KEY (`plate`)
-)
+);
 
 CREATE TABLE `owned_vehicles` (
 	`owner` varchar(30) NOT NULL,
