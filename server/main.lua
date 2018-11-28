@@ -168,10 +168,8 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 
 		local xPlayer = ESX.GetPlayerFromId(target)
 
-		local identifier = GetPlayerIdentifiers(target)[1]
-
-		local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {
-			['@identifier'] = identifier
+		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, sex, dateofbirth, height FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
 		})
 
 		local firstname = result[1].firstname
@@ -256,7 +254,7 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 
 		if result[1] then
 
-			MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',  {
+			MySQL.Async.fetchAll('SELECT name, firstname, lastname FROM users WHERE identifier = @identifier',  {
 				['@identifier'] = result[1].owner
 			}, function(result2)
 
@@ -275,12 +273,12 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source, cb, plate)
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE plate = @plate', {
+	MySQL.Async.fetchAll('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function(result)
 		if result[1] ~= nil then
 
-			MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',  {
+			MySQL.Async.fetchAll('SELECT name, firstname, lastname FROM users WHERE identifier = @identifier',  {
 				['@identifier'] = result[1].owner
 			}, function(result2)
 
