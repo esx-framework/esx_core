@@ -23,6 +23,7 @@ CREATE TABLE `cardealer_vehicles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`vehicle` varchar(255) NOT NULL,
 	`price` int(11) NOT NULL,
+
 	PRIMARY KEY (`id`)
 );
 
@@ -81,6 +82,7 @@ CREATE TABLE `vehicles` (
 	`model` varchar(60) NOT NULL,
 	`price` int(11) NOT NULL,
 	`category` varchar(60) DEFAULT NULL,
+
 	PRIMARY KEY (`model`)
 );
 

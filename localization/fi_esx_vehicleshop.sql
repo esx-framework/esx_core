@@ -1,29 +1,40 @@
 USE `essentialmode`;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
-  ('society_cardealer','Autokauppa',1)
+	('society_cardealer','Autokauppa',1)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
-  ('society_cardealer','Autokauppa',1)
+	('society_cardealer','Autokauppa',1)
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
-  ('cardealer','Autokauppa')
+	('cardealer','Autokauppa')
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-  ('cardealer',0,'recruit','Harjoittelija',10,'{}','{}'),
-  ('cardealer',1,'novice','Aloittelija',25,'{}','{}'),
-  ('cardealer',2,'experienced','Kokenut',40,'{}','{}'),
-  ('cardealer',3,'boss','Pomo',0,'{}','{}')
+	('cardealer',0,'recruit','Harjoittelija',10,'{}','{}'),
+	('cardealer',1,'novice','Aloittelija',25,'{}','{}'),
+	('cardealer',2,'experienced','Kokenut',40,'{}','{}'),
+	('cardealer',3,'boss','Pomo',0,'{}','{}')
 ;
 
 CREATE TABLE `cardealer_vehicles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`vehicle` varchar(255) NOT NULL,
 	`price` int(11) NOT NULL,
+
 	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `vehicle_sold` (
+	`client` VARCHAR(50) NOT NULL,
+	`model` VARCHAR(50) NOT NULL,
+	`plate` VARCHAR(50) NOT NULL,
+	`soldby` VARCHAR(50) NOT NULL,
+	`date` VARCHAR(50) NOT NULL,
+
+	PRIMARY KEY (`plate`)
 );
 
 CREATE TABLE `owned_vehicles` (
@@ -71,6 +82,7 @@ CREATE TABLE `vehicles` (
 	`model` varchar(60) NOT NULL,
 	`price` int(11) NOT NULL,
 	`category` varchar(60) DEFAULT NULL,
+
 	PRIMARY KEY (`model`)
 );
 
