@@ -1018,20 +1018,19 @@ Citizen.CreateThread(function()
 						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'mecano', vehicleProps)
 
-						else
+					else
 
-							if
-								GetEntityModel(vehicle) == GetHashKey('flatbed')   or
-								GetEntityModel(vehicle) == GetHashKey('towtruck2') or
-								GetEntityModel(vehicle) == GetHashKey('slamvan3')
-							then
-								TriggerServerEvent('esx_service:disableService', 'mecano')
-							end
-
+						if
+							GetEntityModel(vehicle) == GetHashKey('flatbed')   or
+							GetEntityModel(vehicle) == GetHashKey('towtruck2') or
+							GetEntityModel(vehicle) == GetHashKey('slamvan3')
+						then
+							TriggerServerEvent('esx_service:disableService', 'mecano')
 						end
 
-						ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 					end
+
+					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 
 				elseif CurrentAction == 'remove_entity' then
 					DeleteEntity(CurrentActionData.entity)
@@ -1039,6 +1038,7 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 			end
+		end
 
 		if IsControlJustReleased(0, Keys['F6']) and not IsDead and PlayerData.job ~= nil and PlayerData.job.name == 'mecano' then
 			OpenMobileMecanoActionsMenu()
