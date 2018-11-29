@@ -641,7 +641,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 		model             = GetEntityModel(vehicle),
 
-		plate             = GetVehicleNumberPlateText(vehicle),
+		plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
 		plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
 		health            = GetEntityHealth(vehicle),
