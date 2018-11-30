@@ -1,5 +1,5 @@
 # es_extended
-es_extended is a roleplay framework for FiveM. It is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the **Es**sentialMode **E**xtended framework for FiveM.
+es_extended is a roleplay framework for FiveM. It is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the **Es**sentialMode E**x**tended framework for FiveM.
 
 ### Links & Read more
 - [ESX Documentation](https://esx-org.github.io/) (incomplete)
