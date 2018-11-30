@@ -364,7 +364,7 @@ Citizen.CreateThread(function()
 		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
-			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
+			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x/2 then
 				isInPublicMarker = true
 				position = v.Teleport
 				zone = v
