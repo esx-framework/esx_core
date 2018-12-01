@@ -74,6 +74,8 @@ AddEventHandler('esx_drugs:processCannabis', function()
 
 				TriggerClientEvent('esx:showNotification', _source, _U('weed_processed'))
 			end
+
+			playersProcessingCannabis[_source] = nil
 		end)
 	else
 		print(('esx_drugs: %s attempted to exploit weed processing!'):format(GetPlayerIdentifiers(source)[1]))
