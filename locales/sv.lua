@@ -1,9 +1,10 @@
 Locales['sv'] = {
-  --Global menus
+  -- global menus
   ['not_enough_in_society']   = 'det finns inte tillräckligt många ~r~ det föremålet~s~ i förrådet!',
   ['player_cannot_hold']      = 'du har ~r~inte~s~ tillräckligt mycket~y~plats~s~ på dig!',
   ['vehicle_belongs']         = 'fordonet med reg numret ~y~%s~s~ tillhör nu ~b~dig~s~',
   ['broke_company']           = 'det finns inte tillräckligt mycket pengar i företagskontot',
+  ['license_missing']         = 'du är inte behörig att köpa bilar, B-körkort krävs!',
   ['purchase_type']           = 'till vem är fordonet?',
   ['society_type']            = 'företag',
   ['staff_type']              = 'personlig användning',
@@ -33,7 +34,7 @@ Locales['sv'] = {
   ['set_vehicle_owner_rent']  = 'hyr ut fordon',
   ['set_vehicle_owner_sell']  = 'sälj fordon',
   ['set_vehicle_owner_sell_society']  = 'sälj fordon till företag',
-  ['shop_menu']               = 'tryck ~INPUT_CONTEXT~ för att få fram menyn',
+  ['shop_menu']               = 'tryck ~INPUT_CONTEXT~ för öppna ~y~bilförsäljarsmenyn~s~.',
   ['generic_shopitem']        = '%s SEK',
   ['vehicle_dealer']          = 'bilförsäljare - fordon för visning',
   ['vehicle_menu']            = 'tryck på ~INPUT_CONTEXT~ för att ~o~lämna tillbaka~s~ fordonet till bilförsäljaren.',

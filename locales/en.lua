@@ -1,9 +1,10 @@
 Locales['en'] = {
-  --Global menus
+  -- global menus
   ['not_enough_in_society']   = 'there\'s not enough of ~r~that item~s~ in the society!',
   ['player_cannot_hold']      = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
   ['vehicle_belongs']         = 'an vehicle with plate ~y~%s~s~ now belongs to ~b~you~s~',
   ['broke_company']           = 'you do not have enough money in the company account',
+  ['license_missing']         = 'you don\'t have a driver\'s license!',
   ['purchase_type']           = 'type of purchase',
   ['society_type']            = 'society',
   ['staff_type']              = 'personal usage',

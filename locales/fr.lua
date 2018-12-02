@@ -1,13 +1,13 @@
 Locales['fr'] = {
-  --Global menus
+  -- global menus
   ['not_enough_in_society']           = 'il n\'y à plus assez ~r~de cet objet~s~ dans la societé!',
   ['player_cannot_hold']              = 'vous n\'avez ~r~pas~s~ assez ~y~d\'espace~s~ dans votre inventaire!',
   ['vehicle_belongs']                 = 'le véhicule avec la plaque ~y~%s~s~ est désormais à ~b~vous~s~',
   ['broke_company']                   = 'vous n\avez pas assez d\'argent sur le compte de la societé',
+  ['license_missing']                 = 'you don\'t have a driver\'s license!',
   ['purchase_type']                   = 'type d\'achat',
   ['society_type']                    = 'societé',
   ['staff_type']                      = 'personnel',
-  ['broke_company']                   = 'vous n\'avez pas assez d\'argent sur votre compte société',
   ['buy_vehicle_shop']                = 'acheter %s pour $%s?',
   ['buy_vehicle']                     = 'acheter véhicule',
   ['car_dealer']                      = 'concessionnaire',
@@ -36,7 +36,6 @@ Locales['fr'] = {
   ['set_vehicle_owner_sell_society']  = 'attribuer véhicule [Vente] [Société]',
   ['shop_menu']                       = 'appuyez sur ~INPUT_CONTEXT~ pour accéder au menu',
   ['generic_shopitem']                = '$%s',
-  ['vehicle']                         = 'le véhicule',
   ['vehicle_dealer']                  = 'concessionnaire - Véhicules',
   ['vehicle_menu']                    = 'appuez sur ~INPUT_CONTEXT~ pour rendre votre véhicule',
   ['vehicle_purchased']               = 'vous avez acheté un véhicule',

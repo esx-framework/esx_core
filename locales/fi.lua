@@ -1,9 +1,10 @@
 Locales['fi'] = {
-  --Global menus
+  -- global menus
   ['not_enough_in_society']   = 'firman varastossa ei ole enempää ~r~tuota esinettä~s~!',
   ['player_cannot_hold']      = 'sinulla ~r~ei ole~s~ tarpeeksi ~y~vapaata tilaa~s~ repussasi!',
   ['vehicle_belongs']         = 'ajoneuvo kilvellä ~y~%s~s~ on nyt ~b~sinun~s~ omistuksessasi',
   ['broke_company']           = 'sinulla ei ole tarpeeksi rahaa yrityksen tilillä',
+  ['license_missing']         = 'you don\'t have a driver\'s license!',
   ['purchase_type']           = 'osto tyyppi',
   ['society_type']            = 'firma',
   ['staff_type']              = 'henkilökunta',

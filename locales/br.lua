@@ -1,7 +1,13 @@
 Locales['br'] = {
-  --Global menus
-  ['belongs']                 = ' agora pertence a você',
+  -- global menus
+  ['not_enough_in_society']   = 'there\'s not enough of ~r~that item~s~ in the society!',
+  ['player_cannot_hold']      = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
+  ['vehicle_belongs']         = 'an vehicle with plate ~y~%s~s~ now belongs to ~b~you~s~',
   ['broke_company']           = 'você não tem dinheiro suficiente na conta da empresa',
+  ['license_missing']         = 'you don\'t have a driver\'s license!',
+  ['purchase_type']           = 'type of purchase',
+  ['society_type']            = 'society',
+  ['staff_type']              = 'personal usage',
   ['buy_vehicle_shop']        = 'comprar %s por $%s?',
   ['buy_vehicle']             = 'comprar veículo',
   ['car_dealer']              = 'Concessionária de carros',
@@ -27,9 +33,9 @@ Locales['br'] = {
   ['sell_menu']               = 'Pressione ~INPUT_CONTEXT~ para vender ',
   ['set_vehicle_owner_rent']  = 'Atribuir veículo [Alugar]',
   ['set_vehicle_owner_sell']  = 'Veículos para [Venda]',
+  ['set_vehicle_owner_sell_society']  = 'assign Vehicle [Sale] [Society]',
   ['shop_menu']               = 'pressione ~INPUT_CONTEXT~ para acessar o menu ~y~%s~s~ pela quantidade de ~g~$%s~s~',
   ['generic_shopitem']        = '$%s',
-  ['vehicle']                 = 'veículo ',
   ['vehicle_dealer']          = 'Veículo - Concessionária',
   ['vehicle_menu']            = 'Pressione ~INPUT_CONTEXT~ para fazer o seu veículo',
   ['vehicle_purchased']       = 'você comprou um veículo',

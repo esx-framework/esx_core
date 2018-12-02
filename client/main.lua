@@ -962,7 +962,21 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, Keys['E']) then
 				if CurrentAction == 'shop_menu' then
-					OpenShopMenu()
+
+					if Config.LicenseEnable then
+
+						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasDriversLicense)
+							if hasDriversLicense then
+								OpenShopMenu()
+							else
+								ESX.ShowNotification(_U('license_missing'))
+							end
+						end, GetPlayerServerId(PlayerId()), 'drive')
+
+					else
+						OpenShopMenu()
+					end
+
 				elseif CurrentAction == 'reseller_menu' then
 					OpenResellerMenu()
 				elseif CurrentAction == 'give_back_vehicle' then
