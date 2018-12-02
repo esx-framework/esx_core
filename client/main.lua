@@ -52,6 +52,7 @@ AddEventHandler('esx_status:load', function(status)
 				status = GetStatusData()
 			})
 
+			TriggerEvent('esx_status:onTick', GetStatusData(true))
 			Citizen.Wait(Config.TickTime)
 		end
 	end)
