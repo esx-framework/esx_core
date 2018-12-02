@@ -160,7 +160,11 @@ function OpenShopMenu()
 	end
 
 	for i=1, #Vehicles, 1 do
-		table.insert(vehiclesByCategory[Vehicles[i].category], Vehicles[i])
+		if IsModelInCdimage(GetHashKey(Vehicles[i].model)) then
+			table.insert(vehiclesByCategory[Vehicles[i].category], Vehicles[i])
+		else
+			print(('esx_vehicleshop: vehicle "%s" does not exist'):format(Vehicles[i].model))
+		end
 	end
 
 	for i=1, #Categories, 1 do
