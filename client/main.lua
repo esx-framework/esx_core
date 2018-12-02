@@ -905,6 +905,22 @@ AddEventHandler('esx_vehicleshop:hasExitedMarker', function (zone)
 	CurrentAction = nil
 end)
 
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		if IsInShopMenu then
+			ESX.UI.Menu.CloseAll()
+
+			DeleteShopInsideVehicles()
+
+			local playerPed = PlayerPedId()
+
+			FreezeEntityPosition(playerPed, false)
+			SetEntityVisible(playerPed, true)
+			SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos.x, Config.Zones.ShopEntering.Pos.y, Config.Zones.ShopEntering.Pos.z)
+		end
+	end
+end)
+
 if Config.EnablePlayerManagement then
 	RegisterNetEvent('esx_phone:loaded')
 	AddEventHandler('esx_phone:loaded', function (phoneNumber, contacts)
