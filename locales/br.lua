@@ -11,6 +11,7 @@ Locales['br'] = {
   ['buy_vehicle_shop']        = 'comprar %s por $%s?',
   ['buy_vehicle']             = 'comprar veículo',
   ['car_dealer']              = 'Concessionária de carros',
+  ['shop_awaiting_model']     = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['create_bill']             = 'criar recibo',
   ['dealer_boss']             = 'Concessionária de carros - Chefe',
   ['delivered']               = 'veículo ~g~entregue~s~ para o revendedor',

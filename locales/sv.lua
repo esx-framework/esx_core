@@ -11,6 +11,7 @@ Locales['sv'] = {
   ['buy_vehicle_shop']        = 'vill du köpa in %s för %s SEK?',
   ['buy_vehicle']             = 'Köp in fordon',
   ['car_dealer']              = 'bilförsäljare',
+  ['shop_awaiting_model']     = 'ditt fordon håller på att ~g~LADDA NER & LÄSA IN~s~ vänta tills det är klart',
   ['create_bill']             = 'ge faktura',
   ['dealer_boss']             = 'chefmeny',
   ['delivered']               = 'fordonet har ~g~lämnats tillbaka~s~ till bilförsäljaren',

@@ -390,6 +390,7 @@ function OpenShopMenu()
 		local playerPed   = PlayerPedId()
 
 		DeleteShopInsideVehicles()
+		WaitForVehicleToLoad(vehicleData.model)
 
 		ESX.Game.SpawnLocalVehicle(vehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
 			table.insert(LastVehicles, vehicle)
@@ -399,6 +400,7 @@ function OpenShopMenu()
 	end)
 
 	DeleteShopInsideVehicles()
+	WaitForVehicleToLoad(firstVehicleData.model)
 
 	ESX.Game.SpawnLocalVehicle(firstVehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function (vehicle)
 		table.insert(LastVehicles, vehicle)
@@ -406,6 +408,27 @@ function OpenShopMenu()
 		FreezeEntityPosition(vehicle, true)
 	end)
 
+end
+
+function WaitForVehicleToLoad(modelHash)
+	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
+
+	if not HasModelLoaded(modelHash) then
+		RequestModel(modelHash)
+
+		while not HasModelLoaded(modelHash) do
+			Citizen.Wait(1)
+
+			DisableControlAction(0, Keys['TOP'], true)
+			DisableControlAction(0, Keys['DOWN'], true)
+			DisableControlAction(0, Keys['LEFT'], true)
+			DisableControlAction(0, Keys['RIGHT'], true)
+			DisableControlAction(0, 176, true) -- ENTER key
+			DisableControlAction(0, Keys['BACKSPACE'], true)
+
+			drawLoadingText(_U('shop_awaiting_model'), 255, 255, 255, 255)
+		end
+	end
 end
 
 function OpenResellerMenu()
@@ -1025,3 +1048,19 @@ Citizen.CreateThread(function()
 	EnableInteriorProp(interiorID, 'csr_beforeMission') -- Load large window
 	RefreshInterior(interiorID)
 end)
+
+function drawLoadingText(text, red, green, blue, alpha)
+	SetTextFont(4)
+	SetTextProportional(0)
+	SetTextScale(0.0, 0.5)
+	SetTextColour(red, green, blue, alpha)
+	SetTextDropShadow(0, 0, 0, 0, 255)
+	SetTextEdge(1, 0, 0, 0, 255)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextCentre(true)
+
+	BeginTextCommandDisplayText("STRING")
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandDisplayText(0.5, 0.5)
+end

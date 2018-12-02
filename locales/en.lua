@@ -11,6 +11,7 @@ Locales['en'] = {
   ['buy_vehicle_shop']        = 'do you want to purchase %s for $%s?',
   ['buy_vehicle']             = 'buy vehicle',
   ['car_dealer']              = 'car Dealership',
+  ['shop_awaiting_model']     = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['create_bill']             = 'create bill',
   ['dealer_boss']             = 'car Dealer - Boss',
   ['delivered']               = 'the vehicle has been ~g~delivered~s~ to the dealer',
