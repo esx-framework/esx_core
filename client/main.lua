@@ -752,6 +752,16 @@ AddEventHandler('playerSpawned', function()
 			ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
 				if propertyName ~= nil then
 					if propertyName ~= '' then
+						local property = GetProperty(propertyName)
+
+						for i=1, #property.ipls, 1 do
+							RequestIpl(property.ipls[i])
+				
+							while not IsIplActive(property.ipls[i]) do
+								Citizen.Wait(0)
+							end
+						end
+
 						TriggerEvent('instance:create', 'property', {property = propertyName, owner = ESX.GetPlayerData().identifier})
 					end
 				end
