@@ -9,8 +9,8 @@ ESX.RegisterServerCallback('esx_joblisting:getJobsList', function(source, cb)
 
 		for i=1, #result, 1 do
 			table.insert(data, {
-				value   = result[i].name,
-				label   = result[i].label
+				job   = result[i].name,
+				label = result[i].label
 			})
 		end
 
