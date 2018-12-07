@@ -64,7 +64,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
 
-		local coords, isInJoblistingMarker, currentZone = GetEntityCoords(PlayerPedId()), false, nil
+		local coords, currentZone = GetEntityCoords(PlayerPedId()), nil
 
 		for i=1, #Config.Zones, 1 do
 			if GetDistanceBetweenCoords(coords, Config.Zones[i].x, Config.Zones[i].y, Config.Zones[i].z, true) < (Config.ZoneSize.x / 2) then
