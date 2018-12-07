@@ -691,7 +691,6 @@ function OpenPlayerInventoryMenu(property, owner)
 			if data.current.type == 'item_weapon' then
 
 				menu.close()
-
 				TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, data.current.ammo)
 
 				ESX.SetTimeout(300, function()
@@ -701,7 +700,7 @@ function OpenPlayerInventoryMenu(property, owner)
 			else
 
 				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'put_item_count', {
-					title = _U('amount'),
+					title = _U('amount')
 				}, function(data2, menu2)
 
 					local quantity = tonumber(data2.value)
@@ -937,6 +936,9 @@ Citizen.CreateThread(function()
 			TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
 		end
 
+		if not isInMarker and not HasAlreadyEnteredMarker then
+			Citizen.Wait(500)
+		end
 	end
 end)
 
