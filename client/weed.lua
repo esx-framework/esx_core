@@ -29,29 +29,47 @@ Citizen.CreateThread(function()
 			end
 
 			if IsControlJustReleased(0, Keys['E']) and not isProcessing then
-				isProcessing = true
-				ESX.ShowNotification(_U('weed_processingstarted'))
-				TriggerServerEvent('esx_drugs:processCannabis')
-				local timeLeft = Config.Delays.WeedProcessing / 1000
 
-				while timeLeft > 0 do
-					Citizen.Wait(1000)
-					timeLeft = timeLeft - 1
-
-					if GetDistanceBetweenCoords(GetEntityCoords(playerPed), Config.CircleZones.WeedProcessing.coords, false) > 4 then
-						ESX.ShowNotification(_U('weed_processingtoofar'))
-						TriggerServerEvent('esx_drugs:cancelProcessing')
-						break
-					end
+				if Config.LicenseEnable then
+					ESX.TriggerServerCallback('esx_license:checkLicense', function(hasProcessingLicense)
+						if hasProcessingLicense then
+							ProcessWeed()
+						else
+							OpenBuyLicenseMenu('weed_processing')
+						end
+					end, GetPlayerServerId(PlayerId()), 'weed_processing')
+				else
+					ProcessWeed()
 				end
 
-				isProcessing = false
 			end
 		else
 			Citizen.Wait(500)
 		end
 	end
 end)
+
+function ProcessWeed()
+	isProcessing = true
+
+	ESX.ShowNotification(_U('weed_processingstarted'))
+	TriggerServerEvent('esx_drugs:processCannabis')
+	local timeLeft = Config.Delays.WeedProcessing / 1000
+	local playerPed = PlayerPedId()
+
+	while timeLeft > 0 do
+		Citizen.Wait(1000)
+		timeLeft = timeLeft - 1
+
+		if GetDistanceBetweenCoords(GetEntityCoords(playerPed), Config.CircleZones.WeedProcessing.coords, false) > 4 then
+			ESX.ShowNotification(_U('weed_processingtoofar'))
+			TriggerServerEvent('esx_drugs:cancelProcessing')
+			break
+		end
+	end
+
+	isProcessing = false
+end
 
 Citizen.CreateThread(function()
 	while true do
