@@ -378,6 +378,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 						if vehicle.plate == plate then
 							xPlayer.addMoney(resellPrice)
 							RemoveOwnedVehicle(plate)
+
 							cb(true)
 						else
 							print(('esx_vehicleshop: %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
@@ -400,10 +401,11 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 								local vehicle = json.decode(result[1].vehicle)
 
-								if vehicle.model == GetHashKey(model) then
+								if vehicle.model == model then
 									if vehicle.plate == plate then
 										xPlayer.addMoney(resellPrice)
 										RemoveOwnedVehicle(plate)
+
 										cb(true)
 									else
 										print(('esx_vehicleshop: %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
