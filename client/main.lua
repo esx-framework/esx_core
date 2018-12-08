@@ -871,7 +871,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function (zone)
 				end
 	
 				resellPrice = ESX.Math.Round(vehicleData.price / 100 * Config.ResellPercentage)
-				model = string.lower(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)))
+				model = GetEntityModel(vehicle)
 				plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
 	
 				CurrentAction     = 'resell_vehicle'

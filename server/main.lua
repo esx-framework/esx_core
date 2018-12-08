@@ -342,14 +342,19 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function (source, 
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, model)
-	local resellPrice
+	local resellPrice = 0
 
 	-- calculate the resell price
 	for i=1, #Vehicles, 1 do
-		if Vehicles[i].model == model then
+		if GetHashKey(Vehicles[i].model) == model then
 			resellPrice = ESX.Math.Round(Vehicles[i].price / 100 * Config.ResellPercentage)
 			break
 		end
+	end
+
+	if resellPrice == 0 then
+		print(('esx_vehicleshop: %s attempted to sell an unknown vehicle!'):format(GetPlayerIdentifiers(source)[1]))
+		cb(false)
 	end
 
 	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
@@ -369,7 +374,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 					local vehicle = json.decode(result[1].vehicle)
 
-					if vehicle.model == GetHashKey(model) then
+					if vehicle.model == model then
 						if vehicle.plate == plate then
 							xPlayer.addMoney(resellPrice)
 							RemoveOwnedVehicle(plate)
