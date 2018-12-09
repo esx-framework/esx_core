@@ -1,6 +1,6 @@
 AddEventHandler('es:invalidCommandHandler', function(source, command_args, user)
 	CancelEvent()
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('ooc_unknown_command', command_args[1]) } })
+	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', _U('unknown_command', command_args[1]) } })
 end)
 
 AddEventHandler('chatMessage', function(source, name, message)

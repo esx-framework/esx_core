@@ -8,5 +8,5 @@ Locales['fr'] = {
   ['do_prefix'] = 'faire | %s',
   ['generic_argument_name'] = 'message',
   ['generic_argument_help'] = 'le message',
-  ['generic_unknown_command'] = '^3%s^0 n\'est pas une commande valide!',
+  ['unknown_command'] = '^3%s^0 n\'est pas une commande valide!',
 }

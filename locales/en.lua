@@ -8,5 +8,5 @@ Locales['en'] = {
   ['do_prefix'] = 'do | %s',
   ['generic_argument_name'] = 'message',
   ['generic_argument_help'] = 'the message',
-  ['generic_unknown_command'] = '^3%s^0 is not a valid command!',
+  ['unknown_command'] = '^3%s^0 is not a valid command!',
 }

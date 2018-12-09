@@ -8,5 +8,5 @@ Locales['fi'] = {
   ['do_prefix'] = 'do | %s',
   ['generic_argument_name'] = 'viesti',
   ['generic_argument_help'] = 'viestin sisältö',
-  ['generic_unknown_command'] = '^3%s^0 ei ole validi komento!',
+  ['unknown_command'] = '^3%s^0 ei ole validi komento!',
 }
