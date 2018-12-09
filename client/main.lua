@@ -35,9 +35,9 @@ end)
 
 function DrawMissionText(msg, time)
 	ClearPrints()
-	SetTextEntry_2('STRING')
-	AddTextComponentString(msg)
-	DrawSubtitleTimed(time, 1)
+	BeginTextCommandPrint('STRING')
+	AddTextComponentSubstringPlayerName(msg)
+	EndTextCommandPrint(time, true)
 end
 
 function StartTheoryTest()

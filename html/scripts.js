@@ -64,7 +64,6 @@ function closeContainer() {
 
 // Listen for NUI Events
 window.addEventListener('message', function (event) {
-
 	var item = event.data;
 
 	// Open & Close main window
@@ -100,17 +99,16 @@ $(".btnKick").click(function () {
 
 // Handle Form Submits
 $("#question-form").submit(function (e) {
-
 	e.preventDefault();
 
 	if (questionNumber != nbQuestionToAnswer) {
-		//question 1 to 9 : pushing answer in array
+		//question 1 to 9: pushing answer in array
 		closeAll();
 		userAnswer.push($('input[name="question"]:checked').val());
 		questionNumber++;
 		openQuestionnaire();
 	} else {
-		// question 10 : comparing arrays and sending number of good answers
+		// question 10: comparing arrays and sending number of good answers
 		userAnswer.push($('input[name="question"]:checked').val());
 		var nbGoodAnswer = 0;
 		for (i = 0; i < nbQuestionToAnswer; i++) {
@@ -128,5 +126,4 @@ $("#question-form").submit(function (e) {
 	}
 
 	return false;
-
 });
