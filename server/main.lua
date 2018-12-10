@@ -341,7 +341,7 @@ end)
 ESX.RegisterServerCallback('esx_property:getLastProperty', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
+	MySQL.Async.fetchAll('SELECT last_property FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(users)
 		cb(users[1].last_property)
