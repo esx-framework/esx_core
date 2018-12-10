@@ -4,9 +4,8 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function getIdentity(source, callback)
 	local identifier = GetPlayerIdentifiers(source)[1]
-	
-	MySQL.Async.fetchAll("SELECT * FROM `users` WHERE `identifier` = @identifier",
-	{
+
+	MySQL.Async.fetchAll('SELECT identifier, firstname, lastname, dateofbirth, sex, height FROM `users` WHERE `identifier` = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1].firstname ~= nil then
@@ -18,6 +17,7 @@ function getIdentity(source, callback)
 				sex			= result[1].sex,
 				height		= result[1].height
 			}
+
 			callback(data)
 		else
 			local data = {
@@ -28,7 +28,7 @@ function getIdentity(source, callback)
 				sex			= '',
 				height		= ''
 			}
-			
+
 			callback(data)
 		end
 	end)
@@ -36,11 +36,11 @@ end
 
 function getCharacters(source, callback)
 	local identifier = GetPlayerIdentifiers(source)[1]
-	MySQL.Async.fetchAll("SELECT * FROM `characters` WHERE `identifier` = @identifier",
-	{
+	MySQL.Async.fetchAll('SELECT * FROM `characters` WHERE `identifier` = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] and result[2] and result[3] then
+
 			local data = {
 				identifier		= result[1].identifier,
 				firstname1		= result[1].firstname,
@@ -59,9 +59,11 @@ function getCharacters(source, callback)
 				sex3			= result[3].sex,
 				height3			= result[3].height
 			}
-			
+
 			callback(data)
+
 		elseif result[1] and result[2] and not result[3] then
+
 			local data = {
 				identifier		= result[1].identifier,
 				firstname1		= result[1].firstname,
@@ -82,7 +84,9 @@ function getCharacters(source, callback)
 			}
 
 			callback(data)
+
 		elseif result[1] and not result[2] and not result[3] then
+
 			local data = {
 				identifier		= result[1].identifier,
 				firstname1		= result[1].firstname,
@@ -103,7 +107,9 @@ function getCharacters(source, callback)
 			}
 
 			callback(data)
+
 		else
+
 			local data = {
 				identifier		= '',
 				firstname1		= '',
@@ -124,28 +130,26 @@ function getCharacters(source, callback)
 			}
 
 			callback(data)
+
 		end
 	end)
 end
 
 function setIdentity(identifier, data, callback)
-	MySQL.Async.execute("UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier",
-	{
+	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
 		['@identifier']		= identifier,
 		['@firstname']		= data.firstname,
 		['@lastname']		= data.lastname,
 		['@dateofbirth']	= data.dateofbirth,
 		['@sex']			= data.sex,
 		['@height']			= data.height
-	}, function(done)
+	}, function(rowsChanged)
 		if callback then
 			callback(true)
 		end
 	end)
 
-	MySQL.Async.execute(
-	'INSERT INTO characters (identifier, firstname, lastname, dateofbirth, sex, height) VALUES (@identifier, @firstname, @lastname, @dateofbirth, @sex, @height)',
-	{
+	MySQL.Async.execute('INSERT INTO characters (identifier, firstname, lastname, dateofbirth, sex, height) VALUES (@identifier, @firstname, @lastname, @dateofbirth, @sex, @height)', {
 		['@identifier']		= identifier,
 		['@firstname']		= data.firstname,
 		['@lastname']		= data.lastname,
@@ -156,15 +160,14 @@ function setIdentity(identifier, data, callback)
 end
 
 function updateIdentity(identifier, data, callback)
-	MySQL.Async.execute("UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier",
-	{
+	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
 		['@identifier']		= identifier,
 		['@firstname']		= data.firstname,
 		['@lastname']		= data.lastname,
 		['@dateofbirth']	= data.dateofbirth,
 		['@sex']			= data.sex,
 		['@height']			= data.height
-	}, function(done)
+	}, function(rowsChanged)
 		if callback then
 			callback(true)
 		end
@@ -172,15 +175,14 @@ function updateIdentity(identifier, data, callback)
 end
 
 function deleteIdentity(identifier, data, callback)
-	MySQL.Async.execute("DELETE FROM `characters` WHERE identifier = @identifier AND firstname = @firstname AND lastname = @lastname AND dateofbirth = @dateofbirth AND sex = @sex AND height = @height",
-	{
+	MySQL.Async.execute('DELETE FROM `characters` WHERE identifier = @identifier AND firstname = @firstname AND lastname = @lastname AND dateofbirth = @dateofbirth AND sex = @sex AND height = @height', {
 		['@identifier']		= identifier,
 		['@firstname']		= data.firstname,
 		['@lastname']		= data.lastname,
 		['@dateofbirth']	= data.dateofbirth,
 		['@sex']			= data.sex,
 		['@height']			= data.height
-	}, function(done)
+	}, function(rowsChanged)
 		if callback then
 			callback(true)
 		end
@@ -203,7 +205,7 @@ AddEventHandler('es:playerLoaded', function(source)
 		steamid = GetPlayerIdentifiers(source)[1],
 		playerid = source
 	}
-	
+
 	TriggerClientEvent('esx_identity:saveID', source, myID)
 	getIdentity(source, function(data)
 		if data.firstname == '' then
@@ -218,20 +220,19 @@ end)
 AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		Citizen.Wait(3000)
-		
+
 		-- Set all the client side variables for connected users one new time
-		local xPlayers = ESX.GetPlayers()
+		local xPlayers, xPlayer = ESX.GetPlayers()
 		for i=1, #xPlayers, 1 do
-		
-			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-			
+			xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
 			local myID = {
 				steamid  = xPlayer.identifier,
 				playerid = xPlayer.source
 			}
-			
+
 			TriggerClientEvent('esx_identity:saveID', xPlayer.source, myID)
-			
+
 			getIdentity(xPlayer.source, function(data)
 				if data.firstname == '' then
 					TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, false)
@@ -293,7 +294,7 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 		TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'That\'s an invalid character!' } })
 		return
 	end
-	
+
 	getCharacters(source, function(data)
 		if charNumber == 1 then
 			local data = {
@@ -317,7 +318,7 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You don\'t have a character in slot 1!' } })
 			end
 		elseif charNumber == 2 then
-		
+
 			local data = {
 				identifier	= data.identifier,
 				firstname	= data.firstname2,
@@ -340,7 +341,7 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You don\'t have a character in slot 2!' } })
 			end
 		elseif charNumber == 3 then
-	
+
 			local data = {
 				identifier	= data.identifier,
 				firstname	= data.firstname3,
@@ -379,9 +380,9 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 	end
 
 	getCharacters(source, function(data)
-	
+
 		if charNumber == 1 then
-	
+
 			local data = {
 				identifier	= data.identifier,
 				firstname	= data.firstname1,
@@ -390,7 +391,7 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 				sex			= data.sex1,
 				height		= data.height1
 			}
-			
+
 			if data.firstname ~= '' then
 				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
 					if callback then
@@ -402,9 +403,9 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 			else
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You don\'t have a character in slot 1!' } })
 			end
-			
+
 		elseif charNumber == 2 then
-	
+
 			local data = {
 				identifier	= data.identifier,
 				firstname	= data.firstname2,
@@ -413,7 +414,7 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 				sex 		= data.sex2,
 				height		= data.height2
 			}
-			
+
 			if data.firstname ~= '' then
 				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
 					if callback then
@@ -425,9 +426,9 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 			else
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You don\'t have a character in slot 2!' } })
 			end
-			
+
 		elseif charNumber == 3 then
-	
+
 			local data = {
 				identifier	= data.identifier,
 				firstname	= data.firstname3,
@@ -436,7 +437,7 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 				sex			= data.sex3,
 				height		= data.height3
 			}
-			
+
 			if data.firstname ~= '' then
 				deleteIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
 					if callback then

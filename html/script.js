@@ -11,15 +11,17 @@ $(function() {
 		}
 	};
 	
-	$("#register").submit(function(e) {
-		e.preventDefault(); // Prevent form from submitting
+	$("#register").submit(function(event) {
+		event.preventDefault(); // Prevent form from submitting
 		
 		// Verify date
 		var date = $("#dateofbirth").val();
 		var dateCheck = new Date($("#dateofbirth").val());
+
 		if (dateCheck == "Invalid Date") {
 			date == "invalid";
 		}
+
 		$.post('http://esx_identity/register', JSON.stringify({
 			firstname: $("#firstname").val(),
 			lastname: $("#lastname").val(),

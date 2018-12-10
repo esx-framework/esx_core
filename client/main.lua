@@ -135,14 +135,14 @@ function verifyName(name)
 	local spacesInName    = 0
 	local spacesWithUpper = 0
 	for word in string.gmatch(name, '%S+') do
-	
+
 		if string.match(word, '%u') then
 			spacesWithUpper = spacesWithUpper + 1
 		end
-	
+
 		spacesInName = spacesInName + 1
 	end
-	
+
 	if spacesInName > 2 then
 		return 'Your name contains more than two spaces'
 	end
@@ -150,6 +150,6 @@ function verifyName(name)
 	if spacesWithUpper ~= spacesInName then
 		return 'your name must start with a capital letter.'
 	end
-	
+
 	return ''
 end
