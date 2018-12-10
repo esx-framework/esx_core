@@ -166,7 +166,7 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	if Config.EnableESXIdentity then
 
-		MySQL.Async.fetchAll('SELECT * FROM users WHERE job = @job ORDER BY job_grade DESC', {
+		MySQL.Async.fetchAll('SELECT firstname, lastname, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
 			['@job'] = society
 		}, function (results)
 			local employees = {}
@@ -180,7 +180,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 						label       = Jobs[results[i].job].label,
 						grade       = results[i].job_grade,
 						grade_name  = Jobs[results[i].job].grades[tostring(results[i].job_grade)].name,
-						grade_label = Jobs[results[i].job].grades[tostring(results[i].job_grade)].label,
+						grade_label = Jobs[results[i].job].grades[tostring(results[i].job_grade)].label
 					}
 				})
 			end
@@ -188,7 +188,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 			cb(employees)
 		end)
 	else
-		MySQL.Async.fetchAll('SELECT * FROM users WHERE job = @job ORDER BY job_grade DESC', {
+		MySQL.Async.fetchAll('SELECT name, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
 			['@job'] = society
 		}, function (result)
 			local employees = {}
@@ -202,7 +202,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 						label       = Jobs[result[i].job].label,
 						grade       = result[i].job_grade,
 						grade_name  = Jobs[result[i].job].grades[tostring(result[i].job_grade)].name,
-						grade_label = Jobs[result[i].job].grades[tostring(result[i].job_grade)].label,
+						grade_label = Jobs[result[i].job].grades[tostring(result[i].job_grade)].label
 					}
 				})
 			end

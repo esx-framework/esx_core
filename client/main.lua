@@ -352,8 +352,7 @@ function OpenManageGradesMenu(society)
 			elements = elements
 		}, function(data, menu)
 
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society,
-			{
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society, {
 				title = _U('salary_amount')
 			}, function(data2, menu2)
 
