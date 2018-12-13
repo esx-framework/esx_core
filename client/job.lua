@@ -68,6 +68,8 @@ function OpenMobileAmbulanceActionsMenu()
 
 					if data.current.value == 'revive' then
 
+						IsBusy = true
+
 						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
 							if quantity > 0 then
 								local closestPlayerPed = GetPlayerPed(closestPlayer)
@@ -75,7 +77,6 @@ function OpenMobileAmbulanceActionsMenu()
 								if IsPedDeadOrDying(closestPlayerPed, 1) then
 									local playerPed = PlayerPedId()
 
-									IsBusy = true
 									ESX.ShowNotification(_U('revive_inprogress'))
 
 									local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
@@ -90,7 +91,6 @@ function OpenMobileAmbulanceActionsMenu()
 
 									TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
 									TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
-									IsBusy = false
 
 									-- Show revive award?
 									if Config.ReviveReward > 0 then
@@ -104,6 +104,9 @@ function OpenMobileAmbulanceActionsMenu()
 							else
 								ESX.ShowNotification(_U('not_enough_medikit'))
 							end
+
+							IsBusy = false
+
 						end, 'medikit')
 
 					elseif data.current.value == 'small' then
