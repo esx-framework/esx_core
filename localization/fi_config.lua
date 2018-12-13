@@ -45,7 +45,6 @@ Config.Animations = {
 			{label = "Poliisi : ohjaa liikenettä", type = "scenario", data = {anim = "WORLD_HUMAN_CAR_PARK_ATTENDANT"}},
 			{label = "Poliisi : kiikaroi", type = "scenario", data = {anim = "WORLD_HUMAN_BINOCULARS"}},
 			{label = "Istuta", type = "scenario", data = {anim = "world_human_gardener_plant"}},
-			{label = "Mekaanikko : Korjaa ajoneuvoa", type = "scenario", data = {anim = "world_human_vehicle_mechanic"}},
 			{label = "Mekaanikko : Korjaa moottoria", type = "anim", data = {lib = "mini@repair", anim = "fixing_a_ped"}},
 			{label = "Mekaanikko :  Hitsaa", type = "scenario", data = {anim = "WORLD_HUMAN_WELDING"}},
 			{label = "EMS : tutki", type = "scenario", data = {anim = "CODE_HUMAN_MEDIC_KNEEL"}},
@@ -104,7 +103,6 @@ Config.Animations = {
 		items = {
 			{label = "Juo kahvia", type = "anim", data = {lib = "amb@world_human_aa_coffee@idle_a", anim = "idle_a"}},
 			{label = "Istua", type = "anim", data = {lib = "anim@heists@prison_heistunfinished_biztarget_idle", anim = "target_idle"}},
-			{label = "Istumaahan", type = "scenario", data = {anim = "WORLD_HUMAN_PICNIC"}},
 			{label = "Nojaa taakse", type = "scenario", data = {anim = "world_human_leaning"}},
 			{label = "Ota aurinkoa selällään", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE_BACK"}},
 			{label = "Ota aurinkoa mahallaan", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE"}},
