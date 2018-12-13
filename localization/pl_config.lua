@@ -42,7 +42,6 @@ Config.Animations = {
 		    {label = "Policja: kieruj ruchem", type = "scenario", data = {anim = "WORLD_HUMAN_CAR_PARK_ATTENDANT"}},
 		    {label = "Użyj lornetki", type = "scenario", data = {anim = "WORLD_HUMAN_BINOCULARS"}},
 		    {label = "Wykopki", type = "scenario", data = {anim = "world_human_gardener_plant"}},
-		    {label = "Mechanik: połoź się", type = "scenario", data = {anim = "world_human_vehicle_mechanic"}},
 		    {label = "Mechanik: sprawdź/napraw silnik", type = "anim", data = {lib = "mini@repair", anim = "fixing_a_ped"}},
 		    {label = "Medyk: sprawdź stan", type = "scenario", data = {anim = "CODE_HUMAN_MEDIC_KNEEL"}},
 		    {label = "Taxi: rozmawiaj z klientem", type = "anim", data = {lib = "oddjobs@taxi@driver", anim = "leanover_idle"}},
@@ -101,7 +100,6 @@ Config.Animations = {
 		items = {
 		    {label = "Pij kawe", type = "anim", data = {lib = "amb@world_human_aa_coffee@idle_a", anim = "idle_a"}},
 		    {label = "Usiadz na krzesle", type = "anim", data = {lib = "anim@heists@prison_heistunfinished_biztarget_idle", anim = "target_idle"}},
-		    {label = "Usiadz na ziemi", type = "scenario", data = {anim = "WORLD_HUMAN_PICNIC"}},
 		    {label = "Przegladaj smartfon", type = "scenario", data = {anim = "world_human_leaning"}},
 		    {label = "Polóż się na ziemi", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE_BACK"}},
 		    {label = "Polóż się na ziemi na brzuchu", type = "scenario", data = {anim = "WORLD_HUMAN_SUNBATHE"}},
