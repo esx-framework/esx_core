@@ -2,6 +2,8 @@ local guiEnabled = false
 local myIdentity = {}
 local myIdentifiers = {}
 local hasIdentity = false
+local isDead = false
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -9,6 +11,14 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+end)
+
+AddEventHandler('esx:onPlayerDeath', function(data)
+	isDead = true
+end)
+
+AddEventHandler('playerSpawned', function(spawn)
+	isDead = false
 end)
 
 function EnableGui(state)
@@ -23,7 +33,9 @@ end
 
 RegisterNetEvent('esx_identity:showRegisterIdentity')
 AddEventHandler('esx_identity:showRegisterIdentity', function()
-	EnableGui(true)
+	if not isDead then
+		EnableGui(true)
+	end
 end)
 
 RegisterNetEvent('esx_identity:identityCheck')
