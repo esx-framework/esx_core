@@ -9,6 +9,7 @@ Locales['fi'] = {
   ['no_play_near'] = 'ei pelaajia lähettyvillä',
   ['realtors'] = 'Kiinteistövälitys',
   ['boss_action'] = 'pomo Toiminnot',
+  ['client_poor'] = 'your client cannot afford that',
 
   -- Property menu
   ['property_name'] = 'kiinteistö',

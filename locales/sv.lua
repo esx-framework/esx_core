@@ -9,6 +9,7 @@ Locales['sv'] = {
   ['no_play_near'] = 'det finns inga spelare i närheten!',
   ['realtors'] = 'mäklare',
   ['boss_action'] = 'chefmeny',
+  ['client_poor'] = 'din klient har inte råd att betala det',
 
   -- Property menu
   ['property_name'] = 'fastighet',

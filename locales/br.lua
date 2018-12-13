@@ -9,6 +9,7 @@ Locales['br'] = {
   ['no_play_near'] = 'nenhum jogador nas proximidades',
   ['realtors'] = 'agente Imobiliário',
   ['boss_action'] = 'boss Actions',
+  ['client_poor'] = 'your client cannot afford that',
 
   -- Property menu
   ['property_name'] = 'propriedade',

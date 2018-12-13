@@ -3,7 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 TriggerEvent('esx_phone:registerNumber', 'realestateagent', _U('client'), false, false)
-TriggerEvent('esx_society:registerSociety', 'realestateagent', 'Agent immobilier', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
+TriggerEvent('esx_society:registerSociety', 'realestateagent', _U('realtors'), 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
 
 RegisterServerEvent('esx_realestateagentjob:revoke')
 AddEventHandler('esx_realestateagentjob:revoke', function(property, owner)
@@ -20,7 +20,12 @@ RegisterServerEvent('esx_realestateagentjob:sell')
 AddEventHandler('esx_realestateagentjob:sell', function(target, property, price)
 	local xPlayer, xTarget = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(target)
 
-	if xPlayer.job.name == 'realestateagent' then
+	if xPlayer.job.name ~= 'realestateagent' then
+		print(('esx_realestateagentjob: %s attempted to sell a property!'):format(xPlayer.identifier))
+		return
+	end
+
+	if xTarget.getMoney() >= price then
 		xTarget.removeMoney(price)
 
 		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
@@ -29,7 +34,7 @@ AddEventHandler('esx_realestateagentjob:sell', function(target, property, price)
 	
 		TriggerEvent('esx_property:setPropertyOwned', property, price, false, xTarget.identifier)
 	else
-		print(('esx_realestateagentjob: %s attempted to sell a property!'):format(xPlayer.identifier))
+		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('client_poor'))
 	end
 end)
 
