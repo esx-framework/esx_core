@@ -113,6 +113,7 @@ function OpenPropertyMenu()
 						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 						if closestPlayer == -1 or closestDistance > 3.0 then
 							ESX.ShowNotification(_U('no_play_near'))
+							menu2.close()
 						else
 							TriggerServerEvent('esx_realestateagentjob:sell', GetPlayerServerId(closestPlayer), data.data.name, amount)
 							menu2.close()
@@ -139,6 +140,7 @@ function OpenPropertyMenu()
 						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 						if closestPlayer == -1 or closestDistance > 3.0 then
 							ESX.ShowNotification(_U('no_play_near'))
+							menu2.close()
 						else
 							TriggerServerEvent('esx_realestateagentjob:rent', GetPlayerServerId(closestPlayer), data.data.name, amount)
 							menu2.close()
