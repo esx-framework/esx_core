@@ -300,7 +300,7 @@ ESX.Game.SpawnObject = function(model, coords, cb)
 			Citizen.Wait(0)
 		end
 
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, true, true)
+		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, false, true)
 
 		if cb ~= nil then
 			cb(obj)
@@ -318,7 +318,7 @@ ESX.Game.SpawnLocalObject = function(model, coords, cb)
 			Citizen.Wait(0)
 		end
 
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, true, true)
+		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, false, true)
 
 		if cb ~= nil then
 			cb(obj)
