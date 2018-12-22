@@ -767,7 +767,7 @@ function OpenBodySearchMenu(player)
 			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
 
 				table.insert(elements, {
-					label    = _U('confiscate_dirty', ESX.Round(data.accounts[i].money)),
+					label    = _U('confiscate_dirty', ESX.Math.Round(data.accounts[i].money)),
 					value    = 'black_money',
 					itemType = 'item_account',
 					amount   = data.accounts[i].money
@@ -801,7 +801,6 @@ function OpenBodySearchMenu(player)
 				})
 			end
 		end
-
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search',
 		{
@@ -1258,7 +1257,6 @@ AddEventHandler('esx_phone:cancelMessage', function(dispatchNumber)
 	end
 end)
 
-
 AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNum)
 
 	if part == 'Cloakroom' then
@@ -1445,6 +1443,11 @@ Citizen.CreateThread(function()
 				if not IsPedSittingInAnyVehicle(targetPed) then
 					AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 				else
+					DragStatus.IsDragged = false
+					DetachEntity(playerPed, true, false)
+				end
+
+				if IsPedDeadOrDying(targetPed, true) then
 					DragStatus.IsDragged = false
 					DetachEntity(playerPed, true, false)
 				end
