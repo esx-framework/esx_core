@@ -1553,9 +1553,10 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 143, true) -- Disable melee
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
+
 			if IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) ~= 1 then
 				ESX.Streaming.RequestAnimDict('mp_arresting', function()
-					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
+					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
 				end)
 			end
 		else
@@ -1765,11 +1766,11 @@ Citizen.CreateThread(function()
 		local closestEntity   = nil
 
 		for i=1, #trackedEntities, 1 do
-			local object = GetClosestObjectOfType(coords.x, coords.y, coords.z, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
+			local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
 
 			if DoesEntityExist(object) then
 				local objCoords = GetEntityCoords(object)
-				local distance  = GetDistanceBetweenCoords(coords.x, coords.y, coords.z, objCoords.x, objCoords.y, objCoords.z, true)
+				local distance  = GetDistanceBetweenCoords(coords, objCoords, true)
 
 				if closestDistance == -1 or closestDistance > distance then
 					closestDistance = distance
