@@ -13,7 +13,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.identifier = self.player.get('identifier')
 
 	self.setMoney = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.setMoney(money)
@@ -27,7 +27,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.setBankBalance = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.setBankBalance(money)
@@ -53,7 +53,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.addMoney = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.addMoney(money)
@@ -63,7 +63,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.removeMoney = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.removeMoney(money)
@@ -73,7 +73,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.addBank = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.addBank(money)
@@ -83,7 +83,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.removeBank = function(money)
-		money = ESX.Round(money)
+		money = ESX.Math.Round(money)
 
 		if money >= 0 then
 			self.player.removeBank(money)
@@ -199,6 +199,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getLastPosition = function()
+		self.lastPosition.x = ESX.Math.Round(self.lastPosition.x, 2)
+		self.lastPosition.y = ESX.Math.Round(self.lastPosition.y, 2)
+		self.lastPosition.z = ESX.Math.Round(self.lastPosition.z, 2)
+
 		return self.lastPosition
 	end
 
@@ -251,7 +255,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 		local account   = self.getAccount(acc)
 		local prevMoney = account.money
-		local newMoney  = ESX.Round(money)
+		local newMoney  = ESX.Math.Round(money)
 
 		account.money = newMoney
 
@@ -269,7 +273,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		end
 
 		local account  = self.getAccount(acc)
-		local newMoney = account.money + ESX.Round(money)
+		local newMoney = account.money + ESX.Math.Round(money)
 
 		account.money = newMoney
 

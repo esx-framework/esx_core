@@ -90,8 +90,8 @@ ESX.SavePlayer = function(xPlayer, cb)
 		{
 			['@job']        = xPlayer.job.name,
 			['@job_grade']  = xPlayer.job.grade,
-			['@loadout']    = json.encode(xPlayer.loadout),
-			['@position']   = json.encode(xPlayer.lastPosition),
+			['@loadout']    = json.encode(xPlayer.getLoadout()),
+			['@position']   = json.encode(xPlayer.getLastPosition()),
 			['@identifier'] = xPlayer.identifier
 		}, function(rowsChanged)
 			cb()

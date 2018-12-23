@@ -582,8 +582,13 @@ ESX.Game.GetVehicleInDirection = function()
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
 	local rayHandle    = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
-	local a, b, c, d, vehicle = GetShapeTestResult(rayHandle)
-	return vehicle
+	local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
+
+	if hit == 1 and GetEntityType(entityHit) == 2 then
+		return entityHit
+	end
+
+	return nil
 end
 
 ESX.Game.IsSpawnPointClear = function(coords, radius)

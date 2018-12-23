@@ -538,7 +538,7 @@ Citizen.CreateThread(function()
 			local coords    = GetEntityCoords(playerPed)
 
 			if not IsEntityDead(playerPed) then
-				ESX.PlayerData.lastPosition = {x = coords.x, y = coords.y, z = coords.z}
+				ESX.PlayerData.lastPosition = {x = ESX.Math.Round(coords.x, 2), y = ESX.Math.Round(coords.y, 2), z = ESX.Math.Round(coords.z, 2)}
 			end
 		end
 
