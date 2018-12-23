@@ -58,7 +58,7 @@ Locales['fi'] = {
   -- Item
   ['used_medikit'] = 'sinä käytit ensiapupakkauksen',
   ['used_bandage'] = 'sinä käytit sideharsoja',
-  ['not_enough_medikit'] = 'ei tarpeeksi ~b~ensiapupakkauksia~w~.',
-  ['not_enough_bandage'] = 'ei tarpeeksi ~b~sideharsoja~w~.',
+  ['not_enough_medikit'] = 'ei tarpeeksi ~b~ensiapupakkauksia~s~.',
+  ['not_enough_bandage'] = 'ei tarpeeksi ~b~sideharsoja~s~.',
   ['healed'] = 'sinua parannettiin',
 }

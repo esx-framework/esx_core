@@ -161,8 +161,8 @@ function StartDeathTimer()
 		end)
 	end
 
-	local earlySpawnTimer = ESX.Round(Config.EarlyRespawnTimer / 1000)
-	local bleedoutTimer = ESX.Round(Config.BleedoutTimer / 1000)
+	local earlySpawnTimer = ESX.Math.Round(Config.EarlyRespawnTimer / 1000)
+	local bleedoutTimer = ESX.Math.Round(Config.BleedoutTimer / 1000)
 
 	Citizen.CreateThread(function()
 		-- early respawn timer
@@ -245,6 +245,7 @@ function RemoveItemsAfterRPDeath()
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
+
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
 		end

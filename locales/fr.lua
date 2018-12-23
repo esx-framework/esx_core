@@ -58,7 +58,7 @@ Locales['fr'] = {
   -- Item
   ['used_medikit'] = 'vous avez utilisé 1x kit de soin',
   ['used_bandage'] = 'vous avez utilisé 1x bandage',
-  ['not_enough_medikit'] = 'vous n\'avez pas de ~b~kit de soin~w~.',
-  ['not_enough_bandage'] = 'vous n\'avez pas de ~b~bandage~w~.',
+  ['not_enough_medikit'] = 'vous n\'avez pas de ~b~kit de soin~s~.',
+  ['not_enough_bandage'] = 'vous n\'avez pas de ~b~bandage~s~.',
   ['healed'] = 'vous avez été soigné.',
 }
