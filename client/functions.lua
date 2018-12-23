@@ -46,22 +46,22 @@ end
 
 ESX.ShowNotification = function(msg)
 	SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
+	AddTextComponentSubstringWebsite(msg)
 	DrawNotification(false, true)
 end
 
 ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
 	SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
+	AddTextComponentSubstringWebsite(msg)
 	SetNotificationMessage(icon, icon, false, iconType, title, subject)
 	DrawNotification(false, false)
 end
 
 ESX.ShowHelpNotification = function(msg)
 	if not IsHelpMessageOnScreen() then
-		SetTextComponentFormat('STRING')
-		AddTextComponentString(msg)
-		DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+		BeginTextCommandDisplayHelp('STRING')
+		AddTextComponentSubstringWebsite(msg)
+		EndTextCommandDisplayHelp(0, false, true, -1)
 	end
 end
 
@@ -106,7 +106,7 @@ ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
 		index     = index,
 		priority  = priority,
 		html      = html,
-		data      = data,
+		data      = data
 	})
 
 	ESX.UI.HUD.UpdateElement(name, data)
@@ -450,7 +450,7 @@ ESX.Game.GetClosestObject = function(filter, coords)
 
 		if foundObject then
 			local objectCoords = GetEntityCoords(objects[i])
-			local distance     = GetDistanceBetweenCoords(objectCoords.x, objectCoords.y, objectCoords.z, coords.x, coords.y, coords.z, true)
+			local distance     = GetDistanceBetweenCoords(objectCoords, coords.x, coords.y, coords.z, true)
 
 			if closestDistance == -1 or closestDistance > distance then
 				closestObject   = objects[i]
@@ -498,7 +498,7 @@ ESX.Game.GetClosestPlayer = function(coords)
 
 		if not usePlayerPed or (usePlayerPed and players[i] ~= playerId) then
 			local targetCoords = GetEntityCoords(target)
-			local distance     = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, coords.x, coords.y, coords.z, true)
+			local distance     = GetDistanceBetweenCoords(targetCoords, coords.x, coords.y, coords.z, true)
 
 			if closestDistance == -1 or closestDistance > distance then
 				closestPlayer   = players[i]
@@ -517,7 +517,7 @@ ESX.Game.GetPlayersInArea = function(coords, area)
 	for i=1, #players, 1 do
 		local target       = GetPlayerPed(players[i])
 		local targetCoords = GetEntityCoords(target)
-		local distance     = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, coords.x, coords.y, coords.z, true)
+		local distance     = GetDistanceBetweenCoords(targetCoords, coords.x, coords.y, coords.z, true)
 
 		if distance <= area then
 			table.insert(playersInArea, players[i])
@@ -550,7 +550,7 @@ ESX.Game.GetClosestVehicle = function(coords)
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = GetDistanceBetweenCoords(vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, coords.x, coords.y, coords.z, true)
+		local distance      = GetDistanceBetweenCoords(vehicleCoords, coords.x, coords.y, coords.z, true)
 
 		if closestDistance == -1 or closestDistance > distance then
 			closestVehicle  = vehicles[i]
@@ -567,7 +567,7 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = GetDistanceBetweenCoords(vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, coords.x, coords.y, coords.z, true)
+		local distance      = GetDistanceBetweenCoords(vehicleCoords, coords.x, coords.y, coords.z, true)
 
 		if distance <= area then
 			table.insert(vehiclesInArea, vehicles[i])
@@ -579,11 +579,10 @@ end
 
 ESX.Game.GetVehicleInDirection = function()
 	local playerPed    = PlayerPedId()
-	local playerCoords = GetEntityCoords(playerPed, 1)
+	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
-	local rayHandle    = CastRayPointToPoint(playerCoords.x, playerCoords.y, playerCoords.z, inDirection.x, inDirection.y, inDirection.z, 10, playerPed, 0)
-	local a, b, c, d, vehicle = GetRaycastResult(rayHandle)
-
+	local rayHandle    = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
+	local a, b, c, d, vehicle = GetShapeTestResult(rayHandle)
 	return vehicle
 end
 
@@ -622,7 +621,7 @@ ESX.Game.GetClosestPed = function(coords, ignoreList)
 
 	for i=1, #peds, 1 do
 		local pedCoords = GetEntityCoords(peds[i])
-		local distance  = GetDistanceBetweenCoords(pedCoords.x, pedCoords.y, pedCoords.z, coords.x, coords.y, coords.z, true)
+		local distance  = GetDistanceBetweenCoords(pedCoords, coords.x, coords.y, coords.z, true)
 
 		if closestDistance == -1 or closestDistance > distance then
 			closestPed      = peds[i]
@@ -962,9 +961,9 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
-	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
+	local onScreen, x, y = GetScreenCoordFromWorldCoord(coords.x, coords.y, coords.z)
 	local camCoords      = GetGameplayCamCoords()
-	local dist           = GetDistanceBetweenCoords(camCoords.x, camCoords.y, camCoords.z, coords.x, coords.y, coords.z, 1)
+	local dist           = GetDistanceBetweenCoords(camCoords, coords.x, coords.y, coords.z, true)
 	local size           = size
 
 	if size == nil then
@@ -1035,7 +1034,7 @@ ESX.ShowInventory = function()
 				value     = ESX.PlayerData.inventory[i].name,
 				usable    = ESX.PlayerData.inventory[i].usable,
 				rare      = ESX.PlayerData.inventory[i].rare,
-				canRemove = ESX.PlayerData.inventory[i].canRemove,
+				canRemove = ESX.PlayerData.inventory[i].canRemove
 			})
 		end
 	end

@@ -269,8 +269,8 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 	if type == 'item_standard' then
 
-		local sourceItem    = sourceXPlayer.getInventoryItem(itemName)
-		local targetItem    = targetXPlayer.getInventoryItem(itemName)
+		local sourceItem = sourceXPlayer.getInventoryItem(itemName)
+		local targetItem = targetXPlayer.getInventoryItem(itemName)
 
 		if itemCount > 0 and sourceItem.count >= itemCount then
 
