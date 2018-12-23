@@ -1216,7 +1216,7 @@ ESX.ShowInventory = function()
 
 				if type == 'item_weapon' then
 
-					TriggerServerEvent('esx:removeInventoryItem', type, item, nil)
+					TriggerServerEvent('esx:removeInventoryItem', type, item)
 					menu1.close()
 
 				else -- type: item_standard

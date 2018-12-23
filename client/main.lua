@@ -328,10 +328,12 @@ AddEventHandler('esx:removePickup', function(id)
 end)
 
 RegisterNetEvent('esx:pickupWeapon')
-AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName,ammo)
-	local ped          = PlayerPedId()
-	local playerPedPos = GetEntityCoords(ped, true)
-	CreateAmbientPickup(GetHashKey(weaponPickup), playerPedPos.x + 2.0, playerPedPos.y, playerPedPos.z + 0.5, 0, ammo, 1, false, true)
+AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName, ammo)
+	local playerPed = PlayerPedId()
+	local pickupCoords = GetOffsetFromEntityInWorldCoords(playerPed, 2.0, 0.0, 0.5)
+	local weaponHash = GetHashKey(weaponPickup)
+
+	CreateAmbientPickup(weaponHash, pickupCoords, 0, ammo, 1, false, true)
 end)
 
 RegisterNetEvent('esx:spawnPed')
@@ -358,7 +360,7 @@ AddEventHandler('esx:deleteVehicle', function()
 	local playerPed = PlayerPedId()
 	local vehicle   = ESX.Game.GetVehicleInDirection()
 
-	if IsPedInAnyVehicle(playerPed, false) then
+	if IsPedInAnyVehicle(playerPed, true) then
 		vehicle = GetVehiclePedIsIn(playerPed, false)
 	end
 
@@ -503,7 +505,7 @@ Citizen.CreateThread(function()
 
 		for k,v in pairs(Pickups) do
 
-			local distance = GetDistanceBetweenCoords(coords.x, coords.y, coords.z, v.coords.x, v.coords.y, v.coords.z, true)
+			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 			if distance <= 5.0 then
@@ -516,7 +518,7 @@ Citizen.CreateThread(function()
 
 			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
 				TriggerServerEvent('esx:onPickup', v.id)
-				PlaySoundFrontend(-1, "PICK_UP", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
+				PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 				v.inRange = true
 			end
 
