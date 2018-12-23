@@ -94,12 +94,19 @@ end)
 
 AddEventHandler('esx:restoreLoadout', function()
 	local playerPed = PlayerPedId()
+	local ammoTypes = {}
 
 	RemoveAllPedWeapons(playerPed, true)
 
 	for i=1, #ESX.PlayerData.loadout, 1 do
 		local weaponHash = GetHashKey(ESX.PlayerData.loadout[i].name)
-		GiveWeaponToPed(playerPed, weaponHash, ESX.PlayerData.loadout[i].ammo, false, false)
+		GiveWeaponToPed(playerPed, weaponHash, 0, false, false)
+		local ammoType = GetPedAmmoTypeFromWeapon(playerPed, weaponHash)
+
+		if not ammoTypes[ammoType] then
+			AddAmmoToPed(playerPed, weaponHash, ESX.PlayerData.loadout[i].ammo)
+			ammoTypes[ammoType] = true
+		end
 	end
 
 	LoadoutLoaded = true
