@@ -966,7 +966,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
-	local onScreen, x, y = GetScreenCoordFromWorldCoord(coords.x, coords.y, coords.z)
+	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
 	local camCoords      = GetGameplayCamCoords()
 	local dist           = GetDistanceBetweenCoords(camCoords, coords.x, coords.y, coords.z, true)
 	local size           = size

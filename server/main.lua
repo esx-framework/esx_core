@@ -421,20 +421,17 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 			end
 		end
 
-		-- workaround for CreateAmbientPickup() giving 30 rounds of ammo when you drop the weapon with 0 ammo
-		if itemCount == 0 then
-			itemCount = 1
-		end
-
 		if xPlayer.hasWeapon(itemName) then
 			local weaponLabel, weaponPickup = ESX.GetWeaponLabel(itemName), 'PICKUP_' .. string.upper(itemName)
 
 			xPlayer.removeWeapon(itemName)
-			TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, itemName, itemCount)
-	
+
 			if itemCount > 0 then
+				TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, itemName, itemCount)
 				TriggerClientEvent('esx:showNotification', _source, _U('threw_weapon_ammo', weaponLabel, itemCount))
 			else
+				-- workaround for CreateAmbientPickup() giving 30 rounds of ammo when you drop the weapon with 0 ammo
+				TriggerClientEvent('esx:pickupWeapon', _source, weaponPickup, itemName, 1)
 				TriggerClientEvent('esx:showNotification', _source, _U('threw_weapon', weaponLabel))
 			end
 		end
