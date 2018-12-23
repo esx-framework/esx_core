@@ -37,50 +37,61 @@ ESX.RegisterServerCallback('esx_weaponshop:buyLicense', function(source, cb)
 			cb(true)
 		end)
 	else
-		cb(false)
 		TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
+		cb(false)
 	end
 end)
 
-RegisterServerEvent('esx_weaponshop:buyItem')
-AddEventHandler('esx_weaponshop:buyItem', function(weaponName, zone)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weaponName, zone)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	local price = GetPrice(weaponName, zone)
 
-	if xPlayer.hasWeapon(weaponName) then
-		TriggerClientEvent('esx:showNotification', _source, _U('already_owned'))
-		return
+	if price == 0 then
+		print(('esx_weaponshop: %s attempted to buy a unknown weapon!'):format(xPlayer.identifier))
+		cb(false)
 	end
 
-	if zone == 'BlackWeashop' then
-
-		if xPlayer.getAccount('black_money').money >= price then
-			xPlayer.removeAccountMoney('black_money', price)
-			xPlayer.addWeapon(weaponName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName), ESX.Math.GroupDigits(price)))
-		else
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_black'))
-		end
-
+	if xPlayer.hasWeapon(weaponName) then
+		TriggerClientEvent('esx:showNotification', source, _U('already_owned'))
+		cb(false)
 	else
+		if zone == 'BlackWeashop' then
 
-		if xPlayer.getMoney() >= price then
-			xPlayer.removeMoney(price)
-			xPlayer.addWeapon(weaponName, 42)
-			TriggerClientEvent('esx:showNotification', _source, _U('buy', ESX.GetWeaponLabel(weaponName), ESX.Math.GroupDigits(price)))
+			if xPlayer.getAccount('black_money').money >= price then
+				xPlayer.removeAccountMoney('black_money', price)
+				xPlayer.addWeapon(weaponName, 42)
+
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough_black'))
+				cb(false)
+			end
+
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough'))
-		end
 
+			if xPlayer.getMoney() >= price then
+				xPlayer.removeMoney(price)
+				xPlayer.addWeapon(weaponName, 42)
+
+				cb(true)
+			else
+				TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
+				cb(false)
+			end
+	
+		end
 	end
 end)
 
 function GetPrice(weaponName, zone)
-	local result = MySQL.Sync.fetchAll('SELECT price FROM weashops WHERE zone = @zone AND item = @item', {
+	local price = MySQL.Sync.fetchScalar('SELECT price FROM weashops WHERE zone = @zone AND item = @item', {
 		['@zone'] = zone,
 		['@item'] = weaponName
 	})
 
-	return result[1].price
+	if price then
+		return price
+	else
+		return 0
+	end
 end

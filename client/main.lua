@@ -10,12 +10,13 @@ local Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-ESX                           = nil
+ESX = nil
 local HasAlreadyEnteredMarker = false
-local LastZone                = nil
-local CurrentAction           = nil
-local CurrentActionMsg        = ''
-local CurrentActionData       = {}
+local LastZone = nil
+local CurrentAction = nil
+local CurrentActionMsg = ''
+local CurrentActionData = {}
+local ShopOpen = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -63,37 +64,78 @@ end
 
 function OpenShopMenu(zone)
 	local elements = {}
+	ShopOpen = true
 
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
 		table.insert(elements, {
-			label      = ('%s - <span style="color: green;">%s</span>'):format(item.label, _U('shop_menu_item', ESX.Math.GroupDigits(item.price))),
+			label = ('%s - <span style="color: green;">%s</span>'):format(item.label, _U('shop_menu_item', ESX.Math.GroupDigits(item.price))),
+			price = item.price,
 			weaponName = item.item
 		})
 	end
 
 	ESX.UI.Menu.CloseAll()
+	PlaySoundFrontend(-1, 'BACK', 'HUD_AMMO_SHOP_SOUNDSET', false)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
-		title = _U('shop'),
+		title = _U('shop_menu_title'),
 		align = 'top-left',
 		elements = elements
 	}, function(data, menu)
-		TriggerServerEvent('esx_weaponshop:buyItem', data.current.weaponName, zone)
+		ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
+			if bought then
+				DisplayBoughtScaleform(data.current.weaponName, data.current.price)
+			else
+				PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+			end
+		end, data.current.weaponName, zone)
 	end, function(data, menu)
+		PlaySoundFrontend(-1, 'BACK', 'HUD_AMMO_SHOP_SOUNDSET', false)
+		ShopOpen = false
 		menu.close()
 
 		CurrentAction     = 'shop_menu'
-		CurrentActionMsg  = _U('shop_menu')
+		CurrentActionMsg  = _U('shop_menu_prompt')
 		CurrentActionData = { zone = zone }
+	end, function(data, menu)
+		PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+	end)
+end
+
+function DisplayBoughtScaleform(weaponName, price)
+	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
+	local sec = 4
+
+	BeginScaleformMovieMethod(scaleform, 'SHOW_WEAPON_PURCHASED')
+
+	PushScaleformMovieMethodParameterString(_U('weapon_bought', ESX.Math.GroupDigits(price)))
+	PushScaleformMovieMethodParameterString(ESX.GetWeaponLabel(weaponName))
+	PushScaleformMovieMethodParameterInt(GetHashKey(weaponName))
+	PushScaleformMovieMethodParameterString('')
+	PushScaleformMovieMethodParameterInt(100)
+
+	EndScaleformMovieMethod()
+
+	PlaySoundFrontend(-1, 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET', false)
+
+	Citizen.CreateThread(function()
+		while sec > 0 do
+			Citizen.Wait(0)
+			sec = sec - 0.01
+	
+			DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+		end
 	end)
 end
 
 AddEventHandler('esx_weaponshop:hasEnteredMarker', function(zone)
-	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = _U('shop_menu')
-	CurrentActionData = { zone = zone }
+	if zone == 'GunShop' then
+		CurrentAction     = 'shop_menu'
+		CurrentActionMsg  = _U('shop_menu_prompt')
+		CurrentActionData = { zone = zone }
+	end
 end)
 
 AddEventHandler('esx_weaponshop:hasExitedMarker', function(zone)
@@ -101,12 +143,20 @@ AddEventHandler('esx_weaponshop:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
 end)
 
+AddEventHandler('onResourceStop', function(resource)
+	if resource == GetCurrentResourceName() then
+		if ShopOpen then
+			ESX.UI.Menu.CloseAll()
+		end
+	end
+end)
+
 -- Create Blips
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
-		if v.legal then
-			for i = 1, #v.Pos, 1 do
-				local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+		if v.Legal then
+			for i = 1, #v.Locations, 1 do
+				local blip = AddBlipForCoord(v.Locations[i])
 
 				SetBlipSprite (blip, 110)
 				SetBlipDisplay(blip, 4)
@@ -115,7 +165,7 @@ Citizen.CreateThread(function()
 				SetBlipAsShortRange(blip, true)
 
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString(_U('map_blip'))
+				AddTextComponentSubstringPlayerName(_U('map_blip'))
 				EndTextCommandSetBlipName(blip)
 			end
 		end
@@ -130,9 +180,9 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
-					DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
+			for i = 1, #v.Locations, 1 do
+				if (Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Locations[i], true) < Config.DrawDistance) then
+					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		end
@@ -143,18 +193,13 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-
-		local coords      = GetEntityCoords(PlayerPedId())
-		local isInMarker  = false
-		local currentZone = nil
+		local coords = GetEntityCoords(PlayerPedId())
+		local isInMarker, currentZone = false, nil
 
 		for k,v in pairs(Config.Zones) do
-			for i=1, #v.Pos, 1 do
-				if(GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.Size.x) then
-					isInMarker  = true
-					ShopItems   = v.Items
-					currentZone = k
-					LastZone    = k
+			for i=1, #v.Locations, 1 do
+				if GetDistanceBetweenCoords(coords, v.Locations[i], true) < Config.Size.x then
+					isInMarker, ShopItems, currentZone, LastZone = true, v.Items, k, k
 				end
 			end
 		end
@@ -179,8 +224,9 @@ Citizen.CreateThread(function()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
+
 				if CurrentAction == 'shop_menu' then
-					if Config.LicenseEnable and Config.Zones[CurrentActionData.zone].legal then
+					if Config.LicenseEnable and Config.Zones[CurrentActionData.zone].Legal then
 						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
 							if hasWeaponLicense then
 								OpenShopMenu(CurrentActionData.zone)
@@ -192,6 +238,7 @@ Citizen.CreateThread(function()
 						OpenShopMenu(CurrentActionData.zone)
 					end
 				end
+
 				CurrentAction = nil
 			end
 		end
