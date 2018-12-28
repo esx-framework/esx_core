@@ -45,21 +45,7 @@ AddEventHandler('esx_joblisting:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
 end)
 
--- Display markers
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1)
-		local coords = GetEntityCoords(PlayerPedId())
-
-		for i=1, #Config.Zones, 1 do
-			if GetDistanceBetweenCoords(coords, Config.Zones[i], true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-			end
-		end
-	end
-end)
-
--- Activate menu when player is inside marker
+-- Activate menu when player is inside marker, and draw markers
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -68,7 +54,13 @@ Citizen.CreateThread(function()
 		isInMarker = false
 
 		for i=1, #Config.Zones, 1 do
-			if GetDistanceBetweenCoords(coords, Config.Zones[i], true) < (Config.ZoneSize.x / 2) then
+			local distance = GetDistanceBetweenCoords(coords, Config.Zones[i], true)
+
+			if distance < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+			end
+
+			if distance < (Config.ZoneSize.x / 2) then
 				isInMarker = true
 				ESX.ShowHelpNotification(_U('access_job_center'))
 			end
