@@ -160,4 +160,16 @@ Locales['sv'] = {
   ['gadget_parachute'] = 'fallskärm',
   ['weapon_flare'] = 'signalpistol',
   ['weapon_doubleaction'] = 'double-Action Revolver',
+
+  -- Weapon Components
+  ['component_clip_default'] = 'standard magg',
+  ['component_clip_extended'] = 'förlängd magg',
+  ['component_clip_drum'] = 'trummagasin',
+  ['component_clip_box'] = 'lådmagasin',
+  ['component_flashlight'] = 'ficklampa',
+  ['component_scope'] = 'sikte',
+  ['component_scope_advanced'] = 'advancerat sikte',
+  ['component_suppressor'] = 'ljuddämpare',
+  ['component_grip'] = 'handtag',
+  ['component_luxary_finish'] = 'lyxvapen behandling',
 }
