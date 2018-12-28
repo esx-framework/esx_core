@@ -105,7 +105,6 @@ Locales['pl'] = {
   ['weapon_stungun'] = 'tazer',
   ['weapon_sniperrifle'] = 'karabin snajperski',
   ['weapon_heavysniper'] = 'ciężki karabin snajperski',
-  ['weapon_remotesniper'] = 'remote sniper',
   ['weapon_grenadelauncher'] = 'granatnik',
   ['weapon_rpg'] = 'wyrzutnia rakiet',
   ['weapon_stinger'] = 'stinger',

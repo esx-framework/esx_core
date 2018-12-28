@@ -107,7 +107,6 @@ Locales['fi'] = {
   ['weapon_stungun'] = 'tainutusase',
   ['weapon_sniperrifle'] = 'tarkkuuskivääri',
   ['weapon_heavysniper'] = 'raskas tarkkuuskivääri',
-  ['weapon_remotesniper'] = 'etäohjattava tarkkuuskivääri',
   ['weapon_grenadelauncher'] = 'kranaatinheitin',
   ['weapon_rpg'] = 'raketinheitin',
   ['weapon_stinger'] = 'stinger',

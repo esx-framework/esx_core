@@ -97,7 +97,6 @@ Locales['de'] = {
   ['weapon_stungun'] = 'Tazer',
   ['weapon_sniperrifle'] = 'Scharfschützengewehr',
   ['weapon_heavysniper'] = 'Schweres Sniper',
-  ['weapon_remotesniper'] = 'Remote sniper',
   ['weapon_grenadelauncher'] = 'Granatwerfer',
   ['weapon_rpg'] = 'RPG',
   ['weapon_stinger'] = 'Stinger',

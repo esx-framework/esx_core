@@ -107,7 +107,6 @@ Locales['sv'] = {
   ['weapon_stungun'] = 'elchockpistol',
   ['weapon_sniperrifle'] = 'prickskyttegevär',
   ['weapon_heavysniper'] = 'tung prickskytt',
-  ['weapon_remotesniper'] = 'remote sniper',
   ['weapon_grenadelauncher'] = 'granatkastare',
   ['weapon_rpg'] = 'raketgevär',
   ['weapon_stinger'] = 'stinger',

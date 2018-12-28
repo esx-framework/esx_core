@@ -103,7 +103,6 @@ Locales['br'] = {
   ['weapon_stungun'] = 'arma de choque',
   ['weapon_sniperrifle'] = 'sniper rifle',
   ['weapon_heavysniper'] = 'heavy sniper',
-  ['weapon_remotesniper'] = 'remote sniper',
   ['weapon_grenadelauncher'] = 'lançador de granada',
   ['weapon_rpg'] = 'lançador de foguetes',
   ['weapon_stinger'] = 'stinger',
