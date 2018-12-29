@@ -99,9 +99,18 @@ AddEventHandler('esx:restoreLoadout', function()
 	RemoveAllPedWeapons(playerPed, true)
 
 	for i=1, #ESX.PlayerData.loadout, 1 do
-		local weaponHash = GetHashKey(ESX.PlayerData.loadout[i].name)
+		local weaponName = ESX.PlayerData.loadout[i].name
+		local weaponHash = GetHashKey(weaponName)
+
 		GiveWeaponToPed(playerPed, weaponHash, 0, false, false)
 		local ammoType = GetPedAmmoTypeFromWeapon(playerPed, weaponHash)
+
+		for j=1, #ESX.PlayerData.loadout[i].components, 1 do
+			local weaponComponent = ESX.PlayerData.loadout[i].components[j]
+			local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+
+			GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
+		end
 
 		if not ammoTypes[ammoType] then
 			AddAmmoToPed(playerPed, weaponHash, ESX.PlayerData.loadout[i].ammo)
@@ -179,6 +188,15 @@ AddEventHandler('esx:addWeapon', function(weaponName, ammo)
 	--AddAmmoToPed(playerPed, weaponHash, ammo) possibly not needed
 end)
 
+RegisterNetEvent('esx:addWeaponComponent')
+AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
+	local playerPed  = PlayerPedId()
+	local weaponHash = GetHashKey(weaponName)
+	local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+
+	GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
+end)
+
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
 	local playerPed  = PlayerPedId()
@@ -187,12 +205,22 @@ AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
 	RemoveWeaponFromPed(playerPed, weaponHash)
 
 	if ammo then
-		local pedAmmo   = GetAmmoInPedWeapon(playerPed, weaponHash)
+		local pedAmmo = GetAmmoInPedWeapon(playerPed, weaponHash)
 		local finalAmmo = math.floor(pedAmmo - ammo)
 		SetPedAmmo(playerPed, weaponHash, finalAmmo)
 	else
 		SetPedAmmo(playerPed, weaponHash, 0) -- remove leftover ammo
 	end
+end)
+
+
+RegisterNetEvent('esx:removeWeaponComponent')
+AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
+	local playerPed  = PlayerPedId()
+	local weaponHash = GetHashKey(weaponName)
+	local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+
+	RemoveWeaponComponentFromPed(playerPed, weaponHash, componentHash)
 end)
 
 -- Commands
@@ -392,7 +420,7 @@ end
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(500)
+		Citizen.Wait(5000)
 
 		local playerPed      = PlayerPedId()
 		local loadout        = {}
@@ -404,28 +432,38 @@ Citizen.CreateThread(function()
 
 		for i=1, #Config.Weapons, 1 do
 
-			local weaponHash = GetHashKey(Config.Weapons[i].name)
+			local weaponName = Config.Weapons[i].name
+			local weaponHash = GetHashKey(weaponName)
+			local weaponComponents = {}
 
-			if HasPedGotWeapon(playerPed, weaponHash, false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
+			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponName ~= 'WEAPON_UNARMED' then
 				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+				local components = Config.Weapons[i].components
 
-				if LastLoadout[Config.Weapons[i].name] == nil or LastLoadout[Config.Weapons[i].name] ~= ammo then
+				for j=1, #components, 1 do
+					if HasPedGotWeaponComponent(playerPed, weaponHash, components[j].hash) then
+						table.insert(weaponComponents, components[j].name)
+					end
+				end
+
+				if LastLoadout[weaponName] == nil or LastLoadout[weaponName] ~= ammo then
 					loadoutChanged = true
 				end
 
-				LastLoadout[Config.Weapons[i].name] = ammo
+				LastLoadout[weaponName] = ammo
 
 				table.insert(loadout, {
-					name  = Config.Weapons[i].name,
-					ammo  = ammo,
-					label = Config.Weapons[i].label
+					name = weaponName,
+					ammo = ammo,
+					label = Config.Weapons[i].label,
+					components = weaponComponents
 				})
 			else
-				if LastLoadout[Config.Weapons[i].name] ~= nil then
+				if LastLoadout[weaponName] ~= nil then
 					loadoutChanged = true
 				end
 
-				LastLoadout[Config.Weapons[i].name] = nil
+				LastLoadout[weaponName] = nil
 			end
 
 		end

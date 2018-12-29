@@ -174,21 +174,6 @@ ESX.GetItemLabel = function(item)
 	end
 end
 
-ESX.GetWeaponList = function()
-	return Config.Weapons
-end
-
-ESX.GetWeaponLabel = function(name)
-	name          = string.upper(name)
-	local weapons = ESX.GetWeaponList()
-
-	for i=1, #weapons, 1 do
-		if weapons[i].name == name then
-			return weapons[i].label
-		end
-	end
-end
-
 ESX.CreatePickup = function(type, name, count, label, player)
 	local pickupId = (ESX.PickupId == 65635 and 0 or ESX.PickupId + 1)
 

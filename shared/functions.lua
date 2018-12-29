@@ -18,6 +18,36 @@ ESX.GetConfig = function()
 	return Config
 end
 
+ESX.GetWeaponList = function()
+	return Config.Weapons
+end
+
+ESX.GetWeaponLabel = function(weaponName)
+	weaponName = string.upper(weaponName)
+	local weapons = ESX.GetWeaponList()
+
+	for i=1, #weapons, 1 do
+		if weapons[i].name == weaponName then
+			return weapons[i].label
+		end
+	end
+end
+
+ESX.GetWeaponComponentHash = function(weaponName, weaponComponent)
+	weaponName = string.upper(weaponName)
+	local weapons = ESX.GetWeaponList()
+
+	for i=1, #weapons, 1 do
+		if weapons[i].name == weaponName then
+			for j=1, #weapons[i].components, 1 do
+				if weapons[i].components[j].name == weaponComponent then
+					return weapons[i].components[j].hash
+				end
+			end
+		end
+	end
+end
+
 ESX.TableContainsValue = function(table, value)
 	for k, v in pairs(table) do
 		if v == value then
@@ -57,7 +87,6 @@ ESX.DumpTable = function(table, nb)
 		return tostring(table)
 	end
 end
-
 
 ESX.Round = function(value, numDecimalPlaces)
 	return ESX.Math.Round(value, numDecimalPlaces)

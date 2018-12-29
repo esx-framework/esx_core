@@ -251,21 +251,6 @@ ESX.UI.ShowInventoryItemNotification = function(add, item, count)
 	})
 end
 
-ESX.GetWeaponList = function()
-	return Config.Weapons
-end
-
-ESX.GetWeaponLabel = function(name)
-	name          = string.upper(name)
-	local weapons = ESX.GetWeaponList()
-
-	for i=1, #weapons, 1 do
-		if weapons[i].name == name then
-			return weapons[i].label
-		end
-	end
-end
-
 ESX.Game.GetPedMugshot = function(ped)
 	local mugshot = RegisterPedheadshot(ped)
 	while not IsPedheadshotReady(mugshot) do
