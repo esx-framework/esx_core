@@ -107,7 +107,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 		for j=1, #ESX.PlayerData.loadout[i].components, 1 do
 			local weaponComponent = ESX.PlayerData.loadout[i].components[j]
-			local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+			local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
 			GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
 		end
@@ -192,7 +192,7 @@ RegisterNetEvent('esx:addWeaponComponent')
 AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
 	local playerPed  = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
-	local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
 	GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
 end)
@@ -218,7 +218,7 @@ RegisterNetEvent('esx:removeWeaponComponent')
 AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
 	local playerPed  = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
-	local componentHash = ESX.GetWeaponComponentHash(weaponName, weaponComponent)
+	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
 	RemoveWeaponComponentFromPed(playerPed, weaponHash, componentHash)
 end)

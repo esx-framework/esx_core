@@ -397,6 +397,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.addWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
+
+		if self.hasWeaponComponent(weaponName, weaponComponent) then
+			return
+		end
+
 		table.insert(self.loadout[loadoutNum].components, weaponComponent)
 
 		TriggerClientEvent('esx:addWeaponComponent', self.source, weaponName, weaponComponent)
@@ -414,12 +419,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			end
 		end
 
-		TriggerClientEvent('esx:removeWeapon', self.source, weaponName, ammo)
-		TriggerClientEvent('esx:removeInventoryItem', self.source, {label = weaponLabel}, 1)
+		if weaponLabel then
+			TriggerClientEvent('esx:removeWeapon', self.source, weaponName, ammo)
+			TriggerClientEvent('esx:removeInventoryItem', self.source, {label = weaponLabel}, 1)
+		end
 	end
 
 	self.removeWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
+		
+		if not weapon then
+			return
+		end
 
 		for i=1, #self.loadout[loadoutNum].components, 1 do
 			if self.loadout[loadoutNum].components.name == weaponComponent then
@@ -429,6 +440,22 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		end
 
 		TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, weaponComponent)
+	end
+
+	self.hasWeaponComponent = function(weaponName, weaponComponent)
+		local loadoutNum, weapon = self.getWeapon(weaponName)
+
+		if not weapon then
+			return false
+		end
+
+		for i=1, #weapon.components, 1 do
+			if weapon.components[i] == weaponComponent then
+				return true
+			end
+		end
+
+		return false
 	end
 
 	self.hasWeapon = function(weaponName)

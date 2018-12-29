@@ -33,7 +33,7 @@ ESX.GetWeaponLabel = function(weaponName)
 	end
 end
 
-ESX.GetWeaponComponentHash = function(weaponName, weaponComponent)
+ESX.GetWeaponComponent = function(weaponName, weaponComponent)
 	weaponName = string.upper(weaponName)
 	local weapons = ESX.GetWeaponList()
 
@@ -41,7 +41,7 @@ ESX.GetWeaponComponentHash = function(weaponName, weaponComponent)
 		if weapons[i].name == weaponName then
 			for j=1, #weapons[i].components, 1 do
 				if weapons[i].components[j].name == weaponComponent then
-					return weapons[i].components[j].hash
+					return weapons[i].components[j]
 				end
 			end
 		end
