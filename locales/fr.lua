@@ -46,6 +46,7 @@ Locales['fr'] = {
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
   ['cannot_pickup_room'] = 'vous n\'avez plus de place pour ~y~%s~s~!',
+
   -- Commands
   ['setjob'] = 'assigner job',
   ['id_param'] = 'identification du joueur',
@@ -77,9 +78,13 @@ Locales['fr'] = {
   ['disconnect'] = 'disconnect from the server',
   ['chat_clear'] = 'clear the chat',
   ['chat_clear_all'] = 'clear the chat for everyone',
+  ['command_clearinventory'] = 'clear all items from inventory',
+  ['command_clearloadout'] = 'remove all weapons from loadout',
+  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
+
   -- Weapons
   ['weapon_knife'] = 'couteau',
   ['weapon_nightstick'] = 'matraque',

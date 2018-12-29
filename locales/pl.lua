@@ -46,6 +46,7 @@ Locales['pl'] = {
   ['act_imp'] = 'działanie niemożliwe',
   ['in_vehicle'] = 'nie możesz przekazywać przedmiotów w pojeździe',
   ['cannot_pickup_room'] = 'nie masz wystarczająco dużo miejsca w ekwipunku, aby podnieść ~y~%s~s~!',
+
   -- Commands
   ['setjob'] = 'przydziel prace użytkownikowi',
   ['id_param'] = 'iD użyszkodnika',
@@ -77,9 +78,13 @@ Locales['pl'] = {
   ['disconnect'] = 'odłącz się od serwera',
   ['chat_clear'] = 'clear the chat',
   ['chat_clear_all'] = 'clear the chat for everyone',
+  ['command_clearinventory'] = 'clear all items from inventory',
+  ['command_clearloadout'] = 'remove all weapons from loadout',
+  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
+
   -- Weapons
   ['weapon_knife'] = 'nóż',
   ['weapon_nightstick'] = 'pałka',

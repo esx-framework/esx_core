@@ -46,6 +46,7 @@ Locales['fi'] = {
   ['act_imp'] = 'toiminto mahdoton',
   ['in_vehicle'] = 'et voi antaa ajoneuvossa olevalle mitään.',
   ['cannot_pickup_room'] = 'sinulla ei ole tilaa repussa nostaaksesi ~y~%s~s~!',
+
   -- Commands
   ['setjob'] = 'määritä työ käyttäjälle',
   ['id_param'] = 'käyttäjän ID',
@@ -77,9 +78,13 @@ Locales['fi'] = {
   ['disconnect'] = 'poistu serveriltä',
   ['chat_clear'] = 'tyhjennä chatti',
   ['chat_clear_all'] = 'tyhjennä chatti kaikilta',
+  ['command_clearinventory'] = 'clear all items from inventory',
+  ['command_clearloadout'] = 'remove all weapons from loadout',
+  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
+
   -- Weapons
   ['weapon_knife'] = 'veitsi',
   ['weapon_nightstick'] = 'pamppu',

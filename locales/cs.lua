@@ -46,6 +46,7 @@ Locales['cs'] = {
   ['act_imp'] = 'akce není možná',
   ['in_vehicle'] = 'nemůže nic dát osobě ve vozidle',
   ['cannot_pickup_room'] = 've vašem inventáři není dostatek místa pro ~y~%s~s~!',
+
   -- Commands
   ['setjob'] = 'přiřadit práci hráči',
   ['id_param'] = 'iD hráče',
@@ -77,9 +78,13 @@ Locales['cs'] = {
   ['disconnect'] = 'odpojit od serveru',
   ['chat_clear'] = 'vyčistit chat',
   ['chat_clear_all'] = 'vyčistit chat pro všechny',
+  ['command_clearinventory'] = 'clear all items from inventory',
+  ['command_clearloadout'] = 'remove all weapons from loadout',
+  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
+
   -- Weapons
   ['weapon_knife'] = 'knife',
   ['weapon_nightstick'] = 'nightstick',

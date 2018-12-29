@@ -46,6 +46,7 @@ Locales['sv'] = {
   ['act_imp'] = 'åtgärd omöjlig',
   ['in_vehicle'] = 'du kan inte ge saker till en som sitter i ett fordon!',
   ['cannot_pickup_room'] = 'du har inte plats för att plocka upp ~y~%s~s~!',
+
   -- Commands
   ['setjob'] = 'tilldela ett jobb till en användare',
   ['id_param'] = 'spelarens ID',
@@ -77,9 +78,13 @@ Locales['sv'] = {
   ['disconnect'] = 'koppla från servern',
   ['chat_clear'] = 'töm chatten',
   ['chat_clear_all'] = 'töm chatten för alla',
+  ['command_clearinventory'] = 'clear all items from inventory',
+  ['command_clearloadout'] = 'remove all weapons from loadout',
+  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '%s SEK',
+
   -- Weapons
   ['weapon_knife'] = 'kniv',
   ['weapon_nightstick'] = 'batong',
