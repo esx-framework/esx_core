@@ -1002,6 +1002,7 @@ ESX.ShowInventory = function()
 	for i=1, #ESX.PlayerData.accounts, 1 do
 		if ESX.PlayerData.accounts[i].money > 0 then
 			local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+			local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
 			table.insert(elements, {
 				label     = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
@@ -1010,7 +1011,7 @@ ESX.ShowInventory = function()
 				value     = ESX.PlayerData.accounts[i].name,
 				usable    = false,
 				rare      = false,
-				canRemove = true
+				canRemove = canDrop
 			})
 		end
 	end
