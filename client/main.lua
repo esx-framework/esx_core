@@ -51,7 +51,7 @@ function LeaveInstance()
 	if Instance.host ~= nil then
 
 		if #Instance.players > 1 then
-			TriggerEvent('esx:showNotification', _U('left_instance'))
+			ESX.ShowNotification(_U('left_instance'))
 		end
 
 		if RegisteredInstanceTypes[Instance.type].exit ~= nil then
@@ -182,7 +182,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if InstanceInvite ~= nil and IsControlJustReleased(0, Keys['E']) then
 			local playerPed = PlayerPedId()
@@ -201,7 +201,6 @@ end)
 
 -- Instance players
 Citizen.CreateThread(function()
-
 	while true do
 
 		Citizen.Wait(0)
@@ -257,7 +256,6 @@ Citizen.CreateThread(function()
 		end
 
 	end
-
 end)
 
 Citizen.CreateThread(function()
@@ -276,7 +274,7 @@ Citizen.CreateThread(function()
 			local pos = GetEntityCoords(PlayerPedId())
 			RemoveVehiclesFromGeneratorsInArea(pos.x - 900.0, pos.y - 900.0, pos.z - 900.0, pos.x + 900.0, pos.y + 900.0, pos.z + 900.0)
 		else
-			Citizen.Wait(5000)
+			Citizen.Wait(500)
 		end
 	end
 end)
