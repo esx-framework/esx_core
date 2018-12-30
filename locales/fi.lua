@@ -81,5 +81,5 @@ Locales['fi'] = {
   ['you_used_body_kit']         = 'sinä käytit yhden ~b~Korikitin',
   ['have_withdrawn']            = 'sinä nostit ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']            = 'sinä talletit ~y~x%s~s~ ~b~%s~s~',
-  ['player_cannot_hold']        = 'sinulla ~r~ei ole~w~ tarpeeksi ~y~vapaata tilaa~w~ repussasi!',
+  ['player_cannot_hold']        = 'sinulla ~r~ei ole~s~ tarpeeksi ~y~vapaata tilaa~s~ repussasi!',
 }

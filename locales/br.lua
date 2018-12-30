@@ -81,5 +81,5 @@ Locales['br'] = {
   ['you_used_body_kit']         = 'Você usou um ~b~Kit de corpo',
   ['have_withdrawn']            = 'você retirou ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']            = 'você depositou ~y~x%s~s~ ~b~%s~s~',
-  ['player_cannot_hold']        = 'you do ~r~not~w~ have enough ~y~free space~w~ in your inventory!',
+  ['player_cannot_hold']        = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
 }

@@ -81,5 +81,5 @@ Locales['sv'] = {
   ['you_used_body_kit']         = 'du har använt en ~b~karossverktyg~s~',
   ['have_withdrawn']            = 'du har tagit ut ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']            = 'du har lagrat ~y~x%s~s~ ~b~%s~s~',
-  ['player_cannot_hold']        = 'du har ~r~inte~w~ tillräckligt med ~y~utrymme~w~ för att hålla det!',
+  ['player_cannot_hold']        = 'du har ~r~inte~s~ tillräckligt med ~y~utrymme~s~ för att hålla det!',
 }

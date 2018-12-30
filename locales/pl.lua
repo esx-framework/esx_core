@@ -81,5 +81,5 @@ Locales['pl'] = {
   ['you_used_body_kit']         = 'użyłeś ~b~częsci blacharskich',
   ['have_withdrawn']            = 'wyciągnąłeś ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']            = 'zdeponowałeś ~y~x%s~s~ ~b~%s~s~',
-  ['player_cannot_hold']        = '~r~nie masz~w~ wystarczająco ~y~wolnego~w~ miejsca w ekwipunku!',
+  ['player_cannot_hold']        = '~r~nie masz~s~ wystarczająco ~y~wolnego~s~ miejsca w ekwipunku!',
 }
