@@ -104,7 +104,7 @@ end)
 -- Menu interactions
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if isInATMMarker and not menuIsShowed then
 
