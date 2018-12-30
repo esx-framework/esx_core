@@ -446,10 +446,37 @@ ESX.RegisterServerCallback('esx_vehicleshop:getPlayerInventory', function (sourc
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:isPlateTaken', function (source, cb, plate)
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE @plate = plate', {
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function (result)
 		cb(result[1] ~= nil)
+	end)
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:retrieveJobVehicles', function (source, cb, type)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND type = @type AND job = @job', {
+		['@owner'] = xPlayer.identifier,
+		['@type'] = type,
+		['@job'] = xPlayer.job.name
+	}, function (result)
+		cb(result)
+	end)
+end)
+
+RegisterServerEvent('esx_vehicleshop:setJobVehicleState')
+AddEventHandler('esx_vehicleshop:setJobVehicleState', function(plate, state)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE plate = @plate AND job = @job', {
+		['@stored'] = state,
+		['@plate'] = plate,
+		['@job'] = xPlayer.job.name
+	}, function(rowsChanged)
+		if rowsChanged == 0 then
+			print(('esx_vehicleshop: %s exploited the garage!'):format(xPlayer.identifier))
+		end
 	end)
 end)
 
