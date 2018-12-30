@@ -110,9 +110,9 @@ ESX.RegisterServerCallback('esx_ambulancejob:getItemAmount', function(source, cb
 	cb(quantity)
 end)
 
-ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb, vehicleProps)
+ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb, vehicleProps, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local price = getPriceFromHash(vehicleProps.model, xPlayer.job.grade_name, 'heli')
+	local price = getPriceFromHash(vehicleProps.model, xPlayer.job.grade_name, type)
 
 	-- vehicle model not found
 	if price == 0 then
@@ -127,7 +127,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 			['@owner'] = xPlayer.identifier,
 			['@vehicle'] = json.encode(vehicleProps),
 			['@plate'] = vehicleProps.plate,
-			['@type'] = 'helicopter',
+			['@type'] = type,
 			['@job'] = xPlayer.job.name,
 			['@stored'] = true
 		}, function (rowsChanged)
@@ -175,8 +175,16 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 end)
 
 function getPriceFromHash(hashKey, jobGrade, type)
-	if type == 'heli' then
+	if type == 'helicopter' then
 		local vehicles = Config.AuthorizedHelicopters[jobGrade]
+
+		for k,v in ipairs(vehicles) do
+			if GetHashKey(v.model) == hashKey then
+				return v.price
+			end
+		end
+	elseif type == 'car' then
+		local vehicles = Config.AuthorizedVehicles[jobGrade]
 
 		for k,v in ipairs(vehicles) do
 			if GetHashKey(v.model) == hashKey then

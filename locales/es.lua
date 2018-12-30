@@ -4,7 +4,6 @@ Locales['es'] = {
   ['ems_clothes_civil'] = 'Camiseta',
   ['ems_clothes_ems'] = 'Equipo de ambulancia',
   -- Vehicles
-  ['store_veh'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
   ['helicopter_buy'] = 'helicopter shop',
@@ -25,6 +24,9 @@ Locales['es'] = {
   ['garage_empty'] = 'you dont have any vehicles in your garage.',
   ['garage_released'] = 'your vehicle has been released from the garage.',
   ['garage_store_nearby'] = 'there is no nearby vehicles.',
+  ['garage_storeditem'] = 'open garage',
+  ['garage_storeitem'] = 'store vehicle in garage',
+  ['garage_buyitem'] = 'vehicle shop',
   ['shop_item'] = '$%s',
   ['vehicleshop_title'] = 'vehicle Shop',
   ['vehicleshop_confirm'] = 'do you want to buy this vehicle?',

@@ -49,6 +49,7 @@ Config.Hospitals = {
 		Vehicles = {
 			{
 				Spawner = vector3(307.7, -1433.4, 30.0),
+				InsideShop = vector3(446.7, -1355.6, 43.5),
 				Marker = { type = 36, x = 1.0, y = 1.0, z = 1.0, r = 100, g = 50, b = 200, a = 100, rotate = true },
 				SpawnPoints = {
 					{ coords = vector3(297.2, -1429.5, 29.8), heading = 227.6, radius = 4.0 },
@@ -68,10 +69,6 @@ Config.Hospitals = {
 					{ coords = vector3(299.5, -1453.2, 46.5), heading = 142.7, radius = 10.0 }
 				}
 			}
-		},
-
-		VehicleDeleters = {
-			vector3(327.6, -1481.1, 28.8)
 		},
 
 		FastTravels = {
@@ -131,6 +128,42 @@ Config.Hospitals = {
 	}
 }
 
+Config.AuthorizedVehicles = {
+
+	ambulance = {
+		{
+			model = 'ambulance',
+			label = 'Ambulance Van',
+			price = 5000
+		}
+	},
+
+	doctor = {
+		{
+			model = 'ambulance',
+			label = 'Ambulance Van',
+			price = 4500
+		}
+	},
+
+	chief_doctor = {
+		{
+			model = 'ambulance',
+			label = 'Ambulance Van',
+			price = 3000
+		}
+	},
+
+	boss = {
+		{
+			model = 'ambulance',
+			label = 'Ambulance Van',
+			price = 2000
+		}
+	}
+
+}
+
 Config.AuthorizedHelicopters = {
 
 	ambulance = {},
@@ -169,15 +202,6 @@ Config.AuthorizedHelicopters = {
 			label = 'Sea Sparrow',
 			price = 250000
 		}
-	}
-
-}
-
-Config.AuthorizedVehicles = {
-
-	{
-		model = 'ambulance',
-		label = 'Ambulance'
 	}
 
 }
