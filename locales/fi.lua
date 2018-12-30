@@ -6,5 +6,5 @@ Locales['fi'] = {
   ['received_payment'] = 'sinä ~g~sait~s~ maksun suuruudelta ~r~$%s~s~',
   ['player_not_online'] = 'pelaaja ei ole sisäänkirjautuneena',
   ['no_money'] = 'sinulla ei ole tarpeeksi rahaa maksaaksesi tätä laskua.',
-  ['target_no_money'] = 'pelaajalla ~r~ei ole~w~ tarpeeksi rahaa maksaakseentätä laskua',
+  ['target_no_money'] = 'pelaajalla ~r~ei ole~s~ tarpeeksi rahaa maksaakseentätä laskua',
 }
