@@ -275,11 +275,11 @@ function RemoveItemsAfterRPDeath()
 		end
 
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
-			ESX.SetPlayerData('lastPosition', Config.Zones.HospitalInteriorInside1.Pos)
+			ESX.SetPlayerData('lastPosition', Config.RespawnPoint.coords)
 			ESX.SetPlayerData('loadout', {})
 
-			TriggerServerEvent('esx:updateLastPosition', Config.Zones.HospitalInteriorInside1.Pos)
-			RespawnPed(PlayerPedId(), Config.Zones.HospitalInteriorInside1.Pos)
+			TriggerServerEvent('esx:updateLastPosition', Config.RespawnPoint.coords)
+			RespawnPed(PlayerPedId(), Config.RespawnPoint.coords, Config.RespawnPoint.heading)
 
 			StopScreenEffect('DeathFailOut')
 			DoScreenFadeIn(800)
@@ -287,11 +287,11 @@ function RemoveItemsAfterRPDeath()
 	end)
 end
 
-function RespawnPed(ped, coords)
+function RespawnPed(ped, coords, heading)
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
-	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, false)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
 	SetPlayerInvincible(ped, false)
-	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z, coords.heading)
+	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z)
 	ClearPedBloodDamage(ped)
 
 	ESX.UI.Menu.CloseAll()
@@ -340,7 +340,8 @@ AddEventHandler('esx_ambulancejob:revive', function()
 		RespawnPed(playerPed, {
 			x = coords.x,
 			y = coords.y,
-			z = coords.z
+			z = coords.z,
+			heading = 0.0
 		})
 
 		StopScreenEffect('DeathFailOut')
