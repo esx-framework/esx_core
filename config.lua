@@ -5,20 +5,20 @@ Config.MarkerType                 = 1
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
 Config.MarkerColor                = { r = 50, g = 50, b = 204 }
 
-Config.EnablePlayerManagement     = false
-Config.EnableArmoryManagement     = false
-Config.EnableESXIdentity          = false -- enable if you're using esx_identity
+Config.EnablePlayerManagement     = true
+Config.EnableArmoryManagement     = true
+Config.EnableESXIdentity          = true -- enable if you're using esx_identity
 Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
 Config.EnableSocietyOwnedVehicles = false
-Config.EnableLicenses             = false -- enable if you're using esx_license
+Config.EnableLicenses             = true -- enable if you're using esx_license
 
 Config.EnableHandcuffTimer        = true -- enable handcuff timer? will unrestrain player after the time ends
 Config.HandcuffTimer              = 10 * 60000 -- 10 mins
 
 Config.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
 
-Config.MaxInService               = -1
-Config.Locale                     = 'fr'
+Config.MaxInService               = 5
+Config.Locale                     = 'sv'
 
 Config.PoliceStations = {
 
@@ -29,7 +29,7 @@ Config.PoliceStations = {
 			Sprite  = 60,
 			Display = 4,
 			Scale   = 1.2,
-			Colour  = 29,
+			Colour  = 29
 		},
 
 		-- https://wiki.rage.mp/index.php?title=Weapons
@@ -44,7 +44,7 @@ Config.PoliceStations = {
 			{ name = 'WEAPON_FIREEXTINGUISHER', price = 120 },
 			{ name = 'WEAPON_FLAREGUN',         price = 60 },
 			{ name = 'WEAPON_STICKYBOMB',       price = 250 },
-			{ name = 'GADGET_PARACHUTE',        price = 300 },
+			{ name = 'GADGET_PARACHUTE',        price = 300 }
 		},
 
 		Cloakrooms = {
