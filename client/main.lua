@@ -358,7 +358,7 @@ end)
 -- Activate public marker
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 		local coords   = GetEntityCoords(PlayerPedId())
 		local position = nil
 		local zone     = nil
