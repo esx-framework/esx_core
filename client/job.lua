@@ -321,43 +321,30 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, partNum)
-	if part == 'AmbulanceActions' then
-		CurrentAction = part
-		CurrentActionMsg = _U('actions_prompt')
-		CurrentActionData = {}
-	elseif part == 'Pharmacy' then
-		CurrentAction = part
-		CurrentActionMsg = _U('open_pharmacy')
-		CurrentActionData = {}
-	elseif part == 'Vehicles' then
-		CurrentAction = part
-		CurrentActionMsg = _U('garage_prompt')
-		CurrentActionData = {hospital = hospital, partNum = partNum}
-	elseif part == 'Helicopters' then
-		CurrentAction = part
-		CurrentActionMsg = _U('helicopter_prompt')
-		CurrentActionData = {hospital = hospital, partNum = partNum}
-	elseif part == 'VehicleDeleter' then
+	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' then
+		if part == 'AmbulanceActions' then
+			CurrentAction = part
+			CurrentActionMsg = _U('actions_prompt')
+			CurrentActionData = {}
+		elseif part == 'Pharmacy' then
+			CurrentAction = part
+			CurrentActionMsg = _U('open_pharmacy')
+			CurrentActionData = {}
+		elseif part == 'Vehicles' then
+			CurrentAction = part
+			CurrentActionMsg = _U('garage_prompt')
+			CurrentActionData = {hospital = hospital, partNum = partNum}
+		elseif part == 'Helicopters' then
+			CurrentAction = part
+			CurrentActionMsg = _U('helicopter_prompt')
+			CurrentActionData = {hospital = hospital, partNum = partNum}
+		elseif part == 'FastTravelsPrompt' then
+			local travelItem = Config.Hospitals[hospital][part][partNum]
 
-		local playerPed = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
-
-		if IsPedInAnyVehicle(playerPed, false) then
-			local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
-
-			if distance ~= -1 and distance <= 1.0 then
-				CurrentAction = part
-				CurrentActionMsg = _U('store_veh')
-				CurrentActionData = {vehicle = vehicle}
-			end
+			CurrentAction = part
+			CurrentActionMsg = travelItem.Prompt
+			CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
 		end
-
-	elseif part == 'FastTravelsPrompt' then
-		local travelItem = Config.Hospitals[hospital][part][partNum]
-
-		CurrentAction = part
-		CurrentActionMsg = travelItem.Prompt
-		CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
 	end
 end)
 
@@ -387,8 +374,6 @@ Citizen.CreateThread(function()
 					OpenVehicleSpawnerMenu(CurrentActionData.hospital, CurrentActionData.partNum)
 				elseif CurrentAction == 'Helicopters' then
 					OpenHelicopterSpawnerMenu(CurrentActionData.hospital, CurrentActionData.partNum)
-				elseif CurrentAction == 'VehicleDeleter' then
-					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 				elseif CurrentAction == 'FastTravelsPrompt' then
 					FastTravel(CurrentActionData.to, CurrentActionData.heading)
 				end
