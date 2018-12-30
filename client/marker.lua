@@ -8,7 +8,7 @@ CurrentActionData = {}
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
 
@@ -22,7 +22,7 @@ Citizen.CreateThread(function()
 						OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
 					else -- check for license
 
-						ESX.TriggerServerCallback('esx_license:checkLicense', function (hasBoatLicense)
+						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasBoatLicense)
 							if hasBoatLicense then
 								OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
 							else
@@ -31,7 +31,7 @@ Citizen.CreateThread(function()
 						end, GetPlayerServerId(PlayerId()), 'boat')
 
 					end
-					
+
 				elseif CurrentAction == 'garage_out' then
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
 				elseif CurrentAction == 'garage_in' then
@@ -67,7 +67,6 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 				CurrentActionMsg  = _U('garage_store')
 				CurrentActionData = { vehicle = vehicle, zoneNum = zoneNum }
 			end
-	
 		end
 	end
 end)
@@ -93,7 +92,7 @@ Citizen.CreateThread(function()
 			-- draw boat shop marker
 			local zone = Config.Zones.BoatShops[i].Outside
 			if GetDistanceBetweenCoords(coords, zone.x, zone.y, zone.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
 
@@ -101,13 +100,13 @@ Citizen.CreateThread(function()
 			-- draw garage maker
 			local zoneOut = Config.Zones.Garages[i].GaragePos
 			if GetDistanceBetweenCoords(coords, zoneOut.x, zoneOut.y, zoneOut.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zoneOut.x, zoneOut.y, zoneOut.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(Config.MarkerType, zoneOut.x, zoneOut.y, zoneOut.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
 			end
 
 			-- draw store marker
 			local zoneIn = Config.Zones.Garages[i].StorePos
 			if GetDistanceBetweenCoords(coords, zoneIn.x, zoneIn.y, zoneIn.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zoneIn.x, zoneIn.y, zoneIn.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, false, false, false)
+				DrawMarker(Config.MarkerType, zoneIn.x, zoneIn.y, zoneIn.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
 

@@ -240,7 +240,7 @@ end
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if isInShopMenu then
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
