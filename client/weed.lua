@@ -19,7 +19,7 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
@@ -73,10 +73,10 @@ end
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
-		local nearbyObject, nearbyID = nil, nil
+		local nearbyObject, nearbyID
 
 		for i=1, #weedPlants, 1 do
 			if GetDistanceBetweenCoords(coords, GetEntityCoords(weedPlants[i]), false) < 1 then
@@ -117,6 +117,8 @@ Citizen.CreateThread(function()
 				end, 'cannabis')
 			end
 
+		else
+			Citizen.Wait(500)
 		end
 
 	end
