@@ -120,7 +120,6 @@ function OpenDMVSchoolMenu()
 	end
 
 	if ownedLicenses['dmv'] then
-
 		if not ownedLicenses['drive'] then
 			table.insert(elements, {label = _U('road_test_car') .. ' <span style="color: green;">$' .. Config.Prices['drive'] .. '</span>', value = 'drive_test', type = 'drive'})
 		end
@@ -132,7 +131,6 @@ function OpenDMVSchoolMenu()
 		if not ownedLicenses['drive_truck'] then
 			table.insert(elements, {label = _U('road_test_truck') .. ' <span style="color: green;">$' .. Config.Prices['drive_truck'] .. '</span>', value = 'drive_test', type = 'drive_truck'})
 		end
-
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -141,26 +139,21 @@ function OpenDMVSchoolMenu()
 	{
 		title    = _U('driving_school'),
 		elements = elements,
-		align    = 'top-left',
+		align    = 'top-left'
 	}, function(data, menu)
 		if data.current.value == 'theory_test' then
 			menu.close()
 			StartTheoryTest()
-		end
-
-		if data.current.value == 'drive_test' then
-			menu.close()
+		elseif data.current.value == 'drive_test' then
 			StartDriveTest(data.current.type)
 		end
+	end, function(data, menu)
+		menu.close()
 
-		end, function(data, menu)
-			menu.close()
-
-			CurrentAction     = 'dmvschool_menu'
-			CurrentActionMsg  = _U('press_open_menu')
-			CurrentActionData = {}
-		end
-	)
+		CurrentAction     = 'dmvschool_menu'
+		CurrentActionMsg  = _U('press_open_menu')
+		CurrentActionData = {}
+	end)
 end
 
 RegisterNUICallback('question', function(data, cb)
@@ -217,7 +210,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		local coords = GetEntityCoords(PlayerPedId())
 
@@ -234,7 +227,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(100)
 
 		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
@@ -282,7 +275,7 @@ end)
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
 
@@ -305,7 +298,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentTest == 'drive' then
 			local playerPed      = PlayerPedId()
@@ -329,7 +322,6 @@ Citizen.CreateThread(function()
 			else
 
 				if CurrentCheckPoint ~= LastCheckPoint then
-
 					if DoesBlipExist(CurrentBlip) then
 						RemoveBlip(CurrentBlip)
 					end
