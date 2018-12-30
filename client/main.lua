@@ -228,7 +228,7 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(100)
 
 		if(ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'banker') then
 			local coords      = GetEntityCoords(PlayerPedId())
@@ -258,9 +258,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Key Controls
-Citizen.CreateThread(function ()
+Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
