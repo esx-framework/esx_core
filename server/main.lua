@@ -280,7 +280,7 @@ AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 
 		if result[1] then
 			local id    = result[1].id
-			local price = ESX.Round(result[1].price * 0.75)
+			local price = ESX.Math.Round(result[1].price * 0.75)
 
 			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
 				account.addMoney(price)

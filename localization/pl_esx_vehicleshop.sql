@@ -38,23 +38,24 @@ CREATE TABLE `vehicle_sold` (
 );
 
 CREATE TABLE `owned_vehicles` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`vehicle` longtext NOT NULL,
-	`owner` varchar(60) NOT NULL,
+	`owner` varchar(22) NOT NULL,
+	`plate` varchar(12) NOT NULL,
+	`vehicle` longtext,
+	`type` VARCHAR(20) NOT NULL DEFAULT 'car',
+	`stored` TINYINT(1) NOT NULL DEFAULT '0'
 
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`plate`)
 );
 
 CREATE TABLE `rented_vehicles` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`vehicle` varchar(60) NOT NULL,
-	`plate` varchar(10) NOT NULL,
+	`plate` varchar(12) NOT NULL,
 	`player_name` varchar(255) NOT NULL,
 	`base_price` int(11) NOT NULL,
 	`rent_price` int(11) NOT NULL,
-	`owner` varchar(255) NOT NULL,
+	`owner` varchar(22) NOT NULL,
 
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`plate`)
 );
 
 CREATE TABLE `vehicle_categories` (
