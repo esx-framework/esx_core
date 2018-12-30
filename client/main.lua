@@ -97,7 +97,7 @@ end)
 -- Menu Controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if IsControlJustReleased(0, Keys['E']) and isInMarker and not menuIsShowed then
 			ESX.UI.Menu.CloseAll()
