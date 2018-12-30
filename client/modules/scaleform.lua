@@ -47,7 +47,7 @@ ESX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-ESX.Scaleform.ShowPopupWarning = function(title, msg, footer, sec)
+ESX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('POPUP_WARNING')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_POPUP_WARNING')
@@ -55,7 +55,7 @@ ESX.Scaleform.ShowPopupWarning = function(title, msg, footer, sec)
 	PushScaleformMovieMethodParameterFloat(500.0) -- black background
 	PushScaleformMovieMethodParameterString(title)
 	PushScaleformMovieMethodParameterString(msg)
-	PushScaleformMovieMethodParameterString(footer)
+	PushScaleformMovieMethodParameterString(bottom)
 	PushScaleformMovieMethodParameterBool(true)
 
 	EndScaleformMovieMethod()
