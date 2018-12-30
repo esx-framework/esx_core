@@ -60,6 +60,22 @@ AddEventHandler('playerSpawned', function()
 	end
 end)
 
+-- Create blips
+Citizen.CreateThread(function()
+	for k,v in pairs(Config.Hospitals) do
+		local blip = AddBlipForCoord(v.Blip.coords)
+
+		SetBlipSprite(blip, v.Blip.sprite)
+		SetBlipScale(blip, v.Blip.scale)
+		SetBlipColour(blip, v.Blip.color)
+		SetBlipAsShortRange(blip, true)
+
+		BeginTextCommandSetBlipName('STRING')
+		AddTextComponentSubstringPlayerName(_U('hospital'))
+		EndTextCommandSetBlipName(blip)
+	end
+end)
+
 -- Disable most inputs when dead
 Citizen.CreateThread(function()
 	while true do
@@ -108,6 +124,14 @@ function StartDistressSignal()
 
 			if IsControlPressed(0, Keys['G']) then
 				SendDistressSignal()
+
+				Citizen.CreateThread(function()
+					Citizen.Wait(1000 * 60 * 5)
+					if IsDead then
+						StartDistressSignal()
+					end
+				end)
+
 				break
 			end
 		end
@@ -116,7 +140,7 @@ end
 
 function SendDistressSignal()
 	local playerPed = PlayerPedId()
-	local coords	= GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	ESX.ShowNotification(_U('distress_sent'))
 	TriggerServerEvent('esx_phone:send', 'ambulance', _U('distress_message'), false, {
@@ -273,20 +297,6 @@ function RespawnPed(ped, coords)
 	ESX.UI.Menu.CloseAll()
 end
 
-function TeleportFadeEffect(entity, coords)
-	Citizen.CreateThread(function()
-		DoScreenFadeOut(800)
-
-		while not IsScreenFadedOut() do
-			Citizen.Wait(0)
-		end
-
-		ESX.Game.Teleport(entity, coords, function()
-			DoScreenFadeIn(800)
-		end)
-	end)
-end
-
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	local specialContact = {
@@ -305,7 +315,7 @@ end)
 RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
-	local coords	= GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
 	Citizen.CreateThread(function()

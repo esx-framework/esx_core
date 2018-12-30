@@ -4,8 +4,9 @@
 
 * Auto mode
    - [esx_skin](https://github.com/ESX-Org/esx_skin)
+   - [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
 
-* Player management (boss actions **There is no way to earn money for now**)
+* Player management (boss actions)
    - [esx_society](https://github.com/ESX-Org/esx_society)
 
 ## Download & Installation

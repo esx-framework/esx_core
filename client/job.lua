@@ -1,5 +1,7 @@
-local HasAlreadyEnteredMarker, LastZone, CurrentAction, CurrentActionMsg, CurrentActionData = nil, nil, nil, '', {}
+local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
+local HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum
 local IsBusy = false
+local spawnedVehicles, isInShopMenu = {}, false
 
 function OpenAmbulanceActionsMenu()
 	local elements = {
@@ -27,10 +29,6 @@ function OpenAmbulanceActionsMenu()
 		end
 	end, function(data, menu)
 		menu.close()
-
-		CurrentAction		= 'ambulance_actions_menu'
-		CurrentActionMsg	= _U('open_menu')
-		CurrentActionData	= {}
 	end)
 end
 
@@ -179,184 +177,246 @@ function OpenMobileAmbulanceActionsMenu()
 	end)
 end
 
-
-AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(zone)
-	if zone == 'HospitalInteriorEntering1' then
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorInside1.Pos)
-	elseif zone == 'HospitalInteriorExit1' then
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorOutside1.Pos)
-	elseif zone == 'HospitalInteriorEntering2' then
-		local heli = Config.HelicopterSpawner
-
-		if not IsAnyVehicleNearPoint(heli.SpawnPoint.x, heli.SpawnPoint.y, heli.SpawnPoint.z, 3.0) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' then
-			ESX.Game.SpawnVehicle('polmav', {
-				x = heli.SpawnPoint.x,
-				y = heli.SpawnPoint.y,
-				z = heli.SpawnPoint.z
-			}, heli.Heading, function(vehicle)
-				SetVehicleModKit(vehicle, 0)
-				SetVehicleLivery(vehicle, 1)
-			end)
-		end
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorInside2.Pos)
-	elseif zone == 'HospitalInteriorExit2' then
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.HospitalInteriorOutside2.Pos)
-	elseif zone == 'ParkingDoorGoOutInside' then
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.ParkingDoorGoOutOutside.Pos)
-	elseif zone == 'ParkingDoorGoInOutside' then
-		TeleportFadeEffect(PlayerPedId(), Config.Zones.ParkingDoorGoInInside.Pos)
-	elseif zone == 'StairsGoTopBottom' then
-		CurrentAction		= 'fast_travel_goto_top'
-		CurrentActionMsg	= _U('fast_travel')
-		CurrentActionData	= {pos = Config.Zones.StairsGoTopTop.Pos}
-	elseif zone == 'StairsGoBottomTop' then
-		CurrentAction		= 'fast_travel_goto_bottom'
-		CurrentActionMsg	= _U('fast_travel')
-		CurrentActionData	= {pos = Config.Zones.StairsGoBottomBottom.Pos}
-	elseif zone == 'AmbulanceActions' then
-		CurrentAction		= 'ambulance_actions_menu'
-		CurrentActionMsg	= _U('open_menu')
-		CurrentActionData	= {}
-	elseif zone == 'VehicleSpawner' then
-		CurrentAction		= 'vehicle_spawner_menu'
-		CurrentActionMsg	= _U('veh_spawn')
-		CurrentActionData	= {}
-	elseif zone == 'Pharmacy' then
-		CurrentAction		= 'pharmacy'
-		CurrentActionMsg	= _U('open_pharmacy')
-		CurrentActionData	= {}
-	elseif zone == 'VehicleDeleter' then
-		local playerPed = PlayerPedId()
-		local coords	= GetEntityCoords(playerPed)
-
-		if IsPedInAnyVehicle(playerPed, false) then
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			})
-
-			if distance ~= -1 and distance <= 1.0 then
-				CurrentAction		= 'delete_vehicle'
-				CurrentActionMsg	= _U('store_veh')
-				CurrentActionData	= {vehicle = vehicle}
-			end
-		end
-	end
-end)
-
-function FastTravel(pos)
-	TeleportFadeEffect(PlayerPedId(), pos)
+function FastTravel(coords, heading)
+	TeleportFadeEffect(PlayerPedId(), coords, heading)
 end
 
-AddEventHandler('esx_ambulancejob:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
-	CurrentAction = nil
-end)
+function TeleportFadeEffect(entity, coords, heading)
+	Citizen.CreateThread(function()
+		DoScreenFadeOut(800)
 
--- Create blips
-Citizen.CreateThread(function()
-	local blip = AddBlipForCoord(Config.Blip.Pos.x, Config.Blip.Pos.y, Config.Blip.Pos.z)
+		while not IsScreenFadedOut() do
+			Citizen.Wait(0)
+		end
 
-	SetBlipSprite(blip, Config.Blip.Sprite)
-	SetBlipDisplay(blip, Config.Blip.Display)
-	SetBlipScale(blip, Config.Blip.Scale)
-	SetBlipColour(blip, Config.Blip.Colour)
-	SetBlipAsShortRange(blip, true)
+		ESX.Game.Teleport(entity, coords, function()
+			DoScreenFadeIn(800)
 
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(_U('hospital'))
-	EndTextCommandSetBlipName(blip)
-end)
+			if heading then
+				SetEntityHeading(entity, heading)
+			end
+		end)
+	end)
+end
 
--- Display markers
+-- Draw markers & Marker logic
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+		local playerCoords = GetEntityCoords(PlayerPedId())
+		local canSleep, isInMarker, hasExited = true, false, false
+		local currentHospital, currentPart, currentPartNum
 
-		local coords = GetEntityCoords(PlayerPedId())
-		for k,v in pairs(Config.Zones) do
-			if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-				if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' then
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-				elseif k ~= 'AmbulanceActions' and k ~= 'VehicleSpawner' and k ~= 'VehicleDeleter' and k ~= 'Pharmacy' and k ~= 'StairsGoTopBottom' and k ~= 'StairsGoBottomTop' then
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+		for hospitalNum,hospital in pairs(Config.Hospitals) do
+
+			-- Ambulance Actions
+			for k,v in ipairs(hospital.AmbulanceActions) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < Config.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceActions', k
 				end
 			end
+
+			-- Pharmacies
+			for k,v in ipairs(hospital.Pharmacies) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < Config.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Pharmacy', k
+				end
+			end
+
+			-- Vehicle Spawners
+			for k,v in ipairs(hospital.Vehicles) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < v.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Vehicles', k
+				end
+			end
+
+			-- Helicopter Spawners
+			for k,v in ipairs(hospital.Helicopters) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < v.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
+				end
+			end
+
+			-- Vehicle Deleters
+			for k,v in ipairs(hospital.VehicleDeleters) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < Config.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'VehicleDeleter', k
+				end
+			end
+
+			-- Fast Travels
+			for k,v in ipairs(hospital.FastTravels) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+
+				if distance < v.Marker.x then
+					FastTravel(v.To.coords, v.To.heading)
+				end
+			end
+
+			-- Fast Travels (Prompt)
+			for k,v in ipairs(hospital.FastTravelsPrompt) do
+				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+					canSleep = false
+				end
+
+				if distance < v.Marker.x then
+					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
+				end
+			end
+
+			-- Logic for exiting & entering markers
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+
+				if
+					(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+					(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+				then
+					TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+					hasExited = true
+				end
+
+				HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
+
+				TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
+
+			end
+
+			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+			end
+
 		end
 	end
 end)
 
--- Activate menu when player is inside marker
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(10)
+AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, partNum)
+	if part == 'AmbulanceActions' then
+		CurrentAction = part
+		CurrentActionMsg = _U('actions_prompt')
+		CurrentActionData = {}
+	elseif part == 'Pharmacy' then
+		CurrentAction = part
+		CurrentActionMsg = _U('open_pharmacy')
+		CurrentActionData = {}
+	elseif part == 'Vehicles' then
+		CurrentAction = part
+		CurrentActionMsg = _U('garage_prompt')
+		CurrentActionData = {hospital = hospital, partNum = partNum}
+	elseif part == 'Helicopters' then
+		CurrentAction = part
+		CurrentActionMsg = _U('helicopter_prompt')
+		CurrentActionData = {hospital = hospital, partNum = partNum}
+	elseif part == 'VehicleDeleter' then
 
-		local coords		= GetEntityCoords(PlayerPedId())
-		local isInMarker	= false
-		local currentZone	= nil
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
 
-		for k,v in pairs(Config.Zones) do
-			if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' then
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.MarkerSize.x) then
-					isInMarker	= true
-					currentZone = k
-				end
-			elseif k ~= 'AmbulanceActions' and k ~= 'VehicleSpawner' and k ~= 'VehicleDeleter' and k ~= 'Pharmacy' and k ~= 'StairsGoTopBottom' and k ~= 'StairsGoBottomTop' then
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.MarkerSize.x) then
-					isInMarker	= true
-					currentZone = k
-				end
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
+
+			if distance ~= -1 and distance <= 1.0 then
+				CurrentAction = part
+				CurrentActionMsg = _U('store_veh')
+				CurrentActionData = {vehicle = vehicle}
 			end
 		end
 
-		if isInMarker and not hasAlreadyEnteredMarker then
-			hasAlreadyEnteredMarker = true
-			lastZone				= currentZone
-			TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentZone)
-		end
+	elseif part == 'FastTravelsPrompt' then
+		local travelItem = Config.Hospitals[hospital][part][partNum]
 
-		if not isInMarker and hasAlreadyEnteredMarker then
-			hasAlreadyEnteredMarker = false
-			TriggerEvent('esx_ambulancejob:hasExitedMarker', lastZone)
-		end
+		CurrentAction = part
+		CurrentActionMsg = travelItem.Prompt
+		CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
 	end
+end)
+
+AddEventHandler('esx_ambulancejob:hasExitedMarker', function(hospital, part, partNum)
+	if not isInShopMenu then
+		ESX.UI.Menu.CloseAll()
+	end
+
+	CurrentAction = nil
 end)
 
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
-		if CurrentAction ~= nil then
+		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' then
+			if IsControlJustReleased(0, Keys['E']) then
 
-				if CurrentAction == 'ambulance_actions_menu' then
+				if CurrentAction == 'AmbulanceActions' then
 					OpenAmbulanceActionsMenu()
-				elseif CurrentAction == 'vehicle_spawner_menu' then
-					OpenVehicleSpawnerMenu()
-				elseif CurrentAction == 'pharmacy' then
+				elseif CurrentAction == 'Pharmacy' then
 					OpenPharmacyMenu()
-				elseif CurrentAction == 'fast_travel_goto_top' or CurrentAction == 'fast_travel_goto_bottom' then
-					FastTravel(CurrentActionData.pos)
-				elseif CurrentAction == 'delete_vehicle' then
-					if Config.EnableSocietyOwnedVehicles then
-						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
-						TriggerServerEvent('esx_society:putVehicleInGarage', 'ambulance', vehicleProps)
-					end
+				elseif CurrentAction == 'Vehicles' then
+					OpenVehicleSpawnerMenu(CurrentActionData.hospital, CurrentActionData.partNum)
+				elseif CurrentAction == 'Helicopters' then
+					OpenHelicopterSpawnerMenu(CurrentActionData.hospital, CurrentActionData.partNum)
+				elseif CurrentAction == 'VehicleDeleter' then
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+				elseif CurrentAction == 'FastTravelsPrompt' then
+					FastTravel(CurrentActionData.to, CurrentActionData.heading)
 				end
 
 				CurrentAction = nil
 
 			end
 
-		end
-
-		if IsControlJustReleased(0, Keys['F6']) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead then
-			OpenMobileAmbulanceActionsMenu()
+		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead then
+			if IsControlJustReleased(0, Keys['F6']) then
+				OpenMobileAmbulanceActionsMenu()
+			end
+		else
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -366,12 +426,11 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function()
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
 
-	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
-		local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
+	if IsAnyVehicleNearPoint(coords, 5.0) then
+		local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
 
 		if DoesEntityExist(vehicle) then
-			local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
-			local freeSeat = nil
+			local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
 			for i=maxSeats - 1, 0, -1 do
 				if IsVehicleSeatFree(vehicle, i) then
@@ -380,7 +439,7 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function()
 				end
 			end
 
-			if freeSeat ~= nil then
+			if freeSeat then
 				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
 			end
 		end
@@ -413,75 +472,349 @@ function OpenCloakroomMenu()
 		end
 
 		menu.close()
-		CurrentAction		= 'ambulance_actions_menu'
-		CurrentActionMsg	= _U('open_menu')
-		CurrentActionData	= {}
 	end, function(data, menu)
 		menu.close()
 	end)
 end
 
-function OpenVehicleSpawnerMenu()
+function OpenVehicleSpawnerMenu(hospital, partNum)
 
 	ESX.UI.Menu.CloseAll()
 
-	if Config.EnableSocietyOwnedVehicles then
-
-		local elements = {}
-
-		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
-			for i=1, #vehicles, 1 do
-				table.insert(elements, {
-					label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']',
-					value = vehicles[i]
-				})
-			end
-
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
-			{
-				title		= _U('veh_menu'),
-				align		= 'top-left',
-				elements = elements
-			}, function(data, menu)
-				menu.close()
-
-				local vehicleProps = data.current.value
-				ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 230.0, function(vehicle)
-					ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-					local playerPed = PlayerPedId()
-					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-				end)
-				TriggerServerEvent('esx_society:removeVehicleFromGarage', 'ambulance', vehicleProps)
-			end, function(data, menu)
-				menu.close()
-				CurrentAction		= 'vehicle_spawner_menu'
-				CurrentActionMsg	= _U('veh_spawn')
-				CurrentActionData	= {}
-			end)
-		end, 'ambulance')
-
-	else -- not society vehicles
-
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
 		{
-			title		= _U('veh_menu'),
-			align		= 'top-left',
-			elements	= Config.AuthorizedVehicles
+			title    = _U('garage_title'),
+			align    = 'top-left',
+			elements = Config.AuthorizedVehicles
 		}, function(data, menu)
 			menu.close()
 
-			ESX.Game.SpawnVehicle(data.current.model, Config.Zones.VehicleSpawnPoint.Pos, 230.0, function(vehicle)
-				local playerPed = PlayerPedId()
-				TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-			end)
+			local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(hospital, 'Vehicles', partNum)
+
+			if foundSpawn then
+				ESX.Game.SpawnVehicle(data.current.model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
+					local playerPed = PlayerPedId()
+					TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+				end)
+			end
 		end, function(data, menu)
 			menu.close()
-			CurrentAction		= 'vehicle_spawner_menu'
-			CurrentActionMsg	= _U('veh_spawn')
-			CurrentActionData	= {}
+		end)
+end
+
+function GetAvailableVehicleSpawnPoint(hospital, part, partNum)
+	local spawnPoints = Config.Hospitals[hospital][part][partNum].SpawnPoints
+	local found, foundSpawnPoint = false, nil
+
+	for i=1, #spawnPoints, 1 do
+		if ESX.Game.IsSpawnPointClear(spawnPoints[i].coords, spawnPoints[i].radius) then
+			found, foundSpawnPoint = true, spawnPoints[i]
+			break
+		end
+	end
+
+	if found then
+		return true, foundSpawnPoint
+	else
+		ESX.ShowNotification(_U('garage_blocked'))
+		return false
+	end
+end
+
+function OpenHelicopterSpawnerMenu(hospital, partNum)
+	local playerCoords = GetEntityCoords(PlayerPedId())
+	local elements = {
+		{label = _U('helicopter_garage'), action = 'garage'},
+		{label = _U('helicopter_store'), action = 'store_garage'},
+		{label = _U('helicopter_buy'), action = 'buy_helicopter'}
+	}
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'helicopter_spawner', {
+		title    = _U('helicopter_title'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+
+		if data.current.action == 'buy_helicopter' then
+			local shopCoords = Config.Hospitals[hospital].Helicopters[partNum].InsideShop
+			local shopElements = {}
+
+			local authorizedHelicopters = Config.AuthorizedHelicopters[ESX.PlayerData.job.grade_name]
+
+			if #authorizedHelicopters > 0 then
+				for k,helicopter in ipairs(authorizedHelicopters) do
+					table.insert(shopElements, {
+						label = ('%s - <span style="color:green;">%s</span>'):format(helicopter.label, _U('shop_item', ESX.Math.GroupDigits(helicopter.price))),
+						name  = helicopter.label,
+						model = helicopter.model,
+						price = helicopter.price,
+						type  = 'helicopter'
+					})
+				end
+			else
+				ESX.ShowNotification(_U('helicopter_notauthorized'))
+				return
+			end
+
+			OpenShopMenu(shopElements, playerCoords, shopCoords)
+		elseif data.current.action == 'garage' then
+			local garage = {}
+
+			ESX.TriggerServerCallback('esx_vehicleshop:retrieveJobVehicles', function(jobVehicles)
+				if #jobVehicles > 0 then
+					for k,v in ipairs(jobVehicles) do
+						local props = json.decode(v.vehicle)
+						local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+						local label = ('%s - <span style="color:darkgoldenrod;">%s</span>: '):format(vehicleName, props.plate)
+
+						if v.stored then
+							label = label .. ('<span style="color:green;">%s</span>'):format(_U('garage_stored'))
+						else
+							label = label .. ('<span style="color:darkred;">%s</span>'):format(_U('garage_notstored'))
+						end
+
+						table.insert(garage, {
+							label = label,
+							stored = v.stored,
+							model = props.model,
+							vehicleProps = props
+						})
+					end
+
+					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'helicopter_garage', {
+						title    = _U('helicopter_garage_title'),
+						align    = 'top-left',
+						elements = garage
+					}, function(data2, menu2)
+						if data2.current.stored then
+							local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(hospital, 'Helicopters', partNum)
+
+							if foundSpawn then
+								menu2.close()
+
+								ESX.Game.SpawnVehicle(data2.current.model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
+									ESX.Game.SetVehicleProperties(vehicle, data2.current.vehicleProps)
+
+									TriggerServerEvent('esx_vehicleshop:setJobVehicleState', data2.current.vehicleProps.plate, false)
+									ESX.ShowNotification(_U('garage_released'))
+								end)
+							end
+						else
+							ESX.ShowNotification(_U('garage_notavailable'))
+						end
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+
+				else
+					ESX.ShowNotification(_U('garage_empty'))
+				end
+			end, 'helicopter')
+
+		elseif data.current.action == 'store_garage' then
+			local vehicles, vehiclePlates = ESX.Game.GetVehiclesInArea(playerCoords, 30.0), {}
+
+			if #vehicles > 0 then
+				for k,v in ipairs(vehicles) do
+
+					-- Make sure the vehicle we're saving is empty, or else it wont be deleted
+					if GetVehicleNumberOfPassengers(v) == 0 and IsVehicleSeatFree(v, -1) then
+						table.insert(vehiclePlates, {
+							vehicle = v,
+							plate = ESX.Math.Trim(GetVehicleNumberPlateText(v))
+						})
+					end
+				end
+			else
+				ESX.ShowNotification(_U('garage_store_nearby'))
+				return
+			end
+
+			ESX.TriggerServerCallback('esx_ambulancejob:storeNearbyVehicle', function(storeSuccess, foundNum)
+				if storeSuccess then
+					local vehicleId = vehiclePlates[foundNum]
+					local attempts = 0
+					ESX.Game.DeleteVehicle(vehicleId.vehicle)
+					IsBusy = true
+
+					Citizen.CreateThread(function()
+						while IsBusy do
+							Citizen.Wait(0)
+							drawLoadingText(_U('garage_storing'), 255, 255, 255, 255)
+						end
+					end)
+
+					-- Workaround for vehicle not deleting when other players are near it.
+					while DoesEntityExist(vehicleId.vehicle) do
+						Citizen.Wait(500)
+						attempts = attempts + 1
+
+						-- Give up
+						if attempts > 30 then
+							break
+						end
+
+						vehicles = ESX.Game.GetVehiclesInArea(playerCoords, 30.0)
+						if #vehicles > 0 then
+							for k,v in ipairs(vehicles) do
+								if ESX.Math.Trim(GetVehicleNumberPlateText(v)) == vehicleId.plate then
+									ESX.Game.DeleteVehicle(v)
+									break
+								end
+							end
+						end
+					end
+
+					IsBusy = false
+					ESX.ShowNotification(_U('garage_has_stored'))
+				else
+					ESX.ShowNotification(_U('garage_has_notstored'))
+				end
+			end, vehiclePlates)
+
+		end
+
+	end, function(data, menu)
+		menu.close()
+	end)
+
+end
+
+function OpenShopMenu(elements, restoreCoords, shopCoords)
+	local playerPed = PlayerPedId()
+	isInShopMenu = true
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop', {
+		title    = _U('vehicleshop_title'),
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop_confirm',
+		{
+			title    = _U('vehicleshop_confirm', data.current.name, data.current.price),
+			align    = 'top-left',
+			elements = {
+				{ label = _U('confirm_no'), value = 'no' },
+				{ label = _U('confirm_yes'), value = 'yes' }
+			}
+		}, function(data2, menu2)
+
+			if data2.current.value == 'yes' then
+				local newPlate = exports['esx_vehicleshop']:GeneratePlate()
+				local vehicle  = GetVehiclePedIsIn(playerPed, false)
+				local props    = ESX.Game.GetVehicleProperties(vehicle)
+				props.plate    = newPlate
+
+				ESX.TriggerServerCallback('esx_ambulancejob:buyJobVehicle', function (bought)
+					if bought then
+						ESX.ShowNotification(_U('vehicleshop_bought', data.current.name, ESX.Math.GroupDigits(data.current.price)))
+
+						isInShopMenu = false
+						ESX.UI.Menu.CloseAll()
+				
+						DeleteSpawnedVehicles()
+						FreezeEntityPosition(playerPed, false)
+						SetEntityVisible(playerPed, true)
+				
+						ESX.Game.Teleport(playerPed, restoreCoords)
+					else
+						ESX.ShowNotification(_U('vehicleshop_money'))
+						menu2.close()
+					end
+				end, props)
+			else
+				menu2.close()
+			end
+
+		end, function(data2, menu2)
+			menu2.close()
 		end)
 
+		end, function(data, menu)
+		isInShopMenu = false
+		ESX.UI.Menu.CloseAll()
+
+		DeleteSpawnedVehicles()
+		FreezeEntityPosition(playerPed, false)
+		SetEntityVisible(playerPed, true)
+
+		ESX.Game.Teleport(playerPed, restoreCoords)
+	end, function(data, menu)
+		DeleteSpawnedVehicles()
+
+		WaitForVehicleToLoad(data.current.model)
+		ESX.Game.SpawnLocalVehicle(data.current.model, shopCoords, 0.0, function(vehicle)
+			table.insert(spawnedVehicles, vehicle)
+			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+			FreezeEntityPosition(vehicle, true)
+		end)
+	end)
+
+	WaitForVehicleToLoad(elements[1].model)
+	ESX.Game.SpawnLocalVehicle(elements[1].model, shopCoords, 0.0, function(vehicle)
+		table.insert(spawnedVehicles, vehicle)
+		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		FreezeEntityPosition(vehicle, true)
+	end)
+end
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		if isInShopMenu then
+			DisableControlAction(0, 75, true)  -- Disable exit vehicle
+			DisableControlAction(27, 75, true) -- Disable exit vehicle
+		else
+			Citizen.Wait(500)
+		end
 	end
+end)
+
+function DeleteSpawnedVehicles()
+	while #spawnedVehicles > 0 do
+		local vehicle = spawnedVehicles[1]
+		ESX.Game.DeleteVehicle(vehicle)
+		table.remove(spawnedVehicles, 1)
+	end
+end
+
+function WaitForVehicleToLoad(modelHash)
+	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
+
+	if not HasModelLoaded(modelHash) then
+		RequestModel(modelHash)
+
+		while not HasModelLoaded(modelHash) do
+			Citizen.Wait(0)
+
+			DisableControlAction(0, Keys['TOP'], true)
+			DisableControlAction(0, Keys['DOWN'], true)
+			DisableControlAction(0, Keys['LEFT'], true)
+			DisableControlAction(0, Keys['RIGHT'], true)
+			DisableControlAction(0, 176, true) -- ENTER key
+			DisableControlAction(0, Keys['BACKSPACE'], true)
+
+			drawLoadingText(_U('vehicleshop_awaiting_model'), 255, 255, 255, 255)
+		end
+	end
+end
+
+function drawLoadingText(text, red, green, blue, alpha)
+	SetTextFont(4)
+	SetTextProportional(0)
+	SetTextScale(0.0, 0.5)
+	SetTextColour(red, green, blue, alpha)
+	SetTextDropShadow(0, 0, 0, 0, 255)
+	SetTextEdge(1, 0, 0, 0, 255)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextCentre(true)
+
+	BeginTextCommandDisplayText("STRING")
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandDisplayText(0.5, 0.5)
 end
 
 function OpenPharmacyMenu()
@@ -489,8 +822,8 @@ function OpenPharmacyMenu()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pharmacy',
 	{
-		title		= _U('pharmacy_menu_title'),
-		align		= 'top-left',
+		title    = _U('pharmacy_menu_title'),
+		align    = 'top-left',
 		elements = {
 			{label = _U('pharmacy_take', _U('medikit')), value = 'medikit'},
 			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
@@ -499,25 +832,16 @@ function OpenPharmacyMenu()
 		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)
 	end, function(data, menu)
 		menu.close()
-
-		CurrentAction		= 'pharmacy'
-		CurrentActionMsg	= _U('open_pharmacy')
-		CurrentActionData	= {}
 	end)
 end
 
 function WarpPedInClosestVehicle(ped)
 	local coords = GetEntityCoords(ped)
 
-	local vehicle, distance = ESX.Game.GetClosestVehicle({
-		x = coords.x,
-		y = coords.y,
-		z = coords.z
-	})
+	local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
 
 	if distance ~= -1 and distance <= 5.0 then
-		local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
-		local freeSeat = nil
+		local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
 		for i=maxSeats - 1, 0, -1 do
 			if IsVehicleSeatFree(vehicle, i) then
@@ -526,7 +850,7 @@ function WarpPedInClosestVehicle(ped)
 			end
 		end
 
-		if freeSeat ~= nil then
+		if freeSeat then
 			TaskWarpPedIntoVehicle(ped, vehicle, freeSeat)
 		end
 	else

@@ -34,4 +34,7 @@ client_scripts {
 	'client/job.lua'
 }
 
-dependency 'es_extended'
+dependencies {
+	'es_extended',
+	'esx_vehicleshop'
+}
