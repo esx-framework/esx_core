@@ -245,7 +245,7 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if GUI.PhoneIsShowed then -- codes here: https://pastebin.com/guYd0ht4
 			DisableControlAction(0, 1,    true) -- LookLeftRight
@@ -290,7 +290,7 @@ end)
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
