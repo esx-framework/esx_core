@@ -381,7 +381,7 @@ end)
 -- Activate menu when player is inside marker
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 		if IsPedInAnyVehicle(playerPed, false) then
 			local coords      = GetEntityCoords(PlayerPedId())
@@ -393,7 +393,6 @@ Citizen.CreateThread(function()
 					if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
 						isInLSMarker  = true
 						ESX.ShowHelpNotification(v.Hint)
-
 						break
 					else
 						isInLSMarker  = false
