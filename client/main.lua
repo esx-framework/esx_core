@@ -946,7 +946,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if CurrentAction ~= nil then
 
