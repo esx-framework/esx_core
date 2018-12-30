@@ -480,7 +480,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 
 		if IsControlJustReleased(0, Keys['F2']) and GetLastInputMethod(2) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 			ESX.ShowInventory()
@@ -515,7 +515,7 @@ if Config.DisableWantedLevel then
 
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(10)
+			Citizen.Wait(0)
 
 			local playerId = PlayerId()
 			if GetPlayerWantedLevel(playerId) ~= 0 then

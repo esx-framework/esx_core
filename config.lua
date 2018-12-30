@@ -1,5 +1,5 @@
 Config                      = {}
-Config.Locale               = 'fr'
+Config.Locale               = 'sv'
 
 Config.Accounts             = { 'bank', 'black_money' }
 Config.AccountLabels        = { bank = _U('bank'), black_money = _U('black_money') }
