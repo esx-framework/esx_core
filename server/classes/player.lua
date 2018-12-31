@@ -199,9 +199,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getLastPosition = function()
-		self.lastPosition.x = ESX.Math.Round(self.lastPosition.x, 2)
-		self.lastPosition.y = ESX.Math.Round(self.lastPosition.y, 2)
-		self.lastPosition.z = ESX.Math.Round(self.lastPosition.z, 2)
+		if self.lastPosition then
+			self.lastPosition.x = ESX.Math.Round(self.lastPosition.x, 1)
+			self.lastPosition.y = ESX.Math.Round(self.lastPosition.y, 1)
+			self.lastPosition.z = ESX.Math.Round(self.lastPosition.z, 1)
+		end
 
 		return self.lastPosition
 	end

@@ -568,18 +568,16 @@ end)
 -- Last position
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(1000)
 
-		if ESX ~= nil and ESX.PlayerLoaded and PlayerSpawned then
+		if ESX.PlayerLoaded and PlayerSpawned then
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 
 			if not IsEntityDead(playerPed) then
-				ESX.PlayerData.lastPosition = {x = ESX.Math.Round(coords.x, 2), y = ESX.Math.Round(coords.y, 2), z = ESX.Math.Round(coords.z, 2)}
+				ESX.PlayerData.lastPosition = {x = coords.x, y = coords.y, z = coords.z}
 			end
 		end
-
 	end
 end)
 
