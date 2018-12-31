@@ -12,19 +12,25 @@ end)
 function EnableSocietyMoneyHUDElement()
 	local societyMoneyHUDElementTpl = '<div><img src="' .. base64MoneyIcon .. '" style="width:20px; height:20px; vertical-align:middle;">&nbsp;{{money}}</div>'
 
-	ESX.UI.HUD.RegisterElement('society_money', 3, 0, societyMoneyHUDElementTpl, {
-		money = 0
-	})
+	if ESX.GetConfig().EnableHud then
+		ESX.UI.HUD.RegisterElement('society_money', 3, 0, societyMoneyHUDElementTpl, {
+			money = 0
+		})
+	end
 end
 
 function DisableSocietyMoneyHUDElement()
-	ESX.UI.HUD.RemoveElement('society_money')
+	if ESX.GetConfig().EnableHud then
+		ESX.UI.HUD.RemoveElement('society_money')
+	end
 end
 
 function UpdateSocietyMoneyHUDElement(money)
-	ESX.UI.HUD.UpdateElement('society_money', {
-		money = ESX.Math.GroupDigits(money)
-	})
+	if ESX.GetConfig().EnableHud then
+		ESX.UI.HUD.UpdateElement('society_money', {
+			money = ESX.Math.GroupDigits(money)
+		})
+	end
 end
 
 function OpenBossMenu(society, close, options)
