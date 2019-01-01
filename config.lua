@@ -86,36 +86,61 @@ Config.AuthorizedWeapons = {
 	recruit = {
 		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
-		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_STUNGUN', price = 1500 },
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 80 }
 	},
 
 	officer = {
 		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
-		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
 		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
 		{ weapon = 'WEAPON_STUNGUN', price = 500 },
-		{ weapon = 'WEAPON_FLASHLIGHT', price = 80 }
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
 	sergeant = {
-
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 2000, 6000, nil }, price = 70000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
 	intendent = {
-
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 2000, 6000, nil }, price = 70000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
 	lieutenant = {
-
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 2000, 6000, nil }, price = 70000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
 	chef = {
-
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 2000, 6000, nil }, price = 70000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	},
 
 	boss = {
-
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_ADVANCEDRIFLE', components = { 0, 6000, 1000, 4000, 8000, nil }, price = 50000 },
+		{ weapon = 'WEAPON_PUMPSHOTGUN', components = { 2000, 6000, nil }, price = 70000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 }
 	}
 }
 
