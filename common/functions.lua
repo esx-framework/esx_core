@@ -18,6 +18,17 @@ ESX.GetConfig = function()
 	return Config
 end
 
+ESX.GetWeapon = function(weaponName)
+	weaponName = string.upper(weaponName)
+	local weapons = ESX.GetWeaponList()
+
+	for i=1, #weapons, 1 do
+		if weapons[i].name == weaponName then
+			return i, weapons[i]
+		end
+	end
+end
+
 ESX.GetWeaponList = function()
 	return Config.Weapons
 end
