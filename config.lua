@@ -25,7 +25,7 @@ Config.PoliceStations = {
 	LSPD = {
 
 		Blip = {
-			Pos     = { x = 425.130, y = -979.558, z = 30.711 },
+			Coords  = vector3(425.1, -979.5, 30.7),
 			Sprite  = 60,
 			Display = 4,
 			Scale   = 1.2,
@@ -33,52 +33,52 @@ Config.PoliceStations = {
 		},
 
 		Cloakrooms = {
-			{ x = 452.6, y = -992.8, z = 29.7 },
+			vector3(452.6, -992.8, 29.7)
 		},
 
 		Armories = {
-			{ x = 451.699, y = -980.356, z = 29.689 },
+			vector3(451.6, -980.3, 29.6)
 		},
 
 		Vehicles = {
 			{
-				Spawner    = { x = 454.69, y = -1017.40, z = 27.43 },
+				Spawner = vector3(454.6, -1017.4, 27.4),
 				SpawnPoints = {
-					{ x = 438.42, y = -1018.30, z = 27.75, heading = 90.0, radius = 6.0 },
-					{ x = 441.08, y = -1024.23, z = 28.30, heading = 90.0, radius = 6.0 },
-					{ x = 453.53, y = -1022.20, z = 28.02, heading = 90.0, radius = 6.0 },
-					{ x = 450.97, y = -1016.55, z = 28.10, heading = 90.0, radius = 6.0 }
+					{ coords = vector3(438.4, -1018.3, 27.7), heading = 90.0, radius = 6.0 },
+					{ coords = vector3(441.0, -1024.2, 28.3), heading = 90.0, radius = 6.0 },
+					{ coords = vector3(453.5, -1022.2, 28.0), heading = 90.0, radius = 6.0 },
+					{ coords = vector3(450.9, -1016.5, 28.1), heading = 90.0, radius = 6.0 }
 				}
 			},
 
 			{
-				Spawner    = { x = 473.38, y = -1018.43, z = 27.00 },
+				Spawner = { x = 473.38, y = -1018.43, z = 27.00 },
 				SpawnPoints = {
-					{ x = 475.98, y = -1021.65, z = 28.06, heading = 276.11, radius = 6.0 },
-					{ x = 484.10, y = -1023.19, z = 27.57, heading = 302.54, radius = 6.0 }
+					{ x = 475.9, y = -1021.6, z = 28.0, heading = 276.1, radius = 6.0 },
+					{ x = 484.1, y = -1023.1, z = 27.5, heading = 302.5, radius = 6.0 }
 				}
 			}
 		},
 
 		Helicopters = {
 			{
-				Spawner    = { x = 466.477, y = -982.819, z = 42.691 },
-				SpawnPoint = { x = 450.04, y = -981.14, z = 42.691 },
+				Spawner    = vector3(466.4, -982.8, 42.6),
+				SpawnPoint = vector3(450.0, -981.1, 42.6),
 				Heading    = 0.0
 			}
 		},
 
 		VehicleDeleters = {
-			{ x = 462.74, y = -1014.4, z = 27.065 },
-			{ x = 462.40, y = -1019.7, z = 27.104 },
-			{ x = 469.12, y = -1024.52, z = 27.20 }
+			vector3(462.7, -1014.4, 27.0),
+			vector3(462.4, -1019.7, 27.1),
+			vector3(469.1, -1024.5, 27.2)
 		},
 
 		BossActions = {
-			{ x = 448.417, y = -973.208, z = 29.689 }
-		},
+			vector3(448.4, -973.2, 29.6)
+		}
 
-	},
+	}
 
 }
 

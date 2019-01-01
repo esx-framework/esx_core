@@ -412,7 +412,7 @@ function GetAvailableVehicleSpawnPoint(station, partNum)
 	local found, foundSpawnPoint = false, nil
 
 	for i=1, #spawnPoints, 1 do
-		if ESX.Game.IsSpawnPointClear(spawnPoints[i], spawnPoints[i].radius) then
+		if ESX.Game.IsSpawnPointClear(spawnPoints[i].coords, spawnPoints[i].radius) then
 			found, foundSpawnPoint = true, spawnPoints[i]
 			break
 		end
@@ -1315,7 +1315,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 
 		local helicopters = Config.PoliceStations[station].Helicopters
 
-		if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0) then
+		if not IsAnyVehicleNearPoint(helicopters[partNum].SpawnPoint,  3.0) then
 			ESX.Game.SpawnVehicle('polmav', helicopters[partNum].SpawnPoint, helicopters[partNum].Heading, function(vehicle)
 				SetVehicleModKit(vehicle, 0)
 				SetVehicleLivery(vehicle, 0)
@@ -1604,7 +1604,7 @@ end)
 Citizen.CreateThread(function()
 
 	for k,v in pairs(Config.PoliceStations) do
-		local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
+		local blip = AddBlipForCoord(v.Blip.Pos)
 
 		SetBlipSprite (blip, v.Blip.Sprite)
 		SetBlipDisplay(blip, v.Blip.Display)
@@ -1635,10 +1635,10 @@ Citizen.CreateThread(function()
 			for k,v in pairs(Config.PoliceStations) do
 
 				for i=1, #v.Cloakrooms, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, true)
+					local distance = GetDistanceBetweenCoords(coords, v.Cloakrooms[i], true)
 
 					if distance < Config.DrawDistance then
-						DrawMarker(20, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z + 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						DrawMarker(20, v.Cloakrooms[i] + 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1647,10 +1647,10 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.Armories, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, true)
+					local distance = GetDistanceBetweenCoords(coords, v.Armories[i], true)
 
 					if distance < Config.DrawDistance then
-						DrawMarker(21, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						DrawMarker(21, v.Armories[i] + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1659,10 +1659,10 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.Vehicles, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, true)
+					local distance = GetDistanceBetweenCoords(coords, v.Vehicles[i].Spawner, true)
 
 					if distance < Config.DrawDistance then
-						DrawMarker(36, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						DrawMarker(36, v.Vehicles[i].Spawner + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1671,7 +1671,7 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.Helicopters, 1 do
-					local distance =  GetDistanceBetweenCoords(coords, v.Helicopters[i].Spawner.x, v.Helicopters[i].Spawner.y, v.Helicopters[i].Spawner.z, true)
+					local distance =  GetDistanceBetweenCoords(coords, v.Helicopters[i].Spawner, true)
 
 					if distance < Config.MarkerSize.x then
 						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'HelicopterSpawner', i
@@ -1679,10 +1679,10 @@ Citizen.CreateThread(function()
 				end
 
 				for i=1, #v.VehicleDeleters, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, true)
+					local distance = GetDistanceBetweenCoords(coords, v.VehicleDeleters[i], true)
 
 					if distance < Config.DrawDistance then
-						DrawMarker(Config.MarkerType, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+						DrawMarker(Config.MarkerType, v.VehicleDeleters[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1692,10 +1692,10 @@ Citizen.CreateThread(function()
 
 				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
 					for i=1, #v.BossActions, 1 do
-						local distance = GetDistanceBetweenCoords(coords, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, true)
+						local distance = GetDistanceBetweenCoords(coords, v.BossActions[i], true)
 
 						if distance < Config.DrawDistance then
-							DrawMarker(22, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+							DrawMarker(22, v.BossActions[i] + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 						end
 
 						if distance < Config.MarkerSize.x then
