@@ -9,17 +9,6 @@ end
 TriggerEvent('esx_phone:registerNumber', 'police', _U('alert_police'), true, true)
 TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
 
-RegisterServerEvent('esx_policejob:giveWeapon')
-AddEventHandler('esx_policejob:giveWeapon', function(weapon, ammo)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	if xPlayer.job.name == 'police' then
-		xPlayer.addWeapon(weapon, ammo)
-	else
-		print(('esx_policejob: %s attempted to give weapon!'):format(xPlayer.identifier))
-	end
-end)
-
 RegisterServerEvent('esx_policejob:confiscatePlayerItem')
 AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType, itemName, amount)
 	local _source = source
@@ -385,18 +374,54 @@ ESX.RegisterServerCallback('esx_policejob:removeArmoryWeapon', function(source, 
 
 end)
 
+ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weaponName, type, componentNum)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local authorizedWeapons, selectedWeapon = Config.AuthorizedWeapons[xPlayer.job.grade_name]
 
-ESX.RegisterServerCallback('esx_policejob:buy', function(source, cb, amount)
+	for k,v in ipairs(authorizedWeapons) do
+		if v.weapon == weaponName then
+			selectedWeapon = v
+			break
+		end
+	end
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_police', function(account)
-		if account.money >= amount then
-			account.removeMoney(amount)
+	if not selectedWeapon then
+		print(('esx_policejob: %s attempted to buy an invalid weapon.'):format(xPlayer.identifier))
+		cb(false)
+	end
+
+	-- Weapon
+	if type == 1 then
+		if xPlayer.getMoney() >= selectedWeapon.price then
+			xPlayer.removeMoney(selectedWeapon.price)
+			xPlayer.addWeapon(weaponName, 100)
+
 			cb(true)
 		else
 			cb(false)
 		end
-	end)
 
+	-- Weapon Component
+	elseif type == 2 then
+		local price = selectedWeapon.components[weaponComponent]
+		local weaponNum, weapon = ESX.GetWeapon(weaponName)
+
+		local component = weapon.components[componentNum]
+
+		if component then
+			if xPlayer.getMoney() >= selectedWeapon.price then
+				xPlayer.removeMoney(selectedWeapon.price)
+				xPlayer.addWeaponComponent(weaponName, component.name)
+
+				cb(true)
+			else
+				cb(false)
+			end
+		else
+			print(('esx_policejob: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
+			cb(false)
+		end
+	end
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getStockItems', function(source, cb)

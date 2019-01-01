@@ -2,7 +2,7 @@ Config                            = {}
 
 Config.DrawDistance               = 100.0
 Config.MarkerType                 = 1
-Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
+Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 0.5 }
 Config.MarkerColor                = { r = 50, g = 50, b = 204 }
 
 Config.EnablePlayerManagement     = true
@@ -17,8 +17,8 @@ Config.HandcuffTimer              = 10 * 60000 -- 10 mins
 
 Config.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
 
-Config.MaxInService               = 5
-Config.Locale                     = 'sv'
+Config.MaxInService               = -1
+Config.Locale                     = 'en'
 
 Config.PoliceStations = {
 
@@ -32,23 +32,8 @@ Config.PoliceStations = {
 			Colour  = 29
 		},
 
-		-- https://wiki.rage.mp/index.php?title=Weapons
-		AuthorizedWeapons = {
-			{ name = 'WEAPON_NIGHTSTICK',       price = 200 },
-			{ name = 'WEAPON_COMBATPISTOL',     price = 300 },
-			{ name = 'WEAPON_ASSAULTSMG',       price = 1250 },
-			{ name = 'WEAPON_ASSAULTRIFLE',     price = 1500 },
-			{ name = 'WEAPON_PUMPSHOTGUN',      price = 600 },
-			{ name = 'WEAPON_STUNGUN',          price = 500 },
-			{ name = 'WEAPON_FLASHLIGHT',       price = 80 },
-			{ name = 'WEAPON_FIREEXTINGUISHER', price = 120 },
-			{ name = 'WEAPON_FLAREGUN',         price = 60 },
-			{ name = 'WEAPON_STICKYBOMB',       price = 250 },
-			{ name = 'GADGET_PARACHUTE',        price = 300 }
-		},
-
 		Cloakrooms = {
-			{ x = 452.600, y = -993.306, z = 29.750 },
+			{ x = 452.6, y = -992.8, z = 29.7 },
 		},
 
 		Armories = {
@@ -96,6 +81,44 @@ Config.PoliceStations = {
 	},
 
 }
+
+Config.AuthorizedWeapons = {
+	recruit = {
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 80 }
+	},
+
+	officer = {
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_APPISTOL', components = { 0, 0, 1000, 4000, nil }, price = 10000 },
+		{ weapon = 'WEAPON_NIGHTSTICK', price = 0 },
+		{ weapon = 'WEAPON_STUNGUN', price = 500 },
+		{ weapon = 'WEAPON_FLASHLIGHT', price = 80 }
+	},
+
+	sergeant = {
+
+	},
+
+	intendent = {
+
+	},
+
+	lieutenant = {
+
+	},
+
+	chef = {
+
+	},
+
+	boss = {
+
+	}
+}
+
 
 -- https://wiki.rage.mp/index.php?title=Vehicles
 Config.AuthorizedVehicles = {
