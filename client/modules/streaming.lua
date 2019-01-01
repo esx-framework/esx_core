@@ -28,20 +28,6 @@ function ESX.Streaming.RequestStreamedTextureDict(textureDict, cb)
 	end
 end
 
-function ESX.Streaming.RequestPtfxAsset(assetName, cb)
-	if not HasPtfxAssetLoaded(assetName) then
-		RequestPtfxAsset(assetName)
-
-		while not HasPtfxAssetLoaded(assetName) do
-			Citizen.Wait(1)
-		end
-	end
-
-	if cb ~= nil then
-		cb()
-	end
-end
-
 function ESX.Streaming.RequestNamedPtfxAsset(assetName, cb)
 	if not HasNamedPtfxAssetLoaded(assetName) then
 		RequestNamedPtfxAsset(assetName)
@@ -89,20 +75,6 @@ function ESX.Streaming.RequestWeaponAsset(weaponHash, cb)
 		RequestWeaponAsset(weaponHash)
 
 		while not HasWeaponAssetLoaded(weaponHash) do
-			Citizen.Wait(1)
-		end
-	end
-
-	if cb ~= nil then
-		cb()
-	end
-end
-
-function ESX.Streaming.RequestClipSet(clipSet, cb)
-	if not HasClipSetLoaded(clipSet) then
-		RequestClipSet(clipSet)
-
-		while not HasClipSetLoaded(clipSet) do
 			Citizen.Wait(1)
 		end
 	end

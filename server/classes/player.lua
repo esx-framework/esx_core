@@ -429,7 +429,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.removeWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
-		
+
 		if not weapon then
 			return
 		end
