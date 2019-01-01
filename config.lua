@@ -9,7 +9,6 @@ Config.EnablePlayerManagement     = false
 Config.EnableArmoryManagement     = false
 Config.EnableESXIdentity          = false -- enable if you're using esx_identity
 Config.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
-Config.EnableSocietyOwnedVehicles = false
 Config.EnableLicenses             = false -- enable if you're using esx_license
 
 Config.EnableHandcuffTimer        = true -- enable handcuff timer? will unrestrain player after the time ends
@@ -37,7 +36,7 @@ Config.PoliceStations = {
 		},
 
 		Armories = {
-			vector3(451.6, -980.3, 29.6)
+			vector3(451.0, -980.7, 29.6)
 		},
 
 		Vehicles = {
@@ -52,10 +51,10 @@ Config.PoliceStations = {
 			},
 
 			{
-				Spawner = { x = 473.38, y = -1018.43, z = 27.00 },
+				Spawner = vector3(473.3, -1018.4, 27.0),
 				SpawnPoints = {
-					{ x = 475.9, y = -1021.6, z = 28.0, heading = 276.1, radius = 6.0 },
-					{ x = 484.1, y = -1023.1, z = 27.5, heading = 302.5, radius = 6.0 }
+					{ coords = vector3(475.9, -1021.6, 28.0), heading = 276.1, radius = 6.0 },
+					{ coords = vector3(484.1, -1023.1, 27.5), heading = 302.5, radius = 6.0 }
 				}
 			}
 		},
