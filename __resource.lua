@@ -28,8 +28,8 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
-	'shared/modules/math.lua',
-	'shared/functions.lua'
+	'common/modules/math.lua',
+	'common/functions.lua'
 }
 
 client_scripts {
@@ -56,8 +56,8 @@ client_scripts {
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 
-	'shared/modules/math.lua',
-	'shared/functions.lua'
+	'common/modules/math.lua',
+	'common/functions.lua'
 }
 
 ui_page {
@@ -90,7 +90,8 @@ server_exports {
 }
 
 dependencies {
-	'essentialmode',
 	'mysql-async',
+	'essentialmode',
+	'esplugin_mysql',
 	'async'
 }
