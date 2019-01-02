@@ -239,7 +239,7 @@ TriggerEvent('es:addGroupCommand', 'clearloadout', 'admin', function(source, arg
 		return
 	end
 
-	for i=1, #xPlayer.loadout, 1 do
+	for i=#xPlayer.loadout, 1, -1 do
 		xPlayer.removeWeapon(xPlayer.loadout[i].name)
 	end
 end, function(source, args, user)
