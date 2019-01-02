@@ -1264,6 +1264,7 @@ function OpenBuyWeaponsMenu()
 
 	local elements = {}
 	local playerPed = PlayerPedId()
+	PlayerData = ESX.GetPlayerData()
 
 	for k,v in ipairs(Config.AuthorizedWeapons[PlayerData.job.grade_name]) do
 		local weaponNum, weapon = ESX.GetWeapon(v.weapon)
