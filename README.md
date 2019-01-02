@@ -25,7 +25,7 @@ git clone https://github.com/ESX-Org/esx_license [esx]/esx_license
 start esx_license
 ```
 
-### Available triggers (server side)
+### Available triggers
 - `'esx_license:addLicense', function(target, type, cb)`
 - `'esx_license:removeLicense', function(target, type, cb)`
 - `'esx_license:getLicense', function(source, cb, type)` (callback)
