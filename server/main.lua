@@ -212,7 +212,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 				ESX.Players[_source] = xPlayer
 
-				TriggerEvent('esx:playerLoaded', _source)
+				TriggerEvent('esx:playerLoaded', _source, xPlayer)
 
 				TriggerClientEvent('esx:playerLoaded', _source, {
 					identifier   = xPlayer.identifier,
