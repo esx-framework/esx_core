@@ -3,11 +3,11 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function AddLicense(target, type, cb)
-	local xPlayer = ESX.GetPlayerFromId(target)
+	local identifier = GetPlayerIdentifier(target, 0)
 
 	MySQL.Async.execute('INSERT INTO user_licenses (type, owner) VALUES (@type, @owner)', {
 		['@type']  = type,
-		['@owner'] = xPlayer.identifier
+		['@owner'] = identifier
 	}, function(rowsChanged)
 		if cb ~= nil then
 			cb()
@@ -16,11 +16,11 @@ function AddLicense(target, type, cb)
 end
 
 function RemoveLicense(target, type, cb)
-	local xPlayer = ESX.GetPlayerFromId(target)
+	local identifier = GetPlayerIdentifier(target, 0)
 
 	MySQL.Async.execute('DELETE FROM user_licenses WHERE type = @type AND owner = @owner', {
 		['@type']  = type,
-		['@owner'] = xPlayer.identifier
+		['@owner'] = identifier
 	}, function(rowsChanged)
 		if cb ~= nil then
 			cb()
@@ -42,10 +42,10 @@ function GetLicense(type, cb)
 end
 
 function GetLicenses(target, cb)
-	local xPlayer = ESX.GetPlayerFromId(target)
+	local identifier = GetPlayerIdentifier(target, 0)
 
 	MySQL.Async.fetchAll('SELECT * FROM user_licenses WHERE owner = @owner', {
-		['@owner'] = xPlayer.identifier
+		['@owner'] = identifier
 	}, function(result)
 		local licenses   = {}
 		local asyncTasks = {}
@@ -79,11 +79,11 @@ function GetLicenses(target, cb)
 end
 
 function CheckLicense(target, type, cb)
-	local xPlayer = ESX.GetPlayerFromId(target)
+	local identifier = GetPlayerIdentifier(target, 0)
 
 	MySQL.Async.fetchAll('SELECT COUNT(*) as count FROM user_licenses WHERE type = @type AND owner = @owner', {
 		['@type']  = type,
-		['@owner'] = xPlayer.identifier
+		['@owner'] = identifier
 	}, function(result)
 		if tonumber(result[1].count) > 0 then
 			cb(true)
