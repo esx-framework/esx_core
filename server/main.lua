@@ -233,7 +233,7 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)
 
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE @plate = plate', {
+	MySQL.Async.fetchAll('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function(result)
 

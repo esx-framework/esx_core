@@ -1106,10 +1106,13 @@ function ShowPlayerLicense(player)
 	local elements = {}
 	local targetName
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
-		if data.licenses ~= nil then
+		if data.licenses then
 			for i=1, #data.licenses, 1 do
-				if data.licenses[i].label ~= nil and data.licenses[i].type ~= nil then
-					table.insert(elements, {label = data.licenses[i].label, value = data.licenses[i].type})
+				if data.licenses[i].label and data.licenses[i].type then
+					table.insert(elements, {
+						label = data.licenses[i].label,
+						type = data.licenses[i].type
+					})
 				end
 			end
 		end
@@ -1129,7 +1132,7 @@ function ShowPlayerLicense(player)
 			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
 			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
 			
-			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.value)
+			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.type)
 			
 			ESX.SetTimeout(300, function()
 				ShowPlayerLicense(player)
@@ -1535,7 +1538,7 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 		CurrentActionMsg  = _U('open_armory')
 		CurrentActionData = {station = station}
 
-	elseif part == 'VehicleSpawner' then
+	elseif part == 'Vehicles' then
 
 		CurrentAction     = 'menu_vehicle_spawner'
 		CurrentActionMsg  = _U('garage_prompt')
@@ -1877,7 +1880,7 @@ Citizen.CreateThread(function()
 					end
 
 					if distance < Config.MarkerSize.x then
-						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'VehicleSpawner', i
+						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
 					end
 				end
 
