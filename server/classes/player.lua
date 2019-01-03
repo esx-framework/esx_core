@@ -418,7 +418,6 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 				for j=1, #self.loadout[i].components, 1 do
 					TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, self.loadout[i].components[j])
-					table.remove(self.loadout[i].components, j)
 				end
 
 				table.remove(self.loadout, i)
