@@ -123,7 +123,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 	if xPlayer.getMoney() >= price then
 		xPlayer.removeMoney(price)
 
-		MySQL.Async.execute('INSERT INTO owned_vehicles (`owner`, `vehicle`, `plate`, `type`, `job`, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
+		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
 			['@owner'] = xPlayer.identifier,
 			['@vehicle'] = json.encode(vehicleProps),
 			['@plate'] = vehicleProps.plate,
@@ -158,7 +158,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 	if not foundPlate then
 		cb(false)
 	else
-		MySQL.Async.execute('UPDATE owned_vehicles SET stored = true WHERE owner = @owner AND plate = @plate AND job = @job', {
+		MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
 			['@owner'] = xPlayer.identifier,
 			['@plate'] = foundPlate,
 			['@job'] = xPlayer.job.name
