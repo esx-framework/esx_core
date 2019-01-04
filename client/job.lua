@@ -629,6 +629,7 @@ end
 
 function OpenHelicopterSpawnerMenu(hospital, partNum)
 	local playerCoords = GetEntityCoords(PlayerPedId())
+	ESX.PlayerData = ESX.GetPlayerData()
 	local elements = {
 		{label = _U('helicopter_garage'), action = 'garage'},
 		{label = _U('helicopter_store'), action = 'store_garage'},
