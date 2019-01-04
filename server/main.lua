@@ -469,7 +469,7 @@ RegisterServerEvent('esx_vehicleshop:setJobVehicleState')
 AddEventHandler('esx_vehicleshop:setJobVehicleState', function(plate, state)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE plate = @plate AND job = @job', {
+	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = @stored WHERE plate = @plate AND job = @job', {
 		['@stored'] = state,
 		['@plate'] = plate,
 		['@job'] = xPlayer.job.name
