@@ -257,7 +257,7 @@ function GetColors(color)
 		}
 	elseif color == 'chrome' then
 		colors = {
-			{ index = 117, label = _U('brushechrome')},
+			{ index = 117, label = _U('brushedchrome')},
 			{ index = 118, label = _U('blackchrome')},
 			{ index = 119, label = _U('brushedaluminum')},
 			{ index = 120, label = _U('chrome')}
