@@ -198,6 +198,16 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 		menu.data.elements[i][key] = val
 	end
 
+	menu.removeElement = function(query)
+		for i=1, #menu.data.elements, 1 do
+			for k,v in pairs(query) do
+				if menu.data.elements[i][k] == v then
+					menu.data.elements[i] = nil
+				end
+			end
+		end
+	end
+
 	table.insert(ESX.UI.Menu.Opened, menu)
 	ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
 
