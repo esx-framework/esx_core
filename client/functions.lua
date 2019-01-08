@@ -263,6 +263,7 @@ end
 
 ESX.Game.GetPedMugshot = function(ped)
 	local mugshot = RegisterPedheadshot(ped)
+
 	while not IsPedheadshotReady(mugshot) do
 		Citizen.Wait(0)
 	end
@@ -274,7 +275,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
 	while not HasCollisionLoadedAroundEntity(entity) do
-		RequestCollisionAtCoord(coords.x, coords.x, coords.x)
+		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 		Citizen.Wait(0)
 	end
 
