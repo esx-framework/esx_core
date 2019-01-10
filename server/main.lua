@@ -11,11 +11,17 @@ TriggerEvent('esx_society:registerSociety', 'taxi', 'Taxi', 'society_taxi', 'soc
 
 RegisterServerEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name ~= 'taxi' then
+		print(('esx_taxijob: %s attempted to trigger success!'):format(xPlayer.identifier))
+		return
+	end
+
 	math.randomseed(os.time())
 
-	local xPlayer        = ESX.GetPlayerFromId(source)
-	local total          = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max)
-	local societyAccount = nil
+	local total = math.random(Config.NPCJobEarnings.min, Config.NPCJobEarnings.max)
+	local societyAccount
 
 	if xPlayer.job.grade >= 3 then
 		total = total * 2
@@ -25,16 +31,14 @@ AddEventHandler('esx_taxijob:success', function()
 		societyAccount = account
 	end)
 
-	if societyAccount ~= nil then
-
-		local playerMoney  = math.floor(total / 100 * 30)
-		local societyMoney = math.floor(total / 100 * 70)
+	if societyAccount then
+		local playerMoney  = ESX.Math.Round(total / 100 * 30)
+		local societyMoney = ESX.Math.Round(total / 100 * 70)
 
 		xPlayer.addMoney(playerMoney)
 		societyAccount.addMoney(societyMoney)
 
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('comp_earned', societyMoney, playerMoney))
-
 	else
 		xPlayer.addMoney(total)
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned', total))
@@ -45,6 +49,11 @@ end)
 RegisterServerEvent('esx_taxijob:getStockItem')
 AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name ~= 'taxi' then
+		print(('esx_taxijob: %s attempted to trigger getStockItem!'):format(xPlayer.identifier))
+		return
+	end
 	
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
 		local item = inventory.getItem(itemName)
@@ -76,6 +85,11 @@ end)
 RegisterServerEvent('esx_taxijob:putStockItems')
 AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name ~= 'taxi' then
+		print(('esx_taxijob: %s attempted to trigger putStockItems!'):format(xPlayer.identifier))
+		return
+	end
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
 		local item = inventory.getItem(itemName)
