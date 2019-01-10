@@ -538,49 +538,33 @@ Citizen.CreateThread(function()
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(_U('blip_taxi'))
+	AddTextComponentSubstringPlayerName(_U('blip_taxi'))
 	EndTextCommandSetBlipName(blip)
 end)
 
--- Display markers
+-- Enter / Exit marker events, and draw markers
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 			local coords = GetEntityCoords(PlayerPedId())
+			local isInMarker, currentZone = false
 
 			for k,v in pairs(Config.Zones) do
-				if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+				local distance = GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true)
+
+				if v.Type ~= -1 and distance < Config.DrawDistance then
+					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, v.Rotate, nil, nil, false)
 				end
-			end
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
 
--- Enter / Exit marker events
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
-			local coords      = GetEntityCoords(PlayerPedId())
-			local isInMarker  = false
-			local currentZone = nil
-
-			for k,v in pairs(Config.Zones) do
-				if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
-				isInMarker  = true
-				currentZone = k
+				if distance < v.Size.x then
+					isInMarker, currentZone = true, k
 				end
 			end
 
 			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-				HasAlreadyEnteredMarker = true
-				LastZone                = currentZone
+				HasAlreadyEnteredMarker, LastZone = true, currentZone
 				TriggerEvent('esx_taxijob:hasEnteredMarker', currentZone)
 			end
 
@@ -589,7 +573,7 @@ Citizen.CreateThread(function()
 				TriggerEvent('esx_taxijob:hasExitedMarker', LastZone)
 			end
 		else
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		end
 	end
 end)
@@ -618,14 +602,14 @@ Citizen.CreateThread(function()
 						if CurrentCustomer ~= nil then
 							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
-							SetBlipAsFriendly(CurrentCustomerBlip, 1)
+							SetBlipAsFriendly(CurrentCustomerBlip, true)
 							SetBlipColour(CurrentCustomerBlip, 2)
 							SetBlipCategory(CurrentCustomerBlip, 3)
 							SetBlipRoute(CurrentCustomerBlip, true)
 
 							SetEntityAsMissionEntity(CurrentCustomer, true, false)
 							ClearPedTasksImmediately(CurrentCustomer)
-							SetBlockingOfNonTemporaryEvents(CurrentCustomer, 1)
+							SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
 
 							local standTime = GetRandomIntInRange(60000, 180000)
 							TaskStandStill(CurrentCustomer, standTime)
@@ -682,13 +666,21 @@ Citizen.CreateThread(function()
 								CurrentCustomer, CurrentCustomerBlip, DestinationBlip, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, TargetCoords = nil, nil, nil, false, false, false, nil
 							end
 
-							if TargetCoords ~= nil then
-								DrawMarker(1, TargetCoords.x, TargetCoords.y, TargetCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 4.0, 4.0, 2.0, 178, 236, 93, 155, 0, 0, 2, 0, 0, 0, 0)
+							if TargetCoords then
+								DrawMarker(36, TargetCoords.x, TargetCoords.y, TargetCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
 							end
 						else
 							RemoveBlip(CurrentCustomerBlip)
 							CurrentCustomerBlip = nil
 							TargetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+							local distance = GetDistanceBetweenCoords(playerCoords, TargetCoords.x, TargetCoords.y, TargetCoords.z, true)
+
+							while distance < Config.MinimumDistance do
+								Citizen.Wait(5)
+
+								TargetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+								distance = GetDistanceBetweenCoords(playerCoords, TargetCoords.x, TargetCoords.y, TargetCoords.z, true)
+							end
 
 							local street = table.pack(GetStreetNameAtCoord(TargetCoords.x, TargetCoords.y, TargetCoords.z))
 							local msg    = nil
@@ -704,17 +696,17 @@ Citizen.CreateThread(function()
 							DestinationBlip = AddBlipForCoord(TargetCoords.x, TargetCoords.y, TargetCoords.z)
 
 							BeginTextCommandSetBlipName("STRING")
-							AddTextComponentString("Destination")
+							AddTextComponentSubstringPlayerName("Destination")
 							EndTextCommandSetBlipName(blip)
 							SetBlipRoute(DestinationBlip, true)
 
 							CustomerEnteredVehicle = true
 						end
 					else
-						DrawMarker(1, customerCoords.x, customerCoords.y, customerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 4.0, 4.0, 2.0, 178, 236, 93, 155, 0, 0, 2, 0, 0, 0, 0)
+						DrawMarker(36, customerCoords.x, customerCoords.y, customerCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
 
 						if not CustomerEnteredVehicle then
-							if customerDistance <= 30.0 then
+							if customerDistance <= 40.0 then
 
 								if not IsNearCustomer then
 									ESX.ShowNotification(_U('close_to_client'))
@@ -723,20 +715,23 @@ Citizen.CreateThread(function()
 
 							end
 
-							if customerDistance <= 100.0 then
+							if customerDistance <= 20.0 then
 								if not CustomerIsEnteringVehicle then
 									ClearPedTasksImmediately(CurrentCustomer)
 
-									local seat = 0
-									for i=4, 0, 1 do
-										if IsVehicleSeatFree(vehicle, seat) then
-											seat = i
+									local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
+
+									for i=maxSeats - 1, 0, -1 do
+										if IsVehicleSeatFree(vehicle, i) then
+											freeSeat = i
 											break
 										end
 									end
 
-									TaskEnterVehicle(CurrentCustomer, vehicle, -1, seat, 2.0, 1)
-									CustomerIsEnteringVehicle = true
+									if freeSeat then
+										TaskEnterVehicle(CurrentCustomer, vehicle, -1, freeSeat, 2.0, 0)
+										CustomerIsEnteringVehicle = true
+									end
 								end
 							end
 						end
@@ -756,10 +751,10 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if CurrentAction ~= nil then
+		if CurrentAction and not IsDead then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
+			if IsControlJustReleased(0, Keys['E']) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 				if CurrentAction == 'taxi_actions_menu' then
 					OpenTaxiActionsMenu()
 				elseif CurrentAction == 'cloakroom' then
@@ -774,7 +769,7 @@ Citizen.CreateThread(function()
 			end
 		end
 
-		if IsControlJustReleased(0, Keys['F6']) and GetLastInputMethod(2) and not IsDead and Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
+		if IsControlJustReleased(0, Keys['F6']) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 			OpenMobileTaxiActionsMenu()
 		end
 	end
