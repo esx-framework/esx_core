@@ -1713,18 +1713,17 @@ end)
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	if not IsHandcuffed then
 		return
 	end
 
-	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
-		local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
+	if IsAnyVehicleNearPoint(coords, 5.0) then
+		local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
 
 		if DoesEntityExist(vehicle) then
-			local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
-			local freeSeat = nil
+			local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
 			for i=maxSeats - 1, 0, -1 do
 				if IsVehicleSeatFree(vehicle, i) then
@@ -1733,7 +1732,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 				end
 			end
 
-			if freeSeat ~= nil then
+			if freeSeat then
 				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
 				DragStatus.IsDragged = false
 			end
@@ -1843,7 +1842,7 @@ Citizen.CreateThread(function()
 
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
-			local isInMarker, hasExited = false, false
+			local isInMarker, hasExited, letSleep = false, false, true
 			local currentStation, currentPart, currentPartNum
 
 			for k,v in pairs(Config.PoliceStations) do
@@ -1853,6 +1852,7 @@ Citizen.CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(20, v.Cloakrooms[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1865,6 +1865,7 @@ Citizen.CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(21, v.Armories[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1877,6 +1878,7 @@ Citizen.CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(36, v.Vehicles[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1889,6 +1891,7 @@ Citizen.CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(34, v.Helicopters[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
 					end
 
 					if distance < Config.MarkerSize.x then
@@ -1902,6 +1905,7 @@ Citizen.CreateThread(function()
 
 						if distance < Config.DrawDistance then
 							DrawMarker(22, v.BossActions[i] + 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+							letSleep = false
 						end
 
 						if distance < Config.MarkerSize.x then
@@ -1931,6 +1935,10 @@ Citizen.CreateThread(function()
 				if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
 					HasAlreadyEnteredMarker = false
 					TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
+				end
+
+				if letSleep then
+					Citizen.Wait(500)
 				end
 
 			end
