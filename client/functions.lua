@@ -201,9 +201,13 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 	menu.removeElement = function(query)
 		for i=1, #menu.data.elements, 1 do
 			for k,v in pairs(query) do
-				if menu.data.elements[i][k] == v then
-					menu.data.elements[i] = nil
+				if menu.data.elements[i] then
+					if menu.data.elements[i][k] == v then
+						table.remove(menu.data.elements, i)
+						break
+					end
 				end
+
 			end
 		end
 	end
@@ -427,13 +431,11 @@ ESX.Game.GetClosestObject = function(filter, coords)
 	end
 
 	for i=1, #objects, 1 do
-
 		local foundObject = false
 
 		if filter == nil or (type(filter) == 'table' and #filter == 0) then
 			foundObject = true
 		else
-
 			local objectModel = GetEntityModel(objects[i])
 
 			for j=1, #filter, 1 do
@@ -441,7 +443,6 @@ ESX.Game.GetClosestObject = function(filter, coords)
 					foundObject = true
 				end
 			end
-
 		end
 
 		if foundObject then
@@ -453,7 +454,6 @@ ESX.Game.GetClosestObject = function(filter, coords)
 				closestDistance = distance
 			end
 		end
-
 	end
 
 	return closestObject, closestDistance
