@@ -198,6 +198,10 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 		menu.data.elements[i][key] = val
 	end
 
+	menu.setTitle = function(val)
+		menu.data.title = val
+	end
+
 	menu.removeElement = function(query)
 		for i=1, #menu.data.elements, 1 do
 			for k,v in pairs(query) do
