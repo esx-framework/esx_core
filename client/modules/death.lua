@@ -34,8 +34,8 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
 	local distance     = GetDistanceBetweenCoords(victimCoords, killerCoords, true)
 
 	local data = {
-		victimCoords = victimCoords,
-		killerCoords = killerCoords,
+		victimCoords = {table.unpack(victimCoords)},
+		killerCoords = {table.unpack(killerCoords)},
 
 		killedByPlayer = true,
 		deathCause     = killerWeapon,
@@ -54,7 +54,7 @@ function PlayerKilled()
 	local victimCoords = GetEntityCoords(PlayerPedId())
 
 	local data = {
-		victimCoords = victimCoords,
+		victimCoords = {table.unpack(victimCoords)},
 
 		killedByPlayer = false,
 		deathCause     = GetPedCauseOfDeath(playerPed)
