@@ -41,7 +41,7 @@ AddEventHandler('esx_society:registerSociety', function(name, label, account, da
 
 	for i=1, #RegisteredSocieties, 1 do
 		if RegisteredSocieties[i].name == name then
-			found                  = true
+			found = true
 			RegisteredSocieties[i] = society
 			break
 		end
@@ -82,7 +82,7 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local society = GetSociety(society)
 
-	if amount > 0 and xPlayer.get('money') >= amount then
+	if amount > 0 and xPlayer.getMoney() >= amount then
 
 		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			xPlayer.removeMoney(amount)
@@ -105,8 +105,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 
 		xPlayer.removeAccountMoney('black_money', amount)
 
-		MySQL.Async.execute('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)',
-		{
+		MySQL.Async.execute('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)', {
 			['@identifier'] = xPlayer.identifier,
 			['@society']    = society,
 			['@amount']     = amount
@@ -126,6 +125,7 @@ AddEventHandler('esx_society:putVehicleInGarage', function(societyName, vehicle)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
+
 		table.insert(garage, vehicle)
 		store.set('garage', garage)
 	end)
@@ -152,7 +152,7 @@ end)
 ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, societyName)
 	local society = GetSociety(societyName)
 
-	if society ~= nil then
+	if society then
 
 		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			cb(account.money)
@@ -225,16 +225,16 @@ ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
 	end)
 
 	job.grades = grades
+
 	cb(job)
 end)
 
 
 ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, type)
-
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
 
-	if xTarget ~= nil then
+	if xTarget then
 		xTarget.setJob(job, grade)
 
 		if type == 'hire' then
@@ -247,8 +247,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 
 		cb()
 	else
-		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier',
-		{
+		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier', {
 			['@job']        = job,
 			['@job_grade']  = grade,
 			['@identifier'] = identifier
@@ -256,33 +255,27 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 			cb()
 		end)
 	end
-
 end)
 
 ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
-
-	MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade',
-	{
+	MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
 		['@salary']   = salary,
 		['@job_name'] = job,
 		['@grade']    = grade
 	}, function(rowsChanged)
-
 		Jobs[job].grades[tostring(grade)].salary = salary
 		local xPlayers = ESX.GetPlayers()
 
 		for i=1, #xPlayers, 1 do
-
 			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
 			if xPlayer.job.name == job and xPlayer.job.grade == grade then
 				xPlayer.setJob(job, grade)
 			end
-
 		end
 
 		cb()
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
@@ -304,6 +297,7 @@ end)
 
 ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, societyName)
 	local society = GetSociety(societyName)
+
 	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
 		cb(garage)
@@ -324,16 +318,16 @@ end)
 function WashMoneyCRON(d, h, m)
 	MySQL.Async.fetchAll('SELECT * FROM society_moneywash', {}, function(result)
 		for i=1, #result, 1 do
+			local society = GetSociety(result[i].society)
+			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
 
 			-- add society money
-			local society = GetSociety(result[i].society)
 			TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 				account.addMoney(result[i].amount)
 			end)
 
 			-- send notification if player is online
-			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
-			if xPlayer ~= nil then
+			if xPlayer then
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
 			end
 
