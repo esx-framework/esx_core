@@ -667,6 +667,10 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			IsVehicleNeonLightEnabled(vehicle, 3)
 		},
 
+		extras            = {
+			
+		},
+
 		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
 		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
