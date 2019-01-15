@@ -131,7 +131,7 @@ function DisplayBoughtScaleform(weaponName, price)
 end
 
 AddEventHandler('esx_weaponshop:hasEnteredMarker', function(zone)
-	if zone == 'GunShop' then
+	if zone == 'GunShop' or zone == 'BlackWeashop' then
 		CurrentAction     = 'shop_menu'
 		CurrentActionMsg  = _U('shop_menu_prompt')
 		CurrentActionData = { zone = zone }
