@@ -46,23 +46,23 @@ end
 
 ESX.ShowNotification = function(msg)
 	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringWebsite(msg)
+	AddTextComponentSubstringPlayerName(msg)
 	DrawNotification(false, true)
 end
 
 ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
 	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringWebsite(msg)
+	AddTextComponentSubstringPlayerName(msg)
 	SetNotificationMessage(icon, icon, false, iconType, title, subject)
 	DrawNotification(false, false)
 end
 
 ESX.ShowHelpNotification = function(msg)
-	if not IsHelpMessageOnScreen() then
+	--if not IsHelpMessageBeingDisplayed() then
 		BeginTextCommandDisplayHelp('STRING')
-		AddTextComponentSubstringWebsite(msg)
+		AddTextComponentSubstringPlayerName(msg)
 		EndTextCommandDisplayHelp(0, false, true, -1)
-	end
+	--end
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -130,14 +130,14 @@ ESX.UI.HUD.UpdateElement = function(name, data)
 	SendNUIMessage({
 		action = 'updateHUDElement',
 		name   = name,
-		data   = data,
+		data   = data
 	})
 end
 
 ESX.UI.Menu.RegisterType = function(type, open, close)
 	ESX.UI.Menu.RegisteredTypes[type] = {
 		open   = open,
-		close  = close,
+		close  = close
 	}
 end
 
