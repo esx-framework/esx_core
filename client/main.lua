@@ -1913,34 +1913,34 @@ Citizen.CreateThread(function()
 						end
 					end
 				end
+			end
 
-				if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
 	
-					if
-						(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
-						(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
-					then
-						TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
-						hasExited = true
-					end
-	
-					HasAlreadyEnteredMarker = true
-					LastStation             = currentStation
-					LastPart                = currentPart
-					LastPartNum             = currentPartNum
-	
-					TriggerEvent('esx_policejob:hasEnteredMarker', currentStation, currentPart, currentPartNum)
-				end
-	
-				if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-					HasAlreadyEnteredMarker = false
+				if
+					(LastStation ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+					(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+				then
 					TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
+					hasExited = true
 				end
 
-				if letSleep then
-					Citizen.Wait(500)
-				end
+				HasAlreadyEnteredMarker = true
+				LastStation             = currentStation
+				LastPart                = currentPart
+				LastPartNum             = currentPartNum
 
+				TriggerEvent('esx_policejob:hasEnteredMarker', currentStation, currentPart, currentPartNum)
+
+			end
+
+			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
+			end
+
+			if letSleep then
+				Citizen.Wait(500)
 			end
 
 		else
