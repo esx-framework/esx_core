@@ -1,4 +1,4 @@
-# esx_mecanojob
+# esx_mechanicjob
 
 ## Requirements
 
@@ -13,33 +13,33 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_mecanojob
+fvm install --save --folder=esx esx-org/esx_mechanicjob
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_mecanojob [esx]/esx_mecanojob
+git clone https://github.com/ESX-Org/esx_mechanicjob [esx]/esx_mechanicjob
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_mecanojob/archive/master.zip
+- Download https://github.com/ESX-Org/esx_mechanicjob/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation
-- Import `esx_mecanojob.sql` in your database
+- Import `esx_mechanicjob.sql` in your database
 - If you want player management you have to set `Config.EnablePlayerManagement` to `true` in `config.lua`
 - Add this to your `server.cfg`:
 
 ```
-start esx_mecanojob
+start esx_mechanicjob
 ```
 
 # Legal
 ### License
-esx_mecanojob - mechanic job for ESX
+esx_mechanicjob - mechanic job for ESX
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2019 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

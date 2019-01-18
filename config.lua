@@ -1,12 +1,14 @@
 Config                            = {}
+Config.Locale                     = 'fr'
+
 Config.DrawDistance               = 100.0
 Config.MaxInService               = -1
 Config.EnablePlayerManagement     = false
 Config.EnableSocietyOwnedVehicles = false
+
 Config.NPCSpawnDistance           = 500.0
 Config.NPCNextToDistance          = 25.0
 Config.NPCJobEarnings             = { min = 15, max = 40 }
-Config.Locale                     = 'fr'
 
 Config.Vehicles = {
 	'adder',
@@ -18,7 +20,7 @@ Config.Vehicles = {
 
 Config.Zones = {
 
-	MecanoActions = {
+	MechanicActions = {
 		Pos   = { x = -342.291, y = -133.370, z = 38.009 },
 		Size  = { x = 1.5, y = 1.5, z = 1.0 },
 		Color = { r = 204, g = 204, b = 0 },
@@ -26,7 +28,7 @@ Config.Zones = {
 	},
 
 	Garage = {
-		Pos   = { x = -97.5797576904297, y = 6496.11376953125, z = 30.4909038543701 },
+		Pos   = { x = -97.5, y = 6496.1, z = 30.4 },
 		Size  = { x = 1.5, y = 1.5, z = 1.0 },
 		Color = { r = 204, g = 204, b = 0 },
 		Type  = 1,
