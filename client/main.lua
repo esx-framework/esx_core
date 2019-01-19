@@ -75,7 +75,7 @@ function StopNPCJob(cancel)
 	if cancel then
 		ESX.ShowNotification(_U('mission_canceled'))
 	else
-		--TriggerServerEvent('esx_mechanic:onNPCJobCompleted')
+		--TriggerServerEvent('esx_mechanicjob:onNPCJobCompleted')
 	end
 end
 
@@ -235,11 +235,11 @@ function OpenMechanicHarvestMenu()
 			menu.close()
 
 			if data.current.value == 'gaz_bottle' then
-				TriggerServerEvent('esx_mechanic:startHarvest')
+				TriggerServerEvent('esx_mechanicjob:startHarvest')
 			elseif data.current.value == 'fix_tool' then
-				TriggerServerEvent('esx_mechanic:startHarvest2')
+				TriggerServerEvent('esx_mechanicjob:startHarvest2')
 			elseif data.current.value == 'caro_tool' then
-				TriggerServerEvent('esx_mechanic:startHarvest3')
+				TriggerServerEvent('esx_mechanicjob:startHarvest3')
 			end
 		end, function(data, menu)
 			menu.close()
@@ -272,11 +272,11 @@ function OpenMechanicCraftMenu()
 			menu.close()
 
 			if data.current.value == 'blow_pipe' then
-				TriggerServerEvent('esx_mechanic:startCraft')
+				TriggerServerEvent('esx_mechanicjob:startCraft')
 			elseif data.current.value == 'fix_kit' then
-				TriggerServerEvent('esx_mechanic:startCraft2')
+				TriggerServerEvent('esx_mechanicjob:startCraft2')
 			elseif data.current.value == 'caro_kit' then
-				TriggerServerEvent('esx_mechanic:startCraft3')
+				TriggerServerEvent('esx_mechanicjob:startCraft3')
 			end
 		end, function(data, menu)
 			menu.close()
@@ -491,7 +491,7 @@ function OpenMobileMechanicActionsMenu()
 
 						if CurrentlyTowedVehicle == NPCTargetTowable then
 							ESX.Game.DeleteVehicle(NPCTargetTowable)
-							TriggerServerEvent('esx_mechanic:onNPCJobMissionCompleted')
+							TriggerServerEvent('esx_mechanicjob:onNPCJobMissionCompleted')
 							StopNPCJob()
 							NPCTargetDeleterZone = false
 						else
@@ -560,7 +560,7 @@ function OpenMobileMechanicActionsMenu()
 end
 
 function OpenGetStocksMenu()
-	ESX.TriggerServerCallback('esx_mechanic:getStockItems', function(items)
+	ESX.TriggerServerCallback('esx_mechanicjob:getStockItems', function(items)
 
 		local elements = {}
 
@@ -590,7 +590,7 @@ function OpenGetStocksMenu()
 				else
 					menu2.close()
 					menu.close()
-					TriggerServerEvent('esx_mechanic:getStockItem', itemName, count)
+					TriggerServerEvent('esx_mechanicjob:getStockItem', itemName, count)
 
 					Citizen.Wait(1000)
 					OpenGetStocksMenu()
@@ -609,7 +609,7 @@ end
 
 function OpenPutStocksMenu()
 
-	ESX.TriggerServerCallback('esx_mechanic:getPlayerInventory', function(inventory)
+	ESX.TriggerServerCallback('esx_mechanicjob:getPlayerInventory', function(inventory)
 		local elements = {}
 
 		for i=1, #inventory.items, 1 do
@@ -642,7 +642,7 @@ function OpenPutStocksMenu()
 				else
 					menu2.close()
 					menu.close()
-					TriggerServerEvent('esx_mechanic:putStockItems', itemName, count)
+					TriggerServerEvent('esx_mechanicjob:putStockItems', itemName, count)
 
 					Citizen.Wait(1000)
 					OpenPutStocksMenu()
@@ -659,8 +659,8 @@ function OpenPutStocksMenu()
 end
 
 
-RegisterNetEvent('esx_mechanic:onHijack')
-AddEventHandler('esx_mechanic:onHijack', function()
+RegisterNetEvent('esx_mechanicjob:onHijack')
+AddEventHandler('esx_mechanicjob:onHijack', function()
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
 
@@ -701,8 +701,8 @@ AddEventHandler('esx_mechanic:onHijack', function()
 	end
 end)
 
-RegisterNetEvent('esx_mechanic:onCarokit')
-AddEventHandler('esx_mechanic:onCarokit', function()
+RegisterNetEvent('esx_mechanicjob:onCarokit')
+AddEventHandler('esx_mechanicjob:onCarokit', function()
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
 
@@ -728,8 +728,8 @@ AddEventHandler('esx_mechanic:onCarokit', function()
 	end
 end)
 
-RegisterNetEvent('esx_mechanic:onFixkit')
-AddEventHandler('esx_mechanic:onFixkit', function()
+RegisterNetEvent('esx_mechanicjob:onFixkit')
+AddEventHandler('esx_mechanicjob:onFixkit', function()
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
 
@@ -766,7 +766,7 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-AddEventHandler('esx_mechanic:hasEnteredMarker', function(zone)
+AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
 	if zone == NPCJobTargetTowable then
 
 	elseif zone =='VehicleDelivery' then
@@ -796,24 +796,24 @@ AddEventHandler('esx_mechanic:hasEnteredMarker', function(zone)
 	end
 end)
 
-AddEventHandler('esx_mechanic:hasExitedMarker', function(zone)
+AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
 	if zone =='VehicleDelivery' then
 		NPCTargetDeleterZone = false
 	elseif zone == 'Craft' then
-		TriggerServerEvent('esx_mechanic:stopCraft')
-		TriggerServerEvent('esx_mechanic:stopCraft2')
-		TriggerServerEvent('esx_mechanic:stopCraft3')
+		TriggerServerEvent('esx_mechanicjob:stopCraft')
+		TriggerServerEvent('esx_mechanicjob:stopCraft2')
+		TriggerServerEvent('esx_mechanicjob:stopCraft3')
 	elseif zone == 'Garage' then
-		TriggerServerEvent('esx_mechanic:stopHarvest')
-		TriggerServerEvent('esx_mechanic:stopHarvest2')
-		TriggerServerEvent('esx_mechanic:stopHarvest3')
+		TriggerServerEvent('esx_mechanicjob:stopHarvest')
+		TriggerServerEvent('esx_mechanicjob:stopHarvest2')
+		TriggerServerEvent('esx_mechanicjob:stopHarvest3')
 	end
 
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
 end)
 
-AddEventHandler('esx_mechanic:hasEnteredEntityZone', function(entity)
+AddEventHandler('esx_mechanicjob:hasEnteredEntityZone', function(entity)
 	local playerPed = PlayerPedId()
 
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' and not IsPedInAnyVehicle(playerPed, false) then
@@ -823,7 +823,7 @@ AddEventHandler('esx_mechanic:hasEnteredEntityZone', function(entity)
 	end
 end)
 
-AddEventHandler('esx_mechanic:hasExitedEntityZone', function(entity)
+AddEventHandler('esx_mechanicjob:hasExitedEntityZone', function(entity)
 	if CurrentAction == 'remove_entity' then
 		CurrentAction = nil
 	end
@@ -932,12 +932,12 @@ Citizen.CreateThread(function()
 			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
 				HasAlreadyEnteredMarker = true
 				LastZone                = currentZone
-				TriggerEvent('esx_mechanic:hasEnteredMarker', currentZone)
+				TriggerEvent('esx_mechanicjob:hasEnteredMarker', currentZone)
 			end
 
 			if not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
-				TriggerEvent('esx_mechanic:hasExitedMarker', LastZone)
+				TriggerEvent('esx_mechanicjob:hasExitedMarker', LastZone)
 			end
 
 		end
@@ -975,12 +975,12 @@ Citizen.CreateThread(function()
 
 		if closestDistance ~= -1 and closestDistance <= 3.0 then
 			if LastEntity ~= closestEntity then
-				TriggerEvent('esx_mechanic:hasEnteredEntityZone', closestEntity)
+				TriggerEvent('esx_mechanicjob:hasEnteredEntityZone', closestEntity)
 				LastEntity = closestEntity
 			end
 		else
 			if LastEntity then
-				TriggerEvent('esx_mechanic:hasExitedEntityZone', LastEntity)
+				TriggerEvent('esx_mechanicjob:hasExitedEntityZone', LastEntity)
 				LastEntity = nil
 			end
 		end
