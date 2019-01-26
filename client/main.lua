@@ -388,7 +388,7 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 			local zone 		  = nil
 			local lastZone    = nil
-			if (PlayerData.job ~= nil and PlayerData.job.name == 'mecano') or Config.IsMecanoJobOnly == false then
+			if (PlayerData.job ~= nil and PlayerData.job.name == 'mechanic') or Config.IsMechanicJobOnly == false then
 				for k,v in pairs(Config.Zones) do
 					if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
 						isInLSMarker  = true
@@ -401,7 +401,7 @@ Citizen.CreateThread(function()
 			end
 
 			if IsControlJustReleased(0, Keys['E']) and not lsMenuIsShowed and isInLSMarker then
-				if (PlayerData.job ~= nil and PlayerData.job.name == 'mecano') or Config.IsMecanoJobOnly == false then
+				if (PlayerData.job ~= nil and PlayerData.job.name == 'mechanic') or Config.IsMechanicJobOnly == false then
 					lsMenuIsShowed = true
 
 					local vehicle = GetVehiclePedIsIn(playerPed, false)
