@@ -1,7 +1,7 @@
-Config                 = {}
-Config.DrawDistance    = 100.0
-Config.Locale          = 'en'
-Config.IsMecanoJobOnly = false
+Config                   = {}
+Config.DrawDistance      = 100.0
+Config.Locale            = 'en'
+Config.IsMechanicJobOnly = false
 
 Config.Zones = {
 

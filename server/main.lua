@@ -8,10 +8,10 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	price = tonumber(price)
 
-	if Config.IsMecanoJobOnly then
+	if Config.IsMechanicJobOnly then
 
 		local societyAccount = nil
-		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mecano', function(account)
+		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_mechanic', function(account)
 			societyAccount = account
 		end)
 		if price < societyAccount.money then
