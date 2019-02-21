@@ -133,35 +133,19 @@ Config.Hospitals = {
 Config.AuthorizedVehicles = {
 
 	ambulance = {
-		{
-			model = 'ambulance',
-			label = 'Ambulance Van',
-			price = 5000
-		}
+		{ model = 'ambulance', label = 'Ambulance Van', price = 5000}
 	},
 
 	doctor = {
-		{
-			model = 'ambulance',
-			label = 'Ambulance Van',
-			price = 4500
-		}
+		{ model = 'ambulance', label = 'Ambulance Van', price = 4500}
 	},
 
 	chief_doctor = {
-		{
-			model = 'ambulance',
-			label = 'Ambulance Van',
-			price = 3000
-		}
+		{ model = 'ambulance', label = 'Ambulance Van', price = 3000}
 	},
 
 	boss = {
-		{
-			model = 'ambulance',
-			label = 'Ambulance Van',
-			price = 2000
-		}
+		{ model = 'ambulance', label = 'Ambulance Van', price = 2000}
 	}
 
 }
@@ -171,39 +155,17 @@ Config.AuthorizedHelicopters = {
 	ambulance = {},
 
 	doctor = {
-		{
-			model = 'buzzard2',
-			label = 'Nagasaki Buzzard',
-			price = 150000
-		}
+		{ model = 'buzzard2', label = 'Nagasaki Buzzard', price = 150000 }
 	},
 
 	chief_doctor = {
-		{
-			model = 'buzzard2',
-			label = 'Nagasaki Buzzard',
-			price = 150000
-		},
-
-		{
-			model = 'seasparrow',
-			label = 'Sea Sparrow',
-			price = 300000
-		}
+		{ model = 'buzzard2', label = 'Nagasaki Buzzard', price = 150000 },
+		{ model = 'seasparrow', label = 'Sea Sparrow', price = 300000 }
 	},
 
 	boss = {
-		{
-			model = 'buzzard2',
-			label = 'Nagasaki Buzzard',
-			price = 100000
-		},
-
-		{
-			model = 'seasparrow',
-			label = 'Sea Sparrow',
-			price = 250000
-		}
+		{ model = 'buzzard2', label = 'Nagasaki Buzzard', price = 10000 },
+		{ model = 'seasparrow', label = 'Sea Sparrow', price = 250000 }
 	}
 
 }
