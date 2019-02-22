@@ -285,8 +285,13 @@ RegisterServerEvent('esx_ambulancejob:setDeathStatus')
 AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local identifier = GetPlayerIdentifiers(source)[1]
 
+	if type(isDead) ~= 'boolean' then
+		print(('esx_ambulancejob: %s attempted to parse something else than a boolean to setDeathStatus!'):format(identifier))
+		return
+	end
+
 	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
 		['@identifier'] = identifier,
-		['@isDead']     = isDead
+		['@isDead'] = isDead
 	})
 end)
