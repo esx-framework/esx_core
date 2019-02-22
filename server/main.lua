@@ -56,12 +56,12 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 				for i=1, #inventory, 1 do
 					table.insert(userData.inventory, {
-						name      = inventory[i].item,
-						count     = inventory[i].count,
-						label     = ESX.Items[inventory[i].item].label,
-						limit     = ESX.Items[inventory[i].item].limit,
-						usable    = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
-						rare      = ESX.Items[inventory[i].item].rare,
+						name = inventory[i].item,
+						count = inventory[i].count,
+						label = ESX.Items[inventory[i].item].label,
+						limit = ESX.Items[inventory[i].item].limit,
+						usable = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
+						rare = ESX.Items[inventory[i].item].rare,
 						canRemove = ESX.Items[inventory[i].item].canRemove
 					})
 				end
@@ -79,23 +79,22 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					if not found then
 
 						table.insert(userData.inventory, {
-							name      = k,
-							count     = 0,
-							label     = ESX.Items[k].label,
-							limit     = ESX.Items[k].limit,
-							usable    = ESX.UsableItemsCallbacks[k] ~= nil,
-							rare      = ESX.Items[k].rare,
+							name = k,
+							count = 0,
+							label = ESX.Items[k].label,
+							limit = ESX.Items[k].limit,
+							usable = ESX.UsableItemsCallbacks[k] ~= nil,
+							rare = ESX.Items[k].rare,
 							canRemove = ESX.Items[k].canRemove
 						})
 
 						local scope = function(item, identifier)
 
 							table.insert(tasks2, function(cb2)
-								MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)',
-								{
+								MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)', {
 									['@identifier'] = identifier,
-									['@item']       = item,
-									['@count']      = 0
+									['@item'] = item,
+									['@count'] = 0
 								}, function(rowsChanged)
 									cb2()
 								end)
@@ -160,10 +159,9 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			-- Get job grade data
 			table.insert(tasks2, function(cb2)
 
-				MySQL.Async.fetchAll('SELECT * FROM `job_grades` WHERE `job_name` = @job_name AND `grade` = @grade',
-				{
+				MySQL.Async.fetchAll('SELECT * FROM `job_grades` WHERE `job_name` = @job_name AND `grade` = @grade', {
 					['@job_name'] = userData.job.name,
-					['@grade']    = userData.job.grade
+					['@grade'] = userData.job.grade
 				}, function(result)
 
 					userData.job['grade_name']   = result[1].name
@@ -250,13 +248,13 @@ end)
 
 RegisterServerEvent('esx:updateLoadout')
 AddEventHandler('esx:updateLoadout', function(loadout)
-	local xPlayer   = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.loadout = loadout
 end)
 
 RegisterServerEvent('esx:updateLastPosition')
 AddEventHandler('esx:updateLastPosition', function(position)
-	local xPlayer        = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.lastPosition = position
 end)
 
