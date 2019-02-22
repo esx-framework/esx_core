@@ -275,11 +275,17 @@ function RemoveItemsAfterRPDeath()
 		end
 
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
-			ESX.SetPlayerData('lastPosition', Config.RespawnPoint.coords)
+			local formattedCoords = {
+				x = Config.RespawnPoint.coords.x,
+				y = Config.RespawnPoint.coords.y,
+				z = Config.RespawnPoint.coords.z
+			}
+
+			ESX.SetPlayerData('lastPosition', formattedCoords)
 			ESX.SetPlayerData('loadout', {})
 
-			TriggerServerEvent('esx:updateLastPosition', Config.RespawnPoint.coords)
-			RespawnPed(PlayerPedId(), Config.RespawnPoint.coords, Config.RespawnPoint.heading)
+			TriggerServerEvent('esx:updateLastPosition', formattedCoords)
+			RespawnPed(PlayerPedId(), formattedCoords, Config.RespawnPoint.heading)
 
 			StopScreenEffect('DeathFailOut')
 			DoScreenFadeIn(800)
@@ -316,6 +322,7 @@ RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
 	local coords = GetEntityCoords(playerPed)
+
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
 	Citizen.CreateThread(function()
@@ -325,24 +332,17 @@ AddEventHandler('esx_ambulancejob:revive', function()
 			Citizen.Wait(50)
 		end
 
-		ESX.SetPlayerData('lastPosition', {
-			x = coords.x,
-			y = coords.y,
-			z = coords.z
-		})
+		local formattedCoords = {
+			x = ESX.Math.Round(coords.x, 1),
+			y = ESX.Math.Round(coords.y, 1),
+			z = ESX.Math.Round(coords.z, 1)
+		}
 
-		TriggerServerEvent('esx:updateLastPosition', {
-			x = coords.x,
-			y = coords.y,
-			z = coords.z
-		})
+		ESX.SetPlayerData('lastPosition', formattedCoords)
 
-		RespawnPed(playerPed, {
-			x = coords.x,
-			y = coords.y,
-			z = coords.z,
-			heading = 0.0
-		})
+		TriggerServerEvent('esx:updateLastPosition', formattedCoords)
+
+		RespawnPed(playerPed, formattedCoords, 0.0)
 
 		StopScreenEffect('DeathFailOut')
 		DoScreenFadeIn(800)
