@@ -104,6 +104,8 @@ end
 
 RegisterNetEvent('esx_ambulancejob:useItem')
 AddEventHandler('esx_ambulancejob:useItem', function(itemName)
+	ESX.UI.Menu.CloseAll()
+
 	if itemName == 'medikit' then
 		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
 		local playerPed = PlayerPedId()
@@ -113,7 +115,8 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 
 			Citizen.Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
-				Citizen.Wait(100)
+				Citizen.Wait(0)
+				DisableAllControlActions(0)
 			end
 	
 			TriggerEvent('esx_ambulancejob:heal', 'big', true)
@@ -129,7 +132,8 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 
 			Citizen.Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
-				Citizen.Wait(100)
+				Citizen.Wait(0)
+				DisableAllControlActions(0)
 			end
 
 			TriggerEvent('esx_ambulancejob:heal', 'small', true)
