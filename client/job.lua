@@ -204,7 +204,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 		local playerCoords = GetEntityCoords(PlayerPedId())
-		local canSleep, isInMarker, hasExited = true, false, false
+		local letSleep, isInMarker, hasExited = true, false, false
 		local currentHospital, currentPart, currentPartNum
 
 		for hospitalNum,hospital in pairs(Config.Hospitals) do
@@ -215,7 +215,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 				if distance < Config.Marker.x then
@@ -229,7 +229,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 				if distance < Config.Marker.x then
@@ -243,7 +243,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 				if distance < v.Marker.x then
@@ -257,7 +257,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 				if distance < v.Marker.x then
@@ -271,7 +271,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 
@@ -286,7 +286,7 @@ Citizen.CreateThread(function()
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					canSleep = false
+					letSleep = false
 				end
 
 				if distance < v.Marker.x then
@@ -314,6 +314,10 @@ Citizen.CreateThread(function()
 			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+			end
+
+			if letSleep then
+				Citizen.Wait(500)
 			end
 
 		end
