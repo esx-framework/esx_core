@@ -178,24 +178,20 @@ function OpenMobileAmbulanceActionsMenu()
 end
 
 function FastTravel(coords, heading)
-	TeleportFadeEffect(PlayerPedId(), coords, heading)
-end
+	local playerPed = PlayerPedId()
 
-function TeleportFadeEffect(entity, coords, heading)
-	Citizen.CreateThread(function()
-		DoScreenFadeOut(800)
+	DoScreenFadeOut(800)
 
-		while not IsScreenFadedOut() do
-			Citizen.Wait(0)
+	while not IsScreenFadedOut() do
+		Citizen.Wait(500)
+	end
+
+	ESX.Game.Teleport(playerPed, coords, function()
+		DoScreenFadeIn(800)
+
+		if heading then
+			SetEntityHeading(playerPed, heading)
 		end
-
-		ESX.Game.Teleport(entity, coords, function()
-			DoScreenFadeIn(800)
-
-			if heading then
-				SetEntityHeading(entity, heading)
-			end
-		end)
 	end)
 end
 
