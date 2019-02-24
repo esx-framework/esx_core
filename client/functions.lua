@@ -406,6 +406,17 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 	end)
 end
 
+ESX.Game.IsVehicleEmpty = function(vehicle)
+	local passengers = GetVehicleNumberOfPassengers(vehicle)
+	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
+
+	if driverSeatFree then
+		passengers = passengers + 1
+	end
+
+	return passengers == 0
+end
+
 ESX.Game.GetObjects = function()
 	local objects = {}
 
