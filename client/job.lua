@@ -907,7 +907,7 @@ function WarpPedInClosestVehicle(ped)
 end
 
 RegisterNetEvent('esx_ambulancejob:heal')
-AddEventHandler('esx_ambulancejob:heal', function(healType)
+AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 	local playerPed = PlayerPedId()
 	local maxHealth = GetEntityMaxHealth(playerPed)
 
@@ -919,5 +919,7 @@ AddEventHandler('esx_ambulancejob:heal', function(healType)
 		SetEntityHealth(playerPed, maxHealth)
 	end
 
-	ESX.ShowNotification(_U('healed'))
+	if not quiet then
+		ESX.ShowNotification(_U('healed'))
+	end
 end)

@@ -1,4 +1,5 @@
 ESX = nil
+local playersHealing = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -250,21 +251,29 @@ end, function(source, args, user)
 end, { help = _U('revive_help'), params = {{ name = 'id' }} })
 
 ESX.RegisterUsableItem('medikit', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeInventoryItem('medikit', 1)
+	if not playersHealing[source] then
+		local xPlayer = ESX.GetPlayerFromId(source)
+		xPlayer.removeInventoryItem('medikit', 1)
+	
+		playersHealing[source] = true
+		TriggerClientEvent('esx_ambulancejob:useItem', source, 'medikit')
 
-	TriggerClientEvent('esx_ambulancejob:heal', _source, 'big')
-	TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
+		Citizen.Wait(10000)
+		playersHealing[source] = nil
+	end
 end)
 
 ESX.RegisterUsableItem('bandage', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeInventoryItem('bandage', 1)
+	if not playersHealing[source] then
+		local xPlayer = ESX.GetPlayerFromId(source)
+		xPlayer.removeInventoryItem('bandage', 1)
+	
+		playersHealing[source] = true
+		TriggerClientEvent('esx_ambulancejob:useItem', source, 'bandage')
 
-	TriggerClientEvent('esx_ambulancejob:heal', _source, 'small')
-	TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
+		Citizen.Wait(10000)
+		playersHealing[source] = nil
+	end
 end)
 
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)

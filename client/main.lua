@@ -102,6 +102,42 @@ function OnPlayerDeath()
 	StartScreenEffect('DeathFailOut', 0, false)
 end
 
+RegisterNetEvent('esx_ambulancejob:useItem')
+AddEventHandler('esx_ambulancejob:useItem', function(itemName)
+	if itemName == 'medikit' then
+		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
+		local playerPed = PlayerPedId()
+
+		ESX.Streaming.RequestAnimDict(lib, function()
+			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+
+			Citizen.Wait(500)
+			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
+				Citizen.Wait(100)
+			end
+	
+			TriggerEvent('esx_ambulancejob:heal', 'big', true)
+			ESX.ShowNotification(_U('used_medikit'))
+		end)
+
+	elseif itemName == 'bandage' then
+		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
+		local playerPed = PlayerPedId()
+
+		ESX.Streaming.RequestAnimDict(lib, function()
+			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+
+			Citizen.Wait(500)
+			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
+				Citizen.Wait(100)
+			end
+
+			TriggerEvent('esx_ambulancejob:heal', 'small', true)
+			ESX.ShowNotification(_U('used_bandage'))
+		end)
+	end
+end)
+
 function StartDistressSignal()
 	Citizen.CreateThread(function()
 		local timer = Config.BleedoutTimer
