@@ -345,40 +345,37 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.setJob = function(name, grade)
+	self.setJob = function(job, grade)
 		local lastJob = json.decode(json.encode(self.job))
 
-		MySQL.Async.fetchAll('SELECT * FROM `jobs` WHERE `name` = @name', {
-			['@name'] = name
-		}, function(result)
+		if ESX.DoesJobExist(job, grade) then
+			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
-			self.job['id']    = result[1].id
-			self.job['name']  = result[1].name
-			self.job['label'] = result[1].label
+			self.job['id']    = jobObject.id
+			self.job['name']  = jobObject.name
+			self.job['label'] = jobObject.label
 
-			MySQL.Async.fetchAll('SELECT * FROM `job_grades` WHERE `job_name` = @job_name AND `grade` = @grade', {
-				['@job_name'] = name,
-				['@grade']    = grade
-			}, function(result)
-				self.job['grade']        = grade
-				self.job['grade_name']   = result[1].name
-				self.job['grade_label']  = result[1].label
-				self.job['grade_salary'] = result[1].salary
+			self.job['grade']        = grade
+			self.job['grade_name']   = gradeObject.name
+			self.job['grade_label']  = gradeObject.label
+			self.job['grade_salary'] = gradeObject.salary
 
-				self.job['skin_male']    = nil
-				self.job['skin_female']  = nil
+			self.job['skin_male']    = nil
+			self.job['skin_female']  = nil
 
-				if result[1].skin_male ~= nil then
-					self.job['skin_male'] = json.decode(result[1].skin_male)
-				end
+			if gradeObject.skin_male ~= nil then
+				self.job['skin_male'] = json.decode(gradeObject.skin_male)
+			end
 
-				if result[1].skin_female ~= nil then
-					self.job['skin_female'] = json.decode(result[1].skin_female)
-				end
+			if gradeObject.skin_female ~= nil then
+				self.job['skin_female'] = json.decode(gradeObject.skin_female)
+			end
 
-				TriggerEvent("esx:setJob", self.source, self.job, lastJob)
-				TriggerClientEvent("esx:setJob", self.source, self.job)
-			end)
-		end)
+			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
+			TriggerClientEvent('esx:setJob', self.source, self.job)
+		else
+			print(('es_extended: ignoring setJob for %s due to job not found!'):format(self.source))
+		end
 	end
 
 	self.addWeapon = function(weaponName, ammo)

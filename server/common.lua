@@ -8,6 +8,7 @@ ESX.CancelledTimeouts    = {}
 ESX.LastPlayerData       = {}
 ESX.Pickups              = {}
 ESX.PickupId             = 0
+ESX.Jobs                 = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
@@ -28,6 +29,30 @@ MySQL.ready(function()
 			}
 		end
 	end)
+
+	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
+
+	for i=1, #result do
+		ESX.Jobs[result[i].name] = result[i]
+		ESX.Jobs[result[i].name].grades = {}
+	end
+
+	local result2 = MySQL.Sync.fetchAll('SELECT * FROM job_grades', {})
+
+	for i=1, #result2 do
+		if ESX.Jobs[result2[i].job_name] then
+			ESX.Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
+		else
+			print(('es_extended: invalid job "%s" from table job_grades ignored!'):format(result2[i].job_name))
+		end
+	end
+
+	for k,v in pairs(ESX.Jobs) do
+		if next(v.grades) == nil then
+			ESX.Jobs[v.name] = nil
+			print(('es_extended: ignoring job "%s" due to missing job grades!'):format(v.name))
+		end
+	end
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
