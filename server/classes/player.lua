@@ -48,8 +48,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		self.player.coords = {x = x, y = y, z = z}
 	end
 
-	self.kick = function(r)
-		self.player.kick(r)
+	self.kick = function(reason)
+		self.player.kick(reason)
 	end
 
 	self.addMoney = function(money)
@@ -237,8 +237,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.createAccounts = function(missingAccounts, cb)
 		for i=1, #missingAccounts, 1 do
-			MySQL.Async.execute('INSERT INTO `user_accounts` (identifier, name) VALUES (@identifier, @name)',
-			{
+			MySQL.Async.execute('INSERT INTO `user_accounts` (identifier, name) VALUES (@identifier, @name)', {
 				['@identifier'] = self.getIdentifier(),
 				['@name']       = missingAccounts[i]
 			}, function(rowsChanged)
@@ -317,8 +316,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		local newCount = item.count + count
 		item.count     = newCount
 
-		TriggerEvent("esx:onAddInventoryItem", self.source, item, count)
-		TriggerClientEvent("esx:addInventoryItem", self.source, item, count)
+		TriggerEvent('esx:onAddInventoryItem', self.source, item, count)
+		TriggerClientEvent('esx:addInventoryItem', self.source, item, count)
 	end
 
 	self.removeInventoryItem = function(name, count)
@@ -326,8 +325,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		local newCount = item.count - count
 		item.count     = newCount
 
-		TriggerEvent("esx:onRemoveInventoryItem", self.source, item, count)
-		TriggerClientEvent("esx:removeInventoryItem", self.source, item, count)
+		TriggerEvent('esx:onRemoveInventoryItem', self.source, item, count)
+		TriggerClientEvent('esx:removeInventoryItem', self.source, item, count)
 	end
 
 	self.setInventoryItem = function(name, count)
@@ -336,15 +335,14 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		item.count     = count
 
 		if oldCount > item.count  then
-			TriggerEvent("esx:onRemoveInventoryItem", self.source, item, oldCount - item.count)
-			TriggerClientEvent("esx:removeInventoryItem", self.source, item, oldCount - item.count)
+			TriggerEvent('esx:onRemoveInventoryItem', self.source, item, oldCount - item.count)
+			TriggerClientEvent('esx:removeInventoryItem', self.source, item, oldCount - item.count)
 		else
-			TriggerEvent("esx:onAddInventoryItem", self.source, item, item.count - oldCount)
-			TriggerClientEvent("esx:addInventoryItem", self.source, item, item.count - oldCount)
+			TriggerEvent('esx:onAddInventoryItem', self.source, item, item.count - oldCount)
+			TriggerClientEvent('esx:addInventoryItem', self.source, item, item.count - oldCount)
 		end
 	end
 
-	self.setJob = function(name, grade)
 	self.setJob = function(job, grade)
 		local lastJob = json.decode(json.encode(self.job))
 
