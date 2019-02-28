@@ -208,6 +208,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		return self.lastPosition
 	end
 
+	self.setLastPosition = function(position)
+		self.lastPosition = position
+	end
+
 	self.getMissingAccounts = function(cb)
 		MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
 			['@identifier'] = self.getIdentifier()

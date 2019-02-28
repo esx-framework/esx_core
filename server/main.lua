@@ -255,7 +255,7 @@ end)
 RegisterServerEvent('esx:updateLastPosition')
 AddEventHandler('esx:updateLastPosition', function(position)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.lastPosition = position
+	xPlayer.setLastPosition(position)
 end)
 
 RegisterServerEvent('esx:giveInventoryItem')
