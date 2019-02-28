@@ -64,6 +64,12 @@ RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local society = GetSociety(society)
+	amount = ESX.Math.Round(tonumber(amount))
+
+	if xPlayer.job.name ~= society then
+		print(('esx_society: %s attempted to call withdrawMoney!'):format(xPlayer.identifier))
+		return
+	end
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 		if amount > 0 and account.money >= amount then
@@ -81,6 +87,12 @@ RegisterServerEvent('esx_society:depositMoney')
 AddEventHandler('esx_society:depositMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local society = GetSociety(society)
+	amount = ESX.Math.Round(tonumber(amount))
+
+	if xPlayer.job.name ~= society then
+		print(('esx_society: %s attempted to call depositMoney!'):format(xPlayer.identifier))
+		return
+	end
 
 	if amount > 0 and xPlayer.getMoney() >= amount then
 
@@ -100,9 +112,14 @@ RegisterServerEvent('esx_society:washMoney')
 AddEventHandler('esx_society:washMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local account = xPlayer.getAccount('black_money')
-	amount = tonumber(amount)
-	if amount and amount > 0 and account.money >= amount then
+	amount = ESX.Math.Round(tonumber(amount))
 
+	if xPlayer.job.name ~= society then
+		print(('esx_society: %s attempted to call washMoney!'):format(xPlayer.identifier))
+		return
+	end
+
+	if amount and amount > 0 and account.money >= amount then
 		xPlayer.removeAccountMoney('black_money', amount)
 
 		MySQL.Async.execute('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)', {
@@ -112,7 +129,6 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 		}, function(rowsChanged)
 			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have', ESX.Math.GroupDigits(amount)))
 		end)
-
 	else
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 	end
@@ -153,11 +169,9 @@ ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, s
 	local society = GetSociety(societyName)
 
 	if society then
-
 		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			cb(account.money)
 		end)
-
 	else
 		cb(0)
 	end
@@ -304,16 +318,20 @@ ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, c
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_society:isBoss', function(source, cb, jobName)
+ESX.RegisterServerCallback('esx_society:isBoss', function(source, cb, job)
+	cb(isPlayerBoss(source, job))
+end)
+
+function isPlayerBoss(playerId, job)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.job.name == jobName and xPlayer.job.grade_name == 'boss' then
-		cb(true)
+	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
+		return true
 	else
 		print(('esx_society: %s attempted open a society boss menu!'):format(xPlayer.identifier))
-		cb(false)
+		return false
 	end
-end)
+end
 
 function WashMoneyCRON(d, h, m)
 	MySQL.Async.fetchAll('SELECT * FROM society_moneywash', {}, function(result)
