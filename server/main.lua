@@ -6,7 +6,7 @@ function LoadPlayer(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	for num,v in pairs(PhoneNumbers) do
-		if tonumber(num) == num then -- If phonenumber is a player phone number
+		if tonumber(num) == num then -- if phonenumber is a player phone number
 			for src,_ in pairs(v.sources) do
 				TriggerClientEvent('esx_phone:setPhoneNumberSource', source, num, tonumber(src))
 			end

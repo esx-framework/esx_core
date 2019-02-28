@@ -161,10 +161,10 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 	if job == 'player' then
 		ESX.ShowNotification(_U('new_message', message))
 	else
-		ESX.ShowNotification('~b~' .. job .. ': ~s~' .. message)
+		ESX.ShowNotification(('~b~%s:~s~ %s'):format(job, message))
 	end
 
-	PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
+	PlaySound(-1, 'Menu_Accept', 'Phone_SoundSet_Default', false, 0, true)
 
 	SendNUIMessage({
 		newMessage  = true,
@@ -181,12 +181,12 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 		CurrentDispatchRequestId = dispatchRequestId
 
 		CurrentActionData = {
-			phoneNumber       = phoneNumber,
-			message           = message,
-			position          = position,
-			actions           = actions,
-			anonyme           = anon,
-			job               = job
+			phoneNumber = phoneNumber,
+			message     = message,
+			position    = position,
+			actions     = actions,
+			anonyme     = anon,
+			job         = job
 		}
 		
 		ESX.SetTimeout(15000, function()

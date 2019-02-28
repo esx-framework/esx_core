@@ -34,15 +34,13 @@ Client side
 ```lua
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
+	local specialContact = {
+		name       = 'societyName',
+		number     = 'societyNumber',
+		base64Icon = 'insert base 64 icon'
+	}
 
-  local specialContact = {
-    name       = 'societyName',
-    number     = 'societyNumber',
-    base64Icon = 'insert base 64 icon (PNG recommended)'
-  }
-
-  TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
-
+	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
 end)
 ```
 
@@ -62,7 +60,7 @@ last two booleans are optional
 ### License
 esx_phone - phone script for fivem
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2019 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

@@ -24,7 +24,7 @@ html, body {
 }
 
 #phone {
-	background-image: url(../img/phone.png);
+	background-image: url("../img/phone.png");
 	background-repeat: no-repeat;
 	font-family: 'Catamaran', sans-serif;
 	font-weight: 400;
@@ -243,7 +243,7 @@ html, body {
 	text-align: center;
 }
 
-.message .sender-info, .message .body, .contact .sender-info, {
+.message .sender-info, .message .body, .contact .sender-info {
 	margin-right: 30px;
 }
 
@@ -285,7 +285,7 @@ html, body {
 	display: none;
 	width: 24px;
 	height: 24px;
-	background: transparent url(../img/icons/location.png) no-repeat 50%;
+	background: transparent url("../img/icons/location.png") no-repeat 50%;
 	cursor: pointer;
 }
 
@@ -293,7 +293,7 @@ html, body {
 	display: none;
 	width: 24px;
 	height: 24px;
-	background: transparent url(../img/icons/ok.png) no-repeat 50%;
+	background: transparent url("../img/icons/ok.png") no-repeat 50%;
 	cursor: pointer;
 }
 
