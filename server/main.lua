@@ -66,7 +66,7 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 	local society = GetSociety(society)
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if xPlayer.job.name ~= society then
+	if xPlayer.job.name ~= society.name then
 		print(('esx_society: %s attempted to call withdrawMoney!'):format(xPlayer.identifier))
 		return
 	end
@@ -89,7 +89,7 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 	local society = GetSociety(society)
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if xPlayer.job.name ~= society then
+	if xPlayer.job.name ~= society.name then
 		print(('esx_society: %s attempted to call depositMoney!'):format(xPlayer.identifier))
 		return
 	end
@@ -114,7 +114,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 	local account = xPlayer.getAccount('black_money')
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if xPlayer.job.name ~= society then
+	if xPlayer.job.name ~= society.name then
 		print(('esx_society: %s attempted to call washMoney!'):format(xPlayer.identifier))
 		return
 	end
@@ -323,7 +323,7 @@ ESX.RegisterServerCallback('esx_society:isBoss', function(source, cb, job)
 end)
 
 function isPlayerBoss(playerId, job)
-	local xPlayer = ESX.GetPlayerFromId(source)
+	local xPlayer = ESX.GetPlayerFromId(playerId)
 
 	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
 		return true
