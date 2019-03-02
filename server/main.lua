@@ -403,14 +403,14 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 
 	-- Weapon Component
 	elseif type == 2 then
-		local price = selectedWeapon.components[weaponComponent]
+		local price = selectedWeapon.components[componentNum]
 		local weaponNum, weapon = ESX.GetWeapon(weaponName)
 
 		local component = weapon.components[componentNum]
 
 		if component then
-			if xPlayer.getMoney() >= selectedWeapon.price then
-				xPlayer.removeMoney(selectedWeapon.price)
+			if xPlayer.getMoney() >= price then
+				xPlayer.removeMoney(price)
 				xPlayer.addWeaponComponent(weaponName, component.name)
 
 				cb(true)
