@@ -27,7 +27,7 @@ Citizen.CreateThread(function()
 			action    = 'openMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 
 	end
@@ -37,7 +37,7 @@ Citizen.CreateThread(function()
 			action    = 'closeMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 	end
 
@@ -89,7 +89,7 @@ Citizen.CreateThread(function()
 
 			Citizen.Wait(10)
 
-			if IsControlPressed(0, Keys['ENTER']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlPressed(0, Keys['ENTER']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'ENTER'
@@ -98,7 +98,7 @@ Citizen.CreateThread(function()
 				GUI.Time = GetGameTimer()
 			end
 
-			if IsControlPressed(0, Keys['BACKSPACE']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlPressed(0, Keys['BACKSPACE']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'BACKSPACE'
@@ -107,7 +107,7 @@ Citizen.CreateThread(function()
 				GUI.Time = GetGameTimer()
 			end
 
-			if IsControlPressed(0, Keys['TOP']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 200 then
+			if IsControlPressed(0, Keys['TOP']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 200 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'TOP'
@@ -116,7 +116,7 @@ Citizen.CreateThread(function()
 				GUI.Time = GetGameTimer()
 			end
 
-			if IsControlPressed(0, Keys['DOWN']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 200 then
+			if IsControlPressed(0, Keys['DOWN']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 200 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'DOWN'
@@ -125,7 +125,7 @@ Citizen.CreateThread(function()
 				GUI.Time = GetGameTimer()
 			end
 
-			if IsControlPressed(0, Keys['LEFT']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlPressed(0, Keys['LEFT']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'LEFT'
@@ -134,7 +134,7 @@ Citizen.CreateThread(function()
 				GUI.Time = GetGameTimer()
 			end
 
-			if IsControlPressed(0, Keys['RIGHT']) and GetLastInputMethod(2) and (GetGameTimer() - GUI.Time) > 150 then
+			if IsControlPressed(0, Keys['RIGHT']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 				SendNUIMessage({
 					action  = 'controlPressed',
 					control = 'RIGHT'
