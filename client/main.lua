@@ -18,7 +18,7 @@ Citizen.CreateThread(function()
 			action    = 'openMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 
 		ESX.SetTimeout(200, function()
@@ -36,7 +36,7 @@ Citizen.CreateThread(function()
 			action    = 'closeMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data,
+			data      = data
 		})
 
 		for k,v in pairs(OpenedMenus) do
