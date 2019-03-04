@@ -179,6 +179,13 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 					if result[1].loadout ~= nil then
 						userData.loadout = json.decode(result[1].loadout)
+
+						-- Compatibility with old loadouts prior to components update
+						for k,v in ipairs(userData.loadout) do
+							if v.components == nil then
+								v.components = {}
+							end
+						end
 					end
 
 					if result[1].position ~= nil then
