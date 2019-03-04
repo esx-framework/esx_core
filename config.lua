@@ -19,7 +19,7 @@ Config.StoreMarker = {
 }
 
 Config.Zones = {
-	
+
 	Garages = {
 
 		{ -- Shank St, nearby campaign boat garage
@@ -78,71 +78,15 @@ Config.Zones = {
 }
 
 Config.Vehicles = {
-
-	{
-		model = 'seashark',
-		label = 'Seashark (Random Color)',
-		price = 7500
-	},
-
-	{
-		model = 'seashark3',
-		label = 'Seashark (Dark Blue)',
-		price = 7500
-	},
-
-	{
-		model = 'suntrap',
-		label = 'Suntrap',
-		price = 10000
-	},
-
-	{
-		model = 'jetmax',
-		label = 'Jetmax',
-		price = 45000
-	},
-
-	{
-		model = 'tropic2',
-		label = 'Tropic',
-		price = 65000
-	},
-
-	{
-		model = 'dinghy2',
-		label = 'Dinghy (Black)',
-		price = 32500
-	},
-
-	{
-		model = 'dinghy',
-		label = 'Dinghy 2 (Random Color)',
-		price = 40000
-	},
-
-	{
-		model = 'speeder',
-		label = 'Speeder',
-		price = 85000
-	},
-
-	{
-		model = 'squalo',
-		label = 'Squalo (Random Color)',
-		price = 61000
-	},
-
-	{
-		model = 'toro',
-		label = 'Toro',
-		price = 200000
-	},
-
-	{
-		model = 'submersible',
-		label = 'Submersible',
-		price = 750000
-	}
-
+	{model = 'seashark', label = 'Seashark (Random Color)', price = 7500},
+	{model = 'seashark3', label = 'Seashark (Dark Blue)', price = 7500},
+	{model = 'suntrap', label = 'Suntrap', price = 10000},
+	{model = 'jetmax', label = 'Jetmax', price = 45000},
+	{model = 'tropic2', label = 'Tropic', price = 65000},
+	{model = 'dinghy2', label = 'Dinghy (Black)', price = 32500},
+	{model = 'dinghy', label = 'Dinghy 2 (Random Color)', price = 40000},
+	{model = 'speeder', label = 'Speeder', price = 85000},
+	{model = 'squalo', label = 'Squalo (Random Color)', price = 61000},
+	{model = 'toro', label = 'Toro', price = 200000},
+	{model = 'submersible', label = 'Submersible', price = 750000}
 }
