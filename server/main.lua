@@ -7,10 +7,8 @@ MySQL.ready(function()
 end)
 
 function ParkBoats()
-	MySQL.Async.execute('UPDATE owned_vehicles SET stored = true WHERE stored = @stored AND vehicleType = @vehicleType',
-	{
-		['@stored']      = false,
-		['@vehicleType'] = 'boat'
+	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE `stored` = false AND type = @type', {
+		['@type'] = 'boat'
 	}, function (rowsChanged)
 		if rowsChanged > 0 then
 			print(('esx_boat: %s boat(s) have been stored!'):format(rowsChanged))
@@ -18,7 +16,7 @@ function ParkBoats()
 	end)
 end
 
-ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProps)
+ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price   = getPriceFromModel(vehicleProps.modelAlt)
 
@@ -33,13 +31,13 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProp
 	if xPlayer.getMoney() >= price then
 		xPlayer.removeMoney(price)
 
-		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, vehicleType) VALUES (@owner, @plate, @vehicle, @vehicleType)',
+		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, type) VALUES (@owner, @plate, @vehicle, @type)',
 		{
-			['@owner']       = xPlayer.identifier,
-			['@plate']       = vehicleProps.plate,
-			['@vehicle']     = json.encode(vehicleProps),
-			['@vehicleType'] = 'boat'
-		}, function (rowsChanged)
+			['@owner']   = xPlayer.identifier,
+			['@plate']   = vehicleProps.plate,
+			['@vehicle'] = json.encode(vehicleProps),
+			['@type']    = 'boat'
+		}, function(rowsChanged)
 			cb(true)
 		end)
 	else
@@ -48,13 +46,12 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function (source, cb, vehicleProp
 end)
 
 RegisterServerEvent('esx_boat:takeOutVehicle')
-AddEventHandler('esx_boat:takeOutVehicle', function (plate)
-	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE owner = @owner AND plate = @plate',
-	{
+AddEventHandler('esx_boat:takeOutVehicle', function(plate)
+	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
 		['@stored'] = false,
 		['@owner']  = GetPlayerIdentifiers(source)[1],
 		['@plate']  = plate
-	}, function (rowsChanged)
+	}, function(rowsChanged)
 		if rowsChanged == 0 then
 			print(('esx_boat: %s exploited the garage!'):format(GetPlayerIdentifiers(source)[1]))
 		end
@@ -62,12 +59,11 @@ AddEventHandler('esx_boat:takeOutVehicle', function (plate)
 end)
 
 ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
-	MySQL.Async.execute('UPDATE owned_vehicles SET stored = @stored WHERE owner = @owner AND plate = @plate',
-	{
+	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
 		['@stored'] = true,
 		['@owner']  = GetPlayerIdentifiers(source)[1],
 		['@plate']  = plate
-	}, function (rowsChanged)
+	}, function(rowsChanged)
 		if rowsChanged == 0 then
 			print(('esx_boat: %s attempted to store an boat they don\'t own!'):format(GetPlayerIdentifiers(source)[1]))
 		end
@@ -76,13 +72,12 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_boat:getGarage', function (source, cb)
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND vehicleType = @vehicleType AND stored = @stored',
-	{
-		['@owner']       = GetPlayerIdentifiers(source)[1],
-		['@vehicleType'] = 'boat',
-		['@stored']      = true
-	}, function (result)
+ESX.RegisterServerCallback('esx_boat:getGarage', function(source, cb)
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND type = @type AND `stored` = @stored', {
+		['@owner']  = GetPlayerIdentifiers(source)[1],
+		['@type']   = 'boat',
+		['@stored'] = true
+	}, function(result)
 		local vehicles = {}
 
 		for i=1, #result, 1 do
@@ -92,10 +87,9 @@ ESX.RegisterServerCallback('esx_boat:getGarage', function (source, cb)
 
 		cb(vehicles)
 	end)
-
 end)
 
-ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function (source, cb)
+ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.LicensePrice then
