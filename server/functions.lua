@@ -185,6 +185,8 @@ ESX.CreatePickup = function(type, name, count, label, player)
 end
 
 ESX.DoesJobExist = function(job, grade)
+	grade = tostring(grade)
+
 	if job and grade then
 		if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
 			return true

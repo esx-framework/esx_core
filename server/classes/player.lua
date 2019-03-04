@@ -348,29 +348,30 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.setJob = function(job, grade)
+		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
 
 		if ESX.DoesJobExist(job, grade) then
 			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
-			self.job['id']    = jobObject.id
-			self.job['name']  = jobObject.name
-			self.job['label'] = jobObject.label
+			self.job.id    = jobObject.id
+			self.job.name  = jobObject.name
+			self.job.label = jobObject.label
 
-			self.job['grade']        = grade
-			self.job['grade_name']   = gradeObject.name
-			self.job['grade_label']  = gradeObject.label
-			self.job['grade_salary'] = gradeObject.salary
+			self.job.grade        = grade
+			self.job.grade_name   = gradeObject.name
+			self.job.grade_label  = gradeObject.label
+			self.job.grade_salary = gradeObject.salary
 
-			self.job['skin_male']    = nil
-			self.job['skin_female']  = nil
+			self.job.skin_male    = {}
+			self.job.skin_female  = {}
 
 			if gradeObject.skin_male ~= nil then
-				self.job['skin_male'] = json.decode(gradeObject.skin_male)
+				self.job.skin_male = json.decode(gradeObject.skin_male)
 			end
 
 			if gradeObject.skin_female ~= nil then
-				self.job['skin_female'] = json.decode(gradeObject.skin_female)
+				self.job.skin_female = json.decode(gradeObject.skin_female)
 			end
 
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
