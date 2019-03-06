@@ -141,7 +141,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 						userData.job.name  = jobObject.name
 						userData.job.label = jobObject.label
 
-						userData.job.grade        = grade
+						userData.job.grade        = tonumber(grade)
 						userData.job.grade_name   = gradeObject.name
 						userData.job.grade_label  = gradeObject.label
 						userData.job.grade_salary = gradeObject.salary
@@ -168,7 +168,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 						userData.job.name  = jobObject.name
 						userData.job.label = jobObject.label
 			
-						userData.job.grade        = grade
+						userData.job.grade        = tonumber(grade)
 						userData.job.grade_name   = gradeObject.name
 						userData.job.grade_label  = gradeObject.label
 						userData.job.grade_salary = gradeObject.salary

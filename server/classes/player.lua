@@ -358,7 +358,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			self.job.name  = jobObject.name
 			self.job.label = jobObject.label
 
-			self.job.grade        = grade
+			self.job.grade        = tonumber(grade)
 			self.job.grade_name   = gradeObject.name
 			self.job.grade_label  = gradeObject.label
 			self.job.grade_salary = gradeObject.salary
