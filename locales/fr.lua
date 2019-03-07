@@ -103,7 +103,7 @@ Locales['fr'] = {
   ['box'] = 'caisse',
   ['cash'] = 'caisse',
   -- ID Card Menu
-  ['name'] = 'non: %s',
+  ['name'] = 'nom: %s',
   ['job'] = 'métier: %s',
   ['sex'] = 'sexe: %s',
   ['dob'] = 'DOB: %s',
