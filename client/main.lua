@@ -34,12 +34,13 @@ function OpenBoatShop(shop)
 	local playerPed = PlayerPedId()
 	local elements  = {}
 
-	for i=1, #Config.Vehicles, 1 do
+	for k,v in ipairs(Config.Vehicles) do
 		table.insert(elements, {
-			label = ('%s - <span style="color:green;">$%s</span>'):format(Config.Vehicles[i].label, ESX.Math.GroupDigits(Config.Vehicles[i].price)),
-			name  = Config.Vehicles[i].label,
-			model = Config.Vehicles[i].model,
-			price = Config.Vehicles[i].price
+			label = ('%s - <span style="color:green;">$%s</span>'):format(v.label, ESX.Math.GroupDigits(v.price)),
+			name  = v.label,
+			model = v.model,
+			price = v.price,
+			props = v.props or nil
 		})
 	end
 
@@ -115,6 +116,10 @@ function OpenBoatShop(shop)
 			table.insert(spawnedVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
+
+			if data.current.props then
+				ESX.Game.SetVehicleProperties(vehicle, data.current.props)
+			end
 		end)
 	end)
 
@@ -125,6 +130,10 @@ function OpenBoatShop(shop)
 		table.insert(spawnedVehicles, vehicle)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
+
+		if Config.Vehicles[1].props then
+			ESX.Game.SetVehicleProperties(vehicle, Config.Vehicles[1].props)
+		end
 	end)
 end
 
