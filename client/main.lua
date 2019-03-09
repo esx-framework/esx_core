@@ -65,7 +65,6 @@ function OpenBoatShop(shop)
 				local vehicle  = GetVehiclePedIsIn(playerPed, false)
 				local props    = ESX.Game.GetVehicleProperties(vehicle)
 				props.plate    = plate
-				props.modelAlt = data.current.model
 
 				ESX.TriggerServerCallback('esx_boat:buyBoat', function (bought)
 

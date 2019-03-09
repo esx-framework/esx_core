@@ -18,9 +18,7 @@ end
 
 ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local price   = getPriceFromModel(vehicleProps.modelAlt)
-
-	vehicleProps.modelAlt = nil
+	local price   = getPriceFromModel(vehicleProps.model)
 
 	-- vehicle model not found
 	if price == 0 then
@@ -103,7 +101,7 @@ end)
 
 function getPriceFromModel(model)
 	for i=1, #Config.Vehicles, 1 do
-		if Config.Vehicles[i].model == model then
+		if GetHashKey(Config.Vehicles[i].model) == model then
 			return Config.Vehicles[i].price
 		end
 	end
