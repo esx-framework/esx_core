@@ -79,83 +79,60 @@ AddEventHandler('esx_boat:hasExitedMarker', function()
 	CurrentAction = nil
 end)
 
--- Draw markers
-Citizen.CreateThread(function()
-	while true do
-
-		Citizen.Wait(1)
-
-		local playerPed = PlayerPedId()
-		local coords    = GetEntityCoords(playerPed)
-
-		for i=1, #Config.Zones.BoatShops, 1 do
-			-- draw boat shop marker
-			local zone = Config.Zones.BoatShops[i].Outside
-			if GetDistanceBetweenCoords(coords, zone.x, zone.y, zone.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zone.x, zone.y, zone.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
-			end
-		end
-
-		for i=1, #Config.Zones.Garages, 1 do
-			-- draw garage maker
-			local zoneOut = Config.Zones.Garages[i].GaragePos
-			if GetDistanceBetweenCoords(coords, zoneOut.x, zoneOut.y, zoneOut.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zoneOut.x, zoneOut.y, zoneOut.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, false, false, false)
-			end
-
-			-- draw store marker
-			local zoneIn = Config.Zones.Garages[i].StorePos
-			if GetDistanceBetweenCoords(coords, zoneIn.x, zoneIn.y, zoneIn.z, true) < Config.DrawDistance then
-				DrawMarker(Config.MarkerType, zoneIn.x, zoneIn.y, zoneIn.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, false, false, false)
-			end
-		end
-
-	end
-end)
-
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
-
 	while true do
+		Citizen.Wait(0)
 
-		Citizen.Wait(1)
-
-		local playerPed      = PlayerPedId()
-		local coords         = GetEntityCoords(playerPed)
-		local isInMarker     = false
-		local currentZone    = nil
-		local currentZoneNum = nil
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
+		local isInMarker, hasExited, letSleep = false, false, true
+		local currentZone, currentZoneNum
 
 		for i=1, #Config.Zones.BoatShops, 1 do
+			local distance = GetDistanceBetweenCoords(coords, Config.Zones.BoatShops[i].Outside, true)
 
-			if GetDistanceBetweenCoords(coords, Config.Zones.BoatShops[i].Outside.x, Config.Zones.BoatShops[i].Outside.y, Config.Zones.BoatShops[i].Outside.z,  true) < Config.Marker.x then
+			if distance < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, Config.Zones.BoatShops[i].Outside, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, nil, nil, false)
+				letSleep = false
+			end
+
+			if distance < Config.Marker.x then
 				isInMarker     = true
 				currentZone    = 'boat_shop'
 				currentZoneNum = i
 			end
-
 		end
 
 		for i=1, #Config.Zones.Garages, 1 do
+			local distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].GaragePos, true)
 
-			if GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].GaragePos.x, Config.Zones.Garages[i].GaragePos.y, Config.Zones.Garages[i].GaragePos.z, true) < Config.Marker.x then
+			if distance < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, Config.Zones.Garages[i].GaragePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, nil, nil, false)
+				letSleep = false
+			end
+
+			if distance < Config.Marker.x then
 				isInMarker     = true
 				currentZone    = 'garage_out'
 				currentZoneNum = i
 			end
 
-			if GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].StorePos.x, Config.Zones.Garages[i].StorePos.y, Config.Zones.Garages[i].StorePos.z, true) < Config.StoreMarker.x then
+			distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].StorePos, true)
+
+			if distance < Config.DrawDistance then
+				DrawMarker(Config.MarkerType, Config.Zones.Garages[i].StorePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, nil, nil, false)
+				letSleep = false
+			end
+
+			if distance < Config.StoreMarker.x then
 				isInMarker     = true
 				currentZone    = 'garage_in'
 				currentZoneNum = i
 			end
-
 		end
 
-		local hasExited = false
-
-		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastZone ~= currentZone or LastZoneNum ~= currentZoneNum) ) then
-
+		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastZone ~= currentZone or LastZoneNum ~= currentZoneNum)) then
 			if
 				(LastZone ~= nil and LastZoneNum ~= nil) and
 				(LastZone ~= currentZone or LastZoneNum ~= currentZoneNum)
@@ -165,16 +142,19 @@ Citizen.CreateThread(function()
 			end
 
 			HasAlreadyEnteredMarker = true
-			LastZone                = currentZone
-			LastZoneNum             = currentZoneNum
+			LastZone = currentZone
+			LastZoneNum = currentZoneNum
 
 			TriggerEvent('esx_boat:hasEnteredMarker', currentZone, currentZoneNum)
 		end
 
 		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_boat:hasExitedMarker')
+		end
+
+		if letSleep then
+			Citizen.Wait(500)
 		end
 
 	end
@@ -187,7 +167,7 @@ Citizen.CreateThread(function()
 
 	for i=1, #Config.Zones.Garages, 1 do
 		table.insert(blipList, {
-			coords = { Config.Zones.Garages[i].GaragePos.x, Config.Zones.Garages[i].GaragePos.y },
+			coords = Config.Zones.Garages[i].GaragePos,
 			text   = _U('blip_garage'),
 			sprite = 356,
 			color  = 3,
@@ -197,7 +177,7 @@ Citizen.CreateThread(function()
 
 	for i=1, #Config.Zones.BoatShops, 1 do
 		table.insert(blipList, {
-			coords = { Config.Zones.BoatShops[i].Outside.x, Config.Zones.BoatShops[i].Outside.y },
+			coords = Config.Zones.BoatShops[i].Outside,
 			text   = _U('blip_shop'),
 			sprite = 427,
 			color  = 3,
@@ -212,7 +192,7 @@ Citizen.CreateThread(function()
 end)
 
 function CreateBlip(coords, text, sprite, color, scale)
-	local blip = AddBlipForCoord( table.unpack(coords) )
+	local blip = AddBlipForCoord(coords.x, coords.y)
 
 	SetBlipSprite(blip, sprite)
 	SetBlipScale(blip, scale)

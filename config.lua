@@ -23,45 +23,45 @@ Config.Zones = {
 	Garages = {
 
 		{ -- Shank St, nearby campaign boat garage
-			GaragePos  = { x = -772.42, y = -1430.90, z = 0.55 },
-			SpawnPoint = { x = -785.39, y = -1426.30, z = 0.00, h = 146.00 },
-			StorePos   = { x = -798.45, y = -1456.03, z = 0.00 },
-			StoreTP    = { x = -791.41, y = -1452.57, z = 1.59, h = 318.96 }
+			GaragePos  = vector3(-772.4, -1430.9, 0.5),
+			SpawnPoint = vector4(-785.39, -1426.3, 0.0, 146.0),
+			StorePos   = vector3(-798.4, -1456.0, 0.0),
+			StoreTP    = vector4(-791.4, -1452.5, 1.5, 318.9)
 		},
 
 		{ -- Catfish View
-			GaragePos  = { x = 3864.93, y = 4463.98, z = 1.65 },
-			SpawnPoint = { x = 3854.40, y = 4477.28, z = 0.00, h = 273.00 },
-			StorePos   = { x = 3857.04, y = 4446.94, z = 0.00 },
-			StoreTP    = { x = 3854.73, y = 4458.66, z = 1.85, h = 355.35 }
+			GaragePos  = vector3(3864.9, 4463.9, 1.6),
+			SpawnPoint = vector4(3854.4, 4477.2, 0.0, 273.0),
+			StorePos   = vector3(3857.0, 4446.9, 0.0),
+			StoreTP    = vector4(3854.7, 4458.6, 1.8, 355.3)
 		},
 
 		{ -- Great Ocean Highway
-			GaragePos  = { x = -1614.03, y = 5260.10, z = 2.80 },
-			SpawnPoint = { x = -1622.52, y = 5247.12, z = 0.00, h = 21.00 },
-			StorePos   = { x = -1600.37, y = 5261.91, z = 0.00 },
-			StoreTP    = { x = -1605.77, y = 5259.00, z = 2.09, h = 25.00 }
+			GaragePos  = vector3(-1614.0, 5260.1, 2.8),
+			SpawnPoint = vector4(-1622.5, 5247.1, 0.0, 21.0),
+			StorePos   = vector3(-1600.3, 5261.9, 0.0),
+			StoreTP    = vector4(-1605.7, 5259.0, 2.0, 25.0)
 		},
 
 		{ -- North Calafia Way
-			GaragePos  = { x = 712.67, y = 4093.31, z = 33.70 },
-			SpawnPoint = { x = 712.89, y = 4080.20, z = 29.35, h = 181.00 },
-			StorePos   = { x = 705.16, y = 4110.16, z = 30.20 },
-			StoreTP    = { x = 711.97, y = 4110.55, z = 31.30, h = 180.00 }
+			GaragePos  = vector3(712.6, 4093.3, 33.7),
+			SpawnPoint = vector4(712.8, 4080.2, 29.3, 181.0),
+			StorePos   = vector3(705.1, 4110.1, 30.2),
+			StoreTP    = vector4(711.9, 4110.5, 31.3, 180.0)
 		},
 
 		{ -- Elysian Fields, nearby the airport
-			GaragePos  = { x = 23.87, y = -2806.82, z = 4.80 },
-			SpawnPoint = { x = 23.35, y = -2828.69, z = 0.81, h = 181.0 },
-			StorePos   = { x = -1.03, y = -2799.20, z = 0.50 },
-			StoreTP    = { x = 12.67, y = -2793.87, z = 2.52, h = 355.26 }
+			GaragePos  = vector3(23.8, -2806.8, 4.8),
+			SpawnPoint = vector4(23.3, -2828.6, 0.8, 181.0),
+			StorePos   = vector3(-1.0, -2799.2, 0.5),
+			StoreTP    = vector4(12.6, -2793.8, 2.5, 355.2)
 		},
 
 		{ -- Barbareno Rd
-			GaragePos  = { x = -3427.36, y = 956.94, z = 7.35 },
-			SpawnPoint = { x = -3448.97, y = 953.80, z = 0.00, h = 75.00 },
-			StorePos   = { x = -3436.55, y = 946.67, z = 0.30 },
-			StoreTP    = { x = -3427.08, y = 952.62, z = 8.34, h = 0.00 }
+			GaragePos  = vector3(-3427.3, 956.9, 7.3),
+			SpawnPoint = vector4(-3448.9, 953.8, 0.0, 75.0),
+			StorePos   = vector3(-3436.5, 946.6, 0.3),
+			StoreTP    = vector4(-3427.0, 952.6, 8.3, 0.0)
 		},
 
 	},
@@ -69,8 +69,8 @@ Config.Zones = {
 	BoatShops = {
 
 		{ -- Shank St, nearby campaign boat garage
-			Outside = { x = -773.76, y = -1495.25, z = 1.60 },
-			Inside  = { x = -798.59, y = -1503.12, z = -0.47, h = 120.00 },
+			Outside = vector3(-773.7, -1495.2, 1.6),
+			Inside = vector4(-798.5, -1503.1, -0.4, 120.0)
 		}
 
 	}
