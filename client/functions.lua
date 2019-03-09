@@ -649,8 +649,16 @@ ESX.Game.GetClosestPed = function(coords, ignoreList)
 end
 
 ESX.Game.GetVehicleProperties = function(vehicle)
-	local color1, color2               = GetVehicleColours(vehicle)
+	local color1, color2 = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+	local extras = {}
+
+	for id=0, 12 do
+		if DoesExtraExist(vehicle, id) then
+			local state = IsVehicleExtraTurnedOn(vehicle, id) == 1
+			extras[tostring(id)] = state
+		end
+	end
 
 	return {
 
@@ -678,9 +686,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			IsVehicleNeonLightEnabled(vehicle, 3)
 		},
 
-		extras            = {
-			
-		},
+		extras            = extras,
 
 		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
 		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
@@ -789,6 +795,16 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
 		SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
 		SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
+	end
+
+	if props.extras ~= nil then
+		for id,enabled in pairs(props.extras) do
+			if enabled then
+				SetVehicleExtra(vehicle, tonumber(id), 0)
+			else
+				SetVehicleExtra(vehicle, tonumber(id), 1)
+			end
+		end
 	end
 
 	if props.neonColor ~= nil then
