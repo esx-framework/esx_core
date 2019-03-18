@@ -287,28 +287,28 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			-- Logic for exiting & entering markers
-			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+		end
 
-				if
-					(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
-					(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
-				then
-					TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
-					hasExited = true
-				end
+		-- Logic for exiting & entering markers
+		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
 
-				HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
-
-				TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
-
-			end
-
-			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-				HasAlreadyEnteredMarker = false
+			if
+				(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+				(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+			then
 				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+				hasExited = true
 			end
 
+			HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
+
+			TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
+
+		end
+
+		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+			HasAlreadyEnteredMarker = false
+			TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
 		end
 
 		if letSleep then
