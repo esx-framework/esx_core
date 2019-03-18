@@ -14,11 +14,10 @@ function OpenAmbulanceActionsMenu()
 
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'ambulance_actions',
-	{
-		title		= _U('ambulance'),
-		align		= 'top-left',
-		elements	= elements
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'ambulance_actions', {
+		title    = _U('ambulance'),
+		align    = 'top-left',
+		elements = elements
 	}, function(data, menu)
 		if data.current.value == 'cloakroom' then
 			OpenCloakroomMenu()
@@ -44,11 +43,10 @@ function OpenMobileAmbulanceActionsMenu()
 		}
 	}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction',
-			{
-				title		= _U('ems_menu_title'),
-				align		= 'top-left',
-				elements	= {
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
+				title    = _U('ems_menu_title'),
+				align    = 'top-left',
+				elements = {
 					{label = _U('ems_menu_revive'), value = 'revive'},
 					{label = _U('ems_menu_small'), value = 'small'},
 					{label = _U('ems_menu_big'), value = 'big'},
@@ -311,10 +309,10 @@ Citizen.CreateThread(function()
 				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
 			end
 
-			if letSleep then
-				Citizen.Wait(500)
-			end
+		end
 
+		if letSleep then
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -417,10 +415,9 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function()
 end)
 
 function OpenCloakroomMenu()
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom',
-	{
-		title		= _U('cloakroom'),
-		align		= 'top-left',
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom', {
+		title    = _U('cloakroom'),
+		align    = 'top-left',
 		elements = {
 			{label = _U('ems_clothes_civil'), value = 'citizen_wear'},
 			{label = _U('ems_clothes_ems'), value = 'ambulance_wear'},
@@ -737,8 +734,7 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		elements = elements
 	}, function(data, menu)
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop_confirm',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop_confirm', {
 			title    = _U('vehicleshop_confirm', data.current.name, data.current.price),
 			align    = 'top-left',
 			elements = {
@@ -867,8 +863,7 @@ end
 function OpenPharmacyMenu()
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pharmacy',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pharmacy', {
 		title    = _U('pharmacy_menu_title'),
 		align    = 'top-left',
 		elements = {
