@@ -23,7 +23,7 @@ RegisterCommand('twt', function(source, args, rawCommand)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
 
 	TriggerClientEvent('chat:addMessage', -1, { args = { _U('twt_prefix', name), args }, color = { 0, 153, 204 } })
-	print(('%s: %s'):format(name, args))
+	--print(('%s: %s'):format(name, args))
 end, false)
 
 RegisterCommand('me', function(source, args, rawCommand)
@@ -37,7 +37,7 @@ RegisterCommand('me', function(source, args, rawCommand)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
 
 	TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('me_prefix', name), args, { 255, 0, 0 })
-	print(('%s: %s'):format(name, args))
+	--print(('%s: %s'):format(name, args))
 end, false)
 
 RegisterCommand('do', function(source, args, rawCommand)
@@ -51,7 +51,7 @@ RegisterCommand('do', function(source, args, rawCommand)
 	if Config.EnableESXIdentity then name = GetCharacterName(source) end
 
 	TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('do_prefix', name), args, { 0, 0, 255 })
-	print(('%s: %s'):format(name, args))
+	--print(('%s: %s'):format(name, args))
 end, false)
 
 function GetCharacterName(source)
