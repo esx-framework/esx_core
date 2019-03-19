@@ -113,32 +113,39 @@ function OpenMenu(submitCb, cancelCb, restrict)
 				cancelCb(data, menu)
 			end
 		end, function(data, menu)
-			TriggerEvent('skinchanger:getSkin', function(skin)
-				zoomOffset = data.current.zoomOffset
-				camOffset = data.current.camOffset
+			local skin, components, maxVals
 
-				if skin[data.current.name] ~= data.current.value then
-					-- Change skin element
-					TriggerEvent('skinchanger:change', data.current.name, data.current.value)
-
-					-- Update max values
-					TriggerEvent('skinchanger:getData', function(components, maxVals)
-						for i=1, #elements, 1 do
-							local newData = {}
-
-							newData.max = maxVals[elements[i].name]
-
-							if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
-								newData.value = 0
-							end
-
-							menu.update({name = elements[i].name}, newData)
-						end
-
-						menu.refresh()
-					end)
-				end
+			TriggerEvent('skinchanger:getSkin', function(getSkin)
+				skin = getSkin
 			end)
+
+			zoomOffset = data.current.zoomOffset
+			camOffset = data.current.camOffset
+
+			if skin[data.current.name] ~= data.current.value then
+				-- Change skin element
+				TriggerEvent('skinchanger:change', data.current.name, data.current.value)
+
+				-- Update max values
+				TriggerEvent('skinchanger:getData', function(comp, max)
+					components, maxVals = comp, max
+				end)
+
+				local newData = {}
+
+				for i=1, #elements, 1 do
+					newData = {}
+					newData.max = maxVals[elements[i].name]
+
+					if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
+						newData.value = 0
+					end
+
+					menu.update({name = elements[i].name}, newData)
+				end
+
+				menu.refresh()
+			end
 		end, function(data, menu)
 			DeleteSkinCam()
 		end)
