@@ -410,11 +410,7 @@ ESX.Game.IsVehicleEmpty = function(vehicle)
 	local passengers = GetVehicleNumberOfPassengers(vehicle)
 	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
 
-	if not driverSeatFree then
-		passengers = passengers + 1
-	end
-
-	return passengers == 0
+	return passengers == 0 and driverSeatFree
 end
 
 ESX.Game.GetObjects = function()
