@@ -91,10 +91,18 @@ $(".btnQuestion").click(function () {
 
 $(".btnClose").click(function () {
 	$.post('http://esx_dmvschool/close', JSON.stringify({}));
+	userAnswer = [];
+	goodAnswer = [];
+	questionUsed = [];
+	questionNumber = 1;
 });
 
 $(".btnKick").click(function () {
 	$.post('http://esx_dmvschool/kick', JSON.stringify({}));
+	userAnswer = [];
+	goodAnswer = [];
+	questionUsed = [];
+	questionNumber = 1;
 });
 
 // Handle Form Submits
