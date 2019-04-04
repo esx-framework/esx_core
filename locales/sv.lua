@@ -17,6 +17,7 @@ Locales['sv'] = {
   ['road_test_car'] = 'B-körkort (personbil)',
   ['road_test_bike'] = 'A-körkort (motorcykel)',
   ['road_test_truck'] = 'C-körkort (lastbil)',
+  ['school_item'] = '%s SEK',
   ['driving_school'] = 'körskola',
   ['press_open_menu'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn',
   ['driving_school_blip'] = 'körskola',

@@ -17,6 +17,7 @@ Locales['en'] = {
   ['road_test_car'] = 'driving Test',
   ['road_test_bike'] = 'motorcycle Skills Test',
   ['road_test_truck'] = 'truck Skills Test',
+  ['school_item'] = '$%s',
   ['driving_school'] = 'driving School',
   ['press_open_menu'] = 'press ~INPUT_CONTEXT~ to open the menu',
   ['driving_school_blip'] = 'driving School',

@@ -17,6 +17,7 @@ Locales['pl'] = {
   ['road_test_car'] = 'egzamin praktyczny kat. B',
   ['road_test_bike'] = 'egzamin praktyczny kat. A',
   ['road_test_truck'] = 'egzamin praktyczny kat. C',
+  ['school_item'] = '$%s',
   ['driving_school'] = 'szkoła jazdy',
   ['press_open_menu'] = 'wciśnij ~INPUT_CONTEXT~ by otworzyć menu',
   ['driving_school_blip'] = 'ośrodek egzaminacyjny',

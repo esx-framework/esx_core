@@ -17,6 +17,7 @@ Locales['br'] = {
   ['road_test_car'] = 'teste de habilidades de condução',
   ['road_test_bike'] = 'teste de habilidades da motocicleta',
   ['road_test_truck'] = 'teste de habilidades de caminhão',
+  ['school_item'] = '$%s',
   ['driving_school'] = 'escola de condução',
   ['press_open_menu'] = 'pressione ~INPUT_CONTEXT~ para abrir o menu',
   ['driving_school_blip'] = 'escola de condução',

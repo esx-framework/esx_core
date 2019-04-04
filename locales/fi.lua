@@ -17,6 +17,7 @@ Locales['fi'] = {
   ['road_test_car'] = 'ajokoe',
   ['road_test_bike'] = 'moottoripyörä ajokoe',
   ['road_test_truck'] = 'rekka ajokoe',
+  ['school_item'] = '$%s',
   ['driving_school'] = 'Autokoulu',
   ['press_open_menu'] = 'paina ~INPUT_CONTEXT~ hankkiaksesi ajokortin',
   ['driving_school_blip'] = 'Autokoulu',
