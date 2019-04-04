@@ -2,7 +2,7 @@ Config                 = {}
 Config.DrawDistance    = 100.0
 Config.MaxErrors       = 5
 Config.SpeedMultiplier = 3.6
-Config.Locale          = 'sv'
+Config.Locale          = 'fr'
 
 Config.Prices = {
 	dmv         = 500,
@@ -62,7 +62,7 @@ Config.CheckPoints = {
 		Action = function(playerPed, vehicle, setCurrentZoneType)
 			Citizen.CreateThread(function()
 				DrawMissionText(_U('stop_for_ped'), 5000)
-				PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
+				PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', false, 0, true)
 				FreezeEntityPosition(vehicle, true)
 				Citizen.Wait(4000)
 
@@ -79,7 +79,7 @@ Config.CheckPoints = {
 
 			Citizen.CreateThread(function()
 				DrawMissionText(_U('stop_look_left', Config.SpeedLimits['town']), 5000)
-				PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
+				PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', false, 0, true)
 				FreezeEntityPosition(vehicle, true)
 				Citizen.Wait(6000)
 
@@ -107,7 +107,7 @@ Config.CheckPoints = {
 		Pos = {x = -73.542, y = -1364.335, z = 27.789},
 		Action = function(playerPed, vehicle, setCurrentZoneType)
 			DrawMissionText(_U('stop_for_passing'), 5000)
-			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
+			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', false, 0, true)
 			FreezeEntityPosition(vehicle, true)
 			Citizen.Wait(6000)
 			FreezeEntityPosition(vehicle, false)
@@ -134,7 +134,7 @@ Config.CheckPoints = {
 			setCurrentZoneType('freeway')
 
 			DrawMissionText(_U('hway_time', Config.SpeedLimits['freeway']), 5000)
-			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
+			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', false, 0, true)
 		end
 	},
 
@@ -171,7 +171,7 @@ Config.CheckPoints = {
 		Pos = {x = 1163.603, y = -1841.771, z = 35.679},
 		Action = function(playerPed, vehicle, setCurrentZoneType)
 			DrawMissionText(_U('gratz_stay_alert'), 5000)
-			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
+			PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', false, 0, true)
 		end
 	},
 

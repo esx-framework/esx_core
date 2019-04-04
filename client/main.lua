@@ -135,8 +135,7 @@ function OpenDMVSchoolMenu()
 
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
 		title    = _U('driving_school'),
 		elements = elements,
 		align    = 'top-left'
@@ -209,7 +208,6 @@ end)
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(0)
 
 		local coords = GetEntityCoords(PlayerPedId())
@@ -219,7 +217,6 @@ Citizen.CreateThread(function()
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
-
 	end
 end)
 
@@ -277,7 +274,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if CurrentAction ~= nil then
+		if CurrentAction then
 
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
