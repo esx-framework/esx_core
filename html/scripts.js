@@ -9,19 +9,19 @@ var nbPossibleQuestions = 10; // number of questions in database questions.js
 var lastClick = 0;
 
 function getRandomQuestion() {
-	var random = Math.floor(Math.random() * nbPossibleQuestions)
+	var random = Math.floor(Math.random() * nbPossibleQuestions);
 
 	while (true) {
 		if (questionUsed.indexOf(random) === -1) {
-			break
+			break;
 		}
 
-		random = Math.floor(Math.random() * nbPossibleQuestions)
+		random = Math.floor(Math.random() * nbPossibleQuestions);
 	}
 
-	questionUsed.push(random)
+	questionUsed.push(random);
 
-	return random
+	return random;
 }
 
 // Partial Functions
