@@ -141,7 +141,7 @@ function OpenMechanicActionsMenu()
 					{label = _U('tow_truck'), value = 'towtruck2'}
 				}
 
-				if Config.EnablePlayerManagement and ESX.PlayerData.job and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'chef' or ESX.PlayerData.job.grade_name == 'experimente') then
+				if Config.EnablePlayerManagement and ESX.PlayerData.job and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'chief' or ESX.PlayerData.job.grade_name == 'experimente') then
 					table.insert(elements, {label = 'SlamVan', value = 'slamvan3'})
 				end
 
