@@ -1,3 +1,5 @@
+ESX.Table = {}
+
 -- nil proof alternative to #table
 function ESX.Table.SizeOf(table)
 	local keys = {}
