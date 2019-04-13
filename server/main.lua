@@ -17,7 +17,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 		table.insert(tasks, function(cb)
 			MySQL.Async.execute('UPDATE `users` SET `name` = @name WHERE `identifier` = @identifier', {
 				['@identifier'] = player.getIdentifier(),
-				['@name']       = userData.playerName
+				['@name'] = userData.playerName
 			}, function(rowsChanged)
 				cb()
 			end)
@@ -28,7 +28,6 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(accounts)
-
 				for i=1, #Config.Accounts, 1 do
 					for j=1, #accounts, 1 do
 						if accounts[j].name == Config.Accounts[i] then
@@ -38,6 +37,8 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 								label = Config.AccountLabels[accounts[j].name]
 							})
 						end
+
+						break
 					end
 				end
 

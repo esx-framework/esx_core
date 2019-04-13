@@ -29,6 +29,7 @@ server_scripts {
 	'server/commands.lua',
 
 	'common/modules/math.lua',
+	'common/modules/table.lua',
 	'common/functions.lua'
 }
 
@@ -57,6 +58,7 @@ client_scripts {
 	'client/modules/streaming.lua',
 
 	'common/modules/math.lua',
+	'common/modules/table.lua',
 	'common/functions.lua'
 }
 
