@@ -2,21 +2,13 @@ ESX.Table = {}
 
 -- nil proof alternative to #table
 function ESX.Table.SizeOf(t)
-	local keys = {}
+	local count = 0
 
-	for k,v in pairs(t) do
-		table.insert(keys, tonumber(k))
+	for _,_ in pairs(t) do
+		count = count + 1
 	end
 
-	table.sort(keys, function(a, b)
-		return a < b
-	end)
-
-	if #keys > 0 then
-		return keys[#keys]
-	else
-		return 0
-	end
+	return count
 end
 
 function ESX.Table.IndexOf(t, value)
