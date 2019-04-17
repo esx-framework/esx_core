@@ -37,14 +37,12 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 ESX.SavePlayer = function(xPlayer, cb)
-	local asyncTasks     = {}
+	local asyncTasks = {}
 	xPlayer.setLastPosition(xPlayer.getCoords())
 
 	-- User accounts
 	for i=1, #xPlayer.accounts, 1 do
-
 		if ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] ~= xPlayer.accounts[i].money then
-
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_accounts SET `money` = @money WHERE identifier = @identifier AND name = @name', {
 					['@money']      = xPlayer.accounts[i].money,
@@ -56,16 +54,12 @@ ESX.SavePlayer = function(xPlayer, cb)
 			end)
 
 			ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] = xPlayer.accounts[i].money
-
 		end
-
 	end
 
 	-- Inventory items
 	for i=1, #xPlayer.inventory, 1 do
-
 		if ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] ~= xPlayer.inventory[i].count then
-
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_inventory SET `count` = @count WHERE identifier = @identifier AND item = @item', {
 					['@count']      = xPlayer.inventory[i].count,
@@ -77,9 +71,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 			end)
 
 			ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] = xPlayer.inventory[i].count
-
 		end
-
 	end
 
 	-- Job, loadout and position
@@ -96,13 +88,12 @@ ESX.SavePlayer = function(xPlayer, cb)
 	end)
 
 	Async.parallel(asyncTasks, function(results)
-		RconPrint('[SAVED] ' .. xPlayer.name .. "\n")
+		RconPrint('[SAVED] ' .. xPlayer.name .. "^7\n")
 
 		if cb ~= nil then
 			cb()
 		end
 	end)
-
 end
 
 ESX.SavePlayers = function(cb)
