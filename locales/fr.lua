@@ -17,7 +17,7 @@ Locales ['fr'] = {
   ['dealer_sold'] = 'vous avez vendu ~b~%sx~s~ ~y~%s~s~ pour ~g~$%s~s~',
 
   -- license
-  ['license_title'] = 'vous devez posséder une license spécifique vous autorisant à transformer ce produit. Vous pouvez l\'acheter ici.',    
+  ['license_title'] = 'vous devez posséder une license spécifique vous autorisant à transformer ce produit. Vous pouvez l\'acheter ici.',
   ['license_no'] = 'non',
   ['license_bought'] = 'vous avez acheté ~b~%s~s~ pour ~r~$%s~s~',
   ['license_bought_fail'] = 'vous ne pouvez pas acheter ~b~%s~s~!',
