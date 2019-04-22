@@ -51,25 +51,30 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			MySQL.Async.fetchAll('SELECT * FROM `user_inventory` WHERE `identifier` = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(inventory)
-
 				local tasks2 = {}
 
-				for i=1, #inventory, 1 do
-					table.insert(userData.inventory, {
-						name = inventory[i].item,
-						count = inventory[i].count,
-						label = ESX.Items[inventory[i].item].label,
-						limit = ESX.Items[inventory[i].item].limit,
-						usable = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
-						rare = ESX.Items[inventory[i].item].rare,
-						canRemove = ESX.Items[inventory[i].item].canRemove
-					})
+				for i=1, #inventory do
+					local item = ESX.Items[inventory[i].item]
+
+					if item then
+						table.insert(userData.inventory, {
+							name = inventory[i].item,
+							count = inventory[i].count,
+							label = item.label,
+							limit = item.limit,
+							usable = ESX.UsableItemsCallbacks[inventory[i].item] ~= nil,
+							rare = item.rare,
+							canRemove = item.canRemove
+						})
+					else
+						print(('es_extended: invalid item "%s" ignored!'):format(inventory[i].item))
+					end
 				end
 
 				for k,v in pairs(ESX.Items) do
 					local found = false
 
-					for j=1, #userData.inventory, 1 do
+					for j=1, #userData.inventory do
 						if userData.inventory[j].name == k then
 							found = true
 							break
