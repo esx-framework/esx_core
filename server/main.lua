@@ -112,7 +112,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 	local account = xPlayer.getAccount('black_money')
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if xPlayer.job.name ~= society.name then
+	if xPlayer.job.name ~= society then
 		print(('esx_society: %s attempted to call washMoney!'):format(xPlayer.identifier))
 		return
 	end
