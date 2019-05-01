@@ -34,6 +34,24 @@ git clone https://github.com/ESX-Org/esx_jobs [esx]/esx_jobs
 start esx_jobs
 ```
 
+## iZone integreation (optional)
+- You can use iZone with esx_jobs by creating polynomial zones with iZone. When you finish the zone creation, take the zone name and set a Zone field on the job like so:
+```
+CloakRoom = {
+    Zone = "miner_room", -- HERE
+    Size = {x = 3.0, y = 3.0, z = 1.0},
+    Color = {r = 204, g = 204, b = 0},
+    Marker = 1,
+    Blip = true,
+    Name = _U("m_miner_locker"),
+    Type = "cloakroom",
+    Hint = _U("cloak_change"),
+    GPS = {x = 884.86, y = -2176.51, z = 29.51}
+}
+```
+- Note that this is just to have custom zone and avoid using radius.
+### [How to install and use iZone](https://github.com/izio38/iZone)
+
 # Legal
 ### License
 esx_jobs - jobs

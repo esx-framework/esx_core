@@ -251,7 +251,18 @@ function refreshBlips()
 				for zoneKey,zoneValues in pairs(jobValues.Zones) do
 
 					if zoneValues.Blip then
-						local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
+						local _Pos = {}
+						if (zoneValues.Zone) then
+							TriggerEvent("izone:getZoneCenter", zoneValues.Zone, function(_center)
+								if (_center) then
+									_Pos = _center
+								end
+							end)
+						else
+							_Pos = zoneValues.Pos
+						end
+						print(_Pos.x)
+						local blip = AddBlipForCoord(_Pos.x, _Pos.y, _Pos.z)
 						SetBlipSprite  (blip, jobValues.BlipInfos.Sprite)
 						SetBlipDisplay (blip, 4)
 						SetBlipScale   (blip, 1.2)
@@ -333,8 +344,18 @@ Citizen.CreateThread(function()
 			local coords = GetEntityCoords(PlayerPedId())
 			for k,v in pairs(zones) do
 				if onDuty or v.Type == "cloakroom" or PlayerData.job.name == "reporter" then
-					if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-						DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+					if (v.Zone) then
+						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
+							if (not(center == nil)) then
+								if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, center.x, center.y, center.z, true) < Config.DrawDistance) then
+									DrawMarker(v.Marker, center.x, center.y, center.z - 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+								end
+							end
+						end)
+					else
+						if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+							DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
+						end
 					end
 				end
 			end
@@ -416,14 +437,34 @@ Citizen.CreateThread(function()
 				local lastZone    = nil
 
 				for k,v in pairs(zones) do
-					if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
-						isInMarker  = true
-						currentZone = k
-						zone        = v
-						break
+					-- If we defined a zone from iZone
+					if v.Zone then
+						TriggerEvent("izone:isPlayerInZone", v.Zone, function(isIn)
+							if isIn then
+								isInMarker  = true
+								currentZone = k
+								zone        = v
+								return
+							else
+								isInMarker  = false
+							end
+						end)
+						-- Because we were in a routine
+						if isInMarker then
+							break
+						end
+					-- Else use radius defined from center
 					else
-						isInMarker  = false
+						if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
+							isInMarker  = true
+							currentZone = k
+							zone        = v
+							break
+						else
+							isInMarker  = false
+						end
 					end
+					
 				end
 
 				if IsControlJustReleased(0, Keys['E']) and not menuIsShowed and isInMarker then
