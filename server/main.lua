@@ -108,7 +108,6 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
-
 		local inventoryItem = inventory.getItem(itemName)
 
 		-- is there enough in the society?
@@ -126,7 +125,6 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 			TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 		end
 	end)
-
 end)
 
 RegisterServerEvent('esx_policejob:putStockItems')
@@ -135,7 +133,6 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
-
 		local inventoryItem = inventory.getItem(itemName)
 
 		-- does the player have enough of the item?
@@ -146,17 +143,12 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 		else
 			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
 		end
-
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
-
 	if Config.EnableESXIdentity then
-
 		local xPlayer = ESX.GetPlayerFromId(target)
-
 		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, sex, dateofbirth, height FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		})
@@ -194,9 +186,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		else
 			cb(data)
 		end
-
 	else
-
 		local xPlayer = ESX.GetPlayerFromId(target)
 
 		local data = {
@@ -208,7 +198,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		}
 
 		TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
-			if status ~= nil then
+			if status then
 				data.drunk = math.floor(status.percent)
 			end
 		end)
@@ -218,9 +208,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		end)
 
 		cb(data)
-
 	end
-
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getFineList', function(source, cb, category)
@@ -242,7 +230,6 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 		}
 
 		if result[1] then
-
 			MySQL.Async.fetchAll('SELECT name, firstname, lastname FROM users WHERE identifier = @identifier',  {
 				['@identifier'] = result[1].owner
 			}, function(result2)
@@ -285,7 +272,6 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source,
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb)
-
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
 		local weapons = store.get('weapons')
 
@@ -295,11 +281,9 @@ ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb
 
 		cb(weapons)
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb, weaponName, removeWeapon)
-
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if removeWeapon then
@@ -307,7 +291,6 @@ ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb,
 	end
 
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
-
 		local weapons = store.get('weapons')
 
 		if weapons == nil then
@@ -334,13 +317,10 @@ ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb,
 		store.set('weapons', weapons)
 		cb()
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_policejob:removeArmoryWeapon', function(source, cb, weaponName)
-
 	local xPlayer = ESX.GetPlayerFromId(source)
-
 	xPlayer.addWeapon(weaponName, 500)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
@@ -371,7 +351,6 @@ ESX.RegisterServerCallback('esx_policejob:removeArmoryWeapon', function(source, 
 		store.set('weapons', weapons)
 		cb()
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weaponName, type, componentNum)
@@ -388,38 +367,38 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 	if not selectedWeapon then
 		print(('esx_policejob: %s attempted to buy an invalid weapon.'):format(xPlayer.identifier))
 		cb(false)
-	end
-
-	-- Weapon
-	if type == 1 then
-		if xPlayer.getMoney() >= selectedWeapon.price then
-			xPlayer.removeMoney(selectedWeapon.price)
-			xPlayer.addWeapon(weaponName, 100)
-
-			cb(true)
-		else
-			cb(false)
-		end
-
-	-- Weapon Component
-	elseif type == 2 then
-		local price = selectedWeapon.components[componentNum]
-		local weaponNum, weapon = ESX.GetWeapon(weaponName)
-
-		local component = weapon.components[componentNum]
-
-		if component then
-			if xPlayer.getMoney() >= price then
-				xPlayer.removeMoney(price)
-				xPlayer.addWeaponComponent(weaponName, component.name)
+	else
+		-- Weapon
+		if type == 1 then
+			if xPlayer.getMoney() >= selectedWeapon.price then
+				xPlayer.removeMoney(selectedWeapon.price)
+				xPlayer.addWeapon(weaponName, 100)
 
 				cb(true)
 			else
 				cb(false)
 			end
-		else
-			print(('esx_policejob: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
-			cb(false)
+
+		-- Weapon Component
+		elseif type == 2 then
+			local price = selectedWeapon.components[componentNum]
+			local weaponNum, weapon = ESX.GetWeapon(weaponName)
+
+			local component = weapon.components[componentNum]
+
+			if component then
+				if xPlayer.getMoney() >= price then
+					xPlayer.removeMoney(price)
+					xPlayer.addWeaponComponent(weaponName, component.name)
+
+					cb(true)
+				else
+					cb(false)
+				end
+			else
+				print(('esx_policejob: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
+				cb(false)
+			end
 		end
 	end
 end)
@@ -433,23 +412,23 @@ ESX.RegisterServerCallback('esx_policejob:buyJobVehicle', function(source, cb, v
 	if price == 0 then
 		print(('esx_policejob: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)
-	end
-
-	if xPlayer.getMoney() >= price then
-		xPlayer.removeMoney(price)
-
-		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
-			['@owner'] = xPlayer.identifier,
-			['@vehicle'] = json.encode(vehicleProps),
-			['@plate'] = vehicleProps.plate,
-			['@type'] = type,
-			['@job'] = xPlayer.job.name,
-			['@stored'] = true
-		}, function (rowsChanged)
-			cb(true)
-		end)
 	else
-		cb(false)
+		if xPlayer.getMoney() >= price then
+			xPlayer.removeMoney(price)
+
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
+				['@owner'] = xPlayer.identifier,
+				['@vehicle'] = json.encode(vehicleProps),
+				['@plate'] = vehicleProps.plate,
+				['@type'] = type,
+				['@job'] = xPlayer.job.name,
+				['@stored'] = true
+			}, function (rowsChanged)
+				cb(true)
+			end)
+		else
+			cb(false)
+		end
 	end
 end)
 

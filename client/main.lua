@@ -27,7 +27,7 @@ local CurrentTask = {}
 local playerInService = false
 local spawnedVehicles, isInShopMenu = {}, false
 
-ESX                           = nil
+ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
