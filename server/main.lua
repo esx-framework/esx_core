@@ -24,21 +24,21 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 	if price == 0 then
 		print(('esx_boat: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)
-	end
-
-	if xPlayer.getMoney() >= price then
-		xPlayer.removeMoney(price)
-
-		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, type) VALUES (@owner, @plate, @vehicle, @type)', {
-			['@owner']   = xPlayer.identifier,
-			['@plate']   = vehicleProps.plate,
-			['@vehicle'] = json.encode(vehicleProps),
-			['@type']    = 'boat'
-		}, function(rowsChanged)
-			cb(true)
-		end)
 	else
-		cb(false)
+		if xPlayer.getMoney() >= price then
+			xPlayer.removeMoney(price)
+
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, type) VALUES (@owner, @plate, @vehicle, @type)', {
+				['@owner']   = xPlayer.identifier,
+				['@plate']   = vehicleProps.plate,
+				['@vehicle'] = json.encode(vehicleProps),
+				['@type']    = 'boat'
+			}, function(rowsChanged)
+				cb(true)
+			end)
+		else
+			cb(false)
+		end
 	end
 end)
 
