@@ -38,6 +38,7 @@ AddEventHandler('onClientMapStart', function()
 end)
 
 Citizen.CreateThread(function()
+	NetworkSetTalkerProximity(voice.default)
 	while true do
 		Citizen.Wait(1)
 
