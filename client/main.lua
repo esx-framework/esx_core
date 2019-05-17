@@ -37,8 +37,11 @@ AddEventHandler('onClientMapStart', function()
 	end
 end)
 
+AddEventHandler('playerSpawned', function()
+	NetworkSetTalkerProximity(voice.default)		
+end
+
 Citizen.CreateThread(function()
-	NetworkSetTalkerProximity(voice.default)
 	while true do
 		Citizen.Wait(1)
 
