@@ -39,7 +39,7 @@ end)
 
 AddEventHandler('playerSpawned', function()
 	NetworkSetTalkerProximity(voice.default)		
-end
+end)
 
 Citizen.CreateThread(function()
 	while true do
