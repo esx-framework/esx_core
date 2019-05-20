@@ -641,10 +641,9 @@ end
 
 function drawLoadingText(text, red, green, blue, alpha)
 	SetTextFont(4)
-	SetTextProportional(0)
 	SetTextScale(0.0, 0.5)
 	SetTextColour(red, green, blue, alpha)
-	SetTextDropShadow(0, 0, 0, 0, 255)
+	SetTextDropshadow(0, 0, 0, 0, 255)
 	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	SetTextOutline()
