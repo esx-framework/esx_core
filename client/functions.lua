@@ -1010,7 +1010,6 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size)
 	if onScreen then
 		SetTextScale(0.0 * scale, 0.55 * scale)
 		SetTextFont(0)
-		SetTextProportional(1)
 		SetTextColour(255, 255, 255, 255)
 		SetTextDropshadow(0, 0, 0, 0, 255)
 		SetTextEdge(2, 0, 0, 0, 150)
