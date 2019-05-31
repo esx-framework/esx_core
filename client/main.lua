@@ -17,7 +17,6 @@ function drawLevel(r, g, b, a)
 	SetTextScale(0.5, 0.5)
 	SetTextColour(r, g, b, a)
 	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	SetTextOutline()
 
