@@ -365,6 +365,7 @@ function OpenShopMenu()
 			table.insert(LastVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
+			SetModelAsNoLongerNeeded(vehicleData.model)
 		end)
 	end)
 
@@ -375,6 +376,7 @@ function OpenShopMenu()
 		table.insert(LastVehicles, vehicle)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
+		SetModelAsNoLongerNeeded(firstVehicleData.model)
 	end)
 
 end
@@ -385,18 +387,16 @@ function WaitForVehicleToLoad(modelHash)
 	if not HasModelLoaded(modelHash) then
 		RequestModel(modelHash)
 
+		BeginTextCommandBusyString('STRING')
+		AddTextComponentSubstringPlayerName(_U('shop_awaiting_model'))
+		EndTextCommandBusyString(4)
+
 		while not HasModelLoaded(modelHash) do
 			Citizen.Wait(1)
-
-			DisableControlAction(0, Keys['TOP'], true)
-			DisableControlAction(0, Keys['DOWN'], true)
-			DisableControlAction(0, Keys['LEFT'], true)
-			DisableControlAction(0, Keys['RIGHT'], true)
-			DisableControlAction(0, 176, true) -- ENTER key
-			DisableControlAction(0, Keys['BACKSPACE'], true)
-
-			drawLoadingText(_U('shop_awaiting_model'), 255, 255, 255, 255)
+			DisableAllControlActions(0)
 		end
+
+		RemoveLoadingPrompt()
 	end
 end
 
@@ -1000,18 +1000,3 @@ Citizen.CreateThread(function()
 	EnableInteriorProp(interiorID, 'csr_beforeMission') -- Load large window
 	RefreshInterior(interiorID)
 end)
-
-function drawLoadingText(text, red, green, blue, alpha)
-	SetTextFont(4)
-	SetTextScale(0.0, 0.5)
-	SetTextColour(red, green, blue, alpha)
-	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextEdge(1, 0, 0, 0, 255)
-	SetTextDropShadow()
-	SetTextOutline()
-	SetTextCentre(true)
-
-	BeginTextCommandDisplayText("STRING")
-	AddTextComponentSubstringPlayerName(text)
-	EndTextCommandDisplayText(0.5, 0.5)
-end
