@@ -27,7 +27,6 @@ function drawTxt(x,y, width, height, scale, text, r,g,b,a, outline)
 	SetTextScale(scale, scale)
 	SetTextColour(r, g, b, a)
 	SetTextDropshadow(0, 0, 0, 0,255)
-	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	if outline then SetTextOutline() end
 
