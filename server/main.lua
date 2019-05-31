@@ -1,7 +1,5 @@
-ESX                  = nil
-local AccountsIndex  = {}
-local Accounts       = {}
-local SharedAccounts = {}
+local AccountsIndex, Accounts, SharedAccounts = {}, {}, {}
+ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -18,7 +16,6 @@ MySQL.ready(function()
 		})
 
 		if shared == 0 then
-
 			table.insert(AccountsIndex, name)
 			Accounts[name] = {}
 
@@ -26,14 +23,11 @@ MySQL.ready(function()
 				local addonAccount = CreateAddonAccount(name, result2[j].owner, result2[j].money)
 				table.insert(Accounts[name], addonAccount)
 			end
-
 		else
-
 			local money = nil
 
 			if #result2 == 0 then
-				MySQL.Sync.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, NULL)',
-				{
+				MySQL.Sync.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, NULL)', {
 					['@account_name'] = name,
 					['@money']        = 0
 				})
@@ -45,7 +39,6 @@ MySQL.ready(function()
 
 			local addonAccount   = CreateAddonAccount(name, nil, money)
 			SharedAccounts[name] = addonAccount
-
 		end
 	end
 end)
@@ -70,9 +63,7 @@ AddEventHandler('esx_addonaccount:getSharedAccount', function(name, cb)
 	cb(GetSharedAccount(name))
 end)
 
-AddEventHandler('esx:playerLoaded', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	local addonAccounts = {}
 
 	for i=1, #AccountsIndex, 1 do
@@ -80,8 +71,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 		local account = GetAccount(name, xPlayer.identifier)
 
 		if account == nil then
-			MySQL.Async.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, @owner)',
-			{
+			MySQL.Async.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, @owner)', {
 				['@account_name'] = name,
 				['@money']        = 0,
 				['@owner']        = xPlayer.identifier
