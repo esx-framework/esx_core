@@ -26,7 +26,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 
 		-- does the target player have enough in their inventory?
 		if targetItem.count > 0 and targetItem.count <= amount then
-		
+
 			-- can the player carry the said amount of x item?
 			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
@@ -112,7 +112,7 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 
 		-- is there enough in the society?
 		if count > 0 and inventoryItem.count >= count then
-		
+
 			-- can the player carry the said amount of x item?
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
@@ -513,24 +513,24 @@ end)
 AddEventHandler('playerDropped', function()
 	-- Save the source in case we lose it (which happens a lot)
 	local _source = source
-	
+
 	-- Did the player ever join?
 	if _source ~= nil then
 		local xPlayer = ESX.GetPlayerFromId(_source)
-		
+
 		-- Is it worth telling all clients to refresh?
 		if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police' then
 			Citizen.Wait(5000)
 			TriggerClientEvent('esx_policejob:updateBlip', -1)
 		end
-	end	
+	end
 end)
 
 RegisterServerEvent('esx_policejob:spawned')
 AddEventHandler('esx_policejob:spawned', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
+
 	if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'police' then
 		Citizen.Wait(5000)
 		TriggerClientEvent('esx_policejob:updateBlip', -1)
