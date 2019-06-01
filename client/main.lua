@@ -1,28 +1,7 @@
-local Keys = {
-  ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-  ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-  ["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-  ["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-  ["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-  ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-  ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-  ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
-
-ESX                           = nil
-local OwnedProperties         = {}
-local Blips                   = {}
-local CurrentProperty         = nil
-local CurrentPropertyOwner    = nil
-local LastProperty            = nil
-local LastPart                = nil
-local HasAlreadyEnteredMarker = false
-local CurrentAction           = nil
-local CurrentActionMsg        = ''
-local CurrentActionData       = {}
-local FirstSpawn              = true
-local HasChest                = false
+local OwnedProperties, Blips, CurrentActionData = {}, {}, {}
+local CurrentProperty, CurrentPropertyOwner, LastProperty, LastPart, CurrentAction, CurrentActionMsg
+local firstSpawn, hasChest, hasAlreadyEnteredMarker = true, false, false
+ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -60,9 +39,9 @@ end)
 
 function DrawSub(text, time)
 	ClearPrints()
-	SetTextEntry_2('STRING')
-	AddTextComponentString(text)
-	DrawSubtitleTimed(time, 1)
+	BeginTextCommandPrint('STRING')
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandPrint(time, 1)
 end
 
 function CreateBlips()
@@ -78,7 +57,7 @@ function CreateBlips()
 			SetBlipAsShortRange(Blips[property.name], true)
 
 			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString(_U('free_prop'))
+			AddTextComponentSubstringPlayerName(_U('free_prop'))
 			EndTextCommandSetBlipName(Blips[property.name])
 		end
 	end
@@ -204,7 +183,6 @@ function SetPropertyOwned(name, owned)
 	end
 
 	if owned then
-
 		OwnedProperties[name] = true
 		RemoveBlip(Blips[enteringName])
 
@@ -213,11 +191,9 @@ function SetPropertyOwned(name, owned)
 		SetBlipAsShortRange(Blips[enteringName], true)
 
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('property'))
+		AddTextComponentSubstringPlayerName(_U('property'))
 		EndTextCommandSetBlipName(Blips[enteringName])
-
 	else
-
 		OwnedProperties[name] = nil
 		local found = false
 
@@ -241,12 +217,10 @@ function SetPropertyOwned(name, owned)
 			SetBlipAsShortRange(Blips[enteringName], true)
 
 			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString(_U('free_prop'))
+			AddTextComponentSubstringPlayerName(_U('free_prop'))
 			EndTextCommandSetBlipName(Blips[enteringName])
 		end
-
 	end
-
 end
 
 function PropertyIsOwned(property)
@@ -271,8 +245,7 @@ function OpenPropertyMenu(property)
 		table.insert(elements, {label = _U('visit'), value = 'visit'})
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'property',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'property', {
 		title    = property.label,
 		align    = 'top-left',
 		elements = elements
@@ -304,15 +277,13 @@ function OpenGatewayMenu(property)
 		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
 	else
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway', {
 			title    = property.name,
 			align    = 'top-left',
 			elements = {
 				{label = _U('owned_properties'),    value = 'owned_properties'},
 				{label = _U('available_properties'), value = 'available_properties'}
-			}
-		}, function(data, menu)
+		}}, function(data, menu)
 			if data.current.value == 'owned_properties' then
 				OpenGatewayOwnedPropertiesMenu(property)
 			elseif data.current.value == 'available_properties' then
@@ -325,7 +296,6 @@ function OpenGatewayMenu(property)
 			CurrentActionMsg  = _U('press_to_menu')
 			CurrentActionData = {property = property}
 		end)
-
 	end
 end
 
@@ -342,8 +312,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 		end
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties', {
 		title    = property.name .. ' - ' .. _U('owned_properties'),
 		align    = 'top-left',
 		elements = elements
@@ -358,8 +327,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 			table.insert(elements, {label = _U('leave'), value = 'leave'})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions', {
 			title    = data.current.label,
 			align    = 'top-left',
 			elements = elements
@@ -375,7 +343,6 @@ function OpenGatewayOwnedPropertiesMenu(property)
 		end, function(data2, menu2)
 			menu2.close()
 		end)
-
 	end, function(data, menu)
 		menu.close()
 	end)
@@ -395,25 +362,21 @@ function OpenGatewayAvailablePropertiesMenu(property)
 		end
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties', {
 		title    = property.name .. ' - ' .. _U('available_properties'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-
 		menu.close()
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties_actions',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_available_properties_actions', {
 			title    = property.label .. ' - ' .. _U('available_properties'),
 			align    = 'top-left',
 			elements = {
 				{label = _U('buy'), value = 'buy'},
 				{label = _U('rent'), value = 'rent'},
 				{label = _U('visit'), value = 'visit'}
-			}
-		}, function(data2, menu2)
+		}}, function(data2, menu2)
 			menu2.close()
 
 			if data2.current.value == 'buy' then
@@ -426,7 +389,6 @@ function OpenGatewayAvailablePropertiesMenu(property)
 		end, function(data2, menu2)
 			menu2.close()
 		end)
-
 	end, function(data, menu)
 		menu.close()
 	end)
@@ -434,15 +396,13 @@ end
 
 function OpenRoomMenu(property, owner)
 	local entering = nil
-	local elements = {}
+	local elements = {{label = _U('invite_player'),  value = 'invite_player'}}
 
 	if property.isSingle then
 		entering = property.entering
 	else
 		entering = GetGateway(property).entering
 	end
-
-	table.insert(elements, {label = _U('invite_player'),  value = 'invite_player'})
 
 	if CurrentPropertyOwner == owner then
 		table.insert(elements, {label = _U('player_clothes'), value = 'player_dressing'})
@@ -454,8 +414,7 @@ function OpenRoomMenu(property, owner)
 
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room', {
 		title    = property.label,
 		align    = 'top-left',
 		elements = elements
@@ -472,8 +431,7 @@ function OpenRoomMenu(property, owner)
 				end
 			end
 
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_invite',
-			{
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_invite', {
 				title    = property.label .. ' - ' .. _U('invite'),
 				align    = 'top-left',
 				elements = elements,
@@ -496,13 +454,11 @@ function OpenRoomMenu(property, owner)
 					})
 				end
 
-				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing',
-				{
+				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing', {
 					title    = property.label .. ' - ' .. _U('player_clothes'),
 					align    = 'top-left',
 					elements = elements
 				}, function(data2, menu2)
-
 					TriggerEvent('skinchanger:getSkin', function(skin)
 						ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
 							TriggerEvent('skinchanger:loadClothes', skin, clothes)
@@ -513,7 +469,6 @@ function OpenRoomMenu(property, owner)
 							end)
 						end, data2.current.value)
 					end)
-
 				end, function(data2, menu2)
 					menu2.close()
 				end)
@@ -560,9 +515,7 @@ function OpenRoomMenu(property, owner)
 end
 
 function OpenRoomInventoryMenu(property, owner)
-
 	ESX.TriggerServerCallback('esx_property:getPropertyInventory', function(inventory)
-
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
@@ -596,24 +549,20 @@ function OpenRoomInventoryMenu(property, owner)
 			})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_inventory',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_inventory', {
 			title    = property.label .. ' - ' .. _U('inventory'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 
 			if data.current.type == 'item_weapon' then
-
 				menu.close()
 
 				TriggerServerEvent('esx_property:getItem', owner, data.current.type, data.current.value, data.current.ammo)
 				ESX.SetTimeout(300, function()
 					OpenRoomInventoryMenu(property, owner)
 				end)
-
 			else
-
 				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'get_item_count', {
 					title = _U('amount')
 				}, function(data2, menu)
@@ -629,25 +578,18 @@ function OpenRoomInventoryMenu(property, owner)
 							OpenRoomInventoryMenu(property, owner)
 						end)
 					end
-
 				end, function(data2,menu)
 					menu.close()
 				end)
-
 			end
-
 		end, function(data, menu)
 			menu.close()
 		end)
-
 	end, owner)
-
 end
 
 function OpenPlayerInventoryMenu(property, owner)
-
 	ESX.TriggerServerCallback('esx_property:getPlayerInventory', function(inventory)
-
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
@@ -681,34 +623,28 @@ function OpenPlayerInventoryMenu(property, owner)
 			})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_inventory',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_inventory', {
 			title    = property.label .. ' - ' .. _U('inventory'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 
 			if data.current.type == 'item_weapon' then
-
 				menu.close()
 				TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, data.current.ammo)
 
 				ESX.SetTimeout(300, function()
 					OpenPlayerInventoryMenu(property, owner)
 				end)
-
 			else
-
 				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'put_item_count', {
 					title = _U('amount')
 				}, function(data2, menu2)
-
 					local quantity = tonumber(data2.value)
 
 					if quantity == nil then
 						ESX.ShowNotification(_U('amount_invalid'))
 					else
-
 						menu2.close()
 
 						TriggerServerEvent('esx_property:putItem', owner, data.current.type, data.current.value, tonumber(data2.value))
@@ -716,19 +652,14 @@ function OpenPlayerInventoryMenu(property, owner)
 							OpenPlayerInventoryMenu(property, owner)
 						end)
 					end
-
 				end, function(data2, menu2)
 					menu2.close()
 				end)
-
 			end
-
 		end, function(data, menu)
 			menu.close()
 		end)
-
 	end)
-
 end
 
 AddEventHandler('instance:loaded', function()
@@ -740,10 +671,8 @@ AddEventHandler('instance:loaded', function()
 end)
 
 AddEventHandler('playerSpawned', function()
-	if FirstSpawn then
-
+	if firstSpawn then
 		Citizen.CreateThread(function()
-
 			while not ESX.IsPlayerLoaded() do
 				Citizen.Wait(0)
 			end
@@ -767,7 +696,7 @@ AddEventHandler('playerSpawned', function()
 			end)
 		end)
 
-		FirstSpawn = false
+		firstSpawn = false
 	end
 end)
 
@@ -807,9 +736,9 @@ AddEventHandler('instance:onEnter', function(instance)
 		end
 
 		if isOwned or not isHost then
-			HasChest = true
+			hasChest = true
 		else
-			HasChest = false
+			hasChest = false
 		end
 	end
 end)
@@ -895,7 +824,7 @@ Citizen.CreateThread(function()
 			end
 
 			-- Room menu
-			if property.roomMenu and HasChest and not property.disabled then
+			if property.roomMenu and hasChest and not property.disabled then
 				local distance = GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true)
 
 				if distance < Config.DrawDistance then
@@ -911,16 +840,16 @@ Citizen.CreateThread(function()
 			end
 		end
 
-		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastProperty ~= currentProperty or LastPart ~= currentPart) ) then
-			HasAlreadyEnteredMarker = true
+		if isInMarker and not hasAlreadyEnteredMarker or (isInMarker and (LastProperty ~= currentProperty or LastPart ~= currentPart) ) then
+			hasAlreadyEnteredMarker = true
 			LastProperty            = currentProperty
 			LastPart                = currentPart
 
 			TriggerEvent('esx_property:hasEnteredMarker', currentProperty, currentPart)
 		end
 
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
+		if not isInMarker and hasAlreadyEnteredMarker then
+			hasAlreadyEnteredMarker = false
 			TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
 		end
 
@@ -938,8 +867,7 @@ Citizen.CreateThread(function()
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) then
-
+			if IsControlJustReleased(0, 38) then
 				if CurrentAction == 'property_menu' then
 					OpenPropertyMenu(CurrentActionData.property)
 				elseif CurrentAction == 'gateway_menu' then
@@ -955,7 +883,6 @@ Citizen.CreateThread(function()
 				end
 
 				CurrentAction = nil
-
 			end
 		else
 			Citizen.Wait(500)

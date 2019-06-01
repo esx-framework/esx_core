@@ -11,8 +11,7 @@ function GetProperty(name)
 end
 
 function SetPropertyOwned(name, price, rented, owner)
-	MySQL.Async.execute('INSERT INTO owned_properties (name, price, rented, owner) VALUES (@name, @price, @rented, @owner)',
-	{
+	MySQL.Async.execute('INSERT INTO owned_properties (name, price, rented, owner) VALUES (@name, @price, @rented, @owner)', {
 		['@name']   = name,
 		['@price']  = price,
 		['@rented'] = (rented and 1 or 0),
@@ -33,8 +32,7 @@ function SetPropertyOwned(name, price, rented, owner)
 end
 
 function RemoveOwnedProperty(name, owner)
-	MySQL.Async.execute('DELETE FROM owned_properties WHERE name = @name AND owner = @owner',
-	{
+	MySQL.Async.execute('DELETE FROM owned_properties WHERE name = @name AND owner = @owner', {
 		['@name']  = name,
 		['@owner'] = owner
 	}, function(rowsChanged)
@@ -117,7 +115,6 @@ MySQL.ready(function()
 
 		TriggerClientEvent('esx_property:sendProperties', -1, Config.Properties)
 	end)
-
 end)
 
 ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
@@ -187,8 +184,7 @@ RegisterServerEvent('esx_property:saveLastProperty')
 AddEventHandler('esx_property:saveLastProperty', function(property)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.execute('UPDATE users SET last_property = @last_property WHERE identifier = @identifier',
-	{
+	MySQL.Async.execute('UPDATE users SET last_property = @last_property WHERE identifier = @identifier', {
 		['@last_property'] = property,
 		['@identifier']    = xPlayer.identifier
 	})
@@ -267,7 +263,6 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 		end)
 
 	end
-
 end)
 
 RegisterServerEvent('esx_property:putItem')
@@ -319,14 +314,13 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 		end)
 
 	end
-
 end)
 
 ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE owner = @owner', {
-	['@owner'] = xPlayer.identifier
+		['@owner'] = xPlayer.identifier
 	}, function(ownedProperties)
 		local properties = {}
 
@@ -432,8 +426,7 @@ function PayRent(d, h, m)
 				xPlayer.removeAccountMoney('bank', result[i].price)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
 			else -- pay rent either way
-				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier',
-				{
+				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
 					['@bank']       = result[i].price,
 					['@identifier'] = result[i].owner
 				})
