@@ -1,7 +1,5 @@
-ESX                    = nil
-local DataStoresIndex  = {}
-local DataStores       = {}
-local SharedDataStores = {}
+local DataStores, DataStoresIndex, SharedDataStores = {}, {}, {}
+ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -18,7 +16,6 @@ MySQL.ready(function()
 		})
 
 		if shared == 0 then
-
 			table.insert(DataStoresIndex, name)
 			DataStores[name] = {}
 
@@ -30,9 +27,7 @@ MySQL.ready(function()
 
 				table.insert(DataStores[name], dataStore)
 			end
-
 		else
-
 			local data = nil
 
 			if #result2 == 0 then
@@ -47,7 +42,6 @@ MySQL.ready(function()
 
 			local dataStore = CreateDataStore(name, nil, data)
 			SharedDataStores[name] = dataStore
-
 		end
 	end
 end)
@@ -86,9 +80,7 @@ AddEventHandler('esx_datastore:getSharedDataStore', function(name, cb)
 	cb(GetSharedDataStore(name))
 end)
 
-AddEventHandler('esx:playerLoaded', function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	local dataStores = {}
 
 	for i=1, #DataStoresIndex, 1 do
@@ -96,8 +88,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 		local dataStore = GetDataStore(name, xPlayer.identifier)
 
 		if dataStore == nil then
-			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)',
-			{
+			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
 				['@name']  = name,
 				['@owner'] = xPlayer.identifier,
 				['@data']  = '{}'

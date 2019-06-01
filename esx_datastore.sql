@@ -1,21 +1,20 @@
 USE `essentialmode`;
 
 CREATE TABLE `datastore` (
-	`name` varchar(60) NOT NULL,
-	`label` varchar(255) NOT NULL,
-	`shared` int(11) NOT NULL,
+	`name` VARCHAR(60) NOT NULL,
+	`label` VARCHAR(100) NOT NULL,
+	`shared` INT(11) NOT NULL,
 
 	PRIMARY KEY (`name`)
 );
 
 CREATE TABLE `datastore_data` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(60) NOT NULL,
-	`owner` varchar(60),
-	`data` longtext,
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(60) NOT NULL,
+	`owner` VARCHAR(60),
+	`data` LONGTEXT,
 
-	INDEX index_datastore_name (`name`),
-	CONSTRAINT unique_datastore_owner_name UNIQUE (`owner`, `name`),
-
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `index_datastore_data_name_owner` (`name`, `owner`),
+	INDEX `index_datastore_data_name` (`name`)
 );

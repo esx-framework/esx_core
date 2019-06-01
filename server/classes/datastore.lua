@@ -68,14 +68,12 @@ function CreateDataStore(name, owner, data)
 
 		local timeoutCallback = ESX.SetTimeout(10000, function()
 			if self.owner == nil then
-				MySQL.Async.execute('UPDATE datastore_data SET data = @data WHERE name = @name',
-				{
+				MySQL.Async.execute('UPDATE datastore_data SET data = @data WHERE name = @name', {
 					['@data'] = json.encode(self.data),
 					['@name'] = self.name,
 				})
 			else
-				MySQL.Async.execute('UPDATE datastore_data SET data = @data WHERE name = @name and owner = @owner',
-				{
+				MySQL.Async.execute('UPDATE datastore_data SET data = @data WHERE name = @name and owner = @owner', {
 					['@data']  = json.encode(self.data),
 					['@name']  = self.name,
 					['@owner'] = self.owner,
