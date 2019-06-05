@@ -2,8 +2,8 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-TriggerEvent('esx_phone:registerNumber', 'banker', _('bank_customer'), false, false)
-TriggerEvent('esx_society:registerSociety', 'banker', 'Banquier', 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
+TriggerEvent('esx_phone:registerNumber', 'banker', _('phone_receive'), false, false)
+TriggerEvent('esx_society:registerSociety', 'banker', _U('phone_label'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
 
 RegisterServerEvent('esx_bankerjob:customerDeposit')
 AddEventHandler('esx_bankerjob:customerDeposit', function (target, amount)
@@ -43,7 +43,7 @@ ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function (source, cb)
 	local xPlayers  = ESX.GetPlayers()
 	local customers = {}
 
-	for i=1, #xPlayers, 1 do
+	for i=1, #xPlayers do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 
 		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
@@ -81,12 +81,11 @@ function CalculateBankSavings(d, h, m)
 			else
 				local interests = math.floor(result[i].money / 100 * Config.BankSavingPercentage)
 				local newMoney  = result[i].money + interests
-				bankInterests   = bankInterests + interests
+				bankInterests = bankInterests + interests
 
 				local scope = function(newMoney, owner)
 					table.insert(asyncTasks, function(cb)
-						MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name',
-						{
+						MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name', {
 							['@money']        = newMoney,
 							['@owner']        = owner,
 							['@account_name'] = 'bank_savings',
@@ -107,7 +106,6 @@ function CalculateBankSavings(d, h, m)
 		Async.parallelLimit(asyncTasks, 5, function(results)
 			print('[BANK] Calculated interests')
 		end)
-
 	end)
 end
 

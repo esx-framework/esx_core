@@ -1,0 +1,18 @@
+Locales['sv'] = {
+  ['actions']                           = 'handling',
+  ['amount']                            = 'belopp',
+  ['balance']                           = 'balans',
+  ['bank']                              = 'bank',
+  ['bill_amount']                       = 'räkning belopp',
+  ['billing']                           = 'räkning',
+  ['customer']                          = 'kund',
+  ['customers']                         = 'kunder',
+  ['deposit']                           = 'insättning',
+  ['invalid_amount']                    = 'ogiltig belopp',
+  ['no_player_nearby']                  = 'det hittades inga spelare i närheten.',
+  ['press_input_context_to_open_menu']  = 'tryck ~INPUT_CONTEXT~ för att öppna ~g~bankmenyn~s~.',
+  ['withdraw']                          = 'ta ut',
+  ['boss_actions']                      = 'chef handlingar',
+  ['phone_receive']                     = 'bank meddelande mottaget',
+  ['phone_label']                       = 'bank',
+}
