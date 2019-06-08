@@ -298,11 +298,7 @@ ESX.Game.SpawnObject = function(model, coords, cb)
 	local model = (type(model) == 'number' and model or GetHashKey(model))
 
 	Citizen.CreateThread(function()
-		RequestModel(model)
-
-		while not HasModelLoaded(model) do
-			Citizen.Wait(0)
-		end
+		ESX.Streaming.RequestModel(model)
 
 		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, false, true)
 
@@ -316,11 +312,7 @@ ESX.Game.SpawnLocalObject = function(model, coords, cb)
 	local model = (type(model) == 'number' and model or GetHashKey(model))
 
 	Citizen.CreateThread(function()
-		RequestModel(model)
-
-		while not HasModelLoaded(model) do
-			Citizen.Wait(0)
-		end
+		ESX.Streaming.RequestModel(model)
 
 		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, false, true)
 
@@ -344,11 +336,7 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
 
 	Citizen.CreateThread(function()
-		RequestModel(model)
-
-		while not HasModelLoaded(model) do
-			Citizen.Wait(0)
-		end
+		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
 		local id      = NetworkGetNetworkIdFromEntity(vehicle)
@@ -378,11 +366,7 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
 
 	Citizen.CreateThread(function()
-		RequestModel(model)
-
-		while not HasModelLoaded(model) do
-			Citizen.Wait(0)
-		end
+		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
 
@@ -390,7 +374,6 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
 		SetModelAsNoLongerNeeded(model)
-
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
 		while not HasCollisionLoadedAroundEntity(vehicle) do
@@ -1012,7 +995,6 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size)
 		SetTextFont(0)
 		SetTextColour(255, 255, 255, 255)
 		SetTextDropshadow(0, 0, 0, 0, 255)
-		SetTextEdge(2, 0, 0, 0, 150)
 		SetTextDropShadow()
 		SetTextOutline()
 		SetTextEntry('STRING')

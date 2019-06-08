@@ -1,29 +1,13 @@
-local Keys = {
-  ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-  ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-  ["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-  ["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-  ["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-  ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-  ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-  ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
 
-local LoadoutLoaded = false
-local IsPaused      = false
-local PlayerSpawned = false
-local LastLoadout   = {}
-local Pickups       = {}
-local isDead        = false
+local isLoadoutLoaded, isPaused, isPlayerSpawned, isDead = false, false, false, false
+local lastLoadout, pickups = {}, {}
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerLoaded = true
-	ESX.PlayerData   = xPlayer
+	ESX.PlayerData = xPlayer
 
 	if Config.EnableHud then
-
 		for i=1, #xPlayer.accounts, 1 do
 			local accountTpl = '<div><img src="img/accounts/' .. xPlayer.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
 
@@ -51,7 +35,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 			job_label   = xPlayer.job.label,
 			grade_label = xPlayer.job.grade_label
 		})
-
 	else
 		TriggerEvent('es:setMoneyDisplay', 0.0)
 	end
@@ -65,14 +48,14 @@ AddEventHandler('playerSpawned', function()
 	local playerPed = PlayerPedId()
 
 	-- Restore position
-	if ESX.PlayerData.lastPosition ~= nil then
+	if ESX.PlayerData.lastPosition then
 		SetEntityCoords(playerPed, ESX.PlayerData.lastPosition.x, ESX.PlayerData.lastPosition.y, ESX.PlayerData.lastPosition.z)
 	end
 
 	TriggerEvent('esx:restoreLoadout') -- restore loadout
 
-	LoadoutLoaded = true
-	PlayerSpawned = true
+	isLoadoutLoaded = true
+	isPlayerSpawned = true
 	isDead = false
 end)
 
@@ -81,7 +64,7 @@ AddEventHandler('esx:onPlayerDeath', function()
 end)
 
 AddEventHandler('skinchanger:loadDefaultModel', function()
-	LoadoutLoaded = false
+	isLoadoutLoaded = false
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
@@ -118,7 +101,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		end
 	end
 
-	LoadoutLoaded = true
+	isLoadoutLoaded = true
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
@@ -334,7 +317,7 @@ AddEventHandler('esx:pickup', function(id, label, player)
 		SetEntityAsMissionEntity(obj, true, false)
 		PlaceObjectOnGroundProperly(obj)
 
-		Pickups[id] = {
+		pickups[id] = {
 			id = id,
 			obj = obj,
 			label = label,
@@ -350,8 +333,8 @@ end)
 
 RegisterNetEvent('esx:removePickup')
 AddEventHandler('esx:removePickup', function(id)
-	ESX.Game.DeleteObject(Pickups[id].obj)
-	Pickups[id] = nil
+	ESX.Game.DeleteObject(pickups[id].obj)
+	pickups[id] = nil
 end)
 
 RegisterNetEvent('esx:pickupWeapon')
@@ -402,12 +385,12 @@ if Config.EnableHud then
 		while true do
 			Citizen.Wait(300)
 
-			if IsPauseMenuActive() and not IsPaused then
-				IsPaused = true
+			if IsPauseMenuActive() and not isPaused then
+				isPaused = true
 				TriggerEvent('es:setMoneyDisplay', 0.0)
 				ESX.UI.HUD.SetDisplay(0.0)
-			elseif not IsPauseMenuActive() and IsPaused then
-				IsPaused = false
+			elseif not IsPauseMenuActive() and isPaused then
+				isPaused = false
 				TriggerEvent('es:setMoneyDisplay', 1.0)
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
@@ -418,7 +401,6 @@ end
 -- Save loadout
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(5000)
 
 		local playerPed      = PlayerPedId()
@@ -426,11 +408,10 @@ Citizen.CreateThread(function()
 		local loadoutChanged = false
 
 		if IsPedDeadOrDying(playerPed) then
-			LoadoutLoaded = false
+			isLoadoutLoaded = false
 		end
 
-		for i=1, #Config.Weapons, 1 do
-
+		for i=1, #Config.Weapons do
 			local weaponName = Config.Weapons[i].name
 			local weaponHash = GetHashKey(weaponName)
 			local weaponComponents = {}
@@ -439,17 +420,17 @@ Citizen.CreateThread(function()
 				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 				local components = Config.Weapons[i].components
 
-				for j=1, #components, 1 do
+				for j=1, #components do
 					if HasPedGotWeaponComponent(playerPed, weaponHash, components[j].hash) then
 						table.insert(weaponComponents, components[j].name)
 					end
 				end
 
-				if LastLoadout[weaponName] == nil or LastLoadout[weaponName] ~= ammo then
+				if not lastLoadout[weaponName] or lastLoadout[weaponName] ~= ammo then
 					loadoutChanged = true
 				end
 
-				LastLoadout[weaponName] = ammo
+				lastLoadout[weaponName] = ammo
 
 				table.insert(loadout, {
 					name = weaponName,
@@ -458,42 +439,36 @@ Citizen.CreateThread(function()
 					components = weaponComponents
 				})
 			else
-				if LastLoadout[weaponName] ~= nil then
+				if lastLoadout[weaponName] then
 					loadoutChanged = true
 				end
 
-				LastLoadout[weaponName] = nil
+				lastLoadout[weaponName] = nil
 			end
-
 		end
 
-		if loadoutChanged and LoadoutLoaded then
+		if loadoutChanged and isLoadoutLoaded then
 			ESX.PlayerData.loadout = loadout
 			TriggerServerEvent('esx:updateLoadout', loadout)
 		end
-
 	end
 end)
 
 -- Menu interactions
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(0)
 
-		if IsControlJustReleased(0, Keys['F2']) and IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		if IsControlJustReleased(0, 289) and IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 			ESX.ShowInventory()
 		end
-
 	end
 end)
 
 -- Dot above head
 if Config.ShowDotAbovePlayer then
-
 	Citizen.CreateThread(function()
 		while true do
-
 			Citizen.Wait(1)
 
 			local players = ESX.Game.GetPlayers()
@@ -503,15 +478,12 @@ if Config.ShowDotAbovePlayer then
 					local headId = CreateMpGamerTag(ped, ('·'), false, false, '', false)
 				end
 			end
-
 		end
 	end)
-
 end
 
 -- Disable wanted level
 if Config.DisableWantedLevel then
-
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
@@ -523,25 +495,22 @@ if Config.DisableWantedLevel then
 			end
 		end
 	end)
-
 end
 
--- Pickups
+-- pickups
 Citizen.CreateThread(function()
 	while true do
-
 		Citizen.Wait(0)
 
 		local playerPed = PlayerPedId()
-		local coords    = GetEntityCoords(playerPed)
+		local coords = GetEntityCoords(playerPed)
 		
 		-- if there's no nearby pickups we can wait a bit to save performance
-		if next(Pickups) == nil then
+		if next(pickups) == nil then
 			Citizen.Wait(500)
 		end
 
-		for k,v in pairs(Pickups) do
-
+		for k,v in pairs(pickups) do
 			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
@@ -553,14 +522,12 @@ Citizen.CreateThread(function()
 				}, v.label)
 			end
 
-			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
+			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and IsPedOnFoot(playerPed) then
 				TriggerServerEvent('esx:onPickup', v.id)
 				PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 				v.inRange = true
 			end
-
 		end
-
 	end
 end)
 
@@ -569,7 +536,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1000)
 
-		if ESX.PlayerLoaded and PlayerSpawned then
+		if ESX.PlayerLoaded and isPlayerSpawned then
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 
@@ -585,8 +552,8 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1000)
 
 		local playerPed = PlayerPedId()
-		if IsEntityDead(playerPed) and PlayerSpawned then
-			PlayerSpawned = false
+		if IsEntityDead(playerPed) and isPlayerSpawned then
+			isPlayerSpawned = false
 		end
 	end
 end)
