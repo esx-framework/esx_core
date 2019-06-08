@@ -1,5 +1,5 @@
 function CreateStatus(name, default, color, visible, tickCallback)
-		
+
 	local self = {}
 
 	self.val          = default

@@ -1,5 +1,12 @@
-local Status = {}
-local isPaused = false
+ESX = nil
+local Status, isPaused = {}, false
+
+Citizen.CreateThread(function()
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+end)
 
 function GetStatusData(minimal)
 	local status = {}
@@ -29,6 +36,15 @@ end
 AddEventHandler('esx_status:registerStatus', function(name, default, color, visible, tickCallback)
 	local status = CreateStatus(name, default, color, visible, tickCallback)
 	table.insert(Status, status)
+end)
+
+AddEventHandler('esx_status:unregisterStatus', function(name)
+	for k,v in ipairs(Status) do
+		if v.name == name then
+			table.remove(Status, k)
+			break
+		end
+	end
 end)
 
 RegisterNetEvent('esx_status:load')
