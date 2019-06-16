@@ -1,24 +1,6 @@
-local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
-
-ESX                  = nil
-local FirstSpawn     = true
-local LastSkin       = nil
-local PlayerLoaded   = false
-local cam            = nil
-local isCameraActive = false
-local zoomOffset     = 0.0
-local camOffset      = 0.0
-local heading        = 90.0
+ESX = nil
+local lastSkin, playerLoaded, cam, isCameraActive
+local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -31,7 +13,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 	local playerPed = PlayerPedId()
 
 	TriggerEvent('skinchanger:getSkin', function(skin)
-		LastSkin = skin
+		lastSkin = skin
 	end)
 
 	TriggerEvent('skinchanger:getData', function(components, maxVals)
@@ -99,7 +81,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 			elements = elements
 		}, function(data, menu)
 			TriggerEvent('skinchanger:getSkin', function(skin)
-				LastSkin = skin
+				lastSkin = skin
 			end)
 
 			submitCb(data, menu)
@@ -107,7 +89,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 		end, function(data, menu)
 			menu.close()
 			DeleteSkinCam()
-			TriggerEvent('skinchanger:loadSkin', LastSkin)
+			TriggerEvent('skinchanger:loadSkin', lastSkin)
 
 			if cancelCb ~= nil then
 				cancelCb(data, menu)
@@ -235,7 +217,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if isCameraActive then
-			if IsControlPressed(0, Keys['N4']) then
+			if IsControlPressed(0, 108) then
 				angle = angle - 1
 			elseif IsControlPressed(0, 109) then
 				angle = angle + 1
@@ -256,7 +238,7 @@ end)
 
 function OpenSaveableMenu(submitCb, cancelCb, restrict)
 	TriggerEvent('skinchanger:getSkin', function(skin)
-		LastSkin = skin
+		lastSkin = skin
 	end)
 
 	OpenMenu(function(data, menu)
@@ -276,11 +258,11 @@ end
 
 AddEventHandler('playerSpawned', function()
 	Citizen.CreateThread(function()
-		while not PlayerLoaded do
-			Citizen.Wait(10)
+		while not playerLoaded do
+			Citizen.Wait(100)
 		end
 
-		if FirstSpawn then
+		if firstSpawn then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin == nil then
 					TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
@@ -289,22 +271,22 @@ AddEventHandler('playerSpawned', function()
 				end
 			end)
 
-			FirstSpawn = false
+			firstSpawn = false
 		end
 	end)
 end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerLoaded = true
+	playerLoaded = true
 end)
 
 AddEventHandler('esx_skin:getLastSkin', function(cb)
-	cb(LastSkin)
+	cb(lastSkin)
 end)
 
 AddEventHandler('esx_skin:setLastSkin', function(skin)
-	LastSkin = skin
+	lastSkin = skin
 end)
 
 RegisterNetEvent('esx_skin:openMenu')
