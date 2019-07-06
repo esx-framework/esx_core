@@ -277,8 +277,8 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 				shopCoords = Config.PoliceStations[station].Vehicles[partNum].InsideShop
 				local authorizedVehicles = Config.AuthorizedVehicles[PlayerData.job.grade_name]
 
-				if #Config.AuthorizedVehicles['Shared'] > 0 then
-					for k,vehicle in ipairs(Config.AuthorizedVehicles['Shared']) do
+				if #Config.AuthorizedVehicles.Shared > 0 then
+					for k,vehicle in ipairs(Config.AuthorizedVehicles.Shared) do
 						table.insert(shopElements, {
 							label = ('%s - <span style="color:green;">%s</span>'):format(vehicle.label, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
 							name  = vehicle.label,
@@ -300,7 +300,7 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 						})
 					end
 				else
-					if #Config.AuthorizedVehicles['Shared'] == 0 then
+					if #Config.AuthorizedVehicles.Shared == 0 then
 						return
 					end
 				end
@@ -413,10 +413,15 @@ function StoreNearbyVehicle(playerCoords)
 			IsBusy = true
 
 			Citizen.CreateThread(function()
+				BeginTextCommandBusyString('STRING')
+				AddTextComponentSubstringPlayerName(_U('garage_storing'))
+				EndTextCommandBusyString(4)
+
 				while IsBusy do
-					Citizen.Wait(0)
-					drawLoadingText(_U('garage_storing'), 255, 255, 255, 255)
+					Citizen.Wait(100)
 				end
+
+				RemoveLoadingPrompt()
 			end)
 
 			-- Workaround for vehicle not deleting when other players are near it.
@@ -522,12 +527,13 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		ESX.Game.Teleport(playerPed, restoreCoords)
 	end, function(data, menu)
 		DeleteSpawnedVehicles()
-
 		WaitForVehicleToLoad(data.current.model)
+
 		ESX.Game.SpawnLocalVehicle(data.current.model, shopCoords, 0.0, function(vehicle)
 			table.insert(spawnedVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
+			SetModelAsNoLongerNeeded(data.current.model)
 
 			if data.current.livery then
 				SetVehicleModKit(vehicle, 0)
@@ -541,10 +547,11 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		table.insert(spawnedVehicles, vehicle)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
+		SetModelAsNoLongerNeeded(elements[1].model)
 
 		if elements[1].livery then
 			SetVehicleModKit(vehicle, 0)
-			SetVehicleLivery(vehicle,elements[1].livery)
+			SetVehicleLivery(vehicle, elements[1].livery)
 		end
 	end)
 end
@@ -576,27 +583,17 @@ function WaitForVehicleToLoad(modelHash)
 	if not HasModelLoaded(modelHash) then
 		RequestModel(modelHash)
 
+		BeginTextCommandBusyString('STRING')
+		AddTextComponentSubstringPlayerName(_U('vehicleshop_awaiting_model'))
+		EndTextCommandBusyString(4)
+
 		while not HasModelLoaded(modelHash) do
 			Citizen.Wait(0)
 			DisableAllControlActions(0)
-
-			drawLoadingText(_U('vehicleshop_awaiting_model'), 255, 255, 255, 255)
 		end
+
+		RemoveLoadingPrompt()
 	end
-end
-
-function drawLoadingText(text, red, green, blue, alpha)
-	SetTextFont(4)
-	SetTextScale(0.0, 0.5)
-	SetTextColour(red, green, blue, alpha)
-	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextDropShadow()
-	SetTextOutline()
-	SetTextCentre(true)
-
-	BeginTextCommandDisplayText('STRING')
-	AddTextComponentSubstringPlayerName(text)
-	EndTextCommandDisplayText(0.5, 0.5)
 end
 
 function OpenPoliceActionsMenu()
@@ -1642,7 +1639,7 @@ Citizen.CreateThread(function()
 		SetBlipColour (blip, v.Blip.Colour)
 		SetBlipAsShortRange(blip, true)
 
-		BeginTextCommandSetBlipName("STRING")
+		BeginTextCommandSetBlipName('STRING')
 		AddTextComponentString(_U('map_blip'))
 		EndTextCommandSetBlipName(blip)
 	end
