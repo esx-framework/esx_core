@@ -977,8 +977,8 @@ function LookupVehicle()
 end
 
 function ShowPlayerLicense(player)
-	local elements = {}
-	local targetName
+	local elements, targetName = {}
+
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 		if data.licenses then
 			for i=1, #data.licenses, 1 do
@@ -997,8 +997,7 @@ function ShowPlayerLicense(player)
 			targetName = data.name
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license', {
 			title    = _U('license_revoke'),
 			align    = 'top-left',
 			elements = elements,
@@ -1025,7 +1024,7 @@ function OpenUnpaidBillsMenu(player)
 		for k,bill in ipairs(bills) do
 			table.insert(elements, {
 				label = ('%s - <span style="color:red;">%s</span>'):format(bill.label, _U('armory_item', ESX.Math.GroupDigits(bill.amount))),
-				billId = bills[i].id
+				billId = bill.id
 			})
 		end
 
