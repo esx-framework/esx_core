@@ -1,0 +1,72 @@
+html {
+    overflow: hidden;
+}
+
+p {
+    margin: 0 !important;
+}
+
+.main-container {
+    display:none;
+    width: 70vw;
+    margin: auto;
+    position: relative;
+    top: 35vh;
+}
+
+.character-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.character-box {
+    color: #FFFFFF;
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.character-box:hover {
+    background: rgba(42, 125, 193,1.0);
+    border-radius: 5px;
+    transition: 200ms;
+}
+
+.character-info {
+    text-align: left!important;
+}
+
+.character-buttons {
+    display: none;
+    width: 70vw;
+    margin:15px auto;
+}
+
+.btn-play {
+    background: #43A047;
+    color: #FFFFFF;
+    float:left;
+    margin-right: 10px;
+}
+
+.btn-play:hover {
+    background: #2eb72c;
+}
+
+.btn-delete {
+    background: #930b0b;
+    color: #FFFFFF;
+    float:left;
+}
+
+.btn-delete:hover {
+    background: #b50c0c;
+}
+
+.active-char {
+    border: 2px solid rgba(0,0,0,0.4);
+}
+
