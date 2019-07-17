@@ -1,5 +1,7 @@
 Thanks You KASH (github.com/KASHZIN)Who The Original Develop This ESX_KASHACTERS RELEASE And To XxFri3ndlyxX (github.com/XxFri3ndlyxX)
 
+this tutorial i made original a little bit use XxFri3ndlyxX tutorial :v
+
 1.Step One [ essentialmode\client\main.lua ]
 
 Delete Or Replace This !
