@@ -289,18 +289,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		TriggerClientEvent('esx:setAccountMoney', self.source, account)
 	end
 
-	self.removeAccountMoney = function(a, m)
-		if m < 0 then
+	self.removeAccountMoney = function(acc, money)
+		if money < 0 then
 			print(('es_extended: %s attempted exploiting! (reason: player tried removing -1 account balance)'):format(self.identifier))
 			return
 		end
 
-		local account  = self.getAccount(a)
-		local newMoney = account.money - m
+		local account  = self.getAccount(acc)
+		local newMoney = account.money - ESX.Math.Round(money)
 
 		account.money = newMoney
 
-		if a == 'bank' then
+		if acc == 'bank' then
 			self.set('bank', newMoney)
 		end
 
