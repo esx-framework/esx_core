@@ -335,7 +335,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 			end
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
-			TriggerClientEvent('esx:showNotification', _source, _U('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
+			TriggerClientEvent('esx:showNotification', target, _U('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
 		end
 
 	end
