@@ -454,15 +454,13 @@ ESX.Game.GetClosestObject = function(filter, coords)
 end
 
 ESX.Game.GetPlayers = function()
-	local maxPlayers = Config.MaxPlayers
-	local players    = {}
+	local players = {}
 
-	for i=0, maxPlayers, 1 do
-
-		local ped = GetPlayerPed(i)
+	for _,player in ipairs(GetActivePlayers()) do
+		local ped = GetPlayerPed(player)
 
 		if DoesEntityExist(ped) then
-			table.insert(players, i)
+			table.insert(players, player)
 		end
 	end
 
