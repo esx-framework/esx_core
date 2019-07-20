@@ -465,23 +465,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Dot above head
-if Config.ShowDotAbovePlayer then
-	Citizen.CreateThread(function()
-		while true do
-			Citizen.Wait(1)
-
-			local players = ESX.Game.GetPlayers()
-			for i = 1, #players, 1 do
-				if players[i] ~= PlayerId() then
-					local ped    = GetPlayerPed(players[i])
-					local headId = CreateMpGamerTag(ped, ('·'), false, false, '', false)
-				end
-			end
-		end
-	end)
-end
-
 -- Disable wanted level
 if Config.DisableWantedLevel then
 	Citizen.CreateThread(function()
