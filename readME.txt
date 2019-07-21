@@ -35,7 +35,7 @@ Citizen.CreateThread(function()
 end)```
 
 3. Step Three 
-To Get Your esx_kashacters work you need do this on your database
+To Get Your esx_kashacters work you need do this on your query db
 
 ```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'```
 And This
