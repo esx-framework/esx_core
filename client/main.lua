@@ -1,4 +1,4 @@
-local instance, instancedPlayers, registeredInstanceTypes = {}, {}, {}
+local instance, instancedPlayers, registeredInstanceTypes, playersToHide = {}, {}, {}, {}
 local instanceInvite, insideInstance
 ESX = nil
 
@@ -114,7 +114,7 @@ end)
 
 RegisterNetEvent('instance:onPlayerEntered')
 AddEventHandler('instance:onPlayerEntered', function(_instance, player)
-	instance = _instance 
+	instance = _instance
 	local playerName = GetPlayerName(GetPlayerFromServerId(player))
 
 	ESX.ShowNotification(_('entered_into', playerName))
@@ -170,9 +170,8 @@ end)
 -- Instance players
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
-		local playerPed = PlayerPedId()
-		local playersToHide = {}
+		Citizen.Wait(1000)
+		playersToHide = {}
 
 		if instance.host then
 			-- Get players and sets them as pairs
@@ -189,6 +188,13 @@ Citizen.CreateThread(function()
 				playersToHide[GetPlayerFromServerId(player)] = true
 			end
 		end
+	end
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(10)
+		local playerPed = PlayerPedId()
 
 		-- Hide all these players
 		for player,_ in pairs(playersToHide) do
@@ -207,7 +213,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0) -- must be run every frame
-		
+
 		if insideInstance then
 			SetVehicleDensityMultiplierThisFrame(0.0)
 			SetParkedVehicleDensityMultiplierThisFrame(0.0)
