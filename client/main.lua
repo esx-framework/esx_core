@@ -1,5 +1,5 @@
 local PlayerData, CurrentActionData, handcuffTimer, dragStatus, blipsCops, currentTask, spawnedVehicles = {}, {}, {}, {}, {}, {}, {}
-local HasAlreadyEnteredMarker, isDead, IsHandcuffed, hasAlreadyJoined, playerInService, isInShopMenu = false, false, false, false, false, false
+local HasAlreadyEnteredMarker, isDead, isHandcuffed, hasAlreadyJoined, playerInService, isInShopMenu = false, false, false, false, false, false
 local LastStation, LastPart, LastPartNum, LastEntity, CurrentAction, CurrentActionMsg
 dragStatus.isDragged = false
 ESX = nil
@@ -1416,11 +1416,11 @@ end)
 
 RegisterNetEvent('esx_policejob:handcuff')
 AddEventHandler('esx_policejob:handcuff', function()
-	IsHandcuffed    = not IsHandcuffed
+	isHandcuffed = not isHandcuffed
 	local playerPed = PlayerPedId()
 
 	Citizen.CreateThread(function()
-		if IsHandcuffed then
+		if isHandcuffed then
 
 			RequestAnimDict('mp_arresting')
 			while not HasAnimDictLoaded('mp_arresting') do
@@ -1460,9 +1460,9 @@ end)
 
 RegisterNetEvent('esx_policejob:unrestrain')
 AddEventHandler('esx_policejob:unrestrain', function()
-	if IsHandcuffed then
+	if isHandcuffed then
 		local playerPed = PlayerPedId()
-		IsHandcuffed = false
+		isHandcuffed = false
 
 		ClearPedSecondaryTask(playerPed)
 		SetEnableHandcuffs(playerPed, false)
@@ -1480,7 +1480,7 @@ end)
 
 RegisterNetEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(copId)
-	if not IsHandcuffed then
+	if not isHandcuffed then
 		return
 	end
 
@@ -1495,7 +1495,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
 
-		if IsHandcuffed then
+		if isHandcuffed then
 			playerPed = PlayerPedId()
 
 			if dragStatus.isDragged then
@@ -1528,7 +1528,7 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 	local playerPed = PlayerPedId()
 	local coords = GetEntityCoords(playerPed)
 
-	if not IsHandcuffed then
+	if not isHandcuffed then
 		return
 	end
 
@@ -1571,7 +1571,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 
-		if IsHandcuffed then
+		if isHandcuffed then
 			DisableControlAction(0, 1, true) -- Disable pan
 			DisableControlAction(0, 2, true) -- Disable tilt
 			DisableControlAction(0, 24, true) -- Attack
@@ -1972,7 +1972,7 @@ function StartHandcuffTimer()
 
 	handcuffTimer.active = true
 
-	handcuffTimer.task = ESX.SetTimeout(Config.handcuffTimer, function()
+	handcuffTimer.task = ESX.SetTimeout(Config.HandcuffTimer, function()
 		ESX.ShowNotification(_U('unrestrained_timer'))
 		TriggerEvent('esx_policejob:unrestrain')
 		handcuffTimer.active = false
