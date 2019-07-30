@@ -638,15 +638,15 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	end
 
 	return {
-
 		model             = GetEntityModel(vehicle),
 
 		plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
 		plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
-		health            = GetEntityHealth(vehicle),
-		dirtLevel         = GetVehicleDirtLevel(vehicle),
+		bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
+		engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
 
+		dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
 		color1            = color1,
 		color2            = color2,
 
@@ -731,8 +731,12 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
 	end
 
-	if props.health ~= nil then
-		SetEntityHealth(vehicle, props.health)
+	if props.bodyHealth ~= nil then
+		SetVehicleBodyHealth(vehicle, props.bodyHealth)
+	end
+
+	if props.engineHealth ~= nil then
+		SetVehicleEngineHealth(vehicle, props.engineHealth)
 	end
 
 	if props.dirtLevel ~= nil then
