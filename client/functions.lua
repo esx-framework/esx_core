@@ -646,6 +646,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
 		engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
 
+		fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
 		dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
 		color1            = color1,
 		color2            = color2,
@@ -732,15 +733,19 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.bodyHealth ~= nil then
-		SetVehicleBodyHealth(vehicle, props.bodyHealth)
+		SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0)
 	end
 
 	if props.engineHealth ~= nil then
-		SetVehicleEngineHealth(vehicle, props.engineHealth)
+		SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0)
+	end
+
+	if props.fuelLevel ~= nil then
+		SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
 	end
 
 	if props.dirtLevel ~= nil then
-		SetVehicleDirtLevel(vehicle, props.dirtLevel)
+		SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
 	end
 
 	if props.color1 ~= nil then
