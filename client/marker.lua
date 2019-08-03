@@ -10,14 +10,11 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if CurrentAction ~= nil then
-
+		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) then
-
+			if IsControlJustReleased(0, 38) then
 				if CurrentAction == 'boat_shop' then
-
 					if not Config.LicenseEnable then
 						OpenBoatShop(Config.Zones.BoatShops[CurrentActionData.zoneNum])
 					else -- check for license
@@ -29,9 +26,7 @@ Citizen.CreateThread(function()
 								OpenLicenceMenu(Config.Zones.BoatShops[CurrentActionData.zoneNum])
 							end
 						end, GetPlayerServerId(PlayerId()), 'boat')
-
 					end
-
 				elseif CurrentAction == 'garage_out' then
 					OpenBoatGarage(Config.Zones.Garages[CurrentActionData.zoneNum])
 				elseif CurrentAction == 'garage_in' then
@@ -156,13 +151,11 @@ Citizen.CreateThread(function()
 		if letSleep then
 			Citizen.Wait(500)
 		end
-
 	end
 end)
 
 -- Blips
 Citizen.CreateThread(function()
-
 	local blipList = {}
 
 	for i=1, #Config.Zones.Garages, 1 do
@@ -188,7 +181,6 @@ Citizen.CreateThread(function()
 	for i=1, #blipList, 1 do
 		CreateBlip(blipList[i].coords, blipList[i].text, blipList[i].sprite, blipList[i].color, blipList[i].scale)
 	end
-
 end)
 
 function CreateBlip(coords, text, sprite, color, scale)

@@ -70,7 +70,7 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 end)
 
 ESX.RegisterServerCallback('esx_boat:getGarage', function(source, cb)
-	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND type = @type AND `stored` = @stored', {
+	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE owner = @owner AND type = @type AND `stored` = @stored', {
 		['@owner']  = GetPlayerIdentifiers(source)[1],
 		['@type']   = 'boat',
 		['@stored'] = true
@@ -100,9 +100,9 @@ ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function(source, cb)
 end)
 
 function getPriceFromModel(model)
-	for i=1, #Config.Vehicles, 1 do
-		if GetHashKey(Config.Vehicles[i].model) == model then
-			return Config.Vehicles[i].price
+	for k,v in ipairs(Config.Vehicles) do
+		if GetHashKey(v.model) == model then
+			return v.price
 		end
 	end
 
