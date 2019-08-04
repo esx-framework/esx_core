@@ -59,16 +59,6 @@ ESX.GetWeaponComponent = function(weaponName, weaponComponent)
 	end
 end
 
-ESX.TableContainsValue = function(table, value)
-	for k, v in pairs(table) do
-		if v == value then
-			return true
-		end
-	end
-
-	return false
-end
-
 ESX.DumpTable = function(table, nb)
 	if nb == nil then
 		nb = 0
