@@ -406,10 +406,6 @@ Citizen.CreateThread(function()
 		local loadout        = {}
 		local loadoutChanged = false
 
-		if IsPedDeadOrDying(playerPed) then
-			isLoadoutLoaded = false
-		end
-
 		for k,v in ipairs(Config.Weapons) do
 			local weaponName = v.name
 			local weaponHash = GetHashKey(weaponName)
