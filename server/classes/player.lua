@@ -139,23 +139,19 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.getAccounts = function()
 		local accounts = {}
 
-		for i=1, #Config.Accounts, 1 do
-			if Config.Accounts[i] == 'bank' then
-
+		for k,v in ipairs(Config.Accounts) do
+			if v == 'bank' then
 				table.insert(accounts, {
 					name  = 'bank',
 					money = self.get('bank'),
-					label = Config.AccountLabels['bank']
+					label = Config.AccountLabels.bank
 				})
-
 			else
-
-				for j=1, #self.accounts, 1 do
-					if self.accounts[j].name == Config.Accounts[i] then
-						table.insert(accounts, self.accounts[j])
+				for k2,v2 in ipairs(self.accounts) do
+					if v2 == v then
+						table.insert(accounts, v2)
 					end
 				end
-
 			end
 		end
 
@@ -167,13 +163,13 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return {
 				name  = 'bank',
 				money = self.get('bank'),
-				label = Config.AccountLabels['bank']
+				label = Config.AccountLabels.bank
 			}
 		end
 
-		for i=1, #self.accounts, 1 do
-			if self.accounts[i].name == a then
-				return self.accounts[i]
+		for k,v in ipairs(self.accounts) do
+			if v.name == a then
+				return v
 			end
 		end
 	end
@@ -213,24 +209,24 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getMissingAccounts = function(cb)
-		MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
+		MySQL.Async.fetchAll('SELECT name FROM user_accounts WHERE identifier = @identifier', {
 			['@identifier'] = self.getIdentifier()
 		}, function(result)
 			local missingAccounts = {}
 
-			for i=1, #Config.Accounts, 1 do
-				if Config.Accounts[i] ~= 'bank' then
+			for k,v in ipairs(Config.Accounts) do
+				if v ~= 'bank' then
 					local found = false
 
-					for j=1, #result, 1 do
-						if Config.Accounts[i] == result[j].name then
+					for k2,v2 in ipairs(result) do
+						if v == v2.name then
 							found = true
 							break
 						end
 					end
 
 					if not found then
-						table.insert(missingAccounts, Config.Accounts[i])
+						table.insert(missingAccounts, v)
 					end
 				end
 			end
@@ -240,12 +236,12 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.createAccounts = function(missingAccounts, cb)
-		for i=1, #missingAccounts, 1 do
-			MySQL.Async.execute('INSERT INTO `user_accounts` (identifier, name) VALUES (@identifier, @name)', {
+		for k,v in ipairs(missingAccounts) do
+			MySQL.Async.execute('INSERT INTO user_accounts (identifier, name) VALUES (@identifier, @name)', {
 				['@identifier'] = self.getIdentifier(),
-				['@name']       = missingAccounts[i]
+				['@name'] = v
 			}, function(rowsChanged)
-				if cb ~= nil then
+				if cb then
 					cb()
 				end
 			end)
@@ -308,9 +304,9 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getInventoryItem = function(name)
-		for i=1, #self.inventory, 1 do
-			if self.inventory[i].name == name then
-				return self.inventory[i]
+		for k,v in ipairs(self.inventory) do
+			if v.name == name then
+				return v
 			end
 		end
 	end
@@ -366,11 +362,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			self.job.skin_male    = {}
 			self.job.skin_female  = {}
 
-			if gradeObject.skin_male ~= nil then
+			if gradeObject.skin_male then
 				self.job.skin_male = json.decode(gradeObject.skin_male)
 			end
 
-			if gradeObject.skin_female ~= nil then
+			if gradeObject.skin_female then
 				self.job.skin_female = json.decode(gradeObject.skin_female)
 			end
 
@@ -412,15 +408,15 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.removeWeapon = function(weaponName, ammo)
 		local weaponLabel
 
-		for i=1, #self.loadout, 1 do
-			if self.loadout[i].name == weaponName then
-				weaponLabel = self.loadout[i].label
+		for k,v in ipairs(self.loadout) do
+			if v.name == weaponName then
+				weaponLabel = v.label
 
-				for j=1, #self.loadout[i].components, 1 do
-					TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, self.loadout[i].components[j])
+				for k2,v2 in ipairs(v.components) do
+					TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, v2)
 				end
 
-				table.remove(self.loadout, i)
+				table.remove(self.loadout, k)
 				break
 			end
 		end
@@ -438,9 +434,9 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return
 		end
 
-		for i=1, #self.loadout[loadoutNum].components, 1 do
-			if self.loadout[loadoutNum].components.name == weaponComponent then
-				table.remove(self.loadout[loadoutNum].components, i)
+		for k,v in ipairs(self.loadout[loadoutNum].components) do
+			if v.name == weaponComponent then
+				table.remove(self.loadout[loadoutNum].components, k)
 				break
 			end
 		end
@@ -455,8 +451,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return false
 		end
 
-		for i=1, #weapon.components, 1 do
-			if weapon.components[i] == weaponComponent then
+		for k,v in ipairs(weapon.components) do
+			if v == weaponComponent then
 				return true
 			end
 		end
@@ -465,8 +461,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.hasWeapon = function(weaponName)
-		for i=1, #self.loadout, 1 do
-			if self.loadout[i].name == weaponName then
+		for k,v in ipairs(self.loadout) do
+			if v.name == weaponName then
 				return true
 			end
 		end
@@ -475,9 +471,9 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getWeapon = function(weaponName)
-		for i=1, #self.loadout, 1 do
-			if self.loadout[i].name == weaponName then
-				return i, self.loadout[i]
+		for k,v in ipairs(self.loadout) do
+			if v.name == weaponName then
+				return k, v
 			end
 		end
 
