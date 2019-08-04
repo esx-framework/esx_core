@@ -148,7 +148,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				})
 			else
 				for k2,v2 in ipairs(self.accounts) do
-					if v2 == v then
+					if v2.name == v then
 						table.insert(accounts, v2)
 					end
 				end
