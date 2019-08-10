@@ -14,7 +14,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 	TriggerEvent('es:getPlayerFromId', _source, function(player)
 		-- Update user name in DB
 		table.insert(tasks, function(cb)
-			MySQL.Async.execute('UPDATE `users` SET `name` = @name WHERE `identifier` = @identifier', {
+			MySQL.Async.execute('UPDATE users SET name = @name WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier(),
 				['@name'] = userData.playerName
 			}, function(rowsChanged)
@@ -24,7 +24,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 		-- Get accounts
 		table.insert(tasks, function(cb)
-			MySQL.Async.fetchAll('SELECT * FROM `user_accounts` WHERE `identifier` = @identifier', {
+			MySQL.Async.fetchAll('SELECT * FROM user_accounts WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(accounts)
 				for i=1, #Config.Accounts, 1 do
@@ -47,7 +47,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 		-- Get inventory
 		table.insert(tasks, function(cb)
 
-			MySQL.Async.fetchAll('SELECT * FROM `user_inventory` WHERE `identifier` = @identifier', {
+			MySQL.Async.fetchAll('SELECT * FROM user_inventory WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(inventory)
 				local tasks2 = {}
@@ -127,7 +127,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			-- Get job name, grade and last position
 			table.insert(tasks2, function(cb2)
 
-				MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position FROM `users` WHERE `identifier` = @identifier', {
+				MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position FROM users WHERE identifier = @identifier', {
 					['@identifier'] = player.getIdentifier()
 				}, function(result)
 					local job, grade = result[1].job, tostring(result[1].job_grade)
