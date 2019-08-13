@@ -1,4 +1,4 @@
-#Thanks You KASH (github.com/KASHZIN)Who The Original Develop This ESX_KASHACTERS RELEASE And To XxFri3ndlyxX (github.com/XxFri3ndlyxX)
+# Thanks You KASH (github.com/KASHZIN)Who The Original Develop This ESX_KASHACTERS RELEASE And To XxFri3ndlyxX (github.com/XxFri3ndlyxX)
 
 **this tutorial i made original a little bit use XxFri3ndlyxX tutorial :v**
 
@@ -129,11 +129,11 @@ you need in Roleplay Server if you wan to change just change it
 
 ===--------------------------------------------------------------------===
 
-#OkeyThats All Make My esx_kashacters work properly if you wanna ask
-#My Discord : Blue.#5108
+# OkeyThats All Make My esx_kashacters work properly if you wanna ask
+# My Discord : Blue.#5108
 
-#Thank you Again to KASH And XxFri3ndlyxX ! :)
-#ENJOY YOUR ESX_KASHACTERS
+# Thank you Again to KASH And XxFri3ndlyxX ! :)
+# ENJOY YOUR ESX_KASHACTERS
 
 
 
