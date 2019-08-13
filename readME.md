@@ -45,10 +45,10 @@ end)
 - Step Three 
 To Get Your esx_kashacters work you need do this on your query db
 
-SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
+```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
 And This
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'
-Credit @Xnubil
+Credit @Xnubil```
 
 - Step four [Fix Datastore]
 Duplicate Your esx_datastore or add This line on your esx_datastore server\main.lua
