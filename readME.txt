@@ -5,7 +5,7 @@ this tutorial i made original a little bit use XxFri3ndlyxX tutorial :v
 1.Step One [ essentialmode\client\main.lua ]
 
 Delete Or Replace This !
-```--[[Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
@@ -15,13 +15,13 @@ Delete Or Replace This !
 			return
 		end
 	end
-end)]]--```
+end)]]--
 
 2.Step Two [ es_extended [ LINE : 457 ] client/main.lua ]
 This To Fix Cant Open Inventory When You Die And Get Revived
 
 Change You Menu interactions to this !
-``` ---Menu interactions
+ ---Menu interactions
 Citizen.CreateThread(function()
 	while true do
 		
@@ -32,20 +32,20 @@ Citizen.CreateThread(function()
 		end
 
 	end
-end)```
+end)
 
 3. Step Three 
 To Get Your esx_kashacters work you need do this on your query db
 
-```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'```
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
 And This
-```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'```
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'
 Credit @Xnubil
 
 6. Step Six [Fix Datastore]
 Duplicate Your esx_datastore or add This line on your esx_datastore server\main.lua
 
-```-- Fix was taken from this link --
+-- Fix was taken from this link --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
 AddEventHandler('esx:playerLoaded', function(source)
 
@@ -100,7 +100,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 	end
 
 	xPlayer.set('dataStores', dataStores)
-end)```
+end)
 
 Download Link : https://github.com/XxFri3ndlyxX/esx_datastore
 Credits : https://github.com/XxFri3ndlyxX
