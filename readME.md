@@ -53,8 +53,7 @@ Credit @Xnubil```
 - Step four [Fix Datastore]
 Duplicate Your esx_datastore or add This line on your esx_datastore server\main.lua
 
-```
--- Fix was taken from this link --
+```-- Fix was taken from this link --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
 AddEventHandler('esx:playerLoaded', function(source)
 
