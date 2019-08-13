@@ -1,10 +1,14 @@
-Thanks You KASH (github.com/KASHZIN)Who The Original Develop This ESX_KASHACTERS RELEASE And To XxFri3ndlyxX (github.com/XxFri3ndlyxX)
+#Thanks You KASH (github.com/KASHZIN)Who The Original Develop This ESX_KASHACTERS RELEASE And To XxFri3ndlyxX (github.com/XxFri3ndlyxX)
 
-this tutorial i made original a little bit use XxFri3ndlyxX tutorial :v
+**this tutorial i made original a little bit use XxFri3ndlyxX tutorial :v**
 
-1.Step One [ essentialmode\client\main.lua ]
+**_How To Install and fix bug esx_kashacters**
+
+- Step One [ essentialmode\client\main.lua ]
 
 Delete Or Replace This !
+
+```
 --[[Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -16,11 +20,14 @@ Delete Or Replace This !
 		end
 	end
 end)]]--
+```
 
-2.Step Two [ es_extended [ LINE : 457 ] client/main.lua ]
+- Step Two [ es_extended [ LINE : 457 ] client/main.lua ]
 This To Fix Cant Open Inventory When You Die And Get Revived
 
 Change You Menu interactions to this !
+ 
+ ```
  ---Menu interactions
 Citizen.CreateThread(function()
 	while true do
@@ -33,8 +40,9 @@ Citizen.CreateThread(function()
 
 	end
 end)
+```
 
-3. Step Three 
+- Step Three 
 To Get Your esx_kashacters work you need do this on your query db
 
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
@@ -42,9 +50,10 @@ And This
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'
 Credit @Xnubil
 
-6. Step Six [Fix Datastore]
+- Step four [Fix Datastore]
 Duplicate Your esx_datastore or add This line on your esx_datastore server\main.lua
 
+```
 -- Fix was taken from this link --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
 AddEventHandler('esx:playerLoaded', function(source)
@@ -101,32 +110,31 @@ AddEventHandler('esx:playerLoaded', function(source)
 
 	xPlayer.set('dataStores', dataStores)
 end)
+```
 
 Download Link : https://github.com/XxFri3ndlyxX/esx_datastore
 Credits : https://github.com/XxFri3ndlyxX
 
-5. Step Five [ Fix Ambulance ]
+- Step Five [ Fix Ambulance ]
 This To Fix Die Tele And When Your Get Revived You Cant Open any Menu only F2
 
 Download My File the esx_ambulancejob (or download the lastest version esx_ambulancejob :v)
 
-6. Step Six [ Fix your esx_kashacters identifier ]
+- Step Six [ Fix your esx_kashacters identifier ]
 Download My mysql-async And start on your server.cfg
 
-7. Step Seven [ Fix Your Identifier And Spawn] 
+- Step Seven [ Fix Your Identifier And Spawn] 
 Download My esx_kashacters Modified And start on your server.cfg
 Thats All Identifier [esx_kashacters\server\main.lua] maybe thats all
 you need in Roleplay Server if you wan to change just change it 
 
 ===--------------------------------------------------------------------===
 
-Okey Thats All Make My esx_kashacters work properly if you wanna ask
-My Discord : Blue.#5108
+#OkeyThats All Make My esx_kashacters work properly if you wanna ask
+#My Discord : Blue.#5108
 
-Thank you Again to KASH And XxFri3ndlyxX ! :)
-ENJOY YOUR ESX_KASHACTERS
-
-
+#Thank you Again to KASH And XxFri3ndlyxX ! :)
+#ENJOY YOUR ESX_KASHACTERS
 
 
 
