@@ -47,7 +47,7 @@ To Get Your esx_kashacters work you need do this on your query db
 
 ```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
 And This
-SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'identifier'
 Credit @Xnubil```
 
 - Step four [Fix Datastore]
