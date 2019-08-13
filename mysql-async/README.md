@@ -1,13 +1,16 @@
-# MySQL Async Library for FiveM
+# mysql-async Library for FiveM
 
-This library intends to provide function to connect to a MySQL library in a Sync and Async Way.
+This library intends to provide function to connect to a MySQL library in a Sync and Async way.
 
-## Disclaimer
+## Table of Contents
+* [Installation](#installation)
+* [Configuration](#configuration)
+  * [keepAlive](#keepalive)
+  * [ConVars](#convars)
+* [GUI](#gui)
+* [Usage](#usage)
+* [Features](#features)
 
-This mod does not replace EssentialMode, it offers instead a way of connecting to MySQL from lua-scripts, but
-it will never contain any gameplay logic. It will remain a simple wrapper around MySQL functions.
-
-All feedback is appreciated in order to deliver a stable release.
 
 ## Installation
 
@@ -20,19 +23,32 @@ Once installed, you will need to add this line of code in the resource file of e
 server_script '@mysql-async/lib/MySQL.lua'
 ```
 
-### Warning
-
-On Linux servers, users need to stick with the old mysql-async 2.x at least for the moment, due to some issues the linux server has with v8/javascript.
-
-It can be downloaded from https://github.com/brouznouf/fivem-mysql-async/tree/2.0 or the release section. Note that the connection_string is different for 3.0.0 and 2.x.
-
 ## Configuration
 
 Add this convar to your server configuration and change the values according to your MySQL installation:
 
-`set mysql_connection_string "mysql://username:password@host/database?dateStrings=true"`
+`set mysql_connection_string "server=localhost;uid=mysqluser;password=password;database=fivem"`
 
-Further options can be found under https://github.com/mysqljs/mysql#connection-options
+Alternatively an url-like connection string can be used:
+
+`set mysql_connection_string "mysql://username:password@host/database"`
+
+Further options can be found under https://github.com/mysqljs/mysql#connection-options for the mysql.js connection string, they can be added on both: the semicolon seperated string or the url-like string.
+
+### keepAlive
+
+For people, having issues with the connection being interrupted for usually a bad network configuration, but have no way of figuring out what is wrong, there is an option to enable keep alive queries. This will execute a query on the given interval. To enable those keep alive queries, append e.g. `keepAlive=60` to your connection string, seperated with a semicolon, to ensure that a keep alive query is fired every 60s.
+
+### ConVars
+
+The following ConVars are available in the `server.cfg` which you execute. These have also to be set before `start mysql-async`
+* `set mysql_debug 1`: Prints out the actual consumed query.
+* `set mysql_debug_output "console"`: Select where to output the log, accepts `console`, `file`, and `both`. In case of `both` and `file` a file named `mysql-async.log` in your main server folder will be created.
+* `set mysql_slow_query_warning 200`: Sets a limit in ms, queries slower than this limit will be displayed with a warning at the specified location of `mysql_debug_output`, see above.
+
+## GUI
+
+Since the newest version, anyone with ace admin rights can open the GUI by typing `mysql` in the F8 console. This opens a profiling view of the data collected by this middleware, that might help you optimize resources and queries. You can disable the viewing of certain data by clicking on the respective entry in the legends, and can browse a table of the 21 slowest performing queries.
 
 ## Usage
 
@@ -115,12 +131,7 @@ local countPlayer = MySQL.Sync.fetchScalar("SELECT COUNT(1) FROM players")
 
 ## Features
 
- * Async / Sync
+ * Async / Sync.
  * It uses the https://github.com/mysqljs/mysql library to provide a connection to your mysql server.
  * Create and close a connection for each query, the underlying library use a connection pool so only the
-mysql auth is done each time, old tcp connections are keeped in memory for performance reasons
-
-## Credits
-
-Some parts of this library, and also my understanding were directly inspired by "Essential Mode", thanks to
-them to have begin to work on this, which allows guy like me to not start from scratch every time...
+mysql auth is done each time, old tcp connections are keeped in memory for performance reasons.
