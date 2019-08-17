@@ -47,7 +47,7 @@ To Get Your esx_kashacters work you need do this on your query db
 
 ```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
 And This
-SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'identifier'
 Credit @Xnubil```
 
 - Step four [Fix Datastore]
@@ -114,10 +114,9 @@ end)
 Download Link : https://github.com/XxFri3ndlyxX/esx_datastore
 Credits : https://github.com/XxFri3ndlyxX
 
-- Step Five [ Fix Ambulance ]
+- Step Five [ Fix Ambulance Or Spawn ]
 This To Fix Die Tele And When Your Get Revived You Cant Open any Menu only F2
-
-Download My File the esx_ambulancejob (or download the lastest version esx_ambulancejob :v)
+Or Just Download My File the esx_ambulancejob (or download the lastest version esx_ambulancejob :v)
 
 - Step Six [ Fix your esx_kashacters identifier ]
 Download My mysql-async And start on your server.cfg
@@ -126,6 +125,10 @@ Download My mysql-async And start on your server.cfg
 Download My esx_kashacters Modified And start on your server.cfg
 Thats All Identifier [esx_kashacters\server\main.lua] maybe thats all
 you need in Roleplay Server if you wan to change just change it 
+
+- Step Eight [ Fix F6 Can Open Menu ]
+try to delete IsDie in the police and mechanic Menu
+https://github.com/EbenSantuy/esx_kashacter-TUTORIAL-FIXED-ALL-ISSUE/issues/1#issuecomment-520927465
 
 ===--------------------------------------------------------------------===
 
