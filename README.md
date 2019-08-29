@@ -1,5 +1,7 @@
 # fxserver-esx_sit
 
+### Warning: This resource is not actively maintained. The ESX Teams has higher priorties than this particular add-on, if you have a suggestion open a PR. The likelihood of the ESX Team making feature based updates to esx_sit are unlikely. Thanks for understanding!
+
 This script allow you to sit almost everywhere.
 If the player has many props around him, the game camera might become crazy.
 
