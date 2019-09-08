@@ -12,6 +12,12 @@ function GetInstancedPlayers()
 	return players
 end
 
+AddEventHandler('playerDropped', function(reason)
+	if instances[source] then
+		CloseInstance(source)
+	end
+end)
+
 function CreateInstance(type, player, data)
 	instances[player] = {
 		type    = type,
