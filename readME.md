@@ -43,7 +43,7 @@ end)
 ```
 
 - Step Three 
-To Get Your esx_kashacters work you need do this on your query db
+To Get Your esx_kashacters work you need do this on your query if you wan to check what is the owner and identifier tables
 
 ```SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'
 And This
