@@ -4,6 +4,9 @@
 
 **_How To Install and fix bug esx_kashacters**
 
+Change Log : 
+esx_ambulancejob : Fixed The Bug When You Die And You Reconnect And You still alive with your item !
+
 - Step One [ essentialmode\client\main.lua ]
 
 Delete Or Replace This !
