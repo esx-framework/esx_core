@@ -40,7 +40,7 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-AddEventHandler('playerSpawned', function()
+--[[AddEventHandler('playerSpawned', function()
 	IsDead = false
 
 	if FirstSpawn then
@@ -58,6 +58,18 @@ AddEventHandler('playerSpawned', function()
 			end
 		end)
 	end
+end)]]
+
+RegisterNetEvent('esx_ambulancejob:multicharacter')
+AddEventHandler('esx_ambulancejob:multicharacter', function()
+	IsDead = false
+
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+			if isDead and Config.AntiCombatLog then
+				ESX.ShowNotification(_U('combatlog_message'))
+				RemoveItemsAfterRPDeath()
+			end
+		end)
 end)
 
 -- Create blips
@@ -180,13 +192,15 @@ end
 
 function SendDistressSignal()
 	local playerPed = PlayerPedId()
-	local coords = GetEntityCoords(playerPed)
+	PedPosition		= GetEntityCoords(playerPed)
+	
+	local PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z }
 
 	ESX.ShowNotification(_U('distress_sent'))
-	TriggerServerEvent('esx_phone:send', 'ambulance', _U('distress_message'), false, {
-		x = coords.x,
-		y = coords.y,
-		z = coords.z
+
+    TriggerServerEvent('esx_addons_gcphone:startCall', 'ambulance', _U('distress_message'), PlayerCoords, {
+
+		PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z },
 	})
 end
 
@@ -332,11 +346,21 @@ function RemoveItemsAfterRPDeath()
 	end)
 end
 
-function RespawnPed(ped, coords, heading)
+--[[function RespawnPed(ped, coords, heading)
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
 	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
 	SetPlayerInvincible(ped, false)
 	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z)
+	ClearPedBloodDamage(ped)
+
+	ESX.UI.Menu.CloseAll()
+end]]
+
+function RespawnPed(ped, coords, heading)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(ped, false)
+	TriggerEvent('esx_ambulancejob:multicharacter', coords.x, coords.y, coords.z)
 	ClearPedBloodDamage(ped)
 
 	ESX.UI.Menu.CloseAll()
