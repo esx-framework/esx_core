@@ -40,6 +40,24 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	end
 end)
 
+RegisterNetEvent('esx:createMissingPickups')
+AddEventHandler('esx:createMissingPickups', function(pickups)
+	for pickupId,v in pairs(pickups) do
+		ESX.Game.SpawnLocalObject('prop_money_bag_01', v.coords, function(obj)
+			SetEntityAsMissionEntity(obj, true, false)
+			PlaceObjectOnGroundProperly(obj)
+
+			Pickups[pickupId] = {
+				id = pickupId,
+				obj = obj,
+				label = v.label,
+				inRange = false,
+				coords = v.coords
+			}
+		end)
+	end
+end)
+
 AddEventHandler('playerSpawned', function()
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(1)

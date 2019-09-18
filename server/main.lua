@@ -234,6 +234,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 				})
 
 				xPlayer.displayMoney(xPlayer.getMoney())
+				TriggerClientEvent('esx:createMissingPickups', _source, ESX.Pickups)
 			end)
 		end)
 
