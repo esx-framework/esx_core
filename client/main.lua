@@ -122,13 +122,13 @@ Citizen.CreateThread(function()
 		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), nil, nil, true
 
 		for k,v in ipairs(Config.Shops) do
-			local distnace = #(playerCoords - v)
+			local distance = #(playerCoords - v)
 
 			if distance < Config.DrawDistance then
 				letSleep = false
 				DrawMarker(Config.MarkerType, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 
-				if distnace < 1.5 then
+				if distance < 1.5 then
 					isInMarker, currentZone = true, k
 				end
 			end
