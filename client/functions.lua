@@ -984,32 +984,30 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
-	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
-	local camCoords      = GetGameplayCamCoords()
-	local dist           = GetDistanceBetweenCoords(camCoords, coords.x, coords.y, coords.z, true)
-	local size           = size
+	coords = vector3(coords.x, coords.y, coords.z)
 
-	if size == nil then
-		size = 1
-	end
+	local camCoords = GetGameplayCamCoords()
+	local distance = #(coords - camCoords)
 
-	local scale = (size / dist) * 2
-	local fov   = (1 / GetGameplayCamFov()) * 100
-	local scale = scale * fov
+	if not size then size = 1 end
+	
+	local scale = (size / distance) * 2
+	local fov = (1 / GetGameplayCamFov()) * 100
+	scale = scale * fov
 
-	if onScreen then
-		SetTextScale(0.0 * scale, 0.55 * scale)
-		SetTextFont(0)
-		SetTextColour(255, 255, 255, 255)
-		SetTextDropshadow(0, 0, 0, 0, 255)
-		SetTextDropShadow()
-		SetTextOutline()
-		SetTextEntry('STRING')
-		SetTextCentre(1)
+	SetTextScale(0.0 * scale, 0.55 * scale)
+	SetTextFont(0)
+	SetTextColour(255, 255, 255, 255)
+	SetTextDropshadow(0, 0, 0, 0, 255)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextCentre(true)
 
-		AddTextComponentString(text)
-		DrawText(x, y)
-	end
+	SetDrawOrigin(coords, 0)
+	BeginTextCommandDisplayText('STRING')
+	AddTextComponentSubstringPlayerName(text)
+	EndTextCommandDisplayText(0.0, 0.0)
+	ClearDrawOrigin()
 end
 
 ESX.ShowInventory = function()
