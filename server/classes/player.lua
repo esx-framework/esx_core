@@ -41,7 +41,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.getCoords = function()
-		return self.player.get('coords')
+		local coords = self.player.get('coords')
+		return {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1)}
 	end
 
 	self.setCoords = function(x, y, z)
