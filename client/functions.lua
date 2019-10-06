@@ -983,20 +983,21 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, size)
+ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	coords = vector3(coords.x, coords.y, coords.z)
 
 	local camCoords = GetGameplayCamCoords()
 	local distance = #(coords - camCoords)
 
 	if not size then size = 1 end
+	if not font then font = 0 end
 	
 	local scale = (size / distance) * 2
 	local fov = (1 / GetGameplayCamFov()) * 100
 	scale = scale * fov
 
 	SetTextScale(0.0 * scale, 0.55 * scale)
-	SetTextFont(0)
+	SetTextFont(font)
 	SetTextColour(255, 255, 255, 255)
 	SetTextDropshadow(0, 0, 0, 0, 255)
 	SetTextDropShadow()
