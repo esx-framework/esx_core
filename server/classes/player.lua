@@ -8,6 +8,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.loadout      = loadout
 	self.name         = name
 	self.lastPosition = lastPosition
+	self.maxWeight    = Config.MaxWeight
 
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
@@ -350,6 +351,28 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		end
 	end
 
+	self.getWeight = function()
+		local inventoryWeight = 0
+
+		for k,v in ipairs(self.inventory) do
+			inventoryWeight = inventoryWeight + (v.count * v.weight)
+		end
+
+		return inventoryWeight
+	end
+
+	self.canCarryItem = function(name, count)
+		local currentWeight, itemWeight = self.getWeight(), ESX.Items[name].weight
+		local newWeight = currentWeight + (itemWeight * count)
+
+		return newWeight <= self.maxWeight
+	end
+
+	self.setMaxWeight = function(newWeight)
+		self.maxWeight = newWeight
+		TriggerClientEvent('esx:setMaxWeight', self.source, self.maxWeight)
+	end
+
 	self.setJob = function(job, grade)
 		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
@@ -403,13 +426,21 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.addWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
-		if self.hasWeaponComponent(weaponName, weaponComponent) then
-			return
+		if weapon then
+			if not self.hasWeaponComponent(weaponName, weaponComponent) then
+				table.insert(self.loadout[loadoutNum].components, weaponComponent)
+				TriggerClientEvent('esx:addWeaponComponent', self.source, weaponName, weaponComponent)
+			end
 		end
+	end
 
-		table.insert(self.loadout[loadoutNum].components, weaponComponent)
+	self.addWeaponAmmo = function(weaponName, ammoCount)
+		local loadoutNum, weapon = self.getWeapon(weaponName)
 
-		TriggerClientEvent('esx:addWeaponComponent', self.source, weaponName, weaponComponent)
+		if weapon then
+			weapon.ammo = weapon.ammo + ammoCount
+			TriggerClientEvent('esx:setWeaponAmmo', self.source, weaponName, weapon.ammo)
+		end
 	end
 
 	self.removeWeapon = function(weaponName, ammo)
@@ -437,34 +468,41 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.removeWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
-		if not weapon then
-			return
-		end
-
-		for k,v in ipairs(self.loadout[loadoutNum].components) do
-			if v.name == weaponComponent then
-				table.remove(self.loadout[loadoutNum].components, k)
-				break
+		if weapon then
+			for k,v in ipairs(self.loadout[loadoutNum].components) do
+				if v.name == weaponComponent then
+					table.remove(self.loadout[loadoutNum].components, k)
+					break
+				end
 			end
+	
+			TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, weaponComponent)
 		end
+	end
 
-		TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, weaponComponent)
+	self.removeWeaponAmmo = function(weaponName, ammoCount)
+		local loadoutNum, weapon = self.getWeapon(weaponName)
+
+		if weapon then
+			weapon.ammo = weapon.ammo - ammoCount
+			TriggerClientEvent('esx:setWeaponAmmo', self.source, weaponName, weapon.ammo)
+		end
 	end
 
 	self.hasWeaponComponent = function(weaponName, weaponComponent)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
-		if not weapon then
+		if weapon then
+			for k,v in ipairs(weapon.components) do
+				if v == weaponComponent then
+					return true
+				end
+			end
+	
+			return false
+		else
 			return false
 		end
-
-		for k,v in ipairs(weapon.components) do
-			if v == weaponComponent then
-				return true
-			end
-		end
-
-		return false
 	end
 
 	self.hasWeapon = function(weaponName)

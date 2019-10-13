@@ -40,6 +40,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	end
 end)
 
+RegisterNetEvent('esx:setMaxWeight')
+AddEventHandler('esx:setMaxWeight', function(newMaxWeight)
+	ESX.PlayerData.maxWeight = newMaxWeight
+end)
+
 RegisterNetEvent('esx:createMissingPickups')
 AddEventHandler('esx:createMissingPickups', function(missingPickups)
 	for pickupId,v in pairs(missingPickups) do
@@ -200,6 +205,14 @@ AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
 	GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
 end)
 
+RegisterNetEvent('esx:setWeaponAmmo')
+AddEventHandler('esx:setWeaponAmmo', function(weaponName, weaponAmmo)
+	local playerPed  = PlayerPedId()
+	local weaponHash = GetHashKey(weaponName)
+
+	SetPedAmmo(playerPed, weaponHash, weaponAmmo)
+end)
+
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
 	local playerPed  = PlayerPedId()
@@ -256,7 +269,6 @@ end)
 RegisterNetEvent('esx:loadIPL')
 AddEventHandler('esx:loadIPL', function(name)
 	Citizen.CreateThread(function()
-		LoadMpDlcMaps()
 		RequestIpl(name)
 	end)
 end)
@@ -342,11 +354,7 @@ AddEventHandler('esx:pickup', function(id, label, player)
 			obj = obj,
 			label = label,
 			inRange = false,
-			coords = {
-				x = x,
-				y = y,
-				z = z
-			}
+			coords = {x = x, y = y, z = z}
 		}
 	end)
 end)

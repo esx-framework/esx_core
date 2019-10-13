@@ -1,7 +1,7 @@
 Locales['fr'] = {
   -- Inventory
   ['cash'] = 'espèces',
-  ['inventory'] = 'inventaire',
+  ['inventory'] = 'inventaire %s / %s',
   ['use'] = 'utiliser',
   ['give'] = 'donner',
   ['remove'] = 'jeter',
@@ -13,14 +13,18 @@ Locales['fr'] = {
   ['noammo'] = 'tu n\'as pas toutes ces munitions!',
   ['gave_item'] = 'vous avez donné ~y~%sx~s~ ~b~%s~s~ à ~y~%s~s~',
   ['received_item'] = 'vous avez reçu ~y~%sx~s~ ~b~%s~s~ par ~b~%s~s~',
-  ['gave_weapon'] = 'vous avez donné ~y~1x~s~ ~b~%s~s~ à ~y~%s~s~.',
-  ['gave_weapon_ammo'] = 'vous avez donné ~y~1x~s~ ~b~%s~s~ avec ~o~%sx~s~ balles à ~y~%s~s~.',
+  ['gave_weapon'] = 'vous avez donné ~y~1x~s~ ~b~%s~s~ à ~y~%s~s~',
+  ['gave_weapon_ammo'] = 'you gave ~o~%sx~s~ bullets for ~b~%s~s~ to ~y~%s~s~',
+  ['gave_weapon_withammo'] = 'vous avez donné ~y~1x~s~ ~b~%s~s~ avec ~o~%sx~s~ balles à ~y~%s~s~',
   ['gave_weapon_hasalready'] = '~y~%s~s~ a déjà ~y~%s~s~',
-  ['received_weapon'] = 'vous recevez ~y~1x~s~ ~b~%s~s~ de ~b~%s~s~.',
-  ['received_weapon_ammo'] = 'vous avez reçu ~y~1x~s~ ~b~%s~s~ avec ~o~%sx~s~ balles de ~b~%s~s~.',
-  ['received_weapon_hasalready'] = '~b~%s~s~ a tenté de vous donner ~y~%s~s~, mais vous en aviez déjà un exemplaire.',
-  ['gave_ammo'] = 'vous donnez ~o~%sx~s~ munitions à ~y~%s~s~.',
-  ['received_ammo'] = 'vous recevez ~o~%sx~s~ munitions de ~b~%s~s~.',
+  ['gave_weapon_noweapon'] = '~y~%s~s~ does not have that weapon',
+  ['received_weapon'] = 'vous recevez ~y~1x~s~ ~b~%s~s~ de ~b~%s~s~',
+  ['received_weapon_ammo'] = 'you received ~o~%sx~s~ bullets for your ~b~%s~s~ from ~b~%s~s~',
+  ['received_weapon_withammo'] = 'vous avez reçu ~y~1x~s~ ~b~%s~s~ avec ~o~%sx~s~ balles de ~b~%s~s~',
+  ['received_weapon_hasalready'] = '~b~%s~s~ a tenté de vous donner ~y~%s~s~, mais vous en aviez déjà un exemplaire',
+  ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for an ~y~%s~s~, but you dont have one',
+  ['gave_ammo'] = 'vous donnez ~o~%sx~s~ munitions à ~y~%s~s~',
+  ['received_ammo'] = 'vous recevez ~o~%sx~s~ munitions de ~b~%s~s~',
   ['gave_money'] = 'vous avez donné ~g~$%s~s~ à ~y~%s~s~',
   ['received_money'] = 'vous avez reçu ~g~$%s~s~ par ~b~%s~s~',
   ['gave_account_money'] = 'vous avez donné ~g~$%s~s~ (%s) à ~y~%s~s~',
@@ -45,7 +49,6 @@ Locales['fr'] = {
 
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
-  ['cannot_pickup_room'] = 'vous n\'avez plus de place pour ~y~%s~s~!',
 
   -- Commands
   ['setjob'] = 'assigner job',
