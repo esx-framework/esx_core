@@ -72,9 +72,12 @@ AddEventHandler('playerSpawned', function()
 
 	TriggerEvent('esx:restoreLoadout') -- restore loadout
 
-	isLoadoutLoaded = true
-	isPlayerSpawned = true
-	isDead = false
+	isLoadoutLoaded, isPlayerSpawned, isDead = true, true, false
+
+	if Config.EnablePvP then
+		SetCanAttackFriendly(playerPed, true, false)
+		NetworkSetFriendlyFireOption(true)
+	end
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
