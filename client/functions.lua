@@ -45,22 +45,22 @@ ESX.SetPlayerData = function(key, val)
 end
 
 ESX.ShowNotification = function(msg)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringPlayerName(msg)
+	AddTextEntry('esxNotification', msg)
+	SetNotificationTextEntry('esxNotification')
 	DrawNotification(false, true)
 end
 
 ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringPlayerName(msg)
+	AddTextEntry('esxAdvancedNotification', msg)
+	SetNotificationTextEntry('esxAdvancedNotification')
 	SetNotificationMessage(icon, icon, false, iconType, title, subject)
 	DrawNotification(false, false)
 end
 
 ESX.ShowHelpNotification = function(msg)
 	--if not IsHelpMessageBeingDisplayed() then
-		BeginTextCommandDisplayHelp('STRING')
-		AddTextComponentSubstringPlayerName(msg)
+		AddTextEntry('esxHelpNotification', msg)
+		BeginTextCommandDisplayHelp('esxHelpNotification')
 		EndTextCommandDisplayHelp(0, false, true, -1)
 	--end
 end
