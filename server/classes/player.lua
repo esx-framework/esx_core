@@ -40,9 +40,15 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		return self.player.get('bank')
 	end
 
-	self.getCoords = function()
+	self.getCoords = function(vectorType)
 		local coords = self.player.get('coords')
-		return {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1)}
+		coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1)}
+
+		if vectorType then
+			return vector3(coords.x, coords.y, coords.z)
+		else
+			return coords
+		end
 	end
 
 	self.setCoords = function(x, y, z)
