@@ -1,9 +1,8 @@
 # es_extended
-es_extended is a roleplay framework for FiveM. It is developed on top of [EssentialMode](https://essentialmode.com/) (aka ES), thus commonly named ESX - the **Es**sentialMode E**x**tended framework for FiveM.
+es_extended is a roleplay framework for FiveM. It is developed on top of EssentialMode (aka ES), thus commonly named ESX - the **Es**sentialMode E**x**tended framework for FiveM.
 
 ### Links & Read more
 - [ESX Documentation](https://esx-org.github.io/)
-- [ES Documentation](https://docs.essentialmode.com/)
 - [ESX Discord Community](https://discord.gg/MsWzPqE)
 - [FiveM Forum Thread](https://forum.fivem.net/t/release-esx-base/39881)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
@@ -13,7 +12,7 @@ es_extended is a roleplay framework for FiveM. It is developed on top of [Essent
 ![screenshot](http://i.imgur.com/aPFdJl3.jpg)
 
 ### Features
-- Accounts (bank / black money). You can add further accounts
+- Accounts (comes with bank / black money), you can add more accounts
 - Advanced inventory system (press `F2` ingame)
 - Job system
 - Loadouts and position synced in database
@@ -78,7 +77,7 @@ start esx_menu_dialog
 ### License
 es_extended - EssentialMode Extended framework for FiveM
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2019 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
