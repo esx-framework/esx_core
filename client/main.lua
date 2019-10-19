@@ -25,10 +25,6 @@ function OpenShopMenu(zone)
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
-		if item.limit == -1 then
-			item.limit = 100
-		end
-
 		table.insert(elements, {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
 			label_real = item.label,
@@ -39,7 +35,7 @@ function OpenShopMenu(zone)
 			value      = 1,
 			type       = 'slider',
 			min        = 1,
-			max        = item.limit
+			max        = 100
 		})
 	end
 
