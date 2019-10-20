@@ -23,9 +23,9 @@ INSERT INTO `jobs` (name, label) VALUES
 	('ambulance','Záchranka')
 ;
 
-INSERT INTO `items` (name, label, `limit`) VALUES
-	('bandage','Obvaz', 20),
-	('medikit','Lékarnička', 5)
+INSERT INTO `items` (name, label, weight) VALUES
+	('bandage','Obvaz', 2),
+	('medikit','Lékarnička', 2)
 ;
 
 ALTER TABLE `users`

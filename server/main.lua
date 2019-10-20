@@ -99,7 +99,7 @@ if Config.EarlyRespawnFine then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local fineAmount = Config.EarlyRespawnFineAmount
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_bleedout_fine_msg', ESX.Math.GroupDigits(fineAmount)))
+		xPlayer.showNotification(_U('respawn_bleedout_fine_msg', ESX.Math.GroupDigits(fineAmount)))
 		xPlayer.removeAccountMoney('bank', fineAmount)
 	end)
 end
@@ -122,7 +122,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 	else
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
-	
+
 			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
 				['@owner'] = xPlayer.identifier,
 				['@vehicle'] = json.encode(vehicleProps),
@@ -205,14 +205,14 @@ AddEventHandler('esx_ambulancejob:removeItem', function(item)
 	xPlayer.removeInventoryItem(item, 1)
 
 	if item == 'bandage' then
-		TriggerClientEvent('esx:showNotification', _source, _U('used_bandage'))
+		xPlayer.showNotification(_U('used_bandage'))
 	elseif item == 'medikit' then
-		TriggerClientEvent('esx:showNotification', _source, _U('used_medikit'))
+		xPlayer.showNotification(_U('used_medikit'))
 	end
 end)
 
 RegisterServerEvent('esx_ambulancejob:giveItem')
-AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
+AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name ~= 'ambulance' then
@@ -223,17 +223,10 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 		return
 	end
 
-	local xItem = xPlayer.getInventoryItem(itemName)
-	local count = 1
-
-	if xItem.limit ~= -1 then
-		count = xItem.limit - xItem.count
-	end
-
-	if xItem.count < xItem.limit then
-		xPlayer.addInventoryItem(itemName, count)
+	if xPlayer.canCarryItem(itemName, amount) then
+		xPlayer.addInventoryItem(itemName, amount)
 	else
-		TriggerClientEvent('esx:showNotification', source, _U('max_item'))
+		xPlayer.showNotification(_U('max_item'))
 	end
 end)
 
@@ -254,7 +247,7 @@ ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('medikit', 1)
-	
+
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'medikit')
 
@@ -267,7 +260,7 @@ ESX.RegisterUsableItem('bandage', function(source)
 	if not playersHealing[source] then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('bandage', 1)
-	
+
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'bandage')
 
