@@ -1,9 +1,6 @@
-ESX                           = nil
-local HasAlreadyEnteredMarker = false
-local LastZone                = nil
-local CurrentAction           = nil
-local CurrentActionMsg        = ''
-local CurrentActionData       = {}
+ESX = nil
+local hasAlreadyEnteredMarker, lastZone
+local currentAction, currentActionMsg, currentActionData = nil, nil, {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -27,7 +24,7 @@ function OpenShopMenu(zone)
 
 		table.insert(elements, {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
-			label_real = item.label,
+			itemLabel = item.label,
 			item       = item.item,
 			price      = item.price,
 
@@ -40,19 +37,19 @@ function OpenShopMenu(zone)
 	end
 
 	ESX.UI.Menu.CloseAll()
+
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
 		title    = _U('shop'),
 		align    = 'bottom-right',
 		elements = elements
 	}, function(data, menu)
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title    = _U('shop_confirm', data.current.value, data.current.label_real, ESX.Math.GroupDigits(data.current.price * data.current.value)),
+			title    = _U('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
 			align    = 'bottom-right',
 			elements = {
 				{label = _U('no'),  value = 'no'},
 				{label = _U('yes'), value = 'yes'}
-			}
-		}, function(data2, menu2)
+		}}, function(data2, menu2)
 			if data2.current.value == 'yes' then
 				TriggerServerEvent('esx_shops:buyItem', data.current.item, data.current.value, zone)
 			end
@@ -64,20 +61,20 @@ function OpenShopMenu(zone)
 	end, function(data, menu)
 		menu.close()
 
-		CurrentAction     = 'shop_menu'
-		CurrentActionMsg  = _U('press_menu')
-		CurrentActionData = {zone = zone}
+		currentAction     = 'shop_menu'
+		currentActionMsg  = _U('press_menu')
+		currentActionData = {zone = zone}
 	end)
 end
 
 AddEventHandler('esx_shops:hasEnteredMarker', function(zone)
-	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = _U('press_menu')
-	CurrentActionData = {zone = zone}
+	currentAction     = 'shop_menu'
+	currentActionMsg  = _U('press_menu')
+	currentActionData = {zone = zone}
 end)
 
 AddEventHandler('esx_shops:hasExitedMarker', function(zone)
-	CurrentAction = nil
+	currentAction = nil
 	ESX.UI.Menu.CloseAll()
 end)
 
@@ -86,30 +83,15 @@ Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		for i = 1, #v.Pos, 1 do
 			local blip = AddBlipForCoord(v.Pos[i].x, v.Pos[i].y, v.Pos[i].z)
+
 			SetBlipSprite (blip, 52)
-			SetBlipDisplay(blip, 4)
 			SetBlipScale  (blip, 1.0)
 			SetBlipColour (blip, 2)
 			SetBlipAsShortRange(blip, true)
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString(_U('shops'))
+
+			BeginTextCommandSetBlipName('STRING')
+			AddTextComponentSubstringPlayerName(_U('shops'))
 			EndTextCommandSetBlipName(blip)
-		end
-	end
-end)
-
--- Display markers
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		local coords = GetEntityCoords(PlayerPedId())
-
-		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.DrawDistance) then
-					DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
-				end
-			end
 		end
 	end
 end)
@@ -118,27 +100,38 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local coords      = GetEntityCoords(PlayerPedId())
-		local isInMarker  = false
-		local currentZone = nil
+		local playerCoords = GetEntityCoords(PlayerPedId())
+		local isInMarker, letSleep, currentZone = false, false
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(GetDistanceBetweenCoords(coords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true) < Config.Size.x) then
-					isInMarker  = true
-					ShopItems   = v.Items
-					currentZone = k
-					LastZone    = k
+				local distance = GetDistanceBetweenCoords(playerCoords, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, true)
+
+				if distance < Config.DrawDistance then
+					DrawMarker(Config.Type, v.Pos[i].x, v.Pos[i].y, v.Pos[i].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, nil, nil, false)
+					letSleep = false
+
+					if distance < Config.Size.x then
+						isInMarker  = true
+						currentZone = k
+						lastZone    = k
+					end
 				end
 			end
 		end
-		if isInMarker and not HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = true
+
+		if isInMarker and not hasAlreadyEnteredMarker then
+			hasAlreadyEnteredMarker = true
 			TriggerEvent('esx_shops:hasEnteredMarker', currentZone)
 		end
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_shops:hasExitedMarker', LastZone)
+
+		if not isInMarker and hasAlreadyEnteredMarker then
+			hasAlreadyEnteredMarker = false
+			TriggerEvent('esx_shops:hasExitedMarker', lastZone)
+		end
+
+		if letSleep then
+			Citizen.Wait(500)
 		end
 	end
 end)
@@ -148,15 +141,15 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if CurrentAction ~= nil then
-			ESX.ShowHelpNotification(CurrentActionMsg)
+		if currentAction then
+			ESX.ShowHelpNotification(currentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
-				if CurrentAction == 'shop_menu' then
-					OpenShopMenu(CurrentActionData.zone)
+				if currentAction == 'shop_menu' then
+					OpenShopMenu(currentActionData.zone)
 				end
 
-				CurrentAction = nil
+				currentAction = nil
 			end
 		else
 			Citizen.Wait(500)
