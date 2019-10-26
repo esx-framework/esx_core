@@ -36,7 +36,6 @@ Locales['en'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
   -- Action Menu
-  ['hospital'] = 'hospital',
   ['revive_inprogress'] = 'a revive is in progress!',
   ['revive_complete'] = 'you have revived ~y~%s~s~',
   ['revive_complete_award'] = 'you have revived ~y~%s~s~ and earned ~g~$%s~s~!',
@@ -87,4 +86,7 @@ Locales['en'] = {
   ['not_enough_medikit'] = 'You do not have ~b~medikit~s~.',
   ['not_enough_bandage'] = 'You do not have ~b~bandage~s~.',
   ['healed'] = 'you have been treated.',
+  -- Blips
+  ['blip_hospital'] = 'hospital',
+  ['blip_dead'] = 'unconscious player',
 }

@@ -36,7 +36,6 @@ Locales['pl'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
   -- Action Menu
-  ['hospital'] = 'szpital',
   ['revive_inprogress'] = 'trwa wskrzeszenie',
   ['revive_complete'] = 'zostałeś wskrzeszony ~y~%s~s~',
   ['revive_complete_award'] = 'zostałeś wskrzeszony ~y~%s~s~ i zarobiono ~g~$%s~s~!',
@@ -87,4 +86,7 @@ Locales['pl'] = {
   ['not_enough_medikit'] = 'nie posiadasz ~b~apteczki~s~.',
   ['not_enough_bandage'] = 'nie posiadasz ~b~bandaża~s~.',
   ['healed'] = 'zostałeś potraktowany',
+  -- Blips
+  ['blip_hospital'] = 'szpital',
+  ['blip_dead'] = 'unconscious player',
 }

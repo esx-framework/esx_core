@@ -36,7 +36,6 @@ Locales['sv'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
   -- Action Menu
-  ['hospital'] = 'sjukhus',
   ['revive_inprogress'] = 'en återupplivning har börjats',
   ['revive_complete'] = 'du har återupplivat ~y~%s~s~, bra jobbat!',
   ['revive_complete_award'] = 'du har återupplivat ~y~%s~s~ och tjärnat ~g~%s SEK~s~ för dina tjänster, bra jobbat!',
@@ -87,4 +86,7 @@ Locales['sv'] = {
   ['not_enough_medikit'] = 'du har inget ~b~Medecinkit~s~.',
   ['not_enough_bandage'] = 'du har inget ~b~Bandage~s~.',
   ['healed'] = 'dina skador har blivit behandlade.',
+  -- Blips
+  ['blip_hospital'] = 'sjukhus',
+  ['blip_dead'] = 'medvetslös människa',
 }

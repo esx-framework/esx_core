@@ -36,7 +36,6 @@ Locales['cs'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
   -- Action Menu
-  ['hospital'] = 'nemocnice',
   ['revive_inprogress'] = 'probíhá oživení!',
   ['revive_complete'] = 'oživili jste ~y~%s~s~',
   ['revive_complete_award'] = 'oživili jste ~y~%s~s~ a dostali jste ~g~$%s~s~!',
@@ -87,4 +86,7 @@ Locales['cs'] = {
   ['not_enough_medikit'] = 'nemáte ~b~medikit~s~.',
   ['not_enough_bandage'] = 'nemáte~b~bandage~s~.',
   ['healed'] = 'byli jste ošetřeni.',
+  -- Blips
+  ['blip_hospital'] = 'nemocnice',
+  ['blip_dead'] = 'unconscious player',
 }

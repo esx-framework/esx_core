@@ -1,6 +1,6 @@
 local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
 local HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum
-local IsBusy = false
+local isBusy = false
 local spawnedVehicles, isInShopMenu = {}, false
 
 function OpenAmbulanceActionsMenu()
@@ -53,7 +53,7 @@ function OpenMobileAmbulanceActionsMenu()
 					{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'}
 				}
 			}, function(data, menu)
-				if IsBusy then return end
+				if isBusy then return end
 
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
@@ -63,7 +63,7 @@ function OpenMobileAmbulanceActionsMenu()
 
 					if data.current.value == 'revive' then
 
-						IsBusy = true
+						isBusy = true
 
 						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
 							if quantity > 0 then
@@ -100,7 +100,7 @@ function OpenMobileAmbulanceActionsMenu()
 								ESX.ShowNotification(_U('not_enough_medikit'))
 							end
 
-							IsBusy = false
+							isBusy = false
 
 						end, 'medikit')
 
@@ -114,7 +114,7 @@ function OpenMobileAmbulanceActionsMenu()
 								if health > 0 then
 									local playerPed = PlayerPedId()
 
-									IsBusy = true
+									isBusy = true
 									ESX.ShowNotification(_U('heal_inprogress'))
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 									Citizen.Wait(10000)
@@ -123,7 +123,7 @@ function OpenMobileAmbulanceActionsMenu()
 									TriggerServerEvent('esx_ambulancejob:removeItem', 'bandage')
 									TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'small')
 									ESX.ShowNotification(_U('heal_complete', GetPlayerName(closestPlayer)))
-									IsBusy = false
+									isBusy = false
 								else
 									ESX.ShowNotification(_U('player_not_conscious'))
 								end
@@ -142,7 +142,7 @@ function OpenMobileAmbulanceActionsMenu()
 								if health > 0 then
 									local playerPed = PlayerPedId()
 
-									IsBusy = true
+									isBusy = true
 									ESX.ShowNotification(_U('heal_inprogress'))
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 									Citizen.Wait(10000)
@@ -151,7 +151,7 @@ function OpenMobileAmbulanceActionsMenu()
 									TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
 									TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'big')
 									ESX.ShowNotification(_U('heal_complete', GetPlayerName(closestPlayer)))
-									IsBusy = false
+									isBusy = false
 								else
 									ESX.ShowNotification(_U('player_not_conscious'))
 								end
@@ -379,7 +379,7 @@ Citizen.CreateThread(function()
 
 			end
 
-		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead then
+		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not isDead then
 			if IsControlJustReleased(0, Keys['F6']) then
 				OpenMobileAmbulanceActionsMenu()
 			end
@@ -566,10 +566,10 @@ function StoreNearbyVehicle(playerCoords)
 			local vehicleId = vehiclePlates[foundNum]
 			local attempts = 0
 			ESX.Game.DeleteVehicle(vehicleId.vehicle)
-			IsBusy = true
+			isBusy = true
 
 			Citizen.CreateThread(function()
-				while IsBusy do
+				while isBusy do
 					Citizen.Wait(0)
 					drawLoadingText(_U('garage_storing'), 255, 255, 255, 255)
 				end
@@ -596,7 +596,7 @@ function StoreNearbyVehicle(playerCoords)
 				end
 			end
 
-			IsBusy = false
+			isBusy = false
 			ESX.ShowNotification(_U('garage_has_stored'))
 		else
 			ESX.ShowNotification(_U('garage_has_notstored'))
@@ -774,7 +774,7 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 			menu2.close()
 		end)
 
-		end, function(data, menu)
+	end, function(data, menu)
 		isInShopMenu = false
 		ESX.UI.Menu.CloseAll()
 
@@ -849,7 +849,6 @@ function drawLoadingText(text, red, green, blue, alpha)
 	SetTextScale(0.0, 0.5)
 	SetTextColour(red, green, blue, alpha)
 	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	SetTextOutline()
 	SetTextCentre(true)

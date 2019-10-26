@@ -10,9 +10,9 @@ Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local FirstSpawn, PlayerLoaded = true, false
+local firstSpawn, PlayerLoaded = true, false
 
-IsDead = false
+isDead = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -41,14 +41,14 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 AddEventHandler('playerSpawned', function()
-	IsDead = false
+	isDead = false
 
-	if FirstSpawn then
+	if firstSpawn then
 		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
-		FirstSpawn = false
+		firstSpawn = false
 
-		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
-			if isDead and Config.AntiCombatLog then
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+			if shouldDie and Config.AntiCombatLog then
 				while not PlayerLoaded do
 					Citizen.Wait(1000)
 				end
@@ -57,6 +57,8 @@ AddEventHandler('playerSpawned', function()
 				RemoveItemsAfterRPDeath()
 			end
 		end)
+	else
+		TriggerServerEvent('esx_ambulancejob:onPlayerSpawn')
 	end
 end)
 
@@ -71,7 +73,7 @@ Citizen.CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentSubstringPlayerName(_U('hospital'))
+		AddTextComponentSubstringPlayerName(_U('blip_hospital'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
@@ -81,7 +83,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if IsDead then
+		if isDead then
 			DisableAllControlActions(0)
 			EnableControlAction(0, Keys['G'], true)
 			EnableControlAction(0, Keys['T'], true)
@@ -93,7 +95,7 @@ Citizen.CreateThread(function()
 end)
 
 function OnPlayerDeath()
-	IsDead = true
+	isDead = true
 	ESX.UI.Menu.CloseAll()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
 
@@ -147,7 +149,7 @@ function StartDistressSignal()
 	Citizen.CreateThread(function()
 		local timer = Config.BleedoutTimer
 
-		while timer > 0 and IsDead do
+		while timer > 0 and isDead do
 			Citizen.Wait(2)
 			timer = timer - 30
 
@@ -155,7 +157,6 @@ function StartDistressSignal()
 			SetTextScale(0.45, 0.45)
 			SetTextColour(185, 185, 185, 255)
 			SetTextDropshadow(0, 0, 0, 0, 255)
-			SetTextEdge(1, 0, 0, 0, 255)
 			SetTextDropShadow()
 			SetTextOutline()
 			BeginTextCommandDisplayText('STRING')
@@ -167,7 +168,7 @@ function StartDistressSignal()
 
 				Citizen.CreateThread(function()
 					Citizen.Wait(1000 * 60 * 5)
-					if IsDead then
+					if isDead then
 						StartDistressSignal()
 					end
 				end)
@@ -195,7 +196,6 @@ function DrawGenericTextThisFrame()
 	SetTextScale(0.0, 0.5)
 	SetTextColour(255, 255, 255, 255)
 	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextEdge(1, 0, 0, 0, 255)
 	SetTextDropShadow()
 	SetTextOutline()
 	SetTextCentre(true)
@@ -229,7 +229,7 @@ function StartDeathTimer()
 
 	Citizen.CreateThread(function()
 		-- early respawn timer
-		while earlySpawnTimer > 0 and IsDead do
+		while earlySpawnTimer > 0 and isDead do
 			Citizen.Wait(1000)
 
 			if earlySpawnTimer > 0 then
@@ -238,7 +238,7 @@ function StartDeathTimer()
 		end
 
 		-- bleedout timer
-		while bleedoutTimer > 0 and IsDead do
+		while bleedoutTimer > 0 and isDead do
 			Citizen.Wait(1000)
 
 			if bleedoutTimer > 0 then
@@ -251,7 +251,7 @@ function StartDeathTimer()
 		local text, timeHeld
 
 		-- early respawn timer
-		while earlySpawnTimer > 0 and IsDead do
+		while earlySpawnTimer > 0 and isDead do
 			Citizen.Wait(0)
 			text = _U('respawn_available_in', secondsToClock(earlySpawnTimer))
 
@@ -263,7 +263,7 @@ function StartDeathTimer()
 		end
 
 		-- bleedout timer
-		while bleedoutTimer > 0 and IsDead do
+		while bleedoutTimer > 0 and isDead do
 			Citizen.Wait(0)
 			text = _U('respawn_bleedout_in', secondsToClock(bleedoutTimer))
 
@@ -297,7 +297,7 @@ function StartDeathTimer()
 			DrawText(0.5, 0.8)
 		end
 			
-		if bleedoutTimer < 1 and IsDead then
+		if bleedoutTimer < 1 and isDead then
 			RemoveItemsAfterRPDeath()
 		end
 	end)

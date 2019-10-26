@@ -36,7 +36,6 @@ Locales['fr'] = {
   ['confirm_no'] = 'non',
   ['confirm_yes'] = 'oui',
   -- Action Menu
-  ['hospital'] = 'hôpital',
   ['revive_inprogress'] = 'réanimation en cours',
   ['revive_complete'] = 'vous avez réanimé ~y~%s~s~',
   ['revive_complete_award'] = 'vous avez réanimé ~y~%s~s~, ~g~$%s~s~',
@@ -49,7 +48,7 @@ Locales['fr'] = {
   -- Boss Menu
   ['boss_actions'] = 'action Patron',
   -- Misc
-  ['invalid_amount'] = '~r~montant invalide',
+  ['invalid_amount'] = '~r~montant invalide~s~',
   ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
   ['deposit_amount'] = 'montant du dépôt',
   ['money_withdraw'] = 'montant du retrait',
@@ -87,4 +86,7 @@ Locales['fr'] = {
   ['not_enough_medikit'] = 'vous n\'avez pas de ~b~kit de soin~s~.',
   ['not_enough_bandage'] = 'vous n\'avez pas de ~b~bandage~s~.',
   ['healed'] = 'vous avez été soigné.',
+  -- Blips
+  ['blip_hospital'] = 'hôpital',
+  ['blip_dead'] = 'unconscious player',
 }

@@ -36,7 +36,6 @@ Locales['fi'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
   -- Action Menu
-  ['hospital'] = 'sairaala',
   ['revive_inprogress'] = 'elvytys on menossa!',
   ['revive_complete'] = 'sinä elvytit henkilön ~y~%s~s~',
   ['revive_complete_award'] = 'sinä elvytit henkilön ~y~%s~s~ ja tienasit ~g~$%s~s~!',
@@ -87,4 +86,7 @@ Locales['fi'] = {
   ['not_enough_medikit'] = 'ei tarpeeksi ~b~ensiapupakkauksia~s~.',
   ['not_enough_bandage'] = 'ei tarpeeksi ~b~sideharsoja~s~.',
   ['healed'] = 'sinua parannettiin',
+  -- Blips
+  ['blip_hospital'] = 'sairaala',
+  ['blip_dead'] = 'unconscious player',
 }
