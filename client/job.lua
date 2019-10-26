@@ -78,7 +78,7 @@ function OpenMobileAmbulanceActionsMenu()
 
 									for i=1, 15, 1 do
 										Citizen.Wait(900)
-								
+
 										ESX.Streaming.RequestAnimDict(lib, function()
 											TaskPlayAnim(PlayerPedId(), lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 										end)
@@ -755,11 +755,11 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 
 						isInShopMenu = false
 						ESX.UI.Menu.CloseAll()
-				
+
 						DeleteSpawnedVehicles()
 						FreezeEntityPosition(playerPed, false)
 						SetEntityVisible(playerPed, true)
-				
+
 						ESX.Game.Teleport(playerPed, restoreCoords)
 					else
 						ESX.ShowNotification(_U('vehicleshop_money'))
@@ -865,11 +865,11 @@ function OpenPharmacyMenu()
 		title    = _U('pharmacy_menu_title'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('pharmacy_take', _U('medikit')), value = 'medikit'},
-			{label = _U('pharmacy_take', _U('bandage')), value = 'bandage'}
+			{label = _U('pharmacy_take', _U('medikit')), item = 'medikit', type = 'slider', value = 1, min = 1, max = 100},
+			{label = _U('pharmacy_take', _U('bandage')), item = 'bandage', type = 'slider', value = 1, min = 1, max = 100}
 		}
 	}, function(data, menu)
-		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.value)
+		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.item, data.current.value)
 	end, function(data, menu)
 		menu.close()
 	end)
