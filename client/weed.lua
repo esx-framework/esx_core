@@ -2,17 +2,13 @@ local spawnedWeeds = 0
 local weedPlants = {}
 local isPickingUp, isProcessing = false, false
 
-
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(500)
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.CircleZones.WeedField.coords, true) < 50 then
 			SpawnWeedPlants()
-			Citizen.Wait(500)
-		else
-			Citizen.Wait(500)
 		end
 	end
 end)
@@ -28,8 +24,7 @@ Citizen.CreateThread(function()
 				ESX.ShowHelpNotification(_U('weed_processprompt'))
 			end
 
-			if IsControlJustReleased(0, Keys['E']) and not isProcessing then
-
+			if IsControlJustReleased(0, 38) and not isProcessing then
 				if Config.LicenseEnable then
 					ESX.TriggerServerCallback('esx_license:checkLicense', function(hasProcessingLicense)
 						if hasProcessingLicense then
@@ -41,7 +36,6 @@ Citizen.CreateThread(function()
 				else
 					ProcessWeed()
 				end
-
 			end
 		else
 			Citizen.Wait(500)
@@ -74,6 +68,7 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 		local nearbyObject, nearbyID
@@ -85,16 +80,14 @@ Citizen.CreateThread(function()
 		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) then
-
 			if not isPickingUp then
 				ESX.ShowHelpNotification(_U('weed_pickupprompt'))
 			end
 
-			if IsControlJustReleased(0, Keys['E']) and not isPickingUp then
+			if IsControlJustReleased(0, 38) and not isPickingUp then
 				isPickingUp = true
 
 				ESX.TriggerServerCallback('esx_drugs:canPickUp', function(canPickUp)
-
 					if canPickUp then
 						TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
@@ -113,16 +106,12 @@ Citizen.CreateThread(function()
 					end
 
 					isPickingUp = false
-
 				end, 'cannabis')
 			end
-
 		else
 			Citizen.Wait(500)
 		end
-
 	end
-
 end)
 
 AddEventHandler('onResourceStop', function(resource)

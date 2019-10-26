@@ -15,7 +15,7 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	end
 
 	if xItem.count < amount then
-		TriggerClientEvent('esx:showNotification', source, _U('dealer_notenough'))
+		xPlayer.showNotification(_U('dealer_notenough'))
 		return
 	end
 
@@ -28,26 +28,25 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	end
 
 	xPlayer.removeInventoryItem(xItem.name, amount)
-
-	TriggerClientEvent('esx:showNotification', source, _U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
+	xPlayer.showNotification(_U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
 end)
 
 ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseName)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local license = Config.LicensePrices[licenseName]
 
-	if license == nil then
-		print(('esx_drugs: %s attempted to buy an invalid license!'):format(xPlayer.identifier))
-		cb(false)
-	end
-
-	if xPlayer.getMoney() >= license.price then
-		xPlayer.removeMoney(license.price)
-
-		TriggerEvent('esx_license:addLicense', source, licenseName, function()
-			cb(true)
-		end)
+	if license then
+		if xPlayer.getMoney() >= license.price then
+			xPlayer.removeMoney(license.price)
+	
+			TriggerEvent('esx_license:addLicense', source, licenseName, function()
+				cb(true)
+			end)
+		else
+			cb(false)
+		end
 	else
+		print(('esx_drugs: %s attempted to buy an invalid license!'):format(xPlayer.identifier))
 		cb(false)
 	end
 end)
@@ -55,24 +54,17 @@ end)
 RegisterServerEvent('esx_drugs:pickedUpCannabis')
 AddEventHandler('esx_drugs:pickedUpCannabis', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local xItem = xPlayer.getInventoryItem('cannabis')
 
-	if xItem.limit ~= -1 and (xItem.count + 1) > xItem.limit then
-		TriggerClientEvent('esx:showNotification', _source, _U('weed_inventoryfull'))
+	if xPlayer.canCarryItem('cannabis', 1) then
+		xPlayer.showNotification(_U('weed_inventoryfull'))
 	else
-		xPlayer.addInventoryItem(xItem.name, 1)
+		xPlayer.addInventoryItem('cannabis', 1)
 	end
 end)
 
 ESX.RegisterServerCallback('esx_drugs:canPickUp', function(source, cb, item)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local xItem = xPlayer.getInventoryItem(item)
-
-	if xItem.limit ~= -1 and xItem.count >= xItem.limit then
-		cb(false)
-	else
-		cb(true)
-	end
+	cb(xPlayer.canCarryItem(item, 1))
 end)
 
 RegisterServerEvent('esx_drugs:processCannabis')
@@ -82,17 +74,17 @@ AddEventHandler('esx_drugs:processCannabis', function()
 
 		playersProcessingCannabis[_source] = ESX.SetTimeout(Config.Delays.WeedProcessing, function()
 			local xPlayer = ESX.GetPlayerFromId(_source)
-			local xCannabis, xMarijuana = xPlayer.getInventoryItem('cannabis'), xPlayer.getInventoryItem('marijuana')
+			local xCannabis = xPlayer.getInventoryItem('cannabis')
 
-			if xMarijuana.limit ~= -1 and (xMarijuana.count + 1) >= xMarijuana.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('weed_processingfull'))
+			if not xPlayer.canCarryItem('marijuana', 1) then
+				xPlayer.showNotification(_U('weed_processingfull'))
 			elseif xCannabis.count < 3 then
-				TriggerClientEvent('esx:showNotification', _source, _U('weed_processingenough'))
+				xPlayer.showNotification(_U('weed_processingenough'))
 			else
 				xPlayer.removeInventoryItem('cannabis', 3)
 				xPlayer.addInventoryItem('marijuana', 1)
 
-				TriggerClientEvent('esx:showNotification', _source, _U('weed_processed'))
+				xPlayer.showNotification(_U('weed_processed'))
 			end
 
 			playersProcessingCannabis[_source] = nil
