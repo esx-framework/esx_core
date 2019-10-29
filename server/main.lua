@@ -56,9 +56,9 @@ AddEventHandler('esx_drugs:pickedUpCannabis', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.canCarryItem('cannabis', 1) then
-		xPlayer.showNotification(_U('weed_inventoryfull'))
-	else
 		xPlayer.addInventoryItem('cannabis', 1)
+	else
+		xPlayer.showNotification(_U('weed_inventoryfull'))
 	end
 end)
 
