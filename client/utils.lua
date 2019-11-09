@@ -49,7 +49,7 @@ function IsPlateTaken(plate)
 end
 
 function GetRandomNumber(length)
-	Citizen.Wait(1)
+	Citizen.Wait(0)
 	math.randomseed(GetGameTimer())
 	if length > 0 then
 		return GetRandomNumber(length - 1) .. NumberCharset[math.random(1, #NumberCharset)]
@@ -59,7 +59,7 @@ function GetRandomNumber(length)
 end
 
 function GetRandomLetter(length)
-	Citizen.Wait(1)
+	Citizen.Wait(0)
 	math.randomseed(GetGameTimer())
 	if length > 0 then
 		return GetRandomLetter(length - 1) .. Charset[math.random(1, #Charset)]
