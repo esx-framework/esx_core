@@ -55,7 +55,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwned', function(vehicleProps)
 		['@plate']   = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps)
 	}, function(rowsChanged)
-		TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', vehicleProps.plate))
+		xPlayer.showNotification(_U('vehicle_belongs', vehicleProps.plate))
 	end)
 end)
 
@@ -69,7 +69,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, ve
 		['@plate']   = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps)
 	}, function(rowsChanged)
-		TriggerClientEvent('esx:showNotification', playerId, _U('vehicle_belongs', vehicleProps.plate))
+		xPlayer.showNotification(_U('vehicle_belongs', vehicleProps.plate))
 	end)
 end)
 
@@ -152,7 +152,6 @@ RegisterServerEvent('esx_vehicleshop:getStockItem')
 AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function(inventory)
 		local item = inventory.getItem(itemName)
@@ -161,15 +160,15 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 		if count > 0 and item.count >= count then
 
 			-- can the player carry the said amount of x item?
-			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
-			else
+			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				TriggerClientEvent('esx:showNotification', _source, _U('have_withdrawn', count, item.label))
+				xPlayer.showNotification(_U('have_withdrawn', count, item.label))
+			else
+				xPlayer.showNotification(_U('player_cannot_hold'))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_in_society'))
+			xPlayer.showNotification(_U('not_enough_in_society'))
 		end
 	end)
 end)
@@ -185,9 +184,9 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 		if item.count >= 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			TriggerClientEvent('esx:showNotification', _source, _U('have_deposited', count, item.label))
+			xPlayer.showNotification(_U('have_deposited', count, item.label))
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('invalid_amount'))
+			xPlayer.showNotification(_U('invalid_amount'))
 		end
 	end)
 end)
@@ -280,7 +279,7 @@ AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 				['@id'] = id
 			})
 
-			TriggerClientEvent('esx:showNotification', _source, _U('vehicle_sold_for', vehicleModel, ESX.Math.GroupDigits(price)))
+			xPlayer.showNotification(_U('vehicle_sold_for', vehicleModel, ESX.Math.GroupDigits(price)))
 		else
 			print(('esx_vehicleshop: %s attempted selling an invalid vehicle!'):format(GetPlayerIdentifiers(_source)[1]))
 		end
@@ -462,7 +461,7 @@ function PayRent(d, h, m)
 
 			if xPlayer then -- message player if connected
 				xPlayer.removeAccountMoney('bank', result[i].rent_price)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
+				xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
 			else -- pay rent by updating SQL
 				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
 					['@bank'] = result[i].rent_price,
