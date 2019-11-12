@@ -37,7 +37,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyLicense', function(source, cb)
 			cb(true)
 		end)
 	else
-		TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
+		xPlayer.showNotification(_U('not_enough'))
 		cb(false)
 	end
 end)
@@ -51,7 +51,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 		cb(false)
 	else
 		if xPlayer.hasWeapon(weaponName) then
-			TriggerClientEvent('esx:showNotification', source, _U('already_owned'))
+			xPlayer.showNotification(_U('already_owned'))
 			cb(false)
 		else
 			if zone == 'BlackWeashop' then
@@ -61,7 +61,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	
 					cb(true)
 				else
-					TriggerClientEvent('esx:showNotification', source, _U('not_enough_black'))
+					xPlayer.showNotification(_U('not_enough_black'))
 					cb(false)
 				end
 			else
@@ -71,7 +71,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	
 					cb(true)
 				else
-					TriggerClientEvent('esx:showNotification', source, _U('not_enough'))
+					xPlayer.showNotification(_U('not_enough'))
 					cb(false)
 				end
 			end
