@@ -207,7 +207,6 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 
 	if type == 'item_standard' then
 
-		local sourceItem = xPlayer.getInventoryItem(item)
 
 		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 			local inventoryItem = inventory.getItem(item)
