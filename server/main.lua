@@ -38,10 +38,10 @@ AddEventHandler('esx_taxijob:success', function()
 		xPlayer.addMoney(playerMoney)
 		societyAccount.addMoney(societyMoney)
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('comp_earned', societyMoney, playerMoney))
+		xPlayer.showNotification(_U('comp_earned', societyMoney, playerMoney))
 	else
 		xPlayer.addMoney(total)
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_earned', total))
+		xPlayer.showNotification(_U('have_earned', total))
 	end
 
 end)
@@ -57,21 +57,20 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 	
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
 		local item = inventory.getItem(itemName)
-		local sourceItem = xPlayer.getInventoryItem(itemName)
 
 		-- is there enough in the society?
 		if count > 0 and item.count >= count then
 		
 			-- can the player carry the said amount of x item?
-			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('player_cannot_hold'))
-			else
+			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', count, item.label))
+				xPlayer.showNotification(_U('have_withdrawn', count, item.label))
+			else
+				xPlayer.showNotification(_U('player_cannot_hold'))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+			xPlayer.showNotification(_U('quantity_invalid'))
 		end
 	end)
 end)
@@ -97,9 +96,9 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 		if item.count >= 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', count, item.label))
+			xPlayer.showNotification(_U('have_deposited', count, item.label))
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+			xPlayer.showNotification(_U('quantity_invalid'))
 		end
 
 	end)
