@@ -20,11 +20,11 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('mechanic',4,'boss','Pomo',0,'{}','{}')
 ;
 
-INSERT INTO `items` (name, label, `limit`) VALUES
-	('gazbottle', 'Kaasupullo', 11),
-	('fixtool', 'Korjaustyökalut', 6),
-	('carotool', 'Työkalut', 4),
-	('blowpipe', 'Polttoleikkuri', 10),
-	('fixkit', 'Korjauskitti', 5),
+INSERT INTO `items` (name, label, weight) VALUES
+	('gazbottle', 'Kaasupullo', 2),
+	('fixtool', 'Korjaustyökalut', 2),
+	('carotool', 'Työkalut', 2),
+	('blowpipe', 'Polttoleikkuri', 2),
+	('fixkit', 'Korjauskitti', 3),
 	('carokit', 'Korikitti', 3)
 ;

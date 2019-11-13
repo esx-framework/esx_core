@@ -20,11 +20,11 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('mechanic',4,'boss','Boss',0,'{}','{}')
 ;
 
-INSERT INTO `items` (name, label, `limit`) VALUES
-	('gazbottle', 'Gas Bottle', 11),
-	('fixtool', 'Repair Tools', 6),
-	('carotool', 'Tools', 4),
-	('blowpipe', 'Blowtorch', 10),
-	('fixkit', 'Repair Kit', 5),
+INSERT INTO `items` (name, label, weight) VALUES
+	('gazbottle', 'Gas Bottle', 2),
+	('fixtool', 'Repair Tools', 2),
+	('carotool', 'Tools', 2),
+	('blowpipe', 'Blowtorch', 2),
+	('fixkit', 'Repair Kit', 3),
 	('carokit', 'Body Kit', 3)
 ;
