@@ -76,9 +76,9 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 			account.removeMoney(amount)
 			xPlayer.addMoney(amount)
 
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', ESX.Math.GroupDigits(amount)))
+			xPlayer.showNotification(_U('have_withdrawn', ESX.Math.GroupDigits(amount)))
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+			xPlayer.showNotification(_U('invalid_amount'))
 		end
 	end)
 end)
@@ -100,9 +100,9 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 			account.addMoney(amount)
 		end)
 
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', ESX.Math.GroupDigits(amount)))
+		xPlayer.showNotification(_U('have_deposited', ESX.Math.GroupDigits(amount)))
 	else
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+		xPlayer.showNotification(_U('invalid_amount'))
 	end
 end)
 
@@ -125,10 +125,10 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 			['@society']    = society,
 			['@amount']     = amount
 		}, function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have', ESX.Math.GroupDigits(amount)))
+			xPlayer.showNotification(_U('you_have', ESX.Math.GroupDigits(amount)))
 		end)
 	else
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+		xPlayer.showNotification(_U('invalid_amount'))
 	end
 
 end)
@@ -253,11 +253,11 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 			xTarget.setJob(job, grade)
 
 			if type == 'hire' then
-				TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_hired', job))
+				xPlayer.showNotification(_U('you_have_been_hired', job))
 			elseif type == 'promote' then
-				TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_promoted'))
+				xPlayer.showNotification(_U('you_have_been_promoted'))
 			elseif type == 'fire' then
-				TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_fired', xTarget.getJob().label))
+				xPlayer.showNotification(_U('you_have_been_fired', xTarget.getJob().label))
 			end
 
 			cb()
@@ -364,7 +364,7 @@ function WashMoneyCRON(d, h, m)
 
 			-- send notification if player is online
 			if xPlayer then
-				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
+				xPlayer.showNotification(_U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
 			end
 
 			MySQL.Async.execute('DELETE FROM society_moneywash WHERE id = @id', {
