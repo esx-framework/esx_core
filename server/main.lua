@@ -26,9 +26,9 @@ local function Work(source, item)
 				end
 
 				if item[i].name ~= _U('delivery') and itemQtty >= item[i].max then
-					TriggerClientEvent('esx:showNotification', source, _U('max_limit', item[i].name))
+					xPlayer.showNotification(_U('max_limit', item[i].name))
 				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
-					TriggerClientEvent('esx:showNotification', source, _U('not_enough', item[1].requires_name))
+					xPlayer.showNotification(_U('not_enough', item[1].requires_name))
 				else
 					if item[i].name ~= _U('delivery') then
 						-- Chances to drop the item
@@ -84,7 +84,7 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 			account.addMoney(cautionAmount)
 		end)
 
-		TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
+		xPlayer.showNotification(_U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
 		TriggerClientEvent('esx_jobs:spawnJobVehicle', source, spawnPoint, vehicle)
 	elseif cautionType == "give_back" then
 
@@ -99,7 +99,7 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 
 			xPlayer.addAccountMoney('bank', toGive)
 			account.removeMoney(toGive)
-			TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
+			xPlayer.showNotification(_U('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
 		end)
 	end
 end)
