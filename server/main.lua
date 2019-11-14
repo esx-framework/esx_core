@@ -24,19 +24,16 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 		-- Get accounts
 		table.insert(tasks, function(cb)
-			MySQL.Async.fetchAll('SELECT * FROM user_accounts WHERE identifier = @identifier', {
+			MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(accounts)
-				for i=1, #Config.Accounts, 1 do
-					for j=1, #accounts, 1 do
-						if accounts[j].name == Config.Accounts[i] then
-							table.insert(userData.accounts, {
-								name  = accounts[j].name,
-								money = accounts[j].money,
-								label = Config.AccountLabels[accounts[j].name]
-							})
-							break
-						end
+				for k,v in ipairs(accounts) do
+					if Config.Accounts[v.name] then
+						table.insert(userData.accounts, {
+							name  = v.name,
+							money = v.money,
+							label = Config.AccountLabels[v.name]
+						})
 					end
 				end
 
@@ -50,12 +47,14 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			MySQL.Async.fetchAll('SELECT item, count FROM user_inventory WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(inventory)
-				local tasks2 = {}
+				local tasks2, foundItems = {}, {}
 
 				for k,v in ipairs(inventory) do
 					local item = ESX.Items[v.item]
 
 					if item then
+						foundItems[v.item] = true
+
 						table.insert(userData.inventory, {
 							name = v.item,
 							count = v.count,
@@ -70,25 +69,16 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					end
 				end
 
-				for k,v in pairs(ESX.Items) do
-					local found = false
-
-					for j=1, #userData.inventory do
-						if userData.inventory[j].name == k then
-							found = true
-							break
-						end
-					end
-
-					if not found then
+				for itemName,item in pairs(ESX.Items) do
+					if not foundItems[itemName] then
 						table.insert(userData.inventory, {
-							name = k,
+							name = itemName,
 							count = 0,
-							label = ESX.Items[k].label,
-							weight = ESX.Items[k].weight,
-							usable = ESX.UsableItemsCallbacks[k] ~= nil,
-							rare = ESX.Items[k].rare,
-							canRemove = ESX.Items[k].canRemove
+							label = item.label,
+							weight = item.weight,
+							usable = ESX.UsableItemsCallbacks[itemName] ~= nil,
+							rare = item.rare,
+							canRemove = item.canRemove
 						})
 
 						local scope = function(item, identifier)
@@ -103,9 +93,8 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 							end)
 						end
 
-						scope(k, player.getIdentifier())
+						scope(itemName, player.getIdentifier())
 					end
-
 				end
 
 				Async.parallelLimit(tasks2, 5, function(results) end)
