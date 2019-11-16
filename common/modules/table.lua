@@ -11,6 +11,12 @@ function ESX.Table.SizeOf(t)
 	return count
 end
 
+function ESX.Table.Set(t)
+	local set = {}
+	for k,v in ipairs(t) do set[v] = true end
+	return set
+end
+
 function ESX.Table.IndexOf(t, value)
 	for i=1, #t, 1 do
 		if t[i] == value then

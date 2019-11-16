@@ -27,8 +27,9 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(accounts)
+				local validAccounts = ESX.Table.Set(Config.Accounts)
 				for k,v in ipairs(accounts) do
-					if Config.Accounts[v.name] then
+					if validAccounts[v.name] then
 						table.insert(userData.accounts, {
 							name  = v.name,
 							money = v.money,
