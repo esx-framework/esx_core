@@ -1,11 +1,4 @@
-local Keys = {
-	["ESC"] = 322, ["BACKSPACE"] = 177, ["E"] = 38, ["ENTER"] = 18,	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173
-}
-
-local menuIsShowed = false
-local hasAlreadyEnteredMarker = false
-local isInMarker = false
-
+local menuIsShowed, hasAlreadyEnteredMarker, isInMarker = false, false, false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -99,7 +92,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		if IsControlJustReleased(0, Keys['E']) and isInMarker and not menuIsShowed then
+		if IsControlJustReleased(0, 38) and isInMarker and not menuIsShowed then
 			ESX.UI.Menu.CloseAll()
 			ShowJobListingMenu()
 		end
