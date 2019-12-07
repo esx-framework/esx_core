@@ -6,6 +6,7 @@ Locales['en'] = {
   ['job_wear']                  = 'workers clothes',
   ['bank_deposit_returned']     = 'a security deposit of ~g~$%s~s~ was returned to you.',
   ['bank_deposit_taken']        = 'a security deposit of ~r~$%s~s~ was taken from you.',
+  ['caution_afford']            = 'you cannot afford the caution of ~g~$%s~s~',
   ['foot_work']                 = 'you have to be on foot to be able to work.',
   ['next_point']                = 'go to the next step after completing this one.',
   ['not_your_vehicle']          = 'you are not the driver of this vehicle.',

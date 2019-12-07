@@ -1,47 +1,46 @@
-Config.Jobs.lumberjack = {
+Config.Jobs.slaughterer = {
 
 	BlipInfos = {
-		Sprite = 237,
-		Color = 4
+		Sprite = 256,
+		Color = 5
 	},
 
 	Vehicles = {
 
 		Truck = {
 			Spawner = 1,
-			Hash = 'phantom',
-			Trailer = 'trailers',
+			Hash = 'benson',
+			Trailer = 'none',
 			HasCaution = true
 		}
-
 	},
 
 	Zones = {
 
 		CloakRoom = {
-			Pos = {x = 1200.63, y = -1276.87, z = 34.38},
+			Pos = {x = -1071.13, y = -2003.78, z = 14.78},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('lj_locker_room'),
+			Name = _U('s_slaughter_locker'),
 			Type = 'cloakroom',
 			Hint = _U('cloak_change')
 		},
 
-		Wood = {
-			Pos = {x = -534.32, y = 5373.79, z = 69.50},
+		AliveChicken = {
+			Pos = {x = -62.90, y = 6241.46, z = 30.09},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('lj_mapblip'),
+			Name = _U('s_hen'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_wood'),
-					db_name = 'wood',
-					time = 3000,
+					name = _U('s_alive_chicken'),
+					db_name = 'alive_chicken',
+					time = 3,
 					max = 20,
 					add = 1,
 					remove = 1,
@@ -50,59 +49,59 @@ Config.Jobs.lumberjack = {
 					drop = 100
 				}
 			},
-			Hint = _U('lj_pickup')
+			Hint = _U('s_catch_hen')
 		},
 
-		CuttedWood = {
-			Pos = {x = -552.21, y = 5326.90, z = 72.59},
+		SlaughterHouse = {
+			Pos = {x = -77.99, y = 6229.06, z = 30.09},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('lj_cutwood'),
+			Name = _U('s_slaughtered'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_cutwood'),
-					db_name = 'cutted_wood',
-					time = 5000,
+					name = _U('s_slaughtered_chicken'),
+					db_name = 'slaughtered_chicken',
+					time = 5,
 					max = 20,
 					add = 1,
 					remove = 1,
-					requires = 'wood',
-					requires_name = _U('lj_wood'),
+					requires = 'alive_chicken',
+					requires_name = _U('s_alive_chicken'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_cutwood_button')
+			Hint = _U('s_chop_animal')
 		},
 
-		Planks = {
-			Pos = {x = -501.38, y = 5280.53, z = 79.61},
+		Packaging = {
+			Pos = {x = -101.97, y = 6208.79, z = 30.02},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('lj_board'),
+			Name = _U('s_package'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_planks'),
-					db_name = 'packaged_plank',
-					time = 4000,
+					name = _U('s_packagechicken'),
+					db_name = 'packaged_chicken',
+					time = 4,
 					max = 100,
 					add = 5,
 					remove = 1,
-					requires = 'cutted_wood',
-					requires_name = _U('lj_cutwood'),
+					requires = 'slaughtered_chicken',
+					requires_name = _U('s_unpackaged'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_pick_boards')
+			Hint = _U('s_unpackaged_button')
 		},
 
 		VehicleSpawner = {
-			Pos = {x = 1191.96, y = -1261.77, z = 34.17},
+			Pos = {x = -1042.94, y = -2023.25, z = 12.16},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
@@ -115,18 +114,18 @@ Config.Jobs.lumberjack = {
 		},
 
 		VehicleSpawnPoint = {
-			Pos = {x = 1194.62, y = -1286.95, z = 34.12},
+			Pos = {x = -1048.85, y = -2025.32, z = 12.16},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
 			Name = _U('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
-			Heading = 264.40
+			Heading = 130.1
 		},
 
 		VehicleDeletePoint = {
-			Pos = {x = 1216.89, y = -1229.23, z = 34.40},
+			Pos = {x = -1061.51, y = -2008.35, z = 12.16},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
@@ -141,9 +140,9 @@ Config.Jobs.lumberjack = {
 		},
 
 		Delivery = {
-			Pos = {x = 1201.35, y = -1327.51, z = 34.22},
+			Pos = {x = -596.15, y = -889.32, z = 24.50},
 			Color = {r = 204, g = 204, b = 0},
-			Size = {x = 5.0, y = 5.0, z = 3.0},
+			Size = {x = 5.0, y = 5.0, z = 1.0},
 			Marker = 1,
 			Blip = true,
 			Name = _U('delivery_point'),
@@ -152,17 +151,16 @@ Config.Jobs.lumberjack = {
 			Item = {
 				{
 					name = _U('delivery'),
-					time = 500,
+					time = 0.5,
 					remove = 1,
 					max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
-					price = 13,
-					requires = 'packaged_plank',
-					requires_name = _U('lj_planks'),
+					price = 23,
+					requires = 'packaged_chicken',
+					requires_name = _U('s_packagechicken'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_deliver_button')
+			Hint = _U('s_deliver')
 		}
-
 	}
 }

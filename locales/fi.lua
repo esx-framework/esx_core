@@ -6,6 +6,7 @@ Locales['fi'] = {
   ['job_wear']                  = 'työvaatteet',
   ['bank_deposit_returned']     = 'vakuuden summa ~g~€%s~s~ palautettiin sinulle.',
   ['bank_deposit_taken']        = 'vakuuden summa ~r~€%s~s~ otettiin sinulta.',
+  ['caution_afford']            = 'you cannot afford the caution of ~g~$%s~s~',
   ['foot_work']                 = 'sinun täytyy olla jalan, jotta voit työskennellä',
   ['next_point']                = 'mene seuraavaan pisteeseen kun olet valmis täällä',
   ['not_your_vehicle']          = 'tämä ei ole sinun ajoneuvo tai et ole sen kuski',

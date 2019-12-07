@@ -1,5 +1,5 @@
-local menuIsShowed, hintIsShowed, hintToDisplay, hasAlreadyEnteredMarker, isInMarker, onDuty, vehicleObjInCaseofDrop, vehicleInCaseofDrop, vehicleMaxHealth
-local PlayerData, Blips, JobBlips, myPlate,  spawner = {}, {}, {}, {}, 0
+local menuIsShowed, hintIsShowed, hintToDisplay, hasAlreadyEnteredMarker, isInMarker, vehicleObjInCaseofDrop, vehicleInCaseofDrop, vehicleMaxHealth
+local PlayerData, Blips, JobBlips, myPlate, onDuty, spawner = {}, {}, {}, {}, false, 0
 
 ESX = nil
 
@@ -55,7 +55,7 @@ function OpenMenu()
 	end)
 end
 
-AddEventHandler('esx_jobs:action', function(job, zone)
+AddEventHandler('esx_jobs:action', function(job, zone, zoneIndex)
 	menuIsShowed = true
 	if zone.Type == 'cloakroom' then
 		OpenMenu()
@@ -65,7 +65,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 		local playerPed = PlayerPedId()
 
 		if IsPedOnFoot(playerPed) then
-			TriggerServerEvent('esx_jobs:startWork', zone.Item)
+			TriggerServerEvent('esx_jobs:startWork', zoneIndex)
 		else
 			ESX.ShowNotification(_U('foot_work'))
 		end
@@ -150,7 +150,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 
 		hintToDisplay = nil
 		hintIsShowed = false
-		TriggerServerEvent('esx_jobs:startWork', zone.Item)
+		TriggerServerEvent('esx_jobs:startWork', zoneIndex)
 	end
 
 	--nextStep(zone.GPS)
@@ -195,28 +195,25 @@ function deleteBlips()
 end
 
 function refreshBlips()
-	local zones = {}
-	local blipInfo = {}
-
 	if PlayerData.job then
-		for jobKey,jobValues in pairs(Config.Jobs) do
+		local jobObject = Config.Jobs[PlayerData.job.name]
 
-			if jobKey == PlayerData.job.name then
-				for zoneKey,zoneValues in pairs(jobValues.Zones) do
+		if jobObject then
+			for k,v in pairs(jobObject.Zones) do
+				if v.Blip then
+					local blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
 
-					if zoneValues.Blip then
-						local blip = AddBlipForCoord(zoneValues.Pos.x, zoneValues.Pos.y, zoneValues.Pos.z)
-						SetBlipSprite  (blip, jobValues.BlipInfos.Sprite)
-						SetBlipScale   (blip, 1.2)
-						SetBlipCategory(blip, 3)
-						SetBlipColour  (blip, jobValues.BlipInfos.Color)
-						SetBlipAsShortRange(blip, true)
+					SetBlipSprite  (blip, jobObject.BlipInfos.Sprite)
+					SetBlipScale   (blip, 1.2)
+					SetBlipCategory(blip, 3)
+					SetBlipColour  (blip, jobObject.BlipInfos.Color)
+					SetBlipAsShortRange(blip, true)
 
-						BeginTextCommandSetBlipName('STRING')
-						AddTextComponentSubstringPlayerName(zoneValues.Name)
-						EndTextCommandSetBlipName(blip)
-						table.insert(JobBlips, blip)
-					end
+					BeginTextCommandSetBlipName('STRING')
+					AddTextComponentSubstringPlayerName(v.Name)
+					EndTextCommandSetBlipName(blip)
+
+					table.insert(JobBlips, blip)
 				end
 			end
 		end
@@ -273,7 +270,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local zones, currentZone, isInMarker = {}
+		local zones, currentZone, currentZoneIndex, isInMarker = {}
 		local letSleep, playerPed = true, PlayerPedId()
 		local playerCoords = GetEntityCoords(playerPed)
 
@@ -293,14 +290,14 @@ Citizen.CreateThread(function()
 				end
 
 				if distance < v.Size.x then
-					letSleep, isInMarker, currentZone = false, true, v
+					letSleep, isInMarker, currentZone, currentZoneIndex = false, true, v, k
 					break
 				end
 			end
 
 			if IsControlJustReleased(0, 38) and not menuIsShowed and isInMarker then
 				if onDuty or currentZone.Type == 'cloakroom' or PlayerData.job.name == 'reporter' then
-					TriggerEvent('esx_jobs:action', PlayerData.job.name, currentZone)
+					TriggerEvent('esx_jobs:action', PlayerData.job.name, currentZone, currentZoneIndex)
 				end
 			end
 

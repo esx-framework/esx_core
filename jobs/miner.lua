@@ -42,7 +42,7 @@ Config.Jobs.miner = {
 				{
 					name = _U('m_rock'),
 					db_name = 'stone',
-					time = 3000,
+					time = 3,
 					max = 7,
 					add = 1,
 					remove = 1,
@@ -67,7 +67,7 @@ Config.Jobs.miner = {
 				{
 					name = _U('m_washrock'),
 					db_name = 'washed_stone',
-					time = 5000,
+					time = 5,
 					max = 7,
 					add = 1,
 					remove = 1,
@@ -92,7 +92,7 @@ Config.Jobs.miner = {
 				{
 					name = _U('m_copper'),
 					db_name = 'copper',
-					time = 4000,
+					time = 4,
 					max = 56,
 					add = 8,
 					remove = 1,
@@ -179,7 +179,7 @@ Config.Jobs.miner = {
 			Item = {
 				{
 					name = _U('delivery'),
-					time = 500,
+					time = 0.5,
 					remove = 1,
 					max = 56, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 5,
@@ -205,7 +205,7 @@ Config.Jobs.miner = {
 			Item = {
 				{
 					name = _U('delivery'),
-					time = 500,
+					time = 0.5,
 					remove = 1,
 					max = 42, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 9,
@@ -231,7 +231,7 @@ Config.Jobs.miner = {
 			Item = {
 				{
 					name = _U('delivery'),
-					time = 500,
+					time = 0.5,
 					remove = 1,
 					max = 21, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 25,
@@ -257,7 +257,7 @@ Config.Jobs.miner = {
 			Item = {
 				{
 					name = _U('delivery'),
-					time = 500,
+					time = 0.5,
 					remove = 1,
 					max = 50, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 250,

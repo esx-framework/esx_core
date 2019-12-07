@@ -51,7 +51,7 @@ Config.Jobs.fisherman = {
 				{
 					name   = _U('fm_fish'),
 					db_name= 'fish',
-					time   = 2000,
+					time   = 2,
 					max    = 100,
 					add    = 1,
 					remove = 1,
@@ -160,7 +160,7 @@ Config.Jobs.fisherman = {
 			Item = {
 				{
 				name   = _U('delivery'),
-				time   = 500,
+				time   = 0.5,
 				remove = 1,
 				max    = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 				price  = 11,

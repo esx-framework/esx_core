@@ -6,6 +6,7 @@ Locales['fr'] = {
   ['job_wear']                  = 'tenue de travail',
   ['bank_deposit_returned']     = 'une caution de ~g~$%s~s~ vous a été rendue.',
   ['bank_deposit_taken']        = 'une caution de ~g~$%s~s~ vous a été prélevée.',
+  ['caution_afford']            = 'you cannot afford the caution of ~g~$%s~s~',
   ['foot_work']                 = 'vous devez être à pied pour pouvoir travailler.',
   ['next_point']                = 'rendez-vous à la prochaine étape après avoir complété celle-ci.',
   ['not_your_vehicle']          = 'ce n\'est pas votre véhicule ou vous devez être conducteur.',

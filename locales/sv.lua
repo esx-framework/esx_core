@@ -6,6 +6,7 @@ Locales['sv'] = {
   ['job_wear']                  = 'arbetskläder',
   ['bank_deposit_returned']     = 'en deposition på ~g~%s SEK~s~ har återvänts till dig.',
   ['bank_deposit_taken']        = 'en deposition på ~r~%s SEK~s~ togs från dig.',
+  ['caution_afford']            = 'you cannot afford the caution of ~g~$%s~s~',
   ['foot_work']                 = 'du måste vara till fots för att kunna arbeta.',
   ['next_point']                = 'gå till nästa steg efter att du har avslutat här.',
   ['not_your_vehicle']          = 'det här är inte ditt fordon eller så måste du vara föraren.',
