@@ -28,32 +28,32 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		if targetItem.count > 0 and targetItem.count <= amount then
 
 			-- can the player carry the said amount of x item?
-			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
-			else
+			if sourceXPlayer.canCarryItem(itemName, sourceItem.count) then
 				targetXPlayer.removeInventoryItem(itemName, amount)
 				sourceXPlayer.addInventoryItem   (itemName, amount)
-				TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
-				TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
+				sourceXPlayer.showNotification(_U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
+				targetXPlayer.showNotification(_U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
+			else
+				sourceXPlayer.showNotification(_U('quantity_invalid'))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
+			sourceXPlayer.showNotification(_U('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_account' then
 		targetXPlayer.removeAccountMoney(itemName, amount)
 		sourceXPlayer.addAccountMoney   (itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated_account', amount, itemName, targetXPlayer.name))
-		TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
+		sourceXPlayer.showNotification(_U('you_confiscated_account', amount, itemName, targetXPlayer.name))
+		targetXPlayer.showNotification(_U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
 
 	elseif itemType == 'item_weapon' then
 		if amount == nil then amount = 0 end
 		targetXPlayer.removeWeapon(itemName, amount)
 		sourceXPlayer.addWeapon   (itemName, amount)
 
-		TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
-		TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
+		sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
+		targetXPlayer.showNotification(_U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
 	end
 end)
 
@@ -105,7 +105,6 @@ RegisterServerEvent('esx_policejob:getStockItem')
 AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 		local inventoryItem = inventory.getItem(itemName)
@@ -114,15 +113,15 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 		if count > 0 and inventoryItem.count >= count then
 
 			-- can the player carry the said amount of x item?
-			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
-			else
+			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				TriggerClientEvent('esx:showNotification', _source, _U('have_withdrawn', count, inventoryItem.label))
+				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.label))
+			else
+				xPlayer.showNotification(_U('quantity_invalid'))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
+			xPlayer.showNotification(_U('quantity_invalid'))
 		end
 	end)
 end)
@@ -139,9 +138,9 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_deposited', count, inventoryItem.label))
+			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.label))
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
+			xPlayer.showNotification(_U('quantity_invalid'))
 		end
 	end)
 end)
