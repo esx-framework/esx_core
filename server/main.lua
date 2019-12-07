@@ -21,13 +21,13 @@ local function Work(source, item)
 				end
 
 				local requiredItemQtty = 0
-				if item[1].requires ~= "nothing" then
+				if item[1].requires ~= 'nothing' then
 					requiredItemQtty = xPlayer.getInventoryItem(item[1].requires).count
 				end
 
 				if item[i].name ~= _U('delivery') and itemQtty >= item[i].max then
 					xPlayer.showNotification(_U('max_limit', item[i].name))
-				elseif item[i].requires ~= "nothing" and requiredItemQtty <= 0 then
+				elseif item[i].requires ~= 'nothing' and requiredItemQtty <= 0 then
 					xPlayer.showNotification(_U('not_enough', item[1].requires_name))
 				else
 					if item[i].name ~= _U('delivery') then
@@ -46,7 +46,7 @@ local function Work(source, item)
 				end
 			end
 
-			if item[1].requires ~= "nothing" then
+			if item[1].requires ~= 'nothing' then
 				local itemToRemoveQtty = xPlayer.getInventoryItem(item[1].requires).count
 				if itemToRemoveQtty > 0 then
 					xPlayer.removeInventoryItem(item[1].requires, item[1].remove)
@@ -78,7 +78,7 @@ RegisterServerEvent('esx_jobs:caution')
 AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPoint, vehicle)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if cautionType == "take" then
+	if cautionType == 'take' then
 		TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
 			xPlayer.removeAccountMoney('bank', cautionAmount)
 			account.addMoney(cautionAmount)
@@ -86,7 +86,7 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 
 		xPlayer.showNotification(_U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
 		TriggerClientEvent('esx_jobs:spawnJobVehicle', source, spawnPoint, vehicle)
-	elseif cautionType == "give_back" then
+	elseif cautionType == 'give_back' then
 
 		if cautionAmount > 1 then
 			print(('esx_jobs: %s is using cheat engine!'):format(xPlayer.identifier))
