@@ -271,13 +271,13 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if account then
 			local prevMoney = account.money
 			local newMoney  = ESX.Math.Round(money)
-	
+
 			account.money = newMoney
-	
+
 			if acc == 'bank' then
 				self.set('bank', newMoney)
 			end
-	
+
 			TriggerClientEvent('esx:setAccountMoney', self.source, account)
 		end
 	end
@@ -293,11 +293,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if account then
 			local newMoney = account.money + ESX.Math.Round(money)
 			account.money = newMoney
-	
+
 			if acc == 'bank' then
 				self.set('bank', newMoney)
 			end
-	
+
 			TriggerClientEvent('esx:setAccountMoney', self.source, account)
 		end
 	end
@@ -313,11 +313,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if account then
 			local newMoney = account.money - ESX.Math.Round(money)
 			account.money = newMoney
-	
+
 			if acc == 'bank' then
 				self.set('bank', newMoney)
 			end
-	
+
 			TriggerClientEvent('esx:setAccountMoney', self.source, account)
 		end
 	end
@@ -338,7 +338,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if item then
 			local newCount = item.count + count
 			item.count     = newCount
-	
+
 			TriggerEvent('esx:onAddInventoryItem', self.source, item, count)
 			TriggerClientEvent('esx:addInventoryItem', self.source, item, count)
 		end
@@ -352,7 +352,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 			if newCount >= 0 then
 				item.count = newCount
-	
+
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item, count)
 				TriggerClientEvent('esx:removeInventoryItem', self.source, item, count)
 			end
@@ -365,7 +365,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if item and count >= 0 then
 			local oldCount = item.count
 			item.count = count
-	
+
 			if oldCount > item.count  then
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item, oldCount - item.count)
 				TriggerClientEvent('esx:removeInventoryItem', self.source, item, oldCount - item.count)
@@ -514,7 +514,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					break
 				end
 			end
-	
+
 			TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, weaponComponent)
 		end
 	end
@@ -537,7 +537,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					return true
 				end
 			end
-	
+
 			return false
 		else
 			return false
