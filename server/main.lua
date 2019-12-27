@@ -1,5 +1,5 @@
 AddEventHandler('es:playerLoaded', function(source, _player)
-	local _source = source
+	local playerId = source
 	local tasks   = {}
 
 	local userData = {
@@ -7,11 +7,11 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 		inventory    = {},
 		job          = {},
 		loadout      = {},
-		playerName   = GetPlayerName(_source),
+		playerName   = GetPlayerName(playerId),
 		lastPosition = nil
 	}
 
-	TriggerEvent('es:getPlayerFromId', _source, function(player)
+	TriggerEvent('es:getPlayerFromId', playerId, function(player)
 		-- Update user name in DB
 		table.insert(tasks, function(cb)
 			MySQL.Async.execute('UPDATE users SET name = @name WHERE identifier = @identifier', {
@@ -208,11 +208,11 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					xPlayer.createAccounts(missingAccounts)
 				end
 
-				ESX.Players[_source] = xPlayer
+				ESX.Players[playerId] = xPlayer
 
-				TriggerEvent('esx:playerLoaded', _source, xPlayer)
+				TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 
-				TriggerClientEvent('esx:playerLoaded', _source, {
+				TriggerClientEvent('esx:playerLoaded', playerId, {
 					identifier   = xPlayer.identifier,
 					accounts     = xPlayer.getAccounts(),
 					inventory    = xPlayer.getInventory(),
@@ -224,7 +224,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 				})
 
 				xPlayer.displayMoney(xPlayer.getMoney())
-				TriggerClientEvent('esx:createMissingPickups', _source, ESX.Pickups)
+				TriggerClientEvent('esx:createMissingPickups', playerId, ESX.Pickups)
 			end)
 		end)
 
@@ -232,15 +232,15 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 end)
 
 AddEventHandler('playerDropped', function(reason)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local playerId = source
+	local xPlayer = ESX.GetPlayerFromId(playerId)
 
 	if xPlayer then
-		TriggerEvent('esx:playerDropped', _source, reason)
+		TriggerEvent('esx:playerDropped', playerId, reason)
 
 		ESX.SavePlayer(xPlayer, function()
-			ESX.Players[_source] = nil
-			ESX.LastPlayerData[_source] = nil
+			ESX.Players[playerId] = nil
+			ESX.LastPlayerData[playerId] = nil
 		end)
 	end
 end)
@@ -419,9 +419,9 @@ end)
 
 RegisterServerEvent('esx:onPickup')
 AddEventHandler('esx:onPickup', function(id)
-	local _source = source
+	local playerId = source
 	local pickup  = ESX.Pickups[id]
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(playerId)
 
 	if pickup.type == 'item_standard' then
 		if xPlayer.canCarryItem(pickup.name, pickup.count) then

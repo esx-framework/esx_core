@@ -456,10 +456,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				label = weaponLabel,
 				components = {}
 			})
-		end
 
-		TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
-		TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
+			TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
+			TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
+		end
 	end
 
 	self.addWeaponComponent = function(weaponName, weaponComponent)

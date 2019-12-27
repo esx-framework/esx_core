@@ -83,9 +83,9 @@ end)
 
 RegisterServerEvent('esx:triggerServerCallback')
 AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
-	local _source = source
+	local playerId = source
 
-	ESX.TriggerServerCallback(name, requestID, _source, function(...)
-		TriggerClientEvent('esx:serverCallback', _source, requestId, ...)
+	ESX.TriggerServerCallback(name, requestID, playerId, function(...)
+		TriggerClientEvent('esx:serverCallback', playerId, requestId, ...)
 	end, ...)
 end)
