@@ -266,47 +266,6 @@ AddEventHandler('esx:setJob', function(job)
 	end
 end)
 
-RegisterNetEvent('esx:loadIPL')
-AddEventHandler('esx:loadIPL', function(name)
-	Citizen.CreateThread(function()
-		RequestIpl(name)
-	end)
-end)
-
-RegisterNetEvent('esx:unloadIPL')
-AddEventHandler('esx:unloadIPL', function(name)
-	Citizen.CreateThread(function()
-		RemoveIpl(name)
-	end)
-end)
-
-RegisterNetEvent('esx:playAnim')
-AddEventHandler('esx:playAnim', function(dict, anim)
-	Citizen.CreateThread(function()
-		local playerPed = PlayerPedId()
-		RequestAnimDict(dict)
-
-		while not HasAnimDictLoaded(dict) do
-			Citizen.Wait(1)
-		end
-
-		TaskPlayAnim(playerPed, dict, anim, 1.0, -1.0, 20000, 0, 1, true, true, true)
-	end)
-end)
-
-RegisterNetEvent('esx:playEmote')
-AddEventHandler('esx:playEmote', function(emote)
-	Citizen.CreateThread(function()
-
-		local playerPed = PlayerPedId()
-
-		TaskStartScenarioInPlace(playerPed, emote, 0, false);
-		Citizen.Wait(20000)
-		ClearPedTasks(playerPed)
-
-	end)
-end)
-
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(model)
 	local playerPed = PlayerPedId()
@@ -314,23 +273,6 @@ AddEventHandler('esx:spawnVehicle', function(model)
 
 	ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
 		TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
-	end)
-end)
-
-RegisterNetEvent('esx:spawnObject')
-AddEventHandler('esx:spawnObject', function(model)
-	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
-
-	ESX.Game.SpawnObject(model, {
-		x = x,
-		y = y,
-		z = z
-	}, function(obj)
-		SetEntityHeading(obj, GetEntityHeading(playerPed))
-		PlaceObjectOnGroundProperly(obj)
 	end)
 end)
 
@@ -372,25 +314,6 @@ AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName, ammo)
 	local weaponHash = GetHashKey(weaponPickup)
 
 	CreateAmbientPickup(weaponHash, pickupCoords, 0, ammo, 1, false, true)
-end)
-
-RegisterNetEvent('esx:spawnPed')
-AddEventHandler('esx:spawnPed', function(model)
-	model           = (tonumber(model) ~= nil and tonumber(model) or GetHashKey(model))
-	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
-
-	Citizen.CreateThread(function()
-		RequestModel(model)
-
-		while not HasModelLoaded(model) do
-			Citizen.Wait(1)
-		end
-
-		CreatePed(5, model, x, y, z, 0.0, true, false)
-	end)
 end)
 
 RegisterNetEvent('esx:deleteVehicle')
