@@ -13,6 +13,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
 
+	self.triggerEvent = function(eventName, ...)
+		TriggerClientEvent(eventName, self.source, ...)
+	end
+
 	self.setMoney = function(money)
 		money = ESX.Math.Round(money)
 
@@ -387,6 +391,20 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		local newWeight = currentWeight + (itemWeight * count)
 
 		return newWeight <= self.maxWeight
+	end
+
+	self.canSwapItem = function(firstItem, firstItemCount, testItem, testItemCount)
+		local firstItemObject = self.getInventoryItem(firstItem)
+		local testItemObject = self.getInventoryItem(testItem)
+
+		if firstItemObject.count >= firstItemCount then
+			local weightWithoutFirstItem = ESX.Math.Round(self.getWeight() - (firstItemObject.weight * firstItemCount))
+			local weightWithTestItem = ESX.Math.Round(weightWithoutFirstItem + (testItemObject.weight * testItemCount))
+
+			return weightWithTestItem <= self.maxWeight
+		end
+
+		return false
 	end
 
 	self.setMaxWeight = function(newWeight)
