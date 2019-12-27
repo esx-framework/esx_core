@@ -267,13 +267,19 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(model)
-	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+AddEventHandler('esx:spawnVehicle', function(vehicle)
+	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
-	ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
-		TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
-	end)
+	if IsModelInCdimage(model) then
+		local playerPed = PlayerPedId()
+		local coords    = GetEntityCoords(playerPed)
+	
+		ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
+			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		end)
+	else
+		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
+	end
 end)
 
 RegisterNetEvent('esx:pickup')
