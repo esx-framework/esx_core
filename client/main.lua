@@ -323,16 +323,42 @@ AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName, ammo)
 end)
 
 RegisterNetEvent('esx:deleteVehicle')
-AddEventHandler('esx:deleteVehicle', function()
+AddEventHandler('esx:deleteVehicle', function(radius)
 	local playerPed = PlayerPedId()
-	local vehicle   = ESX.Game.GetVehicleInDirection()
 
-	if IsPedInAnyVehicle(playerPed, true) then
-		vehicle = GetVehiclePedIsIn(playerPed, false)
-	end
+	if radius and tonumber(radius) then
+		radius = tonumber(radius) + 0.01
+		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(playerPed), radius)
 
-	if DoesEntityExist(vehicle) then
-		ESX.Game.DeleteVehicle(vehicle)
+		for k,entity in ipairs(vehicles) do
+			local attempt = 0
+
+			while not NetworkHasControlOfEntity(entity) and attempt < 100 and DoesEntityExist(entity) do
+				Citizen.Wait(100)
+				NetworkRequestControlOfEntity(entity)
+				attempt = attempt + 1
+			end
+
+			if DoesEntityExist(entity) and NetworkHasControlOfEntity(entity) then
+				ESX.Game.DeleteVehicle(entity)
+			end
+		end
+	else
+		local vehicle, attempt = ESX.Game.GetVehicleInDirection(), 0
+
+		if IsPedInAnyVehicle(playerPed, true) then
+			vehicle = GetVehiclePedIsIn(playerPed, false)
+		end
+
+		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
+			Citizen.Wait(100)
+			NetworkRequestControlOfEntity(vehicle)
+			attempt = attempt + 1
+		end
+
+		if DoesEntityExist(vehicle) and NetworkHasControlOfEntity(vehicle) then
+			ESX.Game.DeleteVehicle(vehicle)
+		end
 	end
 end)
 

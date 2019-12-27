@@ -43,16 +43,20 @@ end, function(source, args, user)
 end, {help = _U('spawn_car'), params = {{name = 'car', help = _U('spawn_car_param')}}})
 
 TriggerEvent('es:addGroupCommand', 'cardel', 'admin', function(source, args, user)
-	TriggerClientEvent('esx:deleteVehicle', source)
+	TriggerClientEvent('esx:deleteVehicle', source, args[1])
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('delete_vehicle')})
+end, {help = _U('delete_vehicle'), params = {
+	{name = 'radius', help = 'Optional, delete every vehicle within the specified radius'}
+}})
 
 TriggerEvent('es:addGroupCommand', 'dv', 'admin', function(source, args, user)
-	TriggerClientEvent('esx:deleteVehicle', source)
+	TriggerClientEvent('esx:deleteVehicle', source, args[1])
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('delete_vehicle')})
+end, {help = _U('delete_vehicle'), params = {
+	{name = 'radius', help = 'Optional, delete every vehicle within the specified radius'}
+}})
 
 TriggerEvent('es:addGroupCommand', 'setmoney', 'admin', function(source, args, user)
 	local playerId = source
