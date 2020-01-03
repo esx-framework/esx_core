@@ -1,8 +1,12 @@
 ESX.Math = {}
 
 ESX.Math.Round = function(value, numDecimalPlaces)
-	local mult = 10^(numDecimalPlaces or 0)
-	return math.floor(value * mult + 0.5) / mult
+	if numDecimalPlaces then
+		local power = 10^numDecimalPlaces
+		return math.floor((value * power) + 0.5) / (power)
+	else
+		return math.floor(value + 0.5)
+	end
 end
 
 -- credit http://richard.warburton.it
