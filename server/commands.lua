@@ -14,7 +14,11 @@ TriggerEvent('es:addGroupCommand', 'tp', 'admin', function(source, args, user)
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = 'Teleport to coordinates', params = {{name = 'x', help = 'X coords'}, {name = 'y', help = 'Y coords'}, {name = 'z', help = 'Z coords'}}})
+end, {help = 'Teleport to coordinates', params = {
+	{name = 'x', help = 'X coords'},
+	{name = 'y', help = 'Y coords'},
+	{name = 'z', help = 'Z coords'}
+}})
 
 TriggerEvent('es:addGroupCommand', 'setjob', 'jobmaster', function(source, args, user)
 	if tonumber(args[1]) and args[2] and tonumber(args[3]) then
@@ -34,7 +38,11 @@ TriggerEvent('es:addGroupCommand', 'setjob', 'jobmaster', function(source, args,
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('setjob'), params = {{name = 'id', help = _U('id_param')}, {name = 'job', help = _U('setjob_param2')}, {name = 'grade_id', help = _U('setjob_param3')}}})
+end, {help = _U('setjob'), params = {
+	{name = 'playerId', help = _U('id_param')},
+	{name = 'job', help = _U('setjob_param2')},
+	{name = 'grade_id', help = _U('setjob_param3')}
+}})
 
 TriggerEvent('es:addGroupCommand', 'car', 'admin', function(source, args, user)
 	TriggerClientEvent('esx:spawnVehicle', source, args[1])
@@ -64,7 +72,7 @@ TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source,
 	if xPlayer then
 		local account = args[2]
 		local amount = tonumber(args[3])
-	
+
 		if amount then
 			if xPlayer.getAccount(account) then
 				xPlayer.addAccountMoney(account, amount)
@@ -79,7 +87,11 @@ TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source,
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('giveaccountmoney'), params = {{name = 'id', help = _U('id_param')}, {name = 'account', help = _U('account')}, {name = 'amount', help = _U('money_amount')}}})
+end, {help = _U('giveaccountmoney'), params = {
+	{name = 'playerId', help = _U('id_param')},
+	{name = 'account', help = _U('account')},
+	{name = 'amount', help = _U('money_amount')}
+}})
 
 TriggerEvent('es:addGroupCommand', 'giveitem', 'admin', function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromId(args[1])
@@ -102,7 +114,11 @@ TriggerEvent('es:addGroupCommand', 'giveitem', 'admin', function(source, args, u
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('giveitem'), params = {{name = 'id', help = _U('id_param')}, {name = 'item', help = _U('item')}, {name = 'amount', help = _U('amount')}}})
+end, {help = _U('giveitem'), params = {
+	{name = 'playerId', help = _U('id_param')},
+	{name = 'item', help = _U('item')},
+	{name = 'amount', help = _U('amount')}
+}})
 
 TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromId(args[1])
@@ -124,7 +140,47 @@ TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args,
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('giveweapon'), params = {{name = 'id', help = _U('id_param')}, {name = 'weapon', help = _U('weapon')}, {name = 'ammo', help = _U('amountammo')}}})
+end, {help = _U('giveweapon'), params = {
+	{name = 'playerId', help = _U('id_param')},
+	{name = 'weapon', help = _U('weapon')},
+	{name = 'ammo', help = _U('amountammo')}
+}})
+
+TriggerEvent('es:addGroupCommand', 'giveweaponcomponent', 'admin', function(source, args, user)
+	local xPlayer = ESX.GetPlayerFromId(args[1])
+
+	if xPlayer then
+		local weapon = args[2] or 'unknown'
+
+		if ESX.GetWeapon(weapon) then
+			if xPlayer.hasWeapon(weapon) then
+				local component = ESX.GetWeaponComponent(weapon, args[3] or 'unknown')
+
+				if component then
+					if xPlayer.hasWeaponComponent(weapon, args[3]) then
+						TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player already has that weapon component.' } })
+					else
+						xPlayer.addWeaponComponent(weapon, args[3])
+					end
+				else
+					TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid weapon component.' } })
+				end
+			else
+				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player does not have that weapon.' } })
+			end
+		else
+			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid weapon.' } })
+		end
+	else
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
+	end
+end, function(source, args, user)
+	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
+end, {help = 'Give weapon component', params = {
+	{name = 'playerId', help = _U('id_param')},
+	{name = 'weapon', help = _U('weapon')},
+	{name = 'component', help = 'weapon component'}
+}})
 
 TriggerEvent('es:addGroupCommand', 'disc', 'admin', function(source, args, user)
 	DropPlayer(source, 'You have been disconnected')
