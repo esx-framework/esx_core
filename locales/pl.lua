@@ -33,11 +33,12 @@ Locales['pl'] = {
   ['imp_invalid_quantity'] = 'akcja jest niemożliwa, nieprawidłowa ilość',
   ['imp_invalid_amount'] = 'akcja jest niemożliwa, nieprawidłowa kwota',
   ['threw_standard'] = 'wyrzuciłeś/aś ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'wyrzuciłeś/aś ~r~$%s~s~ ~b~gotówki~s~',
-  ['threw_account'] = 'wyrzuciłeś/aś ~r~$%s~s~ ~b~%s~s~',
+  ['threw_money'] = 'wyrzuciłeś/aś ~g~$%s~s~ ~b~gotówki~s~',
+  ['threw_account'] = 'wyrzuciłeś/aś ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'wyrzuciłeś/aś ~b~%s~s~',
   ['threw_weapon_ammo'] = 'wyrzuciłeś/aś ~b~%s~s~ z ~o~%sx~s~ nabojami',
-	
+  ['threw_cannot_pickup'] = 'you cannot pickup that because your inventory is full!',
+  ['threw_pickup_prompt'] = 'press ~y~E~s~ to pickup',
   -- Salary related
   ['received_salary'] = 'otrzymałeś wynagrodzenie: ~g~%s$~s~',
   ['received_help'] = 'otrzymałem zapomogę: ~g~$%s~s~',

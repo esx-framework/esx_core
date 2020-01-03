@@ -1199,19 +1199,26 @@ ESX.ShowInventory = function()
 				end
 			elseif data1.current.action == 'remove' then
 				if IsPedOnFoot(playerPed) then
+					local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
+					ESX.Streaming.RequestAnimDict(dict)
+
 					if type == 'item_weapon' then
-						TriggerServerEvent('esx:removeInventoryItem', type, item)
 						menu1.close()
-					else -- type: item_standard
+						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+						Citizen.Wait(1000)
+						TriggerServerEvent('esx:removeInventoryItem', type, item)
+					else
 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 							title = _U('amount')
 						}, function(data2, menu2)
 							local quantity = tonumber(data2.value)
 	
 							if quantity then
-								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 								menu2.close()
 								menu1.close()
+								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+								Citizen.Wait(1000)
+								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 							else
 								ESX.ShowNotification(_U('amount_invalid'))
 							end

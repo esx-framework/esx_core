@@ -419,24 +419,28 @@ end)
 
 RegisterServerEvent('esx:onPickup')
 AddEventHandler('esx:onPickup', function(id)
-	local playerId = source
-	local pickup  = ESX.Pickups[id]
-	local xPlayer = ESX.GetPlayerFromId(playerId)
+	local pickup, xPlayer, success = ESX.Pickups[id], ESX.GetPlayerFromId(source)
 
-	if pickup.type == 'item_standard' then
-		if xPlayer.canCarryItem(pickup.name, pickup.count) then
-			xPlayer.addInventoryItem(pickup.name, pickup.count)
+	if pickup then
+		if pickup.type == 'item_standard' then
+			if xPlayer.canCarryItem(pickup.name, pickup.count) then
+				xPlayer.addInventoryItem(pickup.name, pickup.count)
+				success = true
+			else
+				xPlayer.showNotification(_U('threw_cannot_pickup'))
+			end
+		elseif pickup.type == 'item_money' then
+			success = true
+			xPlayer.addMoney(pickup.count)
+		elseif pickup.type == 'item_account' then
+			success = true
+			xPlayer.addAccountMoney(pickup.name, pickup.count)
+		end
+
+		if success then
 			ESX.Pickups[id] = nil
 			TriggerClientEvent('esx:removePickup', -1, id)
 		end
-	elseif pickup.type == 'item_money' then
-		ESX.Pickups[id] = nil
-		TriggerClientEvent('esx:removePickup', -1, id)
-		xPlayer.addMoney(pickup.count)
-	elseif pickup.type == 'item_account' then
-		ESX.Pickups[id] = nil
-		TriggerClientEvent('esx:removePickup', -1, id)
-		xPlayer.addAccountMoney(pickup.name, pickup.count)
 	end
 end)
 

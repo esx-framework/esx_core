@@ -51,13 +51,14 @@ AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		ESX.Game.SpawnLocalObject('prop_money_bag_01', v.coords, function(obj)
 			SetEntityAsMissionEntity(obj, true, false)
 			PlaceObjectOnGroundProperly(obj)
+			FreezeEntityPosition(obj, true)
 
 			pickups[pickupId] = {
 				id = pickupId,
 				obj = obj,
 				label = v.label,
 				inRange = false,
-				coords = v.coords
+				coords = vector3(v.coords.x, v.coords.y, v.coords.z)
 			}
 		end)
 	end
@@ -273,7 +274,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	if IsModelInCdimage(model) then
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
-	
+
 		ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		end)
@@ -287,22 +288,19 @@ AddEventHandler('esx:pickup', function(id, label, player)
 	local ped     = GetPlayerPed(GetPlayerFromServerId(player))
 	local coords  = GetEntityCoords(ped)
 	local forward = GetEntityForwardVector(ped)
-	local x, y, z = table.unpack(coords + forward * -2.0)
+	coords = (coords + forward * 2.0)
 
-	ESX.Game.SpawnLocalObject('prop_money_bag_01', {
-		x = x,
-		y = y,
-		z = z - 2.0,
-	}, function(obj)
+	ESX.Game.SpawnLocalObject('prop_money_bag_01', coords, function(obj)
 		SetEntityAsMissionEntity(obj, true, false)
 		PlaceObjectOnGroundProperly(obj)
+		FreezeEntityPosition(obj, true)
 
 		pickups[id] = {
 			id = id,
 			obj = obj,
 			label = label,
 			inRange = false,
-			coords = {x = x, y = y, z = z}
+			coords = coords
 		}
 	end)
 end)
@@ -462,32 +460,47 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-
 		local playerPed = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
-		
-		-- if there's no nearby pickups we can wait a bit to save performance
-		if next(pickups) == nil then
-			Citizen.Wait(500)
-		end
+		local playerCoords, letSleep = GetEntityCoords(playerPed), true
+		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 		for k,v in pairs(pickups) do
-			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
-			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+			local distance = #(playerCoords - v.coords)
 
-			if distance <= 5.0 then
+			if distance < 5 then
+				local label = v.label
+				letSleep = false
+
+				if distance < 1 then
+					if IsControlJustReleased(0, 38) then
+						if IsPedOnFoot(playerPed) and (closestDistance == -1 or closestDistance > 3) and not v.inRange then
+							v.inRange = true
+
+							local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
+							ESX.Streaming.RequestAnimDict(dict)
+							TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+							Citizen.Wait(1000)
+
+							TriggerServerEvent('esx:onPickup', v.id)
+							PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
+						end
+					end
+
+					label = ('%s~n~%s'):format(label, _U('threw_pickup_prompt'))
+				end
+
 				ESX.Game.Utils.DrawText3D({
 					x = v.coords.x,
 					y = v.coords.y,
 					z = v.coords.z + 0.25
-				}, v.label)
+				}, label, 1.2, 1)
+			elseif v.inRange then
+				v.inRange = false
 			end
+		end
 
-			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and IsPedOnFoot(playerPed) then
-				TriggerServerEvent('esx:onPickup', v.id)
-				PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
-				v.inRange = true
-			end
+		if letSleep then
+			Citizen.Wait(500)
 		end
 	end
 end)
