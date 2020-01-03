@@ -58,82 +58,70 @@ end, {help = _U('delete_vehicle'), params = {
 	{name = 'radius', help = 'Optional, delete every vehicle within the specified radius'}
 }})
 
-TriggerEvent('es:addGroupCommand', 'setmoney', 'admin', function(source, args, user)
-	local playerId = source
-	local target = tonumber(args[1])
-	local money_type = args[2]
-	local money_amount = tonumber(args[3])
-
-	local xPlayer = ESX.GetPlayerFromId(target)
-
-	if target and money_type and money_amount and xPlayer then
-		if money_type == 'cash' then
-			xPlayer.setMoney(money_amount)
-		elseif money_type == 'bank' then
-			xPlayer.setAccountMoney('bank', money_amount)
-		elseif money_type == 'black' then
-			xPlayer.setAccountMoney('black_money', money_amount)
-		else
-			TriggerClientEvent('chatMessage', playerId, 'SYSTEM', {255, 0, 0}, '^2' .. money_type .. ' ^0 is not a valid money type!')
-			return
-		end
-	else
-		TriggerClientEvent('chatMessage', playerId, 'SYSTEM', {255, 0, 0}, 'Invalid arguments.')
-		return
-	end
-
-	print('es_extended: ' .. GetPlayerName(source) .. ' just set $' .. money_amount .. ' (' .. money_type .. ') to ' .. xPlayer.name)
-
-	if xPlayer.source ~= playerId then
-		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('money_set', money_amount, money_type))
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, {help = _U('setmoney'), params = {{name = 'id', help = _U('id_param')}, {name = 'money type', help = _U('money_type')}, {name = 'amount', help = _U('money_amount')}}})
-
 TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source, args, user)
-	local playerId = source
 	local xPlayer = ESX.GetPlayerFromId(args[1])
-	local account = args[2]
-	local amount  = tonumber(args[3])
 
-	if amount then
-		if xPlayer.getAccount(account) then
-			xPlayer.addAccountMoney(account, amount)
+	if xPlayer then
+		local account = args[2]
+		local amount = tonumber(args[3])
+	
+		if amount then
+			if xPlayer.getAccount(account) then
+				xPlayer.addAccountMoney(account, amount)
+			else
+				TriggerClientEvent('esx:showNotification', source, _U('invalid_account'))
+			end
 		else
-			TriggerClientEvent('esx:showNotification', playerId, _U('invalid_account'))
+			TriggerClientEvent('esx:showNotification', source, _U('amount_invalid'))
 		end
 	else
-		TriggerClientEvent('esx:showNotification', playerId, _U('amount_invalid'))
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = _U('giveaccountmoney'), params = {{name = 'id', help = _U('id_param')}, {name = 'account', help = _U('account')}, {name = 'amount', help = _U('money_amount')}}})
 
 TriggerEvent('es:addGroupCommand', 'giveitem', 'admin', function(source, args, user)
-	local playerId = source
 	local xPlayer = ESX.GetPlayerFromId(args[1])
-	local item    = args[2]
-	local count   = (args[3] == nil and 1 or tonumber(args[3]))
 
-	if count then
-		if xPlayer.getInventoryItem(item) then
-			xPlayer.addInventoryItem(item, count)
+	if xPlayer then
+		local item = args[2]
+		local count = tonumber(args[3])
+
+		if count then
+			if xPlayer.getInventoryItem(item) then
+				xPlayer.addInventoryItem(item, count)
+			else
+				TriggerClientEvent('esx:showNotification', source, _U('invalid_item'))
+			end
 		else
-			TriggerClientEvent('esx:showNotification', playerId, _U('invalid_item'))
+			TriggerClientEvent('esx:showNotification', source, _U('invalid_amount'))
 		end
 	else
-		TriggerClientEvent('esx:showNotification', playerId, _U('invalid_amount'))
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = _U('giveitem'), params = {{name = 'id', help = _U('id_param')}, {name = 'item', help = _U('item')}, {name = 'amount', help = _U('amount')}}})
 
 TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args, user)
-	local xPlayer    = ESX.GetPlayerFromId(args[1])
-	local weaponName = string.upper(args[2])
+	local xPlayer = ESX.GetPlayerFromId(args[1])
 
-	xPlayer.addWeapon(weaponName, tonumber(args[3]))
+	if xPlayer then
+		local weaponName = args[2] or 'unknown'
+
+		if ESX.GetWeapon(weaponName) then
+			if xPlayer.hasWeapon(weaponName) then
+				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player already has that weapon.' } })
+			else
+				xPlayer.addWeapon(weaponName, tonumber(args[3]))
+			end
+		else
+			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid weapon.' } })
+		end
+	else
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
+	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = _U('giveweapon'), params = {{name = 'id', help = _U('id_param')}, {name = 'weapon', help = _U('weapon')}, {name = 'ammo', help = _U('amountammo')}}})
