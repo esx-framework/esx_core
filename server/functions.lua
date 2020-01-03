@@ -1,6 +1,6 @@
 ESX.Trace = function(str)
 	if Config.EnableDebug then
-		print('ESX> ' .. str)
+		print(('[es_extended] [^2TRACE^7] %s'):format(str))
 	end
 end
 
@@ -32,7 +32,7 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 	if ESX.ServerCallbacks[name] ~= nil then
 		ESX.ServerCallbacks[name](source, cb, ...)
 	else
-		print('es_extended: TriggerServerCallback => [' .. name .. '] does not exist')
+		print(('[es_extended] [^3WARNING^7] Server callback "%s" does not exist. Make sure that the server sided file really is loading, an error in that file might cause it to not load.'):format(name))
 	end
 end
 
@@ -88,7 +88,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 	end)
 
 	Async.parallel(asyncTasks, function(results)
-		RconPrint('[SAVED] ' .. xPlayer.name .. "^7\n")
+		print(('[es_extended] [^2INFO^7] Saved %s'):format(xPlayer.getName()))
 
 		if cb ~= nil then
 			cb()
@@ -108,8 +108,7 @@ ESX.SavePlayers = function(cb)
 	end
 
 	Async.parallelLimit(asyncTasks, 8, function(results)
-		RconPrint('[SAVED] All players' .. "\n")
-
+		print(('[es_extended] [^2INFO^7] Saved %s player(s)'):format(#xPlayers))
 		if cb ~= nil then
 			cb()
 		end

@@ -66,7 +66,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 							canRemove = item.canRemove
 						})
 					else
-						print(('es_extended: invalid item "%s" ignored!'):format(v.item))
+						print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(v.item, player.getIdentifier()))
 					end
 				end
 
@@ -147,7 +147,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 							userData.job.skin_female = json.decode(gradeObject.skin_female)
 						end
 					else
-						print(('es_extended: %s had an unknown job [job: %s, grade: %s], setting as unemployed!'):format(player.getIdentifier(), job, grade))
+						print(('[es_extended] [^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(player.getIdentifier(), job, grade))
 
 						local job, grade = 'unemployed', '0'
 						local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
