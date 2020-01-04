@@ -153,6 +153,8 @@ TriggerEvent('es:addGroupCommand', 'giveweaponcomponent', 'admin', function(sour
 		local weapon = args[2] or 'unknown'
 
 		if ESX.GetWeapon(weapon) then
+			weapon = string.upper(weapon)
+
 			if xPlayer.hasWeapon(weapon) then
 				local component = ESX.GetWeaponComponent(weapon, args[3] or 'unknown')
 
