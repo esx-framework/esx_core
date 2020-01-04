@@ -1,8 +1,8 @@
 Locales['fr'] = {
   -- Cloakroom
-  ['cloakroom'] = 'Vestiaire',
-  ['ems_clothes_civil'] = 'Tenue Civil',
-  ['ems_clothes_ems'] = 'Tenue Ambulancier',
+  ['cloakroom'] = 'vestiaire',
+  ['ems_clothes_civil'] = 'tenue Civil',
+  ['ems_clothes_ems'] = 'tenue Ambulancier',
   -- Vehicles
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour accéder aux ~y~Actions de l\'hélicoptère~s~.',
@@ -39,6 +39,7 @@ Locales['fr'] = {
   ['revive_inprogress'] = 'réanimation en cours',
   ['revive_complete'] = 'vous avez réanimé ~y~%s~s~',
   ['revive_complete_award'] = 'vous avez réanimé ~y~%s~s~, ~g~$%s~s~',
+  ['revive_fail_offline'] = 'that player is no longer online',
   ['heal_inprogress'] = 'vous soignez...',
   ['heal_complete'] = 'vous avez soigné ~y~%s~s~',
   ['no_players'] = 'aucun joueur à proximité',

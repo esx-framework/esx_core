@@ -3,17 +3,24 @@ local playersHealing = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent('esx_ambulancejob:revive')
-AddEventHandler('esx_ambulancejob:revive', function(target)
+RegisterNetEvent('esx_ambulancejob:revive')
+AddEventHandler('esx_ambulancejob:revive', function(playerId)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.job.name == 'ambulance' then
-		xPlayer.addMoney(Config.ReviveReward)
-		TriggerClientEvent('esx_ambulancejob:revive', target)
+	if xPlayer and xPlayer.job.name == 'ambulance' then
+		local xTarget = ESX.GetPlayerFromId(playerId)
+
+		if xTarget then
+			xPlayer.showNotification(_U('revive_complete_award', xTarget.name, Config.ReviveReward))
+			xPlayer.addMoney(Config.ReviveReward)
+			xTarget.triggerEvent('esx_ambulancejob:revive')
+		else
+			xPlayer.showNotification(_U('revive_fail_offline'))
+		end
 	end
 end)
 
-RegisterServerEvent('esx_ambulancejob:heal')
+RegisterNetEvent('esx_ambulancejob:heal')
 AddEventHandler('esx_ambulancejob:heal', function(target, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -22,7 +29,7 @@ AddEventHandler('esx_ambulancejob:heal', function(target, type)
 	end
 end)
 
-RegisterServerEvent('esx_ambulancejob:putInVehicle')
+RegisterNetEvent('esx_ambulancejob:putInVehicle')
 AddEventHandler('esx_ambulancejob:putInVehicle', function(target)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -88,7 +95,7 @@ if Config.EarlyRespawnFine then
 		cb(bankBalance >= Config.EarlyRespawnFineAmount)
 	end)
 
-	RegisterServerEvent('esx_ambulancejob:payFine')
+	RegisterNetEvent('esx_ambulancejob:payFine')
 	AddEventHandler('esx_ambulancejob:payFine', function()
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local fineAmount = Config.EarlyRespawnFineAmount
@@ -188,7 +195,7 @@ function getPriceFromHash(hashKey, jobGrade, type)
 	return 0
 end
 
-RegisterServerEvent('esx_ambulancejob:removeItem')
+RegisterNetEvent('esx_ambulancejob:removeItem')
 AddEventHandler('esx_ambulancejob:removeItem', function(item)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.removeInventoryItem(item, 1)
@@ -200,7 +207,7 @@ AddEventHandler('esx_ambulancejob:removeItem', function(item)
 	end
 end)
 
-RegisterServerEvent('esx_ambulancejob:giveItem')
+RegisterNetEvent('esx_ambulancejob:giveItem')
 AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -274,7 +281,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, c
 	end)
 end)
 
-RegisterServerEvent('esx_ambulancejob:setDeathStatus')
+RegisterNetEvent('esx_ambulancejob:setDeathStatus')
 AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local identifier = GetPlayerIdentifiers(source)[1]
 

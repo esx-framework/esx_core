@@ -39,6 +39,7 @@ Locales['es'] = {
   ['revive_inprogress'] = 'reanimación en curso',
   ['revive_complete'] = 'has sido reanimado ~y~%s~s~',
   ['revive_complete_award'] = 'has sido reanimado ~y~%s~s~, ~g~$%s~s~',
+  ['revive_fail_offline'] = 'that player is no longer online',
   ['heal_inprogress'] = 'you are healing!',
   ['heal_complete'] = 'you have healed ~y~%s~s~',
   ['no_players'] = 'ningún jugador cerca',

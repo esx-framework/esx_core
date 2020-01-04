@@ -39,6 +39,7 @@ Locales['sv'] = {
   ['revive_inprogress'] = 'en återupplivning har börjats',
   ['revive_complete'] = 'du har återupplivat ~y~%s~s~, bra jobbat!',
   ['revive_complete_award'] = 'du har återupplivat ~y~%s~s~ och tjärnat ~g~%s SEK~s~ för dina tjänster, bra jobbat!',
+  ['revive_fail_offline'] = 'den spelaren har lämnat servern',
   ['heal_inprogress'] = 'du behandlar patienten!',
   ['heal_complete'] = 'du har behandlat ~y~%s~s~',
   ['no_players'] = 'det finns inga spelare i närheten!',

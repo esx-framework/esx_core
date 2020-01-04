@@ -39,6 +39,7 @@ Locales['cs'] = {
   ['revive_inprogress'] = 'probíhá oživení!',
   ['revive_complete'] = 'oživili jste ~y~%s~s~',
   ['revive_complete_award'] = 'oživili jste ~y~%s~s~ a dostali jste ~g~$%s~s~!',
+  ['revive_fail_offline'] = 'that player is no longer online',
   ['heal_inprogress'] = 'uzdravujete!',
   ['heal_complete'] = 'uzdravili jste ~y~%s~s~',
   ['no_players'] = 'v okolí není žádný hráč!',

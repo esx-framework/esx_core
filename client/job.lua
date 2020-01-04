@@ -62,48 +62,7 @@ function OpenMobileAmbulanceActionsMenu()
 				else
 
 					if data.current.value == 'revive' then
-
-						isBusy = true
-
-						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
-							if quantity > 0 then
-								local closestPlayerPed = GetPlayerPed(closestPlayer)
-
-								if IsPedDeadOrDying(closestPlayerPed, 1) then
-									local playerPed = PlayerPedId()
-
-									ESX.ShowNotification(_U('revive_inprogress'))
-
-									local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
-
-									for i=1, 15, 1 do
-										Citizen.Wait(900)
-
-										ESX.Streaming.RequestAnimDict(lib, function()
-											TaskPlayAnim(PlayerPedId(), lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
-										end)
-									end
-
-									TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
-									TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
-
-									-- Show revive award?
-									if Config.ReviveReward > 0 then
-										ESX.ShowNotification(_U('revive_complete_award', GetPlayerName(closestPlayer), Config.ReviveReward))
-									else
-										ESX.ShowNotification(_U('revive_complete', GetPlayerName(closestPlayer)))
-									end
-								else
-									ESX.ShowNotification(_U('player_not_unconscious'))
-								end
-							else
-								ESX.ShowNotification(_U('not_enough_medikit'))
-							end
-
-							isBusy = false
-
-						end, 'medikit')
-
+						revivePlayer(closestPlayer)
 					elseif data.current.value == 'small' then
 
 						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
@@ -172,6 +131,38 @@ function OpenMobileAmbulanceActionsMenu()
 	end, function(data, menu)
 		menu.close()
 	end)
+end
+
+function revivePlayer(closestPlayer)
+	isBusy = true
+
+	ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
+		if quantity > 0 then
+			local closestPlayerPed = GetPlayerPed(closestPlayer)
+
+			if IsPedDeadOrDying(closestPlayerPed, 1) then
+				local playerPed = PlayerPedId()
+				local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
+				ESX.ShowNotification(_U('revive_inprogress'))
+
+				for i=1, 15 do
+					Citizen.Wait(900)
+
+					ESX.Streaming.RequestAnimDict(lib, function()
+						TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+					end)
+				end
+
+				TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
+				TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
+			else
+				ESX.ShowNotification(_U('player_not_unconscious'))
+			end
+		else
+			ESX.ShowNotification(_U('not_enough_medikit'))
+		end
+		isBusy = false
+	end, 'medikit')
 end
 
 function FastTravel(coords, heading)

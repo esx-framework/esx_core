@@ -39,6 +39,7 @@ Locales['pl'] = {
   ['revive_inprogress'] = 'trwa wskrzeszenie',
   ['revive_complete'] = 'zostałeś wskrzeszony ~y~%s~s~',
   ['revive_complete_award'] = 'zostałeś wskrzeszony ~y~%s~s~ i zarobiono ~g~$%s~s~!',
+  ['revive_fail_offline'] = 'that player is no longer online',
   ['heal_inprogress'] = 'leczysz!',
   ['heal_complete'] = 'zostałeś uleczony ~y~%s~s~',
   ['no_players'] = 'brak graczy w pobliżu',
