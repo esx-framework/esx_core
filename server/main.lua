@@ -11,11 +11,11 @@ AddEventHandler('esx_atm:deposit', function(amount)
 	amount = ESX.Math.Round(amount)
 
 	if amount == nil or amount <= 0 or amount > xPlayer.getMoney() then
-		TriggerClientEvent('esx:showNotification', _source, _U('invalid_amount'))
+		xPlayer.showNotification(_U('invalid_amount'))
 	else
 		xPlayer.removeMoney(amount)
 		xPlayer.addAccountMoney('bank', amount)
-		TriggerClientEvent('esx:showNotification', _source, _U('deposit_money', amount))
+		xPlayer.showNotification(_U('deposit_money', amount))
 	end
 end)
 
@@ -30,10 +30,10 @@ AddEventHandler('esx_atm:withdraw', function(amount)
 	amount = ESX.Math.Round(amount)
 
 	if amount == nil or amount <= 0 or amount > accountMoney then
-		TriggerClientEvent('esx:showNotification', _source, _U('invalid_amount'))
+		xPlayer.showNotification(_U('invalid_amount'))
 	else
 		xPlayer.removeAccountMoney('bank', amount)
 		xPlayer.addMoney(amount)
-		TriggerClientEvent('esx:showNotification', _source, _U('withdraw_money', amount))
+		xPlayer.showNotification(_U('withdraw_money', amount))
 	end
 end)
