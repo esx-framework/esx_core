@@ -28,13 +28,13 @@ if Config.Debug then
 					end
 				end
 
-				local text = ('ID: %s~n~HASH: %s~n~MODEL: %s'):format(id, hash, model)
+				local text = ('ID: %s~n~Hash: %s~n~Model: %s'):format(id, hash, model)
 
 				ESX.Game.Utils.DrawText3D({
 					x = coords.x,
 					y = coords.y,
 					z = coords.z + 2.0
-				}, text)
+				}, text, 0.5)
 			end
 
 			if #debugProps == 0 then
@@ -53,7 +53,7 @@ Citizen.CreateThread(function()
 			wakeup()
 		end
 
-		if IsControlJustPressed(1, 38) and IsControlPressed(1, 21) and IsInputDisabled(0) and IsPedOnFoot(playerPed) then
+		if IsControlJustPressed(0, 38) and IsControlPressed(0, 21) and IsInputDisabled(0) and IsPedOnFoot(playerPed) then
 			if sitting then
 				wakeup()
 			else
