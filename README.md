@@ -1,4 +1,5 @@
 # esx_joblisting
+
 Simple job listing script, you can specify what jobs you want to be whitelisted in db.
 
 ## Download & Installation
@@ -30,7 +31,7 @@ start esx_joblisting
 ### License
 esx_joblisting - job listing script
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2020 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
