@@ -1,5 +1,5 @@
 Config.Sitable = {
-	--Only verticalOffset works right now!	
+	--Only verticalOffset works right now!
 	--all scenarios: pastebin.com/6mrYTdQv
 	
 	-- BENCH
