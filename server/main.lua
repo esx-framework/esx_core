@@ -10,8 +10,6 @@ AddEventHandler('esx_ambulancejob:revive', function(target)
 	if xPlayer.job.name == 'ambulance' then
 		xPlayer.addMoney(Config.ReviveReward)
 		TriggerClientEvent('esx_ambulancejob:revive', target)
-	else
-		print(('esx_ambulancejob: %s attempted to revive!'):format(xPlayer.identifier))
 	end
 end)
 
@@ -21,8 +19,6 @@ AddEventHandler('esx_ambulancejob:heal', function(target, type)
 
 	if xPlayer.job.name == 'ambulance' then
 		TriggerClientEvent('esx_ambulancejob:heal', target, type)
-	else
-		print(('esx_ambulancejob: %s attempted to heal!'):format(xPlayer.identifier))
 	end
 end)
 
@@ -32,8 +28,6 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function(target)
 
 	if xPlayer.job.name == 'ambulance' then
 		TriggerClientEvent('esx_ambulancejob:putInVehicle', target)
-	else
-		print(('esx_ambulancejob: %s attempted to put in vehicle!'):format(xPlayer.identifier))
 	end
 end)
 
@@ -117,7 +111,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 
 	-- vehicle model not found
 	if price == 0 then
-		print(('esx_ambulancejob: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then
@@ -165,14 +158,12 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 			['@job'] = xPlayer.job.name
 		}, function (rowsChanged)
 			if rowsChanged == 0 then
-				print(('esx_ambulancejob: %s has exploited the garage!'):format(xPlayer.identifier))
 				cb(false)
 			else
 				cb(true, foundNum)
 			end
 		end)
 	end
-
 end)
 
 function getPriceFromHash(hashKey, jobGrade, type)
@@ -199,9 +190,7 @@ end
 
 RegisterServerEvent('esx_ambulancejob:removeItem')
 AddEventHandler('esx_ambulancejob:removeItem', function(item)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-
+	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.removeInventoryItem(item, 1)
 
 	if item == 'bandage' then
@@ -216,10 +205,10 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name ~= 'ambulance' then
-		print(('esx_ambulancejob: %s attempted to spawn in an item!'):format(xPlayer.identifier))
+		print(('[esx_ambulancejob] [^2INFO^7] "%s" attempted to spawn in an item!'):format(xPlayer.identifier))
 		return
 	elseif (itemName ~= 'medikit' and itemName ~= 'bandage') then
-		print(('esx_ambulancejob: %s attempted to spawn in an item!'):format(xPlayer.identifier))
+		print(('[esx_ambulancejob] [^2INFO^7] "%s" attempted to spawn in an item!'):format(xPlayer.identifier))
 		return
 	end
 
@@ -231,17 +220,19 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 end)
 
 TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
-	if args[1] ~= nil then
-		if GetPlayerName(tonumber(args[1])) ~= nil then
-			print(('esx_ambulancejob: %s used admin revive'):format(GetPlayerIdentifiers(source)[1]))
-			TriggerClientEvent('esx_ambulancejob:revive', tonumber(args[1]))
+	if args[1] then
+		local playerId = tonumber(args[1])
+		if playerId and ESX.Players[playerId] then
+			TriggerClientEvent('esx_ambulancejob:revive', playerId)
+		else
+			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
 		end
 	else
 		TriggerClientEvent('esx_ambulancejob:revive', source)
 	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, { help = _U('revive_help'), params = {{ name = 'id' }} })
+end, { help = _U('revive_help'), params = {{ name = 'playerId' }} })
 
 ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] then
@@ -276,7 +267,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, c
 		['@identifier'] = identifier
 	}, function(isDead)
 		if isDead then
-			print(('esx_ambulancejob: %s attempted combat logging!'):format(identifier))
+			print(('[esx_ambulancejob] [^2INFO^7] "%s" attempted combat logging'):format(identifier))
 		end
 
 		cb(isDead)
@@ -287,13 +278,10 @@ RegisterServerEvent('esx_ambulancejob:setDeathStatus')
 AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local identifier = GetPlayerIdentifiers(source)[1]
 
-	if type(isDead) ~= 'boolean' then
-		print(('esx_ambulancejob: %s attempted to parse something else than a boolean to setDeathStatus!'):format(identifier))
-		return
+	if type(isDead) == 'boolean' then
+		MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
+			['@identifier'] = identifier,
+			['@isDead'] = isDead
+		})
 	end
-
-	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
-		['@identifier'] = identifier,
-		['@isDead'] = isDead
-	})
 end)
