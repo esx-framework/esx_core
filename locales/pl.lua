@@ -37,6 +37,7 @@ Locales['pl'] = {
   ['threw_account'] = 'wyrzuciłeś/aś ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'wyrzuciłeś/aś ~b~%s~s~',
   ['threw_weapon_ammo'] = 'wyrzuciłeś/aś ~b~%s~s~ z ~o~%sx~s~ nabojami',
+  ['threw_weapon_already'] = 'you already carry the same weapon',
   ['threw_cannot_pickup'] = 'you cannot pickup that because your inventory is full!',
   ['threw_pickup_prompt'] = 'press ~y~E~s~ to pickup',
   -- Salary related

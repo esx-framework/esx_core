@@ -45,25 +45,6 @@ AddEventHandler('esx:setMaxWeight', function(newMaxWeight)
 	ESX.PlayerData.maxWeight = newMaxWeight
 end)
 
-RegisterNetEvent('esx:createMissingPickups')
-AddEventHandler('esx:createMissingPickups', function(missingPickups)
-	for pickupId,v in pairs(missingPickups) do
-		ESX.Game.SpawnLocalObject('prop_money_bag_01', v.coords, function(obj)
-			SetEntityAsMissionEntity(obj, true, false)
-			PlaceObjectOnGroundProperly(obj)
-			FreezeEntityPosition(obj, true)
-
-			pickups[pickupId] = {
-				id = pickupId,
-				obj = obj,
-				label = v.label,
-				inRange = false,
-				coords = vector3(v.coords.x, v.coords.y, v.coords.z)
-			}
-		end)
-	end
-end)
-
 AddEventHandler('playerSpawned', function()
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(1)
@@ -283,41 +264,84 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	end
 end)
 
-RegisterNetEvent('esx:pickup')
-AddEventHandler('esx:pickup', function(id, label, player)
-	local ped     = GetPlayerPed(GetPlayerFromServerId(player))
-	local coords  = GetEntityCoords(ped)
-	local forward = GetEntityForwardVector(ped)
-	coords = (coords + forward * 2.0)
+RegisterNetEvent('esx:createPickup')
+AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, name, components)
+	local playerPed = GetPlayerPed(GetPlayerFromServerId(playerId))
+	local entityCoords, forward, pickupObject = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
+	local objectCoords = (entityCoords + forward * 1.0)
 
-	ESX.Game.SpawnLocalObject('prop_money_bag_01', coords, function(obj)
-		SetEntityAsMissionEntity(obj, true, false)
-		PlaceObjectOnGroundProperly(obj)
-		FreezeEntityPosition(obj, true)
+	if type == 'item_weapon' then
+		ESX.Streaming.RequestWeaponAsset(GetHashKey(name))
+		pickupObject = CreateWeaponObject(GetHashKey(name), 50, objectCoords, true, 1.0, 0)
 
-		pickups[id] = {
-			id = id,
-			obj = obj,
-			label = label,
+		for k,v in ipairs(components) do
+			local component = ESX.GetWeaponComponent(name, v)
+			GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+		end
+	else
+		ESX.Game.SpawnLocalObject('prop_money_bag_01', objectCoords, function(obj)
+			pickupObject = obj
+		end)
+
+		while not pickupObject do
+			Citizen.Wait(10)
+		end
+	end
+
+	SetEntityAsMissionEntity(pickupObject, true, false)
+	PlaceObjectOnGroundProperly(pickupObject)
+	FreezeEntityPosition(pickupObject, true)
+
+	pickups[pickupId] = {
+		id = pickupId,
+		obj = pickupObject,
+		label = label,
+		inRange = false,
+		coords = objectCoords
+	}
+end)
+
+RegisterNetEvent('esx:createMissingPickups')
+AddEventHandler('esx:createMissingPickups', function(missingPickups)
+	for pickupId,pickup in pairs(missingPickups) do
+		local pickupObject = nil
+
+		if pickup.type == 'item_weapon' then
+			ESX.Streaming.RequestWeaponAsset(GetHashKey(pickup.name))
+			pickupObject = CreateWeaponObject(GetHashKey(pickup.name), 50, pickup.coords.x, pickup.coords.y, pickup.coords.z, true, 1.0, 0)
+
+			for k,componentName in ipairs(pickup.components) do
+				local component = ESX.GetWeaponComponent(pickup.name, componentName)
+				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+			end
+		else
+			ESX.Game.SpawnLocalObject('prop_money_bag_01', pickup.coords, function(obj)
+				pickupObject = obj
+			end)
+
+			while not pickupObject do
+				Citizen.Wait(10)
+			end
+		end
+
+		SetEntityAsMissionEntity(pickupObject, true, false)
+		PlaceObjectOnGroundProperly(pickupObject)
+		FreezeEntityPosition(pickupObject, true)
+
+		pickups[pickupId] = {
+			id = pickupId,
+			obj = pickupObject,
+			label = pickup.label,
 			inRange = false,
-			coords = coords
+			coords = vector3(pickup.coords.x, pickup.coords.y, pickup.coords.z)
 		}
-	end)
+	end
 end)
 
 RegisterNetEvent('esx:removePickup')
 AddEventHandler('esx:removePickup', function(id)
 	ESX.Game.DeleteObject(pickups[id].obj)
 	pickups[id] = nil
-end)
-
-RegisterNetEvent('esx:pickupWeapon')
-AddEventHandler('esx:pickupWeapon', function(weaponPickup, weaponName, ammo)
-	local playerPed = PlayerPedId()
-	local pickupCoords = GetOffsetFromEntityInWorldCoords(playerPed, 2.0, 0.0, 0.5)
-	local weaponHash = GetHashKey(weaponPickup)
-
-	CreateAmbientPickup(weaponHash, pickupCoords, 0, ammo, 1, false, true)
 end)
 
 RegisterNetEvent('esx:deleteVehicle')

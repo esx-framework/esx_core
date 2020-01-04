@@ -37,6 +37,7 @@ Locales['sv'] = {
   ['threw_account'] = 'du kastade ~g~%s SEK~s~ ~b~%s~s~',
   ['threw_weapon'] = 'du kastade ~b~%s~s~',
   ['threw_weapon_ammo'] = 'du kastade ~b~%s~s~ med ~o~%sx~s~ skott',
+  ['threw_weapon_already'] = 'du har redan ett sådant vapen på dig',
   ['threw_cannot_pickup'] = 'du kan inte plocka upp det på grund av att det kommer ej få plats i ditt förråd!',
   ['threw_pickup_prompt'] = 'tryck ~y~E~s~ för att plocka upp',
   -- Salary related

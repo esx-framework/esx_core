@@ -390,15 +390,14 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 	elseif type == 'item_weapon' then
 		if xPlayer.hasWeapon(itemName) then
 			local weaponNum, weapon = xPlayer.getWeapon(itemName)
-			local weaponPickup = 'PICKUP_' .. string.upper(itemName)
 			xPlayer.removeWeapon(itemName)
 
+			local pickupLabel = ('~y~%s~s~ [~g~%s~s~ ammo]'):format(weapon.label, weapon.ammo)
+			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, weapon.components)
+
 			if weapon.ammo > 0 then
-				TriggerClientEvent('esx:pickupWeapon', playerId, weaponPickup, itemName, weapon.ammo)
 				xPlayer.showNotification(_U('threw_weapon_ammo', weapon.label, weapon.ammo))
 			else
-				-- workaround for CreateAmbientPickup() giving 30 rounds of ammo when you drop the weapon with 0 ammo
-				TriggerClientEvent('esx:pickupWeapon', playerId, weaponPickup, itemName, 1)
 				xPlayer.showNotification(_U('threw_weapon', weapon.label))
 			end
 		end
@@ -435,6 +434,17 @@ AddEventHandler('esx:onPickup', function(id)
 		elseif pickup.type == 'item_account' then
 			success = true
 			xPlayer.addAccountMoney(pickup.name, pickup.count)
+		elseif pickup.type == 'item_weapon' then
+			if xPlayer.hasWeapon(pickup.name) then
+				xPlayer.showNotification(_U('threw_weapon_already'))
+			else
+				success = true
+				xPlayer.addWeapon(pickup.name, pickup.count)
+
+				for k,v in ipairs(pickup.components) do
+					xPlayer.addWeaponComponent(pickup.name, v)
+				end
+			end
 		end
 
 		if success then
