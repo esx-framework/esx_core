@@ -10,7 +10,9 @@ end)
 
 RegisterNetEvent('esx_sit:leavePlace')
 AddEventHandler('esx_sit:leavePlace', function(objectCoords)
-	seatsTaken[objectCoords] = nil
+	if seatsTaken[objectCoords] then
+		seatsTaken[objectCoords] = nil
+	end
 end)
 
 ESX.RegisterServerCallback('esx_sit:getPlace', function(source, cb, objectCoords)
