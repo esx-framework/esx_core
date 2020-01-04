@@ -106,7 +106,7 @@ function sit(object, modelName, data)
 			FreezeEntityPosition(object, true)
 
 			currentScenario = data.scenario
-
+			Citizen.Wait(1000)
 			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z - data.verticalOffset, GetEntityHeading(object) + 180.0, 0, true, true)
 			sitting = true
 		end
