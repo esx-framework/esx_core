@@ -1,7 +1,5 @@
 local Player          = nil
-local CruisedSpeed    = 0
-local CruisedSpeedKm  = 0
-local VehicleVectorY  = 0
+local CruisedSpeed, CruisedSpeedKm, VehicleVectorY = 0, 0, 0
 
 ESX = nil
 
