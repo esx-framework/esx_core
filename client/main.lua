@@ -747,15 +747,10 @@ function OpenPoliceActionsMenu()
 					{label = _U('cash'), model = 'hei_prop_cash_crate_half_full'}
 			}}, function(data2, menu2)
 				local playerPed = PlayerPedId()
-				local coords    = GetEntityCoords(playerPed)
-				local forward   = GetEntityForwardVector(playerPed)
-				local x, y, z   = table.unpack(coords + forward * 1.0)
+				local coords, forward = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
+				local objectCoords = (coords + forward * 1.0)
 
-				if data2.current.model == 'prop_roadcone02a' then
-					z = z - 2.0
-				end
-
-				ESX.Game.SpawnObject(data2.current.model, {x = x, y = y, z = z}, function(obj)
+				ESX.Game.SpawnObject(data2.current.model, objectCoords, function(obj)
 					SetEntityHeading(obj, GetEntityHeading(playerPed))
 					PlaceObjectOnGroundProperly(obj)
 				end)
