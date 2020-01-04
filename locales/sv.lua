@@ -145,7 +145,7 @@ Locales['sv'] = {
   ['inventory'] = 'förråd',
   ['police_stock'] = 'polisförråd',
   -- Misc
-  ['remove_prop'] = 'tryck ~INPUT_CONTEXT~ för att ta bort obejektet',
+  ['remove_prop'] = 'tryck ~INPUT_CONTEXT~ för att ta bort objektet',
   ['map_blip'] = 'polisstation',
   ['unrestrained_timer'] = 'dina handklovar har försvunnit',
   -- Notifications
