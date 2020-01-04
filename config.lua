@@ -34,6 +34,7 @@ Config.Interactables = {
 	'prop_chair_08',
 	'prop_chair_09',
 	'prop_chair_10',
+	'v_club_stagechair',
 	'prop_chateau_chair_01',
 	'prop_clown_chair',
 	'prop_cs_office_chair',
