@@ -361,7 +361,7 @@ Citizen.CreateThread(function()
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, Keys['E']) then
+			if IsControlJustReleased(0, 38) then
 
 				if CurrentAction == 'AmbulanceActions' then
 					OpenAmbulanceActionsMenu()
@@ -380,7 +380,7 @@ Citizen.CreateThread(function()
 			end
 
 		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not isDead then
-			if IsControlJustReleased(0, Keys['F6']) then
+			if IsControlJustReleased(0, 167) then
 				OpenMobileAmbulanceActionsMenu()
 			end
 		else
@@ -832,12 +832,12 @@ function WaitForVehicleToLoad(modelHash)
 		while not HasModelLoaded(modelHash) do
 			Citizen.Wait(0)
 
-			DisableControlAction(0, Keys['TOP'], true)
-			DisableControlAction(0, Keys['DOWN'], true)
-			DisableControlAction(0, Keys['LEFT'], true)
-			DisableControlAction(0, Keys['RIGHT'], true)
+			DisableControlAction(0, 27, true)
+			DisableControlAction(0, 173, true)
+			DisableControlAction(0, 174, true)
+			DisableControlAction(0, 175, true)
 			DisableControlAction(0, 176, true) -- ENTER key
-			DisableControlAction(0, Keys['BACKSPACE'], true)
+			DisableControlAction(0, 177, true)
 
 			drawLoadingText(_U('vehicleshop_awaiting_model'), 255, 255, 255, 255)
 		end
