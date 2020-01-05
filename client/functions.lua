@@ -990,7 +990,7 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 
 	if not size then size = 1 end
 	if not font then font = 0 end
-	
+
 	local scale = (size / distance) * 2
 	local fov = (1 / GetGameplayCamFov()) * 100
 	scale = scale * fov
@@ -1113,87 +1113,72 @@ ESX.ShowInventory = function()
 			align    = 'bottom-right',
 			elements = elements,
 		}, function(data1, menu1)
-			local item = data1.current.value
-			local type = data1.current.type
+			local item, type = data1.current.value, data1.current.type
 
 			if data1.current.action == 'give' then
-				local playersInArea = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
-				local foundPlayers, elements = false, {}
+				local playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
 
-				for k,v in ipairs(playersInArea) do
-					if v ~= PlayerId() then
-						foundPlayers = true
+				if #playersNearby > 0 then
+					local players, elements = {}, {}
 
-						table.insert(elements, {
-							label = GetPlayerName(v),
-							player = v
-						})
+					for k,player in ipairs(playersNearby) do
+						players[GetPlayerServerId(player)] = true
 					end
-				end
 
-				if foundPlayers then
-					foundPlayers = false
-
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
-						title    = _U('give_to'),
-						align    = 'bottom-right',
-						elements = elements
-					}, function(data2, menu2)
-						local playersInArea, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
-	
-						for k,v in ipairs(playersInArea) do
-							if v ~= PlayerId() then
-	
-								if v == data2.current.player then
-									foundPlayers = true
-									nearbyPlayer = v
-									break
-								end
-							end
+					ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
+						for playerId,playerName in pairs(returnedPlayers) do
+							table.insert(elements, {
+								label = playerName,
+								playerId = playerId
+							})
 						end
-	
-						if foundPlayers then
-							if type == 'item_weapon' then
-								local closestPed = GetPlayerPed(nearbyPlayer)
-								local sourceAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
-		
-								if IsPedOnFoot(closestPed) then
-									TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(nearbyPlayer), type, item, sourceAmmo)
-									menu2.close()
-									menu1.close()
+
+						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
+							title    = _U('give_to'),
+							align    = 'bottom-right',
+							elements = elements
+						}, function(data2, menu2)
+							local selectedPlayer, selectedPlayerId = GetPlayerFromServerId(data2.current.playerId), data2.current.playerId
+							playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
+							playersNearby = ESX.Table.Set(playersNearby)
+
+							if playersNearby[selectedPlayer] then
+								local selectedPlayerPed = GetPlayerPed(selectedPlayer)
+
+								if IsPedOnFoot(selectedPlayerPed) then
+									if type == 'item_weapon' then
+										TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, nil)
+										menu2.close()
+										menu1.close()
+									else
+										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
+											title = _U('amount')
+										}, function(data3, menu3)
+											local quantity = tonumber(data3.value)
+
+											if quantity then
+												TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
+												menu3.close()
+												menu2.close()
+												menu1.close()
+											else
+												ESX.ShowNotification(_U('amount_invalid'))
+											end
+										end, function(data3, menu3)
+											menu3.close()
+										end)
+									end
 								else
 									ESX.ShowNotification(_U('in_vehicle'))
 								end
 							else
-								ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
-									title = _U('amount')
-								}, function(data3, menu3)
-									local quantity = tonumber(data3.value)
-									local closestPed = GetPlayerPed(nearbyPlayer)
-		
-									if IsPedOnFoot(closestPed) then
-										if quantity then
-											TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(nearbyPlayer), type, item, quantity)
-											menu3.close()
-											menu2.close()
-											menu1.close()
-										else
-											ESX.ShowNotification(_U('amount_invalid'))
-										end
-									else
-										ESX.ShowNotification(_U('in_vehicle'))
-									end
-								end, function(data3, menu3)
-									menu3.close()
-								end)
+								ESX.ShowNotification(_U('players_nearby'))
+								menu2.close()
 							end
-						else
-							ESX.ShowNotification(_U('players_nearby'))
+						end, function(data2, menu2)
 							menu2.close()
-						end
-					end, function(data2, menu2)
-						menu2.close()
-					end) -- give end
+						end)
+					end, players)
 				else
 					ESX.ShowNotification(_U('players_nearby'))
 				end
@@ -1212,7 +1197,7 @@ ESX.ShowInventory = function()
 							title = _U('amount')
 						}, function(data2, menu2)
 							local quantity = tonumber(data2.value)
-	
+
 							if quantity then
 								menu2.close()
 								menu1.close()
@@ -1244,7 +1229,7 @@ ESX.ShowInventory = function()
 								title = _U('amountammo')
 							}, function(data2, menu2)
 								local quantity = tonumber(data2.value)
-	
+
 								if quantity then
 									if pedAmmo >= quantity and quantity > 0 then
 										TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
