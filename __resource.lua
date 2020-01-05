@@ -9,6 +9,7 @@ client_scripts {
 	'locales/br.lua',
 	'locales/de.lua',
 	'locales/en.lua',
+	'locales/es.lua',
 	'locales/fi.lua',
 	'locales/fr.lua',
 	'locales/pl.lua',
