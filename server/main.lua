@@ -9,7 +9,7 @@ ESX.RegisterUsableItem('bread', function(source)
 
 	TriggerClientEvent('esx_status:add', source, 'hunger', 200000)
 	TriggerClientEvent('esx_basicneeds:onEat', source)
-	TriggerClientEvent('esx:showNotification', source, _U('used_bread'))
+	xPlayer.showNotification(_U('used_bread'))
 end)
 
 ESX.RegisterUsableItem('water', function(source)
@@ -19,7 +19,7 @@ ESX.RegisterUsableItem('water', function(source)
 
 	TriggerClientEvent('esx_status:add', source, 'thirst', 200000)
 	TriggerClientEvent('esx_basicneeds:onDrink', source)
-	TriggerClientEvent('esx:showNotification', source, _U('used_water'))
+	xPlayer.showNotification(_U('used_water'))
 end)
 
 TriggerEvent('es:addGroupCommand', 'heal', 'admin', function(source, args, user)
