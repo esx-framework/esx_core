@@ -30,39 +30,36 @@ MySQL.ready(function()
 		end
 	end)
 
-	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
-
-	for i=1, #result do
-		ESX.Jobs[result[i].name] = result[i]
-		ESX.Jobs[result[i].name].grades = {}
-	end
-
-	local result2 = MySQL.Sync.fetchAll('SELECT * FROM job_grades', {})
-
-	for i=1, #result2 do
-		if ESX.Jobs[result2[i].job_name] then
-			ESX.Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
-		else
-			print(('[es_extended] [^3WARNING^7] Invalid job "%s" from table job_grades ignored'):format(result2[i].job_name))
+	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
+		for k,v in ipairs(jobs) do
+			ESX.Jobs[v.name] = v
+			ESX.Jobs[v.name].grades = {}
 		end
-	end
 
-	for k,v in pairs(ESX.Jobs) do
-		if next(v.grades) == nil then
-			ESX.Jobs[v.name] = nil
-			print(('[es_extended] [^3WARNING^7] Ignoring job "%s" due to missing job grades'):format(v.name))
-		end
-	end
+		MySQL.Async.fetchAll('SELECT * FROM job_grades', {}, function(jobGrades)
+			for k,v in ipairs(jobGrades) do
+				if ESX.Jobs[v.job_name] then
+					ESX.Jobs[v.job_name].grades[tostring(v.grade)] = v
+				else
+					print(('[es_extended] [^3WARNING^7] Ignoring job grades for "%s" due to missing job'):format(v.job_name))
+				end
+			end
+
+			for k2,v2 in pairs(ESX.Jobs) do
+				if ESX.Table.SizeOf(v2.grades) == 0 then
+					ESX.Jobs[v2.name] = nil
+					print(('[es_extended] [^3WARNING^7] Ignoring job "%s" due to no job grades found'):format(v2.name))
+				end
+			end
+		end)
+	end)
 
 	print('[es_extended] [^2INFO^7] ESX developed by ESX-Org has been initialized')
 end)
 
-AddEventHandler('esx:playerLoaded', function(source)
-	local xPlayer         = ESX.GetPlayerFromId(source)
-	local accounts        = {}
-	local items           = {}
-	local xPlayerAccounts = xPlayer.getAccounts()
-	local xPlayerItems    = xPlayer.getInventory()
+AddEventHandler('esx:playerLoaded', function(playerId)
+	local xPlayer, accounts, items = ESX.GetPlayerFromId(playerId), {}, {}
+	local xPlayerAccounts, xPlayerItems = xPlayer.getAccounts(), xPlayer.getInventory()
 
 	for i=1, #xPlayerAccounts, 1 do
 		accounts[xPlayerAccounts[i].name] = xPlayerAccounts[i].money
@@ -72,16 +69,16 @@ AddEventHandler('esx:playerLoaded', function(source)
 		items[xPlayerItems[i].name] = xPlayerItems[i].count
 	end
 
-	ESX.LastPlayerData[source] = {
+	ESX.LastPlayerData[playerId] = {
 		accounts = accounts,
-		items    = items
+		items = items
 	}
 end)
 
 RegisterServerEvent('esx:clientLog')
 AddEventHandler('esx:clientLog', function(msg)
 	if Config.EnableDebug then
-		print(('[es_extended] [^2TRACE^7] %s'):format(msg))
+		print(('[es_extended] [^2TRACE^7] %s^7'):format(msg))
 	end
 end)
 

@@ -1,6 +1,6 @@
-ESX.Trace = function(str)
+ESX.Trace = function(msg)
 	if Config.EnableDebug then
-		print(('[es_extended] [^2TRACE^7] %s'):format(str))
+		print(('[es_extended] [^2TRACE^7] %s^7'):format(msg))
 	end
 end
 

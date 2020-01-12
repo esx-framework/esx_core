@@ -1,5 +1,4 @@
 ESX.StartPayCheck = function()
-
 	function payCheck()
 		local xPlayers = ESX.GetPlayers()
 
@@ -39,9 +38,7 @@ ESX.StartPayCheck = function()
 		end
 
 		SetTimeout(Config.PaycheckInterval, payCheck)
-
 	end
 
 	SetTimeout(Config.PaycheckInterval, payCheck)
-
 end
