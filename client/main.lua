@@ -308,10 +308,7 @@ function RemoveItemsAfterRPDeath()
 				z = Config.RespawnPoint.coords.z
 			}
 
-			ESX.SetPlayerData('lastPosition', formattedCoords)
 			ESX.SetPlayerData('loadout', {})
-
-			TriggerServerEvent('esx:updateLastPosition', formattedCoords)
 			RespawnPed(PlayerPedId(), formattedCoords, Config.RespawnPoint.heading)
 
 			StopScreenEffect('DeathFailOut')
@@ -364,10 +361,6 @@ AddEventHandler('esx_ambulancejob:revive', function()
 			y = ESX.Math.Round(coords.y, 1),
 			z = ESX.Math.Round(coords.z, 1)
 		}
-
-		ESX.SetPlayerData('lastPosition', formattedCoords)
-
-		TriggerServerEvent('esx:updateLastPosition', formattedCoords)
 
 		RespawnPed(playerPed, formattedCoords, 0.0)
 
