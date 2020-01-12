@@ -449,7 +449,6 @@ Citizen.CreateThread(function()
 
 		if loadoutChanged and isLoadoutLoaded then
 			ESX.PlayerData.loadout = loadout
-			TriggerServerEvent('esx:updateLoadout', loadout)
 		end
 	end
 end)

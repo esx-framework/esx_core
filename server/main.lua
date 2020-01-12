@@ -245,11 +245,7 @@ AddEventHandler('playerDropped', function(reason)
 	end
 end)
 
-RegisterServerEvent('esx:updateLoadout')
-AddEventHandler('esx:updateLoadout', function(loadout)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.loadout = loadout
-end)
 
 RegisterServerEvent('esx:updateLastPosition')
 AddEventHandler('esx:updateLastPosition', function(position)
