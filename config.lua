@@ -10,6 +10,7 @@ Config.EnableHud            = true -- enable the default hud? Display current jo
 Config.EnablePvP            = true -- enable pvp?
 Config.MaxWeight            = 24   -- the max inventory weight without backpack
 
-Config.PaycheckInterval     = 7 * 60000
+Config.PaycheckInterval     = 7 * 60000 -- how often to recieve pay checks in milliseconds
+Config.CoordsSyncInterval   = 2 * 60000 -- how often to sync coords with server in milliseconds
 
 Config.EnableDebug          = false

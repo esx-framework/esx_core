@@ -1,4 +1,4 @@
-function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, lastPosition)
+function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, coords)
 	local self = {}
 
 	self.player       = player
@@ -7,8 +7,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.job          = job
 	self.loadout      = loadout
 	self.name         = name
-	self.lastPosition = lastPosition
 	self.maxWeight    = Config.MaxWeight
+	self.coords       = coords
 
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
@@ -41,23 +41,25 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		return self.player.get('bank')
 	end
 
-	self.getCoords = function(vectorType)
-		local coords = self.player.get('coords')
-		coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1)}
+	self.setCoords = function(coords)
+		self.updateCoords(coords)
+		self.triggerEvent('esx:teleport', coords)
+	end
 
-		if vectorType then
-			return vector3(coords.x, coords.y, coords.z)
+	self.updateCoords = function(coords)
+		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(coords.heading, 1)}
+	end
+
+	self.getCoords = function(vector)
+		if vector then
+			return vector3(self.coords.x, self.coords.y, self.coords.z)
 		else
-			return coords
+			return self.coords
 		end
 	end
 
-	self.setCoords = function(x, y, z)
-		self.player.coords = {x = x, y = y, z = z}
-	end
-
 	self.kick = function(reason)
-		self.player.kick(reason)
+		DropPlayer(self.source, reason)
 	end
 
 	self.addMoney = function(money)
@@ -194,20 +196,6 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		self.name = newName
 	end
 
-	self.getLastPosition = function()
-		if self.lastPosition and self.lastPosition.x and self.lastPosition.y and self.lastPosition.z then
-			self.lastPosition.x = ESX.Math.Round(self.lastPosition.x, 1)
-			self.lastPosition.y = ESX.Math.Round(self.lastPosition.y, 1)
-			self.lastPosition.z = ESX.Math.Round(self.lastPosition.z, 1)
-		end
-
-		return self.lastPosition
-	end
-
-	self.setLastPosition = function(position)
-		self.lastPosition = position
-	end
-
 	self.getMissingAccounts = function(cb)
 		MySQL.Async.fetchAll('SELECT name FROM user_accounts WHERE identifier = @identifier', {
 			['@identifier'] = self.getIdentifier()
@@ -262,7 +250,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					self.set('bank', newMoney)
 				end
 
-				TriggerClientEvent('esx:setAccountMoney', self.source, account)
+				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
 	end
@@ -279,7 +267,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					self.set('bank', newMoney)
 				end
 	
-				TriggerClientEvent('esx:setAccountMoney', self.source, account)
+				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
 	end
@@ -296,7 +284,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 					self.set('bank', newMoney)
 				end
 	
-				TriggerClientEvent('esx:setAccountMoney', self.source, account)
+				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
 	end
@@ -319,7 +307,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			item.count     = newCount
 
 			TriggerEvent('esx:onAddInventoryItem', self.source, item, count)
-			TriggerClientEvent('esx:addInventoryItem', self.source, item, count)
+			self.triggerEvent('esx:addInventoryItem', item, count)
 		end
 	end
 
@@ -333,7 +321,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				item.count = newCount
 
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item, count)
-				TriggerClientEvent('esx:removeInventoryItem', self.source, item, count)
+				self.triggerEvent('esx:removeInventoryItem', item, count)
 			end
 		end
 	end
@@ -347,10 +335,10 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 			if oldCount > item.count  then
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item, oldCount - item.count)
-				TriggerClientEvent('esx:removeInventoryItem', self.source, item, oldCount - item.count)
+				self.triggerEvent('esx:removeInventoryItem', item, oldCount - item.count)
 			else
 				TriggerEvent('esx:onAddInventoryItem', self.source, item, item.count - oldCount)
-				TriggerClientEvent('esx:addInventoryItem', self.source, item, item.count - oldCount)
+				self.triggerEvent('esx:addInventoryItem', item, item.count - oldCount)
 			end
 		end
 	end
@@ -388,7 +376,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 	self.setMaxWeight = function(newWeight)
 		self.maxWeight = newWeight
-		TriggerClientEvent('esx:setMaxWeight', self.source, self.maxWeight)
+		self.triggerEvent('esx:setMaxWeight', self.maxWeight)
 	end
 
 	self.setJob = function(job, grade)
@@ -419,7 +407,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			end
 
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
-			TriggerClientEvent('esx:setJob', self.source, self.job)
+			self.triggerEvent('esx:setJob', self.job)
 		else
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
 		end
@@ -436,8 +424,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				components = {}
 			})
 
-			TriggerClientEvent('esx:addWeapon', self.source, weaponName, ammo)
-			TriggerClientEvent('esx:addInventoryItem', self.source, {label = weaponLabel}, 1)
+			self.triggerEvent('esx:addWeapon', weaponName, ammo)
+			self.triggerEvent('esx:addInventoryItem', {label = weaponLabel}, 1)
 		end
 	end
 
@@ -447,7 +435,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if weapon then
 			if not self.hasWeaponComponent(weaponName, weaponComponent) then
 				table.insert(self.loadout[loadoutNum].components, weaponComponent)
-				TriggerClientEvent('esx:addWeaponComponent', self.source, weaponName, weaponComponent)
+				self.triggerEvent('esx:addWeaponComponent', weaponName, weaponComponent)
 			end
 		end
 	end
@@ -457,7 +445,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 		if weapon then
 			weapon.ammo = weapon.ammo + ammoCount
-			TriggerClientEvent('esx:setWeaponAmmo', self.source, weaponName, weapon.ammo)
+			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
 		end
 	end
 
@@ -469,7 +457,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				weaponLabel = v.label
 
 				for k2,v2 in ipairs(v.components) do
-					TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, v2)
+					self.triggerEvent('esx:removeWeaponComponent', weaponName, v2)
 				end
 
 				table.remove(self.loadout, k)
@@ -478,8 +466,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		end
 
 		if weaponLabel then
-			TriggerClientEvent('esx:removeWeapon', self.source, weaponName, ammo)
-			TriggerClientEvent('esx:removeInventoryItem', self.source, {label = weaponLabel}, 1)
+			self.triggerEvent('esx:removeWeapon', weaponName, ammo)
+			self.triggerEvent('esx:removeInventoryItem', {label = weaponLabel}, 1)
 		end
 	end
 
@@ -494,7 +482,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 				end
 			end
 
-			TriggerClientEvent('esx:removeWeaponComponent', self.source, weaponName, weaponComponent)
+			self.triggerEvent('esx:removeWeaponComponent', weaponName, weaponComponent)
 		end
 	end
 
@@ -503,7 +491,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 
 		if weapon then
 			weapon.ammo = weapon.ammo - ammoCount
-			TriggerClientEvent('esx:setWeaponAmmo', self.source, weaponName, weapon.ammo)
+			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
 		end
 	end
 
@@ -544,11 +532,11 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.showNotification = function(msg)
-		TriggerClientEvent('esx:showNotification', self.source, msg)
+		self.triggerEvent('esx:showNotification', msg)
 	end
 
 	self.showHelpNotification = function(msg)
-		TriggerClientEvent('esx:showHelpNotification', self.source, msg)
+		self.triggerEvent('esx:showHelpNotification', msg)
 	end
 
 	return self

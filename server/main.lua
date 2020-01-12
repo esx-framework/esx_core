@@ -1,233 +1,225 @@
-AddEventHandler('es:playerLoaded', function(source, _player)
-	local playerId = source
-	local tasks   = {}
+AddEventHandler('es:playerLoaded', function(playerId, player)
+	local tasks = {}
 
 	local userData = {
-		accounts     = {},
-		inventory    = {},
-		job          = {},
-		loadout      = {},
-		playerName   = GetPlayerName(playerId),
-		lastPosition = nil
+		accounts = {},
+		inventory = {},
+		job = {},
+		loadout = {},
+		playerName = GetPlayerName(playerId),
+		coords = nil
 	}
 
-	TriggerEvent('es:getPlayerFromId', playerId, function(player)
-		-- Update user name in DB
-		table.insert(tasks, function(cb)
-			MySQL.Async.execute('UPDATE users SET name = @name WHERE identifier = @identifier', {
-				['@identifier'] = player.getIdentifier(),
-				['@name'] = userData.playerName
-			}, function(rowsChanged)
-				cb()
-			end)
+	-- Update user name in DB
+	table.insert(tasks, function(cb)
+		MySQL.Async.execute('UPDATE users SET name = @name WHERE identifier = @identifier', {
+			['@identifier'] = player.getIdentifier(),
+			['@name'] = userData.playerName
+		}, function(rowsChanged)
+			cb()
 		end)
+	end)
 
-		-- Get accounts
-		table.insert(tasks, function(cb)
-			MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
-				['@identifier'] = player.getIdentifier()
-			}, function(accounts)
-				local validAccounts = ESX.Table.Set(Config.Accounts)
-				for k,v in ipairs(accounts) do
-					if validAccounts[v.name] then
-						table.insert(userData.accounts, {
-							name  = v.name,
-							money = v.money,
-							label = Config.AccountLabels[v.name]
-						})
-					end
+	-- Get accounts
+	table.insert(tasks, function(cb)
+		MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
+			['@identifier'] = player.getIdentifier()
+		}, function(accounts)
+			local validAccounts = ESX.Table.Set(Config.Accounts)
+			for k,v in ipairs(accounts) do
+				if validAccounts[v.name] then
+					table.insert(userData.accounts, {
+						name  = v.name,
+						money = v.money,
+						label = Config.AccountLabels[v.name]
+					})
 				end
+			end
 
-				cb()
-			end)
+			cb()
 		end)
+	end)
 
-		-- Get inventory
-		table.insert(tasks, function(cb)
+	-- Get inventory
+	table.insert(tasks, function(cb)
+		MySQL.Async.fetchAll('SELECT item, count FROM user_inventory WHERE identifier = @identifier', {
+			['@identifier'] = player.getIdentifier()
+		}, function(inventory)
+			local tasks2, foundItems = {}, {}
 
-			MySQL.Async.fetchAll('SELECT item, count FROM user_inventory WHERE identifier = @identifier', {
-				['@identifier'] = player.getIdentifier()
-			}, function(inventory)
-				local tasks2, foundItems = {}, {}
+			for k,v in ipairs(inventory) do
+				local item = ESX.Items[v.item]
 
-				for k,v in ipairs(inventory) do
-					local item = ESX.Items[v.item]
+				if item then
+					foundItems[v.item] = true
 
-					if item then
-						foundItems[v.item] = true
-
-						table.insert(userData.inventory, {
-							name = v.item,
-							count = v.count,
-							label = item.label,
-							weight = item.weight,
-							usable = ESX.UsableItemsCallbacks[v.item] ~= nil,
-							rare = item.rare,
-							canRemove = item.canRemove
-						})
-					else
-						print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(v.item, player.getIdentifier()))
-					end
+					table.insert(userData.inventory, {
+						name = v.item,
+						count = v.count,
+						label = item.label,
+						weight = item.weight,
+						usable = ESX.UsableItemsCallbacks[v.item] ~= nil,
+						rare = item.rare,
+						canRemove = item.canRemove
+					})
+				else
+					print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(v.item, player.getIdentifier()))
 				end
+			end
 
-				for itemName,item in pairs(ESX.Items) do
-					if not foundItems[itemName] then
-						table.insert(userData.inventory, {
-							name = itemName,
-							count = 0,
-							label = item.label,
-							weight = item.weight,
-							usable = ESX.UsableItemsCallbacks[itemName] ~= nil,
-							rare = item.rare,
-							canRemove = item.canRemove
-						})
+			for name,item in pairs(ESX.Items) do
+				if not foundItems[name] then
+					table.insert(userData.inventory, {
+						name = name,
+						count = 0,
+						label = item.label,
+						weight = item.weight,
+						usable = ESX.UsableItemsCallbacks[name] ~= nil,
+						rare = item.rare,
+						canRemove = item.canRemove
+					})
 
-						local scope = function(item, identifier)
-							table.insert(tasks2, function(cb2)
-								MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)', {
-									['@identifier'] = identifier,
-									['@item'] = item,
-									['@count'] = 0
-								}, function(rowsChanged)
-									cb2()
-								end)
+					local scope = function(item, identifier)
+						table.insert(tasks2, function(cb2)
+							MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)', {
+								['@identifier'] = identifier,
+								['@item'] = item,
+								['@count'] = 0
+							}, function(rowsChanged)
+								cb2()
 							end)
-						end
+						end)
+					end
 
-						scope(itemName, player.getIdentifier())
+					scope(name, player.getIdentifier())
+				end
+			end
+
+			Async.parallelLimit(tasks2, 5, function(results) end)
+
+			table.sort(userData.inventory, function(a,b)
+				return a.label < b.label
+			end)
+
+			cb()
+		end)
+
+	end)
+
+	-- Get job and loadout
+	table.insert(tasks, function(cb)
+
+		local tasks2 = {}
+
+		-- Get job name, grade and coords
+		table.insert(tasks2, function(cb2)
+
+			MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position FROM users WHERE identifier = @identifier', {
+				['@identifier'] = player.getIdentifier()
+			}, function(result)
+				local job, grade = result[1].job, tostring(result[1].job_grade)
+
+				if ESX.DoesJobExist(job, grade) then
+					local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+
+					userData.job = {}
+
+					userData.job.id    = jobObject.id
+					userData.job.name  = jobObject.name
+					userData.job.label = jobObject.label
+
+					userData.job.grade        = tonumber(grade)
+					userData.job.grade_name   = gradeObject.name
+					userData.job.grade_label  = gradeObject.label
+					userData.job.grade_salary = gradeObject.salary
+
+					userData.job.skin_male    = {}
+					userData.job.skin_female  = {}
+
+					if gradeObject.skin_male then
+						userData.job.skin_male = json.decode(gradeObject.skin_male)
+					end
+
+					if gradeObject.skin_female then
+						userData.job.skin_female = json.decode(gradeObject.skin_female)
+					end
+				else
+					print(('[es_extended] [^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(player.getIdentifier(), job, grade))
+
+					local job, grade = 'unemployed', '0'
+					local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+
+					userData.job = {}
+
+					userData.job.id    = jobObject.id
+					userData.job.name  = jobObject.name
+					userData.job.label = jobObject.label
+
+					userData.job.grade        = tonumber(grade)
+					userData.job.grade_name   = gradeObject.name
+					userData.job.grade_label  = gradeObject.label
+					userData.job.grade_salary = gradeObject.salary
+
+					userData.job.skin_male    = {}
+					userData.job.skin_female  = {}
+				end
+
+				if result[1].loadout then
+					userData.loadout = json.decode(result[1].loadout)
+
+					-- Compatibility with old loadouts prior to components update
+					for k,v in ipairs(userData.loadout) do
+						if v.components == nil then
+							v.components = {}
+						end
 					end
 				end
 
-				Async.parallelLimit(tasks2, 5, function(results) end)
-
-				table.sort(userData.inventory, function(a,b)
-					return a.label < b.label
-				end)
-
-				cb()
+				userData.coords = json.decode(result[1].position)
+				cb2()
 			end)
 
 		end)
 
-		-- Get job and loadout
-		table.insert(tasks, function(cb)
+		Async.series(tasks2, cb)
 
-			local tasks2 = {}
+	end)
 
-			-- Get job name, grade and last position
-			table.insert(tasks2, function(cb2)
+	-- Run Tasks
+	Async.parallel(tasks, function(results)
+		local xPlayer = CreateExtendedPlayer(player, userData.accounts, userData.inventory, userData.job, userData.loadout, userData.playerName, userData.coords)
 
-				MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position FROM users WHERE identifier = @identifier', {
-					['@identifier'] = player.getIdentifier()
-				}, function(result)
-					local job, grade = result[1].job, tostring(result[1].job_grade)
-
-					if ESX.DoesJobExist(job, grade) then
-						local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
-
-						userData.job = {}
-
-						userData.job.id    = jobObject.id
-						userData.job.name  = jobObject.name
-						userData.job.label = jobObject.label
-
-						userData.job.grade        = tonumber(grade)
-						userData.job.grade_name   = gradeObject.name
-						userData.job.grade_label  = gradeObject.label
-						userData.job.grade_salary = gradeObject.salary
-
-						userData.job.skin_male    = {}
-						userData.job.skin_female  = {}
-
-						if gradeObject.skin_male ~= nil then
-							userData.job.skin_male = json.decode(gradeObject.skin_male)
-						end
-
-						if gradeObject.skin_female ~= nil then
-							userData.job.skin_female = json.decode(gradeObject.skin_female)
-						end
-					else
-						print(('[es_extended] [^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(player.getIdentifier(), job, grade))
-
-						local job, grade = 'unemployed', '0'
-						local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
-
-						userData.job = {}
-
-						userData.job.id    = jobObject.id
-						userData.job.name  = jobObject.name
-						userData.job.label = jobObject.label
-
-						userData.job.grade        = tonumber(grade)
-						userData.job.grade_name   = gradeObject.name
-						userData.job.grade_label  = gradeObject.label
-						userData.job.grade_salary = gradeObject.salary
-
-						userData.job.skin_male    = {}
-						userData.job.skin_female  = {}
-					end
-
-					if result[1].loadout ~= nil then
-						userData.loadout = json.decode(result[1].loadout)
-
-						-- Compatibility with old loadouts prior to components update
-						for k,v in ipairs(userData.loadout) do
-							if v.components == nil then
-								v.components = {}
-							end
-						end
-					end
-
-					if result[1].position ~= nil then
-						userData.lastPosition = json.decode(result[1].position)
-					end
-
-					cb2()
-				end)
-
-			end)
-
-			Async.series(tasks2, cb)
-
-		end)
-
-		-- Run Tasks
-		Async.parallel(tasks, function(results)
-			local xPlayer = CreateExtendedPlayer(player, userData.accounts, userData.inventory, userData.job, userData.loadout, userData.playerName, userData.lastPosition)
-
-			xPlayer.getMissingAccounts(function(missingAccounts)
-				if #missingAccounts > 0 then
-					for i=1, #missingAccounts, 1 do
-						table.insert(xPlayer.accounts, {
-							name  = missingAccounts[i],
-							money = 0,
-							label = Config.AccountLabels[missingAccounts[i]]
-						})
-					end
-
-					xPlayer.createAccounts(missingAccounts)
+		xPlayer.getMissingAccounts(function(missingAccounts)
+			if #missingAccounts > 0 then
+				for i=1, #missingAccounts, 1 do
+					table.insert(xPlayer.accounts, {
+						name = missingAccounts[i],
+						money = 0,
+						label = Config.AccountLabels[missingAccounts[i]]
+					})
 				end
 
-				ESX.Players[playerId] = xPlayer
+				xPlayer.createAccounts(missingAccounts)
+			end
 
-				TriggerEvent('esx:playerLoaded', playerId, xPlayer)
+			ESX.Players[playerId] = xPlayer
 
-				TriggerClientEvent('esx:playerLoaded', playerId, {
-					identifier   = xPlayer.identifier,
-					accounts     = xPlayer.getAccounts(),
-					inventory    = xPlayer.getInventory(),
-					job          = xPlayer.getJob(),
-					loadout      = xPlayer.getLoadout(),
-					lastPosition = xPlayer.getLastPosition(),
-					money        = xPlayer.getMoney(),
-					maxWeight    = xPlayer.maxWeight
-				})
+			TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 
-				xPlayer.displayMoney(xPlayer.getMoney())
-				TriggerClientEvent('esx:createMissingPickups', playerId, ESX.Pickups)
-			end)
+			xPlayer.triggerEvent('esx:playerLoaded', {
+				identifier = xPlayer.identifier,
+				accounts = xPlayer.getAccounts(),
+				coords = xPlayer.getCoords(),
+				inventory = xPlayer.getInventory(),
+				job = xPlayer.getJob(),
+				loadout = xPlayer.getLoadout(),
+				money = xPlayer.getMoney(),
+				maxWeight = xPlayer.maxWeight
+			})
+
+			xPlayer.displayMoney(xPlayer.getMoney())
+			xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		end)
-
 	end)
 end)
 
@@ -245,15 +237,16 @@ AddEventHandler('playerDropped', function(reason)
 	end
 end)
 
+RegisterNetEvent('esx:updateCoords')
+AddEventHandler('esx:updateCoords', function(coords)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-RegisterServerEvent('esx:updateLastPosition')
-AddEventHandler('esx:updateLastPosition', function(position)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.setLastPosition(position)
+	if xPlayer then
+		xPlayer.updateCoords(coords)
+	end
 end)
 
-RegisterServerEvent('esx:giveInventoryItem')
+RegisterNetEvent('esx:giveInventoryItem')
 AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
 	local playerId = source
 	local sourceXPlayer = ESX.GetPlayerFromId(playerId)
@@ -306,7 +299,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 				sourceXPlayer.removeWeapon(itemName)
 				targetXPlayer.addWeapon(itemName, itemCount)
-	
+
 				if itemCount > 0 then
 					sourceXPlayer.showNotification(_U('gave_weapon_withammo', weaponLabel, itemCount, targetXPlayer.name))
 					targetXPlayer.showNotification(_U('received_weapon_withammo', weaponLabel, itemCount, sourceXPlayer.name))
@@ -339,7 +332,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 	end
 end)
 
-RegisterServerEvent('esx:removeInventoryItem')
+RegisterNetEvent('esx:removeInventoryItem')
 AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 	local playerId = source
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -406,7 +399,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 	end
 end)
 
-RegisterServerEvent('esx:useItem')
+RegisterNetEvent('esx:useItem')
 AddEventHandler('esx:useItem', function(itemName)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local count = xPlayer.getInventoryItem(itemName).count
@@ -418,7 +411,7 @@ AddEventHandler('esx:useItem', function(itemName)
 	end
 end)
 
-RegisterServerEvent('esx:onPickup')
+RegisterNetEvent('esx:onPickup')
 AddEventHandler('esx:onPickup', function(id)
 	local pickup, xPlayer, success = ESX.Pickups[id], ESX.GetPlayerFromId(source)
 
@@ -465,7 +458,6 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
 		loadout      = xPlayer.getLoadout(),
-		lastPosition = xPlayer.getLastPosition(),
 		money        = xPlayer.getMoney()
 	})
 end)
@@ -479,7 +471,6 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
 		loadout      = xPlayer.getLoadout(),
-		lastPosition = xPlayer.getLastPosition(),
 		money        = xPlayer.getMoney()
 	})
 end)

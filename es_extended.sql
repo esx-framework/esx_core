@@ -6,7 +6,7 @@ ALTER TABLE `users`
 	ADD COLUMN `job` VARCHAR(50) NULL DEFAULT 'unemployed' AFTER `skin`,
 	ADD COLUMN `job_grade` INT NULL DEFAULT 0 AFTER `job`,
 	ADD COLUMN `loadout` LONGTEXT NULL AFTER `job_grade`,
-	ADD COLUMN `position` VARCHAR(36) NULL AFTER `loadout`
+	ADD COLUMN `position` VARCHAR(53) NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}' AFTER `loadout`
 ;
 
 CREATE TABLE `items` (
