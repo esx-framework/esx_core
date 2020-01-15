@@ -752,7 +752,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.fuelLevel then SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0) end
 		if props.dirtLevel then SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0) end
 		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
-		if props.color2 then SetVehicleColours(vehicle, colorPrimary, props.color2) end
+		if props.color2 then SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2) end
 		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end
 		if props.wheelColor then SetVehicleExtraColours(vehicle, pearlescentColor, props.wheelColor) end
 		if props.wheels then SetVehicleWheelType(vehicle, props.wheels) end
