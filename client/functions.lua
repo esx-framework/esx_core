@@ -278,13 +278,17 @@ ESX.UI.ShowInventoryItemNotification = function(add, item, count)
 end
 
 ESX.Game.GetPedMugshot = function(ped)
-	local mugshot = RegisterPedheadshot(ped)
+	if DoesEntityExist(ped) then
+		local mugshot = RegisterPedheadshot(ped)
 
-	while not IsPedheadshotReady(mugshot) do
-		Citizen.Wait(0)
+		while not IsPedheadshotReady(mugshot) do
+			Citizen.Wait(0)
+		end
+
+		return mugshot, GetPedheadshotTxdString(mugshot)
+	else
+		return
 	end
-
-	return mugshot, GetPedheadshotTxdString(mugshot)
 end
 
 ESX.Game.Teleport = function(entity, coords, cb)
@@ -512,15 +516,14 @@ ESX.Game.GetClosestPlayer = function(coords)
 end
 
 ESX.Game.GetPlayersInArea = function(coords, area)
-	local players       = ESX.Game.GetPlayers()
-	local playersInArea = {}
+	local players, playersInArea = ESX.Game.GetPlayers(), {}
+	coords = vector3(coords.x, coords.y, coords.z)
 
 	for i=1, #players, 1 do
-		local target       = GetPlayerPed(players[i])
+		local target = GetPlayerPed(players[i])
 		local targetCoords = GetEntityCoords(target)
-		local distance     = GetDistanceBetweenCoords(targetCoords, coords.x, coords.y, coords.z, true)
 
-		if distance <= area then
+		if #(coords - targetCoords) <= area then
 			table.insert(playersInArea, players[i])
 		end
 	end
@@ -539,23 +542,22 @@ ESX.Game.GetVehicles = function()
 end
 
 ESX.Game.GetClosestVehicle = function(coords)
-	local vehicles        = ESX.Game.GetVehicles()
-	local closestDistance = -1
-	local closestVehicle  = -1
-	local coords          = coords
+	local vehicles = ESX.Game.GetVehicles()
+	local closestDistance, closestVehicle, coords = -1, -1, coords
 
-	if coords == nil then
+	if coords then
+		coords = vector3(coords.x, coords.y, coords.z)
+	else
 		local playerPed = PlayerPedId()
-		coords          = GetEntityCoords(playerPed)
+		coords = GetEntityCoords(playerPed)
 	end
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = GetDistanceBetweenCoords(vehicleCoords, coords.x, coords.y, coords.z, true)
+		local distance = #(coords - vehicleCoords)
 
 		if closestDistance == -1 or closestDistance > distance then
-			closestVehicle  = vehicles[i]
-			closestDistance = distance
+			closestVehicle, closestDistance = vehicles[i], distance
 		end
 	end
 
@@ -677,9 +679,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			IsVehicleNeonLightEnabled(vehicle, 3)
 		},
 
-		extras            = extras,
-
 		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
+		extras            = extras,
 		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
 		modSpoilers       = GetVehicleMod(vehicle, 0),
