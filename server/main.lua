@@ -36,6 +36,7 @@ end
 
 function getCharacters(source, callback)
 	local identifier = GetPlayerIdentifiers(source)[1]
+
 	MySQL.Async.fetchAll('SELECT * FROM `characters` WHERE `identifier` = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
@@ -159,9 +160,11 @@ function setIdentity(identifier, data, callback)
 	})
 end
 
-function updateIdentity(identifier, data, callback)
+function updateIdentity(playerId, data, callback)
+	local xPlayer = ESX.GetPlayerFromId(playerId)
+
 	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
-		['@identifier']		= identifier,
+		['@identifier']		= xPlayer.identifier,
 		['@firstname']		= data.firstname,
 		['@lastname']		= data.lastname,
 		['@dateofbirth']	= data.dateofbirth,
@@ -169,6 +172,9 @@ function updateIdentity(identifier, data, callback)
 		['@height']			= data.height
 	}, function(rowsChanged)
 		if callback then
+			xPlayer.set('firstName', data.firstname)
+			xPlayer.set('lastName', data.lastname)
+			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
 			callback(true)
 		end
 	end)
@@ -194,53 +200,69 @@ AddEventHandler('esx_identity:setIdentity', function(data, myIdentifiers)
 	setIdentity(myIdentifiers.steamid, data, function(callback)
 		if callback then
 			TriggerClientEvent('esx_identity:identityCheck', myIdentifiers.playerid, true)
+
+			local xPlayer = ESX.GetPlayerFromId(myIdentifiers.playerid)
+			xPlayer.set('firstName', data.firstname)
+			xPlayer.set('lastName', data.lastname)
+			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
 		else
-			TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'Failed to set character, try again later or contact the server admin!' } })
+			TriggerClientEvent('chat:addMessage', myIdentifiers.playerid, { args = { '^1[IDENTITY]', 'Failed to set character, try again later or contact the server admin!' } })
 		end
 	end)
 end)
 
-AddEventHandler('es:playerLoaded', function(source)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	local myID = {
-		steamid = GetPlayerIdentifiers(source)[1],
-		playerid = source
+		steamid = xPlayer.identifier,
+		playerid = playerId
 	}
 
-	TriggerClientEvent('esx_identity:saveID', source, myID)
-	getIdentity(source, function(data)
+	TriggerClientEvent('esx_identity:saveID', playerId, myID)
+
+	getIdentity(playerId, function(data)
 		if data.firstname == '' then
-			TriggerClientEvent('esx_identity:identityCheck', source, false)
-			TriggerClientEvent('esx_identity:showRegisterIdentity', source)
+			TriggerClientEvent('esx_identity:identityCheck', playerId, false)
+			TriggerClientEvent('esx_identity:showRegisterIdentity', playerId)
 		else
-			TriggerClientEvent('esx_identity:identityCheck', source, true)
+			TriggerClientEvent('esx_identity:identityCheck', playerId, true)
+
+			xPlayer.set('firstName', data.firstname)
+			xPlayer.set('lastName', data.lastname)
+			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
 		end
 	end)
 end)
 
+-- Set all the client side variables for connected users one new time
 AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		Citizen.Wait(3000)
+		local xPlayers = ESX.GetPlayers()
 
-		-- Set all the client side variables for connected users one new time
-		local xPlayers, xPlayer = ESX.GetPlayers()
 		for i=1, #xPlayers, 1 do
-			xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 
-			local myID = {
-				steamid  = xPlayer.identifier,
-				playerid = xPlayer.source
-			}
+			if xPlayer then
+				local myID = {
+					steamid  = xPlayer.identifier,
+					playerid = xPlayer.source
+				}
+	
+				TriggerClientEvent('esx_identity:saveID', xPlayer.source, myID)
+	
+				getIdentity(xPlayer.source, function(data)
+					if data.firstname == '' then
+						TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, false)
+						TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
+					else
+						TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, true)
 
-			TriggerClientEvent('esx_identity:saveID', xPlayer.source, myID)
-
-			getIdentity(xPlayer.source, function(data)
-				if data.firstname == '' then
-					TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, false)
-					TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-				else
-					TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, true)
-				end
-			end)
+						xPlayer.set('firstName', data.firstname)
+						xPlayer.set('lastName', data.lastname)
+						xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+					end
+				end)
+			end
 		end
 	end
 end)
@@ -248,9 +270,9 @@ end)
 TriggerEvent('es:addCommand', 'register', function(source, args, user)
 	getCharacters(source, function(data)
 		if data.firstname3 ~= '' then
-			TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'You can only have 3 registered characters. Use the ^3/chardel^0  command in order to delete existing characters.' } })
+			TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You can only have 3 registered characters. Use the ^3/chardel^0  command in order to delete existing characters.' } })
 		else
-			TriggerClientEvent('esx_identity:showRegisterIdentity', source, {})
+			TriggerClientEvent('esx_identity:showRegisterIdentity', source)
 		end
 	end)
 end, {help = "Register a new character"})
@@ -280,7 +302,7 @@ TriggerEvent('es:addGroupCommand', 'charlist', 'user', function(source, args, us
 				end
 			end
 		else
-			TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'You have no registered characters. Use the ^3/register^0 command to register a character.' } })
+			TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'You have no registered characters. Use the ^3/register^0 command to register a character.' } })
 		end
 	end)
 end, function(source, args, user)
@@ -291,7 +313,7 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 	local charNumber = tonumber(args[1])
 
 	if charNumber == nil or charNumber > 3 or charNumber < 1 then
-		TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'That\'s an invalid character!' } })
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'That\'s an invalid character!' } })
 		return
 	end
 
@@ -307,7 +329,8 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 			}
 
 			if data.firstname ~= '' then
-				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+				updateIdentity(source, data, function(callback)
+
 					if callback then
 						TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'Updated your active character to ^2' .. data.firstname .. ' ' .. data.lastname } })
 					else
@@ -329,7 +352,7 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 			}
 
 			if data.firstname ~= '' then
-				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+				updateIdentity(source, data, function(callback)
 
 					if callback then
 						TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'Updated your active character to ^2' .. data.firstname .. ' ' .. data.lastname } })
@@ -352,7 +375,8 @@ TriggerEvent('es:addGroupCommand', 'charselect', 'user', function(source, args, 
 			}
 
 			if data.firstname ~= '' then
-				updateIdentity(GetPlayerIdentifiers(source)[1], data, function(callback)
+				updateIdentity(source, data, function(callback)
+
 					if callback then
 						TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'Updated your active character to ^2' .. data.firstname .. ' ' .. data.lastname } })
 					else
@@ -375,7 +399,7 @@ TriggerEvent('es:addGroupCommand', 'chardel', 'user', function(source, args, use
 	local charNumber = tonumber(args[1])
 
 	if charNumber == nil or charNumber > 3 or charNumber < 1 then
-		TriggerClientEvent('chat:addMessage', source, { args = { '^[IDENTITY]', 'That\'s an invalid character!' } })
+		TriggerClientEvent('chat:addMessage', source, { args = { '^1[IDENTITY]', 'That\'s an invalid character!' } })
 		return
 	end
 
