@@ -10,16 +10,6 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 		coords = nil
 	}
 
-	-- Update user name in DB
-	table.insert(tasks, function(cb)
-		MySQL.Async.execute('UPDATE users SET name = @name WHERE identifier = @identifier', {
-			['@identifier'] = player.getIdentifier(),
-			['@name'] = userData.playerName
-		}, function(rowsChanged)
-			cb()
-		end)
-	end)
-
 	-- Get accounts
 	table.insert(tasks, function(cb)
 		MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {

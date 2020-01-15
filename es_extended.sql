@@ -1,7 +1,6 @@
 USE `essentialmode`;
 
 ALTER TABLE `users`
-	ADD COLUMN `name` VARCHAR(50) NULL DEFAULT '' AFTER `money`,
 	ADD COLUMN `skin` LONGTEXT NULL AFTER `name`,
 	ADD COLUMN `job` VARCHAR(50) NULL DEFAULT 'unemployed' AFTER `skin`,
 	ADD COLUMN `job_grade` INT NULL DEFAULT 0 AFTER `job`,
