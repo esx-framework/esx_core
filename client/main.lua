@@ -1,22 +1,20 @@
 RegisterNetEvent('esx_rpchat:sendProximityMessage')
 AddEventHandler('esx_rpchat:sendProximityMessage', function(playerId, title, message, color)
-	local source = PlayerId()
+	local player = PlayerId()
 	local target = GetPlayerFromServerId(playerId)
 
-	local sourcePed, targetPed = PlayerPedId(), GetPlayerPed(target)
-	local sourceCoords, targetCoords = GetEntityCoords(sourcePed), GetEntityCoords(targetPed)
+	local playerPed, targetPed = PlayerPedId(), GetPlayerPed(target)
+	local playerCoords, targetCoords = GetEntityCoords(playerPed), GetEntityCoords(targetPed)
 
-	if target == source then
-		TriggerEvent('chat:addMessage', { args = { title, message }, color = color })
-	elseif GetDistanceBetweenCoords(sourceCoords, targetCoords, true) < 20 then
-		TriggerEvent('chat:addMessage', { args = { title, message }, color = color })
+	if target == player or #(playerCoords - targetCoords) < 20 then
+		TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
 	end
 end)
 
 Citizen.CreateThread(function()
-	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  { { name = _U('generic_argument_name'), help = _U('generic_argument_help') } } )
-	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   { { name = _U('generic_argument_name'), help = _U('generic_argument_help') } } )
-	TriggerEvent('chat:addSuggestion', '/do',   _U('do_help'),   { { name = _U('generic_argument_name'), help = _U('generic_argument_help') } } )
+	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/do',   _U('do_help'),   {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
 end)
 
 AddEventHandler('onResourceStop', function(resource)
