@@ -44,25 +44,28 @@ ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
 end
 
-ESX.ShowNotification = function(msg)
+ESX.ShowNotification = function(msg, flash, saveToBrief)
 	AddTextEntry('esxNotification', msg)
-	SetNotificationTextEntry('esxNotification')
-	DrawNotification(false, true)
+	BeginTextCommandThefeedPost('esxNotification')
+	EndTextCommandThefeedPostTicker(flash or false, saveToBrief or true)
 end
 
-ESX.ShowAdvancedNotification = function(title, subject, msg, icon, iconType)
+ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
 	AddTextEntry('esxAdvancedNotification', msg)
-	SetNotificationTextEntry('esxAdvancedNotification')
-	SetNotificationMessage(icon, icon, false, iconType, title, subject)
-	DrawNotification(false, false)
+	BeginTextCommandThefeedPost('esxAdvancedNotification')
+	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
+	EndTextCommandThefeedPostTicker(flash, saveToBrief)
 end
 
-ESX.ShowHelpNotification = function(msg)
-	--if not IsHelpMessageBeingDisplayed() then
-		AddTextEntry('esxHelpNotification', msg)
+ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
+	AddTextEntry('esxHelpNotification', msg)
+
+	if thisFrame then
+		DisplayHelpTextThisFrame('esxHelpNotification', true)
+	else
 		BeginTextCommandDisplayHelp('esxHelpNotification')
-		EndTextCommandDisplayHelp(0, false, true, -1)
-	--end
+		EndTextCommandDisplayHelp(0, false, beep or true, duration or -1)
+	end
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -1104,18 +1107,18 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
-	ESX.ShowNotification(msg)
+AddEventHandler('esx:showNotification', function(msg, flash, saveToBrief)
+	ESX.ShowNotification(msg, flash, saveToBrief)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
-AddEventHandler('esx:showAdvancedNotification', function(title, subject, msg, icon, iconType)
-	ESX.ShowAdvancedNotification(title, subject, msg, icon, iconType)
+AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
+	ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
 end)
 
 RegisterNetEvent('esx:showHelpNotification')
-AddEventHandler('esx:showHelpNotification', function(msg)
-	ESX.ShowHelpNotification(msg)
+AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
+	ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
 -- SetTimeout
