@@ -172,9 +172,7 @@ function updateIdentity(playerId, data, callback)
 		['@height']			= data.height
 	}, function(rowsChanged)
 		if callback then
-			xPlayer.set('firstName', data.firstname)
-			xPlayer.set('lastName', data.lastname)
-			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+			TriggerEvent('esx_identity:characterUpdated', playerId, data)
 			callback(true)
 		end
 	end)
@@ -200,11 +198,7 @@ AddEventHandler('esx_identity:setIdentity', function(data, myIdentifiers)
 	setIdentity(myIdentifiers.steamid, data, function(callback)
 		if callback then
 			TriggerClientEvent('esx_identity:identityCheck', myIdentifiers.playerid, true)
-
-			local xPlayer = ESX.GetPlayerFromId(myIdentifiers.playerid)
-			xPlayer.set('firstName', data.firstname)
-			xPlayer.set('lastName', data.lastname)
-			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+			TriggerEvent('esx_identity:characterUpdated', myIdentifiers.playerid, data)
 		else
 			TriggerClientEvent('chat:addMessage', myIdentifiers.playerid, { args = { '^1[IDENTITY]', 'Failed to set character, try again later or contact the server admin!' } })
 		end
@@ -225,12 +219,22 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 			TriggerClientEvent('esx_identity:showRegisterIdentity', playerId)
 		else
 			TriggerClientEvent('esx_identity:identityCheck', playerId, true)
-
-			xPlayer.set('firstName', data.firstname)
-			xPlayer.set('lastName', data.lastname)
-			xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+			TriggerEvent('esx_identity:characterUpdated', playerId, data)
 		end
 	end)
+end)
+
+AddEventHandler('esx_identity:characterUpdated', function(playerId, data)
+	local xPlayer = ESX.GetPlayerFromId(playerId)
+
+	if xPlayer then
+		xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+		xPlayer.set('firstName', data.firstname)
+		xPlayer.set('lastName', data.lastname)
+		xPlayer.set('dateofbirth', data.dateofbirth)
+		xPlayer.set('sex', data.sex)
+		xPlayer.set('height', data.height)
+	end
 end)
 
 -- Set all the client side variables for connected users one new time
@@ -256,10 +260,7 @@ AddEventHandler('onResourceStart', function(resource)
 						TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
 					else
 						TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, true)
-
-						xPlayer.set('firstName', data.firstname)
-						xPlayer.set('lastName', data.lastname)
-						xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
+						TriggerEvent('esx_identity:characterUpdated', xPlayer.source, data)
 					end
 				end)
 			end
