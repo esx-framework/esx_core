@@ -45,9 +45,10 @@ ESX.SetPlayerData = function(key, val)
 end
 
 ESX.ShowNotification = function(msg, flash, saveToBrief)
+	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('esxNotification', msg)
 	BeginTextCommandThefeedPost('esxNotification')
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief or true)
+	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
@@ -61,10 +62,11 @@ ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
 	AddTextEntry('esxHelpNotification', msg)
 
 	if thisFrame then
-		DisplayHelpTextThisFrame('esxHelpNotification', true)
+		DisplayHelpTextThisFrame('esxHelpNotification', false)
 	else
+		if beep == nil then beep = true end
 		BeginTextCommandDisplayHelp('esxHelpNotification')
-		EndTextCommandDisplayHelp(0, false, beep or true, duration or -1)
+		EndTextCommandDisplayHelp(0, false, beep, duration or -1)
 	end
 end
 
