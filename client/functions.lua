@@ -44,16 +44,18 @@ ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
 end
 
-ESX.ShowNotification = function(msg, flash, saveToBrief)
+ESX.ShowNotification = function(msg, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('esxNotification', msg)
 	BeginTextCommandThefeedPost('esxNotification')
+	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
-ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
+ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	AddTextEntry('esxAdvancedNotification', msg)
 	BeginTextCommandThefeedPost('esxAdvancedNotification')
+	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
 	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
 	EndTextCommandThefeedPostTicker(flash, saveToBrief)
 end
@@ -1109,13 +1111,13 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg, flash, saveToBrief)
-	ESX.ShowNotification(msg, flash, saveToBrief)
+AddEventHandler('esx:showNotification', function(msg, flash, saveToBrief, hudColorIndex)
+	ESX.ShowNotification(msg, flash, saveToBrief, hudColorIndex)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
-AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
-	ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief)
+AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+	ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 end)
 
 RegisterNetEvent('esx:showHelpNotification')

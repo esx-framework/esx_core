@@ -531,8 +531,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 		return
 	end
 
-	self.showNotification = function(msg, flash, saveToBrief)
-		self.triggerEvent('esx:showNotification', msg, flash, saveToBrief)
+	self.showNotification = function(msg, flash, saveToBrief, hudColorIndex)
+		self.triggerEvent('esx:showNotification', msg, flash, saveToBrief, hudColorIndex)
 	end
 
 	self.showHelpNotification = function(msg, thisFrame, beep, duration)
