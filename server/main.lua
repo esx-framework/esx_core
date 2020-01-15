@@ -38,7 +38,7 @@ ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseN
 	if license then
 		if xPlayer.getMoney() >= license.price then
 			xPlayer.removeMoney(license.price)
-	
+
 			TriggerEvent('esx_license:addLicense', source, licenseName, function()
 				cb(true)
 			end)
@@ -80,16 +80,16 @@ AddEventHandler('esx_drugs:processCannabis', function()
 				if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
 					xPlayer.removeInventoryItem('cannabis', 3)
 					xPlayer.addInventoryItem('marijuana', 1)
-	
+
 					xPlayer.showNotification(_U('weed_processed'))
 				else
 					xPlayer.showNotification(_U('weed_processingfull'))
-					playersProcessingCannabis[_source] = nil
 				end
 			else
 				xPlayer.showNotification(_U('weed_processingenough'))
-				playersProcessingCannabis[_source] = nil
 			end
+
+			playersProcessingCannabis[_source] = nil
 		end)
 	else
 		print(('esx_drugs: %s attempted to exploit weed processing!'):format(GetPlayerIdentifiers(source)[1]))
