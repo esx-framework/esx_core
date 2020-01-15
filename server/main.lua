@@ -1,3 +1,7 @@
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
 AddEventHandler('es:invalidCommandHandler', function(source, command_args, user)
 	CancelEvent()
 	TriggerClientEvent('chat:addMessage', source, {args = {'^1SYSTEM', _U('unknown_command', command_args[1])}})
