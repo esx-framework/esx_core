@@ -302,7 +302,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 
 		SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
 
-		if coords.heading then
+		if type(coords) == 'table' and coords.heading then
 			SetEntityHeading(entity, coords.heading)
 		end
 	end
