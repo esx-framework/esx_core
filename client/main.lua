@@ -6,11 +6,10 @@ local Licenses          = {}
 local CurrentTest       = nil
 local CurrentTestType   = nil
 local CurrentVehicle    = nil
-local CurrentCheckPoint = 0
+local CurrentCheckPoint, DriveErrors = 0, 0
 local LastCheckPoint    = -1
 local CurrentBlip       = nil
 local CurrentZoneType   = nil
-local DriveErrors       = 0
 local IsAboveSpeedLimit = false
 local LastVehicleHealth = nil
 
@@ -129,7 +128,7 @@ function OpenDMVSchoolMenu()
 
 		if not ownedLicenses['drive_truck'] then
 			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('drive_truck'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
+				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_truck'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
 				value = 'drive_test',
 				type = 'drive_truck'
 			})
