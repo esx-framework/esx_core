@@ -1,5 +1,5 @@
-# fxserver-esx_optionalneeds
-FXServer ESX Optional Needs
+# esx_optionalneeds
+ESX Optional Needs
 
 [REQUIREMENTS]
 - esx_status https://github.com/ESX-Org/esx_status
