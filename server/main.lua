@@ -15,7 +15,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 			['@garage']     = garage;
 			['@zone']       = zone
 		}, function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('veh_released'))
+			xPlayer.showNotification(_U('veh_released'))
 		end)
 	else
 		MySQL.Async.execute('INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
@@ -25,7 +25,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 			['@zone']       = zone,
 			['vehicle']     = json.encode(vehicleProps)
 		}, function(rowsChanged)
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('veh_stored'))
+			xPlayer.showNotification(_U('veh_stored'))
 		end)
 	end
 end)
@@ -58,5 +58,4 @@ ESX.RegisterServerCallback('esx_vehicleshop:getVehiclesInGarage', function(sourc
 		cb(vehicles)
 
 	end)
-
 end)
