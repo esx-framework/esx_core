@@ -1,6 +1,6 @@
 USE `essentialmode`;
 
-INSERT INTO `items` (`name`, `label`, `limit`) VALUES
-	('bread', 'Bröd', 10),
-	('water', 'Vatten', 5)
+INSERT INTO `items` (`name`, `label`, `weight`) VALUES
+	('bread', 'Bröd', 1),
+	('water', 'Vatten', 1)
 ;
