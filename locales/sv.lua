@@ -40,6 +40,10 @@ Locales['sv'] = {
   ['threw_weapon_already'] = 'du har redan ett sådant vapen på dig',
   ['threw_cannot_pickup'] = 'du kan inte plocka upp det på grund av att det kommer ej få plats i ditt förråd!',
   ['threw_pickup_prompt'] = 'tryck ~y~E~s~ för att plocka upp',
+
+  -- Key mapping
+  ['keymap_showinventory'] = 'öppna inventory',
+
   -- Salary related
   ['received_salary'] = 'du har mottagit din lön på ~g~%s SEK~s~',
   ['received_help'] = 'du har mottagit bidrag på ~g~%s SEK~s~',
@@ -73,6 +77,7 @@ Locales['sv'] = {
   ['command_clearinventory'] = 'clear all items from inventory',
   ['command_clearloadout'] = 'remove all weapons from loadout',
   ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
+
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '%s SEK',

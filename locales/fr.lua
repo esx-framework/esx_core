@@ -40,6 +40,10 @@ Locales['fr'] = {
   ['threw_weapon_already'] = 'you already carry the same weapon',
   ['threw_cannot_pickup'] = 'you cannot pickup that because your inventory is full!',
   ['threw_pickup_prompt'] = 'press ~y~E~s~ to pickup',
+
+  -- Key mapping
+  ['keymap_showinventory'] = 'show Inventory',
+
   -- Salary related
   ['received_salary'] = 'vous avez reçu votre salaire: ~g~$%s~s~',
   ['received_help'] = 'vous avez reçu une aide de l\'état: ~g~$%s~s~',
@@ -73,6 +77,7 @@ Locales['fr'] = {
   ['command_clearinventory'] = 'effacer tout les items de l\'inventaire',
   ['command_clearloadout'] = 'retirer toutes les armes de l\'équipement',
   ['command_playerid_param'] = 'spécifiez un playerid ou laissez vide pour vous-même',
+
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
