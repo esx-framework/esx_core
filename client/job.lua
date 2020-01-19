@@ -1,6 +1,6 @@
 local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
 local HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum
-local isBusy = false
+local isBusy, deadPlayers, deadPlayerBlips, isOnDuty = false, {}, {}, false
 local spawnedVehicles, isInShopMenu = {}, false
 
 function OpenAmbulanceActionsMenu()
@@ -407,11 +407,16 @@ function OpenCloakroomMenu()
 		elements = {
 			{label = _U('ems_clothes_civil'), value = 'citizen_wear'},
 			{label = _U('ems_clothes_ems'), value = 'ambulance_wear'},
-		}
-	}, function(data, menu)
+	}}, function(data, menu)
 		if data.current.value == 'citizen_wear' then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				TriggerEvent('skinchanger:loadSkin', skin)
+				isOnDuty = false
+
+				for playerId,v in pairs(deadPlayerBlips) do
+					RemoveBlip(v)
+					deadPlayerBlips[playerId] = nil
+				end
 			end)
 		elseif data.current.value == 'ambulance_wear' then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -420,6 +425,8 @@ function OpenCloakroomMenu()
 				else
 					TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 				end
+
+				isOnDuty = true
 			end)
 		end
 
@@ -768,12 +775,13 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		ESX.Game.Teleport(playerPed, restoreCoords)
 	end, function(data, menu)
 		DeleteSpawnedVehicles()
-
 		WaitForVehicleToLoad(data.current.model)
+
 		ESX.Game.SpawnLocalVehicle(data.current.model, shopCoords, 0.0, function(vehicle)
 			table.insert(spawnedVehicles, vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
+			SetModelAsNoLongerNeeded(data.current.model)
 		end)
 	end)
 
@@ -782,6 +790,7 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		table.insert(spawnedVehicles, vehicle)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
+		SetModelAsNoLongerNeeded(elements[1].model)
 	end)
 end
 
@@ -812,33 +821,17 @@ function WaitForVehicleToLoad(modelHash)
 	if not HasModelLoaded(modelHash) then
 		RequestModel(modelHash)
 
+		BeginTextCommandBusyspinnerOn('STRING')
+		AddTextComponentSubstringPlayerName(_U('vehicleshop_awaiting_model'))
+		EndTextCommandBusyspinnerOn(4)
+
 		while not HasModelLoaded(modelHash) do
 			Citizen.Wait(0)
-
-			DisableControlAction(0, 27, true)
-			DisableControlAction(0, 173, true)
-			DisableControlAction(0, 174, true)
-			DisableControlAction(0, 175, true)
-			DisableControlAction(0, 176, true) -- ENTER key
-			DisableControlAction(0, 177, true)
-
-			drawLoadingText(_U('vehicleshop_awaiting_model'), 255, 255, 255, 255)
+			DisableAllControlActions(0)
 		end
+
+		BusyspinnerOff()
 	end
-end
-
-function drawLoadingText(text, red, green, blue, alpha)
-	SetTextFont(4)
-	SetTextScale(0.0, 0.5)
-	SetTextColour(red, green, blue, alpha)
-	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextDropShadow()
-	SetTextOutline()
-	SetTextCentre(true)
-
-	BeginTextCommandDisplayText("STRING")
-	AddTextComponentSubstringPlayerName(text)
-	EndTextCommandDisplayText(0.5, 0.5)
 end
 
 function OpenPharmacyMenu()
@@ -896,5 +889,36 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 
 	if not quiet then
 		ESX.ShowNotification(_U('healed'))
+	end
+end)
+
+RegisterNetEvent('esx_ambulancejob:setDeadPlayers')
+AddEventHandler('esx_ambulancejob:setDeadPlayers', function(_deadPlayers)
+	deadPlayers = _deadPlayers
+
+	if isOnDuty then
+		for playerId,v in pairs(deadPlayerBlips) do
+			RemoveBlip(v)
+			deadPlayerBlips[playerId] = nil
+		end
+
+		for playerId,status in pairs(deadPlayers) do
+			if status == 'distress' then
+				local player = GetPlayerFromServerId(playerId)
+				local playerPed = GetPlayerPed(player)
+				local blip = AddBlipForEntity(playerPed)
+	
+				SetBlipSprite(blip, 303)
+				SetBlipColour(blip, 1)
+				SetBlipFlashes(blip, true)
+				SetBlipCategory(blip, 7)
+	
+				BeginTextCommandSetBlipName('STRING')
+				AddTextComponentSubstringPlayerName(_U('blip_dead'))
+				EndTextCommandSetBlipName(blip)
+	
+				deadPlayerBlips[playerId] = blip
+			end
+		end
 	end
 end)

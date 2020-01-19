@@ -1,7 +1,11 @@
 ESX = nil
-local playersHealing = {}
+local playersHealing, deadPlayers = {}, {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
+
+TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_ambulance', 'society_ambulance', 'society_ambulance', {type = 'public'})
 
 RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function(playerId)
@@ -11,12 +15,46 @@ AddEventHandler('esx_ambulancejob:revive', function(playerId)
 		local xTarget = ESX.GetPlayerFromId(playerId)
 
 		if xTarget then
-			xPlayer.showNotification(_U('revive_complete_award', xTarget.name, Config.ReviveReward))
-			xPlayer.addMoney(Config.ReviveReward)
-			xTarget.triggerEvent('esx_ambulancejob:revive')
+			if deadPlayers[playerId] then
+				xPlayer.showNotification(_U('revive_complete_award', xTarget.name, Config.ReviveReward))
+				xPlayer.addMoney(Config.ReviveReward)
+				xTarget.triggerEvent('esx_ambulancejob:revive')
+				deadPlayers[playerId] = nil
+			else
+				xPlayer.showNotification(_U('player_not_unconscious'))
+			end
 		else
 			xPlayer.showNotification(_U('revive_fail_offline'))
 		end
+	end
+end)
+
+RegisterNetEvent('esx:onPlayerDeath')
+AddEventHandler('esx:onPlayerDeath', function(data)
+	deadPlayers[source] = 'dead'
+	TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
+end)
+
+RegisterNetEvent('esx_ambulancejob:onPlayerDistress')
+AddEventHandler('esx_ambulancejob:onPlayerDistress', function()
+	if deadPlayers[source] then
+		deadPlayers[source] = 'distress'
+		TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
+	end
+end)
+
+RegisterNetEvent('esx_ambulancejob:onPlayerSpawn')
+AddEventHandler('esx_ambulancejob:onPlayerSpawn', function()
+	if deadPlayers[source] then
+		deadPlayers[source] = nil
+		TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
+	end
+end)
+
+AddEventHandler('esx:playerDropped', function(playerId, reason)
+	if deadPlayers[playerId] then
+		deadPlayers[playerId] = nil
+		TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
 	end
 end)
 
@@ -37,10 +75,6 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function(target)
 		TriggerClientEvent('esx_ambulancejob:putInVehicle', target)
 	end
 end)
-
-TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
-
-TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_ambulance', 'society_ambulance', 'society_ambulance', {type = 'public'})
 
 ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)

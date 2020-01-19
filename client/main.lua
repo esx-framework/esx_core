@@ -109,7 +109,7 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 				Citizen.Wait(0)
 				DisableAllControlActions(0)
 			end
-	
+
 			TriggerEvent('esx_ambulancejob:heal', 'big', true)
 			ESX.ShowNotification(_U('used_medikit'))
 		end)
@@ -151,16 +151,8 @@ function StartDistressSignal()
 			AddTextComponentSubstringPlayerName(_U('distress_send'))
 			EndTextCommandDisplayText(0.175, 0.805)
 
-			if IsControlPressed(0, 47) then
+			if IsControlJustReleased(0, 47) then
 				SendDistressSignal()
-
-				Citizen.CreateThread(function()
-					Citizen.Wait(1000 * 60 * 5)
-					if isDead then
-						StartDistressSignal()
-					end
-				end)
-
 				break
 			end
 		end
@@ -172,11 +164,7 @@ function SendDistressSignal()
 	local coords = GetEntityCoords(playerPed)
 
 	ESX.ShowNotification(_U('distress_sent'))
-	TriggerServerEvent('esx_phone:send', 'ambulance', _U('distress_message'), false, {
-		x = coords.x,
-		y = coords.y,
-		z = coords.z
-	})
+	TriggerServerEvent('esx_ambulancejob:onPlayerDistress')
 end
 
 function DrawGenericTextThisFrame()
@@ -195,9 +183,9 @@ function secondsToClock(seconds)
 	if seconds <= 0 then
 		return 0, 0
 	else
-		local hours = string.format("%02.f", math.floor(seconds / 3600))
-		local mins = string.format("%02.f", math.floor(seconds / 60 - (hours * 60)))
-		local secs = string.format("%02.f", math.floor(seconds - hours * 3600 - mins * 60))
+		local hours = string.format('%02.f', math.floor(seconds / 3600))
+		local mins = string.format('%02.f', math.floor(seconds / 60 - (hours * 60)))
+		local secs = string.format('%02.f', math.floor(seconds - hours * 3600 - mins * 60))
 
 		return mins, secs
 	end
@@ -245,7 +233,7 @@ function StartDeathTimer()
 
 			DrawGenericTextThisFrame()
 
-			SetTextEntry("STRING")
+			SetTextEntry('STRING')
 			AddTextComponentString(text)
 			DrawText(0.5, 0.8)
 		end
@@ -280,11 +268,11 @@ function StartDeathTimer()
 
 			DrawGenericTextThisFrame()
 
-			SetTextEntry("STRING")
+			SetTextEntry('STRING')
 			AddTextComponentString(text)
 			DrawText(0.5, 0.8)
 		end
-			
+
 		if bleedoutTimer < 1 and isDead then
 			RemoveItemsAfterRPDeath()
 		end

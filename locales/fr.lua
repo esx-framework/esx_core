@@ -77,7 +77,6 @@ Locales['fr'] = {
   ['respawn_bleedout_fine_msg'] = 'vous avez payé ~r~$%s~s~ pour être réanimer.',
   ['distress_send'] = 'appuyez sur [~b~G~s~] pour envoyer un signal de détresse',
   ['distress_sent'] = 'un signal a été envoyé à toutes les unités disponibles!',
-  ['distress_message'] = 'interventtion requise: citoyen inconscient!',
   ['combatlog_message'] = 'vous avez été réanimé de force car vous avez quitté le serveur.',
   -- Revive
   ['revive_help'] = 'relancer un joueur',
