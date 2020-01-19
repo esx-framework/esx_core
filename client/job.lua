@@ -149,7 +149,7 @@ function revivePlayer(closestPlayer)
 					Citizen.Wait(900)
 
 					ESX.Streaming.RequestAnimDict(lib, function()
-						TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+						TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0.0, false, false, false)
 					end)
 				end
 
@@ -724,16 +724,13 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop_confirm', {
 			title    = _U('vehicleshop_confirm', data.current.name, data.current.price),
 			align    = 'top-left',
 			elements = {
-				{ label = _U('confirm_no'), value = 'no' },
-				{ label = _U('confirm_yes'), value = 'yes' }
-			}
-		}, function(data2, menu2)
-
+				{label = _U('confirm_no'), value = 'no'},
+				{label = _U('confirm_yes'), value = 'yes'}
+		}}, function(data2, menu2)
 			if data2.current.value == 'yes' then
 				local newPlate = exports['esx_vehicleshop']:GeneratePlate()
 				local vehicle  = GetVehiclePedIsIn(playerPed, false)
