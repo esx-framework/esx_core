@@ -108,7 +108,6 @@ Locales['fi'] = {
   ['sex'] = 'sukupuoli: %s',
   ['dob'] = 'syntymäaika: %s',
   ['height'] = 'pituus: %s',
-  ['id'] = 'ID: %s',
   ['bac'] = 'alkometri: %s',
   ['unknown'] = 'tuntematon',
   ['male'] = 'mies',

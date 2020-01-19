@@ -108,7 +108,6 @@ Locales['sv'] = {
   ['sex'] = 'kön: %s',
   ['dob'] = 'födelsedatum: %s',
   ['height'] = 'längd: %s',
-  ['id'] = 'ID: %s',
   ['bac'] = 'alkohol i blodet: %s',
   ['unknown'] = 'okänt',
   ['male'] = 'man',

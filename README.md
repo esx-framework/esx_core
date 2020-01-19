@@ -41,7 +41,7 @@ git clone https://github.com/ESX-Org/esx_policejob [esx]/esx_policejob
 
 ## Installation
 - Import `esx_policejob.sql` in your database
-- Add this in your server.cfg :
+- Add this to your server.cfg:
 
 ```
 start esx_policejob
@@ -51,7 +51,6 @@ start esx_policejob
    * If you want armory management you have to set `Config.EnableArmoryManagement` to `true` in `config.lua`
    * If you want license management you have to set `Config.EnableLicenses` to `true` in `config.lua`
    * If you want service management you have to set `Config.MaxInService` to a higher value than `-1` in `config.lua`
-
 
 # Legal
 ### License

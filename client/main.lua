@@ -610,7 +610,7 @@ function OpenPoliceActionsMenu()
 		if data.current.value == 'citizen_interaction' then
 			local elements = {
 				{label = _U('id_card'), value = 'identity_card'},
-				{label = _U('search'), value = 'body_search'},
+				{label = _U('search'), value = 'search'},
 				{label = _U('handcuff'), value = 'handcuff'},
 				{label = _U('drag'), value = 'drag'},
 				{label = _U('put_in_vehicle'), value = 'put_in_vehicle'},
@@ -634,8 +634,7 @@ function OpenPoliceActionsMenu()
 
 					if action == 'identity_card' then
 						OpenIdentityCardMenu(closestPlayer)
-					elseif action == 'body_search' then
-						TriggerServerEvent('esx_policejob:message', GetPlayerServerId(closestPlayer), _U('being_searched'))
+					elseif action == 'search' then
 						OpenBodySearchMenu(closestPlayer)
 					elseif action == 'handcuff' then
 						TriggerServerEvent('esx_policejob:handcuff', GetPlayerServerId(closestPlayer))
@@ -765,58 +764,15 @@ end
 
 function OpenIdentityCardMenu(player)
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
-		local elements = {}
-		local nameLabel = _U('name', data.name)
-		local jobLabel, sexLabel, dobLabel, heightLabel, idLabel
-
-		if data.job.grade_label and  data.job.grade_label ~= '' then
-			jobLabel = _U('job', data.job.label .. ' - ' .. data.job.grade_label)
-		else
-			jobLabel = _U('job', data.job.label)
-		end
-
-		if Config.EnableESXIdentity then
-			nameLabel = _U('name', data.firstname .. ' ' .. data.lastname)
-
-			if data.sex then
-				if string.lower(data.sex) == 'm' then
-					sexLabel = _U('sex', _U('male'))
-				else
-					sexLabel = _U('sex', _U('female'))
-				end
-			else
-				sexLabel = _U('sex', _U('unknown'))
-			end
-
-			if data.dob then
-				dobLabel = _U('dob', data.dob)
-			else
-				dobLabel = _U('dob', _U('unknown'))
-			end
-
-			if data.height then
-				heightLabel = _U('height', data.height)
-			else
-				heightLabel = _U('height', _U('unknown'))
-			end
-
-			if data.name then
-				idLabel = _U('id', data.name)
-			else
-				idLabel = _U('id', _U('unknown'))
-			end
-		end
-
 		local elements = {
-			{label = nameLabel},
-			{label = jobLabel}
+			{label = _U('name', data.name)},
+			{label = _U('job', ('%s - %s'):format(data.job.label, data.job.grade_label))}
 		}
 
 		if Config.EnableESXIdentity then
-			table.insert(elements, {label = sexLabel})
-			table.insert(elements, {label = dobLabel})
-			table.insert(elements, {label = heightLabel})
-			table.insert(elements, {label = idLabel})
+			table.insert(elements, {label = _U('sex', _U(data.sex))})
+			table.insert(elements, {label = _U('dob', data.dob)})
+			table.insert(elements, {label = _U('height', data.height)})
 		end
 
 		if data.drunk then
@@ -949,8 +905,7 @@ function OpenFineCategoryMenu(player, category)
 end
 
 function LookupVehicle()
-	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'lookup_vehicle',
-	{
+	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'lookup_vehicle', {
 		title = _U('search_database_title'),
 	}, function(data, menu)
 		local length = string.len(data.value)
@@ -972,24 +927,18 @@ function LookupVehicle()
 end
 
 function ShowPlayerLicense(player)
-	local elements, targetName = {}
+	local elements = {}
 
-	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
-		if data.licenses then
-			for i=1, #data.licenses, 1 do
-				if data.licenses[i].label and data.licenses[i].type then
+	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(playerData)
+		if playerData.licenses then
+			for i=1, #playerData.licenses, 1 do
+				if playerData.licenses[i].label and playerData.licenses[i].type then
 					table.insert(elements, {
-						label = data.licenses[i].label,
-						type = data.licenses[i].type
+						label = playerData.licenses[i].label,
+						type = playerData.licenses[i].type
 					})
 				end
 			end
-		end
-
-		if Config.EnableESXIdentity then
-			targetName = data.firstname .. ' ' .. data.lastname
-		else
-			targetName = data.name
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license', {
@@ -997,7 +946,7 @@ function ShowPlayerLicense(player)
 			align    = 'top-left',
 			elements = elements,
 		}, function(data, menu)
-			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
+			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, playerData.name))
 			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
 
 			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.type)
