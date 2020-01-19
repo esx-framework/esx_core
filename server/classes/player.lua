@@ -78,22 +78,6 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 		end
 	end
 
-	self.addBank = function(money)
-		money = ESX.Math.Round(money)
-
-		if money > 0 then
-			self.player.addBank(money)
-		end
-	end
-
-	self.removeBank = function(money)
-		money = ESX.Math.Round(money)
-
-		if money > 0 then
-			self.player.removeBank(money)
-		end
-	end
-
 	self.displayMoney = function(money)
 		self.player.displayMoney(money)
 	end
