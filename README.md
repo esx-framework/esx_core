@@ -1,7 +1,7 @@
 # esx_clotheshop
 
 ## Requirements
-- [esx_skin](https://github.com/ESX-Org/esx_clotheshop)
+- [esx_skin](https://github.com/ESX-Org/esx_skin)
 
 ## Download & Installation
 
