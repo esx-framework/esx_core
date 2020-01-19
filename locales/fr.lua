@@ -1,15 +1,15 @@
 Locales['fr'] = {
   -- cloakroom
-  ['cloakroom_menu'] = 'cloakroom',
-  ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~cloakroom~s~.',
-  ['wear_citizen'] = 'citizen wear',
-  ['wear_work'] = 'taxi wear',
+  ['cloakroom_menu'] = 'vestiaire',
+  ['cloakroom_prompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir le ~y~cloakroom~s~.',
+  ['wear_citizen'] = 'tenue civile',
+  ['wear_work'] = 'tenue de travail',
 
   -- garage
-  ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to open the ~y~garage~s~.',
+  ['spawner_prompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour ouvrir le ~y~garage~s~.',
   ['store_veh'] = 'appuyez sur ~INPUT_CONTEXT~ pour ranger le véhicule',
   ['spawn_veh'] = 'sortir véhicule',
-  ['spawnpoint_blocked'] = 'there is a vehicle blocking the spawnpoint!',
+  ['spawnpoint_blocked'] = 'un véhicule bloque la sortie!!',
   ['only_taxi'] = 'vous ne pouvez ranger que les taxi',
 
   ['taking_service'] = 'prise de service : Taxi/Uber',
