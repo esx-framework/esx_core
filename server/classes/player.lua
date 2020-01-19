@@ -1,14 +1,14 @@
 function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, coords)
 	local self = {}
 
-	self.player       = player
-	self.accounts     = accounts
-	self.inventory    = inventory
-	self.job          = job
-	self.loadout      = loadout
-	self.name         = name
-	self.maxWeight    = Config.MaxWeight
-	self.coords       = coords
+	self.player    = player
+	self.accounts  = accounts
+	self.inventory = inventory
+	self.job       = job
+	self.loadout   = loadout
+	self.name      = name
+	self.maxWeight = Config.MaxWeight
+	self.coords    = coords
 
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
@@ -27,18 +27,6 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 
 	self.getMoney = function()
 		return self.player.get('money')
-	end
-
-	self.setBankBalance = function(money)
-		money = ESX.Math.Round(money)
-
-		if money >= 0 then
-			self.player.setBankBalance(money)
-		end
-	end
-
-	self.getBank = function()
-		return self.player.get('bank')
 	end
 
 	self.setCoords = function(coords)
@@ -84,22 +72,6 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 
 	self.displayBank = function(money)
 		self.player.displayBank(money)
-	end
-
-	self.setSessionVar = function(key, value)
-		self.player.setSessionVar(key, value)
-	end
-
-	self.getSessionVar = function(k)
-		return self.player.getSessionVar(k)
-	end
-
-	self.getPermissions = function()
-		return self.player.getPermissions()
-	end
-
-	self.setPermissions = function(p)
-		self.player.setPermissions(p)
 	end
 
 	self.getIdentifier = function()
