@@ -1,3 +1,7 @@
+fx_version 'adamant'
+
+game 'gta5'
+
 description 'CruiseControl System for ESX'
 
 version '1.0.0'
