@@ -284,7 +284,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 			local weaponLabel = ESX.GetWeaponLabel(itemName)
 
 			if not targetXPlayer.hasWeapon(itemName) then
-				local weaponNum, weapon = xPlayer.getWeapon(itemName)
+				local weaponNum, weapon = sourceXPlayer.getWeapon(itemName)
 				itemCount = weapon.ammo
 
 				sourceXPlayer.removeWeapon(itemName)
