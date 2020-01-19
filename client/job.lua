@@ -32,7 +32,6 @@ function OpenAmbulanceActionsMenu()
 end
 
 function OpenMobileAmbulanceActionsMenu()
-
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mobile_ambulance_actions', {
@@ -40,8 +39,7 @@ function OpenMobileAmbulanceActionsMenu()
 		align    = 'top-left',
 		elements = {
 			{label = _U('ems_menu'), value = 'citizen_interaction'}
-		}
-	}, function(data, menu)
+	}}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
 				title    = _U('ems_menu_title'),
@@ -51,8 +49,7 @@ function OpenMobileAmbulanceActionsMenu()
 					{label = _U('ems_menu_small'), value = 'small'},
 					{label = _U('ems_menu_big'), value = 'big'},
 					{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'}
-				}
-			}, function(data, menu)
+			}}, function(data, menu)
 				if isBusy then return end
 
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
@@ -60,11 +57,9 @@ function OpenMobileAmbulanceActionsMenu()
 				if closestPlayer == -1 or closestDistance > 1.0 then
 					ESX.ShowNotification(_U('no_players'))
 				else
-
 					if data.current.value == 'revive' then
 						revivePlayer(closestPlayer)
 					elseif data.current.value == 'small' then
-
 						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
 							if quantity > 0 then
 								local closestPlayerPed = GetPlayerPed(closestPlayer)
@@ -195,7 +190,7 @@ Citizen.CreateThread(function()
 
 			-- Ambulance Actions
 			for k,v in ipairs(hospital.AmbulanceActions) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
+				local distance = #(playerCoords - v)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
@@ -209,7 +204,7 @@ Citizen.CreateThread(function()
 
 			-- Pharmacies
 			for k,v in ipairs(hospital.Pharmacies) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
+				local distance = #(playerCoords - v)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
@@ -223,7 +218,7 @@ Citizen.CreateThread(function()
 
 			-- Vehicle Spawners
 			for k,v in ipairs(hospital.Vehicles) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
+				local distance = #(playerCoords - v.Spawner)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
@@ -237,7 +232,7 @@ Citizen.CreateThread(function()
 
 			-- Helicopter Spawners
 			for k,v in ipairs(hospital.Helicopters) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
+				local distance = #(playerCoords - v.Spawner)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
@@ -251,7 +246,7 @@ Citizen.CreateThread(function()
 
 			-- Fast Travels
 			for k,v in ipairs(hospital.FastTravels) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
+				local distance = #(playerCoords - v.From)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
@@ -266,7 +261,7 @@ Citizen.CreateThread(function()
 
 			-- Fast Travels (Prompt)
 			for k,v in ipairs(hospital.FastTravelsPrompt) do
-				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
+				local distance = #(playerCoords - v.From)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
