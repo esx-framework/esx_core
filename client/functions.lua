@@ -205,6 +205,10 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 	menu.setElement = function(i, key, val)
 		menu.data.elements[i][key] = val
 	end
+	
+	menu.setElements = function(newElements)
+		menu.data.elements = newElements
+	end
 
 	menu.setTitle = function(val)
 		menu.data.title = val
