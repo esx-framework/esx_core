@@ -129,6 +129,8 @@ TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args,
 		local weaponName = args[2] or 'unknown'
 
 		if ESX.GetWeapon(weaponName) then
+			weaponName = string.upper(weaponName)
+
 			if xPlayer.hasWeapon(weaponName) then
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player already has that weapon.' } })
 			else
@@ -152,19 +154,19 @@ TriggerEvent('es:addGroupCommand', 'giveweaponcomponent', 'admin', function(sour
 	local xPlayer = ESX.GetPlayerFromId(args[1])
 
 	if xPlayer then
-		local weapon = args[2] or 'unknown'
+		local weaponName = args[2] or 'unknown'
 
-		if ESX.GetWeapon(weapon) then
-			weapon = string.upper(weapon)
+		if ESX.GetWeapon(weaponName) then
+			weaponName = string.upper(weaponName)
 
-			if xPlayer.hasWeapon(weapon) then
-				local component = ESX.GetWeaponComponent(weapon, args[3] or 'unknown')
+			if xPlayer.hasWeapon(weaponName) then
+				local component = ESX.GetWeaponComponent(weaponName, args[3] or 'unknown')
 
 				if component then
-					if xPlayer.hasWeaponComponent(weapon, args[3]) then
+					if xPlayer.hasWeaponComponent(weaponName, args[3]) then
 						TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player already has that weapon component.' } })
 					else
-						xPlayer.addWeaponComponent(weapon, args[3])
+						xPlayer.addWeaponComponent(weaponName, args[3])
 					end
 				else
 					TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid weapon component.' } })
@@ -182,17 +184,11 @@ end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = 'Give weapon component', params = {
 	{name = 'playerId', help = _U('id_param')},
-	{name = 'weapon', help = _U('weapon')},
-	{name = 'component', help = 'weapon component'}
+	{name = 'weaponName', help = _U('weapon')},
+	{name = 'componentName', help = 'weapon component'}
 }})
 
 TriggerEvent('es:addGroupCommand', 'disc', 'admin', function(source, args, user)
-	DropPlayer(source, 'You have been disconnected')
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end)
-
-TriggerEvent('es:addGroupCommand', 'disconnect', 'admin', function(source, args, user)
 	DropPlayer(source, 'You have been disconnected')
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })

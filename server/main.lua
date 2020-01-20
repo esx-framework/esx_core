@@ -373,6 +373,8 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 			end
 		end
 	elseif type == 'item_weapon' then
+		itemName = string.upper(itemName)
+
 		if xPlayer.hasWeapon(itemName) then
 			local weaponNum, weapon = xPlayer.getWeapon(itemName)
 			xPlayer.removeWeapon(itemName)
