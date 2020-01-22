@@ -1337,43 +1337,40 @@ AddEventHandler('esx_policejob:handcuff', function()
 	isHandcuffed = not isHandcuffed
 	local playerPed = PlayerPedId()
 
-	Citizen.CreateThread(function()
-		if isHandcuffed then
+	if isHandcuffed then
+		RequestAnimDict('mp_arresting')
+		while not HasAnimDictLoaded('mp_arresting') do
+			Citizen.Wait(100)
+		end
 
-			RequestAnimDict('mp_arresting')
-			while not HasAnimDictLoaded('mp_arresting') do
-				Citizen.Wait(100)
-			end
+		TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
 
-			TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
+		SetEnableHandcuffs(playerPed, true)
+		DisablePlayerFiring(playerPed, true)
+		SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+		SetPedCanPlayGestureAnims(playerPed, false)
+		FreezeEntityPosition(playerPed, true)
+		DisplayRadar(false)
 
-			SetEnableHandcuffs(playerPed, true)
-			DisablePlayerFiring(playerPed, true)
-			SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
-			SetPedCanPlayGestureAnims(playerPed, false)
-			FreezeEntityPosition(playerPed, true)
-			DisplayRadar(false)
-
-			if Config.EnableHandcuffTimer then
-				if handcuffTimer.active then
-					ESX.ClearTimeout(handcuffTimer.task)
-				end
-
-				StartHandcuffTimer()
-			end
-		else
-			if Config.EnableHandcuffTimer and handcuffTimer.active then
+		if Config.EnableHandcuffTimer then
+			if handcuffTimer.active then
 				ESX.ClearTimeout(handcuffTimer.task)
 			end
 
-			ClearPedSecondaryTask(playerPed)
-			SetEnableHandcuffs(playerPed, false)
-			DisablePlayerFiring(playerPed, false)
-			SetPedCanPlayGestureAnims(playerPed, true)
-			FreezeEntityPosition(playerPed, false)
-			DisplayRadar(true)
+			StartHandcuffTimer()
 		end
-	end)
+	else
+		if Config.EnableHandcuffTimer and handcuffTimer.active then
+			ESX.ClearTimeout(handcuffTimer.task)
+		end
+
+		ClearPedSecondaryTask(playerPed)
+		SetEnableHandcuffs(playerPed, false)
+		DisablePlayerFiring(playerPed, false)
+		SetPedCanPlayGestureAnims(playerPed, true)
+		FreezeEntityPosition(playerPed, false)
+		DisplayRadar(true)
+	end
 end)
 
 RegisterNetEvent('esx_policejob:unrestrain')
@@ -1398,43 +1395,37 @@ end)
 
 RegisterNetEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(copId)
-	if not isHandcuffed then
-		return
+	if isHandcuffed then
+		dragStatus.isDragged = not dragStatus.isDragged
+		dragStatus.CopId = copId
 	end
-
-	dragStatus.isDragged = not dragStatus.isDragged
-	dragStatus.CopId = copId
 end)
 
 Citizen.CreateThread(function()
-	local playerPed
-	local targetPed
+	local wasDragged
 
 	while true do
-		Citizen.Wait(1)
+		Citizen.Wait(0)
+		local playerPed = PlayerPedId()
 
-		if isHandcuffed then
-			playerPed = PlayerPedId()
+		if isHandcuffed and dragStatus.isDragged then
+			local targetPed = GetPlayerPed(GetPlayerFromServerId(dragStatus.CopId))
 
-			if dragStatus.isDragged then
-				targetPed = GetPlayerPed(GetPlayerFromServerId(dragStatus.CopId))
-
-				-- undrag if target is in an vehicle
-				if not IsPedSittingInAnyVehicle(targetPed) then
+			if DoesEntityExist(targetPed) and IsPedOnFoot(targetPed) and not IsPedDeadOrDying(targetPed, true) then
+				if not wasDragged then
 					AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+					wasDragged = true
 				else
-					dragStatus.isDragged = false
-					DetachEntity(playerPed, true, false)
+					Citizen.Wait(1000)
 				end
-
-				if IsPedDeadOrDying(targetPed, true) then
-					dragStatus.isDragged = false
-					DetachEntity(playerPed, true, false)
-				end
-
 			else
+				wasDragged = false
+				dragStatus.isDragged = false
 				DetachEntity(playerPed, true, false)
 			end
+		elseif wasDragged then
+			wasDragged = false
+			DetachEntity(playerPed, true, false)
 		else
 			Citizen.Wait(500)
 		end
@@ -1443,29 +1434,27 @@ end)
 
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
-	local playerPed = PlayerPedId()
-	local coords = GetEntityCoords(playerPed)
+	if isHandcuffed then
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
 
-	if not isHandcuffed then
-		return
-	end
+		if IsAnyVehicleNearPoint(coords, 5.0) then
+			local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
 
-	if IsAnyVehicleNearPoint(coords, 5.0) then
-		local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
+			if DoesEntityExist(vehicle) then
+				local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
-		if DoesEntityExist(vehicle) then
-			local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
-
-			for i=maxSeats - 1, 0, -1 do
-				if IsVehicleSeatFree(vehicle, i) then
-					freeSeat = i
-					break
+				for i=maxSeats - 1, 0, -1 do
+					if IsVehicleSeatFree(vehicle, i) then
+						freeSeat = i
+						break
+					end
 				end
-			end
 
-			if freeSeat then
-				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
-				dragStatus.isDragged = false
+				if freeSeat then
+					TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
+					dragStatus.isDragged = false
+				end
 			end
 		end
 	end
@@ -1475,12 +1464,10 @@ RegisterNetEvent('esx_policejob:OutVehicle')
 AddEventHandler('esx_policejob:OutVehicle', function()
 	local playerPed = PlayerPedId()
 
-	if not IsPedSittingInAnyVehicle(playerPed) then
-		return
+	if IsPedSittingInAnyVehicle(playerPed) then
+		local vehicle = GetVehiclePedIsIn(playerPed, false)
+		TaskLeaveVehicle(playerPed, vehicle, 16)
 	end
-
-	local vehicle = GetVehiclePedIsIn(playerPed, false)
-	TaskLeaveVehicle(playerPed, vehicle, 16)
 end)
 
 -- Handcuff
@@ -1546,7 +1533,6 @@ end)
 
 -- Create blips
 Citizen.CreateThread(function()
-
 	for k,v in pairs(Config.PoliceStations) do
 		local blip = AddBlipForCoord(v.Blip.Coords)
 
@@ -1557,89 +1543,86 @@ Citizen.CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentString(_U('map_blip'))
+		AddTextComponentSubstringPlayerName(_U('map_blip'))
 		EndTextCommandSetBlipName(blip)
 	end
-
 end)
 
--- Display markers
+-- Draw markers and more
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
 		if PlayerData.job and PlayerData.job.name == 'police' then
-
 			local playerPed = PlayerPedId()
-			local coords    = GetEntityCoords(playerPed)
+			local playerCoords = GetEntityCoords(playerPed)
 			local isInMarker, hasExited, letSleep = false, false, true
 			local currentStation, currentPart, currentPartNum
 
 			for k,v in pairs(Config.PoliceStations) do
-
 				for i=1, #v.Cloakrooms, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Cloakrooms[i], true)
+					local distance = #(playerCoords - v.Cloakrooms[i])
 
 					if distance < Config.DrawDistance then
 						DrawMarker(20, v.Cloakrooms[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 						letSleep = false
-					end
 
-					if distance < Config.MarkerSize.x then
-						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Cloakroom', i
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Cloakroom', i
+						end
 					end
 				end
 
 				for i=1, #v.Armories, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Armories[i], true)
+					local distance = #(playerCoords - v.Armories[i])
 
 					if distance < Config.DrawDistance then
 						DrawMarker(21, v.Armories[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 						letSleep = false
-					end
 
-					if distance < Config.MarkerSize.x then
-						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Armory', i
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Armory', i
+						end
 					end
 				end
 
 				for i=1, #v.Vehicles, 1 do
-					local distance = GetDistanceBetweenCoords(coords, v.Vehicles[i].Spawner, true)
+					local distance = #(playerCoords - v.Vehicles[i].Spawner)
 
 					if distance < Config.DrawDistance then
 						DrawMarker(36, v.Vehicles[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 						letSleep = false
-					end
 
-					if distance < Config.MarkerSize.x then
-						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
+						end
 					end
 				end
 
 				for i=1, #v.Helicopters, 1 do
-					local distance =  GetDistanceBetweenCoords(coords, v.Helicopters[i].Spawner, true)
+					local distance =  #(playerCoords - v.Helicopters[i].Spawner)
 
 					if distance < Config.DrawDistance then
 						DrawMarker(34, v.Helicopters[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 						letSleep = false
-					end
 
-					if distance < Config.MarkerSize.x then
-						isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Helicopters', i
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Helicopters', i
+						end
 					end
 				end
 
 				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
 					for i=1, #v.BossActions, 1 do
-						local distance = GetDistanceBetweenCoords(coords, v.BossActions[i], true)
+						local distance = #(playerCoords - v.BossActions[i])
 
 						if distance < Config.DrawDistance then
 							DrawMarker(22, v.BossActions[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 							letSleep = false
-						end
 
-						if distance < Config.MarkerSize.x then
-							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'BossActions', i
+							if distance < Config.MarkerSize.x then
+								isInMarker, currentStation, currentPart, currentPartNum = true, k, 'BossActions', i
+							end
 						end
 					end
 				end
@@ -1670,7 +1653,6 @@ Citizen.CreateThread(function()
 			if letSleep then
 				Citizen.Wait(500)
 			end
-
 		else
 			Citizen.Wait(500)
 		end
@@ -1691,17 +1673,17 @@ Citizen.CreateThread(function()
 		Citizen.Wait(500)
 
 		local playerPed = PlayerPedId()
-		local coords    = GetEntityCoords(playerPed)
+		local playerCoords = GetEntityCoords(playerPed)
 
 		local closestDistance = -1
 		local closestEntity   = nil
 
 		for i=1, #trackedEntities, 1 do
-			local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
+			local object = GetClosestObjectOfType(playerCoords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
 
 			if DoesEntityExist(object) then
 				local objCoords = GetEntityCoords(object)
-				local distance  = GetDistanceBetweenCoords(coords, objCoords, true)
+				local distance = #(playerCoords - objCoords)
 
 				if closestDistance == -1 or closestDistance > distance then
 					closestDistance = distance
