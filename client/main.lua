@@ -1719,7 +1719,7 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
 				elseif CurrentAction == 'menu_armory' then
-					if Config.MaxInService == -1 then
+					if not Config.EnableESXService then
 						OpenArmoryMenu(CurrentActionData.station)
 					elseif playerInService then
 						OpenArmoryMenu(CurrentActionData.station)
@@ -1727,7 +1727,7 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification(_U('service_not'))
 					end
 				elseif CurrentAction == 'menu_vehicle_spawner' then
-					if Config.MaxInService == -1 then
+					if not Config.EnableESXService then
 						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 					elseif playerInService then
 						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
@@ -1735,7 +1735,7 @@ Citizen.CreateThread(function()
 						ESX.ShowNotification(_U('service_not'))
 					end
 				elseif CurrentAction == 'Helicopters' then
-					if Config.MaxInService == -1 then
+					if not Config.EnableESXService then
 						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 					elseif playerInService then
 						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
@@ -1762,7 +1762,7 @@ Citizen.CreateThread(function()
 		end -- CurrentAction end
 
 		if IsControlJustReleased(0, 167) and not isDead and PlayerData.job and PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
-			if Config.MaxInService == -1 then
+			if not Config.EnableESXService then
 				OpenPoliceActionsMenu()
 			elseif playerInService then
 				OpenPoliceActionsMenu()
