@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-if Config.MaxInService ~= -1 then
+if Config.EnableESXService then
 	TriggerEvent('esx_service:activateService', 'police', Config.MaxInService)
 end
 
