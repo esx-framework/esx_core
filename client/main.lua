@@ -138,7 +138,7 @@ function StartDistressSignal()
 		local timer = Config.BleedoutTimer
 
 		while timer > 0 and isDead do
-			Citizen.Wait(2)
+			Citizen.Wait(0)
 			timer = timer - 30
 
 			SetTextFont(4)

@@ -187,7 +187,6 @@ Citizen.CreateThread(function()
 		local currentHospital, currentPart, currentPartNum
 
 		for hospitalNum,hospital in pairs(Config.Hospitals) do
-
 			-- Ambulance Actions
 			for k,v in ipairs(hospital.AmbulanceActions) do
 				local distance = #(playerCoords - v)
@@ -195,10 +194,10 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-				if distance < Config.Marker.x then
-					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceActions', k
+					if distance < Config.Marker.x then
+						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceActions', k
+					end
 				end
 			end
 
@@ -209,10 +208,10 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-				if distance < Config.Marker.x then
-					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Pharmacy', k
+					if distance < Config.Marker.x then
+						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Pharmacy', k
+					end
 				end
 			end
 
@@ -223,10 +222,10 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-				if distance < v.Marker.x then
-					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Vehicles', k
+					if distance < v.Marker.x then
+						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Vehicles', k
+					end
 				end
 			end
 
@@ -237,10 +236,10 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-				if distance < v.Marker.x then
-					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
+					if distance < v.Marker.x then
+						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
+					end
 				end
 			end
 
@@ -251,11 +250,10 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-
-				if distance < v.Marker.x then
-					FastTravel(v.To.coords, v.To.heading)
+					if distance < v.Marker.x then
+						FastTravel(v.To.coords, v.To.heading)
+					end
 				end
 			end
 
@@ -266,18 +264,16 @@ Citizen.CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
 					letSleep = false
-				end
 
-				if distance < v.Marker.x then
-					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
+					if distance < v.Marker.x then
+						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
+					end
 				end
 			end
-
 		end
 
 		-- Logic for exiting & entering markers
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
-
 			if
 				(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
 				(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
@@ -289,7 +285,6 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
 
 			TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
-
 		end
 
 		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
@@ -348,7 +343,6 @@ Citizen.CreateThread(function()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
-
 				if CurrentAction == 'AmbulanceActions' then
 					OpenAmbulanceActionsMenu()
 				elseif CurrentAction == 'Pharmacy' then
@@ -362,10 +356,9 @@ Citizen.CreateThread(function()
 				end
 
 				CurrentAction = nil
-
 			end
 
-		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not isDead then
+		elseif ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' and not isDead then
 			if IsControlJustReleased(0, 167) then
 				OpenMobileAmbulanceActionsMenu()
 			end
@@ -907,16 +900,16 @@ AddEventHandler('esx_ambulancejob:setDeadPlayers', function(_deadPlayers)
 				local player = GetPlayerFromServerId(playerId)
 				local playerPed = GetPlayerPed(player)
 				local blip = AddBlipForEntity(playerPed)
-	
+
 				SetBlipSprite(blip, 303)
 				SetBlipColour(blip, 1)
 				SetBlipFlashes(blip, true)
 				SetBlipCategory(blip, 7)
-	
+
 				BeginTextCommandSetBlipName('STRING')
 				AddTextComponentSubstringPlayerName(_U('blip_dead'))
 				EndTextCommandSetBlipName(blip)
-	
+
 				deadPlayerBlips[playerId] = blip
 			end
 		end
