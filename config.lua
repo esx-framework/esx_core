@@ -127,37 +127,39 @@ Config.Hospitals = {
 }
 
 Config.AuthorizedVehicles = {
-	ambulance = {
-		{model = 'ambulance', label = 'Ambulance Van', price = 5000}
+	car = {
+		ambulance = {
+			{model = 'ambulance', price = 5000}
+		},
+
+		doctor = {
+			{model = 'ambulance', price = 4500}
+		},
+
+		chief_doctor = {
+			{model = 'ambulance', price = 3000}
+		},
+
+		boss = {
+			{model = 'ambulance', price = 2000}
+		}
 	},
 
-	doctor = {
-		{model = 'ambulance', label = 'Ambulance Van', price = 4500}
-	},
+	helicopter = {
+		ambulance = {},
 
-	chief_doctor = {
-		{model = 'ambulance', label = 'Ambulance Van', price = 3000}
-	},
+		doctor = {
+			{model = 'buzzard2', price = 150000}
+		},
 
-	boss = {
-		{model = 'ambulance', label = 'Ambulance Van', price = 2000}
-	}
-}
+		chief_doctor = {
+			{model = 'buzzard2', price = 150000},
+			{model = 'seasparrow', price = 300000}
+		},
 
-Config.AuthorizedHelicopters = {
-	ambulance = {},
-
-	doctor = {
-		{model = 'buzzard2', label = 'Nagasaki Buzzard', price = 150000}
-	},
-
-	chief_doctor = {
-		{model = 'buzzard2', label = 'Nagasaki Buzzard', price = 150000},
-		{model = 'seasparrow', label = 'Sea Sparrow', price = 300000}
-	},
-
-	boss = {
-		{model = 'buzzard2', label = 'Nagasaki Buzzard', price = 10000},
-		{model = 'seasparrow', label = 'Sea Sparrow', price = 250000}
+		boss = {
+			{model = 'buzzard2', price = 10000},
+			{model = 'seasparrow', price = 250000}
+		}
 	}
 }

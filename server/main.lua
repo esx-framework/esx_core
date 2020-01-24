@@ -207,22 +207,12 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 	end
 end)
 
-function getPriceFromHash(hashKey, jobGrade, type)
-	if type == 'helicopter' then
-		local vehicles = Config.AuthorizedHelicopters[jobGrade]
+function getPriceFromHash(vehicleHash, jobGrade, type)
+	local vehicles = Config.AuthorizedVehicles[type][jobGrade]
 
-		for k,v in ipairs(vehicles) do
-			if GetHashKey(v.model) == hashKey then
-				return v.price
-			end
-		end
-	elseif type == 'car' then
-		local vehicles = Config.AuthorizedVehicles[jobGrade]
-
-		for k,v in ipairs(vehicles) do
-			if GetHashKey(v.model) == hashKey then
-				return v.price
-			end
+	for k,v in ipairs(vehicles) do
+		if GetHashKey(v.model) == vehicleHash then
+			return v.price
 		end
 	end
 

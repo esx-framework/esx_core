@@ -33,7 +33,8 @@ client_scripts {
 	'locales/cs.lua',
 	'config.lua',
 	'client/main.lua',
-	'client/job.lua'
+	'client/job.lua',
+	'client/vehicle.lua',
 }
 
 dependencies {
