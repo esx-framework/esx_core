@@ -18,19 +18,23 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 
 			if #authorizedVehicles > 0 then
 				for k,vehicle in ipairs(authorizedVehicles) do
-					local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicle.model))
+					if IsModelInCdimage(vehicle.model) then
+						local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicle.model))
 
-					table.insert(shopElements, {
-						label = ('%s - <span style="color:green;">%s</span>'):format(vehicleLabel, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
-						name  = vehicleLabel,
-						model = vehicle.model,
-						price = vehicle.price,
-						props = vehicle.props,
-						type  = type
-					})
+						table.insert(shopElements, {
+							label = ('%s - <span style="color:green;">%s</span>'):format(vehicleLabel, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
+							name  = vehicleLabel,
+							model = vehicle.model,
+							price = vehicle.price,
+							props = vehicle.props,
+							type  = type
+						})
+					end
 				end
 
-				OpenShopMenu(shopElements, playerCoords, shopCoords)
+				if #shopElements > 0 then
+					OpenShopMenu(shopElements, playerCoords, shopCoords)
+				end
 			end
 		elseif data.current.action == 'garage' then
 			local garage = {}
@@ -41,50 +45,57 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 
 					for k,v in ipairs(jobVehicles) do
 						local props = json.decode(v.vehicle)
-						local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
-						local label = ('%s - <span style="color:darkgoldenrod;">%s</span>: '):format(vehicleName, props.plate)
 
-						if v.stored then
-							label = label .. ('<span style="color:green;">%s</span>'):format(_U('garage_stored'))
-						else
-							label = label .. ('<span style="color:darkred;">%s</span>'):format(_U('garage_notstored'))
+						if IsModelInCdimage(props.model) then
+							local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+							local label = ('%s - <span style="color:darkgoldenrod;">%s</span>: '):format(vehicleName, props.plate)
+
+							if v.stored then
+								label = label .. ('<span style="color:green;">%s</span>'):format(_U('garage_stored'))
+							else
+								label = label .. ('<span style="color:darkred;">%s</span>'):format(_U('garage_notstored'))
+							end
+
+							table.insert(garage, {
+								label = label,
+								stored = v.stored,
+								model = props.model,
+								plate = props.plate
+							})
+
+							allVehicleProps[props.plate] = props
 						end
-
-						table.insert(garage, {
-							label = label,
-							stored = v.stored,
-							model = props.model,
-							plate = props.plate
-						})
-
-						allVehicleProps[props.plate] = props
 					end
 
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_garage', {
-						title    = _U('garage_title'),
-						align    = 'top-left',
-						elements = garage
-					}, function(data2, menu2)
-						if data2.current.stored then
-							local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(hospital, part, partNum)
+					if #garage > 0 then
+						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_garage', {
+							title    = _U('garage_title'),
+							align    = 'top-left',
+							elements = garage
+						}, function(data2, menu2)
+							if data2.current.stored then
+								local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(hospital, part, partNum)
 
-							if foundSpawn then
-								menu2.close()
+								if foundSpawn then
+									menu2.close()
 
-								ESX.Game.SpawnVehicle(data2.current.model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
-									local vehicleProps = allVehicleProps[data2.current.plate]
-									ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+									ESX.Game.SpawnVehicle(data2.current.model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
+										local vehicleProps = allVehicleProps[data2.current.plate]
+										ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 
-									TriggerServerEvent('esx_vehicleshop:setJobVehicleState', data2.current.plate, false)
-									ESX.ShowNotification(_U('garage_released'))
-								end)
+										TriggerServerEvent('esx_vehicleshop:setJobVehicleState', data2.current.plate, false)
+										ESX.ShowNotification(_U('garage_released'))
+									end)
+								end
+							else
+								ESX.ShowNotification(_U('garage_notavailable'))
 							end
-						else
-							ESX.ShowNotification(_U('garage_notavailable'))
-						end
-					end, function(data2, menu2)
-						menu2.close()
-					end)
+						end, function(data2, menu2)
+							menu2.close()
+						end)
+					else
+						ESX.ShowNotification(_U('garage_empty'))
+					end
 				else
 					ESX.ShowNotification(_U('garage_empty'))
 				end
