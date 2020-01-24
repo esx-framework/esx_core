@@ -37,6 +37,8 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 
 			ESX.TriggerServerCallback('esx_vehicleshop:retrieveJobVehicles', function(jobVehicles)
 				if #jobVehicles > 0 then
+					local allVehicleProps = {}
+
 					for k,v in ipairs(jobVehicles) do
 						local props = json.decode(v.vehicle)
 						local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
@@ -52,8 +54,10 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 							label = label,
 							stored = v.stored,
 							model = props.model,
-							vehicleProps = props
+							plate = props.plate
 						})
+
+						allVehicleProps[props.plate] = props
 					end
 
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_garage', {
@@ -68,9 +72,10 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 								menu2.close()
 
 								ESX.Game.SpawnVehicle(data2.current.model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
-									ESX.Game.SetVehicleProperties(vehicle, data2.current.vehicleProps)
+									local vehicleProps = allVehicleProps[data2.current.plate]
+									ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 
-									TriggerServerEvent('esx_vehicleshop:setJobVehicleState', data2.current.vehicleProps.plate, false)
+									TriggerServerEvent('esx_vehicleshop:setJobVehicleState', data2.current.plate, false)
 									ESX.ShowNotification(_U('garage_released'))
 								end)
 							end
