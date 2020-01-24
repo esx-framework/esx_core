@@ -43,7 +43,6 @@ Locales['es'] = {
   ['heal_inprogress'] = 'you are healing!',
   ['heal_complete'] = 'you have healed ~y~%s~s~',
   ['no_players'] = 'ningún jugador cerca',
-  ['no_vehicles'] = 'ningún vehículo cerca',
   ['player_not_unconscious'] = 'n\'estás inconsciente',
   ['player_not_conscious'] = 'that player is not conscious!',
   -- Boss Menu

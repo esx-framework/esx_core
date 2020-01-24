@@ -43,7 +43,6 @@ Locales['fi'] = {
   ['heal_inprogress'] = 'sinä olet parantamassa!',
   ['heal_complete'] = 'sinä paransit henkilön ~y~%s~s~',
   ['no_players'] = 'ei pelaajia lähettyvillä',
-  ['no_vehicles'] = 'ei ajoneuvoja lähettyvillä',
   ['player_not_unconscious'] = 'tämä pelaaja ei ole tajuton!',
   ['player_not_conscious'] = 'tämä pelaaja ei ole tajuissaan!',
   -- Boss Menu

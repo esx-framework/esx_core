@@ -43,7 +43,6 @@ Locales['cs'] = {
   ['heal_inprogress'] = 'uzdravujete!',
   ['heal_complete'] = 'uzdravili jste ~y~%s~s~',
   ['no_players'] = 'v okolí není žádný hráč!',
-  ['no_vehicles'] = 'v okolí není žádné vozidlo',
   ['player_not_unconscious'] = 'hráč není v bezvědomí!',
   ['player_not_conscious'] = 'hráč je v bezvědomí!',
   -- Boss Menu

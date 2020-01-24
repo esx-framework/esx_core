@@ -43,7 +43,6 @@ Locales['sv'] = {
   ['heal_inprogress'] = 'du behandlar patienten!',
   ['heal_complete'] = 'du har behandlat ~y~%s~s~',
   ['no_players'] = 'det finns inga spelare i närheten!',
-  ['no_vehicles'] = 'det finns inget fordon i närheten!',
   ['player_not_unconscious'] = 'spelaren är inte medvetslös!',
   ['player_not_conscious'] = 'spelaren är inte vid medvetande!',
   -- Boss Menu
