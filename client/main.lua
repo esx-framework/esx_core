@@ -334,32 +334,27 @@ RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
 	local coords = GetEntityCoords(playerPed)
-
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
-	Citizen.CreateThread(function()
-		DoScreenFadeOut(800)
+	DoScreenFadeOut(800)
 
-		while not IsScreenFadedOut() do
-			Citizen.Wait(50)
-		end
+	while not IsScreenFadedOut() do
+		Citizen.Wait(50)
+	end
 
-		local formattedCoords = {
-			x = ESX.Math.Round(coords.x, 1),
-			y = ESX.Math.Round(coords.y, 1),
-			z = ESX.Math.Round(coords.z, 1)
-		}
+	local formattedCoords = {
+		x = ESX.Math.Round(coords.x, 1),
+		y = ESX.Math.Round(coords.y, 1),
+		z = ESX.Math.Round(coords.z, 1)
+	}
 
-		RespawnPed(playerPed, formattedCoords, 0.0)
+	RespawnPed(playerPed, formattedCoords, 0.0)
 
-		StopScreenEffect('DeathFailOut')
-		DoScreenFadeIn(800)
-	end)
+	StopScreenEffect('DeathFailOut')
+	DoScreenFadeIn(800)
 end)
 
 -- Load unloaded IPLs
 if Config.LoadIpl then
-	Citizen.CreateThread(function()
-		RequestIpl('Coroner_Int_on') -- Morgue
-	end)
+	RequestIpl('Coroner_Int_on') -- Morgue
 end

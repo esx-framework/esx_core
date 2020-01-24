@@ -459,11 +459,9 @@ function OpenVehicleSpawnerMenu(hospital, partNum)
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-
 		if data.current.action == 'buy_vehicle' then
 			local shopCoords = Config.Hospitals[hospital].Vehicles[partNum].InsideShop
 			local shopElements = {}
-
 			local authorizedVehicles = Config.AuthorizedVehicles[ESX.PlayerData.job.grade_name]
 
 			if #authorizedVehicles > 0 then
@@ -476,11 +474,9 @@ function OpenVehicleSpawnerMenu(hospital, partNum)
 						type  = 'car'
 					})
 				end
-			else
-				return
-			end
 
-			OpenShopMenu(shopElements, playerCoords, shopCoords)
+				OpenShopMenu(shopElements, playerCoords, shopCoords)
+			end
 		elseif data.current.action == 'garage' then
 			local garage = {}
 
@@ -529,20 +525,16 @@ function OpenVehicleSpawnerMenu(hospital, partNum)
 					end, function(data2, menu2)
 						menu2.close()
 					end)
-
 				else
 					ESX.ShowNotification(_U('garage_empty'))
 				end
 			end, 'car')
-
 		elseif data.current.action == 'store_garage' then
 			StoreNearbyVehicle(playerCoords)
 		end
-
 	end, function(data, menu)
 		menu.close()
 	end)
-
 end
 
 function StoreNearbyVehicle(playerCoords)
@@ -629,22 +621,18 @@ end
 function OpenHelicopterSpawnerMenu(hospital, partNum)
 	local playerCoords = GetEntityCoords(PlayerPedId())
 	ESX.PlayerData = ESX.GetPlayerData()
-	local elements = {
-		{label = _U('helicopter_garage'), action = 'garage'},
-		{label = _U('helicopter_store'), action = 'store_garage'},
-		{label = _U('helicopter_buy'), action = 'buy_helicopter'}
-	}
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'helicopter_spawner', {
 		title    = _U('helicopter_title'),
 		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-
+		elements = {
+			{label = _U('helicopter_garage'), action = 'garage'},
+			{label = _U('helicopter_store'), action = 'store_garage'},
+			{label = _U('helicopter_buy'), action = 'buy_helicopter'}
+	}}, function(data, menu)
 		if data.current.action == 'buy_helicopter' then
 			local shopCoords = Config.Hospitals[hospital].Helicopters[partNum].InsideShop
 			local shopElements = {}
-
 			local authorizedHelicopters = Config.AuthorizedHelicopters[ESX.PlayerData.job.grade_name]
 
 			if #authorizedHelicopters > 0 then
@@ -711,20 +699,16 @@ function OpenHelicopterSpawnerMenu(hospital, partNum)
 					end, function(data2, menu2)
 						menu2.close()
 					end)
-
 				else
 					ESX.ShowNotification(_U('garage_empty'))
 				end
 			end, 'helicopter')
-
 		elseif data.current.action == 'store_garage' then
 			StoreNearbyVehicle(playerCoords)
 		end
-
 	end, function(data, menu)
 		menu.close()
 	end)
-
 end
 
 function OpenShopMenu(elements, restoreCoords, shopCoords)
@@ -853,35 +837,11 @@ function OpenPharmacyMenu()
 		elements = {
 			{label = _U('pharmacy_take', _U('medikit')), item = 'medikit', type = 'slider', value = 1, min = 1, max = 100},
 			{label = _U('pharmacy_take', _U('bandage')), item = 'bandage', type = 'slider', value = 1, min = 1, max = 100}
-		}
-	}, function(data, menu)
+	}}, function(data, menu)
 		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.item, data.current.value)
 	end, function(data, menu)
 		menu.close()
 	end)
-end
-
-function WarpPedInClosestVehicle(ped)
-	local coords = GetEntityCoords(ped)
-
-	local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
-
-	if distance ~= -1 and distance <= 5.0 then
-		local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
-
-		for i=maxSeats - 1, 0, -1 do
-			if IsVehicleSeatFree(vehicle, i) then
-				freeSeat = i
-				break
-			end
-		end
-
-		if freeSeat then
-			TaskWarpPedIntoVehicle(ped, vehicle, freeSeat)
-		end
-	else
-		ESX.ShowNotification(_U('no_vehicles'))
-	end
 end
 
 RegisterNetEvent('esx_ambulancejob:heal')
