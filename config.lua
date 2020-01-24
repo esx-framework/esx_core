@@ -144,64 +144,52 @@ Config.AuthorizedWeapons = {
 }
 
 Config.AuthorizedVehicles = {
-	Shared = {
-		{model = 'police', label = 'Police Cruiser', price = 10000},
-		{model = 'pbus', label = 'Police Prison Bus', price = 5000}
+	car = {
+		recruit = {},
+
+		officer = {
+			{model = 'police3', price = 20000}
+		},
+
+		sergeant = {
+			{model = 'policet', price = 18500},
+			{model = 'policeb', price = 30500}
+		},
+
+		intendent = {},
+
+		lieutenant = {
+			{model = 'riot', price = 70000},
+			{model = 'fbi2', price = 60000}
+		},
+
+		chef = {},
+
+		boss = {}
 	},
 
-	recruit = {
+	helicopter = {
+		recruit = {},
 
-	},
+		officer = {},
 
-	officer = {
-		{model = 'police3', label = 'Police Interceptor', price = 20000}
-	},
+		sergeant = {},
 
-	sergeant = {
-		{model = 'policet', label = 'Police Transporter', price = 18500},
-		{model = 'policeb', label = 'Police Bike', price = 30500}
-	},
+		intendent = {},
 
-	intendent = {
+		lieutenant = {
+			{model = 'polmav', props = {modLivery = 0}, price = 200000}
+		},
 
-	},
+		chef = {
+			{model = 'polmav', props = {modLivery = 0}, price = 150000}
+		},
 
-	lieutenant = {
-		{model = 'riot', label = 'Police Riot', price = 70000},
-		{model = 'fbi2', label = 'FIB SUV', price = 60000}
-	},
-
-	chef = {
-
-	},
-
-	boss = {
-
+		boss = {
+			{model = 'polmav', props = {modLivery = 0}, price = 100000}
+		}
 	}
 }
-
-Config.AuthorizedHelicopters = {
-	recruit = {},
-
-	officer = {},
-
-	sergeant = {},
-
-	intendent = {},
-
-	lieutenant = {
-		{model = 'polmav', label = 'Police Maverick', livery = 0, price = 200000}
-	},
-
-	chef = {
-		{model = 'polmav', label = 'Police Maverick', livery = 0, price = 150000}
-	},
-
-	boss = {
-		{model = 'polmav', label = 'Police Maverick', livery = 0, price = 100000}
-	}
-}
-
 
 Config.CustomPeds = {
 	shared = {
