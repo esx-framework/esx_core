@@ -182,67 +182,120 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		local playerCoords = GetEntityCoords(PlayerPedId())
-		local letSleep, isInMarker, hasExited = true, false, false
-		local currentHospital, currentPart, currentPartNum
+
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' then
+			local playerCoords = GetEntityCoords(PlayerPedId())
+			local letSleep, isInMarker, hasExited = true, false, false
+			local currentHospital, currentPart, currentPartNum
+
+			for hospitalNum,hospital in pairs(Config.Hospitals) do
+				-- Ambulance Actions
+				for k,v in ipairs(hospital.AmbulanceActions) do
+					local distance = #(playerCoords - v)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < Config.Marker.x then
+							isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceActions', k
+						end
+					end
+				end
+
+				-- Pharmacies
+				for k,v in ipairs(hospital.Pharmacies) do
+					local distance = #(playerCoords - v)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < Config.Marker.x then
+							isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Pharmacy', k
+						end
+					end
+				end
+
+				-- Vehicle Spawners
+				for k,v in ipairs(hospital.Vehicles) do
+					local distance = #(playerCoords - v.Spawner)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < v.Marker.x then
+							isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Vehicles', k
+						end
+					end
+				end
+
+				-- Helicopter Spawners
+				for k,v in ipairs(hospital.Helicopters) do
+					local distance = #(playerCoords - v.Spawner)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < v.Marker.x then
+							isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
+						end
+					end
+				end
+
+				-- Fast Travels (Prompt)
+				for k,v in ipairs(hospital.FastTravelsPrompt) do
+					local distance = #(playerCoords - v.From)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
+						letSleep = false
+
+						if distance < v.Marker.x then
+							isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
+						end
+					end
+				end
+			end
+
+			-- Logic for exiting & entering markers
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+				if
+					(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
+					(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+				then
+					TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+					hasExited = true
+				end
+
+				HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
+
+				TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
+			end
+
+			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
+			end
+
+			if letSleep then
+				Citizen.Wait(500)
+			end
+		else
+			Citizen.Wait(500)
+		end
+	end
+end)
+
+-- Fast travels
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		local playerCoords, letSleep = GetEntityCoords(PlayerPedId()), true
 
 		for hospitalNum,hospital in pairs(Config.Hospitals) do
-			-- Ambulance Actions
-			for k,v in ipairs(hospital.AmbulanceActions) do
-				local distance = #(playerCoords - v)
-
-				if distance < Config.DrawDistance then
-					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
-					letSleep = false
-
-					if distance < Config.Marker.x then
-						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceActions', k
-					end
-				end
-			end
-
-			-- Pharmacies
-			for k,v in ipairs(hospital.Pharmacies) do
-				local distance = #(playerCoords - v)
-
-				if distance < Config.DrawDistance then
-					DrawMarker(Config.Marker.type, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, Config.Marker.rotate, nil, nil, false)
-					letSleep = false
-
-					if distance < Config.Marker.x then
-						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Pharmacy', k
-					end
-				end
-			end
-
-			-- Vehicle Spawners
-			for k,v in ipairs(hospital.Vehicles) do
-				local distance = #(playerCoords - v.Spawner)
-
-				if distance < Config.DrawDistance then
-					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					letSleep = false
-
-					if distance < v.Marker.x then
-						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Vehicles', k
-					end
-				end
-			end
-
-			-- Helicopter Spawners
-			for k,v in ipairs(hospital.Helicopters) do
-				local distance = #(playerCoords - v.Spawner)
-
-				if distance < Config.DrawDistance then
-					DrawMarker(v.Marker.type, v.Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					letSleep = false
-
-					if distance < v.Marker.x then
-						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
-					end
-				end
-			end
-
 			-- Fast Travels
 			for k,v in ipairs(hospital.FastTravels) do
 				local distance = #(playerCoords - v.From)
@@ -256,40 +309,6 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
-
-			-- Fast Travels (Prompt)
-			for k,v in ipairs(hospital.FastTravelsPrompt) do
-				local distance = #(playerCoords - v.From)
-
-				if distance < Config.DrawDistance then
-					DrawMarker(v.Marker.type, v.From, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Marker.x, v.Marker.y, v.Marker.z, v.Marker.r, v.Marker.g, v.Marker.b, v.Marker.a, false, false, 2, v.Marker.rotate, nil, nil, false)
-					letSleep = false
-
-					if distance < v.Marker.x then
-						isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
-					end
-				end
-			end
-		end
-
-		-- Logic for exiting & entering markers
-		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
-			if
-				(LastHospital ~= nil and LastPart ~= nil and LastPartNum ~= nil) and
-				(LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
-			then
-				TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
-				hasExited = true
-			end
-
-			HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
-
-			TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
-		end
-
-		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_ambulancejob:hasExitedMarker', LastHospital, LastPart, LastPartNum)
 		end
 
 		if letSleep then
@@ -299,30 +318,28 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, partNum)
-	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' then
-		if part == 'AmbulanceActions' then
-			CurrentAction = part
-			CurrentActionMsg = _U('actions_prompt')
-			CurrentActionData = {}
-		elseif part == 'Pharmacy' then
-			CurrentAction = part
-			CurrentActionMsg = _U('open_pharmacy')
-			CurrentActionData = {}
-		elseif part == 'Vehicles' then
-			CurrentAction = part
-			CurrentActionMsg = _U('garage_prompt')
-			CurrentActionData = {hospital = hospital, partNum = partNum}
-		elseif part == 'Helicopters' then
-			CurrentAction = part
-			CurrentActionMsg = _U('helicopter_prompt')
-			CurrentActionData = {hospital = hospital, partNum = partNum}
-		elseif part == 'FastTravelsPrompt' then
-			local travelItem = Config.Hospitals[hospital][part][partNum]
+	if part == 'AmbulanceActions' then
+		CurrentAction = part
+		CurrentActionMsg = _U('actions_prompt')
+		CurrentActionData = {}
+	elseif part == 'Pharmacy' then
+		CurrentAction = part
+		CurrentActionMsg = _U('open_pharmacy')
+		CurrentActionData = {}
+	elseif part == 'Vehicles' then
+		CurrentAction = part
+		CurrentActionMsg = _U('garage_prompt')
+		CurrentActionData = {hospital = hospital, partNum = partNum}
+	elseif part == 'Helicopters' then
+		CurrentAction = part
+		CurrentActionMsg = _U('helicopter_prompt')
+		CurrentActionData = {hospital = hospital, partNum = partNum}
+	elseif part == 'FastTravelsPrompt' then
+		local travelItem = Config.Hospitals[hospital][part][partNum]
 
-			CurrentAction = part
-			CurrentActionMsg = travelItem.Prompt
-			CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
-		end
+		CurrentAction = part
+		CurrentActionMsg = travelItem.Prompt
+		CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
 	end
 end)
 
