@@ -72,5 +72,5 @@ Locales['br'] = {
   ['chest_hair_1'] = 'quantidade de cabelo no peito',
   ['chest_color'] = 'cor do cabelo no peito',
   ['bodyb'] = 'manchas no corpo',
-  ['bodyb_size'] = 'espessura de manchas do corpo'
+  ['bodyb_size'] = 'espessura de manchas do corpo',
 }

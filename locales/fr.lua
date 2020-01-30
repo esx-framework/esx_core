@@ -72,5 +72,5 @@ Locales['fr'] = {
   ['chest_hair_1'] = 'opacité pillositée',
   ['chest_color'] = 'couleur pillositée',
   ['bodyb'] = 'imperfections du corps',
-  ['bodyb_size'] = 'opacité imperfections'
+  ['bodyb_size'] = 'opacité imperfections',
 }

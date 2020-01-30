@@ -34,7 +34,7 @@ Locales['tr'] = {
   ['decals_1'] = 'çıkartma 1',
   ['decals_2'] = 'çıkartma 2',
   ['arms'] = 'kollar',
-  ['arms_2'] = 'kollar 2'
+  ['arms_2'] = 'kollar 2',
   ['pants_1'] = 'pantolonlar 1',
   ['pants_2'] = 'pantolonlar 2',
   ['shoes_1'] = 'ayakkabılar 1',
@@ -72,5 +72,5 @@ Locales['tr'] = {
   ['chest_hair_1'] = 'gövde kılı kalınlığı',
   ['chest_color'] = 'gövde kılı rengi',
   ['bodyb'] = 'gövde lekesi',
-  ['bodyb_size'] = 'gövde lekesi kalınlığı'
+  ['bodyb_size'] = 'gövde lekesi kalınlığı',
 }

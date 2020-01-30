@@ -72,5 +72,5 @@ Locales['sv'] = {
   ['chest_hair_1'] = 'chest hair thickness',
   ['chest_color'] = 'chest hair color',
   ['bodyb'] = 'body blemishes',
-  ['bodyb_size'] = 'body blemishes thickness'
+  ['bodyb_size'] = 'body blemishes thickness',
 }

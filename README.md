@@ -1,5 +1,7 @@
 # skinchanger
 
+skinchanger is a resource that makes it easy to set and get player ped clothing. It supports the freemode peds `mp_m_freemode_01` and `mp_f_freemode_01`.
+
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
@@ -92,7 +94,7 @@ end)
 ### License
 skinchanger - make your own skin!
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2020 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
