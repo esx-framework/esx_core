@@ -116,7 +116,7 @@ Locales['en'] = {
   ['guns_label'] = '--- Guns ---',
   ['inventory_label'] = '--- Inventory ---',
   ['license_label'] = ' --- Licenses ---',
-  ['confiscate'] = 'sieze illegal items',
+  ['confiscate'] = 'confiscate %s',
   ['confiscate_weapon'] = 'confiscate %s with %s bullets',
   ['confiscate_inv'] = 'confiscate %sx %s',
   ['confiscate_dirty'] = 'confiscate dirty money: <span style="color:red;">$%s</span>',
