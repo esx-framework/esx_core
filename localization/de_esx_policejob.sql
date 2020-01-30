@@ -19,13 +19,12 @@ INSERT INTO `jobs` (name, label) VALUES
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
 	('police',0,'recruit','Rekrut',20,'{}','{}'),
 	('police',1,'officer','Officier',40,'{}','{}'),
-	('police',2,'sergeant','Sergent',40,'{}','{}'),
-	('police',3,'lieutenant','Lieutenant',65,'{}','{}'),
-	('police',4,'boss','Commandant',80,'{}','{}')
+	('police',2,'sergeant','Sergent',60,'{}','{}'),
+	('police',3,'lieutenant','Lieutenant',85,'{}','{}'),
+	('police',4,'boss','Commandant',100,'{}','{}')
 ;
 
 CREATE TABLE `fine_types` (
-
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`label` varchar(255) DEFAULT NULL,
 	`amount` int(11) DEFAULT NULL,

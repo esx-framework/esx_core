@@ -18,14 +18,13 @@ INSERT INTO `jobs` (name, label) VALUES
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
 	('police',0,'recruit','Aspirant',20,'{}','{}'),
-	('police',1,'officer','Biträdande Rikspolischef',40,'{}','{}'),
-	('police',2,'sergeant','Assistent',60,'{}','{}'),
-	('police',3,'lieutenant','Inspektör',85,'{}','{}'),
+	('police',1,'officer','Assistent',40,'{}','{}'),
+	('police',2,'sergeant','Inspektör',60,'{}','{}'),
+	('police',3,'lieutenant','Kommissarie',85,'{}','{}'),
 	('police',4,'boss','Rikspolischef',100,'{}','{}')
 ;
 
 CREATE TABLE `fine_types` (
-
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`label` varchar(255) DEFAULT NULL,
 	`amount` int(11) DEFAULT NULL,
