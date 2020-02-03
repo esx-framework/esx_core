@@ -58,19 +58,19 @@ MySQL.ready(function()
 			local isGateway = nil
 			local roomMenu  = nil
 
-			if properties[i].entering ~= nil then
+			if properties[i].entering then
 				entering = json.decode(properties[i].entering)
 			end
 
-			if properties[i].exit ~= nil then
+			if properties[i].exit then
 				exit = json.decode(properties[i].exit)
 			end
 
-			if properties[i].inside ~= nil then
+			if properties[i].inside then
 				inside = json.decode(properties[i].inside)
 			end
 
-			if properties[i].outside ~= nil then
+			if properties[i].outside then
 				outside = json.decode(properties[i].outside)
 			end
 
@@ -92,7 +92,7 @@ MySQL.ready(function()
 				isGateway = true
 			end
 
-			if properties[i].room_menu ~= nil then
+			if properties[i].room_menu then
 				roomMenu = json.decode(properties[i].room_menu)
 			end
 
@@ -201,19 +201,15 @@ end)
 
 RegisterServerEvent('esx_property:getItem')
 AddEventHandler('esx_property:getItem', function(owner, type, item, count)
-	local _source      = source
-	local xPlayer      = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
 	if type == 'item_standard' then
-
-
 		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 			local inventoryItem = inventory.getItem(item)
 
 			-- is there enough in the property?
 			if count > 0 and inventoryItem.count >= count then
-			
 				-- can the player carry the said amount of x item?
 				if xPlayer.canCarryItem(item, count) then
 					inventory.removeItem(item, count)
@@ -226,52 +222,38 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 				xPlayer.showNotification(_U('not_enough_in_property'))
 			end
 		end)
-
 	elseif type == 'item_account' then
-
 		TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayerOwner.identifier, function(account)
-			local roomAccountMoney = account.money
-
-			if roomAccountMoney >= count then
+			if account.money >= count then
 				account.removeMoney(count)
 				xPlayer.addAccountMoney(item, count)
 			else
 				xPlayer.showNotification(_U('amount_invalid'))
 			end
 		end)
-
 	elseif type == 'item_weapon' then
-
 		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
 			local storeWeapons = store.get('weapons') or {}
-			local weaponName   = nil
-			local ammo         = nil
+			local weapon = storeWeapons[data.current.count] -- count is the index
 
-			for i=1, #storeWeapons, 1 do
-				if storeWeapons[i].name == item then
-					weaponName = storeWeapons[i].name
-					ammo       = storeWeapons[i].ammo
+			if weapon then
+				if not xPlayer.hasWeapon(weaponName) then
+					table.remove(storeWeapons, data.current.count)
+					store.set('weapons', storeWeapons)
 
-					table.remove(storeWeapons, i)
-					break
+					xPlayer.addWeapon(weapon.name, weapon.ammo)
 				end
 			end
-
-			store.set('weapons', storeWeapons)
-			xPlayer.addWeapon(weaponName, ammo)
 		end)
-
 	end
 end)
 
 RegisterServerEvent('esx_property:putItem')
 AddEventHandler('esx_property:putItem', function(owner, type, item, count)
-	local _source      = source
-	local xPlayer      = ESX.GetPlayerFromId(_source)
+	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
 	if type == 'item_standard' then
-
 		local playerItemCount = xPlayer.getInventoryItem(item).count
 
 		if playerItemCount >= count and count > 0 then
@@ -283,12 +265,8 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 		else
 			xPlayer.showNotification(_U('invalid_quantity'))
 		end
-
 	elseif type == 'item_account' then
-
-		local playerAccountMoney = xPlayer.getAccount(item).money
-
-		if playerAccountMoney >= count and count > 0 then
+		if xPlayer.getAccount(item).money >= count and count > 0 then
 			xPlayer.removeAccountMoney(item, count)
 
 			TriggerEvent('esx_addonaccount:getAccount', 'property_' .. item, xPlayerOwner.identifier, function(account)
@@ -297,34 +275,34 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 		else
 			xPlayer.showNotification(_U('amount_invalid'))
 		end
-
 	elseif type == 'item_weapon' then
-
-		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
-			local storeWeapons = store.get('weapons') or {}
-
-			table.insert(storeWeapons, {
-				name = item,
-				ammo = count
-			})
-
-			store.set('weapons', storeWeapons)
+		if xPlayer.hasWeapon(item) then
 			xPlayer.removeWeapon(item)
-		end)
 
+			TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
+				local storeWeapons = store.get('weapons') or {}
+
+				table.insert(storeWeapons, {
+					name = item,
+					ammo = count
+				})
+
+				store.set('weapons', storeWeapons)
+			end)
+		end
 	end
 end)
 
 ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE owner = @owner', {
+	MySQL.Async.fetchAll('SELECT name FROM owned_properties WHERE owner = @owner', {
 		['@owner'] = xPlayer.identifier
-	}, function(ownedProperties)
+	}, function(result)
 		local properties = {}
 
-		for i=1, #ownedProperties, 1 do
-			table.insert(properties, ownedProperties[i].name)
+		for i=1, #result, 1 do
+			table.insert(properties, result[i].name)
 		end
 
 		cb(properties)
