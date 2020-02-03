@@ -7,8 +7,9 @@ description 'ESX Property'
 version '1.0.4'
 
 server_scripts {
-	'@es_extended/locale.lua',
+	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
+	'@es_extended/locale.lua',
 	'locales/de.lua',
 	'locales/br.lua',
 	'locales/en.lua',
@@ -36,6 +37,7 @@ client_scripts {
 }
 
 dependencies {
+	'async',
 	'es_extended',
 	'instance',
 	'cron',

@@ -416,25 +416,37 @@ AddEventHandler('esx_property:removeOutfit', function(label)
 end)
 
 function PayRent(d, h, m)
-	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE rented = 1', {}, function (result)
+	local tasks, timeStart = {}, os.clock()
+	print('[esx_property] [^2INFO^7] Paying rent cron job started')
+
+	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE rented = 1', {}, function(result)
 		for i=1, #result, 1 do
-			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
+			table.insert(tasks, function(cb)
+				local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
-			-- message player if connected
-			if xPlayer then
-				xPlayer.removeAccountMoney('bank', result[i].price)
-				xPlayer.showNotification(_U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
-			else -- pay rent either way
-				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
-					['@bank']       = result[i].price,
-					['@identifier'] = result[i].owner
-				})
-			end
+				-- message player if connected
+				if xPlayer then
+					xPlayer.removeAccountMoney('bank', result[i].price)
+					xPlayer.showNotification(_U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
+				else -- pay rent either way
+					MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
+						['@bank'] = result[i].price,
+						['@identifier'] = result[i].owner
+					})
+				end
 
-			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
-				account.addMoney(result[i].price)
+				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
+					account.addMoney(result[i].price)
+				end)
+
+				cb()
 			end)
 		end
+
+		Async.parallelLimit(tasks, 5, function(results) end)
+
+		local elapsedTime = os.clock() - timeStart
+		print(('[esx_property] [^2INFO^7] Paying rent cron job took %s seconds'):format(elapsedTime))
 	end)
 end
 
