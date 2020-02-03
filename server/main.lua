@@ -20,7 +20,7 @@ function SetPropertyOwned(name, price, rented, owner)
 		local xPlayer = ESX.GetPlayerFromIdentifier(owner)
 
 		if xPlayer then
-			TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true)
+			TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true, rented)
 
 			if rented then
 				xPlayer.showNotification(_U('rented_for', ESX.Math.GroupDigits(price)))
@@ -32,15 +32,29 @@ function SetPropertyOwned(name, price, rented, owner)
 end
 
 function RemoveOwnedProperty(name, owner)
-	MySQL.Async.execute('DELETE FROM owned_properties WHERE name = @name AND owner = @owner', {
+	MySQL.Async.fetchAll('SELECT id, rented, price FROM owned_properties WHERE name = @name AND owner = @owner', {
 		['@name']  = name,
 		['@owner'] = owner
-	}, function(rowsChanged)
-		local xPlayer = ESX.GetPlayerFromIdentifier(owner)
+	}, function(result)
+		if result[1] then
+			MySQL.Async.execute('DELETE FROM owned_properties WHERE id = @id', {
+				['@id'] = result[1].id
+			}, function(rowsChanged)
+				local xPlayer = ESX.GetPlayerFromIdentifier(owner)
 
-		if xPlayer then
-			TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, false)
-			xPlayer.showNotification(_U('made_property'))
+				if xPlayer then
+					xPlayer.triggerEvent('esx_property:setPropertyOwned', name, false)
+
+					if result[1].rented == 1 then
+						xPlayer.showNotification(_U('moved_out'))
+					else
+						local sellPrice = ESX.Math.Round(result[1].price / Config.SellModifier)
+
+						xPlayer.showNotification(_U('moved_out_sold', ESX.Math.GroupDigits(sellPrice)))
+						xPlayer.addAccountMoney('bank', sellPrice)
+					end
+				end
+			end)
 		end
 	end)
 end
@@ -152,7 +166,7 @@ RegisterServerEvent('esx_property:rentProperty')
 AddEventHandler('esx_property:rentProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
-	local rent     = ESX.Math.Round(property.price / 200)
+	local rent     = ESX.Math.Round(property.price / Config.RentModifier)
 
 	SetPropertyOwned(propertyName, rent, true, xPlayer.identifier)
 end)
@@ -296,16 +310,10 @@ end)
 ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT name FROM owned_properties WHERE owner = @owner', {
+	MySQL.Async.fetchAll('SELECT name, rented FROM owned_properties WHERE owner = @owner', {
 		['@owner'] = xPlayer.identifier
 	}, function(result)
-		local properties = {}
-
-		for i=1, #result, 1 do
-			table.insert(properties, result[i].name)
-		end
-
-		cb(properties)
+		cb(result)
 	end)
 end)
 
