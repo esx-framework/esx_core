@@ -778,8 +778,6 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part)
 	CurrentAction = nil
 end)
 
-local index = 0
-RegisterCommand('s', function(a, b, c)
 -- Enter / Exit marker events & Draw markers
 Citizen.CreateThread(function()
 	while true do
@@ -826,7 +824,7 @@ Citizen.CreateThread(function()
 			end
 
 			-- Room menu
-			if property.roomMenu then
+			if property.roomMenu and hasChest and not property.disabled then
 				local distance = GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true)
 
 				if distance < Config.DrawDistance then
@@ -867,7 +865,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if CurrentAction then
-			--ESX.ShowHelpNotification(CurrentActionMsg)
+			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
 				if CurrentAction == 'property_menu' then
