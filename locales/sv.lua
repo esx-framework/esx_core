@@ -7,4 +7,5 @@ Locales['sv'] = {
   ['player_not_online'] = 'personen är inte online',
   ['no_money'] = 'du har ~r~inte råd~s~ för att kunna betala räkningen',
   ['target_no_money'] = 'personen har ~r~inte råd~s~ för att betala räkningen',
+  ['keymap_showbills'] = 'open bills menu',
 }

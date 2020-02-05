@@ -1,4 +1,4 @@
-ESX          = nil
+ESX = nil
 local isDead = false
 
 Citizen.CreateThread(function()
@@ -9,20 +9,18 @@ Citizen.CreateThread(function()
 end)
 
 function ShowBillsMenu()
-
 	ESX.TriggerServerCallback('esx_billing:getBills', function(bills)
 		ESX.UI.Menu.CloseAll()
 		local elements = {}
 
-		for i=1, #bills, 1 do
+		for k,v in ipairs(bills) do
 			table.insert(elements, {
-				label  = ('%s - <span style="color:red;">%s</span>'):format(bills[i].label, _U('invoices_item', ESX.Math.GroupDigits(bills[i].amount))),
-				billID = bills[i].id
+				label  = ('%s - <span style="color:red;">%s</span>'):format(v.label, _U('invoices_item', ESX.Math.GroupDigits(v.amount))),
+				billId = v.id
 			})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
 			title    = _U('invoices'),
 			align    = 'bottom-right',
 			elements = elements
@@ -31,28 +29,20 @@ function ShowBillsMenu()
 
 			ESX.TriggerServerCallback('esx_billing:payBill', function()
 				ShowBillsMenu()
-			end, data.current.billID)
+			end, data.current.billId)
 		end, function(data, menu)
 			menu.close()
 		end)
 	end)
-
 end
 
--- Key controls
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		if IsControlJustReleased(0, 168) and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'billing') then
-			ShowBillsMenu()
-		end
+RegisterCommand('showbills', function()
+	if not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'billing') then
+		ShowBillsMenu()
 	end
-end)
+end, false)
 
-AddEventHandler('esx:onPlayerDeath', function(data)
-	isDead = true
-end)
+RegisterKeyMapping('showbills', _U('keymap_showbills'), 'keyboard', 'F7')
 
-AddEventHandler('playerSpawned', function(spawn)
-	isDead = false
-end)
+AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
+AddEventHandler('playerSpawned', function(spawn) isDead = false end)

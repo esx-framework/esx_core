@@ -7,4 +7,5 @@ Locales['es'] = {
   ['player_not_online'] = 'el jugador no está conectado',
   ['no_money'] = 'you do not have enough money to pay this bill',
   ['target_no_money'] = 'the player ~r~does not~s~ have enough money to pay the bill!',
+  ['keymap_showbills'] = 'open bills menu',
 }

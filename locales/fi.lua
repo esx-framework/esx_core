@@ -7,4 +7,5 @@ Locales['fi'] = {
   ['player_not_online'] = 'pelaaja ei ole sisäänkirjautuneena',
   ['no_money'] = 'sinulla ei ole tarpeeksi rahaa maksaaksesi tätä laskua.',
   ['target_no_money'] = 'pelaajalla ~r~ei ole~s~ tarpeeksi rahaa maksaakseentätä laskua',
+  ['keymap_showbills'] = 'open bills menu',
 }

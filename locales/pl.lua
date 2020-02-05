@@ -7,4 +7,5 @@ Locales['pl'] = {
   ['player_not_online'] = 'gracz nie jest zalogowany',
   ['no_money'] = 'nie masz wystarczająco pieniędzy aby zapłacić tą fakture',
   ['target_no_money'] = 'gracz ~r~nie posiada~s~ wystarczająco pieniędzy aby zapłacić tą fakture!',
+  ['keymap_showbills'] = 'open bills menu',
 }
