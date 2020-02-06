@@ -30,6 +30,7 @@ end)
 
 AddEventHandler('playerSpawned', function()
 	isDead = false
+	TriggerServerEvent('esx_ambulancejob:onPlayerSpawn')
 
 	if firstSpawn then
 		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
@@ -45,8 +46,6 @@ AddEventHandler('playerSpawned', function()
 				RemoveItemsAfterRPDeath()
 			end
 		end)
-	else
-		TriggerServerEvent('esx_ambulancejob:onPlayerSpawn')
 	end
 end)
 

@@ -4,9 +4,7 @@ local isBusy, deadPlayers, deadPlayerBlips, isOnDuty = false, {}, {}, false
 isInShopMenu = false
 
 function OpenAmbulanceActionsMenu()
-	local elements = {
-		{label = _U('cloakroom'), value = 'cloakroom'}
-	}
+	local elements = {{label = _U('cloakroom'), value = 'cloakroom'}}
 
 	if Config.EnablePlayerManagement and ESX.PlayerData.job.grade_name == 'boss' then
 		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
@@ -437,6 +435,7 @@ function OpenCloakroomMenu()
 				end
 
 				isOnDuty = true
+				TriggerEvent('esx_ambulancejob:setDeadPlayers', deadPlayers)
 			end)
 		end
 
@@ -477,6 +476,18 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 
 	if not quiet then
 		ESX.ShowNotification(_U('healed'))
+	end
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	if isOnDuty and job ~= 'ambulance' then
+		for playerId,v in pairs(deadPlayerBlips) do
+			RemoveBlip(v)
+			deadPlayerBlips[playerId] = nil
+		end
+
+		isOnDuty = false
 	end
 end)
 
