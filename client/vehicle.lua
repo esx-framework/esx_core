@@ -17,24 +17,28 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 			local shopCoords = Config.PoliceStations[station][part][partNum].InsideShop
 			local authorizedVehicles = Config.AuthorizedVehicles[type][ESX.PlayerData.job.grade_name]
 
-			if #authorizedVehicles > 0 then
-				for k,vehicle in ipairs(authorizedVehicles) do
-					if IsModelInCdimage(vehicle.model) then
-						local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicle.model))
+			if authorizedVehicles then
+				if #authorizedVehicles > 0 then
+					for k,vehicle in ipairs(authorizedVehicles) do
+						if IsModelInCdimage(vehicle.model) then
+							local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicle.model))
 
-						table.insert(shopElements, {
-							label = ('%s - <span style="color:green;">%s</span>'):format(vehicleLabel, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
-							name  = vehicleLabel,
-							model = vehicle.model,
-							price = vehicle.price,
-							props = vehicle.props,
-							type  = type
-						})
+							table.insert(shopElements, {
+								label = ('%s - <span style="color:green;">%s</span>'):format(vehicleLabel, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
+								name  = vehicleLabel,
+								model = vehicle.model,
+								price = vehicle.price,
+								props = vehicle.props,
+								type  = type
+							})
+						end
 					end
-				end
 
-				if #shopElements > 0 then
-					OpenShopMenu(shopElements, playerCoords, shopCoords)
+					if #shopElements > 0 then
+						OpenShopMenu(shopElements, playerCoords, shopCoords)
+					else
+						ESX.ShowNotification(_U('garage_notauthorized'))
+					end
 				else
 					ESX.ShowNotification(_U('garage_notauthorized'))
 				end
