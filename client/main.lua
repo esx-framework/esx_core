@@ -400,7 +400,7 @@ function OpenIdentityCardMenu(player)
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 		local elements = {
 			{label = _U('name', data.name)},
-			{label = _U('job', ('%s - %s'):format(data.job.label, data.job.grade_label))}
+			{label = _U('job', ('%s - %s'):format(data.job, data.grade))}
 		}
 
 		if Config.EnableESXIdentity then
