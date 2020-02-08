@@ -19,7 +19,7 @@ function GeneratePlate()
 			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers))
 		end
 
-		ESX.TriggerServerCallback('esx_vehicleshop:isPlateTaken', function (isPlateTaken)
+		ESX.TriggerServerCallback('esx_vehicleshop:isPlateTaken', function(isPlateTaken)
 			if not isPlateTaken then
 				doBreak = true
 			end
