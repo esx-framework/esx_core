@@ -139,6 +139,11 @@ function StartShopRestriction()
 end
 
 function OpenShopMenu()
+	if #Vehicles == 0 then
+		print('[esx_vehicleshop] [^3ERROR^7] No vehicles found')
+		return
+	end
+
 	IsInShopMenu = true
 
 	StartShopRestriction()
@@ -180,6 +185,8 @@ function OpenShopMenu()
 
 			table.insert(options, ('%s <span style="color:green;">%s</span>'):format(vehicle.name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicle.price))))
 		end
+
+		table.sort(options)
 
 		table.insert(elements, {
 			name    = category.name,
