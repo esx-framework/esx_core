@@ -201,7 +201,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 		MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (@owner, @plate, @vehicle)', {
 			['@owner']   = xPlayer.identifier,
 			['@plate']   = plate,
-			['@vehicle'] = json.encode({model = GetHashKey(model)})
+			['@vehicle'] = json.encode({model = GetHashKey(model), plate = plate})
 		}, function(rowsChanged)
 			xPlayer.showNotification(_U('vehicle_belongs', plate))
 			cb(true)
