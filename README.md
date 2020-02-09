@@ -27,7 +27,7 @@ git clone https://github.com/ESX-Org/esx_sit [esx]/esx_sit
 - Add this to your server.cfg:
 
 ```
-start esx_policejob
+start esx_sit
 ```
 
 ## Credits
