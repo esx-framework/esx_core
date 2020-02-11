@@ -869,12 +869,12 @@ ESX.ShowInventory = function()
 		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.money))
 
 		table.insert(elements, {
-			label     = ('%s: <span style="color:green;">%s</span>'):format(_U('cash'), formattedMoney),
-			count     = ESX.PlayerData.money,
-			type      = 'item_money',
-			value     = 'money',
-			usable    = false,
-			rare      = false,
+			label = ('%s: <span style="color:green;">%s</span>'):format(_U('cash'), formattedMoney),
+			count = ESX.PlayerData.money,
+			type = 'item_money',
+			value = 'money',
+			usable = false,
+			rare = false,
 			canRemove = true
 		})
 	end
@@ -885,12 +885,12 @@ ESX.ShowInventory = function()
 			local canDrop = v.name ~= 'bank'
 
 			table.insert(elements, {
-				label     = ('%s: <span style="color:green;">%s</span>'):format(v.label, formattedMoney),
-				count     = v.money,
-				type      = 'item_account',
-				value     = v.name,
-				usable    = false,
-				rare      = false,
+				label = ('%s: <span style="color:green;">%s</span>'):format(v.label, formattedMoney),
+				count = v.money,
+				type = 'item_account',
+				value = v.name,
+				usable = false,
+				rare = false,
 				canRemove = canDrop
 			})
 		end
@@ -899,13 +899,14 @@ ESX.ShowInventory = function()
 	for k,v in ipairs(ESX.PlayerData.inventory) do
 		if v.count > 0 then
 			currentWeight = currentWeight + (v.weight * v.count)
+
 			table.insert(elements, {
-				label     = ('%s x%s'):format(v.label, v.count),
-				count     = v.count,
-				type      = 'item_standard',
-				value     = v.name,
-				usable    = v.usable,
-				rare      = v.rare,
+				label = ('%s x%s'):format(v.label, v.count),
+				count = v.count,
+				type = 'item_standard',
+				value = v.name,
+				usable = v.usable,
+				rare = v.rare,
 				canRemove = v.canRemove
 			})
 		end
@@ -915,16 +916,23 @@ ESX.ShowInventory = function()
 		local weaponHash = GetHashKey(v.name)
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) then
-			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+			local ammo, label = GetAmmoInPedWeapon(playerPed, weaponHash)
+
+			if v.ammo then
+				label = ('%s - %s %s'):format(v.label, ammo, v.ammo.label)
+			else
+				label = v.label
+			end
 
 			table.insert(elements, {
-				label     = ('%s [%s]'):format(v.label, ammo),
-				count     = 1,
-				type      = 'item_weapon',
-				value     = v.name,
-				ammo      = ammo,
-				usable    = false,
-				rare      = false,
+				label = label,
+				count = 1,
+				type = 'item_weapon',
+				value = v.name,
+				usable = false,
+				rare = false,
+				ammo = ammo,
+				canGiveAmmo = (v.ammo ~= nil),
 				canRemove = true
 			})
 		end
@@ -953,7 +961,7 @@ ESX.ShowInventory = function()
 			table.insert(elements, {label = _U('remove'), action = 'remove', type = data.current.type, value = data.current.value})
 		end
 
-		if data.current.type == 'item_weapon' and data.current.ammo > 0 and player ~= -1 and distance <= 3.0 then
+		if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and distance <= 3.0 then
 			table.insert(elements, {label = _U('giveammo'), action = 'give_ammo', type = data.current.type, value = data.current.value})
 		end
 

@@ -134,7 +134,11 @@ TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args,
 			if xPlayer.hasWeapon(weaponName) then
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player already has that weapon.' } })
 			else
-				xPlayer.addWeapon(weaponName, tonumber(args[3]))
+				if tonumber(args[3]) then
+					xPlayer.addWeapon(weaponName, tonumber(args[3]))
+				else
+					TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid ammo amount.' } })
+				end
 			end
 		else
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid weapon.' } })
