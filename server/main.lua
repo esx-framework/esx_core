@@ -236,6 +236,12 @@ AddEventHandler('esx:updateCoords', function(coords)
 	end
 end)
 
+RegisterNetEvent('esx:updateLoadout')
+AddEventHandler('esx:updateLoadout', function(loadout)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.loadout = loadout
+end)
+
 RegisterNetEvent('esx:giveInventoryItem')
 AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
 	local playerId = source
