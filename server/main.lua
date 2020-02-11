@@ -29,7 +29,7 @@ RegisterCommand('twt', function(playerId, args, rawCommand)
 end, false)
 
 RegisterCommand('me', function(playerId, args, rawCommand)
-	if source == 0 then
+	if playerId == 0 then
 		print('esx_rpchat: you can\'t use this command from console!')
 	else
 		args = table.concat(args, ' ')
@@ -40,7 +40,7 @@ RegisterCommand('me', function(playerId, args, rawCommand)
 end, false)
 
 RegisterCommand('do', function(playerId, args, rawCommand)
-	if source == 0 then
+	if playerId == 0 then
 		print('esx_rpchat: you can\'t use this command from console!')
 	else
 		args = table.concat(args, ' ')
