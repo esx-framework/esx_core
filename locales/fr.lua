@@ -189,4 +189,14 @@ Locales['fr'] = {
   ['ammo_snowball'] = 'boule(s) de neige',
   ['ammo_flare'] = 'fusée(s) éclairante(s)',
   ['ammo_flaregun'] = 'fusée(s)',
+
+  -- Weapon Tints
+  ['tint_default'] = 'default skin',
+  ['tint_green'] = 'green skin',
+  ['tint_gold'] = 'gold skin',
+  ['tint_pink'] = 'pink skin',
+  ['tint_army'] = 'army skin',
+  ['tint_lspd'] = 'blue skin',
+  ['tint_orange'] = 'orange skin',
+  ['tint_platinum'] = 'platinum skin',
 }

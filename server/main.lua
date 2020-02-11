@@ -159,9 +159,8 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 
 					-- Compatibility with old loadouts prior to components update
 					for k,v in ipairs(userData.loadout) do
-						if v.components == nil then
-							v.components = {}
-						end
+						if not v.components then v.components = {} end
+						if not v.tintIndex then v.tintIndex = 0 end
 					end
 				end
 
@@ -404,7 +403,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('threw_weapon', weapon.label))
 			end
 
-			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, weapon.components)
+			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, weapon.components, weapon.tintIndex)
 		end
 	end
 end)
@@ -445,6 +444,7 @@ AddEventHandler('esx:onPickup', function(id)
 			else
 				success = true
 				xPlayer.addWeapon(pickup.name, pickup.count)
+				xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
 
 				for k,v in ipairs(pickup.components) do
 					xPlayer.addWeaponComponent(pickup.name, v)

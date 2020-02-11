@@ -85,6 +85,8 @@ AddEventHandler('esx:restoreLoadout', function()
 		local weaponHash = GetHashKey(weaponName)
 
 		GiveWeaponToPed(playerPed, weaponHash, 0, false, false)
+		SetPedWeaponTintIndex(playerPed, weaponHash, v.tintIndex)
+
 		local ammoType = GetPedAmmoTypeFromWeapon(playerPed, weaponHash)
 
 		for k2,v2 in ipairs(v.components) do
@@ -168,7 +170,7 @@ end)
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
 	GiveWeaponToPed(playerPed, weaponHash, ammo, false, false)
@@ -176,7 +178,7 @@ end)
 
 RegisterNetEvent('esx:addWeaponComponent')
 AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
@@ -185,15 +187,23 @@ end)
 
 RegisterNetEvent('esx:setWeaponAmmo')
 AddEventHandler('esx:setWeaponAmmo', function(weaponName, weaponAmmo)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
 	SetPedAmmo(playerPed, weaponHash, weaponAmmo)
 end)
 
+RegisterNetEvent('esx:setWeaponTint')
+AddEventHandler('esx:setWeaponTint', function(weaponName, weaponTintIndex)
+	local playerPed = PlayerPedId()
+	local weaponHash = GetHashKey(weaponName)
+
+	SetPedWeaponTintIndex(playerPed, weaponHash, weaponTintIndex)
+end)
+
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
 	RemoveWeaponFromPed(playerPed, weaponHash)
@@ -209,7 +219,7 @@ end)
 
 RegisterNetEvent('esx:removeWeaponComponent')
 AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
@@ -243,9 +253,8 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
 	if IsModelInCdimage(model) then
-		local playerPed  = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
-		local playerHeading = GetEntityHeading(playerPed)
+		local playerPed = PlayerPedId()
+		local playerCoords, playerHeading = GetEntityCoords(playerPed), GetEntityHeading(playerPed)
 
 		ESX.Game.SpawnVehicle(model, coords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
@@ -256,7 +265,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 end)
 
 RegisterNetEvent('esx:createPickup')
-AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, name, components)
+AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, name, components, tintIndex)
 	local playerPed = GetPlayerPed(GetPlayerFromServerId(playerId))
 	local entityCoords, forward, pickupObject = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
 	local objectCoords = (entityCoords + forward * 1.0)
@@ -264,6 +273,7 @@ AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, na
 	if type == 'item_weapon' then
 		ESX.Streaming.RequestWeaponAsset(GetHashKey(name))
 		pickupObject = CreateWeaponObject(GetHashKey(name), 50, objectCoords, true, 1.0, 0)
+		SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
 		for k,v in ipairs(components) do
 			local component = ESX.GetWeaponComponent(name, v)
@@ -300,6 +310,7 @@ AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		if pickup.type == 'item_weapon' then
 			ESX.Streaming.RequestWeaponAsset(GetHashKey(pickup.name))
 			pickupObject = CreateWeaponObject(GetHashKey(pickup.name), 50, pickup.coords.x, pickup.coords.y, pickup.coords.z, true, 1.0, 0)
+			SetWeaponObjectTintIndex(pickupObject, pickup.tintIndex)
 
 			for k,componentName in ipairs(pickup.components) do
 				local component = ESX.GetWeaponComponent(pickup.name, componentName)
@@ -405,10 +416,9 @@ Citizen.CreateThread(function()
 		for k,v in ipairs(Config.Weapons) do
 			local weaponName = v.name
 			local weaponHash = GetHashKey(weaponName)
-			local weaponComponents = {}
 
 			if HasPedGotWeapon(playerPed, weaponHash, false) then
-				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+				local ammo, tintIndex, weaponComponents = GetAmmoInPedWeapon(playerPed, weaponHash), GetPedWeaponTintIndex(playerPed, weaponHash), {}
 
 				for k2,v2 in ipairs(v.components) do
 					if HasPedGotWeaponComponent(playerPed, weaponHash, v2.hash) then
@@ -426,7 +436,8 @@ Citizen.CreateThread(function()
 					name = weaponName,
 					ammo = ammo,
 					label = v.label,
-					components = weaponComponents
+					components = weaponComponents,
+					tintIndex = tintIndex
 				})
 			else
 				if lastLoadout[weaponName] then
