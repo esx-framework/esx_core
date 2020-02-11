@@ -1,10 +1,12 @@
 # esx_taxijob
 
+ESX Taxi Job adds driving cabs as a service, and more including NPC missions.
+
 ## Requirements
 
 * Auto mode
   * [esx_service](https://github.com/ESX-Org/esx_service)
-  
+
 * Player management (billing and boss actions)
   * [esx_society](https://github.com/ESX-Org/esx_society)
   * [esx_billing](https://github.com/ESX-Org/esx_billing)
@@ -38,7 +40,7 @@ start esx_taxijob
 ### License
 esx_taxijob
 
-Copyright (C) 2015-2018 Jérémie N'gadi
+Copyright (C) 2015-2020 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
