@@ -72,7 +72,6 @@ Locales['cs'] = {
   ['giveitem'] = 'dát věc',
   ['weapon'] = 'zbraň',
   ['giveweapon'] = 'dát zbraň',
-  ['disconnect'] = 'odpojit od serveru',
   ['chat_clear'] = 'vyčistit chat',
   ['chat_clear_all'] = 'vyčistit chat pro všechny',
   ['command_clearinventory'] = 'clear all items from inventory',

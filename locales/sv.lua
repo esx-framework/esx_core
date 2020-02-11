@@ -71,7 +71,6 @@ Locales['sv'] = {
   ['giveitem'] = 'ge föremål',
   ['weapon'] = 'vapen',
   ['giveweapon'] = 'ge vapen',
-  ['disconnect'] = 'koppla från servern',
   ['chat_clear'] = 'töm chatten',
   ['chat_clear_all'] = 'töm chatten för alla',
   ['command_clearinventory'] = 'clear all items from inventory',

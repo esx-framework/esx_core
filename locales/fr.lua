@@ -71,7 +71,6 @@ Locales['fr'] = {
   ['giveitem'] = 'donner un article',
   ['weapon'] = 'arme',
   ['giveweapon'] = 'donner l\'arme',
-  ['disconnect'] = 'déconnecter du serveur',
   ['chat_clear'] = 'vider le chat',
   ['chat_clear_all'] = 'vider le chat pour tous le monde',
   ['command_clearinventory'] = 'effacer tout les items de l\'inventaire',

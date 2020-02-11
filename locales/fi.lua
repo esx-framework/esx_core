@@ -71,7 +71,6 @@ Locales['fi'] = {
   ['giveitem'] = 'anna itemi',
   ['weapon'] = 'ase',
   ['giveweapon'] = 'anna ase',
-  ['disconnect'] = 'poistu serveriltä',
   ['chat_clear'] = 'tyhjennä chatti',
   ['chat_clear_all'] = 'tyhjennä chatti kaikilta',
   ['command_clearinventory'] = 'clear all items from inventory',
