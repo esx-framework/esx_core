@@ -171,6 +171,12 @@ function OpenShopMenu()
 		end
 	end
 
+	for k,v in pairs(vehiclesByCategory) do
+		table.sort(v, function(a, b)
+			return a.name < b.name
+		end)
+	end
+
 	for i=1, #Categories, 1 do
 		local category         = Categories[i]
 		local categoryVehicles = vehiclesByCategory[category.name]
