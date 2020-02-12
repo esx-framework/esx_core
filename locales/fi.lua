@@ -93,8 +93,6 @@ Locales['fi'] = {
   ['search_database'] = 'ajoneuvon tiedot',
   ['search_database_title'] = 'ajoneuvon tiedot - etsi rekisterinumerolla',
   ['search_database_error_invalid'] = 'tämä ~r~ei ole~s~ ~y~voimassa oleva~s~ rekisterinumero',
-  ['search_database_error_not_found'] = 'tämä ~y~rekisterinumero~s~ ~r~ei~s~ ole rekistöröity ajoneuvoon!',
-  ['search_database_found'] = 'ajoneuvo on ~y~rekistöröity~s~ henkilölle ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'liikenteen vuorovaikutus',
   ['cone'] = 'kartio',

@@ -93,8 +93,6 @@ Locales['es'] = {
   ['search_database'] = 'vehicle information',
   ['search_database_title'] = 'vehicle information - search with registration number',
   ['search_database_error_invalid'] = 'that is ~r~not~s~ a ~y~valid~s~ registration number',
-  ['search_database_error_not_found'] = 'that ~y~registration number~s~ is ~r~not~s~ registered to an vehicle!',
-  ['search_database_found'] = 'the vehicle is ~y~registered~s~ to ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'Rutas de interacción',
   ['cone'] = 'Cono',

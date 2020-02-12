@@ -93,8 +93,6 @@ Locales['sv'] = {
   ['search_database'] = 'fordonsuppgifter',
   ['search_database_title'] = 'fordonsuppgifter - sök med registreringsnummer',
   ['search_database_error_invalid'] = 'det är ~r~inte~s~ ett ~y~giltigt~s~ registreringsnummer',
-  ['search_database_error_not_found'] = 'det ~y~registreringsnummeret~s~ är ~r~inte~s~ registrerat till något fordon!',
-  ['search_database_found'] = 'detta fordon är ~y~registrerat~s~ till ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'trafiksåtgärder',
   ['cone'] = 'kon',

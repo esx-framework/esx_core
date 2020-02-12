@@ -93,8 +93,6 @@ Locales['fr'] = {
   ['search_database'] = 'vehicle information',
   ['search_database_title'] = 'informations sur le véhicule - recherche avec numéro d\'enregistrement',
   ['search_database_error_invalid'] = 'Ce n\'est ~r~pas~s~ un ~y~numéro d\'enregistrement valide~s~',
-  ['search_database_error_not_found'] = 'ce ~y~numéro d\'enregistrement ~s~est~r~ pas ~s~ enregistré sur un véhicule!',
-  ['search_database_found'] = 'le véhicule est ~y~enregistré~s~ à ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'interaction routière',
   ['cone'] = 'plot',

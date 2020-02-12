@@ -93,8 +93,6 @@ Locales['ko'] = {
   ['search_database'] = '차량 정보',
   ['search_database_title'] = '차량 정보 - 등록번호로 검색',
   ['search_database_error_invalid'] = '~y~유효한~s~ 등록 번호가 ~r~아닙니다.~s~',
-  ['search_database_error_not_found'] = '그 ~y~등록 번호~s~는 차량에 등록되지 ~r~않았습니다!~s~',
-  ['search_database_found'] = '이 차량은 ~b~%s~s~에 ~y~등록되었습니다~s~',
   -- Traffic interaction
   ['traffic_interaction'] = '교통 상호 작용',
   ['cone'] = '원뿔',

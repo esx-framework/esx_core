@@ -93,8 +93,6 @@ Locales['cs'] = {
   ['search_database'] = 'informace o  vozidle',
   ['search_database_title'] = 'informace o vozidle - pomocí registracnich cisel',
   ['search_database_error_invalid'] = 'tohle ~r~neni~s~  ~y~spravne~s~ registracni cislo',
-  ['search_database_error_not_found'] = 'toto ~y~registracni cislo~s~ je ~r~nespravne~s~ pro toto vozidlo!',
-  ['search_database_found'] = 'vozidlo bylo ~y~registrovano~s~ k ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'interakce provozu',
   ['cone'] = 'kuzel',

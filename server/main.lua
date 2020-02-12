@@ -207,47 +207,22 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 			if xPlayer then
 				retrivedInfo.owner = xPlayer.getName()
 				cb(retrivedInfo)
-			else
-				MySQL.Async.fetchAll('SELECT name, firstname, lastname FROM users WHERE identifier = @identifier',  {
+			elseif Config.EnableESXIdentity then
+				MySQL.Async.fetchAll('SELECT firstname, lastname FROM users WHERE identifier = @identifier',  {
 					['@identifier'] = result[1].owner
 				}, function(result2)
 					if result2[1] then
-						if Config.EnableESXIdentity then
-							retrivedInfo.owner = ('%s %s'):format(result2[1].firstname, result2[1].lastname)
-						else
-							retrivedInfo.owner = result2[1].name
-						end
-
+						retrivedInfo.owner = ('%s %s'):format(result2[1].firstname, result2[1].lastname)
 						cb(retrivedInfo)
 					else
 						cb(retrivedInfo)
 					end
 				end)
+			else
+				cb(retrivedInfo)
 			end
 		else
 			cb(retrivedInfo)
-		end
-	end)
-end)
-
-ESX.RegisterServerCallback('esx_policejob:getVehicleFromPlate', function(source, cb, plate)
-	MySQL.Async.fetchAll('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
-		['@plate'] = plate
-	}, function(result)
-		if result[1] then
-			MySQL.Async.fetchAll('SELECT name, firstname, lastname FROM users WHERE identifier = @identifier',  {
-				['@identifier'] = result[1].owner
-			}, function(result2)
-
-				if Config.EnableESXIdentity then
-					cb(('%s %s'):format(result2[1].firstname, result2[1].lastname), true)
-				else
-					cb(result2[1].name, true)
-				end
-
-			end)
-		else
-			cb(_U('unknown'), false)
 		end
 	end)
 end)

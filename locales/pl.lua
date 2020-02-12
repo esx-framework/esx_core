@@ -93,8 +93,6 @@ Locales['pl'] = {
   ['search_database'] = 'informacje o pojeździe',
   ['search_database_title'] = 'informacjeo pojeździe - przeszukaj używając numeru rejestracyjnego',
   ['search_database_error_invalid'] = 'to ~r~nie~s~ jest ~y~poprawny~s~ rnumer rejestracyjny',
-  ['search_database_error_not_found'] = 'ten ~y~numer rejestracyjny~s~  ~r~nie jest~s~ zarejestrowany do tego pojazdu!',
-  ['search_database_found'] = 'pojazd jest ~y~zarejestrowany~s~ do ~b~%s~s~',
   -- Traffic interaction
   ['traffic_interaction'] = 'interakcje dla ruchu drogowego',
   ['cone'] = 'pachołek',
