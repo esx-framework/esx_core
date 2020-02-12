@@ -30,72 +30,6 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 		end)
 	end)
 
-	-- Get inventory
-	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll('SELECT item, count FROM user_inventory WHERE identifier = @identifier', {
-			['@identifier'] = player.getIdentifier()
-		}, function(inventory)
-			local tasks2, foundItems = {}, {}
-
-			for k,v in ipairs(inventory) do
-				local item = ESX.Items[v.item]
-
-				if item then
-					foundItems[v.item] = true
-
-					table.insert(userData.inventory, {
-						name = v.item,
-						count = v.count,
-						label = item.label,
-						weight = item.weight,
-						usable = ESX.UsableItemsCallbacks[v.item] ~= nil,
-						rare = item.rare,
-						canRemove = item.canRemove
-					})
-				else
-					print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(v.item, player.getIdentifier()))
-				end
-			end
-
-			for name,item in pairs(ESX.Items) do
-				if not foundItems[name] then
-					table.insert(userData.inventory, {
-						name = name,
-						count = 0,
-						label = item.label,
-						weight = item.weight,
-						usable = ESX.UsableItemsCallbacks[name] ~= nil,
-						rare = item.rare,
-						canRemove = item.canRemove
-					})
-
-					local scope = function(item, identifier)
-						table.insert(tasks2, function(cb2)
-							MySQL.Async.execute('INSERT INTO user_inventory (identifier, item, count) VALUES (@identifier, @item, @count)', {
-								['@identifier'] = identifier,
-								['@item'] = item,
-								['@count'] = 0
-							}, function(rowsChanged)
-								cb2()
-							end)
-						end)
-					end
-
-					scope(name, player.getIdentifier())
-				end
-			end
-
-			Async.parallelLimit(tasks2, 5, function(results) end)
-
-			table.sort(userData.inventory, function(a,b)
-				return a.label < b.label
-			end)
-
-			cb()
-		end)
-
-	end)
-
 	-- Get job and loadout
 	table.insert(tasks, function(cb)
 
@@ -104,7 +38,7 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 		-- Get job name, grade and coords
 		table.insert(tasks2, function(cb2)
 
-			MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position FROM users WHERE identifier = @identifier', {
+			MySQL.Async.fetchAll('SELECT job, job_grade, loadout, position, inventory FROM users WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(result)
 				local job, grade = result[1].job, tostring(result[1].job_grade)
@@ -154,10 +88,44 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 					userData.job.skin_female  = {}
 				end
 
+				local foundItems = {}
+
+				if result[1].inventory and result[1].inventory ~= '' then
+					local inventory = json.decode(result[1].inventory)
+
+					for name,count in pairs(inventory) do
+						local item = ESX.Items[name]
+
+						if item then
+							foundItems[name] = count
+						else
+							print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, player.getIdentifier()))
+						end
+					end
+				end
+
+				for name,item in pairs(ESX.Items) do
+					local count = foundItems[name] or 0
+
+					table.insert(userData.inventory, {
+						name = name,
+						count = count,
+						label = item.label,
+						weight = item.weight,
+						usable = ESX.UsableItemsCallbacks[name] ~= nil,
+						rare = item.rare,
+						canRemove = item.canRemove
+					})
+				end
+
+				table.sort(userData.inventory, function(a,b)
+					return a.label < b.label
+				end)
+
 				if result[1].loadout then
 					userData.loadout = json.decode(result[1].loadout)
 
-					-- Compatibility with old loadouts prior to components update
+					-- compatibility with old loadouts
 					for k,v in ipairs(userData.loadout) do
 						if not v.components then v.components = {} end
 						if not v.tintIndex then v.tintIndex = 0 end

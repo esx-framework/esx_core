@@ -56,31 +56,15 @@ ESX.SavePlayer = function(xPlayer, cb)
 		end
 	end
 
-	-- Inventory items
-	for k,v in ipairs(xPlayer.inventory) do
-		if ESX.LastPlayerData[xPlayer.source].items[v.name] ~= v.count then
-			table.insert(asyncTasks, function(cb)
-				MySQL.Async.execute('UPDATE user_inventory SET count = @count WHERE identifier = @identifier AND item = @item', {
-					['@count']      = v.count,
-					['@identifier'] = xPlayer.identifier,
-					['@item']       = v.name
-				}, function(rowsChanged)
-					cb()
-				end)
-			end)
-
-			ESX.LastPlayerData[xPlayer.source].items[v.name] = v.count
-		end
-	end
-
-	-- Job, loadout and position
+	-- Job, loadout, inventory and position
 	table.insert(asyncTasks, function(cb)
-		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade, loadout = @loadout, position = @position WHERE identifier = @identifier', {
-			['@job']        = xPlayer.job.name,
-			['@job_grade']  = xPlayer.job.grade,
-			['@loadout']    = json.encode(xPlayer.getLoadout()),
-			['@position']   = json.encode(xPlayer.getCoords()),
-			['@identifier'] = xPlayer.identifier
+		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
+			['@job'] = xPlayer.job.name,
+			['@job_grade'] = xPlayer.job.grade,
+			['@loadout'] = json.encode(xPlayer.getLoadout()),
+			['@position'] = json.encode(xPlayer.getCoords()),
+			['@identifier'] = xPlayer.identifier,
+			['@inventory'] = json.encode(xPlayer.getInventory(true))
 		}, function(rowsChanged)
 			cb()
 		end)
