@@ -164,7 +164,13 @@ AddEventHandler('es:playerLoaded', function(playerId, player)
 					end
 				end
 
-				userData.coords = json.decode(result[1].position)
+				if result[1].position and result[1].position ~= '' then
+					userData.coords = json.decode(result[1].position)
+				else
+					print('[es_extended] [^3WARNING^7] Column "position" in "users" table is missing required default value. Using backup coords, fix your database.')
+					userData.coords = {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
+				end
+
 				cb2()
 			end)
 
