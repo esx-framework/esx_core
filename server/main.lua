@@ -234,7 +234,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyCarDealerVehicle', function(sourc
 			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
 				if account.money >= modelPrice then
 					account.removeMoney(modelPrice)
-	
+
 					MySQL.Async.execute('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (@vehicle, @price)', {
 						['@vehicle'] = model,
 						['@price'] = modelPrice
@@ -311,7 +311,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function(source, c
 					['@vehicle'] = vehicle,
 					['@price']   = basePrice
 				})
-	
+
 				RemoveOwnedVehicle(plate)
 				cb(true)
 			end)
@@ -420,24 +420,36 @@ AddEventHandler('esx_vehicleshop:setJobVehicleState', function(plate, state)
 end)
 
 function PayRent(d, h, m)
-	MySQL.Async.fetchAll('SELECT * FROM rented_vehicles', {}, function(result)
+	local tasks, timeStart = {}, os.clock()
+	print('[esx_vehicleshop] [^2INFO^7] Paying rent cron job started')
+
+	MySQL.Async.fetchAll('SELECT owner, rent_price FROM rented_vehicles', {}, function(result)
 		for i=1, #result, 1 do
-			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
+			table.insert(tasks, function(cb)
+				local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
-			if xPlayer then -- message player if connected
-				xPlayer.removeAccountMoney('bank', result[i].rent_price)
-				xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
-			else -- pay rent by updating SQL
-				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
-					['@bank'] = result[i].rent_price,
-					['@identifier'] = result[i].owner
-				})
-			end
+				if xPlayer then -- message player if connected
+					xPlayer.removeAccountMoney('bank', result[i].rent_price)
+					xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
+				else -- pay rent by updating SQL
+					MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
+						['@bank'] = result[i].rent_price,
+						['@identifier'] = result[i].owner
+					})
+				end
 
-			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
-				account.addMoney(result[i].rent_price)
+				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+					account.addMoney(result[i].rent_price)
+				end)
+
+				cb()
 			end)
 		end
+
+		Async.parallelLimit(tasks, 5, function(results) end)
+
+		local elapsedTime = os.clock() - timeStart
+		print(('[esx_vehicleshop] [^2INFO^7] Paying rent cron job took %s seconds'):format(elapsedTime))
 	end)
 end
 

@@ -7,6 +7,7 @@ description 'ESX Vehicle Shop'
 version '1.1.0'
 
 server_scripts {
+	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
