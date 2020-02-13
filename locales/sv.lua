@@ -60,6 +60,7 @@ Locales['sv'] = {
   ['ems_menu_putincar'] = 'sätt i fordon',
   ['ems_menu_small'] = 'behandla mindre skador',
   ['ems_menu_big'] = 'behandla svåra skador',
+  ['ems_menu_search'] = 'patienten hittades inte',
   -- Phone
   ['alert_ambulance'] = 'ambulanssamtal',
   -- Death

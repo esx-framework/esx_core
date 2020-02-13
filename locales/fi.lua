@@ -60,6 +60,7 @@ Locales['fi'] = {
   ['ems_menu_putincar'] = 'Laita ajoneuvoon',
   ['ems_menu_small'] = 'hoida pieniä haavoja',
   ['ems_menu_big'] = 'hoida isoja haavoja',
+  ['ems_menu_search'] = 'potilasta ei löydy',
   -- Phone
   ['alert_ambulance'] = 'hälyytys Ensihoidolle',
   -- Death

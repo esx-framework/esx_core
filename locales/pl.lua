@@ -60,6 +60,7 @@ Locales['pl'] = {
   ['ems_menu_putincar'] = 'umieścić w pojeździe',
   ['ems_menu_small'] = 'ulecz małe rany',
   ['ems_menu_big'] = 'ulecz poważne obrażenia',
+  ['ems_menu_search'] = 'nie znaleziono pacjenta',
   -- Phone
   ['alert_ambulance'] = 'wezwij ambulans',
   -- Death

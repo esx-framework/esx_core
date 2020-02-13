@@ -1,6 +1,6 @@
 local firstSpawn, PlayerLoaded = true, false
 
-isDead = false
+isDead, isSearched, medic = false, false, 0
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -77,6 +77,41 @@ Citizen.CreateThread(function()
 			EnableControlAction(0, 38, true)
 		else
 			Citizen.Wait(500)
+		end
+	end
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		if isDead and isSearched then
+			local playerPed = PlayerPedId()
+			local ped = GetPlayerPed(GetPlayerFromServerId(medic))
+			isSearched = false
+
+			AttachEntityToEntity(playerPed, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			Citizen.Wait(1000)
+			DetachEntity(playerPed, true, false)
+			ClearPedTasksImmediately(playerPed)
+		end
+	end
+end)
+
+RegisterNetEvent('esx_ambulancejob:clsearch')
+AddEventHandler('esx_ambulancejob:clsearch', function(medicId)
+	local playerPed = PlayerPedId()
+
+	if isDead then
+		local coords = GetEntityCoords(playerPed)
+		local playersInArea = ESX.Game.GetPlayersInArea(coords, 50.0)
+
+		for i=1, #playersInArea, 1 do
+			local player = playersInArea[i]
+			if player == GetPlayerFromServerId(medicId) then
+				medic = tonumber(medicId)
+				isSearched = true
+				break
+			end
 		end
 	end
 end)
