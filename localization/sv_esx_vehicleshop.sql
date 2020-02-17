@@ -38,7 +38,7 @@ CREATE TABLE `vehicle_sold` (
 );
 
 CREATE TABLE `owned_vehicles` (
-	`owner` varchar(22) NOT NULL,
+	`owner` varchar(40) NOT NULL,
 	`plate` varchar(12) NOT NULL,
 	`vehicle` longtext,
 	`type` VARCHAR(20) NOT NULL DEFAULT 'car',
