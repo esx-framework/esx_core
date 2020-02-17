@@ -1,13 +1,16 @@
 USE `essentialmode`;
 
-ALTER TABLE `users`
-	ADD COLUMN `skin` LONGTEXT NULL,
-	ADD COLUMN `job` VARCHAR(50) NULL DEFAULT 'unemployed' AFTER `skin`,
-	ADD COLUMN `job_grade` INT NULL DEFAULT 0 AFTER `job`,
-	ADD COLUMN `loadout` LONGTEXT NULL AFTER `job_grade`,
-	ADD COLUMN `inventory` LONGTEXT NULL AFTER `loadout`,
-	ADD COLUMN `position` VARCHAR(53) NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}' AFTER `inventory`
-;
+CREATE TABLE `users` (
+	`identifier` VARCHAR(40) NOT NULL,
+	`group` VARCHAR(50) NULL DEFAULT 'user',
+	`job` VARCHAR(20) NULL DEFAULT 'unemployed',
+	`job_grade` INT(11) NULL DEFAULT 0,
+	`inventory` LONGTEXT NULL DEFAULT NULL,
+	`loadout` LONGTEXT NULL DEFAULT NULL,
+	`position` VARCHAR(53) NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
+
+	PRIMARY KEY (`identifier`)
+);
 
 CREATE TABLE `items` (
 	`name` VARCHAR(50) NOT NULL,
@@ -45,7 +48,7 @@ INSERT INTO `jobs` VALUES ('unemployed','Unemployed');
 
 CREATE TABLE `user_accounts` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`identifier` VARCHAR(22) NOT NULL,
+	`identifier` VARCHAR(40) NOT NULL,
 	`name` VARCHAR(50) NOT NULL,
 	`money` INT(11) NOT NULL DEFAULT '0',
 

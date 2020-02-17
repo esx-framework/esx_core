@@ -1,6 +1,5 @@
 Locales['de'] = {
   -- Inventory
-  ['cash'] = 'bargeld',
   ['inventory'] = 'inventar %s / %s',
   ['use'] = 'benutzen',
   ['give'] = 'geben',
@@ -23,8 +22,6 @@ Locales['de'] = {
   ['received_weapon_withammo'] = 'du erhälst ~b~%s~s~ mit ~o~%sx %s~s~ von ~b~%s~s~',
   ['received_weapon_hasalready'] = '~b~%s~s~ hat versucht dir eine(n) ~y~%s~s~ zu geben, aber du hast bereits eine(n)',
   ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for an ~y~%s~s~, but you dont have one',
-  ['gave_money'] = 'du gibst ~g~$%s~s~ an ~y~%s~s~',
-  ['received_money'] = 'du erhälst ~g~$%s~s~ von ~b~%s~s~',
   ['gave_account_money'] = 'du gibst ~g~$%s~s~ (%s) an ~y~%s~s~',
   ['received_account_money'] = 'du empfängst ~g~$%s~s~ (%s) von ~b~%s~s~',
   ['amount_invalid'] = 'ungültiger Betrag',
@@ -33,7 +30,6 @@ Locales['de'] = {
   ['imp_invalid_quantity'] = 'aktion nicht möglich, ungültige Anzahl',
   ['imp_invalid_amount'] = 'aktion nicht möglich, ungültiger Betrag',
   ['threw_standard'] = 'you threw ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'you threw ~g~$%s~s~ ~b~cash~s~',
   ['threw_account'] = 'you threw ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'you threw ~b~%s~s~',
   ['threw_weapon_ammo'] = 'you threw ~b~%s~s~ with ~o~%sx %s~s~',
@@ -50,7 +46,9 @@ Locales['de'] = {
   ['company_nomoney'] = 'die Firma in der du angestellt bist, ist zu arm um dein Gehalt zu zahlen',
   ['received_paycheck'] = 'erhaltener Gehaltsscheck',
   ['bank'] = 'bank',
-  ['black_money'] = 'schwarzgeld',
+  ['account_bank'] = 'bank',
+  ['account_black_money'] = 'dirty Money',
+  ['account_money'] = 'cash',
 
   ['act_imp'] = 'Aktion nicht möglich',
   ['in_vehicle'] = 'you can\'t give anything to someone in a vehicle',
@@ -75,7 +73,6 @@ Locales['de'] = {
   ['chat_clear_all'] = 'clear the chat for everyone',
   ['command_clearinventory'] = 'clear all items from inventory',
   ['command_clearloadout'] = 'remove all weapons from loadout',
-  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',

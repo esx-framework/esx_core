@@ -1,32 +1,23 @@
-function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, coords)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, job, loadout, name, coords)
 	local self = {}
 
-	self.player    = player
-	self.accounts  = accounts
+	self.accounts = accounts
 	self.inventory = inventory
-	self.job       = job
-	self.loadout   = loadout
-	self.name      = name
+	self.job = job
+	self.group = group
+	self.loadout = loadout
+	self.name = name
 	self.maxWeight = Config.MaxWeight
-	self.coords    = coords
+	self.coords = coords
+	self.variables = {}
+	self.source = playerId
+	self.playerId = playerId
+	self.identifier = identifier
 
-	self.source     = self.player.get('source')
-	self.identifier = self.player.get('identifier')
+	ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
 
 	self.triggerEvent = function(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
-	end
-
-	self.setMoney = function(money)
-		money = ESX.Math.Round(money)
-
-		if money >= 0 then
-			self.player.setMoney(money)
-		end
-	end
-
-	self.getMoney = function()
-		return self.player.get('money')
 	end
 
 	self.setCoords = function(coords)
@@ -35,7 +26,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 	end
 
 	self.updateCoords = function(coords)
-		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(coords.heading, 1)}
+		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(coords.heading or 0.0, 1)}
 	end
 
 	self.getCoords = function(vector)
@@ -50,78 +41,52 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 		DropPlayer(self.source, reason)
 	end
 
+	self.setMoney = function(money)
+		money = ESX.Math.Round(money)
+		self.setAccountMoney('money', money)
+	end
+
+	self.getMoney = function()
+		return self.getAccount('money').money
+	end
+
 	self.addMoney = function(money)
 		money = ESX.Math.Round(money)
-
-		if money >= 0 then
-			self.player.addMoney(money)
-		end
+		self.addAccountMoney('money', money)
 	end
 
 	self.removeMoney = function(money)
 		money = ESX.Math.Round(money)
-
-		if money > 0 then
-			self.player.removeMoney(money)
-		end
-	end
-
-	self.displayMoney = function(money)
-		self.player.displayMoney(money)
+		self.removeAccountMoney('money', money)
 	end
 
 	self.getIdentifier = function()
-		return self.player.getIdentifier()
+		return self.identifier
+	end
+
+	self.setGroup = function(newGroup)
+		ExecuteCommand(('remove_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
+		self.group = newGroup
+		ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
 	end
 
 	self.getGroup = function()
-		return self.player.getGroup()
+		return self.group
 	end
 
 	self.set = function(k, v)
-		self.player.set(k, v)
+		self.variables[k] = v
 	end
 
 	self.get = function(k)
-		return self.player.get(k)
-	end
-
-	self.getPlayer = function()
-		return self.player
+		return self.variables[k]
 	end
 
 	self.getAccounts = function()
-		local accounts = {}
-
-		for k,account in ipairs(Config.Accounts) do
-			if account == 'bank' then
-				table.insert(accounts, {
-					name  = 'bank',
-					money = self.get('bank'),
-					label = Config.AccountLabels.bank
-				})
-			else
-				for k2,v2 in ipairs(self.accounts) do
-					if v2.name == account then
-						table.insert(accounts, v2)
-						break
-					end
-				end
-			end
-		end
-
-		return accounts
+		return self.accounts
 	end
 
 	self.getAccount = function(account)
-		if account == 'bank' then
-			return {
-				name  = 'bank',
-				money = self.get('bank'),
-				label = Config.AccountLabels.bank
-			}
-		end
-
 		for k,v in ipairs(self.accounts) do
 			if v.name == account then
 				return v
@@ -162,36 +127,29 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, c
 	end
 
 	self.getMissingAccounts = function(cb)
-		MySQL.Async.fetchAll('SELECT name FROM user_accounts WHERE identifier = @identifier', {
-			['@identifier'] = self.getIdentifier()
-		}, function(result)
-			local missingAccounts = {}
+		local missingAccounts = {}
 
-			for k,v in ipairs(Config.Accounts) do
-				if v ~= 'bank' then
-					local found = false
+		for account,label in pairs(Config.Accounts) do
+			local found = false
 
-					for k2,v2 in ipairs(result) do
-						if v == v2.name then
-							found = true
-							break
-						end
-					end
-
-					if not found then
-						table.insert(missingAccounts, v)
-					end
+			for k2,v2 in ipairs(self.accounts) do
+				if account == v2.name then
+					found = true
 				end
 			end
 
-			cb(missingAccounts)
-		end)
+			if not found then
+				table.insert(missingAccounts, account)
+			end
+		end
+
+		cb(missingAccounts)
 	end
 
-	self.createAccounts = function(missingAccounts, cb)
+	self.createMissingAccounts = function(missingAccounts, cb)
 		for k,v in ipairs(missingAccounts) do
 			MySQL.Async.execute('INSERT INTO user_accounts (identifier, name) VALUES (@identifier, @name)', {
-				['@identifier'] = self.getIdentifier(),
+				['@identifier'] = self.identifier,
 				['@name'] = v
 			}, function(rowsChanged)
 				if cb then

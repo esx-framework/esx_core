@@ -20,6 +20,115 @@ ESX.SetTimeout = function(msec, cb)
 	return id
 end
 
+ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
+	if type(name) == 'table' then
+		for k,v in ipairs(name) do
+			ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
+		end
+
+		return
+	end
+
+	if ESX.RegisteredCommands[name] then
+		print(('[es_extended] [^3WARNING^7] An command "%s" is already registered'):format(name))
+	else
+		if suggestion then
+			if not suggestion.arguments then suggestion.arguments = {} end
+			if not suggestion.help then suggestion.help = '' end
+		end
+
+		ESX.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
+
+		RegisterCommand(name, function(playerId, args, rawCommand)
+			local command = ESX.RegisteredCommands[name]
+
+			if not command.allowConsole and playerId == 0 then
+				print('[es_extended] [^3WARNING^7] That command can not be run from console')
+			else
+				local xPlayer, error = ESX.GetPlayerFromId(playerId), nil
+
+				if command.suggestion then
+					if command.suggestion.validate then
+						if #args ~= #command.suggestion.arguments then
+							error = ('Argument count mismatch (passed %s, wanted %s)'):format(#args, #command.suggestion.arguments)
+						end
+					end
+
+					if not error and command.suggestion.arguments then
+						local newArgs = {}
+
+						for k,v in ipairs(command.suggestion.arguments) do
+							if v.type then
+								if v.type == 'number' then
+									local newArg = tonumber(args[k])
+
+									if newArg then
+										newArgs[v.name] = newArg
+									else
+										error = ('Argument #%s type mismatch (passed string, wanted number)'):format(k)
+									end
+								elseif v.type == 'player' then
+									local targetPlayer = tonumber(args[k])
+
+									if targetPlayer then
+										local xTargetPlayer = ESX.GetPlayerFromId(targetPlayer)
+
+										if xTargetPlayer then
+											newArgs[v.name] = xTargetPlayer
+										else
+											error = 'Player not online'
+										end
+									else
+										error = ('Argument #%s type mismatch (passed string, wanted number)'):format(k)
+									end
+								elseif v.type == 'string' then
+									newArgs[v.name] = args[k]
+								elseif v.type == 'item' then
+									if ESX.Items[args[k]] then
+										newArgs[v.name] = args[k]
+									else
+										error = _U('invalid_item')
+									end
+								elseif v.type == 'weapon' then
+									if ESX.GetWeapon(args[k]) then
+										newArgs[v.name] = string.upper(args[k])
+									else
+										error = 'Invalid weapon'
+									end
+								elseif v.type == 'any' then
+									newArgs[v.name] = args[k]
+								end
+							end
+
+							if error then break end
+						end
+
+						args = newArgs
+					end
+				end
+
+				if error then
+					if playerId == 0 then
+						print(('[es_extended] [^3WARNING^7] %s^7'):format(error))
+					else
+						xPlayer.triggerEvent('chat:addMessage', {args = {'^1SYSTEM', error}})
+					end
+				else
+					cb(xPlayer, args, function(msg)
+						if playerId == 0 then
+							print(('[es_extended] [^3WARNING^7] %s^7'):format(msg))
+						else
+							xPlayer.triggerEvent('chat:addMessage', {args = {'^1SYSTEM', msg}})
+						end
+					end)
+				end
+			end
+		end, true)
+
+		ExecuteCommand(('add_ace group.%s command.%s allow'):format(group, name))
+	end
+end
+
 ESX.ClearTimeout = function(id)
 	ESX.CancelledTimeouts[id] = true
 end
@@ -44,9 +153,9 @@ ESX.SavePlayer = function(xPlayer, cb)
 		if ESX.LastPlayerData[xPlayer.source].accounts[v.name] ~= v.money then
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_accounts SET money = @money WHERE identifier = @identifier AND name = @name', {
-					['@money']      = v.money,
+					['@money'] = v.money,
 					['@identifier'] = xPlayer.identifier,
-					['@name']       = v.name
+					['@name'] = v.name
 				}, function(rowsChanged)
 					cb()
 				end)

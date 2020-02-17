@@ -1,6 +1,5 @@
 Locales['cs'] = {
   -- Inventory
-  ['cash'] = 'hotovost',
   ['inventory'] = 'inventář %s / %s',
   ['use'] = 'použít',
   ['give'] = 'dát',
@@ -23,8 +22,6 @@ Locales['cs'] = {
   ['received_weapon_withammo'] = 'you received ~b~%s~s~ with ~o~%sx %s~s~ from ~b~%s~s~',
   ['received_weapon_hasalready'] = '~b~%s~s~ attempted to give you an ~y~%s~s~, but you already have one',
   ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for an ~y~%s~s~, but you dont have one',
-  ['gave_money'] = 'dali jste ~g~$%s~s~ ~y~%s~s~',
-  ['received_money'] = 'obdrželi jste ~g~$%s~s~ od ~b~%s~s~',
   ['gave_account_money'] = 'dali jste ~g~$%s~s~ (%s) ~y~%s~s~',
   ['received_account_money'] = 'obdrželi jste ~g~$%s~s~ (%s) od ~b~%s~s~',
   ['amount_invalid'] = 'neplatné množství',
@@ -33,7 +30,6 @@ Locales['cs'] = {
   ['imp_invalid_quantity'] = 'akce není možná, neplatný počet',
   ['imp_invalid_amount'] = 'akce není možná, neplatné množství',
   ['threw_standard'] = 'you threw ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'you threw ~g~$%s~s~ ~b~cash~s~',
   ['threw_account'] = 'you threw ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'you threw ~b~%s~s~',
   ['threw_weapon_ammo'] = 'you threw ~b~%s~s~ with ~o~%sx %s~s~',
@@ -51,7 +47,9 @@ Locales['cs'] = {
   ['company_nomoney'] = 'společnost u které jste zaměstananí nemá peníze na váš plat',
   ['received_paycheck'] = 'obdržena výplata',
   ['bank'] = 'bankovní účet',
-  ['black_money'] = 'špinavé peníze',
+  ['account_bank'] = 'bank',
+  ['account_black_money'] = 'dirty Money',
+  ['account_money'] = 'cash',
 
   ['act_imp'] = 'akce není možná',
   ['in_vehicle'] = 'nemůže nic dát osobě ve vozidle',
@@ -76,7 +74,6 @@ Locales['cs'] = {
   ['chat_clear_all'] = 'vyčistit chat pro všechny',
   ['command_clearinventory'] = 'clear all items from inventory',
   ['command_clearloadout'] = 'remove all weapons from loadout',
-  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',

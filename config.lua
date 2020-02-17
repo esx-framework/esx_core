@@ -1,8 +1,11 @@
-Config                      = {}
-Config.Locale               = 'fr'
+Config = {}
+Config.Locale = 'fr'
 
-Config.Accounts             = {'bank', 'black_money'}
-Config.AccountLabels        = {bank = _U('bank'), black_money = _U('black_money')}
+Config.Accounts = {
+	bank = _U('account_bank'),
+	black_money = _U('account_black_money'),
+	money = _U('account_money')
+}
 
 Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.DisableWantedLevel   = true

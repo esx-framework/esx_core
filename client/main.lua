@@ -1,40 +1,29 @@
 local isLoadoutLoaded, isPaused, isDead, isFirstSpawn, pickups = false, false, false, true, {}
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
-	ESX.PlayerData = xPlayer
+	ESX.PlayerData = playerData
 
 	if Config.EnableHud then
-		for k,v in ipairs(xPlayer.accounts) do
+		for k,v in ipairs(playerData.accounts) do
 			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
 
-			ESX.UI.HUD.RegisterElement('account_' .. v.name, k - 1, 0, accountTpl, {
-				money = 0
-			})
-
-			ESX.UI.HUD.UpdateElement('account_' .. v.name, {
+			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {
 				money = ESX.Math.GroupDigits(v.money)
 			})
 		end
 
 		local jobTpl = '<div>{{job_label}} - {{grade_label}}</div>'
 
-		if xPlayer.job.grade_label == '' then
+		if playerData.job.grade_label == '' or playerData.job.grade_label == playerData.job.label then
 			jobTpl = '<div>{{job_label}}</div>'
 		end
 
-		ESX.UI.HUD.RegisterElement('job', #xPlayer.accounts, 0, jobTpl, {
-			job_label   = '',
-			grade_label = ''
+		ESX.UI.HUD.RegisterElement('job', #playerData.accounts, 0, jobTpl, {
+			job_label = playerData.job.label,
+			grade_label = playerData.job.grade_label
 		})
-
-		ESX.UI.HUD.UpdateElement('job', {
-			job_label   = xPlayer.job.label,
-			grade_label = xPlayer.job.grade_label
-		})
-	else
-		TriggerEvent('es:setMoneyDisplay', 0.0)
 	end
 end)
 
@@ -44,6 +33,10 @@ AddEventHandler('esx:setMaxWeight', function(newMaxWeight)
 end)
 
 AddEventHandler('playerSpawned', function()
+	if isFirstSpawn then
+		TriggerServerEvent('esx:playerJoined')
+	end
+
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(10)
 	end
@@ -118,11 +111,6 @@ AddEventHandler('esx:setAccountMoney', function(account)
 			money = ESX.Math.GroupDigits(account.money)
 		})
 	end
-end)
-
-RegisterNetEvent('es:activateMoney')
-AddEventHandler('es:activateMoney', function(money)
-	ESX.PlayerData.money = money
 end)
 
 RegisterNetEvent('esx:addInventoryItem')
@@ -394,11 +382,9 @@ if Config.EnableHud then
 
 			if IsPauseMenuActive() and not isPaused then
 				isPaused = true
-				TriggerEvent('es:setMoneyDisplay', 0.0)
 				ESX.UI.HUD.SetDisplay(0.0)
 			elseif not IsPauseMenuActive() and isPaused then
 				isPaused = false
-				TriggerEvent('es:setMoneyDisplay', 1.0)
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
 		end

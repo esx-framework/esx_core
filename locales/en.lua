@@ -1,6 +1,5 @@
 Locales['en'] = {
   -- Inventory
-  ['cash'] = 'cash',
   ['inventory'] = 'inventory %s / %s',
   ['use'] = 'use',
   ['give'] = 'give',
@@ -23,8 +22,6 @@ Locales['en'] = {
   ['received_weapon_withammo'] = 'you received ~b~%s~s~ with ~o~%sx %s~s~ from ~b~%s~s~',
   ['received_weapon_hasalready'] = '~b~%s~s~ attempted to give you an ~y~%s~s~, but you already have one',
   ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for an ~y~%s~s~, but you dont have one',
-  ['gave_money'] = 'you gave ~g~$%s~s~ to ~y~%s~s~',
-  ['received_money'] = 'you received ~g~$%s~s~ from ~b~%s~s~',
   ['gave_account_money'] = 'you gave ~g~$%s~s~ (%s) to ~y~%s~s~',
   ['received_account_money'] = 'you received ~g~$%s~s~ (%s) from ~b~%s~s~',
   ['amount_invalid'] = 'invalid amount',
@@ -33,7 +30,6 @@ Locales['en'] = {
   ['imp_invalid_quantity'] = 'action impossible, invalid quantity',
   ['imp_invalid_amount'] = 'action impossible, invalid amount',
   ['threw_standard'] = 'you threw ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'you threw ~g~$%s~s~ ~b~cash~s~',
   ['threw_account'] = 'you threw ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'you threw ~b~%s~s~',
   ['threw_weapon_ammo'] = 'you threw ~b~%s~s~ with ~o~%sx %s~s~',
@@ -50,7 +46,9 @@ Locales['en'] = {
   ['company_nomoney'] = 'the company you\'re employeed at is too poor to pay out your salary',
   ['received_paycheck'] = 'received paycheck',
   ['bank'] = 'maze Bank',
-  ['black_money'] = 'dirty Money',
+  ['account_bank'] = 'bank',
+  ['account_black_money'] = 'dirty Money',
+  ['account_money'] = 'cash',
 
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'you can\'t give anything to someone in a vehicle',
@@ -75,7 +73,6 @@ Locales['en'] = {
   ['chat_clear_all'] = 'clear the chat for everyone',
   ['command_clearinventory'] = 'clear all items from inventory',
   ['command_clearloadout'] = 'remove all weapons from loadout',
-  ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',

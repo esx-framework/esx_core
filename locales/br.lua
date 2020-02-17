@@ -1,6 +1,5 @@
 Locales['br'] = {
   -- Inventory
-  ['cash'] = 'dinheiro',
   ['inventory'] = 'inventário %s / %s',
   ['use'] = 'usar',
   ['give'] = 'dar',
@@ -23,8 +22,6 @@ Locales['br'] = {
   ['received_weapon_withammo'] = 'você recebeu ~b~%s~s~ com ~o~%sx %s~s~ de ~b~%s~s~',
   ['received_weapon_hasalready'] = '~b~%s~s~ tentou lhe dar uma ~y~%s~s~, mas você já tem um(a)',
   ['received_weapon_noweapon'] = '~b~%s~s~ tentou lhe dar munição para ~y~%s~s~, mas você não tem um(a)',
-  ['gave_money'] = 'voce deu ~g~$%s~s~ para ~y~%s~s~',
-  ['received_money'] = 'voce recebeu ~g~$%s~s~ de ~b~%s~s~',
   ['gave_account_money'] = 'voce deu ~g~$%s~s~ (%s) para ~y~%s~s~',
   ['received_account_money'] = 'voce recebeu ~g~$%s~s~ (%s) de ~b~%s~s~',
   ['amount_invalid'] = 'quantidade inválida',
@@ -33,7 +30,6 @@ Locales['br'] = {
   ['imp_invalid_quantity'] = 'ação impossível, quantidade inválida',
   ['imp_invalid_amount'] = 'ação impossível, valor invalido',
   ['threw_standard'] = 'você jogou ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'você jogou ~g~$%s~s~ ~b~cash~s~',
   ['threw_account'] = 'você jogou ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'você jogou ~b~%s~s~',
   ['threw_weapon_ammo'] = 'você jogou ~b~%s~s~ com ~o~%sx %s~s~',
@@ -50,7 +46,9 @@ Locales['br'] = {
   ['company_nomoney'] = 'a empresa em que voce esta empregado esta muito pobre para pagar seu salário',
   ['received_paycheck'] = 'recebeu dinheiro',
   ['bank'] = 'banco',
-  ['black_money'] = 'dinheiro sujo',
+  ['account_bank'] = 'bank',
+  ['account_black_money'] = 'dirty Money',
+  ['account_money'] = 'cash',
 
   ['act_imp'] = 'ação impossível',
   ['in_vehicle'] = 'voce não pode dar nada para alguem no veículo',
@@ -75,7 +73,6 @@ Locales['br'] = {
   ['chat_clear_all'] = 'limpar o chat para todos',
   ['command_clearinventory'] = 'remover todos os itens do inventário',
   ['command_clearloadout'] = 'remova todas as armas do carregamento',
-  ['command_playerid_param'] = 'especifique playerId ou deixe em branco para si mesmo',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',

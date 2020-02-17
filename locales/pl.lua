@@ -1,6 +1,5 @@
 Locales['pl'] = {
   -- Inventory
-  ['cash'] = 'gotówka',
   ['inventory'] = 'ekwipunek %s / %s',
   ['use'] = 'użyj',
   ['give'] = 'daj',
@@ -23,8 +22,6 @@ Locales['pl'] = {
   ['received_weapon_withammo'] = 'otrzymałeś/aś ~b~%s~s~ z ~o~%sx %s~s~ od ~b~%s~s~',
   ['received_weapon_hasalready'] = '~b~%s~s~ próbował/a przekazać ci ~y~%s~s~, lecz już posiadasz jedno',
   ['received_weapon_noweapon'] = '~b~%s~s~ próbował/a przekazać ci amunicje do ~y~%s~s~, lecz nie posiadasz tej broni',
-  ['gave_money'] = 'dajesz ~g~%s$~s~ dla ~y~%s~s~',
-  ['received_money'] = 'otrzymujesz ~g~%s$~s~ od ~b~%s~s~',
   ['gave_account_money'] = 'dajesz ~g~%s$~s~ (%s) dla ~y~%s~s~',
   ['received_account_money'] = 'otrzymujesz ~g~%s$~s~ (%s) od ~b~%s~s~',
   ['amount_invalid'] = 'nieprawidłowa ilość',
@@ -33,7 +30,6 @@ Locales['pl'] = {
   ['imp_invalid_quantity'] = 'akcja jest niemożliwa, nieprawidłowa ilość',
   ['imp_invalid_amount'] = 'akcja jest niemożliwa, nieprawidłowa kwota',
   ['threw_standard'] = 'wyrzuciłeś/aś ~y~%sx~s~ ~b~%s~s~',
-  ['threw_money'] = 'wyrzuciłeś/aś ~g~$%s~s~ ~b~gotówki~s~',
   ['threw_account'] = 'wyrzuciłeś/aś ~g~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'wyrzuciłeś/aś ~b~%s~s~',
   ['threw_weapon_ammo'] = 'wyrzuciłeś/aś ~b~%s~s~ z ~o~%sx %s~s~',
@@ -44,14 +40,16 @@ Locales['pl'] = {
   -- Key mapping
   ['keymap_showinventory'] = 'show Inventory',
 
-
   -- Salary related
   ['received_salary'] = 'otrzymałeś wynagrodzenie: ~g~%s$~s~',
   ['received_help'] = 'otrzymałem zapomogę: ~g~$%s~s~',
   ['company_nomoney'] = 'firma, w której pracujesz, jest zbyt biedna, by wypłacić twoją pensję',
   ['received_paycheck'] = 'otrzymana wypłata',
   ['bank'] = 'bank',
-  ['black_money'] = 'brudne pieniądze',
+  ['account_bank'] = 'bank',
+  ['account_black_money'] = 'dirty Money',
+  ['account_money'] = 'cash',
+
   ['act_imp'] = 'działanie niemożliwe',
   ['in_vehicle'] = 'nie możesz przekazywać przedmiotów w pojeździe',
 
@@ -75,7 +73,6 @@ Locales['pl'] = {
   ['chat_clear_all'] = 'wyczyść czat dla wszystkich',
   ['command_clearinventory'] = 'usuń wszystkie przedmioty z ekwipunku',
   ['command_clearloadout'] = 'usuń wszystkie bronie z wyposażenia',
-  ['command_playerid_param'] = 'id gracza lub zostaw puste dla siebie',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
