@@ -186,6 +186,7 @@ function loadESXPlayer(identifier, playerId)
 			})
 
 			xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
+			xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
 		end)
 	end)
 end
