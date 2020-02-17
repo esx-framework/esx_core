@@ -31,6 +31,10 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 
 	if ESX.RegisteredCommands[name] then
 		print(('[es_extended] [^3WARNING^7] An command "%s" is already registered, overriding command'):format(name))
+
+		if ESX.RegisteredCommands[name].suggestion then
+			TriggerClientEvent('chat:removeSuggestion', -1, ('/%s'):format(name))
+		end
 	end
 
 	if suggestion then
