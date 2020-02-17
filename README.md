@@ -63,6 +63,9 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 - Configure your `server.cfg` to look like this
 
 ```
+add_ace resource.es_extended command.add_ace allow
+add_ace resource.es_extended command.add_principal allow
+
 start mysql-async
 start es_extended
 
