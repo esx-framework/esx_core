@@ -19,7 +19,7 @@ ESX.RegisterCommand('wladd', 'admin', function(xPlayer, args, showError)
 			end)
 		end
 	else
-		showError('Invalid steam ID length!')
+		showError('Invalid license ID length!')
 	end
 end, true, {help = _U('help_whitelist_add'), validate = true, arguments = {
 	{name = 'license', help = 'the player license', type = 'string'}

@@ -1,4 +1,6 @@
-WhiteList = {}
+ESX, WhiteList = nil, {}
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function loadWhiteList(cb)
 	Whitelist = {}
