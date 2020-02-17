@@ -36,16 +36,18 @@ AddEventHandler('playerSpawned', function()
 		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
 		firstSpawn = false
 
-		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
-			if shouldDie and Config.AntiCombatLog then
-				while not PlayerLoaded do
-					Citizen.Wait(1000)
-				end
-
-				ESX.ShowNotification(_U('combatlog_message'))
-				RemoveItemsAfterRPDeath()
+		if Config.AntiCombatLog then
+			while not PlayerLoaded do
+				Citizen.Wait(1000)
 			end
-		end)
+
+			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+				if shouldDie then
+					ESX.ShowNotification(_U('combatlog_message'))
+					RemoveItemsAfterRPDeath()
+				end
+			end)
+		end
 	end
 end)
 

@@ -250,20 +250,11 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 	end
 end)
 
-TriggerEvent('es:addGroupCommand', 'revive', 'admin', function(source, args, user)
-	if args[1] then
-		local playerId = tonumber(args[1])
-		if playerId and ESX.GetPlayerFromId(playerId) then
-			TriggerClientEvent('esx_ambulancejob:revive', playerId)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Player not online.' } })
-		end
-	else
-		TriggerClientEvent('esx_ambulancejob:revive', source)
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
-end, { help = _U('revive_help'), params = {{ name = 'playerId' }} })
+ESX.RegisterCommand('revive', 'admin', function(xPlayer, args, showError)
+	args.playerId.triggerEvent('esx_ambulancejob:revive')
+end, true, {help = _U('revive_help'), validate = true, arguments = {
+	{name = 'playerId', help = 'The player id', type = 'player'}
+}})
 
 ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] then
@@ -292,13 +283,13 @@ ESX.RegisterUsableItem('bandage', function(source)
 end)
 
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)
-	local identifier = GetPlayerIdentifiers(source)[1]
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchScalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
-		['@identifier'] = identifier
+		['@identifier'] = xPlayer.identifier
 	}, function(isDead)
 		if isDead then
-			print(('[esx_ambulancejob] [^2INFO^7] "%s" attempted combat logging'):format(identifier))
+			print(('[esx_ambulancejob] [^2INFO^7] "%s" attempted combat logging'):format(xPlayer.identifier))
 		end
 
 		cb(isDead)
@@ -307,11 +298,11 @@ end)
 
 RegisterNetEvent('esx_ambulancejob:setDeathStatus')
 AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
-	local identifier = GetPlayerIdentifiers(source)[1]
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if type(isDead) == 'boolean' then
 		MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
-			['@identifier'] = identifier,
+			['@identifier'] = xPlayer.identifier,
 			['@isDead'] = isDead
 		})
 	end
