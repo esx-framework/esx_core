@@ -46,9 +46,9 @@ Locales['fr'] = {
   ['company_nomoney'] = 'votre entreprise n\'a plus d\'argent pour vous payer!',
   ['received_paycheck'] = 'paiement reçu',
   ['bank'] = 'banque',
-  ['account_bank'] = 'bank',
-  ['account_black_money'] = 'dirty Money',
-  ['account_money'] = 'cash',
+  ['account_bank'] = 'banque',
+  ['account_black_money'] = 'argent sale',
+  ['account_money'] = 'espèces',
 
   ['act_imp'] = 'action impossible',
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
@@ -187,12 +187,12 @@ Locales['fr'] = {
   ['ammo_flaregun'] = 'fusée(s)',
 
   -- Weapon Tints
-  ['tint_default'] = 'default skin',
-  ['tint_green'] = 'green skin',
-  ['tint_gold'] = 'gold skin',
-  ['tint_pink'] = 'pink skin',
-  ['tint_army'] = 'army skin',
-  ['tint_lspd'] = 'blue skin',
-  ['tint_orange'] = 'orange skin',
-  ['tint_platinum'] = 'platinum skin',
+  ['tint_default'] = 'skin par défaut',
+  ['tint_green'] = 'skin vert',
+  ['tint_gold'] = 'skin doré',
+  ['tint_pink'] = 'skin rose',
+  ['tint_army'] = 'skin militaire',
+  ['tint_lspd'] = 'skin bleu',
+  ['tint_orange'] = 'skin orange',
+  ['tint_platinum'] = 'skin platine',
 }
