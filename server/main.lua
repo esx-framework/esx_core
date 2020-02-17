@@ -322,52 +322,52 @@ ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function(source, c
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb, plate, model)
-	local resellPrice
+	local xPlayer, resellPrice = ESX.GetPlayerFromId(source)
 
-	-- calculate the resell price
-	for i=1, #vehicles, 1 do
-		if GetHashKey(vehicles[i].model) == model then
-			resellPrice = ESX.Math.Round(vehicles[i].price / 100 * Config.ResellPercentage)
-			break
+	if xPlayer.job.name == 'cardealer' then
+		-- calculate the resell price
+		for i=1, #vehicles, 1 do
+			if GetHashKey(vehicles[i].model) == model then
+				resellPrice = ESX.Math.Round(vehicles[i].price / 100 * Config.ResellPercentage)
+				break
+			end
 		end
-	end
 
-	if not resellPrice then
-		print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an unknown vehicle!'):format(GetPlayerIdentifiers(source)[1]))
-		cb(false)
-	else
-		MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
-			['@plate'] = plate
-		}, function(result)
-			if result[1] then -- is it a rented vehicle?
-				cb(false) -- it is, don't let the player sell it since he doesn't own it
-			else
-				local xPlayer = ESX.GetPlayerFromId(source)
+		if not resellPrice then
+			print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an unknown vehicle!'):format(xPlayer.identifier))
+			cb(false)
+		else
+			MySQL.Async.fetchAll('SELECT * FROM rented_vehicles WHERE plate = @plate', {
+				['@plate'] = plate
+			}, function(result)
+				if result[1] then -- is it a rented vehicle?
+					cb(false) -- it is, don't let the player sell it since he doesn't own it
+				else
+					MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
+						['@owner'] = xPlayer.identifier,
+						['@plate'] = plate
+					}, function(result)
+						if result[1] then -- does the owner match?
+							local vehicle = json.decode(result[1].vehicle)
 
-				MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
-					['@owner'] = xPlayer.identifier,
-					['@plate'] = plate
-				}, function(result)
-					if result[1] then -- does the owner match?
-						local vehicle = json.decode(result[1].vehicle)
-
-						if vehicle.model == model then
-							if vehicle.plate == plate then
-								xPlayer.addMoney(resellPrice)
-								RemoveOwnedVehicle(plate)
-								cb(true)
+							if vehicle.model == model then
+								if vehicle.plate == plate then
+									xPlayer.addMoney(resellPrice)
+									RemoveOwnedVehicle(plate)
+									cb(true)
+								else
+									print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
+									cb(false)
+								end
 							else
-								print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
+								print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with model mismatch!'):format(xPlayer.identifier))
 								cb(false)
 							end
-						else
-							print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with model mismatch!'):format(xPlayer.identifier))
-							cb(false)
 						end
-					end
-				end)
-			end
-		end)
+					end)
+				end
+			end)
+		end
 	end
 end)
 
