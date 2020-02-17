@@ -272,10 +272,9 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 end)
 
 ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
-	local isBoss = isPlayerBoss(source, job)
-	local identifier = GetPlayerIdentifier(source, 0)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if isBoss then
+	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
 		if salary <= Config.MaxSalary then
 			MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
 				['@salary']   = salary,
@@ -286,21 +285,21 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				local xPlayers = ESX.GetPlayers()
 
 				for i=1, #xPlayers, 1 do
-					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+					local xTarget = ESX.GetPlayerFromId(xPlayers[i])
 
-					if xPlayer.job.name == job and xPlayer.job.grade == grade then
-						xPlayer.setJob(job, grade)
+					if xTarget.job.name == job and xTarget.job.grade == grade then
+						xTarget.setJob(job, grade)
 					end
 				end
 
 				cb()
 			end)
 		else
-			print(('esx_society: %s attempted to setJobSalary over config limit!'):format(identifier))
+			print(('esx_society: %s attempted to setJobSalary over config limit!'):format(xPlayer.identifier))
 			cb()
 		end
 	else
-		print(('esx_society: %s attempted to setJobSalary'):format(identifier))
+		print(('esx_society: %s attempted to setJobSalary'):format(xPlayer.identifier))
 		cb()
 	end
 end)
