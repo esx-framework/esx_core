@@ -11,7 +11,7 @@ CREATE TABLE `datastore` (
 CREATE TABLE `datastore_data` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(60) NOT NULL,
-	`owner` VARCHAR(60),
+	`owner` VARCHAR(40),
 	`data` LONGTEXT,
 
 	PRIMARY KEY (`id`),
