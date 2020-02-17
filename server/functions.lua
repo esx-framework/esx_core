@@ -36,6 +36,8 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 	if suggestion then
 		if not suggestion.arguments then suggestion.arguments = {} end
 		if not suggestion.help then suggestion.help = '' end
+
+		TriggerClientEvent('chat:addSuggestion', -1, ('/%s'):format(name), suggestion.help, suggestion.arguments)
 	end
 
 	ESX.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
