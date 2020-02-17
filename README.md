@@ -1,6 +1,6 @@
 # es_extended
 
-es_extended is a roleplay framework for FiveM. It is developed on top of EssentialMode (aka ES), where the project ESX is originating from - the **Es**sentialMode E**x**tended framework for FiveM.
+es_extended is a roleplay framework for FiveM. ESX is short for **Es**sentialMode E**x**tended.
 
 ## Links & Read more
 
@@ -11,20 +11,18 @@ es_extended is a roleplay framework for FiveM. It is developed on top of Essenti
 ## Features
 
 - Weight based inventory system
-- Weapons support, including support for attachments
-- Supports different money accounts (defaulted with bank & black money)
+- Weapons support, including support for attachments and tints
+- Supports different money accounts (defaulted with cash, bank and black money)
 - Many official resources available in our GitHub
 - Job system, with grades and clothes support
 - Supports multiple languages, most strings are localized
-- Easy to use API
+- Easy to use API for developers to easily integrate ESX to their projects
 
 ## Requirements
 
 This order also applies in the startup order.
 
 - [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
-- [essentialmode](https://github.com/kanersps/essentialmode)
-- [esplugin_mysql](https://github.com/kanersps/esplugin_mysql)
 - [async](https://github.com/ESX-Org/async)
 
 ## Download & Installation
@@ -66,9 +64,6 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 
 ```
 start mysql-async
-start essentialmode
-start esplugin_mysql
-
 start es_extended
 
 start esx_menu_default
