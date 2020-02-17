@@ -26,8 +26,8 @@ end)
 
 function OpenBankActionsMenu()
 	local elements = {
-		{ label = _U('customers'), value = 'customers' },
-		{ label = _U('billing'),   value = 'billing' }
+		{label = _U('customers'), value = 'customers'},
+		{label = _U('billing'),   value = 'billing'}
 	}
 
 	if ESX.PlayerData.job.grade_name == 'boss' then
