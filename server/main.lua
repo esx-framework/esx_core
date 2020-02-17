@@ -4,7 +4,7 @@ local availableJobs = {}
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT * FROM jobs WHERE whitelisted = @whitelisted', {
+	MySQL.Async.fetchAll('SELECT name, label FROM jobs WHERE whitelisted = @whitelisted', {
 		['@whitelisted'] = false
 	}, function(result)
 		for i=1, #result, 1 do
