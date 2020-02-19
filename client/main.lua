@@ -52,7 +52,7 @@ RegisterNUICallback('escape', function(data, cb)
 	if hasIdentity then
 		EnableGui(false)
 	else
-		TriggerEvent('chat:addMessage', { args = { '^1[IDENTITY]', '^1You must create your first character in order to play' } })
+		ESX.ShowNotification(_U('create_a_character'))
 	end
 end)
 
