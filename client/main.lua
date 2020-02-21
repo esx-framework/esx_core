@@ -1,8 +1,5 @@
-local guiEnabled = false
-local myIdentity = {}
-local myIdentifiers = {}
-local hasIdentity = false
-local isDead = false
+local guiEnabled, hasIdentity, isDead = false, false, false
+local myIdentity, myIdentifiers = {}, {}
 
 ESX = nil
 
