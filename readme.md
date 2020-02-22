@@ -2,10 +2,9 @@
 
 ## Required changes:
 
-* es_extended:
-  * `es_extended/client/main.lua`
+* es_extended: (`es_extended/client/main.lua`)
 
-Change `AddEventHandler('playerSpawned', function()` (35) to:
+Replace `AddEventHandler('playerSpawned', function()` (35) with:
 
 ```lua
 RegisterNetEvent('esx:kashloaded')
