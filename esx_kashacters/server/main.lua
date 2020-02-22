@@ -48,7 +48,7 @@ end)
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local xPlayer = ESX.GetPlayerFromId(src)
     DeleteCharacter(xPlayer.identifier, charid)
     TriggerClientEvent("kashactersC:ReloadCharacters", src)
 end)
