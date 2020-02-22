@@ -18,8 +18,10 @@ local IdentifierTables = {
 RegisterServerEvent("kashactersS:SetupCharacters")
 AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
+    local xPlayer = ESX.GetPlayerFromId(rc)
     local LastCharId = GetLastCharacter(src)
-    SetIdentifierToChar(GetPlayerIdentifiers(src)[1], LastCharId)
+
+    SetIdentifierToChar(xPlayer.identifier, LastCharId)
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
@@ -27,28 +29,34 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
     local spawn = {}
+
     SetLastCharacter(src, tonumber(charid))
-    SetCharToIdentifier(GetPlayerIdentifiers(src)[1], tonumber(charid))
+    SetCharToIdentifier(xPlayer.identifier, tonumber(charid))
+
     if ischar == "true" then
         spawn = GetSpawnPos(src)
     else
 	TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
         spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
     end
+
     TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
 end)
 
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    DeleteCharacter(GetPlayerIdentifiers(src)[1], charid)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    DeleteCharacter(xPlayer.identifier, charid)
     TriggerClientEvent("kashactersC:ReloadCharacters", src)
 end)
 
 function GetPlayerCharacters(source)
-  local identifier = GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[1])
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..identifier.."%'")
+  local xPlayer = ESX.GetPlayerFromId(source)
+	
+  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..xPlayer.identifier.."%'")
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
     charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."'")
@@ -59,17 +67,20 @@ function GetPlayerCharacters(source)
 end
 
 function GetLastCharacter(source)
-    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `steamid` = '"..GetPlayerIdentifiers(source)[1].."'")
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `steamid` = '"..xPlayer.identifier.."'")
     if LastChar[1] ~= nil and LastChar[1].charid ~= nil then
         return tonumber(LastChar[1].charid)
     else
-        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`steamid`, `charid`) VALUES('"..GetPlayerIdentifiers(source)[1].."', 1)")
+        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`steamid`, `charid`) VALUES('"..xPlayer.identifier.."', 1)")
         return 1
     end
 end
 
 function SetLastCharacter(source, charid)
-    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `steamid` = '"..GetPlayerIdentifiers(source)[1].."'")
+    local xPlayer = ESX.GetPlayerFromId(source)
+    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `steamid` = '"..xPlayer.identifier.."'")
 end
 
 function SetIdentifierToChar(identifier, charid)
@@ -91,7 +102,8 @@ function DeleteCharacter(identifier, charid)
 end
 
 function GetSpawnPos(source)
-    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetPlayerIdentifiers(source)[1].."'")
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..xPlayer.identifier.."'")
     return json.decode(SpawnPos[1].position)
 end
 
