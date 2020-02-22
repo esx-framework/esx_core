@@ -18,7 +18,7 @@ local IdentifierTables = {
 RegisterServerEvent("kashactersS:SetupCharacters")
 AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(rc)
+    local xPlayer = ESX.GetPlayerFromId(src)
     local LastCharId = GetLastCharacter(src)
 
     SetIdentifierToChar(xPlayer.identifier, LastCharId)
