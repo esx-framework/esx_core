@@ -1,4 +1,4 @@
-# KASHacters - ESX Multi Characters
+# Thanks to KASH and XxFri3ndlyxX
 
 ## Required changes:
 
@@ -15,7 +15,7 @@ AddEventHandler('esx:kashloaded', function()
 
 ## How it works
 > What this script does it manipulates ESX for loading characters
-So when you are choosing your character it changes your steam id which is normally steam: to Char: this prevents ESX from loading another character because it is looking for you exact steamid. So when you choose your character it will change it from Char: to your normal steam id (steam:). When creating a new character it will spawn you without an exact steamid which creates a new database entry for your steamid
+So when you are choosing your character it changes your **Rockstar license** which is normally **license:** to **Char:** this prevents ESX from loading another character because it is looking for you exact license. So when you choose your character it will change it from Char: to your normal Rockstar license (license:). When creating a new character it will spawn you without an exact license which creates a new database entry for your license.
 
 ## Credits
 
