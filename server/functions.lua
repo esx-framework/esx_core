@@ -77,6 +77,8 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 							elseif v.type == 'player' or v.type == 'playerId' then
 								local targetPlayer = tonumber(args[k])
 
+								if args[k] == 'me' then targetPlayer = playerId end
+
 								if targetPlayer then
 									local xTargetPlayer = ESX.GetPlayerFromId(targetPlayer)
 
