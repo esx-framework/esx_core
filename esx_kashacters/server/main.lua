@@ -28,19 +28,21 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
+    local new = true
     local spawn = {}
 
     SetLastCharacter(src, tonumber(charid))
     SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
 
     if ischar == "true" then
+        new = false
         spawn = GetSpawnPos(src)
     else
 	TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
         spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
     end
 
-    TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
+    TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn, new)
 end)
 
 RegisterServerEvent("kashactersS:DeleteCharacter")
@@ -106,13 +108,13 @@ function GetIdentifierWithoutLicense(Identifier)
 end
 
 function GetRockstarID(playerId)
-	local identifier
+    local identifier
 
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			identifier = v
-			break
-		end
+    for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+        if string.match(v, 'license:') then
+            identifier = v
+            break
+        end
     end
 
     return identifier
