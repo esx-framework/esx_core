@@ -51,7 +51,7 @@ AddEventHandler('kashactersS:DeleteCharacter', function(charid)
 end)
 
 function GetPlayerCharacters(source)
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetRockstarID(source).."%'")
+  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetIdentifierWithoutLicense(GetRockstarID(source)).."%'")
 
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
