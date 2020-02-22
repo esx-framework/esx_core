@@ -100,7 +100,7 @@ AddEventHandler('kashactersC:SpawnCharacter', function(spawn, isnew)
 
     TriggerEvent('esx:kashloaded')
 
-    if isnew then
+    if isnew == true then
         TriggerEvent('esx_identity:showRegisterIdentity')
      end
 
