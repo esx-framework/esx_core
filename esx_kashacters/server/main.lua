@@ -18,10 +18,9 @@ local IdentifierTables = {
 RegisterServerEvent("kashactersS:SetupCharacters")
 AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
     local LastCharId = GetLastCharacter(src)
 
-    SetIdentifierToChar(xPlayer.identifier, LastCharId)
+    SetIdentifierToChar(GetRockstarID(src), LastCharId)
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
@@ -29,11 +28,10 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
     local spawn = {}
 
     SetLastCharacter(src, tonumber(charid))
-    SetCharToIdentifier(xPlayer.identifier, tonumber(charid))
+    SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
 
     if ischar == "true" then
         spawn = GetSpawnPos(src)
@@ -48,39 +46,36 @@ end)
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
-    DeleteCharacter(xPlayer.identifier, charid)
+    DeleteCharacter(GetRockstarID(src), charid)
     TriggerClientEvent("kashactersC:ReloadCharacters", src)
 end)
 
 function GetPlayerCharacters(source)
-  local xPlayer = ESX.GetPlayerFromId(source)
-	
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..xPlayer.identifier.."%'")
+  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetRockstarID(source).."%'")
+
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
     charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."'")
     Chars[i].job = charJob[1].label
     Chars[i].job_grade = charJobgrade[1].label
   end
+
   return Chars
 end
 
 function GetLastCharacter(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `steamid` = '"..GetRockstarID(source).."'")
 
-    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `steamid` = '"..xPlayer.identifier.."'")
     if LastChar[1] ~= nil and LastChar[1].charid ~= nil then
         return tonumber(LastChar[1].charid)
     else
-        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`steamid`, `charid`) VALUES('"..xPlayer.identifier.."', 1)")
+        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`steamid`, `charid`) VALUES('"..GetRockstarID(source).."', 1)")
         return 1
     end
 end
 
 function SetLastCharacter(source, charid)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `steamid` = '"..xPlayer.identifier.."'")
+    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `steamid` = '"..GetRockstarID(source).."'")
 end
 
 function SetIdentifierToChar(identifier, charid)
@@ -102,13 +97,25 @@ function DeleteCharacter(identifier, charid)
 end
 
 function GetSpawnPos(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..xPlayer.identifier.."'")
+    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetRockstarID(source).."'")
     return json.decode(SpawnPos[1].position)
 end
 
 function GetIdentifierWithoutLicense(Identifier)
     return string.gsub(Identifier, "license", "")
+end
+
+function GetRockstarID(playerId)
+	local identifier
+
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
+    end
+
+    return identifier
 end
 
 function MySQLAsyncExecute(query)
