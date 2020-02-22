@@ -3,25 +3,16 @@
 -- where identifiers are used (such as users, owned_vehicles, owned_properties etc.)
 ---------------------------------------------------------------------------------------
 local IdentifierTables = {
-    {table = "users", column = "identifier"},
-    {table = "user_accounts", column = "identifier"},
-   -- {table = "user_contacts", column = "identifier"},
-    {table = "user_inventory", column = "identifier"},
-   -- {table = "user_parkings", column = "identifier"},
-    {table = "society_moneywash", column = "identifier"},
-    {table = "phone_users_contacts", column = "identifier"},
-    --{table = "jail", column = "identifier"},
-    {table = "characters", column = "identifier"},
-    {table = "billing", column = "identifier"},
-    {table = "rented_vehicles", column = "owner"},
     {table = "addon_account_data", column = "owner"},
     {table = "addon_inventory_items", column = "owner"},
-    {table = "datastore_data", column = "owner"}, 
-    {table = "owned_vehicles", column = "owner"}, 
-    {table = "phone_calls", column = "owner"}, 
-    {table = "phone_messages", column = "owner"}, 
-    {table = "rented_vehicles", column = "owner"}, 
-    {table = "user_licenses", column = "owner"}, 
+    {table = "billing", column = "identifier"},
+    {table = "datastore_data", column = "owner"},
+    {table = "owned_vehicles", column = "owner"},
+    {table = "owned_properties", column = "owner"},
+    {table = "rented_vehicles", column = "owner"},
+    {table = "users", column = "identifier"},
+    {table = "user_accounts", column = "identifier"},
+    {table = "user_licenses", column = "owner"},
 }
 
 RegisterServerEvent("kashactersS:SetupCharacters")
@@ -42,7 +33,7 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     if ischar == "true" then
         spawn = GetSpawnPos(src)
     else
-		TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
+	TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
         spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
     end
     TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
@@ -56,7 +47,7 @@ AddEventHandler('kashactersS:DeleteCharacter', function(charid)
 end)
 
 function GetPlayerCharacters(source)
-  local identifier = GetIdentifierWithoutSteam(GetPlayerIdentifiers(source)[1])
+  local identifier = GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[1])
   local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..identifier.."%'")
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
@@ -83,19 +74,19 @@ end
 
 function SetIdentifierToChar(identifier, charid)
     for _, itable in pairs(IdentifierTables) do
-        MySQLAsyncExecute("UPDATE `"..itable.table.."` SET `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutSteam(identifier).."' WHERE `"..itable.column.."` = '"..identifier.."'")
+        MySQLAsyncExecute("UPDATE `"..itable.table.."` SET `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutLicense(identifier).."' WHERE `"..itable.column.."` = '"..identifier.."'")
     end
 end
 
 function SetCharToIdentifier(identifier, charid)
     for _, itable in pairs(IdentifierTables) do
-        MySQLAsyncExecute("UPDATE `"..itable.table.."` SET `"..itable.column.."` = '"..identifier.."' WHERE `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutSteam(identifier).."'")
+        MySQLAsyncExecute("UPDATE `"..itable.table.."` SET `"..itable.column.."` = '"..identifier.."' WHERE `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutLicense(identifier).."'")
     end
 end
 
 function DeleteCharacter(identifier, charid)
     for _, itable in pairs(IdentifierTables) do
-        MySQLAsyncExecute("DELETE FROM `"..itable.table.."` WHERE `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutSteam(identifier).."'")
+        MySQLAsyncExecute("DELETE FROM `"..itable.table.."` WHERE `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutLicense(identifier).."'")
     end
 end
 
@@ -104,8 +95,8 @@ function GetSpawnPos(source)
     return json.decode(SpawnPos[1].position)
 end
 
-function GetIdentifierWithoutSteam(Identifier)
-    return string.gsub(Identifier, "steam", "")
+function GetIdentifierWithoutLicense(Identifier)
+    return string.gsub(Identifier, "license", "")
 end
 
 function MySQLAsyncExecute(query)
