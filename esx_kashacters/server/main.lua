@@ -110,7 +110,7 @@ function GetRockstarID(playerId)
 
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
-			identifier = string.sub(v, 9)
+			identifier = v
 			break
 		end
     end
