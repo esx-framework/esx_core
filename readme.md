@@ -27,7 +27,7 @@ AddEventHandler('esx:kashloaded', function()
 ### to:
 
 
-```
+```lua
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
 			identifier = v
@@ -37,7 +37,7 @@ AddEventHandler('esx:kashloaded', function()
 ```
 
 # WARNING!
-> You **MUST** incerase characters limit in `users` table for row `identifier` to **48**.
+> You **MUST** incerase the character limit in the `users` table for row `identifier` to **48**.
 
 > *Pay ATTENTION: You have to call the resource 'esx_kashacters' in order for the javascript to work!!!**
 
