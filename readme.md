@@ -11,6 +11,34 @@ RegisterNetEvent('esx:kashloaded')
 AddEventHandler('esx:kashloaded', function()
 ```
 
+* es_extended: (`es_extended/server/main.lua`)
+
+### Change this code in `onPlayerJoined(playerId)` function:
+
+```lua
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
+	end
+```
+
+### to:
+
+
+```
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = v
+			break
+		end
+	end
+```
+
+# WARNING!
+> You **MUST** incerase characters limit in `users` table for row `identifier` to **48**.
+
 > *Pay ATTENTION: You have to call the resource 'esx_kashacters' in order for the javascript to work!!!**
 
 ## How it works
