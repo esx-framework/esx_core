@@ -1,13 +1,6 @@
-local HasAlreadyEnteredMarker = false
-local LastZone
-local CurrentAction
-local CurrentActionMsg        = ''
-local CurrentActionData       = {}
-local IsInShopMenu            = false
-local Categories              = {}
-local Vehicles                = {}
-local currentDisplayVehicle
-local CurrentVehicleData
+local HasAlreadyEnteredMarker, IsInShopMenu = false, false
+local CurrentAction, CurrentActionMsg, LastZone, currentDisplayVehicle, CurrentVehicleData
+local CurrentActionData, Vehicles, Categories = {}, {}, {}
 
 ESX = nil
 
