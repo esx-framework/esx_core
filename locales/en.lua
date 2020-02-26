@@ -1,5 +1,5 @@
 Locales['en'] = {
-  ['new_message'] = '~b~You have recived a message:~s~ %s',
+  ['new_message'] = '~b~You have received a message:~s~ %s',
   ['press_take_call'] = '%s - Press ~INPUT_CONTEXT~ to take the call',
   ['taken_call'] = '~y~%s~s~ has taken the call',
   ['gps_position'] = 'the destination has been added to your GPS',
