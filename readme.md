@@ -36,7 +36,7 @@ AddEventHandler('esx:kashloaded', function()
 	end
 ```
 
-# Using kashacters without esx_ambulancejob (respawn fix)
+## Using kashacters without esx_ambulancejob (respawn fix)
 
 > Remove `exports.spawnmanager:setAutoSpawn(false)` from `client/main.lua`.
 
