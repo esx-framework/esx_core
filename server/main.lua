@@ -43,5 +43,5 @@ end)
 ESX.RegisterServerCallback('esx_accessories:checkMoney', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	cb(xPlayer.get('money') >= Config.Price)
+	cb(xPlayer.getMoney() >= Config.Price)
 end)
