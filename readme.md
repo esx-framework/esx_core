@@ -36,6 +36,10 @@ AddEventHandler('esx:kashloaded', function()
 	end
 ```
 
+# Using kashacters without esx_ambulancejob (respawn fix)
+
+> Remove `exports.spawnmanager:setAutoSpawn(false)` from `client/main.lua`.
+
 # WARNING!
 > You **MUST** incerase the character limit in the `users` table for row `identifier` to **48**.
 
