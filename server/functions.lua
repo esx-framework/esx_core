@@ -182,7 +182,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 		MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
 			['@job'] = xPlayer.job.name,
 			['@job_grade'] = xPlayer.job.grade,
-			['@loadout'] = json.encode(xPlayer.getLoadout()),
+			['@loadout'] = json.encode(xPlayer.getLoadout(true)),
 			['@position'] = json.encode(xPlayer.getCoords()),
 			['@identifier'] = xPlayer.identifier,
 			['@inventory'] = json.encode(xPlayer.getInventory(true))

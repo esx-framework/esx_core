@@ -96,15 +96,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	self.getInventory = function(minimal)
 		if minimal then
-			local items = {}
+			local minimalInventory = {}
 
 			for k,v in ipairs(self.inventory) do
 				if v.count > 0 then
-					items[v.name] = v.count
+					minimalInventory[v.name] = v.count
 				end
 			end
 
-			return items
+			return minimalInventory
 		else
 			return self.inventory
 		end
@@ -114,8 +114,33 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return self.job
 	end
 
-	self.getLoadout = function()
-		return self.loadout
+	self.getLoadout = function(minimal)
+		if minimal then
+			local minimalLoadout = {}
+
+			for k,v in ipairs(self.loadout) do
+				minimalLoadout[v.name] = {ammo = v.ammo}
+				if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
+
+				if #v.components > 0 then
+					local components = {}
+
+					for k2,component in ipairs(v.components) do
+						if component ~= 'clip_default' then
+							table.insert(components, component)
+						end
+					end
+
+					if #components > 0 then
+						minimalLoadout[v.name].components = components
+					end
+				end
+			end
+
+			return minimalLoadout
+		else
+			return self.loadout
+		end
 	end
 
 	self.getName = function()
@@ -185,11 +210,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if account then
 				local newMoney = account.money + ESX.Math.Round(money)
 				account.money = newMoney
-	
+
 				if accountName == 'bank' then
 					self.set('bank', newMoney)
 				end
-	
+
 				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
@@ -202,11 +227,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if account then
 				local newMoney = account.money - ESX.Math.Round(money)
 				account.money = newMoney
-	
+
 				if accountName == 'bank' then
 					self.set('bank', newMoney)
 				end
-	
+
 				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end

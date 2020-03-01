@@ -133,13 +133,24 @@ function loadESXPlayer(identifier, playerId)
 				return a.label < b.label
 			end)
 
-			if result[1].loadout then
-				userData.loadout = json.decode(result[1].loadout)
+			if result[1].loadout and result[1].loadout ~= '' then
+				local loadout = json.decode(result[1].loadout)
 
-				-- compatibility with old loadouts
-				for k,v in ipairs(userData.loadout) do
-					if not v.components then v.components = {} end
-					if not v.tintIndex then v.tintIndex = 0 end
+				for name,weapon in pairs(loadout) do
+					local label = ESX.GetWeaponLabel(name)
+
+					if label then
+						if not weapon.components then weapon.components = {} end
+						if not weapon.tintIndex then weapon.tintIndex = 0 end
+
+						table.insert(userData.loadout, {
+							name = name,
+							ammo = weapon.ammo,
+							label = label,
+							components = weapon.components,
+							tintIndex = weapon.tintIndex
+						})
+					end
 				end
 			end
 
