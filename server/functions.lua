@@ -50,14 +50,14 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 		local command = ESX.RegisteredCommands[name]
 
 		if not command.allowConsole and playerId == 0 then
-			print('[es_extended] [^3WARNING^7] That command can not be run from console')
+			print(('[es_extended] [^3WARNING^7] %s'):format(_U('commanderror_console')))
 		else
 			local xPlayer, error = ESX.GetPlayerFromId(playerId), nil
 
 			if command.suggestion then
 				if command.suggestion.validate then
 					if #args ~= #command.suggestion.arguments then
-						error = ('Argument count mismatch (passed %s, wanted %s)'):format(#args, #command.suggestion.arguments)
+						error = _U('commanderror_argumentmismatch', #args, #command.suggestion.arguments)
 					end
 				end
 
@@ -72,7 +72,7 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 								if newArg then
 									newArgs[v.name] = newArg
 								else
-									error = ('Argument #%s type mismatch (passed string, wanted number)'):format(k)
+									error = _U('commanderror_argumentmismatch_number', k)
 								end
 							elseif v.type == 'player' or v.type == 'playerId' then
 								local targetPlayer = tonumber(args[k])
@@ -89,10 +89,10 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 											newArgs[v.name] = targetPlayer
 										end
 									else
-										error = 'Player not online'
+										error = _U('commanderror_invalidplayerid')
 									end
 								else
-									error = ('Argument #%s type mismatch (passed string, wanted number)'):format(k)
+									error = _U('commanderror_argumentmismatch_number', k)
 								end
 							elseif v.type == 'string' then
 								newArgs[v.name] = args[k]
@@ -100,13 +100,13 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 								if ESX.Items[args[k]] then
 									newArgs[v.name] = args[k]
 								else
-									error = _U('invalid_item')
+									error = _U('commanderror_invaliditem')
 								end
 							elseif v.type == 'weapon' then
 								if ESX.GetWeapon(args[k]) then
 									newArgs[v.name] = string.upper(args[k])
 								else
-									error = 'Invalid weapon'
+									error = _U('commanderror_invalidweapon')
 								end
 							elseif v.type == 'any' then
 								newArgs[v.name] = args[k]
