@@ -164,7 +164,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			end
 
 			if not found then
-				table.insert(missingAccounts, account)
+				missingAccounts[account] = Config.StartingAccountMoney[account] or 0
 			end
 		end
 
@@ -172,10 +172,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.createMissingAccounts = function(missingAccounts, cb)
-		for k,v in ipairs(missingAccounts) do
-			MySQL.Async.execute('INSERT INTO user_accounts (identifier, name) VALUES (@identifier, @name)', {
+		for name,money in pairs(missingAccounts) do
+			MySQL.Async.execute('INSERT INTO user_accounts (identifier, name, money) VALUES (@identifier, @name, @money)', {
 				['@identifier'] = self.identifier,
-				['@name'] = v
+				['@name'] = name,
+				['@money'] = money
 			}, function(rowsChanged)
 				if cb then
 					cb()

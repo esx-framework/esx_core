@@ -169,12 +169,12 @@ function loadESXPlayer(identifier, playerId)
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.job, userData.loadout, userData.playerName, userData.coords)
 
 		xPlayer.getMissingAccounts(function(missingAccounts)
-			if #missingAccounts > 0 then
-				for k,v in ipairs(missingAccounts) do
+			if ESX.Table.SizeOf(missingAccounts) > 0 then
+				for name,money in pairs(missingAccounts) do
 					table.insert(xPlayer.accounts, {
-						name = v,
-						money = 0,
-						label = Config.Accounts[v]
+						name = name,
+						money = money,
+						label = Config.Accounts[name]
 					})
 				end
 
@@ -192,7 +192,6 @@ function loadESXPlayer(identifier, playerId)
 				inventory = xPlayer.getInventory(),
 				job = xPlayer.getJob(),
 				loadout = xPlayer.getLoadout(),
-				money = xPlayer.getMoney(),
 				maxWeight = xPlayer.maxWeight
 			})
 
