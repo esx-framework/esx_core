@@ -17,10 +17,9 @@ es_extended is a roleplay framework for FiveM. ESX is short for **Es**sentialMod
 - Job system, with grades and clothes support
 - Supports multiple languages, most strings are localized
 - Easy to use API for developers to easily integrate ESX to their projects
+- Register your own commands easily, with argument validation, chat suggestion and using FXServer ACL
 
 ## Requirements
-
-This order also applies in the startup order.
 
 - [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
 - [async](https://github.com/ESX-Org/async)
@@ -63,6 +62,7 @@ git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
 - Configure your `server.cfg` to look like this
 
 ```
+add_principal group.admin group.user
 add_ace resource.es_extended command.add_ace allow
 add_ace resource.es_extended command.add_principal allow
 
