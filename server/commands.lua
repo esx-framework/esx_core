@@ -111,7 +111,7 @@ end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
-	args.playerId.setGorup(args.group)
+	args.playerId.setGroup(args.group)
 end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
 	{name = 'group', help = _U('command_setgroup_group'), type = 'string'},
