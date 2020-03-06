@@ -20,7 +20,14 @@ function onPlayerJoined(playerId)
 			if result then
 				loadESXPlayer(identifier, playerId)
 			else
-				MySQL.Async.execute('INSERT INTO users (identifier) VALUES (@identifier)', {
+				local accounts = {}
+
+				for account,money in pairs(Config.StartingAccountMoney) do
+					accounts[account] = money
+				end
+
+				MySQL.Async.execute('INSERT INTO users (accounts, identifier) VALUES (@accounts, @identifier)', {
+					['@accounts'] = json.encode(accounts),
 					['@identifier'] = identifier
 				}, function(rowsChanged)
 					loadESXPlayer(identifier, playerId)
@@ -43,31 +50,31 @@ function loadESXPlayer(identifier, playerId)
 		playerName = GetPlayerName(playerId)
 	}
 
-	-- get accounts
 	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
-			['@identifier'] = identifier
-		}, function(accounts)
-			for k,v in ipairs(accounts) do
-				if Config.Accounts[v.name] then
-					table.insert(userData.accounts, {
-						name  = v.name,
-						money = v.money,
-						label = Config.Accounts[v.name]
-					})
-				end
-			end
-
-			cb()
-		end)
-	end)
-
-	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll('SELECT job, job_grade, `group`, loadout, position, inventory FROM users WHERE identifier = @identifier', {
+		MySQL.Async.fetchAll('SELECT accounts, job, job_grade, `group`, loadout, position, inventory FROM users WHERE identifier = @identifier', {
 			['@identifier'] = identifier
 		}, function(result)
 			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
+			local fonudAccounts, foundItems = {}, {}
 
+			-- Accounts
+			if result[1].accounts and result[1].accounts ~= '' then
+				local accounts = json.decode(result[1].accounts)
+
+				for account,money in pairs(accounts) do
+					fonudAccounts[account] = money
+				end
+			end
+
+			for account,label in pairs(Config.Accounts) do
+				table.insert(userData.accounts, {
+					name = account,
+					money = fonudAccounts[account] or Config.StartingAccountMoney[account] or 0,
+					label = label
+				})
+			end
+
+			-- Job
 			if ESX.DoesJobExist(job, grade) then
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			else
@@ -75,8 +82,6 @@ function loadESXPlayer(identifier, playerId)
 				job, grade = 'unemployed', '0'
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			end
-
-			userData.job = {}
 
 			userData.job.id = jobObject.id
 			userData.job.name = jobObject.name
@@ -93,8 +98,7 @@ function loadESXPlayer(identifier, playerId)
 			if gradeObject.skin_male then userData.job.skin_male = json.decode(gradeObject.skin_male) end
 			if gradeObject.skin_female then userData.job.skin_female = json.decode(gradeObject.skin_female) end
 
-			local foundItems = {}
-
+			-- Inventory
 			if result[1].inventory and result[1].inventory ~= '' then
 				local inventory = json.decode(result[1].inventory)
 
@@ -123,6 +127,7 @@ function loadESXPlayer(identifier, playerId)
 				})
 			end
 
+			-- Group
 			if result[1].group then
 				userData.group = result[1].group
 			else
@@ -133,6 +138,7 @@ function loadESXPlayer(identifier, playerId)
 				return a.label < b.label
 			end)
 
+			-- Loadout
 			if result[1].loadout and result[1].loadout ~= '' then
 				local loadout = json.decode(result[1].loadout)
 
@@ -154,6 +160,7 @@ function loadESXPlayer(identifier, playerId)
 				end
 			end
 
+			-- Position
 			if result[1].position and result[1].position ~= '' then
 				userData.coords = json.decode(result[1].position)
 			else
@@ -167,37 +174,22 @@ function loadESXPlayer(identifier, playerId)
 
 	Async.parallel(tasks, function(results)
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.job, userData.loadout, userData.playerName, userData.coords)
+		ESX.Players[playerId] = xPlayer
+		TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 
-		xPlayer.getMissingAccounts(function(missingAccounts)
-			if ESX.Table.SizeOf(missingAccounts) > 0 then
-				for name,money in pairs(missingAccounts) do
-					table.insert(xPlayer.accounts, {
-						name = name,
-						money = money,
-						label = Config.Accounts[name]
-					})
-				end
+		xPlayer.triggerEvent('esx:playerLoaded', {
+			accounts = xPlayer.getAccounts(),
+			coords = xPlayer.getCoords(),
+			identifier = xPlayer.identifier,
+			inventory = xPlayer.getInventory(),
+			job = xPlayer.getJob(),
+			loadout = xPlayer.getLoadout(),
+			maxWeight = xPlayer.maxWeight,
+			money = xPlayer.getMoney(),
+		})
 
-				xPlayer.createMissingAccounts(missingAccounts)
-			end
-
-			ESX.Players[playerId] = xPlayer
-			TriggerEvent('esx:playerLoaded', playerId, xPlayer)
-
-			xPlayer.triggerEvent('esx:playerLoaded', {
-				identifier = xPlayer.identifier,
-				money = xPlayer.getMoney(),
-				accounts = xPlayer.getAccounts(),
-				coords = xPlayer.getCoords(),
-				inventory = xPlayer.getInventory(),
-				job = xPlayer.getJob(),
-				loadout = xPlayer.getLoadout(),
-				maxWeight = xPlayer.maxWeight
-			})
-
-			xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
-			xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
-		end)
+		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
+		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
 	end)
 end
 
@@ -210,7 +202,6 @@ AddEventHandler('playerDropped', function(reason)
 
 		ESX.SavePlayer(xPlayer, function()
 			ESX.Players[playerId] = nil
-			ESX.LastPlayerData[playerId] = nil
 		end)
 	end
 end)
