@@ -11,7 +11,6 @@ local IdentifierTables = {
     {table = "owned_properties", column = "owner"},
     {table = "rented_vehicles", column = "owner"},
     {table = "users", column = "identifier"},
-    {table = "user_accounts", column = "identifier"},
     {table = "user_licenses", column = "owner"},
 }
 
