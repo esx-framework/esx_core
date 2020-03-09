@@ -8,5 +8,4 @@ Locales['cs'] = {
   ['do_prefix'] = 'do | %s',
   ['generic_argument_name'] = 'zpráva',
   ['generic_argument_help'] = 'zpráva',
-  ['unknown_command'] = '^3%s^0 není platný příkaz!',
 }

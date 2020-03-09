@@ -2,17 +2,11 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-AddEventHandler('es:invalidCommandHandler', function(source, command_args, user)
-	CancelEvent()
-	TriggerClientEvent('chat:addMessage', source, {args = {'^1SYSTEM', _U('unknown_command', command_args[1])}})
-end)
-
 AddEventHandler('chatMessage', function(playerId, playerName, message)
 	if string.sub(message, 1, string.len('/')) ~= '/' then
 		CancelEvent()
 
-		local xPlayer = ESX.GetPlayerFromId(playerId)
-		if xPlayer then playerName = xPlayer.getName() end
+		playerName = GetRealPlayerName(playerId)
 		TriggerClientEvent('chat:addMessage', -1, {args = {_U('ooc_prefix', playerName), message}, color = {128, 128, 128}})
 	end
 end)

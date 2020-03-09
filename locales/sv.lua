@@ -8,5 +8,4 @@ Locales['sv'] = {
   ['do_prefix'] = 'gör | %s',
   ['generic_argument_name'] = 'meddelande',
   ['generic_argument_help'] = 'det meddelandet du vill skicka',
-  ['unknown_command'] = '^3%s^0 är inte ett giltigt kommando!',
 }
