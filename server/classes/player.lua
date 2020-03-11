@@ -265,6 +265,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return inventoryWeight
 	end
 
+	self.getMaxWeight = function()
+		return self.maxWeight
+	end
+
 	self.canCarryItem = function(name, count)
 		local currentWeight, itemWeight = self.getWeight(), ESX.Items[name].weight
 		local newWeight = currentWeight + (itemWeight * count)
