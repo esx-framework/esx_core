@@ -55,21 +55,21 @@ function loadESXPlayer(identifier, playerId)
 			['@identifier'] = identifier
 		}, function(result)
 			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
-			local fonudAccounts, foundItems = {}, {}
+			local foundAccounts, foundItems = {}, {}
 
 			-- Accounts
 			if result[1].accounts and result[1].accounts ~= '' then
 				local accounts = json.decode(result[1].accounts)
 
 				for account,money in pairs(accounts) do
-					fonudAccounts[account] = money
+					foundAccounts[account] = money
 				end
 			end
 
 			for account,label in pairs(Config.Accounts) do
 				table.insert(userData.accounts, {
 					name = account,
-					money = fonudAccounts[account] or Config.StartingAccountMoney[account] or 0,
+					money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
 					label = label
 				})
 			end
