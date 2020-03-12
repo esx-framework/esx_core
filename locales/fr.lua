@@ -38,7 +38,7 @@ Locales['fr'] = {
   ['threw_pickup_prompt'] = 'appuyez sur ~y~E~s~ pour ramasser',
 
   -- Key mapping
-  ['keymap_showinventory'] = 'show Inventory',
+  ['keymap_showinventory'] = 'montrer l\'inventaire',
 
   -- Salary related
   ['received_salary'] = 'vous avez reçu votre salaire: ~g~$%s~s~',
@@ -93,7 +93,7 @@ Locales['fr'] = {
   ['commanderror_invaliditem'] = 'nom de l\'objet invalide',
   ['commanderror_invalidweapon'] = 'arme invalide',
   ['commanderror_console'] = 'cette commande ne peut pas être utilisée dans la console',
-  ['commanderror_invalidcommand'] = '^3%s^0 is not an valid command!',
+  ['commanderror_invalidcommand'] = '^3%s^0 n\'est pas une commande valide!',
   ['commanderror_invalidplayerid'] = 'il n\'ya aucun joueur avec cet ID en jeu',
   ['commandgeneric_playerid'] = 'id joueur',
 
