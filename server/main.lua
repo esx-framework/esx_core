@@ -47,7 +47,8 @@ function loadESXPlayer(identifier, playerId)
 		inventory = {},
 		job = {},
 		loadout = {},
-		playerName = GetPlayerName(playerId)
+		playerName = GetPlayerName(playerId),
+		weight = 0
 	}
 
 	table.insert(tasks, function(cb)
@@ -115,6 +116,7 @@ function loadESXPlayer(identifier, playerId)
 
 			for name,item in pairs(ESX.Items) do
 				local count = foundItems[name] or 0
+				if count > 0 then userData.weight = userData.weight + (item.weight * count) end
 
 				table.insert(userData.inventory, {
 					name = name,
@@ -173,7 +175,7 @@ function loadESXPlayer(identifier, playerId)
 	end)
 
 	Async.parallel(tasks, function(results)
-		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.job, userData.loadout, userData.playerName, userData.coords)
+		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords)
 		ESX.Players[playerId] = xPlayer
 		TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 

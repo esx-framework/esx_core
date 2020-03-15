@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS `essentialmode`;
 USE `essentialmode`;
 
 CREATE TABLE `users` (

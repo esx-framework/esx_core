@@ -1,18 +1,19 @@
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, job, loadout, name, coords)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
 	local self = {}
 
 	self.accounts = accounts
+	self.coords = coords
+	self.group = group
+	self.identifier = identifier
 	self.inventory = inventory
 	self.job = job
-	self.group = group
 	self.loadout = loadout
 	self.name = name
-	self.maxWeight = Config.MaxWeight
-	self.coords = coords
-	self.variables = {}
-	self.source = playerId
 	self.playerId = playerId
-	self.identifier = identifier
+	self.source = playerId
+	self.variables = {}
+	self.weight = weight
+	self.maxWeight = Config.MaxWeight
 
 	ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
 
@@ -216,9 +217,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		if item then
 			count = ESX.Math.Round(count)
-
-			local newCount = item.count + count
-			item.count = newCount
+			item.count = item.count + count
+			self.weight = self.weight + (item.weight * count)
 
 			TriggerEvent('esx:onAddInventoryItem', self.source, item.name, item.count)
 			self.triggerEvent('esx:addInventoryItem', item.name, item.count)
@@ -234,6 +234,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if newCount >= 0 then
 				item.count = newCount
+				self.weight = self.weight - (item.weight * count)
 
 				TriggerEvent('esx:onRemoveInventoryItem', self.source, item.name, item.count)
 				self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
@@ -256,13 +257,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.getWeight = function()
-		local inventoryWeight = 0
-
-		for k,v in ipairs(self.inventory) do
-			inventoryWeight = inventoryWeight + (v.count * v.weight)
-		end
-
-		return inventoryWeight
+		return self.weight
 	end
 
 	self.getMaxWeight = function()
@@ -270,7 +265,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.canCarryItem = function(name, count)
-		local currentWeight, itemWeight = self.getWeight(), ESX.Items[name].weight
+		local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
 		local newWeight = currentWeight + (itemWeight * count)
 
 		return newWeight <= self.maxWeight
@@ -281,7 +276,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local testItemObject = self.getInventoryItem(testItem)
 
 		if firstItemObject.count >= firstItemCount then
-			local weightWithoutFirstItem = ESX.Math.Round(self.getWeight() - (firstItemObject.weight * firstItemCount))
+			local weightWithoutFirstItem = ESX.Math.Round(self.weight - (firstItemObject.weight * firstItemCount))
 			local weightWithTestItem = ESX.Math.Round(weightWithoutFirstItem + (testItemObject.weight * testItemCount))
 
 			return weightWithTestItem <= self.maxWeight
