@@ -36,7 +36,7 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 
 ![Iceline hosting](https://media.discordapp.net/attachments/667787270375473183/667790233441533952/banner.gif)
 
-Are you thinking of starting a FiveM server of your own? [Iceline Hosting](https://iceline-hosting.com/) provide cost effective game servers, high end game VPS's with DDoS protection included, and more!
+Are you thinking of starting a FiveM server of your own? [Iceline Hosting](https://iceline-hosting.com/billing/aff.php?aff=94) provide cost effective game servers, high end game VPS's with DDoS protection included, and more!
 
 There is an optional Managed Support Addon available for game servers and Game VPS's that add the following services:
 
@@ -44,7 +44,7 @@ There is an optional Managed Support Addon available for game servers and Game V
 - Installing third-party scripts or software
 - Recovery of lost data
 
-Go to [Iceline Hosting](https://iceline-hosting.com/) and use promo code `ESX` for 15% off the first month on FiveM game servers, Game VPS's and Singapore VPS's.
+Go to [Iceline Hosting](https://iceline-hosting.com/billing/aff.php?aff=94) and use promo code `ESX` for 15% off the first month on FiveM game servers, Game VPS's and Singapore VPS's.
 
 ## Download & Installation
 
