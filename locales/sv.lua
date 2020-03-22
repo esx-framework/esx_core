@@ -30,7 +30,8 @@ Locales['sv'] = {
   ['press_to_exit'] = 'tryck ~INPUT_CONTEXT~ för att lämna fastigheten',
   ['not_enough'] = 'du har inte tillräckligt med pengar!',
   ['invalid_quantity'] = 'ogiltlig mängd',
-  ['paid_rent'] = 'du ~y~betalade~s~ din hyra: ~g~%s SEK~s~',
+  ['paid_rent'] = 'du betalade din hyra på ~g~%s SEK~s~ för ~y~%s~s~',
+  ['paid_rent_evicted'] = 'du blev ~o~vräkt~s~ från ~y~%s~s~ för att du inte har råd för att betala hyran på ~g~%s SEK~s~',
   ['not_enough_in_property'] = 'det finns ~r~inte~s~ tillräckligt av ~r~det objektet~s~ i fastigheten!',
   ['player_cannot_hold'] = 'du har ~r~inte~s~ tillräckligt med ~y~utrymme~s~ för att hålla det!',
 }

@@ -28,11 +28,10 @@ Locales['de'] = {
   ['amount'] = 'Anzahlt?',
   ['amount_invalid'] = 'Ungültiger Wert',
   ['press_to_exit'] = 'Drücke ~INPUT_CONTEXT~ um die Immobilie zu verlassen',
-  ['rent_for'] = 'Du hast eine Immobilie gemietet ~g~$%s~s~',
-  ['purchased_for'] = 'Du hast eine Immobilie gekauft ~g~$%s~s~',
   ['not_enough'] = 'du hast nicht genug Geld',
   ['invalid_quantity'] = 'Ungültiger Betrag',
-  ['paid_rent'] = 'du ~g~bezahlst~s~ deine Miete: ~g~$%s~s~',
+  ['paid_rent'] = 'you paid your rent at ~g~$%s~s~ for ~y~%s~s~',
+  ['paid_rent_evicted'] = 'you have been ~o~evicted~s~ from ~y~%s~s~ for not affording rent at ~g~$%s~s~',
   ['not_enough_in_property'] = 'there\'s not enough of ~r~that item~s~ in the property!',
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
 }

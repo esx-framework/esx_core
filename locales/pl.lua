@@ -30,7 +30,8 @@ Locales['pl'] = {
   ['press_to_exit'] = 'wciśnij ~INPUT_CONTEXT~ aby wyjść z mieszkania',
   ['not_enough'] = 'nie posiadasz wystarczająco pieniędzy',
   ['invalid_quantity'] = 'nieprawidłowa ilość',
-  ['paid_rent'] = '~g~zapłaciłeś/aś~s~ za wynajem: ~g~$%s~s~',
+  ['paid_rent'] = 'you paid your rent at ~g~$%s~s~ for ~y~%s~s~',
+  ['paid_rent_evicted'] = 'you have been ~o~evicted~s~ from ~y~%s~s~ for not affording rent at ~g~$%s~s~',
   ['not_enough_in_property'] = 'nie ma wystarczająco ~r~tego przedmiotu~s~ w mieszkaniu!',
   ['player_cannot_hold'] = '~r~nie masz~s~ wystarczająco ~y~wolnego~s~ miejsca w ekwipunku!',
 }

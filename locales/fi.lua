@@ -30,7 +30,8 @@ Locales['fi'] = {
   ['press_to_exit'] = 'paina ~INPUT_CONTEXT~ poistuaksesi kiinteistöstä',
   ['not_enough'] = 'sinulla ei ole tarpeeksi rahaa',
   ['invalid_quantity'] = 'virheellinen määrä',
-  ['paid_rent'] = 'sinä ~g~maksoit~s~ vuokraasi: ~g~$%s~s~',
+  ['paid_rent'] = 'you paid your rent at ~g~$%s~s~ for ~y~%s~s~',
+  ['paid_rent_evicted'] = 'you have been ~o~evicted~s~ from ~y~%s~s~ for not affording rent at ~g~$%s~s~',
   ['not_enough_in_property'] = 'täällä ei ole enempää ~r~tätä itemiä~s~ tässä kiinteistössä!',
   ['player_cannot_hold'] = 'sinulla ~r~ei ole~s~ tarpeeksi ~y~vapaata tilaa~s~ repussasi!',
 }

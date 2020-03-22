@@ -31,7 +31,7 @@ function SetPropertyOwned(name, price, rented, owner)
 	end)
 end
 
-function RemoveOwnedProperty(name, owner)
+function RemoveOwnedProperty(name, owner, noPay)
 	MySQL.Async.fetchAll('SELECT id, rented, price FROM owned_properties WHERE name = @name AND owner = @owner', {
 		['@name']  = name,
 		['@owner'] = owner
@@ -45,13 +45,15 @@ function RemoveOwnedProperty(name, owner)
 				if xPlayer then
 					xPlayer.triggerEvent('esx_property:setPropertyOwned', name, false)
 
-					if result[1].rented == 1 then
-						xPlayer.showNotification(_U('moved_out'))
-					else
-						local sellPrice = ESX.Math.Round(result[1].price / Config.SellModifier)
+					if not noPay then
+						if result[1].rented == 1 then
+							xPlayer.showNotification(_U('moved_out'))
+						else
+							local sellPrice = ESX.Math.Round(result[1].price / Config.SellModifier)
 
-						xPlayer.showNotification(_U('moved_out_sold', ESX.Math.GroupDigits(sellPrice)))
-						xPlayer.addAccountMoney('bank', sellPrice)
+							xPlayer.showNotification(_U('moved_out_sold', ESX.Math.GroupDigits(sellPrice)))
+							xPlayer.addAccountMoney('bank', sellPrice)
+						end
 					end
 				end
 			end)
@@ -60,6 +62,8 @@ function RemoveOwnedProperty(name, owner)
 end
 
 MySQL.ready(function()
+	Citizen.Wait(1500)
+
 	MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
 
 		for i=1, #properties, 1 do
@@ -162,7 +166,7 @@ AddEventHandler('esx_property:removeOwnedProperty', function(name, owner)
 	RemoveOwnedProperty(name, owner)
 end)
 
-RegisterServerEvent('esx_property:rentProperty')
+RegisterNetEvent('esx_property:rentProperty')
 AddEventHandler('esx_property:rentProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
@@ -171,7 +175,7 @@ AddEventHandler('esx_property:rentProperty', function(propertyName)
 	SetPropertyOwned(propertyName, rent, true, xPlayer.identifier)
 end)
 
-RegisterServerEvent('esx_property:buyProperty')
+RegisterNetEvent('esx_property:buyProperty')
 AddEventHandler('esx_property:buyProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
@@ -184,7 +188,7 @@ AddEventHandler('esx_property:buyProperty', function(propertyName)
 	end
 end)
 
-RegisterServerEvent('esx_property:removeOwnedProperty')
+RegisterNetEvent('esx_property:removeOwnedProperty')
 AddEventHandler('esx_property:removeOwnedProperty', function(propertyName)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	RemoveOwnedProperty(propertyName, xPlayer.identifier)
@@ -194,7 +198,7 @@ AddEventHandler('esx_property:removeOwnedPropertyIdentifier', function(propertyN
 	RemoveOwnedProperty(propertyName, identifier)
 end)
 
-RegisterServerEvent('esx_property:saveLastProperty')
+RegisterNetEvent('esx_property:saveLastProperty')
 AddEventHandler('esx_property:saveLastProperty', function(property)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -204,7 +208,7 @@ AddEventHandler('esx_property:saveLastProperty', function(property)
 	})
 end)
 
-RegisterServerEvent('esx_property:deleteLastProperty')
+RegisterNetEvent('esx_property:deleteLastProperty')
 AddEventHandler('esx_property:deleteLastProperty', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -213,7 +217,7 @@ AddEventHandler('esx_property:deleteLastProperty', function()
 	})
 end)
 
-RegisterServerEvent('esx_property:getItem')
+RegisterNetEvent('esx_property:getItem')
 AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
@@ -262,7 +266,7 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 	end
 end)
 
-RegisterServerEvent('esx_property:putItem')
+RegisterNetEvent('esx_property:putItem')
 AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
@@ -389,7 +393,7 @@ ESX.RegisterServerCallback('esx_property:getPlayerOutfit', function(source, cb, 
 	end)
 end)
 
-RegisterServerEvent('esx_property:removeOutfit')
+RegisterNetEvent('esx_property:removeOutfit')
 AddEventHandler('esx_property:removeOutfit', function(label)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -401,28 +405,48 @@ AddEventHandler('esx_property:removeOutfit', function(label)
 	end)
 end)
 
-function PayRent(d, h, m)
+function payRent(d, h, m)
 	local tasks, timeStart = {}, os.clock()
 	print('[esx_property] [^2INFO^7] Paying rent cron job started')
 
 	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE rented = 1', {}, function(result)
-		for i=1, #result, 1 do
+		for k,v in ipairs(result) do
 			table.insert(tasks, function(cb)
-				local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
+				local xPlayer = ESX.GetPlayerFromIdentifier(v.owner)
 
-				-- message player if connected
 				if xPlayer then
-					xPlayer.removeAccountMoney('bank', result[i].price)
-					xPlayer.showNotification(_U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
-				else -- pay rent either way
-					MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
-						['@bank'] = result[i].price,
-						['@identifier'] = result[i].owner
-					})
+					if xPlayer.getAccount('bank').money >= v.price then
+						xPlayer.removeAccountMoney('bank', v.price)
+						xPlayer.showNotification(_U('paid_rent', ESX.Math.GroupDigits(v.price), GetProperty(v.name).label))
+					else
+						xPlayer.showNotification(_U('paid_rent_evicted', GetProperty(v.name).label, ESX.Math.GroupDigits(v.price)))
+						RemoveOwnedProperty(v.name, v.owner, true)
+					end
+				else
+					MySQL.Async.fetchScalar('SELECT accounts FROM users WHERE identifier = @identifier', {
+						['@identifier'] = v.owner
+					}, function(accounts)
+						if accounts then
+							local playerAccounts = json.decode(accounts)
+
+							if playerAccounts and playerAccounts.bank then
+								if playerAccounts.bank >= v.price then
+									playerAccounts.bank = playerAccounts.bank - v.price
+
+									MySQL.Async.execute('UPDATE users SET accounts = @accounts WHERE identifier = @identifier', {
+										['@identifier'] = v.owner,
+										['@accounts'] = json.encode(playerAccounts)
+									})
+								else
+									RemoveOwnedProperty(v.name, v.owner, true)
+								end
+							end
+						end
+					end)
 				end
 
 				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_realestateagent', function(account)
-					account.addMoney(result[i].price)
+					account.addMoney(v.price)
 				end)
 
 				cb()
@@ -436,4 +460,4 @@ function PayRent(d, h, m)
 	end)
 end
 
-TriggerEvent('cron:runAt', 22, 0, PayRent)
+TriggerEvent('cron:runAt', 22, 0, payRent)
