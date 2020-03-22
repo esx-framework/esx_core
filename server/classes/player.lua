@@ -367,6 +367,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
+	self.updateWeaponAmmo = function(weaponName, ammoCount)
+		local loadoutNum, weapon = self.getWeapon(weaponName)
+
+		if weapon then
+			if ammoCount < weapon.ammo then
+				weapon.ammo = ammoCount
+			end
+		end
+	end
+
 	self.setWeaponTint = function(weaponName, weaponTintIndex)
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 

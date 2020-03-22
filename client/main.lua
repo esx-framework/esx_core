@@ -393,52 +393,25 @@ if Config.EnableHud then
 	end)
 end
 
--- Save loadout
+-- Keep track of ammo usage
 Citizen.CreateThread(function()
-	local lastLoadout = {}
-
 	while true do
-		Citizen.Wait(5000)
-		local playerPed, loadout, loadoutChanged = PlayerPedId(), {}, false
+		Citizen.Wait(0)
 
-		for k,v in ipairs(Config.Weapons) do
-			local weaponName = v.name
-			local weaponHash = GetHashKey(weaponName)
+		if isDead then
+			Citizen.Wait(500)
+		else
+			local playerPed = PlayerPedId()
 
-			if HasPedGotWeapon(playerPed, weaponHash, false) then
-				local ammo, tintIndex, weaponComponents = GetAmmoInPedWeapon(playerPed, weaponHash), GetPedWeaponTintIndex(playerPed, weaponHash), {}
+			if IsPedShooting(playerPed) then
+				local _,weaponHash = GetCurrentPedWeapon(playerPed, true)
+				local weapon = ESX.GetWeaponFromHash(weaponHash)
 
-				for k2,v2 in ipairs(v.components) do
-					if HasPedGotWeaponComponent(playerPed, weaponHash, v2.hash) then
-						table.insert(weaponComponents, v2.name)
-					end
+				if weapon then
+					local ammoCount = GetAmmoInPedWeapon(playerPed, weaponHash)
+					TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
 				end
-
-				if not lastLoadout[weaponName] or lastLoadout[weaponName] ~= ammo then
-					loadoutChanged = true
-				end
-
-				lastLoadout[weaponName] = ammo
-
-				table.insert(loadout, {
-					name = weaponName,
-					ammo = ammo,
-					label = v.label,
-					components = weaponComponents,
-					tintIndex = tintIndex
-				})
-			else
-				if lastLoadout[weaponName] then
-					loadoutChanged = true
-				end
-
-				lastLoadout[weaponName] = nil
 			end
-		end
-
-		if loadoutChanged and isLoadoutLoaded then
-			ESX.PlayerData.loadout = loadout
-			TriggerServerEvent('esx:updateLoadout', loadout)
 		end
 	end
 end)
