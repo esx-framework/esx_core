@@ -116,3 +116,13 @@ end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
 	{name = 'group', help = _U('command_setgroup_group'), type = 'string'},
 }})
+
+ESX.RegisterCommand('save', 'admin', function(xPlayer, args, showError)
+	ESX.SavePlayer(args.playerId)
+end, true, {help = _U('command_save'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
+	ESX.SavePlayers()
+end, true, {help = _U('command_saveall')})
