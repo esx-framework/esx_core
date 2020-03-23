@@ -1,17 +1,44 @@
 local isLoadoutLoaded, isPaused, isDead, isFirstSpawn, pickups = false, false, false, true, {}
 
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		if NetworkIsPlayerActive(PlayerId()) then
+			TriggerServerEvent('esx:onPlayerJoined')
+			break
+		end
+	end
+end)
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
+	local defaultModel = GetHashKey('mp_m_freemode_01')
+	RequestModel(defaultModel)
+
+	while not HasModelLoaded(defaultModel) do
+		Citizen.Wait(100)
+	end
+
+	SetPlayerModel(PlayerId(), defaultModel)
+	local playerPed = PlayerPedId()
+
+	SetPedDefaultComponentVariation(playerPed)
+	SetModelAsNoLongerNeeded(defaultModel)
+	FreezeEntityPosition(playerPed, false)
+
+	if Config.EnablePvP then
+		SetCanAttackFriendly(playerPed, true, false)
+		NetworkSetFriendlyFireOption(true)
+	end
+
 	if Config.EnableHud then
 		for k,v in ipairs(playerData.accounts) do
 			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
-
-			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {
-				money = ESX.Math.GroupDigits(v.money)
-			})
+			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
 		end
 
 		local jobTpl = '<div>{{job_label}} - {{grade_label}}</div>'
@@ -25,43 +52,34 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 			grade_label = playerData.job.grade_label
 		})
 	end
+
+	ESX.Game.Teleport(playerPed, {
+		x = playerData.coords.x,
+		y = playerData.coords.y,
+		z = playerData.coords.z + 0.25,
+		heading = playerData.coords.heading
+	}, function()
+		isLoadoutLoaded, isDead = true, false
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx:onPlayerSpawn')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('esx:restoreLoadout')
+
+		Citizen.Wait(3000)
+		ShutdownLoadingScreen()
+		DoScreenFadeIn(10000)
+	end)
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
-AddEventHandler('esx:setMaxWeight', function(newMaxWeight)
-	ESX.PlayerData.maxWeight = newMaxWeight
-end)
-
-AddEventHandler('playerSpawned', function()
-	if isFirstSpawn then
-		TriggerServerEvent('esx:playerJoined')
-	end
-
-	while not ESX.PlayerLoaded do
-		Citizen.Wait(10)
-	end
-
-	TriggerEvent('esx:restoreLoadout')
-
-	if isFirstSpawn then
-		ESX.Game.Teleport(PlayerPedId(), ESX.PlayerData.coords)
-		isFirstSpawn = false
-	end
-
-	isLoadoutLoaded, isDead = true, false
-
-	if Config.EnablePvP then
-		SetCanAttackFriendly(PlayerPedId(), true, false)
-		NetworkSetFriendlyFireOption(true)
-	end
-end)
+AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
 
 AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
 AddEventHandler('skinchanger:loadDefaultModel', function() isLoadoutLoaded = false end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
 	while not ESX.PlayerLoaded do
-		Citizen.Wait(1)
+		Citizen.Wait(100)
 	end
 
 	TriggerEvent('esx:restoreLoadout')

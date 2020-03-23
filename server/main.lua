@@ -1,6 +1,8 @@
-RegisterNetEvent('esx:playerJoined')
-AddEventHandler('esx:playerJoined', function()
-	onPlayerJoined(source)
+RegisterNetEvent('esx:onPlayerJoined')
+AddEventHandler('esx:onPlayerJoined', function()
+	if not ESX.Players[source] then
+		onPlayerJoined(source)
+	end
 end)
 
 function onPlayerJoined(playerId)
