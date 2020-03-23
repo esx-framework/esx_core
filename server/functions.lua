@@ -161,10 +161,11 @@ ESX.SavePlayer = function(xPlayer, cb)
 	local asyncTasks = {}
 
 	table.insert(asyncTasks, function(cb)
-		MySQL.Async.execute('UPDATE users SET accounts = @accounts, job = @job, job_grade = @job_grade, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET accounts = @accounts, job = @job, job_grade = @job_grade, `group` = @group, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
 			['@accounts'] = json.encode(xPlayer.getAccounts(true)),
 			['@job'] = xPlayer.job.name,
 			['@job_grade'] = xPlayer.job.grade,
+			['@group'] = xPlayer.getGroup(),
 			['@loadout'] = json.encode(xPlayer.getLoadout(true)),
 			['@position'] = json.encode(xPlayer.getCoords()),
 			['@identifier'] = xPlayer.identifier,
