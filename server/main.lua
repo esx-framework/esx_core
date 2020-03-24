@@ -43,8 +43,8 @@ AddEventHandler('esx_ambulancejob:onPlayerDistress', function()
 	end
 end)
 
-RegisterNetEvent('esx_ambulancejob:onPlayerSpawn')
-AddEventHandler('esx_ambulancejob:onPlayerSpawn', function()
+RegisterNetEvent('esx:onPlayerSpawn')
+AddEventHandler('esx:onPlayerSpawn', function()
 	if deadPlayers[source] then
 		deadPlayers[source] = nil
 		TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
