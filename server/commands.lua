@@ -30,6 +30,18 @@ end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
 }})
 
+ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
+	if args.playerId.getAccount(args.account) then
+		args.playerId.setAccountMoney(args.account, args.amount)
+	else
+		showError(_U('command_giveaccountmoney_invalid'))
+	end
+end, true, {help = _U('command_setaccountmoney'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+	{name = 'account', help = _U('command_giveaccountmoney_account'), type = 'string'},
+	{name = 'amount', help = _U('command_setaccountmoney_amount'), type = 'number'}
+}})
+
 ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
 	if args.playerId.getAccount(args.account) then
 		args.playerId.addAccountMoney(args.account, args.amount)
