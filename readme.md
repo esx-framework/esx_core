@@ -58,7 +58,9 @@ end)
 
 # Read carefully...
 > You **MUST** incerase the character limit in the `users` table for row `identifier` to **48**.
+
 > Do **not** use essentialsmode, mapmanager and spawnmanager!
+
 > *Pay ATTENTION: You have to call the resource 'esx_kashacters' in order for the javascript to work!**
 
 ## How it works
