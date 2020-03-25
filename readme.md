@@ -27,7 +27,9 @@ end)
 ```lua
 RegisterNetEvent('esx:kashloaded')
 AddEventHandler('esx:kashloaded', function()
-	TriggerServerEvent('esx:onPlayerJoined')
+	if isFirstSpawn then
+		TriggerServerEvent('esx:onPlayerJoined')
+	end
 end)
 ```
 
