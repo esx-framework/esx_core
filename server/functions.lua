@@ -168,7 +168,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 			['@group'] = xPlayer.getGroup(),
 			['@loadout'] = json.encode(xPlayer.getLoadout(true)),
 			['@position'] = json.encode(xPlayer.getCoords()),
-			['@identifier'] = xPlayer.identifier,
+			['@identifier'] = xPlayer.getIdentifier(),
 			['@inventory'] = json.encode(xPlayer.getInventory(true))
 		}, function(rowsChanged)
 			cb()

@@ -56,7 +56,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.Game.Teleport(playerPed, {
 		x = playerData.coords.x,
 		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
+		z = playerData.coords.z + 0.5,
 		heading = playerData.coords.heading
 	}, function()
 		isLoadoutLoaded, isDead = true, false

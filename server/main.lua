@@ -131,16 +131,16 @@ function loadESXPlayer(identifier, playerId)
 				})
 			end
 
+			table.sort(userData.inventory, function(a, b)
+				return a.label < b.label
+			end)
+
 			-- Group
 			if result[1].group then
 				userData.group = result[1].group
 			else
 				userData.group = 'user'
 			end
-
-			table.sort(userData.inventory, function(a, b)
-				return a.label < b.label
-			end)
 
 			-- Loadout
 			if result[1].loadout and result[1].loadout ~= '' then
@@ -184,12 +184,12 @@ function loadESXPlayer(identifier, playerId)
 		xPlayer.triggerEvent('esx:playerLoaded', {
 			accounts = xPlayer.getAccounts(),
 			coords = xPlayer.getCoords(),
-			identifier = xPlayer.identifier,
+			identifier = xPlayer.getIdentifier(),
 			inventory = xPlayer.getInventory(),
 			job = xPlayer.getJob(),
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.maxWeight,
-			money = xPlayer.getMoney(),
+			money = xPlayer.getMoney()
 		})
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
