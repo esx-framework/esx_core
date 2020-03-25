@@ -1,7 +1,7 @@
 # Podziękowania dla KASH oraz XxFri3ndlyxX.
-### If you are updating ESX, be sure to update the remaining scripts!
+### Jeśli aktualizujesz ESX, pamiętaj o aktualizacji pozostałych skryptów!
 
-## Required changes:
+## Wymagane zmiany:
 
 * es_extended: (`es_extended/client/main.lua`)
 
@@ -56,7 +56,9 @@ end)
 
 # Przeczytaj uważnie...
 > **Musisz** zwiększyć limit znaków w tabeli `users`dla kolumny `identifier` do **48**.
+
 > **Nie** używaj essentialsmode, mapmanager oraz spawnmanager.
+
 > **Uwaga!** Musisz nazwać skrypt 'esx_kashacters', aby wszystko działało poprawnie.
 
 ## Jak to działa?
