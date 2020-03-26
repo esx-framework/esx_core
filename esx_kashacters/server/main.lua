@@ -103,7 +103,7 @@ function GetSpawnPos(source)
 end
 
 function GetIdentifierWithoutLicense(Identifier)
-    return string.gsub(Identifier, "license", "")
+    return string.gsub(Identifier, "license:", "")
 end
 
 function GetRockstarID(playerId)
