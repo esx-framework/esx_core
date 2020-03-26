@@ -16,19 +16,25 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
-	local defaultModel = GetHashKey('mp_m_freemode_01')
-	RequestModel(defaultModel)
+	-- check if player is coming from loading screen
+	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
+		local defaultModel = GetHashKey('a_m_y_stbla_02')
+		RequestModel(defaultModel)
 
-	while not HasModelLoaded(defaultModel) do
-		Citizen.Wait(100)
+		while not HasModelLoaded(defaultModel) do
+			Citizen.Wait(100)
+		end
+
+		SetPlayerModel(PlayerId(), defaultModel)
+		local playerPed = PlayerPedId()
+
+		SetPedDefaultComponentVariation(playerPed)
+		SetPedRandomComponentVariation(playerPed, true)
+		SetModelAsNoLongerNeeded(defaultModel)
+		FreezeEntityPosition(playerPed, false)
 	end
 
-	SetPlayerModel(PlayerId(), defaultModel)
 	local playerPed = PlayerPedId()
-
-	SetPedDefaultComponentVariation(playerPed)
-	SetModelAsNoLongerNeeded(defaultModel)
-	FreezeEntityPosition(playerPed, false)
 
 	if Config.EnablePvP then
 		SetCanAttackFriendly(playerPed, true, false)
