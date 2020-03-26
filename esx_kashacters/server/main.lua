@@ -98,7 +98,7 @@ function DeleteCharacter(identifier, charid)
 end
 
 function GetSpawnPos(source)
-    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetRockstarID(source).."'")
+    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetIdentifierWithoutLicense(GetRockstarID(source)).."'")
     return json.decode(SpawnPos[1].position)
 end
 
