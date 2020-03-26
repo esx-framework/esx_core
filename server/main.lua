@@ -16,30 +16,58 @@ function onPlayerJoined(playerId)
 	end
 
 	if identifier then
-		MySQL.Async.fetchScalar('SELECT 1 FROM users WHERE identifier = @identifier', {
-			['@identifier'] = identifier
-		}, function(result)
-			if result then
-				loadESXPlayer(identifier, playerId)
-			else
-				local accounts = {}
-
-				for account,money in pairs(Config.StartingAccountMoney) do
-					accounts[account] = money
-				end
-
-				MySQL.Async.execute('INSERT INTO users (accounts, identifier) VALUES (@accounts, @identifier)', {
-					['@accounts'] = json.encode(accounts),
-					['@identifier'] = identifier
-				}, function(rowsChanged)
+		if ESX.GetPlayerFromIdentifier(identifier) then
+			DropPlayer(playerId, ('there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
+		else
+			MySQL.Async.fetchScalar('SELECT 1 FROM users WHERE identifier = @identifier', {
+				['@identifier'] = identifier
+			}, function(result)
+				if result then
 					loadESXPlayer(identifier, playerId)
-				end)
-			end
-		end)
+				else
+					local accounts = {}
+
+					for account,money in pairs(Config.StartingAccountMoney) do
+						accounts[account] = money
+					end
+
+					MySQL.Async.execute('INSERT INTO users (accounts, identifier) VALUES (@accounts, @identifier)', {
+						['@accounts'] = json.encode(accounts),
+						['@identifier'] = identifier
+					}, function(rowsChanged)
+						loadESXPlayer(identifier, playerId)
+					end)
+				end
+			end)
+		end
 	else
-		DropPlayer(playerId, 'Your Rockstar license could not be found')
+		DropPlayer(playerId, 'there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
 	end
 end
+
+AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
+	deferrals.defer()
+	local playerId, identifier = source
+	Citizen.Wait(100)
+
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
+	end
+
+	if identifier then
+		if ESX.GetPlayerFromIdentifier(identifier) then
+			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
+		else
+			deferrals.done()
+		end
+	else
+		deferrals.done('There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
+	end
+end)
+
 
 function loadESXPlayer(identifier, playerId)
 	local tasks = {}
