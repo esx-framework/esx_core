@@ -24,7 +24,7 @@ $(".character-box").click(function () {
 });
 
 $("#play-char").click(function () {
-    $.post("http://esx_kashacters/CharacterChosen", JSON.stringify({
+    $.post("http://esx_kashacter/CharacterChosen", JSON.stringify({
         charid: $('.active-char').attr("data-charid"),
         ischar: $('.active-char').attr("data-ischar"),
     }));
@@ -32,7 +32,7 @@ $("#play-char").click(function () {
 });
 
 $("#deletechar").click(function () {
-    $.post("http://esx_kashacters/DeleteCharacter", JSON.stringify({
+    $.post("http://esx_kashacter/DeleteCharacter", JSON.stringify({
         charid: $('.active-char').attr("data-charid"),
     }));
     Kashacter.CloseUI();
