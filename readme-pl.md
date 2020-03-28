@@ -61,7 +61,7 @@ end)
 
 > **Nie** używaj essentialsmode, mapmanager oraz spawnmanager.
 
-> **Uwaga!** Musisz nazwać skrypt 'esx_kashacters', aby wszystko działało poprawnie.
+> **Uwaga!** Musisz nazwać skrypt **esx_kashacter**, aby wszystko działało poprawnie.
 
 ## Jak to działa?
 > Ten skrypt manipuluje ładowaniem postaci przez ESX.
