@@ -63,7 +63,7 @@ end)
 
 > Do **not** use essentialsmode, mapmanager and spawnmanager!
 
-> *Pay ATTENTION: You have to call the resource 'esx_kashacters' in order for the javascript to work!**
+> *Pay ATTENTION: You have to call the resource **esx_kashacter** in order for the javascript to work!**
 
 ## How it works
 > What this script does it manipulates ESX for loading characters
