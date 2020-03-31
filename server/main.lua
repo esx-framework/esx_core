@@ -419,23 +419,51 @@ AddEventHandler('esx_vehicleshop:setJobVehicleState', function(plate, state)
 	end)
 end)
 
+function UnrentVehicleAsync(identifier, plate)
+	MySQL.Async.execute('DELETE FROM rented_vehicles WHERE identifier = @identifier AND plate = @plate', {
+		['@identifier'] = identifier,
+		['@plate'] = plate
+	})
+end
+
 function PayRent(d, h, m)
 	local tasks, timeStart = {}, os.clock()
 	print('[esx_vehicleshop] [^2INFO^7] Paying rent cron job started')
 
-	MySQL.Async.fetchAll('SELECT owner, rent_price FROM rented_vehicles', {}, function(result)
-		for i=1, #result, 1 do
+	MySQL.Async.fetchAll('SELECT owner, rent_price, plate FROM rented_vehicles', {}, function(result)
+		for k,v in ipairs(result) do
 			table.insert(tasks, function(cb)
-				local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
+				local xPlayer = ESX.GetPlayerFromIdentifier(v.owner)
 
-				if xPlayer then -- message player if connected
-					xPlayer.removeAccountMoney('bank', result[i].rent_price)
-					xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
-				else -- pay rent by updating SQL
-					MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
-						['@bank'] = result[i].rent_price,
-						['@identifier'] = result[i].owner
-					})
+				if xPlayer then
+					if xPlayer.getAccount('bank').money >= v.rent_price then
+						xPlayer.removeAccountMoney('bank', v.rent_price)
+						xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(v.rent_price), v.plate))
+					else
+						xPlayer.showNotification(_U('paid_rental_evicted', ESX.Math.GroupDigits(v.rent_price), v.plate))
+						UnrentVehicleAsync(v.owner, v.plate)
+					end
+				else
+					MySQL.Async.fetchScalar('SELECT accounts FROM users WHERE identifier = @identifier', {
+						['@identifier'] = v.owner
+					}, function(accounts)
+						if accounts then
+							local playerAccounts = json.decode(accounts)
+
+							if playerAccounts and playerAccounts.bank then
+								if playerAccounts.bank >= v.price then
+									playerAccounts.bank = playerAccounts.bank - v.price
+
+									MySQL.Async.execute('UPDATE users SET accounts = @accounts WHERE identifier = @identifier', {
+										['@identifier'] = v.owner,
+										['@accounts'] = json.encode(playerAccounts)
+									})
+								else
+									UnrentVehicleAsync(v.owner, v.plate)
+								end
+							end
+						end
+					end)
 				end
 
 				TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
