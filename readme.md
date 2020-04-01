@@ -28,6 +28,8 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 	end
 ```
 
+* es_extended: (`es_extended/client/main.lua`)
+
 ### Replace this code:
 
 ```lua
