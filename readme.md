@@ -7,6 +7,29 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 
 * es_extended: (`es_extended/client/main.lua`)
 
+### Comment out this code:
+```lua
+-- check if player is coming from loading screen
+	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
+		local defaultModel = GetHashKey('a_m_y_stbla_02')
+		RequestModel(defaultModel)
+
+		while not HasModelLoaded(defaultModel) do
+			Citizen.Wait(100)
+		end
+
+		SetPlayerModel(PlayerId(), defaultModel)
+		local playerPed = PlayerPedId()
+
+		SetPedDefaultComponentVariation(playerPed)
+		SetPedRandomComponentVariation(playerPed, true)
+		SetModelAsNoLongerNeeded(defaultModel)
+		FreezeEntityPosition(playerPed, false)
+	end
+```
+
+* es_extended: (`es_extended/client/main.lua`)
+
 ### Replace this code:
 
 ```lua
