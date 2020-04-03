@@ -138,7 +138,13 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 		end
 	end, true)
 
-	ExecuteCommand(('add_ace group.%s command.%s allow'):format(group, name))
+	if type(group) == 'table' then
+		for k,v in ipairs(group) do
+			ExecuteCommand(('add_ace group.%s command.%s allow'):format(v, name))
+		end
+	else
+		ExecuteCommand(('add_ace group.%s command.%s allow'):format(group, name))
+	end
 end
 
 ESX.ClearTimeout = function(id)
