@@ -297,6 +297,7 @@ AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, na
 	SetEntityAsMissionEntity(pickupObject, true, false)
 	PlaceObjectOnGroundProperly(pickupObject)
 	FreezeEntityPosition(pickupObject, true)
+	SetEntityCollision(pickupObject, false, true)
 
 	pickups[pickupId] = {
 		id = pickupId,
@@ -334,6 +335,7 @@ AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		SetEntityAsMissionEntity(pickupObject, true, false)
 		PlaceObjectOnGroundProperly(pickupObject)
 		FreezeEntityPosition(pickupObject, true)
+		SetEntityCollision(pickupObject, false, true)
 
 		pickups[pickupId] = {
 			id = pickupId,
