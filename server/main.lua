@@ -86,8 +86,8 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     end
 end)
 
-RegisterServerEvent('esx:onPlayerSpawn')
-AddEventHandler('esx:onPlayerSpawn', function()
+RegisterServerEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function()
     local playerId = source
     local xPlayer = ESX.GetPlayerFromId(playerId)
 
