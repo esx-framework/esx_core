@@ -306,7 +306,6 @@ ESX.Game.Teleport = function(entity, coords, cb)
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
 		while not HasCollisionLoadedAroundEntity(entity) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 			Citizen.Wait(0)
 		end
 
@@ -378,7 +377,6 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 			Citizen.Wait(0)
 		end
 
@@ -405,7 +403,6 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 			Citizen.Wait(0)
 		end
 
