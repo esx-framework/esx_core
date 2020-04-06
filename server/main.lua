@@ -1,6 +1,6 @@
-ESX 				= nil
-local registered 	= false
-local tempIdentity 	= {}
+ESX                = nil
+local registered   = false
+local tempIdentity = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
