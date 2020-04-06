@@ -65,7 +65,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		z = playerData.coords.z + 0.5,
 		heading = playerData.coords.heading
 	}, function()
-		isLoadoutLoaded, isDead = true, false
+		isLoadoutLoaded = true
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
@@ -80,6 +80,7 @@ end)
 RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
 
+AddEventHandler('esx:onPlayerSpawn', function() isDead = false end)
 AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
 AddEventHandler('skinchanger:loadDefaultModel', function() isLoadoutLoaded = false end)
 
