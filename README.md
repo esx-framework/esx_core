@@ -34,14 +34,6 @@ start esx_identity
 - If you are using esx_policejob or esx_society, you need to enable the following in the scripts' `config.lua`:
 ```Config.EnableESXIdentity          = true```
 
-### Commands
-```
-/register
-/charlist
-/charselect
-/chardel
-```
-
 # Legal
 ### License
 esx_identity - rp characters

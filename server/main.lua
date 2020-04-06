@@ -1,189 +1,226 @@
 ESX = nil
+local registered = false
+local data =  {
+    firstName,
+    lastName,
+    dateOfBirth,
+    sex,
+    height
+}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-function getIdentity(source, callback)
-	local xPlayer = ESX.GetPlayerFromId(source)
+AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
+    local player = source
+    local identifiers = GetPlayerIdentifiers(player)
+    local identifier
+    deferrals.defer()
 
-	MySQL.Async.fetchAll('SELECT identifier, firstname, lastname, dateofbirth, sex, height FROM `users` WHERE `identifier` = @identifier', {
-		['@identifier'] = xPlayer.identifier
-	}, function(result)
-		if result[1].firstname ~= nil then
-			local data = {
-				identifier	= result[1].identifier,
-				firstname	= result[1].firstname,
-				lastname	= result[1].lastname,
-				dateofbirth	= result[1].dateofbirth,
-				sex			= result[1].sex,
-				height		= result[1].height
-			}
+    Citizen.Wait(0)
 
-			callback(data)
-		else
-			local data = {
-				identifier	= '',
-				firstname	= '',
-				lastname	= '',
-				dateofbirth	= '',
-				sex			= '',
-				height		= ''
-			}
+    for k, v in pairs(identifiers) do
+        if string.match(v, 'license:') then
+            identifier = string.sub(v, 9)
+            break
+        end
+    end
 
-			callback(data)
-		end
-	end)
-end
+    Citizen.Wait(0)
+    
+    if identifier then
+        MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM `users` WHERE `identifier` = @identifier', {
+            ['@identifier'] = identifier
+        }, function(result)
+            if result[1] then
+                if result[1].firstname ~= nil then
+                    data = {
+                        firstName   = result[1].firstname,
+                        lastName    = result[1].lastname,
+                        dateOfBirth = result[1.].dateofbirth,
+                        sex         = result[1].sex,
+                        height      = result[1].height
+                    }
+                end
+            end                
+        end)
 
-function setIdentity(identifier, data, callback)
-	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
-		['@identifier']		= identifier,
-		['@firstname']		= data.firstname,
-		['@lastname']		= data.lastname,
-		['@dateofbirth']	= data.dateofbirth,
-		['@sex']			= data.sex,
-		['@height']			= data.height
-	}, function(rowsChanged)
-		if callback then
-			callback(true)
-		end
-	end)
-end
-
-function updateIdentity(playerId, data, callback)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-
-	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
-		['@identifier']		= xPlayer.identifier,
-		['@firstname']		= data.firstname,
-		['@lastname']		= data.lastname,
-		['@dateofbirth']	= data.dateofbirth,
-		['@sex']			= data.sex,
-		['@height']			= data.height
-	}, function(rowsChanged)
-		if callback then
-			TriggerEvent('esx_identity:characterUpdated', playerId, data)
-			callback(true)
-		end
-	end)
-end
-
-function deleteIdentity(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
-		['@identifier']		= xPlayer.identifier,
-		['@firstname']		= '',
-		['@lastname']		= '',
-		['@dateofbirth']	= '',
-		['@sex']			= '',
-		['@height']			= '',
-	})
-end
-
-RegisterServerEvent('esx_identity:setIdentity')
-AddEventHandler('esx_identity:setIdentity', function(data, myIdentifiers)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	setIdentity(myIdentifiers.steamid, data, function(callback)
-		if callback then
-			TriggerClientEvent('esx_identity:identityCheck', myIdentifiers.playerid, true)
-			TriggerEvent('esx_identity:characterUpdated', myIdentifiers.playerid, data)
-		else
-			xPlayer.showNotification(_U('failed_identity'))
-		end
-	end)
+        Citizen.Wait(500)
+        if data.firstName ~= nil then
+            registered = true
+            deferrals.done()
+        else
+            deferrals.presentCard([==[{"type": "AdaptiveCard", "body": [{ "type": "ColumnSet", "columns": [{ "type": "Column", "items": [
+                { "type": "Input.Text", "placeholder": "First Name (Max 15 Characters)", "id": "firstname" }], "width": "stretch" }]},
+                { "type": "Input.Text", "placeholder": "Last Name (Max 15 Characters)", "id": "lastname" },
+                { "type": "Input.Text", "placeholder": "Height (24-96 Inches)", "id": "height" },
+                { "type": "Input.Date", "id": "dateofbirth" },
+                { "type": "Input.ChoiceSet", "placeholder": "Sex", "choices": [{ "title": "Male", "value": "m" }, { "title": "Female",  "value": "f" }], "style": "expanded", "value": "m", "id": "sex" }],
+                "actions": [{ "type": "Action.Submit", "title": "Submit" }],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.0"
+            }]==], function(submittedData, rawData)
+                if submittedData.firstname == "" or submittedData.lastname == "" or submittedData.dateofbirth == "" or submittedData.sex == "" or submittedData.height == "" then
+                    deferrals.done(_U('data_incorrect'))
+                else
+                    if checkNameFormat(submittedData.firstname) and checkNameFormat(submittedData.lastname) and checkDOBFormat(submittedData.dateofbirth) and checkSexFormat(submittedData.sex) and checkHeightFormat(submittedData.height) then
+                        local formattedFirstName = formatName(submittedData.firstname)
+                        local formattedLastName = formatName(submittedData.lastname)
+                        local formattedHeight = tonumber(submittedData.height)
+                        data = {
+                            firstName   = formattedFirstName,
+                            lastName    = formattedLastName,
+                            dateOfBirth = submittedData.dateofbirth,
+                            sex         = submittedData.sex,
+                            height      = formattedHeight
+                        }
+                        Citizen.Wait(500)
+                        deferrals.done()
+                    else
+                        deferrals.done(_U('invalid_format'))
+                    end
+                end
+            end)
+        end
+    else
+        deferrals.done(_U('no_identifiers'))
+    end
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-	local myID = {
-		steamid = xPlayer.identifier,
-		playerid = playerId
-	}
+RegisterServerEvent('esx:onPlayerSpawn')
+AddEventHandler('esx:onPlayerSpawn', function()
+    local playerId = source
+    local xPlayer = ESX.GetPlayerFromId(playerId)
 
-	TriggerClientEvent('esx_identity:saveID', playerId, myID)
+    Citizen.Wait(4000)
+    
+    if xPlayer then
+        xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
+        xPlayer.set('firstName', data.firstName)
+        xPlayer.set('lastName', data.lastName)
+        xPlayer.set('dateofbirth', data.dateOfBirth)
+        xPlayer.set('sex', data.sex)
+        xPlayer.set('height', data.height)
+    end
 
-	getIdentity(playerId, function(data)
-		if data.firstname == '' then
-			TriggerClientEvent('esx_identity:identityCheck', playerId, false)
-			TriggerClientEvent('esx_identity:showRegisterIdentity', playerId)
-		else
-			TriggerClientEvent('esx_identity:identityCheck', playerId, true)
-			TriggerEvent('esx_identity:characterUpdated', playerId, data)
-		end
-	end)
+    if not registered then
+        registered = true
+        SetIdentity(xPlayer.identifier, data.firstName, data.lastName, data.dateOfBirth, data.sex, data.height)
+    end
 end)
 
-AddEventHandler('esx_identity:characterUpdated', function(playerId, data)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
 
-	if xPlayer then
-		xPlayer.setName(('%s %s'):format(data.firstname, data.lastname))
-		xPlayer.set('firstName', data.firstname)
-		xPlayer.set('lastName', data.lastname)
-		xPlayer.set('dateofbirth', data.dateofbirth)
-		xPlayer.set('sex', data.sex)
-		xPlayer.set('height', data.height)
-	end
-end)
+function checkNameFormat(name)
+    if checkAlphanumeric(name) == nil then
+        if checkForNumbers(name) == nil then
+            local stringLength = string.len(name)
+            if stringLength > 0 and stringLength < Config.MaxNameLength then
+                return true
+            else
+                return false
+            end
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
 
--- Set all the client side variables for connected users one new time
-AddEventHandler('onResourceStart', function(resource)
-	if resource == GetCurrentResourceName() then
-		Citizen.Wait(3000)
-		local xPlayers = ESX.GetPlayers()
+function checkDOBFormat(dob)
+    local date = tostring(dob)
+    if checkDate(date) == true then
+        return true
+    else
+        return false
+    end
+end
 
-		for i=1, #xPlayers, 1 do
-			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+function checkSexFormat(sex)
+    if sex == "m" or sex == "M" or sex == "f" or sex == "F" then
+        return true
+    else
+        return false
+    end
+end
 
-			if xPlayer then
-				local myID = {
-					steamid  = xPlayer.identifier,
-					playerid = xPlayer.source
-				}
-	
-				TriggerClientEvent('esx_identity:saveID', xPlayer.source, myID)
-	
-				getIdentity(xPlayer.source, function(data)
-					if data.firstname == '' then
-						TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, false)
-						TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-					else
-						TriggerClientEvent('esx_identity:identityCheck', xPlayer.source, true)
-						TriggerEvent('esx_identity:characterUpdated', xPlayer.source, data)
-					end
-				end)
-			end
-		end
-	end
-end)
+function checkHeightFormat(height)
+    local numHeight = tonumber(height)
+    if numHeight < Config.MinHeight and numHeight > Config.MaxHeight then
+        return false
+    else
+        return true
+    end
+end
 
-ESX.RegisterCommand('register', 'user', function(xPlayer, args, showError)
-	getIdentity(xPlayer.source, function(data)
-		if data.firstname ~= '' then
-			xPlayer.showNotification(_U('already_registered'))
-		else
-			TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-		end
-	end)
-end, false, {help = _U('show_registration')})
+function formatName(name)
+    local loweredName = convertToLowerCase(name)
+    local formattedName = convertFirstLetterToUpper(loweredName)
+    return formattedName
+end
 
-ESX.RegisterCommand('char', 'user', function(xPlayer, args, showError)
-	getIdentity(xPlayer.source, function(data)
-		if data.firstname == '' then
-			xPlayer.showNotification(_U('not_registered'))
-		else
-			xPlayer.showNotification(_U('active_character', data.firstname, data.lastname))
-		end
-	end)
-end, false, {help = _U('show_active_character')})
+function convertToLowerCase(str)
+    return string.lower(str)
+end
 
-ESX.RegisterCommand('chardel', 'user', function(xPlayer, args, showError)
-	getIdentity(xPlayer.source, function(data)
-		if data.firstname == '' then
-			xPlayer.showNotification(_U('not_registered'))
-		else
-			deleteIdentity(xPlayer.source)
-			xPlayer.showNotification(_U('deleted_character'))
-			TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-		end
-	end)
-end, false, {help = _U('delete_character')})
+function convertFirstLetterToUpper(str)
+    return str:gsub("^%l", string.upper)
+end
+
+function checkAlphanumeric(str)
+    return (string.match(str, "%W"))
+end
+
+function checkForNumbers(str)
+    return (string.match(str,"%d"))
+end
+
+function checkDate(str)
+    if string.match(str, '(%d%d%d%d)-(%d%d)-(%d%d)') ~= nil then
+        local y, m, d = string.match(str, '(%d+)-(%d+)-(%d+)')
+        y = tonumber(y)
+        m = tonumber(m)
+        d = tonumber(d)
+        if ((d <= 0) or (d > 31)) or ((m <= 0) or (m > 12)) or ((y <= Config.LowestYear) or (y > Config.HighestYear)) then
+            return false
+        elseif m == 4 or m == 6 or m == 9 or m == 11 then 
+            if d > 30 then
+                return false
+            else
+                return true
+            end
+        elseif m == 2 then
+            if y%400 == 0 or (y%100 ~= 0 and y%4 == 0) then
+                if d > 29 then
+                    return false
+                else
+                    return true
+                end
+            else
+                if d > 28 then
+                    return false
+                else
+                    return true
+                end
+            end
+        else 
+            if d > 31 then
+                return false
+            else
+                return true
+            end
+        end
+    else
+        return false
+    end
+end
+
+function SetIdentity(identifier, firstName, lastName, dateOfBirth, sex, height)
+    MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
+        ['@identifier']		= identifier,
+        ['@firstname']		= firstName,
+        ['@lastname']       = lastName,
+        ['@dateofbirth']    = dateOfBirth,
+        ['@sex']            = sex,
+        ['@height']         = height
+    })
+end
