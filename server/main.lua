@@ -22,7 +22,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 	Citizen.Wait(0)
 	
 	if identifier then
-		MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM `users` WHERE `identifier` = @identifier', {
+		MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
 			['@identifier'] = identifier
 		}, function(result)
 			if result[1] then
@@ -204,7 +204,7 @@ function checkDate(str)
 end
 
 function SetIdentity(identifier, firstName, lastName, dateOfBirth, sex, height)
-	MySQL.Async.execute('UPDATE `users` SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
+	MySQL.Async.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
 		['@identifier']		= identifier,
 		['@firstname']		= firstName,
 		['@lastname']       = lastName,
