@@ -36,7 +36,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
                     data = {
                         firstName   = result[1].firstname,
                         lastName    = result[1].lastname,
-                        dateOfBirth = result[1.].dateofbirth,
+                        dateOfBirth = result[1].dateofbirth,
                         sex         = result[1].sex,
                         height      = result[1].height
                     }
@@ -86,7 +86,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     end
 end)
 
-RegisterServerEvent('esx:playerLoaded')
+RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
     xPlayer.set('firstName', data.firstName)

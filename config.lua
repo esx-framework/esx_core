@@ -1,6 +1,5 @@
 Config                  = {}
 Config.Locale           = 'en'
-Config.StartingAccountMoney = {bank = 50000}
 Config.MinHeight        = 24    -- Minimum Height
 Config.MaxHeight        = 96    -- Maximum Height
 Config.HighestYear      = 2020  -- The highest year that can be used in date of birth
