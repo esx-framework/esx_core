@@ -32,7 +32,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
             ['@identifier'] = identifier
         }, function(result)
             if result[1] then
-                if result[1].firstname ~= nil then
+                if result[1].firstname then
                     data = {
                         firstName   = result[1].firstname,
                         lastName    = result[1].lastname,
@@ -46,7 +46,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 
         Citizen.Wait(500)
 
-        if data.firstName ~= nil then
+        if data.firstName then
             registered = true
             deferrals.done()
         else
@@ -88,14 +88,12 @@ end)
 
 RegisterServerEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-    if xPlayer then
-        xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
-        xPlayer.set('firstName', data.firstName)
-        xPlayer.set('lastName', data.lastName)
-        xPlayer.set('dateofbirth', data.dateOfBirth)
-        xPlayer.set('sex', data.sex)
-        xPlayer.set('height', data.height)
-    end
+    xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
+    xPlayer.set('firstName', data.firstName)
+    xPlayer.set('lastName', data.lastName)
+    xPlayer.set('dateofbirth', data.dateOfBirth)
+    xPlayer.set('sex', data.sex)
+    xPlayer.set('height', data.height)
 
     if not registered then
         registered = true
