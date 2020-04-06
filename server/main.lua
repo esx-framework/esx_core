@@ -1,12 +1,6 @@
-ESX = nil
-local registered = false
-local data =  {
-	firstName,
-	lastName,
-	dateOfBirth,
-	sex,
-	height
-}
+ESX 				= nil
+local registered 	= false
+local tempIdentity 	= {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -33,12 +27,12 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 		}, function(result)
 			if result[1] then
 				if result[1].firstname then
-					data = {
+					tempIdentity[identifier] = {
 						firstName   = result[1].firstname,
 						lastName    = result[1].lastname,
 						dateOfBirth = result[1].dateofbirth,
 						sex         = result[1].sex,
-						height      = result[1].height
+						height      = result[1].height	
 					}
 				end
 			end                
@@ -46,7 +40,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 
 		Citizen.Wait(500)
 
-		if data.firstName then
+		if tempIdentity[identifier] and tempIdentity[identifier].firstName then
 			registered = true
 			deferrals.done()
 		else
@@ -67,7 +61,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 						local formattedFirstName = formatName(submittedData.firstname)
 						local formattedLastName = formatName(submittedData.lastname)
 						local formattedHeight = tonumber(submittedData.height)
-						data = {
+						tempIdentity[identifier] = {
 							firstName   = formattedFirstName,
 							lastName    = formattedLastName,
 							dateOfBirth = submittedData.dateofbirth,
@@ -88,16 +82,18 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-	xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
-	xPlayer.set('firstName', data.firstName)
-	xPlayer.set('lastName', data.lastName)
-	xPlayer.set('dateofbirth', data.dateOfBirth)
-	xPlayer.set('sex', data.sex)
-	xPlayer.set('height', data.height)
+	xPlayer.setName(('%s %s'):format(tempIdentity[xPlayer.identifier].firstName, tempIdentity[xPlayer.identifier].lastName))
+	xPlayer.set('firstName', tempIdentity[xPlayer.identifier].firstName)
+	xPlayer.set('lastName', tempIdentity[xPlayer.identifier].lastName)
+	xPlayer.set('dateofbirth', tempIdentity[xPlayer.identifier].dateOfBirth)
+	xPlayer.set('sex', tempIdentity[xPlayer.identifier].sex)
+	xPlayer.set('height', tempIdentity[xPlayer.identifier].height)
 
 	if not registered then
 		registered = true
-		SetIdentity(xPlayer.identifier, data.firstName, data.lastName, data.dateOfBirth, data.sex, data.height)
+		SetIdentity(xPlayer.identifier, tempIdentity[xPlayer.identifier].firstName, tempIdentity[xPlayer.identifier].lastName, tempIdentity[xPlayer.identifier].dateOfBirth, tempIdentity[xPlayer.identifier].sex, tempIdentity[xPlayer.identifier].height)
+	else
+		tempIdentity[xPlayer.identifier] = nil
 	end
 end)
 
@@ -208,7 +204,7 @@ function checkDate(str)
 end
 
 function SetIdentity(identifier, firstName, lastName, dateOfBirth, sex, height)
-	MySQL.Async.execute('UPDATE `users` SET `firstname` = @firstname, `lastname` = @lastname, `dateofbirth` = @dateofbirth, `sex` = @sex, `height` = @height WHERE identifier = @identifier', {
+	MySQL.Async.execute('UPDATE `users` SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
 		['@identifier']		= identifier,
 		['@firstname']		= firstName,
 		['@lastname']       = lastName,
@@ -216,4 +212,6 @@ function SetIdentity(identifier, firstName, lastName, dateOfBirth, sex, height)
 		['@sex']            = sex,
 		['@height']         = height
 	})
+
+	tempIdentity[identifier] = nil
 end
