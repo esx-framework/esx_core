@@ -45,6 +45,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
         end)
 
         Citizen.Wait(500)
+
         if data.firstName ~= nil then
             registered = true
             deferrals.done()
@@ -73,7 +74,6 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
                             sex         = submittedData.sex,
                             height      = formattedHeight
                         }
-                        Citizen.Wait(500)
                         deferrals.done()
                     else
                         deferrals.done(_U('invalid_format'))
@@ -87,12 +87,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 end)
 
 RegisterServerEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function()
-    local playerId = source
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-
-    Citizen.Wait(4000)
-    
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     if xPlayer then
         xPlayer.setName(('%s %s'):format(data.firstName, data.lastName))
         xPlayer.set('firstName', data.firstName)
