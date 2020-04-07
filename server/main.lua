@@ -1,5 +1,4 @@
 ESX                = nil
-local registered   = false
 local tempIdentity = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -32,7 +31,8 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 						lastName    = result[1].lastname,
 						dateOfBirth = result[1].dateofbirth,
 						sex         = result[1].sex,
-						height      = result[1].height	
+						height      = result[1].height,
+						registered  = false
 					}
 				end
 			end                
@@ -41,7 +41,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 		Citizen.Wait(500)
 
 		if tempIdentity[identifier] and tempIdentity[identifier].firstName then
-			registered = true
+			tempIdentity[identifier].registered = true
 			deferrals.done()
 		else
 			deferrals.presentCard([==[{"type": "AdaptiveCard", "body": [{ "type": "ColumnSet", "columns": [{ "type": "Column", "items": [
@@ -82,25 +82,27 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-	xPlayer.setName(('%s %s'):format(tempIdentity[xPlayer.identifier].firstName, tempIdentity[xPlayer.identifier].lastName))
-	xPlayer.set('firstName', tempIdentity[xPlayer.identifier].firstName)
-	xPlayer.set('lastName', tempIdentity[xPlayer.identifier].lastName)
-	xPlayer.set('dateofbirth', tempIdentity[xPlayer.identifier].dateOfBirth)
-	xPlayer.set('sex', tempIdentity[xPlayer.identifier].sex)
-	xPlayer.set('height', tempIdentity[xPlayer.identifier].height)
-
-	if not registered then
-		registered = true
-		SetIdentity(xPlayer.identifier, tempIdentity[xPlayer.identifier].firstName, tempIdentity[xPlayer.identifier].lastName, tempIdentity[xPlayer.identifier].dateOfBirth, tempIdentity[xPlayer.identifier].sex, tempIdentity[xPlayer.identifier].height)
-	else
-		tempIdentity[xPlayer.identifier] = nil
+	if tempIdentity[xPlayer.identifier] then
+		local currentIdentity = tempIdentity[xPlayer.identifier]
+		xPlayer.setName(('%s %s'):format(currentIdentity.firstName, currentIdentity.lastName))
+		xPlayer.set('firstName', currentIdentity.firstName)
+		xPlayer.set('lastName', currentIdentity.lastName)
+		xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
+		xPlayer.set('sex', currentIdentity.sex)
+		xPlayer.set('height', currentIdentity.height)
+		if not currentIdentity.registered then
+			currentIdentity.registered = true
+			SetIdentity(xPlayer.identifier, currentIdentity)
+		else
+			tempIdentity[xPlayer.identifier] = nil
+		end
 	end
 end)
 
 
 function checkNameFormat(name)
-	if checkAlphanumeric(name) == nil then
-		if checkForNumbers(name) == nil then
+	if not checkAlphanumeric(name) then
+		if not checkForNumbers(name) then
 			local stringLength = string.len(name)
 			if stringLength > 0 and stringLength < Config.MaxNameLength then
 				return true
@@ -117,7 +119,7 @@ end
 
 function checkDOBFormat(dob)
 	local date = tostring(dob)
-	if checkDate(date) == true then
+	if not checkDate(date) then
 		return true
 	else
 		return false
@@ -203,14 +205,14 @@ function checkDate(str)
 	end
 end
 
-function SetIdentity(identifier, firstName, lastName, dateOfBirth, sex, height)
+function SetIdentity(identifier, identity)
 	MySQL.Async.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
 		['@identifier']		= identifier,
-		['@firstname']		= firstName,
-		['@lastname']       = lastName,
-		['@dateofbirth']    = dateOfBirth,
-		['@sex']            = sex,
-		['@height']         = height
+		['@firstname']		= identity.firstName,
+		['@lastname']       = identity.lastName,
+		['@dateofbirth']    = identity.dateOfBirth,
+		['@sex']            = identity.sex,
+		['@height']         = identity.height
 	})
 
 	tempIdentity[identifier] = nil
