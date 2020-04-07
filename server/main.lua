@@ -9,7 +9,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 	local identifier
 	deferrals.defer()
 
-	Citizen.Wait(0)
+	Citizen.Wait(500)
 
 	for k, v in pairs(identifiers) do
 		if string.match(v, 'license:') then
@@ -18,7 +18,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 		end
 	end
 
-	Citizen.Wait(0)
+	Citizen.Wait(500)
 	
 	if identifier then
 		MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
@@ -66,11 +66,12 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 							lastName    = formattedLastName,
 							dateOfBirth = submittedData.dateofbirth,
 							sex         = submittedData.sex,
-							height      = formattedHeight
+							height      = formattedHeight,
+							registered  = false
 						}
 						deferrals.done()
 					else
-						deferrals.done(_U('invalid_format'))
+						deferrals.done(_U('invalid_format')
 					end
 				end
 			end)
@@ -119,7 +120,7 @@ end
 
 function checkDOBFormat(dob)
 	local date = tostring(dob)
-	if not checkDate(date) then
+	if checkDate(date) then
 		return true
 	else
 		return false
