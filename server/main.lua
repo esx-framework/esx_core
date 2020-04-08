@@ -71,7 +71,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 						}
 						deferrals.done()
 					else
-						deferrals.done(_U('invalid_format')
+						deferrals.done(_U('invalid_format'))
 					end
 				end
 			end)
@@ -208,12 +208,12 @@ end
 
 function SetIdentity(identifier, identity)
 	MySQL.Async.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
-		['@identifier']		= identifier,
-		['@firstname']		= identity.firstName,
-		['@lastname']       = identity.lastName,
-		['@dateofbirth']    = identity.dateOfBirth,
-		['@sex']            = identity.sex,
-		['@height']         = identity.height
+		['@identifier']  = identifier,
+		['@firstname']   = identity.firstName,
+		['@lastname']    = identity.lastName,
+		['@dateofbirth'] = identity.dateOfBirth,
+		['@sex']         = identity.sex,
+		['@height']      = identity.height
 	})
 
 	tempIdentity[identifier] = nil
