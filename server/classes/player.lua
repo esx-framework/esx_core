@@ -432,7 +432,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if component then
 				if self.hasWeaponComponent(weaponName, weaponComponent) then
 					for k,v in ipairs(self.loadout[loadoutNum].components) do
-						if v.name == weaponComponent then
+						if v == weaponComponent then
 							table.remove(self.loadout[loadoutNum].components, k)
 							break
 						end
