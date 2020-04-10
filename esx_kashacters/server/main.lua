@@ -57,7 +57,7 @@ function GetPlayerCharacters(source)
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
     charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."'")
-    local accounts = json.decode(Chars[1].accounts)
+    local accounts = json.decode(Chars[i].accounts)
     Chars[i].bank = accounts["bank"]
     Chars[i].money = accounts["money"]
     Chars[i].job = charJob[1].label
