@@ -273,12 +273,13 @@ end)
 RegisterNetEvent('esx:createPickup')
 AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, name, components, tintIndex)
 	local playerPed = GetPlayerPed(GetPlayerFromServerId(playerId))
-	local entityCoords, forward, pickupObject = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
-	local objectCoords = (entityCoords + forward * 1.0)
+	local entityCoords, forwardVector, pickupObject = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
+	local objectCoords = (entityCoords + forwardVector * 1.0)
 
 	if type == 'item_weapon' then
-		ESX.Streaming.RequestWeaponAsset(GetHashKey(name))
-		pickupObject = CreateWeaponObject(GetHashKey(name), 50, objectCoords, true, 1.0, 0)
+		local weaponHash = GetHashKey(name)
+		ESX.Streaming.RequestWeaponAsset(weaponHash)
+		pickupObject = CreateWeaponObject(weaponHash, 50, objectCoords, true, 1.0, 0)
 		SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
 		for k,v in ipairs(components) do
@@ -301,7 +302,6 @@ AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, na
 	SetEntityCollision(pickupObject, false, true)
 
 	pickups[pickupId] = {
-		id = pickupId,
 		obj = pickupObject,
 		label = label,
 		inRange = false,
@@ -339,7 +339,6 @@ AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		SetEntityCollision(pickupObject, false, true)
 
 		pickups[pickupId] = {
-			id = pickupId,
 			obj = pickupObject,
 			label = pickup.label,
 			inRange = false,
@@ -358,10 +357,10 @@ AddEventHandler('esx:registerSuggestions', function(registeredCommands)
 end)
 
 RegisterNetEvent('esx:removePickup')
-AddEventHandler('esx:removePickup', function(id)
-	if pickups[id] and pickups[id].obj then
-		ESX.Game.DeleteObject(pickups[id].obj)
-		pickups[id] = nil
+AddEventHandler('esx:removePickup', function(pickupId)
+	if pickups[pickupId] and pickups[pickupId].obj then
+		ESX.Game.DeleteObject(pickups[pickupId].obj)
+		pickups[pickupId] = nil
 	end
 end)
 
@@ -480,24 +479,24 @@ Citizen.CreateThread(function()
 		local playerCoords, letSleep = GetEntityCoords(playerPed), true
 		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
-		for k,v in pairs(pickups) do
-			local distance = #(playerCoords - v.coords)
+		for pickupId,pickup in pairs(pickups) do
+			local distance = #(playerCoords - pickup.coords)
 
 			if distance < 5 then
-				local label = v.label
+				local label = pickup.label
 				letSleep = false
 
 				if distance < 1 then
 					if IsControlJustReleased(0, 38) then
-						if IsPedOnFoot(playerPed) and (closestDistance == -1 or closestDistance > 3) and not v.inRange then
-							v.inRange = true
+						if IsPedOnFoot(playerPed) and (closestDistance == -1 or closestDistance > 3) and not pickup.inRange then
+							pickup.inRange = true
 
 							local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
 							ESX.Streaming.RequestAnimDict(dict)
 							TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
 							Citizen.Wait(1000)
 
-							TriggerServerEvent('esx:onPickup', v.id)
+							TriggerServerEvent('esx:onPickup', pickupId)
 							PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 						end
 					end
@@ -506,12 +505,12 @@ Citizen.CreateThread(function()
 				end
 
 				ESX.Game.Utils.DrawText3D({
-					x = v.coords.x,
-					y = v.coords.y,
-					z = v.coords.z + 0.25
+					x = pickup.coords.x,
+					y = pickup.coords.y,
+					z = pickup.coords.z + 0.25
 				}, label, 1.2, 1)
-			elseif v.inRange then
-				v.inRange = false
+			elseif pickup.inRange then
+				pickup.inRange = false
 			end
 		end
 

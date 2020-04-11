@@ -420,8 +420,8 @@ AddEventHandler('esx:useItem', function(itemName)
 end)
 
 RegisterNetEvent('esx:onPickup')
-AddEventHandler('esx:onPickup', function(id)
-	local pickup, xPlayer, success = ESX.Pickups[id], ESX.GetPlayerFromId(source)
+AddEventHandler('esx:onPickup', function(pickupId)
+	local pickup, xPlayer, success = ESX.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
 	if pickup then
 		if pickup.type == 'item_standard' then
@@ -449,8 +449,8 @@ AddEventHandler('esx:onPickup', function(id)
 		end
 
 		if success then
-			ESX.Pickups[id] = nil
-			TriggerClientEvent('esx:removePickup', -1, id)
+			ESX.Pickups[pickupId] = nil
+			TriggerClientEvent('esx:removePickup', -1, pickupId)
 		end
 	end
 end)
