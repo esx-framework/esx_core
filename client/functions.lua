@@ -326,8 +326,8 @@ ESX.Game.SpawnObject = function(model, coords, cb)
 
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
-
 		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, false, true)
+		SetModelAsNoLongerNeeded(model)
 
 		if cb then
 			cb(obj)
@@ -340,8 +340,8 @@ ESX.Game.SpawnLocalObject = function(model, coords, cb)
 
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
-
 		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, false, true)
+		SetModelAsNoLongerNeeded(model)
 
 		if cb then
 			cb(obj)
