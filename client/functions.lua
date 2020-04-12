@@ -304,9 +304,12 @@ end
 ESX.Game.Teleport = function(entity, coords, cb)
 	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		local timeout = 0
 
-		while not HasCollisionLoadedAroundEntity(entity) do
+		-- we can get stuck here if any of the axies are "invalid"
+		while not HasCollisionLoadedAroundEntity(entity) and timeout < 2000 do
 			Citizen.Wait(0)
+			timeout = timeout + 1
 		end
 
 		SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
@@ -366,21 +369,22 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
-		local id      = NetworkGetNetworkIdFromEntity(vehicle)
+		local networkId = NetworkGetNetworkIdFromEntity(vehicle)
+		local timeout = 0
 
-		SetNetworkIdCanMigrate(id, true)
+		SetNetworkIdCanMigrate(networkId, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
+		SetVehRadioStation(vehicle, 'OFF')
 		SetModelAsNoLongerNeeded(model)
-
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
-		while not HasCollisionLoadedAroundEntity(vehicle) do
+		-- we can get stuck here if any of the axies are "invalid"
+		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
 			Citizen.Wait(0)
+			timeout = timeout + 1
 		end
-
-		SetVehRadioStation(vehicle, 'OFF')
 
 		if cb then
 			cb(vehicle)
@@ -395,18 +399,20 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
+		local timeout = 0
 
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
+		SetVehRadioStation(vehicle, 'OFF')
 		SetModelAsNoLongerNeeded(model)
 		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
-		while not HasCollisionLoadedAroundEntity(vehicle) do
+		-- we can get stuck here if any of the axies are "invalid"
+		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
 			Citizen.Wait(0)
+			timeout = timeout + 1
 		end
-
-		SetVehRadioStation(vehicle, 'OFF')
 
 		if cb then
 			cb(vehicle)
