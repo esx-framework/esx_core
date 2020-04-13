@@ -7,7 +7,7 @@ Citizen.CreateThread(function()
 		local status = GetResourceState(resourceName)
 
 		if status == 'started' or status == 'starting' then
-			while status == 'starting' do
+			while GetResourceState(resourceName) == 'starting' do
 				Citizen.Wait(100)
 			end
 
