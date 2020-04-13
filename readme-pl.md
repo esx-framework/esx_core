@@ -66,3 +66,6 @@ end)
 ## Jak to działa?
 > Ten skrypt manipuluje ładowaniem postaci przez ESX.
 Kiedy więc wybierasz swoją postać, skrypt zmienia twoją **licencje rockstar**, która jest normalnie zapisywana jako **license:** na **Char:**, co zapobiega ładowaniu przez ESX innej postaci, ponieważ szuka on dokładnej licencji.
+
+## Obsługa wielu języków
+Po prostu zmień locales/en.js w html/ui.html (linia 10)
