@@ -1,3 +1,32 @@
+Citizen.CreateThread(function()
+	SetMapName('San Andreas')
+	SetGameType('Roleplay')
+	local resourcesStopped = {}
+
+	for resourceName,reason in pairs(Config.IncompatibleResourcesToStop) do
+		local status = GetResourceState(resourceName)
+
+		if status == 'started' or status == 'starting' then
+			while status == 'starting' do
+				Citizen.Wait(100)
+			end
+
+			StopResource(resourceName)
+			resourcesStopped[resourceName] = reason
+		end
+	end
+
+	if ESX.Table.SizeOf(resourcesStopped) > 0 then
+		local allStoppedResources = ''
+
+		for resourceName,reason in pairs(resourcesStopped) do
+			allStoppedResources = ('%s\n- ^3%s^7, %s'):format(allStoppedResources, resourceName, reason)
+		end
+
+		print(('[es_extended] [^3WARNING^7] Stopped %s incompatible resource(s) that can cause issues when used with ESX. They are not needed and can safely be removed from your server, remove these resource(s) from your resource directory and your configuration file:%s'):format(ESX.Table.SizeOf(resourcesStopped), allStoppedResources))
+	end
+end)
+
 RegisterNetEvent('esx:onPlayerJoined')
 AddEventHandler('esx:onPlayerJoined', function()
 	if not ESX.Players[source] then
@@ -216,7 +245,7 @@ function loadESXPlayer(identifier, playerId)
 			inventory = xPlayer.getInventory(),
 			job = xPlayer.getJob(),
 			loadout = xPlayer.getLoadout(),
-			maxWeight = xPlayer.maxWeight,
+			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney()
 		})
 
