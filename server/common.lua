@@ -19,6 +19,9 @@ function getSharedObject()
 end
 
 MySQL.ready(function()
+	SetMapName('San Andreas')
+	SetGameType('Roleplay')
+
 	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
 		for k,v in ipairs(result) do
 			ESX.Items[v.name] = {
