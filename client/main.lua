@@ -297,7 +297,6 @@ end)
 
 -- Load IPLS
 Citizen.CreateThread(function()
-	LoadMpDlcMaps()
 	RequestIpl('ex_dt1_02_office_02c')
 end)
 
