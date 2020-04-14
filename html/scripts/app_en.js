@@ -501,7 +501,11 @@
 
 	}
 
-	window.onload = function(e){ window.addEventListener('message', function(event){ onData(event.data) }); }
+	window.onload = function(e){
+		window.addEventListener('message', function(event) {
+			onData(event.data)
+		});
+	}
 
 	document.onkeydown = function (data) {
 		if ((data.which == 120 || data.which == 27) && isPhoneShowed) { // || data.which == 8
