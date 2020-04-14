@@ -1,4 +1,4 @@
-USE `essentialmode`;
+USE `es_extended`;
 
 INSERT INTO `datastore` (name, label, shared) VALUES
 	('user_ears', 'Örontilbb', 0),

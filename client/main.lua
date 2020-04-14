@@ -122,13 +122,8 @@ function OpenShopMenu(accessory)
 	end, restrict)
 end
 
-AddEventHandler('playerSpawned', function()
-	isDead = false
-end)
-
-AddEventHandler('esx:onPlayerDeath', function()
-	isDead = true
-end)
+AddEventHandler('esx:onPlayerSpawn', function() isDead = false end)
+AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
 
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
