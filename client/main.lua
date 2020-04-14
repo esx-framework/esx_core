@@ -49,4 +49,4 @@ end, false)
 RegisterKeyMapping('showbills', _U('keymap_showbills'), 'keyboard', 'F7')
 
 AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
-AddEventHandler('playerSpawned', function(spawn) isDead = false end)
+AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
