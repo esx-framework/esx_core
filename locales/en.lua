@@ -15,13 +15,13 @@ Locales['en'] = {
   ['gave_weapon'] = 'you gave ~b~%s~s~ to ~y~%s~s~',
   ['gave_weapon_ammo'] = 'you gave ~o~%sx %s~s~ for ~b~%s~s~ to ~y~%s~s~',
   ['gave_weapon_withammo'] = 'you gave ~b~%s~s~ with ~o~%sx %s~s~ to ~y~%s~s~',
-  ['gave_weapon_hasalready'] = '~y~%s~s~ already have an ~y~%s~s~',
+  ['gave_weapon_hasalready'] = '~y~%s~s~ already has a ~y~%s~s~',
   ['gave_weapon_noweapon'] = '~y~%s~s~ does not have that weapon',
   ['received_weapon'] = 'you received ~b~%s~s~ from ~b~%s~s~',
   ['received_weapon_ammo'] = 'you received ~o~%sx %s~s~ for your ~b~%s~s~ from ~b~%s~s~',
   ['received_weapon_withammo'] = 'you received ~b~%s~s~ with ~o~%sx %s~s~ from ~b~%s~s~',
-  ['received_weapon_hasalready'] = '~b~%s~s~ attempted to give you an ~y~%s~s~, but you already have one',
-  ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for an ~y~%s~s~, but you dont have one',
+  ['received_weapon_hasalready'] = '~b~%s~s~ attempted to give you a ~y~%s~s~, but you already have one',
+  ['received_weapon_noweapon'] = '~b~%s~s~ attempted to give you ammo for a ~y~%s~s~, but you dont have one',
   ['gave_account_money'] = 'you gave ~g~$%s~s~ (%s) to ~y~%s~s~',
   ['received_account_money'] = 'you received ~g~$%s~s~ (%s) from ~b~%s~s~',
   ['amount_invalid'] = 'invalid amount',
@@ -42,7 +42,7 @@ Locales['en'] = {
 
   -- Salary related
   ['received_salary'] = 'you received your salary: ~g~$%s~s~',
-  ['received_help'] = 'you recieved your welfare check: ~g~$%s~s~',
+  ['received_help'] = 'you received your welfare check: ~g~$%s~s~',
   ['company_nomoney'] = 'the company you\'re employeed at is too poor to pay out your salary',
   ['received_paycheck'] = 'received paycheck',
   ['bank'] = 'maze Bank',
@@ -51,10 +51,10 @@ Locales['en'] = {
   ['account_money'] = 'cash',
 
   ['act_imp'] = 'action impossible',
-  ['in_vehicle'] = 'you can\'t give anything to someone in a vehicle',
+  ['in_vehicle'] = 'you cannot give anything to someone in a vehicle',
 
   -- Commands
-  ['command_car'] = 'spawn an vehicle',
+  ['command_car'] = 'spawn a vehicle',
   ['command_car_car'] = 'vehicle spawn name or hash',
   ['command_cardel'] = 'delete vehicle in proximity',
   ['command_cardel_radius'] = 'optional, delete every vehicle within the specified radius',
@@ -96,8 +96,8 @@ Locales['en'] = {
   ['commanderror_argumentmismatch_number'] = 'argument #%s type mismatch (passed string, wanted number)',
   ['commanderror_invaliditem'] = 'invalid item name',
   ['commanderror_invalidweapon'] = 'invalid weapon',
-  ['commanderror_console'] = 'that command can not be run from console',
-  ['commanderror_invalidcommand'] = '^3%s^0 is not an valid command!',
+  ['commanderror_console'] = 'that command cannot be run from console',
+  ['commanderror_invalidcommand'] = '^3%s^0 is not a valid command!',
   ['commanderror_invalidplayerid'] = 'there is no player online matching that server id',
   ['commandgeneric_playerid'] = 'player id',
 
