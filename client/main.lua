@@ -669,7 +669,7 @@ AddEventHandler('instance:loaded', function()
 	end)
 end)
 
-AddEventHandler('playerSpawned', function()
+AddEventHandler('esx:onPlayerSpawn', function()
 	if firstSpawn then
 		Citizen.CreateThread(function()
 			while not ESX.IsPlayerLoaded() do
