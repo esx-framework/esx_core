@@ -140,7 +140,7 @@ function OpenDMVSchoolMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
 		title    = _U('driving_school'),
 		elements = elements,
-		align    = 'top-left'
+		align    = 'bottom-right'
 	}, function(data, menu)
 		if data.current.value == 'theory_test' then
 			menu.close()
