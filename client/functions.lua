@@ -449,9 +449,9 @@ ESX.Game.GetClosestObject = function(coords, modelFilter) return ESX.Game.GetClo
 ESX.Game.GetClosestPed = function(coords, modelFilter) return ESX.Game.GetClosestEntity(EnumeratePeds(), coords, modelFilter) end
 ESX.Game.GetClosestPlayer = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(), coords, modelFilter) end
 ESX.Game.GetClosestVehicle = function(coords, modelFilter) return ESX.Game.GetClosestEntity(EnumerateVehicles(), coords, modelFilter) end
-ESX.Game.GetPlayersInArea = function(coords, area) return enumerateInArea(ESX.Game.GetPlayers(), coords, area) end
-ESX.Game.GetVehiclesInArea = function(coords, area) return enumerateInArea(ESX.Game.GetVehicles(), coords, area) end
-ESX.Game.IsSpawnPointClear = function(coords, radius) return #ESX.Game.GetVehiclesInArea(coords, radius) == 0 end
+ESX.Game.GetPlayersInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(ESX.Game.GetPlayers(), coords, maxDistance) end
+ESX.Game.GetVehiclesInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(EnumerateVehicles(), coords, maxDistance) end
+ESX.Game.IsSpawnPointClear = function(coords, maxDistance) return #ESX.Game.GetVehiclesInArea(coords, maxDistance) == 0 end
 
 ESX.Game.GetClosestEntity = function(entities, coords, modelFilter)
 	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil

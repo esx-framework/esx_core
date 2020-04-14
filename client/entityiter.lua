@@ -57,6 +57,27 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
 	end)
 end
 
+function EnumerateEntitiesWithinDistance(entities, coords, maxDistance)
+	local nearbyEntities = {}
+
+	if coords then
+		coords = vector3(coords.x, coords.y, coords.z)
+	else
+		local playerPed = PlayerPedId()
+		coords = GetEntityCoords(playerPed)
+	end
+
+	for k,entity in ipairs(entities) do
+		local distance = #(coords - GetEntityCoords(entity))
+
+		if distance <= maxDistance then
+			table.insert(nearbyEntities, entity)
+		end
+	end
+
+	return nearbyEntities
+end
+
 function EnumerateObjects()
 	return EnumerateEntities(FindFirstObject, FindNextObject, EndFindObject)
 end
