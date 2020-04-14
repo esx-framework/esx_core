@@ -256,7 +256,7 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 	end, cancelCb, restrict)
 end
 
-AddEventHandler('playerSpawned', function()
+AddEventHandler('esx:onPlayerSpawn', function()
 	Citizen.CreateThread(function()
 		while not playerLoaded do
 			Citizen.Wait(100)
