@@ -477,7 +477,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 		local playerCoords, letSleep = GetEntityCoords(playerPed), true
-		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
 		for pickupId,pickup in pairs(pickups) do
 			local distance = #(playerCoords - pickup.coords)

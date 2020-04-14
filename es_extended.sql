@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `essentialmode`;
-USE `essentialmode`;
+CREATE DATABASE IF NOT EXISTS `es_extended`;
+USE `es_extended`;
 
 CREATE TABLE `users` (
 	`identifier` VARCHAR(40) NOT NULL,

@@ -530,10 +530,10 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 		local extras = {}
 
-		for id=0, 12 do
-			if DoesExtraExist(vehicle, id) then
-				local state = IsVehicleExtraTurnedOn(vehicle, id) == 1
-				extras[tostring(id)] = state
+		for extraId=0, 12 do
+			if DoesExtraExist(vehicle, extraId) then
+				local state = IsVehicleExtraTurnedOn(vehicle, extraId) == 1
+				extras[tostring(extraId)] = state
 			end
 		end
 
@@ -651,11 +651,11 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		end
 
 		if props.extras then
-			for id,enabled in pairs(props.extras) do
+			for extraId,enabled in pairs(props.extras) do
 				if enabled then
-					SetVehicleExtra(vehicle, tonumber(id), 0)
+					SetVehicleExtra(vehicle, tonumber(extraId), 0)
 				else
-					SetVehicleExtra(vehicle, tonumber(id), 1)
+					SetVehicleExtra(vehicle, tonumber(extraId), 1)
 				end
 			end
 		end
@@ -884,7 +884,7 @@ ESX.ShowInventory = function()
 										}, function(data3, menu3)
 											local quantity = tonumber(data3.value)
 
-											if quantity then
+											if quantity and quantity > 0 and data.current.count >= quantity then
 												TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
 												menu3.close()
 												menu2.close()
@@ -926,7 +926,7 @@ ESX.ShowInventory = function()
 						}, function(data2, menu2)
 							local quantity = tonumber(data2.value)
 
-							if quantity then
+							if quantity and quantity > 0 and data.current.count >= quantity then
 								menu2.close()
 								menu1.close()
 								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
@@ -957,8 +957,8 @@ ESX.ShowInventory = function()
 							}, function(data2, menu2)
 								local quantity = tonumber(data2.value)
 
-								if quantity then
-									if pedAmmo >= quantity and quantity > 0 then
+								if quantity and quantity > 0 then
+									if pedAmmo >= quantity then
 										TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
 										menu2.close()
 										menu1.close()
