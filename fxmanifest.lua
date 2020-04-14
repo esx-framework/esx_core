@@ -6,7 +6,10 @@ description 'ESX Menu Dialog'
 
 version '1.1.0'
 
-client_script 'client/main.lua'
+client_scripts {
+	'@es_extended/client/wrapper.lua',
+	'client/main.lua'
+}
 
 ui_page 'html/ui.html'
 
