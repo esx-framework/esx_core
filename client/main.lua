@@ -11,7 +11,7 @@ end)
 
 AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
 
-AddEventHandler('playerSpawned', function(spawn) isDead = false end)
+AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
 
 function startAttitude(lib, anim)
 	ESX.Streaming.RequestAnimSet(lib, function()
