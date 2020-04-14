@@ -1,4 +1,4 @@
-USE `essentialmode`;
+USE `es_extended`;
 
 CREATE TABLE `shops` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
