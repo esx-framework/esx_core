@@ -1001,7 +1001,7 @@ ESX.ShowInventory = function()
 							if playersNearby[selectedPlayer] then
 								local selectedPlayerPed = GetPlayerPed(selectedPlayer)
 
-								if IsPedOnFoot(selectedPlayerPed) then
+								if IsPedOnFoot(selectedPlayerPed) and not IsPedFalling(selectedPlayerPed) then
 									if type == 'item_weapon' then
 										TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, nil)
 										menu2.close()
@@ -1039,7 +1039,7 @@ ESX.ShowInventory = function()
 					ESX.ShowNotification(_U('players_nearby'))
 				end
 			elseif data1.current.action == 'remove' then
-				if IsPedOnFoot(playerPed) then
+				if IsPedOnFoot(playerPed) and not IsPedFalling(playerPed) then
 					local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
 					ESX.Streaming.RequestAnimDict(dict)
 
@@ -1075,10 +1075,9 @@ ESX.ShowInventory = function()
 				ESX.ShowInventory()
 			elseif data1.current.action == 'give_ammo' then
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-				local closestPed = GetPlayerPed(closestPlayer)
 				local pedAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
 
-				if IsPedOnFoot(closestPed) then
+				if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
 					if closestPlayer ~= -1 and closestDistance < 3.0 then
 						if pedAmmo > 0 then
 							ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
