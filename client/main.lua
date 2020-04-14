@@ -1000,6 +1000,6 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 	isDead = true
 end)
 
-AddEventHandler('playerSpawned', function(spawn)
+AddEventHandler('esx:onPlayerSpawn', function(spawn)
 	isDead = false
 end)
