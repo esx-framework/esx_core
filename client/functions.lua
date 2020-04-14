@@ -944,7 +944,7 @@ ESX.ShowInventory = function()
 	}, function(data, menu)
 		menu.close()
 		local player, distance = ESX.Game.GetClosestPlayer()
-		local elements = {}
+		elements = {}
 
 		if data.current.usable then
 			table.insert(elements, {label = _U('use'), action = 'use', type = data.current.type, value = data.current.value})
@@ -975,10 +975,11 @@ ESX.ShowInventory = function()
 				local playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
 
 				if #playersNearby > 0 then
-					local players, elements = {}, {}
+					local players = {}
+					elements = {}
 
-					for k,player in ipairs(playersNearby) do
-						players[GetPlayerServerId(player)] = true
+					for k,playerNearby in ipairs(playersNearby) do
+						players[GetPlayerServerId(playerNearby)] = true
 					end
 
 					ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)

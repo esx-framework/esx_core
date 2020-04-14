@@ -255,8 +255,8 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(vehicle)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+AddEventHandler('esx:spawnVehicle', function(vehicleName)
+	local model = (type(vehicleName) == 'number' and vehicleName or GetHashKey(vehicleName))
 
 	if IsModelInCdimage(model) then
 		local playerPed = PlayerPedId()
@@ -266,7 +266,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		end)
 	else
-		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
+		TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Invalid vehicle model.'}})
 	end
 end)
 

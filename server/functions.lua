@@ -166,7 +166,7 @@ end
 ESX.SavePlayer = function(xPlayer, cb)
 	local asyncTasks = {}
 
-	table.insert(asyncTasks, function(cb)
+	table.insert(asyncTasks, function(cb2)
 		MySQL.Async.execute('UPDATE users SET accounts = @accounts, job = @job, job_grade = @job_grade, `group` = @group, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
 			['@accounts'] = json.encode(xPlayer.getAccounts(true)),
 			['@job'] = xPlayer.job.name,
@@ -177,7 +177,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 			['@identifier'] = xPlayer.getIdentifier(),
 			['@inventory'] = json.encode(xPlayer.getInventory(true))
 		}, function(rowsChanged)
-			cb()
+			cb2()
 		end)
 	end)
 
@@ -194,9 +194,9 @@ ESX.SavePlayers = function(cb)
 	local xPlayers, asyncTasks = ESX.GetPlayers(), {}
 
 	for i=1, #xPlayers, 1 do
-		table.insert(asyncTasks, function(cb)
+		table.insert(asyncTasks, function(cb2)
 			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-			ESX.SavePlayer(xPlayer, cb)
+			ESX.SavePlayer(xPlayer, cb2)
 		end)
 	end
 
