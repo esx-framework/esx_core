@@ -178,7 +178,7 @@ Locales['sv'] = {
   ['weapon_wrench'] = 'skiftnyckel',
   ['weapon_flashlight'] = 'ficklampa',
   ['gadget_parachute'] = 'fallskärm',
-  ['weapon_flare'] = 'signalpistol',
+  ['weapon_flare'] = 'blossa',
   ['weapon_doubleaction'] = 'double-Action Revolver',
 
   -- Weapon Components

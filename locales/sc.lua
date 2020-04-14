@@ -49,7 +49,7 @@ Locales['sc'] = {
   ['account_bank'] = '银行',
   ['account_black_money'] = '黑钱',
   ['account_money'] = '现金',
-  
+
   ['act_imp'] = '操作失败',
   ['in_vehicle'] = '请离开载具',
 

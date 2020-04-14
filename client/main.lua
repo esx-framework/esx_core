@@ -1,4 +1,4 @@
-local isLoadoutLoaded, isPaused, isDead, isFirstSpawn, pickups = false, false, false, true, {}
+local isLoadoutLoaded, isPaused, isDead, pickups = false, false, false, {}
 
 Citizen.CreateThread(function()
 	while true do

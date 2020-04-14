@@ -178,12 +178,12 @@ Locales['en'] = {
   ['weapon_wrench'] = 'pipe wrench',
   ['weapon_flashlight'] = 'flashlight',
   ['gadget_parachute'] = 'parachute',
-  ['weapon_flare'] = 'flare gun',
+  ['weapon_flare'] = 'flare',
   ['weapon_doubleaction'] = 'double-Action Revolver',
 
   -- Weapon Components
-  ['component_clip_default'] = 'default Grip',
-  ['component_clip_extended'] = 'extended Grip',
+  ['component_clip_default'] = 'default Clip',
+  ['component_clip_extended'] = 'extended Clip',
   ['component_clip_drum'] = 'drum Magazine',
   ['component_clip_box'] = 'box Magazine',
   ['component_flashlight'] = 'flashlight',

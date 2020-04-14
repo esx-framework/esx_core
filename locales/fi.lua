@@ -182,8 +182,8 @@ Locales['fi'] = {
   ['weapon_doubleaction'] = 'double-Action Revolver',
 
   -- Weapon Components
-  ['component_clip_default'] = 'default Grip',
-  ['component_clip_extended'] = 'extended Grip',
+  ['component_clip_default'] = 'default Clip',
+  ['component_clip_extended'] = 'extended Clip',
   ['component_clip_drum'] = 'drum Magazine',
   ['component_clip_box'] = 'box Magazine',
   ['component_flashlight'] = 'flashlight',

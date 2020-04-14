@@ -49,7 +49,7 @@ Locales['tc'] = {
   ['account_bank'] = '銀行',
   ['account_black_money'] = '黑錢',
   ['account_money'] = '現金',
-  
+
   ['act_imp'] = '操作失敗',
   ['in_vehicle'] = '請離開載具',
 
