@@ -73,159 +73,128 @@ function UpdateSocietyMoneyHUDElement(money)
 end
 
 function OpenBossMenu(society, close, options)
-	local isBoss = nil
-	local options  = options or {}
+	options = options or {}
 	local elements = {}
 
-	ESX.TriggerServerCallback('esx_society:isBoss', function(result)
-		isBoss = result
+	ESX.TriggerServerCallback('esx_society:isBoss', function(isBoss)
+		if isBoss then
+			local defaultOptions = {
+				withdraw = true,
+				deposit = true,
+				wash = true,
+				employees = true,
+				grades = true
+			}
+
+			for k,v in pairs(defaultOptions) do
+				if options[k] == nil then
+					options[k] = v
+				end
+			end
+
+			if options.withdraw then
+				table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
+			end
+
+			if options.deposit then
+				table.insert(elements, {label = _U('deposit_society_money'), value = 'deposit_money'})
+			end
+
+			if options.wash then
+				table.insert(elements, {label = _U('wash_money'), value = 'wash_money'})
+			end
+
+			if options.employees then
+				table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
+			end
+
+			if options.grades then
+				table.insert(elements, {label = _U('salary_management'), value = 'manage_grades'})
+			end
+
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boss_actions_' .. society, {
+				title    = _U('boss_menu'),
+				align    = 'top-left',
+				elements = elements
+			}, function(data, menu)
+				if data.current.value == 'withdraw_society_money' then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. society, {
+						title = _U('withdraw_amount')
+					}, function(data2, menu2)
+						local amount = tonumber(data2.value)
+
+						if amount == nil then
+							ESX.ShowNotification(_U('invalid_amount'))
+						else
+							menu2.close()
+							TriggerServerEvent('esx_society:withdrawMoney', society, amount)
+						end
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				elseif data.current.value == 'deposit_money' then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount_' .. society, {
+						title = _U('deposit_amount')
+					}, function(data2, menu2)
+						local amount = tonumber(data2.value)
+
+						if amount == nil then
+							ESX.ShowNotification(_U('invalid_amount'))
+						else
+							menu2.close()
+							TriggerServerEvent('esx_society:depositMoney', society, amount)
+						end
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				elseif data.current.value == 'wash_money' then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'wash_money_amount_' .. society, {
+						title = _U('wash_money_amount')
+					}, function(data2, menu2)
+						local amount = tonumber(data2.value)
+
+						if amount == nil then
+							ESX.ShowNotification(_U('invalid_amount'))
+						else
+							menu2.close()
+							TriggerServerEvent('esx_society:washMoney', society, amount)
+						end
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				elseif data.current.value == 'manage_employees' then
+					OpenManageEmployeesMenu(society)
+				elseif data.current.value == 'manage_grades' then
+					OpenManageGradesMenu(society)
+				end
+			end, function(data, menu)
+				if close then
+					close(data, menu)
+				end
+			end)
+		end
 	end, society)
-
-	while isBoss == nil do
-		Citizen.Wait(100)
-	end
-
-	if not isBoss then
-		return
-	end
-
-	local defaultOptions = {
-		withdraw  = true,
-		deposit   = true,
-		wash      = true,
-		employees = true,
-		grades    = true
-	}
-
-	for k,v in pairs(defaultOptions) do
-		if options[k] == nil then
-			options[k] = v
-		end
-	end
-
-	if options.withdraw then
-		table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
-	end
-
-	if options.deposit then
-		table.insert(elements, {label = _U('deposit_society_money'), value = 'deposit_money'})
-	end
-
-	if options.wash then
-		table.insert(elements, {label = _U('wash_money'), value = 'wash_money'})
-	end
-
-	if options.employees then
-		table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
-	end
-
-	if options.grades then
-		table.insert(elements, {label = _U('salary_management'), value = 'manage_grades'})
-	end
-
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boss_actions_' .. society, {
-		title    = _U('boss_menu'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-
-		if data.current.value == 'withdraw_society_money' then
-
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. society, {
-				title = _U('withdraw_amount')
-			}, function(data, menu)
-
-				local amount = tonumber(data.value)
-
-				if amount == nil then
-					ESX.ShowNotification(_U('invalid_amount'))
-				else
-					menu.close()
-					TriggerServerEvent('esx_society:withdrawMoney', society, amount)
-				end
-
-			end, function(data, menu)
-				menu.close()
-			end)
-
-		elseif data.current.value == 'deposit_money' then
-
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount_' .. society, {
-				title = _U('deposit_amount')
-			}, function(data, menu)
-
-				local amount = tonumber(data.value)
-
-				if amount == nil then
-					ESX.ShowNotification(_U('invalid_amount'))
-				else
-					menu.close()
-					TriggerServerEvent('esx_society:depositMoney', society, amount)
-				end
-
-			end, function(data, menu)
-				menu.close()
-			end)
-
-		elseif data.current.value == 'wash_money' then
-
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'wash_money_amount_' .. society, {
-				title = _U('wash_money_amount')
-			}, function(data, menu)
-
-				local amount = tonumber(data.value)
-
-				if amount == nil then
-					ESX.ShowNotification(_U('invalid_amount'))
-				else
-					menu.close()
-					TriggerServerEvent('esx_society:washMoney', society, amount)
-				end
-
-			end, function(data, menu)
-				menu.close()
-			end)
-
-		elseif data.current.value == 'manage_employees' then
-			OpenManageEmployeesMenu(society)
-		elseif data.current.value == 'manage_grades' then
-			OpenManageGradesMenu(society)
-		end
-
-	end, function(data, menu)
-		if close then
-			close(data, menu)
-		end
-	end)
-
 end
 
 function OpenManageEmployeesMenu(society)
-
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_employees_' .. society, {
 		title    = _U('employee_management'),
 		align    = 'top-left',
 		elements = {
 			{label = _U('employee_list'), value = 'employee_list'},
-			{label = _U('recruit'),       value = 'recruit'}
-		}
-	}, function(data, menu)
-
+			{label = _U('recruit'), value = 'recruit'}
+	}}, function(data, menu)
 		if data.current.value == 'employee_list' then
 			OpenEmployeeList(society)
-		end
-
-		if data.current.value == 'recruit' then
+		elseif data.current.value == 'recruit' then
 			OpenRecruitMenu(society)
 		end
-
 	end, function(data, menu)
 		menu.close()
 	end)
 end
 
 function OpenEmployeeList(society)
-
 	ESX.TriggerServerCallback('esx_society:getEmployees', function(employees)
 
 		local elements = {
@@ -263,15 +232,11 @@ function OpenEmployeeList(society)
 			menu.close()
 			OpenManageEmployeesMenu(society)
 		end)
-
 	end, society)
-
 end
 
 function OpenRecruitMenu(society)
-
 	ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
-
 		local elements = {}
 
 		for i=1, #players, 1 do
@@ -290,15 +255,13 @@ function OpenRecruitMenu(society)
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
-
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_confirm_' .. society, {
 				title    = _U('do_you_want_to_recruit', data.current.name),
 				align    = 'top-left',
 				elements = {
-					{label = _U('no'),  value = 'no'},
+					{label = _U('no'), value = 'no'},
 					{label = _U('yes'), value = 'yes'}
-				}
-			}, function(data2, menu2)
+			}}, function(data2, menu2)
 				menu2.close()
 
 				if data2.current.value == 'yes' then
@@ -311,19 +274,14 @@ function OpenRecruitMenu(society)
 			end, function(data2, menu2)
 				menu2.close()
 			end)
-
 		end, function(data, menu)
 			menu.close()
 		end)
-
 	end)
-
 end
 
 function OpenPromoteMenu(society, employee)
-
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
-
 		local elements = {}
 
 		for i=1, #job.grades, 1 do
@@ -351,15 +309,11 @@ function OpenPromoteMenu(society, employee)
 			menu.close()
 			OpenEmployeeList(society)
 		end)
-
 	end, society)
-
 end
 
 function OpenManageGradesMenu(society)
-
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
-
 		local elements = {}
 
 		for i=1, #job.grades, 1 do
@@ -376,7 +330,6 @@ function OpenManageGradesMenu(society)
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
-
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society, {
 				title = _U('salary_amount')
 			}, function(data2, menu2)
@@ -394,17 +347,13 @@ function OpenManageGradesMenu(society)
 						OpenManageGradesMenu(society)
 					end, society, data.current.value, amount)
 				end
-
 			end, function(data2, menu2)
 				menu2.close()
 			end)
-
 		end, function(data, menu)
 			menu.close()
 		end)
-
 	end, society)
-
 end
 
 AddEventHandler('esx_society:openBossMenu', function(society, close, options)

@@ -16,7 +16,7 @@ MySQL.ready(function()
 	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
 
 	for i=1, #result, 1 do
-		Jobs[result[i].name]        = result[i]
+		Jobs[result[i].name] = result[i]
 		Jobs[result[i].name].grades = {}
 	end
 
@@ -31,18 +31,17 @@ AddEventHandler('esx_society:registerSociety', function(name, label, account, da
 	local found = false
 
 	local society = {
-		name      = name,
-		label     = label,
-		account   = account,
+		name = name,
+		label = label,
+		account = account,
 		datastore = datastore,
 		inventory = inventory,
-		data      = data
+		data = data
 	}
 
 	for i=1, #RegisteredSocieties, 1 do
 		if RegisteredSocieties[i].name == name then
-			found = true
-			RegisteredSocieties[i] = society
+			found, RegisteredSocieties[i] = true, society
 			break
 		end
 	end
@@ -61,9 +60,9 @@ AddEventHandler('esx_society:getSociety', function(name, cb)
 end)
 
 RegisterServerEvent('esx_society:withdrawMoney')
-AddEventHandler('esx_society:withdrawMoney', function(society, amount)
+AddEventHandler('esx_society:withdrawMoney', function(societyName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local society = GetSociety(society)
+	local society = GetSociety(societyName)
 	amount = ESX.Math.Round(tonumber(amount))
 
 	if xPlayer.job.name == society.name then
@@ -71,7 +70,6 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 			if amount > 0 and account.money >= amount then
 				account.removeMoney(amount)
 				xPlayer.addMoney(amount)
-
 				xPlayer.showNotification(_U('have_withdrawn', ESX.Math.GroupDigits(amount)))
 			else
 				xPlayer.showNotification(_U('invalid_amount'))
@@ -83,19 +81,18 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 end)
 
 RegisterServerEvent('esx_society:depositMoney')
-AddEventHandler('esx_society:depositMoney', function(society, amount)
+AddEventHandler('esx_society:depositMoney', function(societyName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local society = GetSociety(society)
+	local society = GetSociety(societyName)
 	amount = ESX.Math.Round(tonumber(amount))
 
 	if xPlayer.job.name == society.name then
 		if amount > 0 and xPlayer.getMoney() >= amount then
 			TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 				xPlayer.removeMoney(amount)
+				xPlayer.showNotification(_U('have_deposited', ESX.Math.GroupDigits(amount)))
 				account.addMoney(amount)
 			end)
-
-			xPlayer.showNotification(_U('have_deposited', ESX.Math.GroupDigits(amount)))
 		else
 			xPlayer.showNotification(_U('invalid_amount'))
 		end
@@ -116,8 +113,8 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 
 			MySQL.Async.execute('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)', {
 				['@identifier'] = xPlayer.identifier,
-				['@society']    = society,
-				['@amount']     = amount
+				['@society'] = society,
+				['@amount'] = amount
 			}, function(rowsChanged)
 				xPlayer.showNotification(_U('you_have', ESX.Math.GroupDigits(amount)))
 			end)
@@ -135,7 +132,6 @@ AddEventHandler('esx_society:putVehicleInGarage', function(societyName, vehicle)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
-
 		table.insert(garage, vehicle)
 		store.set('garage', garage)
 	end)
@@ -221,7 +217,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 end)
 
 ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
-	local job    = json.decode(json.encode(Jobs[society]))
+	local job = json.decode(json.encode(Jobs[society]))
 	local grades = {}
 
 	for k,v in pairs(job.grades) do
@@ -306,15 +302,15 @@ end)
 
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	local xPlayers = ESX.GetPlayers()
-	local players  = {}
+	local players = {}
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 		table.insert(players, {
-			source     = xPlayer.source,
+			source = xPlayer.source,
 			identifier = xPlayer.identifier,
-			name       = xPlayer.name,
-			job        = xPlayer.job
+			name = xPlayer.name,
+			job = xPlayer.job
 		})
 	end
 
