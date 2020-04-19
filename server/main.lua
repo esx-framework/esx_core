@@ -2,6 +2,7 @@ Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('Roleplay')
 	local resourcesStopped = {}
+	ExecuteCommand('add_ace resource.es_extended command.stop allow')
 
 	for resourceName,reason in pairs(Config.IncompatibleResourcesToStop) do
 		local status = GetResourceState(resourceName)
@@ -11,7 +12,7 @@ Citizen.CreateThread(function()
 				Citizen.Wait(100)
 			end
 
-			StopResource(resourceName)
+			ExecuteCommand(('stop %s'):format(resourceName))
 			resourcesStopped[resourceName] = reason
 		end
 	end
