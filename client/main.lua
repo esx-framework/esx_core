@@ -26,18 +26,16 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		end
 
 		SetPlayerModel(PlayerId(), defaultModel)
-		local playerPed = PlayerPedId()
-
-		SetPedDefaultComponentVariation(playerPed)
-		SetPedRandomComponentVariation(playerPed, true)
+		SetPedDefaultComponentVariation(PlayerPedId())
+		SetPedRandomComponentVariation(PlayerPedId(), true)
 		SetModelAsNoLongerNeeded(defaultModel)
-		FreezeEntityPosition(playerPed, false)
 	end
 
-	local playerPed = PlayerPedId()
+	-- freeze the player
+	FreezeEntityPosition(PlayerPedId(), true)
 
 	-- enable PVP
-	SetCanAttackFriendly(playerPed, true, false)
+	SetCanAttackFriendly(PlayerPedId(), true, false)
 	NetworkSetFriendlyFireOption(true)
 
 	-- disable wanted level
@@ -62,10 +60,10 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		})
 	end
 
-	ESX.Game.Teleport(playerPed, {
+	ESX.Game.Teleport(PlayerPedId(), {
 		x = playerData.coords.x,
 		y = playerData.coords.y,
-		z = playerData.coords.z + 0.5,
+		z = playerData.coords.z + 0.25,
 		heading = playerData.coords.heading
 	}, function()
 		TriggerServerEvent('esx:onPlayerSpawn')
@@ -75,6 +73,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 
 		Citizen.Wait(3000)
 		ShutdownLoadingScreen()
+		FreezeEntityPosition(PlayerPedId(), false)
 		DoScreenFadeIn(10000)
 		StartServerSyncLoops()
 	end)
@@ -97,7 +96,6 @@ end)
 AddEventHandler('esx:restoreLoadout', function()
 	local playerPed = PlayerPedId()
 	local ammoTypes = {}
-
 	RemoveAllPedWeapons(playerPed, true)
 
 	for k,v in ipairs(ESX.PlayerData.loadout) do
@@ -111,7 +109,6 @@ AddEventHandler('esx:restoreLoadout', function()
 
 		for k2,v2 in ipairs(v.components) do
 			local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
-
 			GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
 		end
 
