@@ -268,79 +268,42 @@ AddEventHandler('esx:spawnVehicle', function(vehicleName)
 end)
 
 RegisterNetEvent('esx:createPickup')
-AddEventHandler('esx:createPickup', function(pickupId, label, playerId, type, name, components, tintIndex)
-	local playerPed = GetPlayerPed(GetPlayerFromServerId(playerId))
-	local entityCoords, forwardVector, pickupObject = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
-	local objectCoords = (entityCoords + forwardVector * 1.0)
+AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
+	local function setObjectProperties(object)
+		SetEntityAsMissionEntity(object, true, false)
+		PlaceObjectOnGroundProperly(object)
+		FreezeEntityPosition(object, true)
+		SetEntityCollision(object, false, true)
+
+		pickups[pickupId] = {
+			obj = object,
+			label = label,
+			inRange = false,
+			coords = vector3(coords.x, coords.y, coords.z)
+		}
+	end
 
 	if type == 'item_weapon' then
 		local weaponHash = GetHashKey(name)
 		ESX.Streaming.RequestWeaponAsset(weaponHash)
-		pickupObject = CreateWeaponObject(weaponHash, 50, objectCoords, true, 1.0, 0)
+		local pickupObject = CreateWeaponObject(weaponHash, 50, coords, true, 1.0, 0)
 		SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
 		for k,v in ipairs(components) do
 			local component = ESX.GetWeaponComponent(name, v)
 			GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 		end
+
+		setObjectProperties(pickupObject)
 	else
-		ESX.Game.SpawnLocalObject('prop_money_bag_01', objectCoords, function(obj)
-			pickupObject = obj
-		end)
-
-		while not pickupObject do
-			Citizen.Wait(10)
-		end
+		ESX.Game.SpawnLocalObject('prop_money_bag_01', coords, setObjectProperties)
 	end
-
-	SetEntityAsMissionEntity(pickupObject, true, false)
-	PlaceObjectOnGroundProperly(pickupObject)
-	FreezeEntityPosition(pickupObject, true)
-	SetEntityCollision(pickupObject, false, true)
-
-	pickups[pickupId] = {
-		obj = pickupObject,
-		label = label,
-		inRange = false,
-		coords = objectCoords
-	}
 end)
 
 RegisterNetEvent('esx:createMissingPickups')
 AddEventHandler('esx:createMissingPickups', function(missingPickups)
 	for pickupId,pickup in pairs(missingPickups) do
-		local pickupObject = nil
-
-		if pickup.type == 'item_weapon' then
-			ESX.Streaming.RequestWeaponAsset(GetHashKey(pickup.name))
-			pickupObject = CreateWeaponObject(GetHashKey(pickup.name), 50, pickup.coords.x, pickup.coords.y, pickup.coords.z, true, 1.0, 0)
-			SetWeaponObjectTintIndex(pickupObject, pickup.tintIndex)
-
-			for k,componentName in ipairs(pickup.components) do
-				local component = ESX.GetWeaponComponent(pickup.name, componentName)
-				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
-			end
-		else
-			ESX.Game.SpawnLocalObject('prop_money_bag_01', pickup.coords, function(obj)
-				pickupObject = obj
-			end)
-
-			while not pickupObject do
-				Citizen.Wait(10)
-			end
-		end
-
-		SetEntityAsMissionEntity(pickupObject, true, false)
-		PlaceObjectOnGroundProperly(pickupObject)
-		FreezeEntityPosition(pickupObject, true)
-		SetEntityCollision(pickupObject, false, true)
-
-		pickups[pickupId] = {
-			obj = pickupObject,
-			label = pickup.label,
-			inRange = false,
-			coords = vector3(pickup.coords.x, pickup.coords.y, pickup.coords.z)
-		}
+		TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords, pickup.type, pickup.name, pickup.components, pickup.tintIndex)
 	end
 end)
 

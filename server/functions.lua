@@ -258,11 +258,9 @@ ESX.CreatePickup = function(type, name, count, label, playerId, components, tint
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 
 	ESX.Pickups[pickupId] = {
-		type  = type,
-		name  = name,
-		count = count,
-		label = label,
-		coords = xPlayer.getCoords(),
+		type = type, name = name,
+		count = count, label = label,
+		coords = xPlayer.getCoords()
 	}
 
 	if type == 'item_weapon' then
@@ -270,7 +268,7 @@ ESX.CreatePickup = function(type, name, count, label, playerId, components, tint
 		ESX.Pickups[pickupId].tintIndex = tintIndex
 	end
 
-	TriggerClientEvent('esx:createPickup', -1, pickupId, label, playerId, type, name, components, tintIndex)
+	TriggerClientEvent('esx:createPickup', -1, pickupId, label, xPlayer.getCoords(), type, name, components, tintIndex)
 	ESX.PickupId = pickupId
 end
 
