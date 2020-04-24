@@ -1,8 +1,7 @@
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('Roleplay')
-	local resourcesStopped = {}
-	ExecuteCommand('add_ace resource.es_extended command.stop allow')
+	local resourcesStopped, isAceGranted = {}, false
 
 	for resourceName,reason in pairs(Config.IncompatibleResourcesToStop) do
 		local status = GetResourceState(resourceName)
@@ -10,6 +9,11 @@ Citizen.CreateThread(function()
 		if status == 'started' or status == 'starting' then
 			while GetResourceState(resourceName) == 'starting' do
 				Citizen.Wait(100)
+			end
+
+			if not isAceGranted then
+				ExecuteCommand('add_ace resource.es_extended command.stop allow')
+				isAceGranted = true
 			end
 
 			ExecuteCommand(('stop %s'):format(resourceName))
