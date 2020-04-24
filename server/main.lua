@@ -252,6 +252,7 @@ function loadESXPlayer(identifier, playerId)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
+		print(('[es_extended] [^2INFO^7] A player with name "%s^7" has connected to the server with assigned player id %s'):format(xPlayer.getName(), playerId))
 	end)
 end
 
@@ -302,7 +303,6 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 	if type == 'item_standard' then
 		local sourceItem = sourceXPlayer.getInventoryItem(itemName)
-		local targetItem = targetXPlayer.getInventoryItem(itemName)
 
 		if itemCount > 0 and sourceItem.count >= itemCount then
 			if targetXPlayer.canCarryItem(itemName, itemCount) then
@@ -419,8 +419,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 		if xPlayer.hasWeapon(itemName) then
 			local _, weapon = xPlayer.getWeapon(itemName)
 			local _, weaponObject = ESX.GetWeapon(itemName)
-			local pickupLabel
-
+			local components, pickupLabel = ESX.Table.Clone(weapon.components)
 			xPlayer.removeWeapon(itemName)
 
 			if weaponObject.ammo and weapon.ammo > 0 then
@@ -432,7 +431,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('threw_weapon', weapon.label))
 			end
 
-			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, weapon.components, weapon.tintIndex)
+			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
 		end
 	end
 end)

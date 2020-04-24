@@ -286,7 +286,7 @@ AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name
 	if type == 'item_weapon' then
 		local weaponHash = GetHashKey(name)
 		ESX.Streaming.RequestWeaponAsset(weaponHash)
-		local pickupObject = CreateWeaponObject(weaponHash, 50, coords, true, 1.0, 0)
+		local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 		SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
 		for k,v in ipairs(components) do
