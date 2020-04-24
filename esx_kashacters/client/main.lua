@@ -6,17 +6,20 @@ Citizen.CreateThread(function()
     end
 end)
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        if NetworkIsSessionStarted() then
-            Citizen.Wait(100)
-            TriggerServerEvent("kashactersS:SetupCharacters")
-            TriggerEvent("kashactersC:SetupCharacters")
-            return
-        end
-    end
-end)
+-- This Code Was changed to fix error With player spawner as default --
+-- Link to the post with the error fix --
+-- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/316?u=xxfri3ndlyxx --
+--Citizen.CreateThread(function()
+--    while true do
+--        Citizen.Wait(0)
+--        if NetworkIsSessionStarted() then
+--            Citizen.Wait(100)
+--            TriggerServerEvent("kashactersS:SetupCharacters")
+--            TriggerEvent("kashactersC:SetupCharacters")
+--           return -- break the loop
+--        end
+--    end
+--end)
 
 local IsChoosing = true
 Citizen.CreateThread(function ()
@@ -56,48 +59,56 @@ AddEventHandler('kashactersC:SetupUI', function(Characters)
 end)
 
 RegisterNetEvent('kashactersC:SpawnCharacter')
-AddEventHandler('kashactersC:SpawnCharacter', function(spawn, isnew)
-
-    SetTimecycleModifier('default')
-
-    local pos = spawn
-
-    SetEntityCoords(GetPlayerPed(-1), pos.x, pos.y, pos.z)
-    DoScreenFadeIn(500)
-
-    Citizen.Wait(500)
-
-    cam2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", -1355.93,-1487.78,520.75, 300.00,0.00,0.00, 100.00, false, 0)
-    PointCamAtCoord(cam2, pos.x,pos.y,pos.z+200)
-    SetCamActiveWithInterp(cam2, cam, 900, true, true)
-
-    Citizen.Wait(900)
-
-    cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", pos.x,pos.y,pos.z+200, 300.00,0.00,0.00, 100.00, false, 0)
-    PointCamAtCoord(cam, pos.x,pos.y,pos.z+2)
-    SetCamActiveWithInterp(cam, cam2, 3700, true, true)
-
-    Citizen.Wait(3700)
-
-    PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
-    RenderScriptCams(false, true, 500, true, true)
-    PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
-    FreezeEntityPosition(GetPlayerPed(-1), false)
-
-    Citizen.Wait(500)
-
-    SetCamActive(cam, false)
-    DestroyCam(cam, true)
-    IsChoosing = false
-    DisplayHud(true)
-    DisplayRadar(true)
-
-    TriggerEvent('esx:kashloaded')
-
+AddEventHandler('kashactersC:SpawnCharacter', function(isnew)
     if isnew == true then
-        TriggerEvent('esx_identity:showRegisterIdentity')
-     end
+		SetTimecycleModifier('default')
+		
+		local pos = { x = -1044.73, y = -2749.13, z = 21.3634 } -- DEFAULT SPAWN POSITION
+		RequestCollisionAtCoord(pos.x, pos.y, pos.z)
+		SetEntityCoords(GetPlayerPed(-1), pos.x, pos.y, pos.z)
+		DoScreenFadeIn(500)
 
+		Citizen.Wait(500)
+
+		cam2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", -1355.93,-1487.78,520.75, 300.00,0.00,0.00, 100.00, false, 0)
+		PointCamAtCoord(cam2, pos.x,pos.y,pos.z+200)
+		SetCamActiveWithInterp(cam2, cam, 900, true, true)
+
+		Citizen.Wait(900)	
+	    cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", pos.x,pos.y,pos.z+200, 300.00,0.00,0.00, 100.00, false, 0)
+		PointCamAtCoord(cam, pos.x,pos.y,pos.z+2)
+		SetCamActiveWithInterp(cam, cam2, 3700, true, true)
+
+		Citizen.Wait(3700)
+
+		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
+		RenderScriptCams(false, true, 500, true, true)
+		PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
+		FreezeEntityPosition(GetPlayerPed(-1), false)
+		Citizen.Wait(500)
+		SetPlayerInvincible(GetPlayerPed(-1), false);
+		SetEntityCollision(GetPlayerPed(-1), true, true)
+		SetCamActive(cam, false)
+		DestroyCam(cam, true)
+		IsChoosing = false
+
+		SetEntityVisible(GetPlayerPed(-1), true, false)
+
+		TriggerEvent('esx:kashloaded')
+        TriggerEvent('esx_identity:showRegisterIdentity')
+	else
+		SetTimecycleModifier('default')
+		DoScreenFadeIn(500)
+		Citizen.Wait(500)
+		RenderScriptCams(false, true, 500, true, true)
+		SetCamActive(cam, false)
+		DestroyCam(cam, true)
+		IsChoosing = false
+		DisplayHud(true)
+		DisplayRadar(true)
+		TriggerEvent('esx:kashloaded')
+		TriggerEvent("madrp-spawn")
+    end
 end)
 
 RegisterNetEvent('kashactersC:ReloadCharacters')

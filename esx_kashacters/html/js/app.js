@@ -24,7 +24,7 @@ $(".character-box").click(function () {
 });
 
 $("#play-char").click(function () {
-    $.post("http://esx_kashacter/CharacterChosen", JSON.stringify({
+    $.post("http://esx_kashacters/CharacterChosen", JSON.stringify({
         charid: $('.active-char').attr("data-charid"),
         ischar: $('.active-char').attr("data-ischar"),
     }));
@@ -32,7 +32,7 @@ $("#play-char").click(function () {
 });
 
 $("#deletechar").click(function () {
-    $.post("http://esx_kashacter/DeleteCharacter", JSON.stringify({
+    $.post("http://esx_kashacters/DeleteCharacter", JSON.stringify({
         charid: $('.active-char').attr("data-charid"),
     }));
     Kashacter.CloseUI();
@@ -47,7 +47,7 @@ $("#deletechar").click(function () {
             $.each(data.characters, function (index, char) {
                 if (char.charid !== 0) {
                     var charid = char.identifier.charAt(4);
-                    $('[data-charid=' + charid + ']').html('<h3 class="character-fullname">'+ char.firstname +' '+ char.lastname +'</h3><div class="character-info"><p class="character-info-work"><strong>' + `${translate.job}: ` + '</strong><span>'+ char.job +' '+ char.job_grade +'</span></p><p class="character-info-money"><strong>' + `${translate.money}: ` + '</strong><span>'+ char.money +'</span></p><p class="character-info-bank"><strong>' + `${translate.bank}: ` + '</strong><span>'+ char.bank +'</span></p> <p class="character-info-dateofbirth"><strong>' + `${translate.dob}: ` + '</strong><span>'+ char.dateofbirth +'</span></p> <p class="character-info-gender"><strong>' + `${translate.gender}: ` + '</strong><span>'+ char.sex +'</span></p></div>').attr("data-ischar", "true");
+                    $('[data-charid=' + charid + ']').html('<h3 class="character-fullname">'+ char.firstname +' '+ char.lastname +'</h3><div class="character-info"><p class="character-info-work"><strong>Work: </strong><span>'+ char.job +' '+ char.job_grade +'</span></p><p class="character-info-money"><strong>Cash: </strong><span>'+ char.money +'</span></p><p class="character-info-bank"><strong>Bank: </strong><span>'+ char.bank +'</span></p> <p class="character-info-dateofbirth"><strong>Date of birth: </strong><span>'+ char.dateofbirth +'</span></p> <p class="character-info-gender"><strong>Gender: </strong><span>'+ char.sex +'</span></p></div>').attr("data-ischar", "true");
                 }
             });
         }
@@ -57,7 +57,7 @@ $("#deletechar").click(function () {
         $('.main-container').css({"display":"none"});
         $(".character-box").removeClass('active-char');
         $("#delete").css({"display":"none"});
-        $(".character-box").html('<h3 class="character-fullname"><i class="fas fa-plus"></i></h3><div class="character-info"><p class="character-info-new">' + `${translate.new}` + '</p></div>').attr("data-ischar", "false");
+		$(".character-box").html('<h3 class="character-fullname"><i class="fas fa-plus"></i></h3><div class="character-info"><p class="character-info-new">Create new character</p></div>').attr("data-ischar", "false");
     };
     window.onload = function(e) {
         window.addEventListener('message', function(event) {

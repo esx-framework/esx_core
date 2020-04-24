@@ -48,7 +48,7 @@ p {
 .btn-play {
     background: #43A047;
     color: #FFFFFF;
-    float:left;
+
     margin-right: 10px;
 }
 
@@ -59,7 +59,6 @@ p {
 .btn-delete {
     background: #930b0b;
     color: #FFFFFF;
-    float:left;
 }
 
 .btn-delete:hover {

@@ -2,16 +2,24 @@
 -- Edit this table to all the database tables and columns
 -- where identifiers are used (such as users, owned_vehicles, owned_properties etc.)
 ---------------------------------------------------------------------------------------
+
 local IdentifierTables = {
     {table = "addon_account_data", column = "owner"},
     {table = "addon_inventory_items", column = "owner"},
-    {table = "billing", column = "identifier"},
     {table = "datastore_data", column = "owner"},
-    {table = "owned_vehicles", column = "owner"},
     {table = "owned_properties", column = "owner"},
+    {table = "owned_vehicles", column = "owner"},
+    {table = "phone_calls", column = "owner"},
+    {table = "phone_messages", column = "owner"},
+    {table = "private_vehicles", column = "owner"},
     {table = "rented_vehicles", column = "owner"},
+	{table = "user_licenses", column = "owner"},
+    {table = "billing", column = "identifier"},
+    {table = "crimerecord", column = "identifier"},
+    {table = "phone_users_contacts", column = "identifier"},
+    {table = "society_moneywash", column = "identifier"},
     {table = "users", column = "identifier"},
-    {table = "user_licenses", column = "owner"},
+	{table = "twitter_tweets", column = "realUser"}
 }
 
 RegisterServerEvent("kashactersS:SetupCharacters")
@@ -19,7 +27,7 @@ AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
     local LastCharId = GetLastCharacter(src)
 
-    SetIdentifierToChar(GetRockstarID(src), LastCharId)
+    SetIdentifierToChar(GetPlayerIdentifiers(src)[2], LastCharId)
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
@@ -27,63 +35,56 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
-    local new = true
-    local spawn = {}
-
+	local isnew = true
     SetLastCharacter(src, tonumber(charid))
-    SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
-
+    SetCharToIdentifier(GetPlayerIdentifiers(src)[2], tonumber(charid))
     if ischar == "true" then
-        new = false
-        spawn = GetSpawnPos(src)
+		isnew = false
     else
-	TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
-        spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
+		TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
     end
-
-    TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn, new)
+    TriggerClientEvent("kashactersC:SpawnCharacter", src, isnew)
 end)
 
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    DeleteCharacter(GetRockstarID(src), charid)
+    DeleteCharacter(GetPlayerIdentifiers(src)[2], charid)
     TriggerClientEvent("kashactersC:ReloadCharacters", src)
 end)
 
 function GetPlayerCharacters(source)
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetIdentifierWithoutLicense(GetRockstarID(source)).."%'")
-
+  local identifier = GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[2])
+  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..identifier.."%'")
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
     charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."' AND `job_name` = '"..Chars[i].job.."'")
-    local accounts = json.decode(Chars[i].accounts)
-    Chars[i].bank = accounts["bank"]
-    Chars[i].money = accounts["money"]
+	
+	local accounts = json.decode(Chars[i].accounts)
+	Chars[i].bank = accounts["bank"]
+	Chars[i].money = accounts["money"]
     Chars[i].job = charJob[1].label
-    if charJobgrade[1].label ~= "Unemployed" then
-      Chars[i].job_grade = charJobgrade[1].label
-    else
-      Chars[i].job_grade = ""
-    end
+	if charJob[1].label == "Unemployed" then
+		Chars[i].job_grade = ""
+	else
+		Chars[i].job_grade = charJobgrade[1].label		
+	end
   end
-
   return Chars
 end
 
 function GetLastCharacter(source)
-    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `steamid` = '"..GetRockstarID(source).."'")
-
+    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `license` = '"..GetPlayerIdentifiers(source)[2].."'")
     if LastChar[1] ~= nil and LastChar[1].charid ~= nil then
         return tonumber(LastChar[1].charid)
     else
-        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`steamid`, `charid`) VALUES('"..GetRockstarID(source).."', 1)")
+        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`license`, `charid`) VALUES('"..GetPlayerIdentifiers(source)[2].."', 1)")
         return 1
     end
 end
 
 function SetLastCharacter(source, charid)
-    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `steamid` = '"..GetRockstarID(source).."'")
+    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `license` = '"..GetPlayerIdentifiers(source)[2].."'")
 end
 
 function SetIdentifierToChar(identifier, charid)
@@ -104,26 +105,8 @@ function DeleteCharacter(identifier, charid)
     end
 end
 
-function GetSpawnPos(source)
-    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetIdentifierWithoutLicense(GetRockstarID(source)).."'")
-    return json.decode(SpawnPos[1].position)
-end
-
 function GetIdentifierWithoutLicense(Identifier)
-    return string.gsub(Identifier, "license:", "")
-end
-
-function GetRockstarID(playerId)
-    local identifier
-
-    for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-        if string.match(v, 'license:') then
-            identifier = v
-            break
-        end
-    end
-
-    return identifier
+    return string.gsub(Identifier, "license", "")
 end
 
 function MySQLAsyncExecute(query)
