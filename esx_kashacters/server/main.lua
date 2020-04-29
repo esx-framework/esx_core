@@ -35,13 +35,18 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
+--    local spawn = {}
 	local isnew = true
     SetLastCharacter(src, tonumber(charid))
     SetCharToIdentifier(GetPlayerIdentifiers(src)[2], tonumber(charid))
     if ischar == "true" then
 		isnew = false
+        --spawn = GetSpawnPos(src)
+		--TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
     else
 		TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
+		--TriggerEvent('esx_identity:showRegisterIdentity')
+		--TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
     end
     TriggerClientEvent("kashactersC:SpawnCharacter", src, isnew)
 end)
@@ -68,6 +73,11 @@ function GetPlayerCharacters(source)
 		Chars[i].job_grade = ""
 	else
 		Chars[i].job_grade = charJobgrade[1].label		
+	end
+	if Chars[i].sex == "m" then
+		Chars[i].sex = "Male"
+	else
+		Chars[i].sex = "Female"		
 	end
   end
   return Chars
@@ -104,6 +114,11 @@ function DeleteCharacter(identifier, charid)
         MySQLAsyncExecute("DELETE FROM `"..itable.table.."` WHERE `"..itable.column.."` = 'Char"..charid..GetIdentifierWithoutLicense(identifier).."'")
     end
 end
+
+--function GetSpawnPos(source)
+--    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetPlayerIdentifiers(source)[2].."'")
+--    return json.decode(SpawnPos[1].position)
+--end
 
 function GetIdentifierWithoutLicense(Identifier)
     return string.gsub(Identifier, "license", "")
