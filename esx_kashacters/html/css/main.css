@@ -63,17 +63,16 @@ p {
 
 .character-box {
     background: rgba(44, 51, 69, 0.6);
-    color: #fff;
     padding: 10px;
     text-align: center;
     border: 2px solid transparent;
     border-radius: 2px;
     margin-top: 15%;
-    width: 20%;
+    width: 17.5%;
 }
 
 .character-box:hover {
-    background-color: rgb(44, 51, 69); 
+    background-color: rgb(34, 31, 39); 
     color: #fff;
 }
 
@@ -95,6 +94,7 @@ p {
 
 .character-info {
     text-align: left!important;
+    color: rgb(255, 255, 255);
 }
 
 .character-buttons {

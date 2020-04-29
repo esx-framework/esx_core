@@ -1,7 +1,7 @@
 $(".character-box").hover(
     function() {
         $(this).css({
-            "background": "rgb(44, 51, 69)",
+            "background": "rgb(34, 31, 39)",
             "transition": "200ms",
         });
     }, function() {
@@ -11,6 +11,13 @@ $(".character-box").hover(
         });
     }
 );
+
+$(document).ready(() => {
+	$(".character-info-new").html(translate.new)
+	$(".btn-delete").html(translate.delete);
+	$(".modalTitle").html(translate.modalTitle);
+	$(".modalText").html(translate.modalText);
+});
 
 $(".character-box").click(function () {
     $(".character-box").removeClass('active-char');
@@ -25,9 +32,9 @@ $(".character-box").click(function () {
 
 $(".character-box").click(function () {
     if ($(this).attr("data-ischar") === "true") {
-        $("#play-char").html('PLAY');
+        $("#play-char").html(translate.play);
     } else {
-        $("#play-char").html('CREATE CHARACTER');
+        $("#play-char").html(translate.playNew);
     }
 });
 
@@ -57,7 +64,7 @@ $("#deletechar").click(function () {
             $.each(data.characters, function (index, char) {
                 if (char.charid !== 0) {
                     var charid = char.identifier.charAt(4);
-                    $('[data-charid=' + charid + ']').html('<h3 class="character-fullname">'+ char.firstname +'</h3><div class="character-info"><p class="character-info-name"><strong>Name: </strong><span>'+ char.firstname +' '+ char.lastname +'</span></p><p class="character-info-work"><strong>Work: </strong><span>'+ char.job +' '+ char.job_grade +'</span></p><p class="character-info-money"><strong>Cash: </strong><span>'+ char.money +'</span></p><p class="character-info-bank"><strong>Bank: </strong><span>'+ char.bank +'</span></p> <p class="character-info-dateofbirth"><strong>Date of birth: </strong><span>'+ char.dateofbirth +'</span></p> <p class="character-info-gender"><strong>Gender: </strong><span>'+ char.sex +'</span></p></div>').attr("data-ischar", "true");
+                    $('[data-charid=' + charid + ']').html('<h3 class="character-fullname">'+ char.firstname +'</h3><div class="character-info"><p class="character-info-name"><strong>' + `${translate.name}: ` + '</strong><span>' + char.firstname +' '+ char.lastname +'</span></p><p class="character-info-work"><strong>' + `${translate.job}: ` + '</strong><span>'+ char.job +' '+ char.job_grade +'</span></p><p class="character-info-money"><strong>' + `${translate.money}: ` + '</strong><span> $'+ char.money +'</span></p><p class="character-info-bank"><strong>' + `${translate.bank}: ` + '</strong><span> $'+ char.bank +'</span></p> <p class="character-info-dateofbirth"><strong>' + `${translate.dob}: ` + '</strong><span>'+ char.dateofbirth +'</span></p> <p class="character-info-gender"><strong>' + `${translate.gender}: ` + '</strong><span>'+ char.sex +'</span></p></div>').attr("data-ischar", "true");
                 }
             });
         }
@@ -68,7 +75,7 @@ $("#deletechar").click(function () {
         $('.main-container').css({"display":"none"});
         $(".character-box").removeClass('active-char');
         $("#delete").css({"display":"none"});
-		$(".character-box").html('<h3 class="character-fullname"><i class="fas fa-plus"></i></h3><div class="character-info"><p class="character-info-new">Create new character</p></div>').attr("data-ischar", "false");
+		$(".character-box").html('<h3 class="character-fullname">Empty Slot</h3><div class="character-info"><p class="character-info-new">' + `${translate.new}` + '</p></div>').attr("data-ischar", "false");
     };
     window.onload = function(e) {
         window.addEventListener('message', function(event) {
