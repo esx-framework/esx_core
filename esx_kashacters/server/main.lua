@@ -13,12 +13,14 @@ local IdentifierTables = {
     {table = "phone_messages", column = "owner"},
     {table = "private_vehicles", column = "owner"},
     {table = "rented_vehicles", column = "owner"},
+	{table = "user_documents", column = "owner"},
 	{table = "user_licenses", column = "owner"},
     {table = "billing", column = "identifier"},
     {table = "crimerecord", column = "identifier"},
     {table = "phone_users_contacts", column = "identifier"},
     {table = "society_moneywash", column = "identifier"},
     {table = "users", column = "identifier"},
+	{table = "invest", column = "identifier"},
 	{table = "twitter_tweets", column = "realUser"}
 }
 
@@ -35,20 +37,20 @@ end)
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
---    local spawn = {}
+
 	local isnew = true
-    SetLastCharacter(src, tonumber(charid))
-    SetCharToIdentifier(GetPlayerIdentifiers(src)[2], tonumber(charid))
-    if ischar == "true" then
-		isnew = false
-        --spawn = GetSpawnPos(src)
-		--TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
-    else
-		TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
-		--TriggerEvent('esx_identity:showRegisterIdentity')
-		--TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn)
-    end
-    TriggerClientEvent("kashactersC:SpawnCharacter", src, isnew)
+	if type(charid) == "number" and type(ischar) == "boolean" then
+		SetLastCharacter(src, charid)
+		SetCharToIdentifier(GetPlayerIdentifiers(src)[2], charid)
+		if ischar == true then
+			isnew = false
+		else
+			TriggerClientEvent('skinchanger:loadDefaultModel', src, isnew, cb)
+		end
+		TriggerClientEvent("kashactersC:SpawnCharacter", src, isnew)
+	else
+		-- Trigger Ban Event here to ban individuals trying to use SQL Injections
+	end
 end)
 
 RegisterServerEvent("kashactersS:DeleteCharacter")
