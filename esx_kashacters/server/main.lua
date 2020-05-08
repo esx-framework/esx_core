@@ -60,7 +60,7 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local spawn = {}
     if type(charid) == "number" and type(ischar) == "boolean" then
         SetLastCharacter(src, tonumber(charid))
-        SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
+        SetCharToIdentifier(GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[2]), tonumber(charid))
 
         if ischar == "true" then
             new = false
