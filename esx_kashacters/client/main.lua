@@ -9,17 +9,17 @@ end)
 -- This Code Was changed to fix error With player spawner as default --
 -- Link to the post with the error fix --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/316?u=xxfri3ndlyxx --
---Citizen.CreateThread(function()
---    while true do
---        Citizen.Wait(0)
---        if NetworkIsSessionStarted() then
---            Citizen.Wait(100)
---            TriggerServerEvent("kashactersS:SetupCharacters")
---            TriggerEvent("kashactersC:SetupCharacters")
---           return -- break the loop
---        end
---    end
---end)
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        if NetworkIsSessionStarted() then
+            Citizen.Wait(100)
+            TriggerServerEvent("kashactersS:SetupCharacters")
+            TriggerEvent("kashactersC:SetupCharacters")
+           return -- break the loop
+        end
+    end
+end)
 
 local IsChoosing = true
 Citizen.CreateThread(function ()
@@ -57,7 +57,7 @@ AddEventHandler('kashactersC:SetupUI', function(Characters)
         characters = Characters,
     })
 end)
-
+--[[
 RegisterNetEvent('kashactersC:SpawnCharacter')
 AddEventHandler('kashactersC:SpawnCharacter', function(isnew)
     if isnew == true then
@@ -111,7 +111,8 @@ AddEventHandler('kashactersC:SpawnCharacter', function(isnew)
 		--TriggerEvent('esx_ambulancejob:multicharacter', source)
     end
 end)
---[[
+]]
+
 RegisterNetEvent('kashactersC:SpawnCharacter')
 AddEventHandler('kashactersC:SpawnCharacter', function(spawn, isnew)
 
@@ -156,7 +157,7 @@ AddEventHandler('kashactersC:SpawnCharacter', function(spawn, isnew)
      end
 
 end)
-]]--
+
 RegisterNetEvent('kashactersC:ReloadCharacters')
 AddEventHandler('kashactersC:ReloadCharacters', function()
     TriggerServerEvent("kashactersS:SetupCharacters")

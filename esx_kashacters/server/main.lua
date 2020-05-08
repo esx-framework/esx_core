@@ -33,7 +33,7 @@ AddEventHandler('kashactersS:SetupCharacters', function()
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
-
+--[[
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
@@ -51,6 +51,29 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
 	else
 		-- Trigger Ban Event here to ban individuals trying to use SQL Injections
 	end
+end)
+]]
+RegisterServerEvent("kashactersS:CharacterChosen")
+AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
+    local src = source
+    local new = true
+    local spawn = {}
+    if type(charid) == "number" and type(ischar) == "boolean" then
+        SetLastCharacter(src, tonumber(charid))
+        SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
+
+        if ischar == "true" then
+            new = false
+            spawn = GetSpawnPos(src)
+        else
+        TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
+            spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
+        end
+
+        TriggerClientEvent("kashactersC:SpawnCharacter", src, spawn, new)
+    else
+        -- Trigger Ban Event here to ban individuals trying to use SQL Injections
+    end
 end)
 
 RegisterServerEvent("kashactersS:DeleteCharacter")
@@ -117,10 +140,10 @@ function DeleteCharacter(identifier, charid)
     end
 end
 
---function GetSpawnPos(source)
---    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetPlayerIdentifiers(source)[2].."'")
---    return json.decode(SpawnPos[1].position)
---end
+function GetSpawnPos(source)
+    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetPlayerIdentifiers(source)[2].."'")
+    return json.decode(SpawnPos[1].position)
+end
 
 function GetIdentifierWithoutLicense(Identifier)
     return string.gsub(Identifier, "license", "")
