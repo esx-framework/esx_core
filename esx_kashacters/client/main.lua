@@ -16,7 +16,7 @@ Citizen.CreateThread(function()
             Citizen.Wait(100)
             TriggerServerEvent("kashactersS:SetupCharacters")
             TriggerEvent("kashactersC:SetupCharacters")
-           return -- break the loop
+            return -- break the loop
         end
     end
 end)
@@ -36,6 +36,8 @@ local cam, cam2 = nil, nil
 
 RegisterNetEvent('kashactersC:SetupCharacters')
 AddEventHandler('kashactersC:SetupCharacters', function()
+    ShutdownLoadingScreen()
+    Citizen.Wait(100)
     DoScreenFadeOut(10)
     while not IsScreenFadedOut() do
         Citizen.Wait(10)

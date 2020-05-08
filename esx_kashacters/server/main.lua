@@ -29,7 +29,7 @@ AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
     local LastCharId = GetLastCharacter(src)
 
-    SetIdentifierToChar(GetPlayerIdentifiers(src)[2], LastCharId)
+    SetIdentifierToChar(GetRockstarID(src), LastCharId)
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
@@ -60,8 +60,8 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local spawn = {}
     if type(charid) == "number" and type(ischar) == "boolean" then
         SetLastCharacter(src, tonumber(charid))
-        SetCharToIdentifier(GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[2]), tonumber(charid))
-
+        SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
+    
         if ischar == "true" then
             new = false
             spawn = GetSpawnPos(src)
@@ -79,47 +79,46 @@ end)
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    DeleteCharacter(GetPlayerIdentifiers(src)[2], charid)
+    DeleteCharacter(GetRockstarID(src), charid)
     TriggerClientEvent("kashactersC:ReloadCharacters", src)
 end)
 
 function GetPlayerCharacters(source)
-  local identifier = GetIdentifierWithoutLicense(GetPlayerIdentifiers(source)[2])
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..identifier.."%'")
+  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetIdentifierWithoutLicense(GetRockstarID(source)).."%'")
   for i = 1, #Chars, 1 do
     charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
     charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."' AND `job_name` = '"..Chars[i].job.."'")
-	
-	local accounts = json.decode(Chars[i].accounts)
-	Chars[i].bank = accounts["bank"]
-	Chars[i].money = accounts["money"]
+    local accounts = json.decode(Chars[i].accounts)
+    Chars[i].bank = accounts["bank"]
+    Chars[i].money = accounts["money"]
     Chars[i].job = charJob[1].label
-	if charJob[1].label == "Unemployed" then
-		Chars[i].job_grade = ""
-	else
-		Chars[i].job_grade = charJobgrade[1].label		
-	end
-	if Chars[i].sex == "m" then
-		Chars[i].sex = "Male"
-	else
-		Chars[i].sex = "Female"		
-	end
+    if charJob[1].label == "Unemployed" then
+      Chars[i].job_grade = ""
+    else
+      Chars[i].job_grade = charJobgrade[1].label	
+    end
+    if Chars[i].sex == "m" then
+      Chars[i].sex = "Male"
+    else
+      Chars[i].sex = "Female"	
+    end
   end
   return Chars
 end
 
 function GetLastCharacter(source)
-    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `license` = '"..GetPlayerIdentifiers(source)[2].."'")
+    local LastChar = MySQLAsyncExecute("SELECT `charid` FROM `user_lastcharacter` WHERE `license` = '"..GetRockstarID(source).."'")
+
     if LastChar[1] ~= nil and LastChar[1].charid ~= nil then
         return tonumber(LastChar[1].charid)
     else
-        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`license`, `charid`) VALUES('"..GetPlayerIdentifiers(source)[2].."', 1)")
+        MySQLAsyncExecute("INSERT INTO `user_lastcharacter` (`license`, `charid`) VALUES('"..GetRockstarID(source).."', 1)")
         return 1
     end
 end
 
 function SetLastCharacter(source, charid)
-    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `license` = '"..GetPlayerIdentifiers(source)[2].."'")
+    MySQLAsyncExecute("UPDATE `user_lastcharacter` SET `charid` = '"..charid.."' WHERE `license` = '"..GetRockstarID(source).."'")
 end
 
 function SetIdentifierToChar(identifier, charid)
@@ -141,12 +140,25 @@ function DeleteCharacter(identifier, charid)
 end
 
 function GetSpawnPos(source)
-    local SpawnPos = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetPlayerIdentifiers(source)[2].."'")
-    return json.decode(SpawnPos[1].position)
+    local spawn = MySQLAsyncExecute("SELECT `position` FROM `users` WHERE `identifier` = '"..GetRockstarID(source).."'")
+    return json.decode(spawn[1].position)
 end
 
 function GetIdentifierWithoutLicense(Identifier)
     return string.gsub(Identifier, "license", "")
+end
+
+function GetRockstarID(playerId)
+    local identifier
+
+    for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+        if string.match(v, 'license') then
+            identifier = v
+            break
+        end
+    end
+
+    return identifier
 end
 
 function MySQLAsyncExecute(query)
