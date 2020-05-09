@@ -13,7 +13,7 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 ## Links & Read more
 
 - [ESX Documentation](https://esx-org.github.io/)
-- [ESX Development Discord](https://discord.gg/MsWzPqE)
+- [ESX Development Discord](https://discord.me/esx)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
 
 ## Features
@@ -32,30 +32,9 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 - [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
 - [async](https://github.com/ESX-Org/async)
 
-## Rent Server
-
-![Iceline hosting](https://media.discordapp.net/attachments/667787270375473183/667790233441533952/banner.gif)
-
-Are you thinking of starting a FiveM server of your own? [Iceline Hosting](https://iceline-hosting.com/billing/aff.php?aff=94) provide cost effective game servers, high end game VPS's with DDoS protection included, and more!
-
-There is an optional Managed Support Addon available for game servers and Game VPS's that add the following services:
-
-- Investigation and fixing errors in relation to the server or third-party scripts
-- Installing third-party scripts or software
-- Recovery of lost data
-
-Go to [Iceline Hosting](https://iceline-hosting.com/billing/aff.php?aff=94) and use promo code `ESX` for 15% off the first month on FiveM game servers, Game VPS's and Singapore VPS's.
 
 ## Download & Installation
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-
-```
-fvm install --save --folder=essential esx-org/es_extended
-fvm install --save --folder=esx esx-org/esx_menu_default
-fvm install --save --folder=esx esx-org/esx_menu_dialog
-fvm install --save --folder=esx esx-org/esx_menu_list
-```
 
 ### Using Git
 
