@@ -94,3 +94,6 @@ So when you are choosing your character it changes your **Rockstar license** whi
 
 ## Multiple languages support
 Just change locales/en.js in html/ui.html (line 10)
+
+
+![img](https://gyazo.com/9ec7181c10679e4053ced5349884f4e8)

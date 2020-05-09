@@ -62,11 +62,11 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
         SetLastCharacter(src, tonumber(charid))
         SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
     
-        if ischar == "true" then
+        if ischar == true then
             new = false
             spawn = GetSpawnPos(src)
         else
-        TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
+            TriggerClientEvent('skinchanger:loadDefaultModel', src, true, cb)
             spawn = { x = 195.55, y = -933.36, z = 29.90 } -- DEFAULT SPAWN POSITION
         end
 
@@ -84,26 +84,26 @@ AddEventHandler('kashactersS:DeleteCharacter', function(charid)
 end)
 
 function GetPlayerCharacters(source)
-  local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetIdentifierWithoutLicense(GetRockstarID(source)).."%'")
-  for i = 1, #Chars, 1 do
-    charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
-    charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."' AND `job_name` = '"..Chars[i].job.."'")
-    local accounts = json.decode(Chars[i].accounts)
-    Chars[i].bank = accounts["bank"]
-    Chars[i].money = accounts["money"]
-    Chars[i].job = charJob[1].label
-    if charJob[1].label == "Unemployed" then
-      Chars[i].job_grade = ""
-    else
-      Chars[i].job_grade = charJobgrade[1].label	
+    local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE identifier LIKE '%"..GetIdentifierWithoutLicense(GetRockstarID(source)).."%'")
+    for i = 1, #Chars, 1 do
+        charJob = MySQLAsyncExecute("SELECT * FROM `jobs` WHERE `name` = '"..Chars[i].job.."'")
+        charJobgrade = MySQLAsyncExecute("SELECT * FROM `job_grades` WHERE `grade` = '"..Chars[i].job_grade.."' AND `job_name` = '"..Chars[i].job.."'")
+        local accounts = json.decode(Chars[i].accounts)
+        Chars[i].bank = accounts["bank"]
+        Chars[i].money = accounts["money"]
+        Chars[i].job = charJob[1].label
+        if charJob[1].label == "Unemployed" then
+            Chars[i].job_grade = ""
+        else
+            Chars[i].job_grade = charJobgrade[1].label	
+        end
+        if Chars[i].sex == "m" then
+            Chars[i].sex = "Male"
+        else
+            Chars[i].sex = "Female"	
+        end
     end
-    if Chars[i].sex == "m" then
-      Chars[i].sex = "Male"
-    else
-      Chars[i].sex = "Female"	
-    end
-  end
-  return Chars
+    return Chars
 end
 
 function GetLastCharacter(source)
