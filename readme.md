@@ -5,7 +5,7 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 
 ## Required changes:
 
-* es_extended: (`es_extended/client/main.lua`)
+* es_extended: (`es_extended/client/main.lua` at RegisterNetEvent('esx:playerLoaded'))
 
 ### Comment out this code:
 ```lua
@@ -26,6 +26,19 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 		SetModelAsNoLongerNeeded(defaultModel)
 		FreezeEntityPosition(playerPed, false)
 	end
+```
+### and  
+```lua
+		Citizen.Wait(3000)
+		ShutdownLoadingScreen()
+		FreezeEntityPosition(PlayerPedId(), false)
+		DoScreenFadeIn(10000)
+		StartServerSyncLoops()	
+```
+### keep
+```lua
+		FreezeEntityPosition(PlayerPedId(), false)
+		StartServerSyncLoops()	
 ```
 
 * es_extended: (`es_extended/client/main.lua`)
@@ -50,9 +63,7 @@ end)
 ```lua
 RegisterNetEvent('esx:kashloaded')
 AddEventHandler('esx:kashloaded', function()
-	if isFirstSpawn then
-		TriggerServerEvent('esx:onPlayerJoined')
-	end
+	TriggerServerEvent('esx:onPlayerJoined')
 end)
 ```
 
@@ -79,6 +90,104 @@ end)
 			break
 		end
 	end
+```
+
+# **IMPORTANT**
+
+## Tables (Owned & Identifier)
+- Now we edit the table and add all our identifier to make sure our character loads.
+- *Edit the code in esx_kashacters\server\main.lua*
+
+
+```
+local IdentifierTables = {
+    {table = "addon_account_data", column = "owner"},
+	{table = "addon_inventory_items", column = "owner"},
+    {table = "billing", column = "identifier"},
+	{table = "characters", column = "identifier"},
+	{table = "datastore_data", column = "owner"},
+	{table = "owned_vehicles", column = "owner"},
+    {table = "rented_vehicles", column = "owner"},
+	{table = "society_moneywash", column = "identifier"},
+	{table = "users", column = "identifier"},
+    {table = "user_accounts", column = "identifier"},
+	{table = "user_inventory", column = "identifier"},
+	{table = "user_licenses", column = "owner"},
+}
+```
+
+To get your identifier.
+Do this query in your database
+
+`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'`
+
+and
+
+`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'`
+
+## Duplication Entry (Datastore)
+To fix The datastore duplicated entry download this https://github.com/XxFri3ndlyxX/esx_datastore   
+
+Or  
+
+Add this code to your server/main.lua  
+```-- Fix for kashacters duplication entry --
+-- Fix was taken from this link --
+-- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
+AddEventHandler('esx:playerLoaded', function(source)
+
+  local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
+
+	for i=1, #result, 1 do
+		local name   = result[i].name
+		local label  = result[i].label
+		local shared = result[i].shared
+
+		local result2 = MySQL.Sync.fetchAll('SELECT * FROM datastore_data WHERE name = @name', {
+			['@name'] = name
+		})
+
+		if shared == 0 then
+
+			table.insert(DataStoresIndex, name)
+			DataStores[name] = {}
+
+			for j=1, #result2, 1 do
+				local storeName  = result2[j].name
+				local storeOwner = result2[j].owner
+				local storeData  = (result2[j].data == nil and {} or json.decode(result2[j].data))
+				local dataStore  = CreateDataStore(storeName, storeOwner, storeData)
+
+				table.insert(DataStores[name], dataStore)
+			end
+		end
+	end
+
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+  	local dataStores = {}
+  
+	for i=1, #DataStoresIndex, 1 do
+		local name      = DataStoresIndex[i]
+		local dataStore = GetDataStore(name, xPlayer.identifier)
+
+		if dataStore == nil then
+			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)',
+			{
+				['@name']  = name,
+				['@owner'] = xPlayer.identifier,
+				['@data']  = '{}'
+			})
+
+			dataStore = CreateDataStore(name, xPlayer.identifier, {})
+			table.insert(DataStores[name], dataStore)
+		end
+
+		table.insert(dataStores, dataStore)
+	end
+
+	xPlayer.set('dataStores', dataStores)
+end)
 ```
 
 # Read carefully...
