@@ -131,8 +131,32 @@ To fix The datastore duplicated entry download this https://github.com/XxFri3ndl
 
 Or  
 
-Add this code to your server/main.lua  
-```-- Fix for kashacters duplication entry --
+* esx_datastore: (`esx_datastore/server/main.lua `)
+ 
+### Comment out this code:
+```lua
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+	for i=1, #DataStoresIndex, 1 do
+		local name = DataStoresIndex[i]
+		local dataStore = GetDataStore(name, xPlayer.identifier)
+
+		if not dataStore then
+			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
+				['@name']  = name,
+				['@owner'] = xPlayer.identifier,
+				['@data']  = '{}'
+			})
+
+			dataStore = CreateDataStore(name, xPlayer.identifier, {})
+			table.insert(DataStores[name], dataStore)
+		end
+	end
+end)
+```
+
+## Add this code 
+```lua
+-- Fix for kashacters duplication entry --
 -- Fix was taken from this link --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
 AddEventHandler('esx:playerLoaded', function(source)
