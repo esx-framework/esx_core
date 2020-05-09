@@ -2,6 +2,7 @@
 ### If you are updating ESX, be sure to update the remaining scripts!
 
 Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/esx_kashacter/blob/master/readme-pl.md).
+![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
 
 ## Required changes:
 
@@ -203,6 +204,3 @@ So when you are choosing your character it changes your **Rockstar license** whi
 
 ## Multiple languages support
 Just change locales/en.js in html/ui.html (line 10)
-
-
-![img](https://gyazo.com/9ec7181c10679e4053ced5349884f4e8)
