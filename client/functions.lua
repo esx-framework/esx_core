@@ -1,4 +1,6 @@
 ESX                           = {}
+ESX.Loops                     = {}
+ESX.LoopsRunning              = {}
 ESX.Modules                   = {}
 ESX.PlayerData                = {}
 ESX.PlayerLoaded              = false
@@ -56,6 +58,59 @@ RegisterNUICallback('frame_message', function(data, cb)
   TriggerEvent('esx:frame_message', data.name, data.msg, data.cb)
   cb('')
 end)
+
+ESX.LogError = function(err)
+  local str = err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+ESX.LogScopeError = function(scope, err)
+  local str = '[esx] error in scope (' .. scope .. ') ' .. err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+
+ESX.LogLoopError = function(loop, err)
+  local str = '[esx] error in loop (' .. loop .. ') ' .. err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+ESX.Loop = function(name, func, wait, conditions)
+
+  ESX.Loops[name] = {
+    func      = func,
+    wait      = wait,
+    conditons = conditions or {},
+    name      = name,
+  }
+
+end
+
+ESX.Scope = function(name, func)
+
+  local status, result = xpcall(func, function(err)
+    ESX.LogScopeError(name, err)
+  end)
+
+  return result
+end
+
+ESX.MakeScope = function(name, func)
+
+  return function(...)
+
+    local status, result = xpcall(func, ESX.LogError, function(err)
+      ESX.LogScopeError(name, err)
+    end)
+
+    return result
+
+  end
+
+end
 
 ESX.IsPlayerLoaded = function()
 	return ESX.PlayerLoaded

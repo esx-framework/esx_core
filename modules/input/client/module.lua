@@ -454,8 +454,8 @@ end
 
 self.InitESX = function()
 
-  self.RegisterControl(Input.Groups.MOVE, Input.Controls[Config.InventoryKey])
-  self.On('released', Input.Groups.MOVE, Input.Controls[Config.InventoryKey], function(lastPressed)
+  self.RegisterControl(self.Groups.MOVE, self.Controls[Config.InventoryKey])
+  self.On('released', self.Groups.MOVE, self.Controls[Config.InventoryKey], function(lastPressed)
 
     if (not ESX.IsDead) and (not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory')) then
       ESX.ShowInventory()

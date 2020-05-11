@@ -9,7 +9,10 @@ self.Cache = {
     ped    = 0,
     coords = vector3(0.0, 0.0, 0.0)
   },
-  current = {},
+  current = {
+    marker = {},
+    npc    = {},
+  },
   using   = {},
 }
 

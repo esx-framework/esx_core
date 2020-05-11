@@ -108,6 +108,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
+--[[
 -- Enter / Exit entity zone events
 Citizen.CreateThread(function()
 	local trackedEntities = {
@@ -154,4 +155,4 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
+]]--

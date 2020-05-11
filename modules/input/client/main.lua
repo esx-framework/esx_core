@@ -1,5 +1,7 @@
 local self = ESX.Modules['input']
 
+self.InitESX()
+
 Citizen.CreateThread(function()
   while true do
 

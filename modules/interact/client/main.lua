@@ -31,7 +31,7 @@ Citizen.CreateThread(function()
         local distance = #(data.pos - self.Cache.player.coords);
         if
           (distance <= data.distance) and
-          (ESX.Table.FindIndex(self.Cache.current, function(e) return e.__id == data.__id end) == -1)
+          (ESX.Table.FindIndex(self.Cache.current , function(e) return e.__id == data.__id end) == -1)
         then
 
           if (data.check == nil) or data.check(self.Cache.player.ped, self.Cache.player.coords) then
@@ -62,33 +62,29 @@ Citizen.CreateThread(function()
 end)
 
 -- Markers
-Citizen.CreateThread(function()
-  while true do
+ESX.Loop('input-markers', function()
 
-    Citizen.Wait(0)
+  for i=1, #self.Cache.current, 1 do
 
-    for i=1, #self.Cache.current, 1 do
+    local curr = self.Cache.current[i]
 
-      local curr = self.Cache.current[i]
+    if curr.type == 'marker' then
 
-      if curr.type == 'marker' then
-
-        DrawMarker(
-          curr.mtype,
-          curr.pos.x + 0.0, curr.pos.y + 0.0, curr.pos.z + 0.0,
-          0.0, 0.0, 0.0,
-          0.0, 0.0, 0.0,
-          curr.size.x + 0.0, curr.size.y + 0.0, curr.size.z + 0.0,
-          curr.color.r, curr.color.g, curr.color.b, curr.color.a,
-          curr.bobUpAndDown, curr.faceCamera, 2, curr.rotate, nil, nil, false
-        )
-
-      end
+      DrawMarker(
+        curr.mtype,
+        curr.pos.x + 0.0, curr.pos.y + 0.0, curr.pos.z + 0.0,
+        0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0,
+        curr.size.x + 0.0, curr.size.y + 0.0, curr.size.z + 0.0,
+        curr.color.r, curr.color.g, curr.color.b, curr.color.a,
+        curr.bobUpAndDown, curr.faceCamera, 2, curr.rotate, nil, nil, false
+      )
 
     end
 
   end
-end)
+
+end, 0)
 
 -- NPCs
 Citizen.CreateThread(function()

@@ -94,7 +94,9 @@ server_exports {
 
 dependencies {
 	'mysql-async',
-	'async'
+  'async',
+  'cron',
+  'skinchanger',
 }
 
 -- ESX Modules
@@ -120,12 +122,16 @@ esxmodule 'interact'       -- Interact menu (marker / npc)
 esxmodule 'addonaccount'   -- Addon account
 esxmodule 'addoninventory' -- Addon inventory
 esxmodule 'datastore'      -- Arbitrary data store
+esxmodule 'society'        -- Society management
 
 -- UI
 esxmodule 'hud'            -- Money / society etc... HUD
 esxmodule 'menu_default'   -- Default menu
 esxmodule 'menu_dialog'    -- Dialog menu
 esxmodule 'menu_list'      -- List menu
+
+-- Misc
+esxmodule 'skin'           -- Skin management
 
 -- Jobs
 esxmodule 'job_police'     -- Job police
