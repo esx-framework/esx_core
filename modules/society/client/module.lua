@@ -149,9 +149,9 @@ self.OpenBossMenu = function(society, close, options)
 						menu2.close()
 					end)
 				elseif data.current.value == 'manage_employees' then
-					OpenManageEmployeesMenu(society)
+					self.OpenManageEmployeesMenu(society)
 				elseif data.current.value == 'manage_grades' then
-					OpenManageGradesMenu(society)
+					self.OpenManageGradesMenu(society)
 				end
 			end, function(data, menu)
 				if close then
@@ -171,9 +171,9 @@ self.OpenManageEmployeesMenu = function(society)
 			{label = _U('society:recruit'), value = 'recruit'}
 	}}, function(data, menu)
 		if data.current.value == 'employee_list' then
-			OpenEmployeeList(society)
+			self.OpenEmployeeList(society)
 		elseif data.current.value == 'recruit' then
-			OpenRecruitMenu(society)
+			self.OpenRecruitMenu(society)
 		end
 	end, function(data, menu)
 		menu.close()
@@ -206,17 +206,17 @@ self.OpenEmployeeList = function(society)
 
 			if data.value == 'promote' then
 				menu.close()
-				OpenPromoteMenu(society, employee)
+				self.OpenPromoteMenu(society, employee)
 			elseif data.value == 'fire' then
 				ESX.ShowNotification(_U('society:you_have_fired', employee.name))
 
 				ESX.TriggerServerCallback('esx_society:setJob', function()
-					OpenEmployeeList(society)
+					self.OpenEmployeeList(society)
 				end, employee.identifier, 'unemployed', 0, 'fire')
 			end
 		end, function(data, menu)
 			menu.close()
-			OpenManageEmployeesMenu(society)
+			self.OpenManageEmployeesMenu(society)
 		end)
 	end, society)
 end
@@ -254,7 +254,7 @@ self.OpenRecruitMenu = function(society)
 					ESX.ShowNotification(_U('society:you_have_hired', data.current.name))
 
 					ESX.TriggerServerCallback('esx_society:setJob', function()
-						OpenRecruitMenu(society)
+						self.OpenRecruitMenu(society)
 					end, data.current.identifier, society, 0, 'hire')
 				end
 			end, function(data2, menu2)
@@ -324,7 +324,7 @@ self.OpenManageGradesMenu = function(society)
 
 				if amount == nil then
 					ESX.ShowNotification(_U('society:invalid_amount'))
-				elseif amount > Config.MaxSalary then
+				elseif amount > self.Config.MaxSalary then
 					ESX.ShowNotification(_U('society:invalid_amount_max'))
 				else
 					menu2.close()

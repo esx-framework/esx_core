@@ -93,6 +93,8 @@ server_exports {
 }
 
 dependencies {
+  'spawnmanager',
+  'baseevents',
 	'mysql-async',
   'async',
   'cron',

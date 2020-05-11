@@ -158,7 +158,7 @@ self.Init = function()
 
     end
 
-    -- Helicopters
+      -- Helicopters
     for i=1, #station.Helicopters, 1 do
 
       local heli = station.Helicopters[i]
@@ -194,6 +194,52 @@ self.Init = function()
 
     end
 
+    -- Boss actions
+    for i=1, #station.BossActions, 1 do
+
+      local actions = station.BossActions[i]
+      local key     = 'job_police:' .. stationName .. ':bossactions:' .. tostring(i)
+
+      Interact.Register({
+        name     = key,
+        type     = 'marker',
+        distance = self.Config.DrawDistance,
+        radius   = 2.0,
+        pos      = actions,
+        size     = 1.0,
+        mtype    = 22,
+        color    = self.Config.MarkerColor,
+        rotate   = true,
+        check    = self.IsPoliceBoss,
+      })
+
+      AddEventHandler('esx:interact:enter:' .. key, function(data)
+
+        ESX.ShowHelpNotification(_U('job_police:open_bossmenu'))
+
+        local bossAction
+
+        bossAction = function()
+
+          TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
+            menu.close()
+            self.CurrentAction = bossAction
+          end, {
+            wash = false
+          })
+
+        end
+
+        self.CurrentAction = bossAction
+
+      end)
+
+      AddEventHandler('esx:interact:exit:' .. key, function(data)
+        self.CurrentAction = nil
+      end)
+
+    end
+
   end
 
 end
@@ -207,7 +253,11 @@ self.RegisterControls = function()
 end
 
 self.IsPolice = function(playerPed, coords)
-  return ESX.PlayerData.job and ESX.PlayerData.job.name == 'police'
+  return ESX.PlayerData.job and (ESX.PlayerData.job.name == 'police')
+end
+
+self.IsPoliceBoss = function(playerPed, coords)
+  return self.IsPolice() and (ESX.PlayerData.job.grade_name == 'boss')
 end
 
 self.CleanPlayer = function(playerPed)

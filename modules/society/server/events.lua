@@ -250,7 +250,7 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
-		if salary <= Config.MaxSalary then
+		if salary <= self.Config.MaxSalary then
 			MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
 				['@salary']   = salary,
 				['@job_name'] = job,
@@ -306,7 +306,7 @@ ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, c
 end)
 
 ESX.RegisterServerCallback('esx_society:isBoss', function(source, cb, job)
-	cb(isPlayerBoss(source, job))
+	cb(self.isPlayerBoss(source, job))
 end)
 
 MySQL.ready(function()
