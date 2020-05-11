@@ -34,7 +34,9 @@ server_scripts {
 
 	'common/modules/math.lua',
 	'common/modules/table.lua',
-	'common/functions.lua'
+  'common/functions.lua',
+
+  'common/bootstrap.lua',
 }
 
 client_scripts {
@@ -66,6 +68,8 @@ client_scripts {
 	'common/modules/math.lua',
 	'common/modules/table.lua',
   'common/functions.lua',
+
+  'common/bootstrap.lua',
 }
 
 ui_page {
@@ -108,11 +112,20 @@ esxmodule = function(name)
 
 end
 
-esxmodule 'input'
-esxmodule 'hud'
-esxmodule 'menu_default'
-esxmodule 'menu_dialog'
-esxmodule 'menu_list'
-esxmodule 'interact'
+-- Misc
+esxmodule 'input'          -- Evented input manager
+esxmodule 'interact'       -- Interact menu (marker / npc)
 
-esxmodule 'job_police'
+-- Extend
+esxmodule 'addonaccount'   -- Addon account
+esxmodule 'addoninventory' -- Addon inventory
+esxmodule 'datastore'      -- Arbitrary data store
+
+-- UI
+esxmodule 'hud'            -- Money / society etc... HUD
+esxmodule 'menu_default'   -- Default menu
+esxmodule 'menu_dialog'    -- Dialog menu
+esxmodule 'menu_list'      -- List menu
+
+-- Jobs
+esxmodule 'job_police'     -- Job police

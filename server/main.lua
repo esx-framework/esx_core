@@ -1,3 +1,17 @@
+MySQL.ready(function()
+
+  print('[esx] ensuring migrations')
+
+  TriggerEvent('esx:migrations:ensure', function(module)
+    ESX.EnsureMigrations(module)
+  end)
+
+end)
+
+AddEventHandler('esx:migrations:ensure', function(register)
+  register('base')
+end)
+
 RegisterNetEvent('esx:onPlayerJoined')
 AddEventHandler('esx:onPlayerJoined', function()
 	if not ESX.Players[source] then

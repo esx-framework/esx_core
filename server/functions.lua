@@ -1,3 +1,70 @@
+ESX.EnsureMigrations = function(module)
+
+  print('[esx] migrate => ' .. module)
+
+  local dir
+
+  if module == 'base' then
+    dir = 'migrations'
+  else
+    dir = 'modules/' .. module .. '/migrations'
+  end
+
+  local result      = MySQL.Sync.fetchAll('SELECT * FROM `migrations` WHERE `module` = @module', {['@module'] = module})
+  local initial     = true
+  local i           = 0
+  local hasmigrated = false
+
+  if #result > 0 then
+    i           = result[1].last + 1
+    initial     = false
+  end
+
+  local sql = nil
+
+  repeat
+
+    sql = LoadResourceFile(GetCurrentResourceName(), dir .. '/' .. i .. '.sql')
+
+    if sql ~= nil then
+
+      print('[esx] [' .. module .. '] => running migration #' .. i)
+
+      MySQL.Sync.execute(sql)
+
+      if initial then
+        MySQL.Sync.execute('INSERT INTO `migrations` (module, last) VALUES (@module, @last)', {['@module'] = module, ['@last'] = 0})
+      else
+        MySQL.Sync.execute('UPDATE `migrations` SET `last` = @last WHERE `module` = @module', {['@module'] = module, ['@last'] = i})
+      end
+
+      hasmigrated = true
+
+    end
+
+    i = i + 1
+
+  until sql == nil
+
+  if not hasmigrated then
+    print('[esx] [' .. module .. '] => no pending migration')
+  end
+
+end
+
+ESX.FileExists = function(name)
+
+  local f=io.open(name, 'r')
+
+  if f~=nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+
+end
+
 ESX.Trace = function(msg)
 	if Config.EnableDebug then
 		print(('[es_extended] [^2TRACE^7] %s^7'):format(msg))

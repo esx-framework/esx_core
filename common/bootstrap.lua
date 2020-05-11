@@ -15,3 +15,4 @@ OnESX = function(cb)
 
 end
 
+exports('OnESX', OnESX)
