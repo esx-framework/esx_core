@@ -124,7 +124,7 @@ Do this query in your database
 
 and
 
-`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'indentifier'`
+`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'identifier'`
 
 ## Duplication Entry (Datastore)
 To fix The datastore duplicated entry download this https://github.com/XxFri3ndlyxX/esx_datastore   
