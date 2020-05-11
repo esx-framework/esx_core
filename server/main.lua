@@ -1,37 +1,3 @@
-Citizen.CreateThread(function()
-	SetMapName('San Andreas')
-	SetGameType('Roleplay')
-	local resourcesStopped, isAceGranted = {}, false
-
-	for resourceName,reason in pairs(Config.IncompatibleResourcesToStop) do
-		local status = GetResourceState(resourceName)
-
-		if status == 'started' or status == 'starting' then
-			while GetResourceState(resourceName) == 'starting' do
-				Citizen.Wait(100)
-			end
-
-			if not isAceGranted then
-				ExecuteCommand('add_ace resource.es_extended command.stop allow')
-				isAceGranted = true
-			end
-
-			ExecuteCommand(('stop %s'):format(resourceName))
-			resourcesStopped[resourceName] = reason
-		end
-	end
-
-	if ESX.Table.SizeOf(resourcesStopped) > 0 then
-		local allStoppedResources = ''
-
-		for resourceName,reason in pairs(resourcesStopped) do
-			allStoppedResources = ('%s\n- ^3%s^7, %s'):format(allStoppedResources, resourceName, reason)
-		end
-
-		print(('[es_extended] [^3WARNING^7] Stopped %s incompatible resource(s) that can cause issues when used with ESX. They are not needed and can safely be removed from your server, remove these resource(s) from your resource directory and your configuration file:%s'):format(ESX.Table.SizeOf(resourcesStopped), allStoppedResources))
-	end
-end)
-
 RegisterNetEvent('esx:onPlayerJoined')
 AddEventHandler('esx:onPlayerJoined', function()
 	if not ESX.Players[source] then
@@ -40,6 +6,7 @@ AddEventHandler('esx:onPlayerJoined', function()
 end)
 
 function onPlayerJoined(playerId)
+
 	local identifier
 
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
@@ -256,7 +223,6 @@ function loadESXPlayer(identifier, playerId)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
-		print(('[es_extended] [^2INFO^7] A player with name "%s^7" has connected to the server with assigned player id %s'):format(xPlayer.getName(), playerId))
 	end)
 end
 
@@ -307,6 +273,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 	if type == 'item_standard' then
 		local sourceItem = sourceXPlayer.getInventoryItem(itemName)
+		local targetItem = targetXPlayer.getInventoryItem(itemName)
 
 		if itemCount > 0 and sourceItem.count >= itemCount then
 			if targetXPlayer.canCarryItem(itemName, itemCount) then
@@ -423,7 +390,8 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 		if xPlayer.hasWeapon(itemName) then
 			local _, weapon = xPlayer.getWeapon(itemName)
 			local _, weaponObject = ESX.GetWeapon(itemName)
-			local components, pickupLabel = ESX.Table.Clone(weapon.components)
+			local pickupLabel
+
 			xPlayer.removeWeapon(itemName)
 
 			if weaponObject.ammo and weapon.ammo > 0 then
@@ -435,7 +403,7 @@ AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
 				xPlayer.showNotification(_U('threw_weapon', weapon.label))
 			end
 
-			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
+			ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, weapon.components, weapon.tintIndex)
 		end
 	end
 end)
@@ -532,3 +500,18 @@ end)
 
 ESX.StartDBSync()
 ESX.StartPayCheck()
+
+AddEventHandler('luaconsole:getHandlers', function(cb)
+
+  local name = GetCurrentResourceName()
+
+  cb(name, function(code, env)
+    if env ~= nil then
+      for k,v in pairs(env) do _ENV[k] = v end
+      return load(code, 'lc:' .. name, 'bt', _ENV)
+    else
+      return load(code, 'lc:' .. name, 'bt')
+    end
+  end)
+
+end)

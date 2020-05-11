@@ -1,4 +1,5 @@
 ESX                           = {}
+ESX.Modules                   = {}
 ESX.PlayerData                = {}
 ESX.PlayerLoaded              = false
 ESX.CurrentRequestId          = 0
@@ -32,6 +33,30 @@ ESX.ClearTimeout = function(i)
 	ESX.TimeoutCallbacks[i] = nil
 end
 
+ESX.CreateFrame = function(name, url, visible)
+	visible = (visible == nil) and true or false
+	SendNUIMessage({action = 'create_frame', name = name, url = url, visible = visible})
+end
+
+ESX.SendFrameMessage = function(name, msg)
+	SendNUIMessage({target = name, data = msg})
+end
+
+ESX.FocusFrame = function(name, cursor)
+	SendNUIMessage({action = 'focus_frame', name = name})
+	SetNuiFocus(true, cursor)
+end
+
+RegisterNUICallback('nui_ready', function(data, cb)
+  TriggerEvent('esx:nui_ready')
+  cb('')
+end)
+
+RegisterNUICallback('frame_message', function(data, cb)
+  TriggerEvent('esx:frame_message', data.name, data.msg, data.cb)
+  cb('')
+end)
+
 ESX.IsPlayerLoaded = function()
 	return ESX.PlayerLoaded
 end
@@ -44,41 +69,66 @@ ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
 end
 
-ESX.ShowNotification = function(msg, flash, saveToBrief, hudColorIndex)
-	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxNotification', msg)
-	BeginTextCommandThefeedPost('esxNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+ESX.ShowNotification = function(msg)
+	SetNotificationTextEntry('STRING')
+	AddTextComponentString(msg)
+	DrawNotification(0,1)
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxAdvancedNotification', msg)
-	BeginTextCommandThefeedPost('esxAdvancedNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
+
+  if saveToBrief == nil then
+    saveToBrief = true
+  end
+
+  BeginTextCommandThefeedPost('STRING')
+  AddTextComponentSubstringPlayerName(msg)
+
+  if hudColorIndex then
+    ThefeedNextPostBackgroundColor(hudColorIndex)
+  end
+
 	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+  EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+
 end
 
 ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
-	AddTextEntry('esxHelpNotification', msg)
+
+  BeginTextCommandDisplayHelp('STRING')
+  AddTextComponentSubstringPlayerName(msg)
 
 	if thisFrame then
-		DisplayHelpTextThisFrame('esxHelpNotification', false)
+		DisplayHelpTextThisFrame(msg, false)
 	else
 		if beep == nil then beep = true end
 		BeginTextCommandDisplayHelp('esxHelpNotification')
 		EndTextCommandDisplayHelp(0, false, beep, duration or -1)
-	end
+  end
+
 end
 
-ESX.ShowFloatingHelpNotification = function(msg, coords)
-	AddTextEntry('esxFloatingHelpNotification', msg)
-	SetFloatingHelpTextWorldPosition(1, coords)
-	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
-	EndTextCommandDisplayHelp(2, false, false, -1)
+ESX.ShowFloatingHelpNotification = function(msg, coords, timeout)
+
+  timeout     = timeout or 5000
+  local start = GetGameTimer()
+
+  Citizen.CreateThread(function()
+
+    while (GetGameTimer() - start) < timeout do
+
+      SetFloatingHelpTextWorldPosition(1, coords.x, coords.y, coords.z)
+      SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
+      BeginTextCommandDisplayHelp('STRING')
+      AddTextComponentSubstringPlayerName(msg)
+      EndTextCommandDisplayHelp(2, false, true, -1)
+
+      Citizen.Wait(0)
+
+    end
+
+  end)
+
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -94,7 +144,7 @@ ESX.TriggerServerCallback = function(name, cb, ...)
 end
 
 ESX.UI.HUD.SetDisplay = function(opacity)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action  = 'setHUDDisplay',
 		opacity = opacity
 	})
@@ -116,7 +166,7 @@ ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
 
 	table.insert(ESX.UI.HUD.RegisteredElements, name)
 
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action    = 'insertHUDElement',
 		name      = name,
 		index     = index,
@@ -136,14 +186,14 @@ ESX.UI.HUD.RemoveElement = function(name)
 		end
 	end
 
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action    = 'deleteHUDElement',
 		name      = name
 	})
 end
 
 ESX.UI.HUD.UpdateElement = function(name, data)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action = 'updateHUDElement',
 		name   = name,
 		data   = data
@@ -281,7 +331,7 @@ ESX.UI.Menu.IsOpen = function(type, namespace, name)
 end
 
 ESX.UI.ShowInventoryItemNotification = function(add, item, count)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action = 'inventoryNotification',
 		add    = add,
 		item   = item,
@@ -487,7 +537,7 @@ end
 
 ESX.Game.GetClosestObject = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter) end
 ESX.Game.GetClosestPed = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter) end
-ESX.Game.GetClosestPlayer = function(coords) return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil) end
+ESX.Game.GetClosestPlayer = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, modelFilter) end
 ESX.Game.GetClosestVehicle = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter) end
 ESX.Game.GetPlayersInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(ESX.Game.GetPlayers(true, true), true, coords, maxDistance) end
 ESX.Game.GetVehiclesInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(ESX.Game.GetVehicles(), false, coords, maxDistance) end
@@ -559,7 +609,6 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 			bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
 			engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
-			tankHealth        = ESX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
 
 			fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
 			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
@@ -649,7 +698,6 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.plateIndex then SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex) end
 		if props.bodyHealth then SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0) end
 		if props.engineHealth then SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0) end
-		if props.tankHealth then SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0) end
 		if props.fuelLevel then SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0) end
 		if props.dirtLevel then SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0) end
 		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
@@ -932,10 +980,15 @@ ESX.ShowInventory = function()
 					ESX.Streaming.RequestAnimDict(dict)
 
 					if type == 'item_weapon' then
+
 						menu1.close()
-						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-						Citizen.Wait(1000)
-						TriggerServerEvent('esx:removeInventoryItem', type, item)
+
+						Citizen.CreateThread(function()
+							TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+							Citizen.Wait(1000)
+							TriggerServerEvent('esx:removeInventoryItem', type, item)
+						end)
+
 					else
 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 							title = _U('amount')
@@ -943,11 +996,16 @@ ESX.ShowInventory = function()
 							local quantity = tonumber(data2.value)
 
 							if quantity and quantity > 0 and data.current.count >= quantity then
+
 								menu2.close()
 								menu1.close()
-								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-								Citizen.Wait(1000)
-								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+
+								Citizen.CreateThread(function()
+									TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+									Citizen.Wait(1000)
+									TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+								end)
+
 							else
 								ESX.ShowNotification(_U('amount_invalid'))
 							end

@@ -1,0 +1,94 @@
+@font-face {
+	font-family: bankgothic;
+	src: url('../fonts/bankgothic.ttf');
+}
+
+@font-face {
+	font-family: pcdown;
+	src: url('../fonts/pdown.ttf');
+}
+
+.menu {
+	font-family: bankgothic;
+	min-width: 400px;
+	color: #fff;
+	box-shadow: 0px 0px 50px 0px #000;
+	position: absolute;
+}
+
+.menu.align-left {
+	left: 40;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
+.menu.align-top-left {
+	left: 40;
+	top: 40;
+}
+
+.menu.align-top {
+	left: 50%;
+	top: 40;
+	transform: translate(-50%, 0);
+}
+
+.menu.align-top-right {
+	right: 10;
+	top: 40;
+}
+
+.menu.align-right {
+	right: 40;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
+.menu.align-bottom-right {
+	right: 40;
+	bottom: 40;
+}
+
+.menu.align-bottom {
+	left: 50%;
+	bottom: 40;
+	transform: translate(-50%, 0);
+}
+
+.menu.align-bottom-left {
+	left: 40;
+	bottom: 40;
+}
+
+.menu.align-center {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.menu .head {
+	background-color: #506be6;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+}
+
+.menu .menu-items {
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+.menu .menu-items .menu-item {
+	height: 40px;
+	display: block;
+	background-color: #f1f1f1;
+	box-shadow: inset 1px 0px 0px 1px #b8b8b8;
+	height: 32px;
+	line-height: 32px;
+	color: #3A3A3A;
+	text-align: center;
+}
+
+.menu .menu-items .menu-item.selected {
+	background-color: #d0d0d0;
+}

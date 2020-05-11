@@ -20,8 +20,8 @@ html {
 	padding: 4px;
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 	text-align: right;
-	top: 80;
-	right: 40;
+	top: 20;
+	right: 20;
 }
 
 #inventory_notifications {

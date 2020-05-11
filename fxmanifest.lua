@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
-version '1.2.0'
+version '2.0.0'
 
 server_scripts {
 	'@async/async.lua',
@@ -65,40 +65,54 @@ client_scripts {
 
 	'common/modules/math.lua',
 	'common/modules/table.lua',
-	'common/functions.lua'
+  'common/functions.lua',
 }
 
 ui_page {
-	'html/ui.html'
+	'hud/index.html'
 }
 
 files {
+  'client/bootstrap.lua',
 	'locale.js',
-	'html/ui.html',
-
-	'html/css/app.css',
-
-	'html/js/mustache.min.js',
-	'html/js/wrapper.js',
-	'html/js/app.js',
-
-	'html/fonts/pdown.ttf',
-	'html/fonts/bankgothic.ttf',
-
-	'html/img/accounts/bank.png',
-	'html/img/accounts/black_money.png',
-	'html/img/accounts/money.png'
+	'hud/**/*',
 }
 
 exports {
-	'getSharedObject'
+  'getSharedObject',
+  'OnESX',
 }
 
 server_exports {
-	'getSharedObject'
+  'getSharedObject',
+  'OnESX',
 }
 
 dependencies {
 	'mysql-async',
 	'async'
 }
+
+-- ESX Modules
+esxmodule = function(name)
+
+	file('modules/' .. name .. '/data/**/*')
+
+	client_script('modules/' .. name .. '/client/module.lua')
+	client_script('modules/' .. name .. '/client/main.lua')
+	client_script('modules/' .. name .. '/client/events.lua')
+
+	server_script('modules/' .. name .. '/server/module.lua')
+	server_script('modules/' .. name .. '/server/main.lua')
+	server_script('modules/' .. name .. '/server/events.lua')
+
+end
+
+esxmodule 'input'
+esxmodule 'hud'
+esxmodule 'menu_default'
+esxmodule 'menu_dialog'
+esxmodule 'menu_list'
+esxmodule 'interact'
+
+esxmodule 'job_police'

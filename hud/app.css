@@ -1,0 +1,14 @@
+html, body, #frames, #frames > div, #frames > div > iframe {
+  width           : 100vw;
+  height          : 100vh;
+  margin          : 0;
+  padding         : 0;
+  border          : 0;
+  background-color: transparent;
+}
+
+#frames > div, #frames > div > iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
