@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `es_extended`
+CREATE DATABASE IF NOT EXISTS `es_extended`;
 USE `es_extended`;
 
 CREATE TABLE IF NOT EXISTS `migrations` (
