@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `job_grade` int(11) DEFAULT 0,
   `loadout` longtext DEFAULT NULL,
   `position` varchar(53) DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
-  `skin` longtext DEFAULT NULL,
   `phone_number` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `status` longtext DEFAULT NULL,
