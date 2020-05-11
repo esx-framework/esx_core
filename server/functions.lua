@@ -1,6 +1,6 @@
 ESX.EnsureMigrations = function(module)
 
-  print('[esx] migrate => ' .. module)
+  print('[esx] ensure migrations => ' .. module)
 
   local dir
 
@@ -47,7 +47,7 @@ ESX.EnsureMigrations = function(module)
   until sql == nil
 
   if not hasmigrated then
-    print('[esx] [' .. module .. '] => no pending migration')
+    -- print('[esx] [' .. module .. '] => no pending migration')
   end
 
 end

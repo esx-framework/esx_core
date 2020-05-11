@@ -1,9 +1,5 @@
 local self = ESX.Modules['job_police']
 
-AddEventHandler('esx:migrations:ensure', function(register)
-  register('job_police')
-end)
-
 RegisterNetEvent('esx_policejob:confiscatePlayerItem')
 AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType, itemName, amount)
 	local _source = source

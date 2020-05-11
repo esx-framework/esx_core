@@ -1,9 +1,5 @@
 local self = ESX.Modules['addonaccount']
 
-AddEventHandler('esx:migrations:ensure', function(register)
-  register('addonaccount')
-end)
-
 AddEventHandler('esx_addonaccount:getAccount', function(name, owner, cb)
 
   Citizen.CreateThread(function()

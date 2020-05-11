@@ -1,9 +1,5 @@
 local self = ESX.Modules['addoninventory']
 
-AddEventHandler('esx:migrations:ensure', function(register)
-  register('addoninventory')
-end)
-
 AddEventHandler('esx_addoninventory:getInventory', function(name, owner, cb)
 
   Citizen.CreateThread(function()

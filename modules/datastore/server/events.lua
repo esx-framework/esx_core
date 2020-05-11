@@ -1,9 +1,5 @@
 local self = ESX.Modules['datastore']
 
-AddEventHandler('esx:migrations:ensure', function(register)
-  register('datastore')
-end)
-
 AddEventHandler('esx_datastore:getDataStore', function(name, owner, cb)
 
   Citizen.CreateThread(function()

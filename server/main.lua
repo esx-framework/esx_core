@@ -2,14 +2,25 @@ MySQL.ready(function()
 
   print('[esx] ensuring migrations')
 
-  TriggerEvent('esx:migrations:ensure', function(module)
-    ESX.EnsureMigrations(module)
-  end)
+  local index   = 0
+  local results = {}
+  local start
+  local manifest = LoadResourceFile(GetCurrentResourceName(), 'fxmanifest.lua')
 
-end)
+  repeat
 
-AddEventHandler('esx:migrations:ensure', function(register)
-  register('base')
+    start, index = manifest:find("esxmodule '.-'", index)
+
+    if start then
+
+      local module = manifest:sub(start, index):sub(12):sub(0, -2)
+
+      ESX.EnsureMigrations(module)
+
+    end
+
+  until not start
+
 end)
 
 RegisterNetEvent('esx:onPlayerJoined')
