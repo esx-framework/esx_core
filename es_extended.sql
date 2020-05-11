@@ -51,3 +51,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `index_users_phone_number` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `job_grades` VALUES (1,'unemployed',0,'unemployed','Unemployed',200,'{}','{}');
+
+CREATE TABLE `jobs` (
+	`name` VARCHAR(50) NOT NULL,
+	`label` VARCHAR(50) DEFAULT NULL,
+
+	PRIMARY KEY (`name`)
+);
+
+INSERT INTO `jobs` VALUES ('unemployed','Unemployed');
