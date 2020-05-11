@@ -7,6 +7,8 @@ MySQL.ready(function()
   local start
   local manifest = LoadResourceFile(GetCurrentResourceName(), 'fxmanifest.lua')
 
+  ESX.EnsureMigrations('base')
+
   repeat
 
     start, index = manifest:find("esxmodule '.-'", index)
