@@ -270,6 +270,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		return newWeight <= self.maxWeight
 	end
+  
+  self.maxCarryItem = function(name)
+		local count = 0
+		local currentWeight, itemWeight = self.getWeight(), ESX.Items[name].weight
+		local newWeight = self.maxWeight - currentWeight
+
+		-- math.max(0, ... to prevent bad programmers
+		return math.max(0, math.floor(newWeight / itemWeight))
+	end
 
 	self.canSwapItem = function(firstItem, firstItemCount, testItem, testItemCount)
 		local firstItemObject = self.getInventoryItem(firstItem)
@@ -317,7 +326,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			else
 				self.job.skin_female = {}
 			end
-
+      
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
 			self.triggerEvent('esx:setJob', self.job)
 		else
