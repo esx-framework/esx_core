@@ -116,7 +116,7 @@ Translations = {
   ['license_label'] = ' --- Lizenzen ---',
   ['confiscate'] = '%s konfiszieren',
   ['confiscate_weapon'] = 'konfisziert %s mit %s Kugeln',
-  ['confiscate_inv'] = 'konfiziere %sx %s',
+  ['confiscate_inv'] = 'konfisziere %sx %s',
   ['confiscate_dirty'] = 'schwarzgeld konfisziert: <span style="color:red;">$%s</span>',
   ['you_confiscated'] = 'du konfiszierst ~y~%sx~s~ ~b~%s~s~ von ~b~%s~s~',
   ['got_confiscated'] = '~y~%sx~s~ ~b~%s~s~ wurden von ~y~%s~s~ konfisziert',
