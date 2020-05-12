@@ -19,7 +19,7 @@ Config.EnableCustomPeds = false -- enable custom peds in cloak room? See Config.
 Config.EnableESXService = false -- enable esx service?
 Config.MaxInService     = 5
 
-Config.Locale = 'fr'
+Config.Locale = 'de'
 
 Config.PoliceStations = {
 
