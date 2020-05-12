@@ -6,8 +6,30 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 
 ## Required changes:
 
-* es_extended: (`es_extended/client/main.lua` at RegisterNetEvent('esx:playerLoaded'))
+* es_extended: (`es_extended/client/main.lua`)
+### Replace this code:
+```lua
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
 
+		if NetworkIsPlayerActive(PlayerId()) then
+			TriggerServerEvent('esx:onPlayerJoined')
+			break
+		end
+	end
+end)
+```
+
+### with:
+```lua
+RegisterNetEvent('esx:kashloaded')
+AddEventHandler('esx:kashloaded', function()
+	TriggerServerEvent('esx:onPlayerJoined')
+end)
+```
+
+* es_extended: (`es_extended/client/main.lua` at RegisterNetEvent('esx:playerLoaded'))
 ### Comment out this code:
 ```lua
 -- check if player is coming from loading screen
@@ -42,36 +64,9 @@ Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/e
 		StartServerSyncLoops()	
 ```
 
-* es_extended: (`es_extended/client/main.lua`)
-
-### Replace this code:
-
-```lua
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if NetworkIsPlayerActive(PlayerId()) then
-			TriggerServerEvent('esx:onPlayerJoined')
-			break
-		end
-	end
-end)
-```
-
-### with:
-
-```lua
-RegisterNetEvent('esx:kashloaded')
-AddEventHandler('esx:kashloaded', function()
-	TriggerServerEvent('esx:onPlayerJoined')
-end)
-```
-
 * es_extended: (`es_extended/server/main.lua`)
 
 ### Change this code in `onPlayerJoined(playerId)` function:
-
 ```lua
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
@@ -82,8 +77,6 @@ end)
 ```
 
 ### to:
-
-
 ```lua
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
@@ -93,13 +86,11 @@ end)
 	end
 ```
 
-# **IMPORTANT**
 
+# **IMPORTANT**
 ## Tables (Owned & Identifier)
 - Now we edit the table and add all our identifier to make sure our character loads.
 - *Edit the code in esx_kashacters\server\main.lua*
-
-
 ```
 local IdentifierTables = {
     {table = "addon_account_data", column = "owner"},
@@ -129,7 +120,6 @@ To fix The datastore duplicated entry download this https://github.com/XxFri3ndl
 Or  
 
 * esx_datastore: (`esx_datastore/server/main.lua `)
- 
 ### Comment out this code:
 ```lua
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
@@ -213,11 +203,11 @@ end)
 ```
 
 # Read carefully...
-> You **MUST** increase the character limit in the `users` table for row `identifier` to **48**.
+> You **MUST** increase the character limit in all tables where column name `owner` or `identifier` occurs to at least  **48**.
 
 > Do **not** use essentialsmode, mapmanager and spawnmanager!
 
-> *Pay ATTENTION: You have to call the resource **esx_kashacter** in order for the javascript to work!**
+> *ATTENTION: You have to call the resource **esx_kashacters** in order for the javascript to work!**
 
 ## How it works
 > What this script does it manipulates ESX for loading characters
