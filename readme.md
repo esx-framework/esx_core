@@ -267,13 +267,17 @@ end)
 RegisterNetEvent('esx_ambulancejob:multicharacter')
 AddEventHandler('esx_ambulancejob:multicharacter', function()
 	IsDead = false
-
+	if Config.AntiCombatLog then
+		while not PlayerLoaded do
+			Citizen.Wait(1000)
+		end
 		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
 			if isDead and Config.AntiCombatLog then
 				ESX.ShowNotification(_U('combatlog_message'))
 				RemoveItemsAfterRPDeath()
 			end
 		end)
+	end
 end)
 ```
 ### Then change this 

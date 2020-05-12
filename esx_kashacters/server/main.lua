@@ -24,26 +24,7 @@ AddEventHandler('kashactersS:SetupCharacters', function()
     local Characters = GetPlayerCharacters(src)
     TriggerClientEvent('kashactersC:SetupUI', src, Characters)
 end)
---[[
-RegisterServerEvent("kashactersS:CharacterChosen")
-AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
-    local src = source
 
-	local isnew = true
-	if type(charid) == "number" and type(ischar) == "boolean" then
-		SetLastCharacter(src, charid)
-		SetCharToIdentifier(GetPlayerIdentifiers(src)[2], charid)
-		if ischar == true then
-			isnew = false
-		else
-			TriggerClientEvent('skinchanger:loadDefaultModel', src, isnew, cb)
-		end
-		TriggerClientEvent("kashactersC:SpawnCharacter", src, isnew)
-	else
-		-- Trigger Ban Event here to ban individuals trying to use SQL Injections
-	end
-end)
-]]
 RegisterServerEvent("kashactersS:CharacterChosen")
 AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
