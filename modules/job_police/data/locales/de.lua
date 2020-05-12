@@ -147,5 +147,5 @@ Translations = {
   ['unrestrained_timer'] = 'deine Handschellen lösen sich langsam.',
   -- Notifications
   ['alert_police'] = 'Polizei alamieren',
-  ['phone_police'] = 'police',
+  ['phone_police'] = 'polizei',
 }
