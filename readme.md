@@ -241,24 +241,26 @@ comment or delete
 * esx_ambulancejob: (`esx_ambulancejob/client/main.lua`)
 ### find:
 ```lua
-AddEventHandler('playerSpawned', function()
-    IsDead = false
+AddEventHandler('esx:onPlayerSpawn', function()
+	isDead = false
 
-    if FirstSpawn then
-        exports.spawnmanager:setAutoSpawn(false) -- disable respawn
-        FirstSpawn = false
+	if firstSpawn then
+		exports.spawnmanager:setAutoSpawn(false)
+		firstSpawn = false
 
-        ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
-            if isDead and Config.AntiCombatLog then
-                while not PlayerLoaded do
-                    Citizen.Wait(1000)
-                end
+		if Config.AntiCombatLog then
+			while not PlayerLoaded do
+				Citizen.Wait(1000)
+			end
 
-                ESX.ShowNotification(_U('combatlog_message'))
-                RemoveItemsAfterRPDeath()
-            end
-        end)
-    end
+			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+				if shouldDie then
+					ESX.ShowNotification(_U('combatlog_message'))
+					RemoveItemsAfterRPDeath()
+				end
+			end)
+		end
+	end
 end)
 ```
 
@@ -266,18 +268,21 @@ end)
 ```lua
 RegisterNetEvent('esx_ambulancejob:multicharacter')
 AddEventHandler('esx_ambulancejob:multicharacter', function()
-    IsDead = false
-    if Config.AntiCombatLog then
-        while not PlayerLoaded do
-            Citizen.Wait(1000)
-        end
-        ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
-            if isDead and Config.AntiCombatLog then
-                ESX.ShowNotification(_U('combatlog_message'))
-                RemoveItemsAfterRPDeath()
-            end
-        end)
-    end
+	IsDead = false
+	if firstSpawn then
+		firstSpawn = false
+		if Config.AntiCombatLog then
+			while not PlayerLoaded do
+				Citizen.Wait(1000)
+			end
+			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+				if isDead and Config.AntiCombatLog then
+					ESX.ShowNotification(_U('combatlog_message'))
+					RemoveItemsAfterRPDeath()
+				end
+			end)
+		end
+	end
 end)
 ```
 
