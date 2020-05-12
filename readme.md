@@ -146,7 +146,7 @@ end)
 -- Fix for kashacters duplication entry --
 -- Fix was taken from this link --
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
-AddEventHandler('esx:playerLoaded', function(source)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 
   local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
 
@@ -175,10 +175,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 		end
 	end
 
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
   	local dataStores = {}
-  
 	for i=1, #DataStoresIndex, 1 do
 		local name      = DataStoresIndex[i]
 		local dataStore = GetDataStore(name, xPlayer.identifier)
