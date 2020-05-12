@@ -2,6 +2,8 @@
 ### If you are updating ESX, be sure to update the remaining scripts!
 
 Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/esx_kashacter/blob/master/readme-pl.md).
+
+### Current design:
 ![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
 
 ## Required changes:
@@ -50,18 +52,47 @@ end)
 		FreezeEntityPosition(playerPed, false)
 	end
 ```
-### and  
+### find:
 ```lua
+	ESX.Game.Teleport(PlayerPedId(), {
+		x = playerData.coords.x,
+		y = playerData.coords.y,
+		z = playerData.coords.z + 0.25,
+		heading = playerData.coords.heading
+	}, function()
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx:onPlayerSpawn')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('esx:restoreLoadout')
+
 		Citizen.Wait(3000)
 		ShutdownLoadingScreen()
 		FreezeEntityPosition(PlayerPedId(), false)
 		DoScreenFadeIn(10000)
-		StartServerSyncLoops()	
+		StartServerSyncLoops()
+	end)
 ```
-### keep
+### replace with:
 ```lua
-		FreezeEntityPosition(PlayerPedId(), false)
-		StartServerSyncLoops()	
+--[[
+	ESX.Game.Teleport(PlayerPedId(), {
+		x = playerData.coords.x,
+		y = playerData.coords.y,
+		z = playerData.coords.z + 0.25,
+		heading = playerData.coords.heading
+	}, function()
+	end)
+]]--
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx:onPlayerSpawn')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+	TriggerEvent('esx:restoreLoadout')
+
+	Citizen.Wait(3000)
+	ShutdownLoadingScreen()
+	FreezeEntityPosition(PlayerPedId(), false)
+	DoScreenFadeIn(10000)
+	StartServerSyncLoops()
 ```
 
 * es_extended: (`es_extended/server/main.lua`)
@@ -198,6 +229,79 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	xPlayer.set('dataStores', dataStores)
 end)
 ```
+## Ambulance Fix
+The Fix for the ambulance on the kashacter script is already implemented.  
+
+Now all you have to do is go to your ambulance script that is up to date and 
+comment or delete
+
+
+
+```
+--[[
+AddEventHandler('playerSpawned', function()
+	IsDead = false
+
+	if FirstSpawn then
+		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
+		FirstSpawn = false
+
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+			if isDead and Config.AntiCombatLog then
+				while not PlayerLoaded do
+					Citizen.Wait(1000)
+				end
+
+				ESX.ShowNotification(_U('combatlog_message'))
+				RemoveItemsAfterRPDeath()
+			end
+		end)
+	end
+end)
+]]--
+```
+
+### Then add this 
+
+```
+RegisterNetEvent('esx_ambulancejob:multicharacter')
+AddEventHandler('esx_ambulancejob:multicharacter', function()
+	IsDead = false
+
+		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
+			if isDead and Config.AntiCombatLog then
+				ESX.ShowNotification(_U('combatlog_message'))
+				RemoveItemsAfterRPDeath()
+			end
+		end)
+end)
+```
+### Then change this 
+```
+function RespawnPed(ped, coords, heading)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(ped, false)
+	TriggerEvent('playerspawned', coords.x, coords.y, coords.z)
+	ClearPedBloodDamage(ped)
+
+	ESX.UI.Menu.CloseAll()
+end
+```
+### to
+```
+function RespawnPed(ped, coords, heading)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(ped, false)
+	TriggerEvent('esx_ambulancejob:multicharacter', coords.x, coords.y, coords.z)
+	ClearPedBloodDamage(ped)
+
+	ESX.UI.Menu.CloseAll()
+end
+```
+*If you do not do this last part once you repawn after death you will be frozen into place.*
+
 
 # Read carefully...
 > You **MUST** increase the character limit in all tables where column name `owner` or `identifier` occurs to at least  **48**.
