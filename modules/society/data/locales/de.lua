@@ -33,5 +33,5 @@ Translations = {
   ['you_have_fired']         = 'du wurdest gefeuert %s',
   ['you_have_been_fired']    = 'du wurdest von %s gefeuert',
   ['you_have_promoted']      = 'du hast %s befördert zu %s',
-  ['you_have_been_promoted'] = 'du wurdest ~b~promoted~s~!',
+  ['you_have_been_promoted'] = 'du wurdest ~b~befördert~s~!',
 }
