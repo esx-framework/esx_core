@@ -51,7 +51,7 @@ AddEventHandler('esx_accessories:pay', function()
 
   local xPlayer = ESX.GetPlayerFromId(source)
   xPlayer.removeMoney(self.Config.Price)
-  TriggerClientEvent('esx:showNotification', source, _U('you_paid', ESX.Math.GroupDigits(self.Config.Price)))
+  TriggerClientEvent('esx:showNotification', source, _U('accesories:you_paid', ESX.Math.GroupDigits(self.Config.Price)))
 
 end)
 
