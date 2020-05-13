@@ -100,6 +100,7 @@
 }
 
 .menu .menu-items .menu-item {
+  border: 1px solid transparent;
 	height: 40px;
 	display: block;
 	background-color: rgba(0, 0, 0, 0.2);
@@ -162,7 +163,7 @@
   56%,
   100% {
 
-  text-shadow: 0 0 5px #0ba5ef, 0 0 15px #0ba5ef, 0 0 20px #0ba5ef, 0 0 40px #0ba5ef, 0 0 60px #00aeff, 0 0 10px #0ba5ef, 0 0 98px #ff0000;
+  text-shadow: 0 0 5px #0ba5ef, 0 0 15px #0ba5ef, 0 0 20px #0ba5ef, 0 0 40px #0ba5ef, 0 0 60px #00aeff, 0 0 10px #0ba5ef, 0 0 98px #0ba5ef;
     color: #6fc9f3;
   }
 }
