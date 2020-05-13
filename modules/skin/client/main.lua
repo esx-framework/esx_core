@@ -1,5 +1,7 @@
 local self = ESX.Modules['skin']
 
+self.Init()
+
 Citizen.CreateThread(function()
 	while true do
 
@@ -18,39 +20,42 @@ Citizen.CreateThread(function()
 			local playerPed = PlayerPedId()
 			local coords    = GetEntityCoords(playerPed)
 
-			local angle = heading * math.pi / 180.0
+			local angle = self.heading * math.pi / 180.0
 			local theta = {
 				x = math.cos(angle),
 				y = math.sin(angle)
 			}
 
 			local pos = {
-				x = coords.x + (zoomOffset * theta.x),
-				y = coords.y + (zoomOffset * theta.y)
+				x = coords.x + (self.zoomOffset * theta.x),
+				y = coords.y + (self.zoomOffset * theta.y)
 			}
 
-			local angleToLook = heading - 140.0
+      local angleToLook = self.heading - 140.0
+
 			if angleToLook > 360 then
 				angleToLook = angleToLook - 360
 			elseif angleToLook < 0 then
 				angleToLook = angleToLook + 360
 			end
 
-			angleToLook = angleToLook * math.pi / 180.0
+      angleToLook = angleToLook * math.pi / 180.0
+
 			local thetaToLook = {
 				x = math.cos(angleToLook),
 				y = math.sin(angleToLook)
 			}
 
 			local posToLook = {
-				x = coords.x + (zoomOffset * thetaToLook.x),
-				y = coords.y + (zoomOffset * thetaToLook.y)
+				x = coords.x + (self.zoomOffset * thetaToLook.x),
+				y = coords.y + (self.zoomOffset * thetaToLook.y)
 			}
 
-			SetCamCoord(cam, pos.x, pos.y, coords.z + camOffset)
-			PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
+			SetCamCoord(self.cam, pos.x, pos.y, coords.z + self.camOffset)
+			PointCamAtCoord(self.cam, posToLook.x, posToLook.y, coords.z + self.camOffset)
 
-			ESX.ShowHelpNotification(_U('use_rotate_view'))
+      ESX.ShowHelpNotification(_U('use_rotate_view'))
+
 		else
 			Citizen.Wait(500)
 		end

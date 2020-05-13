@@ -10,6 +10,14 @@ self.firstSpawn = true
 self.zoomOffset = 0.0
 self.camOffset  = 0.0
 self.heading    = 90.0
+self.angle      = 0.0
+
+self.Init = function()
+
+	local translations = ESX.EvalFile(GetCurrentResourceName(), 'modules/skin/data/locales/' .. Config.Locale .. '.lua')['Translations']
+	LoadLocale('skin', Config.Locale, translations)
+
+end
 
 self.OpenMenu = function(submitCb, cancelCb, restrict)
 
@@ -79,7 +87,7 @@ self.OpenMenu = function(submitCb, cancelCb, restrict)
 		self.camOffset = _components[1].camOffset
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'skin', {
-			title    = _U('skin_menu'),
+			title    = _U('skin:skin_menu'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
@@ -132,27 +140,30 @@ self.OpenMenu = function(submitCb, cancelCb, restrict)
 				menu.refresh()
 			end
 		end, function(data, menu)
-			DeleteSkinCam()
+			self.DeleteSkinCam()
 		end)
 	end)
 end
 
 self.CreateSkinCam = function()
-	if not DoesCamExist(cam) then
+
+  local playerPed = PlayerPedId()
+
+	if not DoesCamExist(self.cam) then
 		self.cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
 	end
 
-	SetCamActive(cam, true)
+	SetCamActive(self.cam, true)
 	RenderScriptCams(true, true, 500, true, true)
 
 	self.isCameraActive = true
-	SetCamRot(cam, 0.0, 0.0, 270.0, true)
+	SetCamRot(self.cam, 0.0, 0.0, 270.0, true)
 	SetEntityHeading(playerPed, 90.0)
 end
 
 self.DeleteSkinCam = function()
 	self.isCameraActive = false
-	SetCamActive(cam, false)
+	SetCamActive(self.cam, false)
 	RenderScriptCams(false, true, 500, true, true)
 	cam = nil
 end
@@ -164,7 +175,7 @@ self.OpenSaveableMenu = function(submitCb, cancelCb, restrict)
 
 	self.OpenMenu(function(data, menu)
 		menu.close()
-		DeleteSkinCam()
+		self.DeleteSkinCam()
 
 		TriggerEvent('skinchanger:getSkin', function(skin)
 			TriggerServerEvent('esx_skin:save', skin)
