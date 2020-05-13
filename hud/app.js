@@ -7,7 +7,18 @@
       this.frames = {};
       this.modulePath = '../modules';
 
-      window.addEventListener('message', e => this.onMessage(e.data));
+      window.addEventListener('message', e => {
+
+        for(let name in this.frames) {
+          if(this.frames[name].iframe.contentWindow === e.source) {
+            this.onFrameMessage(name, e.data);
+            return;
+          }
+        }
+
+        this.onMessage(e.data);
+
+      });
 
       $.post('http://es_extended/nui_ready', '{}');
 
