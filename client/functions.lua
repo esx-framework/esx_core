@@ -23,6 +23,71 @@ ESX.Scaleform.Utils           = {}
 
 ESX.Streaming                 = {}
 
+ESX.Utils                     = {}
+ESX.Utils.Random              = {}
+ESX.Utils.Vehicle             = {}
+
+ESX.Utils.Random.isLucky = function(percentChance, cb, callCbOnUnlucky)
+  local hasCallback = cb ~= nil
+  local callCbOnUnlucky = callCbOnUnlucky ~= nil and callCbOnUnlucky or false
+
+  if percentChance <= 0 or percentChance >= 100 then
+    local result = percentChance >= 100 and true or false
+    if hasCallback and (callCbOnUnlucky or result) then
+      cb(result)
+    else
+      return result
+    end
+  end
+
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  local randomNumber = 100 * math.random()
+  local result = randomNumber <= percentChance
+
+  if hasCallback and (callCbOnUnlucky or result) then
+    cb(result)
+  else
+    return result
+  end
+end
+
+ESX.Utils.Random.isUnlucky = ESX.Utils.Random.isLucky
+
+ESX.Utils.Random.inRange = function(min, max)
+  local min = min ~= nil and min or 0
+  local max = max ~= nil and max or 100
+
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  return math.random(min, max)
+end
+
+-- Format [0-9]{2}[A-Z]{3}[0-9]{3}
+ESX.Utils.Vehicle.generateRandomPlate = function()
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  local firstPart = string.format("%02d", math.random(0, 99))
+
+  local charTable = {}
+  local chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  for c in chars:gmatch"." do
+    table.insert(charTable, c)
+  end
+
+  local stringPart = '';
+  for i = 1, 3 do
+    stringPart = stringPart .. charTable[math.random(1, #charTable)]
+  end
+
+  local lastPart = string.format("%03d", math.random(0, 999))
+
+  return firstPart .. stringPart .. lastPart
+end
+
 ESX.SetTimeout = function(msec, cb)
 	table.insert(ESX.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
