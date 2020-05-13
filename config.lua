@@ -2,9 +2,9 @@ Config = {}
 Config.Locale = 'en'
 
 Config.Accounts = {
-	bank = _U('account_bank'),
+	bank        = _U('account_bank'),
 	black_money = _U('account_black_money'),
-	money = _U('account_money')
+	money       = _U('account_money')
 }
 
 Config.StartingAccountMoney = {bank = 50000}
@@ -17,5 +17,5 @@ Config.MaxWeight            = 24   -- the max inventory weight without backpack
 
 Config.PaycheckInterval = 7 * 60000 -- how often to recieve pay checks in milliseconds
 
-Config.EnableDebug = false
+Config.EnableDebug  = false
 Config.InventoryKey = 'REPLAY_START_STOP_RECORDING_SECONDARY' -- Key F2 by default

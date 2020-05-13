@@ -11,16 +11,7 @@ server_scripts {
 	'@mysql-async/lib/MySQL.lua',
 
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
-	'locales/sc.lua',
-	'locales/tc.lua',
+	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -40,17 +31,9 @@ server_scripts {
 }
 
 client_scripts {
+
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
-	'locales/sc.lua',
-	'locales/tc.lua',
+	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -134,6 +117,7 @@ esxmodule 'menu_list'      -- List menu
 
 -- Misc
 esxmodule 'skin'           -- Skin management
+esxmodule 'accessories'    -- Skin accessories management
 
 -- Jobs
 esxmodule 'job_police'     -- Job police

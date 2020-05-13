@@ -231,30 +231,41 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 ESX.SavePlayer = function(xPlayer, cb)
-	local asyncTasks = {}
 
-	table.insert(asyncTasks, function(cb2)
-		MySQL.Async.execute('UPDATE users SET accounts = @accounts, job = @job, job_grade = @job_grade, `group` = @group, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
-			['@accounts'] = json.encode(xPlayer.getAccounts(true)),
-			['@job'] = xPlayer.job.name,
-			['@job_grade'] = xPlayer.job.grade,
-			['@group'] = xPlayer.getGroup(),
-			['@loadout'] = json.encode(xPlayer.getLoadout(true)),
-			['@position'] = json.encode(xPlayer.getCoords()),
-			['@identifier'] = xPlayer.getIdentifier(),
-			['@inventory'] = json.encode(xPlayer.getInventory(true))
-		}, function(rowsChanged)
-			cb2()
-		end)
-	end)
+  local data       = xPlayer.serializeDB()
+  local statement  = 'UPDATE users SET'
+  local fields     = {}
 
-	Async.parallel(asyncTasks, function(results)
+  local first = true
+
+  for k,v in pairs(data) do
+
+    if first then
+      statement = statement .. ' `' .. k .. '` = ' .. '@' .. k
+      first = false
+    else
+      statement = statement .. ', `' .. k .. '` = ' .. '@' .. k
+    end
+
+    fields['@' .. k] = v
+
+  end
+
+  statement = statement .. ' WHERE `identifier` = @identifier'
+
+  print(statement)
+  print(ESX.DumpTable(fields))
+
+  MySQL.Async.execute(statement, fields, function(rowsChanged)
+
 		print(('[es_extended] [^2INFO^7] Saved player "%s^7"'):format(xPlayer.getName()))
 
-		if cb then
+    if cb then
 			cb()
-		end
-	end)
+    end
+
+  end)
+
 end
 
 ESX.SavePlayers = function(cb)
