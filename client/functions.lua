@@ -186,6 +186,15 @@ ESX.ShowFloatingHelpNotification = function(msg, coords, timeout)
 
 end
 
+ESX.ShowProgressBar = function(time, text)
+	SendNUIMessage({
+		type = "progressbar",
+		display = true,
+		time = time,
+		text = text
+	})
+end
+
 ESX.TriggerServerCallback = function(name, cb, ...)
 	ESX.ServerCallbacks[ESX.CurrentRequestId] = cb
 
