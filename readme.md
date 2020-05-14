@@ -315,7 +315,7 @@ end
 
 
 # Read carefully...
-> You **MUST** increase the character limit in all tables where column name `owner` or `identifier` occurs to at least  **48**.
+> You **MUST** increase the varchar limit in all tables where column name `owner` or `identifier` occurs to at least  **48**.
 
 > Do **not** use essentialsmode, mapmanager and spawnmanager!
 
