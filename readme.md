@@ -148,9 +148,6 @@ and
 
 
 ## Duplication Entry (Datastore)
-To fix The datastore duplicated entry download this https://github.com/XxFri3ndlyxX/esx_datastore   
-
-Or  
 
 * esx_datastore: (`esx_datastore/server/main.lua `)
 ### Comment out this code:
