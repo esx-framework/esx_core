@@ -102,7 +102,7 @@
 .menu .menu-items .menu-item {
 	height: 40px;
 	display: block;
-	background-color: rgba(255, 255, 255, 0.4);
+	background-color: rgba(255, 255, 255, 0.6);
 	height: 32px;
 	line-height: 32px;
 	color: rgb(0, 0, 0);
@@ -110,21 +110,21 @@
 }
 
 .menu .menu-items .menu-item.selected {
-	background-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(255, 255, 255, 0.9);
   border:1px solid rgb(245, 13, 13);
   border-radius: 5px 5px 5px 5px;
   animation: border-flicker 4s linear infinite;
 }
 
 .menu .menu-items .menu-item.selected:first-child {
-	background-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(255, 255, 255, 0.7);
   border:1px solid rgb(245, 13, 13);
   border-radius: 5px 5px 5px 5px;
   animation: border-flicker 4s linear infinite;
 }
 
 .menu .menu-items .menu-item.selected:last-child {
-	background-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(255, 255, 255, 0.7);
   border:1px solid rgb(245, 13, 13);
   border-radius: 5px 5px 5px 5px;
   animation: border-flicker 4s linear infinite;
