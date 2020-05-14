@@ -5,6 +5,10 @@ ESX Ambulance Job is an plugin for ESX with features:
 - Adds death screen, with early respawn timer and bleed out timer
 - Vehicle garages, revive menu and more for on duty EMS
 
+## What I changed
+
+- I changed the client/main.lua so that when a player dies and if they combat log, when joining back to your server it will kill them so it doesnt cause the force respawn.
+
 ## Requirements
 
 * Auto mode
