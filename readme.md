@@ -1,3 +1,5 @@
+## SQL Injection fix from [KASHZIN/kashacters/pull/36](https://github.com/KASHZIN/kashacters/pull/36) is applied to this fork!
+
 # Thanks to KASH and XxFri3ndlyxX
 ### If you are updating ESX, be sure to update the remaining scripts!
 
