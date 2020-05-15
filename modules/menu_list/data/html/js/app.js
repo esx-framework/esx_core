@@ -5,7 +5,7 @@
 			'<table>' +
 				'<thead>' +
 					'<tr>' +
-						'{{#head}}<td>{{content}}</td>{{/head}}' +
+						'{{#head}}<td>- {{content}} -</td>{{/head}}' +
 					'</tr>' +
 				'</thead>'+
 				'<tbody>' +
@@ -44,7 +44,7 @@
 			namespace: namespace,
 			name     : name
 		});
-		
+
 		ESX_MENU.render();
 	};
 
@@ -70,7 +70,7 @@
 		$(menuContainer).hide();
 
 		for (let namespace in ESX_MENU.opened) {
-			
+
 			if (typeof ESX_MENU.data[namespace] == 'undefined') {
 				ESX_MENU.data[namespace] = {};
 			}
