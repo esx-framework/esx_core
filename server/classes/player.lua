@@ -1,19 +1,13 @@
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
-	local self = {}
+function CreateExtendedPlayer(data)
 
-	self.accounts = accounts
-	self.coords = coords
-	self.group = group
-	self.identifier = identifier
-	self.inventory = inventory
-	self.job = job
-	self.loadout = loadout
-	self.name = name
-	self.playerId = playerId
-	self.source = playerId
-	self.variables = {}
-	self.weight = weight
-	self.maxWeight = Config.MaxWeight
+  local self = {}
+
+	self.source    = data.playerId
+  self.maxWeight = Config.MaxWeight
+
+  for k,v in pairs(data) do
+    self[k] = v
+  end
 
 	ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
 
@@ -76,11 +70,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.set = function(k, v)
-		self.variables[k] = v
+		self[k] = v
 	end
 
 	self.get = function(k)
-		return self.variables[k]
+		return self[k]
 	end
 
 	self.getAccounts = function(minimal)
@@ -269,6 +263,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local newWeight = currentWeight + (itemWeight * count)
 
 		return newWeight <= self.maxWeight
+	end
+
+  self.maxCarryItem = function(name)
+		local count = 0
+		local currentWeight, itemWeight = self.getWeight(), ESX.Items[name].weight
+		local newWeight = self.maxWeight - currentWeight
+
+		-- math.max(0, ... to prevent bad programmers
+		return math.max(0, math.floor(newWeight / itemWeight))
 	end
 
 	self.canSwapItem = function(firstItem, firstItemCount, testItem, testItemCount)
@@ -498,5 +501,317 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	return self
+  self.serialize = function()
+
+    local data = {
+      accounts   = self.getAccounts(),
+      coords     = self.getCoords(),
+      identifier = self.getIdentifier(),
+      inventory  = self.getInventory(),
+      job        = self.getJob(),
+      loadout    = self.getLoadout(),
+      maxWeight  = self.getMaxWeight(),
+      money      = self.getMoney()
+    }
+
+    TriggerEvent('esx:player:serialize', self, function(extraData)
+
+      for k,v in pairs(extraData) do
+        data[k] = v
+      end
+
+    end)
+
+    return data
+
+  end
+
+  self.serializeDB = function()
+
+    local job = self.getJob()
+
+    local data = {
+      identifier = self.getIdentifier(),
+      accounts   = json.encode(self.getAccounts(true)),
+      group      = self.getGroup(),
+      inventory  = json.encode(self.getInventory(true)),
+      job        = job.name,
+      job_grade  = job.grade,
+      loadout    = json.encode(self.getLoadout(true)),
+      position   = json.encode(self.getCoords())
+    }
+
+    TriggerEvent('esx:player:serialize:db', self, function(extraData)
+
+      for k,v in pairs(extraData) do
+        data[k] = v
+      end
+
+    end)
+
+    return data
+
+  end
+
+  TriggerEvent('esx:player:create', self)  -- You can hook this event to extend xPlayer
+
+  return self
+
 end
+
+function LoadExtendedPlayer(identifier, playerId, cb)
+
+  MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', { ['@identifier'] = identifier }, function(result)
+
+    local tasks = {}
+
+    local userData = {
+      playerId   = playerId,
+      identifier = identifier,
+      weight     = 0,
+    }
+
+    for entryName, entryValue in pairs(result[1]) do
+
+      TriggerEvent('esx:player:load:' .. entryName, identifier, playerId, result[1], userData, function(task)
+        tasks[#tasks + 1] = task
+      end)
+
+    end
+
+    Async.parallelLimit(tasks, 5, function(results)
+
+      for i=1, #results, 1 do
+
+        local result = results[i]
+
+        for k,v in pairs(result) do
+          userData[k] = v
+        end
+
+      end
+
+      local xPlayer = CreateExtendedPlayer(userData)
+
+      ESX.Players[playerId] = xPlayer
+
+      TriggerEvent('esx:playerLoaded', playerId, xPlayer)
+
+      xPlayer.triggerEvent('esx:playerLoaded', xPlayer.serialize())
+      xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
+      xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
+
+      if cb ~= nil then
+        cb()
+      end
+
+    end)
+
+  end)
+
+end
+
+AddEventHandler('esx:player:load:accounts', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data          = {}
+    local foundAccounts = {}
+
+    if row.accounts and row.accounts ~= '' then
+
+      local accounts = json.decode(row.accounts)
+
+      for account, money in pairs(accounts) do
+        foundAccounts[account] = money
+      end
+
+    end
+
+    for account, label in pairs(Config.Accounts) do
+
+      table.insert(data, {
+        name = account,
+        money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
+        label = label
+      })
+
+    end
+
+    cb({accounts = data})
+
+  end)
+
+end)
+
+AddEventHandler('esx:player:load:job', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data                   = {}
+    local jobObject, gradeObject = {}, {}
+
+    if ESX.DoesJobExist(row.job, row.job_grade) then
+      jobObject, gradeObject = ESX.Jobs[row.job], ESX.Jobs[row.job].grades[tostring(row.job_grade)]
+    else
+
+      print(('[es_extended] [^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
+
+      job, grade = 'unemployed', '0'
+      jobObject, gradeObject = ESX.Jobs[row.job], ESX.Jobs[row.job].grades[tostring(rrow.job_grade)]
+
+    end
+
+    data.id    = jobObject.id
+    data.name  = jobObject.name
+    data.label = jobObject.label
+
+    data.grade        = row.job_grade
+    data.grade_name   = gradeObject.name
+    data.grade_label  = gradeObject.label
+    data.grade_salary = gradeObject.salary
+
+    data.skin_male   = {}
+    data.skin_female = {}
+
+    if gradeObject.skin_male   then data.skin_male   = json.decode(gradeObject.skin_male)   end
+    if gradeObject.skin_female then data.skin_female = json.decode(gradeObject.skin_female) end
+
+    cb({job = data})
+
+  end)
+
+end)
+
+AddEventHandler('esx:player:load:inventory', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data = {
+      weight    = userData.weight,
+      inventory = {}
+    }
+
+    local foundItems = {}
+
+    if row.inventory and row.inventory ~= '' then
+
+      local inventory = json.decode(row.inventory)
+
+      for name,count in pairs(inventory) do
+
+        local item = ESX.Items[name]
+
+        if item then
+          foundItems[name] = count
+        else
+          print(('[es_extended] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, identifier))
+        end
+      end
+
+    end
+
+    for name,item in pairs(ESX.Items) do
+
+      local count = foundItems[name] or 0
+
+      if count > 0 then
+        data.weight = data.weight + (item.weight * count)
+      end
+
+      table.insert(data.inventory, {
+        name      = name,
+        count     = count,
+        label     = item.label,
+        weight    = item.weight,
+        usable    = ESX.UsableItemsCallbacks[name] ~= nil,
+        rare      = item.rare,
+        canRemove = item.canRemove
+      })
+
+    end
+
+    table.sort(data.inventory, function(a, b)
+      return a.label < b.label
+    end)
+
+    cb(data)
+
+  end)
+
+end)
+
+AddEventHandler('esx:player:load:group', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data = {}
+
+    if row.group then
+      data = row.group
+    else
+      data.group = 'user'
+    end
+
+    cb({group = data})
+
+  end)
+
+end)
+
+AddEventHandler('esx:player:load:loadout', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data = {}
+
+    if row.loadout and row.loadout ~= '' then
+
+      local loadout = json.decode(row.loadout)
+
+      for name,weapon in pairs(loadout) do
+
+        local label = ESX.GetWeaponLabel(name)
+
+        if label then
+
+          if not weapon.components then weapon.components = {} end
+          if not weapon.tintIndex  then weapon.tintIndex  = 0  end
+
+          table.insert(data, {
+            name       = name,
+            ammo       = weapon.ammo,
+            label      = label,
+            components = weapon.components,
+            tintIndex  = weapon.tintIndex
+          })
+
+        end
+      end
+
+    end
+
+    cb({loadout = data})
+
+  end)
+
+end)
+
+AddEventHandler('esx:player:load:position', function(identifier, playerId, row, userData, addTask)
+
+  addTask(function(cb)
+
+    local data = {}
+
+    if row.position and row.position ~= '' then
+      data = json.decode(row.position)
+    else
+      print('[es_extended] [^3WARNING^7] Column "position" in "users" table is missing required default value. Using backup coords, fix your database.')
+      data = {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
+    end
+
+    cb({coords = data})
+
+  end)
+
+end)

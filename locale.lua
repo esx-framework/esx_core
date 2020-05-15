@@ -19,3 +19,13 @@ end
 function _U(str, ...) -- Translate string first char uppercase
 	return tostring(_(str, ...):gsub("^%l", string.upper))
 end
+
+function LoadLocale(ns, lang, data)
+
+  Locales[lang] = Locales[lang] or {}
+
+  for k,v in pairs(data) do
+    Locales[lang][ns .. ':' .. k] =v
+  end
+
+end

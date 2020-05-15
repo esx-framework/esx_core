@@ -1,4 +1,7 @@
 ESX                           = {}
+ESX.Loops                     = {}
+ESX.LoopsRunning              = {}
+ESX.Modules                   = {}
 ESX.PlayerData                = {}
 ESX.PlayerLoaded              = false
 ESX.CurrentRequestId          = 0
@@ -20,6 +23,71 @@ ESX.Scaleform.Utils           = {}
 
 ESX.Streaming                 = {}
 
+ESX.Utils                     = {}
+ESX.Utils.Random              = {}
+ESX.Utils.Vehicle             = {}
+
+ESX.Utils.Random.isLucky = function(percentChance, cb, callCbOnUnlucky)
+  local hasCallback = cb ~= nil
+  local callCbOnUnlucky = callCbOnUnlucky ~= nil and callCbOnUnlucky or false
+
+  if percentChance <= 0 or percentChance >= 100 then
+    local result = percentChance >= 100 and true or false
+    if hasCallback and (callCbOnUnlucky or result) then
+      cb(result)
+    else
+      return result
+    end
+  end
+
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  local randomNumber = 100 * math.random()
+  local result = randomNumber <= percentChance
+
+  if hasCallback and (callCbOnUnlucky or result) then
+    cb(result)
+  else
+    return result
+  end
+end
+
+ESX.Utils.Random.isUnlucky = ESX.Utils.Random.isLucky
+
+ESX.Utils.Random.inRange = function(min, max)
+  local min = min ~= nil and min or 0
+  local max = max ~= nil and max or 100
+
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  return math.random(min, max)
+end
+
+-- Format [0-9]{2}[A-Z]{3}[0-9]{3}
+ESX.Utils.Vehicle.generateRandomPlate = function()
+  -- Force random on each iteration
+  math.randomseed(GetGameTimer())
+
+  local firstPart = string.format("%02d", math.random(0, 99))
+
+  local charTable = {}
+  local chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  for c in chars:gmatch"." do
+    table.insert(charTable, c)
+  end
+
+  local stringPart = '';
+  for i = 1, 3 do
+    stringPart = stringPart .. charTable[math.random(1, #charTable)]
+  end
+
+  local lastPart = string.format("%03d", math.random(0, 999))
+
+  return firstPart .. stringPart .. lastPart
+end
+
 ESX.SetTimeout = function(msec, cb)
 	table.insert(ESX.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
@@ -30,6 +98,83 @@ end
 
 ESX.ClearTimeout = function(i)
 	ESX.TimeoutCallbacks[i] = nil
+end
+
+ESX.CreateFrame = function(name, url, visible)
+	visible = (visible == nil) and true or false
+	SendNUIMessage({action = 'create_frame', name = name, url = url, visible = visible})
+end
+
+ESX.SendFrameMessage = function(name, msg)
+	SendNUIMessage({target = name, data = msg})
+end
+
+ESX.FocusFrame = function(name, cursor)
+	SendNUIMessage({action = 'focus_frame', name = name})
+	SetNuiFocus(true, cursor)
+end
+
+RegisterNUICallback('nui_ready', function(data, cb)
+  TriggerEvent('esx:nui_ready')
+  cb('')
+end)
+
+RegisterNUICallback('frame_message', function(data, cb)
+  TriggerEvent('esx:frame_message', data.name, data.msg, data.cb)
+  cb('')
+end)
+
+ESX.LogError = function(err)
+  local str = err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+ESX.LogScopeError = function(scope, err)
+  local str = '[esx] error in scope (' .. scope .. ') ' .. err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+
+ESX.LogLoopError = function(loop, err)
+  local str = '[esx] error in loop (' .. loop .. ') ' .. err .. ' ' .. debug.traceback()
+  print(str)
+  TriggerServerEvent('esx:error:log', str);
+end
+
+ESX.Loop = function(name, func, wait, conditions)
+
+  ESX.Loops[name] = {
+    func      = func,
+    wait      = wait,
+    conditons = conditions or {},
+    name      = name,
+  }
+
+end
+
+ESX.Scope = function(name, func)
+
+  local status, result = xpcall(func, function(err)
+    ESX.LogScopeError(name, err)
+  end)
+
+  return result
+end
+
+ESX.MakeScope = function(name, func)
+
+  return function(...)
+
+    local status, result = xpcall(func, ESX.LogError, function(err)
+      ESX.LogScopeError(name, err)
+    end)
+
+    return result
+
+  end
+
 end
 
 ESX.IsPlayerLoaded = function()
@@ -51,32 +196,68 @@ ESX.ShowNotification = function(msg)
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxAdvancedNotification', msg)
-	BeginTextCommandThefeedPost('esxAdvancedNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
+
+  if saveToBrief == nil then
+    saveToBrief = true
+  end
+
+  BeginTextCommandThefeedPost('STRING')
+  AddTextComponentSubstringPlayerName(msg)
+
+  if hudColorIndex then
+    ThefeedNextPostBackgroundColor(hudColorIndex)
+  end
+
 	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+  EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+
 end
 
 ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
-	AddTextEntry('esxHelpNotification', msg)
+
+  BeginTextCommandDisplayHelp('STRING')
+  AddTextComponentSubstringPlayerName(msg)
 
 	if thisFrame then
-		DisplayHelpTextThisFrame('esxHelpNotification', false)
+		DisplayHelpTextThisFrame(msg, false)
 	else
 		if beep == nil then beep = true end
 		BeginTextCommandDisplayHelp('esxHelpNotification')
 		EndTextCommandDisplayHelp(0, false, beep, duration or -1)
-	end
+  end
+
 end
 
-ESX.ShowFloatingHelpNotification = function(msg, coords)
-	AddTextEntry('esxFloatingHelpNotification', msg)
-	SetFloatingHelpTextWorldPosition(1, coords)
-	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
-	EndTextCommandDisplayHelp(2, false, false, -1)
+ESX.ShowFloatingHelpNotification = function(msg, coords, timeout)
+
+  timeout     = timeout or 5000
+  local start = GetGameTimer()
+
+  Citizen.CreateThread(function()
+
+    while (GetGameTimer() - start) < timeout do
+
+      SetFloatingHelpTextWorldPosition(1, coords.x, coords.y, coords.z)
+      SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
+      BeginTextCommandDisplayHelp('STRING')
+      AddTextComponentSubstringPlayerName(msg)
+      EndTextCommandDisplayHelp(2, false, true, -1)
+
+      Citizen.Wait(0)
+
+    end
+
+  end)
+
+end
+
+ESX.ShowProgressBar = function(time, text)
+	SendNUIMessage({
+		type = "progressbar",
+		display = true,
+		time = time,
+		text = text
+	})
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -92,7 +273,7 @@ ESX.TriggerServerCallback = function(name, cb, ...)
 end
 
 ESX.UI.HUD.SetDisplay = function(opacity)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action  = 'setHUDDisplay',
 		opacity = opacity
 	})
@@ -114,7 +295,7 @@ ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
 
 	table.insert(ESX.UI.HUD.RegisteredElements, name)
 
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action    = 'insertHUDElement',
 		name      = name,
 		index     = index,
@@ -134,14 +315,14 @@ ESX.UI.HUD.RemoveElement = function(name)
 		end
 	end
 
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action    = 'deleteHUDElement',
 		name      = name
 	})
 end
 
 ESX.UI.HUD.UpdateElement = function(name, data)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action = 'updateHUDElement',
 		name   = name,
 		data   = data
@@ -279,7 +460,7 @@ ESX.UI.Menu.IsOpen = function(type, namespace, name)
 end
 
 ESX.UI.ShowInventoryItemNotification = function(add, item, count)
-	SendNUIMessage({
+	ESX.SendFrameMessage('hud', {
 		action = 'inventoryNotification',
 		add    = add,
 		item   = item,
@@ -485,7 +666,7 @@ end
 
 ESX.Game.GetClosestObject = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter) end
 ESX.Game.GetClosestPed = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter) end
-ESX.Game.GetClosestPlayer = function(coords) return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil) end
+ESX.Game.GetClosestPlayer = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, modelFilter) end
 ESX.Game.GetClosestVehicle = function(coords, modelFilter) return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter) end
 ESX.Game.GetPlayersInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(ESX.Game.GetPlayers(true, true), true, coords, maxDistance) end
 ESX.Game.GetVehiclesInArea = function(coords, maxDistance) return EnumerateEntitiesWithinDistance(ESX.Game.GetVehicles(), false, coords, maxDistance) end
@@ -557,7 +738,6 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 			bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
 			engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
-			tankHealth        = ESX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
 
 			fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
 			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
@@ -647,7 +827,6 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.plateIndex then SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex) end
 		if props.bodyHealth then SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0) end
 		if props.engineHealth then SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0) end
-		if props.tankHealth then SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0) end
 		if props.fuelLevel then SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0) end
 		if props.dirtLevel then SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0) end
 		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
@@ -930,10 +1109,15 @@ ESX.ShowInventory = function()
 					ESX.Streaming.RequestAnimDict(dict)
 
 					if type == 'item_weapon' then
+
 						menu1.close()
-						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-						Citizen.Wait(1000)
-						TriggerServerEvent('esx:removeInventoryItem', type, item)
+
+						Citizen.CreateThread(function()
+							TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+							Citizen.Wait(1000)
+							TriggerServerEvent('esx:removeInventoryItem', type, item)
+						end)
+
 					else
 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 							title = _U('amount')
@@ -941,11 +1125,16 @@ ESX.ShowInventory = function()
 							local quantity = tonumber(data2.value)
 
 							if quantity and quantity > 0 and data.current.count >= quantity then
+
 								menu2.close()
 								menu1.close()
-								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-								Citizen.Wait(1000)
-								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+
+								Citizen.CreateThread(function()
+									TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+									Citizen.Wait(1000)
+									TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+								end)
+
 							else
 								ESX.ShowNotification(_U('amount_invalid'))
 							end

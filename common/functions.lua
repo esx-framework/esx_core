@@ -4,6 +4,19 @@ for i = 48,  57 do table.insert(Charset, string.char(i)) end
 for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
+-- Be careful with this, use it for some config file parsing and such
+ESX.EvalFile = function(resource, file, env)
+
+  env        = env or {}
+  env._G     = env
+  local code = LoadResourceFile(resource, file)
+
+  load(code, code, 't', env)()
+
+  return env
+
+end
+
 ESX.GetRandomString = function(length)
 	math.randomseed(GetGameTimer())
 

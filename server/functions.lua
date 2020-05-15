@@ -1,3 +1,70 @@
+ESX.EnsureMigrations = function(module)
+
+  print('[esx] ensure migrations => ' .. module)
+
+  local dir
+
+  if module == 'base' then
+    dir = 'migrations'
+  else
+    dir = 'modules/' .. module .. '/migrations'
+  end
+
+  local result      = MySQL.Sync.fetchAll('SELECT * FROM `migrations` WHERE `module` = @module', {['@module'] = module})
+  local initial     = true
+  local i           = 0
+  local hasmigrated = false
+
+  if #result > 0 then
+    i           = result[1].last + 1
+    initial     = false
+  end
+
+  local sql = nil
+
+  repeat
+
+    sql = LoadResourceFile(GetCurrentResourceName(), dir .. '/' .. i .. '.sql')
+
+    if sql ~= nil then
+
+      print('[esx] [' .. module .. '] => running migration #' .. i)
+
+      MySQL.Sync.execute(sql)
+
+      if initial then
+        MySQL.Sync.execute('INSERT INTO `migrations` (module, last) VALUES (@module, @last)', {['@module'] = module, ['@last'] = 0})
+      else
+        MySQL.Sync.execute('UPDATE `migrations` SET `last` = @last WHERE `module` = @module', {['@module'] = module, ['@last'] = i})
+      end
+
+      hasmigrated = true
+
+    end
+
+    i = i + 1
+
+  until sql == nil
+
+  if not hasmigrated then
+    -- print('[esx] [' .. module .. '] => no pending migration')
+  end
+
+end
+
+ESX.FileExists = function(name)
+
+  local f=io.open(name, 'r')
+
+  if f~=nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+
+end
+
 ESX.Trace = function(msg)
 	if Config.EnableDebug then
 		print(('[es_extended] [^2TRACE^7] %s^7'):format(msg))
@@ -164,30 +231,41 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 ESX.SavePlayer = function(xPlayer, cb)
-	local asyncTasks = {}
 
-	table.insert(asyncTasks, function(cb2)
-		MySQL.Async.execute('UPDATE users SET accounts = @accounts, job = @job, job_grade = @job_grade, `group` = @group, loadout = @loadout, position = @position, inventory = @inventory WHERE identifier = @identifier', {
-			['@accounts'] = json.encode(xPlayer.getAccounts(true)),
-			['@job'] = xPlayer.job.name,
-			['@job_grade'] = xPlayer.job.grade,
-			['@group'] = xPlayer.getGroup(),
-			['@loadout'] = json.encode(xPlayer.getLoadout(true)),
-			['@position'] = json.encode(xPlayer.getCoords()),
-			['@identifier'] = xPlayer.getIdentifier(),
-			['@inventory'] = json.encode(xPlayer.getInventory(true))
-		}, function(rowsChanged)
-			cb2()
-		end)
-	end)
+  local data       = xPlayer.serializeDB()
+  local statement  = 'UPDATE users SET'
+  local fields     = {}
 
-	Async.parallel(asyncTasks, function(results)
+  local first = true
+
+  for k,v in pairs(data) do
+
+    if first then
+      statement = statement .. ' `' .. k .. '` = ' .. '@' .. k
+      first = false
+    else
+      statement = statement .. ', `' .. k .. '` = ' .. '@' .. k
+    end
+
+    fields['@' .. k] = v
+
+  end
+
+  statement = statement .. ' WHERE `identifier` = @identifier'
+
+  print(statement)
+  print(ESX.DumpTable(fields))
+
+  MySQL.Async.execute(statement, fields, function(rowsChanged)
+
 		print(('[es_extended] [^2INFO^7] Saved player "%s^7"'):format(xPlayer.getName()))
 
-		if cb then
+    if cb then
 			cb()
-		end
-	end)
+    end
+
+  end)
+
 end
 
 ESX.SavePlayers = function(cb)
@@ -256,12 +334,13 @@ end
 ESX.CreatePickup = function(type, name, count, label, playerId, components, tintIndex)
 	local pickupId = (ESX.PickupId == 65635 and 0 or ESX.PickupId + 1)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local coords = xPlayer.getCoords()
 
 	ESX.Pickups[pickupId] = {
-		type = type, name = name,
-		count = count, label = label,
-		coords = coords
+		type  = type,
+		name  = name,
+		count = count,
+		label = label,
+		coords = xPlayer.getCoords(),
 	}
 
 	if type == 'item_weapon' then
@@ -269,7 +348,7 @@ ESX.CreatePickup = function(type, name, count, label, playerId, components, tint
 		ESX.Pickups[pickupId].tintIndex = tintIndex
 	end
 
-	TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, type, name, components, tintIndex)
+	TriggerClientEvent('esx:createPickup', -1, pickupId, label, playerId, type, name, components, tintIndex)
 	ESX.PickupId = pickupId
 end
 
