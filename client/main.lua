@@ -71,12 +71,15 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
 		TriggerEvent('esx:restoreLoadout')
 
-		Citizen.Wait(3000)
+		Citizen.Wait(4000)
 		ShutdownLoadingScreen()
+		ShutdownLoadingScreenNui()
 		FreezeEntityPosition(PlayerPedId(), false)
 		DoScreenFadeIn(10000)
 		StartServerSyncLoops()
 	end)
+
+	TriggerEvent('esx:loadingScreenOff')
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -378,6 +381,10 @@ if Config.EnableHud then
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
 		end
+	end)
+
+	AddEventHandler('esx:loadingScreenOff', function()
+		ESX.UI.HUD.SetDisplay(1.0)
 	end)
 end
 
