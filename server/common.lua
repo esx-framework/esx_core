@@ -1,5 +1,4 @@
 ESX = {}
-ESX.Modules = {}
 ESX.Players = {}
 ESX.UsableItemsCallbacks = {}
 ESX.Items = {}
