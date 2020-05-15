@@ -156,8 +156,8 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Loaded event
-Citizen.CreateThread(function()
+-- Loading screen off event
+AddEventHandler('esx:loadingScreenOff', function()
 	TriggerEvent('esx_status:loaded')
 end)
 
