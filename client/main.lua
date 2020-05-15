@@ -23,36 +23,38 @@ AddEventHandler('onClientMapStart', function()
 	end
 end)
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1)
+AddEventHandler('esx:loadingScreenOff', function()
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(1)
 
-		if IsControlJustPressed(1, 74) and IsControlPressed(1, 21) then
-			voice.current = (voice.current + 1) % 3
+			if IsControlJustPressed(1, 74) and IsControlPressed(1, 21) then
+				voice.current = (voice.current + 1) % 3
+				if voice.current == 0 then
+					NetworkSetTalkerProximity(voice.default)
+					voice.level = _U('normal')
+				elseif voice.current == 1 then
+					NetworkSetTalkerProximity(voice.shout)
+					voice.level = _U('shout')
+				elseif voice.current == 2 then
+					NetworkSetTalkerProximity(voice.whisper)
+					voice.level = _U('whisper')
+				end
+			end
+
 			if voice.current == 0 then
-				NetworkSetTalkerProximity(voice.default)
 				voice.level = _U('normal')
 			elseif voice.current == 1 then
-				NetworkSetTalkerProximity(voice.shout)
 				voice.level = _U('shout')
 			elseif voice.current == 2 then
-				NetworkSetTalkerProximity(voice.whisper)
 				voice.level = _U('whisper')
 			end
-		end
 
-		if voice.current == 0 then
-			voice.level = _U('normal')
-		elseif voice.current == 1 then
-			voice.level = _U('shout')
-		elseif voice.current == 2 then
-			voice.level = _U('whisper')
+			if NetworkIsPlayerTalking(PlayerId()) then
+				drawLevel(41, 128, 185, 255)
+			else
+				drawLevel(185, 185, 185, 255)
+			end
 		end
-
-		if NetworkIsPlayerTalking(PlayerId()) then
-			drawLevel(41, 128, 185, 255)
-		else
-			drawLevel(185, 185, 185, 255)
-		end
-	end
+	end)
 end)
