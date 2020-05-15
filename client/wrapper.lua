@@ -6,7 +6,7 @@ RegisterNUICallback('__chunk', function(data, cb)
 
 	if data['end'] then
 		local msg = json.decode(Chunks[data.id])
-		TriggerEvent(data.__namespace .. ':message:' .. data.__type, msg)
+		TriggerEvent(GetCurrentResourceName() .. ':message:' .. data.__type, msg)
 		Chunks[data.id] = nil
 	end
 

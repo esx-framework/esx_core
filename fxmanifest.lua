@@ -4,14 +4,23 @@ game 'gta5'
 
 description 'ES Extended'
 
-version '2.0.0'
+version '1.2.0'
 
 server_scripts {
 	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 
 	'locale.lua',
-	'locales/*.lua',
+	'locales/de.lua',
+	'locales/br.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'locales/fi.lua',
+	'locales/sv.lua',
+	'locales/pl.lua',
+	'locales/cs.lua',
+	'locales/sc.lua',
+	'locales/tc.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -25,15 +34,21 @@ server_scripts {
 
 	'common/modules/math.lua',
 	'common/modules/table.lua',
-  'common/functions.lua',
-
-  'common/bootstrap.lua',
+	'common/functions.lua'
 }
 
 client_scripts {
-
 	'locale.lua',
-	'locales/*.lua',
+	'locales/de.lua',
+	'locales/br.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'locales/fi.lua',
+	'locales/sv.lua',
+	'locales/pl.lua',
+	'locales/cs.lua',
+	'locales/sc.lua',
+	'locales/tc.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -50,74 +65,40 @@ client_scripts {
 
 	'common/modules/math.lua',
 	'common/modules/table.lua',
-  'common/functions.lua',
-
-  'common/bootstrap.lua',
+	'common/functions.lua'
 }
 
 ui_page {
-	'hud/index.html'
+	'html/ui.html'
 }
 
 files {
-  'client/bootstrap.lua',
 	'locale.js',
-	'hud/**/*',
+	'html/ui.html',
+
+	'html/css/app.css',
+
+	'html/js/mustache.min.js',
+	'html/js/wrapper.js',
+	'html/js/app.js',
+
+	'html/fonts/pdown.ttf',
+	'html/fonts/bankgothic.ttf',
+
+	'html/img/accounts/bank.png',
+	'html/img/accounts/black_money.png',
+	'html/img/accounts/money.png'
 }
 
 exports {
-  'getSharedObject',
-  'OnESX',
+	'getSharedObject'
 }
 
 server_exports {
-  'getSharedObject',
-  'OnESX',
+	'getSharedObject'
 }
 
 dependencies {
-  'spawnmanager',
-  'baseevents',
 	'mysql-async',
-  'async',
-  'cron',
-  'skinchanger',
+	'async'
 }
-
--- ESX Modules
-esxmodule = function(name)
-
-	file('modules/' .. name .. '/data/**/*')
-
-	client_script('modules/' .. name .. '/client/module.lua')
-	client_script('modules/' .. name .. '/client/main.lua')
-	client_script('modules/' .. name .. '/client/events.lua')
-
-	server_script('modules/' .. name .. '/server/module.lua')
-	server_script('modules/' .. name .. '/server/main.lua')
-	server_script('modules/' .. name .. '/server/events.lua')
-
-end
-
--- Misc
-esxmodule 'input'          -- Evented input manager
-esxmodule 'interact'       -- Interact menu (marker / npc)
-
--- Extend
-esxmodule 'addonaccount'   -- Addon account
-esxmodule 'addoninventory' -- Addon inventory
-esxmodule 'datastore'      -- Arbitrary data store
-esxmodule 'society'        -- Society management
-
--- UI
-esxmodule 'hud'            -- Money / society etc... HUD
-esxmodule 'menu_default'   -- Default menu
-esxmodule 'menu_dialog'    -- Dialog menu
-esxmodule 'menu_list'      -- List menu
-
--- Misc
-esxmodule 'skin'           -- Skin management
-esxmodule 'accessories'    -- Skin accessories management
-
--- Jobs
-esxmodule 'job_police'     -- Job police

@@ -42,7 +42,7 @@ Locales['sc'] = {
 
   -- Salary related
   ['received_salary'] = '你收到了你的工资: ~g~$%s~s~',
-  ['received_help'] = '鉴于你良好的表现，系统赠送给你一些奖励: ~g~$%s~s~',
+  ['received_help'] = '你领取到了你的失业救济金: ~g~$%s~s~',
   ['company_nomoney'] = '你受雇的公司太穷了，无法支付你的工资。',
   ['received_paycheck'] = '收到转账',
   ['bank'] = '花园银行',
