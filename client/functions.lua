@@ -44,12 +44,10 @@ ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
 end
 
-ESX.ShowNotification = function(msg, flash, saveToBrief, hudColorIndex)
-	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxNotification', msg)
-	BeginTextCommandThefeedPost('esxNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+ESX.ShowNotification = function(msg)
+	SetNotificationTextEntry('STRING')
+	AddTextComponentString(msg)
+	DrawNotification(0,1)
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
@@ -1013,8 +1011,8 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg, flash, saveToBrief, hudColorIndex)
-	ESX.ShowNotification(msg, flash, saveToBrief, hudColorIndex)
+AddEventHandler('esx:showNotification', function(msg)
+	ESX.ShowNotification(msg)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
