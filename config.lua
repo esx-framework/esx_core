@@ -14,6 +14,5 @@ Config.EnableHud            = true -- enable the default hud? Display current jo
 Config.MaxWeight            = 24   -- the max inventory weight without backpack
 Config.PaycheckInterval     = 7 * 60000 -- how often to recieve pay checks in milliseconds
 Config.EnableDebug          = false
-Config.UseESXIdentity       = false -- Enable support for ESX Identity features, and support for custom loading screens
 
 Config.IncompatibleResourcesToStop = {}
