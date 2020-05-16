@@ -79,9 +79,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		StartServerSyncLoops()
 	end)
 
-	if Config.UseESXIdentity then
-		TriggerEvent('esx:loadingScreenOff')
-	end
+	TriggerEvent('esx:loadingScreenOff')
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -385,15 +383,9 @@ if Config.EnableHud then
 		end
 	end)
 
-	if Config.UseESXIdentity then
-		AddEventHandler('esx:loadingScreenOff', function()
-			ESX.UI.HUD.SetDisplay(1.0)
-		end)
-	else
-		AddEventHandler('esx:onPlayerSpawn', function()
-			ESX.UI.HUD.SetDisplay(1.0)
-		end)
-	end
+	AddEventHandler('esx:loadingScreenOff', function()
+		ESX.UI.HUD.SetDisplay(1.0)
+	end)
 end
 
 function StartServerSyncLoops()
