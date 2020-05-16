@@ -961,6 +961,7 @@ ESX.ShowInventory = function()
 				ESX.ShowInventory()
 			elseif data1.current.action == 'give_ammo' then
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+				local closestPed = GetPlayerPed(closestPlayer)
 				local pedAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
 
 				if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
