@@ -12,7 +12,8 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 
 ## Links & Read more
 
-- [ESX Documentation](https://esx-org.github.io/)
+- [ESX Forum](https://forum.esx-framework.org/)
+- [ESX Documentation](https://wiki.esx-framework.org/)
 - [ESX Development Discord](https://discord.me/esx)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
 
