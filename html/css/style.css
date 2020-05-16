@@ -1,0 +1,127 @@
+body {
+	font-family: sans-serif;
+	overflow: hidden;
+	display: none;
+	color: #000000;
+}
+
+.dialog {
+	width: 332px;
+	opacity			: 0.95;
+	position      	: absolute;
+	margin-left: auto;
+	margin-right: auto; 
+	top				: 30.0%;
+	padding: 10px;
+	left            : 50%; /* à 50%/50% du parent référent */
+	transform       : translate(-50%); /* décalage de 50% de sa propre taille */
+	background-color: #B7B7B7;
+	border-radius   : 4px;
+	box-shadow: 0px 0px 50px 0px #000;
+	border-left:5px solid #000;
+	border:1px inset;
+	margin:5px;
+	margin-bottom:20px;
+	color: #000000;
+}
+
+input {
+	width: 100%;
+	padding: 10px;
+	text-align:left;
+	color: #000000;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+	color: black;
+	opacity: 1; /* Firefox */
+}
+
+.radio-toolbar input[type="radio"] {
+	opacity: 0;
+	position: absolute;
+	width: 36%;
+}
+
+.radio-toolbar label {
+	display: inline-block;
+	margin-top: 5px;
+    background-color: #ddd;
+    padding: 10px 20px;
+    font-family: sans-serif, Arial;
+	font-size: 16px;
+	color: #000000;
+    border: 2px solid #444;
+	border-radius: 4px;
+	width: 36%;
+}
+
+.radio-toolbar input[type="radio"]:checked + label {
+	width: 36%;
+    background-color:#3399FF;
+	border-color: #0033FF;
+	color: #000000;
+}
+
+.radio-toolbar input[type="radio"]:focus + label {
+	border: 2px solid #444;
+	width: 36%;
+	color: #000000;
+}
+
+.radio-toolbar label:hover {
+	background-color: #dfd;
+	width: 36%;
+	color: #000000;
+}
+
+button {
+	display: block;
+	margin-top: 5px;
+	padding: 10px;
+	background-color: #373737;
+    border: 2px solid #444;
+	color: #FFFFFF;
+	width: 100%;
+}
+
+h1 {
+	display: block;
+	margin-top: 5px;
+	margin-right: 5px;
+	padding: 10px;
+	background-color: #506be6;
+	color: #000000;
+	width: 93%;
+	text-align: center;
+}
+
+.range-wrap {
+	position: relative;
+	margin: 0 auto 3rem;
+}
+
+.range {
+	width: 100%;
+}
+
+.bubble {
+	background: #3399FF;
+	color: black;
+	padding: 4px 12px;
+	position: absolute;
+	border-radius: 4px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.bubble::after {
+	content: "";
+	position: absolute;
+	width: 2px;
+	height: 2px;
+	background: #3399FF;
+	color: black;
+	top: -1px;
+	left: 50%;
+}
