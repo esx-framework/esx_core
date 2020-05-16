@@ -30,7 +30,7 @@ AddEventHandler('kashactersS:CharacterChosen', function(charid, ischar)
     local src = source
     local new = true
     local spawn = {}
-    if type(charid) == "number" and type(ischar) == "boolean" then
+    if type(charid) == "number" and string.len(charid) < 10 and type(ischar) == "boolean" then
         SetLastCharacter(src, tonumber(charid))
         SetCharToIdentifier(GetRockstarID(src), tonumber(charid))
     
@@ -51,8 +51,12 @@ end)
 RegisterServerEvent("kashactersS:DeleteCharacter")
 AddEventHandler('kashactersS:DeleteCharacter', function(charid)
     local src = source
-    DeleteCharacter(GetRockstarID(src), charid)
-    TriggerClientEvent("kashactersC:ReloadCharacters", src)
+    if type(charid) == "number" and string.len(charid) < 10 then
+        DeleteCharacter(GetRockstarID(src), charid)
+        TriggerClientEvent("kashactersC:ReloadCharacters", src)
+    else
+        -- Trigger Ban Event here to ban individuals trying to use SQL Injections
+    end
 end)
 
 function GetPlayerCharacters(source)
