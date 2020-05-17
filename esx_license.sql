@@ -8,7 +8,7 @@ CREATE TABLE `licenses` (
 );
 
 CREATE TABLE `user_licenses` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`id` int NOT NULL AUTO_INCREMENT,
 	`type` varchar(60) NOT NULL,
 	`owner` varchar(40) NOT NULL,
 
