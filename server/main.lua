@@ -416,39 +416,41 @@ function deleteIdentityFromDatabase(xPlayer)
 		['@skin'] = NULL
 	})
 
-	MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
-		['@account_name'] = 'bank_savings',
-		['@owner'] = xPlayer.identifier
-	})
+	if Config.FullCharDelete then
+		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
+			['@account_name'] = 'bank_savings',
+			['@owner'] = xPlayer.identifier
+		})
 
-	MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
-		['@account_name'] = 'caution',
-		['@owner'] = xPlayer.identifier
-	})
+		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
+			['@account_name'] = 'caution',
+			['@owner'] = xPlayer.identifier
+		})
 
-	MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-		['@data'] = '\'{}\'',
-		['@name'] = 'user_ears',
-		['@owner'] = xPlayer.identifier
-	})
+		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+			['@data'] = '\'{}\'',
+			['@name'] = 'user_ears',
+			['@owner'] = xPlayer.identifier
+		})
 
-	MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-		['@data'] = '\'{}\'',
-		['@name'] = 'user_glasses',
-		['@owner'] = xPlayer.identifier
-	})
+		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+			['@data'] = '\'{}\'',
+			['@name'] = 'user_glasses',
+			['@owner'] = xPlayer.identifier
+		})
 
-	MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-		['@data'] = '\'{}\'',
-		['@name'] = 'user_helmet',
-		['@owner'] = xPlayer.identifier
-	})
+		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+			['@data'] = '\'{}\'',
+			['@name'] = 'user_helmet',
+			['@owner'] = xPlayer.identifier
+		})
 
-	MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-		['@data'] = '\'{}\'',
-		['@name'] = 'user_mask',
-		['@owner'] = xPlayer.identifier
-	})
+		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+			['@data'] = '\'{}\'',
+			['@name'] = 'user_mask',
+			['@owner'] = xPlayer.identifier
+		})
+	end
 end
 
 function checkNameFormat(name)
