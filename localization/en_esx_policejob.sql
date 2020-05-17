@@ -25,10 +25,10 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 ;
 
 CREATE TABLE `fine_types` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`id` int NOT NULL AUTO_INCREMENT,
 	`label` varchar(255) DEFAULT NULL,
-	`amount` int(11) DEFAULT NULL,
-	`category` int(11) DEFAULT NULL,
+	`amount` int DEFAULT NULL,
+	`category` int DEFAULT NULL,
 
 	PRIMARY KEY (`id`)
 );
