@@ -26,5 +26,5 @@ Config.MaxHeight        = 96
 Config.LowestYear       = 1900
 Config.HighestYear      = 2020
 
--- You can leave this set to false, unless you are trying to solve an issue with your identity.
+Config.FullCharDelete   = false
 Config.EnableDebugging  = false
