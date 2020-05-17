@@ -312,12 +312,12 @@ if Config.EnableCommands then
 	ESX.RegisterCommand('chardel', 'user', function(xPlayer, args, showError)
 		if xPlayer and xPlayer.getName() then
 			if Config.UseDeferrals then
+				xPlayer.kick(_('deleted_identity'))
+				Citizen.Wait(1500)
 				deleteIdentity(xPlayer)
 				xPlayer.showNotification(_U('deleted_character'))
 				playerIdentity[xPlayer.identifier] = nil
 				alreadyRegistered[xPlayer.identifier] = false
-				Citizen.Wait(2500)
-				xPlayer.kick(_('deleted_identity'))
 			else
 				deleteIdentity(xPlayer)
 				xPlayer.showNotification(_U('deleted_character'))
