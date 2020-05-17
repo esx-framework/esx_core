@@ -1,35 +1,6 @@
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('Roleplay')
-	local resourcesStopped, isAceGranted = {}, false
-
-	for resourceName,reason in pairs(Config.IncompatibleResourcesToStop) do
-		local status = GetResourceState(resourceName)
-
-		if status == 'started' or status == 'starting' then
-			while GetResourceState(resourceName) == 'starting' do
-				Citizen.Wait(100)
-			end
-
-			if not isAceGranted then
-				ExecuteCommand('add_ace resource.es_extended command.stop allow')
-				isAceGranted = true
-			end
-
-			ExecuteCommand(('stop %s'):format(resourceName))
-			resourcesStopped[resourceName] = reason
-		end
-	end
-
-	if ESX.Table.SizeOf(resourcesStopped) > 0 then
-		local allStoppedResources = ''
-
-		for resourceName,reason in pairs(resourcesStopped) do
-			allStoppedResources = ('%s\n- ^3%s^7, %s'):format(allStoppedResources, resourceName, reason)
-		end
-
-		print(('[es_extended] [^3WARNING^7] Stopped %s incompatible resource(s) that can cause issues when used with ESX. They are not needed and can safely be removed from your server, remove these resource(s) from your resource directory and your configuration file:%s'):format(ESX.Table.SizeOf(resourcesStopped), allStoppedResources))
-	end
 end)
 
 RegisterNetEvent('esx:onPlayerJoined')
