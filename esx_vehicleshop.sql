@@ -83,7 +83,7 @@ INSERT INTO `vehicle_categories` (name, label) VALUES
 CREATE TABLE `vehicles` (
 	`name` varchar(60) NOT NULL,
 	`model` varchar(60) NOT NULL,
-	`price` int(11) NOT NULL,
+	`price` int NOT NULL,
 	`category` varchar(60) DEFAULT NULL,
 
 	PRIMARY KEY (`model`)
