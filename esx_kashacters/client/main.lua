@@ -1,8 +1,10 @@
-ESX = nil
+local ESX = nil
+local IsChoosing = true
+
 Citizen.CreateThread(function()
     while ESX == nil do
-        Citizen.Wait(200)
-        TriggerEvent('esx:getSharedObject', function (obj) ESX = obj end)
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+        Citizen.Wait(0)
     end
 end)
 
@@ -11,17 +13,17 @@ end)
 -- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/316?u=xxfri3ndlyxx --
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
-        if NetworkIsSessionStarted() then
-            Citizen.Wait(100)
-            TriggerServerEvent("kashactersS:SetupCharacters")
-            TriggerEvent("kashactersC:SetupCharacters")
-            return -- break the loop
+        Citizen.Wait(200)
+        if ESX ~= nil then
+            if NetworkIsSessionStarted() and not ESX.IsPlayerLoaded() then
+                TriggerServerEvent("kashactersS:SetupCharacters")
+                TriggerEvent("kashactersC:SetupCharacters")
+                return -- break the loop
+            end
         end
     end
 end)
 
-local IsChoosing = true
 Citizen.CreateThread(function ()
     while true do
         Citizen.Wait(0)
