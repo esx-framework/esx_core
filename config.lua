@@ -114,4 +114,7 @@ Config.Interactables = {
 	'v_tre_sofa_mess_c_s',
 	'prop_roller_car_01',
 	'prop_roller_car_02',
+	-- Custom
+	'v_ret_gc_chair02',
+	'v_serv_ct_chair02',
 }
