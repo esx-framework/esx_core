@@ -65,13 +65,12 @@ Citizen.CreateThread(function()
 				wakeup()
 			else
 				local object, distance = GetNearChair()
-				--local object, distance = ESX.Game.GetClosestObject(GetEntityCoords(GetPlayerPed(-1)), Config.Interactables)
 
 				if Config.Debug then
 					table.insert(debugProps, object)
 				end
 
-				if distance and distance < 1.5 then
+				if distance and distance < 1.4 then
 					local hash = GetEntityModel(object)
 
 					for k,v in pairs(Config.Sitable) do
@@ -120,16 +119,22 @@ function wakeup()
 end
 
 function sit(object, modelName, data)
+	-- Fix for sit on chairs behind walls
+	if not HasEntityClearLosToEntity(GetPlayerPed(-1), object, 126) then
+		return
+	end
 	disableControls = true
 	currentObj = object
 	FreezeEntityPosition(object, true)
+
 	PlaceObjectOnGroundProperly(object)
 	local pos = GetEntityCoords(object)
-	local objectCoords = string.sub(pos.x, 1, 9) .. string.sub(pos.y, 1, 9) .. string.sub(pos.z, 1, 9)
+	local playerPos = GetEntityCoords(GetPlayerPed(-1))
+	local objectCoords = string.sub(pos.x, 1, 7) .. string.sub(pos.y, 1, 7) .. string.sub(pos.z, 1, 7)
 
 	ESX.TriggerServerCallback('esx_sit:getPlace', function(occupied)
 		if occupied then
-			ESX.ShowNotification('Questo posto è occupato')
+			ESX.ShowNotification('There is someone on this chair')
 		else
 			local playerPed = PlayerPedId()
 			lastPos, currentSitCoords = GetEntityCoords(playerPed), objectCoords
@@ -137,12 +142,12 @@ function sit(object, modelName, data)
 			TriggerServerEvent('esx_sit:takePlace', objectCoords)
 			
 			currentScenario = data.scenario
-			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z - data.verticalOffset, GetEntityHeading(object) + 180.0, 0, true, false)
-			
+			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, false)
+
 			Citizen.Wait(2500)
 			if GetEntitySpeed(GetPlayerPed(-1)) > 0 then
 				ClearPedTasks(GetPlayerPed(-1))
-				TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z - data.verticalOffset, GetEntityHeading(object) + 180.0, 0, true, true)
+				TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, true)
 			end
 
 			sitting = true
