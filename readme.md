@@ -267,7 +267,7 @@ end)
 ```lua
 RegisterNetEvent('esx_ambulancejob:multicharacter')
 AddEventHandler('esx_ambulancejob:multicharacter', function()
-	IsDead = false
+	isDead = false
 	if firstSpawn then
 		firstSpawn = false
 		if Config.AntiCombatLog then
