@@ -102,7 +102,6 @@ function wakeup()
 	local playerPed = PlayerPedId()
 	local pos = GetEntityCoords(GetPlayerPed(-1))
 
-	-- non serve specificare x, y, z perchè si alza?
 	TaskStartScenarioAtPosition(playerPed, currentScenario, 0.0, 0.0, 0.0, 180.0, 2, true, false)
 	while IsPedUsingScenario(GetPlayerPed(-1), currentScenario) do
 		Wait(100)
@@ -120,7 +119,7 @@ end
 
 function sit(object, modelName, data)
 	-- Fix for sit on chairs behind walls
-	if not HasEntityClearLosToEntity(GetPlayerPed(-1), object, 126) then
+	if not HasEntityClearLosToEntity(GetPlayerPed(-1), object, 17) then
 		return
 	end
 	disableControls = true
@@ -130,7 +129,7 @@ function sit(object, modelName, data)
 	PlaceObjectOnGroundProperly(object)
 	local pos = GetEntityCoords(object)
 	local playerPos = GetEntityCoords(GetPlayerPed(-1))
-	local objectCoords = string.sub(pos.x, 1, 7) .. string.sub(pos.y, 1, 7) .. string.sub(pos.z, 1, 7)
+	local objectCoords = pos.x .. pos.y .. pos.z
 
 	ESX.TriggerServerCallback('esx_sit:getPlace', function(occupied)
 		if occupied then
