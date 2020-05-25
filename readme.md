@@ -100,7 +100,7 @@ end)
 ```
 
 * es_extended: (`es_extended/server/main.lua`)
-### Change this code in `onPlayerJoined(playerId)` function:
+### Change this code in `onPlayerJoined(playerId)` function on two places:
 ```lua
     for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
         if string.match(v, 'license:') then
@@ -288,27 +288,29 @@ end)
 ### find:
 ```lua
 function RespawnPed(ped, coords, heading)
-    SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
-    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
-    SetPlayerInvincible(ped, false)
-    TriggerEvent('playerspawned', coords.x, coords.y, coords.z)
-    ClearPedBloodDamage(ped)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(ped, false)
+	ClearPedBloodDamage(ped)
 
-    ESX.UI.Menu.CloseAll()
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx:onPlayerSpawn')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
 end
 ```
 
 ### repalce with:
 ```lua
 function RespawnPed(ped, coords, heading)
-    SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
-    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
-    SetPlayerInvincible(ped, false)
-    TriggerEvent('esx_ambulancejob:multicharacter', coords.x, coords.y, coords.z)
-    ClearPedBloodDamage(ped)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
+	SetPlayerInvincible(ped, false)
+	ClearPedBloodDamage(ped)
 
-    ESX.UI.Menu.CloseAll()
-end     
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx_ambulancejob:multicharacter')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+end
 ```
 *If you do not do this last part once you repawn after death you will be frozen into place.*
 
