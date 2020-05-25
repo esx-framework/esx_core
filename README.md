@@ -1,4 +1,6 @@
-# es_extended
+# es_extended LEGACY / BROKEN / WONTFIX
+
+### Things hapenning here now https://github.com/ESX-Org/es_extended/tree/develop (WIP)
 
 es_extended is a roleplay framework for FiveM. The to-go framework for creating an economy based roleplay server on FiveM and most popular on the platform, too!
 
