@@ -72,6 +72,8 @@ function StartDriveTest(type)
 
 		local playerPed   = PlayerPedId()
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
+		SetVehicleFuelLevel(vehicle, 100.0)
+		DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
 	end)
 
 	TriggerServerEvent('esx_dmvschool:pay', Config.Prices[type])
