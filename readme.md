@@ -3,7 +3,10 @@
 # Thanks to KASH and XxFri3ndlyxX
 ### If you are updating ESX, be sure to update the remaining scripts!
 
-Instrukcja w języku Polskim znajduje się [tutaj](https://github.com/fivem-ex/esx_kashacter/blob/master/readme-pl.md).
+for now use:
+-  [esx_identity commit: cc5abf1](https://github.com/ESX-Org/esx_identity/tree/cc5abf14c803d62b448309729e30c711ca4ed744)
+-  [esx_status commit: bce4abf](https://github.com/ESX-Org/esx_status/tree/59c51e6daf425fa76a7922c8cbc65586af821463)
+
 
 ## Current design:
 ![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
