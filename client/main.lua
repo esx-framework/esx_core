@@ -148,6 +148,7 @@ function OpenDMVSchoolMenu()
 			menu.close()
 			StartTheoryTest()
 		elseif data.current.value == 'drive_test' then
+			menu.close()
 			StartDriveTest(data.current.type)
 		end
 	end, function(data, menu)
