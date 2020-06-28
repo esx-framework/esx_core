@@ -16,9 +16,22 @@ RegisterCommand('twt', function(playerId, args, rawCommand)
 		print('esx_rpchat: you can\'t use this command from console!')
 	else
 		args = table.concat(args, ' ')
+
 		local playerName = GetRealPlayerName(playerId)
 
 		TriggerClientEvent('chat:addMessage', -1, {args = {_U('twt_prefix', playerName), args}, color = {0, 153, 204}})
+	end
+end, false)
+
+RegisterCommand('anontwt', function(playerId, args, rawCommand)
+	if playerId == 0 then
+		print('esx_rpchat: you can\'t use this command from console!')
+	else
+		args = table.concat(args, ' ')
+
+		local playerName = GetRealPlayerName(playerId)
+
+		TriggerClientEvent('chat:addMessage', -1, {args = {_U('twt_prefix', "Anonymous"), args}, color = {0, 153, 204}})
 	end
 end, false)
 
@@ -29,7 +42,7 @@ RegisterCommand('me', function(playerId, args, rawCommand)
 		args = table.concat(args, ' ')
 		local playerName = GetRealPlayerName(playerId)
 
-		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('me_prefix', playerName), args, {255, 0, 0})
+		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, playerId, _U('me_prefix', playerName), args, {255, 0, 0})
 	end
 end, false)
 
@@ -40,7 +53,7 @@ RegisterCommand('do', function(playerId, args, rawCommand)
 		args = table.concat(args, ' ')
 		local playerName = GetRealPlayerName(playerId)
 
-		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, source, _U('do_prefix', playerName), args, {0, 0, 255})
+		TriggerClientEvent('esx_rpchat:sendProximityMessage', -1, playerId, _U('do_prefix', playerName), args, {0, 0, 255})
 	end
 end, false)
 
