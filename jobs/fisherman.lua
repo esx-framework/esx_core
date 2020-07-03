@@ -18,7 +18,7 @@ Config.Jobs.fisherman = {
 			Spawner = 2,
 			Hash = 'tug',
 			Trailer = 'none',
-			HasCaution = false
+			HasCaution = true
 		}
 
 	},
