@@ -46,4 +46,6 @@ Locales['br'] = {
   ['player_cannot_hold'] = 'você não tem espaço suficiente em seu inventário!',
   ['blip_taxi'] = 'taxi',
   ['phone_taxi'] = 'taxi',
+  ['taxi'] = 'taxi',
+  ['taxi_stock'] = 'taxi Stock'
 }
