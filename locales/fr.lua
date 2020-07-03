@@ -33,7 +33,7 @@ Locales['fr'] = {
   ['revive_inprogress'] = 'réanimation en cours',
   ['revive_complete'] = 'vous avez réanimé ~y~%s~s~',
   ['revive_complete_award'] = 'vous avez réanimé ~y~%s~s~, ~g~$%s~s~',
-  ['revive_fail_offline'] = 'that player is no longer online',
+  ['revive_fail_offline'] = 'ce joueur n\'est plus en ligne',
   ['heal_inprogress'] = 'vous soignez...',
   ['heal_complete'] = 'vous avez soigné ~y~%s~s~',
   ['no_players'] = 'aucun joueur à proximité',
@@ -43,7 +43,7 @@ Locales['fr'] = {
   ['boss_actions'] = 'action Patron',
   -- Misc
   ['invalid_amount'] = '~r~montant invalide~s~',
-  ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
+  ['actions_prompt'] = 'appuyez sur ~INPUT_CONTEXT~ accédez aux ~y~Actions d\'Ambulance~s~.',
   ['deposit_amount'] = 'montant du dépôt',
   ['money_withdraw'] = 'montant du retrait',
   ['fast_travel'] = 'appuyez sur ~INPUT_CONTEXT~ pour vous déplacer rapidement.',
@@ -81,5 +81,5 @@ Locales['fr'] = {
   ['healed'] = 'vous avez été soigné.',
   -- Blips
   ['blip_hospital'] = 'hôpital',
-  ['blip_dead'] = 'unconscious player',
+  ['blip_dead'] = 'joueur inconscient',
 }
