@@ -3,7 +3,6 @@ local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
 local CurrentlyTowedVehicle, Blips, NPCOnJob, NPCTargetTowable, NPCTargetTowableZone = nil, {}, false, nil, nil
 local NPCHasSpawnedTowable, NPCLastCancel, NPCHasBeenNextToTowable, NPCTargetDeleterZone = false, GetGameTimer() - 5 * 60000, false, false
 local isDead, isBusy = false, false
-
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -33,7 +32,7 @@ function StartNPCJob()
 	NPCOnJob = true
 
 	NPCTargetTowableZone = SelectRandomTowable()
-	local zone       = Config.Zones[NPCTargetTowableZone]
+	local zone = Config.Zones[NPCTargetTowableZone]
 
 	Blips['NPCTargetTowableZone'] = AddBlipForCoord(zone.Pos.x,  zone.Pos.y,  zone.Pos.z)
 	SetBlipRoute(Blips['NPCTargetTowableZone'], true)
@@ -54,10 +53,10 @@ function StopNPCJob(cancel)
 
 	Config.Zones.VehicleDelivery.Type = -1
 
-	NPCOnJob                = false
-	NPCTargetTowable        = nil
-	NPCTargetTowableZone    = nil
-	NPCHasSpawnedTowable    = false
+	NPCOnJob = false
+	NPCTargetTowable  = nil
+	NPCTargetTowableZone = nil
+	NPCHasSpawnedTowable = false
 	NPCHasBeenNextToTowable = false
 
 	if cancel then
@@ -305,8 +304,8 @@ function OpenMobileMechanicActionsMenu()
 			end)
 		elseif data.current.value == 'hijack_vehicle' then
 			local playerPed = PlayerPedId()
-			local vehicle   = ESX.Game.GetVehicleInDirection()
-			local coords    = GetEntityCoords(playerPed)
+			local vehicle = ESX.Game.GetVehicleInDirection()
+			local coords = GetEntityCoords(playerPed)
 
 			if IsPedSittingInAnyVehicle(playerPed) then
 				ESX.ShowNotification(_U('inside_vehicle'))
@@ -601,7 +600,7 @@ end
 RegisterNetEvent('esx_mechanicjob:onHijack')
 AddEventHandler('esx_mechanicjob:onHijack', function()
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 		local vehicle
@@ -642,7 +641,7 @@ end)
 RegisterNetEvent('esx_mechanicjob:onCarokit')
 AddEventHandler('esx_mechanicjob:onCarokit', function()
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 		local vehicle
@@ -669,7 +668,7 @@ end)
 RegisterNetEvent('esx_mechanicjob:onFixkit')
 AddEventHandler('esx_mechanicjob:onFixkit', function()
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 		local vehicle
@@ -856,8 +855,8 @@ Citizen.CreateThread(function()
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 
-			local coords      = GetEntityCoords(PlayerPedId())
-			local isInMarker  = false
+			local coords = GetEntityCoords(PlayerPedId())
+			local isInMarker = false
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
@@ -892,10 +891,10 @@ Citizen.CreateThread(function()
 		Citizen.Wait(500)
 
 		local playerPed = PlayerPedId()
-		local coords    = GetEntityCoords(playerPed)
+		local coords = GetEntityCoords(playerPed)
 
 		local closestDistance = -1
-		local closestEntity   = nil
+		local closestEntity = nil
 
 		for i=1, #trackedEntities, 1 do
 			local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
@@ -996,10 +995,5 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddEventHandler('esx:onPlayerDeath', function(data)
-	isDead = true
-end)
-
-AddEventHandler('esx:onPlayerSpawn', function(spawn)
-	isDead = false
-end)
+AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
+AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
