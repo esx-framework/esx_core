@@ -37,16 +37,16 @@ end)
 Citizen.CreateThread(function()
 	if not Config.EnableBlips then return end
 
-	for i=1, #Config.ATMLocations, 1 do
-		local blip = AddBlipForCoord(Config.ATMLocations[i].x, Config.ATMLocations[i].y, Config.ATMLocations[i].z - Config.ZDiff)
-		SetBlipSprite (blip, Config.BlipSprite)
-		SetBlipDisplay(blip, 4)
-		SetBlipScale  (blip, 0.9)
-		SetBlipColour (blip, 2)
-		SetBlipAsShortRange(blip, true)
+	for _, ATMLocation in pairs(Config.ATMLocations) do
+		ATMLocation.blip = AddBlipForCoord(ATMLocation.x, ATMLocation.y, ATMLocation.z - Config.ZDiff)
+		SetBlipSprite(ATMLocation.blip, Config.BlipSprite)
+		SetBlipDisplay(ATMLocation.blip, 4)
+		SetBlipScale(ATMLocation.blip, 0.9)
+		SetBlipColour(ATMLocation.blip, 2)
+		SetBlipAsShortRange(ATMLocation.blip, true)
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString(_U('atm_blip'))
-		EndTextCommandSetBlipName(blip)
+		EndTextCommandSetBlipName(ATMLocation.blip)
 	end
 end)
 
