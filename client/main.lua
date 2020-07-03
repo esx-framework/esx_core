@@ -78,7 +78,7 @@ function OpenCloakroomMenu()
 		cleanPlayer(playerPed)
 
 		if data.current.value == 'citizen_wear' then
-			if Config.EnableNonFreemodePeds then
+			if Config.EnableCustomPeds then
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 					local isMale = skin.sex == 0
 
