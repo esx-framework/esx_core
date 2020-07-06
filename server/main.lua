@@ -1,5 +1,7 @@
 ESX = nil
 local playersProcessingCannabis = {}
+local outofbound = true
+local alive = true
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -54,9 +56,10 @@ end)
 RegisterServerEvent('esx_drugs:pickedUpCannabis')
 AddEventHandler('esx_drugs:pickedUpCannabis', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
+	local cime = math.random(5,10)
 
-	if xPlayer.canCarryItem('cannabis', 1) then
-		xPlayer.addInventoryItem('cannabis', 1)
+	if xPlayer.canCarryItem('cannabis', cime) then
+		xPlayer.addInventoryItem('cannabis', cime)
 	else
 		xPlayer.showNotification(_U('weed_inventoryfull'))
 	end
@@ -67,30 +70,62 @@ ESX.RegisterServerCallback('esx_drugs:canPickUp', function(source, cb, item)
 	cb(xPlayer.canCarryItem(item, 1))
 end)
 
+RegisterServerEvent('esx_drugs:outofbound')
+AddEventHandler('esx_drugs:outofbound', function()
+	outofbound = true
+end)
+
+RegisterServerEvent('esx_drugs:quitprocess')
+AddEventHandler('esx_drugs:quitprocess', function()
+	can = false
+end)
+
+ESX.RegisterServerCallback('esx_drugs:cannabis_count', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xCannabis = xPlayer.getInventoryItem('cannabis').count
+	cb(xCannabis)
+end)
+
 RegisterServerEvent('esx_drugs:processCannabis')
 AddEventHandler('esx_drugs:processCannabis', function()
 	if not playersProcessingCannabis[source] then
 		local _source = source
+		local xPlayer = ESX.GetPlayerFromId(_source)
+		local xCannabis = xPlayer.getInventoryItem('cannabis')
+		TriggerClientEvent('esx_drugs:getPlayer',xCannabis.count,_source)
+		local can = true
+		outofbound = false
+		if xCannabis.count >=3 then
+			while outofbound == false and can and GetEntityHealth(GetPlayerPed(_source))>0 do
+				if playersProcessingCannabis[_source] == nil then
+					playersProcessingCannabis[_source] = ESX.SetTimeout(Config.Delays.WeedProcessing , function()
+						if xCannabis.count >= 3 then
+							if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
+								xPlayer.removeInventoryItem('cannabis', 3)
+								xPlayer.addInventoryItem('marijuana', 1)
+								xPlayer.showNotification(_U('weed_processed'))
+							else
+								can = false
+								xPlayer.showNotification(_U('weed_processingfull'))
+								TriggerEvent('esx_drugs:cancelProcessing')
+							end
+						else						
+							can = false
+							xPlayer.showNotification(_U('weed_processingenough'))
+							TriggerEvent('esx_drugs:cancelProcessing')
+						end
 
-		playersProcessingCannabis[_source] = ESX.SetTimeout(Config.Delays.WeedProcessing, function()
-			local xPlayer = ESX.GetPlayerFromId(_source)
-			local xCannabis = xPlayer.getInventoryItem('cannabis')
-
-			if xCannabis.count > 3 then
-				if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
-					xPlayer.removeInventoryItem('cannabis', 3)
-					xPlayer.addInventoryItem('marijuana', 1)
-
-					xPlayer.showNotification(_U('weed_processed'))
+						playersProcessingCannabis[_source] = nil
+					end)
 				else
-					xPlayer.showNotification(_U('weed_processingfull'))
-				end
-			else
-				xPlayer.showNotification(_U('weed_processingenough'))
+					Wait(Config.Delays.WeedProcessing)
+				end	
 			end
-
-			playersProcessingCannabis[_source] = nil
-		end)
+		else
+			xPlayer.showNotification(_U('weed_processingenough'))
+			TriggerEvent('esx_drugs:cancelProcessing')
+		end	
+			
 	else
 		print(('esx_drugs: %s attempted to exploit weed processing!'):format(GetPlayerIdentifiers(source)[1]))
 	end

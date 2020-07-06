@@ -34,7 +34,10 @@ Citizen.CreateThread(function()
 						end
 					end, GetPlayerServerId(PlayerId()), 'weed_processing')
 				else
-					ProcessWeed()
+					ESX.TriggerServerCallback('esx_drugs:cannabis_count', function(xCannabis)
+						ProcessWeed(xCannabis)
+					end)
+					
 				end
 			end
 		else
@@ -43,12 +46,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function ProcessWeed()
+function ProcessWeed(xCannabis)
 	isProcessing = true
-
 	ESX.ShowNotification(_U('weed_processingstarted'))
 	TriggerServerEvent('esx_drugs:processCannabis')
-	local timeLeft = Config.Delays.WeedProcessing / 1000
+	if(xCannabis<3) then
+		xCannabis=0
+	end
+	local timeLeft = (Config.Delays.WeedProcessing * xCannabis) / 1000
 	local playerPed = PlayerPedId()
 
 	while timeLeft > 0 do
@@ -58,6 +63,7 @@ function ProcessWeed()
 		if GetDistanceBetweenCoords(GetEntityCoords(playerPed), Config.CircleZones.WeedProcessing.coords, false) > 4 then
 			ESX.ShowNotification(_U('weed_processingtoofar'))
 			TriggerServerEvent('esx_drugs:cancelProcessing')
+			TriggerServerEvent('esx_drugs:outofbound')
 			break
 		end
 	end
@@ -184,7 +190,7 @@ function GenerateWeedCoords()
 end
 
 function GetCoordZ(x, y)
-	local groundCheckHeights = { 40.0, 41.0, 42.0, 43.0, 44.0, 45.0, 46.0, 47.0, 48.0, 49.0, 50.0 }
+	local groundCheckHeights = { 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0, 58.0 }
 
 	for i, height in ipairs(groundCheckHeights) do
 		local foundGround, z = GetGroundZFor_3dCoord(x, y, height)

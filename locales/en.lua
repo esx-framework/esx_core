@@ -1,6 +1,7 @@
 Locales ['en'] = {
   -- weed
   ['weed_pickupprompt'] = 'press ~INPUT_CONTEXT~ to harvest the ~g~Cannabis~s~ plant.',
+  ['weed_quitprocess'] = 'press ~INPUT_CONTEXT~ to stop ~g~Process Cannabis~s~.',
   ['weed_inventoryfull'] = 'you do not have any more inventory space for ~g~Cannabis~s~.',
   ['weed_processprompt'] = 'press ~INPUT_CONTEXT~ to start ~g~Process Cannabis~s~.',
   ['weed_processingstarted'] = 'processing ~g~Cannabis~s~ into ~g~Marijuana~s~...',
