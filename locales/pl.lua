@@ -46,4 +46,6 @@ Locales['pl'] = {
   ['player_cannot_hold'] = '~r~Nie~s~ masz wystarczająco ~y~wolnego miejsca~s~ w swoim ekwipunku!',
   ['blip_taxi'] = 'taxi',
   ['phone_taxi'] = 'taxi',
+  ['taxi'] = 'taxi',
+  ['taxi_stock'] = 'taxi Stock'
 }
