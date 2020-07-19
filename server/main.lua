@@ -100,7 +100,9 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 	end
 end)
 
-ESX.RegisterServerCallback('esx_taxijob:getPlayerInventory', function(source, cb)
+ESX.RegisterServerCallback('esx_policejob:getPlayerInventory', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	cb(xPlayer.getInventory())
+	local items   = xPlayer.inventory
+
+	cb({items = items})
 end)
