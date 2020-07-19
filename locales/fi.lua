@@ -46,4 +46,6 @@ Locales['fi'] = {
   ['player_cannot_hold'] = 'sinulla ~r~ei ole~s~ enempää ~y~vapaata tilaa~s~ repussasi!',
   ['blip_taxi'] = 'taxi',
   ['phone_taxi'] = 'taxi',
+  ['taxi'] = 'taxi',
+  ['taxi_stock'] = 'taxi Stock'
 }
