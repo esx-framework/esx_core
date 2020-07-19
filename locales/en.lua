@@ -46,4 +46,7 @@ Locales['en'] = {
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
   ['blip_taxi'] = 'downtown Cab Co.',
   ['phone_taxi'] = 'downtown Cab Co.',
+  ['taxi'] = 'taxi',
+  ['taxi_stock'] = 'taxi Stock'
+}
 }
