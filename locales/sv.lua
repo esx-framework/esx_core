@@ -46,4 +46,6 @@ Locales['sv'] = {
   ['player_cannot_hold'] = 'du har ~r~inte~s~ tillräckligt med ~y~utrymme~s~ för att hålla det!',
   ['blip_taxi'] = 'taxifirman',
   ['phone_taxi'] = 'taxi',
+  ['taxi'] = 'taxi',
+  ['taxi_stock'] = 'taxi Stock'
 }
