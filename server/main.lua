@@ -192,14 +192,14 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 			cb(employees)
 		end)
 	else
-		MySQL.Async.fetchAll('SELECT name, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
+		MySQL.Async.fetchAll('SELECT identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
 			['@job'] = society
 		}, function (result)
 			local employees = {}
 
 			for i=1, #result, 1 do
 				table.insert(employees, {
-					name       = result[i].name,
+					name       = GetPlayerName(source),
 					identifier = result[i].identifier,
 					job = {
 						name        = result[i].job,
