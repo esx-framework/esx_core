@@ -1,25 +1,21 @@
-local Jobs     = {}
+local Jobs = {}
 local LastTime = nil
 
 function RunAt(h, m, cb)
-
 	table.insert(Jobs, {
 		h  = h,
 		m  = m,
 		cb = cb
 	})
-
 end
 
 function GetTime()
-
 	local timestamp = os.time()
-	local d         = os.date('*t', timestamp).wday
-	local h         = tonumber(os.date('%H', timestamp))
-	local m         = tonumber(os.date('%M', timestamp))
+	local d = os.date('*t', timestamp).wday
+	local h = tonumber(os.date('%H', timestamp))
+	local m = tonumber(os.date('%M', timestamp))
 
 	return {d = d, h = h, m = m}
-
 end
 
 function OnTime(d, h, m)
@@ -29,11 +25,9 @@ function OnTime(d, h, m)
 			Jobs[i].cb(d, h, m)
 		end
 	end
-
 end
 
 function Tick()
-
 	local time = GetTime()
 
 	if time.h ~= LastTime.h or time.m ~= LastTime.m then
