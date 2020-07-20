@@ -3,6 +3,12 @@ local firstSpawn, PlayerLoaded = true, false
 isDead = false
 ESX = nil
 
+AddEventHandler("onClientMapStart", function()
+	exports.spawnmanager:spawnPlayer()
+	Citizen.Wait(5000)
+	exports.spawnmanager:setAutoSpawn(false)
+end)
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
