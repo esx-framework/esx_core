@@ -16,10 +16,16 @@ AddEventHandler('esx_ambulancejob:revive', function(playerId)
 
 		if xTarget then
 			if deadPlayers[playerId] then
-				xPlayer.showNotification(_U('revive_complete_award', xTarget.name, Config.ReviveReward))
-				xPlayer.addMoney(Config.ReviveReward)
-				xTarget.triggerEvent('esx_ambulancejob:revive')
-				deadPlayers[playerId] = nil
+				if Config.ReviveReward > 0 then
+					xPlayer.showNotification(_U('revive_complete_award', xTarget.name, Config.ReviveReward))
+					xPlayer.addMoney(Config.ReviveReward)
+					xTarget.triggerEvent('esx_ambulancejob:revive')
+					deadPlayers[playerId] = nil
+				else
+					xPlayer.showNotification(_U('revive_complete', xTarget.name))
+					xTarget.triggerEvent('esx_ambulancejob:revive')
+					deadPlayers[playerId] = nil
+				end
 			else
 				xPlayer.showNotification(_U('player_not_unconscious'))
 			end
