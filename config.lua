@@ -1,9 +1,9 @@
 Config                            = {}
-Config.Locale                     = 'fr'
+Config.Locale                     = 'en'
 
-Config.DrawDistance               = 100.0
+Config.DrawDistance               = 20.0 -- How close you need to be in order for the markers to be drawn (in GTA units).
 Config.MaxInService               = -1
-Config.EnablePlayerManagement     = false
+Config.EnablePlayerManagement     = true -- Enable society managing.
 Config.EnableSocietyOwnedVehicles = false
 
 Config.NPCSpawnDistance           = 500.0
@@ -15,7 +15,9 @@ Config.Vehicles = {
 	'asea',
 	'asterope',
 	'banshee',
-	'buffalo'
+	'buffalo',
+	'sultan',
+	'baller3'
 }
 
 Config.Zones = {
