@@ -1,6 +1,6 @@
 ESX = nil
 local lastSkin, playerLoaded, cam, isCameraActive
-local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0
+local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
 
 Citizen.CreateThread(function()
     while ESX == nil do
@@ -160,7 +160,7 @@ Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
 
-        if isCameraActive then
+        if not skinLoaded or isCameraActive then
             DisableControlAction(2, 30, true)
             DisableControlAction(2, 31, true)
             DisableControlAction(2, 32, true)
@@ -280,6 +280,7 @@ end
 
 AddEventHandler('esx_skin:resetFirstSpawn', function()
     firstSpawn = true
+    skinLoaded = false
 end)
 
 AddEventHandler('esx_skin:playerRegistered', function()
@@ -292,8 +293,12 @@ AddEventHandler('esx_skin:playerRegistered', function()
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
                 if skin == nil then
                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
+                    Citizen.Wait(100)
+                    skinLoaded = true
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)
+                    Citizen.Wait(100)
+                    skinLoaded = true
                 end
             end)
 
