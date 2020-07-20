@@ -242,7 +242,7 @@ function OpenTaxiActionsMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'taxi_actions', {
-		title    = 'Taxi',
+		title    = _U('taxi'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -270,7 +270,7 @@ function OpenMobileTaxiActionsMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mobile_taxi_actions', {
-		title    = 'Taxi',
+		title    = _U('taxi'),
 		align    = 'top-left',
 		elements = {
 			{label = _U('billing'),   value = 'billing'},
@@ -359,7 +359,7 @@ function OpenGetStocksMenu()
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
-			title    = 'Taxi Stock',
+			title    = _U('taxi_stock'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
