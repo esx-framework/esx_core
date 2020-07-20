@@ -2,7 +2,7 @@
 Async utilities for FXServer
 
 ## Installation
-Set it as a dependency in you __resource.lua
+Set it as a dependency in you fxmanifest.lua
 ```
 server_script '@async/async.lua'
 ```
