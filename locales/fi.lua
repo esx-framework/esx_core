@@ -31,6 +31,7 @@ Locales['fi'] = {
   ['return_to_veh'] = 'Mene takaisin ajoneuvoon, jatkaaksesi töitä',
   ['must_in_taxi'] = 'Sinun pitää olla taxissa että voit alottaa työn',
   ['must_in_vehicle'] = 'Sinun pitää olla ajoneuvossa että voit alottaa työn',
+  ['not_in_taxi'] = 'You left the taxi while on mission!',
   ['have_earned'] = 'Sinä tienasit ~g~€%s~s~',
   ['comp_earned'] = '- Yrityksesi tienasi ~g~€%s~s~\n- Sinä tienasit ~g~€%s~s~',
   ['deposit_stock'] = 'Talleta varastoon',

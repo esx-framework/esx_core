@@ -713,6 +713,19 @@ Citizen.CreateThread(function()
 	end
 end)
 
+Citizen.CreateThread(function()
+	while onJob do
+		Citizen.Wait(10000)
+		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
+			if not IsInAuthorizedVehicle() then
+				ClearCurrentMission()
+				OnJob = false
+				ESX.ShowNotification(_U('not_in_taxi'))
+			end
+		end
+	end
+end)
+
 -- Key Controls
 Citizen.CreateThread(function()
 	while true do

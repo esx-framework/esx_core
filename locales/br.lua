@@ -31,6 +31,7 @@ Locales['br'] = {
   ['return_to_veh'] = 'volte para o seu veículo para continuar a missão',
   ['must_in_taxi'] = 'você deve estar em um táxi para começar a missão',
   ['must_in_vehicle'] = 'você deve estar em um veículo para começar a missão',
+  ['not_in_taxi'] = 'You left the taxi while on mission!',
   ['have_earned'] = 'você ganhou ~g~$%s~s~',
   ['comp_earned'] = '- sua empresa ganhou ~g~$%s~s~\n- Você ganhou ~g~$%s~s~',
   ['deposit_stock'] = 'depositar estoque',

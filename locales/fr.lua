@@ -31,6 +31,7 @@ Locales['fr'] = {
   ['return_to_veh'] = 'veuillez remonter dans votre véhicule pour continuer la mission',
   ['must_in_taxi'] = 'vous devez être dans un taxi pour commencer la mission',
   ['must_in_vehicle'] = 'vous devez être dans un véhicule pour commencer la mission',
+  ['not_in_taxi'] = 'You left the taxi while on mission!',
   ['have_earned'] = 'vous avez gagné ~g~$%s~s~',
   ['comp_earned'] = '- Votre société a gagné ~g~$%s~s~\n- Vous avez gagné ~g~$%s~s~',
   ['deposit_stock'] = 'Déposer Stock',
