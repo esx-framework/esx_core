@@ -50,4 +50,3 @@ Locales['en'] = {
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi Stock'
 }
-}
