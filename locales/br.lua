@@ -11,7 +11,7 @@ Locales ['br'] = {
   ['weed_processingtoofar'] = 'o processamento foi ~r~cancelado~s~ porque você abandonou a área.',
 
   -- drug dealer
-  ['dealer_prompt'] = aperte ~INPUT_CONTEXT~ para falar com o ~r~Drug Dealer~s~.',
+  ['dealer_prompt'] = 'aperte ~INPUT_CONTEXT~ para falar com o ~r~Drug Dealer~s~.',
   ['dealer_title'] = 'traficante de drogas',
   ['dealer_item'] = '$%s',
   ['dealer_notenough'] = 'você não tem o suficiente disso para vender!',
