@@ -2,6 +2,10 @@
 
 Adds the well-known drugs for the people who want to make quick money. Weed Field require you to run around and harvest weed plants, process and then sell at the beach of San Andreas!
 
+## Requirements
+* ESX License Support
+  * [esx_license](https://github.com/ESX-Org/esx_license)
+
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
