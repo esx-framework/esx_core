@@ -258,25 +258,25 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
     end, cancelCb, restrict)
 end
 
--- AddEventHandler('esx:onPlayerSpawn', function()
---     Citizen.CreateThread(function()
---         while not playerLoaded do
---             Citizen.Wait(100)
---         end
+AddEventHandler('esx:onPlayerSpawn', function()
+    Citizen.CreateThread(function()
+        while not playerLoaded do
+            Citizen.Wait(100)
+        end
 
---         if firstSpawn then
---             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
---                 if skin == nil then
---                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
---                 else
---                     TriggerEvent('skinchanger:loadSkin', skin)
---                 end
---             end)
+        if firstSpawn then
+            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+                if skin == nil then
+                    TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
+                else
+                    TriggerEvent('skinchanger:loadSkin', skin)
+                end
+            end)
 
---             firstSpawn = false
---         end
---     end)
--- end)
+            firstSpawn = false
+        end
+    end)
+end)
 
 AddEventHandler('esx_skin:resetFirstSpawn', function()
     firstSpawn = true
