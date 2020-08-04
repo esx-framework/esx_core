@@ -160,7 +160,7 @@ Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
 
-        if not skinLoaded or isCameraActive then
+        if not skinLoaded and isCameraActive then
             DisableControlAction(2, 30, true)
             DisableControlAction(2, 31, true)
             DisableControlAction(2, 32, true)
