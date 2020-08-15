@@ -299,6 +299,7 @@ function GetAction(data)
 						end
 					end
 				elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
+					SetVehicleModKit(vehicle, 0)
 					local modCount = GetNumVehicleMods(vehicle, v.modType) -- UPGRADES
 					for j = 0, modCount, 1 do
 						local _label = ''
