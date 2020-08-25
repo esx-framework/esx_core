@@ -25,7 +25,7 @@ INSERT INTO `jobs` (name, label) VALUES
 
 INSERT INTO `items` (name, label, weight) VALUES
 	('bandage','Bandage', 2),
-	('medikit','Förstahjälpen kit', 2)
+	('medikit','Akutväska', 2)
 ;
 
 ALTER TABLE `users`

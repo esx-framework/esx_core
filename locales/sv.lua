@@ -40,7 +40,7 @@ Locales['sv'] = {
   ['player_not_unconscious'] = 'spelaren är inte medvetslös!',
   ['player_not_conscious'] = 'spelaren är inte vid medvetande!',
   -- Boss Menu
-  ['boss_actions'] = 'chef meny',
+  ['boss_actions'] = 'chefsmeny',
   -- Misc
   ['invalid_amount'] = '~r~Ogiltig mängd',
   ['actions_prompt'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',
@@ -50,7 +50,7 @@ Locales['sv'] = {
   ['open_pharmacy'] = 'tryck på ~INPUT_CONTEXT~ för att öppna apoteket.',
   ['pharmacy_menu_title'] = 'apotek',
   ['pharmacy_take'] = 'ta <span style="color:blue;">%s</span>',
-  ['medikit'] = 'medicinkit',
+  ['medikit'] = 'akutväska',
   ['bandage'] = 'bandage',
   ['max_item'] = 'du har redan tillräckligt mycket på dig.',
   -- F6 Menu
@@ -74,9 +74,9 @@ Locales['sv'] = {
   -- Revive
   ['revive_help'] = 'återuppliva en spelare',
   -- Item
-  ['used_medikit'] = 'du har använt ~y~1x~s~ ~b~Medicinkit~s~',
+  ['used_medikit'] = 'du har använt ~y~1x~s~ ~b~Akutväska~s~',
   ['used_bandage'] = 'du har använt ~y~1x~s~ ~b~Bandage~s~',
-  ['not_enough_medikit'] = 'du har inget ~b~Medicinkit~s~.',
+  ['not_enough_medikit'] = 'du har ingen ~b~Akutväska~s~.',
   ['not_enough_bandage'] = 'du har inget ~b~Bandage~s~.',
   ['healed'] = 'dina skador har blivit behandlade.',
   -- Blips
