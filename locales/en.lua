@@ -78,7 +78,7 @@ Locales['en'] = {
   ['bag'] = 'bag',
   ['bag_color'] = 'bag color',
   ['blemishes'] = 'blemishes',
-  ['blemishes_size']= 'blemishes thickness',
+  ['blemishes_size'] = 'blemishes thickness',
   ['ageing'] = 'ageing',
   ['ageing_1'] = 'ageing thickness',
   ['blush'] = 'blush',
@@ -95,4 +95,6 @@ Locales['en'] = {
   ['chest_color'] = 'chest hair color',
   ['bodyb'] = 'body blemishes',
   ['bodyb_size'] = 'body blemishes thickness',
+  ['bodyb_extra'] = 'blemishes body effect',
+  ['bodyb_extra_thickness'] = 'blemishes body effect thickness',
 }

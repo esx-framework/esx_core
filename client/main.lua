@@ -76,6 +76,8 @@ local Components = {
 	{label = _U('chest_color'),				name = 'chest_3',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
 	{label = _U('bodyb'),					name = 'bodyb_1',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
 	{label = _U('bodyb_size'),				name = 'bodyb_2',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
+	{label = _U('bodyb_extra'),				name = 'bodyb_3',			value = -1,		min = -1,	zoomOffset = 0.4,		camOffset = 0.15},
+	{label = _U('bodyb_extra_thickness'),	name = 'bodyb_4',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.15},
 	{label = _U('wrinkles'),				name = 'age_1',				value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('wrinkle_thickness'),		name = 'age_2',				value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('blemishes'),				name = 'blemishes_1',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
@@ -205,6 +207,8 @@ function GetMaxVals()
 		chest_3			= GetNumHairColors()-1,
 		bodyb_1			= GetNumHeadOverlayValues(11)-1,
 		bodyb_2			= 10,
+		bodyb_3			= GetNumHeadOverlayValues(12)-1,
+		bodyb_4			= 10,
 		ears_1			= GetNumberOfPedPropDrawableVariations	(playerPed, 2) - 1,
 		ears_2			= GetNumberOfPedPropTextureVariations	(playerPed, 2, Character['ears_1'] - 1),
 		tshirt_1		= GetNumberOfPedDrawableVariations		(playerPed, 8) - 1,
@@ -300,6 +304,7 @@ function ApplySkin(skin, clothes)
 				k ~= 'lipstick_4'		and
 				k ~= 'blemishes_1'		and
 				k ~= 'blemishes_2'		and
+				k ~= 'blemishes_3'		and
 				k ~= 'blush_1'			and
 				k ~= 'blush_2'			and
 				k ~= 'blush_3'			and
@@ -313,7 +318,9 @@ function ApplySkin(skin, clothes)
 				k ~= 'chest_2'			and
 				k ~= 'chest_3'			and
 				k ~= 'bodyb_1'			and
-				k ~= 'bodyb_2'
+				k ~= 'bodyb_2'			and
+				k ~= 'bodyb_3'			and
+				k ~= 'bodyb_4'
 			then
 				Character[k] = v
 			end
@@ -366,6 +373,14 @@ function ApplySkin(skin, clothes)
 	SetPedHeadOverlay			(playerPed, 10,		Character['chest_1'],			(Character['chest_2'] / 10) + 0.0)			-- Chest Hair + opacity
 	SetPedHeadOverlayColor		(playerPed, 10, 1,	Character['chest_3'])														-- Torso Color
 	SetPedHeadOverlay			(playerPed, 11,		Character['bodyb_1'],			(Character['bodyb_2'] / 10) + 0.0)			-- Body Blemishes + opacity
+
+	if Character['bodyb_3'] == -1 then
+		print('skinchanger: saving no extra effect')
+		SetPedHeadOverlay		(playerPed, 12,		255,							(Character['bodyb_4'] / 10) + 0.0)
+	else
+		print('skinchanger: saving extra effect, value ' .. Character['bodyb_3'])
+		SetPedHeadOverlay		(playerPed, 12,		Character['bodyb_3'],			(Character['bodyb_4'] / 10) + 0.0)			-- Blemishes 'added body effect' + opacity
+	end
 
 	if Character['ears_1'] == -1 then
 		ClearPedProp(playerPed, 2)
