@@ -375,10 +375,8 @@ function ApplySkin(skin, clothes)
 	SetPedHeadOverlay			(playerPed, 11,		Character['bodyb_1'],			(Character['bodyb_2'] / 10) + 0.0)			-- Body Blemishes + opacity
 
 	if Character['bodyb_3'] == -1 then
-		print('skinchanger: saving no extra effect')
 		SetPedHeadOverlay		(playerPed, 12,		255,							(Character['bodyb_4'] / 10) + 0.0)
 	else
-		print('skinchanger: saving extra effect, value ' .. Character['bodyb_3'])
 		SetPedHeadOverlay		(playerPed, 12,		Character['bodyb_3'],			(Character['bodyb_4'] / 10) + 0.0)			-- Blemishes 'added body effect' + opacity
 	end
 
