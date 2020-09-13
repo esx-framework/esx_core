@@ -42,6 +42,9 @@ end)
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
 AddEventHandler('esx_lscustom:cancelInstallMod', function()
 	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+	if (GetPedInVehicleSeat(vehicle, -1) ~= PlayerPedId()) then
+	vehicle = GetPlayersLastVehicle(PlayerPedId())
+	end
 	ESX.Game.SetVehicleProperties(vehicle, myCar)
 	if not (myCar.modTurbo) then
 	ToggleVehicleMod(vehicle,  18, false)
