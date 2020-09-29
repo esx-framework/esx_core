@@ -50,9 +50,10 @@ RegisterCommand('msg', function(source, args, user)
 		local player = tonumber(args[1])
 		table.remove(args, 1)
 		
-		TriggerClientEvent('chat:addMessage', player, {args = {"^1MSG de "..GetPlayerName(source).. "[" .. source .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
-		TriggerClientEvent('chat:addMessage', source, {args = {"^1MSG enviado a "..GetPlayerName(player).. "[" .. player .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
-
+		ESP --TriggerClientEvent('chat:addMessage', player, {args = {"^1MSG de "..GetPlayerName(source).. "[" .. source .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
+		ESP --TriggerClientEvent('chat:addMessage', source, {args = {"^1MSG enviado a "..GetPlayerName(player).. "[" .. player .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
+		ENG TriggerClientEvent('chat:addMessage', player, {args = {"^1PM from "..GetPlayerName(source).. "[" .. source .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
+		ENG TriggerClientEvent('chat:addMessage', source, {args = {"^1PM SEND TO "..GetPlayerName(player).. "[" .. player .. "]: ^7" ..table.concat(args, " ")}, color = {255, 153, 0}})
 	else
 		TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "ID de jugador incorrecta!")
 	end
