@@ -175,16 +175,16 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 			if status then
 				data.drunk = ESX.Math.Round(status.percent)
 			end
-
-			if Config.EnableLicenses then
-				TriggerEvent('esx_license:getLicenses', target, function(licenses)
-					data.licenses = licenses
-					cb(data)
-				end)
-			else
-				cb(data)
-			end
 		end)
+
+		if Config.EnableLicenses then
+			TriggerEvent('esx_license:getLicenses', target, function(licenses)
+				data.licenses = licenses
+				cb(data)
+			end)
+		else
+			cb(data)
+		end
 	end
 end)
 
