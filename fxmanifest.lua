@@ -15,6 +15,7 @@ server_scripts {
 	'locales/fr.lua',
 	'locales/sv.lua',
 	'locales/cs.lua',
+	'locales/de.lua',
 	'config.lua',
 
 	'jobs/fisherman.lua',
