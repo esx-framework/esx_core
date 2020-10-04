@@ -12,12 +12,9 @@ end)
 function OpenMenu(submitCb, cancelCb, restrict)
     local playerPed = PlayerPedId()
 
-    TriggerEvent('skinchanger:getSkin', function(skin)
-        lastSkin = skin
-    end)
-
+    TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
     TriggerEvent('skinchanger:getData', function(components, maxVals)
-        local elements    = {}
+        local elements = {}
         local _components = {}
 
         -- Restrict menu
@@ -40,10 +37,9 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 end
             end
         end
-
         -- Insert elements
         for i=1, #_components, 1 do
-            local value       = _components[i].value
+            local value = _components[i].value
             local componentId = _components[i].componentId
 
             if componentId == 0 then
@@ -51,14 +47,14 @@ function OpenMenu(submitCb, cancelCb, restrict)
             end
 
             local data = {
-                label     = _components[i].label,
-                name      = _components[i].name,
-                value     = value,
-                min       = _components[i].min,
+                label = _components[i].label,
+                name = _components[i].name,
+                value = value,
+                min = _components[i].min,
                 textureof = _components[i].textureof,
                 zoomOffset= _components[i].zoomOffset,
                 camOffset = _components[i].camOffset,
-                type      = 'slider'
+                type = 'slider'
             }
 
             for k,v in pairs(maxVals) do
@@ -76,13 +72,11 @@ function OpenMenu(submitCb, cancelCb, restrict)
         camOffset = _components[1].camOffset
 
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'skin', {
-            title    = _U('skin_menu'),
-            align    = 'top-left',
+            title = _U('skin_menu'),
+            align = 'top-left',
             elements = elements
         }, function(data, menu)
-            TriggerEvent('skinchanger:getSkin', function(skin)
-                lastSkin = skin
-            end)
+            TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
 
             submitCb(data, menu)
             DeleteSkinCam()
@@ -97,9 +91,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
         end, function(data, menu)
             local skin, components, maxVals
 
-            TriggerEvent('skinchanger:getSkin', function(getSkin)
-                skin = getSkin
-            end)
+            TriggerEvent('skinchanger:getSkin', function(getSkin) skin = getSkin end)
 
             zoomOffset = data.current.zoomOffset
             camOffset = data.current.camOffset
@@ -239,9 +231,7 @@ Citizen.CreateThread(function()
 end)
 
 function OpenSaveableMenu(submitCb, cancelCb, restrict)
-    TriggerEvent('skinchanger:getSkin', function(skin)
-        lastSkin = skin
-    end)
+    TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
 
     OpenMenu(function(data, menu)
         menu.close()
@@ -312,13 +302,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     playerLoaded = true
 end)
 
-AddEventHandler('esx_skin:getLastSkin', function(cb)
-    cb(lastSkin)
-end)
-
-AddEventHandler('esx_skin:setLastSkin', function(skin)
-    lastSkin = skin
-end)
+AddEventHandler('esx_skin:getLastSkin', function(cb) cb(lastSkin) end)
+AddEventHandler('esx_skin:setLastSkin', function(skin) lastSkin = skin end)
 
 RegisterNetEvent('esx_skin:openMenu')
 AddEventHandler('esx_skin:openMenu', function(submitCb, cancelCb)
