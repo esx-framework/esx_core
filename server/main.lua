@@ -118,7 +118,7 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.label))
+				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.name))
 			else
 				xPlayer.showNotification(_U('quantity_invalid'))
 			end
@@ -140,7 +140,7 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.label))
+			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.name))
 		else
 			xPlayer.showNotification(_U('quantity_invalid'))
 		end
