@@ -49,6 +49,7 @@ end)
 
 RegisterNetEvent('esx_status:load')
 AddEventHandler('esx_status:load', function(status)
+	TriggerEvent('esx_status:loaded')
 	for i=1, #Status, 1 do
 		for j=1, #status, 1 do
 			if Status[i].name == status[j].name then
@@ -158,7 +159,9 @@ end)
 
 -- Loading screen off event
 AddEventHandler('esx:loadingScreenOff', function()
-	TriggerEvent('esx_status:loaded')
+	if not isPaused then
+		TriggerEvent('esx_status:setDisplay', 0.3)
+	end
 end)
 
 -- Update server
