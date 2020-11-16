@@ -53,6 +53,7 @@ Locales['fi'] = {
   ['have_withdrawn']          = 'sinä otit ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']          = 'sinä talletit ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'Pomo toiminnot',
+  ['invalid_vehicle']         = 'di-wastong sasakyan',
 
   -- sold vehicles
   ['boss_sold']               = 'list of sold vehicles',
