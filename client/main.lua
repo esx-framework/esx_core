@@ -720,6 +720,8 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 						model = model,
 						plate = plate
 					}
+				else
+					ESX.ShowNotification(_U('invalid_vehicle'))
 				end
 			end
 		end
