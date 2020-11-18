@@ -2,8 +2,8 @@ local Components = {
 	{label = _U('sex'),						name = 'sex',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('mom'),						name = 'mom',				value = 21,		min = 21,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('dad'),						name = 'dad',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
-	{label = _U('resemblance'),				name = 'face_md_weight',	value = 5,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
-	{label = _U('skin_tone'),				name = 'skin_md_weight',	value = 5,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('resemblance'),				name = 'face_md_weight',	value = 50,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('skin_tone'),				name = 'skin_md_weight',	value = 50,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('nose_1'),					name = 'nose_1',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('nose_2'),					name = 'nose_2',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('nose_3'),					name = 'nose_3',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
@@ -146,8 +146,8 @@ function GetMaxVals()
 		sex				= 1,
 		mom				= 45, -- numbers 21-41 and 45 are female (22 total)
 		dad				= 44, -- numbers 0-20 and 42-44 are male (24 total)
-		face_md_weight	= 10,
-		skin_md_weight	= 10,
+		face_md_weight	= 100,
+		skin_md_weight	= 100,
 		nose_1			= 10,
 		nose_2			= 10,
 		nose_3			= 10,
@@ -327,8 +327,8 @@ function ApplySkin(skin, clothes)
 		end
 	end
 
-	local face_weight = 		(Character['face_md_weight'] / 10) + 0.0
-	local skin_weight =			(Character['skin_md_weight'] / 10) + 0.0
+	local face_weight = 		(Character['face_md_weight'] / 100) + 0.0
+	local skin_weight =			(Character['skin_md_weight'] / 100) + 0.0
 	SetPedHeadBlendData			(playerPed, Character['mom'], Character['dad'], 0, Character['mom'], Character['dad'], 0, face_weight, skin_weight, 0.0, false)
 
 	SetPedFaceFeature			(playerPed,			0,								(Character['nose_1'] / 10) + 0.0)			-- Nose Width
@@ -363,7 +363,7 @@ function ApplySkin(skin, clothes)
 	SetPedComponentVariation	(playerPed, 2,		Character['hair_1'],			Character['hair_2'], 2)						-- Hair
 	SetPedHeadOverlayColor		(playerPed, 1, 1,	Character['beard_3'],			Character['beard_4'])						-- Beard Color
 	SetPedHeadOverlayColor		(playerPed, 2, 1,	Character['eyebrows_3'],		Character['eyebrows_4'])					-- Eyebrows Color
-	SetPedHeadOverlayColor		(playerPed, 4, 1,	Character['makeup_3'],			Character['makeup_4'])						-- Makeup Color
+	SetPedHeadOverlayColor		(playerPed, 4, 2,	Character['makeup_3'],			Character['makeup_4'])						-- Makeup Color
 	SetPedHeadOverlayColor		(playerPed, 8, 1,	Character['lipstick_3'],		Character['lipstick_4'])					-- Lipstick Color
 	SetPedHeadOverlay			(playerPed, 5,		Character['blush_1'],			(Character['blush_2'] / 10) + 0.0)			-- Blush + opacity
 	SetPedHeadOverlayColor		(playerPed, 5, 2,	Character['blush_3'])														-- Blush Color
