@@ -1,7 +1,7 @@
 Config                      = {}
 Config.DrawDistance         = 100.0
 Config.BankSavingPercentage = 2.5
-Config.Locale               = 'fr'
+Config.Locale               = 'en'
 
 Config.Zones = {
 	BankActions = {
