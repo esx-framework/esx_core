@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = 'fr'
+Config.Locale = 'en'
 
 Config.Marker = {
 	r = 250, g = 0, b = 0, a = 100,  -- red color
