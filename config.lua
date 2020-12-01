@@ -3,7 +3,7 @@ Config              = {}
 Config.ZDiff        = 2.0
 Config.BlipSprite   = 431
 
-Config.Locale       = 'fr'
+Config.Locale       = 'en'
 
 Config.EnableBlips = true
 
