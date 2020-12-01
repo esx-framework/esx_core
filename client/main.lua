@@ -101,6 +101,7 @@ function OpenShopMenu()
 		'arms',
 		'pants_1', 'pants_2',
 		'shoes_1', 'shoes_2',
+        'bags_1', 'bags_2',
 		'chain_1', 'chain_2',
 		'helmet_1', 'helmet_2',
 		'glasses_1', 'glasses_2'
@@ -142,7 +143,7 @@ end)
 -- Enter / Exit marker events & draw markers
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(1)
 		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), false, nil, true
 
 		for k,v in pairs(Config.Shops) do
