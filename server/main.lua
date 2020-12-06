@@ -88,21 +88,20 @@ end)
 
 RegisterServerEvent('esx_drugs:processCannabis')
 AddEventHandler('esx_drugs:processCannabis', function()
-	if not playersProcessingCannabis[source] then
+  if not playersProcessingCannabis[source] then
 		local _source = source
 		local xPlayer = ESX.GetPlayerFromId(_source)
 		local xCannabis = xPlayer.getInventoryItem('cannabis')
-		TriggerClientEvent('esx_drugs:getPlayer',xCannabis.count,_source)
 		local can = true
 		outofbound = false
-		if xCannabis.count >=3 then
-			while outofbound == false and can and GetEntityHealth(GetPlayerPed(_source))>0 do
+    if xCannabis.count >= 3 then
+      while outofbound == false and can do
 				if playersProcessingCannabis[_source] == nil then
 					playersProcessingCannabis[_source] = ESX.SetTimeout(Config.Delays.WeedProcessing , function()
-						if xCannabis.count >= 3 then
-							if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
-								xPlayer.removeInventoryItem('cannabis', 3)
-								xPlayer.addInventoryItem('marijuana', 1)
+            if xCannabis.count >= 3 then
+              if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
+                xPlayer.removeInventoryItem('cannabis', 3)
+                xPlayer.addInventoryItem('marijuana', 1)
 								xPlayer.showNotification(_U('weed_processed'))
 							else
 								can = false
