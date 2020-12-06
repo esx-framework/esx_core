@@ -49,11 +49,11 @@ end)
 function ProcessWeed(xCannabis)
 	isProcessing = true
 	ESX.ShowNotification(_U('weed_processingstarted'))
-	TriggerServerEvent('esx_drugs:processCannabis')
-	if(xCannabis<3) then
-		xCannabis=0
+  TriggerServerEvent('esx_drugs:processCannabis')
+	if(xCannabis <= 3) then
+		xCannabis = 0
 	end
-	local timeLeft = (Config.Delays.WeedProcessing * xCannabis) / 1000
+  local timeLeft = (Config.Delays.WeedProcessing * xCannabis) / 1000
 	local playerPed = PlayerPedId()
 
 	while timeLeft > 0 do
