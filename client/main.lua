@@ -193,7 +193,7 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
 
 		-- Hide all these players
@@ -203,7 +203,7 @@ Citizen.CreateThread(function()
 			if NetworkIsPlayerActive(player) then
 				local otherPlayerPed = GetPlayerPed(player)
 				SetEntityVisible(otherPlayerPed, false, false)
-				SetEntityNoCollisionEntity(playerPed, otherPlayerPed, false)
+				SetEntityNoCollisionEntity(otherPlayerPed, playerPed, true)
 			end
 		end
 	end
