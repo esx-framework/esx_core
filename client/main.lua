@@ -2,6 +2,7 @@ local instance, instancedPlayers, registeredInstanceTypes, playersToHide = {}, {
 local instanceInvite, insideInstance
 ESX = nil
 
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -25,6 +26,18 @@ end
 
 function EnterInstance(instance)
 	insideInstance = true
+	-- Fix vehicles randomly spawning nearby the player inside an instance
+	Citizen.CreateThread(function()
+		while insideInstance do
+			Citizen.Wait(0) -- must be run every frame
+
+			SetVehicleDensityMultiplierThisFrame(0.0)
+			SetParkedVehicleDensityMultiplierThisFrame(0.0)
+
+			local pos = GetEntityCoords(PlayerPedId())
+			RemoveVehiclesFromGeneratorsInArea(pos.x - 900.0, pos.y - 900.0, pos.z - 900.0, pos.x + 900.0, pos.y + 900.0, pos.z + 900.0)
+		end
+	end)
 	TriggerServerEvent('instance:enter', instance.host)
 
 	if registeredInstanceTypes[instance.type].enter then
@@ -137,6 +150,20 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 	}
 
 	Citizen.CreateThread(function()
+		-- Controls for invite
+		Citizen.CreateThread(function()
+			while instanceInvite do
+				Citizen.Wait(0)
+
+				ESX.ShowHelpNotification(_U('press_to_enter'))
+
+				if IsControlJustReleased(0, 38) then
+					EnterInstance(instanceInvite)
+					ESX.ShowNotification(_U('entered_instance'))
+					instanceInvite = nil
+				end
+			end
+		end)
 		Citizen.Wait(10000)
 
 		if instanceInvite then
@@ -147,25 +174,6 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 end)
 
 RegisterInstanceType('default')
-
--- Controls for invite
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if instanceInvite then
-			ESX.ShowHelpNotification(_U('press_to_enter'))
-
-			if IsControlJustReleased(0, 38) then
-				EnterInstance(instanceInvite)
-				ESX.ShowNotification(_U('entered_instance'))
-				instanceInvite = nil
-			end
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
 
 -- Instance players
 Citizen.CreateThread(function()
@@ -191,10 +199,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
+local letSleep = true
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 		local playerPed = PlayerPedId()
+		letSleep = true
 
 		-- Hide all these players
 		for serverId,_ in pairs(playersToHide) do
@@ -204,7 +215,12 @@ Citizen.CreateThread(function()
 				local otherPlayerPed = GetPlayerPed(player)
 				SetEntityVisible(otherPlayerPed, false, false)
 				SetEntityNoCollisionEntity(otherPlayerPed, playerPed, true)
+				letSleep = false
 			end
+		end
+
+		if letSleep then
+			Citizen.Wait(1000)
 		end
 	end
 end)
@@ -213,19 +229,3 @@ Citizen.CreateThread(function()
 	TriggerEvent('instance:loaded')
 end)
 
--- Fix vehicles randomly spawning nearby the player inside an instance
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0) -- must be run every frame
-
-		if insideInstance then
-			SetVehicleDensityMultiplierThisFrame(0.0)
-			SetParkedVehicleDensityMultiplierThisFrame(0.0)
-
-			local pos = GetEntityCoords(PlayerPedId())
-			RemoveVehiclesFromGeneratorsInArea(pos.x - 900.0, pos.y - 900.0, pos.z - 900.0, pos.x + 900.0, pos.y + 900.0, pos.z + 900.0)
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
