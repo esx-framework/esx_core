@@ -9,4 +9,4 @@ Locales['tr'] = {
 	['no_money'] = 'bu faturayi odemek icin yeterli paran yok',
 	['target_no_money'] = 'oyuncunun faturayı ödeyecek miktarda parası yok',
 	['keymap_showbills'] = 'faturalar menüsünü aç',
-  }
+}
