@@ -193,8 +193,14 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 			})
 		end
 	end
+		
+	local query = "SELECT identifier, job_grade FROM `users` WHERE `job`=@job ORDER BY job_grade DESC"
 
-	MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `job`=@job ORDER BY job_grade DESC', {
+	if Config.EnableESXIdentity then
+		query = "SELECT identifier, job_grade, firstname, lastname FROM `users` WHERE `job`=@job ORDER BY job_grade DESC"
+	end
+
+	MySQL.Async.fetchAll(query, {
 		['@job'] = society
 	}, function(result)
 		for k, row in pairs(result) do
