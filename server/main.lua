@@ -168,52 +168,69 @@ ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, s
 end)
 
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
-	if Config.EnableESXIdentity then
+	local employees = {}
 
-		MySQL.Async.fetchAll('SELECT firstname, lastname, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
-			['@job'] = society
-		}, function (results)
-			local employees = {}
+	local xPlayers = ESX.GetPlayers()
+	for k, v in pairs(xPlayers) do
+		local xPlayer = ESX.GetPlayerFromId(v)
 
-			for i=1, #results, 1 do
-				table.insert(employees, {
-					name       = results[i].firstname .. ' ' .. results[i].lastname,
-					identifier = results[i].identifier,
-					job = {
-						name        = results[i].job,
-						label       = Jobs[results[i].job].label,
-						grade       = results[i].job_grade,
-						grade_name  = Jobs[results[i].job].grades[tostring(results[i].job_grade)].name,
-						grade_label = Jobs[results[i].job].grades[tostring(results[i].job_grade)].label
-					}
-				})
-			end
+		local name = GetPlayerName(xPlayer.source)
+		if Config.EnableESXIdentity then
+			name = xPlayer.get('firstName') .. ' ' .. xPlayer.get('lastName')
+		end
 
-			cb(employees)
-		end)
-	else
-		MySQL.Async.fetchAll('SELECT identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
-			['@job'] = society
-		}, function (result)
-			local employees = {}
-
-			for i=1, #result, 1 do
-				table.insert(employees, {
-					name       = GetPlayerName(source),
-					identifier = result[i].identifier,
-					job = {
-						name        = result[i].job,
-						label       = Jobs[result[i].job].label,
-						grade       = result[i].job_grade,
-						grade_name  = Jobs[result[i].job].grades[tostring(result[i].job_grade)].name,
-						grade_label = Jobs[result[i].job].grades[tostring(result[i].job_grade)].label
-					}
-				})
-			end
-
-			cb(employees)
-		end)
+		if xPlayer.getJob().name == society then
+			table.insert(employees, {
+				name = name,
+				identifier = xPlayer.identifier,
+				job = {
+					name = society,
+					label = xPlayer.getJob().label,
+					grade = xPlayer.getJob().grade,
+					grade_name = xPlayer.getJob().grade_name,
+					grade_label = xPlayer.getJob().grade_label
+				}
+			})
+		end
 	end
+
+	MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `job`=@job ORDER BY job_grade DESC', {
+		['@job'] = society
+	}, function(result)
+		for k, row in pairs(result) do
+			local alreadyInTable
+			local identifier = row.identifier
+
+			for k, v in pairs(employees) do
+				if v.identifier == identifier then
+					alreadyInTable = true
+				end
+			end
+
+			if not alreadyInTable then
+				local name = "Name not found." -- maybe this should be a locale instead ¯\_(ツ)_/¯
+
+				if Config.EnableESXIdentity then
+					name = row.firstname .. ' ' .. row.lastname 
+				end 
+				
+				table.insert(employees, {
+					name = name,
+					identifier = identifier,
+					job = {
+						name = society,
+						label = Jobs[society].label,
+						grade = row.job_grade,
+						grade_name = Jobs[society].grades[tostring(row.job_grade)].name,
+						grade_label = Jobs[society].grades[tostring(row.job_grade)].label
+					}
+				})
+			end
+		end
+
+		cb(employees)
+	end)
+
 end)
 
 ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
