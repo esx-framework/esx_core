@@ -70,20 +70,51 @@ AddEventHandler('esx_status:update', function(status)
 	end
 end)
 
+Citizen.CreateThread(function()
+	while(true) do
+		Citizen.Wait(10 * 60 * 1000)
+		
+		SaveData()
+
+	end
+
+end)
+
 function SaveData()
 	local xPlayers = ESX.GetPlayers()
+
+	-- Example of a bulk update statement that we are building below
+	--[[
+	UPDATE users
+    SET status = (case when identifier = 'license:123' then '{hunger:45, thirst:23}'
+                         when identifier = 'license:456' then '{hunger:1000, thirst:1000}'
+                         when identifier = 'license:789' then '{hunger:1000, thirst:1000}'
+                    end)
+    WHERE identifier in ('license:123', 'license:456', 'license:789')
+
+	]]
+	local updateStatement = 'UPDATE users SET status = (case %s end) where identifier in (%s)'
+	local whenList = ''
+	local whereList = ''
+	local firstItem = true
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 		local status  = xPlayer.get('status')
 
-		MySQL.Async.execute('UPDATE users SET status = @status WHERE identifier = @identifier', {
-			['@status']     = json.encode(status),
-			['@identifier'] = xPlayer.identifier
-		})
+		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
+
+		if firstItem == false then
+			whereList = whereList .. ', '
+		end
+		whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
+
+		firstItem = false
+
 	end
 
-	SetTimeout(10 * 60 * 1000, SaveData)
-end
+	local sql = string.format(updateStatement, whenList, whereList)
 
-SaveData()
+	MySQL.Async.execute(sql)
+
+end
