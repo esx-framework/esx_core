@@ -97,6 +97,7 @@ function SaveData()
 	local whenList = ''
 	local whereList = ''
 	local firstItem = true
+	local playerCount = 0
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
@@ -110,11 +111,14 @@ function SaveData()
 		whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
 
 		firstItem = false
-
+		playerCount = playerCount + 1
 	end
 
-	local sql = string.format(updateStatement, whenList, whereList)
+	if playerCount > 0 then
+		local sql = string.format(updateStatement, whenList, whereList)
 
-	MySQL.Async.execute(sql)
+		MySQL.Async.execute(sql)
+
+	end
 
 end
