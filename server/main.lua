@@ -43,19 +43,32 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 		end
 
 	elseif itemType == 'item_account' then
-		targetXPlayer.removeAccountMoney(itemName, amount)
-		sourceXPlayer.addAccountMoney   (itemName, amount)
+		local targetAccount = targetXPlayer.getAccount(itemName)
 
-		sourceXPlayer.showNotification(_U('you_confiscated_account', amount, itemName, targetXPlayer.name))
-		targetXPlayer.showNotification(_U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
+		-- does the target player have enough money?
+		if targetAccount.money >= amount then
+			targetXPlayer.removeAccountMoney(itemName, amount)
+			sourceXPlayer.addAccountMoney   (itemName, amount)
+
+			sourceXPlayer.showNotification(_U('you_confiscated_account', amount, itemName, targetXPlayer.name))
+			targetXPlayer.showNotification(_U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
+		else
+			sourceXPlayer.showNotification(_U('quantity_invalid'))
+		end
 
 	elseif itemType == 'item_weapon' then
 		if amount == nil then amount = 0 end
-		targetXPlayer.removeWeapon(itemName, amount)
-		sourceXPlayer.addWeapon   (itemName, amount)
 
-		sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
-		targetXPlayer.showNotification(_U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
+		-- does the target player have weapon?
+		if targetXPlayer.hasWeapon(itemName) then
+			targetXPlayer.removeWeapon(itemName, amount)
+			sourceXPlayer.addWeapon   (itemName, amount)
+
+			sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
+			targetXPlayer.showNotification(_U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
+		else
+			sourceXPlayer.showNotification(_U('quantity_invalid'))
+		end
 	end
 end)
 
