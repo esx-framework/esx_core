@@ -16,8 +16,9 @@ function GetInServiceCount(name)
 	return count
 end
 
+RegisterServerEvent('esx_service:activateService')
 AddEventHandler('esx_service:activateService', function(name, max)
-	InService[name]    = {}
+	InService[name] = {}
 	MaxInService[name] = max
 end)
 
@@ -53,6 +54,8 @@ ESX.RegisterServerCallback('esx_service:isInService', function(source, cb, name)
 		if InService[name][source] then
 			isInService = true
 		end
+	else
+		print(('[esx_service] [^3WARNING^7] A service "%s" is not activated'):format(name))
 	end
 
 	cb(isInService)
