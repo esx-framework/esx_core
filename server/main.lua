@@ -3,7 +3,7 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 Citizen.CreateThread(function()
-	Citizen.Wait(1000)
+	Citizen.Wait(5000)
 	local players = ESX.GetPlayers()
 
 	for _,playerId in ipairs(players) do
