@@ -2,28 +2,6 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-Citizen.CreateThread(function()
-	Citizen.Wait(5000)
-	local players = ESX.GetPlayers()
-
-	for _,playerId in ipairs(players) do
-		local xPlayer = ESX.GetPlayerFromId(playerId)
-
-		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
-		}, function(result)
-			local data = {}
-
-			if result[1].status then
-				data = json.decode(result[1].status)
-			end
-
-			xPlayer.set('status', data)
-			TriggerClientEvent('esx_status:load', playerId, data)
-		end)
-	end
-end)
-
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
