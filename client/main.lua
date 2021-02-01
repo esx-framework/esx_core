@@ -42,13 +42,13 @@ AddEventHandler('esx:onPlayerSpawn', function()
 
 		if Config.AntiCombatLog then
 			while not PlayerLoaded do
-				Citizen.Wait(1000)
+				Citizen.Wait(5000)
 			end
 
 			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
 				if shouldDie then
-					ESX.ShowNotification(_U('combatlog_message'))
-					RemoveItemsAfterRPDeath()
+					Citizen.Wait(10000)
+					SetEntityHealth(PlayerPedId(), 0)
 				end
 			end)
 		end
