@@ -1,4 +1,6 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'adamant'
+
+game 'gta5'
 
 description 'ESX Jobs'
 
@@ -8,10 +10,22 @@ server_scripts {
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/en.lua',
+	'locales/es.lua',
 	'locales/fi.lua',
 	'locales/fr.lua',
 	'locales/sv.lua',
+	'locales/cs.lua',
+	'locales/de.lua',
 	'config.lua',
+
+	'jobs/fisherman.lua',
+	'jobs/fueler.lua',
+	'jobs/lumberjack.lua',
+	'jobs/miner.lua',
+	'jobs/reporter.lua',
+	'jobs/slaughterer.lua',
+	'jobs/tailor.lua',
+
 	'server/main.lua'
 }
 
@@ -20,16 +34,20 @@ client_scripts {
 	'locales/br.lua',
 	'locales/fi.lua',
 	'locales/en.lua',
+	'locales/es.lua',
 	'locales/fr.lua',
 	'locales/sv.lua',
+	'locales/cs.lua',
 	'config.lua',
-	'client/jobs/fisherman.lua',
-	'client/jobs/fueler.lua',
-	'client/jobs/lumberjack.lua',
-	'client/jobs/miner.lua',
-	'client/jobs/reporter.lua',
-	'client/jobs/slaughterer.lua',
-	'client/jobs/tailor.lua',
+
+	'jobs/fisherman.lua',
+	'jobs/fueler.lua',
+	'jobs/lumberjack.lua',
+	'jobs/miner.lua',
+	'jobs/reporter.lua',
+	'jobs/slaughterer.lua',
+	'jobs/tailor.lua',
+
 	'client/main.lua'
 }
 
