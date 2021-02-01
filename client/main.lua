@@ -1,7 +1,26 @@
 local Components = {
 	{label = _U('sex'),						name = 'sex',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
-	{label = _U('face'),					name = 'face',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
-	{label = _U('skin'),					name = 'skin',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('mom'),						name = 'mom',				value = 21,		min = 21,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('dad'),						name = 'dad',				value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('resemblance'),				name = 'face_md_weight',	value = 50,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('skin_tone'),				name = 'skin_md_weight',	value = 50,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_1'),					name = 'nose_1',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_2'),					name = 'nose_2',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_3'),					name = 'nose_3',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_4'),					name = 'nose_4',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_5'),					name = 'nose_5',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('nose_6'),					name = 'nose_6',			value = 0,		min = -10,	zoomOffset = 0.6,		camOffset = 0.65},
+	{label = _U('cheeks_1'),				name = 'cheeks_1',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('cheeks_2'),				name = 'cheeks_2',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('cheeks_3'),				name = 'cheeks_3',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('lip_fullness'),			name = 'lip_thickness',		value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('jaw_bone_width'),			name = 'jaw_1',				value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('jaw_bone_length'),			name = 'jaw_2',				value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('chin_height'),				name = 'chin_1',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('chin_length'),				name = 'chin_2',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('chin_width'),				name = 'chin_3',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('chin_hole'),				name = 'chin_4',			value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('neck_thickness'),			name = 'neck_thickness',	value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('hair_1'),					name = 'hair_1',			value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('hair_2'),					name = 'hair_2',			value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
 	{label = _U('hair_color_1'),			name = 'hair_color_1',		value = 0,		min = 0,	zoomOffset = 0.6,		camOffset = 0.65},
@@ -35,10 +54,13 @@ local Components = {
 	{label = _U('bag'),						name = 'bags_1',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15,	componentId	= 5},
 	{label = _U('bag_color'),				name = 'bags_2',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15,	textureof	= 'bags_1'},
 	{label = _U('eye_color'),				name = 'eye_color',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('eye_squint'),				name = 'eye_squint',		value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('eyebrow_size'),			name = 'eyebrows_2',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('eyebrow_type'),			name = 'eyebrows_1',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('eyebrow_color_1'),			name = 'eyebrows_3',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('eyebrow_color_2'),			name = 'eyebrows_4',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('eyebrow_height'),			name = 'eyebrows_5',		value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
+	{label = _U('eyebrow_depth'),			name = 'eyebrows_6',		value = 0,		min = -10,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('makeup_type'),				name = 'makeup_1',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('makeup_thickness'),		name = 'makeup_2',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('makeup_color_1'),			name = 'makeup_3',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
@@ -52,8 +74,10 @@ local Components = {
 	{label = _U('chest_hair'),				name = 'chest_1',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
 	{label = _U('chest_hair_1'),			name = 'chest_2',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
 	{label = _U('chest_color'),				name = 'chest_3',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
-	{label = _U('bodyb'),					name = 'bodyb_1',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
+	{label = _U('bodyb'),					name = 'bodyb_1',			value = -1,		min = -1,	zoomOffset = 0.75,		camOffset = 0.15},
 	{label = _U('bodyb_size'),				name = 'bodyb_2',			value = 0,		min = 0,	zoomOffset = 0.75,		camOffset = 0.15},
+	{label = _U('bodyb_extra'),				name = 'bodyb_3',			value = -1,		min = -1,	zoomOffset = 0.4,		camOffset = 0.15},
+	{label = _U('bodyb_extra_thickness'),	name = 'bodyb_4',			value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.15},
 	{label = _U('wrinkles'),				name = 'age_1',				value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('wrinkle_thickness'),		name = 'age_2',				value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
 	{label = _U('blemishes'),				name = 'blemishes_1',		value = 0,		min = 0,	zoomOffset = 0.4,		camOffset = 0.65},
@@ -120,8 +144,27 @@ function GetMaxVals()
 
 	local data = {
 		sex				= 1,
-		face			= 45,
-		skin			= 45,
+		mom				= 45, -- numbers 21-41 and 45 are female (22 total)
+		dad				= 44, -- numbers 0-20 and 42-44 are male (24 total)
+		face_md_weight	= 100,
+		skin_md_weight	= 100,
+		nose_1			= 10,
+		nose_2			= 10,
+		nose_3			= 10,
+		nose_4			= 10,
+		nose_5			= 10,
+		nose_6			= 10,
+		cheeks_1		= 10,
+		cheeks_2		= 10,
+		cheeks_3		= 10,
+		lip_thickness	= 10,
+		jaw_1			= 10,
+		jaw_2			= 10,
+		chin_1			= 10,
+		chin_2			= 10,
+		chin_3			= 10,
+		chin_4			= 10,
+		neck_thickness	= 10,
 		age_1			= GetNumHeadOverlayValues(3)-1,
 		age_2			= 10,
 		beard_1			= GetNumHeadOverlayValues(1)-1,
@@ -133,10 +176,13 @@ function GetMaxVals()
 		hair_color_1	= GetNumHairColors()-1,
 		hair_color_2	= GetNumHairColors()-1,
 		eye_color		= 31,
+		eye_squint		= 10,
 		eyebrows_1		= GetNumHeadOverlayValues(2)-1,
 		eyebrows_2		= 10,
 		eyebrows_3		= GetNumHairColors()-1,
 		eyebrows_4		= GetNumHairColors()-1,
+		eyebrows_5		= 10,
+		eyebrows_6		= 10,
 		makeup_1		= GetNumHeadOverlayValues(4)-1,
 		makeup_2		= 10,
 		makeup_3		= GetNumHairColors()-1,
@@ -161,6 +207,8 @@ function GetMaxVals()
 		chest_3			= GetNumHairColors()-1,
 		bodyb_1			= GetNumHeadOverlayValues(11)-1,
 		bodyb_2			= 10,
+		bodyb_3			= GetNumHeadOverlayValues(12)-1,
+		bodyb_4			= 10,
 		ears_1			= GetNumberOfPedPropDrawableVariations	(playerPed, 2) - 1,
 		ears_2			= GetNumberOfPedPropTextureVariations	(playerPed, 2, Character['ears_1'] - 1),
 		tshirt_1		= GetNumberOfPedDrawableVariations		(playerPed, 8) - 1,
@@ -207,11 +255,31 @@ function ApplySkin(skin, clothes)
 		for k,v in pairs(clothes) do
 			if
 				k ~= 'sex'				and
-				k ~= 'face'				and
-				k ~= 'skin'				and
+				k ~= 'mom'				and
+				k ~= 'dad'				and
+				k ~= 'face_md_weight'	and
+				k ~= 'skin_md_weight'	and
+				k ~= 'nose_1'			and
+				k ~= 'nose_2'			and
+				k ~= 'nose_3'			and
+				k ~= 'nose_4'			and
+				k ~= 'nose_5'			and
+				k ~= 'nose_6'			and
+				k ~= 'cheeks_1'			and
+				k ~= 'cheeks_2'			and
+				k ~= 'cheeks_3'			and
+				k ~= 'lip_thickness'	and
+				k ~= 'jaw_1'			and
+				k ~= 'jaw_2'			and
+				k ~= 'chin_1'			and
+				k ~= 'chin_2'			and
+				k ~= 'chin_3'			and
+				k ~= 'chin_4'			and
+				k ~= 'neck_thickness'	and
 				k ~= 'age_1'			and
 				k ~= 'age_2'			and
 				k ~= 'eye_color'		and
+				k ~= 'eye_squint'		and
 				k ~= 'beard_1'			and
 				k ~= 'beard_2'			and
 				k ~= 'beard_3'			and
@@ -224,6 +292,8 @@ function ApplySkin(skin, clothes)
 				k ~= 'eyebrows_2'		and
 				k ~= 'eyebrows_3'		and
 				k ~= 'eyebrows_4'		and
+				k ~= 'eyebrows_5'		and
+				k ~= 'eyebrows_6'		and
 				k ~= 'makeup_1'			and
 				k ~= 'makeup_2'			and
 				k ~= 'makeup_3'			and
@@ -234,6 +304,7 @@ function ApplySkin(skin, clothes)
 				k ~= 'lipstick_4'		and
 				k ~= 'blemishes_1'		and
 				k ~= 'blemishes_2'		and
+				k ~= 'blemishes_3'		and
 				k ~= 'blush_1'			and
 				k ~= 'blush_2'			and
 				k ~= 'blush_3'			and
@@ -247,14 +318,39 @@ function ApplySkin(skin, clothes)
 				k ~= 'chest_2'			and
 				k ~= 'chest_3'			and
 				k ~= 'bodyb_1'			and
-				k ~= 'bodyb_2'
+				k ~= 'bodyb_2'			and
+				k ~= 'bodyb_3'			and
+				k ~= 'bodyb_4'
 			then
 				Character[k] = v
 			end
 		end
 	end
 
-	SetPedHeadBlendData			(playerPed, Character['face'], Character['face'], Character['face'], Character['skin'], Character['skin'], Character['skin'], 1.0, 1.0, 1.0, true)
+	local face_weight = 		(Character['face_md_weight'] / 100) + 0.0
+	local skin_weight =			(Character['skin_md_weight'] / 100) + 0.0
+	SetPedHeadBlendData			(playerPed, Character['mom'], Character['dad'], 0, Character['mom'], Character['dad'], 0, face_weight, skin_weight, 0.0, false)
+
+	SetPedFaceFeature			(playerPed,			0,								(Character['nose_1'] / 10) + 0.0)			-- Nose Width
+	SetPedFaceFeature			(playerPed,			1,								(Character['nose_2'] / 10) + 0.0)			-- Nose Peak Height
+	SetPedFaceFeature			(playerPed,			2,								(Character['nose_3'] / 10) + 0.0)			-- Nose Peak Length
+	SetPedFaceFeature			(playerPed,			3,								(Character['nose_4'] / 10) + 0.0)			-- Nose Bone Height
+	SetPedFaceFeature			(playerPed,			4,								(Character['nose_5'] / 10) + 0.0)			-- Nose Peak Lowering
+	SetPedFaceFeature			(playerPed,			5,								(Character['nose_6'] / 10) + 0.0)			-- Nose Bone Twist
+	SetPedFaceFeature			(playerPed,			6,								(Character['eyebrows_5'] / 10) + 0.0)		-- Eyebrow height
+	SetPedFaceFeature			(playerPed,			7,								(Character['eyebrows_6'] / 10) + 0.0)		-- Eyebrow depth
+	SetPedFaceFeature			(playerPed,			8,								(Character['cheeks_1'] / 10) + 0.0)			-- Cheekbones Height
+	SetPedFaceFeature			(playerPed,			9,								(Character['cheeks_2'] / 10) + 0.0)			-- Cheekbones Width
+	SetPedFaceFeature			(playerPed,			10,								(Character['cheeks_3'] / 10) + 0.0)			-- Cheeks Width
+	SetPedFaceFeature			(playerPed,			11,								(Character['eye_squint'] / 10) + 0.0)		-- Eyes squint
+	SetPedFaceFeature			(playerPed,			12,								(Character['lip_thickness'] / 10) + 0.0)	-- Lip Fullness
+	SetPedFaceFeature			(playerPed,			13,								(Character['jaw_1'] / 10) + 0.0)			-- Jaw Bone Width
+	SetPedFaceFeature			(playerPed,			14,								(Character['jaw_2'] / 10) + 0.0)			-- Jaw Bone Length
+	SetPedFaceFeature			(playerPed,			15,								(Character['chin_1'] / 10) + 0.0)			-- Chin Height
+	SetPedFaceFeature			(playerPed,			16,								(Character['chin_2'] / 10) + 0.0)			-- Chin Length
+	SetPedFaceFeature			(playerPed,			17,								(Character['chin_3'] / 10) + 0.0)			-- Chin Width
+	SetPedFaceFeature			(playerPed,			18,								(Character['chin_4'] / 10) + 0.0)			-- Chin Hole Size
+	SetPedFaceFeature			(playerPed,			19,								(Character['neck_thickness'] / 10) + 0.0)	-- Neck Thickness
 
 	SetPedHairColor				(playerPed,			Character['hair_color_1'],		Character['hair_color_2'])					-- Hair Color
 	SetPedHeadOverlay			(playerPed, 3,		Character['age_1'],				(Character['age_2'] / 10) + 0.0)			-- Age + opacity
@@ -267,7 +363,7 @@ function ApplySkin(skin, clothes)
 	SetPedComponentVariation	(playerPed, 2,		Character['hair_1'],			Character['hair_2'], 2)						-- Hair
 	SetPedHeadOverlayColor		(playerPed, 1, 1,	Character['beard_3'],			Character['beard_4'])						-- Beard Color
 	SetPedHeadOverlayColor		(playerPed, 2, 1,	Character['eyebrows_3'],		Character['eyebrows_4'])					-- Eyebrows Color
-	SetPedHeadOverlayColor		(playerPed, 4, 1,	Character['makeup_3'],			Character['makeup_4'])						-- Makeup Color
+	SetPedHeadOverlayColor		(playerPed, 4, 2,	Character['makeup_3'],			Character['makeup_4'])						-- Makeup Color
 	SetPedHeadOverlayColor		(playerPed, 8, 1,	Character['lipstick_3'],		Character['lipstick_4'])					-- Lipstick Color
 	SetPedHeadOverlay			(playerPed, 5,		Character['blush_1'],			(Character['blush_2'] / 10) + 0.0)			-- Blush + opacity
 	SetPedHeadOverlayColor		(playerPed, 5, 2,	Character['blush_3'])														-- Blush Color
@@ -276,7 +372,18 @@ function ApplySkin(skin, clothes)
 	SetPedHeadOverlay			(playerPed, 9,		Character['moles_1'],			(Character['moles_2'] / 10) + 0.0)			-- Moles/Freckles + opacity
 	SetPedHeadOverlay			(playerPed, 10,		Character['chest_1'],			(Character['chest_2'] / 10) + 0.0)			-- Chest Hair + opacity
 	SetPedHeadOverlayColor		(playerPed, 10, 1,	Character['chest_3'])														-- Torso Color
-	SetPedHeadOverlay			(playerPed, 11,		Character['bodyb_1'],			(Character['bodyb_2'] / 10) + 0.0)			-- Body Blemishes + opacity
+
+	if Character['bodyb_1'] == -1 then
+		SetPedHeadOverlay		(playerPed, 11,		255,						(Character['bodyb_2'] / 10) + 0.0)		-- Body Blemishes + opacity
+	else
+		SetPedHeadOverlay		(playerPed, 11,		Character['bodyb_1'],		(Character['bodyb_2'] / 10) + 0.0)
+	end
+
+	if Character['bodyb_3'] == -1 then
+		SetPedHeadOverlay		(playerPed, 12,		255,							(Character['bodyb_4'] / 10) + 0.0)
+	else
+		SetPedHeadOverlay		(playerPed, 12,		Character['bodyb_3'],			(Character['bodyb_4'] / 10) + 0.0)			-- Blemishes 'added body effect' + opacity
+	end
 
 	if Character['ears_1'] == -1 then
 		ClearPedProp(playerPed, 2)
