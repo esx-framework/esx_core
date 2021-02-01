@@ -41,6 +41,11 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 	TriggerClientEvent('esx_ambulancejob:setDeadPlayers', -1, deadPlayers)
 end)
 
+RegisterServerEvent('esx_ambulancejob:svsearch')
+AddEventHandler('esx_ambulancejob:svsearch', function()
+  TriggerClientEvent('esx_ambulancejob:clsearch', -1, source)
+end)
+
 RegisterNetEvent('esx_ambulancejob:onPlayerDistress')
 AddEventHandler('esx_ambulancejob:onPlayerDistress', function()
 	if deadPlayers[source] then

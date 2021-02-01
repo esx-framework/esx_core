@@ -56,12 +56,13 @@ Locales['es'] = {
   ['bandage'] = 'Vendas',
   ['max_item'] = 'Ya has ocupado el máximo número de items disponibles.',
   -- F6 Menu
-  ['ems_menu'] = 'Ayuda ciudadana',
-  ['ems_menu_title'] = 'Ambulancia - Ayuda Ciudadana',
-  ['ems_menu_revive'] = 'Reanimar',
-  ['ems_menu_putincar'] = 'Meter en el vehículo',
+  ['ems_menu'] = 'ayuda ciudadana',
+  ['ems_menu_title'] = 'ambulancia - Ayuda Ciudadana',
+  ['ems_menu_revive'] = 'reanimar',
+  ['ems_menu_putincar'] = 'meter en el vehículo',
   ['ems_menu_small'] = 'Curar pequeñas heridas',
   ['ems_menu_big'] = 'Tratar lesiones graves',
+  ['ems_menu_search'] = 'Paciente no encontrado',
   -- Phone
   ['alert_ambulance'] = 'Alerta de ambulancia',
   -- Death
