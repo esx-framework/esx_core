@@ -53,6 +53,7 @@ Locales['br'] = {
   ['have_withdrawn']          = 'você retirou ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']          = 'você depositou ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'ações do chefe',
+  ['invalid_vehicle']         = 'Veículo inválido',
 
   -- sold vehicles
   ['boss_sold']               = 'lista de veículos vendidos',

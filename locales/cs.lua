@@ -53,6 +53,7 @@ Locales['cs'] = {
   ['have_withdrawn']          = 'vybral jsi ~y~x%s~s~ ~b~%s~s~',
   ['have_deposited']          = 'vlozil jsi ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'akce šéfa',
+  ['invalid_vehicle']         = 'neplatné vozidlo',
 
   -- sold vehicles
   ['boss_sold']               = 'seznam prodaných  vozidel',
