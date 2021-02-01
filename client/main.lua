@@ -3,6 +3,12 @@ local firstSpawn, PlayerLoaded = true, false
 isDead, isSearched, medic = false, false, 0
 ESX = nil
 
+AddEventHandler("onClientMapStart", function()
+	exports.spawnmanager:spawnPlayer()
+	Citizen.Wait(5000)
+	exports.spawnmanager:setAutoSpawn(false)
+end)
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -28,24 +34,24 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-AddEventHandler('playerSpawned', function()
+AddEventHandler('esx:onPlayerSpawn', function()
 	isDead = false
-	TriggerServerEvent('esx_ambulancejob:onPlayerSpawn')
 
 	if firstSpawn then
-		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
 		firstSpawn = false
 
-		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
-			if shouldDie and Config.AntiCombatLog then
-				while not PlayerLoaded do
-					Citizen.Wait(1000)
-				end
-
-				ESX.ShowNotification(_U('combatlog_message'))
-				RemoveItemsAfterRPDeath()
+		if Config.AntiCombatLog then
+			while not PlayerLoaded do
+				Citizen.Wait(1000)
 			end
-		end)
+
+			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
+				if shouldDie then
+					ESX.ShowNotification(_U('combatlog_message'))
+					RemoveItemsAfterRPDeath()
+				end
+			end)
+		end
 	end
 end)
 
@@ -343,10 +349,11 @@ function RespawnPed(ped, coords, heading)
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
 	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
 	SetPlayerInvincible(ped, false)
-	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z)
 	ClearPedBloodDamage(ped)
 
-	ESX.UI.Menu.CloseAll()
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx:onPlayerSpawn')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
 end
 
 RegisterNetEvent('esx_phone:loaded')
