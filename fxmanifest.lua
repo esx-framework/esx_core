@@ -1,4 +1,6 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'adamant'
+
+game 'gta5'
 
 description 'ESX Voice Controller'
 
@@ -9,9 +11,10 @@ client_scripts {
 	'locales/br.lua',
 	'locales/en.lua',
 	'locales/fi.lua',
-  'locales/fr.lua',
+	'locales/fr.lua',
 	'locales/pl.lua',
 	'locales/sv.lua',
+	'locales/ko.lua',
 	'config.lua',
 	'client/main.lua'
 }
