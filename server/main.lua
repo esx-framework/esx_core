@@ -64,7 +64,7 @@ end
 MySQL.ready(function()
 	Citizen.Wait(1500)
 
-	MySQL.Async.fetchAll('SELECT * FROM properties', {}, function(properties)
+	MySQL.Async.fetchAll('SELECT * FROM `properties`', {}, function(properties)
 
 		for i=1, #properties, 1 do
 			local entering  = nil
