@@ -1,17 +1,17 @@
-ESX       = nil
-WhiteList = {}
+ESX, WhiteList = nil, {}
+
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function loadWhiteList(cb)
 	Whitelist = {}
 
-	MySQL.Async.fetchAll('SELECT * FROM whitelist', {}, function (identifiers)
-		for i=1, #identifiers, 1 do
-			table.insert(WhiteList, tostring(identifiers[i].identifier):lower())
+	MySQL.Async.fetchAll('SELECT identifier FROM whitelist', {}, function(result)
+		for k,v in ipairs(result) do
+			WhiteList[v.identifier] = true
 		end
 
-		if cb ~= nil then
+		if cb then
 			cb()
 		end
 	end)
@@ -27,7 +27,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()
 
-	local _source = source
+	local playerId, kickReason, identifier = source
 	
 	-- Letting the user know what's going on.
 	deferrals.update(_U('whitelist_check'))
@@ -35,30 +35,28 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	-- Needed, not sure why.
 	Citizen.Wait(100)
 
-	local whitelisted, kickReason, steamID = false, nil, GetPlayerIdentifiers(_source)[1]
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
+	end
 
-	if #WhiteList == 0 then
+	if ESX.Table.SizeOf(WhiteList) == 0 then
 		kickReason = _U('whitelist_empty')
-	elseif not string.match(steamID, 'steam:1') then
-		kickReason = _U('steamid_error')
-	else
-
-		for i = 1, #WhiteList, 1 do
-			if tostring(WhiteList[i]) == tostring(steamID) then
-				whitelisted = true
-				break
-			end
-		end
-
-		if not whitelisted then
-			kickReason = _U('not_whitelisted')
-		end
-
+	elseif not identifier then
+		kickReason = _U('license_missing')
+	elseif not WhiteList[identifier] then
+		kickReason = _U('not_whitelisted')
 	end
 
 	if whitelisted or #xPlayers < Config.MinPlayer then
 		deferrals.done()
 	else
-		deferrals.done(kickReason)
-	end
+	  if kickReason then
+		  deferrals.done(kickReason)
+	  else
+		  deferrals.done()
+	  end
+  end
 end)
