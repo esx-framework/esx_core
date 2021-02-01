@@ -45,6 +45,29 @@ MySQL.ready(function()
 	end)
 end)
 
+AddEventHandler('onResourceStart', function(resourceName)
+	MySQL.Async.fetchAll('SELECT * FROM vehicle_categories', {}, function(_categories)
+		categories = _categories
+
+		MySQL.Async.fetchAll('SELECT * FROM vehicles', {}, function(_vehicles)
+			vehicles = _vehicles
+
+			for k,v in ipairs(vehicles) do
+				for k2,v2 in ipairs(categories) do
+					if v2.name == v.category then
+						vehicles[k].categoryLabel = v2.label
+						break
+					end
+				end
+			end
+
+			-- send information after db has loaded, making sure everyone gets vehicle information
+			TriggerClientEvent('esx_vehicleshop:sendCategories', -1, categories)
+			TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, vehicles)
+		end)
+	end)
+end)
+
 function getVehicleLabelFromModel(model)
 	for k,v in ipairs(vehicles) do
 		if v.model == model then
