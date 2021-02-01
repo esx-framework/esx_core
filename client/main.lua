@@ -12,6 +12,13 @@ Citizen.CreateThread(function()
 
 	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
 		for k,v in pairs(ShopItems) do
+			if (Config.Zones[k] == nil) then
+				Config.Zones[k] = {
+					Items = {},
+					Pos = {}
+				}		
+			end
+					
 			Config.Zones[k].Items = v
 		end
 	end)
