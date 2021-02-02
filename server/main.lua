@@ -2,8 +2,11 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-Citizen.CreateThread(function()
-	Citizen.Wait(1000)
+AddEventHandler('onResourceStart', function(resourceName)
+	if (GetCurrentResourceName() ~= resourceName) then
+	  	return
+	end
+
 	local players = ESX.GetPlayers()
 
 	for _,playerId in ipairs(players) do
