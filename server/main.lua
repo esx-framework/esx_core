@@ -23,8 +23,11 @@ function RemoveOwnedVehicle(plate)
 end
 
 AddEventHandler('onResourceStart', function(resourceName)
-	Wait(500)
+	Wait(1000)
+	SQLVehiclesAndCategories()
+end)
 
+function SQLVehiclesAndCategories()
 	MySQL.Async.fetchAll('SELECT * FROM `vehicle_categories`', {}, function(_categories)
 		categories = _categories
 
@@ -35,7 +38,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 		end)
 
 	end)
-end)
+end
 
 function GetVehiclesAndCategories(categories, vehicles)
 	for k,v in ipairs(vehicles) do
