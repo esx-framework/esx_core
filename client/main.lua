@@ -148,22 +148,22 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 		host = _instance,
 		data = data
 	}
+	Citizen.CreateThread(function()
+		while instanceInvite do
+			Citizen.Wait(0)
 
+			ESX.ShowHelpNotification(_U('press_to_enter'))
+
+			if IsControlJustReleased(0, 38) then
+				EnterInstance(instanceInvite)
+				ESX.ShowNotification(_U('entered_instance'))
+				instanceInvite = nil
+			end
+		end
+	end)
+	
 	Citizen.CreateThread(function()
 		-- Controls for invite
-		Citizen.CreateThread(function()
-			while instanceInvite do
-				Citizen.Wait(0)
-
-				ESX.ShowHelpNotification(_U('press_to_enter'))
-
-				if IsControlJustReleased(0, 38) then
-					EnterInstance(instanceInvite)
-					ESX.ShowNotification(_U('entered_instance'))
-					instanceInvite = nil
-				end
-			end
-		end)
 		Citizen.Wait(10000)
 
 		if instanceInvite then
@@ -171,6 +171,7 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 			instanceInvite = nil
 		end
 	end)
+		
 end)
 
 RegisterInstanceType('default')
