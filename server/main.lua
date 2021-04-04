@@ -36,9 +36,17 @@ function onPlayerJoined(playerId)
 						accounts[account] = money
 					end
 
-					MySQL.Async.execute('INSERT INTO users (accounts, identifier) VALUES (@accounts, @identifier)', {
+					if IsPlayerAceAllowed(playerId, "command") then
+						print(('[es_extended] [^2INFO^7] The player id %s just connected for the first time and will be given the admin group due to ace permissions.'):format(playerId))
+						defaultGroup = "admin"
+					else
+						defaultGroup = "user"
+					end
+
+					MySQL.Async.execute('INSERT INTO users (`accounts`, `identifier`, `group`) VALUES (@accounts, @identifier, @group)', {
 						['@accounts'] = json.encode(accounts),
-						['@identifier'] = identifier
+						['@identifier'] = identifier,
+						['@group'] = defaultGroup
 					}, function(rowsChanged)
 						loadESXPlayer(identifier, playerId)
 					end)
