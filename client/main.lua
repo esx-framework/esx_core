@@ -10,29 +10,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 
-	Citizen.Wait(10000)
-
-	ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function(categories)
-		Categories = categories
-	end)
-
-	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vehicles)
-		Vehicles = vehicles
-	end)
-
-	if Config.EnablePlayerManagement then
-		if ESX.PlayerData.job.name == 'cardealer' then
-			Config.Zones.ShopEntering.Type = 1
-
-			if ESX.PlayerData.job.grade_name == 'boss' then
-				Config.Zones.BossActions.Type = 1
-			end
-
-		else
-			Config.Zones.ShopEntering.Type = -1
-			Config.Zones.BossActions.Type  = -1
-		end
-	end
+	PlayerManagement()
 end)
 
 function getVehicleLabelFromModel(model)
@@ -45,10 +23,17 @@ function getVehicleLabelFromModel(model)
 	return
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerData = xPlayer
+function getVehicles()
+	ESX.TriggerServerCallback('esx_vehicleshop:getCategories', function(categories)
+		Categories = categories
+	end)
 
+	ESX.TriggerServerCallback('esx_vehicleshop:getVehicles', function(vehicles)
+		Vehicles = vehicles
+	end)
+end
+
+function PlayerManagement()
 	if Config.EnablePlayerManagement then
 		if ESX.PlayerData.job.name == 'cardealer' then
 			Config.Zones.ShopEntering.Type = 1
@@ -62,6 +47,14 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 			Config.Zones.BossActions.Type  = -1
 		end
 	end
+end
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+
+	PlayerManagement()
+	getVehicles()
 end)
 
 RegisterNetEvent('esx_vehicleshop:sendCategories')
@@ -72,6 +65,11 @@ end)
 RegisterNetEvent('esx_vehicleshop:sendVehicles')
 AddEventHandler('esx_vehicleshop:sendVehicles', function(vehicles)
 	Vehicles = vehicles
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	PlayerManagement()
 end)
 
 function DeleteDisplayVehicleInsideShop()
@@ -647,24 +645,6 @@ function OpenPutStocksMenu()
 	end)
 end
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
-
-	if Config.EnablePlayerManagement then
-		if ESX.PlayerData.job.name == 'cardealer' then
-			Config.Zones.ShopEntering.Type = 1
-
-			if ESX.PlayerData.job.grade_name == 'boss' then
-				Config.Zones.BossActions.Type = 1
-			end
-		else
-			Config.Zones.ShopEntering.Type = -1
-			Config.Zones.BossActions.Type  = -1
-		end
-	end
-end)
-
 AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 	if zone == 'ShopEntering' then
 
@@ -787,7 +767,7 @@ end)
 -- Enter / Exit marker events & Draw Markers
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(4)
 		local playerCoords = GetEntityCoords(PlayerPedId())
 		local isInMarker, letSleep, currentZone = false, true
 
@@ -827,7 +807,7 @@ end)
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(5)
 
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
