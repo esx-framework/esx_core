@@ -8,15 +8,7 @@ if Config.UseDeferrals then
 		deferrals.defer()
 		local playerId, identifier = source
 		Citizen.Wait(100)
-	
-		if Config.UseSteamID then
-			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-				if string.match(v, 'steam:') then
-					identifier = v
-					break
-				end
-			end
-		else
+
 			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 				if string.match(v, 'license:') then
 					identifier = string.sub(v, 9)
@@ -106,7 +98,7 @@ if Config.UseDeferrals then
 				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 			end
 
-			Citizen.Wait(1000)
+			Citizen.Wait(5)
 			alreadyRegistered[xPlayer.identifier] = true
 			TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
 	
@@ -115,20 +107,13 @@ if Config.UseDeferrals then
 			xPlayer.kick(_('missing_identity'))
 		end
 	end)
+
 elseif not Config.UseDeferrals then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
 		local playerId, identifier = source
-		Citizen.Wait(100)
+		Citizen.Wait(40)
 
-		if Config.UseSteamID then
-			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-				if string.match(v, 'steam:') then
-					identifier = v
-					break
-				end
-			end
-		else
 			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 				if string.match(v, 'license:') then
 					identifier = string.sub(v, 9)
@@ -172,7 +157,7 @@ elseif not Config.UseDeferrals then
 
 	AddEventHandler('onResourceStart', function(resource)
 		if resource == GetCurrentResourceName() then
-			Citizen.Wait(1000)
+			Citizen.Wait(300)
 
 			while not ESX do
 				Citizen.Wait(10)
@@ -206,7 +191,7 @@ elseif not Config.UseDeferrals then
 				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 			end
 
-			Citizen.Wait(1000)
+			Citizen.Wait(10)
 			TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
 
 			playerIdentity[xPlayer.identifier] = nil
