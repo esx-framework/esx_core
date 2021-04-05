@@ -15,7 +15,6 @@ if Config.UseDeferrals then
 					break
 				end
 			end
-		end
 	
 		if identifier then
 			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
@@ -120,7 +119,6 @@ elseif not Config.UseDeferrals then
 					break
 				end
 			end
-		end
 
 		if identifier then
 			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
