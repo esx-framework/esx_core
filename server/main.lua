@@ -23,12 +23,9 @@ function RemoveOwnedVehicle(plate)
 end
 
 AddEventHandler('onResourceStart', function(resourceName)
-	Wait(420)
-	SQLVehiclesAndCategories()
-end)
-
-MySQL.ready(function()
-	SQLVehiclesAndCategories()
+  if resourceName == GetCurrentResourceName() then
+    MySQL.ready(function() SQLVehiclesAndCategories() end)
+  end
 end)
 
 function SQLVehiclesAndCategories()
