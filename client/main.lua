@@ -1,23 +1,15 @@
 local isPaused, isDead, pickups = false, false, {}
 
-if not Config.UseKashacters then
-  Citizen.CreateThread(function()
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
 
-	  while true do
-		  Citizen.Wait(0)
-
-		  if NetworkIsPlayerActive(PlayerId()) then
-			  TriggerServerEvent('esx:onPlayerJoined')
-			  break
-		  end
-	  end
-  end)
-else
-	RegisterNetEvent('esx:kashloaded')
-  AddEventHandler('esx:kashloaded', function()
-    TriggerServerEvent('esx:onPlayerJoined')
-  end)
-end
+		if NetworkIsPlayerActive(PlayerId()) then
+			TriggerServerEvent('esx:onPlayerJoined')
+			break
+		end
+	end
+end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
@@ -30,7 +22,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		RequestModel(defaultModel)
 
 		while not HasModelLoaded(defaultModel) do
-			Citizen.Wait(25)
+			Citizen.Wait(10)
 		end
 
 		SetPlayerModel(PlayerId(), defaultModel)
@@ -68,48 +60,26 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		})
 	end
 
-	local wait = 4000
-if Config.UseKashacters then
---[[
-    ESX.Game.Teleport(PlayerPedId(), {
-        x = playerData.coords.x,
-        y = playerData.coords.y,
-        z = playerData.coords.z + 0.25,
-        heading = playerData.coords.heading
-    }, function()
-    end)
-]]--
-TriggerServerEvent('esx:onPlayerSpawn')
-TriggerEvent('esx:onPlayerSpawn')
-TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-TriggerEvent('esx:restoreLoadout')
-
-Citizen.Wait(0)
-ShutdownLoadingScreen()
-FreezeEntityPosition(PlayerPedId(), false)
-DoScreenFadeIn(0)
-StartServerSyncLoops()
-TriggerEvent('esx:loadingScreenOff')
-
-	else
-		ESX.Game.Teleport(PlayerPedId(), {
-			x = playerData.coords.x,
-			y = playerData.coords.y,
-			z = playerData.coords.z + 0.25,
-			heading = playerData.coords.heading
+	ESX.Game.Teleport(PlayerPedId(), {
+		x = playerData.coords.x,
+		y = playerData.coords.y,
+		z = playerData.coords.z + 0.25,
+		heading = playerData.coords.heading
 	}, function()
-			TriggerServerEvent('esx:onPlayerSpawn')
-			TriggerEvent('esx:onPlayerSpawn')
-			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-			TriggerEvent('esx:restoreLoadout')
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx:onPlayerSpawn')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('esx:restoreLoadout')
 
-			Citizen.Wait(3000)
-			ShutdownLoadingScreen()
-			FreezeEntityPosition(PlayerPedId(), false)
-			DoScreenFadeIn(10000)
-			StartServerSyncLoops()
-			TriggerEvent('esx:loadingScreenOff')
+		Citizen.Wait(4000)
+		ShutdownLoadingScreen()
+		ShutdownLoadingScreenNui()
+		FreezeEntityPosition(PlayerPedId(), false)
+		DoScreenFadeIn(10000)
+		StartServerSyncLoops()
 	end)
+
+	TriggerEvent('esx:loadingScreenOff')
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
