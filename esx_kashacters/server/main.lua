@@ -3,18 +3,30 @@
 -- where identifiers are used (such as users, owned_vehicles, owned_properties etc.)
 ---------------------------------------------------------------------------------------
 
-local IdentifierTables = {
-    {table = "addon_account_data", column = "owner"},
-    {table = "addon_inventory_items", column = "owner"},
-    {table = "billing", column = "identifier"},
-    {table = "datastore_data", column = "owner"},
-    {table = "owned_vehicles", column = "owner"},
-    {table = "owned_properties", column = "owner"},
-    {table = "rented_vehicles", column = "owner"},
-    {table = "users", column = "identifier"},
-    {table = "user_licenses", column = "owner"}
-}
+local IdentifierTables = {}
 
+function GetTables()
+    MySQL.ready(function ()
+        MySQL.Async.fetchAll(" SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'owner'"}, function(result)
+            if result then
+                print(json.encode(result))
+           for k, v in pairs(result) do
+         table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "owner"})
+           end
+        end
+        end)
+           MySQL.Async.fetchAll("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'identifier'"}, function(result)
+            if result then
+                print(json.encode(result))
+           for k, v in pairs(result) do
+         table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "identifier"})
+           end
+        end
+          end)
+      end)
+    end
+    
+GetTables()
 RegisterServerEvent("kashactersS:SetupCharacters")
 AddEventHandler('kashactersS:SetupCharacters', function()
     local src = source
