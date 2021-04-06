@@ -13,21 +13,12 @@ end)
 function onPlayerJoined(playerId)
 	local identifier
 
-  if not Config.UseKashacters then
-	  for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		  if string.match(v, 'license:') then
-			  identifier = string.sub(v, 9)
-			  break
-		  end
-	  end
-  else
-    for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-			if string.match(v, 'license:') then
-					identifier = v
-					break
-			end
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
 	end
-end
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -64,20 +55,11 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	local playerId, identifier = source
 	Citizen.Wait(100)
 
-  if not Config.UseKashacters then
-	  for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		  if string.match(v, 'license:') then
-			  identifier = string.sub(v, 9)
-			  break
-		  end
-	  end
-  else
-    for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-			if string.match(v, 'license:') then
-					identifier = v
-					break
-			end
-	end
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
+		end
 	end
 
 	if identifier then

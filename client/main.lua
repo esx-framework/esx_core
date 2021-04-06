@@ -1,12 +1,7 @@
 local isPaused, isDead, pickups = false, false, {}
 
-if Config.UseKashacters then
-	RegisterNetEvent('esx:kashloaded')
-  AddEventHandler('esx:kashloaded', function()
-    TriggerServerEvent('esx:onPlayerJoined')
-  end)
-else
-	Citizen.CreateThread(function()
+if not Config.UseKashacters then
+  Citizen.CreateThread(function()
 
 	  while true do
 		  Citizen.Wait(0)
@@ -17,6 +12,11 @@ else
 		  end
 	  end
   end)
+else
+	RegisterNetEvent('esx:kashloaded')
+  AddEventHandler('esx:kashloaded', function()
+    TriggerServerEvent('esx:onPlayerJoined')
+  end)
 end
 
 RegisterNetEvent('esx:playerLoaded')
@@ -25,7 +25,6 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerData = playerData
 
 	-- check if player is coming from loading screen
-if not Config.UseKashacters then
 	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
 		local defaultModel = GetHashKey('a_m_y_stbla_02')
 		RequestModel(defaultModel)
@@ -38,7 +37,6 @@ if not Config.UseKashacters then
 		SetPedDefaultComponentVariation(PlayerPedId())
 		SetPedRandomComponentVariation(PlayerPedId(), true)
 		SetModelAsNoLongerNeeded(defaultModel)
-	end
 	end
 
 	-- freeze the player
@@ -70,6 +68,7 @@ if not Config.UseKashacters then
 		})
 	end
 
+	local wait = 4000
 if Config.UseKashacters then
 --[[
     ESX.Game.Teleport(PlayerPedId(), {
@@ -90,30 +89,28 @@ ShutdownLoadingScreen()
 FreezeEntityPosition(PlayerPedId(), false)
 DoScreenFadeIn(0)
 StartServerSyncLoops()
+TriggerEvent('esx:loadingScreenOff')
 
-else
-	ESX.Game.Teleport(PlayerPedId(), {
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading
+	else
+		ESX.Game.Teleport(PlayerPedId(), {
+			x = playerData.coords.x,
+			y = playerData.coords.y,
+			z = playerData.coords.z + 0.25,
+			heading = playerData.coords.heading
 	}, function()
-		TriggerServerEvent('esx:onPlayerSpawn')
-		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-		TriggerEvent('esx:restoreLoadout')
+			TriggerServerEvent('esx:onPlayerSpawn')
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+			TriggerEvent('esx:restoreLoadout')
 
-		Citizen.Wait(4000)
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
-		StartServerSyncLoops()
+			Citizen.Wait(3000)
+			ShutdownLoadingScreen()
+			FreezeEntityPosition(PlayerPedId(), false)
+			DoScreenFadeIn(10000)
+			StartServerSyncLoops()
+			TriggerEvent('esx:loadingScreenOff')
 	end)
-	TriggerEvent('esx:loadingScreenOff')
 end)
-end
-
 
 RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
