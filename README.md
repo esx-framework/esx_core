@@ -58,7 +58,7 @@ YouTube Tutorial: https://www.youtube.com/watch?v=iGfwUCO0RZQ
 
 ### Manually
 
-- Download https://github.com/esx-framework/es_extended/tree/legacy
+- Download https://github.com/esx-framework/es_extended/releases/tag/v1-final
 - Put it in the `resource/[esx]` directory
 - Download https://github.com/ESX-Org/esx_menu_default/releases/latest
 - Put it in the `resource/[esx]/[ui]` directory
