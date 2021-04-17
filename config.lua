@@ -9,7 +9,6 @@ Config.EnableCommands   = true
 -- Changes the identifiers from Rockstar License To Steam. In order to use this, you will have to have
 -- made edits to your ESX in order to use Steam identifiers all around, because new ESX uses Rockstar
 -- license. I just made it easier for people that convert to steam identifiers.
-Config.UseSteamID       = false 
 
 -- [Config.UseDeferrals]
 -- EXPERIMENTAL Character Registration Method. This will allow players to create identities in deferrals
@@ -20,11 +19,11 @@ Config.UseDeferrals     = false -- EXPERIMENTAL Character Registration Method.
 
 
 -- These values are for the second input validation in server/main.lua
-Config.MaxNameLength    = 16
-Config.MinHeight        = 48
+Config.MaxNameLength    = 20
+Config.MinHeight        = 45
 Config.MaxHeight        = 96
 Config.LowestYear       = 1900
-Config.HighestYear      = 2020
+Config.HighestYear      = 2021
 
 Config.FullCharDelete   = false
 Config.EnableDebugging  = false
