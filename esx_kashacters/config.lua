@@ -1,3 +1,3 @@
-local Config = {}
+Config = {}
 
 Config.databaseName = "Changeme"
