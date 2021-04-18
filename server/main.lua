@@ -77,7 +77,7 @@ Citizen.CreateThread(function()
 end)
 
 RegisterServerEvent('esx_jobs:startWork')
-AddEventHandler('esx_jobs:startWork', function(zoneIndex)
+AddEventHandler('esx_jobs:startWork', function(zoneIndex, zoneKey)
 	if not playersWorking[source] then
 		local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -85,7 +85,7 @@ AddEventHandler('esx_jobs:startWork', function(zoneIndex)
 			local jobObject = Config.Jobs[xPlayer.job.name]
 
 			if jobObject then
-				local jobZone = jobObject.Zones[zoneIndex]
+				local jobZone = jobObject.Zones[zoneKey]
 
 				if jobZone and jobZone.Item then
 					playersWorking[source] = {
