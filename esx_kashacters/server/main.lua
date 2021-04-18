@@ -7,7 +7,7 @@ local IdentifierTables = {}
 
 function GetTables()
     MySQL.ready(function ()
-        MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = "plumeesx_11cb80"}, function(result)
+        MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
             if result then
             print(json.encode(result))
            for k, v in pairs(result) do
@@ -15,7 +15,7 @@ function GetTables()
            end
         end
         end)
-           MySQL.Async.fetchAll("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'identifier'"}, function(result)
+        MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
             if result then
                 print(json.encode(result))
            for k, v in pairs(result) do
