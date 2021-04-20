@@ -67,7 +67,7 @@
 }
 
 .menu .head {
-	background-color: #506be6;
+	background-color: #4169E1;
 	text-align: center;
 	height: 40px;
 	line-height: 40px;
@@ -81,14 +81,15 @@
 .menu .menu-items .menu-item {
 	height: 40px;
 	display: block;
-	background-color: #f1f1f1;
-	box-shadow: inset 1px 0px 0px 1px #b8b8b8;
+	background-color: rgba(30, 30, 30, 0.95);
+	box-shadow: inset 2px 0px 0px 1px #4e4e4e;
+	padding: 10px;
 	height: 32px;
 	line-height: 32px;
-	color: #3A3A3A;
+	color: #ffffff;
 	text-align: center;
 }
 
 .menu .menu-items .menu-item.selected {
-	background-color: #d0d0d0;
+	background-color: rgba(50, 50, 50, 0.95);
 }
