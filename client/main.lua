@@ -45,6 +45,7 @@ function PlayerManagement()
 		else
 			Config.Zones.ShopEntering.Type = -1
 			Config.Zones.BossActions.Type  = -1
+			Config.Zones.ResellVehicle.Type = -1
 		end
 	end
 end
