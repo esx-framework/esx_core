@@ -2,8 +2,8 @@ ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
+		Citizen.Wait(5)
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
 	end
 
 	local GUI, MenuType = {}, 'default'
@@ -65,7 +65,7 @@ Citizen.CreateThread(function()
 
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(10)
+			Citizen.Wait(15)
 
 			if IsControlPressed(0, 18) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 				SendNUIMessage({action = 'controlPressed', control = 'ENTER'})
