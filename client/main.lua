@@ -195,7 +195,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 
 		hintToDisplay = "no hint to display"
 		hintIsShowed = false
-		TriggerServerEvent('esx_jobs:startWork', zone.Item)
+		TriggerServerEvent('esx_jobs:startWork', zone.Item, zoneKey)
 	end
 	--nextStep(zone.GPS)
 end)
