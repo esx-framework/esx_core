@@ -9,7 +9,8 @@
 }
 
 .menu {
-	font-family: bankgothic;
+	font-family: 'PT Sans Narrow', sans-serif;
+	font-size: 22px;
 	min-width: 400px;
 	color: #fff;
 	box-shadow: 0px 0px 50px 0px #000;
@@ -67,7 +68,7 @@
 }
 
 .menu .head {
-	background-color: #506be6;
+	background-color: #4682B4;
 	text-align: center;
 	height: 40px;
 	line-height: 40px;
@@ -81,14 +82,15 @@
 .menu .menu-items .menu-item {
 	height: 40px;
 	display: block;
-	background-color: #f1f1f1;
-	box-shadow: inset 1px 0px 0px 1px #b8b8b8;
-	height: 32px;
+	background-color: rgba(40, 40, 40, 1);
 	line-height: 32px;
-	color: #3A3A3A;
+	color: #ffffff;
+	padding: 2px;
 	text-align: center;
 }
 
 .menu .menu-items .menu-item.selected {
-	background-color: #d0d0d0;
+	background-color: rgba(20, 20, 20, 1);
+	border-top: 2px solid 	#e76767;
+	border-bottom: 2px solid		#e76767;
 }

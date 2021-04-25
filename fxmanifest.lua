@@ -19,9 +19,7 @@ files {
 	'html/ui.html',
 	'html/css/app.css',
 	'html/js/mustache.min.js',
-	'html/js/app.js',
-	'html/fonts/pdown.ttf',
-	'html/fonts/bankgothic.ttf'
+	'html/js/app.js'
 }
 
 dependencies {
