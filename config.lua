@@ -16,7 +16,6 @@ Config.Zones = {
 				label = bread,
 				price = 100
 			}
-		}
 		},
 		Pos = {
 			vector3(373.8, 325.8, 102.5),
@@ -28,7 +27,7 @@ Config.Zones = {
 			vector3(2678.9, 3280.6, 54.2),
 			vector3(1729.2, 6414.1, 34.0)
 	},
-	Size  = {x = 1.0, y = 1.0, z = 1.0}
+	Size  = {x = 1.0, y = 1.0, z = 1.0},
 	Type  = 59,
 	Color = {r = 102, g = 102, b = 204, a = 255}
 },
@@ -85,5 +84,5 @@ Config.Zones = {
 	Size  = 1.0,
 	Type  = 59,
 	Color = {r = 102, g = 102, b = 204, a = 255}
-},
+}
 }
