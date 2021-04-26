@@ -77,7 +77,7 @@ end)
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		for i = 1, #v.Pos, 1 do
-			if v.Show then
+			if v.ShowBlip then
 			local blip = AddBlipForCoord(v.Pos[i])
 
 			SetBlipSprite (blip, v.Type)
@@ -105,10 +105,12 @@ Citizen.CreateThread(function()
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
+					if v.ShowMarker then
 					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
+				  end
 					letSleep = false
 
-					if distance < Config.MarkerSize.x then
+					if distance < 2.0 then
 						isInMarker  = true
 						currentZone = k
 						lastZone    = k
