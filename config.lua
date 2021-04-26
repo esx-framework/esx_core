@@ -32,7 +32,8 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = 25
+	Color = 25,
+	Show = true -- show blip 
 },
 
 	RobsLiquor = {
@@ -61,7 +62,8 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = 25
+	Color = 25,
+	Show = true -- show blip 
 },
 
 	LTDgasoline = {
@@ -86,6 +88,7 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = 25
+	Color = 25,
+	Show = true -- show blip 
 }
 }

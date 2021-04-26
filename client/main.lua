@@ -77,6 +77,7 @@ end)
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		for i = 1, #v.Pos, 1 do
+			if v.Show then
 			local blip = AddBlipForCoord(v.Pos[i])
 
 			SetBlipSprite (blip, v.Type)
@@ -88,6 +89,7 @@ Citizen.CreateThread(function()
 			AddTextComponentSubstringPlayerName(_U('shops'))
 			EndTextCommandSetBlipName(blip)
 		end
+	end
 	end
 end)
 
