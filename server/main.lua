@@ -3,30 +3,6 @@ local ShopItems = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT * FROM shops LEFT JOIN items ON items.name = shops.item', {}, function(shopResult)
-		for i=1, #shopResult, 1 do
-			if shopResult[i].name then
-				if ShopItems[shopResult[i].store] == nil then
-					ShopItems[shopResult[i].store] = {}
-				end
-
-				table.insert(ShopItems[shopResult[i].store], {
-					label = shopResult[i].label,
-					item  = shopResult[i].item,
-					price = shopResult[i].price,
-				})
-			else
-				print(('esx_shops: invalid item "%s" found!'):format(shopResult[i].item))
-			end
-		end
-	end)
-end)
-
-ESX.RegisterServerCallback('esx_shops:requestDBItems', function(source, cb)
-	cb(ShopItems)
-end)
-
 RegisterServerEvent('esx_shops:buyItem')
 AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 	local _source = source
@@ -34,7 +10,6 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 
 	amount = ESX.Math.Round(amount)
 
-	-- is the player trying to exploit?
 	if amount < 0 then
 		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to exploit the shop!')
 		return
@@ -44,10 +19,11 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 	local price = 0
 	local itemLabel = ''
 
-	for i=1, #ShopItems[zone], 1 do
-		if ShopItems[zone][i].item == itemName then
-			price = ShopItems[zone][i].price
-			itemLabel = ShopItems[zone][i].label
+	for i=1, #Config.Zones[zone].Items, 1 do
+		local item = Config.Zones[zone].Items[i]
+		if item.name == itemName then
+			price = item.price
+			itemLabel = item.label
 			break
 		end
 	end

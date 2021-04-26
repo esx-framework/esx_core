@@ -10,18 +10,6 @@ Citizen.CreateThread(function()
 
 	Citizen.Wait(5000)
 
-	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
-		for k,v in pairs(ShopItems) do
-			if (Config.Zones[k] == nil) then
-				Config.Zones[k] = {
-					Items = {},
-					Pos = {}
-				}		
-			end
-					
-			Config.Zones[k].Items = v
-		end
-	end)
 end)
 
 function OpenShopMenu(zone)
@@ -91,9 +79,9 @@ Citizen.CreateThread(function()
 		for i = 1, #v.Pos, 1 do
 			local blip = AddBlipForCoord(v.Pos[i])
 
-			SetBlipSprite (blip, 52)
-			SetBlipScale  (blip, 1.0)
-			SetBlipColour (blip, 2)
+			SetBlipSprite (blip, v.Type[i])
+			SetBlipScale  (blip, v.Size[i])
+			SetBlipColour (blip, v.Color[i])
 			SetBlipAsShortRange(blip, true)
 
 			BeginTextCommandSetBlipName('STRING')
@@ -115,10 +103,10 @@ Citizen.CreateThread(function()
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
-					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, nil, nil, false)
+					DrawMarker(v.Type[i], v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size[i].x, v.Size[i].y, v.Size[i].z, v.Color[i].r, v.Color[i].g, v.Color[i].b, 100, false, true, 2, false, nil, nil, false)
 					letSleep = false
 
-					if distance < Config.Size.x then
+					if distance < v.Size[i].x then
 						isInMarker  = true
 						currentZone = k
 						lastZone    = k
