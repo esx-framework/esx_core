@@ -436,7 +436,7 @@ function StartServerSyncLoops()
 end
 
 Citizen.CreateThread(function()
-	while true do
+	while Config.EnableDefaultInventory do
 		Citizen.Wait(0)
 
 		if IsControlJustReleased(0, 289) then
