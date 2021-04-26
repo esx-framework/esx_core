@@ -763,7 +763,7 @@ ESX.ShowInventory = function()
 
 	for k,v in pairs(ESX.PlayerData.accounts) do
 		if v.money > 0 then
-			local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
+		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
 			local canDrop = v.name ~= 'bank'
 
 			table.insert(elements, {
@@ -776,7 +776,7 @@ ESX.ShowInventory = function()
 				canRemove = canDrop
 			})
 		end
-	end
+	end 
 
 	for k,v in ipairs(ESX.PlayerData.inventory) do
 		if v.count > 0 then

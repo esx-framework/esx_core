@@ -1,3 +1,4 @@
+
 ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
 	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
 end, false, {help = _U('command_setcoords'), validate = true, arguments = {
@@ -66,7 +67,7 @@ ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
 	if args.playerId.hasWeapon(args.weapon) then
 		showError(_U('command_giveweapon_hasalready'))
 	else
-		xPlayer.addWeapon(args.weapon, args.ammo)
+		args.playerId.addWeapon(args.weapon, args.ammo)
 	end
 end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
@@ -79,10 +80,10 @@ ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, show
 		local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
 
 		if component then
-			if xPlayer.hasWeaponComponent(args.weaponName, args.componentName) then
+			if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
 				showError(_U('command_giveweaponcomponent_hasalready'))
 			else
-				xPlayer.addWeaponComponent(args.weaponName, args.componentName)
+				args.playerId.addWeaponComponent(args.weaponName, args.componentName)
 			end
 		else
 			showError(_U('command_giveweaponcomponent_invalid'))
@@ -138,3 +139,26 @@ end, true, {help = _U('command_save'), validate = true, arguments = {
 ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
 	ESX.SavePlayers()
 end, true, {help = _U('command_saveall')})
+
+ESX.RegisterCommand('currentgroup', {"user", "admin"}, function(xPlayer, args, showError)
+	TriggerClientEvent('chatMessage', xPlayer.source, "You are currently: "..xPlayer.getGroup()))
+end, true)
+
+ESX.RegisterCommand('getcoords', "admin", function(xPlayer, args, showError)
+	print("".. xPlayer.getName().. ": "xPlayer.getCoords(true))
+end, true)
+
+ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
+			TriggerEvent("esx:admin:tpm", xPlayer.source, args.playerid)
+end, true, {help = _U('command_save'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}}))
+
+ESX.RegisterCommand('getplayers', "admin", function(xPlayer, args, showError)
+	local xAll = ESX.GetPlayers()
+	print("^2"..#xAll.." ^3online player(s)^0")
+	for i=1, #xAll, 1 do
+		local xPlayer = ESX.GetPlayerFromId(xAll[i])
+		print("^4[ ^2ID : ^3"..xPlayer.source.." ^0| ^2Name : ^3"..xPlayer.getName().." ^0 | ^2Group : ^3"..xPlayer.getGroup().." ^4]^0\n")
+	end
+end, true)
