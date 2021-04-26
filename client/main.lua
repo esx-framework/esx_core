@@ -20,7 +20,7 @@ function OpenShopMenu(zone)
 		table.insert(elements, {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
 			itemLabel = item.label,
-			item       = item.item,
+			item       = item.name,
 			price      = item.price,
 
 			-- menu properties
@@ -79,9 +79,9 @@ Citizen.CreateThread(function()
 		for i = 1, #v.Pos, 1 do
 			local blip = AddBlipForCoord(v.Pos[i])
 
-			SetBlipSprite (blip, v.Type[i])
-			SetBlipScale  (blip, v.Size[i])
-			SetBlipColour (blip, v.Color[i])
+			SetBlipSprite (blip, v.Type)
+			SetBlipScale  (blip, v.Size)
+			SetBlipColour (blip, v.Color)
 			SetBlipAsShortRange(blip, true)
 
 			BeginTextCommandSetBlipName('STRING')

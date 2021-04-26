@@ -10,13 +10,13 @@ Config.Zones = {
 	TwentyFourSeven = {
 		Items = {
 			{
-				name = bread,
-				label = bread,
+				name = "bread",
+				label = "bread",
 				price = 100
 			},
 			{
-				name = water,
-				label = bread,
+				name = "water",
+				label = "water",
 				price = 100
 			}
 		},
@@ -32,19 +32,19 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = {r = 102, g = 102, b = 204, a = 255}
+	Color = 25
 },
 
 	RobsLiquor = {
 		Items = {
 			{
-				name = bread,
-				label = bread,
+				name = "bread",
+				label = "bread",
 				price = 100
 			},
 			{
-				name = water,
-				label = bread,
+				name = "water",
+				label = "water",
 				price = 100
 			}
 		},
@@ -61,19 +61,19 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = {r = 102, g = 102, b = 204, a = 255}
+	Color = 25
 },
 
 	LTDgasoline = {
 		Items = {
 			{
-				name = bread,
-				label = bread,
+				name = "bread",
+				label = "bread",
 				price = 100
 			},
 			{
-				name = water,
-				label = bread,
+				name = "water",
+				label = "water",
 				price = 100
 			}
 		},
@@ -86,6 +86,6 @@ Config.Zones = {
 	},
 	Size  = 1.0,
 	Type  = 59,
-	Color = {r = 102, g = 102, b = 204, a = 255}
+	Color = 25
 }
 }
