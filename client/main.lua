@@ -103,10 +103,10 @@ Citizen.CreateThread(function()
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
-					DrawMarker(v.Type[i], v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size[i].x, v.Size[i].y, v.Size[i].z, v.Color[i].r, v.Color[i].g, v.Color[i].b, 100, false, true, 2, false, nil, nil, false)
+					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 					letSleep = false
 
-					if distance < v.Size[i].x then
+					if distance < Config.MarkerSize.x then
 						isInMarker  = true
 						currentZone = k
 						lastZone    = k

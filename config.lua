@@ -1,5 +1,8 @@
 Config = {}
 Config.DrawDistance = 100
+Config.MarkerSize = {x = 1.1, y = 1.1, z = 0.9}
+Config.MarkerType =  21
+Config.MarkerColor = {r = 102, g = 102, b = 204, a = 255}
 Config.Locale = 'en'
 
 Config.Zones = {
@@ -27,7 +30,7 @@ Config.Zones = {
 			vector3(2678.9, 3280.6, 54.2),
 			vector3(1729.2, 6414.1, 34.0)
 	},
-	Size  = {x = 1.0, y = 1.0, z = 1.0},
+	Size  = 1.0,
 	Type  = 59,
 	Color = {r = 102, g = 102, b = 204, a = 255}
 },
