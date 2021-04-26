@@ -85,5 +85,5 @@ Config.Zones = {
 	Size  = 1.0,
 	Type  = 59,
 	Color = {r = 102, g = 102, b = 204, a = 255}
-}
+},
 }
