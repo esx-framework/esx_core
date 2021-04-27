@@ -10,18 +10,6 @@ Citizen.CreateThread(function()
 
 	Citizen.Wait(5000)
 
-	ESX.TriggerServerCallback('esx_shops:requestDBItems', function(ShopItems)
-		for k,v in pairs(ShopItems) do
-			if (Config.Zones[k] == nil) then
-				Config.Zones[k] = {
-					Items = {},
-					Pos = {}
-				}		
-			end
-					
-			Config.Zones[k].Items = v
-		end
-	end)
 end)
 
 function OpenShopMenu(zone)
@@ -32,7 +20,7 @@ function OpenShopMenu(zone)
 		table.insert(elements, {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
 			itemLabel = item.label,
-			item       = item.item,
+			item       = item.name,
 			price      = item.price,
 
 			-- menu properties
@@ -89,17 +77,19 @@ end)
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		for i = 1, #v.Pos, 1 do
+			if v.ShowBlip then
 			local blip = AddBlipForCoord(v.Pos[i])
 
-			SetBlipSprite (blip, 52)
-			SetBlipScale  (blip, 1.0)
-			SetBlipColour (blip, 2)
+			SetBlipSprite (blip, v.Type)
+			SetBlipScale  (blip, v.Size)
+			SetBlipColour (blip, v.Color)
 			SetBlipAsShortRange(blip, true)
 
 			BeginTextCommandSetBlipName('STRING')
 			AddTextComponentSubstringPlayerName(_U('shops'))
 			EndTextCommandSetBlipName(blip)
 		end
+	end
 	end
 end)
 
@@ -115,10 +105,12 @@ Citizen.CreateThread(function()
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
-					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, nil, nil, false)
+					if v.ShowMarker then
+					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
+				  end
 					letSleep = false
 
-					if distance < Config.Size.x then
+					if distance < 2.0 then
 						isInMarker  = true
 						currentZone = k
 						lastZone    = k
