@@ -284,3 +284,12 @@ ESX.DoesJobExist = function(job, grade)
 
 	return false
 end
+
+ESX.GetPlayerIdentifier = function(playerId)
+  local identifiers = GetPlayerIdentifiers(playerId)
+  for _,id in ipairs(identifiers) do
+    if id:find(Config.IdentifierPrefix) then
+			return id:gsub(string.format("%s:","licence"),"")
+    end
+  end
+end

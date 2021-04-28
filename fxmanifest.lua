@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
-version '1.2.0'
+version 'legacy'
 
 server_scripts {
 	'@async/async.lua',

@@ -1,6 +1,6 @@
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
-	SetGameType('Roleplay')
+	SetGameType('ESX Roleplay')
 end)
 
 RegisterNetEvent('esx:onPlayerJoined')
@@ -10,13 +10,23 @@ AddEventHandler('esx:onPlayerJoined', function()
 	end
 end)
 
+if Config.UseMulticharacter then
+AddEventHandler("esx:overwriteIdentifierMethod",function(ref)
+  ESX.GetPlayerIdentifier = ref
+end)
+end
+
 function onPlayerJoined(playerId)
 	local identifier
 
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			identifier = string.sub(v, 9)
-			break
+	if Config.UseMulticharacter then
+		local identifier = ESX.GetPlayerIdentifier(playerId)
+	else
+		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+			if string.match(v, 'license:') then
+				identifier = string.sub(v, 9)
+				break
+			end
 		end
 	end
 
@@ -63,13 +73,17 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	local playerId, identifier = source
 	Citizen.Wait(100)
 
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			identifier = string.sub(v, 9)
-			break
+
+	if Config.UseMulticharacter then
+		local identifier = ESX.GetPlayerIdentifier(playerId)
+	else
+		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+			if string.match(v, 'license:') then
+				identifier = string.sub(v, 9)
+				break
+			end
 		end
 	end
-
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
@@ -80,7 +94,6 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 		deferrals.done('There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
 	end
 end)
-
 
 function loadESXPlayer(identifier, playerId)
 	local tasks = {}

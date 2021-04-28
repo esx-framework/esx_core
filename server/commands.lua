@@ -20,6 +20,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
+	if not args.car then args.car = "baller2" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
@@ -124,6 +125,8 @@ end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
+	if not args.playerId then args.playerId = xPlayer.source end
+	if Config.DisableSuperadmin and args.group == "superadmin" then args.group = "admin" end
 	args.playerId.setGroup(args.group)
 end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
@@ -141,18 +144,12 @@ ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
 end, true, {help = _U('command_saveall')})
 
 ESX.RegisterCommand('currentgroup', {"user", "admin"}, function(xPlayer, args, showError)
-	TriggerClientEvent('chatMessage', xPlayer.source, "You are currently: "..xPlayer.getGroup()))
+	print("You are currently: ".. xPlayer.getGroup())
 end, true)
 
 ESX.RegisterCommand('getcoords', "admin", function(xPlayer, args, showError)
-	print("".. xPlayer.getName().. ": "xPlayer.getCoords(true))
+	print("".. xPlayer.getName().. ": ".. xPlayer.getCoords(true))
 end, true)
-
-ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
-			TriggerEvent("esx:admin:tpm", xPlayer.source, args.playerid)
-end, true, {help = _U('command_save'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-}}))
 
 ESX.RegisterCommand('getplayers', "admin", function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()

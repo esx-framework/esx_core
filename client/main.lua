@@ -5,6 +5,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if NetworkIsPlayerActive(PlayerId()) then
+			if not Config.UseMulticharacter end
 			TriggerServerEvent('esx:onPlayerJoined')
 			break
 		end
@@ -39,8 +40,10 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	NetworkSetFriendlyFireOption(true)
 
 	-- disable wanted level
+if not Config.EnableWantedLevel then
 	ClearPlayerWantedLevel(PlayerId())
 	SetMaxWantedLevel(0)
+end
 
 	if Config.EnableHud then
 		for k,v in ipairs(playerData.accounts) do
