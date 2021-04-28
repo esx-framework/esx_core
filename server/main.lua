@@ -522,5 +522,60 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 	cb(players)
 end)
 
+-- version check
+Citizen.CreateThread(
+	function()
+		local vRaw = LoadResourceFile(GetCurrentResourceName(), 'version.json')
+		if vRaw and config.versionCheck then
+			local v = json.decode(vRaw)
+			PerformHttpRequest(
+				'https://raw.githubusercontent.com/Mycroft-Studios/es_extended/legacy/version.json',
+				function(code, res, headers)
+					if code == 200 then
+						local rv = json.decode(res)
+						if rv.version ~= v.version then
+							if rv.commit ~= v.commit then 
+							print(
+								([[
+
+-------------------------------------------------------
+URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
+COMMIT UPDATE: %s AVAILABLE
+CHANGELOG: %s
+-------------------------------------------------------
+]]):format(
+									rv.commit,
+									rv.changelog
+								)
+							)
+						else
+							print(
+								([[
+
+-------------------------------------------------------
+Your Es-extended is the latest version!
+Version: %s
+COMMIT: %s
+CHANGELOG: %s
+-------------------------------------------------------
+]]):format(
+								 	rv.version
+									rv.commit,
+									rv.changelog
+								)
+							)
+						end
+						end
+					else
+						print('ERROR: Es-Extended unable to check version')
+					end
+				end,
+				'GET'
+			)
+		end
+	end
+)
+
+
 ESX.StartDBSync()
 ESX.StartPayCheck()
