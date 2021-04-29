@@ -88,8 +88,8 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 					identifier = v
 					break
 				else
-				identifier = string.sub(v, 9)
-				break
+					identifier = string.sub(v, 9)
+					break
 				end	
 			end
 		end

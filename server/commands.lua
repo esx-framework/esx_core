@@ -151,6 +151,37 @@ ESX.RegisterCommand('getcoords', "admin", function(xPlayer, args, showError)
 	print("".. xPlayer.getName().. ": ".. xPlayer.getCoords(true))
 end, true)
 
+ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
+	xPlayer.triggerEvent("esx:tpm")
+end, true)
+
+ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
+	local xTarget = ESX.GetPlayerFromId(args.playerId)
+	if xTarget then
+		local targetCoords = xTarget.getCoords()
+		xPlayer.setCoords(targetCoords)
+		xPlayer.TriggerEvent("chatMessage", "Successfully Teleported")
+	else
+		xPlayer.TriggerEvent("chatMessage", "ERROR: Player Not Online!")
+	end
+end, true, {help = _U('goto'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
+	local xTarget = ESX.GetPlayerFromId(args.playerId)
+	if xTarget then
+		local playerCoords = xPlayer.getCoords()
+		xTarget.setCoords(playerCoords)
+		xPlayer.TriggerEvent("chatMessage", "Successfully Brought Player")
+	else
+		xPlayer.TriggerEvent("chatMessage", "ERROR: Player Not Online!")
+	end
+end, true, {help = _U('goto'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+
 ESX.RegisterCommand('getplayers', "admin", function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()
 	print("^2"..#xAll.." ^3online player(s)^0")

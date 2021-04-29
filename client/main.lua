@@ -1,7 +1,13 @@
 local isPaused, isDead, pickups = false, false, {}
 
+if Config.UseKashacters then
+	RegisterNetEvent('esx:kashloaded')
+	AddEventHandler('esx:kashloaded', function()
+    TriggerServerEvent('esx:onPlayerJoined')
+	end)
+else
 Citizen.CreateThread(function()
-	while not Config.UseKashacters do
+	while true do
 		Citizen.Wait(0)
 
 		if NetworkIsPlayerActive(PlayerId()) then
@@ -10,12 +16,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-if Config.UseKashacters then
-	RegisterNetEvent('esx:kashloaded')
-	AddEventHandler('esx:kashloaded', function()
-    TriggerServerEvent('esx:onPlayerJoined')
-	end)
 end
 
 RegisterNetEvent('esx:playerLoaded')
@@ -23,8 +23,8 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
-	if Config.UseKashacters then
-	-- check if player is coming from loading screen
+	if not Config.UseKashacters then
+
 	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
 		local defaultModel = GetHashKey('a_m_y_stbla_02')
 		RequestModel(defaultModel)
@@ -37,11 +37,11 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		SetPedDefaultComponentVariation(PlayerPedId())
 		SetPedRandomComponentVariation(PlayerPedId(), true)
 		SetModelAsNoLongerNeeded(defaultModel)
-		end
 	end
 
-	-- freeze the player
+
 	FreezeEntityPosition(PlayerPedId(), true)
+end
 
 	-- enable PVP
 	if Config.EnablePVP then
@@ -524,4 +524,29 @@ Citizen.CreateThread(function()
 			Citizen.Wait(500)
 		end
 	end
+end)
+
+RegisterNetEvent("esx:tpm")
+AddEventHandler("esx:tpm", function()
+    local WaypointHandle = GetFirstBlipInfoId(8)
+    if DoesBlipExist(WaypointHandle) then
+        local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+
+        for height = 1, 1000 do
+            SetPedCoordsKeepVehicle(PlayerPedId(), waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+            local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+            if foundGround then
+                SetPedCoordsKeepVehicle(PlayerPedId(), waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+                break
+            end
+
+            Citizen.Wait(5)
+        end
+        TriggerEvent('chatMessage', "Successfully Teleported")
+    else
+        TriggerEvent('chatMessage', "No Waypoint Set")
+    end
 end)
