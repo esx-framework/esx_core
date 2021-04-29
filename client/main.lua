@@ -5,7 +5,6 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if NetworkIsPlayerActive(PlayerId()) then
-			if not Config.UseMulticharacter end
 			TriggerServerEvent('esx:onPlayerJoined')
 			break
 		end
@@ -45,9 +44,10 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 	FreezeEntityPosition(PlayerPedId(), true)
 
 	-- enable PVP
-	SetCanAttackFriendly(PlayerPedId(), true, false)
-	NetworkSetFriendlyFireOption(true)
-
+	if Config.EnablePVP then
+		SetCanAttackFriendly(PlayerPedId(), true, false)
+		NetworkSetFriendlyFireOption(true)
+  end
 	-- disable wanted level
 if not Config.EnableWantedLevel then
 	ClearPlayerWantedLevel(PlayerId())
