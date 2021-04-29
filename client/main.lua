@@ -1,7 +1,7 @@
 local isPaused, isDead, pickups = false, false, {}
 
 Citizen.CreateThread(function()
-	while true do
+	while not Config.UseKashacters do
 		Citizen.Wait(0)
 
 		if NetworkIsPlayerActive(PlayerId()) then
@@ -12,11 +12,19 @@ Citizen.CreateThread(function()
 	end
 end)
 
+if Config.UseKashacters then
+	RegisterNetEvent('esx:kashloaded')
+	AddEventHandler('esx:kashloaded', function()
+    TriggerServerEvent('esx:onPlayerJoined')
+	end)
+end
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
+	if Config.UseKashacters then
 	-- check if player is coming from loading screen
 	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
 		local defaultModel = GetHashKey('a_m_y_stbla_02')
@@ -30,6 +38,7 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 		SetPedDefaultComponentVariation(PlayerPedId())
 		SetPedRandomComponentVariation(PlayerPedId(), true)
 		SetModelAsNoLongerNeeded(defaultModel)
+		end
 	end
 
 	-- freeze the player
@@ -63,24 +72,46 @@ end
 		})
 	end
 
-	ESX.Game.Teleport(PlayerPedId(), {
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading
-	}, function()
-		TriggerServerEvent('esx:onPlayerSpawn')
-		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-		TriggerEvent('esx:restoreLoadout')
+		if Config.UseKashacters then 
+			--[[
+   	 ESX.Game.Teleport(PlayerPedId(), {
+        	x = playerData.coords.x,
+        	y = playerData.coords.y,
+      	  z = playerData.coords.z + 0.25,
+    	    heading = playerData.coords.heading
+   	 }, function()
+  	  end)
+	]]--
+	TriggerServerEvent('esx:onPlayerSpawn')
+	TriggerEvent('esx:onPlayerSpawn')
+	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+	TriggerEvent('esx:restoreLoadout')
 
-		Citizen.Wait(4000)
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
-		StartServerSyncLoops()
+	Citizen.Wait(0)
+	ShutdownLoadingScreen()
+	FreezeEntityPosition(PlayerPedId(), false)
+	DoScreenFadeIn(0)
+	StartServerSyncLoops()
+	else 
+		ESX.Game.Teleport(PlayerPedId(), {
+			x = playerData.coords.x,
+			y = playerData.coords.y,
+			z = playerData.coords.z + 0.25,
+			heading = playerData.coords.heading
+		}, function()
+			TriggerServerEvent('esx:onPlayerSpawn')
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+			TriggerEvent('esx:restoreLoadout')
+
+			Citizen.Wait(4000)
+			ShutdownLoadingScreen()
+			ShutdownLoadingScreenNui()
+			FreezeEntityPosition(PlayerPedId(), false)
+			DoScreenFadeIn(10000)
+			StartServerSyncLoops()
 	end)
+end
 
 	TriggerEvent('esx:loadingScreenOff')
 end)
@@ -179,11 +210,6 @@ AddEventHandler('esx:removeInventoryItem', function(item, count, showNotificatio
 	end
 end)
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
-end)
-
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
 	local playerPed = PlayerPedId()
@@ -248,13 +274,14 @@ AddEventHandler('esx:teleport', function(coords)
 end)
 
 RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
+AddEventHandler('esx:setJob', function(Job)
 	if Config.EnableHud then
 		ESX.UI.HUD.UpdateElement('job', {
-			job_label = job.label,
-			grade_label = job.grade_label
+			job_label = Job.label,
+			grade_label = Job.grade_label
 		})
 	end
+	ESX.SetPlayerData(job, Job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')

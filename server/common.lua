@@ -54,7 +54,7 @@ MySQL.ready(function()
 		end)
 	end)
 
-	print('[es_extended] [^2INFO^7] ESX developed by ESX-Org has been initialized')
+	print('[es_extended] [^2INFO^7] ESX Legacy developed by The ESX-Framework Team has been initialized')
 end)
 
 RegisterServerEvent('esx:clientLog')

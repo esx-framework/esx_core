@@ -18,4 +18,5 @@ Config.EnableDefaultInventory = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.DisableSuperadmin      = true -- Disable the use of superadmin
 Config.UseMulticharacter      = false -- WIP, ADDS multicharacter features
+Config.UseKashacters          = true
 

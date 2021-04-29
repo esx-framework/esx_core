@@ -24,8 +24,13 @@ function onPlayerJoined(playerId)
 	else
 		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 			if string.match(v, 'license:') then
+				if Config.UseKashacters then 
+					identifier = v
+					break
+				else
 				identifier = string.sub(v, 9)
 				break
+				end	
 			end
 		end
 	end
@@ -79,11 +84,17 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	else
 		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 			if string.match(v, 'license:') then
+				if Config.UseKashacters then 
+					identifier = v
+					break
+				else
 				identifier = string.sub(v, 9)
 				break
+				end	
 			end
 		end
 	end
+
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
@@ -538,7 +549,7 @@ Citizen.CreateThread(
 							print(
 								([[
 
--------------------------------------------------------
+^1-------------------------------------------------------
 URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
 COMMIT UPDATE: %s AVAILABLE
 CHANGELOG: %s
@@ -552,12 +563,12 @@ CHANGELOG: %s
 							print(
 								([[
 
--------------------------------------------------------
-Your Es-extended is the latest version!
-Version: %s
-COMMIT: %s
-CHANGELOG: %s
--------------------------------------------------------
+^8-------------------------------------------------------
+^2Your Es-extended is the latest version!
+^5Version:^0 %s
+^5COMMIT:^0 %s
+^5CHANGELOG:^0 %s
+^8-------------------------------------------------------
 ]]):format(
 								 	rv.version
 									rv.commit,
