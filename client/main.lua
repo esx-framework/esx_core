@@ -8,8 +8,10 @@ AddEventHandler('esx_rpchat:sendProximityMessage', function(playerId, title, mes
 	local playerCoords = GetEntityCoords(playerPed)
 	local targetCoords = GetEntityCoords(targetPed)
 
-	if target == player or #(playerCoords - targetCoords) < 20 then
-		TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
+	if target ~= -1 then
+		if target == player or #(playerCoords - targetCoords) < 20 then
+			TriggerEvent('chat:addMessage', {args = {title, message}, color = color})
+		end
 	end
 end)
 
