@@ -60,7 +60,7 @@ end
 			grade_label = playerData.job.grade_label
 		})
 	end
-	
+
 	ESX.Game.Teleport(PlayerPedId(), {
 		x = playerData.coords.x,
 		y = playerData.coords.y,
