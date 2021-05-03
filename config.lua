@@ -16,8 +16,5 @@ Config.PaycheckInterval       = 7 * 60000 -- how often to recieve pay checks in 
 Config.EnableDebug            = false -- Use Debug options?
 Config.EnableDefaultInventory = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
-Config.DisableSuperadmin      = true -- Disable the use of superadmin
 Config.EnablePVP              = true -- Allow Player to player combat
-Config.UseMulticharacter      = false -- WIP, ADDS multicharacter features
-Config.UseKashacters          = true
 

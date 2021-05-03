@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.4",
+	"commit" : "1.1.5",
 	"changelog": "Performance Improvements; Config Updates; Bug Fixes"
 }

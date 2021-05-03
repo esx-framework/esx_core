@@ -1,29 +1,19 @@
 local isPaused, isDead, pickups = false, false, {}
 
-if Config.UseKashacters then
-	RegisterNetEvent('esx:kashloaded')
-	AddEventHandler('esx:kashloaded', function()
-    TriggerServerEvent('esx:onPlayerJoined')
-	end)
-else
 Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-
-		if NetworkIsPlayerActive(PlayerId()) then
+	while NetworkIsPlayerActive(PlayerId()) do
+		Citizen.Wait(5)
 			TriggerServerEvent('esx:onPlayerJoined')
 			break
-		end
 	end
 end)
-end
+
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
-	if not Config.UseKashacters then
 
 	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
 		local defaultModel = GetHashKey('a_m_y_stbla_02')
@@ -41,7 +31,6 @@ AddEventHandler('esx:playerLoaded', function(playerData)
 
 
 	FreezeEntityPosition(PlayerPedId(), true)
-end
 
 	-- enable PVP
 	if Config.EnablePVP then
@@ -72,33 +61,6 @@ end
 		})
 	end
 
-		if Config.UseKashacters then 
-			--[[
-   	 ESX.Game.Teleport(PlayerPedId(), {
-        	x = playerData.coords.x,
-        	y = playerData.coords.y,
-      	  z = playerData.coords.z + 0.25,
-    	    heading = playerData.coords.heading
-   	 }, function()
-  	  end)
-	]]--
-	TriggerServerEvent('esx:onPlayerSpawn')
-	TriggerEvent('esx:onPlayerSpawn')
-	TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-	TriggerEvent('esx:restoreLoadout')
-
-	Citizen.Wait(0)
-	ShutdownLoadingScreen()
-	FreezeEntityPosition(PlayerPedId(), false)
-	DoScreenFadeIn(0)
-	StartServerSyncLoops()
-	else 
-		ESX.Game.Teleport(PlayerPedId(), {
-			x = playerData.coords.x,
-			y = playerData.coords.y,
-			z = playerData.coords.z + 0.25,
-			heading = playerData.coords.heading
-		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
 			TriggerEvent('esx:onPlayerSpawn')
 			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
@@ -110,8 +72,6 @@ end
 			FreezeEntityPosition(PlayerPedId(), false)
 			DoScreenFadeIn(10000)
 			StartServerSyncLoops()
-	end)
-end
 
 	TriggerEvent('esx:loadingScreenOff')
 end)
@@ -281,7 +241,7 @@ AddEventHandler('esx:setJob', function(Job)
 			grade_label = Job.grade_label
 		})
 	end
-	ESX.SetPlayerData(job, Job)
+	ESX.SetPlayerData("job", Job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')
@@ -422,7 +382,7 @@ function StartServerSyncLoops()
 	-- keep track of ammo
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(0)
+			Citizen.Wait(1000)
 
 			if isDead then
 				Citizen.Wait(500)
@@ -447,7 +407,7 @@ function StartServerSyncLoops()
 		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 
 		while true do
-			Citizen.Wait(1000)
+			Citizen.Wait(1500)
 			local playerPed = PlayerPedId()
 
 			if DoesEntityExist(playerPed) then
@@ -467,7 +427,7 @@ end
 
 Citizen.CreateThread(function()
 	while Config.EnableDefaultInventory do
-		Citizen.Wait(0)
+		Citizen.Wait(9)
 
 		if IsControlJustReleased(0, 289) then
 			if IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
@@ -477,7 +437,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Pickups
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)

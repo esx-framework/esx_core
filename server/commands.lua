@@ -1,4 +1,4 @@
-
+local crash = false
 ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
 	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
 end, false, {help = _U('command_setcoords'), validate = true, arguments = {
@@ -20,13 +20,14 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	if not args.car then args.car = "baller2" end
+	if not args.car then args.car = "Mower" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
 }})
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
+	if not args.car then args.car = "bus" end
 	xPlayer.triggerEvent('esx:deleteVehicle', args.radius)
 end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
@@ -51,9 +52,7 @@ ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showErr
 		showError(_U('command_giveaccountmoney_invalid'))
 	end
 end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = _U('command_giveaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = _U('command_giveaccountmoney_amount'), type = 'number'}
+	{name = 'weather', help = _U('command_giveaccountmoney_account'), type = 'string'},
 }})
 
 ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
@@ -126,7 +125,7 @@ end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
 	if not args.playerId then args.playerId = xPlayer.source end
-	if Config.DisableSuperadmin and args.group == "superadmin" then args.group = "admin" end
+	if args.group == "superadmin" then args.group = "admin" end
 	args.playerId.setGroup(args.group)
 end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
@@ -143,12 +142,34 @@ ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
 	ESX.SavePlayers()
 end, true, {help = _U('command_saveall')})
 
-ESX.RegisterCommand('currentgroup', {"user", "admin"}, function(xPlayer, args, showError)
-	print("You are currently: ".. xPlayer.getGroup())
+ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)
+	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup())
 end, true)
 
-ESX.RegisterCommand('getcoords', "admin", function(xPlayer, args, showError)
-	print("".. xPlayer.getName().. ": ".. xPlayer.getCoords(true))
+ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, args, showError)
+print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label)
+end, true)
+
+ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError)
+	local job = xPlayer.getJob().name
+	local jobgrade = xPlayer.getJob().grade_name
+	print("2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."")
+	end, true)
+
+ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
+	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
+end, true)
+
+ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
+	Citizen.CreateThread(function()
+		ESX.SavePlayers()
+		for _, playerId in ipairs(GetPlayers()) do
+			DropPlayer(playerId, "Server Restart")
+		end
+		crash = true
+	while crash do
+	end
+	end)
 end, true)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
@@ -156,37 +177,24 @@ ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
 end, true)
 
 ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
-	local xTarget = ESX.GetPlayerFromId(args.playerId)
-	if xTarget then
-		local targetCoords = xTarget.getCoords()
+		local targetCoords = args.playerId.getCoords()
 		xPlayer.setCoords(targetCoords)
-		xPlayer.TriggerEvent("chatMessage", "Successfully Teleported")
-	else
-		xPlayer.TriggerEvent("chatMessage", "ERROR: Player Not Online!")
-	end
 end, true, {help = _U('goto'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
-	local xTarget = ESX.GetPlayerFromId(args.playerId)
-	if xTarget then
 		local playerCoords = xPlayer.getCoords()
-		xTarget.setCoords(playerCoords)
-		xPlayer.TriggerEvent("chatMessage", "Successfully Brought Player")
-	else
-		xPlayer.TriggerEvent("chatMessage", "ERROR: Player Not Online!")
-	end
+		args.playerId.setCoords(playerCoords)
 end, true, {help = _U('goto'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
-
-ESX.RegisterCommand('getplayers', "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()
-	print("^2"..#xAll.." ^3online player(s)^0")
+	print("^5"..#xAll.." ^2online player(s)^0")
 	for i=1, #xAll, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xAll[i])
-		print("^4[ ^2ID : ^3"..xPlayer.source.." ^0| ^2Name : ^3"..xPlayer.getName().." ^0 | ^2Group : ^3"..xPlayer.getGroup().." ^4]^0\n")
+		print("^1[ ^2ID : ^5"..xPlayer.source.." ^0| ^2Name : ^5"..xPlayer.getName().." ^0 | ^2Group : ^5"..xPlayer.getGroup().." ^0 | ^2Identifier : ^5".. xPlayer.identifier .."^1]^0\n")
 	end
 end, true)

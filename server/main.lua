@@ -10,30 +10,16 @@ AddEventHandler('esx:onPlayerJoined', function()
 	end
 end)
 
-if Config.UseMulticharacter then
-AddEventHandler("esx:overwriteIdentifierMethod",function(ref)
-  ESX.GetPlayerIdentifier = ref
-end)
-end
-
 function onPlayerJoined(playerId)
 	local identifier
 
-	if Config.UseMulticharacter then
-		local identifier = ESX.GetPlayerIdentifier(playerId)
-	else
-		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-			if string.match(v, 'license:') then
-				if Config.UseKashacters then 
-					identifier = v
-					break
-				else
-				identifier = string.sub(v, 9)
-				break
-				end	
-			end
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license:') then
+			identifier = string.sub(v, 9)
+			break
 		end
 	end
+
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -52,7 +38,7 @@ function onPlayerJoined(playerId)
 					end
 
 					if IsPlayerAceAllowed(playerId, "command") then
-						print(('[es_extended] [^2INFO^7] The player id %s just connected for the first time and will be given the admin group due to ace permissions.'):format(playerId))
+						print(('[es_extended] ^5[INFO] ^0 Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.'):format(playerId))
 						defaultGroup = "admin"
 					else
 						defaultGroup = "user"
@@ -78,22 +64,13 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	local playerId, identifier = source
 	Citizen.Wait(100)
 
-
-	if Config.UseMulticharacter then
-		local identifier = ESX.GetPlayerIdentifier(playerId)
-	else
 		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 			if string.match(v, 'license:') then
-				if Config.UseKashacters then 
-					identifier = v
-					break
-				else
-					identifier = string.sub(v, 9)
-					break
-				end	
+				identifier = string.sub(v, 9)
+				break
 			end
 		end
-	end
+	
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -202,7 +179,11 @@ function loadESXPlayer(identifier, playerId)
 
 			-- Group
 			if result[1].group then
-				userData.group = result[1].group
+				if result[1].group == "superadmin" then
+					userData.group = "admin"
+				else
+					userData.group = result[1].group
+				end
 			else
 				userData.group = 'user'
 			end
@@ -244,7 +225,6 @@ function loadESXPlayer(identifier, playerId)
 	Async.parallel(tasks, function(results)
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords)
 		ESX.Players[playerId] = xPlayer
-		TriggerEvent('esx:playerLoaded', playerId, xPlayer)
 
 		xPlayer.triggerEvent('esx:playerLoaded', {
 			accounts = xPlayer.getAccounts(),
@@ -259,7 +239,7 @@ function loadESXPlayer(identifier, playerId)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
-		print(('[es_extended] [^2INFO^7] A player with name "%s^7" has connected to the server with assigned player id %s'):format(xPlayer.getName(), playerId))
+		print(('[es_extended] ^5[INFO]^0 Player ^5"%s" ^0has connected to the server. ID: ^5%s'):format(xPlayer.getName(), playerId))
 	end)
 end
 
@@ -537,23 +517,24 @@ end)
 Citizen.CreateThread(
 	function()
 		local vRaw = LoadResourceFile(GetCurrentResourceName(), 'version.json')
-		if vRaw and config.versionCheck then
+		if vRaw then
 			local v = json.decode(vRaw)
 			PerformHttpRequest(
-				'https://raw.githubusercontent.com/Mycroft-Studios/es_extended/legacy/version.json',
+				'https://raw.githubusercontent.com/esx-framework/es_extended/legacy/version.json',
 				function(code, res, headers)
 					if code == 200 then
 						local rv = json.decode(res)
-						if rv.version ~= v.version then
+						if rv.version == v.version then
 							if rv.commit ~= v.commit then 
 							print(
 								([[
 
-^1-------------------------------------------------------
-URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
-COMMIT UPDATE: %s AVAILABLE
-CHANGELOG: %s
--------------------------------------------------------
+^1----------------------------------------------------------------------
+^1URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
+^1COMMIT UPDATE: ^5%s AVAILABLE
+^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
+^1CHANGELOG:^5 %s
+^1-----------------------------------------------------------------------
 ]]):format(
 									rv.commit,
 									rv.changelog
@@ -570,12 +551,26 @@ CHANGELOG: %s
 ^5CHANGELOG:^0 %s
 ^8-------------------------------------------------------
 ]]):format(
-								 	rv.version
+								 	rv.version,
 									rv.commit,
 									rv.changelog
 								)
 							)
 						end
+					else
+						print(
+							([[
+
+^1-------------------------------------------------------
+URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
+VERSION: %s AVAILABLE
+CHANGELOG: %s
+-------------------------------------------------------
+]]):format(
+								rv.commit,
+								rv.changelog
+							)
+						)
 						end
 					else
 						print('ERROR: Es-Extended unable to check version')
