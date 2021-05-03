@@ -153,7 +153,7 @@ end, true)
 ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
-	print("2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."")
+	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."")
 	end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
@@ -166,6 +166,7 @@ ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
 		for _, playerId in ipairs(GetPlayers()) do
 			DropPlayer(playerId, "Server Restart")
 		end
+	print('[^5es_extended^0] ^2[INFO] ^1 Server Restarting, Please Wait :)')
 		crash = true
 	while crash do
 	end

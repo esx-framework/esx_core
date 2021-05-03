@@ -60,18 +60,25 @@ end
 			grade_label = playerData.job.grade_label
 		})
 	end
+	
+	ESX.Game.Teleport(PlayerPedId(), {
+		x = playerData.coords.x,
+		y = playerData.coords.y,
+		z = playerData.coords.z + 0.25,
+		heading = playerData.coords.heading
+	}, function()
+		TriggerServerEvent('esx:onPlayerSpawn')
+		TriggerEvent('esx:onPlayerSpawn')
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('esx:restoreLoadout')
 
-			TriggerServerEvent('esx:onPlayerSpawn')
-			TriggerEvent('esx:onPlayerSpawn')
-			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
-			TriggerEvent('esx:restoreLoadout')
-
-			Citizen.Wait(4000)
-			ShutdownLoadingScreen()
-			ShutdownLoadingScreenNui()
-			FreezeEntityPosition(PlayerPedId(), false)
-			DoScreenFadeIn(10000)
-			StartServerSyncLoops()
+		Citizen.Wait(4000)
+		ShutdownLoadingScreen()
+		ShutdownLoadingScreenNui()
+		FreezeEntityPosition(PlayerPedId(), false)
+		DoScreenFadeIn(10000)
+		StartServerSyncLoops()
+	end)
 
 	TriggerEvent('esx:loadingScreenOff')
 end)
