@@ -20,7 +20,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	if not args.car then args.car = "Mower" end
+	if not args.car then args.car = "baller2" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
