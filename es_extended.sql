@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS `es_extended`;
 USE `es_extended`;
 
 CREATE TABLE `users` (
-	`identifier` VARCHAR(40) NOT NULL,
+	`identifier` VARCHAR(64) NOT NULL,
 	`accounts` LONGTEXT NULL DEFAULT NULL,
 	`group` VARCHAR(50) NULL DEFAULT 'user',
 	`inventory` LONGTEXT NULL DEFAULT NULL,

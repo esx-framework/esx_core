@@ -729,31 +729,23 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
-	coords = vector3(coords.x, coords.y, coords.z)
+ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
-	local camCoords = GetGameplayCamCoords()
-	local distance = #(coords - camCoords)
+	if not scale then scale = 0.35 end
+	if not font then font = 4 end
 
-	if not size then size = 1 end
-	if not font then font = 0 end
-
-	local scale = (size / distance) * 2
-	local fov = (1 / GetGameplayCamFov()) * 100
-	scale = scale * fov
-
-	SetTextScale(0.0 * scale, 0.55 * scale)
+	SetTextScale(scale, scale)
 	SetTextFont(font)
-	SetTextColour(255, 255, 255, 255)
-	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextDropShadow()
-	SetTextOutline()
+	SetTextProportional(1)
+	SetTextColour(255, 255, 255, 215)
+	SetTextEntry('STRING')
 	SetTextCentre(true)
-
-	SetDrawOrigin(coords, 0)
-	BeginTextCommandDisplayText('STRING')
-	AddTextComponentSubstringPlayerName(text)
-	EndTextCommandDisplayText(0.0, 0.0)
+	AddTextComponentString(text)
+	SetDrawOrigin(vector.xyz, 0)
+	DrawText(0.0, 0.0)
+	local factor = string.len(text) / 370
+	DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
 	ClearDrawOrigin()
 end
 
@@ -763,7 +755,7 @@ ESX.ShowInventory = function()
 
 	for k,v in pairs(ESX.PlayerData.accounts) do
 		if v.money > 0 then
-			local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
+		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
 			local canDrop = v.name ~= 'bank'
 
 			table.insert(elements, {
@@ -776,7 +768,7 @@ ESX.ShowInventory = function()
 				canRemove = canDrop
 			})
 		end
-	end
+	end 
 
 	for k,v in ipairs(ESX.PlayerData.inventory) do
 		if v.count > 0 then
