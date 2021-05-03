@@ -52,7 +52,9 @@ ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showErr
 		showError(_U('command_giveaccountmoney_invalid'))
 	end
 end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = {
-	{name = 'weather', help = _U('command_giveaccountmoney_account'), type = 'string'},
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+	{name = 'account', help = _U('command_giveaccountmoney_account'), type = 'string'},
+	{name = 'amount', help = _U('command_giveaccountmoney_amount'), type = 'number'}
 }})
 
 ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
