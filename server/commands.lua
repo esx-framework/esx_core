@@ -215,11 +215,11 @@ ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
 	for _, playerId in ipairs(GetPlayers()) do
 		TriggerClientEvent('esx_ambulancejob:revive', playerId)
 	end
-end, false, {help = "reviveall"})
+end, false)
 
 ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx:noclip')
-end, false, {help = "noclip"})
+end, false)
 
 ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()
