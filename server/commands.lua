@@ -27,7 +27,7 @@ end, false, {help = _U('command_car'), validate = false, arguments = {
 }})
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
-	if not args.car then args.car = "bus" end
+	if not args.radius then args.radius = 4 end
 	xPlayer.triggerEvent('esx:deleteVehicle', args.radius)
 end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
