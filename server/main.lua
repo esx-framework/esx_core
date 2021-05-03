@@ -513,6 +513,15 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 	cb(players)
 end)
 
+AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
+  if eventData.secondsRemaining == 60 then
+    Citizen.CreateThread(function()
+      Citizen.Wait(50000)
+      ESX.SavePlayers()
+     end)
+  end
+end)
+
 -- version check
 Citizen.CreateThread(
 	function()
