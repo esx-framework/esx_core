@@ -492,6 +492,8 @@ Citizen.CreateThread(function()
 	end
 end)
 
+----- Admin commnads from esx_adminplus
+
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
     local WaypointHandle = GetFirstBlipInfoId(8)
@@ -514,5 +516,92 @@ AddEventHandler("esx:tpm", function()
         TriggerEvent('chatMessage', "Successfully Teleported")
     else
         TriggerEvent('chatMessage', "No Waypoint Set")
+    end
+end)
+
+local noclip = false
+RegisterNetEvent("esx:noclip")
+AddEventHandler("esx:noclip", function(input)
+    local player = PlayerId()
+	local ped = PlayerPedId
+	
+    local msg = "disabled"
+	if(noclip == false)then
+		noclip_pos = GetEntityCoords(PlayerPedId(), false)
+	end
+
+	noclip = not noclip
+
+	if(noclip)then
+		msg = "enabled"
+	end
+
+	TriggerEvent("chatMessage", "Noclip has been ^2^*" .. msg)
+	end)
+	
+	local heading = 0
+	Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		if(noclip)then
+			SetEntityCoordsNoOffset(PlayerPedId(), noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+
+			if(IsControlPressed(1, 34))then
+				heading = heading + 1.5
+				if(heading > 360)then
+					heading = 0
+				end
+
+				SetEntityHeading(PlayerPedId(), heading)
+			end
+
+			if(IsControlPressed(1, 9))then
+				heading = heading - 1.5
+				if(heading < 0)then
+					heading = 360
+				end
+
+				SetEntityHeading(PlayerPedId(), heading)
+			end
+
+			if(IsControlPressed(1, 8))then
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 1.0, 0.0)
+			end
+
+			if(IsControlPressed(1, 32))then
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, -1.0, 0.0)
+			end
+
+			if(IsControlPressed(1, 27))then
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, 1.0)
+			end
+
+			if(IsControlPressed(1, 173))then
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -1.0)
+			end
+		else
+			Citizen.Wait(200)
+		end
+	end
+end)
+
+RegisterNetEvent("esx:killPlayer")
+AddEventHandler("esx:killPlayer", function()
+  SetEntityHealth(PlayerPedId(), 0)
+end)
+
+RegisterNetEvent("esx:freezePlayer")
+AddEventHandler("esx:freezePlayer", function(input)
+    local player = PlayerId()
+	local ped = PlayerPedId()
+    if input == 'freeze' then
+        SetEntityCollision(ped, false)
+        FreezeEntityPosition(ped, true)
+        SetPlayerInvincible(player, true)
+    elseif input == 'unfreeze' then
+        SetEntityCollision(ped, true)
+	    FreezeEntityPosition(ped, false)
+        SetPlayerInvincible(player, false)
     end
 end)

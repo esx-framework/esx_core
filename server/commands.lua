@@ -189,9 +189,37 @@ end, true, {help = _U('goto'), validate = true, arguments = {
 ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
 		local playerCoords = xPlayer.getCoords()
 		args.playerId.setCoords(playerCoords)
-end, true, {help = _U('goto'), validate = true, arguments = {
+end, true, {help = _U('bring'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
+
+ESX.RegisterCommand('kill', "admin", function(xPlayer, args, showError)
+	args.playerId.triggerEvent('esx:killPlayer')
+end, true, {help = _U('kill'), validate = true, arguments = {
+{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+ESX.RegisterCommand('freeze', "admin", function(xPlayer, args, showError)
+	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
+end, true, {help = _U('kill'), validate = true, arguments = {
+{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args, showError)
+	args.playerId.triggerEvent('esx:freezePlayer', "unfreeze")
+end, true, {help = _U('kill'), validate = true, arguments = {
+{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+}})
+
+ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
+	for _, playerId in ipairs(GetPlayers()) do
+		TriggerClientEvent('esx_ambulancejob:revive', playerId)
+	end
+end, false, {help = "reviveall")})
+
+ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
+	xPlayer.triggerEvent('esx:noclip')
+end, false, {help = "noclip")})
 
 ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()
