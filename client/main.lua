@@ -10,38 +10,24 @@ end)
 
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(playerData)
+AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
 
-	if GetEntityModel(PlayerPedId()) == GetHashKey('PLAYER_ZERO') then
-		local defaultModel = GetHashKey('a_m_y_stbla_02')
-		RequestModel(defaultModel)
-
-		while not HasModelLoaded(defaultModel) do
-			Citizen.Wait(10)
-		end
-
-		SetPlayerModel(PlayerId(), defaultModel)
-		SetPedDefaultComponentVariation(PlayerPedId())
-		SetPedRandomComponentVariation(PlayerPedId(), true)
-		SetModelAsNoLongerNeeded(defaultModel)
-	end
-
-
 	FreezeEntityPosition(PlayerPedId(), true)
-
+	
 	-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(PlayerPedId(), true, false)
 		NetworkSetFriendlyFireOption(true)
-  end
+	end
+	
 	-- disable wanted level
-if not Config.EnableWantedLevel then
-	ClearPlayerWantedLevel(PlayerId())
-	SetMaxWantedLevel(0)
-end
+	if not Config.EnableWantedLevel then
+		ClearPlayerWantedLevel(PlayerId())
+		SetMaxWantedLevel(0)
+	end
 
 	if Config.EnableHud then
 		for k,v in ipairs(playerData.accounts) do
@@ -61,11 +47,13 @@ end
 		})
 	end
 
-	ESX.Game.Teleport(PlayerPedId(), {
+	exports.spawnmanager:spawnPlayer({
 		x = playerData.coords.x,
 		y = playerData.coords.y,
 		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading
+		heading = playerData.coords.heading,
+		model = `mp_m_freemode_01`,
+		skipFade = false
 	}, function()
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
@@ -78,6 +66,11 @@ end
 		FreezeEntityPosition(PlayerPedId(), false)
 		DoScreenFadeIn(10000)
 		StartServerSyncLoops()
+		if isNew then
+			-- Put your code for if you want to do something with new players.
+		else
+			-- If they aren't new put that code here.
+		end
 	end)
 
 	TriggerEvent('esx:loadingScreenOff')
