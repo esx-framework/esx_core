@@ -29,7 +29,7 @@ function onPlayerJoined(playerId)
 				['@identifier'] = identifier
 			}, function(result)
 				if result then
-					loadESXPlayer(identifier, playerId)
+					loadESXPlayer(identifier, playerId, false)
 				else
 					local accounts = {}
 
@@ -49,7 +49,7 @@ function onPlayerJoined(playerId)
 						['@identifier'] = identifier,
 						['@group'] = defaultGroup
 					}, function(rowsChanged)
-						loadESXPlayer(identifier, playerId)
+						loadESXPlayer(identifier, playerId, true)
 					end)
 				end
 			end)
@@ -83,7 +83,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	end
 end)
 
-function loadESXPlayer(identifier, playerId)
+function loadESXPlayer(identifier, playerId, isNew)
 	local tasks = {}
 
 	local userData = {
@@ -235,7 +235,7 @@ function loadESXPlayer(identifier, playerId)
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney()
-		})
+		}, isNew)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
