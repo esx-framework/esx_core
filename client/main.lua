@@ -52,7 +52,7 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		y = playerData.coords.y,
 		z = playerData.coords.z + 0.25,
 		heading = playerData.coords.heading,
-		model = Config.DefaultPlayerModel,
+		model = `mp_m_freemode_01`,
 		skipFade = false
 	}, function()
 		TriggerServerEvent('esx:onPlayerSpawn')

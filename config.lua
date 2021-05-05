@@ -17,5 +17,4 @@ Config.EnableDebug              = false -- Use Debug options?
 Config.EnableDefaultInventory   = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
-Config.DefaultPlayerModel = `mp_m_freemode_01` -- Don't Change this there is absolutely no need
 
