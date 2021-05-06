@@ -308,21 +308,16 @@ ESX.Game.GetPedMugshot = function(ped, transparent)
 end
 
 ESX.Game.Teleport = function(entity, coords, cb)
+	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
+	
 	if DoesEntityExist(entity) then
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-		local timeout = 0
-
-		-- we can get stuck here if any of the axies are "invalid"
-		while not HasCollisionLoadedAroundEntity(entity) and timeout < 2000 do
-			Citizen.Wait(0)
-			timeout = timeout + 1
+		RequestCollisionAtCoord(vector.xyz)
+		while not HasCollisionLoadedAroundEntity(entity) do
+			Wait(0)
 		end
 
-		SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
-
-		if type(coords) == 'table' and coords.heading then
-			SetEntityHeading(entity, coords.heading)
-		end
+		SetEntityCoords(entity, vector.xyz, false, false, false, false)
+		SetEntityHeading(entity, vector.w)
 	end
 
 	if cb then
@@ -330,14 +325,18 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-ESX.Game.SpawnObject = function(model, coords, cb)
-	local model = (type(model) == 'number' and model or GetHashKey(model))
-
-	Citizen.CreateThread(function()
+ESX.Game.SpawnObject = function(model, coords, cb, networked, dynamic)
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	networked = networked == nil and true or false
+	dynamic = dynamic ~= nil and true or false
+	
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, false, true)
-		SetModelAsNoLongerNeeded(model)
-
+		
+		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
+		-- as an Object instead of a hash so it doesn't automatically hash the item
+		model = type(model) == 'number' and model or GetHashKey(model)
+		local obj = CreateObject(model, vector.xyz, networked, false, dynamic)
 		if cb then
 			cb(obj)
 		end
@@ -345,17 +344,8 @@ ESX.Game.SpawnObject = function(model, coords, cb)
 end
 
 ESX.Game.SpawnLocalObject = function(model, coords, cb)
-	local model = (type(model) == 'number' and model or GetHashKey(model))
-
-	Citizen.CreateThread(function()
-		ESX.Streaming.RequestModel(model)
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, false, true)
-		SetModelAsNoLongerNeeded(model)
-
-		if cb then
-			cb(obj)
-		end
-	end)
+	-- Why have 2 separate functions for this? Just call the other one with an extra param
+	ESX.Game.SpawnObject(model, coords, cb, false)
 end
 
 ESX.Game.DeleteVehicle = function(vehicle)
@@ -368,28 +358,25 @@ ESX.Game.DeleteObject = function(object)
 	DeleteObject(object)
 end
 
-ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
-	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
-
-	Citizen.CreateThread(function()
+ESX.Game.SpawnVehicle = function(model, coords, heading, cb, networked)
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	networked = networked == nil and true or false
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
-		local networkId = NetworkGetNetworkIdFromEntity(vehicle)
-		local timeout = 0
+		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
+		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
-		SetNetworkIdCanMigrate(networkId, true)
+		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
-		SetVehRadioStation(vehicle, 'OFF')
 		SetModelAsNoLongerNeeded(model)
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		SetVehRadioStation(vehicle, 'OFF')
 
-		-- we can get stuck here if any of the axies are "invalid"
-		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
-			Citizen.Wait(0)
-			timeout = timeout + 1
+		RequestCollisionAtCoord(vector.xyz)
+		while not HasCollisionLoadedAroundEntity(vehicle) do
+			Wait(0)
 		end
 
 		if cb then
@@ -398,32 +385,9 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 	end)
 end
 
-ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
-	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
-
-	Citizen.CreateThread(function()
-		ESX.Streaming.RequestModel(model)
-
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
-		local timeout = 0
-
-		SetEntityAsMissionEntity(vehicle, true, false)
-		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-		SetVehicleNeedsToBeHotwired(vehicle, false)
-		SetVehRadioStation(vehicle, 'OFF')
-		SetModelAsNoLongerNeeded(model)
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-
-		-- we can get stuck here if any of the axies are "invalid"
-		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
-			Citizen.Wait(0)
-			timeout = timeout + 1
-		end
-
-		if cb then
-			cb(vehicle)
-		end
-	end)
+ESX.Game.SpawnLocalVehicle = function(model, coords, heading, cb)
+	-- Why have 2 separate functions for this? Just call the other one with an extra param
+	ESX.Game.SpawnVehicle(model, coords, heading, cb, false)
 end
 
 ESX.Game.IsVehicleEmpty = function(vehicle)
@@ -1022,15 +986,22 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
+		local letSleep = true
 		local currTime = GetGameTimer()
 
-		for i=1, #ESX.TimeoutCallbacks, 1 do
-			if ESX.TimeoutCallbacks[i] then
-				if currTime >= ESX.TimeoutCallbacks[i].time then
-					ESX.TimeoutCallbacks[i].cb()
-					ESX.TimeoutCallbacks[i] = nil
+		if #ESX.TimeoutCallbacks > 0 then
+			letSleep = false
+			for i=1, #ESX.TimeoutCallbacks, 1 do
+				if ESX.TimeoutCallbacks[i] then
+					if currTime >= ESX.TimeoutCallbacks[i].time then
+						ESX.TimeoutCallbacks[i].cb()
+						ESX.TimeoutCallbacks[i] = nil
+					end
 				end
 			end
+		end
+		if letSleep then
+			Citizen.Wait(500)
 		end
 	end
 end)

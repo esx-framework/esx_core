@@ -3,8 +3,8 @@ local isPaused, isDead, pickups = false, false, {}
 Citizen.CreateThread(function()
 	while NetworkIsPlayerActive(PlayerId()) do
 		Citizen.Wait(5)
-			TriggerServerEvent('esx:onPlayerJoined')
-			break
+		TriggerServerEvent('esx:onPlayerJoined')
+		break
 	end
 end)
 
@@ -21,12 +21,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	if Config.EnablePVP then
 		SetCanAttackFriendly(PlayerPedId(), true, false)
 		NetworkSetFriendlyFireOption(true)
-	end
-	
-	-- disable wanted level
-	if not Config.EnableWantedLevel then
-		ClearPlayerWantedLevel(PlayerId())
-		SetMaxWantedLevel(0)
 	end
 
 	if Config.EnableHud then
@@ -55,25 +49,28 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		model = `mp_m_freemode_01`,
 		skipFade = false
 	}, function()
-		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
 		TriggerEvent('esx:restoreLoadout')
 
 		Citizen.Wait(4000)
 		ShutdownLoadingScreen()
 		ShutdownLoadingScreenNui()
 		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
 		StartServerSyncLoops()
-		if isNew then
-			-- Put your code for if you want to do something with new players.
-		else
-			-- If they aren't new put that code here.
-		end
 	end)
+	if isNew then
+		TriggerEvent('esx_identity:showRegisterIdentity')
+	else
+		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+			TriggerEvent('skinchanger:loadSkin', skin)
+		end)
+	end
+	if Config.EnableHud then
+		ESX.UI.HUD.SetDisplay(1.0)
+	end
 
-	TriggerEvent('esx:loadingScreenOff')
+	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -172,65 +169,46 @@ end)
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	GiveWeaponToPed(playerPed, weaponHash, ammo, false, false)
+	-- Removed PlayerPedId() from being stored in a variable, not needed
+	-- when it's only being used once, also doing it in a few
+	-- functions below this one
+	GiveWeaponToPed(PlayerPedId(), weaponName, ammo, false, false)
 end)
 
 RegisterNetEvent('esx:addWeaponComponent')
 AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-
-	GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
+	GiveWeaponComponentToPed(PlayerPedId(), weaponName, componentHash)
 end)
 
 RegisterNetEvent('esx:setWeaponAmmo')
 AddEventHandler('esx:setWeaponAmmo', function(weaponName, weaponAmmo)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	SetPedAmmo(playerPed, weaponHash, weaponAmmo)
+	SetPedAmmo(PlayerPedId(), weaponName, weaponAmmo)
 end)
 
 RegisterNetEvent('esx:setWeaponTint')
 AddEventHandler('esx:setWeaponTint', function(weaponName, weaponTintIndex)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	SetPedWeaponTintIndex(playerPed, weaponHash, weaponTintIndex)
+	SetPedWeaponTintIndex(PlayerPedId(), weaponName, weaponTintIndex)
 end)
 
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName)
 	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	RemoveWeaponFromPed(playerPed, weaponHash)
-	SetPedAmmo(playerPed, weaponHash, 0) -- remove leftover ammo
+	RemoveWeaponFromPed(playerPed, weaponName)
+	SetPedAmmo(playerPed, weaponName, 0)
 end)
 
 RegisterNetEvent('esx:removeWeaponComponent')
 AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-
-	RemoveWeaponComponentFromPed(playerPed, weaponHash, componentHash)
+	RemoveWeaponComponentFromPed(PlayerPedId(), weaponName, componentHash)
 end)
 
 RegisterNetEvent('esx:teleport')
 AddEventHandler('esx:teleport', function(coords)
-	local playerPed = PlayerPedId()
-
-	-- ensure decmial number
-	coords.x = coords.x + 0.0
-	coords.y = coords.y + 0.0
-	coords.z = coords.z + 0.0
-
-	ESX.Game.Teleport(playerPed, coords)
+	-- The coords x, y and z were having 0.0 added to them here to make them floats
+	-- Since we are forcing vectors in the teleport function now we don't need to do it
+	ESX.Game.Teleport(PlayerPedId(), coords)
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -245,21 +223,18 @@ AddEventHandler('esx:setJob', function(Job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(vehicleName)
-	local model = (type(vehicleName) == 'number' and vehicleName or GetHashKey(vehicleName))
-
-	if IsModelInCdimage(model) then
+AddEventHandler('esx:spawnVehicle', function(vehicle)
+	if IsModelInCdimage(vehicle) then
 		local playerPed = PlayerPedId()
 		local playerCoords, playerHeading = GetEntityCoords(playerPed), GetEntityHeading(playerPed)
 
-		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
+		ESX.Game.SpawnVehicle(vehicle, playerCoords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		end)
 	else
-		TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Invalid vehicle model.'}})
+		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
 	end
 end)
-
 RegisterNetEvent('esx:createPickup')
 AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
 	local function setObjectProperties(object)
@@ -372,10 +347,6 @@ if Config.EnableHud then
 			end
 		end
 	end)
-
-	AddEventHandler('esx:loadingScreenOff', function()
-		ESX.UI.HUD.SetDisplay(1.0)
-	end)
 end
 
 function StartServerSyncLoops()
@@ -384,11 +355,10 @@ function StartServerSyncLoops()
 		while true do
 			Citizen.Wait(1000)
 
-			if isDead then
-				Citizen.Wait(500)
-			else
-				local playerPed = PlayerPedId()
+			local letSleep = true
+			local playerPed = PlayerPedId()
 
+			if IsPedArmed(playerPed, 4) then
 				if IsPedShooting(playerPed) then
 					local _,weaponHash = GetCurrentPedWeapon(playerPed, true)
 					local weapon = ESX.GetWeaponFromHash(weaponHash)
@@ -398,6 +368,9 @@ function StartServerSyncLoops()
 						TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
 					end
 				end
+			end
+			if letSleep then
+				Citizen.Wait(500)
 			end
 		end
 	end)
@@ -425,17 +398,21 @@ function StartServerSyncLoops()
 	end)
 end
 
-Citizen.CreateThread(function()
-	while Config.EnableDefaultInventory do
-		Citizen.Wait(9)
-
-		if IsControlJustReleased(0, 289) then
-			if IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-				ESX.ShowInventory()
-			end
+if Config.EnableDefaultInventory then
+	RegisterCommand('showinv', function()
+		if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+			ESX.ShowInventory()
 		end
-	end
-end)
+	end)
+
+	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+end
+
+-- disable wanted level
+if not Config.EnableWantedLevel then
+	ClearPlayerWantedLevel(PlayerId())
+	SetMaxWantedLevel(0)
+end
 
 Citizen.CreateThread(function()
 	while true do
