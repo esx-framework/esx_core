@@ -50,7 +50,7 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		skipFade = false
 	}, function()
 		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
+		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
 		TriggerEvent('esx:restoreLoadout')
 
 		Citizen.Wait(4000)
@@ -69,6 +69,8 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	if Config.EnableHud then
 		ESX.UI.HUD.SetDisplay(1.0)
 	end
+
+	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
