@@ -67,9 +67,10 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	end)
 	if isNew then
 		TriggerEvent('esx_identity:showRegisterIdentity')
-		-- Put your code for if you want to do something with new players.
 	else
-		-- If they aren't new put that code here.
+		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+			TriggerEvent('skinchanger:loadSkin', skin)
+		end)
 	end
 	if Config.EnableHud then
 		ESX.UI.HUD.SetDisplay(1.0)
