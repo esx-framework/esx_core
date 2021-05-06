@@ -405,17 +405,15 @@ function StartServerSyncLoops()
 	end)
 end
 
-Citizen.CreateThread(function()
-	while Config.EnableDefaultInventory do
-		Citizen.Wait(9)
-
-		if IsControlJustReleased(0, 289) then
-			if IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-				ESX.ShowInventory()
-			end
+if Config.EnableDefaultInventory then
+	RegisterCommand('showinv', function()
+		if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+			ESX.ShowInventory()
 		end
-	end
-end)
+	end)
+
+	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+end
 
 Citizen.CreateThread(function()
 	while true do
