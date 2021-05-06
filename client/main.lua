@@ -55,7 +55,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		model = `mp_m_freemode_01`,
 		skipFade = false
 	}, function()
-		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon
 		TriggerEvent('esx:restoreLoadout')
@@ -73,8 +72,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			-- If they aren't new put that code here.
 		end
 	end)
-
-	TriggerEvent('esx:loadingScreenOff')
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
