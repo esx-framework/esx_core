@@ -72,6 +72,9 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			-- If they aren't new put that code here.
 		end
 	end)
+	if Config.EnableHud then
+		ESX.UI.HUD.SetDisplay(1.0)
+	end
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -369,10 +372,6 @@ if Config.EnableHud then
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
 		end
-	end)
-
-	AddEventHandler('esx:loadingScreenOff', function()
-		ESX.UI.HUD.SetDisplay(1.0)
 	end)
 end
 
