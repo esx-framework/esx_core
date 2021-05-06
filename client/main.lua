@@ -352,7 +352,7 @@ end
 function StartServerSyncLoops()
 	-- keep track of ammo
 	Citizen.CreateThread(function()
-		while true do
+		while ESX.PlayerLoaded do
 			Citizen.Wait(1000)
 
 			local letSleep = true
@@ -379,7 +379,7 @@ function StartServerSyncLoops()
 	Citizen.CreateThread(function()
 		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 
-		while true do
+		while ESX.PlayerLoaded do
 			Citizen.Wait(1500)
 			local playerPed = PlayerPedId()
 

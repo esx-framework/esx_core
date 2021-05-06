@@ -42,6 +42,7 @@ end
 
 ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
+	TriggerEvent('esx:setPlayerData', key, val)
 end
 
 ESX.ShowNotification = function(msg)
@@ -365,10 +366,12 @@ ESX.Game.SpawnVehicle = function(model, coords, heading, cb, networked)
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
-		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
-		SetNetworkIdCanMigrate(id, true)
-		SetEntityAsMissionEntity(vehicle, true, false)
+		if networked then
+			local id = NetworkGetNetworkIdFromEntity(vehicle)
+			SetNetworkIdCanMigrate(id, true)
+			SetEntityAsMissionEntity(vehicle, true, false)
+		end
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
 		SetModelAsNoLongerNeeded(model)
@@ -494,7 +497,8 @@ ESX.Game.GetVehicleInDirection = function()
 	local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
 
 	if hit == 1 and GetEntityType(entityHit) == 2 then
-		return entityHit
+		local entityCoords = GetEntityCoords(entityHit)
+		return entityHit, entityCoords
 	end
 
 	return nil
