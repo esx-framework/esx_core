@@ -325,14 +325,18 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-ESX.Game.SpawnObject = function(model, coords, cb)
-	local model = (type(model) == 'number' and model or GetHashKey(model))
-
-	Citizen.CreateThread(function()
+ESX.Game.SpawnObject = function(model, coords, cb, networked, dynamic)
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	networked = networked == nil and true or false
+	dynamic = dynamic ~= nil and true or false
+	
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, true, false, true)
-		SetModelAsNoLongerNeeded(model)
-
+		
+		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
+		-- as an Object instead of a hash so it doesn't automatically hash the item
+		model = type(model) == 'number' and model or GetHashKey(model)
+		local obj = CreateObject(model, vector.xyz, networked, false, dynamic)
 		if cb then
 			cb(obj)
 		end
@@ -340,17 +344,8 @@ ESX.Game.SpawnObject = function(model, coords, cb)
 end
 
 ESX.Game.SpawnLocalObject = function(model, coords, cb)
-	local model = (type(model) == 'number' and model or GetHashKey(model))
-
-	Citizen.CreateThread(function()
-		ESX.Streaming.RequestModel(model)
-		local obj = CreateObject(model, coords.x, coords.y, coords.z, false, false, true)
-		SetModelAsNoLongerNeeded(model)
-
-		if cb then
-			cb(obj)
-		end
-	end)
+	-- Why have 2 separate functions for this? Just call the other one with an extra param
+	ESX.Game.SpawnObject(model, coords, cb, false)
 end
 
 ESX.Game.DeleteVehicle = function(vehicle)
@@ -363,28 +358,25 @@ ESX.Game.DeleteObject = function(object)
 	DeleteObject(object)
 end
 
-ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
-	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
-
-	Citizen.CreateThread(function()
+ESX.Game.SpawnVehicle = function(model, coords, heading, cb, networked)
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	networked = networked == nil and true or false
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
-		local networkId = NetworkGetNetworkIdFromEntity(vehicle)
-		local timeout = 0
+		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
+		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
-		SetNetworkIdCanMigrate(networkId, true)
+		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
-		SetVehRadioStation(vehicle, 'OFF')
 		SetModelAsNoLongerNeeded(model)
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		SetVehRadioStation(vehicle, 'OFF')
 
-		-- we can get stuck here if any of the axies are "invalid"
-		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
-			Citizen.Wait(0)
-			timeout = timeout + 1
+		RequestCollisionAtCoord(vector.xyz)
+		while not HasCollisionLoadedAroundEntity(vehicle) do
+			Wait(0)
 		end
 
 		if cb then
@@ -393,32 +385,9 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 	end)
 end
 
-ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
-	local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
-
-	Citizen.CreateThread(function()
-		ESX.Streaming.RequestModel(model)
-
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
-		local timeout = 0
-
-		SetEntityAsMissionEntity(vehicle, true, false)
-		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-		SetVehicleNeedsToBeHotwired(vehicle, false)
-		SetVehRadioStation(vehicle, 'OFF')
-		SetModelAsNoLongerNeeded(model)
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-
-		-- we can get stuck here if any of the axies are "invalid"
-		while not HasCollisionLoadedAroundEntity(vehicle) and timeout < 2000 do
-			Citizen.Wait(0)
-			timeout = timeout + 1
-		end
-
-		if cb then
-			cb(vehicle)
-		end
-	end)
+ESX.Game.SpawnLocalVehicle = function(model, coords, heading, cb)
+	-- Why have 2 separate functions for this? Just call the other one with an extra param
+	ESX.Game.SpawnVehicle(model, coords, heading, cb, false)
 end
 
 ESX.Game.IsVehicleEmpty = function(vehicle)
