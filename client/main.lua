@@ -22,12 +22,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		SetCanAttackFriendly(PlayerPedId(), true, false)
 		NetworkSetFriendlyFireOption(true)
 	end
-	
-	-- disable wanted level
-	if not Config.EnableWantedLevel then
-		ClearPlayerWantedLevel(PlayerId())
-		SetMaxWantedLevel(0)
-	end
 
 	if Config.EnableHud then
 		for k,v in ipairs(playerData.accounts) do
@@ -413,6 +407,12 @@ if Config.EnableDefaultInventory then
 	end)
 
 	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+end
+
+-- disable wanted level
+if not Config.EnableWantedLevel then
+	ClearPlayerWantedLevel(PlayerId())
+	SetMaxWantedLevel(0)
 end
 
 Citizen.CreateThread(function()
