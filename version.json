@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.1.8",
-	"changelog": "Code Improvements; Redundant Code Removal"
+	"commit" : "1.1.9",
+	"changelog": "Fix esx_identity"
 }
