@@ -63,7 +63,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		ShutdownLoadingScreen()
 		ShutdownLoadingScreenNui()
 		FreezeEntityPosition(PlayerPedId(), false)
-		DoScreenFadeIn(10000)
 		StartServerSyncLoops()
 		if isNew then
 			TriggerEvent('esx_identity:showRegisterIdentity')
