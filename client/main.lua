@@ -173,65 +173,46 @@ end)
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	GiveWeaponToPed(playerPed, weaponHash, ammo, false, false)
+	-- Removed PlayerPedId() from being stored in a variable, not needed
+	-- when it's only being used once, also doing it in a few
+	-- functions below this one
+	GiveWeaponToPed(PlayerPedId(), weaponName, ammo, false, false)
 end)
 
 RegisterNetEvent('esx:addWeaponComponent')
 AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-
-	GiveWeaponComponentToPed(playerPed, weaponHash, componentHash)
+	GiveWeaponComponentToPed(PlayerPedId(), weaponName, componentHash)
 end)
 
 RegisterNetEvent('esx:setWeaponAmmo')
 AddEventHandler('esx:setWeaponAmmo', function(weaponName, weaponAmmo)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	SetPedAmmo(playerPed, weaponHash, weaponAmmo)
+	SetPedAmmo(PlayerPedId(), weaponName, weaponAmmo)
 end)
 
 RegisterNetEvent('esx:setWeaponTint')
 AddEventHandler('esx:setWeaponTint', function(weaponName, weaponTintIndex)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	SetPedWeaponTintIndex(playerPed, weaponHash, weaponTintIndex)
+	SetPedWeaponTintIndex(PlayerPedId(), weaponName, weaponTintIndex)
 end)
 
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName)
 	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
-
-	RemoveWeaponFromPed(playerPed, weaponHash)
-	SetPedAmmo(playerPed, weaponHash, 0) -- remove leftover ammo
+	RemoveWeaponFromPed(playerPed, weaponName)
+	SetPedAmmo(playerPed, weaponName, 0)
 end)
 
 RegisterNetEvent('esx:removeWeaponComponent')
 AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed = PlayerPedId()
-	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-
-	RemoveWeaponComponentFromPed(playerPed, weaponHash, componentHash)
+	RemoveWeaponComponentFromPed(PlayerPedId(), weaponName, componentHash)
 end)
 
 RegisterNetEvent('esx:teleport')
 AddEventHandler('esx:teleport', function(coords)
-	local playerPed = PlayerPedId()
-
-	-- ensure decmial number
-	coords.x = coords.x + 0.0
-	coords.y = coords.y + 0.0
-	coords.z = coords.z + 0.0
-
-	ESX.Game.Teleport(playerPed, coords)
+	-- The coords x, y and z were having 0.0 added to them here to make them floats
+	-- Since we are forcing vectors in the teleport function now we don't need to do it
+	ESX.Game.Teleport(PlayerPedId(), coords)
 end)
 
 RegisterNetEvent('esx:setJob')
