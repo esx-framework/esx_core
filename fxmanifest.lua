@@ -73,6 +73,7 @@ ui_page {
 }
 
 files {
+	'imports.lua',
 	'locale.js',
 	'html/ui.html',
 
