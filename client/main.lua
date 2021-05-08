@@ -121,6 +121,7 @@ AddEventHandler('esx:setAccountMoney', function(account)
 			break
 		end
 	end
+	ESX.SetPlayerData('accounts', ESX.PlayerData.accounts)
 
 	if Config.EnableHud then
 		ESX.UI.HUD.UpdateElement('account_' .. account.name, {
