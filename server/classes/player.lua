@@ -15,7 +15,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.weight = weight
 	self.maxWeight = Config.MaxWeight
 
-	ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
+	ExecuteCommand(('add_principal identifier.%s:%s group.%s'):format(Config.PrimaryIdentifier, self.identifier, self.group))
 
 	self.triggerEvent = function(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
@@ -66,9 +66,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	self.setGroup = function(newGroup)
-		ExecuteCommand(('remove_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
+		ExecuteCommand(('remove_principal identifier.%s:%s group.%s'):format(Config.PrimaryIdentifier, self.identifier, self.group))
 		self.group = newGroup
-		ExecuteCommand(('add_principal identifier.license:%s group.%s'):format(self.identifier, self.group))
+		ExecuteCommand(('add_principal identifier.%s:%s group.%s'):format(Config.PrimaryIdentifier, self.identifier, self.group))
 	end
 
 	self.getGroup = function()
