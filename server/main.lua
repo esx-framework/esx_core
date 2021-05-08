@@ -540,7 +540,7 @@ Citizen.CreateThread(
 								([[
 
 ^1----------------------------------------------------------------------
-^1URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
+^1URGENT: YOUR ES-EXTENDED IS OUTDATED!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s
