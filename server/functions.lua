@@ -239,6 +239,15 @@ ESX.GetPlayerFromIdentifier = function(identifier)
 	end
 end
 
+ESX.GetIdentifier = function(playerId)
+	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, 'license') then
+			local identifier = string.gsub(v, 'license:', '')
+			return identifier
+		end
+	end
+end
+
 ESX.RegisterUsableItem = function(item, cb)
 	ESX.UsableItemsCallbacks[item] = cb
 end
