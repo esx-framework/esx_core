@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.1.9",
-	"changelog": "Fix esx_identity"
+	"commit" : "1.1.10",
+	"changelog": "function improvements; new import file and functions"
 }
