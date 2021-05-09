@@ -8,7 +8,6 @@ Config.Accounts = {
 }
 
 Config.StartingAccountMoney 	= {bank = 50000}
-Config.PrimaryIdentifier		= 'license'	-- recommended
 
 Config.EnableSocietyPayouts 	= false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.EnableHud            	= true -- enable the default hud? Display current job and accounts (black, bank & cash)
