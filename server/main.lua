@@ -11,15 +11,7 @@ AddEventHandler('esx:onPlayerJoined', function()
 end)
 
 function onPlayerJoined(playerId)
-	local identifier
-
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, Config.PrimaryIdentifier) then
-			identifier = string.gsub(v, Config.PrimaryIdentifier..':', '')
-			break
-		end
-	end
-
+	local identifier = ESX.GetIdentifier(playerId)
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -61,20 +53,13 @@ end
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	deferrals.defer()
-	local playerId, identifier = source
+	local playerId = source
+	local identifier = ESX.GetIdentifier(playerId)
 	Citizen.Wait(100)
-
-		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-			if string.match(v, Config.PrimaryIdentifier) then
-			identifier = string.gsub(v, Config.PrimaryIdentifier..':', '')
-				break
-			end
-		end
-	
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
-			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
+			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s'):format(identifier))
 		else
 			deferrals.done()
 		end
