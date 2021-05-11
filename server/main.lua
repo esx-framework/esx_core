@@ -1,24 +1,30 @@
+ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Kashacters then
+
 	local IdentifierTables = {}
 
 	function GetTables()
-		MySQL.ready(function ()
-			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
-				if result then
-				--print(json.encode(result))
-					for k, v in pairs(result) do
-						table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "owner"})
-					end
-				end
-			end)
-			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
-				if result then
+		Citizen.CreateThread(function()
+			MySQL.ready(function ()
+				MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
+					if result then
 					--print(json.encode(result))
-					for k, v in pairs(result) do
-						table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "identifier"})
+						for k, v in pairs(result) do
+							table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "owner"})
+						end
 					end
-				end
+				end)
+				MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
+					if result then
+						--print(json.encode(result))
+						for k, v in pairs(result) do
+							table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "identifier"})
+						end
+					end
+				end)
 			end)
+			Citizen.Wait(1000)
+			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
 		end)
 	end
 
@@ -59,7 +65,7 @@ if ESX.GetConfig().Kashacters then
 		local Chars = MySQLAsyncExecute("SELECT * FROM `users` WHERE `identifier` LIKE 'char%:"..ESX.GetIdentifier(source).."'")
 		for i = 1, #Chars, 1 do
 			local charJob = ESX.Jobs[Chars[i].job]
-			local charGrade = charJob.grades[tostring(Chars[i].job_grade)]
+			local charGrade = ESX.Jobs[Chars[i].job].grades[tostring(Chars[i].job_grade)]
 			local accounts = json.decode(Chars[i].accounts)
 			Chars[i].bank = accounts["bank"]
 			Chars[i].money = accounts["money"]
