@@ -17,8 +17,6 @@ While the end result worked it wasn't exactly optimised and had the reputation o
 * All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
 * Do not run `essentialsmode` and ensure you are using `spawnmanager`
 
-> You **MUST** increase the varchar limit in all tables where column name `owner` or `identifier` occurs to at least  **48**.
-
 
 # Information below is outdated and pending review
 
