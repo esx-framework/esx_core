@@ -1,3 +1,4 @@
+ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Kashacters then
 	local IsChoosing = true
 
