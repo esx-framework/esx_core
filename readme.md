@@ -18,16 +18,16 @@ While the end result worked it wasn't exactly optimised and had the reputation o
 * Do not run `essentialsmode` and ensure you are using `spawnmanager`
 
 
-# Information below is outdated and pending review
+## Current design
+![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
 
 ## SQL Injection fix from [KASHZIN/kashacters/pull/36](https://github.com/KASHZIN/kashacters/pull/36) is applied to this fork!
 
 # Thanks to KASH and XxFri3ndlyxX
 
 
-## Current design:
-![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
 
+# Information below is outdated and pending review
 
 ## Duplication Entry (Datastore)
 
