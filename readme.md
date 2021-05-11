@@ -1,3 +1,16 @@
+### ESX Legacy  
+This resource is using some new features added in the latest update to ESX v1.
+
+
+### Nuclear Disarmament  
+> 
+The old kashacters queried the database when you selected a different character than your last; selecting the 3rd slot meant replacing every instance of `license` with `Char2:license`, then updating `Char3:license` to just `license`.  
+While the end result worked it wasn't exactly optimised and had the reputation of "nuking your database".
+* When a character is created, append the character id to the license
+* (Framework) xPlayer and ESX.PlayerData `identifier` will display `char#:license` - `license` will display the actual identifier
+
+# Information below is outdated and pending review
+
 ## SQL Injection fix from [KASHZIN/kashacters/pull/36](https://github.com/KASHZIN/kashacters/pull/36) is applied to this fork!
 
 # Thanks to KASH and XxFri3ndlyxX
