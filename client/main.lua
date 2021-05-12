@@ -1,5 +1,5 @@
 ESX = exports['es_extended']:getSharedObject()
-if ESX.GetConfig().Kashacters then
+if ESX.GetConfig().Multichar then
 	local IsChoosing = true
 
 	-- This Code Was changed to fix error With player spawner as default --
