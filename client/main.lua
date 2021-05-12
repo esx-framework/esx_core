@@ -86,10 +86,6 @@ if ESX.GetConfig().Kashacters then
 			PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
 			RenderScriptCams(false, true, 500, true, true)
 			PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
-			FreezeEntityPosition(PlayerPedId(), false)
-			TriggerServerEvent('esx:onPlayerSpawn')
-			TriggerEvent('esx:onPlayerSpawn')
-			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
 			if isNew then
 				if skin.sex == 0 then
 					TriggerEvent('skinchanger:loadDefaultModel', true)
@@ -100,13 +96,17 @@ if ESX.GetConfig().Kashacters then
 
 			Citizen.Wait(500)
 
+			FreezeEntityPosition(PlayerPedId(), false)
+			TriggerServerEvent('esx:onPlayerSpawn')
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
+
 			SetCamActive(cam, false)
 			DestroyCam(cam, true)
 			IsChoosing = false
 
 			DisplayHud(true)
 			DisplayRadar(true)
-			ESX.UI.HUD.SetDisplay(1.0)
 		end)
 	end)
 
