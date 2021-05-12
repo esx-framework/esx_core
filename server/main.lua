@@ -1,6 +1,5 @@
 ESX = exports['es_extended']:getSharedObject()
-if ESX.GetConfig().Kashacters then
-
+if ESX.GetConfig().Multichar then
 	local IdentifierTables = {}
 
 	function GetTables()
