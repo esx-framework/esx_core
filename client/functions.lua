@@ -325,7 +325,8 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-ESX.Game.SpawnObject = function(model, coords, cb, networked, dynamic)
+ESX.Game.SpawnObject = function(object, coords, cb, networked, dynamic)
+	local model = (type(object) == 'number' and model or GetHashKey(object))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
 	dynamic = dynamic ~= nil and true or false
@@ -343,9 +344,9 @@ ESX.Game.SpawnObject = function(model, coords, cb, networked, dynamic)
 	end)
 end
 
-ESX.Game.SpawnLocalObject = function(model, coords, cb)
+ESX.Game.SpawnLocalObject = function(object, coords, cb)
 	-- Why have 2 separate functions for this? Just call the other one with an extra param
-	ESX.Game.SpawnObject(model, coords, cb, false)
+	ESX.Game.SpawnObject(object, coords, cb, false)
 end
 
 ESX.Game.DeleteVehicle = function(vehicle)
@@ -358,7 +359,8 @@ ESX.Game.DeleteObject = function(object)
 	DeleteObject(object)
 end
 
-ESX.Game.SpawnVehicle = function(model, coords, heading, cb, networked)
+ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
+	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
 	CreateThread(function()
@@ -385,9 +387,9 @@ ESX.Game.SpawnVehicle = function(model, coords, heading, cb, networked)
 	end)
 end
 
-ESX.Game.SpawnLocalVehicle = function(model, coords, heading, cb)
+ESX.Game.SpawnLocalVehicle = function(vehicle, coords, heading, cb)
 	-- Why have 2 separate functions for this? Just call the other one with an extra param
-	ESX.Game.SpawnVehicle(model, coords, heading, cb, false)
+	ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
 end
 
 ESX.Game.IsVehicleEmpty = function(vehicle)

@@ -66,9 +66,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			TriggerEvent('skinchanger:loadSkin', skin)
 		end)
 	end
-	if Config.EnableHud then
-		ESX.UI.HUD.SetDisplay(1.0)
-	end
 
 	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
 end)
@@ -168,40 +165,40 @@ AddEventHandler('esx:removeInventoryItem', function(item, count, showNotificatio
 end)
 
 RegisterNetEvent('esx:addWeapon')
-AddEventHandler('esx:addWeapon', function(weaponName, ammo)
+AddEventHandler('esx:addWeapon', function(weapon, ammo)
 	-- Removed PlayerPedId() from being stored in a variable, not needed
 	-- when it's only being used once, also doing it in a few
 	-- functions below this one
-	GiveWeaponToPed(PlayerPedId(), weaponName, ammo, false, false)
+	GiveWeaponToPed(PlayerPedId(), GetHashKey(weapon), ammo, false, false)
 end)
 
 RegisterNetEvent('esx:addWeaponComponent')
-AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
-	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-	GiveWeaponComponentToPed(PlayerPedId(), weaponName, componentHash)
+AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
+	local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
+	GiveWeaponComponentToPed(PlayerPedId(), GetHashKey(weapon), componentHash)
 end)
 
 RegisterNetEvent('esx:setWeaponAmmo')
-AddEventHandler('esx:setWeaponAmmo', function(weaponName, weaponAmmo)
-	SetPedAmmo(PlayerPedId(), weaponName, weaponAmmo)
+AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
+	SetPedAmmo(PlayerPedId(), GetHashKey(weapon), weaponAmmo)
 end)
 
 RegisterNetEvent('esx:setWeaponTint')
-AddEventHandler('esx:setWeaponTint', function(weaponName, weaponTintIndex)
-	SetPedWeaponTintIndex(PlayerPedId(), weaponName, weaponTintIndex)
+AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
+	SetPedWeaponTintIndex(PlayerPedId(), GetHashKey(weapon), weaponTintIndex)
 end)
 
 RegisterNetEvent('esx:removeWeapon')
-AddEventHandler('esx:removeWeapon', function(weaponName)
+AddEventHandler('esx:removeWeapon', function(weapon)
 	local playerPed = PlayerPedId()
-	RemoveWeaponFromPed(playerPed, weaponName)
-	SetPedAmmo(playerPed, weaponName, 0)
+	RemoveWeaponFromPed(playerPed, GetHashKey(weapon))
+	SetPedAmmo(playerPed, GetHashKey(weapon), 0)
 end)
 
 RegisterNetEvent('esx:removeWeaponComponent')
-AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
-	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
-	RemoveWeaponComponentFromPed(PlayerPedId(), weaponName, componentHash)
+AddEventHandler('esx:removeWeaponComponent', function(weapon, weaponComponent)
+	local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
+	RemoveWeaponComponentFromPed(PlayerPedId(), GetHashKey(weapon), componentHash)
 end)
 
 RegisterNetEvent('esx:teleport')
@@ -224,11 +221,13 @@ end)
 
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
-	if IsModelInCdimage(vehicle) then
+	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+
+	if IsModelInCdimage(model) then
 		local playerPed = PlayerPedId()
 		local playerCoords, playerHeading = GetEntityCoords(playerPed), GetEntityHeading(playerPed)
 
-		ESX.Game.SpawnVehicle(vehicle, playerCoords, playerHeading, function(vehicle)
+		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		end)
 	else
@@ -346,6 +345,10 @@ if Config.EnableHud then
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
 		end
+	end)
+
+	AddEventHandler('esx:loadingScreenOff', function()
+		ESX.UI.HUD.SetDisplay(1.0)
 	end)
 end
 
