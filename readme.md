@@ -1,3 +1,12 @@
+
+### Requirements
+* [esx_identity 8e97e6d](https://github.com/thelindat/esx_identity/tree/8e97e6dcc264dbd9f77ec51790cce77873a4b39a) - Needs to be my fork for the moment
+* [esx_skin 1a0302b](https://github.com/esx-framework/esx_skin/tree/1a0302be4d6dc44d4cb80588775c8723e6f8d6c4)
+* Resource must be named `esx_kashacters` to function properly
+* All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
+* Do not run `essentialsmode` or `basic-gamemode`, and ensure you are using `spawnmanager`
+ 
+ 
 ### ESX Legacy  
 This resource is using some new features added in the latest update to ESX v1.
 Requires esx_identity and esx_skin to work - if you want to use something else (such as cui_character) you will need to work out the necessary changes.
@@ -9,13 +18,6 @@ The old kashacters queried the database when you selected a different character 
 While the end result worked it wasn't exactly optimised and had the reputation of "nuking your database".
 * When a character is created, append the character id to the license
 * (Framework) xPlayer and ESX.PlayerData `identifier` will display `char#:license` - `license` will display the actual identifier
-
-### Requirements
-* [esx_identity f490632](https://github.com/thelindat/esx_identity/tree/f4906324f8add2a3761f44eece6e32ab9f363550) - Needs to be my fork for the moment
-* [esx_skin 1a0302b](https://github.com/esx-framework/esx_skin/tree/1a0302be4d6dc44d4cb80588775c8723e6f8d6c4)
-* Resource must be named `esx_kashacters` to function properly
-* All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
-* Do not run `essentialsmode` and ensure you are using `spawnmanager`
 
 
 ## Current design
