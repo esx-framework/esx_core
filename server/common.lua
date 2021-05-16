@@ -55,6 +55,8 @@ MySQL.ready(function()
 	end)
 
 	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+	ESX.StartDBSync()
+	ESX.StartPayCheck()
 end)
 
 RegisterServerEvent('esx:clientLog')

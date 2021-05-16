@@ -576,7 +576,3 @@ Citizen.CreateThread(
 		end
 	end
 )
-
-
-ESX.StartDBSync()
-ESX.StartPayCheck()
