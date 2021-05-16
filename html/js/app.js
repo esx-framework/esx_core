@@ -40,7 +40,7 @@ $(".character-box").click(function () {
 
 
 $("#play-char").click(function () {
-    $.post("http://esx_kashacters/CharacterChosen", JSON.stringify({
+    $.post("http://esx_multicharacter/CharacterChosen", JSON.stringify({
         charid: Number($('.active-char').attr("data-charid")),
         ischar: ($('.active-char').attr("data-ischar") == "true"),
     }));
@@ -48,7 +48,7 @@ $("#play-char").click(function () {
 });
 
 $("#deletechar").click(function () {
-    $.post("http://esx_kashacters/DeleteCharacter", JSON.stringify({
+    $.post("http://esx_multicharacter/DeleteCharacter", JSON.stringify({
         charid: Number($('.active-char').attr("data-charid")),
     }));
     Kashacter.CloseUI();

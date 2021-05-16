@@ -1,3 +1,3 @@
 Config = {}
 
-Config.databaseName = "es_extended"
+Config.databaseName = 'es_extended'

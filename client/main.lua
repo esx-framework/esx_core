@@ -2,15 +2,12 @@ ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar then
 	local IsChoosing = true
 
-	-- This Code Was changed to fix error With player spawner as default --
-	-- Link to the post with the error fix --
-	-- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/316?u=xxfri3ndlyxx --
 	CreateThread(function()
 		while true do
 			Wait(0)
 			if NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() then
-				TriggerServerEvent("kashactersS:SetupCharacters")
-				TriggerEvent("kashactersC:SetupCharacters")
+				TriggerServerEvent("esx_multicharacter:SetupCharacters")
+				TriggerEvent("esx_multicharacter:SetupCharacters")
 				break
 			end
 		end
@@ -24,8 +21,8 @@ if ESX.GetConfig().Multichar then
 
 	local cam, cam2 = nil, nil
 
-	RegisterNetEvent('kashactersC:SetupCharacters')
-	AddEventHandler('kashactersC:SetupCharacters', function()
+	RegisterNetEvent('esx_multicharacter:SetupCharacters')
+	AddEventHandler('esx_multicharacter:SetupCharacters', function()
 		ESX.UI.HUD.SetDisplay(0.0)
 		DisplayHud(false)
 		DisplayRadar(false)
@@ -42,8 +39,8 @@ if ESX.GetConfig().Multichar then
 		RenderScriptCams(true, false, 1, true, true)
 	end)
 
-	RegisterNetEvent('kashactersC:SetupUI')
-	AddEventHandler('kashactersC:SetupUI', function(Characters)
+	RegisterNetEvent('esx_multicharacter:SetupUI')
+	AddEventHandler('esx_multicharacter:SetupUI', function(Characters)
 		DoScreenFadeIn(500)
 		Citizen.Wait(500)
 		SetNuiFocus(true, true)
@@ -53,8 +50,8 @@ if ESX.GetConfig().Multichar then
 		})
 	end)
 
-	RegisterNetEvent('kashactersC:SpawnCharacter')
-	AddEventHandler('kashactersC:SpawnCharacter', function(spawn, isNew, skin)
+	RegisterNetEvent('esx_multicharacter:SpawnCharacter')
+	AddEventHandler('esx_multicharacter:SpawnCharacter', function(spawn, isNew, skin)
 		local pos = spawn
 
 		SetTimecycleModifier('default')
@@ -110,16 +107,16 @@ if ESX.GetConfig().Multichar then
 		end)
 	end)
 
-	RegisterNetEvent('kashactersC:ReloadCharacters')
-	AddEventHandler('kashactersC:ReloadCharacters', function()
-		TriggerServerEvent("kashactersS:SetupCharacters")
-		TriggerEvent("kashactersC:SetupCharacters")
+	RegisterNetEvent('esx_multicharacter:ReloadCharacters')
+	AddEventHandler('esx_multicharacter:ReloadCharacters', function()
+		TriggerServerEvent("esx_multicharacter:SetupCharacters")
+		TriggerEvent("esx_multicharacter:SetupCharacters")
 	end)
 
 	RegisterNUICallback("CharacterChosen", function(data, cb)
 		SetNuiFocus(false,false)
 		DoScreenFadeOut(500)
-		TriggerServerEvent('kashactersS:CharacterChosen', data.charid, data.ischar)
+		TriggerServerEvent('esx_multicharacter:CharacterChosen', data.charid, data.ischar)
 		if not data.ischar then TriggerEvent('esx_identity:showRegisterIdentity') end
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
@@ -130,7 +127,7 @@ if ESX.GetConfig().Multichar then
 	RegisterNUICallback("DeleteCharacter", function(data, cb)
 		SetNuiFocus(false,false)
 		DoScreenFadeOut(500)
-		TriggerServerEvent('kashactersS:DeleteCharacter', data.charid)
+		TriggerServerEvent('esx_multicharacter:DeleteCharacter', data.charid)
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
 		end
