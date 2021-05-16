@@ -91,3 +91,7 @@ if ESX.GetConfig().Multichar then
 		end
 	end
 end
+
+RegisterCommand('relog', function(source, args, rawCommand)
+	TriggerEvent('esx:playerLogout', source)
+end, true)

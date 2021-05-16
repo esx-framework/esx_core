@@ -22,7 +22,9 @@ if ESX.GetConfig().Multichar then
 	local cam, cam2 = nil, nil
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters')
-	AddEventHandler('esx_multicharacter:SetupCharacters', function()
+	AddEventHandler('esx_multicharacter:SetupCharacters', function()	
+		ESX.PlayerLoaded = false
+		ESX.PlayerData = {}
 		ESX.UI.HUD.SetDisplay(0.0)
 		DisplayHud(false)
 		DisplayRadar(false)
@@ -133,4 +135,12 @@ if ESX.GetConfig().Multichar then
 		end
 		cb("ok")
 	end)
+
+	RegisterNetEvent('esx:onPlayerLogout')
+	AddEventHandler('esx:onPlayerLogout', function()
+		TriggerServerEvent("esx_multicharacter:SetupCharacters")
+		TriggerEvent("esx_multicharacter:SetupCharacters")
+		TriggerEvent('esx_skin:resetFirstSpawn')
+	end)
+
 end
