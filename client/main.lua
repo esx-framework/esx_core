@@ -60,14 +60,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		FreezeEntityPosition(ESX.PlayerData.ped, false)
 		StartServerSyncLoops()
 	end)
-	if isNew then
-		
-	else
-		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-			TriggerEvent('skinchanger:loadSkin', skin)
-		end)
-	end
-
 	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
 end)
 
