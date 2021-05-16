@@ -30,7 +30,7 @@ function onPlayerJoined(playerId)
 					end
 
 					if IsPlayerAceAllowed(playerId, "command") then
-						print(('[^5es_extended^0] ^2[INFO] ^0 Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
+						print(('^2[INFO] ^0 Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
 						defaultGroup = "admin"
 					else
 						defaultGroup = "user"
@@ -108,7 +108,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			if ESX.DoesJobExist(job, grade) then
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			else
-				print(('[^5es_extended^0] [^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
+				print(('[^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
 				job, grade = 'unemployed', '0'
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			end
@@ -138,7 +138,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 					if item then
 						foundItems[name] = count
 					else
-						print(('[^5es_extended^0] [^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, identifier))
+						print(('[^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, identifier))
 					end
 				end
 			end
@@ -199,7 +199,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			if result[1].position and result[1].position ~= '' then
 				userData.coords = json.decode(result[1].position)
 			else
-				print('[^5es_extended^0] [^3WARNING^7] Column ^5"position"^0 in ^5"users"^0 table is missing required default value. Using backup coords, fix your database.')
+				print('[^3WARNING^7] Column ^5"position"^0 in ^5"users"^0 table is missing required default value. Using backup coords, fix your database.')
 				userData.coords = {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
 			end
 
@@ -225,7 +225,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
-		print(('[^5es_extended^0] [^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
+		print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 	end)
 end
 
@@ -568,7 +568,7 @@ Citizen.CreateThread(
 						)
 						end
 					else
-						print('[^5es_extended^0] [^1ERROR^0] Es-Extended unable to check version!')
+						print('[^1ERROR^0] Es-Extended unable to check version!')
 					end
 				end,
 				'GET'

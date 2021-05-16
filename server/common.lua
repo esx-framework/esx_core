@@ -41,26 +41,26 @@ MySQL.ready(function()
 				if ESX.Jobs[v.job_name] then
 					ESX.Jobs[v.job_name].grades[tostring(v.grade)] = v
 				else
-					print(('[^5es_extended^0] [^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
+					print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
 				end
 			end
 
 			for k2,v2 in pairs(ESX.Jobs) do
 				if ESX.Table.SizeOf(v2.grades) == 0 then
 					ESX.Jobs[v2.name] = nil
-					print(('[^5es_extended^0] [^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v2.name))
+					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v2.name))
 				end
 			end
 		end)
 	end)
 
-	print('[^5es_extended^0] [^2INFO^7] ESX ^5Legacy^0 initialized')
+	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
 end)
 
 RegisterServerEvent('esx:clientLog')
 AddEventHandler('esx:clientLog', function(msg)
 	if Config.EnableDebug then
-		print(('[^5es_extended^0] [^2TRACE^7] %s^7'):format(msg))
+		print(('[^2TRACE^7] %s^7'):format(msg))
 	end
 end)
 

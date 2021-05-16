@@ -168,7 +168,7 @@ ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
 		for _, playerId in ipairs(GetPlayers()) do
 			DropPlayer(playerId, "Server Restart")
 		end
-		print('[^5es_extended^0] ^2[INFO] ^1 Server Restarting, Please Wait :)')
+		print('^2[INFO] ^1 Server Restarting, Please Wait :)')
 		crash = true
 		while crash do
 		end
