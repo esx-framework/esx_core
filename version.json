@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.1.10",
-	"changelog": "function improvements; new import file and functions"
+	"commit" : "1.2.0",
+	"changelog": "Preserve compatibility for getting hashes; store player ped and death in PlayerData; resolve typos and outdated prints"
 }
