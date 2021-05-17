@@ -3,7 +3,7 @@ local isPaused, isDead, pickups = false, false, {}
 Citizen.CreateThread(function()
 	while NetworkIsPlayerActive(PlayerId()) and not Config.Multichar do
 		Citizen.Wait(5)
-		DoScreenFadeOut(500)
+		DoScreenFadeOut(0)
 		TriggerServerEvent('esx:onPlayerJoined')
 		break
 	end
