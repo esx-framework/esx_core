@@ -507,6 +507,21 @@ Config.Weapons = {
 		}
 	},
 	{
+		name = 'WEAPON_SMG',
+		label = _U('weapon_smg'),
+		ammo = {label = _U('ammo_rounds'), hash = `AMMO_SMG`},
+		tints = Config.DefaultWeaponTints,
+		components = {
+			{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_SMG_CLIP_01`},
+			{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_SMG_CLIP_02`},
+			{name = 'clip_drum', label = _U('component_clip_drum'), hash = `COMPONENT_SMG_CLIP_03`},
+			{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH`},
+			{name = 'scope', label = _U('component_scope'), hash = `COMPONENT_AT_SCOPE_MACRO_02`},
+			{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP`},
+			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = `COMPONENT_SMG_VARMOD_LUXE`}
+		}
+	},
+	{
 		name = 'WEAPON_SMG_MK2',
 		label = _U('weapon_smg_mk2'),
 		ammo = {label = _U('ammo_rounds'), hash = `AMMO_SMG`},
