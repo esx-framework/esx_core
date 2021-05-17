@@ -1,7 +1,7 @@
 
 ### Requirements
-* [esx_identity 8e97e6d](https://github.com/thelindat/esx_identity/tree/8e97e6dcc264dbd9f77ec51790cce77873a4b39a) - Needs to be my fork for the moment
-* [esx_skin 1a0302b](https://github.com/esx-framework/esx_skin/tree/1a0302be4d6dc44d4cb80588775c8723e6f8d6c4)
+* [esx_identity](https://github.com/thelindat/esx_identity) [Currently requires my fork]
+* [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
 * Resource must be named `esx_multicharacter` to function properly
 * All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
 * Do not run `essentialsmode` or `basic-gamemode`, and ensure you are using `spawnmanager`
