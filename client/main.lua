@@ -16,7 +16,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	ESX.PlayerData = playerData
 	ESX.PlayerData.ped = ESX.PlayerData.ped
 
-
 	FreezeEntityPosition(ESX.PlayerData.ped, true)
 	
 	-- enable PVP
@@ -79,6 +78,7 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	ESX.PlayerLoaded = false
+	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
