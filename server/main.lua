@@ -31,7 +31,7 @@ if ESX.GetConfig().Multichar then
 	AddEventHandler('esx_multicharacter:SetupCharacters', function()
 		local playerId = source
 		local identifier = 'char%:'..ESX.GetIdentifier(playerId)
-		MySQL.Async.fetchAll("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex` FROM `users` WHERE `identifier` LIKE @identifier", {
+		MySQL.Async.fetchAll("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE `identifier` LIKE @identifier", {
 			['@identifier'] = identifier
 		}, function(result)
 			local characters = {}
@@ -48,7 +48,8 @@ if ESX.GetConfig().Multichar then
 					firstname = result[i].firstname,
 					lastname = result[i].lastname,
 					dateofbirth = result[i].dateofbirth,
-					identifier = result[i].identifier
+					identifier = result[i].identifier,
+					skin = json.decode(result[i].skin)
 				}
 				if result[i].sex == 'm' then characters[i].sex = 'Male' else characters[i].sex = 'Female' end
 			end

@@ -1,11 +1,11 @@
 ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar then
-	local IsChoosing = true
 
 	CreateThread(function()
 		while true do
 			Wait(0)
 			if NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() then
+				DoScreenFadeOut(500)
 				TriggerServerEvent("esx_multicharacter:SetupCharacters")
 				TriggerEvent("esx_multicharacter:SetupCharacters")
 				break
@@ -43,6 +43,7 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(Characters)
+		NetworkConcealPlayer(PlayerId(), 1, 0)
 		DoScreenFadeIn(500)
 		Citizen.Wait(500)
 		SetNuiFocus(true, true)
@@ -50,6 +51,9 @@ if ESX.GetConfig().Multichar then
 			action = "openui",
 			characters = Characters,
 		})
+		ShutdownLoadingScreen()
+		ShutdownLoadingScreenNui()
+		TriggerEvent('esx:loadingScreenOff')
 	end)
 
 	RegisterNetEvent('esx_multicharacter:SpawnCharacter')
@@ -67,8 +71,8 @@ if ESX.GetConfig().Multichar then
 			skipFade = true
 		}, function()
 			DoScreenFadeIn(500)
-
 			Citizen.Wait(500)
+			NetworkConcealPlayer(PlayerId(), 0, 0)
 
 			cam2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", -1355.93,-1487.78,520.75, 300.00,0.00,0.00, 100.00, false, 0)
 			PointCamAtCoord(cam2, pos.x,pos.y,pos.z+200)
@@ -102,7 +106,6 @@ if ESX.GetConfig().Multichar then
 
 			SetCamActive(cam, false)
 			DestroyCam(cam, true)
-			IsChoosing = false
 
 			DisplayHud(true)
 			DisplayRadar(true)
