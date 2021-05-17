@@ -1,15 +1,13 @@
 ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar then
 
-	CreateThread(function()
-		while true do
-			Wait(0)
-			if NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() then
-				DoScreenFadeOut(500)
-				TriggerServerEvent("esx_multicharacter:SetupCharacters")
-				TriggerEvent("esx_multicharacter:SetupCharacters")
-				break
-			end
+	Citizen.CreateThread(function()
+		while NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() do
+			Citizen.Wait(5)
+			DoScreenFadeOut(0)
+			TriggerServerEvent("esx_multicharacter:SetupCharacters")
+			TriggerEvent("esx_multicharacter:SetupCharacters")
+			break
 		end
 	end)
 
@@ -22,7 +20,7 @@ if ESX.GetConfig().Multichar then
 	local cam, cam2 = nil, nil
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters')
-	AddEventHandler('esx_multicharacter:SetupCharacters', function()	
+	AddEventHandler('esx_multicharacter:SetupCharacters', function()
 		ESX.PlayerLoaded = false
 		ESX.PlayerData = {}
 		ESX.UI.HUD.SetDisplay(0.0)
@@ -30,7 +28,6 @@ if ESX.GetConfig().Multichar then
 		DisplayRadar(false)
 		ShutdownLoadingScreen()
 		Citizen.Wait(100)
-		DoScreenFadeOut(10)
 		while not IsScreenFadedOut() do
 			Citizen.Wait(10)
 		end
@@ -39,12 +36,12 @@ if ESX.GetConfig().Multichar then
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", -1355.93,-1487.78,520.75, 300.00,0.00,0.00, 100.00, false, 0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
+		DoScreenFadeIn(500)
 	end)
 
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(Characters)
 		NetworkConcealPlayer(PlayerId(), 1, 0)
-		DoScreenFadeIn(500)
 		Citizen.Wait(500)
 		SetNuiFocus(true, true)
 		SendNUIMessage({
@@ -141,6 +138,7 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx:onPlayerLogout')
 	AddEventHandler('esx:onPlayerLogout', function()
+		DoScreenFadeOut(0)
 		TriggerServerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent('esx_skin:resetFirstSpawn')
