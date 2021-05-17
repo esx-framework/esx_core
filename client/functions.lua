@@ -310,7 +310,7 @@ end
 
 ESX.Game.Teleport = function(entity, coords, cb)
 	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
-	
+
 	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(entity) do
@@ -330,10 +330,10 @@ ESX.Game.SpawnObject = function(model, coords, cb, networked, dynamic)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
 	dynamic = dynamic ~= nil and true or false
-	
+
 	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
-		
+
 		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
 		-- as an Object instead of a hash so it doesn't automatically hash the item
 		model = type(model) == 'number' and model or GetHashKey(model)
@@ -712,8 +712,8 @@ ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
 	AddTextComponentString(text)
 	SetDrawOrigin(vector.xyz, 0)
 	DrawText(0.0, 0.0)
-	local factor = string.len(text) / 370
-	DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
+	local scaleFactor = scale / 0.35
+	DrawRect(0.0, 0.0 + 0.0111 * scaleFactor, 0.017 + (string.len(text) / 370) * scaleFactor, 0.03 * scaleFactor, 0, 0, 0, 75)
 	ClearDrawOrigin()
 end
 
@@ -736,7 +736,7 @@ ESX.ShowInventory = function()
 				canRemove = canDrop
 			})
 		end
-	end 
+	end
 
 	for k,v in ipairs(ESX.PlayerData.inventory) do
 		if v.count > 0 then
