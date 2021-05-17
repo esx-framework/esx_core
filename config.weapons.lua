@@ -11,9 +11,9 @@ Config.DefaultWeaponTints = {
 
 Config.Weapons = {
 	-- Melee
-	{name = `WEAPON_DAGGER`, label = _U('weapon_dagger'), components = {}},
-	{name = `WEAPON_BAT`, label = _U('weapon_bat'), components = {}},
-	{name = `WEAPON_BATTLEAXE`, label = _U('weapon_battleaxe'), components = {}},
+	{name = 'WEAPON_DAGGER', label = _U('weapon_dagger'), components = {}},
+	{name = 'WEAPON_BAT', label = _U('weapon_bat'), components = {}},
+	{name = 'WEAPON_BATTLEAXE', label = _U('weapon_battleaxe'), components = {}},
 	{
 		name = 'WEAPON_KNUCKLE',
 		label = _U('weapon_knuckle'),
