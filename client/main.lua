@@ -56,7 +56,7 @@ if not Config.UseDeferrals then
 			if callback then
 				ESX.ShowNotification(_U('thank_you_for_registering'))
 				EnableGui(false)
-				TriggerEvent('esx_skin:playerRegistered')
+				if not ESX.GetConfig().Multichar then TriggerEvent('esx_skin:playerRegistered') end
 			else
 				ESX.ShowNotification(_U('registration_error'))
 			end
