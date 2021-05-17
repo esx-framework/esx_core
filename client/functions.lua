@@ -699,6 +699,7 @@ end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	if scale then scale = scale + 0.0 end
 
 	if not scale then scale = 0.35 end
 	if not font then font = 4 end
