@@ -1,8 +1,9 @@
 local isPaused, isDead, pickups = false, false, {}
 
 Citizen.CreateThread(function()
-	while NetworkIsPlayerActive(PlayerId()) do
+	while NetworkIsPlayerActive(PlayerId()) and not Config.Multichar do
 		Citizen.Wait(5)
+		DoScreenFadeOut(500)
 		TriggerServerEvent('esx:onPlayerJoined')
 		break
 	end
@@ -42,25 +43,42 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 		})
 	end
 
-	exports.spawnmanager:spawnPlayer({
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading,
-		model = `mp_m_freemode_01`,
-		skipFade = false
-	}, function()
-		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
-		TriggerEvent('esx:restoreLoadout')
-
+	if Config.Multichar then
+		TriggerEvent('esx_multicharacter:SpawnCharacter', playerData.coords, isNew, playerData.skin)
 		Citizen.Wait(4000)
+	else
+		exports.spawnmanager:spawnPlayer({
+			x = playerData.coords.x,
+			y = playerData.coords.y,
+			z = playerData.coords.z + 0.25,
+			heading = playerData.coords.heading,
+			model = `mp_m_freemode_01`,
+			skipFade = true
+		}, function()
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts
+			TriggerEvent('esx:restoreLoadout')
+		end)
+		Citizen.Wait(1000)
+		if isNew then
+			if playerData.skin.sex == 0 then
+				TriggerEvent('skinchanger:loadDefaultModel', true)
+			else
+				TriggerEvent('skinchanger:loadDefaultModel', false)
+			end
+		elseif playerData.skin then TriggerEvent('skinchanger:loadSkin', playerData.skin) end
 		ShutdownLoadingScreen()
 		ShutdownLoadingScreenNui()
+		TriggerEvent('esx:loadingScreenOff')
+		DoScreenFadeIn(500)
 		FreezeEntityPosition(ESX.PlayerData.ped, false)
-		StartServerSyncLoops()
-	end)
-	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
+	end
+	StartServerSyncLoops()
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
 end)
 
 RegisterNetEvent('esx:setMaxWeight')

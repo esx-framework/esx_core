@@ -18,3 +18,4 @@ Config.EnableDefaultInventory   = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
 
+Config.Multichar				= true -- Requires esx_multicharacter
