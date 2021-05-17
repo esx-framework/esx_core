@@ -2,30 +2,28 @@ ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar then
 	local IdentifierTables = {}
 
-	function GetTables()
-		Citizen.CreateThread(function()
-			MySQL.ready(function ()
-				MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
-					if result then
-						for k, v in pairs(result) do
-							table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "owner"})
-						end
+	Citizen.CreateThread(function()
+		MySQL.ready(function ()
+			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
+				if result then
+					for k, v in pairs(result) do
+						IdentifierTables[#IdentifierTables+1] = {table = v.TABLE_NAME, column = "owner"}
 					end
-				end)
-				MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
-					if result then
-						for k, v in pairs(result) do
-							table.insert( IdentifierTables, {table = v.TABLE_NAME, column = "identifier"})
-						end
-					end
-				end)
+				end
 			end)
-			Citizen.Wait(500)
-			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
+			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
+				if result then
+					for k, v in pairs(result) do
+						IdentifierTables[#IdentifierTables+1] = {table = v.TABLE_NAME, column = "identifier"}
+					end
+				end
+			end)
 		end)
-	end
-
-	GetTables()
+		while next(ESX.Jobs) == nil do
+			Citizen.Wait(200)
+			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
+		end
+	end)
 
 	RegisterServerEvent("esx_multicharacter:SetupCharacters")
 	AddEventHandler('esx_multicharacter:SetupCharacters', function()
