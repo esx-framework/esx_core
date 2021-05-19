@@ -2,10 +2,10 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local playerIdentity = {}
 local alreadyRegistered = {}
-local multichar = ESX.GetConfig().Multichar or false
+local multichar = ESX.GetConfig().Multichar
 
 function getIdentifier(playerId)
-	if multichar then
+	if multichar ~= nil then
 		return ESX.GetIdentifier(playerId)
 	else
 		ESX.GetIdentifier = function(playerId)
