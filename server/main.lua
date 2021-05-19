@@ -82,9 +82,7 @@ if ESX.GetConfig().Multichar then
 	function DeleteCharacter(playerId, charid)
 		local identifier = 'char'..charid..':'..ESX.GetIdentifier(playerId)
 		for _, itable in pairs(IdentifierTables) do
-			MySQL.Async.fetchAll("DELETE FROM @table WHERE @column = @identifier", {
-				['@table'] = itable.table,
-				['@column'] = itable.column,
+			MySQL.Async.execute("DELETE FROM "..itable.table.." WHERE "..itable.column.." = @identifier", {
 				['@identifier'] = identifier
 			})
 		end
@@ -93,4 +91,4 @@ end
 
 RegisterCommand('relog', function(source, args, rawCommand)
 	TriggerEvent('esx:playerLogout', source)
-end, true)
+end, true) -- Still experimental and requires proper setup; don't use this
