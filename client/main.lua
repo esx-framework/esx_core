@@ -34,10 +34,21 @@ if ESX.GetConfig().Multichar then
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+0.5, 0.0, 0.0, 180.0, 100.00, false, 0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
-		SetPlayerControl(PlayerId(), false, false)
 	end)
 
 	StartLoop = function()
+		Citizen.CreateThread(function()
+			while true do
+				if hidePlayers == false then break end
+				DisableAllControlActions(0)
+				EnableControlAction(0, 173, true)
+				EnableControlAction(0, 177, true)
+				EnableControlAction(0, 18, true)
+				EnableControlAction(0, 27, true)
+				EnableControlAction(0, 200, true)
+				Citizen.Wait(5)
+			end
+		end)
 		Citizen.CreateThread(function()
 			while true do
 				if hidePlayers == false then break end
@@ -89,9 +100,12 @@ if ESX.GetConfig().Multichar then
 
 	LoadPed = function(isNew, skin)
 		if isNew then
-			if skin.sex == 0 then isMale = true else isMale = false end
+			local isMale = false
+			if skin.sex == 1 then isMale = false end
 			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
-				TriggerEvent('skinchanger:loadSkin', {sex = skin.sex})
+				local newSkin = Config.Default
+				newSkin.sex = skin.sex
+				TriggerEvent('skinchanger:loadSkin', newSkin)
 				Citizen.Wait(500)
 				TriggerEvent('esx_skin:openSaveableMenu')
 			end)
@@ -104,6 +118,9 @@ if ESX.GetConfig().Multichar then
 		local elements = {}
 
 		if #Characters == 0 then
+			SendNUIMessage({
+				action = "closeui"
+			})
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -162,6 +179,7 @@ if ESX.GetConfig().Multichar then
 								if data.current.value then
 									TriggerServerEvent('esx_multicharacter:DeleteCharacter', data.current.value)
 									table.remove(Characters, data.current.value)
+									Spawned = false
 									ESX.UI.Menu.CloseAll()
 									TriggerServerEvent('esx_multicharacter:SetupCharacters')
 									Citizen.Wait(100)
@@ -241,7 +259,6 @@ if ESX.GetConfig().Multichar then
 		DisplayHud(true)
 		DisplayRadar(true)
 		FreezeEntityPosition(playerPed, false)
-		SetPlayerControl(PlayerId(), true, false)
 		SetEntityHeading(playerPed, spawn.heading)
 		hidePlayers = false
 	end)
