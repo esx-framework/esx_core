@@ -22,7 +22,7 @@ Although kashacters provided an easy-to-use and free method of multiple characte
 * All tables containing an `owner` or `identifier` column are checked on startup, so character deletion will properly wipe all data
 
 
-![image](https://user-images.githubusercontent.com/65407488/118985577-e82caa00-b9c1-11eb-92a0-a8de765bf157.png)
+![image](https://user-images.githubusercontent.com/65407488/119008926-f71d5780-b9d5-11eb-882e-1c33862e8f42.png)
 
 
 ## Notice
