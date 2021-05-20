@@ -120,26 +120,25 @@ if ESX.GetConfig().Multichar then
 			end)
 		else
 			for i=1, #Characters+1 do
-				local label = 'Create new character'
 				if Characters[i] then
 					if Spawned == false then SetupCharacter(i) end
-					label = Characters[i].firstname..' '..Characters[i].lastname
+					local label = Characters[i].firstname..' '..Characters[i].lastname
 					if Characters[i].sex == 'Female' then Characters[i].model = `mp_f_freemode_01` else Characters[i].model = `mp_m_freemode_01` end
 					elements[#elements+1] = {label = label, value = Characters[i].id, new = false}
-				else elements[#elements+1] = {label = label, new = true} end
+				else elements[#elements+1] = {label = _('create_char'), new = true} end
 			end
 		
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'selectchar', {
-				title    = 'Select character',
+				title    = _('select_char'),
 				align    = 'top-left',
 				elements = elements
 			}, function(data, menu)
 				local elements = { }
 				if not data.current.new then
-					elements[1] = {label = 'Play this character', action = 'play', value = data.current.value}
-					elements[2] = {label = 'Delete this character', action = 'delete', value = data.current.value}
+					elements[1] = {label = _('char_play'), action = 'play', value = data.current.value}
+					elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value}
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'choosechar', {
-						title = 'Select character',
+						title = _('select_char'),
 						align = 'top-left',
 						elements = elements
 					}, function(data, menu)
@@ -153,10 +152,10 @@ if ESX.GetConfig().Multichar then
 							Citizen.Wait(300)
 						else
 							local elements2 = {}
-							elements2[1] = {label = 'Return'}
-							elements2[2] = {label = 'Confirm', value = data.current.value}
+							elements2[1] = {label = _('cancel')}
+							elements2[2] = {label = _('confirm'), value = data.current.value}
 							ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'deletechar', {
-								title = 'Delete '..Characters[data.current.value].firstname..' '..Characters[data.current.value].lastname..'?',
+								title = _('delete_label', Characters[data.current.value].firstname, Characters[data.current.value].lastname),
 								align = 'center',
 								elements = elements2
 							}, function(data, menu)
