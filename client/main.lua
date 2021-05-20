@@ -81,10 +81,10 @@ if ESX.GetConfig().Multichar then
 		end
 		FreezeEntityPosition(PlayerPedId(), true)
 		Spawned = index
-		--[[SendNUIMessage({
+		SendNUIMessage({
 			action = "openui",
 			character = Characters[index]
-		})]]
+		})
 	end
 
 	LoadPed = function(isNew, skin)
@@ -146,9 +146,9 @@ if ESX.GetConfig().Multichar then
 						if data.current.action == 'play' then
 							ESX.UI.Menu.CloseAll()
 							DoScreenFadeOut(300)
-							--[[SendNUIMessage({
+							SendNUIMessage({
 								action = "closeui"
-							})]]
+							})
 							TriggerServerEvent('esx_multicharacter:CharacterChosen', data.current.value, false)
 							Citizen.Wait(300)
 						else
@@ -196,9 +196,9 @@ if ESX.GetConfig().Multichar then
 					local playerPed = PlayerPedId()
 					SetPedAoBlobRendering(playerPed, false)
 					SetEntityAlpha(playerPed, 0)
-					--[[SendNUIMessage({
+					SendNUIMessage({
 						action = "closeui"
-					})]]
+					})
 				else
 					SetupCharacter(data.current.value)
 					local playerPed = PlayerPedId()
