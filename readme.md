@@ -1,114 +1,45 @@
-
+## ESX_Multicharacter
 ### Requirements
+* [ESX Legacy](https://github.com/thelindat/es_extended) [Currently requires my fork]
 * [esx_identity](https://github.com/thelindat/esx_identity) [Currently requires my fork]
 * [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
-* Resource must be named `esx_multicharacter` to function properly
 * All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
 * Do not run `essentialsmode` or `basic-gamemode`, and ensure you are using `spawnmanager`
- 
- 
+
+
 ### ESX Legacy  
-This resource is using some new features added in the latest update to ESX v1.
-Requires esx_identity and esx_skin to work - if you want to use something else (such as cui_character) you will need to work out the necessary changes.
-* By default, identifiers will write as `char#:license`, you can change the prefix in kashacters but the identifier is set by ESX
+* This resource is not compatible with previous versions of ESX or EXM
+* Requires ESX_Identity and ESX_Skin to function properly - edits will be required to use other resources that modify character spawning
+* You can not upgrade to this resource from the original release of kashacters; the methods used are entirely incompatible
+* The player identifier used is set by ESX and by default only allows for a Rockstar License
 
 
-### Nuclear Disarmament  
-The old kashacters queried the database when you selected a different character than your last; selecting the 3rd slot meant replacing every instance of `license` with `Char2:license`, then updating `Char3:license` to just `license`.  
-While the end result worked it wasn't exactly optimised and had the reputation of "nuking your database".
-* When a character is created, append the character id to the license
-* (Framework) xPlayer and ESX.PlayerData `identifier` will display `char#:license` - `license` will display the actual identifier
+### What's new?
+Although kashacters provided an easy-to-use and free method of multiple characters, the method for doing so was inefficient and potentially database breaking.
+* All users are created with a modified identifier entry, instead using `char#:identifier`
+* There is no SQL table or modifications required for this to function
+* Selecting a different character does not require modifying every instance of the characters identifier
+* All tables containing an `owner` or `identifier` column are checked on startup, so character deletion will properly wipe all data
 
 
-## Current design
-![img](https://i.gyazo.com/9ec7181c10679e4053ced5349884f4e8.jpg)
+![image](https://user-images.githubusercontent.com/65407488/118985577-e82caa00-b9c1-11eb-92a0-a8de765bf157.png)
 
-## SQL Injection fix from [KASHZIN/kashacters/pull/36](https://github.com/KASHZIN/kashacters/pull/36) is applied to this fork!
+
+## Notice
+Copyright© 2021 Linden and KASH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see https://www.gnu.org/licenses.
+
 
 # Thanks to KASH and XxFri3ndlyxX
-
-
-
-# Information below is outdated and pending review
-
-## Duplication Entry (Datastore)
-
-* esx_datastore: (`esx_datastore/server/main.lua `)
-### Comment out this code:
-```lua
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-    for i=1, #DataStoresIndex, 1 do
-        local name = DataStoresIndex[i]
-        local dataStore = GetDataStore(name, xPlayer.identifier)
-
-        if not dataStore then
-            MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
-                ['@name']  = name,
-                ['@owner'] = xPlayer.identifier,
-                ['@data']  = '{}'
-            })
-
-            dataStore = CreateDataStore(name, xPlayer.identifier, {})
-            table.insert(DataStores[name], dataStore)
-        end
-    end
-end)
-```
-
-### Add this code 
-```lua
--- Fix for kashacters duplication entry --
--- Fix was taken from this link --
--- https://forum.fivem.net/t/release-esx-kashacters-multi-character/251613/448?u=xxfri3ndlyxx --
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-
-local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
-
-    for i=1, #result, 1 do
-        local name   = result[i].name
-        local label  = result[i].label
-        local shared = result[i].shared
-
-        local result2 = MySQL.Sync.fetchAll('SELECT * FROM datastore_data WHERE name = @name', {
-            ['@name'] = name
-        })
-
-        if shared == 0 then
-
-            table.insert(DataStoresIndex, name)
-            DataStores[name] = {}
-
-            for j=1, #result2, 1 do
-                local storeName  = result2[j].name
-                local storeOwner = result2[j].owner
-                local storeData  = (result2[j].data == nil and {} or json.decode(result2[j].data))
-                local dataStore  = CreateDataStore(storeName, storeOwner, storeData)
-
-                table.insert(DataStores[name], dataStore)
-            end
-        end
-    end
-
-    local dataStores = {}
-    for i=1, #DataStoresIndex, 1 do
-        local name      = DataStoresIndex[i]
-        local dataStore = GetDataStore(name, xPlayer.identifier)
-
-        if dataStore == nil then
-            MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)',
-            {
-                ['@name']  = name,
-                ['@owner'] = xPlayer.identifier,
-                ['@data']  = '{}'
-            })
-
-            dataStore = CreateDataStore(name, xPlayer.identifier, {})
-            table.insert(DataStores[name], dataStore)
-        end
-
-        table.insert(dataStores, dataStore)
-    end
-
-    xPlayer.set('dataStores', dataStores)
-end)
-```
