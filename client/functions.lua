@@ -324,7 +324,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(entity) do
-			Wait(0)
+			Citizen.Wait(0)
 		end
 
 		SetEntityCoords(entity, vector.xyz, false, false, false, false)
@@ -342,7 +342,7 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked, dynamic)
 	networked = networked == nil and true or false
 	dynamic = dynamic ~= nil and true or false
 
-	CreateThread(function()
+	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
@@ -374,7 +374,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
-	CreateThread(function()
+	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
@@ -391,7 +391,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			Wait(0)
+			Citizen.Wait(0)
 		end
 
 		if cb then

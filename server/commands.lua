@@ -1,4 +1,3 @@
-local crash = false
 ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
 	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
 end, false, {help = _U('command_setcoords'), validate = true, arguments = {
@@ -169,9 +168,7 @@ ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
 			DropPlayer(playerId, "Server Restart")
 		end
 		print('^2[INFO] ^1 Server Restarting, Please Wait :)')
-		crash = true
-		while crash do
-		end
+		while true do end
 	end)
 end, true)
 
