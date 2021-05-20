@@ -76,7 +76,8 @@ if ESX.GetConfig().Multichar then
 				model = Characters[index].model or `mp_m_freemode_01`,
 				skipFade = true
 			}, function()
-				if Characters[index] then TriggerEvent('skinchanger:loadSkin', Characters[index].skin) end
+				local skin = Characters[index].skin or Config.Default
+				if Characters[index] then TriggerEvent('skinchanger:loadSkin', skin) end
 			end)
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model ~= Characters[index].model then
@@ -116,8 +117,9 @@ if ESX.GetConfig().Multichar then
 	AddEventHandler('esx_multicharacter:SetupUI', function(data)
 		if data then Characters = data end
 		local elements = {}
+		local Character = next(Characters)
 
-		if #Characters == 0 then
+		if Character == nil then
 			SendNUIMessage({
 				action = "closeui"
 			})
@@ -136,21 +138,21 @@ if ESX.GetConfig().Multichar then
 				TriggerEvent('esx_identity:showRegisterIdentity')
 			end)
 		else
-			for i=1, #Characters+1 do
-				if Characters[i] then
-					if Spawned == false then SetupCharacter(i) end
-					local label = Characters[i].firstname..' '..Characters[i].lastname
-					if Characters[i].sex == 'Female' then Characters[i].model = `mp_f_freemode_01` else Characters[i].model = `mp_m_freemode_01` end
-					elements[#elements+1] = {label = label, value = Characters[i].id, new = false}
-				else elements[#elements+1] = {label = _('create_char'), new = true} end
+			SetupCharacter(Character)
+			for k,v in pairs(Characters) do
+				local label = v.firstname..' '..v.lastname
+				if v.sex == 'Female' then v.model = `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
+				elements[#elements+1] = {label = label, value = v.id}
 			end
-		
+			if #elements < Config.Slots then
+				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
+			end
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'selectchar', {
 				title    = _('select_char'),
 				align    = 'top-left',
 				elements = elements
 			}, function(data, menu)
-				local elements = { }
+				local elements = {}
 				if not data.current.new then
 					elements[1] = {label = _('char_play'), action = 'play', value = data.current.value}
 					elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value}
@@ -178,11 +180,8 @@ if ESX.GetConfig().Multichar then
 							}, function(data, menu)
 								if data.current.value then
 									TriggerServerEvent('esx_multicharacter:DeleteCharacter', data.current.value)
-									table.remove(Characters, data.current.value)
 									Spawned = false
 									ESX.UI.Menu.CloseAll()
-									TriggerServerEvent('esx_multicharacter:SetupCharacters')
-									Citizen.Wait(100)
 								else
 									menu.close()
 								end
@@ -196,7 +195,7 @@ if ESX.GetConfig().Multichar then
 				else
 					ESX.UI.Menu.CloseAll()
 					local GetSlot = function()
-						for i=1, #Characters+1 do
+						for i=1, Config.Slots do
 							if not Characters[i] then
 								return i
 							end
