@@ -4,6 +4,6 @@ Locales['en'] = {
 	['create_char'] = "Create new character",
 	['char_play'] = "Play this character",
 	['char_delete'] = "Delete this character",
-	['return'] = "Return",
+	['cancel'] = "Cancel",
 	['confirm'] = "Confirm",
 }
