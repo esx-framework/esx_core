@@ -16,7 +16,6 @@ client_scripts {
     'client/main.lua',
 }
 
---[[	Disabled for now
 ui_page {
     'html/ui.html',
 }
@@ -28,4 +27,4 @@ files {
     'html/locales/fr.js',
     'html/locales/en.js',
     'html/locales/pl.js',
-}]]
+}
