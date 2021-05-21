@@ -37,7 +37,7 @@ if ESX.GetConfig().Multichar then
 	end
 
 	DeleteCharacter = function(playerId, charid)
-		local identifier = 'char'..charid..':'..ESX.GetIdentifier(playerId)
+		local identifier = Config.prefix..charid..':'..ESX.GetIdentifier(playerId)
 		for _, itable in pairs(IdentifierTables) do
 			MySQL.Async.execute("DELETE FROM "..itable.table.." WHERE "..itable.column.." = @identifier", {
 				['@identifier'] = identifier
