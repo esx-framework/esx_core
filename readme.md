@@ -1,6 +1,6 @@
 ## ESX_Multicharacter
 ### Requirements
-* [ESX Legacy](https://github.com/thelindat/es_extended) [Currently requires my fork]
+* [ESX Legacy](https://github.com/thelindat/es_extended/tree/multichar) [Currently requires my fork]
 * [esx_identity](https://github.com/thelindat/esx_identity) [Currently requires my fork]
 * [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
 * All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
