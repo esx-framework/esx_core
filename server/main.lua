@@ -5,6 +5,9 @@ if ESX.GetConfig().Multichar then
 	Config.prefix = 'char'
 
 	SetupCharacters = function(playerId)
+		if next(ESX.Jobs) == nil then
+			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
+		end
 		local identifier = Config.prefix..'%:'..ESX.GetIdentifier(playerId)
 		MySQL.Async.fetchAll("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE `identifier` LIKE @identifier", {
 			['@identifier'] = identifier
@@ -59,10 +62,6 @@ if ESX.GetConfig().Multichar then
 				end
 			end)
 		end)
-		while next(ESX.Jobs) == nil do
-			Citizen.Wait(200)
-			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
-		end
 	end)
 
 	RegisterServerEvent("esx_multicharacter:SetupCharacters")
