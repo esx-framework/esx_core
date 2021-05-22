@@ -90,8 +90,10 @@ if ESX.GetConfig().Multichar then
 		end
 	end)
 
-	RegisterCommand('relog', function(source, args, rawCommand)
-		TriggerEvent('esx:playerLogout', source)
-	end, false)	-- Still experimental! Requires proper setup and modifications to other resources to properly support relogging
+	RegisterServerEvent("esx_multicharacter:relog")
+	AddEventHandler('esx_multicharacter:relog', function()
+		local src = source
+		TriggerEvent('esx:playerLogout', src)
+	end)
 	
 end
