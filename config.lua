@@ -4,6 +4,11 @@ Config.Locale = 'en'
 Config.Slots = 4
 Config.Spawn = vector4(-113.7, 565.3, 196, 0)
 
+--------------------
+-- Do not use unless you are prepared to adjust your resources to correctly reset data
+Config.Relog = false
+--------------------
+
 Config.Default = {
 	mom = 21,
 	dad = 0,
