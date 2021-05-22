@@ -53,13 +53,19 @@ if ESX.GetConfig().Multichar then
 				for i=1, #players do
 					if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], true, true) end
 				end
+				local vehicles == ESX.Game.GetVehicles()
+				for i=1, #vehicles do
+					NetworkConcealEntity(vehicles[i], true)
+				end
 				Citizen.Wait(500)
 			end
-			local players = GetActivePlayers()
 			for i=1, #players do
 				if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], false, false) end
 			end
-			Citizen.Wait(5000)
+			for i=1, #vehicles do
+				NetworkConcealEntity(vehicles[i], false)
+			end
+			Citizen.Wait(10000)
 			canRelog = true
 		end)
 	end
