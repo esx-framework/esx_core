@@ -21,22 +21,37 @@ if ESX.GetConfig().Multichar then
 		ESX.PlayerLoaded = false
 		ESX.PlayerData = {}
 		Spawned = false
-		ESX.UI.HUD.SetDisplay(0.0)
-		DisplayHud(false)
-		DisplayRadar(false)
-		StartLoop()
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		TriggerEvent('esx:loadingScreenOff')
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+0.5, 0.0, 0.0, 180.0, 100.00, false, 0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
+		exports.spawnmanager:forceRespawn()
+		exports.spawnmanager:spawnPlayer({
+			x = Config.Spawn.x,
+			y = Config.Spawn.y,
+			z = Config.Spawn.z,
+			heading = Config.Spawn.w,
+			model = `mp_m_freemode_01`,
+			skipFade = true
+		}, function()
+			canRelog = false
+			exports.spawnmanager:setAutoSpawn(false)
+			local playerPed = PlayerPedId()
+			SetPedAoBlobRendering(playerPed, false)
+			SetEntityAlpha(playerPed, 0)
+			ESX.UI.HUD.SetDisplay(0.0)
+			DisplayHud(false)
+			DisplayRadar(false)
+			StartLoop()
+			ShutdownLoadingScreen()
+			ShutdownLoadingScreenNui()
+			TriggerEvent('esx:loadingScreenOff')
+		end)
 	end)
 
 	StartLoop = function()
+		hidePlayers = true
 		Citizen.CreateThread(function()
-			while true do
-				if hidePlayers == false then break end
+			while hidePlayers do
 				DisableAllControlActions(0)
 				EnableControlAction(0, 173, true)
 				EnableControlAction(0, 177, true)
@@ -47,13 +62,13 @@ if ESX.GetConfig().Multichar then
 			end
 		end)
 		Citizen.CreateThread(function()
-			while true do
-				if hidePlayers == false then break end
-				local players = GetActivePlayers()
+			local players, vehicles
+			while hidePlayers do
+				players = GetActivePlayers()
 				for i=1, #players do
 					if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], true, true) end
 				end
-				local vehicles == ESX.Game.GetVehicles()
+				vehicles = ESX.Game.GetVehicles()
 				for i=1, #vehicles do
 					NetworkConcealEntity(vehicles[i], true)
 				end
@@ -87,7 +102,7 @@ if ESX.GetConfig().Multichar then
 				if Characters[index] then TriggerEvent('skinchanger:loadSkin', skin) end
 			end)
 		elseif Characters[index] and Characters[index].skin then
-			if Characters[Spawned] and Characters[Spawned].model ~= Characters[index].model then
+			if Characters[Spawned] and Characters[Spawned].model then
 				RequestModel(Characters[index].model)
 				while not HasModelLoaded(Characters[index].model) do
 					RequestModel(Characters[index].model)
@@ -104,6 +119,9 @@ if ESX.GetConfig().Multichar then
 			action = "openui",
 			character = Characters[index]
 		})
+		local playerPed = PlayerPedId()
+		SetPedAoBlobRendering(playerPed, true)
+		SetEntityAlpha(playerPed, 255)
 	end
 
 	LoadPed = function(isNew, skin)
@@ -130,28 +148,19 @@ if ESX.GetConfig().Multichar then
 			SendNUIMessage({
 				action = "closeui"
 			})
-			exports.spawnmanager:forceRespawn()
-			exports.spawnmanager:spawnPlayer({
-				x = Config.Spawn.x,
-				y = Config.Spawn.y,
-				z = Config.Spawn.z,
-				heading = Config.Spawn.w,
-				model = `mp_m_freemode_01`,
-				skipFade = true
-			}, function()
-				canRelog = false
-				exports.spawnmanager:setAutoSpawn(false)
-				local playerPed = PlayerPedId()
-				SetPedAoBlobRendering(playerPed, false)
-				SetEntityAlpha(playerPed, 0)
-				TriggerServerEvent('esx_multicharacter:CharacterChosen', 1, true)
-				TriggerEvent('esx_identity:showRegisterIdentity')
-			end)
+			canRelog = false
+			local playerPed = PlayerPedId()
+			SetPedAoBlobRendering(playerPed, false)
+			SetEntityAlpha(playerPed, 0)
+			TriggerServerEvent('esx_multicharacter:CharacterChosen', 1, true)
+			TriggerEvent('esx_identity:showRegisterIdentity')
 		else
 			SetupCharacter(Character)
 			for k,v in pairs(Characters) do
+				if not v.model then
+					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
+				end
 				local label = v.firstname..' '..v.lastname
-				if v.sex == 'Female' then v.model = `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
 				elements[#elements+1] = {label = label, value = v.id}
 			end
 			if #elements < Config.Slots then
