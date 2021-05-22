@@ -11,12 +11,9 @@ if ESX.GetConfig().Multichar then
 		end
 	end)
 
-	AddEventHandler("onClientMapStart", function()
-		exports.spawnmanager:setAutoSpawn(false)
-	end)
-
 	local cam, cam2 = nil, nil
 	local Characters =  {}
+	local canRelog = true
 	local Spawned
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters')
@@ -62,11 +59,14 @@ if ESX.GetConfig().Multichar then
 			for i=1, #players do
 				if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], false, false) end
 			end
+			Citizen.Wait(5000)
+			canRelog = true
 		end)
 	end
 
 	SetupCharacter = function(index)
 		if Spawned == false then
+			exports.spawnmanager:setAutoSpawn(false)
 			exports.spawnmanager:forceRespawn()
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
@@ -76,6 +76,7 @@ if ESX.GetConfig().Multichar then
 				model = Characters[index].model or `mp_m_freemode_01`,
 				skipFade = true
 			}, function()
+				canRelog = false
 				local skin = Characters[index].skin or Config.Default
 				if Characters[index] then TriggerEvent('skinchanger:loadSkin', skin) end
 			end)
@@ -115,7 +116,7 @@ if ESX.GetConfig().Multichar then
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data)
-		if data then Characters = data end
+		Characters = data
 		local elements = {}
 		local Character = next(Characters)
 
@@ -123,6 +124,7 @@ if ESX.GetConfig().Multichar then
 			SendNUIMessage({
 				action = "closeui"
 			})
+			exports.spawnmanager:forceRespawn()
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -131,6 +133,8 @@ if ESX.GetConfig().Multichar then
 				model = `mp_m_freemode_01`,
 				skipFade = true
 			}, function()
+				canRelog = false
+				exports.spawnmanager:setAutoSpawn(false)
 				local playerPed = PlayerPedId()
 				SetPedAoBlobRendering(playerPed, false)
 				SetEntityAlpha(playerPed, 0)
@@ -270,5 +274,17 @@ if ESX.GetConfig().Multichar then
 		TriggerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent('esx_skin:resetFirstSpawn')
 	end)
+
+	if Config.Relog then
+		RegisterCommand('relog', function(source, args, rawCommand)
+			if canRelog == true then
+				canRelog = false
+				TriggerServerEvent('esx_multicharacter:relog')
+				ESX.SetTimeout(10000, function()
+					canRelog = true
+				end)
+			end
+		end)
+	end
 
 end
