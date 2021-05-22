@@ -46,7 +46,7 @@ MySQL.ready(function()
 				end
 			end
 
-			for k2,v2 in pairs(ESX.Jobs) do
+			for k2,v2 in pairs(Jobs) do
 				if ESX.Table.SizeOf(v2.grades) == 0 then
 					Jobs[v2.name] = nil
 					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v2.name))
