@@ -36,14 +36,13 @@ if ESX.GetConfig().Multichar then
 	StartLoop = function()
 		hidePlayers = true
 		Citizen.CreateThread(function()
+			local keys = {18, 27, 172, 173, 176, 177, 187, 188, 191, 201}
 			while hidePlayers do
 				DisableAllControlActions(0)
-				EnableControlAction(0, 173, true)
-				EnableControlAction(0, 177, true)
-				EnableControlAction(0, 18, true)
-				EnableControlAction(0, 27, true)
-				EnableControlAction(0, 200, true)
-				Citizen.Wait(5)
+				for i=1, #keys do
+					EnableControlAction(0, keys[i], true)
+				end
+				Citizen.Wait(3)
 			end
 		end)
 		Citizen.CreateThread(function()
