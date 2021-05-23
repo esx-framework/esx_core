@@ -227,6 +227,16 @@ ESX.GetPlayers = function()
 	return sources
 end
 
+ESX.GetExtendedPlayers = function()
+	local xPlayers = {}
+
+	for k,v in pairs(ESX.Players) do
+		xPlayers[k] = v
+	end
+
+	return xPlayers
+end
+
 ESX.GetPlayerFromId = function(source)
 	return ESX.Players[tonumber(source)]
 end
