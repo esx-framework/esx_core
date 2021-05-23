@@ -95,5 +95,9 @@ if ESX.GetConfig().Multichar then
 		local src = source
 		TriggerEvent('esx:playerLogout', src)
 	end)
-	
+
+	RegisterCommand('forcelog', function(source, args, rawCommand)
+		TriggerEvent('esx:playerLogout', source)
+	end, true)
+
 end

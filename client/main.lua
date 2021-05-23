@@ -24,28 +24,13 @@ if ESX.GetConfig().Multichar then
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+0.5, 0.0, 0.0, 180.0, 100.00, false, 0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
-		exports.spawnmanager:forceRespawn()
-		exports.spawnmanager:spawnPlayer({
-			x = Config.Spawn.x,
-			y = Config.Spawn.y,
-			z = Config.Spawn.z,
-			heading = Config.Spawn.w,
-			model = `mp_m_freemode_01`,
-			skipFade = true
-		}, function()
-			canRelog = false
-			exports.spawnmanager:setAutoSpawn(false)
-			local playerPed = PlayerPedId()
-			SetPedAoBlobRendering(playerPed, false)
-			SetEntityAlpha(playerPed, 0)
-			ESX.UI.HUD.SetDisplay(0.0)
-			DisplayHud(false)
-			DisplayRadar(false)
-			StartLoop()
-			ShutdownLoadingScreen()
-			ShutdownLoadingScreenNui()
-			TriggerEvent('esx:loadingScreenOff')
-		end)
+		ESX.UI.HUD.SetDisplay(0.0)
+		DisplayHud(false)
+		DisplayRadar(false)
+		StartLoop()
+		ShutdownLoadingScreen()
+		ShutdownLoadingScreenNui()
+		TriggerEvent('esx:loadingScreenOff')
 	end)
 
 	StartLoop = function()
@@ -100,6 +85,7 @@ if ESX.GetConfig().Multichar then
 				canRelog = false
 				local skin = Characters[index].skin or Config.Default
 				if Characters[index] then TriggerEvent('skinchanger:loadSkin', skin) end
+				exports.spawnmanager:setAutoSpawn(false)
 			end)
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model then
@@ -148,18 +134,29 @@ if ESX.GetConfig().Multichar then
 			SendNUIMessage({
 				action = "closeui"
 			})
-			canRelog = false
-			local playerPed = PlayerPedId()
-			SetPedAoBlobRendering(playerPed, false)
-			SetEntityAlpha(playerPed, 0)
-			TriggerServerEvent('esx_multicharacter:CharacterChosen', 1, true)
-			TriggerEvent('esx_identity:showRegisterIdentity')
+			exports.spawnmanager:forceRespawn()
+			exports.spawnmanager:spawnPlayer({
+				x = Config.Spawn.x,
+				y = Config.Spawn.y,
+				z = Config.Spawn.z,
+				heading = Config.Spawn.w,
+				model = `mp_m_freemode_01`,
+				skipFade = true
+			}, function()
+				exports.spawnmanager:setAutoSpawn(false)
+				canRelog = false
+				local playerPed = PlayerPedId()
+				SetPedAoBlobRendering(playerPed, false)
+				SetEntityAlpha(playerPed, 0)
+				TriggerServerEvent('esx_multicharacter:CharacterChosen', 1, true)
+				TriggerEvent('esx_identity:showRegisterIdentity')
+			end)
 		else
-			SetupCharacter(Character)
 			for k,v in pairs(Characters) do
 				if not v.model then
 					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
 				end
+				if Spawned == false then SetupCharacter(Character) end
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
 			end
