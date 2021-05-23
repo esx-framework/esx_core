@@ -5,6 +5,7 @@
 * [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
 * All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
 * Do not run `essentialsmode` or `basic-gamemode`, and ensure you are using `spawnmanager`
+* You must enable `Config.Multichar` in ESX itself
 
 
 ### ESX Legacy  
