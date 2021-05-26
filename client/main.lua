@@ -5,6 +5,9 @@ if ESX.GetConfig().Multichar then
 		while NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() do
 			Citizen.Wait(5)
 			DoScreenFadeOut(0)
+			while not GetResourceState('esx_menu_default') == 'started' do 
+				Citizen.Wait(50)
+			end
 			TriggerServerEvent("esx_multicharacter:SetupCharacters")
 			TriggerEvent("esx_multicharacter:SetupCharacters")
 			break
