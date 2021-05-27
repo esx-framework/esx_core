@@ -155,9 +155,9 @@ if ESX.GetConfig().Multichar then
 			end)
 		else
 			for k,v in pairs(Characters) do
-				if not v.model then
+				if not v.model and v.skin then
 					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
-				end
+				elseif v.sex == 'Female' then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
 				if Spawned == false then SetupCharacter(Character) end
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
