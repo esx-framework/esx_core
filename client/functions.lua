@@ -709,13 +709,20 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
+ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
-	if not scale then scale = 0.35 end
-	if not font then font = 4 end
+	local camCoords = GetGameplayCamCoords()
+	local distance = #(vector - camCoords)
 
-	SetTextScale(scale, scale)
+	if not size then size = 1 end
+	if not font then font = 0 end
+
+	local scale = (size / distance) * 2
+	local fov = (1 / GetGameplayCamFov()) * 100
+	scale = scale * fov
+
+	SetTextScale(0.0 * scale, 0.55 * scale)
 	SetTextFont(font)
 	SetTextProportional(1)
 	SetTextColour(255, 255, 255, 215)
@@ -724,8 +731,8 @@ ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
 	AddTextComponentString(text)
 	SetDrawOrigin(vector.xyz, 0)
 	DrawText(0.0, 0.0)
-	local scaleFactor = scale / 0.35
-	DrawRect(0.0, 0.0 + 0.0111 * scaleFactor, 0.017 + (string.len(text) / 370) * scaleFactor, 0.03 * scaleFactor, 0, 0, 0, 75)
+	local scaleFactor = scale * fov
+	DrawRect(0.0, 0.01 * scaleFactor, (string.len(text) / 220) * scaleFactor, 0.02 * scaleFactor, 0, 0, 0, 75)
 	ClearDrawOrigin()
 end
 
