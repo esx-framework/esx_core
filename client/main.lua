@@ -47,6 +47,11 @@ AddEventHandler('esx_status:unregisterStatus', function(name)
 	end
 end)
 
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	Status = {}
+end)
+
 RegisterNetEvent('esx_status:load')
 AddEventHandler('esx_status:load', function(status)
 	TriggerEvent('esx_status:loaded')
