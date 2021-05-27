@@ -1,14 +1,14 @@
 ESX = exports['es_extended']:getSharedObject()
-if ESX.GetConfig().Multichar then
+if ESX.GetConfig().Multichar == true then
 	local IdentifierTables = {}
-	Config.databaseName = 'es_extended'
-	Config.prefix = 'char'
+	
+	-- enter the name of your database here
+	Config.Database = 'es_extended'
+	-- enter a prefix to prepend to all user identifiers (keep it short)
+	Config.Prefix = 'char'
 
 	SetupCharacters = function(playerId)
-		if next(ESX.Jobs) == nil then
-			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
-		end
-		local identifier = Config.prefix..'%:'..ESX.GetIdentifier(playerId)
+		local identifier = Config.Prefix..'%:'..ESX.GetIdentifier(playerId)
 		MySQL.Async.fetchAll("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE `identifier` LIKE @identifier", {
 			['@identifier'] = identifier
 		}, function(result)
@@ -18,7 +18,7 @@ if ESX.GetConfig().Multichar then
 				local grade = ESX.Jobs[job.name].grades[tostring(result[i].job_grade)].label
 				local accounts = json.decode(result[i].accounts)
 				if grade == 'Unemployed' then grade = '' end
-				local id = tonumber(string.sub(result[i].identifier, #Config.prefix+1, string.find(result[i].identifier, ':')-1))
+				local id = tonumber(string.sub(result[i].identifier, #Config.Prefix+1, string.find(result[i].identifier, ':')-1))
 				characters[id] = {
 					id = id,
 					bank = accounts.bank,
@@ -37,7 +37,7 @@ if ESX.GetConfig().Multichar then
 	end
 
 	DeleteCharacter = function(playerId, charid)
-		local identifier = Config.prefix..charid..':'..ESX.GetIdentifier(playerId)
+		local identifier = Config.Prefix..charid..':'..ESX.GetIdentifier(playerId)
 		for _, itable in pairs(IdentifierTables) do
 			MySQL.Async.execute("DELETE FROM "..itable.table.." WHERE "..itable.column.." = @identifier", {
 				['@identifier'] = identifier
@@ -47,14 +47,14 @@ if ESX.GetConfig().Multichar then
 
 	Citizen.CreateThread(function()
 		MySQL.ready(function ()
-			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.databaseName}, function(result)
+			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.Database}, function(result)
 				if result then
 					for k, v in pairs(result) do
 						IdentifierTables[#IdentifierTables+1] = {table = v.TABLE_NAME, column = 'owner'}
 					end
 				end
 			end)
-			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.databaseName}, function(result)
+			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "identifier", ["@db"] = Config.Database}, function(result)
 				if result then
 					for k, v in pairs(result) do
 						IdentifierTables[#IdentifierTables+1] = {table = v.TABLE_NAME, column = 'identifier'}
@@ -62,6 +62,11 @@ if ESX.GetConfig().Multichar then
 				end
 			end)
 		end)
+		
+		while next(ESX.Jobs) == nil do
+			Citizen.Wait(250)
+			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
+		end
 	end)
 
 	RegisterServerEvent("esx_multicharacter:SetupCharacters")
@@ -72,8 +77,9 @@ if ESX.GetConfig().Multichar then
 	RegisterServerEvent("esx_multicharacter:CharacterChosen")
 	AddEventHandler('esx_multicharacter:CharacterChosen', function(charid, isNew)
 		local src = source
+		print(Config.Prefix..charid)
 		if type(charid) == 'number' and string.len(charid) == 1 and type(isNew) == 'boolean' then
-			TriggerEvent('esx:onPlayerJoined', src, charid, isNew)
+			TriggerEvent('esx:onPlayerJoined', src, Config.Prefix..charid, isNew)
 		else
 			-- Trigger Ban Event here to ban individuals trying to use SQL Injections
 		end
@@ -100,4 +106,10 @@ if ESX.GetConfig().Multichar then
 		TriggerEvent('esx:playerLogout', source)
 	end, true)
 
+elseif ESX.GetConfig().Multichar == false then
+	Citizen.Wait(1500)
+	print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration')
+else
+	Citizen.Wait(1500)
+	print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ')
 end
