@@ -161,17 +161,6 @@ ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
 	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
 end, true)
 
-ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
-	Citizen.CreateThread(function()
-		ESX.SavePlayers()
-		for _, playerId in ipairs(GetPlayers()) do
-			DropPlayer(playerId, "Server Restart")
-		end
-		print('^2[INFO] ^1 Server Restarting, Please Wait :)')
-		while true do end
-	end)
-end, true)
-
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
 	xPlayer.triggerEvent("esx:tpm")
 end, true)
