@@ -729,7 +729,8 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	SetDrawOrigin(vector.xyz, 0)
 	DrawText(0.0, 0.0)
 	local scaleFactor = scale * fov
-	DrawRect(0.0, 0.01 * scaleFactor, (string.len(text) / 220) * scaleFactor, 0.02 * scaleFactor, 0, 0, 0, 75)
+	local length = string.len(string.gsub(text, "(~[rbgypcmuosh]~)", ""))
+	DrawRect(0.0, 0.0 + 0.0111 * scaleFactor, 0.027 + (length / 260) * scaleFactor, 0.03 * scaleFactor, 0, 0, 0, 75)
 	ClearDrawOrigin()
 end
 
