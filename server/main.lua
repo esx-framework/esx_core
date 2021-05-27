@@ -84,7 +84,17 @@ Citizen.CreateThread(function()
 end)
 
 function SaveData()
-	local xPlayers = ESX.GetPlayers()
+
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+
+	for i=1, 100 do
+		xPlayers[#xPlayers+1] = xPlayers[1]
+	end
 
 	-- Example of a bulk update statement that we are building below
 	--[[
@@ -102,24 +112,39 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		local status  = xPlayer.get('status')
+	if ESX.GetExtendedPlayers then	-- Retrieve all xPlayer data directly (ESX Legacy)
+		for k,v in pairs(xPlayers) do
+			local status  = v.get('status')
 
-		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
+			whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', v.identifier, json.encode(status))
 
-		if firstItem == false then
-			whereList = whereList .. ', '
+			if firstItem == false then
+				whereList = whereList .. ', '
+			end
+			whereList = whereList .. string.format('\'%s\'', v.identifier)
+
+			firstItem = false
+			playerCount = playerCount + 1
 		end
-		whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
+	else
+		for i=1, #xPlayers, 1 do
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+			local status  = xPlayer.get('status')
 
-		firstItem = false
-		playerCount = playerCount + 1
+			whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
+
+			if firstItem == false then
+				whereList = whereList .. ', '
+			end
+			whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
+
+			firstItem = false
+			playerCount = playerCount + 1
+		end
 	end
 
 	if playerCount > 0 then
 		local sql = string.format(updateStatement, whenList, whereList)
-
 		MySQL.Async.execute(sql)
 
 	end
