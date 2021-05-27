@@ -142,12 +142,9 @@ ESX.UI.HUD.RemoveElement = function(name)
 end
 
 ESX.UI.HUD.Reset = function()
-	for i=1, #ESX.UI.HUD.RegisteredElements, 1 do
-		SendNUIMessage({
-			action    = 'deleteHUDElement',
-			name      = ESX.UI.HUD.RegisteredElements[i]
-		})
-	end
+	SendNUIMessage({
+		action    = 'resetHUDElements'
+	})
 	ESX.UI.HUD.RegisteredElements = {}
 end
 
