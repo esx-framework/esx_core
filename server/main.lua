@@ -1,6 +1,10 @@
+local NewPlayer = -1
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Roleplay')
+	MySQL.Async.store("INSERT INTO users SET ?", function(storeId)
+		NewPlayer = storeId
+	end)
 end)
 
 local awaitingRegistration = {}
@@ -24,7 +28,7 @@ end
 
 function onPlayerJoined(playerId, char, isNew)
 	local identifier = ESX.GetIdentifier(playerId)
-	if char then identifier = 'char'..char..':'..identifier end
+	if char then identifier = char..':'..identifier end
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -60,10 +64,12 @@ function createESXPlayer(identifier, playerId)
 	end
 
 	if not Config.Multichar then
-		MySQL.Async.execute('INSERT INTO users (`accounts`, `identifier`, `group`) VALUES (@accounts, @identifier, @group)', {
-			['@accounts'] = json.encode(accounts),
-			['@identifier'] = identifier,
-			['@group'] = defaultGroup
+		MySQL.Async.execute(NewPlayer, {
+			{
+				['accounts'] = json.encode(accounts),
+				['identifier'] = identifier,
+				['group'] = defaultGroup,
+			}
 		}, function(rowsChanged)
 			loadESXPlayer(identifier, playerId, true)
 		end)
@@ -75,15 +81,17 @@ function createESXPlayer(identifier, playerId)
 			if awaitingRegistration[playerId] ~= true then data = awaitingRegistration[playerId] break end
 		end
 		awaitingRegistration[playerId] = nil
-		MySQL.Async.execute('INSERT INTO users (`accounts`, `identifier`, `group`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`) VALUES (@accounts, @identifier, @group, @firstname, @lastname, @dateofbirth, @sex, @height)', {
-			['@accounts'] = json.encode(accounts),
-			['@identifier'] = identifier,
-			['@group'] = defaultGroup,
-			['@firstname'] = data.firstname,
-			['@lastname'] = data.lastname,
-			['@dateofbirth'] = data.dateofbirth,
-			['@sex'] = data.sex,
-			['@height'] = data.height,
+		MySQL.Async.execute(NewPlayer, {
+			{
+				['accounts'] = json.encode(accounts),
+				['identifier'] = identifier,
+				['group'] = defaultGroup,
+				['firstname'] = data.firstname,
+				['lastname'] = data.lastname,
+				['dateofbirth'] = data.dateofbirth,
+				['sex'] = data.sex,
+				['height'] = data.height,
+			}
 		}, function(rowsChanged)
 			loadESXPlayer(identifier, playerId, true)
 		end)
