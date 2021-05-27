@@ -85,8 +85,13 @@ if ESX.GetConfig().Multichar then
 				skipFade = true
 			}, function()
 				canRelog = false
-				local skin = Characters[index].skin or Config.Default
-				if Characters[index] then TriggerEvent('skinchanger:loadSkin', skin) end
+				if Characters[index] then
+					local skin = Characters[index].skin or Config.Default
+					if not Characters[index].model then
+						if Characters[index].sex == 'Female' then skin.sex = 1 else skin.sex = 0 end
+					end
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end
 				exports.spawnmanager:setAutoSpawn(false)
 			end)
 		elseif Characters[index] and Characters[index].skin then
@@ -112,18 +117,23 @@ if ESX.GetConfig().Multichar then
 		SetEntityAlpha(playerPed, 255)
 	end
 
-	LoadPed = function(isNew, skin)
-		if isNew then
-			local isMale = false
-			if skin.sex == 1 then isMale = false end
+	LoadPed = function(isNew)
+		if isNew or not Characters[Spawned].skin[2] then
+			local isMale, sex = true, 0
+			if Characters[Spawned].sex == 'Female' then isMale, sex = false, 1 end
 			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
-				local newSkin = Config.Default
-				newSkin.sex = skin.sex
-				TriggerEvent('skinchanger:loadSkin', newSkin)
+				skin = Config.Default
+				skin.sex = sex
+				TriggerEvent('skinchanger:loadSkin', skin, function()
+					TriggerEvent('esx_skin:openSaveableMenu')
+				end)
 				Citizen.Wait(500)
-				TriggerEvent('esx_skin:openSaveableMenu')
 			end)
-		else TriggerEvent('skinchanger:loadSkin', skin) Citizen.Wait(500) end
+		else
+			TriggerEvent('skinchanger:loadSkin', Characters[Spawned].skin)
+			Citizen.Wait(500)
+		end
+		Characters = {}
 	end
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
@@ -157,7 +167,7 @@ if ESX.GetConfig().Multichar then
 			for k,v in pairs(Characters) do
 				if not v.model and v.skin then
 					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
-				elseif v.sex == 'Female' then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
+				end
 				if Spawned == false then SetupCharacter(Character) end
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
@@ -244,7 +254,7 @@ if ESX.GetConfig().Multichar then
 	end)
 
 	RegisterNetEvent('esx_multicharacter:SpawnCharacter')
-	AddEventHandler('esx_multicharacter:SpawnCharacter', function(spawn, isNew, skin)
+	AddEventHandler('esx_multicharacter:SpawnCharacter', function(spawn, isNew)
 		DoScreenFadeOut(0)
 		Citizen.Wait(300)
 		local playerPed = PlayerPedId()
@@ -264,7 +274,7 @@ if ESX.GetConfig().Multichar then
 
 		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
 		Citizen.Wait(1000)
-		LoadPed(isNew, skin)
+		LoadPed(isNew)
 		playerPed = PlayerPedId()
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
