@@ -43,8 +43,8 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	end
 
 	if Config.Multichar then
-		TriggerEvent('esx_multicharacter:SpawnCharacter', playerData.coords, isNew, playerData.skin)
-		Citizen.Wait(4000)
+		TriggerEvent('esx_multicharacter:SpawnCharacter', playerData.coords, isNew)
+		Citizen.Wait(3000)
 	else
 		exports.spawnmanager:spawnPlayer({
 			x = playerData.coords.x,
@@ -52,25 +52,21 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			z = playerData.coords.z + 0.25,
 			heading = playerData.coords.heading,
 			model = `mp_m_freemode_01`,
-			skipFade = true
+			skipFade = false
 		}, function()
 			TriggerEvent('esx:onPlayerSpawn')
 			TriggerEvent('playerSpawned') -- compatibility with old scripts
 			TriggerEvent('esx:restoreLoadout')
+			if isNew then
+				if playerData.skin.sex == 0 then
+					TriggerEvent('skinchanger:loadDefaultModel', true)
+				else
+					TriggerEvent('skinchanger:loadDefaultModel', false)
+				end
+			elseif playerData.skin then TriggerEvent('skinchanger:loadSkin', playerData.skin) end
+			TriggerEvent('esx:loadingScreenOff')
+			FreezeEntityPosition(ESX.PlayerData.ped, false)
 		end)
-		Citizen.Wait(1000)
-		if isNew then
-			if playerData.skin.sex == 0 then
-				TriggerEvent('skinchanger:loadDefaultModel', true)
-			else
-				TriggerEvent('skinchanger:loadDefaultModel', false)
-			end
-		elseif playerData.skin then TriggerEvent('skinchanger:loadSkin', playerData.skin) end
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		TriggerEvent('esx:loadingScreenOff')
-		DoScreenFadeIn(500)
-		FreezeEntityPosition(ESX.PlayerData.ped, false)
 	end
 	StartServerSyncLoops()
 end)
