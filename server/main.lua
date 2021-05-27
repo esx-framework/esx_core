@@ -77,7 +77,6 @@ if ESX.GetConfig().Multichar == true then
 	RegisterServerEvent("esx_multicharacter:CharacterChosen")
 	AddEventHandler('esx_multicharacter:CharacterChosen', function(charid, isNew)
 		local src = source
-		print(Config.Prefix..charid)
 		if type(charid) == 'number' and string.len(charid) == 1 and type(isNew) == 'boolean' then
 			TriggerEvent('esx:onPlayerJoined', src, Config.Prefix..charid, isNew)
 		else
