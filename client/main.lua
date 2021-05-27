@@ -118,7 +118,7 @@ if ESX.GetConfig().Multichar then
 	end
 
 	LoadPed = function(isNew)
-		if isNew or not Characters[Spawned].skin[2] then
+		if isNew or not Characters[Spawned].skin or not Characters[Spawned].skin[2] then
 			local isMale, sex = true, 0
 			if Characters[Spawned].sex == 'Female' then isMale, sex = false, 1 end
 			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
