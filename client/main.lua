@@ -1,4 +1,4 @@
-local isPaused, isDead, pickups = false, false, {}
+local pickups = {}
 
 Citizen.CreateThread(function()
 	while NetworkIsPlayerActive(PlayerId()) and not Config.Multichar do
@@ -84,14 +84,12 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 	ESX.SetPlayerData('dead', false)
-	isDead = false
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 	ESX.SetPlayerData('dead', true)
-	isDead = true
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
@@ -349,6 +347,7 @@ end)
 -- Pause menu disables HUD display
 if Config.EnableHud then
 	Citizen.CreateThread(function()
+		local isPaused = false
 		while true do
 			Citizen.Wait(300)
 
@@ -418,7 +417,7 @@ end
 
 if Config.EnableDefaultInventory then
 	RegisterCommand('showinv', function()
-		if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 			ESX.ShowInventory()
 		end
 	end)
