@@ -7,23 +7,45 @@ AddEventHandler('onResourceStart', function(resourceName)
 	  	return
 	end
 
-	local players = ESX.GetPlayers()
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
 
-	for _,playerId in ipairs(players) do
-		local xPlayer = ESX.GetPlayerFromId(playerId)
-
-		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
-		}, function(result)
-			local data = {}
-
-			if result[1].status then
-				data = json.decode(result[1].status)
-			end
-
-			xPlayer.set('status', data)
-			TriggerClientEvent('esx_status:load', playerId, data)
-		end)
+	if ESX.GetExtendedPlayers then
+		for k,v in pairs(xPlayers) do		
+			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
+				['@identifier'] = v.identifier
+			}, function(result)
+				local data = {}
+		
+				if result[1].status then
+					data = json.decode(result[1].status)
+				end
+		
+				v.set('status', data)
+				TriggerClientEvent('esx_status:load', k, data)
+			end)
+		end
+	else
+		for _,playerId in ipairs(xPlayers) do
+			local xPlayer = ESX.GetPlayerFromId(playerId)
+	
+			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
+				['@identifier'] = xPlayer.identifier
+			}, function(result)
+				local data = {}
+		
+				if result[1].status then
+					data = json.decode(result[1].status)
+				end
+		
+				xPlayer.set('status', data)
+				TriggerClientEvent('esx_status:load', playerId, data)
+			end)
+		end
 	end
 end)
 
