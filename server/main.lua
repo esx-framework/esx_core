@@ -1,5 +1,6 @@
 ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar == true then
+	local fetchCharacters = -1
 	local IdentifierTables = {}
 	
 	-- enter the name of your database here
@@ -7,10 +8,11 @@ if ESX.GetConfig().Multichar == true then
 	-- enter a prefix to prepend to all user identifiers (keep it short)
 	Config.Prefix = 'char'
 
+
 	SetupCharacters = function(playerId)
+		while fetchCharacters == -1 do Citizen.Wait(100) end
 		local identifier = Config.Prefix..'%:'..ESX.GetIdentifier(playerId)
-		MySQL.Async.fetchAll("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE `identifier` LIKE @identifier", {
-			['@identifier'] = identifier
+		MySQL.Async.fetchAll(fetchCharacters, {'identifier', {identifier}
 		}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
@@ -47,6 +49,8 @@ if ESX.GetConfig().Multichar == true then
 
 	Citizen.CreateThread(function()
 		MySQL.ready(function ()
+			fetchCharacters = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE ?? LIKE ?")
+
 			MySQL.Async.fetchAll('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = @id AND TABLE_SCHEMA = @db', { ['@id'] = "owner", ["@db"] = Config.Database}, function(result)
 				if result then
 					for k, v in pairs(result) do
