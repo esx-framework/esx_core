@@ -92,10 +92,6 @@ function SaveData()
 		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
 	end
 
-	for i=1, 100 do
-		xPlayers[#xPlayers+1] = xPlayers[1]
-	end
-
 	-- Example of a bulk update statement that we are building below
 	--[[
 	UPDATE users
