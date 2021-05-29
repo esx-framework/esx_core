@@ -1,17 +1,31 @@
-## ESX_Multicharacter
 ### Requirements
 * [ESX Legacy](https://github.com/thelindat/es_extended/tree/multichar) [Currently requires my fork]
 * [esx_identity](https://github.com/thelindat/esx_identity) [Currently requires my fork]
 * [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
-* All `owner` and `identifier` columns in your SQL tables must be set to at least **VARCHAR(50)** to correctly insert data
-* Do not run `essentialsmode` or `basic-gamemode`, and ensure you are using `spawnmanager`
-* You must enable `Config.Multichar` in ESX itself
+* [spawnmanager](https://github.com/citizenfx/cfx-server-data/blob/master/resources/[managers]/spawnmanager)
+* Do not run `essentialsmode` or `basic-gamemode`
+
+
+### Installation
+* Modify your ESX config and set `Config.Multichar = true`
+* All `owner` and `identifier` columns in your SQL must have their size increased to at least **VARCHAR(50)**
+* You can add the following command to `server.lua` to easily update all your columns
+```lua
+	RegisterCommand('varchar', function(source)
+		if source == 0 then
+			for _, itable in pairs(IdentifierTables) do
+				print('Setting `'..itable.table..'` column `'..itable.column..'` to VARCHAR(50)')
+				MySQL.Sync.execute("ALTER TABLE "..itable.table.." MODIFY COLUMN "..itable.column.." VARCHAR(50)", {})
+			end
+		end
+	end, true)
+```
 
 
 ### ESX Legacy  
 * This resource is not compatible with previous versions of ESX or EXM
 * Requires ESX_Identity and ESX_Skin to function properly - edits will be required to use other resources that modify character spawning
-* You can not upgrade to this resource from the original release of kashacters; the methods used are entirely incompatible
+* The method for storing characters is different from kashacters - if you want to use previous characters you will need to find a way to update stored identifiers
 * The player identifier used is set by ESX and by default only allows for a Rockstar License
 
 
@@ -22,7 +36,7 @@ Although kashacters provided an easy-to-use and free method of multiple characte
 * Selecting a different character does not require modifying every instance of the characters identifier
 * All tables containing an `owner` or `identifier` column are checked on startup, so character deletion will properly wipe all data
 
-
+#### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
 
 
