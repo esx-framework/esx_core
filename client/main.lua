@@ -54,6 +54,7 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			model = `mp_m_freemode_01`,
 			skipFade = false
 		}, function()
+			TriggerServerEvent('esx:onPlayerSpawn')
 			TriggerEvent('esx:onPlayerSpawn')
 			TriggerEvent('playerSpawned') -- compatibility with old scripts
 			TriggerEvent('esx:restoreLoadout')
@@ -65,6 +66,8 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 				end
 			elseif playerData.skin then TriggerEvent('skinchanger:loadSkin', playerData.skin) end
 			TriggerEvent('esx:loadingScreenOff')
+			ShutdownLoadingScreen()
+			ShutdownLoadingScreenNui()
 			FreezeEntityPosition(ESX.PlayerData.ped, false)
 		end)
 	end
