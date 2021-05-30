@@ -706,7 +706,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, size, font, rect)
+ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetGameplayCamCoords()
@@ -728,10 +728,6 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font, rect)
 	AddTextComponentString(text)
 	SetDrawOrigin(vector.xyz, 0)
 	DrawText(0.0, 0.0)
-	if rect then
-		local length = string.len(text:gsub('~.-~', ''))/13.5
-		DrawRect(0.0, 0.18 / distance, length / distance, 0.04 * scale , 0,0,0, 75)
-	end
 	ClearDrawOrigin()
 end
 
