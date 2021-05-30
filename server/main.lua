@@ -110,9 +110,7 @@ if ESX.GetConfig().Multichar == true then
 	end, true)
 
 elseif ESX.GetConfig().Multichar == false then
-	Citizen.Wait(1500)
 	print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration')
 else
-	Citizen.Wait(1500)
 	print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ')
 end
