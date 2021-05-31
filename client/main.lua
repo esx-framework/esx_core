@@ -9,12 +9,12 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
+fix(client/main): Set PlayerData.ped correctly
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
-	ESX.PlayerData.ped = ESX.PlayerData.ped
+	ESX.PlayerData.ped = PlayerPedId()
 
 	FreezeEntityPosition(ESX.PlayerData.ped, true)
 	
