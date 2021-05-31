@@ -47,7 +47,7 @@ if ESX.GetConfig().Multichar then
 				end
 				SetEntityVisible(PlayerPedId(), 0, 0)
 				SetLocalPlayerVisibleLocally(1)
-				SetEntityCollision(PlayerPedId(), 0, 1)
+				SetPlayerInvincible(PlayerId(), 1)
 				Citizen.Wait(3)
 			end
 		end)
@@ -71,7 +71,7 @@ if ESX.GetConfig().Multichar then
 				NetworkConcealEntity(vehicles[i], false)
 			end
 			SetEntityVisible(PlayerPedId(), 1, 0)
-			SetEntityCollision(PlayerPedId(), 1, 1)
+			SetPlayerInvincible(PlayerId(), 0)
 			Citizen.Wait(10000)
 			canRelog = true
 		end)
