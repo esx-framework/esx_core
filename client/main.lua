@@ -45,6 +45,9 @@ if ESX.GetConfig().Multichar then
 				for i=1, #keys do
 					EnableControlAction(0, keys[i], true)
 				end
+				SetEntityVisible(PlayerPedId(), 0, 0)
+				SetLocalPlayerVisibleLocally(1)
+				SetEntityCollision(PlayerPedId(), 0, 1)
 				Citizen.Wait(3)
 			end
 		end)
@@ -67,6 +70,8 @@ if ESX.GetConfig().Multichar then
 			for i=1, #vehicles do
 				NetworkConcealEntity(vehicles[i], false)
 			end
+			SetEntityVisible(PlayerPedId(), 1, 0)
+			SetEntityCollision(PlayerPedId(), 1, 1)
 			Citizen.Wait(10000)
 			canRelog = true
 		end)
