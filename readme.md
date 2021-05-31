@@ -9,7 +9,7 @@
 ### Installation
 * Modify your ESX config and set `Config.Multichar = true`
 * All `owner` and `identifier` columns in your SQL must have their size increased to at least **VARCHAR(50)**
-* You can add the following command to `server.lua` to easily update all your columns
+* You can add the following command to `server/main.lua` to easily update all your columns
 ```lua
 	RegisterCommand('varchar', function(source)
 		if source == 0 then
