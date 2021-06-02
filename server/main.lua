@@ -178,7 +178,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 	end
 	
 	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(k)
+		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
 		local name = GetPlayerName(xPlayer.source)
 		if Config.EnableESXIdentity then
@@ -316,7 +316,7 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				end
 				
 				for k,v in pairs(xPlayers) do
-					local xTarget = type(v) == 'table' and v or ESX.GetPlayerFromId(k)
+					local xTarget = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
 					if xTarget.job.name == job and xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
@@ -346,7 +346,8 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	end
 	
 	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(k)
+		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
+		
 		table.insert(players, {
 			source = xPlayer.source,
 			identifier = xPlayer.identifier,
