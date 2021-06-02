@@ -13,39 +13,21 @@ AddEventHandler('onResourceStart', function(resourceName)
 	else
 		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
 	end
-
-	if ESX.GetExtendedPlayers then
-		for k,v in pairs(xPlayers) do		
-			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-				['@identifier'] = v.identifier
-			}, function(result)
-				local data = {}
-		
-				if result[1].status then
-					data = json.decode(result[1].status)
-				end
-		
-				v.set('status', data)
-				TriggerClientEvent('esx_status:load', k, data)
-			end)
-		end
-	else
-		for _,playerId in ipairs(xPlayers) do
-			local xPlayer = ESX.GetPlayerFromId(playerId)
 	
-			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-				['@identifier'] = xPlayer.identifier
-			}, function(result)
-				local data = {}
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
+		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
+			['@identifier'] = xPlayer.identifier
+		}, function(result)
+			local data = {}
+	
+			if result[1].status then
+				data = json.decode(result[1].status)
+			end
 		
-				if result[1].status then
-					data = json.decode(result[1].status)
-				end
-		
-				xPlayer.set('status', data)
-				TriggerClientEvent('esx_status:load', playerId, data)
-			end)
-		end
+			xPlayer.set('status', data)
+			TriggerClientEvent('esx_status:load', k, data)
+		end)
 	end
 end)
 
@@ -106,14 +88,6 @@ Citizen.CreateThread(function()
 end)
 
 function SaveData()
-
-	local xPlayers
-	if ESX.GetExtendedPlayers then	
-		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-	else
-		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-	end
-
 	-- Example of a bulk update statement that we are building below
 	--[[
 	UPDATE users
@@ -130,35 +104,26 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	if ESX.GetExtendedPlayers then	-- Retrieve all xPlayer data directly (ESX Legacy)
-		for k,v in pairs(xPlayers) do
-			local status  = v.get('status')
-
-			whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', v.identifier, json.encode(status))
-
-			if firstItem == false then
-				whereList = whereList .. ', '
-			end
-			whereList = whereList .. string.format('\'%s\'', v.identifier)
-
-			firstItem = false
-			playerCount = playerCount + 1
-		end
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
 	else
-		for i=1, #xPlayers, 1 do
-			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-			local status  = xPlayer.get('status')
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+	
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
+		local status  = xPlayer.get('status')
 
-			whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
+		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
 
-			if firstItem == false then
-				whereList = whereList .. ', '
-			end
-			whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
-
-			firstItem = false
-			playerCount = playerCount + 1
+		if firstItem == false then
+			whereList = whereList .. ', '
 		end
+		whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
+
+		firstItem = false
+		playerCount = playerCount + 1
 	end
 
 	if playerCount > 0 then
