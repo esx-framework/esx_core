@@ -234,13 +234,7 @@ ESX.GetPlayers = function()
 end
 
 ESX.GetExtendedPlayers = function()
-	local xPlayers = {}
-
-	for k,v in pairs(ESX.Players) do
-		xPlayers[k] = v
-	end
-
-	return xPlayers
+	return ESX.Players
 end
 
 ESX.GetPlayerFromId = function(source)
