@@ -170,9 +170,15 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	local employees = {}
 
-	local xPlayers = ESX.GetPlayers()
-	for k, v in pairs(xPlayers) do
-		local xPlayer = ESX.GetPlayerFromId(v)
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+	
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
 
 		local name = GetPlayerName(xPlayer.source)
 		if Config.EnableESXIdentity then
@@ -301,10 +307,16 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				['@grade']    = grade
 			}, function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
-				local xPlayers = ESX.GetPlayers()
 
-				for i=1, #xPlayers, 1 do
-					local xTarget = ESX.GetPlayerFromId(xPlayers[i])
+				local xPlayers
+				if ESX.GetExtendedPlayers then	
+					xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+				else
+					xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+				end
+				
+				for k,v in pairs(xPlayers) do
+					local xTarget = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
 
 					if xTarget.job.name == job and xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
@@ -324,11 +336,17 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 end)
 
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	local xPlayers = ESX.GetPlayers()
 	local players = {}
 
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+	
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
 		table.insert(players, {
 			source = xPlayer.source,
 			identifier = xPlayer.identifier,
