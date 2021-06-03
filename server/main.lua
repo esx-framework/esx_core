@@ -1,9 +1,12 @@
-local NewPlayer = -1
+local NewPlayer, LoadPlayer = -1, -1
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Roleplay')
 	MySQL.Async.store("INSERT INTO users SET ?", function(storeId)
 		NewPlayer = storeId
+	end)
+	MySQL.Async.store("SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `is_dead` FROM `users` WHERE ?? LIKE ?", function(storeId)
+		LoadPlayer = storeId
 	end)
 end)
 
@@ -128,7 +131,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 	}
 
 	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll('SELECT `accounts`, `job`, `job_grade`, `group`, `loadout`, `position`, `inventory`, `skin`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height` FROM `users` WHERE identifier = @identifier', {
+		MySQL.Async.fetchAll(LoadPlayer, {'identifier', {identifier}
 			['@identifier'] = identifier
 		}, function(result)
 			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
@@ -266,6 +269,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 				if result[1].sex then userData.sex = result[1].sex end
 				if result[1].height then userData.height = result[1].height end
 			end
+			
+			-- Death
+			if result[1].is_dead and result[1].is_dead ~= '' then
+				userData.is_dead = result[1].is_dead
+			else
+				userData.is_dead = 0
+			end
 
 			cb()
 		end)
@@ -294,7 +304,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney(),
-			skin = userData.skin
+			skin = userData.skin,
+			dead = userData.dead
 		}, isNew)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
