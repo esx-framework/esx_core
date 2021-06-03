@@ -118,7 +118,7 @@ end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
 
 ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
 	for i=#args.playerId.loadout, 1, -1 do
-		xPlayer.removeWeapon(args.playerId.loadout[i].name)
+		args.playerId.removeWeapon(args.playerId.loadout[i].name)
 	end
 end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
