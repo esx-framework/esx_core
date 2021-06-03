@@ -304,9 +304,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney(),
-			skin = userData.skin,
 			dead = userData.dead
-		}, isNew)
+		}, isNew, userData.skin)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
 		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
