@@ -10,7 +10,7 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(playerData, isNew)
+AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
 
@@ -33,12 +33,12 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			TriggerEvent('playerSpawned') -- compatibility with old scripts
 			TriggerEvent('esx:restoreLoadout')
 			if isNew then
-				if playerData.skin.sex == 0 then
+				if skin.sex == 0 then
 					TriggerEvent('skinchanger:loadDefaultModel', true)
 				else
 					TriggerEvent('skinchanger:loadDefaultModel', false)
 				end
-			elseif playerData.skin then TriggerEvent('skinchanger:loadSkin', playerData.skin) end
+			elseif skin then TriggerEvent('skinchanger:loadSkin', skin) end
 			TriggerEvent('esx:loadingScreenOff')
 			ShutdownLoadingScreen()
 			ShutdownLoadingScreenNui()
