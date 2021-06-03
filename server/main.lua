@@ -335,28 +335,33 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
+local getOnlinePlayers = false
+local onlinePlayers = {}
+
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	local players = {}
+	if getOnlinePlayers == false and next(onlinePlayers) == nil then	-- Prevent multiple xPlayer loops from running in quick succession
+		getOnlinePlayers, onlinePlayers = true, {}
+		local xPlayers
+		if not ESX.GetExtendedPlayers then	
+			xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+		else
+			xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+		end
 
-	local xPlayers
-	if ESX.GetExtendedPlayers then	
-		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-	else
-		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+		for k,v in pairs(xPlayers) do
+			local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
+			
+			table.insert(onlinePlayers, {
+				source = xPlayer.source,
+				identifier = xPlayer.identifier,
+				name = xPlayer.name,
+				job = xPlayer.job
+			})
+		end
+		getOnlinePlayers = false
 	end
-	
-	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
-		
-		table.insert(players, {
-			source = xPlayer.source,
-			identifier = xPlayer.identifier,
-			name = xPlayer.name,
-			job = xPlayer.job
-		})
-	end
-
-	cb(players)
+	while getOnlinePlayers do Citizen.Wait(50) end	-- Wait for the xPlayer loop to finish
+	cb(onlinePlayers)
 end)
 
 ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, societyName)
