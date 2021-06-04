@@ -5,7 +5,11 @@ Citizen.CreateThread(function()
 	MySQL.Async.store("INSERT INTO users SET ?", function(storeId)
 		NewPlayer = storeId
 	end)
-	MySQL.Async.store("SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `is_dead` FROM `users` WHERE ?? LIKE ?", function(storeId)
+	
+	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`'
+	if Config.Multichar or Config.Identity then query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`' end
+
+	MySQL.Async.store("SELECT "..query.." FROM `users` WHERE ?? LIKE ?", function(storeId)
 		LoadPlayer = storeId
 	end)
 end)
@@ -268,13 +272,6 @@ function loadESXPlayer(identifier, playerId, isNew)
 				if result[1].sex then userData.sex = result[1].sex end
 				if result[1].height then userData.height = result[1].height end
 			end
-			
-			-- Death
-			if result[1].is_dead and result[1].is_dead ~= '' then
-				userData.is_dead = result[1].is_dead
-			else
-				userData.is_dead = 0
-			end
 
 			cb()
 		end)
@@ -303,7 +300,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney(),
-			dead = userData.dead
+			dead = 0
 		}, isNew, userData.skin)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
@@ -623,7 +620,7 @@ Citizen.CreateThread(
 								([[
 
 ^1----------------------------------------------------------------------
-^1URGENT: YOUR ES-EXTENDED IS OUTDATED!
+^1URGENT: YOUR ES_EXTENDED IS OUTDATED!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s
@@ -638,7 +635,7 @@ Citizen.CreateThread(
 								([[
 
 ^8-------------------------------------------------------
-^2Your Es-extended is the latest version!
+^2Your es_extended is the latest version!
 ^5Version:^0 %s
 ^5COMMIT:^0 %s
 ^5CHANGELOG:^0 %s
@@ -654,7 +651,7 @@ Citizen.CreateThread(
 						print(
 							([[
 ^1----------------------------------------------------------------------
-^1URGENT: YOUR ES-EXTENDED IS OUTDATATED!!!
+^1URGENT: YOUR ES_EXTENDED IS OUTDATATED!!!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s
@@ -666,7 +663,7 @@ Citizen.CreateThread(
 						)
 						end
 					else
-						print('[^1ERROR^0] Es-Extended unable to check version!')
+						print('[^1ERROR^0] es_extended unable to check version!')
 					end
 				end,
 				'GET'
