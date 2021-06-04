@@ -50,6 +50,10 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	Status = {}
+	SendNUIMessage({
+		update = true,
+		status = Status
+	})
 end)
 
 RegisterNetEvent('esx_status:load')
