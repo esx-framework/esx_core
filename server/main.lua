@@ -132,7 +132,6 @@ function loadESXPlayer(identifier, playerId, isNew)
 
 	table.insert(tasks, function(cb)
 		MySQL.Async.fetchAll(LoadPlayer, {'identifier', {identifier}
-			['@identifier'] = identifier
 		}, function(result)
 			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
 			local foundAccounts, foundItems = {}, {}
