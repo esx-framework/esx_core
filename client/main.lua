@@ -64,7 +64,7 @@ AddEventHandler('esx_status:load', function(status)
 	end
 
 	Citizen.CreateThread(function()
-		while true do
+		while #Status > 0 do
 			for i=1, #Status, 1 do
 				Status[i].onTick()
 			end
