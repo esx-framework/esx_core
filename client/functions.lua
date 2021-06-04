@@ -42,7 +42,9 @@ end
 
 ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
-	TriggerEvent('esx:setPlayerData', key, val)
+	if key ~= 'inventory' and key ~= 'loadout' then
+		TriggerEvent('esx:setPlayerData', key, val)
+	end
 end
 
 ESX.ShowNotification = function(msg)
