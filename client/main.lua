@@ -13,20 +13,19 @@ function GetStatusData(minimal)
 
 	for i=1, #Status, 1 do
 		if minimal then
-			table.insert(status, {
+			status[#status+1] = {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				percent = (Status[i].val / Config.StatusMax) * 100
-			})
+			}
 		else
-			table.insert(status, {
+			status[#status+1] {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				color   = Status[i].color,
-				visible = Status[i].visible(Status[i]),
-				max     = Status[i].max,
+				visible = Status[i].visible(),
 				percent = (Status[i].val / Config.StatusMax) * 100
-			})
+			}
 		end
 	end
 
@@ -50,10 +49,12 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	Status = {}
-	SendNUIMessage({
-		update = true,
-		status = Status
-	})
+	if Config.Display then
+		SendNUIMessage({
+			update = true,
+			status = Status
+		})
+	end
 end)
 
 RegisterNetEvent('esx_status:load')
@@ -72,13 +73,21 @@ AddEventHandler('esx_status:load', function(status)
 			for i=1, #Status, 1 do
 				Status[i].onTick()
 			end
+			local data = GetStatusData(true)
+			
+			if Config.Display then
+				local fullData = data
+				for i=1, #data, 1 do
+					fullData[i].color = Status[i].color
+					fullData[i].visible = Status[i].visible()
+				end
+				SendNUIMessage({
+					update = true,
+					status = fullData
+				})
+			end
 
-			SendNUIMessage({
-				update = true,
-				status = GetStatusData()
-			})
-
-			TriggerEvent('esx_status:onTick', GetStatusData(true))
+			TriggerEvent('esx_status:onTick', data)
 			Citizen.Wait(Config.TickTime)
 		end
 	end)
@@ -92,12 +101,12 @@ AddEventHandler('esx_status:set', function(name, val)
 			break
 		end
 	end
-
-	SendNUIMessage({
-		update = true,
-		status = GetStatusData()
-	})
-
+	if Config.Display then
+		SendNUIMessage({
+			update = true,
+			status = GetStatusData()
+		})
+	end
 	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
@@ -109,12 +118,12 @@ AddEventHandler('esx_status:add', function(name, val)
 			break
 		end
 	end
-
-	SendNUIMessage({
-		update = true,
-		status = GetStatusData()
-	})
-
+	if Config.Display then
+		SendNUIMessage({
+			update = true,
+			status = GetStatusData()
+		})
+	end
 	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
@@ -126,12 +135,12 @@ AddEventHandler('esx_status:remove', function(name, val)
 			break
 		end
 	end
-
-	SendNUIMessage({
-		update = true,
-		status = GetStatusData()
-	})
-
+		if Config.Display then
+		SendNUIMessage({
+			update = true,
+			status = GetStatusData()
+		})
+	end
 	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
@@ -154,15 +163,17 @@ end)
 -- Pause menu disable hud display
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(300)
+		if Config.Display then
+			Citizen.Wait(300)
 
-		if IsPauseMenuActive() and not isPaused then
-			isPaused = true
-			TriggerEvent('esx_status:setDisplay', 0.0)
-		elseif not IsPauseMenuActive() and isPaused then
-			isPaused = false 
-			TriggerEvent('esx_status:setDisplay', 0.5)
-		end
+			if IsPauseMenuActive() and not isPaused then
+				isPaused = true
+				TriggerEvent('esx_status:setDisplay', 0.0)
+			elseif not IsPauseMenuActive() and isPaused then
+				isPaused = false 
+				TriggerEvent('esx_status:setDisplay', 0.5)
+			end
+		else Citizen.Wait(1000) end
 	end
 end)
 
