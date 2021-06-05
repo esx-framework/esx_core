@@ -17,19 +17,8 @@
 - Modify your ESX config with `Config.Multichar = true`
 - Set your database name for `Config.Database` in server/main.lua
 - All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
-- Add the following command to easily update all of your SQL tables
-
-```lua
-	RegisterCommand('varchar', function(source)
-		if source == 0 then
-			for _, itable in pairs(IdentifierTables) do
-				print('Setting `'..itable.table..'` column `'..itable.column..'` to VARCHAR(60)')
-				MySQL.Sync.execute("ALTER TABLE "..itable.table.." MODIFY COLUMN "..itable.column.." VARCHAR(60)", {})
-			end
-		end
-	end, true)
-```
-- Use the command from the console and then remove it
+- Use the `varchar` command from the console to update your SQL tables
+- Once you have used the command you should just remove it for sanity's sake
 ### Relogging
 - Modify the config with `Config.Relog = true`
 - Use the latest version of [ESX Status](https://github.com/esx-framework/esx_status)
