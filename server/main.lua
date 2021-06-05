@@ -3,6 +3,7 @@ local Jobs = {}
 local RegisteredSocieties = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local isLegacy = not not ESX.GetExtendedPlayers
 
 function GetSociety(name)
 	for i=1, #RegisteredSocieties, 1 do
@@ -170,9 +171,9 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	local employees = {}
 
-	local xPlayers = ESX.GetPlayers()
-	for k, v in pairs(xPlayers) do
-		local xPlayer = ESX.GetPlayerFromId(v)
+	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
 		local name = GetPlayerName(xPlayer.source)
 		if Config.EnableESXIdentity then
@@ -301,10 +302,10 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				['@grade']    = grade
 			}, function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
-				local xPlayers = ESX.GetPlayers()
 
-				for i=1, #xPlayers, 1 do
-					local xTarget = ESX.GetPlayerFromId(xPlayers[i])
+				local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+				for k,v in pairs(xPlayers) do
+					local xTarget = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
 					if xTarget.job.name == job and xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
@@ -323,21 +324,28 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
+local getOnlinePlayers = false
+local onlinePlayers = {}
+
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	local xPlayers = ESX.GetPlayers()
-	local players = {}
-
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		table.insert(players, {
-			source = xPlayer.source,
-			identifier = xPlayer.identifier,
-			name = xPlayer.name,
-			job = xPlayer.job
-		})
+	if getOnlinePlayers == false and next(onlinePlayers) == nil then	-- Prevent multiple xPlayer loops from running in quick succession
+		getOnlinePlayers, onlinePlayers = true, {}
+		
+		local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+		for k,v in pairs(xPlayers) do
+			local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
+			
+			table.insert(onlinePlayers, {
+				source = xPlayer.source,
+				identifier = xPlayer.identifier,
+				name = xPlayer.name,
+				job = xPlayer.job
+			})
+		end
+		getOnlinePlayers = false
 	end
-
-	cb(players)
+	while getOnlinePlayers do Citizen.Wait(50) end	-- Wait for the xPlayer loop to finish
+	cb(onlinePlayers)
 end)
 
 ESX.RegisterServerCallback('esx_society:getVehiclesInGarage', function(source, cb, societyName)
