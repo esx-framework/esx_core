@@ -11,7 +11,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	
 	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
+		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
@@ -103,7 +103,7 @@ function SaveData()
 	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	
 	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
+		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 		local status  = xPlayer.get('status')
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
