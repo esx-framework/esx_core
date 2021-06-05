@@ -255,7 +255,7 @@ AddEventHandler('esx:onPlayerSpawn', function()
             Citizen.Wait(100)
         end
 
-        if firstSpawn then
+        if firstSpawn and ESX.GetConfig().Multichar ~= true then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
                 if skin == nil then
                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
