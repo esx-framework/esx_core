@@ -122,7 +122,7 @@ if ESX.GetConfig().Multichar then
 		SetEntityAlpha(playerPed, 255)
 	end
 
-	LoadPed = function(isNew)
+	LoadPed = function(isNew, spawn)
 		local char = Characters[Spawned]
 		if isNew or not char.skin or #char.skin == 1 then
 			local isMale, sex = true, 0
@@ -131,13 +131,15 @@ if ESX.GetConfig().Multichar then
 				skin = Config.Default
 				skin.sex = sex
 				TriggerEvent('skinchanger:loadSkin', skin, function()
-					TriggerEvent('esx_skin:openSaveableMenu')
+					Citizen.CreateThread(function()
+						Citizen.Wait(1530)
+						TriggerEvent('esx_skin:openSaveableMenu')
+						SetEntityHeading(PlayerPedId(), spawn.heading)
+					end)
 				end)
-				Citizen.Wait(500)
 			end)
 		else
 			TriggerEvent('skinchanger:loadSkin', Characters[Spawned].skin)
-			Citizen.Wait(500)
 		end
 		Characters = {}
 	end
@@ -274,25 +276,26 @@ if ESX.GetConfig().Multichar then
 		SetEntityVisible(playerPed, true, 0)
 		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z, true, false, false, false)
 
-		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", spawn.x,spawn.y,spawn.z+10, GetEntityRotation(playerPed), 100.00, false, 0)
+		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", spawn.x,spawn.y,spawn.z+10, 0.0, 0.0, 0.0, 100.00, false, 0)
 		PointCamAtCoord(cam, spawn.x,spawn.y,spawn.z+2)
-		SetCamActiveWithInterp(cam, cam2, 2700, true, true)
+		SetCamActiveWithInterp(cam, cam2, 2000, true, true)
 
-		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
-		Citizen.Wait(1000)
-		LoadPed(isNew)
-		playerPed = PlayerPedId()
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned')
+		LoadPed(isNew, spawn)
+		FreezeEntityPosition(playerPed, false)
+		SetEntityHeading(PlayerPed, spawn.heading)
+
+		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
+		Citizen.Wait(1000)
+		playerPed = PlayerPedId()
 		RenderScriptCams(false, true, 500, true, true)
 		PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
 		SetCamActive(cam, false)
-		DestroyCam(cam, true)
+		DestroyAllCams(true)
 		DisplayHud(true)
 		DisplayRadar(true)
-		FreezeEntityPosition(playerPed, false)
-		SetEntityHeading(playerPed, spawn.heading)
 		hidePlayers = false
 	end)
 
