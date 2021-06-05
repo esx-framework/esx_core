@@ -29,6 +29,7 @@
 		end
 	end, true)
 ```
+- Use the command from the console and then remove it
 ### Relogging
 - Modify the config with `Config.Relog = true`
 - Use the latest version of [ESX Status](https://github.com/esx-framework/esx_status)
