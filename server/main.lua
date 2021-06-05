@@ -7,22 +7,26 @@ AddEventHandler('onResourceStart', function(resourceName)
 	  	return
 	end
 
-	local players = ESX.GetPlayers()
-
-	for _,playerId in ipairs(players) do
-		local xPlayer = ESX.GetPlayerFromId(playerId)
-
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+	
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
 		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
 			local data = {}
-
+	
 			if result[1].status then
 				data = json.decode(result[1].status)
 			end
-
+		
 			xPlayer.set('status', data)
-			TriggerClientEvent('esx_status:load', playerId, data)
+			TriggerClientEvent('esx_status:load', k, data)
 		end)
 	end
 end)
@@ -84,8 +88,6 @@ Citizen.CreateThread(function()
 end)
 
 function SaveData()
-	local xPlayers = ESX.GetPlayers()
-
 	-- Example of a bulk update statement that we are building below
 	--[[
 	UPDATE users
@@ -102,8 +104,15 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+	local xPlayers
+	if ESX.GetExtendedPlayers then	
+		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
+	else
+		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
+	end
+	
+	for k,v in pairs(xPlayers) do
+		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
 		local status  = xPlayer.get('status')
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
@@ -119,7 +128,6 @@ function SaveData()
 
 	if playerCount > 0 then
 		local sql = string.format(updateStatement, whenList, whereList)
-
 		MySQL.Async.execute(sql)
 
 	end
