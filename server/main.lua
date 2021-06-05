@@ -7,7 +7,18 @@ if ESX.GetConfig().Multichar == true then
 	Config.Database = 'es_extended'
 	-- enter a prefix to prepend to all user identifiers (keep it short)
 	Config.Prefix = 'char'
-
+	
+	RegisterCommand('varchar', function(source)
+		if source == 0 then
+			if next(IdentifierTables) == nil then print('	Unable to update your tables - have you defined the correct database?') return end
+			for _, itable in pairs(IdentifierTables) do
+				print('Setting `'..itable.table..'` column `'..itable.column..'` to VARCHAR(60)')
+				MySQL.Sync.execute("ALTER TABLE "..itable.table.." MODIFY COLUMN "..itable.column.." VARCHAR(60)", {})
+			end
+			Citizen.Wait(100)
+			print('	Updated your tables to use the correct field length - you should remove this command')
+		end
+	end, true)
 
 	SetupCharacters = function(playerId)
 		while fetchCharacters == -1 do Citizen.Wait(100) end
