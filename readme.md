@@ -12,10 +12,11 @@
 - Required for spawning as well as ESX Legacy
 
 ### Installation
-- Enable Config.Multichar in the ESX config
-- Set your database name in for Config.Database in server/main.lua
-- All owner and identifier columns should be set to VARCHAR(60) to ensure correct data entry
-* Add the following command to easily update all of your SQL tables
+- Modify your ESX config with `Config.Multichar = true`
+- Set your database name for `Config.Database` in server/main.lua
+- All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
+- Add the following command to easily update all of your SQL tables
+
 ```lua
 	RegisterCommand('varchar', function(source)
 		if source == 0 then
@@ -26,6 +27,25 @@
 		end
 	end, true)
 ```
+### Relogging
+- Modify the config with `Config.Relog = true`
+- Use the latest version of [ESX Status](https://github.com/esx-framework/esx_status)
+- Add the following event to any resources that will benefit from clearing ESX.PlayerData
+
+```lua
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+ 	ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+end)
+```
+- If you have any threads running with `while true do` you should change them to `while ESX.PlayerLoaded do`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
