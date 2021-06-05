@@ -3,6 +3,7 @@ local Jobs = {}
 local RegisteredSocieties = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local isLegacy = not not ESX.GetExtendedPlayers
 
 function GetSociety(name)
 	for i=1, #RegisteredSocieties, 1 do
@@ -170,13 +171,7 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	local employees = {}
 
-	local xPlayers
-	if ESX.GetExtendedPlayers then	
-		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-	else
-		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-	end
-	
+	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	for k,v in pairs(xPlayers) do
 		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
@@ -308,13 +303,7 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 			}, function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
 
-				local xPlayers
-				if ESX.GetExtendedPlayers then	
-					xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-				else
-					xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-				end
-				
+				local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 				for k,v in pairs(xPlayers) do
 					local xTarget = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 
@@ -341,13 +330,8 @@ local onlinePlayers = {}
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	if getOnlinePlayers == false and next(onlinePlayers) == nil then	-- Prevent multiple xPlayer loops from running in quick succession
 		getOnlinePlayers, onlinePlayers = true, {}
-		local xPlayers
-		if not ESX.GetExtendedPlayers then	
-			xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-		else
-			xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-		end
-
+		
+		local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 		for k,v in pairs(xPlayers) do
 			local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
 			
