@@ -1,20 +1,29 @@
 ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local playerIdentity = {}
 local alreadyRegistered = {}
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local multichar = ESX.GetConfig().Multichar
+
+function getIdentifier(playerId)
+	if multichar ~= nil then
+		return ESX.GetIdentifier(playerId)
+	else
+		ESX.GetIdentifier = function(playerId)
+			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+				if string.match(v, 'license') then
+					local identifier = string.gsub(v, 'license:', '')
+					return identifier
+				end
+			end
+		end
+	end
+end
 
 if Config.UseDeferrals then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
-		local playerId, identifier = source
+		local playerId, identifier = source, getIdentifier(source)
 		Citizen.Wait(100)
-
-			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-				if string.match(v, 'license:') then
-					identifier = string.sub(v, 9)
-					break
-				end
-			end
 	
 		if identifier then
 			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
@@ -108,95 +117,90 @@ if Config.UseDeferrals then
 	end)
 
 elseif not Config.UseDeferrals then
-	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
-		deferrals.defer()
-		local playerId, identifier = source
-		Citizen.Wait(40)
+	if not multichar then
+		AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+			deferrals.defer()
+			local playerId, identifier = source, getIdentifier(source)
+			Citizen.Wait(40)
 
-			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-				if string.match(v, 'license:') then
-					identifier = string.sub(v, 9)
-					break
-				end
-			end
+			if identifier then
+				MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
+					['@identifier'] = identifier
+				}, function(result)
+					if result[1] then
+						if result[1].firstname then
+							playerIdentity[identifier] = {
+								firstName = result[1].firstname,
+								lastName = result[1].lastname,
+								dateOfBirth = result[1].dateofbirth,
+								sex = result[1].sex,
+								height = result[1].height
+							}
 
-		if identifier then
-			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
-				['@identifier'] = identifier
-			}, function(result)
-				if result[1] then
-					if result[1].firstname then
-						playerIdentity[identifier] = {
-							firstName = result[1].firstname,
-							lastName = result[1].lastname,
-							dateOfBirth = result[1].dateofbirth,
-							sex = result[1].sex,
-							height = result[1].height
-						}
+							alreadyRegistered[identifier] = true
 
-						alreadyRegistered[identifier] = true
-
-						deferrals.done()
+							deferrals.done()
+						else
+							playerIdentity[identifier] = nil
+							alreadyRegistered[identifier] = false
+							deferrals.done()
+						end
 					else
 						playerIdentity[identifier] = nil
 						alreadyRegistered[identifier] = false
 						deferrals.done()
 					end
-				else
-					playerIdentity[identifier] = nil
-					alreadyRegistered[identifier] = false
-					deferrals.done()
-				end
-			end)
-		else
-			deferrals.done(_U('no_identifier'))
-		end
-	end)
-
-	AddEventHandler('onResourceStart', function(resource)
-		if resource == GetCurrentResourceName() then
-			Citizen.Wait(300)
-
-			while not ESX do
-				Citizen.Wait(10)
+				end)
+			else
+				deferrals.done(_U('no_identifier'))
 			end
+		end)
 
-			local xPlayers = ESX.GetPlayers()
+		AddEventHandler('onResourceStart', function(resource)
+			if resource == GetCurrentResourceName() then
+				Citizen.Wait(300)
 
-			for i=1, #xPlayers, 1 do
-				local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+				while not ESX do
+					Citizen.Wait(10)
+				end
 
-				if xPlayer then	
-					checkIdentity(xPlayer)
+				local xPlayers = ESX.GetPlayers()
+
+				for i=1, #xPlayers, 1 do
+					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+					if xPlayer then	
+						checkIdentity(xPlayer)
+					end
 				end
 			end
-		end
-	end)
+		end)
 
-	RegisterNetEvent('esx:playerLoaded')
-	AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-		if alreadyRegistered[xPlayer.identifier] == true then
+		RegisterNetEvent('esx:playerLoaded')
+		AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 			local currentIdentity = playerIdentity[xPlayer.identifier]
+			if currentIdentity and alreadyRegistered[xPlayer.identifier] == true then
 
-			xPlayer.setName(('%s %s'):format(currentIdentity.firstName, currentIdentity.lastName))
-			xPlayer.set('firstName', currentIdentity.firstName)
-			xPlayer.set('lastName', currentIdentity.lastName)
-			xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
-			xPlayer.set('sex', currentIdentity.sex)
-			xPlayer.set('height', currentIdentity.height)
+				xPlayer.setName(('%s %s'):format(currentIdentity.firstName, currentIdentity.lastName))
+				xPlayer.set('firstName', currentIdentity.firstName)
+				xPlayer.set('lastName', currentIdentity.lastName)
+				xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
+				xPlayer.set('sex', currentIdentity.sex)
+				xPlayer.set('height', currentIdentity.height)
 
-			if currentIdentity.saveToDatabase then
-				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
+				if currentIdentity.saveToDatabase then
+					saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
+				end
+
+				Citizen.Wait(10)
+				TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
+
+				playerIdentity[xPlayer.identifier] = nil
+			else
+				TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
 			end
-
-			Citizen.Wait(10)
-			TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
-
-			playerIdentity[xPlayer.identifier] = nil
-		else
-			TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-		end
-	end)
+		end)
+	end
 
 	ESX.RegisterServerCallback('esx_identity:registerIdentity', function(source, cb, data)
 		local xPlayer = ESX.GetPlayerFromId(source)
@@ -231,6 +235,11 @@ elseif not Config.UseDeferrals then
 				end
 			else
 				cb(false)
+			end
+		else
+			if multichar and checkNameFormat(data.firstname) and checkNameFormat(data.lastname) and checkSexFormat(data.sex) and checkDOBFormat(data.dateofbirth) and checkHeightFormat(data.height) then
+				TriggerEvent('esx_identity:completedRegistration', source, data)
+				cb(true)
 			end
 		end
 	end)
