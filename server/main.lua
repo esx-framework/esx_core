@@ -1,18 +1,14 @@
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local isLegacy = not not ESX.GetExtendedPlayers
 
 AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  	return
 	end
 
-	local xPlayers
-	if ESX.GetExtendedPlayers then	
-		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-	else
-		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-	end
+	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	
 	for k,v in pairs(xPlayers) do
 		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
@@ -104,12 +100,7 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	local xPlayers
-	if ESX.GetExtendedPlayers then	
-		xPlayers = ESX.GetExtendedPlayers()		-- Retrieve all xPlayer data directly (ESX Legacy)
-	else
-		xPlayers = ESX.GetPlayers()				-- Retrieves player ids and gets xPlayer data one-by-one (ESX 1.2 support)
-	end
+	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	
 	for k,v in pairs(xPlayers) do
 		local xPlayer = type(v) ~= 'table' and v or ESX.GetPlayerFromId(k)
