@@ -1,44 +1,53 @@
 ### Requirements
-* [ESX Legacy](https://github.com/thelindat/es_extended/tree/multichar) [Currently requires my fork]
-* [esx_identity](https://github.com/thelindat/esx_identity) [Currently requires my fork]
-* [esx_skin](https://github.com/thelindat/esx_skin) [Currently requires my fork]
-* [spawnmanager](https://github.com/citizenfx/cfx-server-data/blob/master/resources/[managers]/spawnmanager)
-* Do not run `essentialsmode` or `basic-gamemode`
-
+#### [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
+- Minimum commit: 89f8d87
+- Legacy is an update from v1 Final with bug fixes, optimisations and some new features
+#### [ESX Identity](https://github.com/esx-framework/esx_identity)
+- Minimum commit: 5d28b23
+- Required for character registration
+#### [ESX Skin](https://github.com/esx-framework/esx_skin)
+- Minimum commit: 3a81208
+- If you wish to use other resources, you will need to adjust events in multicharacter
+#### [Spawnmanager](https://github.com/citizenfx/cfx-server-data/tree/master/resources/%5Bmanagers%5D/spawnmanager)
+- Required for spawning as well as ESX Legacy
 
 ### Installation
-* Modify your ESX config and set `Config.Multichar = true`
-* All `owner` and `identifier` columns in your SQL must have their size increased to at least **VARCHAR(50)**
-* Set your database name in `server/main.lua` to allow for character deletion
-* You can add the following command to `server/main.lua` to easily update all your columns
+- Enable Config.Multichar in the ESX config
+- Set your database name in for Config.Database in server/main.lua
+- All owner and identifier columns should be set to VARCHAR(60) to ensure correct data entry
+* Add the following command to easily update all of your SQL tables
 ```lua
 	RegisterCommand('varchar', function(source)
 		if source == 0 then
 			for _, itable in pairs(IdentifierTables) do
-				print('Setting `'..itable.table..'` column `'..itable.column..'` to VARCHAR(50)')
-				MySQL.Sync.execute("ALTER TABLE "..itable.table.." MODIFY COLUMN "..itable.column.." VARCHAR(50)", {})
+				print('Setting `'..itable.table..'` column `'..itable.column..'` to VARCHAR(60)')
+				MySQL.Sync.execute("ALTER TABLE "..itable.table.." MODIFY COLUMN "..itable.column.." VARCHAR(60)", {})
 			end
 		end
 	end, true)
 ```
 
-
-### ESX Legacy  
-* This resource is not compatible with previous versions of ESX or EXM
-* Requires ESX_Identity and ESX_Skin to function properly - edits will be required to use other resources that modify character spawning
-* The method for storing characters is different from kashacters - if you want to use previous characters you will need to find a way to update stored identifiers
-* The player identifier used is set by ESX and by default only allows for a Rockstar License
-
-
-### What's new?
-Although kashacters provided an easy-to-use and free method of multiple characters, the method for doing so was inefficient and potentially database breaking.
-* All users are created with a modified identifier entry, instead using `char#:identifier`
-* There is no SQL table or modifications required for this to function
-* Selecting a different character does not require modifying every instance of the characters identifier
-* All tables containing an `owner` or `identifier` column are checked on startup, so character deletion will properly wipe all data
-
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
+
+### Conflicts
+	- essentialsmode
+	- basic-gamemode
+	- fivem-maps
+	- cui_character
+
+### Notes
+- This resource is not compatible with ExtendedMode or previous versions of ESX
+- Legacy, skin, and identity must be updated to at least the minimum commits specified above
+- Characters are stored in the users table as `char#:license` - if you need to use a different identifier then you need to modify ESX itself
+- Character deletion does not require manual entries for the tables to remove
+- As characters are stored with unique identifiers, there is no excessive queries being executed
+	
+### Kashacters
+- This project is forked from the [kashacters multicharacter resource](https://github.com/FiveEYZ/esx_kashacter)
+- Most of the code has been entirely rewritten
+- KASH has given permission for this resource to use his code and the addition of a license
+- The license obviously does not apply to previous versions and KASH has stated his resource is free to be used however
 
 
 
@@ -59,4 +68,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses.
 
 
-# Thanks to KASH and XxFri3ndlyxX
+### Thanks to KASH, XxFri3ndlyxX, and all those who have contributed
