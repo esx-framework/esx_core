@@ -1,23 +1,52 @@
-local isPaused, isDead, pickups = false, false, {}
+local pickups = {}
 
 Citizen.CreateThread(function()
-	while NetworkIsPlayerActive(PlayerId()) do
+	while NetworkIsPlayerActive(PlayerId()) and not Config.Multichar do
 		Citizen.Wait(5)
+		DoScreenFadeOut(0)
 		TriggerServerEvent('esx:onPlayerJoined')
 		break
 	end
 end)
 
-
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(playerData, isNew)
+AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = playerData
-	ESX.PlayerData.ped = ESX.PlayerData.ped
 
+	FreezeEntityPosition(PlayerPedId(), true)
 
-	FreezeEntityPosition(ESX.PlayerData.ped, true)
-	
+	if Config.Multichar then
+		TriggerEvent('esx_multicharacter:SpawnCharacter', playerData.coords, isNew)
+		Citizen.Wait(3000)
+	else
+		exports.spawnmanager:spawnPlayer({
+			x = playerData.coords.x,
+			y = playerData.coords.y,
+			z = playerData.coords.z + 0.25,
+			heading = playerData.coords.heading,
+			model = `mp_m_freemode_01`,
+			skipFade = false
+		}, function()
+			TriggerServerEvent('esx:onPlayerSpawn')
+			TriggerEvent('esx:onPlayerSpawn')
+			TriggerEvent('playerSpawned') -- compatibility with old scripts
+			TriggerEvent('esx:restoreLoadout')
+			if isNew then
+				if skin.sex == 0 then
+					TriggerEvent('skinchanger:loadDefaultModel', true)
+				else
+					TriggerEvent('skinchanger:loadDefaultModel', false)
+				end
+			elseif skin then TriggerEvent('skinchanger:loadSkin', skin) end
+			TriggerEvent('esx:loadingScreenOff')
+			ShutdownLoadingScreen()
+			ShutdownLoadingScreenNui()
+			FreezeEntityPosition(ESX.PlayerData.ped, false)
+		end)
+	end
+
+	while ESX.PlayerData.ped == nil do Citizen.Wait(20) end
 	-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
@@ -41,26 +70,13 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew)
 			grade_label = playerData.job.grade_label
 		})
 	end
+	StartServerSyncLoops()
+end)
 
-	exports.spawnmanager:spawnPlayer({
-		x = playerData.coords.x,
-		y = playerData.coords.y,
-		z = playerData.coords.z + 0.25,
-		heading = playerData.coords.heading,
-		model = `mp_m_freemode_01`,
-		skipFade = false
-	}, function()
-		TriggerEvent('esx:onPlayerSpawn')
-		TriggerEvent('playerSpawned') -- compatibility with old scripts, will be removed soon.
-		TriggerEvent('esx:restoreLoadout')
-
-		Citizen.Wait(4000)
-		ShutdownLoadingScreen()
-		ShutdownLoadingScreenNui()
-		FreezeEntityPosition(ESX.PlayerData.ped, false)
-		StartServerSyncLoops()
-	end)
-	TriggerEvent('esx:loadingScreenOff') -- compatibility with old scripts, will be removed soon.
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -70,14 +86,12 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 	ESX.SetPlayerData('dead', false)
-	isDead = false
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 	ESX.SetPlayerData('dead', true)
-	isDead = true
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
@@ -335,6 +349,7 @@ end)
 -- Pause menu disables HUD display
 if Config.EnableHud then
 	Citizen.CreateThread(function()
+		local isPaused = false
 		while true do
 			Citizen.Wait(300)
 
@@ -356,10 +371,17 @@ end
 function StartServerSyncLoops()
 	-- keep track of ammo
 	Citizen.CreateThread(function()
+		local currentWeapon = {timer=0}
 		while ESX.PlayerLoaded do
-			Citizen.Wait(1000)
+			local sleep = 5
 
-			local letSleep = true
+			if currentWeapon.timer == sleep then
+				local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+				TriggerServerEvent('esx:updateWeaponAmmo', currentWeapon.name, ammoCount)
+				currentWeapon.timer = 0
+			elseif currentWeapon.timer > sleep then
+				currentWeapon.timer = currentWeapon.timer - sleep
+			end
 
 			if IsPedArmed(ESX.PlayerData.ped, 4) then
 				if IsPedShooting(ESX.PlayerData.ped) then
@@ -367,14 +389,15 @@ function StartServerSyncLoops()
 					local weapon = ESX.GetWeaponFromHash(weaponHash)
 
 					if weapon then
-						local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-						TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
+						currentWeapon.name = weapon.name
+						currentWeapon.hash = weaponHash	
+						currentWeapon.timer = 100 * sleep		
 					end
 				end
+			else
+				sleep = 200
 			end
-			if letSleep then
-				Citizen.Wait(500)
-			end
+			Citizen.Wait(sleep)
 		end
 	end)
 
@@ -404,7 +427,7 @@ end
 
 if Config.EnableDefaultInventory then
 	RegisterCommand('showinv', function()
-		if not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 			ESX.ShowInventory()
 		end
 	end)

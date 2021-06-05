@@ -1,4 +1,3 @@
-local crash = false
 ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
 	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
 end, false, {help = _U('command_setcoords'), validate = true, arguments = {
@@ -118,8 +117,8 @@ end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
-	for k,v in ipairs(args.playerId.loadout) do
-		args.playerId.removeWeapon(v.name)
+	for i=#args.playerId.loadout, 1, -1 do
+		args.playerId.removeWeapon(args.playerId.loadout[i].name)
 	end
 end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
@@ -160,19 +159,6 @@ ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
 	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
-end, true)
-
-ESX.RegisterCommand('sv_restart', "admin", function(xPlayer, args, showError)
-	Citizen.CreateThread(function()
-		ESX.SavePlayers()
-		for _, playerId in ipairs(GetPlayers()) do
-			DropPlayer(playerId, "Server Restart")
-		end
-		print('^2[INFO] ^1 Server Restarting, Please Wait :)')
-		crash = true
-		while crash do
-		end
-	end)
 end, true)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)

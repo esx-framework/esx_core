@@ -30,27 +30,29 @@ MySQL.ready(function()
 		end
 	end)
 
+	local Jobs = {}
 	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
 		for k,v in ipairs(jobs) do
-			ESX.Jobs[v.name] = v
-			ESX.Jobs[v.name].grades = {}
+			Jobs[v.name] = v
+			Jobs[v.name].grades = {}
 		end
 
 		MySQL.Async.fetchAll('SELECT * FROM job_grades', {}, function(jobGrades)
 			for k,v in ipairs(jobGrades) do
-				if ESX.Jobs[v.job_name] then
-					ESX.Jobs[v.job_name].grades[tostring(v.grade)] = v
+				if Jobs[v.job_name] then
+					Jobs[v.job_name].grades[tostring(v.grade)] = v
 				else
 					print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
 				end
 			end
 
-			for k2,v2 in pairs(ESX.Jobs) do
+			for k2,v2 in pairs(Jobs) do
 				if ESX.Table.SizeOf(v2.grades) == 0 then
-					ESX.Jobs[v2.name] = nil
+					Jobs[v2.name] = nil
 					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v2.name))
 				end
 			end
+			ESX.Jobs = Jobs
 		end)
 	end)
 

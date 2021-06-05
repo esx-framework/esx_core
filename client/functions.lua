@@ -42,7 +42,9 @@ end
 
 ESX.SetPlayerData = function(key, val)
 	ESX.PlayerData[key] = val
-	TriggerEvent('esx:setPlayerData', key, val)
+	if key ~= 'inventory' and key ~= 'loadout' then
+		TriggerEvent('esx:setPlayerData', key, val)
+	end
 end
 
 ESX.ShowNotification = function(msg)
@@ -139,6 +141,13 @@ ESX.UI.HUD.RemoveElement = function(name)
 		action    = 'deleteHUDElement',
 		name      = name
 	})
+end
+
+ESX.UI.HUD.Reset = function()
+	SendNUIMessage({
+		action    = 'resetHUDElements'
+	})
+	ESX.UI.HUD.RegisteredElements = {}
 end
 
 ESX.UI.HUD.UpdateElement = function(name, data)
@@ -314,7 +323,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(entity) do
-			Wait(0)
+			Citizen.Wait(0)
 		end
 
 		SetEntityCoords(entity, vector.xyz, false, false, false, false)
@@ -332,7 +341,7 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked, dynamic)
 	networked = networked == nil and true or false
 	dynamic = dynamic ~= nil and true or false
 
-	CreateThread(function()
+	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
@@ -364,7 +373,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
-	CreateThread(function()
+	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
@@ -381,7 +390,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			Wait(0)
+			Citizen.Wait(0)
 		end
 
 		if cb then
@@ -699,14 +708,20 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
+ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	if scale then scale = scale + 0.0 end
 
-	if not scale then scale = 0.35 end
-	if not font then font = 4 end
+	local camCoords = GetGameplayCamCoords()
+	local distance = #(vector - camCoords)
 
-	SetTextScale(scale, scale)
+	if not size then size = 1 end
+	if not font then font = 0 end
+
+	local scale = (size / distance) * 2
+	local fov = (1 / GetGameplayCamFov()) * 100
+	scale = scale * fov
+
+	SetTextScale(0.0 * scale, 0.55 * scale)
 	SetTextFont(font)
 	SetTextProportional(1)
 	SetTextColour(255, 255, 255, 215)
@@ -715,9 +730,6 @@ ESX.Game.Utils.DrawText3D = function(coords, text, scale, font)
 	AddTextComponentString(text)
 	SetDrawOrigin(vector.xyz, 0)
 	DrawText(0.0, 0.0)
-	local scaleFactor = scale / 0.35
-	local length = string.len(string.gsub(text, "(~[rbgypcmuosh]~)", ""))
-	DrawRect(0.0, 0.0 + 0.0111 * scaleFactor, 0.027 + (length / 370) * scaleFactor, 0.03 * scaleFactor, 0, 0, 0, 75)
 	ClearDrawOrigin()
 end
 
