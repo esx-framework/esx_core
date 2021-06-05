@@ -2,6 +2,8 @@
 #### [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
 - Minimum commit: 89f8d87
 - Legacy is an update from v1 Final with bug fixes, optimisations and some new features
+#### [MySQL Async](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
+- Minimum commit:  ec81359
 #### [ESX Identity](https://github.com/esx-framework/esx_identity)
 - Minimum commit: 5d28b23
 - Required for character registration
