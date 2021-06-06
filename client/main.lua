@@ -23,7 +23,7 @@ function GetStatusData(minimal)
 				name    = Status[i].name,
 				val     = Status[i].val,
 				color   = Status[i].color,
-				visible = Status[i].visible(),
+				visible = Status[i].visible(Status[i]),
 				percent = (Status[i].val / Config.StatusMax) * 100
 			}
 		end
@@ -68,6 +68,8 @@ AddEventHandler('esx_status:load', function(status)
 		end
 	end
 
+	if Config.Display then TriggerEvent('esx_status:setDisplay', 0.5) end
+
 	Citizen.CreateThread(function()
 		while #Status > 0 do
 			for i=1, #Status, 1 do
@@ -79,7 +81,7 @@ AddEventHandler('esx_status:load', function(status)
 				local fullData = data
 				for i=1, #data, 1 do
 					fullData[i].color = Status[i].color
-					fullData[i].visible = Status[i].visible()
+					fullData[i].visible = Status[i].visible(Status[i])
 				end
 				SendNUIMessage({
 					update = true,
