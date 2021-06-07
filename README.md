@@ -7,8 +7,8 @@ ESX is the most popular framework for creating an economy-based roleplay server 
 ###### `esx_society` add employee management, society funds and more
 ###### `esx_billing` add support for registered societies to fine or bill players
 ###### `esx_vehicleshop` allow players to purchase vehicles directly or from players
-###### `esx_ambulancejob` adds a death and respawn system while allowing players to become EMS and revive
-###### `esx_policejob` allow players to become cops and protect the city
+###### `esx_ambulancejob` adds a death and respawn system while allowing players to become EMS to heal or revive others
+###### `esx_policejob` allow players to become cops, granting the ability to detain and fine others
 
 
 Many more resources are available on the [ESX Framework Github](https://github.com/esx-framework) and [ESX Community Github](https://github.com/esx-community/) pages.
@@ -31,6 +31,7 @@ ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a 
 * /clearloadout now properly removes all weapons instead of needing to be performed multiple times
 * ESX.Jobs is no longer set until the full table has been creating, allowing other resources to retrieve it more easily
 * Now using spawnmanager to spawn players and prevent weird desync issues
+	- This may cause problems with some third-party resources that modify player spawns
  
 #### Optimisation
 * Support for compile-time hashing instead of calling the native
@@ -38,12 +39,12 @@ ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a 
 * Allow loops to sleep while not performing any tasks
 * The current player ped and death status are now stored in ESX.PlayerData, reducing the need to constantly call the native
 * Weapon ammo is no longer synced on every frame, instead triggering a server event once shooting has ceased
+* Reduced the number of queries being performed by a single player connecting to the server
 
 #### Features
 * Support for the latest weapons and components
 * Additional admin commands from esx_adminplus
 * Save all players before the txAdmin scheduled restarts
-* Reduce the number of queries being performed when a player loads by returning skin and identity data with the initial query
 * When loading a new player, send the isNew argument along with `esx:playerLoaded`
 * Added an imports file to load in other resource manifests with `shared_script '@es_extended/imports.lua'`
 	- Removes the need to define ESX in your resources, as it will perform the task for you
