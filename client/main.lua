@@ -13,19 +13,19 @@ function GetStatusData(minimal)
 
 	for i=1, #Status, 1 do
 		if minimal then
-			status[#status+1] = {
+			table.insert(status, {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				percent = (Status[i].val / Config.StatusMax) * 100
-			}
+			})
 		else
-			status[#status+1] {
+			table.insert(status, {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				color   = Status[i].color,
 				visible = Status[i].visible(Status[i]),
 				percent = (Status[i].val / Config.StatusMax) * 100
-			}
+			})
 		end
 	end
 
