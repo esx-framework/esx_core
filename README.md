@@ -2,14 +2,15 @@
 
 
 ESX is the most popular framework for creating an economy-based roleplay server on FiveM, with many more official and unofficial resources designed to utilise the tools provided by this resource. Here's a taste of what's available:
-```
-esx_identity: enable character registration using a name, sex, and date of birth
-esx_society: add employee management, society funds and more
-esx_billing: add support for registered societies to fine or bill players
-esx_vehicleshop: allow players to purchase vehicles directly or from players
-esx_ambulancejob: adds a death and respawn system while allowing players to become EMS and revive
-esx_policejob: allow players to become cops and protect the city
-```
+
+###### `esx_identity` enable character registration using a name, sex, and date of birth
+###### `esx_society` add employee management, society funds and more
+###### `esx_billing` add support for registered societies to fine or bill players
+###### `esx_vehicleshop` allow players to purchase vehicles directly or from players
+###### `esx_ambulancejob` adds a death and respawn system while allowing players to become EMS and revive
+###### `esx_policejob` allow players to become cops and protect the city
+
+
 Many more resources are available on the [ESX Framework Github](https://github.com/esx-framework) and [ESX Community Github](https://github.com/esx-community/) pages.
 
 
@@ -49,6 +50,9 @@ ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a 
 	- Ensures ESX.PlayerData will always return current information (exception: loadout and inventory)
 * Support for relogging, clearing all player data and cancelling sync loops
 * Added the `ESX.GetExtendedPlayers` function to be used with xPlayer loops without causing massive server hitches
+
+To get an idea for how you can utilise imports and the new functions, you can refer to [this updated boilerplate](https://github.com/thelindat/esx_legacy_boilerplate).  
+##### Any resources made using the imports will only work for ESX Legacy.
 
 
 ## 1.2 + Features
