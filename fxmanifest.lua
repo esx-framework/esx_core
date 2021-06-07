@@ -5,7 +5,9 @@ version '1.0.0'
 
 dependencies {
 	'es_extended',
-	'esx_menu_default'
+	'esx_menu_default',
+	'esx_identity',
+	'esx_skin'
 }
 
 shared_script 'config.lua'
