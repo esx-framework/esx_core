@@ -1,25 +1,57 @@
-# es_extended LEGACY / BROKEN / WONTFIX
+<h1 align='center'>ESX Legacy</a></h1><h5 align='center'>There is no official support for this resource. Create a thread on the <a href='https://forum.cfx.re/c/server-development/essentialmode/46'>ESX Server Development board</a> or find a support Discord.</h5>
 
-### Things hapenning here now https://github.com/ESX-Org/es_extended/tree/develop (WIP)
 
-es_extended is a roleplay framework for FiveM. The to-go framework for creating an economy based roleplay server on FiveM and most popular on the platform, too!
+ESX is the most popular framework for creating an economy-based roleplay server on FiveM, with many more official and unofficial resources designed to utilise the tools provided by this resource. Here's a taste of what's available:
+```
+esx_identity: enable character registration using a name, sex, and date of birth
+esx_society: add employee management, society funds and more
+esx_billing: add support for registered societies to fine or bill players
+esx_vehicleshop: allow players to purchase vehicles directly or from players
+esx_ambulancejob: adds a death and respawn system while allowing players to become EMS and revive
+esx_policejob: allow players to become cops and protect the city
+```
+Many more resources are available on the [ESX Framework Github](https://github.com/esx-framework) and [ESX Community Github](https://github.com/esx-community/) pages.
 
-Featuring many extra resources to fit roleplaying servers, here's a taste of what's available:
 
-- esx_ambulancejob: play as a medic to revive players who are bleeding out. Complete with garages and respawn & bleedout system
-- esx_policejob: patrol the city and arrest players commiting crime, with armory, outfit room and garages
-- esx_vehicleshop: roleplay working in an vehicle dealership where you sell cars to players
-
-ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
-
-## Links & Read more
+## Information
 
 - [ESX Forum](https://forum.esx-framework.org/)
 - [ESX Documentation](https://wiki.esx-framework.org/)
 - [ESX Development Discord](https://discord.me/esx)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
 
-## Features
+ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
+
+
+## Legacy
+
+ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a more stable experience for the people using ESX 1.2 or Final, however there are also some new features added in to allow better server performance with other resources and official support for esx_multicharacter.
+#### Bug fixes
+* /clearloadout now properly removes all weapons instead of needing to be performed multiple times
+* ESX.Jobs is no longer set until the full table has been creating, allowing other resources to retrieve it more easily
+* Now using spawnmanager to spawn players and prevent weird desync issues
+ 
+#### Optimisation
+* Support for compile-time hashing instead of calling the native
+* Utilise the `MySQL.Store` function to reduce overhead when executing queries
+* Allow loops to sleep while not performing any tasks
+* The current player ped and death status are now stored in ESX.PlayerData, reducing the need to constantly call the native
+* Weapon ammo is no longer synced on every frame, instead triggering a server event once shooting has ceased
+
+#### Features
+* Support for the latest weapons and components
+* Additional admin commands from esx_adminplus
+* Save all players before the txAdmin scheduled restarts
+* Reduce the number of queries being performed when a player loads by returning skin and identity data with the initial query
+* When loading a new player, send the isNew argument along with `esx:playerLoaded`
+* Added an imports file to load in other resource manifests with `shared_script '@es_extended/imports.lua'`
+	- Removes the need to define ESX in your resources, as it will perform the task for you
+	- Ensures ESX.PlayerData will always return current information (exception: loadout and inventory)
+* Support for relogging, clearing all player data and cancelling sync loops
+* Added the `ESX.GetExtendedPlayers` function to be used with xPlayer loops without causing massive server hitches
+
+
+## 1.2 + Features
 
 - Weight based inventory system
 - Weapons support, including support for attachments and tints
@@ -30,10 +62,11 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 - Easy to use API for developers to easily integrate ESX to their projects
 - Register your own commands easily, with argument validation, chat suggestion and using FXServer ACL
 
+
 ## Requirements
 
 - [mysql-async](https://github.com/brouznouf/fivem-mysql-async)
-- [async](https://github.com/ESX-Org/async)
+- [async](https://github.com/esx-framework/async)
 
 
 ## Download & Installation
@@ -44,10 +77,11 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 ```
 cd resources
 git clone https://github.com/esx-framework/es_extended.git --branch legacy
-git clone https://github.com/ESX-Org/esx_menu_default [esx]/[ui]/esx_menu_default
-git clone https://github.com/ESX-Org/esx_menu_dialog [esx]/[ui]/esx_menu_dialog
-git clone https://github.com/ESX-Org/esx_menu_list [esx]/[ui]/esx_menu_list
+git clone https://github.com/esx-framework/esx_menu_default [esx]/[ui]/esx_menu_default
+git clone https://github.com/esx-framework/esx_menu_dialog [esx]/[ui]/esx_menu_dialog
+git clone https://github.com/esx-framework/esx_menu_list [esx]/[ui]/esx_menu_list
 ```
+
 ### Plume ESX:
 
 PlumeESX is a full featured (13 jobs) and highly configurable yet lightweight ESX v1.2 base that can be easily extendable.
@@ -56,14 +90,15 @@ YouTube Tutorial: https://www.youtube.com/watch?v=iGfwUCO0RZQ
 
 ### Manually
 
-- Download https://github.com/esx-framework/es_extended/releases/tag/v1-final
+- Download https://github.com/esx-framework/es_extended/archive/refs/heads/legacy.zip
 - Put it in the `resource/[esx]` directory
-- Download https://github.com/ESX-Org/esx_menu_default/releases/latest
+- Download https://github.com/esx-framework/esx_menu_default/archive/refs/heads/master.zip
 - Put it in the `resource/[esx]/[ui]` directory
-- Download https://github.com/ESX-Org/esx_menu_dialog/releases/latest
+- Download https://github.com/esx-framework/esx_menu_dialog/archive/refs/heads/master.zip
 - Put it in the `resource/[esx]/[ui]` directory
-- Download https://github.com/ESX-Org/esx_menu_list/releases/latest
+- Download https://github.com/esx-framework/esx_menu_list/archive/refs/heads/master.zip
 - Put it in the `resource/[esx]/[ui]` directory
+
 
 ### Installation
 
@@ -84,6 +119,11 @@ start esx_menu_default
 start esx_menu_list
 start esx_menu_dialog
 ```
+
+## Reborn
+
+ESX Reborn is the name for the framework being actively developed by the team, with many existing features being rewritten and improved upon. It is currently possible to create a server using ESX Reborn, however the project is still missing many features and should not be used unless you are a developer looking to contribute in some way.
+
 
 ## Legal
 
