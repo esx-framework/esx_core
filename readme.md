@@ -22,8 +22,11 @@
 ### Relogging
 - Modify the config with `Config.Relog = true`
 - Use the latest version of [ESX Status](https://github.com/esx-framework/esx_status)
+- If you have any threads running with `while true do` I recommend using `while ESX.PlayerLoaded do` instead
+	- For threads that are triggered by a spawn/load event this will ensure they do not start a second time
+	- You can clear loops that may break after ESX.PlayerData is cleared
+	- For an example, refer to my [boilerplate](https://github.com/thelindat/esx_legacy_boilerplate/blob/main/client.lua)
 - Add the following event to any resources that will benefit from clearing ESX.PlayerData
-
 ```lua
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -37,7 +40,6 @@ AddEventHandler('esx:onPlayerLogout', function()
 	ESX.PlayerData = {}
 end)
 ```
-- If you have any threads running with `while true do` you should change them to `while ESX.PlayerLoaded do`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
