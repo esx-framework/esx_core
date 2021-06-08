@@ -28,10 +28,10 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 
 ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a more stable experience for the people using ESX 1.2 or Final, however there are also some new features added in to allow better server performance with other resources and official support for esx_multicharacter.
 #### Bug fixes
-* /clearloadout now properly removes all weapons instead of needing to be performed multiple times
 * ESX.Jobs is no longer set until the full table has been creating, allowing other resources to retrieve it more easily
 * Now using spawnmanager to spawn players and prevent weird desync issues
 	- This may cause problems with some third-party resources that modify player spawns
+* /clearloadout now properly removes all weapons instead of needing to be performed multiple times
  
 #### Optimisation
 * Support for compile-time hashing instead of calling the native
@@ -54,6 +54,14 @@ ESX Legacy is mostly intended as a bug-fix and optimisation update to provide a 
 
 To get an idea for how you can utilise imports and the new functions, you can refer to [this updated boilerplate](https://github.com/thelindat/esx_legacy_boilerplate).  
 ##### Any resources made using the imports will only work for ESX Legacy.
+
+
+## Conflicts
+* The following resources should not be used with ESX Legacy and can result in errors
+	- basic-gamemode
+	- fivem-map-skater
+	- fivem-map-hipster
+	- **essentialsmode**
 
 
 ## 1.2 + Features
