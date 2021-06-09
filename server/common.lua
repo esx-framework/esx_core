@@ -53,12 +53,11 @@ MySQL.ready(function()
 				end
 			end
 			ESX.Jobs = Jobs
+			print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+			ESX.StartDBSync()
+			ESX.StartPayCheck()
 		end)
 	end)
-
-	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
-	ESX.StartDBSync()
-	ESX.StartPayCheck()
 end)
 
 RegisterServerEvent('esx:clientLog')
