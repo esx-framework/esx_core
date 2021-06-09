@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.3.1",
-	"changelog": "\n- Improved spawn event triggers\n- Improved support for relogging\n- Set PlayerData.dead initial value based on `is_dead` column (or 0)\n- Added a MySQL.store for the loadESXPlayer function\n- Ammo sync now waits for the player to stop shooting before sending a server event\n- /clearloadout now clears all player weapons on the first try\n- Minor fixes and optimisations"
+	"commit" : "1.3.2",
+	"changelog": "Corrected a mistake resulting in loadouts not being loaded with players"
 }

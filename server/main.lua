@@ -6,7 +6,7 @@ Citizen.CreateThread(function()
 		NewPlayer = storeId
 	end)
 	
-	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`'
+	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
 	if Config.Multichar or Config.Identity then query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`' end
 
 	MySQL.Async.store("SELECT "..query.." FROM `users` WHERE ?? LIKE ?", function(storeId)
@@ -625,7 +625,7 @@ Citizen.CreateThread(
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s
 ^1-----------------------------------------------------------------------
-]]):format(
+^0]]):format(
 									rv.commit,
 									rv.changelog
 								)
@@ -640,7 +640,7 @@ Citizen.CreateThread(
 ^5COMMIT:^0 %s
 ^5CHANGELOG:^0 %s
 ^8-------------------------------------------------------
-]]):format(
+^0]]):format(
 								 	rv.version,
 									rv.commit,
 									rv.changelog
@@ -656,7 +656,7 @@ Citizen.CreateThread(
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s
 ^1-----------------------------------------------------------------------
-]]):format(
+^0]]):format(
 								rv.commit,
 								rv.changelog
 							)
