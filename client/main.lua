@@ -51,39 +51,30 @@ AddEventHandler('esx_status:loaded', function(status)
 		status.remove(75)
 	end)
 
-	Citizen.CreateThread(function()
-		while true do
-			Citizen.Wait(1000)
+end)
 
-			local playerPed  = PlayerPedId()
-			local prevHealth = GetEntityHealth(playerPed)
-			local health     = prevHealth
-
-			TriggerEvent('esx_status:getStatus', 'hunger', function(status)
-				if status.val == 0 then
-					if prevHealth <= 150 then
-						health = health - 5
-					else
-						health = health - 1
-					end
-				end
-			end)
-
-			TriggerEvent('esx_status:getStatus', 'thirst', function(status)
-				if status.val == 0 then
-					if prevHealth <= 150 then
-						health = health - 5
-					else
-						health = health - 1
-					end
-				end
-			end)
-
-			if health ~= prevHealth then
-				SetEntityHealth(playerPed, health)
+AddEventHandler('esx_status:onTick', function(data)
+	local playerPed  = PlayerPedId()
+	local prevHealth = GetEntityHealth(playerPed)
+	local health     = prevHealth
+	
+	for i=1, #data do
+		if data[i].name == 'hunger' and data[i].percent == 0 then
+			if prevHealth <= 150 then
+				health = health - 5
+			else
+				health = health - 1
+			end
+		elseif data[i].name == 'thirst' and data[i].percent == 0 then
+			if prevHealth <= 150 then
+				health = health - 5
+			else
+				health = health - 1
 			end
 		end
-	end)
+	end
+	
+	if health ~= prevHealth then SetEntityHealth(playerPed, health) end
 end)
 
 AddEventHandler('esx_basicneeds:isEating', function(cb)
