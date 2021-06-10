@@ -121,28 +121,6 @@ if ESX.GetConfig().Multichar then
 		SetPedAoBlobRendering(playerPed, true)
 		SetEntityAlpha(playerPed, 255)
 	end
-
-	LoadPed = function(isNew, spawn)
-		local char = Characters[Spawned]
-		if isNew or not char.skin or #char.skin == 1 then
-			local isMale, sex = true, 0
-			if char and char.sex == 'Female' then isMale, sex = false, 1 end
-			TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
-				skin = Config.Default
-				skin.sex = sex
-				TriggerEvent('skinchanger:loadSkin', skin, function()
-					Citizen.CreateThread(function()
-						Citizen.Wait(1530)
-						TriggerEvent('esx_skin:openSaveableMenu')
-						SetEntityHeading(PlayerPedId(), spawn.heading)
-					end)
-				end)
-			end)
-		else
-			TriggerEvent('skinchanger:loadSkin', Characters[Spawned].skin)
-		end
-		Characters = {}
-	end
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data)
@@ -255,14 +233,15 @@ if ESX.GetConfig().Multichar then
 					SetupCharacter(data.current.value)
 					local playerPed = PlayerPedId()
 					SetPedAoBlobRendering(playerPed, true)
-					SetEntityAlpha(playerPed, 255)
+					ResetEntityAlpha(playerPed)
 				end
 			end)
 		end
 	end)
 
-	RegisterNetEvent('esx_multicharacter:SpawnCharacter')
-	AddEventHandler('esx_multicharacter:SpawnCharacter', function(spawn, isNew)
+	RegisterNetEvent('esx:playerLoaded')
+	AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
+		local spawn = playerData.coords
 		DoScreenFadeOut(0)
 		Citizen.Wait(300)
 		local playerPed = PlayerPedId()
@@ -277,19 +256,44 @@ if ESX.GetConfig().Multichar then
 		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z, true, false, false, false)
 
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", spawn.x,spawn.y,spawn.z+10, 0.0, 0.0, 0.0, 100.00, false, 0)
-		PointCamAtCoord(cam, spawn.x,spawn.y,spawn.z+2)
-		SetCamActiveWithInterp(cam, cam2, 2000, true, true)
-
+		PointCamAtCoord(cam, spawn.x,spawn.y,spawn.z)
+		SetCamActiveWithInterp(cam, cam2, 1700, true, true)
+		
+		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
+		if isNew or not skin or #skin == 1 then
+			local sex = skin.sex or 0
+			if sex == 0 then model = `mp_m_freemode_01` else model = `mp_f_freemode_01` end
+			RequestModel(model)
+			while not HasModelLoaded(model) do
+				RequestModel(model)
+				Citizen.Wait(0)
+			end
+			SetPlayerModel(PlayerId(), model)
+			SetModelAsNoLongerNeeded(model)
+			skin = Config.Default
+			skin.sex = sex
+			TriggerEvent('skinchanger:loadSkin', skin, function()
+				Citizen.CreateThread(function()
+					playerped = PlayerPedId()
+					SetPedAoBlobRendering(playerPed, true)
+					ResetEntityAlpha(playerPed)
+					Citizen.Wait(1500)
+					TriggerEvent('esx_skin:openSaveableMenu')
+					SetEntityHeading(playerPed, spawn.heading)
+				end)
+			end)
+		else
+			TriggerEvent('skinchanger:loadSkin', Characters[Spawned].skin)
+			Citizen.Wait(1500)
+		end
+		Characters = {}
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned')
-		LoadPed(isNew, spawn)
+		playerPed = PlayerPedId()
 		FreezeEntityPosition(playerPed, false)
 		SetEntityHeading(PlayerPed, spawn.heading)
-
-		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
-		Citizen.Wait(1000)
-		playerPed = PlayerPedId()
+		Citizen.Wait(500)
 		RenderScriptCams(false, true, 500, true, true)
 		PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
 		SetCamActive(cam, false)
