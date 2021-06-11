@@ -44,11 +44,13 @@ end)
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
 
-### Conflicts
-	- essentialsmode
+## Conflicts
+* The following resources should not be used with ESX Legacy and can result in errors
+	- **essentialsmode**
 	- basic-gamemode
-	- fivem-maps
-	- cui_character
+	- fivem-map-skater
+	- fivem-map-hipster
+	- default_spawnpoint
 
 ### Notes
 - This resource is not compatible with ExtendedMode or previous versions of ESX
