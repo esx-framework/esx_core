@@ -109,7 +109,6 @@ AddEventHandler('esx_status:set', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 RegisterNetEvent('esx_status:add')
@@ -126,7 +125,6 @@ AddEventHandler('esx_status:add', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 RegisterNetEvent('esx_status:remove')
@@ -143,7 +141,6 @@ AddEventHandler('esx_status:remove', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 AddEventHandler('esx_status:getStatus', function(name, cb)
