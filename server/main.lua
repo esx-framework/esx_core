@@ -4,16 +4,12 @@ local playerIdentity = {}
 local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
 
-function getIdentifier(playerId)
-	if multichar ~= nil then
-		return ESX.GetIdentifier(playerId)
-	else
-		ESX.GetIdentifier = function(playerId)
-			for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-				if string.match(v, 'license') then
-					local identifier = string.gsub(v, 'license:', '')
-					return identifier
-				end
+if multichar == nil then
+	ESX.GetIdentifier = function(playerId)
+		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+			if string.match(v, 'license:') then
+				local identifier = string.gsub(v, 'license:', '')
+				return identifier
 			end
 		end
 	end
@@ -22,7 +18,7 @@ end
 if Config.UseDeferrals then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
-		local playerId, identifier = source, getIdentifier(source)
+		local playerId, identifier = source, ESX.GetIdentifier(source)
 		Citizen.Wait(100)
 	
 		if identifier then
@@ -120,7 +116,7 @@ elseif not Config.UseDeferrals then
 	if not multichar then
 		AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 			deferrals.defer()
-			local playerId, identifier = source, getIdentifier(source)
+			local playerId, identifier = source, ESX.GetIdentifier(source)
 			Citizen.Wait(40)
 
 			if identifier then
