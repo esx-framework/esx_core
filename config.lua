@@ -6,6 +6,7 @@ Config.Spawn = vector4(-113.7, 565.3, 196, 0)
 
 --------------------
 -- Do not use unless you are prepared to adjust your resources to correctly reset data
+-- Information: https://github.com/thelindat/esx_multicharacter#relogging
 Config.Relog = false
 --------------------
 
