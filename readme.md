@@ -32,13 +32,10 @@
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
 
 ### Relogging
-- Modify the config with `Config.Relog = true`
-- Use the latest version of [ESX Status](https://github.com/esx-framework/esx_status)
-- If you have any threads running with `while true do` I recommend using `while ESX.PlayerLoaded do` instead
-	- For threads that are triggered by a spawn/load event this will ensure they do not start a second time
-	- You can clear loops that may break after ESX.PlayerData is cleared
-	- For an example, refer to my [boilerplate](https://github.com/thelindat/esx_legacy_boilerplate/blob/main/client.lua)
-- Add the following event to any resources that will benefit from clearing ESX.PlayerData
+- Do not enable this setting if you do not intend to properly set up relog support
+- Requires the latest update for ESX Status (prevents multiple status ticks from running)
+- Add the following events to resources that require support for relogging, or
+- Add them to [@esx/imports.lua](https://github.com/esx-framework/es_extended/blob/legacy/imports.lua) (and use the imports in your resources)
 ```lua
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -52,6 +49,10 @@ AddEventHandler('esx:onPlayerLogout', function()
 	ESX.PlayerData = {}
 end)
 ```
+- Any threads using ESX.PlayerData in a loop should check if ESX.PlayerLoaded is true
+	- This ensures the resource does not error after relogging, or while on character selection
+	- Setup correctly you can break your loops and trigger them again after loading
+	- Refer to my [boilerplate](https://github.com/thelindat/esx_legacy_boilerplate) for more information and usage examples
 
 ### Notes
 - This resource is not compatible with ExtendedMode or previous versions of ESX
