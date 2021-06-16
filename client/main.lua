@@ -290,6 +290,7 @@ if ESX.GetConfig().Multichar then
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned')
+		TriggerEvent('esx:restoreLoadout')
 		playerPed = PlayerPedId()
 		FreezeEntityPosition(playerPed, false)
 		SetEntityHeading(PlayerPed, spawn.heading)
