@@ -27,16 +27,20 @@ if ESX.GetConfig().Multichar == true then
 		}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
-				local job = ESX.Jobs[result[i].job]
-				local grade = ESX.Jobs[job.name].grades[tostring(result[i].job_grade)].label
+				local job, grade = result[1].job, tostring(result[1].job_grade)
+				if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
+					grade = ESX.Jobs[job].grades[grade].label
+					job = ESX.Jobs[job].label
+				else
+					job, grade = 'Unemployed', ''
+				end
 				local accounts = json.decode(result[i].accounts)
-				if grade == 'Unemployed' then grade = '' end
 				local id = tonumber(string.sub(result[i].identifier, #Config.Prefix+1, string.find(result[i].identifier, ':')-1))
 				characters[id] = {
 					id = id,
 					bank = accounts.bank,
 					money = accounts.money,
-					job = job.label,
+					job = job,
 					job_grade = grade,
 					firstname = result[i].firstname,
 					lastname = result[i].lastname,
