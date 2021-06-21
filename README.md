@@ -58,10 +58,11 @@ To get an idea for how you can utilise imports and the new functions, you can re
 
 ## Conflicts
 * The following resources should not be used with ESX Legacy and can result in errors
+	- **essentialsmode**
 	- basic-gamemode
 	- fivem-map-skater
 	- fivem-map-hipster
-	- **essentialsmode**
+	- default_spawnpoint
 
 
 ## 1.2 + Features
