@@ -17,7 +17,6 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
 	FreezeEntityPosition(PlayerPedId(), true)
 
 	if Config.Multichar then
-		TriggerEvent('esx_multicharacter:SpawnCharacter', playerData.coords, isNew)
 		Citizen.Wait(3000)
 	else
 		exports.spawnmanager:spawnPlayer({
@@ -85,13 +84,13 @@ AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWei
 AddEventHandler('esx:onPlayerSpawn', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-	ESX.SetPlayerData('dead', false)
+	if ESX.PlayerData.dead ~= false then ESX.SetPlayerData('dead', false) end
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	local playerPed = PlayerPedId()
 	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-	ESX.SetPlayerData('dead', true)
+	if ESX.PlayerData.dead ~= false then ESX.SetPlayerData('dead', true) end
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
@@ -186,9 +185,6 @@ end)
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weapon, ammo)
-	-- Removed ESX.PlayerData.ped from being stored in a variable, not needed
-	-- when it's only being used once, also doing it in a few
-	-- functions below this one
 	GiveWeaponToPed(ESX.PlayerData.ped, GetHashKey(weapon), ammo, false, false)
 end)
 
@@ -406,7 +402,6 @@ function StartServerSyncLoops()
 		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 
 		while ESX.PlayerLoaded do
-			Citizen.Wait(1500)
 			local playerPed = PlayerPedId()
 			if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 
@@ -421,6 +416,7 @@ function StartServerSyncLoops()
 					TriggerServerEvent('esx:updateCoords', formattedCoords)
 				end
 			end
+			Citizen.Wait(1500)
 		end
 	end)
 end
