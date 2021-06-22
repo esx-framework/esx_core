@@ -125,7 +125,9 @@ if ESX.GetConfig().Multichar == true then
 	end, true)
 
 elseif ESX.GetConfig().Multichar == false then
-	print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration')
+	SetTimeout(1000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
+	SetTimeout(3000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
 else
-	print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ')
+	SetTimeout(1000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
+	SetTimeout(3000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
 end
