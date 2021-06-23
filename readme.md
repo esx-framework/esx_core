@@ -1,3 +1,4 @@
+#### If you are using my ESX Fork then download the 1.1.0 pre-release
 ### Requirements (ensure you are using the latest)
 - [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
 - [MySQL Async](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
