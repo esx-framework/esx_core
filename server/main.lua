@@ -1,31 +1,41 @@
 local NewPlayer, LoadPlayer = -1, -1
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
-	SetGameType('ESX Roleplay')
-	MySQL.Async.store("INSERT INTO users SET ?", function(storeId)
-		NewPlayer = storeId
-	end)
+	SetGameType('ESX Legacy')
 	
-	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
-	if Config.Multichar or Config.Identity then query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`' end
+	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`' -- Select these fields from the database
+	if Config.Multichar or Config.Identity then	-- append these fields to the select query
+		query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`'
+	end
 
-	MySQL.Async.store("SELECT "..query.." FROM `users` WHERE ?? LIKE ?", function(storeId)
+	if Config.Multichar then -- insert identity data with creation
+		MySQL.Async.store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?, `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?", function(storeId)
+			NewPlayer = storeId
+		end)
+	else
+		MySQL.Async.store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?", function(storeId)
+			NewPlayer = storeId
+		end)
+	end
+
+	MySQL.Async.store("SELECT "..query.." FROM `users` WHERE identifier = ?", function(storeId)
 		LoadPlayer = storeId
 	end)
 end)
 
-local awaitingRegistration = {}
-RegisterNetEvent('esx:onPlayerJoined')
 if Config.Multichar then
-	AddEventHandler('esx_identity:completedRegistration', function(playerId, data)
-		awaitingRegistration[playerId] = data
-	end)
-	AddEventHandler('esx:onPlayerJoined', function(src, char, isNew)
+	AddEventHandler('esx:onPlayerJoined', function(src, char, data)
 		if not ESX.Players[src] then
-			onPlayerJoined(src, char, isNew)
+			local identifier = char..':'..ESX.GetIdentifier(src)
+			if data then
+				createESXPlayer(identifier, src, data)
+			else
+				loadESXPlayer(identifier, src, false)
+			end
 		end
 	end)
 else
+	RegisterNetEvent('esx:onPlayerJoined')
 	AddEventHandler('esx:onPlayerJoined', function()
 		if not ESX.Players[source] then
 			onPlayerJoined(source)
@@ -33,15 +43,13 @@ else
 	end)
 end
 
-function onPlayerJoined(playerId, char, isNew)
+function onPlayerJoined(playerId)
 	local identifier = ESX.GetIdentifier(playerId)
 	if char then identifier = char..':'..identifier end
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			DropPlayer(playerId, ('there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
-		elseif Config.Multichar and isNew then
-			createESXPlayer(identifier, playerId)
 		else
 			MySQL.Async.fetchScalar('SELECT 1 FROM users WHERE identifier = @identifier', {
 				['@identifier'] = identifier
@@ -56,7 +64,7 @@ function onPlayerJoined(playerId, char, isNew)
 	end
 end
 
-function createESXPlayer(identifier, playerId)
+function createESXPlayer(identifier, playerId, data)
 	local accounts = {}
 
 	for account,money in pairs(Config.StartingAccountMoney) do
@@ -72,33 +80,22 @@ function createESXPlayer(identifier, playerId)
 
 	if not Config.Multichar then
 		MySQL.Async.execute(NewPlayer, {
-			{
-				['accounts'] = json.encode(accounts),
-				['identifier'] = identifier,
-				['group'] = defaultGroup,
-			}
+				json.encode(accounts),
+				identifier,
+				defaultGroup,
 		}, function(rowsChanged)
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	else
-		local data
-		awaitingRegistration[playerId] = true
-		while true do
-			Citizen.Wait(250)
-			if awaitingRegistration[playerId] ~= true then data = awaitingRegistration[playerId] break end
-		end
-		awaitingRegistration[playerId] = nil
 		MySQL.Async.execute(NewPlayer, {
-			{
-				['accounts'] = json.encode(accounts),
-				['identifier'] = identifier,
-				['group'] = defaultGroup,
-				['firstname'] = data.firstname,
-				['lastname'] = data.lastname,
-				['dateofbirth'] = data.dateofbirth,
-				['sex'] = data.sex,
-				['height'] = data.height,
-			}
+				json.encode(accounts),
+				identifier,
+				defaultGroup,
+				data.firstname,
+				data.lastname,
+				data.dateofbirth,
+				data.sex,
+				data.height,
 		}, function(rowsChanged)
 			loadESXPlayer(identifier, playerId, true)
 		end)
@@ -129,13 +126,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 		accounts = {},
 		inventory = {},
 		job = {},
-		loadout = {},
 		playerName = GetPlayerName(playerId),
-		weight = 0
 	}
 
 	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll(LoadPlayer, {'identifier', {identifier}
+		MySQL.Async.fetchAll(LoadPlayer, { identifier
 		}, function(result)
 			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
 			local foundAccounts, foundItems = {}, {}
@@ -300,7 +295,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			loadout = xPlayer.getLoadout(),
 			maxWeight = xPlayer.getMaxWeight(),
 			money = xPlayer.getMoney(),
-			dead = 0
+			dead = false
 		}, isNew, userData.skin)
 
 		xPlayer.triggerEvent('esx:createMissingPickups', ESX.Pickups)
@@ -333,7 +328,6 @@ end)
 if Config.Multichar then
 	AddEventHandler('esx:playerLogout', function(playerId)
 		local xPlayer = ESX.GetPlayerFromId(playerId)
-		awaitingRegistration[playerId] = nil
 		if xPlayer then
 			TriggerEvent('esx:playerDropped', playerId, reason)
 
@@ -595,12 +589,12 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 end)
 
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
-  if eventData.secondsRemaining == 60 then
-    Citizen.CreateThread(function()
-      Citizen.Wait(50000)
-      ESX.SavePlayers()
-     end)
-  end
+	if eventData.secondsRemaining == 60 then
+		Citizen.CreateThread(function()
+			Citizen.Wait(50000)
+			ESX.SavePlayers()
+		end)
+	end
 end)
 
 -- version check
@@ -651,7 +645,7 @@ Citizen.CreateThread(
 						print(
 							([[
 ^1----------------------------------------------------------------------
-^1URGENT: YOUR ES_EXTENDED IS OUTDATATED!!!
+^1URGENT: YOUR ES_EXTENDED IS OUTDATED!!!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
 ^1DOWNLOAD:^5 https://github.com/esx-framework/es_extended/tree/legacy
 ^1CHANGELOG:^5 %s

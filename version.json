@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.3.2",
-	"changelog": "Corrected a mistake resulting in loadouts not being loaded with players"
+	"commit" : "1.3.3",
+	"changelog": "\n- Resolved an issue when using Config.Identity\n- MySQL.store is now storing entire queries ahead of time\n- Improved support when using esx_multicharacter"
 }
