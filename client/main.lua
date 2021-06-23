@@ -8,7 +8,7 @@ if ESX.GetConfig().Multichar then
 			while not GetResourceState('esx_menu_default') == 'started' do 
 				Citizen.Wait(10)
 			end
-			Citizen.Wait(200)
+			Citizen.Wait(300)
 			TriggerServerEvent("esx_multicharacter:SetupCharacters")
 			TriggerEvent("esx_multicharacter:SetupCharacters")
 			break
