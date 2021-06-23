@@ -1,7 +1,6 @@
-#### If you are using my ESX Fork then download the 1.1.0 pre-release
 ### Requirements (ensure you are using the latest)
-- [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
-- [MySQL Async](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
+- [ESX Legacy 1.3.3](https://github.com/esx-framework/es_extended/tree/legacy)
+- [MySQL Async 3.3.2](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
 - [ESX Identity](https://github.com/esx-framework/esx_identity)
 - [ESX Skin](https://github.com/esx-framework/esx_skin)
 - [Spawnmanager](https://github.com/citizenfx/cfx-server-data/tree/master/resources/%5Bmanagers%5D/spawnmanager)
