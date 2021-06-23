@@ -13,19 +13,19 @@ function GetStatusData(minimal)
 
 	for i=1, #Status, 1 do
 		if minimal then
-			status[#status+1] = {
+			table.insert(status, {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				percent = (Status[i].val / Config.StatusMax) * 100
-			}
+			})
 		else
-			status[#status+1] {
+			table.insert(status, {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				color   = Status[i].color,
 				visible = Status[i].visible(Status[i]),
 				percent = (Status[i].val / Config.StatusMax) * 100
-			}
+			})
 		end
 	end
 
@@ -109,7 +109,6 @@ AddEventHandler('esx_status:set', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 RegisterNetEvent('esx_status:add')
@@ -126,7 +125,6 @@ AddEventHandler('esx_status:add', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 RegisterNetEvent('esx_status:remove')
@@ -143,7 +141,6 @@ AddEventHandler('esx_status:remove', function(name, val)
 			status = GetStatusData()
 		})
 	end
-	TriggerServerEvent('esx_status:update', GetStatusData(true))
 end)
 
 AddEventHandler('esx_status:getStatus', function(name, cb)
