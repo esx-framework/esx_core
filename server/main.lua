@@ -126,7 +126,9 @@ function loadESXPlayer(identifier, playerId, isNew)
 		accounts = {},
 		inventory = {},
 		job = {},
+		loadout = {},
 		playerName = GetPlayerName(playerId),
+		weight = 0
 	}
 
 	table.insert(tasks, function(cb)
