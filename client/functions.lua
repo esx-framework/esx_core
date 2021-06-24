@@ -335,10 +335,11 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-ESX.Game.SpawnObject = function(object, coords, cb, networked)
+ESX.Game.SpawnObject = function(object, coords, cb, networked, dynamic)
 	local model = (type(object) == 'number' and model or GetHashKey(object))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	networked = networked or true
+	networked = networked == nil and true or false
+	dynamic = dynamic ~= nil and true or false
 
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
@@ -346,7 +347,7 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked)
 		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
 		-- as an Object instead of a hash so it doesn't automatically hash the item
 		model = type(model) == 'number' and model or GetHashKey(model)
-		local obj = CreateObject(model, vector.xyz, networked, false, true)
+		local obj = CreateObject(model, vector.xyz, networked, false, dynamic)
 		if cb then
 			cb(obj)
 		end
@@ -371,7 +372,7 @@ end
 ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	networked = networked or true
+	networked = networked == nil and true or false
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
