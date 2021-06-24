@@ -6,9 +6,8 @@ if ESX.GetConfig().Multichar then
 			Citizen.Wait(5)
 			DoScreenFadeOut(0)
 			while not GetResourceState('esx_menu_default') == 'started' do 
-				Citizen.Wait(10)
+				Citizen.Wait(100)
 			end
-			Citizen.Wait(300)
 			TriggerServerEvent("esx_multicharacter:SetupCharacters")
 			TriggerEvent("esx_multicharacter:SetupCharacters")
 			break
@@ -25,7 +24,9 @@ if ESX.GetConfig().Multichar then
 		ESX.PlayerLoaded = false
 		ESX.PlayerData = {}
 		Spawned = false
-		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+0.5, 0.0, 0.0, 180.0, 100.00, false, 0)
+		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+1.3, 0.0, 0.0, 180.0, 100.00, false, 0)
+		SetEntityCoords(PlayerPedId(), Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
+		DoScreenFadeOut(0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
 		ESX.UI.HUD.SetDisplay(0.0)
@@ -125,6 +126,7 @@ if ESX.GetConfig().Multichar then
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data)
+		DoScreenFadeOut(0)
 		Characters = data
 		local elements = {}
 		local Character = next(Characters)
@@ -140,7 +142,7 @@ if ESX.GetConfig().Multichar then
 				z = Config.Spawn.z,
 				heading = Config.Spawn.w,
 				model = `mp_m_freemode_01`,
-				skipFade = true
+				skipFade = false
 			}, function()
 				exports.spawnmanager:setAutoSpawn(false)
 				canRelog = false
@@ -151,6 +153,8 @@ if ESX.GetConfig().Multichar then
 				TriggerEvent('esx_identity:showRegisterIdentity')
 			end)
 		else
+			DoScreenFadeIn(400)
+			while not IsScreenFadedIn() do Citizen.Wait(200) end
 			for k,v in pairs(Characters) do
 				if not v.model and v.skin then
 					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
