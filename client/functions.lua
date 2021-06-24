@@ -338,7 +338,7 @@ end
 ESX.Game.SpawnObject = function(object, coords, cb, networked)
 	local model = (type(object) == 'number' and model or GetHashKey(object))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	networked = networked or true
+	networked = networked == nil and true or networked
 
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
@@ -371,7 +371,7 @@ end
 ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	networked = networked or true
+	networked = networked == nil and true or networked
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
