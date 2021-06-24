@@ -45,8 +45,6 @@ end
 
 function onPlayerJoined(playerId)
 	local identifier = ESX.GetIdentifier(playerId)
-	if char then identifier = char..':'..identifier end
-
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			DropPlayer(playerId, ('there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
