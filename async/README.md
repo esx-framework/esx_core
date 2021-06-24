@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# esx-legacy
+Consolidated esx-legacy files into one repo for easy download since we will not support it
+=======
 # async
 Async utilities for FXServer
 
@@ -35,3 +39,4 @@ Async.series(tasks, function(results)
 	print(json.encode(results))
 end)
 ```
+>>>>>>> async/master
