@@ -2,19 +2,17 @@
 
 
 ##### ESX is the most popular framework for creating economy-based roleplay servers on FiveM, with many official and community resources designed to utilise the tools provided here. For a taste of what's available:
+>	esx_identity: Enables character registration defining a players name, sex, height, and date of birth
 
-- esx_identity
-	- Enables character registration defining a players name, sex, height, and date of birth
-- esx_society
-	- Allows job resources to register a society, gaining employee management, society funds, and more
-- esx_billing
-	- Allows members of some societies to send fines or bills to other players
-- esx_vehicleshop
-	- Allow players to purchase vehicles from a dealership, or setup society support for a player-managed dealership
-- esx_vehicleshop
-	- Adds a death and respawn system while allowing players to work as EMS to heal and revive others
+>	esx_society: Allows job resources to register a society, gaining employee management, society funds, and more
 
-Many more resources are included in this repository, otherwise you can browse the [ESX Community Github](https://github.com/esx-community/) or [Cfx.re Releases board](https://forum.cfx.re/tag/esx) for more.
+>	esx_billing: Allows members of some societies to send fines or bills to other players
+
+>	esx_vehicleshop: Allow players to purchase vehicles from a dealership, or setup society support for a player-managed dealership
+
+>	esx_ambulancejop: Adds a death and respawn system while allowing players to work as EMS to heal and revive others
+
+Many more resources are included in this repository, or you can browse the [ESX Community Github](https://github.com/esx-community/) or [Cfx.re Releases board](https://forum.cfx.re/tag/esx) for more.
 
 ### Conflicts
 * The following resources should not be used with ESX Legacy and will prevent characters from loading
@@ -28,42 +26,35 @@ Many more resources are included in this repository, otherwise you can browse th
 ##### Legacy provides some necessary bug-fixes and improvements to optimise the framework before reaching the end of official support by the development team.
 ##### Most resources designed for 1.2 will have no issues with Legacy, notable exceptions are those which modify spawning/loading behaviour.   There are several minor feature updates which do not impact compatibility with old resources.
 
-- Optimisation
-	- Utilise compile-time jenkins hashing over the GetHashKey native
-	- Update old MySQL queries to use MySQL.store to improve performance, especially during player saving
-	- Several loops will now sleep when their tasks are not necessary to perform
-	- Improved support when using ESX Identity to reduce events and queries during player login
-	- Weapon ammo is no longer synced every time it changes, instead waiting for the player to stop shooting
-	- Support for the latest weapons and components
+#### Optimisation
+- Utilise compile-time jenkins hashing over the GetHashKey native
+- Update old MySQL queries to use MySQL.store to improve performance, especially during player saving
+- Several loops will now sleep when their tasks are not necessary to perform
+- Improved support when using ESX Identity to reduce events and queries during player login
+- Weapon ammo is no longer synced every time it changes, instead waiting for the player to stop shooting
+- Support for the latest weapons and components
 
-- Features
-	- Integrated commands from esx_adminplus
-	- All players will be saved immediately before a txAdmin scheduled restart
-	- Detect if a player is new and send the result to the playerLoaded event
-	- Support for players logging out when using multicharacter resources
-	- Added an improved function when performing xPlayer loops to prevent large server hitches
-		- Using `ESX.GetExtendedPlayers()` instead of `ESX.GetPlayers()`
-	- Cache the players ped id and death state in ESX.PlayerData
-	- Added an imports file (similar to locales.lua) for setting up events and functions in other resources
-		- Before defining all manifest script files, add `shared_script '@es_extended/imports.lua'`
-			- Automatically retrieve the ESX object, removing the need to send a callback event on both the client and server
-			- Ensures current information is always returned when using `ESX.PlayerData` (except loadout and inventory)
-	- Spawnmanager is being utilised to correctly handle player spawns
-		- Potential conflicts with some third-party resources that do not expect spawnmanager
-	- Integrated support for identity data
+#### Features
+- Integrated support for identity data
+- Integrated commands from esx_adminplus
+- All players will be saved immediately before a txAdmin scheduled restart
+- Detect if a player is new and send the result to the playerLoaded event
+- Support for players logging out when using multicharacter resources
+- Cache the players ped id and death state in ESX.PlayerData
+- Added an imports file (similar to locales.lua) for setting up events and functions in other resources
+	- Before defining all manifest script files, add `shared_script '@es_extended/imports.lua'`
+	- Automatically retrieve the ESX object, removing the need to send a callback event on both the client and server
+	- Ensures current information is always returned when using `ESX.PlayerData` (except loadout and inventory)
+- Spawnmanager is being utilised to correctly handle player spawns
+	- Potential conflicts with some third-party resources that do not expect spawnmanager
+- Added an improved function when performing xPlayer loops to prevent large server hitches
+	- Using `ESX.GetExtendedPlayers()` instead of `ESX.GetPlayers()`
 			
-- Fixes
-	- ESX.Jobs table is populated after all jobs are setup, allowing other resources to retrieve it if needed
-	- All weapons are properly removed when using the clearloadout command
+#### Fixes
+- ESX.Jobs table is populated after all jobs are setup, allowing other resources to retrieve it if needed
+- All weapons are properly removed when using the clearloadout command
 ##### For creating or updating resources refer to the [updated boilerplate](https://github.com/thelindat/esx_legacy_boilerplate).
 
-## Information
-- [ESX Forum](https://forum.esx-framework.org/)
-- [ESX Documentation](https://wiki.esx-framework.org/)
-- [ESX Development Discord](https://discord.me/esx)
-- [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
-
-ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
 
 ### Features
 - Weight based inventory system
@@ -82,7 +73,7 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 
 
 ### Installation
-- Navigate to the resources folder and, if desired, prepare directories for organisation (i.e. resources/[core]/es_extended)
+- Download files to the resources folder and, if desired, prepare directories for organisation (i.e. resources/[core]/es_extended)
 - Import `es_extended.sql` in your database
 - Import any other sql files for the resources you are using
 - Ensure all resources config files have been adjusted for your preferences
@@ -116,12 +107,19 @@ ensure esx_identity
 ensure esx_skin
 ```
 
-## Reborn
+### Information
+ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
+- [ESX Forum](https://forum.esx-framework.org/)
+- [ESX Documentation](https://wiki.esx-framework.org/)
+- [ESX Development Discord](https://discord.me/esx)
+- [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
+
+### Reborn
 
 ESX Reborn is the name for the framework being actively developed by the team, with many existing features being rewritten and improved upon. It is currently possible to create a server using ESX Reborn, however the project is still missing many features and should not be used unless you are a developer looking to contribute in some way.
 
 
-## Legal
+### Legal
 
 ### License
 
