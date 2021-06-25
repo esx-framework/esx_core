@@ -1,17 +1,16 @@
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-local isLegacy = not not ESX.GetExtendedPlayers
 
 AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  	return
 	end
 
-	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
+	for i=1, #xPlayers do
+		local xPlayer = xPlayers[i]
 		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
@@ -22,7 +21,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 			end
 		
 			xPlayer.set('status', data)
-			TriggerClientEvent('esx_status:load', k, data)
+			TriggerClientEvent('esx_status:load', xPlayer.source, data)
 		end)
 	end
 end)
@@ -100,10 +99,10 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
+	for i=1, #xPlayers do
+		local xPlayer = xPlayers[i]
 		local status  = xPlayer.get('status')
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))

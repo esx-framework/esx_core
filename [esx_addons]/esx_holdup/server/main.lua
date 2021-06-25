@@ -7,11 +7,11 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterServerEvent('esx_holdup:tooFar')
 AddEventHandler('esx_holdup:tooFar', function(currentStore)
 	local _source = source
-	local xPlayers = ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 	rob = false
 
 	for i=1, #xPlayers, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		local xPlayer = xPlayers[i]
 		
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_cancelled_at', Stores[currentStore].nameOfStore))
@@ -30,7 +30,7 @@ RegisterServerEvent('esx_holdup:robberyStarted')
 AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 	local _source  = source
 	local xPlayer  = ESX.GetPlayerFromId(_source)
-	local xPlayers = ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 
 	if Stores[currentStore] then
 		local store = Stores[currentStore]
@@ -42,7 +42,7 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 
 		local cops = 0
 		for i=1, #xPlayers, 1 do
-			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+			local xPlayer = xPlayers[i]
 			if xPlayer.job.name == 'police' then
 				cops = cops + 1
 			end
@@ -53,7 +53,7 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 				rob = true
 
 				for i=1, #xPlayers, 1 do
-					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+					local xPlayer = xPlayers[i]
 					if xPlayer.job.name == 'police' then
 						TriggerClientEvent('esx:showNotification', xPlayers[i], _U('rob_in_prog', store.nameOfStore))
 						TriggerClientEvent('esx_holdup:setBlip', xPlayers[i], Stores[currentStore].position)
@@ -81,9 +81,9 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 								xPlayer.addMoney(store.reward)
 							end
 							
-							local xPlayers, xPlayer = ESX.GetPlayers(), nil
+							local xPlayers, xPlayer = ESX.GetExtendedPlayers(), nil
 							for i=1, #xPlayers, 1 do
-								xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+								xPlayer = xPlayers[i]
 
 								if xPlayer.job.name == 'police' then
 									TriggerClientEvent('esx:showNotification', xPlayers[i], _U('robbery_complete_at', store.nameOfStore))

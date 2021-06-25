@@ -4,15 +4,15 @@ local DisptachRequestId, PhoneNumbers = 0, {}
 TriggerEvent('esx:getSharedObject', function(obj)
 	ESX = obj
 
-	local xPlayers = ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 
 	for i=1, #xPlayers, 1 do
 		LoadPlayer(xPlayers[i])
 	end
 end)
 
-function LoadPlayer(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
+function LoadPlayer(player)
+	local xPlayer = player
 
 	for num,v in pairs(PhoneNumbers) do
 		if tonumber(num) == num then -- if phonenumber is a player phone number
@@ -107,8 +107,8 @@ AddEventHandler('esx_phone:getDistpatchRequestId', function(cb)
 	cb(GetDistpatchRequestId())
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId)
-	LoadPlayer(playerId)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+	LoadPlayer(xPlayer)
 end)
 
 AddEventHandler('esx:playerDropped', function(source)

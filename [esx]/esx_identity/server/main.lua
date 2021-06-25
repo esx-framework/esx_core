@@ -160,10 +160,10 @@ elseif not Config.UseDeferrals then
 					Citizen.Wait(10)
 				end
 
-				local xPlayers = ESX.GetPlayers()
+				local xPlayers = ESX.GetExtendedPlayers()
 
 				for i=1, #xPlayers, 1 do
-					local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+					local xPlayer = xPlayers[i]
 
 					if xPlayer then	
 						checkIdentity(xPlayer)

@@ -40,11 +40,11 @@ AddEventHandler('esx_bankerjob:customerWithdraw', function (target, amount)
 end)
 
 ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function (source, cb)
-	local xPlayers  = ESX.GetPlayers()
+	local xPlayers  = ESX.GetExtendedPlayers()
 	local customers = {}
 
 	for i=1, #xPlayers do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+		local xPlayer = xPlayers[i]
 
 		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
 			table.insert(customers, {
