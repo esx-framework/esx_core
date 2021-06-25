@@ -10,9 +10,9 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
+AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
-	ESX.PlayerData = playerData
+	ESX.PlayerData = xPlayer
 
 	FreezeEntityPosition(PlayerPedId(), true)
 
@@ -20,10 +20,10 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
 		Citizen.Wait(3000)
 	else
 		exports.spawnmanager:spawnPlayer({
-			x = playerData.coords.x,
-			y = playerData.coords.y,
-			z = playerData.coords.z + 0.25,
-			heading = playerData.coords.heading,
+			x = ESX.PlayerData.coords.x,
+			y = ESX.PlayerData.coords.y,
+			z = ESX.PlayerData.coords.z + 0.25,
+			heading = ESX.PlayerData.coords.heading,
 			model = `mp_m_freemode_01`,
 			skipFade = false
 		}, function()
@@ -53,20 +53,19 @@ AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
 	end
 
 	if Config.EnableHud then
-		for k,v in ipairs(playerData.accounts) do
+		for k,v in ipairs(ESX.PlayerData.accounts) do
 			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
 			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
 		end
 
-		local jobTpl = '<div>{{job_label}} - {{grade_label}}</div>'
+		local jobTpl = '<div>{{job_label}}{{grade_label}}</div>'
 
-		if playerData.job.grade_label == '' or playerData.job.grade_label == playerData.job.label then
-			jobTpl = '<div>{{job_label}}</div>'
-		end
-
-		ESX.UI.HUD.RegisterElement('job', #playerData.accounts, 0, jobTpl, {
-			job_label = playerData.job.label,
-			grade_label = playerData.job.grade_label
+		local gradeLabel = ESX.PlayerData.job.grade_label ~= ESX.PlayerData.job.label and ESX.PlayerData.job.grade_label or ''
+		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
+		
+		ESX.UI.HUD.RegisterElement('job', #ESX.PlayerData.accounts, 0, jobTpl, {
+			job_label = ESX.PlayerData.job.label,
+			grade_label = gradeLabel
 		})
 	end
 	StartServerSyncLoops()
@@ -97,7 +96,6 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	while not ESX.PlayerLoaded do
 		Citizen.Wait(100)
 	end
-
 	TriggerEvent('esx:restoreLoadout')
 end)
 
@@ -225,9 +223,11 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(Job)
 	if Config.EnableHud then
+		local gradeLabel = Job.grade_label ~= Job.label and Job.grade_label or ''
+		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
 		ESX.UI.HUD.UpdateElement('job', {
 			job_label = Job.label,
-			grade_label = Job.grade_label
+			grade_label = gradeLabel
 		})
 	end
 	ESX.SetPlayerData('job', Job)
