@@ -12,7 +12,8 @@ CREATE TABLE `users` (
 	`position` VARCHAR(255) NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
 
 	PRIMARY KEY (`identifier`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `items` (
 	`name` VARCHAR(50) NOT NULL,
@@ -22,7 +23,8 @@ CREATE TABLE `items` (
 	`can_remove` TINYINT NOT NULL DEFAULT 1,
 
 	PRIMARY KEY (`name`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `job_grades` (
 	`id` INT NOT NULL AUTO_INCREMENT,
@@ -35,7 +37,8 @@ CREATE TABLE `job_grades` (
 	`skin_female` LONGTEXT NOT NULL,
 
 	PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `job_grades` VALUES (1,'unemployed',0,'unemployed','Unemployed',200,'{}','{}');
 
@@ -44,6 +47,7 @@ CREATE TABLE `jobs` (
 	`label` VARCHAR(50) DEFAULT NULL,
 
 	PRIMARY KEY (`name`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `jobs` VALUES ('unemployed','Unemployed');

@@ -8,7 +8,8 @@ CREATE TABLE `user_contacts` (
 
 	PRIMARY KEY (`id`),
 	INDEX `index_user_contacts_identifier_name_number` (`identifier`, `name`, `number`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 ALTER TABLE `users`
 	ADD COLUMN `phone_number` INT(11) NULL,

@@ -5,7 +5,8 @@ CREATE TABLE `licenses` (
 	`label` varchar(60) NOT NULL,
 
 	PRIMARY KEY (`type`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `user_licenses` (
 	`id` int NOT NULL AUTO_INCREMENT,
@@ -13,4 +14,5 @@ CREATE TABLE `user_licenses` (
 	`owner` VARCHAR(60) NOT NULL,
 
 	PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

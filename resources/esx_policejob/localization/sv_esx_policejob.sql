@@ -31,7 +31,8 @@ CREATE TABLE `fine_types` (
 	`category` int(11) DEFAULT NULL,
 
 	PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Missbruk av tuta',30,0),

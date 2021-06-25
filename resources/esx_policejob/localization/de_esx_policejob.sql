@@ -31,7 +31,8 @@ CREATE TABLE `fine_types` (
 	`category` int DEFAULT NULL,
 
 	PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `fine_types` VALUES ('1', 'Missbrauchen der Hupe', '30', '0');
 INSERT INTO `fine_types` VALUES ('2', 'Vorfahrtstraße missachtet', '40', '0');

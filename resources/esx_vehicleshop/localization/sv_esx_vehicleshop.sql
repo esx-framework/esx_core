@@ -25,7 +25,8 @@ CREATE TABLE `cardealer_vehicles` (
 	`price` int NOT NULL,
 
 	PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `vehicle_sold` (
 	`client` VARCHAR(50) NOT NULL,
@@ -35,7 +36,8 @@ CREATE TABLE `vehicle_sold` (
 	`date` VARCHAR(50) NOT NULL,
 
 	PRIMARY KEY (`plate`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `owned_vehicles` (
 	`owner` VARCHAR(60) NOT NULL,
@@ -46,7 +48,8 @@ CREATE TABLE `owned_vehicles` (
 	`stored` TINYINT(1) NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (`plate`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `rented_vehicles` (
 	`vehicle` varchar(60) NOT NULL,
@@ -57,14 +60,16 @@ CREATE TABLE `rented_vehicles` (
 	`owner` VARCHAR(60) NOT NULL,
 
 	PRIMARY KEY (`plate`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `vehicle_categories` (
 	`name` varchar(60) NOT NULL,
 	`label` varchar(60) NOT NULL,
 
 	PRIMARY KEY (`name`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `vehicle_categories` (name, label) VALUES
 	('compacts','Småbil'),
@@ -87,7 +92,8 @@ CREATE TABLE `vehicles` (
 	`category` varchar(60) DEFAULT NULL,
 
 	PRIMARY KEY (`model`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO `vehicles` (name, model, price, category) VALUES
 	('Blade','blade',15000,'muscle'),
