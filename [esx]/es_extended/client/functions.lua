@@ -41,9 +41,12 @@ ESX.GetPlayerData = function()
 end
 
 ESX.SetPlayerData = function(key, val)
+	local current = ESX.PlayerData[key]
 	ESX.PlayerData[key] = val
 	if key ~= 'inventory' and key ~= 'loadout' then
-		TriggerEvent('esx:setPlayerData', key, val)
+		if type(val) == 'table' or val ~= current then
+			TriggerEvent('esx:setPlayerData', key, val, current)
+		end
 	end
 end
 
