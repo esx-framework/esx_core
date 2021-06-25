@@ -38,12 +38,12 @@ CREATE TABLE `vehicle_sold` (
 );
 
 CREATE TABLE `owned_vehicles` (
-	`owner` varchar(40) NOT NULL,
+	`owner` VARCHAR(60) NOT NULL,
 	`plate` varchar(12) NOT NULL,
 	`vehicle` longtext,
 	`type` VARCHAR(20) NOT NULL DEFAULT 'car',
 	`job` VARCHAR(20) NULL DEFAULT NULL,
-	`stored` TINYINT NOT NULL DEFAULT '0',
+	`stored` TINYINT(1) NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (`plate`)
 );
@@ -54,7 +54,7 @@ CREATE TABLE `rented_vehicles` (
 	`player_name` varchar(255) NOT NULL,
 	`base_price` int NOT NULL,
 	`rent_price` int NOT NULL,
-	`owner` varchar(22) NOT NULL,
+	`owner` VARCHAR(60) NOT NULL,
 
 	PRIMARY KEY (`plate`)
 );

@@ -13,7 +13,7 @@ CREATE TABLE `addon_inventory_items` (
 	`inventory_name` VARCHAR(100) NOT NULL,
 	`name` VARCHAR(100) NOT NULL,
 	`count` INT NOT NULL,
-	`owner` VARCHAR(40) DEFAULT NULL,
+	`owner` VARCHAR(60) DEFAULT NULL,
 
 	PRIMARY KEY (`id`),
 	INDEX `index_addon_inventory_items_inventory_name_name` (`inventory_name`, `name`),

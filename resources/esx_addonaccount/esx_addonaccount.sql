@@ -12,7 +12,7 @@ CREATE TABLE `addon_account_data` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`account_name` VARCHAR(100) DEFAULT NULL,
 	`money` INT NOT NULL,
-	`owner` VARCHAR(40) DEFAULT NULL,
+	`owner` VARCHAR(60) DEFAULT NULL,
 
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `index_addon_account_data_account_name_owner` (`account_name`, `owner`),

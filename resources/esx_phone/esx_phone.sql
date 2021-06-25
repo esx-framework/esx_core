@@ -2,7 +2,7 @@ USE `es_extended`;
 
 CREATE TABLE `user_contacts` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`identifier` VARCHAR(22) NOT NULL,
+	`identifier` VARCHAR(60) NOT NULL,
 	`name` VARCHAR(100) NOT NULL,
 	`number` INT(11) NOT NULL,
 
