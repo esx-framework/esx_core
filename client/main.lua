@@ -26,6 +26,7 @@ if ESX.GetConfig().Multichar then
 		Spawned = false
 		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+1.3, 0.0, 0.0, 180.0, 100.00, false, 0)
 		SetEntityCoords(PlayerPedId(), Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
+		SetEntityHeading(PlayerPedId(), Config.Spawn.w)
 		DoScreenFadeOut(0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
