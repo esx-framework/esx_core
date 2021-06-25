@@ -421,7 +421,7 @@ ESX.Game.GetObjects = function()
 end
 
 ESX.Game.GetPeds = function(onlyOtherPeds)
-	local peds, myPed = {}, PlayerPedId()
+	local peds, myPed = {}, ESX.PlayerData.ped
 
 	for ped in EnumeratePeds() do
 		if ((onlyOtherPeds and ped ~= myPed) or not onlyOtherPeds) then
@@ -474,7 +474,7 @@ ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFi
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		coords = GetEntityCoords(playerPed)
 	end
 
@@ -500,7 +500,7 @@ ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFi
 end
 
 ESX.Game.GetVehicleInDirection = function()
-	local playerPed    = PlayerPedId()
+	local playerPed    = ESX.PlayerData.ped
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
 	local rayHandle    = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
@@ -733,7 +733,7 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 end
 
 ESX.ShowInventory = function()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	local elements, currentWeight = {}, 0
 
 	for k,v in pairs(ESX.PlayerData.accounts) do

@@ -6,10 +6,7 @@ description 'ES Extended'
 
 version 'legacy'
 
-server_scripts {
-	'@async/async.lua',
-	'@mysql-async/lib/MySQL.lua',
-
+shared_scripts {
 	'locale.lua',
 	'locales/de.lua',
 	'locales/br.lua',
@@ -24,6 +21,11 @@ server_scripts {
 
 	'config.lua',
 	'config.weapons.lua',
+}
+
+server_scripts {
+	'@async/async.lua',
+	'@mysql-async/lib/MySQL.lua',
 
 	'server/common.lua',
 	'server/classes/player.lua',
@@ -38,21 +40,6 @@ server_scripts {
 }
 
 client_scripts {
-	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
-	'locales/sc.lua',
-	'locales/tc.lua',
-
-	'config.lua',
-	'config.weapons.lua',
-
 	'client/common.lua',
 	'client/entityiter.lua',
 	'client/functions.lua',

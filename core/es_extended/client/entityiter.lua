@@ -63,7 +63,7 @@ function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coords, max
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		coords = GetEntityCoords(playerPed)
 	end
 
