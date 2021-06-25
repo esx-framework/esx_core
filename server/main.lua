@@ -1,5 +1,6 @@
-ESX = exports['es_extended']:getSharedObject()
-if ESX.GetConfig().Multichar == true then
+if not ESX then
+	SetTimeout(3000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
+elseif ESX.GetConfig().Multichar == true then
 	local fetchCharacters = -1
 	local IdentifierTables = {}
 	
@@ -27,12 +28,10 @@ if ESX.GetConfig().Multichar == true then
 		}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
-				local job, grade = result[1].job, tostring(result[1].job_grade)
+				local job, grade = result[1].job or 'unemployed', tostring(result[1].job_grade)
 				if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
-					grade = ESX.Jobs[job].grades[grade].label
+					if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
 					job = ESX.Jobs[job].label
-				else
-					job, grade = 'Unemployed', ''
 				end
 				local accounts = json.decode(result[i].accounts)
 				local id = tonumber(string.sub(result[i].identifier, #Config.Prefix+1, string.find(result[i].identifier, ':')-1))
@@ -81,11 +80,7 @@ if ESX.GetConfig().Multichar == true then
 				end
 			end)
 		end)
-		
-		while next(ESX.Jobs) == nil do
-			Citizen.Wait(250)
-			ESX.Jobs = exports['es_extended']:getSharedObject().Jobs
-		end
+		if not next(ESX.Jobs) then ESX.Jobs = GetJobs() end
 	end)
 
 	RegisterServerEvent("esx_multicharacter:SetupCharacters")
@@ -139,9 +134,5 @@ if ESX.GetConfig().Multichar == true then
 	end, true)
 
 elseif ESX.GetConfig().Multichar == false then
-	SetTimeout(1000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
 	SetTimeout(3000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
-else
-	SetTimeout(1000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
-	SetTimeout(3000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
 end
