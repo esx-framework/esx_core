@@ -1,0 +1,5 @@
+{
+	"version": "legacy",
+	"commit" : "1.3.4",
+	"changelog": "\n- Corrected spawning of entities"
+}
