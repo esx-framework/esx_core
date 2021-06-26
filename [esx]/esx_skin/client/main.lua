@@ -1,13 +1,5 @@
-ESX = nil
-local lastSkin, playerLoaded, cam, isCameraActive
+local lastSkin, cam, isCameraActive
 local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
-
-Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(0)
-    end
-end)
 
 function OpenMenu(submitCb, cancelCb, restrict)
     local playerPed = PlayerPedId()
@@ -249,34 +241,15 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
     end, cancelCb, restrict)
 end
 
-AddEventHandler('esx:onPlayerSpawn', function()
-    Citizen.CreateThread(function()
-        while not playerLoaded do
-            Citizen.Wait(100)
-        end
-
-        if firstSpawn and ESX.GetConfig().Multichar ~= true then
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-                if skin == nil then
-                    TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
-                else
-                    TriggerEvent('skinchanger:loadSkin', skin)
-                end
-            end)
-
-            firstSpawn = false
-        end
-    end)
-end)
-
 AddEventHandler('esx_skin:resetFirstSpawn', function()
     firstSpawn = true
     skinLoaded = false
+    ESX.PlayerLoaded = false
 end)
 
 AddEventHandler('esx_skin:playerRegistered', function()
     Citizen.CreateThread(function()
-        while not playerLoaded do
+        while not ESX.PlayerLoaded do
             Citizen.Wait(100)
         end
 
@@ -300,7 +273,7 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-    playerLoaded = true
+    ESX.PlayerLoaded = true
 end)
 
 AddEventHandler('esx_skin:getLastSkin', function(cb) cb(lastSkin) end)

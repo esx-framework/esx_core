@@ -1,19 +1,5 @@
-ESX = nil
-isInShopMenu = false
+local isInShopMenu = false
 local spawnedVehicles = {}
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	while not ESX.GetPlayerData().job do
-		Citizen.Wait(10)
-	end
-
-	ESX.PlayerData = ESX.GetPlayerData()
-end)
 
 function OpenBoatShop(shop)
 	isInShopMenu = true

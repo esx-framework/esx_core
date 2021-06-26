@@ -1,14 +1,6 @@
-ESX	= nil
 local HasAlreadyEnteredMarker, isDead = false, false
 local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 function OpenAccessoryMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
@@ -157,47 +149,56 @@ Citizen.CreateThread(function()
 	end
 end)
 
+local nearMarker = false
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
-		local coords = GetEntityCoords(PlayerPedId())
+		local sleep = 500
+		local coords = GetEntityCoords(ESX.PlayerData.ped)
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos[i], true) < Config.DrawDistance) then
+				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
 					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
+					sleep = 0
+					break
 				end
 			end
 		end
+		if sleep == 0 then nearMarker = true else nearMarker = false end
+		Citizen.Wait(sleep)
 	end
 end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(200)
-
-		local coords = GetEntityCoords(PlayerPedId())
-		local isInMarker = false
-		local currentZone = nil
-		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
-				if GetDistanceBetweenCoords(coords, v.Pos[i], true) < Config.Size.x then
-					isInMarker  = true
-					currentZone = k
+		local sleep = 500
+		if nearMarker then
+			sleep = 200
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
+			local isInMarker = false
+			local currentZone = nil
+			for k,v in pairs(Config.Zones) do
+				for i = 1, #v.Pos, 1 do
+					if #(coords - v.Pos[i]) < Config.Size.x then
+						isInMarker  = true
+						currentZone = k
+						break
+					end
 				end
 			end
-		end
 
-		if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-			HasAlreadyEnteredMarker = true
-			LastZone = currentZone
-			TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
-		end
+			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
+				HasAlreadyEnteredMarker = true
+				LastZone = currentZone
+				TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
+			end
 
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
+			if not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
+			end
 		end
+		Citizen.Wait(sleep)
 	end
 end)
 

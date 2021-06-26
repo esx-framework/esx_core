@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 function GetProperty(name)
 	for i=1, #Config.Properties, 1 do
 		if Config.Properties[i].name == name then

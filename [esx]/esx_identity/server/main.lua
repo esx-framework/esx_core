@@ -1,19 +1,6 @@
-ESX = nil
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local playerIdentity = {}
 local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
-
-if multichar == nil then
-	ESX.GetIdentifier = function(playerId)
-		for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-			if string.match(v, 'license:') then
-				local identifier = string.gsub(v, 'license:', '')
-				return identifier
-			end
-		end
-	end
-end
 
 if Config.UseDeferrals then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)

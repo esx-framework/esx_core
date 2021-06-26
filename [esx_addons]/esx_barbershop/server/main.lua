@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 RegisterServerEvent('esx_barbershop:pay')
 AddEventHandler('esx_barbershop:pay', function()
 	local _source = source

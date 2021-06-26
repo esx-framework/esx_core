@@ -1,14 +1,6 @@
 
 local hasAlreadyEnteredMarker, hasPaid, currentActionData = false, false, {}
 local lastZone, currentAction, currentActionMsg
-ESX = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 function OpenShopMenu()
 	hasPaid = false

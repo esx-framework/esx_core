@@ -1,25 +1,5 @@
 local hasAlreadyEnteredMarker, CurrentActionData = false, {}
 local CurrentAction, CurrentActionMsg, LastZone
-ESX = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(100)
-	end
-
-	ESX.PlayerData = ESX.GetPlayerData()
-
-	if ESX.PlayerData.job.name == 'realestateagent' then
-		Config.Zones.OfficeActions.Type = 1
-	else
-		Config.Zones.OfficeActions.Type = -1
-	end
-end)
 
 function OpenRealestateAgentMenu()
 	local elements = {
@@ -185,6 +165,18 @@ function OpenCustomersMenu()
 	end)
 end
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
+
+	if ESX.PlayerData.job.name == 'realestateagent' then
+		Config.Zones.OfficeActions.Type = 1
+	else
+		Config.Zones.OfficeActions.Type = -1
+	end
+end)
+
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
@@ -309,4 +301,11 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	}
 
 	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
+end)
+
+if ESX.PlayerLoaded and ESX.PlayerData.job.name == 'realestateagent' then
+		Config.Zones.OfficeActions.Type = 1
+	else
+		Config.Zones.OfficeActions.Type = -1
+	end
 end)

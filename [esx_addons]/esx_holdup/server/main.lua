@@ -1,8 +1,5 @@
 local rob = false
 local robbers = {}
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('esx_holdup:tooFar')
 AddEventHandler('esx_holdup:tooFar', function(currentStore)

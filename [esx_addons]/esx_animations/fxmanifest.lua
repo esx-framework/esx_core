@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Animations'
 
-version '1.0.0'
+version 'legacy'
 
 client_scripts {
+	'@es_extended/imports.lua',
 	'config.lua',
 	'client/main.lua'
 }

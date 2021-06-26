@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX Service'
 
-version '1.0.0'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'server/main.lua'

@@ -1,7 +1,4 @@
-ESX = nil
 local playersHealing, deadPlayers = {}, {}
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
 

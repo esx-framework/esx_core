@@ -1,8 +1,5 @@
-ESX                = nil
 local InService    = {}
 local MaxInService = {}
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function GetInServiceCount(name)
 	local count = 0

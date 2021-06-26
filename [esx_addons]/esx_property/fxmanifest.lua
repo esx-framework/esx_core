@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX Property'
 
-version '1.0.4'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@async/async.lua',

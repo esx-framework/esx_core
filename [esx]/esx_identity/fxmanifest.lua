@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX Identity'
 
-version '1.4.0'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',

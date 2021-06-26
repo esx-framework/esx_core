@@ -1,19 +1,11 @@
-ESX                  = nil
 local IsAlreadyDrunk = false
 local DrunkLevel     = -1
-
-Citizen.CreateThread(function()
-  while ESX == nil do
-    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-    Citizen.Wait(0)
-  end
-end)
 
 function Drunk(level, start)
   
   Citizen.CreateThread(function()
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
 
     if start then
       DoScreenFadeOut(800)
@@ -68,7 +60,7 @@ function Reality()
 
   Citizen.CreateThread(function()
 
-    local playerPed = GetPlayerPed(-1)
+    local playerPed = PlayerPedId()
 
     DoScreenFadeOut(800)
     Wait(1000)
@@ -156,7 +148,7 @@ end)
 RegisterNetEvent('esx_optionalneeds:onDrink')
 AddEventHandler('esx_optionalneeds:onDrink', function()
   
-  local playerPed = GetPlayerPed(-1)
+  local playerPed = PlayerPedId()
   
   TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_DRINKING", 0, 1)
   Citizen.Wait(1000)

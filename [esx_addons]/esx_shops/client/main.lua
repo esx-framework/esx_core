@@ -1,16 +1,5 @@
-ESX = nil
 local hasAlreadyEnteredMarker, lastZone
 local currentAction, currentActionMsg, currentActionData = nil, nil, {}
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	Citizen.Wait(5000)
-
-end)
 
 function OpenShopMenu(zone)
 	local elements = {}

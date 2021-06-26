@@ -1,12 +1,4 @@
-ESX = nil
 local Status, isPaused = {}, false
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 function GetStatusData(minimal)
 	local status = {}
@@ -48,6 +40,7 @@ end)
 
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
 	Status = {}
 	if Config.Display then
 		SendNUIMessage({
@@ -59,6 +52,7 @@ end)
 
 RegisterNetEvent('esx_status:load')
 AddEventHandler('esx_status:load', function(status)
+	ESX.PlayerLoaded = true
 	TriggerEvent('esx_status:loaded')
 	for i=1, #Status, 1 do
 		for j=1, #status, 1 do
@@ -71,7 +65,7 @@ AddEventHandler('esx_status:load', function(status)
 	if Config.Display then TriggerEvent('esx_status:setDisplay', 0.5) end
 
 	Citizen.CreateThread(function()
-		while #Status > 0 do
+		while ESX.PlayerLoaded do
 			for i=1, #Status, 1 do
 				Status[i].onTick()
 			end
@@ -187,7 +181,6 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(Config.UpdateInterval)
-
-		TriggerServerEvent('esx_status:update', GetStatusData(true))
+		if ESX.PlayerLoaded then TriggerServerEvent('esx_status:update', GetStatusData(true)) end
 	end
 end)

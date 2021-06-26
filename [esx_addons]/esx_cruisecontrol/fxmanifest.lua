@@ -4,13 +4,14 @@ game 'gta5'
 
 description 'CruiseControl System for ESX'
 
-version '1.0.0'
+version 'legacy'
 
 dependencies {
   'es_extended'
 }
 
 client_scripts {
+  '@es_extended/imports.lua',
   '@es_extended/locale.lua',
   'locales/fi.lua',
   'locales/fr.lua',

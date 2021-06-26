@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Whitelist'
 
-version '1.1.0'
+version 'legacy'
 
 server_scripts {
+	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'config.lua',

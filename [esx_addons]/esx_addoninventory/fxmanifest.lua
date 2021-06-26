@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Addon Inventory'
 
-version '1.1.0'
+version 'legacy'
 
 server_scripts {
+	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'server/classes/addoninventory.lua',
 	'server/main.lua'

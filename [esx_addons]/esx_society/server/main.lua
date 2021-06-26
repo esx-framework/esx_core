@@ -1,8 +1,5 @@
-ESX = nil
 local Jobs = {}
 local RegisteredSocieties = {}
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function GetSociety(name)
 	for i=1, #RegisteredSocieties, 1 do

@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Menu List'
 
-version '1.0.2'
+version 'legacy'
 
 client_scripts {
 	'@es_extended/client/wrapper.lua',

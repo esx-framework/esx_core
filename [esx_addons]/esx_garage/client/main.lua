@@ -1,12 +1,4 @@
-ESX = nil
 local LastGarage, LastPart, LastParking, thisGarage = nil, nil, nil, nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 TriggerEvent('instance:registerType', 'garage')
 
@@ -232,7 +224,7 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part, parking)
 
 	if part == 'Parking' then
 
-		local playerPed  = PlayerPedId()
+		local playerPed = PlayerPedId()
 		local garage = thisGarage
 		local parkingPos = garage.Parkings[parking].Pos
 
@@ -254,7 +246,7 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part, parking)
 
 	if part == 'Parking' then
 
-		local playerPed  = PlayerPedId()
+		local playerPed = PlayerPedId()
 		local garage = thisGarage
 		local parkingPos = garage.Parkings[parking].Pos
 
@@ -289,25 +281,29 @@ Citizen.CreateThread(function()
 
 end)
 
+local nearMarker = false
 -- Display markers
 Citizen.CreateThread(function()
 	while true do
+		local sleep = 500
 		
-		Citizen.Wait(0)
 		
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 		
 		for k,v in pairs(Config.Garages) do
+			local garage = vector3(v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z)
 
 			if v.IsClosed then
 
-				if(not v.disabled and GetDistanceBetweenCoords(coords, v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z, true) < Config.DrawDistance) then
+				if(not v.disabled and #(coords - garage) < Config.DrawDistance) then
 					DrawMarker(Config.MarkerType, v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					sleep = 0
 				end	
 
-				if(not v.disabled and GetDistanceBetweenCoords(coords, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, true) < Config.DrawDistance) then
+				if(not v.disabled and #(coords - garage) < Config.DrawDistance) then
 					DrawMarker(Config.MarkerType, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+					sleep = 0
 				end
 
 			end
@@ -316,10 +312,11 @@ Citizen.CreateThread(function()
 
 				for i=1, #v.Parkings, 1 do
 
-					local parking = v.Parkings[i]
+					local parking = vector3(v.Parkings[i].Pos.x, v.Parkings[i].Pos.y, v.Parkings[i].Pos.z)
 
-					if(not v.disabled and GetDistanceBetweenCoords(coords, parking.Pos.x, parking.Pos.y, parking.Pos.z, true) < Config.DrawDistance) then
+					if(not v.disabled and #(coords - parking) < Config.DrawDistance) then
 						DrawMarker(Config.MarkerType, parking.Pos.x, parking.Pos.y, parking.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ParkingMarkerSize.x, Config.ParkingMarkerSize.y, Config.ParkingMarkerSize.z, Config.ParkingMarkerColor.r, Config.ParkingMarkerColor.g, Config.ParkingMarkerColor.b, 100, false, true, 2, false, false, false, false)
+						sleep = 0
 					end
 
 				end
@@ -327,68 +324,70 @@ Citizen.CreateThread(function()
 			end
 
 		end
-
+		if sleep == 0 then nearMarker = true else nearMarker = false end
+		Citizen.Wait(sleep)
 	end
 end)
 
 -- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		if nearMarker then
+			local playerPed      = PlayerPedId()
+			local coords         = GetEntityCoords(playerPed)
+			local isInMarker     = false
+			local currentGarage  = nil
+			local currentPart    = nil
+			local currentParking = nil
+			
+			for k,v in pairs(Config.Garages) do
+								if v.IsClosed then
 
-		local playerPed      = PlayerPedId()
-		local coords         = GetEntityCoords(playerPed)
-		local isInMarker     = false
-		local currentGarage  = nil
-		local currentPart    = nil
-		local currentParking = nil
-		
-		for k,v in pairs(Config.Garages) do
-							if v.IsClosed then
+									if (not v.disabled and GetDistanceBetweenCoords(coords, v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z, true) < Config.MarkerSize.x) then
+										isInMarker    = true
+										currentGarage = k
+										currentPart   = 'ExteriorEntryPoint'
+									end
 
-								if (not v.disabled and GetDistanceBetweenCoords(coords, v.ExteriorEntryPoint.Pos.x, v.ExteriorEntryPoint.Pos.y, v.ExteriorEntryPoint.Pos.z, true) < Config.MarkerSize.x) then
-									isInMarker    = true
-									currentGarage = k
-									currentPart   = 'ExteriorEntryPoint'
-								end
+									if (not v.disabled and GetDistanceBetweenCoords(coords, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, true) < Config.MarkerSize.x) then
+										isInMarker    = true
+										currentGarage = k
+										currentPart   = 'InteriorExitPoint'
+									end
+							
+									for i=1, #v.Parkings, 1 do
+										local parking = v.Parkings[i]
 
-								if (not v.disabled and GetDistanceBetweenCoords(coords, v.InteriorExitPoint.Pos.x, v.InteriorExitPoint.Pos.y, v.InteriorExitPoint.Pos.z, true) < Config.MarkerSize.x) then
-									isInMarker    = true
-									currentGarage = k
-									currentPart   = 'InteriorExitPoint'
-								end
-						
-								for i=1, #v.Parkings, 1 do
-									local parking = v.Parkings[i]
-
-									if (not v.disabled and GetDistanceBetweenCoords(coords, parking.Pos.x, parking.Pos.y, parking.Pos.z, true) < Config.ParkingMarkerSize.x) then
-										isInMarker     = true
-										currentGarage  = k
-										currentPart    = 'Parking'
-										currentParking = i
+										if (not v.disabled and GetDistanceBetweenCoords(coords, parking.Pos.x, parking.Pos.y, parking.Pos.z, true) < Config.ParkingMarkerSize.x) then
+											isInMarker     = true
+											currentGarage  = k
+											currentPart    = 'Parking'
+											currentParking = i
+										end
 									end
 								end
-							end
-		end
-
-		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking) ) then
-			
-			if LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking then
-				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
 			end
 
-			HasAlreadyEnteredMarker = true
-			LastGarage              = currentGarage
-			LastPart                = currentPart
-			LastParking             = currentParking
-			
-			TriggerEvent('esx_garage:hasEnteredMarker', currentGarage, currentPart, currentParking)
-		end
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking) ) then
+				
+				if LastGarage ~= currentGarage or LastPart ~= currentPart or LastParking ~= currentParking then
+					TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
+				end
 
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
+				HasAlreadyEnteredMarker = true
+				LastGarage              = currentGarage
+				LastPart                = currentPart
+				LastParking             = currentParking
+				
+				TriggerEvent('esx_garage:hasEnteredMarker', currentGarage, currentPart, currentParking)
+			end
 
-			TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
-		end
+			if not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+
+				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
+			end
+			Citizen.Wait(1)
+		else Citizen.Wait(500) end
 	end
 end)

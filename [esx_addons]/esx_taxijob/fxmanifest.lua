@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX Taxi Job'
 
-version '1.0.2'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 client_scripts {
 	'@es_extended/locale.lua',

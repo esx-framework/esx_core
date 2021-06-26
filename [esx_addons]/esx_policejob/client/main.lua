@@ -2,20 +2,11 @@ local CurrentActionData, handcuffTimer, dragStatus, blipsCops, currentTask = {},
 local HasAlreadyEnteredMarker, isDead, isHandcuffed, hasAlreadyJoined, playerInService = false, false, false, false, false
 local LastStation, LastPart, LastPartNum, LastEntity, CurrentAction, CurrentActionMsg
 dragStatus.isDragged, isInShopMenu = false, false
-ESX = nil
 
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(10)
-	end
-
-	ESX.PlayerData = ESX.GetPlayerData()
-end)
+if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
+	Citizen.Wait(1000)
+	TriggerServerEvent('esx_policejob:forceBlip')
+end
 
 function cleanPlayer(playerPed)
 	SetPedArmour(playerPed, 0)
@@ -931,9 +922,10 @@ end
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
-
-	Citizen.Wait(5000)
-	TriggerServerEvent('esx_policejob:forceBlip')
+	if job.name == 'police' then
+		Citizen.Wait(1000)
+		TriggerServerEvent('esx_policejob:forceBlip')
+	end
 end)
 
 RegisterNetEvent('esx_phone:loaded')
@@ -1508,6 +1500,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 	-- Is the player a cop? In that case show all the blips for other cops
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' then
 		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
+			print(ESX.DumpTable(players))
 			for i=1, #players, 1 do
 				if players[i].job.name == 'police' then
 					local id = GetPlayerFromServerId(players[i].source)

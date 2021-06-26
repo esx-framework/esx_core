@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX RP Chat'
 
-version '1.3.1'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',

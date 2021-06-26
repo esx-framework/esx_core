@@ -1,7 +1,4 @@
-ESX, WhiteList = nil, {}
-
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+WhiteList = {}
 
 function loadWhiteList(cb)
 	Whitelist = {}
@@ -22,7 +19,7 @@ MySQL.ready(function()
 end)
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
-	local xPlayers = ESX.GetExtendedPlayers()
+	local xPlayers = ESX.GetPlayers()
 
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()

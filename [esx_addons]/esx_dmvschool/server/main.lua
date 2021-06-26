@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 ESX.RegisterServerCallback('esx_dmvschool:canYouPay', function(source, cb, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
