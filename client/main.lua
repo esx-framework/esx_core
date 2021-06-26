@@ -6,8 +6,9 @@ if ESX.GetConfig().Multichar then
 			Citizen.Wait(5)
 			DoScreenFadeOut(0)
 			while not GetResourceState('esx_menu_default') == 'started' do 
-				Citizen.Wait(100)
+				Citizen.Wait(0)
 			end
+			Citizen.Wait(200)
 			TriggerServerEvent("esx_multicharacter:SetupCharacters")
 			TriggerEvent("esx_multicharacter:SetupCharacters")
 			break
