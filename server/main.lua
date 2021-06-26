@@ -28,7 +28,7 @@ elseif ESX.GetConfig().Multichar == true then
 		}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
-				local job, grade = result[1].job or 'unemployed', tostring(result[1].job_grade)
+				local job, grade = result[i].job or 'unemployed', tostring(result[i].job_grade)
 				if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
 					if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
 					job = ESX.Jobs[job].label
