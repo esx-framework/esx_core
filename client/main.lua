@@ -13,10 +13,8 @@ if ESX.GetConfig().Multichar then
 		end
 	end)
 
-	local cam, cam2 = nil, nil
+	local canRelog, cam, Spawned = true
 	local Characters =  {}
-	local canRelog = true
-	local Spawned
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters')
 	AddEventHandler('esx_multicharacter:SetupCharacters', function()
@@ -42,8 +40,9 @@ if ESX.GetConfig().Multichar then
 
 	StartLoop = function()
 		hidePlayers = true
+		MumbleSetVolumeOverride(PlayerId(), 0.0)
 		Citizen.CreateThread(function()
-			local keys = {18, 27, 172, 173, 176, 177, 187, 188, 191, 201}
+			local keys = {18, 27, 172, 173, 176, 177, 187, 188, 191, 201, 108, 109}
 			while hidePlayers do
 				DisableAllControlActions(0)
 				for i=1, #keys do
@@ -53,31 +52,35 @@ if ESX.GetConfig().Multichar then
 				SetLocalPlayerVisibleLocally(1)
 				SetPlayerInvincible(PlayerId(), 1)
 				Citizen.Wait(3)
+				local vehicles = GetGamePool('CVehicle')
+				for i=1, #vehicles do
+					SetEntityLocallyInvisible(vehicles[i])
+				end
 			end
+			local playerId, playerPed = PlayerId(), PlayerPedId()
+			MumbleSetVolumeOverride(playerId, -1.0)
+			SetEntityVisible(playerPed, 1, 0)
+			SetPlayerInvincible(playerId, 0)
+			FreezeEntityPosition(playerPed, false)
+			Citizen.Wait(10000)
+			canRelog = true
 		end)
 		Citizen.CreateThread(function()
-			local players, vehicles
+			local playerPool = {}
 			while hidePlayers do
-				players = GetActivePlayers()
+				local players = GetActivePlayers()
 				for i=1, #players do
-					if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], true, true) end
-				end
-				vehicles = ESX.Game.GetVehicles()
-				for i=1, #vehicles do
-					NetworkConcealEntity(vehicles[i], true)
+					local player = players[i]
+					if player ~= PlayerId() and not playerPool[player] then
+						playerPool[player] = true
+						NetworkConcealPlayer(players[player], true, true)
+					end
 				end
 				Citizen.Wait(500)
 			end
-			for i=1, #players do
-				if players[i] ~= PlayerId() then NetworkConcealPlayer(players[i], false, false) end
+			for i=1, #playerPool do
+				NetworkConcealPlayer(playerPool[i], false, false)
 			end
-			for i=1, #vehicles do
-				NetworkConcealEntity(vehicles[i], false)
-			end
-			SetEntityVisible(PlayerPedId(), 1, 0)
-			SetPlayerInvincible(PlayerId(), 0)
-			Citizen.Wait(10000)
-			canRelog = true
 		end)
 	end
 
@@ -144,10 +147,12 @@ if ESX.GetConfig().Multichar then
 				z = Config.Spawn.z,
 				heading = Config.Spawn.w,
 				model = `mp_m_freemode_01`,
-				skipFade = false
+				skipFade = true
 			}, function()
 				exports.spawnmanager:setAutoSpawn(false)
 				canRelog = false
+				DoScreenFadeIn(400)
+				while not IsScreenFadedIn() do Citizen.Wait(200) end
 				local playerPed = PlayerPedId()
 				SetPedAoBlobRendering(playerPed, false)
 				SetEntityAlpha(playerPed, 0)
@@ -155,8 +160,6 @@ if ESX.GetConfig().Multichar then
 				TriggerEvent('esx_identity:showRegisterIdentity')
 			end)
 		else
-			DoScreenFadeIn(400)
-			while not IsScreenFadedIn() do Citizen.Wait(200) end
 			for k,v in pairs(Characters) do
 				if not v.model and v.skin then
 					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model =  `mp_f_freemode_01` else v.model = `mp_m_freemode_01` end
@@ -165,6 +168,8 @@ if ESX.GetConfig().Multichar then
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
 			end
+			DoScreenFadeIn(200)
+			Citizen.Wait(200)
 			if #elements < Config.Slots then
 				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
 			end
@@ -184,12 +189,10 @@ if ESX.GetConfig().Multichar then
 					}, function(data, menu)
 						if data.current.action == 'play' then
 							ESX.UI.Menu.CloseAll()
-							DoScreenFadeOut(300)
 							SendNUIMessage({
 								action = "closeui"
 							})
 							TriggerServerEvent('esx_multicharacter:CharacterChosen', data.current.value, false)
-							Citizen.Wait(300)
 						else
 							local elements2 = {}
 							elements2[1] = {label = _('cancel')}
@@ -248,25 +251,19 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx:playerLoaded')
 	AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
+		DoScreenFadeOut(100)
 		local spawn = playerData.coords
-		DoScreenFadeOut(0)
-		Citizen.Wait(300)
 		local playerPed = PlayerPedId()
-		cam2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", spawn.x,spawn.y,spawn.z+200, 0.0, 0.0, 0.0, 100.00, false, 0)
-		PointCamAtCoord(cam2, spawn.x,spawn.y,spawn.z+10)
-		SetCamActiveWithInterp(cam2, cam, 400, true, true)
-
-		Citizen.Wait(700)
-		DoScreenFadeIn(500)
 		FreezeEntityPosition(playerPed, true)
-		SetEntityVisible(playerPed, true, 0)
-		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z, true, false, false, false)
+		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z-1.3, true, false, false, false)
+		SetEntityHeading(playerPed, spawn.heading)
+		Citizen.Wait(300)
+		SetCamActive(cam, false)
+		RenderScriptCams(0, 0)
+		DestroyAllCams(true)
+		DoScreenFadeIn(400)
+		Citizen.Wait(400)
 
-		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", spawn.x,spawn.y,spawn.z+10, 0.0, 0.0, 0.0, 100.00, false, 0)
-		PointCamAtCoord(cam, spawn.x,spawn.y,spawn.z)
-		SetCamActiveWithInterp(cam, cam2, 1700, true, true)
-		
-		PlaySoundFrontend(-1, "Zoom_Out", "DLC_HEIST_PLANNING_BOARD_SOUNDS", 1)
 		if isNew or not skin or #skin == 1 then
 			local sex = skin.sex or 0
 			if sex == 0 then model = `mp_m_freemode_01` else model = `mp_f_freemode_01` end
@@ -280,35 +277,27 @@ if ESX.GetConfig().Multichar then
 			skin = Config.Default
 			skin.sex = sex
 			TriggerEvent('skinchanger:loadSkin', skin, function()
-				Citizen.CreateThread(function()
-					playerped = PlayerPedId()
-					SetPedAoBlobRendering(playerPed, true)
-					ResetEntityAlpha(playerPed)
-					Citizen.Wait(1500)
-					TriggerEvent('esx_skin:openSaveableMenu')
-					SetEntityHeading(playerPed, spawn.heading)
+				playerPed = PlayerPedId()
+				SetPedAoBlobRendering(playerPed, true)
+				ResetEntityAlpha(playerPed)
+				TriggerEvent('esx_skin:openSaveableMenu', function()
+					finished = true end, function() finished = true
 				end)
+				SetEntityHeading(playerPed, spawn.heading)
 			end)
+			while not finished do Citizen.Wait(200) end
 		else
+			local playerPed = PlayerPedId()
+			SetEntityHeading(playerPed, spawn.heading)
 			TriggerEvent('skinchanger:loadSkin', skin or Characters[Spawned].skin)
-			Citizen.Wait(1500)
+			playerPed = PlayerPedId()
+			SetEntityVisible(playerPed, true, 0)
 		end
-		Characters = {}
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned')
 		TriggerEvent('esx:restoreLoadout')
-		playerPed = PlayerPedId()
-		FreezeEntityPosition(playerPed, false)
-		SetEntityHeading(PlayerPed, spawn.heading)
-		Citizen.Wait(500)
-		RenderScriptCams(false, true, 500, true, true)
-		PlaySoundFrontend(-1, "CAR_BIKE_WHOOSH", "MP_LOBBY_SOUNDS", 1)
-		SetCamActive(cam, false)
-		DestroyAllCams(true)
-		DisplayHud(true)
-		DisplayRadar(true)
-		hidePlayers = false
+		Characters, hidePlayers = {}, false
 	end)
 
 	RegisterNetEvent('esx:onPlayerLogout')
