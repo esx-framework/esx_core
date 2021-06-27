@@ -60,7 +60,7 @@ elseif ESX.GetConfig().Multichar == true then
 			if result then
 				local varchar, varsize = {}, 0
 				for k, v in pairs(result) do
-					if v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
+					if v.CHARACTER_MAXIMUM_LENGTH and v.CHARACTER_MAXIMUM_LENGTH >= 40 and v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
 					table.insert(IdentifierTables, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
 				end
 				if next(varchar) then
