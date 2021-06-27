@@ -8,8 +8,6 @@ if ESX.GetConfig().Multichar then
 			while not GetResourceState('esx_menu_default') == 'started' do 
 				Citizen.Wait(0)
 			end
-			Citizen.Wait(200)
-			TriggerServerEvent("esx_multicharacter:SetupCharacters")
 			TriggerEvent("esx_multicharacter:SetupCharacters")
 			break
 		end
@@ -38,6 +36,8 @@ if ESX.GetConfig().Multichar then
 		ShutdownLoadingScreen()
 		ShutdownLoadingScreenNui()
 		TriggerEvent('esx:loadingScreenOff')
+		Citizen.Wait(200)
+		TriggerServerEvent("esx_multicharacter:SetupCharacters")
 	end)
 
 	StartLoop = function()
@@ -97,7 +97,7 @@ if ESX.GetConfig().Multichar then
 				if Characters[index] then
 					local skin = Characters[index].skin or Config.Default
 					if not Characters[index].model then
-						if Characters[index].sex == 'Female' then skin.sex = 1 else skin.sex = 0 end
+						if Characters[index].sex == _('female') then skin.sex = 1 else skin.sex = 0 end
 					end
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
@@ -315,7 +315,6 @@ if ESX.GetConfig().Multichar then
 	AddEventHandler('esx:onPlayerLogout', function()
 		DoScreenFadeOut(0)
 		Spawned = false
-		TriggerServerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent('esx_skin:resetFirstSpawn')
 	end)
