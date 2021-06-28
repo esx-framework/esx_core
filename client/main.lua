@@ -2,16 +2,20 @@ ESX = exports['es_extended']:getSharedObject()
 if ESX.GetConfig().Multichar then
 
 	Citizen.CreateThread(function()
-		while NetworkIsPlayerActive(PlayerId()) and not ESX.IsPlayerLoaded() do
-			Citizen.Wait(5)
-			DoScreenFadeOut(0)
-			while not GetResourceState('esx_menu_default') == 'started' do 
-				Citizen.Wait(0)
+		while not ESX.PlayerLoaded do
+			Citizen.Wait(0)
+			if NetworkIsPlayerActive(PlayerId()) then
+				exports.spawnmanager:setAutoSpawn(false)
+				DoScreenFadeOut(0)
+				while not GetResourceState('esx_menu_default') == 'started' do 
+					Citizen.Wait(0)
+				end
+				TriggerEvent("esx_multicharacter:SetupCharacters")
+				break
 			end
-			TriggerEvent("esx_multicharacter:SetupCharacters")
-			break
 		end
 	end)
+
 
 	local canRelog, cam, Spawned = true
 	local Characters =  {}
@@ -86,8 +90,6 @@ if ESX.GetConfig().Multichar then
 
 	SetupCharacter = function(index)
 		if Spawned == false then
-			exports.spawnmanager:setAutoSpawn(false)
-			exports.spawnmanager:forceRespawn()
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -104,7 +106,6 @@ if ESX.GetConfig().Multichar then
 					end
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
-				exports.spawnmanager:setAutoSpawn(false)
 			end)
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model then
@@ -149,10 +150,9 @@ if ESX.GetConfig().Multichar then
 				model = `mp_m_freemode_01`,
 				skipFade = true
 			}, function()
-				exports.spawnmanager:setAutoSpawn(false)
 				canRelog = false
 				DoScreenFadeIn(400)
-				while not IsScreenFadedIn() do Citizen.Wait(200) end
+				Citizen.Wait(400)
 				local playerPed = PlayerPedId()
 				SetPedAoBlobRendering(playerPed, false)
 				SetEntityAlpha(playerPed, 0)
@@ -168,8 +168,8 @@ if ESX.GetConfig().Multichar then
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
 			end
-			DoScreenFadeIn(200)
-			Citizen.Wait(200)
+			DoScreenFadeIn(400)
+			Citizen.Wait(400)
 			if #elements < Config.Slots then
 				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
 			end
