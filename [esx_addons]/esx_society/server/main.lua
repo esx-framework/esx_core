@@ -168,7 +168,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 	local employees = {}
 
 	local xPlayers = ESX.GetExtendedPlayers()
-	for playerId, xPlayer in pairs(xPlayers) do
+	for _, xPlayer in pairs(xPlayers) do
 
 		local name = xPlayer.name
 		if Config.EnableESXIdentity and name == GetPlayerName(xPlayer.source) then
@@ -324,7 +324,7 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 		getOnlinePlayers, onlinePlayers = true, {}
 		
 		local xPlayers = ESX.GetExtendedPlayers()
-		for playerId, xPlayer in pairs(xPlayers) do
+		for _, xPlayer in pairs(xPlayers) do
 			table.insert(onlinePlayers, {
 				source = xPlayer.source,
 				identifier = xPlayer.identifier,

@@ -233,7 +233,11 @@ ESX.GetPlayers = function()
 end
 
 ESX.GetExtendedPlayers = function()
-	return ESX.Players
+	local xPlayers = {}
+	for k, v in pairs(ESX.Players) do
+		table.insert(xPlayers, v)
+	end
+	return xPlayers
 end
 
 ESX.GetPlayerFromId = function(source)

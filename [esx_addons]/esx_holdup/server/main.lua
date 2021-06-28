@@ -7,10 +7,10 @@ AddEventHandler('esx_holdup:tooFar', function(currentStore)
 	local xPlayers = ESX.GetExtendedPlayers()
 	rob = false
 
-	for playerId, xPlayer in pairs(xPlayers) do
+	for _, xPlayer in pairs(xPlayers) do
 		if xPlayer.job.name == 'police' then
-			TriggerClientEvent('esx:showNotification', playerId, _U('robbery_cancelled_at', Stores[currentStore].nameOfStore))
-			TriggerClientEvent('esx_holdup:killBlip', playerId)
+			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('robbery_cancelled_at', Stores[currentStore].nameOfStore))
+			TriggerClientEvent('esx_holdup:killBlip', xPlayer.source)
 		end
 	end
 
@@ -36,7 +36,7 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 		end
 
 		local cops = 0
-		for playerId, xPlayer in pairs(xPlayers) do
+		for _, xPlayer in pairs(xPlayers) do
 			if xPlayer.job.name == 'police' then
 				cops = cops + 1
 			end
@@ -46,10 +46,10 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 			if cops >= Config.PoliceNumberRequired then
 				rob = true
 
-				for playerId, xPlayer in pairs(xPlayers) do
+				for _, xPlayer in pairs(xPlayers) do
 					if xPlayer.job.name == 'police' then
-						TriggerClientEvent('esx:showNotification', playerId, _U('rob_in_prog', store.nameOfStore))
-						TriggerClientEvent('esx_holdup:setBlip', playerId, Stores[currentStore].position)
+						TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rob_in_prog', store.nameOfStore))
+						TriggerClientEvent('esx_holdup:setBlip', xPlayer.source, Stores[currentStore].position)
 					end
 				end
 
@@ -75,10 +75,10 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 							end
 							
 							local xPlayers = ESX.GetExtendedPlayers()
-							for playerId, xPlayer in pairs(xPlayers) do
+							for _, xPlayer in pairs(xPlayers) do
 								if xPlayer.job.name == 'police' then
-									TriggerClientEvent('esx:showNotification', playerId, _U('robbery_complete_at', store.nameOfStore))
-									TriggerClientEvent('esx_holdup:killBlip', playerId)
+									TriggerClientEvent('esx:showNotification', xPlayer.source, _U('robbery_complete_at', store.nameOfStore))
+									TriggerClientEvent('esx_holdup:killBlip', xPlayer.source)
 								end
 							end
 						end
