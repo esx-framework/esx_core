@@ -2,12 +2,6 @@ local firstSpawn = true
 
 isDead, isSearched, medic = false, false, 0
 
-AddEventHandler("onClientMapStart", function()
-	exports.spawnmanager:spawnPlayer()
-	Citizen.Wait(5000)
-	exports.spawnmanager:setAutoSpawn(false)
-end)
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
