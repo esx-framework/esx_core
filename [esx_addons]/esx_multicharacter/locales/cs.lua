@@ -1,4 +1,6 @@
 Locales['cs'] = {
+	['male'] = "Muž",
+	['female'] = "Žena",
 	['delete_label'] = "Vymazat %s %s?",
 	['select_char'] = "Zvolit Postavu",
 	['create_char'] = "Vytvořit novou postavu",

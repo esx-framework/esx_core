@@ -1,3 +1,6 @@
+<h3 align='center'>Although this resource is included, a more updated version <a href='https://github.com/thelindat/esx_multicharacter'>may be available</a>.</h3>
+
+
 ### Requirements (ensure you are using the latest)
 - [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
 - [MySQL Async 3.3.2](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
@@ -26,7 +29,7 @@
 	- Download and run all requirements
 	- Ensure none of the conflicting resources are enabled
 #### mysql-async duplicate entry
-	- You have not increased the VARCHAR size of your tables (use the command)
+	- You have not increased the VARCHAR size of the table holding identifiers - usually `owner` or `identifier`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)

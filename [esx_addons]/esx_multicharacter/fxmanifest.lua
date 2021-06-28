@@ -1,7 +1,7 @@
 fx_version 'adamant'
 game 'gta5'
 description 'https://github.com/thelindat/esx_multicharacter'
-version '1.1.1'
+version '1.2.1'
 
 dependencies {
 	'es_extended',
@@ -10,18 +10,20 @@ dependencies {
 	'esx_skin'
 }
 
-shared_script 'config.lua'
+shared_scripts {
+	'@es_extended/locale.lua',
+	'locales/*.lua',
+	'config.lua'
+}
 
 server_scripts {
 	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
-	'server/*.lua',
+	'server/*.lua'
 }
 
 client_scripts {
-	'@es_extended/locale.lua',
-	'client/main.lua',
-	'locales/*.lua',
+	'client/*.lua'
 }
 
 ui_page {
