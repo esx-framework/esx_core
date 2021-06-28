@@ -1,11 +1,14 @@
 local pickups = {}
 
 Citizen.CreateThread(function()
-	while NetworkIsPlayerActive(PlayerId()) and not Config.Multichar do
-		Citizen.Wait(5)
-		DoScreenFadeOut(0)
-		TriggerServerEvent('esx:onPlayerJoined')
-		break
+	while not Config.Multichar do
+		Citizen.Wait(0)
+		if NetworkIsPlayerActive(PlayerId()) then
+			exports.spawnmanager:setAutoSpawn(false)
+			DoScreenFadeOut(0)
+			TriggerServerEvent('esx:onPlayerJoined')
+			break
+		end
 	end
 end)
 
