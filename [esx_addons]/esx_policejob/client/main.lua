@@ -1500,7 +1500,6 @@ AddEventHandler('esx_policejob:updateBlip', function()
 	-- Is the player a cop? In that case show all the blips for other cops
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' then
 		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
-			print(ESX.DumpTable(players))
 			for i=1, #players, 1 do
 				if players[i].job.name == 'police' then
 					local id = GetPlayerFromServerId(players[i].source)
@@ -1514,7 +1513,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 
 end)
 
-AddEventHandler('playerSpawned', function(spawn)
+AddEventHandler('esx:onPlayerSpawn', function(spawn)
 	isDead = false
 	TriggerEvent('esx_policejob:unrestrain')
 

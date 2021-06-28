@@ -168,8 +168,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 	local employees = {}
 
 	local xPlayers = ESX.GetExtendedPlayers()
-	for i=1, #xPlayers do
-		local xPlayer = xPlayers[i]
+	for playerId, xPlayer in pairs(xPlayers) do
 
 		local name = xPlayer.name
 		if Config.EnableESXIdentity and name == GetPlayerName(xPlayer.source) then
@@ -215,7 +214,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 
 				if Config.EnableESXIdentity then
 					name = row.firstname .. ' ' .. row.lastname 
-				end 
+				end
 				
 				table.insert(employees, {
 					name = name,
@@ -300,8 +299,7 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 				Jobs[job].grades[tostring(grade)].salary = salary
 
 				local xPlayers = ESX.GetExtendedPlayers()
-				for i=1, #xPlayers do
-					local xTarget = xPlayers[i]
+				for playerId, xTarget in pairs(xPlayers) do
 
 					if xTarget.job.name == job and xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
@@ -320,17 +318,13 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
-local getOnlinePlayers = false
-local onlinePlayers = {}
-
+local getOnlinePlayers, onlinePlayers = false, nil
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	if getOnlinePlayers == false and next(onlinePlayers) == nil then	-- Prevent multiple xPlayer loops from running in quick succession
+	if getOnlinePlayers ~= true then -- Prevent multiple xPlayer loops from running in quick succession
 		getOnlinePlayers, onlinePlayers = true, {}
 		
 		local xPlayers = ESX.GetExtendedPlayers()
-		for i=1, #xPlayers do
-			local xPlayer = xPlayers[i]
-			
+		for playerId, xPlayer in pairs(xPlayers) do
 			table.insert(onlinePlayers, {
 				source = xPlayer.source,
 				identifier = xPlayer.identifier,
@@ -340,7 +334,7 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 		end
 		getOnlinePlayers = false
 	end
-	while getOnlinePlayers do Citizen.Wait(50) end	-- Wait for the xPlayer loop to finish
+	while getOnlinePlayers do Citizen.Wait(100) end -- Wait for the xPlayer loop to finish
 	cb(onlinePlayers)
 end)
 

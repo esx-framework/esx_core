@@ -7,7 +7,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 
 	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for playerId, xPlayer in pairs(xPlayers)
+	for playerId, xPlayer in pairs(xPlayers) do
 		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
@@ -98,7 +98,7 @@ function SaveData()
 
 	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for playerId, xPlayer in pairs(xPlayers)
+	for playerId, xPlayer in pairs(xPlayers) do
 		local status  = Status[xPlayer.source]
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
