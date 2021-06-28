@@ -1,7 +1,7 @@
 fx_version 'adamant'
 game 'gta5'
 description 'https://github.com/thelindat/esx_multicharacter'
-version '1.2.0'
+version '1.2.1'
 
 dependencies {
 	'es_extended',

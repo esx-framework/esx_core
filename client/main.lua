@@ -32,8 +32,6 @@ if ESX.GetConfig().Multichar then
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
 		ESX.UI.HUD.SetDisplay(0.0)
-		DisplayHud(false)
-		DisplayRadar(false)
 		StartLoop()
 		ShutdownLoadingScreen()
 		ShutdownLoadingScreenNui()
@@ -55,6 +53,11 @@ if ESX.GetConfig().Multichar then
 				SetEntityVisible(PlayerPedId(), 0, 0)
 				SetLocalPlayerVisibleLocally(1)
 				SetPlayerInvincible(PlayerId(), 1)
+				ThefeedHideThisFrame()
+				HideHudComponentThisFrame(11)
+				HideHudComponentThisFrame(12)
+				HideHudComponentThisFrame(21)
+				HideHudAndRadarThisFrame()
 				Citizen.Wait(3)
 				local vehicles = GetGamePool('CVehicle')
 				for i=1, #vehicles do
@@ -106,7 +109,10 @@ if ESX.GetConfig().Multichar then
 					end
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
+				DoScreenFadeIn(400)
+				while IsScreenFadedOut() do Citizen.Wait(100) end
 			end)
+			
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model then
 				RequestModel(Characters[index].model)
@@ -119,15 +125,15 @@ if ESX.GetConfig().Multichar then
 			end
 			TriggerEvent('skinchanger:loadSkin', Characters[index].skin)
 		end
-		FreezeEntityPosition(PlayerPedId(), true)
 		Spawned = index
-		SendNUIMessage({
-			action = "openui",
-			character = Characters[index]
-		})
 		local playerPed = PlayerPedId()
+		FreezeEntityPosition(PlayerPedId(), true)
 		SetPedAoBlobRendering(playerPed, true)
 		SetEntityAlpha(playerPed, 255)
+		SendNUIMessage({
+			action = "openui",
+			character = Characters[Spawned]
+		})
 	end
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
@@ -141,7 +147,6 @@ if ESX.GetConfig().Multichar then
 			SendNUIMessage({
 				action = "closeui"
 			})
-			exports.spawnmanager:forceRespawn()
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -168,8 +173,6 @@ if ESX.GetConfig().Multichar then
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
 			end
-			DoScreenFadeIn(400)
-			Citizen.Wait(400)
 			if #elements < Config.Slots then
 				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
 			end

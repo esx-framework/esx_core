@@ -9,8 +9,7 @@
 - Modify your ESX config with `Config.Multichar = true`
 - Set your database name for `Config.Database` in server/main.lua
 - All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
-- Use the `varchar` command from the console to update your SQL tables
-- Once you have used the command you should just remove it for sanity's sake
+	- The resource will attempt to set columns automatically
 
 ### Conflicts
 * The following resources should not be used with ESX Legacy and can result in errors
@@ -19,14 +18,14 @@
 	- fivem-map-skater
 	- fivem-map-hipster
 	- default_spawnpoint
-	- cui_character (or other resources that modify spawn behaviour)
 
 ### Common issues
 #### Black screen / loading scripts
 	- Download and run all requirements
+	- Use a fresh spawnmanager as many people alter the code
 	- Ensure none of the conflicting resources are enabled
 #### mysql-async duplicate entry
-	- You have not increased the VARCHAR size of your tables (use the command)
+	- You have not increased the VARCHAR size of the table holding identifiers - usually `owner` or `identifier`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
