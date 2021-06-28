@@ -5,8 +5,8 @@ AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		local xPlayers = ESX.GetExtendedPlayers()
 
-		for i=1, #xPlayers, 1 do
-			LoadPlayer(xPlayers[i])
+		for k, v in pairs(xPlayers) do
+			LoadPlayer(v)
 		end
 	end
 end)

@@ -39,8 +39,7 @@ ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function (source, cb)
 	local xPlayers  = ESX.GetExtendedPlayers()
 	local customers = {}
 
-	for i=1, #xPlayers do
-		local xPlayer = xPlayers[i]
+	for playerId, xPlayer in pairs(xPlayers)
 
 		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
 			table.insert(customers, {

@@ -148,10 +148,7 @@ elseif not Config.UseDeferrals then
 				end
 
 				local xPlayers = ESX.GetExtendedPlayers()
-
-				for i=1, #xPlayers, 1 do
-					local xPlayer = xPlayers[i]
-
+				for playerId, xPlayer in pairs(xPlayers)
 					if xPlayer then	
 						checkIdentity(xPlayer)
 					end
