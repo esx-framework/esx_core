@@ -1,3 +1,5 @@
+local Status = {}
+
 AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  	return
@@ -5,8 +7,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 
 	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for i=1, #xPlayers do
-		local xPlayer = xPlayers[i]
+	for playerId, xPlayer in pairs(xPlayers)
 		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
@@ -16,7 +17,8 @@ AddEventHandler('onResourceStart', function(resourceName)
 				data = json.decode(result[1].status)
 			end
 		
-			xPlayer.set('status', data)
+			xPlayer.set('status', data)	-- save to xPlayer for compatibility
+			Status[xPlayer.source] = data -- save locally for performance
 			TriggerClientEvent('esx_status:load', xPlayer.source, data)
 		end)
 	end
@@ -39,19 +41,18 @@ end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local status = xPlayer.get('status')
+	local status = Status[xPlayer.source]
 
 	MySQL.Async.execute('UPDATE users SET status = @status WHERE identifier = @identifier', {
 		['@status']     = json.encode(status),
 		['@identifier'] = xPlayer.identifier
-	})
+	}, function(result)
+		Status[xPlayer.source] = nil
+	end
 end)
 
 AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local status  = xPlayer.get('status')
-
-	for i=1, #status, 1 do
+	for i=1, #Status[xPlayer.source], 1 do
 		if status[i].name == statusName then
 			cb(status[i])
 			break
@@ -62,9 +63,9 @@ end)
 RegisterServerEvent('esx_status:update')
 AddEventHandler('esx_status:update', function(status)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
 	if xPlayer then
-		xPlayer.set('status', status)
+		xPlayer.set('status', status)	-- save to xPlayer for compatibility
+		Status[xPlayer.source] = status	-- save locally for performance
 	end
 end)
 
@@ -97,9 +98,8 @@ function SaveData()
 
 	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for i=1, #xPlayers do
-		local xPlayer = xPlayers[i]
-		local status  = xPlayer.get('status')
+	for playerId, xPlayer in pairs(xPlayers)
+		local status  = Status[xPlayer.source]
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
 
