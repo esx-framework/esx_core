@@ -1,26 +1,27 @@
-local Status = {}
-
 AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  	return
 	end
-
-	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for playerId, xPlayer in pairs(xPlayers) do
-		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
-		}, function(result)
-			local data = {}
-	
-			if result[1].status then
-				data = json.decode(result[1].status)
-			end
+	for _, xPlayer in pairs(ESX.Players) do
+		local status = xPlayer.get('status')
+		if status then
+			ESX.Players[xPlayer.source] = status
+		else
+			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
+				['@identifier'] = xPlayer.identifier
+			}, function(result)
+				local data = {}
 		
-			xPlayer.set('status', data)	-- save to xPlayer for compatibility
-			Status[xPlayer.source] = data -- save locally for performance
-			TriggerClientEvent('esx_status:load', xPlayer.source, data)
-		end)
+				if result[1].status then
+					data = json.decode(result[1].status)
+				end
+			
+				xPlayer.set('status', data)	-- save to xPlayer for compatibility
+				ESX.Players[xPlayer.source] = data -- save locally for performance
+			end)
+		end
+		TriggerClientEvent('esx_status:load', xPlayer.source, data)
 	end
 end)
 
@@ -35,24 +36,25 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		end
 
 		xPlayer.set('status', data)
+		ESX.Players[xPlayer.source] = data
 		TriggerClientEvent('esx_status:load', playerId, data)
 	end)
 end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local status = Status[xPlayer.source]
+	local status = ESX.Players[xPlayer.source]
 
 	MySQL.Async.execute('UPDATE users SET status = @status WHERE identifier = @identifier', {
 		['@status']     = json.encode(status),
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
-		Status[xPlayer.source] = nil
-	end
+		ESX.Players[xPlayer.source] = nil
+	end)
 end)
 
 AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
-	for i=1, #Status[xPlayer.source], 1 do
+	for i=1, #ESX.Players, 1 do
 		if status[i].name == statusName then
 			cb(status[i])
 			break
@@ -65,7 +67,7 @@ AddEventHandler('esx_status:update', function(status)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer then
 		xPlayer.set('status', status)	-- save to xPlayer for compatibility
-		Status[xPlayer.source] = status	-- save locally for performance
+		ESX.Players[xPlayer.source] = status	-- save locally for performance
 	end
 end)
 
