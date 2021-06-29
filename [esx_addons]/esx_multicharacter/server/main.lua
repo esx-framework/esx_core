@@ -52,15 +52,14 @@ elseif ESX.GetConfig().Multichar == true then
 		print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, identifier))
 	end
 
-	Citizen.CreateThread(function()
-		MySQL.ready(function ()
-			local result = MySQL.Sync.fetchAll('SELECT `TABLE_NAME`, `COLUMN_NAME`, `CHARACTER_MAXIMUM_LENGTH` FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND (COLUMN_NAME = ? OR COLUMN_NAME = ?) ', {
-				Config.Database, 'identifier', 'owner'
-			})
+	MySQL.ready(function()
+		MySQL.Async.fetchAll('SELECT `TABLE_NAME`, `COLUMN_NAME`, `CHARACTER_MAXIMUM_LENGTH` FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND (COLUMN_NAME = ? OR COLUMN_NAME = ?) ', {
+			Config.Database, 'identifier', 'owner'
+		}, function(result)
 			if result then
 				local varchar, varsize = {}, 0
 				for k, v in pairs(result) do
-					if v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
+					if v.CHARACTER_MAXIMUM_LENGTH and v.CHARACTER_MAXIMUM_LENGTH >= 40 and v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
 					table.insert(IdentifierTables, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
 				end
 				if next(varchar) then
@@ -69,9 +68,9 @@ elseif ESX.GetConfig().Multichar == true then
 					end
 					print(('[^2INFO^7] Attempted to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
 				end
+				if not next(ESX.Jobs) then ESX.Jobs = GetJobs() end
+				Fetch = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE identifier LIKE ? LIMIT ?")
 			end
-			if not next(ESX.Jobs) then ESX.Jobs = GetJobs() end
-			Fetch = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE identifier LIKE ? LIMIT ?")
 		end)
 	end)
 
