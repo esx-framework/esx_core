@@ -1114,25 +1114,21 @@ RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
 	if isHandcuffed then
 		local playerPed = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
+		local vehicle, distance = ESX.Game.GetClosestVehicle()
 
-		if IsAnyVehicleNearPoint(coords, 5.0) then
-			local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
+		if vehicle and distance < 5 then
+			local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
-			if DoesEntityExist(vehicle) then
-				local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
-
-				for i=maxSeats - 1, 0, -1 do
-					if IsVehicleSeatFree(vehicle, i) then
-						freeSeat = i
-						break
-					end
+			for i=maxSeats - 1, 0, -1 do
+				if IsVehicleSeatFree(vehicle, i) then
+					freeSeat = i
+					break
 				end
+			end
 
-				if freeSeat then
-					TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
-					dragStatus.isDragged = false
-				end
+			if freeSeat then
+				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
+				dragStatus.isDragged = false
 			end
 		end
 	end
