@@ -44,7 +44,7 @@ if ESX.GetConfig().Multichar then
 		hidePlayers = true
 		MumbleSetVolumeOverride(PlayerId(), 0.0)
 		Citizen.CreateThread(function()
-			local keys = {18, 27, 172, 173, 176, 177, 187, 188, 191, 201, 108, 109}
+			local keys = {18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109}
 			while hidePlayers do
 				DisableAllControlActions(0)
 				for i=1, #keys do
