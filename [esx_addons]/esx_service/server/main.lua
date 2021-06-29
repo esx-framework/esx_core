@@ -73,9 +73,7 @@ ESX.RegisterServerCallback('esx_service:getInServiceList', function(source, cb, 
 	cb(InService[name])
 end)
 
-AddEventHandler('playerDropped', function()
-	local _source = source
-		
+AddEventHandler('esx:playerDropped', function(playerId, reason)
 	for k,v in pairs(InService) do
 		if v[_source] == true then
 			v[_source] = nil

@@ -115,7 +115,7 @@ function OpenCloakroomMenu()
 			ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
 				if not isInService then
 
-					if Config.MaxInService == -1 then
+					if Config.MaxInService ~= -1 then
 						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
 							if not canTakeService then
 								ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
