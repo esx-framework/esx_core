@@ -167,7 +167,7 @@ end)
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	local employees = {}
 
-	local xPlayers = ESX.GetExtendedPlayers()
+	local xPlayers = ESX.GetExtendedPlayers('job', society)
 	for _, xPlayer in pairs(xPlayers) do
 
 		local name = xPlayer.name
@@ -175,19 +175,17 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 			name = xPlayer.get('firstName') .. ' ' .. xPlayer.get('lastName')
 		end
 
-		if xPlayer.job.name == society then
-			table.insert(employees, {
-				name = name,
-				identifier = xPlayer.identifier,
-				job = {
-					name = society,
-					label = xPlayer.job.label,
-					grade = xPlayer.job.grade,
-					grade_name = xPlayer.job.grade_name,
-					grade_label = xPlayer.job.grade_label
-				}
-			})
-		end
+		table.insert(employees, {
+			name = name,
+			identifier = xPlayer.identifier,
+			job = {
+				name = society,
+				label = xPlayer.job.label,
+				grade = xPlayer.job.grade,
+				grade_name = xPlayer.job.grade_name,
+				grade_label = xPlayer.job.grade_label
+			}
+		})
 	end
 		
 	local query = "SELECT identifier, job_grade FROM `users` WHERE `job`=@job ORDER BY job_grade DESC"
@@ -298,10 +296,10 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 			}, function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
 
-				local xPlayers = ESX.GetExtendedPlayers()
-				for playerId, xTarget in pairs(xPlayers) do
+				local xPlayers = ESX.GetExtendedPlayers('job', job)
+				for _, xTarget in pairs(xPlayers) do
 
-					if xTarget.job.name == job and xTarget.job.grade == grade then
+					if xTarget.job.grade == grade then
 						xTarget.setJob(job, grade)
 					end
 				end
