@@ -1,4 +1,4 @@
-<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Developer Discord</a> - <a href='https://www.patreon.com/esx'>Patreon</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
+<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/esx'>Website</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
 
 
 ##### ESX is the most popular framework for creating economy-based roleplay servers on FiveM, with many official and community resources designed to utilise the tools provided here. For a taste of what's available:
@@ -14,24 +14,16 @@
 
 Many more resources are included in this repository, or you can browse the [ESX Community Github](https://github.com/esx-community/) or [Cfx.re Releases board](https://forum.cfx.re/tag/esx) for more.
 
-### Conflicts
-* The following resources should not be used with ESX Legacy and will prevent characters from loading
-	- essentialsmode
-	- basic-gamemode
-	- fivem-map-skater
-	- fivem-map-hipster
-	- default_spawnpoint
-
 ### Information
 ##### Legacy provides some necessary bug-fixes and improvements to optimise the framework before reaching the end of official support by the development team.
-##### Most resources designed for 1.2 will have no issues with Legacy, notable exceptions are those which modify spawning/loading behaviour.   There are several minor feature updates which do not impact compatibility with old resources.
+##### Most resources designed for 1.2 will have no issues with Legacy, notable exceptions are those which modify spawning/loading behaviour.   There are several minor feature updates which do not impact compatibility with old resources.  
+##### NOTE: The loadouts system in ESX has always been problematic, and fixing it would require a complete overhaul. Your best option is to use a resource that handles weapons as items.
 
 #### Optimisation
 - Utilise compile-time jenkins hashing over the GetHashKey native
 - Update old MySQL queries to use MySQL.store to improve performance, especially during player saving
 - Several loops will now sleep when their tasks are not necessary to perform
 - Improved support when using ESX Identity to reduce events and queries during player login
-- Weapon ammo is no longer synced every time it changes, instead waiting for the player to stop shooting
 - Support for the latest weapons and components
 
 #### Features
@@ -49,14 +41,16 @@ Many more resources are included in this repository, or you can browse the [ESX 
 	- Potential conflicts with some third-party resources that do not expect spawnmanager
 - Added an improved function when performing xPlayer loops to prevent large server hitches
 	- Using `ESX.GetExtendedPlayers()` instead of `ESX.GetPlayers()`
+	- You can use arguments with the new function as well, such as
+		- ESX.GetExtendedPlayers('job', 'police')
+		- ESX.GetExtendedPlayers('group', 'admin')
 			
 #### Fixes
 - ESX.Jobs table is populated after all jobs are setup, allowing other resources to retrieve it if needed
 - All weapons are properly removed when using the clearloadout command
-##### For creating or updating resources refer to the [updated boilerplate](https://github.com/thelindat/esx_legacy_boilerplate).
+##### For creating or updating resources refer to the [updated boilerplate](/esx_example).
 
-
-### Features
+### 1.2 Features
 - Weight based inventory system
 - Weapons support, including support for attachments and tints
 - Supports different money accounts (defaulted with cash, bank and black money)
@@ -77,35 +71,15 @@ Many more resources are included in this repository, or you can browse the [ESX 
 - Import `es_extended.sql` in your database
 - Import any other sql files for the resources you are using
 - Ensure all resources config files have been adjusted for your preferences
-- Configure your `server.cfg` with the following
-```
-set mysql_connection_string "mysql://user:password@localhost/es_extended?waitForConnections=true&charset=utf8mb4"
-set onesync legacy # Infinity is not recommended unless you know how to use it
+- Use or refer to the included server.cfg for start order and settings
 
-add_principal group.admin group.user
-add_ace resource.es_extended command.add_ace allow
-add_ace resource.es_extended command.add_principal allow
-add_ace resource.es_extended command.remove_principal allow
-add_ace resource.es_extended command.stop allow
-
-# Cfx
-ensure mapmanager
-ensure chat
-ensure spawnmanager
-ensure sessionmanager
-
-# ESX Core Framework
-ensure mysql-async
-ensure cron
-ensure instance
-ensure skinchanger
-ensure es_extended
-ensure esx_menu_default
-ensure esx_menu_dialog
-ensure esx_menu_list
-ensure esx_identity
-ensure esx_skin
-```
+### Conflicts
+* The following resources should not be used with ESX Legacy
+	- essentialsmode
+	- basic-gamemode
+	- fivem-map-skater
+	- fivem-map-hipster
+	- default_spawnpoint
 
 ### Information
 ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
@@ -113,10 +87,6 @@ ESX was initially developed by Gizz back in 2017 for his friend as the were crea
 - [ESX Documentation](https://wiki.esx-framework.org/)
 - [ESX Development Discord](https://discord.me/esx)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
-
-### Reborn
-
-ESX Reborn is the name for the framework being actively developed by the team, with many existing features being rewritten and improved upon. It is currently possible to create a server using ESX Reborn, however the project is still missing many features and should not be used unless you are a developer looking to contribute in some way.
 
 
 ### Legal
