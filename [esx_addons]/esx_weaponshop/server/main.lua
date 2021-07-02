@@ -1,7 +1,4 @@
-ESX = nil
 local shopItems = {}
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 MySQL.ready(function()
 

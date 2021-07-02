@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 if Config.EnableESXService then
 	if Config.MaxInService ~= -1 then
 		TriggerEvent('esx_service:activateService', 'police', Config.MaxInService)
@@ -452,14 +448,9 @@ ESX.RegisterServerCallback('esx_policejob:getPlayerInventory', function(source, 
 end)
 
 AddEventHandler('playerDropped', function()
-	-- Save the source in case we lose it (which happens a lot)
 	local playerId = source
-
-	-- Did the player ever join?
 	if playerId then
 		local xPlayer = ESX.GetPlayerFromId(playerId)
-
-		-- Is it worth telling all clients to refresh?
 		if xPlayer and xPlayer.job.name == 'police' then
 			Citizen.Wait(5000)
 			TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -470,7 +461,6 @@ end)
 RegisterNetEvent('esx_policejob:spawned')
 AddEventHandler('esx_policejob:spawned', function()
 	local xPlayer = ESX.GetPlayerFromId(playerId)
-
 	if xPlayer and xPlayer.job.name == 'police' then
 		Citizen.Wait(5000)
 		TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -479,13 +469,17 @@ end)
 
 RegisterNetEvent('esx_policejob:forceBlip')
 AddEventHandler('esx_policejob:forceBlip', function()
-	TriggerClientEvent('esx_policejob:updateBlip', -1)
+	for _, xPlayer in pairs(ESX.GetExtendedPlayers('job', 'police')) do
+		TriggerClientEvent('esx_policejob:updateBlip', -1)
+	end
 end)
 
 AddEventHandler('onResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
 		Citizen.Wait(5000)
-		TriggerClientEvent('esx_policejob:updateBlip', -1)
+		for _, xPlayer in pairs(ESX.GetExtendedPlayers('job', 'police')) do
+			TriggerClientEvent('esx_policejob:updateBlip', xPlayer.source)
+		end
 	end
 end)
 

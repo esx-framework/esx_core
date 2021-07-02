@@ -4,7 +4,9 @@ game 'gta5'
 
 description 'ESX DMV School'
 
-version '1.0.4'
+version 'legacy'
+
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',

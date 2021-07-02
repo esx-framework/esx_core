@@ -1,14 +1,6 @@
-ESX = nil
 local debugProps, sitting, lastPos, currentSitCoords, currentScenario = {}
 local disableControls = false
 local currentObj = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 if Config.Debug then
 	Citizen.CreateThread(function()
@@ -87,7 +79,7 @@ end)
 
 function GetNearChair()
 	local object, distance
-	local coords = GetEntityCoords(GetPlayerPed(-1))
+	local coords = GetEntityCoords(PlayerPedId())
 	for i=1, #Config.Interactables do
 		object = GetClosestObjectOfType(coords, 3.0, GetHashKey(Config.Interactables[i]), false, false, false)
 		distance = #(coords - GetEntityCoords(object))
@@ -100,10 +92,10 @@ end
 
 function wakeup()
 	local playerPed = PlayerPedId()
-	local pos = GetEntityCoords(GetPlayerPed(-1))
+	local pos = GetEntityCoords(PlayerPedId())
 
 	TaskStartScenarioAtPosition(playerPed, currentScenario, 0.0, 0.0, 0.0, 180.0, 2, true, false)
-	while IsPedUsingScenario(GetPlayerPed(-1), currentScenario) do
+	while IsPedUsingScenario(PlayerPedId(), currentScenario) do
 		Wait(100)
 	end
 	ClearPedTasks(playerPed)
@@ -119,7 +111,7 @@ end
 
 function sit(object, modelName, data)
 	-- Fix for sit on chairs behind walls
-	if not HasEntityClearLosToEntity(GetPlayerPed(-1), object, 17) then
+	if not HasEntityClearLosToEntity(PlayerPedId(), object, 17) then
 		return
 	end
 	disableControls = true
@@ -128,7 +120,7 @@ function sit(object, modelName, data)
 
 	PlaceObjectOnGroundProperly(object)
 	local pos = GetEntityCoords(object)
-	local playerPos = GetEntityCoords(GetPlayerPed(-1))
+	local playerPos = GetEntityCoords(PlayerPedId())
 	local objectCoords = pos.x .. pos.y .. pos.z
 
 	ESX.TriggerServerCallback('esx_sit:getPlace', function(occupied)
@@ -144,8 +136,8 @@ function sit(object, modelName, data)
 			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, false)
 
 			Citizen.Wait(2500)
-			if GetEntitySpeed(GetPlayerPed(-1)) > 0 then
-				ClearPedTasks(GetPlayerPed(-1))
+			if GetEntitySpeed(PlayerPedId()) > 0 then
+				ClearPedTasks(PlayerPedId())
 				TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, true)
 			end
 

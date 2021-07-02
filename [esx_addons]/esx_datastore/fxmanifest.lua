@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Data Store'
 
-version '1.0.2'
+version 'legacy'
 
 server_scripts {
+	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'server/classes/datastore.lua',
 	'server/main.lua'

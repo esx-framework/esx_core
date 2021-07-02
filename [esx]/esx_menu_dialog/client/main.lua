@@ -1,11 +1,6 @@
 Citizen.CreateThread(function()
-	ESX = nil
+	local ESX = exports['es_extended']:getSharedObject()
 	local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
-
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
 
 	local openMenu = function(namespace, name, data)
 		for i=1, #Timeouts, 1 do

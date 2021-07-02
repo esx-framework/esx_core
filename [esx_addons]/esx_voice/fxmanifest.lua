@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Voice Controller'
 
-version '1.1.0'
+version 'legacy'
 
 client_scripts {
+	'@es_extended/imports.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/en.lua',

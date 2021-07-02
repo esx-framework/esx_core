@@ -127,28 +127,28 @@
 	};
 
 	ESX_MENU.submit = function(namespace, name, data) {
-		SendMessage(ESX_MENU.ResourceName, 'menu_submit', {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify({
 			_namespace: namespace,
 			_name: name,
 			current: data,
 			elements: ESX_MENU.opened[namespace][name].elements
-		});
+		}));
 	};
 
 	ESX_MENU.cancel = function(namespace, name) {
-		SendMessage(ESX_MENU.ResourceName, 'menu_cancel', {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_cancel', JSON.stringify({
 			_namespace: namespace,
 			_name: name
-		});
+		}));
 	};
 
 	ESX_MENU.change = function(namespace, name, data) {
-		SendMessage(ESX_MENU.ResourceName, 'menu_change', {
+		$.post('http://' + ESX_MENU.ResourceName + '/menu_change', JSON.stringify({
 			_namespace: namespace,
 			_name: name,
 			current: data,
 			elements: ESX_MENU.opened[namespace][name].elements
-		});
+		}));
 	};
 
 	ESX_MENU.getFocused = function() {

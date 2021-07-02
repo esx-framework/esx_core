@@ -1,8 +1,5 @@
 Items = {}
 local InventoriesIndex, Inventories, SharedInventories = {}, {}, {}
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 MySQL.ready(function()
 	local items = MySQL.Sync.fetchAll('SELECT * FROM items')

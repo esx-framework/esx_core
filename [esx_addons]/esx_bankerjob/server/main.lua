@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 TriggerEvent('esx_phone:registerNumber', 'banker', _('phone_receive'), false, false)
 TriggerEvent('esx_society:registerSociety', 'banker', _U('phone_label'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
 
@@ -40,11 +36,10 @@ AddEventHandler('esx_bankerjob:customerWithdraw', function (target, amount)
 end)
 
 ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function (source, cb)
-	local xPlayers  = ESX.GetPlayers()
+	local xPlayers  = ESX.GetExtendedPlayers()
 	local customers = {}
 
-	for i=1, #xPlayers do
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+	for _, xPlayer in pairs(xPlayers) do
 
 		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
 			table.insert(customers, {

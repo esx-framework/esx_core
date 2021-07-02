@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 TriggerEvent('esx_phone:registerNumber', 'realestateagent', _U('clients'), false, false)
 TriggerEvent('esx_society:registerSociety', 'realestateagent', _U('realtors'), 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
 
@@ -47,12 +43,12 @@ end)
 
 ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(source, cb)
 	TriggerEvent('esx_ownedproperty:getOwnedProperties', function(properties)
-		local xPlayers  = ESX.GetPlayers()
+		local xPlayers  = ESX.GetExtendedPlayers()
 		local customers = {}
 
 		for i=1, #properties, 1 do
 			for j=1, #xPlayers, 1 do
-				local xPlayer = ESX.GetPlayerFromId(xPlayers[j])
+				local xPlayer = xPlayers[j]
 
 				if xPlayer.identifier == properties[i].owner then
 					table.insert(customers, {

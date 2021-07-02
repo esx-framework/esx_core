@@ -3,16 +3,6 @@ local CurrentAction, CurrentActionMsg
 GUI.PhoneIsShowed = false
 GUI.MessagesIsShowed = false
 GUI.AddContactIsShowed = false
-ESX = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	ESX.UI.Menu.RegisterType('phone', OpenPhone, ClosePhone)
-end)
 
 function OpenPhone()
 	local playerPed = PlayerPedId()
@@ -60,6 +50,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 		reloadPhone = true,
 		phoneData   = PhoneData
 	})
+	ESX.UI.Menu.RegisterType('phone', OpenPhone, ClosePhone)
 end)
 
 RegisterNetEvent('esx_phone:addContact')

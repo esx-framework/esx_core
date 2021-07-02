@@ -1,9 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj)
-	ESX = obj
-end)
-
 ESX.RegisterUsableItem('beer', function(source)
 
 	local xPlayer = ESX.GetPlayerFromId(source)

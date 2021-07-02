@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 AddEventHandler('chatMessage', function(playerId, playerName, message)
 	if string.sub(message, 1, string.len('/')) ~= '/' then
 		CancelEvent()

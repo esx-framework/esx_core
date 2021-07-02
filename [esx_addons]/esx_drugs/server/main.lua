@@ -1,9 +1,6 @@
-ESX = nil
 local playersProcessingCannabis = {}
 local outofbound = true
 local alive = true
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('esx_drugs:sellDrug')
 AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)

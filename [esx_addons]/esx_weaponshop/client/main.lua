@@ -1,4 +1,3 @@
-ESX = nil
 local HasAlreadyEnteredMarker = false
 local LastZone = nil
 local CurrentAction = nil
@@ -6,17 +5,10 @@ local CurrentActionMsg = ''
 local CurrentActionData = {}
 local ShopOpen = false
 
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
+ESX.TriggerServerCallback('esx_weaponshop:getShop', function(shopItems)
+	for k,v in pairs(shopItems) do
+		Config.Zones[k].Items = v
 	end
-
-	ESX.TriggerServerCallback('esx_weaponshop:getShop', function(shopItems)
-		for k,v in pairs(shopItems) do
-			Config.Zones[k].Items = v
-		end
-	end)
 end)
 
 RegisterNetEvent('esx_weaponshop:sendShop')

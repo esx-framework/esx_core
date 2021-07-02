@@ -1,6 +1,3 @@
-ESX = nil
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 RegisterServerEvent('esx_atm:deposit')
 AddEventHandler('esx_atm:deposit', function(amount)
 	local _source = source

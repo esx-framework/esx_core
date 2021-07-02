@@ -1,4 +1,3 @@
-ESX                     = nil
 local CurrentAction     = nil
 local CurrentActionMsg  = nil
 local CurrentActionData = nil
@@ -12,13 +11,6 @@ local CurrentBlip       = nil
 local CurrentZoneType   = nil
 local IsAboveSpeedLimit = false
 local LastVehicleHealth = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
 
 function DrawMissionText(msg, time)
 	ClearPrints()

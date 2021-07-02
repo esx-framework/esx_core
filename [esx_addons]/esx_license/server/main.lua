@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 function AddLicense(target, type, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 

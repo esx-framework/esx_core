@@ -1,29 +1,27 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-local isLegacy = not not ESX.GetExtendedPlayers
-
 AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  	return
 	end
-
-	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
 	
-	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
-		MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
-		}, function(result)
-			local data = {}
-	
-			if result[1].status then
-				data = json.decode(result[1].status)
-			end
+	for _, xPlayer in pairs(ESX.Players) do
+		local status = xPlayer.get('status')
+		if status then
+			ESX.Players[xPlayer.source] = status
+		else
+			MySQL.Async.fetchAll('SELECT status FROM users WHERE identifier = @identifier', {
+				['@identifier'] = xPlayer.identifier
+			}, function(result)
+				local data = {}
 		
-			xPlayer.set('status', data)
-			TriggerClientEvent('esx_status:load', k, data)
-		end)
+				if result[1].status then
+					data = json.decode(result[1].status)
+				end
+			
+				xPlayer.set('status', data)	-- save to xPlayer for compatibility
+				ESX.Players[xPlayer.source] = data -- save locally for performance
+			end)
+		end
+		TriggerClientEvent('esx_status:load', xPlayer.source, data)
 	end
 end)
 
@@ -38,25 +36,25 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		end
 
 		xPlayer.set('status', data)
+		ESX.Players[xPlayer.source] = data
 		TriggerClientEvent('esx_status:load', playerId, data)
 	end)
 end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local status = xPlayer.get('status')
+	local status = ESX.Players[xPlayer.source]
 
 	MySQL.Async.execute('UPDATE users SET status = @status WHERE identifier = @identifier', {
 		['@status']     = json.encode(status),
 		['@identifier'] = xPlayer.identifier
-	})
+	}, function(result)
+		ESX.Players[xPlayer.source] = nil
+	end)
 end)
 
 AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local status  = xPlayer.get('status')
-
-	for i=1, #status, 1 do
+	for i=1, #ESX.Players, 1 do
 		if status[i].name == statusName then
 			cb(status[i])
 			break
@@ -67,9 +65,9 @@ end)
 RegisterServerEvent('esx_status:update')
 AddEventHandler('esx_status:update', function(status)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
 	if xPlayer then
-		xPlayer.set('status', status)
+		xPlayer.set('status', status)	-- save to xPlayer for compatibility
+		ESX.Players[xPlayer.source] = status	-- save locally for performance
 	end
 end)
 
@@ -100,11 +98,10 @@ function SaveData()
 	local firstItem = true
 	local playerCount = 0
 
-	local xPlayers = isLegacy and ESX.GetExtendedPlayers() or ESX.GetPlayers()
+	local xPlayers = ESX.GetExtendedPlayers()
 	
-	for k,v in pairs(xPlayers) do
-		local xPlayer = type(v) == 'table' and v or ESX.GetPlayerFromId(v)
-		local status  = xPlayer.get('status')
+	for _, xPlayer in pairs(xPlayers) do
+		local status  = ESX.Players[xPlayer.source]
 
 		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
 

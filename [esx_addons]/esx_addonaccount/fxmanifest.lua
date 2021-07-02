@@ -4,9 +4,10 @@ game 'gta5'
 
 description 'ESX Addon Account'
 
-version '1.0.1'
+version 'legacy'
 
 server_scripts {
+	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
 	'server/classes/addonaccount.lua',
 	'server/main.lua'

@@ -1,7 +1,4 @@
-ESX, WhiteList = nil, {}
-
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+WhiteList = {}
 
 function loadWhiteList(cb)
 	Whitelist = {}
@@ -27,7 +24,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()
 
-	local playerId, kickReason, identifier = source
+	local playerId, kickReason = source
 	
 	-- Letting the user know what's going on.
 	deferrals.update(_U('whitelist_check'))
@@ -35,12 +32,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	-- Needed, not sure why.
 	Citizen.Wait(100)
 
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			identifier = string.sub(v, 9)
-			break
-		end
-	end
+	local identifier = ESX.GetIdentifier(playerId)
 
 	if ESX.Table.SizeOf(WhiteList) == 0 then
 		kickReason = _U('whitelist_empty')

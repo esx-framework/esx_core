@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 RegisterServerEvent('esx_accessories:pay')
 AddEventHandler('esx_accessories:pay', function()
 	local xPlayer = ESX.GetPlayerFromId(source)

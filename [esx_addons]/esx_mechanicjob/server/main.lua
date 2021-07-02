@@ -1,12 +1,4 @@
-ESX                = nil
-PlayersHarvesting  = {}
-PlayersHarvesting2 = {}
-PlayersHarvesting3 = {}
-PlayersCrafting    = {}
-PlayersCrafting2   = {}
-PlayersCrafting3   = {}
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local PlayersHarvesting, PlayersHarvesting2, PlayersHarvesting3, PlayersCrafting, PlayersCrafting2, PlayersCrafting3  = {}, {}, {}, {}, {}, {}
 
 if Config.MaxInService ~= -1 then
 	TriggerEvent('esx_service:activateService', 'mechanic', Config.MaxInService)

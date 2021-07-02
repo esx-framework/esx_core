@@ -1,23 +1,23 @@
-ESX = nil
+
 local DisptachRequestId, PhoneNumbers = 0, {}
 
-TriggerEvent('esx:getSharedObject', function(obj)
-	ESX = obj
+AddEventHandler('onResourceStart', function(resource)
+	if resource == GetCurrentResourceName() then
+		local xPlayers = ESX.GetExtendedPlayers()
 
-	local xPlayers = ESX.GetPlayers()
-
-	for i=1, #xPlayers, 1 do
-		LoadPlayer(xPlayers[i])
+		for k, v in pairs(xPlayers) do
+			LoadPlayer(v)
+		end
 	end
 end)
 
-function LoadPlayer(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
+function LoadPlayer(player)
+	local xPlayer = player
 
 	for num,v in pairs(PhoneNumbers) do
 		if tonumber(num) == num then -- if phonenumber is a player phone number
 			for src,_ in pairs(v.sources) do
-				TriggerClientEvent('esx_phone:setPhoneNumberSource', source, num, tonumber(src))
+				TriggerClientEvent('esx_phone:setPhoneNumberSource', xPlayer.source, num, tonumber(src))
 			end
 		end
 	end
@@ -35,8 +35,7 @@ function LoadPlayer(source)
 				['@phone_number'] = phoneNumber
 			})
 		end
-
-		TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, phoneNumber, source)
+		TriggerClientEvent('esx_phone:setPhoneNumberSource', -1, phoneNumber, xPlayer.source)
 
 		PhoneNumbers[phoneNumber] = {
 			type          = 'player',
@@ -44,14 +43,14 @@ function LoadPlayer(source)
 			sharePos      = false,
 			hideNumber    = false,
 			hidePosIfAnon = false,
-			sources       = {[source] = true}
+			sources       = {[xPlayer.source] = true}
 		}
 
 		xPlayer.set('phoneNumber', phoneNumber)
 		local contacts = {}
 
 		if PhoneNumbers[xPlayer.job.name] then
-			TriggerEvent('esx_phone:addSource', xPlayer.job.name, source)
+			TriggerEvent('esx_phone:addSource', xPlayer.job.name, xPlayer.source)
 		end
 
 		MySQL.Async.fetchAll('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC', {
@@ -65,7 +64,7 @@ function LoadPlayer(source)
 			end
 
 			xPlayer.set('contacts', contacts)
-			TriggerClientEvent('esx_phone:loaded', source, phoneNumber, contacts)
+			TriggerClientEvent('esx_phone:loaded', xPlayer.source, phoneNumber, contacts)
 		end)
 	end)
 end
@@ -107,8 +106,8 @@ AddEventHandler('esx_phone:getDistpatchRequestId', function(cb)
 	cb(GetDistpatchRequestId())
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId)
-	LoadPlayer(playerId)
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+	LoadPlayer(xPlayer)
 end)
 
 AddEventHandler('esx:playerDropped', function(source)

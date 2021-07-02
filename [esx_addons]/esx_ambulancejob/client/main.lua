@@ -1,32 +1,18 @@
-local firstSpawn, PlayerLoaded = true, false
+local firstSpawn = true
 
 isDead, isSearched, medic = false, false, 0
-ESX = nil
-
-AddEventHandler("onClientMapStart", function()
-	exports.spawnmanager:spawnPlayer()
-	Citizen.Wait(5000)
-	exports.spawnmanager:setAutoSpawn(false)
-end)
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(100)
-	end
-
-	PlayerLoaded = true
-	ESX.PlayerData = ESX.GetPlayerData()
-end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
-	PlayerLoaded = true
+	ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+	firstSpawn = true
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -41,13 +27,13 @@ AddEventHandler('esx:onPlayerSpawn', function()
 		firstSpawn = false
 
 		if Config.AntiCombatLog then
-			while not PlayerLoaded do
-				Citizen.Wait(5000)
+			while not ESX.PlayerLoaded do
+				Citizen.Wait(1000)
 			end
 
 			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
 				if shouldDie then
-					Citizen.Wait(10000)
+					Citizen.Wait(5000)
 					SetEntityHealth(PlayerPedId(), 0)
 				end
 			end)

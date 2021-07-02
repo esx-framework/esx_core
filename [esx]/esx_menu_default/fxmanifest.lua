@@ -4,10 +4,9 @@ game 'gta5'
 
 description 'ESX Menu Default'
 
-version '1.0.4'
+version 'legacy'
 
 client_scripts {
-	'@es_extended/client/wrapper.lua',
 	'client/main.lua'
 }
 

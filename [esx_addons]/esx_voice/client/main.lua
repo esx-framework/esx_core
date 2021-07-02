@@ -37,7 +37,7 @@ AddEventHandler('onClientMapStart', function()
 	end
 end)
 
-AddEventHandler('playerSpawned', function()
+AddEventHandler('esx:onPlayerSpawn', function()
 	NetworkSetTalkerProximity(voice.default)		
 end)
 

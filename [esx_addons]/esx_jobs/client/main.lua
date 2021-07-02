@@ -10,7 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData = {}
 local menuIsShowed = false
 local hintIsShowed = false
 local hasAlreadyEnteredMarker = false
@@ -29,25 +28,9 @@ local vehicleInCaseofDrop = nil
 
 local vehicleMaxHealth = nil
 
-ESX = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-	
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(10)
-	end
-
-	PlayerData = ESX.GetPlayerData()
-	refreshBlips()
-end)
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer
+	ESX.PlayerData = xPlayer
 	refreshBlips()
 end)
 
@@ -103,7 +86,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 		local vehicle = nil
 
 		for k,v in pairs(Config.Jobs) do
-			if PlayerData.job.name == k then
+			if ESX.PlayerData.job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehspawnpt" and w.Spawner == zone.Spawner then
 						spawnPoint = w
@@ -129,7 +112,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 		local looping = true
 
 		for k,v in pairs(Config.Jobs) do
-			if PlayerData.job.name == k then
+			if ESX.PlayerData.job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehdelete" and w.Spawner == zone.Spawner then
 						local playerPed = PlayerPedId()
@@ -223,7 +206,7 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	PlayerData.job = job
+	ESX.PlayerData.job = job
 	onDuty = false
 	myPlate = {} -- loosing vehicle caution in case player changes job.
 	spawner = 0
@@ -244,10 +227,10 @@ function refreshBlips()
 	local zones = {}
 	local blipInfo = {}
 
-	if PlayerData.job ~= nil then
+	if ESX.PlayerData.job ~= nil then
 		for jobKey,jobValues in pairs(Config.Jobs) do
 
-			if jobKey == PlayerData.job.name then
+			if jobKey == ESX.PlayerData.job.name then
 				for zoneKey,zoneValues in pairs(jobValues.Zones) do
 
 					if zoneValues.Blip then
@@ -334,16 +317,16 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1)
 		local zones = {}
 
-		if PlayerData.job ~= nil then
+		if ESX.PlayerData.job ~= nil then
 			for k,v in pairs(Config.Jobs) do
-				if PlayerData.job.name == k then
+				if ESX.PlayerData.job.name == k then
 					zones = v.Zones
 				end
 			end
 
 			local coords = GetEntityCoords(PlayerPedId())
 			for k,v in pairs(zones) do
-				if onDuty or v.Type == "cloakroom" or PlayerData.job.name == "reporter" then
+				if onDuty or v.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
 					if (v.Zone) then
 						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
 							if (not(center == nil)) then
@@ -419,12 +402,12 @@ Citizen.CreateThread(function()
 
 		Citizen.Wait(1)
 
-		if PlayerData.job ~= nil and PlayerData.job.name ~= 'unemployed' then
+		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
 			local zones = nil
 			local job = nil
 
 			for k,v in pairs(Config.Jobs) do
-				if PlayerData.job.name == k then
+				if ESX.PlayerData.job.name == k then
 					job = v
 					zones = v.Zones
 				end
@@ -468,7 +451,7 @@ Citizen.CreateThread(function()
 				end
 
 				if IsControlJustReleased(0, Keys['E']) and not menuIsShowed and isInMarker then
-					if onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter" then
+					if onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
 						TriggerEvent('esx_jobs:action', job, zone, currentZone)
 					end
 				end
@@ -476,10 +459,10 @@ Citizen.CreateThread(function()
 				-- hide or show top left zone hints
 				if isInMarker and not menuIsShowed then
 					hintIsShowed = true
-					if (onDuty or zone.Type == "cloakroom" or PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
+					if (onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
 						hintToDisplay = zone.Hint
 						hintIsShowed = true
-					elseif zone.Type == "vehdelete" and (onDuty or PlayerData.job.name == "reporter") then
+					elseif zone.Type == "vehdelete" and (onDuty or ESX.PlayerData.job.name == "reporter") then
 						local playerPed = PlayerPedId()
 
 						if IsPedInAnyVehicle(playerPed, false) then
@@ -540,3 +523,5 @@ Citizen.CreateThread(function()
 	RequestIpl("id2_14_during_door")
 	RequestIpl("id2_14_during1")
 end)
+
+if ESX.PlayerLoaded then refreshBlips() end

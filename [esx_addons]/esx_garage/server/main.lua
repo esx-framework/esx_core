@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 RegisterServerEvent('esx_garage:setParking')
 AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 	local _source = source

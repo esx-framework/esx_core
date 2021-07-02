@@ -2,20 +2,11 @@ local CurrentActionData, handcuffTimer, dragStatus, blipsCops, currentTask = {},
 local HasAlreadyEnteredMarker, isDead, isHandcuffed, hasAlreadyJoined, playerInService = false, false, false, false, false
 local LastStation, LastPart, LastPartNum, LastEntity, CurrentAction, CurrentActionMsg
 dragStatus.isDragged, isInShopMenu = false, false
-ESX = nil
 
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(10)
-	end
-
-	ESX.PlayerData = ESX.GetPlayerData()
-end)
+if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
+	Citizen.Wait(1000)
+	TriggerServerEvent('esx_policejob:forceBlip')
+end
 
 function cleanPlayer(playerPed)
 	SetPedArmour(playerPed, 0)
@@ -124,7 +115,7 @@ function OpenCloakroomMenu()
 			ESX.TriggerServerCallback('esx_service:isInService', function(isInService)
 				if not isInService then
 
-					if Config.MaxInService == -1 then
+					if Config.MaxInService ~= -1 then
 						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
 							if not canTakeService then
 								ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
@@ -931,9 +922,10 @@ end
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
-
-	Citizen.Wait(5000)
-	TriggerServerEvent('esx_policejob:forceBlip')
+	if job.name == 'police' then
+		Citizen.Wait(1000)
+		TriggerServerEvent('esx_policejob:forceBlip')
+	end
 end)
 
 RegisterNetEvent('esx_phone:loaded')
@@ -1122,25 +1114,21 @@ RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
 	if isHandcuffed then
 		local playerPed = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
+		local vehicle, distance = ESX.Game.GetClosestVehicle()
 
-		if IsAnyVehicleNearPoint(coords, 5.0) then
-			local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
+		if vehicle and distance < 5 then
+			local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
-			if DoesEntityExist(vehicle) then
-				local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
-
-				for i=maxSeats - 1, 0, -1 do
-					if IsVehicleSeatFree(vehicle, i) then
-						freeSeat = i
-						break
-					end
+			for i=maxSeats - 1, 0, -1 do
+				if IsVehicleSeatFree(vehicle, i) then
+					freeSeat = i
+					break
 				end
+			end
 
-				if freeSeat then
-					TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
-					dragStatus.isDragged = false
-				end
+			if freeSeat then
+				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
+				dragStatus.isDragged = false
 			end
 		end
 	end
@@ -1521,7 +1509,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 
 end)
 
-AddEventHandler('playerSpawned', function(spawn)
+AddEventHandler('esx:onPlayerSpawn', function(spawn)
 	isDead = false
 	TriggerEvent('esx_policejob:unrestrain')
 
