@@ -232,8 +232,18 @@ ESX.GetPlayers = function()
 	return sources
 end
 
-ESX.GetExtendedPlayers = function()
-	return ESX.Players
+ESX.GetExtendedPlayers = function(key, val)
+	local xPlayers = {}
+	for k, v in pairs(ESX.Players) do
+		if key then
+			if (key == 'job' and v.job.name == val) or v[key] == val then
+				table.insert(xPlayers, v)
+			end
+		else
+			table.insert(xPlayers, v)
+		end
+	end
+	return xPlayers
 end
 
 ESX.GetPlayerFromId = function(source)
