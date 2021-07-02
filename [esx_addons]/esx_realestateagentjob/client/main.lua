@@ -304,8 +304,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 end)
 
 if ESX.PlayerLoaded and ESX.PlayerData.job.name == 'realestateagent' then
-		Config.Zones.OfficeActions.Type = 1
-	else
-		Config.Zones.OfficeActions.Type = -1
-	end
-end)
+	Config.Zones.OfficeActions.Type = 1
+else
+	Config.Zones.OfficeActions.Type = -1
+end
