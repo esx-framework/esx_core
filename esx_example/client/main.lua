@@ -1,4 +1,4 @@
-RegisterNetEvent('esx:playerLoaded') -- When a player loads their data, store their data
+RegisterNetEvent('esx:playerLoaded') -- Store the players data
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew)
 	ESX.PlayerData = xPlayer
 	ESX.PlayerLoaded = true
