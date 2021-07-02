@@ -1,0 +1,5 @@
+{
+	"version": "legacy",
+	"commit" : "1.3.5",
+	"changelog": "\n- Base resources updated to use ESX Legacy improvements\n - Improved functionality for ESX.GetExtendedPlayers to return specific players only\n - "
+}

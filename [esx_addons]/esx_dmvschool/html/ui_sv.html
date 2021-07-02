@@ -1,0 +1,121 @@
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+
+<body>
+	<div class="full-screen">
+		<div class="question-container">
+			<!-- header -->
+			<div class="header">
+				<h1>Körskola</h1>
+			</div>
+			<!-- home -->
+			<div class="body home">
+				<div class="content">
+					<!-- ICI BREVE PRESENTATION -->
+					<center>
+						<img src="dmv.png" class="logo">
+						<br>
+						<p class="bold-text">Välkommen till körskolan
+					</center>
+					<br>
+					<center>Alla medborgare i Los Santos måste ha körkort för att få behörigheten att köra fordon
+						<br>Ta din tid, svara med sunt förnuft och svara inte slumpmässigt.
+						<br>
+						<br> Kunskapsprov
+						<br> - Det teoretiska provet kostar 200 SEK, och kommer ej återbetalas om du misslyckas.
+						<br> - Var inte rädd, körskolan accepterar kredit. Var dock försiktig så att du inte får en stor skuld.
+						<br> - Om du misslyckas med testet första gången kan du inte omedelbart återta det, du måste ta det på ett senare
+						tillfälle.
+						<br>
+						<br> Uppkörning
+						<br> - Uppkörningen kostar 500 SEK, precis som den teoretiska delen. Denna betalning återbetalas ej om du
+						misslyckas.
+						<br> - Se till att du är uppmärksam vid körning och försök undvik olyckor!</p>
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnQuestion">Start</a>
+				</div>
+				<div class="barre-progression">
+					<h2>Framsteg</h2>
+					<progress class="progression" value="0" max="10">
+				</div>
+			</div>
+			<!-- Question-->
+			<div class="body questionnaire-container">
+				<div class="content">
+					<h2 id="questionNumero"></h2>
+					<p id="question"></p>
+					<form class="form" id="question-form">
+						<div>
+							<input type="radio" name="question" id="answerA" value="A">
+							<label class="answerA"></label>
+						</div>
+						<div>
+							<input type="radio" name="question" id="answerB" value="B">
+							<label class="answerB"></label>
+						</div>
+						<div>
+							<input type="radio" name="question" id="answerC" value="C">
+							<label class="answerC"></label>
+						</div>
+						<div>
+							<input type="radio" name="question" id="answerD" value="D">
+							<label class="answerD"></label>
+						</div>
+						<button type="submit" id="submit" class="submit">Nästa fråga</button>
+					</form>
+				</div>
+				<div class="barre-progression">
+					<h2>Framsteg</h2>
+					<progress class="progression" value="0" max="10">
+				</div>
+			</div>
+			<!-- Results -->
+			<div class="body resultGood">
+				<div class="content">
+					<center>
+						<p class="bold-text">Bra jobbat!</p>
+						<br>
+						<br>Du har klarat teoretiska delen av körkortet
+						<br>
+						<br>Du kan nu stänga det här fönstret och ta uppkörningen!
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnClose">Stäng</a>
+				</div>
+				<div class="barre-progression">
+					<h2>Framsteg</h2>
+					<progress class="progression" value="10" max="10">
+				</div>
+			</div>
+			<div class="body resultBad">
+				<div class="content">
+					<center>
+						<p class="bold-text">Du kuggade</p>
+						<br>
+						<br>Du var inte redo för detta prov, försök igen senare...
+						<br>
+						<br>
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnKick">Stäng</a>
+				</div>
+				<div class="barre-progression">
+					<h2>Framsteg</h2>
+					<progress class="progression" value="10" max="10">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+	<script src="questions.js" type="text/javascript"></script>
+	<script src="scripts.js" type="text/javascript"></script>
+	<script src="debounce.min.js" type="text/javascript"></script>
+
+</body>

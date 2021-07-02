@@ -1,0 +1,91 @@
+@font-face {
+	font-family: bankgothic;
+	src: url('../fonts/bankgothic.ttf');
+}
+
+@font-face {
+	font-family: pcdown;
+	src: url('../fonts/pdown.ttf');
+}
+
+#controls {
+	font-family: 'IBM Plex Sans', sans-serif;
+	font-size: 5em;
+	color: #FFF;
+	position: absolute;
+	bottom: 40;
+	right: 40;
+}
+
+.controls {
+	display: none;
+}
+
+.dialog {
+	font-family: 'PT Sans Narrow', sans-serif;
+	background-color: rgba(40, 40, 40, 1);
+	color: #fff;
+	position: absolute;
+	overflow: hidden;
+	top: 50%;
+	left: 50%;
+	width: 640px;
+	height: 124px;
+	transform: translate(-50%, -50%);
+}
+
+.dialog.big {
+	height: 200px;
+}
+
+.dialog .head {
+	background-color: #4682B4;
+	text-align: center;
+	height: 40px;
+	font-size: 22px;
+}
+
+.dialog .head span:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.dialog input[type="text"] {
+	width: 100%;
+	height: 42px;
+	color: #fff;
+	font-size: 20px;
+	background-color: rgba(20, 20, 20, 1);
+	border-bottom: 2px solid 	#e76767;
+}
+
+.dialog textarea {
+	width: 100%;
+	height: 138px;
+	color: #fff;
+	font-size: 20px;
+	background-color: rgba(20, 20, 20, 1);
+	border-bottom: 2px solid 	#e76767;
+}
+
+.dialog button[name="submit"] {
+	width: 75%;
+	color: #fff;
+	height: 42px;
+	font-size: 22px;
+	border: 0px solid 	#e76767;
+	border-right: 1px solid 	#e76767;
+	background-color: rgba(40, 40, 40, 1)
+}
+
+.dialog button[name="cancel"] {
+	width: 25%;
+	color: rgb(236, 75, 75);
+	height: 42px;
+	font-size: 20px;
+	border: 0px solid 	#e76767;
+	border-left: 1px solid 	#e76767;
+	background-color: rgba(40, 40, 40, 1)
+}
