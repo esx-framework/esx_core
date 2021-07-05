@@ -108,7 +108,7 @@ AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPo
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if cautionType == 'take' then
-		if cautionAmount <= Config.MaxCaution and cautionAmount > 0 then
+		if cautionAmount <= Config.MaxCaution and cautionAmount >= 0 then
 			TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
 				if xPlayer.getAccount('bank').money >= cautionAmount then
 					xPlayer.removeAccountMoney('bank', cautionAmount)

@@ -123,6 +123,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 							local plate = GetVehicleNumberPlateText(vehicle)
 							plate = string.gsub(plate, " ", "")
 							local driverPed = GetPedInVehicleSeat(vehicle, -1)
+							local vehicleMaxHealth = GetVehicleEngineHealth(vehicle)
 
 							if playerPed == driverPed then
 
