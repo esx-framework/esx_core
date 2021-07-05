@@ -1015,23 +1015,17 @@ end)
 -- SetTimeout
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
-		local letSleep = true
-		local currTime = GetGameTimer()
-
+		local sleep = 100
 		if #ESX.TimeoutCallbacks > 0 then
-			letSleep = false
+			local currTime = GetGameTimer()
+			sleep = 0
 			for i=1, #ESX.TimeoutCallbacks, 1 do
-				if ESX.TimeoutCallbacks[i] then
-					if currTime >= ESX.TimeoutCallbacks[i].time then
-						ESX.TimeoutCallbacks[i].cb()
-						ESX.TimeoutCallbacks[i] = nil
-					end
+				if currTime >= ESX.TimeoutCallbacks[i].time then
+					ESX.TimeoutCallbacks[i].cb()
+					ESX.TimeoutCallbacks[i] = nil
 				end
 			end
 		end
-		if letSleep then
-			Citizen.Wait(500)
-		end
+		Citizen.Wait(sleep)
 	end
 end)
