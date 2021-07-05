@@ -316,9 +316,9 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
-local getOnlinePlayers, onlinePlayers = false, nil
+local getOnlinePlayers, onlinePlayers = false, {}
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
-	if getOnlinePlayers ~= true then -- Prevent multiple xPlayer loops from running in quick succession
+	if getOnlinePlayers == false and next(onlinePlayers) == nil then -- Prevent multiple xPlayer loops from running in quick succession
 		getOnlinePlayers, onlinePlayers = true, {}
 		
 		local xPlayers = ESX.GetExtendedPlayers()
@@ -330,9 +330,13 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 				job = xPlayer.job
 			})
 		end
+		cb(onlinePlayers)
 		getOnlinePlayers = false
+		Citizen.Wait(1000) -- For the next second any extra requests will receive the cached list
+		onlinePlayers = {}
+		return
 	end
-	while getOnlinePlayers do Citizen.Wait(100) end -- Wait for the xPlayer loop to finish
+	while getOnlinePlayers do Citizen.Wait(10) end -- Wait for the xPlayer loop to finish
 	cb(onlinePlayers)
 end)
 
