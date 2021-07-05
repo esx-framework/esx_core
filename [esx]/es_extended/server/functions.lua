@@ -233,7 +233,7 @@ ESX.SavePlayers = function(cb)
 		MySQL.Async.fetchAll(updateCommand, {},
 		function(result)
 			if result then
-				if cb then cb() else print(('[^2INFO^7] Saved %s of %s player(s) over %s seconds'):format(result.changedRows, #xPlayers, os.time() - time)) end
+				if cb then cb() else print(('[^2INFO^7] Saved %s of %s player(s) over %s seconds'):format(result.affectedRows, #xPlayers, os.time() - time)) end
 			end
 		end)
 	end
