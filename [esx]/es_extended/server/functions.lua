@@ -197,12 +197,12 @@ end
 
 ESX.SavePlayers = function(cb)
 	local xPlayers = ESX.GetExtendedPlayers()
-	print("ESX.GetPlayers executed in es_extended saveplayers")
-
-	local selectListWithNames = "SELECT '%s' AS identifier, '%s' AS new_accounts, '%s' AS new_job, %s AS new_job_grade, '%s' AS new_group, '%s' AS new_loadout, '%s' AS new_position, '%s' AS new_inventory "
-	local selectListNoNames = "SELECT '%s', '%s', '%s' , %s, '%s', '%s', '%s', '%s' "
-
 	if #xPlayers > 0 then
+		local time = os.time()
+
+		local selectListWithNames = "SELECT '%s' AS identifier, '%s' AS new_accounts, '%s' AS new_job, %s AS new_job_grade, '%s' AS new_group, '%s' AS new_loadout, '%s' AS new_position, '%s' AS new_inventory "
+		local selectListNoNames = "SELECT '%s', '%s', '%s' , %s, '%s', '%s', '%s', '%s' "
+
 		local updateCommand = 'UPDATE users u JOIN ('
 
 		local selectList = selectListNoNames
@@ -230,16 +230,13 @@ ESX.SavePlayers = function(cb)
 
 		updateCommand = updateCommand .. ' ) vals ON u.identifier = vals.identifier SET accounts = new_accounts, job = new_job, job_grade = new_job_grade, `group` = new_group, loadout = new_loadout, `position` = new_position, inventory = new_inventory'
 
-		MySQL.Async.execute(updateCommand)
-
-		print(('[es_extended] [^2INFO^7] Saved %s player(s)'):format(#xPlayers))
-
+		MySQL.Async.fetchAll(updateCommand, {},
+		function(result)
+			if result then
+				if cb then cb() else print(('[^2INFO^7] Saved %s of %s player(s) over %s seconds'):format(result.changedRows, #xPlayers, os.time() - time)) end
+			end
+		end)
 	end
-
-	if cb then
-		cb()
-	end
-
 end
 
 ESX.StartDBSync = function()
