@@ -75,7 +75,7 @@ Many more resources are included in this repository, or you can browse the [ESX 
 
 ### Conflicts
 * The following resources should not be used with ESX Legacy
-	- essentialsmode
+	- essentialmode
 	- basic-gamemode
 	- fivem-map-skater
 	- fivem-map-hipster
