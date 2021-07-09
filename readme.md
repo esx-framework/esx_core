@@ -1,5 +1,5 @@
 ### Requirements (ensure you are using the latest)
-- [ESX Legacy](https://github.com/esx-framework/es_extended/tree/legacy)
+- [ESX Legacy](https://github.com/esx-framework/esx-legacy)
 - [MySQL Async 3.3.2](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
 - [ESX Identity](https://github.com/esx-framework/esx_identity)
 - [ESX Skin](https://github.com/esx-framework/esx_skin)
@@ -13,7 +13,7 @@
 
 ### Conflicts
 * The following resources should not be used with ESX Legacy and can result in errors
-	- **essentialsmode**
+	- essentialmode
 	- basic-gamemode
 	- fivem-map-skater
 	- fivem-map-hipster
