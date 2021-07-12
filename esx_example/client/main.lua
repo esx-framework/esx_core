@@ -10,8 +10,6 @@ AddEventHandler('esx:playerLogout', function(xPlayer, isNew)
 	ESX.PlayerData = {}
 end)
 
-
-
 -- These two functions can perform the same task
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
@@ -41,3 +39,33 @@ OnPlayerData = function(key, val, last)
 	end
 end
 -----------------------------------------------
+
+RegisterCommand('closestobject', function()
+	local result = ESX.Game.GetClosestObject(GetEntityCoords(PlayerPedId()))
+	print(result)
+end)
+
+RegisterCommand('closestped', function()
+	local result = ESX.Game.GetClosestPed(GetEntityCoords(PlayerPedId()))
+	print(result)
+end)
+
+RegisterCommand('closestplayer', function()
+	local result = ESX.Game.GetClosestPlayer(GetEntityCoords(PlayerPedId()))
+	print(result)
+end)
+
+RegisterCommand('closestvehicle', function()
+	local result = ESX.Game.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
+	print(result)
+end)
+
+RegisterCommand('areaplayer', function()
+	local result = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 20)
+	print(json.encode(result))
+end)
+
+RegisterCommand('areavehicle', function()
+	local result = ESX.Game.GetVehiclesInArea(GetEntityCoords(PlayerPedId()), 20)
+	print(json.encode(result))
+end)
