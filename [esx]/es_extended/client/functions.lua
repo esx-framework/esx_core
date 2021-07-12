@@ -339,16 +339,13 @@ ESX.Game.Teleport = function(entity, coords, cb)
 end
 
 ESX.Game.SpawnObject = function(object, coords, cb, networked)
-	local model = (type(object) == 'number' and model or GetHashKey(object))
+	local model = type(object) == 'number' and object or GetHashKey(object)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
-		-- The below has to be done just for CreateObject since for some reason CreateObjects model argument is set
-		-- as an Object instead of a hash so it doesn't automatically hash the item
-		model = type(model) == 'number' and model or GetHashKey(model)
 		local obj = CreateObject(model, vector.xyz, networked, false, true)
 		if cb then
 			cb(obj)
@@ -357,7 +354,6 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked)
 end
 
 ESX.Game.SpawnLocalObject = function(object, coords, cb)
-	-- Why have 2 separate functions for this? Just call the other one with an extra param
 	ESX.Game.SpawnObject(object, coords, cb, false)
 end
 
@@ -417,13 +413,13 @@ ESX.Game.GetObjects = function() -- Leave the function for compatibility
 end
 
 ESX.Game.GetPeds = function(onlyOtherPeds)
-	local peds, myPed = {}, ESX.PlayerData.ped
+	local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
 
-	for ped in GetGamePool('CPed') do
-		if ((onlyOtherPeds and ped ~= myPed) or not onlyOtherPeds) then
-			table.insert(peds, ped)
-		end
-	end
+	for i=1, #pool do
+        if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
+            table.insert(peds, pool[i])
+        end
+    end
 
 	return peds
 end
