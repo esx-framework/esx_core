@@ -74,11 +74,8 @@ end)
 Citizen.CreateThread(function()
 	while(true) do
 		Citizen.Wait(10 * 60 * 1000)
-		
 		SaveData()
-
 	end
-
 end)
 
 function SaveData()
@@ -101,17 +98,18 @@ function SaveData()
 	local xPlayers = ESX.GetExtendedPlayers()
 	
 	for _, xPlayer in pairs(xPlayers) do
-		local status  = ESX.Players[xPlayer.source]
+		local status = ESX.Players[xPlayer.source]
+		if status then
+			whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
 
-		whenList = whenList .. string.format('when identifier = \'%s\' then \'%s\' ', xPlayer.identifier, json.encode(status))
+			if firstItem == false then
+				whereList = whereList .. ', '
+			end
+			whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
 
-		if firstItem == false then
-			whereList = whereList .. ', '
+			firstItem = false
+			playerCount = playerCount + 1
 		end
-		whereList = whereList .. string.format('\'%s\'', xPlayer.identifier)
-
-		firstItem = false
-		playerCount = playerCount + 1
 	end
 
 	if playerCount > 0 then

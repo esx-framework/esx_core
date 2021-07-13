@@ -18,6 +18,13 @@ function getSharedObject()
 	return ESX
 end
 
+local function StartDBSync()
+	Citizen.CreateThread(function()
+		Citizen.Wait(10 * 60 * 1000)
+		ESX.SavePlayers()
+	end)
+end
+
 MySQL.ready(function()
 	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
 		for k,v in ipairs(result) do
@@ -54,8 +61,8 @@ MySQL.ready(function()
 			end
 			ESX.Jobs = Jobs
 			print('[^2INFO^7] ESX ^5Legacy^0 initialized')
-			ESX.StartDBSync()
-			ESX.StartPayCheck()
+			StartDBSync()
+			StartPayCheck()
 		end)
 	end)
 end)

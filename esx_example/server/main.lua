@@ -1,3 +1,8 @@
+Citizen.CreateThread(function()
+	Citizen.Wait(3000)
+	print('^1Do not run this resource in a live environment, it is solely intended for showcasing ESX functions^0')
+end)
+
 RegisterNetEvent('esx:playerLoaded') -- When a player loads in, we can store some basic information about them locally
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer, isNew)
 	ESX.Players[playerId] = xPlayer.job.name
@@ -16,17 +21,19 @@ AddEventHandler('onResourceStart', function(resourceName) -- The resource just r
 	if (GetCurrentResourceName() == resourceName) then -- Useful if we need to run functions or send events after a restart
 		local players = {}
 		for _, xPlayer in pairs(ESX.Players) do
-			players[playerId] = xPlayer.job.name
-			print( ('%s %s is online with player id %s'):format(xPlayer.job.grade_label, xPlayer.name, playerId) )
+			players[xPlayer.source] = xPlayer.job.name
+			print( ('%s %s is online with player id %s'):format(xPlayer.job.grade_label, xPlayer.name, xPlayer.source) )
 		end
 		ESX.Players = players -- Replace the data as it is a waste of memory
 	end
 end)
 
-Citizen.CreateThread(function()
-	Citizen.Wait(1000)
-	local xPlayers = ESX.GetExtendedPlayers('job', 'police') -- New hitchless xPlayer loop, with the ability to only return players with specific data
-	for _, xPlayer in pairs(xPlayers) do
+ESX.RegisterCommand('get', 'user', function(xPlayer, args, showError)
+	local xPlayers = ESX.GetExtendedPlayers(args.key, args.val) -- New hitchless xPlayer loop, with the ability to only return players with specific data
+	for _, xPlayer in pairs(xPlayers) do					 	-- Job and any non-table variable will work, ie. name, group, identifier, source
 		print(xPlayer.source, xPlayer.job.grade_label, xPlayer.name)
 	end
-end)
+end, true, {help = 'Display all online players with specific player data', validate = false, arguments = {
+	{name = 'key', help = 'Variable to check (ie. job)', type = 'string'},
+	{name = 'val', help = 'Value required (ie. police)', type = 'any'}
+}})
