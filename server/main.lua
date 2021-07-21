@@ -1,5 +1,5 @@
 if not ESX then
-	SetTimeout(3000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
+	SetTimeout(3000, function() print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ') end)
 elseif ESX.GetConfig().Multichar == true then
 	local IdentifierTables, Fetch = {}, -1
 
@@ -121,5 +121,5 @@ elseif ESX.GetConfig().Multichar == true then
 	end, true)
 
 else
-	SetTimeout(3000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
+	SetTimeout(3000, function() print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration') end)
 end
