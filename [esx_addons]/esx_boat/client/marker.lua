@@ -1,9 +1,9 @@
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
 
-local CurrentAction     = nil
-local CurrentActionMsg  = ''
-local CurrentActionData = {}
+CurrentAction     = nil
+CurrentActionMsg  = ''
+CurrentActionData = {}
 
 -- Key controls
 Citizen.CreateThread(function()

@@ -1,4 +1,4 @@
-local isInShopMenu = false
+isInShopMenu = false
 local spawnedVehicles = {}
 
 function OpenBoatShop(shop)
