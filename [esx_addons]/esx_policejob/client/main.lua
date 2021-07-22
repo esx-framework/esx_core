@@ -3,10 +3,17 @@ local HasAlreadyEnteredMarker, isDead, isHandcuffed, hasAlreadyJoined, playerInS
 local LastStation, LastPart, LastPartNum, LastEntity, CurrentAction, CurrentActionMsg
 dragStatus.isDragged, isInShopMenu = false, false
 
-if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
-	Citizen.Wait(1000)
-	TriggerServerEvent('esx_policejob:forceBlip')
-end
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+end)
 
 function cleanPlayer(playerPed)
 	SetPedArmour(playerPed, 0)
@@ -1561,4 +1568,10 @@ function ImpoundVehicle(vehicle)
 	ESX.Game.DeleteVehicle(vehicle)
 	ESX.ShowNotification(_U('impound_successful'))
 	currentTask.busy = false
+end
+
+if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
+	SetTimeout(1000, function()
+		TriggerServerEvent('esx_policejob:forceBlip')
+	end)
 end
