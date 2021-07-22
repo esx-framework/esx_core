@@ -2,6 +2,12 @@ local HasAlreadyEnteredMarker, isDead = false, false
 local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
+end)
+
 function OpenAccessoryMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
 		title = _U('set_unset'),
