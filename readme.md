@@ -28,7 +28,7 @@
 	- You have not increased the VARCHAR size of the table holding identifiers - usually `owner` or `identifier`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
-![image](https://user-images.githubusercontent.com/65407488/119010385-592a8c80-b9d7-11eb-9aa1-eb7051004843.png)
+![image](https://user-images.githubusercontent.com/65407488/126976325-17cc3241-bb9e-451f-a6ed-610a8ef52fa5.png)
 
 ### Relogging
 - Do not enable this setting if you do not intend to properly set up relog support
