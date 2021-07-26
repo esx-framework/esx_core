@@ -25,12 +25,17 @@ if ESX.GetConfig().Multichar then
 		ESX.PlayerLoaded = false
 		ESX.PlayerData = {}
 		Spawned = false
-		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+1.3, 0.0, 0.0, 180.0, 100.00, false, 0)
-		SetEntityCoords(PlayerPedId(), Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
-		SetEntityHeading(PlayerPedId(), Config.Spawn.w)
+		cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+		local playerPed = PlayerPedId()
+		SetEntityCoords(playerPed, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
+		SetEntityHeading(playerPed, Config.Spawn.w)
 		DoScreenFadeOut(0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
+
+		SetCamCoord(cam, Config.Spawn.x, Config.Spawn.y + 1.6, Config.Spawn.z + 1.3)
+		PointCamAtCoord(cam, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z + 1.3)
+
 		ESX.UI.HUD.SetDisplay(0.0)
 		StartLoop()
 		ShutdownLoadingScreen()
