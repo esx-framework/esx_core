@@ -29,11 +29,11 @@ if ESX.GetConfig().Multichar then
 		local playerPed = PlayerPedId()
 		SetEntityCoords(playerPed, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
 		SetEntityHeading(playerPed, Config.Spawn.w)
+		local offset = GetOffsetFromEntityInWorldCoords(playerPed, 0, 1.7, 0.4)
 		DoScreenFadeOut(0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
-
-		SetCamCoord(cam, Config.Spawn.x, Config.Spawn.y + 1.6, Config.Spawn.z + 1.3)
+		SetCamCoord(cam, offset.x, offset.y, offset.z)
 		PointCamAtCoord(cam, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z + 1.3)
 
 		ESX.UI.HUD.SetDisplay(0.0)
