@@ -115,8 +115,8 @@ if ESX.GetConfig().Multichar then
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
 				DoScreenFadeIn(400)
-				repeat Citizen.Wait(200) until not IsScreenFadedOut()
 			end)
+		repeat Citizen.Wait(200) until not IsScreenFadedOut()
 			
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model then
