@@ -1,5 +1,5 @@
 if not ESX then
-	SetTimeout(3000, print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible '))
+	SetTimeout(3000, function() print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ') end)
 elseif ESX.GetConfig().Multichar == true then
 	local IdentifierTables, Fetch = {}, -1
 
@@ -44,12 +44,20 @@ elseif ESX.GetConfig().Multichar == true then
 
 	local DeleteCharacter = function(playerId, charid)
 		local identifier = Config.Prefix..charid..':'..ESX.GetIdentifier(playerId)
+		local counter = 0
 		for k, v in pairs(IdentifierTables) do
 			MySQL.Async.execute("DELETE FROM "..v.table.." WHERE "..v.column.." = ?", {
 				identifier
-			})
+			}, function()
+				counter = counter + 1
+				if counter == #IdentifierTables then
+					print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, identifier))
+					Citizen.Wait(100)
+					SetupCharacters(playerId)
+				end
+			end)
+			Citizen.Wait(5)
 		end
-		print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, identifier))
 	end
 
 	MySQL.ready(function()
@@ -106,7 +114,6 @@ elseif ESX.GetConfig().Multichar == true then
 		local src = source
 		if type(charid) == "number" and string.len(charid) <= 2 then
 			DeleteCharacter(src, charid)
-			SetupCharacters(src)
 		end
 	end)
 
@@ -121,5 +128,5 @@ elseif ESX.GetConfig().Multichar == true then
 	end, true)
 
 else
-	SetTimeout(3000, print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration'))
+	SetTimeout(3000, function() print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration') end)
 end
