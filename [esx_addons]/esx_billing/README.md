@@ -48,7 +48,7 @@ end
 ### License
 esx_billing - billing for ESX
 
-Copyright (C) 2015-2020 Jérémie N'gadi
+Copyright (C) 2015-2021  Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

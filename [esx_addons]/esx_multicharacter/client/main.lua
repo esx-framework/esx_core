@@ -25,12 +25,17 @@ if ESX.GetConfig().Multichar then
 		ESX.PlayerLoaded = false
 		ESX.PlayerData = {}
 		Spawned = false
-		cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Spawn.x, Config.Spawn.y+1.6, Config.Spawn.z+1.3, 0.0, 0.0, 180.0, 100.00, false, 0)
-		SetEntityCoords(PlayerPedId(), Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
-		SetEntityHeading(PlayerPedId(), Config.Spawn.w)
+		cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+		local playerPed = PlayerPedId()
+		SetEntityCoords(playerPed, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z, true, false, false, false)
+		SetEntityHeading(playerPed, Config.Spawn.w)
+		local offset = GetOffsetFromEntityInWorldCoords(playerPed, 0, 1.7, 0.4)
 		DoScreenFadeOut(0)
 		SetCamActive(cam, true)
 		RenderScriptCams(true, false, 1, true, true)
+		SetCamCoord(cam, offset.x, offset.y, offset.z)
+		PointCamAtCoord(cam, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z + 1.3)
+
 		ESX.UI.HUD.SetDisplay(0.0)
 		StartLoop()
 		ShutdownLoadingScreen()
@@ -110,8 +115,8 @@ if ESX.GetConfig().Multichar then
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
 				DoScreenFadeIn(400)
-				while IsScreenFadedOut() do Citizen.Wait(100) end
 			end)
+		repeat Citizen.Wait(200) until not IsScreenFadedOut()
 			
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[Spawned] and Characters[Spawned].model then
@@ -254,20 +259,9 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx:playerLoaded')
 	AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
-		DoScreenFadeOut(100)
 		local spawn = playerData.coords
-		local playerPed = PlayerPedId()
-		FreezeEntityPosition(playerPed, true)
-		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z-1.3, true, false, false, false)
-		SetEntityHeading(playerPed, spawn.heading)
-		Citizen.Wait(300)
-		SetCamActive(cam, false)
-		RenderScriptCams(0, 0)
-		DestroyAllCams(true)
-		DoScreenFadeIn(400)
-		Citizen.Wait(400)
-
 		if isNew or not skin or #skin == 1 then
+			local finished = false
 			local sex = skin.sex or 0
 			if sex == 0 then model = `mp_m_freemode_01` else model = `mp_f_freemode_01` end
 			RequestModel(model)
@@ -286,16 +280,22 @@ if ESX.GetConfig().Multichar then
 				TriggerEvent('esx_skin:openSaveableMenu', function()
 					finished = true end, function() finished = true
 				end)
-				SetEntityHeading(playerPed, spawn.heading)
 			end)
-			while not finished do Citizen.Wait(200) end
-		else
-			local playerPed = PlayerPedId()
-			SetEntityHeading(playerPed, spawn.heading)
-			TriggerEvent('skinchanger:loadSkin', skin or Characters[Spawned].skin)
-			playerPed = PlayerPedId()
-			SetEntityVisible(playerPed, true, 0)
+			repeat Citizen.Wait(200) until finished
 		end
+		DoScreenFadeOut(100)
+		repeat Citizen.Wait(200) until IsScreenFadedOut()
+		SetCamActive(cam, false)
+		RenderScriptCams(false, false, 0, true, true)
+		cam = nil
+		local playerPed = PlayerPedId()
+		FreezeEntityPosition(playerPed, true)
+		SetEntityCoords(playerPed, spawn.x, spawn.y, spawn.z-1.3, true, false, false, false)
+		SetEntityHeading(playerPed, spawn.heading)
+		if not isNew then TriggerEvent('skinchanger:loadSkin', skin or Characters[Spawned].skin) end
+		Citizen.Wait(400)
+		DoScreenFadeIn(400)
+		repeat Citizen.Wait(200) until not IsScreenFadedOut()
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
 		TriggerEvent('playerSpawned')
