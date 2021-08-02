@@ -35,7 +35,7 @@ if ESX.GetConfig().Multichar then
 		RenderScriptCams(true, false, 1, true, true)
 		SetCamCoord(cam, offset.x, offset.y, offset.z)
 		PointCamAtCoord(cam, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z + 1.3)
-
+		ESX.UI.Menu.CloseAll()
 		ESX.UI.HUD.SetDisplay(0.0)
 		StartLoop()
 		ShutdownLoadingScreen()
@@ -147,6 +147,7 @@ if ESX.GetConfig().Multichar then
 		Characters = data
 		local elements = {}
 		local Character = next(Characters)
+		exports.spawnmanager:forceRespawn()
 
 		if Character == nil then
 			SendNUIMessage({
@@ -259,7 +260,7 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx:playerLoaded')
 	AddEventHandler('esx:playerLoaded', function(playerData, isNew, skin)
-		local spawn = playerData.coords
+		local spawn = playerData.coords or Config.Spawn
 		if isNew or not skin or #skin == 1 then
 			local finished = false
 			local sex = skin.sex or 0
