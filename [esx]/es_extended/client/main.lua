@@ -421,7 +421,7 @@ function StartServerSyncLoops()
 	end)
 end
 
-if Config.EnableDefaultInventory then
+if Config.EnableInventory then
 	RegisterCommand('showinv', function()
 		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
 			ESX.ShowInventory()
