@@ -5,6 +5,8 @@ Config.Slots = 4
 Config.Spawn = vector4(-113.7, 565.3, 195.2, 0) -- Sets the location for character selection
 -- To set the spawn location for new characters, modify the default value in the `users` SQL table
 
+Config.CanDelete = false -- Choose whether or not a user can self-delete its own characters
+
 --------------------
 -- Do not use unless you are prepared to adjust your resources to correctly reset data
 -- Information: https://github.com/thelindat/esx_multicharacter#relogging

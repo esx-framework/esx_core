@@ -190,7 +190,7 @@ if ESX.GetConfig().Multichar then
 				local elements = {}
 				if not data.current.new then
 					elements[1] = {label = _('char_play'), action = 'play', value = data.current.value}
-					elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value}
+					if Config.CanDelete then elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value} end
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'choosechar', {
 						title = _('select_char'),
 						align = 'top-left',
