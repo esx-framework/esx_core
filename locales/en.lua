@@ -8,4 +8,11 @@ Locales['en'] = {
 	['char_delete'] = "Delete this character",
 	['cancel'] = "Cancel",
 	['confirm'] = "Confirm",
+	['command_setslots'] = "Set multicharacter slots number of a player",
+	['command_remslots'] = "Remove multicharacter slots number of a player",
+	['command_identifier'] = "Player identifier",
+	['command_slots'] = "# of slots",
+	['slotsadd'] = "You added %s slots to %s",
+	['slotsedit'] = "You set %s slots to %s",
+	['slotsrem'] = "You removed slots to %s",
 }

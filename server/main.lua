@@ -12,9 +12,15 @@ elseif ESX.GetConfig().Multichar == true then
 	local SetupCharacters = function(playerId)
 		while Fetch == -1 do Citizen.Wait(500) end
 		local identifier = Config.Prefix..'%:'..ESX.GetIdentifier(playerId)
+		local slots = MySQL.Sync.fetchScalar("SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?", {
+			ESX.GetIdentifier(playerId)
+		})
+		if not slots then
+			slots = Config.Slots
+		end
 		MySQL.Async.fetchAll(Fetch, {
 			identifier,
-			Config.Slots
+			slots
 		}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
@@ -38,7 +44,7 @@ elseif ESX.GetConfig().Multichar == true then
 				}
 				if result[i].sex == 'm' then characters[id].sex = _('male') else characters[id].sex = _('female') end
 			end
-			TriggerClientEvent('esx_multicharacter:SetupUI', playerId, characters)
+			TriggerClientEvent('esx_multicharacter:SetupUI', playerId, characters, slots)
 		end)
 	end
 
@@ -122,6 +128,44 @@ elseif ESX.GetConfig().Multichar == true then
 		local src = source
 		TriggerEvent('esx:playerLogout', src)
 	end)
+
+	ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
+		local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
+			args.identifier
+		})
+
+		if slots == nil then
+			MySQL.Async.execute('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
+				args.identifier,
+				args.slots
+			})
+			xPlayer.triggerEvent('esx:showNotification', _U('slotsadd', args.slots, args.identifier))
+		else
+			MySQL.Async.execute('UPDATE `multicharacter_slots` SET `slots` = ? WHERE `identifier` = ?', {
+				args.slots,
+				args.identifier
+			})
+			xPlayer.triggerEvent('esx:showNotification', _U('slotsedit', args.slots, args.identifier))
+		end
+	end, true, {help = _U('command_setslots'), validate = true, arguments = {
+		{name = 'identifier', help = _U('command_identifier'), type = 'string'},
+		{name = 'slots', help = _U('command_slots'), type = 'number'}
+	}})
+
+	ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
+		local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
+			args.identifier
+		})
+
+		if slots ~= nil then
+			MySQL.Async.execute('DELETE FROM `multicharacter_slots` WHERE `identifier` = ?', {
+				args.identifier
+			})
+			xPlayer.triggerEvent('esx:showNotification', _U('slotsrem', args.identifier))
+		end
+	end, true, {help = _U('command_remslots'), validate = true, arguments = {
+		{name = 'identifier', help = _U('command_identifier'), type = 'string'}
+	}})
 
 	RegisterCommand('forcelog', function(source, args, rawCommand)
 		TriggerEvent('esx:playerLogout', source)

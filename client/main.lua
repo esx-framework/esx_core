@@ -142,9 +142,10 @@ if ESX.GetConfig().Multichar then
 	end
 	
 	RegisterNetEvent('esx_multicharacter:SetupUI')
-	AddEventHandler('esx_multicharacter:SetupUI', function(data)
+	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
 		DoScreenFadeOut(0)
 		Characters = data
+		local slots = slots
 		local elements = {}
 		local Character = next(Characters)
 		exports.spawnmanager:forceRespawn()
@@ -179,7 +180,7 @@ if ESX.GetConfig().Multichar then
 				local label = v.firstname..' '..v.lastname
 				elements[#elements+1] = {label = label, value = v.id}
 			end
-			if #elements < Config.Slots then
+			if #elements < slots then
 				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
 			end
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'selectchar', {
@@ -228,7 +229,7 @@ if ESX.GetConfig().Multichar then
 				else
 					ESX.UI.Menu.CloseAll()
 					local GetSlot = function()
-						for i=1, Config.Slots do
+						for i=1, slots do
 							if not Characters[i] then
 								return i
 							end

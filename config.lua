@@ -1,7 +1,7 @@
 Config = {}
 Config.Locale = 'en'
 
-Config.Slots = 4
+Config.Slots = 1
 Config.Spawn = vector4(-113.7, 565.3, 195.2, 0) -- Sets the location for character selection
 -- To set the spawn location for new characters, modify the default value in the `users` SQL table
 
