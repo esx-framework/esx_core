@@ -1,0 +1,18 @@
+Locales['it'] = {
+	['male'] = "Maschio",
+	['female'] = "Femmina",
+	['delete_label'] = "Cancella %s %s?",
+	['select_char'] = "Seleziona Personaggio",
+	['create_char'] = "Crea un nuovo personaggio",
+	['char_play'] = "Gioca questo personaggio",
+	['char_delete'] = "Cancella questo personaggio",
+	['cancel'] = "Annulla",
+	['confirm'] = "Conferma",
+	['command_setslots'] = "Imposta il numero di slot di personaggi di un player",
+	['command_remslots'] = "Rimuovi il numero di slot di personaggi di un player",
+	['command_identifier'] = "Identifier del giocatore",
+	['command_slots'] = "# di slot",
+	['slotsadd'] = "Hai aggiunto %s slot a %s",
+	['slotsedit'] = "Hai impostato %s slot a %s",
+	['slotsrem'] = "Hai rimosso gli slot a %s",
+}

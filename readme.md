@@ -8,6 +8,7 @@
 ### Installation
 - Modify your ESX config with `Config.Multichar = true`
 - Set your database name for `Config.Database` in server/main.lua
+- Run `esx_multicharacter.sql` into your database
 - All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
 	- The resource will attempt to set columns automatically
 

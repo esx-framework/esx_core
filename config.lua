@@ -1,7 +1,12 @@
 Config = {}
 Config.Locale = 'en'
 
+--------------------
+-- This is the default number of slots for EVERY player
+-- If you want to manage extra slots for specific players you can do it by using '/setslots' and '/remslots' commands
 Config.Slots = 1
+--------------------
+
 Config.Spawn = vector4(-113.7, 565.3, 195.2, 0) -- Sets the location for character selection
 -- To set the spawn location for new characters, modify the default value in the `users` SQL table
 
