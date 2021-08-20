@@ -40,7 +40,8 @@ elseif ESX.GetConfig().Multichar == true then
 					firstname = result[i].firstname,
 					lastname = result[i].lastname,
 					dateofbirth = result[i].dateofbirth,
-					skin = json.decode(result[i].skin)
+					skin = json.decode(result[i].skin),
+					disabled = result[i].disabled,
 				}
 				if result[i].sex == 'm' then characters[id].sex = _('male') else characters[id].sex = _('female') end
 			end
@@ -83,7 +84,7 @@ elseif ESX.GetConfig().Multichar == true then
 					print(('[^2INFO^7] Attempted to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
 				end
 				if not next(ESX.Jobs) then ESX.Jobs = GetJobs() end
-				Fetch = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin` FROM `users` WHERE identifier LIKE ? LIMIT ?")
+				Fetch = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin`, `disabled` FROM `users` WHERE identifier LIKE ? LIMIT ?")
 			end
 		end)
 	end)
@@ -128,48 +129,6 @@ elseif ESX.GetConfig().Multichar == true then
 		local src = source
 		TriggerEvent('esx:playerLogout', src)
 	end)
-
-	ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
-		local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
-			args.identifier
-		})
-
-		if slots == nil then
-			MySQL.Async.execute('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
-				args.identifier,
-				args.slots
-			})
-			xPlayer.triggerEvent('esx:showNotification', _U('slotsadd', args.slots, args.identifier))
-		else
-			MySQL.Async.execute('UPDATE `multicharacter_slots` SET `slots` = ? WHERE `identifier` = ?', {
-				args.slots,
-				args.identifier
-			})
-			xPlayer.triggerEvent('esx:showNotification', _U('slotsedit', args.slots, args.identifier))
-		end
-	end, true, {help = _U('command_setslots'), validate = true, arguments = {
-		{name = 'identifier', help = _U('command_identifier'), type = 'string'},
-		{name = 'slots', help = _U('command_slots'), type = 'number'}
-	}})
-
-	ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
-		local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
-			args.identifier
-		})
-
-		if slots ~= nil then
-			MySQL.Async.execute('DELETE FROM `multicharacter_slots` WHERE `identifier` = ?', {
-				args.identifier
-			})
-			xPlayer.triggerEvent('esx:showNotification', _U('slotsrem', args.identifier))
-		end
-	end, true, {help = _U('command_remslots'), validate = true, arguments = {
-		{name = 'identifier', help = _U('command_identifier'), type = 'string'}
-	}})
-
-	RegisterCommand('forcelog', function(source, args, rawCommand)
-		TriggerEvent('esx:playerLogout', source)
-	end, true)
 
 else
 	SetTimeout(3000, function() print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration') end)
