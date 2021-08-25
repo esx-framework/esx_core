@@ -294,7 +294,7 @@ if ESX.GetConfig().Multichar then
 			repeat Citizen.Wait(200) until finished
 		end
 		DoScreenFadeOut(100)
-		repeat Citizen.Wait(200) until IsScreenFadedOut()
+		
 		SetCamActive(cam, false)
 		RenderScriptCams(false, false, 0, true, true)
 		cam = nil
