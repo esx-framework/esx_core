@@ -63,7 +63,7 @@ if ESX.GetConfig().Multichar then
 				HideHudComponentThisFrame(12)
 				HideHudComponentThisFrame(21)
 				HideHudAndRadarThisFrame()
-				Citizen.Wait(3)
+				Citizen.Wait(0)
 				local vehicles = GetGamePool('CVehicle')
 				for i=1, #vehicles do
 					SetEntityLocallyInvisible(vehicles[i])
@@ -85,13 +85,13 @@ if ESX.GetConfig().Multichar then
 					local player = players[i]
 					if player ~= PlayerId() and not playerPool[player] then
 						playerPool[player] = true
-						NetworkConcealPlayer(players[player], true, true)
+						NetworkConcealPlayer(player, true, true)
 					end
 				end
 				Citizen.Wait(500)
 			end
-			for i=1, #playerPool do
-				NetworkConcealPlayer(playerPool[i], false, false)
+			for k in pairs(playerPool) do
+				NetworkConcealPlayer(k, false, false)
 			end
 		end)
 	end
