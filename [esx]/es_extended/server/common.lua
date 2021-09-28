@@ -20,8 +20,10 @@ end
 
 local function StartDBSync()
 	Citizen.CreateThread(function()
-		Citizen.Wait(10 * 60 * 1000)
-		ESX.SavePlayers()
+		while true do
+			Citizen.Wait(10 * 60 * 1000)
+			ESX.SavePlayers()
+		end
 	end)
 end
 
