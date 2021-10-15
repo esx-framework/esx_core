@@ -1,7 +1,9 @@
 CREATE TABLE `multicharacter_slots` (
-	`identifier` VARCHAR(60) NOT NULL,
-	`slots` INT NOT NULL
-);
-
-ALTER TABLE `users` 
-	ADD `disabled` BIT NOT NULL DEFAULT 0;
+	`identifier` VARCHAR(60) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`slots` INT(11) NOT NULL,
+	PRIMARY KEY (`identifier`) USING BTREE,
+	INDEX `slots` (`slots`) USING BTREE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+;
