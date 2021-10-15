@@ -29,18 +29,15 @@ elseif ESX.GetConfig().Multichar == true then
 	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
 
 	local SetupCharacters = function(playerId)
-		while Fetch == -1 do Citizen.Wait(500) end
-		local identifier = Config.Prefix..'%:'..ESX.GetIdentifier(playerId)
-		local slots = MySQL.Sync.fetchScalar("SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?", {
-			ESX.GetIdentifier(playerId)
-		})
-		if not slots then
-			slots = Config.Slots
-		end
-		MySQL.Async.fetchAll(Fetch, {
-			identifier,
-			slots
-		}, function(result)
+		repeat Citizen.Wait(200) until FETCH
+		local identifier = ESX.GetIdentifier(playerId)
+		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
+			identifier
+		}) or Config.Slots
+
+		identifier = PREFIX..'%:'..identifier
+
+		MySQL.Async.fetchAll(FETCH, {identifier, slots}, function(result)
 			local characters = {}
 			for i=1, #result, 1 do
 				local job, grade = result[i].job or 'unemployed', tostring(result[i].job_grade)
@@ -49,7 +46,7 @@ elseif ESX.GetConfig().Multichar == true then
 					job = ESX.Jobs[job].label
 				end
 				local accounts = json.decode(result[i].accounts)
-				local id = tonumber(string.sub(result[i].identifier, #Config.Prefix+1, string.find(result[i].identifier, ':')-1))
+				local id = tonumber(string.sub(result[i].identifier, #PREFIX+1, string.find(result[i].identifier, ':')-1))
 				characters[id] = {
 					id = id,
 					bank = accounts.bank,
@@ -69,14 +66,14 @@ elseif ESX.GetConfig().Multichar == true then
 	end
 
 	local DeleteCharacter = function(playerId, charid)
-		local identifier = Config.Prefix..charid..':'..ESX.GetIdentifier(playerId)
+		local identifier = ('%s%s:%s'):format(PREFIX, charid, ESX.GetIdentifier(playerId))
 		local counter = 0
-		for k, v in pairs(IdentifierTables) do
+		for k, v in pairs(DB_TABLES) do
 			MySQL.Async.execute("DELETE FROM "..v.table.." WHERE "..v.column.." = ?", {
 				identifier
 			}, function()
 				counter = counter + 1
-				if counter == #IdentifierTables then
+				if counter == #DB_TABLES then
 					print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, identifier))
 					Citizen.Wait(100)
 					SetupCharacters(playerId)
@@ -87,14 +84,14 @@ elseif ESX.GetConfig().Multichar == true then
 	end
 
 	MySQL.ready(function()
-		MySQL.Async.fetchAll('SELECT `TABLE_NAME`, `COLUMN_NAME`, `CHARACTER_MAXIMUM_LENGTH` FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND (COLUMN_NAME = ? OR COLUMN_NAME = ?) ', {
-			Config.Database, 'identifier', 'owner'
+		MySQL.Async.fetchAll('SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND (COLUMN_NAME = ? OR COLUMN_NAME = ?) ', {
+			DATABASE, 'identifier', 'owner'
 		}, function(result)
 			if result then
 				local varchar, varsize = {}, 0
 				for k, v in pairs(result) do
 					if v.CHARACTER_MAXIMUM_LENGTH and v.CHARACTER_MAXIMUM_LENGTH >= 40 and v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
-					table.insert(IdentifierTables, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
+					table.insert(DB_TABLES, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
 				end
 				if next(varchar) then
 					for k, v in pairs(varchar) do
@@ -102,8 +99,16 @@ elseif ESX.GetConfig().Multichar == true then
 					end
 					print(('[^2INFO^7] Attempted to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
 				end
-				if not next(ESX.Jobs) then ESX.Jobs = GetJobs() end
-				Fetch = MySQL.Sync.store("SELECT `identifier`, `accounts`, `job`, `job_grade`, `firstname`, `lastname`, `dateofbirth`, `sex`, `skin`, `disabled` FROM `users` WHERE identifier LIKE ? LIMIT ?")
+				ESX.Jobs = {}
+				local function GetJobs()
+					if ESX.GetJobs then return ESX.GetJobs()
+					else return exports['es_extended']:getSharedObject().Jobs end
+				end
+				repeat
+					ESX.Jobs = GetJobs()
+					Citizen.Wait(50)
+				until next(ESX.Jobs)
+				FETCH = MySQL.Sync.store("SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?")
 			end
 		end)
 	end)
@@ -121,13 +126,13 @@ elseif ESX.GetConfig().Multichar == true then
 			if isNew then
 				awaitingRegistration[src] = charid
 			else
-				TriggerEvent('esx:onPlayerJoined', src, Config.Prefix..charid)
+				TriggerEvent('esx:onPlayerJoined', src, PREFIX..charid)
 			end
 		end
 	end)
 
 	AddEventHandler('esx_identity:completedRegistration', function(playerId, data)
-		TriggerEvent('esx:onPlayerJoined', playerId, Config.Prefix..awaitingRegistration[playerId], data)
+		TriggerEvent('esx:onPlayerJoined', playerId, PREFIX..awaitingRegistration[playerId], data)
 		awaitingRegistration[playerId] = nil
 	end)
 
@@ -150,5 +155,5 @@ elseif ESX.GetConfig().Multichar == true then
 	end)
 
 else
-	SetTimeout(3000, function() print('[^3WARNING^7] Multicharacter is disabled - please check your ESX configuration') end)
+	assert(nil, '^3WARNING: Multicharacter is disabled - please check your ESX configuration^0')
 end
