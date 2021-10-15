@@ -1,7 +1,8 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 game 'gta5'
 description 'https://github.com/thelindat/esx_multicharacter'
-version '1.2.2'
+version '1.3'
+lua54 'yes'
 
 dependencies {
 	'es_extended',
@@ -19,7 +20,7 @@ shared_scripts {
 server_scripts {
 	'@es_extended/imports.lua',
 	'@mysql-async/lib/MySQL.lua',
-	'server/*.lua'
+	'server/*.lua',
 }
 
 client_scripts {
