@@ -178,11 +178,7 @@ if ESX.GetConfig().Multichar then
 				end
 				if Spawned == false then SetupCharacter(Character) end
 				local label = v.firstname..' '..v.lastname
-				if Characters[k].disabled == 1 then
-					elements[#elements+1] = {label = label, value = v.id}
-				else
-					elements[#elements+1] = {label = label, value = v.id}
-				end
+				elements[#elements+1] = {label = label, value = v.id}
 			end
 			if #elements < slots then
 				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
@@ -194,10 +190,10 @@ if ESX.GetConfig().Multichar then
 			}, function(data, menu)
 				local elements = {}
 				if not data.current.new then
-					if Characters[data.current.value].disabled == 0 then 
-						elements[1] = {label = _('char_play'), action = 'play', value = data.current.value} 
-					else
+					if Characters[data.current.value].disabled then 
 						elements[1] = {label = _('char_disabled'), value = data.current.value} 
+					else
+						elements[1] = {label = _('char_play'), action = 'play', value = data.current.value} 
 					end
 					if Config.CanDelete then elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value} end
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'choosechar', {
