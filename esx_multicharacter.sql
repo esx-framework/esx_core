@@ -7,3 +7,6 @@ CREATE TABLE `multicharacter_slots` (
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `users` 
+	`disabled` TINYINT(1) NULL DEFAULT '0',
