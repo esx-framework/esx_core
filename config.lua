@@ -4,13 +4,13 @@ Config.Locale = 'en'
 --------------------
 -- This is the default number of slots for EVERY player
 -- If you want to manage extra slots for specific players you can do it by using '/setslots' and '/remslots' commands
-Config.Slots = 1
+Config.Slots = 4
 --------------------
 
 Config.Spawn = vector4(-113.7, 565.3, 195.2, 0) -- Sets the location for character selection
 -- To set the spawn location for new characters, modify the default value in the `users` SQL table
 
-Config.CanDelete = false -- Choose whether or not a user can self-delete its own characters
+Config.CanDelete = true -- Choose whether or not a user can self-delete its own characters
 
 --------------------
 -- Do not use unless you are prepared to adjust your resources to correctly reset data
