@@ -1,13 +1,32 @@
+local function DATABASE()
+	local connectionString = GetConvar('mysql_connection_string', '');
+	if connectionString == '' then
+		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
+	elseif string.match(connectionString, 'mysql://') then
+		connectionString = string.sub(connectionString, string.find(connectionString, "/[^/]*$")+1)
+		return connectionString
+	else
+		connectionString = {string.strsplit(';', connectionString)}
+		for i=1, #connectionString do
+			local v = connectionString[i]
+			if v:match('database') then
+				return v:sub(10, #v)
+			end
+		end
+	end
+end
+
 if not ESX then
-	SetTimeout(3000, function() print('[^3WARNING^7] Unable to start Multicharacter - your version of ESX is not compatible ') end)
+	error('\n^1WARNING: Unable to start Multicharacter - you must be using ESX Legacy^0')
 elseif ESX.GetConfig().Multichar == true then
-	local IdentifierTables, Fetch = {}, -1
-
-	-- enter the name of your database here
-	Config.Database = 'es_extended'
-
+	DATABASE = DATABASE()
+	local DB_TABLES = {}
+	local FETCH = nil
+	local PREFIX = 'char'
 	-- enter a prefix to prepend to all user identifiers (keep it short)
-	Config.Prefix = 'char'
+	-- if you modify this, you will need to modify es_extended due to an oversight!
+	-- https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
+	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
 
 	local SetupCharacters = function(playerId)
 		while Fetch == -1 do Citizen.Wait(500) end
