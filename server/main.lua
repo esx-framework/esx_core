@@ -2,9 +2,12 @@ local function DATABASE()
 	local connectionString = GetConvar('mysql_connection_string', '');
 	if connectionString == '' then
 		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
-	elseif string.match(connectionString, 'mysql://') then
-		connectionString = string.sub(connectionString, string.find(connectionString, "/[^/]*$")+1)
-		return connectionString
+	elseif connectionString:find('mysql://') then
+		if connectionString:find('?*$') then
+			return connectionString:match('[^/][%w]*[?$]'):sub(0, -2)
+		else
+			return connectionString:match('[^/][%w]*$')
+		end
 	else
 		connectionString = {string.strsplit(';', connectionString)}
 		for i=1, #connectionString do
