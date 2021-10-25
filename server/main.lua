@@ -31,9 +31,25 @@ elseif ESX.GetConfig().Multichar == true then
 	-- https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
 	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
 
-	local SetupCharacters = function(playerId)
+	local function GetIdentifier(playerId)
+		local identifier = 'license:'
+		for _, v in pairs(GetPlayerIdentifiers(playerId)) do
+			if string.match(v, identifier) then
+				identifier = string.gsub(v, identifier, '')
+				return identifier
+			end
+		end
+	end
+
+	if next(ESX.Players) then
+		for k, v in pairs(ESX.Players) do
+			ESX.Players[k] = GetIdentifier(v.source)
+		end
+	else ESX.Players = {} end
+
+	local function SetupCharacters(playerId)
 		repeat Citizen.Wait(200) until FETCH
-		local identifier = ESX.GetIdentifier(playerId)
+		local identifier = GetIdentifier(playerId)
 		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or Config.Slots
@@ -68,16 +84,29 @@ elseif ESX.GetConfig().Multichar == true then
 		end)
 	end
 
-	local DeleteCharacter = function(playerId, charid)
-		local identifier = ('%s%s:%s'):format(PREFIX, charid, ESX.GetIdentifier(playerId))
+	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+		deferrals.defer()
+		local identifier = GetIdentifier(source)
+		Citizen.Wait(100)
+		if ESX.Players[identifier] then
+			deferrals.done('A player is already connected to the server with this identifier.')
+		else
+			ESX.Players[identifier] = true
+			deferrals.done()
+		end
+	end)
+
+	local function DeleteCharacter(playerId, charid)
+		local identifier = GetIdentifier(playerId)
+		local character = ('%s%s:%s'):format(PREFIX, charid, identifier)
 		local counter = 0
-		for k, v in pairs(DB_TABLES) do
+		for _, v in pairs(DB_TABLES) do
 			MySQL.Async.execute("DELETE FROM "..v.table.." WHERE "..v.column.." = ?", {
-				identifier
+				character
 			}, function()
 				counter = counter + 1
 				if counter == #DB_TABLES then
-					print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, identifier))
+					print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, character))
 					Citizen.Wait(100)
 					SetupCharacters(playerId)
 				end
@@ -124,12 +153,12 @@ elseif ESX.GetConfig().Multichar == true then
 	local awaitingRegistration = {}
 	RegisterServerEvent("esx_multicharacter:CharacterChosen")
 	AddEventHandler('esx_multicharacter:CharacterChosen', function(charid, isNew)
-		local src = source
 		if type(charid) == 'number' and string.len(charid) <= 2 and type(isNew) == 'boolean' then
 			if isNew then
-				awaitingRegistration[src] = charid
+				awaitingRegistration[source] = charid
 			else
-				TriggerEvent('esx:onPlayerJoined', src, PREFIX..charid)
+				TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
+				ESX.Players[GetIdentifier(source)] = source
 			end
 		end
 	end)
@@ -137,10 +166,12 @@ elseif ESX.GetConfig().Multichar == true then
 	AddEventHandler('esx_identity:completedRegistration', function(playerId, data)
 		TriggerEvent('esx:onPlayerJoined', playerId, PREFIX..awaitingRegistration[playerId], data)
 		awaitingRegistration[playerId] = nil
+		ESX.Players[GetIdentifier(source)] = playerId
 	end)
 
 	AddEventHandler('playerDropped', function(reason)
 		awaitingRegistration[source] = nil
+		ESX.Players[GetIdentifier(source)] = nil
 	end)
 
 	RegisterServerEvent("esx_multicharacter:DeleteCharacter")
