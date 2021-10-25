@@ -393,7 +393,7 @@ function OpenMobileMechanicActionsMenu()
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, true)
 
-			local towmodel = GetHashKey('flatbed')
+			local towmodel = `flatbed`
 			local isVehicleTow = IsVehicleModel(vehicle, towmodel)
 
 			if isVehicleTow then
@@ -937,9 +937,9 @@ Citizen.CreateThread(function()
 					else
 
 						if
-							GetEntityModel(vehicle) == GetHashKey('flatbed')   or
-							GetEntityModel(vehicle) == GetHashKey('towtruck2') or
-							GetEntityModel(vehicle) == GetHashKey('slamvan3')
+							GetEntityModel(vehicle) == `flatbed` or
+							GetEntityModel(vehicle) == `towtruck2` or
+							GetEntityModel(vehicle) == `slamvan3`
 						then
 							TriggerServerEvent('esx_service:disableService', 'mechanic')
 						end

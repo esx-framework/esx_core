@@ -997,7 +997,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 		CurrentActionData = {entity = entity}
 	end
 
-	if GetEntityModel(entity) == GetHashKey('p_ld_stinger_s') then
+	if GetEntityModel(entity) == `p_ld_stinger_s` then
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 
