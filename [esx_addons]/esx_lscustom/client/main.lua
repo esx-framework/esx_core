@@ -387,7 +387,7 @@ Citizen.CreateThread(function()
 
 			if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
 				for k,v in pairs(Config.Zones) do
-					if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x and not lsMenuIsShowed then
+					if #(coords - v.Pos) < v.Size.x and not lsMenuIsShowed then
 						isInLSMarker  = true
 						ESX.ShowHelpNotification(v.Hint)
 						break

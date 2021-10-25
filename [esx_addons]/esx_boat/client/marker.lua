@@ -85,7 +85,7 @@ Citizen.CreateThread(function()
 		local currentZone, currentZoneNum
 
 		for i=1, #Config.Zones.BoatShops, 1 do
-			local distance = GetDistanceBetweenCoords(coords, Config.Zones.BoatShops[i].Outside, true)
+			local distance = #(coords - Config.Zones.BoatShops[i].Outside)
 
 			if distance < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, Config.Zones.BoatShops[i].Outside, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, nil, nil, false)
@@ -100,7 +100,7 @@ Citizen.CreateThread(function()
 		end
 
 		for i=1, #Config.Zones.Garages, 1 do
-			local distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].GaragePos, true)
+			local distance = #(coords - Config.Zones.Garages[i].GaragePos)
 
 			if distance < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, Config.Zones.Garages[i].GaragePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, 100, false, true, 2, false, nil, nil, false)
@@ -113,7 +113,7 @@ Citizen.CreateThread(function()
 				currentZoneNum = i
 			end
 
-			distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].StorePos, true)
+			distance = #(coords - Config.Zones.Garages[i].StorePos)
 
 			if distance < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, Config.Zones.Garages[i].StorePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.StoreMarker.x, Config.StoreMarker.y, Config.StoreMarker.z, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, false, true, 2, false, nil, nil, false)

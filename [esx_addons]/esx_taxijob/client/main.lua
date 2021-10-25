@@ -500,7 +500,7 @@ Citizen.CreateThread(function()
 			local isInMarker, letSleep, currentZone = false, true
 
 			for k,v in pairs(Config.Zones) do
-				local distance = GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true)
+				local distance = #(coords - v.Pos)
 
 				if v.Type ~= -1 and distance < Config.DrawDistance then
 					letSleep = false
