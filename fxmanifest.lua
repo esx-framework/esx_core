@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 description 'https://github.com/thelindat/esx_multicharacter'
-version '1.3.1'
+version '1.4'
 lua54 'yes'
 
 dependencies {

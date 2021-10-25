@@ -53,7 +53,7 @@ elseif ESX.GetConfig().Multichar == true then
 		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or Config.Slots
-		identifier = ('%s:%s'):format(PREFIX, identifier)
+		identifier = PREFIX..'%:'..identifier
 
 		MySQL.Async.fetchAll(FETCH, {identifier, slots}, function(result)
 			local characters
@@ -100,23 +100,25 @@ elseif ESX.GetConfig().Multichar == true then
 		end
 	end)
 
-	local function DeleteCharacter(playerId, charid)
-		local identifier = GetIdentifier(playerId)
-		local character = ('%s%s:%s'):format(PREFIX, charid, identifier)
-		local counter = 0
-		for _, v in pairs(DB_TABLES) do
-			MySQL.Async.execute("DELETE FROM "..v.table.." WHERE "..v.column.." = ?", {
-				character
-			}, function()
-				counter = counter + 1
-				if counter == #DB_TABLES then
-					print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(playerId), playerId, character))
-					Citizen.Wait(100)
-					SetupCharacters(playerId)
-				end
-			end)
-			Citizen.Wait(5)
+	local function DeleteCharacter(source, charid)
+		local identifier = ('%s%s:%s'):format(PREFIX, charid, GetIdentifier(source))
+		local query = "DELETE FROM ?? WHERE ?? = ?"
+		local tableCount = #DB_TABLES
+		local queries = table.create(tableCount, 0)
+
+		for i=1, tableCount do
+			local v = DB_TABLES[i]
+			queries[i] = {query = query, values = {v.table, v.column, identifier}}
 		end
+
+		MySQL.Async.transaction(queries, function(result)
+			if result then
+				print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(source), source, identifier))
+				SetupCharacters(source)
+			else
+				print(result)
+			end
+		end)
 	end
 
 	MySQL.ready(function()
@@ -130,10 +132,20 @@ elseif ESX.GetConfig().Multichar == true then
 					table.insert(DB_TABLES, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
 				end
 				if next(varchar) then
+					local query = "ALTER TABLE ?? MODIFY COLUMN ?? VARCHAR(60)"
+					local queries = table.create(varsize, 0)
+
 					for k, v in pairs(varchar) do
-						MySQL.Sync.execute("ALTER TABLE "..k.." MODIFY COLUMN "..v.." VARCHAR(60)")
+						queries[#queries+1] = {query = query, values = {k, v}}
 					end
-					print(('[^2INFO^7] Attempted to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
+
+					MySQL.Async.transaction(queries, function(result)
+						if result then
+							print(('[^2INFO^7] Updated ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
+						else
+							print(('[^2INFO^7] Unable to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
+						end
+					end)
 				end
 				ESX.Jobs = {}
 				local function GetJobs()
