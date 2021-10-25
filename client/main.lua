@@ -7,7 +7,7 @@ if ESX.GetConfig().Multichar then
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
-				while not GetResourceState('esx_menu_default') == 'started' do 
+				while not GetResourceState('esx_menu_default') == 'started' do
 					Citizen.Wait(0)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
@@ -139,7 +139,7 @@ if ESX.GetConfig().Multichar then
 			character = Characters[spawned]
 		})
 	end
-	
+
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
 		DoScreenFadeOut(0)
