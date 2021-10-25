@@ -20,7 +20,7 @@ local function DATABASE()
 end
 
 if not ESX then
-	error('\n^1WARNING: Unable to start Multicharacter - you must be using ESX Legacy^0')
+	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
 elseif ESX.GetConfig().Multichar == true then
 	DATABASE = DATABASE()
 	local DB_TABLES = {}
@@ -114,9 +114,10 @@ elseif ESX.GetConfig().Multichar == true then
 		MySQL.Async.transaction(queries, function(result)
 			if result then
 				print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(source), source, identifier))
+				Citizen.Wait(50)
 				SetupCharacters(source)
 			else
-				print(result)
+				error('\n^1Transaction failed while trying to delete '..identifier..'^0')
 			end
 		end)
 	end
