@@ -31,9 +31,9 @@ elseif ESX.GetConfig().Multichar == true then
 	-- https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
 	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
 
-	local function GetIdentifier(playerId)
+	local function GetIdentifier(source)
 		local identifier = 'license:'
-		for _, v in pairs(GetPlayerIdentifiers(playerId)) do
+		for _, v in pairs(GetPlayerIdentifiers(source)) do
 			if string.match(v, identifier) then
 				identifier = string.gsub(v, identifier, '')
 				return identifier
@@ -47,40 +47,44 @@ elseif ESX.GetConfig().Multichar == true then
 		end
 	else ESX.Players = {} end
 
-	local function SetupCharacters(playerId)
-		repeat Citizen.Wait(200) until FETCH
-		local identifier = GetIdentifier(playerId)
+	local function SetupCharacters(source)
+		while not FETCH do Citizen.Wait(100) end
+		local identifier = GetIdentifier(source)
 		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or Config.Slots
-
-		identifier = PREFIX..'%:'..identifier
+		identifier = ('%s:%s'):format(PREFIX, identifier)
 
 		MySQL.Async.fetchAll(FETCH, {identifier, slots}, function(result)
-			local characters = {}
-			for i=1, #result, 1 do
-				local job, grade = result[i].job or 'unemployed', tostring(result[i].job_grade)
-				if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
-					if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
-					job = ESX.Jobs[job].label
+			local characters
+			if result then
+				local characterCount = #result
+				characters = table.create(0, characterCount)
+				for i=1, characterCount, 1 do
+					local i = result[i]
+					local job, grade = i.job or 'unemployed', tostring(i.job_grade)
+					if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
+						if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
+						job = ESX.Jobs[job].label
+					end
+					local accounts = json.decode(i.accounts)
+					local id = tonumber(string.sub(i.identifier, #PREFIX+1, string.find(i.identifier, ':')-1))
+					characters[id] = {
+						id = id,
+						bank = accounts.bank,
+						money = accounts.money,
+						job = job,
+						job_grade = grade,
+						firstname = i.firstname,
+						lastname = i.lastname,
+						dateofbirth = i.dateofbirth,
+						skin = json.decode(i.skin),
+						disabled = i.disabled,
+						sex = i.sex == 'm' and _('male') or _('female')
+					}
 				end
-				local accounts = json.decode(result[i].accounts)
-				local id = tonumber(string.sub(result[i].identifier, #PREFIX+1, string.find(result[i].identifier, ':')-1))
-				characters[id] = {
-					id = id,
-					bank = accounts.bank,
-					money = accounts.money,
-					job = job,
-					job_grade = grade,
-					firstname = result[i].firstname,
-					lastname = result[i].lastname,
-					dateofbirth = result[i].dateofbirth,
-					skin = json.decode(result[i].skin),
-					disabled = result[i].disabled,
-				}
-				if result[i].sex == 'm' then characters[id].sex = _('male') else characters[id].sex = _('female') end
 			end
-			TriggerClientEvent('esx_multicharacter:SetupUI', playerId, characters, slots)
+			TriggerClientEvent('esx_multicharacter:SetupUI', source, characters, slots)
 		end)
 	end
 
@@ -163,10 +167,10 @@ elseif ESX.GetConfig().Multichar == true then
 		end
 	end)
 
-	AddEventHandler('esx_identity:completedRegistration', function(playerId, data)
-		TriggerEvent('esx:onPlayerJoined', playerId, PREFIX..awaitingRegistration[playerId], data)
-		awaitingRegistration[playerId] = nil
-		ESX.Players[GetIdentifier(source)] = playerId
+	AddEventHandler('esx_identity:completedRegistration', function(source, data)
+		TriggerEvent('esx:onPlayerJoined', source, PREFIX..awaitingRegistration[source], data)
+		awaitingRegistration[source] = nil
+		ESX.Players[GetIdentifier(source)] = source
 	end)
 
 	AddEventHandler('playerDropped', function(reason)
@@ -176,16 +180,14 @@ elseif ESX.GetConfig().Multichar == true then
 
 	RegisterServerEvent("esx_multicharacter:DeleteCharacter")
 	AddEventHandler('esx_multicharacter:DeleteCharacter', function(charid)
-		local src = source
 		if type(charid) == "number" and string.len(charid) <= 2 then
-			DeleteCharacter(src, charid)
+			DeleteCharacter(source, charid)
 		end
 	end)
 
 	RegisterServerEvent("esx_multicharacter:relog")
 	AddEventHandler('esx_multicharacter:relog', function()
-		local src = source
-		TriggerEvent('esx:playerLogout', src)
+		TriggerEvent('esx:playerLogout', source)
 	end)
 
 else
