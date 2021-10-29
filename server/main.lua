@@ -25,14 +25,12 @@ elseif ESX.GetConfig().Multichar == true then
 	DATABASE = DATABASE()
 	local DB_TABLES = {}
 	local FETCH = nil
-	local PREFIX = 'char'
-	-- enter a prefix to prepend to all user identifiers (keep it short)
-	-- if you modify this, you will need to modify es_extended due to an oversight!
-	-- https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
-	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
+	local SLOTS = Config.Slots or 4
+	local PREFIX = Config.Prefix or 'char'
+	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or Config.Identifier
 
 	local function GetIdentifier(source)
-		local identifier = 'license:'
+		local identifier = PRIMARY_IDENTIFIER..':'
 		for _, v in pairs(GetPlayerIdentifiers(source)) do
 			if string.match(v, identifier) then
 				identifier = string.gsub(v, identifier, '')
@@ -52,7 +50,7 @@ elseif ESX.GetConfig().Multichar == true then
 		local identifier = GetIdentifier(source)
 		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
-		}) or Config.Slots
+		}) or SLOTS
 		identifier = PREFIX..'%:'..identifier
 
 		MySQL.Async.fetchAll(FETCH, {identifier, slots}, function(result)
