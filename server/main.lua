@@ -90,11 +90,15 @@ elseif ESX.GetConfig().Multichar == true then
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
 		Citizen.Wait(100)
-		if ESX.Players[identifier] then
-			deferrals.done('A player is already connected to the server with this identifier.')
+		if identifier then
+			if ESX.Players[identifier] then
+				deferrals.done('A player is already connected to the server with this identifier.')
+			else
+				ESX.Players[identifier] = true
+				deferrals.done()
+			end
 		else
-			ESX.Players[identifier] = true
-			deferrals.done()
+			deferrals.done("You don't have identifier")
 		end
 	end)
 
