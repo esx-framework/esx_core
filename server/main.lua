@@ -41,14 +41,16 @@ elseif ESX.GetConfig().Multichar == true then
 
 	if next(ESX.Players) then
 		for k, v in pairs(ESX.Players) do
-			ESX.Players[k] = GetIdentifier(v.source)
+			ESX.Players[GetIdentifier(v.source)] = true
 		end
 	else ESX.Players = {} end
 
 	local function SetupCharacters(source)
 		while not FETCH do Citizen.Wait(100) end
 		local identifier = GetIdentifier(source)
-		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
+        ESX.Players[identifier] = true
+		
+        local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or SLOTS
 		identifier = PREFIX..'%:'..identifier
@@ -92,13 +94,12 @@ elseif ESX.GetConfig().Multichar == true then
 		Citizen.Wait(100)
 		if identifier then
 			if ESX.Players[identifier] then
-				deferrals.done('A player is already connected to the server with this identifier.')
+				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier)
 			else
-				ESX.Players[identifier] = true
 				deferrals.done()
 			end
 		else
-			deferrals.done("You don't have identifier")
+			deferrals.done(('Unable to retrieve player identifier.\nIdentifier type: %s'):format(PRIMARY_IDENTIFIER)
 		end
 	end)
 
@@ -177,7 +178,7 @@ elseif ESX.GetConfig().Multichar == true then
 				awaitingRegistration[source] = charid
 			else
 				TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
-				ESX.Players[GetIdentifier(source)] = source
+				ESX.Players[GetIdentifier(source)] = true
 			end
 		end
 	end)
@@ -185,7 +186,7 @@ elseif ESX.GetConfig().Multichar == true then
 	AddEventHandler('esx_identity:completedRegistration', function(source, data)
 		TriggerEvent('esx:onPlayerJoined', source, PREFIX..awaitingRegistration[source], data)
 		awaitingRegistration[source] = nil
-		ESX.Players[GetIdentifier(source)] = source
+		ESX.Players[GetIdentifier(source)] = true
 	end)
 
 	AddEventHandler('playerDropped', function(reason)
