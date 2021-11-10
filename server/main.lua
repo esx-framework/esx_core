@@ -49,7 +49,7 @@ elseif ESX.GetConfig().Multichar == true then
 		while not FETCH do Citizen.Wait(100) end
 		local identifier = GetIdentifier(source)
         ESX.Players[identifier] = true
-		
+
         local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or SLOTS
@@ -94,12 +94,12 @@ elseif ESX.GetConfig().Multichar == true then
 		Citizen.Wait(100)
 		if identifier then
 			if ESX.Players[identifier] then
-				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier)
+				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
 			else
 				deferrals.done()
 			end
 		else
-			deferrals.done(('Unable to retrieve player identifier.\nIdentifier type: %s'):format(PRIMARY_IDENTIFIER)
+			deferrals.done(('Unable to retrieve player identifier.\nIdentifier type: %s'):format(PRIMARY_IDENTIFIER))
 		end
 	end)
 

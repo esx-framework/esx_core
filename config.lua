@@ -29,7 +29,7 @@ else
 
 	-- Do not use unless you are prepared to adjust your resources to correctly reset data
 	-- Information: https://github.com/thelindat/esx_multicharacter#relogging
-	Config.Relog = false
+	Config.Relog = true
 	--------------------
 
 	-- Default appearance for new characters
