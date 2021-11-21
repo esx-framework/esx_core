@@ -11,6 +11,15 @@
 - All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
 	- The resource will attempt to set columns automatically
 
+### Changing character prefix
+- Each character is created a modified identifier (char#:identifier)
+- Due to an oversight, ESX Legacy only supports a prefix with a length of 4
+- If you change the length, refer to https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
+- Modify this line to the following
+```lua
+if Config.Multichar then self.license = 'license:'..identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
+```
+
 ### Conflicts
 * The following resources should not be used with ESX Legacy and can result in errors
 	- essentialmode
@@ -24,8 +33,6 @@
 	- Download and run all requirements
 	- Use a fresh spawnmanager as many people alter the code
 	- Ensure none of the conflicting resources are enabled
-#### mysql-async duplicate entry
-	- You have not increased the VARCHAR size of the table holding identifiers - usually `owner` or `identifier`
 
 #### The menu interface is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/126976325-17cc3241-bb9e-451f-a6ed-610a8ef52fa5.png)

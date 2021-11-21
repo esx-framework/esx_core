@@ -8,9 +8,7 @@ if IsDuplicityVersion() then
 	--------------------
 
 	-- Text to prepend to each character (char#:identifier) - keep it short
-	-- if you modify this, you will need to modify es_extended due to an oversight!
-	-- https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
-	-- if Config.Multichar then self.license = 'license'..identifier:sub(identifier:find(':')) else self.license = 'license:'..identifier end
+	-- if you change the length, you will need to modify es_extended (refer to the readme)
 	Config.Prefix = 'char'
 	--------------------
 
