@@ -40,7 +40,9 @@ elseif ESX.GetConfig().Multichar == true then
 	end
 
 	if next(ESX.Players) then
-		for k, v in pairs(ESX.Players) do
+		local players = table.clone(ESX.Players)
+		table.wipe(ESX.Players)
+		for _, v in pairs(players) do
 			ESX.Players[GetIdentifier(v.source)] = true
 		end
 	else ESX.Players = {} end
@@ -48,9 +50,9 @@ elseif ESX.GetConfig().Multichar == true then
 	local function SetupCharacters(source)
 		while not FETCH do Citizen.Wait(100) end
 		local identifier = GetIdentifier(source)
-        ESX.Players[identifier] = true
+		ESX.Players[identifier] = true
 
-        local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
+		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
 			identifier
 		}) or SLOTS
 		identifier = PREFIX..'%:'..identifier
