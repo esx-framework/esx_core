@@ -1,28 +1,24 @@
-local function DATABASE()
-	local connectionString = GetConvar('mysql_connection_string', '');
-	if connectionString == '' then
-		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
-	elseif connectionString:find('mysql://') then
-		if connectionString:find('?*$') then
-			return connectionString:match('[^/][%w]*[?$]'):sub(0, -2)
-		else
-			return connectionString:match('[^/][%w]*$')
-		end
-	else
-		connectionString = {string.strsplit(';', connectionString)}
-		for i=1, #connectionString do
-			local v = connectionString[i]
-			if v:match('database') then
-				return v:sub(10, #v)
-			end
-		end
-	end
-end
-
 if not ESX then
 	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
 elseif ESX.GetConfig().Multichar == true then
-	DATABASE = DATABASE()
+	local DATABASE do
+		local connectionString = GetConvar('mysql_connection_string', '');
+		if connectionString == '' then
+			error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
+		elseif connectionString:find('mysql://') then
+			connectionString = connectionString:sub(9, -1)
+			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
+		else
+			connectionString = {string.strsplit(';', connectionString)}
+			for i=1, #connectionString do
+				local v = connectionString[i]
+				if v:match('database') then
+					DATABASE = v:sub(10, #v)
+				end
+			end
+		end
+	end
+
 	local DB_TABLES = {}
 	local FETCH = nil
 	local SLOTS = Config.Slots or 4
