@@ -8,7 +8,6 @@ version 'legacy'
 
 server_scripts {
 	'@es_extended/imports.lua',
-	'@mysql-async/lib/MySQL.lua',
 	'server/classes/addonaccount.lua',
 	'server/main.lua'
 }
