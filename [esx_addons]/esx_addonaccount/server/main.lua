@@ -1,16 +1,13 @@
 local AccountsIndex, Accounts, SharedAccounts = {}, {}, {}
-
-MySQL.ready(function()
-	local result = MySQL.Sync.fetchAll('SELECT * FROM addon_account')
+AddEventHandler('onServerResourceStart', function()
+	local result = exports.oxmysql:execute('SELECT * FROM addon_account')
 
 	for i=1, #result, 1 do
 		local name   = result[i].name
 		local label  = result[i].label
 		local shared = result[i].shared
 
-		local result2 = MySQL.Sync.fetchAll('SELECT * FROM addon_account_data WHERE account_name = @account_name', {
-			['@account_name'] = name
-		})
+		local result2 = exports.oxmysql:execute('SELECT * FROM addon_account_data WHERE account_name = ?', {name})
 
 		if shared == 0 then
 			table.insert(AccountsIndex, name)
@@ -24,11 +21,7 @@ MySQL.ready(function()
 			local money = nil
 
 			if #result2 == 0 then
-				MySQL.Sync.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, NULL)', {
-					['@account_name'] = name,
-					['@money']        = 0
-				})
-
+				exports.oxmysql:insert('INSERT INTO addon_account_data (account_name, money, owner) VALUES (?, ?, NULL)', {name, 0})
 				money = 0
 			else
 				money = result2[1].money
@@ -68,11 +61,7 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		local account = GetAccount(name, xPlayer.identifier)
 
 		if account == nil then
-			MySQL.Async.execute('INSERT INTO addon_account_data (account_name, money, owner) VALUES (@account_name, @money, @owner)', {
-				['@account_name'] = name,
-				['@money']        = 0,
-				['@owner']        = xPlayer.identifier
-			})
+			exports.oxmysql:insert('INSERT INTO addon_account_data (account_name, money, owner) VALUES (?, ?, ?)', {name, 0, xPlayer.identifier})
 
 			account = CreateAddonAccount(name, xPlayer.identifier, 0)
 			table.insert(Accounts[name], account)

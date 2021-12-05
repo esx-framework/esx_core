@@ -28,16 +28,9 @@ function CreateAddonAccount(name, owner, money)
 
 	self.save = function()
 		if self.owner == nil then
-			MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name', {
-				['@account_name'] = self.name,
-				['@money']        = self.money
-			})
+			exports.oxmysql:update('UPDATE addon_account_data SET money = ? WHERE account_name = ?', {self.money, self.name})
 		else
-			MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name AND owner = @owner', {
-				['@account_name'] = self.name,
-				['@money']        = self.money,
-				['@owner']        = self.owner
-			})
+			exports.oxmysql:update('UPDATE addon_account_data SET money = ? WHERE account_name = ? AND owner = ?', {self.money, self.name, self.owner})
 		end
 	end
 
