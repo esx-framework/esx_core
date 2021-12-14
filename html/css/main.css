@@ -25,10 +25,9 @@ body {
     display:none;
     position: absolute;
 	top: 50%;
-    right: 0;
+    right: 25;
     transform: translate(0, -50%);
 	background: rgba(0,0,0,0.7);
-	margin-right: 1.5rem;
 }
 
 .header {
