@@ -72,11 +72,6 @@ AddEventHandler('esx_drugs:outofbound', function()
 	outofbound = true
 end)
 
-RegisterServerEvent('esx_drugs:quitprocess')
-AddEventHandler('esx_drugs:quitprocess', function()
-	can = false
-end)
-
 ESX.RegisterServerCallback('esx_drugs:cannabis_count', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xCannabis = xPlayer.getInventoryItem('cannabis').count
