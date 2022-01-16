@@ -1,9 +1,10 @@
 ESX                           = {}
+Core                          = {}
 ESX.PlayerData                = {}
 ESX.PlayerLoaded              = false
-ESX.CurrentRequestId          = 0
-ESX.ServerCallbacks           = {}
-ESX.TimeoutCallbacks          = {}
+Core.CurrentRequestId          = 0
+Core.ServerCallbacks          = {}
+Core.TimeoutCallbacks          = {}
 
 ESX.UI                        = {}
 ESX.UI.HUD                    = {}
@@ -21,15 +22,15 @@ ESX.Scaleform.Utils           = {}
 ESX.Streaming                 = {}
 
 ESX.SetTimeout = function(msec, cb)
-	table.insert(ESX.TimeoutCallbacks, {
+	table.insert(Core.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
 		cb   = cb
 	})
-	return #ESX.TimeoutCallbacks
+	return #Core.TimeoutCallbacks
 end
 
 ESX.ClearTimeout = function(i)
-	ESX.TimeoutCallbacks[i] = nil
+	Core.TimeoutCallbacks[i] = nil
 end
 
 ESX.IsPlayerLoaded = function()
@@ -86,14 +87,14 @@ ESX.ShowFloatingHelpNotification = function(msg, coords)
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
-	ESX.ServerCallbacks[ESX.CurrentRequestId] = cb
+	Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
-	TriggerServerEvent('esx:triggerServerCallback', name, ESX.CurrentRequestId, ...)
+	TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
 
-	if ESX.CurrentRequestId < 65535 then
-		ESX.CurrentRequestId = ESX.CurrentRequestId + 1
+	if Core.CurrentRequestId < 65535 then
+		Core.CurrentRequestId = Core.CurrentRequestId + 1
 	else
-		ESX.CurrentRequestId = 0
+		Core.CurrentRequestId = 0
 	end
 end
 
@@ -849,7 +850,7 @@ ESX.ShowInventory = function()
 						players[GetPlayerServerId(playerNearby)] = true
 					end
 
-					ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
+					Core.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
 						for playerId,playerName in pairs(returnedPlayers) do
 							table.insert(elements, {
 								label = playerName,
@@ -989,8 +990,8 @@ end
 
 RegisterNetEvent('esx:serverCallback')
 AddEventHandler('esx:serverCallback', function(requestId, ...)
-	ESX.ServerCallbacks[requestId](...)
-	ESX.ServerCallbacks[requestId] = nil
+	Core.ServerCallbacks[requestId](...)
+	Core.ServerCallbacks[requestId] = nil
 end)
 
 RegisterNetEvent('esx:showNotification')
@@ -1012,13 +1013,13 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		local sleep = 100
-		if #ESX.TimeoutCallbacks > 0 then
+		if #Core.TimeoutCallbacks > 0 then
 			local currTime = GetGameTimer()
 			sleep = 0
-			for i=1, #ESX.TimeoutCallbacks, 1 do
-				if currTime >= ESX.TimeoutCallbacks[i].time then
-					ESX.TimeoutCallbacks[i].cb()
-					ESX.TimeoutCallbacks[i] = nil
+			for i=1, #Core.TimeoutCallbacks, 1 do
+				if currTime >= Core.TimeoutCallbacks[i].time then
+					Core.TimeoutCallbacks[i].cb()
+					Core.TimeoutCallbacks[i] = nil
 				end
 			end
 		end
