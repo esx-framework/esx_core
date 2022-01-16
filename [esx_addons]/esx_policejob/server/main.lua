@@ -198,7 +198,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getFineList', function(source, cb, category)
-	MySQL.Async.fetchAll('SELECT * FROM fine_types WHERE category = @category', {
+	MySQL.query('SELECT * FROM fine_types WHERE category = @category', {
 		['@category'] = category
 	}, function(fines)
 		cb(fines)
@@ -206,7 +206,7 @@ ESX.RegisterServerCallback('esx_policejob:getFineList', function(source, cb, cat
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb, plate)
-	MySQL.Async.fetchAll('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
+	MySQL.query('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = plate
 	}, function(result)
 		local retrivedInfo = {plate = plate}
@@ -219,7 +219,7 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 				retrivedInfo.owner = xPlayer.getName()
 				cb(retrivedInfo)
 			elseif Config.EnableESXIdentity then
-				MySQL.Async.fetchAll('SELECT firstname, lastname FROM users WHERE identifier = @identifier',  {
+				MySQL.query('SELECT firstname, lastname FROM users WHERE identifier = @identifier',  {
 					['@identifier'] = result[1].owner
 				}, function(result2)
 					if result2[1] then
@@ -371,7 +371,7 @@ ESX.RegisterServerCallback('esx_policejob:buyJobVehicle', function(source, cb, v
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
 
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
+			MySQL.update('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
 				['@owner'] = xPlayer.identifier,
 				['@vehicle'] = json.encode(vehicleProps),
 				['@plate'] = vehicleProps.plate,
@@ -392,7 +392,7 @@ ESX.RegisterServerCallback('esx_policejob:storeNearbyVehicle', function(source, 
 	local foundPlate, foundNum
 
 	for k,v in ipairs(nearbyVehicles) do
-		local result = MySQL.Sync.fetchAll('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
+		local result = MySQL.query.await('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
 			['@owner'] = xPlayer.identifier,
 			['@plate'] = v.plate,
 			['@job'] = xPlayer.job.name
@@ -407,7 +407,7 @@ ESX.RegisterServerCallback('esx_policejob:storeNearbyVehicle', function(source, 
 	if not foundPlate then
 		cb(false)
 	else
-		MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
+		MySQL.update('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
 			['@owner'] = xPlayer.identifier,
 			['@plate'] = foundPlate,
 			['@job'] = xPlayer.job.name

@@ -3,7 +3,7 @@ WhiteList = {}
 function loadWhiteList(cb)
 	Whitelist = {}
 
-	MySQL.Async.fetchAll('SELECT identifier FROM whitelist', {}, function(result)
+	MySQL.query('SELECT identifier FROM whitelist', {}, function(result)
 		for k,v in ipairs(result) do
 			WhiteList[v.identifier] = true
 		end

@@ -9,7 +9,7 @@ if Config.UseDeferrals then
 		Citizen.Wait(100)
 	
 		if identifier then
-			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
+			MySQL.query('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
 				['@identifier'] = identifier
 			}, function(result)
 				if result[1] then
@@ -107,7 +107,7 @@ elseif not Config.UseDeferrals then
 			Citizen.Wait(40)
 
 			if identifier then
-				MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
+				MySQL.query('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
 					['@identifier'] = identifier
 				}, function(result)
 					if result[1] then
@@ -225,7 +225,7 @@ elseif not Config.UseDeferrals then
 	end)
 
 	function checkIdentity(xPlayer)
-		MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
+		MySQL.query('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
 			if result[1] then
@@ -367,7 +367,7 @@ function deleteIdentity(xPlayer)
 end
 
 function saveIdentityToDatabase(identifier, identity)
-	MySQL.Sync.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
+	MySQL.update.await('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
 		['@identifier']  = identifier,
 		['@firstname'] = identity.firstName,
 		['@lastname'] = identity.lastName,
@@ -378,7 +378,7 @@ function saveIdentityToDatabase(identifier, identity)
 end
 
 function deleteIdentityFromDatabase(xPlayer)
-	MySQL.Sync.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height , skin = @skin WHERE identifier = @identifier', {
+	MySQL.update.await('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height , skin = @skin WHERE identifier = @identifier', {
 		['@identifier']  = xPlayer.identifier,
 		['@firstname'] = NULL,
 		['@lastname'] = NULL,
@@ -389,35 +389,35 @@ function deleteIdentityFromDatabase(xPlayer)
 	})
 
 	if Config.FullCharDelete then
-		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
+		MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
 			['@account_name'] = 'bank_savings',
 			['@owner'] = xPlayer.identifier
 		})
 
-		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
+		MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
 			['@account_name'] = 'caution',
 			['@owner'] = xPlayer.identifier
 		})
 
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+		MySQL.update.await('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
 			['@data'] = '\'{}\'',
 			['@name'] = 'user_ears',
 			['@owner'] = xPlayer.identifier
 		})
 
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+		MySQL.update.await('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
 			['@data'] = '\'{}\'',
 			['@name'] = 'user_glasses',
 			['@owner'] = xPlayer.identifier
 		})
 
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+		MySQL.update.await('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
 			['@data'] = '\'{}\'',
 			['@name'] = 'user_helmet',
 			['@owner'] = xPlayer.identifier
 		})
 
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
+		MySQL.update.await('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
 			['@data'] = '\'{}\'',
 			['@name'] = 'user_mask',
 			['@owner'] = xPlayer.identifier

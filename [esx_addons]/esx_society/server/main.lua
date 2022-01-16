@@ -10,14 +10,14 @@ function GetSociety(name)
 end
 
 MySQL.ready(function()
-	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
+	local result = MySQL.query.await('SELECT * FROM jobs', {})
 
 	for i=1, #result, 1 do
 		Jobs[result[i].name] = result[i]
 		Jobs[result[i].name].grades = {}
 	end
 
-	local result2 = MySQL.Sync.fetchAll('SELECT * FROM job_grades', {})
+	local result2 = MySQL.query.await('SELECT * FROM job_grades', {})
 
 	for i=1, #result2, 1 do
 		Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
@@ -108,7 +108,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 		if amount and amount > 0 and account.money >= amount then
 			xPlayer.removeAccountMoney('black_money', amount)
 
-			MySQL.Async.execute('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)', {
+			MySQL.update('INSERT INTO society_moneywash (identifier, society, amount) VALUES (@identifier, @society, @amount)', {
 				['@identifier'] = xPlayer.identifier,
 				['@society'] = society,
 				['@amount'] = amount
@@ -194,7 +194,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 		query = "SELECT identifier, job_grade, firstname, lastname FROM `users` WHERE `job`=@job ORDER BY job_grade DESC"
 	end
 
-	MySQL.Async.fetchAll(query, {
+	MySQL.query(query, {
 		['@job'] = society
 	}, function(result)
 		for k, row in pairs(result) do
@@ -270,7 +270,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 
 			cb()
 		else
-			MySQL.Async.execute('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier', {
+			MySQL.update('UPDATE users SET job = @job, job_grade = @job_grade WHERE identifier = @identifier', {
 				['@job']        = job,
 				['@job_grade']  = grade,
 				['@identifier'] = identifier
@@ -289,7 +289,7 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 
 	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
 		if salary <= Config.MaxSalary then
-			MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
+			MySQL.update('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
 				['@salary']   = salary,
 				['@job_name'] = job,
 				['@grade']    = grade
@@ -365,7 +365,7 @@ function isPlayerBoss(playerId, job)
 end
 
 function WashMoneyCRON(d, h, m)
-	MySQL.Async.fetchAll('SELECT * FROM society_moneywash', {}, function(result)
+	MySQL.query('SELECT * FROM society_moneywash', {}, function(result)
 		for i=1, #result, 1 do
 			local society = GetSociety(result[i].society)
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
@@ -380,7 +380,7 @@ function WashMoneyCRON(d, h, m)
 				xPlayer.showNotification(_U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
 			end
 
-			MySQL.Async.execute('DELETE FROM society_moneywash WHERE id = @id', {
+			MySQL.update('DELETE FROM society_moneywash WHERE id = @id', {
 				['@id'] = result[i].id
 			})
 		end

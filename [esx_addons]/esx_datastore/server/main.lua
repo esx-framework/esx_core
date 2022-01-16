@@ -1,11 +1,11 @@
 local DataStores, DataStoresIndex, SharedDataStores = {}, {}, {}
 
 MySQL.ready(function()
-	local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
+	local result = MySQL.query.await('SELECT * FROM datastore')
 
 	for i=1, #result, 1 do
 		local name, label, shared = result[i].name, result[i].label, result[i].shared
-		local result2 = MySQL.Sync.fetchAll('SELECT * FROM datastore_data WHERE name = @name', {
+		local result2 = MySQL.query.await('SELECT * FROM datastore_data WHERE name = @name', {
 			['@name'] = name
 		})
 
@@ -25,7 +25,7 @@ MySQL.ready(function()
 			local data
 
 			if #result2 == 0 then
-				MySQL.Sync.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')', {
+				MySQL.update.await('INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')', {
 					['@name'] = name
 				})
 
@@ -80,7 +80,7 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		local dataStore = GetDataStore(name, xPlayer.identifier)
 
 		if not dataStore then
-			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
+			MySQL.update('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
 				['@name']  = name,
 				['@owner'] = xPlayer.identifier,
 				['@data']  = '{}'

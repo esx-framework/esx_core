@@ -28,12 +28,12 @@ function CreateAddonAccount(name, owner, money)
 
 	self.save = function()
 		if self.owner == nil then
-			MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name', {
+			MySQL.update('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name', {
 				['@account_name'] = self.name,
 				['@money']        = self.money
 			})
 		else
-			MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name AND owner = @owner', {
+			MySQL.update('UPDATE addon_account_data SET money = @money WHERE account_name = @account_name AND owner = @owner', {
 				['@account_name'] = self.name,
 				['@money']        = self.money,
 				['@owner']        = self.owner

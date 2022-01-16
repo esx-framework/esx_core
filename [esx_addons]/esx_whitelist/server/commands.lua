@@ -11,7 +11,7 @@ ESX.RegisterCommand('wladd', 'admin', function(xPlayer, args, showError)
 		if WhiteList[args.license] then
 			showError('The player is already whitelisted on this server!')
 		else
-			MySQL.Async.execute('INSERT INTO whitelist (identifier) VALUES (@identifier)', {
+			MySQL.update('INSERT INTO whitelist (identifier) VALUES (@identifier)', {
 				['@identifier'] = args.license
 			}, function(rowsChanged)
 				WhiteList[args.license] = true

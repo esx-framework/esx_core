@@ -178,7 +178,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
 
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
+			MySQL.update('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
 				['@owner'] = xPlayer.identifier,
 				['@vehicle'] = json.encode(vehicleProps),
 				['@plate'] = vehicleProps.plate,
@@ -199,7 +199,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 	local foundPlate, foundNum
 
 	for k,v in ipairs(nearbyVehicles) do
-		local result = MySQL.Sync.fetchAll('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
+		local result = MySQL.query.await('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
 			['@owner'] = xPlayer.identifier,
 			['@plate'] = v.plate,
 			['@job'] = xPlayer.job.name
@@ -214,7 +214,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:storeNearbyVehicle', function(sourc
 	if not foundPlate then
 		cb(false)
 	else
-		MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
+		MySQL.update('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
 			['@owner'] = xPlayer.identifier,
 			['@plate'] = foundPlate,
 			['@job'] = xPlayer.job.name
@@ -306,7 +306,7 @@ end)
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchScalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
+	MySQL.scalar('SELECT is_dead FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(isDead)
 				
@@ -323,7 +323,7 @@ AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if type(isDead) == 'boolean' then
-		MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
+		MySQL.update.await('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier,
 			['@isDead'] = isDead
 		})

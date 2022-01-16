@@ -2,7 +2,7 @@ function AddLicense(target, type, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if xPlayer then
-		MySQL.Async.execute('INSERT INTO user_licenses (type, owner) VALUES (@type, @owner)', {
+		MySQL.update('INSERT INTO user_licenses (type, owner) VALUES (@type, @owner)', {
 			['@type']  = type,
 			['@owner'] = xPlayer.identifier
 		}, function(rowsChanged)
@@ -21,7 +21,7 @@ function RemoveLicense(target, type, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if xPlayer then
-		MySQL.Async.execute('DELETE FROM user_licenses WHERE type = @type AND owner = @owner', {
+		MySQL.update('DELETE FROM user_licenses WHERE type = @type AND owner = @owner', {
 			['@type'] = type,
 			['@owner'] = xPlayer.identifier
 		}, function(rowsChanged)
@@ -37,7 +37,7 @@ function RemoveLicense(target, type, cb)
 end
 
 function GetLicense(type, cb)
-	MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
+	MySQL.query('SELECT label FROM licenses WHERE type = @type', {
 		['@type'] = type
 	}, function(result)
 		local data = {
@@ -52,7 +52,7 @@ end
 function GetLicenses(target, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
-	MySQL.Async.fetchAll('SELECT type FROM user_licenses WHERE owner = @owner', {
+	MySQL.query('SELECT type FROM user_licenses WHERE owner = @owner', {
 		['@owner'] = xPlayer.identifier
 	}, function(result)
 		local licenses, asyncTasks = {}, {}
@@ -60,7 +60,7 @@ function GetLicenses(target, cb)
 		for i=1, #result, 1 do
 			local scope = function(type)
 				table.insert(asyncTasks, function(cb)
-					MySQL.Async.fetchAll('SELECT label FROM licenses WHERE type = @type', {
+					MySQL.query('SELECT label FROM licenses WHERE type = @type', {
 						['@type'] = type
 					}, function(result2)
 						table.insert(licenses, {
@@ -86,7 +86,7 @@ function CheckLicense(target, type, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if xPlayer then
-		MySQL.Async.fetchAll('SELECT COUNT(*) as count FROM user_licenses WHERE type = @type AND owner = @owner', {
+		MySQL.query('SELECT COUNT(*) as count FROM user_licenses WHERE type = @type AND owner = @owner', {
 			['@type'] = type,
 			['@owner'] = xPlayer.identifier
 		}, function(result)
@@ -102,7 +102,7 @@ function CheckLicense(target, type, cb)
 end
 
 function GetLicensesList(cb)
-	MySQL.Async.fetchAll('SELECT type, label FROM licenses', {
+	MySQL.query('SELECT type, label FROM licenses', {
 		['@type'] = type
 	}, function(result)
 		local licenses = {}

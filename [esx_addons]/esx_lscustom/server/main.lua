@@ -37,14 +37,14 @@ RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
 AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE plate = @plate', {
+	MySQL.query('SELECT vehicle FROM owned_vehicles WHERE plate = @plate', {
 		['@plate'] = vehicleProps.plate
 	}, function(result)
 		if result[1] then
 			local vehicle = json.decode(result[1].vehicle)
 
 			if vehicleProps.model == vehicle.model then
-				MySQL.Async.execute('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
+				MySQL.update('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
 					['@plate'] = vehicleProps.plate,
 					['@vehicle'] = json.encode(vehicleProps)
 				})
@@ -57,7 +57,7 @@ end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
 	if not Vehicles then
-		MySQL.Async.fetchAll('SELECT * FROM vehicles', {}, function(result)
+		MySQL.query('SELECT * FROM vehicles', {}, function(result)
 			local vehicles = {}
 
 			for i=1, #result, 1 do

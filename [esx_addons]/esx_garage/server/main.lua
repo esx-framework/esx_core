@@ -5,7 +5,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 
 	if vehicleProps == false then
 
-		MySQL.Async.execute('DELETE FROM `user_parkings` WHERE `identifier` = @identifier AND `garage` = @garage AND zone = @zone',
+		MySQL.update('DELETE FROM `user_parkings` WHERE `identifier` = @identifier AND `garage` = @garage AND zone = @zone',
 		{
 			['@identifier'] = xPlayer.identifier,
 			['@garage']     = garage;
@@ -14,7 +14,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 			xPlayer.showNotification(_U('veh_released'))
 		end)
 	else
-		MySQL.Async.execute('INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
+		MySQL.update('INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
 		{
 			['@identifier'] = xPlayer.identifier,
 			['@garage']     = garage;
@@ -28,7 +28,7 @@ end)
 
 RegisterServerEvent('esx_garage:updateOwnedVehicle')
 AddEventHandler('esx_garage:updateOwnedVehicle', function(vehicleProps)
-	MySQL.Async.execute('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
+	MySQL.update('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
 		['@plate'] = vehicleProps.plate,
 		['@vehicle'] = json.encode(vehicleProps)
 	})
@@ -37,7 +37,7 @@ end)
 ESX.RegisterServerCallback('esx_vehicleshop:getVehiclesInGarage', function(source, cb, garage)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT * FROM `user_parkings` WHERE `identifier` = @identifier AND garage = @garage',
+	MySQL.query('SELECT * FROM `user_parkings` WHERE `identifier` = @identifier AND garage = @garage',
 	{
 		['@identifier'] = xPlayer.identifier,
 		['@garage']     = garage

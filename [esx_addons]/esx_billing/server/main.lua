@@ -7,7 +7,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 	if amount > 0 and xTarget then
 		TriggerEvent('esx_addonaccount:getSharedAccount', sharedAccountName, function(account)
 			if account then
-				MySQL.Async.execute('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)', {
+				MySQL.update('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)', {
 					['@identifier'] = xTarget.identifier,
 					['@sender'] = xPlayer.identifier,
 					['@target_type'] = 'society',
@@ -18,7 +18,7 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 					xTarget.showNotification(_U('received_invoice'))
 				end)
 			else
-				MySQL.Async.execute('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)', {
+				MySQL.update('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)', {
 					['@identifier'] = xTarget.identifier,
 					['@sender'] = xPlayer.identifier,
 					['@target_type'] = 'player',
@@ -36,7 +36,7 @@ end)
 ESX.RegisterServerCallback('esx_billing:getBills', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT amount, id, label FROM billing WHERE identifier = @identifier', {
+	MySQL.query('SELECT amount, id, label FROM billing WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
 		cb(result)
@@ -47,7 +47,7 @@ ESX.RegisterServerCallback('esx_billing:getTargetBills', function(source, cb, ta
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if xPlayer then
-		MySQL.Async.fetchAll('SELECT amount, id, label FROM billing WHERE identifier = @identifier', {
+		MySQL.query('SELECT amount, id, label FROM billing WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result)
 			cb(result)
@@ -60,7 +60,7 @@ end)
 ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT sender, target_type, target, amount FROM billing WHERE id = @id', {
+	MySQL.query('SELECT sender, target_type, target, amount FROM billing WHERE id = @id', {
 		['@id'] = billId
 	}, function(result)
 		if result[1] then
@@ -70,7 +70,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 			if result[1].target_type == 'player' then
 				if xTarget then
 					if xPlayer.getMoney() >= amount then
-						MySQL.Async.execute('DELETE FROM billing WHERE id = @id', {
+						MySQL.update('DELETE FROM billing WHERE id = @id', {
 							['@id'] = billId
 						}, function(rowsChanged)
 							if rowsChanged == 1 then
@@ -84,7 +84,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 							cb()
 						end)
 					elseif xPlayer.getAccount('bank').money >= amount then
-						MySQL.Async.execute('DELETE FROM billing WHERE id = @id', {
+						MySQL.update('DELETE FROM billing WHERE id = @id', {
 							['@id'] = billId
 						}, function(rowsChanged)
 							if rowsChanged == 1 then
@@ -109,7 +109,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 			else
 				TriggerEvent('esx_addonaccount:getSharedAccount', result[1].target, function(account)
 					if xPlayer.getMoney() >= amount then
-						MySQL.Async.execute('DELETE FROM billing WHERE id = @id', {
+						MySQL.update('DELETE FROM billing WHERE id = @id', {
 							['@id'] = billId
 						}, function(rowsChanged)
 							if rowsChanged == 1 then
@@ -125,7 +125,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 							cb()
 						end)
 					elseif xPlayer.getAccount('bank').money >= amount then
-						MySQL.Async.execute('DELETE FROM billing WHERE id = @id', {
+						MySQL.update('DELETE FROM billing WHERE id = @id', {
 							['@id'] = billId
 						}, function(rowsChanged)
 							if rowsChanged == 1 then
