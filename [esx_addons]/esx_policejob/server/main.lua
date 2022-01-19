@@ -57,7 +57,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 
 		-- does the target player have weapon?
 		if targetXPlayer.hasWeapon(itemName) then
-			targetXPlayer.removeWeapon(itemName, amount)
+			targetXPlayer.removeWeapon(itemName)
 			sourceXPlayer.addWeapon   (itemName, amount)
 
 			sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
@@ -226,8 +226,8 @@ ESX.RegisterServerCallback('esx_policejob:getVehicleInfos', function(source, cb,
 				end
 			end
 			cb(retrivedInfo)
-		end
-	end)
+		end)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_policejob:getArmoryWeapons', function(source, cb)
