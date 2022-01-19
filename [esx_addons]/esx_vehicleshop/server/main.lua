@@ -24,9 +24,8 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 function SQLVehiclesAndCategories()
-	categories = MySQL.query.await('SELECT * FROM vehicle_categories', {})
-
-	vehicles = MySQL.query.await('SELECT * FROM vehicles', {})
+	categories = MySQL.query.await('SELECT * FROM vehicle_categories')
+	vehicles = MySQL.query.await('SELECT * FROM vehicles')
 
 	GetVehiclesAndCategories(categories, vehicles)
 end

@@ -53,7 +53,7 @@ end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
 	if not Vehicles then
-		Vehicles = MySQL.query.await('SELECT model, price FROM vehicles', {})
+		Vehicles = MySQL.query.await('SELECT model, price FROM vehicles')
 	end
 	cb(Vehicles)
 end)

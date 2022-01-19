@@ -149,7 +149,6 @@ Config.Jobs.fisherman = {
 			Pos   = {x = -1012.64, y = -1354.62, z = 5.54},
 			Color = {r = 204, g = 204, b = 0},
 			Size  = {x = 5.0, y = 5.0, z = 3.0},
-			Color = {r = 204, g = 204, b = 0},
 			Marker= 1,
 			Blip  = true,
 			Name  = _U('delivery_point'),

@@ -11,14 +11,14 @@ end
 
 AddEventHandler('onResourceStart', function(resourceName)
 	if resourceName == GetCurrentResourceName() then
-		local result = MySQL.query.await('SELECT * FROM jobs', {})
+		local result = MySQL.query.await('SELECT * FROM jobs')
 
 		for i = 1, #result, 1 do
 			Jobs[result[i].name] = result[i]
 			Jobs[result[i].name].grades = {}
 		end
 
-		local result2 = MySQL.query.await('SELECT * FROM job_grades', {})
+		local result2 = MySQL.query.await('SELECT * FROM job_grades')
 
 		for i = 1, #result2, 1 do
 			Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
