@@ -37,17 +37,13 @@ RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
 AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.query('SELECT vehicle FROM owned_vehicles WHERE plate = @plate', {
-		['@plate'] = vehicleProps.plate
-	}, function(result)
-		if result[1] then
-			local vehicle = json.decode(result[1].vehicle)
+	MySQL.single('SELECT vehicle FROM owned_vehicles WHERE plate = ?', {vehicleProps.plate},
+	function(result)
+		if result then
+			local vehicle = json.decode(result.vehicle)
 
 			if vehicleProps.model == vehicle.model then
-				MySQL.update('UPDATE owned_vehicles SET vehicle = @vehicle WHERE plate = @plate', {
-					['@plate'] = vehicleProps.plate,
-					['@vehicle'] = json.encode(vehicleProps)
-				})
+				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {vehicleProps.plate, json.encode(vehicleProps)})
 			else
 				print(('esx_lscustom: %s attempted to upgrade vehicle with mismatching vehicle model!'):format(xPlayer.identifier))
 			end
@@ -57,20 +53,7 @@ end)
 
 ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb)
 	if not Vehicles then
-		MySQL.query('SELECT * FROM vehicles', {}, function(result)
-			local vehicles = {}
-
-			for i=1, #result, 1 do
-				table.insert(vehicles, {
-					model = result[i].model,
-					price = result[i].price
-				})
-			end
-
-			Vehicles = vehicles
-			cb(Vehicles)
-		end)
-	else
-		cb(Vehicles)
+		Vehicles = MySQL.query.await('SELECT model, price FROM vehicles', {})
 	end
+	cb(Vehicles)
 end)
