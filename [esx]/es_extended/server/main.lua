@@ -1,17 +1,18 @@
+SetMapName('San Andreas')
+SetGameType('ESX Legacy')
+	
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
 
-Citizen.CreateThread(function()
-	SetMapName('San Andreas')
-	SetGameType('ESX Legacy')
+if Config.Multichar then
+	newPlayer = newPlayer..', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"'
+end
 
-	if Config.Multichar or Config.Identity then
-		newPlayer = newPlayer..', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"'
-		loadPlayer = loadPlayer..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`'
-	end
+if Config.Multichar or Config.Identity then
+	loadPlayer = loadPlayer..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`'
+end
 
-	loadPlayer = loadPlayer..' FROM `users` WHERE identifier = ?'
-end)
+loadPlayer = loadPlayer..' FROM `users` WHERE identifier = ?'
 
 if Config.Multichar then
 	AddEventHandler('esx:onPlayerJoined', function(src, char, data)
@@ -66,23 +67,19 @@ function createESXPlayer(identifier, playerId, data)
 	end
 
 	if not Config.Multichar then
-		MySQL.prepare(newPlayer, {
-				json.encode(accounts),
-				identifier,
-				defaultGroup,
-		}, function()
+		MySQL.prepare(newPlayer, { json.encode(accounts), identifier, defaultGroup }, function()
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	else
 		MySQL.prepare(newPlayer, {
-				json.encode(accounts),
-				identifier,
-				defaultGroup,
-				data.firstname,
-				data.lastname,
-				data.dateofbirth,
-				data.sex,
-				data.height,
+			json.encode(accounts),
+			identifier,
+			defaultGroup,
+			data.firstname,
+			data.lastname,
+			data.dateofbirth,
+			data.sex,
+			data.height
 		}, function()
 			loadESXPlayer(identifier, playerId, true)
 		end)
