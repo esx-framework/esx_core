@@ -70,7 +70,7 @@ function CreateDataStore(name, owner, data)
 			if self.owner == nil then
 				MySQL.update('UPDATE datastore_data SET data = ? WHERE name = ?', {json.encode(self.data), self.name})
 			else
-				MySQL.update('UPDATE datastore_data SET data = / WHERE name = ? and owner = ?', {json.encode(self.data), self.name, self.owner})
+				MySQL.update('UPDATE datastore_data SET data = ? WHERE name = ? and owner = ?', {json.encode(self.data), self.name, self.owner})
 			end
 		end)
 
