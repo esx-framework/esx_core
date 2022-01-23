@@ -117,7 +117,7 @@ function StoreNearbyVehicle(playerCoords)
 			
 			-- Make sure the vehicle we're saving is empty, or else it wont be deleted
 			if GetVehicleNumberOfPassengers(vehicle) == 0 and IsVehicleSeatFree(vehicle, -1) then
-				local plate = ESX.Math.Trim(GetVehicleNumberPlateText(v))
+				local plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
 				plates[#plates + 1] = plate
 				index[plate] = vehicle
 			end
