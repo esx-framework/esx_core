@@ -27,7 +27,12 @@ if not Config.UseDeferrals then
 	function EnableGui(state)
 		SetNuiFocus(state, state)
 		guiEnabled = state
-
+	--[[	Citizen.CreateThread(function()
+			while true do
+				Citizen.Wait(20000) -- UNCOMMENT THIS METHOD IF YOU ARE EXPERIENCING ISSUES WITH THE UI ON LOCALHOST | IF YOU STILL EXPERIENCE ISSUES AFTER REMOVING COMMENTS, INCREASE THE TIME.	
+			end
+		end)
+	]]--
 		SendNUIMessage({
 			type = "enableui",
 			enable = state
