@@ -357,7 +357,7 @@ function isPlayerBoss(playerId, job)
 end
 
 function WashMoneyCRON(d, h, m)
-	MySQL.query('SELECT * FROM society_moneywash', {}, function(result)
+	MySQL.query('SELECT * FROM society_moneywash', function(result)
 		for i=1, #result, 1 do
 			local society = GetSociety(result[i].society)
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].identifier)
@@ -373,7 +373,7 @@ function WashMoneyCRON(d, h, m)
 			end
 
 		end
-		MySQL.query('DELETE FROM society_moneywash', {})
+		MySQL.update('DELETE FROM society_moneywash')
 	end)
 end
 

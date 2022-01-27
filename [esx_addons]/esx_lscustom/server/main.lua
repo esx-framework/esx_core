@@ -43,7 +43,7 @@ AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 			local vehicle = json.decode(result.vehicle)
 
 			if vehicleProps.model == vehicle.model then
-				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {vehicleProps.plate, json.encode(vehicleProps)})
+				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {json.encode(vehicleProps), vehicleProps.plate})
 			else
 				print(('esx_lscustom: %s attempted to upgrade vehicle with mismatching vehicle model!'):format(xPlayer.identifier))
 			end

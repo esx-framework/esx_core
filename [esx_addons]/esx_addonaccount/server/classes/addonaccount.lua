@@ -22,9 +22,9 @@ function CreateAddonAccount(name, owner, money)
 
 	self.save = function()
 		if self.owner == nil then
-			MySQL.update('UPDATE addon_account_data SET money = ? WHERE account_name = ?', {self.name, self.money})
+			MySQL.update('UPDATE addon_account_data SET money = ? WHERE account_name = ?', {self.money, self.name})
 		else
-			MySQL.update('UPDATE addon_account_data SET money = ? WHERE account_name = ? AND owner = ?', {self.name, self.money, self.owner})
+			MySQL.update('UPDATE addon_account_data SET money = ? WHERE account_name = ? AND owner = ?', {self.money, self.name, self.owner})
 		end
 		TriggerClientEvent('esx_addonaccount:setMoney', -1, self.name, self.money)
 	end

@@ -55,7 +55,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 			if result.target_type == 'player' then
 				if xTarget then
 					if xPlayer.getMoney() >= amount then
-						MySQL.query('DELETE FROM billing WHERE id = ?', {billId},
+						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
 								xPlayer.removeMoney(amount)
@@ -68,7 +68,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 							cb()
 						end)
 					elseif xPlayer.getAccount('bank').money >= amount then
-						MySQL.query('DELETE FROM billing WHERE id = ?', {billId},
+						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
 								xPlayer.removeAccountMoney('bank', amount)
@@ -92,7 +92,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 			else
 				TriggerEvent('esx_addonaccount:getSharedAccount', result[1].target, function(account)
 					if xPlayer.getMoney() >= amount then
-						MySQL.query('DELETE FROM billing WHERE id = ?', {billId},
+						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
 								xPlayer.removeMoney(amount)
@@ -107,7 +107,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 							cb()
 						end)
 					elseif xPlayer.getAccount('bank').money >= amount then
-						MySQL.query('DELETE FROM billing WHERE id = ?', {billId},
+						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
 								xPlayer.removeAccountMoney('bank', amount)

@@ -19,7 +19,7 @@ function RemoveLicense(target, type, cb)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if xPlayer then
-		MySQL.query('DELETE FROM user_licenses WHERE type = ? AND owner = ?', {type, Player.identifier},
+		MySQL.update('DELETE FROM user_licenses WHERE type = ? AND owner = ?', {type, xPlayer.identifier},
 		function(rowsChanged)
 			if cb then
 				cb()
@@ -66,7 +66,7 @@ function CheckLicense(target, type, cb)
 end
 
 function GetLicensesList(cb)
-	MySQL.query('SELECT type, label FROM licenses', {},
+	MySQL.query('SELECT type, label FROM licenses',
 	function(result)
 		cb(result)
 	end)
