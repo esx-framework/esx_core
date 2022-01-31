@@ -1,4 +1,4 @@
-<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
+<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/docs/legacy/installation/'>Documentation</a></b></h5>
 
 
 ##### ESX is the most popular framework for creating economy-based roleplay servers on FiveM, with many official and community resources designed to utilise the tools provided here. For a taste of what's available:
@@ -82,9 +82,8 @@ Many more resources are included in this repository, or you can browse the [ESX 
 
 ### Information
 ESX was initially developed by Gizz back in 2017 for his friend as the were creating an FiveM server and there wasn't any economy roleplaying frameworks available. The original code was written within a week or two and later open sourced, it has ever since been improved and parts been rewritten to further improve on it.
-- [ESX Documentation](https://esx-framework.github.io/es_extended/)
+- [ESX Documentation](https://docs.esx-framework.org/)
 - [FiveM Native Reference](https://runtime.fivem.net/doc/reference.html)
-
 
 ### Legal
 
