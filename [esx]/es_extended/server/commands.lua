@@ -134,13 +134,13 @@ end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('save', 'admin', function(xPlayer, args, showError)
-	ESX.SavePlayer(args.playerId)
+	Core.SavePlayer(args.playerId)
 end, true, {help = _U('command_save'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
-	ESX.SavePlayers()
+	Core.SavePlayers()
 end, true, {help = _U('command_saveall')})
 
 ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)

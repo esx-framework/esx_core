@@ -2,10 +2,11 @@ local HasAlreadyEnteredMarker, IsInShopMenu = false, false
 local CurrentAction, CurrentActionMsg, LastZone, currentDisplayVehicle, CurrentVehicleData
 local CurrentActionData, Vehicles, Categories = {}, {}, {}
 
-function getVehicleLabelFromModel(model)
-	for k,v in ipairs(Vehicles) do
-		if v.model == model then
-			return v.name
+function getVehicleFromModel(model)
+	for i = 1, #Vehicles do
+		local vehicle = Vehicles[i]
+		if vehicle.model == model then
+			return vehicle
 		end
 	end
 
@@ -82,7 +83,7 @@ function ReturnVehicleProvider()
 
 		for k,v in ipairs(vehicles) do
 			local returnPrice = ESX.Math.Round(v.price * 0.75)
-			local vehicleLabel = getVehicleLabelFromModel(v.vehicle)
+			local vehicleLabel = getVehicleFromModel(v.vehicle).label
 
 			table.insert(elements, {
 				label = ('%s [<span style="color:orange;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(returnPrice))),
@@ -143,7 +144,7 @@ function OpenShopMenu()
 	end
 
 	for i=1, #Vehicles, 1 do
-		if IsModelInCdimage(GetHashKey(Vehicles[i].model)) then
+		if IsModelInCdimage(joaat(Vehicles[i].model)) then
 			table.insert(vehiclesByCategory[Vehicles[i].category], Vehicles[i])
 		else
 			print(('[esx_vehicleshop] [^3ERROR^7] Vehicle "%s" does not exist'):format(Vehicles[i].model))
@@ -289,7 +290,7 @@ function OpenShopMenu()
 end
 
 function WaitForVehicleToLoad(modelHash)
-	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
+	modelHash = (type(modelHash) == 'number' and modelHash or joaat(modelHash))
 
 	if not HasModelLoaded(modelHash) then
 		RequestModel(modelHash)

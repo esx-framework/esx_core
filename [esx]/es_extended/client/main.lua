@@ -32,15 +32,14 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
 			TriggerEvent('esx:onPlayerSpawn')
-			TriggerEvent('playerSpawned') -- compatibility with old scripts
 			TriggerEvent('esx:restoreLoadout')
+
 			if isNew then
-				if skin.sex == 0 then
-					TriggerEvent('skinchanger:loadDefaultModel', true)
-				else
-					TriggerEvent('skinchanger:loadDefaultModel', false)
-				end
-			elseif skin then TriggerEvent('skinchanger:loadSkin', skin) end
+				TriggerEvent('skinchanger:loadDefaultModel', skin.sex == 0)
+			elseif skin then
+				TriggerEvent('skinchanger:loadSkin', skin)
+			end
+
 			TriggerEvent('esx:loadingScreenOff')
 			ShutdownLoadingScreen()
 			ShutdownLoadingScreenNui()
@@ -65,7 +64,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 		local gradeLabel = ESX.PlayerData.job.grade_label ~= ESX.PlayerData.job.label and ESX.PlayerData.job.grade_label or ''
 		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
-		
+
 		ESX.UI.HUD.RegisterElement('job', #ESX.PlayerData.accounts, 0, jobTpl, {
 			job_label = ESX.PlayerData.job.label,
 			grade_label = gradeLabel
@@ -83,10 +82,15 @@ end)
 RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
 
-AddEventHandler('esx:onPlayerSpawn', function()
-	ESX.SetPlayerData('ped', PlayerPedId())
-	ESX.SetPlayerData('dead', false)
-end)
+local function onPlayerSpawn()
+	if ESX.PlayerLoaded then
+		ESX.SetPlayerData('ped', PlayerPedId())
+		ESX.SetPlayerData('dead', false)
+	end
+end
+
+AddEventHandler('playerSpawned', onPlayerSpawn)
+AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	ESX.SetPlayerData('ped', PlayerPedId())
@@ -282,7 +286,7 @@ end)
 
 RegisterNetEvent('esx:createMissingPickups')
 AddEventHandler('esx:createMissingPickups', function(missingPickups)
-	for pickupId,pickup in pairs(missingPickups) do
+	for pickupId, pickup in pairs(missingPickups) do
 		TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords, pickup.type, pickup.name, pickup.components, pickup.tintIndex)
 	end
 end)

@@ -22,7 +22,7 @@ function LoadPlayer(player)
 		end
 	end
 
-	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE identifier = @identifier', {
+	MySQL.query('SELECT phone_number FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
 		local phoneNumber = result[1].phone_number
@@ -30,7 +30,7 @@ function LoadPlayer(player)
 		if phoneNumber == nil then
 			phoneNumber = GenerateUniquePhoneNumber()
 
-			MySQL.Async.execute('UPDATE users SET phone_number = @phone_number WHERE identifier = @identifier', {
+			MySQL.update('UPDATE users SET phone_number = @phone_number WHERE identifier = @identifier', {
 				['@identifier']   = xPlayer.identifier,
 				['@phone_number'] = phoneNumber
 			})
@@ -53,7 +53,7 @@ function LoadPlayer(player)
 			TriggerEvent('esx_phone:addSource', xPlayer.job.name, xPlayer.source)
 		end
 
-		MySQL.Async.fetchAll('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC', {
+		MySQL.query('SELECT * FROM user_contacts WHERE identifier = @identifier ORDER BY name ASC', {
 			['@identifier'] = xPlayer.identifier
 		}, function(result2)
 			for i=1, #result2, 1 do
@@ -78,7 +78,7 @@ function GenerateUniquePhoneNumber()
 		math.randomseed(GetGameTimer())
 		phoneNumber = math.random(10000, 99999)
 
-		local result = MySQL.Sync.fetchAll('SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber', {
+		local result = MySQL.query.await('SELECT COUNT(*) as count FROM users WHERE phone_number = @phoneNumber', {
 			['@phoneNumber'] = phoneNumber
 		})
 
@@ -206,7 +206,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 		return
 	end
 
-	MySQL.Async.fetchAll('SELECT phone_number, identifier FROM users WHERE phone_number = @number', {
+	MySQL.query('SELECT phone_number, identifier FROM users WHERE phone_number = @number', {
 		['@number'] = phoneNumber
 	}, function(result)
 		if result[1] then
@@ -234,7 +234,7 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 				local xTarget = ESX.GetPlayerFromIdentifier(result[1].identifier)
 				playerOnline = xTarget ~= nil
 
-				MySQL.Async.execute('INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)', {
+				MySQL.update('INSERT INTO user_contacts (identifier, name, number) VALUES (@identifier, @name, @number)', {
 					['@identifier'] = xPlayer.identifier,
 					['@name']       = contactName,
 					['@number']     = phoneNumber
@@ -255,7 +255,7 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 	local foundNumber = false
 
-	MySQL.Async.fetchAll('SELECT phone_number FROM users WHERE phone_number = @number', {
+	MySQL.query('SELECT phone_number FROM users WHERE phone_number = @number', {
 		['@number'] = phoneNumber
 	}, function(result)
 		if result[1] then
@@ -273,7 +273,7 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 
 			xPlayer.set('contacts', contacts)
 
-			MySQL.Async.execute('DELETE FROM user_contacts WHERE identifier = @identifier AND name = @name AND number = @number', {
+			MySQL.update('DELETE FROM user_contacts WHERE identifier = @identifier AND name = @name AND number = @number', {
 				['@identifier'] = xPlayer.identifier,
 				['@name']       = contactName,
 				['@number']     = phoneNumber

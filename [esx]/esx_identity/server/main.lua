@@ -9,17 +9,16 @@ if Config.UseDeferrals then
 		Citizen.Wait(100)
 	
 		if identifier then
-			MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
-				['@identifier'] = identifier
-			}, function(result)
-				if result[1] then
-					if result[1].firstname then
+			MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
+			function(result)
+				if result then
+					if result.firstname then
 						playerIdentity[identifier] = {
-							firstName = result[1].firstname,
-							lastName = result[1].lastname,
-							dateOfBirth = result[1].dateofbirth,
-							sex = result[1].sex,
-							height = result[1].height
+							firstName = result.firstname,
+							lastName = result.lastname,
+							dateOfBirth = result.dateofbirth,
+							sex = result.sex,
+							height = result.height
 						}
 		
 						deferrals.done()
@@ -107,17 +106,16 @@ elseif not Config.UseDeferrals then
 			Citizen.Wait(40)
 
 			if identifier then
-				MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
-					['@identifier'] = identifier
-				}, function(result)
-					if result[1] then
-						if result[1].firstname then
+			MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
+			function(result)
+				if result then
+						if result.firstname then
 							playerIdentity[identifier] = {
-								firstName = result[1].firstname,
-								lastName = result[1].lastname,
-								dateOfBirth = result[1].dateofbirth,
-								sex = result[1].sex,
-								height = result[1].height
+								firstName = result.firstname,
+								lastName = result.lastname,
+								dateOfBirth = result.dateofbirth,
+								sex = result.sex,
+								height = result.height
 							}
 
 							alreadyRegistered[identifier] = true
@@ -225,17 +223,16 @@ elseif not Config.UseDeferrals then
 	end)
 
 	function checkIdentity(xPlayer)
-		MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
-		}, function(result)
-			if result[1] then
-				if result[1].firstname then
+		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
+		function(result)
+			if result then
+				if result.firstname then
 					playerIdentity[xPlayer.identifier] = {
-						firstName = result[1].firstname,
-						lastName = result[1].lastname,
-						dateOfBirth = result[1].dateofbirth,
-						sex = result[1].sex,
-						height = result[1].height
+						firstName = result.firstname,
+						lastName = result.lastname,
+						dateOfBirth = result.dateofbirth,
+						sex = result.sex,
+						height = result.height
 					}
 
 					alreadyRegistered[xPlayer.identifier] = true
@@ -284,7 +281,7 @@ if Config.EnableCommands then
 	ESX.RegisterCommand('chardel', 'user', function(xPlayer, args, showError)
 		if xPlayer and xPlayer.getName() then
 			if Config.UseDeferrals then
-				xPlayer.kick(_('deleted_identity'))
+				xPlayer.kick(_U('deleted_identity'))
 				Citizen.Wait(1500)
 				deleteIdentity(xPlayer)
 				xPlayer.showNotification(_U('deleted_character'))
@@ -367,61 +364,16 @@ function deleteIdentity(xPlayer)
 end
 
 function saveIdentityToDatabase(identifier, identity)
-	MySQL.Sync.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height WHERE identifier = @identifier', {
-		['@identifier']  = identifier,
-		['@firstname'] = identity.firstName,
-		['@lastname'] = identity.lastName,
-		['@dateofbirth'] = identity.dateOfBirth,
-		['@sex'] = identity.sex,
-		['@height'] = identity.height
-	})
+	MySQL.update.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?', {identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height. identifier})
 end
 
 function deleteIdentityFromDatabase(xPlayer)
-	MySQL.Sync.execute('UPDATE users SET firstname = @firstname, lastname = @lastname, dateofbirth = @dateofbirth, sex = @sex, height = @height , skin = @skin WHERE identifier = @identifier', {
-		['@identifier']  = xPlayer.identifier,
-		['@firstname'] = NULL,
-		['@lastname'] = NULL,
-		['@dateofbirth'] = NULL,
-		['@sex'] = NULL,
-		['@height'] = NULL,
-		['@skin'] = NULL
-	})
+	MySQL.query.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?', {nil, nil, nil, nil, nil, xPlayer.identifier})
 
 	if Config.FullCharDelete then
-		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
-			['@account_name'] = 'bank_savings',
-			['@owner'] = xPlayer.identifier
-		})
+		MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?', {{'bank_savings', 'caution'}, xPlayer.identifier})
 
-		MySQL.Sync.execute('UPDATE addon_account_data SET money = 0 WHERE account_name = @account_name AND owner = @owner', {
-			['@account_name'] = 'caution',
-			['@owner'] = xPlayer.identifier
-		})
-
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-			['@data'] = '\'{}\'',
-			['@name'] = 'user_ears',
-			['@owner'] = xPlayer.identifier
-		})
-
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-			['@data'] = '\'{}\'',
-			['@name'] = 'user_glasses',
-			['@owner'] = xPlayer.identifier
-		})
-
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-			['@data'] = '\'{}\'',
-			['@name'] = 'user_helmet',
-			['@owner'] = xPlayer.identifier
-		})
-
-		MySQL.Sync.execute('UPDATE datastore_data SET data = @data WHERE name = @name AND owner = @owner', {
-			['@data'] = '\'{}\'',
-			['@name'] = 'user_mask',
-			['@owner'] = xPlayer.identifier
-		})
+		MySQL.prepare.await('UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?', {'\'{}\'', {'user_ears', 'user_glasses', 'user_helmet', 'user_mask'}, xPlayer.identifier})
 	end
 end
 

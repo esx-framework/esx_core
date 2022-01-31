@@ -42,14 +42,14 @@ function CreateAddonInventory(name, owner, items)
 		table.insert(self.items, item)
 
 		if self.owner == nil then
-			MySQL.Async.execute('INSERT INTO addon_inventory_items (inventory_name, name, count) VALUES (@inventory_name, @item_name, @count)',
+			MySQL.update('INSERT INTO addon_inventory_items (inventory_name, name, count) VALUES (@inventory_name, @item_name, @count)',
 			{
 				['@inventory_name'] = self.name,
 				['@item_name']      = name,
 				['@count']          = 0
 			})
 		else
-			MySQL.Async.execute('INSERT INTO addon_inventory_items (inventory_name, name, count, owner) VALUES (@inventory_name, @item_name, @count, @owner)',
+			MySQL.update('INSERT INTO addon_inventory_items (inventory_name, name, count, owner) VALUES (@inventory_name, @item_name, @count, @owner)',
 			{
 				['@inventory_name'] = self.name,
 				['@item_name']      = name,
@@ -63,13 +63,13 @@ function CreateAddonInventory(name, owner, items)
 
 	self.saveItem = function(name, count)
 		if self.owner == nil then
-			MySQL.Async.execute('UPDATE addon_inventory_items SET count = @count WHERE inventory_name = @inventory_name AND name = @item_name', {
+			MySQL.update('UPDATE addon_inventory_items SET count = @count WHERE inventory_name = @inventory_name AND name = @item_name', {
 				['@inventory_name'] = self.name,
 				['@item_name']      = name,
 				['@count']          = count
 			})
 		else
-			MySQL.Async.execute('UPDATE addon_inventory_items SET count = @count WHERE inventory_name = @inventory_name AND name = @item_name AND owner = @owner', {
+			MySQL.update('UPDATE addon_inventory_items SET count = @count WHERE inventory_name = @inventory_name AND name = @item_name AND owner = @owner', {
 				['@inventory_name'] = self.name,
 				['@item_name']      = name,
 				['@count']          = count,

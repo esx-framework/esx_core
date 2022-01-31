@@ -3,7 +3,7 @@ MySQL.ready(function()
 end)
 
 function ParkBoats()
-	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE `stored` = false AND type = @type', {
+	MySQL.update('UPDATE owned_vehicles SET `stored` = true WHERE `stored` = false AND type = @type', {
 		['@type'] = 'boat'
 	}, function (rowsChanged)
 		if rowsChanged > 0 then
@@ -24,7 +24,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 		if xPlayer.getMoney() >= price then
 			xPlayer.removeMoney(price)
 
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, type, `stored`) VALUES (@owner, @plate, @vehicle, @type, @stored)', {
+			MySQL.update('INSERT INTO owned_vehicles (owner, plate, vehicle, type, `stored`) VALUES (@owner, @plate, @vehicle, @type, @stored)', {
 				['@owner']   = xPlayer.identifier,
 				['@plate']   = vehicleProps.plate,
 				['@vehicle'] = json.encode(vehicleProps),
@@ -43,7 +43,7 @@ RegisterServerEvent('esx_boat:takeOutVehicle')
 AddEventHandler('esx_boat:takeOutVehicle', function(plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
+	MySQL.update('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
 		['@stored'] = false,
 		['@owner']  = xPlayer.identifier,
 		['@plate']  = plate
@@ -57,7 +57,7 @@ end)
 ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
+	MySQL.update('UPDATE owned_vehicles SET `stored` = @stored WHERE owner = @owner AND plate = @plate', {
 		['@stored'] = true,
 		['@owner']  = xPlayer.identifier,
 		['@plate']  = plate
@@ -73,7 +73,7 @@ end)
 ESX.RegisterServerCallback('esx_boat:getGarage', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT vehicle FROM owned_vehicles WHERE owner = @owner AND type = @type AND `stored` = @stored', {
+	MySQL.query('SELECT vehicle FROM owned_vehicles WHERE owner = @owner AND type = @type AND `stored` = @stored', {
 		['@owner']  = xPlayer.identifier,
 		['@type']   = 'boat',
 		['@stored'] = true

@@ -6,6 +6,8 @@ description 'ESX Status'
 
 version 'legacy'
 
+lua54 'yes'
+
 shared_script '@es_extended/imports.lua'
 
 server_scripts {
@@ -27,3 +29,5 @@ files {
 	'html/css/app.css',
 	'html/scripts/app.js'
 }
+
+dependency 'es_extended'

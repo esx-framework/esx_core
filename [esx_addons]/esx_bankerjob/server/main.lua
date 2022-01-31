@@ -56,7 +56,7 @@ end)
 function CalculateBankSavings(d, h, m)
 	local asyncTasks = {}
 
-	MySQL.Async.fetchAll('SELECT * FROM addon_account_data WHERE account_name = @account_name', {
+	MySQL.query('SELECT * FROM addon_account_data WHERE account_name = @account_name', {
 		['@account_name'] = 'bank_savings'
 	}, function(result)
 		local bankInterests = 0
@@ -80,7 +80,7 @@ function CalculateBankSavings(d, h, m)
 
 				local scope = function(newMoney, owner)
 					table.insert(asyncTasks, function(cb)
-						MySQL.Async.execute('UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name', {
+						MySQL.update('UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name', {
 							['@money']        = newMoney,
 							['@owner']        = owner,
 							['@account_name'] = 'bank_savings',

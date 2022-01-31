@@ -21,7 +21,6 @@ Many more resources are included in this repository, or you can browse the [ESX 
 
 #### Optimisation
 - Utilise compile-time jenkins hashing over the GetHashKey native
-- Update old MySQL queries to use MySQL.store to improve performance, especially during player saving
 - Several loops will now sleep when their tasks are not necessary to perform
 - Improved support when using ESX Identity to reduce events and queries during player login
 - Support for the latest weapons and components

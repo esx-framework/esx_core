@@ -15,7 +15,6 @@ shared_scripts {
 }
 
 server_scripts {
-	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 
 	'server/common.lua',
@@ -69,16 +68,8 @@ files {
 	'html/img/accounts/money.png'
 }
 
-exports {
-	'getSharedObject'
-}
-
-server_exports {
-	'getSharedObject'
-}
-
 dependencies {
-	'mysql-async',
+	'oxmysql',
 	'async',
 	'spawnmanager',
 }
