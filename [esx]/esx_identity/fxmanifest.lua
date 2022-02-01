@@ -10,7 +10,7 @@ shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'locales/en.lua',
 	'locales/es.lua',
 	'locales/cs.lua',

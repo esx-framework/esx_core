@@ -8,7 +8,7 @@ version 'legacy'
 
 server_scripts {
 	'@es_extended/imports.lua',
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'config.lua',
 	'locales/br.lua',
