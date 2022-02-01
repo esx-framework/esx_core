@@ -257,6 +257,12 @@ end, true, {help = _U('revive_help'), validate = true, arguments = {
 	{name = 'playerId', help = 'The player id', type = 'player'}
 }})
 
+ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
+	for _, playerId in ipairs(GetPlayers()) do
+		TriggerClientEvent('esx_ambulancejob:revive', playerId)
+	end
+end, false)
+
 ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] then
 		local xPlayer = ESX.GetPlayerFromId(source)
