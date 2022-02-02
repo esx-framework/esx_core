@@ -70,6 +70,5 @@ files {
 
 dependencies {
 	'oxmysql',
-	'async',
 	'spawnmanager',
 }
