@@ -364,7 +364,7 @@ function deleteIdentity(xPlayer)
 end
 
 function saveIdentityToDatabase(identifier, identity)
-	MySQL.update.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?', {identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height. identifier})
+	MySQL.update.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?', {identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier})
 end
 
 function deleteIdentityFromDatabase(xPlayer)
