@@ -368,7 +368,7 @@ function saveIdentityToDatabase(identifier, identity)
 end
 
 function deleteIdentityFromDatabase(xPlayer)
-	MySQL.query.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?', {nil, nil, nil, nil, nil, xPlayer.identifier})
+	MySQL.query.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?', {nil, nil, nil, nil, nil, nil, xPlayer.identifier})
 
 	if Config.FullCharDelete then
 		MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?', {{'bank_savings', 'caution'}, xPlayer.identifier})
