@@ -48,5 +48,6 @@ Locales['en'] = {
   ['blip_taxi'] = 'downtown Cab Co.',
   ['phone_taxi'] = 'downtown Cab Co.',
   ['taxi'] = 'taxi',
-  ['taxi_stock'] = 'taxi Stock'
+  ['taxi_stock'] = 'taxi Stock',
+  ['keymap_showtaximenu'] = 'open taxi menu'
 }
