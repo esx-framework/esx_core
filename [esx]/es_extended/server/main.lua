@@ -5,7 +5,7 @@ local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `gr
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
 
 if Config.Multichar then
-	newPlayer = newPlayer..', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"'
+	newPlayer = newPlayer..', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
 end
 
 if Config.Multichar or Config.Identity then
