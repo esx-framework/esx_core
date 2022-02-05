@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.4",
+	"commit" : "1.4.1",
 	"changelog": "\n- Changed to Oxmysql + optimisation"
 }

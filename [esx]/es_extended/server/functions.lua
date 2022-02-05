@@ -155,7 +155,7 @@ ESX.RegisterServerCallback = function(name, cb)
 	Core.ServerCallbacks[name] = cb
 end
 
-Core.TriggerServerCallback = function(name, requestId, source, cb, ...)
+ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 	if Core.ServerCallbacks[name] then
 		Core.ServerCallbacks[name](source, cb, ...)
 	else

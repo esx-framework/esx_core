@@ -251,6 +251,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
 	end
 end)
+
 RegisterNetEvent('esx:createPickup')
 AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
 	local function setObjectProperties(object)
@@ -350,13 +351,16 @@ end)
 if Config.EnableHud then
 	Citizen.CreateThread(function()
 		local isPaused = false
+		local time = 500
 		while true do
-			Citizen.Wait(300)
+			Citizen.Wait(time)
 
 			if IsPauseMenuActive() and not isPaused then
+				time = 100
 				isPaused = true
 				ESX.UI.HUD.SetDisplay(0.0)
 			elseif not IsPauseMenuActive() and isPaused then
+				time = 100
 				isPaused = false
 				ESX.UI.HUD.SetDisplay(1.0)
 			end

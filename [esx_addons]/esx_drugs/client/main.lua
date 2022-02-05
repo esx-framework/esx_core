@@ -3,11 +3,12 @@ local wasOpen = false
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		local time = 800
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
-		if GetDistanceBetweenCoords(coords, Config.CircleZones.DrugDealer.coords, true) < 0.5 then
+		if #(coords - Config.CircleZones.DrugDealer.coords) < 0.5 then
+			time = 2
 			if not menuOpen then
 				ESX.ShowHelpNotification(_U('dealer_prompt'))
 
@@ -24,7 +25,7 @@ Citizen.CreateThread(function()
 				ESX.UI.Menu.CloseAll()
 			end
 
-			Citizen.Wait(500)
+			Citizen.Wait(time)
 		end
 	end
 end)

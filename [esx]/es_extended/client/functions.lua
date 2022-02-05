@@ -850,7 +850,7 @@ ESX.ShowInventory = function()
 						players[GetPlayerServerId(playerNearby)] = true
 					end
 
-					Core.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
+					ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
 						for playerId,playerName in pairs(returnedPlayers) do
 							table.insert(elements, {
 								label = playerName,

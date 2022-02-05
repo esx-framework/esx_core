@@ -26,14 +26,14 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	if firstSpawn then
 		firstSpawn = false
 
-		if Config.AntiCombatLog then
+		if Config.SaveDeathStatus then
 			while not ESX.PlayerLoaded do
 				Citizen.Wait(1000)
 			end
 
 			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
 				if shouldDie then
-					Citizen.Wait(5000)
+					Citizen.Wait(1000)
 					SetEntityHealth(PlayerPedId(), 0)
 				end
 			end)
