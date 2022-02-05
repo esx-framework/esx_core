@@ -1,4 +1,4 @@
-fx_version 'cerulean'
+fx_version 'adamant'
 
 game 'gta5'
 
