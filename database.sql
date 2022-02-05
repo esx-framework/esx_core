@@ -583,30 +583,6 @@ CREATE TABLE IF NOT EXISTS `rented_vehicles` (
 /*!40000 ALTER TABLE `rented_vehicles` DISABLE KEYS */;
 /*!40000 ALTER TABLE `rented_vehicles` ENABLE KEYS */;
 
--- Dumping structure for table es_extended.shops
-CREATE TABLE IF NOT EXISTS `shops` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `store` varchar(100) NOT NULL,
-  `item` varchar(100) NOT NULL,
-  `price` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `store` (`store`)
-) ENGINE=InnoDB AUTO_INCREMENT=10;
-
--- Dumping data for table es_extended.shops: ~9 rows (approximately)
-/*!40000 ALTER TABLE `shops` DISABLE KEYS */;
-INSERT INTO `shops` (`id`, `store`, `item`, `price`) VALUES
-	(1, 'TwentyFourSeven', 'bread', 30),
-	(2, 'TwentyFourSeven', 'water', 15),
-	(3, 'RobsLiquor', 'bread', 30),
-	(4, 'RobsLiquor', 'water', 15),
-	(5, 'LTDgasoline', 'bread', 30),
-	(6, 'LTDgasoline', 'water', 15),
-	(7, 'TwentyFourSeven', 'beer', 45),
-	(8, 'RobsLiquor', 'beer', 45),
-	(9, 'LTDgasoline', 'beer', 45);
-/*!40000 ALTER TABLE `shops` ENABLE KEYS */;
-
 -- Dumping structure for table es_extended.society_moneywash
 CREATE TABLE IF NOT EXISTS `society_moneywash` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
