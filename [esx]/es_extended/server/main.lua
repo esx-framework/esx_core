@@ -536,6 +536,10 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 	})
 end)
 
+ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
+	cb(Core.IsPlayerAdmin(source))
+end)
+
 ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target)
 	local xPlayer = ESX.GetPlayerFromId(target)
 
