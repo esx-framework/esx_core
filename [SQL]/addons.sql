@@ -313,7 +313,7 @@ INSERT INTO `jobs`(`name`, `label`, `whitelisted`)VALUES
 	('reporter', 'Reporter', 0),
 	('slaughterer', 'Butcher', 0),
 	('tailor', 'Tailor', 0),
-	('taxi', 'Taxi', 0),
+	('taxi', 'Taxi', 0);
 /*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
 
 -- Dumping structure for table es_extended.job_grades
