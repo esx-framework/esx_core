@@ -71,7 +71,6 @@ Locales['sv'] = {
   ['respawn_bleedout_fine_msg'] = 'du betalade ~r~%s SEK~s~ för att respawna.',
   ['distress_send'] = 'tryck ~b~[G]~s~ för att skicka nödsignal',
   ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
-  ['combatlog_message'] = 'du har force-respawnats på grund av att du lämnat servern medans du var död',
   -- Revive
   ['revive_help'] = 'återuppliva en spelare',
   -- Item

@@ -71,7 +71,7 @@ Locales['br'] = {
   ['respawn_bleedout_fine_msg'] = 'você precisa pagar ~r~$%s~s~ para reviver',
   ['distress_send'] = 'pressione [~b~G~s~] enviar sinal de socorro',
   ['distress_sent'] = 'sinal de socorro foi enviado para as unidades disponíveis!',
-  ['combatlog_message'] = 'você foi revivido porque deixou o servidor anteriormente quando estava morto.',
+
   -- Revive
   ['revive_help'] = 'reviver um cidadão',
   -- Item

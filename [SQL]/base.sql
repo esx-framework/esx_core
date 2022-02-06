@@ -48,6 +48,7 @@ INSERT INTO `job_grades` VALUES (1,'unemployed',0,'unemployed','Unemployed',200,
 CREATE TABLE `jobs` (
 	`name` VARCHAR(50) NOT NULL,
 	`label` VARCHAR(50) DEFAULT NULL,
+	`whitelisted` tinyint(1) NOT NULL DEFAULT 0
 
 	PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

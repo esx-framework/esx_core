@@ -71,7 +71,6 @@ Locales['hu'] = {
   ['respawn_bleedout_fine_msg'] = '~b~[Információ]:Ennyit fizettél ~r~$%s~s~, hogy újraéledj',
   ['distress_send'] = 'Nyomd meg a ~r~[G]~s~ gombot a segítségkéréshez',
   ['distress_sent'] = '~b~[Információ]:~s~ Egy civil értesítette az illetékes szervezetet!',
-  ['combatlog_message'] = '~r~[Információ]:~s~ Kiléptél halál alól!',
   -- Revive
   ['revive_help'] = 'újraéleszteni egy játékos',
   -- Item

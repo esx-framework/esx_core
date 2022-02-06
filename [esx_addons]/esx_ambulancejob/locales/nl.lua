@@ -70,7 +70,6 @@ Locales['nl'] = {
   ['respawn_bleedout_fine_msg'] = 'Je hebt ~r~€%s~s~ betaald om te respawnen.',
   ['distress_send'] = 'Druk op [~b~G~s~] om een noodsignaal te verzenden',
   ['distress_sent'] = 'Noodsignaal verzonden naar alle beschikbare eenheden!',
-  ['combatlog_message'] = 'Je bent gerespawned omdat je uitgelogt bent terwijl je dood was.',
   -- Revive
   ['revive_help'] = 'Revive een speler',
   -- Item

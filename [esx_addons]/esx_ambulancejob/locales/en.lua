@@ -71,7 +71,6 @@ Locales['en'] = {
   ['respawn_bleedout_fine_msg'] = 'you paid ~r~$%s~s~ to respawn.',
   ['distress_send'] = 'press [~b~G~s~] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
-  ['combatlog_message'] = 'you have been force-respawned because you\'ve previously left the server when dead.',
   -- Revive
   ['revive_help'] = 'revive a player',
   -- Item

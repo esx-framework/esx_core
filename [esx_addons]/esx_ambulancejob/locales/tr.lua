@@ -70,8 +70,6 @@ Locales['tr'] = {
 	['respawn_bleedout_fine_msg'] = 'yeniden doğmak için ~r~$%s~s~ ödediniz.',
 	['distress_send'] = 'acile sinyal göndermek için [~b~G~s~] basın',
 	['distress_sent'] = 'acil durum sinyali gönderildi!',
-	['combatlog_message'] = 'daha önce öldüğünüzde sunucudan ayrıldığınız için zorunlu olarak yeniden doğdunuz.',
-	-- Revive
 	['revive_help'] = 'oyuncuyu canlandır',
 	-- Item
 	['used_medikit'] = '~y~1x~s~ sağlık kiti kullanıldı.',

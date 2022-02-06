@@ -239,17 +239,21 @@ end)
 
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
+			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
-	if IsModelInCdimage(model) then
-		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
+			if IsModelInCdimage(model) then
+				local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
 
-		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
-		end)
-	else
-		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
-	end
+				ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
+					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
+				end)
+			else
+				TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
+			end
+		end
+	end)
 end)
 
 RegisterNetEvent('esx:createPickup')
@@ -496,32 +500,38 @@ end)
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
-    local WaypointHandle = GetFirstBlipInfoId(8)
-    if DoesBlipExist(WaypointHandle) then
-        local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
+    	local WaypointHandle = GetFirstBlipInfoId(8)
+    	if DoesBlipExist(WaypointHandle) then
+        	local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
 
-        for height = 1, 1000 do
-            SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+        	for height = 1, 1000 do
+            	SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
-            local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            	local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
-            if foundGround then
-                SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            	if foundGround then
+              	SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
                 break
-            end
+            	end
 
             Citizen.Wait(5)
-        end
+        	end
         TriggerEvent('chatMessage', "Successfully Teleported")
-    else
+    	else
         TriggerEvent('chatMessage', "No Waypoint Set")
-    end
+    	end
+		end
+	end)
 end)
 
 local noclip = false
 RegisterNetEvent("esx:noclip")
 AddEventHandler("esx:noclip", function(input)
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
     local player = PlayerId()
 	
     local msg = "disabled"
@@ -536,7 +546,9 @@ AddEventHandler("esx:noclip", function(input)
 	end
 
 	TriggerEvent("chatMessage", "Noclip has been ^2^*" .. msg)
+	end
 	end)
+end)
 	
 	local heading = 0
 	Citizen.CreateThread(function()
