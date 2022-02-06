@@ -299,7 +299,7 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 
 -- Dumping data for table es_extended.jobs: ~15 rows (approximately)
 /*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
-INSERT INTO `jobs` (`name`, `label`, `whitelisted`) VALUES
+INSERT INTO `jobs`(`name`, `label`, `whitelisted`)VALUES
 	('ambulance', 'EMS', 0),
 	('banker', 'Banker', 0),
 	('cardealer', 'Cardealer', 0),
