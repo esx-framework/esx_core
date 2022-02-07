@@ -1,9 +1,8 @@
-local isDead = false
-local inAnim = false
+local isDead, inAnim, inAction = false, false, false
 
 AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
-
 AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
+AddEventHandler('esx:onPlayerAction', function(bool) inAction = bool end)
 
 function startAttitude(lib, anim)
 	ESX.Streaming.RequestAnimSet(lib, function()
@@ -82,17 +81,18 @@ function OpenAnimationsSubMenu(menu)
 end
 
 -- Key Controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
+			if not isDead then
 
-		if IsControlJustReleased(0, 170) and IsInputDisabled(0) and not isDead then
-			OpenAnimationsMenu()
-		end
+				if IsControlJustReleased(0, 170) then
+					OpenAnimationsMenu()
+				end
 
-		if IsControlJustReleased(0, 73) and IsInputDisabled(0) and not isDead then
-			ClearPedTasks(PlayerPedId())
-		end
-
+				if IsControlJustReleased(0, 73) and not inAction then
+					ClearPedTasks(PlayerPedId())
+				end
+			end
 	end
 end)
