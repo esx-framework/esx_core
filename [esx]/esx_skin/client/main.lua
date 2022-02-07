@@ -77,7 +77,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             DeleteSkinCam()
             TriggerEvent('skinchanger:loadSkin', lastSkin)
 
-            if cancelCb ~= nil then
+            if cancelCb then
                 cancelCb(data, menu)
             end
         end, function(data, menu)
@@ -103,7 +103,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                     newData = {}
                     newData.max = maxVals[elements[i].name]
 
-                    if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
+                    if elements[i].textureof and data.current.name == elements[i].textureof then
                         newData.value = 0
                     end
 
@@ -128,7 +128,7 @@ function CreateSkinCam()
     SetCamActive(cam, true)
     RenderScriptCams(true, true, 500, true, true)
 
-    isCameraActive = true
+    isCameraActive = true cameraActive()
     SetCamCoord(cam, GetEntityCoords(playerPed))
     SetCamRot(cam, 0.0, 0.0, 270.0, true)
     SetEntityHeading(playerPed, 0.0)
@@ -141,11 +141,11 @@ function DeleteSkinCam()
     cam = nil
 end
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
+cameraActive = function()
+    CreateThread(function()
+        while isCameraActive do
+            Wait(0)
 
-        if isCameraActive then
             DisableControlAction(2, 30, true)
             DisableControlAction(2, 31, true)
             DisableControlAction(2, 32, true)
@@ -191,19 +191,17 @@ Citizen.CreateThread(function()
             PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
 
             ESX.ShowHelpNotification(_U('use_rotate_view'))
-        else
-            Citizen.Wait(500)
         end
-    end
-end)
+    end)
+end
 
-Citizen.CreateThread(function()
-    local angle = 90
+cameraActiveInput = function()
+    CreateThread(function()
+        local angle = 90
 
-    while true do
-        Citizen.Wait(0)
+        while isCameraActive do
+            Wait(0)
 
-        if isCameraActive then
             if IsControlPressed(0, 108) then
                 angle = angle - 1
             elseif IsControlPressed(0, 109) then
@@ -217,11 +215,9 @@ Citizen.CreateThread(function()
             end
 
             heading = angle + 0.0
-        else
-            Citizen.Wait(500)
         end
-    end
-end)
+    end)
+end
 
 function OpenSaveableMenu(submitCb, cancelCb, restrict)
     TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
@@ -233,7 +229,7 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
         TriggerEvent('skinchanger:getSkin', function(skin)
             TriggerServerEvent('esx_skin:save', skin)
 
-            if submitCb ~= nil then
+            if submitCb then
                 submitCb(data, menu)
             end
         end)
@@ -248,20 +244,20 @@ AddEventHandler('esx_skin:resetFirstSpawn', function()
 end)
 
 AddEventHandler('esx_skin:playerRegistered', function()
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while not ESX.PlayerLoaded do
-            Citizen.Wait(100)
+            Wait(100)
         end
 
         if firstSpawn then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
                 if skin == nil then
                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
-                    Citizen.Wait(100)
+                    Wait(100)
                     skinLoaded = true
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)
-                    Citizen.Wait(100)
+                    Wait(100)
                     skinLoaded = true
                 end
             end)
