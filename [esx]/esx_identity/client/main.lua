@@ -3,7 +3,7 @@ local loadingScreenFinished = false
 RegisterNetEvent('esx_identity:alreadyRegistered')
 AddEventHandler('esx_identity:alreadyRegistered', function()
 	while not loadingScreenFinished do
-		Citizen.Wait(100)
+		Wait(100)
 	end
 
 	TriggerEvent('esx_skin:playerRegistered')
@@ -16,23 +16,16 @@ end)
 if not Config.UseDeferrals then
 	local guiEnabled, isDead = false, false
 
-	AddEventHandler('esx:onPlayerDeath', function(data)
-		isDead = true
-	end)
-
-	AddEventHandler('esx:onPlayerSpawn', function(spawn)
-		isDead = false
-	end)
+	AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
+	AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
 
 	function EnableGui(state)
 		SetNuiFocus(state, state)
 		guiEnabled = state
-	--[[	Citizen.CreateThread(function()
-			while true do
-				Citizen.Wait(20000) -- UNCOMMENT THIS METHOD IF YOU ARE EXPERIENCING ISSUES WITH THE UI ON LOCALHOST | IF YOU STILL EXPERIENCE ISSUES AFTER REMOVING COMMENTS, INCREASE THE TIME.	
-			end
-		end)
-	]]--
+		if guiEnabled then
+			guiEnabled()
+		end
+
 		SendNUIMessage({
 			type = "enableui",
 			enable = state
@@ -60,11 +53,11 @@ if not Config.UseDeferrals then
 		end, data)
 	end)
 
-	Citizen.CreateThread(function()
-		while true do
-			Citizen.Wait(5)
+	guiEnabled = function()
+		CreateThread(function()
+			while guiEnabled do
+				Wait(1)
 
-			if guiEnabled then
 				DisableControlAction(0, 1,   true) -- LookLeftRight
 				DisableControlAction(0, 2,   true) -- LookUpDown
 				DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
@@ -85,6 +78,6 @@ if not Config.UseDeferrals then
 				DisableControlAction(0, 75,  true) -- disable exit vehicle
 				DisableControlAction(27, 75, true) -- disable exit vehicle
 			end
-		end
-	end)
+		end)
+	end
 end
