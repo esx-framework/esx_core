@@ -784,7 +784,7 @@ Citizen.CreateThread(function()
 
 			-- Entering
 			if property.entering and not property.disabled then
-				local distance = GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true)
+				local distance = #(coords - property.entering)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.MarkerType, property.entering.x, property.entering.y, property.entering.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
@@ -803,7 +803,7 @@ Citizen.CreateThread(function()
 
 			-- Exit
 			if property.exit and not property.disabled then
-				local distance = GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true)
+				local distance = #(coords - property.exit)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.MarkerType, property.exit.x, property.exit.y, property.exit.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
@@ -819,7 +819,7 @@ Citizen.CreateThread(function()
 
 			-- Room menu
 			if property.roomMenu and hasChest and not property.disabled then
-				local distance = GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true)
+				local distance = #(coords - property.roomMenu)
 
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.MarkerType, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.RoomMenuMarkerColor.r, Config.RoomMenuMarkerColor.g, Config.RoomMenuMarkerColor.b, 100, false, true, 2, false, nil, nil, false)

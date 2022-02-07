@@ -39,7 +39,7 @@ Citizen.CreateThread(function()
 		isInMarker = false
 
 		for i=1, #Config.Zones, 1 do
-			local distance = GetDistanceBetweenCoords(coords, Config.Zones[i], true)
+			local distance = #(coords - Config.Zones[i])
 
 			if distance < Config.DrawDistance then
 				DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)

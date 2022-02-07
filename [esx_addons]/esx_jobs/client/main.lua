@@ -331,13 +331,13 @@ Citizen.CreateThread(function()
 					if (v.Zone) then
 						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
 							if (not(center == nil)) then
-								if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, center.x, center.y, center.z, true) < Config.DrawDistance) then
+								if(v.Marker ~= -1 and #(coords - center) < Config.DrawDistance) then
 									DrawMarker(v.Marker, center.x, center.y, center.z - 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 								end
 							end
 						end)
 					else
-						if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+						if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
 							DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 						end
 					end
@@ -353,7 +353,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(Config.PublicZones) do
-			if(v.Marker ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
+			if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
 				DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
@@ -369,7 +369,7 @@ Citizen.CreateThread(function()
 		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
-			if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x/2 then
+			if #(coords - v.Pos) < v.Size.x/2 then
 				isInPublicMarker = true
 				position = v.Teleport
 				zone = v
@@ -439,7 +439,7 @@ Citizen.CreateThread(function()
 						end
 					-- Else use radius defined from center
 					else
-						if GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x then
+						if #(coords - v.Pos) < v.Size.x then
 							isInMarker  = true
 							currentZone = k
 							zone        = v

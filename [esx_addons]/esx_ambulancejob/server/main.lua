@@ -258,9 +258,7 @@ end, true, {help = _U('revive_help'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
-	for _, playerId in ipairs(GetPlayers()) do
-		TriggerClientEvent('esx_ambulancejob:revive', playerId)
-	end
+	TriggerClientEvent('esx_ambulancejob:revive', -1)
 end, false)
 
 ESX.RegisterUsableItem('medikit', function(source)
@@ -293,11 +291,11 @@ ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, c
 	local xPlayer = ESX.GetPlayerFromId(source)
 	MySQL.scalar('SELECT is_dead FROM users WHERE identifier = ?', {xPlayer.identifier}, function(isDead)
 
-		if isDead == 1 then 
+		if isDead == 1 then
 			cb(true)
-		else		
+		else
 			cb(false)
-		end 
+		end
 	end)
 end)
 
