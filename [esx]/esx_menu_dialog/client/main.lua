@@ -69,7 +69,7 @@ end)
 AddEventHandler('esx_menu_dialog:message:menu_cancel', function(data)
 	local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
-	if menu.cancel ~= nil then
+	if menu.cancel then
 		menu.cancel(data, menu)
 	end
 end)
@@ -77,16 +77,17 @@ end)
 AddEventHandler('esx_menu_dialog:message:menu_change', function(data)
 	local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
-	if menu.change ~= nil then
+	if menu.change then
 		menu.change(data, menu)
 	end
 end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
-
+		local sleep = 500
+			
 		if ESX.Table.SizeOf(OpenedMenus) > 0 then
+			sleep = 0
 			DisableControlAction(0, 1,   true) -- LookLeftRight
 			DisableControlAction(0, 2,   true) -- LookUpDown
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
@@ -96,8 +97,8 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 15, true) -- WeaponWheelPrev
 			DisableControlAction(0, 16, true) -- SelectNextWeapon
 			DisableControlAction(0, 17, true) -- SelectPrevWeapon
-		else
-			Citizen.Wait(500)
 		end
+			
+		Wait(sleep)
 	end
 end)
