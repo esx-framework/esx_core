@@ -220,7 +220,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			if(v.Type ~= -1 and #(coords - vector3(v.Pos.x, v.Pos.y, v.Pos.z)) < Config.DrawDistance) then
+			if(v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
@@ -238,7 +238,7 @@ Citizen.CreateThread(function()
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			if( #(coords - vector3(v.Pos.x, v.Pos.y, v.Pos.z)) < v.Size.x) then
+			if(#(coords - v.Pos) < v.Size.x) then
 				isInMarker  = true
 				currentZone = k
 			end
@@ -334,9 +334,9 @@ Citizen.CreateThread(function()
 
 					LastCheckPoint = CurrentCheckPoint
 				end
-
-				local distance = #(coords - vector3(Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z))
-
+            
+				local distance = #(coords - Config.CheckPoints[nextCheckPoint].Pos)
+            
 				if distance <= 100.0 then
 					DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100, false, true, 2, false, false, false, false)
 				end

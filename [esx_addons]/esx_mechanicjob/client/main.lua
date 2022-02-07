@@ -393,7 +393,7 @@ function OpenMobileMechanicActionsMenu()
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, true)
 
-			local towmodel = GetHashKey('flatbed')
+			local towmodel = `flatbed`
 			local isVehicleTow = IsVehicleModel(vehicle, towmodel)
 
 			if isVehicleTow then
@@ -773,7 +773,7 @@ Citizen.CreateThread(function()
 			local coords = GetEntityCoords(PlayerPedId())
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
-			if GetDistanceBetweenCoords(coords, zone.Pos.x, zone.Pos.y, zone.Pos.z, true) < Config.NPCSpawnDistance then
+			if #(coords - zone.Pos) < Config.NPCSpawnDistance then
 				local model = Config.Vehicles[GetRandomIntInRange(1,  #Config.Vehicles)]
 
 				ESX.Game.SpawnVehicle(model, zone.Pos, 0, function(vehicle)
@@ -788,7 +788,7 @@ Citizen.CreateThread(function()
 			local coords = GetEntityCoords(PlayerPedId())
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
-			if GetDistanceBetweenCoords(coords, zone.Pos.x, zone.Pos.y, zone.Pos.z, true) < Config.NPCNextToDistance then
+			if #(coords - zone.Pos) < Config.NPCNextToDistance then
 				ESX.ShowNotification(_U('please_tow'))
 				NPCHasBeenNextToTowable = true
 			end
@@ -820,7 +820,7 @@ Citizen.CreateThread(function()
 			local coords, letSleep = GetEntityCoords(PlayerPedId()), true
 
 			for k,v in pairs(Config.Zones) do
-				if v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance then
+				if v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance then
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
@@ -847,7 +847,7 @@ Citizen.CreateThread(function()
 			local currentZone = nil
 
 			for k,v in pairs(Config.Zones) do
-				if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
+				if(#(coords - v.Pos) < v.Size.x) then
 					isInMarker  = true
 					currentZone = k
 				end
@@ -888,7 +888,7 @@ Citizen.CreateThread(function()
 
 			if DoesEntityExist(object) then
 				local objCoords = GetEntityCoords(object)
-				local distance  = GetDistanceBetweenCoords(coords, objCoords, true)
+				local distance  = #(coords - objCoords)
 
 				if closestDistance == -1 or closestDistance > distance then
 					closestDistance = distance
@@ -937,9 +937,9 @@ Citizen.CreateThread(function()
 					else
 
 						if
-							GetEntityModel(vehicle) == GetHashKey('flatbed')   or
-							GetEntityModel(vehicle) == GetHashKey('towtruck2') or
-							GetEntityModel(vehicle) == GetHashKey('slamvan3')
+							GetEntityModel(vehicle) == `flatbed` or
+							GetEntityModel(vehicle) == `towtruck2` or
+							GetEntityModel(vehicle) == `slamvan3`
 						then
 							TriggerServerEvent('esx_service:disableService', 'mechanic')
 						end

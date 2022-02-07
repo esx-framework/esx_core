@@ -8,7 +8,6 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if #(coords - Config.CircleZones.DrugDealer.coords) < 0.5 then
-			time = 2
 			if not menuOpen then
 				ESX.ShowHelpNotification(_U('dealer_prompt'))
 

@@ -51,7 +51,8 @@ Citizen.CreateThread(function()
 		isInATMMarker = false
 
 		for k,v in pairs(Config.ATMLocations) do
-			if #(coords - vector3(v.x, v.y, v.z)) < 1.0 then
+			if #(coords - v) < 1.0 then
+
 				isInATMMarker, canSleep = true, false
 				break
 			end
