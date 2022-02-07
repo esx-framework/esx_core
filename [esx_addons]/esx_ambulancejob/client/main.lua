@@ -1,11 +1,15 @@
 local firstSpawn = true
 
-isDead, isSearched, medic = false, false, 0
+isDead, isSearched, medic, isEMSjob = false, false, 0, false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
-	ESX.PlayerLoaded = true
+    if xPlayer.job and xPlayer.job.name == 'ambulance' then
+        isEMSjob = true
+        currentActionAmb()
+        ambEventMarkers()
+    end
 end)
 
 RegisterNetEvent('esx:onPlayerLogout')
@@ -18,6 +22,13 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+    if job and job.name == 'ambulance' then
+        isEMSjob = true
+        currentActionAmb()
+        ambEventMarkers()
+    else
+        isEMSjob = false
+    end
 end)
 
 AddEventHandler('esx:onPlayerSpawn', function()
@@ -26,14 +37,14 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	if firstSpawn then
 		firstSpawn = false
 
-		if Config.SaveDeathStatus then
+		if Config.AntiCombatLog then
 			while not ESX.PlayerLoaded do
-				Citizen.Wait(1000)
+				Wait(1000)
 			end
 
 			ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
 				if shouldDie then
-					Citizen.Wait(1000)
+					Wait(5000)
 					SetEntityHealth(PlayerPedId(), 0)
 				end
 			end)
@@ -42,7 +53,7 @@ AddEventHandler('esx:onPlayerSpawn', function()
 end)
 
 -- Create blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.Hospitals) do
 		local blip = AddBlipForCoord(v.Blip.coords)
 
@@ -58,36 +69,34 @@ Citizen.CreateThread(function()
 end)
 
 -- Disable most inputs when dead
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
+isDeadDisableInput = function()
+	CreateThread(function()
+		while isDead do
+			Wait(0)
 
-		if isDead then
 			DisableAllControlActions(0)
 			EnableControlAction(0, 47, true)
 			EnableControlAction(0, 245, true)
 			EnableControlAction(0, 38, true)
-		else
-			Citizen.Wait(500)
 		end
-	end
-end)
+	end)
+end
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		if isDead and isSearched then
+isSearchAmb = function()
+	CreateThread(function()
+		while isDead and isSearched do
+			Wait(0)
 			local playerPed = PlayerPedId()
 			local ped = GetPlayerPed(GetPlayerFromServerId(medic))
 			isSearched = false
 
 			AttachEntityToEntity(playerPed, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
-			Citizen.Wait(1000)
+			Wait(1000)
 			DetachEntity(playerPed, true, false)
 			ClearPedTasksImmediately(playerPed)
 		end
-	end
-end)
+	end)
+end
 
 RegisterNetEvent('esx_ambulancejob:clsearch')
 AddEventHandler('esx_ambulancejob:clsearch', function(medicId)
@@ -102,6 +111,8 @@ AddEventHandler('esx_ambulancejob:clsearch', function(medicId)
 			if player == GetPlayerFromServerId(medicId) then
 				medic = tonumber(medicId)
 				isSearched = true
+				isSearchAmb()
+
 				break
 			end
 		end
@@ -110,6 +121,7 @@ end)
 
 function OnPlayerDeath()
 	isDead = true
+	isDeadDisableInput()
 	ESX.UI.Menu.CloseAll()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
 
@@ -130,9 +142,9 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 		ESX.Streaming.RequestAnimDict(lib, function()
 			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 
-			Citizen.Wait(500)
+			Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
-				Citizen.Wait(0)
+				Wait(0)
 				DisableAllControlActions(0)
 			end
 
@@ -147,9 +159,9 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 		ESX.Streaming.RequestAnimDict(lib, function()
 			TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 
-			Citizen.Wait(500)
+			Wait(500)
 			while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
-				Citizen.Wait(0)
+				Wait(0)
 				DisableAllControlActions(0)
 			end
 
@@ -160,11 +172,11 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 end)
 
 function StartDistressSignal()
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		local timer = Config.BleedoutTimer
 
 		while timer > 0 and isDead do
-			Citizen.Wait(0)
+			Wait(0)
 			timer = timer - 30
 
 			SetTextFont(4)
@@ -229,10 +241,10 @@ function StartDeathTimer()
 	local earlySpawnTimer = ESX.Math.Round(Config.EarlyRespawnTimer / 1000)
 	local bleedoutTimer = ESX.Math.Round(Config.BleedoutTimer / 1000)
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		-- early respawn timer
 		while earlySpawnTimer > 0 and isDead do
-			Citizen.Wait(1000)
+			Wait(1000)
 
 			if earlySpawnTimer > 0 then
 				earlySpawnTimer = earlySpawnTimer - 1
@@ -241,7 +253,7 @@ function StartDeathTimer()
 
 		-- bleedout timer
 		while bleedoutTimer > 0 and isDead do
-			Citizen.Wait(1000)
+			Wait(1000)
 
 			if bleedoutTimer > 0 then
 				bleedoutTimer = bleedoutTimer - 1
@@ -249,12 +261,12 @@ function StartDeathTimer()
 		end
 	end)
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		local text, timeHeld
 
 		-- early respawn timer
 		while earlySpawnTimer > 0 and isDead do
-			Citizen.Wait(0)
+			Wait(0)
 			text = _U('respawn_available_in', secondsToClock(earlySpawnTimer))
 
 			DrawGenericTextThisFrame()
@@ -266,7 +278,7 @@ function StartDeathTimer()
 
 		-- bleedout timer
 		while bleedoutTimer > 0 and isDead do
-			Citizen.Wait(0)
+			Wait(0)
 			text = _U('respawn_bleedout_in', secondsToClock(bleedoutTimer))
 
 			if not Config.EarlyRespawnFine then
@@ -308,11 +320,11 @@ end
 function RemoveItemsAfterRPDeath()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		DoScreenFadeOut(800)
 
 		while not IsScreenFadedOut() do
-			Citizen.Wait(10)
+			Wait(10)
 		end
 
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
@@ -366,7 +378,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	DoScreenFadeOut(800)
 
 	while not IsScreenFadedOut() do
-		Citizen.Wait(50)
+		Wait(50)
 	end
 
 	local formattedCoords = {
