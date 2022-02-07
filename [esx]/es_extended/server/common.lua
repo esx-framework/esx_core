@@ -1,34 +1,35 @@
 ESX = {}
 ESX.Players = {}
-ESX.UsableItemsCallbacks = {}
-ESX.Items = {}
-ESX.ServerCallbacks = {}
-ESX.TimeoutCount = -1
-ESX.CancelledTimeouts = {}
-ESX.Pickups = {}
-ESX.PickupId = 0
 ESX.Jobs = {}
-ESX.RegisteredCommands = {}
+ESX.Items = {}
+Core = {}
+Core.UsableItemsCallbacks = {}
+Core.ServerCallbacks = {}
+Core.TimeoutCount = -1
+Core.CancelledTimeouts = {}
+Core.RegisteredCommands = {}
+Core.Pickups = {}
+Core.PickupId = 0
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
 end)
 
-function getSharedObject()
+exports('getSharedObject', function()
 	return ESX
-end
+end)
 
 local function StartDBSync()
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(10 * 60 * 1000)
-			ESX.SavePlayers()
+			Core.SavePlayers()
 		end
 	end)
 end
 
 MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
+	MySQL.query('SELECT * FROM items', {}, function(result)
 		for k,v in ipairs(result) do
 			ESX.Items[v.name] = {
 				label = v.label,
@@ -40,13 +41,13 @@ MySQL.ready(function()
 	end)
 
 	local Jobs = {}
-	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
+	MySQL.query('SELECT * FROM jobs', {}, function(jobs)
 		for k,v in ipairs(jobs) do
 			Jobs[v.name] = v
 			Jobs[v.name].grades = {}
 		end
 
-		MySQL.Async.fetchAll('SELECT * FROM job_grades', {}, function(jobGrades)
+		MySQL.query('SELECT * FROM job_grades', {}, function(jobGrades)
 			for k,v in ipairs(jobGrades) do
 				if Jobs[v.job_name] then
 					Jobs[v.job_name].grades[tostring(v.grade)] = v

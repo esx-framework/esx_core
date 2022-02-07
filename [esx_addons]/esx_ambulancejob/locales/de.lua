@@ -70,7 +70,6 @@ Locales['de'] = {
   ['respawn_bleedout_fine_msg'] = 'Du hast ~r~$%s~s~ bezahlt, um zu respawnen.',
   ['distress_send'] = 'Drücke [~b~G~s~] um ein Notsignal zu senden',
   ['distress_sent'] = 'Notsignal wurde an den Rettungsdienst übermittelt!',
-  ['combatlog_message'] = 'Du wurdest respawnt, da du den Server verlassen hast, als du gestorben bist.',
   -- Revive
   ['revive_help'] = 'Belebe einen Spieler wieder',
   -- Item

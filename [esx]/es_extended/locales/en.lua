@@ -162,7 +162,7 @@ Locales['en'] = {
   -- SMG & LMG
   ['weapon_assaultsmg'] = 'Assault SMG',
   ['weapon_combatmg'] = 'Combat MG',
-  ['weapon_combatmg'] = 'Combat MG MK2',
+  ['weapon_combatmg_mk2'] = 'Combat MG MK2',
   ['weapon_combatpdw'] = 'Combat PDW',
   ['weapon_gusenberg'] = 'Gusenberg Sweeper',
   ['weapon_machinepistol'] = 'Machine Pistol',

@@ -1,7 +1,7 @@
 local availableJobs = {}
 
 MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT name, label FROM jobs WHERE whitelisted = @whitelisted', {
+	MySQL.query('SELECT name, label FROM jobs WHERE whitelisted = @whitelisted', {
 		['@whitelisted'] = false
 	}, function(result)
 		for i=1, #result, 1 do

@@ -73,7 +73,7 @@ Locales['es'] = {
   ['respawn_bleedout_fine_msg'] = 'Tu pagaste ~r~$%s~s~ para reaparecer.',
   ['distress_send'] = 'Presiona [~b~G~s~] para enviar señal de socorro',
   ['distress_sent'] = 'Se ha enviado una señal de socorro a las unidades disponibles.',
-  ['combatlog_message'] = 'Ha sido reaparecido a la fuerza porque anteriormente abandonó el servidor cuando estaba muerto.',
+  
   -- Revive
   ['revive_help'] = 'Revivir un jugador',
   -- Item

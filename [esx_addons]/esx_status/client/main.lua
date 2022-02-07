@@ -65,12 +65,17 @@ AddEventHandler('esx_status:load', function(status)
 	if Config.Display then TriggerEvent('esx_status:setDisplay', 0.5) end
 
 	Citizen.CreateThread(function()
+		local data = {}
 		while ESX.PlayerLoaded do
-			for i=1, #Status, 1 do
+			for i=1, #Status do
 				Status[i].onTick()
+				table.insert(data, {
+					name = Status[i].name,
+					val = Status[i].val,
+					percent = (Status[i].val / 1000000) * 100
+				})
 			end
-			local data = GetStatusData(true)
-			
+
 			if Config.Display then
 				local fullData = data
 				for i=1, #data, 1 do
@@ -84,6 +89,7 @@ AddEventHandler('esx_status:load', function(status)
 			end
 
 			TriggerEvent('esx_status:onTick', data)
+			table.wipe(data)
 			Citizen.Wait(Config.TickTime)
 		end
 	end)
@@ -154,9 +160,9 @@ AddEventHandler('esx_status:setDisplay', function(val)
 end)
 
 -- Pause menu disable hud display
-Citizen.CreateThread(function()
-	while true do
-		if Config.Display then
+if Config.Display then
+	Citizen.CreateThread(function()
+		while true do
 			Citizen.Wait(300)
 
 			if IsPauseMenuActive() and not isPaused then
@@ -166,9 +172,9 @@ Citizen.CreateThread(function()
 				isPaused = false 
 				TriggerEvent('esx_status:setDisplay', 0.5)
 			end
-		else Citizen.Wait(1000) end
-	end
-end)
+		end
+	end)
+end
 
 -- Loading screen off event
 AddEventHandler('esx:loadingScreenOff', function()

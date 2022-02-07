@@ -32,15 +32,14 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
 			TriggerEvent('esx:onPlayerSpawn')
-			TriggerEvent('playerSpawned') -- compatibility with old scripts
 			TriggerEvent('esx:restoreLoadout')
+
 			if isNew then
-				if skin.sex == 0 then
-					TriggerEvent('skinchanger:loadDefaultModel', true)
-				else
-					TriggerEvent('skinchanger:loadDefaultModel', false)
-				end
-			elseif skin then TriggerEvent('skinchanger:loadSkin', skin) end
+				TriggerEvent('skinchanger:loadDefaultModel', skin.sex == 0)
+			elseif skin then
+				TriggerEvent('skinchanger:loadSkin', skin)
+			end
+
 			TriggerEvent('esx:loadingScreenOff')
 			ShutdownLoadingScreen()
 			ShutdownLoadingScreenNui()
@@ -65,7 +64,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 		local gradeLabel = ESX.PlayerData.job.grade_label ~= ESX.PlayerData.job.label and ESX.PlayerData.job.grade_label or ''
 		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
-		
+
 		ESX.UI.HUD.RegisterElement('job', #ESX.PlayerData.accounts, 0, jobTpl, {
 			job_label = ESX.PlayerData.job.label,
 			grade_label = gradeLabel
@@ -83,10 +82,15 @@ end)
 RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
 
-AddEventHandler('esx:onPlayerSpawn', function()
-	ESX.SetPlayerData('ped', PlayerPedId())
-	ESX.SetPlayerData('dead', false)
-end)
+local function onPlayerSpawn()
+	if ESX.PlayerLoaded then
+		ESX.SetPlayerData('ped', PlayerPedId())
+		ESX.SetPlayerData('dead', false)
+	end
+end
+
+AddEventHandler('playerSpawned', onPlayerSpawn)
+AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	ESX.SetPlayerData('ped', PlayerPedId())
@@ -235,18 +239,23 @@ end)
 
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
+			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
-	if IsModelInCdimage(model) then
-		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
+			if IsModelInCdimage(model) then
+				local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
 
-		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
-		end)
-	else
-		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
-	end
+				ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
+					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
+				end)
+			else
+				TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
+			end
+		end
+	end)
 end)
+
 RegisterNetEvent('esx:createPickup')
 AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
 	local function setObjectProperties(object)
@@ -282,7 +291,7 @@ end)
 
 RegisterNetEvent('esx:createMissingPickups')
 AddEventHandler('esx:createMissingPickups', function(missingPickups)
-	for pickupId,pickup in pairs(missingPickups) do
+	for pickupId, pickup in pairs(missingPickups) do
 		TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords, pickup.type, pickup.name, pickup.components, pickup.tintIndex)
 	end
 end)
@@ -346,13 +355,16 @@ end)
 if Config.EnableHud then
 	Citizen.CreateThread(function()
 		local isPaused = false
+		local time = 500
 		while true do
-			Citizen.Wait(300)
+			Citizen.Wait(time)
 
 			if IsPauseMenuActive() and not isPaused then
+				time = 100
 				isPaused = true
 				ESX.UI.HUD.SetDisplay(0.0)
 			elseif not IsPauseMenuActive() and isPaused then
+				time = 100
 				isPaused = false
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
@@ -488,32 +500,38 @@ end)
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
-    local WaypointHandle = GetFirstBlipInfoId(8)
-    if DoesBlipExist(WaypointHandle) then
-        local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
+    	local WaypointHandle = GetFirstBlipInfoId(8)
+    	if DoesBlipExist(WaypointHandle) then
+        	local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
 
-        for height = 1, 1000 do
-            SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+        	for height = 1, 1000 do
+            	SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
-            local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            	local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
-            if foundGround then
-                SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            	if foundGround then
+              	SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
 
                 break
-            end
+            	end
 
             Citizen.Wait(5)
-        end
+        	end
         TriggerEvent('chatMessage', "Successfully Teleported")
-    else
+    	else
         TriggerEvent('chatMessage', "No Waypoint Set")
-    end
+    	end
+		end
+	end)
 end)
 
 local noclip = false
 RegisterNetEvent("esx:noclip")
 AddEventHandler("esx:noclip", function(input)
+	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+		if admin then
     local player = PlayerId()
 	
     local msg = "disabled"
@@ -528,7 +546,9 @@ AddEventHandler("esx:noclip", function(input)
 	end
 
 	TriggerEvent("chatMessage", "Noclip has been ^2^*" .. msg)
+	end
 	end)
+end)
 	
 	local heading = 0
 	Citizen.CreateThread(function()

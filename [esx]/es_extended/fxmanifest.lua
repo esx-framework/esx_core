@@ -8,24 +8,14 @@ version 'legacy'
 
 shared_scripts {
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
-	'locales/sc.lua',
-	'locales/tc.lua',
+	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
 }
 
 server_scripts {
-	'@async/async.lua',
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 
 	'server/common.lua',
 	'server/classes/player.lua',
@@ -78,16 +68,7 @@ files {
 	'html/img/accounts/money.png'
 }
 
-exports {
-	'getSharedObject'
-}
-
-server_exports {
-	'getSharedObject'
-}
-
 dependencies {
-	'mysql-async',
-	'async',
+	'oxmysql',
 	'spawnmanager',
 }

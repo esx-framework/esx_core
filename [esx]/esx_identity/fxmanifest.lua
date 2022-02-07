@@ -10,23 +10,15 @@ shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',
-	'@mysql-async/lib/MySQL.lua',
-	'locales/en.lua',
-	'locales/es.lua',
-	'locales/cs.lua',
-	'locales/pl.lua',
-	'locales/fi.lua',	
+	'@oxmysql/lib/MySQL.lua',
+	'locales/*.lua',
 	'config.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locales/en.lua',
-	'locales/es.lua',
-	'locales/cs.lua',
-	'locales/pl.lua',
-	'locales/fi.lua',	
+	'locales/*.lua',
 	'config.lua',
 	'client/main.lua'
 }

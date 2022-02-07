@@ -3,7 +3,7 @@ local wasOpen = false
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		local time = 800
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 				ESX.UI.Menu.CloseAll()
 			end
 
-			Citizen.Wait(500)
+			Citizen.Wait(time)
 		end
 	end
 end)

@@ -10,7 +10,7 @@ AddEventHandler('esx_skin:save', function(skin)
 		xPlayer.setMaxWeight(defaultMaxWeight)
 	end
 
-	MySQL.Async.execute('UPDATE users SET skin = @skin WHERE identifier = @identifier', {
+	MySQL.update('UPDATE users SET skin = @skin WHERE identifier = @identifier', {
 		['@skin'] = json.encode(skin),
 		['@identifier'] = xPlayer.identifier
 	})
@@ -34,7 +34,7 @@ end)
 ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	MySQL.Async.fetchAll('SELECT skin FROM users WHERE identifier = @identifier', {
+	MySQL.query('SELECT skin FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(users)
 		local user, skin = users[1]

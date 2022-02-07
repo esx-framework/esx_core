@@ -71,7 +71,6 @@ Locales['cs'] = {
   ['respawn_bleedout_fine_msg'] = 'zaplatili jste ~r~$%s~s~ za respawn.',
   ['distress_send'] = 'stiskněte [~b~G~s~] pro vyslání tísňového signálu',
   ['distress_sent'] = 'tísňový signál byl vyslán dostupným jednotkám!',
-  ['combatlog_message'] = 'byli jste násilně oživeni, protože jste předtím opustili server, když jste byli mrtví.',
   -- Revive
   ['revive_help'] = 'oživit hráče',
   -- Item

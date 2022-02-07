@@ -9,7 +9,7 @@ version 'legacy'
 shared_script '@es_extended/imports.lua'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'config.lua',
 	'@es_extended/locale.lua',
 	'locales/de.lua',
@@ -19,6 +19,7 @@ server_scripts {
 	'locales/es.lua',
 	'locales/sv.lua',
 	'locales/pl.lua',
+	'locales/it.lua',
 	'server/main.lua'
 }
 
@@ -32,6 +33,7 @@ client_scripts {
 	'locales/es.lua',
 	'locales/sv.lua',
 	'locales/pl.lua',
+	'locales/it.lua',
 	'client/main.lua'
 }
 

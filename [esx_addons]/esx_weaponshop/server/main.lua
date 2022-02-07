@@ -2,7 +2,7 @@ local shopItems = {}
 
 MySQL.ready(function()
 
-	MySQL.Async.fetchAll('SELECT * FROM weashops', {}, function(result)
+	MySQL.query('SELECT * FROM weashops', {}, function(result)
 		for i=1, #result, 1 do
 			if shopItems[result[i].zone] == nil then
 				shopItems[result[i].zone] = {}
@@ -77,7 +77,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 end)
 
 function GetPrice(weaponName, zone)
-	local price = MySQL.Sync.fetchScalar('SELECT price FROM weashops WHERE zone = @zone AND item = @item', {
+	local price = MySQL.scalar.await('SELECT price FROM weashops WHERE zone = @zone AND item = @item', {
 		['@zone'] = zone,
 		['@item'] = weaponName
 	})

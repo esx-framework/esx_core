@@ -1,41 +1,33 @@
 local DataStores, DataStoresIndex, SharedDataStores = {}, {}, {}
 
-MySQL.ready(function()
-	local result = MySQL.Sync.fetchAll('SELECT * FROM datastore')
+AddEventHandler('onResourceStart', function(resourceName)
+	if resourceName == GetCurrentResourceName() then
+		local dataStore = MySQL.query.await('SELECT * FROM datastore_data LEFT JOIN datastore ON datastore_data.name = datastore.name UNION SELECT * FROM datastore_data RIGHT JOIN datastore ON datastore_data.name = datastore.name')
 
-	for i=1, #result, 1 do
-		local name, label, shared = result[i].name, result[i].label, result[i].shared
-		local result2 = MySQL.Sync.fetchAll('SELECT * FROM datastore_data WHERE name = @name', {
-			['@name'] = name
-		})
-
-		if shared == 0 then
-			table.insert(DataStoresIndex, name)
-			DataStores[name] = {}
-
-			for j=1, #result2, 1 do
-				local storeName  = result2[j].name
-				local storeOwner = result2[j].owner
-				local storeData  = (result2[j].data == nil and {} or json.decode(result2[j].data))
-				local dataStore  = CreateDataStore(storeName, storeOwner, storeData)
-
-				table.insert(DataStores[name], dataStore)
-			end
-		else
-			local data
-
-			if #result2 == 0 then
-				MySQL.Sync.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, NULL, \'{}\')', {
-					['@name'] = name
-				})
-
-				data = {}
+		local newData = {}
+		for i = 1, #dataStore do
+			local data = dataStore[i]
+			if data.shared == 0 then
+				if not DataStores[data.name] then
+					DataStoresIndex[#DataStoresIndex + 1] = data.name
+					DataStores[data.name] = {}
+				end
+				DataStores[data.name][#DataStores[data.name] + 1] = CreateDataStore(data.name, data.owner, data.data)
 			else
-				data = json.decode(result2[1].data)
+				if data.data then
+					SharedDataStores[data.name] = CreateDataStore(data.name, nil, data.data)
+				else
+					newData[#newData + 1] = {data.name, '\'{}\''}
+				end
 			end
+		end
 
-			local dataStore = CreateDataStore(name, nil, data)
-			SharedDataStores[name] = dataStore
+		if next(newData) then
+			MySQL.prepare('INSERT INTO datastore_data (name, data) VALUES (?, ?)', newData)
+			for i = 1, #newData do
+				local new = newData[i]
+				SharedDataStores[new[1]] = CreateDataStore(new[1], nil, new[2])
+			end
 		end
 	end
 end)
@@ -80,14 +72,9 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		local dataStore = GetDataStore(name, xPlayer.identifier)
 
 		if not dataStore then
-			MySQL.Async.execute('INSERT INTO datastore_data (name, owner, data) VALUES (@name, @owner, @data)', {
-				['@name']  = name,
-				['@owner'] = xPlayer.identifier,
-				['@data']  = '{}'
-			})
+			MySQL.insert('INSERT INTO datastore_data (name, owner, data) VALUES (?, ?, ?)', {name, xPlayer.identifier, '{}'})
 
-			dataStore = CreateDataStore(name, xPlayer.identifier, {})
-			table.insert(DataStores[name], dataStore)
+			DataStores[name][#DataStores[name] + 1] = CreateDataStore(name, xPlayer.identifier, {})
 		end
 	end
 end)

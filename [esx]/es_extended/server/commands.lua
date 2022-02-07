@@ -19,7 +19,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	if not args.car then args.car = "baller2" end
+	if not args.car then args.car = "Prototipo" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
@@ -134,31 +134,32 @@ end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('save', 'admin', function(xPlayer, args, showError)
-	ESX.SavePlayer(args.playerId)
+	Core.SavePlayer(args.playerId)
+	print("[^2Info^0] Saved Player!")
 end, true, {help = _U('command_save'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
-	ESX.SavePlayers()
+	Core.SavePlayers()
 end, true, {help = _U('command_saveall')})
 
 ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)
-	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup())
+	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup() .. "^0")
 end, true)
 
 ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, args, showError)
-print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label)
+print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label .. "^0")
 end, true)
 
 ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
-	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."")
+	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."^0")
 	end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
-	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
+	print("Coords:^5 ".. GetEntityCoords(GetPlayerPed(xPlayer.source)).. "^0")
 end, true)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
@@ -180,7 +181,7 @@ end, true, {help = _U('bring'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('kill', "admin", function(xPlayer, args, showError)
-	args.playerId.triggerEvent('esx:killPlayer')
+	args.playerId.triggerEvent("esx:killPlayer")
 end, true, {help = _U('kill'), validate = true, arguments = {
 {name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
@@ -196,12 +197,6 @@ ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args, showError)
 end, true, {help = _U('kill'), validate = true, arguments = {
 {name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
-
-ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
-	for _, playerId in ipairs(GetPlayers()) do
-		TriggerClientEvent('esx_ambulancejob:revive', playerId)
-	end
-end, false)
 
 ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx:noclip')
