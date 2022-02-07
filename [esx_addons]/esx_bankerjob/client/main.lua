@@ -1,13 +1,26 @@
 local CurrentActionData, CurrentAction, CurrentActionMsg, hasAlreadyEnteredMarker, lastZone = {}
+local isBankerJob = false
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function (xPlayer)
+AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
+    if xPlayer.job and xPlayer.job.name == 'banker' then
+        isBankerJob = true
+        currentActionBanker()
+        bankerEventMarkers()
+    end
 end)
 
 RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function (job)
+AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+    if job and job.name == 'banker' then
+        isBankerJob = true
+        currentActionBanker()
+        bankerEventMarkers()
+    else
+        isBankerJob = false
+    end
 end)
 
 function OpenBankActionsMenu()
@@ -145,7 +158,7 @@ AddEventHandler('esx_bankerjob:hasExitedMarker', function (zone)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	local blip = AddBlipForCoord(Config.Zones.BankActions.Coords)
 
 	SetBlipSprite(blip, 108)
@@ -158,66 +171,63 @@ Citizen.CreateThread(function()
 end)
 
 -- Draw marker & activate menu when player is inside marker
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
+bankerEventMarkers = function()
+    CreateThread(function()
+        while isBankerJob do
+            sleep = 500
 
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'banker' then
-			local playerCoords = GetEntityCoords(PlayerPedId())
-			local isInMarker, letSleep, currentZone = false, true
+            local playerCoords = GetEntityCoords(PlayerPedId())
+            local isInMarker, currentZone = false
 
-			for k,v in pairs(Config.Zones) do
-				local distance = #(playerCoords - v.Coords)
+            for k,v in pairs(Config.Zones) do
+                local distance = #(playerCoords - v.Coords)
 
-				if v.Type ~= -1 and distance < Config.DrawDistance then
-					letSleep = false
-					DrawMarker(v.Type, v.Coords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, nil, nil, false)
-				end
+                if v.Type ~= -1 and distance < Config.DrawDistance then
+                    DrawMarker(v.Type, v.Coords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, nil, nil, false)
+                end
 
-				if distance < v.Size.x then
-					isInMarker, currentZone, letSleep = true, k, false
-				end
-			end
+                if distance < v.Size.x then
+                    isInMarker, currentZone = true, k
+                end
+            end
 
-			if isInMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker, lastZone = true, currentZone
-				TriggerEvent('esx_bankerjob:hasEnteredMarker', currentZone)
-			end
+            if isInMarker and not hasAlreadyEnteredMarker then
+                hasAlreadyEnteredMarker, lastZone = true, currentZone
+                TriggerEvent('esx_bankerjob:hasEnteredMarker', currentZone)
+            end
 
-			if not isInMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-				TriggerEvent('esx_bankerjob:hasExitedMarker', lastZone)
-			end
+            if not isInMarker and hasAlreadyEnteredMarker then
+                hasAlreadyEnteredMarker = false
+                TriggerEvent('esx_bankerjob:hasExitedMarker', lastZone)
+            end
 
-			if letSleep then
-				Citizen.Wait(500)
-			end
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
+            Wait(sleep)
+        end
+    end)
+end
 
 -- Key Controls
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
+currentActionBanker = function()
+    CreateThread(function()
+        while isBankerJob do
+            Wait(0)
 
-		if CurrentAction then
-			ESX.ShowHelpNotification(CurrentActionMsg)
+            if CurrentAction then
+                ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'banker' then
-				if CurrentAction == 'bank_actions_menu' then
-					OpenBankActionsMenu()
-				end
+                if IsControlJustReleased(0, 38) then
+                    if CurrentAction == 'bank_actions_menu' then
+                        OpenBankActionsMenu()
+                    end
 
-				CurrentAction = nil
-			end
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
+                    CurrentAction = nil
+                end
+            else
+                Wait(500)
+            end
+        end
+    end)
+end
 
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function (phoneNumber, contacts)
