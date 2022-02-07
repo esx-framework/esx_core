@@ -120,9 +120,6 @@ function OpenShopMenu(accessory)
 	end, restrict)
 end
 
-AddEventHandler('esx:onPlayerSpawn', function() isDead = false end)
-AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
-
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_access')
@@ -135,7 +132,7 @@ AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
 end)
 
 -- Create Blips --
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
 		if v.Pos ~= nil then
 			for i=1, #v.Pos, 1 do
@@ -155,31 +152,33 @@ Citizen.CreateThread(function()
 	end
 end)
 
-local nearMarker = false
 -- Display markers
-Citizen.CreateThread(function()
+local nearMarker = false
+CreateThread(function()
 	while true do
 		local sleep = 500
 		local coords = GetEntityCoords(ESX.PlayerData.ped)
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
+				if (Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
 					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 					sleep = 0
+					nearMarker = true
+					nearMarkerFunc()
 					break
+				else
+					nearMarker = false
 				end
 			end
 		end
-		if sleep == 0 then nearMarker = true else nearMarker = false end
-		Citizen.Wait(sleep)
+
+		Wait(sleep)
 	end
 end)
 
-Citizen.CreateThread(function()
-	while true do
-		local sleep = 500
-		if nearMarker then
-			sleep = 200
+nearMarkerFunc = function()
+	CreateThread(function()
+		while nearMarker do
 			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			local isInMarker = false
 			local currentZone = nil
@@ -188,46 +187,51 @@ Citizen.CreateThread(function()
 					if #(coords - v.Pos[i]) < Config.Size.x then
 						isInMarker  = true
 						currentZone = k
+
+						if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
+							HasAlreadyEnteredMarker = true
+							LastZone = currentZone
+							TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
+						end
 						break
 					end
 				end
-			end
-
-			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-				HasAlreadyEnteredMarker = true
-				LastZone = currentZone
-				TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
 			end
 
 			if not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
 			end
+			Wait(200)
 		end
-		Citizen.Wait(sleep)
-	end
-end)
+	end)
+end
 
--- Key controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
-		
-		if CurrentAction then
-			ESX.ShowHelpNotification(CurrentActionMsg)
+		time = 500
+		if not IsDead then
+			if CurrentAction then time = 1
+				ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
-				OpenShopMenu(CurrentActionData.accessory)
-				CurrentAction = nil
-			end
-		elseif CurrentAction and not Config.EnableControls then
-			Citizen.Wait(500)
-		end
-
-		if Config.EnableControls then
-			if IsControlJustReleased(0, 311) and IsInputDisabled(0) and not isDead then
-				OpenAccessoryMenu()
+				if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
+					OpenShopMenu(CurrentActionData.accessory)
+					CurrentAction = nil
+				end
 			end
 		end
+		Wait(time)
 	end
 end)
+
+RegisterCommand('accessorymenu', function()
+	if CurrentActionData.accessory then
+		if not IsDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'set_unset_accessory') then
+			OpenAccessoryMenu()
+		end
+	end
+end, false)
+RegisterKeyMapping('accessorymenu', _U('keymap_accessorymenu'), 'keyboard', 'K')
+
+AddEventHandler('esx:onPlayerSpawn', function() isDead = false end)
+AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
