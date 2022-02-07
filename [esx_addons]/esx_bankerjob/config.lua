@@ -1,5 +1,5 @@
 Config                      = {}
-Config.DrawDistance         = 100.0
+Config.DrawDistance         = 10.0
 Config.BankSavingPercentage = 2.5
 Config.Locale               = 'en'
 
