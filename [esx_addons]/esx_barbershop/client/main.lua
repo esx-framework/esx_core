@@ -93,7 +93,7 @@ AddEventHandler('esx_barbershop:hasExitedMarker', function(zone)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in ipairs(Config.Shops) do
 		local blip = AddBlipForCoord(v)
 
@@ -108,16 +108,15 @@ Citizen.CreateThread(function()
 end)
 
 -- Enter / Exit marker events and draw marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
-		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), nil, nil, true
+        sleep = 500
+		local playerCoords, isInMarker, currentZone = GetEntityCoords(PlayerPedId()), nil, nil
 
 		for k,v in ipairs(Config.Shops) do
 			local distance = #(playerCoords - v)
 
-			if distance < Config.DrawDistance then
-				letSleep = false
+			if distance < Config.DrawDistance then sleep = 0
 				DrawMarker(Config.MarkerType, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 
 				if distance < 1.5 then
@@ -136,16 +135,14 @@ Citizen.CreateThread(function()
 			TriggerEvent('esx_barbershop:hasExitedMarker', lastZone)
 		end
 
-		if letSleep then
-			Citizen.Wait(500)
-		end
+		Wait(sleep)
 	end
 end)
 
 -- Key controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if currentAction then
 			ESX.ShowHelpNotification(currentActionMsg)
@@ -158,7 +155,7 @@ Citizen.CreateThread(function()
 				currentAction = nil
 			end
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
