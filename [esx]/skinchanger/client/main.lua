@@ -98,8 +98,7 @@ local Components = {
 }
 
 local LastSex		= -1
-local LoadSkin		= nil
-local LoadClothes	= nil
+local LoadSkin, LoadClothes = nil, nil
 local Character		= {}
 
 for i=1, #Components, 1 do
@@ -111,9 +110,9 @@ function LoadDefaultModel(malePed, cb)
 	local characterModel
 
 	if malePed then
-		characterModel = GetHashKey('mp_m_freemode_01')
+		characterModel = `mp_m_freemode_01`
 	else
-		characterModel = GetHashKey('mp_f_freemode_01')
+		characterModel = `mp_f_freemode_01`
 	end
 
 	RequestModel(characterModel)
@@ -131,7 +130,7 @@ function LoadDefaultModel(malePed, cb)
 
 		SetModelAsNoLongerNeeded(characterModel)
 
-		if cb ~= nil then
+		if cb then
 			cb()
 		end
 
@@ -251,7 +250,7 @@ function ApplySkin(skin, clothes)
 		Character[k] = v
 	end
 
-	if clothes ~= nil then
+	if clothes then
 		for k,v in pairs(clothes) do
 			if
 				k ~= 'sex'				and
@@ -438,8 +437,6 @@ AddEventHandler('skinchanger:getData', function(cb)
 		for i=1, #components, 1 do
 			if k == components[i].name then
 				components[i].value = v
-				--components[i].zoomOffset = Components[i].zoomOffset
-				--components[i].camOffset = Components[i].camOffset
 			end
 		end
 	end
@@ -464,12 +461,12 @@ end)
 AddEventHandler('skinchanger:modelLoaded', function()
 	ClearPedProp(PlayerPedId(), 0)
 
-	if LoadSkin ~= nil then
+	if LoadSkin then
 		ApplySkin(LoadSkin)
 		LoadSkin = nil
 	end
 
-	if LoadClothes ~= nil then
+	if LoadClothes then
 		ApplySkin(LoadClothes.playerSkin, LoadClothes.clothesSkin)
 		LoadClothes = nil
 	end
@@ -488,7 +485,7 @@ AddEventHandler('skinchanger:loadSkin', function(skin, cb)
 	else
 		ApplySkin(skin)
 
-		if cb ~= nil then
+		if cb then
 			cb()
 		end
 	end
