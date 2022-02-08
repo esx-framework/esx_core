@@ -12,6 +12,7 @@ jobs:
         with:
           capture: "junit.xml"
           args: "-t --formatter JUnit --no-max-comment-line-length"
+          extra_libs: "+esx_legacy"
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v2
         with:
