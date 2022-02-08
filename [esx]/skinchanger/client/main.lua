@@ -111,9 +111,9 @@ function LoadDefaultModel(malePed, cb)
 	local characterModel
 
 	if malePed then
-		characterModel = `mp_m_freemode_01`
+		characterModel = GetHashKey("mp_m_freemode_01")
 	else
-		characterModel = `mp_f_freemode_01`
+		characterModel = GetHashKey("mp_f_freemode_01")
 	end
 
 	RequestModel(characterModel)
