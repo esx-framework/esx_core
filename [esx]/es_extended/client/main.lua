@@ -27,7 +27,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			y = ESX.PlayerData.coords.y,
 			z = ESX.PlayerData.coords.z + 0.25,
 			heading = ESX.PlayerData.coords.heading,
-			model = GetHashKey("mp_m_freemode_01"),
+			model = `mp_m_freemode_01`,
 			skipFade = false
 		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
@@ -398,8 +398,8 @@ function StartServerSyncLoops()
 
 					if weapon then
 						currentWeapon.name = weapon.name
-						currentWeapon.hash = weaponHash
-						currentWeapon.timer = 100 * sleep
+						currentWeapon.hash = weaponHash	
+						currentWeapon.timer = 100 * sleep		
 					end
 				end
 			else
@@ -533,7 +533,7 @@ AddEventHandler("esx:noclip", function(input)
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
     local player = PlayerId()
-
+	
     local msg = "disabled"
 	if(noclip == false)then
 		noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
@@ -549,7 +549,7 @@ AddEventHandler("esx:noclip", function(input)
 	end
 	end)
 end)
-
+	
 	local heading = 0
 	Citizen.CreateThread(function()
 	while true do
