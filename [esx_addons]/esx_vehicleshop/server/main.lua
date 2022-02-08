@@ -384,7 +384,7 @@ function PayRent()
 		for k, v in pairs(owners) do
 			local sum = 0
 			for i = 1, #v do
-				sum += v[i].rent_price
+				sum = sum + v[i].rent_price
 			end
 			local xPlayer = ESX.GetPlayerFromIdentifier(k)
 
@@ -392,14 +392,14 @@ function PayRent()
 				local bank = xPlayer.getAccount('bank').money
 
 				if bank >= sum and #v > 1 then
-					total += sum
+					total = total + sum
 					xPlayer.removeAccountMoney('bank', sum)
 					xPlayer.showNotification(('You have paid ~g~$%s~s~ for all of your rentals'):format(ESX.Math.GroupDigits(sum)))
 				else
 					for i = 1, #v do
 						local rental = v[i]
 						if xPlayer.getAccount('bank').money >= rental.rent_price then
-							total += rental.rent_price
+							total = total + rental.rent_price
 							xPlayer.removeAccountMoney('bank', rental.rent_price)
 							xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
 						else
@@ -416,9 +416,9 @@ function PayRent()
 					for i = 1, #v do
 						local rental = v[i]
 						if not limit then
-							sum += rental.rent_price
+							sum = sum + rental.rent_price
 							if sum > accounts.bank then
-								sum -= rental.rent_price
+								sum = sum - rental.rent_price
 								limit = true
 							end
 						else
@@ -427,8 +427,8 @@ function PayRent()
 					end
 				end
 				if sum > 0 then
-					total += sum
-					accounts.bank -= sum
+					total = total + sum
+					accounts.bank = accounts.bank - sum
 					users[#users + 1] = {json.encode(accounts), k}
 				end
 			end
