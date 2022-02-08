@@ -1,5 +1,4 @@
 Citizen.CreateThread(function()
-	local ESX = exports['es_extended']:getSharedObject()
 	local MenuType    = 'list'
 	local OpenedMenus = {}
 

@@ -1,4 +1,3 @@
-local ESX = exports.es_extended:getSharedObject()
 local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
 
 local openMenu = function(namespace, name, data)

@@ -7,6 +7,7 @@ description 'ESX Menu Default'
 version 'legacy'
 
 client_scripts {
+	'@es_extended/imports.lua',
 	'client/main.lua'
 }
 
