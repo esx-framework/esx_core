@@ -1,16 +1,9 @@
-local CurrentAction     = nil
-local CurrentActionMsg  = nil
-local CurrentActionData = nil
-local Licenses          = {}
-local CurrentTest       = nil
-local CurrentTestType   = nil
-local CurrentVehicle    = nil
+local CurrentAction, CurrentActionMsg, CurrentActionData, CurrentTest, CurrentTestType, CurrentVehicle = nil, nil, nil, nil, nil, nil
+local CurrentBlip, CurrentZoneType, LastVehicleHealth= nil, nil, nil
+local Licenses = {}
 local CurrentCheckPoint, DriveErrors = 0, 0
-local LastCheckPoint    = -1
-local CurrentBlip       = nil
-local CurrentZoneType   = nil
+local LastCheckPoint = -1
 local IsAboveSpeedLimit = false
-local LastVehicleHealth = nil
 
 function DrawMissionText(msg, time)
 	ClearPrints()
@@ -21,6 +14,7 @@ end
 
 function StartTheoryTest()
 	CurrentTest = 'theory'
+    theoryTest()
 
 	SendNUIMessage({
 		openQuestion = true
@@ -67,6 +61,8 @@ function StartDriveTest(type)
 		SetVehicleFuelLevel(vehicle, 100.0)
 		DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
 	end)
+    driveTest()
+    speedDamageDriveTest()
 end
 
 function StopDriveTest(success)
@@ -199,8 +195,8 @@ AddEventHandler('esx_dmvschool:loadLicenses', function(licenses)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
-	local blip = AddBlipForCoord(Config.Zones.DMVSchool.Pos.x, Config.Zones.DMVSchool.Pos.y, Config.Zones.DMVSchool.Pos.z)
+CreateThread(function()
+	local blip = AddBlipForCoord(Config.Zones.DMVSchool.Pos)
 
 	SetBlipSprite (blip, 408)
 	SetBlipDisplay(blip, 4)
@@ -213,32 +209,34 @@ Citizen.CreateThread(function()
 end)
 
 -- Display markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		sleep = 500
 
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			if(v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
+            local dist = #(coords - v.Pos)
+			if(v.Type ~= -1 and dist < Config.DrawDistance) then sleep = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
+
+        Wait(sleep)
 	end
 end)
 
 -- Enter / Exit marker events
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-
-		Citizen.Wait(100)
+        sleep = 500
 
 		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			if(#(coords - v.Pos) < v.Size.x) then
+			if(#(coords - v.Pos) < v.Size.x) then = sleep = 1
 				isInMarker  = true
 				currentZone = k
 			end
@@ -254,34 +252,32 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_dmvschool:hasExitedMarker', LastZone)
 		end
+
+        Wait(sleep)
 	end
 end)
 
 -- Block UI
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(1)
+theoryTest = function()
+    CreateThread(function()
+        while CurrentTest == 'theory' do
+            Wait(1)
 
-		if CurrentTest == 'theory' then
-			local playerPed = PlayerPedId()
-
-			DisableControlAction(0, 1, true) -- LookLeftRight
-			DisableControlAction(0, 2, true) -- LookUpDown
-			DisablePlayerFiring(playerPed, true) -- Disable weapon firing
-			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
+            DisableControlAction(0, 1, true) -- LookLeftRight
+            DisableControlAction(0, 2, true) -- LookUpDown
+            DisablePlayerFiring(playerPed, true) -- Disable weapon firing
+            DisableControlAction(0, 142, true) -- MeleeAttackAlternate
+            DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
+        end
+    end)
+end
 
 -- Key Controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		sleep = 500
 
-		if CurrentAction then
+		if CurrentAction then sleep = 1
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
@@ -291,117 +287,110 @@ Citizen.CreateThread(function()
 
 				CurrentAction = nil
 			end
-		else
-			Citizen.Wait(500)
 		end
+
+        Wait(sleep)
 	end
 end)
 
 -- Drive test
-Citizen.CreateThread(function()
-	while true do
+driveTest = function()
+    CreateThread(function()
+        while CurrentTest == 'drive' do
 
-		Citizen.Wait(0)
+            Wait(0)
 
-		if CurrentTest == 'drive' then
-			local playerPed      = PlayerPedId()
-			local coords         = GetEntityCoords(playerPed)
-			local nextCheckPoint = CurrentCheckPoint + 1
+            local playerPed      = PlayerPedId()
+            local coords         = GetEntityCoords(playerPed)
+            local nextCheckPoint = CurrentCheckPoint + 1
 
-			if Config.CheckPoints[nextCheckPoint] == nil then
-				if DoesBlipExist(CurrentBlip) then
-					RemoveBlip(CurrentBlip)
-				end
+            if Config.CheckPoints[nextCheckPoint] == nil then
+                if DoesBlipExist(CurrentBlip) then
+                    RemoveBlip(CurrentBlip)
+                end
 
-				CurrentTest = nil
+                CurrentTest = nil
 
-				ESX.ShowNotification(_U('driving_test_complete'))
+                ESX.ShowNotification(_U('driving_test_complete'))
 
-				if DriveErrors < Config.MaxErrors then
-					StopDriveTest(true)
-				else
-					StopDriveTest(false)
-				end
-			else
+                if DriveErrors < Config.MaxErrors then
+                    StopDriveTest(true)
+                else
+                    StopDriveTest(false)
+                end
+            else
 
-				if CurrentCheckPoint ~= LastCheckPoint then
-					if DoesBlipExist(CurrentBlip) then
-						RemoveBlip(CurrentBlip)
-					end
+                if CurrentCheckPoint ~= LastCheckPoint then
+                    if DoesBlipExist(CurrentBlip) then
+                        RemoveBlip(CurrentBlip)
+                    end
 
-					CurrentBlip = AddBlipForCoord(Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z)
-					SetBlipRoute(CurrentBlip, 1)
+                    CurrentBlip = AddBlipForCoord(Config.CheckPoints[nextCheckPoint].Pos)
+                    SetBlipRoute(CurrentBlip, 1)
 
-					LastCheckPoint = CurrentCheckPoint
-				end
+                    LastCheckPoint = CurrentCheckPoint
+                end
             
-				local distance = #(coords - Config.CheckPoints[nextCheckPoint].Pos)
+                local distance = #(coords - Config.CheckPoints[nextCheckPoint].Pos)
             
-				if distance <= 100.0 then
-					DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100, false, true, 2, false, false, false, false)
-				end
+                if distance <= 100.0 then
+                    DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100, false, true, 2, false, false, false, false)
+                    if distance <= 3.0 then
+                        Config.CheckPoints[nextCheckPoint].Action(playerPed, CurrentVehicle, SetCurrentZoneType)
+                        CurrentCheckPoint = CurrentCheckPoint + 1
+                    end
+                end
 
-				if distance <= 3.0 then
-					Config.CheckPoints[nextCheckPoint].Action(playerPed, CurrentVehicle, SetCurrentZoneType)
-					CurrentCheckPoint = CurrentCheckPoint + 1
-				end
-			end
-		else
-			-- not currently taking driver test
-			Citizen.Wait(500)
-		end
-	end
-end)
+            end
+        end
+    end)
+end
 
 -- Speed / Damage control
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(10)
+speedDamageDriveTest = function()
+    CreateThread(function()
+        while CurrentTest == 'drive' do
+            Wait(10)
 
-		if CurrentTest == 'drive' then
+            local playerPed = PlayerPedId()
 
-			local playerPed = PlayerPedId()
+            if IsPedInAnyVehicle(playerPed, false) then
 
-			if IsPedInAnyVehicle(playerPed, false) then
+                local vehicle      = GetVehiclePedIsIn(playerPed, false)
+                local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
+                local tooMuchSpeed = false
 
-				local vehicle      = GetVehiclePedIsIn(playerPed, false)
-				local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
-				local tooMuchSpeed = false
+                for k,v in pairs(Config.SpeedLimits) do
+                    if CurrentZoneType == k and speed > v then
+                        tooMuchSpeed = true
 
-				for k,v in pairs(Config.SpeedLimits) do
-					if CurrentZoneType == k and speed > v then
-						tooMuchSpeed = true
+                        if not IsAboveSpeedLimit then
+                            DriveErrors       = DriveErrors + 1
+                            IsAboveSpeedLimit = true
 
-						if not IsAboveSpeedLimit then
-							DriveErrors       = DriveErrors + 1
-							IsAboveSpeedLimit = true
+                            ESX.ShowNotification(_U('driving_too_fast', v))
+                            ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
+                        end
+                    end
+                end
 
-							ESX.ShowNotification(_U('driving_too_fast', v))
-							ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
-						end
-					end
-				end
+                if not tooMuchSpeed then
+                    IsAboveSpeedLimit = false
+                end
 
-				if not tooMuchSpeed then
-					IsAboveSpeedLimit = false
-				end
+                local health = GetEntityHealth(vehicle)
+                if health < LastVehicleHealth then
 
-				local health = GetEntityHealth(vehicle)
-				if health < LastVehicleHealth then
+                    DriveErrors = DriveErrors + 1
 
-					DriveErrors = DriveErrors + 1
+                    ESX.ShowNotification(_U('you_damaged_veh'))
+                    ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
 
-					ESX.ShowNotification(_U('you_damaged_veh'))
-					ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
-
-					-- avoid stacking faults
-					LastVehicleHealth = health
-					Citizen.Wait(1500)
-				end
-			end
-		else
-			-- not currently taking driver test
-			Citizen.Wait(500)
-		end
-	end
-end)
+                    -- avoid stacking faults
+                    LastVehicleHealth = health
+                    Wait(1500)
+                end
+            end
+        end
+    end)
+end
