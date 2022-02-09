@@ -1,13 +1,13 @@
 local Vehicles = {}
-local lsMenuIsShowed = false
-local isInLSMarker = false
+local isJobMechanic, lsMenuIsShowed, isInLSMarker = false, false, false
 local myCar = {}
-
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
-	ESX.PlayerLoaded = true
+    if xPlayer.job and xPlayer.job.name == 'mechanic' then
+        isJobMechanic = true
+    end
 
 	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
 		Vehicles = vehicles
@@ -17,6 +17,11 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+    if job and job.name == 'mechanic' then
+        isJobMechanic = true
+    else
+        isJobMechanic = false
+    end
 end)
 
 RegisterNetEvent('esx_lscustom:installMod')
@@ -361,9 +366,9 @@ function GetAction(data)
 end
 
 -- Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.Zones) do
-		local blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
+		local blip = AddBlipForCoord(v.Pos)
 
 		SetBlipSprite(blip, 72)
 		SetBlipScale(blip, 0.8)
@@ -376,16 +381,16 @@ Citizen.CreateThread(function()
 end)
 
 -- Activate menu when player is inside marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
 			local coords = GetEntityCoords(PlayerPedId())
 			local currentZone, zone, lastZone
 
-			if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
+			if isJobMechanic or not Config.IsMechanicJobOnly then
 				for k,v in pairs(Config.Zones) do
 					if #(coords - v.Pos) < v.Size.x and not lsMenuIsShowed then
 						isInLSMarker  = true
@@ -397,17 +402,20 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlJustReleased(0, 38) and not lsMenuIsShowed and isInLSMarker then
-				if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
-					lsMenuIsShowed = true
+			if isInLSMarker then
+				if IsControlJustReleased(0, 38) and not lsMenuIsShowed then
+					if isJobMechanic or not Config.IsMechanicJobOnly then
+						lsMenuIsShowed = true
+						menuIsOpen()
 
-					local vehicle = GetVehiclePedIsIn(playerPed, false)
-					FreezeEntityPosition(vehicle, true)
+						local vehicle = GetVehiclePedIsIn(playerPed, false)
+						FreezeEntityPosition(vehicle, true)
 
-					myCar = ESX.Game.GetVehicleProperties(vehicle)
+						myCar = ESX.Game.GetVehicleProperties(vehicle)
 
-					ESX.UI.Menu.CloseAll()
-					GetAction({value = 'main'})
+						ESX.UI.Menu.CloseAll()
+						GetAction({value = 'main'})
+					end
 				end
 			end
 
@@ -424,11 +432,11 @@ Citizen.CreateThread(function()
 end)
 
 -- Prevent Free Tunning Bug
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
+menuIsOpen = function()
+	CreateThread(function()
+		while lsMenuIsShowed do
+			Wait(0)
 
-		if lsMenuIsShowed then
 			DisableControlAction(2, 288, true)
 			DisableControlAction(2, 289, true)
 			DisableControlAction(2, 170, true)
@@ -437,8 +445,6 @@ Citizen.CreateThread(function()
 			DisableControlAction(2, 23, true)
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
-		else
-			Citizen.Wait(500)
 		end
-	end
-end)
+	end)
+end
