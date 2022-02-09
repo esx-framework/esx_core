@@ -33,10 +33,13 @@ AddEventHandler('esx:playerDropped', function(playerId, reason)
 end)
 
 AddEventHandler('esx_status:getStatus', function(playerId, statusName, cb)
-	local status = ESX.Players[playerId]
-	for i = 1, #status do
+	local xPlayer = ESX.GetPlayerFromId(playerId)
+	local status = xPlayer.get('status')
+
+	for i=1, #status, 1 do
 		if status[i].name == statusName then
-			return cb(status[i])
+			cb(status[i])
+			break
 		end
 	end
 end)
