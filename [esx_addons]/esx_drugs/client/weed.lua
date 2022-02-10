@@ -4,7 +4,7 @@ local isPickingUp, isProcessing = false, false
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(500)
+		Citizen.Wait(700)
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if #(coords - Config.CircleZones.WeedField.coords) < 50 then
@@ -15,7 +15,7 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		local wait = 1000
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
@@ -41,8 +41,9 @@ Citizen.CreateThread(function()
 				end
 			end
 		else
-			Citizen.Wait(500)
+			wait = 2
 		end
+	Citizen.Wait(wait)
 	end
 end)
 
