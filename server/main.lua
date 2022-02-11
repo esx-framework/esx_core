@@ -19,7 +19,7 @@ elseif ESX.GetConfig().Multichar == true then
 		end
 	end
 
-	local DB_TABLES = {}
+	local DB_TABLES = {users = 'identifier'}
 	local FETCH = nil
 	local SLOTS = Config.Slots or 4
 	local PREFIX = Config.Prefix or 'char'
@@ -106,13 +106,13 @@ elseif ESX.GetConfig().Multichar == true then
 
 	local function DeleteCharacter(source, charid)
 		local identifier = ('%s%s:%s'):format(PREFIX, charid, GetIdentifier(source))
-		local query = "DELETE FROM ?? WHERE ?? = ?"
-		local tableCount = #DB_TABLES
-		local queries = table.create(tableCount, 0)
+		local query = 'DELETE FROM %s WHERE %s = ?'
+		local queries = {}
+		local count = 0
 
-		for i=1, tableCount do
-			local v = DB_TABLES[i]
-			queries[i] = {query = query, values = {v.table, v.column, identifier}}
+		for table, column in pairs(DB_TABLES) do
+			count += 1
+			queries[count] = {query = query:format(table, column), values = {identifier}}
 		end
 
 		MySQL.transaction(queries, function(result)
@@ -127,47 +127,82 @@ elseif ESX.GetConfig().Multichar == true then
 	end
 
 	MySQL.ready(function()
-		MySQL.Async.fetchAll('SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND (COLUMN_NAME = ? OR COLUMN_NAME = ?) ', {
-			DATABASE, 'identifier', 'owner'
-		}, function(result)
-			if result then
-				local varchar, varsize = {}, 0
-				for k, v in pairs(result) do
-					if v.CHARACTER_MAXIMUM_LENGTH and v.CHARACTER_MAXIMUM_LENGTH >= 40 and v.CHARACTER_MAXIMUM_LENGTH < 60 then varchar[v.TABLE_NAME] = v.COLUMN_NAME varsize = varsize+1 end
-					table.insert(DB_TABLES, {table = v.TABLE_NAME, column = v.COLUMN_NAME})
-				end
-				if next(varchar) then
-					local query = "ALTER TABLE ?? MODIFY COLUMN ?? VARCHAR(60)"
-					local queries = table.create(varsize, 0)
+		local length = 42 + #PREFIX
+		local DB_COLUMNS = MySQL.query.await(('SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "%s" AND DATA_TYPE = "varchar" AND COLUMN_NAME IN (?)'):format(DATABASE, length), {
+			{'identifier', 'owner'}
+		})
 
-					for k, v in pairs(varchar) do
-						queries[#queries+1] = {query = query, values = {k, v}}
-					end
+		if DB_COLUMNS then
+			local FK = MySQL.query.await(('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = "FOREIGN KEY" AND TABLE_SCHEMA = "%s"'):format(DATABASE))
+			local FOREIGN_KEY = {}
 
-					MySQL.Async.transaction(queries, function(result)
-						if result then
-							print(('[^2INFO^7] Updated ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
-						else
-							print(('[^2INFO^7] Unable to update ^5%s^7 columns to use VARCHAR(60)'):format(varsize))
-						end
-					end)
-				end
-				ESX.Jobs = {}
-				local function GetJobs()
-					if ESX.GetJobs then return ESX.GetJobs()
-					else return exports['es_extended']:getSharedObject().Jobs end
-				end
-				repeat
-					ESX.Jobs = GetJobs()
-					Citizen.Wait(50)
-				until next(ESX.Jobs)
-				FETCH = MySQL.Sync.store("SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?")
+			for i = 1, #FK do
+				FOREIGN_KEY[FK[i].TABLE_NAME] = true
 			end
-		end)
+
+			local columns = {}
+			local count = 0
+
+			for i = 1, #DB_COLUMNS do
+				local v = DB_COLUMNS[i]
+
+				if v?.CHARACTER_MAXIMUM_LENGTH ~= length then
+					count += 1
+					columns[v.TABLE_NAME] = v.COLUMN_NAME
+				end
+			end
+
+			if next(columns) then
+				local query = 'ALTER TABLE `%s` MODIFY COLUMN `%s` VARCHAR(%s)'
+				local queries = table.create(count, 0)
+
+				for k, v in pairs(columns) do
+					queries[#queries+1] = {query = query:format(k, v, length)}
+				end
+
+				if MySQL.transaction.await(queries) then
+					print(('[^2INFO^7] Updated ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
+				else
+					print(('[^2INFO^7] Unable to update ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
+				end
+			end
+
+			for i = 1, #DB_COLUMNS do
+				local v = DB_COLUMNS[i]
+
+				if not FOREIGN_KEY[v.TABLE_NAME] then
+					DB_TABLES[v.TABLE_NAME] = v.COLUMN_NAME
+
+					if v.TABLE_NAME ~= 'users' and v.IS_NULLABLE == 'NO' then
+						MySQL.update(([[ALTER TABLE `%s`
+						ADD CONSTRAINT `FK_%s_users` FOREIGN KEY (`%s`) REFERENCES `users` (`identifier`) ON UPDATE CASCADE ON DELETE CASCADE]]):format(v.TABLE_NAME, v.TABLE_NAME, v.COLUMN_NAME), function(result)
+							if result then
+								print(('[^2INFO^7] Updated ^5"%s.%s"^7 to use FOREIGN_KEY referencing ^5"users.identifier"^7'):format(v.TABLE_NAME, v.COLUMN_NAME))
+							end
+						end)
+					end
+				end
+			end
+
+			ESX.Jobs = {}
+
+			local function GetJobs()
+				if ESX.GetJobs then
+					return ESX.GetJobs()
+				end
+				return exports.es_extended:getSharedObject().Jobs
+			end
+
+			repeat
+				ESX.Jobs = GetJobs()
+				Citizen.Wait(50)
+			until next(ESX.Jobs)
+
+			FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
+		end
 	end)
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters', function()
-	AddEventHandler('esx_multicharacter:SetupCharacters', function()
 		SetupCharacters(source)
 	end)
 
