@@ -51,7 +51,7 @@ if ESX.GetConfig().Multichar then
 			local keys = {18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109}
 			while hidePlayers do
 				DisableAllControlActions(0)
-				for i=1, #keys do
+				for i = 1, #keys do
 					EnableControlAction(0, keys[i], true)
 				end
 				SetEntityVisible(PlayerPedId(), 0, 0)
@@ -64,7 +64,7 @@ if ESX.GetConfig().Multichar then
 				HideHudAndRadarThisFrame()
 				Citizen.Wait(0)
 				local vehicles = GetGamePool('CVehicle')
-				for i=1, #vehicles do
+				for i = 1, #vehicles do
 					SetEntityLocallyInvisible(vehicles[i])
 				end
 			end
@@ -80,7 +80,7 @@ if ESX.GetConfig().Multichar then
 			local playerPool = {}
 			while hidePlayers do
 				local players = GetActivePlayers()
-				for i=1, #players do
+				for i = 1, #players do
 					local player = players[i]
 					if player ~= PlayerId() and not playerPool[player] then
 						playerPool[player] = true
@@ -236,7 +236,7 @@ if ESX.GetConfig().Multichar then
 				else
 					ESX.UI.Menu.CloseAll()
 					local GetSlot = function()
-						for i=1, slots do
+						for i = 1, slots do
 							if not Characters[i] then
 								return i
 							end

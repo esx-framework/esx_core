@@ -1,6 +1,9 @@
 Config = {}
 Config.Locale = 'en'
 
+-- Allows players to delete their characters
+Config.CanDelete = true
+
 if IsDuplicityVersion() then
 	-- This is the default number of slots for EVERY player
 	-- If you want to manage extra slots for specific players you can do it by using '/setslots' and '/remslots' commands
@@ -8,7 +11,6 @@ if IsDuplicityVersion() then
 	--------------------
 
 	-- Text to prepend to each character (char#:identifier) - keep it short
-	-- if you change the length, you will need to modify es_extended (refer to the readme)
 	Config.Prefix = 'char'
 	--------------------
 
@@ -19,10 +21,6 @@ else
 	-- Sets the location for the character selection scene
 	-- To set the spawn location for new characters, modify the default value in the `users` SQL table
 	Config.Spawn = vector4(-113.7, 565.3, 195.2, 0)
-	--------------------
-
-	-- Allows players to delete their characters
-	Config.CanDelete = true
 	--------------------
 
 	-- Do not use unless you are prepared to adjust your resources to correctly reset data

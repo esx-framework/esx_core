@@ -1,16 +1,16 @@
 ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
-	local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
+	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
 
 	if slots == nil then
-		MySQL.Async.execute('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
+		MySQL.update('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
 			args.identifier,
 			args.slots
 		})
 		xPlayer.triggerEvent('esx:showNotification', _U('slotsadd', args.slots, args.identifier))
 	else
-		MySQL.Async.execute('UPDATE `multicharacter_slots` SET `slots` = ? WHERE `identifier` = ?', {
+		MySQL.update('UPDATE `multicharacter_slots` SET `slots` = ? WHERE `identifier` = ?', {
 			args.slots,
 			args.identifier
 		})
@@ -22,12 +22,12 @@ end, true, {help = _U('command_setslots'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
-	local slots = MySQL.Sync.fetchScalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
+	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
 
 	if slots ~= nil then
-		MySQL.Async.execute('DELETE FROM `multicharacter_slots` WHERE `identifier` = ?', {
+		MySQL.update('DELETE FROM `multicharacter_slots` WHERE `identifier` = ?', {
 			args.identifier
 		})
 		xPlayer.triggerEvent('esx:showNotification', _U('slotsrem', args.identifier))
@@ -40,7 +40,7 @@ ESX.RegisterCommand('enablechar', 'admin', function(xPlayer, args, showError)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
-	MySQL.Async.execute('UPDATE `users` SET `disabled` = 0 WHERE identifier = ?', {
+	MySQL.update('UPDATE `users` SET `disabled` = 0 WHERE identifier = ?', {
 		selectedCharacter
 	}, function(result)
 		if result > 0 then
@@ -59,7 +59,7 @@ ESX.RegisterCommand('disablechar', 'admin', function(xPlayer, args, showError)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
-	MySQL.Async.execute('UPDATE `users` SET `disabled` = 1 WHERE identifier = ?', {
+	MySQL.update('UPDATE `users` SET `disabled` = 1 WHERE identifier = ?', {
 		selectedCharacter
 	}, function(result)
 		if result > 0 then

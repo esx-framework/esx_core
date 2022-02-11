@@ -1,24 +1,6 @@
 ### Requirements (ensure you are using the latest)
 - [ESX Legacy](https://github.com/esx-framework/esx-legacy)
-- [Spawnmanager](https://github.com/citizenfx/cfx-server-data/tree/master/resources/%5Bmanagers%5D/spawnmanager)
-
-- [OxMySQL](https://github.com/overextended/oxmysql/) or [MySQL Async 3.3.2](https://github.com/brouznouf/fivem-mysql-async/releases/tag/3.3.2)
-
-### Installation
-- Modify your ESX config with `Config.Multichar = true`
-- Set your database name for `Config.Database` in server/main.lua
-- Run `esx_multicharacter.sql` into your database
-- All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
-	- The resource will attempt to set columns automatically
-
-### Changing character prefix
-- Each character is created a modified identifier (char#:identifier)
-- Due to an oversight, ESX Legacy only supports a prefix with a length of 4
-- If you change the length, refer to https://github.com/esx-framework/esx-legacy/blob/main/%5Besx%5D/es_extended/server/classes/player.lua#L17
-- Modify this line to the following
-```lua
-if Config.Multichar then self.license = 'license:'..identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
-```
+- [OxMySQL](https://github.com/overextended/oxmysql/releases)
 
 ### Conflicts
 * The following resources should not be used with ESX Legacy and can result in errors
@@ -28,13 +10,15 @@ if Config.Multichar then self.license = 'license:'..identifier:sub(identifier:fi
 	- fivem-map-hipster
 	- default_spawnpoint
 
-### Common issues
-#### Black screen / loading scripts
-	- Download and run all requirements
-	- Use a fresh spawnmanager as many people alter the code
-	- Ensure none of the conflicting resources are enabled
+### Installation
+- Modify your ESX config with `Config.Multichar = true`
+- Set your database name for `Config.Database` in server/main.lua
+- Run `esx_multicharacter.sql` into your database
+- All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
+	- The resource will attempt to set columns automatically
 
-#### The menu interface is esx_menu_default - you can use any version if you want a different appearance
+
+#### The menu is esx_menu_default - you can use any version if you want a different appearance
 ![image](https://user-images.githubusercontent.com/65407488/126976325-17cc3241-bb9e-451f-a6ed-610a8ef52fa5.png)
 
 ### Relogging
@@ -43,22 +27,16 @@ if Config.Multichar then self.license = 'license:'..identifier:sub(identifier:fi
 - Add the following events to resources that require support for relogging, or
 - Add them to [@esx/imports.lua](https://github.com/esx-framework/es_extended/blob/legacy/imports.lua) (and use the imports in your resources)
 ```lua
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+RegisterNetEvent('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
  	ESX.PlayerLoaded = true
 end)
 
-RegisterNetEvent('esx:onPlayerLogout')
-AddEventHandler('esx:onPlayerLogout', function()
+RegisterNetEvent('esx:onPlayerLogout', function()
 	ESX.PlayerLoaded = false
 	ESX.PlayerData = {}
 end)
 ```
-- Any threads using ESX.PlayerData in a loop should check if ESX.PlayerLoaded is true
-	- This ensures the resource does not error after relogging, or while on character selection
-	- Setup correctly you can break your loops and trigger them again after loading
-	- Refer to my [boilerplate](https://github.com/thelindat/esx_legacy_boilerplate) for more information and usage examples
 
 ### Notes
 - This resource is not compatible with ExtendedMode or previous versions of ESX
@@ -76,7 +54,7 @@ end)
 
 
 ## Notice
-Copyright© 2021 Linden and KASH
+Copyright © 2021 Linden <https://github.com/thelindat/> and KASH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

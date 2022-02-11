@@ -10,7 +10,7 @@ elseif ESX.GetConfig().Multichar == true then
 			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
 		else
 			connectionString = {string.strsplit(';', connectionString)}
-			for i=1, #connectionString do
+			for i = 1, #connectionString do
 				local v = connectionString[i]
 				if v:match('database') then
 					DATABASE = v:sub(10, #v)
@@ -48,48 +48,51 @@ elseif ESX.GetConfig().Multichar == true then
 		local identifier = GetIdentifier(source)
 		ESX.Players[identifier] = true
 
-		local slots = MySQL.Sync.fetchScalar("SELECT slots FROM multicharacter_slots WHERE identifier = ?", {
-			identifier
-		}) or SLOTS
+		local slots = MySQL.scalar('SELECT slots FROM multicharacter_slots WHERE identifier = ?', { identifier }) or SLOTS
 		identifier = PREFIX..'%:'..identifier
 
-		MySQL.Async.fetchAll(FETCH, {identifier, slots}, function(result)
-			local characters
-			if result then
-				local characterCount = #result
-				characters = table.create(0, characterCount)
-				for i=1, characterCount, 1 do
-					local i = result[i]
-					local job, grade = i.job or 'unemployed', tostring(i.job_grade)
-					if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
-						if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
-						job = ESX.Jobs[job].label
-					end
-					local accounts = json.decode(i.accounts)
-					local id = tonumber(string.sub(i.identifier, #PREFIX+1, string.find(i.identifier, ':')-1))
-					characters[id] = {
-						id = id,
-						bank = accounts.bank,
-						money = accounts.money,
-						job = job,
-						job_grade = grade,
-						firstname = i.firstname,
-						lastname = i.lastname,
-						dateofbirth = i.dateofbirth,
-						skin = json.decode(i.skin),
-						disabled = i.disabled,
-						sex = i.sex == 'm' and _('male') or _('female')
-					}
+		local result = MySQL.query.await(FETCH, {identifier, slots})
+		local characters
+
+		if result then
+			local characterCount = #result
+			characters = table.create(0, characterCount)
+
+			for i = 1, characterCount, 1 do
+				local v = result[i]
+				local job, grade = v.job or 'unemployed', tostring(v.job_grade)
+
+				if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
+					if job ~= 'unemployed' then grade = ESX.Jobs[job].grades[grade].label else grade = '' end
+					job = ESX.Jobs[job].label
 				end
+
+				local accounts = json.decode(v.accounts)
+				local id = tonumber(string.sub(v.identifier, #PREFIX+1, string.find(v.identifier, ':')-1))
+
+				characters[id] = {
+					id = id,
+					bank = accounts.bank,
+					money = accounts.money,
+					job = job,
+					job_grade = grade,
+					firstname = v.firstname,
+					lastname = v.lastname,
+					dateofbirth = v.dateofbirth,
+					skin = v.skin and json.decode(v.skin) or {},
+					disabled = v.disabled,
+					sex = v.sex == 'm' and _('male') or _('female')
+				}
 			end
-			TriggerClientEvent('esx_multicharacter:SetupUI', source, characters, slots)
-		end)
+		end
+
+		TriggerClientEvent('esx_multicharacter:SetupUI', source, characters, slots)
 	end
 
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
-		Citizen.Wait(100)
+
 		if identifier then
 			if ESX.Players[identifier] then
 				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
@@ -112,7 +115,7 @@ elseif ESX.GetConfig().Multichar == true then
 			queries[i] = {query = query, values = {v.table, v.column, identifier}}
 		end
 
-		MySQL.Async.transaction(queries, function(result)
+		MySQL.transaction(queries, function(result)
 			if result then
 				print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(source), source, identifier))
 				Citizen.Wait(50)
@@ -163,14 +166,14 @@ elseif ESX.GetConfig().Multichar == true then
 		end)
 	end)
 
-	RegisterServerEvent("esx_multicharacter:SetupCharacters")
+	RegisterNetEvent('esx_multicharacter:SetupCharacters', function()
 	AddEventHandler('esx_multicharacter:SetupCharacters', function()
 		SetupCharacters(source)
 	end)
 
 	local awaitingRegistration = {}
-	RegisterServerEvent("esx_multicharacter:CharacterChosen")
-	AddEventHandler('esx_multicharacter:CharacterChosen', function(charid, isNew)
+
+	RegisterNetEvent('esx_multicharacter:CharacterChosen', function(charid, isNew)
 		if type(charid) == 'number' and string.len(charid) <= 2 and type(isNew) == 'boolean' then
 			if isNew then
 				awaitingRegistration[source] = charid
@@ -192,15 +195,13 @@ elseif ESX.GetConfig().Multichar == true then
 		ESX.Players[GetIdentifier(source)] = nil
 	end)
 
-	RegisterServerEvent("esx_multicharacter:DeleteCharacter")
-	AddEventHandler('esx_multicharacter:DeleteCharacter', function(charid)
-		if type(charid) == "number" and string.len(charid) <= 2 then
+	RegisterNetEvent('esx_multicharacter:DeleteCharacter', function(charid)
+		if Config.CanDelete and type(charid) == 'number' and string.len(charid) <= 2 then
 			DeleteCharacter(source, charid)
 		end
 	end)
 
-	RegisterServerEvent("esx_multicharacter:relog")
-	AddEventHandler('esx_multicharacter:relog', function()
+	RegisterNetEvent('esx_multicharacter:relog', function()
 		TriggerEvent('esx:playerLogout', source)
 	end)
 
