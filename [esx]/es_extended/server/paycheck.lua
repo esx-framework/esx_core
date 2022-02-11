@@ -1,7 +1,7 @@
 StartPayCheck = function()
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while true do
-			Citizen.Wait(Config.PaycheckInterval)
+			Wait(Config.PaycheckInterval)
 			local xPlayers = ESX.GetExtendedPlayers()
 			for _, xPlayer in pairs(xPlayers) do
 				local job     = xPlayer.job.grade_name

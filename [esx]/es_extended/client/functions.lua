@@ -312,7 +312,7 @@ ESX.Game.GetPedMugshot = function(ped, transparent)
 		end
 
 		while not IsPedheadshotReady(mugshot) do
-			Citizen.Wait(0)
+			Wait(0)
 		end
 
 		return mugshot, GetPedheadshotTxdString(mugshot)
@@ -327,7 +327,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	if DoesEntityExist(entity) then
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(entity) do
-			Citizen.Wait(0)
+			Wait(0)
 		end
 
 		SetEntityCoords(entity, vector.xyz, false, false, false, false)
@@ -344,7 +344,7 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		local obj = CreateObject(model, vector.xyz, networked, false, true)
@@ -372,7 +372,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
@@ -389,7 +389,7 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 
 		RequestCollisionAtCoord(vector.xyz)
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			Citizen.Wait(0)
+			Wait(0)
 		end
 
 		if cb then
@@ -915,7 +915,7 @@ ESX.ShowInventory = function()
 					if type == 'item_weapon' then
 						menu1.close()
 						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-						Citizen.Wait(1000)
+						Wait(1000)
 						TriggerServerEvent('esx:removeInventoryItem', type, item)
 					else
 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
@@ -927,7 +927,7 @@ ESX.ShowInventory = function()
 								menu2.close()
 								menu1.close()
 								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
-								Citizen.Wait(1000)
+								Wait(1000)
 								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 							else
 								ESX.ShowNotification(_U('amount_invalid'))
@@ -1010,7 +1010,7 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
 end)
 
 -- SetTimeout
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local sleep = 100
 		if #Core.TimeoutCallbacks > 0 then
@@ -1023,6 +1023,6 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
-		Citizen.Wait(sleep)
+		Wait(sleep)
 	end
 end)

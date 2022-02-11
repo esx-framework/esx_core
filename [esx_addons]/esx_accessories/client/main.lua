@@ -1,4 +1,4 @@
-local HasAlreadyEnteredMarker, isDead = false, false
+local HasAlreadyEnteredMarker = false
 local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
 
@@ -120,9 +120,6 @@ function OpenShopMenu(accessory)
 	end, restrict)
 end
 
-AddEventHandler('esx:onPlayerSpawn', function() isDead = false end)
-AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
-
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_access')
@@ -135,9 +132,9 @@ AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
 end)
 
 -- Create Blips --
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
-		if v.Pos ~= nil then
+		if v.Pos then
 			for i=1, #v.Pos, 1 do
 				local blip = AddBlipForCoord(v.Pos[i])
 
@@ -157,7 +154,7 @@ end)
 
 local nearMarker = false
 -- Display markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local sleep = 500
 		local coords = GetEntityCoords(ESX.PlayerData.ped)
@@ -171,11 +168,11 @@ Citizen.CreateThread(function()
 			end
 		end
 		if sleep == 0 then nearMarker = true else nearMarker = false end
-		Citizen.Wait(sleep)
+		Wait(sleep)
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local sleep = 500
 		if nearMarker then
@@ -204,14 +201,14 @@ Citizen.CreateThread(function()
 				TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
 			end
 		end
-		Citizen.Wait(sleep)
+		Wait(sleep)
 	end
 end)
 
 -- Key controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
@@ -221,11 +218,11 @@ Citizen.CreateThread(function()
 				CurrentAction = nil
 			end
 		elseif CurrentAction and not Config.EnableControls then
-			Citizen.Wait(500)
+			Wait(500)
 		end
 
 		if Config.EnableControls then
-			if IsControlJustReleased(0, 311) and IsInputDisabled(0) and not isDead then
+			if IsControlJustReleased(0, 311) and IsInputDisabled(0) and not ESX.PlayerData.dead then
 				OpenAccessoryMenu()
 			end
 		end

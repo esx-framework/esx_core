@@ -3,9 +3,9 @@ local disableControls = false
 local currentObj = nil
 
 if Config.Debug then
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while true do
-			Citizen.Wait(0)
+			Wait(0)
 
 			for i=1, #debugProps, 1 do
 				local coords = GetEntityCoords(debugProps[i])
@@ -32,50 +32,50 @@ if Config.Debug then
 			end
 
 			if #debugProps == 0 then
-				Citizen.Wait(500)
+				Wait(500)
 			end
 		end
 	end)
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		local wait = 1000
 		local playerPed = PlayerPedId()
 
 		if sitting and not IsPedUsingScenario(playerPed, currentScenario) then
 			wakeup()
 		end
 
-		-- Disable controls
-		if disableControls then
-			DisableControlAction(1, 37, true) -- Disables INPUT_SELECT_WEAPON (TAB)
+		Wait(wait)
+	end
+end)
+
+RegisterCommand('sit', function()
+	if sitting then
+		wakeup()
+	else
+		local object, distance = GetNearChair()
+
+		if Config.Debug then
+			table.insert(debugProps, object)
 		end
 
-		if IsControlJustPressed(0, 38) and IsControlPressed(0, 21) and IsInputDisabled(0) and IsPedOnFoot(playerPed) then
-			if sitting then
-				wakeup()
-			else
-				local object, distance = GetNearChair()
+		if distance and distance < 1.4 then
+			local hash = GetEntityModel(object)
 
-				if Config.Debug then
-					table.insert(debugProps, object)
-				end
-
-				if distance and distance < 1.4 then
-					local hash = GetEntityModel(object)
-
-					for k,v in pairs(Config.Sitable) do
-						if GetHashKey(k) == hash then
-							sit(object, k, v)
-							break
-						end
-					end
+			for k,v in pairs(Config.Sitable) do
+				if GetHashKey(k) == hash then
+					sit(object, k, v)
+					break
 				end
 			end
 		end
 	end
-end)
+end, false)
+
+
+RegisterKeyMapping('sit', 'Sit', 'keyboard', 'e')
 
 function GetNearChair()
 	local object, distance
@@ -135,7 +135,7 @@ function sit(object, modelName, data)
 			currentScenario = data.scenario
 			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, false)
 
-			Citizen.Wait(2500)
+			Wait(2500)
 			if GetEntitySpeed(PlayerPedId()) > 0 then
 				ClearPedTasks(PlayerPedId())
 				TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, true)

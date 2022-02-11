@@ -129,8 +129,8 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 		end
 
 		-- give back wepaons after a couple of seconds
-		Citizen.CreateThread(function()
-			Citizen.Wait(5000)
+		CreateThread(function()
+			Wait(5000)
 			for i=1, #playerLoadout, 1 do
 				if playerLoadout[i].label ~= nil then
 					xPlayer.addWeapon(playerLoadout[i].name, playerLoadout[i].ammo)
@@ -269,7 +269,7 @@ ESX.RegisterUsableItem('medikit', function(source)
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'medikit')
 
-		Citizen.Wait(10000)
+		Wait(10000)
 		playersHealing[source] = nil
 	end
 end)
@@ -282,7 +282,7 @@ ESX.RegisterUsableItem('bandage', function(source)
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'bandage')
 
-		Citizen.Wait(10000)
+		Wait(10000)
 		playersHealing[source] = nil
 	end
 end)

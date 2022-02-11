@@ -6,6 +6,7 @@ AddEventHandler('esx_basicneeds:resetStatus', function()
 	TriggerEvent('esx_status:set', 'thirst', 500000)
 end)
 
+
 RegisterNetEvent('esx_basicneeds:healPlayer')
 AddEventHandler('esx_basicneeds:healPlayer', function()
 	-- restore hunger & thirst
@@ -79,7 +80,7 @@ AddEventHandler('esx_basicneeds:onEat', function(prop_name)
 		prop_name = prop_name or 'prop_cs_burger_01'
 		IsAnimated = true
 
-		Citizen.CreateThread(function()
+		CreateThread(function()
 			local playerPed = PlayerPedId()
 			local x,y,z = table.unpack(GetEntityCoords(playerPed))
 			local prop = CreateObject(GetHashKey(prop_name), x, y, z + 0.2, true, true, true)
@@ -89,7 +90,7 @@ AddEventHandler('esx_basicneeds:onEat', function(prop_name)
 			ESX.Streaming.RequestAnimDict('mp_player_inteat@burger', function()
 				TaskPlayAnim(playerPed, 'mp_player_inteat@burger', 'mp_player_int_eat_burger_fp', 8.0, -8, -1, 49, 0, 0, 0, 0)
 
-				Citizen.Wait(3000)
+				Wait(3000)
 				IsAnimated = false
 				ClearPedSecondaryTask(playerPed)
 				DeleteObject(prop)
@@ -105,7 +106,7 @@ AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
 		prop_name = prop_name or 'prop_ld_flow_bottle'
 		IsAnimated = true
 
-		Citizen.CreateThread(function()
+		CreateThread(function()
 			local playerPed = PlayerPedId()
 			local x,y,z = table.unpack(GetEntityCoords(playerPed))
 			local prop = CreateObject(GetHashKey(prop_name), x, y, z + 0.2, true, true, true)
@@ -115,7 +116,7 @@ AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
 			ESX.Streaming.RequestAnimDict('mp_player_intdrink', function()
 				TaskPlayAnim(playerPed, 'mp_player_intdrink', 'loop_bottle', 1.0, -1.0, 2000, 0, 1, true, true, true)
 
-				Citizen.Wait(3000)
+				Wait(3000)
 				IsAnimated = false
 				ClearPedSecondaryTask(playerPed)
 				DeleteObject(prop)

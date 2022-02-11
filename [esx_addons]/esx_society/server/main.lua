@@ -324,11 +324,11 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 		end
 		cb(onlinePlayers)
 		getOnlinePlayers = false
-		Citizen.Wait(1000) -- For the next second any extra requests will receive the cached list
+		Wait(1000) -- For the next second any extra requests will receive the cached list
 		onlinePlayers = {}
 		return
 	end
-	while getOnlinePlayers do Citizen.Wait(10) end -- Wait for the xPlayer loop to finish
+	while getOnlinePlayers do Wait(10) end -- Wait for the xPlayer loop to finish
 	cb(onlinePlayers)
 end)
 

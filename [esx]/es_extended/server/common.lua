@@ -20,9 +20,9 @@ exports('getSharedObject', function()
 end)
 
 local function StartDBSync()
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while true do
-			Citizen.Wait(10 * 60 * 1000)
+			Wait(10 * 60 * 1000)
 			Core.SavePlayers()
 		end
 	end)

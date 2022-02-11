@@ -197,15 +197,15 @@ function StoreBoatInGarage(vehicle, teleportCoords)
 end
 
 -- Key controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if isInShopMenu then
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)

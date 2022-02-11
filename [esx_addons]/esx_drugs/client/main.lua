@@ -1,7 +1,7 @@
 local menuOpen = false
 local wasOpen = false
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local time = 800
 		local playerPed = PlayerPedId()
@@ -16,7 +16,7 @@ Citizen.CreateThread(function()
 					OpenDrugShop()
 				end
 			else
-				Citizen.Wait(500)
+				Wait(500)
 			end
 		else
 			if wasOpen then
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 				ESX.UI.Menu.CloseAll()
 			end
 
-			Citizen.Wait(time)
+			Wait(time)
 		end
 	end
 end)
@@ -135,7 +135,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
 	EndTextCommandSetBlipName(blip)
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,zone in pairs(Config.CircleZones) do
 		CreateBlipCircle(zone.coords, zone.name, zone.radius, zone.color, zone.sprite)
 	end

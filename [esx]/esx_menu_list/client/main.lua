@@ -1,4 +1,4 @@
-Citizen.CreateThread(function()
+CreateThread(function()
 	local MenuType    = 'list'
 	local OpenedMenus = {}
 

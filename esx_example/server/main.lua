@@ -1,5 +1,5 @@
-Citizen.CreateThread(function()
-	Citizen.Wait(3000)
+CreateThread(function()
+	Wait(3000)
 	print('^1Do not run this resource in a live environment, it is solely intended for showcasing ESX functions^0')
 end)
 

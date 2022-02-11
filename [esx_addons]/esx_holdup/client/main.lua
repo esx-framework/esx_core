@@ -50,23 +50,23 @@ end)
 RegisterNetEvent('esx_holdup:startTimer')
 AddEventHandler('esx_holdup:startTimer', function()
 	local timer = Stores[store].secondsRemaining
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while timer > 0 and holdingUp do
-			Citizen.Wait(1000)
+			Wait(1000)
 			if timer > 0 then
 				timer = timer - 1
 			end
 		end
 	end)
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while holdingUp do
-			Citizen.Wait(1)
+			Wait(1)
 			DrawTxt(0.66, 1.44, 1.0, 1.0, 0.4, _U('robbery_timer', timer), 255, 255, 255, 255)
 		end
 	end)
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Stores) do
 		local blip = AddBlipForCoord(v.position)
 		SetBlipSprite(blip, 156)
@@ -78,9 +78,9 @@ Citizen.CreateThread(function()
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 		local playerPos, letSleep = GetEntityCoords(PlayerPedId()), true
 		for k,v in pairs(Stores) do
 			local distance = #(playerPos - v.position)
@@ -109,7 +109,7 @@ Citizen.CreateThread(function()
 			end
 		end
         if letSleep then
-            Citizen.Wait(500)
+            Wait(500)
         end
 	end
 end)

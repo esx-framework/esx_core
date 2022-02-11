@@ -26,7 +26,7 @@ RegisterNUICallback('withdraw', function(data, cb)
 end)
 
 -- Create blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	if not Config.EnableBlips then return end
 
 	for _, ATMLocation in pairs(Config.ATMLocations) do
@@ -43,9 +43,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Activate menu when player is inside marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Wait(10)
 		local coords = GetEntityCoords(PlayerPedId())
 		local canSleep = true
 		isInATMMarker = false
@@ -76,15 +76,15 @@ Citizen.CreateThread(function()
 		end
 
 		if canSleep then
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Menu interactions
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if isInATMMarker and not menuIsShowed then
 
@@ -106,7 +106,7 @@ Citizen.CreateThread(function()
 			end
 
 		else
-			Citizen.Wait(700)
+			Wait(700)
 		end
 	end
 end)

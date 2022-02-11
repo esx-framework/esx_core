@@ -30,7 +30,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	deferrals.update(_U('whitelist_check'))
 	
 	-- Needed, not sure why.
-	Citizen.Wait(100)
+	Wait(100)
 
 	local identifier = ESX.GetIdentifier(playerId)
 

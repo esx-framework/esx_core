@@ -361,7 +361,7 @@ function GetAction(data)
 end
 
 -- Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		local blip = AddBlipForCoord(v.Pos.x, v.Pos.y, v.Pos.z)
 
@@ -376,9 +376,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Activate menu when player is inside marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -424,9 +424,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Prevent Free Tunning Bug
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if lsMenuIsShowed then
 			DisableControlAction(2, 288, true)
@@ -438,7 +438,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)

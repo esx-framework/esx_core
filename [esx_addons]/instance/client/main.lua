@@ -18,9 +18,9 @@ end
 function EnterInstance(instance)
 	insideInstance = true
 	-- Fix vehicles randomly spawning nearby the player inside an instance
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while insideInstance do
-			Citizen.Wait(0) -- must be run every frame
+			Wait(0) -- must be run every frame
 
 			SetVehicleDensityMultiplierThisFrame(0.0)
 			SetParkedVehicleDensityMultiplierThisFrame(0.0)
@@ -139,9 +139,9 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 		host = _instance,
 		data = data
 	}
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while instanceInvite do
-			Citizen.Wait(0)
+			Wait(0)
 
 			ESX.ShowHelpNotification(_U('press_to_enter'))
 
@@ -153,9 +153,9 @@ AddEventHandler('instance:onInvite', function(_instance, type, data)
 		end
 	end)
 	
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		-- Controls for invite
-		Citizen.Wait(10000)
+		Wait(10000)
 
 		if instanceInvite then
 			ESX.ShowNotification(_U('invite_expired'))
@@ -168,9 +168,9 @@ end)
 RegisterInstanceType('default')
 
 -- Instance players
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1000)
+		Wait(1000)
 		playersToHide = {}
 
 		if instance.host then
@@ -193,9 +193,9 @@ end)
 
 local letSleep = true
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local playerPed = PlayerPedId()
 		letSleep = true
 
@@ -212,12 +212,12 @@ Citizen.CreateThread(function()
 		end
 
 		if letSleep then
-			Citizen.Wait(1000)
+			Wait(1000)
 		end
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	TriggerEvent('instance:loaded')
 end)
 

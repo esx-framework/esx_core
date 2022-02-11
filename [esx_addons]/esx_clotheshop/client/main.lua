@@ -118,7 +118,7 @@ AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in ipairs(Config.Shops) do
 		local blip = AddBlipForCoord(v)
 
@@ -133,9 +133,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Enter / Exit marker events & draw markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), false, nil, true
 
 		for k,v in pairs(Config.Shops) do
@@ -162,15 +162,15 @@ Citizen.CreateThread(function()
 		end
 
 		if letSleep then
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Key controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if currentAction then
 			ESX.ShowHelpNotification(currentActionMsg)
@@ -183,7 +183,7 @@ Citizen.CreateThread(function()
 				currentAction = nil
 			end
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)

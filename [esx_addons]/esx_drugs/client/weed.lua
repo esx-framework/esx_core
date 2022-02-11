@@ -2,9 +2,9 @@ local spawnedWeeds = 0
 local weedPlants = {}
 local isPickingUp, isProcessing = false, false
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(700)
+		Wait(700)
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if #(coords - Config.CircleZones.WeedField.coords) < 50 then
@@ -13,13 +13,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local wait = 1000
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
 		if #(coords - Config.CircleZones.WeedProcessing.coords) < 1 then
+			wait = 2
 			if not isProcessing then
 				ESX.ShowHelpNotification(_U('weed_processprompt'))
 			end
@@ -40,10 +41,8 @@ Citizen.CreateThread(function()
 					
 				end
 			end
-		else
-			wait = 2
 		end
-	Citizen.Wait(wait)
+		Wait(wait)
 	end
 end)
 
@@ -58,7 +57,7 @@ function ProcessWeed(xCannabis)
 	local playerPed = PlayerPedId()
 
 	while timeLeft > 0 do
-		Citizen.Wait(1000)
+		Wait(1000)
 		timeLeft = timeLeft - 1
 
 		if #(GetEntityCoords(playerPed) - Config.CircleZones.WeedProcessing.coords) > 4 then
@@ -72,9 +71,9 @@ function ProcessWeed(xCannabis)
 	isProcessing = false
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
@@ -98,9 +97,9 @@ Citizen.CreateThread(function()
 					if canPickUp then
 						TaskStartScenarioInPlace(playerPed, 'world_human_gardener_plant', 0, false)
 
-						Citizen.Wait(2000)
+						Wait(2000)
 						ClearPedTasks(playerPed)
-						Citizen.Wait(1500)
+						Wait(1500)
 		
 						ESX.Game.DeleteObject(nearbyObject)
 		
@@ -116,7 +115,7 @@ Citizen.CreateThread(function()
 				end, 'cannabis')
 			end
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
@@ -131,7 +130,7 @@ end)
 
 function SpawnWeedPlants()
 	while spawnedWeeds < 25 do
-		Citizen.Wait(0)
+		Wait(0)
 		local weedCoords = GenerateWeedCoords()
 
 		ESX.Game.SpawnLocalObject('prop_weed_02', weedCoords, function(obj)
@@ -166,14 +165,14 @@ end
 
 function GenerateWeedCoords()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 
 		local weedCoordX, weedCoordY
 
 		math.randomseed(GetGameTimer())
 		local modX = math.random(-90, 90)
 
-		Citizen.Wait(100)
+		Wait(100)
 
 		math.randomseed(GetGameTimer())
 		local modY = math.random(-90, 90)

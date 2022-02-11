@@ -141,9 +141,9 @@ function DeleteSkinCam()
     cam = nil
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(0)
+        Wait(0)
 
         if isCameraActive then
             DisableControlAction(2, 30, true)
@@ -192,16 +192,16 @@ Citizen.CreateThread(function()
 
             ESX.ShowHelpNotification(_U('use_rotate_view'))
         else
-            Citizen.Wait(500)
+            Wait(700)
         end
     end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
     local angle = 90
 
     while true do
-        Citizen.Wait(0)
+        Wait(0)
 
         if isCameraActive then
             if IsControlPressed(0, 108) then
@@ -218,7 +218,7 @@ Citizen.CreateThread(function()
 
             heading = angle + 0.0
         else
-            Citizen.Wait(500)
+            Wait(500)
         end
     end
 end)
@@ -248,20 +248,20 @@ AddEventHandler('esx_skin:resetFirstSpawn', function()
 end)
 
 AddEventHandler('esx_skin:playerRegistered', function()
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while not ESX.PlayerLoaded do
-            Citizen.Wait(100)
+            Wait(100)
         end
 
         if firstSpawn then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
                 if skin == nil then
                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
-                    Citizen.Wait(100)
+                    Wait(100)
                     skinLoaded = true
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)
-                    Citizen.Wait(100)
+                    Wait(100)
                     skinLoaded = true
                 end
             end)

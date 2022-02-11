@@ -200,7 +200,7 @@ AddEventHandler('esx_dmvschool:loadLicenses', function(licenses)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	local blip = AddBlipForCoord(Config.Zones.DMVSchool.Pos.x, Config.Zones.DMVSchool.Pos.y, Config.Zones.DMVSchool.Pos.z)
 
 	SetBlipSprite (blip, 408)
@@ -214,14 +214,14 @@ Citizen.CreateThread(function()
 end)
 
 -- Display markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
-			local Pos = Vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+			local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
 			if(v.Type ~= -1 and #(coords - Pos) < Config.DrawDistance) then
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
@@ -230,17 +230,17 @@ Citizen.CreateThread(function()
 end)
 
 -- Enter / Exit marker events
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 
-		Citizen.Wait(100)
+		Wait(100)
 
 		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
 
 		for k,v in pairs(Config.Zones) do
-			local Pos = Vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+			local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
 			if(#(coords - Pos) < v.Size.x) then
 				isInMarker  = true
 				currentZone = k
@@ -261,9 +261,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Block UI
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 
 		if CurrentTest == 'theory' then
 			local playerPed = PlayerPedId()
@@ -274,15 +274,15 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Key Controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
@@ -295,16 +295,16 @@ Citizen.CreateThread(function()
 				CurrentAction = nil
 			end
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Drive test
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 
-		Citizen.Wait(0)
+		Wait(0)
 
 		if CurrentTest == 'drive' then
 			local playerPed      = PlayerPedId()
@@ -352,15 +352,15 @@ Citizen.CreateThread(function()
 			end
 		else
 			-- not currently taking driver test
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Speed / Damage control
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Wait(10)
 
 		if CurrentTest == 'drive' then
 
@@ -400,12 +400,12 @@ Citizen.CreateThread(function()
 
 					-- avoid stacking faults
 					LastVehicleHealth = health
-					Citizen.Wait(1500)
+					Wait(1500)
 				end
 			end
 		else
 			-- not currently taking driver test
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
