@@ -12,42 +12,42 @@ Config.EnableSocietyOwnedVehicles = false
 Config.Locale                     = 'en'
 
 Config.AuthorizedVehicles = {
-	{model = 'taxi', label = 'Taxi'}
+	{model = `taxi`, label = 'Taxi'}
 }
 
 Config.Zones = {
 
 	VehicleSpawner = {
-		Pos   = {x = 915.039, y = -162.187, z = 74.5},
-		Size  = {x = 1.0, y = 1.0, z = 1.0},
+		Pos   = vector3(915.039, -162.187, 74.5),
+		Size  = vector3(1.0, 1.0, 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 36, Rotate = true
 	},
 
 	VehicleSpawnPoint = {
-		Pos     = {x = 911.108, y = -177.867, z = 74.283},
-		Size    = {x = 1.5, y = 1.5, z = 1.0},
+		Pos     = vector3(911.108, -177.867, 74.283),
+		Size    = vector3(1.5, 1.5, 1.0},
 		Type    = -1, Rotate = false,
 		Heading = 225.0
 	},
 
 	VehicleDeleter = {
-		Pos   = {x = 908.317, y = -183.070, z = 73.201},
-		Size  = {x = 3.0, y = 3.0, z = 0.25},
+		Pos   = vector3(908.317, -183.070, 73.201),
+		Size  = vector3(3.0, 3.0, 0.25},
 		Color = {r = 255, g = 0, b = 0},
 		Type  = 1, Rotate = false
 	},
 
 	TaxiActions = {
-		Pos   = {x = 903.32, y = -170.55, z = 74.0},
-		Size  = {x = 1.0, y = 1.0, z = 1.0},
+		Pos   = vector3(903.32, -170.55, 74.0),
+		Size  = vector3(1.0, 1.0, 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 20, Rotate = true
 	},
 
 	Cloakroom = {
-		Pos     = {x = 894.88, y = -180.23, z = 74.5},
-		Size    = {x = 1.0, y = 1.0, z = 1.0},
+		Pos     = vector3(894.88, -180.23, 74.5),
+		Size    = vector3(1.0, 1.0, 1.0},
 		Color   = {r = 204, g = 204, b = 0},
 		Type    = 21, Rotate = true
 	}
