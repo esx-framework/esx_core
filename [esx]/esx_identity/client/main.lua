@@ -39,6 +39,7 @@ if not Config.UseDeferrals then
 		TriggerEvent('esx_skin:resetFirstSpawn')
 
 		if not ESX.GetPlayerData().dead then
+			Wait(4000)
 			EnableGui(true)
 		end
 	end)
