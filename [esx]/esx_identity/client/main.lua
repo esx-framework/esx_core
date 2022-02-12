@@ -1,4 +1,5 @@
 local loadingScreenFinished = false
+local ready = false
 
 RegisterNetEvent('esx_identity:alreadyRegistered')
 AddEventHandler('esx_identity:alreadyRegistered', function()
@@ -11,6 +12,11 @@ end)
 
 AddEventHandler('esx:loadingScreenOff', function()
 	loadingScreenFinished = true
+end)
+
+RegisterNUICallback('ready', function(data, cb)
+	ready = true
+	cb(1)
 end)
 
 if not Config.UseDeferrals then
@@ -26,6 +32,9 @@ if not Config.UseDeferrals then
 			guiEnabled()
 		end
 
+		while not ready do
+			Wait(100)
+		end
 		SendNUIMessage({
 			type = "enableui",
 			enable = state
