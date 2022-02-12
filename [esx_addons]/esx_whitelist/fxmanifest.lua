@@ -11,10 +11,7 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'config.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fr.lua',
-	'locales/sv.lua',
+	'locales/*.lua',
 	'server/main.lua',
 	'server/commands.lua'
 }
