@@ -1,33 +1,33 @@
-local menuOpen = false
-local wasOpen = false
+local menuOpen, wasOpen = false, false
 
 CreateThread(function()
 	while true do
-		local time = 800
-		local playerPed = PlayerPedId()
+        local sleep = 2000
+
+        local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
+        local dist = #(coords - Config.CircleZones.DrugDealer.coords)
 
-		if #(coords - Config.CircleZones.DrugDealer.coords) < 0.5 then
-			if not menuOpen then
-				ESX.ShowHelpNotification(_U('dealer_prompt'))
+        if dist < 20.0 then sleep = 500
+            if dist < 0.5 then sleep = 1
+                if not menuOpen then
+                    ESX.ShowHelpNotification(_U('dealer_prompt'))
+    
+                    if IsControlJustReleased(0, 38) then
+                        wasOpen = true
+                        OpenDrugShop()
+                    end
+                end
+            elseif wasOpen then
+                wasOpen = false
+                ESX.UI.Menu.CloseAll()
+            end
+        end
 
-				if IsControlJustReleased(0, 38) then
-					wasOpen = true
-					OpenDrugShop()
-				end
-			else
-				Wait(500)
-			end
-		else
-			if wasOpen then
-				wasOpen = false
-				ESX.UI.Menu.CloseAll()
-			end
-
-			Wait(time)
-		end
-	end
+        Wait(sleep)
+    end
 end)
+
 
 function OpenDrugShop()
 	ESX.UI.Menu.CloseAll()
