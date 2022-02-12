@@ -1,4 +1,4 @@
-local HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, CurrentActionData = false, false, false, false, false, {}
+local isTaxiJob, HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, IsDead, CurrentActionData, isInVehicle = false, false, false, false, false, false, false, {}, false
 local CurrentCustomer, CurrentCustomerBlip, DestinationBlip, targetCoords, LastZone, CurrentAction, CurrentActionMsg
 
 function DrawSub(msg, time)
@@ -71,12 +71,14 @@ function StartTaxiJob()
 	ClearCurrentMission()
 
 	OnJob = true
+    OnJobTaxiAutorize()
+    OnJobTaxi()
 end
 
 function StopTaxiJob()
 	local playerPed = PlayerPedId()
 
-	if IsPedInAnyVehicle(playerPed, false) and CurrentCustomer ~= nil then
+	if isInVehicle and CurrentCustomer ~= nil then
 		local vehicle = GetVehiclePedIsIn(playerPed,  false)
 		TaskLeaveVehicle(CurrentCustomer,  vehicle,  0)
 
@@ -290,11 +292,11 @@ function OpenMobileTaxiActionsMenu()
 			if OnJob then
 				StopTaxiJob()
 			else
-				if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
+				if ESX.PlayerData.job ~= nil and isTaxiJob then
 					local playerPed = PlayerPedId()
 					local vehicle   = GetVehiclePedIsIn(playerPed, false)
 
-					if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
+					if isInVehicle and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 						if tonumber(ESX.PlayerData.job.grade) >= 3 then
 							StartTaxiJob()
 						else
@@ -324,55 +326,12 @@ function IsInAuthorizedVehicle()
 	local vehModel  = GetEntityModel(GetVehiclePedIsIn(playerPed, false))
 
 	for i=1, #Config.AuthorizedVehicles, 1 do
-		if vehModel == GetHashKey(Config.AuthorizedVehicles[i].model) then
+		if vehModel == Config.AuthorizedVehicles[i].model then
 			return true
 		end
 	end
 	
 	return false
-end
-
-function OpenGetStocksMenu()
-	ESX.TriggerServerCallback('esx_taxijob:getStockItems', function(items)
-		local elements = {}
-
-		for i=1, #items, 1 do
-			table.insert(elements, {
-				label = 'x' .. items[i].count .. ' ' .. items[i].label,
-				value = items[i].name
-			})
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
-			title    = _U('taxi_stock'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			local itemName = data.current.value
-
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count', {
-				title = _U('quantity')
-			}, function(data2, menu2)
-				local count = tonumber(data2.value)
-
-				if count == nil then
-					ESX.ShowNotification(_U('quantity_invalid'))
-				else
-					menu2.close()
-					menu.close()
-
-					-- todo: refresh on callback
-					TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
-					Wait(1000)
-					OpenGetStocksMenu()
-				end
-			end, function(data2, menu2)
-				menu2.close()
-			end)
-		end, function(data, menu)
-			menu.close()
-		end)
-	end)
 end
 
 function OpenPutStocksMenu()
@@ -411,8 +370,51 @@ function OpenPutStocksMenu()
 
 					-- todo: refresh on callback
 					TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
-					Wait(1000)
+					Citizen.Wait(1000)
 					OpenPutStocksMenu()
+				end
+			end, function(data2, menu2)
+				menu2.close()
+			end)
+		end, function(data, menu)
+			menu.close()
+		end)
+	end)
+end
+
+function OpenGetStocksMenu()
+	ESX.TriggerServerCallback('esx_taxijob:getStockItems', function(items)
+		local elements = {}
+
+		for i=1, #items, 1 do
+			table.insert(elements, {
+				label = 'x' .. items[i].count .. ' ' .. items[i].label,
+				value = items[i].name
+			})
+		end
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
+			title    = _U('taxi_stock'),
+			align    = 'top-left',
+			elements = elements
+		}, function(data, menu)
+			local itemName = data.current.value
+
+			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count', {
+				title = _U('quantity')
+			}, function(data2, menu2)
+				local count = tonumber(data2.value)
+
+				if count == nil then
+					ESX.ShowNotification(_U('quantity_invalid'))
+				else
+					menu2.close()
+					menu.close()
+
+					-- todo: refresh on callback
+					TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
+					Citizen.Wait(1000)
+					OpenGetStocksMenu()
 				end
 			end, function(data2, menu2)
 				menu2.close()
@@ -426,11 +428,23 @@ end
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
+    if xPlayer.job and xPlayer.job.name == 'taxi' then
+        isTaxiJob = true
+        currentActionTaxi()
+        taxiEventMarkers()
+    end
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
+    if job and job.name == 'taxi' then
+        isTaxiJob = true
+        currentActionTaxi()
+        taxiEventMarkers()
+    else
+        isTaxiJob = false
+    end
 end)
 
 AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
@@ -442,7 +456,7 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 		local playerPed = PlayerPedId()
 		local vehicle   = GetVehiclePedIsIn(playerPed, false)
 
-		if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
+		if isInVehicle and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 			CurrentAction     = 'delete_vehicle'
 			CurrentActionMsg  = _U('store_veh')
 			CurrentActionData = { vehicle = vehicle }
@@ -477,7 +491,7 @@ end)
 
 -- Create Blips
 CreateThread(function()
-	local blip = AddBlipForCoord(Config.Zones.TaxiActions.Pos.x, Config.Zones.TaxiActions.Pos.y, Config.Zones.TaxiActions.Pos.z)
+	local blip = AddBlipForCoord(Config.Zones.TaxiActions.Pos)
 
 	SetBlipSprite (blip, 198)
 	SetBlipDisplay(blip, 4)
@@ -491,254 +505,264 @@ CreateThread(function()
 end)
 
 -- Enter / Exit marker events, and draw markers
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-			local coords = GetEntityCoords(PlayerPedId())
-			local isInMarker, letSleep, currentZone = false, true
-
-			for k,v in pairs(Config.Zones) do
-				local distance = #(coords - v.Pos)
-
-				if v.Type ~= -1 and distance < Config.DrawDistance then
-					letSleep = false
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, v.Rotate, nil, nil, false)
-				end
-
-				if distance < v.Size.x then
-					isInMarker, currentZone = true, k
-				end
-			end
-
-			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-				HasAlreadyEnteredMarker, LastZone = true, currentZone
-				TriggerEvent('esx_taxijob:hasEnteredMarker', currentZone)
-			end
-
-			if not isInMarker and HasAlreadyEnteredMarker then
-				HasAlreadyEnteredMarker = false
-				TriggerEvent('esx_taxijob:hasExitedMarker', LastZone)
-			end
-
-			if letSleep then
-				Wait(500)
-			end
-		else
-			Wait(1000)
-		end
-	end
-end)
+taxiEventMarkers = function()
+    CreateThread(function()
+        while isTaxiJob do
+            Wait(0)
+    
+            local coords = GetEntityCoords(PlayerPedId())
+            local isInMarker, letSleep, currentZone = false, true
+    
+            for k,v in pairs(Config.Zones) do
+				local dist = #(v.Pos - coords)
+    
+                if v.Type ~= -1 and dist < Config.DrawDistance then
+                    letSleep = false
+                    DrawMarker(v.Type, v.Pos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, v.Rotate, nil, nil, false)
+                end
+    
+                if dist < v.Size.x then
+                    isInMarker, currentZone = true, k
+                end
+            end
+    
+            if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
+                HasAlreadyEnteredMarker, LastZone = true, currentZone
+                TriggerEvent('esx_taxijob:hasEnteredMarker', currentZone)
+            end
+    
+            if not isInMarker and HasAlreadyEnteredMarker then
+                HasAlreadyEnteredMarker = false
+                TriggerEvent('esx_taxijob:hasExitedMarker', LastZone)
+            end
+    
+            if letSleep then
+                Wait(500)
+            end
+    
+        end
+    end)
+end
 
 -- Taxi Job
-CreateThread(function()
-	while true do
+OnJobTaxi = function()
+    CreateThread(function()
+        while OnJob do
+            Wait(0)
+            local playerPed = PlayerPedId()
+    
+            if CurrentCustomer == nil then
+                DrawSub(_U('drive_search_pass'), 5000)
 
-		Wait(0)
-		local playerPed = PlayerPedId()
+                if isInVehicle and GetEntitySpeed(playerPed) > 0 then
+                    local waitUntil = GetGameTimer() + GetRandomIntInRange(30000, 45000)
 
-		if OnJob then
-			if CurrentCustomer == nil then
-				DrawSub(_U('drive_search_pass'), 5000)
+                    while waitUntil > GetGameTimer() do
+                        Wait(0)
+                    end
 
-				if IsPedInAnyVehicle(playerPed, false) and GetEntitySpeed(playerPed) > 0 then
-					local waitUntil = GetGameTimer() + GetRandomIntInRange(30000, 45000)
+                    if isInVehicle and GetEntitySpeed(playerPed) > 0 then
+                        CurrentCustomer = GetRandomWalkingNPC()
 
-					while OnJob and waitUntil > GetGameTimer() do
-						Wait(0)
-					end
+                        if CurrentCustomer ~= nil then
+                            CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
 
-					if OnJob and IsPedInAnyVehicle(playerPed, false) and GetEntitySpeed(playerPed) > 0 then
-						CurrentCustomer = GetRandomWalkingNPC()
+                            SetBlipAsFriendly(CurrentCustomerBlip, true)
+                            SetBlipColour(CurrentCustomerBlip, 2)
+                            SetBlipCategory(CurrentCustomerBlip, 3)
+                            SetBlipRoute(CurrentCustomerBlip, true)
 
-						if CurrentCustomer ~= nil then
-							CurrentCustomerBlip = AddBlipForEntity(CurrentCustomer)
+                            SetEntityAsMissionEntity(CurrentCustomer, true, false)
+                            ClearPedTasksImmediately(CurrentCustomer)
+                            SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
 
-							SetBlipAsFriendly(CurrentCustomerBlip, true)
-							SetBlipColour(CurrentCustomerBlip, 2)
-							SetBlipCategory(CurrentCustomerBlip, 3)
-							SetBlipRoute(CurrentCustomerBlip, true)
+                            local standTime = GetRandomIntInRange(60000, 180000)
+                            TaskStandStill(CurrentCustomer, standTime)
 
-							SetEntityAsMissionEntity(CurrentCustomer, true, false)
-							ClearPedTasksImmediately(CurrentCustomer)
-							SetBlockingOfNonTemporaryEvents(CurrentCustomer, true)
+                            ESX.ShowNotification(_U('customer_found'))
+                        end
+                    end
+                end
+            else
+                if IsPedFatallyInjured(CurrentCustomer) then
+                    ESX.ShowNotification(_U('client_unconcious'))
 
-							local standTime = GetRandomIntInRange(60000, 180000)
-							TaskStandStill(CurrentCustomer, standTime)
+                    if DoesBlipExist(CurrentCustomerBlip) then
+                        RemoveBlip(CurrentCustomerBlip)
+                    end
 
-							ESX.ShowNotification(_U('customer_found'))
-						end
-					end
-				end
-			else
-				if IsPedFatallyInjured(CurrentCustomer) then
-					ESX.ShowNotification(_U('client_unconcious'))
+                    if DoesBlipExist(DestinationBlip) then
+                        RemoveBlip(DestinationBlip)
+                    end
 
-					if DoesBlipExist(CurrentCustomerBlip) then
-						RemoveBlip(CurrentCustomerBlip)
-					end
+                    SetEntityAsMissionEntity(CurrentCustomer, false, true)
 
-					if DoesBlipExist(DestinationBlip) then
-						RemoveBlip(DestinationBlip)
-					end
+                    CurrentCustomer, CurrentCustomerBlip, DestinationBlip, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, false, nil
+                end
 
-					SetEntityAsMissionEntity(CurrentCustomer, false, true)
+                if isInVehicle then
+                    local vehicle          = GetVehiclePedIsIn(playerPed, false)
+                    local playerCoords     = GetEntityCoords(playerPed)
+                    local customerCoords   = GetEntityCoords(CurrentCustomer)
+                    local customerDistance = #(playerCoords - customerCoords)
 
-					CurrentCustomer, CurrentCustomerBlip, DestinationBlip, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, false, nil
-				end
+                    if IsPedSittingInVehicle(CurrentCustomer, vehicle) then
+                        if CustomerEnteredVehicle then
+                            local targetDistance = #(playerCoords - targetCoords)
 
-				if IsPedInAnyVehicle(playerPed, false) then
-					local vehicle          = GetVehiclePedIsIn(playerPed, false)
-					local playerCoords     = GetEntityCoords(playerPed)
-					local customerCoords   = GetEntityCoords(CurrentCustomer)
-					local customerDistance = #(playerCoords - customerCoords)
+                            if targetDistance <= 10.0 then
+                                TaskLeaveVehicle(CurrentCustomer, vehicle, 0)
 
-					if IsPedSittingInVehicle(CurrentCustomer, vehicle) then
-						if CustomerEnteredVehicle then
-							local targetDistance = #(playerCoords - targetCoords)
+                                ESX.ShowNotification(_U('arrive_dest'))
 
-							if targetDistance <= 10.0 then
-								TaskLeaveVehicle(CurrentCustomer, vehicle, 0)
+                                TaskGoStraightToCoord(CurrentCustomer, targetCoords.x, targetCoords.y, targetCoords.z, 1.0, -1, 0.0, 0.0)
+                                SetEntityAsMissionEntity(CurrentCustomer, false, true)
+                                TriggerServerEvent('esx_taxijob:success')
+                                RemoveBlip(DestinationBlip)
 
-								ESX.ShowNotification(_U('arrive_dest'))
+                                local scope = function(customer)
+                                    ESX.SetTimeout(60000, function()
+                                        DeletePed(customer)
+                                    end)
+                                end
 
-								TaskGoStraightToCoord(CurrentCustomer, targetCoords.x, targetCoords.y, targetCoords.z, 1.0, -1, 0.0, 0.0)
-								SetEntityAsMissionEntity(CurrentCustomer, false, true)
-								TriggerServerEvent('esx_taxijob:success')
-								RemoveBlip(DestinationBlip)
+                                scope(CurrentCustomer)
 
-								local scope = function(customer)
-									ESX.SetTimeout(60000, function()
-										DeletePed(customer)
-									end)
-								end
+                                CurrentCustomer, CurrentCustomerBlip, DestinationBlip, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, false, nil
+                            end
 
-								scope(CurrentCustomer)
+                            if targetCoords then
+                                DrawMarker(36, targetCoords.x, targetCoords.y, targetCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
+                            end
+                        else
+                            RemoveBlip(CurrentCustomerBlip)
+                            CurrentCustomerBlip = nil
+                            targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+                            local distance = #(playerCoords - targetCoords)
+                            while distance < Config.MinimumDistance do
+                                Wait(5)
 
-								CurrentCustomer, CurrentCustomerBlip, DestinationBlip, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, targetCoords = nil, nil, nil, false, false, false, nil
-							end
+                                targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
+                                distance = #(playerCoords - targetCoords)
+                            end
 
-							if targetCoords then
-								DrawMarker(36, targetCoords.x, targetCoords.y, targetCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
-							end
-						else
-							RemoveBlip(CurrentCustomerBlip)
-							CurrentCustomerBlip = nil
-							targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
-							local distance = #(playerCoords - targetCoords)
-							while distance < Config.MinimumDistance do
-								Wait(5)
+                            local street = table.pack(GetStreetNameAtCoord(targetCoords.x, targetCoords.y, targetCoords.z))
+                            local msg    = nil
 
-								targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
-								distance = #(playerCoords - targetCoords)
-							end
+                            if street[2] ~= 0 and street[2] ~= nil then
+                                msg = string.format(_U('take_me_to_near', GetStreetNameFromHashKey(street[1]), GetStreetNameFromHashKey(street[2])))
+                            else
+                                msg = string.format(_U('take_me_to', GetStreetNameFromHashKey(street[1])))
+                            end
 
-							local street = table.pack(GetStreetNameAtCoord(targetCoords.x, targetCoords.y, targetCoords.z))
-							local msg    = nil
+                            ESX.ShowNotification(msg)
 
-							if street[2] ~= 0 and street[2] ~= nil then
-								msg = string.format(_U('take_me_to_near', GetStreetNameFromHashKey(street[1]), GetStreetNameFromHashKey(street[2])))
-							else
-								msg = string.format(_U('take_me_to', GetStreetNameFromHashKey(street[1])))
-							end
+                            DestinationBlip = AddBlipForCoord(targetCoords.x, targetCoords.y, targetCoords.z)
 
-							ESX.ShowNotification(msg)
+                            BeginTextCommandSetBlipName('STRING')
+                            AddTextComponentSubstringPlayerName('Destination')
+                            EndTextCommandSetBlipName(blip)
+                            SetBlipRoute(DestinationBlip, true)
 
-							DestinationBlip = AddBlipForCoord(targetCoords.x, targetCoords.y, targetCoords.z)
+                            CustomerEnteredVehicle = true
+                        end
+                    else
+                        DrawMarker(36, customerCoords.x, customerCoords.y, customerCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
 
-							BeginTextCommandSetBlipName('STRING')
-							AddTextComponentSubstringPlayerName('Destination')
-							EndTextCommandSetBlipName(blip)
-							SetBlipRoute(DestinationBlip, true)
+                        if not CustomerEnteredVehicle then
+                            if customerDistance <= 40.0 then
 
-							CustomerEnteredVehicle = true
-						end
-					else
-						DrawMarker(36, customerCoords.x, customerCoords.y, customerCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
+                                if not IsNearCustomer then
+                                    ESX.ShowNotification(_U('close_to_client'))
+                                    IsNearCustomer = true
+                                end
 
-						if not CustomerEnteredVehicle then
-							if customerDistance <= 40.0 then
+                            end
 
-								if not IsNearCustomer then
-									ESX.ShowNotification(_U('close_to_client'))
-									IsNearCustomer = true
-								end
+                            if customerDistance <= 20.0 then
+                                if not CustomerIsEnteringVehicle then
+                                    ClearPedTasksImmediately(CurrentCustomer)
 
-							end
+                                    local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
 
-							if customerDistance <= 20.0 then
-								if not CustomerIsEnteringVehicle then
-									ClearPedTasksImmediately(CurrentCustomer)
+                                    for i=maxSeats - 1, 0, -1 do
+                                        if IsVehicleSeatFree(vehicle, i) then
+                                            freeSeat = i
+                                            break
+                                        end
+                                    end
 
-									local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
+                                    if freeSeat then
+                                        TaskEnterVehicle(CurrentCustomer, vehicle, -1, freeSeat, 2.0, 0)
+                                        CustomerIsEnteringVehicle = true
+                                    end
+                                end
+                            end
+                        end
+                    end
+                else
+                    DrawSub(_U('return_to_veh'), 5000)
+                end
+            end
+        end
+    end)
+end
 
-									for i=maxSeats - 1, 0, -1 do
-										if IsVehicleSeatFree(vehicle, i) then
-											freeSeat = i
-											break
-										end
-									end
+OnJobTaxiAutorize = function()
+    CreateThread(function()
+        while onJob do
+            Wait(10000)
+            if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
+                if not IsInAuthorizedVehicle() then
+                    ClearCurrentMission()
+                    OnJob = false
+                    ESX.ShowNotification(_U('not_in_taxi'))
+                end
+            end
+        end
+    end)
+end
 
-									if freeSeat then
-										TaskEnterVehicle(CurrentCustomer, vehicle, -1, freeSeat, 2.0, 0)
-										CustomerIsEnteringVehicle = true
-									end
-								end
-							end
-						end
-					end
-				else
-					DrawSub(_U('return_to_veh'), 5000)
-				end
-			end
-		else
-			Wait(500)
-		end
-	end
-end)
+currentActionTaxi = function()
+    CreateThread(function()
+        while isTaxiJob do
+            time = 500
+            if not IsDead then
+                if CurrentAction then time = 1
+                    ESX.ShowHelpNotification(CurrentActionMsg)
 
-CreateThread(function()
-	while onJob do
-		Wait(10000)
-		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
-			if not IsInAuthorizedVehicle() then
-				ClearCurrentMission()
-				OnJob = false
-				ESX.ShowNotification(_U('not_in_taxi'))
-			end
-		end
-	end
-end)
+                    if IsControlJustReleased(0, 38) then
+                        if CurrentAction == 'taxi_actions_menu' then
+                            OpenTaxiActionsMenu()
+                        elseif CurrentAction == 'cloakroom' then
+                            OpenCloakroom()
+                        elseif CurrentAction == 'vehicle_spawner' then
+                            OpenVehicleSpawnerMenu()
+                        elseif CurrentAction == 'delete_vehicle' then
+                            DeleteJobVehicle()
+                        end
 
--- Key Controls
-CreateThread(function()
-	while true do
-		Wait(0)
+                        CurrentAction = nil
+                    end
+                end
+            end
+            Wait(time)
+        end
+    end)
+end
 
-		if CurrentAction and not ESX.GetPlayerData().dead then
-			ESX.ShowHelpNotification(CurrentActionMsg)
+if Config.EnablePlayerManagement then
+    RegisterCommand('taximenu', function()
+        if isTaxiJob then
+            if not IsDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'mobile_taxi_actions') then
+                OpenMobileTaxiActionsMenu()
+            end
+        end
+    end, false)
 
-			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-				if CurrentAction == 'taxi_actions_menu' then
-					OpenTaxiActionsMenu()
-				elseif CurrentAction == 'cloakroom' then
-					OpenCloakroom()
-				elseif CurrentAction == 'vehicle_spawner' then
-					OpenVehicleSpawnerMenu()
-				elseif CurrentAction == 'delete_vehicle' then
-					DeleteJobVehicle()
-				end
+    RegisterKeyMapping('taximenu', _U('keymap_showtaximenu'), 'keyboard', 'F6')
+end
 
-				CurrentAction = nil
-			end
-		end
-	end
-end)
-RegisterCommand('taximenu', function()
-	if not ESX.GetPlayerData().dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-		OpenMobileTaxiActionsMenu()
-	end
-end, false)
-
-RegisterKeyMapping('taximenu', 'Open Taxi Menu', 'keyboard', 'f6')
+AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
+AddEventHandler('esx:onPlayerEnterVehicle', function(bool) isInVehicle = bool end)
+AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
