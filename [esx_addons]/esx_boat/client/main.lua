@@ -3,6 +3,7 @@ local spawnedVehicles = {}
 
 function OpenBoatShop(shop)
 	isInShopMenu = true
+    inShopMenu()
 
 	local playerPed = PlayerPedId()
 	local elements  = {}
@@ -197,18 +198,16 @@ function StoreBoatInGarage(vehicle, teleportCoords)
 end
 
 -- Key controls
-CreateThread(function()
-	while true do
-		Wait(0)
+inShopMenu = function()
+    CreateThread(function()
+        while isInShopMenu do
+            Wait(0)
 
-		if isInShopMenu then
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
-		else
-			Wait(500)
-		end
-	end
-end)
+            DisableControlAction(0, 75, true)  -- Disable exit vehicle
+            DisableControlAction(27, 75, true) -- Disable exit vehicle
+        end
+    end)
+end
 
 function DeleteSpawnedVehicles()
 	while #spawnedVehicles > 0 do
