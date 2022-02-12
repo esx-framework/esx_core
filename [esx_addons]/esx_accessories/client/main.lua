@@ -1,4 +1,4 @@
-local HasAlreadyEnteredMarker, isDead = false, false
+local HasAlreadyEnteredMarker = false
 local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
 
@@ -134,7 +134,7 @@ end)
 -- Create Blips --
 CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
-		if v.Pos ~= nil then
+		if v.Pos then
 			for i=1, #v.Pos, 1 do
 				local blip = AddBlipForCoord(v.Pos[i])
 
@@ -171,7 +171,6 @@ CreateThread(function()
 				end
 			end
 		end
-
 		Wait(sleep)
 	end
 end)

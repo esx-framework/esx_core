@@ -1,7 +1,7 @@
 local Player = nil
 local CruisedSpeed, CruisedSpeedKm, VehicleVectorY = 0, 0, 0
 
-Citizen.CreateThread(function ()
+CreateThread(function ()
 	while true do
 		Wait(0)
 		if IsControlJustPressed(1, 246) and IsDriver() then
@@ -19,7 +19,7 @@ function TriggerCruiseControl ()
 
 			ESX.ShowNotification(_U('activated') .. ': ~b~ ' .. CruisedSpeedKm .. ' km/h')
 
-			Citizen.CreateThread(function ()
+			CreateThread(function ()
 				while CruisedSpeed > 0 and IsInVehicle() == Player do
 					Wait(0)
 

@@ -5,6 +5,7 @@ AddEventHandler('esx_basicneeds:resetStatus', function()
 	TriggerEvent('esx_status:set', 'thirst', 500000)
 end)
 
+
 RegisterNetEvent('esx_basicneeds:healPlayer')
 AddEventHandler('esx_basicneeds:healPlayer', function()
 	-- restore hunger & thirst

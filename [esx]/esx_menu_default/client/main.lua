@@ -1,4 +1,3 @@
-local ESX = exports.es_extended:getSharedObject()
 local GUI, MenuType = {}, 'default'
 GUI.Time = 0
 
@@ -58,9 +57,9 @@ RegisterNUICallback('menu_change', function(data, cb)
 	cb('OK')
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(15)
+		Wait(15)
 
 		if IsControlPressed(0, 18) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
 			SendNUIMessage({action = 'controlPressed', control = 'ENTER'})

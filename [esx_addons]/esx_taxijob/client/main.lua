@@ -1,4 +1,4 @@
-local HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, IsDead, CurrentActionData = false, false, false, false, false, false, {}
+local HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, CurrentActionData = false, false, false, false, false, {}
 local CurrentCustomer, CurrentCustomerBlip, DestinationBlip, targetCoords, LastZone, CurrentAction, CurrentActionMsg
 
 function DrawSub(msg, time)
@@ -9,13 +9,13 @@ function DrawSub(msg, time)
 end
 
 function ShowLoadingPromt(msg, time, type)
-	Citizen.CreateThread(function()
-		Citizen.Wait(0)
+	CreateThread(function()
+		Wait(0)
 
 		BeginTextCommandBusyspinnerOn('STRING')
 		AddTextComponentSubstringPlayerName(msg)
 		EndTextCommandBusyspinnerOn(type)
-		Citizen.Wait(time)
+		Wait(time)
 
 		BusyspinnerOff()
 	end)
@@ -363,7 +363,7 @@ function OpenGetStocksMenu()
 
 					-- todo: refresh on callback
 					TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
-					Citizen.Wait(1000)
+					Wait(1000)
 					OpenGetStocksMenu()
 				end
 			end, function(data2, menu2)
@@ -411,7 +411,7 @@ function OpenPutStocksMenu()
 
 					-- todo: refresh on callback
 					TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
-					Citizen.Wait(1000)
+					Wait(1000)
 					OpenPutStocksMenu()
 				end
 			end, function(data2, menu2)
@@ -476,7 +476,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	local blip = AddBlipForCoord(Config.Zones.TaxiActions.Pos.x, Config.Zones.TaxiActions.Pos.y, Config.Zones.TaxiActions.Pos.z)
 
 	SetBlipSprite (blip, 198)
@@ -491,9 +491,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Enter / Exit marker events, and draw markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 			local coords = GetEntityCoords(PlayerPedId())
@@ -523,19 +523,19 @@ Citizen.CreateThread(function()
 			end
 
 			if letSleep then
-				Citizen.Wait(500)
+				Wait(500)
 			end
 		else
-			Citizen.Wait(1000)
+			Wait(1000)
 		end
 	end
 end)
 
 -- Taxi Job
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 
-		Citizen.Wait(0)
+		Wait(0)
 		local playerPed = PlayerPedId()
 
 		if OnJob then
@@ -546,7 +546,7 @@ Citizen.CreateThread(function()
 					local waitUntil = GetGameTimer() + GetRandomIntInRange(30000, 45000)
 
 					while OnJob and waitUntil > GetGameTimer() do
-						Citizen.Wait(0)
+						Wait(0)
 					end
 
 					if OnJob and IsPedInAnyVehicle(playerPed, false) and GetEntitySpeed(playerPed) > 0 then
@@ -628,7 +628,7 @@ Citizen.CreateThread(function()
 							targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 							local distance = #(playerCoords - targetCoords)
 							while distance < Config.MinimumDistance do
-								Citizen.Wait(5)
+								Wait(5)
 
 								targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 								distance = #(playerCoords - targetCoords)
@@ -693,14 +693,14 @@ Citizen.CreateThread(function()
 				end
 			end
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while onJob do
-		Citizen.Wait(10000)
+		Wait(10000)
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
 			if not IsInAuthorizedVehicle() then
 				ClearCurrentMission()
@@ -712,11 +712,11 @@ Citizen.CreateThread(function()
 end)
 
 -- Key Controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
-		if CurrentAction and not IsDead then
+		if CurrentAction and not ESX.GetPlayerData().dead then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
@@ -733,17 +733,12 @@ Citizen.CreateThread(function()
 				CurrentAction = nil
 			end
 		end
-
-		if IsControlJustReleased(0, 167) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-			OpenMobileTaxiActionsMenu()
-		end
 	end
 end)
+RegisterCommand('taximenu', function()
+	if not ESX.GetPlayerData().dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+		OpenMobileTaxiActionsMenu()
+	end
+end, false)
 
-AddEventHandler('esx:onPlayerDeath', function()
-	IsDead = true
-end)
-
-AddEventHandler('esx:onPlayerSpawn', function(spawn)
-	IsDead = false
-end)
+RegisterKeyMapping('taximenu', 'Open Taxi Menu', 'keyboard', 'f6')

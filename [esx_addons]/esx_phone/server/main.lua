@@ -73,7 +73,7 @@ function GenerateUniquePhoneNumber()
 	local foundNumber, phoneNumber = false, nil
 
 	while not foundNumber do
-		Citizen.Wait(100)
+		Wait(100)
 
 		math.randomseed(GetGameTimer())
 		phoneNumber = math.random(10000, 99999)

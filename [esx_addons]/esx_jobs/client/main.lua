@@ -300,22 +300,22 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 end)
 
 -- Show top left hint
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Wait(10)
 
 		if hintIsShowed then
 			ESX.ShowHelpNotification(hintToDisplay)
 		else
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)
 
 -- Display markers (only if on duty and the player's job ones)
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 		local zones = {}
 
 		if ESX.PlayerData.job ~= nil then
@@ -348,9 +348,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Display public markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(Config.PublicZones) do
 			if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
@@ -361,9 +361,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Activate public marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local coords   = GetEntityCoords(PlayerPedId())
 		local position = nil
 		local zone     = nil
@@ -398,10 +398,10 @@ Citizen.CreateThread(function()
 end)
 
 -- Activate menu when player is inside marker
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 
-		Citizen.Wait(1)
+		Wait(1)
 
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
 			local zones = nil
@@ -512,7 +512,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	-- Slaughterer
 	RemoveIpl("CS1_02_cf_offmission")
 	RequestIpl("CS1_02_cf_onmission1")

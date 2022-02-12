@@ -26,7 +26,7 @@ RegisterNUICallback('withdraw', function(data, cb)
 end)
 
 -- Create blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	if not Config.EnableBlips then return end
 
 	for _, ATMLocation in pairs(Config.ATMLocations) do

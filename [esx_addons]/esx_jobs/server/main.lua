@@ -1,12 +1,12 @@
 local playersWorking = {}
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1000)
+		Wait(1000)
 		local timeNow = os.clock()
 
 		for playerId,data in pairs(playersWorking) do
-			Citizen.Wait(10)
+			Wait(10)
 			local xPlayer = ESX.GetPlayerFromId(playerId)
 
 			-- is player still online?

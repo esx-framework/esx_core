@@ -41,9 +41,9 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	NetworkSetTalkerProximity(voice.default)		
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 
 		if IsControlJustPressed(1, Keys['H']) and IsControlPressed(1, Keys['LEFTSHIFT']) then
 			voice.current = (voice.current + 1) % 3

@@ -100,9 +100,9 @@ function DisplayBoughtScaleform(weaponName, price)
 
 	PlaySoundFrontend(-1, 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET', false)
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		while sec > 0 do
-			Citizen.Wait(0)
+			Wait(0)
 			sec = sec - 0.01
 	
 			DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
@@ -132,7 +132,7 @@ AddEventHandler('onResourceStop', function(resource)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 	for k,v in pairs(Config.Zones) do
 		if v.Legal then
 			for i = 1, #v.Locations, 1 do
@@ -153,9 +153,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Display markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		local coords = GetEntityCoords(PlayerPedId())
 
@@ -170,9 +170,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Enter / Exit marker events
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local coords = GetEntityCoords(PlayerPedId())
 		local isInMarker, currentZone = false, nil
 
@@ -196,9 +196,9 @@ Citizen.CreateThread(function()
 end)
 
 -- Key Controls
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)

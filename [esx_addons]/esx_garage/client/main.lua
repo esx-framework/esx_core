@@ -258,7 +258,7 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part, parking)
 end)
 
 -- Create Blips
-Citizen.CreateThread(function()
+CreateThread(function()
 		
 	for k,v in pairs(Config.Garages) do
 
@@ -284,7 +284,7 @@ end)
 
 local nearMarker = false
 -- Display markers
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local sleep = 500
 		
@@ -327,12 +327,12 @@ Citizen.CreateThread(function()
 
 		end
 		if sleep == 0 then nearMarker = true else nearMarker = false end
-		Citizen.Wait(sleep)
+		Wait(sleep)
 	end
 end)
 
 -- Enter / Exit marker events
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		if nearMarker then
 			local playerPed      = PlayerPedId()
@@ -390,7 +390,7 @@ Citizen.CreateThread(function()
 
 				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
 			end
-			Citizen.Wait(1)
-		else Citizen.Wait(500) end
+			Wait(1)
+		else Wait(500) end
 	end
 end)

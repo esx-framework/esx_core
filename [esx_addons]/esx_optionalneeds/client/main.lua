@@ -3,7 +3,7 @@ local DrunkLevel     = -1
 
 function Drunk(level, start)
   
-  Citizen.CreateThread(function()
+  CreateThread(function()
 
     local playerPed = PlayerPedId()
 
@@ -17,7 +17,7 @@ function Drunk(level, start)
       RequestAnimSet("move_m@drunk@slightlydrunk")
       
       while not HasAnimSetLoaded("move_m@drunk@slightlydrunk") do
-        Citizen.Wait(0)
+        Wait(0)
       end
 
       SetPedMovementClipset(playerPed, "move_m@drunk@slightlydrunk", true)
@@ -27,7 +27,7 @@ function Drunk(level, start)
       RequestAnimSet("move_m@drunk@moderatedrunk")
       
       while not HasAnimSetLoaded("move_m@drunk@moderatedrunk") do
-        Citizen.Wait(0)
+        Wait(0)
       end
 
       SetPedMovementClipset(playerPed, "move_m@drunk@moderatedrunk", true)
@@ -37,7 +37,7 @@ function Drunk(level, start)
       RequestAnimSet("move_m@drunk@verydrunk")
       
       while not HasAnimSetLoaded("move_m@drunk@verydrunk") do
-        Citizen.Wait(0)
+        Wait(0)
       end
 
       SetPedMovementClipset(playerPed, "move_m@drunk@verydrunk", true)
@@ -58,7 +58,7 @@ end
 
 function Reality()
 
-  Citizen.CreateThread(function()
+  CreateThread(function()
 
     local playerPed = PlayerPedId()
 
@@ -92,7 +92,7 @@ AddEventHandler('esx_status:loaded', function(status)
     end
   )
 
-	Citizen.CreateThread(function()
+	CreateThread(function()
 
 		while true do
 
@@ -151,7 +151,7 @@ AddEventHandler('esx_optionalneeds:onDrink', function()
   local playerPed = PlayerPedId()
   
   TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_DRINKING", 0, 1)
-  Citizen.Wait(1000)
+  Wait(1000)
   ClearPedTasksImmediately(playerPed)
 
 end)

@@ -571,8 +571,8 @@ end)
 
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 	if eventData.secondsRemaining == 60 then
-		Citizen.CreateThread(function()
-			Citizen.Wait(50000)
+		CreateThread(function()
+			Wait(50000)
 			Core.SavePlayers()
 		end)
 	end

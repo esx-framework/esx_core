@@ -1,8 +1,8 @@
-Citizen.CreateThread(function()
+CreateThread(function()
 	local isDead = false
 
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		local letSleep = 0
 		local player = PlayerId()
 
@@ -28,7 +28,7 @@ Citizen.CreateThread(function()
 			end
 		end
 		if letSleep then
-			Citizen.Wait(500)
+			Wait(500)
 		end
 	end
 end)

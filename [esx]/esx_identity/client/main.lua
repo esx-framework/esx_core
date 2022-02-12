@@ -36,7 +36,7 @@ if not Config.UseDeferrals then
 	AddEventHandler('esx_identity:showRegisterIdentity', function()
 		TriggerEvent('esx_skin:resetFirstSpawn')
 
-		if not isDead then
+		if not ESX.GetPlayerData().dead then
 			EnableGui(true)
 		end
 	end)
@@ -77,6 +77,8 @@ if not Config.UseDeferrals then
 				DisableControlAction(0, 143, true) -- disable melee
 				DisableControlAction(0, 75,  true) -- disable exit vehicle
 				DisableControlAction(27, 75, true) -- disable exit vehicle
+			else 
+				Wait(500)
 			end
 		end)
 	end

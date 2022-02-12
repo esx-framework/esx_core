@@ -1,0 +1,20 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  lint:
+    name: Lint Lua Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Lint
+        uses: Sub-Zero-Interactive/fivem-lua-lint-action@v1.1
+        with:
+          capture: "junit.xml"
+          args: "-t --formatter JUnit --no-max-comment-line-length"
+          extra_libs: "+esx_legacy"
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v2
+        with:
+          report_paths: "**/junit.xml"
+          fail_on_failure: 0

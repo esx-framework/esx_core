@@ -1,4 +1,3 @@
-local ESX = exports.es_extended:getSharedObject()
 local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
 
 local openMenu = function(namespace, name, data)
@@ -82,7 +81,7 @@ AddEventHandler('esx_menu_dialog:message:menu_change', function(data)
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local sleep = 500
 			
