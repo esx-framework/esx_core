@@ -1,4 +1,5 @@
 local loadingScreenFinished = false
+local ready = false
 
 RegisterNetEvent('esx_identity:alreadyRegistered')
 AddEventHandler('esx_identity:alreadyRegistered', function()
@@ -13,18 +14,20 @@ AddEventHandler('esx:loadingScreenOff', function()
 	loadingScreenFinished = true
 end)
 
+RegisterNUICallback('ready', function(data, cb)
+	ready = true
+	cb(1)
+end)
+
 if not Config.UseDeferrals then
 	local guiEnabled = false
 
 	function EnableGui(state)
 		SetNuiFocus(state, state)
 		guiEnabled = state
-	--[[	CreateThread(function()
-			while true do
-				Wait(20000) -- UNCOMMENT THIS METHOD IF YOU ARE EXPERIENCING ISSUES WITH THE UI ON LOCALHOST | IF YOU STILL EXPERIENCE ISSUES AFTER REMOVING COMMENTS, INCREASE THE TIME.	
-			end
-		end)
-	]]--
+		while not ready do
+			Citizen.Wait(500)
+		end
 		SendNUIMessage({
 			type = "enableui",
 			enable = state
