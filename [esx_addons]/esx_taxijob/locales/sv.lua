@@ -48,5 +48,6 @@ Locales['sv'] = {
   ['blip_taxi'] = 'taxifirman',
   ['phone_taxi'] = 'taxi',
   ['taxi'] = 'taxi',
-  ['taxi_stock'] = 'taxi Stock'
+  ['taxi_stock'] = 'taxi Stock',
+  ['keymap_showtaximenu'] = 'öppna taximenyn'
 }

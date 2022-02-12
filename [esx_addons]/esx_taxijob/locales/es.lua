@@ -50,5 +50,6 @@ Locales['es'] = {
   ['blip_taxi'] = 'Downtown Cab Co.',
   ['phone_taxi'] = 'Downtown Cab Co.',
   ['taxi'] = 'Taxi',
-  ['taxi_stock'] = 'Taxi Stock'
+  ['taxi_stock'] = 'Taxi Stock',
+  ['keymap_showtaximenu'] = 'abrir menú de taxi'
 }
