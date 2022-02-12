@@ -28,7 +28,7 @@ OnPlayerData = function(key, val, last)
 			print('You are now in a different job')
 		end
 	elseif key == 'dead' then -- However, this function can be used for other PlayerData
-		if val == true then
+		if val then
 			print('You die too easily')
 			SetTimeout(2000, function()
 				if ESX.PlayerData.dead then
