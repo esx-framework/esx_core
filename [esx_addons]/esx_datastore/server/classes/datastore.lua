@@ -17,7 +17,7 @@ function CreateDataStore(name, owner, data)
 
 	self.name  = name
 	self.owner = owner
-	self.data  = data
+	self.data  = type(data) == 'string' and json.decode(data) or data
 
 	local timeoutCallbacks = {}
 
