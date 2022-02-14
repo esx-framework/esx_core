@@ -128,18 +128,11 @@ elseif ESX.GetConfig().Multichar == true then
 
 	MySQL.ready(function()
 		local length = 42 + #PREFIX
-		local DB_COLUMNS = MySQL.query.await(('SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "%s" AND DATA_TYPE = "varchar" AND COLUMN_NAME IN (?)'):format(DATABASE, length), {
+		local DB_COLUMNS = MySQL.query.await(('SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "%s" AND DATA_TYPE = "varchar" AND COLUMN_NAME IN (?)'):format(DATABASE, length), {
 			{'identifier', 'owner'}
 		})
 
 		if DB_COLUMNS then
-			local FK = MySQL.query.await(('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = "FOREIGN KEY" AND TABLE_SCHEMA = "%s"'):format(DATABASE))
-			local FOREIGN_KEY = {}
-
-			for i = 1, #FK do
-				FOREIGN_KEY[FK[i].TABLE_NAME] = true
-			end
-
 			local columns = {}
 			local count = 0
 
@@ -164,23 +157,6 @@ elseif ESX.GetConfig().Multichar == true then
 					print(('[^2INFO^7] Updated ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
 				else
 					print(('[^2INFO^7] Unable to update ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
-				end
-			end
-
-			for i = 1, #DB_COLUMNS do
-				local v = DB_COLUMNS[i]
-
-				if not FOREIGN_KEY[v.TABLE_NAME] then
-					DB_TABLES[v.TABLE_NAME] = v.COLUMN_NAME
-
-					if v.TABLE_NAME ~= 'users' and v.IS_NULLABLE == 'NO' then
-						MySQL.update(([[ALTER TABLE `%s`
-						ADD CONSTRAINT `FK_%s_users` FOREIGN KEY (`%s`) REFERENCES `users` (`identifier`) ON UPDATE CASCADE ON DELETE CASCADE]]):format(v.TABLE_NAME, v.TABLE_NAME, v.COLUMN_NAME), function(result)
-							if result then
-								print(('[^2INFO^7] Updated ^5"%s.%s"^7 to use FOREIGN_KEY referencing ^5"users.identifier"^7'):format(v.TABLE_NAME, v.COLUMN_NAME))
-							end
-						end)
-					end
 				end
 			end
 
