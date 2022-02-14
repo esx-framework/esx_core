@@ -88,7 +88,7 @@ CreateThread(function()
 				if not holdingUp then
                     letSleep = false
 					DrawMarker(Config.Marker.Type, v.position, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, false, false, false, false)
-					if distance < 0.5 then
+					if distance < 2.0 then
 						ESX.ShowHelpNotification(_U('press_to_rob', v.nameOfStore))
 						if IsControlJustReleased(0, 38) then
 							if IsPedArmed(PlayerPedId(), 4) then
