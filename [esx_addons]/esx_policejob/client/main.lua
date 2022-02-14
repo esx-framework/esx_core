@@ -164,7 +164,7 @@ function OpenCloakroomMenu()
 			end, 'police')
 
 			while awaitService == nil do
-				Wait(5)
+				Wait(0)
 			end
 
 			-- if we couldn't enter service don't let the player get changed

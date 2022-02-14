@@ -628,7 +628,7 @@ CreateThread(function()
 							targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 							local distance = #(playerCoords - targetCoords)
 							while distance < Config.MinimumDistance do
-								Wait(5)
+								Wait(0)
 
 								targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 								distance = #(playerCoords - targetCoords)

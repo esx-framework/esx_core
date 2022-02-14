@@ -45,7 +45,7 @@ end)
 -- Activate menu when player is inside marker
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 		local coords = GetEntityCoords(PlayerPedId())
 		local canSleep = true
 		isInATMMarker = false

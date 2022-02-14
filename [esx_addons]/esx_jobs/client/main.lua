@@ -302,7 +302,7 @@ end)
 -- Show top left hint
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if hintIsShowed then
 			ESX.ShowHelpNotification(hintToDisplay)
@@ -315,7 +315,7 @@ end)
 -- Display markers (only if on duty and the player's job ones)
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 		local zones = {}
 
 		if ESX.PlayerData.job ~= nil then
@@ -401,7 +401,7 @@ end)
 CreateThread(function()
 	while true do
 
-		Wait(1)
+		Wait(0)
 
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
 			local zones = nil

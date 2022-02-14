@@ -83,7 +83,7 @@ end)
 
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if ESX.Table.SizeOf(OpenedMenus) > 0 then
 			DisableControlAction(0, 1,   true) -- LookLeftRight

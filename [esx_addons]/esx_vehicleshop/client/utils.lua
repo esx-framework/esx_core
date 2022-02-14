@@ -11,7 +11,7 @@ function GeneratePlate()
 	local doBreak = false
 
 	while true do
-		Wait(2)
+		Wait(0)
 		math.randomseed(GetGameTimer())
 		if Config.PlateUseSpace then
 			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. ' ' .. GetRandomNumber(Config.PlateNumbers))

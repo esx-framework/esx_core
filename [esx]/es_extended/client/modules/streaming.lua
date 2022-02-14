@@ -5,7 +5,7 @@ function ESX.Streaming.RequestModel(modelHash, cb)
 		RequestModel(modelHash)
 
 		while not HasModelLoaded(modelHash) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 
@@ -19,7 +19,7 @@ function ESX.Streaming.RequestStreamedTextureDict(textureDict, cb)
 		RequestStreamedTextureDict(textureDict)
 
 		while not HasStreamedTextureDictLoaded(textureDict) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 
@@ -33,7 +33,7 @@ function ESX.Streaming.RequestNamedPtfxAsset(assetName, cb)
 		RequestNamedPtfxAsset(assetName)
 
 		while not HasNamedPtfxAssetLoaded(assetName) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 
@@ -47,7 +47,7 @@ function ESX.Streaming.RequestAnimSet(animSet, cb)
 		RequestAnimSet(animSet)
 
 		while not HasAnimSetLoaded(animSet) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 
@@ -61,7 +61,7 @@ function ESX.Streaming.RequestAnimDict(animDict, cb)
 		RequestAnimDict(animDict)
 
 		while not HasAnimDictLoaded(animDict) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 
@@ -75,7 +75,7 @@ function ESX.Streaming.RequestWeaponAsset(weaponHash, cb)
 		RequestWeaponAsset(weaponHash)
 
 		while not HasWeaponAssetLoaded(weaponHash) do
-			Wait(4)
+			Wait(0)
 		end
 	end
 

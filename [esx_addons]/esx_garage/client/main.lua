@@ -390,7 +390,7 @@ CreateThread(function()
 
 				TriggerEvent('esx_property:hasExitedMarker', LastGarage, LastPart, LastParking)
 			end
-			Wait(1)
+			Wait(0)
 		else Wait(500) end
 	end
 end)

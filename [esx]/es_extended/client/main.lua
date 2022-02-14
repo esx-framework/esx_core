@@ -517,7 +517,7 @@ AddEventHandler("esx:tpm", function()
                 break
             	end
 
-            Wait(5)
+            Wait(0)
         	end
         TriggerEvent('chatMessage', "Successfully Teleported")
     	else

@@ -767,7 +767,7 @@ end)
 -- Pop NPC mission vehicle when inside area
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if NPCTargetTowableZone and not NPCHasSpawnedTowable then
 			local coords = GetEntityCoords(PlayerPedId())
@@ -838,7 +838,7 @@ end)
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 

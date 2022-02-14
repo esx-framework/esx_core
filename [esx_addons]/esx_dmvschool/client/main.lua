@@ -263,7 +263,7 @@ end)
 -- Block UI
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 
 		if CurrentTest == 'theory' then
 			local playerPed = PlayerPedId()
@@ -360,7 +360,7 @@ end)
 -- Speed / Damage control
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if CurrentTest == 'drive' then
 

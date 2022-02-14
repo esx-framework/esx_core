@@ -312,7 +312,7 @@ function RemoveItemsAfterRPDeath()
 		DoScreenFadeOut(800)
 
 		while not IsScreenFadedOut() do
-			Wait(10)
+			Wait(0)
 		end
 
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()

@@ -7,7 +7,7 @@ ESX.Scaleform.ShowFreemodeMessage = function(title, msg, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(1)
+		Wait(0)
 		sec = sec - 0.01
 
 		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
@@ -38,7 +38,7 @@ ESX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(1)
+		Wait(0)
 		sec = sec - 0.01
 
 		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
@@ -61,7 +61,7 @@ ESX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(1)
+		Wait(0)
 		sec = sec - 0.01
 
 		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
@@ -78,7 +78,7 @@ ESX.Scaleform.ShowTrafficMovie = function(sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(1)
+		Wait(0)
 		sec = sec - 0.01
 
 		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)

@@ -328,7 +328,7 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 		onlinePlayers = {}
 		return
 	end
-	while getOnlinePlayers do Wait(10) end -- Wait for the xPlayer loop to finish
+	while getOnlinePlayers do Wait(0) end -- Wait for the xPlayer loop to finish
 	cb(onlinePlayers)
 end)
 
