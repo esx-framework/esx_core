@@ -850,8 +850,8 @@ CreateThread(function()
 	RequestIpl('shr_int') -- Load walls and floor
 
 	local interiorID = 7170
-	LoadInterior(interiorID)
-	EnableInteriorProp(interiorID, 'csr_beforeMission') -- Load large window
+	PinInteriorInMemory(interiorID)
+	ActivateInteriorEntitySet(interiorID, 'csr_beforeMission') -- Load large window
 	RefreshInterior(interiorID)
 end)
 

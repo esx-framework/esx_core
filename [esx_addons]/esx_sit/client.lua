@@ -24,7 +24,7 @@ if Config.Debug then
 
 				local text = ('ID: %s~n~Hash: %s~n~Model: %s'):format(id, hash, model)
 
-				ESX.Game.Utils.DrawText3D({
+				ESX.Game.Utils.EndTextCommandDisplayText3D({
 					x = coords.x,
 					y = coords.y,
 					z = coords.z + 2.0

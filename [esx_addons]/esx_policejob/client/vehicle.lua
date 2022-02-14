@@ -143,11 +143,16 @@ function StoreNearbyVehicle(playerCoords)
 			ESX.Game.DeleteVehicle(vehicleId)
 			local isBusy = true
 
-			CreateThread(function()
+			Citizen.CreateThread(function()
+				BeginTextCommandBusyspinnerOn('STRING')
+				AddTextComponentSubstringPlayerName(_U('garage_storing'))
+				EndTextCommandBusyspinnerOn(4)
+
 				while isBusy do
-					Wait(0)
-					drawLoadingText(_U('garage_storing'), 255, 255, 255, 255)
+					Wait(100)
 				end
+
+				BusyspinnerOff()
 			end)
 
 			-- Workaround for vehicle not deleting when other players are near it.

@@ -131,7 +131,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(text)
+	AddTextComponentSubstringPlayerName(text)
 	EndTextCommandSetBlipName(blip)
 end
 

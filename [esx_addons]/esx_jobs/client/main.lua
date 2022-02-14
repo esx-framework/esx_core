@@ -255,7 +255,7 @@ function refreshBlips()
 						SetBlipAsShortRange(blip, true)
 
 						BeginTextCommandSetBlipName("STRING")
-						AddTextComponentString(zoneValues.Name)
+						AddTextComponentSubstringPlayerName(zoneValues.Name)
 						EndTextCommandSetBlipName(blip)
 						table.insert(JobBlips, blip)
 					end

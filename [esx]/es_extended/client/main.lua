@@ -480,7 +480,7 @@ CreateThread(function()
 					label = ('%s~n~%s'):format(label, _U('threw_pickup_prompt'))
 				end
 
-				ESX.Game.Utils.DrawText3D({
+				ESX.Game.Utils.EndTextCommandDisplayText3D({
 					x = pickup.coords.x,
 					y = pickup.coords.y,
 					z = pickup.coords.z + 0.25

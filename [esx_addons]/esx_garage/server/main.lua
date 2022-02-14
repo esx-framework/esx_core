@@ -1,7 +1,7 @@
 RegisterServerEvent('esx_garage:setParking')
 AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
-	local _source = source
-	local xPlayer  = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	if vehicleProps == false then
 

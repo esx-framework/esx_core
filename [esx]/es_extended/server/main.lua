@@ -306,7 +306,7 @@ if Config.Multichar then
 	AddEventHandler('esx:playerLogout', function(playerId)
 		local xPlayer = ESX.GetPlayerFromId(playerId)
 		if xPlayer then
-			TriggerEvent('esx:playerDropped', playerId, reason)
+			TriggerEvent('esx:playerDropped', playerId)
 
 			Core.SavePlayer(xPlayer, function()
 				ESX.Players[playerId] = nil

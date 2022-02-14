@@ -209,7 +209,7 @@ CreateThread(function()
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(_U('driving_school_blip'))
+	AddTextComponentSubstringPlayerName(_U('driving_school_blip'))
 	EndTextCommandSetBlipName(blip)
 end)
 

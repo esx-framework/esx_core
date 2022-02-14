@@ -52,16 +52,16 @@ ESX.SetPlayerData = function(key, val)
 end
 
 ESX.ShowNotification = function(msg)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
-	DrawNotification(0,1)
+	BeginTextCommandThefeedPost('STRING')
+	AddTextComponentSubstringPlayerName(msg)
+	EndTextCommandThefeedPostTicker(0,1)
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('esxAdvancedNotification', msg)
 	BeginTextCommandThefeedPost('esxAdvancedNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
+	if hudColorIndex then ThefeedSetNextPostBackgroundColor(hudColorIndex) end
 	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
@@ -511,7 +511,7 @@ ESX.Game.GetVehicleInDirection = function()
 	local playerPed    = ESX.PlayerData.ped
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
-	local rayHandle    = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
+	local rayHandle    = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
 	local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
 
 	if hit == 1 and GetEntityType(entityHit) == 2 then
@@ -555,7 +555,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 			wheels            = GetVehicleWheelType(vehicle),
 			windowTint        = GetVehicleWindowTint(vehicle),
-			xenonColor        = GetVehicleXenonLightsColour(vehicle),
+			xenonColor        = GetVehicleXenonLightsColor(vehicle),
 
 			neonEnabled       = {
 				IsVehicleNeonLightEnabled(vehicle, 0),
@@ -661,7 +661,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		end
 
 		if props.neonColor then SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3]) end
-		if props.xenonColor then SetVehicleXenonLightsColour(vehicle, props.xenonColor) end
+		if props.xenonColor then SetVehicleXenonLightsColor(vehicle, props.xenonColor) end
 		if props.modSmokeEnabled then ToggleVehicleMod(vehicle, 20, true) end
 		if props.tyreSmokeColor then SetVehicleTyreSmokeColor(vehicle, props.tyreSmokeColor[1], props.tyreSmokeColor[2], props.tyreSmokeColor[3]) end
 		if props.modSpoilers then SetVehicleMod(vehicle, 0, props.modSpoilers, false) end
@@ -715,10 +715,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
+ESX.Game.Utils.EndTextCommandDisplayText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
-	local camCoords = GetGameplayCamCoords()
+	local camCoords = GetFinalRenderedCamCoord()
 	local distance = #(vector - camCoords)
 
 	if not size then size = 1 end
@@ -732,11 +732,11 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	SetTextFont(font)
 	SetTextProportional(1)
 	SetTextColour(255, 255, 255, 215)
-	SetTextEntry('STRING')
+	BeginTextCommandDisplayText('STRING')
 	SetTextCentre(true)
-	AddTextComponentString(text)
+	AddTextComponentSubstringPlayerName(text)
 	SetDrawOrigin(vector.xyz, 0)
-	DrawText(0.0, 0.0)
+	EndTextCommandDisplayText(0.0, 0.0)
 	ClearDrawOrigin()
 end
 

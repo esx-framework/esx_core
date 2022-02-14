@@ -1,7 +1,7 @@
 RegisterServerEvent('esx_barbershop:pay')
 AddEventHandler('esx_barbershop:pay', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	xPlayer.removeMoney(Config.Price)
 	TriggerClientEvent('esx:showNotification', source, _U('you_paid', ESX.Math.GroupDigits(Config.Price)))

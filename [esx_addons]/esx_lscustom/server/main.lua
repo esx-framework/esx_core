@@ -2,8 +2,8 @@ local Vehicles
 
 RegisterServerEvent('esx_lscustom:buyMod')
 AddEventHandler('esx_lscustom:buyMod', function(price)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 	price = tonumber(price)
 
 	if Config.IsMechanicJobOnly then
@@ -14,21 +14,21 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 		end)
 
 		if price < societyAccount.money then
-			TriggerClientEvent('esx_lscustom:installMod', _source)
-			TriggerClientEvent('esx:showNotification', _source, _U('purchased'))
+			TriggerClientEvent('esx_lscustom:installMod', source)
+			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
 			societyAccount.removeMoney(price)
 		else
-			TriggerClientEvent('esx_lscustom:cancelInstallMod', _source)
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_money'))
+			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
+			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
 		end
 	else
 		if price < xPlayer.getMoney() then
-			TriggerClientEvent('esx_lscustom:installMod', _source)
-			TriggerClientEvent('esx:showNotification', _source, _U('purchased'))
+			TriggerClientEvent('esx_lscustom:installMod', source)
+			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
 			xPlayer.removeMoney(price)
 		else
-			TriggerClientEvent('esx_lscustom:cancelInstallMod', _source)
-			TriggerClientEvent('esx:showNotification', _source, _U('not_enough_money'))
+			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
+			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
 		end
 	end
 end)

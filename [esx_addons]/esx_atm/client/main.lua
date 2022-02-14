@@ -37,7 +37,7 @@ CreateThread(function()
 		SetBlipColour(ATMLocation.blip, 2)
 		SetBlipAsShortRange(ATMLocation.blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('atm_blip'))
+		AddTextComponentSubstringPlayerName(_U('atm_blip'))
 		EndTextCommandSetBlipName(ATMLocation.blip)
 	end
 end)

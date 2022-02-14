@@ -2,8 +2,8 @@ ESX.Scaleform.ShowFreemodeMessage = function(title, msg, sec)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_SHARD_WASTED_MP_MESSAGE')
-	PushScaleformMovieMethodParameterString(title)
-	PushScaleformMovieMethodParameterString(msg)
+	ScaleformMovieMethodAddParamTextureNameString(title)
+	ScaleformMovieMethodAddParamTextureNameString(msg)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
@@ -20,20 +20,20 @@ ESX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('BREAKING_NEWS')
 
 	BeginScaleformMovieMethod(scaleform, 'SET_TEXT')
-	PushScaleformMovieMethodParameterString(msg)
-	PushScaleformMovieMethodParameterString(bottom)
+	ScaleformMovieMethodAddParamTextureNameString(msg)
+	ScaleformMovieMethodAddParamTextureNameString(bottom)
 	EndScaleformMovieMethod()
 
 	BeginScaleformMovieMethod(scaleform, 'SET_SCROLL_TEXT')
-	PushScaleformMovieMethodParameterInt(0) -- top ticker
-	PushScaleformMovieMethodParameterInt(0) -- Since this is the first string, start at 0
-	PushScaleformMovieMethodParameterString(title)
+	ScaleformMovieMethodAddParamInt(0) -- top ticker
+	ScaleformMovieMethodAddParamInt(0) -- Since this is the first string, start at 0
+	ScaleformMovieMethodAddParamTextureNameString(title)
 
 	EndScaleformMovieMethod()
 
 	BeginScaleformMovieMethod(scaleform, 'DISPLAY_SCROLL_TEXT')
-	PushScaleformMovieMethodParameterInt(0) -- Top ticker
-	PushScaleformMovieMethodParameterInt(0) -- Index of string
+	ScaleformMovieMethodAddParamInt(0) -- Top ticker
+	ScaleformMovieMethodAddParamInt(0) -- Index of string
 
 	EndScaleformMovieMethod()
 
@@ -52,11 +52,11 @@ ESX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_POPUP_WARNING')
 
-	PushScaleformMovieMethodParameterFloat(500.0) -- black background
-	PushScaleformMovieMethodParameterString(title)
-	PushScaleformMovieMethodParameterString(msg)
-	PushScaleformMovieMethodParameterString(bottom)
-	PushScaleformMovieMethodParameterBool(true)
+	ScaleformMovieMethodAddParamFloat(500.0) -- black background
+	ScaleformMovieMethodAddParamTextureNameString(title)
+	ScaleformMovieMethodAddParamTextureNameString(msg)
+	ScaleformMovieMethodAddParamTextureNameString(bottom)
+	ScaleformMovieMethodAddParamBool(true)
 
 	EndScaleformMovieMethod()
 

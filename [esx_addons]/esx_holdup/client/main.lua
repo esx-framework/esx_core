@@ -73,7 +73,7 @@ CreateThread(function()
 		SetBlipScale(blip, 0.8)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentString(_U('shop_robbery'))
+		AddTextComponentSubstringPlayerName(_U('shop_robbery'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)

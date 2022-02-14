@@ -116,7 +116,7 @@ function OnPlayerDeath()
 	StartDeathTimer()
 	StartDistressSignal()
 
-	StartScreenEffect('DeathFailOut', 0, false)
+	AnimpostfxPlay('DeathFailOut', 0, false)
 end
 
 RegisterNetEvent('esx_ambulancejob:useItem')
@@ -258,10 +258,9 @@ function StartDeathTimer()
 			text = _U('respawn_available_in', secondsToClock(earlySpawnTimer))
 
 			DrawGenericTextThisFrame()
-
-			SetTextEntry('STRING')
-			AddTextComponentString(text)
-			DrawText(0.5, 0.8)
+			BeginTextCommandDisplayText('STRING')
+			AddTextComponentSubstringPlayerName(text)
+			EndTextCommandDisplayText(0.5, 0.8)
 		end
 
 		-- bleedout timer
@@ -294,9 +293,9 @@ function StartDeathTimer()
 
 			DrawGenericTextThisFrame()
 
-			SetTextEntry('STRING')
-			AddTextComponentString(text)
-			DrawText(0.5, 0.8)
+			BeginTextCommandDisplayText('STRING')
+			AddTextComponentSubstringPlayerName(text)
+			EndTextCommandDisplayText(0.5, 0.8)
 		end
 
 		if bleedoutTimer < 1 and isDead then
@@ -325,7 +324,7 @@ function RemoveItemsAfterRPDeath()
 			ESX.SetPlayerData('loadout', {})
 			RespawnPed(PlayerPedId(), formattedCoords, Config.RespawnPoint.heading)
 
-			StopScreenEffect('DeathFailOut')
+			AnimpostfxStop('DeathFailOut')
 			DoScreenFadeIn(800)
 		end)
 	end)
@@ -377,7 +376,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 
 	RespawnPed(playerPed, formattedCoords, 0.0)
 
-	StopScreenEffect('DeathFailOut')
+	AnimpostfxStop('DeathFailOut')
 	DoScreenFadeIn(800)
 end)
 
