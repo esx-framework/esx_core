@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Weapon Shop'
 
-version 'legacy'
+version '1.5.0'
 
 shared_scripts {
 	'@es_extended/imports.lua',

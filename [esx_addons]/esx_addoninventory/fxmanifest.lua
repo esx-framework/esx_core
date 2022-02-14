@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Addon Inventory'
 
-version 'legacy'
+version '1.5.0'
 
 server_scripts {
 	'@es_extended/imports.lua',
