@@ -78,7 +78,7 @@ function CalculateBankSavings(d, h, m)
 				local newMoney  = result[i].money + interests
 				bankInterests = bankInterests + interests
 
-				local scope = function(newMoney, owner)
+				local function scope(newMoney, owner)
 					table.insert(asyncTasks, function(cb)
 						MySQL.update('UPDATE addon_account_data SET money = @money WHERE owner = @owner AND account_name = @account_name', {
 							['@money']        = newMoney,

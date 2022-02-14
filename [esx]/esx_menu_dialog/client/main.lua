@@ -1,6 +1,6 @@
 local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
 
-local openMenu = function(namespace, name, data)
+local function openMenu(namespace, name, data)
 	for i=1, #Timeouts, 1 do
 		ESX.ClearTimeout(Timeouts[i])
 	end
@@ -21,7 +21,7 @@ local openMenu = function(namespace, name, data)
 	table.insert(Timeouts, timeoutId)
 end
 
-local closeMenu = function(namespace, name)
+local function closeMenu(namespace, name)
 	OpenedMenus[namespace .. '_' .. name] = nil
 
 	SendNUIMessage({

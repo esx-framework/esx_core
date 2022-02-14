@@ -1,7 +1,7 @@
 local GUI, MenuType = {}, 'default'
 GUI.Time = 0
 
-local openMenu = function(namespace, name, data)
+local function openMenu(namespace, name, data)
 	SendNUIMessage({
 		action = 'openMenu',
 		namespace = namespace,
@@ -10,7 +10,7 @@ local openMenu = function(namespace, name, data)
 	})
 end
 
-local closeMenu = function(namespace, name)
+local function closeMenu(namespace, name)
 	SendNUIMessage({
 		action = 'closeMenu',
 		namespace = namespace,

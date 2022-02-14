@@ -608,7 +608,7 @@ CreateThread(function()
 								TriggerServerEvent('esx_taxijob:success')
 								RemoveBlip(DestinationBlip)
 
-								local scope = function(customer)
+								local function scope(customer)
 									ESX.SetTimeout(60000, function()
 										DeletePed(customer)
 									end)

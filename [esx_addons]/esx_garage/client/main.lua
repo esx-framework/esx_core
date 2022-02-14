@@ -59,7 +59,7 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part, parking)
 								for j=1, #vehicles, 1 do
 
 									if i == vehicles[j].zone then
-										local spawn = function(j)
+										local function spawn(j)
 
 											local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
 
@@ -97,7 +97,7 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part, parking)
 								for j=1, #vehicles, 1 do
 
 									if i == vehicles[j].zone then
-										local spawn = function(j)
+										local function spawn(j)
 
 											local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
 
@@ -138,7 +138,7 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part, parking)
 						for j=1, #vehicles, 1 do
 
 							if i == vehicles[j].zone then
-								local spawn = function(j)
+								local function spawn(j)
 
 									local vehicle = GetClosestVehicle(garage.Parkings[i].Pos.x,  garage.Parkings[i].Pos.y,  garage.Parkings[i].Pos.z,  2.0,  0,  71)
 

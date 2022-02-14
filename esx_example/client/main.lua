@@ -20,7 +20,7 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
-OnPlayerData = function(key, val, last)
+function OnPlayerData(key, val, last)
 	if type(val) == 'table' then val = json.encode(val) end
 	print('PlayerData.'..key..' was set to '..val)
 	if key == 'job' then

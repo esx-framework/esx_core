@@ -5,22 +5,22 @@ function CreateAddonAccount(name, owner, money)
 	self.owner = owner
 	self.money = money
 
-	self.addMoney = function(m)
+	function self.addMoney(m)
 		self.money = self.money + m
 		self.save()
 	end
 
-	self.removeMoney = function(m)
+	function self.removeMoney(m)
 		self.money = self.money - m
 		self.save()
 	end
 
-	self.setMoney = function(m)
+	function self.setMoney(m)
 		self.money = m
 		self.save()
 	end
 
-	self.save = function()
+	function self.save()
 		if self.owner == nil then
 			MySQL.update('UPDATE addon_account_data SET money = ? WHERE account_name = ?', {self.money, self.name})
 		else

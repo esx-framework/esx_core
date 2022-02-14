@@ -21,7 +21,7 @@ ESX.Scaleform.Utils           = {}
 
 ESX.Streaming                 = {}
 
-ESX.SetTimeout = function(msec, cb)
+function ESX.SetTimeout(msec, cb)
 	table.insert(Core.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
 		cb   = cb
@@ -29,19 +29,19 @@ ESX.SetTimeout = function(msec, cb)
 	return #Core.TimeoutCallbacks
 end
 
-ESX.ClearTimeout = function(i)
+function ESX.ClearTimeout(i)
 	Core.TimeoutCallbacks[i] = nil
 end
 
-ESX.IsPlayerLoaded = function()
+function ESX.IsPlayerLoaded()
 	return ESX.PlayerLoaded
 end
 
-ESX.GetPlayerData = function()
+function ESX.GetPlayerData()
 	return ESX.PlayerData
 end
 
-ESX.SearchInventory = function(items, count)
+function ESX.SearchInventory(items, count)
 	if type(items) == 'string' then items = {items} end
 
 	local returnData = {}
@@ -67,7 +67,7 @@ ESX.SearchInventory = function(items, count)
 	end
 end
 
-ESX.SetPlayerData = function(key, val)
+function ESX.SetPlayerData(key, val)
 	local current = ESX.PlayerData[key]
 	ESX.PlayerData[key] = val
 	if key ~= 'inventory' and key ~= 'loadout' then
@@ -77,13 +77,13 @@ ESX.SetPlayerData = function(key, val)
 	end
 end
 
-ESX.ShowNotification = function(msg)
+function ESX.ShowNotification(msg)
 	BeginTextCommandThefeedPost('STRING')
 	AddTextComponentSubstringPlayerName(msg)
 	EndTextCommandThefeedPostTicker(0,1)
 end
 
-ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('esxAdvancedNotification', msg)
 	BeginTextCommandThefeedPost('esxAdvancedNotification')
@@ -92,7 +92,7 @@ ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconT
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
-ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
+function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 	AddTextEntry('esxHelpNotification', msg)
 
 	if thisFrame then
@@ -104,7 +104,7 @@ ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
 	end
 end
 
-ESX.ShowFloatingHelpNotification = function(msg, coords)
+function ESX.ShowFloatingHelpNotification(msg, coords)
 	AddTextEntry('esxFloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
@@ -112,7 +112,7 @@ ESX.ShowFloatingHelpNotification = function(msg, coords)
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
-ESX.TriggerServerCallback = function(name, cb, ...)
+function ESX.TriggerServerCallback(name, cb, ...)
 	Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
 	TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
@@ -124,14 +124,14 @@ ESX.TriggerServerCallback = function(name, cb, ...)
 	end
 end
 
-ESX.UI.HUD.SetDisplay = function(opacity)
+function ESX.UI.HUD.SetDisplay(opacity)
 	SendNUIMessage({
 		action  = 'setHUDDisplay',
 		opacity = opacity
 	})
 end
 
-ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
+function ESX.UI.HUD.RegisterElement(name, index, priority, html, data)
 	local found = false
 
 	for i=1, #ESX.UI.HUD.RegisteredElements, 1 do
@@ -159,7 +159,7 @@ ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
 	ESX.UI.HUD.UpdateElement(name, data)
 end
 
-ESX.UI.HUD.RemoveElement = function(name)
+function ESX.UI.HUD.RemoveElement(name)
 	for i=1, #ESX.UI.HUD.RegisteredElements, 1 do
 		if ESX.UI.HUD.RegisteredElements[i] == name then
 			table.remove(ESX.UI.HUD.RegisteredElements, i)
@@ -173,14 +173,14 @@ ESX.UI.HUD.RemoveElement = function(name)
 	})
 end
 
-ESX.UI.HUD.Reset = function()
+function ESX.UI.HUD.Reset()
 	SendNUIMessage({
 		action    = 'resetHUDElements'
 	})
 	ESX.UI.HUD.RegisteredElements = {}
 end
 
-ESX.UI.HUD.UpdateElement = function(name, data)
+function ESX.UI.HUD.UpdateElement(name, data)
 	SendNUIMessage({
 		action = 'updateHUDElement',
 		name   = name,
@@ -188,14 +188,14 @@ ESX.UI.HUD.UpdateElement = function(name, data)
 	})
 end
 
-ESX.UI.Menu.RegisterType = function(type, open, close)
+function ESX.UI.Menu.RegisterType(type, open, close)
 	ESX.UI.Menu.RegisteredTypes[type] = {
 		open   = open,
 		close  = close
 	}
 end
 
-ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change, close)
+function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, close)
 	local menu = {}
 
 	menu.type      = type
@@ -280,7 +280,7 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 	return menu
 end
 
-ESX.UI.Menu.Close = function(type, namespace, name)
+function ESX.UI.Menu.Close(type, namespace, name)
 	for i=1, #ESX.UI.Menu.Opened, 1 do
 		if ESX.UI.Menu.Opened[i] then
 			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
@@ -291,7 +291,7 @@ ESX.UI.Menu.Close = function(type, namespace, name)
 	end
 end
 
-ESX.UI.Menu.CloseAll = function()
+function ESX.UI.Menu.CloseAll()
 	for i=1, #ESX.UI.Menu.Opened, 1 do
 		if ESX.UI.Menu.Opened[i] then
 			ESX.UI.Menu.Opened[i].close()
@@ -300,7 +300,7 @@ ESX.UI.Menu.CloseAll = function()
 	end
 end
 
-ESX.UI.Menu.GetOpened = function(type, namespace, name)
+function ESX.UI.Menu.GetOpened(type, namespace, name)
 	for i=1, #ESX.UI.Menu.Opened, 1 do
 		if ESX.UI.Menu.Opened[i] then
 			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
@@ -310,15 +310,15 @@ ESX.UI.Menu.GetOpened = function(type, namespace, name)
 	end
 end
 
-ESX.UI.Menu.GetOpenedMenus = function()
+function ESX.UI.Menu.GetOpenedMenus()
 	return ESX.UI.Menu.Opened
 end
 
-ESX.UI.Menu.IsOpen = function(type, namespace, name)
+function ESX.UI.Menu.IsOpen(type, namespace, name)
 	return ESX.UI.Menu.GetOpened(type, namespace, name) ~= nil
 end
 
-ESX.UI.ShowInventoryItemNotification = function(add, item, count)
+function ESX.UI.ShowInventoryItemNotification(add, item, count)
 	SendNUIMessage({
 		action = 'inventoryNotification',
 		add    = add,
@@ -327,7 +327,7 @@ ESX.UI.ShowInventoryItemNotification = function(add, item, count)
 	})
 end
 
-ESX.Game.GetPedMugshot = function(ped, transparent)
+function ESX.Game.GetPedMugshot(ped, transparent)
 	if DoesEntityExist(ped) then
 		local mugshot
 
@@ -347,7 +347,7 @@ ESX.Game.GetPedMugshot = function(ped, transparent)
 	end
 end
 
-ESX.Game.Teleport = function(entity, coords, cb)
+function ESX.Game.Teleport(entity, coords, cb)
 	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
 
 	if DoesEntityExist(entity) then
@@ -365,7 +365,7 @@ ESX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-ESX.Game.SpawnObject = function(object, coords, cb, networked)
+function ESX.Game.SpawnObject(object, coords, cb, networked)
 	local model = type(object) == 'number' and object or GetHashKey(object)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -380,21 +380,21 @@ ESX.Game.SpawnObject = function(object, coords, cb, networked)
 	end)
 end
 
-ESX.Game.SpawnLocalObject = function(object, coords, cb)
+function ESX.Game.SpawnLocalObject(object, coords, cb)
 	ESX.Game.SpawnObject(object, coords, cb, false)
 end
 
-ESX.Game.DeleteVehicle = function(vehicle)
+function ESX.Game.DeleteVehicle(vehicle)
 	SetEntityAsMissionEntity(vehicle, false, true)
 	DeleteVehicle(vehicle)
 end
 
-ESX.Game.DeleteObject = function(object)
+function ESX.Game.DeleteObject(object)
 	SetEntityAsMissionEntity(object, false, true)
 	DeleteObject(object)
 end
 
-ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
+function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -424,22 +424,22 @@ ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	end)
 end
 
-ESX.Game.SpawnLocalVehicle = function(vehicle, coords, heading, cb)
+function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
 	ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
 end
 
-ESX.Game.IsVehicleEmpty = function(vehicle)
+function ESX.Game.IsVehicleEmpty(vehicle)
 	local passengers = GetVehicleNumberOfPassengers(vehicle)
 	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
 
 	return passengers == 0 and driverSeatFree
 end
 
-ESX.Game.GetObjects = function() -- Leave the function for compatibility
+function ESX.Game.GetObjects() -- Leave the function for compatibility
 	return GetGamePool('CObject')
 end
 
-ESX.Game.GetPeds = function(onlyOtherPeds)
+function ESX.Game.GetPeds(onlyOtherPeds)
 	local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
 
 	for i=1, #pool do
@@ -451,11 +451,11 @@ ESX.Game.GetPeds = function(onlyOtherPeds)
 	return peds
 end
 
-ESX.Game.GetVehicles = function() -- Leave the function for compatibility
+function ESX.Game.GetVehicles() -- Leave the function for compatibility
 	return GetGamePool('CVehicle')
 end
 
-ESX.Game.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
+function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 	local players, myPlayer = {}, PlayerId()
 
 	for k,player in ipairs(GetActivePlayers()) do
@@ -473,36 +473,57 @@ ESX.Game.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
 	return players
 end
 
-ESX.Game.GetClosestObject = function(coords, modelFilter)
+function ESX.Game.GetClosestObject(coords, modelFilter)
 	return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter)
 end
 
-ESX.Game.GetClosestPed = function(coords, modelFilter)
+function ESX.Game.GetClosestPed(coords, modelFilter)
 	return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter)
 end
 
-ESX.Game.GetClosestPlayer = function(coords)
+function ESX.Game.GetClosestPlayer(coords)
 	return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil)
 end
 
-ESX.Game.GetClosestVehicle = function(coords, modelFilter)
+function ESX.Game.GetClosestVehicle(coords, modelFilter)
 	return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter)
 end
 
-ESX.Game.GetPlayersInArea = function(coords, maxDistance)
+local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coords, maxDistance)
+	local nearbyEntities = {}
+
+	if coords then
+		coords = vector3(coords.x, coords.y, coords.z)
+	else
+		local playerPed = ESX.PlayerData.ped
+		coords = GetEntityCoords(playerPed)
+	end
+
+	for k,entity in pairs(entities) do
+		local distance = #(coords - GetEntityCoords(entity))
+
+		if distance <= maxDistance then
+			table.insert(nearbyEntities, isPlayerEntities and k or entity)
+		end
+	end
+
+	return nearbyEntities
+end
+
+function ESX.Game.GetPlayersInArea(coords, maxDistance)
 	return EnumerateEntitiesWithinDistance(ESX.Game.GetPlayers(true, true), true, coords, maxDistance)
 end
 
-ESX.Game.GetVehiclesInArea = function(coords, maxDistance)
+function ESX.Game.GetVehiclesInArea(coords, maxDistance)
 	return EnumerateEntitiesWithinDistance(ESX.Game.GetVehicles(), false, coords, maxDistance)
 end
 
-ESX.Game.IsSpawnPointClear = function(coords, maxDistance)
+function ESX.Game.IsSpawnPointClear(coords, maxDistance)
 	return #ESX.Game.GetVehiclesInArea(coords, maxDistance) == 0
 end
 
 
-ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter)
+function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
 	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
 	if coords then
@@ -533,7 +554,7 @@ ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFi
 	return closestEntity, closestEntityDistance
 end
 
-ESX.Game.GetVehicleInDirection = function()
+function ESX.Game.GetVehicleInDirection()
 	local playerPed    = ESX.PlayerData.ped
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
@@ -548,7 +569,7 @@ ESX.Game.GetVehicleInDirection = function()
 	return nil
 end
 
-ESX.Game.GetVehicleProperties = function(vehicle)
+function ESX.Game.GetVehicleProperties(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -649,7 +670,7 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	end
 end
 
-ESX.Game.SetVehicleProperties = function(vehicle, props)
+function ESX.Game.SetVehicleProperties(vehicle, props)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -741,7 +762,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
+function ESX.Game.Utils.DrawText3D(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetFinalRenderedCamCoord()
@@ -766,7 +787,7 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	ClearDrawOrigin()
 end
 
-ESX.ShowInventory = function()
+function ESX.ShowInventory()
 	local playerPed = ESX.PlayerData.ped
 	local elements, currentWeight = {}, 0
 

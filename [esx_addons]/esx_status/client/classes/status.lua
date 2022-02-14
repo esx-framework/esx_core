@@ -9,23 +9,23 @@ function CreateStatus(name, default, color, visible, tickCallback)
 	self.visible      = visible
 	self.tickCallback = tickCallback
 
-	self._set = function(k, v)
+	function self._set(k, v)
 		self[k] = v
 	end
 
-	self._get = function(k)
+	function self._get(k)
 		return self[k]
 	end
 
-	self.onTick = function()
+	function self.onTick()
 		self.tickCallback(self)
 	end
 
-	self.set = function(val)
+	function self.set(val)
 		self.val = val
 	end
 
-	self.add = function(val)
+	function self.add(val)
 		if self.val + val > Config.StatusMax then
 			self.val = Config.StatusMax
 		else
@@ -33,7 +33,7 @@ function CreateStatus(name, default, color, visible, tickCallback)
 		end
 	end
 
-	self.remove = function(val)
+	function self.remove(val)
 		if self.val - val < 0 then
 			self.val = 0
 		else
@@ -41,7 +41,7 @@ function CreateStatus(name, default, color, visible, tickCallback)
 		end
 	end
 
-	self.getPercent = function()
+	function self.getPercent()
 		return (self.val / Config.StatusMax) * 100
 	end
 

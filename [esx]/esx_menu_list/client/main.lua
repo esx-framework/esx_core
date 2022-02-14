@@ -2,7 +2,7 @@ CreateThread(function()
 	local MenuType    = 'list'
 	local OpenedMenus = {}
 
-	local openMenu = function(namespace, name, data)
+	local function openMenu(namespace, name, data)
 
 		OpenedMenus[namespace .. '_' .. name] = true
 
@@ -19,7 +19,7 @@ CreateThread(function()
 
 	end
 
-	local closeMenu = function(namespace, name)
+	local function closeMenu(namespace, name)
 
 		OpenedMenus[namespace .. '_' .. name] = nil
 		local OpenedMenuCount = 0

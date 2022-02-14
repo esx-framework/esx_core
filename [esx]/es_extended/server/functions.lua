@@ -1,10 +1,10 @@
-ESX.Trace = function(msg)
+function ESX.Trace(msg)
 	if Config.EnableDebug then
 		print(('[^2TRACE^7] %s^7'):format(msg))
 	end
 end
 
-ESX.SetTimeout = function(msec, cb)
+function ESX.SetTimeout(msec, cb)
 	local id = Core.TimeoutCount + 1
 
 	SetTimeout(msec, function()
@@ -20,7 +20,7 @@ ESX.SetTimeout = function(msec, cb)
 	return id
 end
 
-ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
+function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	if type(name) == 'table' then
 		for k,v in ipairs(name) do
 			ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
@@ -147,15 +147,15 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 	end
 end
 
-ESX.ClearTimeout = function(id)
+function ESX.ClearTimeout(id)
 	Core.CancelledTimeouts[id] = true
 end
 
-ESX.RegisterServerCallback = function(name, cb)
+function ESX.RegisterServerCallback(name, cb)
 	Core.ServerCallbacks[name] = cb
 end
 
-ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
+function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
 	if Core.ServerCallbacks[name] then
 		Core.ServerCallbacks[name](source, cb, ...)
 	else
@@ -163,7 +163,7 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 	end
 end
 
-Core.SavePlayer = function(xPlayer, cb)
+function Core.SavePlayer(xPlayer, cb)
 	MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
@@ -181,7 +181,7 @@ Core.SavePlayer = function(xPlayer, cb)
 	end)
 end
 
-Core.SavePlayers = function(cb)
+function Core.SavePlayers(cb)
 	local xPlayers = ESX.GetExtendedPlayers()
 	local count = #xPlayers
 	if count > 0 then
@@ -209,7 +209,7 @@ Core.SavePlayers = function(cb)
 	end
 end
 
-ESX.GetPlayers = function()
+function ESX.GetPlayers()
 	local sources = {}
 
 	for k,v in pairs(ESX.Players) do
@@ -219,7 +219,7 @@ ESX.GetPlayers = function()
 	return sources
 end
 
-ESX.GetExtendedPlayers = function(key, val)
+function ESX.GetExtendedPlayers(key, val)
 	local xPlayers = {}
 	for k, v in pairs(ESX.Players) do
 		if key then
@@ -233,11 +233,11 @@ ESX.GetExtendedPlayers = function(key, val)
 	return xPlayers
 end
 
-ESX.GetPlayerFromId = function(source)
+function ESX.GetPlayerFromId(source)
 	return ESX.Players[tonumber(source)]
 end
 
-ESX.GetPlayerFromIdentifier = function(identifier)
+function ESX.GetPlayerFromIdentifier(identifier)
 	for k,v in pairs(ESX.Players) do
 		if v.identifier == identifier then
 			return v
@@ -245,7 +245,7 @@ ESX.GetPlayerFromIdentifier = function(identifier)
 	end
 end
 
-ESX.GetIdentifier = function(playerId)
+function ESX.GetIdentifier(playerId)
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
 			local identifier = string.gsub(v, 'license:', '')
@@ -254,25 +254,25 @@ ESX.GetIdentifier = function(playerId)
 	end
 end
 
-ESX.RegisterUsableItem = function(item, cb)
+function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-ESX.UseItem = function(source, item)
+function ESX.UseItem(source, item)
 	Core.UsableItemsCallbacks[item](source, item)
 end
 
-ESX.GetItemLabel = function(item)
+function ESX.GetItemLabel(item)
 	if ESX.Items[item] then
 		return ESX.Items[item].label
 	end
 end
 
-ESX.GetJobs = function()
+function ESX.GetJobs()
 	return ESX.Jobs
 end
 
-ESX.GetUsableItems = function()
+function ESX.GetUsableItems()
 	local Usables = {}
 	for k in pairs(Core.UsableItemsCallbacks) do
 		Usables[k] = true
@@ -280,7 +280,7 @@ ESX.GetUsableItems = function()
 	return Usables
 end
 
-ESX.CreatePickup = function(type, name, count, label, playerId, components, tintIndex)
+function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
 	local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 	local coords = xPlayer.getCoords()
@@ -300,7 +300,7 @@ ESX.CreatePickup = function(type, name, count, label, playerId, components, tint
 	Core.PickupId = pickupId
 end
 
-ESX.DoesJobExist = function(job, grade)
+function ESX.DoesJobExist(job, grade)
 	grade = tostring(grade)
 
 	if job and grade then
@@ -312,7 +312,7 @@ ESX.DoesJobExist = function(job, grade)
 	return false
 end
 
-Core.IsPlayerAdmin = function(playerId)
+function Core.IsPlayerAdmin(playerId)
 	if (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false then
 		return true
 	end

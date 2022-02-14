@@ -31,7 +31,6 @@ server_scripts {
 
 client_scripts {
 	'client/common.lua',
-	'client/entityiter.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
