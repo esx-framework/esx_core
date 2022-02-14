@@ -51,8 +51,7 @@ function StopTheoryTest(success)
 end
 
 function StartDriveTest(type)
-	local pos = vector3(VehicleSpawnPoint.Pos.x, VehicleSpawnPoint.Pos.y,VehicleSpawnPoint.Pos.z)
-	ESX.Game.SpawnVehicle(Config.VehicleModels[type], pos, Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
+	ESX.Game.SpawnVehicle(Config.VehicleModels[type], vector3(Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z), Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
 		CurrentTest       = 'drive'
 		CurrentTestType   = type
 		CurrentCheckPoint = 0

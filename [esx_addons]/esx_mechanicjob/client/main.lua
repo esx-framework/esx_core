@@ -935,11 +935,12 @@ CreateThread(function()
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
 
 					else
+						local entityModel = GetEntityModel(CurrentActionData.vehicle)
 
 						if
-							GetEntityModel(vehicle) == GetHashKey("flatbed") or
-							GetEntityModel(vehicle) == GetHashKey("towtruck2") or
-							GetEntityModel(vehicle) == GetHashKey("slamvan3")
+							entityModel == GetHashKey("flatbed") or
+							entityModel == GetHashKey("towtruck2") or
+							entityModel == GetHashKey("slamvan3")
 						then
 							TriggerServerEvent('esx_service:disableService', 'mechanic')
 						end

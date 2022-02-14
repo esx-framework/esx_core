@@ -9,8 +9,6 @@ function getVehicleFromModel(model)
 			return vehicle
 		end
 	end
-
-	return
 end
 
 function getVehicles()
@@ -440,7 +438,7 @@ function OpenPopVehicleMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleLabelFromModel(v.vehicle)
+			local vehicleLabel = getVehicleFromModel(v.vehicle).label
 
 			table.insert(elements, {
 				label = ('%s [MSRP <span style="color:green;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(v.price))),
@@ -477,7 +475,7 @@ function OpenRentedVehiclesMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleLabelFromModel(v.name)
+			local vehicleLabel = getVehicleFromModel(v.name).label
 
 			table.insert(elements, {
 				label = ('%s: %s - <span style="color:orange;">%s</span>'):format(v.playerName, vehicleLabel, v.plate),

@@ -29,7 +29,7 @@ local function StartDBSync()
 end
 
 MySQL.ready(function()
-	MySQL.query('SELECT * FROM items', {}, function(result)
+	MySQL.query('SELECT * FROM items', function(result)
 		for k,v in ipairs(result) do
 			ESX.Items[v.name] = {
 				label = v.label,

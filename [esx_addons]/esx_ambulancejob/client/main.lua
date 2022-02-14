@@ -331,7 +331,7 @@ function RemoveItemsAfterRPDeath()
 end
 
 function RespawnPed(ped, coords, heading)
-	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false)
 	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
 	SetPlayerInvincible(ped, false)
 	ClearPedBloodDamage(ped)

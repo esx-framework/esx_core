@@ -42,7 +42,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	PhoneData.contacts = {}
 
 	for i=1, #contacts, 1 do
-		contacts[i].online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number]))),
+		contacts[i].online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number])))
 		table.insert(PhoneData.contacts, contacts[i])
 	end
 

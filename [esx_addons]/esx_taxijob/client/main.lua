@@ -649,7 +649,7 @@ CreateThread(function()
 
 							BeginTextCommandSetBlipName('STRING')
 							AddTextComponentSubstringPlayerName('Destination')
-							EndTextCommandSetBlipName(blip)
+							EndTextCommandSetBlipName(DestinationBlip)
 							SetBlipRoute(DestinationBlip, true)
 
 							CustomerEnteredVehicle = true
@@ -699,7 +699,7 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	while onJob do
+	while OnJob do
 		Wait(10000)
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
 			if not IsInAuthorizedVehicle() then

@@ -242,7 +242,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:getRentedVehicles', function(source,
 		local vehicles = {}
 
 		for i = 1, #result do
-			local vehicle = tab[i]
+			local vehicle = result[i]
 			vehicles[#vehicles + 1] = {
 				name = vehicle.vehicle,
 				plate = vehicle.plate,

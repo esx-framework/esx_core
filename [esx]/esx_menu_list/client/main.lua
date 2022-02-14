@@ -28,7 +28,6 @@ CreateThread(function()
 			action    = 'closeMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data
 		})
 
 		for k,v in pairs(OpenedMenus) do

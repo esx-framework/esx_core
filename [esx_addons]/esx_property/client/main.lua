@@ -272,7 +272,7 @@ end
 
 function OpenGatewayMenu(property)
 	if Config.EnablePlayerManagement then
-		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
+		OpenGatewayOwnedPropertiesMenu(property)
 	else
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway', {
 			title    = property.name,
@@ -790,7 +790,7 @@ CreateThread(function()
 				if distance < Config.DrawDistance then
 					DrawMarker(Config.MarkerType, property.entering.x, property.entering.y, property.entering.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 					if Config.MarkerText == true then
-						ESX.Game.Utils.EndTextCommandDisplayText3D(property.entering, property.name, 2)
+						ESX.Game.Utils.DrawText3D(property.entering, property.name, 2)
 					end
 					letSleep = false
 				end

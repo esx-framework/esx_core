@@ -715,7 +715,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-ESX.Game.Utils.EndTextCommandDisplayText3D = function(coords, text, size, font)
+ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetFinalRenderedCamCoord()

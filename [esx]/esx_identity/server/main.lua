@@ -223,7 +223,7 @@ elseif not Config.UseDeferrals then
 	end)
 
 	function checkIdentity(xPlayer)
-		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
+		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', { xPlayer.identifier },
 		function(result)
 			if result then
 				if result.firstname then

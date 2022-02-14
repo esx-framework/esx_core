@@ -162,7 +162,7 @@ Locales['es'] = {
   -- SMG & LMG
   ['weapon_assaultsmg'] = 'Subfusil de Asalto',
   ['weapon_combatmg'] = 'Ametralladora de Combate',
-  ['weapon_combatmg'] = 'Ametralladora MK2',
+  ['weapon_combatmg_mk2'] = 'Ametralladora MK2',
   ['weapon_combatpdw'] = 'Subfusil PDW',
   ['weapon_gusenberg'] = 'Subfusil de Barril',
   ['weapon_machinepistol'] = 'Pistola Ametralladora',

@@ -422,6 +422,7 @@ AddEventHandler('playerDropped', function()
 	local playerId = source
 	if playerId then
 		local xPlayer = ESX.GetPlayerFromId(playerId)
+
 		if xPlayer and xPlayer.job.name == 'police' then
 			Wait(5000)
 			TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -431,7 +432,9 @@ end)
 
 RegisterNetEvent('esx_policejob:spawned')
 AddEventHandler('esx_policejob:spawned', function()
+	local playerId = source
 	local xPlayer = ESX.GetPlayerFromId(playerId)
+
 	if xPlayer and xPlayer.job.name == 'police' then
 		Wait(5000)
 		TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -441,7 +444,7 @@ end)
 RegisterNetEvent('esx_policejob:forceBlip')
 AddEventHandler('esx_policejob:forceBlip', function()
 	for _, xPlayer in pairs(ESX.GetExtendedPlayers('job', 'police')) do
-		TriggerClientEvent('esx_policejob:updateBlip', -1)
+		TriggerClientEvent('esx_policejob:updateBlip', xPlayer.source)
 	end
 end)
 

@@ -143,7 +143,7 @@ function StoreNearbyVehicle(playerCoords)
 			ESX.Game.DeleteVehicle(vehicleId)
 			local isBusy = true
 
-			Citizen.CreateThread(function()
+			CreateThread(function()
 				BeginTextCommandBusyspinnerOn('STRING')
 				AddTextComponentSubstringPlayerName(_U('garage_storing'))
 				EndTextCommandBusyspinnerOn(4)

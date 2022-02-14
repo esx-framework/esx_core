@@ -15,7 +15,6 @@ local closeMenu = function(namespace, name)
 		action = 'closeMenu',
 		namespace = namespace,
 		name = name,
-		data = data
 	})
 end
 

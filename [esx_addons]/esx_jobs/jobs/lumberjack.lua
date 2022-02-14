@@ -59,7 +59,7 @@ Config.Jobs.lumberjack = {
 			Color = {r = 204, g = 204, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('lj_cutwood'),
+			Name = _U('lj_woodcutting'),
 			Type = 'work',
 			Item = {
 				{
