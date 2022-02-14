@@ -41,6 +41,32 @@ ESX.GetPlayerData = function()
 	return ESX.PlayerData
 end
 
+ESX.SearchInventory = function(items, count)
+	if type(items) == 'string' then items = {items} end
+
+	local returnData = {}
+	local itemCount = #items
+
+	for i = 1, itemCount do
+		local itemName = items[i]
+		returnData[itemName] = count and 0
+
+		for _, item in pairs(ESX.PlayerData.inventory) do
+			if item.name == itemName then
+				if count then
+					returnData[itemName] = returnData[itemName] + item.count
+				else
+					returnData[itemName] = item
+				end
+			end
+		end
+	end
+
+	if next(returnData) then
+		return itemCount == 1 and returnData[items[1]] or returnData
+	end
+end
+
 ESX.SetPlayerData = function(key, val)
 	local current = ESX.PlayerData[key]
 	ESX.PlayerData[key] = val
