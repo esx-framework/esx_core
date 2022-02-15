@@ -22,13 +22,21 @@ AddEventHandler('esx:onPlayerDeath', function()
 	IsDead = true
 end)
 
-AddEventHandler('esx:onPlayerSpawn', function(spawn)
-	if IsDead then
-		TriggerEvent('esx_basicneeds:resetStatus')
+-- my coding
+--such as revive, when loaded first
+local firstSpawn = true
+AddEventHandler('esx:onPlayerSpawn', function()
+	if(firstSpawn) then
+		firstSpawn = false
+		return
 	end
 
+	if (IsDead) then
+		TriggerEvent('esx_basicneeds:resetStatus')
+	end
 	IsDead = false
 end)
+--end mycoding
 
 AddEventHandler('esx_status:loaded', function(status)
 
