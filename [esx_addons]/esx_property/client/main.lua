@@ -821,7 +821,7 @@ CreateThread(function()
 
 			-- Room menu
 			if property.roomMenu and hasChest and not property.disabled then
-				local Pos = vector3(property.disabled.x, property.disabled.y, property.disabled.z)
+				local Pos = vector3(property.roomMenu.x, property.roomMenu.y, property.roomMenu.z)
 				local distance = #(coords - Pos)
 
 				if distance < Config.DrawDistance then
