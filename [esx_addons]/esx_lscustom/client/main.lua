@@ -382,7 +382,7 @@ CreateThread(function()
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(playerPed)
 			local currentZone, zone, lastZone
 
 			if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
