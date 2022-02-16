@@ -290,8 +290,8 @@ end)
 ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	MySQL.scalar('SELECT is_dead FROM users WHERE identifier = ?', {xPlayer.identifier}, function(isDead)
-
-		if isDead == 1 then
+				
+		if isDead then
 			cb(true)
 		else
 			cb(false)
