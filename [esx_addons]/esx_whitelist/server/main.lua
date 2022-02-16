@@ -19,8 +19,8 @@ MySQL.ready(function()
 end)
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
-	if #GetActivePlayers() < Config.MinPlayer then
-		CancelEvent()
+	if #GetPlayers() < Config.MinPlayer then
+		deferrals.done()
 	end
 
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
