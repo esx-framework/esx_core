@@ -883,6 +883,16 @@ INSERT INTO `weashops` (`id`, `zone`, `item`, `price`) VALUES
 (39, 'BlackWeashop', 'WEAPON_RAILGUN', 50000),
 (40, 'BlackWeashop', 'WEAPON_STICKYBOMB', 500);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `whitelist`
+--
+
+CREATE TABLE `whitelist` (
+	`identifier` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
@@ -1034,6 +1044,12 @@ ALTER TABLE `vehicle_sold`
 --
 ALTER TABLE `weashops`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `whitelist`
+--
+ALTER TABLE `whitelist`
+  ADD PRIMARY KEY (`identifier`);
 
 --
 -- AUTO_INCREMENT for table `addon_account_data`
