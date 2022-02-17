@@ -767,7 +767,7 @@ end)
 -- Pop NPC mission vehicle when inside area
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if NPCTargetTowableZone and not NPCHasSpawnedTowable then
 			local coords = GetEntityCoords(PlayerPedId())
@@ -838,7 +838,7 @@ end)
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 
@@ -935,11 +935,12 @@ CreateThread(function()
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
 
 					else
+						local entityModel = GetEntityModel(CurrentActionData.vehicle)
 
 						if
-							GetEntityModel(vehicle) == GetHashKey("flatbed") or
-							GetEntityModel(vehicle) == GetHashKey("towtruck2") or
-							GetEntityModel(vehicle) == GetHashKey("slamvan3")
+							entityModel == GetHashKey("flatbed") or
+							entityModel == GetHashKey("towtruck2") or
+							entityModel == GetHashKey("slamvan3")
 						then
 							TriggerServerEvent('esx_service:disableService', 'mechanic')
 						end

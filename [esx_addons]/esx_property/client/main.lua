@@ -272,7 +272,7 @@ end
 
 function OpenGatewayMenu(property)
 	if Config.EnablePlayerManagement then
-		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
+		OpenGatewayOwnedPropertiesMenu(property)
 	else
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway', {
 			title    = property.name,

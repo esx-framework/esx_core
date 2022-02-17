@@ -1,7 +1,7 @@
 RegisterServerEvent('esx_atm:deposit')
 AddEventHandler('esx_atm:deposit', function(amount)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 	amount = tonumber(amount)
 
 	if not tonumber(amount) then return end
@@ -18,8 +18,8 @@ end)
 
 RegisterServerEvent('esx_atm:withdraw')
 AddEventHandler('esx_atm:withdraw', function(amount)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 	amount = tonumber(amount)
 	local accountMoney = xPlayer.getAccount('bank').money
 

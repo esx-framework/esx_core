@@ -33,7 +33,7 @@ end)
 -- Activate menu when player is inside marker, and draw markers
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 
 		local coords = GetEntityCoords(PlayerPedId())
 		isInMarker = false

@@ -37,7 +37,7 @@ CreateThread(function()
 		SetBlipColour(ATMLocation.blip, 2)
 		SetBlipAsShortRange(ATMLocation.blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('atm_blip'))
+		AddTextComponentSubstringPlayerName(_U('atm_blip'))
 		EndTextCommandSetBlipName(ATMLocation.blip)
 	end
 end)
@@ -45,7 +45,7 @@ end)
 -- Activate menu when player is inside marker
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 		local coords = GetEntityCoords(PlayerPedId())
 		local canSleep = true
 		isInATMMarker = false

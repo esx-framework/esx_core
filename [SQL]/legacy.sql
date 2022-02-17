@@ -2,7 +2,7 @@ CREATE TABLE `addon_account` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `addon_account`
@@ -28,7 +28,7 @@ CREATE TABLE `addon_account_data` (
   `account_name` varchar(100) DEFAULT NULL,
   `money` int(11) NOT NULL,
   `owner` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `addon_account_data`
@@ -54,7 +54,7 @@ CREATE TABLE `addon_inventory` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `addon_inventory`
@@ -80,7 +80,7 @@ CREATE TABLE `addon_inventory_items` (
   `name` varchar(100) NOT NULL,
   `count` int(11) NOT NULL,
   `owner` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -90,13 +90,13 @@ CREATE TABLE `addon_inventory_items` (
 
 CREATE TABLE `billing` (
   `id` int(11) NOT NULL,
-  `identifier` varchar(60) DEFAULT NULL,
+  `identifier` varchar(60) NOT NULL,
   `sender` varchar(40) NOT NULL,
   `target_type` varchar(50) NOT NULL,
   `target` varchar(40) NOT NULL,
   `label` varchar(255) NOT NULL,
   `amount` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -108,7 +108,7 @@ CREATE TABLE `cardealer_vehicles` (
   `id` int(11) NOT NULL,
   `vehicle` varchar(255) NOT NULL,
   `price` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,7 @@ CREATE TABLE `datastore` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `datastore`
@@ -144,7 +144,7 @@ CREATE TABLE `datastore_data` (
   `name` varchar(60) NOT NULL,
   `owner` varchar(60) DEFAULT NULL,
   `data` longtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `datastore_data`
@@ -169,7 +169,7 @@ CREATE TABLE `items` (
   `weight` int(11) NOT NULL DEFAULT 1,
   `rare` tinyint(4) NOT NULL DEFAULT 0,
   `can_remove` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `items`
@@ -219,7 +219,7 @@ CREATE TABLE `jobs` (
   `name` varchar(50) NOT NULL,
   `label` varchar(50) DEFAULT NULL,
   `whitelisted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `jobs`
@@ -255,7 +255,7 @@ CREATE TABLE `job_grades` (
   `salary` int(11) NOT NULL,
   `skin_male` longtext NOT NULL,
   `skin_female` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `job_grades`
@@ -303,7 +303,7 @@ INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, 
 CREATE TABLE `licenses` (
   `type` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `licenses`
@@ -320,11 +320,11 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 
 CREATE TABLE `owned_properties` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
   `price` double NOT NULL,
   `rented` int(11) NOT NULL,
-  `owner` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `owner` varchar(60) NOT NULL
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -339,7 +339,7 @@ CREATE TABLE `owned_vehicles` (
   `type` varchar(20) NOT NULL DEFAULT 'car',
   `job` varchar(20) DEFAULT NULL,
   `stored` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -351,20 +351,20 @@ CREATE TABLE `owned_vehicles` (
 
 CREATE TABLE `properties` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `entering` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `exit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `inside` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `outside` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ipls` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '[]',
-  `gateway` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `entering` varchar(255) DEFAULT NULL,
+  `exit` varchar(255) DEFAULT NULL,
+  `inside` varchar(255) DEFAULT NULL,
+  `outside` varchar(255) DEFAULT NULL,
+  `ipls` varchar(255) DEFAULT '[]',
+  `gateway` varchar(255) DEFAULT NULL,
   `is_single` int(11) DEFAULT NULL,
   `is_room` int(11) DEFAULT NULL,
   `is_gateway` int(11) DEFAULT NULL,
-  `room_menu` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `room_menu` varchar(255) DEFAULT NULL,
   `price` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `properties`
@@ -457,7 +457,7 @@ CREATE TABLE `rented_vehicles` (
   `base_price` int(11) NOT NULL,
   `rent_price` int(11) NOT NULL,
   `owner` varchar(22) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table `society_moneywash`
@@ -468,7 +468,7 @@ CREATE TABLE `society_moneywash` (
   `identifier` varchar(60) NOT NULL,
   `society` varchar(60) NOT NULL,
   `amount` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -495,7 +495,7 @@ CREATE TABLE `users` (
   `is_dead` tinyint(1) DEFAULT 0,
   `id` int(11) NOT NULL,
   `last_property` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -506,8 +506,8 @@ CREATE TABLE `users` (
 CREATE TABLE `user_licenses` (
   `id` int(11) NOT NULL,
   `type` varchar(60) NOT NULL,
-  `owner` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `owner` varchar(60) NOT NULL
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -517,11 +517,11 @@ CREATE TABLE `user_licenses` (
 
 CREATE TABLE `user_parkings` (
   `id` int(11) NOT NULL,
-  `identifier` varchar(60) DEFAULT NULL,
+  `identifier` varchar(60) NOT NULL,
   `garage` varchar(60) DEFAULT NULL,
   `zone` int(11) NOT NULL,
   `vehicle` longtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -534,7 +534,7 @@ CREATE TABLE `vehicles` (
   `model` varchar(60) NOT NULL,
   `price` int(11) NOT NULL,
   `category` varchar(60) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `vehicles`
@@ -791,7 +791,7 @@ INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES
 CREATE TABLE `vehicle_categories` (
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `vehicle_categories`
@@ -822,7 +822,7 @@ CREATE TABLE `vehicle_sold` (
   `plate` varchar(50) NOT NULL,
   `soldby` varchar(50) NOT NULL,
   `date` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -835,7 +835,7 @@ CREATE TABLE `weashops` (
   `zone` varchar(255) NOT NULL,
   `item` varchar(255) NOT NULL,
   `price` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 --
 -- Dumping data for table `weashops`
@@ -1140,7 +1140,7 @@ CREATE TABLE `user_contacts` (
 
 	PRIMARY KEY (`id`),
 	INDEX `index_user_contacts_identifier_name_number` (`identifier`, `name`, `number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 
 ALTER TABLE `users`
@@ -1157,7 +1157,7 @@ ALTER TABLE `users`
 	`category` int DEFAULT NULL,
 
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Misuse of a horn', 30, 0),

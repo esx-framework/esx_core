@@ -60,7 +60,7 @@ AddEventHandler('esx_holdup:startTimer', function()
 	end)
 	CreateThread(function()
 		while holdingUp do
-			Wait(1)
+			Wait(0)
 			DrawTxt(0.66, 1.44, 1.0, 1.0, 0.4, _U('robbery_timer', timer), 255, 255, 255, 255)
 		end
 	end)
@@ -73,14 +73,14 @@ CreateThread(function()
 		SetBlipScale(blip, 0.8)
 		SetBlipAsShortRange(blip, true)
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentString(_U('shop_robbery'))
+		AddTextComponentSubstringPlayerName(_U('shop_robbery'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
 
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 		local playerPos, letSleep = GetEntityCoords(PlayerPedId()), true
 		for k,v in pairs(Stores) do
 			local distance = #(playerPos - v.position)
@@ -88,7 +88,7 @@ CreateThread(function()
 				if not holdingUp then
                     letSleep = false
 					DrawMarker(Config.Marker.Type, v.position, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.Marker.x, Config.Marker.y, Config.Marker.z, Config.Marker.r, Config.Marker.g, Config.Marker.b, Config.Marker.a, false, false, 2, false, false, false, false)
-					if distance < 0.5 then
+					if distance < 2.0 then
 						ESX.ShowHelpNotification(_U('press_to_rob', v.nameOfStore))
 						if IsControlJustReleased(0, 38) then
 							if IsPedArmed(PlayerPedId(), 4) then

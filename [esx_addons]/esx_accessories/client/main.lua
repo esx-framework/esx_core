@@ -145,7 +145,7 @@ CreateThread(function()
 				SetBlipAsShortRange(blip, true)
 
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString(_U('shop', _U(string.lower(k))))
+				AddTextComponentSubstringPlayerName(_U('shop', _U(string.lower(k))))
 				EndTextCommandSetBlipName(blip)
 			end
 		end
@@ -222,7 +222,7 @@ CreateThread(function()
 		end
 
 		if Config.EnableControls then
-			if IsControlJustReleased(0, 311) and IsInputDisabled(0) and not ESX.PlayerData.dead then
+			if IsControlJustReleased(0, 311) and IsUsingKeyboard(0) and not ESX.PlayerData.dead then
 				OpenAccessoryMenu()
 			end
 		end

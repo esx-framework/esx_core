@@ -165,7 +165,7 @@ end
 
 function GenerateWeedCoords()
 	while true do
-		Wait(1)
+		Wait(0)
 
 		local weedCoordX, weedCoordY
 

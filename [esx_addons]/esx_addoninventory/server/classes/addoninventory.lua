@@ -5,28 +5,28 @@ function CreateAddonInventory(name, owner, items)
 	self.owner = owner
 	self.items = items
 
-	self.addItem = function(name, count)
+	function self.addItem(name, count)
 		local item = self.getItem(name)
 		item.count = item.count + count
 		Wait(100)
 		self.saveItem(name, item.count)
 	end
 
-	self.removeItem = function(name, count)
+	function self.removeItem(name, count)
 		local item = self.getItem(name)
 		item.count = item.count - count
 
 		self.saveItem(name, item.count)
 	end
 
-	self.setItem = function(name, count)
+	function self.setItem(name, count)
 		local item = self.getItem(name)
 		item.count = count
 
 		self.saveItem(name, item.count)
 	end
 
-	self.getItem = function(name)
+	function self.getItem(name)
 		for i=1, #self.items, 1 do
 			if self.items[i].name == name then
 				return self.items[i]
@@ -61,7 +61,7 @@ function CreateAddonInventory(name, owner, items)
 		return item
 	end
 
-	self.saveItem = function(name, count)
+	function self.saveItem(name, count)
 		if self.owner == nil then
 			MySQL.update('UPDATE addon_inventory_items SET count = @count WHERE inventory_name = @inventory_name AND name = @item_name', {
 				['@inventory_name'] = self.name,

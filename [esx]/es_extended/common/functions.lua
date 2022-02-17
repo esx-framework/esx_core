@@ -4,7 +4,7 @@ for i = 48,  57 do table.insert(Charset, string.char(i)) end
 for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
-ESX.GetRandomString = function(length)
+function ESX.GetRandomString(length)
 	math.randomseed(GetGameTimer())
 
 	if length > 0 then
@@ -14,11 +14,11 @@ ESX.GetRandomString = function(length)
 	end
 end
 
-ESX.GetConfig = function()
+function ESX.GetConfig()
 	return Config
 end
 
-ESX.GetWeapon = function(weaponName)
+function ESX.GetWeapon(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -28,7 +28,7 @@ ESX.GetWeapon = function(weaponName)
 	end
 end
 
-ESX.GetWeaponFromHash = function(weaponHash)
+function ESX.GetWeaponFromHash(weaponHash)
 	for k,v in ipairs(Config.Weapons) do
 		if GetHashKey(v.name) == weaponHash then
 			return v
@@ -36,11 +36,11 @@ ESX.GetWeaponFromHash = function(weaponHash)
 	end
 end
 
-ESX.GetWeaponList = function()
+function ESX.GetWeaponList()
 	return Config.Weapons
 end
 
-ESX.GetWeaponLabel = function(weaponName)
+function ESX.GetWeaponLabel(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -50,7 +50,7 @@ ESX.GetWeaponLabel = function(weaponName)
 	end
 end
 
-ESX.GetWeaponComponent = function(weaponName, weaponComponent)
+function ESX.GetWeaponComponent(weaponName, weaponComponent)
 	weaponName = string.upper(weaponName)
 	local weapons = Config.Weapons
 
@@ -65,7 +65,7 @@ ESX.GetWeaponComponent = function(weaponName, weaponComponent)
 	end
 end
 
-ESX.DumpTable = function(table, nb)
+function ESX.DumpTable(table, nb)
 	if nb == nil then
 		nb = 0
 	end
@@ -95,6 +95,6 @@ ESX.DumpTable = function(table, nb)
 	end
 end
 
-ESX.Round = function(value, numDecimalPlaces)
+function ESX.Round(value, numDecimalPlaces)
 	return ESX.Math.Round(value, numDecimalPlaces)
 end

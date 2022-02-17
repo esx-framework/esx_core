@@ -608,7 +608,7 @@ CreateThread(function()
 								TriggerServerEvent('esx_taxijob:success')
 								RemoveBlip(DestinationBlip)
 
-								local scope = function(customer)
+								local function scope(customer)
 									ESX.SetTimeout(60000, function()
 										DeletePed(customer)
 									end)
@@ -628,7 +628,7 @@ CreateThread(function()
 							targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 							local distance = #(playerCoords - targetCoords)
 							while distance < Config.MinimumDistance do
-								Wait(5)
+								Wait(0)
 
 								targetCoords = Config.JobLocations[GetRandomIntInRange(1, #Config.JobLocations)]
 								distance = #(playerCoords - targetCoords)
@@ -649,7 +649,7 @@ CreateThread(function()
 
 							BeginTextCommandSetBlipName('STRING')
 							AddTextComponentSubstringPlayerName('Destination')
-							EndTextCommandSetBlipName(blip)
+							EndTextCommandSetBlipName(DestinationBlip)
 							SetBlipRoute(DestinationBlip, true)
 
 							CustomerEnteredVehicle = true
@@ -699,7 +699,7 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	while onJob do
+	while OnJob do
 		Wait(10000)
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade < 3 then
 			if not IsInAuthorizedVehicle() then

@@ -135,7 +135,7 @@ end)
 -- Enter / Exit marker events & draw markers
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), false, nil, true
 
 		for k,v in pairs(Config.Shops) do

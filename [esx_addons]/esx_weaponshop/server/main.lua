@@ -2,7 +2,7 @@ local shopItems = {}
 
 MySQL.ready(function()
 
-	MySQL.query('SELECT * FROM weashops', {}, function(result)
+	MySQL.query('SELECT * FROM weashops', function(result)
 		for i=1, #result, 1 do
 			if shopItems[result[i].zone] == nil then
 				shopItems[result[i].zone] = {}

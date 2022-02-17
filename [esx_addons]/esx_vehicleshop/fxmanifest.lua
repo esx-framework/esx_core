@@ -6,7 +6,7 @@ lua54 'yes'
 
 description 'ESX Vehicle Shop'
 
-version 'legacy'
+version '1.5.0'
 
 shared_script '@es_extended/imports.lua'
 

@@ -7,7 +7,7 @@ CreateThread(function()
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 
-		if #(coords - Config.CircleZones.DrugDealer.coords) < 0.5 then
+		if #(coords - Config.CircleZones.DrugDealer.coords) < 2.0 then
 			if not menuOpen then
 				ESX.ShowHelpNotification(_U('dealer_prompt'))
 
@@ -131,7 +131,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(text)
+	AddTextComponentSubstringPlayerName(text)
 	EndTextCommandSetBlipName(blip)
 end
 

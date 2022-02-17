@@ -16,6 +16,8 @@ loadPlayer = loadPlayer..' FROM `users` WHERE identifier = ?'
 
 if Config.Multichar then
 	AddEventHandler('esx:onPlayerJoined', function(src, char, data)
+		while not next(ESX.Jobs) do Wait(50) end
+
 		if not ESX.Players[src] then
 			local identifier = char..':'..ESX.GetIdentifier(src)
 			if data then
@@ -28,6 +30,8 @@ if Config.Multichar then
 else
 	RegisterNetEvent('esx:onPlayerJoined')
 	AddEventHandler('esx:onPlayerJoined', function()
+		while not next(ESX.Jobs) do Wait(50) end
+
 		if not ESX.Players[source] then
 			onPlayerJoined(source)
 		end
@@ -306,7 +310,7 @@ if Config.Multichar then
 	AddEventHandler('esx:playerLogout', function(playerId)
 		local xPlayer = ESX.GetPlayerFromId(playerId)
 		if xPlayer then
-			TriggerEvent('esx:playerDropped', playerId, reason)
+			TriggerEvent('esx:playerDropped', playerId)
 
 			Core.SavePlayer(xPlayer, function()
 				ESX.Players[playerId] = nil

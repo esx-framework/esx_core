@@ -1,4 +1,4 @@
-StartPayCheck = function()
+function StartPayCheck()
 	CreateThread(function()
 		while true do
 			Wait(Config.PaycheckInterval)

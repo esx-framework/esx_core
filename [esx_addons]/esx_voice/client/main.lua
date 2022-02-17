@@ -43,7 +43,7 @@ end)
 
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 
 		if IsControlJustPressed(1, Keys['H']) and IsControlPressed(1, Keys['LEFTSHIFT']) then
 			voice.current = (voice.current + 1) % 3

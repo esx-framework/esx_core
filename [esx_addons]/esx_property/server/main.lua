@@ -136,7 +136,7 @@ ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
 end)
 
 AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
-	MySQL.query('SELECT * FROM owned_properties', {}, function(result)
+	MySQL.query('SELECT * FROM owned_properties', function(result)
 		local properties = {}
 
 		for i=1, #result, 1 do
@@ -410,7 +410,7 @@ function payRent(d, h, m)
 	local tasks, timeStart = {}, os.clock()
 	print('[esx_property] [^2INFO^7] Paying rent cron job started')
 
-	MySQL.query('SELECT * FROM owned_properties WHERE rented = 1', {}, function(result)
+	MySQL.query('SELECT * FROM owned_properties WHERE rented = 1', function(result)
 		for k,v in ipairs(result) do
 			table.insert(tasks, function(cb)
 				local xPlayer = ESX.GetPlayerFromIdentifier(v.owner)
