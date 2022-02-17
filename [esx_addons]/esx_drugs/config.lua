@@ -24,3 +24,10 @@ Config.CircleZones = {
 
 	DrugDealer = {coords = vector3(-1172.02, -1571.98, 4.66), name = _U('blip_drugdealer'), color = 6, sprite = 378},
 }
+
+Config.Marker = {
+	Distance = 100.0,
+	Color = {r=60,g=230,b=60,a=255},
+	Size = vector3(1.5,1.5,1.0),
+	Type = 1,
+}
