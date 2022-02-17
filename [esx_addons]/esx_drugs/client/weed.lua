@@ -80,7 +80,7 @@ CreateThread(function()
 		local nearbyObject, nearbyID
 
 		for i=1, #weedPlants, 1 do
-			if #(coords - GetEntityCoords(weedPlants[i])) < 1 then
+			if #(coords - GetEntityCoords(weedPlants[i])) < 1.5 then
 				nearbyObject, nearbyID = weedPlants[i], i
 			end
 		end
