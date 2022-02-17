@@ -1,31 +1,62 @@
 local menuOpen = false
-local wasOpen = false
+local inZoneDrugShop = false
+local inRangeMarkerDrugShop = false
+local cfgMarker = Config.Marker;
 
+--slow loop
 CreateThread(function()
 	while true do
-		local time = 800
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
+		local distDrugShop = #(coords - Config.CircleZones.DrugDealer.coords)
 
-		if #(coords - Config.CircleZones.DrugDealer.coords) < 2.0 then
-			if not menuOpen then
-				ESX.ShowHelpNotification(_U('dealer_prompt'))
+		inRangeMarkerDrugShop = false
+		if(distDrugShop <= Config.Marker.Distance) then
+			inRangeMarkerDrugShop = true
+		end
 
-				if IsControlJustReleased(0, 38) then
-					wasOpen = true
-					OpenDrugShop()
-				end
-			else
-				Wait(500)
-			end
+		if distDrugShop < 1 then
+			inZoneDrugShop = true
 		else
-			if wasOpen then
-				wasOpen = false
+			inZoneDrugShop = false
+			if menuOpen then
+				menuOpen=false
 				ESX.UI.Menu.CloseAll()
 			end
-
-			Wait(time)
 		end
+
+		Wait(500)
+	end
+end)
+
+--drawk marker
+CreateThread(function()
+	while true do 
+		if(inRangeMarkerDrugShop) then
+			local coordsMarker = Config.CircleZones.DrugDealer.coords
+			local color = cfgMarker.Color
+			DrawMarker(cfgMarker.Type, coordsMarker.x, coordsMarker.y,coordsMarker.z - 1.0,
+			0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+			cfgMarker.Size, color.r,color.g,color.b,color.a,
+			false, true, 2, false, nil, nil, false)
+		end
+		Wait(0)
+	end
+end)
+
+--main loop
+CreateThread(function ()
+	while true do 
+		if inZoneDrugShop then
+			if(not menuOpen) then
+				ESX.ShowHelpNotification(_U('dealer_prompt'),true)
+				if IsControlJustPressed(0, 38) then
+					OpenDrugShop()
+				end
+			end
+		end
+
+		Wait(15)
 	end
 end)
 
