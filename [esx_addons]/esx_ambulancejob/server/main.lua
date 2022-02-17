@@ -101,7 +101,8 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if Config.OxInventory and Config.RemoveItemsAfterRPDeath then
-		return exports.ox_inventory:ClearInventory(xPlayer.source)
+		exports.ox_inventory:ClearInventory(xPlayer.source)
+		return cb()
 	end
 
 	if Config.RemoveCashAfterRPDeath then
@@ -122,7 +123,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 		end
 	end
 
-	if Config.OxInventory then return end
+	if Config.OxInventory then return cb() end
 
 	local playerLoadout = {}
 	if Config.RemoveWeaponsAfterRPDeath then
