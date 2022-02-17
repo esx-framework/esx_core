@@ -258,13 +258,18 @@ function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-function ESX.UseItem(source, item)
-	Core.UsableItemsCallbacks[item](source, item)
+function ESX.UseItem(source, item, data)
+	Core.UsableItemsCallbacks[item](source, item, data)
 end
 
 function ESX.GetItemLabel(item)
 	if ESX.Items[item] then
 		return ESX.Items[item].label
+	end
+
+	if Config.OxInventory then
+		item = exports.ox_inventory:Items(item)
+		if item then return item.label end
 	end
 end
 
@@ -280,24 +285,26 @@ function ESX.GetUsableItems()
 	return Usables
 end
 
-function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
-	local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-	local xPlayer = ESX.GetPlayerFromId(playerId)
-	local coords = xPlayer.getCoords()
+if not Config.OxInventory then
+	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
+		local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
+		local xPlayer = ESX.GetPlayerFromId(playerId)
+		local coords = xPlayer.getCoords()
 
-	Core.Pickups[pickupId] = {
-		type = type, name = name,
-		count = count, label = label,
-		coords = coords
-	}
+		Core.Pickups[pickupId] = {
+			type = type, name = name,
+			count = count, label = label,
+			coords = coords
+		}
 
-	if type == 'item_weapon' then
-		Core.Pickups[pickupId].components = components
-		Core.Pickups[pickupId].tintIndex = tintIndex
+		if type == 'item_weapon' then
+			Core.Pickups[pickupId].components = components
+			Core.Pickups[pickupId].tintIndex = tintIndex
+		end
+
+		TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, type, name, components, tintIndex)
+		Core.PickupId = pickupId
 	end
-
-	TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, type, name, components, tintIndex)
-	Core.PickupId = pickupId
 end
 
 function ESX.DoesJobExist(job, grade)
@@ -318,6 +325,7 @@ function Core.IsPlayerAdmin(playerId)
 	end
 
 	local xPlayer = ESX.GetPlayerFromId(playerId)
+
 	if xPlayer then
 		if xPlayer.group == 'admin' then
 			return true

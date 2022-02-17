@@ -56,47 +56,49 @@ end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = 
 	{name = 'amount', help = _U('command_giveaccountmoney_amount'), type = 'number'}
 }})
 
-ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
-	args.playerId.addInventoryItem(args.item, args.count)
-end, true, {help = _U('command_giveitem'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'item', help = _U('command_giveitem_item'), type = 'item'},
-	{name = 'count', help = _U('command_giveitem_count'), type = 'number'}
-}})
+if not Config.OxInventory then
+	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
+		args.playerId.addInventoryItem(args.item, args.count)
+	end, true, {help = _U('command_giveitem'), validate = true, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+		{name = 'item', help = _U('command_giveitem_item'), type = 'item'},
+		{name = 'count', help = _U('command_giveitem_count'), type = 'number'}
+	}})
 
-ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
-	if args.playerId.hasWeapon(args.weapon) then
-		showError(_U('command_giveweapon_hasalready'))
-	else
-		args.playerId.addWeapon(args.weapon, args.ammo)
-	end
-end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'weapon', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-	{name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
-}})
+	ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
+		if args.playerId.hasWeapon(args.weapon) then
+			showError(_U('command_giveweapon_hasalready'))
+		else
+			args.playerId.addWeapon(args.weapon, args.ammo)
+		end
+	end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+		{name = 'weapon', help = _U('command_giveweapon_weapon'), type = 'weapon'},
+		{name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
+	}})
 
-ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
-	if args.playerId.hasWeapon(args.weaponName) then
-		local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
+	ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
+		if args.playerId.hasWeapon(args.weaponName) then
+			local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
 
-		if component then
-			if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
-				showError(_U('command_giveweaponcomponent_hasalready'))
+			if component then
+				if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
+					showError(_U('command_giveweaponcomponent_hasalready'))
+				else
+					args.playerId.addWeaponComponent(args.weaponName, args.componentName)
+				end
 			else
-				args.playerId.addWeaponComponent(args.weaponName, args.componentName)
+				showError(_U('command_giveweaponcomponent_invalid'))
 			end
 		else
-			showError(_U('command_giveweaponcomponent_invalid'))
+			showError(_U('command_giveweaponcomponent_missingweapon'))
 		end
-	else
-		showError(_U('command_giveweaponcomponent_missingweapon'))
-	end
-end, true, {help = _U('command_giveweaponcomponent'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'weaponName', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-	{name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string'}
-}})
+	end, true, {help = _U('command_giveweaponcomponent'), validate = true, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+		{name = 'weaponName', help = _U('command_giveweapon_weapon'), type = 'weapon'},
+		{name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string'}
+	}})
+end
 
 ESX.RegisterCommand({'clear', 'cls'}, 'user', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('chat:clear')
@@ -106,23 +108,25 @@ ESX.RegisterCommand({'clearall', 'clsall'}, 'admin', function(xPlayer, args, sho
 	TriggerClientEvent('chat:clear', -1)
 end, false, {help = _U('command_clearall')})
 
-ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
-	for k,v in ipairs(args.playerId.inventory) do
-		if v.count > 0 then
-			args.playerId.setInventoryItem(v.name, 0)
+if not Config.OxInventory then
+	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
+		for k,v in ipairs(args.playerId.inventory) do
+			if v.count > 0 then
+				args.playerId.setInventoryItem(v.name, 0)
+			end
 		end
-	end
-end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-}})
+	end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+	}})
 
-ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
-	for i=#args.playerId.loadout, 1, -1 do
-		args.playerId.removeWeapon(args.playerId.loadout[i].name)
-	end
-end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-}})
+	ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
+		for i=#args.playerId.loadout, 1, -1 do
+			args.playerId.removeWeapon(args.playerId.loadout[i].name)
+		end
+	end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+	}})
+end
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
 	if not args.playerId then args.playerId = xPlayer.source end

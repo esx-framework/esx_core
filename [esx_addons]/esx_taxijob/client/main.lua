@@ -232,7 +232,10 @@ function OpenTaxiActionsMenu()
 		elements = elements
 	}, function(data, menu)
 
-		if data.current.value == 'put_stock' then
+		if Config.OxInventory and (data.current.value == 'put_stock' or data.current.value == 'get_stock') then
+			exports.ox_inventory:openInventory('stash', 'society_taxi')
+			return ESX.UI.Menu.CloseAll()
+		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()
 		elseif data.current.value == 'get_stock' then
 			OpenGetStocksMenu()
