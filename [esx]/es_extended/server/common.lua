@@ -19,6 +19,12 @@ exports('getSharedObject', function()
 	return ESX
 end)
 
+if GetResourceState('ox_inventory') ~= 'missing' then
+	Config.OxInventory = true
+	SetConvarReplicated('inventory:framework', 'esx')
+	SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
+end
+
 local function StartDBSync()
 	CreateThread(function()
 		while true do
@@ -29,14 +35,28 @@ local function StartDBSync()
 end
 
 MySQL.ready(function()
-	local items = MySQL.query.await('SELECT * FROM items')
-	for k, v in ipairs(items) do
-		ESX.Items[v.name] = {
-			label = v.label,
-			weight = v.weight,
-			rare = v.rare,
-			canRemove = v.can_remove
-		}
+	if not Config.OxInventory then
+		local items = MySQL.query.await('SELECT * FROM items')
+		for k, v in ipairs(items) do
+			ESX.Items[v.name] = {
+				label = v.label,
+				weight = v.weight,
+				rare = v.rare,
+				canRemove = v.can_remove
+			}
+		end
+	else
+		TriggerEvent('__cfx_export_ox_inventory_Items', function(ref)
+			if ref then
+				ESX.Items = ref()
+			end
+		end)
+
+		AddEventHandler('ox_inventory:itemList', function(items)
+			ESX.Items = items
+		end)
+
+		while not next(ESX.Items) do Wait(0) end
 	end
 
 	local Jobs = {}

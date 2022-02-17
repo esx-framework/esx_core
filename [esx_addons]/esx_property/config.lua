@@ -14,3 +14,5 @@ Config.Properties = {}
 
 Config.EnablePlayerManagement = false -- If set to true you use esx_realestateagentjob
 Config.Locale = 'en'
+
+Config.OxInventory = ESX.GetConfig().OxInventory

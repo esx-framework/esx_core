@@ -162,6 +162,10 @@ function OpenMechanicActionsMenu()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
+
+		elseif Config.OxInventory and (data.current.value == 'put_stock' or data.current.value == 'get_stock') then
+			exports.ox_inventory:openInventory('stash', 'society_mechanic')
+			return ESX.UI.Menu.CloseAll()
 		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()
 		elseif data.current.value == 'get_stock' then

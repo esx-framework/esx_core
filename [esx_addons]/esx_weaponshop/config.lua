@@ -7,6 +7,8 @@ Config.Type          = 1
 
 Config.Locale        = 'en'
 
+Config.OxInventory   = ESX.GetConfig().OxInventory
+
 Config.LicenseEnable = false -- only turn this on if you are using esx_license
 Config.LicensePrice  = 5000
 
