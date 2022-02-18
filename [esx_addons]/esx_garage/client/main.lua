@@ -1,6 +1,8 @@
 local LastGarage, LastPart, LastParking, thisGarage = nil, nil, nil, nil
 
-TriggerEvent('instance:registerType', 'garage')
+AddEventHandler('instance:loaded', function()
+	TriggerEvent('instance:registerType', 'garage')
+end)
 
 RegisterNetEvent('instance:onCreate')
 AddEventHandler('instance:onCreate', function(instance)
