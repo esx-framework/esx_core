@@ -1,5 +1,6 @@
 local menuOpen, wasOpen = false, false
 
+--slow loop
 CreateThread(function()
 	while true do
         local sleep = 2000
@@ -9,7 +10,7 @@ CreateThread(function()
         local dist = #(coords - Config.CircleZones.DrugDealer.coords)
 
         if dist < 20.0 then sleep = 500
-            if dist < 0.5 then sleep = 1
+            if dist < 0.5 then sleep = 0
                 if not menuOpen then
                     ESX.ShowHelpNotification(_U('dealer_prompt'))
     
@@ -131,7 +132,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(text)
+	AddTextComponentSubstringPlayerName(text)
 	EndTextCommandSetBlipName(blip)
 end
 

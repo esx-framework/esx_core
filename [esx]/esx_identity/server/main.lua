@@ -88,7 +88,7 @@ if Config.UseDeferrals then
 				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 			end
 
-			Wait(5)
+			Wait(0)
 			alreadyRegistered[xPlayer.identifier] = true
 			TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
 	
@@ -142,7 +142,7 @@ elseif not Config.UseDeferrals then
 				Wait(300)
 
 				while not ESX do
-					Wait(10)
+					Wait(0)
 				end
 
 				local xPlayers = ESX.GetExtendedPlayers()
@@ -170,7 +170,7 @@ elseif not Config.UseDeferrals then
 					saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 				end
 
-				Wait(10)
+				Wait(0)
 				TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
 
 				playerIdentity[xPlayer.identifier] = nil
@@ -223,7 +223,7 @@ elseif not Config.UseDeferrals then
 	end)
 
 	function checkIdentity(xPlayer)
-		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
+		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', { xPlayer.identifier },
 		function(result)
 			if result then
 				if result.firstname then

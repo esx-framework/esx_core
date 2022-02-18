@@ -45,8 +45,7 @@ function StopTheoryTest(success)
 end
 
 function StartDriveTest(type)
-	local pos = vector3(VehicleSpawnPoint.Pos.x, VehicleSpawnPoint.Pos.y,VehicleSpawnPoint.Pos.z)
-	ESX.Game.SpawnVehicle(Config.VehicleModels[type], pos, Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
+	ESX.Game.SpawnVehicle(Config.VehicleModels[type], vector3(Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z), Config.Zones.VehicleSpawnPoint.Pos.h, function(vehicle)
 		CurrentTest       = 'drive'
 		CurrentTestType   = type
 		CurrentCheckPoint = 0
@@ -205,7 +204,7 @@ CreateThread(function()
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(_U('driving_school_blip'))
+	AddTextComponentSubstringPlayerName(_U('driving_school_blip'))
 	EndTextCommandSetBlipName(blip)
 end)
 
@@ -262,7 +261,7 @@ end)
 theoryTest = function()
     CreateThread(function()
         while CurrentTest == 'theory' do
-            Wait(1)
+            Wait(0)
 
             DisableControlAction(0, 1, true) -- LookLeftRight
             DisableControlAction(0, 2, true) -- LookUpDown
@@ -351,7 +350,7 @@ end
 speedDamageDriveTest = function()
     CreateThread(function()
         while CurrentTest == 'drive' do
-            Wait(10)
+            Wait(0)
 
             local playerPed = PlayerPedId()
 

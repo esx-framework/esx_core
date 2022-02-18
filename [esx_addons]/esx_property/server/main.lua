@@ -52,6 +52,12 @@ function RemoveOwnedProperty(name, owner, noPay)
 						end
 					end
 				end
+
+				if Config.OxInventory then
+					MySQL.query('DELETE FROM ox_inventory WHERE owner = ? AND name = ?', {
+						owner, ('%s%s'):format(owner, name)
+					})
+				end
 			end)
 		end
 	end)
@@ -63,6 +69,7 @@ MySQL.ready(function()
 	MySQL.query('SELECT * FROM `properties`', {}, function(properties)
 
 		for i=1, #properties, 1 do
+			local property = properties[i]
 			local entering  = nil
 			local exit      = nil
 			local inside    = nil
@@ -72,59 +79,63 @@ MySQL.ready(function()
 			local isGateway = nil
 			local roomMenu  = nil
 
-			if properties[i].entering then
-				entering = json.decode(properties[i].entering)
+			if property.entering then
+				entering = json.decode(property.entering)
 			end
 
-			if properties[i].exit then
-				exit = json.decode(properties[i].exit)
+			if property.exit then
+				exit = json.decode(property.exit)
 			end
 
-			if properties[i].inside then
-				inside = json.decode(properties[i].inside)
+			if property.inside then
+				inside = json.decode(property.inside)
 			end
 
-			if properties[i].outside then
-				outside = json.decode(properties[i].outside)
+			if property.outside then
+				outside = json.decode(property.outside)
 			end
 
-			if properties[i].is_single == 0 then
+			if property.is_single == 0 then
 				isSingle = false
 			else
 				isSingle = true
 			end
 
-			if properties[i].is_room == 0 then
+			if property.is_room == 0 then
 				isRoom = false
 			else
 				isRoom = true
 			end
 
-			if properties[i].is_gateway == 0 then
+			if property.is_gateway == 0 then
 				isGateway = false
 			else
 				isGateway = true
 			end
 
-			if properties[i].room_menu then
-				roomMenu = json.decode(properties[i].room_menu)
+			if property.room_menu then
+				roomMenu = json.decode(property.room_menu)
 			end
 
 			table.insert(Config.Properties, {
-				name      = properties[i].name,
-				label     = properties[i].label,
+				name      = property.name,
+				label     = property.label,
 				entering  = entering,
 				exit      = exit,
 				inside    = inside,
 				outside   = outside,
-				ipls      = json.decode(properties[i].ipls),
-				gateway   = properties[i].gateway,
+				ipls      = json.decode(property.ipls),
+				gateway   = property.gateway,
 				isSingle  = isSingle,
 				isRoom    = isRoom,
 				isGateway = isGateway,
 				roomMenu  = roomMenu,
-				price     = properties[i].price
+				price     = property.price
 			})
+
+			if Config.OxInventory then
+				exports.ox_inventory:RegisterStash(property.name, property.label, 50, 100000, true)
+			end
 		end
 
 		TriggerClientEvent('esx_property:sendProperties', -1, Config.Properties)
@@ -136,7 +147,7 @@ ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
 end)
 
 AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
-	MySQL.query('SELECT * FROM owned_properties', {}, function(result)
+	MySQL.query('SELECT * FROM owned_properties', function(result)
 		local properties = {}
 
 		for i=1, #result, 1 do
@@ -410,7 +421,7 @@ function payRent(d, h, m)
 	local tasks, timeStart = {}, os.clock()
 	print('[esx_property] [^2INFO^7] Paying rent cron job started')
 
-	MySQL.query('SELECT * FROM owned_properties WHERE rented = 1', {}, function(result)
+	MySQL.query('SELECT * FROM owned_properties WHERE rented = 1', function(result)
 		for k,v in ipairs(result) do
 			table.insert(tasks, function(cb)
 				local xPlayer = ESX.GetPlayerFromIdentifier(v.owner)

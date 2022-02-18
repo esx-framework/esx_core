@@ -31,7 +31,7 @@ end)
 
 CreateThread(function()
 	while true do
-		Wait(1)
+		Wait(0)
 
 		if IsControlJustPressed(1, 74) and IsControlPressed(1, 21) then
 			voice.current = (voice.current + 1) % 3

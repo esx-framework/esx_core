@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX License'
 
-version 'legacy'
+version '1.5.0'
 
 server_scripts {
 	'@async/async.lua',

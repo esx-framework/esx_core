@@ -1,6 +1,6 @@
 local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
 
-local openMenu = function(namespace, name, data)
+local function openMenu(namespace, name, data)
 	for i=1, #Timeouts, 1 do
 		ESX.ClearTimeout(Timeouts[i])
 	end
@@ -21,14 +21,13 @@ local openMenu = function(namespace, name, data)
 	table.insert(Timeouts, timeoutId)
 end
 
-local closeMenu = function(namespace, name)
+local function closeMenu(namespace, name)
 	OpenedMenus[namespace .. '_' .. name] = nil
 
 	SendNUIMessage({
 		action = 'closeMenu',
 		namespace = namespace,
 		name = name,
-		data = data
 	})
 
 	if ESX.Table.SizeOf(OpenedMenus) == 0 then
@@ -84,7 +83,6 @@ end)
 CreateThread(function()
 	while true do
 		local sleep = 500
-			
 		if ESX.Table.SizeOf(OpenedMenus) > 0 then
 			sleep = 0
 			DisableControlAction(0, 1,   true) -- LookLeftRight

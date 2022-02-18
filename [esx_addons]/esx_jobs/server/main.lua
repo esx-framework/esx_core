@@ -6,7 +6,7 @@ CreateThread(function()
 		local timeNow = os.clock()
 
 		for playerId,data in pairs(playersWorking) do
-			Wait(10)
+			Wait(0)
 			local xPlayer = ESX.GetPlayerFromId(playerId)
 
 			-- is player still online?

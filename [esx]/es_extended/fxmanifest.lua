@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
-version 'legacy'
+version '1.5.0'
 
 shared_scripts {
 	'locale.lua',
@@ -31,7 +31,6 @@ server_scripts {
 
 client_scripts {
 	'client/common.lua',
-	'client/entityiter.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',

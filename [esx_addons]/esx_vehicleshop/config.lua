@@ -14,6 +14,8 @@ Config.PlateLetters  = 3
 Config.PlateNumbers  = 3
 Config.PlateUseSpace = true
 
+Config.OxInventory = ESX.GetConfig().OxInventory
+
 Config.Zones = {
 
 	ShopEntering = {

@@ -164,7 +164,7 @@ function OpenCloakroomMenu()
 			end, 'police')
 
 			while awaitService == nil do
-				Wait(5)
+				Wait(0)
 			end
 
 			-- if we couldn't enter service don't let the player get changed
@@ -204,15 +204,21 @@ function OpenCloakroomMenu()
 end
 
 function OpenArmoryMenu(station)
-	local elements = {
-		{label = _U('buy_weapons'), value = 'buy_weapons'}
-	}
+	local elements
+	if Config.OxInventory then
+		exports.ox_inventory:openInventory('stash', {id = 'society_police', owner = station})
+		return ESX.UI.Menu.CloseAll()
+	else
+		elements = {
+			{label = _U('buy_weapons'), value = 'buy_weapons'}
+		}
 
-	if Config.EnableArmoryManagement then
-		table.insert(elements, {label = _U('get_weapon'),     value = 'get_weapon'})
-		table.insert(elements, {label = _U('put_weapon'),     value = 'put_weapon'})
-		table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
-		table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
+		if Config.EnableArmoryManagement then
+			table.insert(elements, {label = _U('get_weapon'),     value = 'get_weapon'})
+			table.insert(elements, {label = _U('put_weapon'),     value = 'put_weapon'})
+			table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
+			table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
+		end
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -446,6 +452,11 @@ function OpenIdentityCardMenu(player)
 end
 
 function OpenBodySearchMenu(player)
+	if Config.OxInventory then
+		exports.ox_inventory:openInventory('player', GetPlayerServerId(closestPlayer))
+		return ESX.UI.Menu.CloseAll()
+	end
+
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 		local elements = {}
 

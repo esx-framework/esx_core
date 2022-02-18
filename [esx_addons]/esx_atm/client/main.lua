@@ -37,7 +37,7 @@ CreateThread(function()
 		SetBlipColour(ATMLocation.blip, 2)
 		SetBlipAsShortRange(ATMLocation.blip, true)
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(_U('atm_blip'))
+		AddTextComponentSubstringPlayerName(_U('atm_blip'))
 		EndTextCommandSetBlipName(ATMLocation.blip)
 	end
 end)
@@ -51,7 +51,7 @@ CreateThread(function()
 
 		for k,v in pairs(Config.ATMLocations) do
 			local dist = #(v - coords)
-			if dist < 1.0 then sleep = 1
+			if dist < 1.0 then sleep = 0
 				isInATMMarker = true
 					inAtmMark()
 				break

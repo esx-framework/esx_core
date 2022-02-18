@@ -3,7 +3,7 @@ WhiteList = {}
 function loadWhiteList(cb)
 	Whitelist = {}
 
-	MySQL.query('SELECT identifier FROM whitelist', {}, function(result)
+	MySQL.query('SELECT identifier FROM whitelist', function(result)
 		for k,v in ipairs(result) do
 			WhiteList[v.identifier] = true
 		end
@@ -19,16 +19,18 @@ MySQL.ready(function()
 end)
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
-	local xPlayers = ESX.GetPlayers()
+	if #GetPlayers() < Config.MinPlayer then
+		deferrals.done()
+	end
 
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()
 
 	local playerId, kickReason = source
-	
+
 	-- Letting the user know what's going on.
 	deferrals.update(_U('whitelist_check'))
-	
+
 	-- Needed, not sure why.
 	Wait(100)
 
@@ -42,13 +44,9 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 		kickReason = _U('not_whitelisted')
 	end
 
-	if whitelisted or #xPlayers < Config.MinPlayer then
-		deferrals.done()
+	if kickReason then
+		deferrals.done(kickReason)
 	else
-	  if kickReason then
-		  deferrals.done(kickReason)
-	  else
-		  deferrals.done()
-	  end
-  end
+		deferrals.done()
+	end
 end)

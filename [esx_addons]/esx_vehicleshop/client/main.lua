@@ -9,8 +9,6 @@ function getVehicleFromModel(model)
 			return vehicle
 		end
 	end
-
-	return
 end
 
 function getVehicles()
@@ -328,7 +326,9 @@ function OpenResellerMenu()
 	}}, function(data, menu)
 		local action = data.current.value
 
-		if action == 'buy_vehicle' then
+		if Config.OxInventory and (action == 'put_stock' or action == 'get_stock') then
+			exports.ox_inventory:openInventory('stash', 'society_cardealer')
+		elseif action == 'buy_vehicle' then
 			OpenShopMenu()
 		elseif action == 'put_stock' then
 			OpenPutStocksMenu()
@@ -440,7 +440,7 @@ function OpenPopVehicleMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleLabelFromModel(v.vehicle)
+			local vehicleLabel = getVehicleFromModel(v.vehicle).label
 
 			table.insert(elements, {
 				label = ('%s [MSRP <span style="color:green;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(v.price))),
@@ -477,7 +477,7 @@ function OpenRentedVehiclesMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleLabelFromModel(v.name)
+			local vehicleLabel = getVehicleFromModel(v.name).label
 
 			table.insert(elements, {
 				label = ('%s: %s - <span style="color:orange;">%s</span>'):format(v.playerName, vehicleLabel, v.plate),
@@ -756,7 +756,7 @@ end)
 -- Enter / Exit marker events & Draw Markers
 CreateThread(function()
 	while true do
-		Wait(4)
+		Wait(0)
 		local playerCoords = GetEntityCoords(PlayerPedId())
 		local isInMarker, letSleep, currentZone = false, true
 
@@ -796,7 +796,7 @@ end)
 -- Key controls
 CreateThread(function()
 	while true do
-		Wait(5)
+		Wait(0)
 
 		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
@@ -850,8 +850,8 @@ CreateThread(function()
 	RequestIpl('shr_int') -- Load walls and floor
 
 	local interiorID = 7170
-	LoadInterior(interiorID)
-	EnableInteriorProp(interiorID, 'csr_beforeMission') -- Load large window
+	PinInteriorInMemory(interiorID)
+	ActivateInteriorEntitySet(interiorID, 'csr_beforeMission') -- Load large window
 	RefreshInterior(interiorID)
 end)
 

@@ -75,8 +75,8 @@ end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)
 	for k,v in pairs(InService) do
-		if v[_source] == true then
-			v[_source] = nil
+		if v[source] == true then
+			v[source] = nil
 		end
 	end
 end)

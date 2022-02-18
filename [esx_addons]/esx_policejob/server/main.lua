@@ -9,8 +9,8 @@ TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police'
 
 RegisterNetEvent('esx_policejob:confiscatePlayerItem')
 AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType, itemName, amount)
-	local _source = source
-	local sourceXPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local sourceXPlayer = ESX.GetPlayerFromId(source)
 	local targetXPlayer = ESX.GetPlayerFromId(target)
 
 	if sourceXPlayer.job.name ~= 'police' then
@@ -114,8 +114,8 @@ end)
 
 RegisterNetEvent('esx_policejob:getStockItem')
 AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local source = source
+	local xPlayer = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 		local inventoryItem = inventory.getItem(itemName)
@@ -422,6 +422,7 @@ AddEventHandler('playerDropped', function()
 	local playerId = source
 	if playerId then
 		local xPlayer = ESX.GetPlayerFromId(playerId)
+
 		if xPlayer and xPlayer.job.name == 'police' then
 			Wait(5000)
 			TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -431,7 +432,9 @@ end)
 
 RegisterNetEvent('esx_policejob:spawned')
 AddEventHandler('esx_policejob:spawned', function()
+	local playerId = source
 	local xPlayer = ESX.GetPlayerFromId(playerId)
+
 	if xPlayer and xPlayer.job.name == 'police' then
 		Wait(5000)
 		TriggerClientEvent('esx_policejob:updateBlip', -1)
@@ -441,7 +444,7 @@ end)
 RegisterNetEvent('esx_policejob:forceBlip')
 AddEventHandler('esx_policejob:forceBlip', function()
 	for _, xPlayer in pairs(ESX.GetExtendedPlayers('job', 'police')) do
-		TriggerClientEvent('esx_policejob:updateBlip', -1)
+		TriggerClientEvent('esx_policejob:updateBlip', xPlayer.source)
 	end
 end)
 

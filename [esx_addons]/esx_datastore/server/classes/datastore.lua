@@ -17,16 +17,16 @@ function CreateDataStore(name, owner, data)
 
 	self.name  = name
 	self.owner = owner
-	self.data  = data
+	self.data  = type(data) == 'string' and json.decode(data) or data
 
 	local timeoutCallbacks = {}
 
-	self.set = function(key, val)
+	function self.set(key, val)
 		data[key] = val
 		self.save()
 	end
 
-	self.get = function(key, i)
+	function self.get(key, i)
 		local path = stringsplit(key, '.')
 		local obj  = self.data
 
@@ -41,7 +41,7 @@ function CreateDataStore(name, owner, data)
 		end
 	end
 
-	self.count = function(key, i)
+	function self.count(key, i)
 		local path = stringsplit(key, '.')
 		local obj  = self.data
 
@@ -60,7 +60,7 @@ function CreateDataStore(name, owner, data)
 		end
 	end
 
-	self.save = function()
+	function self.save()
 		for i=1, #timeoutCallbacks, 1 do
 			ESX.ClearTimeout(timeoutCallbacks[i])
 			timeoutCallbacks[i] = nil

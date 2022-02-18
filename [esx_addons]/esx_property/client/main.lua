@@ -272,7 +272,7 @@ end
 
 function OpenGatewayMenu(property)
 	if Config.EnablePlayerManagement then
-		OpenGatewayOwnedPropertiesMenu(gatewayProperties)
+		OpenGatewayOwnedPropertiesMenu(property)
 	else
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway', {
 			title    = property.name,
@@ -400,8 +400,12 @@ function OpenRoomMenu(property, owner)
 		table.insert(elements, {label = _U('remove_cloth'), value = 'remove_cloth'})
 	end
 
-	table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
-	table.insert(elements, {label = _U('deposit_object'), value = 'player_inventory'})
+	if Config.OxInventory then
+		table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
+	else
+		table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
+		table.insert(elements, {label = _U('deposit_object'), value = 'player_inventory'})
+	end
 
 	ESX.UI.Menu.CloseAll()
 
@@ -506,6 +510,11 @@ function OpenRoomMenu(property, owner)
 end
 
 function OpenRoomInventoryMenu(property, owner)
+	if Config.OxInventory then
+		exports.ox_inventory:openInventory('stash', {id = property.name, owner = owner})
+		return ESX.UI.Menu.CloseAll()
+	end
+
 	ESX.TriggerServerCallback('esx_property:getPropertyInventory', function(inventory)
 		local elements = {}
 
@@ -821,7 +830,7 @@ CreateThread(function()
 
 			-- Room menu
 			if property.roomMenu and hasChest and not property.disabled then
-				local Pos = vector3(property.disabled.x, property.disabled.y, property.disabled.z)
+				local Pos = vector3(property.roomMenu.x, property.roomMenu.y, property.roomMenu.z)
 				local distance = #(coords - Pos)
 
 				if distance < Config.DrawDistance then

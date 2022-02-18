@@ -162,6 +162,10 @@ function OpenMechanicActionsMenu()
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				TriggerEvent('skinchanger:loadSkin', skin)
 			end)
+
+		elseif Config.OxInventory and (data.current.value == 'put_stock' or data.current.value == 'get_stock') then
+			exports.ox_inventory:openInventory('stash', 'society_mechanic')
+			return ESX.UI.Menu.CloseAll()
 		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()
 		elseif data.current.value == 'get_stock' then
@@ -767,7 +771,7 @@ end)
 -- Pop NPC mission vehicle when inside area
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if NPCTargetTowableZone and not NPCHasSpawnedTowable then
 			local coords = GetEntityCoords(PlayerPedId())
@@ -838,7 +842,7 @@ end)
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(10)
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 
@@ -935,11 +939,12 @@ CreateThread(function()
 						TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
 
 					else
+						local entityModel = GetEntityModel(CurrentActionData.vehicle)
 
 						if
-							GetEntityModel(vehicle) == GetHashKey("flatbed") or
-							GetEntityModel(vehicle) == GetHashKey("towtruck2") or
-							GetEntityModel(vehicle) == GetHashKey("slamvan3")
+							entityModel == GetHashKey("flatbed") or
+							entityModel == GetHashKey("towtruck2") or
+							entityModel == GetHashKey("slamvan3")
 						then
 							TriggerServerEvent('esx_service:disableService', 'mechanic')
 						end

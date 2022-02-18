@@ -234,7 +234,10 @@ function OpenTaxiActionsMenu()
 		elements = elements
 	}, function(data, menu)
 
-		if data.current.value == 'put_stock' then
+		if Config.OxInventory and (data.current.value == 'put_stock' or data.current.value == 'get_stock') then
+			exports.ox_inventory:openInventory('stash', 'society_taxi')
+			return ESX.UI.Menu.CloseAll()
+		elseif data.current.value == 'put_stock' then
 			OpenPutStocksMenu()
 		elseif data.current.value == 'get_stock' then
 			OpenGetStocksMenu()
@@ -728,7 +731,7 @@ currentActionTaxi = function()
         while isTaxiJob do
             time = 500
             if not IsDead then
-                if CurrentAction then time = 1
+                if CurrentAction then time = 0
                     ESX.ShowHelpNotification(CurrentActionMsg)
 
                     if IsControlJustReleased(0, 38) then

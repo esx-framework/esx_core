@@ -19,6 +19,12 @@ exports('getSharedObject', function()
 	return ESX
 end)
 
+if GetResourceState('ox_inventory') ~= 'missing' then
+	Config.OxInventory = true
+	SetConvarReplicated('inventory:framework', 'esx')
+	SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
+end
+
 local function StartDBSync()
 	CreateThread(function()
 		while true do
@@ -29,8 +35,9 @@ local function StartDBSync()
 end
 
 MySQL.ready(function()
-	MySQL.query('SELECT * FROM items', {}, function(result)
-		for k,v in ipairs(result) do
+	if not Config.OxInventory then
+		local items = MySQL.query.await('SELECT * FROM items')
+		for k, v in ipairs(items) do
 			ESX.Items[v.name] = {
 				label = v.label,
 				weight = v.weight,
@@ -38,36 +45,66 @@ MySQL.ready(function()
 				canRemove = v.can_remove
 			}
 		end
-	end)
+	else
+		TriggerEvent('__cfx_export_ox_inventory_Items', function(ref)
+			if ref then
+				ESX.Items = ref()
+			end
+		end)
+
+		AddEventHandler('ox_inventory:itemList', function(items)
+			ESX.Items = items
+		end)
+
+		while not next(ESX.Items) do Wait(0) end
+	end
 
 	local Jobs = {}
-	MySQL.query('SELECT * FROM jobs', {}, function(jobs)
-		for k,v in ipairs(jobs) do
-			Jobs[v.name] = v
-			Jobs[v.name].grades = {}
+	local jobs = MySQL.query.await('SELECT * FROM jobs')
+
+	for _, v in ipairs(jobs) do
+		Jobs[v.name] = v
+		Jobs[v.name].grades = {}
+	end
+
+	local jobGrades = MySQL.query.await('SELECT * FROM job_grades')
+
+	for _, v in ipairs(jobGrades) do
+		if Jobs[v.job_name] then
+			Jobs[v.job_name].grades[tostring(v.grade)] = v
+		else
+			print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
 		end
+	end
 
-		MySQL.query('SELECT * FROM job_grades', {}, function(jobGrades)
-			for k,v in ipairs(jobGrades) do
-				if Jobs[v.job_name] then
-					Jobs[v.job_name].grades[tostring(v.grade)] = v
-				else
-					print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
-				end
-			end
+	for _, v in pairs(Jobs) do
+		if ESX.Table.SizeOf(v.grades) == 0 then
+			Jobs[v.name] = nil
+			print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v.name))
+		end
+	end
 
-			for k2,v2 in pairs(Jobs) do
-				if ESX.Table.SizeOf(v2.grades) == 0 then
-					Jobs[v2.name] = nil
-					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v2.name))
-				end
-			end
-			ESX.Jobs = Jobs
-			print('[^2INFO^7] ESX ^5Legacy^0 initialized')
-			StartDBSync()
-			StartPayCheck()
-		end)
-	end)
+	if not Jobs then
+		-- Fallback data, if no jobs exist
+		ESX.Jobs['unemployed'] = {
+			label = 'Unemployed',
+			grades = {
+				['0'] = {
+					grade = 0,
+					label = 'Unemployed',
+					salary = 200,
+					skin_male = {},
+					skin_female = {}
+				}
+			}
+		}
+	else
+		ESX.Jobs = Jobs
+	end
+
+	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+	StartDBSync()
+	StartPayCheck()
 end)
 
 RegisterServerEvent('esx:clientLog')
