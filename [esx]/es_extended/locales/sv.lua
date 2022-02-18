@@ -97,7 +97,7 @@ Locales['sv'] = {
   ['commanderror_invaliditem'] = 'ej giltigt item',
   ['commanderror_invalidweapon'] = 'ej giltigt vapen',
   ['commanderror_console'] = 'detta kommando kan ej executas i konsol',
-  ['commanderror_invalidcommand'] = '^3%s^0 är inte ett giltigt kommando!',
+  ['commanderror_invalidcommand'] = '/%s är inte ett giltigt kommando!',
   ['commanderror_invalidplayerid'] = 'det finns ingen spelare som matchar det angivna server id',
   ['commandgeneric_playerid'] = 'spelarid',
 

@@ -97,7 +97,7 @@ Locales['en'] = {
   ['commanderror_invaliditem'] = 'invalid item name',
   ['commanderror_invalidweapon'] = 'invalid weapon',
   ['commanderror_console'] = 'that command cannot be run from console',
-  ['commanderror_invalidcommand'] = '^3%s^0 is not a valid command!',
+  ['commanderror_invalidcommand'] = '/%s is not a valid command!',
   ['commanderror_invalidplayerid'] = 'there is no player online matching that server id',
   ['commandgeneric_playerid'] = 'player id',
 

@@ -96,7 +96,7 @@ Locales['pl'] = {
   ['commanderror_invaliditem'] = 'nieprawidłowa nazwa przedmiotu',
   ['commanderror_invalidweapon'] = 'nieprawidłowa broń',
   ['commanderror_console'] = 'podana komenda nie może zostać uruchomiona przez konsole',
-  ['commanderror_invalidcommand'] = '^3%s^0 nie jest poprawną komendą!',
+  ['commanderror_invalidcommand'] = '/%s nie jest poprawną komendą!',
   ['commanderror_invalidplayerid'] = 'brak dostepnego gracza pasującego do podanego id serwerowego',
   ['commandgeneric_playerid'] = 'id gracza',
 

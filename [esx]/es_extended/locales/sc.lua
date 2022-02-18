@@ -97,7 +97,7 @@ Locales['sc'] = {
   ['commanderror_invaliditem'] = '无效的物品名称',
   ['commanderror_invalidweapon'] = '无效武器',
   ['commanderror_console'] = '该命令不能从控制台运行',
-  ['commanderror_invalidcommand'] = '^3%s^0 不是有效的命令！',
+  ['commanderror_invalidcommand'] = '/%s 不是有效的命令！',
   ['commanderror_invalidplayerid'] = '没有在线玩家匹配到该服务id',
   ['commandgeneric_playerid'] = '玩家id',
 
