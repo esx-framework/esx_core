@@ -70,6 +70,11 @@ function createESXPlayer(identifier, playerId, data)
 		defaultGroup = "user"
 	end
 
+	if Config.Multichar and not identifier:find('char1:') then
+		local char1 = MySQL.single.await(loadPlayer, {identifier:gsub('char%d+:', 'char1:')})
+		if char1 then	defaultGroup = char1.group	end
+	end
+
 	if not Config.Multichar then
 		MySQL.prepare(newPlayer, { json.encode(accounts), identifier, defaultGroup }, function()
 			loadESXPlayer(identifier, playerId, true)
@@ -301,10 +306,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 end
 
 AddEventHandler('chatMessage', function(playerId, author, message)
+	local xPlayer = ESX.GetPlayerFromId(playerId)
 	if message:sub(1, 1) == '/' and playerId > 0 then
 		CancelEvent()
 		local commandName = message:sub(1):gmatch("%w+")()
-		TriggerClientEvent('chat:addMessage', playerId, {args = {'^1SYSTEM', _U('commanderror_invalidcommand', commandName)}})
+		xPlayer.showNotification(_U('commanderror_invalidcommand', commandName))
 	end
 end)
 
