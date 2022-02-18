@@ -57,7 +57,7 @@ CreateThread(function()
 
 		if NetworkIsPlayerTalking(PlayerId()) then
 			drawLevel(41, 128, 185, 255)
-		elseif not NetworkIsPlayerTalking(PlayerId()) then
+		else
 			drawLevel(185, 185, 185, 255)
 		end
 	end
