@@ -245,13 +245,14 @@ function ESX.GetPlayerFromIdentifier(identifier)
 	end
 end
 
-function ESX.GetIdentifier(playerId)
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			local identifier = string.gsub(v, 'license:', '')
-			return identifier
+function ESX.GetIdentifier(playerId, _identifierType)
+	local identifierType = _identifierType..':' or 'license:'
+	for _, v in pairs(GetPlayerIdentifiers(playerId)) do
+		if string.match(v, identifierType) then
+			return string.gsub(v, identifierType, '')
 		end
 	end
+	return false
 end
 
 function ESX.RegisterUsableItem(item, cb)
