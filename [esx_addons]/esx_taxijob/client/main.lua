@@ -503,7 +503,8 @@ CreateThread(function()
 			local isInMarker, letSleep, currentZone = false, true
 
 			for k,v in pairs(Config.Zones) do
-				local distance = #(coords - v.Pos)
+				local zonePos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+				local distance = #(coords - zonePos)
 
 				if v.Type ~= -1 and distance < Config.DrawDistance then
 					letSleep = false
