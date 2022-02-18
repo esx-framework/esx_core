@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS `esx_legacy`;
-USE `esx-legacy`;
+USE `esx_legacy`;
 
 ALTER DATABASE `esx_legacy`
 	DEFAULT CHARACTER SET UTF8MB4;
