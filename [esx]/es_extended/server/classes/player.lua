@@ -568,6 +568,21 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return false
 	end
 
+	function self.hasItem(item, metadata)
+		if Inventory then
+			return Inventory.GetItem(self.source, name, metadata)
+		end
+
+		for k,v in ipairs(self.inventory) do
+			if (v.name == name) and (v.count >= 1) then
+				return v, v.count
+			end
+		end
+
+		return false
+	end
+
+
 	function self.getWeapon(weaponName)
 		if Inventory then return end
 
