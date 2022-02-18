@@ -338,9 +338,9 @@ CreateThread(function()
 				end
             
 				local Pos = vector3(Config.CheckPoints[nextCheckPoint].Pos.x,Config.CheckPoints[nextCheckPoint].Pos.y,Config.CheckPoints[nextCheckPoint].Pos.z)
-				local distance = #(coords - Config.CheckPoints[nextCheckPoint].Pos)
+				local distance = #(coords - Pos)
             
-				if distance <= 100.0 then
+				if distance <= Config.DrawDistance then
 					DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100, false, true, 2, false, false, false, false)
 				end
 
