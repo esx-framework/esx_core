@@ -1,3 +1,12 @@
+CREATE DATABASE IF NOT EXISTS `esx_legacy`;
+USE `esx-legacy`;
+
+ALTER DATABASE `esx_legacy`
+	DEFAULT CHARACTER SET UTF8MB4;
+	
+ALTER DATABASE `esx_legacy`
+	DEFAULT COLLATE UTF8MB4_UNICODE_CI;
+
 CREATE TABLE `addon_account` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
