@@ -97,7 +97,7 @@ Locales['tc'] = {
   ['commanderror_invaliditem'] = '無效的物品名稱',
   ['commanderror_invalidweapon'] = '無效武器',
   ['commanderror_console'] = '該指令不能從控制台執行',
-  ['commanderror_invalidcommand'] = '^3%s^0 不是有效的指令！',
+  ['commanderror_invalidcommand'] = '/%s 不是有效的指令！',
   ['commanderror_invalidplayerid'] = '無效的玩家ID',
   ['commandgeneric_playerid'] = '玩家id',
 

@@ -97,7 +97,7 @@ Locales['es'] = {
   ['commanderror_invaliditem'] = 'Nombre del artículo no válido',
   ['commanderror_invalidweapon'] = 'Arma inválida',
   ['commanderror_console'] = 'Ese comando no se puede ejecutar desde la consola',
-  ['commanderror_invalidcommand'] = '^3%s^0 ¡No es un comando válido!',
+  ['commanderror_invalidcommand'] = '/%s ¡No es un comando válido!',
   ['commanderror_invalidplayerid'] = 'No hay ningún jugador en línea que coincida con la ID del servidor',
   ['commandgeneric_playerid'] = 'ID del jugador',
 

@@ -97,7 +97,7 @@ Locales['fr'] = {
   ['commanderror_invaliditem'] = 'nom de l\'objet invalide',
   ['commanderror_invalidweapon'] = 'arme invalide',
   ['commanderror_console'] = 'cette commande ne peut pas être utilisée dans la console',
-  ['commanderror_invalidcommand'] = '^3%s^0 n\'est pas une commande valide!',
+  ['commanderror_invalidcommand'] = '/%s n\'est pas une commande valide!',
   ['commanderror_invalidplayerid'] = 'il n\'ya aucun joueur avec cet ID en jeu',
   ['commandgeneric_playerid'] = 'id joueur',
 
