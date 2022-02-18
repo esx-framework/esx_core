@@ -257,7 +257,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 				end)
 			else
-				TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
+				ESX.ShowNotification('Invalid vehicle model.')
 			end
 		end
 	end)
