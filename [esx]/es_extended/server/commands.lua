@@ -163,8 +163,13 @@ ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError
 	end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
-	print("Coords:^5 ".. GetEntityCoords(GetPlayerPed(xPlayer.source)).. "^0")
+	local coords = GetEntityCoords(GetPlayerPed(xPlayer.source), false)
+  local heading = GetEntityHeading(GetPlayerPed(xPlayer.source))
+	print("Coords - Vector3: ^5".. vector3(coords.x,coords.y,coords.z).. "^0")
+	print("Coords - Vector4: ^5".. vector4(coords.x, coords.y, coords.z, heading) .. "^0")
 end, true)
+
+
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
 	xPlayer.triggerEvent("esx:tpm")
