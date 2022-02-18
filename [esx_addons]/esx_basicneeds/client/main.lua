@@ -1,5 +1,6 @@
 local IsDead = false
 local IsAnimated = false
+local isFirstSpawn = true
 
 AddEventHandler('esx_basicneeds:resetStatus', function()
 	TriggerEvent('esx_status:set', 'hunger', 500000)
@@ -22,11 +23,16 @@ AddEventHandler('esx:onPlayerDeath', function()
 	IsDead = true
 end)
 
-AddEventHandler('esx:onPlayerSpawn', function(spawn)
+
+AddEventHandler('esx:onPlayerSpawn', function()
+	if isFirstSpawn then
+		isFirstSpawn = false
+		return
+	end
+
 	if IsDead then
 		TriggerEvent('esx_basicneeds:resetStatus')
 	end
-
 	IsDead = false
 end)
 
