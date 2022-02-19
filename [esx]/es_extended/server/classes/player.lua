@@ -3,6 +3,13 @@ local Inventory
 if Config.OxInventory then
 	AddEventHandler('ox_inventory:loadInventory', function(module)
 		Inventory = module
+		if not Inventory.accounts then
+			Inventory.accounts = {
+				money = 0,
+				black_money = 0,
+			}
+			print("^3[WARNING]^7 You are running an outdated version of ox_inventory, please update as soon as possible.")
+		end
 	end)
 end
 
