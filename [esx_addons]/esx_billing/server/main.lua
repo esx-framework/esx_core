@@ -90,7 +90,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 					cb()
 				end
 			else
-				TriggerEvent('esx_addonaccount:getSharedAccount', result[1].target, function(account)
+				TriggerEvent('esx_addonaccount:getSharedAccount', result.target, function(account)
 					if xPlayer.getMoney() >= amount then
 						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
