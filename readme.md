@@ -12,7 +12,6 @@
 
 ### Installation
 - Modify your ESX config with `Config.Multichar = true`
-- Set your database name for `Config.Database` in server/main.lua
 - Run `esx_multicharacter.sql` into your database
 - All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
 	- The resource will attempt to set columns automatically
@@ -25,7 +24,7 @@
 - Do not enable this setting if you do not intend to properly set up relog support
 - Requires the latest update for ESX Status (prevents multiple status ticks from running)
 - Add the following events to resources that require support for relogging, or
-- Add them to [@esx/imports.lua](https://github.com/esx-framework/es_extended/blob/legacy/imports.lua) (and use the imports in your resources)
+- Add them to [@es_extended/imports.lua](https://github.com/esx-framework/esx-legacy/blob/main/[esx]/es_extended/imports.lua) (and use the imports in your resources)
 ```lua
 RegisterNetEvent('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
