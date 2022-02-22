@@ -213,7 +213,7 @@ function ESX.GetPlayers()
 	local sources = {}
 
 	for k,v in pairs(ESX.Players) do
-		table.insert(sources, k)
+		sources[#sources + 1] = k
 	end
 
 	return sources
@@ -224,10 +224,10 @@ function ESX.GetExtendedPlayers(key, val)
 	for k, v in pairs(ESX.Players) do
 		if key then
 			if (key == 'job' and v.job.name == val) or v[key] == val then
-				table.insert(xPlayers, v)
+				xPlayers[#xPlayers + 1] = v
 			end
 		else
-			table.insert(xPlayers, v)
+			xPlayers[#xPlayers + 1] = v
 		end
 	end
 	return xPlayers
