@@ -39,7 +39,7 @@
 ```lua
 	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
  	for _, xPlayer in pairs(xPlayers) do
-		if v.job.name == 'police' then
+		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayer.source, 'You are a cop!')
 		end
 	end
