@@ -19,6 +19,9 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
+	local playerPed = GetPlayerPed(xPlayer.source)
+	local vehicle = GetVehiclePedIsIn(playerPed)
+	if vehicle then DeleteEntity(vehicle) end
 	if not args.car then args.car = "Prototipo" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
