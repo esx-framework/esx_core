@@ -142,6 +142,17 @@ MySQL.ready(function()
 	end)
 end)
 
+if Config.OxInventory then
+	AddEventHandler('onServerResourceStart', function(resource)
+		if resource == 'ox_inventory' then
+			for i=1, #Config.Properties do
+				local property = Config.Properties[i]
+				exports.ox_inventory:RegisterStash(property.name, property.label, 50, 100000, true)
+			end
+		end
+	end)
+end
+
 ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
 	cb(Config.Properties)
 end)
