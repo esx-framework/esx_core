@@ -12,7 +12,7 @@ INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 ('caution', 'caution', 0),
 ('property_black_money', 'Argent Sale Propriété', 0),
 ('society_ambulance', 'Sjukvård', 1),
-('society_cardealer', 'Cardealer', 1),
+('society_cardealer', 'Bilförsäljare', 1),
 ('society_mechanic', 'Mekaniker', 1),
 ('society_police', 'Polis', 1),
 ('society_taxi', 'Taxi', 1);
@@ -61,9 +61,9 @@ CREATE TABLE `addon_inventory` (
 --
 
 INSERT INTO `addon_inventory` (`name`, `label`, `shared`) VALUES
-('property', 'Propriété', 0),
+('property', 'Egendom', 0),
 ('society_ambulance', 'Sjukvård', 1),
-('society_cardealer', 'Cardealer', 1),
+('society_cardealer', 'Bilförsäljare', 1),
 ('society_mechanic', 'Mekaniker', 1),
 ('society_police', 'Polis', 1),
 ('society_taxi', 'Taxi', 1);
@@ -127,7 +127,7 @@ CREATE TABLE `datastore` (
 --
 
 INSERT INTO `datastore` (`name`, `label`, `shared`) VALUES
-('property', 'Propriété', 0),
+('property', 'Egendom', 0),
 ('society_ambulance', 'Sjukvård', 1),
 ('society_mechanic', 'Mekaniker', 1),
 ('society_police', 'Polis', 1),
@@ -227,7 +227,7 @@ CREATE TABLE `jobs` (
 
 INSERT INTO `jobs` (`name`, `label`, `whitelisted`) VALUES
 ('ambulance', 'Sjukvårdare', 0),
-('cardealer', 'Cardealer', 0),
+('cardealer', 'Bilförsäljare', 0),
 ('fisherman', 'Fiskare', 0),
 ('fueler', 'Bensintankare', 0),
 ('lumberjack', 'Skogshuggare', 0),
@@ -268,10 +268,10 @@ INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, 
 (4, 'police', 2, 'sergeant', 'Inspektör', 60, '{}', '{}'),
 (5, 'police', 3, 'lieutenant', 'Kommissarie', 85, '{}', '{}'),
 (6, 'police', 4, 'boss', 'Rikspolischef', 100, '{}', '{}'),
-(11, 'cardealer', 0, 'recruit', 'Recruit', 10, '{}', '{}'),
-(12, 'cardealer', 1, 'novice', 'Novice', 25, '{}', '{}'),
-(13, 'cardealer', 2, 'experienced', 'Experienced', 40, '{}', '{}'),
-(14, 'cardealer', 3, 'boss', 'Boss', 0, '{}', '{}'),
+(11, 'cardealer', 0, 'recruit', 'Hallvärd', 10, '{}', '{}'),
+(12, 'cardealer', 1, 'novice', 'Nybörjare', 25, '{}', '{}'),
+(13, 'cardealer', 2, 'experienced', 'Erfaren', 40, '{}', '{}'),
+(14, 'cardealer', 3, 'boss', 'VD', 0, '{}', '{}'),
 (15, 'lumberjack', 0, 'employee', 'Anställd', 0, '{}', '{}'),
 (16, 'fisherman', 0, 'employee', 'Anställd', 0, '{}', '{}'),
 (17, 'fueler', 0, 'employee', 'Anställd', 0, '{}', '{}'),
@@ -798,17 +798,17 @@ CREATE TABLE `vehicle_categories` (
 --
 
 INSERT INTO `vehicle_categories` (`name`, `label`) VALUES
-('compacts', 'Compacts'),
-('coupes', 'Coupés'),
-('motorcycles', 'Motos'),
-('muscle', 'Muscle'),
+('compacts', 'Småbil'),
+('coupes', 'Kupé'),
+('motorcycles', 'Motorcyklar'),
+('muscle', 'Muskel'),
 ('offroad', 'Off Road'),
-('sedans', 'Sedans'),
-('sports', 'Sports'),
-('sportsclassics', 'Sports Classics'),
-('super', 'Super'),
-('suvs', 'SUVs'),
-('vans', 'Vans');
+('sedans', 'Sedan'),
+('sports', 'Sportbil'),
+('sportsclassics', 'Klassik sportbil'),
+('super', 'Superbil'),
+('suvs', 'Stadsjeep'),
+('vans', 'Skåpbilar');
 
 -- --------------------------------------------------------
 
@@ -1219,8 +1219,8 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 --
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_banker','Bank',1),
-	('bank_savings','Bank Besparingar',0)
+	('society_banker','Bankir',1),
+	('bank_savings','Banksparande',0)
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
