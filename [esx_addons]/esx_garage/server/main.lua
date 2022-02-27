@@ -8,7 +8,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 		MySQL.update('DELETE FROM `user_parkings` WHERE `identifier` = @identifier AND `garage` = @garage AND zone = @zone',
 		{
 			['@identifier'] = xPlayer.identifier,
-			['@garage']     = garage;
+			['@garage']     = garage,
 			['@zone']       = zone
 		}, function(rowsChanged)
 			xPlayer.showNotification(_U('veh_released'))
@@ -17,7 +17,7 @@ AddEventHandler('esx_garage:setParking', function(garage, zone, vehicleProps)
 		MySQL.update('INSERT INTO `user_parkings` (`identifier`, `garage`, `zone`, `vehicle`) VALUES (@identifier, @garage, @zone, @vehicle)',
 		{
 			['@identifier'] = xPlayer.identifier,
-			['@garage']     = garage;
+			['@garage']     = garage,
 			['@zone']       = zone,
 			['vehicle']     = json.encode(vehicleProps)
 		}, function(rowsChanged)
