@@ -9,7 +9,7 @@ Config.EnableControls = true
 Config.DrawDistance = 10
 Config.Size   = {x = 1.0, y = 1.0, z = 1.0}
 Config.Color  = {r = 102, g = 102, b = 204}
-Config.Type   = 29
+Config.Type   = 1
 
 -- Fill this if you want to see the blips,
 -- If you have esx_clothesshop you should not fill this
