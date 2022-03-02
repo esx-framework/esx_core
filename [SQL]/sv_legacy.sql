@@ -10,7 +10,7 @@ CREATE TABLE `addon_account` (
 
 INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 ('caution', 'caution', 0),
-('property_black_money', 'Argent Sale Propriété', 0),
+('property_black_money', 'Smutsiga pengar', 0),
 ('society_ambulance', 'Sjukvård', 1),
 ('society_cardealer', 'Bilförsäljare', 1),
 ('society_mechanic', 'Mekaniker', 1),
@@ -179,7 +179,7 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 ('alive_chicken', 'Levande kyckling', 1, 0, 1),
 ('bandage', 'Bandage', 2, 0, 1),
 ('blowpipe', 'Blåslampa', 2, 0, 1),
-('bread', 'Bread', 1, 0, 1),
+('bread', 'Bröd', 1, 0, 1),
 ('cannabis', 'Cannabis', 3, 0, 1),
 ('carokit', 'Karosskit', 3, 0, 1),
 ('carotool', 'Verktyg', 2, 0, 1),
@@ -201,11 +201,11 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 ('packaged_plank', 'Paketerad trä', 1, 0, 1),
 ('petrol', 'Råolja', 1, 0, 1),
 ('petrol_raffin', 'Raffinerad olja', 1, 0, 1),
-('phone', 'Phone', 1, 0, 1),
+('phone', 'Telefon', 1, 0, 1),
 ('slaughtered_chicken', 'Slaktad kyckling', 1, 0, 1),
 ('stone', 'Sten', 1, 0, 1),
 ('washed_stone', 'Tvättad sten', 1, 0, 1),
-('water', 'Water', 1, 0, 1),
+('water', 'Vattem', 1, 0, 1),
 ('wood', 'Trä', 1, 0, 1),
 ('wool', 'Ull', 1, 0, 1);
 
@@ -231,14 +231,14 @@ INSERT INTO `jobs` (`name`, `label`, `whitelisted`) VALUES
 ('fisherman', 'Fiskare', 0),
 ('fueler', 'Bensintankare', 0),
 ('lumberjack', 'Skogshuggare', 0),
-('mechanic', 'Mechanic', 0),
+('mechanic', 'Mekaniker', 0),
 ('miner', 'Gruvarbetare', 0),
 ('police', 'Polis', 0),
 ('reporter', 'Reporter', 0),
 ('slaughterer', 'Slaktare', 0),
 ('tailor', 'Skräddare', 0),
 ('taxi', 'Taxi', 0),
-('unemployed', 'Unemployed', 0);
+('unemployed', 'Arbetslös', 0);
 
 -- --------------------------------------------------------
 
@@ -262,7 +262,7 @@ CREATE TABLE `job_grades` (
 --
 
 INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`) VALUES
-(1, 'unemployed', 0, 'unemployed', 'Unemployed', 200, '{}', '{}'),
+(1, 'unemployed', 0, 'unemployed', 'A-Kassa', 200, '{}', '{}'),
 (2, 'police', 0, 'recruit', 'Aspirant', 20, '{}', '{}'),
 (3, 'police', 1, 'officer', 'Assistent', 40, '{}', '{}'),
 (4, 'police', 2, 'sergeant', 'Inspektör', 60, '{}', '{}'),
@@ -310,7 +310,7 @@ CREATE TABLE `licenses` (
 --
 
 INSERT INTO `licenses` (`type`, `label`) VALUES
-('weed_processing', 'Weed Processing License');
+('weed_processing', 'Weed Bearbetnings licens');
 
 -- --------------------------------------------------------
 
@@ -484,7 +484,7 @@ CREATE TABLE `users` (
   `job` varchar(20) DEFAULT 'unemployed',
   `job_grade` int(11) DEFAULT 0,
   `loadout` longtext DEFAULT NULL,
-  `position` varchar(255) DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
+  `position` varchar(255) DEFAULT '{"x":165.95,"y":-979.92,"z":30.1,"heading":330.3}',
   `firstname` varchar(16) DEFAULT NULL,
   `lastname` varchar(16) DEFAULT NULL,
   `dateofbirth` varchar(10) DEFAULT NULL,
