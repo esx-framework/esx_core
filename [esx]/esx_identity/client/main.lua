@@ -57,9 +57,10 @@ if not Config.UseDeferrals then
 
 	CreateThread(function()
 		while true do
-			Wait(0)
+			local sleep = 1500
 
 			if guiEnabled then
+				sleep = 0
 				DisableControlAction(0, 1,   true) -- LookLeftRight
 				DisableControlAction(0, 2,   true) -- LookUpDown
 				DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
@@ -79,9 +80,8 @@ if not Config.UseDeferrals then
 				DisableControlAction(0, 143, true) -- disable melee
 				DisableControlAction(0, 75,  true) -- disable exit vehicle
 				DisableControlAction(27, 75, true) -- disable exit vehicle
-			else 
-				Wait(500)
 			end
+		Wait(sleep)
 		end
 	end)
 end
