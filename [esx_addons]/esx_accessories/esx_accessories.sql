@@ -1,5 +1,3 @@
-USE `es_extended`;
-
 INSERT INTO `datastore` (name, label, shared) VALUES
 	('user_ears', 'Ears', 0),
 	('user_glasses', 'Glasses', 0),
