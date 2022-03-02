@@ -393,7 +393,7 @@ function StartServerSyncLoops()
 		CreateThread(function()
 			local currentWeapon = {timer=0}
 			while ESX.PlayerLoaded do
-				local sleep = 5
+				local sleep = 500
 
 				if currentWeapon.timer == sleep then
 					local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
@@ -404,6 +404,7 @@ function StartServerSyncLoops()
 				end
 
 				if IsPedArmed(ESX.PlayerData.ped, 4) then
+					sleep = 0
 					if IsPedShooting(ESX.PlayerData.ped) then
 						local _,weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
 						local weapon = ESX.GetWeaponFromHash(weaponHash)
@@ -414,8 +415,6 @@ function StartServerSyncLoops()
 							currentWeapon.timer = 100 * sleep
 						end
 					end
-				else
-					sleep = 200
 				end
 				Wait(sleep)
 			end
@@ -465,16 +464,16 @@ end
 if not Config.OxInventory then
 	CreateThread(function()
 		while true do
-			Wait(0)
-			local playerCoords, letSleep = GetEntityCoords(ESX.PlayerData.ped), true
+			local Sleep = 1500
+			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
 			for pickupId,pickup in pairs(pickups) do
 				local distance = #(playerCoords - pickup.coords)
 
 				if distance < 5 then
+					Sleep = 0
 					local label = pickup.label
-					letSleep = false
 
 					if distance < 1 then
 						if IsControlJustReleased(0, 38) then
@@ -503,10 +502,7 @@ if not Config.OxInventory then
 					pickup.inRange = false
 				end
 			end
-
-			if letSleep then
-				Wait(500)
-			end
+			Wait(Sleep)
 		end
 	end)
 end
@@ -630,9 +626,10 @@ end)
 	local heading = 0
 	CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 
 		if(noclip)then
+			Sleep = 0
 			SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
 
 			if(IsControlPressed(1, 34))then
@@ -668,9 +665,8 @@ end)
 			if(IsControlPressed(1, 173))then
 				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0)
 			end
-		else
-			Wait(200)
 		end
+	Wait(Sleep)
 	end
 end)
 

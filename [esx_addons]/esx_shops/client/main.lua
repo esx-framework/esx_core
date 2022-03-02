@@ -85,7 +85,18 @@ end)
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
+
+		if currentAction then
+			sleep = 0
+			ESX.ShowHelpNotification(currentActionMsg)
+
+			if IsControlJustReleased(0, 38) and currentAction == 'shop_menu' then
+				currentAction = nil
+				OpenShopMenu(currentActionData.zone)
+			end
+		end
+
 		local playerCoords = GetEntityCoords(PlayerPedId())
 		local isInMarker, letSleep, currentZone = false, false
 
@@ -94,11 +105,10 @@ CreateThread(function()
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
+					sleep = 0
 					if v.ShowMarker then
 					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 				  end
-					letSleep = false
-
 					if distance < 2.0 then
 						isInMarker  = true
 						currentZone = k
@@ -117,30 +127,6 @@ CreateThread(function()
 			hasAlreadyEnteredMarker = false
 			TriggerEvent('esx_shops:hasExitedMarker', lastZone)
 		end
-
-		if letSleep then
-			Wait(500)
-		end
-	end
-end)
-
--- Key Controls
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if currentAction then
-			ESX.ShowHelpNotification(currentActionMsg)
-
-			if IsControlJustReleased(0, 38) then
-				if currentAction == 'shop_menu' then
-					OpenShopMenu(currentActionData.zone)
-				end
-
-				currentAction = nil
-			end
-		else
-			Wait(500)
-		end
+	Wait(Sleep)
 	end
 end)

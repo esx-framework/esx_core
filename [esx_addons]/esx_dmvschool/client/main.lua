@@ -215,99 +215,30 @@ end)
 -- Display markers
 CreateThread(function()
 	while true do
-		Wait(0)
-
-		local coords = GetEntityCoords(PlayerPedId())
+		local sleep = 1500
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
 
 		for k,v in pairs(Config.Zones) do
 			local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
 			if(v.Type ~= -1 and #(coords - Pos) < Config.DrawDistance) then
+				sleep = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
-	end
-end)
-
--- Enter / Exit marker events
-CreateThread(function()
-	while true do
-
-		Wait(100)
-
-		local coords      = GetEntityCoords(PlayerPedId())
-		local isInMarker  = false
-		local currentZone = nil
-
-		for k,v in pairs(Config.Zones) do
-			local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-			if(#(coords - Pos) < v.Size.x) then
-				isInMarker  = true
-				currentZone = k
-			end
-		end
-
-		if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-			HasAlreadyEnteredMarker = true
-			LastZone                = currentZone
-			TriggerEvent('esx_dmvschool:hasEnteredMarker', currentZone)
-		end
-
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_dmvschool:hasExitedMarker', LastZone)
-		end
-	end
-end)
-
--- Block UI
-CreateThread(function()
-	while true do
-		Wait(0)
 
 		if CurrentTest == 'theory' then
-			local playerPed = PlayerPedId()
-
+			
+			sleep = 0
 			DisableControlAction(0, 1, true) -- LookLeftRight
 			DisableControlAction(0, 2, true) -- LookUpDown
 			DisablePlayerFiring(playerPed, true) -- Disable weapon firing
 			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
 			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-		else
-			Wait(500)
 		end
-	end
-end)
-
--- Key Controls
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if CurrentAction then
-			ESX.ShowHelpNotification(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) then
-				if CurrentAction == 'dmvschool_menu' then
-					OpenDMVSchoolMenu()
-				end
-
-				CurrentAction = nil
-			end
-		else
-			Wait(500)
-		end
-	end
-end)
-
--- Drive test
-CreateThread(function()
-	while true do
-
-		Wait(0)
 
 		if CurrentTest == 'drive' then
-			local playerPed      = PlayerPedId()
-			local coords         = GetEntityCoords(playerPed)
+			sleep = 0
 			local nextCheckPoint = CurrentCheckPoint + 1
 
 			if Config.CheckPoints[nextCheckPoint] == nil then
@@ -325,7 +256,6 @@ CreateThread(function()
 					StopDriveTest(false)
 				end
 			else
-
 				if CurrentCheckPoint ~= LastCheckPoint then
 					if DoesBlipExist(CurrentBlip) then
 						RemoveBlip(CurrentBlip)
@@ -349,20 +279,51 @@ CreateThread(function()
 					CurrentCheckPoint = CurrentCheckPoint + 1
 				end
 			end
-		else
-			-- not currently taking driver test
-			Wait(500)
 		end
+
+		if CurrentAction then
+			sleep = 0
+			ESX.ShowHelpNotification(CurrentActionMsg)
+
+			if (IsControlJustReleased(0, 38)) and (CurrentAction == 'dmvschool_menu') then
+					OpenDMVSchoolMenu()
+					CurrentAction = nil
+			end
+		end
+		
+		local isInMarker  = false
+		local currentZone = nil
+
+		for k,v in pairs(Config.Zones) do
+			local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+			if(#(coords - Pos) < v.Size.x) then
+				sleep = 0
+				isInMarker  = true
+				currentZone = k
+			end
+		end
+
+		if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
+			HasAlreadyEnteredMarker = true
+			LastZone                = currentZone
+			TriggerEvent('esx_dmvschool:hasEnteredMarker', currentZone)
+		end
+
+		if not isInMarker and HasAlreadyEnteredMarker then
+			HasAlreadyEnteredMarker = false
+			TriggerEvent('esx_dmvschool:hasExitedMarker', LastZone)
+		end
+		Wait(sleep)
 	end
 end)
 
 -- Speed / Damage control
 CreateThread(function()
 	while true do
-		Wait(0)
+		local sleep = 1500
 
 		if CurrentTest == 'drive' then
-
+			sleep = 0
 			local playerPed = PlayerPedId()
 
 			if IsPedInAnyVehicle(playerPed, false) then
@@ -402,9 +363,7 @@ CreateThread(function()
 					Wait(1500)
 				end
 			end
-		else
-			-- not currently taking driver test
-			Wait(500)
 		end
+		Wait(sleep)
 	end
 end)
