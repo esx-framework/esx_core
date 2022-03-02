@@ -1,30 +1,13 @@
 # esx_rpchat
 
-#### Description
+## Description
+
 This is a proximity chat script. With a few commands such as Twitter, OOC and Local Me
 
-## Download & Installation
+## Legal
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_rpchat
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_rpchat [esx]/esx_rpchat
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_rpchat/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Add `start esx_rpchat` to your server.cfg
-
-# Legal
 ### License
+
 esx_rpchat - RP chat for ESX
 
 Copyright (C) 2015-2022 Jérémie N'gadi
@@ -33,4 +16,4 @@ This program Is free software: you can redistribute it And/Or modify it under th
 
 This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
 
-You should have received a copy Of the GNU General Public License along with this program. If Not, see http://www.gnu.org/licenses/.
+You should have received a copy Of the GNU General Public License along with this program. If Not, see <http://www.gnu.org/licenses/>.
