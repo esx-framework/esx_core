@@ -6,7 +6,7 @@ RegisterCommand("cruise", function(src)
 	end
 end)
 
-RegisterKeyMapping("cruise", "Enable Cruise Control", Config.ToggleKey)
+RegisterKeyMapping("cruise", "Enable Cruise Control", "keyboard",Config.ToggleKey)
 
 function TriggerCruiseControl()
 	if CruisedSpeed == 0 and IsDriving() then
@@ -65,7 +65,7 @@ function IsInVehicle ()
 end
 
 function IsDriver ()
-	return GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId()
+	return GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1)
 end
 
 function GetVehicleSpeed ()
