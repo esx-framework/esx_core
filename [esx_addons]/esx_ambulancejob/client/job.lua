@@ -378,7 +378,7 @@ RegisterCommand("ambulance", function(src)
 	end
 end)
 
-RegisterKeyMapping("ambulance", "Open Ambulance Actions Menu", "k")
+RegisterKeyMapping("ambulance", "Open Ambulance Actions Menu", "keyboard", "k")
 
 RegisterNetEvent('esx_ambulancejob:putInVehicle')
 AddEventHandler('esx_ambulancejob:putInVehicle', function()
