@@ -13,7 +13,7 @@ INSERT INTO `jobs` (name, label) VALUES
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-	('cardealer',0,'recruit','Nyanställd',10,'{}','{}'),
+	('cardealer',0,'recruit','Hallvärd',10,'{}','{}'),
 	('cardealer',1,'novice','Nybörjare',25,'{}','{}'),
 	('cardealer',2,'experienced','Erfaren',40,'{}','{}'),
 	('cardealer',3,'boss','Chef',0,'{}','{}')
@@ -73,15 +73,15 @@ CREATE TABLE `vehicle_categories` (
 
 INSERT INTO `vehicle_categories` (name, label) VALUES
 	('compacts','Småbil'),
-	('coupes','Coupés'),
-	('sedans','Sedans'),
+	('coupes','Kupé'),
+	('sedans','Sedan'),
 	('sports','Sportbil'),
 	('sportsclassics','Klassik sportbil'),
 	('super','Super'),
 	('muscle','Muskel'),
 	('offroad','Off Road'),
-	('suvs','SUVs'),
-	('vans','Vans'),
+	('suvs','Stadsjeep'),
+	('vans','Skåpbil'),
 	('motorcycles','Motorcykel')
 ;
 
@@ -335,5 +335,4 @@ INSERT INTO `vehicles` (name, model, price, category) VALUES
 	('Neon', 'neon', 1500000, 'sports'),
 	('Revolter', 'revolter', 1610000, 'sports'),
 	('Sentinel3', 'sentinel3', 650000, 'sports'),
-	('Hustler', 'hustler', 625000, 'muscle')
-;
+	('Hustler', 'hustler', 625000, 'muscle');

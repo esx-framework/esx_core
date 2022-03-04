@@ -215,11 +215,11 @@ Locales['sv'] = {
 
   -- Weapon Tints
   ['tint_default'] = 'standardutseende',
-  ['tint_green'] = 'grönskinn',
-  ['tint_gold'] = 'guldskinn',
-  ['tint_pink'] = 'råsaskinn',
-  ['tint_army'] = 'arméskinn',
-  ['tint_lspd'] = 'blåskinn',
-  ['tint_orange'] = 'orangeskinn',
-  ['tint_platinum'] = 'platinaskinn',
+  ['tint_green'] = 'grön färg',
+  ['tint_gold'] = 'guld färg',
+  ['tint_pink'] = 'råsa färg',
+  ['tint_army'] = 'armé färg',
+  ['tint_lspd'] = 'blå färg',
+  ['tint_orange'] = 'orange färg',
+  ['tint_platinum'] = 'platina färg',
 }
