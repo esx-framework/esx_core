@@ -88,7 +88,7 @@ CreateThread(function()
 		local Sleep = 1500
 
 		if currentAction then
-			sleep = 0
+			Sleep = 0
 			ESX.ShowHelpNotification(currentActionMsg)
 
 			if IsControlJustReleased(0, 38) and currentAction == 'shop_menu' then
@@ -98,14 +98,14 @@ CreateThread(function()
 		end
 
 		local playerCoords = GetEntityCoords(PlayerPedId())
-		local isInMarker, letSleep, currentZone = false, false
+		local isInMarker, currentZone = false
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				local distance = #(playerCoords - v.Pos[i])
 
 				if distance < Config.DrawDistance then
-					sleep = 0
+					Sleep = 0
 					if v.ShowMarker then
 					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 				  end
