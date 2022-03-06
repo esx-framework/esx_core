@@ -8,10 +8,10 @@ function OpenRealestateAgentMenu()
 	}
 
 	if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'realestateagent' and ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {
+		elements[#elements+1] = {
 			label = _U('boss_action'),
 			value = 'boss_actions'
-		})
+		}
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -48,13 +48,13 @@ function OpenPropertyMenu()
 		}
 
 		for i=1, #properties, 1 do
-			table.insert(elements.rows, {
+			elements.rows[#elements.rows+1] = {
 				data = properties[i],
 				cols = {
 					properties[i].label,
 					_U('property_actionbuttons')
 				}
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'properties', elements, function(data, menu)
@@ -133,7 +133,7 @@ function OpenCustomersMenu()
 		}
 
 		for i=1, #customers, 1 do
-			table.insert(elements.rows, {
+			elements.rows[#elements.rows+1] = {
 				data = customers[i],
 				cols = {
 					customers[i].name,
@@ -141,7 +141,7 @@ function OpenCustomersMenu()
 					(customers[i].propertyRented and _U('customer_rent') or _U('customer_sell')),
 					_U('customer_contractbuttons')
 				}
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'customers', elements, function(data, menu)

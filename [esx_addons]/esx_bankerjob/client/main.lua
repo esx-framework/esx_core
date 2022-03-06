@@ -17,7 +17,7 @@ function OpenBankActionsMenu()
 	}
 
 	if ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, { label = _U('boss_actions'), value = 'boss_actions' })
+		elements[#elements+1] = { label = _U('boss_actions'), value = 'boss_actions' }
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -73,14 +73,14 @@ function OpenCustomersMenu()
 		}
 
 		for i=1, #customers do
-			table.insert(elements.rows, {
+			elements.rows[#elements.rows+1] = {
 				data = customers[i],
 				cols = {
 					customers[i].name,
 					customers[i].bankSavings,
 					'{{' .. _U('deposit') .. '|deposit}} {{' .. _U('withdraw') .. '|withdraw}}'
 				}
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'customers', elements, function(data, menu)

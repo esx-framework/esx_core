@@ -44,7 +44,7 @@ function GetDataStoreOwners(name)
 	local identifiers = {}
 
 	for i=1, #DataStores[name], 1 do
-		table.insert(identifiers, DataStores[name][i].owner)
+		identifiers[#identifiers+1] = DataStores[name][i].owner
 	end
 
 	return identifiers

@@ -45,10 +45,10 @@ ESX.RegisterServerCallback('esx_vehicleshop:getVehiclesInGarage', function(sourc
 
 		local vehicles = {}
 		for i=1, #result, 1 do
-			table.insert(vehicles, {
+			vehicles[#vehicles+1] = {
 				zone    = result[i].zone,
 				vehicle = json.decode(result[i].vehicle)
-			})
+			}
 		end
 
 		cb(vehicles)

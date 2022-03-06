@@ -39,7 +39,7 @@ function CreateAddonInventory(name, owner, items)
 			label = Items[name]
 		}
 
-		table.insert(self.items, item)
+		self.items[#self.items+1] = item
 
 		if self.owner == nil then
 			MySQL.update('INSERT INTO addon_inventory_items (inventory_name, name, count) VALUES (@inventory_name, @item_name, @count)',

@@ -46,7 +46,7 @@ AddEventHandler('esx_society:registerSociety', function(name, label, account, da
 	end
 
 	if not found then
-		table.insert(RegisteredSocieties, society)
+		RegisteredSocieties[#RegisteredSocieties+1] = society
 	end
 end)
 
@@ -128,7 +128,7 @@ AddEventHandler('esx_society:putVehicleInGarage', function(societyName, vehicle)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', society.datastore, function(store)
 		local garage = store.get('garage') or {}
-		table.insert(garage, vehicle)
+		garage[#garage+1] = vehicle
 		store.set('garage', garage)
 	end)
 end)
@@ -174,7 +174,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 			name = xPlayer.get('firstName') .. ' ' .. xPlayer.get('lastName')
 		end
 
-		table.insert(employees, {
+		employees[#employees+1] = {
 			name = name,
 			identifier = xPlayer.identifier,
 			job = {
@@ -184,7 +184,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 				grade_name = xPlayer.job.grade_name,
 				grade_label = xPlayer.job.grade_label
 			}
-		})
+		}
 	end
 		
 	local query = "SELECT identifier, job_grade FROM `users` WHERE `job`= ? ORDER BY job_grade DESC"
@@ -212,7 +212,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 					name = row.firstname .. ' ' .. row.lastname 
 				end
 				
-				table.insert(employees, {
+				employees[#employees+1] = {
 					name = name,
 					identifier = identifier,
 					job = {
@@ -222,7 +222,7 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 						grade_name = Jobs[society].grades[tostring(row.job_grade)].name,
 						grade_label = Jobs[society].grades[tostring(row.job_grade)].label
 					}
-				})
+				}
 			end
 		end
 
@@ -236,7 +236,7 @@ ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
 	local grades = {}
 
 	for k,v in pairs(job.grades) do
-		table.insert(grades, v)
+		grades[#grades+1] = v
 	end
 
 	table.sort(grades, function(a, b)
@@ -315,12 +315,12 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 		
 		local xPlayers = ESX.GetExtendedPlayers()
 		for _, xPlayer in pairs(xPlayers) do
-			table.insert(onlinePlayers, {
+			onlinePlayers[#onlinePlayers+1] = {
 				source = xPlayer.source,
 				identifier = xPlayer.identifier,
 				name = xPlayer.name,
 				job = xPlayer.job
-			})
+			}
 		end
 		cb(onlinePlayers)
 		getOnlinePlayers = false

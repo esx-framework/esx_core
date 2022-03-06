@@ -132,11 +132,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 	end
 
 	for account,label in pairs(Config.Accounts) do
-		table.insert(userData.accounts, {
+		userData.accounts[#userData.accounts+1] = {
 			name = account,
 			money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
 			label = label
-		})
+		}
 	end
 
 	-- Job
@@ -183,7 +183,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			local count = foundItems[name] or 0
 			if count > 0 then userData.weight = userData.weight + (item.weight * count) end
 
-			table.insert(userData.inventory, {
+			userData.inventory[#userData.inventory+1] = {
 				name = name,
 				count = count,
 				label = item.label,
@@ -191,7 +191,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 				usable = Core.UsableItemsCallbacks[name] ~= nil,
 				rare = item.rare,
 				canRemove = item.canRemove
-			})
+			}
 		end
 
 		table.sort(userData.inventory, function(a, b)
@@ -228,13 +228,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 					if not weapon.components then weapon.components = {} end
 					if not weapon.tintIndex then weapon.tintIndex = 0 end
 
-					table.insert(userData.loadout, {
+					userData.loadout[#userData.loadout+1] = {
 						name = name,
 						ammo = weapon.ammo,
 						label = label,
 						components = weapon.components,
 						tintIndex = weapon.tintIndex
-					})
+					}
 				end
 			end
 		end

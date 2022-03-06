@@ -83,10 +83,10 @@ function ReturnVehicleProvider()
 			local returnPrice = ESX.Math.Round(v.price * 0.75)
 			local vehicleLabel = getVehicleFromModel(v.vehicle).label
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s [<span style="color:orange;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(returnPrice))),
 				value = v.vehicle
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'return_provider_menu', {
@@ -143,7 +143,7 @@ function OpenShopMenu()
 
 	for i=1, #Vehicles, 1 do
 		if IsModelInCdimage(joaat(Vehicles[i].model)) then
-			table.insert(vehiclesByCategory[Vehicles[i].category], Vehicles[i])
+			vehiclesByCategory[Vehicles[i].category][#vehiclesByCategory[Vehicles[i].category]+1] = Vehicles[i]
 		else
 			print(('[esx_vehicleshop] [^3ERROR^7] Vehicle "%s" does not exist'):format(Vehicles[i].model))
 		end
@@ -167,19 +167,19 @@ function OpenShopMenu()
 				firstVehicleData = vehicle
 			end
 
-			table.insert(options, ('%s <span style="color:green;">%s</span>'):format(vehicle.name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicle.price))))
+			options[#options+1] = ('%s <span style="color:green;">%s</span>'):format(vehicle.name, _U('generic_shopitem', ESX.Math.GroupDigits(vehicle.price)))
 		end
 
 		table.sort(options)
 
-		table.insert(elements, {
+		elements[#elements+1] = {
 			name    = category.name,
 			label   = category.label,
 			value   = 0,
 			type    = 'slider',
 			max     = #Categories[i],
 			options = options
-		})
+		}
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop', {
@@ -442,10 +442,10 @@ function OpenPopVehicleMenu()
 		for k,v in ipairs(vehicles) do
 			local vehicleLabel = getVehicleFromModel(v.vehicle).label
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s [MSRP <span style="color:green;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(v.price))),
 				value = v.vehicle
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'commercial_vehicles', {
@@ -479,10 +479,10 @@ function OpenRentedVehiclesMenu()
 		for k,v in ipairs(vehicles) do
 			local vehicleLabel = getVehicleFromModel(v.name).label
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s: %s - <span style="color:orange;">%s</span>'):format(v.playerName, vehicleLabel, v.plate),
 				value = v.name
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'rented_vehicles', {
@@ -518,7 +518,7 @@ function OpenBossActionsMenu()
 				}
 
 				for i=1, #customers, 1 do
-					table.insert(elements.rows, {
+					elements.rows[#elements.rows+1] = {
 						data = customers[i],
 						cols = {
 							customers[i].client,
@@ -527,7 +527,7 @@ function OpenBossActionsMenu()
 							customers[i].soldby,
 							customers[i].date
 						}
-					})
+					}
 				end
 
 				ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'sold_vehicles', elements, function(data2, menu2)
@@ -553,10 +553,10 @@ function OpenGetStocksMenu()
 
 		for i=1, #items, 1 do
 			if items[i].count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = 'x' .. items[i].count .. ' ' .. items[i].label,
 					value = items[i].name
-				})
+				}
 			end
 		end
 
@@ -597,11 +597,11 @@ function OpenPutStocksMenu()
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = item.label .. ' x' .. item.count,
 					type = 'item_standard',
 					value = item.name
-				})
+				}
 			end
 		end
 

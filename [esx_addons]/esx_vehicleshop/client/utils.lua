@@ -1,10 +1,10 @@
 local NumberCharset = {}
 local Charset = {}
 
-for i = 48,  57 do table.insert(NumberCharset, string.char(i)) end
+for i = 48,  57 do NumberCharset[#NumberCharset+1] = string.char(i) end
 
-for i = 65,  90 do table.insert(Charset, string.char(i)) end
-for i = 97, 122 do table.insert(Charset, string.char(i)) end
+for i = 65,  90 do Charset[#Charset+1] = string.char(i) end
+for i = 97, 122 do Charset[#Charset+1] = string.char(i) end
 
 function GeneratePlate()
 	local generatedPlate

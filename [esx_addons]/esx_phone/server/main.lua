@@ -57,10 +57,10 @@ function LoadPlayer(player)
 			['@identifier'] = xPlayer.identifier
 		}, function(result2)
 			for i=1, #result2, 1 do
-				table.insert(contacts, {
+				contacts[#contacts+1] = {
 					name   = result2[i].name,
 					number = result2[i].number,
-				})
+				}
 			end
 
 			xPlayer.set('contacts', contacts)
@@ -223,10 +223,10 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 					end
 				end
 
-				table.insert(contacts, {
+				contacts[#contacts+1] = {
 					name   = contactName,
 					number = phoneNumber
-				})
+				}
 
 				xPlayer.set('contacts', contacts)
 

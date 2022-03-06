@@ -262,10 +262,10 @@ ESX.RegisterServerCallback('esx_policejob:addArmoryWeapon', function(source, cb,
 		end
 
 		if not foundWeapon then
-			table.insert(weapons, {
+			weapons[#weapons+1] = {
 				name  = weaponName,
 				count = 1
-			})
+			}
 		end
 
 		store.set('weapons', weapons)
@@ -291,10 +291,10 @@ ESX.RegisterServerCallback('esx_policejob:removeArmoryWeapon', function(source, 
 		end
 
 		if not foundWeapon then
-			table.insert(weapons, {
+			weapons[#weapons+1] = {
 				name = weaponName,
 				count = 0
-			})
+			}
 		end
 
 		store.set('weapons', weapons)

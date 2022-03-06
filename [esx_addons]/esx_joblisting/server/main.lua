@@ -5,10 +5,10 @@ MySQL.ready(function()
 		['@whitelisted'] = false
 	}, function(result)
 		for i=1, #result, 1 do
-			table.insert(availableJobs, {
+			availableJobs[#availableJobs+1] = {
 				job = result[i].name,
 				label = result[i].label
-			})
+			}
 		end
 	end)
 end)

@@ -9,10 +9,10 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 			dressing = {}
 		end
 
-		table.insert(dressing, {
+		dressing[#dressing+1] = {
 			label = label,
 			skin  = skin
-		})
+		}
 
 		store.set('dressing', dressing)
 		store.save()

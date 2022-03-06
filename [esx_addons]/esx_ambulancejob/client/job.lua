@@ -7,7 +7,7 @@ function OpenAmbulanceActionsMenu()
 	local elements = {{label = _U('cloakroom'), value = 'cloakroom'}}
 
 	if Config.EnablePlayerManagement and ESX.GetPlayerData().job.grade_name == 'boss' then
-		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
+		elements[#elements+1] = {label = _U('boss_actions'), value = 'boss_actions'}
 	end
 
 	ESX.UI.Menu.CloseAll()

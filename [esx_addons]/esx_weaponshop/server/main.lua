@@ -8,11 +8,11 @@ MySQL.ready(function()
 				shopItems[result[i].zone] = {}
 			end
 
-			table.insert(shopItems[result[i].zone], {
+			shopItems[result[i].zone][#shopItems[result[i].zone]+1] = {
 				item  = result[i].item,
 				price = result[i].price,
-				label = ESX.GetWeaponLabel(result[i].item)
-			})
+				label = ESX.GetWeaponLabel(result[i].item)	
+			}
 		end
 
 		TriggerClientEvent('esx_weaponshop:sendShop', -1, shopItems)

@@ -117,7 +117,7 @@ MySQL.ready(function()
 				roomMenu = json.decode(property.room_menu)
 			end
 
-			table.insert(Config.Properties, {
+			Config.Properties[#Config.Properties+1] = {
 				name      = property.name,
 				label     = property.label,
 				entering  = entering,
@@ -131,7 +131,7 @@ MySQL.ready(function()
 				isGateway = isGateway,
 				roomMenu  = roomMenu,
 				price     = property.price
-			})
+			}
 
 			if Config.OxInventory then
 				exports.ox_inventory:RegisterStash(property.name, property.label, 50, 100000, true)
@@ -162,14 +162,14 @@ AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 		local properties = {}
 
 		for i=1, #result, 1 do
-			table.insert(properties, {
+			properties[#properties+1] = {
 				id     = result[i].id,
 				name   = result[i].name,
 				label  = GetProperty(result[i].name).label,
 				price  = result[i].price,
 				rented = (result[i].rented == 1 and true or false),
 				owner  = result[i].owner
-			})
+			}
 		end
 
 		cb(properties)
@@ -323,10 +323,10 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 			TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
 				local storeWeapons = store.get('weapons') or {}
 
-				table.insert(storeWeapons, {
+				storeWeapons[#storeWeapons+1] = {
 					name = item,
 					ammo = count
-				})
+				}
 
 				store.set('weapons', storeWeapons)
 			end)
@@ -400,7 +400,7 @@ ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb
 
 		for i=1, count, 1 do
 			local entry = store.get('dressing', i)
-			table.insert(labels, entry.label)
+			labels[#labels+1] = entry.label
 		end
 
 		cb(labels)

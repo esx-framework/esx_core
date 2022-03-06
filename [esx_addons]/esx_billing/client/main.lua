@@ -7,10 +7,10 @@ function ShowBillsMenu()
 			local elements = {}
 
 			for k,v in ipairs(bills) do
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label  = ('%s - <span style="color:red;">%s</span>'):format(v.label, _U('invoices_item', ESX.Math.GroupDigits(v.amount))),
 					billId = v.id
-				})
+				}
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {

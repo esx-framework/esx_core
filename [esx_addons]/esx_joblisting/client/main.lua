@@ -5,10 +5,10 @@ function ShowJobListingMenu()
 		local elements = {}
 
 		for i=1, #jobs, 1 do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = jobs[i].label,
 				job   = jobs[i].job
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'joblisting', {

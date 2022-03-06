@@ -136,7 +136,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
 		end
 	else -- save weapons & restore em' since spawnmanager removes them
 		for i=1, #xPlayer.loadout, 1 do
-			table.insert(playerLoadout, xPlayer.loadout[i])
+			playerLoadout[#playerLoadout+1] = xPlayer.loadout[i]
 		end
 
 		-- give back wepaons after a couple of seconds

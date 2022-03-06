@@ -21,14 +21,14 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 					if IsModelInCdimage(vehicle.model) then
 						local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicle.model))
 
-						table.insert(shopElements, {
+						shopElements[#shopElements+1] = {
 							label = ('%s - <span style="color:green;">%s</span>'):format(vehicleLabel, _U('shop_item', ESX.Math.GroupDigits(vehicle.price))),
 							name  = vehicleLabel,
 							model = vehicle.model,
 							price = vehicle.price,
 							props = vehicle.props,
 							type  = type
-						})
+						}
 					end
 				end
 
@@ -56,12 +56,12 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 								label = label .. ('<span style="color:darkred;">%s</span>'):format(_U('garage_notstored'))
 							end
 
-							table.insert(garage, {
+							garage[#garage+1] = {
 								label = label,
 								stored = v.stored,
 								model = props.model,
 								plate = props.plate
-							})
+							}
 
 							allVehicleProps[props.plate] = props
 						end
@@ -254,7 +254,7 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		WaitForVehicleToLoad(data.current.model)
 
 		ESX.Game.SpawnLocalVehicle(data.current.model, shopCoords, 0.0, function(vehicle)
-			table.insert(spawnedVehicles, vehicle)
+			spawnedVehicles[#spawnedVehicles+1] = vehicle
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
 			SetModelAsNoLongerNeeded(data.current.model)
@@ -267,7 +267,7 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 
 	WaitForVehicleToLoad(elements[1].model)
 	ESX.Game.SpawnLocalVehicle(elements[1].model, shopCoords, 0.0, function(vehicle)
-		table.insert(spawnedVehicles, vehicle)
+		spawnedVehicles[#spawnedVehicles+1] = vehicle
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
 		SetModelAsNoLongerNeeded(elements[1].model)

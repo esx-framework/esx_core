@@ -25,7 +25,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 end
 
                 if found then
-                    table.insert(_components, components[i])
+                    _components[#_components+1] = components[i]
                 end
             end
         end
@@ -56,7 +56,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 end
             end
 
-            table.insert(elements, data)
+            elements[#elements+1] = data
         end
 
         CreateSkinCam()

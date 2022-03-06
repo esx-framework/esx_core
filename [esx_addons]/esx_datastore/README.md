@@ -42,7 +42,7 @@ An datastore must be configured in the database before using it. Don't forget to
 TriggerEvent('esx_datastore:getSharedDataStore', 'police', function(store)
 	local weapons = store.get('weapons') or {}
 
-	table.insert(weapons, {name = 'WEAPON_PUMPSHOTGUN', ammo = 50})
+	weapons[#weapons+1] = {name = 'WEAPON_PUMPSHOTGUN', ammo = 50}
 	store.set('weapons', weapons)
 end)
 

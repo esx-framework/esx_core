@@ -83,23 +83,23 @@ function OpenBossMenu(society, close, options)
 			end
 
 			if options.withdraw then
-				table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
+				elements[#elements+1] = {label = _U('withdraw_society_money'), value = 'withdraw_society_money'}
 			end
 
 			if options.deposit then
-				table.insert(elements, {label = _U('deposit_society_money'), value = 'deposit_money'})
+				elements[#elements+1] = {label = _U('deposit_society_money'), value = 'deposit_money'}
 			end
 
 			if options.wash then
-				table.insert(elements, {label = _U('wash_money'), value = 'wash_money'})
+				elements[#elements+1] = {label = _U('wash_money'), value = 'wash_money'}
 			end
 
 			if options.employees then
-				table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
+				elements[#elements+1] = {label = _U('employee_management'), value = 'manage_employees'}
 			end
 
 			if options.grades then
-				table.insert(elements, {label = _U('salary_management'), value = 'manage_grades'})
+				elements[#elements+1] = {label = _U('salary_management'), value = 'manage_grades'}
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boss_actions_' .. society, {
@@ -195,14 +195,14 @@ function OpenEmployeeList(society)
 		for i=1, #employees, 1 do
 			local gradeLabel = (employees[i].job.grade_label == '' and employees[i].job.label or employees[i].job.grade_label)
 
-			table.insert(elements.rows, {
+			elements.rows[#elements.rows+1] = {
 				data = employees[i],
 				cols = {
 					employees[i].name,
 					gradeLabel,
 					'{{' .. _U('promote') .. '|promote}} {{' .. _U('fire') .. '|fire}}'
 				}
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'employee_list_' .. society, elements, function(data, menu)
@@ -231,12 +231,12 @@ function OpenRecruitMenu(society)
 
 		for i=1, #players, 1 do
 			if players[i].job.name ~= society then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = players[i].name,
 					value = players[i].source,
 					name = players[i].name,
 					identifier = players[i].identifier
-				})
+				}
 			end
 		end
 
@@ -277,11 +277,11 @@ function OpenPromoteMenu(society, employee)
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = gradeLabel,
 				value = job.grades[i].grade,
 				selected = (employee.job.grade == job.grades[i].grade)
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_employee_' .. society, {
@@ -309,10 +309,10 @@ function OpenManageGradesMenu(society)
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s - <span style="color:green;">%s</span>'):format(gradeLabel, _U('money_generic', ESX.Math.GroupDigits(job.grades[i].salary))),
 				value = job.grades[i].grade
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society, {

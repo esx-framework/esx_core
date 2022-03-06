@@ -159,23 +159,23 @@ CreateThread(function()
 	local blipList = {}
 
 	for i=1, #Config.Zones.Garages, 1 do
-		table.insert(blipList, {
+		blipList[#blipList+1] = {
 			coords = Config.Zones.Garages[i].GaragePos,
 			text   = _U('blip_garage'),
 			sprite = 356,
 			color  = 3,
 			scale  = 1.0
-		})
+		}
 	end
 
 	for i=1, #Config.Zones.BoatShops, 1 do
-		table.insert(blipList, {
+		blipList[#blipList+1] = {
 			coords = Config.Zones.BoatShops[i].Outside,
 			text   = _U('blip_shop'),
 			sprite = 427,
 			color  = 3,
 			scale  = 1.0
-		})
+		}
 	end
 
 	for i=1, #blipList, 1 do

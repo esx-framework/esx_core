@@ -5,19 +5,19 @@ function GetStatusData(minimal)
 
 	for i=1, #Status, 1 do
 		if minimal then
-			table.insert(status, {
+			status[#status+1] = {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				percent = (Status[i].val / Config.StatusMax) * 100
-			})
+			}
 		else
-			table.insert(status, {
+			status[#status+1] = {
 				name    = Status[i].name,
 				val     = Status[i].val,
 				color   = Status[i].color,
 				visible = Status[i].visible(Status[i]),
-				percent = (Status[i].val / Config.StatusMax) * 100
-			})
+				percent = (Status[i].val / Config.StatusMax) * 100	
+			}
 		end
 	end
 
@@ -26,7 +26,7 @@ end
 
 AddEventHandler('esx_status:registerStatus', function(name, default, color, visible, tickCallback)
 	local status = CreateStatus(name, default, color, visible, tickCallback)
-	table.insert(Status, status)
+	Status[#Status+1] = status
 end)
 
 AddEventHandler('esx_status:unregisterStatus', function(name)
@@ -69,11 +69,11 @@ AddEventHandler('esx_status:load', function(status)
 		while ESX.PlayerLoaded do
 			for i=1, #Status do
 				Status[i].onTick()
-				table.insert(data, {
+				data[#data+1] = {
 					name = Status[i].name,
 					val = Status[i].val,
 					percent = (Status[i].val / 1000000) * 100
-				})
+				}
 			end
 
 			if Config.Display then

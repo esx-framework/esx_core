@@ -137,7 +137,7 @@ function SpawnWeedPlants()
 			PlaceObjectOnGroundProperly(obj)
 			FreezeEntityPosition(obj, true)
 
-			table.insert(weedPlants, obj)
+			weedPlants[#weedPlants+1] = obj
 			spawnedWeeds = spawnedWeeds + 1
 		end)
 	end

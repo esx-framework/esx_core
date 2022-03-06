@@ -27,7 +27,7 @@ function GetRandomWalkingNPC()
 
 	for i=1, #peds, 1 do
 		if IsPedHuman(peds[i]) and IsPedWalking(peds[i]) and not IsPedAPlayer(peds[i]) then
-			table.insert(search, peds[i])
+			search[#search+1] = peds[i]
 		end
 	end
 
@@ -39,7 +39,7 @@ function GetRandomWalkingNPC()
 		local ped = GetRandomPedAtCoord(0.0, 0.0, 0.0, math.huge + 0.0, math.huge + 0.0, math.huge + 0.0, 26)
 
 		if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
-			table.insert(search, ped)
+			search[#search+1] = ped
 		end
 	end
 
@@ -132,10 +132,10 @@ function OpenVehicleSpawnerMenu()
 		ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
 
 			for i=1, #vehicles, 1 do
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']',
 					value = vehicles[i]
-				})
+				}
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner', {
@@ -221,7 +221,7 @@ function OpenTaxiActionsMenu()
 	}
 
 	if Config.EnablePlayerManagement and ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
+		elements[#elements+1] = {label = _U('boss_actions'), value = 'boss_actions'}
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -340,10 +340,10 @@ function OpenGetStocksMenu()
 		local elements = {}
 
 		for i=1, #items, 1 do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = 'x' .. items[i].count .. ' ' .. items[i].label,
 				value = items[i].name
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
@@ -386,11 +386,11 @@ function OpenPutStocksMenu()
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = item.label .. ' x' .. item.count,
 					type = 'item_standard',
 					value = item.name
-				})
+				}
 			end
         end
         

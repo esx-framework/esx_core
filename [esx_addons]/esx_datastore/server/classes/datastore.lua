@@ -74,7 +74,7 @@ function CreateDataStore(name, owner, data)
 			end
 		end)
 
-		table.insert(timeoutCallbacks, timeoutCallback)
+		timeoutCallback[#timeoutCallback+1] = timeoutCallback
 	end
 
 	return self

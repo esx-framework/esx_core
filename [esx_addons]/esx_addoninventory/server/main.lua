@@ -37,7 +37,7 @@ MySQL.ready(function()
 
 		if shared == 0 then
 
-			table.insert(InventoriesIndex, name)
+			InventoriesIndex[#InventoriesIndex+1] = name
 
 			Inventories[name] = {}
 			local items       = {}
@@ -51,27 +51,27 @@ MySQL.ready(function()
 					items[itemOwner] = {}
 				end
 
-				table.insert(items[itemOwner], {
+				items[itemOwner][#items[itemOwner]+1] = {
 					name  = itemName,
 					count = itemCount,
 					label = Items[itemName]
-				})
+				}
 			end
 
 			for k,v in pairs(items) do
 				local addonInventory = CreateAddonInventory(name, k, v)
-				table.insert(Inventories[name], addonInventory)
+				Inventories[name][#Inventories[name]+1] = addonInventory
 			end
 
 		else
 			local items = {}
 
 			for j=1, #result2, 1 do
-				table.insert(items, {
+				items[#items+1] = {
 					name  = result2[j].name,
 					count = result2[j].count,
 					label = Items[result2[j].name]
-				})
+				}
 			end
 
 			local addonInventory    = CreateAddonInventory(name, nil, items)
@@ -109,10 +109,10 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 
 		if inventory == nil then
 			inventory = CreateAddonInventory(name, xPlayer.identifier, {})
-			table.insert(Inventories[name], inventory)
+			Inventories[name][#Inventories[name]+1] = inventory
 		end
 
-		table.insert(addonInventories, inventory)
+		addonInventories[#addonInventories+1] = inventory
 	end
 
 	xPlayer.set('addonInventories', addonInventories)

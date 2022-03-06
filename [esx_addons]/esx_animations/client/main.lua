@@ -20,7 +20,7 @@ function OpenAnimationsMenu()
 	local elements = {}
 
 	for i=1, #Config.Animations, 1 do
-		table.insert(elements, {label = Config.Animations[i].label, value = Config.Animations[i].name})
+		elements[#elements+1] = {label = Config.Animations[i].label, value = Config.Animations[i].name}
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'animations', {
@@ -43,11 +43,11 @@ function OpenAnimationsSubMenu(menu)
 			title = Config.Animations[i].label
 
 			for j=1, #Config.Animations[i].items, 1 do
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = Config.Animations[i].items[j].label,
 					type  = Config.Animations[i].items[j].type,
 					value = Config.Animations[i].items[j].data
-				})
+				}
 			end
 
 			break

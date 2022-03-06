@@ -18,7 +18,7 @@ local function openMenu(namespace, name, data)
 		SetNuiFocus(true, true)
 	end)
 
-	table.insert(Timeouts, timeoutId)
+	Timeouts[#Timeouts+1] = timeoutId
 end
 
 local function closeMenu(namespace, name)

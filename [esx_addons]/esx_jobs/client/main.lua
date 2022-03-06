@@ -257,7 +257,7 @@ function refreshBlips()
 						BeginTextCommandSetBlipName("STRING")
 						AddTextComponentSubstringPlayerName(zoneValues.Name)
 						EndTextCommandSetBlipName(blip)
-						table.insert(JobBlips, blip)
+						JobBlips[#JobBlips+1] = blip
 					end
 				end
 			end
@@ -286,7 +286,7 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 		-- save & set plate
 		local plate = 'WORK' .. math.random(100, 900)
 		SetVehicleNumberPlateText(spawnedVehicle, plate)
-		table.insert(myPlate, plate)
+		myPlate[#myPlate+1] = plate
 		plate = string.gsub(plate, " ", "")
 
 		TaskWarpPedIntoVehicle(playerPed, spawnedVehicle, -1)

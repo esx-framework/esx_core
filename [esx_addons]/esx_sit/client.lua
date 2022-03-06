@@ -58,7 +58,7 @@ RegisterCommand('sit', function()
 		local object, distance = GetNearChair()
 
 		if Config.Debug then
-			table.insert(debugProps, object)
+			debugProps[#debugProps+1] = object
 		end
 
 		if distance and distance < 1.4 then

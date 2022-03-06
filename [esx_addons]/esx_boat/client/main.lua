@@ -8,13 +8,13 @@ function OpenBoatShop(shop)
 	local elements  = {}
 
 	for k,v in ipairs(Config.Vehicles) do
-		table.insert(elements, {
+		elements[#elements+1] = {
 			label = ('%s - <span style="color:green;">$%s</span>'):format(v.label, ESX.Math.GroupDigits(v.price)),
 			name  = v.label,
 			model = v.model,
 			price = v.price,
 			props = v.props or nil
-		})
+		}
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boat_shop', {
@@ -75,7 +75,7 @@ function OpenBoatShop(shop)
 		DeleteSpawnedVehicles()
 
 		ESX.Game.SpawnLocalVehicle(data.current.model, shop.Inside, shop.Inside.w, function (vehicle)
-			table.insert(spawnedVehicles, vehicle)
+			spawnedVehicles[#spawnedVehicles+1] = vehicle
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
 
@@ -89,7 +89,7 @@ function OpenBoatShop(shop)
 	DeleteSpawnedVehicles()
 
 	ESX.Game.SpawnLocalVehicle(Config.Vehicles[1].model, shop.Inside, shop.Inside.w, function (vehicle)
-		table.insert(spawnedVehicles, vehicle)
+		spawnedVehicles[#spawnedVehicles+1] = vehicle
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
 
@@ -109,10 +109,10 @@ function OpenBoatGarage(garage)
 			for i=1, #ownedBoats, 1 do
 				ownedBoats[i] = json.decode(ownedBoats[i])
 
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = getVehicleLabelFromHash(ownedBoats[i].model),
 					vehicleProps = ownedBoats[i]
-				})
+				}
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boat_garage', {

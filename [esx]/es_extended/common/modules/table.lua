@@ -62,7 +62,7 @@ function ESX.Table.Filter(t, cb)
 
 	for i=1, #t, 1 do
 		if cb(t[i]) then
-			table.insert(newTable, t[i])
+			newTable[#newTable+1] = t[i]
 		end
 	end
 
@@ -83,7 +83,7 @@ function ESX.Table.Reverse(t)
 	local newTable = {}
 
 	for i=#t, 1, -1 do
-		table.insert(newTable, t[i])
+		newTable[#newTable+1] = t[i]
 	end
 
 	return newTable
@@ -112,7 +112,7 @@ function ESX.Table.Concat(t1, t2)
 	local t3 = ESX.Table.Clone(t1)
 
 	for i=1, #t2, 1 do
-		table.insert(t3, t2[i])
+		t3[#t3+1] = t2[i]
 	end
 
 	return t3

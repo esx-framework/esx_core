@@ -81,7 +81,7 @@ ESX.RegisterServerCallback('esx_boat:getGarage', function(source, cb)
 		local vehicles = {}
 
 		for i=1, #result, 1 do
-			table.insert(vehicles, result[i].vehicle)
+			vehicles[#vehicles+1] = result[i].vehicle
 		end
 
 		cb(vehicles)

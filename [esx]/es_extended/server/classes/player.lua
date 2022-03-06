@@ -397,13 +397,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if not self.hasWeapon(weaponName) then
 			local weaponLabel = ESX.GetWeaponLabel(weaponName)
 
-			table.insert(self.loadout, {
+
+			self.loadout[#self.loadout+1] = {
 				name = weaponName,
 				ammo = ammo,
 				label = weaponLabel,
 				components = {},
 				tintIndex = 0
-			})
+			}
 
 			self.triggerEvent('esx:addWeapon', weaponName, ammo)
 			self.triggerEvent('esx:addInventoryItem', weaponLabel, false, true)

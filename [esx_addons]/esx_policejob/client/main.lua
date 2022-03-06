@@ -58,11 +58,11 @@ function OpenCloakroomMenu()
 
 	if Config.EnableCustomPeds then
 		for k,v in ipairs(Config.CustomPeds.shared) do
-			table.insert(elements, {label = v.label, value = 'freemode_ped', maleModel = v.maleModel, femaleModel = v.femaleModel})
+			elements[#elements+1] = {label = v.label, value = 'freemode_ped', maleModel = v.maleModel, femaleModel = v.femaleModel}
 		end
 
 		for k,v in ipairs(Config.CustomPeds[grade]) do
-			table.insert(elements, {label = v.label, value = 'freemode_ped', maleModel = v.maleModel, femaleModel = v.femaleModel})
+			elements[#elements+1] = {label = v.label, value = 'freemode_ped', maleModel = v.maleModel, femaleModel = v.femaleModel}
 		end
 	end
 
@@ -214,10 +214,10 @@ function OpenArmoryMenu(station)
 		}
 
 		if Config.EnableArmoryManagement then
-			table.insert(elements, {label = _U('get_weapon'),     value = 'get_weapon'})
-			table.insert(elements, {label = _U('put_weapon'),     value = 'put_weapon'})
-			table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
-			table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
+			elements[#elements+1] = {label = _U('get_weapon'),     value = 'get_weapon'}
+			elements[#elements+1] = {label = _U('put_weapon'),     value = 'put_weapon'}
+			elements[#elements+1] = {label = _U('get_stock'),     value = 'get_stock'}
+			elements[#elements+1] = {label = _U('put_stock'),     value = 'put_stock'}
 		end
 	end
 
@@ -274,7 +274,7 @@ function OpenPoliceActionsMenu()
 			}
 
 			if Config.EnableLicenses then
-				table.insert(elements, {label = _U('license_check'), value = 'license'})
+				elements[#elements+1] = {label = _U('license_check'), value = 'license'}
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
@@ -317,12 +317,12 @@ function OpenPoliceActionsMenu()
 			local vehicle = ESX.Game.GetVehicleInDirection()
 
 			if DoesEntityExist(vehicle) then
-				table.insert(elements, {label = _U('vehicle_info'), value = 'vehicle_infos'})
-				table.insert(elements, {label = _U('pick_lock'), value = 'hijack_vehicle'})
-				table.insert(elements, {label = _U('impound'), value = 'impound'})
+				elements[#elements+1] = {label = _U('vehicle_info'), value = 'vehicle_infos'}
+				elements[#elements+1] = {label = _U('pick_lock'), value = 'hijack_vehicle'}
+				elements[#elements+1] = {label = _U('impound'), value = 'impound'}
 			end
 
-			table.insert(elements, {label = _U('search_database'), value = 'search_database'})
+			elements[#elements+1] = {label = _U('search_database'), value = 'search_database'}
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_interaction', {
 				title    = _U('vehicle_interaction'),
@@ -424,20 +424,20 @@ function OpenIdentityCardMenu(player)
 		}
 
 		if Config.EnableESXIdentity then
-			table.insert(elements, {label = _U('sex', _U(data.sex))})
-			table.insert(elements, {label = _U('dob', data.dob)})
-			table.insert(elements, {label = _U('height', data.height)})
+			elements[#elements+1] = {label = _U('sex', _U(data.sex))}
+			elements[#elements+1] = {label = _U('dob', _U(data.dob))}
+			elements[#elements+1] = {label = _U('height', _U(data.height))}
 		end
 
 		if Config.EnableESXOptionalneeds and data.drunk then
-			table.insert(elements, {label = _U('bac', data.drunk)})
+			elements[#elements+1] = {label = _U('bac', data.drunk)}
 		end
 
 		if data.licenses then
-			table.insert(elements, {label = _U('license_label')})
+			elements[#elements+1] = {label = _U('license_label')}
 
 			for i=1, #data.licenses, 1 do
-				table.insert(elements, {label = data.licenses[i].label})
+				elements[#elements+1] = {label = data.licenses[i].label}
 			end
 		end
 
@@ -462,38 +462,38 @@ function OpenBodySearchMenu(player)
 
 		for i=1, #data.accounts, 1 do
 			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label    = _U('confiscate_dirty', ESX.Math.Round(data.accounts[i].money)),
 					value    = 'black_money',
 					itemType = 'item_account',
 					amount   = data.accounts[i].money
-				})
+				}
 
 				break
 			end
 		end
 
-		table.insert(elements, {label = _U('guns_label')})
+		elements[#elements+1] = {label = _U('guns_label')}
 
 		for i=1, #data.weapons, 1 do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label    = _U('confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo),
 				value    = data.weapons[i].name,
 				itemType = 'item_weapon',
 				amount   = data.weapons[i].ammo
-			})
+			}
 		end
 
-		table.insert(elements, {label = _U('inventory_label')})
+		elements[#elements+1] = {label = _U('inventory_label')}
 
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
 					value    = data.inventory[i].name,
 					itemType = 'item_standard',
 					amount   = data.inventory[i].count
-				})
+				}
 			end
 		end
 
@@ -533,12 +533,12 @@ function OpenFineCategoryMenu(player, category)
 		local elements = {}
 
 		for k,fine in ipairs(fines) do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label     = ('%s <span style="color:green;">%s</span>'):format(fine.label, _U('armory_item', ESX.Math.GroupDigits(fine.amount))),
 				value     = fine.id,
 				amount    = fine.amount,
 				fineLabel = fine.label
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine_category', {
@@ -576,9 +576,9 @@ function LookupVehicle()
 				menu.close()
 
 				if not retrivedInfo.owner then
-					table.insert(elements, {label = _U('owner_unknown')})
+					elements[#elements+1] = {label = _U('owner_unknown')}
 				else
-					table.insert(elements, {label = _U('owner', retrivedInfo.owner)})
+					elements[#elements+1] = {label = _U('owner', retrivedInfo.owner)}
 				end
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_infos', {
@@ -603,10 +603,10 @@ function ShowPlayerLicense(player)
 		if playerData.licenses then
 			for i=1, #playerData.licenses, 1 do
 				if playerData.licenses[i].label and playerData.licenses[i].type then
-					table.insert(elements, {
+					elements[#elements+1] = {
 						label = playerData.licenses[i].label,
 						type = playerData.licenses[i].type
-					})
+					}
 				end
 			end
 		end
@@ -636,10 +636,10 @@ function OpenUnpaidBillsMenu(player)
 
 	ESX.TriggerServerCallback('esx_billing:getTargetBills', function(bills)
 		for k,bill in ipairs(bills) do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s - <span style="color:red;">%s</span>'):format(bill.label, _U('armory_item', ESX.Math.GroupDigits(bill.amount))),
 				billId = bill.id
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
@@ -657,9 +657,9 @@ function OpenVehicleInfosMenu(vehicleData)
 		local elements = {{label = _U('plate', retrivedInfo.plate)}}
 
 		if not retrivedInfo.owner then
-			table.insert(elements, {label = _U('owner_unknown')})
+			elements[#elements+1] = {label = _U('owner_unknown')}
 		else
-			table.insert(elements, {label = _U('owner', retrivedInfo.owner)})
+			elements[#elements+1] = {label = _U('owner', retrivedInfo.owner)}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_infos', {
@@ -678,10 +678,10 @@ function OpenGetWeaponMenu()
 
 		for i=1, #weapons, 1 do
 			if weapons[i].count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = 'x' .. weapons[i].count .. ' ' .. ESX.GetWeaponLabel(weapons[i].name),
 					value = weapons[i].name
-				})
+				}
 			end
 		end
 
@@ -710,10 +710,10 @@ function OpenPutWeaponMenu()
 		local weaponHash = GetHashKey(weaponList[i].name)
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = weaponList[i].label,
 				value = weaponList[i].name
-			})
+			}
 		end
 	end
 
@@ -757,7 +757,7 @@ function OpenBuyWeaponsMenu()
 						end
 					end
 
-					table.insert(components, {
+					components[#components+1] = {
 						label = label,
 						componentLabel = component.label,
 						hash = component.hash,
@@ -765,7 +765,7 @@ function OpenBuyWeaponsMenu()
 						price = v.components[i],
 						hasComponent = hasComponent,
 						componentNum = i
-					})
+					}
 				end
 			end
 		end
@@ -782,14 +782,14 @@ function OpenBuyWeaponsMenu()
 			end
 		end
 
-		table.insert(elements, {
+		elements[#elements+1] = {
 			label = label,
 			weaponLabel = weapon.label,
 			name = weapon.name,
 			components = components,
 			price = v.price,
 			hasWeapon = hasWeapon
-		})
+		}
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons', {
@@ -853,10 +853,10 @@ function OpenGetStocksMenu()
 		local elements = {}
 
 		for i=1, #items, 1 do
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = 'x' .. items[i].count .. ' ' .. items[i].label,
 				value = items[i].name
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
@@ -898,11 +898,11 @@ function OpenPutStocksMenu()
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = item.label .. ' x' .. item.count,
 					type = 'item_standard',
 					value = item.name
-				})
+				}
 			end
 		end
 
@@ -1487,7 +1487,7 @@ function createBlip(id)
 		SetBlipScale(blip, 0.85) -- set scale
 		SetBlipAsShortRange(blip, true)
 
-		table.insert(blipsCops, blip) -- add blip to array so we can remove it later
+		blipsCops[#blipsCops+1] = blip -- add blip to array so we can remove it later
 	end
 end
 

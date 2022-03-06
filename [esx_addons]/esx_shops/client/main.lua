@@ -6,7 +6,7 @@ function OpenShopMenu(zone)
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
-		table.insert(elements, {
+		elements[#elements+1] = {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
 			itemLabel = item.label,
 			item       = item.name,
@@ -17,7 +17,7 @@ function OpenShopMenu(zone)
 			type       = 'slider',
 			min        = 1,
 			max        = 100
-		})
+		}
 	end
 
 	ESX.UI.Menu.CloseAll()

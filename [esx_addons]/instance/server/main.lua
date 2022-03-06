@@ -56,7 +56,7 @@ function AddPlayerToInstance(instance, player)
 	end
 
 	if not found then
-		table.insert(instances[instance].players, player)
+		instances[instance].players[#instances[instance].players+1] = player
 	end
 
 	TriggerClientEvent('instance:onEnter', player, instances[instance])

@@ -69,7 +69,7 @@ function OpenDrugShop()
 		local price = Config.DrugDealerItems[v.name]
 
 		if price and v.count > 0 then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ('%s - <span style="color:green;">%s</span>'):format(v.label, _U('dealer_item', ESX.Math.GroupDigits(price))),
 				name = v.name,
 				price = price,
@@ -79,7 +79,7 @@ function OpenDrugShop()
 				value = 1,
 				min = 1,
 				max = v.count
-			})
+			}
 		end
 	end
 

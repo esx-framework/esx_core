@@ -82,7 +82,7 @@ function GetGatewayProperties(property)
 
 	for i=1, #Config.Properties, 1 do
 		if Config.Properties[i].gateway == property.name then
-			table.insert(properties, Config.Properties[i])
+			properties[#properties+1] = Config.Properties[i]
 		end
 	end
 
@@ -223,7 +223,7 @@ function OpenPropertyMenu(property)
 	local elements = {}
 
 	if PropertyIsOwned(property) then
-		table.insert(elements, {label = _U('enter'), value = 'enter'})
+		elements[#elements+1] = {label = _U('enter'), value = 'enter'}
 
 		-- add move out
 		if not Config.EnablePlayerManagement then
@@ -233,15 +233,15 @@ function OpenPropertyMenu(property)
 				leaveLabel = _U('move_out_sold', ESX.Math.GroupDigits(ESX.Math.Round(property.price / Config.SellModifier)))
 			end
 
-			table.insert(elements, {label = leaveLabel, value = 'leave'})
+			elements[#elements+1] = {label = leaveLabel, value = 'leave'}
 		end
 	else
 		if not Config.EnablePlayerManagement then
-			table.insert(elements, {label = _U('buy', ESX.Math.GroupDigits(property.price)), value = 'buy'})
+			elements[#elements+1] = {label = _U('buy', ESX.Math.GroupDigits(property.price)), value = 'buy'}
 
 			-- display rent price
 			local rent = ESX.Math.Round(property.price / Config.RentModifier)
-			table.insert(elements, {label = _U('rent', ESX.Math.GroupDigits(rent)), value = 'rent'})
+			elements[#elements+1] = {label = _U('rent', ESX.Math.GroupDigits(rent)), value = 'rent'}
 		end
 	end
 
@@ -302,10 +302,10 @@ function OpenGatewayOwnedPropertiesMenu(property)
 
 	for i=1, #gatewayProperties, 1 do
 		if PropertyIsOwned(gatewayProperties[i]) then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = gatewayProperties[i].label,
 				value = gatewayProperties[i].name
-			})
+			}
 		end
 	end
 
@@ -318,7 +318,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 		local elements = {{label = _U('enter'), value = 'enter'}}
 
 		if not Config.EnablePlayerManagement then
-			table.insert(elements, {label = _U('leave'), value = 'leave'})
+			elements[#elements+1] = {label = _U('leave'), value = 'leave'}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions', {
@@ -348,12 +348,12 @@ function OpenGatewayAvailablePropertiesMenu(property)
 
 	for i=1, #gatewayProperties, 1 do
 		if not PropertyIsOwned(gatewayProperties[i]) then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = gatewayProperties[i].label,
 				value = gatewayProperties[i].name,
 				buyPrice = gatewayProperties[i].price,
 				rentPrice = ESX.Math.Round(gatewayProperties[i].price / Config.RentModifier)
-			})
+			}
 		end
 	end
 
@@ -396,15 +396,15 @@ function OpenRoomMenu(property, owner)
 	end
 
 	if CurrentPropertyOwner == owner then
-		table.insert(elements, {label = _U('player_clothes'), value = 'player_dressing'})
-		table.insert(elements, {label = _U('remove_cloth'), value = 'remove_cloth'})
+		elements[#elements+1] = {label = _U('player_clothes'), value = 'player_dressing'}
+		elements[#elements+1] = {label = _U('remove_cloth'), value = 'remove_cloth'}
 	end
 
 	if Config.OxInventory then
-		table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
+		elements[#elements+1] = {label = _U('remove_object'),  value = 'room_inventory'}
 	else
-		table.insert(elements, {label = _U('remove_object'),  value = 'room_inventory'})
-		table.insert(elements, {label = _U('deposit_object'), value = 'player_inventory'})
+		elements[#elements+1] = {label = _U('remove_object'),  value = 'room_inventory'}
+		elements[#elements+1] = {label = _U('deposit_object'),  value = 'player_inventory'}
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -422,7 +422,7 @@ function OpenRoomMenu(property, owner)
 
 			for i=1, #playersInArea, 1 do
 				if playersInArea[i] ~= PlayerId() then
-					table.insert(elements, {label = GetPlayerName(playersInArea[i]), value = playersInArea[i]})
+					elements[#elements+1] = {label = GetPlayerName(playersInArea[i]), value = playersInArea[i]}
 				end
 			end
 
@@ -443,10 +443,10 @@ function OpenRoomMenu(property, owner)
 				local elements = {}
 
 				for i=1, #dressing, 1 do
-					table.insert(elements, {
+					elements[#elements+1] = {
 						label = dressing[i],
 						value = i
-					})
+					}
 				end
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing', {
@@ -475,10 +475,10 @@ function OpenRoomMenu(property, owner)
 				local elements = {}
 
 				for i=1, #dressing, 1 do
-					table.insert(elements, {
+					elements[#elements+1] = {
 						label = dressing[i],
-						value = i
-					})
+						value = i	
+					}
 				end
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'remove_cloth', {
@@ -519,34 +519,34 @@ function OpenRoomInventoryMenu(property, owner)
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = _U('dirty_money', ESX.Math.GroupDigits(inventory.blackMoney)),
 				type = 'item_account',
 				value = 'black_money'
-			})
+			}
 		end
 
 		for i=1, #inventory.items, 1 do
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = item.label .. ' x' .. item.count,
 					type = 'item_standard',
 					value = item.name
-				})
+				}
 			end
 		end
 
 		for i=1, #inventory.weapons, 1 do
 			local weapon = inventory.weapons[i]
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = ESX.GetWeaponLabel(weapon.name) .. ' [' .. weapon.ammo .. ']',
 				type  = 'item_weapon',
 				value = weapon.name,
 				index = i
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'room_inventory', {
@@ -593,34 +593,34 @@ function OpenPlayerInventoryMenu(property, owner)
 		local elements = {}
 
 		if inventory.blackMoney > 0 then
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = _U('dirty_money', ESX.Math.GroupDigits(inventory.blackMoney)),
 				type  = 'item_account',
 				value = 'black_money'
-			})
+			}
 		end
 
 		for i=1, #inventory.items, 1 do
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements+1] = {
 					label = item.label .. ' x' .. item.count,
 					type  = 'item_standard',
 					value = item.name
-				})
+				}
 			end
 		end
 
 		for i=1, #inventory.weapons, 1 do
 			local weapon = inventory.weapons[i]
 
-			table.insert(elements, {
+			elements[#elements+1] = {
 				label = weapon.label .. ' [' .. weapon.ammo .. ']',
 				type  = 'item_weapon',
 				value = weapon.name,
 				ammo  = weapon.ammo
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_inventory', {

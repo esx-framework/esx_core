@@ -43,7 +43,7 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 
 	for i=1, #contacts, 1 do
 		contacts[i].online = (PhoneNumberSources[contacts[i].number] == nil and false or NetworkIsPlayerActive(GetPlayerFromServerId(PhoneNumberSources[contacts[i].number])))
-		table.insert(PhoneData.contacts, contacts[i])
+		PhoneData.contacts[#PhoneData.contacts+1] = contacts[i]
 	end
 
 	SendNUIMessage({
@@ -55,11 +55,11 @@ end)
 
 RegisterNetEvent('esx_phone:addContact')
 AddEventHandler('esx_phone:addContact', function(name, phoneNumber, playerOnline)
-	table.insert(PhoneData.contacts, {
+	PhoneData.contacts[#PhoneData.contacts+1] = {
 		name   = name,
 		number = phoneNumber,
 		online = playerOnline
-	})
+	}
 
 	SendNUIMessage({
 		contactAdded = true,

@@ -51,7 +51,7 @@ ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(sourc
 				local xPlayer = xPlayers[j]
 
 				if xPlayer.identifier == properties[i].owner then
-					table.insert(customers, {
+					customers[#customers+1] = {
 						name           = xPlayer.name,
 						propertyOwner  = properties[i].owner,
 						propertyRented = properties[i].rented,
@@ -59,7 +59,7 @@ ESX.RegisterServerCallback('esx_realestateagentjob:getCustomers', function(sourc
 						propertyPrice  = properties[i].price,
 						propertyName   = properties[i].name,
 						propertyLabel  = properties[i].label
-					})
+					}
 				end
 			end
 		end

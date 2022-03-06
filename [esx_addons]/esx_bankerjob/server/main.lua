@@ -42,11 +42,11 @@ ESX.RegisterServerCallback('esx_bankerjob:getCustomers', function (source, cb)
 	for _, xPlayer in pairs(xPlayers) do
 
 		TriggerEvent('esx_addonaccount:getAccount', 'bank_savings', xPlayer.identifier, function(account)
-			table.insert(customers, {
+			customers[#customers+1] = {
 				source      = xPlayer.source,
 				name        = xPlayer.name,
 				bankSavings = account.money
-			})
+			}
 		end)
 	end
 
