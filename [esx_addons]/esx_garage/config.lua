@@ -1,5 +1,5 @@
 Config                      = {}
-Config.DrawDistance         = 100.0
+Config.DrawDistance         = 10.0
 Config.MarkerType           = 1
 Config.MarkerSize           = {x = 2.0, y = 2.0, z = 1.0}
 Config.MarkerColor          = {r = 204, g = 204, b = 0}
