@@ -155,30 +155,34 @@ end)
 -- Display markers
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Locations, 1 do
 				if (Config.Type ~= -1 and #(coords - v.Locations[i]) < Config.DrawDistance) then
+					Sleep = 0
 					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1000
+
 		local coords = GetEntityCoords(PlayerPedId())
 		local isInMarker, currentZone = false, nil
 
 		for k,v in pairs(Config.Zones) do
 			for i=1, #v.Locations, 1 do
 				if #(coords - v.Locations[i]) < Config.Size.x then
+					Sleep = 0
 					isInMarker, ShopItems, currentZone, LastZone = true, v.Items, k, k
 				end
 			end
@@ -192,15 +196,17 @@ CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_weaponshop:hasExitedMarker', LastZone)
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Key Controls
 CreateThread(function()
 	while true do
-		Wait(0)
-
+	local Sleep = 1500
+		
 		if CurrentAction ~= nil then
+			Sleep = 0
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
@@ -222,5 +228,6 @@ CreateThread(function()
 				CurrentAction = nil
 			end
 		end
+	Wait(Sleep)
 	end
 end)
