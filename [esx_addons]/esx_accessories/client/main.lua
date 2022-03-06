@@ -2,7 +2,7 @@ local HasAlreadyEnteredMarker = false
 local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
 
-function OpenAccessoryMenu()
+local function OpenAccessoryMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
 		title = _U('set_unset'),
 		align = 'top-left',
@@ -48,7 +48,7 @@ function SetUnsetAccessory(accessory)
 	end, accessory)
 end
 
-function OpenShopMenu(accessory)
+local function OpenShopMenu(accessory)
 	local _accessory = string.lower(accessory)
 	local restrict = {}
 
@@ -159,10 +159,11 @@ end)
 local nearMarker = false
 -- Display markers
 CreateThread(function()
+	local sleep, coords
 	while true do
-		local sleep = 1500
-		local coords = GetEntityCoords(PlayerPedId())
-		for k,v in pairs(Config.Zones) do
+		sleep = 1500
+		coords = GetEntityCoords(PlayerPedId())
+		for _,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
 					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 255, true, false, 2, true, false, false, false)
@@ -177,13 +178,14 @@ CreateThread(function()
 end)
 
 CreateThread(function()
+	local sleep, coords, isInMarker, currentZone
 	while true do
-		local sleep = 1500
+		sleep = 1500
 		if nearMarker then
 			sleep = 0
-			local coords = GetEntityCoords(PlayerPedId())
-			local isInMarker = false
-			local currentZone = nil
+			coords = GetEntityCoords(PlayerPedId())
+			isInMarker = false
+			currentZone = nil
 			for k,v in pairs(Config.Zones) do
 				for i = 1, #v.Pos, 1 do
 					if #(coords - v.Pos[i]) < Config.Size.x then
@@ -211,8 +213,9 @@ end)
 
 -- Key controls
 CreateThread(function()
+	local Sleep
 	while true do
-		local Sleep = 1500
+		Sleep = 1500
 		
 		if CurrentAction then
 			Sleep = 0

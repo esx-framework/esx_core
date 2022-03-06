@@ -1,7 +1,7 @@
 RegisterServerEvent('esx_accessories:pay')
 AddEventHandler('esx_accessories:pay', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
-
+	if not xPlayer then return ESX.Trace("xPlayer doesn't exist") end
 	xPlayer.removeMoney(Config.Price)
 	TriggerClientEvent('esx:showNotification', source, _U('you_paid', ESX.Math.GroupDigits(Config.Price)))
 end)
@@ -10,7 +10,7 @@ RegisterServerEvent('esx_accessories:save')
 AddEventHandler('esx_accessories:save', function(skin, accessory)
 	local source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
-
+	if not xPlayer then return ESX.Trace("xPlayer doesn't exist") end
 	TriggerEvent('esx_datastore:getDataStore', 'user_' .. string.lower(accessory), xPlayer.identifier, function(store)
 		store.set('has' .. accessory, true)
 
@@ -26,7 +26,7 @@ end)
 
 ESX.RegisterServerCallback('esx_accessories:get', function(source, cb, accessory)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
+	if not xPlayer then return ESX.Trace("xPlayer doesn't exist") end
 	TriggerEvent('esx_datastore:getDataStore', 'user_' .. string.lower(accessory), xPlayer.identifier, function(store)
 		local hasAccessory = (store.get('has' .. accessory) and store.get('has' .. accessory) or false)
 		local skin = (store.get('skin') and store.get('skin') or {})
@@ -38,6 +38,6 @@ end)
 
 ESX.RegisterServerCallback('esx_accessories:checkMoney', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
+	if not xPlayer then return ESX.Trace("xPlayer doesn't exist") end
 	cb(xPlayer.getMoney() >= Config.Price)
 end)
