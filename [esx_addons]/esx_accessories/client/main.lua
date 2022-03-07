@@ -74,18 +74,17 @@ local function OpenShopMenu(accessory)
 							TriggerServerEvent('esx_accessories:save', skin, accessory)
 						end)
 					else
-						local player = PlayerPedId()
 						TriggerEvent('esx_skin:getLastSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin)
 						end)
 						if accessory == "Ears" then
-							ClearPedProp(player, 2)
+							ClearPedProp(ESX.PlayerData.ped, 2)
 						elseif accessory == "Mask" then
-							SetPedComponentVariation(player, 1, 0 ,0, 2)
+							SetPedComponentVariation(ESX.PlayerData.ped, 1, 0 ,0, 2)
 						elseif accessory == "Helmet" then
-							ClearPedProp(player, 0)
+							ClearPedProp(ESX.PlayerData.ped, 0)
 						elseif accessory == "Glasses" then
-							SetPedPropIndex(player, 1, -1, 0, 0)
+							SetPedPropIndex(ESX.PlayerData.ped, 1, -1, 0, 0)
 						end
 						ESX.ShowNotification(_U('not_enough_money'))
 					end
@@ -93,18 +92,17 @@ local function OpenShopMenu(accessory)
 			end
 
 			if data.current.value == 'no' then
-				local player = PlayerPedId()
 				TriggerEvent('esx_skin:getLastSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 				if accessory == "Ears" then
-					ClearPedProp(player, 2)
+					ClearPedProp(ESX.PlayerData.ped, 2)
 				elseif accessory == "Mask" then
-					SetPedComponentVariation(player, 1, 0 ,0, 2)
+					SetPedComponentVariation(ESX.PlayerData.ped, 1, 0 ,0, 2)
 				elseif accessory == "Helmet" then
-					ClearPedProp(player, 0)
+					ClearPedProp(ESX.PlayerData.ped, 0)
 				elseif accessory == "Glasses" then
-					SetPedPropIndex(player, 1, -1, 0, 0)
+					SetPedPropIndex(ESX.PlayerData.ped, 1, -1, 0, 0)
 				end
 			end
 			CurrentAction     = 'shop_menu'
@@ -162,7 +160,7 @@ CreateThread(function()
 	local sleep, coords
 	while true do
 		sleep = 1500
-		coords = GetEntityCoords(PlayerPedId())
+		coords = GetEntityCoords(ESX.PlayerData.ped)
 		for _,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
@@ -183,9 +181,8 @@ CreateThread(function()
 		sleep = 1500
 		if nearMarker then
 			sleep = 0
-			coords = GetEntityCoords(PlayerPedId())
+			coords = GetEntityCoords(ESX.PlayerData.ped)
 			isInMarker = false
-			currentZone = nil
 			for k,v in pairs(Config.Zones) do
 				for i = 1, #v.Pos, 1 do
 					if #(coords - v.Pos[i]) < Config.Size.x then
@@ -232,7 +229,7 @@ end)
 
 if Config.EnableControls then
 	RegisterCommand("accessory", function(src)
-		if not ESX.GetPlayerData().dead then 
+		if not ESX.PlayerData.dead then 
 			OpenAccessoryMenu()
 		end
 	end)
