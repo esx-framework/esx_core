@@ -51,6 +51,7 @@ end
 local function OpenShopMenu(accessory)
 	local _accessory = string.lower(accessory)
 	local restrict = {}
+	local playerPed = PlayerPedId()
 
 	restrict = { _accessory .. '_1', _accessory .. '_2' }
 
@@ -78,13 +79,13 @@ local function OpenShopMenu(accessory)
 							TriggerEvent('skinchanger:loadSkin', skin)
 						end)
 						if accessory == "Ears" then
-							ClearPedProp(ESX.PlayerData.ped, 2)
+							ClearPedProp(playerPed, 2)
 						elseif accessory == "Mask" then
-							SetPedComponentVariation(ESX.PlayerData.ped, 1, 0 ,0, 2)
+							SetPedComponentVariation(playerPed, 1, 0 ,0, 2)
 						elseif accessory == "Helmet" then
-							ClearPedProp(ESX.PlayerData.ped, 0)
+							ClearPedProp(playerPed, 0)
 						elseif accessory == "Glasses" then
-							SetPedPropIndex(ESX.PlayerData.ped, 1, -1, 0, 0)
+							SetPedPropIndex(playerPed, 1, -1, 0, 0)
 						end
 						ESX.ShowNotification(_U('not_enough_money'))
 					end
@@ -96,13 +97,13 @@ local function OpenShopMenu(accessory)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 				if accessory == "Ears" then
-					ClearPedProp(ESX.PlayerData.ped, 2)
+					ClearPedProp(playerPed, 2)
 				elseif accessory == "Mask" then
-					SetPedComponentVariation(ESX.PlayerData.ped, 1, 0 ,0, 2)
+					SetPedComponentVariation(playerPed, 1, 0 ,0, 2)
 				elseif accessory == "Helmet" then
-					ClearPedProp(ESX.PlayerData.ped, 0)
+					ClearPedProp(playerPed, 0)
 				elseif accessory == "Glasses" then
-					SetPedPropIndex(ESX.PlayerData.ped, 1, -1, 0, 0)
+					SetPedPropIndex(playerPed, 1, -1, 0, 0)
 				end
 			end
 			CurrentAction     = 'shop_menu'
@@ -160,7 +161,7 @@ CreateThread(function()
 	local sleep, coords
 	while true do
 		sleep = 1500
-		coords = GetEntityCoords(ESX.PlayerData.ped)
+		coords = GetEntityCoords(PlayerPedId())
 		for _,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
@@ -181,7 +182,7 @@ CreateThread(function()
 		sleep = 1500
 		if nearMarker then
 			sleep = 0
-			coords = GetEntityCoords(ESX.PlayerData.ped)
+			coords = GetEntityCoords(PlayerPedId())
 			isInMarker = false
 			for k,v in pairs(Config.Zones) do
 				for i = 1, #v.Pos, 1 do
