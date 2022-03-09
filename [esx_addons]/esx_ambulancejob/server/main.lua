@@ -11,19 +11,6 @@ end
 RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function(playerId)
 	playerId = tonumber(playerId)
-	if source == '' and GetInvokingResource() == 'monitor' then -- txAdmin support
-        local xTarget = ESX.GetPlayerFromId(playerId)
-        if xTarget then
-            if deadPlayers[playerId] then
-                print(_U('revive_complete', xTarget.name))
-                xTarget.triggerEvent('esx_ambulancejob:revive')
-            else
-                print(_U('player_not_unconscious'))
-            end
-        else
-            print(_U('revive_fail_offline'))
-        end
-	else
 		local xPlayer = source and ESX.GetPlayerFromId(source)
 
 		if xPlayer and xPlayer.job.name == 'ambulance' then
@@ -46,6 +33,14 @@ AddEventHandler('esx_ambulancejob:revive', function(playerId)
 				xPlayer.showNotification(_U('revive_fail_offline'))
 			end
 		end
+end)
+
+AddEventHandler('txAdmin:events:healedPlayer', function(eventData)
+	if GetInvokingResource() ~= "monitor" or type(eventData) ~= "table" or type(eventData.id) ~= "number" then
+		return
+	end
+	if deadPlayers[eventData.id] then
+		TriggerClientEvent('esx_ambulancejob:revive', eventData.id)
 	end
 end)
 
