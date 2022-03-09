@@ -35,7 +35,7 @@ function GetVehiclesAndCategories(categories, vehicles)
 		local vehicle = vehicles[i]
 		for j = 1, #categories do
 			local category = categories[j]
-			if category.name == vehicle.catetgory then
+			if category.name == vehicle.category then
 				vehicle.categoryLabel = category.label
 				break
 			end
