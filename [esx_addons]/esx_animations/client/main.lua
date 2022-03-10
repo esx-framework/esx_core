@@ -78,13 +78,13 @@ end
 
 -- Key Controls
 RegisterCommand('animmenu', function()
-	if not ESX.GetPlayerData().dead then 
+	if not ESX.PlayerData.dead then
 		OpenAnimationsMenu()
 	end
 end, false)
 
 RegisterCommand('cleartasks', function()
-	if not ESX.GetPlayerData().dead then 
+	if not ESX.PlayerData.dead then
 	ClearPedTasks(PlayerPedId())
 	end
 end, false)

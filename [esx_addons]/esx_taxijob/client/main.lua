@@ -720,7 +720,7 @@ CreateThread(function()
 	while true do
 		Wait(0)
 
-		if CurrentAction and not ESX.GetPlayerData().dead then
+		if CurrentAction and not ESX.PlayerData.dead then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
@@ -740,7 +740,7 @@ CreateThread(function()
 	end
 end)
 RegisterCommand('taximenu', function()
-	if not ESX.GetPlayerData().dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+	if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 		OpenMobileTaxiActionsMenu()
 	end
 end, false)
