@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Sit'
 
-version '1.5.0'
+version '1.6.0'
 
 shared_script '@es_extended/imports.lua'
 
