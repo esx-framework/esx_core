@@ -1,7 +1,7 @@
 local hasAlreadyEnteredMarker, lastZone
 local currentAction, currentActionMsg, currentActionData = nil, nil, {}
 
-function OpenShopMenu(zone)
+local function OpenShopMenu(zone)
 	local elements = {}
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
