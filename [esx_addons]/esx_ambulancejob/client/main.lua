@@ -292,18 +292,18 @@ end
 
 function GetClosestRespawnPoint()
 	local PlyCoords = GetEntityCoords(PlayerPedId())
-	local ClosestDist,ClosestHosptial, ClostestCoord = 10000, {}, nil
+	local ClosestDist, ClosestHospital, ClosestCoord = 10000, {}, nil
 
 	for k,v in pairs(Config.RespawnPoints) do
 		local Distance = #(PlyCoords - vector3(v.coords.x, v.coords.y, v.coords.z))
 		if Distance <= ClosestDist then
 			ClosestDist = Distance
-			ClosestHosptial = v
-			ClostestCoord = vector3(v.coords.x, v.coords.y, v.coords.z)
+			ClosestHospital = v
+			ClosestCoord = vector3(v.coords.x, v.coords.y, v.coords.z)
 		end
 	end
 
-	return ClostestCoord, ClosestHosptial
+	return ClosestCoord, ClosestHospital
 end
 
 function RemoveItemsAfterRPDeath()
@@ -317,10 +317,10 @@ function RemoveItemsAfterRPDeath()
 		end
 
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
-			local RepspawnCoords, ClosestHosptial = GetClosestRespawnPoint()
+			local RespawnCoords, ClosestHospital = GetClosestRespawnPoint()
 
 			ESX.SetPlayerData('loadout', {})
-			RespawnPed(PlayerPedId(), RepspawnCoords, ClosestHosptial.heading)
+			RespawnPed(PlayerPedId(), RespawnCoords, ClosestHospital.heading)
 
 			AnimpostfxStop('DeathFailOut')
 			DoScreenFadeIn(800)
