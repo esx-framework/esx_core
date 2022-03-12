@@ -48,7 +48,7 @@ elseif ESX.GetConfig().Multichar == true then
 		local identifier = GetIdentifier(source)
 		ESX.Players[identifier] = true
 
-		local slots = MySQL.scalar('SELECT slots FROM multicharacter_slots WHERE identifier = ?', { identifier }) or SLOTS
+		local slots = MySQL.scalar.await('SELECT slots FROM multicharacter_slots WHERE identifier = ?', { identifier }) or SLOTS
 		identifier = PREFIX..'%:'..identifier
 
 		local result = MySQL.query.await(FETCH, {identifier, slots})
