@@ -130,3 +130,5 @@ CreateThread(function()
 	Wait(Sleep)
 	end
 end)
+
+exports('OpenShop', OpenShopMenu)
