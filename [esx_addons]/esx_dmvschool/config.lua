@@ -28,7 +28,7 @@ Config.Zones = {
 	DMVSchool = {
 		Pos   = vector3(239.471, -1380.960, 32.741)
 		Size  = vector3(1.5, 1.5, 1.0)
-		Color = {r = 204, g = 204, b = 0)
+		Color = {r = 204, g = 204, b = 0}
 		Type  = 1
 	},
 
