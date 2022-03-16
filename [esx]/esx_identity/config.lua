@@ -13,7 +13,7 @@ Config.MaxNameLength    = 20
 Config.MinHeight        = 45
 Config.MaxHeight        = 96
 Config.LowestYear       = 1900
-Config.HighestYear      = 2021
+Config.HighestYear      = tonumber(os.date("%Y"))
 
 Config.FullCharDelete   = false
 Config.EnableDebugging  = false
