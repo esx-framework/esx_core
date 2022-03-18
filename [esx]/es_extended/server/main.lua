@@ -602,15 +602,17 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 	end
 end)
 
-RegisterNetEvent('esx:toggleDuty')
-AddEventHandler('esx:toggleDuty', function()
+RegisterNetEvent('esx:setDuty')
+AddEventHandler('esx:setDuty', function(state)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.job.onduty then
+    if xPlayer.job.onduty == state then return end
+    
+    if state then
         xPlayer.setDuty(false)
         xPlayer.triggerEvent('esx:showNotification', _U('stopped_duty'))
     else
         xPlayer.setDuty(true)
         xPlayer.triggerEvent('esx:showNotification', _U('started_duty'))
     end
-    TriggerClientEvent('esx:setJob', source, xPlayer.job)
+    TriggerClientEvent('esx:setJob', xPlayer.source, xPlayer.job)
 end)
