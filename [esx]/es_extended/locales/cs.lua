@@ -222,4 +222,8 @@ Locales['cs'] = {
   ['tint_lspd'] = 'modry skin',
   ['tint_orange'] = 'oranzovy skin',
   ['tint_platinum'] = 'platinovy skin',
+  
+  -- Duty related
+  ['stopped_duty'] = 'NEED TRANSLATION',
+  ['started_duty'] = 'NEED TRANSLATION',
 }

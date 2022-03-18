@@ -222,4 +222,8 @@ Locales['fr'] = {
   ['tint_lspd'] = 'skin bleu',
   ['tint_orange'] = 'skin orange',
   ['tint_platinum'] = 'skin platine',
+  
+  -- Duty related
+  ['stopped_duty'] = 'Vous êtes maintenant hors-service.',
+  ['started_duty'] = 'Vous êtes maintenant en-service.',
 }

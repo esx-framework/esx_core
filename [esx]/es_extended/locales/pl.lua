@@ -221,4 +221,8 @@ Locales['pl'] = {
   ['tint_lspd'] = 'niebieski skin',
   ['tint_orange'] = 'pomarańczowy skin',
   ['tint_platinum'] = 'platynowy skin',
+  
+  -- Duty related
+  ['stopped_duty'] = 'NEED TRANSLATION',
+  ['started_duty'] = 'NEED TRANSLATION',
 }

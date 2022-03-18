@@ -93,6 +93,7 @@ MySQL.ready(function()
 					grade = 0,
 					label = 'Unemployed',
 					salary = 200,
+                    onduty = false,
 					skin_male = {},
 					skin_female = {}
 				}

@@ -343,4 +343,8 @@ Locales['es'] = {
   ['tint_lspd'] = 'Skin Azul',
   ['tint_orange'] = 'Skin Naranja',
   ['tint_platinum'] = 'Skin Plata',
+  
+  -- Duty related
+  ['stopped_duty'] = 'NEED TRANSLATION',
+  ['started_duty'] = 'NEED TRANSLATION',
 }

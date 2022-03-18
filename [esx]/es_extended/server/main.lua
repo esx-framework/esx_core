@@ -156,6 +156,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 	userData.job.grade_name = gradeObject.name
 	userData.job.grade_label = gradeObject.label
 	userData.job.grade_salary = gradeObject.salary
+    userData.job.onduty = false
 
 	userData.job.skin_male = {}
 	userData.job.skin_female = {}
@@ -599,4 +600,17 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 			Core.SavePlayers()
 		end)
 	end
+end)
+
+RegisterNetEvent('esx:toggleDuty')
+AddEventHandler('esx:toggleDuty', function()
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.job.onduty then
+        xPlayer.setDuty(false)
+        xPlayer.triggerEvent('esx:showNotification', _U('stopped_duty'))
+    else
+        xPlayer.setDuty(true)
+        xPlayer.triggerEvent('esx:showNotification', _U('started_duty'))
+    end
+    TriggerClientEvent('esx:setJob', source, xPlayer.job)
 end)
