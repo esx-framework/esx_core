@@ -246,7 +246,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		userData.coords = json.decode(result.position)
 	else
 		print('[^3WARNING^7] Column ^5"position"^0 in ^5"users"^0 table is missing required default value. Using backup coords, fix your database.')
-		userData.coords = {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
+		userData.coords = Config.SpawnLocation
 	end
 
 	-- Skin
