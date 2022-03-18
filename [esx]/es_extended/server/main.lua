@@ -156,7 +156,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 	userData.job.grade_name = gradeObject.name
 	userData.job.grade_label = gradeObject.label
 	userData.job.grade_salary = gradeObject.salary
-    userData.job.onduty = false
+    userData.job.onduty = true
 
 	userData.job.skin_male = {}
 	userData.job.skin_female = {}
