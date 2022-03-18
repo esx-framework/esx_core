@@ -20,4 +20,3 @@ Config.EnablePVP                = true -- Allow Player to player combat
 
 Config.Multichar                = false -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
-Config.SpawnLocation            = {x = -269.4, y = -955.3, z = 31.2, heading = 205.8} -- The location to spawn at when the player first loads in
