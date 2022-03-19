@@ -1035,24 +1035,20 @@ function ESX.ShowInventory()
 	end)
 end
 
-RegisterNetEvent('esx:serverCallback')
-AddEventHandler('esx:serverCallback', function(requestId, ...)
+RegisterNetEvent('esx:serverCallback', function(requestId, ...)
 	Core.ServerCallbacks[requestId](...)
 	Core.ServerCallbacks[requestId] = nil
 end)
 
-RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
+RegisterNetEvent('esx:showNotification', function(msg)
 	ESX.ShowNotification(msg)
 end)
 
-RegisterNetEvent('esx:showAdvancedNotification')
-AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+RegisterNetEvent('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 end)
 
-RegisterNetEvent('esx:showHelpNotification')
-AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
+RegisterNetEvent('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
 	ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
