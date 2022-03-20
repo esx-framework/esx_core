@@ -360,6 +360,11 @@ if not Config.OxInventory then
 		local playerId = source
 		local sourceXPlayer = ESX.GetPlayerFromId(playerId)
 		local targetXPlayer = ESX.GetPlayerFromId(target)
+        local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
+        if not sourceXPlayer then return end
+        if not targetXPlayer then print("Cheating: " ..  GetPlayerName(playerId)) return end
+        if distance > 4.0 then print("Cheating: " ..  GetPlayerName(playerId)) return end
+
 
 		if type == 'item_standard' then
 			local sourceItem = sourceXPlayer.getInventoryItem(itemName)
@@ -390,12 +395,20 @@ if not Config.OxInventory then
 		elseif type == 'item_weapon' then
 			if sourceXPlayer.hasWeapon(itemName) then
 				local weaponLabel = ESX.GetWeaponLabel(itemName)
-
 				if not targetXPlayer.hasWeapon(itemName) then
 					local _, weapon = sourceXPlayer.getWeapon(itemName)
 					local _, weaponObject = ESX.GetWeapon(itemName)
 					itemCount = weapon.ammo
-
+					local weaponComponents = ESX.Table.Clone(weapon.components)
+					local weaponTint = weapon.tintIndex
+					if weaponTint then
+                        targetXPlayer.setWeaponTint(itemName, weaponTint)
+					end
+					if weaponComponents then
+                        for k, v in pairs(weaponComponents) do
+                            targetXPlayer.addWeaponComponent(itemName, v)
+                        end
+					end
 					sourceXPlayer.removeWeapon(itemName)
 					targetXPlayer.addWeapon(itemName, itemCount)
 
