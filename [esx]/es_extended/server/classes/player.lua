@@ -1,9 +1,7 @@
 local targetOverrides = {}
 
-if Config.OxInventory then
-	targetOverrides = Core.PlayerFunctionOverrides.OxInventory
-elseif Config.MfInventory then
-	targetOverrides = Core.PlayerFunctionOverrides.MfInventory
+if Config.InventoryOverride then
+	targetOverrides = Core.PlayerFunctionOverrides[Config.InventoryOverride] or {}
 end
 
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
