@@ -18,6 +18,7 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 
 	'server/common.lua',
+	'server/classes/overrides/*.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',
 	'server/paycheck.lua',
