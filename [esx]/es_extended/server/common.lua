@@ -22,8 +22,12 @@ end)
 
 if GetResourceState('ox_inventory') ~= 'missing' then
 	Config.OxInventory = true
+	Config.InventoryOverride = 'OxInventory'
+
 	SetConvarReplicated('inventory:framework', 'esx')
 	SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
+elseif GetResourceState('mf-inventory') ~= 'missing' then
+	Config.InventoryOverride = 'MfInventory'
 end
 
 local function StartDBSync()
