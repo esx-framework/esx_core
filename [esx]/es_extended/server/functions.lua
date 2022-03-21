@@ -176,6 +176,7 @@ function Core.SavePlayer(xPlayer, cb)
 	}, function(affectedRows)
 		if affectedRows == 1 then
 			print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
+			TriggerEvent('esx:playerSaved', playerId, xPlayer)
 		end
 		if cb then cb() end
 	end)
@@ -258,8 +259,8 @@ function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-function ESX.UseItem(source, item, data)
-	Core.UsableItemsCallbacks[item](source, item, data)
+function ESX.UseItem(source, item, ...)
+	Core.UsableItemsCallbacks[item](source, item, ...)
 end
 
 function ESX.GetItemLabel(item)
