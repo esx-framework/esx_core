@@ -28,6 +28,7 @@ if GetResourceState('ox_inventory') ~= 'missing' then
 	SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
 elseif GetResourceState('mf-inventory') ~= 'missing' then
 	Config.InventoryOverride = 'MfInventory'
+	print(GetResourceState('mf-inventory'))
 end
 
 local function StartDBSync()

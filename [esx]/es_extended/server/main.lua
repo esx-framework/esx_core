@@ -30,10 +30,12 @@ if Config.Multichar then
 else
 	RegisterNetEvent('esx:onPlayerJoined')
 	AddEventHandler('esx:onPlayerJoined', function()
+		local src = source
+
 		while not next(ESX.Jobs) do Wait(50) end
 
-		if not ESX.Players[source] then
-			onPlayerJoined(source)
+		if not ESX.Players[src] then
+			onPlayerJoined(src)
 		end
 	end)
 end
@@ -323,15 +325,20 @@ AddEventHandler('playerDropped', function(reason)
 end)
 
 if Config.Multichar then
-	AddEventHandler('esx:playerLogout', function(playerId)
+	AddEventHandler('esx:playerLogout', function(playerId,cb)
 		local xPlayer = ESX.GetPlayerFromId(playerId)
 		if xPlayer then
 			TriggerEvent('esx:playerDropped', playerId)
 
 			Core.SavePlayer(xPlayer, function()
 				ESX.Players[playerId] = nil
+				
+				if cb then
+					cb()
+				end
 			end)
 		end
+
 		TriggerClientEvent("esx:onPlayerLogout", playerId)
 	end)
 end
