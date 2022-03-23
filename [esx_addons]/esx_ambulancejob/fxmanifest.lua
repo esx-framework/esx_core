@@ -4,9 +4,9 @@ game 'gta5'
 
 description 'ESX Ambulance Job'
 
-version '1.6.5'
+version '1.6.0'
 
-c
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
