@@ -113,6 +113,19 @@ CREATE TABLE `cardealer_vehicles` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `multicharacter_slots`
+--
+
+CREATE TABLE `multicharacter_slots` (
+	`identifier` VARCHAR(60) NOT NULL,
+	`slots` INT(11) NOT NULL,
+	PRIMARY KEY (`identifier`) USING BTREE,
+	INDEX `slots` (`slots`) USING BTREE
+) ENGINE=InnoDB;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `datastore`
 --
 
@@ -501,6 +514,7 @@ CREATE TABLE `users` (
   `status` longtext DEFAULT NULL,
   `is_dead` tinyint(1) DEFAULT 0,
   `id` int(11) NOT NULL,
+  `disabled` TINYINT(1) NULL DEFAULT '0',
   `last_property` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB;
 
