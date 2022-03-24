@@ -20,3 +20,4 @@ Config.EnablePVP                = true -- Allow Player to player combat
 
 Config.Multichar                = false -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
+Config.OnDuty                   = true -- Default state of the on duty system
