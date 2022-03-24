@@ -1,22 +1,20 @@
-fx_version 'adamant'
+--[[ FX Information ]]--
+fx_version   'cerulean'
+use_fxv2_oal 'yes'
+lua54        'yes'
+game         'gta5'
 
-game 'gta5'
+--[[ Resource Information ]]--
+name         'skinchanger'
+version      '1.6.5'
+description  'Skin Changer'
+author       'esx-legacy'
+repository   'https://github.com/esx-framework/esx-legacy/tree/main/%5Besx%5D/skinchanger'
 
-description 'Skin Changer'
-
-version '1.0.3'
-
+--[[ Manifest ]]--
 client_scripts {
 	'locale.lua',
-	'locales/br.lua',
-	'locales/de.lua',
-	'locales/en.lua',
-	'locales/es.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/pl.lua',
-	'locales/sv.lua',
-	'locales/tr.lua',
+	'locales/*.lua',
 	'config.lua',
 	'client/main.lua'
 }

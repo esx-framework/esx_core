@@ -1,10 +1,18 @@
-fx_version 'adamant'
+--[[ FX Information ]]--
+fx_version   'cerulean'
+use_fxv2_oal 'yes'
+lua54        'yes'
+game         'gta5'
 
-game 'gta5'
+--[[ Resource Information ]]--
+name         'esx_menu_dialog'
+version      '1.6.5'
+description  'ESX Menu Dialog'
+author       'esx-legacy'
+repository   'https://github.com/esx-framework/esx-legacy/tree/main/%5Besx%5D/esx_menu_dialog'
 
-description 'ESX Menu Dialog'
-
-version '1.6.5'
+--[[ Manifest ]]--
+dependency 'es_extended'
 
 client_scripts {
 	'@es_extended/imports.lua',
@@ -25,5 +33,3 @@ files {
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf'
 }
-
-dependency 'es_extended'
