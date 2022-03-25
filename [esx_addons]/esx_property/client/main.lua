@@ -860,17 +860,15 @@ CreateThread(function()
 		end
 
 		if letSleep then
-			Wait(500)
+			Wait(1500)
 		end
 	end
 end)
 
 -- Key controls
 CreateThread(function()
-	while true do
+	while CurrentAction do
 		Wait(0)
-
-		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
@@ -890,8 +888,5 @@ CreateThread(function()
 
 				CurrentAction = nil
 			end
-		else
-			Wait(500)
-		end
 	end
 end)
