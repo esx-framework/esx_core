@@ -1,28 +1,20 @@
 WhiteList = {}
 
-function loadWhiteList(cb)
-	Whitelist = {}
+function loadWhiteList()
+	Whitelist = nil
 
-	MySQL.query('SELECT identifier FROM whitelist', function(result)
-		for k,v in ipairs(result) do
-			WhiteList[v.identifier] = true
-		end
-
-		if cb then
-			cb()
-		end
-	end)
+	local List = LoadResourceFile(GetCurrentResourceName(),'players.json')
+	if List then
+		Whitelist = json.decode(List)
+	end
 end
 
-MySQL.ready(function()
-	loadWhiteList()
-end)
+loadWhiteList()
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
-	if #GetPlayers() < Config.MinPlayer then
+	if #(GetPlayers()) < Config.MinPlayer then
 		deferrals.done()
-	end
-
+	else 
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()
 
@@ -49,4 +41,39 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	else
 		deferrals.done()
 	end
+	end
 end)
+
+ESX.RegisterCommand('wlrefresh', 'admin', function(xPlayer, args, showError)
+	loadWhiteList(function()
+		showError('Whitelist reloaded')
+	end)
+end, true, {help = _U('help_whitelist_load')})
+
+ESX.RegisterCommand('wladd', 'admin', function(xPlayer, args, showError)
+	args.license = args.license:lower()
+
+	if WhiteList[args.license] then
+			showError('The player is already allowlisted on this server!')
+	else
+		WhiteList[args.license] = true
+		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(WhiteList))
+		loadWhiteList()
+	end
+end, true, {help = _U('help_whitelist_add'), validate = true, arguments = {
+	{name = 'license', help = 'the player license', type = 'string'}
+}})
+
+ESX.RegisterCommand('wlremove', 'admin', function(xPlayer, args, showError)
+	args.license = args.license:lower()
+
+	if WhiteList[args.license] then
+		WhiteList[args.license] = nil
+		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(WhiteList))
+		loadWhiteList()
+	else
+		showError('Identifier is not Allowlisted on this server!')
+	end
+end, true, {help = _U('help_whitelist_add'), validate = true, arguments = {
+	{name = 'license', help = 'the player license', type = 'string'}
+}})
