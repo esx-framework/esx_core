@@ -83,7 +83,6 @@ function DisplayBoughtScaleform(weaponName, price)
 	ScaleformMovieMethodAddParamInt(GetHashKey(weaponName))
 	ScaleformMovieMethodAddParamTextureNameString('')
 	ScaleformMovieMethodAddParamInt(100)
-
 	EndScaleformMovieMethod()
 
 	PlaySoundFrontend(-1, 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET', false)
@@ -97,19 +96,6 @@ function DisplayBoughtScaleform(weaponName, price)
 		end
 	end)
 end
-
-AddEventHandler('esx_weaponshop:hasEnteredMarker', function(zone)
-	if zone == 'GunShop' or zone == 'BlackWeashop' then
-		CurrentAction     = 'shop_menu'
-		CurrentActionMsg  = _U('shop_menu_prompt')
-		CurrentActionData = { zone = zone }
-	end
-end)
-
-AddEventHandler('esx_weaponshop:hasExitedMarker', function(zone)
-	CurrentAction = nil
-	ESX.UI.Menu.CloseAll()
-end)
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -151,66 +137,30 @@ CreateThread(function()
 			for i = 1, #v.Locations, 1 do
 				if (Config.Type ~= -1 and #(coords - v.Locations[i]) < Config.DrawDistance) then
 					Sleep = 0
+					ESX.ShowHelpNotification(_U('shop_menu_prompt'))
+
+					if IsControlJustReleased(0, 38) then
+						if Config.LicenseEnable and v.Legal then
+							ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
+								if hasWeaponLicense then
+									OpenShopMenu(k)
+								else
+									OpenBuyLicenseMenu(k)
+								end
+							end, GetPlayerServerId(PlayerId()), 'weapon')
+						else
+							OpenShopMenu(k)
+						end
+					end
 					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
-				end
-			end
-		end
-	Wait(Sleep)
-	end
-end)
-
--- Enter / Exit marker events
-CreateThread(function()
-	while true do
-		local Sleep = 1000
-
-		local coords = GetEntityCoords(PlayerPedId())
-		local isInMarker, currentZone = false, nil
-
-		for k,v in pairs(Config.Zones) do
-			for i=1, #v.Locations, 1 do
-				if #(coords - v.Locations[i]) < Config.Size.x then
-					Sleep = 0
-					isInMarker, ShopItems, currentZone, LastZone = true, v.Items, k, k
-				end
-			end
-		end
-		if isInMarker and not HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = true
-			TriggerEvent('esx_weaponshop:hasEnteredMarker', currentZone)
-		end
-		
-		if not isInMarker and HasAlreadyEnteredMarker then
-			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_weaponshop:hasExitedMarker', LastZone)
-		end
-	Wait(Sleep)
-	end
-end)
-
--- Key Controls
-CreateThread(function()
-	while CurrentAction do
-		Wait(0)
-			ESX.ShowHelpNotification(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) then
-
-				if CurrentAction == 'shop_menu' then
-					if Config.LicenseEnable and Config.Zones[CurrentActionData.zone].Legal then
-						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
-							if hasWeaponLicense then
-								OpenShopMenu(CurrentActionData.zone)
-							else
-								OpenBuyLicenseMenu(CurrentActionData.zone)
-							end
-						end, GetPlayerServerId(PlayerId()), 'weapon')
-					else
-						OpenShopMenu(CurrentActionData.zone)
+				else 
+					if ShopOpen then
+						ESX.UI.Menu.CloseAll()
+						ShopOpen = false
 					end
 				end
-
-				CurrentAction = nil
 			end
+		end
+	Wait(Sleep)
 	end
 end)
