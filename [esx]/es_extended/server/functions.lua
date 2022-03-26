@@ -322,6 +322,20 @@ function ESX.DoesJobExist(job, grade)
 	return false
 end
 
+function ESX.RegisterPlayerOverrides(index,overrides)
+	Core.PlayerFunctionOverrides[index] = overrides
+end
+
+function ESX.SetPlayerOverrides(index)
+	if not index
+	or not Core.PlayerFunctionOverrides[index] 
+	then
+		return print('[^3WARNING^7] No valid index provided.')
+	end
+
+	Config.PlayerFunctionOverrides = index
+end
+
 function Core.IsPlayerAdmin(playerId)
 	if (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false then
 		return true
