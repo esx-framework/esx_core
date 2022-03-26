@@ -333,7 +333,7 @@ function ESX.SetPlayerOverrides(index)
 		return print('[^3WARNING^7] No valid index provided.')
 	end
 
-	Config.PlayerFunctionOverrides = index
+	Config.PlayerOverride = index
 end
 
 function Core.IsPlayerAdmin(playerId)
