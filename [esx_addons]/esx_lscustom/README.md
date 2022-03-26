@@ -1,34 +1,11 @@
 # esx_lscustom
 
 ## Requirements
+
 - [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
 
-## Download & Installation
+## Legal
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_lscustom
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_lscustom [esx]/esx_lscustom
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_lscustom/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Add this to your `server.cfg`:
-
-```
-start esx_lscustom
-```
-
-# Legal
-### License
 esx_lscustoms - The best LS Custom out there for FX
 
 Copyright (C) 2015-2022 Jérémie N'gadi

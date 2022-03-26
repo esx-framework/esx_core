@@ -225,22 +225,24 @@ end)
 -- Display markers
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			if(v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
+				Sleep = 0
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		Wait(0)
+	local Sleep = 500
 
 		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
@@ -248,6 +250,7 @@ CreateThread(function()
 
 		for k,v in pairs(Config.Zones) do
 			if #(coords - v.Pos) < v.Size.x then
+				Sleep = 0
 				isInMarker  = true
 				currentZone = k
 			end
@@ -263,15 +266,14 @@ CreateThread(function()
 			hasAlreadyEnteredMarker = false
 			TriggerEvent('esx_realestateagentjob:hasExitedMarker', LastZone)
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Key controls
 CreateThread(function()
-	while true do
+	while CurrentAction do
 		Wait(0)
-
-		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
@@ -281,9 +283,6 @@ CreateThread(function()
 
 				CurrentAction = nil
 			end
-		else
-			Wait(500)
-		end
 	end
 end)
 
