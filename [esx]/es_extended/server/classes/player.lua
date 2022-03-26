@@ -1,10 +1,6 @@
-local targetOverrides = {}
-
-if Config.InventoryOverride then
-	targetOverrides = Core.PlayerFunctionOverrides[Config.InventoryOverride] or {}
-end
-
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
+	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
+	
 	local self = {}
 
 	self.accounts = accounts
@@ -510,8 +506,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	for k,v in pairs(targetOverrides) do
-		self[k] = v(self)
+	for fnName,fn in pairs(targetOverrides) do
+		self[fnName] = fn(self)
 	end
 
 	return self
