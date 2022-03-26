@@ -5,19 +5,6 @@ local CurrentActionMsg = ''
 local CurrentActionData = {}
 local ShopOpen = false
 
-ESX.TriggerServerCallback('esx_weaponshop:getShop', function(shopItems)
-	for k,v in pairs(shopItems) do
-		Config.Zones[k].Items = v
-	end
-end)
-
-RegisterNetEvent('esx_weaponshop:sendShop')
-AddEventHandler('esx_weaponshop:sendShop', function(shopItems)
-	for k,v in pairs(shopItems) do
-		Config.Zones[k].Items = v
-	end
-end)
-
 function OpenBuyLicenseMenu(zone)
 	ESX.UI.Menu.CloseAll()
 
@@ -48,11 +35,12 @@ function OpenShopMenu(zone)
 
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
+		item.label = ESX.GetWeaponLabel(item.name)
 
 		table.insert(elements, {
 			label = ('%s - <span style="color: green;">%s</span>'):format(item.label, _U('shop_menu_item', ESX.Math.GroupDigits(item.price))),
 			price = item.price,
-			weaponName = item.item
+			weaponName = item.name
 		})
 	end
 
@@ -140,7 +128,7 @@ CreateThread(function()
 
 				SetBlipSprite (blip, 110)
 				SetBlipDisplay(blip, 4)
-				SetBlipScale  (blip, 1.0)
+				SetBlipScale  (blip, 0.8)
 				SetBlipColour (blip, 81)
 				SetBlipAsShortRange(blip, true)
 
@@ -202,11 +190,8 @@ end)
 
 -- Key Controls
 CreateThread(function()
-	while true do
-	local Sleep = 1500
-		
-		if CurrentAction ~= nil then
-			Sleep = 0
+	while CurrentAction do
+		Wait(0)
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
@@ -227,7 +212,5 @@ CreateThread(function()
 
 				CurrentAction = nil
 			end
-		end
-	Wait(Sleep)
 	end
 end)
