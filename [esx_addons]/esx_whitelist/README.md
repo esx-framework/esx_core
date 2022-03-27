@@ -1,32 +1,6 @@
 # esx_whitelist
 
-## Download & Installation
-
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_whitelist
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_whitelist [esx]/esx_whitelist
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_whitelist/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Import `esx_whitelist.sql` to your database
-- Add this in your `server.cfg`:
-
-```
-start esx_whitelist
-```
-
 # Legal
-### License
 esx_whitelist - Whitelist script
 
 Copyright (C) 2015-2022 Jérémie N'gadi

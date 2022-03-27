@@ -1,14 +1,18 @@
-local availableJobs = {}
-
-for k,v in pairs(ESX.Jobs) do 
-	print(v.whitelisted)
-	if v.whitelisted == false then 
-		availableJobs[k] = {label = v.label}
+function getJobs()
+	local jobs = ESX.GetJobs()
+	local availableJobs = {}
+	for k,v in pairs(jobs) do 
+		print(v.whitelisted)
+		if v.whitelisted == false then 
+			availableJobs[k] = {label = v.label}
+		end
 	end
+	return availableJobs
 end
 
 ESX.RegisterServerCallback('esx_joblisting:getJobsList', function(source, cb)
-	cb(availableJobs)
+	local jobs = getJobs()
+	cb(jobs)
 end)
 
 function IsNearCentre(player)
@@ -27,10 +31,12 @@ end
 
 RegisterServerEvent('esx_joblisting:setJob')
 AddEventHandler('esx_joblisting:setJob', function(job)
+	local source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
+	local jobs = getJobs()
 
 	if xPlayer and IsNearCentre(source) then
-		if availableJobs[job] then
+		if jobs[job] then
 			xPlayer.setJob(job, 0)
 		end
 	end
