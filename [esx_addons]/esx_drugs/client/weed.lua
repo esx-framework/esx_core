@@ -73,7 +73,7 @@ end
 
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
@@ -86,6 +86,7 @@ CreateThread(function()
 		end
 
 		if nearbyObject and IsPedOnFoot(playerPed) then
+			Sleep = 0
 			if not isPickingUp then
 				ESX.ShowHelpNotification(_U('weed_pickupprompt'))
 			end
@@ -114,9 +115,8 @@ CreateThread(function()
 					isPickingUp = false
 				end, 'cannabis')
 			end
-		else
-			Wait(500)
 		end
+	Wait(Sleep)
 	end
 end)
 
