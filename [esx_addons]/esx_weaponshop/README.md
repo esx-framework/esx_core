@@ -2,7 +2,33 @@
 
 ESX Weapon Shop adds.. well you guessed it - weapon shops to the already existing shops in the world.
 
+## Download & Installation
+
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
+```
+fvm install --save --folder=esx esx-org/esx_weaponshop
+```
+
+### Using Git
+```
+cd resources
+git clone https://github.com/ESX-Org/esx_weaponshop.git [esx]/esx_weaponshop
+```
+
+### Manually
+- Download https://github.com/ESX-Org/esx_weaponshop/archive/master.zip
+- Put it in the `[esx]` directory
+
+## Installation
+- Import `esx_weaponshop.sql` in your database
+- Add this to your `server.cfg`:
+
+```
+start esx_weaponshop
+```
+
 # Legal
+### License
 esx_weaponshop - Legal and illegal weapon shops
 
 Copyright (C) 2015-2022 Jérémie N'gadi

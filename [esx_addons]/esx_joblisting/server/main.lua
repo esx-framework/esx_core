@@ -1,43 +1,32 @@
-function getJobs()
-	local jobs = ESX.GetJobs()
-	local availableJobs = {}
-	for k,v in pairs(jobs) do 
-		print(v.whitelisted)
-		if v.whitelisted == false then 
-			availableJobs[k] = {label = v.label}
-		end
-	end
-	return availableJobs
-end
+local availableJobs = {}
 
-ESX.RegisterServerCallback('esx_joblisting:getJobsList', function(source, cb)
-	local jobs = getJobs()
-	cb(jobs)
+MySQL.ready(function()
+	MySQL.query('SELECT name, label FROM jobs WHERE whitelisted = @whitelisted', {
+		['@whitelisted'] = false
+	}, function(result)
+		for i=1, #result, 1 do
+			table.insert(availableJobs, {
+				job = result[i].name,
+				label = result[i].label
+			})
+		end
+	end)
 end)
 
-function IsNearCentre(player)
-	local Ped = GetPlayerPed(player)
-	local PedCoords = GetEntityCoords(Ped)
-	local Zones = Config.Zones
-
-	for i=1, #Config.Zones, 1 do
-		local distance = #(PedCoords - Config.Zones[i])
-
-		if distance < Config.DrawDistance then
-			return true
-		end
-	end
-end
+ESX.RegisterServerCallback('esx_joblisting:getJobsList', function(source, cb)
+	cb(availableJobs)
+end)
 
 RegisterServerEvent('esx_joblisting:setJob')
 AddEventHandler('esx_joblisting:setJob', function(job)
-	local source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local jobs = getJobs()
 
-	if xPlayer and IsNearCentre(source) then
-		if jobs[job] then
-			xPlayer.setJob(job, 0)
+	if xPlayer then
+		for k,v in ipairs(availableJobs) do
+			if v.job == job then
+				xPlayer.setJob(job, 0)
+				break
+			end
 		end
 	end
 end)

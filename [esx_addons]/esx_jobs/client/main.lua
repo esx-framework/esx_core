@@ -30,6 +30,7 @@ local vehicleMaxHealth = nil
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
 	refreshBlips()
 end)
 
@@ -229,6 +230,7 @@ function refreshBlips()
 
 	if ESX.PlayerData.job ~= nil then
 		for jobKey,jobValues in pairs(Config.Jobs) do
+
 			if jobKey == ESX.PlayerData.job.name then
 				for zoneKey,zoneValues in pairs(jobValues.Zones) do
 
@@ -243,10 +245,11 @@ function refreshBlips()
 						else
 							_Pos = zoneValues.Pos
 						end
+						print(_Pos.x)
 						local blip = AddBlipForCoord(_Pos.x, _Pos.y, _Pos.z)
 						SetBlipSprite  (blip, jobValues.BlipInfos.Sprite)
 						SetBlipDisplay (blip, 4)
-						SetBlipScale   (blip, 0.0)
+						SetBlipScale   (blip, 1.2)
 						SetBlipCategory(blip, 3)
 						SetBlipColour  (blip, jobValues.BlipInfos.Color)
 						SetBlipAsShortRange(blip, true)
@@ -298,16 +301,21 @@ end)
 
 -- Show top left hint
 CreateThread(function()
-	while hintIsShowed do
+	while true do
 		Wait(0)
-		ESX.ShowHelpNotification(hintToDisplay)
+
+		if hintIsShowed then
+			ESX.ShowHelpNotification(hintToDisplay)
+		else
+			Wait(500)
+		end
 	end
 end)
 
 -- Display markers (only if on duty and the player's job ones)
 CreateThread(function()
 	while true do
-		local Sleep = 1500
+		Wait(0)
 		local zones = {}
 
 		if ESX.PlayerData.job ~= nil then
@@ -324,22 +332,18 @@ CreateThread(function()
 						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
 							if (not(center == nil)) then
 								if(v.Marker ~= -1 and #(coords - center) < Config.DrawDistance) then
-									Sleep = 0
 									DrawMarker(v.Marker, center.x, center.y, center.z - 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 								end
 							end
 						end)
 					else
-						local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-						if(v.Marker ~= -1 and #(coords - Pos) < Config.DrawDistance) then
-							Sleep = 0
+						if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
 							DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 						end
 					end
 				end
 			end
 		end
-	Wait(Sleep)
 	end
 end)
 
@@ -359,14 +363,13 @@ end)
 -- Activate public marker
 CreateThread(function()
 	while true do
-		local Sleep = 1500
+		Wait(0)
 		local coords   = GetEntityCoords(PlayerPedId())
 		local position = nil
 		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
 			if #(coords - v.Pos) < v.Size.x/2 then
-				Sleep = 0
 				isInPublicMarker = true
 				position = v.Teleport
 				zone = v
@@ -391,7 +394,6 @@ CreateThread(function()
 				hintIsShowed = false
 			end
 		end
-	Wait(Sleep)
 	end
 end)
 
@@ -399,7 +401,7 @@ end)
 CreateThread(function()
 	while true do
 
-		local Sleep = 1500
+		Wait(0)
 
 		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
 			local zones = nil
@@ -423,7 +425,6 @@ CreateThread(function()
 					if v.Zone then
 						TriggerEvent("izone:isPlayerInZone", v.Zone, function(isIn)
 							if isIn then
-								Sleep = 0
 								isInMarker  = true
 								currentZone = k
 								zone        = v
@@ -438,9 +439,7 @@ CreateThread(function()
 						end
 					-- Else use radius defined from center
 					else
-						local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-						if #(coords - Pos) < v.Size.x then
-							Sleep = 0
+						if #(coords - v.Pos) < v.Size.x then
 							isInMarker  = true
 							currentZone = k
 							zone        = v
@@ -510,7 +509,6 @@ CreateThread(function()
 				end
 			end
 		end
-	Wait(Sleep)
 	end
 end)
 

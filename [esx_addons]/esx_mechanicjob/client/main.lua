@@ -771,10 +771,9 @@ end)
 -- Pop NPC mission vehicle when inside area
 CreateThread(function()
 	while true do
-		local Sleep = 1500
+		Wait(0)
 
 		if NPCTargetTowableZone and not NPCHasSpawnedTowable then
-			Sleep = 0
 			local coords = GetEntityCoords(PlayerPedId())
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
@@ -790,17 +789,14 @@ CreateThread(function()
 		end
 
 		if NPCTargetTowableZone and NPCHasSpawnedTowable and not NPCHasBeenNextToTowable then
-			Sleep = 500
 			local coords = GetEntityCoords(PlayerPedId())
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
 			if #(coords - zone.Pos) < Config.NPCNextToDistance then
-				Sleep = 0
 				ESX.ShowNotification(_U('please_tow'))
 				NPCHasBeenNextToTowable = true
 			end
 		end
-	Wait(Sleep)
 	end
 end)
 
@@ -822,28 +818,31 @@ end)
 -- Display markers
 CreateThread(function()
 	while true do
-		local Sleep = 2000
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
-			Sleep = 500
 			local coords, letSleep = GetEntityCoords(PlayerPedId()), true
 
 			for k,v in pairs(Config.Zones) do
 				if v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance then
-					Sleep = 0
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
 			end
+
+			if letSleep then
+				Wait(500)
+			end
+		else
+			Wait(500)
 		end
-	Wait(Sleep)
 	end
 end)
 
 -- Enter / Exit marker events
 CreateThread(function()
 	while true do
-		local Sleep = 500
+		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 
@@ -853,7 +852,6 @@ CreateThread(function()
 
 			for k,v in pairs(Config.Zones) do
 				if(#(coords - v.Pos) < v.Size.x) then
-					Sleep = 0
 					isInMarker  = true
 					currentZone = k
 				end
@@ -869,8 +867,8 @@ CreateThread(function()
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_mechanicjob:hasExitedMarker', LastZone)
 			end
+
 		end
-	Wait(Sleep)
 	end
 end)
 
@@ -919,8 +917,10 @@ end)
 
 -- Key Controls
 CreateThread(function()
-	while CurrentAction do
+	while true do
 		Wait(0)
+
+		if CurrentAction then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
@@ -983,6 +983,8 @@ CreateThread(function()
 				end
 			end
 		end
+
+	end
 end)
 
 AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)

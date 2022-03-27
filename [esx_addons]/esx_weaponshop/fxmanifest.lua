@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Weapon Shop'
 
-version '1.6.5'
+version '1.6.0'
 
 shared_scripts {
 	'@es_extended/imports.lua',
@@ -14,6 +14,7 @@ shared_scripts {
 }
 
 server_scripts {
+	'@oxmysql/lib/MySQL.lua',
 	'server/main.lua'
 }
 

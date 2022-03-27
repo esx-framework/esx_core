@@ -1,11 +1,34 @@
 # esx_joblisting
 
-Simple job listing/Job Centre script, you can specify what jobs you want to be whitelisted in db.
+Simple job listing script, you can specify what jobs you want to be whitelisted in db.
 
-## Legal
+## Download & Installation
 
+### Using [fvm](https://github.com/qlaffont/fvm-installer)
+```
+fvm install --save --folder=esx esx-org/esx_joblisting
+```
+
+### Using Git
+```
+cd resources
+git clone https://github.com/ESX-Org/esx_joblisting [esx]/esx_joblisting
+```
+
+### Manually
+- Download https://github.com/ESX-Org/esx_joblisting/archive/master.zip
+- Put it in the `[esx]` directory
+
+## Installation
+- Import `esx_joblisting.sql` in your database
+- Add this in your `server.cfg`:
+
+```
+start esx_joblisting
+```
+
+# Legal
 ### License
-
 esx_joblisting - job listing script
 
 Copyright (C) 2015-2022 Jérémie N'gadi
