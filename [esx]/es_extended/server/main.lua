@@ -28,8 +28,7 @@ if Config.Multichar then
 		end
 	end)
 else
-	RegisterNetEvent('esx:onPlayerJoined')
-	AddEventHandler('esx:onPlayerJoined', function()
+	RegisterNetEvent('esx:onPlayerJoined', function()
 		while not next(ESX.Jobs) do Wait(50) end
 
 		if not ESX.Players[source] then
@@ -336,8 +335,7 @@ if Config.Multichar then
 	end)
 end
 
-RegisterNetEvent('esx:updateCoords')
-AddEventHandler('esx:updateCoords', function(coords)
+RegisterNetEvent('esx:updateCoords', function(coords)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer then
@@ -346,8 +344,7 @@ AddEventHandler('esx:updateCoords', function(coords)
 end)
 
 if not Config.OxInventory then
-	RegisterNetEvent('esx:updateWeaponAmmo')
-	AddEventHandler('esx:updateWeaponAmmo', function(weaponName, ammoCount)
+	RegisterNetEvent('esx:updateWeaponAmmo', function(weaponName, ammoCount)
 		local xPlayer = ESX.GetPlayerFromId(source)
 
 		if xPlayer then
@@ -355,8 +352,7 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:giveInventoryItem')
-	AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
+	RegisterNetEvent('esx:giveInventoryItem', function(target, type, itemName, itemCount)
 		local playerId = source
 		local sourceXPlayer = ESX.GetPlayerFromId(playerId)
 		local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -451,8 +447,7 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:removeInventoryItem')
-	AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
+	RegisterNetEvent('esx:removeInventoryItem', function(type, itemName, itemCount)
 		local playerId = source
 		local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -510,8 +505,7 @@ if not Config.OxInventory then
 	end)
 
 
-	RegisterNetEvent('esx:useItem')
-	AddEventHandler('esx:useItem', function(itemName)
+	RegisterNetEvent('esx:useItem', function(itemName)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local count = xPlayer.getInventoryItem(itemName).count
 
@@ -522,8 +516,7 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:onPickup')
-	AddEventHandler('esx:onPickup', function(pickupId)
+	RegisterNetEvent('esx:onPickup', function(pickupId)
 		local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
 		if pickup then

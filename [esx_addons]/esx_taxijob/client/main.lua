@@ -495,10 +495,9 @@ end)
 
 -- Enter / Exit marker events, and draw markers
 CreateThread(function()
-	while true do
+	while ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi'  do
 		Wait(0)
 
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 			local coords = GetEntityCoords(PlayerPedId())
 			local isInMarker, letSleep, currentZone = false, true
 
@@ -529,20 +528,14 @@ CreateThread(function()
 			if letSleep then
 				Wait(500)
 			end
-		else
-			Wait(1000)
-		end
 	end
 end)
 
 -- Taxi Job
 CreateThread(function()
-	while true do
-
+	while OnJob do
 		Wait(0)
-		local playerPed = PlayerPedId()
-
-		if OnJob then
+			local playerPed = PlayerPedId()
 			if CurrentCustomer == nil then
 				DrawSub(_U('drive_search_pass'), 5000)
 
@@ -695,9 +688,6 @@ CreateThread(function()
 				else
 					DrawSub(_U('return_to_veh'), 5000)
 				end
-			end
-		else
-			Wait(500)
 		end
 	end
 end)
@@ -717,10 +707,8 @@ end)
 
 -- Key Controls
 CreateThread(function()
-	while true do
+	while CurrentAction and not ESX.PlayerData.dead do
 		Wait(0)
-
-		if CurrentAction and not ESX.GetPlayerData().dead then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
@@ -737,7 +725,6 @@ CreateThread(function()
 				CurrentAction = nil
 			end
 		end
-	end
 end)
 RegisterCommand('taximenu', function()
 	if not ESX.GetPlayerData().dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then

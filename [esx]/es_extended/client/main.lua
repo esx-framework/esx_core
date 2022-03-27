@@ -13,8 +13,7 @@ CreateThread(function()
 	end
 end)
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = xPlayer
 
@@ -74,14 +73,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	StartServerSyncLoops()
 end)
 
-RegisterNetEvent('esx:onPlayerLogout')
-AddEventHandler('esx:onPlayerLogout', function()
+RegisterNetEvent('esx:onPlayerLogout', function()
 	ESX.PlayerLoaded = false
 	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
 
-RegisterNetEvent('esx:setMaxWeight')
-AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
+RegisterNetEvent('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData('maxWeight', newMaxWeight) end)
 
 local function onPlayerSpawn()
 	if ESX.PlayerLoaded then
@@ -134,8 +131,7 @@ AddEventHandler('esx:restoreLoadout', function()
 	end
 end)
 
-RegisterNetEvent('esx:setAccountMoney')
-AddEventHandler('esx:setAccountMoney', function(account)
+RegisterNetEvent('esx:setAccountMoney', function(account)
 	for k,v in ipairs(ESX.PlayerData.accounts) do
 		if v.name == account.name then
 			ESX.PlayerData.accounts[k] = account
@@ -153,8 +149,7 @@ AddEventHandler('esx:setAccountMoney', function(account)
 end)
 
 if not Config.OxInventory then
-	RegisterNetEvent('esx:addInventoryItem')
-	AddEventHandler('esx:addInventoryItem', function(item, count, showNotification)
+	RegisterNetEvent('esx:addInventoryItem', function(item, count, showNotification)
 		for k,v in ipairs(ESX.PlayerData.inventory) do
 			if v.name == item then
 				ESX.UI.ShowInventoryItemNotification(true, v.label, count - v.count)
@@ -172,8 +167,7 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:removeInventoryItem')
-	AddEventHandler('esx:removeInventoryItem', function(item, count, showNotification)
+	RegisterNetEvent('esx:removeInventoryItem', function(item, count, showNotification)
 		for k,v in ipairs(ESX.PlayerData.inventory) do
 			if v.name == item then
 				ESX.UI.ShowInventoryItemNotification(false, v.label, v.count - count)
@@ -191,48 +185,40 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:addWeapon')
-	AddEventHandler('esx:addWeapon', function(weapon, ammo)
+	RegisterNetEvent('esx:addWeapon', function(weapon, ammo)
 		GiveWeaponToPed(ESX.PlayerData.ped, GetHashKey(weapon), ammo, false, false)
 	end)
 
-	RegisterNetEvent('esx:addWeaponComponent')
-	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
+	RegisterNetEvent('esx:addWeaponComponent', function(weapon, weaponComponent)
 		local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
 		GiveWeaponComponentToPed(ESX.PlayerData.ped, GetHashKey(weapon), componentHash)
 	end)
 
-	RegisterNetEvent('esx:setWeaponAmmo')
-	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
+	RegisterNetEvent('esx:setWeaponAmmo', function(weapon, weaponAmmo)
 		SetPedAmmo(ESX.PlayerData.ped, GetHashKey(weapon), weaponAmmo)
 	end)
 
-	RegisterNetEvent('esx:setWeaponTint')
-	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
+	RegisterNetEvent('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, GetHashKey(weapon), weaponTintIndex)
 	end)
 
-	RegisterNetEvent('esx:removeWeapon')
-	AddEventHandler('esx:removeWeapon', function(weapon)
+	RegisterNetEvent('esx:removeWeapon', function(weapon)
 		local playerPed = ESX.PlayerData.ped
 		RemoveWeaponFromPed(ESX.PlayerData.ped, GetHashKey(weapon))
 		SetPedAmmo(ESX.PlayerData.ped, GetHashKey(weapon), 0)
 	end)
 
-	RegisterNetEvent('esx:removeWeaponComponent')
-	AddEventHandler('esx:removeWeaponComponent', function(weapon, weaponComponent)
+	RegisterNetEvent('esx:removeWeaponComponent', function(weapon, weaponComponent)
 		local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
 		RemoveWeaponComponentFromPed(ESX.PlayerData.ped, GetHashKey(weapon), componentHash)
 	end)
 end
 
-RegisterNetEvent('esx:teleport')
-AddEventHandler('esx:teleport', function(coords)
+RegisterNetEvent('esx:teleport', function(coords)
 	ESX.Game.Teleport(ESX.PlayerData.ped, coords)
 end)
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(Job)
+RegisterNetEvent('esx:setJob', function(Job)
 	if Config.EnableHud then
 		local gradeLabel = Job.grade_label ~= Job.label and Job.grade_label or ''
 		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
@@ -244,8 +230,7 @@ AddEventHandler('esx:setJob', function(Job)
 	ESX.SetPlayerData('job', Job)
 end)
 
-RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(vehicle)
+RegisterNetEvent('esx:spawnVehicle', function(vehicle)
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
 			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
@@ -264,8 +249,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 end)
 
 if not Config.OxInventory then
-	RegisterNetEvent('esx:createPickup')
-	AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
+	RegisterNetEvent('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
 		local function setObjectProperties(object)
 			SetEntityAsMissionEntity(object, true, false)
 			PlaceObjectOnGroundProperly(object)
@@ -297,16 +281,14 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:createMissingPickups')
-	AddEventHandler('esx:createMissingPickups', function(missingPickups)
+	RegisterNetEvent('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
 			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords, pickup.type, pickup.name, pickup.components, pickup.tintIndex)
 		end
 	end)
 end
 
-RegisterNetEvent('esx:registerSuggestions')
-AddEventHandler('esx:registerSuggestions', function(registeredCommands)
+RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
 	for name,command in pairs(registeredCommands) do
 		if command.suggestion then
 			TriggerEvent('chat:addSuggestion', ('/%s'):format(name), command.suggestion.help, command.suggestion.arguments)
@@ -315,8 +297,7 @@ AddEventHandler('esx:registerSuggestions', function(registeredCommands)
 end)
 
 if not Config.OxInventory then
-	RegisterNetEvent('esx:removePickup')
-	AddEventHandler('esx:removePickup', function(pickupId)
+	RegisterNetEvent('esx:removePickup', function(pickupId)
 		if pickups[pickupId] and pickups[pickupId].obj then
 			ESX.Game.DeleteObject(pickups[pickupId].obj)
 			pickups[pickupId] = nil
@@ -324,8 +305,7 @@ if not Config.OxInventory then
 	end)
 end
 
-RegisterNetEvent('esx:deleteVehicle')
-AddEventHandler('esx:deleteVehicle', function(radius)
+RegisterNetEvent('esx:deleteVehicle', function(radius)
 	if radius and tonumber(radius) then
 		radius = tonumber(radius) + 0.01
 		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(ESX.PlayerData.ped), radius)
@@ -389,36 +369,32 @@ end
 
 function StartServerSyncLoops()
 	if not Config.OxInventory then
-		-- keep track of ammo
-		CreateThread(function()
-			local currentWeapon = {timer=0}
-			while ESX.PlayerLoaded do
-				local sleep = 500
+			-- keep track of ammo
 
-				if currentWeapon.timer == sleep then
-					local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
-					TriggerServerEvent('esx:updateWeaponAmmo', currentWeapon.name, ammoCount)
-					currentWeapon.timer = 0
-				elseif currentWeapon.timer > sleep then
-					currentWeapon.timer = currentWeapon.timer - sleep
-				end
-
-				if IsPedArmed(ESX.PlayerData.ped, 4) then
-					sleep = 0
-					if IsPedShooting(ESX.PlayerData.ped) then
-						local _,weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
-						local weapon = ESX.GetWeaponFromHash(weaponHash)
-
-						if weapon then
-							currentWeapon.name = weapon.name
-							currentWeapon.hash = weaponHash
-							currentWeapon.timer = 100 * sleep
-						end
+			CreateThread(function()
+					local currentWeapon = {Ammo = 0}
+					while ESX.PlayerLoaded do
+						local sleep = 250
+						if IsPedArmed(ESX.PlayerData.ped, 4) or IsPedArmed(ESX.PlayerData.ped, 2) then
+							sleep = 0
+							local _,weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
+							local weapon = ESX.GetWeaponFromHash(weaponHash) 
+							if weapon then
+								local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
+								if weapon.name ~= currentWeapon.name then 
+									currentWeapon.Ammo = ammoCount
+									currentWeapon.name = weapon.name
+								else
+									if ammoCount ~= currentWeapon.Ammo then
+										currentWeapon.Ammo = ammoCount
+										TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
+									end 
+								end   
+							end
+						end    
+					Wait(sleep)
 					end
-				end
-				Wait(sleep)
-			end
-		end)
+			end)
 	end
 
 	-- sync current player coords with server
@@ -509,8 +485,7 @@ end
 
 ----- Admin commnads from esx_adminplus
 
-RegisterNetEvent("esx:tpm")
-AddEventHandler("esx:tpm", function()
+RegisterNetEvent("esx:tpm", function()
 local PlayerPedId = PlayerPedId
 local GetEntityCoords = GetEntityCoords
 local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
@@ -601,8 +576,7 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 end)
 
 local noclip = false
-RegisterNetEvent("esx:noclip")
-AddEventHandler("esx:noclip", function(input)
+RegisterNetEvent("esx:noclip", function(input)
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
     local player = PlayerId()
@@ -670,13 +644,11 @@ end)
 	end
 end)
 
-RegisterNetEvent("esx:killPlayer")
-AddEventHandler("esx:killPlayer", function()
+RegisterNetEvent("esx:killPlayer", function()
   SetEntityHealth(ESX.PlayerData.ped, 0)
 end)
 
-RegisterNetEvent("esx:freezePlayer")
-AddEventHandler("esx:freezePlayer", function(input)
+RegisterNetEvent("esx:freezePlayer", function(input)
     local player = PlayerId()
     if input == 'freeze' then
         SetEntityCollision(ESX.PlayerData.ped, false)
