@@ -391,25 +391,26 @@ CreateThread(function()
 
 							ESX.UI.Menu.CloseAll()
 							GetAction({value = 'main'})
+
+							-- Prevent Free Tunning Bug
+							CreateThread(function()
+								while lsMenuIsShowed do
+									DisableControlAction(2, 288, true)
+									DisableControlAction(2, 289, true)
+									DisableControlAction(2, 170, true)
+									DisableControlAction(2, 167, true)
+									DisableControlAction(2, 168, true)
+									DisableControlAction(2, 23, true)
+									DisableControlAction(0, 75, true)  -- Disable exit vehicle
+									DisableControlAction(27, 75, true) -- Disable exit vehicle
+									Wait(0)
+								end
+							end)
 						end
 					end
 				end
 			end
 		end
 	Wait(Sleep)
-	end
-end)
-
--- Prevent Free Tunning Bug
-CreateThread(function()
-	while lsMenuIsShowed do
-		DisableControlAction(2, 288, true)
-		DisableControlAction(2, 289, true)
-		DisableControlAction(2, 170, true)
-		DisableControlAction(2, 167, true)
-		DisableControlAction(2, 168, true)
-		DisableControlAction(2, 23, true)
-		DisableControlAction(0, 75, true)  -- Disable exit vehicle
-		DisableControlAction(27, 75, true) -- Disable exit vehicle
 	end
 end)
