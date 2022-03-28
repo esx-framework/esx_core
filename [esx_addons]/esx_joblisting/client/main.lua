@@ -4,10 +4,10 @@ function ShowJobListingMenu()
 	ESX.TriggerServerCallback('esx_joblisting:getJobsList', function(jobs)
 		local elements = {}
 
-		for i=1, #jobs, 1 do
+		for k,v in pairs(jobs) do
 			elements[#elements+1] = {
-				label = jobs[i].label,
-				job   = jobs[i].job
+				label = v.label,
+				job   = k
 			}
 		end
 
