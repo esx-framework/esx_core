@@ -1,4 +1,4 @@
-<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+<h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
 **IMPORTANT**: ESX Legacy now supports ox Inventory. **HOWEVER, THIS SHOULD ONLY BE USED IF YOU ARE EXPERIENCED AND KNOW WHAT YOU ARE DOING**.
 
