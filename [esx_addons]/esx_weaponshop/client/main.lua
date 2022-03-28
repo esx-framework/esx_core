@@ -52,7 +52,7 @@ function OpenShopMenu(zone)
 		elements[#elements+1] = {
 			label = ('%s - <span style="color: green;">%s</span>'):format(item.label, _U('shop_menu_item', ESX.Math.GroupDigits(item.price))),
 			price = item.price,
-			weaponName = item.item
+			weaponName = item.name
 		}
 	end
 
