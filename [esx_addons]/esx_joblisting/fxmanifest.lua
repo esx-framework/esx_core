@@ -1,5 +1,4 @@
-fx_version 'adamant'
-
+fx_version 'bodacious'
 game 'gta5'
 
 description 'ESX Job Listing'
@@ -9,17 +8,12 @@ version '1.6.5'
 shared_scripts {
 	'@es_extended/imports.lua',
 	'@es_extended/locale.lua',
+	'locales/*.lua',
 	'config.lua'
 }
-server_scripts {
-	'@oxmysql/lib/MySQL.lua',
-	'locales/*.lua',
-	'server/main.lua'
-}
 
-client_scripts {
-	'locales/*.lua',
-	'client/main.lua'
-}
+server_script 'server/main.lua'
+
+client_script 'client/main.lua'
 
 dependency 'es_extended'

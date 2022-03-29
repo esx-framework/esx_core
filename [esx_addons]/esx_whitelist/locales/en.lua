@@ -1,8 +1,8 @@
 Locales['en'] = {
-  ['whitelist_check']     = 'making sure you\'re whitelisted on this server . . .',
-  ['not_whitelisted']     = 'you are not whitelisted on this server',
-  ['whitelist_empty']     = 'the whitelist hasn\'t been loaded yet, or alternatively no one has been whitelisted!',
-  ['license_missing']     = 'your license could not be found',
+  ['whitelist_check']     = 'Checking you are Allowlisted.',
+  ['not_whitelisted']     = 'You Must be Allowlisted to join this server!',
+  ['whitelist_empty']     = 'There Are no whitelists saved for this server.',
+  ['license_missing']     = 'Error: Your Identifier is missing!',
   ['help_whitelist_add']  = 'add someone to the whitelist',
   ['help_whitelist_load'] = 'reload the whitelist',
 }
