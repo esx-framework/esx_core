@@ -53,7 +53,7 @@ end)
 
 function GetPrice(weaponName, zone)
 	local weapon = nil
-	for k,v in pairs(Config.Zones[zone].items)
+	for k,v in pairs(Config.Zones[zone].items) do
 		if v.name == weaponName then
 			weapon  = v
 			break
