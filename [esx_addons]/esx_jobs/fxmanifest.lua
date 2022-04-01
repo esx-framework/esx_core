@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 
-description 'ESX Job Listing'
+description 'ESX Jobs'
 
 version '1.6.5'
 
@@ -19,8 +19,6 @@ server_scripts {
 }
 
 client_scripts {
-	'@es_extended/locale.lua',
-	'locales/*.lua',
 	'client/main.lua'
 }
 
