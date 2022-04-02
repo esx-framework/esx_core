@@ -890,6 +890,7 @@ CreateThread(function()
 
 				CurrentAction = nil
 			end
-		Wait(Sleep)
 	end
+	Wait(Sleep)
+end
 end)
