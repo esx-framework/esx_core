@@ -222,8 +222,4 @@ Locales['tc'] = {
   ['tint_lspd'] = '洛聖都警察局色調',
   ['tint_orange'] = '橘色調',
   ['tint_platinum'] = '柏金色調',
-  
-  -- Duty related
-  ['stopped_duty'] = 'NEED TRANSLATION',
-  ['started_duty'] = 'NEED TRANSLATION',
 }

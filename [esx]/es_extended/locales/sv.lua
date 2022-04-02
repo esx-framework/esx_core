@@ -222,8 +222,4 @@ Locales['sv'] = {
   ['tint_lspd'] = 'blåskinn',
   ['tint_orange'] = 'orangeskinn',
   ['tint_platinum'] = 'platinaskinn',
-  
-  -- Duty related
-  ['stopped_duty'] = 'NEED TRANSLATION',
-  ['started_duty'] = 'NEED TRANSLATION',
 }

@@ -222,8 +222,4 @@ Locales['fi'] = {
   ['tint_lspd'] = 'blue skin',
   ['tint_orange'] = 'orange skin',
   ['tint_platinum'] = 'platinum skin',
-  
-  -- Duty related
-  ['stopped_duty'] = 'NEED TRANSLATION',
-  ['started_duty'] = 'NEED TRANSLATION',
 }

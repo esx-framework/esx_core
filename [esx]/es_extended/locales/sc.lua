@@ -222,8 +222,4 @@ Locales['sc'] = {
   ['tint_lspd'] = '洛圣都警局色调',
   ['tint_orange'] = '橙色调',
   ['tint_platinum'] = '铂金色调',
-  
-  -- Duty related
-  ['stopped_duty'] = 'NEED TRANSLATION',
-  ['started_duty'] = 'NEED TRANSLATION',
 }
