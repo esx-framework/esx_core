@@ -145,3 +145,24 @@ function sit(object, modelName, data)
 		end
 	end, objectCoords)
 end
+
+Citizen.CreateThread(function()
+	local Sitables = {}
+
+	for k,v in pairs(Config.Interactables) do
+		local model = GetHashKey(v)
+		table.insert(Sitables, model)
+	end
+	Wait(100)
+	exports['bt-target']:AddTargetModel(Sitables, {
+        options = {
+            {
+                event = "sit:sit",
+                icon = "fas fa-chair",
+                label = "Sit down in a chair",
+            },
+        },
+        job = {"all"},
+        distance = Config.MaxDistance
+    })
+end)
