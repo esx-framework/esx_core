@@ -18,16 +18,16 @@ Config.Weapons = {
 		name = 'WEAPON_KNUCKLE',
 		label = _U('weapon_knuckle'),
 		components = {
-			{name = 'knuckle_base', label = _U('component_knuckle_base'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_BASE")},
-			{name = 'knuckle_pimp', label = _U('component_knuckle_pimp'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_PIMP")},
-			{name = 'knuckle_ballas', label = _U('component_knuckle_ballas'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_BALLAS")},
-			{name = 'knuckle_dollar', label = _U('component_knuckle_dollar'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_DOLLAR")},
-			{name = 'knuckle_diamond', label = _U('component_knuckle_diamond'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_DIAMOND")},
-			{name = 'knuckle_hate', label = _U('component_knuckle_hate'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_HATE")},
-			{name = 'knuckle_love', label = _U('component_knuckle_love'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_LOVE")},
-			{name = 'knuckle_player', label = _U('component_knuckle_player'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_PLAYER")},
-			{name = 'knuckle_king', label = _U('component_knuckle_king'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_KING")},
-			{name = 'knuckle_vagos', label = _U('component_knuckle_vagos'), hash = GetHashKey("COMPONENT_KNUCKLE_VARMOD_VAGOS")}
+			{name = 'knuckle_base', label = _U('component_knuckle_base'), hash = `COMPONENT_KNUCKLE_VARMOD_BASE`},
+			{name = 'knuckle_pimp', label = _U('component_knuckle_pimp'), hash = `COMPONENT_KNUCKLE_VARMOD_PIMP`},
+			{name = 'knuckle_ballas', label = _U('component_knuckle_ballas'), hash = `COMPONENT_KNUCKLE_VARMOD_BALLAS`},
+			{name = 'knuckle_dollar', label = _U('component_knuckle_dollar'), hash = `COMPONENT_KNUCKLE_VARMOD_DOLLAR`},
+			{name = 'knuckle_diamond', label = _U('component_knuckle_diamond'), hash = `COMPONENT_KNUCKLE_VARMOD_DIAMOND`},
+			{name = 'knuckle_hate', label = _U('component_knuckle_hate'), hash = `COMPONENT_KNUCKLE_VARMOD_HATE`},
+			{name = 'knuckle_love', label = _U('component_knuckle_love'), hash = `COMPONENT_KNUCKLE_VARMOD_LOVE`},
+			{name = 'knuckle_player', label = _U('component_knuckle_player'), hash = `COMPONENT_KNUCKLE_VARMOD_PLAYER`},
+			{name = 'knuckle_king', label = _U('component_knuckle_king'), hash = `COMPONENT_KNUCKLE_VARMOD_KING`},
+			{name = 'knuckle_vagos', label = _U('component_knuckle_vagos'), hash = `COMPONENT_KNUCKLE_VARMOD_VAGOS`}
 		}
 	},
 	{name = 'WEAPON_BOTTLE', label = _U('weapon_bottle'), components = {}},
@@ -46,54 +46,54 @@ Config.Weapons = {
 		name = 'WEAPON_SWITCHBLADE',
 		label = _U('weapon_switchblade'),
 		components = {
-			{name = 'handle_default', label = _U('component_handle_default'), hash = GetHashKey("COMPONENT_SWITCHBLADE_VARMOD_BASE")},
-			{name = 'handle_vip', label = _U('component_handle_vip'), hash = GetHashKey("COMPONENT_SWITCHBLADE_VARMOD_VAR1")},
-			{name = 'handle_bodyguard', label = _U('component_handle_bodyguard'), hash = GetHashKey("COMPONENT_SWITCHBLADE_VARMOD_VAR2")}
+			{name = 'handle_default', label = _U('component_handle_default'), hash = `COMPONENT_SWITCHBLADE_VARMOD_BASE`},
+			{name = 'handle_vip', label = _U('component_handle_vip'), hash = `COMPONENT_SWITCHBLADE_VARMOD_VAR1`},
+			{name = 'handle_bodyguard', label = _U('component_handle_bodyguard'), hash = `COMPONENT_SWITCHBLADE_VARMOD_VAR2`}
 		}
 	},
 	-- Handguns
 	{
 		name = 'WEAPON_APPISTOL',
 		label = _U('weapon_appistol'),
-		ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")},
+		ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`},
 		tints = Config.DefaultWeaponTints,
 		components = {
-			{name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey("COMPONENT_APPISTOL_CLIP_01")},
-			{name = 'clip_extended', label = _U('component_clip_extended'), hash = GetHashKey("COMPONENT_APPISTOL_CLIP_02")},
-			{name = 'flashlight', label = _U('component_flashlight'), hash = GetHashKey("COMPONENT_AT_PI_FLSH")},
-			{name = 'suppressor', label = _U('component_suppressor'), hash = GetHashKey("COMPONENT_AT_PI_SUPP")},
-			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = GetHashKey("COMPONENT_APPISTOL_VARMOD_LUXE")}
+			{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_APPISTOL_CLIP_01`},
+			{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_APPISTOL_CLIP_02`},
+			{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_PI_FLSH`},
+			{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP`},
+			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = `COMPONENT_APPISTOL_VARMOD_LUXE`}
 		}
 	},
-	{name = 'WEAPON_CERAMICPISTOL', label = _U('weapon_ceramicpistol'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")}},
+	{name = 'WEAPON_CERAMICPISTOL', label = _U('weapon_ceramicpistol'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`}},
 	{
 		name = 'WEAPON_COMBATPISTOL',
 		label = _U('weapon_combatpistol'),
-		ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")},
+		ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`},
 		tints = Config.DefaultWeaponTints,
 		components = {
-			{name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey("COMPONENT_COMBATPISTOL_CLIP_01")},
-			{name = 'clip_extended', label = _U('component_clip_extended'), hash = GetHashKey("COMPONENT_COMBATPISTOL_CLIP_02")},
-			{name = 'flashlight', label = _U('component_flashlight'), hash = GetHashKey("COMPONENT_AT_PI_FLSH")},
-			{name = 'suppressor', label = _U('component_suppressor'), hash = GetHashKey("COMPONENT_AT_PI_SUPP")},
-			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = GetHashKey("COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER")}
+			{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_COMBATPISTOL_CLIP_01`},
+			{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_COMBATPISTOL_CLIP_02`},
+			{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_PI_FLSH`},
+			{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP`},
+			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = `COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER`}
 		}
 	},
-	{name = 'WEAPON_DOUBLEACTION', label = _U('weapon_doubleaction'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")}},
-	{name = 'WEAPON_NAVYREVOLVER', label = _U('weapon_navyrevolver'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")}},
-	{name = 'WEAPON_FLAREGUN', label = _U('weapon_flaregun'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_flaregun'), hash = GetHashKey("AMMO_FLAREGUN")}},
-	{name = 'WEAPON_GADGETPISTOL', label = _U('weapon_gadgetpistol'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")}},
+	{name = 'WEAPON_DOUBLEACTION', label = _U('weapon_doubleaction'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`}},
+	{name = 'WEAPON_NAVYREVOLVER', label = _U('weapon_navyrevolver'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`}},
+	{name = 'WEAPON_FLAREGUN', label = _U('weapon_flaregun'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_flaregun'), hash = `AMMO_FLAREGUN`}},
+	{name = 'WEAPON_GADGETPISTOL', label = _U('weapon_gadgetpistol'), tints = Config.DefaultWeaponTints, components = {}, ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`}},
 	{
 		name = 'WEAPON_HEAVYPISTOL',
 		label = _U('weapon_heavypistol'),
-		ammo = {label = _U('ammo_rounds'), hash = GetHashKey("AMMO_PISTOL")},
+		ammo = {label = _U('ammo_rounds'), hash = `AMMO_PISTOL`},
 		tints = Config.DefaultWeaponTints,
 		components = {
-			{name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey("COMPONENT_HEAVYPISTOL_CLIP_01")},
-			{name = 'clip_extended', label = _U('component_clip_extended'), hash = GetHashKey("COMPONENT_HEAVYPISTOL_CLIP_02")},
-			{name = 'flashlight', label = _U('component_flashlight'), hash = GetHashKey("COMPONENT_AT_PI_FLSH")},
-			{name = 'suppressor', label = _U('component_suppressor'), hash = GetHashKey("COMPONENT_AT_PI_SUPP")},
-			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = GetHashKey("COMPONENT_HEAVYPISTOL_VARMOD_LUXE")}
+			{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_HEAVYPISTOL_CLIP_01`},
+			{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_HEAVYPISTOL_CLIP_02`},
+			{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_PI_FLSH`},
+			{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP`},
+			{name = 'luxary_finish', label = _U('component_luxary_finish'), hash = `COMPONENT_HEAVYPISTOL_VARMOD_LUXE`}
 		}
 	},
 	{

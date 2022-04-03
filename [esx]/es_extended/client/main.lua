@@ -28,7 +28,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			y = ESX.PlayerData.coords.y,
 			z = ESX.PlayerData.coords.z + 0.25,
 			heading = ESX.PlayerData.coords.heading,
-			model = GetHashKey("mp_m_freemode_01"),
+			model = `mp_m_freemode_01`,
 			skipFade = false
 		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
