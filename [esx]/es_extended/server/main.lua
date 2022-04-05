@@ -363,7 +363,7 @@ if not Config.OxInventory then
         local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
         if not sourceXPlayer then return end
         if not targetXPlayer then print("Cheating: " ..  GetPlayerName(playerId)) return end
-        if distance > 4.0 then print("Cheating: " ..  GetPlayerName(playerId)) return end
+        if distance > Config.DistanceGive then print("Cheating: " ..  GetPlayerName(playerId)) return end
 
 
 		if type == 'item_standard' then
