@@ -1,11 +1,12 @@
 RegisterNetEvent('esx:playerLoaded') -- Store the players data
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew)
+	print("Player Loaded. New | " .. isNew)
 	ESX.PlayerData = xPlayer
 	ESX.PlayerLoaded = true
 end)
 
 RegisterNetEvent('esx:playerLogout') -- When a player logs out (multicharacter), reset their data
-AddEventHandler('esx:playerLogout', function(xPlayer, isNew)
+AddEventHandler('esx:playerLogout', function()
 	ESX.PlayerLoaded = false
 	ESX.PlayerData = {}
 end)
