@@ -16,7 +16,7 @@ AddEventHandler('esx:setJob', function(playerId, job)
 end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)	-- Remove any cached data once the player no longer exists
-	print("Player | ".. PlayerId .. "Dropped. Reason | ".. reason)
+	print("Player | ".. playerId .. "Dropped. Reason | ".. reason)
 	ESX.Players[playerId] = nil
 end)
 
@@ -35,7 +35,7 @@ ESX.RegisterCommand('get', 'user', function(xPlayer, args)
 	print("Player |".. xPlayer.source.. "| Fetching all users.")
 	local xPlayers = ESX.GetExtendedPlayers(args.key, args.val) -- New hitchless xPlayer loop, with the ability to only return players with specific data
 	for _, xTarget in pairs(xPlayers) do					 	-- Job and any non-table variable will work, ie. name, group, identifier, source
-		print("^1[ ^2ID : ^5".. xTarget.source.." ^0| ^2Name : ^5"..xTarget.getName().." ^0 | ^Job : ^5".. xTarget.job.label .." ^0 | ^2Identifier : ^5".. xTarget.identifier .."^1]^0\n")
+		print("ID - ".. xTarget.source.." | Name - "..xTarget.getName().." | Job - ".. xTarget.job.label)
 	end
 end, true, {help = 'Display all online players with specific player data', validate = false, arguments = {
 	{name = 'key', help = 'Variable to check (ie. job)', type = 'string'},
