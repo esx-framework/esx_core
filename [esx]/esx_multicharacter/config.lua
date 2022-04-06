@@ -19,7 +19,7 @@ if IsDuplicityVersion() then
 
 else
 	-- Sets the location for the character selection scene
-	-- To set the spawn location for new characters, modify the default value in the `users` SQL table
+	-- To set the spawn location for new characters, modify the default value in the users SQL table
 	Config.Spawn = vector4(-113.7, 565.3, 195.2, 0)
 	--------------------
 
