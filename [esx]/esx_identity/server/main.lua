@@ -422,8 +422,12 @@ end
 
 function formatName(name)
 	local loweredName = convertToLowerCase(name)
-	local formattedName = convertFirstLetterToUpper(loweredName)
+	local formattedName = ucwords(loweredName)
 	return formattedName
+end
+
+function ucwords(str)
+	return string.gsub(" "..str, "%W%l", string.upper):sub(2)
 end
 
 function convertToLowerCase(str)
