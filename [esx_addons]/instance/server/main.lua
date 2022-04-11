@@ -3,16 +3,16 @@ local instances = {}
 function GetInstancedPlayers()
 	local players = {}
 
-	for k,v in pairs(instances) do
-		for k2,v2 in ipairs(v.players) do
-			players[v2] = true
+	for i = 1, #(instances) do
+		for player = 1, #(instances[i].players) do
+			players[instances[i].players[player]] = true
 		end
 	end
 
 	return players
 end
 
-AddEventHandler('playerDropped', function(reason)
+AddEventHandler('playerDropped', function()
 	if instances[source] then
 		CloseInstance(source)
 	end

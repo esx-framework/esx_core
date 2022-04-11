@@ -1,22 +1,13 @@
-local Vehicles = {}
-local lsMenuIsShowed = false
-local isInLSMarker = false
-local myCar = {}
-
+local Vehicles, myCar = {},{}
+local lsMenuIsShowed, isInLSMarker = false, false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerData = xPlayer
 	ESX.PlayerLoaded = true
 
 	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
 		Vehicles = vehicles
 	end)
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
 end)
 
 RegisterNetEvent('esx_lscustom:installMod')
@@ -378,7 +369,7 @@ end)
 -- Activate menu when player is inside marker
 CreateThread(function()
 	while true do
-		Wait(0)
+	local Sleep = 1500
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -389,57 +380,37 @@ CreateThread(function()
 				for k,v in pairs(Config.Zones) do
 					local zonePos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
 					if #(coords - zonePos) < v.Size.x and not lsMenuIsShowed then
-						isInLSMarker  = true
+						Sleep = 0
 						ESX.ShowHelpNotification(v.Hint)
-						break
-					else
-						isInLSMarker  = false
+						if IsControlJustReleased(0, 38) then
+							lsMenuIsShowed = true
+
+							local vehicle = GetVehiclePedIsIn(playerPed, false)
+							FreezeEntityPosition(vehicle, true)
+							myCar = ESX.Game.GetVehicleProperties(vehicle)
+
+							ESX.UI.Menu.CloseAll()
+							GetAction({value = 'main'})
+
+							-- Prevent Free Tunning Bug
+							CreateThread(function()
+								while lsMenuIsShowed do
+									DisableControlAction(2, 288, true)
+									DisableControlAction(2, 289, true)
+									DisableControlAction(2, 170, true)
+									DisableControlAction(2, 167, true)
+									DisableControlAction(2, 168, true)
+									DisableControlAction(2, 23, true)
+									DisableControlAction(0, 75, true)  -- Disable exit vehicle
+									DisableControlAction(27, 75, true) -- Disable exit vehicle
+									Wait(0)
+								end
+							end)
+						end
 					end
 				end
 			end
-
-			if IsControlJustReleased(0, 38) and not lsMenuIsShowed and isInLSMarker then
-				if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
-					lsMenuIsShowed = true
-
-					local vehicle = GetVehiclePedIsIn(playerPed, false)
-					FreezeEntityPosition(vehicle, true)
-
-					myCar = ESX.Game.GetVehicleProperties(vehicle)
-
-					ESX.UI.Menu.CloseAll()
-					GetAction({value = 'main'})
-				end
-			end
-
-			if isInLSMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-			end
-
-			if not isInLSMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-			end
-
 		end
-	end
-end)
-
--- Prevent Free Tunning Bug
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if lsMenuIsShowed then
-			DisableControlAction(2, 288, true)
-			DisableControlAction(2, 289, true)
-			DisableControlAction(2, 170, true)
-			DisableControlAction(2, 167, true)
-			DisableControlAction(2, 168, true)
-			DisableControlAction(2, 23, true)
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
-		else
-			Wait(500)
-		end
+	Wait(Sleep)
 	end
 end)

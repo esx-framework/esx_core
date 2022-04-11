@@ -113,6 +113,19 @@ CREATE TABLE `cardealer_vehicles` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `multicharacter_slots`
+--
+
+CREATE TABLE `multicharacter_slots` (
+	`identifier` VARCHAR(60) NOT NULL,
+	`slots` INT(11) NOT NULL,
+	PRIMARY KEY (`identifier`) USING BTREE,
+	INDEX `slots` (`slots`) USING BTREE
+) ENGINE=InnoDB;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `datastore`
 --
 
@@ -317,6 +330,10 @@ CREATE TABLE `licenses` (
 --
 
 INSERT INTO `licenses` (`type`, `label`) VALUES
+('dmv', 'Driving Permit'),
+('drive', 'Drivers License'),
+('drive_bike', 'Motorcycle License'),
+('drive_truck', 'Commercial Drivers License'),
 ('weed_processing', 'Weed Processing License');
 
 -- --------------------------------------------------------
@@ -501,6 +518,7 @@ CREATE TABLE `users` (
   `status` longtext DEFAULT NULL,
   `is_dead` tinyint(1) DEFAULT 0,
   `id` int(11) NOT NULL,
+  `disabled` TINYINT(1) NULL DEFAULT '0',
   `last_property` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB;
 

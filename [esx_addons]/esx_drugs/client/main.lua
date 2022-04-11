@@ -32,7 +32,9 @@ end)
 --drawk marker
 CreateThread(function()
 	while true do 
+		local Sleep = 1500
 		if(inRangeMarkerDrugShop) then
+			Sleep = 0
 			local coordsMarker = Config.CircleZones.DrugDealer.coords
 			local color = cfgMarker.Color
 			DrawMarker(cfgMarker.Type, coordsMarker.x, coordsMarker.y,coordsMarker.z - 1.0,
@@ -40,23 +42,22 @@ CreateThread(function()
 			cfgMarker.Size, color.r,color.g,color.b,color.a,
 			false, true, 2, false, nil, nil, false)
 		end
-		Wait(0)
+		Wait(Sleep)
 	end
 end)
 
 --main loop
 CreateThread(function ()
 	while true do 
-		if inZoneDrugShop then
-			if(not menuOpen) then
-				ESX.ShowHelpNotification(_U('dealer_prompt'),true)
-				if IsControlJustPressed(0, 38) then
-					OpenDrugShop()
-				end
+		local Sleep = 1500
+		if inZoneDrugShop and not menuOpen then
+			Sleep = 0
+			ESX.ShowHelpNotification(_U('dealer_prompt'),true)
+			if IsControlJustPressed(0, 38) then
+				OpenDrugShop()
 			end
 		end
-
-		Wait(15)
+	Wait(Sleep)
 	end
 end)
 
