@@ -356,6 +356,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
+    function self.setDuty(bool)
+        self.job.onDuty = bool
+        self.triggerEvent('esx:setJob', self.job)
+    end
+
 	function self.setJob(job, grade)
 		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
@@ -371,6 +376,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			self.job.grade_name   = gradeObject.name
 			self.job.grade_label  = gradeObject.label
 			self.job.grade_salary = gradeObject.salary
+            self.job.onDuty = Config.OnDuty
 
 			if gradeObject.skin_male then
 				self.job.skin_male = json.decode(gradeObject.skin_male)
