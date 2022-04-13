@@ -1,23 +1,6 @@
-local Keys = {
-  ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-  ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-  ["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-  ["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-  ["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-  ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-  ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-  ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
-
-local menuIsShowed = false
-local hintIsShowed = false
-local hasAlreadyEnteredMarker = false
 local Blips = {}
 local JobBlips = {}
 local isInMarker = false
-local isInPublicMarker = false
-
 local hintToDisplay = "no hint to display"
 local onDuty = false
 local spawner = 0
@@ -46,8 +29,14 @@ function OpenMenu()
 	}, function(data, menu)
 		if data.current.value == 'citizen_wear' then
 			onDuty = false
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-				TriggerEvent('skinchanger:loadSkin', skin)
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+				local isMale = skin.sex == 0
+
+				TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
+					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+						TriggerEvent('skinchanger:loadSkin', skin)
+					end)
+				end)
 			end)
 		elseif data.current.value == 'job_wear' then
 			onDuty = true
@@ -85,7 +74,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 		local vehicle = nil
 
 		for k,v in pairs(Config.Jobs) do
-			if ESX.PlayerData.job.name == k then
+			if ESX.GetPlayerData().job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehspawnpt" and w.Spawner == zone.Spawner then
 						spawnPoint = w
@@ -111,7 +100,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 		local looping = true
 
 		for k,v in pairs(Config.Jobs) do
-			if ESX.PlayerData.job.name == k then
+			if ESX.GetPlayerData().job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehdelete" and w.Spawner == zone.Spawner then
 						local playerPed = PlayerPedId()
@@ -206,7 +195,6 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
 	onDuty = false
 	myPlate = {} -- loosing vehicle caution in case player changes job.
 	spawner = 0
@@ -227,9 +215,9 @@ function refreshBlips()
 	local zones = {}
 	local blipInfo = {}
 
-	if ESX.PlayerData.job ~= nil then
+	if ESX.GetPlayerData().job ~= nil then
 		for jobKey,jobValues in pairs(Config.Jobs) do
-			if jobKey == ESX.PlayerData.job.name then
+			if jobKey == ESX.GetPlayerData().job.name then
 				for zoneKey,zoneValues in pairs(jobValues.Zones) do
 
 					if zoneValues.Blip then
@@ -310,16 +298,16 @@ CreateThread(function()
 		local Sleep = 1500
 		local zones = {}
 
-		if ESX.PlayerData.job ~= nil then
+		if ESX.GetPlayerData().job ~= nil then
 			for k,v in pairs(Config.Jobs) do
-				if ESX.PlayerData.job.name == k then
+				if ESX.GetPlayerData().job.name == k then
 					zones = v.Zones
 				end
 			end
 
 			local coords = GetEntityCoords(PlayerPedId())
 			for k,v in pairs(zones) do
-				if onDuty or v.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
+				if onDuty or v.Type == "cloakroom" or ESX.GetPlayerData().job.name == "reporter" then
 					if (v.Zone) then
 						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
 							if (not(center == nil)) then
@@ -361,36 +349,21 @@ CreateThread(function()
 	while true do
 		local Sleep = 1500
 		local coords   = GetEntityCoords(PlayerPedId())
-		local position = nil
-		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
 			if #(coords - v.Pos) < v.Size.x/2 then
 				Sleep = 0
-				isInPublicMarker = true
-				position = v.Teleport
-				zone = v
-				break
+				hintToDisplay = v.Hint
+				hintIsShowed = true
+				if IsControlJustReleased(0, 38) then
+					ESX.Game.Teleport(PlayerPedId(), position)
+				end
 			else
-				isInPublicMarker = false
-			end
-		end
-
-		if IsControlJustReleased(0, Keys['E']) and isInPublicMarker then
-			ESX.Game.Teleport(PlayerPedId(), position)
-			isInPublicMarker = false
-		end
-
-		-- hide or show top left zone hints
-		if isInPublicMarker then
-			hintToDisplay = zone.Hint
-			hintIsShowed = true
-		else
-			if not isInMarker then
 				hintToDisplay = "no hint to display"
 				hintIsShowed = false
 			end
 		end
+
 	Wait(Sleep)
 	end
 end)
@@ -401,18 +374,19 @@ CreateThread(function()
 
 		local Sleep = 1500
 
-		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
+		if ESX.GetPlayerData().job ~= nil and ESX.GetPlayerData().job.name ~= 'unemployed' then
 			local zones = nil
 			local job = nil
 
 			for k,v in pairs(Config.Jobs) do
-				if ESX.PlayerData.job.name == k then
+				if ESX.GetPlayerData().job.name == k then
+					Sleep = 50
 					job = v
 					zones = v.Zones
 				end
 			end
 
-			if zones ~= nil then
+			if zones then
 				local coords      = GetEntityCoords(PlayerPedId())
 				local currentZone = nil
 				local zone        = nil
@@ -452,8 +426,8 @@ CreateThread(function()
 					
 				end
 
-				if IsControlJustReleased(0, Keys['E']) and not menuIsShowed and isInMarker then
-					if onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
+				if IsControlJustReleased(0, 38) and not menuIsShowed and isInMarker then
+					if onDuty or zone.Type == "cloakroom" or ESX.GetPlayerData().job.name == "reporter" then
 						TriggerEvent('esx_jobs:action', job, zone, currentZone)
 					end
 				end
@@ -461,10 +435,10 @@ CreateThread(function()
 				-- hide or show top left zone hints
 				if isInMarker and not menuIsShowed then
 					hintIsShowed = true
-					if (onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
+					if (onDuty or zone.Type == "cloakroom" or ESX.GetPlayerData().job.name == "reporter") and zone.Type ~= "vehdelete" then
 						hintToDisplay = zone.Hint
 						hintIsShowed = true
-					elseif zone.Type == "vehdelete" and (onDuty or ESX.PlayerData.job.name == "reporter") then
+					elseif zone.Type == "vehdelete" and (onDuty or ESX.GetPlayerData().job.name == "reporter") then
 						local playerPed = PlayerPedId()
 
 						if IsPedInAnyVehicle(playerPed, false) then
@@ -492,11 +466,6 @@ CreateThread(function()
 					elseif onDuty and zone.Spawner ~= spawner then
 						hintToDisplay = _U('wrong_point')
 						hintIsShowed = true
-					else
-						if not isInPublicMarker then
-							hintToDisplay = "no hint to display"
-							hintIsShowed = false
-						end
 					end
 				end
 
@@ -514,17 +483,17 @@ CreateThread(function()
 	end
 end)
 
-CreateThread(function()
-	-- Slaughterer
-	RemoveIpl("CS1_02_cf_offmission")
-	RequestIpl("CS1_02_cf_onmission1")
-	RequestIpl("CS1_02_cf_onmission2")
-	RequestIpl("CS1_02_cf_onmission3")
-	RequestIpl("CS1_02_cf_onmission4")
-
-	-- Tailor
-	RequestIpl("id2_14_during_door")
-	RequestIpl("id2_14_during1")
-end)
-
+if Config.RequestIPL then
+	CreateThread(function()
+		-- Slaughterer
+		RemoveIpl("CS1_02_cf_offmission")
+		RequestIpl("CS1_02_cf_onmission1")
+		RequestIpl("CS1_02_cf_onmission2")
+		RequestIpl("CS1_02_cf_onmission3")
+		RequestIpl("CS1_02_cf_onmission4")
+		-- Tailor
+		RequestIpl("id2_14_during_door")
+		RequestIpl("id2_14_during1")
+	end)
+end
 if ESX.PlayerLoaded then refreshBlips() end
