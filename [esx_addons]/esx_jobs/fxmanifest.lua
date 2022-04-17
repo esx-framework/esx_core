@@ -9,9 +9,9 @@ version '1.6.5'
 shared_scripts {
 	'@es_extended/imports.lua',
 	'@es_extended/locale.lua',
-	'config.lua',
-	'jobs/*.lua',
 	'locales/*.lua',
+	'config.lua',
+	'jobs/*.lua'
 }
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',

@@ -310,16 +310,16 @@ function RemoveItemsAfterRPDeath()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
 	CreateThread(function()
-		DoScreenFadeOut(800)
-
-		while not IsScreenFadedOut() do
-			Wait(0)
-		end
-
 		ESX.TriggerServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function()
 			local RespawnCoords, ClosestHospital = GetClosestRespawnPoint()
 
 			ESX.SetPlayerData('loadout', {})
+			DoScreenFadeOut(800)
+
+			while not IsScreenFadedOut() do
+				Wait(0)
+			end
+	
 			RespawnPed(PlayerPedId(), RespawnCoords, ClosestHospital.heading)
 
 			AnimpostfxStop('DeathFailOut')
