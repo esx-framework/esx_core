@@ -601,6 +601,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			wheelColor        = wheelColor,
 
 			wheels            = GetVehicleWheelType(vehicle),
+			tyreDrift         = GetDriftTyresEnabled(vehicle),
 			windowTint        = GetVehicleWindowTint(vehicle),
 			xenonColor        = GetVehicleXenonLightsColor(vehicle),
 
@@ -688,6 +689,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end
 		if props.wheelColor then SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor) end
 		if props.wheels then SetVehicleWheelType(vehicle, props.wheels) end
+		if props.tyreDrift then SetDriftTyresEnabled(vehicle, props.tyreDrift) end
 		if props.windowTint then SetVehicleWindowTint(vehicle, props.windowTint) end
 
 		if props.neonEnabled then
