@@ -1004,12 +1004,6 @@ ALTER TABLE `vehicle_sold`
   ADD PRIMARY KEY (`plate`);
 
 --
--- Indexes for table `weashops`
---
-ALTER TABLE `weashops`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `whitelist`
 --
 ALTER TABLE `whitelist`
@@ -1086,12 +1080,6 @@ ALTER TABLE `user_licenses`
 --
 ALTER TABLE `user_parkings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `weashops`
---
-ALTER TABLE `weashops`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- ESX Phone
