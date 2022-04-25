@@ -1,17 +1,20 @@
+game 'common'
+version '1.3.0'
 fx_version 'cerulean'
-games { 'gta5' }
-
 author 'ESX-Framework'
-version '1.2.0'
 
 loadscreen 'index.html'
-loadscreen_manual_shutdown 'yes'
-client_script 'client.lua'
+
+shared_script 'config.lua'
+
+loadscreen_manual_shutdown "yes"
+
+client_script 'client/client.lua'
 
 files {
+    'index.html',
     './vid/*.mp4',
     './vid/*.webm',
     './js/index.js',
-    './css/index.css',
-    'index.html',
+    './css/index.css'
 }
