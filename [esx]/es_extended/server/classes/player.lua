@@ -6,21 +6,12 @@ if Config.OxInventory then
 	end)
 end
 
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
+function CreateExtendedPlayer(userData)
 	local self = {}
-
-	self.accounts = accounts
-	self.coords = coords
-	self.group = group
-	self.identifier = identifier
-	self.inventory = inventory
-	self.job = job
-	self.loadout = loadout
-	self.name = name
-	self.playerId = playerId
-	self.source = playerId
+	self = userData
+	self.name = self.playerName
+	self.source = self.playerId
 	self.variables = {}
-	self.weight = weight
 	self.maxWeight = Config.MaxWeight
 	if Config.Multichar then self.license = 'license'.. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
 

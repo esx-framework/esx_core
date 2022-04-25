@@ -110,6 +110,8 @@ end
 
 function loadESXPlayer(identifier, playerId, isNew)
 	local userData = {
+		playerId = playerId,
+		identifier = identifier,
 		accounts = {},
 		inventory = {},
 		job = {},
@@ -266,16 +268,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 		if result.height then userData.height = result.height end
 	end
 
-	local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords)
+	local xPlayer = CreateExtendedPlayer(userData)
 	ESX.Players[playerId] = xPlayer
-
-	if userData.firstname then 
-		xPlayer.set('firstName', userData.firstname)
-		xPlayer.set('lastName', userData.lastname)
-		if userData.dateofbirth then xPlayer.set('dateofbirth', userData.dateofbirth) end
-		if userData.sex then xPlayer.set('sex', userData.sex) end
-		if userData.height then xPlayer.set('height', userData.height) end
-	end
 
 	TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
