@@ -2,7 +2,7 @@ local ClientLoadESX = false
 
 AddEventHandler("playerSpawned", function ()
     if not ClientLoadESX then
-        ShutDownLoadingScreenNui()
+        ShutdownLoadingScreenNui()
         ClientLoadESX = true
         if Config.Fade then
             DoScreenFadeOut(0)
