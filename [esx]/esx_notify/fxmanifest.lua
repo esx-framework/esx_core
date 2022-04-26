@@ -17,7 +17,3 @@ files {
     'nui/css/*.css',
     'nui/img/*.png',
 }
-
-exports {
-    'Notify'
-}
