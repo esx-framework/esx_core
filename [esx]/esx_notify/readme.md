@@ -7,7 +7,7 @@
 * By doing ESX.ShowNotification("Text Here") it will be default/info
 
 # Exports
-exports["esx_notify"]:Notify("info", 3000, "Text Here")
+* exports["esx_notify"]:Notify("info", 3000, "Text Here")
 
 # Events
-TriggerEvent("ESX:Notify", "info", 3000, "Text Here")
+* TriggerEvent("ESX:Notify", "info", 3000, "Text Here")
