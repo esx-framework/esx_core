@@ -55,6 +55,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		NetworkSetFriendlyFireOption(true)
 	end
 
+	if Config.DisableHealthRegen then
+		SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+	end
+
 	if Config.EnableHud then
 		for k,v in ipairs(ESX.PlayerData.accounts) do
 			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
