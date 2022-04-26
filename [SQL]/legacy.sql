@@ -849,67 +849,6 @@ CREATE TABLE `vehicle_sold` (
   `date` varchar(50) NOT NULL
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `weashops`
---
-
-CREATE TABLE `weashops` (
-  `id` int(11) NOT NULL,
-  `zone` varchar(255) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `price` int(11) NOT NULL
-) ENGINE=InnoDB;
-
---
--- Dumping data for table `weashops`
---
-
-INSERT INTO `weashops` (`id`, `zone`, `item`, `price`) VALUES
-(1, 'GunShop', 'WEAPON_PISTOL', 300),
-(2, 'BlackWeashop', 'WEAPON_PISTOL', 500),
-(3, 'GunShop', 'WEAPON_FLASHLIGHT', 60),
-(4, 'BlackWeashop', 'WEAPON_FLASHLIGHT', 70),
-(5, 'GunShop', 'WEAPON_MACHETE', 90),
-(6, 'BlackWeashop', 'WEAPON_MACHETE', 110),
-(7, 'GunShop', 'WEAPON_NIGHTSTICK', 150),
-(8, 'BlackWeashop', 'WEAPON_NIGHTSTICK', 150),
-(9, 'GunShop', 'WEAPON_BAT', 100),
-(10, 'BlackWeashop', 'WEAPON_BAT', 100),
-(11, 'GunShop', 'WEAPON_STUNGUN', 50),
-(12, 'BlackWeashop', 'WEAPON_STUNGUN', 50),
-(13, 'GunShop', 'WEAPON_MICROSMG', 1400),
-(14, 'BlackWeashop', 'WEAPON_MICROSMG', 1700),
-(15, 'GunShop', 'WEAPON_PUMPSHOTGUN', 3400),
-(16, 'BlackWeashop', 'WEAPON_PUMPSHOTGUN', 3500),
-(17, 'GunShop', 'WEAPON_ASSAULTRIFLE', 10000),
-(18, 'BlackWeashop', 'WEAPON_ASSAULTRIFLE', 11000),
-(19, 'GunShop', 'WEAPON_SPECIALCARBINE', 15000),
-(20, 'BlackWeashop', 'WEAPON_SPECIALCARBINE', 16500),
-(21, 'GunShop', 'WEAPON_SNIPERRIFLE', 22000),
-(22, 'BlackWeashop', 'WEAPON_SNIPERRIFLE', 24000),
-(23, 'GunShop', 'WEAPON_FIREWORK', 18000),
-(24, 'BlackWeashop', 'WEAPON_FIREWORK', 20000),
-(25, 'GunShop', 'WEAPON_GRENADE', 500),
-(26, 'BlackWeashop', 'WEAPON_GRENADE', 650),
-(27, 'GunShop', 'WEAPON_BZGAS', 200),
-(28, 'BlackWeashop', 'WEAPON_BZGAS', 350),
-(29, 'GunShop', 'WEAPON_FIREEXTINGUISHER', 100),
-(30, 'BlackWeashop', 'WEAPON_FIREEXTINGUISHER', 100),
-(31, 'GunShop', 'WEAPON_BALL', 50),
-(32, 'BlackWeashop', 'WEAPON_BALL', 50),
-(33, 'GunShop', 'WEAPON_SMOKEGRENADE', 100),
-(34, 'BlackWeashop', 'WEAPON_SMOKEGRENADE', 100),
-(35, 'BlackWeashop', 'WEAPON_APPISTOL', 1100),
-(36, 'BlackWeashop', 'WEAPON_CARBINERIFLE', 12000),
-(37, 'BlackWeashop', 'WEAPON_HEAVYSNIPER', 30000),
-(38, 'BlackWeashop', 'WEAPON_MINIGUN', 45000),
-(39, 'BlackWeashop', 'WEAPON_RAILGUN', 50000),
-(40, 'BlackWeashop', 'WEAPON_STICKYBOMB', 500);
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `whitelist`
 --
@@ -1065,12 +1004,6 @@ ALTER TABLE `vehicle_sold`
   ADD PRIMARY KEY (`plate`);
 
 --
--- Indexes for table `weashops`
---
-ALTER TABLE `weashops`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `whitelist`
 --
 ALTER TABLE `whitelist`
@@ -1147,12 +1080,6 @@ ALTER TABLE `user_licenses`
 --
 ALTER TABLE `user_parkings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `weashops`
---
-ALTER TABLE `weashops`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- ESX Phone
