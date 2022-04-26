@@ -3,10 +3,6 @@ game 'gta5'
 author 'ESX-Framework'
 description 'ESX Notification'
 
-shared_scripts  {
-	'@es_extended/imports.lua',
-}
-
 client_scripts { 'Notify.lua' }
 
 ui_page 'nui/index.html'
