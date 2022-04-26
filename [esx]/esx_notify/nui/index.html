@@ -7,19 +7,19 @@
     <script src="js/script.js"></script>
 </head>
 <body>
-    <div id="notifyInfo" class="notifyInfo">
+    <div id="notifyInfo" class="notify">
         <div class="innerText">
             <i class="fas fa-info-circle icon info"></i>
             <p class="text" id="infoMessage"></p>
         </div>
     </div>
-    <div id="notifySuccess" class="notifySuccess">
+    <div id="notifySuccess" class="notify success">
         <div class="innerText">
             <i class="fas fa-check-circle icon info"></i>
             <p class="text" id="successMessage"></p>
         </div>
     </div>
-    <div id="notifyError" class="notifyError">
+    <div id="notifyError" class="notify error">
         <div class="innerText">
             <i class="fas fa-exclamation-circle icon info"></i>
             <p class="text" id="errorMessage"></p>
@@ -29,7 +29,9 @@
 </html>
 
 <style>
-    .notifyInfo {
+
+
+.notify {
         flex: auto;
         display: none;
         border-left: 3px solid rgb(0, 97, 153);
@@ -46,40 +48,14 @@
         animation: growDown 300ms ease-in-out;
         padding-right: 10px;
     }
-    .notifySuccess {
-        flex: auto;
-        display: none;
-        border-left: 3px solid rgb(13, 153, 0);
-        position:absolute;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        top: 25px;
-        min-width:15%;
-        width:fit-content; 
-        height:50px;
-        background-color:#212121;
-        border-radius: 5px;
-        animation: growDown 300ms ease-in-out;
-        padding-right: 10px;
+
+     .success {
+        border-left: 3px solid rgb(13, 153, 0) !important; 
     }
-    .notifyError {
-        flex: auto;
-        display: none;
-        border-left: 3px solid rgb(153, 5, 0);
-        position:absolute;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        top: 25px;
-        min-width:15%;
-        width:fit-content ; 
-        height:50px;
-        background-color:#212121;
-        border-radius: 5px;
-        animation: growDown 300ms ease-in-out;
-        padding-right: 10px;
+     .error {
+        border-left: 3px solid rgb(153, 5, 0) !important; 
     }
+
     .icon {
         border: 0;
     }
