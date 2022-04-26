@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+</head>
+<body>
+    <div id="notifyInfo" class="notifyInfo">
+        <div class="innerText">
+            <i class="fas fa-info-circle icon info"></i>
+            <p class="text" id="infoMessage"></p>
+        </div>
+    </div>
+    <div id="notifySuccess" class="notifySuccess">
+        <div class="innerText">
+            <i class="fas fa-check-circle icon info"></i>
+            <p class="text" id="successMessage"></p>
+        </div>
+    </div>
+    <div id="notifyError" class="notifyError">
+        <div class="innerText">
+            <i class="fas fa-exclamation-circle icon info"></i>
+            <p lass="text" id="errorMessage"></p>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    .notifyInfo {
+        flex: auto;
+        display: none;
+        border-left: 3px solid rgb(0, 97, 153);
+        position:absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 25px;
+        min-width:15%;
+        width:fit-content; 
+        height:50px;
+        background-color:#212121;
+        border-radius: 5px;
+        animation: growDown 300ms ease-in-out;
+    }
+    .notifySuccess {
+        flex: auto;
+        display: none;
+        border-left: 3px solid rgb(13, 153, 0);
+        position:absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 25px;
+        min-width:15%;
+        width:fit-content; 
+        height:50px;
+        background-color:#212121;
+        border-radius: 5px;
+        animation: growDown 300ms ease-in-out;
+    }
+    .notifyError {
+        flex: auto;
+        display: none;
+        border-left: 3px solid rgb(153, 5, 0);
+        position:absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 25px;
+        min-width:15%;
+        width:fit-content; 
+        height:50px;
+        background-color:#212121;
+        border-radius: 5px;
+        animation: growDown 300ms ease-in-out;
+    }
+
+    .icon {
+        border: 0;
+    }
+
+    .innerText {
+        flex: auto;
+        margin-top: 15px;
+        width:100%;
+    }
+
+    .innerText{
+        margin-left: 10px;
+    }
+    p {
+        flex: auto;
+        word-wrap: break-word;
+        margin-left: 40px; 
+        margin-top: 15px;
+    }
+
+    .innerText .icon {
+        float: left;
+        margin-left: 15px;
+        font-size: 20px;
+    }
+
+    @keyframes growDown {
+        0% {
+            transform: scaleY(0);
+        }
+        80% {
+            transform: scaleY(1.1)
+        }
+        100% {
+            transform: scaleY(1)
+        }
+    }
+</style>
