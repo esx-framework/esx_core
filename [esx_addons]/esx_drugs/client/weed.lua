@@ -26,20 +26,19 @@ CreateThread(function()
 			end
 
 			if IsControlJustReleased(0, 38) and not isProcessing then
-				if Config.LicenseEnable then
-					ESX.TriggerServerCallback('esx_license:checkLicense', function(hasProcessingLicense)
-						if hasProcessingLicense then
-							ProcessWeed()
-						else
-							OpenBuyLicenseMenu('weed_processing')
-						end
-					end, GetPlayerServerId(PlayerId()), 'weed_processing')
-				else
-					ESX.TriggerServerCallback('esx_drugs:cannabis_count', function(xCannabis)
+				ESX.TriggerServerCallback('esx_drugs:cannabis_count', function(xCannabis)
+					if Config.LicenseEnable then
+						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasProcessingLicense)
+							if hasProcessingLicense then
+								ProcessWeed(xCannabis)
+							else
+								OpenBuyLicenseMenu('weed_processing')
+							end
+						end, GetPlayerServerId(PlayerId()), 'weed_processing')
+					else
 						ProcessWeed(xCannabis)
-					end)
-					
-				end
+					end
+				end)
 			end
 		end
 		Wait(wait)
