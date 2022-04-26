@@ -80,7 +80,7 @@ end
 function ESX.ShowNotification(message, type, length)
     if Config.NativeNotify then 
      BeginTextCommandThefeedPost('STRING')
-    AddTextComponentSubstringPlayerName(msg)
+    AddTextComponentSubstringPlayerName(message)
     EndTextCommandThefeedPostTicker(0,1)
     else 
       exports["esx_notify"]:Notify(type, length, message)
