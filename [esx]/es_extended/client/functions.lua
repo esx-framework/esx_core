@@ -79,13 +79,14 @@ end
 
 function ESX.ShowNotification(message, type, length)
     if Config.NativeNotify then 
-        BeginTextCommandThefeedPost('STRING')
+     BeginTextCommandThefeedPost('STRING')
     AddTextComponentSubstringPlayerName(msg)
     EndTextCommandThefeedPostTicker(0,1)
     else 
       exports["esx_notify"]:Notify(type, length, message)
     end
 end
+
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
