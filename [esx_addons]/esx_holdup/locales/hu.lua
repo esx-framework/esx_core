@@ -1,0 +1,16 @@
+Locales['hu'] = {
+  ['shop_robbery'] = 'Boltrablás',
+  ['press_to_rob'] = 'Nyomd meg az ~INPUT_CONTEXT~ gombot ~o~rablás~s~ indításához ~b~%s~s~',
+  ['robbery_timer'] = 'Ennyi idö van a rablásból: ~r~%s~s~ másodperc',
+  ['recently_robbed'] = 'Ezt a boltot már rabolták. Várj a következö rablásig: ~y~%s~s~ másodperc',
+  ['rob_in_prog'] = '~r~Rablás indult: ~b~%s~s~',
+  ['started_to_rob'] = 'Elindítottál egy rablást: ~y~%s~s~',
+  ['alarm_triggered'] = 'Vészjelzö elindult!',
+  ['robbery_complete'] = '~r~Rablás sikeres~s~, ennyit kaptál: ~g~$%s~s~',
+  ['robbery_complete_at'] = '~r~Rablás sikeres: ~y~%s~s~',
+  ['robbery_cancelled'] = 'Rablást félbe szakítottad!',
+  ['robbery_cancelled_at'] = '~r~Rablást megszakították: ~b~%s~s~!',
+  ['min_police'] = 'Legalább ~b~%s rendőrnek~s~ kell lennie a városban a rabláshoz.',
+  ['robbery_already'] = '~r~Rablás folyamatban.',
+  ['no_threat'] = 'nem jelentesz veszélyzt az üzletvezetőre',
+}

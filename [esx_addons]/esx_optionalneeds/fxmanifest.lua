@@ -10,11 +10,7 @@ shared_script '@es_extended/imports.lua'
 
 server_scripts {
     '@es_extended/locale.lua',
-    'locales/en.lua',
-    'locales/es.lua',
-    'locales/fi.lua',
-    'locales/fr.lua',
-    'locales/pl.lua',
+    'locales/*.lua',
     'config.lua',
     'server/main.lua'
 }
