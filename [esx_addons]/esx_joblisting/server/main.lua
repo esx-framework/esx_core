@@ -2,7 +2,6 @@ function getJobs()
 	local jobs = ESX.GetJobs()
 	local availableJobs = {}
 	for k,v in pairs(jobs) do 
-		print(v.whitelisted)
 		if v.whitelisted == false then 
 			availableJobs[k] = {label = v.label}
 		end
