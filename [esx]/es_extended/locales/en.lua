@@ -54,6 +54,7 @@ Locales['en'] = {
   ['in_vehicle'] = 'Cannot Perform Action, Player is in a vehicle',
 
   -- Commands
+  ['command_bring'] = 'Bring player to you',
   ['command_car'] = 'Spawn a vehicle',
   ['command_car_car'] = 'Vehicle model or hash',
   ['command_cardel'] = 'Remove vehicles in proximity',
@@ -62,6 +63,8 @@ Locales['en'] = {
   ['command_clearall'] = 'Clear chat Text for all players',
   ['command_clearinventory'] = 'Remove All items from the Players Inventory',
   ['command_clearloadout'] = 'Remove All weapons from the Players Loadout',
+  ['command_freeze'] = 'Freeze a player',
+  ['command_unfreeze'] = 'Unfreeze a player',
   ['command_giveaccountmoney'] = 'Give Money to a specified Account',
   ['command_giveaccountmoney_account'] = 'Account to add to',
   ['command_giveaccountmoney_amount'] = 'Amount to add',
@@ -78,6 +81,8 @@ Locales['en'] = {
   ['command_giveweaponcomponent_invalid'] = 'Invalid weapon component',
   ['command_giveweaponcomponent_hasalready'] = 'Player already has this weapon component',
   ['command_giveweaponcomponent_missingweapon'] = 'Player does not have this weapon',
+  ['command_goto'] = 'Teleport yourself to a player',
+  ['command_kill'] = 'Kill a player',
   ['command_save'] = 'Force Save a player`s Data',
   ['command_saveall'] = 'Force Save all player data',
   ['command_setaccountmoney'] = 'Set the money within a specified account',
