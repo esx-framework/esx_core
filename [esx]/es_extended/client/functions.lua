@@ -77,6 +77,11 @@ function ESX.SetPlayerData(key, val)
 	end
 end
 
+function ESX.Progressbar(message,length, FreezePlayer,animation, onFinish)
+    exports["esx_progressbar"]:Progressbar(message,length, FreezePlayer,animation, onFinish)
+end
+
+
 function ESX.ShowNotification(message, type, length)
     if Config.NativeNotify then 
      BeginTextCommandThefeedPost('STRING')
