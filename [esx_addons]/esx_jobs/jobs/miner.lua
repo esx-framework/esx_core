@@ -1,7 +1,7 @@
 Config.Jobs.miner = {
 
 	BlipInfos = {
-		Sprite = 318,
+		Sprite = 68,
 		Color = 5
 	},
 
@@ -20,9 +20,9 @@ Config.Jobs.miner = {
 
 		CloakRoom = {
 			Pos = {x = 892.35, y = -2172.77, z = 31.28},
-			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker = 1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip = true,
 			Name = _U('m_miner_locker'),
 			Type = 'cloakroom',
@@ -33,7 +33,7 @@ Config.Jobs.miner = {
 		Mine = {
 			Pos = {x = 2962.40, y = 2746.20, z = 42.39},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
 			Name = _U('m_rock'),
@@ -45,7 +45,7 @@ Config.Jobs.miner = {
 					time = 3,
 					max = 7,
 					add = 1,
-					remove = 1,
+					remove = 0,
 					requires = 'nothing',
 					requires_name = 'Nothing',
 					drop = 100
@@ -58,7 +58,7 @@ Config.Jobs.miner = {
 		StoneWash = {
 			Pos = {x = 289.24, y = 2862.90, z = 42.64},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
 			Name = _U('m_washrock'),
@@ -83,12 +83,12 @@ Config.Jobs.miner = {
 		Foundry = {
 			Pos = {x = 1109.14, y = -2007.87, z = 30.01},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
 			Name = _U('m_rock_smelting'),
 			Type = 'work',
-			Item = {
+			Item = {  
 				{
 					name = _U('m_copper'),
 					db_name = 'copper',
@@ -129,7 +129,7 @@ Config.Jobs.miner = {
 		VehicleSpawner = {
 			Pos = {x = 884.86, y = -2176.51, z = 29.51},
 			Size = {x = 5.0, y = 5.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('spawn_veh'),
@@ -169,7 +169,7 @@ Config.Jobs.miner = {
 
 		CopperDelivery = {
 			Pos = {x = -169.481, y = -2659.16, z = 5.00103},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
@@ -194,7 +194,7 @@ Config.Jobs.miner = {
 
 		IronDelivery = {
 			Pos = {x = -148.78, y = -1040.38, z = 26.27},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
@@ -219,7 +219,7 @@ Config.Jobs.miner = {
 
 		GoldDelivery = {
 			Pos = {x = 261.48, y = 207.35, z = 109.28},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
@@ -244,7 +244,7 @@ Config.Jobs.miner = {
 
 		DiamondDelivery = {
 			Pos = {x = -621.04, y = -228.53, z = 37.05},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,

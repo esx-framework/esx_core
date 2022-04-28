@@ -72,8 +72,7 @@ CreateThread(function()
 	end
 end)
 
-RegisterServerEvent('esx_jobs:startWork')
-AddEventHandler('esx_jobs:startWork', function(zoneIndex, zoneKey)
+RegisterServerEvent('esx_jobs:startWork', function(zoneIndex, zoneKey)
 	if not playersWorking[source] then
 		local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -96,15 +95,13 @@ AddEventHandler('esx_jobs:startWork', function(zoneIndex, zoneKey)
 	end
 end)
 
-RegisterServerEvent('esx_jobs:stopWork')
-AddEventHandler('esx_jobs:stopWork', function()
+RegisterServerEvent('esx_jobs:stopWork', function()
 	if playersWorking[source] then
 		playersWorking[source] = nil
 	end
 end)
 
-RegisterNetEvent('esx_jobs:caution')
-AddEventHandler('esx_jobs:caution', function(cautionType, cautionAmount, spawnPoint, vehicle)
+RegisterNetEvent('esx_jobs:caution', function(cautionType, cautionAmount, spawnPoint, vehicle)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if cautionType == 'take' then

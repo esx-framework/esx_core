@@ -21,7 +21,7 @@ This addon is an easy way to have farming jobs on your server, there is no playe
 CloakRoom = {
     Zone = "miner_room", -- HERE
     Size = {x = 3.0, y = 3.0, z = 1.0},
-    Color = {r = 204, g = 204, b = 0},
+    Color = {r = 50, g = 200, b = 50},
     Marker = 1,
     Blip = true,
     Name = _U("m_miner_locker"),

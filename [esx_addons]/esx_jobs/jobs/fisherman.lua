@@ -26,10 +26,10 @@ Config.Jobs.fisherman = {
 	Zones = {
 
 		CloakRoom = {
-			Pos   = {x = 868.39, y = -1639.75, z = 29.33},
-			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker= 1,
+			Pos   = {x = 868.39, y = -1639.75, z = 30.33},
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = true,
 			Name  = _U('fm_fish_locker'),
 			Type  = 'cloakroom',
@@ -39,8 +39,8 @@ Config.Jobs.fisherman = {
 
 		FishingSpot = {
 			Pos   = {x = 4435.21, y = 4829.60, z = 0.34},
-			Color = {r = 204, g = 204, b = 0},
-			Size  = {x = 110.0, y = 110.0, z = 10.0},
+			Size  = {x = 100.0, y = 100.0, z = 50.0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker= 1,
 			Blip  = true,
 			Name  = _U('fm_fish_area'),
@@ -51,10 +51,10 @@ Config.Jobs.fisherman = {
 				{
 					name   = _U('fm_fish'),
 					db_name= 'fish',
-					time   = 2,
+					time   = 10,
 					max    = 100,
 					add    = 1,
-					remove = 1,
+					remove = 0,
 					requires = 'nothing',
 					requires_name = 'Nothing',
 					drop   = 100
@@ -64,10 +64,10 @@ Config.Jobs.fisherman = {
 		},
 
 		BoatSpawner = {
-			Pos   = {x = 3867.44, y = 4463.62, z = 1.72},
-			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker= 1,
+			Pos   = {x = 3866.268, y = 4463.868, z = 2.72},
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = true,
 			Name  = _U('fm_spawnboat_title'),
 			Type  = 'vehspawner',
@@ -79,7 +79,8 @@ Config.Jobs.fisherman = {
 
 		BoatSpawnPoint = {
 			Pos   = {x = 3888.3, y = 4468.09, z = 0.0},
-			Size  = {x = 3.0, y = 3.0, z = 1.0},
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker= -1,
 			Blip  = false,
 			Name  = _U('fm_boat_title'),
@@ -91,9 +92,9 @@ Config.Jobs.fisherman = {
 
 		BoatDeletePoint = {
 			Pos   = {x = 3859.43, y = 4448.83, z = 0.39},
-			Size  = {x = 10.0, y = 10.0, z = 1.0},
-			Color = {r = 255, g = 0, b = 0},
-			Marker= 1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = false,
 			Name  = _U('fm_boat_return_title'),
 			Type  = 'vehdelete',
@@ -106,9 +107,9 @@ Config.Jobs.fisherman = {
 
 		VehicleSpawner = {
 			Pos   = {x = 880.74, y = -1663.96, z = 29.37},
-			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker= 1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = false,
 			Name  = _U('spawn_veh'),
 			Type  = 'vehspawner',
@@ -120,8 +121,9 @@ Config.Jobs.fisherman = {
 
 		VehicleSpawnPoint = {
 			Pos   = {x = 859.35, y = -1656.21, z = 29.56},
-			Size  = {x = 3.0, y = 3.0, z = 1.0},
-			Marker= -1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = false,
 			Name  = _U('service_vh'),
 			Type  = 'vehspawnpt',
@@ -132,9 +134,9 @@ Config.Jobs.fisherman = {
 
 		VehicleDeletePoint = {
 			Pos   = {x = 863.23, y = -1718.28, z = 28.63},
-			Size  = {x = 5.0, y = 5.0, z = 1.0},
-			Color = {r = 255, g = 0, b = 0},
-			Marker= 1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = false,
 			Name  = _U('return_vh'),
 			Type  = 'vehdelete',
@@ -146,10 +148,10 @@ Config.Jobs.fisherman = {
 		},
 
 		Delivery = {
-			Pos   = {x = -1012.64, y = -1354.62, z = 5.54},
-			Color = {r = 204, g = 204, b = 0},
-			Size  = {x = 5.0, y = 5.0, z = 3.0},
-			Marker= 1,
+			Pos   = {x = -1037.96, y = -1397.09, z = 5.54},
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip  = true,
 			Name  = _U('delivery_point'),
 			Type  = 'delivery',
