@@ -84,7 +84,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, ve
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getSoldVehicles', function(source, cb)
-	MySQL.query('SELECT client, model, plate, soldby, date FROM vehicle_sold', function(result)
+	MySQL.query('SELECT client, model, plate, soldby, date FROM vehicle_sold ORDER BY DATE DESC', function(result)
 		cb(result)
 	end)
 end)
