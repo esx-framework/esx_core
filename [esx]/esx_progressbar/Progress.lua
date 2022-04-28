@@ -19,8 +19,9 @@ end
 
 exports('Progressbar', Progressbar)
 
-RegisterCommand("progress", function()
+-- Example
+--[[RegisterCommand("progress", function()
     exports["esx_progressbar"]:Progressbar("test", 25000, false,{type = "anim",dict = "mini@prostitutes@sexlow_veh", lib ="low_car_sex_to_prop_p2_player" }, function()
         print("finish")
     end)
-end)
+end)]] 
