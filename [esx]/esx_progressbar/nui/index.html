@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+</head>
+<body>
+    <div id="notifyInfo" class="notify">
+        <div class="innerText">
+            <i class="fas fa-info-circle icon info"></i>
+            <p class="text" id="infoMessage"></p>
+        </div>
+        <div id="progline" class="progline">
+    </div>
+</body>
+</html>
+
+<style>
+
+
+.notify {
+        flex: auto;
+        display: none;
+        position:absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        bottom: 100px;
+        min-width:15%;
+        width:fit-content; 
+        height:45px;
+        background-color:rgba(5, 5, 5, 0.800);
+        border-radius: 5px;
+        animation: growDown 300ms ease-in-out;
+        padding-right: 10px;
+    }
+
+    .progline {
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        height:2px;
+        width:100%;
+        border-radius: 20px;
+        background: linear-gradient(to right, #0052d4, #4364f7, #6fb1fc); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .icon {
+        border: 0;
+    }
+
+    .innerText {
+        flex: auto;
+        margin-top: 15px;
+        width:100%;
+    }
+
+    .innerText{
+        margin-left: 10px;
+    }
+    p {
+        flex: auto;
+        word-wrap: break-word;
+        margin-left: 30px; 
+        margin-top: 15px;
+    }
+
+    .innerText .icon {
+        float: left;
+        margin-left: 5px;
+        font-size: 20px;
+    }
+
+    @keyframes growDown {
+        0% {
+            transform: scaleY(0);
+        }
+        80% {
+            transform: scaleY(1.1)
+        }
+        100% {
+            transform: scaleY(1)
+        }
+    }
+</style>
