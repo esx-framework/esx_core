@@ -1,4 +1,4 @@
-Locales["hu"] = {
+Locales["en"] = {
 	["male"] = "Male",
 	["female"] = "Female",
 	["delete_label"] = "Delete %s %s?",
