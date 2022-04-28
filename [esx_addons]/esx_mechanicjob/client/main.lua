@@ -46,7 +46,7 @@ function StopNPCJob(cancel)
 	NPCHasBeenNextToTowable = false
 
 	if cancel then
-		ESX.ShowNotification(_U('mission_canceled'))
+		ESX.ShowNotification(_U('mission_canceled'), "error")
 	else
 		--TriggerServerEvent('esx_mechanicjob:onNPCJobCompleted')
 	end
@@ -279,11 +279,11 @@ function OpenMobileMechanicActionsMenu()
 				local amount = tonumber(data.value)
 
 				if amount == nil or amount < 0 then
-					ESX.ShowNotification(_U('amount_invalid'))
+					ESX.ShowNotification(_U('amount_invalid'), "error")
 				else
 					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 					if closestPlayer == -1 or closestDistance > 3.0 then
-						ESX.ShowNotification(_U('no_players_nearby'))
+						ESX.ShowNotification(_U('no_players_nearby'), "error")
 					else
 						menu.close()
 						TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_mechanic', _U('mechanic'), amount)
@@ -831,7 +831,7 @@ CreateThread(function()
 			for k,v in pairs(Config.Zones) do
 				if v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance then
 					Sleep = 0
-					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, nil, nil, false)
+					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, true, true, 2, true, nil, nil, false)
 					letSleep = false
 				end
 			end
@@ -919,12 +919,13 @@ end)
 
 -- Key Controls
 CreateThread(function()
-	while CurrentAction do
-		Wait(0)
+	while true do
+	local sleep = 500
+		if CurrentAction then
+			sleep = 0
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
-
 				if CurrentAction == 'mechanic_actions_menu' then
 					OpenMechanicActionsMenu()
 				elseif CurrentAction == 'mechanic_harvest_menu' then
@@ -932,58 +933,58 @@ CreateThread(function()
 				elseif CurrentAction == 'mechanic_craft_menu' then
 					OpenMechanicCraftMenu()
 				elseif CurrentAction == 'delete_vehicle' then
+			if Config.EnableSocietyOwnedVehicles then
 
-					if Config.EnableSocietyOwnedVehicles then
+				local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+				TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
+			else
+				local entityModel = GetEntityModel(CurrentActionData.vehicle)
 
-						local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
-						TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
-
-					else
-						local entityModel = GetEntityModel(CurrentActionData.vehicle)
-
-						if
-							entityModel == GetHashKey("flatbed") or
-							entityModel == GetHashKey("towtruck2") or
-							entityModel == GetHashKey("slamvan3")
-						then
-							TriggerServerEvent('esx_service:disableService', 'mechanic')
-						end
-
-					end
-
-					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-
-				elseif CurrentAction == 'remove_entity' then
-					DeleteEntity(CurrentActionData.entity)
+				if entityModel == GetHashKey("flatbed") or	entityModel == GetHashKey("towtruck2") or entityModel == GetHashKey("slamvan3") then
+					TriggerServerEvent('esx_service:disableService', 'mechanic')
+				end
+			end
+		ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+	elseif CurrentAction == 'remove_entity' then
+		DeleteEntity(CurrentActionData.entity)
 				end
 
 				CurrentAction = nil
-			end
-		end
-
-		if IsControlJustReleased(0, 167) and not isDead and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+			 end
+		 end
+		Wait(sleep)
+	end
+end)
+RegisterCommand('mechanicMenu', function()
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 			OpenMobileMechanicActionsMenu()
 		end
+end, false)
 
-		if IsControlJustReleased(0, 178) and not isDead and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+
+
+RegisterCommand('startmechanicjob', function()
+	local playerPed = PlayerPedId()
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 			if NPCOnJob then
 				if GetGameTimer() - NPCLastCancel > 5 * 60000 then
 					StopNPCJob(true)
 					NPCLastCancel = GetGameTimer()
 				else
-					ESX.ShowNotification(_U('wait_five'))
+					ESX.ShowNotification(_U('wait_five'), "error")
 				end
 			else
-				local playerPed = PlayerPedId()
-
 				if IsPedInAnyVehicle(playerPed, false) and IsVehicleModel(GetVehiclePedIsIn(playerPed, false), GetHashKey('flatbed')) then
 					StartNPCJob()
 				else
-					ESX.ShowNotification(_U('must_in_flatbed'))
+					ESX.ShowNotification(_U('must_in_flatbed'), "error")
 				end
 			end
 		end
-end)
+end, false)
+
+RegisterKeyMapping('mechanicMenu', 'Open Mechanic Menu', 'keyboard', 'F6')
+RegisterKeyMapping('mechanicjob', 'Togggle NPC Job', 'keyboard', 'F6')
 
 AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
 AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)

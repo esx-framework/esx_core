@@ -12,9 +12,9 @@ local function Harvest(source)
 
 		if PlayersHarvesting[source] == true then
 			local xPlayer = ESX.GetPlayerFromId(source)
-			local GazBottle = xPlayer.hasItem('gazbottle')
+			local GazBottleQuantity = xPlayer.getInventoryItem('gazbottle').count
 
-			if GazBottle and GazBottle.count >= 5 then
+			if GazBottleQuantity >= 5 then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_room'))
 			else
 				xPlayer.addInventoryItem('gazbottle', 1)
@@ -44,9 +44,9 @@ local function Harvest2(source)
 
 		if PlayersHarvesting2[source] == true then
 			local xPlayer = ESX.GetPlayerFromId(source)
-			local FixToolQuantity = xPlayer.hasItem('fixtool')
+			local FixToolQuantity = xPlayer.getInventoryItem('fixtool').count
 
-			if FixToolQuantity and FixToolQuantity.count >= 5 then
+			if FixToolQuantity >= 5 then
 				TriggerClientEvent('esx:showNotification', source, _U('you_do_not_room'))
 			else
 				xPlayer.addInventoryItem('fixtool', 1)
@@ -107,9 +107,9 @@ local function Craft(source)
 
 		if PlayersCrafting[source] == true then
 			local xPlayer = ESX.GetPlayerFromId(source)
-			local GazBottleQuantity = xPlayer.hasItem('gazbottle')
+			local GazBottleQuantity = xPlayer.getInventoryItem('gazbottle').count
 
-			if not GazBottleQuantity then
+			if GazBottleQuantity <= 0 then
 				TriggerClientEvent('esx:showNotification', source, _U('not_enough_gas_can'))
 			else
 				xPlayer.removeInventoryItem('gazbottle', 1)
@@ -140,9 +140,9 @@ local function Craft2(source)
 
 		if PlayersCrafting2[source] == true then
 			local xPlayer = ESX.GetPlayerFromId(source)
-			local FixToolQuantity = xPlayer.hasItem('fixtool')
+			local FixToolQuantity = xPlayer.getInventoryItem('fixtool').count
 
-			if not FixToolQuantity then
+			if FixToolQuantity <= 0 then
 				TriggerClientEvent('esx:showNotification', source, _U('not_enough_repair_tools'))
 			else
 				xPlayer.removeInventoryItem('fixtool', 1)
