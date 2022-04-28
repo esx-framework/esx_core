@@ -3,6 +3,13 @@ local HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum
 local isBusy, deadPlayers, deadPlayerBlips, isOnDuty = false, {}, {}, false
 isInShopMenu = false
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
+end)
+
+
 function OpenAmbulanceActionsMenu()
 	local elements = {{label = _U('cloakroom'), value = 'cloakroom'}}
 
