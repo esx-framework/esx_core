@@ -10,9 +10,9 @@
 		<div class="dialog">
 			<img id="logo" src="img/esx_identity.png" height="110px" width="332px">
 			<form id="register" name="register" action="#">
-				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true) return false;" onKeyUp="checkFirstName()" onmouseup="checkFirstName()"><br>
-				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true) return false;" onKeyUp="checkLastName()" onmouseup="checkLastName()"><br>
-				<input id="dateofbirth" type="text" name="dateofbirth" class="" placeholder="Date of Birth (MM/DD/YYYY)" dateformat="M d y" min="01/01/1900" max="12/31/2020" onfocus="(this.type='date')" onkeypress="if ( isNaN(String.fromCharCode(event.keyCode) )) return false;" onchange="checkDOB()" onKeyUp="checkDOB()" onmouseup="checkDOB()"><br>
+				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true)"><br>
+				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true)"><br>
+				<input id="dateofbirth" type="text" name="dateofbirth" class="" placeholder="Date of Birth (MM/DD/YYYY)" dateformat="M d y" min="01/01/1900" max="12/31/2020" onfocus="(this.type='date')" onkeypress="if ( isNaN(String.fromCharCode(event.keyCode) ))"><br>
 				<center>
 					<div class="radio-toolbar">
 						<input type="radio" id="radiom" name="sex" value="m" checked>
@@ -22,10 +22,10 @@
 						<label for="radiof">Female</label>
 					</div>
 				</center>
-					<div class="range-wrap" style="width: 80%;">
+					<!-- <div class="range-wrap" style="width: 80%;">
 						<input type="range" id="height" class="range" min="48" max="96" value="48">
 						<output class="bubble"></output>
-					</div>
+					</div> -->
 				<button id="submit" type="submit"><font size="5px">Submit</font></button>
 			</form>
 			<center><font size="1px" color="red">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font></center>

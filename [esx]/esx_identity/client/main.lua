@@ -32,6 +32,7 @@ if not Config.UseDeferrals then
 			type = "enableui",
 			enable = state
 		})
+		if state == false then ClearTimecycleModifier() end
 	end
 
 	RegisterNetEvent('esx_identity:showRegisterIdentity')
@@ -40,8 +41,11 @@ if not Config.UseDeferrals then
 
 		if not ESX.GetPlayerData().dead then
 			EnableGui(true)
+			SetTimecycleModifier("hud_def_blur")
+		SetTimecycleModifierStrength(1)
 		end
 	end)
+
 
 	RegisterNUICallback('register', function(data, cb)
 		ESX.TriggerServerCallback('esx_identity:registerIdentity', function(callback)
