@@ -34,7 +34,6 @@ Locales['nl'] = {
   ['lj_cutwood_button']         = 'Druk op ~INPUT_PICKUP~ om het hout te zagen',
   ['lj_board']                  = 'Plaken',
   ['lj_planks']                 = 'pakket met planken',
-  ['lj_cutwood']                = 'hout zagen',
   ['lj_pick_boards']            = 'Druk op ~INPUT_PICKUP~ om hout te zagen',
   ['lj_deliver_button']         = 'Druk op ~INPUT_PICKUP~ om het hout te leveren',
 

@@ -75,8 +75,8 @@ Locales['de'] = {
   -- Item
   ['used_medikit'] = 'Du hast eindikit verwendet',
   ['used_bandage'] = 'Du hast einenrband verwendet',
-  ['not_enough_medikit'] = 'Du hast keine  Medikits
-  ['not_enough_bandage'] = 'Du hast keine  Verbände
+  ['not_enough_medikit'] = 'Du hast keine Medikits',
+  ['not_enough_bandage'] = 'Du hast keine Verbände',
   ['healed'] = 'Du wurdest behandelt.',
   -- Blips
   ['blip_hospital'] = 'Krankenhaus',
