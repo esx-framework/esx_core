@@ -77,8 +77,8 @@ function ESX.SetPlayerData(key, val)
 	end
 end
 
-function ESX.Progressbar(message,length, FreezePlayer,animation, onFinish)
-    exports["esx_progressbar"]:Progressbar(message,length, FreezePlayer,animation, onFinish)
+function ESX.Progressbar(message,length, Options)
+    exports["esx_progressbar"]:Progressbar(message,length, Options)
 end
 
 

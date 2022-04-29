@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'CruiseControl System for ESX'
 
-version '1.6.5'
+version '1.7.0'
 
 dependencies {
   'es_extended'

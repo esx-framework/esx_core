@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.6.5",
+	"commit" : "1.7.0",
 	"changelog": "\n- Add ESX Mulitcharacter"
 }

@@ -1,8 +1,8 @@
-local function Progressbar(message,length, FreezePlayer,animation, onFinish)
-    if animation then 
-        if animation.type == "anim" then
-            ESX.Streaming.RequestAnimDict(animation.dict, function()
-                TaskPlayAnim(ESX.PlayerData.ped, animation.dict, animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
+local function Progressbar(message,length,Options)
+    if Options.animation then 
+        if Options.animation.type == "anim" then
+            ESX.Streaming.RequestAnimDict(Options.animation.dict, function()
+                TaskPlayAnim(ESX.PlayerData.ped, Options.animation.dict, Options.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
             end)
         end
     end
@@ -14,14 +14,14 @@ local function Progressbar(message,length, FreezePlayer,animation, onFinish)
     }))
     Wait(length)
     if FreezePlayer then FreezeEntityPosition(PlayerPedId(),not FreezePlayer) end
-    if onFinish then onFinish() end
+    if Options.onFinish then Options.onFinish() end
 end
 
 exports('Progressbar', Progressbar)
 
 -- Example
 --[[RegisterCommand("progress", function()
-    exports["esx_progressbar"]:Progressbar("test", 25000, false,{type = "anim",dict = "mini@prostitutes@sexlow_veh", lib ="low_car_sex_to_prop_p2_player" }, function()
+    exports["esx_progressbar"]:Progressbar("test", 25000, false,{animation ={type = "anim",dict = "mini@prostitutes@sexlow_veh", lib ="low_car_sex_to_prop_p2_player" }, onFinish = function()
         print("finish")
-    end)
+    end})
 end)]] 

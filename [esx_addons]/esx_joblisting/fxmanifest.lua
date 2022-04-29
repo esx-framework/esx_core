@@ -3,7 +3,7 @@ game 'gta5'
 
 description 'ESX Job Listing'
 
-version '1.6.5'
+version '1.7.0'
 
 shared_scripts {
 	'@es_extended/imports.lua',

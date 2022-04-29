@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 description 'Official Multicharacter System For ESX Legacy'
-version '1.6.5'
+version '1.7.0'
 lua54 'yes'
 
 dependencies {

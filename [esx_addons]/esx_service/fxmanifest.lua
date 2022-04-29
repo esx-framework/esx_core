@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Service'
 
-version '1.6.5'
+version '1.7.0'
 
 shared_script '@es_extended/imports.lua'
 

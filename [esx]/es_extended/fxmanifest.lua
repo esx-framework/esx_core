@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
-version '1.6.5'
+version '1.7.0'
 
 shared_scripts {
 	'locale.lua',
