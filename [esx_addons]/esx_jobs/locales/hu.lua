@@ -34,7 +34,6 @@ Locales['hu'] = {
   ['lj_cutwood_button']         = 'nyomj ~INPUT_PICKUP~ gombot a favágáshoz.',
   ['lj_board']                  = 'táblák',
   ['lj_planks']                 = 'tábla csomagolás',
-  ['lj_cutwood']                = 'vágott fa',
   ['lj_pick_boards']            = 'nyomj ~INPUT_PICKUP~ gombot hogy kiszedd a táblát.',
   ['lj_deliver_button']         = 'nyomj ~INPUT_PICKUP~ gombot hogy leszállítsd a táblát.',
 

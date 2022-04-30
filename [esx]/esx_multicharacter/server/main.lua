@@ -175,8 +175,8 @@ elseif ESX.GetConfig().Multichar == true then
 			until next(ESX.Jobs)
 
 			FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
-		end
-	end)
+		end)
+	end
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters', function()
 		SetupCharacters(source)
@@ -216,6 +216,6 @@ elseif ESX.GetConfig().Multichar == true then
 		TriggerEvent('esx:playerLogout', source)
 	end)
 
-else
-	assert(nil, '^3WARNING: Multicharacter is disabled - please check your ESX configuration^0')
-end
+	else
+		assert(nil, '^3WARNING: Multicharacter is disabled - please check your ESX configuration^0')
+	end
