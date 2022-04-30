@@ -6,14 +6,14 @@ local function Progressbar(message,length,Options)
             end)
         end
     end
-    if FreezePlayer then FreezeEntityPosition(PlayerPedId(),FreezePlayer) end
+    if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(),Options.FreezePlayer) end
     SendNuiMessage(json.encode({
         type = "Progressbar",
         length = length or 3000,
         message = message or "ESX-Framework"
     }))
     Wait(length)
-    if FreezePlayer then FreezeEntityPosition(PlayerPedId(),not FreezePlayer) end
+    if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(),not Options.FreezePlayer) end
     if Options.onFinish then Options.onFinish() end
 end
 
