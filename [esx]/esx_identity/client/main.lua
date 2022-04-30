@@ -54,7 +54,7 @@ if not Config.UseDeferrals then
 				EnableGui(false)
 				if not ESX.GetConfig().Multichar then TriggerEvent('esx_skin:playerRegistered') end
 			else
-				ESX.ShowNotification(_U('registration_error'))
+				ESX.ShowNotification(_U('registration_error'), "error",5000)
 			end
 		end, data)
 	end)
