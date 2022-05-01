@@ -16,17 +16,17 @@
 
 .dialog {
 	font-family: montserrat;
-	background:#040A15;
+	background: rgba(33, 33, 33, 0.8);
   color: #fff;
 	position: absolute;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 	overflow: hidden;
 	top: 50%;
 	left: 50%;
 	width: 600px;
-	height: 132px;
+	height: 152px;
 	transform: translate(-50%, -50%);
-  -webkit-box-shadow: 10px 9px 42px -5px rgba(0, 0, 0, 0.52);
-  -moz-box-shadow: 10px 9px 42px -5px rgba(0, 0, 0, 0.52);
 }
 
 .head {
@@ -41,7 +41,7 @@
 }
 
 .dialog .head {
-	background-color: #ffffff;
+	background: rgba(25, 25, 25, 0.9);
 	text-align: center;
 	height: 40px;
 }
@@ -61,6 +61,7 @@
   text-align: center;
   margin-top: 26px;
   margin-left: 125px;
+	font-size: large;
   transition: all 0.2s ease-in-out;
   color: white;
   border: 0.5px solid #ffffff3b;
@@ -81,12 +82,13 @@
 	height: 32px;
   margin-left: 160px;
   font-weight: 300;
-  color:  #ffffff;
+  color: rgb(37, 34, 53);
+	border-radius: 10px;
   text-transform: uppercase;
-  background: rgb(50, 88, 255);
+  background: rgb(50, 79, 208);
   outline: 0;
   border: none;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .dialog button {
@@ -97,14 +99,15 @@
 .dialog button[name="cancel"] {
 	width: 17.6%;
 	height: 32px;
-  margin-left: 80px;
+  margin-left: 60px;
   border: none;
   text-transform: uppercase;
   font-weight: 200;
-  color: rgb(32, 8, 8);
+	border-radius: 10px;
+  color: rgb(53, 34, 34);
   outline: 0;
-  background: #ff4343;
-  transition: all 0.1s ease-in-out;
+  background: #c74545;
+  transition: all 0.2s ease-in-out;
 }
 
 .dialog button[name="cancel"]:hover {
