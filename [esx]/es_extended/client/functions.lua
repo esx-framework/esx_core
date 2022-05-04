@@ -605,9 +605,45 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			end
 		end
 
+		local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
+		local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
+
+		local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
+				['2'] = {0, 4}, -- Bike and cycle.
+				['3'] = {0, 1, 4, 5}, -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+				['4'] = {0, 1, 4, 5}, -- Vehicle with 4 wheels.
+				['6'] = {0, 1, 2, 3, 4, 5}, -- Vehicle with 6 wheels.
+		}
+
+		for tyre,idx in pairs(TyresIndex[numWheels]) do
+				if IsVehicleTyreBurst(vehicle, idx, false) then
+						tyreBurst[tostring(idx)] = true
+				else
+						tyreBurst[tostring(idx)] = false
+				end
+		end
+
+		for windowId = 0, 7 do -- 13
+				if not IsVehicleWindowIntact(vehicle, windowId) then 
+						windowsBroken[tostring(windowId)] = true
+				else
+						windowsBroken[tostring(windowId)] = false
+				end
+		end
+
+		for doorsId = 0, GetNumberOfVehicleDoors(vehicle) do
+				if IsVehicleDoorDamaged(vehicle, doorsId) then 
+						doorsBroken[tostring(doorsId)] = true
+				else
+						doorsBroken[tostring(doorsId)] = false
+				end
+		end
+
 		return {
 			model             = GetEntityModel(vehicle),
-
+			doorsBroken       = doorsBroken,
+			windowsBroken     = windowsBroken,
+			tyreBurst         = tyreBurst,		
 			plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
 			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
@@ -786,6 +822,23 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 		if props.modLivery then
 			SetVehicleMod(vehicle, 48, props.modLivery, false)
 		end
+		if props.windowsBroken then
+			for k, v in pairs(props.windowsBroken) do
+					if v then SmashVehicleWindow(vehicle, tonumber(k)) end
+			end
+	end
+	
+	if props.doorsBroken then
+			for k, v in pairs(props.doorsBroken) do
+					if v then SetVehicleDoorBroken(vehicle, tonumber(k), true) end
+			end
+	end
+	
+	if props.tyreBurst then
+			for k, v in pairs(props.tyreBurst) do
+				 if v then SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0) end
+			end
+	end
 	end
 end
 
