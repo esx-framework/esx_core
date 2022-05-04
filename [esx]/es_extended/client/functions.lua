@@ -724,7 +724,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			modTrimB          = GetVehicleMod(vehicle, 44),
 			modTank           = GetVehicleMod(vehicle, 45),
 			modDoorR          = GetVehicleMod(vehicle, 47),
-			modLivery         = GetVehicleMod(vehicle, 48),
+			modLivery         = GetVehicleLivery(vehicle),
 			modLightbar       = GetVehicleMod(vehicle, 49),
 		}
 	else
@@ -820,25 +820,26 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 		if props.modWindows then SetVehicleMod(vehicle, 46, props.modWindows, false) end
 
 		if props.modLivery then
-			SetVehicleMod(vehicle, 48, props.modLivery, false)
+			SetVehicleLivery(vehicle, props.modLivery)
 		end
+
 		if props.windowsBroken then
 			for k, v in pairs(props.windowsBroken) do
 					if v then SmashVehicleWindow(vehicle, tonumber(k)) end
 			end
-	end
+		end
 	
-	if props.doorsBroken then
+		if props.doorsBroken then
 			for k, v in pairs(props.doorsBroken) do
-					if v then SetVehicleDoorBroken(vehicle, tonumber(k), true) end
+				if v then SetVehicleDoorBroken(vehicle, tonumber(k), true) end
 			end
-	end
-	
-	if props.tyreBurst then
+		end
+		
+		if props.tyreBurst then
 			for k, v in pairs(props.tyreBurst) do
-				 if v then SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0) end
+				if v then SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0) end
 			end
-	end
+		end
 	end
 end
 
