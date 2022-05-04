@@ -114,28 +114,30 @@ function UpdateMods(data)
 	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 
 	if data.modType then
-		local props = {}
-		
-		if data.wheelType then
-			props['wheels'] = data.wheelType
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		elseif data.modType == 'neonColor' then
-			if data.modNum[1] == 0 and data.modNum[2] == 0 and data.modNum[3] == 0 then
-				props['neonEnabled'] = { false, false, false, false }
-			else
-				props['neonEnabled'] = { true, true, true, true }
+			local props = {}
+			
+			if data.wheelType then
+					props['wheels'] = data.wheelType
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
+			elseif data.modType == 'neonColor' then
+					if data.modNum[1] == 0 and data.modNum[2] == 0 and data.modNum[3] == 0 then
+							props['neonEnabled'] = { false, false, false, false }
+					else
+							props['neonEnabled'] = { true, true, true, true }
+					end
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
+			elseif data.modType == 'tyreSmokeColor' then
+					props['modSmokeEnabled'] = true
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
+			elseif data.modType == "modFrontWheels" and GetVehicleClass(vehicle) == 8 then -- Fix bug wheels for bikes.
+					props["modBackWheels"] = data.modNum
 			end
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		elseif data.modType == 'tyreSmokeColor' then
-			props['modSmokeEnabled'] = true
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		end
 
-		props[data.modType] = data.modNum
-		ESX.Game.SetVehicleProperties(vehicle, props)
+			props[data.modType] = data.modNum
+			ESX.Game.SetVehicleProperties(vehicle, props)
 	end
 end
 
@@ -379,38 +381,44 @@ CreateThread(function()
 			if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
 				for k,v in pairs(Config.Zones) do
 					local zonePos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-					if #(coords - zonePos) < v.Size.x and not lsMenuIsShowed then
+					if #(coords - zonePos) < v.Size.x then 
 						Sleep = 0
-						ESX.ShowHelpNotification(v.Hint)
-						if IsControlJustReleased(0, 38) then
-							lsMenuIsShowed = true
+						if not lsMenuIsShowed then
+							ESX.ShowHelpNotification(v.Hint)
+							if IsControlJustReleased(0, 38) then
+								lsMenuIsShowed = true
 
-							local vehicle = GetVehiclePedIsIn(playerPed, false)
-							FreezeEntityPosition(vehicle, true)
-							myCar = ESX.Game.GetVehicleProperties(vehicle)
+								local vehicle = GetVehiclePedIsIn(playerPed, false)
+								FreezeEntityPosition(vehicle, true)
+								myCar = ESX.Game.GetVehicleProperties(vehicle)
 
-							ESX.UI.Menu.CloseAll()
-							GetAction({value = 'main'})
+								ESX.UI.Menu.CloseAll()
+								GetAction({value = 'main'})
 
-							-- Prevent Free Tunning Bug
-							CreateThread(function()
-								while lsMenuIsShowed do
-									DisableControlAction(2, 288, true)
-									DisableControlAction(2, 289, true)
-									DisableControlAction(2, 170, true)
-									DisableControlAction(2, 167, true)
-									DisableControlAction(2, 168, true)
-									DisableControlAction(2, 23, true)
-									DisableControlAction(0, 75, true)  -- Disable exit vehicle
-									DisableControlAction(27, 75, true) -- Disable exit vehicle
-									Wait(0)
-								end
-							end)
-						end
+								-- Prevent Free Tunning Bug
+								CreateThread(function()
+									while true do 
+										local Sleep = 1000
+										if lsMenuIsShowed then
+											Sleep = 0
+											DisableControlAction(2, 288, true)
+											DisableControlAction(2, 289, true)
+											DisableControlAction(2, 170, true)
+											DisableControlAction(2, 167, true)
+											DisableControlAction(2, 168, true)
+											DisableControlAction(2, 23, true)
+											DisableControlAction(0, 75, true)  -- Disable exit vehicle
+											DisableControlAction(27, 75, true) -- Disable exit vehicle
+										end
+										Wait(0)
+									end
+								end)
+							end
 					end
 				end
 			end
 		end
+	end
 	Wait(Sleep)
 	end
 end)
