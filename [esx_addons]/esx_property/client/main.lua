@@ -318,7 +318,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 		local elements = {{label = _U('enter'), value = 'enter'}}
 
 		if not Config.EnablePlayerManagement then
-			table.insert(elements, {label = _U('leave'), value = 'leave'})
+			table.insert(elements, {label = _U('move_out'), value = 'leave'})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions', {
