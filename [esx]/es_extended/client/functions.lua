@@ -1131,8 +1131,8 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
-	ESX.ShowNotification(msg)
+AddEventHandler('esx:showNotification', function(msg, type, length)
+	ESX.ShowNotification(msg, type, length)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
