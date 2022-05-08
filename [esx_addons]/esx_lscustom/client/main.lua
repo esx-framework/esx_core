@@ -118,6 +118,11 @@ function UpdateMods(data)
 			
 			if data.wheelType then
 					props['wheels'] = data.wheelType
+					
+					if GetVehicleClass(vehicle) == 8 then -- Fix bug wheels for bikes.
+						props['modBackWheels'] = data.modNum
+					end
+			
 					ESX.Game.SetVehicleProperties(vehicle, props)
 					props = {}
 			elseif data.modType == 'neonColor' then
@@ -132,8 +137,6 @@ function UpdateMods(data)
 					props['modSmokeEnabled'] = true
 					ESX.Game.SetVehicleProperties(vehicle, props)
 					props = {}
-			elseif data.modType == "modFrontWheels" and GetVehicleClass(vehicle) == 8 then -- Fix bug wheels for bikes.
-					props["modBackWheels"] = data.modNum
 			end
 
 			props[data.modType] = data.modNum
