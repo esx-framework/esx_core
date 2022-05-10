@@ -741,7 +741,7 @@ end)
 
 
 RegisterCommand('taximenu', function()
-	if not ESX.GetPlayerData().dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+	if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 		OpenMobileTaxiActionsMenu()
 	end
 end, false)

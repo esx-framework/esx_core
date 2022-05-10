@@ -4,6 +4,7 @@ game 'gta5'
 
 description 'ES Extended'
 
+lua54 'yes'
 version '1.7.0'
 
 shared_scripts {
@@ -20,6 +21,7 @@ server_scripts {
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',
+	'server/onesync.lua',
 	'server/paycheck.lua',
 	'server/main.lua',
 	'server/commands.lua',
