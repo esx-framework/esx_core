@@ -1,0 +1,18 @@
+Locales['nl'] = {
+  ['actions']                           = 'acties',
+  ['amount']                            = 'bedrag',
+  ['balance']                           = 'saldo',
+  ['bank']                              = 'bank',
+  ['bill_amount']                       = 'rekening bedrag',
+  ['billing']                           = 'rekeningen',
+  ['customer']                          = 'klant',
+  ['customers']                         = 'klanten',
+  ['deposit']                           = 'storten',
+  ['invalid_amount']                    = 'ongedig bedrag',
+  ['no_player_nearby']                  = 'geen speler in de omgeving',
+  ['press_input_context_to_open_menu']  = 'druk op ~INPUT_CONTEXT~ om het ~g~Bank Menu~s~te openen.',
+  ['withdraw']                          = 'opnemen',
+  ['boss_actions']                      = 'baas acties',
+  ['phone_receive']                     = 'bank klant',
+  ['phone_label']                       = 'bank',
+}

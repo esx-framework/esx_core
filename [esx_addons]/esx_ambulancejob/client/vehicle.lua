@@ -13,7 +13,7 @@ function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
 	}}, function(data, menu)
 		if data.current.action == 'buy_vehicle' then
 			local shopElements = {}
-			local authorizedVehicles = Config.AuthorizedVehicles[type][ESX.PlayerData.job.grade_name]
+			local authorizedVehicles = Config.AuthorizedVehicles[type][ESX.PlayerData.job.grade_name] 	
 			local shopCoords = Config.Hospitals[hospital][part][partNum].InsideShop
 
 			if #authorizedVehicles > 0 then

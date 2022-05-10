@@ -8,11 +8,17 @@
 
 	<body onkeydown="TriggeredKey(this)">
 		<div class="dialog">
-			<img id="logo" src="img/esx_identity.png" height="110px" width="332px">
+			<div class="aa"><b>IDENTITY</b></div>
+           <!--	<img id="logo" height="110px" width="332px"> > -->	
 			<form id="register" name="register" action="#">
-				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true) return false;" onKeyUp="checkFirstName()" onmouseup="checkFirstName()"><br>
-				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name (Max 16 Characters)" onKeyDown="if(this.value.length==16 && event.keyCode!=8) return false;" onkeypress="if (isNumber(event) == true) return false;" onKeyUp="checkLastName()" onmouseup="checkLastName()"><br>
-				<input id="dateofbirth" type="text" name="dateofbirth" class="" placeholder="Date of Birth (MM/DD/YYYY)" dateformat="M d y" min="01/01/1900" max="12/31/2020" onfocus="(this.type='date')" onkeypress="if ( isNaN(String.fromCharCode(event.keyCode) )) return false;" onchange="checkDOB()" onKeyUp="checkDOB()" onmouseup="checkDOB()"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>First Name</div>
+				<input id="firstname" type="text"  class=""  name="firstname" placeholder="First Name" onKeyDown="if(this.value.length==16 && event.keyCode!=8)"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>Last Name</div>
+				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" onKeyDown="if(this.value.length==16 && event.keyCode!=8)"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Date of Birth (MM/DD/YYYY)</div>
+				<input id="dateofbirth" type="date" name="dateofbirth" class="" placeholder="Date of Birth (dd/mm/yyy)" min="01/01/1900" max="01/01/2010" onfocus="(this.type='date')"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Height</div>
+				<input id="height" type="number" class="" name="height" min="120" max="220" placeholder="Height (cm)" onKeyDown="if(this.value.length==3 && event.keyCode!=8)"><br>
 				<center>
 					<div class="radio-toolbar">
 						<input type="radio" id="radiom" name="sex" value="m" checked>
@@ -22,13 +28,13 @@
 						<label for="radiof">Female</label>
 					</div>
 				</center>
-					<div class="range-wrap" style="width: 80%;">
+					<!-- <div class="range-wrap" style="width: 80%;">
 						<input type="range" id="height" class="range" min="48" max="96" value="48">
 						<output class="bubble"></output>
-					</div>
-				<button id="submit" type="submit"><font size="5px">Submit</font></button>
+					</div> -->
+				<button id="submit" type="submit"><font size="4px">CREATE</font></button>
 			</form>
-			<center><font size="1px" color="red">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font></center>
+			<center><font size="1px" color="green">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font></center>
 		</div>
 		<script>
 
@@ -67,41 +73,6 @@
 				}
 			}
 
-			function checkFirstName() {
-				var value = myFirstName.value;
-				if(value.trim().match(/^[a-zA-Z][0-9a-zA-Z .,'-]*$/) == null) {
-					myFirstName.style.backgroundColor = '#E06666';
-					myFirstName.style.color = 'black';
-				}
-				else {
-					if(value.length > 0 && value.length < 17) {
-						myFirstName.style.backgroundColor = '#B6D7A8';
-						myFirstName.style.color = 'black';
-					}
-					else {
-						myFirstName.style.backgroundColor = '#E06666';
-						myFirstName.style.color = 'black';
-					}
-				}
-			}
-
-			function checkLastName() {
-				var value = myLastName.value;
-				if(value.trim().match(/^[a-zA-Z][0-9a-zA-Z .,'-]*$/) == null) {
-					myLastName.style.backgroundColor = '#E06666';
-					myLastName.style.color = 'black';
-				}
-				else {
-					if(value.length > 0 && value.length < 17) {
-						myLastName.style.backgroundColor = '#B6D7A8';
-						myLastName.style.color = 'black';
-					}
-					else {
-						myLastName.style.backgroundColor = '#E06666';
-						myLastName.style.color = 'black';
-					}
-				}
-			}
 			
 			function checkDOB() {
 				var date = new Date($('#dateofbirth').val());
@@ -113,7 +84,7 @@
 					myDOB.style.color = 'black';
 				}
 				else {
-					var dateInput = [month, day, year].join('/');
+					var dateInput = [day, month, year].join('/');
 
 					var regExp = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
 					var dateArray = dateInput.match(regExp);
@@ -125,30 +96,6 @@
 					month = dateArray[1];
 					day= dateArray[3];
 					year = dateArray[5];        
-
-					if (month < 1 || month > 12){
-						myDOB.style.backgroundColor = '#E06666';
-						myDOB.style.color = 'black';
-					}
-					else if (day < 1 || day> 31) { 
-						myDOB.style.backgroundColor = '#E06666';
-						myDOB.style.color = 'black';
-					}
-					else if ((month==4 || month==6 || month==9 || month==11) && day ==31) {
-						myDOB.style.backgroundColor = '#E06666';
-						myDOB.style.color = 'black';
-					}
-					else if (month == 2) {
-						var isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-						if (day> 29 || (day ==29 && !isLeapYear)){
-							myDOB.style.backgroundColor = '#E06666';
-							myDOB.style.color = 'black';
-						}
-					}
-					else {
-						myDOB.style.backgroundColor = '#B6D7A8';
-						myDOB.style.color = 'black';	
-					}				
 				}
 			}
 

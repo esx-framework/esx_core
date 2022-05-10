@@ -19,10 +19,10 @@ Config.Jobs.tailor = {
 	Zones = {
 
 		CloakRoom = {
-			Pos = {x = 706.73, y = -960.90, z = 29.39},
-			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker = 1,
+			Pos = {x = 706.73, y = -960.90, z = 30.39},
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip = true,
 			Name = _U('dd_dress_locker'),
 			Type = 'cloakroom',
@@ -33,7 +33,7 @@ Config.Jobs.tailor = {
 		Wool = {
 			Pos = {x = 1978.92, y = 5171.70, z = 46.63},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
 			Name = _U('dd_wool'),
@@ -45,7 +45,7 @@ Config.Jobs.tailor = {
 					time = 3,
 					max = 40,
 					add = 1,
-					remove = 1,
+					remove = 0,
 					requires = 'nothing',
 					requires_name = 'Nothing',
 					drop = 100
@@ -58,7 +58,7 @@ Config.Jobs.tailor = {
 		Fabric = {
 			Pos = {x = 715.95, y = -959.63, z = 29.39},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('dd_fabric'),
@@ -83,7 +83,7 @@ Config.Jobs.tailor = {
 		Clothe = {
 			Pos = {x = 712.92, y = -970.58, z = 29.39},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('dd_clothing'),
@@ -108,7 +108,7 @@ Config.Jobs.tailor = {
 		VehicleSpawner = {
 			Pos = {x = 740.80, y = -970.06, z = 23.46},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('spawn_veh'),
@@ -148,7 +148,7 @@ Config.Jobs.tailor = {
 
 		Delivery = {
 			Pos = {x = 429.59, y = -807.34, z = 28.49},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,

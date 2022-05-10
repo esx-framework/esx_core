@@ -4,20 +4,13 @@ game 'gta5'
 
 description 'ESX Shops'
 
-version '1.5.0'
+version '1.7.0'
 
 shared_script '@es_extended/imports.lua'
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
+	'locales/*.lua',
 	'config.lua',
 	'client/main.lua'
 }
@@ -25,14 +18,7 @@ client_scripts {
 server_scripts {
 	'@es_extended/locale.lua',
 	'@oxmysql/lib/MySQL.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
+	'locales/*.lua',
 	'config.lua',
 	'server/main.lua'
 }

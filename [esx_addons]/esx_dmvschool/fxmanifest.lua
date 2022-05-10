@@ -4,32 +4,20 @@ game 'gta5'
 
 description 'ESX DMV School'
 
-version '1.5.0'
+version '1.7.0'
 
 shared_script '@es_extended/imports.lua'
 
 server_scripts {
 	'@es_extended/locale.lua',
-	'locales/br.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/es.lua',
-	'locales/pl.lua',
-	'locales/sv.lua',
+	'locales/*.lua',
 	'config.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locales/br.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/es.lua',
-	'locales/pl.lua',
-	'locales/sv.lua',
+	'locales/*.lua',
 	'config.lua',
 	'client/main.lua'
 }

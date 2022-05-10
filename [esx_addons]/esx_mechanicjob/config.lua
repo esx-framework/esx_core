@@ -25,24 +25,24 @@ Config.Vehicles = {
 Config.Zones = {
 
 	MechanicActions = {
-		Pos   = vector3(-342.291, -133.370, 38.009 ),
-		Size  = { x = 1.5, y = 1.5, z = 1.0 },
-		Color = { r = 204, g = 204, b = 0 },
-		Type  = 1
+		Pos   = vector3(-342.291, -133.370, 39.009 ),
+		Size  = { x = 1.0, y = 1.0, z = 1.0 },
+		Color = { r = 50, g = 200, b = 50 },
+		Type  = 21
 	},
 
 	Garage = {
-		Pos   = vector3(-97.5, 6496.1, 30.4 ),
-		Size  = { x = 1.5, y = 1.5, z = 1.0 },
-		Color = { r = 204, g = 204, b = 0 },
-		Type  = 1
+		Pos   = vector3(-97.5, 6496.1, 31.4 ),
+		Size  = { x = 1.0, y = 1.0, z = 1.0 },
+		Color = { r = 50, g = 200, b = 50 },
+		Type  = 21
 	},
 
 	Craft = {
-		Pos   = vector3( -323.140, -129.882, 37.999 ),
-		Size  = { x = 1.5, y = 1.5, z = 1.0 },
-		Color = { r = 204, g = 204, b = 0 },
-		Type  = 1
+		Pos   = vector3( -323.140, -129.882, 38.999 ),
+		Size  = { x = 1.0, y = 1.0, z = 1.0 },
+		Color = { r = 50, g = 200, b = 50 },
+		Type  = 21
 	},
 
 	VehicleSpawnPoint = {

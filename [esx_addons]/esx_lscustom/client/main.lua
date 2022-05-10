@@ -1,22 +1,13 @@
-local Vehicles = {}
-local lsMenuIsShowed = false
-local isInLSMarker = false
-local myCar = {}
-
+local Vehicles, myCar = {},{}
+local lsMenuIsShowed, isInLSMarker = false, false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerData = xPlayer
 	ESX.PlayerLoaded = true
 
 	ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
 		Vehicles = vehicles
 	end)
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
 end)
 
 RegisterNetEvent('esx_lscustom:installMod')
@@ -123,28 +114,33 @@ function UpdateMods(data)
 	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 
 	if data.modType then
-		local props = {}
-		
-		if data.wheelType then
-			props['wheels'] = data.wheelType
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		elseif data.modType == 'neonColor' then
-			if data.modNum[1] == 0 and data.modNum[2] == 0 and data.modNum[3] == 0 then
-				props['neonEnabled'] = { false, false, false, false }
-			else
-				props['neonEnabled'] = { true, true, true, true }
+			local props = {}
+			
+			if data.wheelType then
+					props['wheels'] = data.wheelType
+					
+					if GetVehicleClass(vehicle) == 8 then -- Fix bug wheels for bikes.
+						props['modBackWheels'] = data.modNum
+					end
+			
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
+			elseif data.modType == 'neonColor' then
+					if data.modNum[1] == 0 and data.modNum[2] == 0 and data.modNum[3] == 0 then
+							props['neonEnabled'] = { false, false, false, false }
+					else
+							props['neonEnabled'] = { true, true, true, true }
+					end
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
+			elseif data.modType == 'tyreSmokeColor' then
+					props['modSmokeEnabled'] = true
+					ESX.Game.SetVehicleProperties(vehicle, props)
+					props = {}
 			end
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		elseif data.modType == 'tyreSmokeColor' then
-			props['modSmokeEnabled'] = true
-			ESX.Game.SetVehicleProperties(vehicle, props)
-			props = {}
-		end
 
-		props[data.modType] = data.modNum
-		ESX.Game.SetVehicleProperties(vehicle, props)
+			props[data.modType] = data.modNum
+			ESX.Game.SetVehicleProperties(vehicle, props)
 	end
 end
 
@@ -378,7 +374,7 @@ end)
 -- Activate menu when player is inside marker
 CreateThread(function()
 	while true do
-		Wait(0)
+	local Sleep = 1500
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -388,58 +384,44 @@ CreateThread(function()
 			if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
 				for k,v in pairs(Config.Zones) do
 					local zonePos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-					if #(coords - zonePos) < v.Size.x and not lsMenuIsShowed then
-						isInLSMarker  = true
-						ESX.ShowHelpNotification(v.Hint)
-						break
-					else
-						isInLSMarker  = false
+					if #(coords - zonePos) < v.Size.x then 
+						Sleep = 0
+						if not lsMenuIsShowed then
+							ESX.ShowHelpNotification(v.Hint)
+							if IsControlJustReleased(0, 38) then
+								lsMenuIsShowed = true
+
+								local vehicle = GetVehiclePedIsIn(playerPed, false)
+								FreezeEntityPosition(vehicle, true)
+								myCar = ESX.Game.GetVehicleProperties(vehicle)
+
+								ESX.UI.Menu.CloseAll()
+								GetAction({value = 'main'})
+
+								-- Prevent Free Tunning Bug
+								CreateThread(function()
+									while true do 
+										local Sleep = 1000
+										if lsMenuIsShowed then
+											Sleep = 0
+											DisableControlAction(2, 288, true)
+											DisableControlAction(2, 289, true)
+											DisableControlAction(2, 170, true)
+											DisableControlAction(2, 167, true)
+											DisableControlAction(2, 168, true)
+											DisableControlAction(2, 23, true)
+											DisableControlAction(0, 75, true)  -- Disable exit vehicle
+											DisableControlAction(27, 75, true) -- Disable exit vehicle
+										end
+										Wait(0)
+									end
+								end)
+							end
 					end
 				end
 			end
-
-			if IsControlJustReleased(0, 38) and not lsMenuIsShowed and isInLSMarker then
-				if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
-					lsMenuIsShowed = true
-
-					local vehicle = GetVehiclePedIsIn(playerPed, false)
-					FreezeEntityPosition(vehicle, true)
-
-					myCar = ESX.Game.GetVehicleProperties(vehicle)
-
-					ESX.UI.Menu.CloseAll()
-					GetAction({value = 'main'})
-				end
-			end
-
-			if isInLSMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-			end
-
-			if not isInLSMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-			end
-
 		end
 	end
-end)
-
--- Prevent Free Tunning Bug
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if lsMenuIsShowed then
-			DisableControlAction(2, 288, true)
-			DisableControlAction(2, 289, true)
-			DisableControlAction(2, 170, true)
-			DisableControlAction(2, 167, true)
-			DisableControlAction(2, 168, true)
-			DisableControlAction(2, 23, true)
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
-		else
-			Wait(500)
-		end
+	Wait(Sleep)
 	end
 end)

@@ -6,12 +6,11 @@ lua54 'yes'
 
 description 'ESX Vehicle Shop'
 
-version '1.5.0'
+version '1.7.0'
 
 shared_script '@es_extended/imports.lua'
 
 server_scripts {
-	'@async/async.lua',
 	'@oxmysql/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/*.lua',

@@ -1,6 +1,24 @@
 local HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, CurrentActionData = false, false, false, false, false, {}
 local CurrentCustomer, CurrentCustomerBlip, DestinationBlip, targetCoords, LastZone, CurrentAction, CurrentActionMsg
 
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+ 	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	ESX.PlayerData.job = job
+end)
+
 function DrawSub(msg, time)
 	ClearPrints()
 	BeginTextCommandPrint('STRING')
@@ -426,15 +444,6 @@ function OpenPutStocksMenu()
 	end)
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.PlayerData = xPlayer
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
-end)
 
 AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 	if zone == 'VehicleSpawner' then
@@ -495,10 +504,10 @@ end)
 
 -- Enter / Exit marker events, and draw markers
 CreateThread(function()
-	while true do
-		Wait(0)
+	while true do 
+		local sleep = 1500
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi'  then
 
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 			local coords = GetEntityCoords(PlayerPedId())
 			local isInMarker, letSleep, currentZone = false, true
 
@@ -507,7 +516,7 @@ CreateThread(function()
 				local distance = #(coords - zonePos)
 
 				if v.Type ~= -1 and distance < Config.DrawDistance then
-					letSleep = false
+					sleep = 0
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, v.Rotate, nil, nil, false)
 				end
 
@@ -524,25 +533,17 @@ CreateThread(function()
 			if not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_taxijob:hasExitedMarker', LastZone)
+		    	end
 			end
-
-			if letSleep then
-				Wait(500)
-			end
-		else
-			Wait(1000)
-		end
+			Wait(sleep)
 	end
 end)
 
 -- Taxi Job
 CreateThread(function()
-	while true do
-
+	while OnJob do
 		Wait(0)
-		local playerPed = PlayerPedId()
-
-		if OnJob then
+			local playerPed = PlayerPedId()
 			if CurrentCustomer == nil then
 				DrawSub(_U('drive_search_pass'), 5000)
 
@@ -695,9 +696,6 @@ CreateThread(function()
 				else
 					DrawSub(_U('return_to_veh'), 5000)
 				end
-			end
-		else
-			Wait(500)
 		end
 	end
 end)
@@ -718,9 +716,9 @@ end)
 -- Key Controls
 CreateThread(function()
 	while true do
-		Wait(0)
-
+	local sleep = 1500
 		if CurrentAction and not ESX.PlayerData.dead then
+			sleep = 0
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
@@ -735,10 +733,13 @@ CreateThread(function()
 				end
 
 				CurrentAction = nil
-			end
-		end
+			 end
+		 end
+		Wait(sleep)
 	end
 end)
+
+
 RegisterCommand('taximenu', function()
 	if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 		OpenMobileTaxiActionsMenu()

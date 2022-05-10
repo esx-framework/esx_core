@@ -1,23 +1,6 @@
-local Keys = {
-  ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-  ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-  ["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-  ["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-  ["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-  ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-  ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-  ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
-
-local menuIsShowed = false
-local hintIsShowed = false
-local hasAlreadyEnteredMarker = false
 local Blips = {}
 local JobBlips = {}
 local isInMarker = false
-local isInPublicMarker = false
-
 local hintToDisplay = "no hint to display"
 local onDuty = false
 local spawner = 0
@@ -28,10 +11,19 @@ local vehicleInCaseofDrop = nil
 
 local vehicleMaxHealth = nil
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+RegisterNetEvent('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer
+	ESX.PlayerLoaded = true
 	refreshBlips()
+end)
+
+RegisterNetEvent('esx:onPlayerLogout',function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+end)
+
+RegisterNetEvent('esx:setJob',function(job)
+	ESX.PlayerData.job = job
 end)
 
 function OpenMenu()
@@ -47,16 +39,32 @@ function OpenMenu()
 	}, function(data, menu)
 		if data.current.value == 'citizen_wear' then
 			onDuty = false
-			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-				TriggerEvent('skinchanger:loadSkin', skin)
+			ESX.ShowNotification(_U('offduty'),"success")
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+				local isMale = skin.sex == 0
+
+				TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
+					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+						TriggerEvent('skinchanger:loadSkin', skin)
+					end)
+				end)
 			end)
 		elseif data.current.value == 'job_wear' then
 			onDuty = true
+			ESX.ShowNotification(_U('onduty'), "success")
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin.sex == 0 then
-					TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
+					if #(jobSkin.skin_male) >= 1 then 
+						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
+					else
+						ESX.ShowNotification(_U('no_male_clothing'),  "error")
+					end	
 				else
-					TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+					if #(jobSkin.skin_female) >= 1 then 
+						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
+					else
+						ESX.ShowNotification(_U('no_female_clothing'), "error")
+					end	
 				end
 			end)
 		end
@@ -72,8 +80,6 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 	if zone.Type == "cloakroom" then
 		OpenMenu()
 	elseif zone.Type == "work" then
-		hintToDisplay = "no hint to display"
-		hintIsShowed = false
 		local playerPed = PlayerPedId()
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -176,9 +182,6 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 			RemoveBlip(Blips['delivery'])
 			Blips['delivery'] = nil
 		end
-
-		hintToDisplay = "no hint to display"
-		hintIsShowed = false
 		TriggerServerEvent('esx_jobs:startWork', zone.Item, zoneKey)
 	end
 	--nextStep(zone.GPS)
@@ -199,15 +202,11 @@ end
 
 AddEventHandler('esx_jobs:hasExitedMarker', function(zone)
 	TriggerServerEvent('esx_jobs:stopWork')
-	hintToDisplay = "no hint to display"
 	menuIsShowed = false
-	hintIsShowed = false
 	isInMarker = false
 end)
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
+RegisterNetEvent('esx:setJob', function(job)
 	onDuty = false
 	myPlate = {} -- loosing vehicle caution in case player changes job.
 	spawner = 0
@@ -230,7 +229,6 @@ function refreshBlips()
 
 	if ESX.PlayerData.job ~= nil then
 		for jobKey,jobValues in pairs(Config.Jobs) do
-
 			if jobKey == ESX.PlayerData.job.name then
 				for zoneKey,zoneValues in pairs(jobValues.Zones) do
 
@@ -245,11 +243,10 @@ function refreshBlips()
 						else
 							_Pos = zoneValues.Pos
 						end
-						print(_Pos.x)
 						local blip = AddBlipForCoord(_Pos.x, _Pos.y, _Pos.z)
 						SetBlipSprite  (blip, jobValues.BlipInfos.Sprite)
 						SetBlipDisplay (blip, 4)
-						SetBlipScale   (blip, 1.2)
+						SetBlipScale   (blip, 0.8)
 						SetBlipCategory(blip, 3)
 						SetBlipColour  (blip, jobValues.BlipInfos.Color)
 						SetBlipAsShortRange(blip, true)
@@ -266,13 +263,11 @@ function refreshBlips()
 end
 
 function spawnVehicle(spawnPoint, vehicle, vehicleCaution)
-	hintToDisplay = 'no hint to display'
 	hintIsShowed = false
 	TriggerServerEvent('esx_jobs:caution', 'take', vehicleCaution, spawnPoint, vehicle)
 end
 
-RegisterNetEvent('esx_jobs:spawnJobVehicle')
-AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
+RegisterNetEvent('esx_jobs:spawnJobVehicle',function(spawnPoint, vehicle)
 	local playerPed = PlayerPedId()
 
 	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.Heading, function(spawnedVehicle)
@@ -299,101 +294,79 @@ AddEventHandler('esx_jobs:spawnJobVehicle', function(spawnPoint, vehicle)
 	end)
 end)
 
--- Show top left hint
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if hintIsShowed then
-			ESX.ShowHelpNotification(hintToDisplay)
-		else
-			Wait(500)
-		end
-	end
-end)
-
 -- Display markers (only if on duty and the player's job ones)
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 		local zones = {}
-
-		if ESX.PlayerData.job ~= nil then
+		
+		if ESX.PlayerData.job then
 			for k,v in pairs(Config.Jobs) do
 				if ESX.PlayerData.job.name == k then
+					Sleep = 0
 					zones = v.Zones
 				end
 			end
 
 			local coords = GetEntityCoords(PlayerPedId())
 			for k,v in pairs(zones) do
-				if onDuty or v.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
+				if onDuty or v.Type == "cloakroom" then
 					if (v.Zone) then
 						TriggerEvent("izone:getZoneCenter", v.Zone, function(center)
 							if (not(center == nil)) then
 								if(v.Marker ~= -1 and #(coords - center) < Config.DrawDistance) then
+									Sleep = 0
 									DrawMarker(v.Marker, center.x, center.y, center.z - 1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 								end
 							end
 						end)
 					else
-						if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
+						local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+						if(v.Marker ~= -1 and #(coords - Pos) < Config.DrawDistance) then
+							Sleep = 0
 							DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 						end
 					end
 				end
 			end
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Display public markers
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(Config.PublicZones) do
 			if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
+				Sleep = 0
 				DrawMarker(v.Marker, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Activate public marker
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1500
 		local coords   = GetEntityCoords(PlayerPedId())
-		local position = nil
-		local zone     = nil
 
 		for k,v in pairs(Config.PublicZones) do
 			if #(coords - v.Pos) < v.Size.x/2 then
-				isInPublicMarker = true
-				position = v.Teleport
-				zone = v
-				break
-			else
-				isInPublicMarker = false
+				Sleep = 0
+				ESX.ShowHelpNotification(v.Hint)
+				hintIsShowed = true
+				if IsControlJustReleased(0, 38) then
+					ESX.Game.Teleport(PlayerPedId(), position)
+				end
 			end
 		end
 
-		if IsControlJustReleased(0, Keys['E']) and isInPublicMarker then
-			ESX.Game.Teleport(PlayerPedId(), position)
-			isInPublicMarker = false
-		end
-
-		-- hide or show top left zone hints
-		if isInPublicMarker then
-			hintToDisplay = zone.Hint
-			hintIsShowed = true
-		else
-			if not isInMarker then
-				hintToDisplay = "no hint to display"
-				hintIsShowed = false
-			end
-		end
+	Wait(Sleep)
 	end
 end)
 
@@ -401,20 +374,21 @@ end)
 CreateThread(function()
 	while true do
 
-		Wait(0)
+		local Sleep = 500
 
-		if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name ~= 'unemployed' then
+		if ESX.PlayerData.job and ESX.PlayerData.job.name ~= 'unemployed' then
 			local zones = nil
 			local job = nil
 
 			for k,v in pairs(Config.Jobs) do
 				if ESX.PlayerData.job.name == k then
+					Sleep = 0
 					job = v
 					zones = v.Zones
 				end
 			end
 
-			if zones ~= nil then
+			if zones then
 				local coords      = GetEntityCoords(PlayerPedId())
 				local currentZone = nil
 				local zone        = nil
@@ -425,6 +399,7 @@ CreateThread(function()
 					if v.Zone then
 						TriggerEvent("izone:isPlayerInZone", v.Zone, function(isIn)
 							if isIn then
+								Sleep = 0
 								isInMarker  = true
 								currentZone = k
 								zone        = v
@@ -439,7 +414,9 @@ CreateThread(function()
 						end
 					-- Else use radius defined from center
 					else
-						if #(coords - v.Pos) < v.Size.x then
+						local Pos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
+						if #(coords - Pos) < v.Size.x then
+							Sleep = 0
 							isInMarker  = true
 							currentZone = k
 							zone        = v
@@ -451,8 +428,8 @@ CreateThread(function()
 					
 				end
 
-				if IsControlJustReleased(0, Keys['E']) and not menuIsShowed and isInMarker then
-					if onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter" then
+				if IsControlJustReleased(0, 38) and not menuIsShowed and isInMarker then
+					if onDuty or zone.Type == "cloakroom" then
 						TriggerEvent('esx_jobs:action', job, zone, currentZone)
 					end
 				end
@@ -460,10 +437,10 @@ CreateThread(function()
 				-- hide or show top left zone hints
 				if isInMarker and not menuIsShowed then
 					hintIsShowed = true
-					if (onDuty or zone.Type == "cloakroom" or ESX.PlayerData.job.name == "reporter") and zone.Type ~= "vehdelete" then
+					if (onDuty or zone.Type == "cloakroom") and zone.Type ~= "vehdelete" then
 						hintToDisplay = zone.Hint
-						hintIsShowed = true
-					elseif zone.Type == "vehdelete" and (onDuty or ESX.PlayerData.job.name == "reporter") then
+						ESX.ShowHelpNotification(hintToDisplay)
+					elseif zone.Type == "vehdelete" and (onDuty) then
 						local playerPed = PlayerPedId()
 
 						if IsPedInAnyVehicle(playerPed, false) then
@@ -483,19 +460,16 @@ CreateThread(function()
 
 							else
 								hintToDisplay = _U('not_your_vehicle')
+								ESX.ShowHelpNotification(hintToDisplay)
 							end
 						else
 							hintToDisplay = _U('in_vehicle')
+							ESX.ShowHelpNotification(hintToDisplay)
 						end
 						hintIsShowed = true
 					elseif onDuty and zone.Spawner ~= spawner then
 						hintToDisplay = _U('wrong_point')
-						hintIsShowed = true
-					else
-						if not isInPublicMarker then
-							hintToDisplay = "no hint to display"
-							hintIsShowed = false
-						end
+						ESX.ShowHelpNotification(hintToDisplay)
 					end
 				end
 
@@ -509,20 +483,21 @@ CreateThread(function()
 				end
 			end
 		end
+	Wait(Sleep)
 	end
 end)
 
-CreateThread(function()
-	-- Slaughterer
-	RemoveIpl("CS1_02_cf_offmission")
-	RequestIpl("CS1_02_cf_onmission1")
-	RequestIpl("CS1_02_cf_onmission2")
-	RequestIpl("CS1_02_cf_onmission3")
-	RequestIpl("CS1_02_cf_onmission4")
-
-	-- Tailor
-	RequestIpl("id2_14_during_door")
-	RequestIpl("id2_14_during1")
-end)
-
+if Config.RequestIPL then
+	CreateThread(function()
+		-- Slaughterer
+		RemoveIpl("CS1_02_cf_offmission")
+		RequestIpl("CS1_02_cf_onmission1")
+		RequestIpl("CS1_02_cf_onmission2")
+		RequestIpl("CS1_02_cf_onmission3")
+		RequestIpl("CS1_02_cf_onmission4")
+		-- Tailor
+		RequestIpl("id2_14_during_door")
+		RequestIpl("id2_14_during1")
+	end)
+end
 if ESX.PlayerLoaded then refreshBlips() end

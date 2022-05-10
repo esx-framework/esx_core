@@ -1,96 +1,112 @@
-@font-face {
-	font-family: bankgothic;
-	src: url('../fonts/bankgothic.ttf');
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
 
-@font-face {
-	font-family: pcdown;
-	src: url('../fonts/pdown.ttf');
-}
+::-webkit-scrollbar {
+	display: none;
+  }
 
 .menu {
-	font-family: 'PT Sans Narrow', sans-serif;
-	font-size: 22px;
-	min-width: 400px;
+	font-family: 'Poppins', sans-serif;
+	min-width: 350px;
 	color: #fff;
-	box-shadow: 0px 0px 50px 0px #000;
 	position: absolute;
+	padding: auto;
+	background: rgba(33, 33, 33, 0.0);
+	text-allign: center;
+}
+
+.head {
+	display: block;
+	text-align: center;
+	overflow: hidden;
+	padding-bottom: 3px;
+	text-allign: center;
+	margin-bottom: 5px;
+	white-space: nowrap;
+	background: rgba(10, 10, 10, 0.9);
+}
+
+.menu .head {
+	text-allign: center;
+	height: 28px;
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 20px;
+}
+
+.menu .menu-items {
+	max-height: 450px;
+	overflow-y: auto;
+	font-weight: 550;
+}
+
+.menu-items {
+	margin-bottom: 2px;
+}
+
+.menu .menu-items .menu-item {
+	display: block;
+	padding: 7px;
+	font-size: 13px;
+	height: 16px;
+	text-indent: 5px;
+	margin-top: 5px;
+	background: rgba(40, 40, 40, 0.8);
+	color: rgb(202, 202, 202);
+	border-radius: 5px;
+	margin-bottom: 6px;
+}
+
+.menu .menu-items .menu-item.selected {
+	background: rgba(31, 31, 31, 0.525);
+	border: 1px solid rgba(55, 55, 55, 0.9);
+	background: rgba(20, 20, 20, 0.9);
+	color: rgba(243, 243, 243);
+	letter-spacing: 0.2px;
+	font-weight: 500;
 }
 
 .menu.align-left {
-	left: 40;
+	left: 0;
 	top: 50%;
-	transform: translate(0, -50%);
 }
 
 .menu.align-top-left {
 	left: 40;
-	top: 40;
+	top: 0;
 }
 
 .menu.align-top {
 	left: 50%;
-	top: 40;
-	transform: translate(-50%, 0);
+	top: 0;
 }
 
 .menu.align-top-right {
 	right: 10;
-	top: 40;
+	top: 0;
 }
 
 .menu.align-right {
-	right: 40;
+	right: 0;
 	top: 50%;
-	transform: translate(0, -50%);
 }
 
 .menu.align-bottom-right {
 	right: 40;
-	bottom: 40;
+	bottom: 0;
 }
 
 .menu.align-bottom {
 	left: 50%;
-	bottom: 40;
-	transform: translate(-50%, 0);
+	bottom: 0;
+	transform: translate(0, -50%);
 }
 
 .menu.align-bottom-left {
 	left: 40;
-	bottom: 40;
+	bottom: 0;
 }
 
 .menu.align-center {
-	left: 50%;
+  	left: 50%;
 	top: 50%;
-	transform: translate(-50%, -50%);
-}
-
-.menu .head {
-	background-color: #4682B4;
-	text-align: center;
-	height: 40px;
-	line-height: 40px;
-}
-
-.menu .menu-items {
-	max-height: 600px;
-	overflow-y: auto;
-}
-
-.menu .menu-items .menu-item {
-	height: 40px;
-	display: block;
-	background-color: rgba(40, 40, 40, 1);
-	line-height: 32px;
-	color: #ffffff;
-	padding: 2px;
-	text-align: center;
-}
-
-.menu .menu-items .menu-item.selected {
-	background-color: rgba(20, 20, 20, 1);
-	border-top: 2px solid 	#e76767;
-	border-bottom: 2px solid		#e76767;
 }

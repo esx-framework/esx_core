@@ -20,9 +20,9 @@ Config.Jobs.lumberjack = {
 
 		CloakRoom = {
 			Pos = {x = 1200.63, y = -1276.87, z = 34.38},
-			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
-			Marker = 1,
+			Size  = {x = 0.8, y = 0.5, z = 1.0},
+			Color = {r = 50, g = 200, b = 50},
+			Marker= 20,
 			Blip = true,
 			Name = _U('lj_locker_room'),
 			Type = 'cloakroom',
@@ -32,7 +32,7 @@ Config.Jobs.lumberjack = {
 		Wood = {
 			Pos = {x = -534.32, y = 5373.79, z = 69.50},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
 			Name = _U('lj_mapblip'),
@@ -44,7 +44,7 @@ Config.Jobs.lumberjack = {
 					time = 3,
 					max = 20,
 					add = 1,
-					remove = 1,
+					remove = 0,
 					requires = 'nothing',
 					requires_name = 'Nothing',
 					drop = 100
@@ -56,7 +56,7 @@ Config.Jobs.lumberjack = {
 		CuttedWood = {
 			Pos = {x = -552.21, y = 5326.90, z = 72.59},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('lj_woodcutting'),
@@ -80,7 +80,7 @@ Config.Jobs.lumberjack = {
 		Planks = {
 			Pos = {x = -501.38, y = 5280.53, z = 79.61},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('lj_board'),
@@ -104,7 +104,7 @@ Config.Jobs.lumberjack = {
 		VehicleSpawner = {
 			Pos = {x = 1191.96, y = -1261.77, z = 34.17},
 			Size = {x = 3.0, y = 3.0, z = 1.0},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
 			Name = _U('spawn_veh'),
@@ -142,7 +142,7 @@ Config.Jobs.lumberjack = {
 
 		Delivery = {
 			Pos = {x = 1201.35, y = -1327.51, z = 34.22},
-			Color = {r = 204, g = 204, b = 0},
+			Color = {r = 50, g = 200, b = 50},
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,

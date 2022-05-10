@@ -77,11 +77,29 @@ function ESX.SetPlayerData(key, val)
 	end
 end
 
-function ESX.ShowNotification(msg)
-	BeginTextCommandThefeedPost('STRING')
-	AddTextComponentSubstringPlayerName(msg)
-	EndTextCommandThefeedPostTicker(0,1)
+function ESX.Progressbar(message,length, Options)
+    exports["esx_progressbar"]:Progressbar(message,length, Options)
 end
+
+
+function ESX.ShowNotification(message, type, length)
+    if Config.NativeNotify then 
+     BeginTextCommandThefeedPost('STRING')
+    AddTextComponentSubstringPlayerName(message)
+    EndTextCommandThefeedPostTicker(0,1)
+    else 
+      exports["esx_notify"]:Notify(type, length, message)
+    end
+end
+
+function ESX.TextUI(message, type)
+	exports["esx_textui"]:TextUI(message, type)
+end
+
+function ESX.HideUI()
+	exports["esx_textui"]:HideUI()
+end
+
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
@@ -573,6 +591,19 @@ function ESX.Game.GetVehicleProperties(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
+		local customPrimaryColor = nil
+		if hasCustomPrimaryColor then
+			local r, g, b = GetVehicleCustomPrimaryColour(vehicle)
+			customPrimaryColor = { r, g, b }
+		end
+		
+		local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
+		local customSecondaryColor = nil
+		if hasCustomSecondaryColor then
+			local r, g, b = GetVehicleCustomSecondaryColour(vehicle)
+			customSecondaryColor = { r, g, b }
+		end
 		local extras = {}
 
 		for extraId=0, 12 do
@@ -582,9 +613,45 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			end
 		end
 
+		local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
+		local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
+
+		local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
+				['2'] = {0, 4}, -- Bike and cycle.
+				['3'] = {0, 1, 4, 5}, -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+				['4'] = {0, 1, 4, 5}, -- Vehicle with 4 wheels.
+				['6'] = {0, 1, 2, 3, 4, 5}, -- Vehicle with 6 wheels.
+		}
+
+		for tyre,idx in pairs(TyresIndex[numWheels]) do
+				if IsVehicleTyreBurst(vehicle, idx, false) then
+						tyreBurst[tostring(idx)] = true
+				else
+						tyreBurst[tostring(idx)] = false
+				end
+		end
+
+		for windowId = 0, 7 do -- 13
+				if not IsVehicleWindowIntact(vehicle, windowId) then 
+						windowsBroken[tostring(windowId)] = true
+				else
+						windowsBroken[tostring(windowId)] = false
+				end
+		end
+
+		for doorsId = 0, GetNumberOfVehicleDoors(vehicle) do
+				if IsVehicleDoorDamaged(vehicle, doorsId) then 
+						doorsBroken[tostring(doorsId)] = true
+				else
+						doorsBroken[tostring(doorsId)] = false
+				end
+		end
+
 		return {
 			model             = GetEntityModel(vehicle),
-
+			doorsBroken       = doorsBroken,
+			windowsBroken     = windowsBroken,
+			tyreBurst         = tyreBurst,		
 			plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
 			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
@@ -596,6 +663,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
 			color1            = colorPrimary,
 			color2            = colorSecondary,
+			customPrimaryColor = customPrimaryColor,
+			customSecondaryColor = customSecondaryColor,
 
 			pearlescentColor  = pearlescentColor,
 			wheelColor        = wheelColor,
@@ -662,8 +731,9 @@ function ESX.Game.GetVehicleProperties(vehicle)
 			modAerials        = GetVehicleMod(vehicle, 43),
 			modTrimB          = GetVehicleMod(vehicle, 44),
 			modTank           = GetVehicleMod(vehicle, 45),
-			modWindows        = GetVehicleMod(vehicle, 46),
-			modLivery         = GetVehicleLivery(vehicle)
+			modDoorR          = GetVehicleMod(vehicle, 47),
+			modLivery         = GetVehicleLivery(vehicle),
+			modLightbar       = GetVehicleMod(vehicle, 49),
 		}
 	else
 		return
@@ -683,6 +753,8 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 		if props.tankHealth then SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0) end
 		if props.fuelLevel then SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0) end
 		if props.dirtLevel then SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0) end
+		if props.customPrimaryColor then SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2], props.customPrimaryColor[3]) end 
+		if props.customSecondaryColor then SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2], props.customSecondaryColor[3]) end
 		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
 		if props.color2 then SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2) end
 		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end
@@ -756,8 +828,25 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 		if props.modWindows then SetVehicleMod(vehicle, 46, props.modWindows, false) end
 
 		if props.modLivery then
-			SetVehicleMod(vehicle, 48, props.modLivery, false)
 			SetVehicleLivery(vehicle, props.modLivery)
+		end
+
+		if props.windowsBroken then
+			for k, v in pairs(props.windowsBroken) do
+					if v then SmashVehicleWindow(vehicle, tonumber(k)) end
+			end
+		end
+	
+		if props.doorsBroken then
+			for k, v in pairs(props.doorsBroken) do
+				if v then SetVehicleDoorBroken(vehicle, tonumber(k), true) end
+			end
+		end
+		
+		if props.tyreBurst then
+			for k, v in pairs(props.tyreBurst) do
+				if v then SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0) end
+			end
 		end
 	end
 end
@@ -1042,8 +1131,8 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
-	ESX.ShowNotification(msg)
+AddEventHandler('esx:showNotification', function(msg, type, length)
+	ESX.ShowNotification(msg, type, length)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')

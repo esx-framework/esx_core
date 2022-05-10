@@ -444,7 +444,7 @@ end
 
 function checkDate(str)
 	if string.match(str, '(%d%d)/(%d%d)/(%d%d%d%d)') ~= nil then
-		local m, d, y = string.match(str, '(%d+)/(%d+)/(%d+)')
+		local d, m, y = string.match(str, '(%d+)/(%d+)/(%d+)')
 		m = tonumber(m)
 		d = tonumber(d)
 		y = tonumber(y)

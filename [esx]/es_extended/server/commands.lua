@@ -153,18 +153,18 @@ ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showErro
 end, true)
 
 ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, args, showError)
-print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label .. "^0")
+	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label .. "^0")
 end, true)
 
 ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
 	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."^0")
-	end, true)
+end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
 	local coords = GetEntityCoords(GetPlayerPed(xPlayer.source), false)
-  local heading = GetEntityHeading(GetPlayerPed(xPlayer.source))
+	local heading = GetEntityHeading(GetPlayerPed(xPlayer.source))
 	print("Coords - Vector3: ^5".. vector3(coords.x,coords.y,coords.z).. "^0")
 	print("Coords - Vector4: ^5".. vector4(coords.x, coords.y, coords.z, heading) .. "^0")
 end, true)
@@ -176,35 +176,35 @@ ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
 end, true)
 
 ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
-		local targetCoords = args.playerId.getCoords()
-		xPlayer.setCoords(targetCoords)
-end, true, {help = _U('goto'), validate = true, arguments = {
+	local targetCoords = args.playerId.getCoords()
+	xPlayer.setCoords(targetCoords)
+end, true, {help = _U('command_goto'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
-		local playerCoords = xPlayer.getCoords()
-		args.playerId.setCoords(playerCoords)
-end, true, {help = _U('bring'), validate = true, arguments = {
+	local playerCoords = xPlayer.getCoords()
+	args.playerId.setCoords(playerCoords)
+end, true, {help = _U('command_bring'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('kill', "admin", function(xPlayer, args, showError)
 	args.playerId.triggerEvent("esx:killPlayer")
-end, true, {help = _U('kill'), validate = true, arguments = {
-{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+end, true, {help = _U('command_kill'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('freeze', "admin", function(xPlayer, args, showError)
 	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
-end, true, {help = _U('kill'), validate = true, arguments = {
-{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+end, true, {help = _U('command_freeze'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args, showError)
 	args.playerId.triggerEvent('esx:freezePlayer', "unfreeze")
-end, true, {help = _U('kill'), validate = true, arguments = {
-{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
+end, true, {help = _U('command_unfreeze'), validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
 ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
@@ -212,10 +212,9 @@ ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
 end, false)
 
 ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
-	local xAll = ESX.GetPlayers()
-	print("^5"..#xAll.." ^2online player(s)^0")
-	for i=1, #xAll, 1 do
-		local xPlayer = ESX.GetPlayerFromId(xAll[i])
+	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
+	print("^5"..#xPlayers.." ^2online player(s)^0")
+	for _, xPlayer in pairs(xPlayers) do
 		print("^1[ ^2ID : ^5"..xPlayer.source.." ^0| ^2Name : ^5"..xPlayer.getName().." ^0 | ^2Group : ^5"..xPlayer.getGroup().." ^0 | ^2Identifier : ^5".. xPlayer.identifier .."^1]^0\n")
 	end
 end, true)

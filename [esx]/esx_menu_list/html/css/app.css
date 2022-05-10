@@ -12,9 +12,8 @@
 	font-family: bankgothic;
 	position: absolute;
 	left: 50%;
-	top: 50%;
+	top: 40%;
 	transform: translate(-50%, -50%);
-	box-shadow: 0px 0px 50px 0px #000;
 	overflow-y: auto;
 	max-height: 90%;
 }
@@ -24,29 +23,34 @@
 }
 
 .menu>table {
-	border: 1px transparent;
-	border-spacing: 0;
+	border-collapse: separate;
+	border-spacing: 0 5px;
 	min-width: 400px;
-	background-color: #FFF;
+	background: rgba(33, 33, 33, 0.0);
 }
 
 .menu>table>thead {
-	background-color: #506be6;
+	background: rgba(10, 10, 10, 0.9);
 	text-align: center;
-	height: 40px;
-	line-height: 40px;
+	height: 20px;
+	line-height: 20px;
+	margin-bottom: 20px;
 	color: #fff;
 }
 
 .menu td {
+	
 	text-align: center;
 	padding: 8px;
+	margin: 20px;
 }
 
 .menu tbody tr:nth-child(even) {
-	background: #CCC
+	color: #fff;
+	background: rgba(40, 40, 40, 0.8);
 }
 
 .menu tbody tr:nth-child(odd) {
-	background: #FFF
+	color: #fff;
+	background: rgba(40, 40, 40, 0.8);
 }

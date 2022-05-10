@@ -1,16 +1,9 @@
-@font-face {
-	font-family: bankgothic;
-	src: url('../fonts/bankgothic.ttf');
-}
 
-@font-face {
-	font-family: pcdown;
-	src: url('../fonts/pdown.ttf');
-}
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
 #controls {
-	font-family: 'IBM Plex Sans', sans-serif;
-	font-size: 5em;
+	font-family: montserrat;
+	font-size: 3em;
 	color: #FFF;
 	position: absolute;
 	bottom: 40;
@@ -22,16 +15,25 @@
 }
 
 .dialog {
-	font-family: 'PT Sans Narrow', sans-serif;
-	background-color: rgba(40, 40, 40, 1);
-	color: #fff;
+	font-family: montserrat;
+	background: rgba(33, 33, 33, 0.8);
+  color: #fff;
 	position: absolute;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 	overflow: hidden;
 	top: 50%;
 	left: 50%;
-	width: 640px;
-	height: 124px;
+	width: 600px;
+	height: 152px;
 	transform: translate(-50%, -50%);
+}
+
+.head {
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	color: #fff;
 }
 
 .dialog.big {
@@ -39,13 +41,12 @@
 }
 
 .dialog .head {
-	background-color: #4682B4;
+	background: rgba(25, 25, 25, 0.9);
 	text-align: center;
 	height: 40px;
-	font-size: 22px;
 }
 
-.dialog .head span:before {
+.dialog .head span::before {
 	content: "";
 	display: inline-block;
 	height: 100%;
@@ -53,39 +54,79 @@
 }
 
 .dialog input[type="text"] {
-	width: 100%;
-	height: 42px;
-	color: #fff;
-	font-size: 20px;
-	background-color: rgba(20, 20, 20, 1);
-	border-bottom: 2px solid 	#e76767;
+	width: 60%;
+	height: 32px;
+  outline: 0;
+  background: none;
+  text-align: center;
+  margin-top: 26px;
+  margin-left: 125px;
+	font-size: large;
+  transition: all 0.2s ease-in-out;
+  color: white;
+  border: 0.5px solid #ffffff3b;
+  border-radius: 0px;
+}
+
+.dialog input[type="text"]:active, .dialog input[type="text"]:hover {
+  color: white;
 }
 
 .dialog textarea {
 	width: 100%;
-	height: 138px;
-	color: #fff;
-	font-size: 20px;
-	background-color: rgba(20, 20, 20, 1);
-	border-bottom: 2px solid 	#e76767;
+	height: 128px;
 }
 
 .dialog button[name="submit"] {
-	width: 75%;
-	color: #fff;
-	height: 42px;
-	font-size: 22px;
-	border: 0px solid 	#e76767;
-	border-right: 1px solid 	#e76767;
-	background-color: rgba(40, 40, 40, 1)
+	width: 17.6%;
+	height: 32px;
+  margin-left: 160px;
+  font-weight: 300;
+  color: rgb(37, 34, 53);
+	border-radius: 10px;
+  text-transform: uppercase;
+  background: rgb(50, 79, 208);
+  outline: 0;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.dialog button {
+  z-index: 9999;
+	transform: translate(-0%, 50%);
 }
 
 .dialog button[name="cancel"] {
-	width: 25%;
-	color: rgb(236, 75, 75);
-	height: 42px;
-	font-size: 20px;
-	border: 0px solid 	#e76767;
-	border-left: 1px solid 	#e76767;
-	background-color: rgba(40, 40, 40, 1)
+	width: 17.6%;
+	height: 32px;
+  margin-left: 60px;
+  border: none;
+  text-transform: uppercase;
+  font-weight: 200;
+	border-radius: 10px;
+  color: rgb(53, 34, 34);
+  outline: 0;
+  background: #c74545;
+  transition: all 0.2s ease-in-out;
+}
+
+.dialog button[name="cancel"]:hover {
+  letter-spacing: 1px;
+  color: #ffffff;
+  width: 17.6%;
+}
+
+.dialog button[name="submit"]:hover {
+  letter-spacing: 1px;
+  color: white;
+  width: 17.6%;
+}
+
+.head::before,
+.head::after {
+	content: "";
+	flex-grow: 1;
+	background: #00e1ff;
+	height: 2px;
+	margin: 0px 3px;
 }

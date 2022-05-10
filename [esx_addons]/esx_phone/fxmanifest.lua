@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Phone'
 
-version '1.5.0'
+version '1.7.0'
 
 shared_script '@es_extended/imports.lua'
 
@@ -12,28 +12,14 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'config.lua',
 	'@es_extended/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/it.lua',
+	'locales/*.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'@es_extended/locale.lua',
 	'config.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/it.lua',
+	'locales/*.lua',
 	'client/main.lua'
 }
 

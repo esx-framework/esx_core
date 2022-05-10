@@ -22,7 +22,7 @@ $(function() {
 			const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(dateCheck)
 			const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(dateCheck)
 			
-			var formattedDate = `${mo}/${da}/${ye}`;
+			var formattedDate = `${da}/${mo}/${ye}`;
 
 			$.post('http://esx_identity/register', JSON.stringify({
 				firstname: $("#firstname").val(),
