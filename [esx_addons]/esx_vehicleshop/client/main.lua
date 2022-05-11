@@ -22,24 +22,32 @@ function getVehicles()
 end
 
 function PlayerManagement()
-	if Config.EnablePlayerManagement then
-		if ESX.PlayerData.job.name == 'cardealer' then
-			Config.Zones.ShopEntering.Type = 1
-
-			if ESX.PlayerData.job.grade_name == 'boss' then
-				Config.Zones.BossActions.Type = 1
-			end
-
-		else
-			Config.Zones.ShopEntering.Type = -1
-			Config.Zones.BossActions.Type  = -1
-			Config.Zones.ResellVehicle.Type = -1
-		end
+	if not Config.EnablePlayerManagement then
+		return
 	end
+
+	if ESX.PlayerData.job.name == 'cardealer' then
+		Config.Zones.ShopEntering.Type = 1
+
+		if ESX.PlayerData.job.grade_name == 'boss' then
+			Config.Zones.BossActions.Type = 1
+		end
+		return
+	end
+
+	Config.Zones.ShopEntering.Type = -1
+	Config.Zones.BossActions.Type  = -1
+	Config.Zones.ResellVehicle.Type = -1
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+CreateThread(function()
+	while not ESX.IsPlayerLoaded() do 
+		Wait(250)
+	end
+
+	local xPlayer = ESX.GetPlayerData()
+
+
 	ESX.PlayerData = xPlayer
 
 	PlayerManagement()
@@ -56,8 +64,11 @@ AddEventHandler('esx_vehicleshop:sendVehicles', function(vehicles)
 	Vehicles = vehicles
 end)
 
-
-RegisterNetEvent('esx:setJob') AddEventHandler('esx:setJob', PlayerManagement)
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function()
+	PlayerManagement()
+	getVehicles()
+end)
 
 function DeleteDisplayVehicleInsideShop()
 	local attempt = 0
@@ -81,7 +92,7 @@ function ReturnVehicleProvider()
 
 		for k,v in ipairs(vehicles) do
 			local returnPrice = ESX.Math.Round(v.price * 0.75)
-			local vehicleLabel = getVehicleFromModel(v.vehicle).label
+			local vehicleLabel = getVehicleFromModel(v.vehicle).name
 
 			table.insert(elements, {
 				label = ('%s [<span style="color:orange;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(returnPrice))),
@@ -440,7 +451,7 @@ function OpenPopVehicleMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleFromModel(v.vehicle).label
+			local vehicleLabel = getVehicleFromModel(v.vehicle).name
 
 			table.insert(elements, {
 				label = ('%s [MSRP <span style="color:green;">%s</span>]'):format(vehicleLabel, _U('generic_shopitem', ESX.Math.GroupDigits(v.price))),
@@ -477,7 +488,7 @@ function OpenRentedVehiclesMenu()
 		local elements = {}
 
 		for k,v in ipairs(vehicles) do
-			local vehicleLabel = getVehicleFromModel(v.name).label
+			local vehicleLabel = getVehicleFromModel(v.name).name
 
 			table.insert(elements, {
 				label = ('%s: %s - <span style="color:orange;">%s</span>'):format(v.playerName, vehicleLabel, v.plate),
