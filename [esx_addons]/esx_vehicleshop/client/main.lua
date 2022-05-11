@@ -41,6 +41,8 @@ function PlayerManagement()
 end
 
 CreateThread(function()
+	getVehicles()
+
 	if not ESX.IsPlayerLoaded() then 
 		return
 	end
@@ -49,7 +51,6 @@ CreateThread(function()
 	ESX.PlayerData = xPlayer
 
 	PlayerManagement()
-	getVehicles()
 end)
 
 RegisterNetEvent("esx:playerLoaded", function(xPlayer)
