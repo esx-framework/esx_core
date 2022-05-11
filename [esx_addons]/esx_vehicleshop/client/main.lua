@@ -40,19 +40,6 @@ function PlayerManagement()
 	Config.Zones.ResellVehicle.Type = -1
 end
 
-CreateThread(function()
-	getVehicles()
-
-	if not ESX.IsPlayerLoaded() then 
-		return
-	end
-
-	local xPlayer = ESX.GetPlayerData()
-	ESX.PlayerData = xPlayer
-
-	PlayerManagement()
-end)
-
 RegisterNetEvent("esx:playerLoaded", function(xPlayer)
 	ESX.PlayerData = xPlayer
 
@@ -872,3 +859,4 @@ CreateThread(function()
 end)
 
 if ESX.PlayerLoaded then PlayerManagement() end
+getVehicles()
