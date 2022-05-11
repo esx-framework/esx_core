@@ -41,17 +41,21 @@ function PlayerManagement()
 end
 
 CreateThread(function()
-	while not ESX.IsPlayerLoaded() do 
-		Wait(250)
+	if not ESX.IsPlayerLoaded() then 
+		return
 	end
 
 	local xPlayer = ESX.GetPlayerData()
-
-
 	ESX.PlayerData = xPlayer
 
 	PlayerManagement()
 	getVehicles()
+end)
+
+RegisterNetEvent("esx:playerLoaded", function(xPlayer)
+	ESX.PlayerData = xPlayer
+
+	PlayerManagement()
 end)
 
 RegisterNetEvent('esx_vehicleshop:sendCategories')
