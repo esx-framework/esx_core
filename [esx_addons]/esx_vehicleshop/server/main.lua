@@ -26,14 +26,6 @@ end)
 function SQLVehiclesAndCategories()
 	categories = MySQL.query.await('SELECT * FROM vehicle_categories')
 	vehicles = MySQL.query.await('SELECT vehicles.*, vehicle_categories.label AS categoryLabel FROM vehicles, vehicle_categories WHERE vehicles.category = vehicle_categories.name')
-
-	GetVehiclesAndCategories(categories, vehicles)
-end
-
-function GetVehiclesAndCategories(categories, vehicles)
-	-- send information after db has loaded, making sure everyone gets vehicle information
-	TriggerClientEvent('esx_vehicleshop:sendCategories', -1, categories)
-	TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, vehicles)
 end
 
 function getVehicleFromModel(model)
