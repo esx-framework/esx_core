@@ -25,7 +25,7 @@ end)
 
 function SQLVehiclesAndCategories()
 	categories = MySQL.query.await('SELECT * FROM vehicle_categories')
-	vehicles = MySQL.query.await('SELECT vehicles.*, vehicle_categories.label AS categoryLabel FROM vehicles, vehicle_categories WHERE vehicles.category = vehicle_categories.name')
+	vehicles = MySQL.query.await('SELECT vehicles.*, vehicle_categories.label AS categoryLabel FROM vehicles JOIN vehicle_categories ON vehicles.category = vehicle_categories.name')
 end
 
 function getVehicleFromModel(model)
