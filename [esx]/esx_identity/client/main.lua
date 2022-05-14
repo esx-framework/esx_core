@@ -26,7 +26,7 @@ if not Config.UseDeferrals then
 		SetNuiFocus(state, state)
 		guiEnabled = state
 		while not ready do
-			Citizen.Wait(500)
+			Wait(500)
 		end
 		SendNUIMessage({
 			type = "enableui",
