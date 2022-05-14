@@ -1,0 +1,18 @@
+Locales['si'] = {
+  ['actions'] = 'actions',
+  ['amount'] = 'znesek',
+  ["balance"] = "balance",
+  ['bank'] = 'bank',
+  ['bill_amount'] = 'znesek računa',
+  ["billing"] = "billing",
+  ["customer"] = "customer",
+  ['customers'] = 'customers',
+  ["deposit"] = "deposit",
+  ["invalid_amount"] = "neveljavni znesek",
+  ['no_player_nearby'] = 'v bližini ni igralca',
+  ['press_input_context_to_open_menu'] = 'pritisnite ~INPUT_CONTEXT~ za odprtje menija banke ~g~Bank~s~.',
+  ['withdraw'] = 'umakni',
+  ['boss_actions'] = 'boss Actions',
+  ['phone_receive'] = 'bančna stranka',
+  ['phone_label'] = 'bank',
+}
