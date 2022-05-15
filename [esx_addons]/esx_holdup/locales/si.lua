@@ -1,7 +1,7 @@
 Locales['si'] = {
   ['shop_robbery'] = 'rop trgovine',
   ['press_to_rob'] = 'pritisnite ~INPUT_CONTEXT~ za ~o~rob~s~ ~b~%s~s~',
-  ['robbery_timer'] = 'rop trgovine: ~r~%s~s~ sekundah",
+  ['robbery_timer'] = 'rop trgovine: ~r~%s~s~ sekundah',
   ['recently_robbed'] = 'ta trgovina je bila nedavno oropana. Počakajte ~y~%s~s~ sekund, da boste lahko ponovno ropali',
   ['rob_in_prog'] = '~r~robljenje poteka v ~b~%s~s~',
   ['started_to_rob'] = 'začel si ropati ~y~%s~s~',
