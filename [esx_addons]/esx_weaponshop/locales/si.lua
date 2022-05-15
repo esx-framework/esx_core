@@ -1,5 +1,5 @@
 Locales ['si'] = {
-  ['buy_license'] = "kupiti dovoljenje za orožje?',
+  ['buy_license'] = 'kupiti dovoljenje za orožje?',
   ['yes'] = '%s',
   ['no'] = 'ne',
   ['weapon_bought'] = 'kupljeno za $%s',
