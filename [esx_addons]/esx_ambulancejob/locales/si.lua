@@ -69,7 +69,7 @@ Locales['si'] = {
   ['respawn_bleedout_prompt'] = "Držite [E], da se ponovno poženete",
   ['respawn_bleedout_fine'] = 'Držite [E], da se ponovno pojavite za $%s',
   ['respawn_bleedout_fine_msg'] = 'Plačali ste $%s za ponovni zagon.',
-  ['distress_send'] = 'Pritisnite [~b~[E]za pošiljanje signala za pomoč,
+  ['distress_send'] = 'Pritisnite [~b~[E]za pošiljanje signala za pomoč',
   ['distress_sent'] = 'Signal v stiski je bil poslan razpoložljivim enotam!',
   -- Oživitev
   ['revive_help'] = 'oživi igralca',
