@@ -56,6 +56,7 @@ CreateThread(function()
 			if #(coords - Pos) < 2.0 then
 				Sleep = 0
 				isInbankingMarker, canSleep = true, false
+				ESX.TextUI(_U('press_e_banking'))
 				DrawMarker(20, Pos.x, Pos.y, Pos.z,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 187, 255, 0, 255, false, true, 2, nil, nil, false)
 				break
 			end
@@ -71,6 +72,7 @@ CreateThread(function()
 			SetNuiFocus(false)
 			menuIsShowed = false
 			canSleep = false
+			ESX.HideUI()
 
 			SendNUIMessage({
 				hideAll = true
@@ -86,8 +88,6 @@ CreateThread(function()
 		local Sleep = 1500
 		if isInbankingMarker and not menuIsShowed then
 			Sleep = 0
-			ESX.TextUI(_U('press_e_banking'))
-
 			if IsControlJustReleased(0, 38) and IsPedOnFoot(PlayerPedId()) then
 				menuIsShowed = true
 				getTransactionHistory()
