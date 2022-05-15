@@ -55,7 +55,7 @@ Locales['si'] = {
   ['confirm_yes'] = 'yes',
   -- storitev
   ['service_max'] = 'ne morete vstopiti v službo, največje število častnikov v službi: %s/%s',
-  ['service_not'] = 'niste vstopili v službo! Najprej se boste morali zamenjati.",
+  ['service_not'] = 'niste vstopili v službo! Najprej se boste morali zamenjati.',
   ['service_anonunce'] = 'informacije o službi',
   ['service_in'] = 'vstopili ste v storitev, dobrodošli!',
   ['service_in_announce'] = 'operater ~y~%s~s~ je vstopil v storitev!',
