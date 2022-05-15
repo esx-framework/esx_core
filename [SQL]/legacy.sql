@@ -1186,3 +1186,14 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('banker',3,'trader','Trader',40,'{}','{}'),
 	('banker',4,'boss','Patron',0,'{}','{}')
 ;
+
+--
+-- ESX Banking
+--
+
+CREATE TABLE IF NOT EXISTS `banking` (
+  `identifier` varchar(50) DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `amount` int(64) DEFAULT NULL,
+  `time` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
