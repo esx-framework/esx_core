@@ -259,7 +259,11 @@ function ESX.RegisterUsableItem(item, cb)
 end
 
 function ESX.UseItem(source, item, data)
-	Core.UsableItemsCallbacks[item](source, item, data)
+	if ESX.Items[item] then
+		Core.UsableItemsCallbacks[item](source, item, data)
+	else
+		print('Item "' .. item .. '" was called(requested), but does not exist.')
+	end
 end
 
 function ESX.GetItemLabel(item)
