@@ -262,7 +262,7 @@ function ESX.UseItem(source, item, data)
 	if ESX.Items[item] then
 		Core.UsableItemsCallbacks[item](source, item, data)
 	else
-		print('Item "' .. item .. '" was called(requested), but does not exist.')
+		print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(item))
 	end
 end
 
