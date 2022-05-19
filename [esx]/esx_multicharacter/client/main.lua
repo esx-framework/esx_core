@@ -272,7 +272,7 @@ if ESX.GetConfig().Multichar then
 		if isNew or not skin or #skin == 1 then
 			local finished = false
 			local sex = skin.sex or 0
-			if sex == 0 then model = GetHashKey("mp_m_freemode_01") else model = GetHashKey("mp_m_freemode_01") end
+			if sex == 0 then model = GetHashKey("mp_m_freemode_01") else model = GetHashKey("mp_f_freemode_01") end
 			RequestModel(model)
 			while not HasModelLoaded(model) do
 				RequestModel(model)
