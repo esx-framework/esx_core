@@ -12,3 +12,76 @@ body {
     color: var(--color);
     font-family: sans-serif;
 }
+
+.notify {
+    display: none;
+    flex: auto;
+    border-left: 5px solid rgb(34, 132, 189);
+    position:absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 5%;
+    min-width:15%;
+    width:fit-content; 
+    height:50px;
+    background: rgba(5,5, 5, 0.9);
+    border-radius: 5px;
+    animation: growDown 300ms ease-in-out;
+    padding-right: 10px;
+}
+.success {
+    border-left: 5px solid rgb(33, 223, 15) !important; 
+}
+.error {
+    border-left: 5px solid rgb(231, 35, 28) !important; 
+}
+
+.icon {
+    border: 0;
+}
+
+.innerText {
+    flex: auto;
+    margin-top: 15px;
+    width:100%;
+}
+
+.innerText{
+    margin-left: 10px;
+}
+
+p {
+    flex: auto;
+    word-wrap: break-word;
+    margin-left: 40px; 
+    margin-top: 17px;
+}
+
+.innerText .icon {
+    float: left;
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+@keyframes growDown {
+    0% {
+        transform: scaleY(0);
+    }
+    80% {
+        transform: scaleY(1.1)
+    }
+    100% {
+        transform: scaleY(1)
+    }
+}
+
+.prog {
+    flex: auto;
+    position:absolute;
+    margin: 0 auto;
+    left: 0;
+    bottom: 0;
+    background: rgb(75, 75, 75);
+    height: 4px;
+}
