@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.7.0",
-	"changelog": "\n- Add ESX Mulitcharacter"
+	"commit" : "1.7.5",
+	"changelog": "\n- Add PlayerOveride System, ESX Notify, ESX Progressbar and ESX TextUI"
 }

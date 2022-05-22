@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX License'
 
-version '1.7.0'
+version '1.7.5'
 
 server_scripts {
 	'@es_extended/imports.lua',

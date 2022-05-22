@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Whitelist'
 
-version '1.7.0'
+version '1.7.5'
 
 server_only 'yes'
 
