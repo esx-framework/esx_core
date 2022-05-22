@@ -20,6 +20,7 @@ server_scripts {
 
 	'server/common.lua',
 	'server/classes/player.lua',
+	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/onesync.lua',
 	'server/paycheck.lua',
