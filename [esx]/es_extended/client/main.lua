@@ -75,6 +75,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			grade_label = gradeLabel
 		})
 	end
+
+	FreezeEntityPosition(PlayerPedId(), false)
 	StartServerSyncLoops()
 end)
 

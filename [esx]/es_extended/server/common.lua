@@ -10,6 +10,7 @@ Core.CancelledTimeouts = {}
 Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
+Core.PlayerFunctionOverrides = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
@@ -21,6 +22,7 @@ end)
 
 if GetResourceState('ox_inventory') ~= 'missing' then
 	Config.OxInventory = true
+	Config.PlayerFunctionOverride = 'OxInventory'
 	SetConvarReplicated('inventory:framework', 'esx')
 	SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
 end

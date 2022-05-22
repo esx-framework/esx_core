@@ -176,6 +176,7 @@ function Core.SavePlayer(xPlayer, cb)
 	}, function(affectedRows)
 		if affectedRows == 1 then
 			print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
+			TriggerEvent('esx:playerSaved', xPlayer.playerId, xPlayer)
 		end
 		if cb then cb() end
 	end)
@@ -258,12 +259,26 @@ function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-function ESX.UseItem(source, item, data)
+function ESX.UseItem(source, item, ...)
 	if ESX.Items[item] then
-		Core.UsableItemsCallbacks[item](source, item, data)
+		Core.UsableItemsCallbacks[item](source, item, ...)
 	else
 		print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(item))
 	end
+end
+
+function ESX.RegisterPlayerFunctionOverrides(index,overrides)
+	Core.PlayerFunctionOverrides[index] = overrides
+end
+
+function ESX.SetPlayerFunctionOverride(index)
+	if not index
+	or not Core.PlayerFunctionOverrides[index] 
+	then
+		return print('[^3WARNING^7] No valid index provided.')
+	end
+
+	Config.PlayerFunctionOverride = index
 end
 
 function ESX.GetItemLabel(item)

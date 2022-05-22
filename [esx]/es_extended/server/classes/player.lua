@@ -1,12 +1,6 @@
-local Inventory
-
-if Config.OxInventory then
-	AddEventHandler('ox_inventory:loadInventory', function(module)
-		Inventory = module
-	end)
-end
-
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
+	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
+	
 	local self = {}
 
 	self.accounts = accounts
@@ -118,28 +112,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if minimal then
 			local minimalInventory = {}
 
-			if not Inventory then
-				for k, v in ipairs(self.inventory) do
-					if v.count > 0 then
-						minimalInventory[v.name] = v.count
-					end
-				end
-			else
-				for k, v in pairs(self.inventory) do
-					if v.count and v.count > 0 then
-						local metadata = v.metadata
-
-						if v.metadata and next(v.metadata) == nil then
-							metadata = nil
-						end
-
-						minimalInventory[#minimalInventory+1] = {
-							name = v.name,
-							count = v.count,
-							slot = k,
-							metadata = metadata
-						}
-					end
+			for k, v in ipairs(self.inventory) do
+				if v.count > 0 then
+					minimalInventory[v.name] = v.count
 				end
 			end
 
@@ -154,7 +129,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getLoadout(minimal)
-		if Inventory then return {} end
 		if minimal then
 			local minimalLoadout = {}
 
@@ -200,10 +174,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				account.money = newMoney
 
 				self.triggerEvent('esx:setAccountMoney', account)
-
-				if Inventory and Inventory.accounts[accountName] then
-					Inventory.SetItem(self.source, accountName, money)
-				end
 			end
 		end
 	end
@@ -217,10 +187,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				account.money = newMoney
 
 				self.triggerEvent('esx:setAccountMoney', account)
-
-				if Inventory and Inventory.accounts[accountName] then
-					Inventory.AddItem(self.source, accountName, money)
-				end
 			end
 		end
 	end
@@ -234,19 +200,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				account.money = newMoney
 
 				self.triggerEvent('esx:setAccountMoney', account)
-
-				if Inventory and Inventory.accounts[accountName] then
-					Inventory.RemoveItem(self.source, accountName, money)
-				end
 			end
 		end
 	end
 
 	function self.getInventoryItem(name, metadata)
-		if Inventory then
-			return Inventory.GetItem(self.source, name, metadata)
-		end
-
 		for k,v in ipairs(self.inventory) do
 			if v.name == name then
 				return v
@@ -255,10 +213,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.addInventoryItem(name, count, metadata, slot)
-		if Inventory then
-			return Inventory.AddItem(self.source, name, count or 1, metadata, slot)
-		end
-
 		local item = self.getInventoryItem(name)
 
 		if item then
@@ -272,10 +226,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.removeInventoryItem(name, count, metadata, slot)
-		if Inventory then
-			return Inventory.RemoveItem(self.source, name, count or 1, metadata, slot)
-		end
-
 		local item = self.getInventoryItem(name)
 
 		if item then
@@ -293,10 +243,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.setInventoryItem(name, count, metadata)
-		if Inventory then
-			return Inventory.SetItem(self.source, name, count, metadata)
-		end
-
 		local item = self.getInventoryItem(name)
 
 		if item and count >= 0 then
@@ -319,10 +265,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.canCarryItem(name, count, metadata)
-		if Inventory then
-			return Inventory.CanCarryItem(self.source, name, count, metadata)
-		end
-
 		local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
 		local newWeight = currentWeight + (itemWeight * count)
 
@@ -330,10 +272,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)
-		if Inventory then
-			return Inventory.CanSwapItem(self.source, firstItem, firstItemCount, testItem, testItemCount)
-		end
-
 		local firstItemObject = self.getInventoryItem(firstItem)
 		local testItemObject = self.getInventoryItem(testItem)
 
@@ -350,16 +288,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.setMaxWeight(newWeight)
 		self.maxWeight = newWeight
 		self.triggerEvent('esx:setMaxWeight', self.maxWeight)
-
-		if Inventory then
-			return Inventory.Set(self.source, 'maxWeight', newWeight)
-		end
 	end
-
-    function self.setDuty(bool)
-        self.job.onDuty = bool
-        self.triggerEvent('esx:setJob', self.job)
-    end
 
 	function self.setJob(job, grade)
 		grade = tostring(grade)
@@ -376,7 +305,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			self.job.grade_name   = gradeObject.name
 			self.job.grade_label  = gradeObject.label
 			self.job.grade_salary = gradeObject.salary
-            self.job.onDuty = Config.OnDuty
 
 			if gradeObject.skin_male then
 				self.job.skin_male = json.decode(gradeObject.skin_male)
@@ -398,8 +326,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.addWeapon(weaponName, ammo)
-		if Inventory then return end
-
 		if not self.hasWeapon(weaponName) then
 			local weaponLabel = ESX.GetWeaponLabel(weaponName)
 
@@ -417,8 +343,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.addWeaponComponent(weaponName, weaponComponent)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -435,8 +359,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.addWeaponAmmo(weaponName, ammoCount)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -446,18 +368,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.updateWeaponAmmo(weaponName, ammoCount)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
-			weapon.ammo = ammoCount
+			if ammoCount < weapon.ammo then
+				weapon.ammo = ammoCount
+			end
 		end
 	end
 
 	function self.setWeaponTint(weaponName, weaponTintIndex)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -472,8 +392,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getWeaponTint(weaponName)
-		if Inventory then return 0 end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -484,8 +402,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.removeWeapon(weaponName)
-		if Inventory then return end
-
 		local weaponLabel
 
 		for k,v in ipairs(self.loadout) do
@@ -508,8 +424,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.removeWeaponComponent(weaponName, weaponComponent)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -532,8 +446,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.removeWeaponAmmo(weaponName, ammoCount)
-		if Inventory then return end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -543,8 +455,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasWeaponComponent(weaponName, weaponComponent)
-		if Inventory then return false end
-
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
@@ -561,8 +471,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasWeapon(weaponName)
-		if Inventory then return false end
-
 		for k,v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				return true
@@ -573,10 +481,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasItem(item, metadata)
-		if Inventory then
-			return Inventory.GetItem(self.source, item, metadata)
-		end
-
 		for k,v in ipairs(self.inventory) do
 			if (v.name == item) and (v.count >= 1) then
 				return v, v.count
@@ -586,10 +490,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return false
 	end
 
-
 	function self.getWeapon(weaponName)
-		if Inventory then return end
-
 		for k,v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				return k, v
@@ -605,21 +506,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	if Inventory then
-		self.syncInventory = function(weight, maxWeight, items, money)
-			self.weight, self.maxWeight = weight, maxWeight
-			self.inventory = items
-
-			if money then
-				for k, v in pairs(money) do
-					local account = self.getAccount(k)
-					if ESX.Math.Round(account.money) ~= v then
-						account.money = v
-						self.triggerEvent('esx:setAccountMoney', account)
-					end
-				end
-			end
-		end
+	for fnName,fn in pairs(targetOverrides) do
+		self[fnName] = fn(self)
 	end
 
 	return self

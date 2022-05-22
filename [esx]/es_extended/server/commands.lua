@@ -115,6 +115,7 @@ if not Config.OxInventory then
 				args.playerId.setInventoryItem(v.name, 0)
 			end
 		end
+		TriggerEvent('esx:playerInventoryCleared',args.playerId)
 	end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
 		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 	}})
@@ -123,6 +124,7 @@ if not Config.OxInventory then
 		for i=#args.playerId.loadout, 1, -1 do
 			args.playerId.removeWeapon(args.playerId.loadout[i].name)
 		end
+		TriggerEvent('esx:playerLoadoutCleared',args.playerId)
 	end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
 		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 	}})
