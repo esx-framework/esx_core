@@ -69,7 +69,7 @@ Locales['en'] = {
   ['respawn_bleedout_prompt'] = 'Hold [E] to respawn',
   ['respawn_bleedout_fine'] = 'Hold [E] to respawn for $%s',
   ['respawn_bleedout_fine_msg'] = 'You paid $%s to respawn.',
-  ['distress_send'] = 'Press [~b~[E]o send distress signal',
+  ['distress_send'] = 'Press [E] to send distress signal',
   ['distress_sent'] = 'Distress signal has been sent to available units!',
   -- Revive
   ['revive_help'] = 'revive a player',
