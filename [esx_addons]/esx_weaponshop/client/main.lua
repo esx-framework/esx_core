@@ -130,15 +130,19 @@ end)
 CreateThread(function()
 	while true do
 		local Sleep = 1500
-
+		local InShop = false
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Locations, 1 do
 				if (Config.Type ~= -1 and #(coords - v.Locations[i]) < Config.DrawDistance) then
+					InShop = true
 					Sleep = 0
-					ESX.ShowHelpNotification(_U('shop_menu_prompt'))
-
+					if not ShopOpen then 
+						ESX.TextUI(_U('shop_menu_prompt'))
+					else 
+						ESX.HideUI()
+					end
 					if IsControlJustReleased(0, 38) then
 						if Config.LicenseEnable and v.Legal then
 							ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
@@ -153,12 +157,13 @@ CreateThread(function()
 						end
 					end
 					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
-				else 
-					if ShopOpen then
-						ESX.UI.Menu.CloseAll()
-						ShopOpen = false
-					end
 				end
+			end
+		end
+		if not InShop and ShopOpen then
+			if ShopOpen then
+				ESX.UI.Menu.CloseAll()
+				ShopOpen = false
 			end
 		end
 	Wait(Sleep)
