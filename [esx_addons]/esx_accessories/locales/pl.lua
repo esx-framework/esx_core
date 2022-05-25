@@ -9,11 +9,11 @@ Locales ['pl'] = {
   ['shop'] = 'sklep %s ',
   ['set_unset'] = 'załóż / Zdejmij',
   ['not_enough_money'] = 'nie masz wystarczająco pieniędzy',
-  ['press_access'] = 'wciśnij ~INPUT_CONTEXT~ aby otworzyć menu',
+  ['press_access'] = 'wciśnij [E] aby otworzyć menu',
   ['accessories_blip'] = 'akcesoria',
   ['no_ears'] = 'nie posiadasz akcesorii uszu',
   ['no_glasses'] = 'nie posiadasz okularów',
   ['no_helmet'] = 'nie posiadasz nakrycia głowy',
   ['no_mask'] = 'nie posiadasz maski',
-  ['you_paid'] = 'płacisz ~g~%s $~s~',
+  ['you_paid'] = 'płacisz %s $',
 }

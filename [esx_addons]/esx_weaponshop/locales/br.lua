@@ -7,7 +7,7 @@ Locales ['br'] = {
   ['not_enough'] = 'você não tem dinheiro suficiente',
   ['already_owned'] = 'você já possui esta arma!',
   ['shop_menu_title'] = 'comprar',
-  ['shop_menu_prompt'] = 'pressione ~INPUT_CONTEXT~ para comprar armas.',
+  ['shop_menu_prompt'] = 'pressione [E] para comprar armas.',
   ['shop_menu_item'] = 'R$%s',
   ['map_blip'] = 'loja de Armas',
 }

@@ -1,4 +1,4 @@
 Locales['pl'] = {
-	['veh_released'] = 'pojazd ~g~wyprowadzony~s~ z garażu',
-	['veh_stored'] = 'pojazd ~g~oddany~s~ do garażu',
+	['veh_released'] = 'pojazd wyprowadzony z garażu',
+	['veh_stored'] = 'pojazd oddany do garażu',
 }

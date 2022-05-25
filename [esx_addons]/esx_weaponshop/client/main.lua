@@ -45,7 +45,7 @@ function OpenShopMenu(zone)
 	end
 
 	ESX.UI.Menu.CloseAll()
-	PlaySoundFrontend(-1, 'BACK', 'HUD_AMMO_SHOP_SOUNDSET', false)
+	PlaySoundFrontend(-1, 'BACK', 'UD_AMMO_SHOP_SOUNDSET', false)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
 		title = _U('shop_menu_title'),
@@ -131,37 +131,47 @@ CreateThread(function()
 	while true do
 		local Sleep = 1500
 		local InShop = false
+		local TextShown = false
+		local CurrentShop = nil
 		local coords = GetEntityCoords(PlayerPedId())
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Locations, 1 do
 				if (Config.Type ~= -1 and #(coords - v.Locations[i]) < Config.DrawDistance) then
 					InShop = true
+					CurrentShop = v.Locations[i]
 					Sleep = 0
-					if not ShopOpen then 
-						ESX.TextUI(_U('shop_menu_prompt'))
-					else 
-						ESX.HideUI()
-					end
-					if IsControlJustReleased(0, 38) then
-						if Config.LicenseEnable and v.Legal then
-							ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
-								if hasWeaponLicense then
-									OpenShopMenu(k)
-								else
-									OpenBuyLicenseMenu(k)
-								end
-							end, GetPlayerServerId(PlayerId()), 'weapon')
-						else
-							OpenShopMenu(k)
+					if #(coords - CurrentShop) < 1.0 then
+							if not TextShown then 
+								ESX.TextUI(_U('shop_menu_prompt'))
+								TextShown = true
+							end
+						else 
+							ESX.HideUI()
+						end
+						if IsControlJustReleased(0, 38) then
+							if Config.LicenseEnable and v.Legal then
+								ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
+									if hasWeaponLicense then
+										OpenShopMenu(k)
+									else
+										OpenBuyLicenseMenu(k)
+									end
+								end, GetPlayerServerId(PlayerId()), 'weapon')
+							else
+								OpenShopMenu(k)
+							end
 						end
 					end
 					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
+		if not CurrentShop and TextShown then 
+			ESX.HideUI()
 		end
 		if not InShop and ShopOpen then
 			if ShopOpen then
+				ESX.HideUI()
 				ESX.UI.Menu.CloseAll()
 				ShopOpen = false
 			end

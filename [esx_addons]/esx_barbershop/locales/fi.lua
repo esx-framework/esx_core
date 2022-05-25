@@ -3,7 +3,7 @@ Locales['fi'] = {
   ['yes'] = 'kyllä',
   ['no'] = 'ei',
   ['not_enough_money'] = 'sinulla ei ole tarpeeksi rahaa',
-  ['press_access'] = 'paina ~INPUT_CONTEXT~ avataksesi menu',
+  ['press_access'] = 'paina [E] avataksesi menu',
   ['barber_blip'] = 'Kampaamo',
   ['you_paid'] = 'sinä maksoit $%s',
 }

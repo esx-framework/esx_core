@@ -9,11 +9,11 @@ Locales ['sv'] = {
   ['shop'] = '%s affär',
   ['set_unset'] = 'Ta på / av',
   ['not_enough_money'] = 'Du har inte tillräckligt med pengar',
-  ['press_access'] = 'Tryck ~INPUT_CONTEXT~ för att komma åt menyn',
+  ['press_access'] = 'Tryck [E] för att komma åt menyn',
   ['accessories_blip'] = 'Tillbehör',
   ['no_ears'] = 'Du har inga örontillbehör',
   ['no_glasses'] = 'Du har inga glasögon',
   ['no_helmet'] = 'Du har ingen hjälm',
   ['no_mask'] = 'Du har ingen mask',
-  ['you_paid'] = 'Du betalade ~g~%s SEK~s~',
+  ['you_paid'] = 'Du betalade %s SEK',
 }

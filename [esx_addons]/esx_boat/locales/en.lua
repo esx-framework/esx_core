@@ -1,20 +1,20 @@
 Locales['en'] = {
   -- shop
   ['boat_shop'] = 'boat shop',
-  ['boat_shop_open'] = 'press ~INPUT_CONTEXT~ to access the ~y~boat shop~s~.',
+  ['boat_shop_open'] = 'press [E] to access the boat shop.',
   ['boat_shop_confirm'] = 'buy <span style="color: yellow;">%s</span> for <span style="color: orange;">$%s</span>?',
-  ['boat_shop_bought'] = 'you have ~y~bought~s~ a ~b~%s~s~ for ~g~$%s~s~',
-  ['boat_shop_nomoney'] = 'you cannot ~r~afford~s~ this boat!',
+  ['boat_shop_bought'] = 'you have bought a %s for $%s',
+  ['boat_shop_nomoney'] = 'you cannot ~r~afford this boat!',
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
 
   -- garage
   ['garage'] = 'boat garage',
-  ['garage_open'] = 'press ~INPUT_CONTEXT~ to access your ~y~boat garage~s~.',
-  ['garage_store'] = 'press ~INPUT_CONTEXT~ to ~y~store~s~ the boat in your garage.',
+  ['garage_open'] = 'press [E] to access your boat garage.',
+  ['garage_store'] = 'press [E] to store the boat in your garage.',
   ['garage_taken'] = 'the boat has been taken out!',
   ['garage_stored'] = 'the boat has been safely stored in your garage!',
-  ['garage_noboats'] = 'you don\'t have any stored boats! Visit the ~y~boat shop~s~ to buy one.',
+  ['garage_noboats'] = 'you don\'t have any stored boats! Visit the boat shop to buy one.',
   ['garage_blocked'] = 'the boat cannot be taken out because another vehicle is blocking the spawn point!',
   ['garage_notowner'] = 'you don\'t own this boat!',
 
@@ -22,8 +22,8 @@ Locales['en'] = {
   ['license_menu'] = 'buy Boat License?',
   ['license_buy_no'] = 'no',
   ['license_buy_yes'] = 'buy Boat License <span style="color: green;">$%s</span>',
-  ['license_bought'] = 'you have bought the ~y~Boat License~s~ for ~g~$%s~s~',
-  ['license_nomoney'] = 'you cannot ~r~afford~s~ the ~y~Boat License~s~!',
+  ['license_bought'] = 'you have bought the Boat License for $%s',
+  ['license_nomoney'] = 'you cannot ~r~afford the Boat License!',
 
   -- blips
   ['blip_garage'] = 'boat Garage',

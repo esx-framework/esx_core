@@ -9,11 +9,11 @@ Locales ['hu'] = {
   ['shop'] = '%s bolt',
   ['set_unset'] = 'Felvenni / Levenni',
   ['not_enough_money'] = 'Nincsen elég pénzed',
-  ['press_access'] = 'Nyomj ~INPUT_CONTEXT~ hogy megnyisd a kiegészítöket',
+  ['press_access'] = 'Nyomj [E] hogy megnyisd a kiegészítöket',
   ['accessories_blip'] = 'Kiegészítők',
   ['no_ears'] = 'Nincsen fülbevalód',
   ['no_glasses'] = 'Nincsen szemüveged',
   ['no_helmet'] = 'Nincsen sapkád',
   ['no_mask'] = 'Nincsen maszkod',
-  ['you_paid'] = 'Fizettél ~g~$%s~s~',
+  ['you_paid'] = 'Fizettél $%s',
 }

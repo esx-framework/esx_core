@@ -133,7 +133,7 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 	if job == 'player' then
 		ESX.ShowNotification(_U('new_message', message))
 	else
-		ESX.ShowNotification(('~b~%s:~s~ %s'):format(job, message))
+		ESX.ShowNotification(('%s: %s'):format(job, message))
 	end
 
 	PlaySound(-1, 'Menu_Accept', 'Phone_SoundSet_Default', false, 0, true)

@@ -7,7 +7,7 @@ Locales ['cs'] = {
   ['not_enough'] = 'nemas dostatek penez',
   ['already_owned'] = 'tuhle zbran jiz vlastnis!',
   ['shop_menu_title'] = 'ammu-Nation',
-  ['shop_menu_prompt'] = 'stiskni ~INPUT_CONTEXT~ pro pristup do ~y~Ammu-Nationu~s~.',
+  ['shop_menu_prompt'] = 'stiskni [E] pro pristup do Ammu-Nationu.',
   ['shop_menu_item'] = '$%s',
   ['map_blip'] = 'ammu-Nation',
 }

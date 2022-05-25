@@ -522,7 +522,7 @@ if not Config.OxInventory then
                     xPlayer.showNotification(_U('imp_invalid_quantity'))
                 else
                     xPlayer.removeInventoryItem(itemName, itemCount)
-                    local pickupLabel = ('~y~%s~s~ [~b~%s~s~]'):format(xItem.label, itemCount)
+                    local pickupLabel = ('%s [%s]'):format(xItem.label, itemCount)
                     ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
                     xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
                 end
@@ -537,7 +537,7 @@ if not Config.OxInventory then
                     xPlayer.showNotification(_U('imp_invalid_amount'))
                 else
                     xPlayer.removeAccountMoney(itemName, itemCount)
-                    local pickupLabel = ('~y~%s~s~ [~g~%s~s~]'):format(account.label, _U('locale_currency', ESX.Math
+                    local pickupLabel = ('%s [%s]'):format(account.label, _U('locale_currency', ESX.Math
                         .GroupDigits(itemCount)))
                     ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
                     xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount),
@@ -555,10 +555,10 @@ if not Config.OxInventory then
 
                 if weaponObject.ammo and weapon.ammo > 0 then
                     local ammoLabel = weaponObject.ammo.label
-                    pickupLabel = ('~y~%s~s~ [~g~%s~s~ %s]'):format(weapon.label, weapon.ammo, ammoLabel)
+                    pickupLabel = ('%s [%s %s]'):format(weapon.label, weapon.ammo, ammoLabel)
                     xPlayer.showNotification(_U('threw_weapon_ammo', weapon.label, weapon.ammo, ammoLabel))
                 else
-                    pickupLabel = ('~y~%s~s~'):format(weapon.label)
+                    pickupLabel = ('%s'):format(weapon.label)
                     xPlayer.showNotification(_U('threw_weapon', weapon.label))
                 end
 

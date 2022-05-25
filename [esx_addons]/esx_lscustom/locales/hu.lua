@@ -1,10 +1,10 @@
 Locales['hu'] = {
   ['by_default'] = 'alapértelmezett',
   ['installed'] = 'telepítve',
-  ['already_own'] = 'már használod: ~b~%s~s~',
+  ['already_own'] = 'már használod: %s',
   ['not_enough_money'] = 'nincs pénzed erre az alkatrészre!',
   ['purchased'] = 'megvásároltad ezt az alkatrészt!',
-  ['press_custom'] = 'nyomd meg az ~INPUT_PICKUP~ betüt a ~y~jármü~s~ tuningolásához.',
+  ['press_custom'] = 'nyomd meg az ~INPUT_PICKUP~ betüt a jármü tuningolásához.',
   ['level'] = 'szint %s',
   ['neon'] = 'neon',
   ['blip_name'] = 'Tuning mühely',

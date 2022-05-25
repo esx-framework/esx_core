@@ -9,11 +9,11 @@ Locales ['si'] = {
   ['shop'] = '%s trgovina',
   ['set_unset'] = 'Daj gor / Vzemi dol',
   ['not_enough_money'] = 'Nimas dovolj denarja',
-  ['press_access'] = 'Pritisni ~INPUT_CONTEXT~ za dostop do menuja',
+  ['press_access'] = 'Pritisni [E] za dostop do menuja',
   ['accessories_blip'] = 'Dodatki',
   ['no_ears'] = 'Nimas usesnih dodatkov',
   ['no_glasses'] = 'Nimas ocal',
   ['no_helmet'] = 'Nimas celade',
   ['no_mask'] = 'Nimas maske',
-  ['you_paid'] = 'Placal si ~g~$%s~s~',
+  ['you_paid'] = 'Placal si $%s',
 }

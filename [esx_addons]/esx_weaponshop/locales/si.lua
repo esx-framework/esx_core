@@ -7,7 +7,7 @@ Locales ['si'] = {
   ['not_enough'] = 'nimaš dovolj denarja',
   ['already_owned'] = 'to orožje že imaš!',
   ['shop_menu_title'] = 'Orozarna',
-  ['shop_menu_prompt'] = 'pritisnite ~INPUT_CONTEXT~ za dostop do ~y~Ammu-Nation~s~.',
+  ['shop_menu_prompt'] = 'pritisnite [E] za dostop do Ammu-Nation.',
   ['shop_menu_item'] = '$%s',
   ['map_blip'] = 'Orozarna',
 }

@@ -9,11 +9,11 @@ Locales ['cs'] = {
   ['shop'] = '%s obchod',
   ['set_unset'] = 'nasadit / Sundat',
   ['not_enough_money'] = 'nemáte dostatek peněz',
-  ['press_access'] = 'zmáčkněte ~INPUT_CONTEXT~ pro otevření menu',
+  ['press_access'] = 'zmáčkněte [E] pro otevření menu',
   ['accessories_blip'] = 'doplňky',
   ['no_ears'] = 'nemáte doplňky na uši',
   ['no_glasses'] = 'nemáte brýle',
   ['no_helmet'] = 'nemáte helmu',
   ['no_mask'] = 'nemáte masku',
-  ['you_paid'] = 'zaplatili jste ~g~$%s~s~',
+  ['you_paid'] = 'zaplatili jste $%s',
 }

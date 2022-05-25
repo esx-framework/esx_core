@@ -1,7 +1,7 @@
 Locales['es'] = {
-  ['new_message'] = '~b~Nuevo mensaje :~s~ %s',
-  ['press_take_call'] = '%s - Pulsar ~INPUT_CONTEXT~ para coger la llamada',
-  ['taken_call'] = '~y~%s~s~ ha contestado la llamada',
+  ['new_message'] = 'Nuevo mensaje : %s',
+  ['press_take_call'] = '%s - Pulsar [E] para coger la llamada',
+  ['taken_call'] = '%s ha contestado la llamada',
   ['gps_position'] = 'destino añadido al GPS',
   ['message_sent'] = 'mensaje enviado',
   ['cannot_add_self'] = 'no puedes agregarte a ti mismo!',

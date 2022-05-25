@@ -14,7 +14,7 @@ function TriggerCruiseControl()
 			CruisedSpeed = GetVehicleSpeed()
 			CruisedSpeedKm = TransformToKm(CruisedSpeed)
 
-			ESX.ShowNotification(_U('activated') .. ': ~b~ ' .. CruisedSpeedKm .. ' km/h')
+			ESX.ShowNotification(_U('activated') .. ':  ' .. CruisedSpeedKm .. ' km/h')
 
 			CreateThread(function ()
 				while CruisedSpeed > 0 and IsInVehicle() == PlayerPedId() do

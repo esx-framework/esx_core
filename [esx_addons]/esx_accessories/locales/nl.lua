@@ -9,11 +9,11 @@ Locales ['nl'] = {
   ['shop'] = '%s Winkel',
   ['set_unset'] = 'Doe aan / doe uit',
   ['not_enough_money'] = 'Je hebt niet genoeg geld',
-  ['press_access'] = 'Druk op ~INPUT_CONTEXT~ om het menu te openen',
+  ['press_access'] = 'Druk op [E] om het menu te openen',
   ['accessories_blip'] = 'Accessories',
   ['no_ears'] = 'Je hebt geen oor accessories',
   ['no_glasses'] = 'je hebt geen brillen',
   ['no_helmet'] = 'je hebt geen helm',
   ['no_mask'] = 'je hebt geen masker',
-  ['you_paid'] = 'je betaalde ~g~$%s~s~',
+  ['you_paid'] = 'je betaalde $%s',
 }

@@ -1,5 +1,5 @@
 Locales ['fi'] = {
-  ['voice']   = '~y~Puhe: ~s~%s',
+  ['voice']   = 'Puhe: %s',
   ['normal']  = 'normaali',
   ['shout']   = 'huuto',
   ['whisper'] = 'kuiskaus',

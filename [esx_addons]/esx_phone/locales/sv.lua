@@ -1,7 +1,7 @@
 Locales['sv'] = {
-  ['new_message'] = '~b~Nytt meddelande:~s~ %s',
-  ['press_take_call'] = '%s - tryck ~INPUT_CONTEXT~ för att svara',
-  ['taken_call'] = '~y~%s~s~ har tagit emot ditt meddelande',
+  ['new_message'] = 'Nytt meddelande: %s',
+  ['press_take_call'] = '%s - tryck [E] för att svara',
+  ['taken_call'] = '%s har tagit emot ditt meddelande',
   ['gps_position'] = 'destinationen är markerad på din GPS!',
   ['message_sent'] = 'meddelandet har skickats!',
   ['cannot_add_self'] = 'du kan inte lägga till dig själv!',

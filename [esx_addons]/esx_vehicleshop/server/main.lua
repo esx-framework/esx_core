@@ -394,7 +394,7 @@ function PayRent()
 				if bank >= sum and #v > 1 then
 					total = total + sum
 					xPlayer.removeAccountMoney('bank', sum)
-					xPlayer.showNotification(('You have paid ~g~$%s~s~ for all of your rentals'):format(ESX.Math.GroupDigits(sum)))
+					xPlayer.showNotification(('You have paid $%s for all of your rentals'):format(ESX.Math.GroupDigits(sum)))
 				else
 					for i = 1, #v do
 						local rental = v[i]

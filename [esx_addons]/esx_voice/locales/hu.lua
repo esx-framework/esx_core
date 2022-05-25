@@ -1,5 +1,5 @@
 Locales ['hu'] = {
-  ['voice']   = '~y~Beszéd: ~s~%s',
+  ['voice']   = 'Beszéd: %s',
   ['normal']  = 'normál',
   ['shout']   = 'kiáltás',
   ['whisper'] = 'suttogás',

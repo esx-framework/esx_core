@@ -1,7 +1,7 @@
 Locales['si'] = {
-  ['new_message'] = '~b~Prejeli ste sporočilo:~s~ %s',
-  ['press_take_call'] = '%s - Pritisnite ~INPUT_CONTEXT~ za sprejem klica',
-  ['taken_call'] = '~y~%s~s~ je sprejel klic',
+  ['new_message'] = 'Prejeli ste sporočilo: %s',
+  ['press_take_call'] = '%s - Pritisnite [E] za sprejem klica',
+  ['taken_call'] = '%s je sprejel klic',
   ['gps_position'] = 'cilj je bil dodan v vaš GPS',
   ['message_sent'] = 'sporočilo je bilo poslano',
   ['cannot_add_self'] = 'ne morete se dodati!',

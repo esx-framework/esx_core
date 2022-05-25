@@ -1,4 +1,4 @@
 Locales['fi'] = {
-  ['used_bread'] = 'sinä söit ~y~1x~s~ ~b~leipä~s~',
-  ['used_water'] = 'sinä joit ~y~1x~s~ ~b~vesi~s~',
+  ['used_bread'] = 'sinä söit 1x leipä',
+  ['used_water'] = 'sinä joit 1x vesi',
 }

@@ -1,7 +1,7 @@
 Locales['br'] = {
   ['by_default'] = 'default',
   ['installed'] = 'instalado',
-  ['already_own'] = 'já possuis: ~b~%s~s~',
+  ['already_own'] = 'já possuis: %s',
   ['not_enough_money'] = 'sem dinheiro!',
   ['purchased'] = 'tu compraste esta peça!',
   ['press_custom'] = 'pressiona ~INPUT_PICKUP~ para personalizar o veiculo.',

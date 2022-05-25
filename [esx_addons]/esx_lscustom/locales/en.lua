@@ -1,10 +1,10 @@
 Locales['en'] = {
   ['by_default'] = 'default',
   ['installed'] = 'installed',
-  ['already_own'] = 'you already own: ~b~%s~s~',
+  ['already_own'] = 'you already own: %s',
   ['not_enough_money'] = 'you cannot afford this mod!',
   ['purchased'] = 'you have purchased the mod!',
-  ['press_custom'] = 'press ~INPUT_PICKUP~ to ~y~personalize~s~ your vehicle.',
+  ['press_custom'] = 'press ~INPUT_PICKUP~ to personalize your vehicle.',
   ['level'] = 'level %s',
   ['neon'] = 'neon',
   ['blip_name'] = 'los Santos Customs',

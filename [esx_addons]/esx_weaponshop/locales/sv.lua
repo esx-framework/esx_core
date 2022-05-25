@@ -7,7 +7,7 @@ Locales ['sv'] = {
   ['not_enough'] = 'Du har inte tillräckligt med pengar',
   ['already_owned'] = 'Du äger redan det här vapnet!',
   ['shop_menu_title'] = 'Vapenaffär',
-  ['shop_menu_prompt'] = 'Tryck ~INPUT_CONTEXT~ för att komma åt ~y~vapenaffären~s~.',
+  ['shop_menu_prompt'] = 'Tryck [E] för att komma åt vapenaffären.',
   ['shop_menu_item'] = '%s SEK',
   ['map_blip'] = 'Vapenaffär',
 }

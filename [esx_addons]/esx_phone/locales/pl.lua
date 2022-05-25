@@ -1,7 +1,7 @@
 Locales['pl'] = {
-  ['new_message'] = '~b~Masz nową wiadomość:~s~ %s',
-  ['press_take_call'] = '%s - wciśnij ~INPUT_CONTEXT~ aby odebrać telefon',
-  ['taken_call'] = '~y~%s~s~ odebrał telefon',
+  ['new_message'] = 'Masz nową wiadomość: %s',
+  ['press_take_call'] = '%s - wciśnij [E] aby odebrać telefon',
+  ['taken_call'] = '%s odebrał telefon',
   ['gps_position'] = 'cel podróży został dodany do GPS\'a',
   ['message_sent'] = 'wiadomość wysłana',
   ['cannot_add_self'] = 'nie możesz dodać samego siebie!',

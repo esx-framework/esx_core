@@ -1,7 +1,7 @@
 Locales['hu'] = {
-  ['new_message'] = '~b~Kaptál egy üzenetet:~s~ %s',
-  ['press_take_call'] = '%s - Nyomd meg a ~INPUT_CONTEXT~ gombot a hívás fogadásához',
-  ['taken_call'] = '~y~%s~s~ fogadta a hívást',
+  ['new_message'] = 'Kaptál egy üzenetet: %s',
+  ['press_take_call'] = '%s - Nyomd meg a [E] gombot a hívás fogadásához',
+  ['taken_call'] = '%s fogadta a hívást',
   ['gps_position'] = 'az úti cél hozzáadva a GPS-hez.',
   ['message_sent'] = 'az üzenet elküldve',
   ['cannot_add_self'] = 'nem adhatod hozzá magad!',

@@ -1,26 +1,26 @@
 Locales ['sv'] = {
   -- weed
-  ['weed_pickupprompt'] = 'tryck ~INPUT_CONTEXT~ för att skörda ~g~Cannabisväxten~s~.',
-  ['weed_inventoryfull'] = 'du har ingen mer plats för ~g~Cannabis~s~.',
-  ['weed_processprompt'] = 'tryck ~INPUT_CONTEXT~ för att börja ~g~Processera Cannabis~s~.',
-  ['weed_processingstarted'] = 'processerar ~g~Cannabis~s~ till ~g~Marijuana~s~...',
-  ['weed_processingfull'] = 'processeringen ~r~avbröts~s~ för att utrymmet är slut!',
-  ['weed_processingenough'] = 'du måste ha ~b~3x~s~ ~g~Cannabis~s~ för att kunna bearbeta det.',
-  ['weed_processed'] = 'du har processerat ~b~3x~s~ ~g~Cannabis~s~ till ~b~1x~s~ ~g~Marijuana~s~',
-  ['weed_processingtoofar'] = 'processeringen har ~r~har avbrutit~s~ på grund av att du lämnade området.',
+  ['weed_pickupprompt'] = 'tryck [E] för att skörda Cannabisväxten.',
+  ['weed_inventoryfull'] = 'du har ingen mer plats för Cannabis.',
+  ['weed_processprompt'] = 'tryck [E] för att börja Processera Cannabis.',
+  ['weed_processingstarted'] = 'processerar Cannabis till Marijuana...',
+  ['weed_processingfull'] = 'processeringen ~r~avbröts för att utrymmet är slut!',
+  ['weed_processingenough'] = 'du måste ha 3x Cannabis för att kunna bearbeta det.',
+  ['weed_processed'] = 'du har processerat 3x Cannabis till 1x Marijuana',
+  ['weed_processingtoofar'] = 'processeringen har ~r~har avbrutit på grund av att du lämnade området.',
 
   -- drug dealer
-  ['dealer_prompt'] = 'tryck ~INPUT_CONTEXT~ för att prata med ~r~Drågsäljaren~s~.',
+  ['dealer_prompt'] = 'tryck [E] för att prata med ~r~Drågsäljaren.',
   ['dealer_title'] = 'drogsäljare',
   ['dealer_item'] = '%s SEK',
   ['dealer_notenough'] = 'du har inte tillräckligt med det till salu!',
-  ['dealer_sold'] = 'du har sålt ~b~%sx~s~ ~y~%s~s~ för ~g~%s SEK~s~',
+  ['dealer_sold'] = 'du har sålt %sx %s för %s SEK',
 
   -- license
   ['license_title'] = 'du måste ha ett visst processeringslicens för att kunna bearbeta denna produkt, detta kan dock köpas här.',
   ['license_no'] = 'nej',
-  ['license_bought'] = 'du köpte ~b~%s~s~ för ~r~%s SEK~s~',
-  ['license_bought_fail'] = 'du har inte råd för ~b~%s~s~!',
+  ['license_bought'] = 'du köpte %s för ~r~%s SEK',
+  ['license_bought_fail'] = 'du har inte råd för %s!',
   ['license_weed'] = 'marijuana processeringslicens',
 
   -- blips

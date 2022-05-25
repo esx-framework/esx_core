@@ -3,7 +3,7 @@ Locales['tr'] = {
 	['yes'] = 'evet',
 	['no'] = 'hayır',
 	['not_enough_money'] = 'yeterli miktarda paranız yok',
-	['press_access'] = '~y~Berbere~s~ erişmek için ~INPUT_CONTEXT~ basın',
+	['press_access'] = 'Berbere erişmek için [E] basın',
 	['barber_blip'] = 'berber',
-	['you_paid'] = '~g~$%s~s~ ödedin',
+	['you_paid'] = '$%s ödedin',
   }
