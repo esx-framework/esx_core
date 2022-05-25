@@ -54,13 +54,13 @@ function OpenMenu()
 			ESX.ShowNotification(_U('onduty'), "success")
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin.sex == 0 then
-					if #(jobSkin.skin_male) >= 1 then 
+					if ESX.Table.SizeOf(jobSkin.skin_male) >= 1 then 
 						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_male)
 					else
 						ESX.ShowNotification(_U('no_male_clothing'),  "error")
 					end	
 				else
-					if #(jobSkin.skin_female) >= 1 then 
+					if ESX.Table.SizeOf(jobSkin.skin_female) >= 1 then 
 						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 					else
 						ESX.ShowNotification(_U('no_female_clothing'), "error")
