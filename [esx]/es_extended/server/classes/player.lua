@@ -326,13 +326,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 	
 	function self.setDuty(bool)
+		if self.job.onDuty == bool then return end
 		if bool then
 			self.job.onDuty = true
-			self.triggerEvent('esx:showNotification', _U('started_duty'))
+			self.showNotification(_U('started_duty'))
 		else
 			self.job.onDuty = false
-			self.triggerEvent('esx:showNotification', _U('stopped_duty'))
+			self.showNotification(_U('stopped_duty'))
 		end
+		self.triggerEvent('esx:setJob', self.source, self.job)
 	end
 	
 	function self.addWeapon(weaponName, ammo)
