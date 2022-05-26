@@ -324,7 +324,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
 		end
 	end
-
+	
+	function self.setDuty(bool)
+		if bool then
+			self.job.onDuty = true
+			self.triggerEvent('esx:showNotification', _U('started_duty'))
+		else
+			self.job.onDuty = false
+			self.triggerEvent('esx:showNotification', _U('stopped_duty'))
+		end
+	end
+	
 	function self.addWeapon(weaponName, ammo)
 		if not self.hasWeapon(weaponName) then
 			local weaponLabel = ESX.GetWeaponLabel(weaponName)
