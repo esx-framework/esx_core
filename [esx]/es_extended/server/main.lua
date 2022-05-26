@@ -683,10 +683,7 @@ AddEventHandler('esx:setDuty', function(bool)
 
     if bool then
         xPlayer.setDuty(true)
-        xPlayer.triggerEvent('esx:showNotification', _U('started_duty'))
     else
         xPlayer.setDuty(false)
-        xPlayer.triggerEvent('esx:showNotification', _U('stopped_duty'))
     end
-    TriggerClientEvent('esx:setJob', xPlayer.source, xPlayer.job)
 end)
