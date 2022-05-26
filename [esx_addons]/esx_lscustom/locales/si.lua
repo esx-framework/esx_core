@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['si'] = {
   ['by_default'] = 'privzeto',
   ['installed'] = 'nameščen',
   ['already_own'] = 'že imaš: %s',
