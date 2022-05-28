@@ -16,6 +16,13 @@ Config.PlateUseSpace = true
 
 Config.OxInventory = ESX.GetConfig().OxInventory
 
+Config.Blip = {
+	show = true,
+	Sprite = 326,
+	Display = 4,
+	Scale = 0.8
+}
+
 Config.Zones = {
 
 	ShopEntering = {
