@@ -263,7 +263,7 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 				end)
 			else
-				ESX.ShowNotification('Invalid vehicle model.')
+				ESX.ShowNotification(_U('vehicle_invalid'))
 			end
 		end
 	end)
@@ -521,7 +521,7 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 		if admin then
 			local blipMarker = GetFirstBlipInfoId(8)
 			if not DoesBlipExist(blipMarker) then
-					ESX.ShowNotification('No Waypoint Set.', true, false, 140)
+					ESX.ShowNotification(_U('no_waypoint'), true, false, 140)
 					return 'marker'
 			end
 	
@@ -592,12 +592,12 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 					-- If we can't find the coords, set the coords to the old ones.
 					-- We don't unpack them before since they aren't in a loop and only called once.
 					SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
-					ESX.ShowNotification('Successfully Teleported', true, false, 140)
+					ESX.ShowNotification(_U('success_teleport'), true, false, 140)
 			end
 	
 			-- If Z coord was found, set coords in found coords.
 			SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-			ESX.ShowNotification('Successfully Teleported', true, false, 140)
+			ESX.ShowNotification(_U('success_teleport'), true, false, 140)
 		end
 	end)
 end)
