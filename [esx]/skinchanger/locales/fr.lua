@@ -68,9 +68,9 @@ Locales['fr'] = {
   ['sun_1'] = 'opacité dommages UV',
   ['freckles'] = 'taches de rousseur',
   ['freckles_1'] = 'opacité rousseur',
-  ['chest_hair'] = 'pillositée torse',
-  ['chest_hair_1'] = 'opacité pillositée',
-  ['chest_color'] = 'couleur pillositée',
+  ['chest_hair'] = 'pilosité torse',
+  ['chest_hair_1'] = 'opacité pilosité',
+  ['chest_color'] = 'couleur pilosité',
   ['bodyb'] = 'imperfections du corps',
   ['bodyb_size'] = 'opacité imperfections',
 }
