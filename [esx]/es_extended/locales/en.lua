@@ -352,4 +352,11 @@ Locales['en'] = {
   -- Duty related
   ['stopped_duty'] = 'You\'ve stopped your duty.',
   ['started_duty'] = 'You\'ve started your duty.',
+	
+-- Vehicle
+  ['vehicle_invalid'] = 'Invalid vehicle model.',
+  
+-- Teleport
+  ['no_waypoint'] = 'No Waypoint Set.',
+  ['success_teleport'] = 'Successfully Teleported.',
 }
