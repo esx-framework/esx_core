@@ -221,4 +221,11 @@ Locales['pl'] = {
   ['tint_lspd'] = 'niebieski skin',
   ['tint_orange'] = 'pomarańczowy skin',
   ['tint_platinum'] = 'platynowy skin',
+	
+  -- Vehicle
+  ['vehicle_invalid'] = 'Nieprawidłowy model pojazdu.',
+  
+  -- Teleport
+  ['no_waypoint'] = 'Brak ustawionego punktu.',
+  ['success_teleport'] = 'Pomyślnie teleportowano.',
 }
