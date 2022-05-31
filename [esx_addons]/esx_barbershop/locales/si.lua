@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['si'] = {
   ['valid_purchase'] = 'potrdi ta nakup?',
   ['yes'] = 'da',
   ['no'] = 'no',
