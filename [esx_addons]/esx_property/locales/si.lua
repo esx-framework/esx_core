@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['si'] = {
   ['have_withdrawn'] = 'umaknili ste x%s %s',
   ['have_deposited'] = 'položili ste x%s %s',
   ['free_prop'] = 'nepremičnina za prodajo',
