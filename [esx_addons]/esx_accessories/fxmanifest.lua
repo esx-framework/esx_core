@@ -6,35 +6,18 @@ description 'ESX Accessories'
 
 version '1.7.5'
 
-shared_script '@es_extended/imports.lua'
+shared_scripts {
+	'@es_extended/imports.lua',
+	'@es_extended/locale.lua',
+	'locales/*.lua',
+	'config.lua'
+}
 
 server_scripts {
-    '@es_extended/locale.lua',
-    'locales/en.lua',
-    'locales/es.lua',
-    'locales/ru.lua',
-    'locales/fi.lua',
-    'locales/fr.lua',
-    'locales/sv.lua',
-    'locales/cs.lua',
-    'locales/pl.lua',
-    'locales/hu.lua',
-    'config.lua',
     'server/main.lua'
 }
 
 client_scripts {
-    '@es_extended/locale.lua',
-    'locales/en.lua',
-    'locales/es.lua',
-    'locales/ru.lua',
-    'locales/fi.lua',
-    'locales/fr.lua',
-    'locales/sv.lua',
-    'locales/cs.lua',
-    'locales/pl.lua',
-    'locales/hu.lua',
-    'config.lua',
     'client/main.lua'
 }
 
