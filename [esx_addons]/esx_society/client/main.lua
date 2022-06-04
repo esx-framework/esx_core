@@ -69,11 +69,11 @@ function OpenBossMenu(society, close, options)
 	ESX.TriggerServerCallback('esx_society:isBoss', function(isBoss)
 		if isBoss then
 			local defaultOptions = {
-				withdraw = true,
-				deposit = true,
-				wash = true,
-				employees = true,
-				grades = true
+				withdraw = Config.Withdraw,
+				deposit = Config.Deposit,
+				wash = Config.Wash,
+				employees = Config.EmployeesManagement,
+				grades = Config.GradesManagement
 			}
 
 			for k,v in pairs(defaultOptions) do
