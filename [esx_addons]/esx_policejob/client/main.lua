@@ -1040,6 +1040,7 @@ AddEventHandler('esx_policejob:handcuff', function()
 		end
 
 		TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
+		RemoveAnimDict('mp_arresting')
 
 		SetEnableHandcuffs(playerPed, true)
 		DisablePlayerFiring(playerPed, true)
@@ -1215,6 +1216,7 @@ CreateThread(function()
 			if IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) ~= 1 then
 				ESX.Streaming.RequestAnimDict('mp_arresting', function()
 					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
+					RemoveAnimDict('mp_arresting')
 				end)
 			end
 		else

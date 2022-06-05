@@ -3,6 +3,7 @@ local function Progressbar(message,length,Options)
         if Options.animation.type == "anim" then
             ESX.Streaming.RequestAnimDict(Options.animation.dict, function()
                 TaskPlayAnim(ESX.PlayerData.ped, Options.animation.dict, Options.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
+                RemoveAnimDict(Options.animation.dict)
             end)
         end
     end
