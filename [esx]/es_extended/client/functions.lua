@@ -614,7 +614,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 		end
 
 		local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
-		local numWheels = GetVehicleNumberOfWheels(vehicle)
+		local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 		local numDoors = GetNumberOfVehicleDoors(vehicle)
 
 		local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
@@ -624,9 +624,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 				['6'] = {0, 1, 2, 3, 4, 5}, -- Vehicle with 6 wheels.
 		}
 
-		if numWheels ~= nil or numWheels > 0 then
-	    	numWheels = tostring(numWheels)
-
+		if TyresIndex[numWheels] then
 			for tyre,idx in pairs(TyresIndex[numWheels]) do
 				if IsVehicleTyreBurst(vehicle, idx, false) then
 	                tyreBurst[tostring(idx)] = true
@@ -644,7 +642,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 				end
 		end
 
-		if numDoors ~= nil or numDoors > 0 then
+		if numDoors ~= nil and numDoors > 0 then
 	        for doorsId = 0, numDoors do
 	            if IsVehicleDoorDamaged(vehicle, doorsId) then 
 	                doorsBroken[tostring(doorsId)] = true
