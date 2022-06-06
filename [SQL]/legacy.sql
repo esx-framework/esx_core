@@ -10,7 +10,7 @@ CREATE TABLE `addon_account` (
 
 INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 ('caution', 'caution', 0),
-('property_black_money', 'Argent Sale Propriété', 0),
+('property_black_money', 'Realestate', 0),
 ('society_ambulance', 'EMS', 1),
 ('society_cardealer', 'Cardealer', 1),
 ('society_mechanic', 'Mechanic', 1),
@@ -40,10 +40,6 @@ INSERT INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUES
 (3, 'society_ambulance', 0, NULL),
 (4, 'society_mechanic', 0, NULL),
 (5, 'society_taxi', 0, NULL),
-(6, 'caution', 0, 'dd5a2e91e9aa1b6c4fc1f66e44f949954c733450'),
-(7, 'caution', 0, 'char1:5e396ab5a00ebd7885ae4df5771b1e79535be6f6'),
-(8, 'property_black_money', 0, 'char1:5e396ab5a00ebd7885ae4df5771b1e79535be6f6');
-
 -- --------------------------------------------------------
 
 --
@@ -175,7 +171,7 @@ INSERT INTO `datastore_data` (`id`, `name`, `owner`, `data`) VALUES
 (2, 'society_ambulance', NULL, '{}'),
 (3, 'society_mechanic', NULL, '{}'),
 (4, 'society_taxi', NULL, '{}'),
-(5, 'property', 'char1:5e396ab5a00ebd7885ae4df5771b1e79535be6f6', '{}');
+(5, 'property', NULL, '{}');
 
 -- --------------------------------------------------------
 
