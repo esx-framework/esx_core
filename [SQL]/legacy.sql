@@ -39,7 +39,7 @@ INSERT INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUES
 (2, 'society_police', 0, NULL),
 (3, 'society_ambulance', 0, NULL),
 (4, 'society_mechanic', 0, NULL),
-(5, 'society_taxi', 0, NULL),
+(5, 'society_taxi', 0, NULL);
 -- --------------------------------------------------------
 
 --
