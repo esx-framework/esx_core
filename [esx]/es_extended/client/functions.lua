@@ -1056,6 +1056,7 @@ function ESX.ShowInventory()
 					if type == 'item_weapon' then
 						menu1.close()
 						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+						RemoveAnimDict(dict)
 						Wait(1000)
 						TriggerServerEvent('esx:removeInventoryItem', type, item)
 					else
@@ -1068,6 +1069,7 @@ function ESX.ShowInventory()
 								menu2.close()
 								menu1.close()
 								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+								RemoveAnimDict(dict)
 								Wait(1000)
 								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 							else

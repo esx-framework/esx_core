@@ -153,6 +153,7 @@ function revivePlayer(closestPlayer)
 
 					ESX.Streaming.RequestAnimDict(lib, function()
 						TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0.0, false, false, false)
+						RemoveAnimDict(lib)
 					end)
 				end
 

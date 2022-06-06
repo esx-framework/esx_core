@@ -89,6 +89,7 @@ AddEventHandler('esx_basicneeds:onEat', function(prop_name)
 
 			ESX.Streaming.RequestAnimDict('mp_player_inteat@burger', function()
 				TaskPlayAnim(playerPed, 'mp_player_inteat@burger', 'mp_player_int_eat_burger_fp', 8.0, -8, -1, 49, 0, 0, 0, 0)
+				RemoveAnimDict('mp_player_inteat@burger')
 
 				Wait(3000)
 				IsAnimated = false
@@ -115,6 +116,7 @@ AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
 
 			ESX.Streaming.RequestAnimDict('mp_player_intdrink', function()
 				TaskPlayAnim(playerPed, 'mp_player_intdrink', 'loop_bottle', 1.0, -1.0, 2000, 0, 1, true, true, true)
+				RemoveAnimDict('mp_player_intdrink')
 
 				Wait(3000)
 				IsAnimated = false
