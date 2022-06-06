@@ -485,6 +485,7 @@ if not Config.OxInventory then
 								local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
 								ESX.Streaming.RequestAnimDict(dict)
 								TaskPlayAnim(ESX.PlayerData.ped, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+								RemoveAnimDict(dict)
 								Wait(1000)
 
 								TriggerServerEvent('esx:onPickup', pickupId)
