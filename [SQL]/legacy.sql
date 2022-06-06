@@ -206,6 +206,7 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 ('essence', 'Gas', 1, 0, 1),
 ('fabric', 'Fabric', 1, 0, 1),
 ('fish', 'Fish', 1, 0, 1),
+('radio', 'Radio', 1, 0, 1),
 ('fixkit', 'Repair Kit', 3, 0, 1),
 ('fixtool', 'Repair Tools', 2, 0, 1),
 ('gazbottle', 'Gas Bottle', 2, 0, 1),
