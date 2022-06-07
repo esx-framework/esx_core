@@ -1,8 +1,13 @@
 local GUI, MenuType = {}, 'default'
 GUI.Time = 0
+local OpenedMenus = 0
 
 local function openMenu(namespace, name, data)
-	SendNUIMessage({
+	OpenedMenus = OpenedMenus + 1
+        if OpenedMenus == 1 then
+            CheckKeys()
+        end
+        SendNUIMessage({
 		action = 'openMenu',
 		namespace = namespace,
 		name = name,
@@ -11,6 +16,7 @@ local function openMenu(namespace, name, data)
 end
 
 local function closeMenu(namespace, name)
+        OpenedMenus = OpenedMenus - 1
 	SendNUIMessage({
 		action = 'closeMenu',
 		namespace = namespace,
@@ -56,38 +62,40 @@ RegisterNUICallback('menu_change', function(data, cb)
 	cb('OK')
 end)
 
-CreateThread(function()
-	while true do
-		Wait(15)
+function CheckKeys()
+    CreateThread(function()
+	while OpenedMenus > 0 do
+	    Wait(15)
 
-		if IsControlPressed(0, 18) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({action = 'controlPressed', control = 'ENTER'})
-			GUI.Time = GetGameTimer()
-		end
+	    if IsControlPressed(0, 18) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({action = 'controlPressed', control = 'ENTER'})
+		GUI.Time = GetGameTimer()
+	    end
 
-		if IsControlPressed(0, 177) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({action  = 'controlPressed', control = 'BACKSPACE'})
-			GUI.Time = GetGameTimer()
-		end
+	    if IsControlPressed(0, 177) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({action  = 'controlPressed', control = 'BACKSPACE'})
+		GUI.Time = GetGameTimer()
+	    end
 
-		if IsControlPressed(0, 27) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-			SendNUIMessage({action  = 'controlPressed', control = 'TOP'})
-			GUI.Time = GetGameTimer()
-		end
+	    if IsControlPressed(0, 27) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
+		SendNUIMessage({action  = 'controlPressed', control = 'TOP'})
+		GUI.Time = GetGameTimer()
+            end
 
-		if IsControlPressed(0, 173) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-			SendNUIMessage({action  = 'controlPressed', control = 'DOWN'})
-			GUI.Time = GetGameTimer()
-		end
+	    if IsControlPressed(0, 173) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
+		SendNUIMessage({action  = 'controlPressed', control = 'DOWN'})
+		GUI.Time = GetGameTimer()
+	    end
 
-		if IsControlPressed(0, 174) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({action  = 'controlPressed', control = 'LEFT'})
-			GUI.Time = GetGameTimer()
-		end
+	    if IsControlPressed(0, 174) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({action  = 'controlPressed', control = 'LEFT'})
+		GUI.Time = GetGameTimer()
+	    end
 
-		if IsControlPressed(0, 175) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({action  = 'controlPressed', control = 'RIGHT'})
-			GUI.Time = GetGameTimer()
-		end
-	end
-end)
+	    if IsControlPressed(0, 175) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({action  = 'controlPressed', control = 'RIGHT'})
+		GUI.Time = GetGameTimer()
+	    end
+        end
+    end)
+end
