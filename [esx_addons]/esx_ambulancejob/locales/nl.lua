@@ -63,20 +63,20 @@ Locales['nl'] = {
   -- Phone
   ['alert_ambulance'] = 'alert Ambulance',
   -- Death
-  ['respawn_available_in'] = 'Respawn beschikbaar in  %s minuten en %s seconden',
-  ['respawn_bleedout_in'] = 'Je zal doodbloeden in  %s minuten %s seconden\n',
-  ['respawn_bleedout_prompt'] = 'Houd [ E] ingedrukt om te respawnen',
-  ['respawn_bleedout_fine'] = 'Houd [ E] ingedrukt om te respawnen voor €%s',
-  ['respawn_bleedout_fine_msg'] = 'Je hebt   betaald om te respawnen.',
-  ['distress_send'] = 'Druk op [~bs~] om een noodsignaal te verzenden',
+  ['respawn_available_in'] = 'Respawn beschikbaar in %s minuten en %s seconden',
+  ['respawn_bleedout_in'] = 'Je zal doodbloeden in %s minuten %s seconden\n',
+  ['respawn_bleedout_prompt'] = 'Houd [E] ingedrukt om te respawnen',
+  ['respawn_bleedout_fine'] = 'Houd [E] ingedrukt om te respawnen voor €%s',
+  ['respawn_bleedout_fine_msg'] = 'Je hebt €%s betaald om te respawnen.',
+  ['distress_send'] = 'Druk op [G] om een noodsignaal te verzenden',
   ['distress_sent'] = 'Noodsignaal verzonden naar alle beschikbare eenheden!',
   -- Revive
   ['revive_help'] = 'Revive een speler',
   -- Item
   ['used_medikit'] = 'Je hebt 1 spoedkoffer gebruikt',
   ['used_bandage'] = 'Je hebt 1 verbandkoffer gebruikt',
-  ['not_enough_medikit'] = 'Je hebt geen  spoedkoffer bij.',
-  ['not_enough_bandage'] = 'Je hebt geen  verbandkoffer bij.',
+  ['not_enough_medikit'] = 'Je hebt geen spoedkoffer bij.',
+  ['not_enough_bandage'] = 'Je hebt geen verbandkoffer bij.',
   ['healed'] = 'Je bent behandeld.',
   -- Blips
   ['blip_hospital'] = 'Ziekenhuis',

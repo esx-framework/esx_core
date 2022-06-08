@@ -64,20 +64,20 @@ Locales['fr'] = {
   -- Phone
   ['alert_ambulance'] = 'alerte Ambulance',
   -- Death
-  ['respawn_available_in'] = 'réanimation possible dans  %s minutes %s secondes',
-  ['respawn_bleedout_in'] = 'vous allez souffrir d\'une hémorragie dans  %s minutes %s secondes\n',
-  ['respawn_bleedout_prompt'] = 'maintenez [ E] pour être réanimé',
-  ['respawn_bleedout_fine'] = 'maintenez [ E] pour être réanimé pour $%s',
-  ['respawn_bleedout_fine_msg'] = 'vous avez payé   pour être réanimer.',
-  ['distress_send'] = 'appuyez sur [~bs~] pour envoyer un signal de détresse',
+  ['respawn_available_in'] = 'réanimation possible dans %s minutes %s secondes',
+  ['respawn_bleedout_in'] = 'vous allez souffrir d\'une hémorragie dans %s minutes %s secondes\n',
+  ['respawn_bleedout_prompt'] = 'maintenez [E] pour être réanimé',
+  ['respawn_bleedout_fine'] = 'maintenez [E] pour être réanimé pour $%s',
+  ['respawn_bleedout_fine_msg'] = 'vous avez payé $%s pour être réanimer.',
+  ['distress_send'] = 'appuyez sur [G] pour envoyer un signal de détresse',
   ['distress_sent'] = 'un signal a été envoyé à toutes les unités disponibles!',
   -- Revive
   ['revive_help'] = 'relancer un joueur',
   -- Item
   ['used_medikit'] = 'vous avez utilisé 1x kit de soin',
   ['used_bandage'] = 'vous avez utilisé 1x bandage',
-  ['not_enough_medikit'] = 'vous n\'avez pas de  kit de soin.',
-  ['not_enough_bandage'] = 'vous n\'avez pas de  bandage.',
+  ['not_enough_medikit'] = 'vous n\'avez pas de kit de soin.',
+  ['not_enough_bandage'] = 'vous n\'avez pas de bandage.',
   ['healed'] = 'vous avez été soigné.',
   -- Blips
   ['blip_hospital'] = 'hôpital',

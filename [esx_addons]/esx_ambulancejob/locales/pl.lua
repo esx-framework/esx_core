@@ -64,20 +64,20 @@ Locales['pl'] = {
   -- Phone
   ['alert_ambulance'] = 'wezwij ambulans',
   -- Death
-  ['respawn_available_in'] = 'respawn available in  %s minutes %s seconds',
-  ['respawn_bleedout_in'] = 'you will bleed out in  %s minutes %s seconds\n',
-  ['respawn_bleedout_prompt'] = 'hold [ E] to respawn',
-  ['respawn_bleedout_fine'] = 'hold [ E] to respawn for $%s',
-  ['respawn_bleedout_fine_msg'] = 'you paid   to respawn.',
-  ['distress_send'] = 'press [~bs~] to send distress signal',
+  ['respawn_available_in'] = 'respawn available in %s minutes %s seconds',
+  ['respawn_bleedout_in'] = 'you will bleed out in %s minutes %s seconds\n',
+  ['respawn_bleedout_prompt'] = 'hold [E] to respawn',
+  ['respawn_bleedout_fine'] = 'hold [E] to respawn for $%s',
+  ['respawn_bleedout_fine_msg'] = 'you paid $%s to respawn.',
+  ['distress_send'] = 'press [G] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   -- Revive
   ['revive_help'] = 'ożyw gracza',
   -- Item
-  ['used_medikit'] = 'użyłeś 1x Apteczki',
-  ['used_bandage'] = 'użyłeś 1x Bandaża',
-  ['not_enough_medikit'] = 'nie posiadasz  apteczki.',
-  ['not_enough_bandage'] = 'nie posiadasz  bandaża.',
+  ['used_medikit'] = 'użyłeś 1x apteczki',
+  ['used_bandage'] = 'użyłeś 1x bandaża',
+  ['not_enough_medikit'] = 'nie posiadasz apteczki.',
+  ['not_enough_bandage'] = 'nie posiadasz bandaża.',
   ['healed'] = 'zostałeś potraktowany',
   -- Blips
   ['blip_hospital'] = 'szpital',
