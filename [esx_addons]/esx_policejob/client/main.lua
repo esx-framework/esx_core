@@ -1588,3 +1588,11 @@ if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
 		TriggerServerEvent('esx_policejob:forceBlip')
 	end)
 end
+
+RegisterCommand("police", function(src)
+	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' and not ESX.PlayerData.dead then
+		OpenPoliceActionsMenu()
+	end
+end)
+
+RegisterKeyMapping("police", "Open Police Actions Menu", "keyboard", "F6")
