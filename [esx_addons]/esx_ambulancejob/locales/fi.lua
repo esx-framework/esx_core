@@ -64,20 +64,20 @@ Locales['fi'] = {
   -- Phone
   ['alert_ambulance'] = 'hälyytys Ensihoidolle',
   -- Death
-  ['respawn_available_in'] = 'respawn available in  %s minutes %s seconds',
-  ['respawn_bleedout_in'] = 'you will bleed out in  %s minutes %s seconds\n',
-  ['respawn_bleedout_prompt'] = 'hold [ E] to respawn',
-  ['respawn_bleedout_fine'] = 'hold [ E] to respawn for $%s',
-  ['respawn_bleedout_fine_msg'] = 'you paid   to respawn.',
-  ['distress_send'] = 'press [~bs~] to send distress signal',
+  ['respawn_available_in'] = 'respawn available in %s minutes %s seconds',
+  ['respawn_bleedout_in'] = 'you will bleed out in %s minutes %s seconds\n',
+  ['respawn_bleedout_prompt'] = 'hold [E] to respawn',
+  ['respawn_bleedout_fine'] = 'hold [E] to respawn for $%s',
+  ['respawn_bleedout_fine_msg'] = 'you paid $%s to respawn.',
+  ['distress_send'] = 'press [G] to send distress signal',
   ['distress_sent'] = 'distress signal has been sent to available units!',
   -- Revive
   ['revive_help'] = 'elvytä pelaaja',
   -- Item
   ['used_medikit'] = 'sinä käytit ensiapupakkauksen',
   ['used_bandage'] = 'sinä käytit sideharsoja',
-  ['not_enough_medikit'] = 'ei tarpeeksi  ensiapupakkauksia.',
-  ['not_enough_bandage'] = 'ei tarpeeksi  sideharsoja.',
+  ['not_enough_medikit'] = 'ei tarpeeksi ensiapupakkauksia.',
+  ['not_enough_bandage'] = 'ei tarpeeksi sideharsoja.',
   ['healed'] = 'sinua parannettiin',
   -- Blips
   ['blip_hospital'] = 'sairaala',
