@@ -76,8 +76,8 @@ Locales['en'] = {
   -- Item
   ['used_medikit'] = 'You have used 1x medikit',
   ['used_bandage'] = 'You have used 1x bandage',
-  ['not_enough_medikit'] = 'You do not have  medikit.',
-  ['not_enough_bandage'] = 'You do not have  bandage.',
+  ['not_enough_medikit'] = 'You do not have medikit.',
+  ['not_enough_bandage'] = 'You do not have bandage.',
   ['healed'] = 'You have been treated.',
   -- Blips
   ['blip_hospital'] = 'Hospital',
