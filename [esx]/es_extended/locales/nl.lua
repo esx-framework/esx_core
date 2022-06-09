@@ -240,7 +240,7 @@ Locales['nl'] = {
     ['component_knuckle_love'] = 'de minnaar',
     ['component_knuckle_player'] = 'de speler',
     ['component_knuckle_king'] = 'de koning',
-    ['component_knuckle_vagos'] = 'de Vago's',
+    ['component_knuckle_vagos'] = 'de Vagos',
   
     ['component_luxary_finish'] = 'luxe wapenafwerking',
   
