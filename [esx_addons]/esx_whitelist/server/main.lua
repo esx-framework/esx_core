@@ -1,11 +1,11 @@
 WhiteList = {}
 
 function loadWhiteList()
-	Whitelist = nil
+	WhiteList = nil
 
 	local List = LoadResourceFile(GetCurrentResourceName(),'players.json')
 	if List then
-		Whitelist = json.decode(List)
+		WhiteList = json.decode(List)
 	end
 end
 
