@@ -359,8 +359,10 @@ CREATE TABLE `owned_vehicles` (
   `vehicle` longtext DEFAULT NULL,
   `type` varchar(20) NOT NULL DEFAULT 'car',
   `job` varchar(20) DEFAULT NULL,
-  `stored` tinyint(4) NOT NULL DEFAULT 0
+  `stored` tinyint(4) NOT NULL DEFAULT 0,
+  `parking` VARCHAR(60) DEFAULT NULL
 ) ENGINE=InnoDB;
+
 
 -- --------------------------------------------------------
 

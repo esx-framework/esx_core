@@ -64,20 +64,20 @@ Locales['sv'] = {
   -- Phone
   ['alert_ambulance'] = 'ambulanssamtal',
   -- Death
-  ['respawn_available_in'] = 'respawn tillgänglig om  %s:%s',
-  ['respawn_bleedout_in'] = 'du kommer att förblöda om  %s:%s\n',
-  ['respawn_bleedout_prompt'] = 'håll [ E] för att respawna',
-  ['respawn_bleedout_fine'] = 'håll [ E] för att respawna, kostar %s SEK',
-  ['respawn_bleedout_fine_msg'] = 'du betalade   för att respawna.',
+  ['respawn_available_in'] = 'respawn tillgänglig om %s:%s',
+  ['respawn_bleedout_in'] = 'du kommer att förblöda om %s:%s\n',
+  ['respawn_bleedout_prompt'] = 'håll [E] för att respawna',
+  ['respawn_bleedout_fine'] = 'håll [E] för att respawna, kostar %s SEK',
+  ['respawn_bleedout_fine_msg'] = 'du betalade %s för att respawna.',
   ['distress_send'] = 'tryck  [G] för att skicka nödsignal',
   ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
   -- Revive
   ['revive_help'] = 'återuppliva en spelare',
   -- Item
-  ['used_medikit'] = 'du har använt 1x  Akutväska',
-  ['used_bandage'] = 'du har använt 1x  Bandage',
-  ['not_enough_medikit'] = 'du har ingen  Akutväska.',
-  ['not_enough_bandage'] = 'du har inget  Bandage.',
+  ['used_medikit'] = 'du har använt 1x akutväska',
+  ['used_bandage'] = 'du har använt 1x bandage',
+  ['not_enough_medikit'] = 'du har ingen akutväska.',
+  ['not_enough_bandage'] = 'du har inget bandage.',
   ['healed'] = 'dina skador har blivit behandlade.',
   -- Blips
   ['blip_hospital'] = 'sjukhus',

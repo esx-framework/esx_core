@@ -33,6 +33,9 @@ body {
 .success {
     border-left: 5px solid rgb(33, 223, 15) !important; 
 }
+.custom {
+    
+}
 .error {
     border-left: 5px solid rgb(231, 35, 28) !important; 
 }

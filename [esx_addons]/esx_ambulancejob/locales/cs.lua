@@ -64,19 +64,19 @@ Locales['cs'] = {
   -- Phone
   ['alert_ambulance'] = 'zdravotnický poplach',
   -- Death
-  ['respawn_available_in'] = 'oživení dostupné za  %s minut a %s sekund\n',
-  ['respawn_bleedout_in'] = 'vykrvácíte za  %s minut a %s sekund\n',
-  ['respawn_bleedout_prompt'] = 'držte [ E] pro respawn.',
-  ['respawn_now_fine'] = 'držte [ E] pro oživení za $%s',
-  ['respawn_bleedout_fine_msg'] = 'zaplatili jste   za respawn.',
-  ['distress_send'] = 'stiskněte [~bs~] pro vyslání tísňového signálu',
+  ['respawn_available_in'] = 'oživení dostupné za %s minut a %s sekund\n',
+  ['respawn_bleedout_in'] = 'vykrvácíte za %s minut a %s sekund\n',
+  ['respawn_bleedout_prompt'] = 'držte [E] pro respawn.',
+  ['respawn_now_fine'] = 'držte [E] pro oživení za $%s',
+  ['respawn_bleedout_fine_msg'] = 'zaplatili jste $%s za respawn.',
+  ['distress_send'] = 'stiskněte [G] pro vyslání tísňového signálu',
   ['distress_sent'] = 'tísňový signál byl vyslán dostupným jednotkám!',
   -- Revive
   ['revive_help'] = 'oživit hráče',
   -- Item
   ['used_medikit'] = 'použili jste 1x lékarničku',
   ['used_bandage'] = 'použili jste 1x obvaz',
-  ['not_enough_medikit'] = 'nemáte  medikit.',
+  ['not_enough_medikit'] = 'nemáte medikit.',
   ['not_enough_bandage'] = 'nemáte bandage.',
   ['healed'] = 'byli jste ošetřeni.',
   -- Blips

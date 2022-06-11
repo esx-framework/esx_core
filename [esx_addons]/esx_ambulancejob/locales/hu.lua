@@ -64,20 +64,20 @@ Locales['hu'] = {
   -- Phone
   ['alert_ambulance'] = 'EMS értesités',
   -- Death
-  ['respawn_available_in'] = 'Újraéledés:  s',
+  ['respawn_available_in'] = 'Újraéledés: %s',
   ['respawn_bleedout_in'] = 'Elfogsz vérezni  %s perc %s másodperclva...\n',
-  ['respawn_bleedout_prompt'] = 'Nyomd meg az  [E]mbot az újraéledéshez',
-  ['respawn_bleedout_fine'] = 'Újraéledéshez:  [E]',
-  ['respawn_bleedout_fine_msg'] = ' [Információ]:Ennyit fizettél  , hogy újraéledj',
+  ['respawn_bleedout_prompt'] = 'Nyomd meg az [E]mbot az újraéledéshez',
+  ['respawn_bleedout_fine'] = 'Újraéledéshez: [E]',
+  ['respawn_bleedout_fine_msg'] = '[Információ]:Ennyit fizettél, hogy újraéledj',
   ['distress_send'] = 'Nyomd meg a   gombot a segítségkéréshez',
   ['distress_sent'] = ' [Információ]:y civil értesítette az illetékes szervezetet!',
   -- Revive
   ['revive_help'] = 'újraéleszteni egy játékos',
   -- Item
-  ['used_medikit'] = ' [Információ]:használtál  1x Segélytáskát.',
-  ['used_bandage'] = ' [Információ]:használtál  1x Kötszert.',
-  ['not_enough_medikit'] = ' máció]:ncs nálad:  Defibrillátor.',
-  ['not_enough_bandage'] = ' máció]:ncs nálad:  Kötszer.',
+  ['used_medikit'] = ' [Információ]:használtál 1x segélytáskát.',
+  ['used_bandage'] = ' [Információ]:használtál 1x kötszert.',
+  ['not_enough_medikit'] = '[Információ]:ncs nálad: Defibrillátor.',
+  ['not_enough_bandage'] = '[Információ]:ncs nálad: Kötszer.',
   ['healed'] = ' [Információ]:ggyógyítottak!',
   -- Blips
   ['blip_hospital'] = 'Korház',

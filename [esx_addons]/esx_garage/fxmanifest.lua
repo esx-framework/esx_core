@@ -1,10 +1,10 @@
-fx_version 'adamant'
-
+fx_version 'cerulean'
 game 'gta5'
 
-description 'ESX Garage'
-
-version '1.7.5'
+author 'ESX-Framework'
+description 'Official ESX Garage System for ESX Legacy'
+version '1.0.0'
+lua54 'yes'
 
 shared_script '@es_extended/imports.lua'
 
@@ -21,4 +21,14 @@ client_scripts {
 	'locales/*.lua',
 	'config.lua',
 	'client/main.lua'
+}
+
+ui_page 'nui/ui.html'
+
+files {
+    'nui/ui.html',
+    'nui/js/*.js',
+    'nui/css/*.css',
+    'nui/img/*.png',
+	'nui/roboto.ttf',
 }

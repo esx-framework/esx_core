@@ -64,12 +64,12 @@ Locales['br'] = {
   -- Phone
   ['alert_ambulance'] = 'alerta socorrista',
   -- Death
-  ['respawn_available_in'] = 'você irar reviver em  %s minutos %s segundos',
-  ['respawn_bleedout_in'] = 'você vai sangrar  %s minutos %s segundos\n',
-  ['respawn_bleedout_prompt'] = 'aguarde [ E] para reviver',
-  ['respawn_bleedout_fine'] = 'aguarde [ E] para reviver por $%s',
-  ['respawn_bleedout_fine_msg'] = 'você precisa pagar   para reviver',
-  ['distress_send'] = 'pressione [~bs~] enviar sinal de socorro',
+  ['respawn_available_in'] = 'você irar reviver em %s minutos %s segundos',
+  ['respawn_bleedout_in'] = 'você vai sangrar %s minutos %s segundos\n',
+  ['respawn_bleedout_prompt'] = 'aguarde [E] para reviver',
+  ['respawn_bleedout_fine'] = 'aguarde [E] para reviver por $%s',
+  ['respawn_bleedout_fine_msg'] = 'você precisa pagar $%s para reviver',
+  ['distress_send'] = 'pressione [G] enviar sinal de socorro',
   ['distress_sent'] = 'sinal de socorro foi enviado para as unidades disponíveis!',
 
   -- Revive
@@ -77,8 +77,8 @@ Locales['br'] = {
   -- Item
   ['used_medikit'] = 'você usou 1x Seringa',
   ['used_bandage'] = 'você usou 1x Vendagem',
-  ['not_enough_medikit'] = 'você não tem  Seringa.',
-  ['not_enough_bandage'] = 'você não tem  Vendagem.',
+  ['not_enough_medikit'] = 'você não tem seringa.',
+  ['not_enough_bandage'] = 'você não tem vendagem.',
   ['healed'] = 'você foi tratado.',
   -- Blips
   ['blip_hospital'] = 'hospital',

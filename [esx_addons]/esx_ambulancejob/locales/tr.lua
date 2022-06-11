@@ -63,12 +63,12 @@ Locales['tr'] = {
 	-- Phone
 	['alert_ambulance'] = 'hastane Acil Durum',
 	-- Death
-	['respawn_available_in'] = 'yeniden canlanmana  %s dakika %s saniye kaldı',
-	['respawn_bleedout_in'] = 'kanama  %s dakika %s saniye boyunca devam edecek\n',
-	['respawn_bleedout_prompt'] = 'yeniden canlanma için [ E] basılı tut',
-	['respawn_bleedout_fine'] = '%s lira karşılığında canlanma için [ E] basılı tut',
-	['respawn_bleedout_fine_msg'] = 'yeniden doğmak için   ödediniz.',
-	['distress_send'] = 'acile sinyal göndermek için [~bs~] basın',
+	['respawn_available_in'] = 'yeniden canlanmana %s dakika %s saniye kaldı',
+	['respawn_bleedout_in'] = 'kanama %s dakika %s saniye boyunca devam edecek\n',
+	['respawn_bleedout_prompt'] = 'yeniden canlanma için [E] basılı tut',
+	['respawn_bleedout_fine'] = '%s lira karşılığında canlanma için [E] basılı tut',
+	['respawn_bleedout_fine_msg'] = 'yeniden doğmak için %s ödediniz.',
+	['distress_send'] = 'acile sinyal göndermek için [G] basın',
 	['distress_sent'] = 'acil durum sinyali gönderildi!',
 	['revive_help'] = 'oyuncuyu canlandır',
 	-- Item

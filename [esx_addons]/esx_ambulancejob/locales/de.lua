@@ -63,20 +63,20 @@ Locales['de'] = {
   -- Phone
   ['alert_ambulance'] = 'Rettungsdienst alarmieren',
   -- Death
-  ['respawn_available_in'] = 'Respawn in  %s Minuten %s Sekundenrfügbar',
-  ['respawn_bleedout_in'] = 'Du wirst in  %s Minuten %s Sekundensbluten\n',
-  ['respawn_bleedout_prompt'] = 'Drücke [ Em zu respawnen',
-  ['respawn_bleedout_fine'] = 'Drücke [ Em für $%s zuspawnen',
-  ['respawn_bleedout_fine_msg'] = 'Du hast   bezahlt, um zu respawnen.',
-  ['distress_send'] = 'Drücke [~bs~] um ein Notsignal zu senden',
+  ['respawn_available_in'] = 'Respawn in %s Minuten %s Sekundenrfügbar',
+  ['respawn_bleedout_in'] = 'Du wirst in %s Minuten %s Sekundensbluten\n',
+  ['respawn_bleedout_prompt'] = 'Drücke [E] zu respawnen',
+  ['respawn_bleedout_fine'] = 'Drücke [E] für $%s zuspawnen',
+  ['respawn_bleedout_fine_msg'] = 'Du hast $%s bezahlt, um zu respawnen.',
+  ['distress_send'] = 'Drücke [G] um ein Notsignal zu senden',
   ['distress_sent'] = 'Notsignal wurde an den Rettungsdienst übermittelt!',
   -- Revive
   ['revive_help'] = 'Belebe einen Spieler wieder',
   -- Item
   ['used_medikit'] = 'Du hast eindikit verwendet',
   ['used_bandage'] = 'Du hast einenrband verwendet',
-  ['not_enough_medikit'] = 'Du hast keine Medikits',
-  ['not_enough_bandage'] = 'Du hast keine Verbände',
+  ['not_enough_medikit'] = 'Du hast keine medikits',
+  ['not_enough_bandage'] = 'Du hast keine verbände',
   ['healed'] = 'Du wurdest behandelt.',
   -- Blips
   ['blip_hospital'] = 'Krankenhaus',
