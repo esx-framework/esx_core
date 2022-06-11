@@ -1,5 +1,5 @@
-SetMapName('San Andreas')
-SetGameType('ESX Legacy')
+SetMapName(Config.MapName)
+SetGameType(Config.GameType)
 
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
