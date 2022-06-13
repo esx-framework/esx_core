@@ -106,7 +106,11 @@ end, false, {help = _U('command_clear')})
 
 ESX.RegisterCommand({'clearall', 'clsall'}, 'admin', function(xPlayer, args, showError)
 	TriggerClientEvent('chat:clear', -1)
-end, false, {help = _U('command_clearall')})
+end, true, {help = _U('command_clearall')})
+
+ESX.RegisterCommand("refreshjobs", 'admin', function(xPlayer, args, showError)
+	ESX.RefreshJobs()
+end, true, {help = _U('command_clearall')})
 
 if not Config.OxInventory then
 	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
