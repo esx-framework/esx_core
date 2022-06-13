@@ -35,18 +35,44 @@ body {
   color: white;
   font-size: 44px;
   border-radius: 0px 0px 0px 10px;
-  text-align: center;
-  padding: 50px;
   background: #353e4f;
   display: flex;
-  flex-wrap: wrap;
-  align-content: space-between;
-  justify-content: center;
-  width: 10%;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+#header .title {
+  padding: 50px;
+}
+
+#header ul {
+  font-size: 15px;
+  margin-top: -150px;
+  padding: 0px;
+  list-style-type: none;
+}
+
+#header li {
+  cursor: pointer;
+  padding: 15px;
+  width: 296px;
+}
+
+#header li:hover {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.356);
+  border-right: 3px solid #7186ad;
+}
+#header li.selected {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.356);
+  border-right: 3px solid #7186ad;
 }
 
 #header .close {
   float: right;
+  text-align: center;
   color: #b90000;
   font-size: 20px;
   font-weight: bold;
@@ -60,6 +86,7 @@ body {
   -webkit-border-radius: 50%;
   height: 25px;
   width: 25px;
+  margin: 30px 144px;
 }
 
 #header .close:hover {
@@ -91,7 +118,42 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+.content h2 {
+  width: 290px;
+  height: 290px;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  margin: -25px 0 0 -25px;
+  text-align: center;
+}
+
 .content::-webkit-scrollbar {
+  display: none;
+}
+
+.impounded_content {
+  display: none;
+  width: 100%;
+  margin: 20px;
+  color: white;
+  height: 655px;
+  overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.impounded_content h2 {
+  width: 290px;
+  height: 290px;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  margin: -25px 0 0 -25px;
+  text-align: center;
+}
+
+.impounded_content::-webkit-scrollbar {
   display: none;
 }
 
@@ -158,7 +220,7 @@ input::-webkit-inner-spin-button {
   padding: 20px 35px;
   font-size: 18px;
   text-align: center;
-  width: 274px;
+  width: 229px;
 }
 
 .vehicle-listing div {
@@ -194,7 +256,7 @@ input::-webkit-inner-spin-button {
   color: #ffffff;
   font-size: 17px;
   font-weight: bold;
-  padding: 20px 45px;
+  padding: 20px 30px;
   margin: 15px;
   text-shadow: -1px 1px 2px #00000026;
 }
@@ -202,4 +264,16 @@ input::-webkit-inner-spin-button {
 .vehicle-action:hover {
   background: linear-gradient(to bottom, #72b352 5%, #77b55a 100%);
   background-color: #72b352;
+}
+
+.vehicle-action.red {
+  border: 1px solid #8f2929;
+  background: linear-gradient(to bottom, #b55a5a 5%, #b35252 100%);
+  background-color: #b55a5a;
+}
+
+.vehicle-action.red:hover {
+  border: 1px solid #8f2c29;
+  background: linear-gradient(to bottom, #b55a5a 5%, #b35852 100%);
+  background-color: #b55a5a;
 }
