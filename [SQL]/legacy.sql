@@ -853,12 +853,6 @@ ALTER TABLE `addon_account`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `user_parkings`
---
-ALTER TABLE `user_parkings`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `addon_account_data`
 --
 ALTER TABLE `addon_account_data`
@@ -1058,12 +1052,6 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_licenses`
 --
 ALTER TABLE `user_licenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_parkings`
---
-ALTER TABLE `user_parkings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
