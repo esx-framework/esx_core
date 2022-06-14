@@ -128,19 +128,15 @@ end)
 
 AddEventHandler('esx_garage:hasEnteredMarker', function(name, part)
     if part == 'EntryPoint' then
+        local isInVehicle = IsPedInAnyVehicle(PlayerPedId(), false)
         local garage = Config.Garages[name]
         thisGarage   = garage
 
-        ESX.TextUI(_U('access_parking'))
-    end
-
-    if part == 'StorePoint' then
-        local garage = Config.Garages[name]
-        thisGarage              = garage
-
-        local isInVehicle = IsPedInAnyVehicle(PlayerPedId(), false)
-
-        if isInVehicle then ESX.TextUI(_U('park_veh')) end
+        if isInVehicle then 
+            ESX.TextUI(_U('park_veh'))
+        else
+            ESX.TextUI(_U('access_parking'))
+        end
     end
 
     if part == 'GetOutPoint' then
@@ -173,13 +169,6 @@ CreateThread(function()
                 DrawMarker(Config.Markers.EntryPoint.Type, v.EntryPoint.x, v.EntryPoint.y, v.EntryPoint.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Markers.EntryPoint.Size.x, Config.Markers.EntryPoint.Size.y, Config.Markers.EntryPoint.Size.z, Config.Markers.EntryPoint.Color.r, Config.Markers.EntryPoint.Color.g, Config.Markers.EntryPoint.Color.b, 100, false, true, 2, false, false, false, false)
                 sleep           = 0
                 break
-            end
-
-            if (#(coords -
-                vector3(v.StorePoint.x, v.StorePoint.y, v.StorePoint.z)) < Config.DrawDistance) then
-                DrawMarker(Config.Markers.StorePoint.Type, v.StorePoint.x, v.StorePoint.y, v.StorePoint.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Markers.StorePoint.Size.x, Config.Markers.StorePoint.Size.y, Config.Markers.StorePoint.Size.z, Config.Markers.StorePoint.Color.r, Config.Markers.StorePoint.Color.g, Config.Markers.StorePoint.Color.b, 100, false, true, 2, false, false, false, false)
-                
-                sleep           = 0
             end
         end
 
@@ -217,166 +206,159 @@ CreateThread(function()
                     isInMarker          = true
                     currentMarker       = k
                     currentPart         = 'EntryPoint'
-
-                    if IsControlJustReleased(0, 38) and not menuIsShowed then
-                        ESX.TriggerServerCallback('esx_garage:getVehiclesInParking',
-                            function(vehicles)
-                                if next(vehicles) ~= nil then
-                                    menuIsShowed        = true
-
-                                    for i = 1, #vehicles, 1 do
-                                        table.insert(vehiclesList, {
-                                            model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
-                                            plate       = vehicles[i].plate,
-                                            props       = vehicles[i].vehicle
-                                        })
-
-                                    end
-
-                                    local spawnPoint = {
-                                        x               = v.SpawnPoint.x,
-                                        y               = v.SpawnPoint.y,
-                                        z               = v.SpawnPoint.z,
-                                        heading         = v.SpawnPoint.heading
-                                    }
-
-                                    ESX.TriggerServerCallback('esx_garage:getVehiclesImpounded',
-                                    function(vehicles)
-                                        if next(vehicles) ~= nil then
-
-                                            for i = 1, #vehicles, 1 do
-                                                table.insert(vehiclesImpoundedList, {
-                                                    model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
-                                                    plate       = vehicles[i].plate,
-                                                    props       = vehicles[i].vehicle
-                                                })
-                                            end
-
-                                            local poundSpawnPoint = {
-                                                x               = Config.Pounds[v.ImpoundedName].GetOutPoint.x,
-                                                y               = Config.Pounds[v.ImpoundedName].GetOutPoint.y,
-                                            }
-
-                                            SendNUIMessage({
-                                                showMenu = true,
-                                                type                = 'garage',
-                                                vehiclesList = {
-                                                    json.encode(vehiclesList)
-                                                },
-                                                vehiclesImpoundedList = {
-                                                    json.encode(vehiclesImpoundedList)
-                                                },
-                                                poundName           = v.ImpoundedName,
-                                                poundSpawnPoint     = poundSpawnPoint,
-                                                spawnPoint          = spawnPoint,
-                                                locales = {
-                                                    action          = _U('veh_exit'),
-                                                    veh_model       = _U('veh_model'),
-                                                    veh_plate       = _U('veh_plate'),
-                                                    veh_condition   = _U('veh_condition'),
-                                                    veh_action      = _U('veh_action'),
-                                                    impound_action  = _U('impound_action'),
-                                                }
-                                            })
-                                        else
-                                            SendNUIMessage({
-                                                showMenu = true,
-                                                type                = 'garage',
-                                                vehiclesList = {
-                                                    json.encode(vehiclesList)
-                                                },
-                                                spawnPoint              = spawnPoint,
-                                                locales = {
-                                                    action              = _U('veh_exit'),
-                                                    veh_model           = _U('veh_model'),
-                                                    veh_plate           = _U('veh_plate'),
-                                                    veh_condition       = _U('veh_condition'),
-                                                    veh_action          = _U('veh_action'),
-                                                    no_veh_impounded    = _U('no_veh_impounded'),
-                                                }
-                                            })
-                                        end
-                                    end)
-
-                                    SetNuiFocus(true, true)
-
-                                    if menuIsShowed then
-                                        ESX.HideUI()
-                                    end
-                                else
-                                    menuIsShowed        = true
-
-                                    ESX.TriggerServerCallback('esx_garage:getVehiclesImpounded',
-                                    function(vehicles)
-                                        if next(vehicles) ~= nil then
-
-                                            for i = 1, #vehicles, 1 do
-                                                table.insert(vehiclesImpoundedList, {
-                                                    model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
-                                                    plate       = vehicles[i].plate,
-                                                    props       = vehicles[i].vehicle
-                                                })
-                                            end
-
-                                            local poundSpawnPoint = {
-                                                x               = Config.Pounds[v.ImpoundedName].GetOutPoint.x,
-                                                y               = Config.Pounds[v.ImpoundedName].GetOutPoint.y,
-                                            }
-
-                                            SendNUIMessage({
-                                                showMenu = true,
-                                                type                = 'garage',
-                                                vehiclesImpoundedList = {
-                                                    json.encode(vehiclesImpoundedList)
-                                                },
-                                                poundName               = v.ImpoundedName,
-                                                poundSpawnPoint         = poundSpawnPoint,
-                                                locales = {
-                                                    action              = _U('veh_exit'),
-                                                    veh_model           = _U('veh_model'),
-                                                    veh_plate           = _U('veh_plate'),
-                                                    veh_condition       = _U('veh_condition'),
-                                                    veh_action          = _U('veh_action'),
-                                                    no_veh_parking      = _U('no_veh_parking'),
-                                                    no_veh_impounded    = _U('no_veh_impounded'),
-                                                    impound_action      = _U('impound_action'),
-                                                }
-                                            })
-                                        else
-                                            SendNUIMessage({
-                                                showMenu = true,
-                                                type                = 'garage',
-                                                locales = {
-                                                    action          = _U('veh_exit'),
-                                                    veh_model       = _U('veh_model'),
-                                                    veh_plate       = _U('veh_plate'),
-                                                    veh_condition   = _U('veh_condition'),
-                                                    veh_action      = _U('veh_action'),
-                                                    no_veh_parking  = _U('no_veh_parking')
-                                                }
-                                            })
-                                        end
-                                    end)
-                                   
-
-                                    SetNuiFocus(true, true)
-
-                                    if menuIsShowed then
-                                        ESX.HideUI()
-                                    end
-
-                                    -- ESX.ShowNotification(_U('no_veh_parking'))
-                                end
-                            end, currentMarker)
-                    end
-                    break
-                end
-
-                if (#(coords - vector3(v.StorePoint.x, v.StorePoint.y, v.StorePoint.z)) < Config.Markers.StorePoint.Size.x) then
-                    isInMarker          = true
-                    currentMarker       = k
-                    currentPart         = 'StorePoint'
                     local isInVehicle   = IsPedInAnyVehicle(playerPed, false)
+
+                    if not isInVehicle then
+                        if IsControlJustReleased(0, 38) and not menuIsShowed then
+                            ESX.TriggerServerCallback('esx_garage:getVehiclesInParking',
+                                function(vehicles)
+                                    if next(vehicles) ~= nil then
+                                        menuIsShowed        = true
+
+                                        for i = 1, #vehicles, 1 do
+                                            table.insert(vehiclesList, {
+                                                model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
+                                                plate       = vehicles[i].plate,
+                                                props       = vehicles[i].vehicle
+                                            })
+
+                                        end
+
+                                        local spawnPoint = {
+                                            x               = v.SpawnPoint.x,
+                                            y               = v.SpawnPoint.y,
+                                            z               = v.SpawnPoint.z,
+                                            heading         = v.SpawnPoint.heading
+                                        }
+
+                                        ESX.TriggerServerCallback('esx_garage:getVehiclesImpounded',
+                                        function(vehicles)
+                                            if next(vehicles) ~= nil then
+
+                                                for i = 1, #vehicles, 1 do
+                                                    table.insert(vehiclesImpoundedList, {
+                                                        model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
+                                                        plate       = vehicles[i].plate,
+                                                        props       = vehicles[i].vehicle
+                                                    })
+                                                end
+
+                                                local poundSpawnPoint = {
+                                                    x               = Config.Pounds[v.ImpoundedName].GetOutPoint.x,
+                                                    y               = Config.Pounds[v.ImpoundedName].GetOutPoint.y,
+                                                }
+
+                                                SendNUIMessage({
+                                                    showMenu = true,
+                                                    type                = 'garage',
+                                                    vehiclesList = {
+                                                        json.encode(vehiclesList)
+                                                    },
+                                                    vehiclesImpoundedList = {
+                                                        json.encode(vehiclesImpoundedList)
+                                                    },
+                                                    poundName           = v.ImpoundedName,
+                                                    poundSpawnPoint     = poundSpawnPoint,
+                                                    spawnPoint          = spawnPoint,
+                                                    locales = {
+                                                        action          = _U('veh_exit'),
+                                                        veh_model       = _U('veh_model'),
+                                                        veh_plate       = _U('veh_plate'),
+                                                        veh_condition   = _U('veh_condition'),
+                                                        veh_action      = _U('veh_action'),
+                                                        impound_action  = _U('impound_action'),
+                                                    }
+                                                })
+                                            else
+                                                SendNUIMessage({
+                                                    showMenu = true,
+                                                    type                = 'garage',
+                                                    vehiclesList = {
+                                                        json.encode(vehiclesList)
+                                                    },
+                                                    spawnPoint              = spawnPoint,
+                                                    locales = {
+                                                        action              = _U('veh_exit'),
+                                                        veh_model           = _U('veh_model'),
+                                                        veh_plate           = _U('veh_plate'),
+                                                        veh_condition       = _U('veh_condition'),
+                                                        veh_action          = _U('veh_action'),
+                                                        no_veh_impounded    = _U('no_veh_impounded'),
+                                                    }
+                                                })
+                                            end
+                                        end)
+
+                                        SetNuiFocus(true, true)
+
+                                        if menuIsShowed then
+                                            ESX.HideUI()
+                                        end
+                                    else
+                                        menuIsShowed        = true
+
+                                        ESX.TriggerServerCallback('esx_garage:getVehiclesImpounded',
+                                        function(vehicles)
+                                            if next(vehicles) ~= nil then
+
+                                                for i = 1, #vehicles, 1 do
+                                                    table.insert(vehiclesImpoundedList, {
+                                                        model       = GetDisplayNameFromVehicleModel(vehicles[i].vehicle.model),
+                                                        plate       = vehicles[i].plate,
+                                                        props       = vehicles[i].vehicle
+                                                    })
+                                                end
+
+                                                local poundSpawnPoint = {
+                                                    x               = Config.Pounds[v.ImpoundedName].GetOutPoint.x,
+                                                    y               = Config.Pounds[v.ImpoundedName].GetOutPoint.y,
+                                                }
+
+                                                SendNUIMessage({
+                                                    showMenu = true,
+                                                    type                = 'garage',
+                                                    vehiclesImpoundedList = {
+                                                        json.encode(vehiclesImpoundedList)
+                                                    },
+                                                    poundName               = v.ImpoundedName,
+                                                    poundSpawnPoint         = poundSpawnPoint,
+                                                    locales = {
+                                                        action              = _U('veh_exit'),
+                                                        veh_model           = _U('veh_model'),
+                                                        veh_plate           = _U('veh_plate'),
+                                                        veh_condition       = _U('veh_condition'),
+                                                        veh_action          = _U('veh_action'),
+                                                        no_veh_parking      = _U('no_veh_parking'),
+                                                        no_veh_impounded    = _U('no_veh_impounded'),
+                                                        impound_action      = _U('impound_action'),
+                                                    }
+                                                })
+                                            else
+                                                SendNUIMessage({
+                                                    showMenu = true,
+                                                    type                = 'garage',
+                                                    locales = {
+                                                        action          = _U('veh_exit'),
+                                                        veh_model       = _U('veh_model'),
+                                                        veh_plate       = _U('veh_plate'),
+                                                        veh_condition   = _U('veh_condition'),
+                                                        veh_action      = _U('veh_action'),
+                                                        no_veh_parking  = _U('no_veh_parking')
+                                                    }
+                                                })
+                                            end
+                                        end)
+                                    
+
+                                        SetNuiFocus(true, true)
+
+                                        if menuIsShowed then
+                                            ESX.HideUI()
+                                        end
+                                    end
+                                end, currentMarker)
+                        end
+                    end
 
                     if isInVehicle then
                         if IsControlJustReleased(0, 38) then
@@ -393,6 +375,7 @@ CreateThread(function()
                             end, vehicleProps.plate)
                         end
                     end
+                    break
                 end
             end
 
