@@ -17,7 +17,12 @@ $(window).ready(function () {
         $("#container").data("spawnpoint", data.spawnPoint);
         if (data.poundCost) $("#container").data("poundcost", data.poundCost);
 
-        $(".content .vehicle-list").html(getVehicles(data.locales, data.vehiclesList));
+        if (data.poundCost != undefined) {
+          $(".content .vehicle-list").html(getVehicles(data.locales, data.vehiclesList, data.poundCost));
+        } else {
+          $(".content .vehicle-list").html(getVehicles(data.locales, data.vehiclesList));
+        }
+
         $('.content h2').hide();
       } else {
         $('.content h2').show();
@@ -85,7 +90,7 @@ $(window).ready(function () {
     }
   };
 
-function getVehicles(locale, vehicle) {
+function getVehicles(locale, vehicle, amount = null) {
   let html = "";
   let vehicleData = JSON.parse(vehicle);
   let bodyHealth = 1000;
@@ -111,7 +116,7 @@ function getVehicles(locale, vehicle) {
       "<button data-button='spawn' class='vehicle-action unstyled-button' data-vehprops='" +
       JSON.stringify(vehicleData[i].props) +
       "'>" +
-      locale.action +
+      locale.action + (amount ? " ($" + amount + ")" : "") +
       "</button>";
     html += "</div>";
   }
