@@ -30,7 +30,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end
 
 	if Core.RegisteredCommands[name] then
-		print(('[^3WARNING^7] Command ^5"%s" ^7already registered, overriding command'):format(name))
+        print(('[^3WARNING^7] Command ^5"%s" ^7already registered, overriding command'):format(name))
 
 		if Core.RegisteredCommands[name].suggestion then
 			TriggerClientEvent('chat:removeSuggestion', -1, ('/%s'):format(name))
@@ -252,6 +252,52 @@ function ESX.GetIdentifier(playerId)
 			local identifier = string.gsub(v, 'license:', '')
 			return identifier
 		end
+	end
+end
+
+function ESX.RefreshJobs() 
+	local Jobs = {}
+	local jobs = MySQL.query.await('SELECT * FROM jobs')
+
+	for _, v in ipairs(jobs) do
+		Jobs[v.name] = v
+		Jobs[v.name].grades = {}
+	end
+
+	local jobGrades = MySQL.query.await('SELECT * FROM job_grades')
+
+	for _, v in ipairs(jobGrades) do
+		if Jobs[v.job_name] then
+			Jobs[v.job_name].grades[tostring(v.grade)] = v
+		else
+			print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
+		end
+	end
+
+	for _, v in pairs(Jobs) do
+		if ESX.Table.SizeOf(v.grades) == 0 then
+			Jobs[v.name] = nil
+			print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(v.name))
+		end
+	end
+
+	if not Jobs then
+		-- Fallback data, if no jobs exist
+		ESX.Jobs['unemployed'] = {
+			label = 'Unemployed',
+			grades = {
+				['0'] = {
+					grade = 0,
+					label = 'Unemployed',
+					salary = 200,
+                    onDuty = false,
+					skin_male = {},
+					skin_female = {}
+				}
+			}
+		}
+	else
+		ESX.Jobs = Jobs
 	end
 end
 

@@ -287,7 +287,8 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 			MySQL.update('UPDATE job_grades SET salary = ? WHERE job_name = ? AND grade = ?', {salary, job, grade},
 			function(rowsChanged)
 				Jobs[job].grades[tostring(grade)].salary = salary
-
+				ESX.RefreshJobs()
+				Wait(1)
 				local xPlayers = ESX.GetExtendedPlayers('job', job)
 				for _, xTarget in pairs(xPlayers) do
 
@@ -295,13 +296,37 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 						xTarget.setJob(job, grade)
 					end
 				end
-
 				cb()
 			end)
 		else
 			print(('esx_society: %s attempted to setJobSalary over config limit!'):format(xPlayer.identifier))
 			cb()
 		end
+	else
+		print(('esx_society: %s attempted to setJobSalary'):format(xPlayer.identifier))
+		cb()
+	end
+end)
+
+
+ESX.RegisterServerCallback('esx_society:setJobLabel', function(source, cb, job, grade, label)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.job.name == job and xPlayer.job.grade_name == 'boss' then
+			MySQL.update('UPDATE job_grades SET label = ? WHERE job_name = ? AND grade = ?', {label, job, grade},
+			function(rowsChanged)
+				Jobs[job].grades[tostring(grade)].label = label
+				ESX.RefreshJobs()
+				Wait(1)
+				local xPlayers = ESX.GetExtendedPlayers('job', job)
+				for _, xTarget in pairs(xPlayers) do
+
+					if xTarget.job.grade == grade then
+						xTarget.setJob(job, grade)
+					end
+				end
+				cb()
+			end)
 	else
 		print(('esx_society: %s attempted to setJobSalary'):format(xPlayer.identifier))
 		cb()

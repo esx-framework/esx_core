@@ -360,7 +360,8 @@ CREATE TABLE `owned_vehicles` (
   `type` varchar(20) NOT NULL DEFAULT 'car',
   `job` varchar(20) DEFAULT NULL,
   `stored` tinyint(4) NOT NULL DEFAULT 0,
-  `parking` VARCHAR(60) DEFAULT NULL
+  `parking` VARCHAR(60) DEFAULT NULL,
+  `pound` VARCHAR(60) DEFAULT NULL
 ) ENGINE=InnoDB;
 
 
@@ -533,21 +534,6 @@ CREATE TABLE `user_licenses` (
   `owner` varchar(60) NOT NULL
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `user_parkings`
---
-
-CREATE TABLE `user_parkings` (
-  `id` int(11) NOT NULL,
-  `identifier` varchar(60) NOT NULL,
-  `garage` varchar(60) DEFAULT NULL,
-  `zone` int(11) NOT NULL,
-  `vehicle` longtext DEFAULT NULL
-) ENGINE=InnoDB;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `vehicles`
@@ -867,12 +853,6 @@ ALTER TABLE `addon_account`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `user_parkings`
---
-ALTER TABLE `user_parkings`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `addon_account_data`
 --
 ALTER TABLE `addon_account_data`
@@ -1072,12 +1052,6 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_licenses`
 --
 ALTER TABLE `user_licenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_parkings`
---
-ALTER TABLE `user_parkings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

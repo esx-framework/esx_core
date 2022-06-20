@@ -6,12 +6,23 @@
   <body>
     <div id="container">
       <div id="header">
-        <div style="display: inline">ESX garage</div>
+        <div class="title" style="display: inline">ESX garage</div>
+        <ul>
+          <li data-page="garage" class="selected">Garage</li>
+          <li data-page="impounded">Impounded</li>
+        </ul>
         <div class="close">X</div>
       </div>
+
       <div id="menu">
         <div class="content">
-          <div id="vehicle-list"></div>
+          <h2>No vehicle in this garage.</h2>
+          <div class="vehicle-list"></div>
+        </div>
+
+        <div class="impounded_content">
+          <h2>No vehicle impounded.</h2>
+          <div class="vehicle-list"></div>
         </div>
       </div>
     </div>
