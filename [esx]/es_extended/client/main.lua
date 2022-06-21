@@ -76,7 +76,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		})
 	end
 
-	if Config.FallDamage then
+	if Config.DisableFallDamage then
 		if IsPedFalling(PlayerPedId()) then
 			SetEntityInvincible(PlayerPedId(), true)
 			SetPlayerInvincible(PlayerId(), true)
