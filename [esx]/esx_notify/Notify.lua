@@ -1,8 +1,9 @@
 local function Notify(type, length, message)
+    local msg = string.gsub(message, '~%a~', '')
     SendNuiMessage(json.encode({
         type = type or "info",
         length = length or 3000,
-        message = message or "ESX-Notify"
+        message = msg or "ESX-Notify"
     }))
 end
 
