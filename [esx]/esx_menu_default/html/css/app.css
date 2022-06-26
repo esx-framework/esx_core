@@ -9,24 +9,22 @@
 	min-width: 350px;
 	color: #fff;
 	position: absolute;
-	padding: auto;
 	background: rgba(33, 33, 33, 0.0);
-	text-allign: center;
+	text-align: center;
 }
 
 .head {
 	display: block;
-	text-align: center;
 	overflow: hidden;
 	padding-bottom: 3px;
-	text-allign: center;
+	text-align: center;
 	margin-bottom: 5px;
 	white-space: nowrap;
 	background: rgba(10, 10, 10, 0.9);
 }
 
 .menu .head {
-	text-allign: center;
+	text-align: center;
 	height: 28px;
 	color: #ffffff;
 	font-weight: 700;
@@ -57,7 +55,6 @@
 }
 
 .menu .menu-items .menu-item.selected {
-	background: rgba(31, 31, 31, 0.525);
 	border: 1px solid rgba(55, 55, 55, 0.9);
 	background: rgba(20, 20, 20, 0.9);
 	color: rgba(243, 243, 243);
@@ -71,7 +68,7 @@
 }
 
 .menu.align-top-left {
-	left: 40;
+	left: 3rem;
 	top: 0;
 }
 
@@ -81,7 +78,7 @@
 }
 
 .menu.align-top-right {
-	right: 40;
+	right: 3rem;
 	top: 0;
 }
 
@@ -91,7 +88,7 @@
 }
 
 .menu.align-bottom-right {
-	right: 40;
+	right: 3rem;
 	bottom: 0;
 }
 
@@ -102,11 +99,12 @@
 }
 
 .menu.align-bottom-left {
-	left: 40;
+	left: 3rem;
 	bottom: 0;
 }
 
 .menu.align-center {
   	left: 50%;
-	top: 50%;
+	top: 35%;
+	transform:translate(-50%, 50%);
 }
