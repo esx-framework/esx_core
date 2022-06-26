@@ -11,7 +11,7 @@
 	position: absolute;
 	padding: auto;
 	background: rgba(33, 33, 33, 0.0);
-	text-allign: center;
+	text-align: center;
 }
 
 .head {
@@ -19,7 +19,7 @@
 	text-align: center;
 	overflow: hidden;
 	padding-bottom: 3px;
-	text-allign: center;
+	text-align: center;
 	margin-bottom: 5px;
 	white-space: nowrap;
 	background: rgba(10, 10, 10, 0.9);
