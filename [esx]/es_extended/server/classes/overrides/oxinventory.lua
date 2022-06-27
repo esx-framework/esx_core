@@ -8,27 +8,31 @@ end
 
 Core.PlayerFunctionOverrides.OxInventory = {
   getInventory = function(self)
-    return function()
-      local res = {}
+    return function(minimal)
+      if minimal then
+        local minimalInventory = {}
 
-      for k, v in pairs(self.inventory) do
-        if v.count and v.count > 0 then
-          local metadata = v.metadata
+        for k, v in pairs(self.inventory) do
+          if v.count and v.count > 0 then
+            local metadata = v.metadata
 
-          if v.metadata and next(v.metadata) == nil then
-            metadata = nil
+            if v.metadata and next(v.metadata) == nil then
+              metadata = nil
+            end
+
+            minimalInventory[#minimalInventory+1] = {
+              name = v.name,
+              count = v.count,
+              slot = k,
+              metadata = metadata
+            }
           end
-
-          res[#res+1] = {
-            name = v.name,
-            count = v.count,
-            slot = k,
-            metadata = metadata
-          }
         end
+
+        return minimalInventory
       end
 
-      return res
+      return self.inventory
     end
   end,
 
