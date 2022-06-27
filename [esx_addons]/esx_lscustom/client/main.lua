@@ -4,7 +4,7 @@ local lsMenuIsShowed, HintDisplayed, isInLSMarker = false, false, false
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     ESX.PlayerLoaded = true
-
+	ESX.PlayerData = xPlayer
     ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
         Vehicles = vehicles
     end)
