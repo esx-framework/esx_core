@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "types": ["@citizenfx/server", "@types/node"],
+    "declaration": true
+  },
+  "files": ["MySQL.ts"]
+}

@@ -1,0 +1,12 @@
+{
+  "language": "Slovak",
+  "ui": {
+    "settings": {
+      "title": "Nastavenia",
+      "language": "Jazyk"
+    },
+    "cancel": "Cancel",
+    "close": "Zavrieť",
+    "confirm": "Potvrdiť"
+  }
+}

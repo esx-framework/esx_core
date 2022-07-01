@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>fivem runcode</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulmaswatch/0.7.2/cyborg/bulmaswatch.min.css">
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+	<style type="text/css">
+	body {
+		font-family: "Segoe UI", sans-serif;
+	}
+
+	.navbar {
+		z-index: inherit;
+	}
+
+	html.in-nui {
+		overflow: hidden;
+		background: transparent;
+
+		margin-top: 5vh;
+		margin-left: 7.5vw;
+		margin-right: 7.5vw;
+		margin-bottom: 5vh;
+
+		height: calc(100% - 10vh);
+
+		position: relative;
+	}
+
+	html.in-nui body > div.bg {
+		background-color: rgba(0, 0, 0, 1);
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		z-index: -999;
+
+		box-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.56);  
+	}
+
+	span.nui-edition {
+		display: none;
+	}
+
+	html.in-nui span.nui-edition {
+		display: inline;
+	}
+
+	#close {
+		display: none;
+	}
+
+	html.in-nui #close {
+		display: block;
+	}
+
+	#result {
+		margin-top: 0.5em;
+	}
+
+	.navbar {
+		border-top: none;
+		border-left: none;
+		border-right: none;
+	}
+	</style>
+</head>
+<body>
+	<div class="bg">
+
+	</div>
+
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="container">
+			<div class="navbar-brand">
+				<a class="navbar-item" href="/runcode">
+					<strong>runcode</strong> <span class="nui-edition">&nbsp;in-game</span>
+				</a>
+
+				<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</a>
+			</div>
+
+			<div id="navbarMain" class="navbar-menu">
+				<div class="navbar-end">
+					<div class="navbar-item">
+						<div class="field" id="cl-field">
+							<div class="control has-icons-left">
+								<div class="select">
+									<select id="cl-select">
+									</select>
+								</div>
+								<div class="icon is-small is-left">
+								<i class="fas fa-user"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="navbar-item">
+							<div class="field has-addons" id="lang-toggle">
+								<p class="control">
+									<button class="button" id="lua-button">
+										<span class="icon is-small">
+											<i class="fas fa-moon"></i>
+										</span>
+										<span>Lua</span>
+									</button>
+								</p>
+								<p class="control">
+									<button class="button" id="js-button">
+										<span class="icon is-small">
+											<i class="fab fa-js"></i>
+										</span>
+										<span>JS</span>
+									</button>
+								</p>
+								<!-- TODO pending add-on resource that'll contain webpack'd compiler
+								<p class="control">
+									<button class="button" id="ts-button">
+										<span class="icon is-small">
+											<i class="fas fa-code"></i>
+										</span>
+										<span>TS</span>
+									</button>
+								</p>
+								-->
+							</div>
+						</div>
+
+					<div class="navbar-item">
+						<div class="field has-addons" id="cl-sv-toggle">
+							<p class="control">
+								<button class="button" id="cl-button">
+									<span class="icon is-small">
+										<i class="fas fa-user-friends"></i>
+									</span>
+									<span>Client</span>
+								</button>
+							</p>
+							<p class="control">
+								<button class="button" id="sv-button">
+									<span class="icon is-small">
+										<i class="fas fa-server"></i>
+									</span>
+									<span>Server</span>
+								</button>
+							</p>
+						</div>
+					</div>
+
+					<div class="navbar-item" id="close">
+						<button class="button is-danger">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<section class="section">
+		<div class="container">
+			<div id="code-container" style="width:100%;height:60vh;border:1px solid grey"></div><br>
+			<div class="field" id="passwordField">
+			<p class="control has-icons-left">
+				<input class="input" type="password" id="password" placeholder="RCon Password">
+				<span class="icon is-small is-left">
+				<i class="fas fa-lock"></i>
+				</span>
+			</p>
+			</div>
+			<button class="button is-primary" id="run">Run</button>
+			<div id="result">
+			</div>
+		</div>
+	</section>
+
+	<!--
+	to use a local deployment, uncomment; do note currently the server isn't optimized to serve >1MB files
+	<script src="monaco-editor/vs/loader.js"></script>
+	-->
+
+	<script src="https://unpkg.com/monaco-editor@0.18.1/min/vs/loader.js"></script>
+
+	<script>
+		function fetchClients() {
+			fetch('/runcode/clients').then(res => res.json()).then(res => {
+				const el = document.querySelector('#cl-select');
+
+				const clients = res.clients;
+				const realClients = [['All', '-1'], ...clients];
+
+				const createdClients = new Set([...el.querySelectorAll('option').entries()].map(([i, el]) => el.value));
+				const existentClients = new Set(realClients.map(([ name, id ]) => id));
+
+				const toRemove = [...createdClients].filter(a => !existentClients.has(a));
+
+				for (const [name, id] of realClients) {
+					const ex = el.querySelector(`option[value="${id}"]`);
+
+					if (!ex) {
+						const l = document.createElement('option');
+						l.setAttribute('value', id);
+						l.appendChild(document.createTextNode(name));
+
+						el.appendChild(l);
+					}
+				}
+
+				for (const id of toRemove) {
+					const l = el.querySelector(`option[value="${id}"]`);
+
+					if (l) {
+						el.removeChild(l);
+					}
+				}
+			});
+		}
+
+		let useClient = false;
+		let editServerCb = null;
+
+		[['#cl-button', true], ['#sv-button', false]].forEach(([ selector, isClient ]) => {
+			const eh = () => {
+				if (isClient) {
+					document.querySelector('#cl-select').disabled = false;
+					useClient = true;
+				} else {
+					document.querySelector('#cl-select').disabled = true;
+					useClient = false;
+				}
+
+				document.querySelectorAll('#cl-sv-toggle button').forEach(el => {
+					el.classList.remove('is-selected', 'is-info');
+				});
+
+				const tgt = document.querySelector(selector);
+
+				tgt.classList.add('is-selected', 'is-info');
+
+				if (editServerCb) {
+					editServerCb();
+				}
+			};
+
+			// default to not-client
+			if (!isClient) {
+				eh();
+			}
+
+			document.querySelector(selector).addEventListener('click', ev => {
+				eh();
+				
+				ev.preventDefault();
+			});
+		});
+
+		let lang = 'lua';
+		let editLangCb = null;
+		let initCb = null;
+
+		function getLangCode(lang) {
+			switch (lang) {
+				case 'js':
+					return 'javascript';
+				case 'ts':
+					return 'typescript';
+			}
+
+			return lang;
+		}
+
+		[['#lua-button', 'lua'], ['#js-button', 'js']/*, ['#ts-button', 'ts']*/].forEach(([ selector, langOpt ]) => {
+			const eh = () => {
+				lang = langOpt;
+
+				document.querySelectorAll('#lang-toggle button').forEach(el => {
+					el.classList.remove('is-selected', 'is-info');
+				});
+
+				const tgt = document.querySelector(selector);
+
+				tgt.classList.add('is-selected', 'is-info');
+
+				if (editLangCb) {
+					editLangCb();
+				}
+			};
+
+			// default to not-client
+			if (langOpt === 'lua') {
+				eh();
+			}
+
+			document.querySelector(selector).addEventListener('click', ev => {
+				eh();
+				
+				ev.preventDefault();
+			});
+		});
+
+
+		setInterval(() => fetchClients(), 1000);
+
+		const inNui = (!!window.invokeNative);
+		let openData = {};
+
+		if (inNui) {
+			document.querySelector('#passwordField').style.display = 'none';
+			document.querySelector('html').classList.add('in-nui');
+
+			fetch(`http://${window.parent.GetParentResourceName()}/getOpenData`, {
+				method: 'POST',
+				body: '{}'
+			}).then(a => a.json())
+			  .then(a => {
+				openData = a;
+
+				if (!openData.options.canServer) {
+					document.querySelector('#cl-sv-toggle').style.display = 'none';
+
+					const trigger = document.createEvent('HTMLEvents');
+					trigger.initEvent('click', true, true);
+
+					document.querySelector('#cl-button').dispatchEvent(trigger);
+				} else if (!openData.options.canClient && !openData.options.canSelf) {
+					document.querySelector('#cl-sv-toggle').style.display = 'none';
+					document.querySelector('#cl-field').style.display = 'none';
+
+					const trigger = document.createEvent('HTMLEvents');
+					trigger.initEvent('click', true, true);
+
+					document.querySelector('#sv-button').dispatchEvent(trigger);
+				}
+
+				if (!openData.options.canClient && openData.options.canSelf) {
+					document.querySelector('#cl-field').style.display = 'none';
+				}
+
+				if (openData.options.saveData) {
+					const cb = () => {
+						if (initCb) {
+							initCb({
+								lastLang: openData.options.saveData.lastLang,
+								lastSnippet: openData.options.saveData.lastSnippet
+							});
+						} else {
+							setTimeout(cb, 50);
+						}
+					};
+
+					setTimeout(cb, 50);
+				}
+				
+				fetch(`https://${window.parent.GetParentResourceName()}/doOk`, {
+					method: 'POST',
+					body: '{}'
+				});
+			  });
+
+			document.querySelector('#close button').addEventListener('click', ev => {
+				fetch(`https://${window.parent.GetParentResourceName()}/doClose`, {
+					method: 'POST',
+					body: '{}'
+				});
+
+				ev.preventDefault();
+			});
+		}
+
+		const defFiles = ['index.d.ts'];
+		const defFilesServer = [...defFiles, 'natives_server.d.ts'];
+		const defFilesClient = [...defFiles, 'natives_universal.d.ts'];
+
+		const prefix = 'https://unpkg.com/@citizenfx/{}/';
+		const prefixClient = prefix.replace('{}', 'client');
+		const prefixServer = prefix.replace('{}', 'server');
+
+		require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.18.1/min/vs' }});
+		require(['vs/editor/editor.main'], function() {
+			const editor = monaco.editor.create(document.getElementById('code-container'), {
+				value: 'return 42',
+				language: 'lua'
+			});
+
+			monaco.editor.setTheme('vs-dark');
+
+			let finalizers = [];
+
+			const updateScript = (client, lang) => {
+				finalizers.forEach(a => a());
+				finalizers = [];
+
+				if (lang === 'js' || lang === 'ts') {
+					const defaults = (lang === 'js') ? monaco.languages.typescript.javascriptDefaults :
+						monaco.languages.typescript.typescriptDefaults;
+
+					defaults.setCompilerOptions({
+						noLib: true,
+						allowNonTsExtensions: true
+					});
+
+					for (const file of (client ? defFilesClient : defFilesServer)) {
+						const prefix = (client ? prefixClient : prefixServer);
+
+						fetch(`${prefix}${file}`)
+							.then(a => a.text())
+							.then(a => {
+								const l = defaults.addExtraLib(a, file);
+
+								finalizers.push(() => l.dispose());
+							});
+					}
+				}
+			}
+
+			editLangCb = () => {
+				monaco.editor.setModelLanguage(editor.getModel(), getLangCode(lang));
+
+				updateScript(useClient, lang);
+			};
+
+			editServerCb = () => {
+				updateScript(useClient, lang);
+			};
+
+			initCb = (data) => {
+				if (data.lastLang) {
+					const trigger = document.createEvent('HTMLEvents');
+					trigger.initEvent('click', true, true);
+					document.querySelector(`#${data.lastLang}-button`).dispatchEvent(trigger);
+				}
+
+				if (data.lastSnippet) {
+					editor.getModel().setValue(data.lastSnippet);
+				}
+			};
+
+			document.querySelector('#run').addEventListener('click', e => {
+				const text = editor.getValue();
+
+				fetch((!inNui) ? '/runcode/' : `https://${openData.res}/runCodeInBand`, {
+					method: 'post',
+					body: JSON.stringify({
+						password: document.querySelector('#password').value,
+						client: (useClient) ? document.querySelector('#cl-select').value : '',
+						code: text,
+						lang: lang
+					})
+				}).then(res => res.json()).then(res => {
+					if (inNui) {
+						res = JSON.parse(res); // double packing for sad msgpack-to-json
+					}
+
+					const resultElement = document.querySelector('#result');
+
+					if (res.error) {
+						resultElement.classList.remove('notification', 'is-success');
+						resultElement.classList.add('notification', 'is-danger');
+					} else {
+						resultElement.classList.remove('notification', 'is-danger');
+						resultElement.classList.add('notification', 'is-success');
+					}
+
+					resultElement.innerHTML = res.error || res.result;
+
+					if (res.from) {
+						resultElement.innerHTML += ' (from ' + res.from + ')';
+					}
+				});
+
+				e.preventDefault();
+			});
+		});
+	</script>
+
+</body>
+</html>

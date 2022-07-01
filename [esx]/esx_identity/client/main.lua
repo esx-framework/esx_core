@@ -1,5 +1,4 @@
 local loadingScreenFinished = false
-local ready = false
 
 RegisterNetEvent('esx_identity:alreadyRegistered')
 AddEventHandler('esx_identity:alreadyRegistered', function()
@@ -14,38 +13,37 @@ AddEventHandler('esx:loadingScreenOff', function()
 	loadingScreenFinished = true
 end)
 
-RegisterNUICallback('ready', function(data, cb)
-	ready = true
-	cb(1)
-end)
-
 if not Config.UseDeferrals then
 	local guiEnabled = false
 
 	function EnableGui(state)
 		SetNuiFocus(state, state)
 		guiEnabled = state
-		while not ready do
-			Wait(500)
+
+		if(state == true) then
+			SendNUIMessage({
+				action = "open"
+			})
+		else
+			SendNUIMessage({
+				action = "close"
+			})
 		end
-		SendNUIMessage({
-			type = "enableui",
-			enable = state
-		})
-		if state == false then ClearTimecycleModifier() end
 	end
 
 	RegisterNetEvent('esx_identity:showRegisterIdentity')
 	AddEventHandler('esx_identity:showRegisterIdentity', function()
+		SendNUIMessage({
+			action = "config",
+			config = Config.UI
+		})
+
 		TriggerEvent('esx_skin:resetFirstSpawn')
 
-		if not ESX.PlayerData.dead then
+		if not ESX.GetPlayerData().dead then
 			EnableGui(true)
-			SetTimecycleModifier("hud_def_blur")
-		SetTimecycleModifierStrength(1)
 		end
 	end)
-
 
 	RegisterNUICallback('register', function(data, cb)
 		ESX.TriggerServerCallback('esx_identity:registerIdentity', function(callback)
@@ -54,7 +52,7 @@ if not Config.UseDeferrals then
 				EnableGui(false)
 				if not ESX.GetConfig().Multichar then TriggerEvent('esx_skin:playerRegistered') end
 			else
-				ESX.ShowNotification(_U('registration_error'), "error",5000)
+				ESX.ShowNotification(_U('registration_error'))
 			end
 		end, data)
 	end)

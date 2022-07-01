@@ -1,10 +1,9 @@
 fx_version 'adamant'
-
 game 'gta5'
-
 description 'ESX Identity'
+version '1.6.0'
+lua54 'yes'
 
-version '1.7.5'
 
 shared_script '@es_extended/imports.lua'
 
@@ -26,10 +25,8 @@ client_scripts {
 ui_page 'html/index.html'
 
 files {
-	'html/index.html',
-	'html/js/script.js',
-	'html/css/style.css',
-	'html/img/esx_identity.png'
+	'html/**/*.*',
 }
 
 dependency 'es_extended'
+

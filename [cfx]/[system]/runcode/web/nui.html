@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>runcode nui</title>
+
+<style type="text/css">
+html {
+    overflow: hidden;
+}
+
+body {
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+</style>
+
+<div id="holder">
+
+</div>
+
+<script type="text/javascript">
+let openData = null;
+
+window.addEventListener('message', ev => {
+    switch (ev.data.type) {
+        case 'open':
+            const frame = document.createElement('iframe');
+        
+            frame.name = 'rc';
+            frame.allow = 'microphone *;';
+            frame.src = ev.data.url;
+            frame.style.visibility = 'hidden';
+
+            openData = ev.data;
+            openData.frame = frame;
+
+            document.querySelector('#holder').appendChild(frame);
+            break;
+        case 'ok':
+            openData.frame.style.visibility = 'visible';
+            break;
+        case 'close':
+            document.querySelector('#holder').removeChild(openData.frame);
+            
+            openData = null;
+            break;
+    }
+});
+</script>
