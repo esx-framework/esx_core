@@ -674,6 +674,10 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
     end
 end)
 
+AddEventHandler('txAdmin:events:serverShuttingDown', function()
+    Core.SavePlayers()
+end)
+
 RegisterNetEvent('esx:setDuty')
 AddEventHandler('esx:setDuty', function(bool)
     local xPlayer = ESX.GetPlayerFromId(source)
