@@ -1,16 +1,16 @@
 RegisterServerEvent('esx_garage:updateOwnedVehicle')
-AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, pound, vehicleProps)
+AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impound, vehicleProps)
 	local source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
-		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `parking` = @parking, `pound` = @pound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
+		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `parking` = @parking, `pound` = @Impound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
 		{
 			['@identifier'] = xPlayer.identifier,
 			['@vehicle'] 	= json.encode(vehicleProps),
 			['@plate'] 		= vehicleProps.plate,
 			['@stored']     = stored,
 			['@parking']    = parking,
-			['@pound']    	= pound
+			['@Impound']    	= Impound
 		})
 
 		if stored then
@@ -19,17 +19,17 @@ AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, pound
 end)
 
 RegisterServerEvent('esx_garage:setImpound')
-AddEventHandler('esx_garage:setImpound', function(pound, vehicleProps)
+AddEventHandler('esx_garage:setImpound', function(Impound, vehicleProps)
 	local source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
-		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `pound` = @pound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
+		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `pound` = @Impound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
 		{
 			['@identifier'] = xPlayer.identifier,
 			['@vehicle'] 	= json.encode(vehicleProps),
 			['@plate'] 		= vehicleProps.plate,
 			['@stored']     = 2,
-			['@pound']    	= pound
+			['@Impound']    	= Impound
 		})
 
 		xPlayer.showNotification(_U('veh_impounded'))
@@ -96,13 +96,13 @@ ESX.RegisterServerCallback('esx_garage:getVehiclesImpounded', function(source, c
 	end)
 end)
 
-ESX.RegisterServerCallback('esx_garage:getVehiclesInPound', function(source, cb, pound)
+ESX.RegisterServerCallback('esx_garage:getVehiclesInPound', function(source, cb, Impound)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
-	MySQL.query('SELECT * FROM `owned_vehicles` WHERE `owner` = @identifier AND `pound` = @pound AND `stored` = 2',
+	MySQL.query('SELECT * FROM `owned_vehicles` WHERE `owner` = @identifier AND `pound` = @Impound AND `stored` = 2',
 	{
 		['@identifier'] 	= xPlayer.identifier,
-		['@pound']     	    = pound
+		['@Impound']     	    = Impound
 	}, function(result)
 		local vehicles = {}
 
@@ -125,12 +125,12 @@ end)
 
 RegisterServerEvent("esx_garage:payPound")
 AddEventHandler("esx_garage:payPound", function(amount)
+		local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer.getMoney() >= amount then
         xPlayer.removeMoney(amount)
-
-		xPlayer.showNotification(_U('pay_pound_bill', amount))
+				xPlayer.showNotification(_U('pay_Impound_bill', amount))
     else
 		xPlayer.showNotification(_U('missing_money'))
     end
