@@ -1,11 +1,21 @@
-fx_version 'adamant'
+--#### FX Information ####--
+fx_version   'cerulean'
+lua54        'yes'
+game         'gta5'
 
-game 'gta5'
+--#### Resource Information ####--
+name         'es_extended'
+version      '1.7.5'
+description  'ES Extended'
 
-description 'ES Extended'
+--#### Manifest ####--
+dependencies {
+	'oxmysql',
+	'spawnmanager',
+	'/server:5104',
+    '/onesync'
+}
 
-lua54 'yes'
-version '1.7.5'
 
 shared_scripts {
 	'locale.lua',
