@@ -79,8 +79,3 @@ files {
 	'html/img/accounts/black_money.png',
 	'html/img/accounts/money.png'
 }
-
-dependencies {
-	'oxmysql',
-	'spawnmanager',
-}
