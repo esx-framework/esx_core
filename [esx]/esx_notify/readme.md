@@ -23,15 +23,15 @@ TriggerEvent("ESX:Notify", "info", 3000, "message here")
 ```
 
 <h3>Color Code Usage</h3>
-- ~r~ = Red
-- ~b~ = Blue
-- ~g~ = Green
-- ~y~ = Yellow
-- ~p~ = Purple
-- ~c~ = Grey
-- ~m~ = Dark Grey
-- ~u~ = Black
-- ~o~ = Orange
+* ~r~ = Red
+* ~b~ = Blue
+* ~g~ = Green
+* ~y~ = Yellow
+* ~p~ = Purple
+* ~c~ = Grey
+* ~m~ = Dark Grey
+* ~u~ = Black
+* ~o~ = Orange
 
 ```lua
 ESX.ShowNotification("I i ~r~love~s~ donuts", "success", 3000)
