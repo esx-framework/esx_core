@@ -10,8 +10,6 @@ ESX.ShowNotification("message here", "info", 3000)
 
 ESX.ShowNotification("text here") -- Default will time and type will be info/3000
 
-```
-
 <h3>Export Usage</h3>
 ```lua
 exports["esx_notify"]:Notify("info", 3000, "message here")
