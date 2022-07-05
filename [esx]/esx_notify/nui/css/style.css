@@ -1,73 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Poppins:wght@300;400;500;600;800&display=swap');
+
 :root {
-    --color: white;
-    --bgColor: #212121;
+    --color: #919191;
 }
 
 * {
-    padding: 0;
+    border: 0;
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
+    width: 100vw;
+    height: 100vh;
     color: var(--color);
-    font-family: sans-serif;
+    font-weight: 100;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
 }
 
-.notify {
-    display: none;
+#root {
+    display: grid;
+    justify-content: center;
+}
+
+#root .notify {
+    display: flex;
+    position: relative;
     flex: auto;
-    border-left: 5px solid rgb(34, 132, 189);
-    position:absolute;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
-    top: 5%;
-    min-width:15%;
-    width:fit-content; 
-    height:50px;
+    min-width: 20rem;
+    width: fit-content;
+    height: 3.5rem;
     background: rgba(5,5, 5, 0.9);
-    border-radius: 5px;
-    animation: growDown 300ms ease-in-out;
-    padding-right: 10px;
-}
-.success {
-    border-left: 5px solid rgb(33, 223, 15) !important; 
-}
-.custom {
-    
-}
-.error {
-    border-left: 5px solid rgb(231, 35, 28) !important; 
+    border-radius: .5rem;
+    margin-top: .5rem;
+    animation: anim 300ms ease-in-out;
+    align-items: center;
 }
 
-.icon {
-    border: 0;
+#root .innerText {
+    padding-left: .4rem;
+    padding-right: .4rem;
+    width: 100%;
 }
 
-.innerText {
-    flex: auto;
-    margin-top: 15px;
-    width:100%;
-}
-
-.innerText{
-    margin-left: 10px;
-}
-
-p {
-    flex: auto;
-    word-wrap: break-word;
-    margin-left: 40px; 
-    margin-top: 17px;
-}
-
-.innerText .icon {
+#root .icon {
     float: left;
-    margin-left: 5px;
-    font-size: 20px;
+    color: #fff;
 }
 
-@keyframes growDown {
+#root .text {
+    display: inline-block;
+    margin-left: .5rem;
+}
+
+#root .error {
+    border-bottom: 3px solid #c0392b;
+}
+
+#root .success {
+    border-bottom: 3px solid #2ecc71;
+}
+
+#root .info {
+    border-bottom: 3px solid #2980b9;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+             'FILL' 0,
+             'wght' 400,
+             'GRAD' 0,
+             'opsz' 48
+}
+
+@keyframes anim {
     0% {
         transform: scaleY(0);
     }
@@ -77,14 +85,4 @@ p {
     100% {
         transform: scaleY(1)
     }
-}
-
-.prog {
-    flex: auto;
-    position:absolute;
-    margin: 0 auto;
-    left: 0;
-    bottom: 0;
-    background: rgb(75, 75, 75);
-    height: 4px;
 }

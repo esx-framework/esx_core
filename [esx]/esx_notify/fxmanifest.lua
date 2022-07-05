@@ -1,7 +1,11 @@
 fx_version 'adamant'
+lua54 'yes'
 game 'gta5'
+
 author 'ESX-Framework'
-description 'ESX Notification'
+description 'ESX Notification system for esx_legacy'
+
+shared_script '@es_extended/imports.lua'
 
 client_scripts { 'Notify.lua' }
 
