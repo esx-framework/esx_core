@@ -166,8 +166,12 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local modelPrice = getVehicleFromModel(model).price
 
-	if modelPrice and xPlayer.getMoney() >= modelPrice then
-		xPlayer.removeMoney(modelPrice)
+	if modelPrice and xPlayer.getMoney() >= modelPrice or xPlayer.getAccount('bank').money >= modelPrice then
+		if xPlayer.getMoney() >= modelPrice then
+			xPlayer.removeMoney(modelPrice)
+		else
+			xPlayer.removeAccountMoney('bank', modelPrice)
+		end
 
 		MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xPlayer.identifier, plate, json.encode({model = joaat(model), plate = plate})
 		}, function(rowsChanged)
