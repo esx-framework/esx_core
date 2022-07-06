@@ -6,9 +6,77 @@
 * {
     padding: 0;
     margin: 0;
+    border: 0;
+    box-sizing: border-box;
 }
 
 body {
     color: var(--color);
     font-family: sans-serif;
+}
+
+.notify {
+    display: none;
+    position: absolute;
+    right: 2%;
+    bottom: 50%;
+    flex: auto;
+    min-width: 15%;
+    width: fit-content;
+    height: 50px;
+    background: rgba(5,5,5,.9);
+    border-radius: .5rem;
+    animation: growDown 300ms ease-in-out;
+    align-items: center;
+}
+
+.error {
+    border-left: 5px solid #c0392b;
+}
+
+.success {
+    border-left: 5px solid #2ecc71;
+}
+
+.info {
+    border-left: 5px solid #2980b9;
+}
+
+.innerText {
+    padding-left: .4rem;
+    padding-right: .4rem;
+    padding-top: 12.5px;
+    width: 100%;
+    height: 100%;
+}
+
+.innerText .icon {
+    float: left;
+}
+
+.innerText .text {
+    display: inline-block;
+    margin-left: .5rem;
+    margin-top: 4px;
+}
+
+
+@keyframes growDown {
+    0% {
+        transform: scaleY(0);
+    }
+    80% {
+        transform: scaleY(1.1)
+    }
+    100% {
+        transform: scaleY(1)
+    }
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 48
 }
