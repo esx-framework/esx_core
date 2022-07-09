@@ -4,17 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_addoninventory
+fvm install --save --folder=esx esx-legacy/esx_addoninventory
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_addoninventory [esx]/esx_addoninventory
+git clone https://github.com/esx-legacy/esx_addoninventory [esx]/esx_addoninventory
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_addoninventory/archive/master.zip
+- Download https://github.com/esx-legacy/esx_addoninventory/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

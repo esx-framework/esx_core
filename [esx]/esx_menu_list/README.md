@@ -5,17 +5,17 @@ Advanced menu inputs for ESX
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_menu_list
+fvm install --save --folder=esx esx-legacy/esx_menu_list
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_menu_list [esx]/esx_menu_list
+git clone https://github.com/esx-legacy/esx_menu_list [esx]/esx_menu_list
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_menu_list/archive/master.zip
+- Download https://github.com/esx-legacy/esx_menu_list/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

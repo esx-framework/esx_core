@@ -12,4 +12,4 @@ fvm install --save esx_cruisecontrol
 ```
 
 **Using Git Releases**
-Download the latest release : https://github.com/ESX-Org/esx_cruisecontrol/releases
+Download the latest release : https://github.com/esx-legacy/esx_cruisecontrol/releases

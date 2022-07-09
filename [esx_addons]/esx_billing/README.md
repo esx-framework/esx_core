@@ -8,17 +8,17 @@ There is a developer server event available in order to register bills in the da
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_billing
+fvm install --save --folder=esx esx-legacy/esx_billing
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_billing [esx]/esx_billing
+git clone https://github.com/esx-legacy/esx_billing [esx]/esx_billing
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_billing/archive/master.zip
+- Download https://github.com/esx-legacy/esx_billing/archive/master.zip
 - Put it in the `[esx]` directory
 
 

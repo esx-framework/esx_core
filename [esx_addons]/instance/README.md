@@ -1,20 +1,23 @@
 # instance
 
+# Use the SetPlayerRoutingBucket native instead of this script
+# Native documentation: https://docs.fivem.net/natives/?_0x6504EB38
+
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/instance
+fvm install --save --folder=esx esx-legacy/instance
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/instance [esx]/instance
+git clone https://github.com/esx-legacy/instance [esx]/instance
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/instance/archive/master.zip
+- Download https://github.com/esx-legacy/instance/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

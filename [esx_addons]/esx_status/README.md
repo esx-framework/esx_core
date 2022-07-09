@@ -5,7 +5,7 @@ ESX Status
 1) CD in your resources/[esx] folder
 2) Clone the repository
 ```
-git clone https://github.com/ESX-Org/esx_status esx_status
+git clone https://github.com/esx-legacy/esx_status esx_status
 ```
 3) Import esx_status.sql in your database
 4) Add this in your server.cfg :

@@ -4,17 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_shops
+fvm install --save --folder=esx esx-legacy/esx_shops
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_shops [esx]/esx_shops
+git clone https://github.com/esx-legacy/esx_shops [esx]/esx_shops
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_shops/archive/master.zip
+- Download https://github.com/esx-legacy/esx_shops/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

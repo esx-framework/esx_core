@@ -7,19 +7,19 @@ This script allow you to sit in almost every object where you should be able to,
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 
 ```
-fvm install --save --folder=esx esx-org/esx_sit
+fvm install --save --folder=esx esx-legacy/esx_sit
 ```
 
 ### Using Git
 
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_sit [esx]/esx_sit
+git clone https://github.com/esx-legacy/esx_sit [esx]/esx_sit
 ```
 
 ### Manually
 
-- Download https://github.com/ESX-Org/esx_sit/releases/latest
+- Download https://github.com/esx-legacy/esx_sit/releases/latest
 - Put it in the `resource/[esx]` directory
 
 ### Installation

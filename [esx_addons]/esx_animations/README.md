@@ -4,17 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_animations
+fvm install --save --folder=esx esx-legacy/esx_animations
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_animations [esx]/esx_animations
+git clone https://github.com/esx-legacy/esx_animations [esx]/esx_animations
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_animations/archive/master.zip
+- Download https://github.com/esx-legacy/esx_animations/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

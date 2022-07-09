@@ -4,41 +4,41 @@ This resource for ESX adds police armories, vehicle garages and ability for cops
 
 ### Requirements
 * Auto mode
-  * [esx_billing](https://github.com/ESX-Org/esx_billing)
-  * [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
+  * [esx_billing](https://github.com/esx-legacy/esx_billing)
+  * [esx_vehicleshop](https://github.com/esx-legacy/esx_vehicleshop)
 
 * Player management (boss actions and armory with buyable weapons)
-  * [esx_addoninventory](https://github.com/ESX-Org/esx_addoninventory)
-  * [esx_datastore](https://github.com/ESX-Org/esx_datastore)
-  * [esx_society](https://github.com/ESX-Org/esx_society)
+  * [esx_addoninventory](https://github.com/esx-legacy/esx_addoninventory)
+  * [esx_datastore](https://github.com/esx-legacy/esx_datastore)
+  * [esx_society](https://github.com/esx-legacy/esx_society)
 
 * ESX Identity Support
-  * [esx_identity](https://github.com/ESX-Org/esx_identity)
+  * [esx_identity](https://github.com/esx-legacy/esx_identity)
 
 * ESX License Support
-  * [esx_license](https://github.com/ESX-Org/esx_license)
+  * [esx_license](https://github.com/esx-legacy/esx_license)
 
 * ESX Service Support
-  * [esx_service](https://github.com/ESX-Org/esx_service)
+  * [esx_service](https://github.com/esx-legacy/esx_service)
 
 * ESX Status Support
-  * [esx_status](https://github.com/ESX-Org/esx_status)
+  * [esx_status](https://github.com/esx-legacy/esx_status)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_policejob
+fvm install --save --folder=esx esx-legacy/esx_policejob
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_policejob [esx]/esx_policejob
+git clone https://github.com/esx-legacy/esx_policejob [esx]/esx_policejob
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_policejob/archive/master.zip
+- Download https://github.com/esx-legacy/esx_policejob/archive/master.zip
 - Put it in the `[esx]` directory
 
 

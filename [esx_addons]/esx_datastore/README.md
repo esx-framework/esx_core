@@ -4,17 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_datastore
+fvm install --save --folder=esx esx-legacy/esx_datastore
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_datastore [esx]/esx_datastore
+git clone https://github.com/esx-legacy/esx_datastore [esx]/esx_datastore
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_datastore/archive/master.zip
+- Download https://github.com/esx-legacy/esx_datastore/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

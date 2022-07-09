@@ -4,17 +4,17 @@
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_addonaccount
+fvm install --save --folder=esx esx-legacy/esx_addonaccount
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_addonaccount [esx]/esx_addonaccount
+git clone https://github.com/esx-legacy/esx_addonaccount [esx]/esx_addonaccount
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_addonaccount/archive/master.zip
+- Download https://github.com/esx-legacy/esx_addonaccount/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

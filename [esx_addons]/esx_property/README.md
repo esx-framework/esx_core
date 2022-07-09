@@ -2,28 +2,28 @@
 
 ### Requirements
 
-- [async](https://github.com/ESX-Org/async)
-- [instance](https://github.com/ESX-Org/instance)
-- [cron](https://github.com/ESX-Org/cron)
-- [esx_addonaccount](https://github.com/ESX-Org/esx_addonaccount)
-- [esx_addoninventory](https://github.com/ESX-Org/esx_addoninventory)
-- [esx_datastore](https://github.com/ESX-Org/esx_datastore)
+- [async](https://github.com/esx-legacy/async)
+- [instance](https://github.com/esx-legacy/instance)
+- [cron](https://github.com/esx-legacy/cron)
+- [esx_addonaccount](https://github.com/esx-legacy/esx_addonaccount)
+- [esx_addoninventory](https://github.com/esx-legacy/esx_addoninventory)
+- [esx_datastore](https://github.com/esx-legacy/esx_datastore)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_property
+fvm install --save --folder=esx esx-legacy/esx_property
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_property [esx]/esx_property
+git clone https://github.com/esx-legacy/esx_property [esx]/esx_property
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_property/archive/master.zip
+- Download https://github.com/esx-legacy/esx_property/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

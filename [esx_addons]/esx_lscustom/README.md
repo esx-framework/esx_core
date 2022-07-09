@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
+- [esx_vehicleshop](https://github.com/esx-legacy/esx_vehicleshop)
 
 ## Legal
 

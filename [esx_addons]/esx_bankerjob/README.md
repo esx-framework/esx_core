@@ -2,25 +2,25 @@
 
 ## Requirements
 
-- [cron](https://github.com/ESX-Org/cron)
-- [esx_addonaccount](https://github.com/ESX-Org/esx_addonaccount)
-- [esx_society](https://github.com/ESX-Org/esx_society)
+- [cron](https://github.com/esx-legacy/cron)
+- [esx_addonaccount](https://github.com/esx-legacy/esx_addonaccount)
+- [esx_society](https://github.com/esx-legacy/esx_society)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_bankerjob
+fvm install --save --folder=esx esx-legacy/esx_bankerjob
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_bankerjob [esx]/esx_bankerjob
+git clone https://github.com/esx-legacy/esx_bankerjob [esx]/esx_bankerjob
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_bankerjob/archive/master.zip
+- Download https://github.com/esx-legacy/esx_bankerjob/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

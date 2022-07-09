@@ -5,17 +5,17 @@ This is a proximity voice controller script. The default control for this is `Le
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_voice
+fvm install --save --folder=esx esx-legacy/esx_voice
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_voice [esx]/esx_voice
+git clone https://github.com/esx-legacy/esx_voice [esx]/esx_voice
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_voice/archive/master.zip
+- Download https://github.com/esx-legacy/esx_voice/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- [esx_addonaccount](https://github.com/ESX-Org/esx_addonaccount)
-- [esx_skin](https://github.com/ESX-Org/esx_skin)
+- [esx_addonaccount](https://github.com/esx-legacy/esx_addonaccount)
+- [esx_skin](https://github.com/esx-legacy/esx_skin)
 
 ### Features
 

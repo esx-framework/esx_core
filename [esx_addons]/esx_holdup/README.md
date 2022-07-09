@@ -2,23 +2,23 @@
 This resource for ESX adds stores around the island for criminals to rob!
 
 ### Requirements
-- [esx_policejob](https://github.com/ESX-Org/esx_policejob)
+- [esx_policejob](https://github.com/esx-legacy/esx_policejob)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_holdup
+fvm install --save --folder=esx esx-legacy/esx_holdup
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_holdup [esx]/esx_holdup
+git clone https://github.com/esx-legacy/esx_holdup [esx]/esx_holdup
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_holdup/archive/master.zip
+- Download https://github.com/esx-legacy/esx_holdup/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

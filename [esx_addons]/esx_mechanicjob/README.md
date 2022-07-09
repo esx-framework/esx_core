@@ -6,24 +6,24 @@
   * No need to download another resource
 
 * Player management (billing and boss actions)
-  * [esx_society](https://github.com/ESX-Org/esx_society)
-  * [esx_billing](https://github.com/ESX-Org/esx_billing)
+  * [esx_society](https://github.com/esx-legacy/esx_society)
+  * [esx_billing](https://github.com/esx-legacy/esx_billing)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_mechanicjob
+fvm install --save --folder=esx esx-legacy/esx_mechanicjob
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_mechanicjob [esx]/esx_mechanicjob
+git clone https://github.com/esx-legacy/esx_mechanicjob [esx]/esx_mechanicjob
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_mechanicjob/archive/master.zip
+- Download https://github.com/esx-legacy/esx_mechanicjob/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

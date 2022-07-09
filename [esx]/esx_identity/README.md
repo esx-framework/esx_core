@@ -2,25 +2,25 @@
 
 ## Requirements
 * Dependencies For Full Functionality
-  * [esx_skin](https://github.com/ESX-Org/esx_skin)
-  * [esx_policejob](https://github.com/ESX-Org/esx_policejob)
-  * [esx_society](https://github.com/ESX-Org/esx_society)
+  * [esx_skin](https://github.com/esx-legacy/esx_skin)
+  * [esx_policejob](https://github.com/esx-legacy/esx_policejob)
+  * [esx_society](https://github.com/esx-legacy/esx_society)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_identity
+fvm install --save --folder=esx esx-legacy/esx_identity
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_identity [esx]/esx_identity
+git clone https://github.com/esx-legacy/esx_identity [esx]/esx_identity
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_identity/archive/master.zip
+- Download https://github.com/esx-legacy/esx_identity/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

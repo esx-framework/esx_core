@@ -2,23 +2,23 @@
 This script implements hunger and thirst status, they can be increased when eating bread or drinking water.
 
 ## Requirements
-- [esx_status](https://github.com/ESX-Org/esx_status)
+- [esx_status](https://github.com/esx-legacy/esx_status)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_basicneeds
+fvm install --save --folder=esx esx-legacy/esx_basicneeds
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_basicneeds [esx]/esx_basicneeds
+git clone https://github.com/esx-legacy/esx_basicneeds [esx]/esx_basicneeds
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_basicneeds/archive/master.zip
+- Download https://github.com/esx-legacy/esx_basicneeds/archive/master.zip
 - Put it in the `[esx]` directory
 
 

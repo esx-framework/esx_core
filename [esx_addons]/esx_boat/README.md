@@ -2,23 +2,23 @@
 This resource for ESX adds boat shops and boat garages around San Andreas, the island has been populated with boat garages, and comes defaulted with one boat shop.
 
 ## Requirements
-- [esx_vehicleshop](https://github.com/ESX-Org/esx_vehicleshop)
+- [esx_vehicleshop](https://github.com/esx-legacy/esx_vehicleshop)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_boat
+fvm install --save --folder=esx esx-legacy/esx_boat
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_boat [esx]/esx_boat
+git clone https://github.com/esx-legacy/esx_boat [esx]/esx_boat
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_boat/archive/master.zip
+- Download https://github.com/esx-legacy/esx_boat/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

@@ -5,17 +5,17 @@ Simple script used for inputs.
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_menu_dialog
+fvm install --save --folder=esx esx-legacy/esx_menu_dialog
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_menu_dialog [esx]/esx_menu_dialog
+git clone https://github.com/esx-legacy/esx_menu_dialog [esx]/esx_menu_dialog
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_menu_dialog/archive/master.zip
+- Download https://github.com/esx-legacy/esx_menu_dialog/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

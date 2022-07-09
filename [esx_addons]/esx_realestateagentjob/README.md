@@ -1,25 +1,25 @@
 # esx_realestateagentjob
 
 ## Requirements
-- [esx_addonaccount](https://github.com/ESX-Org/esx_addonaccount)
-- [esx_property](https://github.com/ESX-Org/esx_property)
-- [esx_society](https://github.com/ESX-Org/esx_society)
+- [esx_addonaccount](https://github.com/esx-legacy/esx_addonaccount)
+- [esx_property](https://github.com/esx-legacy/esx_property)
+- [esx_society](https://github.com/esx-legacy/esx_society)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_realestateagentjob
+fvm install --save --folder=esx esx-legacy/esx_realestateagentjob
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_realestateagentjob [esx]/esx_realestateagentjob
+git clone https://github.com/esx-legacy/esx_realestateagentjob [esx]/esx_realestateagentjob
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_realestateagentjob/archive/master.zip
+- Download https://github.com/esx-legacy/esx_realestateagentjob/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

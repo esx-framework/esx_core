@@ -1,23 +1,23 @@
 # esx_clotheshop
 
 ## Requirements
-- [esx_skin](https://github.com/ESX-Org/esx_skin)
+- [esx_skin](https://github.com/esx-legacy/esx_skin)
 
 ## Download & Installation
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save --folder=esx esx-org/esx_clotheshop
+fvm install --save --folder=esx esx-legacy/esx_clotheshop
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/esx_clotheshop [esx]/esx_clotheshop
+git clone https://github.com/esx-legacy/esx_clotheshop [esx]/esx_clotheshop
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/esx_clotheshop/archive/master.zip
+- Download https://github.com/esx-legacy/esx_clotheshop/archive/master.zip
 - Put it in the `[esx]` directory
 
 ## Installation

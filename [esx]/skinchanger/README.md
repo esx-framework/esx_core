@@ -6,17 +6,17 @@ skinchanger is a resource that makes it easy to set and get player ped clothing.
 
 ### Using [fvm](https://github.com/qlaffont/fvm-installer)
 ```
-fvm install --save esx-org/skinchanger
+fvm install --save esx-legacy/skinchanger
 ```
 
 ### Using Git
 ```
 cd resources
-git clone https://github.com/ESX-Org/skinchanger skinchanger
+git clone https://github.com/esx-legacy/skinchanger skinchanger
 ```
 
 ### Manually
-- Download https://github.com/ESX-Org/skinchanger/archive/master.zip
+- Download https://github.com/esx-legacy/skinchanger/archive/master.zip
 
 ## Installation
 - Add this to your `server.cfg`:
