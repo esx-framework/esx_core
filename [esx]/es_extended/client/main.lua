@@ -54,6 +54,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
 		NetworkSetFriendlyFireOption(true)
 	end
+	
+	if Config.DisableIdleCamera then
+		DisableIdleCamera(true)
+	end
 
 	if Config.DisableVehicleRewards then
     DisablePlayerVehicleRewards(PlayerId())
