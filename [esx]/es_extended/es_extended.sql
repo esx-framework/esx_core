@@ -57,3 +57,34 @@ CREATE TABLE `jobs` (
 
 
 INSERT INTO `jobs` VALUES ('unemployed','Unemployed');
+
+-----------
+-- Gangs --
+-----------
+
+CREATE TABLE `gangs` (
+  `name` varchar(50) COLLATE utf8mb3_bin NOT NULL,
+  `label` varchar(50) COLLATE utf8mb3_bin DEFAULT NULL,
+	PRIMARY KEY (`name`)
+) ENGINE=InnoDB;
+
+INSERT INTO `gangs` (`name`, `label`) VALUES ('nogang', 'Not a gang member');
+
+CREATE TABLE `gang_grades` (
+  `id` int(11) NOT NULL,
+  `gang_name` varchar(50) COLLATE utf8mb3_bin DEFAULT NULL,
+  `grade` int(11) NOT NULL,
+  `name` varchar(50) COLLATE utf8mb3_bin NOT NULL,
+  `label` varchar(50) COLLATE utf8mb3_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+INSERT INTO `gang_grades` (`id`, `gang_name`, `grade`, `name`, `label`) VALUES
+(1, 'nogang', 0, 'nogang', 'Not a gang member');
+
+-- gang stashes ( WIP )
+--CREATE TABLE `gang_stash` (
+--  `gang` varchar(255) NOT NULL,
+--  `stash` longtext NOT NULL DEFAULT '{}',
+--	PRIMARY KEY (`gang`)
+--) ENGINE=InnoDB;
