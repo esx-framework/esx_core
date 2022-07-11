@@ -2,7 +2,7 @@ SetMapName('San Andreas')
 SetGameType('ESX Legacy')
 
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
-local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
+local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `gang`, `gang_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
 
 if Config.Multichar then
     newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
@@ -117,6 +117,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         accounts = {},
         inventory = {},
         job = {},
+		gang = {},
         loadout = {},
         playerName = GetPlayerName(playerId),
         weight = 0
@@ -124,6 +125,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     local result = MySQL.prepare.await(loadPlayer, {identifier})
     local job, grade, jobObject, gradeObject = result.job, tostring(result.job_grade)
+	local gang, ganggrade, gangObject, ganggradeObject = result.gang, tostring(result.gang_grade)
     local foundAccounts, foundItems = {}, {}
 
     -- Accounts
@@ -152,6 +154,16 @@ function loadESXPlayer(identifier, playerId, isNew)
         jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
     end
 
+	-- Gang
+	if ESX.DoesGangExist(gang, ganggrade) then
+		gangObject, ganggradeObject = ESX.Gangs[gang], ESX.Gangs[gang].grades[ganggrade]
+	else
+		print(('[^3WARNING^7] Ignoring invalid gang for %s [gang: %s, grade: %s]'):format(identifier, gang, ganggrade))
+		gang, ganggrade = 'nogang', 0
+		gangObject, ganggradeObject = ESX.Gangs[gang], ESX.Gangs[gang].grades[ganggrade]
+	end
+
+	-- Job
     userData.job.id = jobObject.id
     userData.job.name = jobObject.name
     userData.job.label = jobObject.label
@@ -172,6 +184,15 @@ function loadESXPlayer(identifier, playerId, isNew)
         userData.job.skin_female = json.decode(gradeObject.skin_female)
     end
 
+	-- Gang
+	userData.gang.id = gangObject.id
+	userData.gang.name = gangObject.name
+	userData.gang.label = gangObject.label
+
+	userData.gang.grade = tonumber(ganggrade)
+	userData.gang.grade_name = ganggradeObject.name
+	userData.gang.grade_label = ganggradeObject.label
+	
     -- Inventory
     if not Config.OxInventory then
         if result.inventory and result.inventory ~= '' then
@@ -301,7 +322,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
 
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory,
-        userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords)
+        userData.weight, userData.job, userData.gang, userData.loadout, userData.playerName, userData.coords)
     ESX.Players[playerId] = xPlayer
 
     if userData.firstname then
@@ -326,6 +347,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         identifier = xPlayer.getIdentifier(),
         inventory = xPlayer.getInventory(),
         job = xPlayer.getJob(),
+		gang = xPlayer.getGang(),
         loadout = xPlayer.getLoadout(),
         maxWeight = xPlayer.getMaxWeight(),
         money = xPlayer.getMoney(),
@@ -625,6 +647,7 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
         accounts = xPlayer.getAccounts(),
         inventory = xPlayer.getInventory(),
         job = xPlayer.getJob(),
+		gang = xPlayer.getGang(),
         loadout = xPlayer.getLoadout(),
         money = xPlayer.getMoney(),
 		position = xPlayer.getCoords(true)
@@ -643,6 +666,7 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
         accounts = xPlayer.getAccounts(),
         inventory = xPlayer.getInventory(),
         job = xPlayer.getJob(),
+		gang = xPlayer.getGang(),
         loadout = xPlayer.getLoadout(),
         money = xPlayer.getMoney(),
 		position = xPlayer.getCoords(true)
