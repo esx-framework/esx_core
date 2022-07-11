@@ -1,4 +1,4 @@
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, gang, loadout, name, coords)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 	
 	local self = {}
@@ -9,6 +9,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.identifier = identifier
 	self.inventory = inventory
 	self.job = job
+	self.gang = gang
 	self.loadout = loadout
 	self.name = name
 	self.playerId = playerId
@@ -126,6 +127,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.getJob()
 		return self.job
+	end
+	
+	function self.getGang()
+		return self.gang
 	end
 
 	function self.getLoadout(minimal)
@@ -322,6 +327,27 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			self.triggerEvent('esx:setJob', self.job)
 		else
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
+		end
+	end
+	
+	self.setGang = function(gang, grade)
+		grade = tostring(grade)
+		local lastGang = json.decode(json.encode(self.gang))
+		if ESX.DoesGangExist(gang, grade) then
+			local gangObject, ganggradeObject = ESX.Gangs[gang], ESX.Gangs[gang].grades[grade]
+
+			self.gang.id	= gangObject.id
+			self.gang.name  = gangObject.name
+			self.gang.label  = gangObject.label
+
+			self.gang.grade        = tonumber(grade)
+			self.gang.grade_name   = ganggradeObject.name
+			self.gang.grade_label  = ganggradeObject.label
+
+			TriggerEvent('esx:setGang', self.source, self.gang, lastGang)
+			self.triggerEvent('esx:setGang', self.gang)
+		else
+			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setGang() usage for "%s"'):format(self.identifier))
 		end
 	end
 
