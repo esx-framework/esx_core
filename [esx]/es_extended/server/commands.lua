@@ -18,6 +18,18 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 	{name = 'grade', help = _U('command_setjob_grade'), type = 'number'}
 }})
 
+ESX.RegisterCommand('setgang', 'admin', function(xPlayer, args, showError)
+	if ESX.DoesGangExist(args.gang, args.grade) then
+		args.playerId.setGang(args.gang, args.grade)
+	else
+		showError('Invalid gang or gang grade.')
+	end
+end, true, {help = "Changes a player's gang and grade.", validate = true, arguments = {
+	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+	{name = 'gang', help = 'Gang name', type = 'string'},
+	{name = 'grade', help = 'Grade', type = 'number'}
+}})
+
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	if not args.car then args.car = "Prototipo" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
