@@ -289,6 +289,11 @@ AddEventHandler('esx:setJob', function(Job)
 	ESX.SetPlayerData('job', Job)
 end)
 
+RegisterNetEvent('esx:setGang')
+AddEventHandler('esx:setGang', function(gang)
+	ESX.SetPlayerData('gang', gang)
+end)
+
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
