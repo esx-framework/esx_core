@@ -164,10 +164,12 @@ function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
 end
 
 function Core.SavePlayer(xPlayer, cb)
-	MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
+	MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `gang` = ?, `gang_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
 		xPlayer.job.grade,
+		xPlayer.gang.name,
+		xPlayer.gang.grade,
 		xPlayer.group,
 		json.encode(xPlayer.getCoords()),
 		json.encode(xPlayer.getInventory(true)),
@@ -194,6 +196,8 @@ function Core.SavePlayers(cb)
 				json.encode(xPlayer.getAccounts(true)),
 				xPlayer.job.name,
 				xPlayer.job.grade,
+				xPlayer.gang.name,
+				xPlayer.gang.grade,
 				xPlayer.group,
 				json.encode(xPlayer.getCoords()),
 				json.encode(xPlayer.getInventory(true)),
@@ -201,7 +205,7 @@ function Core.SavePlayers(cb)
 				xPlayer.identifier
 			}
 		end
-		MySQL.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?", parameters,
+		MySQL.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `gang` = ?, `gang_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?", parameters,
 		function(results)
 			if results then
 				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000)) end
@@ -377,6 +381,18 @@ function ESX.DoesJobExist(job, grade)
 
 	if job and grade then
 		if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
+			return true
+		end
+	end
+
+	return false
+end
+
+ESX.DoesGangExist = function(gang, grade)
+	grade = tostring(grade)
+
+	if gang and grade then
+		if ESX.Gangs[gang] and ESX.Gangs[gang].grades[grade] then
 			return true
 		end
 	end
