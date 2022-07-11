@@ -1,6 +1,7 @@
 ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
+ESX.Gangs = {}
 ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
@@ -60,7 +61,9 @@ MySQL.ready(function()
 
 		while not next(ESX.Items) do Wait(0) end
 	end
-
+	
+	-- Loading Jobs
+	
 	local Jobs = {}
 	local jobs = MySQL.query.await('SELECT * FROM jobs')
 
@@ -104,7 +107,34 @@ MySQL.ready(function()
 	else
 		ESX.Jobs = Jobs
 	end
+		
+	-- Loading Gangs
+		
+	local Gangs = {}
+	local gangs = MySQL.query.await('SELECT * FROM gangs')
+		
+	for k,v in ipairs(gangs) do
+		ESX.Gangs[v.name] = v
+		ESX.Gangs[v.name].grades = {}
+	end
+		
+	local gangGrades = MySQL.query.await('SELECT * FROM gang_grades')
+		
+	for k,v in ipairs(gangGrades) do
+		if ESX.Gangs[v.gang_name] then
+			ESX.Gangs[v.gang_name].grades[tostring(v.grade)] = v
+		else
+			print(('[^3WARNING^7] Ignoring gang grades for "%s" due to missing gang'):format(v.gang_name))
+		end
+	end
 
+	for k2,v2 in pairs(ESX.Gangs) do
+		if ESX.Table.SizeOf(v2.grades) == 0 then
+			ESX.Gangs[v2.name] = nil
+			print(('[^3WARNING^7] Ignoring gang "%s" due to no gang grades found'):format(v2.name))
+		end
+	end
+		
 	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
 	StartDBSync()
 	StartPayCheck()
