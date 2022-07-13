@@ -24,6 +24,7 @@ Config.Identity                 = true -- Select a characters identity data befo
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
 Config.OnDuty                   = true -- Default state of the on duty system
 Config.DisableHealthRegen         = false -- Player will no longer regenerate health
+Config.DisableIdleCamera          = true -- Disables the game's afk camera that starts panning around after 30 seconds of inactivity.
 Config.DisableVehicleRewards      = true -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = true -- stops NPCs from dropping weapons on death
 Config.DisableWeaponWheel         = false -- Disables default weapon wheel
