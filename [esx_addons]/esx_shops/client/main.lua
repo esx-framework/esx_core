@@ -24,12 +24,12 @@ function OpenShopMenu(zone)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
 		title    = _U('shop'),
-		align    = 'bottom-right',
+		align    = 'bottom-left',
 		elements = elements
 	}, function(data, menu)
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
 			title    = _U('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
-			align    = 'bottom-right',
+			align    = 'bottom-left',
 			elements = {
 				{label = _U('no'),  value = 'no'},
 				{label = _U('yes'), value = 'yes'}
@@ -89,16 +89,16 @@ CreateThread(function()
 
 		if currentAction then
 			Sleep = 0
-			ESX.ShowHelpNotification(currentActionMsg)
 
 			if IsControlJustReleased(0, 38) and currentAction == 'shop_menu' then
 				currentAction = nil
+				ESX.HideUI()
 				OpenShopMenu(currentActionData.zone)
 			end
 		end
 
 		local playerCoords = GetEntityCoords(PlayerPedId())
-		local isInMarker, currentZone = false
+		local isInMarker, currentZone = false, nil
 
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
@@ -107,7 +107,7 @@ CreateThread(function()
 				if distance < Config.DrawDistance then
 					Sleep = 0
 					if v.ShowMarker then
-					DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
+						DrawMarker(Config.MarkerType, v.Pos[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 				  end
 					if distance < 2.0 then
 						isInMarker  = true
@@ -120,11 +120,13 @@ CreateThread(function()
 
 		if isInMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
+			ESX.TextUI(currentActionMsg)
 			TriggerEvent('esx_shops:hasEnteredMarker', currentZone)
 		end
 
 		if not isInMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
+			ESX.HideUI()
 			TriggerEvent('esx_shops:hasExitedMarker', lastZone)
 		end
 	Wait(Sleep)

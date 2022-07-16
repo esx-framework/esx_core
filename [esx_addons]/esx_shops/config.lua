@@ -1,8 +1,8 @@
 Config = {}
-Config.DrawDistance = 10
-Config.MarkerSize = {x = 1.1, y = 1.1, z = 0.9}
+Config.DrawDistance = 7.5
+Config.MarkerSize = {x = 1.1, y = 0.7, z = 1.1}
 Config.MarkerType =  29
-Config.MarkerColor = {r = 102, g = 102, b = 204, a = 255}
+Config.MarkerColor = {r = 50, g = 200, b = 50, a = 200}
 Config.Locale = 'en'
 
 Config.Zones = {
@@ -30,7 +30,7 @@ Config.Zones = {
 			vector3(2678.9, 3280.6, 55.2),
 			vector3(1729.2, 6414.1, 35.0)
 	},
-	Size  = 1.0,
+	Size  = 0.8,
 	Type  = 59,
 	Color = 25,
 	ShowBlip = true,
@@ -61,7 +61,7 @@ Config.Zones = {
 			vector3(-1393.4, -606.6, 30.3), --Tequila la
 			vector3(-559.9, 287.0, 82.1) --Bahamamas
 	},
-	Size  = 1.0,
+	Size  = 0.8,
 	Type  = 59,
 	Color = 25,
 	ShowBlip = true,
@@ -88,7 +88,7 @@ Config.Zones = {
 			vector3(-1820.5, 792.5, 138.1),
 			vector3(1698.3, 4924.4, 42.0)
 	},
-	Size  = 1.0,
+	Size  = 0.8,
 	Type  = 59,
 	Color = 25,
 	ShowBlip = true,
