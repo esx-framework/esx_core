@@ -1,7 +1,3 @@
-if Citizen and Citizen.CreateThread then
-	CreateThread = Citizen.CreateThread
-end
-
 Async = {}
 
 function Async.parallel(tasks, cb)
@@ -16,7 +12,7 @@ function Async.parallel(tasks, cb)
 	for i = 1, #tasks, 1 do
 		CreateThread(function()
 			tasks[i](function(result)
-				table.insert(results, result)
+				results[#results+ 1] = result
 				
 				remaining = remaining - 1;
 
@@ -39,7 +35,7 @@ function Async.parallelLimit(tasks, limit, cb)
 	local queue, results = {}, {}
 
 	for i=1, #tasks, 1 do
-		table.insert(queue, tasks[i])
+		queue[queue + 1] = tasks[i]
 	end
 
 	local function processQueue()
@@ -53,7 +49,7 @@ function Async.parallelLimit(tasks, limit, cb)
 			running = running + 1
 
 			task(function(result)
-				table.insert(results, result)
+				results[#results+ 1] = result
 				
 				remaining = remaining - 1;
 				running = running - 1
