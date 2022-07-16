@@ -18,7 +18,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	-- Mark this connection as deferred, this is to prevent problems while checking player identifiers.
 	deferrals.defer()
 
-	local playerId, kickReason = source
+	local playerId, kickReason = source, "There Was An Error, Please Contact the server owner!"
 
 	-- Letting the user know what's going on.
 	deferrals.update(_U('whitelist_check'))
@@ -44,10 +44,9 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	end
 end)
 
-ESX.RegisterCommand('wlrefresh', 'admin', function(xPlayer, args, showError)
-	loadWhiteList(function()
-		showError('Whitelist reloaded')
-	end)
+ESX.RegisterCommand('wlrefresh', 'admin', function(xPlayer, args)
+	loadWhiteList()
+	print('[esx_whitelist] Whitelist Refreshed!')
 end, true, {help = _U('help_whitelist_load')})
 
 ESX.RegisterCommand('wladd', 'admin', function(xPlayer, args, showError)
