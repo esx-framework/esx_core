@@ -4,7 +4,7 @@ Config.DrawDistance = 10.0
 Config.ZoneSize     = {x = 2.7, y = 2.7, z = 0.5}
 Config.MarkerColor  = {r = 100, g = 200, b = 104}
 Config.MarkerType   = 27
-Config.Debug = ESX.GetConfig().Debug
+Config.Debug = ESX.GetConfig().EnableDebug
 
 
 Config.Locale       = 'en'

@@ -3,7 +3,7 @@ Config.Locale           = 'en'
 
 -- [Config.EnableCommands]
 -- Enables Commands Such As /char and /chardel
-Config.EnableCommands   = ESX.GetConfig().Debug
+Config.EnableCommands   = ESX.GetConfig().EnableDebug
 
 Config.UseDeferrals     = false -- EXPERIMENTAL Character Registration Method.
 
@@ -16,4 +16,4 @@ Config.LowestYear       = 1900 -- 112 years old is the oldest you can be.
 Config.HighestYear      = 2003 -- 18 years old is the youngest you can be.
 
 Config.FullCharDelete   = true -- Delete all reference to character.
-Config.EnableDebugging  = ESX.GetConfig().Debug -- prints for debugging :)
+Config.EnableDebugging  = ESX.GetConfig().EnableDebug -- prints for debugging :)

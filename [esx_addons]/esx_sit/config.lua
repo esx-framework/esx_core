@@ -1,7 +1,7 @@
 Config = {}
 
 Config.MaxDistance = 1.5
-Config.Debug = ESX.GetConfig().Debug
+Config.Debug = ESX.GetConfig().EnableDebug
 
 Config.Interactables = {
 	'prop_bench_01a',
