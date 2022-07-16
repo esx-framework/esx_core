@@ -1,24 +1,9 @@
-# cron
+<h1 align='center'>[ESX] Cron</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-## Download & Installation
+A simple, but vital, resource that allows resources to Run tasks at specific intervals.
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/cron
-```
+# Example Usage
 
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/cron cron
-```
-
-### Manually
-- Download https://github.com/ESX-Org/cron/archive/master.zip
-- Put it in your resource directory
-
-
-## Usage
 ```lua
 
 -- Execute task 5:10, every day
@@ -40,8 +25,8 @@ TriggerEvent('cron:runAt', 18, 30, CronTask)
 ```
 
 # Legal
-### License
-cron - do stuff in a specified time
+
+cron - run tasks at specific intervals!
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
