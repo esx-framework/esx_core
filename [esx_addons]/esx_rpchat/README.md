@@ -1,14 +1,12 @@
-# esx_rpchat
+<h1 align='center'>[ESX] RP Chat</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-## Description
+This Resource adds a proximity chat along with a few cool commands such as `/me` , `/ooc` and `/twt`
 
-This is a proximity chat script. With a few commands such as Twitter, OOC and Local Me
+> *Note: Elon Musk Not Included*
 
-## Legal
+# Legal
 
-### License
-
-esx_rpchat - RP chat for ESX
+esx_rpchat - Chat closely with your friends.
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
