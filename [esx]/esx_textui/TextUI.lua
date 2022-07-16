@@ -1,4 +1,4 @@
-Debug = false
+Debug = ESX.GetConfig().Debug
 
 ---@param message any
 ---@param type string
