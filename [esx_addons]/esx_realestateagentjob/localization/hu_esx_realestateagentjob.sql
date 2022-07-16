@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
 	('society_realestateagent','Ingatlan közvetítő',1)

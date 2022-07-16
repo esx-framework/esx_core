@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 CREATE TABLE `user_contacts` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,

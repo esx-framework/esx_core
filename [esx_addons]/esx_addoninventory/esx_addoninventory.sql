@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 CREATE TABLE `addon_inventory` (
 	`name` VARCHAR(60) NOT NULL,

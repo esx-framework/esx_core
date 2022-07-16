@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 CREATE TABLE `licenses` (
 	`type` varchar(60) NOT NULL,

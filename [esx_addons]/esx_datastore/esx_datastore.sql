@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 CREATE TABLE `datastore` (
 	`name` VARCHAR(60) NOT NULL,

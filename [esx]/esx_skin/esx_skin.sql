@@ -1,3 +1,3 @@
-USE `es_extended`;
+
 
 ALTER TABLE `users` ADD COLUMN `skin` LONGTEXT NULL DEFAULT NULL;

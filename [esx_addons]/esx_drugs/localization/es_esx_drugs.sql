@@ -1,4 +1,4 @@
-USE `es_extended`;
+
 
 INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 	('cannabis', 'Marijuana húmeda', 3, 0, 1),
