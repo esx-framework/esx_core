@@ -126,12 +126,13 @@ CreateThread(function()
 	end
 end)
 
+local TextShown = false
+
 -- Display markers
 CreateThread(function()
 	while true do
 		local Sleep = 1500
 		local InShop = false
-		local TextShown = false
 		local CurrentShop = nil
 		local coords = GetEntityCoords(PlayerPedId())
 
@@ -147,6 +148,7 @@ CreateThread(function()
 								TextShown = true
 							end
 						else 
+							TextShown = false
 							ESX.HideUI()
 						end
 						if IsControlJustReleased(0, 38) then
