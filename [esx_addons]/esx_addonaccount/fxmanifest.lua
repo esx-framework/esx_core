@@ -2,6 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 
+author 'ESX-Framework'
 description 'ESX Addon Account'
 
 version '1.7.5'
