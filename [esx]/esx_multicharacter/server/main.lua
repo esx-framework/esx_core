@@ -23,7 +23,7 @@ elseif ESX.GetConfig().Multichar == true then
 	local FETCH = nil
 	local SLOTS = Config.Slots or 4
 	local PREFIX = Config.Prefix or 'char'
-	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or Config.Identifier
+	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
 		local identifier = PRIMARY_IDENTIFIER..':'

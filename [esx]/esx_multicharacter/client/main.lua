@@ -1,4 +1,6 @@
 ESX = exports['es_extended']:getSharedObject()
+local mp_m_freemode_01 = `mp_m_freemode_01`
+local mp_f_freemode_01 = `mp_f_freemode_01`
 if ESX.GetConfig().Multichar then
 
 	Citizen.CreateThread(function()
@@ -102,7 +104,7 @@ if ESX.GetConfig().Multichar then
 				y = Config.Spawn.y,
 				z = Config.Spawn.z,
 				heading = Config.Spawn.w,
-				model = Characters[index].model or GetHashKey("mp_m_freemode_01"),
+				model = Characters[index].model or mp_m_freemode_01,
 				skipFade = true
 			}, function()
 				canRelog = false
@@ -158,7 +160,7 @@ if ESX.GetConfig().Multichar then
 				y = Config.Spawn.y,
 				z = Config.Spawn.z,
 				heading = Config.Spawn.w,
-				model = GetHashKey("mp_m_freemode_01"),
+				model = mp_m_freemode_01,
 				skipFade = true
 			}, function()
 				canRelog = false
@@ -173,7 +175,7 @@ if ESX.GetConfig().Multichar then
 		else
 			for k,v in pairs(Characters) do
 				if not v.model and v.skin then
-					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = GetHashKey("mp_f_freemode_01") else v.model = GetHashKey("mp_m_freemode_01") end
+					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 				end
 				if spawned == false then SetupCharacter(Character) end
 				local label = v.firstname..' '..v.lastname
@@ -272,7 +274,7 @@ if ESX.GetConfig().Multichar then
 		if isNew or not skin or #skin == 1 then
 			local finished = false
 			local sex = skin.sex or 0
-			if sex == 0 then model = GetHashKey("mp_m_freemode_01") else model = GetHashKey("mp_f_freemode_01") end
+			if sex == 0 then model = mp_m_freemode_01 else model = mp_f_freemode_01 end
 			RequestModel(model)
 			while not HasModelLoaded(model) do
 				RequestModel(model)

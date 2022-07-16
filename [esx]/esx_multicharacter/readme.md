@@ -1,40 +1,20 @@
+<h1 align='center'>[ESX] Multi-Character</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-# Preview
+A Simple, Easy to Use resource, that allows Players to have multiple Characters, which can be configured to All players with the `Config.Slots` or To each Player personally using the `setslots`, `remslots`, `enablechar` and `disablechar` Commands :)
 
-![image](https://user-images.githubusercontent.com/65407488/126976325-17cc3241-bb9e-451f-a6ed-610a8ef52fa5.png)
+![Preview](https://i.imgur.com/iAlNnM8.png)
 
-## Installation
-
-- Modify your ESX config with `Config.Multichar = true`
-- All owner and identifier columns should be set to `VARCHAR(60)` to ensure correct data entry
-  - The resource will attempt to set columns automatically
-
-### Relogging
+## Relogging
 
 - Do not enable this setting if you do not intend to properly set up relog support
 - Requires the latest update for ESX Status (prevents multiple status ticks from running)
-- Add the following events to resources that require support for relogging, or
-- Add them to [@es_extended/imports.lua](https://github.com/esx-framework/esx-legacy/blob/main/[esx]/es_extended/imports.lua) (and use the imports in your resources)
 
-```lua
-RegisterNetEvent('esx:playerLoaded', function(xPlayer)
- ESX.PlayerData = xPlayer
-  ESX.PlayerLoaded = true
-end)
+## Notes
 
-RegisterNetEvent('esx:onPlayerLogout', function()
- ESX.PlayerLoaded = false
- ESX.PlayerData = {}
-end)
-```
-
-### Notes
-
-- Characters are stored in the users table as `char#:license` - if you need to use a different identifier then you need to modify ESX itself
+- Characters are stored in the users table as `char#:license`
 - Character deletion does not require manual entries for the tables to remove
-- As characters are stored with unique identifiers, there is no excessive queries being executed
 
-### Kashacters
+## Kashacters
 
 - This project is forked from the [kashacters multicharacter resource](https://github.com/FiveEYZ/esx_kashacter)
 - Most of the code has been entirely rewritten

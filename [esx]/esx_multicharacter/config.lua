@@ -12,11 +12,7 @@ if IsDuplicityVersion() then
 
 	-- Text to prepend to each character (char#:identifier) - keep it short
 	Config.Prefix = 'char'
-	--------------------
-
-	-- Default identifier to store for characters - this should always match es_extended (recommended: license)
-	Config.Identifier = 'license'
-
+	
 else
 	-- Sets the location for the character selection scene
 	-- To set the spawn location for new characters, modify the default value in the users SQL table
