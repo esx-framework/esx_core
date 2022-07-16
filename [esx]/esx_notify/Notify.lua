@@ -7,8 +7,8 @@ local function Notify(notificatonType, length, message)
 
     if Debug then
         print("1 ".. tostring(notificatonType))
-        print("1 "..tostring(length))
-        print("1 "..message)
+        print("2 "..tostring(length))
+        print("3 "..message)
     end
 
     if type(notificatonType) ~= "string" then
@@ -20,9 +20,9 @@ local function Notify(notificatonType, length, message)
     end
 
     if Debug then
-        print("2 ".. tostring(notificatonType))
-        print("2 "..tostring(length))
-        print("2 "..message)
+        print("4 ".. tostring(notificatonType))
+        print("5 "..tostring(length))
+        print("6 "..message)
     end
 
     SendNuiMessage(json.encode({
@@ -37,8 +37,12 @@ exports('Notify', Notify)
 RegisterNetEvent("ESX:Notify", Notify)
 
 if Debug then
-    RegisterCommand("notify", function()
+    RegisterCommand("oldnotify", function()
         ESX.ShowNotification('No Waypoint Set.', true, false, 140)
+    end)
+
+    RegisterCommand("notify", function()
+        ESX.ShowNotification("You Recived ~br~ 1x ball~s~!", "success", 3000)
     end)
 
     RegisterCommand("notify1", function()

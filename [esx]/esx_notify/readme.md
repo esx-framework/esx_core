@@ -1,4 +1,8 @@
-<h1 align="center">ESX Notify</h1>
+<h1 align='center'>[ESX] Notify</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+
+A beautiful and simple NUI notification system for ESX
+
+# Example Code
 
 <h3>Change style and time</h3>
 
@@ -39,4 +43,10 @@ TriggerEvent("ESX:Notify", "info", 3000, "message here")
 ESX.ShowNotification("I i ~r~love~s~ donuts", "success", 3000)
 ```
 
-<img src="https://imgur.com/gsNwFO3.png" alt="image">
+# Previews
+
+![Preview_1](https://cdn.discordapp.com/attachments/944789399852417096/997890963445927977/unknown.png)
+
+![Preview_2_zoom](https://cdn.discordapp.com/attachments/944789399852417096/997892214053163148/unknown.png)
+
+![Preview_2](https://cdn.discordapp.com/attachments/944789399852417096/997891726326898909/unknown.png)
