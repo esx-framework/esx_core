@@ -2,7 +2,8 @@ fx_version 'adamant'
 
 game 'gta5'
 
-description 'ESX Whitelist'
+author 'ESX-Framework'
+description 'Offical AllowList script for ESX'
 
 version '1.7.5'
 
