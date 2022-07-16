@@ -21,7 +21,7 @@ const types = {
 // the color codes example `i ~r~love~s~ donuts`
 const codes = {
     "~r~": "red",
-    "~b~": "blue",
+    "~b~": "#378cbf",
     "~g~": "green",
     "~y~": "yellow",
     "~p~": "purple",

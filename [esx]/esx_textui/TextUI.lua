@@ -23,18 +23,18 @@ RegisterNetEvent('ESX:HideUI', HideUI)
 
 if Debug then
     RegisterCommand("textui:error", function()
-        TriggerEvent("ESX:TextUI", "i ~r~love~s~ donuts", "error")
+        ESX.TextUI("i ~r~love~s~ donuts", "error")
     end)
 
     RegisterCommand("textui:success", function()
-        TriggerEvent("ESX:TextUI", "i ~r~love~s~ donuts", "success")
+        ESX.TextUI("i ~g~love~s~ donuts", "success")
     end)
 
     RegisterCommand("textui:info", function()
-        TriggerEvent("ESX:TextUI", "i ~r~love~s~ donuts", "info")
+        ESX.TextUI("i ~b~love~s~ donuts", "info")
     end)
 
     RegisterCommand("textui:hide", function()
-        TriggerEvent("ESX:HideUI")
+        ESX.HideUI()
     end)
 end
