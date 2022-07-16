@@ -81,5 +81,5 @@ Locales['en'] = {
   ['healed'] = 'You have been treated.',
   -- Blips
   ['blip_hospital'] = 'Hospital',
-  ['blip_dead'] = 'Unconscious player',
+  ['blip_dead'] = 'Dying Player',
 }

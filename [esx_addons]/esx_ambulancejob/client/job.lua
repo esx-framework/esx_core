@@ -322,13 +322,15 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, pa
 		CurrentActionMsg = travelItem.Prompt
 		CurrentActionData = {to = travelItem.To.coords, heading = travelItem.To.heading}
 	end
+
+	ESX.TextUI(CurrentActionMsg)
 end)
 
 AddEventHandler('esx_ambulancejob:hasExitedMarker', function(hospital, part, partNum)
 	if not isInShopMenu then
 		ESX.UI.Menu.CloseAll()
 	end
-
+	ESX.HideUI()
 	CurrentAction = nil
 end)
 
@@ -339,7 +341,6 @@ CreateThread(function()
 
 		if CurrentAction then
 			sleep = 0
-			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
 				if CurrentAction == 'AmbulanceActions' then
@@ -426,6 +427,10 @@ function OpenCloakroomMenu()
 					RemoveBlip(v)
 					deadPlayerBlips[playerId] = nil
 				end
+				deadPlayers = {}
+				if Config.Debug then 
+					print("[INFO] Now Off Duty")
+				end
 			end)
 		elseif data.current.value == 'ambulance_wear' then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -436,7 +441,13 @@ function OpenCloakroomMenu()
 				end
 
 				isOnDuty = true
-				TriggerEvent('esx_ambulancejob:setDeadPlayers', deadPlayers)
+				ESX.TriggerServerCallback('esx_ambulancejob:getDeadPlayers', function(_deadPlayers)
+					TriggerEvent('esx_ambulancejob:setDeadPlayers', _deadPlayers)
+				end)
+				if Config.Debug then 
+					print("[INFO] Player Sex |" .. tostring(skin.sex))
+					print("[INFO] Now On Duty")
+				end
 			end)
 		end
 
@@ -456,6 +467,9 @@ function OpenPharmacyMenu()
 			{label = _U('pharmacy_take', _U('medikit')), item = 'medikit', type = 'slider', value = 1, min = 1, max = 100},
 			{label = _U('pharmacy_take', _U('bandage')), item = 'bandage', type = 'slider', value = 1, min = 1, max = 100}
 	}}, function(data, menu)
+		if Config.Debug then 
+			print("[INFO] Attempting to Give Item |" .. tostring(data.current.item))
+		end
 		TriggerServerEvent('esx_ambulancejob:giveItem', data.current.item, data.current.value)
 	end, function(data, menu)
 		menu.close()
@@ -475,6 +489,9 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 		SetEntityHealth(playerPed, maxHealth)
 	end
 
+	if Config.Debug then 
+		print("[INFO] Healing Player |" .. tostring(healType))
+	end
 	if not quiet then
 		ESX.ShowNotification(_U('healed'))
 	end
@@ -484,12 +501,35 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	if isOnDuty and job ~= 'ambulance' then
 		for playerId,v in pairs(deadPlayerBlips) do
+			if Config.Debug then 
+				print("[INFO] removing dead player blip |" .. tostring(playerId))
+			end
 			RemoveBlip(v)
 			deadPlayerBlips[playerId] = nil
 		end
 
 		isOnDuty = false
 	end
+end)
+
+RegisterNetEvent('esx_ambulancejob:PlayerDead')
+AddEventHandler('esx_ambulancejob:PlayerDead', function(Player)
+	if Config.Debug then 
+		print("[INFO] Setting Player Dead |" .. tostring(Player))
+	end
+	deadPlayers[Player] = "dead"
+end)
+
+RegisterNetEvent('esx_ambulancejob:PlayerNotDead')
+AddEventHandler('esx_ambulancejob:PlayerNotDead', function(Player)
+	if deadPlayerBlips[Player] then
+		RemoveBlip(deadPlayerBlips[Player])
+		deadPlayerBlips[Player] = nil
+	end
+	if Config.Debug then 
+		print("[INFO] Setting Player Not Dead |" .. tostring(Player))
+	end
+	deadPlayers[Player] = nil
 end)
 
 RegisterNetEvent('esx_ambulancejob:setDeadPlayers')
@@ -503,7 +543,13 @@ AddEventHandler('esx_ambulancejob:setDeadPlayers', function(_deadPlayers)
 		end
 
 		for playerId,status in pairs(deadPlayers) do
+			if Config.Debug then 
+				print("[INFO] Setting Player As Dead |" .. tostring(playerId))
+			end
 			if status == 'distress' then
+				if Config.Debug then 
+					print("[INFO] Creating Distress Blip for Player |" .. tostring(playerId))
+				end
 				local player = GetPlayerFromServerId(playerId)
 				local playerPed = GetPlayerPed(player)
 				local blip = AddBlipForEntity(playerPed)
@@ -522,3 +568,32 @@ AddEventHandler('esx_ambulancejob:setDeadPlayers', function(_deadPlayers)
 		end
 	end
 end)
+
+
+RegisterNetEvent('esx_ambulancejob:PlayerDistressed')
+AddEventHandler('esx_ambulancejob:PlayerDistressed', function(Player)
+	deadPlayers[Player] = 'distress'
+
+	if isOnDuty then
+		if Config.Debug then 
+			print("[INFO] Player Distress Recived - ID |" .. tostring(Player))
+		end
+				ESX.ShowNotification("[DISPATCH]: An Unconscious Person Has Been Reported", "error", 10000)
+				deadPlayerBlips[Player] = nil
+				local player = GetPlayerFromServerId(Player)
+				local playerPed = GetPlayerPed(player)
+				local blip = AddBlipForEntity(playerPed)
+
+				SetBlipSprite(blip, Config.DistressBlip.Sprite)
+				SetBlipColour(blip, Config.DistressBlip.Color)
+				SetBlipScale(blip, Config.DistressBlip.Scale)
+				SetBlipFlashes(blip, true)
+
+				BeginTextCommandSetBlipName('STRING')
+				AddTextComponentSubstringPlayerName(_U('blip_dead'))
+				EndTextCommandSetBlipName(blip)
+
+				deadPlayerBlips[Player] = blip
+	end
+end)
+

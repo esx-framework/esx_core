@@ -55,9 +55,12 @@ CreateThread(function()
 		if isDead then
 			Sleep = 0
 			DisableAllControlActions(0)
-			EnableControlAction(0, 47, true)
-			EnableControlAction(0, 245, true)
-			EnableControlAction(0, 38, true)
+			EnableControlAction(0, 47, true) -- G 
+			EnableControlAction(0, 245, true) -- T
+			EnableControlAction(0, 270, true) -- LEFT
+			EnableControlAction(0, 271, true) -- RIGHT
+			EnableControlAction(0, 272, true) -- UP
+			EnableControlAction(0, 273, true) -- DOWN
 
 			if isSearched then
 				local playerPed = PlayerPedId()
@@ -97,12 +100,10 @@ end)
 function OnPlayerDeath()
 	isDead = true
 	ESX.UI.Menu.CloseAll()
+	ESX.HideUI()
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
-
 	StartDeathTimer()
 	StartDistressSignal()
-
-	AnimpostfxPlay('DeathFailOut', 0, false)
 end
 
 RegisterNetEvent('esx_ambulancejob:useItem')
@@ -322,7 +323,6 @@ function RemoveItemsAfterRPDeath()
 			while not IsScreenFadedOut() do
 			Wait(0)
 			end
-			AnimpostfxStop('DeathFailOut')
 			DoScreenFadeIn(800)
 		end)
 	end)
@@ -359,7 +359,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	local playerPed = PlayerPedId()
 	local coords = GetEntityCoords(playerPed)
 	TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
-
+	
 	DoScreenFadeOut(800)
 
 	while not IsScreenFadedOut() do
@@ -373,8 +373,6 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	}
 
 	RespawnPed(playerPed, formattedCoords, 0.0)
-
-	AnimpostfxStop('DeathFailOut')
 	DoScreenFadeIn(800)
 end)
 
