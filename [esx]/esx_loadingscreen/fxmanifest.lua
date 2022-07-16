@@ -1,5 +1,5 @@
 game 'common'
-version '1.3.0'
+version '1.7.5'
 fx_version 'cerulean'
 author 'ESX-Framework'
 
@@ -11,10 +11,4 @@ loadscreen_manual_shutdown "yes"
 
 client_script 'client/client.lua'
 
-files {
-    'index.html',
-    './vid/*.mp4',
-    './vid/*.webm',
-    './js/index.js',
-    './css/index.css'
-}
+files {'index.html', './vid/*.mp4', './vid/*.webm', './js/index.js', './css/index.css'}
