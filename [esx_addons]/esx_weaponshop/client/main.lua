@@ -142,37 +142,36 @@ CreateThread(function()
 					InShop = true
 					CurrentShop = v.Locations[i]
 					Sleep = 0
-					if #(coords - CurrentShop) < 1.0 then
+					if #(coords - CurrentShop) < 2.0 then
 							if not TextShown then 
 								ESX.TextUI(_U('shop_menu_prompt'))
 								TextShown = true
 							end
-						else 
-							TextShown = false
-							ESX.HideUI()
-						end
-						if IsControlJustReleased(0, 38) then
-							if Config.LicenseEnable and v.Legal then
-								ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
-									if hasWeaponLicense then
-										OpenShopMenu(k)
-									else
-										OpenBuyLicenseMenu(k)
-									end
-								end, GetPlayerServerId(PlayerId()), 'weapon')
-							else
-								OpenShopMenu(k)
+							if IsControlJustReleased(0, 38) then
+								if Config.LicenseEnable and v.Legal then
+									ESX.TriggerServerCallback('esx_license:checkLicense', function(hasWeaponLicense)
+										if hasWeaponLicense then
+											OpenShopMenu(k)
+										else
+											OpenBuyLicenseMenu(k)
+										end
+									end, GetPlayerServerId(PlayerId()), 'weapon')
+								else
+									OpenShopMenu(k)
+								end
 							end
 						end
-					end
+						end
 					DrawMarker(Config.Type, v.Locations[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		if not CurrentShop and TextShown then 
+			TextShown = false
 			ESX.HideUI()
 		end
 		if not InShop and ShopOpen then
 			if ShopOpen then
+				TextShown = false
 				ESX.HideUI()
 				ESX.UI.Menu.CloseAll()
 				ShopOpen = false
