@@ -1,9 +1,10 @@
-# esx_weaponshop
+<h1 align='center'>[ESX] Weapon Shops</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-ESX Weapon Shop adds.. well you guessed it - weapon shops to the already existing shops in the world.
+Would it be Los-Santos Without some weapons? No! This resource lets Players spend their hard earned drug money on buying the important things in life - revolvers and RPGs! Users can goto their trusty Ammu-Nation to get some Legal fun or get risky and frisky with the illegal black-market dealer 😉
 
 # Legal
-esx_weaponshop - Legal and illegal weapon shops
+
+esx_weaponshop - America Simulator!
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
