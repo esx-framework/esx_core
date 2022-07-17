@@ -19,4 +19,9 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerLoaded = false
         ESX.PlayerData = {}
     end)
+
+	RegisterNetEvent('esx:setJob')
+	AddEventHandler('esx:setJob', function(job)
+		ESX.PlayerData.job = job
+	end)
 end
