@@ -1,34 +1,9 @@
-# esx_clotheshop
+<h1 align='center'>[ESX] Clothe Shop</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-## Requirements
-- [esx_skin](https://github.com/ESX-Org/esx_skin)
+It`s time to shine! Head over to the variety of stores this resource adds - to Get a new stylish look to out shine all your competition.
 
-## Download & Installation
+# License
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_clotheshop
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_clotheshop [esx]/esx_clotheshop
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_clotheshop/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Add this in your `server.cfg`:
-
-```
-start esx_clotheshop
-```
-
-# Legal
-### License
 esx_clotheshop - clothing store
 
 Copyright (C) 2015-2022 Jérémie N'gadi
