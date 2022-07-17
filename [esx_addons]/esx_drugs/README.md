@@ -1,39 +1,10 @@
-# esx_drugs
+<h1 align='center'>[ESX] Drugs</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-Adds the well-known drugs for the people who want to make quick money. Weed Field require you to run around and harvest weed plants, process and then sell at the beach of San Andreas!
-
-## Requirements
-* ESX License Support
-  * [esx_license](https://github.com/ESX-Org/esx_license)
-
-## Download & Installation
-
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_drugs
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_drugs [esx]/esx_drugs
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_drugs/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Import `esx_drugs.sql` in your database
-- Add this in your `server.cfg`:
-
-```
-start esx_drugs
-```
+Who loves some good old Marijuana? I hope you do! Cause this resource lets you grow, pick, proccess and roll your own to either use for personal use or do some shady deals to sell off your stock to earn **lots** of money!
 
 # Legal
-### License
-esx_drugs - drugs job
+
+esx_drugs - Drugs Job
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
