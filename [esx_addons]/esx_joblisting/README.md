@@ -1,12 +1,10 @@
-# esx_joblisting
+<h1 align='center'>[ESX] Job Listing</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-Simple job listing/Job Centre script, you can specify what jobs you want to be whitelisted in db.
+This Simple resource lets you finally contribute to Society and make a difference in the Word! How? it adds an amazing Menu where you can pick what you want to be in life - want to be a police officier? No-problem! Or maybe you want to stalk people and be a creepy reporter? We got you covered!
 
 ## Legal
 
-### License
-
-esx_joblisting - job listing script
+esx_joblisting - virtual Job Center!
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
