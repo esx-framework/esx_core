@@ -1,36 +1,10 @@
-# esx_holdup
-This resource for ESX adds stores around the island for criminals to rob!
+<h1 align='center'>[ESX] Hold Up</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-### Requirements
-- [esx_policejob](https://github.com/ESX-Org/esx_policejob)
-
-## Download & Installation
-
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_holdup
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_holdup [esx]/esx_holdup
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_holdup/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Add this to your `server.cfg`:
-
-```
-start esx_holdup
-```
+"Freeze!" - is the only you will be hearing here. This resource adds **alot** of stores for you to rob and steal from, because how else are you going to get money? work? uh, Lame!
 
 # Legal
-### License
-esx_holdup - rob stores
+
+esx_holdup - rob stores!
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
