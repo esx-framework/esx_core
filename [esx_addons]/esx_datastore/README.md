@@ -1,37 +1,16 @@
-# esx_datastore
+<h1 align='center'>[ESX] Data Store</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-## Download & Installation
+A simple script for storing data :)
 
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_datastore
-```
+# Usage
 
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_datastore [esx]/esx_datastore
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_datastore/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Import `esx_datastore.sql` in your database
-- Add this in your `server.cfg`:
-
-```
-start esx_datastore
-```
-
-## Usage
 There are two types of datastores: shared and not shared.
 
 - Shared datastores does not belong to a specific user, Example: police armory
 - None-shared datastores are created for every user in the server. They are created in db when player is loaded, Example: property (weapons, dressing).
 
-### `datastore` database information
+## `datastore` database information
+
 An datastore must be configured in the database before using it. Don't forget to run a server restart afterwards (you can alternative restart the script and relog all clients)
 
 | `name`   | `label` | `shared` |
@@ -52,8 +31,8 @@ end)
 ```
 
 # Legal
-### License
-esx_datastore - datastore inventory for ESX
+
+esx_datastore - Datastore for ESX-Framework
 
 Copyright (C) 2015-2022 Jérémie N'gadi
 
