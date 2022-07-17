@@ -1,14 +1,8 @@
-# esx_dmvschool
+<h1 align='center'>[ESX] DMV School</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-Realistic DMV school for ESX
+Tired of waiting for your local DMV to be free so you can get your driving licence? well today is your day! This amazingly Realistic DMV schools allows you to sit a tough theory test and a Rage fueled , high-stakes Practial Driving Test for Cars, motocycles and Trucks, all from the comfort of FiveM!
 
-## Requirements
-
-- [esx_license](https://github.com/esx-framework/esx-legacy/tree/main/%5Besx_addons%5D/esx_license)
-
-## Legal
-
-### License
+# Legal
 
 esx_dmvschool - realistic DMV school for ESX
 
