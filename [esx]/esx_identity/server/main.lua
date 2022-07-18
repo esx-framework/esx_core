@@ -71,6 +71,7 @@ if Config.UseDeferrals then
 
                                         deferrals.done()
                                     else
+
                                         deferrals.done(_U('invalid_format'))
                                     end
                                 end
@@ -220,6 +221,7 @@ elseif not Config.UseDeferrals then
                     playerIdentity[xPlayer.identifier] = nil
                     cb(true)
                 else
+                    xPlayer.showNotification(_U('invalid_format'), "error")
                     cb(false)
                 end
             else
@@ -230,6 +232,8 @@ elseif not Config.UseDeferrals then
                 checkSexFormat(data.sex) and checkDOBFormat(data.dateofbirth) and checkHeightFormat(data.height) then
                 TriggerEvent('esx_identity:completedRegistration', source, data)
                 cb(true)
+            else 
+                TriggerClientEvent("esx:showNotification", source, _U('data_incorrect'), "error")
             end
         end
     end)
