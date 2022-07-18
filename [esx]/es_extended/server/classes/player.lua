@@ -128,6 +128,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return self.job
 	end
 
+	function self.setDuty(state)
+		self.job.onDuty = state
+	end
+
 	function self.getLoadout(minimal)
 		if minimal then
 			local minimalLoadout = {}
