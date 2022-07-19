@@ -147,6 +147,33 @@ ESX.HashString = function(str)
     return input_map
 end
 
+if GetResourceState("esx_context") ~= "missing" then
+
+    function ESX.OpenContext(...)
+        exports["esx_context"]:Open(...)
+    end
+
+    function ESX.PreviewContext(...)
+        exports["esx_context"]:Preview(...)
+    end
+
+    function ESX.CloseContext(...)
+        exports["esx_context"]:Close(...)
+    end
+else 
+    function ESX.OpenContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+
+    function ESX.PreviewContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+
+    function ESX.CloseContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+end
+
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
