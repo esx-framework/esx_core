@@ -117,7 +117,7 @@ AddEventHandler('onResourceStop', function(resource)
 end)
 
 function getTransactionHistory() 
-	ESX.TriggerServerCallback("esx_banking:BenzoFP", function(_history)
+	ESX.TriggerServerCallback("esx_banking:gethistory", function(_history)
 		SendNUIMessage({
 			history = {json.encode(_history)}
 		})

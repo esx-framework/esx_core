@@ -23,7 +23,7 @@ AddEventHandler('esx_banking:deposit', function(amount)
 	end
 end)
 
-ESX.RegisterServerCallback("esx_banking:BenzoFP", function(source, cb) 
+ESX.RegisterServerCallback("esx_banking:gethistory", function(source, cb) 
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local identifier = xPlayer.getIdentifier()
 	local history = MySQL.Sync.prepare('SELECT * FROM banking WHERE identifier = ?', {identifier})

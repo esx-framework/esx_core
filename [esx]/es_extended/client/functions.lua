@@ -5,7 +5,7 @@ ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
-
+ESX.Input = {}
 ESX.UI = {}
 ESX.UI.HUD = {}
 ESX.UI.HUD.RegisteredElements = {}
@@ -134,6 +134,54 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
     SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
     BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
     EndTextCommandDisplayHelp(2, false, false, -1)
+end
+
+ESX.HashString = function(str)
+    local format = string.format
+    local upper = string.upper
+    local gsub = string.gsub
+    local hash = GetHashKey(str)
+    local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
+    input_map = string.gsub(input_map, "FFFFFFFF", "")
+
+    return input_map
+end
+
+if GetResourceState("esx_context") ~= "missing" then
+
+    function ESX.OpenContext(...)
+        exports["esx_context"]:Open(...)
+    end
+
+    function ESX.PreviewContext(...)
+        exports["esx_context"]:Preview(...)
+    end
+
+    function ESX.CloseContext(...)
+        exports["esx_context"]:Close(...)
+    end
+else 
+    function ESX.OpenContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+
+    function ESX.PreviewContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+
+    function ESX.CloseContext()
+        print("[ERROR] ESX Context Not Found")
+    end
+end
+
+
+ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
+    RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
+    ESX.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
+    if on_release then
+        RegisterCommand("-" .. command_name, on_release)
+    end
+    RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
 end
 
 function ESX.TriggerServerCallback(name, cb, ...)
