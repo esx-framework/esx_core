@@ -5,6 +5,7 @@ isDead, isSearched, medic = false, false, 0
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerLoaded = true
+	ESX.PlayerData = xPlayer
 end)
 
 RegisterNetEvent('esx:onPlayerLogout')
