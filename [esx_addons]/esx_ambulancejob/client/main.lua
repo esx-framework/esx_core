@@ -57,10 +57,7 @@ CreateThread(function()
 			DisableAllControlActions(0)
 			EnableControlAction(0, 47, true) -- G 
 			EnableControlAction(0, 245, true) -- T
-			EnableControlAction(0, 270, true) -- LEFT
-			EnableControlAction(0, 271, true) -- RIGHT
-			EnableControlAction(0, 272, true) -- UP
-			EnableControlAction(0, 273, true) -- DOWN
+			EnableControlAction(0, 38, true) -- E
 
 			if isSearched then
 				local playerPed = PlayerPedId()
@@ -157,14 +154,12 @@ function StartDistressSignal()
 			timer = timer - 30
 
 			SetTextFont(4)
-			SetTextScale(0.45, 0.45)
-			SetTextColour(185, 185, 185, 255)
-			SetTextDropshadow(0, 0, 0, 0, 255)
-			SetTextDropShadow()
-			SetTextOutline()
+			SetTextScale(0.5, 0.5)
+			SetTextColour(200, 50, 50, 255)
+			SetTextDropshadow(0.1, 3, 27, 27 , 255)
 			BeginTextCommandDisplayText('STRING')
 			AddTextComponentSubstringPlayerName(_U('distress_send'))
-			EndTextCommandDisplayText(0.175, 0.805)
+			EndTextCommandDisplayText(0.43, 0.77)
 
 			if IsControlJustReleased(0, 47) then
 				SendDistressSignal()
@@ -260,14 +255,14 @@ function StartDeathTimer()
 			if not Config.EarlyRespawnFine then
 				text = text .. _U('respawn_bleedout_prompt')
 
-				if IsControlPressed(0, 38) and timeHeld > 60 then
+				if IsControlPressed(0, 38) and timeHeld > 120 then
 					RemoveItemsAfterRPDeath()
 					break
 				end
 			elseif Config.EarlyRespawnFine and canPayFine then
 				text = text .. _U('respawn_bleedout_fine', ESX.Math.GroupDigits(Config.EarlyRespawnFineAmount))
 
-				if IsControlPressed(0, 38) and timeHeld > 60 then
+				if IsControlPressed(0, 38) and timeHeld > 120 then
 					TriggerServerEvent('esx_ambulancejob:payFine')
 					RemoveItemsAfterRPDeath()
 					break
@@ -275,7 +270,7 @@ function StartDeathTimer()
 			end
 
 			if IsControlPressed(0, 38) then
-				timeHeld = timeHeld + 1
+				timeHeld += 1
 			else
 				timeHeld = 0
 			end
@@ -373,6 +368,7 @@ AddEventHandler('esx_ambulancejob:revive', function()
 	}
 
 	RespawnPed(playerPed, formattedCoords, 0.0)
+	isDead = false
 	DoScreenFadeIn(800)
 end)
 
