@@ -307,7 +307,9 @@ end
 
 function ESX.UseItem(source, item, ...)
 	if ESX.Items[item] then
-		Core.UsableItemsCallbacks[item](source, item, ...)
+		if Core.UsableItemsCallbacks[item] then
+			Core.UsableItemsCallbacks[item](source, item, ...)
+		end
 	else
 		print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(item))
 	end
