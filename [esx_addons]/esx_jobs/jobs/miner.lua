@@ -19,7 +19,7 @@ Config.Jobs.miner = {
 	Zones = {
 
 		CloakRoom = {
-			Pos = {x = 892.35, y = -2172.77, z = 31.28},
+			Pos = {x = 892.35, y = -2172.77, z = 32.28},
 			Size  = {x = 0.8, y = 0.5, z = 1.0},
 			Color = {r = 50, g = 200, b = 50},
 			Marker= 20,
