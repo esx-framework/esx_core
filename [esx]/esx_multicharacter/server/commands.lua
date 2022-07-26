@@ -3,7 +3,7 @@ ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
 		args.identifier
 	})
 
-	if slots == nil then
+	if not slots then
 		MySQL.update('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
 			args.identifier,
 			args.slots
@@ -26,7 +26,7 @@ ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
 		args.identifier
 	})
 
-	if slots ~= nil then
+	if slots then
 		MySQL.update('DELETE FROM `multicharacter_slots` WHERE `identifier` = ?', {
 			args.identifier
 		})
