@@ -90,7 +90,7 @@ end)
 
 RegisterNetEvent('esx:onPlayerSpawn')
 AddEventHandler('esx:onPlayerSpawn', function()
-	local source = soruce
+	local source = source
 	if deadPlayers[source] then
 		deadPlayers[source] = nil
 		local Ambulance = ESX.GetExtendedPlayers("job", "ambulance")
