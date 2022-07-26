@@ -54,6 +54,7 @@ Locales['es'] = {
   ['in_vehicle'] = 'No se puede dar nada a alguien en un vehículo',
 
   -- Commands
+  ['command_bring'] = 'Traer un jugador hacia ti',
   ['command_car'] = 'Generar un vehiculo',
   ['command_car_car'] = 'Nombre o hash del vehículo',
   ['command_cardel'] = 'Eliminar vehículos cercanos',
@@ -62,6 +63,8 @@ Locales['es'] = {
   ['command_clearall'] = 'Limpiar chat para todos los jugadores',
   ['command_clearinventory'] = 'Limpiar el inventario del jugador',
   ['command_clearloadout'] = 'Limpiar inventario de un jugador',
+  ['command_freeze'] = 'Congelar un jugador',
+  ['command_unfreeze'] = 'Descongelar un jugador',
   ['command_giveaccountmoney'] = 'Dar dinero',
   ['command_giveaccountmoney_account'] = 'Nombre de cuenta válido',
   ['command_giveaccountmoney_amount'] = 'Cantidad a añadir',
@@ -78,6 +81,8 @@ Locales['es'] = {
   ['command_giveweaponcomponent_invalid'] = 'Componente del arma no válido',
   ['command_giveweaponcomponent_hasalready'] = 'El jugador ya tiene ese componente del arma',
   ['command_giveweaponcomponent_missingweapon'] = 'El jugador no tiene esa arma',
+  ['command_goto'] = 'Teletransporte hacia un jugador',
+  ['command_kill'] = 'Matar un jugador',
   ['command_save'] = 'Guardar un jugador en la base de datos',
   ['command_saveall'] = 'Guardar todos los jugadores en la base de datos',
   ['command_setaccountmoney'] = 'Establecer el dinero de la cuenta para un jugador',
@@ -343,4 +348,8 @@ Locales['es'] = {
   ['tint_lspd'] = 'Skin Azul',
   ['tint_orange'] = 'Skin Naranja',
   ['tint_platinum'] = 'Skin Plata',
+  
+  -- Duty related
+  ['stopped_duty'] = 'Has salido de servicio.',
+  ['started_duty'] = 'Has entrado de servicio.',
 }
