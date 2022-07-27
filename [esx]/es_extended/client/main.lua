@@ -439,9 +439,9 @@ function StartServerSyncLoops()
 			CreateThread(function()
 					local currentWeapon = {Ammo = 0}
 					while ESX.PlayerLoaded do
-						local sleep = 300
+						local sleep = 1500
 						if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
-							sleep = 0
+							sleep = 1000
 							local _,weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
 							local weapon = ESX.GetWeaponFromHash(weaponHash) 
 							if weapon then
