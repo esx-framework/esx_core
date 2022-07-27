@@ -240,7 +240,7 @@ function ApplySkin(skin, clothes)
 
     SetPedComponentVariation(playerPed, 8, Character['tshirt_1'], Character['tshirt_2'], 2) -- Tshirt
     SetPedComponentVariation(playerPed, 11, Character['torso_1'], Character['torso_2'], 2) -- torso parts
-    SetPedComponentVariation(playerPed, 3, Character['arms'], Character['arms_2'], 2) -- Amrs
+    SetPedComponentVariation(playerPed, 3, Character['arms'], Character['arms_2'], 2) -- Arms
     SetPedComponentVariation(playerPed, 10, Character['decals_1'], Character['decals_2'], 2) -- decals
     SetPedComponentVariation(playerPed, 4, Character['pants_1'], Character['pants_2'], 2) -- pants
     SetPedComponentVariation(playerPed, 6, Character['shoes_1'], Character['shoes_2'], 2) -- shoes
