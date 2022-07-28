@@ -25,4 +25,5 @@ Locales['fi'] = {
   ['driving_too_fast'] = '~r~Ajat liian nopeeta! Hidasta! Nopeusrajoitus: %s km/h!',
   ['errors'] = 'mistakes: ~r~%s/%s',
   ['you_damaged_veh'] = 'sinä vahingoitit ajoneuvoa. Aja varovaisemmin...',
+  ['not_enough_money'] = 'Sinulla ei ole tarpeeksi rahaa'
 }
