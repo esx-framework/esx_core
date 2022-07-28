@@ -223,7 +223,7 @@ function GetColors(color)
 			{ index = 48, label = _U('darkbrown')},
 			{ index = 90, label = _U('bronze')},
 			{ index = 94, label = _U('brownmetallic')},
-			{ index = 95, label = _U('Expresso')},
+			{ index = 95, label = _U('expresso')},
 			{ index = 96, label = _U('chocolate')},
 			{ index = 97, label = _U('terracotta')},
 			{ index = 98, label = _U('marble')},
