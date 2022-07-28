@@ -25,4 +25,5 @@ Locales['sv'] = {
   ['driving_too_fast'] = '~r~Du kör för snabbt, den nuvarande hastighetsgräns är: %s km/h!',
   ['errors'] = 'misstag: ~r~%s/%s',
   ['you_damaged_veh'] = 'du skadade fordonet!',
+  ['not_enough_money'] = 'Du har inte tillräckligt med pengar'
 }
