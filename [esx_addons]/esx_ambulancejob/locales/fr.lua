@@ -42,7 +42,7 @@ Locales['fr'] = {
   -- Boss Menu
   ['boss_actions'] = 'action Patron',
   -- Misc
-  ['invalid_amount'] = ' t invalide',
+  ['invalid_amount'] = 'quantité invalide',
   ['actions_prompt'] = 'appuyez sur [E] accédez aux Actions d\'Ambulance.',
   ['deposit_amount'] = 'montant du dépôt',
   ['money_withdraw'] = 'montant du retrait',

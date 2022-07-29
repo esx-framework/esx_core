@@ -10,8 +10,8 @@ Locales ['fr'] = {
   ['weed_processingtoofar'] = 'la transformation a été ~r~annulée. Vous êtes sorti de la zone.',
 
   -- drug dealer
-  ['dealer_prompt'] = 'appuyez sur [E] pour parler avec le ~r~Drug Dealer.',
-  ['dealer_title'] = 'drug Dealer',
+  ['dealer_prompt'] = 'appuyez sur [E] pour parler avec le ~r~Dealer de drogue.',
+  ['dealer_title'] = 'Dealer de drogue',
   ['dealer_item'] = '$%s',
   ['dealer_notenough'] = 't\'en as pas assez à vendre!',
   ['dealer_sold'] = 'vous avez vendu %sx %s pour $%s',
@@ -26,5 +26,5 @@ Locales ['fr'] = {
   -- blips
   ['blip_weedfield'] = 'champs de weed',
   ['blip_weedprocessing'] = 'transformation de weed',
-  ['blip_drugdealer'] = 'drug Dealer',
+  ['blip_drugdealer'] = 'Dealer de drogue',
 }

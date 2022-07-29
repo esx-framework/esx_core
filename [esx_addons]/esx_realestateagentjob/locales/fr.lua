@@ -9,7 +9,7 @@ Locales['fr'] = {
   ['no_play_near'] = 'aucun joueur à proximité',
   ['realtors'] = 'agents Immobilier',
   ['boss_action'] = 'action Patron',
-  ['client_poor'] = 'your client cannot afford that',
+  ['client_poor'] = 'votre client n\' a pas assez d\'argent',
 
   -- Property menu
   ['property_name'] = 'propriété',
@@ -19,7 +19,7 @@ Locales['fr'] = {
   -- Customer menu
   ['customer_client'] = 'client',
   ['customer_property'] = 'propriété',
-  ['customer_agreement'] = 'agreement',
+  ['customer_agreement'] = 'accord',
   ['customer_actions'] = 'actions',
   ['customer_contractbuttons'] = '{{Révoquer contrat|revoke}} {{GPS|gps}}',
   ['customer_rent'] = 'location',
