@@ -368,9 +368,12 @@ CreateThread(function()
 
                             ESX.TriggerServerCallback('esx_garage:checkVehicleOwner', function(owner)
                                 if owner then
-                                    ESX.Game.DeleteVehicle(vehicle)
-                                    TriggerServerEvent('esx_garage:updateOwnedVehicle', true, currentMarker, nil,
-                                        vehicleProps)
+                                    TaskLeaveVehicle(playerPed, vehicle, 0)
+
+                                    SetTimeout(1000, function()
+                                        ESX.Game.DeleteVehicle(vehicle)
+                                        TriggerServerEvent('esx_garage:updateOwnedVehicle', true, currentMarker, nil, vehicleProps)
+                                    end)
                                 else
                                     ESX.ShowNotification(_U('not_owning_veh'), 'error')
                                 end
