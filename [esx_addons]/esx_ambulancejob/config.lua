@@ -32,7 +32,8 @@ Config.EarlyRespawnFineAmount     = 5000
 Config.OxInventory                = ESX.GetConfig().OxInventory
 Config.RespawnPoints = {
 	{coords = vector3(341.0, -1397.3, 32.5), heading = 48.5}, -- Central Los Santos
-	{coords = vector3(1836.03, 3670.99, 34.28), heading = 296.06} -- Sandy Shores
+	{coords = vector3(1839.152, 3672.501, 34.276), heading = 210.526}, -- Sandy Shores
+	{coords = vector3(-239.6791, 6323.436, 32.426), heading = 221.781} -- Paleto Bay
 }
 
 Config.Hospitals = {
