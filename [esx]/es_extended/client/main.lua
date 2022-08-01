@@ -300,6 +300,32 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 
 				ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
+					SetVehicleDirtLevel(vehicle, 0)
+					SetVehicleFuelLevel(vehicle, 100.0)
+			    SetVehicleCustomSecondaryColour(vehicle, 55, 140, 191) -- ESX Blue
+					SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0) -- white
+					--SetVehicleCustomPrimaryColour(vehicle, 55, 140, 191) -- ESX Blue
+				--	SetVehicleCustomSecondaryColour(vehicle, 0, 0, 0) -- white
+					SetEntityAsMissionEntity(vehicle, true, true) -- Persistant Vehicle
+
+					-- Max out vehicle upgrades
+						SetVehicleExplodesOnHighExplosionDamage(vehicle, true)
+						SetVehicleModKit(vehicle, 0)
+						SetVehicleMod(vehicle, 11, 3, false) -- modEngine
+						SetVehicleMod(vehicle, 12, 2, false) -- modBrakes
+						SetVehicleMod(vehicle, 13, 2, false) -- modTransmission
+						SetVehicleMod(vehicle, 15, 3, false) -- modSuspension
+						SetVehicleMod(vehicle, 16, 4, false) -- modArmor
+						ToggleVehicleMod(vehicle, 18, true) -- modTurbo
+						SetVehicleTurboPressure(vehicle, 100.0)
+						SetVehicleNumberPlateText(vehicle, "ESX KISS")
+						SetVehicleNumberPlateTextIndex(vehicle, 1)
+						SetVehicleNitroEnabled(vehicle, true)
+
+						for i=0, 3 do
+							SetVehicleNeonLightEnabled(vehicle, i, true)
+						end
+						SetVehicleNeonLightsColour(vehicle, 55, 140, 191)  -- ESX Blue
 				end)
 			else
 				ESX.ShowNotification('Invalid vehicle model.')

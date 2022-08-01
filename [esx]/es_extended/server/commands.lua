@@ -19,11 +19,12 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	if not args.car then args.car = "Prototipo" end
+	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
+	if not args.car then args.car = GameBuild >= 2699 and "DRAUGUR" or "Prototipo" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
-}})
+}}) 
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
 	if not args.radius then args.radius = 4 end
