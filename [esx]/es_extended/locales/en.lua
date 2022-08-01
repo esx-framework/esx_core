@@ -208,6 +208,11 @@ Locales['en'] = {
   ['weapon_rpg'] = 'Rocket Launcher',
   ['weapon_rayminigun'] = 'Widowmaker',
 
+  -- Criminal Enterprises DLC
+  ['weapon_metaldetector'] = 'Metal Detector',
+  ['weapon_precisionrifle'] = 'Precision Rifle',
+  ['weapon_tactilerifle'] = 'Service Carbine',
+
   -- Thrown
   ['weapon_ball'] = 'Baseball',
   ['weapon_bzgas'] = 'BZ Gas',
