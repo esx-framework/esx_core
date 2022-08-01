@@ -964,7 +964,7 @@ Config.Weapons = {
 	{name = 'GADGET_PARACHUTE', label = _U('gadget_parachute'), components = {}}
 }
 
-	local GameBuild = GetConvar("sv_enforceGameBuild", 1604)
+	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
 
 	-- The Criminal Enterprises DLC Weapons
 	if GameBuild >= 2699 then 
