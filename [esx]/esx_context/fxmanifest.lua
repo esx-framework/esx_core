@@ -11,6 +11,7 @@ ui_page 'index.html'
 shared_script '@es_extended/imports.lua'
 
 client_scripts {
+    'config.lua',
     'main.lua',
 }
 
