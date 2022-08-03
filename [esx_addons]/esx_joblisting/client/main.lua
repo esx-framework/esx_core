@@ -35,7 +35,7 @@ CreateThread(function()
 		local Sleep = 1500
 
 		local coords = GetEntityCoords(PlayerPedId())
-		isInMarker = false
+		local isInMarker = false
 
 		for i=1, #Config.Zones, 1 do
 			local distance = #(coords - Config.Zones[i])
