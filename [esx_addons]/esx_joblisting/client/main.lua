@@ -29,10 +29,6 @@ function ShowJobListingMenu()
 	end)
 end
 
-AddEventHandler('esx_joblisting:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
-end)
-
 -- Activate menu when player is inside marker, and draw markers
 CreateThread(function()
 	while true do
