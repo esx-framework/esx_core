@@ -26,12 +26,12 @@ local function Progressbar(message,length,Options)
                     SendNuiMessage(json.encode({
                         type = "Close"
                     }))
-                    le = 0
                     ClearPedTasks(ESX.PlayerData.ped)
                     if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
                     if Options.onFinish then Options.onFinish() end
                     InProgress = false
                     Options.onCancel()
+                    le = 0
                     break
                 end
             end
