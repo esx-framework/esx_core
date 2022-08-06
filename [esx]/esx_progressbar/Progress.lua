@@ -1,5 +1,6 @@
 local InProgress = false
 local function Progressbar(message,length,Options)
+    local Canceled = false
     if not InProgress then
         if Options.animation then 
             if Options.animation.type == "anim" then
@@ -17,35 +18,27 @@ local function Progressbar(message,length,Options)
             length = length or 3000,
             message = message or "ESX-Framework"
         }))
-        if Options.onCancel then
-            local le = length or 3000
-            while le > 0 do
-                Wait(0)
-                le -= 1
-                if IsControlJustPressed(0, 178) then
-                    SendNuiMessage(json.encode({
-                        type = "Close"
-                    }))
-                    ClearPedTasks(ESX.PlayerData.ped)
-                    if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-                    if Options.onFinish then Options.onFinish() end
-                    InProgress = false
-                    Options.onCancel()
-                    le = 0
-                    break
-                end
+        local le = length or 3000
+        while le > 0 do
+            Wait(0)
+            le -= 1
+            if IsControlJustPressed(0, 194) and Options.onCancel then
+                SendNuiMessage(json.encode({
+                    type = "Close"
+                }))
+                Canceled = true
+                ClearPedTasksImmediately(ESX.PlayerData.ped)
+                if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+                InProgress = false
+                le = 0
+                Options.onCancel()
             end
-            ClearPedTasks(ESX.PlayerData.ped)
-            if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+        end
+        if not Canceled then
+        ClearPedTasks(ESX.PlayerData.ped)
+        if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
             if Options.onFinish then Options.onFinish() end
             InProgress = false
-        else 
-            SetTimeout(length, function()
-                ClearPedTasks(ESX.PlayerData.ped)
-                if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-                if Options.onFinish then Options.onFinish() end
-                InProgress = false
-            end)
         end
     end
 end
