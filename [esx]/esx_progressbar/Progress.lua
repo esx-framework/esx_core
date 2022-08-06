@@ -26,6 +26,7 @@ local function Progressbar(message,length,Options)
                     SendNuiMessage(json.encode({
                         type = "Close"
                     }))
+                    le = 0
                     Options.onCancel()
                     break
                 end
@@ -46,4 +47,3 @@ local function Progressbar(message,length,Options)
 end
 
 exports('Progressbar', Progressbar)
-

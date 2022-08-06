@@ -42,7 +42,7 @@
         },
         onFinish = function()
         --Code here
-    end, OnCancel = function()
+    end, onCancel = function()
         --Code here
     end
     })
@@ -59,7 +59,7 @@
         },
         onFinish = function()
         --Code here
-    end, OnCancel = function()
+    end, onCancel = function()
         --Code here
     end
     })
