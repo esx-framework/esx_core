@@ -16,9 +16,6 @@ local function Progressbar(message,length,Options)
         message = message or "ESX-Framework"
     }))
     if Options.onCancel then
-        SendNuiMessage(json.encode({
-            type = "Close"
-        }))
         local le = length or 3000
         while le > 0 do
             Wait(0)
@@ -28,8 +25,15 @@ local function Progressbar(message,length,Options)
                 break
             end
         end
+        SendNuiMessage(json.encode({
+            type = "Close"
+        }))
+        ClearPedTasks(ESX.PlayerData.ped)
+        if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+        if Options.onFinish then Options.onFinish() end
     else 
         SetTimeout(length, function()
+            ClearPedTasks(ESX.PlayerData.ped)
             if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
             if Options.onFinish then Options.onFinish() end
         end)
@@ -40,3 +44,4 @@ local function Progressbar(message,length,Options)
 end
 
 exports('Progressbar', Progressbar)
+
