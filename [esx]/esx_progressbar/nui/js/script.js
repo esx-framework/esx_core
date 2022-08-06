@@ -1,9 +1,43 @@
 const w = window
 const doc = document
 
+const codes = {
+    "~r~": "red",
+    "~b~": "#378cbf",
+    "~g~": "green",
+    "~y~": "yellow",
+    "~p~": "purple",
+    "~c~": "grey",
+    "~m~": "#212121",
+    "~u~": "black",
+    "~o~": "orange"
+}
+
+
 $(function () {
     w.addEventListener('message', function(e) {
-        $(".text").text(e.data.message)
+        var message = e.data.message
+        const replaceColors = (str, obj) => {
+            let strToReplace = str
+        
+            for (let id in obj) {
+                strToReplace = strToReplace.replace(new RegExp(id, 'g'), obj[id])
+            }
+        
+            return strToReplace
+        }
+        for (color in codes) {
+            if (message.includes(color)) {
+                let objArr = {};
+                objArr[color] = `<span style="color: ${codes[color]}">`;
+                objArr["~s~"] = "</span>";
+    
+                let newStr = replaceColors(message, objArr);
+    
+                message = newStr;
+            }
+        }
+        $(".text").text(message)
         if (e.data.type === "Progressbar") {
             doc.getElementById("notifyInfo").style.display = "block";
             const start = new Date();
