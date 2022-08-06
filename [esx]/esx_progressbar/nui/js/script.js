@@ -13,32 +13,31 @@ const codes = {
     "~o~": "orange"
 }
 
-
 $(function () {
     w.addEventListener('message', function(e) {
-        var message = e.data.message
-        const replaceColors = (str, obj) => {
-            let strToReplace = str
-        
-            for (let id in obj) {
-                strToReplace = strToReplace.replace(new RegExp(id, 'g'), obj[id])
-            }
-        
-            return strToReplace
-        }
-        for (color in codes) {
-            if (message.includes(color)) {
-                let objArr = {};
-                objArr[color] = `<span style="color: ${codes[color]}">`;
-                objArr["~s~"] = "</span>";
-    
-                let newStr = replaceColors(message, objArr);
-    
-                message = newStr;
-            }
-        }
-        $(".text").text(message)
         if (e.data.type === "Progressbar") {
+            var message = e.data.message
+            const replaceColors = (str, obj) => {
+                let strToReplace = str
+            
+                for (let id in obj) {
+                    strToReplace = strToReplace.replace(new RegExp(id, 'g'), obj[id])
+                }
+            
+                return strToReplace
+            }
+            for (color in codes) {
+                if (message.includes(color)) {
+                    let objArr = {};
+                    objArr[color] = `<span style="color: ${codes[color]}">`;
+                    objArr["~s~"] = "</span>";
+        
+                    let newStr = replaceColors(message, objArr);
+        
+                    message = newStr;
+                }
+            }
+            $(".text").text(message)
             doc.getElementById("notifyInfo").style.display = "block";
             const start = new Date();
             const maxTime = e.data.length
