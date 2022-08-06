@@ -27,6 +27,10 @@ local function Progressbar(message,length,Options)
                         type = "Close"
                     }))
                     le = 0
+                    ClearPedTasks(ESX.PlayerData.ped)
+                    if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+                    if Options.onFinish then Options.onFinish() end
+                    InProgress = false
                     Options.onCancel()
                     break
                 end
@@ -47,3 +51,4 @@ local function Progressbar(message,length,Options)
 end
 
 exports('Progressbar', Progressbar)
+
