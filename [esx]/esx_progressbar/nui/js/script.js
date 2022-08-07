@@ -40,7 +40,7 @@ $(function () {
             $(".text").text(message)
             doc.getElementById("notifyInfo").style.display = "block";
             const start = new Date();
-            const maxTime = e.data.length
+            const maxTime = e.data.length;
             const timeoutValue = Math.floor(maxTime/100);
             animUpdate();
 
@@ -54,13 +54,16 @@ $(function () {
                 const prc = Math.round((timeoutDiff/maxTime)*100);
                 if (prc <= 100) {
                     updateProg(prc);
-                    setTimeout(animUpdate, timeoutValue);
+                    this.timeoutID = setTimeout(animUpdate, timeoutValue);
                 } else {
                    doc.getElementById('notifyInfo').style.display = "none";
                 }
             }
         } else {
             doc.getElementById("notifyInfo").style.display = "none"
+            clearTimeout(this.timeoutID);
+            timeoutValue = 0;
+
         }
     })
 })

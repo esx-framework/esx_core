@@ -1,7 +1,8 @@
-local InProgress = false
+local CurrentProgress = nil
 local function Progressbar(message,length,Options)
     local Canceled = false
-    if not InProgress then
+    if not CurrentProgress then
+        CurrentProgress = Options
         if Options.animation then 
             if Options.animation.type == "anim" then
                 ESX.Streaming.RequestAnimDict(Options.animation.dict, function()
@@ -18,30 +19,32 @@ local function Progressbar(message,length,Options)
             length = length or 3000,
             message = message or "ESX-Framework"
         }))
-        local le = length or 3000
-        while le > 0 do
-            Wait(0)
-            le -= 1
-            if IsControlJustPressed(0, 194) and Options.onCancel then
-                SendNuiMessage(json.encode({
-                    type = "Close"
-                }))
-                Canceled = true
-                ClearPedTasksImmediately(ESX.PlayerData.ped)
+        CurrentProgress.length = length or 3000
+        while CurrentProgress ~= nil do
+            if CurrentProgress.length > 0 then 
+                CurrentProgress.length -= 1000
+            else
+                ClearPedTasks(ESX.PlayerData.ped)
                 if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-                InProgress = false
-                le = 0
-                Options.onCancel()
+                if Options.onFinish then Options.onFinish() end
+                CurrentProgress = nil
             end
-        end
-        if not Canceled then
-        ClearPedTasks(ESX.PlayerData.ped)
-        if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-            if Options.onFinish then Options.onFinish() end
-            InProgress = false
+            Wait(1000)
         end
     end
 end
 
+ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", function()
+    if not CurrentProgress then return end
+    if not CurrentProgress.onCancel then return end
+    SendNuiMessage(json.encode({
+        type = "Close"
+    }))
+        ClearPedTasks(ESX.PlayerData.ped)
+        if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+        CurrentProgress.canceled = true
+        CurrentProgress.length = 0
+        CurrentProgress.onCancel()
+        CurrentProgress = nil
+end)
 exports('Progressbar', Progressbar)
-
