@@ -2,18 +2,18 @@ local CurrentProgress = nil
 local function Progressbar(message,length,Options)
     local Canceled = false
     if not CurrentProgress then
-        CurrentProgress = Options
-        if Options.animation then 
-            if Options.animation.type == "anim" then
-                ESX.Streaming.RequestAnimDict(Options.animation.dict, function()
-                    TaskPlayAnim(ESX.PlayerData.ped, Options.animation.dict, Options.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
-                    RemoveAnimDict(Options.animation.dict)
+        CurrentProgress = Options or {}
+        if CurrentProgress.animation then 
+            if CurrentProgress.animation.type == "anim" then
+                ESX.Streaming.RequestAnimDict(CurrentProgress.animation.dict, function()
+                    TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
+                    RemoveAnimDict(CurrentProgress.animation.dict)
                 end)
-            elseif Options.animation.type == "Scenario" then
-                TaskStartScenarioInPlace(ESX.PlayerData.ped, Options.animation.Scenario, 0, true)
+            elseif CurrentProgress.animation.type == "Scenario" then
+                TaskStartScenarioInPlace(ESX.PlayerData.ped, CurrentProgress.animation.Scenario, 0, true)
             end
         end
-        if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(),Options.FreezePlayer) end
+        if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(),CurrentProgress.FreezePlayer) end
         SendNuiMessage(json.encode({
             type = "Progressbar",
             length = length or 3000,
@@ -25,8 +25,8 @@ local function Progressbar(message,length,Options)
                 CurrentProgress.length -= 1000
             else
                 ClearPedTasks(ESX.PlayerData.ped)
-                if Options.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-                if Options.onFinish then Options.onFinish() end
+                if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+                if CurrentProgress.onFinish then CurrentProgress.onFinish() end
                 CurrentProgress = nil
             end
             Wait(1000)
