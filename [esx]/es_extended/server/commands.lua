@@ -23,14 +23,19 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	if not args.car then args.car = GameBuild >= 2699 and "DRAUGUR" or "Prototipo" end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
-	{name = 'car', help = _U('command_car_car'), type = 'any'}
+	{name = 'car',validate = false, help = _U('command_car_car'), type = 'string'}
 }}) 
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
-	if not args.radius then args.radius = 4 end
-	xPlayer.triggerEvent('esx:deleteVehicle', args.radius)
+	local Vehicles = ESX.OneSync.GetVehiclesInArea(xPlayer.getCoords(true), tonumber(args.radius) or 4)
+	for i=1, #Vehicles do 
+		local Vehicle = NetworkGetEntityFromNetworkId(Vehicles[i])
+		if DoesEntityExist(Vehicle) then
+			DeleteEntity(Vehicle)
+		end
+	end
 end, false, {help = _U('command_cardel'), validate = false, arguments = {
-	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
+	{name = 'radius',validate = false, help = _U('command_cardel_radius'), type = 'string'}
 }})
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
