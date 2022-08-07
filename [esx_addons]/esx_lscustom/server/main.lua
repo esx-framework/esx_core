@@ -1,3 +1,4 @@
+local VehicleData = {}
 local Vehicles
 
 RegisterServerEvent('esx_lscustom:buyMod')
@@ -33,6 +34,20 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 	end
 end)
 
+RegisterNetEvent('esx_lscustom:changeVehicleData')
+AddEventHandler('esx_lscustom:changeVehicleData', function(type, data)
+	local source = source
+	if type == "add" then
+		VehicleData[source] = {plate = data.plate, props = data.props}
+	elseif type == "remove" then
+		for index, value in ipairs(VehicleData) do
+			if value.plate == data.plate then
+				table.remove(VehicleData, index)
+			end
+		end
+	end
+end)
+
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
 AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -56,4 +71,15 @@ ESX.RegisterServerCallback('esx_lscustom:getVehiclesPrices', function(source, cb
 		Vehicles = MySQL.query.await('SELECT model, price FROM vehicles')
 	end
 	cb(Vehicles)
+end)
+
+AddEventHandler('esx:playerDropped', function(playerId, reason)
+	if VehicleData[playerId] then
+		TriggerClientEvent('esx_lscustom:resetCustom', playerId, VehicleData[playerId].props)
+		for index, value in ipairs(VehicleData) do
+			if value.plate == VehicleData[playerId].plate then
+				table.remove(VehicleData, index)
+			end
+		end
+	end
 end)
