@@ -35,7 +35,7 @@ function Async.parallelLimit(tasks, limit, cb)
 	local queue, results = {}, {}
 
 	for i=1, #tasks, 1 do
-		queue[queue + 1] = tasks[i]
+		queue[#queue + 1] = tasks[i]
 	end
 
 	local function processQueue()

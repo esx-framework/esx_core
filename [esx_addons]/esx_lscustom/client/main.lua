@@ -479,6 +479,7 @@ end)
 CreateThread(function()
     while true do
         local Sleep = 1500
+        local Near = false
         local playerPed = PlayerPedId()
 
         if IsPedInAnyVehicle(playerPed, false) then
@@ -488,14 +489,14 @@ CreateThread(function()
             if (ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic') or not Config.IsMechanicJobOnly then
                 for k, v in pairs(Config.Zones) do
                     local zonePos = vector3(v.Pos.x, v.Pos.y, v.Pos.z)
-                    if #(coords - zonePos) < v.Size.x then
+                    if #(coords - zonePos) < 10.0 then
+                        Near = true
                         Sleep = 0
                         if not lsMenuIsShowed then
                             if not HintDisplayed then
                                 HintDisplayed = true
                                 ESX.TextUI(v.Hint)
                             end
-
                             if IsControlJustReleased(0, 38) then
                                 lsMenuIsShowed = true
 
@@ -527,21 +528,10 @@ CreateThread(function()
                                     end
                                 end)
                             end
-                        else
-                            if HintDisplayed then
-                                HintDisplayed = false
-                                ESX.HideUI()
-                            end
-                        end
-                    else
-                        if HintDisplayed then
-                            HintDisplayed = false
-                            ESX.HideUI()
                         end
                     end
                 end
-            else
-                if HintDisplayed then
+                if not Near and HintDisplayed then
                     HintDisplayed = false
                     ESX.HideUI()
                 end

@@ -20,6 +20,8 @@ function Open(position,eles,onSelect,onClose)
 		onClose = onClose
 	}
 
+	LocalPlayer.state:set("context:active",true)
+
 	Post("Open",eles,position)
 end
 
@@ -30,6 +32,8 @@ function Closed()
 	local cb = menu.onClose
 
 	activeMenu = nil
+
+	LocalPlayer.state:set("context:active",false)
 
 	if cb then
 		cb(menu)
@@ -95,7 +99,7 @@ RegisterNUICallback("selected",function(data)
 		return
 	end
 
-	activeMenu.onSelect(activeMenu,ele)
+	activeMenu:onSelect(ele)
 end)
 
 RegisterNUICallback("changed",function(data)
@@ -130,62 +134,81 @@ RegisterNUICallback("changed",function(data)
 	end
 end)
 
+-- Keybind
+
+local function focusPreview()
+	if not activeMenu
+	or not activeMenu.onSelect 
+	then
+		return
+	end
+
+	SetNuiFocus(true,true)
+end
+
+if PREVIEW_KEYBIND then
+	RegisterCommand("previewContext",focusPreview)
+
+	RegisterKeyMapping("previewContext","Preview Active Context","keyboard",PREVIEW_KEYBIND)
+end
+
+exports("focusPreview",focusPreview)
+
 -- Debug/Test
 -- Commands:
 -- [ ctx:preview | ctx:open | ctx:close | ctx:form ]
 
-local position = "right"
+if Debug then
+	local position = "right"
 
-local eles = {
- 	{
- 		unselectable=true,
- 		icon="fas fa-info-circle",
- 		title="Unselectable Item (Header/Label?)",
- 	},
- 	{
- 		icon="fas fa-check",
- 		title="Item A",
- 		description="Some description here. Add some words to make the text overflow."
- 	},
- 	{
- 		disabled=true,
- 		icon="fas fa-times",
- 		title="Disabled Item",
- 		description="Some description here. Add some words to make the text overflow."
- 	},
- 	{
- 		icon="fas fa-check",
- 		title="Item B",
- 		description="Some description here. Add some words to make the text overflow."
- 	},
-}
+	local eles = {
+	 	{
+	 		unselectable=true,
+	 		icon="fas fa-info-circle",
+	 		title="Unselectable Item (Header/Label?)",
+	 	},
+	 	{
+	 		icon="fas fa-check",
+	 		title="Item A",
+	 		description="Some description here. Add some words to make the text overflow."
+	 	},
+	 	{
+	 		disabled=true,
+	 		icon="fas fa-times",
+	 		title="Disabled Item",
+	 		description="Some description here. Add some words to make the text overflow."
+	 	},
+	 	{
+	 		icon="fas fa-check",
+	 		title="Item B",
+	 		description="Some description here. Add some words to make the text overflow."
+	 	},
+	}
 
-local function onSelect(menu,ele)
-	print("Ele selected",ele.title)
+	local function onSelect(menu,ele)
+		print("Ele selected",ele.title)
 
-	if ele.name == "close" then
+		if ele.name == "close" then
+			exports["esx_context"]:Close()
+		end
+
+		if ele.name ~= "submit" then
+			return
+		end
+
+		for _,ele in ipairs(menu.eles) do
+			if ele.input then
+				print(ele.name,ele.inputType,ele.inputValue)
+			end
+		end
+
 		exports["esx_context"]:Close()
 	end
 
-	if ele.name ~= "submit" then
-		return
+	local function onClose(menu)
+		print("Menu closed.")
 	end
 
-	for _,ele in ipairs(menu.eles) do
-		if ele.input then
-			print(ele.name,ele.inputType,ele.inputValue)
-		end
-	end
-
-	exports["esx_context"]:Close()
-end
-
-local function onClose(menu)
-	print("Menu closed.")
-end
-
-
-if Debug then
 	RegisterCommand("ctx:preview",function()
 		exports["esx_context"]:Preview(position,eles)
 	end)

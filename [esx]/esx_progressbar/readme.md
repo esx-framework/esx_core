@@ -16,6 +16,7 @@
 ```
 
 * Export
+  
 ```lua
     exports["esx_progressbar"]:Progressbar("Unlocking Storage", 3000,{
         FreezePlayer = true, 
@@ -27,5 +28,39 @@
         onFinish = function()
         --Code here
     end})
-        
-    ```
+```
+
+* Cancel
+  
+```lua
+    ESX.Progressbar("Unlocking Storage", 3000,{
+        FreezePlayer = true, 
+        animation ={
+            type = "anim",
+            dict = "anim@mp_player_intmenu@key_fob@", 
+            lib ="fob_click"
+        },
+        onFinish = function()
+        --Code here
+    end, onCancel = function()
+        --Code here
+    end
+    })
+```
+
+* Scenario
+  
+```lua
+    ESX.Progressbar("Unlocking Storage", 3000,{
+        FreezePlayer = true, 
+        animation ={
+            type = "Scenario",
+            Scenario = "PROP_HUMAN_BUM_BIN", 
+        },
+        onFinish = function()
+        --Code here
+    end, onCancel = function()
+        --Code here
+    end
+    })
+```
