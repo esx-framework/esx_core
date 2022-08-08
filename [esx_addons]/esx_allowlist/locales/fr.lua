@@ -1,8 +1,8 @@
 Locales['fr'] = {
-  ['whitelist_check']     = 'Etes vous sûr d\'être whitelisté sur ce serveur ...',
-  ['not_whitelisted']     = 'Ce serveur utilise une whitelist',
-  ['whitelist_empty']     = 'La whitelist n\'a pas été rechargé ou vous n\'avez pas été whitelisté',
+  ['allowlist_check']     = 'Etes vous sûr d\'être allowlisté sur ce serveur ...',
+  ['not_allowlisted']     = 'Ce serveur utilise une allowlist',
+  ['allowlist_empty']     = 'La allowlist n\'a pas été rechargé ou vous n\'avez pas été allowlisté',
   ['license_missing']     = 'Votre license est introuvable',
-  ['help_whitelist_add']  = 'Ajouter un joueur à la Whitelist',
-  ['help_whitelist_load'] = 'Recharger la Whitelist',
+  ['help_allowlist_add']  = 'Ajouter un joueur à la Whitelist',
+  ['help_allowlist_load'] = 'Recharger la Whitelist',
 }
