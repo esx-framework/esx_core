@@ -90,7 +90,7 @@ Locales['fr'] = {
   ['impound_canceled'] = 'vous avez annulé la saisie',
   ['impound_canceled_moved'] = 'la saisie a été annulée parce que le véhicule a déménagé',
   ['impound_successful'] = 'vous avez saisi le véhicule',
-  ['search_database'] = 'vehicle information',
+  ['search_database'] = 'information sur le véhicule',
   ['search_database_title'] = 'informations sur le véhicule - recherche avec numéro d\'enregistrement',
   ['search_database_error_invalid'] = 'Ce n\'est ~r~pas un numéro d\'enregistrement valide',
   -- Traffic interaction
