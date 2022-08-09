@@ -179,7 +179,7 @@ CreateThread(function()
 				playersToHide[GetPlayerServerId(v)] = true
 			end
 
-			-- Dont set our instanced players invisible
+			-- Don't set our instanced players invisible
 			for _,player in ipairs(instance.players) do
 				playersToHide[player] = nil
 			end
