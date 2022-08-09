@@ -1,7 +1,7 @@
 # esx_phone
 
 ### Note
-- All scripts that implement the usage of esx phone must be started **after** this script, or else they wont register and no messages will be received.
+- All scripts that implement the usage of esx phone must be started **after** this script, or else they won't register and no messages will be received.
 
 ## Download & Installation
 

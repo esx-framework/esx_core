@@ -1,6 +1,6 @@
 <h1 align='center'>[ESX] Shops</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-This Resource allows Players to shop til they Drop! You Configure *everything* within the Config.lua, and dont worry about those pesky cheaters, we have Security Steve on the door to protect you and your city!
+This Resource allows Players to shop til they Drop! You Configure *everything* within the Config.lua, and don't worry about those pesky cheaters, we have Security Steve on the door to protect you and your city!
 
 # Legal
 

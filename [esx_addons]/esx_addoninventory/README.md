@@ -28,7 +28,7 @@ start esx_addoninventory
 ## Usage
 There are two types of inventories: shared and not shared.
 
-- Shared inventories dont belong to a specific user. Example: foodstore items.
+- Shared inventories don't belong to a specific user. Example: foodstore items.
 - None-shared inventories are created for every user in the server. They are created in db when player is loaded, Example: property items
 
 ### `addon_inventory` database information
