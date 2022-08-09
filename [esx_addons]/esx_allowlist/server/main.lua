@@ -1,15 +1,15 @@
-WhiteList = {}
+local AllowList = {}
 
-function loadWhiteList()
-	WhiteList = nil
+function loadAllowList()
+	AllowList = nil
 
 	local List = LoadResourceFile(GetCurrentResourceName(),'players.json')
 	if List then
-		WhiteList = json.decode(List)
+		AllowList = json.decode(List)
 	end
 end
 
-loadWhiteList()
+loadAllowList()
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	if #(GetPlayers()) < Config.MinPlayer then
@@ -21,19 +21,19 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	local playerId, kickReason = source, "There Was An Error, Please Contact the server owner!"
 
 	-- Letting the user know what's going on.
-	deferrals.update(_U('whitelist_check'))
+	deferrals.update(_U('allowlist_check'))
 
 	-- Needed, not sure why.
 	Wait(100)
 
 	local identifier = ESX.GetIdentifier(playerId)
 
-	if ESX.Table.SizeOf(WhiteList) == 0 then
-		kickReason = _U('whitelist_empty')
+	if ESX.Table.SizeOf(AllowList) == 0 then
+		kickReason = _U('allowlist_empty')
 	elseif not identifier then
 		kickReason = _U('license_missing')
-	elseif not WhiteList[identifier] then
-		kickReason = _U('not_whitelisted')
+	elseif not AllowList[identifier] then
+		kickReason = _U('not_allowlist')
 	end
 
 	if kickReason then
@@ -44,35 +44,35 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	end
 end)
 
-ESX.RegisterCommand('wlrefresh', 'admin', function(xPlayer, args)
-	loadWhiteList()
-	print('[esx_whitelist] Whitelist Refreshed!')
-end, true, {help = _U('help_whitelist_load')})
+ESX.RegisterCommand('alrefresh', 'admin', function(xPlayer, args)
+	loadAllowList()
+	print('[esx_allowlist] Allowlist Refreshed!')
+end, true, {help = _U('help_allowlist_load')})
 
-ESX.RegisterCommand('wladd', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('aladd', 'admin', function(xPlayer, args, showError)
 	args.license = args.license:lower()
 
-	if WhiteList[args.license] then
+	if AllowList[args.license] then
 			showError('The player is already allowlisted on this server!')
 	else
-		WhiteList[args.license] = true
-		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(WhiteList))
-		loadWhiteList()
+		AllowList[args.license] = true
+		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(AllowList))
+		loadAllowList()
 	end
-end, true, {help = _U('help_whitelist_add'), validate = true, arguments = {
+end, true, {help = _U('help_allowlist_add'), validate = true, arguments = {
 	{name = 'license', help = 'the player license', type = 'string'}
 }})
 
-ESX.RegisterCommand('wlremove', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('alremove', 'admin', function(xPlayer, args, showError)
 	args.license = args.license:lower()
 
-	if WhiteList[args.license] then
-		WhiteList[args.license] = nil
-		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(WhiteList))
-		loadWhiteList()
+	if AllowList[args.license] then
+		AllowList[args.license] = nil
+		SaveResourceFile(GetCurrentResourceName(), 'players.json', json.encode(AllowList))
+		loadAllowList()
 	else
 		showError('Identifier is not Allowlisted on this server!')
 	end
-end, true, {help = _U('help_whitelist_add'), validate = true, arguments = {
+end, true, {help = _U('help_allowlist_add'), validate = true, arguments = {
 	{name = 'license', help = 'the player license', type = 'string'}
 }})
