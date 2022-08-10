@@ -403,23 +403,14 @@ function ESX.UI.ShowInventoryItemNotification(add, item, count)
 end
 
 function ESX.Game.GetPedMugshot(ped, transparent)
-    if DoesEntityExist(ped) then
-        local mugshot
+    if not DoesEntityExist(ped) then return end
+    local mugshot = transparent and RegisterPedheadshotTransparent(ped) or RegisterPedheadshot(ped)
 
-        if transparent then
-            mugshot = RegisterPedheadshotTransparent(ped)
-        else
-            mugshot = RegisterPedheadshot(ped)
-        end
-
-        while not IsPedheadshotReady(mugshot) do
-            Wait(0)
-        end
-
-        return mugshot, GetPedheadshotTxdString(mugshot)
-    else
-        return
+    while not IsPedheadshotReady(mugshot) do
+        Wait(0)
     end
+
+    return mugshot, GetPedheadshotTxdString(mugshot)
 end
 
 function ESX.Game.Teleport(entity, coords, cb)
@@ -442,18 +433,35 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-    local model = type(object) == 'number' and object or GetHashKey(object)
-    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
+    if networked then 
+        ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
+            if cb then
+                local obj = NetworkGetEntityFromNetworkId(NetworkID)
+                local Tries = 0
+                while not DoesEntityExist(obj) do
+                    obj = NetworkGetEntityFromNetworkId(NetworkID)
+                    Wait(0)
+                    Tries += 1
+                    if Tries > 250 then
+                        break
+                    end
+                end
+                cb(obj)
+            end
+        end, object, coords, 0.0)
+    else 
+        local model = type(object) == 'number' and object or GetHashKey(object)
+        local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+        CreateThread(function()
+            ESX.Streaming.RequestModel(model)
 
-    CreateThread(function()
-        ESX.Streaming.RequestModel(model)
-
-        local obj = CreateObject(model, vector.xyz, networked, false, true)
-        if cb then
-            cb(obj)
-        end
-    end)
+            local obj = CreateObject(model, vector.xyz, networked, false, true)
+            if cb then
+                cb(obj)
+            end
+        end)
+    end
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
@@ -461,7 +469,7 @@ function ESX.Game.SpawnLocalObject(object, coords, cb)
 end
 
 function ESX.Game.DeleteVehicle(vehicle)
-    SetEntityAsMissionEntity(vehicle, false, true)
+    SetEntityAsMissionEntity(vehicle, true, true)
     DeleteVehicle(vehicle)
 end
 
@@ -474,30 +482,58 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
-    CreateThread(function()
-        ESX.Streaming.RequestModel(model)
+    if networked then 
+        local isAutomobile = IsThisModelACar(model)
+        if isAutomobile ~= false then isAutomobile = true end
+        ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle',function(NetID)
+            print("Spawned Vehicle: " .. NetID)
+            if NetID then
+                local vehicle = NetworkGetEntityFromNetworkId(NetID)
+                local Tries = 0
+                while not DoesEntityExist(vehicle) do
+                    vehicle = NetworkGetEntityFromNetworkId(NetID)
+                    Wait(0)
+                    Tries += 1
+                    if Tries > 250 then
+                        break
+                    end
+                end
+                SetEntityAsMissionEntity(vehicle, true, true)
+                SetVehicleHasBeenOwnedByPlayer(vehicle, true)
+                SetVehicleNeedsToBeHotwired(vehicle, false)
+                SetModelAsNoLongerNeeded(model)
+                SetVehRadioStation(vehicle, 'OFF')
+                if cb then
+                    cb(vehicle)
+                end
+            end
+        end, model, vector, heading, isAutomobile)
+    else 
+        CreateThread(function()
+            ESX.Streaming.RequestModel(model)
 
-        local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
+            local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
 
-        if networked then
-            local id = NetworkGetNetworkIdFromEntity(vehicle)
-            SetNetworkIdCanMigrate(id, true)
-            SetEntityAsMissionEntity(vehicle, true, false)
-        end
-        SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-        SetVehicleNeedsToBeHotwired(vehicle, false)
-        SetModelAsNoLongerNeeded(model)
-        SetVehRadioStation(vehicle, 'OFF')
+            if networked then
+                local id = NetworkGetNetworkIdFromEntity(vehicle)
+                SetNetworkIdCanMigrate(id, true)
+                SetEntityAsMissionEntity(vehicle, true, false)
+            end
+            SetVehicleHasBeenOwnedByPlayer(vehicle, true)
+            SetVehicleNeedsToBeHotwired(vehicle, false)
+            SetModelAsNoLongerNeeded(model)
+            SetVehRadioStation(vehicle, 'OFF')
 
-        RequestCollisionAtCoord(vector.xyz)
-        while not HasCollisionLoadedAroundEntity(vehicle) do
-            Wait(0)
-        end
+            RequestCollisionAtCoord(vector.xyz)
+            while not HasCollisionLoadedAroundEntity(vehicle) do
+                Wait(0)
+            end
 
-        if cb then
-            cb(vehicle)
-        end
-    end)
+            if cb then
+                cb(vehicle)
+            end
+        end)
+    end
 end
 
 function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
@@ -548,6 +584,7 @@ function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 
     return players
 end
+
 
 function ESX.Game.GetClosestObject(coords, modelFilter)
     return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter)
@@ -665,7 +702,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         for extraId = 0, 12 do
             if DoesExtraExist(vehicle, extraId) then
-                local state = IsVehicleExtraTurnedOn(vehicle, extraId) == 1
+                local state = IsVehicleExtraTurnedOn(vehicle, extraId)
                 extras[tostring(extraId)] = state
             end
         end
