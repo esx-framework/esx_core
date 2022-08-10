@@ -59,50 +59,28 @@ end
 ---@param coords vector3|table
 ---@param heading number
 ---@param cb function
-function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile)
+function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	if type(autoMobile) ~= 'boolean' then
     return
   end
-		local entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		-- Sometimes peds can spawn in the vehicle
-		local ped = GetPedInVehicleSeat(entity, -1)
-		if ped > 0 then
-			for i = -1, 6 do
-				ped = GetPedInVehicleSeat(entity, i)
-				local popType = GetEntityPopulationType(ped)
-				if popType <= 5 or popType >= 1 then
-					DeleteEntity(ped)
-				end
-			end
-		end
-		print('Spawned vehicle: ' .. entity)
-		local tries = 0
-    while not DoesEntityExist(entity) do
-      Wait(0)
-      tries = tries + 1
-      if tries > 250 then
-        break
-      end
-    end
-
-		print(DoesEntityExist(entity) and NetworkGetNetworkIdFromEntity(entity) or false)
-		return DoesEntityExist(entity) and NetworkGetNetworkIdFromEntity(entity) or false
+	local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
+	cb(NetworkGetNetworkIdFromEntity(Entity))
 end
 
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
 ---@param cb function
-function ESX.OneSync.SpawnObject(model, coords, heading)
+function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	CreateThread(function()
 		local entity = CreateObject(model, coords, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
 		SetEntityHeading(entity, heading)
-		return DoesEntityExist(entity) and NetworkGetNetworkIdFromEntity(entity) or false
+		cb(NetworkGetNetworkIdFromEntity(entity))
 	end)
 end
 
@@ -169,7 +147,7 @@ end
 ---@param maxDistance number
 ---@param modelFilter table models to ignore, where the key is the model hash and the value is true
 ---@return table
-function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter)
+function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter, cb)
 	return getNearbyEntities(GetAllVehicles(), coords, modelFilter, maxDistance)
 end
 
@@ -212,8 +190,16 @@ function ESX.OneSync.GetClosestVehicle(coords, modelFilter)
 	return getClosestEntity(GetAllVehicles(), coords, modelFilter)
 end
 
-for k,v in pairs(ESX.OneSync) do
-	ESX.RegisterServerCallback("esx:Onesync:"..k, function(source, cb, ...)
-		cb(v(...))
-	end)
-end
+ESX.RegisterServerCallback("esx:Onesync:SpawnVehicle", function(source, cb, model, coords, heading, autoMobile)
+	ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
+end)
+
+ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(source, cb, model, coords, heading)
+	ESX.OneSync.SpawnObject(model, coords, heading, cb)
+end)
+
+-- for k,v in pairs(ESX.OneSync) do
+-- 	ESX.RegisterServerCallback("esx:Onesync:"..k, function(source, cb, ...)
+-- 		cb(v(...))
+-- 	end)
+-- end

@@ -440,6 +440,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 local obj = NetworkGetEntityFromNetworkId(NetworkID)
                 local Tries = 0
                 while not DoesEntityExist(obj) do
+                    obj = NetworkGetEntityFromNetworkId(NetworkID)
                     Wait(0)
                     Tries += 1
                     if Tries > 250 then
@@ -484,20 +485,19 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     if networked then 
         local isAutomobile = IsThisModelACar(model)
         if isAutomobile ~= false then isAutomobile = true end
-        ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle', function(NetID)
+        ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle',function(NetID)
             print("Spawned Vehicle: " .. NetID)
             if NetID then
-                Wait(250)
                 local vehicle = NetworkGetEntityFromNetworkId(NetID)
                 local Tries = 0
                 while not DoesEntityExist(vehicle) do
+                    vehicle = NetworkGetEntityFromNetworkId(NetID)
                     Wait(0)
                     Tries += 1
-                    if Tries > 300 then
+                    if Tries > 250 then
                         break
                     end
                 end
-                print("Spawned Vehicle: " .. vehicle)
                 SetEntityAsMissionEntity(vehicle, true, true)
                 SetVehicleHasBeenOwnedByPlayer(vehicle, true)
                 SetVehicleNeedsToBeHotwired(vehicle, false)
@@ -507,7 +507,7 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
                     cb(vehicle)
                 end
             end
-        end, vehicle, coords, heading, isAutomobile)
+        end, model, vector, heading, isAutomobile)
     else 
         CreateThread(function()
             ESX.Streaming.RequestModel(model)
