@@ -112,6 +112,10 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								newArgs[v.name] = args[k]
 							end
 						end
+				
+						if v.validate ~= false then
+							error = nil
+						end
 
 						if error then break end
 					end
