@@ -739,15 +739,15 @@ ESX.RegisterServerCallback('esx_property:GetNearbyPlayers', function(source, cb,
   local Property = Properties[property]
   local Players = {}
   local xPlayer = ESX.GetPlayerFromId(source)
-  local NearbyPlayers = ESX.OneSync.GetPlayersInArea(vector3(Property.Entrance.x, Property.Entrance.y, Property.Entrance.z), 5.0)
-  Wait(100)
-  for k, v in pairs(NearbyPlayers) do
-    local xTarget = ESX.GetPlayerFromId(v.id)
-    ---if xPlayer.identifier ~= xTarget.identifier then
-    Players[#Players + 1] = {name = xTarget.getName(), source = xTarget.source}
-    -- end
-  end
-  cb(Players)
+  ESX.OneSync.GetPlayersInArea(vector3(Property.Entrance.x, Property.Entrance.y, Property.Entrance.z), 5.0, function(NearbyPlayers)
+    for k, v in pairs(NearbyPlayers) do
+      local xTarget = ESX.GetPlayerFromId(v.id)
+      ---if xPlayer.identifier ~= xTarget.identifier then
+      Players[#Players + 1] = {name = xTarget.getName(), source = xTarget.source}
+      -- end
+    end
+    cb(Players)
+  end)
 end)
 
 ESX.RegisterServerCallback('esx_property:GetPlayersWithKeys', function(source, cb, property)
