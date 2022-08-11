@@ -61,18 +61,19 @@ end
 ---@param heading number
 ---@param cb function
 function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
-	if type(model) == 'string' then model = GetHashKey(model) end
-	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	if type(autoMobile) ~= 'boolean' then
-    return
-  end
-	local tries = 0
-	local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-	while not DoesEntityExist(Entity) do
-		Wait(0)
-	end
-	local netID = NetworkGetNetworkIdFromEntity(Entity)
-	cb(netID)
+		if type(model) == 'string' then model = GetHashKey(model) end
+		local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+		if type(autoMobile) ~= 'boolean' then
+			return
+		end
+		CreateThread(function()
+		local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
+		while not DoesEntityExist(Entity) do
+			Wait(0)
+		end
+		local netID = NetworkGetNetworkIdFromEntity(Entity)
+		cb(netID)
+	end)
 end
 
 ---@param model number|string
