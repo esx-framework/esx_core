@@ -66,8 +66,13 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
 	if type(autoMobile) ~= 'boolean' then
     return
   end
+	local tries = 0
 	local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-	cb(NetworkGetNetworkIdFromEntity(Entity))
+	while not DoesEntityExist(Entity) do
+		Wait(0)
+	end
+	local netID = NetworkGetNetworkIdFromEntity(Entity)
+	cb(netID)
 end
 
 ---@param model number|string

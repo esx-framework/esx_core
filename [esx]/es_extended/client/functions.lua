@@ -489,15 +489,6 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
             print("Spawned Vehicle: " .. NetID)
             if NetID then
                 local vehicle = NetworkGetEntityFromNetworkId(NetID)
-                local Tries = 0
-                while not DoesEntityExist(vehicle) do
-                    vehicle = NetworkGetEntityFromNetworkId(NetID)
-                    Wait(0)
-                    Tries += 1
-                    if Tries > 250 then
-                        break
-                    end
-                end
                 SetEntityAsMissionEntity(vehicle, true, true)
                 SetVehicleHasBeenOwnedByPlayer(vehicle, true)
                 SetVehicleNeedsToBeHotwired(vehicle, false)
