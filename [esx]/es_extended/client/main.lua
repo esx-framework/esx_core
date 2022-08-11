@@ -298,10 +298,8 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 					SetVehicleDirtLevel(vehicle, 0)
 					SetVehicleFuelLevel(vehicle, 100.0)
-			    SetVehicleCustomSecondaryColour(vehicle, 55, 140, 191) -- ESX Blue
-					SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0) -- white
-					--SetVehicleCustomPrimaryColour(vehicle, 55, 140, 191) -- ESX Blue
-				--	SetVehicleCustomSecondaryColour(vehicle, 0, 0, 0) -- white
+			    -- SetVehicleCustomSecondaryColour(vehicle, 55, 140, 191) -- ESX Blue
+					-- SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0) -- white
 					SetEntityAsMissionEntity(vehicle, true, true) -- Persistant Vehicle
 
 					-- Max out vehicle upgrades
