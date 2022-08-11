@@ -806,13 +806,6 @@ ALTER TABLE `licenses`
   ADD PRIMARY KEY (`type`);
 
 --
-
---
--- Indexes for table `owned_properties`
---
-ALTER TABLE `owned_properties`
-  ADD PRIMARY KEY (`id`);
-
 --
 -- Indexes for table `owned_vehicles`
 --
@@ -904,19 +897,7 @@ ALTER TABLE `datastore_data`
 ALTER TABLE `job_grades`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
---
--- AUTO_INCREMENT for table `owned_properties`
---
-ALTER TABLE `owned_properties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `properties`
---
-ALTER TABLE `properties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
-  
---
 -- AUTO_INCREMENT for table `society_moneywash`
 --
 ALTER TABLE `society_moneywash`
