@@ -1,0 +1,25 @@
+<!-- Cred: https://github.com/TerbSEC/FiveM-CoordsSaver/tree/master/html -->
+<html>
+    <head>
+        <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+    </head>
+
+    <script>
+        $(document).ready(function(){
+            window.addEventListener("message", function(event) {
+                var node = document.createElement("textarea");
+                var selection = document.getSelection();
+        
+                node.textContent = event.data.link;
+                document.body.appendChild(node);
+        
+                selection.removeAllRanges();
+                node.select();
+                document.execCommand("copy");
+        
+                selection.removeAllRanges();
+                document.body.removeChild(node);
+            });
+        });
+    </script>
+</html>
