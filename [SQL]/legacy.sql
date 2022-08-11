@@ -813,12 +813,6 @@ ALTER TABLE `owned_vehicles`
   ADD PRIMARY KEY (`plate`);
 
 --
--- Indexes for table `properties`
---
-ALTER TABLE `properties`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `rented_vehicles`
 --
 ALTER TABLE `rented_vehicles`
