@@ -102,6 +102,16 @@ CreateThread(function()
       print("[^2INFO^7] Adding ^5last_property^7 column to users table")
     end
   end)
+  MySQL.insert("INSERT IGNORE INTO `datastore` (name, label, shared) VALUES ('property', 'Property' , 1)", function(result)
+    if result then
+      print("[^2INFO^7] Adding ^5Property^7 into ^5datastore^7 table")
+    end
+  end)
+  MySQL.insert("INSERT IGNORE INTO `datastore_data` (name, owner, data) VALUES ('property', NULL, '{}')", function(result)
+    if result then
+      print("[^2INFO^7] Adding ^5Property^7 into ^5datastore_data^7 table")
+    end
+  end)
   if PM.Enabled then
     MySQL.insert("INSERT IGNORE INTO `addon_account` (name, label, shared) VALUES (?, ? , 1)", {PM.society, PM.joblabel}, function(result)
       if result then
