@@ -351,7 +351,7 @@ ESX.RegisterServerCallback("esx_property:SetGaragePos", function(source, cb, Pro
     local PlayerPed = GetPlayerPed(source)
     local PlayerPos = GetEntityCoords(PlayerPed)
     local Property = Properties[PropertyId]
-    local Original = vector3(Properties[PropertyId].garage.pos.x, Properties[PropertyId].garage.pos.y, Properties[PropertyId].garage.pos.z)
+    local Original = Properties[PropertyId].garage.pos and Properties[PropertyId].garage.pos.x .. ", " .. Properties[PropertyId].garage.pos.y .. ", " .. Properties[PropertyId].garage.pos.z or "N/A"
     Properties[PropertyId].garage.pos = PlayerPos
     Properties[PropertyId].garage.Heading = heading
     TriggerClientEvent("esx_property:syncProperties", -1, Properties)
