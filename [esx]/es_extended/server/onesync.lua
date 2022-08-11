@@ -45,8 +45,8 @@ end
 ---@param source vector3|number playerId or vector3 coordinates
 ---@param maxDistance number
 ---@param ignore table playerIds to ignore, where the key is playerId and value is true
-function ESX.OneSync.GetPlayersInArea(source, maxDistance, ignore)
-	return getNearbyPlayers(source, false, maxDistance, ignore)
+function ESX.OneSync.GetPlayersInArea(source, maxDistance, ignore, cb)
+	cb(getNearbyPlayers(source, false, maxDistance, ignore))
 end
 
 ---@param source vector3|number playerId or vector3 coordinates
