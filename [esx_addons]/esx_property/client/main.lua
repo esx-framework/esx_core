@@ -872,9 +872,6 @@ function OpenPMQuickMenu(Action)
       if ESX.PlayerData.job.grade >= PM.Permissions.CreateProperty then
         elements[#elements + 1] = {title = "Create Property", value = "CreateProperty"}
       end
-      if ESX.PlayerData.job.grade >= PM.Permissions.BillPlayers then
-        elements[#elements + 1] = {title = "Create Bill", value = "bill"}
-      end
       if ESX.PlayerData.job.grade >= PM.Permissions.ManagePropertiesFromQuickActions then
         elements[#elements + 1] = {title = "Manage Properties", value = "manage"}
       end

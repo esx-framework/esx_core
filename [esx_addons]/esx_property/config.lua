@@ -154,7 +154,6 @@ Config.PlayerManagement = {
   },
   Permissions = { -- Minimum Grade Required for Action
     CreateProperty = 0, -- Create Property
-    BillPlayers = 1, -- Send Players A Bill
     DeleteProperty = 2, -- Delete Property
     ViewProperties = 0, -- View All Properties
     SellProperty = 0, -- Sell Property to players
