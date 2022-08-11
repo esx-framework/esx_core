@@ -65,7 +65,7 @@ function PropertiesRefresh()
       end
     end
     local Players = ESX.GetExtendedPlayers()
-    Log("ESX-Property Beta Loaded", 11141375, {{name = "Property Count", value = #Properties, inline = true},
+    Log("ESX-Property Loaded", 11141375, {{name = "Property Count", value = #Properties, inline = true},
                                                {name = "OX Inventory", value = Config.OxInventory and "Enabled" or "Disabled", inline = true}}, 1)
     for _, xPlayer in pairs(Players) do
       TriggerClientEvent("esx_property:syncProperties", xPlayer.source, Properties, xPlayer.get("lastProperty"))
