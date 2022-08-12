@@ -389,6 +389,15 @@ AddEventHandler('esx:updateCoords', function(coords)
 end)
 
 if not Config.OxInventory then
+    RegisterNetEvent('esx:removeWeapon')
+    AddEventHandler('esx:removeWeapon', function(weaponName)
+        local xPlayer = ESX.GetPlayerFromId(source)
+
+        if xPlayer then
+            xPlayer.removeWeapon(weaponName)
+        end
+    end)
+
     RegisterNetEvent('esx:updateWeaponAmmo')
     AddEventHandler('esx:updateWeaponAmmo', function(weaponName, ammoCount)
         local xPlayer = ESX.GetPlayerFromId(source)

@@ -421,8 +421,23 @@ end
 
 function StartServerSyncLoops()
 	if not Config.OxInventory then
-			-- keep track of ammo
+			-- keep track of weapons in loadout
+			CreateThread(function()
+				while ESX.PlayerLoaded do
+					for i, weapon in ipairs(ESX.GetPlayerData().loadout) do
+						local playerHasWeapon = HasPedGotWeapon(ESX.GetPlayerData().ped, GetHashKey(weapon.name), false)
 
+						if not playerHasWeapon then
+							TriggerServerEvent('esx:removeWeapon', weapon.name)
+						end
+					end 
+
+
+					Wait(1000)
+				end
+			end)
+
+			-- keep track of ammo
 			CreateThread(function()
 					local currentWeapon = {Ammo = 0}
 					while ESX.PlayerLoaded do
