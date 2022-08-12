@@ -339,6 +339,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			self.triggerEvent('esx:addWeapon', weaponName, ammo)
 			self.triggerEvent('esx:addInventoryItem', weaponLabel, false, true)
+			self.triggerEvent('esx:syncLoadout', self.loadout)
 		end
 	end
 
@@ -353,6 +354,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 					self.loadout[loadoutNum].components[#self.loadout[loadoutNum].components + 1] = weaponComponent
 					self.triggerEvent('esx:addWeaponComponent', weaponName, weaponComponent)
 					self.triggerEvent('esx:addInventoryItem', component.label, false, true)
+					self.triggerEvent('esx:syncLoadout', self.loadout)
 				end
 			end
 		end
@@ -387,6 +389,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				self.loadout[loadoutNum].tintIndex = weaponTintIndex
 				self.triggerEvent('esx:setWeaponTint', weaponName, weaponTintIndex)
 				self.triggerEvent('esx:addInventoryItem', weaponObject.tints[weaponTintIndex], false, true)
+				self.triggerEvent('esx:syncLoadout', self.loadout)
 			end
 		end
 	end
@@ -420,6 +423,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if weaponLabel then
 			self.triggerEvent('esx:removeWeapon', weaponName)
 			self.triggerEvent('esx:removeInventoryItem', weaponLabel, false, true)
+			self.triggerEvent('esx:syncLoadout', self.loadout)
 		end
 	end
 
@@ -440,6 +444,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 					self.triggerEvent('esx:removeWeaponComponent', weaponName, weaponComponent)
 					self.triggerEvent('esx:removeInventoryItem', component.label, false, true)
+					self.triggerEvent('esx:syncLoadout', self.loadout)
 				end
 			end
 		end

@@ -232,6 +232,11 @@ if not Config.OxInventory then
 		end
 	end)
 
+	RegisterNetEvent('esx:syncLoadout')
+	AddEventHandler('esx:syncLoadout', function(loadout)
+		ESX.PlayerData.loadout = loadout
+	end)
+
 	RegisterNetEvent('esx:addWeapon')
 	AddEventHandler('esx:addWeapon', function(weapon, ammo)
 		GiveWeaponToPed(ESX.PlayerData.ped, GetHashKey(weapon), ammo, false, false)
