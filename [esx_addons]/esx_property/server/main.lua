@@ -1072,27 +1072,33 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
   if eventData.secondsRemaining == 60 then
     CreateThread(function()
       Wait(50000)
-      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Scheduled Server Restart", inline = true},
-                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+      if Properties and #Properties > 0 then
+        SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+        Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Scheduled Server Restart", inline = true},
+                                            {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+      end
     end)
   end
 end)
 
 --- Save Properties On Server Stop/Restart
 AddEventHandler('txAdmin:events:serverShuttingDown', function()
-  SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-  Log("Properties Saving", 11141375,
-    {{name = "**Reason**", value = "Server Shutdown", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+  if Properties and #Properties > 0 then
+    SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+    Log("Properties Saving", 11141375,
+      {{name = "**Reason**", value = "Server Shutdown", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+  end
 end)
 
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
-    SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-    Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Resource Restart", inline = true},
-                                        {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+    if Properties and #Properties > 0 then
+      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Resource Restart", inline = true},
+                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+    end
   end
 end)
 
