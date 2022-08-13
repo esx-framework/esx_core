@@ -113,7 +113,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 							end
 						end
 				
-						if v.validate ~= false then
+						if v.validate == false then
 							error = nil
 						end
 
