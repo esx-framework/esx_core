@@ -86,3 +86,7 @@ Config.Vehicles = {
 	{model = 'toro', label = 'Toro', price = 200000},
 	{model = 'submersible', label = 'Submersible', price = 750000}
 }
+
+exports('getGarages', function()
+	return Config.Zones.Garages
+end)
