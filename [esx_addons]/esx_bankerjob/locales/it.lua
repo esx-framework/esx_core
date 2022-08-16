@@ -1,0 +1,18 @@
+Locales['it'] = {
+  ['actions']                           = 'azioni',
+  ['amount']                            = 'importo',
+  ['balance']                           = 'saldo',
+  ['bank']                              = 'banca',
+  ['bill_amount']                       = 'importo fattura',
+  ['billing']                           = 'fattura',
+  ['customer']                          = 'cliente',
+  ['customers']                         = 'clienti',
+  ['deposit']                           = 'deposito',
+  ['invalid_amount']                    = 'importo non valido',
+  ['no_player_nearby']                  = 'nessun giocatore nelle vicinanze',
+  ['press_input_context_to_open_menu']  = 'premi [E] per aprire il menu della banca.',
+  ['withdraw']                          = 'ritira',
+  ['boss_actions']                      = 'azioni boss',
+  ['phone_receive']                     = 'cliente bancario',
+  ['phone_label']                       = 'banca',
+}
