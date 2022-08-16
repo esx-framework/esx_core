@@ -29,17 +29,13 @@ function ShowJobListingMenu()
 	end)
 end
 
-AddEventHandler('esx_joblisting:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
-end)
-
 -- Activate menu when player is inside marker, and draw markers
 CreateThread(function()
 	while true do
 		local Sleep = 1500
 
 		local coords = GetEntityCoords(PlayerPedId())
-		isInMarker = false
+		local isInMarker = false
 
 		for i=1, #Config.Zones, 1 do
 			local distance = #(coords - Config.Zones[i])
@@ -47,14 +43,10 @@ CreateThread(function()
 			if distance < Config.DrawDistance then
 				Sleep = 0
 				DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-			else 
-				if menuIsShowed then 
-					ESX.UI.Menu.CloseAll()
-					menuIsShowed = false
-				end
 			end
 
 			if distance < (Config.ZoneSize.x / 2) then
+				isInMarker = true
 				ESX.ShowHelpNotification(_U('access_job_center'))
 				if IsControlJustReleased(0, 38) and not menuIsShowed then
 					ESX.UI.Menu.CloseAll()
@@ -62,7 +54,13 @@ CreateThread(function()
 				end
 			end
 		end
-	Wait(Sleep)
+
+		if not isInMarker and menuIsShowed then 
+			ESX.UI.Menu.CloseAll()
+			menuIsShowed = false
+		end
+
+		Wait(Sleep)
 	end
 end)
 
