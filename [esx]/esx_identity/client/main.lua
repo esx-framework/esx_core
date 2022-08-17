@@ -1,12 +1,10 @@
 local loadingScreenFinished = false
 local ready = false
+local guiEnabled = false
+local timecycleModifier = "hud_def_blur"
 
-RegisterNetEvent('esx_identity:alreadyRegistered')
-AddEventHandler('esx_identity:alreadyRegistered', function()
-    while not loadingScreenFinished do
-        Wait(100)
-    end
-
+RegisterNetEvent('esx_identity:alreadyRegistered', function()
+    while not loadingScreenFinished do Wait(100) end
     TriggerEvent('esx_skin:playerRegistered')
 end)
 
@@ -20,32 +18,23 @@ RegisterNUICallback('ready', function(data, cb)
 end)
 
 if not Config.UseDeferrals then
-    local guiEnabled = false
-
     function EnableGui(state)
         SetNuiFocus(state, state)
         guiEnabled = state
-        while not ready do
-            Wait(500)
-        end
+
         if state then
-            SetTimecycleModifier("hud_def_blur")
+            SetTimecycleModifier(timecycleModifier)
         else
             ClearTimecycleModifier()
         end
-        SendNUIMessage({
-            type = "enableui",
-            enable = state
-        })
+
+        SendNUIMessage({type = "enableui",enable = state})
     end
 
-    RegisterNetEvent('esx_identity:showRegisterIdentity')
-    AddEventHandler('esx_identity:showRegisterIdentity', function()
+    RegisterNetEvent('esx_identity:showRegisterIdentity', function()
         TriggerEvent('esx_skin:resetFirstSpawn')
 
-        if not ESX.PlayerData.dead then
-            EnableGui(true)
-        end
+        if not ESX.PlayerData.dead then EnableGui(true) end
     end)
 
     RegisterNUICallback('register', function(data, cb)
@@ -53,11 +42,10 @@ if not Config.UseDeferrals then
             if callback then
                 ESX.ShowNotification(_U('thank_you_for_registering'))
                 EnableGui(false)
+
                 if not ESX.GetConfig().Multichar then
                     TriggerEvent('esx_skin:playerRegistered')
                 end
-            else
-                ESX.ShowNotification(_U('registration_error'), "error", 5000)
             end
         end, data)
     end)
@@ -87,7 +75,10 @@ if not Config.UseDeferrals then
                 DisableControlAction(0, 143, true) -- disable melee
                 DisableControlAction(0, 75, true) -- disable exit vehicle
                 DisableControlAction(27, 75, true) -- disable exit vehicle
+            else
+                sleep = 1500
             end
+
             Wait(sleep)
         end
     end)
