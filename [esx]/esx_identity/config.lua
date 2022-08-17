@@ -5,8 +5,12 @@ Config.Locale           = 'en'
 -- Enables Commands Such As /char and /chardel
 Config.EnableCommands   = ESX.GetConfig().EnableDebug
 
-Config.UseDeferrals     = false -- EXPERIMENTAL Character Registration Method.
+-- EXPERIMENTAL Character Registration Method
+Config.UseDeferrals     = false
 
+-- These values are for the date format in the registration menu
+-- Choices: DD/MM/YYYY | MM/DD/YYYY | YYYY/MM/DD
+Config.DateFormat       = 'DD/MM/YYYY'
 
 -- These values are for the second input validation in server/main.lua
 Config.MaxNameLength    = 20 -- Max Name Length.

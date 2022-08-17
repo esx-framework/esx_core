@@ -8,15 +8,15 @@
 
 	<body onkeydown="TriggeredKey(this)">
 		<div class="dialog">
-			<div class="aa"><b>IDENTITY</b></div>
+			<div class="title"><b>IDENTITY</b></div>
            <!--	<img id="logo" height="110px" width="332px"> > -->	
 			<form id="register" name="register" action="#">
 				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>First Name</div>
-				<input id="firstname" type="text"  class=""  name="firstname" placeholder="First Name" onKeyDown="if(this.value.length==16 && event.keyCode!=8)"><br>
+				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name" onKeyDown="if(this.value.length==16 && event.keyCode!=8)"><br>
 				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>Last Name</div>
 				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" onKeyDown="if(this.value.length==16 && event.keyCode!=8)"><br>
 				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Date of Birth (MM/DD/YYYY)</div>
-				<input id="dateofbirth" type="date" name="dateofbirth" class="" placeholder="Date of Birth (dd/mm/yyy)" min="01/01/1900" max="01/01/2010" onfocus="(this.type='date')"><br>
+				<input id="dateofbirth" type="date" name="dateofbirth" class="" placeholder="Date of Birth (dd/mm/yyyy)" min="01/01/1900" max="01/01/2010" onfocus="(this.type='date')"><br>
 				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Height</div>
 				<input id="height" type="number" class="" name="height" min="120" max="220" placeholder="Height (cm)" onKeyDown="if(this.value.length==3 && event.keyCode!=8)"><br>
 				<center>
@@ -28,16 +28,11 @@
 						<label for="radiof">Female</label>
 					</div>
 				</center>
-					<!-- <div class="range-wrap" style="width: 80%;">
-						<input type="range" id="height" class="range" min="48" max="96" value="48">
-						<output class="bubble"></output>
-					</div> -->
 				<button id="submit" type="submit"><font size="4px">CREATE</font></button>
 			</form>
 			<center><font size="1px" color="green">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font></center>
 		</div>
 		<script>
-
 			const allRanges = document.querySelectorAll(".range-wrap");
 			allRanges.forEach(wrap => {
 				const range = wrap.querySelector(".range");

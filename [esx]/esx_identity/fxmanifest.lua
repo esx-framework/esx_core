@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Identity'
 
-version '1.7.5'
+version '1.7.6'
 
 shared_script '@es_extended/imports.lua'
 
