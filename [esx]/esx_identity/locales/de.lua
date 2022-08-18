@@ -29,6 +29,11 @@ Locales['de'] = {
   ['invalid_format'] = 'Daten falsch formatiert. Versuche es erneut.',
   ['no_identifier'] = 'Es gab einen Fehler beim Laden deines Charackters!\nFehler Code: identifier-missing\n\nDie Ursache des Fehlers ist nicht bekannt, dein Identifier konnte nicht gefunden werden. Bitte versuche es später erneut oder kontaktiere einen Admin.',
   ['missing_identity'] = 'Es gab einen Fehler beim Laden deines Charackters!\nError code: identity-missing\n\nEs scheint, keine Identität zu geben. Bitte versuche, erneut zu verbinden.',
-  ['deleted_identity'] = 'Dein Charakter wurde gelöscht. Bitte logge neu ein, um einen neuen zu erstellen.'
+  ['deleted_identity'] = 'Dein Charakter wurde gelöscht. Bitte logge neu ein, um einen neuen zu erstellen.',
+  ['invalid_firstname_format'] = 'Ungültiges Format (Vorname): Überprüf deine Eingabe',
+  ['invalid_lastname_format'] = 'Ungültiges Format (Nachname): Überprüf deine Eingabe',
+  ['invalid_dob_format'] = 'Ungültiges Format (Geburtsdatum): Überprüf deine Eingabe',
+  ['invalid_sex_format'] = 'Ungültiges Format (Geschlecht): Überprüf deine Eingabe',
+  ['invalid_height_format'] = 'Ungültiges Format (Größe): Überprüf deine Eingabe.'
 }
 
