@@ -278,9 +278,9 @@ CREATE TABLE `job_grades` (
 
 INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`) VALUES
 (1, 'unemployed', 0, 'unemployed', 'Unemployed', 200, '{}', '{}'),
-(2, 'police', 0, 'recruit', 'Recrue', 20, '{}', '{}'),
-(3, 'police', 1, 'officer', 'Officier', 40, '{}', '{}'),
-(4, 'police', 2, 'sergeant', 'Sergent', 60, '{}', '{}'),
+(2, 'police', 0, 'recruit', 'Recruit', 20, '{}', '{}'),
+(3, 'police', 1, 'officer', 'Officer', 40, '{}', '{}'),
+(4, 'police', 2, 'sergeant', 'Sergeant', 60, '{}', '{}'),
 (5, 'police', 3, 'lieutenant', 'Lieutenant', 85, '{}', '{}'),
 (6, 'police', 4, 'boss', 'Commandant', 100, '{}', '{}'),
 (11, 'cardealer', 0, 'recruit', 'Recruit', 10, '{}', '{}'),
