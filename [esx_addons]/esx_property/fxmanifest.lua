@@ -46,6 +46,10 @@ client_scripts {
 	'client/furniture.lua'
 }
 
+exports {
+    'GetProperties'
+}
+
 dependencies {
 	'es_extended'
 }
