@@ -7,11 +7,11 @@
 
 <hr>
 
-### Donnors
+### Supporters 
 
 Interested in helping us? [Take a look at our patreon](https://www.patreon.com/esx "Take a look at our patreon")
 
-| We would like to sincerely thank the following donnors who helped fund the development of ESX.  |
+| We would like to sincerely thank the following donors who helped fund the development of ESX.  |
 | ------------ |
 | Mohamad Buhamad - Michael Hein - RoadToSix - Montree Narathong  |
 | Saydoon - Muhannad alyamani - iSentrie - Wecity - Samuel Nicol |
