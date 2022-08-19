@@ -1102,3 +1102,10 @@ AddEventHandler('onResourceStop', function(ResourceName)
   end
 end)
 
+ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
+  cb(Properties)
+end)
+
+exports('GetProperties', function()
+  return Properties
+end)
