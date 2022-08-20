@@ -489,8 +489,9 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
             print("Spawned Vehicle: " .. NetID)
             if NetID then
                 local vehicle = NetworkGetEntityFromNetworkId(NetID)
-                while not DoesEntityExist(vehicle) do
+                while not DoesEntityExist(vehicle) and not NetworkHasControlOfEntity(vehicle) do
                     vehicle = NetworkGetEntityFromNetworkId(NetID)
+                    NetworkRequestControlOfEntity(vehicle)
                     Wait(0)
                 end
                 SetEntityAsMissionEntity(vehicle, true, true)
