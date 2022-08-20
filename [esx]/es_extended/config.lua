@@ -17,7 +17,7 @@ Config.EnableDebug              = false -- Use Debug options?
 Config.EnableDefaultInventory   = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
-Config.NativeNotify             = false -- true = old esx notification
+Config.NativeNotify             = false -- use old native notification?
 
 Config.Multichar                = true -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
@@ -52,3 +52,15 @@ Config.RemoveHudCommonents = {
 	[21] = false, --HUD_COMPONENTS
 	[22] = false, --HUD_WEAPONS
 }
+
+Config.CustomAIPlates = 'ESX.A111' -- Custom plates for AI vehicles 
+-- Pattern string format
+--1 will lead to a random number from 0-9.
+--A will lead to a random letter from A-Z.
+-- . will lead to a random letter or number, with 50% probability of being either.
+--^1 will lead to a literal 1 being emitted.
+--^A will lead to a literal A being emitted.
+--Any other character will lead to said character being emitted.
+-- A string shorter than 8 characters will be padded on the right.
+
+Config.MaxAdminVehicles = true -- admin vehicles spawn with max vehcle settings
