@@ -29,5 +29,10 @@ Locales['sv'] = {
   ['invalid_format'] = 'Data är felaktigt formaterade. Var god försök igen.',
   ['no_identifier'] = 'Det uppstod ett fel när din karaktär skulle laddas!\nError code: identifier-missing\n\nOrsaken till detta fel är inte känd, din identifierare kunde inte hittas. Kom tillbaka senare eller rapportera det här problemet till en administratör.',
   ['missing_identity'] = 'Det uppstod ett fel när din karaktär skulle laddas!\nError code: identity-missing\n\nDet verkar som om din identitet saknas, försök ansluta igen.',
-  ['deleted_identity'] = 'Din karaktär har tagits bort. Logga in igen för att skapa en ny karaktär.'
+  ['deleted_identity'] = 'Din karaktär har tagits bort. Logga in igen för att skapa en ny karaktär.',
+  ['invalid_firstname_format'] = 'Ogiltigt format (Namn): Försök igen.',
+  ['invalid_lastname_format'] = 'Ogiltigt format (Efternamn): Försök igen.',
+  ['invalid_dob_format'] = 'Ogiltigt format (DOB): Please try again.',
+  ['invalid_sex_format'] = 'Ogiltigt formatOgiltigt format (Kön): Försök igen.',
+  ['invalid_height_format'] = 'Ogiltigt format (Längd): Försök igen.'
 }
