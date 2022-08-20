@@ -265,5 +265,5 @@ Locales['en'] = {
   ['wings'] = 'wings',
   ['fuel_tank'] = 'fuel tank',
   ['windows'] = 'windows',
-  ['stickers'] = 'stickers',
+  ['stickers'] = 'Livery',
 }
