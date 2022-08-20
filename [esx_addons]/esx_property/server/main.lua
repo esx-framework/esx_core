@@ -283,7 +283,7 @@ ESX.RegisterServerCallback("esx_property:sellProperty", function(source, cb, Pro
                                     {name = "**Price**", value = ESX.Math.GroupDigits(Price), inline = true},
                                     {name = "**Owner**", value = xPlayer.getName(), inline = true},
                                     {name = "**Furniture Count**", value = tostring(furn), inline = true},
-                                    {name = "**Vehicle Count**", value = tostring(#Properties[PropertyId].garage.StoredVehicles), inline = true}}, 1)
+                                    {name = "**Vehicle Count**", value = tostring(Properties[PropertyId].garage.StoredVehicles and #Properties[PropertyId].garage.StoredVehicles or "N/A"), inline = true}}, 1)
     if Properties[PropertyId].garage.StoredVehicles then
       Properties[PropertyId].garage.StoredVehicles = {}
     end
