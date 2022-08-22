@@ -19,6 +19,9 @@ ensure esx_banking
 Run the banking.sql into your database. Done.
 ```
 
+# Credits for notify
+  [simple-notify](https://github.com/simple-notify/simple-notify)
+
 # Legal
 ### License
 esx_banking - banking script for ESX
