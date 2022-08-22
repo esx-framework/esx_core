@@ -1,6 +1,6 @@
 # esx_banking
 
-## Special thanks: Csoki, csontvazharcos, Füsti, Pécé
+## Special thanks: Gellipapa#9186,Rav3n95#2849,Csoki, csontvazharcos, Füsti, Pécé
 
 ## Download & Installation
 
