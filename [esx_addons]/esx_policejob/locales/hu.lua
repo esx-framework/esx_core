@@ -93,8 +93,6 @@ Locales['hu'] = {
   ['search_database'] = 'Keresés rendszám alapján',
   ['search_database_title'] = 'jármü információk - keresés rendszám alapján',
   ['search_database_error_invalid'] = 'ez ~r~nem egy érvényes rendszám',
-  ['search_database_error_not_found'] = 'ez a rendszám:  nincs regisztrálva!',
-  ['search_database_found'] = 'jármü regisztrálva : %s',
   -- Traffic interaction
   ['traffic_interaction'] = 'Útzárak',
   ['cone'] = 'bólya',
