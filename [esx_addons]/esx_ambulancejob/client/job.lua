@@ -499,7 +499,7 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	if isOnDuty and job ~= 'ambulance' then
+	if isOnDuty and job.name ~= 'ambulance' then
 		for playerId,v in pairs(deadPlayerBlips) do
 			if Config.Debug then 
 				print("[INFO] removing dead player blip |" .. tostring(playerId))
