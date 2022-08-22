@@ -2,8 +2,6 @@ fx_version 'cerulean'
 
 game 'gta5'
 
-author 'Gellipapa && Raven'
-
 description 'ESX banking'
 
 version '1.7.5'
