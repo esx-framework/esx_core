@@ -1,6 +1,6 @@
 {
     "lang":"EN",
-    "__comment":"DYNAMIC_FORM_DATA résznél a componentName and elementID ne írd át mert elszáll a script!",
+    "__comment":"On DYNAMIC_FORM_DATA  do not change 'componentName',  'elementID'!",
     "EN":{
         "DYNAMIC_FORM_DATA":[
             {
@@ -89,6 +89,7 @@
                 "amountLabel":"Amount",
                 "timeLabel":"Time",
                 "searchInputPlaceholder":"Search ...",
+                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"English" 
             }
         }
@@ -182,7 +183,7 @@
                 "amountLabel":"Összeg",
                 "timeLabel":"Idő",
                 "searchInputPlaceholder":"Kereső ...",
-                "_comment": "tableFullLanguage opciók: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"Hungarian" 
             }
         }
