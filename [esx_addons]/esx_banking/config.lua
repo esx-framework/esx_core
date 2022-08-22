@@ -130,8 +130,4 @@ Config = {
 	}
 }
 
-if GetResourceState('qtarget') == 'started' then
-	Config.Target = true
-else
-	Config.Target = false
-end
+Config.Target = GetResourceState('qtarget') == 'started'
