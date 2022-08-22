@@ -1,5 +1,7 @@
 # esx_banking
 
+## Special thanks: Csoki, csontvazharcos, Füsti, Pécé
+
 ## Download & Installation
 
 - Download https://github.com/esx-framework/esx-legacy/tree/main/%5Besx_addons%5D/esx_banking
