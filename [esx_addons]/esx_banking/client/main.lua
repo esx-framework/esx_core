@@ -356,8 +356,7 @@ RegisterNetEvent('esx_banking:closebanking', function()
 	end)
 
 	-- Player switching job
-	RegisterNetEvent('esx:setJob')
-	AddEventHandler('esx:setJob', function(Job)
+RegisterNetEvent('esx:setJob', function(Job)
 		PlayerData.job = Job
 	end)
 
