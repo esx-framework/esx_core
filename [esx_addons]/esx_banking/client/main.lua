@@ -313,8 +313,7 @@ local _GetEntityCoords, _PlayerPedId
 	end)
 
 -- Events
-	RegisterNetEvent('esx_banking:closebanking')
-	AddEventHandler('esx_banking:closebanking', function()
+RegisterNetEvent('esx_banking:closebanking', function()
 		CloseUi()
 	end)
 
