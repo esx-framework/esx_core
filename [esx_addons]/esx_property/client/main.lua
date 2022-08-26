@@ -155,7 +155,7 @@ end
 function GiveKeysMenu(Property)
   ESX.TriggerServerCallback("esx_property:GetInsidePlayers", function(Players)
     local Elements = {{unselectable = true, title = "Nearby Players", icon = "fas fa-user-plus"},
-                      {title = "Go Back", icon = "fas fa-arrow-left", value = "go_back"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"}}
     for i = 1, #Players, 1 do
       Elements[#Elements + 1] = {title = Players[i].Name, icon = "far fa-user", index = Players[i].Id, value = "user"}
     end
@@ -179,7 +179,7 @@ end
 function RemoveKeysMenu(Property)
   ESX.TriggerServerCallback("esx_property:GetPlayersWithKeys", function(Players)
     local Elements = {{unselectable = true, title = "Remove Key From Player", icon = "fas fa-user-plus"},
-                      {title = "Go Back", icon = "fas fa-arrow-left", value = "go_back"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"}}
     for k, v in pairs(Players) do
       local name = v.name
       local Id = k
@@ -205,7 +205,7 @@ end
 function ManageKeys(Property)
   ESX.HideUI()
   local Elements = {{unselectable = true, title = "Key Management", icon = "fas fa-key"},
-                    {title = "Go Back", icon = "fas fa-arrow-left", value = "go_back"},
+                    {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"},
                     {title = "Give Keys", icon = "fas fa-plus", value = "give_keys"},
                     {title = "Remove Keys", icon = "fas fa-minus", value = "remove_keys"}}
 
@@ -1016,7 +1016,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                        description = "Current Status: " .. status, index = "ToggleCCTV"},
                       {title = "Set Angle", icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
                        description = "Sets the Camera angle to your Cameras Direction", index = "SetCCTVangle"},
-                      {title = "Go Back", icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
             if element.index == "ToggleCCTV" then
@@ -1027,7 +1027,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                        description = "Current Status: " .. status, index = "ToggleCCTV"},
                       {title = "Set Angle", icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
                        description = "Sets the Camera angle to your Cameras Direction", index = "SetCCTVangle"},
-                      {title = "Go Back", icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
             if Config.Garage.Enabled and element.index == "garage" then
@@ -1039,10 +1039,10 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                 opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
                                    description = "Sets the Camera angle to your Cameras Direction", index = "SetGaragePos"}
                 if Property[5].value.pos then
-                  opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                  opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
                 end
               else
-                opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
               end
               exports["esx_context"]:Refresh(opos, "right")
             end
@@ -1056,7 +1056,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                 opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
                                    description = "Sets the Camera angle to your Cameras Direction", index = "SetGaragePos"}
               else
-                opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
               end
               exports["esx_context"]:Refresh(opos, "right")
             end
@@ -1130,7 +1130,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
             local opos = {}
             local function GetData()
               local elements = {{unselectable = true, icon = "fas fa-cogs", title = "Property Management"},
-                                {title = "Go Back", icon = "fas fa-arrow-left", value = "back"},
+                                {title = _U("back"), icon = "fas fa-arrow-left", value = "back"},
                                 {title = "Toggle Lock", icon = (Properties[currentProperty].Locked and "fas fa-lock") or "fas fa-unlock",
                                  description = "Lock/Unlock The Property.", value = "lock"},
                                 {title = "Enter", description = "Force Entry Into The Property.", icon = "fas fa-door-open", value = "enter"},
@@ -1206,11 +1206,11 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                                        disabled = not Properties[currentProperty].garage.enabled,
                                        description = "Sets the Garage Position to your Players Position", value = "SetGaragePos"}
                     if Properties[currentProperty].garage.pos then
-                      opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management.",
+                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
                                          value = "return"}
                     end
                   else
-                    opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
+                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
                   end
                   exports["esx_context"]:Refresh(opos, "right")
                 end
@@ -1223,11 +1223,11 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                     opos[#opos + 1] = {title = "Set Angle", icon = "fas fa-map-marker-alt", disabled = not Properties[currentProperty].cctv.enabled,
                                        description = "Sets the Angle of the Camera.", value = "SetCCTVangle"}
                     if Properties[currentProperty].cctv.rot then
-                      opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management.",
+                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
                                          value = "return"}
                     end
                   else
-                    opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
+                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
                   end
                   exports["esx_context"]:Refresh(opos, "right")
                 end
@@ -1243,11 +1243,11 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                         opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not enabled,
                                            description = "Sets the Garage Position to your Players Position", value = "SetGaragePos"}
                         if Properties[currentProperty].garage.pos then
-                          opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management.",
+                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
                                              value = "return"}
                         end
                       else
-                        opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management",
+                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management",
                                            value = "return"}
                       end
                       exports["esx_context"]:Refresh(opos, "right")
@@ -1268,11 +1268,11 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                         opos[#opos + 1] = {title = "Set Angle", icon = "fas fa-map-marker-alt", disabled = not enabled,
                                            description = "Sets the Angle of the Camera.", value = "SetCCTVangle"}
                         if Properties[currentProperty].cctv.rot then
-                          opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management.",
+                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
                                              value = "return"}
                         end
                       else
-                        opos[#opos + 1] = {title = "Go Back", icon = "fas fa-arrow-left", description = "return to Property Management",
+                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management",
                                            value = "return"}
                       end
                       exports["esx_context"]:Refresh(opos, "right")
@@ -1447,7 +1447,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
         ESX.TriggerServerCallback('esx_property:IsAdmin', function(data)
           if data then
             local elements = {{unselectable = true, icon = "fas fa-home", title = "Property Options"},
-                              {title = "Go Back", icon = "fas fa-arrow-left", value = "back"},
+                              {title = _U("back"), icon = "fas fa-arrow-left", value = "back"},
                               {title = "Manage", icon = "fas fa-cogs", description = "Alter This Property's Settings.", value = "manage"},
                               {title = "Teleport", description = "Teleport To This Property.", icon = "fas fa-map-marker-alt", value = "goto"},
                               {title = "Set GPS", description = "Set GPS position To Property.", icon = "fa-solid fa-location-dot", value = "gps"},
