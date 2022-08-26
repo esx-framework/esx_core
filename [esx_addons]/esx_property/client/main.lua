@@ -35,8 +35,6 @@ local GetEntityHeading = GetEntityHeading
 local IsControlJustPressed = IsControlJustPressed
 local IsControlPressed = IsControlPressed
 local DoScreenFadeOut = DoScreenFadeOut
-
-DoScreenFadeIn(3000)
 function RefreshBlips()
   for i = 1, #Blips, 1 do
     RemoveBlip(Blips[i])
