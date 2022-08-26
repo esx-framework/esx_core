@@ -64,5 +64,18 @@ Locales['en'] = {
 	["key_management"] = "Key Management",
 	["key_management_desc"] = "Control Property Access.",
 	["give_keys"] = "Give Keys",
-	["remove_keys"] = "Remove Keys"
+	["remove_keys"] = "Remove Keys",
+
+
+		--------- Real Estate Strings ---------------
+		["actions"] = "Real Estate Actions",
+		["property_create"] = "Create Property",
+		["property_manage"] = "Manage Properties",
+		["realestate_command"] = "realestatequickmenu",
+		["realestate_command_desc"] = "(ESX Property) Open Real Estate Quick Actions",
+		["enter_office"] = "~b~Entering~s~ Office.",
+		["enter_office_error"] = "You ~r~Cannot~s~ Enter The Office!",
+		["exit_office"] = "~b~Exiting~s~ Office.",
+		["exit_office_error"] = "You ~r~Cannot~s~ Exit The Office!",
+		["realestate_textui"] = "Press ~b~[E]~s~ to Access ~b~%s",
 }

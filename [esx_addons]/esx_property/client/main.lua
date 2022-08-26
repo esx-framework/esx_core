@@ -841,9 +841,9 @@ function OpenPMQuickMenu(Action)
     Wait(1500)
     ESX.TriggerServerCallback("esx_property:PMenterOffice", function(HasEntered)
       if HasEntered then
-        ESX.ShowNotification("~b~Entering~s~ Office.", "success")
+        ESX.ShowNotification(_U("enter_office"), "success")
       else
-        ESX.ShowNotification("You ~r~Cannot~s~ Enter This Office!", "error")
+        ESX.ShowNotification(_U("enter_office_error"), "error")
       end
       Wait(1500)
       DoScreenFadeIn(1500)
@@ -853,9 +853,9 @@ function OpenPMQuickMenu(Action)
     Wait(1500)
     ESX.TriggerServerCallback("esx_property:PMexitOffice", function(HasExited)
       if HasExited then
-        ESX.ShowNotification("~b~Exiting~s~ Office.", "success")
+        ESX.ShowNotification(_U("exit_office"), "success")
       else
-        ESX.ShowNotification("You ~r~Cannot~s~ Exit This Office!", "error")
+        ESX.ShowNotification(_U("exit_office_error"), "error")
       end
       Wait(1500)
       DoScreenFadeIn(1500)
@@ -864,14 +864,14 @@ function OpenPMQuickMenu(Action)
     TriggerEvent("esx_property:AdminMenu")
 
   elseif Action == "ActionsMenu" then
-    local elements = {{unselectable = true, title = "Real Estate Actions", value = "RealEstateActions"}}
+    local elements = {{unselectable = true, title = _U("actions"), value = "RealEstateActions"}}
 
     if ESX.PlayerData.job.name == PM.job then
       if ESX.PlayerData.job.grade >= PM.Permissions.CreateProperty then
-        elements[#elements + 1] = {title = "Create Property", value = "CreateProperty"}
+        elements[#elements + 1] = {title = _U("property_create"), value = "CreateProperty"}
       end
       if ESX.PlayerData.job.grade >= PM.Permissions.ManagePropertiesFromQuickActions then
-        elements[#elements + 1] = {title = "Manage Properties", value = "manage"}
+        elements[#elements + 1] = {title = _U("property_manage"), value = "manage"}
       end
     end
     ESX.OpenContext("right", elements, function(menu, element)
@@ -885,7 +885,7 @@ function OpenPMQuickMenu(Action)
   end
 end
 
-ESX.RegisterInput("realestatequickmenu", "(ESX Property) Open Real Estate Quick Actions", "keyboard", "F5", function()
+ESX.RegisterInput(_U("realestate_command"), _U("realestate_command_desc"), "keyboard", "F5", function()
   ESX.TriggerServerCallback('esx_property:IsAdmin', function(Access)
     if Access then
       OpenPMQuickMenu("ActionsMenu")
@@ -914,7 +914,7 @@ CreateThread(function()
             if Dist <= 1.5 then
               if not PMdrawing[k] then
                 PMdrawing[k] = true
-                ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. k)
+                ESX.TextUI(_U("realestate_textui", k))
               end
               if IsControlJustPressed(0, 38) then
                 OpenPMQuickMenu(k)
