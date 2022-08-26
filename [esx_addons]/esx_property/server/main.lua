@@ -805,15 +805,15 @@ ESX.RegisterServerCallback('esx_property:GiveKey', function(source, cb, property
     local id = xTarget.identifier
     if not Properties[property].Keys[id] then
       Property.Keys[id] = {name = xTarget.getName(), identifier = id}
-      xTarget.showNotification('You Have Been Granted Keys To ~b~' .. Property.Name .. '~s~.', 'success')
+      xTarget.showNotification(_U("you_granted", Property.Name), 'success')
       xTarget.triggerEvent("esx_property:giveKeyAccess")
       cb(true)
     else
-      xPlayer.showNotification('This Player Already Has Keys To ~b~' .. Property.Name .. '~s~.', 'error')
+      xPlayer.showNotification(_U("already_has"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You do ~r~not~s~ own this property.', 'error')
+    xPlayer.showNotification(_U("do_not_own"), 'error')
     cb(false)
   end
   Log("Property Key Given", 3640511,
@@ -902,18 +902,18 @@ ESX.RegisterServerCallback('esx_property:RemoveKey', function(source, cb, proper
           {{name = "**Property Name**", value = Property.Name, inline = true}, {name = "**Owner**", value = xPlayer.getName(), inline = true},
            {name = "**Removed From**", value = tostring(Properties[property].Keys[player].name), inline = true}}, 3)
         Properties[property].Keys[player] = nil
-        xTarget.showNotification('Your Key Access To ~b~' .. Property.Name .. '~s~. Has Been ~r~Revoked~s~', 'error')
+        xTarget.showNotification(_U("key_revoked", Property.Name), 'error')
         xTarget.triggerEvent("esx_property:RemoveKeyAccess", property)
         cb(true)
       else
-        xPlayer.showNotification('This Player Does Not Have Keys To ~b~' .. Property.Name .. '~s~.', 'error')
+        xPlayer.showNotification(_U("no_keys"), 'error')
         cb(false)
       end
     else
       cb(false)
     end
   else
-    xPlayer.showNotification('You do ~r~not~s~ own this property.', 'error')
+    xPlayer.showNotification(_U("do_not_own"), 'error')
     cb(false)
   end
 end)

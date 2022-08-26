@@ -1,5 +1,7 @@
 Locales['en'] = {
+
 	--- CCTV Strings ------
+
 	["take_picture"] = "Take Picture",
 	["rot_left_right"] = "Left/Right",
 	["rot_up_down"] = "Up/Down",
@@ -44,5 +46,14 @@ Locales['en'] = {
 	["furni_reset_success"] = "Furniture Reset!",
 	["furni_cannot_afford"] = "You Cannot Afford Todo this!",
 	["furni_reset_error"] = "You ~r~Cannot~s~  Reset This Property!",
-	["furni_management"] = "Manage Furniture"
+	["furni_management"] = "Manage Furniture",
+
+	--------- Key Strings ---------------
+
+	["you_granted"] = 'You Have Been Granted Keys To ~b~%s~s~.',
+	["already_has"] = "This Player Already Has Keys!",
+	["do_not_own"] = 'You do ~r~not~s~ own this property.',
+	["key_revoked"] = 'Your Key Access To ~b~%s~s~. Has Been ~r~Revoked~s~',
+	["no_keys"] = "This Player Does Not Have Keys!"
+
 }
