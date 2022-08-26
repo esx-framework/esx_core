@@ -851,6 +851,7 @@ ESX.RegisterServerCallback('esx_property:StoreVehicle', function(source, cb, Pro
                                                                                                            vehicle = VehicleProperties}
         cb(true)
       end
+      MySQL.query(Config.Garage.MySQLquery, {1, VehicleProperties.plate}) -- Set vehicle as stored in MySQL
     else
       xPlayer.showNotification('Garage Not Enabled On This Property.', 'error')
       cb(false)
@@ -1012,11 +1013,12 @@ RegisterNetEvent('esx_property:leave', function(PropertyId)
 end)
 
 RegisterNetEvent('esx_property:SetVehicleOut', function(PropertyId, VehIndex)
-  local source = source
-  local Property = Properties[PropertyId]
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local VehicleData = Properties[PropertyId].garage.StoredVehicles[VehIndex]
+  local plate = VehicleData.vehicle.plate
   table.remove(Properties[PropertyId].garage.StoredVehicles, VehIndex)
+  MySQL.query(Config.Garage.MySQLquery, {0, plate}) -- Set vehicle as no longer stored
 end)
+
 
 AddEventHandler('playerDropped', function()
   local source = source
