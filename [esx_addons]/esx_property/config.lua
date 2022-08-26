@@ -6,6 +6,7 @@ Config.OwnedBlips = true -- Add blips for Owned Properties
 ---------------------------------------------------------------
 
 --------------------- General Settings ---------------------------------
+Config.Locale = 'en'
 Config.Shells = false -- Enable/Disable Shell Interiors Default: false
 Config.CanAlwaysExit = true -- Disabling this allows players to be locked in
 Config.OwnerCanAlwaysEnter = true -- Disabling this means the owner can't enter the property unless door is unlocked
@@ -13,6 +14,8 @@ Config.MaxNameLength = 20 -- Max Name Length for Owned Properties Default: 20
 Config.CanCustomiseInventoryAndWardrobePositions = true -- Allow users to customise inventory and wardrobe positions Default: true
 Config.WipeCustomNameOnSell = true -- Wipe custom name on sell Default: true
 Config.WipeFurnitureOnSell = true -- Wipe custom name on sell Default: true
+
+--------------------- Raid Settings ---------------------------------
 Config.Raiding = {
   Enabled = true, -- Enable/Disable Raiding Default: true
   CanAdminsRaid = true, -- Can Admins Raid Houses Default: true
@@ -28,24 +31,28 @@ Config.Raiding = {
   },
 }
 
+--------------------- Garage Settings ---------------------------------
 Config.Garage = {
   Enabled = true, -- Enable/Disable Garage Default: true
   OwnedVehiclesOnly = true, -- Only allow owned vehicles to be stored Default: true
   MySQLquery = "UPDATE `owned_vehicles` SET `stored` = ? WHERE `plate` = ?" -- MySQL Query to store vehicles `?` = True/false, Vehicle Plate
 }
 
-Config.Logs ={
-  Webhook = "",
-  LogLevel = 1
+--------------------- Log Settings ---------------------------------
+if IsDuplicityVersion() then 
+  Config.Logs = {
+    Webhook = "",
+    LogLevel = 1
 
-  ----------- Log Levels ------------
-  -- 0 = No Logs
-  -- 1 = Logs Major Actions
-  -- 2 = Logs Major + Minor Actions
-  -- 3 = Logs All Actions
-  -------------------------------------
-}
-
+    ----------- Log Levels ------------
+    -- 0 = No Logs
+    -- 1 = Logs Major Actions
+    -- 2 = Logs Major + Minor Actions
+    -- 3 = Logs All Actions
+    -------------------------------------
+  }
+end
+--------------------- Furniture Settings ---------------------------------
 Config.Furniture = {
   Enabled = true,
   RotationSpeed = 0.4, -- Object Rotation Speed
@@ -66,9 +73,10 @@ Config.Furniture = {
   }
 }
 
+--------------------- CCTV Settings ---------------------------------
 Config.CCTV = {
   Enabled = true,
-  PictureWebook = "", -- Set a discord webhook here to enable taking pictures of the CCTV (link is copied to user`s clipboard)
+  PictureWebook = IsDuplicityVersion() and "Change This String" or "DO NOT CHANGE THIS STRING", -- Set a discord webhook here to enable taking pictures of the CCTV (link is copied to user`s clipboard)
   HeightAboveDoor = 2.5, -- Height above the door to place the cctv camera
   FOV = 80.0, -- Camera Field of View
   MaxLeftRotation = 80,
