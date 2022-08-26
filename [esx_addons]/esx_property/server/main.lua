@@ -481,7 +481,7 @@ ESX.RegisterServerCallback("esx_property:deleteProperty", function(source, cb, P
        {name = "**Admin**", value = xPlayer.getName(), inline = true},
        {name = "**Owner**", value = Properties[PropertyId].OwnerName ~= "" and Properties[PropertyId].OwnerName or "N/A", inline = true},
        {name = "**Furniture Count**", value = #(Properties[PropertyId].furniture), inline = true},
-       {name = "**Vehicle Count**", value = #(Properties[PropertyId].garage.StoredVehicles), inline = true}}, 1)
+       {name = "**Vehicle Count**", value = Properties[PropertyId].garage.StoredVehicles and #(Properties[PropertyId].garage.StoredVehicles) or "N/A", inline = true}}, 1)
     table.remove(Properties, PropertyId)
     TriggerClientEvent("esx_property:syncProperties", -1, Properties)
     if Config.OxInventory then
