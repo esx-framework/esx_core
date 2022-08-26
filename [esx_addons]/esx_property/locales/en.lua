@@ -54,6 +54,15 @@ Locales['en'] = {
 	["already_has"] = "This Player Already Has Keys!",
 	["do_not_own"] = 'You do ~r~not~s~ own this property.',
 	["key_revoked"] = 'Your Key Access To ~b~%s~s~. Has Been ~r~Revoked~s~',
-	["no_keys"] = "This Player Does Not Have Keys!"
-
+	["no_keys"] = "This Player Does Not Have Keys!",
+	["nearby"] = "Nearby Players",
+	["gave_key"] = "Giving Keys to %s!",
+	["key_cannot_give"] = "You Cannot Give This Player A ~r~Key",
+	["remove_title"] = "Remove Keys From Player",
+	["key_revoke_success"] = "Revoking Keys From ~b~%s~s~.",
+	["key_revoke_error"] = "You Cannot ~b~Remove~s~ A ~r~Key~s~ From this Person",
+	["key_management"] = "Key Management",
+	["key_management_desc"] = "Control Property Access.",
+	["give_keys"] = "Give Keys",
+	["remove_keys"] = "Remove Keys"
 }

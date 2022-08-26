@@ -154,7 +154,7 @@ end
 
 function GiveKeysMenu(Property)
   ESX.TriggerServerCallback("esx_property:GetInsidePlayers", function(Players)
-    local Elements = {{unselectable = true, title = "Nearby Players", icon = "fas fa-user-plus"},
+    local Elements = {{unselectable = true, title = _U("nearby"), icon = "fas fa-user-plus"},
                       {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"}}
     for i = 1, #Players, 1 do
       Elements[#Elements + 1] = {title = Players[i].Name, icon = "far fa-user", index = Players[i].Id, value = "user"}
@@ -165,10 +165,10 @@ function GiveKeysMenu(Property)
       elseif element.value == "user" then
         ESX.TriggerServerCallback("esx_property:GiveKey", function(KeyGiven)
           if KeyGiven then
-            ESX.ShowNotification("You gave a key to ~b~" .. element.title .. "~s~.", "success")
+            ESX.ShowNotification(_U("gave_key",element.title), "success")
             ESX.CloseContext()
           else
-            ESX.ShowNotification("You Cannot Give This Player A ~r~Key", "error")
+            ESX.ShowNotification(_U("key_cannot_give"), "error")
           end
         end, Property, element.index)
       end
@@ -178,7 +178,7 @@ end
 
 function RemoveKeysMenu(Property)
   ESX.TriggerServerCallback("esx_property:GetPlayersWithKeys", function(Players)
-    local Elements = {{unselectable = true, title = "Remove Key From Player", icon = "fas fa-user-plus"},
+    local Elements = {{unselectable = true, title = _U("remove_title"), icon = "fas fa-user-plus"},
                       {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"}}
     for k, v in pairs(Players) do
       local name = v.name
@@ -191,10 +191,10 @@ function RemoveKeysMenu(Property)
       elseif element.value == "user" then
         ESX.TriggerServerCallback("esx_property:RemoveKey", function(KeyGiven)
           if KeyGiven then
-            ESX.ShowNotification("You Revoked ~b~" .. element.title .. "~s~`s Property Access.", "success")
+            ESX.ShowNotification(_U("key_revoke_success", element.title), "success")
             ESX.CloseContext()
           else
-            ESX.ShowNotification("You Cannot ~b~Remove~s~ A ~r~Key~s~ From this Person", "error")
+            ESX.ShowNotification(_U("key_revoke_error"), "error")
           end
         end, Property, element.id)
       end
@@ -204,10 +204,10 @@ end
 
 function ManageKeys(Property)
   ESX.HideUI()
-  local Elements = {{unselectable = true, title = "Key Management", icon = "fas fa-key"},
+  local Elements = {{unselectable = true, title = _U("key_management"), icon = "fas fa-key"},
                     {title = _U("back"), icon = "fas fa-arrow-left", value = "go_back"},
-                    {title = "Give Keys", icon = "fas fa-plus", value = "give_keys"},
-                    {title = "Remove Keys", icon = "fas fa-minus", value = "remove_keys"}}
+                    {title = _U("give_keys"), icon = "fas fa-plus", value = "give_keys"},
+                    {title = _U("remove_keys"), icon = "fas fa-minus", value = "remove_keys"}}
 
   ESX.OpenContext("right", Elements, function(menu, element)
     if element.value == "go_back" then
@@ -259,7 +259,7 @@ function PropertyMenuElements(PropertyId)
     end
     if not InProperty then
       if ESX.PlayerData.identifier == Property.Owner then
-        table.insert(elements, {title = "Manage Keys", description = "Give And Remove Property Access.", icon = "fas fa-key", value = 'property_keys'})
+        table.insert(elements, {title = _U("key_management"), description = _U("key_management_desc"), icon = "fas fa-key", value = 'property_keys'})
         table.insert(elements,
           {title = "Sell", description = "Sell This Property For $" .. ESX.Math.GroupDigits(ESX.Round(Property.Price * 0.6)),
            icon = "fas fa-dollar-sign", value = 'property_sell'})
