@@ -443,7 +443,7 @@ ESX.RegisterServerCallback("esx_property:KnockOnDoor", function(source, cb, Prop
   if Owner then
     for i = 1, #(Property.plysinside) do
       if Property.plysinside[i] == Owner.source then
-        Owner.showNotification("Someone Is ~b~Knocking~s~ On The Door.", "info")
+        Owner.showNotification(_U("knocking"), "info")
         cb(true)
         Log("Player Knocked On Door", 3640511, {{name = "**Property Name**", value = Properties[PropertyId].Name, inline = true},
                                                 {name = "**Owner**", value = Properties[PropertyId].OwnerName, inline = true},
