@@ -76,7 +76,7 @@ Config.Furniture = {
 --------------------- CCTV Settings ---------------------------------
 Config.CCTV = {
   Enabled = true,
-  PictureWebook = IsDuplicityVersion() and "Change This String" or "DO NOT CHANGE THIS STRING", -- Set a discord webhook here to enable taking pictures of the CCTV (link is copied to user`s clipboard)
+  PictureWebook = IsDuplicityVersion() and "" or "DO NOT CHANGE THIS STRING", -- Set a discord webhook here to enable taking pictures of the CCTV (link is copied to user`s clipboard)
   HeightAboveDoor = 2.5, -- Height above the door to place the cctv camera
   FOV = 80.0, -- Camera Field of View
   MaxLeftRotation = 80,
