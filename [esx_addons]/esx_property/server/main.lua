@@ -165,15 +165,21 @@ ESX.RegisterCommand("property:refresh", Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
 end, false, {help = "Refresh Properties"})
 
+ESX.RegisterCommand("property:save", Config.AllowedGroups, function(xPlayer)
+  SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+    Log("Properties Saving", 11141375,
+      {{name = "**Reason**", value = "Requsted By Admin", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+end, false, {help = "Force Save Properties"})
+
 ESX.RegisterCommand("property:create", "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
   end
-end, false, {help = "Refresh Properties"})
+end, false, {help = "Create A New Property"})
 
 ESX.RegisterCommand("property:admin", Config.AllowedGroups, function(xPlayer)
   xPlayer.triggerEvent("esx_property:AdminMenu")
-end, false, {help = "Refresh Properties"})
+end, false, {help = "Manage/view all properties"})
 
 -- Buy Property
 ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, PropertyId)
