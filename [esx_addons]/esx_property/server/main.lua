@@ -161,25 +161,25 @@ AddEventHandler("esx:playerLoaded", function(playerId, xPlayer)
 end)
 
 --- Commands
-ESX.RegisterCommand("property:refresh", Config.AllowedGroups, function(xPlayer)
+ESX.RegisterCommand(_("refresh_name"), Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
-end, false, {help = "Refresh Properties"})
+end, false, {help = _U("refresh_desc")})
 
-ESX.RegisterCommand("property:save", Config.AllowedGroups, function(xPlayer)
+ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
   SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
     Log("Properties Saving", 11141375,
       {{name = "**Reason**", value = "Requsted By Admin", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-end, false, {help = "Force Save Properties"})
+end, false,{help = _U("save_desc")})
 
-ESX.RegisterCommand("property:create", "user", function(xPlayer)
+ESX.RegisterCommand(_("create_name"), "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
   end
-end, false, {help = "Create A New Property"})
+end, false,{help = _U("create_desc")})
 
-ESX.RegisterCommand("property:admin", Config.AllowedGroups, function(xPlayer)
+ESX.RegisterCommand(_("admin_name"), Config.AllowedGroups, function(xPlayer)
   xPlayer.triggerEvent("esx_property:AdminMenu")
-end, false, {help = "Manage/view all properties"})
+end, false,{help = _U("admin_desc")})
 
 -- Buy Property
 ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, PropertyId)
