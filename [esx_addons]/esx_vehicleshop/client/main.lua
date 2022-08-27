@@ -56,8 +56,10 @@ AddEventHandler('esx_vehicleshop:sendVehicles', function(vehicles)
 	Vehicles = vehicles
 end)
 
-
-RegisterNetEvent('esx:setJob') AddEventHandler('esx:setJob', PlayerManagement)
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	ESX.PlayerData.job = job
+end)
 
 function DeleteDisplayVehicleInsideShop()
 	local attempt = 0
