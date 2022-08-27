@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['hu'] = {
   ['invalid_amount'] = 'Érvénytelen pénz mennyiség',
   ['deposit_money']  = 'Befizettél %s$-t',
   ['withdraw_money'] = 'Kivettél %s$-t',
