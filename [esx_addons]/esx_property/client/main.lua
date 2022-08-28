@@ -937,27 +937,27 @@ RegisterNetEvent("esx_property:CreateProperty", function()
       local StreetHash = GetStreetNameAtCoord(Pcoords.x, Pcoords.y, Pcoords.z)
       local StreetName = GetStreetNameFromHashKey(StreetHash)
       HouseData = {}
-      local Property = {{unselectable = true, icon = "fas fa-plus", title = "Property Creation"},
-                        {value = 0, title = "Street Number", icon = "fas fa-list-ol", description = "Set the property Street Number.", input = true,
+      local Property = {{unselectable = true, icon = "fas fa-plus", title = _U("menu_title")},
+                        {value = 0, title = _U("element_title1"), icon = "fas fa-list-ol", description = _U("element_description1"), input = true,
                          inputType = "number", inputPlaceholder = "Number...", inputValue = nil, inputMin = 1, inputMax = 90000, index = "hnumber"},
-                        {title = "Price", icon = "fas fa-dollar-sign", input = true, inputType = "number", description = "Set the property Price.",
+                        {title = _U("element_title2"), icon = "fas fa-dollar-sign", input = true, inputType = "number",description = _U("element_description2"),
                          inputPlaceholder = "Price...", inputValue = nil, inputMin = 1, inputMax = 50000000, index = "price"},
-                        {title = "Select Interior", description = "Set the property Interior.", icon = "fas fa-home", index = "interior"},
-                        {title = "Garage", description = "Set Garage settings (optional)", icon = "fas fa-warehouse", value = {enabled = false},
+                        {title = _U("element_title3"), description = _U("element_description3"), icon = "fas fa-home", index = "interior"},
+                        {title = _U("element_title4"), description = _U("element_description4"), icon = "fas fa-warehouse", value = {enabled = false},
                          index = "garage", disabled = not (Config.Garage.Enabled)},
-                        {title = "CCTV", description = "Set CCTV settings (optional)", icon = "fas fa-video",
+                        {title = _U("element_title5"), description = _U("element_description5"), icon = "fas fa-video",
                          value = {enabled = false, rot = GetGameplayCamRot(2), maxleft = 80, maxright = -20}, index = "cctv",
                          disabled = not (Config.CCTV.Enabled)},
-                        {title = "Entrance:", description = "Set the entrance of the property.", icon = "fas fa-map-marker-alt", index = "entrance"},
-                        {title = "Create Property", icon = "fas fa-check", description = "All Inputs Required to continue.", index = "creation"}}
+                        {title = _U("element_title6"),description = _U("element_description6"), icon = "fas fa-map-marker-alt", index = "entrance"},
+                        {title = _U("element_create_title"), icon = "fas fa-check", description = _U("element_create_desc_1"), index = "creation"}}
       local function OpenCreate()
         local opos = {}
         ESX.OpenContext("right", Property, function(menu, element)
-          if menu.eles[2] and menu.eles[2].inputValue and menu.eles[1].title == "Property Creation" then
+          if menu.eles[2] and menu.eles[2].inputValue and menu.eles[1].title == _U("menu_title") then
             Property[2].inputValue = menu.eles[2].inputValue
             HouseData.name = menu.eles[2].inputValue .. " " .. StreetName
           end
-          if menu.eles[3] and menu.eles[3].inputValue and menu.eles[1].title == "Property Creation" then
+          if menu.eles[3] and menu.eles[3].inputValue and menu.eles[1].title ==  _U("menu_title") then
             Property[3].inputValue = menu.eles[3].inputValue
             HouseData.price = menu.eles[3].inputValue
           end
@@ -965,35 +965,35 @@ RegisterNetEvent("esx_property:CreateProperty", function()
             if element.index == "entrance" then
               local PlayerPos = GetEntityCoords(ESX.PlayerData.ped)
               HouseData.entrance = {x = ESX.Math.Round(PlayerPos.x, 2), y = ESX.Math.Round(PlayerPos.y, 2), z = ESX.Math.Round(PlayerPos.z, 2) - 0.98}
-              Property[7].title = "Entrance Set."
-              Property[7].description = "Entrance: " .. HouseData.entrance.x .. ", " .. HouseData.entrance.y .. ", " .. HouseData.entrance.z
+              Property[7].title = _U("entrance_set_title")
+              Property[7].description = _U("entrance_set_description",HouseData.entrance.x, HouseData.entrance.y, HouseData.entrance.z)
               OpenCreate()
             end
             if element.index == "selectedinterior" then
               HouseData.interior = element.value
-              Property[4].title = "Interior Set."
-              Property[4].description = "Interior: " .. element.title
+              Property[4].title = _U("interior_set_title")
+              Property[4].description = _U("interior_set_description",element.title)
               OpenCreate()
             end
             if element.index == "IPL" then
-              local ints = {{unselectable = true, icon = "fas fa-warehouse", title = "IPL Interiors"}}
+              local ints = {{unselectable = true, icon = "fas fa-warehouse", title = _U("ipl_title")}}
               for i = 1, #(Config.Interiors.IPL) do
                 ints[#ints + 1] = {title = Config.Interiors.IPL[i].label, index = "selectedinterior", value = Config.Interiors.IPL[i].value}
                 exports["esx_context"]:Refresh(ints, "right")
               end
             end
             if element.index == "Shells" then
-              local ints = {{unselectable = true, icon = "fas fa-warehouse", title = "Custom Interiors"}}
+              local ints = {{unselectable = true, icon = "fas fa-warehouse", title = _U("shell_title")}}
               for i = 1, #(Config.Interiors.Shells) do
                 ints[#ints + 1] = {title = Config.Interiors.Shells[i].label, index = "selectedinterior", value = Config.Interiors.Shells[i].value}
                 exports["esx_context"]:Refresh(ints, "right")
               end
             end
             if element.index == "interior" then
-              local catsa = {{unselectable = true, icon = "fas fa-warehouse", title = "Interior Types"},
-                             {title = "IPL Interiors", description = "Native GTA Interiors, Made by R*", index = "IPL"}}
+              local catsa = {{unselectable = true, icon = "fas fa-warehouse", title = _U("types_title")},
+                             {title = _U("ipl_title"), description = _U("ipl_description"), index = "IPL"}}
               if Config.Shells then
-                catsa[3] = {title = "Custom Interiors", description = "Custom Interiors, Made by You", index = "Shells"}
+                catsa[3] = {title = _U("shell_title"), description = _U("shell_description"), index = "Shells"}
               end
               exports["esx_context"]:Refresh(catsa, "right")
             end
@@ -1003,10 +1003,10 @@ RegisterNetEvent("esx_property:CreateProperty", function()
             if element.index == "cctv" then
               local status = Property[6].value.enabled and "Enabled" or "Disabled"
               opos = {{unselectable = true, icon = "fas fa-video", title = "CCTV Settings"},
-                      {title = "Toggle Usage", icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
-                       description = "Current Status: " .. status, index = "ToggleCCTV"},
-                      {title = "Set Angle", icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
-                       description = "Sets the Camera angle to your Cameras Direction", index = "SetCCTVangle"},
+                      {title = _U("toggle_title"), icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
+                       description = _U("toggle_description",status), index = "ToggleCCTV"},
+                      {title = _U("cctv_set_title"), icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
+                       description = _U("cctv_set_description"), index = "SetCCTVangle"},
                       {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
@@ -1014,21 +1014,21 @@ RegisterNetEvent("esx_property:CreateProperty", function()
               Property[6].value.enabled = not Property[6].value.enabled
               local status = Property[6].value.enabled and "Enabled" or "Disabled"
               opos = {{unselectable = true, icon = "fas fa-video", title = "CCTV Settings"},
-                      {title = "Toggle Usage", icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
-                       description = "Current Status: " .. status, index = "ToggleCCTV"},
-                      {title = "Set Angle", icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
-                       description = "Sets the Camera angle to your Cameras Direction", index = "SetCCTVangle"},
+                      {title = _U("toggle_title"), icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
+                       description = _U("toggle_description",status), index = "ToggleCCTV"},
+                      {title = _U("cctv_set_title"), icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
+                       description = _U("cctv_set_description"), index = "SetCCTVangle"},
                       {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
             if Config.Garage.Enabled and element.index == "garage" then
               local status = Property[5].value.enabled and "Enabled" or "Disabled"
               opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                      {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                       description = "Current Status: " .. status, index = "ToggleGarage"}}
+                      {title = _U("toggle_title"), icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                       description = _U("toggle_description",status), index = "ToggleGarage"}}
               if Property[5].value.enabled then
-                opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
-                                   description = "Sets the Camera angle to your Cameras Direction", index = "SetGaragePos"}
+                opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
+                                   description = _U("garage_set_description"), index = "SetGaragePos"}
                 if Property[5].value.pos then
                   opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
                 end
@@ -1041,11 +1041,11 @@ RegisterNetEvent("esx_property:CreateProperty", function()
               Property[5].value.enabled = not Property[5].value.enabled
               local status = Property[5].value.enabled and "Enabled" or "Disabled"
               opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                      {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                       description = "Current Status: " .. status, index = "ToggleGarage"}}
+                      {title = _U("toggle_title"), icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                       description = _U("toggle_description",status), index = "ToggleGarage"}}
               if Property[5].value.enabled then
-                opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
-                                   description = "Sets the Camera angle to your Cameras Direction", index = "SetGaragePos"}
+                opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
+                                   description = _U("garage_set_description"), index = "SetGaragePos"}
               else
                 opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
               end
@@ -1053,7 +1053,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
             end
             if element.index == "SetGaragePos" then
               ESX.CloseContext()
-              ESX.TextUI("Press ~b~[E]~s~ to Set Position")
+              ESX.TextUI(_U("garage_textui"))
               while true do
                 Wait(0)
                 if IsControlJustPressed(0, 38) then
@@ -1068,18 +1068,18 @@ RegisterNetEvent("esx_property:CreateProperty", function()
             end
             if element.index == "SetCCTVangle" then
               ESX.CloseContext()
-              ESX.TextUI("Press ~b~[E]~s~ to Set Angle")
+              ESX.TextUI(_U("cctv_textui_1"))
               local stage = "angle"
               while true do
                 Wait(0)
                 if IsControlJustPressed(0, 38) then
                   if stage == "angle" then
                     Property[6].value.rot = GetGameplayCamRot(2)
-                    ESX.TextUI("Press ~b~[E]~s~ to Set Max Right Roation")
+                    ESX.TextUI(_U("cctv_textui_2"))
                     stage = "maxright"
                   elseif stage == "maxright" then
                     Property[6].value.maxright = GetGameplayCamRot(2).z
-                    ESX.TextUI("Press ~b~[E]~s~ to Set Max Left Roation")
+                    ESX.TextUI(_U("cctv_textui_3"))
                     stage = "maxleft"
                   elseif stage == "maxleft" then
                     Property[6].value.maxleft = GetGameplayCamRot(2).z
@@ -1099,7 +1099,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                 ESX.CloseContext()
                 HouseData = {}
               else
-                ESX.ShowNotification("Please fill out all fields!", "error")
+                ESX.ShowNotification(_U("missing_data"), "error")
               end
             end
           end
