@@ -33,8 +33,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		SetEntityHeading(Ped, vector.w)
 	end
 
-	end
-
 	function self.updateCoords(coords)
 		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(coords.heading or 0.0, 1)}
 	end
