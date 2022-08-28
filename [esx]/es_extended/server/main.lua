@@ -380,11 +380,12 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
 end)
 
 RegisterNetEvent('esx:updateCoords')
-AddEventHandler('esx:updateCoords', function(coords)
+AddEventHandler('esx:updateCoords', function()
+    local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer then
-        xPlayer.updateCoords(coords)
+        xPlayer.updateCoords()
     end
 end)
 

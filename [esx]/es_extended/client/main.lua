@@ -454,9 +454,7 @@ function StartServerSyncLoops()
 
 				if distance > 1 then
 					previousCoords = playerCoords
-					local playerHeading = ESX.Math.Round(GetEntityHeading(ESX.PlayerData.ped), 1)
-					local formattedCoords = {x = ESX.Math.Round(playerCoords.x, 1), y = ESX.Math.Round(playerCoords.y, 1), z = ESX.Math.Round(playerCoords.z, 1), heading = playerHeading}
-					TriggerServerEvent('esx:updateCoords', formattedCoords)
+					TriggerServerEvent('esx:updateCoords')
 				end
 			end
 			Wait(1500)
