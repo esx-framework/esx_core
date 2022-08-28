@@ -26,7 +26,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.setCoords(coords)
 		self.updateCoords(coords)
-		self.triggerEvent('esx:teleport', coords)
+		local Ped = GetPlayerPed(self.source)
+		local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or
+		vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
+		SetEntityCoords(Ped, vector.xyz, false, false, false, false)
+		SetEntityHeading(Ped, vector.w)
+	end
+
 	end
 
 	function self.updateCoords(coords)

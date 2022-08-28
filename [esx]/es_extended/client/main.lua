@@ -267,11 +267,6 @@ if not Config.OxInventory then
 	end)
 end
 
-RegisterNetEvent('esx:teleport')
-AddEventHandler('esx:teleport', function(coords)
-	ESX.Game.Teleport(ESX.PlayerData.ped, coords)
-end)
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(Job)
 	if Config.EnableHud then
