@@ -96,8 +96,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if minimal then
 			local minimalAccounts = {}
 
-			for k,v in ipairs(self.accounts) do
-				minimalAccounts[v.name] = v.money
+			for i=1, #self.accounts do
+				minimalAccounts[self.accounts[i].name] = self.accounts[i].money
 			end
 
 			return minimalAccounts

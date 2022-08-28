@@ -136,11 +136,11 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
 
     for account, label in pairs(Config.Accounts) do
-        table.insert(userData.accounts, {
+        userData.accounts[#userData.accounts + 1] ={
             name = account,
             money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
             label = label
-        })
+        }
     end
 
     -- Job

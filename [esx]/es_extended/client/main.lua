@@ -18,7 +18,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = xPlayer
 
-	FreezeEntityPosition(PlayerPedId(), true)
+	FreezeEntityPosition(ESX.PlayerData.ped, true)
 
 	if Config.Multichar then
 		Wait(3000)
@@ -56,10 +56,20 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 		CreateThread(function()
+			local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
+			local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
+			local DisableControlAction = DisableControlAction
+			local IsPedArmed = IsPedArmed
+			local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
+			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
+			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
+			local HideHudComponentThisFrame = HideHudComponentThisFrame
+			
 			while true do 
 				Wait(0)
+				local PlayerId = PlayerId()
 				if Config.DisableHealthRegeneration then
-					SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
 				end
 
 				if Config.DisableWeaponWheel then
@@ -69,12 +79,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 				if Config.DisableAimAssist then
 					if IsPedArmed(ESX.PlayerData.ped, 4) then
-						SetPlayerLockonRangeOverride(PlayerId(), 2.0)
+						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
 
 				if Config.DisableVehicleRewards then
-					DisablePlayerVehicleRewards(PlayerId())
+					DisablePlayerVehicleRewards(PlayerId)
 				end
 			
 				if Config.DisableNPCDrops then
@@ -94,9 +104,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 
 	if Config.EnableHud then
-		for k,v in ipairs(ESX.PlayerData.accounts) do
-			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
-			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
+		for i=1, #(ESX.PlayerData.accounts) do
+			local accountTpl = '<div><img src="img/accounts/' .. ESX.PlayerData.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
+			ESX.UI.HUD.RegisterElement('account_' .. ESX.PlayerData.accounts[i].name, i, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
 		end
 
 		local jobTpl = '<div>{{job_label}}{{grade_label}}</div>'
@@ -111,7 +121,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
-	FreezeEntityPosition(PlayerPedId(), false)
+	FreezeEntityPosition(ESX.PlayerData.ped, false)
 	StartServerSyncLoops()
 end)
 
@@ -177,9 +187,9 @@ end)
 
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
-	for k,v in ipairs(ESX.PlayerData.accounts) do
-		if v.name == account.name then
-			ESX.PlayerData.accounts[k] = account
+	for i=1, #(ESX.PlayerData.accounts) do
+		if ESX.PlayerData.accounts[i].name == account.name then
+			ESX.PlayerData.accounts[i] = account
 			break
 		end
 	end
@@ -529,9 +539,13 @@ end
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
-local PlayerPedId = PlayerPedId
-local GetEntityCoords = GetEntityCoords
-local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
+	local GetEntityCoords = GetEntityCoords
+	local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
+	local GetFirstBlipInfoId = GetFirstBlipInfoId
+	local DoesBlipExist = DoesBlipExist
+	local DoScreenFadeOut = DoScreenFadeOut
+	local GetBlipInfoIdCoord = GetBlipInfoIdCoord
+	local GetVehiclePedIsIn = GetVehiclePedIsIn
 
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
@@ -547,7 +561,7 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 					Wait(0)
 			end
 	
-			local ped, coords = PlayerPedId(), GetBlipInfoIdCoord(blipMarker)
+			local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
 			local vehicle = GetVehiclePedIsIn(ped, false)
 			local oldCoords = GetEntityCoords(ped)
 	
