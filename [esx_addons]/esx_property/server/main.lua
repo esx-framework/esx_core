@@ -623,8 +623,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
           end
           Can = true
         else
-          xPlayer.showNotification("You need ~b~" .. Config.Raiding.ItemRequired.ItemCount .. "x " .. Config.Raiding.ItemRequired.label ..
-                                     "~s~  to Raid.", "error")
+          xPlayer.showNotification(_U("raid_notify_error", Config.Raiding.ItemRequired.ItemCount, Config.Raiding.ItemRequired.name), "error")
         end
       else
         Can = true
@@ -635,7 +634,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
   if Can then
     local xOwner = ESX.GetPlayerFromIdentifier(Properties[PropertyId].Owner)
     if xOwner then
-      xOwner.showNotification("Your Property is Currently Being ~b~Raided!", "error")
+      xOwner.showNotification(_U("raid_notify_success"), "error")
     end
     Wait(15000)
     Properties[PropertyId].Locked = false
@@ -853,11 +852,11 @@ ESX.RegisterServerCallback('esx_property:StoreVehicle', function(source, cb, Pro
       end
       MySQL.query(Config.Garage.MySQLquery, {1, VehicleProperties.plate}) -- Set vehicle as stored in MySQL
     else
-      xPlayer.showNotification('Garage Not Enabled On This Property.', 'error')
+      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You ~r~Cannot~s~ Access this property.', 'error')
+    xPlayer.showNotification(_U("cannot_access_property"), 'error')
     cb(false)
   end
   Log("User Attempted To Store Vehicle", 3640511,
@@ -876,11 +875,11 @@ ESX.RegisterServerCallback('esx_property:AccessGarage', function(source, cb, Pro
     if Property.garage.enabled then
       cb(Property.garage.StoredVehicles)
     else
-      xPlayer.showNotification('Garage Not Enabled On This Property.', 'error')
+      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You ~r~Cannot~s~ Access this property.', 'error')
+    xPlayer.showNotification(_U("cannot_access_property"), 'error')
     cb(false)
   end
 

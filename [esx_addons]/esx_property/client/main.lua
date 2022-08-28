@@ -488,7 +488,7 @@ end
 function AttemptHouseExit(PropertyId)
   local Property = Properties[PropertyId]
 
-  ESX.ShowNotification("Exiting property...", "success")
+  ESX.ShowNotification(_U("exiting"), "success")
   FreezeEntityPosition(ESX.PlayerData.ped, true)
   InProperty = false
   CurrentId = 0
@@ -528,14 +528,10 @@ function AttemptHouseEntry(PropertyId)
   local Property = Properties[PropertyId]
   local Interior = GetInteriorValues(Property.Interior)
   if Interior.type == "shell" and not Config.Shells then
-    ESX.ShowNotification("This Interior Uses Shells, which are disabled!.", "error")
+    ESX.ShowNotification(_U("shell_disabled"), "error")
     return
   end
-  if Property.Locked and not ESX.GetPlayerData().job.name == "police" then
-    ESX.ShowNotification("The door is ~r~locked.", "error")
-    return
-  end
-  ESX.ShowNotification("Entering property...", "success")
+  ESX.ShowNotification(_U("entering"), "success")
   CurrentId = PropertyId
   ESX.UI.Menu.CloseAll()
   local Property = Properties[CurrentId]
@@ -597,7 +593,7 @@ function AttemptHouseEntry(PropertyId)
             if not ShowingUIs.Exit then
 
               local Pname = Properties[CurrentId].setName ~= "" and Properties[CurrentId].setName or Properties[CurrentId].Name
-              ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. Pname)
+              ESX.TextUI(_U("access_textui", Pname))
               ShowingUIs.Exit = true
             end
             if IsControlJustPressed(0, 38) then
@@ -626,7 +622,7 @@ function AttemptHouseEntry(PropertyId)
                   if not ShowingUIs[k] then
                     ShowingUIs[k] = true
 
-                    ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. k)
+                    ESX.TextUI(_U("access_textui", k))
                   end
                   if IsControlJustPressed(0, 38) then
                     OpenInteractionMenu(CurrentId, k)
@@ -654,7 +650,7 @@ function AttemptHouseEntry(PropertyId)
             if not ShowingUIs.Exit then
               ShowingUIs.Exit = true
               local Pname = Properties[CurrentId].setName ~= "" and Properties[CurrentId].setName or Properties[CurrentId].Name
-              ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. Pname)
+              ESX.TextUI(_U("access_textui", Pname))
             end
             if IsControlJustPressed(0, 38) then
               OpenPropertyMenu(CurrentId)
@@ -681,7 +677,7 @@ function AttemptHouseEntry(PropertyId)
                 if #(PlayerCoords - v) < 2.0 then
                   if not ShowingUIs[k] then
                     ShowingUIs[k] = true
-                    ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. k)
+                    ESX.TextUI(_U("access_textui", k))
                   end
                   if IsControlJustPressed(0, 38) then
                     OpenInteractionMenu(CurrentId, k)
@@ -711,10 +707,10 @@ function StoreVehicle(PropertyId)
       if result then
         SetEntityAsMissionEntity(Vehicle, true, true)
         DeleteVehicle(Vehicle)
-        ESX.ShowNotification("Vehicle ~b~Stored!", "success")
+        ESX.ShowNotification(_U("store_success"), "success")
         return
       else
-        ESX.ShowNotification("You Cannot Store This Vehicle!", "error")
+        ESX.ShowNotification(_U("store_error"), "error")
         return
       end
     end, PropertyId, VehProperties)
@@ -731,7 +727,7 @@ function AccessGarage(PropertyId)
       ESX.OpenContext("right", elements, function(menu, element)
         if element.Properties then
           ESX.CloseContext()
-          ESX.ShowNotification("Retrieving ~b~" .. element.Properties.DisplayName .. "~s~ ...")
+          ESX.ShowNotification(_U("retriving_notify",element.Properties.DisplayName))
           if ESX.Game.IsSpawnPointClear(vector3(Properties[PropertyId].garage.pos.x, Properties[PropertyId].garage.pos.y,
             Properties[PropertyId].garage.pos.z), 3.0) then
             ESX.Game.SpawnVehicle(element.Properties.model, Properties[PropertyId].garage.pos, Properties[PropertyId].garage.Heading,
@@ -746,7 +742,7 @@ function AccessGarage(PropertyId)
         end
       end)
     else
-      ESX.ShowNotification("You Cannot Access This Garage!", "error")
+      ESX.ShowNotification(_U("cannot_access"), "error")
       return
     end
   end, PropertyId)
@@ -777,15 +773,10 @@ CreateThread(function()
                 if not CurrentDrawing.Showing or CurrentDrawing.Name ~= PropertyName then
                   CurrentDrawing.Name = PropertyName
                   CurrentDrawing.Showing = true
-                  ESX.TextUI("Press ~b~[E]~s~ to Access ~b~" .. PropertyName)
+                  ESX.TextUI(_U("access_textui", PropertyName))
                 end
                 if IsControlJustPressed(0, 38) then
-                  if Properties[i].Locked and Properties[i].Owned and Properties[i].Owner ~= ESX.PlayerData.identifier and not ESX.PlayerData.job.name ==
-                    "police" and not PlayerKeys[i] then
-                    ESX.ShowNotification("This property is ~r~locked.", "error")
-                  else
                     OpenPropertyMenu(i)
-                  end
                 end
               end
             end
@@ -804,13 +795,13 @@ CreateThread(function()
                   if not CurrentDrawing.Showing or CurrentDrawing.Name ~= DisplayName then
                     CurrentDrawing.Name = DisplayName
                     CurrentDrawing.Showing = true
-                    ESX.TextUI("Press ~b~[E]~s~ to Store ~b~" .. DisplayName)
+                    ESX.TextUI(_U("store_textui", DisplayName))
                   end
                 else
                   if not CurrentDrawing.Showing or CurrentDrawing.Name ~= "Garage" then
                     CurrentDrawing.Name = "Garage"
                     CurrentDrawing.Showing = true
-                    ESX.TextUI("Press ~b~[E]~s~ to Access ~b~ Garage")
+                    ESX.TextUI(_U("access_textui", "garage"))
                   end
                 end
                 if IsControlJustPressed(0, 38) then

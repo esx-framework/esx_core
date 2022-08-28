@@ -136,4 +136,22 @@ Locales['en'] = {
 		["knock_on_door"] = "Knocking On Door...",
 		["nobody_home"] = "It Seems Nobody is home...",
 
+		---------- General Strings ---------------- 
+
+		["exiting"] = "Exiting property...",
+		["entering"] = "Entering property...",
+		["shell_disabled"] ="This Interior Uses Shells, which are disabled!.",
+		["access_textui"] = "Press ~b~[E]~s~ to Access ~b~%s",
+		["raid_notify_error"] = "You need ~b~ %sx %s~s~  to be able to raid!.",
+		["raid_notify_success"] = "Your Property is Currently Being ~b~Raided!",
+
+		--------------- Garage Strings --------------
+
+		["store_success"] = "Vehicle ~b~Stored!",
+		["store_error"] = "You Cannot Store This Vehicle!",
+		["retriving_notify"] = "Retrieving ~b~%s~s~ ...",
+		["cannot_access"] = "You Cannot Access This Garage!",
+		["store_textui"] = "Press ~b~[E]~s~ to Store ~b~%s",
+		["garage_not_enabled"] = 'Garage Not Enabled On This Property.',
+		["cannot_access_property"] = 'You ~r~Cannot~s~ Access this property.',
 }
