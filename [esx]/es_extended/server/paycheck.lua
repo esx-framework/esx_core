@@ -3,7 +3,8 @@ function StartPayCheck()
 		while true do
 			Wait(Config.PaycheckInterval)
 			local xPlayers = ESX.GetExtendedPlayers()
-			for _, xPlayer in pairs(xPlayers) do
+			for i=1, #(xPlayers) do 
+				local xPlayer = xPlayers[i]
 				local job     = xPlayer.job.grade_name
                 local onDuty  = xPlayer.job.onDuty
 				local salary  = xPlayer.job.grade_salary
