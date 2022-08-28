@@ -823,7 +823,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
             modTrimB = GetVehicleMod(vehicle, 44),
             modTank = GetVehicleMod(vehicle, 45),
             modDoorR = GetVehicleMod(vehicle, 47),
-            modLivery = GetVehicleMod(vehicle, 48),
+            modLivery = GetVehicleLivery(vehicle),
             modLightbar = GetVehicleMod(vehicle, 49)
         }
     else
