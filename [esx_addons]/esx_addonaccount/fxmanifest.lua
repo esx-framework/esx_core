@@ -4,7 +4,7 @@ game 'gta5'
 
 author 'ESX-Framework'
 description 'ESX Addon Account'
-
+lua54 'yes'
 version '1.7.5'
 
 server_scripts {

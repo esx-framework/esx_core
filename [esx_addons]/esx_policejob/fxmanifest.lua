@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 
 description 'ESX Police Job'
-
+lua54 'yes'
 version '1.7.5'
 
 shared_script '@es_extended/imports.lua'

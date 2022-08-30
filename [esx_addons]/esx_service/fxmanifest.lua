@@ -1,7 +1,7 @@
 fx_version 'adamant'
 
 game 'gta5'
-
+lua54 'yes'
 description 'ESX Service'
 
 version '1.7.5'

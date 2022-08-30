@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 
 description 'ESX Menu List'
-
+lua54 'yes'
 version '1.7.5'
 
 client_scripts {
