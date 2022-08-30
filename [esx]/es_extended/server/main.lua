@@ -405,15 +405,8 @@ if not Config.OxInventory then
         local sourceXPlayer = ESX.GetPlayerFromId(playerId)
         local targetXPlayer = ESX.GetPlayerFromId(target)
         local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
-        if not sourceXPlayer then
-            return
-        end
-        if not targetXPlayer then
-            print("Cheating: " .. GetPlayerName(playerId))
-            return
-        end
-        if distance > Config.DistanceGive then
-            print("Cheating: " .. GetPlayerName(playerId))
+        if  not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
+            print("[WARNING] Player Detected Cheating: " .. GetPlayerName(playerId))
             return
         end
 
@@ -511,7 +504,7 @@ if not Config.OxInventory then
     RegisterNetEvent('esx:removeInventoryItem')
     AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
         local playerId = source
-        local xPlayer = ESX.GetPlayerFromId(source)
+        local xPlayer = ESX.GetPlayerFromId(playerId)
 
         if type == 'item_standard' then
             if itemCount == nil or itemCount < 1 then
@@ -571,6 +564,7 @@ if not Config.OxInventory then
 
     RegisterNetEvent('esx:useItem')
     AddEventHandler('esx:useItem', function(itemName)
+        local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
         local count = xPlayer.getInventoryItem(itemName).count
 
