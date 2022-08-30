@@ -294,7 +294,6 @@ function ESX.RefreshJobs()
 					grade = 0,
 					label = 'Unemployed',
 					salary = 200,
-                    onDuty = false,
 					skin_male = {},
 					skin_female = {}
 				}

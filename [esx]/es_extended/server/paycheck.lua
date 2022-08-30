@@ -6,14 +6,13 @@ function StartPayCheck()
 			for i=1, #(xPlayers) do 
 				local xPlayer = xPlayers[i]
 				local job     = xPlayer.job.grade_name
-                local onDuty  = xPlayer.job.onDuty
 				local salary  = xPlayer.job.grade_salary
 
 				if salary > 0 then
 					if job == 'unemployed' then -- unemployed
 						xPlayer.addAccountMoney('bank', salary)
 						TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_help', salary), 'CHAR_BANK_MAZE', 9)
-					elseif Config.EnableSocietyPayouts and onDuty then -- possibly a society
+					elseif Config.EnableSocietyPayouts then -- possibly a society
 						TriggerEvent('esx_society:getSociety', xPlayer.job.name, function (society)
 							if society ~= nil then -- verified society
 								TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function (account)
@@ -31,7 +30,7 @@ function StartPayCheck()
 								TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
 							end
 						end)
-					elseif onDuty then -- generic job
+					else -- generic job
 						xPlayer.addAccountMoney('bank', salary)
 						TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
 					end
