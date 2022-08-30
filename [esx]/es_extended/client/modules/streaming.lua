@@ -1,5 +1,5 @@
 function ESX.Streaming.RequestModel(modelHash, cb)
-	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
+	modelHash = (type(modelHash) == 'number' and modelHash or joaat(modelHash))
 
 	if not HasModelLoaded(modelHash) and IsModelInCdimage(modelHash) then
 		RequestModel(modelHash)

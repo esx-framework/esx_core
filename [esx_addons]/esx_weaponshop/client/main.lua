@@ -80,7 +80,7 @@ function DisplayBoughtScaleform(weaponName, price)
 
 	ScaleformMovieMethodAddParamTextureNameString(_U('weapon_bought', ESX.Math.GroupDigits(price)))
 	ScaleformMovieMethodAddParamTextureNameString(ESX.GetWeaponLabel(weaponName))
-	ScaleformMovieMethodAddParamInt(GetHashKey(weaponName))
+	ScaleformMovieMethodAddParamInt(joaat(weaponName))
 	ScaleformMovieMethodAddParamTextureNameString('')
 	ScaleformMovieMethodAddParamInt(100)
 	EndScaleformMovieMethod()

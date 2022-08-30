@@ -140,7 +140,7 @@ ESX.HashString = function(str)
     local format = string.format
     local upper = string.upper
     local gsub = string.gsub
-    local hash = GetHashKey(str)
+    local hash = joaat(str)
     local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
     input_map = string.gsub(input_map, "FFFFFFFF", "")
 
@@ -446,7 +446,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
             end
         end, object, coords, 0.0)
     else 
-        local model = type(object) == 'number' and object or GetHashKey(object)
+        local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
             ESX.Streaming.RequestModel(model)
@@ -474,7 +474,7 @@ function ESX.Game.DeleteObject(object)
 end
 
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+    local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
     if networked then 
@@ -1136,7 +1136,7 @@ function ESX.ShowInventory()
     end
 
     for k, v in ipairs(Config.Weapons) do
-        local weaponHash = GetHashKey(v.name)
+        local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
             local ammo, label = GetAmmoInPedWeapon(playerPed, weaponHash)
@@ -1332,7 +1332,7 @@ function ESX.ShowInventory()
             elseif data1.current.action == 'give_ammo' then
                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
                 local closestPed = GetPlayerPed(closestPlayer)
-                local pedAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
+                local pedAmmo = GetAmmoInPedWeapon(playerPed, joaat(item))
 
                 if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
                     if closestPlayer ~= -1 and closestDistance < 3.0 then

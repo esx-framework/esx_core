@@ -539,13 +539,13 @@ function AttemptHouseEntry(PropertyId)
   DoScreenFadeOut(1500)
   Wait(1500)
   if Interior.type == "shell" then
-    ESX.Streaming.RequestModel(GetHashKey(Property.Interior), function()
+    ESX.Streaming.RequestModel(joaat(Property.Interior), function()
       if Shell then
         DeleteObject(Shell)
         Shell = nil
       end
       local Pos = vector3(Property.Entrance.x, Property.Entrance.y, 2000)
-      Shell = CreateObjectNoOffset(GetHashKey(Property.Interior), Pos + Interior.pos, false, false, false)
+      Shell = CreateObjectNoOffset(joaat(Property.Interior), Pos + Interior.pos, false, false, false)
       SetEntityHeading(Shell, 0.0)
       while not DoesEntityExist(Shell) do
         Wait(1)

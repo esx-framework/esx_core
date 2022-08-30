@@ -30,7 +30,7 @@ end
 
 function ESX.GetWeaponFromHash(weaponHash)
 	for k,v in ipairs(Config.Weapons) do
-		if GetHashKey(v.name) == weaponHash then
+		if joaat(v.name) == weaponHash then
 			return v
 		end
 	end

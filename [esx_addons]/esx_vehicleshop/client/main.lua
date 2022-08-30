@@ -668,7 +668,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 
 			if GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				for i=1, #Vehicles, 1 do
-					if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
+					if joaat(Vehicles[i].model) == GetEntityModel(vehicle) then
 						vehicleData = Vehicles[i]
 						break
 					end

@@ -16,7 +16,7 @@ if Config.Debug then
 				for i=1, #Config.Interactables, 1 do
 					local seat = Config.Interactables[i]
 
-					if hash == GetHashKey(seat) then
+					if hash == joaat(seat) then
 						model = seat
 						break
 					end
@@ -65,7 +65,7 @@ RegisterCommand('sit', function()
 			local hash = GetEntityModel(object)
 
 			for k,v in pairs(Config.Sitable) do
-				if GetHashKey(k) == hash then
+				if joaat(k) == hash then
 					sit(object, k, v)
 					break
 				end
@@ -81,7 +81,7 @@ function GetNearChair()
 	local object, distance
 	local coords = GetEntityCoords(PlayerPedId())
 	for i=1, #Config.Interactables do
-		object = GetClosestObjectOfType(coords, 3.0, GetHashKey(Config.Interactables[i]), false, false, false)
+		object = GetClosestObjectOfType(coords, 3.0, joaat(Config.Interactables[i]), false, false, false)
 		distance = #(coords - GetEntityCoords(object))
 		if distance < 1.6 then
 			return object, distance

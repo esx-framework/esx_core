@@ -362,7 +362,7 @@ function IsInAuthorizedVehicle()
     local vehModel = GetEntityModel(GetVehiclePedIsIn(playerPed, false))
 
     for i = 1, #Config.AuthorizedVehicles, 1 do
-        if vehModel == GetHashKey(Config.AuthorizedVehicles[i].model) then
+        if vehModel == joaat(Config.AuthorizedVehicles[i].model) then
             return true
         end
     end

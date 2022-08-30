@@ -254,7 +254,7 @@ function getPriceFromHash(vehicleHash, jobGrade, type)
 
 	for i = 1, #vehicles do
 		local vehicle = vehicles[i]
-		if GetHashKey(vehicle.model) == vehicleHash then
+		if joaat(vehicle.model) == vehicleHash then
 			return vehicle.price
 		end
 	end
