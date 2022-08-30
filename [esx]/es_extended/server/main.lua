@@ -135,11 +135,15 @@ function loadESXPlayer(identifier, playerId, isNew)
         end
     end
 
-    for account, label in pairs(Config.Accounts) do
+    for account, data in pairs(Config.Accounts) do
+        if data.round == nil then
+            data.round = true
+        end
         userData.accounts[#userData.accounts + 1] ={
             name = account,
             money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
-            label = label
+            label = data.label,
+            round = data.round
         }
     end
 
@@ -432,9 +436,9 @@ if not Config.OxInventory then
                 targetXPlayer.addAccountMoney(itemName, itemCount)
 
                 sourceXPlayer.showNotification(_U('gave_account_money', ESX.Math.GroupDigits(itemCount),
-                    Config.Accounts[itemName], targetXPlayer.name))
+                    Config.Accounts[itemName].label, targetXPlayer.name))
                 targetXPlayer.showNotification(_U('received_account_money', ESX.Math.GroupDigits(itemCount),
-                    Config.Accounts[itemName], sourceXPlayer.name))
+                    Config.Accounts[itemName].label, sourceXPlayer.name))
             else
                 sourceXPlayer.showNotification(_U('imp_invalid_amount'))
             end

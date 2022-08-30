@@ -107,9 +107,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getAccount(account)
-		for k,v in ipairs(self.accounts) do
-			if v.name == account then
-				return v
+		for i=1, #self.accounts do
+			if self.accounts[i].name == account then
+				return self.accounts[i], i
 			end
 		end
 	end
@@ -172,41 +172,64 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.setAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money >= 0 then
-			local account = self.getAccount(accountName)
+			local account, index = self.getAccount(accountName)
 
 			if account then
-				local newMoney = ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
 	function self.addAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money > 0 then
-			local account = self.getAccount(accountName)
-
+			local account, index = self.getAccount(accountName)
 			if account then
-				local newMoney = account.money + ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
 	function self.removeAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money > 0 then
-			local account = self.getAccount(accountName)
+			local account, index = self.getAccount(accountName)
 
 			if account then
-				local newMoney = account.money - ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
