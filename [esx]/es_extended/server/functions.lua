@@ -52,7 +52,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 		if not command.allowConsole and playerId == 0 then
 			print(('[^3WARNING^7] ^5%s'):format(_U('commanderror_console')))
 		else
-			local xPlayer, error = ESX.GetPlayerFromId(playerId), nil
+			local xPlayer, error = ESX.Players[playerId], nil
 
 			if command.suggestion then
 				if command.suggestion.validate then
@@ -365,7 +365,7 @@ end
 if not Config.OxInventory then
 	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
 		local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-		local xPlayer = ESX.GetPlayerFromId(playerId)
+		local xPlayer = ESX.Players[playerId]
 		local coords = xPlayer.getCoords()
 
 		Core.Pickups[pickupId] = {
@@ -401,7 +401,7 @@ function Core.IsPlayerAdmin(playerId)
 		return true
 	end
 
-	local xPlayer = ESX.GetPlayerFromId(playerId)
+	local xPlayer = ESX.Players[playerId]
 
 	if xPlayer then
 		if xPlayer.group == 'admin' then

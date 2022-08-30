@@ -224,6 +224,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     if result.group then
         if result.group == "superadmin" then
             userData.group = "admin"
+            print("[^3WARNING^7] Superadmin detected, setting group to admin")
         else
             userData.group = result.group
         end

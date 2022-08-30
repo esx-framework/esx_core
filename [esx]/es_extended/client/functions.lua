@@ -5,7 +5,7 @@ ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
-ESX.Input = {}
+Core.Input = {}
 ESX.UI = {}
 ESX.UI.HUD = {}
 ESX.UI.HUD.RegisteredElements = {}
@@ -177,7 +177,7 @@ end
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
-    ESX.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
+    Core.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
     if on_release then
         RegisterCommand("-" .. command_name, on_release)
     end
@@ -188,12 +188,7 @@ function ESX.TriggerServerCallback(name, cb, ...)
     Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
     TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
-
-    if Core.CurrentRequestId < 65535 then
-        Core.CurrentRequestId = Core.CurrentRequestId + 1
-    else
-        Core.CurrentRequestId = 0
-    end
+    Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
 function ESX.UI.HUD.SetDisplay(opacity)
