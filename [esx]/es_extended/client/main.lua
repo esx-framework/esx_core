@@ -64,10 +64,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
 			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
 			local HideHudComponentThisFrame = HideHudComponentThisFrame
-			
+			local PlayerId = PlayerId()
 			while true do 
 				Wait(0)
-				local PlayerId = PlayerId()
+
 				if Config.DisableHealthRegeneration then
 					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
 				end
@@ -106,7 +106,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	if Config.EnableHud then
 		for i=1, #(ESX.PlayerData.accounts) do
 			local accountTpl = '<div><img src="img/accounts/' .. ESX.PlayerData.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
-			ESX.UI.HUD.RegisterElement('account_' .. ESX.PlayerData.accounts[i].name, i, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
+			ESX.UI.HUD.RegisterElement('account_' .. ESX.PlayerData.accounts[i].name, i, 0, accountTpl, {money = ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money)})
 		end
 
 		local jobTpl = '<div>{{job_label}}{{grade_label}}</div>'
