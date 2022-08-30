@@ -339,13 +339,15 @@ function ESX.SetPlayerFunctionOverride(index)
 end
 
 function ESX.GetItemLabel(item)
-	if ESX.Items[item] then
-		return ESX.Items[item].label
-	end
-
 	if Config.OxInventory then
 		item = exports.ox_inventory:Items(item)
 		if item then return item.label end
+	end
+	
+	if ESX.Items[item] then
+		return ESX.Items[item].label
+	else 
+		print('[^3WARNING^7] Attemting to get invalid Item -> '..item )
 	end
 end
 
