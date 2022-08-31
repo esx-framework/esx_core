@@ -1,4 +1,4 @@
 Locales['hu'] = {
-  ['used_bread'] = 'Megettél egy 1x kenyeret.',
-  ['used_water'] = 'Megittál egy 1x vizet.',
+  ['used_bread'] = 'Megettél egy kenyeret.',
+  ['used_water'] = 'Megittál egy vizet.',
 }

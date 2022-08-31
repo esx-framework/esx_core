@@ -135,12 +135,16 @@ function loadESXPlayer(identifier, playerId, isNew)
         end
     end
 
-    for account, label in pairs(Config.Accounts) do
-        table.insert(userData.accounts, {
+    for account, data in pairs(Config.Accounts) do
+        if data.round == nil then
+            data.round = true
+        end
+        userData.accounts[#userData.accounts + 1] ={
             name = account,
             money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
-            label = label
-        })
+            label = data.label,
+            round = data.round
+        }
     end
 
     -- Job
@@ -160,7 +164,6 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.job.grade_name = gradeObject.name
     userData.job.grade_label = gradeObject.label
     userData.job.grade_salary = gradeObject.salary
-    userData.job.onDuty = Config.OnDuty
 
     userData.job.skin_male = {}
     userData.job.skin_female = {}
@@ -220,6 +223,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     if result.group then
         if result.group == "superadmin" then
             userData.group = "admin"
+            print("[^3WARNING^7] Superadmin detected, setting group to admin")
         else
             userData.group = result.group
         end
@@ -380,11 +384,12 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
 end)
 
 RegisterNetEvent('esx:updateCoords')
-AddEventHandler('esx:updateCoords', function(coords)
+AddEventHandler('esx:updateCoords', function()
+    local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer then
-        xPlayer.updateCoords(coords)
+        xPlayer.updateCoords()
     end
 end)
 
@@ -404,15 +409,8 @@ if not Config.OxInventory then
         local sourceXPlayer = ESX.GetPlayerFromId(playerId)
         local targetXPlayer = ESX.GetPlayerFromId(target)
         local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
-        if not sourceXPlayer then
-            return
-        end
-        if not targetXPlayer then
-            print("Cheating: " .. GetPlayerName(playerId))
-            return
-        end
-        if distance > Config.DistanceGive then
-            print("Cheating: " .. GetPlayerName(playerId))
+        if  not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
+            print("[WARNING] Player Detected Cheating: " .. GetPlayerName(playerId))
             return
         end
 
@@ -438,9 +436,9 @@ if not Config.OxInventory then
                 targetXPlayer.addAccountMoney(itemName, itemCount)
 
                 sourceXPlayer.showNotification(_U('gave_account_money', ESX.Math.GroupDigits(itemCount),
-                    Config.Accounts[itemName], targetXPlayer.name))
+                    Config.Accounts[itemName].label, targetXPlayer.name))
                 targetXPlayer.showNotification(_U('received_account_money', ESX.Math.GroupDigits(itemCount),
-                    Config.Accounts[itemName], sourceXPlayer.name))
+                    Config.Accounts[itemName].label, sourceXPlayer.name))
             else
                 sourceXPlayer.showNotification(_U('imp_invalid_amount'))
             end
@@ -510,7 +508,7 @@ if not Config.OxInventory then
     RegisterNetEvent('esx:removeInventoryItem')
     AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
         local playerId = source
-        local xPlayer = ESX.GetPlayerFromId(source)
+        local xPlayer = ESX.GetPlayerFromId(playerId)
 
         if type == 'item_standard' then
             if itemCount == nil or itemCount < 1 then
@@ -570,6 +568,7 @@ if not Config.OxInventory then
 
     RegisterNetEvent('esx:useItem')
     AddEventHandler('esx:useItem', function(itemName)
+        local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
         local count = xPlayer.getInventoryItem(itemName).count
 
@@ -678,19 +677,3 @@ AddEventHandler('txAdmin:events:serverShuttingDown', function()
     Core.SavePlayers()
 end)
 
-RegisterNetEvent('esx:setDuty')
-AddEventHandler('esx:setDuty', function(bool)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.job.onDuty == bool then
-        return
-    end
-
-    if bool then
-        xPlayer.setDuty(true)
-        xPlayer.triggerEvent('esx:showNotification', _U('started_duty'))
-    else
-        xPlayer.setDuty(false)
-        xPlayer.triggerEvent('esx:showNotification', _U('stopped_duty'))
-    end
-    TriggerClientEvent('esx:setJob', xPlayer.source, xPlayer.job)
-end)

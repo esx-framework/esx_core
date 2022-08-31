@@ -397,7 +397,7 @@ function OpenMobileMechanicActionsMenu()
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, true)
 
-			local towmodel = GetHashKey("flatbed")
+			local towmodel = `flatbed`
 			local isVehicleTow = IsVehicleModel(vehicle, towmodel)
 
 			if isVehicleTow then
@@ -890,7 +890,7 @@ CreateThread(function()
 		local closestEntity = nil
 
 		for i=1, #trackedEntities, 1 do
-			local object = GetClosestObjectOfType(coords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
+			local object = GetClosestObjectOfType(coords, 3.0, joaat(trackedEntities[i]), false, false, false)
 
 			if DoesEntityExist(object) then
 				local objCoords = GetEntityCoords(object)
@@ -940,7 +940,7 @@ CreateThread(function()
 			else
 				local entityModel = GetEntityModel(CurrentActionData.vehicle)
 
-				if entityModel == GetHashKey("flatbed") or	entityModel == GetHashKey("towtruck2") or entityModel == GetHashKey("slamvan3") then
+				if entityModel == `flatbed` or	entityModel == `towtruck2` or entityModel == `slamvan3` then
 					TriggerServerEvent('esx_service:disableService', 'mechanic')
 				end
 			end
@@ -974,7 +974,7 @@ RegisterCommand('mechanicjob', function()
 					ESX.ShowNotification(_U('wait_five'), "error")
 				end
 			else
-				if IsPedInAnyVehicle(playerPed, false) and IsVehicleModel(GetVehiclePedIsIn(playerPed, false), GetHashKey('flatbed')) then
+				if IsPedInAnyVehicle(playerPed, false) and IsVehicleModel(GetVehiclePedIsIn(playerPed, false), `flatbed`) then
 					StartNPCJob()
 				else
 					ESX.ShowNotification(_U('must_in_flatbed'), "error")

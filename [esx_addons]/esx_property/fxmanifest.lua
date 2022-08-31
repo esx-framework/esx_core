@@ -25,21 +25,17 @@ description 'Official ESX-Legacy Property System'
 
 version '1.8.0'
 
-shared_script '@es_extended/imports.lua'
+shared_scripts {'@es_extended/imports.lua', '@es_extended/locale.lua', 'locales/*.lua'}
 file "client/html/copy.html"
 ui_page "client/html/copy.html"
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-	'@es_extended/locale.lua',
-	'locales/*.lua',
 	'config.lua',
 	'server/*.lua'
 }
 
 client_scripts {
-	'@es_extended/locale.lua',
-	'locales/*.lua',
 	'config.lua',
 	'client/cctv.lua',
 	'client/main.lua',

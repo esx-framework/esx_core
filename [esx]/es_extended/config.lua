@@ -2,9 +2,18 @@ Config = {}
 Config.Locale = 'en'
 
 Config.Accounts = {
-	bank = _U('account_bank'),
-	black_money = _U('account_black_money'),
-	money = _U('account_money')
+	bank = {
+		label = _U('account_bank'),
+		round = true
+	},
+	black_money = {
+		label = _U('account_black_money'),
+		round = true
+	},
+	money = {
+		label = _U('account_money'),
+		round = true
+	}
 }
 
 Config.StartingAccountMoney 	= {bank = 50000}
@@ -22,7 +31,6 @@ Config.NativeNotify             = false -- use old native notification?
 Config.Multichar                = true -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
-Config.OnDuty                   = true -- Default state of the on duty system
 Config.DisableHealthRegen         = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards      = true -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = true -- stops NPCs from dropping weapons on death

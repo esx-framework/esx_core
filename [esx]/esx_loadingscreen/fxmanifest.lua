@@ -2,7 +2,7 @@ game 'common'
 version '1.7.5'
 fx_version 'cerulean'
 author 'ESX-Framework'
-
+lua54 'yes'
 loadscreen 'index.html'
 
 shared_script 'config.lua'

@@ -104,7 +104,7 @@ end)
 
 function getPriceFromModel(model)
 	for k,v in ipairs(Config.Vehicles) do
-		if GetHashKey(v.model) == model then
+		if joaat(v.model) == model then
 			return v.price
 		end
 	end

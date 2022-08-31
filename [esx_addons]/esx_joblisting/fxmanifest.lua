@@ -2,7 +2,7 @@ fx_version 'bodacious'
 game 'gta5'
 
 description 'ESX Job Listing'
-
+lua54 'yes'
 version '1.7.5'
 
 shared_scripts {

@@ -31,7 +31,8 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
 			local xPlayers = ESX.GetExtendedPlayers('job', 'police')
 			if #xPlayers >= Config.PoliceNumberRequired then
 				rob = true
-				for _, xPlayer in pairs(xPlayers) do
+				for i=1, #(xPlayers) do 
+					local xPlayer = xPlayers[i]
 					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('rob_in_prog', store.nameOfStore))
 					TriggerClientEvent('esx_holdup:setBlip', xPlayer.source, Stores[currentStore].position)
 				end
@@ -50,7 +51,8 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
                             xPlayer.addMoney(store.reward)
                         end
                         local xPlayers = ESX.GetExtendedPlayers('job', 'police')
-                        for _, xPlayer in pairs(xPlayers) do
+												for i=1, #(xPlayers) do 
+													local xPlayer = xPlayers[i]
                             TriggerClientEvent('esx:showNotification', xPlayer.source, _U('robbery_complete_at', store.nameOfStore))
                             TriggerClientEvent('esx_holdup:killBlip', xPlayer.source)
                         end

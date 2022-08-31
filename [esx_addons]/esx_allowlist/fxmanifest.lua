@@ -6,7 +6,7 @@ author 'ESX-Framework'
 description 'Offical AllowList script for ESX'
 
 version '1.7.5'
-
+lua54 'yes'
 server_only 'yes'
 
 server_scripts {

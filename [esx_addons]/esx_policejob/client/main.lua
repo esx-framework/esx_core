@@ -180,9 +180,9 @@ function OpenCloakroomMenu()
 
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin.sex == 0 then
-					modelHash = GetHashKey(data.current.maleModel)
+					modelHash = joaat(data.current.maleModel)
 				else
-					modelHash = GetHashKey(data.current.femaleModel)
+					modelHash = joaat(data.current.femaleModel)
 				end
 
 				ESX.Streaming.RequestModel(modelHash, function()
@@ -707,7 +707,7 @@ function OpenPutWeaponMenu()
 	local weaponList = ESX.GetWeaponList()
 
 	for i=1, #weaponList, 1 do
-		local weaponHash = GetHashKey(weaponList[i].name)
+		local weaponHash = joaat(weaponList[i].name)
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
 			table.insert(elements, {
@@ -739,13 +739,13 @@ function OpenBuyWeaponsMenu()
 	for k,v in ipairs(Config.AuthorizedWeapons[ESX.PlayerData.job.grade_name]) do
 		local weaponNum, weapon = ESX.GetWeapon(v.weapon)
 		local components, label = {}
-		local hasWeapon = HasPedGotWeapon(playerPed, GetHashKey(v.weapon), false)
+		local hasWeapon = HasPedGotWeapon(playerPed, joaat(v.weapon), false)
 
 		if v.components then
 			for i=1, #v.components do
 				if v.components[i] then
 					local component = weapon.components[i]
-					local hasComponent = HasPedGotWeaponComponent(playerPed, GetHashKey(v.weapon), component.hash)
+					local hasComponent = HasPedGotWeaponComponent(playerPed, joaat(v.weapon), component.hash)
 
 					if hasComponent then
 						label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_owned'))
@@ -1008,7 +1008,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 		CurrentActionData = {entity = entity}
 	end
 
-	if GetEntityModel(entity) == GetHashKey("p_ld_stinger_s") then
+	if GetEntityModel(entity) == `p_ld_stinger_s` then
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
 
@@ -1044,7 +1044,7 @@ AddEventHandler('esx_policejob:handcuff', function()
 
 		SetEnableHandcuffs(playerPed, true)
 		DisablePlayerFiring(playerPed, true)
-		SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+		SetCurrentPedWeapon(playerPed, `WEAPON_UNARMED`, true) -- unarm player
 		SetPedCanPlayGestureAnims(playerPed, false)
 		FreezeEntityPosition(playerPed, true)
 		DisplayRadar(false)
@@ -1373,7 +1373,7 @@ CreateThread(function()
 		local closestEntity   = nil
 
 		for i=1, #trackedEntities, 1 do
-			local object = GetClosestObjectOfType(playerCoords, 3.0, GetHashKey(trackedEntities[i]), false, false, false)
+			local object = GetClosestObjectOfType(playerCoords, 3.0, joaat(trackedEntities[i]), false, false, false)
 
 			if DoesEntityExist(object) then
 				local objCoords = GetEntityCoords(object)

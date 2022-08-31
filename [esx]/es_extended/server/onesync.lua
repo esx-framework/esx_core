@@ -61,7 +61,7 @@ end
 ---@param heading number
 ---@param cb function
 function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
-		if type(model) == 'string' then model = GetHashKey(model) end
+		if type(model) == 'string' then model = joaat(model) end
 		local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 		if type(autoMobile) ~= 'boolean' then
 			return
@@ -81,7 +81,7 @@ end
 ---@param heading number
 ---@param cb function
 function ESX.OneSync.SpawnObject(model, coords, heading, cb)
-	if type(model) == 'string' then model = GetHashKey(model) end
+	if type(model) == 'string' then model = joaat(model) end
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	CreateThread(function()
 		local entity = CreateObject(model, coords, true, true)
@@ -96,7 +96,7 @@ end
 ---@param heading number
 ---@param cb function
 function ESX.OneSync.SpawnPed(model, coords, heading, cb)
-	if type(model) == 'string' then model = GetHashKey(model) end
+	if type(model) == 'string' then model = joaat(model) end
 	CreateThread(function()
 		local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
@@ -109,7 +109,7 @@ end
 ---@param seat number
 ---@param cb function
 function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
-	if type(model) == 'string' then model = GetHashKey(model) end
+	if type(model) == 'string' then model = joaat(model) end
 	CreateThread(function()
 		local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end

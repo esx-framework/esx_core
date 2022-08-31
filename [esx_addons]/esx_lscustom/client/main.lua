@@ -77,7 +77,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
                     local vehiclePrice = 50000
 
                     for i = 1, #Vehicles, 1 do
-                        if GetEntityModel(vehicle) == GetHashKey(Vehicles[i].model) then
+                        if GetEntityModel(vehicle) == joaat(Vehicles[i].model) then
                             vehiclePrice = Vehicles[i].price
                             break
                         end
@@ -187,7 +187,7 @@ function GetAction(data)
     local vehiclePrice = 50000
 
     for i = 1, #Vehicles, 1 do
-        if GetEntityModel(vehicle) == GetHashKey(Vehicles[i].model) then
+        if GetEntityModel(vehicle) == joaat(Vehicles[i].model) then
             vehiclePrice = Vehicles[i].price
             break
         end

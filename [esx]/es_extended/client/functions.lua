@@ -5,7 +5,7 @@ ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
-ESX.Input = {}
+Core.Input = {}
 ESX.UI = {}
 ESX.UI.HUD = {}
 ESX.UI.HUD.RegisteredElements = {}
@@ -94,11 +94,21 @@ function ESX.ShowNotification(message, type, length)
 end
 
 function ESX.TextUI(message, type)
-    exports["esx_textui"]:TextUI(message, type)
+    if GetResourceState("esx_textui") ~= "missing" then
+        exports["esx_textui"]:TextUI(message, type)
+    else 
+        print("[ERROR] Missing ESX TextUI!")
+        return
+    end
 end
 
 function ESX.HideUI()
-    exports["esx_textui"]:HideUI()
+    if GetResourceState("esx_textui") ~= "missing" then
+        exports["esx_textui"]:HideUI()
+    else 
+        print("[ERROR] Missing ESX TextUI!")
+        return
+    end
 end
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
@@ -140,7 +150,7 @@ ESX.HashString = function(str)
     local format = string.format
     local upper = string.upper
     local gsub = string.gsub
-    local hash = GetHashKey(str)
+    local hash = joaat(str)
     local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
     input_map = string.gsub(input_map, "FFFFFFFF", "")
 
@@ -177,7 +187,7 @@ end
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
-    ESX.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
+    Core.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
     if on_release then
         RegisterCommand("-" .. command_name, on_release)
     end
@@ -188,12 +198,7 @@ function ESX.TriggerServerCallback(name, cb, ...)
     Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
     TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
-
-    if Core.CurrentRequestId < 65535 then
-        Core.CurrentRequestId = Core.CurrentRequestId + 1
-    else
-        Core.CurrentRequestId = 0
-    end
+    Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
 function ESX.UI.HUD.SetDisplay(opacity)
@@ -451,7 +456,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
             end
         end, object, coords, 0.0)
     else 
-        local model = type(object) == 'number' and object or GetHashKey(object)
+        local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
             ESX.Streaming.RequestModel(model)
@@ -479,7 +484,7 @@ function ESX.Game.DeleteObject(object)
 end
 
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+    local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
     if networked then 
@@ -1107,16 +1112,16 @@ function ESX.ShowInventory()
     local playerPed = ESX.PlayerData.ped
     local elements, currentWeight = {}, 0
 
-    for k, v in pairs(ESX.PlayerData.accounts) do
-        if v.money > 0 then
-            local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
-            local canDrop = v.name ~= 'bank'
+    for i=1, #(ESX.PlayerData.accounts) do
+        if ESX.PlayerData.accounts[i].money > 0 then
+            local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+            local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
             table.insert(elements, {
-                label = ('%s: <span style="color:green;">%s</span>'):format(v.label, formattedMoney),
-                count = v.money,
+                label = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
+                count = ESX.PlayerData.accounts[i].money,
                 type = 'item_account',
-                value = v.name,
+                value = ESX.PlayerData.accounts[i].name,
                 usable = false,
                 rare = false,
                 canRemove = canDrop
@@ -1141,7 +1146,7 @@ function ESX.ShowInventory()
     end
 
     for k, v in ipairs(Config.Weapons) do
-        local weaponHash = GetHashKey(v.name)
+        local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
             local ammo, label = GetAmmoInPedWeapon(playerPed, weaponHash)
@@ -1337,7 +1342,7 @@ function ESX.ShowInventory()
             elseif data1.current.action == 'give_ammo' then
                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
                 local closestPed = GetPlayerPed(closestPlayer)
-                local pedAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
+                local pedAmmo = GetAmmoInPedWeapon(playerPed, joaat(item))
 
                 if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
                     if closestPlayer ~= -1 and closestDistance < 3.0 then

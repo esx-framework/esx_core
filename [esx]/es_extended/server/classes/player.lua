@@ -26,10 +26,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.setCoords(coords)
 		self.updateCoords(coords)
-		self.triggerEvent('esx:teleport', coords)
+		local Ped = GetPlayerPed(self.source)
+		local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or
+		vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
+		SetEntityCoords(Ped, vector.xyz, false, false, false, false)
+		SetEntityHeading(Ped, vector.w)
 	end
 
-	function self.updateCoords(coords)
+	function self.updateCoords()
+		local Ped = GetPlayerPed(self.source)
+		local coords = GetEntityCoords(Ped)
 		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(coords.heading or 0.0, 1)}
 	end
 
@@ -90,8 +96,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if minimal then
 			local minimalAccounts = {}
 
-			for k,v in ipairs(self.accounts) do
-				minimalAccounts[v.name] = v.money
+			for i=1, #self.accounts do
+				minimalAccounts[self.accounts[i].name] = self.accounts[i].money
 			end
 
 			return minimalAccounts
@@ -101,9 +107,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getAccount(account)
-		for k,v in ipairs(self.accounts) do
-			if v.name == account then
-				return v
+		for i=1, #self.accounts do
+			if self.accounts[i].name == account then
+				return self.accounts[i], i
 			end
 		end
 	end
@@ -166,41 +172,64 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.setAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money >= 0 then
-			local account = self.getAccount(accountName)
+			local account, index = self.getAccount(accountName)
 
 			if account then
-				local newMoney = ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
 	function self.addAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money > 0 then
-			local account = self.getAccount(accountName)
-
+			local account, index = self.getAccount(accountName)
 			if account then
-				local newMoney = account.money + ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money += money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
 	function self.removeAccountMoney(accountName, money)
+		if not tonumber(money) then 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
+			return
+		end
 		if money > 0 then
-			local account = self.getAccount(accountName)
+			local account, index = self.getAccount(accountName)
 
 			if account then
-				local newMoney = account.money - ESX.Math.Round(money)
-				account.money = newMoney
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[index].money -= money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+			else 
+				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
+		else 
+			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 		end
 	end
 
@@ -337,7 +366,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				tintIndex = 0
 			})
 
-			self.triggerEvent('esx:addWeapon', weaponName, ammo)
+			GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
 			self.triggerEvent('esx:addInventoryItem', weaponLabel, false, true)
 		end
 	end
@@ -351,7 +380,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if component then
 				if not self.hasWeaponComponent(weaponName, weaponComponent) then
 					self.loadout[loadoutNum].components[#self.loadout[loadoutNum].components + 1] = weaponComponent
-					self.triggerEvent('esx:addWeaponComponent', weaponName, weaponComponent)
+					local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
+					GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(weapon), componentHash)
 					self.triggerEvent('esx:addInventoryItem', component.label, false, true)
 				end
 			end
@@ -363,7 +393,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		if weapon then
 			weapon.ammo = weapon.ammo + ammoCount
-			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
+			SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
 		end
 	end
 

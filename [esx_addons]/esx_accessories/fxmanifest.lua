@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 
 description 'ESX Accessories'
-
+lua54 'yes'
 version '1.7.5'
 
 shared_scripts {

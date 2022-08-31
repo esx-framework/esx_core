@@ -161,19 +161,25 @@ AddEventHandler("esx:playerLoaded", function(playerId, xPlayer)
 end)
 
 --- Commands
-ESX.RegisterCommand("property:refresh", Config.AllowedGroups, function(xPlayer)
+ESX.RegisterCommand(_("refresh_name"), Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
-end, false, {help = "Refresh Properties"})
+end, false, {help = _U("refresh_desc")})
 
-ESX.RegisterCommand("property:create", "user", function(xPlayer)
+ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
+  SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+    Log("Properties Saving", 11141375,
+      {{name = "**Reason**", value = "Requsted By Admin", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+end, false,{help = _U("save_desc")})
+
+ESX.RegisterCommand(_("create_name"), "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
   end
-end, false, {help = "Refresh Properties"})
+end, false,{help = _U("create_desc")})
 
-ESX.RegisterCommand("property:admin", Config.AllowedGroups, function(xPlayer)
+ESX.RegisterCommand(_("admin_name"), Config.AllowedGroups, function(xPlayer)
   xPlayer.triggerEvent("esx_property:AdminMenu")
-end, false, {help = "Refresh Properties"})
+end, false,{help = _U("admin_desc")})
 
 -- Buy Property
 ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, PropertyId)
@@ -242,7 +248,7 @@ ESX.RegisterServerCallback("esx_property:buyFurniture", function(source, cb, Pro
       TriggerClientEvent("esx_property:syncFurniture", -1, PropertyId, Properties[PropertyId].furniture)
     else
       cb(false)
-      ESX.ShowNotification("You ~r~Cannot~s~ Afford This Furniture.")
+      ESX.ShowNotification(_U("furni_cannot_afford"))
     end
   else
     cb(false)
@@ -437,7 +443,7 @@ ESX.RegisterServerCallback("esx_property:KnockOnDoor", function(source, cb, Prop
   if Owner then
     for i = 1, #(Property.plysinside) do
       if Property.plysinside[i] == Owner.source then
-        Owner.showNotification("Someone Is ~b~Knocking~s~ On The Door.", "info")
+        Owner.showNotification(_U("knocking"), "info")
         cb(true)
         Log("Player Knocked On Door", 3640511, {{name = "**Property Name**", value = Properties[PropertyId].Name, inline = true},
                                                 {name = "**Owner**", value = Properties[PropertyId].OwnerName, inline = true},
@@ -475,7 +481,7 @@ ESX.RegisterServerCallback("esx_property:deleteProperty", function(source, cb, P
        {name = "**Admin**", value = xPlayer.getName(), inline = true},
        {name = "**Owner**", value = Properties[PropertyId].OwnerName ~= "" and Properties[PropertyId].OwnerName or "N/A", inline = true},
        {name = "**Furniture Count**", value = #(Properties[PropertyId].furniture), inline = true},
-       {name = "**Vehicle Count**", value = #(Properties[PropertyId].garage.StoredVehicles), inline = true}}, 1)
+       {name = "**Vehicle Count**", value = Properties[PropertyId].garage.StoredVehicles and #(Properties[PropertyId].garage.StoredVehicles) or "N/A", inline = true}}, 1)
     table.remove(Properties, PropertyId)
     TriggerClientEvent("esx_property:syncProperties", -1, Properties)
     if Config.OxInventory then
@@ -617,8 +623,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
           end
           Can = true
         else
-          xPlayer.showNotification("You need ~b~" .. Config.Raiding.ItemRequired.ItemCount .. "x " .. Config.Raiding.ItemRequired.label ..
-                                     "~s~  to Raid.", "error")
+          xPlayer.showNotification(_U("raid_notify_error", Config.Raiding.ItemRequired.ItemCount, Config.Raiding.ItemRequired.name), "error")
         end
       else
         Can = true
@@ -629,7 +634,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
   if Can then
     local xOwner = ESX.GetPlayerFromIdentifier(Properties[PropertyId].Owner)
     if xOwner then
-      xOwner.showNotification("Your Property is Currently Being ~b~Raided!", "error")
+      xOwner.showNotification(_U("raid_notify_success"), "error")
     end
     Wait(15000)
     Properties[PropertyId].Locked = false
@@ -799,15 +804,15 @@ ESX.RegisterServerCallback('esx_property:GiveKey', function(source, cb, property
     local id = xTarget.identifier
     if not Properties[property].Keys[id] then
       Property.Keys[id] = {name = xTarget.getName(), identifier = id}
-      xTarget.showNotification('You Have Been Granted Keys To ~b~' .. Property.Name .. '~s~.', 'success')
+      xTarget.showNotification(_U("you_granted", Property.Name), 'success')
       xTarget.triggerEvent("esx_property:giveKeyAccess")
       cb(true)
     else
-      xPlayer.showNotification('This Player Already Has Keys To ~b~' .. Property.Name .. '~s~.', 'error')
+      xPlayer.showNotification(_U("already_has"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You do ~r~not~s~ own this property.', 'error')
+    xPlayer.showNotification(_U("do_not_own"), 'error')
     cb(false)
   end
   Log("Property Key Given", 3640511,
@@ -845,12 +850,13 @@ ESX.RegisterServerCallback('esx_property:StoreVehicle', function(source, cb, Pro
                                                                                                            vehicle = VehicleProperties}
         cb(true)
       end
+      MySQL.query(Config.Garage.MySQLquery, {1, VehicleProperties.plate}) -- Set vehicle as stored in MySQL
     else
-      xPlayer.showNotification('Garage Not Enabled On This Property.', 'error')
+      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You ~r~Cannot~s~ Access this property.', 'error')
+    xPlayer.showNotification(_U("cannot_access_property"), 'error')
     cb(false)
   end
   Log("User Attempted To Store Vehicle", 3640511,
@@ -869,11 +875,11 @@ ESX.RegisterServerCallback('esx_property:AccessGarage', function(source, cb, Pro
     if Property.garage.enabled then
       cb(Property.garage.StoredVehicles)
     else
-      xPlayer.showNotification('Garage Not Enabled On This Property.', 'error')
+      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification('You ~r~Cannot~s~ Access this property.', 'error')
+    xPlayer.showNotification(_U("cannot_access_property"), 'error')
     cb(false)
   end
 
@@ -895,18 +901,18 @@ ESX.RegisterServerCallback('esx_property:RemoveKey', function(source, cb, proper
           {{name = "**Property Name**", value = Property.Name, inline = true}, {name = "**Owner**", value = xPlayer.getName(), inline = true},
            {name = "**Removed From**", value = tostring(Properties[property].Keys[player].name), inline = true}}, 3)
         Properties[property].Keys[player] = nil
-        xTarget.showNotification('Your Key Access To ~b~' .. Property.Name .. '~s~. Has Been ~r~Revoked~s~', 'error')
+        xTarget.showNotification(_U("key_revoked", Property.Name), 'error')
         xTarget.triggerEvent("esx_property:RemoveKeyAccess", property)
         cb(true)
       else
-        xPlayer.showNotification('This Player Does Not Have Keys To ~b~' .. Property.Name .. '~s~.', 'error')
+        xPlayer.showNotification(_U("no_keys"), 'error')
         cb(false)
       end
     else
       cb(false)
     end
   else
-    xPlayer.showNotification('You do ~r~not~s~ own this property.', 'error')
+    xPlayer.showNotification(_U("do_not_own"), 'error')
     cb(false)
   end
 end)
@@ -1006,11 +1012,12 @@ RegisterNetEvent('esx_property:leave', function(PropertyId)
 end)
 
 RegisterNetEvent('esx_property:SetVehicleOut', function(PropertyId, VehIndex)
-  local source = source
-  local Property = Properties[PropertyId]
-  local xPlayer = ESX.GetPlayerFromId(source)
+  local VehicleData = Properties[PropertyId].garage.StoredVehicles[VehIndex]
+  local plate = VehicleData.vehicle.plate
   table.remove(Properties[PropertyId].garage.StoredVehicles, VehIndex)
+  MySQL.query(Config.Garage.MySQLquery, {0, plate}) -- Set vehicle as no longer stored
 end)
+
 
 AddEventHandler('playerDropped', function()
   local source = source

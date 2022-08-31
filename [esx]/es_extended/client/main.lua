@@ -17,8 +17,8 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
 	ESX.PlayerData = xPlayer
-
-	FreezeEntityPosition(PlayerPedId(), true)
+	ESX.PlayerData.ped = PlayerPedId()
+	FreezeEntityPosition(ESX.PlayerData.ped, true)
 
 	if Config.Multichar then
 		Wait(3000)
@@ -28,7 +28,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			y = ESX.PlayerData.coords.y,
 			z = ESX.PlayerData.coords.z + 0.25,
 			heading = ESX.PlayerData.coords.heading,
-			model = GetHashKey("mp_m_freemode_01"),
+			model = `mp_m_freemode_01`,
 			skipFade = false
 		}, function()
 			TriggerServerEvent('esx:onPlayerSpawn')
@@ -56,10 +56,20 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 		CreateThread(function()
+			local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
+			local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
+			local DisableControlAction = DisableControlAction
+			local IsPedArmed = IsPedArmed
+			local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
+			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
+			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
+			local HideHudComponentThisFrame = HideHudComponentThisFrame
+			local PlayerId = PlayerId()
 			while true do 
 				Wait(0)
+
 				if Config.DisableHealthRegeneration then
-					SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
 				end
 
 				if Config.DisableWeaponWheel then
@@ -69,12 +79,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 				if Config.DisableAimAssist then
 					if IsPedArmed(ESX.PlayerData.ped, 4) then
-						SetPlayerLockonRangeOverride(PlayerId(), 2.0)
+						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
 
 				if Config.DisableVehicleRewards then
-					DisablePlayerVehicleRewards(PlayerId())
+					DisablePlayerVehicleRewards(PlayerId)
 				end
 			
 				if Config.DisableNPCDrops then
@@ -94,9 +104,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 
 	if Config.EnableHud then
-		for k,v in ipairs(ESX.PlayerData.accounts) do
-			local accountTpl = '<div><img src="img/accounts/' .. v.name .. '.png"/>&nbsp;{{money}}</div>'
-			ESX.UI.HUD.RegisterElement('account_' .. v.name, k, 0, accountTpl, {money = ESX.Math.GroupDigits(v.money)})
+		for i=1, #(ESX.PlayerData.accounts) do
+			local accountTpl = '<div><img src="img/accounts/' .. ESX.PlayerData.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
+			ESX.UI.HUD.RegisterElement('account_' .. ESX.PlayerData.accounts[i].name, i, 0, accountTpl, {money = ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money)})
 		end
 
 		local jobTpl = '<div>{{job_label}}{{grade_label}}</div>'
@@ -111,7 +121,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
-	FreezeEntityPosition(PlayerPedId(), false)
+	FreezeEntityPosition(ESX.PlayerData.ped, false)
 	StartServerSyncLoops()
 end)
 
@@ -122,7 +132,7 @@ AddEventHandler('esx:onPlayerLogout', function()
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
-AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.PlayerData.maxWeight = newMaxWeight end)
+AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData("maxWeight", newMaxWeight) end)
 
 local function onPlayerSpawn()
 	if ESX.PlayerLoaded then
@@ -155,7 +165,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 		for k,v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
-			local weaponHash = GetHashKey(weaponName)
+			local weaponHash = joaat(weaponName)
 
 			GiveWeaponToPed(ESX.PlayerData.ped, weaponHash, 0, false, false)
 			SetPedWeaponTintIndex(ESX.PlayerData.ped, weaponHash, v.tintIndex)
@@ -177,9 +187,9 @@ end)
 
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
-	for k,v in ipairs(ESX.PlayerData.accounts) do
-		if v.name == account.name then
-			ESX.PlayerData.accounts[k] = account
+	for i=1, #(ESX.PlayerData.accounts) do
+		if ESX.PlayerData.accounts[i].name == account.name then
+			ESX.PlayerData.accounts[i] = account
 			break
 		end
 	end
@@ -234,43 +244,38 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:addWeapon')
 	AddEventHandler('esx:addWeapon', function(weapon, ammo)
-		GiveWeaponToPed(ESX.PlayerData.ped, GetHashKey(weapon), ammo, false, false)
+		print("[WARNING] event 'esx:addWeapon' is deprecated. Please use xPlayer.addWeapon Instead!")
 	end)
 
 	RegisterNetEvent('esx:addWeaponComponent')
 	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
-		local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
-		GiveWeaponComponentToPed(ESX.PlayerData.ped, GetHashKey(weapon), componentHash)
+		print("[WARNING] event 'esx:addWeaponComponent' is deprecated. Please use xPlayer.addWeaponComponent Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponAmmo')
 	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
-		SetPedAmmo(ESX.PlayerData.ped, GetHashKey(weapon), weaponAmmo)
+		print("[WARNING] event 'esx:setWeaponAmmo' is deprecated. Please use xPlayer.addWeaponComponent Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
-		SetPedWeaponTintIndex(ESX.PlayerData.ped, GetHashKey(weapon), weaponTintIndex)
+		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
+		
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
 	AddEventHandler('esx:removeWeapon', function(weapon)
 		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(ESX.PlayerData.ped, GetHashKey(weapon))
-		SetPedAmmo(ESX.PlayerData.ped, GetHashKey(weapon), 0)
+		RemoveWeaponFromPed(ESX.PlayerData.ped, joaat(weapon))
+		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
 	end)
 
 	RegisterNetEvent('esx:removeWeaponComponent')
 	AddEventHandler('esx:removeWeaponComponent', function(weapon, weaponComponent)
 		local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
-		RemoveWeaponComponentFromPed(ESX.PlayerData.ped, GetHashKey(weapon), componentHash)
+		RemoveWeaponComponentFromPed(ESX.PlayerData.ped, joaat(weapon), componentHash)
 	end)
 end
-
-RegisterNetEvent('esx:teleport')
-AddEventHandler('esx:teleport', function(coords)
-	ESX.Game.Teleport(ESX.PlayerData.ped, coords)
-end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(Job)
@@ -289,7 +294,7 @@ RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
-			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+			local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
 
 			if IsModelInCdimage(model) then
 				local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
@@ -347,7 +352,7 @@ if not Config.OxInventory then
 		end
 
 		if type == 'item_weapon' then
-			local weaponHash = GetHashKey(name)
+			local weaponHash = joaat(name)
 			ESX.Streaming.RequestWeaponAsset(weaponHash)
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
@@ -459,9 +464,7 @@ function StartServerSyncLoops()
 
 				if distance > 1 then
 					previousCoords = playerCoords
-					local playerHeading = ESX.Math.Round(GetEntityHeading(ESX.PlayerData.ped), 1)
-					local formattedCoords = {x = ESX.Math.Round(playerCoords.x, 1), y = ESX.Math.Round(playerCoords.y, 1), z = ESX.Math.Round(playerCoords.z, 1), heading = playerHeading}
-					TriggerServerEvent('esx:updateCoords', formattedCoords)
+					TriggerServerEvent('esx:updateCoords')
 				end
 			end
 			Wait(1500)
@@ -536,9 +539,13 @@ end
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
-local PlayerPedId = PlayerPedId
-local GetEntityCoords = GetEntityCoords
-local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
+	local GetEntityCoords = GetEntityCoords
+	local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
+	local GetFirstBlipInfoId = GetFirstBlipInfoId
+	local DoesBlipExist = DoesBlipExist
+	local DoScreenFadeOut = DoScreenFadeOut
+	local GetBlipInfoIdCoord = GetBlipInfoIdCoord
+	local GetVehiclePedIsIn = GetVehiclePedIsIn
 
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
@@ -554,7 +561,7 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 					Wait(0)
 			end
 	
-			local ped, coords = PlayerPedId(), GetBlipInfoIdCoord(blipMarker)
+			local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
 			local vehicle = GetVehiclePedIsIn(ped, false)
 			local oldCoords = GetEntityCoords(ped)
 	

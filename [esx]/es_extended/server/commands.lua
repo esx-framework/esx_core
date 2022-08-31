@@ -142,7 +142,7 @@ end
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
 	if not args.playerId then args.playerId = xPlayer.source end
-	if args.group == "superadmin" then args.group = "admin" end
+	if args.group == "superadmin" then args.group = "admin" print("[^3WARNING^7] Superadmin detected, setting group to admin") end
 	args.playerId.setGroup(args.group)
 end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
@@ -225,7 +225,8 @@ end, false)
 ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
 	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
 	print("^5"..#xPlayers.." ^2online player(s)^0")
-	for _, xPlayer in pairs(xPlayers) do
+	for i=1, #(xPlayers) do 
+		local xPlayer = xPlayers[i]
 		print("^1[ ^2ID : ^5"..xPlayer.source.." ^0| ^2Name : ^5"..xPlayer.getName().." ^0 | ^2Group : ^5"..xPlayer.getGroup().." ^0 | ^2Identifier : ^5".. xPlayer.identifier .."^1]^0\n")
 	end
 end, true)

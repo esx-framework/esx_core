@@ -48,7 +48,7 @@ function CCTV(PropertyID)
             PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(1)
             N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Screenshot, true))
-            InstructionButtonMessage("Take Picture")
+            InstructionButtonMessage(_U("take_picture"))
             PopScaleformMovieFunctionVoid()
           end
 
@@ -56,33 +56,33 @@ function CCTV(PropertyID)
           PushScaleformMovieFunctionParameterInt(2)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Right, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Left, true))
-          InstructionButtonMessage("Left/Right")
+          InstructionButtonMessage(_U("rot_left_right"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(3)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Down, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Up, true))
-          InstructionButtonMessage("Up/Down")
+          InstructionButtonMessage(_U("rot_up_down"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(4)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomOut, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomIn, true))
-          InstructionButtonMessage("Zoom In/Out")
+          InstructionButtonMessage(_U("Zoom"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(5)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.NightVision, true))
-          InstructionButtonMessage("Toggle Night Vision")
+          InstructionButtonMessage(_U("night_vision"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(0)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Exit, true))
-          InstructionButtonMessage("Exit Camera")
+          InstructionButtonMessage(_U("exit"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
@@ -199,7 +199,7 @@ function CCTV(PropertyID)
           SetTextDropshadow(0.1, 3, 27, 27, 255)
           BeginTextCommandDisplayText('STRING')
           local Zoom = ((Config.CCTV.FOV - GetCamFov(cctvcam)) / GetCamFov(cctvcam)) * 100
-          AddTextComponentSubstringPlayerName("Zoom Level: " .. math.floor(Zoom) .. "%")
+          AddTextComponentSubstringPlayerName(_U("zoom_level", math.floor(Zoom)))
           EndTextCommandDisplayText(0.01, 0.09)
 
           SetTextFont(4)
@@ -233,7 +233,7 @@ function CCTV(PropertyID)
                     print(ESX.DumpTable(image))
                     ESX.ShowNotification("Picture Taken!", "success")
                     SendNUIMessage({link = image.attachments[1].proxy_url})
-                    ESX.ShowNotification("Link Copied To ~b~Cipboard", "success")
+                    ESX.ShowNotification(_U("clipboard"), "success")
                     ShowButtons = true
                     CamTakePic = false
                     SetTimeout(5000, function()
@@ -243,7 +243,7 @@ function CCTV(PropertyID)
                 end
               end)
             else
-              ESX.ShowNotification("Please Wait Before taking another ~b~Picture", "error")
+              ESX.ShowNotification(_U("please_wait"), "error")
             end
           end
 
