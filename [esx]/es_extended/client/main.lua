@@ -65,41 +65,53 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
 			local HideHudComponentThisFrame = HideHudComponentThisFrame
 			local PlayerId = PlayerId()
+			local DisabledComps = {}
+			for i=1, #(Config.RemoveHudCommonents) do
+				if Config.RemoveHudCommonents[i] then
+					DisabledComps[#DisabledComps + 1] = i
+				end
+		 end
 			while true do 
-				Wait(0)
+				local Sleep = true
 
 				if Config.DisableHealthRegeneration then
+					Sleep = false
 					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
 				end
 
 				if Config.DisableWeaponWheel then
+					Sleep = false
 					BlockWeaponWheelThisFrame()
 					DisableControlAction(0, 37,true)
 				end
 
 				if Config.DisableAimAssist then
+					Sleep = false
 					if IsPedArmed(ESX.PlayerData.ped, 4) then
 						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
 
 				if Config.DisableVehicleRewards then
+					Sleep = false
 					DisablePlayerVehicleRewards(PlayerId)
 				end
 			
 				if Config.DisableNPCDrops then
+					Sleep = false
 					RemoveAllPickupsOfType(0xDF711959) -- carbine rifle
 					RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
 					RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
 				end
 
-				if Config.RemoveHudCommonents then
-					for i=1, #(Config.RemoveHudCommonents) do
-						 if Config.RemoveHudCommonents[i] then
+				if #DisabledComps > 0 then
+					Sleep = false
+					for i=1, #(DisabledComps) do
 								HideHudComponentThisFrame(i)
-						 end
 					end
 				end
+				
+			Wait(Sleep and 1500 or 0)
 			end
 		end)
 
