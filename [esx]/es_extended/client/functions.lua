@@ -828,7 +828,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
             modTrimB = GetVehicleMod(vehicle, 44),
             modTank = GetVehicleMod(vehicle, 45),
             modDoorR = GetVehicleMod(vehicle, 47),
-            modLivery = GetVehicleMod(vehicle, 48),
+            modLivery = GetVehicleMod(vehicle, 48) == -1 and GetVehicleLivery(vehicle) or GetVehicleMod(vehicle, 48),
             modLightbar = GetVehicleMod(vehicle, 49)
         }
     else
@@ -1051,6 +1051,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 
         if props.modLivery then
             SetVehicleMod(vehicle, 48, props.modLivery, false)
+            SetVehicleLivery(vehicle, props.modLivery)
         end
 
         if props.windowsBroken then
