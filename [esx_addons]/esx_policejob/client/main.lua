@@ -1102,15 +1102,15 @@ CreateThread(function()
 	local wasDragged
 
 	while true do
-		Wait(0)
-		local playerPed = PlayerPedId()
+		local Sleep = 1500
 
 		if isHandcuffed and dragStatus.isDragged then
+			Sleep = 50
 			local targetPed = GetPlayerPed(GetPlayerFromServerId(dragStatus.CopId))
 
 			if DoesEntityExist(targetPed) and IsPedOnFoot(targetPed) and not IsPedDeadOrDying(targetPed, true) then
 				if not wasDragged then
-					AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+					AttachEntityToEntity(ESX.PlayerData.ped, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 					wasDragged = true
 				else
 					Wait(1000)
@@ -1118,14 +1118,13 @@ CreateThread(function()
 			else
 				wasDragged = false
 				dragStatus.isDragged = false
-				DetachEntity(playerPed, true, false)
+				DetachEntity(ESX.PlayerData.ped, true, false)
 			end
 		elseif wasDragged then
 			wasDragged = false
-			DetachEntity(playerPed, true, false)
-		else
-			Wait(500)
+			DetachEntity(ESX.PlayerData.ped, true, false)
 		end
+	Wait(Sleep)
 	end
 end)
 
@@ -1155,21 +1154,24 @@ end)
 
 RegisterNetEvent('esx_policejob:OutVehicle')
 AddEventHandler('esx_policejob:OutVehicle', function()
-	local playerPed = PlayerPedId()
-
-	if IsPedSittingInAnyVehicle(playerPed) then
-		local vehicle = GetVehiclePedIsIn(playerPed, false)
-		TaskLeaveVehicle(playerPed, vehicle, 64)
+	local GetVehiclePedIsIn = GetVehiclePedIsIn
+	local IsPedSittingInAnyVehicle = IsPedSittingInAnyVehicle
+	local TaskLeaveVehicle = TaskLeaveVehicle
+	if IsPedSittingInAnyVehicle(ESX.PlayerData.ped) then
+		local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
+		TaskLeaveVehicle(ESX.PlayerData.ped, vehicle, 64)
 	end
 end)
 
 -- Handcuff
 CreateThread(function()
+	local DisableControlAction = DisableControlAction
+	local IsEntityPlayingAnim = IsEntityPlayingAnim
 	while true do
-		Wait(0)
-		local playerPed = PlayerPedId()
+		local Sleep = 1000
 
 		if isHandcuffed then
+			Sleep = 0
 			DisableControlAction(0, 1, true) -- Disable pan
 			DisableControlAction(0, 2, true) -- Disable tilt
 			DisableControlAction(0, 24, true) -- Attack
@@ -1213,15 +1215,14 @@ CreateThread(function()
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
 
-			if IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) ~= 1 then
+			if IsEntityPlayingAnim(ESX.PlayerData.ped, 'mp_arresting', 'idle', 3) ~= 1 then
 				ESX.Streaming.RequestAnimDict('mp_arresting', function()
-					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
+					TaskPlayAnim(ESX.PlayerData.ped, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
 					RemoveAnimDict('mp_arresting')
 				end)
 			end
-		else
-			Wait(500)
 		end
+	Wait(Sleep)
 	end
 end)
 
@@ -1245,12 +1246,12 @@ end)
 -- Draw markers and more
 CreateThread(function()
 	while true do
-		Wait(0)
-
+		local Sleep = 1500
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' then
+			Sleep = 500
 			local playerPed = PlayerPedId()
 			local playerCoords = GetEntityCoords(playerPed)
-			local isInMarker, hasExited, letSleep = false, false, true
+			local isInMarker, hasExited = false, false
 			local currentStation, currentPart, currentPartNum
 
 			for k,v in pairs(Config.PoliceStations) do
@@ -1259,7 +1260,7 @@ CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(Config.MarkerType.Cloakrooms, v.Cloakrooms[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-						letSleep = false
+						Sleep = 0
 
 						if distance < Config.MarkerSize.x then
 							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Cloakroom', i
@@ -1272,7 +1273,7 @@ CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(Config.MarkerType.Armories, v.Armories[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-						letSleep = false
+						Sleep = 0
 
 						if distance < Config.MarkerSize.x then
 							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Armory', i
@@ -1285,7 +1286,7 @@ CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(Config.MarkerType.Vehicles, v.Vehicles[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-						letSleep = false
+						Sleep = 0
 
 						if distance < Config.MarkerSize.x then
 							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
@@ -1298,7 +1299,7 @@ CreateThread(function()
 
 					if distance < Config.DrawDistance then
 						DrawMarker(Config.MarkerType.Helicopters, v.Helicopters[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-						letSleep = false
+						Sleep = 0
 
 						if distance < Config.MarkerSize.x then
 							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Helicopters', i
@@ -1312,7 +1313,7 @@ CreateThread(function()
 
 						if distance < Config.DrawDistance then
 							DrawMarker(Config.MarkerType.BossActions, v.BossActions[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-							letSleep = false
+							Sleep = 0
 
 							if distance < Config.MarkerSize.x then
 								isInMarker, currentStation, currentPart, currentPartNum = true, k, 'BossActions', i
@@ -1343,135 +1344,137 @@ CreateThread(function()
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_policejob:hasExitedMarker', LastStation, LastPart, LastPartNum)
 			end
-
-			if letSleep then
-				Wait(500)
-			end
-		else
-			Wait(500)
 		end
+	Wait(Sleep)
 	end
 end)
 
 -- Enter / Exit entity zone events
 CreateThread(function()
 	local trackedEntities = {
-		'prop_roadcone02a',
-		'prop_barrier_work05',
-		'p_ld_stinger_s',
-		'prop_boxpile_07d',
-		'hei_prop_cash_crate_half_full'
+		`prop_roadcone02a`,
+		`prop_barrier_work05`,
+		`p_ld_stinger_s`,
+		`prop_boxpile_07d`,
+		`hei_prop_cash_crate_half_full`
 	}
 
 	while true do
-		Wait(500)
+		local Sleep = 1500
 
-		local playerPed = PlayerPedId()
-		local playerCoords = GetEntityCoords(playerPed)
+			local GetEntityCoords = GetEntityCoords
+			local GetClosestObjectOfType = GetClosestObjectOfType
+			local DoesEntityExist = DoesEntityExist
+			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+	
+			local closestDistance = -1
+			local closestEntity   = nil
 
-		local closestDistance = -1
-		local closestEntity   = nil
+			for i=1, #trackedEntities, 1 do
+				local object = GetClosestObjectOfType(playerCoords, 3.0, trackedEntities[i], false, false, false)
 
-		for i=1, #trackedEntities, 1 do
-			local object = GetClosestObjectOfType(playerCoords, 3.0, joaat(trackedEntities[i]), false, false, false)
+				if DoesEntityExist(object) then
+					Sleep = 500
+					local objCoords = GetEntityCoords(object)
+					local distance = #(playerCoords - objCoords)
 
-			if DoesEntityExist(object) then
-				local objCoords = GetEntityCoords(object)
-				local distance = #(playerCoords - objCoords)
-
-				if closestDistance == -1 or closestDistance > distance then
-					closestDistance = distance
-					closestEntity   = object
+					if closestDistance == -1 or closestDistance > distance then
+						closestDistance = distance
+						closestEntity   = object
+					end
 				end
 			end
-		end
 
-		if closestDistance ~= -1 and closestDistance <= 3.0 then
-			if LastEntity ~= closestEntity then
-				TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
-				LastEntity = closestEntity
+			if closestDistance ~= -1 and closestDistance <= 3.0 then
+				if LastEntity ~= closestEntity then
+					TriggerEvent('esx_policejob:hasEnteredEntityZone', closestEntity)
+					LastEntity = closestEntity
+				end
+			else
+				if LastEntity then
+					TriggerEvent('esx_policejob:hasExitedEntityZone', LastEntity)
+					LastEntity = nil
+				end
 			end
-		else
-			if LastEntity then
-				TriggerEvent('esx_policejob:hasExitedEntityZone', LastEntity)
-				LastEntity = nil
-			end
-		end
+		Wait(Sleep)
 	end
 end)
 
--- Key Controls
+ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E", function()
+	if not CurrentAction then 
+		return 
+	end
+
+	if not ESX.PlayerData.job or (ESX.PlayerData.job and not ESX.PlayerData.job.name == 'police') then
+		return
+	end
+	if CurrentAction == 'menu_cloakroom' then
+		OpenCloakroomMenu()
+	elseif CurrentAction == 'menu_armory' then
+		if not Config.EnableESXService then
+			OpenArmoryMenu(CurrentActionData.station)
+		elseif playerInService then
+			OpenArmoryMenu(CurrentActionData.station)
+		else
+			ESX.ShowNotification(_U('service_not'))
+		end
+	elseif CurrentAction == 'menu_vehicle_spawner' then
+		if not Config.EnableESXService then
+			OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
+		elseif playerInService then
+			OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
+		else
+			ESX.ShowNotification(_U('service_not'))
+		end
+	elseif CurrentAction == 'Helicopters' then
+		if not Config.EnableESXService then
+			OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
+		elseif playerInService then
+			OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
+		else
+			ESX.ShowNotification(_U('service_not'))
+		end
+	elseif CurrentAction == 'delete_vehicle' then
+		ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+	elseif CurrentAction == 'menu_boss_actions' then
+		ESX.UI.Menu.CloseAll()
+		TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
+			menu.close()
+
+			CurrentAction     = 'menu_boss_actions'
+			CurrentActionMsg  = _U('open_bossmenu')
+			CurrentActionData = {}
+		end, { wash = false }) -- disable washing money
+	elseif CurrentAction == 'remove_entity' then
+		DeleteEntity(CurrentActionData.entity)
+	end
+
+	CurrentAction = nil
+end)
+
+ESX.RegisterInput("police:quickactions", "(ESX PoliceJob) Quick Actions", "keyboard", "F6", function()
+	if not ESX.PlayerData.job or (ESX.PlayerData.job and not ESX.PlayerData.job.name == 'police') or isDead then
+		return
+	end
+
+	if not Config.EnableESXService then
+		OpenPoliceActionsMenu()
+	elseif playerInService then
+		OpenPoliceActionsMenu()
+	else
+		ESX.ShowNotification(_U('service_not'))
+	end
+end)
+
 CreateThread(function()
 	while true do
-		Wait(0)
+		local Sleep = 1000
 
 		if CurrentAction then
+			Sleep = 0
 			ESX.ShowHelpNotification(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' then
-
-				if CurrentAction == 'menu_cloakroom' then
-					OpenCloakroomMenu()
-				elseif CurrentAction == 'menu_armory' then
-					if not Config.EnableESXService then
-						OpenArmoryMenu(CurrentActionData.station)
-					elseif playerInService then
-						OpenArmoryMenu(CurrentActionData.station)
-					else
-						ESX.ShowNotification(_U('service_not'))
-					end
-				elseif CurrentAction == 'menu_vehicle_spawner' then
-					if not Config.EnableESXService then
-						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					elseif playerInService then
-						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					else
-						ESX.ShowNotification(_U('service_not'))
-					end
-				elseif CurrentAction == 'Helicopters' then
-					if not Config.EnableESXService then
-						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					elseif playerInService then
-						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					else
-						ESX.ShowNotification(_U('service_not'))
-					end
-				elseif CurrentAction == 'delete_vehicle' then
-					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-				elseif CurrentAction == 'menu_boss_actions' then
-					ESX.UI.Menu.CloseAll()
-					TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
-						menu.close()
-
-						CurrentAction     = 'menu_boss_actions'
-						CurrentActionMsg  = _U('open_bossmenu')
-						CurrentActionData = {}
-					end, { wash = false }) -- disable washing money
-				elseif CurrentAction == 'remove_entity' then
-					DeleteEntity(CurrentActionData.entity)
-				end
-
-				CurrentAction = nil
-			end
-		end -- CurrentAction end
-
-		if IsControlJustReleased(0, 167) and not isDead and ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
-			if not Config.EnableESXService then
-				OpenPoliceActionsMenu()
-			elseif playerInService then
-				OpenPoliceActionsMenu()
-			else
-				ESX.ShowNotification(_U('service_not'))
-			end
 		end
-
-		if IsControlJustReleased(0, 38) and currentTask.busy then
-			ESX.ShowNotification(_U('impound_canceled'))
-			ESX.ClearTimeout(currentTask.task)
-			ClearPedTasks(PlayerPedId())
-
-			currentTask.busy = false
-		end
+	Wait(Sleep)
 	end
 end)
 
