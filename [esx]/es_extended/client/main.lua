@@ -44,8 +44,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 	end
 
-	while ESX.PlayerData.ped == nil do Wait(20) end
 	ESX.PlayerLoaded = true
+	
+	while ESX.PlayerData.ped == nil do Wait(20) end
+
 	-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
