@@ -1453,7 +1453,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 end)
 
 ESX.RegisterInput("police:quickactions", "(ESX PoliceJob) Quick Actions", "keyboard", "F6", function()
-	if not ESX.PlayerData.job or (ESX.PlayerData.job and not ESX.PlayerData.job.name == 'police') or isDead then
+	if not ESX.PlayerData.job or (ESX.PlayerData.job.name ~= 'police') or isDead then
 		return
 	end
 
