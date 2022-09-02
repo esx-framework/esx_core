@@ -42,6 +42,7 @@ function OpenShopMenu()
 											title = _U('name_outfit')
 										}, function(data3, menu3)
 											menu3.close()
+											ESX.TextUI(currentActionMsg, "info")
 
 											TriggerEvent('skinchanger:getSkin', function(skin)
 												TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
@@ -50,6 +51,8 @@ function OpenShopMenu()
 										end, function(data3, menu3)
 											menu3.close()
 										end)
+									elseif data2.current.value == 'no' then 
+										ESX.TextUI(currentActionMsg, "info")			
 									end
 								end)
 							end
@@ -61,6 +64,7 @@ function OpenShopMenu()
 						end)
 
 						ESX.ShowNotification(_U('not_enough_money'))
+                        ESX.TextUI(currentActionMsg, "info")
 					end
 				end)
 			elseif data.current.value == 'no' then
@@ -75,6 +79,7 @@ function OpenShopMenu()
 		end, function(data, menu)
 			menu.close()
 
+            ESX.TextUI(currentActionMsg, "info")
 			currentAction     = 'shop_menu'
 			currentActionMsg  = _U('press_menu')
 			currentActionData = {}
@@ -82,7 +87,8 @@ function OpenShopMenu()
 
 	end, function(data, menu)
 		menu.close()
-
+		
+		ESX.TextUI(currentActionMsg, "info")
 		currentAction     = 'shop_menu'
 		currentActionMsg  = _U('press_menu')
 		currentActionData = {}
@@ -104,12 +110,13 @@ AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 	currentAction     = 'shop_menu'
 	currentActionMsg  = _U('press_menu')
 	currentActionData = {}
+	ESX.TextUI(currentActionMsg, "info")
 end)
 
 AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
 	currentAction = nil
-
+	ESX.HideUI()
 	if not hasPaid then
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 			TriggerEvent('skinchanger:loadSkin', skin)
@@ -173,13 +180,12 @@ CreateThread(function()
 		Wait(0)
 
 		if currentAction then
-			ESX.ShowHelpNotification(currentActionMsg)
 
 			if IsControlJustReleased(0, 38) then
 				if currentAction == 'shop_menu' then
 					OpenShopMenu()
+                    ESX.HideUI()
 				end
-
 				currentAction = nil
 			end
 		else
