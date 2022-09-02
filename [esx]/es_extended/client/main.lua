@@ -54,65 +54,65 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		NetworkSetFriendlyFireOption(true)
 	end
 
-		CreateThread(function()
-			local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
-			local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
-			local DisableControlAction = DisableControlAction
-			local IsPedArmed = IsPedArmed
-			local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
-			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
-			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
-			local HideHudComponentThisFrame = HideHudComponentThisFrame
-			local PlayerId = PlayerId()
-			local DisabledComps = {}
-			for i=1, #(Config.RemoveHudCommonents) do
-				if Config.RemoveHudCommonents[i] then
-					DisabledComps[#DisabledComps + 1] = i
-				end
-		 end
-			while true do 
-				local Sleep = true
+	CreateThread(function()
+		local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
+		local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
+		local DisableControlAction = DisableControlAction
+		local IsPedArmed = IsPedArmed
+		local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
+		local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
+		local ToggleUsePickupsForPlayer = ToggleUsePickupsForPlayer
+		local HideHudComponentThisFrame = HideHudComponentThisFrame
+		local PlayerId = PlayerId()
+		if Config.DisableNPCDrops then
+			local pickups = {"PICKUP_AMMO_BULLET_MP","PICKUP_AMMO_FIREWORK","PICKUP_AMMO_FLAREGUN","PICKUP_AMMO_GRENADELAUNCHER","PICKUP_AMMO_GRENADELAUNCHER_MP","PICKUP_AMMO_HOMINGLAUNCHER","PICKUP_AMMO_MG","PICKUP_AMMO_MINIGUN","PICKUP_AMMO_MISSILE_MP","PICKUP_AMMO_PISTOL","PICKUP_AMMO_RIFLE","PICKUP_AMMO_RPG","PICKUP_AMMO_SHOTGUN","PICKUP_AMMO_SMG","PICKUP_AMMO_SNIPER","PICKUP_ARMOUR_STANDARD","PICKUP_CAMERA","PICKUP_CUSTOM_SCRIPT","PICKUP_GANG_ATTACK_MONEY","PICKUP_HEALTH_SNACK","PICKUP_HEALTH_STANDARD","PICKUP_MONEY_CASE","PICKUP_MONEY_DEP_BAG","PICKUP_MONEY_MED_BAG","PICKUP_MONEY_PAPER_BAG","PICKUP_MONEY_PURSE","PICKUP_MONEY_SECURITY_CASE","PICKUP_MONEY_VARIABLE","PICKUP_MONEY_WALLET","PICKUP_PARACHUTE","PICKUP_PORTABLE_CRATE_FIXED_INCAR","PICKUP_PORTABLE_CRATE_UNFIXED","PICKUP_PORTABLE_CRATE_UNFIXED_INCAR","PICKUP_PORTABLE_CRATE_UNFIXED_INCAR_SMALL","PICKUP_PORTABLE_CRATE_UNFIXED_LOW_GLOW","PICKUP_PORTABLE_DLC_VEHICLE_PACKAGE","PICKUP_PORTABLE_PACKAGE","PICKUP_SUBMARINE","PICKUP_VEHICLE_ARMOUR_STANDARD","PICKUP_VEHICLE_CUSTOM_SCRIPT","PICKUP_VEHICLE_CUSTOM_SCRIPT_LOW_GLOW","PICKUP_VEHICLE_HEALTH_STANDARD","PICKUP_VEHICLE_HEALTH_STANDARD_LOW_GLOW","PICKUP_VEHICLE_MONEY_VARIABLE","PICKUP_VEHICLE_WEAPON_APPISTOL","PICKUP_VEHICLE_WEAPON_ASSAULTSMG","PICKUP_VEHICLE_WEAPON_COMBATPISTOL","PICKUP_VEHICLE_WEAPON_GRENADE","PICKUP_VEHICLE_WEAPON_MICROSMG","PICKUP_VEHICLE_WEAPON_MOLOTOV","PICKUP_VEHICLE_WEAPON_PISTOL","PICKUP_VEHICLE_WEAPON_PISTOL50","PICKUP_VEHICLE_WEAPON_SAWNOFF","PICKUP_VEHICLE_WEAPON_SMG","PICKUP_VEHICLE_WEAPON_SMOKEGRENADE","PICKUP_VEHICLE_WEAPON_STICKYBOMB","PICKUP_WEAPON_ADVANCEDRIFLE","PICKUP_WEAPON_APPISTOL","PICKUP_WEAPON_ASSAULTRIFLE","PICKUP_WEAPON_ASSAULTSHOTGUN","PICKUP_WEAPON_ASSAULTSMG","PICKUP_WEAPON_AUTOSHOTGUN","PICKUP_WEAPON_BAT","PICKUP_WEAPON_BATTLEAXE","PICKUP_WEAPON_BOTTLE","PICKUP_WEAPON_BULLPUPRIFLE","PICKUP_WEAPON_BULLPUPSHOTGUN","PICKUP_WEAPON_CARBINERIFLE","PICKUP_WEAPON_COMBATMG","PICKUP_WEAPON_COMBATPDW","PICKUP_WEAPON_COMBATPISTOL","PICKUP_WEAPON_COMPACTLAUNCHER","PICKUP_WEAPON_COMPACTRIFLE","PICKUP_WEAPON_CROWBAR","PICKUP_WEAPON_DAGGER","PICKUP_WEAPON_DBSHOTGUN","PICKUP_WEAPON_FIREWORK","PICKUP_WEAPON_FLAREGUN","PICKUP_WEAPON_FLASHLIGHT","PICKUP_WEAPON_GRENADE","PICKUP_WEAPON_GRENADELAUNCHER","PICKUP_WEAPON_GUSENBERG","PICKUP_WEAPON_GOLFCLUB","PICKUP_WEAPON_HAMMER","PICKUP_WEAPON_HATCHET","PICKUP_WEAPON_HEAVYPISTOL","PICKUP_WEAPON_HEAVYSHOTGUN","PICKUP_WEAPON_HEAVYSNIPER","PICKUP_WEAPON_HOMINGLAUNCHER","PICKUP_WEAPON_KNIFE","PICKUP_WEAPON_KNUCKLE","PICKUP_WEAPON_MACHETE","PICKUP_WEAPON_MACHINEPISTOL","PICKUP_WEAPON_MARKSMANPISTOL","PICKUP_WEAPON_MARKSMANRIFLE","PICKUP_WEAPON_MG","PICKUP_WEAPON_MICROSMG","PICKUP_WEAPON_MINIGUN","PICKUP_WEAPON_MINISMG","PICKUP_WEAPON_MOLOTOV","PICKUP_WEAPON_MUSKET","PICKUP_WEAPON_NIGHTSTICK","PICKUP_WEAPON_PETROLCAN","PICKUP_WEAPON_PIPEBOMB","PICKUP_WEAPON_PISTOL","PICKUP_WEAPON_PISTOL50","PICKUP_WEAPON_POOLCUE","PICKUP_WEAPON_PROXMINE","PICKUP_WEAPON_PUMPSHOTGUN","PICKUP_WEAPON_RAILGUN","PICKUP_WEAPON_REVOLVER","PICKUP_WEAPON_RPG","PICKUP_WEAPON_SAWNOFFSHOTGUN","PICKUP_WEAPON_SMG","PICKUP_WEAPON_SMOKEGRENADE","PICKUP_WEAPON_SNIPERRIFLE","PICKUP_WEAPON_SNSPISTOL","PICKUP_WEAPON_SPECIALCARBINE","PICKUP_WEAPON_STICKYBOMB","PICKUP_WEAPON_STUNGUN","PICKUP_WEAPON_SWITCHBLADE","PICKUP_WEAPON_VINTAGEPISTOL","PICKUP_WEAPON_WRENCH", "PICKUP_WEAPON_RAYCARBINE"}
+			for i=1, #pickups do
+				ToggleUsePickupsForPlayer(PlayerId, joaat(pickups[i]), false)
+			end
+		end
+		local DisabledComps = {}
+		for i=1, #(Config.RemoveHudCommonents) do
+			if Config.RemoveHudCommonents[i] then
+				DisabledComps[#DisabledComps + 1] = i
+			end
+		end
+		local Sleep = true
+		while true do 
+			Sleep = true
 
-				if Config.DisableHealthRegeneration then
-					Sleep = false
-					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
-				end
+			if Config.DisableHealthRegeneration then
+				Sleep = false
+				SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
+			end
 
-				if Config.DisableWeaponWheel then
-					Sleep = false
-					BlockWeaponWheelThisFrame()
-					DisableControlAction(0, 37,true)
-				end
+			if Config.DisableWeaponWheel then
+				Sleep = false
+				BlockWeaponWheelThisFrame()
+				DisableControlAction(0, 37,true)
+			end
 
-				if Config.DisableAimAssist then
-					Sleep = false
-					if IsPedArmed(ESX.PlayerData.ped, 4) then
-						SetPlayerLockonRangeOverride(PlayerId, 2.0)
-					end
+			if Config.DisableAimAssist then
+				Sleep = false
+				if IsPedArmed(ESX.PlayerData.ped, 4) then
+					SetPlayerLockonRangeOverride(PlayerId, 2.0)
 				end
+			end
 
-				if Config.DisableVehicleRewards then
-					Sleep = false
-					DisablePlayerVehicleRewards(PlayerId)
-				end
-			
-				if Config.DisableNPCDrops then
-					Sleep = false
-					RemoveAllPickupsOfType(0xDF711959) -- carbine rifle
-					RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
-					RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
-				end
+			if Config.DisableVehicleRewards then
+				Sleep = false
+				DisablePlayerVehicleRewards(PlayerId)
+			end
 
-				if #DisabledComps > 0 then
-					Sleep = false
-					for i=1, #(DisabledComps) do
-								HideHudComponentThisFrame(i)
-					end
+			if #DisabledComps > 0 then
+				Sleep = false
+				for i=1, #(DisabledComps) do
+					HideHudComponentThisFrame(i)
 				end
+			end
 				
 			Wait(Sleep and 1500 or 0)
-			end
-		end)
+		end
+	end)
 
 	if Config.EnableHud then
 		for i=1, #(ESX.PlayerData.accounts) do
@@ -145,8 +145,8 @@ RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData("maxWeight", newMaxWeight) end)
 
 local function onPlayerSpawn()
-		ESX.SetPlayerData('ped', PlayerPedId())
-		ESX.SetPlayerData('dead', false)
+	ESX.SetPlayerData('ped', PlayerPedId())
+	ESX.SetPlayerData('dead', false)
 end
 
 AddEventHandler('playerSpawned', onPlayerSpawn)
@@ -409,8 +409,7 @@ if Config.EnableHud then
 		local isPaused = false
 		local time = 500
 		while true do
-			Wait(time)
-
+			time = 500
 			if IsPauseMenuActive() and not isPaused then
 				time = 100
 				isPaused = true
@@ -420,6 +419,7 @@ if Config.EnableHud then
 				isPaused = false
 				ESX.UI.HUD.SetDisplay(1.0)
 			end
+			Wait(time)
 		end
 	end)
 
