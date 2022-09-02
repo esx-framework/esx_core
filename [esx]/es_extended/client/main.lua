@@ -15,10 +15,7 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
-	ESX.PlayerLoaded = true
 	ESX.PlayerData = xPlayer
-	ESX.PlayerData.ped = PlayerPedId()
-	FreezeEntityPosition(ESX.PlayerData.ped, true)
 
 	if Config.Multichar then
 		Wait(3000)
@@ -44,11 +41,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			TriggerEvent('esx:loadingScreenOff')
 			ShutdownLoadingScreen()
 			ShutdownLoadingScreenNui()
-			FreezeEntityPosition(ESX.PlayerData.ped, false)
 		end)
 	end
 
 	while ESX.PlayerData.ped == nil do Wait(20) end
+	ESX.PlayerLoaded = true
 	-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
@@ -133,7 +130,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
-	FreezeEntityPosition(ESX.PlayerData.ped, false)
 	StartServerSyncLoops()
 end)
 
