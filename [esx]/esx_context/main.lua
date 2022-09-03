@@ -131,6 +131,8 @@ RegisterNUICallback("changed",function(data)
 		end
 	elseif ele.inputType == "text" then
 		ele.inputValue = data.value
+	elseif ele.inputType == "radio" then
+		ele.inputValue = data.value
 	end
 end)
 
