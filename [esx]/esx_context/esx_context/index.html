@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ESX Context HUD</title>
+
+	<style type="text/css">		
+		:root {
+			--item-main: #242424;
+			--item-unselectable: #161616;
+			--item-hover: #404040;
+			--item-disabled: #393939;
+		}
+
+		html,body {
+			margin: 0;
+			padding: 0;
+			outline: none;
+			border: none;
+		}
+
+		body {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+
+			display: none;
+		}
+
+		#container {
+			position: absolute;
+			width: 280px;
+			max-height: 50%;
+			height: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			overflow-y: auto;
+			padding-right: 5px;
+		}
+
+		.center {
+			top: 50%;
+			left: 50%;	
+			transform: translate(-50%,-50%);		
+		}
+
+		.left {
+			top: 50%;
+			left: 25%;	
+			transform: translate(-50%,-50%);		
+		}
+
+		.right {
+			top: 50%;
+			left: 75%;	
+			transform: translate(-50%,-50%);		
+		}
+
+		.item {
+			display: grid;
+			grid-template-columns: 30px calc(100% - 30px);
+			padding: 15px 10px;
+			border-radius: 5px;
+			background: var(--item-main);
+		}
+
+		.item:hover {
+			background: var(--item-hover);
+		}
+
+		.item > i {
+			text-align: center;
+		}
+
+		.item > div {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		.item > div > i {
+			opacity: 0.5;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+			padding: 15px 10px;
+			border-radius: 5px;
+			background: var(--item-main);
+		}
+
+		.input:hover {
+			background: var(--item-hover);
+		}
+
+		input {
+			position: relative;
+			width: auto;
+			padding: 5px;
+			margin: 0;
+			border: none;
+			border: none;
+			background: transparent;
+		}
+
+		.unselectable {
+			background: var(--item-unselectable);
+			pointer-events: none;
+		}
+
+		.disabled {
+			pointer-events: none;
+			background: var(--item-disabled);
+		}
+
+		* {
+			color: white;
+			font-family: Arial;
+			user-select: none;
+			font-size: 14px;
+		}
+
+		::-webkit-scrollbar {
+			width: 5px;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: rgb(20,20,20);	
+			border-radius: 5px;		
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: rgb(30,30,30);				
+		}
+
+		.container {
+		  display: flex;
+		  position: relative;
+		  cursor: pointer;
+		  font-size: 14px;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		  flex-direction: row-reverse;
+		  align-items: center;
+		  justify-content: flex-end;
+		  gap: 5px;
+		}
+
+		/* Hide the browser's default checkbox */
+		.container input {
+		  position: relative;
+		  opacity: 0;
+		  cursor: pointer;
+		  height: 0;
+		  width: 0;
+		}
+
+		/* Create a custom checkbox */
+		.checkmark {
+		  position: relative;
+		  height: 10px;
+		  width: 10px;
+		  border-radius: 8px;
+		  background-color: #eee;
+		}
+
+		/* On mouse-over, add a grey background color */
+		.container:hover input ~ .checkmark {
+		  background-color: #ccc;
+		}
+
+		/* When the checkbox is checked, add a blue background */
+		.container input:checked ~ .checkmark {
+		  background-color: #2196F3;
+		}
+
+		/* Create the checkmark/indicator (hidden when not checked) */
+		.checkmark:after {
+		  content: "";
+		  position: relative;
+		  display: none;
+		}
+
+		/* Show the checkmark when checked */
+		.container input:checked ~ .checkmark:after {
+		  display: block;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="container" class="right">
+		<div class="item unselectable">
+			<i class="fas fa-info-circle"></i> 
+			<div>
+				<b>Unselectable Item</b>
+				<i>Testing, testing a description here.</i>
+			</div>
+		</div>
+		<div class="item disabled">
+			<i class="fas fa-times"></i> 
+			<div>
+				<b>Disabled Item</b>
+				<i>Testing, testing a description here.</i>
+			</div>
+		</div>
+		<div class="item">
+			<i class="fas fa-check"></i> 
+			<div>
+				<b>Item</b>
+				<i>Testing, testing a description here. Generic words to force overflow.</i>
+			</div> 
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		const container = document.getElementById("container")
+
+		const CreateElement = (tag = "div",className = "",parent) => {
+			const e = document.createElement(tag)
+			e.className = className
+
+			if (parent) {
+				parent.append(e)
+			}
+
+			return e
+		}
+
+		function Open(eles,position = "right") {
+			container.innerHTML = ""
+			container.className = position
+
+			for (let i=0;i<eles.length;i++) {
+				let ele = eles[i]
+				let item = CreateElement("div","item",container)
+
+				let icon = CreateElement("i",ele.icon,item)
+				let div = CreateElement("div","",item)
+
+				let title = CreateElement("b","",div)
+				title.innerHTML = ele.title
+
+				if (ele.description) {
+					let desc = CreateElement("i","",div)
+					desc.innerHTML = ele.description || ""
+				}
+
+				if (ele.input) {
+					if (ele.inputType == "radio") {
+						for (let j=0;j<ele.inputValues.length;j++) {
+							let v = ele.inputValues[j]
+							let container = CreateElement("label","container",div)
+							container.innerHTML = v.text 
+
+							let input = CreateElement("INPUT","",container)
+							input.type = "radio"
+							input.name = i+1
+							input.checked = (ele.inputValue || ele.inputPlaceholder || -1) == v.value
+
+							let span = CreateElement("SPAN","checkmark",container)
+
+							input.onchange = function() {
+								$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
+									index:i+1,
+									value:v.value
+								}))	
+							}
+						}
+					} else {
+						let input = CreateElement("input","",div)
+						input.type = ele.inputType
+
+						if (ele.inputValue) {
+							input.value = ele.inputValue
+						}
+
+						if (ele.inputPlaceholder) {
+							input.placeholder = ele.inputPlaceholder
+						}
+
+						switch (ele.inputType) {
+							case "number":
+								if (ele.inputMin) input.min = ele.inputMin;
+								if (ele.inputMax) input.max = ele.inputMax;
+
+								input.onchange = function() {
+									let v = Number(input.value)
+
+									if (ele.inputMin) {
+										v = Math.max(ele.inputMin,v)
+									}
+
+									if (ele.inputMax) {
+										v = Math.min(ele.inputMax,v)
+									}
+
+									input.value = v	
+
+									$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
+										index:i+1,
+										value:v
+									}))				
+								}
+							break
+
+							case "text":
+								input.onchange = function() {
+									$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
+										index:i+1,
+										value:input.value
+									}))				
+								}
+							break
+						}
+					}
+				} else {
+					if (ele.disabled) {
+						item.className += " disabled"
+					} else if (ele.unselectable) {
+						item.className += " unselectable"
+					} else if (!ele.input) {
+						item.onclick = function() {
+							$.post(`https://${GetParentResourceName()}/selected`,JSON.stringify({
+								index:i+1
+							}))
+						}
+					}
+				}
+			}
+
+			document.body.style.display = "block"
+		}
+
+		function Closed() {
+			document.body.style.display = "none"
+		}
+
+		function Close() {
+			$.post(`https://${GetParentResourceName()}/closed`)
+			Closed()
+		}
+
+		window.addEventListener("message",(e) => {
+			let data = e.data
+
+			if (!data.func || !window[data.func]) {
+				return
+			}
+
+			window[data.func](...data.args)
+		})
+
+		window.addEventListener("keydown",(e) => {
+            if (e.key == "Escape" || e.key == "Backspace") {
+                if (e.target.tagName.toLowerCase() == "input") {
+                    return
+                }
+
+                Close()
+            }
+		})
+
+		// Open([
+		// 	{
+		// 		unselectable:true,
+		// 		icon:"fas fa-info-circle",
+		// 		title:"Unselectable Item (Header/Label?)",
+		// 	},
+		// 	{
+		// 		icon:"fas fa-check",
+		// 		title:"Item A",
+		// 		description:"Some description here. Add some words to make the text overflow."
+		// 	},
+		// 	{
+		// 		disabled:true,
+		// 		icon:"fas fa-times",
+		// 		title:"Disabled Item",
+		// 		description:"Some description here. Add some words to make the text overflow."
+		// 	},
+		// 	{
+		// 		icon:"fas fa-check",
+		// 		title:"Item B",
+		// 		description:"Some description here. Add some words to make the text overflow."
+		// 	},
+		// 	{
+		// 		input:true,
+		// 		icon:"fas fa-times",
+		// 		title:"Input Text",
+		// 		inputType:"text",
+		// 		inputPlaceholder:"Placeholder..."
+		// 	},
+		// 	{
+		// 		input:true,
+		// 		icon:"",
+		// 		title:"Input Number",
+		// 		inputType:"number",
+		// 		inputPlaceholder:"Placeholder...",
+		// 		inputValue:0,
+		// 		inputMin:0,
+		// 		inputMax:50
+		// 	},
+		// 	{
+		// 		input:true,
+		// 		icon:"",
+		// 		title:"Input Radio",
+		// 		inputType:"radio",
+		// 		inputPlaceholder:"turbocharger",
+		// 		inputValue:"supercharger",
+		// 		inputValues:[
+		// 			{
+		// 				value:"turbocharger",
+		// 				title:"Turbocharger"
+		// 			},
+		// 			{
+		// 				value:"supercharger",
+		// 				title:"Supercharger"
+		// 			},
+		// 		]
+		// 	}
+		// ])
+	</script>
+</body>
+</html>
