@@ -437,7 +437,7 @@ CreateThread(function()
 				-- hide or show top left zone hints
 				if isInMarker and not menuIsShowed then
 					hintIsShowed = true
-					if (onDuty or zone.Type == "cloakroom") and zone.Type ~= "vehdelete" then
+					if (onDuty or zone.Type == "cloakroom") and zone.Type ~= "vehdelete" and zone.Type ~= "vehspawnpt" then
 						hintToDisplay = zone.Hint
 						ESX.ShowHelpNotification(hintToDisplay)
 					elseif zone.Type == "vehdelete" and (onDuty) then
