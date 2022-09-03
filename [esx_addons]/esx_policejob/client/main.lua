@@ -1586,7 +1586,7 @@ function ImpoundVehicle(vehicle)
 	currentTask.busy = false
 end
 
-if ESX.PlayerLoaded and ESX.PlayerData.job == 'police' then
+if ESX.PlayerLoaded and ESX.PlayerData.job.name == 'police' then
 	SetTimeout(1000, function()
 		TriggerServerEvent('esx_policejob:forceBlip')
 	end)
