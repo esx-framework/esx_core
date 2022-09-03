@@ -4,7 +4,7 @@ Locales['fr'] = {
   ['already_own'] = 'vous possédez déjà: %s',
   ['not_enough_money'] = 'vous n\'avez pas assez d\'argent!',
   ['purchased'] = 'achat effectué!',
-  ['press_custom'] = 'appuyez sur ~INPUT_PICKUP~ pour personnaliser le véhicule.',
+  ['press_custom'] = 'appuyez sur [E] pour personnaliser le véhicule.',
   ['level'] = 'niveau %s',
   ['neon'] = 'neon',
   ['blip_name'] = 'los Santos Customs',
@@ -225,7 +225,7 @@ Locales['fr'] = {
   -- Misc
   ['headlights'] = 'phares',
   ['licenseplates'] = 'plaque',
-  ['windowtint'] = 'fenêtres',
+  ['windowtint'] = 'teinte de fenêtres',
   ['horns'] = 'klaxon',
   -- Neon
   ['neons'] = 'néons',
