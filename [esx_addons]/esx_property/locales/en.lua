@@ -140,9 +140,9 @@ Locales['en'] = {
 
 		["exiting"] = "Exiting property...",
 		["entering"] = "Entering property...",
-		["shell_disabled"] ="This Interior Uses Shells, which are disabled!.",
+		["shell_disabled"] ="This Interior Uses Shells, which are disabled!",
 		["access_textui"] = "Press ~b~[E]~s~ to Access ~b~%s",
-		["raid_notify_error"] = "You need ~b~ %sx %s~s~  to be able to raid!.",
+		["raid_notify_error"] = "You need ~b~ %sx %s~s~  to be able to raid!",
 		["raid_notify_success"] = "Your Property is Currently Being ~b~Raided!",
 
 		--------------- Garage Strings --------------
@@ -169,7 +169,7 @@ Locales['en'] = {
 		["element_description4"] = "(Optional) Manage Garage Settings",
 		["element_title5"] = "CCTV",
 		["element_description5"] = "(Optional) Manage CCTV Settings",
-		["element_title6"] = "Entance",
+		["element_title6"] = "Entrance",
 		["element_description6"] = "Set The Property`s Entrance Location.",
 		["element_create_title"] = "Create Property",
 		["element_create_desc_1"] = "Please Fill Out all Required Inputs!",
