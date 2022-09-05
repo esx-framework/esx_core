@@ -106,7 +106,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 				if #DisabledComps > 0 then
 					Sleep = false
 					for i=1, #(DisabledComps) do
-								HideHudComponentThisFrame(i)
+						HideHudComponentThisFrame(DisabledComps[i])
 					end
 				end
 				
