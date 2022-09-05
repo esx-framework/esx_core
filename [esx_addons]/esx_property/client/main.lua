@@ -81,12 +81,12 @@ function RefreshBlips()
 
   if PM.Enabled then
     local Blip = AddBlipForCoord(PM.Locations.Entrance)
-    SetBlipSprite(Blip, 374)
-    SetBlipColour(Blip, 45)
+    SetBlipSprite(Blip, PM.Blip.Sprite)
+    SetBlipColour(Blip, PM.Blip.Colour)
     SetBlipAsShortRange(Blip, true)
-    SetBlipScale(Blip, 0.7)
+    SetBlipScale(Blip, PM.Blip.Size)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(PM.joblabel .. " Office")
+    AddTextComponentString(PM.Blip.Label)
     EndTextCommandSetBlipName(Blip)
     Blips[#Blips + 1] = Blip
   end
