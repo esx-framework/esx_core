@@ -182,6 +182,12 @@ Config.PlayerManagement = {
     Entrance = vector3( -199.151, -575.000,  39.489 ), -- Entrance Location Default: vector3( -199.151, -575.000,  39.489 )
     Exit = vector3( -141.226, -614.166,  167.820 ), -- Exit Location (Interior Location) Default: vector3( -141.226, -614.166,  167.820 )
     Properties = vector3(-138.9228, -634.1255, 167.8504), -- Property Management Menu Default: vector3(-138.9228, -634.1255, 167.8504)
+  },
+  Blip = {
+    Sprite = 374,
+    Colour = 45,
+    Size = 0.7,
+    Label = 'Estate Agent Office'
   }
 }        
 
