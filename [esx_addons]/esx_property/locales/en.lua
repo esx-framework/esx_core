@@ -47,7 +47,7 @@ Locales['en'] = {
 	["furni_command_permission"] = "You ~r~Cannot~s~ Access This Menu!",
 	["furni_reset_success"] = "Furniture Reset!",
 	["furni_cannot_afford"] = "You Cannot Afford Todo this!",
-	["furni_reset_error"] = "You ~r~Cannot~s~  Reset This Property!",
+	["furni_reset_error"] = "You ~r~Cannot~s~ Reset The Furniture!",
 	["furni_management"] = "Manage Furniture",
 
 	--------- Key Strings ---------------
@@ -266,12 +266,15 @@ Locales['en'] = {
 	["interior_changed"] = "Interior Changed!",
 	["entrance_changed"] = "Entrance Changed!",
 	["angle_changed"] = "Angle Changed!",
+	["property_price"] = "Preis der Immobilie",
 	["price_changed"] = "Price Changed!",
 	["cannot_change"] = "You ~r~Cannot~s~ Change This Option!",
 	["cannot_change_property"] = "You Cannot Reset This Property!",
 	["custom_name_reset"] = "Property Name Reset!",
 	["cannot_reset_name"] = "You Cannot Reset This Property`s Name!",
 	["storage_reset"] = "~b~Storage~s~ Position Reset!",
+	["storage_reset_error"] = "You ~r~Cannot~s~ Reset Storage Position!",
 	["wardrobe_reset"] = "~b~Wardrobe~s~ Position Reset!",
+	["wardrobe_reset_error"] = "You ~r~Cannot~s~ Reset Wardrobe Position!",
 	["interiors"] = "Interiors",
 	}
