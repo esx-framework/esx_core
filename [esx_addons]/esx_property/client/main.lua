@@ -1363,7 +1363,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                       ESX.ShowNotification(_U('storage_reset'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification(_U('furni_reset_error'), "error")
+                      ESX.ShowNotification(_U('storage_reset_error'), "error")
                     end
                   end, currentProperty, Interior.positions.Storage, true)
                 end
@@ -1373,7 +1373,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                       ESX.ShowNotification(_U('wardrobe_reset'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification(_U('furni_reset_error'), "error")
+                      ESX.ShowNotification(_U('wardrobe_reset_error'), "error")
                     end
                   end, currentProperty, Interior.positions.Wardrobe, true)
                 end
