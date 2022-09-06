@@ -81,12 +81,12 @@ function RefreshBlips()
 
   if PM.Enabled then
     local Blip = AddBlipForCoord(PM.Locations.Entrance)
-    SetBlipSprite(Blip, 374)
-    SetBlipColour(Blip, 45)
+    SetBlipSprite(Blip, PM.Blip.Sprite)
+    SetBlipColour(Blip, PM.Blip.Colour)
     SetBlipAsShortRange(Blip, true)
-    SetBlipScale(Blip, 0.7)
+    SetBlipScale(Blip, PM.Blip.Size)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(PM.joblabel .. " Office")
+    AddTextComponentString(PM.Blip.Label)
     EndTextCommandSetBlipName(Blip)
     Blips[#Blips + 1] = Blip
   end
@@ -224,18 +224,18 @@ end
 
 function SetPropertyName(Property)
   local Name = Properties[Property].setName ~= "" and Properties[Property].setName or Properties[Property].Name
-  local Elements = {{unselectable = true, title = "Edit Property Name", icon = "fa-solid fa-signature"},
-                    {icon = "", title = "Name", input = true, inputType = "text", inputValue = Name, inputPlaceholder = Properties[Property].Name,
-                     name = "setName"}, {icon = "fa-solid fa-check", title = "Confirm", name = "confirm"}}
+  local Elements = {{unselectable = true, title = _U('edit_property_name'), icon = "fa-solid fa-signature"},
+                    {icon = "", title = _U('name'), input = true, inputType = "text", inputValue = Name, inputPlaceholder = Properties[Property].Name,
+                     name = "setName"}, {icon = "fa-solid fa-check", title = _U('confirm'), name = "confirm"}}
 
   ESX.OpenContext("right", Elements, function(menu, element)
     if element.name == "confirm" then
       ESX.TriggerServerCallback("esx_property:SetPropertyName", function(Set)
         if Set then
-          ESX.ShowNotification("You Have Set The Property Name To ~b~" .. menu.eles[2].inputValue .. "~s~.", "success")
+          ESX.ShowNotification(_U('set_name_success', menu.eles[2].inputValue), "success")
           ESX.CloseContext()
         else
-          ESX.ShowNotification("You Cannot Set The Property Name To ~r~" .. menu.eles[2].inputValue .. "~s~.", "error")
+          ESX.ShowNotification(_U('set_name_error', menu.eles[2].inputValue), "error")
         end
       end, Property, menu.eles[2].inputValue)
     end
@@ -720,7 +720,7 @@ end
 function AccessGarage(PropertyId)
   ESX.TriggerServerCallback("esx_property:AccessGarage", function(Vehicles)
     if Vehicles then
-      local elements = {{unselectable = true, icon = "fas fa-warehouse", title = "Property Garage"}}
+      local elements = {{unselectable = true, icon = "fas fa-warehouse", title = _U('garage')}}
       for k, v in pairs(Vehicles) do
         elements[#elements + 1] = {title = v.vehicle.DisplayName .. " | " .. v.vehicle.plate, Properties = v.vehicle, index = k}
       end
@@ -802,6 +802,7 @@ CreateThread(function()
                     CurrentDrawing.Name = "Garage"
                     CurrentDrawing.Showing = true
                     ESX.TextUI(_U("access_textui", "garage"))
+                    ESX.ShowHelpNotification(_U("access_textui", "garage"))
                   end
                 end
                 if IsControlJustPressed(0, 38) then
@@ -876,7 +877,7 @@ function OpenPMQuickMenu(Action)
   end
 end
 
-ESX.RegisterInput(_U("realestate_command"), _U("realestate_command_desc"), "keyboard", "F5", function()
+ESX.RegisterInput(_U("realestate_command"), _U("realestate_command_desc"), "keyboard", "F6", function()
   ESX.TriggerServerCallback('esx_property:IsAdmin', function(Access)
     if Access then
       OpenPMQuickMenu("ActionsMenu")
@@ -895,6 +896,7 @@ CreateThread(function()
 
         local Coords = GetEntityCoords(ESX.PlayerData.ped)
         local nearby = false
+        local text
 
         for k, v in pairs(PM.Locations) do
           local Dist = #(Coords - v)
@@ -905,7 +907,14 @@ CreateThread(function()
             if Dist <= 1.5 then
               if not PMdrawing[k] then
                 PMdrawing[k] = true
-                ESX.TextUI(_U("realestate_textui", k))
+                if k == 'Entrance' then 
+                  text = _U('entrance_textui')
+                elseif k == 'Exit' then
+                  text = _U('exit_textui')
+                elseif k == 'Properties' then
+                  text = _U('properties')
+                end
+                ESX.TextUI(_U("realestate_textui", text))
               end
               if IsControlJustPressed(0, 38) then
                 OpenPMQuickMenu(k)
@@ -939,9 +948,9 @@ RegisterNetEvent("esx_property:CreateProperty", function()
       HouseData = {}
       local Property = {{unselectable = true, icon = "fas fa-plus", title = _U("menu_title")},
                         {value = 0, title = _U("element_title1"), icon = "fas fa-list-ol", description = _U("element_description1"), input = true,
-                         inputType = "number", inputPlaceholder = "Number...", inputValue = nil, inputMin = 1, inputMax = 90000, index = "hnumber"},
+                         inputType = "number", inputPlaceholder = _U('element_placeholder1'), inputValue = nil, inputMin = 1, inputMax = 90000, index = "hnumber"},
                         {title = _U("element_title2"), icon = "fas fa-dollar-sign", input = true, inputType = "number",description = _U("element_description2"),
-                         inputPlaceholder = "Price...", inputValue = nil, inputMin = 1, inputMax = 50000000, index = "price"},
+                         inputPlaceholder = _U('element_placeholder2'), inputValue = nil, inputMin = 1, inputMax = 50000000, index = "price"},
                         {title = _U("element_title3"), description = _U("element_description3"), icon = "fas fa-home", index = "interior"},
                         {title = _U("element_title4"), description = _U("element_description4"), icon = "fas fa-warehouse", value = {enabled = false},
                          index = "garage", disabled = not (Config.Garage.Enabled)},
@@ -1001,53 +1010,53 @@ RegisterNetEvent("esx_property:CreateProperty", function()
               OpenCreate()
             end
             if element.index == "cctv" then
-              local status = Property[6].value.enabled and "Enabled" or "Disabled"
-              opos = {{unselectable = true, icon = "fas fa-video", title = "CCTV Settings"},
-                      {title = _U("toggle_title"), icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
+              local status = Property[6].value.enabled and _U('enabled') or _U('disabled')
+              opos = {{unselectable = true, icon = "fas fa-video", title = _U('CCTV_settings')},
+                      {title = _U("toggle_title"), icon = status == _U('enabled') and "fas fa-eye" or "fas fa-eye-slash",
                        description = _U("toggle_description",status), index = "ToggleCCTV"},
                       {title = _U("cctv_set_title"), icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
                        description = _U("cctv_set_description"), index = "SetCCTVangle"},
-                      {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_creation'), index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
             if element.index == "ToggleCCTV" then
               Property[6].value.enabled = not Property[6].value.enabled
-              local status = Property[6].value.enabled and "Enabled" or "Disabled"
-              opos = {{unselectable = true, icon = "fas fa-video", title = "CCTV Settings"},
-                      {title = _U("toggle_title"), icon = status == "Enabled" and "fas fa-eye" or "fas fa-eye-slash",
+              local status = Property[6].value.enabled and _U('enabled') or _U('disabled')
+              opos = {{unselectable = true, icon = "fas fa-video", title = _U('CCTV_settings')},
+                      {title = _U("toggle_title"), icon = status == _U('enabled') and "fas fa-eye" or "fas fa-eye-slash",
                        description = _U("toggle_description",status), index = "ToggleCCTV"},
                       {title = _U("cctv_set_title"), icon = "fas fa-rotate", disabled = not Property[6].value.enabled,
                        description = _U("cctv_set_description"), index = "SetCCTVangle"},
-                      {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}}
+                      {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_creation'), index = "return"}}
               exports["esx_context"]:Refresh(opos, "right")
             end
             if Config.Garage.Enabled and element.index == "garage" then
-              local status = Property[5].value.enabled and "Enabled" or "Disabled"
-              opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                      {title = _U("toggle_title"), icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+              local status = Property[5].value.enabled and _U('enabled') or _U('disabled')
+              opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('garage_settings')},
+                      {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
                        description = _U("toggle_description",status), index = "ToggleGarage"}}
               if Property[5].value.enabled then
                 opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
                                    description = _U("garage_set_description"), index = "SetGaragePos"}
                 if Property[5].value.pos then
-                  opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                  opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_creation'), index = "return"}
                 end
               else
-                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_creation'), index = "return"}
               end
               exports["esx_context"]:Refresh(opos, "right")
             end
             if element.index == "ToggleGarage" then
               Property[5].value.enabled = not Property[5].value.enabled
-              local status = Property[5].value.enabled and "Enabled" or "Disabled"
-              opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                      {title = _U("toggle_title"), icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+              local status = Property[5].value.enabled and _U('enabled') or _U('disabled')
+              opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('garage_settings')},
+                      {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
                        description = _U("toggle_description",status), index = "ToggleGarage"}}
               if Property[5].value.enabled then
                 opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt", disabled = not Property[5].value.enabled,
                                    description = _U("garage_set_description"), index = "SetGaragePos"}
               else
-                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to property creation.", index = "return"}
+                opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_creation'), index = "return"}
               end
               exports["esx_context"]:Refresh(opos, "right")
             end
@@ -1095,7 +1104,7 @@ RegisterNetEvent("esx_property:CreateProperty", function()
                 local newProperty = {name = HouseData.name, price = HouseData.price, interior = HouseData.interior, entrance = HouseData.entrance,
                                      cctv = Property[6].value, garage = Property[5].value}
                 TriggerServerEvent("esx_property:server:createProperty", newProperty)
-                ESX.ShowNotification("Property created!", "success")
+                ESX.ShowNotification(_U('create_success'), "success")
                 ESX.CloseContext()
                 HouseData = {}
               else
@@ -1120,44 +1129,44 @@ RegisterNetEvent("esx_property:AdminMenu", function()
           if data then
             local opos = {}
             local function GetData()
-              local elements = {{unselectable = true, icon = "fas fa-cogs", title = "Property Management"},
+              local elements = {{unselectable = true, icon = "fas fa-cogs", title = _U('property_management')},
                                 {title = _U("back"), icon = "fas fa-arrow-left", value = "back"},
-                                {title = "Toggle Lock", icon = (Properties[currentProperty].Locked and "fas fa-lock") or "fas fa-unlock",
-                                 description = "Lock/Unlock The Property.", value = "lock"},
-                                {title = "Enter", description = "Force Entry Into The Property.", icon = "fas fa-door-open", value = "enter"},
-                                {title = "Price", icon = "fas fa-dollar-sign", description = "Alter The Price Of The Property.", value = "price"},
-                                {title = "Set Interior", description = "Renovate The Property`s Interior.", icon = "fas fa-home", value = "interior"},
-                                {title = "Entrance", description = "Set The Entrance As Your Position.", icon = "fas fa-map-marker-alt",
+                                {title = _U('management_title1'), icon = (Properties[currentProperty].Locked and "fas fa-lock") or "fas fa-unlock",
+                                 description = _U('management_desc1'), value = "lock"},
+                                {title = _U('management_title2'), description = _U('management_desc2'), icon = "fas fa-door-open", value = "enter"},
+                                {title = _U('management_title3'), icon = "fas fa-dollar-sign", description = _U('management_desc3'), value = "price"},
+                                {title = _U('management_title4'), description = _U('management_desc4'), icon = "fas fa-home", value = "interior"},
+                                {title = _U('management_title5'), description = _U('management_desc5'), icon = "fas fa-map-marker-alt",
                                  value = "entrance"}}
               if Properties[currentProperty].setName ~= "" then
-                elements[#elements + 1] = {title = "Clear Custom Name", icon = "fa-solid fa-ban",
-                                           description = "Current Name: " .. Properties[currentProperty].setName, value = "remove_custom_name"}
+                elements[#elements + 1] = {title = _U('management_title6'), icon = "fa-solid fa-ban",
+                                           description = _U('management_desc6', Properties[currentProperty].setName), value = "remove_custom_name"}
               end
               if Config.Furniture.Enabled and #(Properties[currentProperty].furniture) > 0 then
-                elements[#elements + 1] = {title = "Reset Furniture", description = "Delete All Property Furniture", icon = "fas fa-eraser",
+                elements[#elements + 1] = {title = _U('management_title7'), description = _U('management_desc7'), icon = "fas fa-eraser",
                                            value = "refurni"}
               end
               if Config.Garage.Enabled then
-                elements[#elements + 1] = {title = "Garage", description = "Change Garage Settings", icon = "fa-solid fa-warehouse", value = "garage"}
+                elements[#elements + 1] = {title = _U('management_title8'), description = _U('management_desc8'), icon = "fa-solid fa-warehouse", value = "garage"}
               end
               if Config.CCTV.Enabled then
-                elements[#elements + 1] = {title = "CCTV", description = "Change CCTV Settings", icon = "fa-solid fa-camera", value = "cctv"}
+                elements[#elements + 1] = {title = _U('management_title9'), description = _U('management_desc9'), icon = "fa-solid fa-camera", value = "cctv"}
               end
               if (Config.OxInventory) and Properties[currentProperty].positions.Storage and
                 (ESX.Round(Interior.positions.Storage.x, 2) ~= Properties[currentProperty].positions.Storage.x or
                   ESX.Round(Interior.positions.Storage.y, 2) ~= Properties[currentProperty].positions.Storage.y) then
-                elements[#elements + 1] = {title = "Reset Storage Position", description = "Set Storage Position To Interior Default.",
+                elements[#elements + 1] = {title = _U('management_title10'), description = _U('management_desc10'),
                                            icon = "fas fa-eraser", value = "restorage"}
               end
               if Interior.positions.Wardrobe then
                 if ESX.Round(Interior.positions.Wardrobe.x, 2) ~= ESX.Round(Properties[currentProperty].positions.Wardrobe.x, 2) or
                   ESX.Round(Interior.positions.Wardrobe.y, 2) ~= ESX.Round(Properties[currentProperty].positions.Wardrobe.y, 2) then
-                  elements[#elements + 1] = {title = "Reset Wardrobe Position", description = "Set Wardrobe Position To Interior Default.",
+                  elements[#elements + 1] = {title = _U('management_title11'), description = _U('management_desc11'),
                                              icon = "fas fa-eraser", value = "rewardrobe"}
                 end
               end
               if Properties[currentProperty].Owned then
-                elements[#elements + 1] = {title = "Remove Owner", icon = "fas fa-user-times", description = "Evict The Owner Of The Property.",
+                elements[#elements + 1] = {title = _U('management_title12'), icon = "fas fa-user-times", description = _U('management_desc12'),
                                            value = "removeowner"}
               end
               return elements
@@ -1167,10 +1176,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if element.value == "lock" then
                   ESX.TriggerServerCallback("esx_property:toggleLock", function(IsUnlocked)
                     if IsUnlocked then
-                      ESX.ShowNotification("Lock Toggled!", "success")
+                      ESX.ShowNotification(_U('lock_toggled'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Lock This Property", "error")
+                      ESX.ShowNotification(_U('lock_error'), "error")
                     end
                   end, currentProperty)
                 end
@@ -1180,101 +1189,101 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if element.value == "removeowner" then
                   ESX.TriggerServerCallback("esx_property:evictOwner", function(Evicted)
                     if Evicted then
-                      ESX.ShowNotification("Owner Evicted!", "success")
+                      ESX.ShowNotification(_U('owner_evicted'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Evict This Owner!", "error")
+                      ESX.ShowNotification(_U('evict_error'), "error")
                     end
                   end, currentProperty)
                 end
                 if element.value == "garage" then
-                  local status = Properties[currentProperty].garage.enabled and "Enabled" or "Disabled"
-                  opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                          {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                           description = "Current Status: " .. status, value = "ToggleGarage"}}
+                  local status = Properties[currentProperty].garage.enabled and _U('enabled') or _U('disabled')
+                  opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('garage_settings')},
+                          {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                           description = _U('toggle_description', status), value = "ToggleGarage"}}
                   if Properties[currentProperty].garage.enabled then
-                    opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt",
+                    opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt",
                                        disabled = not Properties[currentProperty].garage.enabled,
-                                       description = "Sets the Garage Position to your Players Position", value = "SetGaragePos"}
+                                       description = _U("garage_set_description"), value = "SetGaragePos"}
                     if Properties[currentProperty].garage.pos then
-                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
+                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                          value = "return"}
                     end
                   else
-                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
+                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'), value = "return"}
                   end
                   exports["esx_context"]:Refresh(opos, "right")
                 end
                 if element.value == "cctv" then
-                  local status = Properties[currentProperty].cctv.enabled and "Enabled" or "Disabled"
-                  opos = {{unselectable = true, icon = "fas fa-warehouse", title = "CCTV Settings"},
-                          {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                           description = "Current Status: " .. status, value = "ToggleCCTV"}}
+                  local status = Properties[currentProperty].cctv.enabled and _U('enabled') or _U('disabled')
+                  opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('CCTV_settings')},
+                          {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                           description = _U('toggle_description', status), value = "ToggleCCTV"}}
                   if Properties[currentProperty].cctv.enabled then
-                    opos[#opos + 1] = {title = "Set Angle", icon = "fas fa-map-marker-alt", disabled = not Properties[currentProperty].cctv.enabled,
-                                       description = "Sets the Angle of the Camera.", value = "SetCCTVangle"}
+                    opos[#opos + 1] = {title = _U("cctv_set_title"), icon = "fas fa-map-marker-alt", disabled = not Properties[currentProperty].cctv.enabled,
+                                       description = _U("cctv_set_description"), value = "SetCCTVangle"}
                     if Properties[currentProperty].cctv.rot then
-                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
+                      opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                          value = "return"}
                     end
                   else
-                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management", value = "return"}
+                    opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'), value = "return"}
                   end
                   exports["esx_context"]:Refresh(opos, "right")
                 end
                 if element.value == "ToggleGarage" then
                   ESX.TriggerServerCallback("esx_property:toggleGarage", function(IsUnlocked, enabled)
                     if IsUnlocked then
-                      ESX.ShowNotification("Garage Toggled!", "success")
-                      local status = enabled and "Enabled" or "Disabled"
-                      opos = {{unselectable = true, icon = "fas fa-warehouse", title = "Garage Settings"},
-                              {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                               description = "Current Status: " .. status, value = "ToggleGarage"}}
+                      ESX.ShowNotification(_U("garage_toggled"), "success")
+                      local status = enabled and _U('enabled') or _U('disabled')
+                      opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('garage_settings')},
+                              {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                               description = _U('toggle_description', status), value = "ToggleGarage"}}
                       if enabled then
-                        opos[#opos + 1] = {title = "Set Position", icon = "fas fa-map-marker-alt", disabled = not enabled,
-                                           description = "Sets the Garage Position to your Players Position", value = "SetGaragePos"}
+                        opos[#opos + 1] = {title = _U("garage_set_title"), icon = "fas fa-map-marker-alt", disabled = not enabled,
+                                           description = _U('garage_set_description'), value = "SetGaragePos"}
                         if Properties[currentProperty].garage.pos then
-                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
+                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                              value = "return"}
                         end
                       else
-                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management",
+                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                            value = "return"}
                       end
                       exports["esx_context"]:Refresh(opos, "right")
                     else
-                      ESX.ShowNotification("You ~r~Cannot~s~ Toggle This Option!", "error")
+                      ESX.ShowNotification(_U('toggle_error'), "error")
                     end
                   end, currentProperty)
                 end
                 if element.value == "ToggleCCTV" then
                   ESX.TriggerServerCallback("esx_property:toggleCCTV", function(IsUnlocked, enabled)
                     if IsUnlocked then
-                      ESX.ShowNotification("CCTV Toggled!", "success")
-                      local status = enabled and "Enabled" or "Disabled"
-                      opos = {{unselectable = true, icon = "fas fa-warehouse", title = "CCTV Settings"},
-                              {title = "Toggle Usage", icon = status == "Enabled" and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
-                               description = "Current Status: " .. status, value = "ToggleCCTV"}}
+                      ESX.ShowNotification(_U('cctv_toggled'), "success")
+                      local status = enabled and _U('enabled') or _U('disabled')
+                      opos = {{unselectable = true, icon = "fas fa-warehouse", title = _U('CCTV_settings')},
+                              {title = _U("toggle_title"), icon = status == _U('enabled') and "fa-solid fa-toggle-on" or "fa-solid fa-toggle-off",
+                               description = _U('toggle_description', status), value = "ToggleCCTV"}}
                       if enabled then
-                        opos[#opos + 1] = {title = "Set Angle", icon = "fas fa-map-marker-alt", disabled = not enabled,
-                                           description = "Sets the Angle of the Camera.", value = "SetCCTVangle"}
+                        opos[#opos + 1] = {title = _U("cctv_set_title"), icon = "fas fa-map-marker-alt", disabled = not enabled,
+                                           description = _U("cctv_set_description"), value = "SetCCTVangle"}
                         if Properties[currentProperty].cctv.rot then
-                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management.",
+                          opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                              value = "return"}
                         end
                       else
-                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = "return to Property Management",
+                        opos[#opos + 1] = {title = _U("back"), icon = "fas fa-arrow-left", description = _U('return_to_management'),
                                            value = "return"}
                       end
                       exports["esx_context"]:Refresh(opos, "right")
                     else
-                      ESX.ShowNotification("You ~r~Cannot~s~ Toggle This Option!", "error")
+                      ESX.ShowNotification(_U('toggle_error'), "error")
                     end
                   end, currentProperty)
                 end
                 if element.value == "SetGaragePos" then
                   ESX.CloseContext()
-                  ESX.TextUI("Press ~b~[E]~s~ to Set Position")
+                  ESX.TextUI(_U('garage_textui'))
                   SettingValue = "Garage"
                   while SettingValue ~= "" do
                     Wait(0)
@@ -1283,10 +1292,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                         if IsChanged then
                           ESX.HideUI()
                           SettingValue = ""
-                          ESX.ShowNotification("Position Changed!", "success")
+                          ESX.ShowNotification(_U('position_changed'), "success")
                           ManageProperty(currentProperty)
                         else
-                          ESX.ShowNotification("You ~r~Cannot~s~ Change This Option!", "error")
+                          ESX.ShowNotification(_U('cannot_change'), "error")
                         end
                       end, currentProperty, GetEntityHeading(ESX.PlayerData.ped))
                       break
@@ -1295,7 +1304,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 end
                 if element.value == "SetCCTVangle" then
                   ESX.CloseContext()
-                  ESX.TextUI("Press ~b~[E]~s~ to Set Angle")
+                  ESX.TextUI(_U('cctv_textui_1'))
                   local stage = "angle"
                   SettingValue = "cctv"
                   local Angles = {}
@@ -1304,11 +1313,11 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                     if IsControlJustPressed(0, 38) then
                       if stage == "angle" then
                         Angles.rot = GetGameplayCamRot(2)
-                        ESX.TextUI("Press ~b~[E]~s~ to Set Max Right Roation")
+                        ESX.TextUI(_U('cctv_textui_2'))
                         stage = "maxright"
                       elseif stage == "maxright" then
                         Angles.maxright = GetGameplayCamRot(2).z
-                        ESX.TextUI("Press ~b~[E]~s~ to Set Max Left Roation")
+                        ESX.TextUI(_U('cctv_textui_3'))
                         stage = "maxleft"
                       elseif stage == "maxleft" then
                         Angles.maxleft = GetGameplayCamRot(2).z
@@ -1317,10 +1326,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                             SettingValue = ""
                             stage = nil
                             ESX.HideUI()
-                            ESX.ShowNotification("Angle Changed!", "success")
+                            ESX.ShowNotification(_U('angle_changed'), "success")
                             ManageProperty(currentProperty)
                           else
-                            ESX.ShowNotification("You ~r~Cannot~s~ Change This Option!", "error")
+                            ESX.ShowNotification(_U('cannot_change'), "error")
                           end
                         end, currentProperty, Angles)
                         break
@@ -1331,40 +1340,40 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if element.value == "remove_custom_name" then
                   ESX.TriggerServerCallback("esx_property:RemoveCustomName", function(Cleared)
                     if Cleared then
-                      ESX.ShowNotification("Property Name Reset!", "success")
+                      ESX.ShowNotification(_U('custom_name_reset'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Reset This Property`s Name!", "error")
+                      ESX.ShowNotification(_U('cannot_reset_name'), "error")
                     end
                   end, currentProperty)
                 end
                 if element.value == "refurni" then
                   ESX.TriggerServerCallback("esx_property:RemoveAllfurniture", function(Removed)
                     if Removed then
-                      ESX.ShowNotification("Furniture Reset!", "success")
+                      ESX.ShowNotification(_U('furni_reset_success'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Reset This Property!", "error")
+                      ESX.ShowNotification(_U('furni_reset_error'), "error")
                     end
                   end, currentProperty)
                 end
                 if element.value == "restorage" then
                   ESX.TriggerServerCallback("esx_property:SetInventoryPosition", function(Reset)
                     if Reset then
-                      ESX.ShowNotification("~b~Storage~s~ Position Reset!", "success")
+                      ESX.ShowNotification(_U('storage_reset'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Reset This Property!", "error")
+                      ESX.ShowNotification(_U('furni_reset_error'), "error")
                     end
                   end, currentProperty, Interior.positions.Storage, true)
                 end
                 if element.value == "rewardrobe" then
                   ESX.TriggerServerCallback("esx_property:SetWardrobePosition", function(Reset)
                     if Reset then
-                      ESX.ShowNotification("~b~Wardrobe~s~ Position Reset!", "success")
+                      ESX.ShowNotification(_U('wardrobe_reset'), "success")
                       exports["esx_context"]:Refresh(GetData())
                     else
-                      ESX.ShowNotification("You Cannot Reset This Property!", "error")
+                      ESX.ShowNotification(_U('furni_reset_error'), "error")
                     end
                   end, currentProperty, Interior.positions.Wardrobe, true)
                 end
@@ -1379,10 +1388,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                     if data4.value then
                       ESX.TriggerServerCallback("esx_property:ChangePrice", function(IsChanged)
                         if IsChanged then
-                          ESX.ShowNotification("Price Changed!", "success")
+                          ESX.ShowNotification(_U('price_changed'), "success")
                           menu4.close()
                         else
-                          ESX.ShowNotification("You Cannot Change this property!", "error")
+                          ESX.ShowNotification(_U('cannot_change_property'), "error")
                         end
                       end, currentProperty, tonumber(data4.value))
                     end
@@ -1391,14 +1400,14 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                   end)
                 end
                 if element.value == "interior" then
-                  local elements = {{unselectable = true, icon = "fas fa-warehouse", title = "Interior Types"},
-                                    {title = "IPL Interiors", description = "Native GTA Interiors, Made by R*", value = "IPL"}}
+                  local elements = {{unselectable = true, icon = "fas fa-warehouse", title = _U('types_title')},
+                                    {title = _U('ipl_title'), description = _U('ipl_description'), value = "IPL"}}
                   if Config.Shells then
-                    elements[3] = {title = "Custom Interiors", description = "Custom Interiors, Made by You", value = "Shells"}
+                    elements[3] = {title = _U('shell_title'), description = _U('shell_description'), value = "Shells"}
                   end
                   ESX.OpenContext("right", elements, function(menu, element)
                     if element.value then
-                      local elements = {{unselectable = true, icon = "fas fa-warehouse", title = "Interiors"}}
+                      local elements = {{unselectable = true, icon = "fas fa-warehouse", title = _U('interiors')}}
                       for i = 1, #(Config.Interiors[element.value]) do
                         elements[#elements + 1] = {title = Config.Interiors[element.value][i].label, value = Config.Interiors[element.value][i].value}
                       end
@@ -1406,10 +1415,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                         if element.value then
                           ESX.TriggerServerCallback("esx_property:ChangeInterior", function(IsChanged)
                             if IsChanged then
-                              ESX.ShowNotification("Interior Changed!", "success")
+                              ESX.ShowNotification(_U('interior_changed'), "success")
                               ESX.CloseContext()
                             else
-                              ESX.ShowNotification("You Cannot Change this property!", "error")
+                              ESX.ShowNotification(_U('cannot_change_property'), "error")
                             end
                           end, currentProperty, element.value)
                         end
@@ -1422,9 +1431,9 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if element.value == "entrance" then
                   ESX.TriggerServerCallback("esx_property:ChangeEntrance", function(IsChanged)
                     if IsChanged then
-                      ESX.ShowNotification("Entrance Changed!", "success")
+                      ESX.ShowNotification(_U('entrance_changed'), "success")
                     else
-                      ESX.ShowNotification("You Cannot Change this property!", "error")
+                      ESX.ShowNotification(_U('cannot_change_property'), "error")
                     end
                   end, currentProperty, GetEntityCoords(ESX.PlayerData.ped))
                 end
@@ -1437,23 +1446,23 @@ RegisterNetEvent("esx_property:AdminMenu", function()
       function AdminOptions(currentProperty)
         ESX.TriggerServerCallback('esx_property:IsAdmin', function(data)
           if data then
-            local elements = {{unselectable = true, icon = "fas fa-home", title = "Property Options"},
+            local elements = {{unselectable = true, icon = "fas fa-home", title = _U("property_management")},
                               {title = _U("back"), icon = "fas fa-arrow-left", value = "back"},
-                              {title = "Manage", icon = "fas fa-cogs", description = "Alter This Property's Settings.", value = "manage"},
-                              {title = "Teleport", description = "Teleport To This Property.", icon = "fas fa-map-marker-alt", value = "goto"},
-                              {title = "Set GPS", description = "Set GPS position To Property.", icon = "fa-solid fa-location-dot", value = "gps"},
-                              {title = "Delete", icon = "fas fa-trash-alt", description = "Remove Current Property.", value = "delete"}}
+                              {title = _U("manage"), icon = "fas fa-cogs", description = _U("manage_desc"), value = "manage"},
+                              {title = _U("teleport"), icon = "fas fa-map-marker-alt", description = _U("teleport_desc"), value = "goto"},
+                              {title = _U("gps"), icon = "fa-solid fa-location-dot", description = _U("gps_desc"), value = "gps"},
+                              {title = _U("delete"), icon = "fas fa-trash-alt", description = _U("delete_desc"), value = "delete"}}
 
             ESX.OpenContext("right", elements, function(menu, element)
               if element.value then
                 if element.value == "goto" then
                   SetEntityCoords(ESX.PlayerData.ped, Properties[currentProperty].Entrance.x, Properties[currentProperty].Entrance.y,
                     Properties[currentProperty].Entrance.z)
-                  ESX.ShowNotification("Teleported to Property!")
+                  ESX.ShowNotification(_U("teleported"))
                 end
                 if element.value == "gps" then
                   SetNewWaypoint(Properties[currentProperty].Entrance.x, Properties[currentProperty].Entrance.y)
-                  ESX.ShowNotification("GPS Set!")
+                  ESX.ShowNotification(_U("gps_set"))
                 end
                 if element.value == "back" then
                   AdminMenu()
@@ -1461,10 +1470,10 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if element.value == "delete" then
                   ESX.TriggerServerCallback("esx_property:deleteProperty", function(response)
                     if response then
-                      ESX.ShowNotification("Property Deleted!", "success")
+                      ESX.ShowNotification(_U("deleted"), "success")
                       ESX.CloseContext()
                     else
-                      ESX.ShowNotification("You Cannot Delete This Property", "error")
+                      ESX.ShowNotification(_U("cannot_delete"), "error")
                     end
                   end, currentProperty)
                 end
@@ -1481,7 +1490,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
       function AdminMenu()
         ESX.TriggerServerCallback('esx_property:IsAdmin', function(data)
           if data then
-            local elements = {{unselectable = true, icon = "fas fa-home", title = "Properties Management"}}
+            local elements = {{unselectable = true, icon = "fas fa-home", title = _U("property_management")}}
             for i = 1, #(Properties) do
               if Properties[i].Entrance then
                 local description = ""
@@ -1506,7 +1515,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
 
       AdminMenu()
     else
-      ESX.ShowNotification("You ~r~Cannot~s~ Access This Menu!", 5000, "error")
+      ESX.ShowNotification(_U("cannot_access_admin"), 5000, "error")
     end
   end)
 end)
