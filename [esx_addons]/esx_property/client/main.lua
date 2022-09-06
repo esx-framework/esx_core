@@ -1384,7 +1384,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                   exports["esx_context"]:Refresh(GetData())
                 end
                 if element.value == "price" then
-                  ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'PropertyPrice', {title = "Property Price"}, function(data4, menu4)
+                  ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'PropertyPrice', {title = _U('property_price')}, function(data4, menu4)
                     if data4.value then
                       ESX.TriggerServerCallback("esx_property:ChangePrice", function(IsChanged)
                         if IsChanged then
