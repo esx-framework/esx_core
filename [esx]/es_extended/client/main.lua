@@ -103,12 +103,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 				DisablePlayerVehicleRewards(PlayerId)
 			end
 
-      if #DisabledComps > 0 then
-        Sleep = false
-        for i=1, #(DisabledComps) do
-          HideHudComponentThisFrame(DisabledComps[i])
-        end
-      end
+      		if #DisabledComps > 0 then
+        		Sleep = false
+        		for i=1, #(DisabledComps) do
+          			HideHudComponentThisFrame(DisabledComps[i])
+        		end
+      		end
 				
 			Wait(Sleep and 1500 or 0)
 		end
