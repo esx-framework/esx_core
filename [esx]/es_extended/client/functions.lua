@@ -158,7 +158,6 @@ ESX.HashString = function(str)
 end
 
 if GetResourceState("esx_context") ~= "missing" then
-
     function ESX.OpenContext(...)
         exports["esx_context"]:Open(...)
     end
@@ -172,15 +171,15 @@ if GetResourceState("esx_context") ~= "missing" then
     end
 else 
     function ESX.OpenContext()
-        print("[ERROR] ESX Context Not Found")
+        print("[ERROR] Tried to open context menu, but esx_context is missing!")
     end
 
     function ESX.PreviewContext()
-        print("[ERROR] ESX Context Not Found")
+        print("[ERROR] Tried to preview context menu, but esx_context is missing!")
     end
 
     function ESX.CloseContext()
-        print("[ERROR] ESX Context Not Found")
+        print("[ERROR] Tried to close context menu, but esx_context is missing!")
     end
 end
 
