@@ -10,7 +10,6 @@ local function deleteIdentity(xPlayer)
         xPlayer.set('dateofbirth', nil)
         xPlayer.set('sex', nil)
         xPlayer.set('height', nil)
-
         deleteIdentityFromDatabase(xPlayer)
     end
 end
@@ -281,7 +280,6 @@ if Config.UseDeferrals then
             xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
             xPlayer.set('sex', currentIdentity.sex)
             xPlayer.set('height', currentIdentity.height)
-
             if currentIdentity.saveToDatabase then
                 saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
             end
@@ -289,7 +287,6 @@ if Config.UseDeferrals then
             Wait(0)
             alreadyRegistered[xPlayer.identifier] = true
             TriggerClientEvent('esx_identity:alreadyRegistered', xPlayer.source)
-
             playerIdentity[xPlayer.identifier] = nil
         else
             xPlayer.kick(_('missing_identity'))
@@ -332,7 +329,7 @@ else
 			xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
 			xPlayer.set('sex', currentIdentity.sex)
 			xPlayer.set('height', currentIdentity.height)
-
+            TriggerClientEvent('esx_identity:setPlayerData', xPlayer.source, currentIdentity)
 			if currentIdentity.saveToDatabase then
 				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 			end
@@ -405,7 +402,7 @@ else
                 xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
                 xPlayer.set('sex', currentIdentity.sex)
                 xPlayer.set('height', currentIdentity.height)
-
+                TriggerClientEvent('esx_identity:setPlayerData', xPlayer.source, currentIdentity)
                 if currentIdentity.saveToDatabase then
                     saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
                 end
@@ -452,10 +449,10 @@ else
 									xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
 									xPlayer.set('sex', currentIdentity.sex)
 									xPlayer.set('height', currentIdentity.height)
+                                    TriggerClientEvent('esx_identity:setPlayerData', xPlayer.source, currentIdentity)
 									saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
 									alreadyRegistered[xPlayer.identifier] = true
 									playerIdentity[xPlayer.identifier] = nil
-
 									cb(true)
 								else
 									xPlayer.showNotification(_U('invalid_height_format'), "error")
@@ -494,9 +491,16 @@ else
                                 data.firstname = formattedFirstName
                                 data.lastname = formattedLastName
                                 data.dateofbirth = formattedDate
-
 								if checkHeightFormat(data.height) then
+                                    local Identity= {
+										firstName = formattedFirstName,
+										lastName = formattedLastName,
+										dateOfBirth = formattedDate,
+										sex = data.sex,
+										height = data.height
+									}
 									TriggerEvent('esx_identity:completedRegistration', source, data)
+                                    TriggerClientEvent('esx_identity:setPlayerData', source, Identity)
 									cb(true)
 								else
 									TriggerClientEvent("esx:showNotification", source, _U('invalid_height_format'), "error")
