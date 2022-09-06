@@ -1,5 +1,5 @@
 local CurrentActionData, handcuffTimer, dragStatus, blipsCops, currentTask = {}, {}, {}, {}, {}
-local HasAlreadyEnteredMarker, isDead, isHandcuffed, hasAlreadyJoined, playerInService = false, false, false, false, false
+local HasAlreadyEnteredMarker, isDead, hasAlreadyJoined, playerInService = false, false, false, false
 local LastStation, LastPart, LastPartNum, LastEntity, CurrentAction, CurrentActionMsg
 dragStatus.isDragged, isInShopMenu = false, false
 
@@ -1030,10 +1030,11 @@ end)
 
 RegisterNetEvent('esx_policejob:handcuff')
 AddEventHandler('esx_policejob:handcuff', function()
-	isHandcuffed = not isHandcuffed
+	LocalPlayer.state:set('isHandcuffed', true, false)
+	playerHandcuff()
 	local playerPed = PlayerPedId()
 
-	if isHandcuffed then
+	if LocalPlayer.state.isHandcuffed then
 		RequestAnimDict('mp_arresting')
 		while not HasAnimDictLoaded('mp_arresting') do
 			Wait(100)
@@ -1072,9 +1073,9 @@ end)
 
 RegisterNetEvent('esx_policejob:unrestrain')
 AddEventHandler('esx_policejob:unrestrain', function()
-	if isHandcuffed then
+	if LocalPlayer.state.isHandcuffed then
 		local playerPed = PlayerPedId()
-		isHandcuffed = false
+		LocalPlayer.state:set('isHandcuffed', false, false)
 
 		ClearPedSecondaryTask(playerPed)
 		SetEnableHandcuffs(playerPed, false)
@@ -1092,7 +1093,7 @@ end)
 
 RegisterNetEvent('esx_policejob:drag')
 AddEventHandler('esx_policejob:drag', function(copId)
-	if isHandcuffed then
+	if LocalPlayer.state.isHandcuffed then
 		dragStatus.isDragged = not dragStatus.isDragged
 		dragStatus.CopId = copId
 	end
@@ -1104,7 +1105,7 @@ CreateThread(function()
 	while true do
 		local Sleep = 1500
 
-		if isHandcuffed and dragStatus.isDragged then
+		if LocalPlayer.state.isHandcuffed and dragStatus.isDragged then
 			Sleep = 50
 			local targetPed = GetPlayerPed(GetPlayerFromServerId(dragStatus.CopId))
 
@@ -1130,7 +1131,7 @@ end)
 
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
-	if isHandcuffed then
+	if LocalPlayer.state.isHandcuffed then
 		local playerPed = PlayerPedId()
 		local vehicle, distance = ESX.Game.GetClosestVehicle()
 
@@ -1164,56 +1165,17 @@ AddEventHandler('esx_policejob:OutVehicle', function()
 end)
 
 -- Handcuff
-CreateThread(function()
-	local DisableControlAction = DisableControlAction
-	local IsEntityPlayingAnim = IsEntityPlayingAnim
-	while true do
-		local Sleep = 1000
+playerHandcuff = function()
+	CreateThread(function()
+		local DisableControlAction = DisableControlAction
+		local IsEntityPlayingAnim = IsEntityPlayingAnim
+		while LocalPlayer.state.isHandcuffed do
+			local Sleep = 1000
 
-		if isHandcuffed then
 			Sleep = 0
-			DisableControlAction(0, 1, true) -- Disable pan
-			DisableControlAction(0, 2, true) -- Disable tilt
-			DisableControlAction(0, 24, true) -- Attack
-			DisableControlAction(0, 257, true) -- Attack 2
-			DisableControlAction(0, 25, true) -- Aim
-			DisableControlAction(0, 263, true) -- Melee Attack 1
-			DisableControlAction(0, 32, true) -- W
-			DisableControlAction(0, 34, true) -- A
-			DisableControlAction(0, 31, true) -- S
-			DisableControlAction(0, 30, true) -- D
-
-			DisableControlAction(0, 45, true) -- Reload
-			DisableControlAction(0, 22, true) -- Jump
-			DisableControlAction(0, 44, true) -- Cover
-			DisableControlAction(0, 37, true) -- Select Weapon
-			DisableControlAction(0, 23, true) -- Also 'enter'?
-
-			DisableControlAction(0, 288,  true) -- Disable phone
-			DisableControlAction(0, 289, true) -- Inventory
-			DisableControlAction(0, 170, true) -- Animations
-			DisableControlAction(0, 167, true) -- Job
-
-			DisableControlAction(0, 0, true) -- Disable changing view
-			DisableControlAction(0, 26, true) -- Disable looking behind
-			DisableControlAction(0, 73, true) -- Disable clearing animation
-			DisableControlAction(2, 199, true) -- Disable pause screen
-
-			DisableControlAction(0, 59, true) -- Disable steering in vehicle
-			DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
-			DisableControlAction(0, 72, true) -- Disable reversing in vehicle
-
-			DisableControlAction(2, 36, true) -- Disable going stealth
-
-			DisableControlAction(0, 47, true)  -- Disable weapon
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
+			DisableAllControlActions(0)
+			EnableControlAction(0, 1, true)
+			EnableControlAction(0, 2, true)
 
 			if IsEntityPlayingAnim(ESX.PlayerData.ped, 'mp_arresting', 'idle', 3) ~= 1 then
 				ESX.Streaming.RequestAnimDict('mp_arresting', function()
@@ -1221,10 +1183,10 @@ CreateThread(function()
 					RemoveAnimDict('mp_arresting')
 				end)
 			end
+		Wait(0)
 		end
-	Wait(Sleep)
-	end
-end)
+	end)
+end
 
 -- Create blips
 CreateThread(function()
