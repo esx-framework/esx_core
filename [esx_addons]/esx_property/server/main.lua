@@ -582,7 +582,7 @@ ESX.RegisterServerCallback("esx_property:evictOwner", function(source, cb, Prope
   if IsPlayerAdmin(source, "EvictOwner") then
     local xOwner = ESX.GetPlayerFromIdentifier(Properties[PropertyId].Owner)
     if xOwner then
-      xOwner.showNotification("Your Have Been ~r~Evicted~s~.", "error")
+      xOwner.showNotification(_U('been_evicted'), "error")
     end
     local pName = Properties[PropertyId].OwnerName
     Properties[PropertyId].Owner = ""
