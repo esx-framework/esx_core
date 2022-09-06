@@ -310,10 +310,10 @@ if Config.Furniture.Enabled then
       if element.value == "delete" then
         ESX.TriggerServerCallback("esx_property:deleteFurniture", function(response)
           if response then
-            ESX.ShowNotification(_U("delete_confirm", Funiture.title), "success")
+            ESX.ShowNotification(_U("deleted_confirm", Funiture.title), "success")
             FurnitureEditSelect(propertyId)
           else
-            ESX.ShowNotification(_U("delete_error", Funiture.title), "error")
+            ESX.ShowNotification(_U("deleted_error", Funiture.title), "error")
           end
         end, propertyId, furniture)
       end
