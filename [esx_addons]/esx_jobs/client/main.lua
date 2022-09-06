@@ -361,7 +361,7 @@ CreateThread(function()
 				ESX.ShowHelpNotification(v.Hint)
 				hintIsShowed = true
 				if IsControlJustReleased(0, 38) then
-					ESX.Game.Teleport(PlayerPedId(), position)
+					ESX.Game.Teleport(PlayerPedId(), v.Teleport)
 				end
 			end
 		end
