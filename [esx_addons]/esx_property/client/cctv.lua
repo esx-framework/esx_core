@@ -207,7 +207,7 @@ function CCTV(PropertyID)
           SetTextColour(255, 255, 255, 255)
           SetTextDropshadow(0.1, 3, 27, 27, 255)
           BeginTextCommandDisplayText('STRING')
-          AddTextComponentSubstringPlayerName(NightVision and "Night Vision: Active" or "CCTV System: Active")
+          AddTextComponentSubstringPlayerName(NightVision and _U('night_vision_active') or _U('cctv_active'))
           EndTextCommandDisplayText(0.01, 0.12)
 
           if IsDisabledControlPressed(0, Config.CCTV.Controls.Down) and getCameraRot.x > Config.CCTV.MaxDownRotation then
@@ -231,7 +231,7 @@ function CCTV(PropertyID)
                   exports['screenshot-basic']:requestScreenshotUpload(hook, "files[]", function(data)
                     local image = json.decode(data)
                     print(ESX.DumpTable(image))
-                    ESX.ShowNotification("Picture Taken!", "success")
+                    ESX.ShowNotification(_U('picture_taken'), "success")
                     SendNUIMessage({link = image.attachments[1].proxy_url})
                     ESX.ShowNotification(_U("clipboard"), "success")
                     ShowButtons = true
