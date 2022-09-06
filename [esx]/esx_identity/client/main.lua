@@ -8,6 +8,17 @@ RegisterNetEvent('esx_identity:alreadyRegistered', function()
     TriggerEvent('esx_skin:playerRegistered')
 end)
 
+RegisterNetEvent('esx_identity:setPlayerData', function(data)
+    SetTimeout(1, function()
+         ESX.SetPlayerData("name", ('%s %s'):format(data.firstName, data.lastName))
+         ESX.SetPlayerData('firstName', data.firstName)
+         ESX.SetPlayerData('lastName', data.lastName)
+         ESX.SetPlayerData('dateofbirth', data.dateOfBirth)
+         ESX.SetPlayerData('sex', data.sex)
+         ESX.SetPlayerData('height', data.height)
+    end)
+ end)
+
 AddEventHandler('esx:loadingScreenOff', function()
     loadingScreenFinished = true
 end)
