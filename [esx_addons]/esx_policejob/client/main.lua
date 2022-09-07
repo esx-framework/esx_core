@@ -1170,8 +1170,6 @@ playerHandcuff = function()
 		local DisableControlAction = DisableControlAction
 		local IsEntityPlayingAnim = IsEntityPlayingAnim
 		while LocalPlayer.state.isHandcuffed do
-			local Sleep = 0
-				
 			DisableAllControlActions(0)
 			EnableControlAction(0, 1, true)
 			EnableControlAction(0, 2, true)
