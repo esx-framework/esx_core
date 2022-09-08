@@ -1038,11 +1038,11 @@ ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb
   cb(Re)
 end)
 
-ESX.RegisterServerCallback('esx_property:IsAdmin', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:IsAdmin', function(source, cb)
   cb(IsPlayerAdmin(source, "ViewProperties"))
 end)
 
-ESX.RegisterServerCallback('esx_property:CanAccessRealEstateMenu', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:CanAccessRealEstateMenu', function(source, cb)
   local xPlayer = ESX.GetPlayerFromId(source)
   local Re = (Config.PlayerManagement.Enabled and xPlayer.job.name == Config.PlayerManagement.job and xPlayer.job.grade >= Config.PlayerManagement.Permissions.ManagePropertiesFromQuickActions) and true or false
   cb(Re)
