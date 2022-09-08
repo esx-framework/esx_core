@@ -1109,3 +1109,15 @@ AddEventHandler('onResourceStop', function(ResourceName)
   end
 end)
 
+-- Save Properties every x Minutes 
+
+CreateThread(function()
+  while true do
+    Wait(60000 * Config.SaveInterval)
+    if Properties and #Properties > 0 then
+      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Interval Saving", inline = true},
+                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+    end
+  end
+end)
