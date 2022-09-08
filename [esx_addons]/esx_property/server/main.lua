@@ -1025,7 +1025,7 @@ AddEventHandler('playerDropped', function()
   end
 end)
 
-ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb)
   local Re = false
   local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -1040,6 +1040,12 @@ end)
 
 ESX.RegisterServerCallback('esx_property:IsAdmin', function(source, cb, num)
   cb(IsPlayerAdmin(source, "ViewProperties"))
+end)
+
+ESX.RegisterServerCallback('esx_property:CanAccessRealEstateMenu', function(source, cb, num)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  local Re = (Config.PlayerManagement.Enabled and xPlayer.job.name == Config.PlayerManagement.job and xPlayer.job.grade >= Config.PlayerManagement.Permissions.ManagePropertiesFromQuickActions) and true or false
+  cb(Re)
 end)
 
 RegisterNetEvent('esx_property:server:createProperty', function(Property)
