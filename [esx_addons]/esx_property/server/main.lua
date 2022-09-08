@@ -165,12 +165,6 @@ ESX.RegisterCommand(_("refresh_name"), Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
 end, false, {help = _U("refresh_desc")})
 
-ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
-  SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-    Log("Properties Saving", 11141375,
-      {{name = "**Reason**", value = "Requsted By Admin", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-end, false,{help = _U("save_desc")})
-
 ESX.RegisterCommand(_("create_name"), "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
@@ -1088,24 +1082,24 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
   end
 end)
 
---- Save Properties On Server Stop/Restart
-AddEventHandler('txAdmin:events:serverShuttingDown', function()
+function PropertySave(Reason)
   if Properties and #Properties > 0 then
     SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
     Log("Properties Saving", 11141375,
-      {{name = "**Reason**", value = "Server Shutdown", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+      {{name = "**Reason**", value = Reason, inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
   end
+end
+
+--- Save Properties On Server Stop/Restart
+AddEventHandler('txAdmin:events:serverShuttingDown', function()
+  PropertySave("Server Shutdown")
 end)
 
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
-    if Properties and #Properties > 0 then
-      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Resource Restart", inline = true},
-                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-    end
+    PropertySave("Resource Stopped")
   end
 end)
 
@@ -1114,10 +1108,10 @@ end)
 CreateThread(function()
   while true do
     Wait(60000 * Config.SaveInterval)
-    if Properties and #Properties > 0 then
-      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Interval Saving", inline = true},
-                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-    end
+    PropertySave("Interval Saving")
   end
 end)
+
+ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
+  PropertySave("Manual Saving (Requested By .. " .. GetPlayerName(xPlayer.source) .. ")")
+end, false,{help = _U("save_desc")})
