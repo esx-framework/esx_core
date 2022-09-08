@@ -194,4 +194,11 @@ Locales['en'] = {
 		["cctv_textui_3"] = "Press ~b~[E]~s~ to Set Max Left Roation",
 		["create_success"] = "Property created!",
 		["missing_data"] = "Please Fill Out all Required Inputs!",
+
+		-- Saving Translations
+		["server_restart"] = "Server Restarting",
+		["server_shutdown"] = "Server Shutdown",
+		["manual_save"] = "Manual Save (Requested By %s)",
+		["resource_stop"] = "Resource Stopping",
+		["interval_saving"] = "Interval Saving"
 	}

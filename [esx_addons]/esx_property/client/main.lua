@@ -877,7 +877,7 @@ function OpenPMQuickMenu(Action)
 end
 
 ESX.RegisterInput(_U("realestate_command"), _U("realestate_command_desc"), "keyboard", "F5", function()
-  ESX.TriggerServerCallback('esx_property:IsAdmin', function(Access)
+  ESX.TriggerServerCallback('esx_property:CanAccessRealEstateMenu', function(Access)
     if Access then
       OpenPMQuickMenu("ActionsMenu")
     end

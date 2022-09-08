@@ -131,8 +131,14 @@ function loadESXPlayer(identifier, playerId, isNew)
     if data.round == nil then
       data.round = true
     end
-    userData.accounts[#userData.accounts + 1] = {name = account, money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
-                                                 label = data.label, round = data.round}
+    local index = #userData.accounts + 1
+    userData.accounts[index] = {
+      name = account, 
+      money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
+      label = data.label, 
+      round = data.round,
+      index = index
+    }
   end
 
   -- Job

@@ -165,12 +165,6 @@ ESX.RegisterCommand(_("refresh_name"), Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
 end, false, {help = _U("refresh_desc")})
 
-ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
-  SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-    Log("Properties Saving", 11141375,
-      {{name = "**Reason**", value = "Requsted By Admin", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-end, false,{help = _U("save_desc")})
-
 ESX.RegisterCommand(_("create_name"), "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
@@ -1031,7 +1025,7 @@ AddEventHandler('playerDropped', function()
   end
 end)
 
-ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb)
   local Re = false
   local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -1044,8 +1038,14 @@ ESX.RegisterServerCallback('esx_property:CanCreateProperty', function(source, cb
   cb(Re)
 end)
 
-ESX.RegisterServerCallback('esx_property:IsAdmin', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:IsAdmin', function(source, cb)
   cb(IsPlayerAdmin(source, "ViewProperties"))
+end)
+
+ESX.RegisterServerCallback('esx_property:CanAccessRealEstateMenu', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  local Re = (Config.PlayerManagement.Enabled and xPlayer.job.name == Config.PlayerManagement.job and xPlayer.job.grade >= Config.PlayerManagement.Permissions.ManagePropertiesFromQuickActions) and true or false
+  cb(Re)
 end)
 
 RegisterNetEvent('esx_property:server:createProperty', function(Property)
@@ -1088,24 +1088,36 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
   end
 end)
 
---- Save Properties On Server Stop/Restart
-AddEventHandler('txAdmin:events:serverShuttingDown', function()
+function PropertySave(Reason)
   if Properties and #Properties > 0 then
     SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
     Log("Properties Saving", 11141375,
-      {{name = "**Reason**", value = "Server Shutdown", inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
+      {{name = "**Reason**", value = Reason, inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
   end
+end
+
+--- Save Properties On Server Stop/Restart
+AddEventHandler('txAdmin:events:serverShuttingDown', function()
+  PropertySave(_U("server_shutdown"))
 end)
 
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
-    if Properties and #Properties > 0 then
-      SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
-      Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Resource Restart", inline = true},
-                                          {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
-    end
+    PropertySave(_U("resource_stop"))
   end
 end)
 
+-- Save Properties every x Minutes 
+
+CreateThread(function()
+  while true do
+    Wait(60000 * Config.SaveInterval)
+    PropertySave(_U("interval_save"))
+  end
+end)
+
+ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
+  PropertySave(_U("manual_save", GetPlayerName(xPlayer.source)))
+end, false,{help = _U("save_desc")})

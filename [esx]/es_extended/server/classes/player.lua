@@ -109,7 +109,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.getAccount(account)
 		for i=1, #self.accounts do
 			if self.accounts[i].name == account then
-				return self.accounts[i], i
+				return self.accounts[i]
 			end
 		end
 	end
@@ -177,11 +177,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return
 		end
 		if money >= 0 then
-			local account, index = self.getAccount(accountName)
+			local account = self.getAccount(accountName)
 
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[index].money = money
+				self.accounts[account.index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
 			else 
@@ -198,10 +198,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return
 		end
 		if money > 0 then
-			local account, index = self.getAccount(accountName)
+			local account = self.getAccount(accountName)
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[index].money += money
+				self.accounts[account.index].money += money
 
 				self.triggerEvent('esx:setAccountMoney', account)
 			else 
@@ -218,11 +218,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return
 		end
 		if money > 0 then
-			local account, index = self.getAccount(accountName)
+			local account = self.getAccount(accountName)
 
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[index].money -= money
+				self.accounts[account.index].money -= money
 
 				self.triggerEvent('esx:setAccountMoney', account)
 			else 

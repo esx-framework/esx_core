@@ -100,6 +100,7 @@ Locales['nl'] = {
     ['box'] = 'Box',
     ['fence'] = 'PD Hek',
     ['cash'] = 'Pallet met geld',
+    ['spikestrips'] = 'Spijkermatten',
     -- ID Menu
     ['name'] = 'Naam: %s',
     ['job'] = 'Werk: %s',

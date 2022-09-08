@@ -122,6 +122,7 @@
 				let menu = $(Mustache.render(MenuTpl, view));
 
 				menu.find('button[data-namespace][data-name]').click(function() {
+					ESX_MENU.data[$(this).data('namespace')][$(this).data('name')][parseInt($(this).data('id'))].currentRow = parseInt($(this).data('id')) + 1;
 					ESX_MENU.submit($(this).data('namespace'), $(this).data('name'), {
 						data : ESX_MENU.data[$(this).data('namespace')][$(this).data('name')][parseInt($(this).data('id'))],
 						value: $(this).data('value')

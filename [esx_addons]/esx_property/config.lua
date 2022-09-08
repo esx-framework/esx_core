@@ -8,6 +8,7 @@ Config.OwnedBlips = true -- Add blips for Owned Properties
 --------------------- General Settings ---------------------------------
 Config.Locale = 'en'
 Config.Shells = false -- Enable/Disable Shell Interiors Default: false
+Config.SaveInterval = 5 -- Interval in Minutes to Save Properties
 Config.CanAlwaysExit = true -- Disabling this allows players to be locked in
 Config.OwnerCanAlwaysEnter = true -- Disabling this means the owner can't enter the property unless door is unlocked
 Config.MaxNameLength = 20 -- Max Name Length for Owned Properties Default: 20
