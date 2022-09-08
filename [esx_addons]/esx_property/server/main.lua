@@ -1092,14 +1092,14 @@ end
 
 --- Save Properties On Server Stop/Restart
 AddEventHandler('txAdmin:events:serverShuttingDown', function()
-  PropertySave("Server Shutdown")
+  PropertySave(_U("server_shutdown"))
 end)
 
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
-    PropertySave("Resource Stopped")
+    PropertySave(_U("resource_stop"))
   end
 end)
 
@@ -1108,10 +1108,10 @@ end)
 CreateThread(function()
   while true do
     Wait(60000 * Config.SaveInterval)
-    PropertySave("Interval Saving")
+    PropertySave(_U("interval_save"))
   end
 end)
 
 ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
-  PropertySave("Manual Saving (Requested By .. " .. GetPlayerName(xPlayer.source) .. ")")
+  PropertySave(_U("manual_save", GetPlayerName(xPlayer.source)))
 end, false,{help = _U("save_desc")})
