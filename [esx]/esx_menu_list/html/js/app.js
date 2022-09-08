@@ -122,9 +122,8 @@
 				let menu = $(Mustache.render(MenuTpl, view));
 
 				menu.find('button[data-namespace][data-name]').click(function() {
-					ESX_MENU.data[$(this).data('namespace')][$(this).data('name')][parseInt($(this).data('id'))].currentRow = parseInt($(this).data('id')) + 1;
 					ESX_MENU.submit($(this).data('namespace'), $(this).data('name'), {
-						data : ESX_MENU.data[$(this).data('namespace')][$(this).data('name')][parseInt($(this).data('id'))],
+						data : ESX_MENU.data[$(this).data('namespace')][$(this).data('name')][parseInt($(this).data('id'))].currentRow = parseInt($(this).data('id')) + 1,
 						value: $(this).data('value')
 					});
 				});
@@ -144,10 +143,10 @@
 
 	ESX_MENU.submit = function(namespace, name, data){
 		$.post('http://' + ESX_MENU.ResourceName + '/menu_submit', JSON.stringify({
-			_namespace: namespace,
-			_name     : name,
-			data      : data.data,
-			value     : data.value
+			_namespace  : namespace,
+			_name       : name,
+			currentData : data.data,
+			value       : data.value
 		}));
 	};
 
