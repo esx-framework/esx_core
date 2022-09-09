@@ -129,7 +129,7 @@ AddEventHandler("esx_garage:payPound", function(amount)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer.getMoney() >= amount then
-        xPlayer.removeMoney(amount)
+        xPlayer.removeMoney(amount, "Impound Fee")
 				xPlayer.showNotification(_U('pay_Impound_bill', amount))
     else
 		xPlayer.showNotification(_U('missing_money'))
