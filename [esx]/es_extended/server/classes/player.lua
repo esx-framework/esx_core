@@ -171,7 +171,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.name = newName
 	end
 
-	function self.setAccountMoney(accountName, money)
+	function self.setAccountMoney(accountName, money, reason)
+		reason = reason or 'unknown'
 		if not tonumber(money) then 
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 			return
@@ -184,6 +185,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				self.accounts[account.index].money = money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+				TriggerEvent('esx:setAccountMoney', self.source, accountName, money, reason)
 			else 
 				print(('[^1ERROR^7] Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
@@ -192,7 +194,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.addAccountMoney(accountName, money)
+	function self.addAccountMoney(accountName, money, reason)
+		reason = reason or 'Unknown'
 		if not tonumber(money) then 
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 			return
@@ -204,6 +207,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				self.accounts[account.index].money += money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+				TriggerEvent('esx:addAccountMoney', self.source, accountName, money, reason)
 			else 
 				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
@@ -212,7 +216,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.removeAccountMoney(accountName, money)
+	function self.removeAccountMoney(accountName, money, reason)
+		reason = reason or 'Unknown'
 		if not tonumber(money) then 
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number!'):format(accountName, self.playerId))
 			return
@@ -225,6 +230,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				self.accounts[account.index].money -= money
 
 				self.triggerEvent('esx:setAccountMoney', account)
+				TriggerEvent('esx:removeAccountMoney', self.source, accountName, money, reason)
 			else 
 				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
