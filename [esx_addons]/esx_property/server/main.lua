@@ -180,7 +180,7 @@ ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, Prop
   local xPlayer = ESX.GetPlayerFromId(source)
   local Price = Properties[PropertyId].Price
   if xPlayer.getAccount("bank").money >= Price then
-    xPlayer.removeAccountMoney("bank", Price)
+    xPlayer.removeAccountMoney("bank", Price, "Bought Property")
     Properties[PropertyId].Owner = xPlayer.identifier
     Properties[PropertyId].OwnerName = xPlayer.getName()
     Properties[PropertyId].Owned = true
@@ -200,7 +200,7 @@ ESX.RegisterServerCallback("esx_property:attemptSellToPlayer", function(source, 
   local xTarget = ESX.GetPlayerFromId(PlayerId)
   local Price = Properties[PropertyId].Price
   if xTarget and (xTarget.getAccount("bank").money >= Price) and (xPlayer.job.name == PM.job) then
-    xPlayer.removeAccountMoney("bank", Price)
+    xTarget.removeAccountMoney("bank", Price, "Sold Property")
     Properties[PropertyId].Owner = xTarget.identifier
     Properties[PropertyId].OwnerName = xTarget.getName()
     Properties[PropertyId].Owned = true
