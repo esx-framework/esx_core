@@ -46,9 +46,9 @@ AddEventHandler('esx_holdup:robberyStarted', function(currentStore)
                     if xPlayer then
                         TriggerClientEvent('esx_holdup:robberyComplete', source, store.reward)
                         if Config.GiveBlackMoney then
-                            xPlayer.addAccountMoney('black_money', store.reward)
+                            xPlayer.addAccountMoney('black_money', store.reward, "Robbery")
                         else
-                            xPlayer.addMoney(store.reward)
+                            xPlayer.addMoney(store.reward, "Robbery")
                         end
                         local xPlayers = ESX.GetExtendedPlayers('job', 'police')
 												for i=1, #(xPlayers) do 
