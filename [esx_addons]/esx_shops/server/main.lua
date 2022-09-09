@@ -43,7 +43,7 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 		if xPlayer.getMoney() >= price then
 			-- can the player carry the said amount of x item?
 			if xPlayer.canCarryItem(itemName, amount) then
-				xPlayer.removeMoney(price)
+				xPlayer.removeMoney(price, label .. " Purchase")
 				xPlayer.addInventoryItem(itemName, amount)
 				xPlayer.showNotification(_U('bought', amount, label, ESX.Math.GroupDigits(price)))
 			else
