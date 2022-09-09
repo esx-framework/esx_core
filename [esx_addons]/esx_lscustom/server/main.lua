@@ -25,7 +25,7 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 		if price < xPlayer.getMoney() then
 			TriggerClientEvent('esx_lscustom:installMod', source)
 			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
-			xPlayer.removeMoney(price)
+			xPlayer.removeMoney(price, "LSC Purchase")
 		else
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
 			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
