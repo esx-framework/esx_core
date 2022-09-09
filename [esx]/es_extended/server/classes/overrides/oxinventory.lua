@@ -48,8 +48,8 @@ Core.PlayerFunctionOverrides.OxInventory = {
         local account = self.getAccount(accountName)
 
         if account then
-          local newMoney = ESX.Math.Round(money)
-          account.money = newMoney
+          money = account.round and ESX.Math.Round(money) or money
+          self.accounts[account.index].money = money
 
           self.triggerEvent('esx:setAccountMoney', account)
 
@@ -67,10 +67,9 @@ Core.PlayerFunctionOverrides.OxInventory = {
         local account = self.getAccount(accountName)
 
         if account then
-          local newMoney = account.money + ESX.Math.Round(money)
-          account.money = newMoney
-
-          self.triggerEvent('esx:setAccountMoney', account)
+				money = account.round and ESX.Math.Round(money) or money
+				self.accounts[account.index].money += money
+        self.triggerEvent('esx:setAccountMoney', account)
 
           if Inventory.accounts[accountName] then
             Inventory.AddItem(self.source, accountName, money)
@@ -86,9 +85,8 @@ Core.PlayerFunctionOverrides.OxInventory = {
         local account = self.getAccount(accountName)
 
         if account then
-          local newMoney = account.money - ESX.Math.Round(money)
-          account.money = newMoney
-
+          money = account.round and ESX.Math.Round(money) or money
+          self.accounts[account.index].money -= money
           self.triggerEvent('esx:setAccountMoney', account)
 
           if Inventory.accounts[accountName] then
