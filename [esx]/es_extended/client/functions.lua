@@ -692,6 +692,12 @@ function ESX.Game.GetVehicleProperties(vehicle)
             customPrimaryColor = {r, g, b}
         end
 
+        local customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
+        local customXenonColor = nil
+        if customXenonColorR and customXenonColorG and customXenonColorB then 
+            customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
+        end
+        
         local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
         local customSecondaryColor = nil
         if hasCustomSecondaryColor then
@@ -771,6 +777,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
             wheels = GetVehicleWheelType(vehicle),
             windowTint = GetVehicleWindowTint(vehicle),
             xenonColor = GetVehicleXenonLightsColor(vehicle),
+            customXenonColor = customXenonColor,
 
             neonEnabled = {IsVehicleNeonLightEnabled(vehicle, 0), IsVehicleNeonLightEnabled(vehicle, 1),
                            IsVehicleNeonLightEnabled(vehicle, 2), IsVehicleNeonLightEnabled(vehicle, 3)},
@@ -911,6 +918,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         end
         if props.xenonColor then
             SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        end
+        if props.customXenonColor then
+            SetVehicleXenonLightsCustomColor(vehicle, props.customXenonColor[1], props.customXenonColor[2],
+                props.customXenonColor[3])
         end
         if props.modSmokeEnabled then
             ToggleVehicleMod(vehicle, 20, true)
