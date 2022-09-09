@@ -72,7 +72,7 @@ AddEventHandler('esx_society:withdrawMoney', function(societyName, amount)
 		TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 			if amount > 0 and account.money >= amount then
 				account.removeMoney(amount)
-				xPlayer.addMoney(amount)
+				xPlayer.addMoney(amount, "Society Withdraw")
 				xPlayer.showNotification(_U('have_withdrawn', ESX.Math.GroupDigits(amount)))
 			else
 				xPlayer.showNotification(_U('invalid_amount'))
@@ -97,7 +97,7 @@ AddEventHandler('esx_society:depositMoney', function(societyName, amount)
 	if xPlayer.job.name == society.name then
 		if amount > 0 and xPlayer.getMoney() >= amount then
 			TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
-				xPlayer.removeMoney(amount)
+				xPlayer.removeMoney(amount, "Society Deposit")
 				xPlayer.showNotification(_U('have_deposited', ESX.Math.GroupDigits(amount)))
 				account.addMoney(amount)
 			end)
@@ -118,7 +118,7 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 
 	if xPlayer.job.name == society then
 		if amount and amount > 0 and account.money >= amount then
-			xPlayer.removeAccountMoney('black_money', amount)
+			xPlayer.removeAccountMoney('black_money', amount, "Washing")
 
 			MySQL.insert('INSERT INTO society_moneywash (identifier, society, amount) VALUES (?, ?, ?)', {xPlayer.identifier, society, amount},
 			function(rowsChanged)
