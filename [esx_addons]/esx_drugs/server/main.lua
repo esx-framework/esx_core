@@ -21,9 +21,9 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	price = ESX.Math.Round(price * amount)
 
 	if Config.GiveBlack then
-		xPlayer.addAccountMoney('black_money', price)
+		xPlayer.addAccountMoney('black_money', price, "Drugs Sold")
 	else
-		xPlayer.addMoney(price)
+		xPlayer.addMoney(price, "Drugs Sold")
 	end
 
 	xPlayer.removeInventoryItem(xItem.name, amount)
