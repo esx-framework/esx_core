@@ -1121,3 +1121,60 @@ end)
 ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
   PropertySave(_U("manual_save", GetPlayerName(xPlayer.source)))
 end, false,{help = _U("save_desc")})
+
+----- Exports -----
+
+exports("GetProperties", function()
+  return Properties
+end)
+
+exports("GetOwnedProperties", function()
+  local OwnedProperties = {}
+  for i=1, #Properties do
+    if Properties[i].Owned then
+      OwnedProperties[#OwnedProperties + 1] = Properties[i]
+    end
+  end
+  return OwnedProperties
+end)
+
+exports("GetNonOwnedProperties", function()
+  local NonOwnedProperties = {}
+  for i=1, #Properties do
+    if not Properties[i].Owned then
+      NonOwnedProperties[#NonOwnedProperties + 1] = Properties[i]
+    end
+  end
+  return NonOwnedProperties
+end)
+
+exports("GetPlayerProperties", function(identifier)
+  local PlayerProperties = {}
+  for i=1, #Properties do
+    if Properties[i].Owned and Properties[i].owner == identifier then
+      PlayerProperties[#PlayerProperties + 1] = Properties[i]
+    end
+  end
+  return PlayerProperties
+end)
+
+exports("GetPropertyKeys", function(PropertyId)
+  local Property = Properties[PropertyId]
+  if Property.Keys then
+    return Property.Keys
+  end
+  return {}
+end)
+
+exports("DoesPlayerHaveKeys", function(PropertyId, Identifier)
+  local Property = Properties[PropertyId]
+  if Property.Keys then
+    return Property.Keys[Identifier] and true or false
+  end
+  return {}
+end)
+
+exports("ForceSaveProperties", function()
+  local ExecutingResource = GetInvokingResource()
+  PropertySave(_U("forced_save", ExecutingResource))
+end)

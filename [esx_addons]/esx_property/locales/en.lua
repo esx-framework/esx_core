@@ -200,5 +200,6 @@ Locales['en'] = {
 		["server_shutdown"] = "Server Shutdown",
 		["manual_save"] = "Manual Save (Requested By %s)",
 		["resource_stop"] = "Resource Stopping",
+		["force_save"] = "Force Save (Requested By %s)",
 		["interval_saving"] = "Interval Saving"
 	}
