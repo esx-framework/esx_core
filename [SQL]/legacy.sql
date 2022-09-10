@@ -399,7 +399,9 @@ CREATE TABLE `users` (
   `is_dead` tinyint(1) DEFAULT 0,
   `id` int(11) NOT NULL,
   `disabled` TINYINT(1) NULL DEFAULT '0',
-  `last_property` varchar(255) DEFAULT NULL
+  `last_property` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_seen` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------

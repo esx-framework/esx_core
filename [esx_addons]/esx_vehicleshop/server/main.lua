@@ -167,7 +167,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 	local modelPrice = getVehicleFromModel(model).price
 
 	if modelPrice and xPlayer.getMoney() >= modelPrice then
-		xPlayer.removeMoney(modelPrice)
+		xPlayer.removeMoney(modelPrice, "Vehicle Purchase")
 
 		MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xPlayer.identifier, plate, json.encode({model = joaat(model), plate = plate})
 		}, function(rowsChanged)
@@ -302,7 +302,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 
 							if vehicle.model == model then
 								if vehicle.plate == plate then
-									xPlayer.addMoney(resellPrice)
+									xPlayer.addMoney(resellPrice, "Sold Vehicle")
 									RemoveOwnedVehicle(plate)
 									cb(true)
 								else
@@ -393,14 +393,14 @@ function PayRent()
 
 				if bank >= sum and #v > 1 then
 					total = total + sum
-					xPlayer.removeAccountMoney('bank', sum)
+					xPlayer.removeAccountMoney('bank', sum, "Vehicle Rental")
 					xPlayer.showNotification(('You have paid $%s for all of your rentals'):format(ESX.Math.GroupDigits(sum)))
 				else
 					for i = 1, #v do
 						local rental = v[i]
 						if xPlayer.getAccount('bank').money >= rental.rent_price then
 							total = total + rental.rent_price
-							xPlayer.removeAccountMoney('bank', rental.rent_price)
+							xPlayer.removeAccountMoney('bank', rental.rent_price, "Vehicle Rental")
 							xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
 						else
 							xPlayer.showNotification(_U('paid_rental_evicted', ESX.Math.GroupDigits(rental.rent_price), rental.plate))

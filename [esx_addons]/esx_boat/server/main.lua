@@ -22,7 +22,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then
-			xPlayer.removeMoney(price)
+			xPlayer.removeMoney(price, "Boat Purchase")
 
 			MySQL.update('INSERT INTO owned_vehicles (owner, plate, vehicle, type, `stored`) VALUES (@owner, @plate, @vehicle, @type, @stored)', {
 				['@owner']   = xPlayer.identifier,
@@ -92,7 +92,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.LicensePrice then
-		xPlayer.removeMoney(Config.LicensePrice)
+		xPlayer.removeMoney(Config.LicensePrice, "Boat License Purchase")
 
 		TriggerEvent('esx_license:addLicense', source, 'boat', function()
 			cb(true)

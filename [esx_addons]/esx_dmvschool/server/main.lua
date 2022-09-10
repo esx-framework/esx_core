@@ -2,7 +2,7 @@ ESX.RegisterServerCallback('esx_dmvschool:canYouPay', function(source, cb, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.Prices[type] then
-		xPlayer.removeMoney(Config.Prices[type])
+		xPlayer.removeMoney(Config.Prices[type], "DMV Purchase")
 		TriggerClientEvent('esx:showNotification', source, _U('you_paid', Config.Prices[type]))
 		cb(true)
 	else

@@ -58,8 +58,8 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
-								xPlayer.removeMoney(amount)
-								xTarget.addMoney(amount)
+								xPlayer.removeMoney(amount, "Bill Paid")
+								xTarget.addMoney(amount, "Paid bill")
 
 								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
 								xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
@@ -71,8 +71,8 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
-								xPlayer.removeAccountMoney('bank', amount)
-								xTarget.addAccountMoney('bank', amount)
+								xPlayer.removeAccountMoney('bank', amount, "Bill Paid")
+								xTarget.addAccountMoney('bank', amount, "Paid bill")
 
 								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
 								xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
@@ -95,7 +95,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
-								xPlayer.removeMoney(amount)
+								xPlayer.removeMoney(amount, "Bill Paid")
 								account.addMoney(amount)
 
 								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
@@ -110,7 +110,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 						MySQL.update('DELETE FROM billing WHERE id = ?', {billId},
 						function(rowsChanged)
 							if rowsChanged == 1 then
-								xPlayer.removeAccountMoney('bank', amount)
+								xPlayer.removeAccountMoney('bank', amount, "Bill Paid")
 								account.addMoney(amount)
 								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
 

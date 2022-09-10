@@ -180,7 +180,7 @@ ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, Prop
   local xPlayer = ESX.GetPlayerFromId(source)
   local Price = Properties[PropertyId].Price
   if xPlayer.getAccount("bank").money >= Price then
-    xPlayer.removeAccountMoney("bank", Price)
+    xPlayer.removeAccountMoney("bank", Price, "Bought Property")
     Properties[PropertyId].Owner = xPlayer.identifier
     Properties[PropertyId].OwnerName = xPlayer.getName()
     Properties[PropertyId].Owned = true
@@ -200,7 +200,7 @@ ESX.RegisterServerCallback("esx_property:attemptSellToPlayer", function(source, 
   local xTarget = ESX.GetPlayerFromId(PlayerId)
   local Price = Properties[PropertyId].Price
   if xTarget and (xTarget.getAccount("bank").money >= Price) and (xPlayer.job.name == PM.job) then
-    xPlayer.removeAccountMoney("bank", Price)
+    xTarget.removeAccountMoney("bank", Price, "Sold Property")
     Properties[PropertyId].Owner = xTarget.identifier
     Properties[PropertyId].OwnerName = xTarget.getName()
     Properties[PropertyId].Owned = true
@@ -218,7 +218,7 @@ ESX.RegisterServerCallback("esx_property:attemptSellToPlayer", function(source, 
       TriggerEvent('esx_addonaccount:getSharedAccount', PM.society, function(account)
         account.addMoney(SocietyPrice)
       end)
-      xPlayer.addAccountMoney("bank", PlayerPrice)
+      xPlayer.addAccountMoney("bank", PlayerPrice, "Sold Property")
     end
   end
   cb(xPlayer.getAccount("bank").money >= Price)
@@ -231,7 +231,7 @@ ESX.RegisterServerCallback("esx_property:buyFurniture", function(source, cb, Pro
   if xPlayer.identifier == Owner or IsPlayerAdmin(source) or (Properties[PropertyId].Keys and Properties[PropertyId].Keys[xPlayer.identifier]) then
     local Price = Config.FurnitureCatagories[PropCatagory][PropIndex].price
     if xPlayer.getAccount("bank").money >= Price then
-      xPlayer.removeAccountMoney("bank", Price)
+      xPlayer.removeAccountMoney("bank", Price, "Furniture")
       cb(true)
       local furniture = {Name = PropName, Index = PropIndex, Catagory = PropCatagory, Pos = pos, Heading = heading, Price = Price}
       table.insert(Properties[PropertyId].furniture, furniture)
@@ -265,7 +265,7 @@ ESX.RegisterServerCallback("esx_property:sellProperty", function(source, cb, Pro
   local Owner = Properties[PropertyId].Owner
   if xPlayer.identifier == Owner then
     local Price = ESX.Math.Round(Properties[PropertyId].Price * 0.6)
-    xPlayer.addAccountMoney("bank", Price)
+    xPlayer.addAccountMoney("bank", Price, "Sold Property")
     Properties[PropertyId].Owner = ""
     Properties[PropertyId].OwnerName = ""
     Properties[PropertyId].Owned = false

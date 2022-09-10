@@ -30,12 +30,12 @@ AddEventHandler('esx_taxijob:success', function()
                     local playerMoney = ESX.Math.Round(total / 100 * 30)
                     local societyMoney = ESX.Math.Round(total / 100 * 70)
 
-                    xPlayer.addMoney(playerMoney)
+                    xPlayer.addMoney(playerMoney, "Taxi Fair")
                     account.addMoney(societyMoney)
 
                     xPlayer.showNotification(_U('comp_earned', societyMoney, playerMoney))
                 else
-                    xPlayer.addMoney(total)
+                    xPlayer.addMoney(total, "Taxi Fair")
                     xPlayer.showNotification(_U('have_earned', total))
                 end
             end)

@@ -40,7 +40,7 @@ end, false, {help = _U('command_cardel'), validate = false, arguments = {
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if args.playerId.getAccount(args.account) then
-		args.playerId.setAccountMoney(args.account, args.amount)
+		args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
 	else
 		showError(_U('command_giveaccountmoney_invalid'))
 	end
@@ -52,7 +52,7 @@ end, true, {help = _U('command_setaccountmoney'), validate = true, arguments = {
 
 ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
 	if args.playerId.getAccount(args.account) then
-		args.playerId.addAccountMoney(args.account, args.amount)
+		args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
 	else
 		showError(_U('command_giveaccountmoney_invalid'))
 	end

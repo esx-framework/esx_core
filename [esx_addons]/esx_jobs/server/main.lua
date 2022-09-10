@@ -50,7 +50,7 @@ CreateThread(function()
 										end
 									end
 								else
-									xPlayer.addMoney(v.price)
+									xPlayer.addMoney(v.price, "Job Payment")
 								end
 							end
 						end
@@ -108,7 +108,7 @@ RegisterNetEvent('esx_jobs:caution', function(cautionType, cautionAmount, spawnP
 		if cautionAmount <= Config.MaxCaution and cautionAmount >= 0 then
 			TriggerEvent('esx_addonaccount:getAccount', 'caution', xPlayer.identifier, function(account)
 				if xPlayer.getAccount('bank').money >= cautionAmount then
-					xPlayer.removeAccountMoney('bank', cautionAmount)
+					xPlayer.removeAccountMoney('bank', cautionAmount, "Caution Fine")
 					account.addMoney(cautionAmount)
 					xPlayer.showNotification(_U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
 					TriggerClientEvent('esx_jobs:spawnJobVehicle', xPlayer.source, spawnPoint, vehicle)
@@ -123,7 +123,7 @@ RegisterNetEvent('esx_jobs:caution', function(cautionType, cautionAmount, spawnP
 				local caution = account.money
 				local toGive = ESX.Math.Round(caution * cautionAmount)
 	
-				xPlayer.addAccountMoney('bank', toGive)
+				xPlayer.addAccountMoney('bank', toGive, "Caution Return")
 				account.removeMoney(toGive)
 				TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
 			end)
