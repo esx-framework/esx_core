@@ -1,4 +1,9 @@
-# esx_banking
+<h1 align='center'>[ESX] Banking</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+
+A beautiful and Easy-To-Use Banking & ATM system for ESX, with optional OX Target Support
+
+
+## Special thanks: Gellipapa#9186,Rav3n95#2849,Csoki, csontvazharcos, Füsti, Pécé
 
 ## Download & Installation
 
@@ -21,7 +26,7 @@ Run the banking.sql into your database. Done.
 ### License
 esx_banking - banking script for ESX
 
-Copyright (C) 2015-2022 Jérémie N'gadi
+Copyright (C) 2022 ESX-Framework
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

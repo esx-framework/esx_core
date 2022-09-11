@@ -1,4 +1,4 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 
 game 'gta5'
 
@@ -25,10 +25,7 @@ client_scripts {
 ui_page 'html/ui.html'
 
 files {
-	'html/ui.html',
-	'html/roboto.ttf',
-	'html/css/app.css',
-	'html/scripts/app.js'
+	'html/**',
 }
 
 dependency 'es_extended'
