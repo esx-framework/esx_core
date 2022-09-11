@@ -169,6 +169,10 @@ if GetResourceState("esx_context") ~= "missing" then
     function ESX.CloseContext(...)
         exports["esx_context"]:Close(...)
     end
+
+    function ESX.RefreshContext(...)
+       exports["esx_context"]:Refresh(...) 
+    end
 else 
     function ESX.OpenContext()
         print("[ERROR] Tried to open context menu, but esx_context is missing!")
@@ -179,6 +183,10 @@ else
     end
 
     function ESX.CloseContext()
+        print("[ERROR] Tried to close context menu, but esx_context is missing!")
+    end
+
+    function ESX.RefreshContext()
         print("[ERROR] Tried to close context menu, but esx_context is missing!")
     end
 end
