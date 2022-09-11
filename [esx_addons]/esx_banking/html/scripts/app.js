@@ -1,3 +1,4 @@
+var LOADED = true
 class Components{
 	static allComponents = []
 	static generateAllComponents(generatedData,generateType = "bank"){
@@ -55,11 +56,12 @@ class Components{
 				<circle class="loader-path" cx="50" cy="50" r="20"></circle>
 			</svg>`);
 			$(appendedDiv).fadeIn(200)
-
+			LOADED = true
 			setTimeout(() => {
 				$(`${appendedDiv}`).fadeOut(200)
 				$("#wrapper").fadeIn().css("display","flex");
 				if(appendedDiv == ".loader") $("#container").fadeIn().css("display","flex")
+				LOADED = false
 			}, 2500);
 		}else if(state == "hide"){
 			$(`${appendedDiv}`).fadeOut(200)
@@ -966,8 +968,10 @@ $(document).ready(function(){
 
 	$(document).keyup(function(e) {
 		if(e.which == 27) {
-			Components.loader(".loader","hide")
-			$.post('https://esx_banking/close', JSON.stringify({}));
+			if (!LOADED) {
+				Components.loader(".loader","hide")
+				$.post('https://esx_banking/close', JSON.stringify({}));
+			}
 		}
 	});
 })

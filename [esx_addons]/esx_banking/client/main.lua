@@ -20,7 +20,7 @@ end
 local function CreateBlips()
     local tmpActiveBlips = {}
     for i = 1, #Config.Banks do
-        if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Activate then
+        if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Enabled then
             local blip = AddBlipForCoord(Config.Banks[i].Position.xy)
             SetBlipSprite(blip, Config.Banks[i].Blip.Sprite)
             SetBlipScale(blip, Config.Banks[i].Blip.Scale)
