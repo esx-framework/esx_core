@@ -338,6 +338,10 @@ AddEventHandler('onResourceStart', function(resource)
     StartThread()
 end)
 
+-- Enables it on player loaded 
+RegisterNetEvent('esx:playerLoaded', function()
+    StartThread()
+  end)
 -- Resource stopping
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then
