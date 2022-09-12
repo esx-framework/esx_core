@@ -498,13 +498,26 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
         local isAutomobile = IsThisModelACar(model)
         if isAutomobile ~= false then isAutomobile = true end
         ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle',function(NetID)
-            print("Spawned Vehicle: " .. NetID)
             if NetID then
+                local Tries = 0
+                SetNetworkIdCanMigrate(NetID, true)
                 local vehicle = NetworkGetEntityFromNetworkId(NetID)
-                while not DoesEntityExist(vehicle) and not NetworkHasControlOfEntity(vehicle) do
-                    vehicle = NetworkGetEntityFromNetworkId(NetID)
-                    NetworkRequestControlOfEntity(vehicle)
+                while not DoesEntityExist(vehicle) do
                     Wait(0)
+                    vehicle = NetworkGetEntityFromNetworkId(NetID)
+                    Tries += 1 
+                    if Tries > 250 then
+                        break
+                    end
+                end
+                Tries = 0
+                NetworkRequestControlOfEntity(vehicle)
+                while not NetworkHasControlOfEntity(vehicle) do
+                    Wait(0)
+                    Tries += 1 
+                    if Tries > 250 then
+                        break
+                    end
                 end
                 SetEntityAsMissionEntity(vehicle, true, true)
                 SetVehicleHasBeenOwnedByPlayer(vehicle, true)
