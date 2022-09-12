@@ -71,6 +71,10 @@
             }
         ],
         "LAUNGAGE": {
+            "your_money_title":"Balance",
+            "your_money_desc":"Here you can see your current balance and cash.",
+            "your_money_cash_label":"Your cash",
+            "your_money_bank_label":"Your bank balance",
             "withdraw":"WITHDRAW",
             "deposit":"DEPOSIT",
             "transfer":"TRANSFER",
@@ -165,6 +169,10 @@
             
         ],
         "LAUNGAGE": {
+            "your_money_title":"Egyenleged",
+            "your_money_desc":"Itt láthatod a jelenlegi egyenleged és készpénzed.",
+            "your_money_cash_label":"Készpénz",
+            "your_money_bank_label":"Banki egyenleged",
             "withdraw":"KIVÉTEL",
             "deposit":"BETÉTEL",
             "transfer":"UTALÁS",

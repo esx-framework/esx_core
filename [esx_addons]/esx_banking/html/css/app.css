@@ -758,3 +758,10 @@ table.dataTable tbody tr:hover {
 	padding: 3vmin;
 	border-radius: 1.38vmin;
 }
+
+/*MEDIA QUERY*/
+@media only screen and (max-width: 1280px) {
+	.dataTables_scrollBody{
+		max-height: 310px !important;
+	}
+}
