@@ -195,5 +195,102 @@
                 "tableFullLanguage":"Hungarian" 
             }
         }
+    },
+    "IT":{
+        "DYNAMIC_FORM_DATA":[
+            {
+                "componentName":"moreGraph",
+                "elementID":"#wrapper",
+                "title":"",
+                "closeButtonText":"Close",
+                "bankTitle":"Fleeca Bank",
+                "mainExitButtonText": "Disconnettersi"
+            },
+            {
+                "elementID":"#cpincode",
+                "name":"cpincode",
+                "buttonText":"conferma",
+                "inputPlaceholder": "4 cifre...",
+                "title":"IMPOSTAZIONE CODICE PIN",
+                "description": "Qui puoi impostare o modificare il codice PIN.",
+                "type":"password"
+            },
+            {
+                "elementID":"#withdraw",
+                "name":"withdraw",
+                "buttonText":"conferma",
+                "inputPlaceholder": "Quantità",
+                "title":"RITIRARE",
+                "description": "Qui puoi prelevare i tuoi soldi dalla banca.",
+                "type":"number"
+            },
+            {
+                "elementID":"#deposit",
+                "name":"deposit",
+                "buttonText":"conferma",
+                "inputPlaceholder": "Quantità",
+                "title":"DEPOSITARE",
+                "description": "Qui puoi depositare i tuoi soldi in banca.",
+                "type":"number"
+            },
+            {
+                "elementID":"#transfer",
+                "name":"transfer",
+                "buttonText":"trasferisci",
+                "inputPlaceholder": "Quantità",
+                "inputPlaceholder2": "Giocatore ID",
+                "title":"TRASFERIMENTO",
+                "description": "Qui puoi trasferire i tuoi soldi a qualcun altro."
+            },
+            {
+                "componentName":"trans",
+                "elementID":"#third-column",
+                "title":"CRONOLOGIA DELLE TRANSAZIONI",
+                "description": "Qui puoi vedere la cronologia delle tue operazioni.",
+                "moreHistoryText": "Mostra più cronologia",
+                "moreGraphText": "Mostra tutto il grafico"
+            },
+            {
+                "componentName":"pincodePanel",
+                "elementID":"#wrapper",
+                "title":"Enter PIN",
+                "deleteButtonText": "<i class='fa-solid fa-ban'></i>",
+                "loginButtonText": "<i class='fa-solid fa-right-to-bracket'></i>",
+                "closeButtonText": "Close"
+            },
+            {
+                "componentName":"atmComponent",
+                "elementID":"#wrapper",
+                "title":"Fleeca Bank",
+                "closeButtonText":"Disconnettersi"
+            }
+        ],
+        "LAUNGAGE": {
+            "your_money_title":"saldo",
+            "your_money_desc":"qui puoi vedere il saldo attuale e contanti.",
+            "your_money_cash":"i tuoi soldi",
+            "your_money_bank":"il tuo saldo bancario",
+            "withdraw":"RITIRARE",
+            "deposit":"DEPOSITARE",
+            "transfer":"TRASFERIMENTO",
+            "transferReceive":"TRASFERIMENTO RICEVUTO",
+            "moneyFormat":"$__replaceData__",
+            "graphTitle":"Il tuo bilancio",
+            "moreGraphTitle": "grafico",
+            "moreHistoryTitle":"Mostra la cronologia",
+            "inputErrorTitle":"I dati non sono corretti",
+            "inputErrorMessage":"Non può essere vuoto o un valore inferiore a 1!",
+            "showPincodeErrorTitle":"PIN errato",
+            "showPincodeErrorMessage":"Il pin deve contenere almeno 4 caratteri!",
+            "tableLang":{
+                "typeLabel": "Tipo di transazione",
+                "balanceLabel":"bilancio",
+                "amountLabel":"quantità",
+                "timeLabel":"tempo",
+                "searchInputPlaceholder":"Cerca ...",
+                "_comment": "tabella Opzioni complete della lingua: inglese, ungherese, italiana puoi trovare qui tutte le lingue: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "tableFullLanguage":"Italiano" 
+            }
+        }
     }
 }

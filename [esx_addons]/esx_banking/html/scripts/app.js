@@ -650,7 +650,7 @@ $(document).ready(function(){
 		if(data[data.lang] != null){
 			lang = data.lang
 		}
-		Utils.setTimeZone(lang == "EN" ? "en-GB" : "hu-HU")
+		Utils.setTimeZone(lang == "HU" ? "hu-HU" : "en-GB")
 		formData = new GlobalStore(data[lang]["DYNAMIC_FORM_DATA"])
 		language = new GlobalStore(data[lang]["LAUNGAGE"])
 	}).fail(function(error){
