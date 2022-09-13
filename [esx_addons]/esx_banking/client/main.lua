@@ -126,14 +126,10 @@ function OpenUi(atm)
             openATM = atm,
             datas = {
                 your_money_panel = {
-                    title = _U('your_money_title'),
-                    desc = _U('your_money_desc'),
                     accountsData = {{
-                        title = _U('your_money_cash'),
                         name = "cash",
                         amount = data.money
                     }, {
-                        title = _U('your_money_bank'),
                         name = "bank",
                         amount = data.bankMoney
                     }}

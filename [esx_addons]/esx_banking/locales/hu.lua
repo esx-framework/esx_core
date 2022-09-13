@@ -12,9 +12,5 @@ Locales['hu'] = {
     ['not_enough_money'] = "Nincs elég pénzed, még szükséged lesz ennyire: %s",
     ['pincode_not_found'] = "Érvénytelen PIN kód",
     ['pincode_found'] = "Érvényes PIN kód...",
-    ['bank_name'] = "Fleeca Bank",
-    ['your_money_title'] = "Egyenleg",
-    ['your_money_desc'] = "Itt láthatod a jelenlegi egyenleged és készpénzed.",
-    ['your_money_cash'] = "Készpénz",
-    ['your_money_bank'] = "Banki egyenleged"
+    ['bank_name'] = "Fleeca Bank"
 }
