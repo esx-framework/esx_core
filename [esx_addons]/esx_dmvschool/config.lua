@@ -2,7 +2,7 @@ Config                 = {}
 Config.DrawDistance    = 10.0
 Config.MaxErrors       = 5
 Config.SpeedMultiplier = 3.6
-Config.Locale          = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Prices = {
 	dmv         = 500,

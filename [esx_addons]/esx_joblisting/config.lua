@@ -7,7 +7,7 @@ Config.MarkerType   = 27
 Config.Debug = ESX.GetConfig().EnableDebug
 
 
-Config.Locale       = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Zones = {
 	vector3(-265.08, -964.1, 30.3)

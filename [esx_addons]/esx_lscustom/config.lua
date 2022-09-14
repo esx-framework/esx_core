@@ -1,6 +1,6 @@
 Config                   = {}
 Config.DrawDistance      = 10.0
-Config.Locale            = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.IsMechanicJobOnly = false
 
 Config.Zones = {
