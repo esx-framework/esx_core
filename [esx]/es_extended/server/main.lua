@@ -298,8 +298,18 @@ function loadESXPlayer(identifier, playerId, isNew)
   TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
   xPlayer.triggerEvent('esx:playerLoaded',
-    {accounts = xPlayer.getAccounts(), coords = xPlayer.getCoords(), identifier = xPlayer.getIdentifier(), inventory = xPlayer.getInventory(),
-     job = xPlayer.getJob(), loadout = xPlayer.getLoadout(), maxWeight = xPlayer.getMaxWeight(), money = xPlayer.getMoney(), dead = false}, isNew,
+    {
+      accounts = xPlayer.getAccounts(), 
+      coords = xPlayer.getCoords(), 
+      identifier = xPlayer.getIdentifier(), 
+      inventory = xPlayer.getInventory(),
+      job = xPlayer.getJob(), 
+      loadout = xPlayer.getLoadout(), 
+      maxWeight = xPlayer.getMaxWeight(), 
+      money = xPlayer.getMoney(),
+      sex = xPlayer.get("sex") or "m",
+      dead = false
+    }, isNew,
     userData.skin)
 
   if not Config.OxInventory then

@@ -272,8 +272,9 @@ if ESX.GetConfig().Multichar then
 		local spawn = playerData.coords or Config.Spawn
 		if isNew or not skin or #skin == 1 then
 			local finished = false
-			local sex = skin.sex or 0
-			local model = sex == 0 and mp_m_freemode_01 or mp_f_freemode_01
+			skin = Config.Default[playerData.sex]
+			skin.sex = playerData.sex == "m" and 0 or 1
+			local model = skin.sex == 0 and mp_m_freemode_01 or mp_f_freemode_01
 			RequestModel(model)
 			while not HasModelLoaded(model) do
 				RequestModel(model)
@@ -281,13 +282,8 @@ if ESX.GetConfig().Multichar then
 			end
 			SetPlayerModel(PlayerId(), model)
 			SetModelAsNoLongerNeeded(model)
-			while not ESX.PlayerData.sex do
-				Wait(0)
-			end
-			skin = Config.Default[ESX.PlayerData.sex]
-			skin.sex = ESX.PlayerData.sex == "m" and 0 or 1
 			TriggerEvent('skinchanger:loadSkin', skin, function()
-				playerPed = PlayerPedId()
+				local playerPed = PlayerPedId()
 				SetPedAoBlobRendering(playerPed, true)
 				ResetEntityAlpha(playerPed)
 				TriggerEvent('esx_skin:openSaveableMenu', function()

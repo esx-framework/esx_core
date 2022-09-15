@@ -1,3 +1,4 @@
+var LOADED = true
 class Components{
 	static allComponents = []
 	static generateAllComponents(generatedData,generateType = "bank"){
@@ -55,11 +56,14 @@ class Components{
 				<circle class="loader-path" cx="50" cy="50" r="20"></circle>
 			</svg>`);
 			$(appendedDiv).fadeIn(200)
+			LOADED = true
+
 
 			setTimeout(() => {
 				$(`${appendedDiv}`).fadeOut(200)
 				$("#wrapper").fadeIn().css("display","flex");
 				if(appendedDiv == ".loader") $("#container").fadeIn().css("display","flex")
+				LOADED = false
 			}, 2500);
 		}else if(state == "hide"){
 			$(`${appendedDiv}`).fadeOut(200)
@@ -264,25 +268,7 @@ class Render {
 	language = ""
 	constructor(elementID){
 		this.elementID = elementID
-		// this.fullRenderData = renderData
 	}
-
-	// getCurrentTemplate(){
-	// 	let functionName = ""
-	// 	switch(this.elementID){
-	// 		case "bankcard":
-	// 			functionName = this.renderBankCard()
-	// 			break;
-	// 		case "your_money":
-	// 			functionName = this.renderMyMoneySection()
-	// 			break;
-	// 		case "transaction":
-	// 			functionName = this.renderTransactions()
-	// 			break;
-	// 	}
-	// 	return functionName;
-	// }
-
 	renderBankCard(){
 		const bankData =  this.fullRenderData
 		$("#bankcard").empty();
@@ -387,14 +373,13 @@ class Render {
 	renderMyMoneySection(){
 		const moneyData =  this.fullRenderData
 		$("#your-money-panel").empty();
-		let template = `<h3>${moneyData.title}</h3>
-		<p>${moneyData.desc}</p>
+		let template = `<h3>${this.language.your_money_title}</h3>
+		<p>${this.language.your_money_desc}</p>
 		<div id="money-containers">`;
 			moneyData.accountsData.forEach((data)=>{
-
 			template += `
 				<div class="money-container">
-					<h4>${data.title}</h4>
+					<h4>${this.language[`your_money_${data.name}_label`]}</h4>
 					<span id="money-${data.name}">${this.language.moneyFormat.replace("__replaceData__",data.amount)}</span>
 				</div>
 			`;
@@ -496,8 +481,7 @@ class Pincode {
 	}
 }
 
-
-const timeZone = localStorage.getItem("TIME_ZONE")
+var timeZone = ""
 class Utils {
 	static dateFormat(date){
 		if(typeof(date) == "number"){
@@ -505,8 +489,7 @@ class Utils {
 		}else{
 			var newDate = date
 		}
-		
-		return newDate.toLocaleString([timeZone], {
+		return newDate.toLocaleString([Utils.getTimeZone()], {
 			weekday:"long",
 			hour:"2-digit",
 			minute:"2-digit",
@@ -544,6 +527,14 @@ class Utils {
 			}
 		}
 		return genNum;
+	}
+
+	static setTimeZone(newTimeZone){
+		timeZone = newTimeZone
+	}
+
+	static getTimeZone(){
+		return timeZone
 	}
 }
 
@@ -659,7 +650,7 @@ $(document).ready(function(){
 		if(data[data.lang] != null){
 			lang = data.lang
 		}
-		localStorage.setItem("TIME_ZONE",lang == "EN" ? "en-GB" : "hu-HU")
+		Utils.setTimeZone(lang == "HU" ? "hu-HU" : "en-GB")
 		formData = new GlobalStore(data[lang]["DYNAMIC_FORM_DATA"])
 		language = new GlobalStore(data[lang]["LAUNGAGE"])
 	}).fail(function(error){
@@ -898,7 +889,6 @@ $(document).ready(function(){
 		second: false
 	}
 
-	let currentNotify = false
 	$(document).on('keyup','input[type="number"] , input[type="password"]',function(){
 		let buttonGroup = $(this).closest('.input-groups-container').find('button');
 
@@ -927,12 +917,6 @@ $(document).ready(function(){
 
 		if($(this).val() != '') {
 			if($(this).attr("name") == "pincode" && $(this).val().length < 4){
-				if(!currentNotify){
-					currentNotify = true
-					setTimeout(function(){
-						currentNotify = false
-					},3000)
-				}
 				return
 			}
 
@@ -962,12 +946,6 @@ $(document).ready(function(){
 			let inputValue = $(this).prev('input').val();
 			if(inputValue == undefined){return}
 			if((inputValue.length == 0 && inputValue <= 0 )){
-				if(!currentNotify){
-					currentNotify = true
-					setTimeout(function(){
-						currentNotify = false
-					},3000)
-				}
 				return
 			}
 
@@ -997,8 +975,10 @@ $(document).ready(function(){
 
 	$(document).keyup(function(e) {
 		if(e.which == 27) {
-			Components.loader(".loader","hide")
-			$.post('https://esx_banking/close', JSON.stringify({}));
+			if (!LOADED) {
+				Components.loader(".loader","hide")
+				$.post('https://esx_banking/close', JSON.stringify({}));
+			}
 		}
 	});
 })

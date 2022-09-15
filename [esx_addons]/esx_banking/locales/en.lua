@@ -12,9 +12,5 @@ Locales['en'] = {
   ['not_enough_money'] = "Not enough money! You need %s money!",
   ['pincode_not_found'] = "Invalid PIN code",
   ['pincode_found'] = "Valid PIN code...",
-  ['bank_name'] = "Fleeca Bank",
-  ['your_money_title'] = "Balance",
-  ['your_money_desc'] = "Here you can see your current balance and cash.",
-  ['your_money_cash'] = "Your cash",
-  ['your_money_bank'] = "Your bank balance"
+  ['bank_name'] = "Fleeca Bank"
 }

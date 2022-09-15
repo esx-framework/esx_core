@@ -20,7 +20,7 @@ end
 local function CreateBlips()
     local tmpActiveBlips = {}
     for i = 1, #Config.Banks do
-        if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Activate then
+        if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Enabled then
             local blip = AddBlipForCoord(Config.Banks[i].Position.xy)
             SetBlipSprite(blip, Config.Banks[i].Blip.Sprite)
             SetBlipScale(blip, Config.Banks[i].Blip.Scale)
@@ -126,14 +126,10 @@ function OpenUi(atm)
             openATM = atm,
             datas = {
                 your_money_panel = {
-                    title = _U('your_money_title'),
-                    desc = _U('your_money_desc'),
                     accountsData = {{
-                        title = _U('your_money_cash'),
                         name = "cash",
                         amount = data.money
                     }, {
-                        title = _U('your_money_bank'),
                         name = "bank",
                         amount = data.bankMoney
                     }}
