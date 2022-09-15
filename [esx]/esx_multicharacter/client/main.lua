@@ -8,7 +8,7 @@ if ESX.GetConfig().Multichar then
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
-				while not GetResourceState('esx_menu_default') == 'started' do
+				while not GetResourceState('esx_context') == 'started' do
 					Wait(0)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
@@ -114,7 +114,7 @@ if ESX.GetConfig().Multichar then
 					end
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
-				DoScreenFadeIn(400)
+				DoScreenFadeIn(600)
 			end)
 		repeat Wait(200) until not IsScreenFadedOut()
 
@@ -141,16 +141,88 @@ if ESX.GetConfig().Multichar then
 		})
 	end
 
+	function CharacterOptions(Characters, slots, SelectedCharacter)
+		local elements = {{title = "Character: ".. Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname,icon = "fa-regular fa-user", unselectable = true}, 
+		{title = "Return", unselectable = false,icon = "fa-solid fa-arrow-left",description ="Return To Character Selection.", action = "return"}}
+		if not Characters[SelectedCharacter.value].disabled then 
+			elements[3] = {title = _('char_play'), description ="Continue Into The City.", icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
+		else
+			elements[3] = {title = _('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description ="This Character Is Unusable.",}
+		end
+		if Config.CanDelete then elements[4] = {title = _('char_delete'),icon ="fa-solid fa-xmark",description ="Permanently Remove This Character.", action = 'delete', value = SelectedCharacter.value} end
+		ESX.OpenContext("left", elements, function(element, Action)
+			if Action.action == "play" then
+				SendNUIMessage({
+					action = "closeui"
+				})
+				ESX.CloseContext()
+				TriggerServerEvent('esx_multicharacter:CharacterChosen', Action.value, false)
+			elseif Action.action == "delete" then
+					ESX.CloseContext()
+					TriggerServerEvent('esx_multicharacter:DeleteCharacter', Action.value)
+					spawned = false
+			elseif Action.action == "return" then
+				SelectCharacterMenu(Characters, slots)
+			end
+		end, nil, true)
+	end
+
+	function SelectCharacterMenu(Characters, slots)
+		local Character = next(Characters)
+		local elements = {{title = "Select A Character." , icon = "fa-solid fa-users", description = "Select a character to play as." , unselectable = true}}
+		for k,v in pairs(Characters) do
+			if not v.model and v.skin then
+				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
+			end
+			if spawned == false then SetupCharacter(Character) end
+			local label = v.firstname..' '..v.lastname
+			if Characters[k].disabled then
+				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
+			else
+				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
+			end
+		end
+		if #elements < slots then
+			elements[#elements+1] = {title = _('create_char'), icon = "fa-solid fa-plus", value = (#elements+1), new = true}
+		end
+
+		ESX.OpenContext("left", elements, function(menu, SelectedCharacter)
+			if SelectedCharacter.new then
+				ESX.CloseContext()
+				local GetSlot = function()
+					for i = 1, slots do
+						if not Characters[i] then
+							return i
+						end
+					end
+				end
+				local slot = GetSlot()
+				TriggerServerEvent('esx_multicharacter:CharacterChosen', slot, true)
+				TriggerEvent('esx_identity:showRegisterIdentity')
+				local playerPed = PlayerPedId()
+					SetPedAoBlobRendering(playerPed, false)
+					SetEntityAlpha(playerPed, 0)
+					SendNUIMessage({
+						action = "closeui"
+					})
+			else
+				CharacterOptions(Characters,slots, SelectedCharacter)
+				SetupCharacter(SelectedCharacter.value)
+				local playerPed = PlayerPedId()
+				SetPedAoBlobRendering(playerPed, true)
+				ResetEntityAlpha(playerPed)
+			end
+		end, nil, true)
+	end
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
 		DoScreenFadeOut(0)
 		Characters = data
 		slots = slots
-		local elements = {}
 		local Character = next(Characters)
 		exports.spawnmanager:forceRespawn()
 
-		if Character == nil then
+		if not Character then
 			SendNUIMessage({
 				action = "closeui"
 			})
@@ -172,98 +244,7 @@ if ESX.GetConfig().Multichar then
 				TriggerEvent('esx_identity:showRegisterIdentity')
 			end)
 		else
-			for k,v in pairs(Characters) do
-				if not v.model and v.skin then
-					if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
-				end
-				if spawned == false then SetupCharacter(Character) end
-				local label = v.firstname..' '..v.lastname
-				if Characters[k].disabled then
-					elements[#elements+1] = {label = label, value = v.id}
-				else
-					elements[#elements+1] = {label = label, value = v.id}
-				end
-			end
-			if #elements < slots then
-				elements[#elements+1] = {label = _('create_char'), value = (#elements+1), new = true}
-			end
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'selectchar', {
-				title    = _('select_char'),
-				align    = 'top-left',
-				elements = elements
-			}, function(data, menu)
-				local elements = {}
-				if not data.current.new then
-					if not Characters[data.current.value].disabled then 
-						elements[1] = {label = _('char_play'), action = 'play', value = data.current.value}
-					else
-						elements[1] = {label = _('char_disabled'), value = data.current.value}
-					end
-					if Config.CanDelete then elements[2] = {label = _('char_delete'), action = 'delete', value = data.current.value} end
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'choosechar', {
-						title = _('select_char'),
-						align = 'top-left',
-						elements = elements
-					}, function(data, menu)
-						if data.current.action == 'play' then
-							ESX.UI.Menu.CloseAll()
-							SendNUIMessage({
-								action = "closeui"
-							})
-							TriggerServerEvent('esx_multicharacter:CharacterChosen', data.current.value, false)
-						elseif data.current.action == 'delete' then
-							local elements2 = {}
-							elements2[1] = {label = _('cancel')}
-							elements2[2] = {label = _('confirm'), value = data.current.value}
-							ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'deletechar', {
-								title = _('delete_label', Characters[data.current.value].firstname, Characters[data.current.value].lastname),
-								align = 'center',
-								elements = elements2
-							}, function(data, menu)
-								if data.current.value then
-									TriggerServerEvent('esx_multicharacter:DeleteCharacter', data.current.value)
-									spawned = false
-									ESX.UI.Menu.CloseAll()
-								else
-									menu.close()
-								end
-							end, function(data, menu)
-								menu.close()
-							end)
-						end
-					end, function(data, menu)
-						menu.close()
-					end)
-				else
-					ESX.UI.Menu.CloseAll()
-					local GetSlot = function()
-						for i = 1, slots do
-							if not Characters[i] then
-								return i
-							end
-						end
-					end
-					local slot = GetSlot()
-					TriggerServerEvent('esx_multicharacter:CharacterChosen', slot, true)
-					TriggerEvent('esx_identity:showRegisterIdentity')
-				end		
-			end, function(data, menu)
-				menu.refresh()
-			end, function(data, menu)
-				if data.current.new then
-					local playerPed = PlayerPedId()
-					SetPedAoBlobRendering(playerPed, false)
-					SetEntityAlpha(playerPed, 0)
-					SendNUIMessage({
-						action = "closeui"
-					})
-				else
-					SetupCharacter(data.current.value)
-					local playerPed = PlayerPedId()
-					SetPedAoBlobRendering(playerPed, true)
-					ResetEntityAlpha(playerPed)
-				end
-			end)
+			SelectCharacterMenu(Characters, slots)
 		end
 	end)
 
@@ -314,7 +295,8 @@ if ESX.GetConfig().Multichar then
 
 	RegisterNetEvent('esx:onPlayerLogout')
 	AddEventHandler('esx:onPlayerLogout', function()
-		DoScreenFadeOut(0)
+		DoScreenFadeOut(500)
+		Wait(1000)
 		spawned = false
 		TriggerEvent("esx_multicharacter:SetupCharacters")
 		TriggerEvent('esx_skin:resetFirstSpawn')
