@@ -73,4 +73,5 @@ files {
 dependencies {
 	'oxmysql',
 	'spawnmanager',
+	'esx_notify',
 }
