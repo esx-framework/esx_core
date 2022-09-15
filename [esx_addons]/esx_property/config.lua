@@ -412,7 +412,6 @@ Config.FurnitureCatagories =
                 {name = "prop_el_guitar_01", title = "E Guitar 1", price = 100},
                 {name = "prop_el_guitar_02", title = "E Guitar 2", price = 100},
                 {name = "prop_el_guitar_03", title = "E Guitar 2", price = 100},
-                {name = "prop_ld_greenscreen_01", title = "Green Screen", price = 100},
                 {name = "v_res_mbowlornate", title = "Ornate Bowl", price = 300},
                 {name = "v_res_mbronzvase", title = "Bronze Vase", price = 300},
                 {name = "prop_ceramic_jug_01", title = "Ceramic Jug", price = 100},
