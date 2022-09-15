@@ -213,6 +213,7 @@ elseif ESX.GetConfig().Multichar == true then
 	end)
 
 	RegisterNetEvent('esx_multicharacter:relog', function()
+		local source = source
 		TriggerEvent('esx:playerLogout', source)
 	end)
 

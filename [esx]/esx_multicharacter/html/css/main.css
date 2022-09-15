@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 * {
     margin: 0;
     padding: 0;
     user-select: none;
     color: rgb(255, 255, 255);
+	border-radius: 15px;
 	font-weight: 300;
 	font-size: 1.6vh;
     font-family: Calibri, "Helvetica", san-serif;
@@ -25,25 +27,30 @@ body {
     display:none;
     position: absolute;
 	top: 50%;
-    right: 25;
+    right: 150;
     transform: translate(0, -50%);
-	background: rgba(0,0,0,0.7);
+	border-radius: 15px;
+	background: rgba(15,15,15, 0.9);
 }
 
 .header {
+	font-family: 'Oswald', sans-serif;
 	position: absolute;
-	top: 5%;
+	background: rgba(10, 10, 10, 0.9);
+	border-radius: 15px 15px 0px 0px; 
+	height: 10%;
+	width: 100%;
     left: 50%;
+	text-align: center;
     transform: translate(-50%);
-	font-size: 1.1rem;
+	font-weight: 700;
+	padding-bottom: 5px;
+	font-size: 1.6rem;
 }
 
 .footer {
 	position: absolute;
-	bottom: 5%;
-    left: 50%;
-    transform: translate(-50%);
-	font-size: 1.1rem;
+	font-size: 0rem;
 }
 
 .character-box {
@@ -54,17 +61,16 @@ body {
 	align-items: center;
 	text-align: center;
 	line-height: 1.4rem;
-	height: calc(100vh - 6rem);
-	width: 20rem;
-	padding: 1rem;
-	border: 1px rgba(12,12,12,200) solid;
-	box-shadow: 0px 0px 4px 1px rgba(12,12,12,20);
+	height: calc(30rem);
+	width: 17rem;
+	border: 1px rgba(10,10,10,0.7) solid;
+	box-shadow: 2px 1px 9px 3px rgba(10,10,10,0.7);
 }
 
 h1 {
-    font-family: 'Raleway', sans-serif;
-	padding-top: 2rem;
+	font-family: 'Oswald', sans-serif;
+	font-size: 22px;
+	padding-top: 1.3rem;
 	display: block;
-	font-size: 1.3rem;
-	font-weight: 600;
+	font-weight: 0;
 }
