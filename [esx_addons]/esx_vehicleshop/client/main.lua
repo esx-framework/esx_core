@@ -228,18 +228,12 @@ function OpenShopMenu()
 							menu2.close()
 							menu.close()
 							DeleteDisplayVehicleInsideShop()
-
-							ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function(vehicle)
-								TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-								SetVehicleNumberPlateText(vehicle, generatedPlate)
-
-								FreezeEntityPosition(playerPed, false)
-								SetEntityVisible(playerPed, true)
-							end)
+							FreezeEntityPosition(playerPed, false)
+							SetEntityVisible(playerPed, true)
 						else
 							ESX.ShowNotification(_U('not_enough_money'))
 						end
-					end, vehicleData.model, generatedPlate)
+					end, vehicleData.model, generatedPlate, IsThisModelACar(vehicleData.model))
 				end
 			else
 				menu2.close()
