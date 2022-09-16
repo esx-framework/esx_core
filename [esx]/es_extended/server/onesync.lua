@@ -70,12 +70,12 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, Properties
 		return
 	end
 	CreateThread(function()
-		local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		while not DoesEntityExist(Entity) do
+		local entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
+		while not DoesEntityExist(entity) do
 			Wait(0)
 		end
-		Entity(Entity).state:set('VehicleProperties', Properties, true)
-		local netID = NetworkGetNetworkIdFromEntity(Entity)
+		Entity(entity).state:set('VehicleProperties', Properties, true)
+		local netID = NetworkGetNetworkIdFromEntity(entity)
 		cb(netID)
 	end)
 end
