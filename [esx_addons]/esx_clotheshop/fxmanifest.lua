@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Clothes Shop'
 
-version '1.7.5'
+version '1.8.5'
 lua54 'yes'
 shared_script '@es_extended/imports.lua'
 

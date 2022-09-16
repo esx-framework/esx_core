@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Weapon Shop'
 lua54 'yes'
-version '1.7.5'
+version '1.8.5'
 
 shared_scripts {
 	'@es_extended/imports.lua',
