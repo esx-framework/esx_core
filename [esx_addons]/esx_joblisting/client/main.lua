@@ -1,82 +1,81 @@
-local menuIsShowed = false
+local menuIsShowed, TextUIdrawing = false, false
 
 function ShowJobListingMenu()
-	menuIsShowed = true
-	ESX.TriggerServerCallback('esx_joblisting:getJobsList', function(jobs)
-		local elements = {}
+  menuIsShowed = true
+  ESX.TriggerServerCallback('esx_joblisting:getJobsList', function(jobs)
+    local elements = {{unselectable = "true", title = _U('job_center'), icon = "fas fa-briefcase"}}
 
-		for k,v in pairs(jobs) do
-			table.insert(elements, {
-				label = v.label,
-				job   = k
-			})
-		end
+    for i = 1, #(jobs) do
+      elements[#elements + 1] = {title = jobs[i].label, name = jobs[i].name}
+    end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'joblisting', {
-			title    = _U('job_center'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			TriggerServerEvent('esx_joblisting:setJob', data.current.job)
-			ESX.ShowNotification(_U('new_job'))
-			menuIsShowed = false
-			menu.close()
-		end, function(data, menu)
-			menuIsShowed = false
-			menu.close()
-		end)
-
-	end)
+    ESX.OpenContext("right", elements, function(menu, SelectJob)
+      TriggerServerEvent('esx_joblisting:setJob', SelectJob.name)
+      ESX.CloseContext()
+      ESX.ShowNotification(_U('new_job', SelectJob.title), "success")
+      menuIsShowed = false
+      TextUIdrawing = false
+    end, function()
+      menuIsShowed = false
+      TextUIdrawing = false
+    end)
+  end)
 end
 
 -- Activate menu when player is inside marker, and draw markers
 CreateThread(function()
-	while true do
-		local Sleep = 1500
+  while true do
+    local Sleep = 1500
 
-		local coords = GetEntityCoords(PlayerPedId())
-		local isInMarker = false
+    local coords = GetEntityCoords(ESX.PlayerData.ped)
+    local isInMarker = false
 
-		for i=1, #Config.Zones, 1 do
-			local distance = #(coords - Config.Zones[i])
+    for i = 1, #Config.Zones, 1 do
+      local distance = #(coords - Config.Zones[i])
 
-			if distance < Config.DrawDistance then
-				Sleep = 0
-				DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
-			end
+      if distance < Config.DrawDistance then
+        Sleep = 0
+        DrawMarker(Config.MarkerType, Config.Zones[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z,
+          Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
+      end
 
-			if distance < (Config.ZoneSize.x / 2) then
-				isInMarker = true
-				ESX.ShowHelpNotification(_U('access_job_center'))
-				if IsControlJustReleased(0, 38) and not menuIsShowed then
-					ESX.UI.Menu.CloseAll()
-					ShowJobListingMenu()
-				end
-			end
-		end
+      if distance < (Config.ZoneSize.x / 2) then
+        isInMarker = true
+        if not TextUIdrawing then
+          ESX.TextUI(_U("access_job_center"))
+          TextUIdrawing = true
+        end
+        if IsControlJustReleased(0, 38) and not menuIsShowed then
+          ShowJobListingMenu()
+          ESX.HideUI()
+        end
+      end
+    end
 
-		if not isInMarker and menuIsShowed then 
-			ESX.UI.Menu.CloseAll()
-			menuIsShowed = false
-		end
+    if not isInMarker and TextUIdrawing then
+      ESX.HideUI()
+      TextUIdrawing = false
+    end
 
-		Wait(Sleep)
-	end
+    Wait(Sleep)
+  end
 end)
 
 -- Create blips
-CreateThread(function()
-	for i=1, #Config.Zones, 1 do
-		local blip = AddBlipForCoord(Config.Zones[i])
+if Config.Blip.Enabled then
+  CreateThread(function()
+    for i = 1, #Config.Zones, 1 do
+      local blip = AddBlipForCoord(Config.Zones[i])
 
-		SetBlipSprite (blip, Config.Blip.Sprite)
-		SetBlipDisplay(blip, Config.Blip.Display)
-		SetBlipScale  (blip, Config.Blip.Scale)
-		SetBlipColour (blip, Config.Blip.Colour)
-		SetBlipAsShortRange(blip, Config.Blip.ShortRange)
+      SetBlipSprite(blip, Config.Blip.Sprite)
+      SetBlipDisplay(blip, Config.Blip.Display)
+      SetBlipScale(blip, Config.Blip.Scale)
+      SetBlipColour(blip, Config.Blip.Colour)
+      SetBlipAsShortRange(blip, Config.Blip.ShortRange)
 
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentSubstringPlayerName(_U('job_center'))
-		EndTextCommandSetBlipName(blip)
-	end
-end)
+      BeginTextCommandSetBlipName("STRING")
+      AddTextComponentSubstringPlayerName(_U('blip_text'))
+      EndTextCommandSetBlipName(blip)
+    end
+  end)
+end

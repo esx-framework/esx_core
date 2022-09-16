@@ -6,7 +6,7 @@ This Simple resource lets you finally contribute to Society and make a differenc
 
 esx_joblisting - virtual Job Center!
 
-Copyright (C) 2015-2022 Jérémie N'gadi
+Copyright (C) 2015-2022 Jérémie N'gadi, ESX-Framework
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
