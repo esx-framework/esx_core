@@ -21,6 +21,8 @@ function getVehicles()
 	end)
 end
 
+AddEventHandler("onResourceStart", getVehicles)
+
 function PlayerManagement()
 	if Config.EnablePlayerManagement then
 		if ESX.PlayerData.job.name == 'cardealer' then
