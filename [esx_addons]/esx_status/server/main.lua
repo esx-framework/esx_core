@@ -22,7 +22,6 @@ end)
 
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	MySQL.scalar('SELECT status FROM users WHERE identifier = ?', { xPlayer.identifier }, function(result)
-		print("playerLoaded -> result", result)
 		setPlayerStatus(xPlayer, result)
 	end)
 end)
