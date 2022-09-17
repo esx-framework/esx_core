@@ -173,13 +173,9 @@ function OpenVehicleSpawnerMenu()
                 menu.close()
 
                 local vehicleProps = data.current.value
-                ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos,
-                    Config.Zones.VehicleSpawnPoint.Heading, function(vehicle)
-                        ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-                        local playerPed = PlayerPedId()
-                        TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-                    end)
-
+                ESX.TriggerServerCallback("esx_taxijob:SpawnVehicle", function()
+                    return
+                end, vehicleProps.model, vehicleProps)
                 TriggerServerEvent('esx_society:removeVehicleFromGarage', 'taxi', vehicleProps)
             end, function(data, menu)
                 CurrentAction = 'vehicle_spawner'
@@ -203,11 +199,9 @@ function OpenVehicleSpawnerMenu()
             end
 
             menu.close()
-            ESX.Game.SpawnVehicle(data.current.model, Config.Zones.VehicleSpawnPoint.Pos,
-                Config.Zones.VehicleSpawnPoint.Heading, function(vehicle)
-                    local playerPed = PlayerPedId()
-                    TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-                end)
+            ESX.TriggerServerCallback("esx_taxijob:SpawnVehicle", function()
+                ESX.ShowNotification(_U('vehicle_spawned'), "success")
+            end, data.current.model, {plate = "TAXI JOB"})
         end, function(data, menu)
             CurrentAction = 'vehicle_spawner'
             CurrentActionMsg = _U('spawner_prompt')

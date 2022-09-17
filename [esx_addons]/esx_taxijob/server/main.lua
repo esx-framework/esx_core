@@ -45,6 +45,22 @@ AddEventHandler('esx_taxijob:success', function()
     end
 end)
 
+ESX.RegisterServerCallback("esx_taxijob:SpawnVehicle", function(source, cb, model , props)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if xPlayer.job.name ~= "taxi" then 
+        print(('[esx_taxijob] [^3WARNING^7] ^5%s^7 attempted to spawn a vehicle (not taxi job)'):format(xPlayer.identifier))
+        return
+    end
+    local SpawnPoint = vector3(Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z)
+    ESX.OneSync.SpawnVehicle(joaat(model), SpawnPoint, Config.Zones.VehicleSpawnPoint.Heading, true, props, function(vehicle)
+        local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+        print("Vehicle Spawned")
+        TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
+    end)
+    cb()
+end)
+
 RegisterNetEvent('esx_taxijob:getStockItem')
 AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
     local xPlayer = ESX.GetPlayerFromId(source)
