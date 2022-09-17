@@ -84,15 +84,14 @@ function ESX.Progressbar(message, length, Options)
 end
 
 function ESX.ShowNotification(message, type, length)
-    if Config.NativeNotify then
-        BeginTextCommandThefeedPost('STRING')
-        AddTextComponentSubstringPlayerName(message)
-        EndTextCommandThefeedPostTicker(0, 1)
-    else
+    if GetResourceState("esx_notify") ~= "missing" then
         exports["esx_notify"]:Notify(type, length, message)
+        else
+            print("[ERROR] Missing esx_notify")
+        end
     end
-end
-
+    
+    
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:TextUI(message, type)
@@ -491,70 +490,33 @@ function ESX.Game.DeleteObject(object)
 end
 
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
+    local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
-    if networked then 
-        local isAutomobile = IsThisModelACar(model)
-        if isAutomobile ~= false then isAutomobile = true end
-        ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle',function(NetID)
-            if NetID then
-                local Tries = 0
-                SetNetworkIdCanMigrate(NetID, true)
-                local vehicle = NetworkGetEntityFromNetworkId(NetID)
-                while not DoesEntityExist(vehicle) do
-                    Wait(0)
-                    vehicle = NetworkGetEntityFromNetworkId(NetID)
-                    Tries += 1 
-                    if Tries > 250 then
-                        break
-                    end
-                end
-                Tries = 0
-                NetworkRequestControlOfEntity(vehicle)
-                while not NetworkHasControlOfEntity(vehicle) do
-                    Wait(0)
-                    Tries += 1 
-                    if Tries > 250 then
-                        break
-                    end
-                end
-                SetEntityAsMissionEntity(vehicle, true, true)
-                SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-                SetVehicleNeedsToBeHotwired(vehicle, false)
-                SetModelAsNoLongerNeeded(model)
-                SetVehRadioStation(vehicle, 'OFF')
-                if cb then
-                    cb(vehicle)
-                end
-            end
-        end, model, vector, heading, isAutomobile)
-    else 
-        CreateThread(function()
-            ESX.Streaming.RequestModel(model)
+    CreateThread(function()
+        ESX.Streaming.RequestModel(model)
 
-            local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
+        local vehicle = CreateVehicle(model, vector.xyz, heading, networked, true)
 
-            if networked then
-                local id = NetworkGetNetworkIdFromEntity(vehicle)
-                SetNetworkIdCanMigrate(id, true)
-                SetEntityAsMissionEntity(vehicle, true, false)
-            end
-            SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-            SetVehicleNeedsToBeHotwired(vehicle, false)
-            SetModelAsNoLongerNeeded(model)
-            SetVehRadioStation(vehicle, 'OFF')
+        if networked then
+            local id = NetworkGetNetworkIdFromEntity(vehicle)
+            SetNetworkIdCanMigrate(id, true)
+            SetEntityAsMissionEntity(vehicle, true, true)
+        end
+        SetVehicleHasBeenOwnedByPlayer(vehicle, true)
+        SetVehicleNeedsToBeHotwired(vehicle, false)
+        SetModelAsNoLongerNeeded(model)
+        SetVehRadioStation(vehicle, 'OFF')
 
-            RequestCollisionAtCoord(vector.xyz)
-            while not HasCollisionLoadedAroundEntity(vehicle) do
-                Wait(0)
-            end
+        RequestCollisionAtCoord(vector.xyz)
+        while not HasCollisionLoadedAroundEntity(vehicle) do
+            Wait(0)
+        end
 
-            if cb then
-                cb(vehicle)
-            end
-        end)
-    end
+        if cb then
+            cb(vehicle)
+        end
+    end)
 end
 
 function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)

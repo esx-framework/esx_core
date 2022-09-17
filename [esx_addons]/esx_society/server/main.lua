@@ -284,10 +284,13 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 
 			if type == 'hire' then
 				xTarget.showNotification(_U('you_have_been_hired', job))
+				xPlayer.showNotification(_U("you_have_hired", xTarget.getName()))
 			elseif type == 'promote' then
 				xTarget.showNotification(_U('you_have_been_promoted'))
+				xPlayer.showNotification(_U("you_have_promoted", xTarget.getName()))
 			elseif type == 'fire' then
 				xTarget.showNotification(_U('you_have_been_fired', xTarget.getJob().label))
+				xPlayer.showNotification(_U("you_have_fired", xTarget.getName()))
 			end
 
 			cb()
@@ -302,6 +305,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 		cb()
 	end
 end)
+
 
 ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
 	local xPlayer = ESX.GetPlayerFromId(source)

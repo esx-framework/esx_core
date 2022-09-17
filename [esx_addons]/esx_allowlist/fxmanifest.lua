@@ -5,7 +5,7 @@ game 'gta5'
 author 'ESX-Framework'
 description 'Offical AllowList script for ESX'
 
-version '1.7.5'
+version '1.8.5'
 lua54 'yes'
 server_only 'yes'
 

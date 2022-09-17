@@ -6,7 +6,7 @@ lua54 'yes'
 
 description 'Official ESX-Legacy resource for handling the Player`s Skin'
 
-version '1.7.5'
+version '1.8.5'
 
 client_scripts {
 	'@es_extended/locale.lua',

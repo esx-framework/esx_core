@@ -193,18 +193,23 @@ AddEventHandler('esx:restoreLoadout', function()
 	end
 end)
 
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
+	if value then
+			Wait(0)
+			local NetId = tonumber(bagName:gsub('entity:', ''), 10)
+			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+
+			if NetworkGetEntityOwner(Vehicle) == PlayerId() then
+					ESX.Game.SetVehicleProperties(Vehicle, value)
+			end
+	end
+end)
+
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
 	for i=1, #(ESX.PlayerData.accounts) do
 		if ESX.PlayerData.accounts[i].name == account.name then
 			ESX.PlayerData.accounts[i] = account
-			if ESX.PlayerData.accounts[i].name == "bank" then
-				PlayerBank = account.money
-				StatSetInt("BANK_BALANCE", PlayerBank, true)
-			elseif ESX.PlayerData.accounts[i].name == "money" then
-				PlayerMoney = account.money
-				StatSetInt("MP0_WALLET_BALANCE", PlayerMoney, true)
-			end
 			break
 		end
 	end
