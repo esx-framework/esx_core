@@ -8,6 +8,7 @@ Locales['en'] = {
 	["Zoom_level"] = "Zoom Level: %s %",
 	["night_vision"] = "Toggle Night Vision",
 	["clipboard"] = "Link Copied To ~b~Cipboard",
+	["picture_taken"] = "Picture Taken!",
 	["please_wait"] = "Please Wait Before taking another ~b~Picture",
 	["exit"] = "Exit",
 
