@@ -129,6 +129,9 @@ function CreateSkinCam()
     RenderScriptCams(true, true, 500, true, true)
 
     isCameraActive = true
+	CameraControl()
+	CameraRotation()
+	
     SetCamCoord(cam, GetEntityCoords(playerPed))
     SetCamRot(cam, 0.0, 0.0, 270.0, true)
     SetEntityHeading(playerPed, 0.0)
@@ -141,12 +144,9 @@ function DeleteSkinCam()
     cam = nil
 end
 
-CreateThread(function()
-    while true do
-        local sleep = 1500
-
-        if isCameraActive then
-            sleep = 0
+function CameraControl()
+	CreateThread(function()
+    	while isCameraActive then
             DisableControlAction(2, 30, true)
             DisableControlAction(2, 31, true)
             DisableControlAction(2, 32, true)
@@ -192,18 +192,17 @@ CreateThread(function()
             PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
 
             ESX.ShowHelpNotification(_U('use_rotate_view'))
-        end
-        Wait(sleep)
-    end
-end)
 
-CreateThread(function()
-    local angle = 90
+        	Wait(0)
+    	end
+	end)
+end
 
-    while true do
-        local sleep = 1500
+function CameraRotation()
+	CreateThread(function()
+    	local angle = 90
 
-        if isCameraActive then
+    	while isCameraActive then
             sleep = 0
             if IsControlPressed(0, 209) then
                 angle = angle - 1
@@ -218,10 +217,11 @@ CreateThread(function()
             end
 
             heading = angle + 0.0
-        end
-    Wait(sleep)
-    end
-end)
+
+    		Wait(0)
+    	end
+	end)
+end
 
 function OpenSaveableMenu(submitCb, cancelCb, restrict)
     TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
