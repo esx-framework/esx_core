@@ -4,6 +4,6 @@ Locales['de'] = {
     ['allowlist_empty']     = 'Für diesen Server sind keine allowlists gespeichert.',
     ['license_missing']     = 'Error: Ihr Identifier fehlt.',
     ['help_allowlist_add']  = 'jemanden zur Allowlist hinzufügen',
-    ['help_allowlist_load'] = 'reloade die allowlist',
+    ['help_allowlist_load'] = 'lade die Allowlist neu',
   }
   
