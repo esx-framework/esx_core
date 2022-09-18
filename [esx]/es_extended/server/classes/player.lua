@@ -386,8 +386,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if component then
 				if not self.hasWeaponComponent(weaponName, weaponComponent) then
 					self.loadout[loadoutNum].components[#self.loadout[loadoutNum].components + 1] = weaponComponent
-					local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
-					GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(weapon), componentHash)
+					local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
+					GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(weaponName), componentHash)
 					self.triggerEvent('esx:addInventoryItem', component.label, false, true)
 				end
 			end
