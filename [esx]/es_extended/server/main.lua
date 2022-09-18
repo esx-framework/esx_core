@@ -72,7 +72,7 @@ function createESXPlayer(identifier, playerId, data)
   end
 
   if Core.IsPlayerAdmin(playerId) then
-    print(('^2[INFO] ^0 Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
+    print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
     defaultGroup = "admin"
   else
     defaultGroup = "user"
@@ -145,7 +145,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   if ESX.DoesJobExist(job, grade) then
     jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
   else
-    print(('[^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
+    print(('[^3WARNING^7] Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]'):format(identifier, job, grade))
     job, grade = 'unemployed', '0'
     jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
   end
@@ -180,7 +180,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         if item then
           foundItems[name] = count
         else
-          print(('[^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, identifier))
+          print(('[^3WARNING^7] Ignoring invalid item ^5"%s"^7 for ^5"%s^7"'):format(name, identifier))
         end
       end
     end
@@ -211,7 +211,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   if result.group then
     if result.group == "superadmin" then
       userData.group = "admin"
-      print("[^3WARNING^7] Superadmin detected, setting group to admin")
+      print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7")
     else
       userData.group = result.group
     end
@@ -319,7 +319,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   end
 
   xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
-  print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
+  print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
 
 AddEventHandler('chatMessage', function(playerId, author, message)
@@ -386,7 +386,7 @@ if not Config.OxInventory then
     local targetXPlayer = ESX.GetPlayerFromId(target)
     local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
     if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
-      print("[WARNING] Player Detected Cheating: " .. GetPlayerName(playerId))
+      print("[^3WARNING^7] Player Detected Cheating: ^5" .. GetPlayerName(playerId) .. "^7")
       return
     end
 
