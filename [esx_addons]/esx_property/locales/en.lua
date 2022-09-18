@@ -68,6 +68,7 @@ Locales['en'] = {
 
 
 		--------- Real Estate Strings ---------------
+		["office_blip"] = "%s Office",
 		["actions"] = "Real Estate Actions",
 		["property_create"] = "Create Property",
 		["property_manage"] = "Manage Properties",
@@ -93,6 +94,11 @@ Locales['en'] = {
 		---------- Property Actions Menu  -------------------------
 
 		["knocking"]  = "Someone Is ~b~Knocking~s~ On The Door.",
+		["name_edit"] = "Edit Property Name",
+		["name"] = "Name",
+		["confirm"] = "Confirm",
+		["name_edit_success"] = "You Have Set The Property Name To ~b~%s~s~.",
+		["name_edit_error"] = "You Cannot Set The Property Name To ~r~%s~s~.",
 		["door_locked"] = "Door: Locked",
 		["door_unlocked"] = "Door: Unlocked",
 		["name_manage"] = "Manage Name",
@@ -139,6 +145,8 @@ Locales['en'] = {
 
 		---------- General Strings ---------------- 
 
+		["enabled"] = "Enabled",
+		["disabled"] = "Disabled",
 		["exiting"] = "Exiting property...",
 		["entering"] = "Entering property...",
 		["shell_disabled"] ="This Interior Uses Shells, which are disabled!",
@@ -150,6 +158,7 @@ Locales['en'] = {
 
 		["store_success"] = "Vehicle ~b~Stored!",
 		["store_error"] = "You Cannot Store This Vehicle!",
+		["property_garage"] = "Property Garage",
 		["retriving_notify"] = "Retrieving ~b~%s~s~ ...",
 		["cannot_access"] = "You Cannot Access This Garage!",
 		["store_textui"] = "Press ~b~[E]~s~ to Store ~b~%s",
@@ -183,10 +192,13 @@ Locales['en'] = {
 		["ipl_description"] = "Native GTA Interiors, Made by R*",
 		["shell_title"] = "Custom Interiors",
 		["shell_description"] = "Custom Interiors, Made by You",
+		["cctv_settings"] = "CCTV Settings",
+		["garage_settings"] = "Garage Settings",
 		["toggle_title"] = "Toggle Usage",
 		["toggle_description"] = "Current Status: %s",
 		["cctv_set_title"] = "Set Angle",
 		["cctv_set_description"] = "Sets the Camera angle to your Cameras Direction",
+		["back_description"] = "return to property creation.",
 		["garage_set_title"] = "Set Position",
 		["garage_set_description"] = "Set the position of the Property Garage.",
 		["garage_textui"] = "Press ~b~[E]~s~ to Set Position",
