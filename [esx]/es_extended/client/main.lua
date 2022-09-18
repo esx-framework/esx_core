@@ -741,3 +741,21 @@ AddEventHandler("esx:freezePlayer", function(input)
         SetPlayerInvincible(player, false)
     end
 end)
+
+local DoNotUse = {
+	'essentialmode',
+	'es_admin2',
+	'basic-gamemode',
+	'mapmanager',
+	'fivem-map-skater',
+	'fivem-map-hipster',
+	'mysql-async',
+	'qb-core',
+	'default_spawnpoint',
+}
+
+for i=1, #DoNotUse do
+	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
+		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5"..DoNotUse[i].."^7")
+	end
+end
