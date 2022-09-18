@@ -58,60 +58,83 @@ RegisterNUICallback('menu_change', function(data, cb)
     cb('OK')
 end)
 
-CreateThread(function()
-    while true do
-        local Sleep = 500
 
-        if OpenedMenus > 0 then
-            Sleep = 10
-            if IsControlPressed(0, 18) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'ENTER'
-                })
-                GUI.Time = GetGameTimer()
-            end
+RegisterCommand('+1esxmenudefault', function()
+	if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({
+			action  = 'controlPressed',
+			control = 'ENTER'
+		})
 
-            if IsControlPressed(0, 177) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'BACKSPACE'
-                })
-                GUI.Time = GetGameTimer()
-            end
+		GUI.Time = GetGameTimer()
+	end
+end, false)
 
-            if IsControlPressed(0, 27) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'TOP'
-                })
-                GUI.Time = GetGameTimer()
-            end
+RegisterCommand('+esxmenudefault2', function()
+	if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({
+			action  = 'controlPressed',
+			control = 'BACKSPACE'
+		})
 
-            if IsControlPressed(0, 173) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'DOWN'
-                })
-                GUI.Time = GetGameTimer()
-            end
+		GUI.Time = GetGameTimer()
+	end
+end, false)
 
-            if IsControlPressed(0, 174) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'LEFT'
-                })
-                GUI.Time = GetGameTimer()
-            end
+RegisterCommand('+esxmenudefault3', function()
+	if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({
+			action  = 'controlPressed',
+			control = 'TOP'
+		})
 
-            if IsControlPressed(0, 175) and IsUsingKeyboard(0) and (GetGameTimer() - GUI.Time) > 200 then
-                SendNUIMessage({
-                    action = 'controlPressed',
-                    control = 'RIGHT'
-                })
-                GUI.Time = GetGameTimer()
-            end
-        end
-        Wait(Sleep)
-    end
-end)
+		GUI.Time = GetGameTimer()
+	end
+end, false)
+
+RegisterCommand('+esxmenudefault4', function()
+	if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({
+			action  = 'controlPressed',
+			control = 'DOWN'
+		})
+
+		GUI.Time = GetGameTimer()
+	end
+end, false)
+	
+RegisterCommand('+esxmenudefault5', function()
+	if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+		SendNUIMessage({
+			action  = 'controlPressed',
+			control = 'LEFT'
+		})
+
+		GUI.Time = GetGameTimer()
+	end
+
+end, false)
+
+RegisterCommand('+esxmenudefault6', function()
+		if IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
+			SendNUIMessage({
+				action  = 'controlPressed',
+				control = 'RIGHT'
+			})
+
+			GUI.Time = GetGameTimer()
+		end
+end, false)
+
+RegisterKeyMapping('+1esxmenudefault', 'ESXMENU', 'keyboard', 'RETURN')
+RegisterKeyMapping('+esxmenudefault2', 'ESXMENU', 'keyboard', 'BACK')
+RegisterKeyMapping('+esxmenudefault3', 'ESXMENU', 'keyboard', 'UP')
+RegisterKeyMapping('+esxmenudefault4', 'ESXMENU', 'keyboard', 'DOWN')
+RegisterKeyMapping('+esxmenudefault5', 'ESXMENU', 'keyboard', 'LEFT')
+RegisterKeyMapping('+esxmenudefault6', 'ESXMENU', 'keyboard', 'RIGHT')
+RegisterCommand('-esxmenudefault6', function() end, false)
+RegisterCommand('-esxmenudefault5', function() end, false)
+RegisterCommand('-esxmenudefault4', function() end, false)
+RegisterCommand('-esxmenudefault3', function() end, false)
+RegisterCommand('-esxmenudefault2', function() end, false)
+RegisterCommand('-1esxmenudefault', function() end, false)
