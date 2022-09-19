@@ -91,7 +91,6 @@ function ESX.ShowNotification(message, type, length)
     end
 end
     
-    
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:TextUI(message, type)
