@@ -86,10 +86,10 @@ end
 function ESX.ShowNotification(message, type, length)
     if GetResourceState("esx_notify") ~= "missing" then
         exports["esx_notify"]:Notify(type, length, message)
-        else
-            print("[ERROR] Missing esx_notify")
-        end
+    else
+		print("[ERROR] Missing esx_notify")
     end
+end
     
     
 function ESX.TextUI(message, type)
