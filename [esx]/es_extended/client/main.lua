@@ -749,7 +749,6 @@ local DoNotUse = {
 	'mapmanager',
 	'fivem-map-skater',
 	'fivem-map-hipster',
-	'mysql-async',
 	'qb-core',
 	'default_spawnpoint',
 }
