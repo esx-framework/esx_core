@@ -105,11 +105,11 @@ Locales['de'] = {
 
   -- Dress Designer
   ['dd_dress_locker'] = 'dress Designer\'s Locker Room',
-  ['dd_wool'] = 'wool',
-  ['dd_pickup'] = 'Drücke [E] to retrieve wool.',
-  ['dd_fabric'] = 'fabric',
-  ['dd_makefabric'] = 'Drücke [E] to make fabric.',
-  ['dd_clothing'] = 'clothing',
-  ['dd_makeclothing'] = 'Drücke [E] to retrieve clothing.',
-  ['dd_deliver_clothes'] = 'Drücke [E] to deliver the clothes.',
+  ['dd_wool'] = 'wolle',
+  ['dd_pickup'] = 'Drücke [E] um Wolle zu gewinnen.',
+  ['dd_fabric'] = 'stoff',
+  ['dd_makefabric'] = 'Drücke [E] zur Herstellung von Stoffen.',
+  ['dd_clothing'] = 'kleidung',
+  ['dd_makeclothing'] = 'Drücke [E] um Kleidung herzustellen.',
+  ['dd_deliver_clothes'] = 'Drücke [E] um Kleidung zu liefern.',
  }
