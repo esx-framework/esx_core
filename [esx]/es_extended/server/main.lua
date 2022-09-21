@@ -595,6 +595,10 @@ ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
   cb(Core.IsPlayerAdmin(source))
 end)
 
+ESX.RegisterServerCallback('esx:getGameBuild', function(source, cb)
+  cb(tonumber(GetConvar("sv_enforceGameBuild", 1604)))
+end)
+
 ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target)
   local xPlayer = ESX.GetPlayerFromId(target)
 
