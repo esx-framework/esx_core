@@ -12,6 +12,11 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	else
 		showError(_U('command_setjob_invalid'))
 	end
+	ESX.DiscordLogFields("UserActions", "/setjob Triggered", "pink", {
+		{name = "Player", value = xPlayer.name, inline = true},
+		{name = "Job", value = args.job, inline = true},
+    {name = "Grade", value = args.grade, inline = true}
+	})
 end, true, {help = _U('command_setjob'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
 	{name = 'job', help = _U('command_setjob_job'), type = 'string'},
@@ -20,7 +25,12 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
-	if not args.car then args.car = GameBuild >= 2699 and "DRAUGUR" or "Prototipo" end
+	if not args.car then args.car = GameBuild >= 2699 and "draugur" or "prototipo" end
+	ESX.DiscordLogFields("UserActions", "/car Triggered", "pink", {
+		{name = "Player", value = xPlayer.name, inline = true},
+		{name = "ID", value = xPlayer.source, inline = true},
+    {name = "Vehicle", value = args.car, inline = true}
+	})
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = _U('command_car_car'), type = 'string'}
