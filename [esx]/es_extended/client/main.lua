@@ -1,5 +1,5 @@
 local pickups = {}
-local PlayerBank, PlayerMoney = 0,0
+
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(0)
