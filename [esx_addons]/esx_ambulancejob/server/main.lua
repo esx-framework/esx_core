@@ -279,10 +279,10 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.job.name ~= 'ambulance' then
-		print(('[esx_ambulancejob] [^2WARNING^7] "%s" attempted to spawn in an item!'):format(xPlayer.identifier))
+		print(('[^2WARNING^7] Player ^5%s^7 Tried Giving Themselves -> ^5' .. itemName ..'^7!'):format(xPlayer.source))
 		return
 	elseif (itemName ~= 'medikit' and itemName ~= 'bandage') then
-		print(('[esx_ambulancejob] [^2WARNING^7] "%s" attempted to spawn in an item!'):format(xPlayer.identifier))
+		print(('[^2WARNING^7] Player ^5%s^7 Tried Giving Themselves -> ^5' .. itemName ..'^7!'):format(xPlayer.source))
 		return
 	end
 
