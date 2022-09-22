@@ -167,11 +167,11 @@ function ESX.RegisterServerCallback(name, cb)
   Core.ServerCallbacks[name] = cb
 end
 
-function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
+function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
   if Core.ServerCallbacks[name] then
     Core.ServerCallbacks[name](source, cb, ...)
   else
-    print(('[^3WARNING^7] Server callback ^5%s^0 does not exist. Please Check The Server File for ^1Errors^7!'):format(name))
+    print(('[^1ERROR^7] Server callback ^5"%s"^0 does not exist. Please Check ^5%s^7 for Errors!'):format(name, Invoke))
   end
 end
 

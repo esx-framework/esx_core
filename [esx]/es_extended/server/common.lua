@@ -106,10 +106,10 @@ AddEventHandler('esx:clientLog', function(msg)
 end)
 
 RegisterServerEvent('esx:triggerServerCallback')
-AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
-  local playerId = source
+AddEventHandler('esx:triggerServerCallback', function(name, requestId,Invoke, ...)
+  local source = source
 
-  ESX.TriggerServerCallback(name, requestId, playerId, function(...)
-    TriggerClientEvent('esx:serverCallback', playerId, requestId, ...)
+  ESX.TriggerServerCallback(name, requestId, source,Invoke, function(...)
+    TriggerClientEvent('esx:serverCallback', source, requestId, ...)
   end, ...)
 end)

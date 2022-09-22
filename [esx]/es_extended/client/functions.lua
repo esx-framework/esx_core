@@ -201,9 +201,10 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
 end
 
 function ESX.TriggerServerCallback(name, cb, ...)
+    local Invoke = GetInvokingResource() or "unknown"
     Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
-    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
+    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId,Invoke, ...)
     Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
