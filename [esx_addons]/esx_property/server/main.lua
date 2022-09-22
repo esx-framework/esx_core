@@ -1109,6 +1109,12 @@ AddEventHandler('onResourceStop', function(ResourceName)
   end
 end)
 
+AddEventHandler('onServerResourceStop', function(ResourceName)
+  if ResourceName == GetCurrentResourceName() then
+    PropertySave(_U("resource_stop"))
+  end
+end)
+
 -- Save Properties every x Minutes 
 
 CreateThread(function()
