@@ -30,7 +30,7 @@ AddEventHandler('esx_skin:responseSaveSkin', function(skin)
 		file:flush()
 		file:close()
 	else
-		print(('esx_skin: %s attempted saving skin to file'):format(xPlayer.getIdentifier()))
+		print(('[^2INFO^7] ^5%s^7 attempted saving skin to file'):format(xPlayer.getIdentifier()))
 	end
 end)
 
