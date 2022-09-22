@@ -4,14 +4,14 @@ Config.Visible = true
 
 Config.Food = {
 	["bread"] = {
-		status = 10000,
-		remove = false -- want the item to remove on use
+		status = 200000,
+		remove = false
 	}
 }
 
 Config.Drinks = {
 	["water"] = {
-		status = 10000,
-		remove = true  -- want the item to remove on use
+		status = 100000,
+		remove = true
 	}
 }
