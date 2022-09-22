@@ -230,7 +230,6 @@ function CCTV(PropertyID)
                 if hook then
                   exports['screenshot-basic']:requestScreenshotUpload(hook, "files[]", function(data)
                     local image = json.decode(data)
-                    print(ESX.DumpTable(image))
                     ESX.ShowNotification(_U("picture_taken"), "success")
                     SendNUIMessage({link = image.attachments[1].proxy_url})
                     ESX.ShowNotification(_U("clipboard"), "success")
