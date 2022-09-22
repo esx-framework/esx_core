@@ -13,15 +13,15 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-	for k,v in pairs(Config.Drink) do
+	for k,v in pairs(Config.Drinks) do
 		ESX.RegisterUsableItem(k, function(source)
 			local xPlayer = ESX.GetPlayerFromId(source)
 			if v.remove then
 				xPlayer.removeInventoryItem(k,1)
 			end
 			TriggerClientEvent("esx_status:add",source,"thirst",v.status)
-			TriggerClientEvent('esx_basicneeds:onEat',source)
-			xPlayer.showNotification(_U('used_eat', ESX.GetItemLabel(k)))
+			TriggerClientEvent('esx_basicneeds:onDrink',source)
+			xPlayer.showNotification(_U('used_drink', ESX.GetItemLabel(k)))
 		end)
 	end
 end)
