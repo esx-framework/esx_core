@@ -152,7 +152,7 @@ end
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
 	if not args.playerId then args.playerId = xPlayer.source end
-	if args.group == "superadmin" then args.group = "admin" print("[^3WARNING^7] Superadmin detected, setting group to admin") end
+	if args.group == "superadmin" then args.group = "admin" print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7") end
 	args.playerId.setGroup(args.group)
 end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
@@ -161,7 +161,7 @@ end, true, {help = _U('command_setgroup'), validate = true, arguments = {
 
 ESX.RegisterCommand('save', 'admin', function(xPlayer, args, showError)
 	Core.SavePlayer(args.playerId)
-	print("[^2Info^0] Saved Player!")
+	print("[^2Info^0] Saved Player - ^5".. args.playerId.source .. "^0")
 end, true, {help = _U('command_save'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})

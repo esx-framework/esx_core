@@ -171,7 +171,7 @@ function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
   if Core.ServerCallbacks[name] then
     Core.ServerCallbacks[name](source, cb, ...)
   else
-    print(('[^3WARNING^7] Server callback ^5"%s"^0 does not exist. ^1Please Check The Server File for Errors!'):format(name))
+    print(('[^3WARNING^7] Server callback ^5%s^0 does not exist. Please Check The Server File for ^1Errors^7!'):format(name))
   end
 end
 
@@ -209,7 +209,7 @@ function Core.SavePlayers(cb)
           if type(cb) == 'function' then
             cb()
           else
-            print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000))
+            print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(count, count > 1 and 'players' or 'player', ESX.Math.Round((os.time() - time) / 1000000, 2)))
           end
         end
       end)
@@ -392,7 +392,7 @@ function ESX.GetItemLabel(item)
   if ESX.Items[item] then
     return ESX.Items[item].label
   else
-    print('[^3WARNING^7] Attemting to get invalid Item -> ' .. item)
+    print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
   end
 end
 
