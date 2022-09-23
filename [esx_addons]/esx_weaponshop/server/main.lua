@@ -19,7 +19,8 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	local price = GetPrice(weaponName, zone)
 
 	if price == 0 then
-		print(('esx_weaponshop: %s attempted to buy a unknown weapon!'):format(xPlayer.identifier))
+
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to buy Invalid weapon - %s!'):format(source, weaponName))
 		cb(false)
 	else
 		if xPlayer.hasWeapon(weaponName) then
