@@ -984,5 +984,8 @@ Config.Weapons = {
 						{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_PRECISIONRIFLE_CLIP_01`},
 				}
 			},
-			{name = 'WEAPON_METALDETECTOR', label = _U('weapon_metaldetector'), components = {}}
+			{name = 'WEAPON_METALDETECTOR', label = _U('weapon_metaldetector'), components = {}
 		}
+		
+	}
+}
