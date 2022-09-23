@@ -120,7 +120,7 @@ end
 
 function OpenShopMenu()
 	if #Vehicles == 0 then
-		print('[esx_vehicleshop] [^3ERROR^7] No vehicles found')
+		print('[^3ERROR^7] Vehicleshop has ^50^7 vehicles, please add some!')
 		return
 	end
 
@@ -147,7 +147,7 @@ function OpenShopMenu()
 		if IsModelInCdimage(joaat(Vehicles[i].model)) then
 			table.insert(vehiclesByCategory[Vehicles[i].category], Vehicles[i])
 		else
-			print(('[esx_vehicleshop] [^3ERROR^7] Vehicle "%s" does not exist'):format(Vehicles[i].model))
+			print(('[^3WARNING^7] Ignoring vehicle ^5%s^7 due to invalid Model'):format(Vehicles[i].model))
 		end
 	end
 
