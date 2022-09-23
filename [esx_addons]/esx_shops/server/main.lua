@@ -28,12 +28,12 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 	amount = ESX.Math.Round(amount)
 
 	if amount < 0 then
-		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to exploit the shop!')
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to exploit the shop!'):format(source))
 		return
 	end
 
 	if not Exists then
-		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to exploit the shop!')
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to exploit the shop!'):format(source))
 		return
 	end
 
