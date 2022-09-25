@@ -1,4 +1,4 @@
 Locales['br'] = {
-  ['used_bread'] = 'você comeu 1x pão',
-  ['used_water'] = 'você tomou 1x água',
+  ['used_eat'] = 'você comeu 1x %s',
+  ['used_drink'] = 'você tomou 1x  %s',
 }
