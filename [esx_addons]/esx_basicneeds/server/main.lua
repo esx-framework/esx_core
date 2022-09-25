@@ -1,19 +1,29 @@
-ESX.RegisterUsableItem('bread', function(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.removeInventoryItem('bread', 1)
-
-	TriggerClientEvent('esx_status:add', source, 'hunger', 200000)
-	TriggerClientEvent('esx_basicneeds:onEat', source)
-	xPlayer.showNotification(_U('used_bread'))
+CreateThread(function()
+	for k,v in pairs(Config.Food) do
+		ESX.RegisterUsableItem(k, function(source)
+			local xPlayer = ESX.GetPlayerFromId(source)
+			if v.remove then
+				xPlayer.removeInventoryItem(k,1)
+			end
+			TriggerClientEvent("esx_status:add",source,"hunger",v.status)
+			TriggerClientEvent('esx_basicneeds:onEat',source)
+			xPlayer.showNotification(_U('used_eat', ESX.GetItemLabel(k)))
+		end)
+	end
 end)
 
-ESX.RegisterUsableItem('water', function(source)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.removeInventoryItem('water', 1)
-
-	TriggerClientEvent('esx_status:add', source, 'thirst', 200000)
-	TriggerClientEvent('esx_basicneeds:onDrink', source)
-	xPlayer.showNotification(_U('used_water'))
+CreateThread(function()
+	for k,v in pairs(Config.Drinks) do
+		ESX.RegisterUsableItem(k, function(source)
+			local xPlayer = ESX.GetPlayerFromId(source)
+			if v.remove then
+				xPlayer.removeInventoryItem(k,1)
+			end
+			TriggerClientEvent("esx_status:add",source,"thirst",v.status)
+			TriggerClientEvent('esx_basicneeds:onDrink',source)
+			xPlayer.showNotification(_U('used_drink', ESX.GetItemLabel(k)))
+		end)
+	end
 end)
 
 ESX.RegisterCommand('heal', 'admin', function(xPlayer, args, showError)
