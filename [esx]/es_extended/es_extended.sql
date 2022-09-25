@@ -7,6 +7,8 @@ ALTER DATABASE `es_extended`
 ALTER DATABASE `es_extended`
 	DEFAULT COLLATE UTF8MB4_UNICODE_CI;
 
+USE `es_extended`;
+
 CREATE TABLE `users` (
 	`identifier` VARCHAR(60) NOT NULL,
 	`accounts` LONGTEXT NULL DEFAULT NULL,
