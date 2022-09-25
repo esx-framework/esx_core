@@ -350,7 +350,7 @@ function OpenPropertyMenu(PropertyId)
     if element.value == "property_raid" then
       ESX.TriggerServerCallback("esx_property:CanRaid", function(CanRaid)
         if CanRaid then
-          ESX.Progressbar(U("prep_raid"), 15000, {FreezePlayer = true, animation = Config.Raiding.Animation, onFinish = function()
+          ESX.Progressbar(_U("prep_raid"), 15000, {FreezePlayer = true, animation = Config.Raiding.Animation, onFinish = function()
             ESX.ShowNotification(_U("raiding"), "success")
             AttemptHouseEntry(PropertyId)
           end, onCancel = function()
