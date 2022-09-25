@@ -274,7 +274,7 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:setWeaponAmmo')
 	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
-		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
+		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponTint')
