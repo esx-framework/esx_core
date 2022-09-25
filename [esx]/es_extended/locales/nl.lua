@@ -48,7 +48,7 @@ Locales['nl'] = {
     ['bank'] = 'Doolhofbank',
     ['account_bank'] = 'Bank',
     ['account_black_money'] = 'Zwart geld',
-    ['account_money'] = 'Cash',
+    ['account_money'] = 'Geld',
   
     ['act_imp'] = 'Kan actie niet uitvoeren',
     ['in_vehicle'] = 'Kan actie niet uitvoeren, speler zit in voertuig',
