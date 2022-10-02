@@ -254,7 +254,7 @@ function OpenPoliceActionsMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_actions', {
-		title    = 'Police',
+		title    = _U('police_actions'),
 		align    = 'top-left',
 		elements = {
 			{label = _U('citizen_interaction'), value = 'citizen_interaction'},
