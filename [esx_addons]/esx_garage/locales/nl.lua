@@ -1,4 +1,4 @@
-Locales["en"] = {
+Locales["nl"] = {
     ["parking_blip_name"] = 'Garage',
     ["Impound_blip_name"] = 'In beslag genomen',
     ["access_parking"] = 'klik op [E] om je garage te gebruiken.',
