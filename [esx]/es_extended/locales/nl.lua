@@ -105,6 +105,9 @@ Locales['nl'] = {
     ['commanderror_invalidcommand'] = 'Ongeldige opdracht - /%s',
     ['commanderror_invalidplayerid'] = 'Opgegeven speler is niet online',
     ['commandgeneric_playerid'] = 'Server-ID van de speler',
+    ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
+    ['command_giveammo_weapon'] = 'Weapon name',
+    ['command_giveammo_ammo'] = 'Ammo Quantity',
   
     -- Locale settings
     ['locale_digit_grouping_symbol'] = ',',
