@@ -2,7 +2,6 @@ local PlayerData, ActivateBlips, Peds = {}, {}, {}
 local PlayerLoaded = true
 local isInMarker, isInAtmMarker, isInMenu, isMarkerShowed = false, false, false, false
 local _GetEntityCoords, _PlayerPedId
-local ox_target = exports.ox_target
 
 -- Functions
 -- Listen for keypress while player inside the marker
@@ -77,23 +76,15 @@ local function PedHandler(ids)
             SetEntityDynamic(npc, false)
 
             if Config.Target then
-                ox_target:addGlobalPed({
-                    {
-                        name = 'esx_banking:access',
+                exports.ox_target:addGlobalPed(npc, {
+                    options = {{
                         icon = "fas fa-money-bill-wave",
                         label = _U('access_bank'),
-                        distance = 2.0,
-                        canInteract = function(entity, coords, distance)
-                            for i = 0, #Peds do
-                                if Peds[i] == entity then
-                                    return true
-                                end
-                            end
-                        end,
-                        onSelect = function(data)
+                        action = function()
                             OpenUi()
                         end
-                    }
+                    }},
+                    distance = 2
                 })
             end
 
@@ -115,7 +106,7 @@ local function PedHandler(ids)
         if del then
             DeletePed(handle)
             if Config.Target then
-                ox_target:removeGlobalPed({'esx_banking:access'})
+                exports.ox_target:removeGlobalPed(handle, {_U('access_bank')})
             end
         end
     end
@@ -184,36 +175,34 @@ local function StartThread()
         CreateBlips()
 
         if Config.Target then
-            ox_target:addModel(Config.AtmModels, {
-                {
-                    name = 'esx_banking:accessATM',
+            exports.ox_target:addModel(Config.AtmModels, {
+                options = {{
                     icon = 'fas fa-credit-card',
                     label = _U('access_bank'),
-                    distance = 2.0,
-                    onSelect = function(data)
+                    action = function()
                         OpenUi(true)
                     end
-                }
+                }},
+                distance = 1.5
             })
             if not Config.EnablePeds then
                 for i = 1, #Config.Banks do
                     local targetInfo = Config.Banks[i].Position
-                    ox_target:addBoxZone({
-                        coords = targetInfo.xyz,
-                        size = vec3(1.5, 1.5, 1.5),
-                        rotation = targetInfo.w,
-                        debug = Config.Debug,
-                        options = {
-                            {
-                                name = "esx_banking:access",
-                                icon = 'fas fa-money-bill-wave',
-                                label = _U('access_bank'),
-                                distance = 2.0,
-                                onSelect = function(data)
-                                    OpenUi()
-                                end
-                            }
-                        }
+                    exports.ox_target:addBoxZone('openBank' .. i, targetInfo.xyz, 1.5, 1.5, {
+                        name = 'openBank' .. i,
+                        heading = targetInfo.w,
+                        minZ = targetInfo.z - 1.0,
+                        maxZ = targetInfo.z + 1.5,
+                        debugPoly = Config.Debug
+                    }, {
+                        options = {{
+                            icon = 'fas fa-money-bill-wave',
+                            label = _U('access_bank'),
+                            action = function()
+                                OpenUi()
+                            end
+                        }},
+                        distance = 2.0
                     })
                 end
             end
@@ -345,7 +334,7 @@ AddEventHandler('onResourceStart', function(resource)
     StartThread()
 end)
 
--- Enables it on player loaded
+-- Enables it on player loaded 
 RegisterNetEvent('esx:playerLoaded', function()
     StartThread()
   end)
