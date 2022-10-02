@@ -1,4 +1,8 @@
 Locales ['sv'] = {
+  ["license_shop_title"] = "Licens Affär",
+  ["weapon_shop_menu_title"] = "Vapen Affär",
+  ["weapon_shop_menu_description"] = "Köp Vapen",
+  ["menu_cancel"] = "Avbryt",
   ['buy_license'] = 'Köpa vapenlicens?',
   ['yes'] = '%s',
   ['no'] = 'Nej',

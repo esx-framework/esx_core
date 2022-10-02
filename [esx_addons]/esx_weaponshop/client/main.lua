@@ -10,15 +10,15 @@ function OpenBuyLicenseMenu(zone)
     local Elements = {{
         icon = "fa-regular fa-money-bill-alt",
         unselectable = true,
-        title = "License Shop"
+        title = _U("license_shop_title")
 	}, {
 		icon = "fa-regular fa-id-card",
-		title = "Buy Weapon License",
+		title = _U("buy_license"),
         description = "Price: $"..Config.LicensePrice,
 		value = "buylicense"
 	}, {
 		icon = "fa-solid fa-xmark",
-		title = "Cancel",
+		title = _U("menu_cancel"),
 		value = "cancel"
     }}
 
@@ -43,8 +43,8 @@ function OpenShopMenu(zone)
     local Elements = {{
         icon = "fa-solid fa-bullseye",
         unselectable = true,
-        description = "Buy Weapons",
-        title = "Weapon Shop"
+        description = _U("weapon_shop_menu_description"),
+        title = _U("weapon_shop_menu_title")
     }}
     for i = 1, #Config.Zones[zone].Items, 1 do
         local item = Config.Zones[zone].Items[i]
