@@ -93,6 +93,18 @@ if not Config.OxInventory then
 		{name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
 	}})
 
+	ESX.RegisterCommand('giveammo', 'admin', function(xPlayer, args, showError)
+		if args.playerId.hasWeapon(args.weapon) then
+			args.playerId.addWeaponAmmo(args.weapon, args.ammo)   
+		else
+			showError(_U("command_giveammo_noweapon_found"))
+		end
+	end, true, {help = _U('command_giveweapon'), validate = false, arguments = {
+		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
+		{name = 'weapon', help = _U('command_giveammo_weapon'), type = 'weapon'},
+		{name = 'ammo', help = _U('command_giveammo_ammo'), type = 'number'}
+	}})
+
 	ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
 		if args.playerId.hasWeapon(args.weaponName) then
 			local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)

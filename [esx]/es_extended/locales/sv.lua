@@ -100,6 +100,9 @@ Locales['sv'] = {
   ['commanderror_invalidcommand'] = 'Ogiltigt kommando - /%s',
   ['commanderror_invalidplayerid'] = 'Angiven spelare är inte online',
   ['commandgeneric_playerid'] = 'Spelarens server-id',
+  ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
+  ['command_giveammo_weapon'] = 'Weapon name',
+  ['command_giveammo_ammo'] = 'Ammo Quantity',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',
