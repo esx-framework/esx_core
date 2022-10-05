@@ -12,24 +12,25 @@ end)
 
 function OpenBankActionsMenu()
 	local elements = {
-		{label = _U('customers'), value = 'customers'},
-		{label = _U('billing'),   value = 'billing'}
+		{unselectable = true, icon = "fas fa-building", title = _U('bank')},
+		{icon = "fas fa-users", title = _U('customers'), value = 'customers'},
+		{icon = "fas fa-scroll", title = _U('billing'),   value = 'billing'}
 	}
 
 	if ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, { label = _U('boss_actions'), value = 'boss_actions' })
+		elements[#elements+1] = {
+			icon = "fas fa-wallet",
+			title = _U('boss_actions'),
+			value = "boss_actions"
+		}
 	end
 
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'bank_actions', {
-		title    = _U('bank'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-		if data.current.value == 'customers' then
+	ESX.OpenContext("right", elements, function(menu,element)
+		if element.value == "customers" then
 			OpenCustomersMenu()
-		elseif data.current.value == 'billing' then
+		elseif element.value == "billing" then
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
 				title = _U('bill_amount')
 			}, function(data, menu)
@@ -39,7 +40,6 @@ function OpenBankActionsMenu()
 					ESX.ShowNotification(_U('invalid_amount'))
 				else
 					menu.close()
-
 					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 					if closestPlayer == -1 or closestDistance > 5.0 then
@@ -51,14 +51,12 @@ function OpenBankActionsMenu()
 			end, function(data, menu)
 				menu.close()
 			end)
-		elseif data.current.value == 'boss_actions' then
+		elseif element.value == "boss_actions" then
 			TriggerEvent('esx_society:openBossMenu', 'banker', function (data, menu)
-			menu.close()
+				menu.close()
 			end, {wash = false})
 		end
-	end, function(data, menu)
-		menu.close()
-
+	end, function(menu)
 		CurrentAction     = 'bank_actions_menu'
 		CurrentActionMsg  = _U('press_input_context_to_open_menu')
 		CurrentActionData = {}
@@ -68,65 +66,77 @@ end
 function OpenCustomersMenu()
 	ESX.TriggerServerCallback('esx_bankerjob:getCustomers', function(customers)
 		local elements = {
-			head = { _U('customer'), _U('balance'), _U('actions') },
-			rows = {}
+			{unselectable = true, icon = "fas fa-user", title = "Customers"}
 		}
 
 		for i=1, #customers do
-			table.insert(elements.rows, {
+			elements[#elements+1] = {
+				icon = "fas fa-user",
+				title = customers[i].name,
 				data = customers[i],
-				cols = {
-					customers[i].name,
-					customers[i].bankSavings,
-					'{{' .. _U('deposit') .. '|deposit}} {{' .. _U('withdraw') .. '|withdraw}}'
-				}
-			})
+				savings = customers[i].bankSavings
+			}
 		end
 
-		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'customers', elements, function(data, menu)
-			local customer = data.data
+		elements[#elements+1] = {
+			icon = "fas fa-arrow-left",
+			title = "Return",
+			value = "return"
+		}
 
-			if data.value == 'deposit' then
-				menu.close()
+		ESX.OpenContext("right", elements, function(menu,element)
+			if element.value == "return" then
+				OpenBankActionsMenu()
+			else
+				local elements2 = { 
+					{unselectable = true, icon = "fas fa-user", title = element.title},
+					{unselectable = true, icon = "fas fa-wallet", title = "$"..ESX.Math.GroupDigits(element.savings)},
+					{icon = "fas fa-scroll", title = "Deposit", value = "deposit"},
+					{icon = "fas fa-scroll", title = "Withdraw", value = "withdraw"},
+					{icon = "fas fa-arrow-left", title = "Return", value = "return"}
+				}
 
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_deposit_amount', {
-					title = _U('amount')
-				}, function(data2, menu2)
-					local amount = tonumber(data2.value)
+				ESX.OpenContext("right", elements2, function(menu2, element2)
+					local customer = element.data
+					if element2.value == "deposit" then
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_deposit_amount', {
+							title = _U('amount')
+						}, function(data2, menu2)
+							local amount = tonumber(data2.value)
 
-					if amount == nil then
-						ESX.ShowNotification(_U('invalid_amount'))
-					else
-						menu2.close()
-						TriggerServerEvent('esx_bankerjob:customerDeposit', customer.source, amount)
+							if amount == nil then
+								ESX.ShowNotification(_U('invalid_amount'))
+							else
+								menu2.close()
+								TriggerServerEvent('esx_bankerjob:customerDeposit', customer.source, amount)
+								OpenCustomersMenu()
+							end
+						end, function(data2, menu2)
+							menu2.close()
+							OpenCustomersMenu()
+						end)
+					elseif element2.value == "withdraw" then
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_withdraw_amount', {
+							title = _U('amount')
+						}, function(data2, menu2)
+							local amount = tonumber(data2.value)
+
+							if amount == nil then
+								ESX.ShowNotification(_U('invalid_amount'))
+							else
+								menu2.close()
+								TriggerServerEvent('esx_bankerjob:customerWithdraw', customer.source, amount)
+								OpenCustomersMenu()
+							end
+						end, function(data2, menu2)
+							menu2.close()
+							OpenCustomersMenu()
+						end)
+					elseif element2.value == "return" then
 						OpenCustomersMenu()
 					end
-				end, function(data2, menu2)
-					menu2.close()
-					OpenCustomersMenu()
-				end)
-			elseif data.value == 'withdraw' then
-				menu.close()
-
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_withdraw_amount', {
-					title = _U('amount')
-				}, function(data2, menu2)
-					local amount = tonumber(data2.value)
-
-					if amount == nil then
-						ESX.ShowNotification(_U('invalid_amount'))
-					else
-						menu2.close()
-						TriggerServerEvent('esx_bankerjob:customerWithdraw', customer.source, amount)
-						OpenCustomersMenu()
-					end
-				end, function(data2, menu2)
-					menu2.close()
-					OpenCustomersMenu()
 				end)
 			end
-		end, function(data, menu)
-			menu.close()
 		end)
 	end)
 end
