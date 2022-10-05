@@ -6,16 +6,14 @@ function OpenShopMenu()
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 		menu.close()
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('valid_purchase'),
-			align = 'top-left',
-			elements = {
-				{label = _U('no'),  value = 'no'},
-				{label = _U('yes'), value = 'yes'}
-		}}, function(data, menu)
-			menu.close()
+		local elements = {
+			{unselectable = true, icon = "fas fa-hair", title = _U('valid_purchase')},
+			{icon = "fas fa-hair", title = _U('no'), value = "no"},
+			{icon = "fas fa-hair", title = _U('yes'), value = "yes"},
+		}
 
-			if data.current.value == 'yes' then
+		ESX.OpenContext("right", elements, function(menu,element)
+			if element.value == "yes" then
 				ESX.TriggerServerCallback('esx_barbershop:checkMoney', function(hasEnoughMoney)
 					if hasEnoughMoney then
 						TriggerEvent('skinchanger:getSkin', function(skin)
@@ -24,24 +22,26 @@ function OpenShopMenu()
 
 						TriggerServerEvent('esx_barbershop:pay')
 						hasPaid = true
+						ESX.CloseContext()
 					else
 						ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin) 
 						end)
 
 						ESX.ShowNotification(_U('not_enough_money'))
+						ESX.CloseContext()
 					end
 				end)
-			elseif data.current.value == 'no' then
+			elseif element.value == "no" then
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin) 
+					ESX.CloseContext()
 				end)
 			end
 
 			currentAction = 'shop_menu'
 			currentActionMsg = _U('press_access')
-		end, function(data, menu)
-			menu.close()
+		end, function(menu)
 			currentAction = 'shop_menu'
 			currentActionMsg = _U('press_access')
 		end)
@@ -82,7 +82,7 @@ AddEventHandler('esx_barbershop:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_barbershop:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 	currentAction = nil
 
 	if not hasPaid then
