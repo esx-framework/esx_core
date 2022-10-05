@@ -8,16 +8,14 @@ function OpenShopMenu()
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 		menu.close()
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('valid_this_purchase'),
-			align = 'top-left',
-			elements = {
-				{label = _U('no'), value = 'no'},
-				{label = _U('yes'), value = 'yes'}
-		}}, function(data, menu)
-			menu.close()
+		local elements = {
+			{unselectable = true, icon = "fas fa-shirt", title = _U('valid_this_purchase')},
+			{icon = "fas fa-shirt", title = _U('no'), value = "no"},
+			{icon = "fas fa-shirt", title = _U('yes'), value = "yes"},
+		}
 
-			if data.current.value == 'yes' then
+		ESX.OpenContext("right", elements, function(menu,element)
+			if element.value == "yes" then
 				ESX.TriggerServerCallback('esx_clotheshop:buyClothes', function(bought)
 					if bought then
 						TriggerEvent('skinchanger:getSkin', function(skin)
@@ -28,16 +26,13 @@ function OpenShopMenu()
 
 						ESX.TriggerServerCallback('esx_clotheshop:checkPropertyDataStore', function(foundStore)
 							if foundStore then
-								ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'save_dressing', {
-									title = _U('save_in_dressing'),
-									align = 'top-left',
-									elements = {
-										{label = _U('no'),  value = 'no'},
-										{label = _U('yes'), value = 'yes'}
-								}}, function(data2, menu2)
-									menu2.close()
-
-									if data2.current.value == 'yes' then
+								local elements2 = {
+									{unselectable = true, icon = "fas fa-shirt", title = _U('save_in_dressing')},
+									{icon = "fas fa-shirt", title = _U("no"), value = "no"},
+									{icon = "fas fa-shirt", title = _U("yes"), value = "yes"}
+								}
+								ESX.OpenContext("right", elements2, function(menu2,element2)
+									if element2.value == "yes" then
 										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'outfit_name', {
 											title = _U('name_outfit')
 										}, function(data3, menu3)
@@ -46,10 +41,14 @@ function OpenShopMenu()
 											TriggerEvent('skinchanger:getSkin', function(skin)
 												TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
 												ESX.ShowNotification(_U('saved_outfit'))
+
+												ESX.CloseContext()
 											end)
 										end, function(data3, menu3)
 											menu3.close()
 										end)
+									elseif element2.value == "no" then
+										ESX.CloseContext()
 									end
 								end)
 							end
@@ -63,23 +62,17 @@ function OpenShopMenu()
 						ESX.ShowNotification(_U('not_enough_money'))
 					end
 				end)
-			elseif data.current.value == 'no' then
+			elseif element.value == 'no' then
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin)
+					ESX.CloseContext()
 				end)
 			end
-
-			currentAction     = 'shop_menu'
-			currentActionMsg  = _U('press_menu')
-			currentActionData = {}
-		end, function(data, menu)
-			menu.close()
-
+		end, function(menu)
 			currentAction     = 'shop_menu'
 			currentActionMsg  = _U('press_menu')
 			currentActionData = {}
 		end)
-
 	end, function(data, menu)
 		menu.close()
 
