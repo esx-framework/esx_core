@@ -18,10 +18,10 @@ $(function () {
         if (e.data.type === "Progressbar") {
             var message = e.data.message
             const replaceColors = (str, obj) => {
-                let strToReplace = str
+                let strToReplace = str;
             
                 for (let id in obj) {
-                    strToReplace = strToReplace.replace(new RegExp(id, 'g'), obj[id])
+                    strToReplace = strToReplace.replace(new RegExp(id, "g"), obj[id]);
                 }
             
                 return strToReplace
@@ -34,10 +34,10 @@ $(function () {
         
                     let newStr = replaceColors(message, objArr);
         
-                    message = newStr;
+                    message = newStr
                 }
             }
-            $(".text").text(message)
+            $(".text").html(`<p class="text">${message}</p>`)
             doc.getElementById("notifyInfo").style.display = "block";
             const start = new Date();
             const maxTime = e.data.length;

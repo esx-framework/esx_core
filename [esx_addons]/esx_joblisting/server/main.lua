@@ -41,7 +41,7 @@ AddEventHandler('esx_joblisting:setJob', function(job)
     if ESX.DoesJobExist(job, 0) then
       xPlayer.setJob(job, 0)
     else
-      print("[^1ERROR^7] Tried Setting User To Invalid Job - ^5"..job .."^7!")
+      print("[^1ERROR^7] Tried Setting User ^5".. source .. "^7 To Invalid Job - ^5"..job .."^7!")
     end
   end
 end)

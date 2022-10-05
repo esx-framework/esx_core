@@ -9,7 +9,7 @@ CreateThread(function()
 	if Config.PlateUseSpace then char = char + 1 end
 
 	if char > 8 then
-		print(('[esx_vehicleshop] [^3WARNING^7] Plate character count reached, %s/8 characters!'):format(char))
+		print(('[^3WARNING^7] Character Limit Exceeded, ^5%s/8^7!'):format(char))
 	end
 end)
 
@@ -172,7 +172,8 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 		MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xPlayer.identifier, plate, json.encode({model = joaat(model), plate = plate})
 		}, function(rowsChanged)
 			xPlayer.showNotification(_U('vehicle_belongs', plate))
-			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.VehicleSpawnPoint.Pos, Config.Zones.VehicleSpawnPoint.Heading, automobile,{plate = plate}, function(vehicle)
+			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, false,{plate = plate}, function(vehicle)
+				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
 				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
 			end)
 			cb(true)
@@ -234,7 +235,7 @@ AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 					end
 				end)
 			else
-				print(('[esx_vehicleshop] [^3WARNING^7] %s attempted selling an invalid vehicle!'):format(xPlayer.identifier))
+				print(('[^3WARNING^7] Player ^5%s^7 Attempted To Sell Invalid Vehicle - ^5%s^7!'):format(source, vehicleModel))
 			end
 		end)
 	end
@@ -290,7 +291,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 		end
 
 		if not resellPrice then
-			print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an unknown vehicle!'):format(xPlayer.identifier))
+			print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Invalid Vehicle - ^5%s^7!'):format(source, model))
 			cb(false)
 		else
 			MySQL.single('SELECT * FROM rented_vehicles WHERE plate = ?', {plate},
@@ -309,11 +310,11 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 									RemoveOwnedVehicle(plate)
 									cb(true)
 								else
-									print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with plate mismatch!'):format(xPlayer.identifier))
+									print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Plate - ^5%s^7!'):format(source, plate))
 									cb(false)
 								end
 							else
-								print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an vehicle with model mismatch!'):format(xPlayer.identifier))
+								print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Model - ^5%s^7!'):format(source, model))
 								cb(false)
 							end
 						end
@@ -360,14 +361,14 @@ AddEventHandler('esx_vehicleshop:setJobVehicleState', function(plate, state)
 	MySQL.update('UPDATE owned_vehicles SET `stored` = ? WHERE plate = ? AND job = ?', {state, plate, xPlayer.job.name},
 	function(rowsChanged)
 		if rowsChanged == 0 then
-			print(('[esx_vehicleshop] [^3WARNING^7] %s exploited the garage!'):format(xPlayer.identifier))
+			print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit the Garage!'):format(source, plate))
 		end
 	end)
 end)
 
 function PayRent()
 	local timeStart = os.clock()
-	print('[esx_vehicleshop] [^2INFO^7] Paying rent cron job started')
+	print('[^2INFO^7] ^5Rent Payments^7 Initiated')
 
 	MySQL.query('SELECT rented_vehicles.owner, rented_vehicles.rent_price, rented_vehicles.plate, users.accounts FROM rented_vehicles LEFT JOIN users ON rented_vehicles.owner = users.identifier', {},
 	function(rentals)
@@ -451,7 +452,7 @@ function PayRent()
 			MySQL.prepare.await('DELETE FROM rented_vehicles WHERE owner = ? AND plate = ?', unrentals)
 		end
 
-		print(('[esx_vehicleshop] [^2INFO^7] Paying rent cron job took %s seconds'):format(os.clock() - timeStart))
+		print(('[^2INFO^7] ^5Rent Payments^7 took ^5%s^7 ms to execute'):format(ESX.Math.Round((os.time() - timeStart) / 1000000, 2)))
 	end)
 end
 

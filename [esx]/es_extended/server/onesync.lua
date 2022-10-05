@@ -65,17 +65,17 @@ end
 function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, Properties, cb)
 	model = type(model) == 'string' and joaat(model) or model
 	Properties = Properties or {}
-	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
 	if type(autoMobile) ~= 'boolean' then
 		return
 	end
 	CreateThread(function()
-		local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		while not DoesEntityExist(Entity) do
+		local SpawnedEntity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
+		while not DoesEntityExist(SpawnedEntity) do
 			Wait(0)
 		end
-		Entity(Entity).state:set('VehicleProperties', Properties, true)
-		local netID = NetworkGetNetworkIdFromEntity(Entity)
+		Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+		local netID = NetworkGetNetworkIdFromEntity(SpawnedEntity)
 		cb(netID)
 	end)
 end
@@ -86,7 +86,7 @@ end
 ---@param cb function
 function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 	if type(model) == 'string' then model = joaat(model) end
-	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
 	CreateThread(function()
 		local entity = CreateObject(model, coords, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end

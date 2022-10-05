@@ -961,35 +961,20 @@ Config.Weapons = {
 	-- Tools
 	{name = 'WEAPON_FIREEXTINGUISHER', label = _U('weapon_fireextinguisher'), components = {}, ammo = {label = _U('ammo_charge'), hash = `AMMO_FIREEXTINGUISHER`}},
 	{name = 'WEAPON_DIGISCANNER', label = _U('weapon_digiscanner'), components = {}},
-	{name = 'GADGET_PARACHUTE', label = _U('gadget_parachute'), components = {}}
+	{name = 'GADGET_PARACHUTE', label = _U('gadget_parachute'), components = {}},
+	{name = 'WEAPON_TACTICALRIFLE',label = _U('weapon_tactilerifle'),ammo = {label = _U('ammo_rounds'), hash = `AMMO_RIFLE`},tints = Config.DefaultWeaponTints,
+		components = {
+						{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_TACTICALRIFLE_CLIP_01`},
+						{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_TACTICALRIFLE_CLIP_02`},
+						{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH_REH`},
+						{name = 'grip', label = _U('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`},
+						{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02`}
+				}
+	},
+	{name = 'WEAPON_PRECISIONRIFLE', label = _U('weapon_precisionrifle'), ammo = {label = _U('ammo_rounds'), hash = `AMMO_SNIPER`}, tints = Config.DefaultWeaponTints,
+				components = {
+						{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_PRECISIONRIFLE_CLIP_01`},
+				}
+	},
+	{name = 'WEAPON_METALDETECTOR', label = _U('weapon_metaldetector'), components = {}}
 }
-
-	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
-
-	-- The Criminal Enterprises DLC Weapons
-	if GameBuild >= 2699 then 
-		local Length = #Config.Weapons
-		Config.Weapons[Length + 1] = {
-			name = 'WEAPON_TACTICALRIFLE',
-			label = _U('weapon_tactilerifle'),
-			ammo = {label = _U('ammo_rounds'), hash = `AMMO_RIFLE`},
-			tints = Config.DefaultWeaponTints,
-			components = {
-					{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_TACTICALRIFLE_CLIP_01`},
-					{name = 'clip_extended', label = _U('component_clip_extended'), hash = `COMPONENT_TACTICALRIFLE_CLIP_02`},
-					{name = 'flashlight', label = _U('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH_REH`},
-					{name = 'grip', label = _U('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`},
-					{name = 'suppressor', label = _U('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02`}
-			}
-		}
-		Config.Weapons[Length + 2] = {
-			name = 'WEAPON_PRECISIONRIFLE',
-			label = _U('weapon_precisionrifle'),
-			ammo = {label = _U('ammo_rounds'), hash = `AMMO_SNIPER`},
-			tints = Config.DefaultWeaponTints,
-			components = {
-					{name = 'clip_default', label = _U('component_clip_default'), hash = `COMPONENT_PRECISIONRIFLE_CLIP_01`},
-			}
-		}
-		Config.Weapons[Length+ 3] = {name = 'WEAPON_METALDETECTOR', label = _U('weapon_metaldetector'), components = {}}
-	end

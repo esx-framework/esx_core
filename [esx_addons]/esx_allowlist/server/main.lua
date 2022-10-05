@@ -46,7 +46,7 @@ end)
 
 ESX.RegisterCommand('alrefresh', 'admin', function(xPlayer, args)
 	loadAllowList()
-	print('[esx_allowlist] Allowlist Refreshed!')
+	print('[^2INFO^7] Allowlist ^5Refreshed^7!')
 end, true, {help = _U('help_allowlist_load')})
 
 ESX.RegisterCommand('aladd', 'admin', function(xPlayer, args, showError)

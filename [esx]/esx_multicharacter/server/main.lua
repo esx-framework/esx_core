@@ -117,7 +117,7 @@ elseif ESX.GetConfig().Multichar == true then
 
 		MySQL.transaction(queries, function(result)
 			if result then
-				print(('[^2INFO^7] Player [%s] %s has deleted a character (%s)'):format(GetPlayerName(source), source, identifier))
+				print(('[^2INFO^7] Player ^5%s %s^7 has deleted a character ^5(%s)^7'):format(GetPlayerName(source), source, identifier))
 				Wait(50)
 				SetupCharacters(source)
 			else
@@ -154,9 +154,9 @@ elseif ESX.GetConfig().Multichar == true then
 				end
 
 				if MySQL.transaction.await(queries) then
-					print(('[^2INFO^7] Updated ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
+					print(('[^2INFO^7] Updated ^5%s^7 columns to use ^5VARCHAR(%s)^7'):format(count, length))
 				else
-					print(('[^2INFO^7] Unable to update ^5%s^7 columns to use VARCHAR(%s)'):format(count, length))
+					print(('[^2INFO^7] Unable to update ^5%s^7 columns to use ^5VARCHAR(%s)^7'):format(count, length))
 				end
 			end
 

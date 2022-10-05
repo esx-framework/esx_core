@@ -7,7 +7,7 @@ function ParkBoats()
 		['@type'] = 'boat'
 	}, function (rowsChanged)
 		if rowsChanged > 0 then
-			print(('esx_boat: %s boat(s) have been stored!'):format(rowsChanged))
+			print(('[^2INFO^7] Stored ^5%s^7 %s !'):format(rowsChanged, rowsChanged > 1 and 'boats' or 'boat'))
 		end
 	end)
 end
@@ -18,7 +18,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 
 	-- vehicle model not found
 	if price == 0 then
-		print(('esx_boat: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
+		print(('[^2INFO^7] Player ^5%s^7 Attempted To Exploit Shop'):format(xPlayer.source))
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then
@@ -49,7 +49,7 @@ AddEventHandler('esx_boat:takeOutVehicle', function(plate)
 		['@plate']  = plate
 	}, function(rowsChanged)
 		if rowsChanged == 0 then
-			print(('esx_boat: %s exploited the garage!'):format(xPlayer.identifier))
+			print(('[^2INFO^7] Player ^5%s^7 Attempted To Exploit Garage'):format(xPlayer.source))
 		end
 	end)
 end)
@@ -62,10 +62,6 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 		['@owner']  = xPlayer.identifier,
 		['@plate']  = plate
 	}, function(rowsChanged)
-		if rowsChanged == 0 then
-			print(('esx_boat: %s attempted to store an boat they don\'t own!'):format(xPlayer.identifier))
-		end
-
 		cb(rowsChanged)
 	end)
 end)

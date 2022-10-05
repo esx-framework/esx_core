@@ -72,7 +72,7 @@ function PropertiesRefresh()
     end
   else
     Properties = {}
-    print("[ERROR]: Properties.json Not Found!")
+    print("[^1ERROR^7]: ^5Properties.json^7 Not Found!")
   end
 end
 
@@ -1052,7 +1052,6 @@ RegisterNetEvent('esx_property:server:createProperty', function(Property)
   local source = source
   local xPlayer = ESX.GetPlayerFromId(source)
   local Interior = GetInteriorValues(Property.interior)
-  print(ESX.DumpTable(Property))
   local garageData =
     Property.garage.enabled and {enabled = true, pos = Property.garage.pos, Heading = Property.garage.heading, StoredVehicles = {}} or
       {enabled = false}
@@ -1104,6 +1103,12 @@ end)
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
+  if ResourceName == GetCurrentResourceName() then
+    PropertySave(_U("resource_stop"))
+  end
+end)
+
+AddEventHandler('onServerResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
     PropertySave(_U("resource_stop"))
   end

@@ -167,11 +167,11 @@ function ESX.RegisterServerCallback(name, cb)
   Core.ServerCallbacks[name] = cb
 end
 
-function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
+function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
   if Core.ServerCallbacks[name] then
     Core.ServerCallbacks[name](source, cb, ...)
   else
-    print(('[^3WARNING^7] Server callback ^5"%s"^0 does not exist. ^1Please Check The Server File for Errors!'):format(name))
+    print(('[^1ERROR^7] Server callback ^5"%s"^0 does not exist. Please Check ^5%s^7 for Errors!'):format(name, Invoke))
   end
 end
 
@@ -209,7 +209,7 @@ function Core.SavePlayers(cb)
           if type(cb) == 'function' then
             cb()
           else
-            print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000))
+            print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(count, count > 1 and 'players' or 'player', ESX.Math.Round((os.time() - time) / 1000000, 2)))
           end
         end
       end)
@@ -263,6 +263,54 @@ function ESX.GetIdentifier(playerId)
       return identifier
     end
   end
+end
+
+function ESX.DiscordLog(name, title, color, message)
+
+  local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
+  local embedData = {{
+      ['title'] = title,
+      ['color'] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
+      ['footer'] = {
+          ['text'] = "| ESX Logs | " .. os.date(),
+          ['icon_url'] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png"
+      },
+      ['description'] = message,
+      ['author'] = {
+          ['name'] = "ESX Framework",
+          ['icon_url'] = "https://cdn.discordapp.com/emojis/939245183621558362.webp?size=128&quality=lossless"
+      }
+  }}
+  PerformHttpRequest(webHook, nil, 'POST', json.encode({
+      username = 'Logs',
+      embeds = embedData
+  }), {
+      ['Content-Type'] = 'application/json'
+  })
+end
+
+function ESX.DiscordLogFields(name, title, color, fields)
+  local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
+  local embedData = {{
+      ['title'] = title,
+      ['color'] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
+      ['footer'] = {
+          ['text'] = "| ESX Logs | " .. os.date(),
+          ['icon_url'] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png"
+      },
+      ['fields'] = fields, 
+      ['description'] = "",
+      ['author'] = {
+          ['name'] = "ESX Framework",
+          ['icon_url'] = "https://cdn.discordapp.com/emojis/939245183621558362.webp?size=128&quality=lossless"
+      }
+  }}
+  PerformHttpRequest(webHook, nil, 'POST', json.encode({
+      username = 'Logs',
+      embeds = embedData
+  }), {
+      ['Content-Type'] = 'application/json'
+  })
 end
 
 function ESX.RefreshJobs()
@@ -344,7 +392,7 @@ function ESX.GetItemLabel(item)
   if ESX.Items[item] then
     return ESX.Items[item].label
   else
-    print('[^3WARNING^7] Attemting to get invalid Item -> ' .. item)
+    print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
   end
 end
 

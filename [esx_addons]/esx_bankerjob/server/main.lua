@@ -100,7 +100,7 @@ function CalculateBankSavings(d, h, m)
 		end)
 
 		Async.parallelLimit(asyncTasks, 5, function(results)
-			print('[BANK] Calculated interests')
+			print('[^2INFO^7] Calculated interest Rate')
 		end)
 	end)
 end

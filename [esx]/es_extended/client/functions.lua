@@ -87,7 +87,7 @@ function ESX.ShowNotification(message, type, length)
     if GetResourceState("esx_notify") ~= "missing" then
         exports["esx_notify"]:Notify(type, length, message)
         else
-            print("[ERROR] Missing esx_notify")
+            print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
         end
     end
     
@@ -96,7 +96,7 @@ function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:TextUI(message, type)
     else 
-        print("[ERROR] Missing ESX TextUI!")
+        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
         return
     end
 end
@@ -105,7 +105,7 @@ function ESX.HideUI()
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:HideUI()
     else 
-        print("[ERROR] Missing ESX TextUI!")
+        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
         return
     end
 end
@@ -174,19 +174,19 @@ if GetResourceState("esx_context") ~= "missing" then
     end
 else 
     function ESX.OpenContext()
-        print("[ERROR] Tried to open context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
 
     function ESX.PreviewContext()
-        print("[ERROR] Tried to preview context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
     end
 
     function ESX.CloseContext()
-        print("[ERROR] Tried to close context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
     end
 
     function ESX.RefreshContext()
-        print("[ERROR] Tried to close context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
     end
 end
 
@@ -201,9 +201,10 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
 end
 
 function ESX.TriggerServerCallback(name, cb, ...)
+    local Invoke = GetInvokingResource() or "unknown"
     Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
-    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
+    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId,Invoke, ...)
     Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 

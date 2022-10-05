@@ -389,10 +389,7 @@ CreateThread(function()
                     currentPart = 'GetOutPoint'
 
                     if IsControlJustReleased(0, 38) and not menuIsShowed then
-                        print("2")
                         ESX.TriggerServerCallback('esx_garage:getVehiclesInPound', function(vehicles)
-                            print(1)
-                            print(vehicles)
                             if next(vehicles) then
                                 menuIsShowed = true
 

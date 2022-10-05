@@ -14,7 +14,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 	local targetXPlayer = ESX.GetPlayerFromId(target)
 
 	if sourceXPlayer.job.name ~= 'police' then
-		print(('esx_policejob: %s attempted to confiscate!'):format(sourceXPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit The Confuscation System!'):format(sourceXPlayer.source))
 		return
 	end
 
@@ -75,7 +75,7 @@ AddEventHandler('esx_policejob:handcuff', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:handcuff', target)
 	else
-		print(('esx_policejob: %s attempted to handcuff a player (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Handcuffs!'):format(xPlayer.source))
 	end
 end)
 
@@ -86,7 +86,7 @@ AddEventHandler('esx_policejob:drag', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:drag', target, source)
 	else
-		print(('esx_policejob: %s attempted to drag (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Dragging!'):format(xPlayer.source))
 	end
 end)
 
@@ -97,7 +97,7 @@ AddEventHandler('esx_policejob:putInVehicle', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:putInVehicle', target)
 	else
-		print(('esx_policejob: %s attempted to put in vehicle (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Garage!'):format(xPlayer.source))
 	end
 end)
 
@@ -108,7 +108,7 @@ AddEventHandler('esx_policejob:OutVehicle', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:OutVehicle', target)
 	else
-		print(('esx_policejob: %s attempted to drag out from vehicle (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Dragging Out Of Vehicle!'):format(xPlayer.source))
 	end
 end)
 
@@ -314,7 +314,7 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 	end
 
 	if not selectedWeapon then
-		print(('esx_policejob: %s attempted to buy an invalid weapon.'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Weapon - ^5%s^7!'):format(source, weaponName))
 		cb(false)
 	else
 		-- Weapon
@@ -344,7 +344,7 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 					cb(false)
 				end
 			else
-				print(('esx_policejob: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
+				print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Weapon Component - ^5%s^7!'):format(source, componentNum))
 				cb(false)
 			end
 		end
@@ -357,7 +357,7 @@ ESX.RegisterServerCallback('esx_policejob:buyJobVehicle', function(source, cb, v
 
 	-- vehicle model not found
 	if price == 0 then
-		print(('esx_policejob: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Vehicle - ^5%s^7!'):format(source, vehicleProps.model))
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then

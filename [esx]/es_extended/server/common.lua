@@ -13,6 +13,8 @@ Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
+  local Invoke = GetInvokingResource()
+  print(('[^3WARNING^7] ^5%s^7 used ^5esx:getSharedObject^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/sharedevent^7 for more info!'):format(Invoke))
   cb(ESX)
 end)
 
@@ -72,14 +74,14 @@ MySQL.ready(function()
     if Jobs[v.job_name] then
       Jobs[v.job_name].grades[tostring(v.grade)] = v
     else
-      print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
+      print(('[^3WARNING^7] Ignoring job grades for ^5%s^0 due to missing job'):format(v.job_name))
     end
   end
 
   for _, v in pairs(Jobs) do
     if ESX.Table.SizeOf(v.grades) == 0 then
       Jobs[v.name] = nil
-      print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(v.name))
+      print(('[^3WARNING^7] Ignoring job ^5%s^0 due to no job grades found'):format(v.name))
     end
   end
 
@@ -91,7 +93,7 @@ MySQL.ready(function()
     ESX.Jobs = Jobs
   end
 
-  print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+  print('[^2INFO^7] ESX ^5Legacy 1.8.5^0 initialized!')
   StartDBSync()
   StartPayCheck()
 end)
@@ -104,10 +106,10 @@ AddEventHandler('esx:clientLog', function(msg)
 end)
 
 RegisterServerEvent('esx:triggerServerCallback')
-AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
-  local playerId = source
+AddEventHandler('esx:triggerServerCallback', function(name, requestId,Invoke, ...)
+  local source = source
 
-  ESX.TriggerServerCallback(name, requestId, playerId, function(...)
-    TriggerClientEvent('esx:serverCallback', playerId, requestId, ...)
+  ESX.TriggerServerCallback(name, requestId, source,Invoke, function(...)
+    TriggerClientEvent('esx:serverCallback', source, requestId, ...)
   end, ...)
 end)

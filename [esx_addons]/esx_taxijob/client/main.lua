@@ -40,30 +40,18 @@ function ShowLoadingPromt(msg, time, type)
 end
 
 function GetRandomWalkingNPC()
-    local search = {}
-    local peds = ESX.Game.GetPeds()
-
-    for i = 1, #peds, 1 do
-        if IsPedHuman(peds[i]) and IsPedWalking(peds[i]) and not IsPedAPlayer(peds[i]) then
-            table.insert(search, peds[i])
+        local search = {}
+        local peds = GetGamePool("CPed")
+    
+        for i = 1, #peds, 1 do
+            if IsPedHuman(peds[i]) and IsPedWalking(peds[i]) and not IsPedAPlayer(peds[i]) then
+                search[#search+1] = peds[i]
+            end
         end
-    end
-
-    if #search > 0 then
-        return search[GetRandomIntInRange(1, #search)]
-    end
-
-    for i = 1, 250, 1 do
-        local ped = GetRandomPedAtCoord(0.0, 0.0, 0.0, math.huge + 0.0, math.huge + 0.0, math.huge + 0.0, 26)
-
-        if DoesEntityExist(ped) and IsPedHuman(ped) and IsPedWalking(ped) and not IsPedAPlayer(ped) then
-            table.insert(search, ped)
+    
+        if #search > 0 then
+            return search[math.random(#search)]
         end
-    end
-
-    if #search > 0 then
-        return search[GetRandomIntInRange(1, #search)]
-    end
 end
 
 function ClearCurrentMission()
@@ -173,13 +161,9 @@ function OpenVehicleSpawnerMenu()
                 menu.close()
 
                 local vehicleProps = data.current.value
-                ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos,
-                    Config.Zones.VehicleSpawnPoint.Heading, function(vehicle)
-                        ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-                        local playerPed = PlayerPedId()
-                        TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-                    end)
-
+                ESX.TriggerServerCallback("esx_taxijob:SpawnVehicle", function()
+                    return
+                end, vehicleProps.model, vehicleProps)
                 TriggerServerEvent('esx_society:removeVehicleFromGarage', 'taxi', vehicleProps)
             end, function(data, menu)
                 CurrentAction = 'vehicle_spawner'
@@ -201,13 +185,10 @@ function OpenVehicleSpawnerMenu()
                 ESX.ShowNotification(_U('spawnpoint_blocked'))
                 return
             end
-
+            ESX.TriggerServerCallback("esx_taxijob:SpawnVehicle", function()
+                ESX.ShowNotification(_U('vehicle_spawned'), "success")
+            end, "taxi", {plate = "TAXI JOB"})
             menu.close()
-            ESX.Game.SpawnVehicle(data.current.model, Config.Zones.VehicleSpawnPoint.Pos,
-                Config.Zones.VehicleSpawnPoint.Heading, function(vehicle)
-                    local playerPed = PlayerPedId()
-                    TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-                end)
         end, function(data, menu)
             CurrentAction = 'vehicle_spawner'
             CurrentActionMsg = _U('spawner_prompt')
@@ -569,15 +550,9 @@ CreateThread(function()
             local playerPed = PlayerPedId()
             if CurrentCustomer == nil then
                 DrawSub(_U('drive_search_pass'), 5000)
-
-                if IsPedInAnyVehicle(playerPed, false) and GetEntitySpeed(playerPed) > 0 then
-                    local waitUntil = GetGameTimer() + GetRandomIntInRange(30000, 45000)
-
-                    while OnJob and waitUntil > GetGameTimer() do
-                        Wait(0)
-                    end
-
-                    if OnJob and IsPedInAnyVehicle(playerPed, false) and GetEntitySpeed(playerPed) > 0 then
+            
+                if IsPedInAnyVehicle(playerPed, false) and OnJob then
+                    Wait(5000)
                         CurrentCustomer = GetRandomWalkingNPC()
 
                         if CurrentCustomer ~= nil then
@@ -597,7 +572,6 @@ CreateThread(function()
 
                             ESX.ShowNotification(_U('customer_found'))
                         end
-                    end
                 end
             else
                 if IsPedFatallyInjured(CurrentCustomer) then

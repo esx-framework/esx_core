@@ -9,7 +9,7 @@ end)
 
 RegisterCommand('twt', function(playerId, args, rawCommand)
 	if playerId == 0 then
-		print('esx_rpchat: you can\'t use this command from console!')
+		print('[^1ERROR^7] This Command Cannot Be Used By The Console!')
 	else
 		args = table.concat(args, ' ')
 
@@ -21,7 +21,7 @@ end, false)
 
 RegisterCommand('anontwt', function(playerId, args, rawCommand)
 	if playerId == 0 then
-		print('esx_rpchat: you can\'t use this command from console!')
+		print('[^1ERROR^7] This Command Cannot Be Used By The Console!')
 	else
 		args = table.concat(args, ' ')
 
@@ -33,7 +33,7 @@ end, false)
 
 RegisterCommand('me', function(playerId, args, rawCommand)
 	if playerId == 0 then
-		print('esx_rpchat: you can\'t use this command from console!')
+		print('[^1ERROR^7] This Command Cannot Be Used By The Console!')
 	else
 		args = table.concat(args, ' ')
 		local playerName = GetRealPlayerName(playerId)
@@ -44,7 +44,7 @@ end, false)
 
 RegisterCommand('do', function(playerId, args, rawCommand)
 	if playerId == 0 then
-		print('esx_rpchat: you can\'t use this command from console!')
+		print('[^1ERROR^7] This Command Cannot Be Used By The Console!')
 	else
 		args = table.concat(args, ' ')
 		local playerName = GetRealPlayerName(playerId)
