@@ -16,6 +16,8 @@ Config.Accounts = {
 	}
 }
 
+Config.CheckForUpdates = true -- Check for Updates?
+
 Config.StartingAccountMoney 	= {bank = 50000}
 
 Config.EnableSocietyPayouts 	= false -- pay from the society account that the player is employed at? Requirement: esx_society
