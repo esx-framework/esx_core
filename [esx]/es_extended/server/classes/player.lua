@@ -75,9 +75,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.setGroup(newGroup)
+		local old = self.group
+
 		ExecuteCommand(('remove_principal identifier.%s group.%s'):format(self.license, self.group))
 		self.group = newGroup
 		ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
+
+		self.triggerEvent('esx:setGroup', newGroup, old)
+		TriggerEvent('esx:setGroup', self.source, newGroup, old)
 	end
 
 	function self.getGroup()
