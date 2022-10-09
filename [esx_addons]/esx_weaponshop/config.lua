@@ -5,7 +5,7 @@ Config.Size          = { x = 1.5, y = 1.5, z = 0.5 }
 Config.Color         = { r = 0, g = 128, b = 255 }
 Config.Type          = 1
 
-Config.Locale        = 'en'
+Config.Locale        = GetConvar('esx:locale', 'en')
 Config.MenuPosition  = "right"
 Config.OxInventory   = ESX.GetConfig().OxInventory
 

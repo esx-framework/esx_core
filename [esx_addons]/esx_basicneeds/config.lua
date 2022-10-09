@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.Visible = true
 
 Config.Food = {

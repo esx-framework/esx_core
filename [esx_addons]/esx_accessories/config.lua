@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Price = 100
 

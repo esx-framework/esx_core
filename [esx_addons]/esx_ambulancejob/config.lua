@@ -8,7 +8,7 @@ Config.ReviveReward               = 700  -- Revive reward, set to 0 if you don't
 Config.SaveDeathStatus              = true -- Save Death Status?
 Config.LoadIpl                    = true -- Disable if you're using fivem-ipl or other IPL loaders
 
-Config.Locale                     = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.DistressBlip = {
 	Sprite = 310,
