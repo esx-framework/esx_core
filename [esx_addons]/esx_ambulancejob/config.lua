@@ -122,14 +122,14 @@ Config.Hospitals = {
 				From = vector3(237.4, -1373.8, 26.0),
 				To = {coords = vector3(251.9, -1363.3, 38.5), heading = 0.0},
 				Marker = {type = 1, x = 1.5, y = 1.5, z = 0.5, r = 102, g = 0, b = 102, a = 100, rotate = false},
-				Prompt = _U('fast_travel')
+				Prompt = TranslateCap('fast_travel')
 			},
 
 			{
 				From = vector3(256.5, -1357.7, 36.0),
 				To = {coords = vector3(235.4, -1372.8, 26.3), heading = 0.0},
 				Marker = {type = 1, x = 1.5, y = 1.5, z = 0.5, r = 102, g = 0, b = 102, a = 100, rotate = false},
-				Prompt = _U('fast_travel')
+				Prompt = TranslateCap('fast_travel')
 			}
 		}
 

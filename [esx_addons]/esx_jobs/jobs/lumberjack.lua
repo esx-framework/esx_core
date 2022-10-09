@@ -24,9 +24,9 @@ Config.Jobs.lumberjack = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker= 20,
 			Blip = true,
-			Name = _U('lj_locker_room'),
+			Name = TranslateCap('lj_locker_room'),
 			Type = 'cloakroom',
-			Hint = _U('cloak_change')
+			Hint = TranslateCap('cloak_change')
 		},
 
 		Wood = {
@@ -35,11 +35,11 @@ Config.Jobs.lumberjack = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('lj_mapblip'),
+			Name = TranslateCap('lj_mapblip'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_wood'),
+					name = TranslateCap('lj_wood'),
 					db_name = 'wood',
 					time = 3,
 					max = 20,
@@ -50,7 +50,7 @@ Config.Jobs.lumberjack = {
 					drop = 100
 				}
 			},
-			Hint = _U('lj_pickup')
+			Hint = TranslateCap('lj_pickup')
 		},
 
 		CuttedWood = {
@@ -59,22 +59,22 @@ Config.Jobs.lumberjack = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('lj_woodcutting'),
+			Name = TranslateCap('lj_woodcutting'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_cutwood'),
+					name = TranslateCap('lj_cutwood'),
 					db_name = 'cutted_wood',
 					time = 5,
 					max = 20,
 					add = 1,
 					remove = 1,
 					requires = 'wood',
-					requires_name = _U('lj_wood'),
+					requires_name = TranslateCap('lj_wood'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_cutwood_button')
+			Hint = TranslateCap('lj_cutwood_button')
 		},
 
 		Planks = {
@@ -83,22 +83,22 @@ Config.Jobs.lumberjack = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('lj_board'),
+			Name = TranslateCap('lj_board'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('lj_planks'),
+					name = TranslateCap('lj_planks'),
 					db_name = 'packaged_plank',
 					time = 4,
 					max = 100,
 					add = 5,
 					remove = 1,
 					requires = 'cutted_wood',
-					requires_name = _U('lj_cutwood'),
+					requires_name = TranslateCap('lj_cutwood'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_pick_boards')
+			Hint = TranslateCap('lj_pick_boards')
 		},
 
 		VehicleSpawner = {
@@ -107,10 +107,10 @@ Config.Jobs.lumberjack = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('spawn_veh'),
+			Name = TranslateCap('spawn_veh'),
 			Type = 'vehspawner',
 			Spawner = 1,
-			Hint = _U('spawn_veh_button'),
+			Hint = TranslateCap('spawn_veh_button'),
 			Caution = 2000
 		},
 
@@ -119,7 +119,7 @@ Config.Jobs.lumberjack = {
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
-			Name = _U('service_vh'),
+			Name = TranslateCap('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
 			Heading = 264.40
@@ -131,9 +131,9 @@ Config.Jobs.lumberjack = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('return_vh'),
+			Name = TranslateCap('return_vh'),
 			Type = 'vehdelete',
-			Hint = _U('return_vh_button'),
+			Hint = TranslateCap('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -146,22 +146,22 @@ Config.Jobs.lumberjack = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('delivery_point'),
+			Name = TranslateCap('delivery_point'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 13,
 					requires = 'packaged_plank',
-					requires_name = _U('lj_planks'),
+					requires_name = TranslateCap('lj_planks'),
 					drop = 100
 				}
 			},
-			Hint = _U('lj_deliver_button')
+			Hint = TranslateCap('lj_deliver_button')
 		}
 
 	}

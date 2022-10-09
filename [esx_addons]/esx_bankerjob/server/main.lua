@@ -1,5 +1,5 @@
 TriggerEvent('esx_phone:registerNumber', 'banker', _('phone_receive'), false, false)
-TriggerEvent('esx_society:registerSociety', 'banker', _U('phone_label'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
+TriggerEvent('esx_society:registerSociety', 'banker', TranslateCap('phone_label'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
 
 RegisterServerEvent('esx_bankerjob:customerDeposit')
 AddEventHandler('esx_bankerjob:customerDeposit', function (target, amount)
@@ -13,7 +13,7 @@ AddEventHandler('esx_bankerjob:customerDeposit', function (target, amount)
 				account.addMoney(amount)
 			end)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, TranslateCap('invalid_amount'))
 		end
 	end)
 end)
@@ -30,7 +30,7 @@ AddEventHandler('esx_bankerjob:customerWithdraw', function (target, amount)
 				account.addMoney(amount)
 			end)
 		else
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
+			TriggerClientEvent('esx:showNotification', xPlayer.source, TranslateCap('invalid_amount'))
 		end
 	end)
 end)

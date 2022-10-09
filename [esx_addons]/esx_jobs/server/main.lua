@@ -24,7 +24,7 @@ CreateThread(function()
 						for k,v in ipairs(data.jobItem) do
 							local itemQtty, requiredItemQtty = 0, 0
 
-							if v.name ~= _U('delivery') then
+							if v.name ~= TranslateCap('delivery') then
 								itemQtty = xPlayer.getInventoryItem(v.db_name).count
 							end
 
@@ -32,14 +32,14 @@ CreateThread(function()
 								requiredItemQtty = xPlayer.getInventoryItem(data.jobItem[1].requires).count
 							end
 			
-							if v.name ~= _U('delivery') and itemQtty >= v.max then
-								xPlayer.showNotification(_U('max_limit', v.name))
+							if v.name ~= TranslateCap('delivery') and itemQtty >= v.max then
+								xPlayer.showNotification(TranslateCap('max_limit', v.name))
 								playersWorking[playerId] = nil
 							elseif v.requires ~= 'nothing' and requiredItemQtty <= 0 then
-								xPlayer.showNotification(_U('not_enough', data.jobItem[1].requires_name))
+								xPlayer.showNotification(TranslateCap('not_enough', data.jobItem[1].requires_name))
 								playersWorking[playerId] = nil
 							else
-								if v.name ~= _U('delivery') then
+								if v.name ~= TranslateCap('delivery') then
 									-- chances to drop the item
 									if v.drop == 100 then
 										xPlayer.addInventoryItem(v.db_name, v.add)
@@ -110,10 +110,10 @@ RegisterNetEvent('esx_jobs:caution', function(cautionType, cautionAmount, spawnP
 				if xPlayer.getAccount('bank').money >= cautionAmount then
 					xPlayer.removeAccountMoney('bank', cautionAmount, "Caution Fine")
 					account.addMoney(cautionAmount)
-					xPlayer.showNotification(_U('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
+					xPlayer.showNotification(TranslateCap('bank_deposit_taken', ESX.Math.GroupDigits(cautionAmount)))
 					TriggerClientEvent('esx_jobs:spawnJobVehicle', xPlayer.source, spawnPoint, vehicle)
 				else
-					xPlayer.showNotification(_U('caution_afford', ESX.Math.GroupDigits(cautionAmount)))
+					xPlayer.showNotification(TranslateCap('caution_afford', ESX.Math.GroupDigits(cautionAmount)))
 				end
 			end)
 		end
@@ -125,7 +125,7 @@ RegisterNetEvent('esx_jobs:caution', function(cautionType, cautionAmount, spawnP
 	
 				xPlayer.addAccountMoney('bank', toGive, "Caution Return")
 				account.removeMoney(toGive)
-				TriggerClientEvent('esx:showNotification', source, _U('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
+				TriggerClientEvent('esx:showNotification', source, TranslateCap('bank_deposit_returned', ESX.Math.GroupDigits(toGive)))
 			end)
 		end
 	end

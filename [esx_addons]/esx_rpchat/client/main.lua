@@ -16,10 +16,10 @@ AddEventHandler('esx_rpchat:sendProximityMessage', function(playerId, title, mes
 end)
 
 CreateThread(function()
-	TriggerEvent('chat:addSuggestion', '/twt',  _U('twt_help'),  {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/anontwt',  _U('twtanon_help'),  {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/me',   _U('me_help'),   {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
-	TriggerEvent('chat:addSuggestion', '/do',   _U('do_help'),   {{name = _U('generic_argument_name'), help = _U('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/twt',  TranslateCap('twt_help'),  {{name = TranslateCap('generic_argument_name'), help = TranslateCap('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/anontwt',  TranslateCap('twtanon_help'),  {{name = TranslateCap('generic_argument_name'), help = TranslateCap('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/me',   TranslateCap('me_help'),   {{name = TranslateCap('generic_argument_name'), help = TranslateCap('generic_argument_help')}})
+	TriggerEvent('chat:addSuggestion', '/do',   TranslateCap('do_help'),   {{name = TranslateCap('generic_argument_name'), help = TranslateCap('generic_argument_help')}})
 end)
 
 AddEventHandler('onResourceStop', function(resource)

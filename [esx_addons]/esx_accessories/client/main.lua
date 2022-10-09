@@ -4,13 +4,13 @@ local CurrentActionData	= {}
 
 function OpenAccessoryMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
-		title = _U('set_unset'),
+		title = TranslateCap('set_unset'),
 		align = 'top-left',
 		elements = {
-			{label = _U('helmet'), value = 'Helmet'},
-			{label = _U('ears'), value = 'Ears'},
-			{label = _U('mask'), value = 'Mask'},
-			{label = _U('glasses'), value = 'Glasses'}
+			{label = TranslateCap('helmet'), value = 'Helmet'},
+			{label = TranslateCap('ears'), value = 'Ears'},
+			{label = TranslateCap('mask'), value = 'Mask'},
+			{label = TranslateCap('glasses'), value = 'Glasses'}
 		}}, function(data, menu)
 		menu.close()
 		SetUnsetAccessory(data.current.value)
@@ -43,7 +43,7 @@ function SetUnsetAccessory(accessory)
 				TriggerEvent('skinchanger:loadClothes', skin, accessorySkin)
 			end)
 		else
-			ESX.ShowNotification(_U('no_' .. _accessory))
+			ESX.ShowNotification(TranslateCap('no_' .. _accessory))
 		end
 	end, accessory)
 end
@@ -59,11 +59,11 @@ function OpenShopMenu(accessory)
 		menu.close()
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('valid_purchase'),
+			title = TranslateCap('valid_purchase'),
 			align = 'top-left',
 			elements = {
-				{label = _U('no'), value = 'no'},
-				{label = _U('yes', ESX.Math.GroupDigits(Config.Price)), value = 'yes'}
+				{label = TranslateCap('no'), value = 'no'},
+				{label = TranslateCap('yes', ESX.Math.GroupDigits(Config.Price)), value = 'yes'}
 			}}, function(data, menu)
 			menu.close()
 			if data.current.value == 'yes' then
@@ -87,7 +87,7 @@ function OpenShopMenu(accessory)
 						elseif accessory == "Glasses" then
 							SetPedPropIndex(player, 1, -1, 0, 0)
 						end
-						ESX.ShowNotification(_U('not_enough_money'))
+						ESX.ShowNotification(TranslateCap('not_enough_money'))
 					end
 				end)
 			end
@@ -108,25 +108,25 @@ function OpenShopMenu(accessory)
 				end
 			end
 			CurrentAction     = 'shop_menu'
-			CurrentActionMsg  = _U('press_access')
+			CurrentActionMsg  = TranslateCap('press_access')
 			CurrentActionData = {}
 		end, function(data, menu)
 			menu.close()
 			CurrentAction     = 'shop_menu'
-			CurrentActionMsg  = _U('press_access')
+			CurrentActionMsg  = TranslateCap('press_access')
 			CurrentActionData = {}
 		end)
 	end, function(data, menu)
 		menu.close()
 		CurrentAction     = 'shop_menu'
-		CurrentActionMsg  = _U('press_access')
+		CurrentActionMsg  = TranslateCap('press_access')
 		CurrentActionData = {}
 	end, restrict)
 end
 
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
-	CurrentActionMsg  = _U('press_access')
+	CurrentActionMsg  = TranslateCap('press_access')
 	CurrentActionData = { accessory = zone }
 end)
 
@@ -149,7 +149,7 @@ CreateThread(function()
 				SetBlipAsShortRange(blip, true)
 
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentSubstringPlayerName(_U('shop', _U(string.lower(k))))
+				AddTextComponentSubstringPlayerName(TranslateCap('shop', TranslateCap(string.lower(k))))
 				EndTextCommandSetBlipName(blip)
 			end
 		end

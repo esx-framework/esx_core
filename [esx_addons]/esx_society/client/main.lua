@@ -83,38 +83,38 @@ function OpenBossMenu(society, close, options)
 			end
 
 			if options.withdraw then
-				table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
+				table.insert(elements, {label = TranslateCap('withdraw_society_money'), value = 'withdraw_society_money'})
 			end
 
 			if options.deposit then
-				table.insert(elements, {label = _U('deposit_society_money'), value = 'deposit_money'})
+				table.insert(elements, {label = TranslateCap('deposit_society_money'), value = 'deposit_money'})
 			end
 
 			if options.wash then
-				table.insert(elements, {label = _U('wash_money'), value = 'wash_money'})
+				table.insert(elements, {label = TranslateCap('wash_money'), value = 'wash_money'})
 			end
 
 			if options.employees then
-				table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
+				table.insert(elements, {label = TranslateCap('employee_management'), value = 'manage_employees'})
 			end
 
 			if options.grades then
-				table.insert(elements, {label = _U('salary_management'), value = 'manage_grades'})
+				table.insert(elements, {label = TranslateCap('salary_management'), value = 'manage_grades'})
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'boss_actions_' .. society, {
-				title    = _U('boss_menu'),
+				title    = TranslateCap('boss_menu'),
 				align    = 'top-left',
 				elements = elements
 			}, function(data, menu)
 				if data.current.value == 'withdraw_society_money' then
 					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. society, {
-						title = _U('withdraw_amount')
+						title = TranslateCap('withdraw_amount')
 					}, function(data2, menu2)
 						local amount = tonumber(data2.value)
 
 						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
+							ESX.ShowNotification(TranslateCap('invalid_amount'))
 						else
 							menu2.close()
 							TriggerServerEvent('esx_society:withdrawMoney', society, amount)
@@ -124,12 +124,12 @@ function OpenBossMenu(society, close, options)
 					end)
 				elseif data.current.value == 'deposit_money' then
 					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount_' .. society, {
-						title = _U('deposit_amount')
+						title = TranslateCap('deposit_amount')
 					}, function(data2, menu2)
 						local amount = tonumber(data2.value)
 
 						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
+							ESX.ShowNotification(TranslateCap('invalid_amount'))
 						else
 							menu2.close()
 							TriggerServerEvent('esx_society:depositMoney', society, amount)
@@ -139,12 +139,12 @@ function OpenBossMenu(society, close, options)
 					end)
 				elseif data.current.value == 'wash_money' then
 					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'wash_money_amount_' .. society, {
-						title = _U('wash_money_amount')
+						title = TranslateCap('wash_money_amount')
 					}, function(data2, menu2)
 						local amount = tonumber(data2.value)
 
 						if amount == nil then
-							ESX.ShowNotification(_U('invalid_amount'))
+							ESX.ShowNotification(TranslateCap('invalid_amount'))
 						else
 							menu2.close()
 							TriggerServerEvent('esx_society:washMoney', society, amount)
@@ -168,11 +168,11 @@ end
 
 function OpenManageEmployeesMenu(society)
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_employees_' .. society, {
-		title    = _U('employee_management'),
+		title    = TranslateCap('employee_management'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('employee_list'), value = 'employee_list'},
-			{label = _U('recruit'), value = 'recruit'}
+			{label = TranslateCap('employee_list'), value = 'employee_list'},
+			{label = TranslateCap('recruit'), value = 'recruit'}
 	}}, function(data, menu)
 		if data.current.value == 'employee_list' then
 			OpenEmployeeList(society)
@@ -188,7 +188,7 @@ function OpenEmployeeList(society)
 	ESX.TriggerServerCallback('esx_society:getEmployees', function(employees)
 
 		local elements = {
-			head = {_U('employee'), _U('grade'), _U('actions')},
+			head = {TranslateCap('employee'), TranslateCap('grade'), TranslateCap('actions')},
 			rows = {}
 		}
 
@@ -200,7 +200,7 @@ function OpenEmployeeList(society)
 				cols = {
 					employees[i].name,
 					gradeLabel,
-					'{{' .. _U('promote') .. '|promote}} {{' .. _U('fire') .. '|fire}}'
+					'{{' .. TranslateCap('promote') .. '|promote}} {{' .. TranslateCap('fire') .. '|fire}}'
 				}
 			})
 		end
@@ -212,7 +212,7 @@ function OpenEmployeeList(society)
 				menu.close()
 				OpenPromoteMenu(society, employee)
 			elseif data.value == 'fire' then
-				ESX.ShowNotification(_U('you_have_fired', employee.name))
+				ESX.ShowNotification(TranslateCap('you_have_fired', employee.name))
 
 				ESX.TriggerServerCallback('esx_society:setJob', function()
 					OpenEmployeeList(society)
@@ -241,21 +241,21 @@ function OpenRecruitMenu(society)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_' .. society, {
-			title    = _U('recruiting'),
+			title    = TranslateCap('recruiting'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_confirm_' .. society, {
-				title    = _U('do_you_want_to_recruit', data.current.name),
+				title    = TranslateCap('do_you_want_to_recruit', data.current.name),
 				align    = 'top-left',
 				elements = {
-					{label = _U('no'), value = 'no'},
-					{label = _U('yes'), value = 'yes'}
+					{label = TranslateCap('no'), value = 'no'},
+					{label = TranslateCap('yes'), value = 'yes'}
 			}}, function(data2, menu2)
 				menu2.close()
 
 				if data2.current.value == 'yes' then
-					ESX.ShowNotification(_U('you_have_hired', data.current.name))
+					ESX.ShowNotification(TranslateCap('you_have_hired', data.current.name))
 
 					ESX.TriggerServerCallback('esx_society:setJob', function()
 						OpenRecruitMenu(society)
@@ -285,12 +285,12 @@ function OpenPromoteMenu(society, employee)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_employee_' .. society, {
-			title    = _U('promote_employee', employee.name),
+			title    = TranslateCap('promote_employee', employee.name),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			menu.close()
-			ESX.ShowNotification(_U('you_have_promoted', employee.name, data.current.label))
+			ESX.ShowNotification(TranslateCap('you_have_promoted', employee.name, data.current.label))
 
 			ESX.TriggerServerCallback('esx_society:setJob', function()
 				OpenEmployeeList(society)
@@ -310,26 +310,26 @@ function OpenManageGradesMenu(society)
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
 
 			table.insert(elements, {
-				label = ('%s - <span style="color:green;">%s</span>'):format(gradeLabel, _U('money_generic', ESX.Math.GroupDigits(job.grades[i].salary))),
+				label = ('%s - <span style="color:green;">%s</span>'):format(gradeLabel, TranslateCap('money_generic', ESX.Math.GroupDigits(job.grades[i].salary))),
 				value = job.grades[i].grade
 			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society, {
-			title    = _U('salary_management'),
+			title    = TranslateCap('salary_management'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'manage_grades_amount_' .. society, {
-				title = _U('salary_amount')
+				title = TranslateCap('salary_amount')
 			}, function(data2, menu2)
 
 				local amount = tonumber(data2.value)
 
 				if amount == nil then
-					ESX.ShowNotification(_U('invalid_amount'))
+					ESX.ShowNotification(TranslateCap('invalid_amount'))
 				elseif amount > Config.MaxSalary then
-					ESX.ShowNotification(_U('invalid_amount_max'))
+					ESX.ShowNotification(TranslateCap('invalid_amount_max'))
 				else
 					menu2.close()
 

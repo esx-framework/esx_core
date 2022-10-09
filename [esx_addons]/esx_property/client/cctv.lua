@@ -48,7 +48,7 @@ function CCTV(PropertyID)
             PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(1)
             N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Screenshot, true))
-            InstructionButtonMessage(_U("take_picture"))
+            InstructionButtonMessage(TranslateCap("take_picture"))
             PopScaleformMovieFunctionVoid()
           end
 
@@ -56,33 +56,33 @@ function CCTV(PropertyID)
           PushScaleformMovieFunctionParameterInt(2)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Right, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Left, true))
-          InstructionButtonMessage(_U("rot_left_right"))
+          InstructionButtonMessage(TranslateCap("rot_left_right"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(3)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Down, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Up, true))
-          InstructionButtonMessage(_U("rot_up_down"))
+          InstructionButtonMessage(TranslateCap("rot_up_down"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(4)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomOut, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomIn, true))
-          InstructionButtonMessage(_U("Zoom"))
+          InstructionButtonMessage(TranslateCap("Zoom"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(5)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.NightVision, true))
-          InstructionButtonMessage(_U("night_vision"))
+          InstructionButtonMessage(TranslateCap("night_vision"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(0)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Exit, true))
-          InstructionButtonMessage(_U("exit"))
+          InstructionButtonMessage(TranslateCap("exit"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
@@ -199,7 +199,7 @@ function CCTV(PropertyID)
           SetTextDropshadow(0.1, 3, 27, 27, 255)
           BeginTextCommandDisplayText('STRING')
           local Zoom = ((Config.CCTV.FOV - GetCamFov(cctvcam)) / GetCamFov(cctvcam)) * 100
-          AddTextComponentSubstringPlayerName(_U("zoom_level", math.floor(Zoom)))
+          AddTextComponentSubstringPlayerName(TranslateCap("zoom_level", math.floor(Zoom)))
           EndTextCommandDisplayText(0.01, 0.09)
 
           SetTextFont(4)
@@ -230,9 +230,9 @@ function CCTV(PropertyID)
                 if hook then
                   exports['screenshot-basic']:requestScreenshotUpload(hook, "files[]", function(data)
                     local image = json.decode(data)
-                    ESX.ShowNotification(_U("picture_taken"), "success")
+                    ESX.ShowNotification(TranslateCap("picture_taken"), "success")
                     SendNUIMessage({link = image.attachments[1].proxy_url})
-                    ESX.ShowNotification(_U("clipboard"), "success")
+                    ESX.ShowNotification(TranslateCap("clipboard"), "success")
                     ShowButtons = true
                     CamTakePic = false
                     SetTimeout(5000, function()
@@ -242,7 +242,7 @@ function CCTV(PropertyID)
                 end
               end)
             else
-              ESX.ShowNotification(_U("please_wait"), "error")
+              ESX.ShowNotification(TranslateCap("please_wait"), "error")
             end
           end
 
