@@ -23,9 +23,9 @@ Config.Jobs.slaughterer = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker= 20,
 			Blip = true,
-			Name = _U('s_slaughter_locker'),
+			Name = TranslateCap('s_slaughter_locker'),
 			Type = 'cloakroom',
-			Hint = _U('cloak_change')
+			Hint = TranslateCap('cloak_change')
 		},
 
 		AliveChicken = {
@@ -34,11 +34,11 @@ Config.Jobs.slaughterer = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('s_hen'),
+			Name = TranslateCap('s_hen'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('s_alive_chicken'),
+					name = TranslateCap('s_alive_chicken'),
 					db_name = 'alive_chicken',
 					time = 3,
 					max = 20,
@@ -49,7 +49,7 @@ Config.Jobs.slaughterer = {
 					drop = 100
 				}
 			},
-			Hint = _U('s_catch_hen')
+			Hint = TranslateCap('s_catch_hen')
 		},
 
 		SlaughterHouse = {
@@ -58,22 +58,22 @@ Config.Jobs.slaughterer = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('s_slaughtered'),
+			Name = TranslateCap('s_slaughtered'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('s_slaughtered_chicken'),
+					name = TranslateCap('s_slaughtered_chicken'),
 					db_name = 'slaughtered_chicken',
 					time = 5,
 					max = 20,
 					add = 1,
 					remove = 1,
 					requires = 'alive_chicken',
-					requires_name = _U('s_alive_chicken'),
+					requires_name = TranslateCap('s_alive_chicken'),
 					drop = 100
 				}
 			},
-			Hint = _U('s_chop_animal')
+			Hint = TranslateCap('s_chop_animal')
 		},
 
 		Packaging = {
@@ -82,22 +82,22 @@ Config.Jobs.slaughterer = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('s_package'),
+			Name = TranslateCap('s_package'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('s_packagechicken'),
+					name = TranslateCap('s_packagechicken'),
 					db_name = 'packaged_chicken',
 					time = 4,
 					max = 100,
 					add = 5,
 					remove = 1,
 					requires = 'slaughtered_chicken',
-					requires_name = _U('s_unpackaged'),
+					requires_name = TranslateCap('s_unpackaged'),
 					drop = 100
 				}
 			},
-			Hint = _U('s_unpackaged_button')
+			Hint = TranslateCap('s_unpackaged_button')
 		},
 
 		VehicleSpawner = {
@@ -106,10 +106,10 @@ Config.Jobs.slaughterer = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('spawn_veh'),
+			Name = TranslateCap('spawn_veh'),
 			Type = 'vehspawner',
 			Spawner = 1,
-			Hint = _U('spawn_veh_button'),
+			Hint = TranslateCap('spawn_veh_button'),
 			Caution = 2000
 		},
 
@@ -118,7 +118,7 @@ Config.Jobs.slaughterer = {
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
-			Name = _U('service_vh'),
+			Name = TranslateCap('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
 			Heading = 130.1
@@ -130,9 +130,9 @@ Config.Jobs.slaughterer = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('return_vh'),
+			Name = TranslateCap('return_vh'),
 			Type = 'vehdelete',
-			Hint = _U('return_vh_button'),
+			Hint = TranslateCap('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -145,22 +145,22 @@ Config.Jobs.slaughterer = {
 			Size = {x = 5.0, y = 5.0, z = 1.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('delivery_point'),
+			Name = TranslateCap('delivery_point'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 23,
 					requires = 'packaged_chicken',
-					requires_name = _U('s_packagechicken'),
+					requires_name = TranslateCap('s_packagechicken'),
 					drop = 100
 				}
 			},
-			Hint = _U('s_deliver')
+			Hint = TranslateCap('s_deliver')
 		}
 	}
 }

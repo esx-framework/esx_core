@@ -79,7 +79,7 @@ local function PedHandler(ids)
                 exports.ox_target:addGlobalPed(npc, {
                     options = {{
                         icon = "fas fa-money-bill-wave",
-                        label = _U('access_bank'),
+                        label = TranslateCap('access_bank'),
                         action = function()
                             OpenUi()
                         end
@@ -106,7 +106,7 @@ local function PedHandler(ids)
         if del then
             DeletePed(handle)
             if Config.Target then
-                exports.ox_target:removeGlobalPed(handle, {_U('access_bank')})
+                exports.ox_target:removeGlobalPed(handle, {TranslateCap('access_bank')})
             end
         end
     end
@@ -135,7 +135,7 @@ function OpenUi(atm)
                     }}
                 },
                 bankCardData = {
-                    bankName = _U('bank_name'),
+                    bankName = TranslateCap('bank_name'),
                     cardNumber = "2232 2222 2222 2222",
                     createdDate = "08/08",
                     name = data.playerName
@@ -155,7 +155,7 @@ local function CloseUi()
     })
 
     if not Config.Target and (isInMarker or isInAtmMarker) then
-        ESX.TextUI(_U('press_e_banking'))
+        ESX.TextUI(TranslateCap('press_e_banking'))
         Listen4Key()
     end
 end
@@ -178,7 +178,7 @@ local function StartThread()
             exports.ox_target:addModel(Config.AtmModels, {
                 options = {{
                     icon = 'fas fa-credit-card',
-                    label = _U('access_bank'),
+                    label = TranslateCap('access_bank'),
                     action = function()
                         OpenUi(true)
                     end
@@ -197,7 +197,7 @@ local function StartThread()
                     }, {
                         options = {{
                             icon = 'fas fa-money-bill-wave',
-                            label = _U('access_bank'),
+                            label = TranslateCap('access_bank'),
                             action = function()
                                 OpenUi()
                             end
@@ -236,7 +236,7 @@ local function StartThread()
                         local atmDistance = #(_GetEntityCoords - atmOffset)
                         if not isInAtmMarker and atmDistance <= 1.5 then
                             isInAtmMarker = true
-                            ESX.TextUI(_U('press_e_banking'))
+                            ESX.TextUI(TranslateCap('press_e_banking'))
                             Listen4Key()
                         elseif isInAtmMarker and atmDistance > 1.5 then
                             isInAtmMarker = false
@@ -263,7 +263,7 @@ local function StartThread()
                 if next(closestBank) then
                     if not isInMarker and closestBank[2] <= 1.0 then
                         isInMarker = true
-                        ESX.TextUI(_U('press_e_banking'))
+                        ESX.TextUI(TranslateCap('press_e_banking'))
                         Listen4Key()
                     elseif isInMarker and closestBank[2] > 1.0 then
                         isInMarker = false
@@ -297,13 +297,13 @@ RegisterNUICallback('checkPincode', function(data, cb)
                 cb({
                     success = true
                 })
-                ESX.ShowNotification(_U('pincode_found'), "success")
+                ESX.ShowNotification(TranslateCap('pincode_found'), "success")
 
             else
                 cb({
                     error = true
                 })
-                ESX.ShowNotification(_U('pincode_not_found'), "error")
+                ESX.ShowNotification(TranslateCap('pincode_not_found'), "error")
             end
         end, data)
     end

@@ -7,7 +7,7 @@ CreateThread(function()
 			end
 			TriggerClientEvent("esx_status:add",source,"hunger",v.status)
 			TriggerClientEvent('esx_basicneeds:onEat',source)
-			xPlayer.showNotification(_U('used_eat', ESX.GetItemLabel(k)))
+			xPlayer.showNotification(TranslateCap('used_eat', ESX.GetItemLabel(k)))
 		end)
 	end
 end)
@@ -21,7 +21,7 @@ CreateThread(function()
 			end
 			TriggerClientEvent("esx_status:add",source,"thirst",v.status)
 			TriggerClientEvent('esx_basicneeds:onDrink',source)
-			xPlayer.showNotification(_U('used_drink', ESX.GetItemLabel(k)))
+			xPlayer.showNotification(TranslateCap('used_drink', ESX.GetItemLabel(k)))
 		end)
 	end
 end)

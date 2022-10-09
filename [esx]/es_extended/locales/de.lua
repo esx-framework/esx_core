@@ -100,6 +100,9 @@ Locales['de'] = {
   ['commanderror_invalidcommand'] = '/%s ist kein verfügbarer command!',
   ['commanderror_invalidplayerid'] = 'kein spieler ist online mit dieser id',
   ['commandgeneric_playerid'] = 'spieler id',
+  ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
+  ['command_giveammo_weapon'] = 'Weapon name',
+  ['command_giveammo_ammo'] = 'Ammo Quantity',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ' ',

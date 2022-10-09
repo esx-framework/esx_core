@@ -6,7 +6,7 @@ Config.OwnedBlips = true -- Add blips for Owned Properties
 ---------------------------------------------------------------
 
 --------------------- General Settings ---------------------------------
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.Shells = false -- Enable/Disable Shell Interiors Default: false
 Config.SaveInterval = 5 -- Interval in Minutes to Save Properties
 Config.CanAlwaysExit = true -- Disabling this allows players to be locked in
@@ -15,6 +15,23 @@ Config.MaxNameLength = 20 -- Max Name Length for Owned Properties Default: 20
 Config.CanCustomiseInventoryAndWardrobePositions = true -- Allow users to customise inventory and wardrobe positions Default: true
 Config.WipeCustomNameOnSell = true -- Wipe custom name on sell Default: true
 Config.WipeFurnitureOnSell = true -- Wipe custom name on sell Default: true
+
+
+--------------------- Zone Suggested Prices  ---------------------------------
+Config.ZonePriceOptions = {
+    Enabled = true, -- Enable/Disable Zone Prices Modifiers Default: true
+    Default = 250000, -- Default Price of a property Default: 250000
+}
+
+-- The Amount to Multiply the Default Price by (if the above is enabled):
+Config.ZonePrices = {
+  [0] = 10, -- Posh
+  [1] = 7, -- Nice
+  [2] = 5, -- Above Average
+  [3] = 3, -- Bellow Average
+  [4] = 2, -- Crap
+  [5] = 1, -- Scum
+}
 
 --------------------- Raid Settings ---------------------------------
 Config.Raiding = {

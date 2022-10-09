@@ -99,6 +99,9 @@ Locales['pl'] = {
   ['commanderror_invalidcommand'] = '/%s nie jest poprawną komendą!',
   ['commanderror_invalidplayerid'] = 'brak dostepnego gracza pasującego do podanego id serwerowego',
   ['commandgeneric_playerid'] = 'id gracza',
+  ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
+  ['command_giveammo_weapon'] = 'Weapon name',
+  ['command_giveammo_ammo'] = 'Ammo Quantity',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',

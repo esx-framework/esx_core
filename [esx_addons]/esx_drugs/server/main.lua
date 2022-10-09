@@ -14,7 +14,7 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	end
 
 	if xItem.count < amount then
-		xPlayer.showNotification(_U('dealer_notenough'))
+		xPlayer.showNotification(TranslateCap('dealer_notenough'))
 		return
 	end
 
@@ -27,7 +27,7 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	end
 
 	xPlayer.removeInventoryItem(xItem.name, amount)
-	xPlayer.showNotification(_U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
+	xPlayer.showNotification(TranslateCap('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
 end)
 
 ESX.RegisterServerCallback('esx_drugs:buyLicense', function(source, cb, licenseName)
@@ -58,7 +58,7 @@ AddEventHandler('esx_drugs:pickedUpCannabis', function()
 	if xPlayer.canCarryItem('cannabis', cime) then
 		xPlayer.addInventoryItem('cannabis', cime)
 	else
-		xPlayer.showNotification(_U('weed_inventoryfull'))
+		xPlayer.showNotification(TranslateCap('weed_inventoryfull'))
 	end
 end)
 
@@ -94,15 +94,15 @@ AddEventHandler('esx_drugs:processCannabis', function()
               if xPlayer.canSwapItem('cannabis', 3, 'marijuana', 1) then
                 xPlayer.removeInventoryItem('cannabis', 3)
                 xPlayer.addInventoryItem('marijuana', 1)
-								xPlayer.showNotification(_U('weed_processed'))
+								xPlayer.showNotification(TranslateCap('weed_processed'))
 							else
 								can = false
-								xPlayer.showNotification(_U('weed_processingfull'))
+								xPlayer.showNotification(TranslateCap('weed_processingfull'))
 								TriggerEvent('esx_drugs:cancelProcessing')
 							end
 						else						
 							can = false
-							xPlayer.showNotification(_U('weed_processingenough'))
+							xPlayer.showNotification(TranslateCap('weed_processingenough'))
 							TriggerEvent('esx_drugs:cancelProcessing')
 						end
 
@@ -113,7 +113,7 @@ AddEventHandler('esx_drugs:processCannabis', function()
 				end	
 			end
 		else
-			xPlayer.showNotification(_U('weed_processingenough'))
+			xPlayer.showNotification(TranslateCap('weed_processingenough'))
 			TriggerEvent('esx_drugs:cancelProcessing')
 		end	
 			

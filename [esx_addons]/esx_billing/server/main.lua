@@ -9,12 +9,12 @@ AddEventHandler('esx_billing:sendBill', function(playerId, sharedAccountName, la
 			if account then
 				MySQL.insert('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (?, ?, ?, ?, ?, ?)', {xTarget.identifier, xPlayer.identifier, 'society', sharedAccountName, label, amount},
 				function(rowsChanged)
-					xTarget.showNotification(_U('received_invoice'))
+					xTarget.showNotification(TranslateCap('received_invoice'))
 				end)
 			else
 				MySQL.insert('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (?, ?, ?, ?, ?, ?)', {xTarget.identifier, xPlayer.identifier, 'player', xPlayer.identifier, label, amount},
 				function(rowsChanged)
-					xTarget.showNotification(_U('received_invoice'))
+					xTarget.showNotification(TranslateCap('received_invoice'))
 				end)
 			end
 		end)
@@ -61,8 +61,8 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 								xPlayer.removeMoney(amount, "Bill Paid")
 								xTarget.addMoney(amount, "Paid bill")
 
-								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
-								xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
+								xPlayer.showNotification(TranslateCap('paid_invoice', ESX.Math.GroupDigits(amount)))
+								xTarget.showNotification(TranslateCap('received_payment', ESX.Math.GroupDigits(amount)))
 							end
 
 							cb()
@@ -74,19 +74,19 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 								xPlayer.removeAccountMoney('bank', amount, "Bill Paid")
 								xTarget.addAccountMoney('bank', amount, "Paid bill")
 
-								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
-								xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
+								xPlayer.showNotification(TranslateCap('paid_invoice', ESX.Math.GroupDigits(amount)))
+								xTarget.showNotification(TranslateCap('received_payment', ESX.Math.GroupDigits(amount)))
 							end
 
 							cb()
 						end)
 					else
-						xTarget.showNotification(_U('target_no_money'))
-						xPlayer.showNotification(_U('no_money'))
+						xTarget.showNotification(TranslateCap('target_no_money'))
+						xPlayer.showNotification(TranslateCap('no_money'))
 						cb()
 					end
 				else
-					xPlayer.showNotification(_U('player_not_online'))
+					xPlayer.showNotification(TranslateCap('player_not_online'))
 					cb()
 				end
 			else
@@ -98,9 +98,9 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 								xPlayer.removeMoney(amount, "Bill Paid")
 								account.addMoney(amount)
 
-								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
+								xPlayer.showNotification(TranslateCap('paid_invoice', ESX.Math.GroupDigits(amount)))
 								if xTarget then
-									xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
+									xTarget.showNotification(TranslateCap('received_payment', ESX.Math.GroupDigits(amount)))
 								end
 							end
 
@@ -112,10 +112,10 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 							if rowsChanged == 1 then
 								xPlayer.removeAccountMoney('bank', amount, "Bill Paid")
 								account.addMoney(amount)
-								xPlayer.showNotification(_U('paid_invoice', ESX.Math.GroupDigits(amount)))
+								xPlayer.showNotification(TranslateCap('paid_invoice', ESX.Math.GroupDigits(amount)))
 
 								if xTarget then
-									xTarget.showNotification(_U('received_payment', ESX.Math.GroupDigits(amount)))
+									xTarget.showNotification(TranslateCap('received_payment', ESX.Math.GroupDigits(amount)))
 								end
 							end
 
@@ -123,10 +123,10 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, billId)
 						end)
 					else
 						if xTarget then
-							xTarget.showNotification(_U('target_no_money'))
+							xTarget.showNotification(TranslateCap('target_no_money'))
 						end
 
-						xPlayer.showNotification(_U('no_money'))
+						xPlayer.showNotification(TranslateCap('no_money'))
 						cb()
 					end
 				end)

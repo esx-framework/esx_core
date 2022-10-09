@@ -1,6 +1,6 @@
 Config                   = {}
 Config.DrawDistance      = 10.0
-Config.Locale            = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.IsMechanicJobOnly = false
 
 Config.Zones = {
@@ -10,8 +10,8 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = _U('blip_name'),
-		Hint  = _U('press_custom')
+		Name  = TranslateCap('blip_name'),
+		Hint  = TranslateCap('press_custom')
 	},
 
 	ls2 = {
@@ -19,8 +19,8 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = _U('blip_name'),
-		Hint  = _U('press_custom')
+		Name  = TranslateCap('blip_name'),
+		Hint  = TranslateCap('press_custom')
 	},
 
 	ls3 = {
@@ -28,8 +28,8 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = _U('blip_name'),
-		Hint  = _U('press_custom')
+		Name  = TranslateCap('blip_name'),
+		Hint  = TranslateCap('press_custom')
 	},
 
 	ls4 = {
@@ -37,8 +37,8 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = _U('blip_name'),
-		Hint  = _U('press_custom')
+		Name  = TranslateCap('blip_name'),
+		Hint  = TranslateCap('press_custom')
 	},
 
 	ls5 = {
@@ -46,228 +46,228 @@ Config.Zones = {
 		Size  = {x = 3.0, y = 3.0, z = 0.2},
 		Color = {r = 204, g = 204, b = 0},
 		Marker= 1,
-		Name  = _U('blip_name'),
-		Hint  = _U('press_custom')
+		Name  = TranslateCap('blip_name'),
+		Hint  = TranslateCap('press_custom')
 	}
 
 }
 
 Config.Colors = {
-	{label = _U('black'), value = 'black'},
-	{label = _U('white'), value = 'white'},
-	{label = _U('grey'), value = 'grey'},
-	{label = _U('red'), value = 'red'},
-	{label = _U('pink'), value = 'pink'},
-	{label = _U('blue'), value = 'blue'},
-	{label = _U('yellow'), value = 'yellow'},
-	{label = _U('green'), value = 'green'},
-	{label = _U('orange'), value = 'orange'},
-	{label = _U('brown'), value = 'brown'},
-	{label = _U('purple'), value = 'purple'},
-	{label = _U('chrome'), value = 'chrome'},
-	{label = _U('gold'), value = 'gold'}
+	{label = TranslateCap('black'), value = 'black'},
+	{label = TranslateCap('white'), value = 'white'},
+	{label = TranslateCap('grey'), value = 'grey'},
+	{label = TranslateCap('red'), value = 'red'},
+	{label = TranslateCap('pink'), value = 'pink'},
+	{label = TranslateCap('blue'), value = 'blue'},
+	{label = TranslateCap('yellow'), value = 'yellow'},
+	{label = TranslateCap('green'), value = 'green'},
+	{label = TranslateCap('orange'), value = 'orange'},
+	{label = TranslateCap('brown'), value = 'brown'},
+	{label = TranslateCap('purple'), value = 'purple'},
+	{label = TranslateCap('chrome'), value = 'chrome'},
+	{label = TranslateCap('gold'), value = 'gold'}
 }
 
 function GetColors(color)
 	local colors = {}
 	if color == 'black' then
 		colors = {
-			{ index = 0, label = _U('black')},
-			{ index = 1, label = _U('graphite')},
-			{ index = 2, label = _U('black_metallic')},
-			{ index = 3, label = _U('caststeel')},
-			{ index = 11, label = _U('black_anth')},
-			{ index = 12, label = _U('matteblack')},
-			{ index = 15, label = _U('darknight')},
-			{ index = 16, label = _U('deepblack')},
-			{ index = 21, label = _U('oil')},
-			{ index = 147, label = _U('carbon')}
+			{ index = 0, label = TranslateCap('black')},
+			{ index = 1, label = TranslateCap('graphite')},
+			{ index = 2, label = TranslateCap('black_metallic')},
+			{ index = 3, label = TranslateCap('caststeel')},
+			{ index = 11, label = TranslateCap('black_anth')},
+			{ index = 12, label = TranslateCap('matteblack')},
+			{ index = 15, label = TranslateCap('darknight')},
+			{ index = 16, label = TranslateCap('deepblack')},
+			{ index = 21, label = TranslateCap('oil')},
+			{ index = 147, label = TranslateCap('carbon')}
 		}
 	elseif color == 'white' then
 		colors = {
-			{ index = 106, label = _U('vanilla')},
-			{ index = 107, label = _U('creme')},
-			{ index = 111, label = _U('white')},
-			{ index = 112, label = _U('polarwhite')},
-			{ index = 113, label = _U('beige')},
-			{ index = 121, label = _U('mattewhite')},
-			{ index = 122, label = _U('snow')},
-			{ index = 131, label = _U('cotton')},
-			{ index = 132, label = _U('alabaster')},
-			{ index = 134, label = _U('purewhite')}
+			{ index = 106, label = TranslateCap('vanilla')},
+			{ index = 107, label = TranslateCap('creme')},
+			{ index = 111, label = TranslateCap('white')},
+			{ index = 112, label = TranslateCap('polarwhite')},
+			{ index = 113, label = TranslateCap('beige')},
+			{ index = 121, label = TranslateCap('mattewhite')},
+			{ index = 122, label = TranslateCap('snow')},
+			{ index = 131, label = TranslateCap('cotton')},
+			{ index = 132, label = TranslateCap('alabaster')},
+			{ index = 134, label = TranslateCap('purewhite')}
 		}
 	elseif color == 'grey' then
 		colors = {
-			{ index = 4, label = _U('silver')},
-			{ index = 5, label = _U('metallicgrey')},
-			{ index = 6, label = _U('laminatedsteel')},
-			{ index = 7, label = _U('darkgray')},
-			{ index = 8, label = _U('rockygray')},
-			{ index = 9, label = _U('graynight')},
-			{ index = 10, label = _U('aluminum')},
-			{ index = 13, label = _U('graymat')},
-			{ index = 14, label = _U('lightgrey')},
-			{ index = 17, label = _U('asphaltgray')},
-			{ index = 18, label = _U('grayconcrete')},
-			{ index = 19, label = _U('darksilver')},
-			{ index = 20, label = _U('magnesite')},
-			{ index = 22, label = _U('nickel')},
-			{ index = 23, label = _U('zinc')},
-			{ index = 24, label = _U('dolomite')},
-			{ index = 25, label = _U('bluesilver')},
-			{ index = 26, label = _U('titanium')},
-			{ index = 66, label = _U('steelblue')},
-			{ index = 93, label = _U('champagne')},
-			{ index = 144, label = _U('grayhunter')},
-			{ index = 156, label = _U('grey')}
+			{ index = 4, label = TranslateCap('silver')},
+			{ index = 5, label = TranslateCap('metallicgrey')},
+			{ index = 6, label = TranslateCap('laminatedsteel')},
+			{ index = 7, label = TranslateCap('darkgray')},
+			{ index = 8, label = TranslateCap('rockygray')},
+			{ index = 9, label = TranslateCap('graynight')},
+			{ index = 10, label = TranslateCap('aluminum')},
+			{ index = 13, label = TranslateCap('graymat')},
+			{ index = 14, label = TranslateCap('lightgrey')},
+			{ index = 17, label = TranslateCap('asphaltgray')},
+			{ index = 18, label = TranslateCap('grayconcrete')},
+			{ index = 19, label = TranslateCap('darksilver')},
+			{ index = 20, label = TranslateCap('magnesite')},
+			{ index = 22, label = TranslateCap('nickel')},
+			{ index = 23, label = TranslateCap('zinc')},
+			{ index = 24, label = TranslateCap('dolomite')},
+			{ index = 25, label = TranslateCap('bluesilver')},
+			{ index = 26, label = TranslateCap('titanium')},
+			{ index = 66, label = TranslateCap('steelblue')},
+			{ index = 93, label = TranslateCap('champagne')},
+			{ index = 144, label = TranslateCap('grayhunter')},
+			{ index = 156, label = TranslateCap('grey')}
 		}
 	elseif color == 'red' then
 		colors = {
-			{ index = 27, label = _U('red')},
-			{ index = 28, label = _U('torino_red')},
-			{ index = 29, label = _U('poppy')},
-			{ index = 30, label = _U('copper_red')},
-			{ index = 31, label = _U('cardinal')},
-			{ index = 32, label = _U('brick')},
-			{ index = 33, label = _U('garnet')},
-			{ index = 34, label = _U('cabernet')},
-			{ index = 35, label = _U('candy')},
-			{ index = 39, label = _U('matte_red')},
-			{ index = 40, label = _U('dark_red')},
-			{ index = 43, label = _U('red_pulp')},
-			{ index = 44, label = _U('bril_red')},
-			{ index = 46, label = _U('pale_red')},
-			{ index = 143, label = _U('wine_red')},
-			{ index = 150, label = _U('volcano')}
+			{ index = 27, label = TranslateCap('red')},
+			{ index = 28, label = TranslateCap('torino_red')},
+			{ index = 29, label = TranslateCap('poppy')},
+			{ index = 30, label = TranslateCap('copper_red')},
+			{ index = 31, label = TranslateCap('cardinal')},
+			{ index = 32, label = TranslateCap('brick')},
+			{ index = 33, label = TranslateCap('garnet')},
+			{ index = 34, label = TranslateCap('cabernet')},
+			{ index = 35, label = TranslateCap('candy')},
+			{ index = 39, label = TranslateCap('matte_red')},
+			{ index = 40, label = TranslateCap('dark_red')},
+			{ index = 43, label = TranslateCap('red_pulp')},
+			{ index = 44, label = TranslateCap('bril_red')},
+			{ index = 46, label = TranslateCap('pale_red')},
+			{ index = 143, label = TranslateCap('wine_red')},
+			{ index = 150, label = TranslateCap('volcano')}
 		}
 	elseif color == 'pink' then
 		colors = {
-			{ index = 135, label = _U('electricpink')},
-			{ index = 136, label = _U('salmon')},
-			{ index = 137, label = _U('sugarplum')}
+			{ index = 135, label = TranslateCap('electricpink')},
+			{ index = 136, label = TranslateCap('salmon')},
+			{ index = 137, label = TranslateCap('sugarplum')}
 		}
 	elseif color == 'blue' then
 		colors = {
-			{ index = 54, label = _U('topaz')},
-			{ index = 60, label = _U('light_blue')},
-			{ index = 61, label = _U('galaxy_blue')},
-			{ index = 62, label = _U('dark_blue')},
-			{ index = 63, label = _U('azure')},
-			{ index = 64, label = _U('navy_blue')},
-			{ index = 65, label = _U('lapis')},
-			{ index = 67, label = _U('blue_diamond')},
-			{ index = 68, label = _U('surfer')},
-			{ index = 69, label = _U('pastel_blue')},
-			{ index = 70, label = _U('celeste_blue')},
-			{ index = 73, label = _U('rally_blue')},
-			{ index = 74, label = _U('blue_paradise')},
-			{ index = 75, label = _U('blue_night')},
-			{ index = 77, label = _U('cyan_blue')},
-			{ index = 78, label = _U('cobalt')},
-			{ index = 79, label = _U('electric_blue')},
-			{ index = 80, label = _U('horizon_blue')},
-			{ index = 82, label = _U('metallic_blue')},
-			{ index = 83, label = _U('aquamarine')},
-			{ index = 84, label = _U('blue_agathe')},
-			{ index = 85, label = _U('zirconium')},
-			{ index = 86, label = _U('spinel')},
-			{ index = 87, label = _U('tourmaline')},
-			{ index = 127, label = _U('paradise')},
-			{ index = 140, label = _U('bubble_gum')},
-			{ index = 141, label = _U('midnight_blue')},
-			{ index = 146, label = _U('forbidden_blue')},
-			{ index = 157, label = _U('glacier_blue')}
+			{ index = 54, label = TranslateCap('topaz')},
+			{ index = 60, label = TranslateCap('light_blue')},
+			{ index = 61, label = TranslateCap('galaxy_blue')},
+			{ index = 62, label = TranslateCap('dark_blue')},
+			{ index = 63, label = TranslateCap('azure')},
+			{ index = 64, label = TranslateCap('navy_blue')},
+			{ index = 65, label = TranslateCap('lapis')},
+			{ index = 67, label = TranslateCap('blue_diamond')},
+			{ index = 68, label = TranslateCap('surfer')},
+			{ index = 69, label = TranslateCap('pastel_blue')},
+			{ index = 70, label = TranslateCap('celeste_blue')},
+			{ index = 73, label = TranslateCap('rally_blue')},
+			{ index = 74, label = TranslateCap('blue_paradise')},
+			{ index = 75, label = TranslateCap('blue_night')},
+			{ index = 77, label = TranslateCap('cyan_blue')},
+			{ index = 78, label = TranslateCap('cobalt')},
+			{ index = 79, label = TranslateCap('electric_blue')},
+			{ index = 80, label = TranslateCap('horizon_blue')},
+			{ index = 82, label = TranslateCap('metallic_blue')},
+			{ index = 83, label = TranslateCap('aquamarine')},
+			{ index = 84, label = TranslateCap('blue_agathe')},
+			{ index = 85, label = TranslateCap('zirconium')},
+			{ index = 86, label = TranslateCap('spinel')},
+			{ index = 87, label = TranslateCap('tourmaline')},
+			{ index = 127, label = TranslateCap('paradise')},
+			{ index = 140, label = TranslateCap('bubble_gum')},
+			{ index = 141, label = TranslateCap('midnight_blue')},
+			{ index = 146, label = TranslateCap('forbidden_blue')},
+			{ index = 157, label = TranslateCap('glacier_blue')}
 		}
 	elseif color == 'yellow' then
 		colors = {
-			{ index = 42, label = _U('yellow')},
-			{ index = 88, label = _U('wheat')},
-			{ index = 89, label = _U('raceyellow')},
-			{ index = 91, label = _U('paleyellow')},
-			{ index = 126, label = _U('lightyellow')}
+			{ index = 42, label = TranslateCap('yellow')},
+			{ index = 88, label = TranslateCap('wheat')},
+			{ index = 89, label = TranslateCap('raceyellow')},
+			{ index = 91, label = TranslateCap('paleyellow')},
+			{ index = 126, label = TranslateCap('lightyellow')}
 		}
 	elseif color == 'green' then
 		colors = {
-			{ index = 49, label = _U('met_dark_green')},
-			{ index = 50, label = _U('rally_green')},
-			{ index = 51, label = _U('pine_green')},
-			{ index = 52, label = _U('olive_green')},
-			{ index = 53, label = _U('light_green')},
-			{ index = 55, label = _U('lime_green')},
-			{ index = 56, label = _U('forest_green')},
-			{ index = 57, label = _U('lawn_green')},
-			{ index = 58, label = _U('imperial_green')},
-			{ index = 59, label = _U('green_bottle')},
-			{ index = 92, label = _U('citrus_green')},
-			{ index = 125, label = _U('green_anis')},
-			{ index = 128, label = _U('khaki')},
-			{ index = 133, label = _U('army_green')},
-			{ index = 151, label = _U('dark_green')},
-			{ index = 152, label = _U('hunter_green')},
-			{ index = 155, label = _U('matte_foilage_green')}
+			{ index = 49, label = TranslateCap('met_dark_green')},
+			{ index = 50, label = TranslateCap('rally_green')},
+			{ index = 51, label = TranslateCap('pine_green')},
+			{ index = 52, label = TranslateCap('olive_green')},
+			{ index = 53, label = TranslateCap('light_green')},
+			{ index = 55, label = TranslateCap('lime_green')},
+			{ index = 56, label = TranslateCap('forest_green')},
+			{ index = 57, label = TranslateCap('lawn_green')},
+			{ index = 58, label = TranslateCap('imperial_green')},
+			{ index = 59, label = TranslateCap('green_bottle')},
+			{ index = 92, label = TranslateCap('citrus_green')},
+			{ index = 125, label = TranslateCap('green_anis')},
+			{ index = 128, label = TranslateCap('khaki')},
+			{ index = 133, label = TranslateCap('army_green')},
+			{ index = 151, label = TranslateCap('dark_green')},
+			{ index = 152, label = TranslateCap('hunter_green')},
+			{ index = 155, label = TranslateCap('matte_foilage_green')}
 		}
 	elseif color == 'orange' then
 		colors = {
-			{ index = 36, label = _U('tangerine')},
-			{ index = 38, label = _U('orange')},
-			{ index = 41, label = _U('matteorange')},
-			{ index = 123, label = _U('lightorange')},
-			{ index = 124, label = _U('peach')},
-			{ index = 130, label = _U('pumpkin')},
-			{ index = 138, label = _U('orangelambo')}
+			{ index = 36, label = TranslateCap('tangerine')},
+			{ index = 38, label = TranslateCap('orange')},
+			{ index = 41, label = TranslateCap('matteorange')},
+			{ index = 123, label = TranslateCap('lightorange')},
+			{ index = 124, label = TranslateCap('peach')},
+			{ index = 130, label = TranslateCap('pumpkin')},
+			{ index = 138, label = TranslateCap('orangelambo')}
 		}
 	elseif color == 'brown' then
 		colors = {
-			{ index = 45, label = _U('copper')},
-			{ index = 47, label = _U('lightbrown')},
-			{ index = 48, label = _U('darkbrown')},
-			{ index = 90, label = _U('bronze')},
-			{ index = 94, label = _U('brownmetallic')},
-			{ index = 95, label = _U('expresso')},
-			{ index = 96, label = _U('chocolate')},
-			{ index = 97, label = _U('terracotta')},
-			{ index = 98, label = _U('marble')},
-			{ index = 99, label = _U('sand')},
-			{ index = 100, label = _U('sepia')},
-			{ index = 101, label = _U('bison')},
-			{ index = 102, label = _U('palm')},
-			{ index = 103, label = _U('caramel')},
-			{ index = 104, label = _U('rust')},
-			{ index = 105, label = _U('chestnut')},
-			{ index = 108, label = _U('brown')},
-			{ index = 109, label = _U('hazelnut')},
-			{ index = 110, label = _U('shell')},
-			{ index = 114, label = _U('mahogany')},
-			{ index = 115, label = _U('cauldron')},
-			{ index = 116, label = _U('blond')},
-			{ index = 129, label = _U('gravel')},
-			{ index = 153, label = _U('darkearth')},
-			{ index = 154, label = _U('desert')}
+			{ index = 45, label = TranslateCap('copper')},
+			{ index = 47, label = TranslateCap('lightbrown')},
+			{ index = 48, label = TranslateCap('darkbrown')},
+			{ index = 90, label = TranslateCap('bronze')},
+			{ index = 94, label = TranslateCap('brownmetallic')},
+			{ index = 95, label = TranslateCap('expresso')},
+			{ index = 96, label = TranslateCap('chocolate')},
+			{ index = 97, label = TranslateCap('terracotta')},
+			{ index = 98, label = TranslateCap('marble')},
+			{ index = 99, label = TranslateCap('sand')},
+			{ index = 100, label = TranslateCap('sepia')},
+			{ index = 101, label = TranslateCap('bison')},
+			{ index = 102, label = TranslateCap('palm')},
+			{ index = 103, label = TranslateCap('caramel')},
+			{ index = 104, label = TranslateCap('rust')},
+			{ index = 105, label = TranslateCap('chestnut')},
+			{ index = 108, label = TranslateCap('brown')},
+			{ index = 109, label = TranslateCap('hazelnut')},
+			{ index = 110, label = TranslateCap('shell')},
+			{ index = 114, label = TranslateCap('mahogany')},
+			{ index = 115, label = TranslateCap('cauldron')},
+			{ index = 116, label = TranslateCap('blond')},
+			{ index = 129, label = TranslateCap('gravel')},
+			{ index = 153, label = TranslateCap('darkearth')},
+			{ index = 154, label = TranslateCap('desert')}
 		}
 	elseif color == 'purple' then
 		colors = {
-			{ index = 71, label = _U('indigo')},
-			{ index = 72, label = _U('deeppurple')},
-			{ index = 76, label = _U('darkviolet')},
-			{ index = 81, label = _U('amethyst')},
-			{ index = 142, label = _U('mysticalviolet')},
-			{ index = 145, label = _U('purplemetallic')},
-			{ index = 148, label = _U('matteviolet')},
-			{ index = 149, label = _U('mattedeeppurple')}
+			{ index = 71, label = TranslateCap('indigo')},
+			{ index = 72, label = TranslateCap('deeppurple')},
+			{ index = 76, label = TranslateCap('darkviolet')},
+			{ index = 81, label = TranslateCap('amethyst')},
+			{ index = 142, label = TranslateCap('mysticalviolet')},
+			{ index = 145, label = TranslateCap('purplemetallic')},
+			{ index = 148, label = TranslateCap('matteviolet')},
+			{ index = 149, label = TranslateCap('mattedeeppurple')}
 		}
 	elseif color == 'chrome' then
 		colors = {
-			{ index = 117, label = _U('brushedchrome')},
-			{ index = 118, label = _U('blackchrome')},
-			{ index = 119, label = _U('brushedaluminum')},
-			{ index = 120, label = _U('chrome')}
+			{ index = 117, label = TranslateCap('brushedchrome')},
+			{ index = 118, label = TranslateCap('blackchrome')},
+			{ index = 119, label = TranslateCap('brushedaluminum')},
+			{ index = 120, label = TranslateCap('chrome')}
 		}
 	elseif color == 'gold' then
 		colors = {
-			{ index = 37, label = _U('gold')},
-			{ index = 158, label = _U('puregold')},
-			{ index = 159, label = _U('brushedgold')},
-			{ index = 160, label = _U('lightgold')}
+			{ index = 37, label = TranslateCap('gold')},
+			{ index = 158, label = TranslateCap('puregold')},
+			{ index = 159, label = TranslateCap('brushedgold')},
+			{ index = 160, label = TranslateCap('lightgold')}
 		}
 	end
 	return colors
@@ -401,7 +401,7 @@ end
 
 function GetNeons()
 	local neons = {
-		{label = _U('white'),		r = 255, 	g = 255, 	b = 255},
+		{label = TranslateCap('white'),		r = 255, 	g = 255, 	b = 255},
 		{label = "Slate Gray",		r = 112, 	g = 128, 	b = 144},
 		{label = "Blue",			r = 0, 		g = 0, 		b = 255},
 		{label = "Light Blue",		r = 0, 		g = 150, 	b = 255},
@@ -411,14 +411,14 @@ function GetNeons()
 		{label = "Mint Green", 	r = 50, 	g = 255, 	b = 155},
 		{label = "Lime Green", 	r = 0, 		g = 255, 	b = 0},
 		{label = "Olive", 			r = 128, 	g = 128, 	b = 0},
-		{label = _U('yellow'), 	r = 255, 	g = 255, 	b = 0},
-		{label = _U('gold'), 		r = 255, 	g = 215, 	b = 0},
-		{label = _U('orange'), 	r = 255, 	g = 165, 	b = 0},
-		{label = _U('wheat'), 		r = 245, 	g = 222, 	b = 179},
-		{label = _U('red'), 		r = 255, 	g = 0, 		b = 0},
-		{label = _U('pink'), 		r = 255, 	g = 161, 	b = 211},
-		{label = _U('brightpink'),	r = 255, 	g = 0, 		b = 255},
-		{label = _U('purple'), 	r = 153, 	g = 0, 		b = 153},
+		{label = TranslateCap('yellow'), 	r = 255, 	g = 255, 	b = 0},
+		{label = TranslateCap('gold'), 		r = 255, 	g = 215, 	b = 0},
+		{label = TranslateCap('orange'), 	r = 255, 	g = 165, 	b = 0},
+		{label = TranslateCap('wheat'), 		r = 245, 	g = 222, 	b = 179},
+		{label = TranslateCap('red'), 		r = 255, 	g = 0, 		b = 0},
+		{label = TranslateCap('pink'), 		r = 255, 	g = 161, 	b = 211},
+		{label = TranslateCap('brightpink'),	r = 255, 	g = 0, 		b = 255},
+		{label = TranslateCap('purple'), 	r = 153, 	g = 0, 		b = 153},
 		{label = "Ivory", 			r = 41, 	g = 36, 	b = 33}
 	}
 
@@ -427,15 +427,15 @@ end
 
 function GetPlatesName(index)
 	if (index == 0) then
-		return _U('blue_on_white_1')
+		return TranslateCap('blue_on_white_1')
 	elseif (index == 1) then
-		return _U('yellow_on_black')
+		return TranslateCap('yellow_on_black')
 	elseif (index == 2) then
-		return _U('yellow_blue')
+		return TranslateCap('yellow_blue')
 	elseif (index == 3) then
-		return _U('blue_on_white_2')
+		return TranslateCap('blue_on_white_2')
 	elseif (index == 4) then
-		return _U('blue_on_white_3')
+		return TranslateCap('blue_on_white_3')
 	end
 end
 
@@ -443,465 +443,465 @@ Config.Menus = {
 	main = {
 		label		= 'LS CUSTOMS',
 		parent		= nil,
-		upgrades	= _U('upgrades'),
-		cosmetics	= _U('cosmetics')
+		upgrades	= TranslateCap('upgrades'),
+		cosmetics	= TranslateCap('cosmetics')
 	},
 	upgrades = {
-		label			= _U('upgrades'),
+		label			= TranslateCap('upgrades'),
 		parent			= 'main',
-		modEngine		= _U('engine'),
-		modBrakes		= _U('brakes'),
-		modTransmission	= _U('transmission'),
-		modSuspension	= _U('suspension'),
-		modArmor		= _U('armor'),
-		modTurbo		= _U('turbo')
+		modEngine		= TranslateCap('engine'),
+		modBrakes		= TranslateCap('brakes'),
+		modTransmission	= TranslateCap('transmission'),
+		modSuspension	= TranslateCap('suspension'),
+		modArmor		= TranslateCap('armor'),
+		modTurbo		= TranslateCap('turbo')
 	},
 	modEngine = {
-		label = _U('engine'),
+		label = TranslateCap('engine'),
 		parent = 'upgrades',
 		modType = 11,
 		price = {13.95, 32.56, 65.12, 139.53}
 	},
 	modBrakes = {
-		label = _U('brakes'),
+		label = TranslateCap('brakes'),
 		parent = 'upgrades',
 		modType = 12,
 		price = {4.65, 9.3, 18.6, 13.95}
 	},
 	modTransmission = {
-		label = _U('transmission'),
+		label = TranslateCap('transmission'),
 		parent = 'upgrades',
 		modType = 13,
 		price = {13.95, 20.93, 46.51}
 	},
 	modSuspension = {
-		label = _U('suspension'),
+		label = TranslateCap('suspension'),
 		parent = 'upgrades',
 		modType = 15,
 		price = {3.72, 7.44, 14.88, 29.77, 40.2}
 	},
 	modArmor = {
-		label = _U('armor'),
+		label = TranslateCap('armor'),
 		parent = 'upgrades',
 		modType = 16,
 		price = {69.77, 116.28, 130.00, 150.00, 180.00, 190.00}
 	},
 	modTurbo = {
-		label = _U('turbo'),
+		label = TranslateCap('turbo'),
 		parent = 'upgrades',
 		modType = 17,
 		price = {55.81}
 	},
 	cosmetics = {
-		label				= _U('cosmetics'),
+		label				= TranslateCap('cosmetics'),
 		parent				= 'main',
-		bodyparts			= _U('bodyparts'),
-		windowTint			= _U('windowtint'),
-		modHorns			= _U('horns'),
-		neonColor			= _U('neons'),
-		resprays			= _U('respray'),
-		modXenon			= _U('headlights'),
-		plateIndex			= _U('licenseplates'),
-		wheels				= _U('wheels'),
-		modPlateHolder		= _U('modplateholder'),
-		modVanityPlate		= _U('modvanityplate'),
-		modTrimA			= _U('interior'),
-		modOrnaments		= _U('trim'),
-		modDashboard		= _U('dashboard'),
-		modDial				= _U('speedometer'),
-		modDoorSpeaker		= _U('door_speakers'),
-		modSeats			= _U('seats'),
-		modSteeringWheel	= _U('steering_wheel'),
-		modShifterLeavers	= _U('gear_lever'),
-		modAPlate			= _U('quarter_deck'),
-		modSpeakers			= _U('speakers'),
-		modTrunk			= _U('trunk'),
-		modHydrolic			= _U('hydraulic'),
-		modEngineBlock		= _U('engine_block'),
-		modAirFilter		= _U('air_filter'),
-		modStruts			= _U('struts'),
-		modArchCover		= _U('arch_cover'),
-		modAerials			= _U('aerials'),
-		modTrimB			= _U('wings'),
-		modTank				= _U('fuel_tank'),
-		modWindows			= _U('windows'),
-		modLivery			= _U('stickers')
+		bodyparts			= TranslateCap('bodyparts'),
+		windowTint			= TranslateCap('windowtint'),
+		modHorns			= TranslateCap('horns'),
+		neonColor			= TranslateCap('neons'),
+		resprays			= TranslateCap('respray'),
+		modXenon			= TranslateCap('headlights'),
+		plateIndex			= TranslateCap('licenseplates'),
+		wheels				= TranslateCap('wheels'),
+		modPlateHolder		= TranslateCap('modplateholder'),
+		modVanityPlate		= TranslateCap('modvanityplate'),
+		modTrimA			= TranslateCap('interior'),
+		modOrnaments		= TranslateCap('trim'),
+		modDashboard		= TranslateCap('dashboard'),
+		modDial				= TranslateCap('speedometer'),
+		modDoorSpeaker		= TranslateCap('door_speakers'),
+		modSeats			= TranslateCap('seats'),
+		modSteeringWheel	= TranslateCap('steering_wheel'),
+		modShifterLeavers	= TranslateCap('gear_lever'),
+		modAPlate			= TranslateCap('quarter_deck'),
+		modSpeakers			= TranslateCap('speakers'),
+		modTrunk			= TranslateCap('trunk'),
+		modHydrolic			= TranslateCap('hydraulic'),
+		modEngineBlock		= TranslateCap('engine_block'),
+		modAirFilter		= TranslateCap('air_filter'),
+		modStruts			= TranslateCap('struts'),
+		modArchCover		= TranslateCap('arch_cover'),
+		modAerials			= TranslateCap('aerials'),
+		modTrimB			= TranslateCap('wings'),
+		modTank				= TranslateCap('fuel_tank'),
+		modWindows			= TranslateCap('windows'),
+		modLivery			= TranslateCap('stickers')
 	},
 
 	modPlateHolder = {
-		label = _U('modplateholder'),
+		label = TranslateCap('modplateholder'),
 		parent = 'cosmetics',
 		modType = 25,
 		price = 3.49
 	},
 	modVanityPlate = {
-		label = _U('modvanityplate'),
+		label = TranslateCap('modvanityplate'),
 		parent = 'cosmetics',
 		modType = 26,
 		price = 1.1
 	},
 	modTrimA = {
-		label = _U('interior'),
+		label = TranslateCap('interior'),
 		parent = 'cosmetics',
 		modType = 27,
 		price = 6.98
 	},
 	modOrnaments = {
-		label = _U('trim'),
+		label = TranslateCap('trim'),
 		parent = 'cosmetics',
 		modType = 28,
 		price = 0.9
 	},
 	modDashboard = {
-		label = _U('dashboard'),
+		label = TranslateCap('dashboard'),
 		parent = 'cosmetics',
 		modType = 29,
 		price = 4.65
 	},
 	modDial = {
-		label = _U('speedometer'),
+		label = TranslateCap('speedometer'),
 		parent = 'cosmetics',
 		modType = 30,
 		price = 4.19
 	},
 	modDoorSpeaker = {
-		label = _U('door_speakers'),
+		label = TranslateCap('door_speakers'),
 		parent = 'cosmetics',
 		modType = 31,
 		price = 5.58
 	},
 	modSeats = {
-		label = _U('seats'),
+		label = TranslateCap('seats'),
 		parent = 'cosmetics',
 		modType = 32,
 		price = 4.65
 	},
 	modSteeringWheel = {
-		label = _U('steering_wheel'),
+		label = TranslateCap('steering_wheel'),
 		parent = 'cosmetics',
 		modType = 33,
 		price = 4.19
 	},
 	modShifterLeavers = {
-		label = _U('gear_lever'),
+		label = TranslateCap('gear_lever'),
 		parent = 'cosmetics',
 		modType = 34,
 		price = 3.26
 	},
 	modAPlate = {
-		label = _U('quarter_deck'),
+		label = TranslateCap('quarter_deck'),
 		parent = 'cosmetics',
 		modType = 35,
 		price = 4.19
 	},
 	modSpeakers = {
-		label = _U('speakers'),
+		label = TranslateCap('speakers'),
 		parent = 'cosmetics',
 		modType = 36,
 		price = 6.98
 	},
 	modTrunk = {
-		label = _U('trunk'),
+		label = TranslateCap('trunk'),
 		parent = 'cosmetics',
 		modType = 37,
 		price = 5.58
 	},
 	modHydrolic = {
-		label = _U('hydraulic'),
+		label = TranslateCap('hydraulic'),
 		parent = 'cosmetics',
 		modType = 38,
 		price = 5.12
 	},
 	modEngineBlock = {
-		label = _U('engine_block'),
+		label = TranslateCap('engine_block'),
 		parent = 'cosmetics',
 		modType = 39,
 		price = 5.12
 	},
 	modAirFilter = {
-		label = _U('air_filter'),
+		label = TranslateCap('air_filter'),
 		parent = 'cosmetics',
 		modType = 40,
 		price = 3.72
 	},
 	modStruts = {
-		label = _U('struts'),
+		label = TranslateCap('struts'),
 		parent = 'cosmetics',
 		modType = 41,
 		price = 6.51
 	},
 	modArchCover = {
-		label = _U('arch_cover'),
+		label = TranslateCap('arch_cover'),
 		parent = 'cosmetics',
 		modType = 42,
 		price = 4.19
 	},
 	modAerials = {
-		label = _U('aerials'),
+		label = TranslateCap('aerials'),
 		parent = 'cosmetics',
 		modType = 43,
 		price = 1.12
 	},
 	modTrimB = {
-		label = _U('wings'),
+		label = TranslateCap('wings'),
 		parent = 'cosmetics',
 		modType = 44,
 		price = 6.05
 	},
 	modTank = {
-		label = _U('fuel_tank'),
+		label = TranslateCap('fuel_tank'),
 		parent = 'cosmetics',
 		modType = 45,
 		price = 4.19
 	},
 	modWindows = {
-		label = _U('windows'),
+		label = TranslateCap('windows'),
 		parent = 'cosmetics',
 		modType = 46,
 		price = 4.19
 	},
 	modLivery = {
-		label = _U('stickers'),
+		label = TranslateCap('stickers'),
 		parent = 'cosmetics',
 		modType = 48,
 		price = 9.3
 	},
 
 	wheels = {
-		label = _U('wheels'),
+		label = TranslateCap('wheels'),
 		parent = 'cosmetics',
-		modFrontWheelsTypes = _U('wheel_type'),
-		modFrontWheelsColor = _U('wheel_color'),
-		tyreSmokeColor = _U('tiresmoke')
+		modFrontWheelsTypes = TranslateCap('wheel_type'),
+		modFrontWheelsColor = TranslateCap('wheel_color'),
+		tyreSmokeColor = TranslateCap('tiresmoke')
 	},
 	modFrontWheelsTypes = {
-		label				= _U('wheel_type'),
+		label				= TranslateCap('wheel_type'),
 		parent				= 'wheels',
-		modFrontWheelsType0	= _U('sport'),
-		modFrontWheelsType1	= _U('muscle'),
-		modFrontWheelsType2	= _U('lowrider'),
-		modFrontWheelsType3	= _U('suv'),
-		modFrontWheelsType4	= _U('allterrain'),
-		modFrontWheelsType5	= _U('tuning'),
-		modFrontWheelsType6	= _U('motorcycle'),
-		modFrontWheelsType7	= _U('highend')
+		modFrontWheelsType0	= TranslateCap('sport'),
+		modFrontWheelsType1	= TranslateCap('muscle'),
+		modFrontWheelsType2	= TranslateCap('lowrider'),
+		modFrontWheelsType3	= TranslateCap('suv'),
+		modFrontWheelsType4	= TranslateCap('allterrain'),
+		modFrontWheelsType5	= TranslateCap('tuning'),
+		modFrontWheelsType6	= TranslateCap('motorcycle'),
+		modFrontWheelsType7	= TranslateCap('highend')
 	},
 	modFrontWheelsType0 = {
-		label = _U('sport'),
+		label = TranslateCap('sport'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 0,
 		price = 4.65
 	},
 	modFrontWheelsType1 = {
-		label = _U('muscle'),
+		label = TranslateCap('muscle'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 1,
 		price = 4.19
 	},
 	modFrontWheelsType2 = {
-		label = _U('lowrider'),
+		label = TranslateCap('lowrider'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 2,
 		price = 4.65
 	},
 	modFrontWheelsType3 = {
-		label = _U('suv'),
+		label = TranslateCap('suv'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 3,
 		price = 4.19
 	},
 	modFrontWheelsType4 = {
-		label = _U('allterrain'),
+		label = TranslateCap('allterrain'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 4,
 		price = 4.19
 	},
 	modFrontWheelsType5 = {
-		label = _U('tuning'),
+		label = TranslateCap('tuning'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 5,
 		price = 5.12
 	},
 	modFrontWheelsType6 = {
-		label = _U('motorcycle'),
+		label = TranslateCap('motorcycle'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 6,
 		price = 3.26
 	},
 	modFrontWheelsType7 = {
-		label = _U('highend'),
+		label = TranslateCap('highend'),
 		parent = 'modFrontWheelsTypes',
 		modType = 23,
 		wheelType = 7,
 		price = 5.12
 	},
 	modFrontWheelsColor = {
-		label = _U('wheel_color'),
+		label = TranslateCap('wheel_color'),
 		parent = 'wheels'
 	},
 	wheelColor = {
-		label = _U('wheel_color'),
+		label = TranslateCap('wheel_color'),
 		parent = 'modFrontWheelsColor',
 		modType = 'wheelColor',
 		price = 0.66
 	},
 	plateIndex = {
-		label = _U('licenseplates'),
+		label = TranslateCap('licenseplates'),
 		parent = 'cosmetics',
 		modType = 'plateIndex',
 		price = 1.1
 	},
 	resprays = {
-		label = _U('respray'),
+		label = TranslateCap('respray'),
 		parent = 'cosmetics',
-		primaryRespray = _U('primary'),
-		secondaryRespray = _U('secondary'),
-		pearlescentRespray = _U('pearlescent'),
+		primaryRespray = TranslateCap('primary'),
+		secondaryRespray = TranslateCap('secondary'),
+		pearlescentRespray = TranslateCap('pearlescent'),
 	},
 	primaryRespray = {
-		label = _U('primary'),
+		label = TranslateCap('primary'),
 		parent = 'resprays',
 	},
 	secondaryRespray = {
-		label = _U('secondary'),
+		label = TranslateCap('secondary'),
 		parent = 'resprays',
 	},
 	pearlescentRespray = {
-		label = _U('pearlescent'),
+		label = TranslateCap('pearlescent'),
 		parent = 'resprays',
 	},
 	color1 = {
-		label = _U('primary'),
+		label = TranslateCap('primary'),
 		parent = 'primaryRespray',
 		modType = 'color1',
 		price = 1.12
 	},
 	color2 = {
-		label = _U('secondary'),
+		label = TranslateCap('secondary'),
 		parent = 'secondaryRespray',
 		modType = 'color2',
 		price = 0.66
 	},
 	pearlescentColor = {
-		label = _U('pearlescent'),
+		label = TranslateCap('pearlescent'),
 		parent = 'pearlescentRespray',
 		modType = 'pearlescentColor',
 		price = 0.88
 	},
 	modXenon = {
-		label = _U('headlights'),
+		label = TranslateCap('headlights'),
 		parent = 'cosmetics',
 		modType = 22,
 		price = 3.72
 	},
 	bodyparts = {
-		label = _U('bodyparts'),
+		label = TranslateCap('bodyparts'),
 		parent = 'cosmetics',
-		modFender = _U('leftfender'),
-		modRightFender = _U('rightfender'),
-		modSpoilers = _U('spoilers'),
-		modSideSkirt = _U('sideskirt'),
-		modFrame = _U('cage'),
-		modHood = _U('hood'),
-		modGrille = _U('grille'),
-		modRearBumper = _U('rearbumper'),
-		modFrontBumper = _U('frontbumper'),
-		modExhaust = _U('exhaust'),
-		modRoof = _U('roof')
+		modFender = TranslateCap('leftfender'),
+		modRightFender = TranslateCap('rightfender'),
+		modSpoilers = TranslateCap('spoilers'),
+		modSideSkirt = TranslateCap('sideskirt'),
+		modFrame = TranslateCap('cage'),
+		modHood = TranslateCap('hood'),
+		modGrille = TranslateCap('grille'),
+		modRearBumper = TranslateCap('rearbumper'),
+		modFrontBumper = TranslateCap('frontbumper'),
+		modExhaust = TranslateCap('exhaust'),
+		modRoof = TranslateCap('roof')
 	},
 	modSpoilers = {
-		label = _U('spoilers'),
+		label = TranslateCap('spoilers'),
 		parent = 'bodyparts',
 		modType = 0,
 		price = 4.65
 	},
 	modFrontBumper = {
-		label = _U('frontbumper'),
+		label = TranslateCap('frontbumper'),
 		parent = 'bodyparts',
 		modType = 1,
 		price = 5.12
 	},
 	modRearBumper = {
-		label = _U('rearbumper'),
+		label = TranslateCap('rearbumper'),
 		parent = 'bodyparts',
 		modType = 2,
 		price = 5.12
 	},
 	modSideSkirt = {
-		label = _U('sideskirt'),
+		label = TranslateCap('sideskirt'),
 		parent = 'bodyparts',
 		modType = 3,
 		price = 4.65
 	},
 	modExhaust = {
-		label = _U('exhaust'),
+		label = TranslateCap('exhaust'),
 		parent = 'bodyparts',
 		modType = 4,
 		price = 5.12
 	},
 	modFrame = {
-		label = _U('cage'),
+		label = TranslateCap('cage'),
 		parent = 'bodyparts',
 		modType = 5,
 		price = 5.12
 	},
 	modGrille = {
-		label = _U('grille'),
+		label = TranslateCap('grille'),
 		parent = 'bodyparts',
 		modType = 6,
 		price = 3.72
 	},
 	modHood = {
-		label = _U('hood'),
+		label = TranslateCap('hood'),
 		parent = 'bodyparts',
 		modType = 7,
 		price = 4.88
 	},
 	modFender = {
-		label = _U('leftfender'),
+		label = TranslateCap('leftfender'),
 		parent = 'bodyparts',
 		modType = 8,
 		price = 5.12
 	},
 	modRightFender = {
-		label = _U('rightfender'),
+		label = TranslateCap('rightfender'),
 		parent = 'bodyparts',
 		modType = 9,
 		price = 5.12
 	},
 	modRoof = {
-		label = _U('roof'),
+		label = TranslateCap('roof'),
 		parent = 'bodyparts',
 		modType = 10,
 		price = 5.58
 	},
 	windowTint = {
-		label = _U('windowtint'),
+		label = TranslateCap('windowtint'),
 		parent = 'cosmetics',
 		modType = 'windowTint',
 		price = 1.12
 	},
 	modHorns = {
-		label = _U('horns'),
+		label = TranslateCap('horns'),
 		parent = 'cosmetics',
 		modType = 14,
 		price = 1.12
 	},
 	neonColor = {
-		label = _U('neons'),
+		label = TranslateCap('neons'),
 		parent = 'cosmetics',
 		modType = 'neonColor',
 		price = 1.12
 	},
 	tyreSmokeColor = {
-		label = _U('tiresmoke'),
+		label = TranslateCap('tiresmoke'),
 		parent = 'wheels',
 		modType = 'tyreSmokeColor',
 		price = 1.12

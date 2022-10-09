@@ -24,9 +24,9 @@ Config.Jobs.tailor = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker= 20,
 			Blip = true,
-			Name = _U('dd_dress_locker'),
+			Name = TranslateCap('dd_dress_locker'),
 			Type = 'cloakroom',
-			Hint = _U('cloak_change'),
+			Hint = TranslateCap('cloak_change'),
 			GPS = {x = 740.80, y = -970.06, z = 23.46}
 		},
 
@@ -36,11 +36,11 @@ Config.Jobs.tailor = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('dd_wool'),
+			Name = TranslateCap('dd_wool'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('dd_wool'),
+					name = TranslateCap('dd_wool'),
 					db_name = 'wool',
 					time = 3,
 					max = 40,
@@ -51,7 +51,7 @@ Config.Jobs.tailor = {
 					drop = 100
 				}
 			},
-			Hint = _U('dd_pickup'),
+			Hint = TranslateCap('dd_pickup'),
 			GPS = {x = 715.95, y = -959.63, z = 29.39}
 		},
 
@@ -61,22 +61,22 @@ Config.Jobs.tailor = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('dd_fabric'),
+			Name = TranslateCap('dd_fabric'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('dd_fabric'),
+					name = TranslateCap('dd_fabric'),
 					db_name = 'fabric',
 					time = 5,
 					max = 80,
 					add = 2,
 					remove = 1,
 					requires = 'wool',
-					requires_name = _U('dd_wool'),
+					requires_name = TranslateCap('dd_wool'),
 					drop = 100
 				}
 			},
-			Hint = _U('dd_makefabric'),
+			Hint = TranslateCap('dd_makefabric'),
 			GPS = {x = 712.92, y = -970.58, z = 29.39}
 		},
 
@@ -86,22 +86,22 @@ Config.Jobs.tailor = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('dd_clothing'),
+			Name = TranslateCap('dd_clothing'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('dd_clothing'),
+					name = TranslateCap('dd_clothing'),
 					db_name = 'clothe',
 					time = 4,
 					max = 40,
 					add = 1,
 					remove = 2,
 					requires = 'fabric',
-					requires_name = _U('dd_fabric'),
+					requires_name = TranslateCap('dd_fabric'),
 					drop = 100
 				}
 			},
-			Hint = _U('dd_makeclothing'),
+			Hint = TranslateCap('dd_makeclothing'),
 			GPS = {x = 429.59, y = -807.34, z = 28.49}
 		},
 
@@ -111,10 +111,10 @@ Config.Jobs.tailor = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('spawn_veh'),
+			Name = TranslateCap('spawn_veh'),
 			Type = 'vehspawner',
 			Spawner = 1,
-			Hint = _U('spawn_veh_button'),
+			Hint = TranslateCap('spawn_veh_button'),
 			Caution = 2000,
 			GPS = {x = 1978.92, y = 5171.70, z = 46.63}
 		},
@@ -124,7 +124,7 @@ Config.Jobs.tailor = {
 			Size = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
-			Name = _U('service_vh'),
+			Name = TranslateCap('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
 			Heading = 270.1,
@@ -137,9 +137,9 @@ Config.Jobs.tailor = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('return_vh'),
+			Name = TranslateCap('return_vh'),
 			Type = 'vehdelete',
-			Hint = _U('return_vh_button'),
+			Hint = TranslateCap('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -152,22 +152,22 @@ Config.Jobs.tailor = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('delivery_point'),
+			Name = TranslateCap('delivery_point'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 40,
 					requires = 'clothe',
-					requires_name = _U('dd_clothing'),
+					requires_name = TranslateCap('dd_clothing'),
 					drop = 100
 				}
 			},
-			Hint = _U('dd_deliver_clothes'),
+			Hint = TranslateCap('dd_deliver_clothes'),
 			GPS = {x = 1978.92, y = 5171.70, z = 46.63}
 		}
 	}

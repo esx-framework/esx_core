@@ -5,8 +5,8 @@ Config.Size          = { x = 1.5, y = 1.5, z = 0.5 }
 Config.Color         = { r = 0, g = 128, b = 255 }
 Config.Type          = 1
 
-Config.Locale        = 'en'
-
+Config.Locale        = GetConvar('esx:locale', 'en')
+Config.MenuPosition  = "right"
 Config.OxInventory   = ESX.GetConfig().OxInventory
 
 Config.LicenseEnable = false -- only turn this on if you are using esx_license
@@ -16,6 +16,14 @@ Config.Zones = {
 
 	GunShop = {
 		Legal = true,
+		Blip = {
+			Enabled = true,
+			Sprite = 110,
+			Color = 81,
+			Display = 4,
+			Scale = 0.7,
+			ShortRange = true
+		},
 		Items = {
 			{
 				name = "WEAPON_PISTOL",
@@ -101,6 +109,14 @@ Config.Zones = {
 
 	BlackWeashop = {
 		Legal = false,
+		Blip = {
+			Enabled = false,
+			Sprite = 110,
+			Color = 59,
+			Display = 4,
+			Scale = 0.7,
+			ShortRange = true
+		},
 		Items = {
 			{
 				name = "WEAPON_PISTOL",

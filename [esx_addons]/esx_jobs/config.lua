@@ -1,6 +1,6 @@
 Config              = {}
 Config.DrawDistance = 10.0
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.Jobs         = {}
 
 Config.MaxCaution = 10000 -- the max caution allowed
@@ -14,9 +14,9 @@ Config.PublicZones = {
 		Color = {r = 50, g = 200, b = 50},
 		Marker= 1,
 		Blip  = false,
-		Name  = _U('reporter_name'),
+		Name  = TranslateCap('reporter_name'),
 		Type  = "teleport",
-		Hint  = _U('public_enter'),
+		Hint  = TranslateCap('public_enter'),
 		Teleport = vector3(-139.09,-620.74, 167.82)
 	},
 
@@ -26,9 +26,9 @@ Config.PublicZones = {
 		Color = {r = 50, g = 200, b = 50},
 		Marker= 1,
 		Blip  = false,
-		Name  = _U('reporter_name'),
+		Name  = TranslateCap('reporter_name'),
 		Type  = "teleport",
-		Hint  = _U('public_leave'),
+		Hint  = TranslateCap('public_leave'),
 		Teleport = vector3(-113.07, -604.93, 35.28 ),
 	}
 

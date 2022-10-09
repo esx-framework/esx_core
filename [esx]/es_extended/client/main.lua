@@ -500,7 +500,7 @@ if not Config.OxInventory and Config.EnableDefaultInventory then
 		end
 	end)
 
-	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
 -- disable wanted level
@@ -539,7 +539,7 @@ if not Config.OxInventory then
 							end
 						end
 
-						label = ('%s~n~%s'):format(label, _U('threw_pickup_prompt'))
+						label = ('%s~n~%s'):format(label, TranslateCap('threw_pickup_prompt'))
 					end
 
 					ESX.Game.Utils.DrawText3D({

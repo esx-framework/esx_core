@@ -9,7 +9,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyLicense', function(source, cb)
 			cb(true)
 		end)
 	else
-		xPlayer.showNotification(_U('not_enough'))
+		xPlayer.showNotification(TranslateCap('not_enough'))
 		cb(false)
 	end
 end)
@@ -18,13 +18,13 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price = GetPrice(weaponName, zone)
 
-	if price == 0 then
+	if price <= 0  then
 
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to buy Invalid weapon - %s!'):format(source, weaponName))
 		cb(false)
 	else
 		if xPlayer.hasWeapon(weaponName) then
-			xPlayer.showNotification(_U('already_owned'))
+			xPlayer.showNotification(TranslateCap('already_owned'))
 			cb(false)
 		else
 			if zone == 'BlackWeashop' then
@@ -34,7 +34,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	
 					cb(true)
 				else
-					xPlayer.showNotification(_U('not_enough_black'))
+					xPlayer.showNotification(TranslateCap('not_enough_black'))
 					cb(false)
 				end
 			else
@@ -44,7 +44,7 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 	
 					cb(true)
 				else
-					xPlayer.showNotification(_U('not_enough'))
+					xPlayer.showNotification(TranslateCap('not_enough'))
 					cb(false)
 				end
 			end
@@ -53,17 +53,12 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 end)
 
 function GetPrice(weaponName, zone)
-	local weapon = nil
-	for k,v in pairs(Config.Zones[zone].Items) do
-		if v.name == weaponName then
-			weapon  = v
-			break
+	for i=1, #(Config.Zones[zone].Items) do
+		if Config.Zones[zone].Items[i].name == weaponName then
+			local weapon = Config.Zones[zone].Items[i]
+			return weapon.price
 		end
 	end
 
-	if weapon then
-		return weapon.price
-	else
-		return 0
-	end
+	return -1
 end

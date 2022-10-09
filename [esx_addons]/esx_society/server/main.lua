@@ -73,9 +73,9 @@ AddEventHandler('esx_society:withdrawMoney', function(societyName, amount)
 			if amount > 0 and account.money >= amount then
 				account.removeMoney(amount)
 				xPlayer.addMoney(amount, "Society Withdraw")
-				xPlayer.showNotification(_U('have_withdrawn', ESX.Math.GroupDigits(amount)))
+				xPlayer.showNotification(TranslateCap('have_withdrawn', ESX.Math.GroupDigits(amount)))
 			else
-				xPlayer.showNotification(_U('invalid_amount'))
+				xPlayer.showNotification(TranslateCap('invalid_amount'))
 			end
 		end)
 	else
@@ -98,11 +98,11 @@ AddEventHandler('esx_society:depositMoney', function(societyName, amount)
 		if amount > 0 and xPlayer.getMoney() >= amount then
 			TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
 				xPlayer.removeMoney(amount, "Society Deposit")
-				xPlayer.showNotification(_U('have_deposited', ESX.Math.GroupDigits(amount)))
+				xPlayer.showNotification(TranslateCap('have_deposited', ESX.Math.GroupDigits(amount)))
 				account.addMoney(amount)
 			end)
 		else
-			xPlayer.showNotification(_U('invalid_amount'))
+			xPlayer.showNotification(TranslateCap('invalid_amount'))
 		end
 	else
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to deposit to society - ^5%s^7!'):format(source, society.name))
@@ -122,10 +122,10 @@ AddEventHandler('esx_society:washMoney', function(society, amount)
 
 			MySQL.insert('INSERT INTO society_moneywash (identifier, society, amount) VALUES (?, ?, ?)', {xPlayer.identifier, society, amount},
 			function(rowsChanged)
-				xPlayer.showNotification(_U('you_have', ESX.Math.GroupDigits(amount)))
+				xPlayer.showNotification(TranslateCap('you_have', ESX.Math.GroupDigits(amount)))
 			end)
 		else
-			xPlayer.showNotification(_U('invalid_amount'))
+			xPlayer.showNotification(TranslateCap('invalid_amount'))
 		end
 	else
 		print(('[^3WARNING^7] Player ^5%s^7 attempted to wash money in society - ^5%s^7!'):format(source, society))
@@ -283,14 +283,14 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 			xTarget.setJob(job, grade)
 
 			if type == 'hire' then
-				xTarget.showNotification(_U('you_have_been_hired', job))
-				xPlayer.showNotification(_U("you_have_hired", xTarget.getName()))
+				xTarget.showNotification(TranslateCap('you_have_been_hired', job))
+				xPlayer.showNotification(TranslateCap("you_have_hired", xTarget.getName()))
 			elseif type == 'promote' then
-				xTarget.showNotification(_U('you_have_been_promoted'))
-				xPlayer.showNotification(_U("you_have_promoted", xTarget.getName()))
+				xTarget.showNotification(TranslateCap('you_have_been_promoted'))
+				xPlayer.showNotification(TranslateCap("you_have_promoted", xTarget.getName()))
 			elseif type == 'fire' then
-				xTarget.showNotification(_U('you_have_been_fired', xTarget.getJob().label))
-				xPlayer.showNotification(_U("you_have_fired", xTarget.getName()))
+				xTarget.showNotification(TranslateCap('you_have_been_fired', xTarget.getJob().label))
+				xPlayer.showNotification(TranslateCap("you_have_fired", xTarget.getName()))
 			end
 
 			cb()
@@ -426,7 +426,7 @@ function WashMoneyCRON(d, h, m)
 
 			-- send notification if player is online
 			if xPlayer then
-				xPlayer.showNotification(_U('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
+				xPlayer.showNotification(TranslateCap('you_have_laundered', ESX.Math.GroupDigits(result[i].amount)))
 			end
 
 		end
