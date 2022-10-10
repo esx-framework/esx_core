@@ -44,9 +44,9 @@ function StopTheoryTest(success)
 
 	if success then
 		TriggerServerEvent('esx_dmvschool:addLicense', 'dmv')
-		ESX.ShowNotification(_U('passed_test'))
+		ESX.ShowNotification(TranslateCap('passed_test'))
 	else
-		ESX.ShowNotification(_U('failed_test'))
+		ESX.ShowNotification(TranslateCap('failed_test'))
 	end
 end
 
@@ -72,9 +72,9 @@ end
 function StopDriveTest(success)
 	if success then
 		TriggerServerEvent('esx_dmvschool:addLicense', CurrentTestType)
-		ESX.ShowNotification(_U('passed_test'))
+		ESX.ShowNotification(TranslateCap('passed_test'))
 	else
-		ESX.ShowNotification(_U('failed_test'))
+		ESX.ShowNotification(TranslateCap('failed_test'))
 	end
 
 	CurrentTest     = nil
@@ -96,7 +96,7 @@ function OpenDMVSchoolMenu()
 
 	if not ownedLicenses['dmv'] then
 		table.insert(elements, {
-			label = (('%s: <span style="color:green;">%s</span>'):format(_U('theory_test'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
+			label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('theory_test'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
 			value = 'theory_test'
 		})
 	end
@@ -104,7 +104,7 @@ function OpenDMVSchoolMenu()
 	if ownedLicenses['dmv'] then
 		if not ownedLicenses['drive'] then
 			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_car'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
+				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_car'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
 				value = 'drive_test',
 				type = 'drive'
 			})
@@ -112,7 +112,7 @@ function OpenDMVSchoolMenu()
 
 		if not ownedLicenses['drive_bike'] then
 			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_bike'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
+				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_bike'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
 				value = 'drive_test',
 				type = 'drive_bike'
 			})
@@ -120,7 +120,7 @@ function OpenDMVSchoolMenu()
 
 		if not ownedLicenses['drive_truck'] then
 			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_truck'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
+				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_truck'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
 				value = 'drive_test',
 				type = 'drive_truck'
 			})
@@ -130,7 +130,7 @@ function OpenDMVSchoolMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
-		title    = _U('driving_school'),
+		title    = TranslateCap('driving_school'),
 		elements = elements,
 		align    = 'bottom-right'
 	}, function(data, menu)
@@ -140,7 +140,7 @@ function OpenDMVSchoolMenu()
 				if haveMoney then
 					StartTheoryTest()
 				else
-					ESX.ShowNotification(_U('not_enough_money'))
+					ESX.ShowNotification(TranslateCap('not_enough_money'))
 				end
 			end, 'dmv')
 		elseif data.current.value == 'drive_test' then
@@ -149,7 +149,7 @@ function OpenDMVSchoolMenu()
 				if haveMoney then
 					StartDriveTest(data.current.type)
 				else
-					ESX.ShowNotification(_U('not_enough_money'))
+					ESX.ShowNotification(TranslateCap('not_enough_money'))
 				end
 			end, data.current.type)
 		end
@@ -157,7 +157,7 @@ function OpenDMVSchoolMenu()
 		menu.close()
 
 		CurrentAction     = 'dmvschool_menu'
-		CurrentActionMsg  = _U('press_open_menu')
+		CurrentActionMsg  = TranslateCap('press_open_menu')
 		CurrentActionData = {}
 	end)
 end
@@ -183,7 +183,7 @@ end)
 AddEventHandler('esx_dmvschool:hasEnteredMarker', function(zone)
 	if zone == 'DMVSchool' then
 		CurrentAction     = 'dmvschool_menu'
-		CurrentActionMsg  = _U('press_open_menu')
+		CurrentActionMsg  = TranslateCap('press_open_menu')
 		CurrentActionData = {}
 	end
 end)
@@ -208,7 +208,7 @@ CreateThread(function()
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentSubstringPlayerName(_U('driving_school_blip'))
+	AddTextComponentSubstringPlayerName(TranslateCap('driving_school_blip'))
 	EndTextCommandSetBlipName(blip)
 end)
 
@@ -248,7 +248,7 @@ CreateThread(function()
 
 				CurrentTest = nil
 
-				ESX.ShowNotification(_U('driving_test_complete'))
+				ESX.ShowNotification(TranslateCap('driving_test_complete'))
 
 				if DriveErrors < Config.MaxErrors then
 					StopDriveTest(true)
@@ -340,8 +340,8 @@ CreateThread(function()
 							DriveErrors       = DriveErrors + 1
 							IsAboveSpeedLimit = true
 
-							ESX.ShowNotification(_U('driving_too_fast', v))
-							ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
+							ESX.ShowNotification(TranslateCap('driving_too_fast', v))
+							ESX.ShowNotification(TranslateCap('errors', DriveErrors, Config.MaxErrors))
 						end
 					end
 				end
@@ -355,8 +355,8 @@ CreateThread(function()
 
 					DriveErrors = DriveErrors + 1
 
-					ESX.ShowNotification(_U('you_damaged_veh'))
-					ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
+					ESX.ShowNotification(TranslateCap('you_damaged_veh'))
+					ESX.ShowNotification(TranslateCap('errors', DriveErrors, Config.MaxErrors))
 
 					-- avoid stacking faults
 					LastVehicleHealth = health

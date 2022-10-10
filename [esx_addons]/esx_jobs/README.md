@@ -24,9 +24,9 @@ CloakRoom = {
     Color = {r = 50, g = 200, b = 50},
     Marker = 1,
     Blip = true,
-    Name = _U("m_miner_locker"),
+    Name = TranslateCap("m_miner_locker"),
     Type = "cloakroom",
-    Hint = _U("cloak_change"),
+    Hint = TranslateCap("cloak_change"),
     GPS = {x = 884.86, y = -2176.51, z = 29.51}
 }
 ```

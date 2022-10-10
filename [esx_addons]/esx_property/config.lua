@@ -6,7 +6,7 @@ Config.OwnedBlips = true -- Add blips for Owned Properties
 ---------------------------------------------------------------
 
 --------------------- General Settings ---------------------------------
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 Config.Shells = false -- Enable/Disable Shell Interiors Default: false
 Config.SaveInterval = 5 -- Interval in Minutes to Save Properties
 Config.CanAlwaysExit = true -- Disabling this allows players to be locked in
@@ -15,6 +15,23 @@ Config.MaxNameLength = 20 -- Max Name Length for Owned Properties Default: 20
 Config.CanCustomiseInventoryAndWardrobePositions = true -- Allow users to customise inventory and wardrobe positions Default: true
 Config.WipeCustomNameOnSell = true -- Wipe custom name on sell Default: true
 Config.WipeFurnitureOnSell = true -- Wipe custom name on sell Default: true
+
+
+--------------------- Zone Suggested Prices  ---------------------------------
+Config.ZonePriceOptions = {
+    Enabled = true, -- Enable/Disable Zone Prices Modifiers Default: true
+    Default = 250000, -- Default Price of a property Default: 250000
+}
+
+-- The Amount to Multiply the Default Price by (if the above is enabled):
+Config.ZonePrices = {
+  [0] = 10, -- Posh
+  [1] = 7, -- Nice
+  [2] = 5, -- Above Average
+  [3] = 3, -- Bellow Average
+  [4] = 2, -- Crap
+  [5] = 1, -- Scum
+}
 
 --------------------- Raid Settings ---------------------------------
 Config.Raiding = {
@@ -412,7 +429,6 @@ Config.FurnitureCatagories =
                 {name = "prop_el_guitar_01", title = "E Guitar 1", price = 100},
                 {name = "prop_el_guitar_02", title = "E Guitar 2", price = 100},
                 {name = "prop_el_guitar_03", title = "E Guitar 2", price = 100},
-                {name = "prop_ld_greenscreen_01", title = "Green Screen", price = 100},
                 {name = "v_res_mbowlornate", title = "Ornate Bowl", price = 300},
                 {name = "v_res_mbronzvase", title = "Bronze Vase", price = 300},
                 {name = "prop_ceramic_jug_01", title = "Ceramic Jug", price = 100},
@@ -429,7 +445,6 @@ Config.FurnitureCatagories =
                 {name = "apa_mp_h_acc_rugwools_03", title = "Rug 6", price = 300},
                 {name = "v_res_fh_pouf", title = "Pouf", price = 300},
                 {name = "v_res_fh_sculptmod", title = "Sculpture", price = 300},
-                {name = "prop_ceramic_jug_01", title = "Ceramic Jug", price = 100},
                 {name = "prop_v_5_bclock", title = "Vintage Clock", price = 300},
                 {name = "prop_v_15_cars_clock", title = "American Flag Clock", price = 300},
                 {name = "prop_sm_19_clock", title = "Modern Clock", price = 300},
@@ -531,7 +546,6 @@ Config.FurnitureCatagories =
                 {price = 1200, title = 'PC speaker', name = 'v_res_pcspeaker'},
                 {price = 5000, title = 'VHS white RETRO player', name = 'v_res_vhsplayer'},
                 {price = 2200, title = 'Vacuum Cleaner', name = 'v_res_vacuum'},
-                {price = 5400, title = 'Shredder', name = 'v_ret_gc_shred'},
                 {price = 100, title = 'Stapler', name = 'v_ret_gc_staple'},
                 {price = 1900, title = 'Hardisk', name = 'xm_prop_x17_harddisk_01a'},
                 {price = 5300, title = 'Computer', name = 'xm_prop_x17_res_pctower'},
@@ -540,7 +554,7 @@ Config.FurnitureCatagories =
                 {price = 14000, title = 'Jukebox', name = 'bkr_prop_clubhouse_jukebox_01b'},
                 {price = 1700, title = 'USB', name = 'hei_prop_hst_usb_drive'},
                 {price = 700, title = 'Flashlight', name = 'p_cs_police_torch_s'},
-                {price = 1000, title = 'Mikofon', name = 'p_ing_microphonel_01'},
+                {price = 1000, title = 'Microphone', name = 'p_ing_microphonel_01'},
                 {price = 1600, title = 'Radio', name = 'prop_tapeplayer_01'},
                 {price = 4500, title = 'Multifunction Laser Printer', name = 'prop_printer_01'},
                 {price = 11200, title = 'Multifunction Laser Printer', name = 'prop_printer_02'},

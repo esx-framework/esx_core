@@ -14,7 +14,7 @@ function TriggerCruiseControl()
 			CruisedSpeed = GetVehicleSpeed()
 			CruisedSpeedKm = TransformToKm(CruisedSpeed)
 
-			ESX.ShowNotification(_U('activated') .. ':  ' .. CruisedSpeedKm .. ' km/h')
+			ESX.ShowNotification(TranslateCap('activated') .. ':  ' .. CruisedSpeedKm .. ' km/h')
 
 			CreateThread(function ()
 				while CruisedSpeed > 0 and IsInVehicle() == PlayerPedId() do
@@ -22,7 +22,7 @@ function TriggerCruiseControl()
 
 					if not IsTurningOrHandBraking() and GetVehicleSpeed() < (CruisedSpeed - 1.5) then
 						CruisedSpeed = 0
-						ESX.ShowNotification(_U('deactivated'))
+						ESX.ShowNotification(TranslateCap('deactivated'))
 						Wait(2000)
 						break
 					end
@@ -38,7 +38,7 @@ function TriggerCruiseControl()
 
 					if IsControlJustPressed(2, 72) then
 						CruisedSpeed = 0
-						ESX.ShowNotification(_U('deactivated'))
+						ESX.ShowNotification(TranslateCap('deactivated'))
 						Wait(2000)
 						break
 					end

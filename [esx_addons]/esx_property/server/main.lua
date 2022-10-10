@@ -72,7 +72,7 @@ function PropertiesRefresh()
     end
   else
     Properties = {}
-    print("[ERROR]: Properties.json Not Found!")
+    print("[^1ERROR^7]: ^5Properties.json^7 Not Found!")
   end
 end
 
@@ -169,24 +169,24 @@ end)
 --- Commands
 ESX.RegisterCommand(_("refresh_name"), Config.AllowedGroups, function(xPlayer)
   PropertiesRefresh()
-end, false, {help = _U("refresh_desc")})
+end, false, {help = TranslateCap("refresh_desc")})
 
 ESX.RegisterCommand(_("create_name"), "user", function(xPlayer)
   if IsPlayerAdmin(xPlayer.source) or (PM.Enabled and xPlayer.job.name == PM.job) then
     xPlayer.triggerEvent("esx_property:CreateProperty")
   end
-end, false,{help = _U("create_desc")})
+end, false,{help = TranslateCap("create_desc")})
 
 ESX.RegisterCommand(_("admin_name"), Config.AllowedGroups, function(xPlayer)
   xPlayer.triggerEvent("esx_property:AdminMenu")
-end, false,{help = _U("admin_desc")})
+end, false,{help = TranslateCap("admin_desc")})
 
 -- Buy Property
 ESX.RegisterServerCallback("esx_property:buyProperty", function(source, cb, PropertyId)
   local xPlayer = ESX.GetPlayerFromId(source)
   local Price = Properties[PropertyId].Price
   if xPlayer.getAccount("bank").money >= Price then
-    xPlayer.removeAccountMoney("bank", Price)
+    xPlayer.removeAccountMoney("bank", Price, "Bought Property")
     Properties[PropertyId].Owner = xPlayer.identifier
     Properties[PropertyId].OwnerName = xPlayer.getName()
     Properties[PropertyId].Owned = true
@@ -206,7 +206,7 @@ ESX.RegisterServerCallback("esx_property:attemptSellToPlayer", function(source, 
   local xTarget = ESX.GetPlayerFromId(PlayerId)
   local Price = Properties[PropertyId].Price
   if xTarget and (xTarget.getAccount("bank").money >= Price) and (xPlayer.job.name == PM.job) then
-    xPlayer.removeAccountMoney("bank", Price)
+    xTarget.removeAccountMoney("bank", Price, "Sold Property")
     Properties[PropertyId].Owner = xTarget.identifier
     Properties[PropertyId].OwnerName = xTarget.getName()
     Properties[PropertyId].Owned = true
@@ -224,7 +224,7 @@ ESX.RegisterServerCallback("esx_property:attemptSellToPlayer", function(source, 
       TriggerEvent('esx_addonaccount:getSharedAccount', PM.society, function(account)
         account.addMoney(SocietyPrice)
       end)
-      xPlayer.addAccountMoney("bank", PlayerPrice)
+      xPlayer.addAccountMoney("bank", PlayerPrice, "Sold Property")
     end
   end
   cb(xPlayer.getAccount("bank").money >= Price)
@@ -237,7 +237,7 @@ ESX.RegisterServerCallback("esx_property:buyFurniture", function(source, cb, Pro
   if xPlayer.identifier == Owner or IsPlayerAdmin(source) or (Properties[PropertyId].Keys and Properties[PropertyId].Keys[xPlayer.identifier]) then
     local Price = Config.FurnitureCatagories[PropCatagory][PropIndex].price
     if xPlayer.getAccount("bank").money >= Price then
-      xPlayer.removeAccountMoney("bank", Price)
+      xPlayer.removeAccountMoney("bank", Price, "Furniture")
       cb(true)
       local furniture = {Name = PropName, Index = PropIndex, Catagory = PropCatagory, Pos = pos, Heading = heading, Price = Price}
       table.insert(Properties[PropertyId].furniture, furniture)
@@ -248,7 +248,7 @@ ESX.RegisterServerCallback("esx_property:buyFurniture", function(source, cb, Pro
       TriggerClientEvent("esx_property:syncFurniture", -1, PropertyId, Properties[PropertyId].furniture)
     else
       cb(false)
-      ESX.ShowNotification(_U("furni_cannot_afford"))
+      ESX.ShowNotification(TranslateCap("furni_cannot_afford"))
     end
   else
     cb(false)
@@ -271,7 +271,7 @@ ESX.RegisterServerCallback("esx_property:sellProperty", function(source, cb, Pro
   local Owner = Properties[PropertyId].Owner
   if xPlayer.identifier == Owner then
     local Price = ESX.Math.Round(Properties[PropertyId].Price * 0.6)
-    xPlayer.addAccountMoney("bank", Price)
+    xPlayer.addAccountMoney("bank", Price, "Sold Property")
     Properties[PropertyId].Owner = ""
     Properties[PropertyId].OwnerName = ""
     Properties[PropertyId].Owned = false
@@ -443,7 +443,7 @@ ESX.RegisterServerCallback("esx_property:KnockOnDoor", function(source, cb, Prop
   if Owner then
     for i = 1, #(Property.plysinside) do
       if Property.plysinside[i] == Owner.source then
-        Owner.showNotification(_U("knocking"), "info")
+        Owner.showNotification(TranslateCap("knocking"), "info")
         cb(true)
         Log("Player Knocked On Door", 3640511, {{name = "**Property Name**", value = Properties[PropertyId].Name, inline = true},
                                                 {name = "**Owner**", value = Properties[PropertyId].OwnerName, inline = true},
@@ -623,7 +623,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
           end
           Can = true
         else
-          xPlayer.showNotification(_U("raid_notify_error", Config.Raiding.ItemRequired.ItemCount, Config.Raiding.ItemRequired.name), "error")
+          xPlayer.showNotification(TranslateCap("raid_notify_error", Config.Raiding.ItemRequired.ItemCount, Config.Raiding.ItemRequired.name), "error")
         end
       else
         Can = true
@@ -634,7 +634,7 @@ ESX.RegisterServerCallback("esx_property:CanRaid", function(source, cb, Property
   if Can then
     local xOwner = ESX.GetPlayerFromIdentifier(Properties[PropertyId].Owner)
     if xOwner then
-      xOwner.showNotification(_U("raid_notify_success"), "error")
+      xOwner.showNotification(TranslateCap("raid_notify_success"), "error")
     end
     Wait(15000)
     Properties[PropertyId].Locked = false
@@ -804,15 +804,15 @@ ESX.RegisterServerCallback('esx_property:GiveKey', function(source, cb, property
     local id = xTarget.identifier
     if not Properties[property].Keys[id] then
       Property.Keys[id] = {name = xTarget.getName(), identifier = id}
-      xTarget.showNotification(_U("you_granted", Property.Name), 'success')
+      xTarget.showNotification(TranslateCap("you_granted", Property.Name), 'success')
       xTarget.triggerEvent("esx_property:giveKeyAccess")
       cb(true)
     else
-      xPlayer.showNotification(_U("already_has"), 'error')
+      xPlayer.showNotification(TranslateCap("already_has"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification(_U("do_not_own"), 'error')
+    xPlayer.showNotification(TranslateCap("do_not_own"), 'error')
     cb(false)
   end
   Log("Property Key Given", 3640511,
@@ -852,11 +852,11 @@ ESX.RegisterServerCallback('esx_property:StoreVehicle', function(source, cb, Pro
       end
       MySQL.query(Config.Garage.MySQLquery, {1, VehicleProperties.plate}) -- Set vehicle as stored in MySQL
     else
-      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
+      xPlayer.showNotification(TranslateCap("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification(_U("cannot_access_property"), 'error')
+    xPlayer.showNotification(TranslateCap("cannot_access_property"), 'error')
     cb(false)
   end
   Log("User Attempted To Store Vehicle", 3640511,
@@ -875,11 +875,11 @@ ESX.RegisterServerCallback('esx_property:AccessGarage', function(source, cb, Pro
     if Property.garage.enabled then
       cb(Property.garage.StoredVehicles)
     else
-      xPlayer.showNotification(_U("garage_not_enabled"), 'error')
+      xPlayer.showNotification(TranslateCap("garage_not_enabled"), 'error')
       cb(false)
     end
   else
-    xPlayer.showNotification(_U("cannot_access_property"), 'error')
+    xPlayer.showNotification(TranslateCap("cannot_access_property"), 'error')
     cb(false)
   end
 
@@ -901,18 +901,18 @@ ESX.RegisterServerCallback('esx_property:RemoveKey', function(source, cb, proper
           {{name = "**Property Name**", value = Property.Name, inline = true}, {name = "**Owner**", value = xPlayer.getName(), inline = true},
            {name = "**Removed From**", value = tostring(Properties[property].Keys[player].name), inline = true}}, 3)
         Properties[property].Keys[player] = nil
-        xTarget.showNotification(_U("key_revoked", Property.Name), 'error')
+        xTarget.showNotification(TranslateCap("key_revoked", Property.Name), 'error')
         xTarget.triggerEvent("esx_property:RemoveKeyAccess", property)
         cb(true)
       else
-        xPlayer.showNotification(_U("no_keys"), 'error')
+        xPlayer.showNotification(TranslateCap("no_keys"), 'error')
         cb(false)
       end
     else
       cb(false)
     end
   else
-    xPlayer.showNotification(_U("do_not_own"), 'error')
+    xPlayer.showNotification(TranslateCap("do_not_own"), 'error')
     cb(false)
   end
 end)
@@ -1058,7 +1058,6 @@ RegisterNetEvent('esx_property:server:createProperty', function(Property)
   local source = source
   local xPlayer = ESX.GetPlayerFromId(source)
   local Interior = GetInteriorValues(Property.interior)
-  print(ESX.DumpTable(Property))
   local garageData =
     Property.garage.enabled and {enabled = true, pos = Property.garage.pos, Heading = Property.garage.heading, StoredVehicles = {}} or
       {enabled = false}
@@ -1104,14 +1103,20 @@ end
 
 --- Save Properties On Server Stop/Restart
 AddEventHandler('txAdmin:events:serverShuttingDown', function()
-  PropertySave(_U("server_shutdown"))
+  PropertySave(TranslateCap("server_shutdown"))
 end)
 
 --- Save Properties On Resource Stop/Restart
 
 AddEventHandler('onResourceStop', function(ResourceName)
   if ResourceName == GetCurrentResourceName() then
-    PropertySave(_U("resource_stop"))
+    PropertySave(TranslateCap("resource_stop"))
+  end
+end)
+
+AddEventHandler('onServerResourceStop', function(ResourceName)
+  if ResourceName == GetCurrentResourceName() then
+    PropertySave(TranslateCap("resource_stop"))
   end
 end)
 
@@ -1120,10 +1125,67 @@ end)
 CreateThread(function()
   while true do
     Wait(60000 * Config.SaveInterval)
-    PropertySave(_U("interval_save"))
+    PropertySave(TranslateCap("interval_save"))
   end
 end)
 
 ESX.RegisterCommand(_("save_name"), Config.AllowedGroups, function(xPlayer)
-  PropertySave(_U("manual_save", GetPlayerName(xPlayer.source)))
-end, false,{help = _U("save_desc")})
+  PropertySave(TranslateCap("manual_save", GetPlayerName(xPlayer.source)))
+end, false,{help = TranslateCap("save_desc")})
+
+----- Exports -----
+
+exports("GetProperties", function()
+  return Properties
+end)
+
+exports("GetOwnedProperties", function()
+  local OwnedProperties = {}
+  for i=1, #Properties do
+    if Properties[i].Owned then
+      OwnedProperties[#OwnedProperties + 1] = Properties[i]
+    end
+  end
+  return OwnedProperties
+end)
+
+exports("GetNonOwnedProperties", function()
+  local NonOwnedProperties = {}
+  for i=1, #Properties do
+    if not Properties[i].Owned then
+      NonOwnedProperties[#NonOwnedProperties + 1] = Properties[i]
+    end
+  end
+  return NonOwnedProperties
+end)
+
+exports("GetPlayerProperties", function(identifier)
+  local PlayerProperties = {}
+  for i=1, #Properties do
+    if Properties[i].Owned and Properties[i].owner == identifier then
+      PlayerProperties[#PlayerProperties + 1] = Properties[i]
+    end
+  end
+  return PlayerProperties
+end)
+
+exports("GetPropertyKeys", function(PropertyId)
+  local Property = Properties[PropertyId]
+  if Property.Keys then
+    return Property.Keys
+  end
+  return {}
+end)
+
+exports("DoesPlayerHaveKeys", function(PropertyId, Identifier)
+  local Property = Properties[PropertyId]
+  if Property.Keys then
+    return Property.Keys[Identifier] and true or false
+  end
+  return {}
+end)
+
+exports("ForceSaveProperties", function()
+  local ExecutingResource = GetInvokingResource()
+  PropertySave(TranslateCap("forced_save", ExecutingResource))
+end)

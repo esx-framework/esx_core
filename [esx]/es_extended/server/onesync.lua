@@ -59,19 +59,23 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
+---@param autoMobile boolean
+---@param Properties table
 ---@param cb function
-function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
-		if type(model) == 'string' then model = joaat(model) end
-		local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-		if type(autoMobile) ~= 'boolean' then
-			return
-		end
-		CreateThread(function()
-		local Entity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		while not DoesEntityExist(Entity) do
+function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, Properties, cb)
+	model = type(model) == 'string' and joaat(model) or model
+	Properties = Properties or {}
+	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
+	if type(autoMobile) ~= 'boolean' then
+		return
+	end
+	CreateThread(function()
+		local SpawnedEntity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
+		while not DoesEntityExist(SpawnedEntity) do
 			Wait(0)
 		end
-		local netID = NetworkGetNetworkIdFromEntity(Entity)
+		Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+		local netID = NetworkGetNetworkIdFromEntity(SpawnedEntity)
 		cb(netID)
 	end)
 end
@@ -82,7 +86,7 @@ end
 ---@param cb function
 function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 	if type(model) == 'string' then model = joaat(model) end
-	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
 	CreateThread(function()
 		local entity = CreateObject(model, coords, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
@@ -197,16 +201,6 @@ function ESX.OneSync.GetClosestVehicle(coords, modelFilter)
 	return getClosestEntity(GetAllVehicles(), coords, modelFilter)
 end
 
-ESX.RegisterServerCallback("esx:Onesync:SpawnVehicle", function(source, cb, model, coords, heading, autoMobile)
-	ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, cb)
-end)
-
 ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(source, cb, model, coords, heading)
 	ESX.OneSync.SpawnObject(model, coords, heading, cb)
 end)
-
--- for k,v in pairs(ESX.OneSync) do
--- 	ESX.RegisterServerCallback("esx:Onesync:"..k, function(source, cb, ...)
--- 		cb(v(...))
--- 	end)
--- end

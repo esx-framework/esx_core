@@ -7,7 +7,7 @@
 
 <hr>
 
-### Supporters 
+### Supporters
 
 Interested in helping us? [Take a look at our patreon](https://www.patreon.com/esx "Take a look at our patreon")
 

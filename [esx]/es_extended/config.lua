@@ -1,17 +1,17 @@
 Config = {}
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Accounts = {
 	bank = {
-		label = _U('account_bank'),
+		label = TranslateCap('account_bank'),
 		round = true
 	},
 	black_money = {
-		label = _U('account_black_money'),
+		label = TranslateCap('account_black_money'),
 		round = true
 	},
 	money = {
-		label = _U('account_money'),
+		label = TranslateCap('account_money'),
 		round = true
 	}
 }
@@ -26,12 +26,11 @@ Config.EnableDebug              = false -- Use Debug options?
 Config.EnableDefaultInventory   = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
-Config.NativeNotify             = false -- use old native notification?
 
 Config.Multichar                = true -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
-Config.DisableHealthRegen         = false -- Player will no longer regenerate health
+Config.DisableHealthRegeneration  = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death
 Config.DisableWeaponWheel         = false -- Disables default weapon wheel
@@ -61,6 +60,7 @@ Config.RemoveHudCommonents = {
 	[22] = false, --HUD_WEAPONS
 }
 
+Config.MaxAdminVehicles = true -- admin vehicles spawn with max vehcle settings
 Config.CustomAIPlates = 'ESX.A111' -- Custom plates for AI vehicles 
 -- Pattern string format
 --1 will lead to a random number from 0-9.
@@ -70,5 +70,3 @@ Config.CustomAIPlates = 'ESX.A111' -- Custom plates for AI vehicles
 --^A will lead to a literal A being emitted.
 --Any other character will lead to said character being emitted.
 -- A string shorter than 8 characters will be padded on the right.
-
-Config.MaxAdminVehicles = true -- admin vehicles spawn with max vehcle settings

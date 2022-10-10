@@ -1,7 +1,7 @@
 Config                      = {}
 Config.DrawDistance         = 10.0
 Config.BankSavingPercentage = 2.5
-Config.Locale               = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Zones = {
 	BankActions = {

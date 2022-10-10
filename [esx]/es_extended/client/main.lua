@@ -193,18 +193,23 @@ AddEventHandler('esx:restoreLoadout', function()
 	end
 end)
 
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
+	if value then
+			Wait(0)
+			local NetId = tonumber(bagName:gsub('entity:', ''), 10)
+			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+
+			if NetworkGetEntityOwner(Vehicle) == PlayerId() then
+					ESX.Game.SetVehicleProperties(Vehicle, value)
+			end
+	end
+end)
+
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
 	for i=1, #(ESX.PlayerData.accounts) do
 		if ESX.PlayerData.accounts[i].name == account.name then
 			ESX.PlayerData.accounts[i] = account
-			if ESX.PlayerData.accounts[i].name == "bank" then
-				PlayerBank = account.money
-				StatSetInt("BANK_BALANCE", PlayerBank, true)
-			elseif ESX.PlayerData.accounts[i].name == "money" then
-				PlayerMoney = account.money
-				StatSetInt("MP0_WALLET_BALANCE", PlayerMoney, true)
-			end
 			break
 		end
 	end
@@ -259,17 +264,17 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:addWeapon')
 	AddEventHandler('esx:addWeapon', function(weapon, ammo)
-		print("[WARNING] event 'esx:addWeapon' is deprecated. Please use xPlayer.addWeapon Instead!")
+		print("[^1ERROR^7] event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:addWeaponComponent')
 	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
-		print("[WARNING] event 'esx:addWeaponComponent' is deprecated. Please use xPlayer.addWeaponComponent Instead!")
+		print("[^1ERROR^7] event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponAmmo')
 	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
-		print("[WARNING] event 'esx:setWeaponAmmo' is deprecated. Please use xPlayer.addWeaponComponent Instead!")
+		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponTint')
@@ -495,7 +500,7 @@ if not Config.OxInventory and Config.EnableDefaultInventory then
 		end
 	end)
 
-	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
 -- disable wanted level
@@ -534,7 +539,7 @@ if not Config.OxInventory then
 							end
 						end
 
-						label = ('%s~n~%s'):format(label, _U('threw_pickup_prompt'))
+						label = ('%s~n~%s'):format(label, TranslateCap('threw_pickup_prompt'))
 					end
 
 					ESX.Game.Utils.DrawText3D({
@@ -736,3 +741,20 @@ AddEventHandler("esx:freezePlayer", function(input)
         SetPlayerInvincible(player, false)
     end
 end)
+
+local DoNotUse = {
+	'essentialmode',
+	'es_admin2',
+	'basic-gamemode',
+	'mapmanager',
+	'fivem-map-skater',
+	'fivem-map-hipster',
+	'qb-core',
+	'default_spawnpoint',
+}
+
+for i=1, #DoNotUse do
+	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
+		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5"..DoNotUse[i].."^7")
+	end
+end

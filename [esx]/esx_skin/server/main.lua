@@ -30,7 +30,7 @@ AddEventHandler('esx_skin:responseSaveSkin', function(skin)
 		file:flush()
 		file:close()
 	else
-		print(('esx_skin: %s attempted saving skin to file'):format(xPlayer.getIdentifier()))
+		print(('[^2INFO^7] ^5%s^7 attempted saving skin to file'):format(xPlayer.getIdentifier()))
 	end
 end)
 
@@ -57,8 +57,8 @@ end)
 
 ESX.RegisterCommand('skin', 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx_skin:openSaveableMenu')
-end, false, {help = _U('skin')})
+end, false, {help = TranslateCap('skin')})
 
 ESX.RegisterCommand('skinsave', 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx_skin:requestSaveSkin')
-end, false, {help = _U('saveskin')})
+end, false, {help = TranslateCap('saveskin')})

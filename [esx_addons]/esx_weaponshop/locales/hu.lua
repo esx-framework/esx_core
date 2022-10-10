@@ -1,4 +1,8 @@
 Locales ['hu'] = {
+  ["license_shop_title"] = "License Shop",
+  ["weapon_shop_menu_title"] = "Weapon Shop",
+  ["weapon_shop_menu_description"] = "Buy Weapons",
+  ["menu_cancel"] = "Cancel",
   ['buy_license'] = 'Veszel fegyver engedélyt?',
   ['yes'] = '%s',
   ['no'] = 'Igen',

@@ -54,14 +54,14 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     local command = Core.RegisteredCommands[name]
 
     if not command.allowConsole and playerId == 0 then
-      print(('[^3WARNING^7] ^5%s'):format(_U('commanderror_console')))
+      print(('[^3WARNING^7] ^5%s'):format(TranslateCap('commanderror_console')))
     else
       local xPlayer, error = ESX.Players[playerId], nil
 
       if command.suggestion then
         if command.suggestion.validate then
           if #args ~= #command.suggestion.arguments then
-            error = _U('commanderror_argumentmismatch', #args, #command.suggestion.arguments)
+            error = TranslateCap('commanderror_argumentmismatch', #args, #command.suggestion.arguments)
           end
         end
 
@@ -76,7 +76,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                 if newArg then
                   newArgs[v.name] = newArg
                 else
-                  error = _U('commanderror_argumentmismatch_number', k)
+                  error = TranslateCap('commanderror_argumentmismatch_number', k)
                 end
               elseif v.type == 'player' or v.type == 'playerId' then
                 local targetPlayer = tonumber(args[k])
@@ -95,10 +95,10 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                       newArgs[v.name] = targetPlayer
                     end
                   else
-                    error = _U('commanderror_invalidplayerid')
+                    error = TranslateCap('commanderror_invalidplayerid')
                   end
                 else
-                  error = _U('commanderror_argumentmismatch_number', k)
+                  error = TranslateCap('commanderror_argumentmismatch_number', k)
                 end
               elseif v.type == 'string' then
                 newArgs[v.name] = args[k]
@@ -106,13 +106,13 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                 if ESX.Items[args[k]] then
                   newArgs[v.name] = args[k]
                 else
-                  error = _U('commanderror_invaliditem')
+                  error = TranslateCap('commanderror_invaliditem')
                 end
               elseif v.type == 'weapon' then
                 if ESX.GetWeapon(args[k]) then
                   newArgs[v.name] = string.upper(args[k])
                 else
-                  error = _U('commanderror_invalidweapon')
+                  error = TranslateCap('commanderror_invalidweapon')
                 end
               elseif v.type == 'any' then
                 newArgs[v.name] = args[k]
@@ -167,11 +167,11 @@ function ESX.RegisterServerCallback(name, cb)
   Core.ServerCallbacks[name] = cb
 end
 
-function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
+function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
   if Core.ServerCallbacks[name] then
     Core.ServerCallbacks[name](source, cb, ...)
   else
-    print(('[^3WARNING^7] Server callback ^5"%s"^0 does not exist. ^1Please Check The Server File for Errors!'):format(name))
+    print(('[^1ERROR^7] Server callback ^5"%s"^0 does not exist. Please Check ^5%s^7 for Errors!'):format(name, Invoke))
   end
 end
 
@@ -209,7 +209,7 @@ function Core.SavePlayers(cb)
           if type(cb) == 'function' then
             cb()
           else
-            print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000))
+            print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(count, count > 1 and 'players' or 'player', ESX.Math.Round((os.time() - time) / 1000000, 2)))
           end
         end
       end)
@@ -253,12 +253,64 @@ function ESX.GetPlayerFromIdentifier(identifier)
 end
 
 function ESX.GetIdentifier(playerId)
+  local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+  if fxDk == 1 then
+    return "ESX-DEBUG-LICENCE"
+  end
   for k, v in ipairs(GetPlayerIdentifiers(playerId)) do
     if string.match(v, 'license:') then
       local identifier = string.gsub(v, 'license:', '')
       return identifier
     end
   end
+end
+
+function ESX.DiscordLog(name, title, color, message)
+
+  local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
+  local embedData = {{
+      ['title'] = title,
+      ['color'] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
+      ['footer'] = {
+          ['text'] = "| ESX Logs | " .. os.date(),
+          ['icon_url'] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png"
+      },
+      ['description'] = message,
+      ['author'] = {
+          ['name'] = "ESX Framework",
+          ['icon_url'] = "https://cdn.discordapp.com/emojis/939245183621558362.webp?size=128&quality=lossless"
+      }
+  }}
+  PerformHttpRequest(webHook, nil, 'POST', json.encode({
+      username = 'Logs',
+      embeds = embedData
+  }), {
+      ['Content-Type'] = 'application/json'
+  })
+end
+
+function ESX.DiscordLogFields(name, title, color, fields)
+  local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
+  local embedData = {{
+      ['title'] = title,
+      ['color'] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
+      ['footer'] = {
+          ['text'] = "| ESX Logs | " .. os.date(),
+          ['icon_url'] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png"
+      },
+      ['fields'] = fields, 
+      ['description'] = "",
+      ['author'] = {
+          ['name'] = "ESX Framework",
+          ['icon_url'] = "https://cdn.discordapp.com/emojis/939245183621558362.webp?size=128&quality=lossless"
+      }
+  }}
+  PerformHttpRequest(webHook, nil, 'POST', json.encode({
+      username = 'Logs',
+      embeds = embedData
+  }), {
+      ['Content-Type'] = 'application/json'
+  })
 end
 
 function ESX.RefreshJobs()
@@ -340,7 +392,7 @@ function ESX.GetItemLabel(item)
   if ESX.Items[item] then
     return ESX.Items[item].label
   else
-    print('[^3WARNING^7] Attemting to get invalid Item -> ' .. item)
+    print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
   end
 end
 

@@ -12,7 +12,9 @@ CreateThread(function()
 			name      = name,
 			data      = data
 		})
+		SetTimeout(200, function()
 		SetNuiFocus(true, true)
+		 end)
 	end
 
 	local function closeMenu(namespace, name)

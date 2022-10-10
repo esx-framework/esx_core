@@ -5,7 +5,7 @@ game 'gta5'
 description 'ES Extended'
 
 lua54 'yes'
-version '1.7.5'
+version '1.8.5'
 
 shared_scripts {
 	'locale.lua',
@@ -17,7 +17,7 @@ shared_scripts {
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-
+	'config.logs.lua',
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/classes/overrides/*.lua',

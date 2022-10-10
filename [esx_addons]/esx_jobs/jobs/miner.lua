@@ -24,9 +24,9 @@ Config.Jobs.miner = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker= 20,
 			Blip = true,
-			Name = _U('m_miner_locker'),
+			Name = TranslateCap('m_miner_locker'),
 			Type = 'cloakroom',
-			Hint = _U('cloak_change'),
+			Hint = TranslateCap('cloak_change'),
 			GPS = {x = 884.86, y = -2176.51, z = 29.51}
 		},
 
@@ -36,11 +36,11 @@ Config.Jobs.miner = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_rock'),
+			Name = TranslateCap('m_rock'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('m_rock'),
+					name = TranslateCap('m_rock'),
 					db_name = 'stone',
 					time = 3,
 					max = 7,
@@ -51,7 +51,7 @@ Config.Jobs.miner = {
 					drop = 100
 				}
 			},
-			Hint = _U('m_pickrocks'),
+			Hint = TranslateCap('m_pickrocks'),
 			GPS = {x = 289.24, y = 2862.90, z = 42.64}
 		},
 
@@ -61,22 +61,22 @@ Config.Jobs.miner = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_washrock'),
+			Name = TranslateCap('m_washrock'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('m_washrock'),
+					name = TranslateCap('m_washrock'),
 					db_name = 'washed_stone',
 					time = 5,
 					max = 7,
 					add = 1,
 					remove = 1,
 					requires = 'stone',
-					requires_name = _U('m_rock'),
+					requires_name = TranslateCap('m_rock'),
 					drop = 100
 				}
 			},
-			Hint = _U('m_rock_button'),
+			Hint = TranslateCap('m_rock_button'),
 			GPS = {x = 1109.14, y = -2007.87, z = 30.01}
 		},
 
@@ -86,43 +86,43 @@ Config.Jobs.miner = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_rock_smelting'),
+			Name = TranslateCap('m_rock_smelting'),
 			Type = 'work',
 			Item = {  
 				{
-					name = _U('m_copper'),
+					name = TranslateCap('m_copper'),
 					db_name = 'copper',
 					time = 4,
 					max = 56,
 					add = 8,
 					remove = 1,
 					requires = 'washed_stone',
-					requires_name = _U('m_washrock'),
+					requires_name = TranslateCap('m_washrock'),
 					drop = 100
 				},
 				{
-					name = _U('m_iron'),
+					name = TranslateCap('m_iron'),
 					db_name = 'iron',
 					max = 42,
 					add = 6,
 					drop = 100
 				},
 				{
-					name = _U('m_gold'),
+					name = TranslateCap('m_gold'),
 					db_name = 'gold',
 					max = 21,
 					add = 3,
 					drop = 100
 				},
 				{
-					name = _U('m_diamond'),
+					name = TranslateCap('m_diamond'),
 					db_name = 'diamond',
 					max = 50,
 					add = 1,
 					drop = 5
 				}
 			},
-			Hint = _U('m_melt_button'),
+			Hint = TranslateCap('m_melt_button'),
 			GPS = {x = -169.48, y = -2659.16, z = 5.00}
 		},
 
@@ -132,10 +132,10 @@ Config.Jobs.miner = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('spawn_veh'),
+			Name = TranslateCap('spawn_veh'),
 			Type = 'vehspawner',
 			Spawner = 1,
-			Hint = _U('spawn_veh_button'),
+			Hint = TranslateCap('spawn_veh_button'),
 			Caution = 2000,
 			GPS = {x = 2962.40, y = 2746.20, z = 42.39}
 		},
@@ -145,7 +145,7 @@ Config.Jobs.miner = {
 			Size = {x = 5.0, y = 5.0, z = 1.0},
 			Marker = -1,
 			Blip = false,
-			Name = _U('service_vh'),
+			Name = TranslateCap('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
 			Heading = 90.1,
@@ -158,9 +158,9 @@ Config.Jobs.miner = {
 			Color = {r = 255, g = 0, b = 0},
 			Marker = 1,
 			Blip = false,
-			Name = _U('return_vh'),
+			Name = TranslateCap('return_vh'),
 			Type = 'vehdelete',
-			Hint = _U('return_vh_button'),
+			Hint = TranslateCap('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -173,22 +173,22 @@ Config.Jobs.miner = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_sell_copper'),
+			Name = TranslateCap('m_sell_copper'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 56, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 5,
 					requires = 'copper',
-					requires_name = _U('m_copper'),
+					requires_name = TranslateCap('m_copper'),
 					drop = 100
 				}
 			},
-			Hint = _U('m_deliver_copper'),
+			Hint = TranslateCap('m_deliver_copper'),
 			GPS = {x = -148.78, y = -1040.38, z = 26.27}
 		},
 
@@ -198,22 +198,22 @@ Config.Jobs.miner = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_sell_iron'),
+			Name = TranslateCap('m_sell_iron'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 42, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 9,
 					requires = 'iron',
-					requires_name = _U('m_iron'),
+					requires_name = TranslateCap('m_iron'),
 					drop = 100
 				}
 			},
-			Hint = _U('m_deliver_iron'),
+			Hint = TranslateCap('m_deliver_iron'),
 			GPS = {x = 261.48, y = 207.35, z = 109.28}
 		},
 
@@ -223,22 +223,22 @@ Config.Jobs.miner = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_sell_gold'),
+			Name = TranslateCap('m_sell_gold'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 21, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 25,
 					requires = 'gold',
-					requires_name = _U('m_gold'),
+					requires_name = TranslateCap('m_gold'),
 					drop = 100
 				}
 			},
-			Hint = _U('m_deliver_gold'),
+			Hint = TranslateCap('m_deliver_gold'),
 			GPS = {x = -621.04, y = -228.53, z = 37.05}
 		},
 
@@ -248,22 +248,22 @@ Config.Jobs.miner = {
 			Size = {x = 5.0, y = 5.0, z = 3.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('m_sell_diamond'),
+			Name = TranslateCap('m_sell_diamond'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 50, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 250,
 					requires = 'diamond',
-					requires_name = _U('m_diamond'),
+					requires_name = TranslateCap('m_diamond'),
 					drop = 100
 				}
 			},
-			Hint = _U('m_deliver_diamond'),
+			Hint = TranslateCap('m_deliver_diamond'),
 			GPS = {x = 2962.40, y = 2746.20, z = 42.39}
 		}
 

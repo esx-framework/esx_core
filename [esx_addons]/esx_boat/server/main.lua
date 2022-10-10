@@ -7,7 +7,7 @@ function ParkBoats()
 		['@type'] = 'boat'
 	}, function (rowsChanged)
 		if rowsChanged > 0 then
-			print(('esx_boat: %s boat(s) have been stored!'):format(rowsChanged))
+			print(('[^2INFO^7] Stored ^5%s^7 %s !'):format(rowsChanged, rowsChanged > 1 and 'boats' or 'boat'))
 		end
 	end)
 end
@@ -18,11 +18,11 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 
 	-- vehicle model not found
 	if price == 0 then
-		print(('esx_boat: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
+		print(('[^2INFO^7] Player ^5%s^7 Attempted To Exploit Shop'):format(xPlayer.source))
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then
-			xPlayer.removeMoney(price)
+			xPlayer.removeMoney(price, "Boat Purchase")
 
 			MySQL.update('INSERT INTO owned_vehicles (owner, plate, vehicle, type, `stored`) VALUES (@owner, @plate, @vehicle, @type, @stored)', {
 				['@owner']   = xPlayer.identifier,
@@ -49,7 +49,7 @@ AddEventHandler('esx_boat:takeOutVehicle', function(plate)
 		['@plate']  = plate
 	}, function(rowsChanged)
 		if rowsChanged == 0 then
-			print(('esx_boat: %s exploited the garage!'):format(xPlayer.identifier))
+			print(('[^2INFO^7] Player ^5%s^7 Attempted To Exploit Garage'):format(xPlayer.source))
 		end
 	end)
 end)
@@ -62,10 +62,6 @@ ESX.RegisterServerCallback('esx_boat:storeVehicle', function (source, cb, plate)
 		['@owner']  = xPlayer.identifier,
 		['@plate']  = plate
 	}, function(rowsChanged)
-		if rowsChanged == 0 then
-			print(('esx_boat: %s attempted to store an boat they don\'t own!'):format(xPlayer.identifier))
-		end
-
 		cb(rowsChanged)
 	end)
 end)
@@ -92,7 +88,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoatLicense', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.getMoney() >= Config.LicensePrice then
-		xPlayer.removeMoney(Config.LicensePrice)
+		xPlayer.removeMoney(Config.LicensePrice, "Boat License Purchase")
 
 		TriggerEvent('esx_license:addLicense', source, 'boat', function()
 			cb(true)

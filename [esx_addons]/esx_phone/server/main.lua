@@ -211,14 +211,14 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 	}, function(result)
 		if result[1] then
 			if phoneNumber == xPlayer.get('phoneNumber') then
-				TriggerClientEvent('esx:showNotification', playerId, _U('cannot_add_self'))
+				TriggerClientEvent('esx:showNotification', playerId, TranslateCap('cannot_add_self'))
 			else
 				local contacts  = xPlayer.get('contacts')
 
 				-- already added player?
 				for i=1, #contacts, 1 do
 					if contacts[i].number == phoneNumber then
-						TriggerClientEvent('esx:showNotification', playerId, _U('number_in_contacts'))
+						TriggerClientEvent('esx:showNotification', playerId, TranslateCap('number_in_contacts'))
 						return
 					end
 				end
@@ -239,12 +239,12 @@ AddEventHandler('esx_phone:addPlayerContact', function(phoneNumber, contactName)
 					['@name']       = contactName,
 					['@number']     = phoneNumber
 				}, function(rowsChanged)
-					TriggerClientEvent('esx:showNotification', playerId, _U('contact_added'))
+					TriggerClientEvent('esx:showNotification', playerId, TranslateCap('contact_added'))
 					TriggerClientEvent('esx_phone:addContact', playerId, contactName, phoneNumber, playerOnline)
 				end)
 			end
 		else
-			TriggerClientEvent('esx:showNotification', playerId, _U('number_not_assigned'))
+			TriggerClientEvent('esx:showNotification', playerId, TranslateCap('number_not_assigned'))
 		end
 	end)
 end)
@@ -278,11 +278,11 @@ AddEventHandler('esx_phone:removePlayerContact', function(phoneNumber, contactNa
 				['@name']       = contactName,
 				['@number']     = phoneNumber
 			}, function(rowsChanged)
-				TriggerClientEvent('esx:showNotification', playerId, _U('contact_removed'))
+				TriggerClientEvent('esx:showNotification', playerId, TranslateCap('contact_removed'))
 				TriggerClientEvent('esx_phone:removeContact', playerId, contactName, phoneNumber)
 			end)
 		else
-			TriggerClientEvent('esx:showNotification', playerId, _U('number_not_assigned'))
+			TriggerClientEvent('esx:showNotification', playerId, TranslateCap('number_not_assigned'))
 		end
 	end)
 end)

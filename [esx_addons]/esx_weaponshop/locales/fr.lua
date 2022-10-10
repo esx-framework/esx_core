@@ -1,4 +1,8 @@
 Locales ['fr'] = {
+  ["license_shop_title"] = "License Shop",
+  ["weapon_shop_menu_title"] = "Weapon Shop",
+  ["weapon_shop_menu_description"] = "Buy Weapons",
+  ["menu_cancel"] = "Cancel",
   ['buy_license'] = 'acheter une license?',
   ['yes'] = '%s',
   ['no'] = 'non',

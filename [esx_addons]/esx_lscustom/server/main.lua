@@ -15,20 +15,20 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 
 		if price < societyAccount.money then
 			TriggerClientEvent('esx_lscustom:installMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('purchased'))
 			societyAccount.removeMoney(price)
 		else
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('not_enough_money'))
 		end
 	else
 		if price < xPlayer.getMoney() then
 			TriggerClientEvent('esx_lscustom:installMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
-			xPlayer.removeMoney(price)
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('purchased'))
+			xPlayer.removeMoney(price, "LSC Purchase")
 		else
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('not_enough_money'))
 		end
 	end
 end)
@@ -45,7 +45,7 @@ AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 			if vehicleProps.model == vehicle.model then
 				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {json.encode(vehicleProps), vehicleProps.plate})
 			else
-				print(('esx_lscustom: %s attempted to upgrade vehicle with mismatching vehicle model!'):format(xPlayer.identifier))
+				print(('[^3WARNING^7] Player ^5%s^7 Attempted To upgrade with mismatching vehicle model'):format(xPlayer.source))
 			end
 		end
 	end)

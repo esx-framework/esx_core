@@ -52,7 +52,7 @@ ESX.RegisterServerCallback('esx_service:isInService', function(source, cb, name)
 			isInService = true
 		end
 	else
-		print(('[esx_service] [^3WARNING^7] A service "%s" is not activated'):format(name))
+		print(('[^3WARNING^7] Attempted To Use Inactive Service - ^5%s^7'):format(name))
 	end
 
 	cb(isInService)

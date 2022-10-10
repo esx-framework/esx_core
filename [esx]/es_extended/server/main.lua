@@ -72,7 +72,7 @@ function createESXPlayer(identifier, playerId, data)
   end
 
   if Core.IsPlayerAdmin(playerId) then
-    print(('^2[INFO] ^0 Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
+    print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
     defaultGroup = "admin"
   else
     defaultGroup = "user"
@@ -145,7 +145,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   if ESX.DoesJobExist(job, grade) then
     jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
   else
-    print(('[^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
+    print(('[^3WARNING^7] Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]'):format(identifier, job, grade))
     job, grade = 'unemployed', '0'
     jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
   end
@@ -180,7 +180,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         if item then
           foundItems[name] = count
         else
-          print(('[^3WARNING^7] Ignoring invalid item "%s" for "%s"'):format(name, identifier))
+          print(('[^3WARNING^7] Ignoring invalid item ^5"%s"^7 for ^5"%s^7"'):format(name, identifier))
         end
       end
     end
@@ -211,7 +211,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   if result.group then
     if result.group == "superadmin" then
       userData.group = "admin"
-      print("[^3WARNING^7] Superadmin detected, setting group to admin")
+      print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7")
     else
       userData.group = result.group
     end
@@ -298,8 +298,18 @@ function loadESXPlayer(identifier, playerId, isNew)
   TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
   xPlayer.triggerEvent('esx:playerLoaded',
-    {accounts = xPlayer.getAccounts(), coords = xPlayer.getCoords(), identifier = xPlayer.getIdentifier(), inventory = xPlayer.getInventory(),
-     job = xPlayer.getJob(), loadout = xPlayer.getLoadout(), maxWeight = xPlayer.getMaxWeight(), money = xPlayer.getMoney(), dead = false}, isNew,
+    {
+      accounts = xPlayer.getAccounts(), 
+      coords = xPlayer.getCoords(), 
+      identifier = xPlayer.getIdentifier(), 
+      inventory = xPlayer.getInventory(),
+      job = xPlayer.getJob(), 
+      loadout = xPlayer.getLoadout(), 
+      maxWeight = xPlayer.getMaxWeight(), 
+      money = xPlayer.getMoney(),
+      sex = xPlayer.get("sex") or "m",
+      dead = false
+    }, isNew,
     userData.skin)
 
   if not Config.OxInventory then
@@ -309,7 +319,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   end
 
   xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
-  print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
+  print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
 
 AddEventHandler('chatMessage', function(playerId, author, message)
@@ -317,7 +327,7 @@ AddEventHandler('chatMessage', function(playerId, author, message)
   if message:sub(1, 1) == '/' and playerId > 0 then
     CancelEvent()
     local commandName = message:sub(1):gmatch("%w+")()
-    xPlayer.showNotification(_U('commanderror_invalidcommand', commandName))
+    xPlayer.showNotification(TranslateCap('commanderror_invalidcommand', commandName))
   end
 end)
 
@@ -376,7 +386,7 @@ if not Config.OxInventory then
     local targetXPlayer = ESX.GetPlayerFromId(target)
     local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
     if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
-      print("[WARNING] Player Detected Cheating: " .. GetPlayerName(playerId))
+      print("[^3WARNING^7] Player Detected Cheating: ^5" .. GetPlayerName(playerId) .. "^7")
       return
     end
 
@@ -388,24 +398,24 @@ if not Config.OxInventory then
           sourceXPlayer.removeInventoryItem(itemName, itemCount)
           targetXPlayer.addInventoryItem(itemName, itemCount)
 
-          sourceXPlayer.showNotification(_U('gave_item', itemCount, sourceItem.label, targetXPlayer.name))
-          targetXPlayer.showNotification(_U('received_item', itemCount, sourceItem.label, sourceXPlayer.name))
+          sourceXPlayer.showNotification(TranslateCap('gave_item', itemCount, sourceItem.label, targetXPlayer.name))
+          targetXPlayer.showNotification(TranslateCap('received_item', itemCount, sourceItem.label, sourceXPlayer.name))
         else
-          sourceXPlayer.showNotification(_U('ex_inv_lim', targetXPlayer.name))
+          sourceXPlayer.showNotification(TranslateCap('ex_inv_lim', targetXPlayer.name))
         end
       else
-        sourceXPlayer.showNotification(_U('imp_invalid_quantity'))
+        sourceXPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
       end
     elseif type == 'item_account' then
       if itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
-        sourceXPlayer.removeAccountMoney(itemName, itemCount)
-        targetXPlayer.addAccountMoney(itemName, itemCount)
+        sourceXPlayer.removeAccountMoney(itemName, itemCount, "Gave to " .. targetXPlayer.name)
+        targetXPlayer.addAccountMoney(itemName, itemCount, "Received from " .. sourceXPlayer.name)
 
-        sourceXPlayer.showNotification(_U('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label, targetXPlayer.name))
-        targetXPlayer.showNotification(_U('received_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label,
+        sourceXPlayer.showNotification(TranslateCap('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label, targetXPlayer.name))
+        targetXPlayer.showNotification(TranslateCap('received_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label,
           sourceXPlayer.name))
       else
-        sourceXPlayer.showNotification(_U('imp_invalid_amount'))
+        sourceXPlayer.showNotification(TranslateCap('imp_invalid_amount'))
       end
     elseif type == 'item_weapon' then
       if sourceXPlayer.hasWeapon(itemName) then
@@ -429,15 +439,15 @@ if not Config.OxInventory then
 
           if weaponObject.ammo and itemCount > 0 then
             local ammoLabel = weaponObject.ammo.label
-            sourceXPlayer.showNotification(_U('gave_weapon_withammo', weaponLabel, itemCount, ammoLabel, targetXPlayer.name))
-            targetXPlayer.showNotification(_U('received_weapon_withammo', weaponLabel, itemCount, ammoLabel, sourceXPlayer.name))
+            sourceXPlayer.showNotification(TranslateCap('gave_weapon_withammo', weaponLabel, itemCount, ammoLabel, targetXPlayer.name))
+            targetXPlayer.showNotification(TranslateCap('received_weapon_withammo', weaponLabel, itemCount, ammoLabel, sourceXPlayer.name))
           else
-            sourceXPlayer.showNotification(_U('gave_weapon', weaponLabel, targetXPlayer.name))
-            targetXPlayer.showNotification(_U('received_weapon', weaponLabel, sourceXPlayer.name))
+            sourceXPlayer.showNotification(TranslateCap('gave_weapon', weaponLabel, targetXPlayer.name))
+            targetXPlayer.showNotification(TranslateCap('received_weapon', weaponLabel, sourceXPlayer.name))
           end
         else
-          sourceXPlayer.showNotification(_U('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
-          targetXPlayer.showNotification(_U('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
+          sourceXPlayer.showNotification(TranslateCap('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
+          targetXPlayer.showNotification(TranslateCap('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
         end
       end
     elseif type == 'item_ammo' then
@@ -454,13 +464,13 @@ if not Config.OxInventory then
               sourceXPlayer.removeWeaponAmmo(itemName, itemCount)
               targetXPlayer.addWeaponAmmo(itemName, itemCount)
 
-              sourceXPlayer.showNotification(_U('gave_weapon_ammo', itemCount, ammoLabel, weapon.label, targetXPlayer.name))
-              targetXPlayer.showNotification(_U('received_weapon_ammo', itemCount, ammoLabel, weapon.label, sourceXPlayer.name))
+              sourceXPlayer.showNotification(TranslateCap('gave_weapon_ammo', itemCount, ammoLabel, weapon.label, targetXPlayer.name))
+              targetXPlayer.showNotification(TranslateCap('received_weapon_ammo', itemCount, ammoLabel, weapon.label, sourceXPlayer.name))
             end
           end
         else
-          sourceXPlayer.showNotification(_U('gave_weapon_noweapon', targetXPlayer.name))
-          targetXPlayer.showNotification(_U('received_weapon_noweapon', sourceXPlayer.name, weapon.label))
+          sourceXPlayer.showNotification(TranslateCap('gave_weapon_noweapon', targetXPlayer.name))
+          targetXPlayer.showNotification(TranslateCap('received_weapon_noweapon', sourceXPlayer.name, weapon.label))
         end
       end
     end
@@ -473,32 +483,32 @@ if not Config.OxInventory then
 
     if type == 'item_standard' then
       if itemCount == nil or itemCount < 1 then
-        xPlayer.showNotification(_U('imp_invalid_quantity'))
+        xPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
       else
         local xItem = xPlayer.getInventoryItem(itemName)
 
         if (itemCount > xItem.count or xItem.count < 1) then
-          xPlayer.showNotification(_U('imp_invalid_quantity'))
+          xPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
         else
           xPlayer.removeInventoryItem(itemName, itemCount)
           local pickupLabel = ('%s [%s]'):format(xItem.label, itemCount)
           ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
-          xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
+          xPlayer.showNotification(TranslateCap('threw_standard', itemCount, xItem.label))
         end
       end
     elseif type == 'item_account' then
       if itemCount == nil or itemCount < 1 then
-        xPlayer.showNotification(_U('imp_invalid_amount'))
+        xPlayer.showNotification(TranslateCap('imp_invalid_amount'))
       else
         local account = xPlayer.getAccount(itemName)
 
         if (itemCount > account.money or account.money < 1) then
-          xPlayer.showNotification(_U('imp_invalid_amount'))
+          xPlayer.showNotification(TranslateCap('imp_invalid_amount'))
         else
-          xPlayer.removeAccountMoney(itemName, itemCount)
-          local pickupLabel = ('%s [%s]'):format(account.label, _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
+          xPlayer.removeAccountMoney(itemName, itemCount, "Threw away")
+          local pickupLabel = ('%s [%s]'):format(account.label, TranslateCap('locale_currency', ESX.Math.GroupDigits(itemCount)))
           ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
-          xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+          xPlayer.showNotification(TranslateCap('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
         end
       end
     elseif type == 'item_weapon' then
@@ -513,10 +523,10 @@ if not Config.OxInventory then
         if weaponObject.ammo and weapon.ammo > 0 then
           local ammoLabel = weaponObject.ammo.label
           pickupLabel = ('%s [%s %s]'):format(weapon.label, weapon.ammo, ammoLabel)
-          xPlayer.showNotification(_U('threw_weapon_ammo', weapon.label, weapon.ammo, ammoLabel))
+          xPlayer.showNotification(TranslateCap('threw_weapon_ammo', weapon.label, weapon.ammo, ammoLabel))
         else
           pickupLabel = ('%s'):format(weapon.label)
-          xPlayer.showNotification(_U('threw_weapon', weapon.label))
+          xPlayer.showNotification(TranslateCap('threw_weapon', weapon.label))
         end
 
         ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
@@ -533,7 +543,7 @@ if not Config.OxInventory then
     if count > 0 then
       ESX.UseItem(source, itemName)
     else
-      xPlayer.showNotification(_U('act_imp'))
+      xPlayer.showNotification(TranslateCap('act_imp'))
     end
   end)
 
@@ -547,14 +557,14 @@ if not Config.OxInventory then
           xPlayer.addInventoryItem(pickup.name, pickup.count)
           success = true
         else
-          xPlayer.showNotification(_U('threw_cannot_pickup'))
+          xPlayer.showNotification(TranslateCap('threw_cannot_pickup'))
         end
       elseif pickup.type == 'item_account' then
         success = true
-        xPlayer.addAccountMoney(pickup.name, pickup.count)
+        xPlayer.addAccountMoney(pickup.name, pickup.count, "Picked up")
       elseif pickup.type == 'item_weapon' then
         if xPlayer.hasWeapon(pickup.name) then
-          xPlayer.showNotification(_U('threw_weapon_already'))
+          xPlayer.showNotification(TranslateCap('threw_weapon_already'))
         else
           success = true
           xPlayer.addWeapon(pickup.name, pickup.count)
@@ -583,6 +593,10 @@ end)
 
 ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
   cb(Core.IsPlayerAdmin(source))
+end)
+
+ESX.RegisterServerCallback('esx:getGameBuild', function(source, cb)
+  cb(tonumber(GetConvar("sv_enforceGameBuild", 1604)))
 end)
 
 ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target)

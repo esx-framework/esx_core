@@ -14,7 +14,7 @@ AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impou
 		})
 
 		if stored then
-			xPlayer.showNotification(_U('veh_stored'))
+			xPlayer.showNotification(TranslateCap('veh_stored'))
 		end
 end)
 
@@ -32,7 +32,7 @@ AddEventHandler('esx_garage:setImpound', function(Impound, vehicleProps)
 			['@Impound']    	= Impound
 		})
 
-		xPlayer.showNotification(_U('veh_impounded'))
+		xPlayer.showNotification(TranslateCap('veh_impounded'))
 	
 end)
 
@@ -129,9 +129,9 @@ AddEventHandler("esx_garage:payPound", function(amount)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer.getMoney() >= amount then
-        xPlayer.removeMoney(amount)
-				xPlayer.showNotification(_U('pay_Impound_bill', amount))
+        xPlayer.removeMoney(amount, "Impound Fee")
+				xPlayer.showNotification(TranslateCap('pay_Impound_bill', amount))
     else
-		xPlayer.showNotification(_U('missing_money'))
+		xPlayer.showNotification(TranslateCap('missing_money'))
     end
 end)

@@ -28,12 +28,12 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 	amount = ESX.Math.Round(amount)
 
 	if amount < 0 then
-		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to exploit the shop!')
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to exploit the shop!'):format(source))
 		return
 	end
 
 	if not Exists then
-		print('esx_shops: ' .. xPlayer.identifier .. ' attempted to exploit the shop!')
+		print(('[^3WARNING^7] Player ^5%s^7 attempted to exploit the shop!'):format(source))
 		return
 	end
 
@@ -43,15 +43,15 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 		if xPlayer.getMoney() >= price then
 			-- can the player carry the said amount of x item?
 			if xPlayer.canCarryItem(itemName, amount) then
-				xPlayer.removeMoney(price)
+				xPlayer.removeMoney(price, label .. " Purchase")
 				xPlayer.addInventoryItem(itemName, amount)
-				xPlayer.showNotification(_U('bought', amount, label, ESX.Math.GroupDigits(price)))
+				xPlayer.showNotification(TranslateCap('bought', amount, label, ESX.Math.GroupDigits(price)))
 			else
-				xPlayer.showNotification(_U('player_cannot_hold'))
+				xPlayer.showNotification(TranslateCap('player_cannot_hold'))
 			end
 		else
 			local missingMoney = price - xPlayer.getMoney()
-			xPlayer.showNotification(_U('not_enough', ESX.Math.GroupDigits(missingMoney)))
+			xPlayer.showNotification(TranslateCap('not_enough', ESX.Math.GroupDigits(missingMoney)))
 		end
 	end
 end)

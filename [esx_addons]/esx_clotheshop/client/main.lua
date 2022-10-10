@@ -9,11 +9,11 @@ function OpenShopMenu()
 		menu.close()
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('valid_this_purchase'),
+			title = TranslateCap('valid_this_purchase'),
 			align = 'top-left',
 			elements = {
-				{label = _U('no'), value = 'no'},
-				{label = _U('yes'), value = 'yes'}
+				{label = TranslateCap('no'), value = 'no'},
+				{label = TranslateCap('yes'), value = 'yes'}
 		}}, function(data, menu)
 			menu.close()
 
@@ -29,23 +29,23 @@ function OpenShopMenu()
 						ESX.TriggerServerCallback('esx_clotheshop:checkPropertyDataStore', function(foundStore)
 							if foundStore then
 								ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'save_dressing', {
-									title = _U('save_in_dressing'),
+									title = TranslateCap('save_in_dressing'),
 									align = 'top-left',
 									elements = {
-										{label = _U('no'),  value = 'no'},
-										{label = _U('yes'), value = 'yes'}
+										{label = TranslateCap('no'),  value = 'no'},
+										{label = TranslateCap('yes'), value = 'yes'}
 								}}, function(data2, menu2)
 									menu2.close()
 
 									if data2.current.value == 'yes' then
 										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'outfit_name', {
-											title = _U('name_outfit')
+											title = TranslateCap('name_outfit')
 										}, function(data3, menu3)
 											menu3.close()
 
 											TriggerEvent('skinchanger:getSkin', function(skin)
 												TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
-												ESX.ShowNotification(_U('saved_outfit'))
+												ESX.ShowNotification(TranslateCap('saved_outfit'))
 											end)
 										end, function(data3, menu3)
 											menu3.close()
@@ -60,7 +60,7 @@ function OpenShopMenu()
 							TriggerEvent('skinchanger:loadSkin', skin)
 						end)
 
-						ESX.ShowNotification(_U('not_enough_money'))
+						ESX.ShowNotification(TranslateCap('not_enough_money'))
 					end
 				end)
 			elseif data.current.value == 'no' then
@@ -70,13 +70,13 @@ function OpenShopMenu()
 			end
 
 			currentAction     = 'shop_menu'
-			currentActionMsg  = _U('press_menu')
+			currentActionMsg  = TranslateCap('press_menu')
 			currentActionData = {}
 		end, function(data, menu)
 			menu.close()
 
 			currentAction     = 'shop_menu'
-			currentActionMsg  = _U('press_menu')
+			currentActionMsg  = TranslateCap('press_menu')
 			currentActionData = {}
 		end)
 
@@ -84,7 +84,7 @@ function OpenShopMenu()
 		menu.close()
 
 		currentAction     = 'shop_menu'
-		currentActionMsg  = _U('press_menu')
+		currentActionMsg  = TranslateCap('press_menu')
 		currentActionData = {}
 	end, {
 		'tshirt_1', 'tshirt_2',
@@ -102,7 +102,7 @@ end
 
 AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 	currentAction     = 'shop_menu'
-	currentActionMsg  = _U('press_menu')
+	currentActionMsg  = TranslateCap('press_menu')
 	currentActionData = {}
 end)
 
@@ -127,7 +127,7 @@ CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentSubstringPlayerName(_U('clothes'))
+		AddTextComponentSubstringPlayerName(TranslateCap('clothes'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)

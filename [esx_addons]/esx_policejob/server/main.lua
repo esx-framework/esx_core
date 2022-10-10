@@ -4,7 +4,7 @@ if Config.EnableESXService then
 	end
 end
 
-TriggerEvent('esx_phone:registerNumber', 'police', _U('alert_police'), true, true)
+TriggerEvent('esx_phone:registerNumber', 'police', TranslateCap('alert_police'), true, true)
 TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
 
 RegisterNetEvent('esx_policejob:confiscatePlayerItem')
@@ -14,7 +14,7 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 	local targetXPlayer = ESX.GetPlayerFromId(target)
 
 	if sourceXPlayer.job.name ~= 'police' then
-		print(('esx_policejob: %s attempted to confiscate!'):format(sourceXPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit The Confuscation System!'):format(sourceXPlayer.source))
 		return
 	end
 
@@ -29,13 +29,13 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 			if sourceXPlayer.canCarryItem(itemName, sourceItem.count) then
 				targetXPlayer.removeInventoryItem(itemName, amount)
 				sourceXPlayer.addInventoryItem   (itemName, amount)
-				sourceXPlayer.showNotification(_U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
-				targetXPlayer.showNotification(_U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
+				sourceXPlayer.showNotification(TranslateCap('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
+				targetXPlayer.showNotification(TranslateCap('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
 			else
-				sourceXPlayer.showNotification(_U('quantity_invalid'))
+				sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 			end
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_account' then
@@ -43,13 +43,13 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 
 		-- does the target player have enough money?
 		if targetAccount.money >= amount then
-			targetXPlayer.removeAccountMoney(itemName, amount)
-			sourceXPlayer.addAccountMoney   (itemName, amount)
+			targetXPlayer.removeAccountMoney(itemName, amount, "Confiscated")
+			sourceXPlayer.addAccountMoney   (itemName, amount, "Confiscated")
 
-			sourceXPlayer.showNotification(_U('you_confiscated_account', amount, itemName, targetXPlayer.name))
-			targetXPlayer.showNotification(_U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
+			sourceXPlayer.showNotification(TranslateCap('you_confiscated_account', amount, itemName, targetXPlayer.name))
+			targetXPlayer.showNotification(TranslateCap('got_confiscated_account', amount, itemName, sourceXPlayer.name))
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_weapon' then
@@ -60,10 +60,10 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 			targetXPlayer.removeWeapon(itemName)
 			sourceXPlayer.addWeapon   (itemName, amount)
 
-			sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
-			targetXPlayer.showNotification(_U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
+			sourceXPlayer.showNotification(TranslateCap('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
+			targetXPlayer.showNotification(TranslateCap('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end
 end)
@@ -75,7 +75,7 @@ AddEventHandler('esx_policejob:handcuff', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:handcuff', target)
 	else
-		print(('esx_policejob: %s attempted to handcuff a player (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Handcuffs!'):format(xPlayer.source))
 	end
 end)
 
@@ -86,7 +86,7 @@ AddEventHandler('esx_policejob:drag', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:drag', target, source)
 	else
-		print(('esx_policejob: %s attempted to drag (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Dragging!'):format(xPlayer.source))
 	end
 end)
 
@@ -97,7 +97,7 @@ AddEventHandler('esx_policejob:putInVehicle', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:putInVehicle', target)
 	else
-		print(('esx_policejob: %s attempted to put in vehicle (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Garage!'):format(xPlayer.source))
 	end
 end)
 
@@ -108,7 +108,7 @@ AddEventHandler('esx_policejob:OutVehicle', function(target)
 	if xPlayer.job.name == 'police' then
 		TriggerClientEvent('esx_policejob:OutVehicle', target)
 	else
-		print(('esx_policejob: %s attempted to drag out from vehicle (not cop)!'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit Dragging Out Of Vehicle!'):format(xPlayer.source))
 	end
 end)
 
@@ -127,12 +127,12 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.name))
+				xPlayer.showNotification(TranslateCap('have_withdrawn', count, inventoryItem.name))
 			else
-				xPlayer.showNotification(_U('quantity_invalid'))
+				xPlayer.showNotification(TranslateCap('quantity_invalid'))
 			end
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end)
 end)
@@ -149,9 +149,9 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.name))
+			xPlayer.showNotification(TranslateCap('have_deposited', count, inventoryItem.name))
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end)
 end)
@@ -160,7 +160,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if notify then
-		xPlayer.showNotification(_U('being_searched'))
+		xPlayer.showNotification(TranslateCap('being_searched'))
 	end
 
 	if xPlayer then
@@ -314,13 +314,13 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 	end
 
 	if not selectedWeapon then
-		print(('esx_policejob: %s attempted to buy an invalid weapon.'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Weapon - ^5%s^7!'):format(source, weaponName))
 		cb(false)
 	else
 		-- Weapon
 		if type == 1 then
 			if xPlayer.getMoney() >= selectedWeapon.price then
-				xPlayer.removeMoney(selectedWeapon.price)
+				xPlayer.removeMoney(selectedWeapon.price, "Weapon Bought")
 				xPlayer.addWeapon(weaponName, 100)
 
 				cb(true)
@@ -336,7 +336,7 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 
 			if component then
 				if xPlayer.getMoney() >= price then
-					xPlayer.removeMoney(price)
+					xPlayer.removeMoney(price, "Weapon Component Bought")
 					xPlayer.addWeaponComponent(weaponName, component.name)
 
 					cb(true)
@@ -344,7 +344,7 @@ ESX.RegisterServerCallback('esx_policejob:buyWeapon', function(source, cb, weapo
 					cb(false)
 				end
 			else
-				print(('esx_policejob: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
+				print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Weapon Component - ^5%s^7!'):format(source, componentNum))
 				cb(false)
 			end
 		end
@@ -357,11 +357,11 @@ ESX.RegisterServerCallback('esx_policejob:buyJobVehicle', function(source, cb, v
 
 	-- vehicle model not found
 	if price == 0 then
-		print(('esx_policejob: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Buy Invalid Vehicle - ^5%s^7!'):format(source, vehicleProps.model))
 		cb(false)
 	else
 		if xPlayer.getMoney() >= price then
-			xPlayer.removeMoney(price)
+			xPlayer.removeMoney(price, "Job Vehicle Bought")
 
 			MySQL.insert('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (?, ?, ?, ?, ?, ?)', { xPlayer.identifier, json.encode(vehicleProps), vehicleProps.plate, type, xPlayer.job.name, true},
 			function (rowsChanged)

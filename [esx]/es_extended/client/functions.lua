@@ -84,20 +84,19 @@ function ESX.Progressbar(message, length, Options)
 end
 
 function ESX.ShowNotification(message, type, length)
-    if Config.NativeNotify then
-        BeginTextCommandThefeedPost('STRING')
-        AddTextComponentSubstringPlayerName(message)
-        EndTextCommandThefeedPostTicker(0, 1)
-    else
+    if GetResourceState("esx_notify") ~= "missing" then
         exports["esx_notify"]:Notify(type, length, message)
+        else
+            print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
+        end
     end
-end
-
+    
+    
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:TextUI(message, type)
     else 
-        print("[ERROR] Missing ESX TextUI!")
+        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
         return
     end
 end
@@ -106,7 +105,7 @@ function ESX.HideUI()
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:HideUI()
     else 
-        print("[ERROR] Missing ESX TextUI!")
+        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
         return
     end
 end
@@ -169,17 +168,25 @@ if GetResourceState("esx_context") ~= "missing" then
     function ESX.CloseContext(...)
         exports["esx_context"]:Close(...)
     end
+
+    function ESX.RefreshContext(...)
+       exports["esx_context"]:Refresh(...) 
+    end
 else 
     function ESX.OpenContext()
-        print("[ERROR] Tried to open context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
 
     function ESX.PreviewContext()
-        print("[ERROR] Tried to preview context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
     end
 
     function ESX.CloseContext()
-        print("[ERROR] Tried to close context menu, but esx_context is missing!")
+        print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
+    end
+
+    function ESX.RefreshContext()
+        print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
     end
 end
 
@@ -194,9 +201,10 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
 end
 
 function ESX.TriggerServerCallback(name, cb, ...)
+    local Invoke = GetInvokingResource() or "unknown"
     Core.ServerCallbacks[Core.CurrentRequestId] = cb
 
-    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
+    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId,Invoke, ...)
     Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
@@ -483,57 +491,33 @@ function ESX.Game.DeleteObject(object)
 end
 
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
+    local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
-    if networked then 
-        local isAutomobile = IsThisModelACar(model)
-        if isAutomobile ~= false then isAutomobile = true end
-        ESX.TriggerServerCallback('esx:Onesync:SpawnVehicle',function(NetID)
-            print("Spawned Vehicle: " .. NetID)
-            if NetID then
-                local vehicle = NetworkGetEntityFromNetworkId(NetID)
-                while not DoesEntityExist(vehicle) and not NetworkHasControlOfEntity(vehicle) do
-                    vehicle = NetworkGetEntityFromNetworkId(NetID)
-                    NetworkRequestControlOfEntity(vehicle)
-                    Wait(0)
-                end
-                SetEntityAsMissionEntity(vehicle, true, true)
-                SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-                SetVehicleNeedsToBeHotwired(vehicle, false)
-                SetModelAsNoLongerNeeded(model)
-                SetVehRadioStation(vehicle, 'OFF')
-                if cb then
-                    cb(vehicle)
-                end
-            end
-        end, model, vector, heading, isAutomobile)
-    else 
-        CreateThread(function()
-            ESX.Streaming.RequestModel(model)
+    CreateThread(function()
+        ESX.Streaming.RequestModel(model)
 
-            local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
+        local vehicle = CreateVehicle(model, vector.xyz, heading, networked, true)
 
-            if networked then
-                local id = NetworkGetNetworkIdFromEntity(vehicle)
-                SetNetworkIdCanMigrate(id, true)
-                SetEntityAsMissionEntity(vehicle, true, false)
-            end
-            SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-            SetVehicleNeedsToBeHotwired(vehicle, false)
-            SetModelAsNoLongerNeeded(model)
-            SetVehRadioStation(vehicle, 'OFF')
+        if networked then
+            local id = NetworkGetNetworkIdFromEntity(vehicle)
+            SetNetworkIdCanMigrate(id, true)
+            SetEntityAsMissionEntity(vehicle, true, true)
+        end
+        SetVehicleHasBeenOwnedByPlayer(vehicle, true)
+        SetVehicleNeedsToBeHotwired(vehicle, false)
+        SetModelAsNoLongerNeeded(model)
+        SetVehRadioStation(vehicle, 'OFF')
 
-            RequestCollisionAtCoord(vector.xyz)
-            while not HasCollisionLoadedAroundEntity(vehicle) do
-                Wait(0)
-            end
+        RequestCollisionAtCoord(vector.xyz)
+        while not HasCollisionLoadedAroundEntity(vehicle) do
+            Wait(0)
+        end
 
-            if cb then
-                cb(vehicle)
-            end
-        end)
-    end
+        if cb then
+            cb(vehicle)
+        end
+    end)
 end
 
 function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
@@ -692,6 +676,12 @@ function ESX.Game.GetVehicleProperties(vehicle)
             customPrimaryColor = {r, g, b}
         end
 
+        local customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
+        local customXenonColor = nil
+        if customXenonColorR and customXenonColorG and customXenonColorB then 
+            customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
+        end
+        
         local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
         local customSecondaryColor = nil
         if hasCustomSecondaryColor then
@@ -771,6 +761,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
             wheels = GetVehicleWheelType(vehicle),
             windowTint = GetVehicleWindowTint(vehicle),
             xenonColor = GetVehicleXenonLightsColor(vehicle),
+            customXenonColor = customXenonColor,
 
             neonEnabled = {IsVehicleNeonLightEnabled(vehicle, 0), IsVehicleNeonLightEnabled(vehicle, 1),
                            IsVehicleNeonLightEnabled(vehicle, 2), IsVehicleNeonLightEnabled(vehicle, 3)},
@@ -911,6 +902,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         end
         if props.xenonColor then
             SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        end
+        if props.customXenonColor then
+            SetVehicleXenonLightsCustomColor(vehicle, props.customXenonColor[1], props.customXenonColor[2],
+                props.customXenonColor[3])
         end
         if props.modSmokeEnabled then
             ToggleVehicleMod(vehicle, 20, true)
@@ -1114,7 +1109,7 @@ function ESX.ShowInventory()
 
     for i=1, #(ESX.PlayerData.accounts) do
         if ESX.PlayerData.accounts[i].money > 0 then
-            local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+            local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
             table.insert(elements, {
@@ -1174,7 +1169,7 @@ function ESX.ShowInventory()
     ESX.UI.Menu.CloseAll()
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory', {
-        title = _U('inventory', currentWeight, ESX.PlayerData.maxWeight),
+        title = TranslateCap('inventory', currentWeight, ESX.PlayerData.maxWeight),
         align = 'bottom-right',
         elements = elements
     }, function(data, menu)
@@ -1184,7 +1179,7 @@ function ESX.ShowInventory()
 
         if data.current.usable then
             table.insert(elements, {
-                label = _U('use'),
+                label = TranslateCap('use'),
                 action = 'use',
                 type = data.current.type,
                 value = data.current.value
@@ -1194,7 +1189,7 @@ function ESX.ShowInventory()
         if data.current.canRemove then
             if player ~= -1 and distance <= 3.0 then
                 table.insert(elements, {
-                    label = _U('give'),
+                    label = TranslateCap('give'),
                     action = 'give',
                     type = data.current.type,
                     value = data.current.value
@@ -1202,7 +1197,7 @@ function ESX.ShowInventory()
             end
 
             table.insert(elements, {
-                label = _U('remove'),
+                label = TranslateCap('remove'),
                 action = 'remove',
                 type = data.current.type,
                 value = data.current.value
@@ -1212,7 +1207,7 @@ function ESX.ShowInventory()
         if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and
             distance <= 3.0 then
             table.insert(elements, {
-                label = _U('giveammo'),
+                label = TranslateCap('giveammo'),
                 action = 'give_ammo',
                 type = data.current.type,
                 value = data.current.value
@@ -1220,7 +1215,7 @@ function ESX.ShowInventory()
         end
 
         table.insert(elements, {
-            label = _U('return'),
+            label = TranslateCap('return'),
             action = 'return'
         })
 
@@ -1251,7 +1246,7 @@ function ESX.ShowInventory()
                         end
 
                         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
-                            title = _U('give_to'),
+                            title = TranslateCap('give_to'),
                             align = 'bottom-right',
                             elements = elements
                         }, function(data2, menu2)
@@ -1271,7 +1266,7 @@ function ESX.ShowInventory()
                                     else
                                         ESX.UI.Menu.Open('dialog', GetCurrentResourceName(),
                                             'inventory_item_count_give', {
-                                                title = _U('amount')
+                                                title = TranslateCap('amount')
                                             }, function(data3, menu3)
                                                 local quantity = tonumber(data3.value)
 
@@ -1282,17 +1277,17 @@ function ESX.ShowInventory()
                                                     menu2.close()
                                                     menu1.close()
                                                 else
-                                                    ESX.ShowNotification(_U('amount_invalid'))
+                                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
                                                 end
                                             end, function(data3, menu3)
                                                 menu3.close()
                                             end)
                                     end
                                 else
-                                    ESX.ShowNotification(_U('in_vehicle'))
+                                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                                 end
                             else
-                                ESX.ShowNotification(_U('players_nearby'))
+                                ESX.ShowNotification(TranslateCap('players_nearby'))
                                 menu2.close()
                             end
                         end, function(data2, menu2)
@@ -1300,7 +1295,7 @@ function ESX.ShowInventory()
                         end)
                     end, players)
                 else
-                    ESX.ShowNotification(_U('players_nearby'))
+                    ESX.ShowNotification(TranslateCap('players_nearby'))
                 end
             elseif data1.current.action == 'remove' then
                 if IsPedOnFoot(playerPed) and not IsPedFalling(playerPed) then
@@ -1315,7 +1310,7 @@ function ESX.ShowInventory()
                         TriggerServerEvent('esx:removeInventoryItem', type, item)
                     else
                         ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
-                            title = _U('amount')
+                            title = TranslateCap('amount')
                         }, function(data2, menu2)
                             local quantity = tonumber(data2.value)
 
@@ -1327,7 +1322,7 @@ function ESX.ShowInventory()
                                 Wait(1000)
                                 TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
                             else
-                                ESX.ShowNotification(_U('amount_invalid'))
+                                ESX.ShowNotification(TranslateCap('amount_invalid'))
                             end
                         end, function(data2, menu2)
                             menu2.close()
@@ -1348,7 +1343,7 @@ function ESX.ShowInventory()
                     if closestPlayer ~= -1 and closestDistance < 3.0 then
                         if pedAmmo > 0 then
                             ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
-                                title = _U('amountammo')
+                                title = TranslateCap('amountammo')
                             }, function(data2, menu2)
                                 local quantity = tonumber(data2.value)
 
@@ -1359,22 +1354,22 @@ function ESX.ShowInventory()
                                         menu2.close()
                                         menu1.close()
                                     else
-                                        ESX.ShowNotification(_U('noammo'))
+                                        ESX.ShowNotification(TranslateCap('noammo'))
                                     end
                                 else
-                                    ESX.ShowNotification(_U('amount_invalid'))
+                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
                                 end
                             end, function(data2, menu2)
                                 menu2.close()
                             end)
                         else
-                            ESX.ShowNotification(_U('noammo'))
+                            ESX.ShowNotification(TranslateCap('noammo'))
                         end
                     else
-                        ESX.ShowNotification(_U('players_nearby'))
+                        ESX.ShowNotification(TranslateCap('players_nearby'))
                     end
                 else
-                    ESX.ShowNotification(_U('in_vehicle'))
+                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                 end
             end
         end, function(data1, menu1)
