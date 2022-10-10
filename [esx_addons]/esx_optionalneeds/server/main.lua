@@ -6,6 +6,6 @@ ESX.RegisterUsableItem('beer', function(source)
 
 	TriggerClientEvent('esx_status:add', source, 'drunk', 250000)
 	TriggerClientEvent('esx_optionalneeds:onDrink', source)
-	TriggerClientEvent('esx:showNotification', source, _U('used_beer'))
+	TriggerClientEvent('esx:showNotification', source, TranslateCap('used_beer'))
 
 end)

@@ -51,7 +51,7 @@ TriggerServerEvent('esx_phone:registerNumber', number, type, sharePos, hasDispat
 
 example
 
-TriggerEvent('esx_phone:registerNumber', 'ambulance', _U('alert_ambulance'), true, true)
+TriggerEvent('esx_phone:registerNumber', 'ambulance', TranslateCap('alert_ambulance'), true, true)
 
 last two booleans are optional
 ```

@@ -107,7 +107,7 @@ RegisterNUICallback('add_contact', function(data, cb)
 	if phoneNumber then
 		TriggerServerEvent('esx_phone:addPlayerContact', phoneNumber, contactName)
 	else
-		ESX.ShowNotification(_U('invalid_number'))
+		ESX.ShowNotification(TranslateCap('invalid_number'))
 	end
 end)
 
@@ -131,7 +131,7 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 	end
 
 	if job == 'player' then
-		ESX.ShowNotification(_U('new_message', message))
+		ESX.ShowNotification(TranslateCap('new_message', message))
 	else
 		ESX.ShowNotification(('%s: %s'):format(job, message))
 	end
@@ -149,7 +149,7 @@ AddEventHandler('esx_phone:onMessage', function(phoneNumber, message, position, 
 
 	if dispatchRequestId then
 		CurrentAction            = 'dispatch'
-		CurrentActionMsg         = _U('press_take_call', job)
+		CurrentActionMsg         = TranslateCap('press_take_call', job)
 		CurrentDispatchRequestId = dispatchRequestId
 
 		CurrentActionData = {
@@ -171,7 +171,7 @@ RegisterNetEvent('esx_phone:stopDispatch')
 AddEventHandler('esx_phone:stopDispatch', function(dispatchRequestId, playerName)
 	if CurrentDispatchRequestId == dispatchRequestId and CurrentAction == 'dispatch' then
 		CurrentAction = nil
-		ESX.ShowNotification(_U('taken_call', playerName))
+		ESX.ShowNotification(TranslateCap('taken_call', playerName))
 	end
 end)
 
@@ -186,7 +186,7 @@ end)
 
 RegisterNUICallback('setGPS', function(data)
 	SetNewWaypoint(data.x,  data.y)
-	ESX.ShowNotification(_U('gps_position'))
+	ESX.ShowNotification(TranslateCap('gps_position'))
 end)
 
 RegisterNUICallback('send', function(data)
@@ -208,7 +208,7 @@ RegisterNUICallback('send', function(data)
 		showMessageEditor = false
 	})
 
-	ESX.ShowNotification(_U('message_sent'))
+	ESX.ShowNotification(TranslateCap('message_sent'))
 end)
 
 RegisterNUICallback('escape', function()

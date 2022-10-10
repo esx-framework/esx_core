@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Marker = {
 	r = 250, g = 0, b = 0, a = 100,  -- red color

@@ -3,7 +3,7 @@ local menuIsShowed, TextUIdrawing = false, false
 function ShowJobListingMenu()
   menuIsShowed = true
   ESX.TriggerServerCallback('esx_joblisting:getJobsList', function(jobs)
-    local elements = {{unselectable = "true", title = _U('job_center'), icon = "fas fa-briefcase"}}
+    local elements = {{unselectable = "true", title = TranslateCap('job_center'), icon = "fas fa-briefcase"}}
 
     for i = 1, #(jobs) do
       elements[#elements + 1] = {title = jobs[i].label, name = jobs[i].name}
@@ -12,7 +12,7 @@ function ShowJobListingMenu()
     ESX.OpenContext("right", elements, function(menu, SelectJob)
       TriggerServerEvent('esx_joblisting:setJob', SelectJob.name)
       ESX.CloseContext()
-      ESX.ShowNotification(_U('new_job', SelectJob.title), "success")
+      ESX.ShowNotification(TranslateCap('new_job', SelectJob.title), "success")
       menuIsShowed = false
       TextUIdrawing = false
     end, function()
@@ -42,7 +42,7 @@ CreateThread(function()
       if distance < (Config.ZoneSize.x / 2) then
         isInMarker = true
         if not TextUIdrawing then
-          ESX.TextUI(_U("access_job_center"))
+          ESX.TextUI(TranslateCap("access_job_center"))
           TextUIdrawing = true
         end
         if IsControlJustReleased(0, 38) and not menuIsShowed then
@@ -74,7 +74,7 @@ if Config.Blip.Enabled then
       SetBlipAsShortRange(blip, Config.Blip.ShortRange)
 
       BeginTextCommandSetBlipName("STRING")
-      AddTextComponentSubstringPlayerName(_U('blip_text'))
+      AddTextComponentSubstringPlayerName(TranslateCap('blip_text'))
       EndTextCommandSetBlipName(blip)
     end
   end)

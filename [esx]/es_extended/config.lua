@@ -1,17 +1,17 @@
 Config = {}
-Config.Locale = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Accounts = {
 	bank = {
-		label = _U('account_bank'),
+		label = TranslateCap('account_bank'),
 		round = true
 	},
 	black_money = {
-		label = _U('account_black_money'),
+		label = TranslateCap('account_black_money'),
 		round = true
 	},
 	money = {
-		label = _U('account_money'),
+		label = TranslateCap('account_money'),
 		round = true
 	}
 }

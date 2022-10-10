@@ -11,16 +11,16 @@ end)
 
 
 function OpenAmbulanceActionsMenu()
-	local elements = {{label = _U('cloakroom'), value = 'cloakroom'}}
+	local elements = {{label = TranslateCap('cloakroom'), value = 'cloakroom'}}
 
 	if Config.EnablePlayerManagement and ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
+		table.insert(elements, {label = TranslateCap('boss_actions'), value = 'boss_actions'})
 	end
 
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'ambulance_actions', {
-		title    = _U('ambulance'),
+		title    = TranslateCap('ambulance'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -40,21 +40,21 @@ function OpenMobileAmbulanceActionsMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mobile_ambulance_actions', {
-		title    = _U('ambulance'),
+		title    = TranslateCap('ambulance'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('ems_menu'), value = 'citizen_interaction'}
+			{label = TranslateCap('ems_menu'), value = 'citizen_interaction'}
 	}}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
-				title    = _U('ems_menu_title'),
+				title    = TranslateCap('ems_menu_title'),
 				align    = 'top-left',
 				elements = {
-					{label = _U('ems_menu_revive'), value = 'revive'},
-					{label = _U('ems_menu_small'), value = 'small'},
-					{label = _U('ems_menu_big'), value = 'big'},
-					{label = _U('ems_menu_putincar'), value = 'put_in_vehicle'},
-					{label = _U('ems_menu_search'), value = 'search'}
+					{label = TranslateCap('ems_menu_revive'), value = 'revive'},
+					{label = TranslateCap('ems_menu_small'), value = 'small'},
+					{label = TranslateCap('ems_menu_big'), value = 'big'},
+					{label = TranslateCap('ems_menu_putincar'), value = 'put_in_vehicle'},
+					{label = TranslateCap('ems_menu_search'), value = 'search'}
 			}}, function(data, menu)
 				if isBusy then return end
 
@@ -63,7 +63,7 @@ function OpenMobileAmbulanceActionsMenu()
 				if data.current.value == 'search' then
 					TriggerServerEvent('esx_ambulancejob:svsearch')
 				elseif closestPlayer == -1 or closestDistance > 1.0 then
-					ESX.ShowNotification(_U('no_players'))
+					ESX.ShowNotification(TranslateCap('no_players'))
 				else
 					if data.current.value == 'revive' then
 						revivePlayer(closestPlayer)
@@ -77,20 +77,20 @@ function OpenMobileAmbulanceActionsMenu()
 									local playerPed = PlayerPedId()
 
 									isBusy = true
-									ESX.ShowNotification(_U('heal_inprogress'))
+									ESX.ShowNotification(TranslateCap('heal_inprogress'))
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 									Wait(10000)
 									ClearPedTasks(playerPed)
 
 									TriggerServerEvent('esx_ambulancejob:removeItem', 'bandage')
 									TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'small')
-									ESX.ShowNotification(_U('heal_complete', GetPlayerName(closestPlayer)))
+									ESX.ShowNotification(TranslateCap('heal_complete', GetPlayerName(closestPlayer)))
 									isBusy = false
 								else
-									ESX.ShowNotification(_U('player_not_conscious'))
+									ESX.ShowNotification(TranslateCap('player_not_conscious'))
 								end
 							else
-								ESX.ShowNotification(_U('not_enough_bandage'))
+								ESX.ShowNotification(TranslateCap('not_enough_bandage'))
 							end
 						end, 'bandage')
 
@@ -105,20 +105,20 @@ function OpenMobileAmbulanceActionsMenu()
 									local playerPed = PlayerPedId()
 
 									isBusy = true
-									ESX.ShowNotification(_U('heal_inprogress'))
+									ESX.ShowNotification(TranslateCap('heal_inprogress'))
 									TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 									Wait(10000)
 									ClearPedTasks(playerPed)
 
 									TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
 									TriggerServerEvent('esx_ambulancejob:heal', GetPlayerServerId(closestPlayer), 'big')
-									ESX.ShowNotification(_U('heal_complete', GetPlayerName(closestPlayer)))
+									ESX.ShowNotification(TranslateCap('heal_complete', GetPlayerName(closestPlayer)))
 									isBusy = false
 								else
-									ESX.ShowNotification(_U('player_not_conscious'))
+									ESX.ShowNotification(TranslateCap('player_not_conscious'))
 								end
 							else
-								ESX.ShowNotification(_U('not_enough_medikit'))
+								ESX.ShowNotification(TranslateCap('not_enough_medikit'))
 							end
 						end, 'medikit')
 
@@ -146,7 +146,7 @@ function revivePlayer(closestPlayer)
 			if IsPedDeadOrDying(closestPlayerPed, 1) then
 				local playerPed = PlayerPedId()
 				local lib, anim = 'mini@cpr@char_a@cpr_str', 'cpr_pumpchest'
-				ESX.ShowNotification(_U('revive_inprogress'))
+				ESX.ShowNotification(TranslateCap('revive_inprogress'))
 
 				for i=1, 15 do
 					Wait(900)
@@ -160,10 +160,10 @@ function revivePlayer(closestPlayer)
 				TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
 				TriggerServerEvent('esx_ambulancejob:revive', GetPlayerServerId(closestPlayer))
 			else
-				ESX.ShowNotification(_U('player_not_unconscious'))
+				ESX.ShowNotification(TranslateCap('player_not_unconscious'))
 			end
 		else
-			ESX.ShowNotification(_U('not_enough_medikit'))
+			ESX.ShowNotification(TranslateCap('not_enough_medikit'))
 		end
 		isBusy = false
 	end, 'medikit')
@@ -301,19 +301,19 @@ end)
 AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, partNum)
 	if part == 'AmbulanceActions' then
 		CurrentAction = part
-		CurrentActionMsg = _U('actions_prompt')
+		CurrentActionMsg = TranslateCap('actions_prompt')
 		CurrentActionData = {}
 	elseif part == 'Pharmacy' then
 		CurrentAction = part
-		CurrentActionMsg = _U('open_pharmacy')
+		CurrentActionMsg = TranslateCap('open_pharmacy')
 		CurrentActionData = {}
 	elseif part == 'Vehicles' then
 		CurrentAction = part
-		CurrentActionMsg = _U('garage_prompt')
+		CurrentActionMsg = TranslateCap('garage_prompt')
 		CurrentActionData = {hospital = hospital, partNum = partNum}
 	elseif part == 'Helicopters' then
 		CurrentAction = part
-		CurrentActionMsg = _U('helicopter_prompt')
+		CurrentActionMsg = TranslateCap('helicopter_prompt')
 		CurrentActionData = {hospital = hospital, partNum = partNum}
 	elseif part == 'FastTravelsPrompt' then
 		local travelItem = Config.Hospitals[hospital][part][partNum]
@@ -412,11 +412,11 @@ end)
 
 function OpenCloakroomMenu()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom', {
-		title    = _U('cloakroom'),
+		title    = TranslateCap('cloakroom'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('ems_clothes_civil'), value = 'citizen_wear'},
-			{label = _U('ems_clothes_ems'), value = 'ambulance_wear'},
+			{label = TranslateCap('ems_clothes_civil'), value = 'citizen_wear'},
+			{label = TranslateCap('ems_clothes_ems'), value = 'ambulance_wear'},
 	}}, function(data, menu)
 		if data.current.value == 'citizen_wear' then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -461,11 +461,11 @@ function OpenPharmacyMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pharmacy', {
-		title    = _U('pharmacy_menu_title'),
+		title    = TranslateCap('pharmacy_menu_title'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('pharmacy_take', _U('medikit')), item = 'medikit', type = 'slider', value = 1, min = 1, max = 100},
-			{label = _U('pharmacy_take', _U('bandage')), item = 'bandage', type = 'slider', value = 1, min = 1, max = 100}
+			{label = TranslateCap('pharmacy_take', TranslateCap('medikit')), item = 'medikit', type = 'slider', value = 1, min = 1, max = 100},
+			{label = TranslateCap('pharmacy_take', TranslateCap('bandage')), item = 'bandage', type = 'slider', value = 1, min = 1, max = 100}
 	}}, function(data, menu)
 		if Config.Debug then 
 			print("[^2INFO^7] Attempting to Give Item - ^5" .. tostring(data.current.item) .. "^7")
@@ -493,7 +493,7 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 		print("[^2INFO^7] Healing Player - ^5" .. tostring(healType).. "^7")
 	end
 	if not quiet then
-		ESX.ShowNotification(_U('healed'))
+		ESX.ShowNotification(TranslateCap('healed'))
 	end
 end)
 
@@ -560,7 +560,7 @@ AddEventHandler('esx_ambulancejob:setDeadPlayers', function(_deadPlayers)
 				SetBlipCategory(blip, 7)
 
 				BeginTextCommandSetBlipName('STRING')
-				AddTextComponentSubstringPlayerName(_U('blip_dead'))
+				AddTextComponentSubstringPlayerName(TranslateCap('blip_dead'))
 				EndTextCommandSetBlipName(blip)
 
 				deadPlayerBlips[playerId] = blip
@@ -590,7 +590,7 @@ AddEventHandler('esx_ambulancejob:PlayerDistressed', function(Player)
 				SetBlipFlashes(blip, true)
 
 				BeginTextCommandSetBlipName('STRING')
-				AddTextComponentSubstringPlayerName(_U('blip_dead'))
+				AddTextComponentSubstringPlayerName(TranslateCap('blip_dead'))
 				EndTextCommandSetBlipName(blip)
 
 				deadPlayerBlips[Player] = blip

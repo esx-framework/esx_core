@@ -89,40 +89,40 @@ if Config.Furniture.Enabled then
       PushScaleformMovieFunctionParameterInt(1)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.MinusX, true))
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.PlusX, true))
-      InstructionButtonMessage(_U("rot_left_right"))
+      InstructionButtonMessage(TranslateCap("rot_left_right"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
       PushScaleformMovieFunctionParameterInt(3)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.MinusY, true))
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.PlusY, true))
-      InstructionButtonMessage(_U("rot_up_down"))
+      InstructionButtonMessage(TranslateCap("rot_up_down"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
       PushScaleformMovieFunctionParameterInt(5)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.Up, true))
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.Down, true))
-      InstructionButtonMessage(_U("Height"))
+      InstructionButtonMessage(TranslateCap("Height"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
       PushScaleformMovieFunctionParameterInt(7)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.RotateLeft, true))
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.RotateRight, true))
-      InstructionButtonMessage(_U("Rotation"))
+      InstructionButtonMessage(TranslateCap("Rotation"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
       PushScaleformMovieFunctionParameterInt(9)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.Confirm, true))
-      InstructionButtonMessage(_U("place"))
+      InstructionButtonMessage(TranslateCap("place"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
       PushScaleformMovieFunctionParameterInt(0)
       N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.Furniture.Controls.Exit, true))
-      InstructionButtonMessage(_U("delete_furni"))
+      InstructionButtonMessage(TranslateCap("delete_furni"))
       PopScaleformMovieFunctionVoid()
 
       PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
@@ -221,17 +221,17 @@ if Config.Furniture.Enabled then
         if IsControlJustPressed(0, Config.Furniture.Controls.Confirm) then
           if not Existing then
             ESX.OpenContext("right",
-              {{unslectable = true, title = _U("confirm_buy",Config.FurnitureCatagories[PropCatagory][PropIndex].title),
-                description = _U("price",Config.FurnitureCatagories[PropCatagory][PropIndex].price), icon = "fas fa-shopping-cart"},
-               {title = _U("yes"), value = "buy", icon = "fas fa-check"}, {title = _U("no"), icon = "fas fa-minus"}}, function(menu, element)
+              {{unslectable = true, title = TranslateCap("confirm_buy",Config.FurnitureCatagories[PropCatagory][PropIndex].title),
+                description = TranslateCap("price",Config.FurnitureCatagories[PropCatagory][PropIndex].price), icon = "fas fa-shopping-cart"},
+               {title = TranslateCap("yes"), value = "buy", icon = "fas fa-check"}, {title = TranslateCap("no"), icon = "fas fa-minus"}}, function(menu, element)
                 if element.value and element.value == "buy" then
                   ESX.TriggerServerCallback("esx_property:buyFurniture", function(response)
                     if response then
                       DeleteEntity(CurrentlyEditing)
-                      ESX.ShowNotification(_U("bought_furni", Config.FurnitureCatagories[PropCatagory][PropIndex].title), "success")
+                      ESX.ShowNotification(TranslateCap("bought_furni", Config.FurnitureCatagories[PropCatagory][PropIndex].title), "success")
                       ESX.CloseContext()
                     else
-                      ESX.ShowNotification(_U("cannot_buy"), "error")
+                      ESX.ShowNotification(TranslateCap("cannot_buy"), "error")
                     end
                   end, CurrentId, PropName, PropIndex, PropCatagory, vector3(CurrentPos.x, CurrentPos.y, CurrentPos.z), CurrentHeading)
                 end
@@ -240,10 +240,10 @@ if Config.Furniture.Enabled then
             ESX.TriggerServerCallback("esx_property:editFurniture", function(response)
               if response then
                 DeleteEntity(CurrentlyEditing)
-                ESX.ShowNotification(_U("edited_furni"), "success")
+                ESX.ShowNotification(TranslateCap("edited_furni"), "success")
                 ESX.CloseContext()
               else
-                ESX.ShowNotification(_U("cannot_edit"), "error")
+                ESX.ShowNotification(TranslateCap("cannot_edit"), "error")
               end
             end, CurrentId, PropIndex, vector3(CurrentPos.x, CurrentPos.y, CurrentPos.z), CurrentHeading)
           end
@@ -263,11 +263,11 @@ if Config.Furniture.Enabled then
   end
 
   function FurnitureItems(house, Store, StoreIndex, Catagory)
-    local Items = {{unselectable = true, title = _U("store_title", Catagory), icon = "fas fa-store"},
-                   {title = _U("back"), value = "go-back", icon = "fas fa-arrow-left"}}
+    local Items = {{unselectable = true, title = TranslateCap("store_title", Catagory), icon = "fas fa-store"},
+                   {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"}}
 
     for k, v in pairs(Config.FurnitureCatagories[Catagory]) do
-      table.insert(Items, {title = v.title, value = v.name, index = k, description = "Price: " .. v.price, icon = "fas fa-shopping-cart"})
+      table.insert(Items, {title = v.title, value = v.name, index = k, description = _U("price", v.price), icon = "fas fa-shopping-cart"})
     end
 
     ESX.OpenContext("right", Items, function(data, element)
@@ -280,8 +280,8 @@ if Config.Furniture.Enabled then
   end
 
   function FurnitureCatagories(house, Store, StoreIndex)
-    local Catagories = {{unselectable = true, title = _U("store_title", Store), icon = "fas fa-store"},
-    {title = _U("back"), value = "go-back", icon = "fas fa-arrow-left"}}
+    local Catagories = {{unselectable = true, title = TranslateCap("store_title", Store), icon = "fas fa-store"},
+    {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"}}
 
     for k, v in pairs(Config.FurnitureStores[StoreIndex].Catagories) do
       table.insert(Catagories, {title = v})
@@ -299,9 +299,9 @@ if Config.Furniture.Enabled then
   function FurnitureEdit(propertyId, furniture)
     local furni = SpawnedFurniture[furniture]
     local Funiture = Config.FurnitureCatagories[furni.data.Catagory][furni.data.Index]
-    local Catagories = {{unselectable = true, title = _U("edit_title",Funiture.title), icon = "fas fa-store"},
-                        {title = _U("back"), value = "go-back", icon = "fas fa-arrow-left"},
-                        {title = _U("move_title"), value = "rotate", icon = "fas fa-sync-alt"}, {title = _U("delete_furni"), value = "delete", icon = "fas fa-trash-alt"}}
+    local Catagories = {{unselectable = true, title = TranslateCap("edit_title",Funiture.title), icon = "fas fa-store"},
+                        {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"},
+                        {title = TranslateCap("move_title"), value = "rotate", icon = "fas fa-sync-alt"}, {title = TranslateCap("delete_furni"), value = "delete", icon = "fas fa-trash-alt"}}
 
     ESX.OpenContext("right", Catagories, function(data, element)
       if element.value == "go-back" then
@@ -310,10 +310,10 @@ if Config.Furniture.Enabled then
       if element.value == "delete" then
         ESX.TriggerServerCallback("esx_property:deleteFurniture", function(response)
           if response then
-            ESX.ShowNotification(_U("delete_confirm", Funiture.title), "success")
+            ESX.ShowNotification(TranslateCap("delete_confirm", Funiture.title), "success")
             FurnitureEditSelect(propertyId)
           else
-            ESX.ShowNotification(_U("delete_error", Funiture.title), "error")
+            ESX.ShowNotification(TranslateCap("delete_error", Funiture.title), "error")
           end
         end, propertyId, furniture)
       end
@@ -325,8 +325,8 @@ if Config.Furniture.Enabled then
   end
 
   function FurnitureEditSelect(propertyId)
-    local Furni = {{unselectable = true, title = _U("owned_furni"), icon = "far fa-edit"},
-                   {title = _U("back"), value = "go-back", icon = "fas fa-arrow-left"}}
+    local Furni = {{unselectable = true, title = TranslateCap("owned_furni"), icon = "far fa-edit"},
+                   {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"}}
 
     for k, v in pairs(SpawnedFurniture) do
       local Funiture = Config.FurnitureCatagories[v.data.Catagory][v.data.Index]
@@ -343,8 +343,8 @@ if Config.Furniture.Enabled then
   end
 
   function FurnitureStores(house)
-    local Options = {{unselectable = true, title = _U("menu_stores"), icon = "fas fa-store"},
-                     {title = _U("back"), value = "go-back", icon = "fas fa-arrow-left"}}
+    local Options = {{unselectable = true, title = TranslateCap("menu_stores"), icon = "fas fa-store"},
+                     {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"}}
 
     for k, v in pairs(Config.FurnitureStores) do
       table.insert(Options, {title = v.title, Store = k})
@@ -360,12 +360,12 @@ if Config.Furniture.Enabled then
   end
 
   function FurnitureMenu(PropertyId)
-    local Options = {{unselectable = true, title = _U("furni_management"), icon = "fas fa-lamp"},
-                     {title = _U("menu_stores"), description = _U("menu_stores_desc"), icon = "fas fa-dollar-sign", value = "store"}}
+    local Options = {{unselectable = true, title = TranslateCap("furni_management"), icon = "fas fa-lamp"},
+                     {title = TranslateCap("menu_stores"), description = TranslateCap("menu_stores_desc"), icon = "fas fa-dollar-sign", value = "store"}}
 
     if #SpawnedFurniture > 0 then
-      Options[#Options + 1] = {title = _U("menu_reset"), description = _U("menu_reset_desc"), icon = "fas fa-trash", value = "reset"}
-      Options[#Options + 1] = {title = _U("menu_edit"), description = _U("menu_edit_desc"), icon = "fas fa-archive", value = "edit"}
+      Options[#Options + 1] = {title = TranslateCap("menu_reset"), description = TranslateCap("menu_reset_desc"), icon = "fas fa-trash", value = "reset"}
+      Options[#Options + 1] = {title = TranslateCap("menu_edit"), description = TranslateCap("menu_edit_desc"), icon = "fas fa-archive", value = "edit"}
 
     end
     ESX.OpenContext("right", Options, function(data, element)
@@ -377,9 +377,9 @@ if Config.Furniture.Enabled then
         elseif element.value == "reset" then
           ESX.TriggerServerCallback("esx_property:RemoveAllfurniture", function(Removed)
             if Removed then
-              ESX.ShowNotification(_U("furni_reset_success"), "success")
+              ESX.ShowNotification(TranslateCap("furni_reset_success"), "success")
             else
-              ESX.ShowNotification(_U("furni_reset_error"), "error")
+              ESX.ShowNotification(TranslateCap("furni_reset_error"), "error")
             end
           end, PropertyId)
         end
@@ -387,7 +387,7 @@ if Config.Furniture.Enabled then
     end)
   end
 
-  ESX.RegisterInput(_U("furni_command"), _U("furni_command_desc"), "keyboard", "M", function()
+  ESX.RegisterInput(TranslateCap("furni_command"), TranslateCap("furni_command_desc"), "keyboard", "M", function()
     if InProperty then
       ESX.TriggerServerCallback('esx_property:CanOpenFurniture', function(Access)
         if Access then
@@ -397,7 +397,7 @@ if Config.Furniture.Enabled then
             FurnitureStores(CurrentId)
           end
         else
-          ESX.ShowNotification(_U("furni_command_permission"), 5000, "error")
+          ESX.ShowNotification(TranslateCap("furni_command_permission"), 5000, "error")
         end
       end, CurrentId)
     else

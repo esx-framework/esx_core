@@ -7,7 +7,7 @@ function OpenShopMenu(zone)
 		local item = Config.Zones[zone].Items[i]
 
 		table.insert(elements, {
-			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, TranslateCap('shop_item', ESX.Math.GroupDigits(item.price))),
 			itemLabel = item.label,
 			item       = item.name,
 			price      = item.price,
@@ -23,16 +23,16 @@ function OpenShopMenu(zone)
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
-		title    = _U('shop'),
+		title    = TranslateCap('shop'),
 		align    = 'bottom-left',
 		elements = elements
 	}, function(data, menu)
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title    = _U('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
+			title    = TranslateCap('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
 			align    = 'bottom-left',
 			elements = {
-				{label = _U('no'),  value = 'no'},
-				{label = _U('yes'), value = 'yes'}
+				{label = TranslateCap('no'),  value = 'no'},
+				{label = TranslateCap('yes'), value = 'yes'}
 		}}, function(data2, menu2)
 			if data2.current.value == 'yes' then
 				TriggerServerEvent('esx_shops:buyItem', data.current.item, data.current.value, zone)
@@ -46,14 +46,14 @@ function OpenShopMenu(zone)
 		menu.close()
 
 		currentAction     = 'shop_menu'
-		currentActionMsg  = _U('press_menu')
+		currentActionMsg  = TranslateCap('press_menu')
 		currentActionData = {zone = zone}
 	end)
 end
 
 AddEventHandler('esx_shops:hasEnteredMarker', function(zone)
 	currentAction     = 'shop_menu'
-	currentActionMsg  = _U('press_menu')
+	currentActionMsg  = TranslateCap('press_menu')
 	currentActionData = {zone = zone}
 end)
 
@@ -75,7 +75,7 @@ CreateThread(function()
 			SetBlipAsShortRange(blip, true)
 
 			BeginTextCommandSetBlipName('STRING')
-			AddTextComponentSubstringPlayerName(_U('shops'))
+			AddTextComponentSubstringPlayerName(TranslateCap('shops'))
 			EndTextCommandSetBlipName(blip)
 		end
 	end
