@@ -87,25 +87,25 @@ function OpenBossMenu(society, close, options)
 			end
 
 			if options.checkBal then
-				table.insert(elements, {icon = "fas fa-wallet", title = TranslateCap('check_society_balance'), value = "check_society_balance"})
+				elements[#elements+1] = {icon = "fas fa-wallet", title = TranslateCap('check_society_balance'), value = "check_society_balance"}
 			end
 			if options.withdraw then
-				table.insert(elements, {icon = "fas fa-wallet", title = TranslateCap('withdraw_society_money'), value = "withdraw_society_money"})
+				elements[#elements+1] = {icon = "fas fa-wallet", title = TranslateCap('withdraw_society_money'), value = "withdraw_society_money"}
 			end
 			if options.deposit then
-				table.insert(elements, {icon = "fas fa-wallet", title = TranslateCap('deposit_society_money'), value = "deposit_money"})
+				elements[#elements+1] = {icon = "fas fa-wallet", title = TranslateCap('deposit_society_money'), value = "deposit_money"}
 			end
 			if options.wash then
-				table.insert(elements, {icon = "fas fa-wallet", title = TranslateCap('wash_money'), value = "wash_money"})
+				elements[#elements+1] = {icon = "fas fa-wallet", title = TranslateCap('wash_money'), value = "wash_money"}
 			end
 			if options.employees then
-				table.insert(elements, {icon = "fas fa-users", title = TranslateCap('employee_management'), value = "manage_employees"})
+				elements[#elements+1] = {icon = "fas fa-users", title = TranslateCap('employee_management'), value = "manage_employees"}
 			end
 			if options.salary then
-				table.insert(elements, {icon = "fas fa-wallet", title = TranslateCap('salary_management'), value = "manage_salary"})
+				elements[#elements+1] = {icon = "fas fa-wallet", title = TranslateCap('salary_management'), value = "manage_salary"}
 			end
 			if options.grades then
-				table.insert(elements, {icon = "fas fa-scroll", title = TranslateCap('grade_management'), value = "manage_grades"})
+				elements[#elements+1] = {icon = "fas fa-scroll", title = TranslateCap('grade_management'), value = "manage_grades"}
 			end
 
 			ESX.OpenContext("right", elements, function(menu,element)
@@ -192,10 +192,10 @@ function OpenEmployeeList(society)
 		for i=1, #employees, 1 do
 			local gradeLabel = (employees[i].job.grade_label == '' and employees[i].job.label or employees[i].job.grade_label)
 
-			table.insert(elements, {icon = "fas fa-user", title = employees[i].name .. " | " ..gradeLabel, gradeLabel = gradeLabel, data = employees[i]})
+			elements[#elements+1] = {icon = "fas fa-user", title = employees[i].name .. " | " ..gradeLabel, gradeLabel = gradeLabel, data = employees[i]}
 		end
 
-		table.insert(elements, {icon = "fas fa-arrow-left", title = "Return", value = "return"})
+		elements[#elements+1] = {icon = "fas fa-arrow-left", title = "Return", value = "return"}
 
 		ESX.OpenContext("right", elements, function(menu,element) 
 			if element.value == "return" then
@@ -235,16 +235,11 @@ function OpenRecruitMenu(society)
 
 		for i=1, #players, 1 do
 			if players[i].job.name ~= society then
-				table.insert(elements, {
-					icon = "fas fa-user", 
-					title = players[i].name, 
-					value = players[i].source, 
-					name = players[i].name, 
-					identifier = players[i].identifier})
+				elements[#elements+1] = {icon = "fas fa-user", title = players[i].name, value = players[i].source, name = players[i].name, identifier = players[i].identifier}
 			end
 		end
 
-		table.insert(elements, {icon = "fas fa-arrow-left", title = "Return", value = "return"})
+		elements[#elements+1] = {icon = "fas fa-arrow-left", title = "Return", value = "return"}
 
 		ESX.OpenContext("right", elements, function(menu,element)
 			if element.value == "return" then
@@ -278,10 +273,10 @@ function OpenPromoteMenu(society, employee)
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
 
-			table.insert(elements, {icon = "fas fa-user", title = gradeLabel, value = job.grades[i].grade, selected = (employee.job.grade == job.grades[i].grade)})
+			elements[#elements+1] = {icon = "fas fa-user", title = gradeLabel, value = job.grades[i].grade, selected = (employee.job.grade == job.grades[i].grade)}
 		end
 
-		table.insert(elements, {icon = "fas fa-arrow-left", title = "Return", value = "return"})
+		elements[#elements+1] = {icon = "fas fa-arrow-left", title = "Return", value = "return"}
 
 		ESX.OpenContext("right", elements, function(menu,element)
 			if element.value == "return" then
@@ -307,12 +302,12 @@ function OpenManageSalaryMenu(society)
 
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-				
-			table.insert(elements, {
+
+			elements[#elements+1] = {
 				icon = "fas fa-wallet",
 				title = ('%s - <span style="color:green;">%s</span>'):format(gradeLabel, TranslateCap('money_generic', ESX.Math.GroupDigits(job.grades[i].salary))),
 				value = job.grades[i].grade
-			})
+			}
 		end
 
 		ESX.OpenContext("right", elements, function(menu,element)
@@ -349,8 +344,8 @@ function OpenManageGradesMenu(society)
 
 		for i=1, #job.grades, 1 do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-				
-			table.insert(elements, {icon = "fas fa-wallet", title = ('%s'):format(gradeLabel), value = job.grades[i].grade})
+
+			elements[#elements+1] = {icon = "fas fa-wallet", title = ('%s'):format(gradeLabel), value = job.grades[i].grade}
 		end
 
 		ESX.OpenContext("right", elements, function(menu,element)
