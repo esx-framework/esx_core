@@ -267,7 +267,7 @@ if Config.Furniture.Enabled then
                    {title = TranslateCap("back"), value = "go-back", icon = "fas fa-arrow-left"}}
 
     for k, v in pairs(Config.FurnitureCatagories[Catagory]) do
-      table.insert(Items, {title = v.title, value = v.name, index = k, description = "Price: " .. v.price, icon = "fas fa-shopping-cart"})
+      table.insert(Items, {title = v.title, value = v.name, index = k, description = _U("price", v.price), icon = "fas fa-shopping-cart"})
     end
 
     ESX.OpenContext("right", Items, function(data, element)

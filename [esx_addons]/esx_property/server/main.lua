@@ -95,54 +95,60 @@ function IsPlayerAdmin(player, action)
 end
 
 CreateThread(function()
-  Wait(3000)
-  PropertiesRefresh()
-  MySQL.query("ALTER TABLE `users` ADD COLUMN IF NOT EXISTS `last_property` LONGTEXT NULL", function(result)
-    if result then
-      print("[^2INFO^7] Adding ^5last_property^7 column to users table")
-    end
-  end)
-  MySQL.insert("INSERT IGNORE INTO `datastore` (name, label, shared) VALUES ('property', 'Property' , 1)", function(result)
-    if result then
-      print("[^2INFO^7] Adding ^5Property^7 into ^5datastore^7 table")
-    end
-  end)
-  MySQL.insert("INSERT IGNORE INTO `datastore_data` (name, owner, data) VALUES ('property', NULL, '{}')", function(result)
-    if result then
-      print("[^2INFO^7] Adding ^5Property^7 into ^5datastore_data^7 table")
-    end
-  end)
-  if PM.Enabled then
-    MySQL.insert("INSERT IGNORE INTO `addon_account` (name, label, shared) VALUES (?, ? , 1)", {PM.society, PM.joblabel}, function(result)
-      if result then
-        print("[^2INFO^7] Adding ^5" .. PM.society .. " - " .. PM.joblabel .. "^7 into ^5addon_account^7 table")
-      end
-    end)
-    local Existance = ESX.DoesJobExist(PM.job, 0)
-    if not Existance then
-      MySQL.query("INSERT INTO `jobs` VALUES (?, ?, 1)", {PM.job, PM.joblabel}, function(result)
-        if result then
-          print("[^2INFO^7] Inserting ^5" .. PM.job .. " - " .. PM.joblabel .. "^7 into ^5jobs^7 table")
-        end
-      end)
-    end
-    for i = 1, #PM.jobRanks do
-      local Existance = ESX.DoesJobExist(PM.job, PM.jobRanks[i].grade)
-      if not Existance then
-        MySQL.query("INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?,?, ?, ?,'{}','{}')",
-          {PM.job, PM.jobRanks[i].grade, PM.jobRanks[i].name, PM.jobRanks[i].label, PM.jobRanks[i].salary}, function(result)
-            if result then
-              print("[^2INFO^7] Inserting ^5" .. PM.job .. " - " .. PM.jobRanks[i].grade .. " - " .. PM.jobRanks[i].label ..
-                      "^7 into ^5job_grades^7 table")
+      Wait(3000)
+	PropertiesRefresh()
+
+	MySQL.query("ALTER TABLE `users` ADD COLUMN IF NOT EXISTS `last_property` LONGTEXT NULL", function(result)
+		if result?.affectedRows > 0 then
+			print("[^2INFO^7] Added ^5last_property^7 column to users table")
+		end
+	end)
+
+	-- Check if datastore table exists before to insert values.
+	if MySQL.scalar.await("SELECT EXISTS (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE LIKE 'BASE TABLE' AND TABLE_NAME = 'datastore')") > 0 then
+		MySQL.insert("INSERT IGNORE INTO `datastore` (name, label, shared) VALUES ('property', 'Property' , 1)", function(affectedRows)
+			if affectedRows > 0 then
+				print("[^2INFO^7] Added ^5Property^7 into ^5datastore^7 table")
+			end
+		end)
+		MySQL.insert("INSERT IGNORE INTO `datastore_data` (name, owner, data) VALUES ('property', NULL, '{}')", function(affectedRows)
+			if affectedRows > 0 then
+				print("[^2INFO^7] Added ^5Property^7 into ^5datastore_data^7 table")
+			end
+		end)
+	end
+
+	if PM.Enabled then
+            if MySQL.scalar.await("SELECT EXISTS (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE LIKE 'BASE TABLE' AND TABLE_NAME = 'datastore')") > 0 then
+                  MySQL.insert("INSERT IGNORE INTO `addon_account` (name, label, shared) VALUES (?, ? , 1)", {PM.society, PM.joblabel}, function(affectedRows)
+                        if affectedRows > 0 then
+                              print("[^2INFO^7] Added ^5" .. PM.society .. " - " .. PM.joblabel .. "^7 into ^5addon_account^7 table")
+                        end
+                  end)
             end
-          end)
-      end
-    end
-    Wait(10)
-    ESX.RefreshJobs()
-    TriggerEvent('esx_society:registerSociety', 'realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent',
-      'society_realestateagent', {type = 'private'})
-  end
+		if not ESX.DoesJobExist(PM.job, 0) then
+			MySQL.insert("INSERT INTO `jobs` SET name = ?, label = ?, whitelisted = 1", {PM.job, PM.joblabel}, function(affectedRows)
+				if affectedRows > 0 then
+					print("[^2INFO^7] Inserted ^5" .. PM.job .. " - " .. PM.joblabel .. "^7 into ^5jobs^7 table")
+				end
+			end)
+		end
+
+		local QUERIES = {}
+		for i = 1, #PM.jobRanks do
+			if not ESX.DoesJobExist(PM.job, PM.jobRanks[i].grade) then
+				QUERIES[i] = {
+					query = "INSERT INTO `job_grades` SET job_name = ?, grade = ?, name = ?, label = ?, salary = ?, skin_male = '{}', skin_female = '{}'",
+					parameters = { PM.job, PM.jobRanks[i].grade, PM.jobRanks[i].name, PM.jobRanks[i].label, PM.jobRanks[i].salary }
+				}
+			end
+		end
+		MySQL.transaction(QUERIES)
+
+		Wait(10)
+		ESX.RefreshJobs()
+		TriggerEvent('esx_society:registerSociety', 'realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
+	end
 end)
 
 AddEventHandler("esx:playerLoaded", function(playerId, xPlayer)

@@ -58,6 +58,21 @@ AddEventHandler('esx_society:getSociety', function(name, cb)
 	cb(GetSociety(name))
 end)
 
+RegisterServerEvent('esx_society:checkSocietyBalance')
+AddEventHandler('esx_society:checkSocietyBalance', function(society)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = GetSociety(society)
+
+	if xPlayer.job.name ~= society.name then
+		print(('esx_society: %s attempted to call checkSocietyBalance!'):format(xPlayer.identifier))
+		return
+	end
+
+	TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
+		TriggerClientEvent("esx:showNotification", xPlayer.source, TranslateCap('check_balance', ESX.Math.GroupDigits(account.money)))
+	end)
+end)
+
 RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(societyName, amount)
 	local source = source
@@ -335,7 +350,6 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 		cb()
 	end
 end)
-
 
 ESX.RegisterServerCallback('esx_society:setJobLabel', function(source, cb, job, grade, label)
 	local xPlayer = ESX.GetPlayerFromId(source)

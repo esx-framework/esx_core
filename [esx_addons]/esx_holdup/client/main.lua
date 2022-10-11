@@ -37,7 +37,7 @@ end)
 
 RegisterNetEvent('esx_holdup:tooFar')
 AddEventHandler('esx_holdup:tooFar', function()
-	holdingUp, store = false, ''
+	store = ''
 	ESX.ShowNotification(TranslateCap('robbery_cancelled'))
 end)
 
@@ -100,12 +100,15 @@ CreateThread(function()
 					end
 				end
                 break
+			else
+				letSleep = true
 			end
 		end
 		if holdingUp then
             letSleep = false
 			if #(playerPos - Stores[store].position) > Config.MaxDistance then
 				TriggerServerEvent('esx_holdup:tooFar', store)
+				holdingUp, letSleep = false, true
 			end
 		end
         if letSleep then
