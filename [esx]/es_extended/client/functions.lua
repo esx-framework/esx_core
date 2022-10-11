@@ -1381,10 +1381,13 @@ function ESX.ShowInventory()
     end)
 end
 
-RegisterNetEvent('esx:serverCallback')
-AddEventHandler('esx:serverCallback', function(requestId, ...)
-    Core.ServerCallbacks[requestId](...)
-    Core.ServerCallbacks[requestId] = nil
+RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
+    if Core.ServerCallbacks[requestId] then
+        Core.ServerCallbacks[requestId](...)
+        Core.ServerCallbacks[requestId] = nil
+    else 
+        print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
+    end
 end)
 
 RegisterNetEvent('esx:showNotification')
