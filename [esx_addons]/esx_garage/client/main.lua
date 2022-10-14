@@ -49,7 +49,7 @@ RegisterNUICallback('spawnVehicle', function(data, cb)
                     TriggerServerEvent('esx_garage:payPound', data.exitVehicleCost)
                     thisPound = nil
 
-                    TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data.vehicleProps)
+                    TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data, spawnCoords)
                     TriggerEvent('esx_garage:closemenu')
 
                 else
@@ -345,12 +345,11 @@ CreateThread(function()
                         if IsControlJustReleased(0, 38) then
                             local vehicle = GetVehiclePedIsIn(playerPed, false)
                             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
-
                             ESX.TriggerServerCallback('esx_garage:checkVehicleOwner', function(owner)
                                 if owner then
                                     ESX.Game.DeleteVehicle(vehicle)
                                     TriggerServerEvent('esx_garage:updateOwnedVehicle', true, currentMarker, nil,
-                                        vehicleProps)
+                                        {vehicleProps = vehicleProps})
                                 else
                                     ESX.ShowNotification(TranslateCap('not_owning_veh'), 'error')
                                 end
