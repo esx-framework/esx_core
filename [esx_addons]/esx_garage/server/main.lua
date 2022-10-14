@@ -1,13 +1,12 @@
 RegisterServerEvent('esx_garage:updateOwnedVehicle')
-AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impound, vehicleProps)
+AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impound, data, spawn)
 	local source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
-
 		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `parking` = @parking, `pound` = @Impound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
 		{
 			['@identifier'] = xPlayer.identifier,
-			['@vehicle'] 	= json.encode(vehicleProps),
-			['@plate'] 		= vehicleProps.plate,
+			['@vehicle'] 	= json.encode(data.vehicleProps),
+			['@plate'] 		= data.vehicleProps.plate,
 			['@stored']     = stored,
 			['@parking']    = parking,
 			['@Impound']    	= Impound
@@ -15,6 +14,15 @@ AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impou
 
 		if stored then
 			xPlayer.showNotification(TranslateCap('veh_stored'))
+		else 
+			ESX.OneSync.SpawnVehicle(data.vehicleProps.model, spawn, data.spawnPoint.heading,data.vehicleProps, function(vehicle)
+				Wait(100)
+				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+				while GetVehicleNumberPlateText(vehicle) ~= data.vehicleProps.plate do
+					Wait(0)
+				end
+				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
+			end)
 		end
 end)
 
