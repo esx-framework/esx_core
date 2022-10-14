@@ -53,8 +53,11 @@ ESX.RegisterServerCallback("esx_taxijob:SpawnVehicle", function(source, cb, mode
         return
     end
     local SpawnPoint = vector3(Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z)
-    ESX.OneSync.SpawnVehicle(joaat(model), SpawnPoint, Config.Zones.VehicleSpawnPoint.Heading, true, props, function(vehicle)
+    ESX.OneSync.SpawnVehicle(joaat(model), SpawnPoint, Config.Zones.VehicleSpawnPoint.Heading, props, function(vehicle)
         local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+        while GetVehicleNumberPlateText(vehicle) ~= props.plate do
+            Wait(0)
+        end
         TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
     end)
     cb()
