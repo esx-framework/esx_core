@@ -82,8 +82,7 @@ end)
 
 CreateThread(function()
 	while true do
-		Wait(0)
-
+		local sleep = 1500
 		if ESX.Table.SizeOf(OpenedMenus) > 0 then
 			DisableControlAction(0, 1,   true) -- LookLeftRight
 			DisableControlAction(0, 2,   true) -- LookUpDown
@@ -94,8 +93,8 @@ CreateThread(function()
 			DisableControlAction(0, 15, true) -- WeaponWheelPrev
 			DisableControlAction(0, 16, true) -- SelectNextWeapon
 			DisableControlAction(0, 17, true) -- SelectPrevWeapon
-		else
-			Wait(500)
+			sleep = 0
 		end
+		Wait(sleep)
 	end
 end)
