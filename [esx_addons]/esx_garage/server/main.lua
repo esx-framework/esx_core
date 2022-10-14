@@ -16,14 +16,8 @@ AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impou
 			xPlayer.showNotification(TranslateCap('veh_stored'))
 		else 
 			ESX.OneSync.SpawnVehicle(data.vehicleProps.model, spawn, data.spawnPoint.heading,data.vehicleProps, function(vehicle)
-				Wait(100)
 				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
-				while not DoesEntityExist(vehicle) do
-					Wait(0)
-				end
-				while GetVehicleNumberPlateText(vehicle) ~= data.vehicleProps.plate do
-					Wait(0)
-				end
+				Wait(300)
 				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
 			end)
 		end

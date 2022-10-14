@@ -175,12 +175,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading,{plate = plate}, function(vehicle)
 				Wait(100)
 				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
-				while not DoesEntityExist(vehicle) do
-					Wait(0)
-				end
-				while GetVehicleNumberPlateText(vehicle) ~= plate do
-					Wait(0)
-				end
+				Wait(300)
 				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
 			end)
 			cb(true)
