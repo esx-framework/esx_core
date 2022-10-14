@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = GetConvar('esx:locale', 'en')
+Config.Locale = 'de'
 
 Config.Marker = {
 	r = 250, g = 0, b = 0, a = 100,  -- red color
@@ -12,6 +12,11 @@ Config.TimerBeforeNewRob    = 1800 -- The cooldown timer on a store after robber
 
 Config.MaxDistance    = 20   -- max distance from the robbary, going any longer away from it will to cancel the robbary
 Config.GiveBlackMoney = true -- give black money? If disabled it will give cash instead
+
+Config.Jobs = {
+	police = true, 
+	sast = true
+}
 
 Stores = {
 	['paleto_twentyfourseven'] = {
