@@ -330,7 +330,7 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
     end
 
     menu.refresh = function()
-        ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
+        ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data, true)
     end
 
     menu.setElement = function(i, key, val)
