@@ -59,24 +59,33 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param autoMobile boolean
 ---@param Properties table
 ---@param cb function
-function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, Properties, cb)
+function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
 	model = type(model) == 'string' and joaat(model) or model
 	Properties = Properties or {}
-	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
-	if type(autoMobile) ~= 'boolean' then
-		return
-	end
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	CreateThread(function()
-		local SpawnedEntity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		while not DoesEntityExist(SpawnedEntity) do
+		local PlayerCount = ESX.Table.SizeOf(ESX.Players)
+		local xPlayer = ESX.Players[math.random(1, PlayerCount)]
+		local tries = 0
+		while not xPlayer do
 			Wait(0)
+			xPlayer = ESX.Players[math.random(1, PlayerCount)]
+			tries += 1
+			if tries > 100 then
+				print("[^2ERROR^7] Failed to find a valid player to spawn vehicle")
+				return
+			end
 		end
-		Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
-		local netID = NetworkGetNetworkIdFromEntity(SpawnedEntity)
-		cb(netID)
+		ESX.GetVehicleType(model, xPlayer.source, function(Type)
+			local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
+			Wait(250)
+			local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
+			Properties.NetId = NetworkId
+			Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+			cb(NetworkId)
+		end)
 	end)
 end
 

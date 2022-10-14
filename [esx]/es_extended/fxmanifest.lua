@@ -71,6 +71,8 @@ files {
 }
 
 dependencies {
+	'/server:5949',
+	'/onesync',
 	'oxmysql',
 	'spawnmanager',
 }

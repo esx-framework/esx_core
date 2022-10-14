@@ -5,6 +5,8 @@ ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
+Core.ClientCallbacks = {}
+Core.CurrentRequestId = 0
 Core.TimeoutCount = -1
 Core.CancelledTimeouts = {}
 Core.RegisteredCommands = {}
@@ -112,4 +114,11 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId,Invoke, ..
   ESX.TriggerServerCallback(name, requestId, source,Invoke, function(...)
     TriggerClientEvent('esx:serverCallback', source, requestId,Invoke, ...)
   end, ...)
+end)
+
+RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)
+  if Core.ClientCallbacks[Request] then
+    Core.ClientCallbacks[Request](Type)
+    Core.ClientCallbacks[Request] = nil
+  end
 end)
