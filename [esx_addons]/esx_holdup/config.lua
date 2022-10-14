@@ -14,8 +14,8 @@ Config.MaxDistance    = 20   -- max distance from the robbary, going any longer 
 Config.GiveBlackMoney = true -- give black money? If disabled it will give cash instead
 
 Config.Jobs = {
-	police = true, 
-	sast = true
+	['police'] = true, 
+	['sast'] = true
 }
 
 Stores = {
