@@ -1,8 +1,8 @@
 local GUI, MenuType, OpenedMenus = {}, 'default', 0
 GUI.Time = 0
 
-local function openMenu(namespace, name, data)
-    OpenedMenus += 1
+local function openMenu(namespace, name, data, refresh)
+    if not refresh then OpenedMenus += 1 end
     SendNUIMessage({
         action = 'openMenu',
         namespace = namespace,
