@@ -66,28 +66,21 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
 	Properties = Properties or {}
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	CreateThread(function()
-		local PlayerCount = ESX.Table.SizeOf(ESX.Players)
-		local xPlayer = ESX.Players[math.random(1, PlayerCount)]
-		local tries = 0
-		while not xPlayer do
-			Wait(0)
-			xPlayer = ESX.Players[math.random(1, PlayerCount)]
-			tries += 1
-			if tries > 100 then
-				print("[^2ERROR^7] Failed to find a valid player to spawn vehicle")
-				return
-			end
+		local player = nil
+		for _, playerId in ipairs(GetPlayers()) do
+				ESX.GetVehicleType(model, playerId, function(Type)
+					local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
+					Wait(250)
+					local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
+					Properties.NetId = NetworkId
+					Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+					cb(NetworkId)
+				end)
+				break
 		end
-		ESX.GetVehicleType(model, xPlayer.source, function(Type)
-			local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
-			Wait(250)
-			local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
-			Properties.NetId = NetworkId
-			Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
-			cb(NetworkId)
-		end)
 	end)
 end
+
 
 ---@param model number|string
 ---@param coords vector3|table
