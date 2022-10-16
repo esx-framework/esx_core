@@ -992,12 +992,13 @@ end)
 
 RegisterNetEvent('esx_property:leave', function(PropertyId)
   local player = source
+  local PlayerPed = GetPlayerPed(player)
   local Property = Properties[PropertyId]
   local xPlayer = ESX.GetPlayerFromId(player)
   MySQL.query("UPDATE `users` SET `last_property` = NULL WHERE `identifier` = ?", {xPlayer.identifier}) -- Remove Saved Data
   xPlayer.set("lastProperty", nil)
-  SetEntityCoords(player, vector3(Property.Entrance.x, Property.Entrance.y, Property.Entrance.z))
-  SetEntityHeading(player, 0.0)
+  SetEntityCoords(PlayerPed, vector3(Property.Entrance.x, Property.Entrance.y, Property.Entrance.z))
+  SetEntityHeading(PlayerPed, 0.0)
   SetPlayerRoutingBucket(player, 0)
   for i = 1, #(Properties[PropertyId].plysinside) do
     if Properties[PropertyId].plysinside[i] == player then
