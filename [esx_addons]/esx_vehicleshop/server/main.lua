@@ -1,7 +1,7 @@
 local categories, vehicles = {}, {}
 
-TriggerEvent('esx_phone:registerNumber', 'cardealer', _U('dealer_customers'), false, false)
-TriggerEvent('esx_society:registerSociety', 'cardealer', _U('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
+TriggerEvent('esx_phone:registerNumber', 'cardealer', TranslateCap('dealer_customers'), false, false)
+TriggerEvent('esx_society:registerSociety', 'cardealer', TranslateCap('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
 
 CreateThread(function()
 	local char = Config.PlateLetters
@@ -71,8 +71,8 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, ve
 					if rowsChanged == 1 then
 						MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xTarget.identifier, vehicleProps.plate, json.encode(vehicleProps)},
 						function(id)
-							xPlayer.showNotification(_U('vehicle_set_owned', vehicleProps.plate, xTarget.getName()))
-							xTarget.showNotification(_U('vehicle_belongs', vehicleProps.plate))
+							xPlayer.showNotification(TranslateCap('vehicle_set_owned', vehicleProps.plate, xTarget.getName()))
+							xTarget.showNotification(TranslateCap('vehicle_belongs', vehicleProps.plate))
 						end)
 
 						MySQL.insert('INSERT INTO vehicle_sold (client, model, plate, soldby, date) VALUES (?, ?, ?, ?, ?)', {xTarget.getName(), label, vehicleProps.plate, xPlayer.getName(), os.date('%Y-%m-%d %H:%M')})
@@ -102,7 +102,7 @@ AddEventHandler('esx_vehicleshop:rentVehicle', function(vehicle, plate, rentPric
 					if rowsChanged == 1 then
 						MySQL.insert('INSERT INTO rented_vehicles (vehicle, plate, player_name, base_price, rent_price, owner) VALUES (?, ?, ?, ?, ?, ?)', {vehicle, plate, xTarget.getName(), result.price, rentPrice, xTarget.identifier},
 						function(id)
-							xPlayer.showNotification(_U('vehicle_set_rented', plate, xTarget.getName()))
+							xPlayer.showNotification(TranslateCap('vehicle_set_rented', plate, xTarget.getName()))
 						end)
 					end
 				end)
@@ -126,12 +126,12 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				xPlayer.showNotification(_U('have_withdrawn', count, item.label))
+				xPlayer.showNotification(TranslateCap('have_withdrawn', count, item.label))
 			else
-				xPlayer.showNotification(_U('player_cannot_hold'))
+				xPlayer.showNotification(TranslateCap('player_cannot_hold'))
 			end
 		else
-			xPlayer.showNotification(_U('not_enough_in_society'))
+			xPlayer.showNotification(TranslateCap('not_enough_in_society'))
 		end
 	end)
 end)
@@ -147,9 +147,9 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 		if item.count >= 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			xPlayer.showNotification(_U('have_deposited', count, item.label))
+			xPlayer.showNotification(TranslateCap('have_deposited', count, item.label))
 		else
-			xPlayer.showNotification(_U('invalid_amount'))
+			xPlayer.showNotification(TranslateCap('invalid_amount'))
 		end
 	end)
 end)
@@ -162,7 +162,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:getVehicles', function(source, cb)
 	cb(vehicles)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, model, plate, automobile)
+ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, model, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local modelPrice = getVehicleFromModel(model).price
 
@@ -171,9 +171,11 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 
 		MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xPlayer.identifier, plate, json.encode({model = joaat(model), plate = plate})
 		}, function(rowsChanged)
-			xPlayer.showNotification(_U('vehicle_belongs', plate))
-			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, false,{plate = plate}, function(vehicle)
+			xPlayer.showNotification(TranslateCap('vehicle_belongs', plate))
+			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading,{plate = plate}, function(vehicle)
+				Wait(100)
 				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+				Wait(300)
 				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
 			end)
 			cb(true)
@@ -230,7 +232,7 @@ AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 							local vehicleLabel = getVehicleFromModel(vehicleModel).label
 
 							account.addMoney(price)
-							xPlayer.showNotification(_U('vehicle_sold_for', vehicleLabel, ESX.Math.GroupDigits(price)))
+							xPlayer.showNotification(TranslateCap('vehicle_sold_for', vehicleLabel, ESX.Math.GroupDigits(price)))
 						end)
 					end
 				end)
@@ -405,9 +407,9 @@ function PayRent()
 						if xPlayer.getAccount('bank').money >= rental.rent_price then
 							total = total + rental.rent_price
 							xPlayer.removeAccountMoney('bank', rental.rent_price, "Vehicle Rental")
-							xPlayer.showNotification(_U('paid_rental', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
+							xPlayer.showNotification(TranslateCap('paid_rental', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
 						else
-							xPlayer.showNotification(_U('paid_rental_evicted', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
+							xPlayer.showNotification(TranslateCap('paid_rental_evicted', ESX.Math.GroupDigits(rental.rent_price), rental.plate))
 							unrentals[#unrentals + 1] = {rental.owner, rental.plate}
 						end
 					end

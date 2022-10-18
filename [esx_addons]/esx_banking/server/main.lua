@@ -49,7 +49,7 @@ AddEventHandler('esx_banking:doingType', function(typeData)
     amount = ESX.Math.Round(amount)
 
     if amount == nil or amount <= 0 then
-        TriggerClientEvent("esx:showNotification", source, _U('invalid_amount'), "error")
+        TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_amount'), "error")
     else
         if typeData.deposit and amount <= money then
             -- deposit
@@ -69,7 +69,7 @@ AddEventHandler('esx_banking:doingType', function(typeData)
                 end
             end
         else
-            TriggerClientEvent("esx:showNotification", source, _U('not_enough_money', amount), "error")
+            TriggerClientEvent("esx:showNotification", source, TranslateCap('not_enough_money', amount), "error")
             return
         end
 
@@ -77,9 +77,9 @@ AddEventHandler('esx_banking:doingType', function(typeData)
         bankMoney = xPlayer.getAccount('bank').money
         if typeData.transfer then
             TriggerClientEvent("esx:showNotification", source,
-                _U(string.format('%s_money', key), amount, typeData.transfer.playerId), "success")
+                TranslateCap(string.format('%s_money', key), amount, typeData.transfer.playerId), "success")
         else
-            TriggerClientEvent("esx:showNotification", source, _U(string.format('%s_money', key), amount), "success")
+            TriggerClientEvent("esx:showNotification", source, TranslateCap(string.format('%s_money', key), amount), "success")
         end
         if not typeData.pincode then
             BANK.LogTransaction(source, string.upper(key), amount, bankMoney)
@@ -126,7 +126,7 @@ BANK = {
     end,
     Transfer = function(xTarget, xPlayer, amount, key)
         if xTarget == nil or xPlayer.source == xTarget.source then
-            TriggerClientEvent("esx:showNotification", source, _U("cant_do_it"), "error")
+            TriggerClientEvent("esx:showNotification", source, TranslateCap("cant_do_it"), "error")
             return false
         end
 
@@ -134,7 +134,7 @@ BANK = {
         xTarget.addAccountMoney('bank', amount)
         bankMoney = xTarget.getAccount('bank').money
         BANK.LogTransaction(xTarget.source, "TRANSFER_RECEIVE", amount, bankMoney)
-        TriggerClientEvent("esx:showNotification", xTarget.source, _U('receive_transfer', amount, xPlayer.source),
+        TriggerClientEvent("esx:showNotification", xTarget.source, TranslateCap('receive_transfer', amount, xPlayer.source),
             "success")
 
         return true

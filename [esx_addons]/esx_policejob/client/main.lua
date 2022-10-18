@@ -40,7 +40,7 @@ function setUniform(uniform, playerPed)
 				SetPedArmour(playerPed, 100)
 			end
 		else
-			ESX.ShowNotification(_U('no_outfit'))
+			ESX.ShowNotification(TranslateCap('no_outfit'))
 		end
 	end)
 end
@@ -50,10 +50,10 @@ function OpenCloakroomMenu()
 	local grade = ESX.PlayerData.job.grade_name
 
 	local elements = {
-		{label = _U('citizen_wear'), value = 'citizen_wear'},
-		{label = _U('bullet_wear'), uniform = 'bullet_wear'},
-		{label = _U('gilet_wear'), uniform = 'gilet_wear'},
-		{label = _U('police_wear'), uniform = grade}
+		{label = TranslateCap('citizen_wear'), value = 'citizen_wear'},
+		{label = TranslateCap('bullet_wear'), uniform = 'bullet_wear'},
+		{label = TranslateCap('gilet_wear'), uniform = 'gilet_wear'},
+		{label = TranslateCap('police_wear'), uniform = grade}
 	}
 
 	if Config.EnableCustomPeds then
@@ -69,7 +69,7 @@ function OpenCloakroomMenu()
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom', {
-		title    = _U('cloakroom'),
+		title    = TranslateCap('cloakroom'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -100,9 +100,9 @@ function OpenCloakroomMenu()
 						playerInService = false
 
 						local notification = {
-							title    = _U('service_anonunce'),
+							title    = TranslateCap('service_anonunce'),
 							subject  = '',
-							msg      = _U('service_out_announce', GetPlayerName(PlayerId())),
+							msg      = TranslateCap('service_out_announce', GetPlayerName(PlayerId())),
 							iconType = 1
 						}
 
@@ -110,7 +110,7 @@ function OpenCloakroomMenu()
 
 						TriggerServerEvent('esx_service:disableService', 'police')
 						TriggerEvent('esx_policejob:updateBlip')
-						ESX.ShowNotification(_U('service_out'))
+						ESX.ShowNotification(TranslateCap('service_out'))
 					end
 				end, 'police')
 			end
@@ -125,21 +125,21 @@ function OpenCloakroomMenu()
 					if Config.MaxInService ~= -1 then
 						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
 							if not canTakeService then
-								ESX.ShowNotification(_U('service_max', inServiceCount, maxInService))
+								ESX.ShowNotification(TranslateCap('service_max', inServiceCount, maxInService))
 							else
 								awaitService = true
 								playerInService = true
 
 								local notification = {
-									title    = _U('service_anonunce'),
+									title    = TranslateCap('service_anonunce'),
 									subject  = '',
-									msg      = _U('service_in_announce', GetPlayerName(PlayerId())),
+									msg      = TranslateCap('service_in_announce', GetPlayerName(PlayerId())),
 									iconType = 1
 								}
 
 								TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 								TriggerEvent('esx_policejob:updateBlip')
-								ESX.ShowNotification(_U('service_in'))
+								ESX.ShowNotification(TranslateCap('service_in'))
 							end
 						end, 'police')
 					else
@@ -147,15 +147,15 @@ function OpenCloakroomMenu()
 						playerInService = true
 
 						local notification = {
-							title    = _U('service_anonunce'),
+							title    = TranslateCap('service_anonunce'),
 							subject  = '',
-							msg      = _U('service_in_announce', GetPlayerName(PlayerId())),
+							msg      = TranslateCap('service_in_announce', GetPlayerName(PlayerId())),
 							iconType = 1
 						}
 
 						TriggerServerEvent('esx_service:notifyAllInService', notification, 'police')
 						TriggerEvent('esx_policejob:updateBlip')
-						ESX.ShowNotification(_U('service_in'))
+						ESX.ShowNotification(TranslateCap('service_in'))
 					end
 
 				else
@@ -198,7 +198,7 @@ function OpenCloakroomMenu()
 		menu.close()
 
 		CurrentAction     = 'menu_cloakroom'
-		CurrentActionMsg  = _U('open_cloackroom')
+		CurrentActionMsg  = TranslateCap('open_cloackroom')
 		CurrentActionData = {}
 	end)
 end
@@ -210,21 +210,21 @@ function OpenArmoryMenu(station)
 		return ESX.UI.Menu.CloseAll()
 	else
 		elements = {
-			{label = _U('buy_weapons'), value = 'buy_weapons'}
+			{label = TranslateCap('buy_weapons'), value = 'buy_weapons'}
 		}
 
 		if Config.EnableArmoryManagement then
-			table.insert(elements, {label = _U('get_weapon'),     value = 'get_weapon'})
-			table.insert(elements, {label = _U('put_weapon'),     value = 'put_weapon'})
-			table.insert(elements, {label = _U('remove_object'),  value = 'get_stock'})
-			table.insert(elements, {label = _U('deposit_object'), value = 'put_stock'})
+			table.insert(elements, {label = TranslateCap('get_weapon'),     value = 'get_weapon'})
+			table.insert(elements, {label = TranslateCap('put_weapon'),     value = 'put_weapon'})
+			table.insert(elements, {label = TranslateCap('remove_object'),  value = 'get_stock'})
+			table.insert(elements, {label = TranslateCap('deposit_object'), value = 'put_stock'})
 		end
 	end
 
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory', {
-		title    = _U('armory'),
+		title    = TranslateCap('armory'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -245,7 +245,7 @@ function OpenArmoryMenu(station)
 		menu.close()
 
 		CurrentAction     = 'menu_armory'
-		CurrentActionMsg  = _U('open_armory')
+		CurrentActionMsg  = TranslateCap('open_armory')
 		CurrentActionData = {station = station}
 	end)
 end
@@ -257,28 +257,28 @@ function OpenPoliceActionsMenu()
 		title    = 'Police',
 		align    = 'top-left',
 		elements = {
-			{label = _U('citizen_interaction'), value = 'citizen_interaction'},
-			{label = _U('vehicle_interaction'), value = 'vehicle_interaction'},
-			{label = _U('object_spawner'), value = 'object_spawner'}
+			{label = TranslateCap('citizen_interaction'), value = 'citizen_interaction'},
+			{label = TranslateCap('vehicle_interaction'), value = 'vehicle_interaction'},
+			{label = TranslateCap('object_spawner'), value = 'object_spawner'}
 	}}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
 			local elements = {
-				{label = _U('id_card'), value = 'identity_card'},
-				{label = _U('search'), value = 'search'},
-				{label = _U('handcuff'), value = 'handcuff'},
-				{label = _U('drag'), value = 'drag'},
-				{label = _U('put_in_vehicle'), value = 'put_in_vehicle'},
-				{label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
-				{label = _U('fine'), value = 'fine'},
-				{label = _U('unpaid_bills'), value = 'unpaid_bills'}
+				{label = TranslateCap('id_card'), value = 'identity_card'},
+				{label = TranslateCap('search'), value = 'search'},
+				{label = TranslateCap('handcuff'), value = 'handcuff'},
+				{label = TranslateCap('drag'), value = 'drag'},
+				{label = TranslateCap('put_in_vehicle'), value = 'put_in_vehicle'},
+				{label = TranslateCap('out_the_vehicle'), value = 'out_the_vehicle'},
+				{label = TranslateCap('fine'), value = 'fine'},
+				{label = TranslateCap('unpaid_bills'), value = 'unpaid_bills'}
 			}
 
 			if Config.EnableLicenses then
-				table.insert(elements, {label = _U('license_check'), value = 'license'})
+				table.insert(elements, {label = TranslateCap('license_check'), value = 'license'})
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
-				title    = _U('citizen_interaction'),
+				title    = TranslateCap('citizen_interaction'),
 				align    = 'top-left',
 				elements = elements
 			}, function(data2, menu2)
@@ -306,7 +306,7 @@ function OpenPoliceActionsMenu()
 						OpenUnpaidBillsMenu(closestPlayer)
 					end
 				else
-					ESX.ShowNotification(_U('no_players_nearby'))
+					ESX.ShowNotification(TranslateCap('no_players_nearby'))
 				end
 			end, function(data2, menu2)
 				menu2.close()
@@ -317,15 +317,15 @@ function OpenPoliceActionsMenu()
 			local vehicle = ESX.Game.GetVehicleInDirection()
 
 			if DoesEntityExist(vehicle) then
-				table.insert(elements, {label = _U('vehicle_info'), value = 'vehicle_infos'})
-				table.insert(elements, {label = _U('pick_lock'), value = 'hijack_vehicle'})
-				table.insert(elements, {label = _U('impound'), value = 'impound'})
+				table.insert(elements, {label = TranslateCap('vehicle_info'), value = 'vehicle_infos'})
+				table.insert(elements, {label = TranslateCap('pick_lock'), value = 'hijack_vehicle'})
+				table.insert(elements, {label = TranslateCap('impound'), value = 'impound'})
 			end
 
-			table.insert(elements, {label = _U('search_database'), value = 'search_database'})
+			table.insert(elements, {label = TranslateCap('search_database'), value = 'search_database'})
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_interaction', {
-				title    = _U('vehicle_interaction'),
+				title    = TranslateCap('vehicle_interaction'),
 				align    = 'top-left',
 				elements = elements
 			}, function(data2, menu2)
@@ -347,7 +347,7 @@ function OpenPoliceActionsMenu()
 
 							SetVehicleDoorsLocked(vehicle, 1)
 							SetVehicleDoorsLockedForAllPlayers(vehicle, false)
-							ESX.ShowNotification(_U('vehicle_unlocked'))
+							ESX.ShowNotification(TranslateCap('vehicle_unlocked'))
 						end
 					elseif action == 'impound' then
 						-- is the script busy?
@@ -355,7 +355,7 @@ function OpenPoliceActionsMenu()
 							return
 						end
 
-						ESX.ShowHelpNotification(_U('impound_prompt'))
+						ESX.ShowHelpNotification(TranslateCap('impound_prompt'))
 						TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
 
 						currentTask.busy = true
@@ -372,7 +372,7 @@ function OpenPoliceActionsMenu()
 
 								vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 3.0, 0, 71)
 								if not DoesEntityExist(vehicle) and currentTask.busy then
-									ESX.ShowNotification(_U('impound_canceled_moved'))
+									ESX.ShowNotification(TranslateCap('impound_canceled_moved'))
 									ESX.ClearTimeout(currentTask.task)
 									ClearPedTasks(playerPed)
 									currentTask.busy = false
@@ -382,7 +382,7 @@ function OpenPoliceActionsMenu()
 						end)
 					end
 				else
-					ESX.ShowNotification(_U('no_vehicles_nearby'))
+					ESX.ShowNotification(TranslateCap('no_vehicles_nearby'))
 				end
 
 			end, function(data2, menu2)
@@ -390,14 +390,14 @@ function OpenPoliceActionsMenu()
 			end)
 		elseif data.current.value == 'object_spawner' then
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
-				title    = _U('traffic_interaction'),
+				title    = TranslateCap('traffic_interaction'),
 				align    = 'top-left',
 				elements = {
-					{label = _U('cone'), model = 'prop_roadcone02a'},
-					{label = _U('barrier'), model = 'prop_barrier_work05'},
-					{label = _U('spikestrips'), model = 'p_ld_stinger_s'},
-					{label = _U('box'), model = 'prop_boxpile_07d'},
-					{label = _U('cash'), model = 'hei_prop_cash_crate_half_full'}
+					{label = TranslateCap('cone'), model = 'prop_roadcone02a'},
+					{label = TranslateCap('barrier'), model = 'prop_barrier_work05'},
+					{label = TranslateCap('spikestrips'), model = 'p_ld_stinger_s'},
+					{label = TranslateCap('box'), model = 'prop_boxpile_07d'},
+					{label = TranslateCap('cash'), model = 'hei_prop_cash_crate_half_full'}
 			}}, function(data2, menu2)
 				local playerPed = PlayerPedId()
 				local coords, forward = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
@@ -419,22 +419,22 @@ end
 function OpenIdentityCardMenu(player)
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 		local elements = {
-			{label = _U('name', data.name)},
-			{label = _U('job', ('%s - %s'):format(data.job, data.grade))}
+			{label = TranslateCap('name', data.name)},
+			{label = TranslateCap('job', ('%s - %s'):format(data.job, data.grade))}
 		}
 
 		if Config.EnableESXIdentity then
-			table.insert(elements, {label = _U('sex', _U(data.sex))})
-			table.insert(elements, {label = _U('dob', data.dob)})
-			table.insert(elements, {label = _U('height', data.height)})
+			table.insert(elements, {label = TranslateCap('sex', TranslateCap(data.sex))})
+			table.insert(elements, {label = TranslateCap('dob', data.dob)})
+			table.insert(elements, {label = TranslateCap('height', data.height)})
 		end
 
 		if Config.EnableESXOptionalneeds and data.drunk then
-			table.insert(elements, {label = _U('bac', data.drunk)})
+			table.insert(elements, {label = TranslateCap('bac', data.drunk)})
 		end
 
 		if data.licenses then
-			table.insert(elements, {label = _U('license_label')})
+			table.insert(elements, {label = TranslateCap('license_label')})
 
 			for i=1, #data.licenses, 1 do
 				table.insert(elements, {label = data.licenses[i].label})
@@ -442,7 +442,7 @@ function OpenIdentityCardMenu(player)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
-			title    = _U('citizen_interaction'),
+			title    = TranslateCap('citizen_interaction'),
 			align    = 'top-left',
 			elements = elements
 		}, nil, function(data, menu)
@@ -463,7 +463,7 @@ function OpenBodySearchMenu(player)
 		for i=1, #data.accounts, 1 do
 			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
 				table.insert(elements, {
-					label    = _U('confiscate_dirty', ESX.Math.Round(data.accounts[i].money)),
+					label    = TranslateCap('confiscate_dirty', ESX.Math.Round(data.accounts[i].money)),
 					value    = 'black_money',
 					itemType = 'item_account',
 					amount   = data.accounts[i].money
@@ -473,23 +473,23 @@ function OpenBodySearchMenu(player)
 			end
 		end
 
-		table.insert(elements, {label = _U('guns_label')})
+		table.insert(elements, {label = TranslateCap('guns_label')})
 
 		for i=1, #data.weapons, 1 do
 			table.insert(elements, {
-				label    = _U('confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo),
+				label    = TranslateCap('confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo),
 				value    = data.weapons[i].name,
 				itemType = 'item_weapon',
 				amount   = data.weapons[i].ammo
 			})
 		end
 
-		table.insert(elements, {label = _U('inventory_label')})
+		table.insert(elements, {label = TranslateCap('inventory_label')})
 
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
 				table.insert(elements, {
-					label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
+					label    = TranslateCap('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
 					value    = data.inventory[i].name,
 					itemType = 'item_standard',
 					amount   = data.inventory[i].count
@@ -498,7 +498,7 @@ function OpenBodySearchMenu(player)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search', {
-			title    = _U('search'),
+			title    = TranslateCap('search'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
@@ -514,13 +514,13 @@ end
 
 function OpenFineMenu(player)
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine', {
-		title    = _U('fine'),
+		title    = TranslateCap('fine'),
 		align    = 'top-left',
 		elements = {
-			{label = _U('traffic_offense'), value = 0},
-			{label = _U('minor_offense'),   value = 1},
-			{label = _U('average_offense'), value = 2},
-			{label = _U('major_offense'),   value = 3}
+			{label = TranslateCap('traffic_offense'), value = 0},
+			{label = TranslateCap('minor_offense'),   value = 1},
+			{label = TranslateCap('average_offense'), value = 2},
+			{label = TranslateCap('major_offense'),   value = 3}
 	}}, function(data, menu)
 		OpenFineCategoryMenu(player, data.current.value)
 	end, function(data, menu)
@@ -534,7 +534,7 @@ function OpenFineCategoryMenu(player, category)
 
 		for k,fine in ipairs(fines) do
 			table.insert(elements, {
-				label     = ('%s <span style="color:green;">%s</span>'):format(fine.label, _U('armory_item', ESX.Math.GroupDigits(fine.amount))),
+				label     = ('%s <span style="color:green;">%s</span>'):format(fine.label, TranslateCap('armory_item', ESX.Math.GroupDigits(fine.amount))),
 				value     = fine.id,
 				amount    = fine.amount,
 				fineLabel = fine.label
@@ -542,16 +542,16 @@ function OpenFineCategoryMenu(player, category)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine_category', {
-			title    = _U('fine'),
+			title    = TranslateCap('fine'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			menu.close()
 
 			if Config.EnablePlayerManagement then
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', _U('fine_total', data.current.fineLabel), data.current.amount)
+				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_police', TranslateCap('fine_total', data.current.fineLabel), data.current.amount)
 			else
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', data.current.fineLabel), data.current.amount)
+				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', TranslateCap('fine_total', data.current.fineLabel), data.current.amount)
 			end
 
 			ESX.SetTimeout(300, function()
@@ -565,24 +565,24 @@ end
 
 function LookupVehicle()
 	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'lookup_vehicle', {
-		title = _U('search_database_title'),
+		title = TranslateCap('search_database_title'),
 	}, function(data, menu)
 		local length = string.len(data.value)
 		if not data.value or length < 2 or length > 8 then
-			ESX.ShowNotification(_U('search_database_error_invalid'))
+			ESX.ShowNotification(TranslateCap('search_database_error_invalid'))
 		else
 			ESX.TriggerServerCallback('esx_policejob:getVehicleInfos', function(retrivedInfo)
-				local elements = {{label = _U('plate', retrivedInfo.plate)}}
+				local elements = {{label = TranslateCap('plate', retrivedInfo.plate)}}
 				menu.close()
 
 				if not retrivedInfo.owner then
-					table.insert(elements, {label = _U('owner_unknown')})
+					table.insert(elements, {label = TranslateCap('owner_unknown')})
 				else
-					table.insert(elements, {label = _U('owner', retrivedInfo.owner)})
+					table.insert(elements, {label = TranslateCap('owner', retrivedInfo.owner)})
 				end
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_infos', {
-					title    = _U('vehicle_info'),
+					title    = TranslateCap('vehicle_info'),
 					align    = 'top-left',
 					elements = elements
 				}, nil, function(data2, menu2)
@@ -612,12 +612,12 @@ function ShowPlayerLicense(player)
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license', {
-			title    = _U('license_revoke'),
+			title    = TranslateCap('license_revoke'),
 			align    = 'top-left',
 			elements = elements,
 		}, function(data, menu)
-			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, playerData.name))
-			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
+			ESX.ShowNotification(TranslateCap('licence_you_revoked', data.current.label, playerData.name))
+			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), TranslateCap('license_revoked', data.current.label))
 
 			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.type)
 
@@ -637,13 +637,13 @@ function OpenUnpaidBillsMenu(player)
 	ESX.TriggerServerCallback('esx_billing:getTargetBills', function(bills)
 		for k,bill in ipairs(bills) do
 			table.insert(elements, {
-				label = ('%s - <span style="color:red;">%s</span>'):format(bill.label, _U('armory_item', ESX.Math.GroupDigits(bill.amount))),
+				label = ('%s - <span style="color:red;">%s</span>'):format(bill.label, TranslateCap('armory_item', ESX.Math.GroupDigits(bill.amount))),
 				billId = bill.id
 			})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
-			title    = _U('unpaid_bills'),
+			title    = TranslateCap('unpaid_bills'),
 			align    = 'top-left',
 			elements = elements
 		}, nil, function(data, menu)
@@ -654,16 +654,16 @@ end
 
 function OpenVehicleInfosMenu(vehicleData)
 	ESX.TriggerServerCallback('esx_policejob:getVehicleInfos', function(retrivedInfo)
-		local elements = {{label = _U('plate', retrivedInfo.plate)}}
+		local elements = {{label = TranslateCap('plate', retrivedInfo.plate)}}
 
 		if not retrivedInfo.owner then
-			table.insert(elements, {label = _U('owner_unknown')})
+			table.insert(elements, {label = TranslateCap('owner_unknown')})
 		else
-			table.insert(elements, {label = _U('owner', retrivedInfo.owner)})
+			table.insert(elements, {label = TranslateCap('owner', retrivedInfo.owner)})
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_infos', {
-			title    = _U('vehicle_info'),
+			title    = TranslateCap('vehicle_info'),
 			align    = 'top-left',
 			elements = elements
 		}, nil, function(data, menu)
@@ -686,7 +686,7 @@ function OpenGetWeaponMenu()
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_get_weapon', {
-			title    = _U('get_weapon_menu'),
+			title    = TranslateCap('get_weapon_menu'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
@@ -718,7 +718,7 @@ function OpenPutWeaponMenu()
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_put_weapon', {
-		title    = _U('put_weapon_menu'),
+		title    = TranslateCap('put_weapon_menu'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -748,12 +748,12 @@ function OpenBuyWeaponsMenu()
 					local hasComponent = HasPedGotWeaponComponent(playerPed, joaat(v.weapon), component.hash)
 
 					if hasComponent then
-						label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_owned'))
+						label = ('%s: <span style="color:green;">%s</span>'):format(component.label, TranslateCap('armory_owned'))
 					else
 						if v.components[i] > 0 then
-							label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_item', ESX.Math.GroupDigits(v.components[i])))
+							label = ('%s: <span style="color:green;">%s</span>'):format(component.label, TranslateCap('armory_item', ESX.Math.GroupDigits(v.components[i])))
 						else
-							label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('armory_free'))
+							label = ('%s: <span style="color:green;">%s</span>'):format(component.label, TranslateCap('armory_free'))
 						end
 					end
 
@@ -773,12 +773,12 @@ function OpenBuyWeaponsMenu()
 		if hasWeapon and v.components then
 			label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
 		elseif hasWeapon and not v.components then
-			label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_owned'))
+			label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, TranslateCap('armory_owned'))
 		else
 			if v.price > 0 then
-				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_item', ESX.Math.GroupDigits(v.price)))
+				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, TranslateCap('armory_item', ESX.Math.GroupDigits(v.price)))
 			else
-				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('armory_free'))
+				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, TranslateCap('armory_free'))
 			end
 		end
 
@@ -793,7 +793,7 @@ function OpenBuyWeaponsMenu()
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons', {
-		title    = _U('armory_weapontitle'),
+		title    = TranslateCap('armory_weapontitle'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
@@ -805,13 +805,13 @@ function OpenBuyWeaponsMenu()
 			ESX.TriggerServerCallback('esx_policejob:buyWeapon', function(bought)
 				if bought then
 					if data.current.price > 0 then
-						ESX.ShowNotification(_U('armory_bought', data.current.weaponLabel, ESX.Math.GroupDigits(data.current.price)))
+						ESX.ShowNotification(TranslateCap('armory_bought', data.current.weaponLabel, ESX.Math.GroupDigits(data.current.price)))
 					end
 
 					menu.close()
 					OpenBuyWeaponsMenu()
 				else
-					ESX.ShowNotification(_U('armory_money'))
+					ESX.ShowNotification(TranslateCap('armory_money'))
 				end
 			end, data.current.name, 1)
 		end
@@ -822,24 +822,24 @@ end
 
 function OpenWeaponComponentShop(components, weaponName, parentShop)
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'armory_buy_weapons_components', {
-		title    = _U('armory_componenttitle'),
+		title    = TranslateCap('armory_componenttitle'),
 		align    = 'top-left',
 		elements = components
 	}, function(data, menu)
 		if data.current.hasComponent then
-			ESX.ShowNotification(_U('armory_hascomponent'))
+			ESX.ShowNotification(TranslateCap('armory_hascomponent'))
 		else
 			ESX.TriggerServerCallback('esx_policejob:buyWeapon', function(bought)
 				if bought then
 					if data.current.price > 0 then
-						ESX.ShowNotification(_U('armory_bought', data.current.componentLabel, ESX.Math.GroupDigits(data.current.price)))
+						ESX.ShowNotification(TranslateCap('armory_bought', data.current.componentLabel, ESX.Math.GroupDigits(data.current.price)))
 					end
 
 					menu.close()
 					parentShop.close()
 					OpenBuyWeaponsMenu()
 				else
-					ESX.ShowNotification(_U('armory_money'))
+					ESX.ShowNotification(TranslateCap('armory_money'))
 				end
 			end, weaponName, 2, data.current.componentNum)
 		end
@@ -860,19 +860,19 @@ function OpenGetStocksMenu()
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
-			title    = _U('police_stock'),
+			title    = TranslateCap('police_stock'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			local itemName = data.current.value
 
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count', {
-				title = _U('quantity')
+				title = TranslateCap('quantity')
 			}, function(data2, menu2)
 				local count = tonumber(data2.value)
 
 				if not count then
-					ESX.ShowNotification(_U('quantity_invalid'))
+					ESX.ShowNotification(TranslateCap('quantity_invalid'))
 				else
 					menu2.close()
 					menu.close()
@@ -907,19 +907,19 @@ function OpenPutStocksMenu()
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
-			title    = _U('inventory'),
+			title    = TranslateCap('inventory'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
 			local itemName = data.current.value
 
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count', {
-				title = _U('quantity')
+				title = TranslateCap('quantity')
 			}, function(data2, menu2)
 				local count = tonumber(data2.value)
 
 				if not count then
-					ESX.ShowNotification(_U('quantity_invalid'))
+					ESX.ShowNotification(TranslateCap('quantity_invalid'))
 				else
 					menu2.close()
 					menu.close()
@@ -949,7 +949,7 @@ end)
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	local specialContact = {
-		name       = _U('phone_police'),
+		name       = TranslateCap('phone_police'),
 		number     = 'police',
 		base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDFGQTJDRkI0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDFGQTJDRkM0QUJCMTFFN0JBNkQ5OENBMUI4QUEzM0YiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0MUZBMkNGOTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MUZBMkNGQTRBQkIxMUU3QkE2RDk4Q0ExQjhBQTMzRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoW66EYAAAjGSURBVHjapJcLcFTV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'
 	}
@@ -970,23 +970,23 @@ end)
 AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNum)
 	if part == 'Cloakroom' then
 		CurrentAction     = 'menu_cloakroom'
-		CurrentActionMsg  = _U('open_cloackroom')
+		CurrentActionMsg  = TranslateCap('open_cloackroom')
 		CurrentActionData = {}
 	elseif part == 'Armory' then
 		CurrentAction     = 'menu_armory'
-		CurrentActionMsg  = _U('open_armory')
+		CurrentActionMsg  = TranslateCap('open_armory')
 		CurrentActionData = {station = station}
 	elseif part == 'Vehicles' then
 		CurrentAction     = 'menu_vehicle_spawner'
-		CurrentActionMsg  = _U('garage_prompt')
+		CurrentActionMsg  = TranslateCap('garage_prompt')
 		CurrentActionData = {station = station, part = part, partNum = partNum}
 	elseif part == 'Helicopters' then
 		CurrentAction     = 'Helicopters'
-		CurrentActionMsg  = _U('helicopter_prompt')
+		CurrentActionMsg  = TranslateCap('helicopter_prompt')
 		CurrentActionData = {station = station, part = part, partNum = partNum}
 	elseif part == 'BossActions' then
 		CurrentAction     = 'menu_boss_actions'
-		CurrentActionMsg  = _U('open_bossmenu')
+		CurrentActionMsg  = TranslateCap('open_bossmenu')
 		CurrentActionData = {}
 	end
 end)
@@ -1004,7 +1004,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' and IsPedOnFoot(playerPed) then
 		CurrentAction     = 'remove_entity'
-		CurrentActionMsg  = _U('remove_prop')
+		CurrentActionMsg  = TranslateCap('remove_prop')
 		CurrentActionData = {entity = entity}
 	end
 
@@ -1238,7 +1238,7 @@ CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentSubstringPlayerName(_U('map_blip'))
+		AddTextComponentSubstringPlayerName(TranslateCap('map_blip'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)
@@ -1416,7 +1416,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 		elseif playerInService then
 			OpenArmoryMenu(CurrentActionData.station)
 		else
-			ESX.ShowNotification(_U('service_not'))
+			ESX.ShowNotification(TranslateCap('service_not'))
 		end
 	elseif CurrentAction == 'menu_vehicle_spawner' then
 		if not Config.EnableESXService then
@@ -1424,7 +1424,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 		elseif playerInService then
 			OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 		else
-			ESX.ShowNotification(_U('service_not'))
+			ESX.ShowNotification(TranslateCap('service_not'))
 		end
 	elseif CurrentAction == 'Helicopters' then
 		if not Config.EnableESXService then
@@ -1432,7 +1432,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 		elseif playerInService then
 			OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 		else
-			ESX.ShowNotification(_U('service_not'))
+			ESX.ShowNotification(TranslateCap('service_not'))
 		end
 	elseif CurrentAction == 'delete_vehicle' then
 		ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
@@ -1442,7 +1442,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 			menu.close()
 
 			CurrentAction     = 'menu_boss_actions'
-			CurrentActionMsg  = _U('open_bossmenu')
+			CurrentActionMsg  = TranslateCap('open_bossmenu')
 			CurrentActionData = {}
 		end, { wash = false }) -- disable washing money
 	elseif CurrentAction == 'remove_entity' then
@@ -1462,7 +1462,7 @@ ESX.RegisterInput("police:quickactions", "(ESX PoliceJob) Quick Actions", "keybo
 	elseif playerInService then
 		OpenPoliceActionsMenu()
 	else
-		ESX.ShowNotification(_U('service_not'))
+		ESX.ShowNotification(TranslateCap('service_not'))
 	end
 end)
 
@@ -1570,7 +1570,7 @@ function StartHandcuffTimer()
 	handcuffTimer.active = true
 
 	handcuffTimer.task = ESX.SetTimeout(Config.HandcuffTimer, function()
-		ESX.ShowNotification(_U('unrestrained_timer'))
+		ESX.ShowNotification(TranslateCap('unrestrained_timer'))
 		TriggerEvent('esx_policejob:unrestrain')
 		handcuffTimer.active = false
 	end)
@@ -1582,7 +1582,7 @@ end
 function ImpoundVehicle(vehicle)
 	--local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)))
 	ESX.Game.DeleteVehicle(vehicle)
-	ESX.ShowNotification(_U('impound_successful'))
+	ESX.ShowNotification(TranslateCap('impound_successful'))
 	currentTask.busy = false
 end
 

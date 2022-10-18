@@ -59,26 +59,28 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param autoMobile boolean
 ---@param Properties table
 ---@param cb function
-function ESX.OneSync.SpawnVehicle(model, coords, heading, autoMobile, Properties, cb)
+function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
 	model = type(model) == 'string' and joaat(model) or model
 	Properties = Properties or {}
-	local coords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
-	if type(autoMobile) ~= 'boolean' then
-		return
-	end
+	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	CreateThread(function()
-		local SpawnedEntity = autoMobile and Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading) or CreateVehicle(model, coords, heading, true, true)
-		while not DoesEntityExist(SpawnedEntity) do
-			Wait(0)
+		local player = nil
+		for _, playerId in ipairs(GetPlayers()) do
+				ESX.GetVehicleType(model, playerId, function(Type)
+					local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
+					Wait(250)
+					local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
+					Properties.NetId = NetworkId
+					Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+					cb(NetworkId)
+				end)
+				break
 		end
-		Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
-		local netID = NetworkGetNetworkIdFromEntity(SpawnedEntity)
-		cb(netID)
 	end)
 end
+
 
 ---@param model number|string
 ---@param coords vector3|table

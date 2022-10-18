@@ -45,13 +45,13 @@ AddEventHandler('esx_shops:buyItem', function(itemName, amount, zone)
 			if xPlayer.canCarryItem(itemName, amount) then
 				xPlayer.removeMoney(price, label .. " Purchase")
 				xPlayer.addInventoryItem(itemName, amount)
-				xPlayer.showNotification(_U('bought', amount, label, ESX.Math.GroupDigits(price)))
+				xPlayer.showNotification(TranslateCap('bought', amount, label, ESX.Math.GroupDigits(price)))
 			else
-				xPlayer.showNotification(_U('player_cannot_hold'))
+				xPlayer.showNotification(TranslateCap('player_cannot_hold'))
 			end
 		else
 			local missingMoney = price - xPlayer.getMoney()
-			xPlayer.showNotification(_U('not_enough', ESX.Math.GroupDigits(missingMoney)))
+			xPlayer.showNotification(TranslateCap('not_enough', ESX.Math.GroupDigits(missingMoney)))
 		end
 	end
 end)

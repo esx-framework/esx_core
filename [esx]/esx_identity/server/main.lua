@@ -190,7 +190,7 @@ if Config.UseDeferrals then
                                 function(data, rawData)
                                     if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex ==
                                         '' or data.height == '' then
-                                        deferrals.done(_U('data_incorrect'))
+                                        deferrals.done(TranslateCap('data_incorrect'))
                                     else
                                         if checkNameFormat(data.firstname) and checkNameFormat(data.lastname) and
                                             checkDOBFormat(data.dateofbirth) and checkSexFormat(data.sex) and
@@ -206,7 +206,7 @@ if Config.UseDeferrals then
 
                                             deferrals.done()
                                         else
-                                            deferrals.done(_U('invalid_format'))
+                                            deferrals.done(TranslateCap('invalid_format'))
                                         end
                                     end
                                 end)
@@ -225,7 +225,7 @@ if Config.UseDeferrals then
                             function(data, rawData)
                                 if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex ==
                                     '' or data.height == '' then
-                                    deferrals.done(_U('data_incorrect'))
+                                    deferrals.done(TranslateCap('data_incorrect'))
                                 else
                                     if checkNameFormat(date.firstname) then
                                         if checkNameFormat(data.lastname) then
@@ -247,26 +247,26 @@ if Config.UseDeferrals then
 
                                                         deferrals.done()
                                                     else
-                                                        deferrals.done(_U('invalid_height_format'))
+                                                        deferrals.done(TranslateCap('invalid_height_format'))
                                                     end
                                                 else
-                                                    deferrals.done(_U('invalid_sex_format'))
+                                                    deferrals.done(TranslateCap('invalid_sex_format'))
                                                 end
                                             else
-                                                deferrals.done(_U('invalid_dob_format'))
+                                                deferrals.done(TranslateCap('invalid_dob_format'))
                                             end
                                         else
-                                            deferrals.done(_U('invalid_lastname_format'))
+                                            deferrals.done(TranslateCap('invalid_lastname_format'))
                                         end
                                     else
-                                        deferrals.done(_U('invalid_firstname_format'))
+                                        deferrals.done(TranslateCap('invalid_firstname_format'))
                                     end
                                 end
                             end)
                     end
                 end)
         else
-            deferrals.done(_U('no_identifier'))
+            deferrals.done(TranslateCap('no_identifier'))
         end
     end)
 
@@ -372,7 +372,7 @@ else
                         end
                     end)
 			else
-				deferrals.done(_U('no_identifier'))
+				deferrals.done(TranslateCap('no_identifier'))
 			end
 		end)
 
@@ -423,7 +423,7 @@ else
 
 		if xPlayer then
 			if not alreadyRegistered[xPlayer.identifier] then
-                xPlayer.showNotification(_U('running'), "error")
+                xPlayer.showNotification(TranslateCap('running'), "error")
 				if checkNameFormat(data.firstname) then
 					if checkNameFormat(data.lastname) then
 						if checkSexFormat(data.sex) then
@@ -455,27 +455,27 @@ else
 									playerIdentity[xPlayer.identifier] = nil
 									cb(true)
 								else
-									xPlayer.showNotification(_U('invalid_height_format'), "error")
+									xPlayer.showNotification(TranslateCap('invalid_height_format'), "error")
 									cb(false)
 								end
 							else
-								xPlayer.showNotification(_U('invalid_dob_format'), "error")
+								xPlayer.showNotification(TranslateCap('invalid_dob_format'), "error")
 								cb(false)
 							end
 						else
-							xPlayer.showNotification(_U('invalid_sex_format'), "error")
+							xPlayer.showNotification(TranslateCap('invalid_sex_format'), "error")
 							cb(false)
 						end
 					else
-						xPlayer.showNotification(_U('invalid_lastname_format'), "error")
+						xPlayer.showNotification(TranslateCap('invalid_lastname_format'), "error")
 						cb(false)
 					end
 				else
-					xPlayer.showNotification(_U('invalid_firstname_format'), "error")
+					xPlayer.showNotification(TranslateCap('invalid_firstname_format'), "error")
 					cb(false)
 				end
 			else
-				xPlayer.showNotification(_U('already_registered'), "error")
+				xPlayer.showNotification(TranslateCap('already_registered'), "error")
 				cb(false)
 			end
 		else
@@ -503,27 +503,27 @@ else
                                     TriggerClientEvent('esx_identity:setPlayerData', source, Identity)
 									cb(true)
 								else
-									TriggerClientEvent("esx:showNotification", source, _U('invalid_height_format'), "error")
+									TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_height_format'), "error")
 									cb(false)
 								end
 							else
-								TriggerClientEvent("esx:showNotification", source, _U('invalid_dob_format'), "error")
+								TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_dob_format'), "error")
 								cb(false)
 							end
 						else
-							TriggerClientEvent("esx:showNotification", source, _U('invalid_sex_format'), "error")
+							TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_sex_format'), "error")
 							cb(false)
 						end
 					else
-						TriggerClientEvent("esx:showNotification", source, _U('invalid_lastname_format'), "error")
+						TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_lastname_format'), "error")
 						cb(false)
 					end
 				else
-					TriggerClientEvent("esx:showNotification", source, _U('invalid_firstname_format'), "error")
+					TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_firstname_format'), "error")
 					cb(false)
 				end
 			else
-				TriggerClientEvent("esx:showNotification", source, _U('data_incorrect'), "error")
+				TriggerClientEvent("esx:showNotification", source, TranslateCap('data_incorrect'), "error")
                 cb(false)
 			end
 		end
@@ -533,80 +533,80 @@ end
 if Config.EnableCommands then
 	ESX.RegisterCommand('char', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.getName() then
-            xPlayer.showNotification(_U('active_character', xPlayer.getName()))
+            xPlayer.showNotification(TranslateCap('active_character', xPlayer.getName()))
         else
-            xPlayer.showNotification(_U('error_active_character'))
+            xPlayer.showNotification(TranslateCap('error_active_character'))
         end
-    end, false, {help = _U('show_active_character')})
+    end, false, {help = TranslateCap('show_active_character')})
 
 	ESX.RegisterCommand('chardel', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.getName() then
             if Config.UseDeferrals then
-                xPlayer.kick(_U('deleted_identity'))
+                xPlayer.kick(TranslateCap('deleted_identity'))
                 Wait(1500)
                 deleteIdentity(xPlayer)
-                xPlayer.showNotification(_U('deleted_character'))
+                xPlayer.showNotification(TranslateCap('deleted_character'))
                 playerIdentity[xPlayer.identifier] = nil
                 alreadyRegistered[xPlayer.identifier] = false
             else
                 deleteIdentity(xPlayer)
-                xPlayer.showNotification(_U('deleted_character'))
+                xPlayer.showNotification(TranslateCap('deleted_character'))
                 playerIdentity[xPlayer.identifier] = nil
                 alreadyRegistered[xPlayer.identifier] = false
                 TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
             end
         else
-            xPlayer.showNotification(_U('error_delete_character'))
+            xPlayer.showNotification(TranslateCap('error_delete_character'))
         end
-    end, false, {help = _U('delete_character')})
+    end, false, {help = TranslateCap('delete_character')})
 end
 
 if Config.EnableDebugging then
     ESX.RegisterCommand('xPlayerGetFirstName', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.get('firstName') then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_first_name', xPlayer.get('firstName')))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_first_name', xPlayer.get('firstName')))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_first_name'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_first_name'))
         end
-    end, false, {help = _U('debug_xPlayer_get_first_name')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_first_name')})
 
     ESX.RegisterCommand('xPlayerGetLastName', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.get('lastName') then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_last_name', xPlayer.get('lastName')))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_last_name', xPlayer.get('lastName')))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_last_name'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_last_name'))
         end
-    end, false, {help = _U('debug_xPlayer_get_last_name')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_last_name')})
 
     ESX.RegisterCommand('xPlayerGetFullName', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.getName() then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_full_name', xPlayer.getName()))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_full_name', xPlayer.getName()))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_full_name'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_full_name'))
         end
-    end, false, {help = _U('debug_xPlayer_get_full_name')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_full_name')})
 
     ESX.RegisterCommand('xPlayerGetSex', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.get('sex') then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_sex', xPlayer.get('sex')))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_sex', xPlayer.get('sex')))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_sex'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_sex'))
         end
-    end, false, {help = _U('debug_xPlayer_get_sex')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_sex')})
 
     ESX.RegisterCommand('xPlayerGetDOB', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.get('dateofbirth') then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_dob', xPlayer.get('dateofbirth')))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_dob', xPlayer.get('dateofbirth')))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_dob'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_dob'))
         end
-    end, false, {help = _U('debug_xPlayer_get_dob')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_dob')})
 
     ESX.RegisterCommand('xPlayerGetHeight', 'user', function(xPlayer, args, showError)
         if xPlayer and xPlayer.get('height') then
-            xPlayer.showNotification(_U('return_debug_xPlayer_get_height', xPlayer.get('height')))
+            xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_height', xPlayer.get('height')))
         else
-            xPlayer.showNotification(_U('error_debug_xPlayer_get_height'))
+            xPlayer.showNotification(TranslateCap('error_debug_xPlayer_get_height'))
         end
-    end, false, {help = _U('debug_xPlayer_get_height')})
+    end, false, {help = TranslateCap('debug_xPlayer_get_height')})
 end

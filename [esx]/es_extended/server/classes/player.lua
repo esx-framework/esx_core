@@ -177,7 +177,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 			return
 		end
-		if money >= 0 then
+		if money > 0 then
 			local account = self.getAccount(accountName)
 
 			if account then
@@ -407,9 +407,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
-			if ammoCount < weapon.ammo then
-				weapon.ammo = ammoCount
-			end
+			weapon.ammo = ammoCount
 		end
 	end
 

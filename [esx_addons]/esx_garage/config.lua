@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = "en"
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.DrawDistance = 10.0
 

@@ -196,9 +196,17 @@ end)
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	if value then
 			Wait(0)
-			local NetId = tonumber(bagName:gsub('entity:', ''), 10)
+			local NetId = value.NetId
 			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
-
+			local Tries = 0
+			while not DoesEntityExist(Vehicle) do
+				local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+				Wait(100)
+				Tries = Tries + 1
+				if Tries > 300 then
+					break
+				end
+			end
 			if NetworkGetEntityOwner(Vehicle) == PlayerId() then
 					ESX.Game.SetVehicleProperties(Vehicle, value)
 			end
@@ -308,50 +316,6 @@ AddEventHandler('esx:setJob', function(Job)
 		})
 	end
 	ESX.SetPlayerData('job', Job)
-end)
-
-RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(vehicle)
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
-		if admin then
-			local model = (type(vehicle) == 'number' and vehicle or joaat(vehicle))
-
-			if IsModelInCdimage(model) then
-				local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
-
-				ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
-					SetVehicleDirtLevel(vehicle, 0)
-					SetVehicleFuelLevel(vehicle, 100.0)
-			    -- SetVehicleCustomSecondaryColour(vehicle, 55, 140, 191) -- ESX Blue
-					SetEntityAsMissionEntity(vehicle, true, true) -- Persistant Vehicle
-
-					-- Max out vehicle upgrades
-					if Config.MaxAdminVehicles then 
-						SetVehicleExplodesOnHighExplosionDamage(vehicle, true)
-						SetVehicleModKit(vehicle, 0)
-						SetVehicleMod(vehicle, 11, 3, false) -- modEngine
-						SetVehicleMod(vehicle, 12, 2, false) -- modBrakes
-						SetVehicleMod(vehicle, 13, 2, false) -- modTransmission
-						SetVehicleMod(vehicle, 15, 3, false) -- modSuspension
-						SetVehicleMod(vehicle, 16, 4, false) -- modArmor
-						ToggleVehicleMod(vehicle, 18, true) -- modTurbo
-						SetVehicleTurboPressure(vehicle, 100.0)
-						SetVehicleNumberPlateText(vehicle, "ESX KISS")
-						SetVehicleNumberPlateTextIndex(vehicle, 1)
-						SetVehicleNitroEnabled(vehicle, true)
-
-						for i=0, 3 do
-							SetVehicleNeonLightEnabled(vehicle, i, true)
-						end
-						SetVehicleNeonLightsColour(vehicle, 55, 140, 191)  -- ESX Blue
-					end
-				end)
-			else
-				ESX.ShowNotification('Invalid vehicle model.')
-			end
-		end
-	end)
 end)
 
 if not Config.OxInventory then
@@ -500,7 +464,7 @@ if not Config.OxInventory and Config.EnableDefaultInventory then
 		end
 	end)
 
-	RegisterKeyMapping('showinv', _U('keymap_showinventory'), 'keyboard', 'F2')
+	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
 -- disable wanted level
@@ -539,7 +503,7 @@ if not Config.OxInventory then
 							end
 						end
 
-						label = ('%s~n~%s'):format(label, _U('threw_pickup_prompt'))
+						label = ('%s~n~%s'):format(label, TranslateCap('threw_pickup_prompt'))
 					end
 
 					ESX.Game.Utils.DrawText3D({
@@ -741,6 +705,30 @@ AddEventHandler("esx:freezePlayer", function(input)
         SetPlayerInvincible(player, false)
     end
 end)
+
+RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
+	local Model = Model
+	local VehicleType = GetVehicleClassFromName(Model)
+	local type = "automobile"
+	if VehicleType == 15 then
+		type = "heli"
+	elseif VehicleType == 16 then
+		type = "plane"
+	elseif VehicleType == 14 then
+		type = "boat"
+	elseif VehicleType == 11 then
+		type = "trailer"
+	elseif VehicleType == 21 then
+		type = "train"
+	elseif VehicleType == 13 or VehicleType == 8 then
+		type = "bike"
+	end
+	if Model == `submersible` or Model == `submersible2` then
+		type = "submarine"
+	end
+	TriggerServerEvent("esx:ReturnVehicleType", type, Request)
+end)
+
 
 local DoNotUse = {
 	'essentialmode',

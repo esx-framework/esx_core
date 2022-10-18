@@ -15,20 +15,20 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 
 		if price < societyAccount.money then
 			TriggerClientEvent('esx_lscustom:installMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('purchased'))
 			societyAccount.removeMoney(price)
 		else
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('not_enough_money'))
 		end
 	else
 		if price < xPlayer.getMoney() then
 			TriggerClientEvent('esx_lscustom:installMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('purchased'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('purchased'))
 			xPlayer.removeMoney(price, "LSC Purchase")
 		else
 			TriggerClientEvent('esx_lscustom:cancelInstallMod', source)
-			TriggerClientEvent('esx:showNotification', source, _U('not_enough_money'))
+			TriggerClientEvent('esx:showNotification', source, TranslateCap('not_enough_money'))
 		end
 	end
 end)

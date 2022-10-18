@@ -1109,7 +1109,7 @@ function ESX.ShowInventory()
 
     for i=1, #(ESX.PlayerData.accounts) do
         if ESX.PlayerData.accounts[i].money > 0 then
-            local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+            local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
             table.insert(elements, {
@@ -1169,7 +1169,7 @@ function ESX.ShowInventory()
     ESX.UI.Menu.CloseAll()
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory', {
-        title = _U('inventory', currentWeight, ESX.PlayerData.maxWeight),
+        title = TranslateCap('inventory', currentWeight, ESX.PlayerData.maxWeight),
         align = 'bottom-right',
         elements = elements
     }, function(data, menu)
@@ -1179,7 +1179,7 @@ function ESX.ShowInventory()
 
         if data.current.usable then
             table.insert(elements, {
-                label = _U('use'),
+                label = TranslateCap('use'),
                 action = 'use',
                 type = data.current.type,
                 value = data.current.value
@@ -1189,7 +1189,7 @@ function ESX.ShowInventory()
         if data.current.canRemove then
             if player ~= -1 and distance <= 3.0 then
                 table.insert(elements, {
-                    label = _U('give'),
+                    label = TranslateCap('give'),
                     action = 'give',
                     type = data.current.type,
                     value = data.current.value
@@ -1197,7 +1197,7 @@ function ESX.ShowInventory()
             end
 
             table.insert(elements, {
-                label = _U('remove'),
+                label = TranslateCap('remove'),
                 action = 'remove',
                 type = data.current.type,
                 value = data.current.value
@@ -1207,7 +1207,7 @@ function ESX.ShowInventory()
         if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and
             distance <= 3.0 then
             table.insert(elements, {
-                label = _U('giveammo'),
+                label = TranslateCap('giveammo'),
                 action = 'give_ammo',
                 type = data.current.type,
                 value = data.current.value
@@ -1215,7 +1215,7 @@ function ESX.ShowInventory()
         end
 
         table.insert(elements, {
-            label = _U('return'),
+            label = TranslateCap('return'),
             action = 'return'
         })
 
@@ -1246,7 +1246,7 @@ function ESX.ShowInventory()
                         end
 
                         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
-                            title = _U('give_to'),
+                            title = TranslateCap('give_to'),
                             align = 'bottom-right',
                             elements = elements
                         }, function(data2, menu2)
@@ -1266,7 +1266,7 @@ function ESX.ShowInventory()
                                     else
                                         ESX.UI.Menu.Open('dialog', GetCurrentResourceName(),
                                             'inventory_item_count_give', {
-                                                title = _U('amount')
+                                                title = TranslateCap('amount')
                                             }, function(data3, menu3)
                                                 local quantity = tonumber(data3.value)
 
@@ -1277,17 +1277,17 @@ function ESX.ShowInventory()
                                                     menu2.close()
                                                     menu1.close()
                                                 else
-                                                    ESX.ShowNotification(_U('amount_invalid'))
+                                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
                                                 end
                                             end, function(data3, menu3)
                                                 menu3.close()
                                             end)
                                     end
                                 else
-                                    ESX.ShowNotification(_U('in_vehicle'))
+                                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                                 end
                             else
-                                ESX.ShowNotification(_U('players_nearby'))
+                                ESX.ShowNotification(TranslateCap('players_nearby'))
                                 menu2.close()
                             end
                         end, function(data2, menu2)
@@ -1295,7 +1295,7 @@ function ESX.ShowInventory()
                         end)
                     end, players)
                 else
-                    ESX.ShowNotification(_U('players_nearby'))
+                    ESX.ShowNotification(TranslateCap('players_nearby'))
                 end
             elseif data1.current.action == 'remove' then
                 if IsPedOnFoot(playerPed) and not IsPedFalling(playerPed) then
@@ -1310,7 +1310,7 @@ function ESX.ShowInventory()
                         TriggerServerEvent('esx:removeInventoryItem', type, item)
                     else
                         ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
-                            title = _U('amount')
+                            title = TranslateCap('amount')
                         }, function(data2, menu2)
                             local quantity = tonumber(data2.value)
 
@@ -1322,7 +1322,7 @@ function ESX.ShowInventory()
                                 Wait(1000)
                                 TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
                             else
-                                ESX.ShowNotification(_U('amount_invalid'))
+                                ESX.ShowNotification(TranslateCap('amount_invalid'))
                             end
                         end, function(data2, menu2)
                             menu2.close()
@@ -1343,7 +1343,7 @@ function ESX.ShowInventory()
                     if closestPlayer ~= -1 and closestDistance < 3.0 then
                         if pedAmmo > 0 then
                             ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
-                                title = _U('amountammo')
+                                title = TranslateCap('amountammo')
                             }, function(data2, menu2)
                                 local quantity = tonumber(data2.value)
 
@@ -1354,22 +1354,22 @@ function ESX.ShowInventory()
                                         menu2.close()
                                         menu1.close()
                                     else
-                                        ESX.ShowNotification(_U('noammo'))
+                                        ESX.ShowNotification(TranslateCap('noammo'))
                                     end
                                 else
-                                    ESX.ShowNotification(_U('amount_invalid'))
+                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
                                 end
                             end, function(data2, menu2)
                                 menu2.close()
                             end)
                         else
-                            ESX.ShowNotification(_U('noammo'))
+                            ESX.ShowNotification(TranslateCap('noammo'))
                         end
                     else
-                        ESX.ShowNotification(_U('players_nearby'))
+                        ESX.ShowNotification(TranslateCap('players_nearby'))
                     end
                 else
-                    ESX.ShowNotification(_U('in_vehicle'))
+                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                 end
             end
         end, function(data1, menu1)
@@ -1381,10 +1381,13 @@ function ESX.ShowInventory()
     end)
 end
 
-RegisterNetEvent('esx:serverCallback')
-AddEventHandler('esx:serverCallback', function(requestId, ...)
-    Core.ServerCallbacks[requestId](...)
-    Core.ServerCallbacks[requestId] = nil
+RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
+    if Core.ServerCallbacks[requestId] then
+        Core.ServerCallbacks[requestId](...)
+        Core.ServerCallbacks[requestId] = nil
+    else 
+        print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
+    end
 end)
 
 RegisterNetEvent('esx:showNotification')

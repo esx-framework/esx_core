@@ -7,11 +7,11 @@ function OpenShopMenu()
 		menu.close()
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = _U('valid_purchase'),
+			title = TranslateCap('valid_purchase'),
 			align = 'top-left',
 			elements = {
-				{label = _U('no'),  value = 'no'},
-				{label = _U('yes'), value = 'yes'}
+				{label = TranslateCap('no'),  value = 'no'},
+				{label = TranslateCap('yes'), value = 'yes'}
 		}}, function(data, menu)
 			menu.close()
 
@@ -29,7 +29,7 @@ function OpenShopMenu()
 							TriggerEvent('skinchanger:loadSkin', skin) 
 						end)
 
-						ESX.ShowNotification(_U('not_enough_money'))
+						ESX.ShowNotification(TranslateCap('not_enough_money'))
 					end
 				end)
 			elseif data.current.value == 'no' then
@@ -39,17 +39,17 @@ function OpenShopMenu()
 			end
 
 			currentAction = 'shop_menu'
-			currentActionMsg = _U('press_access')
+			currentActionMsg = TranslateCap('press_access')
 		end, function(data, menu)
 			menu.close()
 			currentAction = 'shop_menu'
-			currentActionMsg = _U('press_access')
+			currentActionMsg = TranslateCap('press_access')
 		end)
 	end, function(data, menu)
 		menu.close()
 
 		currentAction    = 'shop_menu'
-		currentActionMsg  = _U('press_access')
+		currentActionMsg  = TranslateCap('press_access')
 	end, {
 		'beard_1',
 		'beard_2',
@@ -78,7 +78,7 @@ end
 
 AddEventHandler('esx_barbershop:hasEnteredMarker', function(zone)
 	currentAction = 'shop_menu'
-	currentActionMsg = _U('press_access')
+	currentActionMsg = TranslateCap('press_access')
 end)
 
 AddEventHandler('esx_barbershop:hasExitedMarker', function(zone)
@@ -102,7 +102,7 @@ CreateThread(function()
 		SetBlipAsShortRange(blip, true)
 
 		BeginTextCommandSetBlipName('STRING')
-		AddTextComponentSubstringPlayerName(_U('barber_blip'))
+		AddTextComponentSubstringPlayerName(TranslateCap('barber_blip'))
 		EndTextCommandSetBlipName(blip)
 	end
 end)

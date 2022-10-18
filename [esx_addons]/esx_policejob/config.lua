@@ -20,7 +20,7 @@ Config.EnableCustomPeds           = false -- Enable custom peds in cloak room? S
 Config.EnableESXService           = false -- Enable esx service?
 Config.MaxInService               = -1 -- How many people can be in service at once? Set as -1 to have no limit
 
-Config.Locale                     = 'en'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.OxInventory                = ESX.GetConfig().OxInventory
 

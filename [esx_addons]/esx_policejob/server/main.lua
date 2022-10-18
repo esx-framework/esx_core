@@ -4,7 +4,7 @@ if Config.EnableESXService then
 	end
 end
 
-TriggerEvent('esx_phone:registerNumber', 'police', _U('alert_police'), true, true)
+TriggerEvent('esx_phone:registerNumber', 'police', TranslateCap('alert_police'), true, true)
 TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
 
 RegisterNetEvent('esx_policejob:confiscatePlayerItem')
@@ -29,13 +29,13 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 			if sourceXPlayer.canCarryItem(itemName, sourceItem.count) then
 				targetXPlayer.removeInventoryItem(itemName, amount)
 				sourceXPlayer.addInventoryItem   (itemName, amount)
-				sourceXPlayer.showNotification(_U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
-				targetXPlayer.showNotification(_U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
+				sourceXPlayer.showNotification(TranslateCap('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
+				targetXPlayer.showNotification(TranslateCap('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
 			else
-				sourceXPlayer.showNotification(_U('quantity_invalid'))
+				sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 			end
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_account' then
@@ -46,10 +46,10 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 			targetXPlayer.removeAccountMoney(itemName, amount, "Confiscated")
 			sourceXPlayer.addAccountMoney   (itemName, amount, "Confiscated")
 
-			sourceXPlayer.showNotification(_U('you_confiscated_account', amount, itemName, targetXPlayer.name))
-			targetXPlayer.showNotification(_U('got_confiscated_account', amount, itemName, sourceXPlayer.name))
+			sourceXPlayer.showNotification(TranslateCap('you_confiscated_account', amount, itemName, targetXPlayer.name))
+			targetXPlayer.showNotification(TranslateCap('got_confiscated_account', amount, itemName, sourceXPlayer.name))
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 
 	elseif itemType == 'item_weapon' then
@@ -60,10 +60,10 @@ AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType,
 			targetXPlayer.removeWeapon(itemName)
 			sourceXPlayer.addWeapon   (itemName, amount)
 
-			sourceXPlayer.showNotification(_U('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
-			targetXPlayer.showNotification(_U('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
+			sourceXPlayer.showNotification(TranslateCap('you_confiscated_weapon', ESX.GetWeaponLabel(itemName), targetXPlayer.name, amount))
+			targetXPlayer.showNotification(TranslateCap('got_confiscated_weapon', ESX.GetWeaponLabel(itemName), amount, sourceXPlayer.name))
 		else
-			sourceXPlayer.showNotification(_U('quantity_invalid'))
+			sourceXPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end
 end)
@@ -127,12 +127,12 @@ AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 			if xPlayer.canCarryItem(itemName, count) then
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.name))
+				xPlayer.showNotification(TranslateCap('have_withdrawn', count, inventoryItem.name))
 			else
-				xPlayer.showNotification(_U('quantity_invalid'))
+				xPlayer.showNotification(TranslateCap('quantity_invalid'))
 			end
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end)
 end)
@@ -149,9 +149,9 @@ AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.name))
+			xPlayer.showNotification(TranslateCap('have_deposited', count, inventoryItem.name))
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(TranslateCap('quantity_invalid'))
 		end
 	end)
 end)
@@ -160,7 +160,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	if notify then
-		xPlayer.showNotification(_U('being_searched'))
+		xPlayer.showNotification(TranslateCap('being_searched'))
 	end
 
 	if xPlayer then

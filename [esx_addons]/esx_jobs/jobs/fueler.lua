@@ -24,9 +24,9 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 20,
 			Blip = true,
-			Name = _U('f_oil_refiner'),
+			Name = TranslateCap('f_oil_refiner'),
 			Type = 'cloakroom',
-			Hint = _U('cloak_change'),
+			Hint = TranslateCap('cloak_change'),
 			GPS = {x = 554.59, y = -2314.43, z = 4.86}
 		},
 
@@ -36,11 +36,11 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('f_drill_oil'),
+			Name = TranslateCap('f_drill_oil'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('f_fuel'),
+					name = TranslateCap('f_fuel'),
 					db_name = 'petrol',
 					time = 5,
 					max = 24,
@@ -51,7 +51,7 @@ Config.Jobs.fueler = {
 					drop = 100
 				}
 			},
-			Hint = _U('f_drillbutton'),
+			Hint = TranslateCap('f_drillbutton'),
 			GPS = {x = 2736.94, y = 1417.99, z = 23.48}
 		},
 
@@ -61,22 +61,22 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('f_fuel_refine'),
+			Name = TranslateCap('f_fuel_refine'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('f_fuel_refine'),
+					name = TranslateCap('f_fuel_refine'),
 					db_name = 'petrol_raffin',
 					time = 5,
 					max = 24,
 					add = 1,
 					remove = 2,
 					requires = 'petrol',
-					requires_name = _U('f_fuel'),
+					requires_name = TranslateCap('f_fuel'),
 					drop = 100
 				}
 			},
-			Hint = _U('f_refine_fuel_button'),
+			Hint = TranslateCap('f_refine_fuel_button'),
 			GPS = {x = 265.75, y = -3013.39, z = 4.73}
 		},
 
@@ -86,22 +86,22 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = true,
-			Name = _U('f_fuel_mixture'),
+			Name = TranslateCap('f_fuel_mixture'),
 			Type = 'work',
 			Item = {
 				{
-					name = _U('f_gas'),
+					name = TranslateCap('f_gas'),
 					db_name = 'essence',
 					time = 5,
 					max = 24,
 					add = 2,
 					remove = 1,
 					requires = 'petrol_raffin',
-					requires_name = _U('f_fuel_refine'),
+					requires_name = TranslateCap('f_fuel_refine'),
 					drop = 100
 				}
 			},
-			Hint = _U('f_fuel_mixture_button'),
+			Hint = TranslateCap('f_fuel_mixture_button'),
 			GPS = {x = 491.40, y = -2163.37, z = 4.91}
 		},
 
@@ -111,10 +111,10 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('spawn_veh'),
+			Name = TranslateCap('spawn_veh'),
 			Type = 'vehspawner',
 			Spawner = 1,
-			Hint = _U('spawn_truck_button'),
+			Hint = TranslateCap('spawn_truck_button'),
 			Caution = 2000,
 			GPS = {x = 602.25, y = 2926.62, z = 39.68}
 		},
@@ -125,7 +125,7 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = -1,
 			Blip = false,
-			Name = _U('service_vh'),
+			Name = TranslateCap('service_vh'),
 			Type = 'vehspawnpt',
 			Spawner = 1,
 			GPS = 0,
@@ -138,9 +138,9 @@ Config.Jobs.fueler = {
 			Color = {r = 50, g = 200, b = 50},
 			Marker = 1,
 			Blip = false,
-			Name = _U('return_vh'),
+			Name = TranslateCap('return_vh'),
 			Type = 'vehdelete',
-			Hint = _U('return_vh_button'),
+			Hint = TranslateCap('return_vh_button'),
 			Spawner = 1,
 			Caution = 2000,
 			GPS = 0,
@@ -153,23 +153,23 @@ Config.Jobs.fueler = {
 			Size = {x = 10.0, y = 10.0, z = 1.0},
 			Marker = 1,
 			Blip = true,
-			Name = _U('f_deliver_gas'),
+			Name = TranslateCap('f_deliver_gas'),
 			Type = 'delivery',
 			Spawner = 1,
 			Item = {
 				{
-					name = _U('delivery'),
+					name = TranslateCap('delivery'),
 					time = 0.5,
 					remove = 1,
 					max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
 					price = 61,
 					requires = 'essence',
-					requires_name = _U('f_gas'),
+					requires_name = TranslateCap('f_gas'),
 					drop = 100
 				}
 			},
 
-			Hint = _U('f_deliver_gas_button'),
+			Hint = TranslateCap('f_deliver_gas_button'),
 			GPS = {x = 609.58, y = 2856.74, z = 39.49}
 		}
 

@@ -8,13 +8,13 @@ function ShowBillsMenu()
 
 			for k,v in ipairs(bills) do
 				table.insert(elements, {
-					label  = ('%s - <span style="color:red;">%s</span>'):format(v.label, _U('invoices_item', ESX.Math.GroupDigits(v.amount))),
+					label  = ('%s - <span style="color:red;">%s</span>'):format(v.label, TranslateCap('invoices_item', ESX.Math.GroupDigits(v.amount))),
 					billId = v.id
 				})
 			end
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
-				title    = _U('invoices'),
+				title    = TranslateCap('invoices'),
 				align    = 'bottom-right',
 				elements = elements
 			}, function(data, menu)
@@ -27,7 +27,7 @@ function ShowBillsMenu()
 				menu.close()
 			end)
 		else
-			ESX.ShowNotification(_U('no_invoices'))
+			ESX.ShowNotification(TranslateCap('no_invoices'))
 		end
 	end)
 end
@@ -38,7 +38,7 @@ RegisterCommand('showbills', function()
 	end
 end, false)
 
-RegisterKeyMapping('showbills', _U('keymap_showbills'), 'keyboard', 'F7')
+RegisterKeyMapping('showbills', TranslateCap('keymap_showbills'), 'keyboard', 'F7')
 
 AddEventHandler('esx:onPlayerDeath', function() isDead = true end)
 AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)

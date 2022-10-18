@@ -14,10 +14,10 @@ AddEventHandler('esx_garage:closemenu', function()
     })
 
     if not menuIsShowed and thisGarage then
-        ESX.TextUI(_U('access_parking'))
+        ESX.TextUI(TranslateCap('access_parking'))
     end
     if not menuIsShowed and thisPound then
-        ESX.TextUI(_U('access_Impound'))
+        ESX.TextUI(TranslateCap('access_Impound'))
     end
 end)
 
@@ -27,30 +27,18 @@ RegisterNUICallback('escape', function(data, cb)
 end)
 
 RegisterNUICallback('spawnVehicle', function(data, cb)
-    local spawnCoords = {
-        x = data.spawnPoint.x,
-        y = data.spawnPoint.y,
-        z = data.spawnPoint.z
-    }
-
+    local spawnCoords = vector3(data.spawnPoint.x, data.spawnPoint.y, data.spawnPoint.z)
     if thisGarage then
 
         if ESX.Game.IsSpawnPointClear(spawnCoords, 2.5) then
-            ESX.Game.SpawnVehicle(data.vehicleProps.model, spawnCoords, data.spawnPoint.heading, function(vehicle)
-                TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
-                ESX.Game.SetVehicleProperties(vehicle, data.vehicleProps)
-                SetVehicleEngineOn(vehicle, (not GetIsVehicleEngineRunning(vehicle)), true, true)
-            end)
-
             thisGarage = nil
-
-            TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data.vehicleProps)
+            TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data, spawnCoords)
             TriggerEvent('esx_garage:closemenu')
 
-            ESX.ShowNotification(_U('veh_released'))
+            ESX.ShowNotification(TranslateCap('veh_released'))
 
         else
-            ESX.ShowNotification(_U('veh_block'), 'error')
+            ESX.ShowNotification(TranslateCap('veh_block'), 'error')
         end
 
     elseif thisPound then
@@ -59,24 +47,16 @@ RegisterNUICallback('spawnVehicle', function(data, cb)
             if hasMoney then
                 if ESX.Game.IsSpawnPointClear(spawnCoords, 2.5) then
                     TriggerServerEvent('esx_garage:payPound', data.exitVehicleCost)
-
-                    ESX.Game.SpawnVehicle(data.vehicleProps.model, spawnCoords, data.spawnPoint.heading,
-                        function(vehicle)
-                            TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
-                            ESX.Game.SetVehicleProperties(vehicle, data.vehicleProps)
-                            SetVehicleEngineOn(vehicle, (not GetIsVehicleEngineRunning(vehicle)), true, true)
-                        end)
-
                     thisPound = nil
 
-                    TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data.vehicleProps)
+                    TriggerServerEvent('esx_garage:updateOwnedVehicle', false, nil, nil, data, spawnCoords)
                     TriggerEvent('esx_garage:closemenu')
 
                 else
-                    ESX.ShowNotification(_U('veh_block'), 'error')
+                    ESX.ShowNotification(TranslateCap('veh_block'), 'error')
                 end
             else
-                ESX.ShowNotification(_U('missing_money'))
+                ESX.ShowNotification(TranslateCap('missing_money'))
             end
         end, data.exitVehicleCost)
 
@@ -111,7 +91,7 @@ CreateThread(function()
         SetBlipAsShortRange(blip, true)
 
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(_U('parking_blip_name'))
+        AddTextComponentSubstringPlayerName(TranslateCap('parking_blip_name'))
         EndTextCommandSetBlipName(blip)
     end
 
@@ -125,7 +105,7 @@ CreateThread(function()
         SetBlipAsShortRange(blip, true)
 
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(_U('Impound_blip_name'))
+        AddTextComponentSubstringPlayerName(TranslateCap('Impound_blip_name'))
         EndTextCommandSetBlipName(blip)
     end
 end)
@@ -137,9 +117,9 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part)
         thisGarage = garage
 
         if isInVehicle then
-            ESX.TextUI(_U('park_veh'))
+            ESX.TextUI(TranslateCap('park_veh'))
         else
-            ESX.TextUI(_U('access_parking'))
+            ESX.TextUI(TranslateCap('access_parking'))
         end
     end
 
@@ -147,7 +127,7 @@ AddEventHandler('esx_garage:hasEnteredMarker', function(name, part)
         local pound = Config.Impounds[name]
         thisPound = pound
 
-        ESX.TextUI(_U('access_Impound'))
+        ESX.TextUI(TranslateCap('access_Impound'))
     end
 end)
 
@@ -268,12 +248,12 @@ CreateThread(function()
                                                 poundSpawnPoint = poundSpawnPoint,
                                                 spawnPoint = spawnPoint,
                                                 locales = {
-                                                    action = _U('veh_exit'),
-                                                    veh_model = _U('veh_model'),
-                                                    veh_plate = _U('veh_plate'),
-                                                    veh_condition = _U('veh_condition'),
-                                                    veh_action = _U('veh_action'),
-                                                    impound_action = _U('impound_action')
+                                                    action = TranslateCap('veh_exit'),
+                                                    veh_model = TranslateCap('veh_model'),
+                                                    veh_plate = TranslateCap('veh_plate'),
+                                                    veh_condition = TranslateCap('veh_condition'),
+                                                    veh_action = TranslateCap('veh_action'),
+                                                    impound_action = TranslateCap('impound_action')
                                                 }
                                             })
                                         else
@@ -283,12 +263,12 @@ CreateThread(function()
                                                 vehiclesList = {json.encode(vehiclesList)},
                                                 spawnPoint = spawnPoint,
                                                 locales = {
-                                                    action = _U('veh_exit'),
-                                                    veh_model = _U('veh_model'),
-                                                    veh_plate = _U('veh_plate'),
-                                                    veh_condition = _U('veh_condition'),
-                                                    veh_action = _U('veh_action'),
-                                                    no_veh_impounded = _U('no_veh_impounded')
+                                                    action = TranslateCap('veh_exit'),
+                                                    veh_model = TranslateCap('veh_model'),
+                                                    veh_plate = TranslateCap('veh_plate'),
+                                                    veh_condition = TranslateCap('veh_condition'),
+                                                    veh_action = TranslateCap('veh_action'),
+                                                    no_veh_impounded = TranslateCap('no_veh_impounded')
                                                 }
                                             })
                                         end
@@ -325,14 +305,14 @@ CreateThread(function()
                                                 poundName = v.ImpoundedName,
                                                 poundSpawnPoint = poundSpawnPoint,
                                                 locales = {
-                                                    action = _U('veh_exit'),
-                                                    veh_model = _U('veh_model'),
-                                                    veh_plate = _U('veh_plate'),
-                                                    veh_condition = _U('veh_condition'),
-                                                    veh_action = _U('veh_action'),
-                                                    no_veh_parking = _U('no_veh_parking'),
-                                                    no_veh_impounded = _U('no_veh_impounded'),
-                                                    impound_action = _U('impound_action')
+                                                    action = TranslateCap('veh_exit'),
+                                                    veh_model = TranslateCap('veh_model'),
+                                                    veh_plate = TranslateCap('veh_plate'),
+                                                    veh_condition = TranslateCap('veh_condition'),
+                                                    veh_action = TranslateCap('veh_action'),
+                                                    no_veh_parking = TranslateCap('no_veh_parking'),
+                                                    no_veh_impounded = TranslateCap('no_veh_impounded'),
+                                                    impound_action = TranslateCap('impound_action')
                                                 }
                                             })
                                         else
@@ -340,12 +320,12 @@ CreateThread(function()
                                                 showMenu = true,
                                                 type = 'garage',
                                                 locales = {
-                                                    action = _U('veh_exit'),
-                                                    veh_model = _U('veh_model'),
-                                                    veh_plate = _U('veh_plate'),
-                                                    veh_condition = _U('veh_condition'),
-                                                    veh_action = _U('veh_action'),
-                                                    no_veh_parking = _U('no_veh_parking')
+                                                    action = TranslateCap('veh_exit'),
+                                                    veh_model = TranslateCap('veh_model'),
+                                                    veh_plate = TranslateCap('veh_plate'),
+                                                    veh_condition = TranslateCap('veh_condition'),
+                                                    veh_action = TranslateCap('veh_action'),
+                                                    no_veh_parking = TranslateCap('no_veh_parking')
                                                 }
                                             })
                                         end
@@ -365,14 +345,13 @@ CreateThread(function()
                         if IsControlJustReleased(0, 38) then
                             local vehicle = GetVehiclePedIsIn(playerPed, false)
                             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
-
                             ESX.TriggerServerCallback('esx_garage:checkVehicleOwner', function(owner)
                                 if owner then
                                     ESX.Game.DeleteVehicle(vehicle)
                                     TriggerServerEvent('esx_garage:updateOwnedVehicle', true, currentMarker, nil,
-                                        vehicleProps)
+                                        {vehicleProps = vehicleProps})
                                 else
-                                    ESX.ShowNotification(_U('not_owning_veh'), 'error')
+                                    ESX.ShowNotification(TranslateCap('not_owning_veh'), 'error')
                                 end
                             end, vehicleProps.plate)
                         end
@@ -415,11 +394,11 @@ CreateThread(function()
                                     spawnPoint = spawnPoint,
                                     poundCost = v.Cost,
                                     locales = {
-                                        action = _U('pay_impound'),
-                                        veh_model = _U('veh_model'),
-                                        veh_plate = _U('veh_plate'),
-                                        veh_condition = _U('veh_condition'),
-                                        veh_action = _U('veh_action')
+                                        action = TranslateCap('pay_impound'),
+                                        veh_model = TranslateCap('veh_model'),
+                                        veh_plate = TranslateCap('veh_plate'),
+                                        veh_condition = TranslateCap('veh_condition'),
+                                        veh_action = TranslateCap('veh_action')
                                     }
                                 })
 
@@ -429,7 +408,7 @@ CreateThread(function()
                                     ESX.HideUI()
                                 end
                             else
-                                ESX.ShowNotification(_U('no_veh_Impound'))
+                                ESX.ShowNotification(TranslateCap('no_veh_Impound'))
                             end
                         end, currentMarker)
                     end

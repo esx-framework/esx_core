@@ -64,7 +64,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
         camOffset = _components[1].camOffset
 
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'skin', {
-            title = _U('skin_menu'),
+            title = TranslateCap('skin_menu'),
             align = 'bottom-left',
             elements = elements
         }, function(data, menu)
@@ -191,7 +191,7 @@ CreateThread(function()
             SetCamCoord(cam, pos.x, pos.y, coords.z + camOffset)
             PointCamAtCoord(cam, posToLook.x, posToLook.y, coords.z + camOffset)
 
-            ESX.ShowHelpNotification(_U('use_rotate_view'))
+            ESX.ShowHelpNotification(TranslateCap('use_rotate_view'))
         end
         Wait(sleep)
     end

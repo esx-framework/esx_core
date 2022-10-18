@@ -10,15 +10,15 @@ function OpenBuyLicenseMenu(zone)
     local Elements = {{
         icon = "fa-regular fa-money-bill-alt",
         unselectable = true,
-        title = _U("license_shop_title")
+        title = TranslateCap("license_shop_title")
 	}, {
 		icon = "fa-regular fa-id-card",
-		title = _U("buy_license"),
+		title = TranslateCap("buy_license"),
         description = "Price: $"..Config.LicensePrice,
 		value = "buylicense"
 	}, {
 		icon = "fa-solid fa-xmark",
-		title = _U("menu_cancel"),
+		title = TranslateCap("menu_cancel"),
 		value = "cancel"
     }}
 
@@ -43,8 +43,8 @@ function OpenShopMenu(zone)
     local Elements = {{
         icon = "fa-solid fa-bullseye",
         unselectable = true,
-        description = _U("weapon_shop_menu_description"),
-        title = _U("weapon_shop_menu_title")
+        description = TranslateCap("weapon_shop_menu_description"),
+        title = TranslateCap("weapon_shop_menu_title")
     }}
     for i = 1, #Config.Zones[zone].Items, 1 do
         local item = Config.Zones[zone].Items[i]
@@ -75,7 +75,7 @@ function OpenShopMenu(zone)
     end, function(menu)
         ShopOpen = false
         CurrentAction = 'shop_menu'
-        CurrentActionMsg = _U('shop_menu_prompt')
+        CurrentActionMsg = TranslateCap('shop_menu_prompt')
         CurrentActionData = {
             zone = zone
         }
@@ -88,7 +88,7 @@ function DisplayBoughtScaleform(weaponName, price)
 
     BeginScaleformMovieMethod(scaleform, 'SHOW_WEAPON_PURCHASED')
 
-    ScaleformMovieMethodAddParamTextureNameString(_U('weapon_bought', ESX.Math.GroupDigits(price)))
+    ScaleformMovieMethodAddParamTextureNameString(TranslateCap('weapon_bought', ESX.Math.GroupDigits(price)))
     ScaleformMovieMethodAddParamTextureNameString(ESX.GetWeaponLabel(weaponName))
     ScaleformMovieMethodAddParamInt(joaat(weaponName))
     ScaleformMovieMethodAddParamTextureNameString('')
@@ -130,7 +130,7 @@ CreateThread(function()
                 SetBlipAsShortRange(blip, blipSettings.ShortRange)
 
                 BeginTextCommandSetBlipName("STRING")
-                AddTextComponentSubstringPlayerName(_U('map_blip'))
+                AddTextComponentSubstringPlayerName(TranslateCap('map_blip'))
                 EndTextCommandSetBlipName(blip)
             end
         end
@@ -159,7 +159,7 @@ CreateThread(function()
                     Sleep = 0
                     if #(coords - CurrentShop) < 2.0 then
                         if not TextShown then
-                            ESX.TextUI(_U('shop_menu_prompt'))
+                            ESX.TextUI(TranslateCap('shop_menu_prompt'))
                             TextShown = true
                         end
                         if IsControlJustReleased(0, 38) then

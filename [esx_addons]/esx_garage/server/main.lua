@@ -1,20 +1,25 @@
 RegisterServerEvent('esx_garage:updateOwnedVehicle')
-AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impound, vehicleProps)
+AddEventHandler('esx_garage:updateOwnedVehicle', function(stored, parking, Impound, data, spawn)
 	local source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
-
 		MySQL.update('UPDATE owned_vehicles SET `stored` = @stored, `parking` = @parking, `pound` = @Impound, `vehicle` = @vehicle WHERE `plate` = @plate AND `owner` = @identifier',
 		{
 			['@identifier'] = xPlayer.identifier,
-			['@vehicle'] 	= json.encode(vehicleProps),
-			['@plate'] 		= vehicleProps.plate,
+			['@vehicle'] 	= json.encode(data.vehicleProps),
+			['@plate'] 		= data.vehicleProps.plate,
 			['@stored']     = stored,
 			['@parking']    = parking,
 			['@Impound']    	= Impound
 		})
 
 		if stored then
-			xPlayer.showNotification(_U('veh_stored'))
+			xPlayer.showNotification(TranslateCap('veh_stored'))
+		else 
+			ESX.OneSync.SpawnVehicle(data.vehicleProps.model, spawn, data.spawnPoint.heading,data.vehicleProps, function(vehicle)
+				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+				Wait(300)
+				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
+			end)
 		end
 end)
 
@@ -32,7 +37,7 @@ AddEventHandler('esx_garage:setImpound', function(Impound, vehicleProps)
 			['@Impound']    	= Impound
 		})
 
-		xPlayer.showNotification(_U('veh_impounded'))
+		xPlayer.showNotification(TranslateCap('veh_impounded'))
 	
 end)
 
@@ -130,8 +135,8 @@ AddEventHandler("esx_garage:payPound", function(amount)
 
     if xPlayer.getMoney() >= amount then
         xPlayer.removeMoney(amount, "Impound Fee")
-				xPlayer.showNotification(_U('pay_Impound_bill', amount))
+				xPlayer.showNotification(TranslateCap('pay_Impound_bill', amount))
     else
-		xPlayer.showNotification(_U('missing_money'))
+		xPlayer.showNotification(TranslateCap('missing_money'))
     end
 end)

@@ -44,11 +44,11 @@ end)
 AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 	if zone == 'boat_shop' then
 		CurrentAction     = 'boat_shop'
-		CurrentActionMsg  = _U('boat_shop_open')
+		CurrentActionMsg  = TranslateCap('boat_shop_open')
 		CurrentActionData = { zoneNum = zoneNum }
 	elseif zone == 'garage_out' then
 		CurrentAction     = 'garage_out'
-		CurrentActionMsg  = _U('garage_open')
+		CurrentActionMsg  = TranslateCap('garage_open')
 		CurrentActionData = { zoneNum = zoneNum }
 	elseif zone == 'garage_in' then
 		local playerPed = PlayerPedId()
@@ -59,7 +59,7 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 	
 			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				CurrentAction     = 'garage_in'
-				CurrentActionMsg  = _U('garage_store')
+				CurrentActionMsg  = TranslateCap('garage_store')
 				CurrentActionData = { vehicle = vehicle, zoneNum = zoneNum }
 			end
 		end
@@ -161,7 +161,7 @@ CreateThread(function()
 	for i=1, #Config.Zones.Garages, 1 do
 		table.insert(blipList, {
 			coords = Config.Zones.Garages[i].GaragePos,
-			text   = _U('blip_garage'),
+			text   = TranslateCap('blip_garage'),
 			sprite = 356,
 			color  = 3,
 			scale  = 1.0
@@ -171,7 +171,7 @@ CreateThread(function()
 	for i=1, #Config.Zones.BoatShops, 1 do
 		table.insert(blipList, {
 			coords = Config.Zones.BoatShops[i].Outside,
-			text   = _U('blip_shop'),
+			text   = TranslateCap('blip_shop'),
 			sprite = 427,
 			color  = 3,
 			scale  = 1.0
