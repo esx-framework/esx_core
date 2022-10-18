@@ -110,8 +110,11 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 				end
 			end, type)
 		elseif data.current.action == 'store_garage' then
-			StoreNearbyVehicle(playerCoords)
-		end
+    if not IsPedInAnyVehicle(PlayerPedId()) then
+        StoreNearbyVehicle(playerCoords)
+    else                     ESX.ShowNotification("Need to be out of the vehicle.")
+    end
+end
 	end, function(data, menu)
 		menu.close()
 	end)
