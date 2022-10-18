@@ -75,19 +75,6 @@ local function PedHandler(ids)
             SetEntityAsMissionEntity(npc, true, true)
             SetEntityDynamic(npc, false)
 
-            if Config.Target then
-                exports.ox_target:addGlobalPed(npc, {
-                    options = {{
-                        icon = "fas fa-money-bill-wave",
-                        label = TranslateCap('access_bank'),
-                        action = function()
-                            OpenUi()
-                        end
-                    }},
-                    distance = 2
-                })
-            end
-
             Peds[id] = npc
         end
     end
@@ -106,7 +93,7 @@ local function PedHandler(ids)
         if del then
             DeletePed(handle)
             if Config.Target then
-                exports.ox_target:removeGlobalPed(handle, {TranslateCap('access_bank')})
+                exports.ox_target:removeModel(handle, TranslateCap('access_bank'))
             end
         end
     end
@@ -176,14 +163,14 @@ local function StartThread()
 
         if Config.Target then
             exports.ox_target:addModel(Config.AtmModels, {
-                options = {{
+                {
                     icon = 'fas fa-credit-card',
                     label = TranslateCap('access_bank'),
-                    action = function()
+                    onSelect = function()
                         OpenUi(true)
                     end
-                }},
-                distance = 1.5
+                    distance = 1.5
+                },
             })
             if not Config.EnablePeds then
                 for i = 1, #Config.Banks do
@@ -198,11 +185,28 @@ local function StartThread()
                         options = {{
                             icon = 'fas fa-money-bill-wave',
                             label = TranslateCap('access_bank'),
-                            action = function()
+                            onSelect = function()
                                 OpenUi()
                             end
                         }},
                         distance = 2.0
+                    })
+                end
+            else
+                for i = 1, #Config.Peds do
+                    exports.ox_target:addModel(Config.Peds[i].Model, {
+                        {
+                            icon = "fas fa-money-bill-wave",
+                            label = TranslateCap('access_bank'),
+                            distance = 2.0,
+                            canInteract = function(entity, distance, coords, name, bone)
+                                local location = vector3(Config.Peds[i].Position.xyz)
+                                return #(coords - location) < 2.0
+                            end,
+                            onSelect = function()
+                                OpenUi()
+                            end
+                        }
                     })
                 end
             end
