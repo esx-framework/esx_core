@@ -168,7 +168,7 @@ local function StartThread()
                     label = TranslateCap('access_bank'),
                     onSelect = function()
                         OpenUi(true)
-                    end
+                    end,
                     distance = 1.5
                 },
             })
