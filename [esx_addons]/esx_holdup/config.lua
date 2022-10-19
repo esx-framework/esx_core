@@ -1,5 +1,5 @@
 Config = {}
-Config.Locale = 'de'
+Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Marker = {
 	r = 250, g = 0, b = 0, a = 100,  -- red color
@@ -14,8 +14,8 @@ Config.MaxDistance    = 20   -- max distance from the robbary, going any longer 
 Config.GiveBlackMoney = true -- give black money? If disabled it will give cash instead
 
 Config.Jobs = {
-	['police'] = true, 
-	['sast'] = true
+	police = true, 
+	sast = true
 }
 
 Stores = {
