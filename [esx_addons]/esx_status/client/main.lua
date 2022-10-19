@@ -183,10 +183,10 @@ AddEventHandler('esx:loadingScreenOff', function()
 	end
 end)
 
--- Update server
-CreateThread(function()
-	while true do
-		Wait(Config.UpdateInterval)
-		if ESX.PlayerLoaded then TriggerServerEvent('esx_status:update', GetStatusData(true)) end
-	end
-end)
+-- Update server 
+function ServerUpdate()
+    if ESX.PlayerLoaded then TriggerServerEvent('esx_status:update', GetStatusData(true)) end
+    SetTimeout(Config.UpdateInterval, ServerUpdate)
+end
+ServerUpdate()
+
