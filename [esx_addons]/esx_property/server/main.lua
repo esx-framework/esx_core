@@ -1085,7 +1085,7 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
     CreateThread(function()
       Wait(50000)
       if Properties and #Properties > 0 then
-        SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+        SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties, {indent = true}))
         Log("Properties Saving", 11141375, {{name = "**Reason**", value = "Scheduled Server Restart", inline = true},
                                             {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
       end
@@ -1095,7 +1095,7 @@ end)
 
 function PropertySave(Reason)
   if Properties and #Properties > 0 then
-    SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties))
+    SaveResourceFile(GetCurrentResourceName(), 'properties.json', json.encode(Properties, {indent = true}))
     Log("Properties Saving", 11141375,
       {{name = "**Reason**", value = Reason, inline = true}, {name = "**Property Count**", value = tostring(#Properties), inline = true}}, 1)
   end
