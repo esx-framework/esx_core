@@ -364,7 +364,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if not self.hasWeapon(weaponName) then
 			local weaponLabel = ESX.GetWeaponLabel(weaponName)
 
-			table.insert(self.loadout, {
+			ESX.TableInsert(self.loadout, {
 				name = weaponName,
 				ammo = ammo,
 				label = weaponLabel,

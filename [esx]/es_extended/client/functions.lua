@@ -22,7 +22,7 @@ ESX.Scaleform.Utils = {}
 ESX.Streaming = {}
 
 function ESX.SetTimeout(msec, cb)
-    table.insert(Core.TimeoutCallbacks, {
+    ESX.TableInsert(Core.TimeoutCallbacks, {
         time = GetGameTimer() + msec,
         cb = cb
     })
@@ -1108,7 +1108,7 @@ function ESX.ShowInventory()
             local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
                 count = ESX.PlayerData.accounts[i].money,
                 type = 'item_account',
@@ -1124,7 +1124,7 @@ function ESX.ShowInventory()
         if v.count > 0 then
             currentWeight = currentWeight + (v.weight * v.count)
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = ('%s x%s'):format(v.label, v.count),
                 count = v.count,
                 type = 'item_standard',
@@ -1148,7 +1148,7 @@ function ESX.ShowInventory()
                 label = v.label
             end
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = label,
                 count = 1,
                 type = 'item_weapon',
@@ -1174,7 +1174,7 @@ function ESX.ShowInventory()
         elements = {}
 
         if data.current.usable then
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('use'),
                 action = 'use',
                 type = data.current.type,
@@ -1184,7 +1184,7 @@ function ESX.ShowInventory()
 
         if data.current.canRemove then
             if player ~= -1 and distance <= 3.0 then
-                table.insert(elements, {
+                ESX.TableInsert(elements, {
                     label = TranslateCap('give'),
                     action = 'give',
                     type = data.current.type,
@@ -1192,7 +1192,7 @@ function ESX.ShowInventory()
                 })
             end
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('remove'),
                 action = 'remove',
                 type = data.current.type,
@@ -1202,7 +1202,7 @@ function ESX.ShowInventory()
 
         if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and
             distance <= 3.0 then
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('giveammo'),
                 action = 'give_ammo',
                 type = data.current.type,
@@ -1210,7 +1210,7 @@ function ESX.ShowInventory()
             })
         end
 
-        table.insert(elements, {
+        ESX.TableInsert(elements, {
             label = TranslateCap('return'),
             action = 'return'
         })
@@ -1235,7 +1235,7 @@ function ESX.ShowInventory()
 
                     ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
                         for playerId, playerName in pairs(returnedPlayers) do
-                            table.insert(elements, {
+                            ESX.TableInsert(elements, {
                                 label = playerName,
                                 playerId = playerId
                             })

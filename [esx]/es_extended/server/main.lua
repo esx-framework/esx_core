@@ -198,7 +198,7 @@ function loadESXPlayer(identifier, playerId, isNew)
                 userData.weight = userData.weight + (item.weight * count)
             end
 
-            table.insert(userData.inventory,
+            ESX.TableInsert(userData.inventory,
                 { name = name, count = count, label = item.label, weight = item.weight,
                     usable = Core.UsableItemsCallbacks[name] ~= nil, rare = item.rare,
                     canRemove = item.canRemove })
@@ -243,7 +243,7 @@ function loadESXPlayer(identifier, playerId, isNew)
                         weapon.tintIndex = 0
                     end
 
-                    table.insert(userData.loadout,
+                    ESX.TableInsert(userData.loadout,
                         { name = name, ammo = weapon.ammo, label = label, components = weapon.components,
                             tintIndex = weapon.tintIndex })
                 end

@@ -1,8 +1,8 @@
 local Charset = {}
 
-for i = 48, 57 do table.insert(Charset, string.char(i)) end
-for i = 65, 90 do table.insert(Charset, string.char(i)) end
-for i = 97, 122 do table.insert(Charset, string.char(i)) end
+for i = 48, 57 do ESX.TableInsert(Charset, string.char(i)) end
+for i = 65, 90 do ESX.TableInsert(Charset, string.char(i)) end
+for i = 97, 122 do ESX.TableInsert(Charset, string.char(i)) end
 
 function ESX.GetRandomString(length)
     math.randomseed(GetGameTimer())
@@ -63,6 +63,10 @@ function ESX.GetWeaponComponent(weaponName, weaponComponent)
             end
         end
     end
+end
+
+function ESX.TableInsert(table, value)
+    table[#table + 1] = value
 end
 
 function ESX.DumpTable(table, nb)
