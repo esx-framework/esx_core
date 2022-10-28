@@ -1,7 +1,8 @@
-local GUI, MenuType, OpenedMenus = {}, 'default', 0
+local GUI, MenuType, OpenedMenus, activeNameSpace = {}, 'default', 0, nil
 GUI.Time = 0
 
 local function openMenu(namespace, name, data)
+    activeNameSpace = namespace
     OpenedMenus += 1
     SendNUIMessage({
         action = 'openMenu',
@@ -12,6 +13,7 @@ local function openMenu(namespace, name, data)
 end
 
 local function closeMenu(namespace, name)
+    activeNameSpace = namespace
     OpenedMenus -= 1
     SendNUIMessage({
         action = 'closeMenu',
@@ -19,6 +21,14 @@ local function closeMenu(namespace, name)
         name = name
     })
 end
+
+AddEventHandler('onResourceStop', function(resource)
+    if GetCurrentResourceName() == resource and OpenedMenus > 0 then
+        ESX.UI.Menu.CloseAll()
+    elseif activeNameSpace ~= nil and activeNameSpace == resource and OpenedMenus > 0 then
+        ESX.UI.Menu.CloseAll()
+    end
+end)
 
 ESX.UI.Menu.RegisterType(MenuType, openMenu, closeMenu)
 
@@ -56,6 +66,66 @@ RegisterNUICallback('menu_change', function(data, cb)
         menu.change(data, menu)
     end
     cb('OK')
+end)
+
+ESX.RegisterInput('menu_enter', 'Submit selected menu item', 'keyboard', 'RETURN', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'ENTER'
+        })
+        GUI.Time = GetGameTimer()
+    end
+end)
+
+ESX.RegisterInput('menu_backspace', 'Close or cancel menu', 'keyboard', 'BACK', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'BACKSPACE'
+        })
+        GUI.Time = GetGameTimer()
+    end
+end)
+
+ESX.RegisterInput('menu_top', 'Change selected menu to top item', 'keyboard', 'UP', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'TOP'
+        })
+        GUI.Time = GetGameTimer()
+    end
+end)
+
+ESX.RegisterInput('menu_down', 'Change selected menu to down item', 'keyboard', 'DOWN', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'DOWN'
+        })
+        GUI.Time = GetGameTimer()
+    end
+end)
+
+ESX.RegisterInput('menu_right', 'Change slider to right', 'keyboard', 'RIGHT', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'RIGHT'
+        })
+        GUI.Time = GetGameTimer()
+    end
+end)
+
+ESX.RegisterInput('menu_left', 'Change slider to left', 'keyboard', 'LEFT', function()
+    if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
+        SendNUIMessage({
+            action = 'controlPressed',
+            control = 'LEFT'
+        })
+        GUI.Time = GetGameTimer()
+    end
 end)
 
 CreateThread(function()
