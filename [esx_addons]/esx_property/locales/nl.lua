@@ -4,8 +4,8 @@ Locales['nl'] = {
 	["take_picture"] = "Neem foto",
 	["rot_left_right"] = "Links/Rechts",
 	["rot_up_down"] = "Omhoog/Omblaag",
-	["Zoom"] = "Zoom In/Uit",
-	["Zoom_level"] = "Zoom Level: %s %",
+	["zoom"] = "Zoom In/Uit",
+	["zoom_level"] = "Zoom Level: %s %",
 	["night_vision"] = "Nachtcamera aanzetten",
 	["clipboard"] = "Link gekopierd naar ~b~klembord",
 	["picture_taken"] = "Foto genomen!",
@@ -14,7 +14,7 @@ Locales['nl'] = {
 
 	--- Furniture Strings ------
 
-	["Height"] = "Hoogte",
+	["height"] = "Hoogte",
 	["rotate"] = "Rotatie",
 	["place"] = "Plaats Meubel",
 	["delete_furni"] = "Verwijder",
@@ -41,7 +41,7 @@ Locales['nl'] = {
 	["menu_edit"] = "Aanpassen",
 	["menu_edit_desc"] = "Verplaats en/of verwijder meubels",
 	["furni_command"] = "meubel",
-	["furni_Command_desc"] = "(ESX Property) Open meubel menu",
+	["furni_command_desc"] = "(ESX Property) Open meubel menu",
 	["furni_command_permission"] = "Je ~r~Kan dit~s~ menu niet betreden!",
 	["furni_reset_success"] = "Meubel Reset!",
 	["furni_cannot_afford"] = "Je kan dit niet betalen!",
@@ -113,8 +113,8 @@ Locales['nl'] = {
 		["inventory_desc"] = "Verander positie van de berging.",
 		["wardrobe_title"] = "Kledingkast",
 		["wardrobe_desc"] = "Verander de positie van de kledingkast.",
-		["Furniture_title"] = "Meubels",
-		["Furniture_desc"] = "Verander de positie van een meubel",
+		["furniture_title"] = "Meubels",
+		["furniture_desc"] = "Verander de positie van een meubel",
 		["enter_title"] = "Ga naar binnen",
 		["knock_title"] = "Klop op de deur",
 		["buy_title"] = "Koop",
@@ -139,11 +139,11 @@ Locales['nl'] = {
 		["please_finish"] = "Maak het plaatsen van ~b~%s~s~ eerst af.",
 		["cannot_afford"] = "Je kan dit gebouw niet kopen!",
 		["select_player"] = "Selecteer speler",
-		["cannot_Sell"] = "Kan niet aan deze speler verkopen!",
+		["cannot_sell"] = "Kan niet aan deze speler verkopen!",
 		["knock_on_door"] = "Op deur kloppen...",
 		["nobody_home"] = "Lijkt erop alsof niemand thuis is...",
 
-		---------- General Strings ---------------- 
+		---------- General Strings ----------------
 
 		["enabled"] = "Aan",
 		["disabled"] = "Uit",
@@ -166,7 +166,7 @@ Locales['nl'] = {
 		["cannot_access_property"] = 'Je ~r~kan niet~s~ dit gebouw betreden.',
 
 
-		----------------- Creation Menu Strings ---------------- 
+		----------------- Creation Menu Strings ----------------
 
 		["menu_title"] = "Gebouw creatie",
 		["element_title1"] = "Straat nummer",

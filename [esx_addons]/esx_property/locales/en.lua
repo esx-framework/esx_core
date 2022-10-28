@@ -4,8 +4,8 @@ Locales['en'] = {
 	["take_picture"] = "Take Picture",
 	["rot_left_right"] = "Left/Right",
 	["rot_up_down"] = "Up/Down",
-	["Zoom"] = "Zoom In/Out",
-	["Zoom_level"] = "Zoom Level: %s %",
+	["zoom"] = "Zoom In/Out",
+	["zoom_level"] = "Zoom Level: %s %",
 	["night_vision"] = "Toggle Night Vision",
 	["clipboard"] = "Link Copied To ~b~Cipboard",
 	["picture_taken"] = "Picture Taken!",
@@ -14,7 +14,7 @@ Locales['en'] = {
 
 	--- Furniture Strings ------
 
-	["Height"] = "Height",
+	["height"] = "Height",
 	["rotate"] = "Rotation",
 	["place"] = "Place Furniture",
 	["delete_furni"] = "Delete",
@@ -41,7 +41,7 @@ Locales['en'] = {
 	["menu_edit"] = "Edit",
 	["menu_edit_desc"] = "Move and/or Delete furniture items",
 	["furni_command"] = "furniture",
-	["furni_Command_desc"] = "(ESX Property) Open Furniture Menu",
+	["furni_command_desc"] = "(ESX Property) Open Furniture Menu",
 	["furni_command_permission"] = "You ~r~Cannot~s~ Access This Menu!",
 	["furni_reset_success"] = "Furniture Reset!",
 	["furni_cannot_afford"] = "You Cannot Afford Todo this!",
@@ -113,8 +113,8 @@ Locales['en'] = {
 		["inventory_desc"] = "Change Position of Property Storage.",
 		["wardrobe_title"] = "Wardrobe",
 		["wardrobe_desc"] = "Change Position of Property Wardrobe.",
-		["Furniture_title"] = "Furniture",
-		["Furniture_desc"] = "Change Position of Property Furniture.",
+		["furniture_title"] = "Furniture",
+		["furniture_desc"] = "Change Position of Property Furniture.",
 		["enter_title"] = "Enter",
 		["knock_title"] = "Knock On Door",
 		["buy_title"] = "Buy",
@@ -139,11 +139,11 @@ Locales['en'] = {
 		["please_finish"] = "Please Finish Setting ~b~%s~s~ Position",
 		["cannot_afford"] = "You Cannot Purchase This Property!",
 		["select_player"] = "Select Player",
-		["cannot_Sell"] = "Cannot Sell To This Player!",
+		["cannot_sell"] = "Cannot Sell To This Player!",
 		["knock_on_door"] = "Knocking On Door...",
 		["nobody_home"] = "It Seems Nobody is home...",
 
-		---------- General Strings ---------------- 
+		---------- General Strings ----------------
 
 		["enabled"] = "Enabled",
 		["disabled"] = "Disabled",
@@ -166,7 +166,7 @@ Locales['en'] = {
 		["cannot_access_property"] = 'You ~r~Cannot~s~ Access this property.',
 
 
-		----------------- Creation Menu Strings ---------------- 
+		----------------- Creation Menu Strings ----------------
 
 		["menu_title"] = "Property Creation",
 		["element_title1"] = "Street Number",

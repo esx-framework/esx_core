@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-]] 
+]]
 function CCTV(PropertyID)
   DoScreenFadeOut(500)
   Wait(500)
@@ -70,7 +70,7 @@ function CCTV(PropertyID)
           PushScaleformMovieFunctionParameterInt(4)
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomOut, true))
           N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomIn, true))
-          InstructionButtonMessage(TranslateCap("Zoom"))
+          InstructionButtonMessage(TranslateCap("zoom"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
