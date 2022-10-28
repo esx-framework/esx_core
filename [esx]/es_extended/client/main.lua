@@ -64,12 +64,15 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
 			local HideHudComponentThisFrame = HideHudComponentThisFrame
 			local PlayerId = PlayerId()
-			local DisabledComps = {}
+
 			for i=1, #(Config.RemoveHudCommonents) do
 				if Config.RemoveHudCommonents[i] then
-					DisabledComps[#DisabledComps + 1] = i
+					SetHudComponentPosition(i, 999999.0, 999999.0)
+				else
+					ResetHudComponentValues(i)
 				end
-		 end
+		 	end
+			
 			while true do 
 				local Sleep = true
 
@@ -102,15 +105,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 					RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
 					RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
 				end
-
-				if #DisabledComps > 0 then
-					Sleep = false
-					for i=1, #(DisabledComps) do
-						HideHudComponentThisFrame(DisabledComps[i])
-					end
-				end
 				
-			Wait(Sleep and 1500 or 0)
+				Wait(Sleep and 1500 or 0)
 			end
 		end)
 
@@ -145,8 +141,8 @@ RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData("maxWeight", newMaxWeight) end)
 
 local function onPlayerSpawn()
-		ESX.SetPlayerData('ped', PlayerPedId())
-		ESX.SetPlayerData('dead', false)
+	ESX.SetPlayerData('ped', PlayerPedId())
+	ESX.SetPlayerData('dead', false)
 end
 
 AddEventHandler('playerSpawned', onPlayerSpawn)
