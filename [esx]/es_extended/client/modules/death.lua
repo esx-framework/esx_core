@@ -1,32 +1,17 @@
-CreateThread(function()
-	local isDead = false
-
-	while true do
-		local sleep = 1500
-		local player = PlayerId()
-
-		if NetworkIsPlayerActive(player) then
-			local playerPed = PlayerPedId()
-
-			if IsPedFatallyInjured(playerPed) and not isDead then
-				sleep = 0
-				isDead = true
-
-				local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
-				local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
-
-				if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
-					PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
-				else
-					PlayerKilled(deathCause)
-				end
-
-			elseif not IsPedFatallyInjured(playerPed) and isDead then
-				sleep = 0
-				isDead = false
-			end
+AddEventHandler('gameEventTriggered', function(event, data)
+	if event ~= 'CEventNetworkEntityDamage' then return end
+	local victim, victimDied = data[1], data[4]
+	if not IsPedAPlayer(victim) then return end
+	local player = PlayerId()
+	local playerPed = PlayerPedId()
+	if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and IsPedDeadOrDying(victim, true) then
+		local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
+		local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
+		if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
+			PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
+		else
+			PlayerKilled(deathCause)
 		end
-	Wait(sleep)
 	end
 end)
 
