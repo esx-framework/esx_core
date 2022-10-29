@@ -71,8 +71,8 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 
                 if data.current.label == TranslateCap('by_default') or string.match(data.current.label, TranslateCap('installed')) then
                     ESX.ShowNotification(TranslateCap('already_own', data.current.label))
-										myCar = ESX.Game.GetVehicleProperties(vehicle)
-										TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
+                    myCar = ESX.Game.GetVehicleProperties(vehicle)
+                    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
                 else
                     local vehiclePrice = 50000
 
@@ -85,16 +85,40 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 
                     if isRimMod then
                         price = math.floor(vehiclePrice * data.current.price / 100)
-                        TriggerServerEvent('esx_lscustom:buyMod', price)
+                        ESX.TriggerServerCallback('esx_lscustom:buyMod', function(valid)
+                            if valid then
+                                TriggerEvent('esx_lscustom:installMod')
+                            else
+                                TriggerEvent('esx_lscustom:cancelInstallMod')
+                            end
+                        end, price)
                     elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
                         price = math.floor(vehiclePrice * v.price[data.current.modNum + 1] / 100)
-                        TriggerServerEvent('esx_lscustom:buyMod', price)
+                        ESX.TriggerServerCallback('esx_lscustom:buyMod', function(valid)
+                            if valid then
+                                TriggerEvent('esx_lscustom:installMod')
+                            else
+                                TriggerEvent('esx_lscustom:cancelInstallMod')
+                            end
+                        end, price)
                     elseif v.modType == 17 then
                         price = math.floor(vehiclePrice * v.price[1] / 100)
-                        TriggerServerEvent('esx_lscustom:buyMod', price)
+                        ESX.TriggerServerCallback('esx_lscustom:buyMod', function(valid)
+                            if valid then
+                                TriggerEvent('esx_lscustom:installMod')
+                            else
+                                TriggerEvent('esx_lscustom:cancelInstallMod')
+                            end
+                        end, price)
                     else
                         price = math.floor(vehiclePrice * v.price / 100)
-                        TriggerServerEvent('esx_lscustom:buyMod', price)
+                        ESX.TriggerServerCallback('esx_lscustom:buyMod', function(valid)
+                            if valid then
+                                TriggerEvent('esx_lscustom:installMod')
+                            else
+                                TriggerEvent('esx_lscustom:cancelInstallMod')
+                            end
+                        end, price)
                     end
                 end
 
