@@ -66,6 +66,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local PlayerId = PlayerId()
 			local ESXPlayerId = ESX.PlayerData.ped
 			local DisabledComps = {}
+			local pickupList = {`PICKUP_WEAPON_CARBINERIFLE`,`PICKUP_WEAPON_PISTOL`,`PICKUP_WEAPON_PUMPSHOTGUN`}
 			for i=1, #(Config.RemoveHudCommonents) do
 				if Config.RemoveHudCommonents[i] then
 					DisabledComps[#DisabledComps + 1] = i
@@ -76,13 +77,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			end
 
 			if Config.DisableNPCDrops then
-				AddEventHandler('gameEventTriggered', function(name, args)
-    				if name == 'CEventNetworkEntityDamage' then
-        				if args[6] == 1 then
-            				SetPedDropsWeaponsWhenDead(args[1], false)
-        				end
-    				end
-				end)
+				for a = 1, #pickupList do
+					ToggleUsePickupsForPlayer(PlayerId, pickupList[a], false)
+				end
 			end
 			while true do 
 				local Sleep = true
