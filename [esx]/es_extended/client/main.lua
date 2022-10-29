@@ -61,10 +61,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local IsPedArmed = IsPedArmed
 			local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
 			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
-			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
 			local HideHudComponentThisFrame = HideHudComponentThisFrame
 			local PlayerId = PlayerId()
-			local ESXPlayerId = ESX.PlayerData.ped
+			local playerPed = ESX.PlayerData.ped
 			local DisabledComps = {}
 			local pickupList = {`PICKUP_WEAPON_CARBINERIFLE`,`PICKUP_WEAPON_PISTOL`,`PICKUP_WEAPON_PUMPSHOTGUN`}
 			for i=1, #(Config.RemoveHudCommonents) do
@@ -91,18 +90,15 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 				end
 
 				if Config.DisableAimAssist then
-					if IsPedArmed(ESXPlayerId, 4) then
+					if IsPedArmed(playerPed, 4) then
 						Sleep = false
 						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
 
 				if Config.DisableVehicleRewards then
-					local veh = GetVehiclePedIsEntering(ESXPlayerId)
-        			if veh ~= 0 then
-						Sleep = false
-						DisablePlayerVehicleRewards(PlayerId)
-					end
+					Sleep = false
+					DisablePlayerVehicleRewards(PlayerId)
 				end
 			
 				if #DisabledComps > 0 then
