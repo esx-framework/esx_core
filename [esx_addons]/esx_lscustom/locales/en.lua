@@ -3,6 +3,7 @@ Locales['en'] = {
   ['installed'] = 'installed',
   ['already_own'] = 'you already own: %s',
   ['not_enough_money'] = 'you cannot afford this mod!',
+  ['missing_society'] = 'mechanic society is missing (please connect to developer)',
   ['purchased'] = 'you have purchased the mod!',
   ['press_custom'] = 'press ~b~[E]~s~ to Personalise Your Vehicle',
   ['level'] = 'level %s',

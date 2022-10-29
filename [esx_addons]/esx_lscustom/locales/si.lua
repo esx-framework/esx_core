@@ -3,6 +3,7 @@ Locales['si'] = {
   ['installed'] = 'nameščen',
   ['already_own'] = 'že imaš: %s',
   ['not_enough_money'] = 'tega modusa si ne moreš privoščiti!',
+  ['missing_society'] = 'mechanic society is missing (please connect to developer)', -- change to correct lang
   ['purchased'] = 'kupili ste mod!',
   ['press_custom'] = 'pritisnite ~INPUT_PICKUP~, da personalizirate~ svoje vozilo.',
   ['level'] = 'raven %s',

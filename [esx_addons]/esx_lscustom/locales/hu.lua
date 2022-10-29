@@ -3,6 +3,7 @@ Locales['hu'] = {
   ['installed'] = 'telepítve',
   ['already_own'] = 'már használod: %s',
   ['not_enough_money'] = 'nincs pénzed erre az alkatrészre!',
+  ['missing_society'] = 'mechanic society is missing (please connect to developer)', -- change to correct lang
   ['purchased'] = 'megvásároltad ezt az alkatrészt!',
   ['press_custom'] = 'nyomd meg az ~INPUT_PICKUP~ betüt a jármü tuningolásához.',
   ['level'] = 'szint %s',

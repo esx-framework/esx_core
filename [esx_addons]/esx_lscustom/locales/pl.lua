@@ -3,6 +3,7 @@ Locales['pl'] = {
   ['installed'] = 'zainstalowane',
   ['already_own'] = 'już posiadasz: %s',
   ['not_enough_money'] = 'nie masz wystarczająco pieniędzy!',
+  ['missing_society'] = 'mechanic society is missing (please connect to developer)', -- change to correct lang
   ['purchased'] = 'zakupiłeś!',
   ['press_custom'] = 'naciśnij ~INPUT_PICKUP~ aby spersonalizować swój pojazd.',
   ['level'] = 'level %s',
