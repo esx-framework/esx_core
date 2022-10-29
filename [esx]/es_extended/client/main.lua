@@ -64,19 +64,28 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
 			local HideHudComponentThisFrame = HideHudComponentThisFrame
 			local PlayerId = PlayerId()
+			local ESXPlayerId = ESX.PlayerData.ped
 			local DisabledComps = {}
 			for i=1, #(Config.RemoveHudCommonents) do
 				if Config.RemoveHudCommonents[i] then
 					DisabledComps[#DisabledComps + 1] = i
 				end
-		 end
+		 	end
+			if Config.DisableHealthRegeneration then
+				SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
+			end
+
+			if Config.DisableNPCDrops then
+				AddEventHandler('gameEventTriggered', function(name, args)
+    				if name == 'CEventNetworkEntityDamage' then
+        				if args[6] == 1 then
+            				SetPedDropsWeaponsWhenDead(args[1], false)
+        				end
+    				end
+				end)
+			end
 			while true do 
 				local Sleep = true
-
-				if Config.DisableHealthRegeneration then
-					Sleep = false
-					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
-				end
 
 				if Config.DisableWeaponWheel then
 					Sleep = false
@@ -85,24 +94,20 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 				end
 
 				if Config.DisableAimAssist then
-					Sleep = false
-					if IsPedArmed(ESX.PlayerData.ped, 4) then
+					if IsPedArmed(ESXPlayerId, 4) then
+						Sleep = false
 						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
 
 				if Config.DisableVehicleRewards then
-					Sleep = false
-					DisablePlayerVehicleRewards(PlayerId)
+					local veh = GetVehiclePedIsEntering(ESXPlayerId)
+        			if veh ~= 0 then
+						Sleep = false
+						DisablePlayerVehicleRewards(PlayerId)
+					end
 				end
 			
-				if Config.DisableNPCDrops then
-					Sleep = false
-					RemoveAllPickupsOfType(0xDF711959) -- carbine rifle
-					RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
-					RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
-				end
-
 				if #DisabledComps > 0 then
 					Sleep = false
 					for i=1, #(DisabledComps) do
@@ -110,7 +115,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 					end
 				end
 				
-			Wait(Sleep and 1500 or 0)
+				Wait(Sleep and 1500 or 0)
 			end
 		end)
 
