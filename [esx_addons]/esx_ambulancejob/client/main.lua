@@ -99,6 +99,8 @@ AddEventHandler('esx_ambulancejob:clsearch', function(medicId)
 end)
 
 function OnPlayerDeath()
+		local seconds = 1000
+		ESX.UI.Menu.CloseAll() -- Close all menus on death...
   isDead = true
   ESX.UI.Menu.CloseAll()
   ClearTimecycleModifier()
@@ -107,10 +109,20 @@ function OnPlayerDeath()
   SetExtraTimecycleModifier("fp_vig_red")
   SetExtraTimecycleModifierStrength(1.0)
   SetPedMotionBlur(PlayerPedId(), true)
+		ClearPedTasksImmediately(PlayerPedId())
   TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
   StartDeathTimer()
   StartDeathCam()
   StartDistressSignal()
+		CreateThread(function()
+        repeat
+            Wait(60 * seconds)
+            local playerPed = PlayerPedId()
+            if IsEntityDead(playerPed) and isDead then
+																ClearPedTasksImmediately(playerPed)
+        				end
+        until isDead == false
+    end)
 end
 
 RegisterNetEvent('esx_ambulancejob:useItem')
