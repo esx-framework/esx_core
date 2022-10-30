@@ -106,14 +106,9 @@ CreateThread(function()
 
 	-- Check if datastore table exists before to insert values.
 	if MySQL.scalar.await("SELECT EXISTS (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE LIKE 'BASE TABLE' AND TABLE_NAME = 'datastore')") > 0 then
-		MySQL.insert("INSERT IGNORE INTO `datastore` (name, label, shared) VALUES ('property', 'Property' , 1)", function(affectedRows)
+		MySQL.insert("INSERT IGNORE INTO `datastore` (name, label, shared) VALUES ('property', 'Property' , 0)", function(affectedRows)
 			if affectedRows > 0 then
 				print("[^2INFO^7] Added ^5Property^7 into ^5datastore^7 table")
-			end
-		end)
-		MySQL.insert("INSERT IGNORE INTO `datastore_data` (name, owner, data) VALUES ('property', NULL, '{}')", function(affectedRows)
-			if affectedRows > 0 then
-				print("[^2INFO^7] Added ^5Property^7 into ^5datastore_data^7 table")
 			end
 		end)
 	end
@@ -1120,7 +1115,7 @@ AddEventHandler('onServerResourceStop', function(ResourceName)
   end
 end)
 
--- Save Properties every x Minutes 
+-- Save Properties every x Minutes
 
 CreateThread(function()
   while true do
