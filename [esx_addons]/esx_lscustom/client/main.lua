@@ -17,6 +17,15 @@ AddEventHandler('esx_lscustom:installMod', function()
     TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
 end)
 
+RegisterNetEvent('esx_lscustom:restoreMods', function(netId, props)
+    local xVehicle = NetworkGetEntityFromNetworkId(netId)
+    if props ~= nil then
+        if DoesEntityExist(xVehicle) then
+            ESX.Game.SetVehicleProperties(xVehicle, props)
+        end
+    end
+end)
+
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
 AddEventHandler('esx_lscustom:cancelInstallMod', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -51,7 +60,6 @@ AddEventHandler('onResourceStop', function(resource)
 	end
 end)
 
-
 function OpenLSMenu(elems, menuName, menuTitle, parent)
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), menuName, {
         title = menuTitle,
@@ -82,7 +90,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
                             break
                         end
                     end
-
+                    
                     if isRimMod then
                         price = math.floor(vehiclePrice * data.current.price / 100)
                         TriggerServerEvent('esx_lscustom:buyMod', price)
@@ -120,6 +128,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
             lsMenuIsShowed = false
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
             FreezeEntityPosition(vehicle, false)
+            TriggerServerEvent('esx_lscustom:stopModing', myCar.plate)
             myCar = {}
         end
     end, function(data, menu) -- on change
@@ -170,7 +179,6 @@ function GetAction(data)
     local playerPed = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(playerPed, false)
     local currentMods = ESX.Game.GetVehicleProperties(vehicle)
-
     if data.value == 'modSpeakers' or data.value == 'modTrunk' or data.value == 'modHydrolic' or data.value ==
         'modEngineBlock' or data.value == 'modAirFilter' or data.value == 'modStruts' or data.value == 'modTank' then
         SetVehicleDoorOpen(vehicle, 4, false)
@@ -503,6 +511,9 @@ CreateThread(function()
                                 local vehicle = GetVehiclePedIsIn(playerPed, false)
                                 FreezeEntityPosition(vehicle, true)
                                 myCar = ESX.Game.GetVehicleProperties(vehicle)
+                                
+                                local netId = NetworkGetNetworkIdFromEntity(vehicle)
+                                TriggerServerEvent('esx_lscustom:startModing', myCar, netId)
 
                                 ESX.UI.Menu.CloseAll()
                                 GetAction({
