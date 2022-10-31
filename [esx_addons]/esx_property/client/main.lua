@@ -281,7 +281,7 @@ function PropertyMenuElements(PropertyId)
                                   value = 'property_wardrobe'})
         end
         table.insert(elements,
-          {title = TranslateCap("Furniture_title"), description = TranslateCap("Furniture_desc"), icon = "fas fa-boxes-stacked", value = 'property_furniture'})
+          {title = TranslateCap("furniture_title"), description = TranslateCap("furniture_desc"), icon = "fas fa-boxes-stacked", value = 'property_furniture'})
       end
     end
     if (not Property.Locked or Config.OwnerCanAlwaysEnter and ESX.PlayerData.identifier == Property.Owner) and not InProperty then
@@ -454,7 +454,7 @@ function OpenPropertyMenu(PropertyId)
                   local eles = PropertyMenuElements(PropertyId)
                   exports["esx_context"]:Refresh(eles)
                 else
-                  ESX.ShowNotification(TranslateCap("cannot_Sell"), "error")
+                  ESX.ShowNotification(TranslateCap("cannot_sell"), "error")
                 end
               end, PropertyId, element.value)
             end
@@ -476,7 +476,7 @@ function OpenPropertyMenu(PropertyId)
           local eles = PropertyMenuElements(PropertyId)
           exports["esx_context"]:Refresh(eles)
         else
-          ESX.ShowNotification(TranslateCap("cannot_Sell"), "error")
+          ESX.ShowNotification(TranslateCap("cannot_sell"), "error")
         end
       end, PropertyId)
     end
