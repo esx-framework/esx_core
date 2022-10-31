@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
- 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
@@ -9,7 +10,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>ESX Context HUD</title>
 
-	<style type="text/css">		
+	<style type="text/css">
 		:root {
 			--item-main: #242424;
 			--item-unselectable: #161616;
@@ -17,7 +18,8 @@
 			--item-disabled: #393939;
 		}
 
-		html,body {
+		html,
+		body {
 			margin: 0;
 			padding: 0;
 			outline: none;
@@ -48,20 +50,20 @@
 
 		.center {
 			top: 50%;
-			left: 50%;	
-			transform: translate(-50%,-50%);		
+			left: 50%;
+			transform: translate(-50%, -50%);
 		}
 
 		.left {
 			top: 50%;
-			left: 25%;	
-			transform: translate(-50%,-50%);		
+			left: 25%;
+			transform: translate(-50%, -50%);
 		}
 
 		.right {
 			top: 50%;
-			left: 75%;	
-			transform: translate(-50%,-50%);		
+			left: 75%;
+			transform: translate(-50%, -50%);
 		}
 
 		.item {
@@ -76,17 +78,17 @@
 			background: var(--item-hover);
 		}
 
-		.item > i {
+		.item>i {
 			text-align: center;
 		}
 
-		.item > div {
+		.item>div {
 			display: flex;
 			flex-direction: column;
 			gap: 5px;
 		}
 
-		.item > div > i {
+		.item>div>i {
 			opacity: 0.5;
 		}
 
@@ -135,100 +137,101 @@
 		}
 
 		::-webkit-scrollbar-thumb {
-			background: rgb(20,20,20);	
-			border-radius: 5px;		
+			background: rgb(20, 20, 20);
+			border-radius: 5px;
 		}
 
 		::-webkit-scrollbar-thumb:hover {
-			background: rgb(30,30,30);				
+			background: rgb(30, 30, 30);
 		}
 
 		.container {
-		  display: flex;
-		  position: relative;
-		  cursor: pointer;
-		  font-size: 14px;
-		  -webkit-user-select: none;
-		  -moz-user-select: none;
-		  -ms-user-select: none;
-		  user-select: none;
-		  flex-direction: row-reverse;
-		  align-items: center;
-		  justify-content: flex-end;
-		  gap: 5px;
+			display: flex;
+			position: relative;
+			cursor: pointer;
+			font-size: 14px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			flex-direction: row-reverse;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 5px;
 		}
 
 		/* Hide the browser's default checkbox */
 		.container input {
-		  position: relative;
-		  opacity: 0;
-		  cursor: pointer;
-		  height: 0;
-		  width: 0;
+			position: relative;
+			opacity: 0;
+			cursor: pointer;
+			height: 0;
+			width: 0;
 		}
 
 		/* Create a custom checkbox */
 		.checkmark {
-		  position: relative;
-		  height: 10px;
-		  width: 10px;
-		  border-radius: 8px;
-		  background-color: #eee;
+			position: relative;
+			height: 10px;
+			width: 10px;
+			border-radius: 8px;
+			background-color: #eee;
 		}
 
 		/* On mouse-over, add a grey background color */
-		.container:hover input ~ .checkmark {
-		  background-color: #ccc;
+		.container:hover input~.checkmark {
+			background-color: #ccc;
 		}
 
 		/* When the checkbox is checked, add a blue background */
-		.container input:checked ~ .checkmark {
-		  background-color: #2196F3;
+		.container input:checked~.checkmark {
+			background-color: #2196F3;
 		}
 
 		/* Create the checkmark/indicator (hidden when not checked) */
 		.checkmark:after {
-		  content: "";
-		  position: relative;
-		  display: none;
+			content: "";
+			position: relative;
+			display: none;
 		}
 
 		/* Show the checkmark when checked */
-		.container input:checked ~ .checkmark:after {
-		  display: block;
+		.container input:checked~.checkmark:after {
+			display: block;
 		}
 	</style>
 </head>
+
 <body>
 
 	<div id="container" class="right">
 		<div class="item unselectable">
-			<i class="fas fa-info-circle"></i> 
+			<i class="fas fa-info-circle"></i>
 			<div>
 				<b>Unselectable Item</b>
 				<i>Testing, testing a description here.</i>
 			</div>
 		</div>
 		<div class="item disabled">
-			<i class="fas fa-times"></i> 
+			<i class="fas fa-times"></i>
 			<div>
 				<b>Disabled Item</b>
 				<i>Testing, testing a description here.</i>
 			</div>
 		</div>
 		<div class="item">
-			<i class="fas fa-check"></i> 
+			<i class="fas fa-check"></i>
 			<div>
 				<b>Item</b>
 				<i>Testing, testing a description here. Generic words to force overflow.</i>
-			</div> 
+			</div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
 		const container = document.getElementById("container")
 
-		const CreateElement = (tag = "div",className = "",parent) => {
+		const CreateElement = (tag = "div", className = "", parent) => {
 			const e = document.createElement(tag)
 			e.className = className
 
@@ -239,48 +242,48 @@
 			return e
 		}
 
-		function Open(eles,position = "right") {
+		function Open(eles, position = "right") {
 			container.innerHTML = ""
 			container.className = position
 
-			for (let i=0;i<eles.length;i++) {
+			for (let i = 0; i < eles.length; i++) {
 				let ele = eles[i]
-				let item = CreateElement("div","item",container)
+				let item = CreateElement("div", "item", container)
 
-				let icon = CreateElement("i",ele.icon,item)
-				let div = CreateElement("div","",item)
+				let icon = CreateElement("i", ele.icon, item)
+				let div = CreateElement("div", "", item)
 
-				let title = CreateElement("b","",div)
+				let title = CreateElement("b", "", div)
 				title.innerHTML = ele.title
 
 				if (ele.description) {
-					let desc = CreateElement("i","",div)
+					let desc = CreateElement("i", "", div)
 					desc.innerHTML = ele.description || ""
 				}
 
 				if (ele.input) {
 					if (ele.inputType == "radio") {
-						for (let j=0;j<ele.inputValues.length;j++) {
+						for (let j = 0; j < ele.inputValues.length; j++) {
 							let v = ele.inputValues[j]
-							let container = CreateElement("label","container",div)
-							container.innerHTML = v.text 
+							let container = CreateElement("label", "container", div)
+							container.innerHTML = v.text
 
-							let input = CreateElement("INPUT","",container)
+							let input = CreateElement("INPUT", "", container)
 							input.type = "radio"
-							input.name = i+1
+							input.name = i + 1
 							input.checked = (ele.inputValue || ele.inputPlaceholder || -1) == v.value
 
-							let span = CreateElement("SPAN","checkmark",container)
+							let span = CreateElement("SPAN", "checkmark", container)
 
-							input.onchange = function() {
-								$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
-									index:i+1,
-									value:v.value
-								}))	
+							input.onchange = function () {
+								$.post(`https://${GetParentResourceName()}/changed`, JSON.stringify({
+									index: i + 1,
+									value: v.value
+								}))
 							}
 						}
 					} else {
-						let input = CreateElement("input","",div)
+						let input = CreateElement("input", "", div)
 						input.type = ele.inputType
 
 						if (ele.inputValue) {
@@ -296,34 +299,34 @@
 								if (ele.inputMin) input.min = ele.inputMin;
 								if (ele.inputMax) input.max = ele.inputMax;
 
-								input.onchange = function() {
+								input.onchange = function () {
 									let v = Number(input.value)
 
 									if (ele.inputMin) {
-										v = Math.max(ele.inputMin,v)
+										v = Math.max(ele.inputMin, v)
 									}
 
 									if (ele.inputMax) {
-										v = Math.min(ele.inputMax,v)
+										v = Math.min(ele.inputMax, v)
 									}
 
-									input.value = v	
+									input.value = v
 
-									$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
-										index:i+1,
-										value:v
-									}))				
+									$.post(`https://${GetParentResourceName()}/changed`, JSON.stringify({
+										index: i + 1,
+										value: v
+									}))
 								}
-							break
+								break
 
 							case "text":
-								input.onchange = function() {
-									$.post(`https://${GetParentResourceName()}/changed`,JSON.stringify({
-										index:i+1,
-										value:input.value
-									}))				
+								input.onchange = function () {
+									$.post(`https://${GetParentResourceName()}/changed`, JSON.stringify({
+										index: i + 1,
+										value: input.value
+									}))
 								}
-							break
+								break
 						}
 					}
 				} else {
@@ -332,9 +335,9 @@
 					} else if (ele.unselectable) {
 						item.className += " unselectable"
 					} else if (!ele.input) {
-						item.onclick = function() {
-							$.post(`https://${GetParentResourceName()}/selected`,JSON.stringify({
-								index:i+1
+						item.onclick = function () {
+							$.post(`https://${GetParentResourceName()}/selected`, JSON.stringify({
+								index: i + 1
 							}))
 						}
 					}
@@ -353,7 +356,7 @@
 			Closed()
 		}
 
-		window.addEventListener("message",(e) => {
+		window.addEventListener("message", (e) => {
 			let data = e.data
 
 			if (!data.func || !window[data.func]) {
@@ -363,14 +366,14 @@
 			window[data.func](...data.args)
 		})
 
-		window.addEventListener("keydown",(e) => {
-            if (e.key == "Escape" || e.key == "Backspace") {
-                if (e.target.tagName.toLowerCase() == "input") {
-                    return
-                }
+		window.addEventListener("keydown", (e) => {
+			if (e.key == "Escape" || e.key == "Backspace") {
+				if (e.target.tagName.toLowerCase() == "input") {
+					return
+				}
 
-                Close()
-            }
+				Close()
+			}
 		})
 
 		// Open([
@@ -433,4 +436,5 @@
 		// ])
 	</script>
 </body>
+
 </html>
