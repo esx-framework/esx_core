@@ -35,42 +35,6 @@ AddEventHandler('esx:playerDropped', function(src)
 		Customs[src] = nil
 	end
 end)
-local Customs = {}
-
-RegisterNetEvent('esx_lscustom:startModing', function(props, netId)
-	local src = tostring(source)
-	if Customs[src] then
-		Customs[src][props.plate] = {props = props, netId = netId}
-	else
-		Customs[src] = {}
-		Customs[src][props.plate] = {props = props, netId = netId}
-	end
-end)
-
-RegisterNetEvent('esx_lscustom:stopModing', function(plate)
-	local src = tostring(source)
-	if Customs[src] then
-		Customs[src][tostring(plate)] = nil
-	end
-end)
-
-AddEventHandler('esx:playerDropped', function(src)
-	src = tostring(src)
-	local playersCount = #ESX.GetExtendedPlayers()
-	if Customs[src] then
-		for k,v in pairs(Customs[src]) do
-			local entity = NetworkGetEntityFromNetworkId(v.netId)
-			if DoesEntityExist(entity) then
-				if players > 0 then
-					TriggerClientEvent('esx_lscustom:restoreMods', -1, v.netId, v.props)
-				else
-					DeleteEntity(entity)
-				end
-			end
-		end
-		Customs[src] = nil
-	end
-end)
 
 RegisterServerEvent('esx_lscustom:buyMod')
 AddEventHandler('esx_lscustom:buyMod', function(price)
