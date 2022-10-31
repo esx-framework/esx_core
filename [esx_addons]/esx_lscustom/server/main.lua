@@ -20,7 +20,7 @@ end)
 
 AddEventHandler('esx:playerDropped', function(src)
 	src = tostring(src)
-	local playersCount = #ESX.GetPlayers()
+	local playersCount = #ESX.GetExtendedPlayers()
 	if Customs[src] then
 		for k,v in pairs(Customs[src]) do
 			local entity = NetworkGetEntityFromNetworkId(v.netId)
