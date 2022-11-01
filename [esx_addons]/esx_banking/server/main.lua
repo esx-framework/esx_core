@@ -14,6 +14,19 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
     local twoMonthMs = (os.time() - 5259487) * 1000
     MySQL.Sync.fetchScalar('DELETE FROM banking WHERE time < ? ', {twoMonthMs})
+    local xPlayers = ESX.GetExtendedPlayers()
+    for i =1, #xPlayers do
+        local xPlayer = xPlayers[i]
+        local identifier = xPlayer.getIdentifier()
+        local pincode = MySQL.query('SELECT pincode FROM users WHERE identifier = ?', {identifier})
+        xPlayer.set("Pincode", pincode[1].pincode)
+    end
+end)
+
+AddEventHandler('esx:playerLoaded', function(playerId)
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+    local pincode = MySQL.query('SELECT pincode FROM users WHERE identifier = ?', {xPlayer.identifier})
+    xPlayer.set("Pincode", pincode[1].pincode)
 end)
 
 -- event
@@ -108,10 +121,11 @@ end)
 
 ESX.RegisterServerCallback("esx_banking:checkPincode", function(source, cb, inputPincode)
     local xPlayer = ESX.GetPlayerFromId(source)
-    local identifier = xPlayer.getIdentifier()
-    local pincode = MySQL.Sync.fetchScalar('SELECT COUNT(1) AS pincode FROM users WHERE identifier = ? AND pincode = ?',
-        {identifier, inputPincode})
-    cb(pincode > 0)
+    if xPlayer.get("Pincode") == inputPincode then
+        cb(true)
+    else
+        cb(false)
+    end
 end)
 
 -- bank functions
@@ -141,6 +155,7 @@ BANK = {
     end,
     Pincode = function(amount, identifier)
         MySQL.update('UPDATE users SET pincode = ? WHERE identifier = ? ', {amount, identifier})
+        ESX.GetPlayerFromIdentifier(identifier).set("Pincode", amount)
     end,
     LogTransaction = function(playerId, logType, amount, bankMoney)
         if source == nil then
