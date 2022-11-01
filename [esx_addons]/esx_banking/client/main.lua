@@ -172,11 +172,11 @@ local function StartThread()
                 PedHandler(closestPed)
             end
 
-            if not isInMenu and IsPedOnFoot(PlayerPedId()) then
+            if IsPedOnFoot(PlayerPedId()) then
                 local closestBank = {}
 
                 for i = 1, #Config.AtmModels do
-                    local atm = GetClosestObjectOfType(_GetEntityCoords, 3.0, Config.AtmModels[i], false)
+                    local atm = GetClosestObjectOfType(_GetEntityCoords, 8.0, Config.AtmModels[i], false)
                     if atm ~= 0 then
                         local atmOffset = GetOffsetFromEntityInWorldCoords(atm, 0.0, -0.7, 0.0)
                         local atmHeading = GetEntityHeading(atm)

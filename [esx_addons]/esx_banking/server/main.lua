@@ -48,7 +48,7 @@ AddEventHandler('esx_banking:doingType', function(typeData)
     end
     amount = ESX.Math.Round(amount)
 
-    if amount == nil or amount <= 0 then
+    if amount == nil or (not typeData.pincode and amount <= 0) then
         TriggerClientEvent("esx:showNotification", source, TranslateCap('invalid_amount'), "error")
     else
         if typeData.deposit and amount <= money then
@@ -79,7 +79,7 @@ AddEventHandler('esx_banking:doingType', function(typeData)
             TriggerClientEvent("esx:showNotification", source,
                 TranslateCap(string.format('%s_money', key), amount, typeData.transfer.playerId), "success")
         else
-            TriggerClientEvent("esx:showNotification", source, TranslateCap(string.format('%s_money', key), amount), "success")
+            TriggerClientEvent("esx:showNotification", source, TranslateCap(string.format('%s_money', key), typeData.pincode and (string.format("%04d", amount)) or amount), "success")
         end
         if not typeData.pincode then
             BANK.LogTransaction(source, string.upper(key), amount, bankMoney)
