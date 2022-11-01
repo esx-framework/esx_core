@@ -739,6 +739,7 @@ local DoNotUse = {
 	'fivem-map-hipster',
 	'qb-core',
 	'default_spawnpoint',
+	'hardcap',
 }
 
 for i=1, #DoNotUse do
