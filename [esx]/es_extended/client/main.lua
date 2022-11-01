@@ -1,6 +1,19 @@
 local pickups = {}
 local PlayerBank, PlayerMoney = 0,0
 CreateThread(function()
+	--load unloaded ipl's
+  	OnEnterMp()
+  	SetInstancePriorityMode(true)
+  	RequestIpl("FIBlobbyfake")
+  	RequestIpl("DT1_03_Gr_Closed")
+  	RequestIpl("v_tunnel_hole")
+  	RequestIpl("TrevorsMP")
+  	RequestIpl("TrevorsTrailer")
+  	RequestIpl("farm")
+  	RequestIpl("farmint")
+  	RequestIpl("farmint_cap")
+  	RequestIpl("farm_props")
+  	RequestIpl("CS1_02_cf_offmission")
 	while not Config.Multichar do
 		Wait(0)
 		if NetworkIsPlayerActive(PlayerId()) then
@@ -45,20 +58,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	ESX.PlayerLoaded = true
-		
-	--load unloaded ipl's
-  	OnEnterMp()
-  	SetInstancePriorityMode(true)
-  	RequestIpl("FIBlobbyfake")
-  	RequestIpl("DT1_03_Gr_Closed")
-  	RequestIpl("v_tunnel_hole")
-  	RequestIpl("TrevorsMP")
-  	RequestIpl("TrevorsTrailer")
-  	RequestIpl("farm")
-  	RequestIpl("farmint")
-  	RequestIpl("farmint_cap")
-  	RequestIpl("farm_props")
-  	RequestIpl("CS1_02_cf_offmission")
 
 	while ESX.PlayerData.ped == nil do Wait(20) end
 
