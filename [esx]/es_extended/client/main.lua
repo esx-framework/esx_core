@@ -45,6 +45,20 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	ESX.PlayerLoaded = true
+		
+	--load unloaded ipl's
+  	OnEnterMp()
+  	SetInstancePriorityMode(true)
+  	RequestIpl("FIBlobbyfake")
+  	RequestIpl("DT1_03_Gr_Closed")
+  	RequestIpl("v_tunnel_hole")
+  	RequestIpl("TrevorsMP")
+  	RequestIpl("TrevorsTrailer")
+  	RequestIpl("farm")
+  	RequestIpl("farmint")
+  	RequestIpl("farmint_cap")
+  	RequestIpl("farm_props")
+  	RequestIpl("CS1_02_cf_offmission")
 
 	while ESX.PlayerData.ped == nil do Wait(20) end
 
@@ -53,7 +67,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
 		NetworkSetFriendlyFireOption(true)
 	end
-
+	
 		CreateThread(function()
 			local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
 			local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
