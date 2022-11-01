@@ -1,8 +1,17 @@
 SetMapName('San Andreas')
 SetGameType('ESX Legacy')
+StopResource('hardcap')
 
+local cv = GetConvarInt('sv_maxclients', 32)
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
+
+local playerCount = 0
+local list = {}
+
+AddEventHandler("onResourceStarting", function(resource)
+    if resource == "hardcap" then CancelEvent() return end
+end)
 
 if Config.Multichar then
   newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
@@ -23,8 +32,10 @@ if Config.Multichar then
     if not ESX.Players[src] then
       local identifier = char .. ':' .. ESX.GetIdentifier(src)
       if data then
+		playerCount = playerCount + 1
         createESXPlayer(identifier, src, data)
       else
+		playerCount = playerCount + 1
         loadESXPlayer(identifier, src, false)
       end
     end
@@ -38,6 +49,7 @@ else
     end
 
     if not ESX.Players[_source] then
+	  playerCount = playerCount + 1
       onPlayerJoined(_source)
     end
   end)
@@ -92,9 +104,16 @@ end
 
 if not Config.Multichar then
   AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
+	print('^4[ESX-Legacy]^2: Connecting: ' .. name .. '^7')
     deferrals.defer()
     local playerId = source
     local identifier = ESX.GetIdentifier(playerId)
+
+	if playerCount >= cv then
+        print('^4[ESX-Legacy]^1 Player ' .. name .. "tries to join server but server is full :(")
+		deferrals.done('This server is full (past ' .. tostring(cv) .. ' players).')
+    	CancelEvent()
+  	end
 
     if identifier then
       if ESX.GetPlayerFromIdentifier(identifier) then
@@ -109,6 +128,15 @@ if not Config.Multichar then
         'There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
     end
   end)
+else
+    AddEventHandler('playerConnecting', function(name, setReason)
+	    print('^4[ESX-Legacy]^2: Connecting: ' .. name .. '^7')
+        if playerCount >= cv then
+            print('^4[ESX-Legacy]^1 Player ' .. name .. "tries to join server but server is full :(")
+            setReason('This server is full (past ' .. tostring(cv) .. ' players).')
+            CancelEvent()
+        end
+    end)
 end
 
 function loadESXPlayer(identifier, playerId, isNew)
@@ -336,6 +364,8 @@ AddEventHandler('playerDropped', function(reason)
   local xPlayer = ESX.GetPlayerFromId(playerId)
 
   if xPlayer then
+	playerCount = playerCount - 1
+    list[source] = nil
     TriggerEvent('esx:playerDropped', playerId, reason)
 
     Core.SavePlayer(xPlayer, function()
@@ -348,7 +378,7 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
   local xPlayer = ESX.GetPlayerFromId(playerId)
   if xPlayer then
     TriggerEvent('esx:playerDropped', playerId)
-
+	
     Core.SavePlayer(xPlayer, function()
       ESX.Players[playerId] = nil
       if cb then
