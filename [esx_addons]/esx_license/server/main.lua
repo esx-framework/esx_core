@@ -1,9 +1,5 @@
 local licenses = {}
 
-local allowedJobs = {
-	['police'] = true
-}
-
 MySQL.ready(function()
 	local p = promise.new()
 	MySQL.query('SELECT type, label FROM licenses', function(result)
@@ -102,7 +98,7 @@ RegisterNetEvent('esx_license:removeLicense')
 AddEventHandler('esx_license:removeLicense', function(target, licenseType, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer then 
-		if allowedJobs[xPlayer.getJob().name] then
+		if Config.allowedJobs[xPlayer.getJob().name] then
 			local xTarget = ESX.GetPlayerFromId(target)
 			if xTarget then
 				RemoveLicense(xTarget.getIdentifier(), licenseType, cb)
