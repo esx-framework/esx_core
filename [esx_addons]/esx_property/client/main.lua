@@ -254,12 +254,10 @@ function PropertyMenuElements(PropertyId)
       elements[elements + 1] = {title = TranslateCap("door_unlocked"), icon = "fas fa-unlock", value = 'property_lock'}
     end
     if ESX.PlayerData.identifier == Property.Owner then
-      elements[elements + 1] =
-        {title = TranslateCap("name_manage"), description = TranslateCap("name_manage_desc"), icon = "fa-solid fa-signature", value = 'property_name'}
+      elements[elements + 1] = {title = TranslateCap("name_manage"), description = TranslateCap("name_manage_desc"), icon = "fa-solid fa-signature", value = 'property_name'}
     end
     if not InProperty then
       if ESX.PlayerData.identifier == Property.Owner then
-        elements[elements + 1] = {title = TranslateCap("key_management"), description = TranslateCap("key_management_desc"), icon = "fas fa-key", value = 'property_keys'}
         elements[elements + 1] =
           {title = TranslateCap("sell_title"), description = TranslateCap("sell_desc", ESX.Math.GroupDigits(ESX.Round(Property.Price * 0.6))),
            icon = "fas fa-dollar-sign", value = 'property_sell'}
@@ -270,6 +268,9 @@ function PropertyMenuElements(PropertyId)
     else
       if (Config.CCTV.Enabled and Properties[PropertyId].cctv.enabled) and (ESX.PlayerData.identifier == Property.Owner or PlayerKeys[PropertyId]) then
         elements[elements + 1] = {title = TranslateCap("cctv_title"), description = TranslateCap("cctv_desc"), icon = "fas fa-video", value = 'property_cctv'}
+      end
+      if (ESX.PlayerData.identifier == Property.Owner) then
+        elements[elements + 1] = {title = TranslateCap("key_management"), description = TranslateCap("key_management_desc"), icon = "fas fa-key", value = 'property_keys'}
       end
       if (ESX.PlayerData.identifier == Property.Owner or PlayerKeys[PropertyId]) then
         if Config.CanCustomiseInventoryAndWardrobePositions then
