@@ -753,6 +753,8 @@ local DoNotUse = {
 	'qb-core',
 	'default_spawnpoint',
 	'hardcap',
+	'baseevents',
+	'mysql-async',
 }
 
 for i=1, #DoNotUse do
