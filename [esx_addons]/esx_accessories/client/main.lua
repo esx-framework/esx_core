@@ -74,7 +74,7 @@ function OpenShopMenu(accessory)
 							TriggerServerEvent('esx_accessories:save', skin, accessory)
 						end)
 					else
-						local player = PlayerPedId()
+						local player = ESX.PlayerData.ped
 						TriggerEvent('esx_skin:getLastSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin)
 						end)
@@ -93,7 +93,7 @@ function OpenShopMenu(accessory)
 			end
 
 			if data.current.value == 'no' then
-				local player = PlayerPedId()
+				local player = ESX.PlayerData.ped
 				TriggerEvent('esx_skin:getLastSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
@@ -161,7 +161,7 @@ local nearMarker = false
 CreateThread(function()
 	while true do
 		local sleep = 1500
-		local coords = GetEntityCoords(PlayerPedId())
+		local coords = GetEntityCoords(ESX.PlayerData.ped)
 		for k,v in pairs(Config.Zones) do
 			for i = 1, #v.Pos, 1 do
 				if(Config.Type ~= -1 and #(coords - v.Pos[i]) < Config.DrawDistance) then
@@ -181,7 +181,7 @@ CreateThread(function()
 		local sleep = 1500
 		if nearMarker then
 			sleep = 0
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			local isInMarker = false
 			local currentZone = nil
 			for k,v in pairs(Config.Zones) do
@@ -198,32 +198,23 @@ CreateThread(function()
 				HasAlreadyEnteredMarker = true
 				LastZone = currentZone
 				TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
+				ESX.TextUI(CurrentActionMsg)
 			end
 
 			if not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
+				ESX.HideUI()
 			end
 		end
 		Wait(sleep)
 	end
 end)
 
--- Key controls
-CreateThread(function()
-	while true do
-		local Sleep = 1500
-		
-		if CurrentAction then
-			Sleep = 0
-			ESX.ShowHelpNotification(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
-				OpenShopMenu(CurrentActionData.accessory)
-				CurrentAction = nil
-			end
-		end
-		Wait(Sleep)
+ESX.RegisterInput("accessories_shop", "(ESX Accessory): Open Shop", "keyboard", "e", function()
+	if CurrentActionData.accessory then
+		OpenShopMenu(CurrentActionData.accessory)
+		CurrentAction = nil
 	end
 end)
 

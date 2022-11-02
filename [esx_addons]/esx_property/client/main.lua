@@ -249,67 +249,67 @@ function PropertyMenuElements(PropertyId)
   local elements = {{unselectable = true, title = Property.setName ~= "" and Property.setName or Property.Name, icon = "fas fa-home"}}
   if Property.Owned then
     if Property.Locked then
-      elements[elements + 1] = {title = TranslateCap("door_locked"), icon = "fas fa-lock", value = 'property_unlock'}
+      elements[#elements + 1] = {title = TranslateCap("door_locked"), icon = "fas fa-lock", value = 'property_unlock'}
     else
-      elements[elements + 1] = {title = TranslateCap("door_unlocked"), icon = "fas fa-unlock", value = 'property_lock'}
+      elements[#elements + 1] = {title = TranslateCap("door_unlocked"), icon = "fas fa-unlock", value = 'property_lock'}
     end
     if ESX.PlayerData.identifier == Property.Owner then
-      elements[elements + 1] = {title = TranslateCap("name_manage"), description = TranslateCap("name_manage_desc"), icon = "fa-solid fa-signature", value = 'property_name'}
+      elements[#elements + 1] = {title = TranslateCap("name_manage"), description = TranslateCap("name_manage_desc"), icon = "fa-solid fa-signature", value = 'property_name'}
     end
     if not InProperty then
       if ESX.PlayerData.identifier == Property.Owner then
-        elements[elements + 1] =
+        elements[#elements + 1] =
           {title = TranslateCap("sell_title"), description = TranslateCap("sell_desc", ESX.Math.GroupDigits(ESX.Round(Property.Price * 0.6))),
            icon = "fas fa-dollar-sign", value = 'property_sell'}
       end
       if Config.Raiding.Enabled and Property.Locked and ESX.PlayerData.job and ESX.GetPlayerData().job.name == "police" then
-        elements[elements + 1] = {title = TranslateCap("raid_title"), description = TranslateCap("raid_desc"), icon = "fas fa-bomb", value = 'property_raid'}
+        elements[#elements + 1] = {title = TranslateCap("raid_title"), description = TranslateCap("raid_desc"), icon = "fas fa-bomb", value = 'property_raid'}
       end
     else
       if (Config.CCTV.Enabled and Properties[PropertyId].cctv.enabled) and (ESX.PlayerData.identifier == Property.Owner or PlayerKeys[PropertyId]) then
-        elements[elements + 1] = {title = TranslateCap("cctv_title"), description = TranslateCap("cctv_desc"), icon = "fas fa-video", value = 'property_cctv'}
+        elements[#elements + 1] = {title = TranslateCap("cctv_title"), description = TranslateCap("cctv_desc"), icon = "fas fa-video", value = 'property_cctv'}
       end
       if (ESX.PlayerData.identifier == Property.Owner) then
-        elements[elements + 1] = {title = TranslateCap("key_management"), description = TranslateCap("key_management_desc"), icon = "fas fa-key", value = 'property_keys'}
+        elements[#elements + 1] = {title = TranslateCap("key_management"), description = TranslateCap("key_management_desc"), icon = "fas fa-key", value = 'property_keys'}
       end
       if (ESX.PlayerData.identifier == Property.Owner or PlayerKeys[PropertyId]) then
         if Config.CanCustomiseInventoryAndWardrobePositions then
           if Config.OxInventory then
-            elements[elements + 1] = {title = TranslateCap("inventory_title"), description = TranslateCap("inventory_desc"),
+            elements[#elements + 1] = {title = TranslateCap("inventory_title"), description = TranslateCap("inventory_desc"),
                                     icon = "fa-solid fa-up-down-left-right", value = 'property_inventory'}
           end
-          elements[elements + 1] = {title = TranslateCap("wardrobe_title"), description = TranslateCap("wardrobe_desc"), icon = "fa-solid fa-up-down-left-right",
+          elements[#elements + 1] = {title = TranslateCap("wardrobe_title"), description = TranslateCap("wardrobe_desc"), icon = "fa-solid fa-up-down-left-right",
                                   value = 'property_wardrobe'}
         end
-        elements[elements + 1] =
+        elements[#elements + 1] =
           {title = TranslateCap("furniture_title"), description = TranslateCap("furniture_desc"), icon = "fas fa-boxes-stacked", value = 'property_furniture'}
       end
     end
     if (not Property.Locked or Config.OwnerCanAlwaysEnter and ESX.PlayerData.identifier == Property.Owner) and not InProperty then
-      elements[elements + 1] = {title = TranslateCap("enter_title"), icon = "fas fa-door-open", value = 'property_enter'}
+      elements[#elements + 1] = {title = TranslateCap("enter_title"), icon = "fas fa-door-open", value = 'property_enter'}
     end
     if Property.Locked and not InProperty and
       not (Config.OwnerCanAlwaysEnter and ESX.PlayerData.identifier == Property.Owner or PlayerKeys[PropertyId]) then
-      elements[elements + 1] = {title = TranslateCap("knock_title"), icon = "fa-solid fa-hand-sparkles", value = 'property_knock'}
+      elements[#elements + 1] = {title = TranslateCap("knock_title"), icon = "fa-solid fa-hand-sparkles", value = 'property_knock'}
     end
   else
     if not PM.Enabled then
-      elements[elements + 1] =
+      elements[#elements + 1] =
         {title = TranslateCap("buy_title"), description = TranslateCap("buy_desc", ESX.Math.GroupDigits(ESX.Round(Property.Price))), icon = "fas fa-shopping-cart",
          value = 'property_buy'}
     else
       if ESX.PlayerData.job.name == PM.job and ESX.PlayerData.job.grade >= PM.Permissions.SellProperty then
-        elements[elements + 1] = {title = TranslateCap("sellplayer_title"), description = TranslateCap("sellplayer_desc", ESX.Math.GroupDigits(ESX.Round(Property.Price))),
+        elements[#elements + 1] = {title = TranslateCap("sellplayer_title"), description = TranslateCap("sellplayer_desc", ESX.Math.GroupDigits(ESX.Round(Property.Price))),
                                 icon = "fas fa-shopping-cart", value = 'property_sell_re'}
       end
     end
     if not Property.Locked and not InProperty then
-      elements[elements + 1] = {title = TranslateCap("view_title"), icon = "fas fa-door-open", value = 'property_enter'}
+      elements[#elements + 1] = {title = TranslateCap("view_title"), icon = "fas fa-door-open", value = 'property_enter'}
     end
   end
 
   if InProperty and (not Property.Locked or Config.CanAlwaysExit) then
-    elements[elements + 1] = {title = TranslateCap("exit_title"), icon = "fas fa-sign-out-alt", value = 'property_exit'}
+    elements[#elements + 1] = {title = TranslateCap("exit_title"), icon = "fas fa-sign-out-alt", value = 'property_exit'}
   end
 
   return elements
@@ -1495,7 +1495,7 @@ RegisterNetEvent("esx_property:AdminMenu", function()
                 if Properties[i].Owned then
                   description = description .. "\nOwner: " .. Properties[i].OwnerName
                 end
-                elements[elements + 1] = {title = Properties[i].Name, value = i, description = description, icon = "fas fa-home"}
+                elements[#elements + 1] = {title = Properties[i].Name, value = i, description = description, icon = "fas fa-home"}
               end
             end
             ESX.OpenContext("right", elements, function(menu, element)
