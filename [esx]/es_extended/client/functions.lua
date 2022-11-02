@@ -196,8 +196,10 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
     Core.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
     if on_release then
         RegisterCommand("-" .. command_name, on_release)
+        TriggerEvent('chat:removeSuggestion', '/-' .. command_name)
     end
     RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
+    TriggerEvent('chat:removeSuggestion', '/'..on_release ~= nil and "+" .. command_name or command_name)
 end
 
 function ESX.TriggerServerCallback(name, cb, ...)

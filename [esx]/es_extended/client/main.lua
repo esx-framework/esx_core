@@ -463,7 +463,6 @@ if not Config.OxInventory and Config.EnableDefaultInventory then
 			ESX.ShowInventory()
 		end
 	end)
-
 	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
