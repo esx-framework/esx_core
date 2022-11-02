@@ -458,12 +458,11 @@ function StartServerSyncLoops()
 end
 
 if not Config.OxInventory and Config.EnableDefaultInventory then
-	RegisterCommand('showinv', function()
-		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+	ESX.RegisterInput("inventory", Translate("keymap_showinventory"), "keyboard", "F2", function()
+		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'inventory') then
 			ESX.ShowInventory()
 		end
 	end)
-	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
 -- disable wanted level
