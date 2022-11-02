@@ -275,27 +275,32 @@ end)
 
 ESX.RegisterServerCallback('esx_policejob:removeArmoryWeapon', function(source, cb, weaponName)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.addWeapon(weaponName, 500)
 
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_police', function(store)
 		local weapons = store.get('weapons') or {}
-
+		local weaponCount = nil
 		local foundWeapon = false
 
 		for i=1, #weapons, 1 do
-			if weapons[i].name == weaponName then
-				weapons[i].count = (weapons[i].count > 0 and weapons[i].count - 1 or 0)
-				foundWeapon = true
-				break
-			end
-		end
+            if weapons[i].name == weaponName then
+                weaponCount = weapons[i].count
+                if (weapons[i].count > 0) then
+                    foundWeapon = true
+                    weapons[i].count = weapons[i].count - 1
+                end
+            end
+        end
 
-		if not foundWeapon then
+		if not foundWeapon and weaponCount == nil then
 			table.insert(weapons, {
 				name = weaponName,
 				count = 0
 			})
 		end
+
+        if foundWeapon then
+            xPlayer.addWeapon(weaponName, 250)
+        end
 
 		store.set('weapons', weapons)
 		cb()
