@@ -116,6 +116,11 @@ RegisterNetEvent('esx_policejob:getStockItem')
 AddEventHandler('esx_policejob:getStockItem', function(itemName, count)
 	local source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
+		
+	if xPlayer.job.name ~= 'police' then
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit The getStockItem!'):format(xPlayer.source))
+		return
+	end
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 		local inventoryItem = inventory.getItem(itemName)
@@ -141,6 +146,11 @@ RegisterNetEvent('esx_policejob:putStockItems')
 AddEventHandler('esx_policejob:putStockItems', function(itemName, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
+		
+	if xPlayer.job.name ~= 'police' then
+		print(('[^3WARNING^7] Player ^5%s^7 Attempted To Exploit The putStockItems!'):format(xPlayer.source))
+		return
+	end
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_police', function(inventory)
 		local inventoryItem = inventory.getItem(itemName)
