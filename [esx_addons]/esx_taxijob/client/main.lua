@@ -745,11 +745,8 @@ CreateThread(function()
     end
 end)
 
-RegisterCommand('taximenu', function()
-    if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name ==
-        'taxi' then
+ESX.RegisterInput("taximenu", "(ESX Mechanics): Open Job Actions", "keyboard", "F6", function()
+    if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
         OpenMobileTaxiActionsMenu()
     end
-end, false)
-
-RegisterKeyMapping('taximenu', 'Open Taxi Menu', 'keyboard', 'f6')
+end)

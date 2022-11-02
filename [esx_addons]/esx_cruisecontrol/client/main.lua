@@ -1,23 +1,22 @@
 local CruisedSpeed, CruisedSpeedKm, VehicleVectorY = 0, 0, 0
 
-RegisterCommand("cruise", function(src)
+ESX.RegisterInput("cruise", "(ESX CruiseControl): Toggle", "keyboard", Config.ToggleKey, function()
 	if IsDriver() then 
 		TriggerCruiseControl()
 	end
 end)
 
-RegisterKeyMapping("cruise", "Enable Cruise Control", "keyboard",Config.ToggleKey)
-
 function TriggerCruiseControl()
+	local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
 	if CruisedSpeed == 0 and IsDriving() then
-		if GetVehicleSpeed() > 0 and GetVehicleCurrentGear(GetVehicle()) > 0	then
+		if GetVehicleSpeed() > 0 and GetVehicleCurrentGear(vehicle) > 0	then
 			CruisedSpeed = GetVehicleSpeed()
 			CruisedSpeedKm = TransformToKm(CruisedSpeed)
 
 			ESX.ShowNotification(TranslateCap('activated') .. ':  ' .. CruisedSpeedKm .. ' km/h')
 
 			CreateThread(function ()
-				while CruisedSpeed > 0 and IsInVehicle() == PlayerPedId() do
+				while CruisedSpeed > 0 and GetPedInVehicleSeat(vehicle, -1) == ESX.PlayerData.ped do
 					Wait(0)
 
 					if not IsTurningOrHandBraking() and GetVehicleSpeed() < (CruisedSpeed - 1.5) then

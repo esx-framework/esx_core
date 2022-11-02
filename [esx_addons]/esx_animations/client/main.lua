@@ -77,18 +77,14 @@ function OpenAnimationsSubMenu(menu)
 	end)
 end
 
--- Key Controls
-RegisterCommand('animmenu', function()
+ESX.RegisterInput("animations", "(ESX Amimations): Open Menu", "keyboard", "F3", function()
 	if not ESX.PlayerData.dead then
 		OpenAnimationsMenu()
 	end
-end, false)
+end)
 
-RegisterCommand('cleartasks', function()
+ESX.RegisterInput("cleartasks", "(ESX AmbulanceJob): Stop Animation", "keyboard", "x", function()
 	if not ESX.PlayerData.dead then
-	ClearPedTasks(PlayerPedId())
+		ClearPedTasks(PlayerPedId())
 	end
-end, false)
-
-RegisterKeyMapping('animmenu', 'Open Animations Menu', 'keyboard', 'f3')
-RegisterKeyMapping('cleartasks', 'Stop Anmimation', 'keyboard', 'z')
+end)

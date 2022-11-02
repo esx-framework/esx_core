@@ -228,11 +228,9 @@ CreateThread(function()
 end)
 
 if Config.EnableControls then
-	RegisterCommand("accessory", function(src)
+	ESX.RegisterInput("accessory", "(ESX Accessory): Open Menu", "keyboard", "k", function()
 		if not ESX.PlayerData.dead then
 			OpenAccessoryMenu()
 		end
 	end)
-
-	RegisterKeyMapping("accessory", "Open Accessory Menu", "keyboard", "k")
 end

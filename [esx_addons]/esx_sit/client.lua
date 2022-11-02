@@ -51,7 +51,7 @@ CreateThread(function()
 	end
 end)
 
-RegisterCommand('sit', function()
+ESX.RegisterInput("sit", "(ESX Sit): Sit", "keyboard", "E", function()
 	if sitting then
 		wakeup()
 	else
@@ -72,11 +72,7 @@ RegisterCommand('sit', function()
 			end
 		end
 	end
-end, false)
-
-
-RegisterKeyMapping('sit', 'Sit', 'keyboard', 'e')
-
+end)
 function GetNearChair()
 	local object, distance
 	local coords = GetEntityCoords(PlayerPedId())

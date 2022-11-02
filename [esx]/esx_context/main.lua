@@ -149,9 +149,7 @@ local function focusPreview()
 end
 
 if PREVIEW_KEYBIND then
-	RegisterCommand("previewContext",focusPreview)
-
-	RegisterKeyMapping("previewContext","Preview Active Context","keyboard",PREVIEW_KEYBIND)
+	ESX.RegisterInput("previewContext", "(ESX Context): Preview Active Context", "keyboard", PREVIEW_KEYBIND, focusPreview)
 end
 
 exports("focusPreview",focusPreview)

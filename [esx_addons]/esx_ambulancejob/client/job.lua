@@ -381,13 +381,11 @@ CreateThread(function()
 	end
 end)
 
-RegisterCommand("ambulance", function(src)
+ESX.RegisterInput("EMS", "(ESX AmbulanceJob): Open Ambulance Actions Menu", "keyboard", "F6", function()
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'ambulance' and not ESX.PlayerData.dead then
 		OpenMobileAmbulanceActionsMenu()
 	end
 end)
-
-RegisterKeyMapping("ambulance", "Open Ambulance Actions Menu", "keyboard", "F6")
 
 RegisterNetEvent('esx_ambulancejob:putInVehicle')
 AddEventHandler('esx_ambulancejob:putInVehicle', function()

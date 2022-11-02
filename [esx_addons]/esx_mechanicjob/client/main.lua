@@ -2,7 +2,7 @@ local HasAlreadyEnteredMarker, LastZone = false, nil
 local CurrentAction, CurrentActionMsg, CurrentActionData = nil, '', {}
 local CurrentlyTowedVehicle, Blips, NPCOnJob, NPCTargetTowable, NPCTargetTowableZone = nil, {}, false, nil, nil
 local NPCHasSpawnedTowable, NPCLastCancel, NPCHasBeenNextToTowable, NPCTargetDeleterZone = false, GetGameTimer() - 5 * 60000, false, false
-local isDead, isBusy = false, false
+local isBusy = false
 
 function SelectRandomTowable()
 	local index = GetRandomIntInRange(1,  #Config.Towables)
@@ -95,7 +95,7 @@ function OpenMechanicActionsMenu()
 
 						ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
 							ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-							local playerPed = PlayerPedId()
+							local playerPed = ESX.PlayerData.ped
 							TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)
 						end)
 
@@ -125,14 +125,14 @@ function OpenMechanicActionsMenu()
 				}, function(data, menu)
 					if Config.MaxInService == -1 then
 						ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos, 90.0, function(vehicle)
-							local playerPed = PlayerPedId()
+							local playerPed = ESX.PlayerData.ped
 							TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 						end)
 					else
 						ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
 							if canTakeService then
 								ESX.Game.SpawnVehicle(data.current.value, Config.Zones.VehicleSpawnPoint.Pos, 90.0, function(vehicle)
-									local playerPed = PlayerPedId()
+									local playerPed = ESX.PlayerData.ped
 									TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
 								end)
 							else
@@ -293,7 +293,7 @@ function OpenMobileMechanicActionsMenu()
 				menu.close()
 			end)
 		elseif data.current.value == 'hijack_vehicle' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local vehicle = ESX.Game.GetVehicleInDirection()
 			local coords = GetEntityCoords(playerPed)
 
@@ -319,7 +319,7 @@ function OpenMobileMechanicActionsMenu()
 				ESX.ShowNotification(TranslateCap('no_vehicle_nearby'))
 			end
 		elseif data.current.value == 'fix_vehicle' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local vehicle   = ESX.Game.GetVehicleInDirection()
 			local coords    = GetEntityCoords(playerPed)
 
@@ -347,7 +347,7 @@ function OpenMobileMechanicActionsMenu()
 				ESX.ShowNotification(TranslateCap('no_vehicle_nearby'))
 			end
 		elseif data.current.value == 'clean_vehicle' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local vehicle   = ESX.Game.GetVehicleInDirection()
 			local coords    = GetEntityCoords(playerPed)
 
@@ -372,7 +372,7 @@ function OpenMobileMechanicActionsMenu()
 				ESX.ShowNotification(TranslateCap('no_vehicle_nearby'))
 			end
 		elseif data.current.value == 'del_vehicle' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 
 			if IsPedSittingInAnyVehicle(playerPed) then
 				local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -394,7 +394,7 @@ function OpenMobileMechanicActionsMenu()
 				end
 			end
 		elseif data.current.value == 'dep_vehicle' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local vehicle = GetVehiclePedIsIn(playerPed, true)
 
 			local towmodel = `flatbed`
@@ -460,7 +460,7 @@ function OpenMobileMechanicActionsMenu()
 				ESX.ShowNotification(TranslateCap('imp_flatbed'))
 			end
 		elseif data.current.value == 'object_spawner' then
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 
 			if IsPedSittingInAnyVehicle(playerPed) then
 				ESX.ShowNotification(TranslateCap('inside_vehicle'))
@@ -589,7 +589,7 @@ end
 
 RegisterNetEvent('esx_mechanicjob:onHijack')
 AddEventHandler('esx_mechanicjob:onHijack', function()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
@@ -630,7 +630,7 @@ end)
 
 RegisterNetEvent('esx_mechanicjob:onCarokit')
 AddEventHandler('esx_mechanicjob:onCarokit', function()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
@@ -657,7 +657,7 @@ end)
 
 RegisterNetEvent('esx_mechanicjob:onFixkit')
 AddEventHandler('esx_mechanicjob:onFixkit', function()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	local coords = GetEntityCoords(playerPed)
 
 	if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
@@ -695,9 +695,7 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
-	if zone == 'NPCJobTargetTowable' then
-
-	elseif zone =='VehicleDelivery' then
+	if zone =='VehicleDelivery' then
 		NPCTargetDeleterZone = true
 	elseif zone == 'MechanicActions' then
 		CurrentAction     = 'mechanic_actions_menu'
@@ -712,7 +710,7 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
 		CurrentActionMsg  = TranslateCap('craft_menu')
 		CurrentActionData = {}
 	elseif zone == 'VehicleDeleter' then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		if IsPedInAnyVehicle(playerPed, false) then
 			local vehicle = GetVehiclePedIsIn(playerPed,  false)
@@ -722,6 +720,7 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
 			CurrentActionData = {vehicle = vehicle}
 		end
 	end
+	ESX.TextUI(CurrentActionMsg)
 end)
 
 AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
@@ -739,10 +738,11 @@ AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
 
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
+	ESX.HideUI()
 end)
 
 AddEventHandler('esx_mechanicjob:hasEnteredEntityZone', function(entity)
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' and not IsPedInAnyVehicle(playerPed, false) then
 		CurrentAction     = 'remove_entity'
@@ -775,7 +775,7 @@ CreateThread(function()
 
 		if NPCTargetTowableZone and not NPCHasSpawnedTowable then
 			Sleep = 0
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
 			if #(coords - zone.Pos) < Config.NPCSpawnDistance then
@@ -791,7 +791,7 @@ CreateThread(function()
 
 		if NPCTargetTowableZone and NPCHasSpawnedTowable and not NPCHasBeenNextToTowable then
 			Sleep = 500
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			local zone   = Config.Zones[NPCTargetTowableZone]
 
 			if #(coords - zone.Pos) < Config.NPCNextToDistance then
@@ -826,7 +826,7 @@ CreateThread(function()
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 			Sleep = 500
-			local coords, letSleep = GetEntityCoords(PlayerPedId()), true
+			local coords, letSleep = GetEntityCoords(ESX.PlayerData.ped), true
 
 			for k,v in pairs(Config.Zones) do
 				if v.Type ~= -1 and #(coords - v.Pos) < Config.DrawDistance then
@@ -847,7 +847,7 @@ CreateThread(function()
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			local isInMarker = false
 			local currentZone = nil
 
@@ -883,7 +883,7 @@ CreateThread(function()
 	while true do
 		Wait(500)
 
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 
 		local closestDistance = -1
@@ -917,55 +917,9 @@ CreateThread(function()
 	end
 end)
 
--- Key Controls
-CreateThread(function()
-	while true do
-	local sleep = 500
-		if CurrentAction then
-			sleep = 0
-			ESX.ShowHelpNotification(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
-				if CurrentAction == 'mechanic_actions_menu' then
-					OpenMechanicActionsMenu()
-				elseif CurrentAction == 'mechanic_harvest_menu' then
-					OpenMechanicHarvestMenu()
-				elseif CurrentAction == 'mechanic_craft_menu' then
-					OpenMechanicCraftMenu()
-				elseif CurrentAction == 'delete_vehicle' then
-			if Config.EnableSocietyOwnedVehicles then
-
-				local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
-				TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
-			else
-				local entityModel = GetEntityModel(CurrentActionData.vehicle)
-
-				if entityModel == `flatbed` or	entityModel == `towtruck2` or entityModel == `slamvan3` then
-					TriggerServerEvent('esx_service:disableService', 'mechanic')
-				end
-			end
-		ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-	elseif CurrentAction == 'remove_entity' then
-		DeleteEntity(CurrentActionData.entity)
-				end
-
-				CurrentAction = nil
-			 end
-		 end
-		Wait(sleep)
-	end
-end)
-RegisterCommand('mechanicMenu', function()
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
-			OpenMobileMechanicActionsMenu()
-		end
-end, false)
-
-
-
-RegisterCommand('mechanicjob', function()
-	local playerPed = PlayerPedId()
-		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+ESX.RegisterInput("mechanicjob", "(ESX Mechanics): Toggle NPC Jobs", "keyboard", "F5", function()
+	local playerPed = ESX.PlayerData.ped
+		if (not ESX.PlayerData.dead) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
 			if NPCOnJob then
 				if GetGameTimer() - NPCLastCancel > 5 * 60000 then
 					StopNPCJob(true)
@@ -981,10 +935,40 @@ RegisterCommand('mechanicjob', function()
 				end
 			end
 		end
-end, false)
+end)
 
-RegisterKeyMapping('mechanicMenu', 'Open Mechanic Menu', 'keyboard', 'F6')
-RegisterKeyMapping('mechanicjob', 'Togggle NPC Job', 'keyboard', 'F6')
 
-AddEventHandler('esx:onPlayerDeath', function(data) isDead = true end)
-AddEventHandler('esx:onPlayerSpawn', function(spawn) isDead = false end)
+ESX.RegisterInput("mechanicActions", "(ESX Mechanics): Interact", "keyboard", "E", function()
+	if (not ESX.PlayerData.dead) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+		if not CurrentAction then return end 
+		if CurrentAction == 'mechanic_actions_menu' then
+			OpenMechanicActionsMenu()
+		elseif CurrentAction == 'mechanic_harvest_menu' then
+			OpenMechanicHarvestMenu()
+		elseif CurrentAction == 'mechanic_craft_menu' then
+			OpenMechanicCraftMenu()
+		elseif CurrentAction == 'delete_vehicle' then
+			if Config.EnableSocietyOwnedVehicles then
+				local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
+				TriggerServerEvent('esx_society:putVehicleInGarage', 'mechanic', vehicleProps)
+			else
+				local entityModel = GetEntityModel(CurrentActionData.vehicle)
+
+				if entityModel == `flatbed` or	entityModel == `towtruck2` or entityModel == `slamvan3` then
+					TriggerServerEvent('esx_service:disableService', 'mechanic')
+				end
+			end
+			ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+		elseif CurrentAction == 'remove_entity' then
+			DeleteEntity(CurrentActionData.entity)
+		end
+
+		CurrentAction = nil
+	end
+end)
+
+ESX.RegisterInput("mechanicMenu", "(ESX Mechanics): Open Job Actions", "keyboard", "F6", function()
+	if (not ESX.PlayerData.dead) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' then
+		OpenMobileMechanicActionsMenu()
+	end
+end)
