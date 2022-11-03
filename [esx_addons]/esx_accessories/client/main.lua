@@ -128,9 +128,11 @@ AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = TranslateCap('press_access')
 	CurrentActionData = { accessory = zone }
+	ESX.TextUI(CurrentActionMsg)
 end)
 
 AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
+	ESX.HideUI()
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
@@ -198,13 +200,12 @@ CreateThread(function()
 				HasAlreadyEnteredMarker = true
 				LastZone = currentZone
 				TriggerEvent('esx_accessories:hasEnteredMarker', currentZone)
-				ESX.TextUI(CurrentActionMsg)
+
 			end
 
 			if not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
 				TriggerEvent('esx_accessories:hasExitedMarker', LastZone)
-				ESX.HideUI()
 			end
 		end
 		Wait(sleep)
