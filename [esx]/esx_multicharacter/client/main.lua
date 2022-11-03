@@ -42,7 +42,7 @@ if ESX.GetConfig().Multichar then
 		ShutdownLoadingScreenNui()
 		TriggerEvent('esx:loadingScreenOff')
 		Wait(200)
-		TriggerServerEvent("esx_multicharacter:SetupCharacters")
+		TriggerServerEvent("esx_multicharacter:s:SetupCharacters")
 	end)
 
 	StartLoop = function()
@@ -76,23 +76,6 @@ if ESX.GetConfig().Multichar then
 			FreezeEntityPosition(playerPed, false)
 			Wait(10000)
 			canRelog = true
-		end)
-		CreateThread(function()
-			local playerPool = {}
-			while hidePlayers do
-				local players = GetActivePlayers()
-				for i = 1, #players do
-					local player = players[i]
-					if player ~= PlayerId() and not playerPool[player] then
-						playerPool[player] = true
-						NetworkConcealPlayer(player, true, true)
-					end
-				end
-				Wait(500)
-			end
-			for k in pairs(playerPool) do
-				NetworkConcealPlayer(k, false, false)
-			end
 		end)
 	end
 

@@ -178,17 +178,23 @@ elseif ESX.GetConfig().Multichar == true then
 		end
 	end)
 
-	RegisterNetEvent('esx_multicharacter:SetupCharacters', function()
+	RegisterNetEvent('esx_multicharacter:s:SetupCharacters', function()
+		local source = source
+		SetPlayerRoutingBucket(source, source)
+		SetRoutingBucketPopulationEnabled(source, false)
 		SetupCharacters(source)
 	end)
 
 	local awaitingRegistration = {}
 
 	RegisterNetEvent('esx_multicharacter:CharacterChosen', function(charid, isNew)
+		local source = source
 		if type(charid) == 'number' and string.len(charid) <= 2 and type(isNew) == 'boolean' then
 			if isNew then
 				awaitingRegistration[source] = charid
 			else
+				SetPlayerRoutingBucket(source, 0)
+				SetRoutingBucketPopulationEnabled(source, true)
 				TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
 				ESX.Players[GetIdentifier(source)] = true
 			end
@@ -198,6 +204,7 @@ elseif ESX.GetConfig().Multichar == true then
 	AddEventHandler('esx_identity:completedRegistration', function(source, data)
 		TriggerEvent('esx:onPlayerJoined', source, PREFIX..awaitingRegistration[source], data)
 		awaitingRegistration[source] = nil
+		SetPlayerRoutingBucket(source, 0)
 		ESX.Players[GetIdentifier(source)] = true
 	end)
 
