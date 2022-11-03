@@ -425,6 +425,27 @@ function GetNeons()
 	return neons
 end
 
+function GetXenonColors()
+	local xenonColors = {
+		{label = TranslateCap('neon'), index = -1},
+		{label = TranslateCap('white'), index = 0},
+		{label = TranslateCap('blue'), index = 1},
+		{label = "Electric Blue", index = 2},
+		{label = "Mint Green", index = 3},
+		{label = "Lime Green", index = 4},
+		{label = TranslateCap('yellow'), index = 5},
+		{label = "Golden Shower", index = 6},
+		{label = TranslateCap('orange'), index = 7},
+		{label = TranslateCap('red'), index = 8},
+		{label = "Pony Pink", index = 9},
+		{label = "Hot Pink", index = 10},
+		{label = TranslateCap('purple'), index = 11},
+		{label = "Blacklight", index = 11},
+	}
+
+	return xenonColors
+end
+
 function GetPlatesName(index)
 	if (index == 0) then
 		return TranslateCap('blue_on_white_1')
@@ -500,7 +521,8 @@ Config.Menus = {
 		modHorns			= TranslateCap('horns'),
 		neonColor			= TranslateCap('neons'),
 		resprays			= TranslateCap('respray'),
-		modXenon			= TranslateCap('headlights'),
+		-- modXenon			= TranslateCap('headlights'),
+		xenonColor			= TranslateCap('headlights'),
 		plateIndex			= TranslateCap('licenseplates'),
 		wheels				= TranslateCap('wheels'),
 		modPlateHolder		= TranslateCap('modplateholder'),
@@ -799,6 +821,12 @@ Config.Menus = {
 		label = TranslateCap('headlights'),
 		parent = 'cosmetics',
 		modType = 22,
+		price = 3.72
+	},
+	xenonColor = {
+		label = TranslateCap('headlights'),
+		parent = 'cosmetics',
+		modType = 'xenonColor',
 		price = 3.72
 	},
 	bodyparts = {
