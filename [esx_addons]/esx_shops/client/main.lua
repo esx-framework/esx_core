@@ -1,14 +1,15 @@
 local hasAlreadyEnteredMarker, lastZone
 local currentAction, currentActionMsg, currentActionData = nil, nil, {}
+local resourceName = GetCurrentResourceName()
 
 function OpenShopMenu(zone)
 	local elements = {}
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
-		table.insert(elements, {
+		elements[#elements + 1] = {
 			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, TranslateCap('shop_item', ESX.Math.GroupDigits(item.price))),
-			itemLabel = item.label,
+			itemLabel =  item.label,
 			item       = item.name,
 			price      = item.price,
 
@@ -17,17 +18,17 @@ function OpenShopMenu(zone)
 			type       = 'slider',
 			min        = 1,
 			max        = 100
-		})
+		}
 	end
 
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
+	ESX.UI.Menu.Open('default', resourceName, 'shop', {
 		title    = TranslateCap('shop'),
 		align    = 'bottom-left',
 		elements = elements
 	}, function(data, menu)
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
+		ESX.UI.Menu.Open('default', resourceName, 'shop_confirm', {
 			title    = TranslateCap('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
 			align    = 'bottom-left',
 			elements = {
@@ -55,9 +56,11 @@ AddEventHandler('esx_shops:hasEnteredMarker', function(zone)
 	currentAction     = 'shop_menu'
 	currentActionMsg  = TranslateCap('press_menu')
 	currentActionData = {zone = zone}
+	ESX.TextUI(currentActionMsg)
 end)
 
 AddEventHandler('esx_shops:hasExitedMarker', function(zone)
+	ESX.HideUI()
 	currentAction = nil
 	ESX.UI.Menu.CloseAll()
 end)
@@ -77,9 +80,18 @@ CreateThread(function()
 			BeginTextCommandSetBlipName('STRING')
 			AddTextComponentSubstringPlayerName(TranslateCap('shops'))
 			EndTextCommandSetBlipName(blip)
+			end
 		end
 	end
-	end
+end)
+
+ESX.RegisterInput("shops:interact", "(ESX Shops): Interact", "keyboard", "E", function()
+	if not currentAction then return end
+			if currentAction == 'shop_menu' then
+				ESX.HideUI()
+				OpenShopMenu(currentActionData.zone)
+			end
+			currentAction = nil
 end)
 
 -- Enter / Exit marker events
@@ -87,17 +99,7 @@ CreateThread(function()
 	while true do
 		local Sleep = 1500
 
-		if currentAction then
-			Sleep = 0
-
-			if IsControlJustReleased(0, 38) and currentAction == 'shop_menu' then
-				currentAction = nil
-				ESX.HideUI()
-				OpenShopMenu(currentActionData.zone)
-			end
-		end
-
-		local playerCoords = GetEntityCoords(PlayerPedId())
+		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 		local isInMarker, currentZone = false, nil
 
 		for k,v in pairs(Config.Zones) do
@@ -120,13 +122,11 @@ CreateThread(function()
 
 		if isInMarker and not hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = true
-			ESX.TextUI(currentActionMsg)
 			TriggerEvent('esx_shops:hasEnteredMarker', currentZone)
 		end
 
 		if not isInMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
-			ESX.HideUI()
 			TriggerEvent('esx_shops:hasExitedMarker', lastZone)
 		end
 	Wait(Sleep)
