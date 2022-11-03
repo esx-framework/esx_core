@@ -237,6 +237,13 @@ function GetAction(data)
                         modType = k,
                         modNum = false
                     })
+                elseif v.modType == 23 then
+                    table.insert(elements, {
+                        label = " " .. TranslateCap('by_default'),
+                        modType = "modFrontWheels",
+                        modNum = -1,
+                        wheelType = -1
+                    })
                 else
                     table.insert(elements, {
                         label = " " .. TranslateCap('by_default'),
