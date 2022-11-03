@@ -119,6 +119,24 @@ AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
 	end
 end)
 
+if Config.Blip.Enabled then
+  CreateThread(function()
+    for i = 1, #Config.Shops, 1 do
+      local blip = AddBlipForCoord(Config.Zones[i])
+
+      SetBlipSprite(blip, Config.Blip.Sprite)
+      SetBlipDisplay(blip, Config.Blip.Display)
+      SetBlipScale(blip, Config.Blip.Scale)
+      SetBlipColour(blip, Config.Blip.Colour)
+      SetBlipAsShortRange(blip, Config.Blip.ShortRange)
+
+      BeginTextCommandSetBlipName("STRING")
+      AddTextComponentSubstringPlayerName(TranslateCap('clothes'))
+      EndTextCommandSetBlipName(blip)
+    end
+  end)
+end
+
 -- Create Blips
 CreateThread(function()
 	for i=1, #(Config.Shops) do

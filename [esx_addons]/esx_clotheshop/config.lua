@@ -1,12 +1,21 @@
 Config = {}
 Config.Locale = GetConvar('esx:locale', 'en')
 
-Config.Price = 250
+Config.Price = math.random(200, 300)
 
 Config.DrawDistance = 10.0
 Config.MarkerSize   = {x = 1.5, y = 1.5, z = 1.0}
 Config.MarkerColor  = {r = 102, g = 102, b = 204}
 Config.MarkerType   = 1
+
+Config.Blip = {
+  Enabled = true, 
+  Sprite = 73, 
+  Display = 4, 
+  Scale = 0.7, 
+  Colour = 47, 
+  ShortRange = true
+}
 
 Config.Shops = {
 	vector3(72.3, -1399.1, 28.4),
