@@ -6,6 +6,7 @@ Config.ResellPercentage           = 50
 
 Config.Locale = GetConvar('esx:locale', 'en')
 
+Config.RequestIPL = true -- Enable default GTA Vehicleshop interior
 Config.LicenseEnable = false -- require people to own drivers license when buying vehicles? Only applies if EnablePlayerManagement is disabled. Requires esx_license
 
 -- looks like this: 'LLL NNN'

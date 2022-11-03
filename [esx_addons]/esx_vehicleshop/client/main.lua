@@ -696,6 +696,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 		CurrentActionMsg  = TranslateCap('shop_menu')
 		CurrentActionData = {}
 	end
+	ESX.TextUI(CurrentActionMsg)
 end)
 
 AddEventHandler('esx_vehicleshop:hasExitedMarker', function(zone)
@@ -791,66 +792,56 @@ CreateThread(function()
 	end
 end)
 
--- Key controls
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if CurrentAction then
-			ESX.TextUI(CurrentActionMsg)
-
-			if IsControlJustReleased(0, 38) then
-				if CurrentAction == 'shop_menu' then
-					if Config.LicenseEnable then
-						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasDriversLicense)
-							if hasDriversLicense then
-								OpenShopMenu()
-							else
-								ESX.ShowNotification(TranslateCap('license_missing'))
-							end
-						end, GetPlayerServerId(PlayerId()), 'drive')
-					else
+ESX.RegisterInput("vehicleshop:interact", "(ESX VehicleShop): Interact", "keyboard", "E", function()
+	if not CurrentAction then return end
+		if CurrentAction == 'shop_menu' then
+			if Config.LicenseEnable then
+				ESX.TriggerServerCallback('esx_license:checkLicense', function(hasDriversLicense)
+					if hasDriversLicense then
 						OpenShopMenu()
+					else
+						ESX.ShowNotification(TranslateCap('license_missing'))
 					end
-				elseif CurrentAction == 'reseller_menu' then
-					OpenResellerMenu()
-				elseif CurrentAction == 'give_back_vehicle' then
-					ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function(isRentedVehicle)
-						if isRentedVehicle then
-							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-							ESX.ShowNotification(TranslateCap('delivered'))
-						else
-							ESX.ShowNotification(TranslateCap('not_rental'))
-						end
-					end, ESX.Math.Trim(GetVehicleNumberPlateText(CurrentActionData.vehicle)))
-				elseif CurrentAction == 'resell_vehicle' then
-					ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
-						if vehicleSold then
-							ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-							ESX.ShowNotification(TranslateCap('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
-						else
-							ESX.ShowNotification(TranslateCap('not_yours'))
-						end
-					end, CurrentActionData.plate, CurrentActionData.model)
-				elseif CurrentAction == 'boss_actions_menu' then
-					OpenBossActionsMenu()
-				end
-				ESX.HideUI()
-				CurrentAction = nil
+				end, GetPlayerServerId(PlayerId()), 'drive')
+			else
+				OpenShopMenu()
 			end
-		else
-			Wait(500)
+		elseif CurrentAction == 'reseller_menu' then
+			OpenResellerMenu()
+		elseif CurrentAction == 'give_back_vehicle' then
+			ESX.TriggerServerCallback('esx_vehicleshop:giveBackVehicle', function(isRentedVehicle)
+				if isRentedVehicle then
+					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+					ESX.ShowNotification(TranslateCap('delivered'))
+				else
+					ESX.ShowNotification(TranslateCap('not_rental'))
+				end
+			end, ESX.Math.Trim(GetVehicleNumberPlateText(CurrentActionData.vehicle)))
+		elseif CurrentAction == 'resell_vehicle' then
+			ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
+				if vehicleSold then
+					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
+					ESX.ShowNotification(TranslateCap('vehicle_sold_for', CurrentActionData.label, ESX.Math.GroupDigits(CurrentActionData.price)))
+				else
+					ESX.ShowNotification(TranslateCap('not_yours'))
+				end
+			end, CurrentActionData.plate, CurrentActionData.model)
+		elseif CurrentAction == 'boss_actions_menu' then
+			OpenBossActionsMenu()
 		end
-	end
+	ESX.HideUI()
+	CurrentAction = nil
 end)
 
-CreateThread(function()
-	RequestIpl('shr_int') -- Load walls and floor
+if Config.RequestIPL then
+	CreateThread(function()
+		RequestIpl('shr_int') -- Load walls and floor 
 
-	local interiorID = 7170
-	PinInteriorInMemory(interiorID)
-	ActivateInteriorEntitySet(interiorID, 'csr_beforeMission') -- Load large window
-	RefreshInterior(interiorID)
-end)
+		local interiorID = 7170
+		PinInteriorInMemory(interiorID)
+		ActivateInteriorEntitySet(interiorID, 'csr_beforeMission') -- Load large window
+		RefreshInterior(interiorID)
+	end)
+end
 
 if ESX.PlayerLoaded then PlayerManagement() end
