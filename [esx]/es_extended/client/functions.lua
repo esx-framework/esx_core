@@ -832,62 +832,62 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
         SetVehicleModKit(vehicle, 0)
 
-        if props.plate then
+        if props.plate ~= nil then
             SetVehicleNumberPlateText(vehicle, props.plate)
         end
-        if props.plateIndex then
+        if props.plateIndex ~= nil then
             SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
         end
-        if props.bodyHealth then
+        if props.bodyHealth ~= nil then
             SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0)
         end
-        if props.engineHealth then
+        if props.engineHealth ~= nil then
             SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0)
         end
-        if props.tankHealth then
+        if props.tankHealth ~= nil then
             SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0)
         end
-        if props.fuelLevel then
+        if props.fuelLevel ~= nil then
             SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
         end
-        if props.dirtLevel then
+        if props.dirtLevel ~= nil then
             SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
         end
-        if props.customPrimaryColor then
+        if props.customPrimaryColor ~= nil then
             SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2],
                 props.customPrimaryColor[3])
         end
-        if props.customSecondaryColor then
+        if props.customSecondaryColor ~= nil then
             SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2],
                 props.customSecondaryColor[3])
         end
-        if props.color1 then
+        if props.color1 ~= nil then
             SetVehicleColours(vehicle, props.color1, colorSecondary)
         end
-        if props.color2 then
+        if props.color2 ~= nil then
             SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2)
         end
-        if props.pearlescentColor then
+        if props.pearlescentColor ~= nil then
             SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
         end
-        if props.wheelColor then
+        if props.wheelColor ~= nil then
             SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
         end
-        if props.wheels then
+        if props.wheels ~= nil then
             SetVehicleWheelType(vehicle, props.wheels)
         end
-        if props.windowTint then
+        if props.windowTint ~= nil then
             SetVehicleWindowTint(vehicle, props.windowTint)
         end
 
-        if props.neonEnabled then
+        if props.neonEnabled ~= nil then
             SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1])
             SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
             SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
             SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
         end
 
-        if props.extras then
+        if props.extras ~= nil then
             for extraId, enabled in pairs(props.extras) do
                 if enabled then
                     SetVehicleExtra(vehicle, tonumber(extraId), 0)
@@ -897,158 +897,158 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
             end
         end
 
-        if props.neonColor then
+        if props.neonColor ~= nil then
             SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
         end
-        if props.xenonColor then
+        if props.xenonColor ~= nil then
             SetVehicleXenonLightsColor(vehicle, props.xenonColor)
         end
-        if props.customXenonColor then
+        if props.customXenonColor ~= nil then
             SetVehicleXenonLightsCustomColor(vehicle, props.customXenonColor[1], props.customXenonColor[2],
                 props.customXenonColor[3])
         end
-        if props.modSmokeEnabled then
+        if props.modSmokeEnabled ~= nil then
             ToggleVehicleMod(vehicle, 20, true)
         end
-        if props.tyreSmokeColor then
+        if props.tyreSmokeColor ~= nil then
             SetVehicleTyreSmokeColor(vehicle, props.tyreSmokeColor[1], props.tyreSmokeColor[2], props.tyreSmokeColor[3])
         end
-        if props.modSpoilers then
+        if props.modSpoilers ~= nil then
             SetVehicleMod(vehicle, 0, props.modSpoilers, false)
         end
-        if props.modFrontBumper then
+        if props.modFrontBumper ~= nil then
             SetVehicleMod(vehicle, 1, props.modFrontBumper, false)
         end
-        if props.modRearBumper then
+        if props.modRearBumper ~= nil then
             SetVehicleMod(vehicle, 2, props.modRearBumper, false)
         end
-        if props.modSideSkirt then
+        if props.modSideSkirt ~= nil then
             SetVehicleMod(vehicle, 3, props.modSideSkirt, false)
         end
-        if props.modExhaust then
+        if props.modExhaust ~= nil then
             SetVehicleMod(vehicle, 4, props.modExhaust, false)
         end
-        if props.modFrame then
+        if props.modFrame ~= nil then
             SetVehicleMod(vehicle, 5, props.modFrame, false)
         end
-        if props.modGrille then
+        if props.modGrille ~= nil then
             SetVehicleMod(vehicle, 6, props.modGrille, false)
         end
-        if props.modHood then
+        if props.modHood ~= nil then
             SetVehicleMod(vehicle, 7, props.modHood, false)
         end
-        if props.modFender then
+        if props.modFender ~= nil then
             SetVehicleMod(vehicle, 8, props.modFender, false)
         end
-        if props.modRightFender then
+        if props.modRightFender ~= nil then
             SetVehicleMod(vehicle, 9, props.modRightFender, false)
         end
-        if props.modRoof then
+        if props.modRoof ~= nil then
             SetVehicleMod(vehicle, 10, props.modRoof, false)
         end
-        if props.modEngine then
+        if props.modEngine ~= nil then
             SetVehicleMod(vehicle, 11, props.modEngine, false)
         end
-        if props.modBrakes then
+        if props.modBrakes ~= nil then
             SetVehicleMod(vehicle, 12, props.modBrakes, false)
         end
-        if props.modTransmission then
+        if props.modTransmission ~= nil then
             SetVehicleMod(vehicle, 13, props.modTransmission, false)
         end
-        if props.modHorns then
+        if props.modHorns ~= nil then
             SetVehicleMod(vehicle, 14, props.modHorns, false)
         end
-        if props.modSuspension then
+        if props.modSuspension ~= nil then
             SetVehicleMod(vehicle, 15, props.modSuspension, false)
         end
-        if props.modArmor then
+        if props.modArmor ~= nil then
             SetVehicleMod(vehicle, 16, props.modArmor, false)
         end
-        if props.modTurbo then
+        if props.modTurbo ~= nil then
             ToggleVehicleMod(vehicle, 18, props.modTurbo)
         end
-        if props.modXenon then
+        if props.modXenon ~= nil then
             ToggleVehicleMod(vehicle, 22, props.modXenon)
         end
-        if props.modFrontWheels then
+        if props.modFrontWheels ~= nil then
             SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
         end
-        if props.modBackWheels then
+        if props.modBackWheels ~= nil then
             SetVehicleMod(vehicle, 24, props.modBackWheels, false)
         end
-        if props.modPlateHolder then
+        if props.modPlateHolder ~= nil then
             SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
         end
-        if props.modVanityPlate then
+        if props.modVanityPlate ~= nil then
             SetVehicleMod(vehicle, 26, props.modVanityPlate, false)
         end
-        if props.modTrimA then
+        if props.modTrimA ~= nil then
             SetVehicleMod(vehicle, 27, props.modTrimA, false)
         end
-        if props.modOrnaments then
+        if props.modOrnaments ~= nil then
             SetVehicleMod(vehicle, 28, props.modOrnaments, false)
         end
-        if props.modDashboard then
+        if props.modDashboard ~= nil then
             SetVehicleMod(vehicle, 29, props.modDashboard, false)
         end
-        if props.modDial then
+        if props.modDial ~= nil then
             SetVehicleMod(vehicle, 30, props.modDial, false)
         end
-        if props.modDoorSpeaker then
+        if props.modDoorSpeaker ~= nil then
             SetVehicleMod(vehicle, 31, props.modDoorSpeaker, false)
         end
-        if props.modSeats then
+        if props.modSeats ~= nil then
             SetVehicleMod(vehicle, 32, props.modSeats, false)
         end
-        if props.modSteeringWheel then
+        if props.modSteeringWheel ~= nil then
             SetVehicleMod(vehicle, 33, props.modSteeringWheel, false)
         end
-        if props.modShifterLeavers then
+        if props.modShifterLeavers ~= nil then
             SetVehicleMod(vehicle, 34, props.modShifterLeavers, false)
         end
-        if props.modAPlate then
+        if props.modAPlate ~= nil then
             SetVehicleMod(vehicle, 35, props.modAPlate, false)
         end
-        if props.modSpeakers then
+        if props.modSpeakers ~= nil then
             SetVehicleMod(vehicle, 36, props.modSpeakers, false)
         end
-        if props.modTrunk then
+        if props.modTrunk ~= nil then
             SetVehicleMod(vehicle, 37, props.modTrunk, false)
         end
-        if props.modHydrolic then
+        if props.modHydrolic ~= nil then
             SetVehicleMod(vehicle, 38, props.modHydrolic, false)
         end
-        if props.modEngineBlock then
+        if props.modEngineBlock ~= nil then
             SetVehicleMod(vehicle, 39, props.modEngineBlock, false)
         end
-        if props.modAirFilter then
+        if props.modAirFilter ~= nil then
             SetVehicleMod(vehicle, 40, props.modAirFilter, false)
         end
-        if props.modStruts then
+        if props.modStruts ~= nil then
             SetVehicleMod(vehicle, 41, props.modStruts, false)
         end
-        if props.modArchCover then
+        if props.modArchCover ~= nil then
             SetVehicleMod(vehicle, 42, props.modArchCover, false)
         end
-        if props.modAerials then
+        if props.modAerials ~= nil then
             SetVehicleMod(vehicle, 43, props.modAerials, false)
         end
-        if props.modTrimB then
+        if props.modTrimB ~= nil then
             SetVehicleMod(vehicle, 44, props.modTrimB, false)
         end
-        if props.modTank then
+        if props.modTank ~= nil then
             SetVehicleMod(vehicle, 45, props.modTank, false)
         end
-        if props.modWindows then
+        if props.modWindows ~= nil then
             SetVehicleMod(vehicle, 46, props.modWindows, false)
         end
 
-        if props.modLivery then
+        if props.modLivery ~= nil then
             SetVehicleMod(vehicle, 48, props.modLivery, false)
             SetVehicleLivery(vehicle, props.modLivery)
         end
 
-        if props.windowsBroken then
+        if props.windowsBroken ~= nil then
             for k, v in pairs(props.windowsBroken) do
                 if v then
                     SmashVehicleWindow(vehicle, tonumber(k))
@@ -1056,7 +1056,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
             end
         end
 
-        if props.doorsBroken then
+        if props.doorsBroken ~= nil then
             for k, v in pairs(props.doorsBroken) do
                 if v then
                     SetVehicleDoorBroken(vehicle, tonumber(k), true)
@@ -1064,7 +1064,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
             end
         end
 
-        if props.tyreBurst then
+        if props.tyreBurst ~= nil then
             for k, v in pairs(props.tyreBurst) do
                 if v then
                     SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0)
