@@ -468,10 +468,12 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
         CurrentActionMsg = TranslateCap('cloakroom_prompt')
         CurrentActionData = {}
     end
+    ESX.TextUI(CurrentActionMsg)
 end)
 
 AddEventHandler('esx_taxijob:hasExitedMarker', function(zone)
     ESX.UI.Menu.CloseAll()
+    ESX.HideUI()
     CurrentAction = nil
 end)
 
@@ -719,31 +721,23 @@ CreateThread(function()
     end
 end)
 
--- Key Controls
-CreateThread(function()
-    while true do
-        local sleep = 1500
-        if CurrentAction and not ESX.PlayerData.dead then
-            sleep = 0
-            ESX.ShowHelpNotification(CurrentActionMsg)
-
-            if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
-                if CurrentAction == 'taxi_actions_menu' then
-                    OpenTaxiActionsMenu()
-                elseif CurrentAction == 'cloakroom' then
-                    OpenCloakroom()
-                elseif CurrentAction == 'vehicle_spawner' then
-                    OpenVehicleSpawnerMenu()
-                elseif CurrentAction == 'delete_vehicle' then
-                    DeleteJobVehicle()
-                end
-
-                CurrentAction = nil
-            end
+ESX.RegisterInput("taxi:interact", "(ESX Taxijob): Interact", "keyboard", "E", function()
+    if not CurrentAction then return end
+    if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
+        if CurrentAction == 'taxi_actions_menu' then
+            OpenTaxiActionsMenu()
+        elseif CurrentAction == 'cloakroom' then
+            OpenCloakroom()
+        elseif CurrentAction == 'vehicle_spawner' then
+            OpenVehicleSpawnerMenu()
+        elseif CurrentAction == 'delete_vehicle' then
+            DeleteJobVehicle()
         end
-        Wait(sleep)
+
+        CurrentAction = nil
     end
 end)
+
 
 ESX.RegisterInput("taximenu", "(ESX Mechanics): Open Job Actions", "keyboard", "F6", function()
     if not ESX.PlayerData.dead and Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
