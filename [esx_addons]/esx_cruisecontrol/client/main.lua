@@ -26,8 +26,8 @@ function TriggerCruiseControl()
 						break
 					end
 
-					if not IsTurningOrHandBraking() and IsVehicleOnAllWheels(GetVehicle()) and GetVehicleSpeed() < CruisedSpeed then
-						SetVehicleForwardSpeed(GetVehicle(), CruisedSpeed)
+					if not IsTurningOrHandBraking() and IsVehicleOnAllWheels(vehicle) and GetVehicleSpeed() < CruisedSpeed then
+						SetVehicleForwardSpeed(vehicle, CruisedSpeed)
 					end
 
 					if IsControlJustPressed(1, 246) then
@@ -52,11 +52,11 @@ function IsTurningOrHandBraking ()
 end
 
 function IsDriving ()
-	return IsPedInAnyVehicle(PlayerPedId(), false)
+	return IsPedInAnyVehicle(ESX.PlayerData.ped, false)
 end
 
 function GetVehicle ()
-	return GetVehiclePedIsIn(PlayerPedId(), false)
+	return GetVehiclePedIsIn(ESX.PlayerData.ped, false)
 end
 
 function IsInVehicle ()
@@ -64,7 +64,7 @@ function IsInVehicle ()
 end
 
 function IsDriver ()
-	return GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1)
+	return GetPedInVehicleSeat(GetVehiclePedIsIn(ESX.PlayerData.ped, false), -1)
 end
 
 function GetVehicleSpeed ()

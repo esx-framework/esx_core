@@ -80,7 +80,7 @@ function StartTaxiJob()
 end
 
 function StopTaxiJob()
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     if IsPedInAnyVehicle(playerPed, false) and CurrentCustomer ~= nil then
         local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -200,7 +200,7 @@ function OpenVehicleSpawnerMenu()
 end
 
 function DeleteJobVehicle()
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     if Config.EnableSocietyOwnedVehicles then
         local vehicleProps = ESX.Game.GetVehicleProperties(CurrentActionData.vehicle)
@@ -310,7 +310,7 @@ function OpenMobileTaxiActionsMenu()
                 StopTaxiJob()
             else
                 if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'taxi' then
-                    local playerPed = PlayerPedId()
+                    local playerPed = ESX.PlayerData.ped
                     local vehicle = GetVehiclePedIsIn(playerPed, false)
 
                     if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
@@ -339,7 +339,7 @@ function OpenMobileTaxiActionsMenu()
 end
 
 function IsInAuthorizedVehicle()
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
     local vehModel = GetEntityModel(GetVehiclePedIsIn(playerPed, false))
 
     for i = 1, #Config.AuthorizedVehicles, 1 do
@@ -448,7 +448,7 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
         CurrentActionMsg = TranslateCap('spawner_prompt')
         CurrentActionData = {}
     elseif zone == 'VehicleDeleter' then
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         local vehicle = GetVehiclePedIsIn(playerPed, false)
 
         if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
@@ -510,7 +510,7 @@ CreateThread(function()
         local sleep = 1500
         if ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 
-            local coords = GetEntityCoords(PlayerPedId())
+            local coords = GetEntityCoords(ESX.PlayerData.ped)
             local isInMarker, currentZone = false
 
             for k, v in pairs(Config.Zones) do
@@ -549,7 +549,7 @@ CreateThread(function()
 
         if OnJob then
             Sleep = 0
-            local playerPed = PlayerPedId()
+            local playerPed = ESX.PlayerData.ped
             if CurrentCustomer == nil then
                 DrawSub(TranslateCap('drive_search_pass'), 5000)
             

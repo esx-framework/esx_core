@@ -62,7 +62,7 @@ function StartDriveTest(type)
 		CurrentVehicle    = vehicle
 		LastVehicleHealth = GetEntityHealth(vehicle)
 
-		local playerPed   = PlayerPedId()
+		local playerPed   = ESX.PlayerData.ped
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		SetVehicleFuelLevel(vehicle, 100.0)
 		DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
@@ -216,7 +216,7 @@ end)
 CreateThread(function()
 	while true do
 		local sleep = 1500
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 
 		for k,v in pairs(Config.Zones) do
@@ -324,7 +324,7 @@ CreateThread(function()
 
 		if CurrentTest == 'drive' then
 			sleep = 0
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 
 			if IsPedInAnyVehicle(playerPed, false) then
 

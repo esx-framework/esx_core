@@ -12,7 +12,7 @@ end)
 
 RegisterNetEvent('esx_lscustom:installMod')
 AddEventHandler('esx_lscustom:installMod', function()
-    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+    local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
     myCar = ESX.Game.GetVehicleProperties(vehicle)
     TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
 end)
@@ -28,9 +28,9 @@ end)
 
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
 AddEventHandler('esx_lscustom:cancelInstallMod', function()
-    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-    if (GetPedInVehicleSeat(vehicle, -1) ~= PlayerPedId()) then
-        vehicle = GetPlayersLastVehicle(PlayerPedId())
+    local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
+    if (GetPedInVehicleSeat(vehicle, -1) ~= ESX.PlayerData.ped) then
+        vehicle = GetPlayersLastVehicle(ESX.PlayerData.ped)
     end
     ESX.Game.SetVehicleProperties(vehicle, myCar)
     if not (myCar.modTurbo) then
@@ -67,7 +67,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
         elements = elems
     }, function(data, menu)
         local isRimMod, found = false, false
-        local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+        local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
 
         if data.current.modType == "modFrontWheels" then
             isRimMod = true
@@ -120,13 +120,13 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
         menu.close()
         TriggerEvent('esx_lscustom:cancelInstallMod')
 
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         local vehicle = GetVehiclePedIsIn(playerPed, false)
         SetVehicleDoorsShut(vehicle, false)
 
         if parent == nil then
             lsMenuIsShowed = false
-            local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+            local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
             FreezeEntityPosition(vehicle, false)
             TriggerServerEvent('esx_lscustom:stopModing', myCar.plate)
             myCar = {}
@@ -137,7 +137,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 end
 
 function UpdateMods(data)
-    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+    local vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
 
     if data.modType then
         local props = {}
@@ -176,7 +176,7 @@ function GetAction(data)
     local menuTitle = ''
     local parent = nil
 
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
     local vehicle = GetVehiclePedIsIn(playerPed, false)
     local currentMods = ESX.Game.GetVehicleProperties(vehicle)
     if data.value == 'modSpeakers' or data.value == 'modTrunk' or data.value == 'modHydrolic' or data.value ==
@@ -488,7 +488,7 @@ CreateThread(function()
     while true do
         local Sleep = 1500
         local Near = false
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
 
         if IsPedInAnyVehicle(playerPed, false) then
             local coords = GetEntityCoords(playerPed)

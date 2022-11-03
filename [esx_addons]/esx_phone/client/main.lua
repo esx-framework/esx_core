@@ -5,7 +5,7 @@ GUI.MessagesIsShowed = false
 GUI.AddContactIsShowed = false
 
 function OpenPhone()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	TriggerServerEvent('esx_phone:reload', PhoneData.phoneNumber)
 
 	SendNUIMessage({
@@ -25,7 +25,7 @@ function OpenPhone()
 end
 
 function ClosePhone()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	SendNUIMessage({
 		showPhone = false
@@ -191,7 +191,7 @@ end)
 
 RegisterNUICallback('send', function(data)
 	local phoneNumber = data.number
-	local playerPed   = PlayerPedId()
+	local playerPed   = ESX.PlayerData.ped
 	local coords      = GetEntityCoords(playerPed)
 
 	if tonumber(phoneNumber) then

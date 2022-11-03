@@ -16,7 +16,7 @@ end)
 AddEventHandler('esx:onPlayerSpawn', function()
   isDead = false
   ClearTimecycleModifier()
-  SetPedMotionBlur(PlayerPedId(), false)
+  SetPedMotionBlur(ESX.PlayerData.ped, false)
   ClearExtraTimecycleModifier()
   EndDeathCam()
   if firstSpawn then
@@ -30,7 +30,7 @@ AddEventHandler('esx:onPlayerSpawn', function()
       ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(shouldDie)
         if shouldDie then
           Wait(1000)
-          SetEntityHealth(PlayerPedId(), 0)
+          SetEntityHealth(ESX.PlayerData.ped, 0)
         end
       end)
     end
@@ -64,7 +64,7 @@ CreateThread(function()
 
       ProcessCamControls()
       if isSearched then
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         local ped = GetPlayerPed(GetPlayerFromServerId(medic))
         isSearched = false
 
@@ -81,7 +81,7 @@ end)
 
 RegisterNetEvent('esx_ambulancejob:clsearch')
 AddEventHandler('esx_ambulancejob:clsearch', function(medicId)
-  local playerPed = PlayerPedId()
+  local playerPed = ESX.PlayerData.ped
 
   if isDead then
     local coords = GetEntityCoords(playerPed)
@@ -106,7 +106,7 @@ function OnPlayerDeath()
   SetTimecycleModifierStrength(0.7)
   SetExtraTimecycleModifier("fp_vig_red")
   SetExtraTimecycleModifierStrength(1.0)
-  SetPedMotionBlur(PlayerPedId(), true)
+  SetPedMotionBlur(ESX.PlayerData.ped, true)
   TriggerServerEvent('esx_ambulancejob:setDeathStatus', true)
   StartDeathTimer()
   StartDeathCam()
@@ -119,7 +119,7 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 
   if itemName == 'medikit' then
     local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     ESX.Streaming.RequestAnimDict(lib, function()
       TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
@@ -137,7 +137,7 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 
   elseif itemName == 'bandage' then
     local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     ESX.Streaming.RequestAnimDict(lib, function()
       TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
@@ -180,7 +180,7 @@ function StartDistressSignal()
 end
 
 function SendDistressSignal()
-  local playerPed = PlayerPedId()
+  local playerPed = ESX.PlayerData.ped
   local coords = GetEntityCoords(playerPed)
 
   ESX.ShowNotification(TranslateCap('distress_sent'))
@@ -299,7 +299,7 @@ function StartDeathTimer()
 end
 
 function GetClosestRespawnPoint()
-  local PlyCoords = GetEntityCoords(PlayerPedId())
+  local PlyCoords = GetEntityCoords(ESX.PlayerData.ped)
   local ClosestDist, ClosestHospital, ClosestCoord = 10000, {}, nil
 
   for k, v in pairs(Config.RespawnPoints) do
@@ -324,7 +324,7 @@ function RemoveItemsAfterRPDeath()
       ESX.SetPlayerData('loadout', {})
 
       DoScreenFadeOut(800)
-      RespawnPed(PlayerPedId(), RespawnCoords, ClosestHospital.heading)
+      RespawnPed(ESX.PlayerData.ped, RespawnCoords, ClosestHospital.heading)
       while not IsScreenFadedOut() do
         Wait(0)
       end
@@ -358,7 +358,7 @@ end)
 
 RegisterNetEvent('esx_ambulancejob:revive')
 AddEventHandler('esx_ambulancejob:revive', function()
-  local playerPed = PlayerPedId()
+  local playerPed = ESX.PlayerData.ped
   local coords = GetEntityCoords(playerPed)
   TriggerServerEvent('esx_ambulancejob:setDeathStatus', false)
 
@@ -402,7 +402,7 @@ local angleZ = 0.0
 
 function StartDeathCam()
   ClearFocus()
-  local playerPed = PlayerPedId()
+  local playerPed = ESX.PlayerData.ped
   cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", GetEntityCoords(playerPed), 0, 0, 0, GetGameplayCamFov())
   SetCamActive(cam, true)
   RenderScriptCams(true, true, 1000, true, false)
@@ -418,7 +418,7 @@ function EndDeathCam()
 end
 -- process camera controls
 function ProcessCamControls()
-  local playerPed = PlayerPedId()
+  local playerPed = ESX.PlayerData.ped
   local playerCoords = GetEntityCoords(playerPed)
   -- disable 1st person as the 1st person camera can cause some glitches
   DisableFirstPersonCamThisFrame()
@@ -457,13 +457,13 @@ function ProcessNewPosition()
   elseif (angleY < -89.0) then
     angleY = -89.0
   end
-  local pCoords = GetEntityCoords(PlayerPedId())
+  local pCoords = GetEntityCoords(ESX.PlayerData.ped)
   local behindCam = {x = pCoords.x + ((Cos(angleZ) * Cos(angleY)) + (Cos(angleY) * Cos(angleZ))) / 2 * (5.5 + 0.5),
 
                      y = pCoords.y + ((Sin(angleZ) * Cos(angleY)) + (Cos(angleY) * Sin(angleZ))) / 2 * (5.5 + 0.5),
 
                      z = pCoords.z + ((Sin(angleY))) * (5.5 + 0.5)}
-  local rayHandle = StartShapeTestRay(pCoords.x, pCoords.y, pCoords.z + 0.5, behindCam.x, behindCam.y, behindCam.z, -1, PlayerPedId(), 0)
+  local rayHandle = StartShapeTestRay(pCoords.x, pCoords.y, pCoords.z + 0.5, behindCam.x, behindCam.y, behindCam.z, -1, ESX.PlayerData.ped, 0)
 
   local a, hitBool, hitCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
 

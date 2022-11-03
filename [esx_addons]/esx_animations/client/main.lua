@@ -2,19 +2,19 @@ local inAnim = false
 
 function startAttitude(lib, anim)
 	ESX.Streaming.RequestAnimSet(lib, function()
-		SetPedMovementClipset(PlayerPedId(), anim, true)
+		SetPedMovementClipset(ESX.PlayerData.ped, anim, true)
 	end)
 end
 
 function startAnim(lib, anim)
 	ESX.Streaming.RequestAnimDict(lib, function()
-		TaskPlayAnim(PlayerPedId(), lib, anim, 8.0, -8.0, -1, 0, 0.0, false, false, false)
+		TaskPlayAnim(ESX.PlayerData.ped, lib, anim, 8.0, -8.0, -1, 0, 0.0, false, false, false)
 		RemoveAnimDict(lib)
 	end)
 end
 
 function startScenario(anim)
-	TaskStartScenarioInPlace(PlayerPedId(), anim, 0, false)
+	TaskStartScenarioInPlace(ESX.PlayerData.ped, anim, 0, false)
 end
 
 function OpenAnimationsMenu()
@@ -85,6 +85,6 @@ end)
 
 ESX.RegisterInput("cleartasks", "(ESX AmbulanceJob): Stop Animation", "keyboard", "x", function()
 	if not ESX.PlayerData.dead then
-		ClearPedTasks(PlayerPedId())
+		ClearPedTasks(ESX.PlayerData.ped)
 	end
 end)

@@ -163,7 +163,7 @@ CreateThread(function()
 		Wait(0)
 
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'banker' then
-			local playerCoords = GetEntityCoords(PlayerPedId())
+			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 			local isInMarker, letSleep, currentZone = false, true
 
 			for k,v in pairs(Config.Zones) do

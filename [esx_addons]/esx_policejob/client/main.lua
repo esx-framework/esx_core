@@ -46,7 +46,7 @@ function setUniform(uniform, playerPed)
 end
 
 function OpenCloakroomMenu()
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.peda.ped
 	local grade = ESX.PlayerData.job.grade_name
 
 	local elements = {
@@ -188,7 +188,7 @@ function OpenCloakroomMenu()
 				ESX.Streaming.RequestModel(modelHash, function()
 					SetPlayerModel(PlayerId(), modelHash)
 					SetModelAsNoLongerNeeded(modelHash)
-					SetPedDefaultComponentVariation(PlayerPedId())
+					SetPedDefaultComponentVariation(ESX.PlayerData.ped)
 
 					TriggerEvent('esx:restoreLoadout')
 				end)
@@ -313,7 +313,7 @@ function OpenPoliceActionsMenu()
 			end)
 		elseif data.current.value == 'vehicle_interaction' then
 			local elements  = {}
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local vehicle = ESX.Game.GetVehicleInDirection()
 
 			if DoesEntityExist(vehicle) then
@@ -399,7 +399,7 @@ function OpenPoliceActionsMenu()
 					{label = TranslateCap('box'), model = 'prop_boxpile_07d'},
 					{label = TranslateCap('cash'), model = 'hei_prop_cash_crate_half_full'}
 			}}, function(data2, menu2)
-				local playerPed = PlayerPedId()
+				local playerPed = ESX.PlayerData.ped
 				local coords, forward = GetEntityCoords(playerPed), GetEntityForwardVector(playerPed)
 				local objectCoords = (coords + forward * 1.0)
 
@@ -703,7 +703,7 @@ end
 
 function OpenPutWeaponMenu()
 	local elements   = {}
-	local playerPed  = PlayerPedId()
+	local playerPed  = ESX.PlayerData.ped
 	local weaponList = ESX.GetWeaponList()
 
 	for i=1, #weaponList, 1 do
@@ -734,7 +734,7 @@ end
 
 function OpenBuyWeaponsMenu()
 	local elements = {}
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	for k,v in ipairs(Config.AuthorizedWeapons[ESX.PlayerData.job.grade_name]) do
 		local weaponNum, weapon = ESX.GetWeapon(v.weapon)
@@ -1000,7 +1000,7 @@ AddEventHandler('esx_policejob:hasExitedMarker', function(station, part, partNum
 end)
 
 AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' and IsPedOnFoot(playerPed) then
 		CurrentAction     = 'remove_entity'
@@ -1009,7 +1009,7 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 	end
 
 	if GetEntityModel(entity) == `p_ld_stinger_s` then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords    = GetEntityCoords(playerPed)
 
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -1031,7 +1031,7 @@ end)
 RegisterNetEvent('esx_policejob:handcuff')
 AddEventHandler('esx_policejob:handcuff', function()
 	isHandcuffed = not isHandcuffed
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	if isHandcuffed then
 		RequestAnimDict('mp_arresting')
@@ -1073,7 +1073,7 @@ end)
 RegisterNetEvent('esx_policejob:unrestrain')
 AddEventHandler('esx_policejob:unrestrain', function()
 	if isHandcuffed then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		isHandcuffed = false
 
 		ClearPedSecondaryTask(playerPed)
@@ -1131,7 +1131,7 @@ end)
 RegisterNetEvent('esx_policejob:putInVehicle')
 AddEventHandler('esx_policejob:putInVehicle', function()
 	if isHandcuffed then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local vehicle, distance = ESX.Game.GetClosestVehicle()
 
 		if vehicle and distance < 5 then
@@ -1249,7 +1249,7 @@ CreateThread(function()
 		local Sleep = 1500
 		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'police' then
 			Sleep = 500
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local playerCoords = GetEntityCoords(playerPed)
 			local isInMarker, hasExited = false, false
 			local currentStation, currentPart, currentPartNum
@@ -1522,7 +1522,7 @@ AddEventHandler('esx_policejob:updateBlip', function()
 			for i=1, #players, 1 do
 				if players[i].job.name == 'police' then
 					local id = GetPlayerFromServerId(players[i].source)
-					if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
+					if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= ESX.PlayerData.ped then
 						createBlip(id)
 					end
 				end

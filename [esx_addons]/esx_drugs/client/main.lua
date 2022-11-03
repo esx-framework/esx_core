@@ -6,7 +6,7 @@ local cfgMarker = Config.Marker;
 --slow loop
 CreateThread(function()
 	while true do
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 		local distDrugShop = #(coords - Config.CircleZones.DrugDealer.coords)
 

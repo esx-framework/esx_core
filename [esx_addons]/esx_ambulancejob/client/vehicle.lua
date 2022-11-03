@@ -1,7 +1,7 @@
 local spawnedVehicles = {}
 
 function OpenVehicleSpawnerMenu(type, hospital, part, partNum)
-	local playerCoords = GetEntityCoords(PlayerPedId())
+	local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle', {
 		title    = TranslateCap('garage_title'),
@@ -196,7 +196,7 @@ function GetAvailableVehicleSpawnPoint(hospital, part, partNum)
 end
 
 function OpenShopMenu(elements, restoreCoords, shopCoords)
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	isInShopMenu = true
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop', {

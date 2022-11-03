@@ -80,7 +80,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 	if zone.Type == "cloakroom" then
 		OpenMenu()
 	elseif zone.Type == "work" then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		if IsPedInAnyVehicle(playerPed, false) then
 			ESX.ShowNotification(TranslateCap('foot_work'))
@@ -121,7 +121,7 @@ AddEventHandler('esx_jobs:action', function(job, zone, zoneKey)
 			if ESX.PlayerData.job.name == k then
 				for l,w in pairs(v.Zones) do
 					if w.Type == "vehdelete" and w.Spawner == zone.Spawner then
-						local playerPed = PlayerPedId()
+						local playerPed = ESX.PlayerData.ped
 
 						if IsPedInAnyVehicle(playerPed, false) then
 
@@ -268,7 +268,7 @@ function spawnVehicle(spawnPoint, vehicle, vehicleCaution)
 end
 
 RegisterNetEvent('esx_jobs:spawnJobVehicle',function(spawnPoint, vehicle)
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.Heading, function(spawnedVehicle)
 
@@ -308,7 +308,7 @@ CreateThread(function()
 				end
 			end
 
-			local coords = GetEntityCoords(PlayerPedId())
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
 			for k,v in pairs(zones) do
 				if onDuty or v.Type == "cloakroom" then
 					if (v.Zone) then
@@ -338,7 +338,7 @@ end)
 CreateThread(function()
 	while true do
 		local Sleep = 1500
-		local coords = GetEntityCoords(PlayerPedId())
+		local coords = GetEntityCoords(ESX.PlayerData.ped)
 		for k,v in pairs(Config.PublicZones) do
 			if(v.Marker ~= -1 and #(coords - v.Pos) < Config.DrawDistance) then
 				Sleep = 0
@@ -353,7 +353,7 @@ end)
 CreateThread(function()
 	while true do
 		local Sleep = 1500
-		local coords   = GetEntityCoords(PlayerPedId())
+		local coords   = GetEntityCoords(ESX.PlayerData.ped)
 
 		for k,v in pairs(Config.PublicZones) do
 			if #(coords - v.Pos) < v.Size.x/2 then
@@ -361,7 +361,7 @@ CreateThread(function()
 				ESX.ShowHelpNotification(v.Hint)
 				hintIsShowed = true
 				if IsControlJustReleased(0, 38) then
-					ESX.Game.Teleport(PlayerPedId(), v.Teleport)
+					ESX.Game.Teleport(ESX.PlayerData.ped, v.Teleport)
 				end
 			end
 		end
@@ -389,7 +389,7 @@ CreateThread(function()
 			end
 
 			if zones then
-				local coords      = GetEntityCoords(PlayerPedId())
+				local coords      = GetEntityCoords(ESX.PlayerData.ped)
 				local currentZone = nil
 				local zone        = nil
 				local lastZone    = nil
@@ -441,7 +441,7 @@ CreateThread(function()
 						hintToDisplay = zone.Hint
 						ESX.ShowHelpNotification(hintToDisplay)
 					elseif zone.Type == "vehdelete" and (onDuty) then
-						local playerPed = PlayerPedId()
+						local playerPed = ESX.PlayerData.ped
 
 						if IsPedInAnyVehicle(playerPed, false) then
 							local vehicle = GetVehiclePedIsIn(playerPed, false)

@@ -4,7 +4,7 @@ local spawnedVehicles = {}
 function OpenBoatShop(shop)
 	isInShopMenu = true
 
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	local elements  = {}
 
 	for k,v in ipairs(Config.Vehicles) do
@@ -121,7 +121,7 @@ function OpenBoatGarage(garage)
 				elements = elements
 			}, function (data, menu)
 				-- make sure the spawn point isn't blocked
-				local playerPed = PlayerPedId()
+				local playerPed = ESX.PlayerData.ped
 				local vehicleProps = data.current.vehicleProps
 
 				if ESX.Game.IsSpawnPointClear(garage.SpawnPoint, 4.0) then
@@ -185,7 +185,7 @@ function StoreBoatInGarage(vehicle, teleportCoords)
 		if rowsChanged > 0 then
 			ESX.Game.DeleteVehicle(vehicle)
 			ESX.ShowNotification(TranslateCap('garage_stored'))
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 
 			ESX.Game.Teleport(playerPed, teleportCoords, function()
 				SetEntityHeading(playerPed, teleportCoords.w)

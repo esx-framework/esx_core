@@ -41,7 +41,7 @@ end
 CreateThread(function()
 	while true do
 		local wait = 1000
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		if sitting and not IsPedUsingScenario(playerPed, currentScenario) then
 			wakeup()
@@ -75,7 +75,7 @@ ESX.RegisterInput("sit", "(ESX Sit): Sit", "keyboard", "E", function()
 end)
 function GetNearChair()
 	local object, distance
-	local coords = GetEntityCoords(PlayerPedId())
+	local coords = GetEntityCoords(ESX.PlayerData.ped)
 	for i=1, #Config.Interactables do
 		object = GetClosestObjectOfType(coords, 3.0, joaat(Config.Interactables[i]), false, false, false)
 		distance = #(coords - GetEntityCoords(object))
@@ -87,11 +87,11 @@ function GetNearChair()
 end
 
 function wakeup()
-	local playerPed = PlayerPedId()
-	local pos = GetEntityCoords(PlayerPedId())
+	local playerPed = ESX.PlayerData.ped
+	local pos = GetEntityCoords(ESX.PlayerData.ped)
 
 	TaskStartScenarioAtPosition(playerPed, currentScenario, 0.0, 0.0, 0.0, 180.0, 2, true, false)
-	while IsPedUsingScenario(PlayerPedId(), currentScenario) do
+	while IsPedUsingScenario(ESX.PlayerData.ped, currentScenario) do
 		Wait(100)
 	end
 	ClearPedTasks(playerPed)
@@ -107,7 +107,7 @@ end
 
 function sit(object, modelName, data)
 	-- Fix for sit on chairs behind walls
-	if not HasEntityClearLosToEntity(PlayerPedId(), object, 17) then
+	if not HasEntityClearLosToEntity(ESX.PlayerData.ped, object, 17) then
 		return
 	end
 	disableControls = true
@@ -116,14 +116,14 @@ function sit(object, modelName, data)
 
 	PlaceObjectOnGroundProperly(object)
 	local pos = GetEntityCoords(object)
-	local playerPos = GetEntityCoords(PlayerPedId())
+	local playerPos = GetEntityCoords(ESX.PlayerData.ped)
 	local objectCoords = pos.x .. pos.y .. pos.z
 
 	ESX.TriggerServerCallback('esx_sit:getPlace', function(occupied)
 		if occupied then
 			ESX.ShowNotification('There is someone on this chair')
 		else
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			lastPos, currentSitCoords = GetEntityCoords(playerPed), objectCoords
 
 			TriggerServerEvent('esx_sit:takePlace', objectCoords)
@@ -132,8 +132,8 @@ function sit(object, modelName, data)
 			TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, false)
 
 			Wait(2500)
-			if GetEntitySpeed(PlayerPedId()) > 0 then
-				ClearPedTasks(PlayerPedId())
+			if GetEntitySpeed(ESX.PlayerData.ped) > 0 then
+				ClearPedTasks(ESX.PlayerData.ped)
 				TaskStartScenarioAtPosition(playerPed, currentScenario, pos.x, pos.y, pos.z + (playerPos.z - pos.z)/2, GetEntityHeading(object) + 180.0, 0, true, true)
 			end
 

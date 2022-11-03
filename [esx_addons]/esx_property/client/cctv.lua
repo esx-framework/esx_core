@@ -18,7 +18,7 @@
 function CCTV(PropertyID)
   DoScreenFadeOut(500)
   Wait(500)
-  local PlyCoordsBefore = GetEntityCoords(PlayerPedId())
+  local PlyCoordsBefore = GetEntityCoords(ESX.PlayerData.ped)
   local Property = Properties[PropertyID]
   local CamTakePic = true
   if Property.cctv.enabled then
@@ -101,7 +101,7 @@ function CCTV(PropertyID)
         local cctvcam = nil
         local angleZ = 0.0
         ClearFocus()
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         cctvcam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA",
           vector3(Property.Entrance.x, Property.Entrance.y, Property.Entrance.z + Config.CCTV.HeightAboveDoor), 0, 0, 0, Config.CCTV.FOV)
         SetCamRot(cctvcam, Property.cctv.rot.x, Property.cctv.rot.y, Property.cctv.rot.z, 2)

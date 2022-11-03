@@ -129,7 +129,7 @@ function OpenShopMenu()
 	StartShopRestriction()
 	ESX.UI.Menu.CloseAll()
 
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.peda.ped
 
 	FreezeEntityPosition(playerPed, true)
 	SetEntityVisible(playerPed, false)
@@ -209,7 +209,7 @@ function OpenShopMenu()
 							CurrentActionMsg  = TranslateCap('shop_menu')
 							CurrentActionData = {}
 
-							local playerPed = PlayerPedId()
+							local playerPed = ESX.PlayerData.ped
 							FreezeEntityPosition(playerPed, false)
 							SetEntityVisible(playerPed, true)
 							SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
@@ -246,7 +246,7 @@ function OpenShopMenu()
 	end, function(data, menu)
 		menu.close()
 		DeleteDisplayVehicleInsideShop()
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		CurrentAction     = 'shop_menu'
 		CurrentActionMsg  = TranslateCap('shop_menu')
@@ -259,7 +259,7 @@ function OpenShopMenu()
 		IsInShopMenu = false
 	end, function(data, menu)
 		local vehicleData = vehiclesByCategory[data.current.name][data.current.value + 1]
-		local playerPed   = PlayerPedId()
+		local playerPed   = ESX.PlayerData.ped
 
 		DeleteDisplayVehicleInsideShop()
 		WaitForVehicleToLoad(vehicleData.model)
@@ -646,7 +646,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 		end
 
 	elseif zone == 'GiveBackVehicle' and Config.EnablePlayerManagement then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		if IsPedInAnyVehicle(playerPed, false) then
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -656,7 +656,7 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone)
 			CurrentActionData = {vehicle = vehicle}
 		end
 	elseif zone == 'ResellVehicle' then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 
 		if IsPedSittingInAnyVehicle(playerPed) then
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -711,7 +711,7 @@ AddEventHandler('onResourceStop', function(resource)
 		if IsInShopMenu then
 			ESX.UI.Menu.CloseAll()
 
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 
 			FreezeEntityPosition(playerPed, false)
 			SetEntityVisible(playerPed, true)
@@ -755,7 +755,7 @@ end)
 CreateThread(function()
 	while true do
 		Wait(0)
-		local playerCoords = GetEntityCoords(PlayerPedId())
+		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 		local isInMarker, letSleep, currentZone = false, true
 
 		for k,v in pairs(Config.Zones) do

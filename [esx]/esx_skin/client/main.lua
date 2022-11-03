@@ -2,7 +2,7 @@ local lastSkin, cam, isCameraActive
 local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
 
 function OpenMenu(submitCb, cancelCb, restrict)
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     TriggerEvent('skinchanger:getSkin', function(skin) lastSkin = skin end)
     TriggerEvent('skinchanger:getData', function(components, maxVals)

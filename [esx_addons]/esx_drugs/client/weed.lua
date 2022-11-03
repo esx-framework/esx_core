@@ -5,7 +5,7 @@ local isPickingUp, isProcessing = false, false
 CreateThread(function()
 	while true do
 		Wait(700)
-		local coords = GetEntityCoords(PlayerPedId())
+		local coords = GetEntityCoords(ESX.PlayerData.ped)
 
 		if #(coords - Config.CircleZones.WeedField.coords) < 50 then
 			SpawnWeedPlants()
@@ -16,7 +16,7 @@ end)
 CreateThread(function()
 	while true do
 		local wait = 1000
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 
 		if #(coords - Config.CircleZones.WeedProcessing.coords) < 1 then
@@ -53,7 +53,7 @@ function ProcessWeed(xCannabis)
 		xCannabis = 0
 	end
   local timeLeft = (Config.Delays.WeedProcessing * xCannabis) / 1000
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 
 	while timeLeft > 0 do
 		Wait(1000)
@@ -74,7 +74,7 @@ CreateThread(function()
 	while true do
 		local Sleep = 1500
 
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 		local nearbyObject, nearbyID
 

@@ -156,7 +156,7 @@ local function StartThread()
         CreateBlips()
 
         while PlayerLoaded do
-            _PlayerPedId = PlayerPedId()
+            _PlayerPedId = ESX.PlayerData.ped
             _GetEntityCoords = GetEntityCoords(_PlayerPedId)
 
             if Config.EnablePeds then
@@ -172,7 +172,7 @@ local function StartThread()
                 PedHandler(closestPed)
             end
 
-            if IsPedOnFoot(PlayerPedId()) then
+            if IsPedOnFoot(ESX.PlayerData.ped) then
                 local closestBank = {}
 
                 for i = 1, #Config.AtmModels do

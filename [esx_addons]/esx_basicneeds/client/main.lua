@@ -14,7 +14,7 @@ AddEventHandler('esx_basicneeds:healPlayer', function()
 	TriggerEvent('esx_status:set', 'thirst', 1000000)
 
 	-- restore hp
-	local playerPed = PlayerPedId()
+	local playerPed = ESX.PlayerData.ped
 	SetEntityHealth(playerPed, GetEntityMaxHealth(playerPed))
 end)
 
@@ -47,7 +47,7 @@ AddEventHandler('esx_status:loaded', function(status)
 end)
 
 AddEventHandler('esx_status:onTick', function(data)
-	local playerPed  = PlayerPedId()
+	local playerPed  = ESX.PlayerData.ped
 	local prevHealth = GetEntityHealth(playerPed)
 	local health     = prevHealth
 	
@@ -81,7 +81,7 @@ AddEventHandler('esx_basicneeds:onEat', function(prop_name)
 		IsAnimated = true
 
 		CreateThread(function()
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local x,y,z = table.unpack(GetEntityCoords(playerPed))
 			local prop = CreateObject(joaat(prop_name), x, y, z + 0.2, true, true, true)
 			local boneIndex = GetPedBoneIndex(playerPed, 18905)
@@ -108,7 +108,7 @@ AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
 		IsAnimated = true
 
 		CreateThread(function()
-			local playerPed = PlayerPedId()
+			local playerPed = ESX.PlayerData.ped
 			local x,y,z = table.unpack(GetEntityCoords(playerPed))
 			local prop = CreateObject(joaat(prop_name), x, y, z + 0.2, true, true, true)
 			local boneIndex = GetPedBoneIndex(playerPed, 18905)

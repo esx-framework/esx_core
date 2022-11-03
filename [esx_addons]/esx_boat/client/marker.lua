@@ -51,7 +51,7 @@ AddEventHandler('esx_boat:hasEnteredMarker', function(zone, zoneNum)
 		CurrentActionMsg  = TranslateCap('garage_open')
 		CurrentActionData = { zoneNum = zoneNum }
 	elseif zone == 'garage_in' then
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords    = GetEntityCoords(playerPed)
 	
 		if IsPedInAnyVehicle(playerPed, false) then
@@ -79,7 +79,7 @@ CreateThread(function()
 	while true do
 		Wait(0)
 
-		local playerPed = PlayerPedId()
+		local playerPed = ESX.PlayerData.ped
 		local coords = GetEntityCoords(playerPed)
 		local isInMarker, hasExited, letSleep = false, false, true
 		local currentZone, currentZoneNum
