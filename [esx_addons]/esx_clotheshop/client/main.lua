@@ -104,10 +104,12 @@ AddEventHandler('esx_clotheshop:hasEnteredMarker', function(zone)
 	currentAction     = 'shop_menu'
 	currentActionMsg  = TranslateCap('press_menu')
 	currentActionData = {}
+	ESX.TextUI(currentActionMsg)
 end)
 
 AddEventHandler('esx_clotheshop:hasExitedMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
+	ESX.HideUI()
 	currentAction = nil
 
 	if not hasPaid then
@@ -119,8 +121,8 @@ end)
 
 -- Create Blips
 CreateThread(function()
-	for k,v in ipairs(Config.Shops) do
-		local blip = AddBlipForCoord(v)
+	for i=1, #(Config.Shops) do
+		local blip = AddBlipForCoord(Config.Shops[i])
 
 		SetBlipSprite (blip, 73)
 		SetBlipColour (blip, 47)
@@ -135,14 +137,14 @@ end)
 -- Enter / Exit marker events & draw markers
 CreateThread(function()
 	while true do
-		Wait(0)
-		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(PlayerPedId()), false, nil, true
+		local Sleep = 1000
+		local playerCoords, isInMarker, currentZone, letSleep = GetEntityCoords(ESX.PlayerData.ped), false, nil, true
 
 		for k,v in pairs(Config.Shops) do
 			local distance = #(playerCoords - v)
 
 			if distance < Config.DrawDistance then
-				letSleep = false
+				Sleep = 0
 				DrawMarker(Config.MarkerType, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, nil, nil, false)
 
 				if distance < Config.MarkerSize.x then
@@ -161,29 +163,13 @@ CreateThread(function()
 			TriggerEvent('esx_clotheshop:hasExitedMarker', lastZone)
 		end
 
-		if letSleep then
-			Wait(500)
-		end
+		Wait(Sleep)
 	end
 end)
 
--- Key controls
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if currentAction then
-			ESX.ShowHelpNotification(currentActionMsg)
-
-			if IsControlJustReleased(0, 38) then
-				if currentAction == 'shop_menu' then
-					OpenShopMenu()
-				end
-
-				currentAction = nil
-			end
-		else
-			Wait(500)
-		end
-	end
+ESX.RegisterInput("clotheshop:interact", "(ESX ClotheShop): Open Shop", "keyboard", "e", function()
+	if not currentAction then return end 
+	if currentAction ~= "shop_menu" then return end
+	OpenShopMenu()
+	currentAction = nil
 end)
