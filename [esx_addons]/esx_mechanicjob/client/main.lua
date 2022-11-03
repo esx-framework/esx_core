@@ -62,7 +62,7 @@ function OpenMechanicActionsMenu()
 	}
 
 	if Config.EnablePlayerManagement and ESX.PlayerData.job and ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, {label = TranslateCap('boss_actions'), value = 'boss_actions'})
+		elements[elements + 1] = {label = TranslateCap('boss_actions'), value = 'boss_actions'}
 	end
 
 	ESX.UI.Menu.CloseAll()
@@ -79,10 +79,10 @@ function OpenMechanicActionsMenu()
 
 				ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(vehicles)
 					for i=1, #vehicles, 1 do
-						table.insert(elements, {
+						elements[#elements +1] = {
 							label = GetDisplayNameFromVehicleModel(vehicles[i].model) .. ' [' .. vehicles[i].plate .. ']',
 							value = vehicles[i]
-						})
+						}
 					end
 
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner', {
@@ -503,10 +503,11 @@ function OpenGetStocksMenu()
 		local elements = {}
 
 		for i=1, #items, 1 do
-			table.insert(elements, {
+
+			elements[#elements +1] = {
 				label = 'x' .. items[i].count .. ' ' .. items[i].label,
 				value = items[i].name
-			})
+			}
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
@@ -548,11 +549,11 @@ function OpenPutStocksMenu()
 			local item = inventory.items[i]
 
 			if item.count > 0 then
-				table.insert(elements, {
+				elements[#elements + 1] =  {
 					label = item.label .. ' x' .. item.count,
 					type  = 'item_standard',
 					value = item.name
-				})
+				}
 			end
 		end
 
@@ -735,10 +736,9 @@ AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
 		TriggerServerEvent('esx_mechanicjob:stopHarvest2')
 		TriggerServerEvent('esx_mechanicjob:stopHarvest3')
 	end
-
+	ESX.HideUI()
 	CurrentAction = nil
 	ESX.UI.Menu.CloseAll()
-	ESX.HideUI()
 end)
 
 AddEventHandler('esx_mechanicjob:hasEnteredEntityZone', function(entity)
