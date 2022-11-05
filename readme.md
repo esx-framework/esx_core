@@ -1,5 +1,4 @@
 <h1 align='center'>ESX Legacy</a></h1>
-<p align="center"><img src="https://docs.esx-framework.org/severcount.svg"/></p>
 <p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
 <p align='center'>Want More resources? You can browse the <a href="https://github.com/esx-community/">ESX Community Github</a> or <a href="https://forum.cfx.re/tag/esx">Cfx.re Releases board</a> for more!

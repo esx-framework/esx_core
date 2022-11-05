@@ -74,20 +74,6 @@ local function PedHandler(ids)
             SetPedCanRagdoll(npc, false)
             SetEntityAsMissionEntity(npc, true, true)
             SetEntityDynamic(npc, false)
-
-            if Config.Target then
-                exports.ox_target:addGlobalPed(npc, {
-                    options = {{
-                        icon = "fas fa-money-bill-wave",
-                        label = TranslateCap('access_bank'),
-                        action = function()
-                            OpenUi()
-                        end
-                    }},
-                    distance = 2
-                })
-            end
-
             Peds[id] = npc
         end
     end
@@ -105,9 +91,6 @@ local function PedHandler(ids)
 
         if del then
             DeletePed(handle)
-            if Config.Target then
-                exports.ox_target:removeGlobalPed(handle, {TranslateCap('access_bank')})
-            end
         end
     end
 
@@ -117,9 +100,7 @@ end
 function OpenUi(atm)
     atm = atm or false
     isInMenu = true
-    if not Config.Target then
-        ESX.HideUI()
-    end
+    ESX.HideUI()
     ESX.TriggerServerCallback('esx_banking:getPlayerData', function(data)
         SendNUIMessage({
             showMenu = true,
@@ -154,7 +135,7 @@ local function CloseUi()
         showMenu = false
     })
 
-    if not Config.Target and (isInMarker or isInAtmMarker) then
+    if (isInMarker or isInAtmMarker) then
         ESX.TextUI(TranslateCap('press_e_banking'))
         Listen4Key()
     end
@@ -174,40 +155,6 @@ local function StartThread()
     CreateThread(function()
         CreateBlips()
 
-        if Config.Target then
-            exports.ox_target:addModel(Config.AtmModels, {
-                options = {{
-                    icon = 'fas fa-credit-card',
-                    label = TranslateCap('access_bank'),
-                    action = function()
-                        OpenUi(true)
-                    end
-                }},
-                distance = 1.5
-            })
-            if not Config.EnablePeds then
-                for i = 1, #Config.Banks do
-                    local targetInfo = Config.Banks[i].Position
-                    exports.ox_target:addBoxZone('openBank' .. i, targetInfo.xyz, 1.5, 1.5, {
-                        name = 'openBank' .. i,
-                        heading = targetInfo.w,
-                        minZ = targetInfo.z - 1.0,
-                        maxZ = targetInfo.z + 1.5,
-                        debugPoly = Config.Debug
-                    }, {
-                        options = {{
-                            icon = 'fas fa-money-bill-wave',
-                            label = TranslateCap('access_bank'),
-                            action = function()
-                                OpenUi()
-                            end
-                        }},
-                        distance = 2.0
-                    })
-                end
-            end
-        end
-
         while PlayerLoaded do
             _PlayerPedId = PlayerPedId()
             _GetEntityCoords = GetEntityCoords(_PlayerPedId)
@@ -225,11 +172,11 @@ local function StartThread()
                 PedHandler(closestPed)
             end
 
-            if not Config.Target and not isInMenu and IsPedOnFoot(PlayerPedId()) then
+            if IsPedOnFoot(PlayerPedId()) then
                 local closestBank = {}
 
                 for i = 1, #Config.AtmModels do
-                    local atm = GetClosestObjectOfType(_GetEntityCoords, 3.0, Config.AtmModels[i], false)
+                    local atm = GetClosestObjectOfType(_GetEntityCoords, 8.0, Config.AtmModels[i], false)
                     if atm ~= 0 then
                         local atmOffset = GetOffsetFromEntityInWorldCoords(atm, 0.0, -0.7, 0.0)
                         local atmHeading = GetEntityHeading(atm)
