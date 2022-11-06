@@ -31,13 +31,32 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 		{name = "ID", value = xPlayer.source, inline = true},
     {name = "Vehicle", value = args.car, inline = true}
 	})
-	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
+	local upgrades = Config.MaxAdminVehicles and {
+		plate = "ADMINCAR", 
+		modEngine = 3,
+		modBrakes = 2,
+		modTransmission = 2,
+		modSuspension = 3,
+		modArmor = true,
+		windowTint = 1,
+	} or {}
+	local coords = xPlayer.getCoords(true)
+	local PlayerPed = GetPlayerPed(xPlayer.source)
+	ESX.OneSync.SpawnVehicle(args.car, coords - vector3(0,0, 0.9), GetEntityHeading(PlayerPed), upgrades, function(networkId)
+		local vehicle = NetworkGetEntityFromNetworkId(networkId)
+		Wait(250)
+		TaskWarpPedIntoVehicle(PlayerPed, vehicle, -1)
+	end)
 end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = TranslateCap('command_car_car'), type = 'string'}
 }}) 
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
-	local Vehicles = ESX.OneSync.GetVehiclesInArea(xPlayer.getCoords(true), tonumber(args.radius) or 4)
+	local PedVehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source), false)
+	if DoesEntityExist(PedVehicle) then
+		DeleteEntity(PedVehicle)
+	end
+	local Vehicles = ESX.OneSync.GetVehiclesInArea(GetEntityCoords(GetPlayerPed(xPlayer.source)), tonumber(args.radius) or 5.0)
 	for i=1, #Vehicles do 
 		local Vehicle = NetworkGetEntityFromNetworkId(Vehicles[i])
 		if DoesEntityExist(Vehicle) then

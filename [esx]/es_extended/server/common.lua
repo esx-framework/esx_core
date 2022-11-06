@@ -5,6 +5,8 @@ ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
+Core.ClientCallbacks = {}
+Core.CurrentRequestId = 0
 Core.TimeoutCount = -1
 Core.CancelledTimeouts = {}
 Core.RegisteredCommands = {}
@@ -14,7 +16,7 @@ Core.PlayerFunctionOverrides = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
   local Invoke = GetInvokingResource()
-  print(('[^3WARNING^7] ^5%s^7 used ^5esx:getSharedObject^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/sharedevent^7 for more info!'):format(Invoke))
+  print(('[^3WARNING^7] ^5%s^7 used ^5esx:getSharedObject^7, this method is deprecated and should not be used, On 30/11/2022 esx:getSharedObject will come to EOL and be fully removed! Refer to ^5https://docs.esx-framework.org/tutorials/sharedevent^7 for more info!'):format(Invoke))
   cb(ESX)
 end)
 
@@ -110,6 +112,13 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId,Invoke, ..
   local source = source
 
   ESX.TriggerServerCallback(name, requestId, source,Invoke, function(...)
-    TriggerClientEvent('esx:serverCallback', source, requestId, ...)
+    TriggerClientEvent('esx:serverCallback', source, requestId,Invoke, ...)
   end, ...)
+end)
+
+RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)
+  if Core.ClientCallbacks[Request] then
+    Core.ClientCallbacks[Request](Type)
+    Core.ClientCallbacks[Request] = nil
+  end
 end)

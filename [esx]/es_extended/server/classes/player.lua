@@ -300,10 +300,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.canCarryItem(name, count, metadata)
-		local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
-		local newWeight = currentWeight + (itemWeight * count)
+        if ESX.Items[name] then
+            local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
+            local newWeight = currentWeight + (itemWeight * count)
 
-		return newWeight <= self.maxWeight
+            return newWeight <= self.maxWeight
+        else
+            print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(name))
+        end
 	end
 
 	function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)

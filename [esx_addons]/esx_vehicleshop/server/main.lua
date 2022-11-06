@@ -162,7 +162,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:getVehicles', function(source, cb)
 	cb(vehicles)
 end)
 
-ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, model, plate, automobile)
+ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, model, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local modelPrice = getVehicleFromModel(model).price
 
@@ -172,8 +172,10 @@ ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, mo
 		MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xPlayer.identifier, plate, json.encode({model = joaat(model), plate = plate})
 		}, function(rowsChanged)
 			xPlayer.showNotification(TranslateCap('vehicle_belongs', plate))
-			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, false,{plate = plate}, function(vehicle)
+			ESX.OneSync.SpawnVehicle(joaat(model), Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading,{plate = plate}, function(vehicle)
+				Wait(100)
 				local vehicle = NetworkGetEntityFromNetworkId(vehicle)
+				Wait(300)
 				TaskWarpPedIntoVehicle(GetPlayerPed(source), vehicle, -1)
 			end)
 			cb(true)

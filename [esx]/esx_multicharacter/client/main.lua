@@ -182,7 +182,7 @@ if ESX.GetConfig().Multichar then
 				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
 			end
 		end
-		if #elements < slots then
+		if #elements - 1 < slots then
 			elements[#elements+1] = {title = _('create_char'), icon = "fa-solid fa-plus", value = (#elements+1), new = true}
 		end
 
