@@ -137,6 +137,7 @@ function OpenDMVSchoolMenu()
 		if element.value == "theory_test" then
 			ESX.TriggerServerCallback('esx_dmvschool:canYouPay', function(haveMoney)
 				if haveMoney then
+					ESX.CloseContext()
 					StartTheoryTest()
 				else
 					ESX.ShowNotification(TranslateCap('not_enough_money'))
@@ -145,6 +146,7 @@ function OpenDMVSchoolMenu()
 		elseif element.value == "drive_test" then
 			ESX.TriggerServerCallback('esx_dmvschool:canYouPay', function(haveMoney)
 				if haveMoney then
+					ESX.CloseContext()
 					StartDriveTest(element.type)
 				else
 					ESX.ShowNotification(TranslateCap('not_enough_money'))
