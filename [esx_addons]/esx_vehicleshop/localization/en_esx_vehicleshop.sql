@@ -14,8 +14,8 @@ INSERT INTO `jobs` (name, label) VALUES
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
 	('cardealer',0,'recruit','Recruit',10,'{}','{}'),
-	('cardealer',1,'novice','Novice',25,'{}','{}'),
-	('cardealer',2,'experienced','Experienced',40,'{}','{}'),
+	('cardealer',1,'novice','Salesman',25,'{}','{}'),
+	('cardealer',2,'experienced','Experienced Salesman',40,'{}','{}'),
 	('cardealer',3,'boss','Boss',0,'{}','{}')
 ;
 

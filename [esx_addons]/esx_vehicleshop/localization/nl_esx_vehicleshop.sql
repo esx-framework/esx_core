@@ -1,22 +1,20 @@
-
-
 INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_cardealer','Cardealer',1)
+	('society_cardealer','AutoVerkoop',1)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
-	('society_cardealer','Cardealer',1)
+	('society_cardealer','AutoVerkoop',1)
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
-	('cardealer','Cardealer')
+	('cardealer','Autoverkoop')
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-	('cardealer',0,'recruit','Recruit',10,'{}','{}'),
-	('cardealer',1,'novice','Salesman',25,'{}','{}'),
-	('cardealer',2,'experienced','Experienced Salesman',40,'{}','{}'),
-	('cardealer',3,'boss','Boss',0,'{}','{}')
+	('cardealer',0,'recruit','In opleiding',10,'{}','{}'),
+	('cardealer',1,'novice','Verkoper',25,'{}','{}'),
+	('cardealer',2,'experienced','Ervaren Verkoper',40,'{}','{}'),
+	('cardealer',3,'boss','Baas',0,'{}','{}')
 ;
 
 CREATE TABLE `cardealer_vehicles` (
