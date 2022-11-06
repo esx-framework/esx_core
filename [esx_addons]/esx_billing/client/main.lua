@@ -3,28 +3,22 @@ local isDead = false
 function ShowBillsMenu()
 	ESX.TriggerServerCallback('esx_billing:getBills', function(bills)
 		if #bills > 0 then
-			ESX.UI.Menu.CloseAll()
-			local elements = {}
+			local elements = {
+				{unselectable = true, icon = "fas fa-scroll", title = TranslateCap('invoices')}
+			}
 
 			for k,v in ipairs(bills) do
-				table.insert(elements, {
-					label  = ('%s - <span style="color:red;">%s</span>'):format(v.label, TranslateCap('invoices_item', ESX.Math.GroupDigits(v.amount))),
+				elements[#elements+1] = {
+					icon = "fas fa-scroll",
+					title = ('%s - <span style="color:red;">%s</span>'):format(v.label, TranslateCap('invoices_item', ESX.Math.GroupDigits(v.amount))),
 					billId = v.id
-				})
+				}
 			end
 
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'billing', {
-				title    = TranslateCap('invoices'),
-				align    = 'bottom-right',
-				elements = elements
-			}, function(data, menu)
-				menu.close()
-
+			ESX.OpenContext("right", elements, function(menu,element)
 				ESX.TriggerServerCallback('esx_billing:payBill', function()
 					ShowBillsMenu()
-				end, data.current.billId)
-			end, function(data, menu)
-				menu.close()
+				end, element.billId)
 			end)
 		else
 			ESX.ShowNotification(TranslateCap('no_invoices'))
