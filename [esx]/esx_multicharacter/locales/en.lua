@@ -3,6 +3,7 @@ Locales["en"] = {
 	["female"] = "Female",
 	["delete_label"] = "Delete %s %s?",
 	["select_char"] = "Select Character",
+	["select_char_description"] = "Select a character to play as.",
 	["create_char"] = "New Character",
 	["char_play"] = "Play",
 	["char_disabled"] = "Disabled",

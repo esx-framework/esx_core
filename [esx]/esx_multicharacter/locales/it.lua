@@ -3,6 +3,7 @@ Locales['it'] = {
 	['female'] = "Femmina",
 	['delete_label'] = "Cancella %s %s?",
 	['select_char'] = "Seleziona Personaggio",
+	["select_char_description"] = "Selezione il personaggio con cui vuoi giocare.",
 	['create_char'] = "Crea un nuovo personaggio",
 	['char_play'] = "Gioca questo personaggio",
 	['char_disabled'] = "Questo personaggio è disabilitato",
