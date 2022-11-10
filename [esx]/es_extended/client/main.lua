@@ -69,6 +69,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			for i=1, #(Config.RemoveHudCommonents) do
 				if Config.RemoveHudCommonents[i] then
 					DisabledComps[#DisabledComps + 1] = i
+					SetHudComponentPosition(DisabledComps[i],999999.0,999999.0)
 				end
 		 	end
 			if Config.DisableHealthRegeneration then
@@ -79,6 +80,21 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 				for a = 1, #pickupList do
 					ToggleUsePickupsForPlayer(PlayerId, pickupList[a], false)
 				end
+			end
+			if Config.DisableVehicleRewards then
+				AddEventHandler('gameEventTriggered', function(name, args)
+    				if name == "CEventNetworkPlayerEnteredVehicle" then
+        				CreateThread(function()
+            				while 1 do
+                				Wait(0)
+                				DisablePlayerVehicleRewards(PlayerId())
+                				if not IsPedInAnyVehicle(PlayerPedId(), false) then
+                    				break
+               					end
+            				end
+        				end)
+    				end
+				end)
 			end
 			while true do 
 				local Sleep = true
@@ -95,20 +111,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 						SetPlayerLockonRangeOverride(PlayerId, 2.0)
 					end
 				end
-
-				if Config.DisableVehicleRewards then
-					Sleep = false
-					DisablePlayerVehicleRewards(PlayerId)
-				end
-			
-				if #DisabledComps > 0 then
-					Sleep = false
-					for i=1, #(DisabledComps) do
-						HideHudComponentThisFrame(DisabledComps[i])
-					end
-				end
-				
-				Wait(Sleep and 1500 or 0)
+	
+				Wait(Sleep and 1500 or 1)
 			end
 		end)
 
