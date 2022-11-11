@@ -242,7 +242,8 @@ function GetAction(data)
                         label = " " .. TranslateCap('by_default'),
                         modType = "modFrontWheels",
                         modNum = -1,
-                        wheelType = -1
+                        wheelType = -1,
+                        price = 1
                     })
                 else
                     table.insert(elements, {
