@@ -262,7 +262,7 @@ function GetAction(data)
                         })
                     end
                 elseif v.modType == 'plateIndex' then -- PLATES
-                    for j = 0, 4, 1 do
+                    for j = 0, 5, 1 do
                         local _label = ''
                         if j == currentMods.plateIndex then
                             _label = GetPlatesName(j) .. ' - <span style="color:cornflowerblue;">' .. TranslateCap('installed') ..
