@@ -68,6 +68,8 @@ Config.Colors = {
 	{label = TranslateCap('gold'), value = 'gold'}
 }
 
+Config.DefaultWheelsPriceMultiplier = 2
+
 function GetColors(color)
 	local colors = {}
 	if color == 'black' then

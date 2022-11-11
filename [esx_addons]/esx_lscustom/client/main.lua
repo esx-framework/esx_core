@@ -243,7 +243,7 @@ function GetAction(data)
                         modType = "modFrontWheels",
                         modNum = -1,
                         wheelType = -1,
-                        price = 1
+                        price = Config.DefaultWheelsPriceMultiplier
                     })
                 else
                     table.insert(elements, {
