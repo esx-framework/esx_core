@@ -1,0 +1,16 @@
+Locales['et'] = {
+  ['shop_robbery'] = 'Poe rööv',
+  ['press_to_rob'] = 'Vajuta [E], et ~o~röövida %s',
+  ['robbery_timer'] = 'Poe vargus: ~r~%s sekundit jäänud',
+  ['recently_robbed'] = 'Seda poodi on juba röövitud. Palun oota %s sekundit, et seda poodi röövida uuesti',
+  ['rob_in_prog'] = '~r~Toimumas poe rööv asukohas: %s',
+  ['started_to_rob'] = 'Sa alustasid %s röövimisega',
+  ['alarm_triggered'] = 'Alarm on käivitatud',
+  ['robbery_complete'] = '~r~Rööv edukas, sa ~o~varastasid $%s',
+  ['robbery_complete_at'] = '~r~Edukas rööv asukohas %s',
+  ['robbery_cancelled'] = 'Poe rööv katkestatud!',
+  ['robbery_cancelled_at'] = '~r~Rööv asukohas: %s on katkestatud!',
+  ['min_police'] = 'Linnas peab olema vähemalt %s politseiniku ,et röövida poodi.',
+  ['robbery_already'] = '~r~Keegi juba röövib kusagil poodi.',
+  ['no_threat'] = 'Sa ei kujuta poepidajale ohtu',
+}
