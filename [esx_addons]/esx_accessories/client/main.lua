@@ -3,19 +3,16 @@ local LastZone, CurrentAction, CurrentActionMsg
 local CurrentActionData	= {}
 
 function OpenAccessoryMenu()
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'set_unset_accessory', {
-		title = TranslateCap('set_unset'),
-		align = 'top-left',
-		elements = {
-			{label = TranslateCap('helmet'), value = 'Helmet'},
-			{label = TranslateCap('ears'), value = 'Ears'},
-			{label = TranslateCap('mask'), value = 'Mask'},
-			{label = TranslateCap('glasses'), value = 'Glasses'}
-		}}, function(data, menu)
-		menu.close()
-		SetUnsetAccessory(data.current.value)
-	end, function(data, menu)
-		menu.close()
+	local elements = {
+		{unselectable = true, icon = "fas fa-user", title = TranslateCap('set_unset')},
+		{icon = "fas fa-hat-cowboy", title = TranslateCap("helmet"), value = "Helmet"},
+		{icon = "fas fa-deaf", title = TranslateCap("ears"), value = "Ears"},
+		{icon = "fas fa-mask", title = TranslateCap("mask"), value = "Mask"},
+		{icon = "fas fa-glasses", title = TranslateCap("glasses"), value = "Glasses"}
+	}
+
+	ESX.OpenContext("right", elements, function(menu,element)
+		SetUnsetAccessory(element.value)
 	end)
 end
 
@@ -56,24 +53,24 @@ function OpenShopMenu(accessory)
 
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 
-		menu.close()
+		menu.close()	
+		local elements = {
+			{unselectable = true, icon = "fas fa-check-double", title = TranslateCap('valid_purchase')},
+			{icon = "fas fa-check-circle", title = TranslateCap("yes", ESX.Math.GroupDigits(Config.Price)), value = "yes"},
+			{icon = "fas fa-window-close", title = TranslateCap("no"), value = "no"}
+		}
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title = TranslateCap('valid_purchase'),
-			align = 'top-left',
-			elements = {
-				{label = TranslateCap('no'), value = 'no'},
-				{label = TranslateCap('yes', ESX.Math.GroupDigits(Config.Price)), value = 'yes'}
-			}}, function(data, menu)
-			menu.close()
-			if data.current.value == 'yes' then
+		ESX.OpenContext("right", elements, function(menu,element)
+			if element.value == "yes" then
 				ESX.TriggerServerCallback('esx_accessories:checkMoney', function(hasEnoughMoney)
 					if hasEnoughMoney then
+						ESX.CloseContext()
 						TriggerServerEvent('esx_accessories:pay')
 						TriggerEvent('skinchanger:getSkin', function(skin)
 							TriggerServerEvent('esx_accessories:save', skin, accessory)
 						end)
 					else
+						ESX.CloseContext()
 						local player = PlayerPedId()
 						TriggerEvent('esx_skin:getLastSkin', function(skin)
 							TriggerEvent('skinchanger:loadSkin', skin)
@@ -90,9 +87,7 @@ function OpenShopMenu(accessory)
 						ESX.ShowNotification(TranslateCap('not_enough_money'))
 					end
 				end)
-			end
-
-			if data.current.value == 'no' then
+			elseif element.value == "no" then
 				local player = PlayerPedId()
 				TriggerEvent('esx_skin:getLastSkin', function(skin)
 					TriggerEvent('skinchanger:loadSkin', skin)
@@ -106,12 +101,13 @@ function OpenShopMenu(accessory)
 				elseif accessory == "Glasses" then
 					SetPedPropIndex(player, 1, -1, 0, 0)
 				end
+
+				ESX.CloseContext()
 			end
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = TranslateCap('press_access')
 			CurrentActionData = {}
-		end, function(data, menu)
-			menu.close()
+		end, function(menu)
 			CurrentAction     = 'shop_menu'
 			CurrentActionMsg  = TranslateCap('press_access')
 			CurrentActionData = {}
@@ -131,7 +127,7 @@ AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
 end)
 
 AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 	CurrentAction = nil
 end)
 
