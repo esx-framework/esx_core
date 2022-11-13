@@ -44,8 +44,7 @@ if not Config.UseDeferrals then
 
     RegisterNetEvent('esx_identity:showRegisterIdentity', function()
         TriggerEvent('esx_skin:resetFirstSpawn')
-
-        if not ESX.PlayerData.dead then EnableGui(true) end
+        EnableGui(true)
     end)
 
     RegisterNUICallback('register', function(data, cb)
