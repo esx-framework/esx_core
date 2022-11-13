@@ -3,6 +3,7 @@ Locales['cs'] = {
 	['female'] = "Žena",
 	['delete_label'] = "Vymazat %s %s?",
 	['select_char'] = "Zvolit Postavu",
+	["select_char_description"] = "Select a character to play as.",
 	['create_char'] = "Vytvořit Novou Postavu",
 	['char_play'] = "Hrát za postavu",
 	['char_disabled'] = "Tato postava je zakázána!",

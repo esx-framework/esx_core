@@ -3,6 +3,7 @@ Locales["nl"] = {
 	["female"] = "Vrouw",
 	["delete_label"] = "Verwijder %s %s?",
 	["select_char"] = "Kies Karakter",
+	["select_char_description"] = "Select a character to play as.",
 	["create_char"] = "Creeër nieuw karakter",
 	["char_play"] = "Speel dit karakter",
 	["char_disabled"] = "Dit karakter is niet beschikbaar",
