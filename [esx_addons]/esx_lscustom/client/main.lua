@@ -535,7 +535,7 @@ CreateThread(function()
                                             DisableControlAction(0, 75, true) -- Disable exit vehicle
                                             DisableControlAction(27, 75, true) -- Disable exit vehicle
                                         end
-                                        Wait(0)
+                                        Wait(Sleep)
                                     end
                                 end)
                             end
