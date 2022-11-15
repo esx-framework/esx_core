@@ -423,7 +423,6 @@ else
 
 		if xPlayer then
 			if not alreadyRegistered[xPlayer.identifier] then
-                xPlayer.showNotification(TranslateCap('running'), "error")
 				if checkNameFormat(data.firstname) then
 					if checkNameFormat(data.lastname) then
 						if checkSexFormat(data.sex) then
