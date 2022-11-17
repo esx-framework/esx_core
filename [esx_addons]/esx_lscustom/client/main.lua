@@ -302,7 +302,6 @@ function GetAction(data)
                     local xenonColors = GetXenonColors()
                     price = math.floor(vehiclePrice * v.price / 100)
                     for i = 1, #xenonColors, 1 do
-                        print(xenonColors[i].label, xenonColors[i].index)
                         table.insert(elements, {
                             label = xenonColors[i].label .. ' - <span style="color:green;">$' .. price .. '</span>',
                             modType = k,
