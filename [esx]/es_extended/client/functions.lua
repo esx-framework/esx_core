@@ -151,7 +151,7 @@ ESX.HashString = function(str)
     local gsub = string.gsub
     local hash = joaat(str)
     local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
-    input_map = string.gsub(input_map, "FFFFFFFF", "")
+    input_map = gsub(input_map, "FFFFFFFF", "")
 
     return input_map
 end
