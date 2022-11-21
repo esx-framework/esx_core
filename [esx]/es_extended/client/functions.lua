@@ -80,34 +80,36 @@ function ESX.SetPlayerData(key, val)
 end
 
 function ESX.Progressbar(message, length, Options)
-    exports["esx_progressbar"]:Progressbar(message, length, Options)
+    if GetResourceState("esx_progressbar") ~= "missing" then
+        return exports["esx_progressbar"]:Progressbar(message, length, Options)
+    end
+
+    print("[^1ERROR^7] ^5ESX Progressbar^7 is Missing!")
 end
 
 function ESX.ShowNotification(message, type, length)
     if GetResourceState("esx_notify") ~= "missing" then
-        exports["esx_notify"]:Notify(type, length, message)
-        else
-            print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
-        end
+        return exports["esx_notify"]:Notify(type, length, message)
     end
+
+    print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
+end
     
     
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
-        exports["esx_textui"]:TextUI(message, type)
-    else 
-        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
-        return
+        return exports["esx_textui"]:TextUI(message, type)
     end
+
+    print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
 end
 
 function ESX.HideUI()
     if GetResourceState("esx_textui") ~= "missing" then
-        exports["esx_textui"]:HideUI()
-    else 
-        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
-        return
+        return exports["esx_textui"]:HideUI()
     end
+
+    print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
 end
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
