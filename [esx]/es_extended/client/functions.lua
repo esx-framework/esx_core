@@ -22,7 +22,7 @@ ESX.Scaleform.Utils = {}
 ESX.Streaming = {}
 
 function ESX.SetTimeout(msec, cb)
-    table.insert(Core.TimeoutCallbacks, {
+    ESX.TableInsert(Core.TimeoutCallbacks, {
         time = GetGameTimer() + msec,
         cb = cb
     })
@@ -80,34 +80,31 @@ function ESX.SetPlayerData(key, val)
 end
 
 function ESX.Progressbar(message, length, Options)
+    if GetResourceState("esx_progressbar") == "missing" then
+        return print("[^1ERROR^7] ^5ESX ProgressBar^7 is Missing!")
+    end
     exports["esx_progressbar"]:Progressbar(message, length, Options)
 end
 
 function ESX.ShowNotification(message, type, length)
-    if GetResourceState("esx_notify") ~= "missing" then
-        exports["esx_notify"]:Notify(type, length, message)
-        else
-            print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
-        end
+    if GetResourceState("esx_notify") == "missing" then
+        return print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
     end
-    
-    
+    exports["esx_notify"]:Notify(type, length, message)
+end
+
 function ESX.TextUI(message, type)
-    if GetResourceState("esx_textui") ~= "missing" then
-        exports["esx_textui"]:TextUI(message, type)
-    else 
-        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
-        return
+    if GetResourceState("esx_textui") == "missing" then
+        return print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
     end
+    exports["esx_textui"]:TextUI(message, type)
 end
 
 function ESX.HideUI()
-    if GetResourceState("esx_textui") ~= "missing" then
-        exports["esx_textui"]:HideUI()
-    else 
-        print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
-        return
+    if GetResourceState("esx_textui") == "missing" then
+        return print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
     end
+    exports["esx_textui"]:HideUI()
 end
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
@@ -151,7 +148,7 @@ ESX.HashString = function(str)
     local gsub = string.gsub
     local hash = joaat(str)
     local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
-    input_map = string.gsub(input_map, "FFFFFFFF", "")
+    input_map = gsub(input_map, "FFFFFFFF", "")
 
     return input_map
 end
@@ -170,9 +167,9 @@ if GetResourceState("esx_context") ~= "missing" then
     end
 
     function ESX.RefreshContext(...)
-       exports["esx_context"]:Refresh(...) 
+       exports["esx_context"]:Refresh(...)
     end
-else 
+else
     function ESX.OpenContext()
         print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
@@ -189,7 +186,6 @@ else
         print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
     end
 end
-
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
@@ -446,7 +442,7 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then 
+    if networked then
         ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
             if cb then
                 local obj = NetworkGetEntityFromNetworkId(NetworkID)
@@ -462,7 +458,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 cb(obj)
             end
         end, object, coords, 0.0)
-    else 
+    else
         local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
@@ -678,10 +674,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         local customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
         local customXenonColor = nil
-        if customXenonColorR and customXenonColorG and customXenonColorB then 
+        if customXenonColorR and customXenonColorG and customXenonColorB then
             customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
         end
-        
+
         local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
         local customSecondaryColor = nil
         if hasCustomSecondaryColor then
@@ -1112,7 +1108,7 @@ function ESX.ShowInventory()
             local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
                 count = ESX.PlayerData.accounts[i].money,
                 type = 'item_account',
@@ -1128,7 +1124,7 @@ function ESX.ShowInventory()
         if v.count > 0 then
             currentWeight = currentWeight + (v.weight * v.count)
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = ('%s x%s'):format(v.label, v.count),
                 count = v.count,
                 type = 'item_standard',
@@ -1152,7 +1148,7 @@ function ESX.ShowInventory()
                 label = v.label
             end
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = label,
                 count = 1,
                 type = 'item_weapon',
@@ -1178,7 +1174,7 @@ function ESX.ShowInventory()
         elements = {}
 
         if data.current.usable then
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('use'),
                 action = 'use',
                 type = data.current.type,
@@ -1188,7 +1184,7 @@ function ESX.ShowInventory()
 
         if data.current.canRemove then
             if player ~= -1 and distance <= 3.0 then
-                table.insert(elements, {
+                ESX.TableInsert(elements, {
                     label = TranslateCap('give'),
                     action = 'give',
                     type = data.current.type,
@@ -1196,7 +1192,7 @@ function ESX.ShowInventory()
                 })
             end
 
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('remove'),
                 action = 'remove',
                 type = data.current.type,
@@ -1206,7 +1202,7 @@ function ESX.ShowInventory()
 
         if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and
             distance <= 3.0 then
-            table.insert(elements, {
+            ESX.TableInsert(elements, {
                 label = TranslateCap('giveammo'),
                 action = 'give_ammo',
                 type = data.current.type,
@@ -1214,7 +1210,7 @@ function ESX.ShowInventory()
             })
         end
 
-        table.insert(elements, {
+        ESX.TableInsert(elements, {
             label = TranslateCap('return'),
             action = 'return'
         })
@@ -1239,7 +1235,7 @@ function ESX.ShowInventory()
 
                     ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
                         for playerId, playerName in pairs(returnedPlayers) do
-                            table.insert(elements, {
+                            ESX.TableInsert(elements, {
                                 label = playerName,
                                 playerId = playerId
                             })
@@ -1385,7 +1381,7 @@ RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
     if Core.ServerCallbacks[requestId] then
         Core.ServerCallbacks[requestId](...)
         Core.ServerCallbacks[requestId] = nil
-    else 
+    else
         print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
     end
 end)
@@ -1396,10 +1392,9 @@ AddEventHandler('esx:showNotification', function(msg, type, length)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
-AddEventHandler('esx:showAdvancedNotification',
-    function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-        ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-    end)
+AddEventHandler('esx:showAdvancedNotification',function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+    ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+end)
 
 RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
