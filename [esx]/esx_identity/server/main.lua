@@ -395,11 +395,11 @@ else
                 xPlayer.showNotification(TranslateCap('invalid_sex_format'), "error")
                 return cb(false)
             end
-            if checkDOBFormat(data.dateofbirth) then
+            if not checkDOBFormat(data.dateofbirth) then
                 xPlayer.showNotification(TranslateCap('invalid_dob_format'), "error")
                 return cb(false)
             end
-            if checkHeightFormat(data.height) then
+            if not checkHeightFormat(data.height) then
                 xPlayer.showNotification(TranslateCap('invalid_height_format'), "error")
                 return cb(false)
             end
