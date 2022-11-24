@@ -50,6 +50,10 @@ if not Config.UseDeferrals then
     end)
 
     RegisterNUICallback('register', function(data, cb)
+        if not guiEnabled then
+            return
+        end
+
         ESX.TriggerServerCallback('esx_identity:registerIdentity', function(callback)
             if not callback then
                 return
