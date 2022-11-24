@@ -1,9 +1,10 @@
-local PlayerData, ActivateBlips, Peds = {}, {}, {}
+local ActivateBlips = {}
 local PlayerLoaded = true
 local isInMarker, isInAtmMarker, isInMenu, isMarkerShowed = false, false, false, false
 local _GetEntityCoords, _PlayerPedId
 
 -- Functions
+
 -- Listen for keypress while player inside the marker
 local function Listen4Key()
     CreateThread(function()
@@ -46,57 +47,6 @@ local function RemoveBlips()
     ActivateBlips = {}
 end
 
--- Ped Handler
-local function PedHandler(ids)
-    local tmpPeds = {}
-
-    for _, id in pairs(ids) do
-        if not Peds[id] then
-
-            if not HasModelLoaded(Config.Peds[id].Model) then
-                RequestModel(Config.Peds[id].Model)
-                Wait(100)
-                while not HasModelLoaded(Config.Peds[id].Model) do
-                    Wait(10)
-                end
-            end
-
-            local npc = CreatePed(6, Config.Peds[id].Model, Config.Peds[id].Position + vector4(0, 0, -1, 0), false,
-                false)
-            TaskStartScenarioInPlace(npc, Config.Peds[id].Scenario, 0, true)
-            SetEntityInvincible(npc, true)
-            SetEntityProofs(npc, true, true, true, true, true, true, 1, true)
-            SetBlockingOfNonTemporaryEvents(npc, true)
-            FreezeEntityPosition(npc, true)
-            SetPedDiesWhenInjured(npc, false)
-            SetEntityCanBeDamaged(npc, false)
-            SetPedCanRagdollFromPlayerImpact(npc, false)
-            SetPedCanRagdoll(npc, false)
-            SetEntityAsMissionEntity(npc, true, true)
-            SetEntityDynamic(npc, false)
-            Peds[id] = npc
-        end
-    end
-
-    for id, handle in pairs(Peds) do
-        local del = true
-
-        for i = 1, #ids do
-
-            if ids[i] == id then
-                del = false
-                tmpPeds[id] = handle
-            end
-        end
-
-        if del then
-            DeletePed(handle)
-        end
-    end
-
-    Peds = tmpPeds
-end
-
 function OpenUi(atm)
     atm = atm or false
     isInMenu = true
@@ -129,7 +79,7 @@ function OpenUi(atm)
 end
 
 local function CloseUi()
-    SetNuiFocus(false)
+    SetNuiFocus(false, false)
     isInMenu = false
     SendNUIMessage({
         showMenu = false
@@ -144,8 +94,7 @@ end
 local function ShowMarker(coord)
     CreateThread(function()
         while isMarkerShowed do
-            DrawMarker(20, coord.x, coord.y, coord.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 187, 255, 0, 255,
-                false, true, 2, nil, nil, false)
+            DrawMarker(20, coord.x, coord.y, coord.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 187, 255, 0, 255, false, true, 2, false, nil, nil, false)
             Wait(0)
         end
     end)
@@ -158,19 +107,6 @@ local function StartThread()
         while PlayerLoaded do
             _PlayerPedId = PlayerPedId()
             _GetEntityCoords = GetEntityCoords(_PlayerPedId)
-
-            if Config.EnablePeds then
-                local closestPed = {}
-
-                for i = 1, #Config.Peds do
-                    local distance = #(_GetEntityCoords - Config.Peds[i].Position.xyz)
-                    if distance <= Config.DrawMarker then
-                        closestPed[#closestPed + 1] = i
-                    end
-                end
-
-                PedHandler(closestPed)
-            end
 
             if IsPedOnFoot(PlayerPedId()) then
                 local closestBank = {}
@@ -261,6 +197,21 @@ RegisterNetEvent('esx_banking:closebanking', function()
     CloseUi()
 end)
 
+RegisterNetEvent('esx_banking:PedHandler', function(netIdTable)
+    local npc
+    for i = 1, #netIdTable do
+        npc = NetworkGetEntityFromNetworkId(netIdTable[i])
+        TaskStartScenarioInPlace(npc, Config.Peds[i].Scenario, 0, true)
+        SetEntityProofs(npc, true, true, true, true, true, true, true, true)
+        SetBlockingOfNonTemporaryEvents(npc, true)
+        FreezeEntityPosition(npc, true)
+        SetPedCanRagdollFromPlayerImpact(npc, false)
+        SetPedCanRagdoll(npc, false)
+        SetEntityAsMissionEntity(npc, true, true)
+        SetEntityDynamic(npc, false)
+    end
+end)
+
 RegisterNetEvent('esx_banking:updateMoneyInUI')
 AddEventHandler('esx_banking:updateMoneyInUI', function(doingType, bankMoney, money)
     SendNUIMessage({
@@ -275,21 +226,18 @@ end)
 
 -- Resource starting
 AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() then
-        return
-    end
+    if resource ~= GetCurrentResourceName() then return end
     StartThread()
 end)
 
 -- Enables it on player loaded 
 RegisterNetEvent('esx:playerLoaded', function()
     StartThread()
-  end)
+end)
+
 -- Resource stopping
 AddEventHandler('onResourceStop', function(resource)
-    if resource ~= GetCurrentResourceName() then
-        return
-    end
+    if resource ~= GetCurrentResourceName() then return end
     RemoveBlips()
     if isInMenu then
         CloseUi()
