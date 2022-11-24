@@ -104,7 +104,7 @@ end
 
 local function checkHeightFormat(height)
     local numHeight = tonumber(height)
-    return numHeight < Config.MinHeight and numHeight > Config.MaxHeight
+    return numHeight >= Config.MinHeight and numHeight <= Config.MaxHeight
 end
 
 local function convertToLowerCase(str)
