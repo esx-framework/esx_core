@@ -62,23 +62,21 @@ end
 ---@param Properties table
 ---@param cb function
 function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
-	model = type(model) == 'string' and joaat(model) or model
-	Properties = Properties or {}
-	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-	CreateThread(function()
-		local player = nil
-		for _, playerId in ipairs(GetPlayers()) do
-				ESX.GetVehicleType(model, playerId, function(Type)
-					local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
-					Wait(250)
-					local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
-					Properties.NetId = NetworkId
-					Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
-					cb(NetworkId)
-				end)
-				break
-		end
-	end)
+    model = type(model) == 'string' and joaat(model) or model
+    Properties = Properties or {}
+    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+    TriggerClientEvent("esx:requestModel", -1, model)
+    CreateThread(function()
+        local xPlayer = ESX.OneSync.GetClosestPlayer(vector, 200)
+        ESX.GetVehicleType(model, xPlayer.id, function(Type)
+            local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
+            Wait(250)
+            local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
+            Properties.NetId = NetworkId
+            Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+            cb(NetworkId)
+        end)
+    end)
 end
 
 
