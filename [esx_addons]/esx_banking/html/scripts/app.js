@@ -758,6 +758,7 @@ $(document).ready(function(){
 			if(data.openATM){
 				ATMRender()
 				type = "ATM"
+				transaction.setData(transData,languageText)
 			}
 			else{
 				type = "BANK"

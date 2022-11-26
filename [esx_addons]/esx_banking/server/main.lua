@@ -120,6 +120,38 @@ ESX.RegisterServerCallback("esx_banking:checkPincode", function(source, cb, inpu
     cb(pincode > 0)
 end)
 
+function logTransaction(targetSource,key,amount)
+    if targetSource == nil then
+        print("ERROR: TargetSource nil!")
+        return
+    end
+
+    if key == nil then
+        print("ERROR: Do you need use these: WITHDRAW,DEPOSIT,TRANSFER_RECEIVE")
+        return
+    end
+    
+    if type(key) ~= "string" or key == '' then
+        print("ERROR: Do you need use these: WITHDRAW,DEPOSIT,TRANSFER_RECEIVE and can only be string type!")
+        return
+    end
+
+    if amount == nil then
+        print("ERROR: Amount value is nil! Add some numeric value to the amount!")
+        return
+    end
+
+    local xPlayer = ESX.GetPlayerFromId(tonumber(targetSource))
+
+    if xPlayer ~= nil then
+        local bankCurrentMoney = xPlayer.getAccount('bank').money
+        BANK.LogTransaction(targetSource, string.upper(key), amount, bankCurrentMoney)  
+    else
+        print("ERROR: xPlayer is nil!") 
+    end
+end
+exports("logTransaction", logTransaction)
+
 -- bank functions
 BANK = {
     CreatePeds = function()
@@ -167,7 +199,7 @@ BANK = {
         MySQL.update('UPDATE users SET pincode = ? WHERE identifier = ? ', {amount, identifier})
     end,
     LogTransaction = function(playerId, logType, amount, bankMoney)
-        if source == nil then
+        if playerId == nil then
             return
         end
         local xPlayer = ESX.GetPlayerFromId(playerId)
