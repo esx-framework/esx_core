@@ -110,7 +110,7 @@ if ESX.GetConfig().Multichar then
 				if Characters[index] then
 					local skin = Characters[index].skin or Config.Default
 					if not Characters[index].model then
-						if Characters[index].sex == TranslateCapCap('female') then skin.sex = 1 else skin.sex = 0 end
+						if Characters[index].sex == TranslateCap('female') then skin.sex = 1 else skin.sex = 0 end
 					end
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end
