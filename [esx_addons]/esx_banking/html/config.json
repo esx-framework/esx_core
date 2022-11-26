@@ -268,8 +268,8 @@
         "LAUNGAGE": {
             "your_money_title":"saldo",
             "your_money_desc":"qui puoi vedere il saldo attuale e contanti.",
-            "your_money_cash":"i tuoi soldi",
-            "your_money_bank":"il tuo saldo bancario",
+            "your_money_cash_label":"i tuoi soldi",
+            "your_money_bank_label":"il tuo saldo bancario",
             "withdraw":"RITIRARE",
             "deposit":"DEPOSITARE",
             "transfer":"TRASFERIMENTO",
@@ -289,7 +289,7 @@
                 "timeLabel":"tempo",
                 "searchInputPlaceholder":"Cerca ...",
                 "_comment": "tabella Opzioni complete della lingua: inglese, ungherese, italiana puoi trovare qui tutte le lingue: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
-                "tableFullLanguage":"Italiano" 
+                "tableFullLanguage":"Italian" 
             }
         }
     }
