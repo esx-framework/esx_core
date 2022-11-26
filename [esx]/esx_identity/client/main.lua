@@ -35,7 +35,6 @@ if not Config.UseDeferrals then
 
         if state then
             SetTimecycleModifier(timecycleModifier)
-            CreateThread(disableControls)
         else
             ClearTimecycleModifier()
         end
@@ -67,30 +66,4 @@ if not Config.UseDeferrals then
             end
         end, data)
     end)
-
-    function disableControls()
-        while guiEnabled do
-            DisableControlAction(0, 1, true) -- LookLeftRight
-            DisableControlAction(0, 2, true) -- LookUpDown
-            DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-            DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-            DisableControlAction(0, 30, true) -- MoveLeftRight
-            DisableControlAction(0, 31, true) -- MoveUpDown
-            DisableControlAction(0, 21, true) -- disable sprint
-            DisableControlAction(0, 24, true) -- disable attack
-            DisableControlAction(0, 25, true) -- disable aim
-            DisableControlAction(0, 47, true) -- disable weapon
-            DisableControlAction(0, 58, true) -- disable weapon
-            DisableControlAction(0, 263, true) -- disable melee
-            DisableControlAction(0, 264, true) -- disable melee
-            DisableControlAction(0, 257, true) -- disable melee
-            DisableControlAction(0, 140, true) -- disable melee
-            DisableControlAction(0, 141, true) -- disable melee
-            DisableControlAction(0, 143, true) -- disable melee
-            DisableControlAction(0, 75, true) -- disable exit vehicle
-            DisableControlAction(27, 75, true) -- disable exit vehicle
-
-            Wait(0)
-        end
-    end
 end
