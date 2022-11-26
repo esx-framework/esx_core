@@ -380,7 +380,6 @@ else
 				return cb(false)
             end
 
-            xPlayer.showNotification(TranslateCap('running'), "error")
             if not checkNameFormat(data.firstname) then
                 xPlayer.showNotification(TranslateCap('invalid_firstname_format'), "error")
                 return cb(false)
