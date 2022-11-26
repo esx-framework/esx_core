@@ -99,11 +99,14 @@ local function checkDOBFormat(dob)
 end
 
 local function checkSexFormat(sex)
+    if not sex then
+        return false
+    end
     return sex == "m" or sex == "M" or sex == "f" or sex == "F"
 end
 
 local function checkHeightFormat(height)
-    local numHeight = tonumber(height)
+    local numHeight = tonumber(height) or 0
     return numHeight >= Config.MinHeight and numHeight <= Config.MaxHeight
 end
 
