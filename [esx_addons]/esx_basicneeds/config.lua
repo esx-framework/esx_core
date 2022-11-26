@@ -5,7 +5,7 @@ Config.Visible = true
 Config.Food = {
 	["bread"] = {
 		status = 200000,
-		remove = false
+		remove = true
 	}
 }
 
