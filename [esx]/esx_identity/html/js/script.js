@@ -31,5 +31,7 @@ $(document).ready(function () {
         height: $('#height').val(),
       })
     );
+
+    $('#register').trigger('reset');
   });
 });
