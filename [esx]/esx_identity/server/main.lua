@@ -36,7 +36,8 @@ local function saveIdentityToDatabase(identifier, identity)
         {identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier})
 end
 
-local function checkDate(str)
+local function checkDOBFormat(str)
+    str = tostring(str)
     if not string.match(str, '(%d%d)/(%d%d)/(%d%d%d%d)') then
         return false
     end
@@ -90,12 +91,6 @@ local function checkNameFormat(name)
     end
 
     return false
-end
-
-local function checkDOBFormat(dob)
-    local date = tostring(dob)
-
-    return checkDate(date)
 end
 
 local function checkSexFormat(sex)
