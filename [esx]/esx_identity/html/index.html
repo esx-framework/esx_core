@@ -1,23 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="nui://game/ui/jquery.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<link href="css/style.css" rel="stylesheet">
+
+		<title>ESX Identity</title>
 	</head>
 
 	<body onkeydown="TriggeredKey(this)">
 		<div class="dialog">
 			<div class="title"><b>IDENTITY</b></div>
-           <!--	<img id="logo" height="110px" width="332px"> > -->	
 			<form id="register" name="register" action="#">
-				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>First Name</div>
-				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name"><br>
-				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif";>Last Name</div>
-				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name"><br>
-				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Date of Birth (MM/DD/YYYY)</div>
-				<input id="dateofbirth" type="date" name="dateofbirth" class="" placeholder="Date of Birth (dd/mm/yyyy)" min="01/01/1900" max="01/01/2010" onfocus="(this.type='date')"><br>
-				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif", sans-serif;>Height</div>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif">First Name</div>
+				<input id="firstname" type="text" class="" name="firstname" placeholder="First Name" minlength="3" maxlength="8" pattern="[a-zA-Z]*"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif">Last Name</div>
+				<input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" minlength="3" maxlength="10" pattern="[a-zA-Z]*"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif">Date of Birth (MM/DD/YYYY)</div>
+				<input id="dateofbirth" type="date" name="dateofbirth" class="" min="1900-01-01" max="2010-01-01" onfocus="(this.type='date')"><br>
+				<div style="color: rgb(46, 187, 205);font-size: 12px; font-family: 'Gill Sans', sans-serif">Height</div>
 				<input id="height" type="number" class="" name="height" min="120" max="220" placeholder="Height (cm)"><br>
 				<center>
 					<div class="radio-toolbar">
@@ -32,74 +33,13 @@
 			</form>
 			<center><font size="1px" color="green">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font></center>
 		</div>
-		<script>
-			const allRanges = document.querySelectorAll(".range-wrap");
-			allRanges.forEach(wrap => {
-				const range = wrap.querySelector(".range");
-				const bubble = wrap.querySelector(".bubble");
-
-				range.addEventListener("input", () => {
-					setBubble(range, bubble);
-				});
-				setBubble(range, bubble);
-			});
-
-			function setBubble(range, bubble) {
-				const val = range.value;
-				const min = range.min ? range.min : 0;
-				const max = range.max ? range.max : 100;
-				const newVal = Number(((val - min) * 100) / (max - min));
-				bubble.innerHTML = 'Height: ' + val;
-				bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-			}
-		
-			var myFirstName = document.getElementById('firstname');
-			var myLastName = document.getElementById('lastname');
-			var myDOB = document.getElementById('dateofbirth');
-			var myHeight = document.getElementById('height');
-
-			function isNumber(e) {
-				var key=e.which || e.KeyCode;
-				if ( key >=48 && key <= 57) {
-					return true; 
-				}
-				else {
-					return false;
-				}
-			}
-
-			
-			function checkDOB() {
-				var date = new Date($('#dateofbirth').val());
-				day = date.getDate();
-				month = date.getMonth() + 1;
-				year = date.getFullYear();
-				if (isNaN(month) || isNaN(day) || isNaN(year)) {
-					myDOB.style.backgroundColor = '#E06666';
-					myDOB.style.color = 'black';
-				}
-				else {
-					var dateInput = [day, month, year].join('/');
-
-					var regExp = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
-					var dateArray = dateInput.match(regExp);
-
-					if (dateArray == null){
-						return false;
-					}
-
-					month = dateArray[1];
-					day= dateArray[3];
-					year = dateArray[5];        
-				}
-			}
-
+		<script>		
 			function TriggeredKey(e) {
 				var keycode;
 				if (window.event) keycode = window.event.keyCode;
 				if (window.event.keyCode == 13 || window.event.keyCode == 27) return false;
 			}
 		</script>
-		<script src="js/script.js" type="text/javascript"></script>
+		<script src="js/script.js"></script>
 	</body>
 </html>

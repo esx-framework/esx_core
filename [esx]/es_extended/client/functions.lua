@@ -680,18 +680,18 @@ function ESX.Game.GetVehicleProperties(vehicle)
         customPrimaryColor = {GetVehicleCustomPrimaryColour(vehicle)}
     end
 
-    local customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
-    local customXenonColor = nil
-    if customXenonColorR and customXenonColorG and customXenonColorB then 
-        customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
-    end
-    
-    local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
-    local customSecondaryColor = nil
-    if hasCustomSecondaryColor then
-        customSecondaryColor = {GetVehicleCustomSecondaryColour(vehicle)}
-    end
-    local extras = {}
+        local hasCustomXenonColor, customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
+        local customXenonColor = nil
+        if hasCustomXenonColor then 
+            customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
+        end
+        
+        local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
+        local customSecondaryColor = nil
+        if hasCustomSecondaryColor then
+            customSecondaryColor = {GetVehicleCustomSecondaryColour(vehicle)}
+        end
+        local extras = {}
 
     for extraId = 0, 12 do
         if DoesExtraExist(vehicle, extraId) then
