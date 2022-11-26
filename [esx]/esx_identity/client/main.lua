@@ -29,7 +29,7 @@ RegisterNUICallback('ready', function(data, cb)
 end)
 
 if not Config.UseDeferrals then
-    function EnableGui(state)
+    function setGuiState(state)
         SetNuiFocus(state, state)
         guiEnabled = state
 
@@ -45,7 +45,7 @@ if not Config.UseDeferrals then
     RegisterNetEvent('esx_identity:showRegisterIdentity', function()
         TriggerEvent('esx_skin:resetFirstSpawn')
 
-        if not ESX.PlayerData.dead then EnableGui(true) end
+        if not ESX.PlayerData.dead then setGuiState(true) end
     end)
 
     RegisterNUICallback('register', function(data, cb)
@@ -59,7 +59,7 @@ if not Config.UseDeferrals then
             end
 
             ESX.ShowNotification(TranslateCap('thank_you_for_registering'))
-            EnableGui(false)
+            setGuiState(false)
 
             if not ESX.GetConfig().Multichar then
                 TriggerEvent('esx_skin:playerRegistered')
