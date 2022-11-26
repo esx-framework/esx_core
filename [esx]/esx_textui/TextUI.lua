@@ -1,6 +1,6 @@
 Debug = ESX.GetConfig().EnableDebug
 local IsShowing = false
----@param message any
+---@param message string
 ---@param Type string
 local function TextUI(message, type)
     IsShowing = true

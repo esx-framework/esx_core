@@ -2,6 +2,20 @@ local playerIdentity = {}
 local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
 
+local function deleteIdentityFromDatabase(xPlayer)
+    MySQL.query.await(
+        'UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?',
+        {nil, nil, nil, nil, nil, nil, xPlayer.identifier})
+
+    if Config.FullCharDelete then
+        MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?',
+            {{'bank_savings', 'caution'}, xPlayer.identifier})
+
+        MySQL.prepare.await('UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?',
+            {'\'{}\'', {'user_ears', 'user_glasses', 'user_helmet', 'user_mask'}, xPlayer.identifier})
+    end
+end
+
 local function deleteIdentity(xPlayer)
     if alreadyRegistered[xPlayer.identifier] then
         xPlayer.setName(('%s %s'):format(nil, nil))
@@ -18,20 +32,6 @@ local function saveIdentityToDatabase(identifier, identity)
     MySQL.update.await(
         'UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?',
         {identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier})
-end
-
-local function deleteIdentityFromDatabase(xPlayer)
-    MySQL.query.await(
-        'UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?',
-        {nil, nil, nil, nil, nil, nil, xPlayer.identifier})
-
-    if Config.FullCharDelete then
-        MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?',
-            {{'bank_savings', 'caution'}, xPlayer.identifier})
-
-        MySQL.prepare.await('UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?',
-            {'\'{}\'', {'user_ears', 'user_glasses', 'user_helmet', 'user_mask'}, xPlayer.identifier})
-    end
 end
 
 local function checkDate(str)
@@ -293,6 +293,25 @@ if Config.UseDeferrals then
         end
     end)
 else
+	local function setIdentity(xPlayer)
+		if alreadyRegistered[xPlayer.identifier] then
+			local currentIdentity = playerIdentity[xPlayer.identifier]
+
+			xPlayer.setName(('%s %s'):format(currentIdentity.firstName, currentIdentity.lastName))
+			xPlayer.set('firstName', currentIdentity.firstName)
+			xPlayer.set('lastName', currentIdentity.lastName)
+			xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
+			xPlayer.set('sex', currentIdentity.sex)
+			xPlayer.set('height', currentIdentity.height)
+            TriggerClientEvent('esx_identity:setPlayerData', xPlayer.source, currentIdentity)
+			if currentIdentity.saveToDatabase then
+				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
+			end
+
+			playerIdentity[xPlayer.identifier] = nil
+		end
+	end
+	
 	local function checkIdentity(xPlayer)
 		MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?',
             {xPlayer.identifier}, function(result)
@@ -317,25 +336,6 @@ else
                     TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
                 end
             end)
-	end
-
-	local function setIdentity(xPlayer)
-		if alreadyRegistered[xPlayer.identifier] then
-			local currentIdentity = playerIdentity[xPlayer.identifier]
-
-			xPlayer.setName(('%s %s'):format(currentIdentity.firstName, currentIdentity.lastName))
-			xPlayer.set('firstName', currentIdentity.firstName)
-			xPlayer.set('lastName', currentIdentity.lastName)
-			xPlayer.set('dateofbirth', currentIdentity.dateOfBirth)
-			xPlayer.set('sex', currentIdentity.sex)
-			xPlayer.set('height', currentIdentity.height)
-            TriggerClientEvent('esx_identity:setPlayerData', xPlayer.source, currentIdentity)
-			if currentIdentity.saveToDatabase then
-				saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
-			end
-
-			playerIdentity[xPlayer.identifier] = nil
-		end
 	end
 
 	if not multichar then
