@@ -142,14 +142,14 @@ if ESX.GetConfig().Multichar then
 	end
 
 	function CharacterOptions(Characters, slots, SelectedCharacter)
-		local elements = {{title = "Character: ".. Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname,icon = "fa-regular fa-user", unselectable = true}, 
-		{title = "Return", unselectable = false,icon = "fa-solid fa-arrow-left",description ="Return To Character Selection.", action = "return"}}
+		local elements = {{title = _('char_play'.. Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true}, 
+		{title = _('return'), unselectable = false,icon = "fa-solid fa-arrow-left",description =_('return_description'), action = "return"}}
 		if not Characters[SelectedCharacter.value].disabled then 
-			elements[3] = {title = _('char_play'), description ="Continue Into The City.", icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
+			elements[3] = {title = _('char_play'), description =_('char_play_description'), icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
 		else
-			elements[3] = {title = _('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description ="This Character Is Unusable.",}
+			elements[3] = {title = _('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description =_('char_disabled_description'),}
 		end
-		if Config.CanDelete then elements[4] = {title = _('char_delete'),icon ="fa-solid fa-xmark",description ="Permanently Remove This Character.", action = 'delete', value = SelectedCharacter.value} end
+		if Config.CanDelete then elements[4] = {title = _('char_delete'),icon ="fa-solid fa-xmark",description =_('char_delete_description'), action = 'delete', value = SelectedCharacter.value} end
 		ESX.OpenContext("left", elements, function(element, Action)
 			if Action.action == "play" then
 				SendNUIMessage({
