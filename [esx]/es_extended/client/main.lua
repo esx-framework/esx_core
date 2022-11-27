@@ -711,26 +711,22 @@ AddEventHandler("esx:freezePlayer", function(input)
 end)
 
 RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
-	local Model = Model
-	local VehicleType = GetVehicleClassFromName(Model)
-	local type = "automobile"
-	if VehicleType == 15 then
-		type = "heli"
-	elseif VehicleType == 16 then
-		type = "plane"
-	elseif VehicleType == 14 then
-		type = "boat"
-	elseif VehicleType == 11 then
-		type = "trailer"
-	elseif VehicleType == 21 then
-		type = "train"
-	elseif VehicleType == 13 or VehicleType == 8 then
-		type = "bike"
-	end
 	if Model == `submersible` or Model == `submersible2` then
-		type = "submarine"
+		return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
 	end
-	TriggerServerEvent("esx:ReturnVehicleType", type, Request)
+
+	local VehicleType = GetVehicleClassFromName(Model)
+	local types = {
+		[8] = "bike",
+		[11] = "trailer",
+		[13] = "bike",
+		[14] = "boat",
+		[15] = "heli",
+		[16] = "plane",
+		[21] = "train",
+	}
+
+	TriggerServerEvent("esx:ReturnVehicleType", types[VehicleType] or "automobile", Request)
 end)
 
 
