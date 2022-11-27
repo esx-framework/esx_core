@@ -266,4 +266,11 @@ Locales['br'] = {
   ['fuel_tank'] = 'tanque de combustível',
   ['windows'] = 'janelas',
   ['stickers'] = 'autocolantes',
+
+-- Xenon Colors
+  ['mintgreen'] = 'Mint Green',
+  ['goldenshower'] = 'Golden Shower',
+  ['ponypink'] = 'Pony Pink',
+  ['hotpink'] = 'Hot Pink',
+  ['blacklight'] = 'Blacklight',
 }

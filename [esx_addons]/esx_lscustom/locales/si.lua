@@ -266,4 +266,11 @@ Locales['si'] = {
   ['fuel_tank'] = 'rezervoar za gorivo',
   ['windows'] = 'okna',
   ['stickers'] = 'nalepke',
+
+-- Xenon Colors
+  ['mintgreen'] = 'Mint Green',
+  ['goldenshower'] = 'Golden Shower',
+  ['ponypink'] = 'Pony Pink',
+  ['hotpink'] = 'Hot Pink',
+  ['blacklight'] = 'Blacklight',
 }
