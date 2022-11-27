@@ -3,9 +3,7 @@ local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 9
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
-    if ESX.IsPlayerLoaded() then
-        TriggerServerEvent('esx_skin:setWeight', skin)
-    end
+    TriggerServerEvent('esx_skin:setWeight', skin)
 end)
 
 function OpenMenu(submitCb, cancelCb, restrict)
