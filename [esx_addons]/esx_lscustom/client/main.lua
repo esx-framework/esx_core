@@ -17,6 +17,15 @@ AddEventHandler('esx_lscustom:installMod', function()
     TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
 end)
 
+RegisterNetEvent('esx_lscustom:restoreMods', function(netId, props)
+    local xVehicle = NetworkGetEntityFromNetworkId(netId)
+    if props ~= nil then
+        if DoesEntityExist(xVehicle) then
+            ESX.Game.SetVehicleProperties(xVehicle, props)
+        end
+    end
+end)
+
 RegisterNetEvent('esx_lscustom:cancelInstallMod')
 AddEventHandler('esx_lscustom:cancelInstallMod', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -51,7 +60,6 @@ AddEventHandler('onResourceStop', function(resource)
 	end
 end)
 
-
 function OpenLSMenu(elems, menuName, menuTitle, parent)
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), menuName, {
         title = menuTitle,
@@ -82,7 +90,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
                             break
                         end
                     end
-
+                    
                     if isRimMod then
                         price = math.floor(vehiclePrice * data.current.price / 100)
                         TriggerServerEvent('esx_lscustom:buyMod', price)
@@ -120,6 +128,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
             lsMenuIsShowed = false
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
             FreezeEntityPosition(vehicle, false)
+            TriggerServerEvent('esx_lscustom:stopModing', myCar.plate)
             myCar = {}
         end
     end, function(data, menu) -- on change
@@ -154,6 +163,14 @@ function UpdateMods(data)
             props['modSmokeEnabled'] = true
             ESX.Game.SetVehicleProperties(vehicle, props)
             props = {}
+        elseif data.modType == 'xenonColor' then
+            if data.modNum then
+                props['modXenon'] = true
+            else
+                props['modXenon'] = false
+            end
+            ESX.Game.SetVehicleProperties(vehicle, props)
+            props = {}
         end
 
         props[data.modType] = data.modNum
@@ -170,7 +187,6 @@ function GetAction(data)
     local playerPed = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(playerPed, false)
     local currentMods = ESX.Game.GetVehicleProperties(vehicle)
-
     if data.value == 'modSpeakers' or data.value == 'modTrunk' or data.value == 'modHydrolic' or data.value ==
         'modEngineBlock' or data.value == 'modAirFilter' or data.value == 'modStruts' or data.value == 'modTank' then
         SetVehicleDoorOpen(vehicle, 4, false)
@@ -203,7 +219,7 @@ function GetAction(data)
 
             if v.modType then
 
-                if v.modType == 22 then
+                if v.modType == 22 or v.modType == 'xenonColor' then
                     table.insert(elements, {
                         label = " " .. TranslateCap('by_default'),
                         modType = k,
@@ -228,6 +244,14 @@ function GetAction(data)
                         label = " " .. TranslateCap('no_turbo'),
                         modType = k,
                         modNum = false
+                    })
+                elseif v.modType == 23 then
+                    table.insert(elements, {
+                        label = " " .. TranslateCap('by_default'),
+                        modType = "modFrontWheels",
+                        modNum = -1,
+                        wheelType = -1,
+                        price = Config.DefaultWheelsPriceMultiplier
                     })
                 else
                     table.insert(elements, {
@@ -282,6 +306,16 @@ function GetAction(data)
                         modType = k,
                         modNum = true
                     })
+                elseif v.modType == 'xenonColor' then -- XENON COLOR
+                    local xenonColors = GetXenonColors()
+                    price = math.floor(vehiclePrice * v.price / 100)
+                    for i = 1, #xenonColors, 1 do
+                        table.insert(elements, {
+                            label = xenonColors[i].label .. ' - <span style="color:green;">$' .. price .. '</span>',
+                            modType = k,
+                            modNum = xenonColors[i].index
+                        })
+                    end
                 elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then -- NEON & SMOKE COLOR
                     local neons = GetNeons()
                     price = math.floor(vehiclePrice * v.price / 100)
@@ -503,6 +537,9 @@ CreateThread(function()
                                 local vehicle = GetVehiclePedIsIn(playerPed, false)
                                 FreezeEntityPosition(vehicle, true)
                                 myCar = ESX.Game.GetVehicleProperties(vehicle)
+                                
+                                local netId = NetworkGetNetworkIdFromEntity(vehicle)
+                                TriggerServerEvent('esx_lscustom:startModing', myCar, netId)
 
                                 ESX.UI.Menu.CloseAll()
                                 GetAction({
@@ -524,7 +561,7 @@ CreateThread(function()
                                             DisableControlAction(0, 75, true) -- Disable exit vehicle
                                             DisableControlAction(27, 75, true) -- Disable exit vehicle
                                         end
-                                        Wait(0)
+                                        Wait(Sleep)
                                     end
                                 end)
                             end

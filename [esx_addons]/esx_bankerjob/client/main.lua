@@ -12,53 +12,35 @@ end)
 
 function OpenBankActionsMenu()
 	local elements = {
-		{label = TranslateCap('customers'), value = 'customers'},
-		{label = TranslateCap('billing'),   value = 'billing'}
+		{unselectable = true, icon = "fas fa-bank", title = TranslateCap("bank")},
+		{icon = "fas fa-users", title = TranslateCap("customers"), value = "customers"},
+		{icon = "fas fa-scroll", title = TranslateCap("billing"),   value = "billing"}
 	}
 
 	if ESX.PlayerData.job.grade_name == 'boss' then
-		table.insert(elements, { label = TranslateCap('boss_actions'), value = 'boss_actions' })
+		elements[#elements+1] = {
+			icon = "fas fa-wallet",
+			title = TranslateCap("boss_actions"),
+			value = "boss_actions"
+		}
 	end
 
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'bank_actions', {
-		title    = TranslateCap('bank'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-		if data.current.value == 'customers' then
+	ESX.OpenContext("right", elements, function(menu,element)
+		if element.value == "customers" then
 			OpenCustomersMenu()
-		elseif data.current.value == 'billing' then
-			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
-				title = TranslateCap('bill_amount')
-			}, function(data, menu)
-				local amount = tonumber(data.value)
-
-				if amount == nil then
-					ESX.ShowNotification(TranslateCap('invalid_amount'))
-				else
-					menu.close()
-
-					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
-					if closestPlayer == -1 or closestDistance > 5.0 then
-						ESX.ShowNotification(TranslateCap('no_player_nearby'))
-					else
-						TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_banker', 'Banque', amount)
-					end
-				end
-			end, function(data, menu)
+		elseif element.value == "billing" then
+			CreateBillingDialog()
+		elseif element.value == "boss_actions" then
+			TriggerEvent('esx_society:openBossMenu', 'banker', function(data, menu)
 				menu.close()
-			end)
-		elseif data.current.value == 'boss_actions' then
-			TriggerEvent('esx_society:openBossMenu', 'banker', function (data, menu)
-			menu.close()
 			end, {wash = false})
+			CurrentAction     = 'bank_actions_menu'
+			CurrentActionMsg  = TranslateCap('press_input_context_to_open_menu')
+			CurrentActionData = {}
 		end
-	end, function(data, menu)
-		menu.close()
-
+	end, function(menu)
 		CurrentAction     = 'bank_actions_menu'
 		CurrentActionMsg  = TranslateCap('press_input_context_to_open_menu')
 		CurrentActionData = {}
@@ -68,66 +50,98 @@ end
 function OpenCustomersMenu()
 	ESX.TriggerServerCallback('esx_bankerjob:getCustomers', function(customers)
 		local elements = {
-			head = { TranslateCap('customer'), TranslateCap('balance'), TranslateCap('actions') },
-			rows = {}
+			{unselectable = true, icon = "fas fa-users", title = TranslateCap('customer')}
 		}
 
 		for i=1, #customers do
-			table.insert(elements.rows, {
-				data = customers[i],
-				cols = {
-					customers[i].name,
-					customers[i].bankSavings,
-					'{{' .. TranslateCap('deposit') .. '|deposit}} {{' .. TranslateCap('withdraw') .. '|withdraw}}'
-				}
-			})
+			elements[#elements+1] = {
+				icon = "fas fa-user",
+				title = customers[i].name,
+				bankSavings = customers[i].bankSavings,
+				data = customers[i]
+			}
 		end
 
-		ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'customers', elements, function(data, menu)
-			local customer = data.data
+		ESX.OpenContext("right", elements, function(menu,element)
+			local elements2 = {
+				{unselectable = true, icon = "fas fa-user", title = element.title},
+				{unselectable = true, icon = "fas fa-wallet", title = "$"..ESX.Math.GroupDigits(element.bankSavings)},
+				{icon = "fas fa-wallet", title = TranslateCap('deposit'), value = "deposit"},
+				{icon = "fas fa-wallet", title = TranslateCap('withdraw'), value = "withdraw"},
+			}
+			ESX.OpenContext("right", elements2, function(menu2,element2)
+				local customer = element.data
+				if element2.value == "deposit" then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_deposit_amount', {
+						title = TranslateCap('amount')
+					}, function(data2, menu2)
+						local amount = tonumber(data2.value)
 
-			if data.value == 'deposit' then
-				menu.close()
-
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_deposit_amount', {
-					title = TranslateCap('amount')
-				}, function(data2, menu2)
-					local amount = tonumber(data2.value)
-
-					if amount == nil then
-						ESX.ShowNotification(TranslateCap('invalid_amount'))
-					else
+						if amount == nil then
+							ESX.ShowNotification(TranslateCap('invalid_amount'))
+						else
+							menu2.close()
+							TriggerServerEvent('esx_bankerjob:customerDeposit', customer.source, amount)
+							ESX.ShowNotification("You have deposited $"..amount.." into "..element.title.."s account.")
+							OpenCustomersMenu()
+						end
+					end, function(data2, menu2)
 						menu2.close()
-						TriggerServerEvent('esx_bankerjob:customerDeposit', customer.source, amount)
 						OpenCustomersMenu()
-					end
-				end, function(data2, menu2)
-					menu2.close()
-					OpenCustomersMenu()
-				end)
-			elseif data.value == 'withdraw' then
-				menu.close()
+					end)
+				elseif element2.value == "withdraw" then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_withdraw_amount', {
+						title = TranslateCap('amount')
+					}, function(data2, menu2)
+						local amount = tonumber(data2.value)
 
-				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'customer_withdraw_amount', {
-					title = TranslateCap('amount')
-				}, function(data2, menu2)
-					local amount = tonumber(data2.value)
-
-					if amount == nil then
-						ESX.ShowNotification(TranslateCap('invalid_amount'))
-					else
+						if amount == nil then
+							ESX.ShowNotification(TranslateCap('invalid_amount'))
+						else
+							menu2.close()
+							TriggerServerEvent('esx_bankerjob:customerWithdraw', customer.source, amount)
+							ESX.ShowNotification("You have withdrawn $"..amount.." from "..element.title.."s account.")
+							OpenCustomersMenu()
+						end
+					end, function(data2, menu2)
 						menu2.close()
-						TriggerServerEvent('esx_bankerjob:customerWithdraw', customer.source, amount)
 						OpenCustomersMenu()
-					end
-				end, function(data2, menu2)
-					menu2.close()
-					OpenCustomersMenu()
-				end)
-			end
-		end, function(data, menu)
-			menu.close()
+					end)
+				end
+			end, function(menu)	
+				CurrentAction     = 'bank_actions_menu'
+				CurrentActionMsg  = TranslateCap('press_input_context_to_open_menu')
+				CurrentActionData = {}
+			end)
+		end, function(menu)
+			CurrentAction     = 'bank_actions_menu'
+			CurrentActionMsg  = TranslateCap('press_input_context_to_open_menu')
+			CurrentActionData = {}
 		end)
+	end)
+end
+
+function CreateBillingDialog()
+	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
+		title = TranslateCap('bill_amount')
+	}, function(data, menu)
+		local amount = tonumber(data.value)
+
+		if amount == nil then
+			ESX.ShowNotification(TranslateCap('invalid_amount'))
+		else
+			menu.close()
+
+			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+
+			if closestPlayer == -1 or closestDistance > 5.0 then
+				ESX.ShowNotification(TranslateCap('no_player_nearby'))
+			else
+				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_banker', 'Bank', amount)
+			end
+		end
+	end, function(data, menu)
+		menu.close()
 	end)
 end
 
@@ -141,7 +155,7 @@ end)
 
 AddEventHandler('esx_bankerjob:hasExitedMarker', function (zone)
 	CurrentAction = nil
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 end)
 
 -- Create Blips
