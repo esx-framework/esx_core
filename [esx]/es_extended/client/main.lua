@@ -611,12 +611,12 @@ AddEventHandler("esx:tpm", function()
 					-- If we can't find the coords, set the coords to the old ones.
 					-- We don't unpack them before since they aren't in a loop and only called once.
 					SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
-					ESX.ShowNotification('Successfully Teleported', true, false, 140)
+					ESX.ShowNotification(TranslateCap('tpm_success'), true, false, 140)
 			end
 	
 			-- If Z coord was found, set coords in found coords.
 			SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-			ESX.ShowNotification('Successfully Teleported', true, false, 140)
+			ESX.ShowNotification(TranslateCap('tpm_success'), true, false, 140)
 		end
 	end)
 end)

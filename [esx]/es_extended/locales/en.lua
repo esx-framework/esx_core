@@ -108,6 +108,7 @@ Locales['en'] = {
   ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
   ['command_giveammo_weapon'] = 'Weapon name',
   ['command_giveammo_ammo'] = 'Ammo Quantity',
+  ['tpm_success'] = 'Successfully Teleported',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',

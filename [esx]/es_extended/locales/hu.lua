@@ -105,9 +105,10 @@ Locales["hu"] = {
 	["commanderror_invalidcommand"] = "Érvénytelen parancs - /%s",
 	["commanderror_invalidplayerid"] = "Megadott játékos nem online.",
 	["commandgeneric_playerid"] = "Játékos Szerver Id",
-	['command_giveammo_noweapon_found'] = '%s does not have that weapon',
-	['command_giveammo_weapon'] = 'Weapon name',
-	['command_giveammo_ammo'] = 'Ammo Quantity',
+	['command_giveammo_noweapon_found'] = 'Nincs ilyen fegyvered: %s',
+	['command_giveammo_weapon'] = 'Fegyver név',
+	['command_giveammo_ammo'] = 'Lőszer mennyiség',
+	['tpm_success'] = 'Sikeres teleportálás',
 
 	-- Locale settings
 	["locale_digit_grouping_symbol"] = ",",
