@@ -108,7 +108,12 @@ Locales["hu"] = {
 	['command_giveammo_noweapon_found'] = 'Nincs ilyen fegyvered: %s',
 	['command_giveammo_weapon'] = 'Fegyver név',
 	['command_giveammo_ammo'] = 'Lőszer mennyiség',
+	['tpm_nowaypoint'] = 'Nincs kijelölve pozíció!',
 	['tpm_success'] = 'Sikeres teleportálás',
+
+	['noclip_message'] = 'Noclip %s',
+	['enabled'] = '~g~engedélyezve~s~',
+	['disabled'] = '~r~letiltva~s~',
 
 	-- Locale settings
 	["locale_digit_grouping_symbol"] = ",",
