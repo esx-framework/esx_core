@@ -163,6 +163,14 @@ function UpdateMods(data)
             props['modSmokeEnabled'] = true
             ESX.Game.SetVehicleProperties(vehicle, props)
             props = {}
+        elseif data.modType == 'xenonColor' then
+            if data.modNum then
+                props['modXenon'] = true
+            else
+                props['modXenon'] = false
+            end
+            ESX.Game.SetVehicleProperties(vehicle, props)
+            props = {}
         end
 
         props[data.modType] = data.modNum
@@ -211,7 +219,7 @@ function GetAction(data)
 
             if v.modType then
 
-                if v.modType == 22 then
+                if v.modType == 22 or v.modType == 'xenonColor' then
                     table.insert(elements, {
                         label = " " .. TranslateCap('by_default'),
                         modType = k,
@@ -298,6 +306,16 @@ function GetAction(data)
                         modType = k,
                         modNum = true
                     })
+                elseif v.modType == 'xenonColor' then -- XENON COLOR
+                    local xenonColors = GetXenonColors()
+                    price = math.floor(vehiclePrice * v.price / 100)
+                    for i = 1, #xenonColors, 1 do
+                        table.insert(elements, {
+                            label = xenonColors[i].label .. ' - <span style="color:green;">$' .. price .. '</span>',
+                            modType = k,
+                            modNum = xenonColors[i].index
+                        })
+                    end
                 elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then -- NEON & SMOKE COLOR
                     local neons = GetNeons()
                     price = math.floor(vehiclePrice * v.price / 100)

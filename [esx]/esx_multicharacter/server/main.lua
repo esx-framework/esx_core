@@ -81,7 +81,7 @@ elseif ESX.GetConfig().Multichar == true then
 					dateofbirth = v.dateofbirth,
 					skin = v.skin and json.decode(v.skin) or {},
 					disabled = v.disabled,
-					sex = v.sex == 'm' and _('male') or _('female')
+					sex = v.sex == 'm' and TranslateCap('male') or TranslateCap('female')
 				}
 			end
 		end
