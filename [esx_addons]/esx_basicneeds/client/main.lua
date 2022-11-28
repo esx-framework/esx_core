@@ -103,3 +103,26 @@ AddEventHandler('esx_basicneeds:onUse', function(type, prop_name)
 		end)
 	end
 end)
+
+-- Backwards compatibility
+RegisterNetEvent('esx_basicneeds:onEat')
+AddEventHandler('esx_basicneeds:onEat', function(prop_name)
+    local Invoke = GetInvokingResource()
+    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onEat^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/basicneeds^7 for more info!'):format(Invoke))
+
+    if not prop_name then
+        prop_name = 'prop_cs_burger_01'
+    end
+    TriggerEvent('esx_basicneeds:onUse', 'food', prop_name)
+end)
+
+RegisterNetEvent('esx_basicneeds:onDrink')
+AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
+    local Invoke = GetInvokingResource()
+    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onEat^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/basicneeds^7 for more info!'):format(Invoke))
+
+    if not prop_name then
+        prop_name = 'prop_ld_flow_bottle'
+    end
+    TriggerEvent('esx_basicneeds:onUse', 'drink', prop_name)
+end)
