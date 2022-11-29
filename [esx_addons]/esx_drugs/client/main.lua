@@ -21,7 +21,6 @@ CreateThread(function()
 			inZoneDrugShop = false
 			if menuOpen then
 				menuOpen=false
-				ESX.UI.Menu.CloseAll()
 			end
 		end
 
@@ -62,36 +61,39 @@ CreateThread(function ()
 end)
 
 function OpenDrugShop()
-	ESX.UI.Menu.CloseAll()
-	local elements = {}
+	local elements = {
+		{unselectable = true, icon = "fas fa-cannabis", title = TranslateCap('dealer_title')}
+	}
 	menuOpen = true
 
 	for k, v in pairs(ESX.GetPlayerData().inventory) do
 		local price = Config.DrugDealerItems[v.name]
 
 		if price and v.count > 0 then
-			table.insert(elements, {
-				label = ('%s - <span style="color:green;">%s</span>'):format(v.label, TranslateCap('dealer_item', ESX.Math.GroupDigits(price))),
+			elements[#elements+1] = {
+				icon = "fas fa-shopping-basket",
+				title = ('%s - <span style="color:green;">%s</span>'):format(v.label, TranslateCap('dealer_item', ESX.Math.GroupDigits(price))),
 				name = v.name,
 				price = price,
-
-				-- menu properties
-				type = 'slider',
-				value = 1,
-				min = 1,
-				max = v.count
-			})
+			}
 		end
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'drug_shop', {
-		title    = TranslateCap('dealer_title'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-		TriggerServerEvent('esx_drugs:sellDrug', data.current.name, data.current.value)
-	end, function(data, menu)
-		menu.close()
+	ESX.OpenContext("right", elements, function(menu,element)
+		local elements2 = {
+			{unselectable = true, icon = "fas fa-shopping-basket", title = element.title},
+			{icon = "fas fa-shopping-basket", title = "Amount", input = true, inputType = "number", inputPlaceholder = "Amount you want to sell", inputMin = Config.SellMenu.Min, inputMax = Config.SellMenu.Max},
+			{icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
+		}
+
+		ESX.OpenContext("right", elements2, function(menu2,element2)
+			local amount = menu2.eles[2].inputValue
+			ESX.CloseContext()
+			TriggerServerEvent('esx_drugs:sellDrug', element.name, amount)
+		end, function(menu)
+			menuOpen = false
+		end)
+	end, function(menu)
 		menuOpen = false
 	end)
 end
@@ -99,7 +101,7 @@ end
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
 		if menuOpen then
-			ESX.UI.Menu.CloseAll()
+			ESX.CloseContext()
 		end
 	end
 end)
@@ -109,39 +111,20 @@ function OpenBuyLicenseMenu(licenseName)
 	local license = Config.LicensePrices[licenseName]
 
 	local elements = {
-		{
-			label = TranslateCap('license_no'),
-			value = 'no'
-		},
-
-		{
-			label = ('%s - <span style="color:green;">%s</span>'):format(license.label, TranslateCap('dealer_item', ESX.Math.GroupDigits(license.price))),
-			value = licenseName,
-			price = license.price,
-			licenseName = license.label
-		}
+		{unselectable = true, title = TranslateCap('purchase_license')},
+		{title = ('%s - <span style="color:green;">%s</span>'):format(license.label, TranslateCap('dealer_item', ESX.Math.GroupDigits(license.price))), value = licenseName, price = license.price, licenseName = license.label}
 	}
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'license_shop', {
-		title    = TranslateCap('license_title'),
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-
-		if data.current.value ~= 'no' then
-			ESX.TriggerServerCallback('esx_drugs:buyLicense', function(boughtLicense)
-				if boughtLicense then
-					ESX.ShowNotification(TranslateCap('license_bought', data.current.licenseName, ESX.Math.GroupDigits(data.current.price)))
-				else
-					ESX.ShowNotification(TranslateCap('license_bought_fail', data.current.licenseName))
-				end
-			end, data.current.value)
-		else
-			menu.close()
-		end
-
-	end, function(data, menu)
-		menu.close()
+	ESX.OpenContext("right", elements, function(menu,element)
+		ESX.TriggerServerCallback('esx_drugs:buyLicense', function(boughtLicense)
+			if boughtLicense then
+				ESX.CloseContext()
+				ESX.ShowNotification(TranslateCap('license_bought', element.licenseName, ESX.Math.GroupDigits(element.price)))
+			else
+				ESX.ShowNotification(TranslateCap('license_bought_fail', element.licenseName))
+			end
+		end, element.value)
+	end, function(menu)
 		menuOpen = false
 	end)
 end
