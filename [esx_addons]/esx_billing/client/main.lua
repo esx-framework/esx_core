@@ -27,7 +27,7 @@ function ShowBillsMenu()
 end
 
 RegisterCommand('showbills', function()
-	if not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'billing') then
+	if not isDead then
 		ShowBillsMenu()
 	end
 end, false)
