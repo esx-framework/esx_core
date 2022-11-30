@@ -264,19 +264,6 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 	end)
 end
 
-	WaitForVehicleToLoad(elements[1].model)
-	ESX.Game.SpawnLocalVehicle(elements[1].model, shopCoords, 0.0, function(vehicle)
-		table.insert(spawnedVehicles, vehicle)
-		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-		FreezeEntityPosition(vehicle, true)
-		SetModelAsNoLongerNeeded(elements[1].model)
-
-		if elements[1].props then
-			ESX.Game.SetVehicleProperties(vehicle, elements[1].props)
-		end
-	end)
-end
-
 CreateThread(function()
 	while true do
 		sleep = 1500
