@@ -104,7 +104,7 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
         TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
             local item = inventory.getItem(itemName)
 
-            if item.count > 0 then
+            if sourceItem.count >= count and count > 0 then
                 xPlayer.removeInventoryItem(itemName, count)
                 inventory.addItem(itemName, count)
                 xPlayer.showNotification(TranslateCap('have_deposited', count, item.label))
