@@ -322,24 +322,24 @@ function OpenGetStocksMenu()
 
         ESX.OpenContext("right", elements, function(menu,element)
             local itemName = element.value
-            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_get_item_count', {
-                title = TranslateCap('quantity')
-            }, function(data2, menu2)
-                local count = tonumber(data2.value)
+            local elements2 = {
+                {unselectable = true, icon = "fas fa-box", title = element.title},
+                {title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to withdraw.."},
+                {icon = "fas fa-check-double", title = "Confirm", value = "confirm"}
+            }
+
+            ESX.OpenContext("right", elements2, function(menu2,element2)
+                local count = tonumber(menu2.eles[2].inputValue)
 
                 if count == nil then
                     ESX.ShowNotification(TranslateCap('quantity_invalid'))
                 else
-                    menu2.close()
                     ESX.CloseContext()
-
-                    -- todo: refresh on callback
                     TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
+
                     Wait(1000)
                     OpenGetStocksMenu()
                 end
-            end, function(data2, menu2)
-                menu2.close()
             end)
         end)
     end, function(menu)
@@ -370,24 +370,24 @@ function OpenPutStocksMenu()
         ESX.OpenContext("right", elements, function(menu,element)
             local itemName = element.value
 
-            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count', {
-                title = TranslateCap('quantity')
-            }, function(data2, menu2)
-                local count = tonumber(data2.value)
+            local elements2 = {
+                {unselectable = true, icon = "fas fa-box", title = element.title},
+                {title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to deposit.."},
+                {icon = "fas fa-check-double", title = "Confirm", value = "confirm"}
+            }
+
+            ESX.OpenContext("right", elements2, function(menu2,element2)
+                local count = tonumber(menu2.eles[2].inputValue)
 
                 if count == nil then
                     ESX.ShowNotification(TranslateCap('quantity_invalid'))
-                else
-                    menu2.close()
+                else                    
                     ESX.CloseContext()
-
                     -- todo: refresh on callback
                     TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
                     Wait(1000)
                     OpenPutStocksMenu()
                 end
-            end, function(data2, menu2)
-                menu2.close()
             end)
         end)
     end, function(menu)
