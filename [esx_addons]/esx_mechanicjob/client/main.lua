@@ -481,7 +481,7 @@ function OpenGetStocksMenu()
 
 			local elements2 = {
 				{unselectable = true, icon = "fas fa-box", title = element.title},
-				{title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to deposit.."},
+				{title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to withdraw.."},
 				{icon = "fas fa-check-double", title = "Confirm", value = "confirm"}
 			}
 
@@ -526,7 +526,7 @@ function OpenPutStocksMenu()
 
 			local elements2 = {
 				{unselectable = true, icon = "fas fa-box", title = element.title},
-				{title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to withdraw.."},
+				{title = "Amount", input = true, inputType = "number", inputMin = 1, inputMax = 100, inputPlaceholder = "Amount to deposit.."},
 				{icon = "fas fa-check-double", title = "Confirm", value = "confirm"}
 			}
 
