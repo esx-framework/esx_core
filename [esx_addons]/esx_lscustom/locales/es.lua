@@ -268,9 +268,9 @@ Locales['es'] = {
   ['stickers'] = 'calcomanías',
 
 -- Xenon Colors
-  ['mintgreen'] = 'Mint Green',
-  ['goldenshower'] = 'Golden Shower',
-  ['ponypink'] = 'Pony Pink',
-  ['hotpink'] = 'Hot Pink',
-  ['blacklight'] = 'Blacklight',
+  ['mintgreen'] = 'Menta verde',
+  ['goldenshower'] = 'Baño de oro',
+  ['ponypink'] = 'Poni rosa',
+  ['hotpink'] = 'Rosa caliente',
+  ['blacklight'] = 'Luz negra',
 }
