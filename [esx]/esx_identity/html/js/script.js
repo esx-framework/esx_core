@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $.post('http://esx_identity/ready', JSON.stringify({}));
+  $.post('https://esx_identity/ready', JSON.stringify({}));
 
   window.addEventListener('message', function (event) {
     if (event.data.type === 'enableui') {
@@ -22,7 +22,7 @@ $(document).ready(function () {
     const formattedDate = `${day}/${month}/${year}`;
 
     $.post(
-      'http://esx_identity/register',
+      'https://esx_identity/register',
       JSON.stringify({
         firstname: $('#firstname').val(),
         lastname: $('#lastname').val(),
