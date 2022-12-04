@@ -27,17 +27,14 @@ RegisterNetEvent('esx:setJob',function(job)
 end)
 
 function OpenMenu()
-	ESX.UI.Menu.CloseAll()
+	local elements = {
+		{unselectable = true, icon = "fas fa-shirt", title = TranslateCap('cloakroom')},
+		{icon = "fas fa-shirt", title = TranslateCap('job_wear'), value = "job_wear"},
+		{icon = "fas fa-shirt", title = TranslateCap('citizen_wear'), value = "citizen_wear"},
+	}
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom',
-	{
-		title    = TranslateCap('cloakroom'),
-		elements = {
-			{label = TranslateCap('job_wear'),     value = 'job_wear'},
-			{label = TranslateCap('citizen_wear'), value = 'citizen_wear'}
-		}
-	}, function(data, menu)
-		if data.current.value == 'citizen_wear' then
+	ESX.OpenContext("right", elements, function(menu,element)
+		if element.value == "citizen_wear" then
 			onDuty = false
 			ESX.ShowNotification(TranslateCap('offduty'),"success")
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -49,7 +46,7 @@ function OpenMenu()
 					end)
 				end)
 			end)
-		elseif data.current.value == 'job_wear' then
+		elseif element.value == "job_wear" then
 			onDuty = true
 			ESX.ShowNotification(TranslateCap('onduty'), "success")
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
@@ -68,10 +65,6 @@ function OpenMenu()
 				end
 			end)
 		end
-
-		menu.close()
-	end, function(data, menu)
-		menu.close()
 	end)
 end
 

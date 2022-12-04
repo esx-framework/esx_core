@@ -99,12 +99,13 @@ end)
 RegisterNetEvent('esx_taxijob:putStockItems')
 AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
     local xPlayer = ESX.GetPlayerFromId(source)
-
+	local sourceItem = xPlayer.getInventoryItem(itemName)
+		
     if xPlayer.job.name == 'taxi' then
         TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
             local item = inventory.getItem(itemName)
 
-            if item.count > 0 then
+            if sourceItem.count >= count and count > 0 then
                 xPlayer.removeInventoryItem(itemName, count)
                 inventory.addItem(itemName, count)
                 xPlayer.showNotification(TranslateCap('have_deposited', count, item.label))
