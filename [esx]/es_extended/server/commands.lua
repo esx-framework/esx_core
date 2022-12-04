@@ -7,8 +7,9 @@ end, false, {help = TranslateCap('command_setcoords'), validate = true, argument
 }})
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
-	if ESX.DoesJobExist(args.job, args.grade) then
-		args.playerId.setJob(args.job, args.grade)
+	local Jobs_Lower = string.lower(args.job)
+	if ESX.DoesJobExist(Jobs_Lower, args.grade) then
+		args.playerId.setJob(Jobs_Lower, args.grade)
 	else
 		showError(TranslateCap('command_setjob_invalid'))
 	end
