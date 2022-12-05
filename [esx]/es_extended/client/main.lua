@@ -250,9 +250,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(true, item, count)
 		end
 
-		if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:removeInventoryItem')
@@ -269,9 +267,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
 		end
 
-		if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
@@ -463,7 +459,7 @@ end
 
 if not Config.OxInventory and Config.EnableDefaultInventory then
 	RegisterCommand('showinv', function()
-		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		if not ESX.PlayerData.dead then
 			ESX.ShowInventory()
 		end
 	end)
