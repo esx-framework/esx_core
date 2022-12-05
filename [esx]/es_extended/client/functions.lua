@@ -1095,7 +1095,7 @@ function ESX.ShowInventory()
 
     for i=1, #(ESX.PlayerData.accounts) do
         if ESX.PlayerData.accounts[i].money > 0 then
-            local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
+            local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
             elements[#elements+1] = {
@@ -1171,7 +1171,7 @@ function ESX.ShowInventory()
         if element.usable then
             elements2[#elements2+1] = {
                 icon = "fas fa-utensils",
-                title = _U('use'),
+                title = TranslateCap('use'),
                 action = 'use',
                 type = element.type,
                 value = element.value
@@ -1182,7 +1182,7 @@ function ESX.ShowInventory()
             if player ~= -1 and distance <= 3.0 then
                 elements2[#elements2+1] = {
                     icon = "fas fa-hands",
-                    title = _U('give'),
+                    title = TranslateCap('give'),
                     action = 'give',
                     type = element.type,
                     value = element.value
@@ -1191,7 +1191,7 @@ function ESX.ShowInventory()
 
             elements2[#elements2+1] = {
                 icon = "fas fa-trash",
-                title = _U('remove'),
+                title = TranslateCap('remove'),
                 action = 'remove',
                 type = element.type,
                 value = element.value
@@ -1201,7 +1201,7 @@ function ESX.ShowInventory()
         if element.type == 'item_weapon' and element.canGiveAmmo and element.ammo > 0 and player ~= -1 and distance <= 3.0 then
             elements2[#elements2+1] = {
                 icon = "fas fa-gun",
-                title = _U('giveammo'),
+                title = TranslateCap('giveammo'),
                 action = 'give_ammo',
                 type = element.type,
                 value = element.value
@@ -1210,7 +1210,7 @@ function ESX.ShowInventory()
 
         elements2[#elements2+1] = {
             icon = "fas fa-arrow-left",
-            title = _U('return'),
+            title = TranslateCap('return'),
             action = 'return'
         }
 
@@ -1265,15 +1265,15 @@ function ESX.ShowInventory()
                                                 TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
                                                 ESX.CloseContext()
                                             else
-                                                ESX.ShowNotification(_U('amount_invalid'))
+                                                ESX.ShowNotification(TranslateCap('amount_invalid'))
                                             end
                                         end)
                                     end
                                 else
-                                    ESX.ShowNotification(_U('in_vehicle'))
+                                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                                 end
                             else
-                                ESX.ShowNotification(_U('players_nearby'))
+                                ESX.ShowNotification(TranslateCap('players_nearby'))
                                 ESX.CloseContext()
                             end
                         end)
@@ -1307,7 +1307,7 @@ function ESX.ShowInventory()
                                 Wait(1000)
                                 TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
                             else
-                                ESX.ShowNotification(_U('amount_invalid'))
+                                ESX.ShowNotification(TranslateCap('amount_invalid'))
                             end
                         end)
                     end
@@ -1340,20 +1340,20 @@ function ESX.ShowInventory()
                                         TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
                                         ESX.CloseContext()
                                     else
-                                        ESX.ShowNotification(_U('noammo'))
+                                        ESX.ShowNotification(TranslateCap('noammo'))
                                     end
                                 else
-                                    ESX.ShowNotification(_U('amount_invalid'))
+                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
                                 end
                             end)
                         else
-                            ESX.ShowNotification(_U('noammo'))
+                            ESX.ShowNotification(TranslateCap('noammo'))
                         end
                     else
-                        ESX.ShowNotification(_U('players_nearby'))
+                        ESX.ShowNotification(TranslateCap('players_nearby'))
                     end
                 else
-                    ESX.ShowNotification(_U('in_vehicle'))
+                    ESX.ShowNotification(TranslateCap('in_vehicle'))
                 end
             end
         end)
