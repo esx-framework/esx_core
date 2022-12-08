@@ -203,8 +203,8 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 			local NetId = value.NetId
 			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
 			local Tries = 0
-			while not DoesEntityExist(Vehicle) do
-				local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+			while Vehicle == 0 do
+				Vehicle = NetworkGetEntityFromNetworkId(NetId)
 				Wait(100)
 				Tries = Tries + 1
 				if Tries > 300 then
