@@ -359,16 +359,6 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
   TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
 
-RegisterNetEvent('esx:updateCoords')
-AddEventHandler('esx:updateCoords', function()
-  local source = source
-  local xPlayer = ESX.GetPlayerFromId(source)
-
-  if xPlayer then
-    xPlayer.updateCoords()
-  end
-end)
-
 if not Config.OxInventory then
   RegisterNetEvent('esx:updateWeaponAmmo')
   AddEventHandler('esx:updateWeaponAmmo', function(weaponName, ammoCount)
