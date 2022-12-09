@@ -690,28 +690,33 @@ AddEventHandler("esx:freezePlayer", function(input)
 end)
 
 RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
+	local ReturnedType = "automobile"
 	local Model = Model
-	local VehicleType = GetVehicleClassFromName(Model)
-	local type = "automobile"
-	if VehicleType == 15 then
-		type = "heli"
-	elseif VehicleType == 16 then
-		type = "plane"
-	elseif VehicleType == 14 then
-		type = "boat"
-	elseif VehicleType == 11 then
-		type = "trailer"
-	elseif VehicleType == 21 then
-		type = "train"
-	elseif VehicleType == 13 or VehicleType == 8 then
-		type = "bike"
-	end
-	if Model == `submersible` or Model == `submersible2` then
-		type = "submarine"
-	end
-	TriggerServerEvent("esx:ReturnVehicleType", type, Request)
-end)
+	local IsValidModel = IsModelInCdimage(Model)
+	if IsValidModel == true or IsValidModel == 1 then
+		local VehicleType = GetVehicleClassFromName(Model)
 
+		if VehicleType == 15 then
+			ReturnedType = "heli"
+		elseif VehicleType == 16 then
+			ReturnedType = "plane"
+		elseif VehicleType == 14 then
+			ReturnedType = "boat"
+		elseif VehicleType == 11 then
+			ReturnedType = "trailer"
+		elseif VehicleType == 21 then
+			ReturnedType = "train"
+		elseif VehicleType == 13 or VehicleType == 8 then
+			ReturnedType = "bike"
+		end
+		if Model == `submersible` or Model == `submersible2` then
+			ReturnedType = "submarine"
+		end
+	else 
+		ReturnedType = false
+	end
+	TriggerServerEvent("esx:ReturnVehicleType", ReturnedType, Request)
+end)
 
 local DoNotUse = {
 	'essentialmode',
