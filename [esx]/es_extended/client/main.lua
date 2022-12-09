@@ -438,27 +438,6 @@ function StartServerSyncLoops()
 					end
 			end)
 	end
-
-	-- sync current player coords with server
-	CreateThread(function()
-		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
-
-		while ESX.PlayerLoaded do
-			local playerPed = PlayerPedId()
-			if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-
-			if DoesEntityExist(ESX.PlayerData.ped) then
-				local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-				local distance = #(playerCoords - previousCoords)
-
-				if distance > 1 then
-					previousCoords = playerCoords
-					TriggerServerEvent('esx:updateCoords')
-				end
-			end
-			Wait(1500)
-		end
-	end)
 end
 
 if not Config.OxInventory and Config.EnableDefaultInventory then
