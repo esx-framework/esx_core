@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX banking'
 lua54 'yes'
-version '1.8.5'
+version '1.8.6'
 
 shared_scripts {
 	'@es_extended/imports.lua',

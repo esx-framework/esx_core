@@ -100,7 +100,7 @@ end)
 
 function OnPlayerDeath()
   isDead = true
-  ESX.UI.Menu.CloseAll()
+  ESX.CloseContext()
   ClearTimecycleModifier()
   SetTimecycleModifier("REDMIST_blend")
   SetTimecycleModifierStrength(0.7)
@@ -115,7 +115,7 @@ end
 
 RegisterNetEvent('esx_ambulancejob:useItem')
 AddEventHandler('esx_ambulancejob:useItem', function(itemName)
-  ESX.UI.Menu.CloseAll()
+  ESX.CloseContext()
 
   if itemName == 'medikit' then
     local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations

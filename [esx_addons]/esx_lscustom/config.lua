@@ -68,6 +68,8 @@ Config.Colors = {
 	{label = TranslateCap('gold'), value = 'gold'}
 }
 
+Config.DefaultWheelsPriceMultiplier = 2
+
 function GetColors(color)
 	local colors = {}
 	if color == 'black' then
@@ -425,6 +427,27 @@ function GetNeons()
 	return neons
 end
 
+function GetXenonColors()
+	local xenonColors = {
+		{label = TranslateCap('neon'), index = -1},
+		{label = TranslateCap('white'), index = 0},
+		{label = TranslateCap('blue'), index = 1},
+		{label = TranslateCap('electric_blue'), index = 2},
+		{label = TranslateCap('mintgreen'), index = 3},
+		{label = TranslateCap('lime_green'), index = 4},
+		{label = TranslateCap('yellow'), index = 5},
+		{label = TranslateCap('goldenshower'), index = 6},
+		{label = TranslateCap('orange'), index = 7},
+		{label = TranslateCap('red'), index = 8},
+		{label = TranslateCap('ponypink'), index = 9},
+		{label = TranslateCap('hotpink'), index = 10},
+		{label = TranslateCap('purple'), index = 11},
+		{label = TranslateCap('blacklight'), index = 11},
+	}
+
+	return xenonColors
+end
+
 function GetPlatesName(index)
 	if (index == 0) then
 		return TranslateCap('blue_on_white_1')
@@ -500,7 +523,8 @@ Config.Menus = {
 		modHorns			= TranslateCap('horns'),
 		neonColor			= TranslateCap('neons'),
 		resprays			= TranslateCap('respray'),
-		modXenon			= TranslateCap('headlights'),
+		-- modXenon			= TranslateCap('headlights'),
+		xenonColor			= TranslateCap('headlights'),
 		plateIndex			= TranslateCap('licenseplates'),
 		wheels				= TranslateCap('wheels'),
 		modPlateHolder		= TranslateCap('modplateholder'),
@@ -799,6 +823,12 @@ Config.Menus = {
 		label = TranslateCap('headlights'),
 		parent = 'cosmetics',
 		modType = 22,
+		price = 3.72
+	},
+	xenonColor = {
+		label = TranslateCap('headlights'),
+		parent = 'cosmetics',
+		modType = 'xenonColor',
 		price = 3.72
 	},
 	bodyparts = {

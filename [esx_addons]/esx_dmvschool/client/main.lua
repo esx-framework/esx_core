@@ -92,70 +92,68 @@ function OpenDMVSchoolMenu()
 		ownedLicenses[Licenses[i].type] = true
 	end
 
-	local elements = {}
+	local elements = {
+		{unselectable = true, icon = "fas fa-car", title = TranslateCap("driving_school")}
+	}
 
 	if not ownedLicenses['dmv'] then
-		table.insert(elements, {
-			label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('theory_test'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
-			value = 'theory_test'
-		})
+		elements[#elements+1] = {
+			icon = "fas fa-car",
+			title = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('theory_test'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
+			value = "theory_test"
+		}
 	end
 
 	if ownedLicenses['dmv'] then
 		if not ownedLicenses['drive'] then
-			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_car'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
-				value = 'drive_test',
-				type = 'drive'
-			})
+			elements[#elements+1] = {
+				icon = "fas fa-car",
+				title = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_car'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
+				value = "drive_test",
+				type = "drive"
+			}
 		end
 
 		if not ownedLicenses['drive_bike'] then
-			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_bike'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
-				value = 'drive_test',
-				type = 'drive_bike'
-			})
+			elements[#elements+1] = {
+				icon = "fas fa-car",
+				title = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_bike'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
+				value = "drive_test",
+				type = "drive_bike"
+			}
 		end
 
 		if not ownedLicenses['drive_truck'] then
-			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_truck'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
-				value = 'drive_test',
-				type = 'drive_truck'
-			})
+			elements[#elements+1] = {
+				icon = "fas fa-car",
+				title = (('%s: <span style="color:green;">%s</span>'):format(TranslateCap('road_test_truck'), TranslateCap('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
+				value = "drive_test",
+				type = "drive_truck"
+			}
 		end
 	end
 
-	ESX.UI.Menu.CloseAll()
-
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
-		title    = TranslateCap('driving_school'),
-		elements = elements,
-		align    = 'bottom-right'
-	}, function(data, menu)
-		if data.current.value == 'theory_test' then
-			menu.close()
+	ESX.OpenContext("right", elements, function(menu,element)
+		if element.value == "theory_test" then
 			ESX.TriggerServerCallback('esx_dmvschool:canYouPay', function(haveMoney)
 				if haveMoney then
+					ESX.CloseContext()
 					StartTheoryTest()
 				else
 					ESX.ShowNotification(TranslateCap('not_enough_money'))
 				end
 			end, 'dmv')
-		elseif data.current.value == 'drive_test' then
-			menu.close()
+		elseif element.value == "drive_test" then
 			ESX.TriggerServerCallback('esx_dmvschool:canYouPay', function(haveMoney)
 				if haveMoney then
-					StartDriveTest(data.current.type)
+					ESX.CloseContext()
+					StartDriveTest(element.type)
 				else
 					ESX.ShowNotification(TranslateCap('not_enough_money'))
 				end
-			end, data.current.type)
+			end, element.type)
 		end
-	end, function(data, menu)
-		menu.close()
-
+	end, function(menu)
 		CurrentAction     = 'dmvschool_menu'
 		CurrentActionMsg  = TranslateCap('press_open_menu')
 		CurrentActionData = {}
@@ -190,7 +188,7 @@ end)
 
 AddEventHandler('esx_dmvschool:hasExitedMarker', function(zone)
 	CurrentAction = nil
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 end)
 
 RegisterNetEvent('esx_dmvschool:loadLicenses')
@@ -286,8 +284,8 @@ CreateThread(function()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if (IsControlJustReleased(0, 38)) and (CurrentAction == 'dmvschool_menu') then
-					OpenDMVSchoolMenu()
-					CurrentAction = nil
+				OpenDMVSchoolMenu()
+				CurrentAction = nil
 			end
 		end
 		

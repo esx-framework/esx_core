@@ -18,20 +18,20 @@ function startScenario(anim)
 end
 
 function OpenAnimationsMenu()
-	local elements = {}
+	local elements = {
+		{unselectable = true, icon = "fas fa-smile", title = "Animations"}
+	}
 
 	for i=1, #Config.Animations, 1 do
-		table.insert(elements, {label = Config.Animations[i].label, value = Config.Animations[i].name})
+		elements[#elements+1] = {
+			icon = "fas fa-smile",
+			title = Config.Animations[i].label,
+			value = Config.Animations[i].name
+		}
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'animations', {
-		title    = 'Animations',
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-		OpenAnimationsSubMenu(data.current.value)
-	end, function(data, menu)
-		menu.close()
+	ESX.OpenContext("right", elements, function(menu,element)
+		OpenAnimationsSubMenu(element.value)
 	end)
 end
 
@@ -40,30 +40,29 @@ function OpenAnimationsSubMenu(menu)
 	local elements = {}
 
 	for i=1, #Config.Animations, 1 do
+		elements = {
+			{unselectable = true, icon = "fas fa-smile", title = Config.Animations[i].label}
+		}
+
 		if Config.Animations[i].name == menu then
 			title = Config.Animations[i].label
 
 			for j=1, #Config.Animations[i].items, 1 do
-				table.insert(elements, {
-					label = Config.Animations[i].items[j].label,
-					type  = Config.Animations[i].items[j].type,
+				elements[#elements+1] = {
+					icon = "fas fa-smile",
+					title = Config.Animations[i].items[j].label,
+					type = Config.Animations[i].items[j].type,
 					value = Config.Animations[i].items[j].data
-				})
+				}
 			end
-
 			break
-
 		end
 	end
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'animations_sub', {
-		title    = title,
-		align    = 'top-left',
-		elements = elements
-	}, function(data, menu)
-		local type = data.current.type
-		local lib  = data.current.value.lib
-		local anim = data.current.value.anim
+	ESX.OpenContext("right", elements, function(menu,element)
+		local type = element.type
+		local lib  = element.value.lib
+		local anim = element.value.anim
 
 		if type == 'scenario' then
 			startScenario(anim)
@@ -72,8 +71,6 @@ function OpenAnimationsSubMenu(menu)
 		elseif type == 'anim' then
 			startAnim(lib, anim)
 		end
-	end, function(data, menu)
-		menu.close()
 	end)
 end
 

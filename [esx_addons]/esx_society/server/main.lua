@@ -287,7 +287,7 @@ ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
 	cb(job)
 end)
 
-ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, type)
+ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, actionType)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local isBoss = xPlayer.job.grade_name == 'boss'
 	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
@@ -297,13 +297,13 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 		if xTarget then
 			xTarget.setJob(job, grade)
 
-			if type == 'hire' then
+			if actionType == 'hire' then
 				xTarget.showNotification(TranslateCap('you_have_been_hired', job))
 				xPlayer.showNotification(TranslateCap("you_have_hired", xTarget.getName()))
-			elseif type == 'promote' then
+			elseif actionType == 'promote' then
 				xTarget.showNotification(TranslateCap('you_have_been_promoted'))
-				xPlayer.showNotification(TranslateCap("you_have_promoted", xTarget.getName()))
-			elseif type == 'fire' then
+				xPlayer.showNotification(TranslateCap("you_have_promoted", xTarget.getName(), xTarget.getJob().label))
+			elseif actionType == 'fire' then
 				xTarget.showNotification(TranslateCap('you_have_been_fired', xTarget.getJob().label))
 				xPlayer.showNotification(TranslateCap("you_have_fired", xTarget.getName()))
 			end
