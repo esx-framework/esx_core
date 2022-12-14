@@ -356,8 +356,4 @@ Locales['en'] = {
   ['tint_lspd'] = 'blue skin',
   ['tint_orange'] = 'orange skin',
   ['tint_platinum'] = 'platinum skin',
-  
-  -- Duty related
-  ['stopped_duty'] = 'You\'ve stopped your duty.',
-  ['started_duty'] = 'You\'ve started your duty.',
 }

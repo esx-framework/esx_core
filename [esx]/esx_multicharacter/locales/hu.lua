@@ -3,6 +3,7 @@ Locales["hu"] = {
 	["female"] = "Nő",
 	["delete_label"] = "Törlés %s %s?",
 	["select_char"] = "Karakter kiválasztása",
+	["select_char_description"] = "Select a character to play as.",
 	["create_char"] = "Új karakter létrehozása",
 	["char_play"] = "Karakter kiválasztása",
 	["char_disabled"] = "Karakter le van tiltva",

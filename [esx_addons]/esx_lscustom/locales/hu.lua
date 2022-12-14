@@ -266,4 +266,11 @@ Locales['hu'] = {
   ['fuel_tank'] = 'üzemanyag tartály',
   ['windows'] = 'ablakok',
   ['stickers'] = 'matricák',
+
+-- Xenon Colors
+  ['mintgreen'] = 'Mint Green',
+  ['goldenshower'] = 'Golden Shower',
+  ['ponypink'] = 'Pony Pink',
+  ['hotpink'] = 'Hot Pink',
+  ['blacklight'] = 'Blacklight',
 }
