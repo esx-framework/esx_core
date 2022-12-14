@@ -14,7 +14,7 @@ RegisterNetEvent('esx_lscustom:installMod')
 AddEventHandler('esx_lscustom:installMod', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
     myCar = ESX.Game.GetVehicleProperties(vehicle)
-    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
+    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar, NetworkGetNetworkIdFromEntity(vehicle))
 end)
 
 RegisterNetEvent('esx_lscustom:restoreMods', function(netId, props)
@@ -79,8 +79,8 @@ function OpenLSMenu(elems, menuName, menuTitle, parent)
 
                 if data.current.label == TranslateCap('by_default') or string.match(data.current.label, TranslateCap('installed')) then
                     ESX.ShowNotification(TranslateCap('already_own', data.current.label))
-										myCar = ESX.Game.GetVehicleProperties(vehicle)
-										TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar)
+                    myCar = ESX.Game.GetVehicleProperties(vehicle)
+                    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar, NetworkGetNetworkIdFromEntity(vehicle))
                 else
                     local vehiclePrice = 50000
 
