@@ -197,11 +197,14 @@ RegisterNetEvent('esx_banking:closebanking', function()
     CloseUi()
 end)
 
-RegisterNetEvent('esx_banking:PedHandler', function(netIdTable)
-    local npc
-    for i = 1, #netIdTable do
-        npc = NetworkGetEntityFromNetworkId(netIdTable[i])
-        TaskStartScenarioInPlace(npc, Config.Peds[i].Scenario, 0, true)
+local function loadNPC(index, netID)
+    CreateThread(function()
+        while not NetworkDoesEntityExistWithNetworkId(netID) do
+            Wait(1)
+        end
+        local npc = NetworkGetEntityFromNetworkId(netID)
+        
+        TaskStartScenarioInPlace(npc, Config.Peds[index].Scenario, 0, true)
         SetEntityProofs(npc, true, true, true, true, true, true, true, true)
         SetBlockingOfNonTemporaryEvents(npc, true)
         FreezeEntityPosition(npc, true)
@@ -209,6 +212,12 @@ RegisterNetEvent('esx_banking:PedHandler', function(netIdTable)
         SetPedCanRagdoll(npc, false)
         SetEntityAsMissionEntity(npc, true, true)
         SetEntityDynamic(npc, false)
+    end)
+end
+
+RegisterNetEvent('esx_banking:PedHandler', function(netIdTable)
+    for i = 1, #netIdTable do
+        loadNPC(i, netIdTable[i])
     end
 end)
 
