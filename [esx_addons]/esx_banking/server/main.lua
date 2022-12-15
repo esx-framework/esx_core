@@ -22,10 +22,11 @@ AddEventHandler('onResourceStop', function(resourceName)
     if Config.EnablePeds then BANK.DeletePeds() end
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-    if not Config.EnablePeds then return end
-	TriggerClientEvent('esx_banking:PedHandler', playerId, netIdTable)
-end)
+if Config.EnablePeds then
+    AddEventHandler('esx:playerLoaded', function(playerId)
+        TriggerClientEvent('esx_banking:PedHandler', playerId, netIdTable)
+    end)
+end
 
 -- event
 RegisterServerEvent('esx_banking:doingType')
