@@ -33,18 +33,18 @@ function OpenShopMenu()
 
 								ESX.OpenContext("right", elements2, function(menu2,element2)
 									if element2.value == "yes" then
-										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'outfit_name', {
-											title = TranslateCap('name_outfit')
-										}, function(data3, menu3)
-											menu3.close()
+										local elements3 = {
+											{unselectable = true, icon = "fas fa-shirt", title = TranslateCap('name_outfit')},
+											{title = "Outfit Name", input = true, inputType = "text", inputPlaceholder = "Outfit name in wardrobe.."},
+											{icon = "fas fa-check-circle", title = "Confirm", value = "confirm"}
+										}
 
+										ESX.OpenContext("right", elements3, function(menu3,element3)
 											TriggerEvent('skinchanger:getSkin', function(skin)
 												ESX.CloseContext()
-												TriggerServerEvent('esx_clotheshop:saveOutfit', data3.value, skin)
+												TriggerServerEvent('esx_clotheshop:saveOutfit', menu3.eles[2].inputValue, skin)
 												ESX.ShowNotification(TranslateCap('saved_outfit'))
 											end)
-										end, function(data3, menu3)
-											menu3.close()
 										end)
 									elseif element2.value == "no" then
 										ESX.CloseContext()

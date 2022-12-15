@@ -250,9 +250,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(true, item, count)
 		end
 
-		if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:removeInventoryItem')
@@ -269,9 +267,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
 		end
 
-		if ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
@@ -438,32 +434,11 @@ function StartServerSyncLoops()
 					end
 			end)
 	end
-
-	-- sync current player coords with server
-	CreateThread(function()
-		local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
-
-		while ESX.PlayerLoaded do
-			local playerPed = PlayerPedId()
-			if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-
-			if DoesEntityExist(ESX.PlayerData.ped) then
-				local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-				local distance = #(playerCoords - previousCoords)
-
-				if distance > 1 then
-					previousCoords = playerCoords
-					TriggerServerEvent('esx:updateCoords')
-				end
-			end
-			Wait(1500)
-		end
-	end)
 end
 
 if not Config.OxInventory and Config.EnableDefaultInventory then
 	RegisterCommand('showinv', function()
-		if not ESX.PlayerData.dead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+		if not ESX.PlayerData.dead then
 			ESX.ShowInventory()
 		end
 	end)
@@ -700,8 +675,12 @@ AddEventHandler("esx:freezePlayer", function(input)
 end)
 
 RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
+	if not IsModelInCdimage(Model) then
+      return TriggerServerEvent("esx:ReturnVehicleType", false, Request)
+  end
+
 	if Model == `submersible` or Model == `submersible2` then
-		return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
+		  return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
 	end
 
 	local VehicleType = GetVehicleClassFromName(Model)
@@ -717,7 +696,6 @@ RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
 
 	TriggerServerEvent("esx:ReturnVehicleType", types[VehicleType] or "automobile", Request)
 end)
-
 
 local DoNotUse = {
 	'essentialmode',
