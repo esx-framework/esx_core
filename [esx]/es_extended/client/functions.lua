@@ -877,7 +877,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 
     if props.extras ~= nil then
         for extraId, enabled in pairs(props.extras) do
-            SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 0)
+            SetVehicleExtra(vehicle, tonumber(extraId), enabled and 1 or 0)
         end
     end
 
