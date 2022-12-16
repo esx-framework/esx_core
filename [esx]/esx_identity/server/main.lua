@@ -374,7 +374,7 @@ else
 	ESX.RegisterServerCallback('esx_identity:registerIdentity', function(source, cb, data)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		if not checkNameFormat(data.firstname) then
-	            	TriggerClientEvent('esx:showNotification',source,(TranslateCap('invalid_firstname_format'), "error")
+	            	TriggerClientEvent('esx:showNotification',source,TranslateCap('invalid_firstname_format'), "error")
             		return cb(false)
         	end
         	if not checkNameFormat(data.lastname) then
