@@ -163,7 +163,7 @@ if ESX.GetConfig().Multichar then
 			elseif Action.action == "return" then
 				SelectCharacterMenu(Characters, slots)
 			end
-		end, nil, true)
+		end, nil, false)
 	end
 
 	function SelectCharacterMenu(Characters, slots)
@@ -211,7 +211,7 @@ if ESX.GetConfig().Multichar then
 				SetPedAoBlobRendering(playerPed, true)
 				ResetEntityAlpha(playerPed)
 			end
-		end, nil, true)
+		end, nil, false)
 	end
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
