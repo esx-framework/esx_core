@@ -1409,7 +1409,7 @@ ESX.RegisterInput("police:interact", "(ESX PoliceJob) Interact", "keyboard", "E"
 	elseif CurrentAction == 'delete_vehicle' then
 		ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 	elseif CurrentAction == 'menu_boss_actions' then
-		ESX.UI.Menu.CloseAll()
+		ESX.CloseContext()
 		TriggerEvent('esx_society:openBossMenu', 'police', function(data, menu)
 			menu.close()
 
