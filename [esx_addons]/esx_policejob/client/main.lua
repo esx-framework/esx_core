@@ -965,7 +965,7 @@ end)
 
 AddEventHandler('esx_policejob:hasExitedMarker', function(station, part, partNum)
 	if not isInShopMenu then
-		ESX.UI.Menu.CloseAll()
+		ESX.CloseContext()
 	end
 
 	CurrentAction = nil
