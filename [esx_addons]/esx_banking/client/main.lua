@@ -115,7 +115,6 @@ local function StartThread()
                     local atm = GetClosestObjectOfType(_GetEntityCoords, 8.0, Config.AtmModels[i], false)
                     if atm ~= 0 then
                         local atmOffset = GetOffsetFromEntityInWorldCoords(atm, 0.0, -0.7, 0.0)
-                        local atmHeading = GetEntityHeading(atm)
                         local atmDistance = #(_GetEntityCoords - atmOffset)
                         if not isInAtmMarker and atmDistance <= 1.5 then
                             isInAtmMarker = true
