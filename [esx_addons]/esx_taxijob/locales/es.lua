@@ -1,4 +1,3 @@
--- Traducción by: https://github.com/ItsManueh
 
 Locales['es'] = {
   -- cloakroom
