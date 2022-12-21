@@ -7,6 +7,7 @@ Locales['es'] = {
 
   -- garage
   ['spawner_prompt'] = 'Presiona [E] para acceder al Garaje.',
+  ["vehicle_spawned"] = "Generado con éxito un ~b~Taxi!",
   ['store_veh'] = 'Presiona [E] para almacenar el vehículo',
   ['spawn_veh'] = 'Vehículo de generación',
   ['spawnpoint_blocked'] = '¡Hay un vehículo bloqueando el punto de generación!',
