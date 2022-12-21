@@ -1,5 +1,3 @@
--- Traducción by https://github.com/ItsManueh
-
 Locales['es'] = {
   -- Cloakroom
   ['cloakroom'] = 'Guardarropa',
@@ -73,7 +71,6 @@ Locales['es'] = {
   ['respawn_bleedout_fine_msg'] = 'Tu pagaste $%s para reaparecer.',
   ['distress_send'] = 'Presiona [G] para enviar señal de socorro',
   ['distress_sent'] = 'Se ha enviado una señal de socorro a las unidades disponibles.',
-  
   -- Revive
   ['revive_help'] = 'Revivir un jugador',
   -- Item
