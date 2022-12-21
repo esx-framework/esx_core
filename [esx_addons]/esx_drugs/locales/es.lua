@@ -1,6 +1,7 @@
 Locales ['es'] = {
   -- weed
   ['weed_pickupprompt'] = 'pulsa [E] para recolectar Marijuana húmeda.',
+	['weed_quitprocess'] = 'pulsa [E] para parar de procesar Marijuana.',
   ['weed_inventoryfull'] = 'no puedes llevar más Marijuana húmeda!',
   ['weed_processprompt'] = 'pulsa [E] para secar la Marijuana.',
   ['weed_processingstarted'] = 'secando la Marijuana húmeda...',
