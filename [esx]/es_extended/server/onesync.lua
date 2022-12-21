@@ -61,23 +61,29 @@ end
 ---@param heading number
 ---@param Properties table
 ---@param cb function
-function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
-    model = type(model) == 'string' and joaat(model) or model
-    Properties = Properties or {}
-    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-    TriggerClientEvent("esx:requestModel", -1, model)
-    CreateThread(function()
-        local xPlayer = ESX.OneSync.GetClosestPlayer(vector, 200)
-        ESX.GetVehicleType(model, xPlayer.id, function(Type)
-            local SpawnedEntity = CreateVehicleServerSetter(model, Type, vector, heading)
-            Wait(250)
-            local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
-            Properties.NetId = NetworkId
-            Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
-            cb(NetworkId)
-        end)
-    end)
-end
+	function ESX.OneSync.SpawnVehicle(model, coords, heading, Properties, cb)
+		local veh_model = type(model) == 'string' and joaat(model) or model
+		Properties = Properties or {}
+		local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+		TriggerClientEvent("esx:requestModel", -1, model)
+		CreateThread(function()
+			local xPlayer = ESX.OneSync.GetClosestPlayer(vector, 300)
+			ESX.GetVehicleType(veh_model, xPlayer.id, function(Type)
+				if Type then
+					local SpawnedEntity = CreateVehicleServerSetter(veh_model, Type, vector, heading)
+					local NetworkId = NetworkGetNetworkIdFromEntity(SpawnedEntity)
+					while not DoesEntityExist(SpawnedEntity) do 
+						Wait(100)
+					end
+					Properties.NetId = NetworkId
+					Entity(SpawnedEntity).state:set('VehicleProperties', Properties, true)
+					cb(NetworkId)
+				else 
+					print(('[^1ERROR^7] Tried to spawn invalid vehicle - ^5%s^7!'):format(model))
+				end
+			end)
+		end)
+	end
 
 
 ---@param model number|string

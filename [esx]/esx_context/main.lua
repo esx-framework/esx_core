@@ -12,10 +12,11 @@ function Post(fn,...)
 	})
 end
 
-function Open(position,eles,onSelect,onClose)
+function Open(position,eles,onSelect,onClose,canClose)
 	activeMenu = {
 		position = position,
 		eles = eles,
+		canClose = canClose,
 		onSelect = onSelect,
 		onClose = onClose
 	}
@@ -74,11 +75,11 @@ end)
 -- NUI Callbacks
 -- [ closed | selected | changed ]
 
-RegisterNUICallback("closed",function()
-	if not activeMenu then
-		return
+RegisterNUICallback("closed",function(data,cb)
+	if not activeMenu or (activeMenu and not activeMenu.canClose) then
+		return cb(false)
 	end
-
+	cb(true)
 	Closed()
 end)
 

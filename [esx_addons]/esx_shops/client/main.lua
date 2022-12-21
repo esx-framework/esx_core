@@ -51,7 +51,7 @@ end)
 AddEventHandler('esx_shops:hasExitedMarker', function(zone)
 	ESX.HideUI()
 	currentAction = nil
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 end)
 
 -- Create Blips
