@@ -19,6 +19,22 @@ AddEventHandler('esx_skin:save', function(skin)
 	})
 end)
 
+RegisterServerEvent('esx_skin:setWeight')
+AddEventHandler('esx_skin:setWeight', function(skin)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if not ESX.GetConfig().OxInventory then
+        local defaultMaxWeight = ESX.GetConfig().MaxWeight
+        local backpackModifier = Config.BackpackWeight[skin.bags_1]
+
+        if backpackModifier then
+            xPlayer.setMaxWeight(defaultMaxWeight + backpackModifier)
+        else
+            xPlayer.setMaxWeight(defaultMaxWeight)
+        end
+    end
+end)
+
 RegisterServerEvent('esx_skin:responseSaveSkin')
 AddEventHandler('esx_skin:responseSaveSkin', function(skin)
 	local xPlayer = ESX.GetPlayerFromId(source)
