@@ -1,5 +1,5 @@
 Locales['es'] = {
     
-    ['used_beer'] = 'Has usado 1x Cerveza',
+    ['used_beer'] = 'Has bebido 1x Cerveza',
 
 }
