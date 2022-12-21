@@ -1,22 +1,20 @@
-
-
 INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_cardealer','Cardealer',1)
+	('society_cardealer','Concessionnaire',1)
 ;
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES
-	('society_cardealer','Cardealer',1)
+	('society_cardealer','Concesionnaire',1)
 ;
 
 INSERT INTO `jobs` (name, label) VALUES
-	('cardealer','Cardealer')
+	('cardealer','Concessionnaire')
 ;
 
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-	('cardealer',0,'recruit','Recruit',10,'{}','{}'),
+	('cardealer',0,'recruit','Recrue',10,'{}','{}'),
 	('cardealer',1,'novice','Novice',25,'{}','{}'),
-	('cardealer',2,'experienced','Experienced',40,'{}','{}'),
-	('cardealer',3,'boss','Boss',0,'{}','{}')
+	('cardealer',2,'experienced','Experimente',40,'{}','{}'),
+	('cardealer',3,'boss','Patron',0,'{}','{}')
 ;
 
 CREATE TABLE `cardealer_vehicles` (
@@ -73,7 +71,7 @@ CREATE TABLE `vehicle_categories` (
 
 INSERT INTO `vehicle_categories` (name, label) VALUES
 	('compacts','Compacts'),
-	('coupes','Coupes'),
+	('coupes','Coupés'),
 	('sedans','Sedans'),
 	('sports','Sports'),
 	('sportsclassics','Sports Classics'),
