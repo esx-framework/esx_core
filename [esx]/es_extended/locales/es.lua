@@ -108,6 +108,11 @@ Locales['es'] = {
   ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
   ['command_giveammo_weapon'] = 'Weapon name',
   ['command_giveammo_ammo'] = 'Ammo Quantity',
+	['tpm_nowaypoint'] = 'No has marcado el destino',
+  ['tpm_success'] = 'Teletransporte completado',
+  ['noclip_message'] = 'Noclip ha sido %s',
+  ['enabled'] = '~g~activado~s~',
+  ['disabled'] = '~r~desactivado~s~', 
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',
@@ -210,6 +215,11 @@ Locales['es'] = {
   ['weapon_railgun'] = 'Cañón de riel',
   ['weapon_rpg'] = 'Lanzador de cohetes',
   ['weapon_rayminigun'] = 'Minigun de Rayos',
+	
+	  -- Criminal Enterprises DLC
+  ['weapon_metaldetector'] = 'Detector de Metales',
+  ['weapon_precisionrifle'] = 'Rifle de Precision',
+  ['weapon_tactilerifle'] = 'Carabina Tactica', 
 
   -- Thrown
   ['weapon_ball'] = 'Pelota de Beisbol',
