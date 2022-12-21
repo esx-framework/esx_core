@@ -1,4 +1,3 @@
-
 Locales['es'] = {
   -- cloakroom
   ['cloakroom_menu'] = 'Guardarropa',
