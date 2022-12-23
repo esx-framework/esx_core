@@ -329,7 +329,8 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 ('drive', 'Drivers License'),
 ('drive_bike', 'Motorcycle License'),
 ('drive_truck', 'Commercial Drivers License'),
-('weed_processing', 'Weed Processing License');
+('weed_processing', 'Weed Processing License'),
+('boat', 'Boat License');
 
 -- --------------------------------------------------------
 
