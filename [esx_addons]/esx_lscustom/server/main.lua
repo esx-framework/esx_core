@@ -70,7 +70,7 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 end)
 
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
-AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
+AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps, netId)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.single('SELECT vehicle FROM owned_vehicles WHERE plate = ?', {vehicleProps.plate},
@@ -80,6 +80,11 @@ AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
 			if vehicleProps.model == vehicle.model then
 				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {json.encode(vehicleProps), vehicleProps.plate})
 				Customs[tostring(source)][tostring(vehicleProps.plate)].props = vehicleProps
+				local veh = NetworkGetEntityFromNetworkId(netId)
+				local Veh_State = Entity(veh).state.VehicleProperties
+				if Veh_State then
+					Entity(veh).state:set("VehicleProperties", vehicleProps, true)
+				end
 			else
 				print(('[^3WARNING^7] Player ^5%s^7 Attempted To upgrade with mismatching vehicle model'):format(xPlayer.source))
 			end
