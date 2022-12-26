@@ -309,7 +309,7 @@ function loadESXPlayer(identifier, playerId, isNew)
       money = xPlayer.getMoney(),
       sex = xPlayer.get("sex") or "m",
 	  firstName = xPlayer.get("firstName") or "John",
-	  lastName = xPlayer.get("lastName") or "Doe,
+	  lastName = xPlayer.get("lastName") or "Doe",
 	  dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
 	  height = xPlayer.get("height") or 120,
       dead = false
