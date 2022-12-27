@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'CruiseControl System for ESX'
 
-version '1.8.5'
+version '1.9.0'
 lua54 'yes'
 dependencies {
   'es_extended'

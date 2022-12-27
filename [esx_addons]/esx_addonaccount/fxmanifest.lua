@@ -5,7 +5,7 @@ game 'gta5'
 author 'ESX-Framework'
 description 'ESX Addon Account'
 lua54 'yes'
-version '1.8.5'
+version '1.9.0'
 
 server_scripts {
 	'@es_extended/imports.lua',
