@@ -1,5 +1,5 @@
 local pickups = {}
-local PlayerBank, PlayerMoney = 0,0
+
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(0)
@@ -52,71 +52,71 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	while ESX.PlayerData.ped == nil do Wait(20) end
 
-		-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
 		NetworkSetFriendlyFireOption(true)
 	end
 
-		CreateThread(function()
-			local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
-			local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
-			local DisableControlAction = DisableControlAction
-			local IsPedArmed = IsPedArmed
-			local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
-			local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
-			local RemoveAllPickupsOfType = RemoveAllPickupsOfType
-			local HideHudComponentThisFrame = HideHudComponentThisFrame
-			local PlayerId = PlayerId()
-			local DisabledComps = {}
-			for i=1, #(Config.RemoveHudCommonents) do
-				if Config.RemoveHudCommonents[i] then
-					DisabledComps[#DisabledComps + 1] = i
-				end
-		 end
-			while true do 
-				local Sleep = true
+	CreateThread(function()
+		local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
+		local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
+		local DisableControlAction = DisableControlAction
+		local IsPedArmed = IsPedArmed
+		local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
+		local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
+		local RemoveAllPickupsOfType = RemoveAllPickupsOfType
+		local HideHudComponentThisFrame = HideHudComponentThisFrame
+		local PlayerId = PlayerId()
+		local DisabledComps = {}
+		for i=1, #(Config.RemoveHudCommonents) do
+			if Config.RemoveHudCommonents[i] then
+				DisabledComps[#DisabledComps + 1] = i
+			end
+		end
 
-				if Config.DisableHealthRegeneration then
-					Sleep = false
-					SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
-				end
+		while true do 
+			local Sleep = true
 
-				if Config.DisableWeaponWheel then
-					Sleep = false
-					BlockWeaponWheelThisFrame()
-					DisableControlAction(0, 37,true)
-				end
+			if Config.DisableHealthRegeneration then
+				Sleep = false
+				SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
+			end
 
-				if Config.DisableAimAssist then
-					Sleep = false
-					if IsPedArmed(ESX.PlayerData.ped, 4) then
-						SetPlayerLockonRangeOverride(PlayerId, 2.0)
-					end
-				end
+			if Config.DisableWeaponWheel then
+				Sleep = false
+				BlockWeaponWheelThisFrame()
+				DisableControlAction(0, 37,true)
+			end
 
-				if Config.DisableVehicleRewards then
-					Sleep = false
-					DisablePlayerVehicleRewards(PlayerId)
+			if Config.DisableAimAssist then
+				Sleep = false
+				if IsPedArmed(ESX.PlayerData.ped, 4) then
+					SetPlayerLockonRangeOverride(PlayerId, 2.0)
 				end
+			end
+
+			if Config.DisableVehicleRewards then
+				Sleep = false
+				DisablePlayerVehicleRewards(PlayerId)
+			end
 			
-				if Config.DisableNPCDrops then
-					Sleep = false
-					RemoveAllPickupsOfType(0xDF711959) -- carbine rifle
-					RemoveAllPickupsOfType(0xF9AFB48F) -- pistol
-					RemoveAllPickupsOfType(0xA9355DCD) -- pumpshotgun
-				end
+			if Config.DisableNPCDrops then
+				Sleep = false
+				RemoveAllPickupsOfType(0xDF711959)
+				RemoveAllPickupsOfType(0xF9AFB48F)
+				RemoveAllPickupsOfType(0xA9355DCD)
+			end
 
-				if #DisabledComps > 0 then
-					Sleep = false
-					for i=1, #(DisabledComps) do
-						HideHudComponentThisFrame(DisabledComps[i])
-					end
+			if #DisabledComps > 0 then
+				Sleep = false
+				for i=1, #(DisabledComps) do
+					HideHudComponentThisFrame(DisabledComps[i])
 				end
+			end
 				
 			Wait(Sleep and 1500 or 0)
-			end
-		end)
+		end
+	end)
 
 	if Config.EnableHud then
 		for i=1, #(ESX.PlayerData.accounts) do
