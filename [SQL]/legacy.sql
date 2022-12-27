@@ -715,7 +715,6 @@ CREATE TABLE `vehicle_sold` (
   `plate` varchar(50) NOT NULL,
   `soldby` varchar(50) NOT NULL,
   `date` varchar(50) NOT NULL,
-   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 --
@@ -851,7 +850,7 @@ ALTER TABLE `vehicle_categories`
 -- Indexes for table `vehicle_sold`
 --
 ALTER TABLE `vehicle_sold`
-  ADD PRIMARY KEY (`plate`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `whitelist`
