@@ -877,7 +877,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 
     if props.extras ~= nil then
         for extraId, enabled in pairs(props.extras) do
-            SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 0)
+            SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
         end
     end
 
@@ -1088,22 +1088,26 @@ end
 
 function ESX.ShowInventory()
     local playerPed = ESX.PlayerData.ped
-    local elements, currentWeight = {}, 0
+    local elements = {
+        {unselectable = true, icon = 'fas fa-box', title = 'Player Inventory'}
+    }
+    local currentWeight = 0
 
     for i=1, #(ESX.PlayerData.accounts) do
         if ESX.PlayerData.accounts[i].money > 0 then
             local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
-            table.insert(elements, {
-                label = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
+            elements[#elements+1] = {
+                icon = 'fas fa-money-bill-wave',
+                title = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
                 count = ESX.PlayerData.accounts[i].money,
                 type = 'item_account',
                 value = ESX.PlayerData.accounts[i].name,
                 usable = false,
                 rare = false,
                 canRemove = canDrop
-            })
+            }
         end
     end
 
@@ -1111,15 +1115,16 @@ function ESX.ShowInventory()
         if v.count > 0 then
             currentWeight = currentWeight + (v.weight * v.count)
 
-            table.insert(elements, {
-                label = ('%s x%s'):format(v.label, v.count),
+            elements[#elements+1] = {
+                icon = 'fas fa-box',
+                title = ('%s x%s'):format(v.label, v.count),
                 count = v.count,
                 type = 'item_standard',
                 value = v.name,
                 usable = v.usable,
                 rare = v.rare,
                 canRemove = v.canRemove
-            })
+            }
         end
     end
 
@@ -1135,8 +1140,9 @@ function ESX.ShowInventory()
                 label = v.label
             end
 
-            table.insert(elements, {
-                label = label,
+            elements[#elements+1] = {
+                icon = 'fas fa-gun',
+                title = label,
                 count = 1,
                 type = 'item_weapon',
                 value = v.name,
@@ -1145,76 +1151,80 @@ function ESX.ShowInventory()
                 ammo = ammo,
                 canGiveAmmo = (v.ammo ~= nil),
                 canRemove = true
-            })
+            }
         end
     end
 
-    ESX.UI.Menu.CloseAll()
+    elements[#elements+1] = {
+        unselectable = true,
+        icon = "fas fa-weight",
+        title = "Current Weight: "..currentWeight
+    }
+ 
+    ESX.CloseContext()
 
-    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory', {
-        title = TranslateCap('inventory', currentWeight, ESX.PlayerData.maxWeight),
-        align = 'bottom-right',
-        elements = elements
-    }, function(data, menu)
-        menu.close()
+    ESX.OpenContext("right", elements, function(menu,element)
         local player, distance = ESX.Game.GetClosestPlayer()
-        elements = {}
 
-        if data.current.usable then
-            table.insert(elements, {
-                label = TranslateCap('use'),
+        elements2 = {}
+
+        if element.usable then
+            elements2[#elements2+1] = {
+                icon = "fas fa-utensils",
+                title = TranslateCap('use'),
                 action = 'use',
-                type = data.current.type,
-                value = data.current.value
-            })
+                type = element.type,
+                value = element.value
+            }
         end
 
-        if data.current.canRemove then
+        if element.canRemove then
             if player ~= -1 and distance <= 3.0 then
-                table.insert(elements, {
-                    label = TranslateCap('give'),
+                elements2[#elements2+1] = {
+                    icon = "fas fa-hands",
+                    title = TranslateCap('give'),
                     action = 'give',
-                    type = data.current.type,
-                    value = data.current.value
-                })
+                    type = element.type,
+                    value = element.value
+                }
             end
 
-            table.insert(elements, {
-                label = TranslateCap('remove'),
+            elements2[#elements2+1] = {
+                icon = "fas fa-trash",
+                title = TranslateCap('remove'),
                 action = 'remove',
-                type = data.current.type,
-                value = data.current.value
-            })
+                type = element.type,
+                value = element.value
+            }
         end
 
-        if data.current.type == 'item_weapon' and data.current.canGiveAmmo and data.current.ammo > 0 and player ~= -1 and
-            distance <= 3.0 then
-            table.insert(elements, {
-                label = TranslateCap('giveammo'),
+        if element.type == 'item_weapon' and element.canGiveAmmo and element.ammo > 0 and player ~= -1 and distance <= 3.0 then
+            elements2[#elements2+1] = {
+                icon = "fas fa-gun",
+                title = TranslateCap('giveammo'),
                 action = 'give_ammo',
-                type = data.current.type,
-                value = data.current.value
-            })
+                type = element.type,
+                value = element.value
+            }
         end
 
-        table.insert(elements, {
-            label = TranslateCap('return'),
+        elements2[#elements2+1] = {
+            icon = "fas fa-arrow-left",
+            title = TranslateCap('return'),
             action = 'return'
-        })
+        }
 
-        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory_item', {
-            title = data.current.label,
-            align = 'bottom-right',
-            elements = elements
-        }, function(data1, menu1)
-            local item, type = data1.current.value, data1.current.type
+        ESX.OpenContext("right", elements2, function(menu2,element2)
+            local item, type = element2.value, element2.type
 
-            if data1.current.action == 'give' then
+            if element2.action == "give" then
                 local playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
 
                 if #playersNearby > 0 then
                     local players = {}
-                    elements = {}
+                    elements3 = {
+                        {unselectable = true, icon = "fas fa-users", title = "Nearby Players"}
+                    }
 
                     for k, playerNearby in ipairs(playersNearby) do
                         players[GetPlayerServerId(playerNearby)] = true
@@ -1222,19 +1232,15 @@ function ESX.ShowInventory()
 
                     ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
                         for playerId, playerName in pairs(returnedPlayers) do
-                            table.insert(elements, {
-                                label = playerName,
+                            elements3[#elements3+1] = {
+                                icon = "fas fa-user",
+                                title = playerName,
                                 playerId = playerId
-                            })
+                            }
                         end
 
-                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
-                            title = TranslateCap('give_to'),
-                            align = 'bottom-right',
-                            elements = elements
-                        }, function(data2, menu2)
-                            local selectedPlayer, selectedPlayerId = GetPlayerFromServerId(data2.current.playerId),
-                                data2.current.playerId
+                        ESX.OpenContext("right", elements3, function(menu3,element3)
+                            local selectedPlayer, selectedPlayerId = GetPlayerFromServerId(element3.playerId), element3.playerId
                             playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
                             playersNearby = ESX.Table.Set(playersNearby)
 
@@ -1244,62 +1250,58 @@ function ESX.ShowInventory()
                                 if IsPedOnFoot(selectedPlayerPed) and not IsPedFalling(selectedPlayerPed) then
                                     if type == 'item_weapon' then
                                         TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, nil)
-                                        menu2.close()
-                                        menu1.close()
+                                        ESX.CloseContext()
                                     else
-                                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(),
-                                            'inventory_item_count_give', {
-                                                title = TranslateCap('amount')
-                                            }, function(data3, menu3)
-                                                local quantity = tonumber(data3.value)
+                                        local elementsG = {
+                                            {unselectable = true, icon = "fas fa-trash", title = element.title},
+                                            {icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000},
+                                            {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
+                                        }
 
-                                                if quantity and quantity > 0 and data.current.count >= quantity then
-                                                    TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type,
-                                                        item, quantity)
-                                                    menu3.close()
-                                                    menu2.close()
-                                                    menu1.close()
-                                                else
-                                                    ESX.ShowNotification(TranslateCap('amount_invalid'))
-                                                end
-                                            end, function(data3, menu3)
-                                                menu3.close()
-                                            end)
+                                        ESX.OpenContext("right", elementsG, function(menuG,elementG)
+                                            local quantity = tonumber(menuG.eles[2].inputValue)
+
+                                            if quantity and quantity > 0 and element.count >= quantity then
+                                                TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
+                                                ESX.CloseContext()
+                                            else
+                                                ESX.ShowNotification(TranslateCap('amount_invalid'))
+                                            end
+                                        end)
                                     end
                                 else
                                     ESX.ShowNotification(TranslateCap('in_vehicle'))
                                 end
                             else
                                 ESX.ShowNotification(TranslateCap('players_nearby'))
-                                menu2.close()
+                                ESX.CloseContext()
                             end
-                        end, function(data2, menu2)
-                            menu2.close()
                         end)
                     end, players)
-                else
-                    ESX.ShowNotification(TranslateCap('players_nearby'))
                 end
-            elseif data1.current.action == 'remove' then
+            elseif element2.action == "remove" then
                 if IsPedOnFoot(playerPed) and not IsPedFalling(playerPed) then
                     local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
                     ESX.Streaming.RequestAnimDict(dict)
 
                     if type == 'item_weapon' then
-                        menu1.close()
+                        ESX.CloseContext()
                         TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                         RemoveAnimDict(dict)
                         Wait(1000)
                         TriggerServerEvent('esx:removeInventoryItem', type, item)
                     else
-                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
-                            title = TranslateCap('amount')
-                        }, function(data2, menu2)
-                            local quantity = tonumber(data2.value)
+                        local elementsR = {
+                            {unselectable = true, icon = "fas fa-trash", title = element.title},
+                            {icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to remove..", inputMin = 1, inputMax = 1000},
+                            {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
+                        }
 
-                            if quantity and quantity > 0 and data.current.count >= quantity then
-                                menu2.close()
-                                menu1.close()
+                        ESX.OpenContext("right", elementsR, function(menuR,elementR)
+                            local quantity = tonumber(menuR.eles[2].inputValue)
+
+                            if quantity and quantity > 0 and element.count >= quantity then
+                                ESX.CloseContext()
                                 TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                                 RemoveAnimDict(dict)
                                 Wait(1000)
@@ -1307,17 +1309,16 @@ function ESX.ShowInventory()
                             else
                                 ESX.ShowNotification(TranslateCap('amount_invalid'))
                             end
-                        end, function(data2, menu2)
-                            menu2.close()
                         end)
                     end
                 end
-            elseif data1.current.action == 'use' then
+            elseif element2.action == "use" then
+                ESX.CloseContext()
                 TriggerServerEvent('esx:useItem', item)
-            elseif data1.current.action == 'return' then
-                ESX.UI.Menu.CloseAll()
+            elseif element2.action == "return" then
+                ESX.CloseContext()
                 ESX.ShowInventory()
-            elseif data1.current.action == 'give_ammo' then
+            elseif element2.action == "give_ammo" then
                 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
                 local closestPed = GetPlayerPed(closestPlayer)
                 local pedAmmo = GetAmmoInPedWeapon(playerPed, joaat(item))
@@ -1325,25 +1326,25 @@ function ESX.ShowInventory()
                 if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
                     if closestPlayer ~= -1 and closestDistance < 3.0 then
                         if pedAmmo > 0 then
-                            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
-                                title = TranslateCap('amountammo')
-                            }, function(data2, menu2)
-                                local quantity = tonumber(data2.value)
+                            local elementsGA = {
+                                {unselectable = true, icon = "fas fa-trash", title = element.title},
+                                {icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000},
+                                {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
+                            }
+
+                            ESX.OpenContext("right", elementsGA, function(menuGA,elementGA)
+                                local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then
                                     if pedAmmo >= quantity then
-                                        TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer),
-                                            'item_ammo', item, quantity)
-                                        menu2.close()
-                                        menu1.close()
+                                        TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
+                                        ESX.CloseContext()
                                     else
                                         ESX.ShowNotification(TranslateCap('noammo'))
                                     end
                                 else
                                     ESX.ShowNotification(TranslateCap('amount_invalid'))
                                 end
-                            end, function(data2, menu2)
-                                menu2.close()
                             end)
                         else
                             ESX.ShowNotification(TranslateCap('noammo'))
@@ -1355,12 +1356,7 @@ function ESX.ShowInventory()
                     ESX.ShowNotification(TranslateCap('in_vehicle'))
                 end
             end
-        end, function(data1, menu1)
-            ESX.UI.Menu.CloseAll()
-            ESX.ShowInventory()
         end)
-    end, function(data, menu)
-        menu.close()
     end)
 end
 

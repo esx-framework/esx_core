@@ -35,6 +35,17 @@ Config.RespawnPoints = {
 	{coords = vector3(1836.03, 3670.99, 34.28), heading = 296.06} -- Sandy Shores
 }
 
+Config.PharmacyItems = {
+	{
+		title = "Medikit",
+		item = "medikit"
+	},
+	{
+		title = "Bandage",
+		item = "bandage"
+	},
+}
+
 Config.Hospitals = {
 
 	CentralLosSantos = {

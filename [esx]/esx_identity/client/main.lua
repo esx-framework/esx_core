@@ -44,7 +44,10 @@ if not Config.UseDeferrals then
 
     RegisterNetEvent('esx_identity:showRegisterIdentity', function()
         TriggerEvent('esx_skin:resetFirstSpawn')
-
+        while not ready do
+            print('Waiting for  esx_identity NUI..')
+            Wait(100)
+        end
         if not ESX.PlayerData.dead then setGuiState(true) end
     end)
 

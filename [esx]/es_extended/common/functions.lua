@@ -4,6 +4,16 @@ for i = 48,  57 do table.insert(Charset, string.char(i)) end
 for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
+local weaponsByName = {}
+local weaponsByHash = {}
+
+CreateThread(function()
+	for index, weapon in pairs(Config.Weapons) do
+		weaponsByName[weapon.name] = index
+		weaponsByHash[joaat(weapon.name)] = weapon
+	end
+end)
+
 function ESX.GetRandomString(length)
 	math.randomseed(GetGameTimer())
 
@@ -17,19 +27,16 @@ end
 function ESX.GetWeapon(weaponName)
 	weaponName = string.upper(weaponName)
 
-	for k,v in ipairs(Config.Weapons) do
-		if v.name == weaponName then
-			return k, v
-		end
-	end
+	assert(weaponsByName[weaponName], "Invalid weapon name!")
+
+	local index = weaponsByName[weaponName]
+	return index, Config.Weapons[index]
 end
 
 function ESX.GetWeaponFromHash(weaponHash)
-	for k,v in ipairs(Config.Weapons) do
-		if joaat(v.name) == weaponHash then
-			return v
-		end
-	end
+	weaponHash = type(weaponHash) == "string" and joaat(weaponHash) or weaponHash
+
+	return weaponsByHash[weaponHash]
 end
 
 function ESX.GetWeaponList()
@@ -39,24 +46,21 @@ end
 function ESX.GetWeaponLabel(weaponName)
 	weaponName = string.upper(weaponName)
 
-	for k,v in ipairs(Config.Weapons) do
-		if v.name == weaponName then
-			return v.label
-		end
-	end
+	assert(weaponsByName[weaponName], "Invalid weapon name!")
+
+	local index = weaponsByName[weaponName]
+	return Config.Weapons[index].label or ""
 end
 
 function ESX.GetWeaponComponent(weaponName, weaponComponent)
 	weaponName = string.upper(weaponName)
-	local weapons = Config.Weapons
 
-	for k,v in ipairs(Config.Weapons) do
-		if v.name == weaponName then
-			for k2,v2 in ipairs(v.components) do
-				if v2.name == weaponComponent then
-					return v2
-				end
-			end
+	assert(weaponsByName[weaponName], "Invalid weapon name!")
+	local weapon = Config.Weapons[weaponsByName[weaponName]]
+
+	for _, component in ipairs(weapon.components) do
+		if component.name == weaponComponent then
+			return component
 		end
 	end
 end

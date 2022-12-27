@@ -31,3 +31,10 @@ Config.Marker = {
 	Size = vector3(1.5,1.5,1.0),
 	Type = 1,
 }
+
+-- min amount of Config.DrugDealerItems to sell
+-- max amount of Config.DrugDealerItems to sell
+Config.SellMenu = {
+	Min = 1,
+	Max = 50
+}

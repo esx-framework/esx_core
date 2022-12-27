@@ -68,7 +68,7 @@ end)
 
 AddEventHandler('esx_boat:hasExitedMarker', function()
 	if not isInShopMenu then
-		ESX.UI.Menu.CloseAll()
+		ESX.CloseContext()
 	end
 
 	CurrentAction = nil

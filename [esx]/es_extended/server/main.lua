@@ -308,6 +308,10 @@ function loadESXPlayer(identifier, playerId, isNew)
       maxWeight = xPlayer.getMaxWeight(), 
       money = xPlayer.getMoney(),
       sex = xPlayer.get("sex") or "m",
+	  firstName = xPlayer.get("firstName") or "John",
+	  lastName = xPlayer.get("lastName") or "Doe",
+	  dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
+	  height = xPlayer.get("height") or 120,
       dead = false
     }, isNew,
     userData.skin)
@@ -317,7 +321,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   else
     exports.ox_inventory:setPlayerInventory(xPlayer, userData.inventory)
   end
-
+  xPlayer.updateCoords()
   xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
   print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
@@ -357,16 +361,6 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
     end)
   end
   TriggerClientEvent("esx:onPlayerLogout", playerId)
-end)
-
-RegisterNetEvent('esx:updateCoords')
-AddEventHandler('esx:updateCoords', function()
-  local source = source
-  local xPlayer = ESX.GetPlayerFromId(source)
-
-  if xPlayer then
-    xPlayer.updateCoords()
-  end
 end)
 
 if not Config.OxInventory then

@@ -1,3 +1,9 @@
+local SetTimeout = SetTimeout
+local GetPlayerPed = GetPlayerPed
+local DoesEntityExist = DoesEntityExist
+local GetEntityCoords = GetEntityCoords
+local GetEntityHeading = GetEntityHeading
+
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 	
@@ -31,7 +37,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.setCoords(coords)
-		self.updateCoords(coords)
 		local Ped = GetPlayerPed(self.source)
 		local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or
 		vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
@@ -40,10 +45,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.updateCoords()
-		local Ped = GetPlayerPed(self.source)
-		local coords = GetEntityCoords(Ped)
-		local heading = GetEntityHeading(Ped)
-		self.coords = {x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1), heading = ESX.Math.Round(heading or 0.0, 1)}
+		SetTimeout(1000,function()
+			local Ped = GetPlayerPed(self.source)
+			if DoesEntityExist(Ped) then
+				local coords = GetEntityCoords(Ped)
+				local distance = #(coords - vector3(self.coords.x, self.coords.y, self.coords.z))
+				if distance > 1.5 then
+					local heading = GetEntityHeading(Ped)
+					self.coords = {
+						x = coords.x,
+						y = coords.y, 
+						z = coords.z, 
+						heading = heading or 0.0
+					}
+				end
+			end
+			self.updateCoords()
+		end)
 	end
 
 	function self.getCoords(vector)
@@ -187,7 +205,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 			return
 		end
-		if money > 0 then
+		if money >= 0 then
 			local account = self.getAccount(accountName)
 
 			if account then

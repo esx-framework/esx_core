@@ -352,8 +352,11 @@
 		}
 
 		function Close() {
-			$.post(`https://${GetParentResourceName()}/closed`)
-			Closed()
+			$.post(`https://${GetParentResourceName()}/closed`,(retVal)=>{
+				if(retVal){
+					Closed()
+				}
+			})
 		}
 
 		window.addEventListener("message", (e) => {

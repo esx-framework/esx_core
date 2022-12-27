@@ -35,7 +35,6 @@ if ESX.GetConfig().Multichar then
 		RenderScriptCams(true, false, 1, true, true)
 		SetCamCoord(cam, offset.x, offset.y, offset.z)
 		PointCamAtCoord(cam, Config.Spawn.x, Config.Spawn.y, Config.Spawn.z + 1.3)
-		ESX.UI.Menu.CloseAll()
 		ESX.UI.HUD.SetDisplay(0.0)
 		StartLoop()
 		ShutdownLoadingScreen()
@@ -164,7 +163,7 @@ if ESX.GetConfig().Multichar then
 			elseif Action.action == "return" then
 				SelectCharacterMenu(Characters, slots)
 			end
-		end, nil, true)
+		end, nil, false)
 	end
 
 	function SelectCharacterMenu(Characters, slots)
@@ -212,7 +211,7 @@ if ESX.GetConfig().Multichar then
 				SetPedAoBlobRendering(playerPed, true)
 				ResetEntityAlpha(playerPed)
 			end
-		end, nil, true)
+		end, nil, false)
 	end
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
