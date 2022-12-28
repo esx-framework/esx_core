@@ -18,7 +18,6 @@
 function CCTV(PropertyID)
   DoScreenFadeOut(500)
   Wait(500)
-  local PlyCoordsBefore = GetEntityCoords(PlayerPedId())
   local Property = Properties[PropertyID]
   local CamTakePic = true
   if Property.cctv.enabled then
@@ -99,7 +98,6 @@ function CCTV(PropertyID)
         end
         ESX.CloseContext()
         local cctvcam = nil
-        local angleZ = 0.0
         ClearFocus()
         local playerPed = PlayerPedId()
         cctvcam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA",
