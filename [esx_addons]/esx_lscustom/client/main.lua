@@ -2,9 +2,7 @@ local Vehicles, myCar = {}, {}
 local lsMenuIsShowed, HintDisplayed, isInLSMarker = false, false, false
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-    ESX.PlayerLoaded = true
-	ESX.PlayerData = xPlayer
+AddEventHandler('esx:playerLoaded', function()
     ESX.TriggerServerCallback('esx_lscustom:getVehiclesPrices', function(vehicles)
         Vehicles = vehicles
     end)
@@ -13,8 +11,9 @@ end)
 RegisterNetEvent('esx_lscustom:installMod')
 AddEventHandler('esx_lscustom:installMod', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+    local NetId = NetworkGetNetworkIdFromEntity(vehicle)
     myCar = ESX.Game.GetVehicleProperties(vehicle)
-    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar, NetworkGetNetworkIdFromEntity(vehicle))
+    TriggerServerEvent('esx_lscustom:refreshOwnedVehicle', myCar, NetId)
 end)
 
 RegisterNetEvent('esx_lscustom:restoreMods', function(netId, props)

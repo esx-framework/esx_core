@@ -89,6 +89,11 @@ AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps, netId
 					Customs[src] = {}
 					Customs[src][tostring(vehicleProps.plate)] = {props = vehicleProps, netId = netId}
 				end
+        local veh = NetworkGetEntityFromNetworkId(netId)
+				local Veh_State = Entity(veh).state.VehicleProperties
+				if Veh_State then
+					Entity(veh).state:set("VehicleProperties", vehicleProps, true)
+        end
 			else
 				print(('[^3WARNING^7] Player ^5%s^7 Attempted To upgrade with mismatching vehicle model'):format(xPlayer.source))
 			end
