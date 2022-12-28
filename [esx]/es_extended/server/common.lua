@@ -19,6 +19,13 @@ exports('getSharedObject', function()
   return ESX
 end)
 
+if Config.Multichar then
+	if GetResourceState('esx_multicharacter') == 'missing' then
+    print("Warning: esx_multicharacter was not found because of this the Config.Multichar value was set to false")
+		Config.Multichar = false
+	end
+end
+
 if GetResourceState('ox_inventory') ~= 'missing' then
   Config.OxInventory = true
   Config.PlayerFunctionOverride = 'OxInventory'
