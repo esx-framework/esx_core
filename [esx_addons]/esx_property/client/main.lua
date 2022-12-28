@@ -514,16 +514,6 @@ function AttemptHouseExit(PropertyId)
   DoScreenFadeIn(1500)
 end
 
-RegisterCommand("getoffset", function(source)
-  if InProperty then
-    local PlayerPed = ESX.PlayerData.ped
-    local Pcoords = GetEntityCoords(PlayerPed)
-    local Property = Properties[CurrentId]
-    local Interior = GetInteriorValues(Property.Interior)
-    print(vector3(Property.Entrance.x, Property.Entrance.y, 2000) - Pcoords)
-  end
-end)
-
 function AttemptHouseEntry(PropertyId)
   local Property = Properties[PropertyId]
   local Interior = GetInteriorValues(Property.Interior)
