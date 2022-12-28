@@ -142,9 +142,9 @@ if ESX.GetConfig().Multichar then
 
 	function CharacterDeleteConfirmation(Characters, slots, SelectedCharacter, value)
 		local elements = {
-			{title = 'Delete Confirmation', icon = "fa-solid fa-users", description = 'Are you sure removing selected character?', unselectable = true},
-			{title = TranslateCap('char_delete'), icon ="fa-solid fa-xmark", description = 'Yes, I am sure removing selected character', action = 'delete', value = value},
-			{title = TranslateCap('return'), unselectable = false, icon = "fa-solid fa-arrow-left", description = 'No, return to character options', action = "return"}
+			{title = TranslateCap('char_delete_confirmation'), icon = "fa-solid fa-users", description = TranslateCap('char_delete_confirmation_description'), unselectable = true},
+			{title = TranslateCap('char_delete'), icon ="fa-solid fa-xmark", description = TranslateCap('char_delete_yes_description'), action = 'delete', value = value},
+			{title = TranslateCap('return'), unselectable = false, icon = "fa-solid fa-arrow-left", description = TranslateCap('char_delete_no_description'), action = "return"}
 		}
 	
 		ESX.OpenContext("left", elements, function(element, Action)
