@@ -1125,7 +1125,7 @@ end)
 CreateThread(function()
   while true do
     Wait(60000 * Config.SaveInterval)
-    PropertySave(TranslateCap("interval_save"))
+    PropertySave(TranslateCap("interval_saving"))
   end
 end)
 
