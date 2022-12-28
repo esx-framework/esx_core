@@ -495,7 +495,7 @@ Config.Menus = {
 		label = TranslateCap('transmission'),
 		parent = 'upgrades',
 		modType = 13,
-		price = {13.95, 20.93, 46.51}
+		price = {13.95, 20.93, 46.51, 63.55}
 	},
 	modSuspension = {
 		label = TranslateCap('suspension'),
