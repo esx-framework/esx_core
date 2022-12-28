@@ -22,6 +22,7 @@ end)
 RegisterServerEvent('esx_service:disableService')
 AddEventHandler('esx_service:disableService', function(name)
 	InService[name][source] = nil
+	Player(source).state.onduty = false
 end)
 
 RegisterServerEvent('esx_service:notifyAllInService')
@@ -40,6 +41,7 @@ ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, nam
 		cb(false, MaxInService[name], inServiceCount)
 	else
 		InService[name][source] = true
+		Player(source).state.onduty = true
 		cb(true, MaxInService[name], inServiceCount)
 	end
 end)
