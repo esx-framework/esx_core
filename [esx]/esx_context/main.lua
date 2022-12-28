@@ -13,6 +13,9 @@ function Post(fn,...)
 end
 
 function Open(position,eles,onSelect,onClose,canClose)
+	if canClose == nil then
+		canClose = true
+	end
 	activeMenu = {
 		position = position,
 		eles = eles,
