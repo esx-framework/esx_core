@@ -310,6 +310,10 @@ end
 
 function OpenManageSalaryMenu(society, options)
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
+		if not job then
+			return
+		end
+
 		local elements = {
 			{unselectable = true, icon = "fas fa-wallet", title = TranslateCap('salary_management')}
 		}
