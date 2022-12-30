@@ -12,6 +12,5 @@ Locales ['es'] = {
   ['already_owned'] = '¡Ya dispones de esta arma!',
   ['shop_menu_title'] = 'tienda',
   ['shop_menu_prompt'] = 'presione [E] para acceder a la tienda.',
-  ['shop_menu_item'] = '$%s',
   ['map_blip'] = 'ammu-Nation',
 }
