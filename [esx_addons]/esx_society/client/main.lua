@@ -276,6 +276,10 @@ end
 
 function OpenPromoteMenu(society, employee, options)
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
+		if not job then
+			return
+		end
+
 		local elements = {
 			{unselectable = true, icon = "fas fa-user", title = TranslateCap('promote_employee', employee.name)}
 		}
@@ -354,6 +358,10 @@ end
 
 function OpenManageGradesMenu(society, options)
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
+		if not job then
+			return
+		end
+
 		local elements = {
 			{unselectable = true, icon = "fas fa-wallet", title = TranslateCap('grade_management')}
 		}
