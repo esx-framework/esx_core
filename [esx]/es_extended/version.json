@@ -1,5 +1,5 @@
 {
 	"version": "legacy",
-	"commit" : "1.8.5",
+	"commit" : "1.9.0",
 	"changelog": "\n- Add PlayerOveride System, ESX Notify, ESX Progressbar and ESX TextUI"
 }

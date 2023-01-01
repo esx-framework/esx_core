@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'ESX-Framework'
 description 'Official ESX Garage System for ESX Legacy'
-version '1.8.5'
+version '1.9.0'
 lua54 'yes'
 
 shared_script '@es_extended/imports.lua'

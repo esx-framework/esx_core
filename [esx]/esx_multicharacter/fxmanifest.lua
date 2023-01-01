@@ -2,10 +2,10 @@ fx_version 'cerulean'
 game 'gta5'
 author 'ESX-Framework - Linden - KASH'
 description 'Official Multicharacter System For ESX Legacy'
-version '1.8.5'
+version '1.9.0'
 lua54 'yes'
 
-dependencies {'es_extended', 'esx_menu_default', 'esx_identity', 'esx_skin'}
+dependencies {'es_extended', 'esx_context', 'esx_identity', 'esx_skin'}
 
 shared_scripts {'@es_extended/imports.lua', '@es_extended/locale.lua', 'locales/*.lua', 'config.lua'}
 
