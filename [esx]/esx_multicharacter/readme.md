@@ -23,7 +23,7 @@ A Simple, Easy to Use resource, that allows Players to have multiple Characters,
 
 ## Notice
 
-Copyright © 2022 [Linden](https://github.com/thelindat/), ESX-Framework (fournier Brice & Jérémie N'gadi) and KASH
+Copyright © 2023 [Linden](https://github.com/thelindat/), ESX-Framework (fournier Brice & Jérémie N'gadi) and KASH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
