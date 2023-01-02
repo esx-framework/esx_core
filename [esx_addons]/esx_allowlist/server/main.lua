@@ -29,11 +29,11 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	local identifier = ESX.GetIdentifier(playerId)
 
 	if ESX.Table.SizeOf(AllowList) == 0 then
-		kickReason = TranslateCap('allowlist_empty')
+		kickReason = "[ESX] " .. TranslateCap('allowlist_empty')
 	elseif not identifier then
-		kickReason = TranslateCap('license_missing')
+		kickReason = "[ESX] " .. TranslateCap('license_missing')
 	elseif not AllowList[identifier] then
-		kickReason = TranslateCap('not_allowlist')
+		kickReason = "[ESX] " .. TranslateCap('not_allowlist')
 	end
 
 	if kickReason then
