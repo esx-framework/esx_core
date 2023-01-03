@@ -9,7 +9,6 @@ for i = 1, #Components, 1 do
 end
 
 function LoadDefaultModel(malePed, cb)
-    local playerPed = PlayerPedId()
     local characterModel
 
     if malePed then
@@ -22,13 +21,12 @@ function LoadDefaultModel(malePed, cb)
 
     CreateThread(function()
         while not HasModelLoaded(characterModel) do
-            RequestModel(characterModel)
             Wait(0)
         end
 
         if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
             SetPlayerModel(PlayerId(), characterModel)
-            SetPedDefaultComponentVariation(playerPed)
+            SetPedDefaultComponentVariation(PlayerPedId())
         end
 
         SetModelAsNoLongerNeeded(characterModel)
