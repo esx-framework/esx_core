@@ -10,13 +10,13 @@
 //   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/esx-framework/esx-reborn
 //   This copyright should appear in every part of the project code
 
-$(document).ready(function(){
-    const introTag = document.getElementById('esx_intro');
-    const loopTag = document.getElementById('esx_loop');
+document.addEventListener("DOMContentLoaded", () => {
+  const introTag = document.getElementById("esx_intro");
+  const loopTag = document.getElementById("esx_loop");
 
-    introTag.onended = (event) => {
-        introTag.style.display = "none";
-        loopTag.loop = true; // true
-        loopTag.play()
-      };
-})
+  introTag.onended = () => {
+    introTag.style.display = "none";
+    loopTag.loop = true; // true
+    loopTag.play();
+  };
+});

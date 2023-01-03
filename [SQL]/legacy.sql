@@ -329,7 +329,8 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 ('drive', 'Drivers License'),
 ('drive_bike', 'Motorcycle License'),
 ('drive_truck', 'Commercial Drivers License'),
-('weed_processing', 'Weed Processing License');
+('weed_processing', 'Weed Processing License'),
+('boat', 'Boat License');
 
 -- --------------------------------------------------------
 
@@ -709,12 +710,13 @@ INSERT INTO `vehicle_categories` (`name`, `label`) VALUES
 --
 
 CREATE TABLE `vehicle_sold` (
-  `id` INT(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `client` varchar(50) NOT NULL,
   `model` varchar(50) NOT NULL,
   `plate` varchar(50) NOT NULL,
   `soldby` varchar(50) NOT NULL,
-  `date` varchar(50) NOT NULL
+  `date` varchar(50) NOT NULL,
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 --
@@ -847,23 +849,11 @@ ALTER TABLE `vehicle_categories`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `vehicle_sold`
---
-ALTER TABLE `vehicle_sold`
- ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `whitelist`
 --
 ALTER TABLE `whitelist`
   ADD PRIMARY KEY (`identifier`);
 
---
--- Indexes for table `vehicle_sold`
---
-ALTER TABLE `vehicle_sold`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-  
 --
 -- AUTO_INCREMENT for table `addon_account_data`
 --
