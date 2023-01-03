@@ -4,10 +4,10 @@ local Customs = {}
 RegisterNetEvent('esx_lscustom:startModing', function(props, netId)
 	local src = tostring(source)
 	if Customs[src] then
-		Customs[src][props.plate] = {props = props, netId = netId}
+		Customs[src][tostring(props.plate)] = {props = props, netId = netId}
 	else
 		Customs[src] = {}
-		Customs[src][props.plate] = {props = props, netId = netId}
+		Customs[src][tostring(props.plate)] = {props = props, netId = netId}
 	end
 end)
 
@@ -70,16 +70,30 @@ AddEventHandler('esx_lscustom:buyMod', function(price)
 end)
 
 RegisterServerEvent('esx_lscustom:refreshOwnedVehicle')
-AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps)
+AddEventHandler('esx_lscustom:refreshOwnedVehicle', function(vehicleProps, netId)
+	local src = tostring(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
-
 	MySQL.single('SELECT vehicle FROM owned_vehicles WHERE plate = ?', {vehicleProps.plate},
 	function(result)
 		if result then
 			local vehicle = json.decode(result.vehicle)
 			if vehicleProps.model == vehicle.model then
 				MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {json.encode(vehicleProps), vehicleProps.plate})
-				Customs[tostring(source)][tostring(vehicleProps.plate)].props = vehicleProps
+				if Customs[src] then
+					if Customs[src][tostring(vehicleProps.plate)]  then
+						Customs[src][tostring(vehicleProps.plate)].props = vehicleProps
+					else
+						Customs[src][tostring(vehicleProps.plate)] = {props = vehicleProps, netId = netId}
+					end
+				else
+					Customs[src] = {}
+					Customs[src][tostring(vehicleProps.plate)] = {props = vehicleProps, netId = netId}
+				end
+        local veh = NetworkGetEntityFromNetworkId(netId)
+				local Veh_State = Entity(veh).state.VehicleProperties
+				if Veh_State then
+					Entity(veh).state:set("VehicleProperties", vehicleProps, true)
+        end
 			else
 				print(('[^3WARNING^7] Player ^5%s^7 Attempted To upgrade with mismatching vehicle model'):format(xPlayer.source))
 			end

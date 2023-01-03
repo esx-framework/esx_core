@@ -329,7 +329,8 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 ('drive', 'Drivers License'),
 ('drive_bike', 'Motorcycle License'),
 ('drive_truck', 'Commercial Drivers License'),
-('weed_processing', 'Weed Processing License');
+('weed_processing', 'Weed Processing License'),
+('boat', 'Boat License');
 
 -- --------------------------------------------------------
 
@@ -714,7 +715,8 @@ CREATE TABLE `vehicle_sold` (
   `model` varchar(50) NOT NULL,
   `plate` varchar(50) NOT NULL,
   `soldby` varchar(50) NOT NULL,
-  `date` varchar(50) NOT NULL
+  `date` varchar(50) NOT NULL,
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 --
