@@ -14,6 +14,10 @@ Core.Pickups = {}
 Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
 
+AddEventHandler("esx:getSharedObject", function()
+	local Invoke = GetInvokingResource()
+	print(("[ERROR] Resource %s Used the getSharedObject Event, this event no longer exists! Visit https://documentation.esx-framework.org/tutorials/sharedevent for how to fix!"):format(Invoke))
+end)
 
 exports('getSharedObject', function()
   return ESX
