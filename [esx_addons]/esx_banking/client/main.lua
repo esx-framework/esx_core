@@ -199,7 +199,7 @@ end)
 local function loadNPC(index, netID)
     CreateThread(function()
         while not NetworkDoesEntityExistWithNetworkId(netID) do
-            Wait(1)
+            Wait(200)
         end
         local npc = NetworkGetEntityFromNetworkId(netID)
         
