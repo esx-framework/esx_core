@@ -29,5 +29,6 @@ client_scripts {
 dependencies {
 	'es_extended',
 	'esx_skin',
+	'esx_society',
 	'esx_vehicleshop'
 }
