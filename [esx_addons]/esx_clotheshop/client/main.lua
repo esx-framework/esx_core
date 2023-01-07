@@ -76,8 +76,6 @@ function OpenShopMenu()
 		end)
 
 	end, function(data, menu)
-		menu.close()
-
 		currentAction     = 'shop_menu'
 		currentActionMsg  = TranslateCap('press_menu')
 		currentActionData = {}
