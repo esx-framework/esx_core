@@ -78,7 +78,6 @@ function OpenMenu(submitCb, cancelCb, restrict)
             submitCb(data, menu)
             DeleteSkinCam()
         end, function(data, menu)
-            menu.close()
             DeleteSkinCam()
             TriggerEvent('skinchanger:loadSkin', lastSkin)
 
