@@ -13,6 +13,9 @@ end
 
 local function closeMenu(namespace, name)
     OpenedMenus -= 1
+    if (OpenedMenus < 0) then
+        OpenedMenus = 0
+    end
     SendNUIMessage({
         action = 'closeMenu',
         namespace = namespace,
