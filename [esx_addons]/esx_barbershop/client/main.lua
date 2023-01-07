@@ -45,8 +45,6 @@ function OpenShopMenu()
 			currentActionMsg = TranslateCap('press_access')
 		end)
 	end, function(data, menu)
-		menu.close()
-
 		currentAction    = 'shop_menu'
 		currentActionMsg  = TranslateCap('press_access')
 	end, {
