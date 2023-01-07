@@ -12,15 +12,14 @@ local function openMenu(namespace, name, data)
 end
 
 local function closeMenu(namespace, name)
-    OpenedMenus -= 1
-    if (OpenedMenus < 0) then
-        OpenedMenus = 0
+    if (OpenedMenus > 0) then
+        OpenedMenus -= 1
+        SendNUIMessage({
+            action = 'closeMenu',
+            namespace = namespace,
+            name = name
+        })
     end
-    SendNUIMessage({
-        action = 'closeMenu',
-        namespace = namespace,
-        name = name
-    })
 end
 
 ESX.UI.Menu.RegisterType(MenuType, openMenu, closeMenu)
