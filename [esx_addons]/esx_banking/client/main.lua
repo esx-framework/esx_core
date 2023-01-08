@@ -105,7 +105,6 @@ local function StartThread()
         CreateBlips()
 
         while PlayerLoaded do
-            print('isInMarker', isInMarker, 'isInAtmMarker', isInAtmMarker)
             _PlayerPedId = PlayerPedId()
             _GetEntityCoords = GetEntityCoords(_PlayerPedId)
             local closestBank = {}
