@@ -9,24 +9,24 @@ function GetSociety(name)
 	end
 end
 
-AddEventHandler('onResourceStart', function(resourceName)
-	if resourceName == GetCurrentResourceName() then
-		local result = MySQL.query.await('SELECT * FROM jobs')
+exports("GetSociety", GetSociety)
 
-		for i = 1, #result, 1 do
-			Jobs[result[i].name] = result[i]
-			Jobs[result[i].name].grades = {}
-		end
+CreateThread(function()
+	local result = MySQL.query.await('SELECT * FROM jobs')
 
-		local result2 = MySQL.query.await('SELECT * FROM job_grades')
+	for i = 1, #result, 1 do
+		Jobs[result[i].name] = result[i]
+		Jobs[result[i].name].grades = {}
+	end
 
-		for i = 1, #result2, 1 do
-			Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
-		end
+	local result2 = MySQL.query.await('SELECT * FROM job_grades')
+
+	for i = 1, #result2, 1 do
+		Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
 	end
 end)
 
-AddEventHandler('esx_society:registerSociety', function(name, label, account, datastore, inventory, data)
+function registerSociety(name, label, account, datastore, inventory, data)
 	local found = false
 
 	local society = {
@@ -46,9 +46,13 @@ AddEventHandler('esx_society:registerSociety', function(name, label, account, da
 	end
 
 	if not found then
-		table.insert(RegisteredSocieties, society)
+		RegisteredSocieties[#RegisteredSocieties + 1] = society
+		print(("[^2INFO^7] Registered Society ^5%s^7"):format(label))
 	end
-end)
+end
+
+AddEventHandler('esx_society:registerSociety',registerSociety)
+exports("registerSociety", registerSociety)
 
 AddEventHandler('esx_society:getSocieties', function(cb)
 	cb(RegisteredSocieties)
