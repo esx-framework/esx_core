@@ -147,7 +147,7 @@ CreateThread(function()
 
 		Wait(10)
 		ESX.RefreshJobs()
-		TriggerEvent('esx_society:registerSociety', 'realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
+    exports["esx_society"]:registerSociety('realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
 	end
 end)
 
