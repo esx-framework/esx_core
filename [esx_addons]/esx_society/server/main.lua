@@ -27,7 +27,7 @@ function registerSociety(name, label, account, datastore, inventory, data)
 
 	SocietiesByName[name] = society
 	table.insert(RegisteredSocieties, society)
-end)
+end
 AddEventHandler('esx_society:registerSociety', registerSociety)
 exports("registerSociety", registerSociety)
 
