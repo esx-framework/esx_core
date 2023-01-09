@@ -250,9 +250,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(true, item, count)
 		end
 
-		if Config.EnableDefaultInventory then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:removeInventoryItem')
@@ -269,9 +267,7 @@ if not Config.OxInventory then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
 		end
 
-		if Config.EnableDefaultInventory then
-			ESX.ShowInventory()
-		end
+		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
