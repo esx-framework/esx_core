@@ -1,35 +1,6 @@
-# esx_society
+<h1 align='center'>[ESX] Society</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://documentation.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
 Society management for ESX. Adds employee management (hire, fire, promote / demote, change salary), society bank accounts and money washing. It's crucial that this script gets started before all resources that utilize societies do, or else many things will go wrong.
-
-## Requirements
-- [cron](https://github.com/esx-framework/esx-legacy/tree/main/%5Besx%5D/cron)
-- [esx_addonaccount](https://github.com/esx-framework/esx-legacy/tree/main/%5Besx_addons%5D/esx_addonaccount)
-
-## Download & Installation
-
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-org/esx_society
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/ESX-Org/esx_society [esx]/esx_society
-```
-
-### Manually
-- Download https://github.com/ESX-Org/esx_society/archive/master.zip
-- Put it in the `[esx]` directory
-
-## Installation
-- Import `esx_society.sql` in your database
-- Add this in your `server.cfg`:
-
-```
-start esx_society
-```
 
 ## Explanation
 ESX Society works with addon accounts named 'society_xxx', for example 'society_taxi' or 'society_realestateagent'. If you job grade is 'boss' the society money will be displayed in your hud.
@@ -53,7 +24,7 @@ end, {wash = false}) -- set custom options, e.g disable washing
 ### License
 esx_society - societies for ESX
 
-Copyright (C) 2015-2022 Jérémie N'gadi
+Copyright (C) 2015-2023 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

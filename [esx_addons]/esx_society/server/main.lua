@@ -8,8 +8,9 @@ local SocietiesByName = {}
 function GetSociety(name)
 	return SocietiesByName[name]
 end
+exports("GetSociety", GetSociety)
 
-AddEventHandler('esx_society:registerSociety', function(name, label, account, datastore, inventory, data)
+function registerSociety(name, label, account, datastore, inventory, data)
 	if SocietiesByName[name] then
 		print(('[^3WARNING^7] society already registered, name: ^5%s^7'):format(name))
 		return
@@ -27,6 +28,8 @@ AddEventHandler('esx_society:registerSociety', function(name, label, account, da
 	SocietiesByName[name] = society
 	table.insert(RegisteredSocieties, society)
 end)
+AddEventHandler('esx_society:registerSociety', registerSociety)
+exports("registerSociety", registerSociety)
 
 AddEventHandler('esx_society:getSocieties', function(cb)
 	cb(RegisteredSocieties)
