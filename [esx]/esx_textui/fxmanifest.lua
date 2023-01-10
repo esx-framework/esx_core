@@ -1,7 +1,7 @@
 fx_version 'adamant'
 game 'gta5'
 author 'ESX-Framework'
-version '1.8.5'
+version '1.9.0'
 description 'ESX TextUI'
 lua54 'yes'
 client_scripts { 'TextUI.lua' }

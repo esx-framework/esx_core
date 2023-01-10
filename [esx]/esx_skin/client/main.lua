@@ -1,6 +1,11 @@
 local lastSkin, cam, isCameraActive
 local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
 
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+    TriggerServerEvent('esx_skin:setWeight', skin)
+end)
+
 function OpenMenu(submitCb, cancelCb, restrict)
     local playerPed = PlayerPedId()
 

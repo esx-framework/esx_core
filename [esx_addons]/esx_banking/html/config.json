@@ -292,5 +292,102 @@
                 "tableFullLanguage":"Italian" 
             }
         }
+    },
+"ES":{
+        "DYNAMIC_FORM_DATA":[
+            {
+                "componentName":"moreGraph",
+                "elementID":"#wrapper",
+                "title":"",
+                "closeButtonText":"Cerrar",
+                "bankTitle":"Banco Fleeca",
+                "mainExitButtonText": "Cerrar sesión"
+            },
+            {
+                "elementID":"#cpincode",
+                "name":"cpincode",
+                "buttonText":"Aprobar",
+                "inputPlaceholder": "Introduzca 4 dígitos...",
+                "title":"CONFIGURACIÓN DEL PIN",
+                "description": "Aquí puede establecer o cambiar el código PIN.",
+                "type":"password"
+            },
+            {
+                "elementID":"#withdraw",
+                "name":"withdraw",
+                "buttonText":"Aprobar",
+                "inputPlaceholder": "Importe",
+                "title":"RETIRAR",
+                "description": "Aquí puede retirar su dinero del banco.",
+                "type":"number"
+            },
+            {
+                "elementID":"#deposit",
+                "name":"deposit",
+                "buttonText":"Aprobación",
+                "inputPlaceholder": "Importe",
+                "title":"DEPOSITO",
+                "description": "Aquí puede ingresar su dinero en el banco.",
+                "type":"number"
+            },
+            {
+                "elementID":"#transfer",
+                "name":"transfer",
+                "buttonText":"Transfererir",
+                "inputPlaceholder": "Importe",
+                "inputPlaceholder2": "ID del jugador",
+                "title":"TRANSFERENCIA",
+                "description": "Aquí puedes transferir tu dinero a otra persona."
+            },
+            {
+                "componentName":"trans",
+                "elementID":"#third-column",
+                "title":"HISTORIAL DE TRANSACCIONES",
+                "description": "Aquí puede ver su historial de transacciones.",
+                "moreHistoryText": "Mostrar más historial",
+                "moreGraphText": "Mostrar el gráfico"
+            },
+            {
+                "componentName":"pincodePanel",
+                "elementID":"#wrapper",
+                "title":"Introducir PIN",
+                "deleteButtonText": "<i class='fa-solid fa-ban'></i>",
+                "loginButtonText": "<i class='fa-solid fa-right-to-bracket'></i>",
+                "closeButtonText": "Close"
+            },
+            {
+                "componentName":"atmComponent",
+                "elementID":"#wrapper",
+                "title":"Banco Fleeca",
+                "closeButtonText":"Cerrar sesión"
+            }
+        ],
+        "LAUNGAGE": {
+            "your_money_title":"Saldo",
+            "your_money_desc":"Aquí puedes ver tu saldo actual y tu efectivo.",
+            "your_money_cash_label":"Su dinero en mano",
+            "your_money_bank_label":"Su saldo bancario",
+            "withdraw":"RETIRAR",
+            "deposit":"DEPÓSITO",
+            "transfer":"TRANSFERENCIA",
+            "transferReceive":"TRANSFERENCIA RECIBIDA",
+            "moneyFormat":"$__replaceData__",
+            "graphTitle":"Su saldo",
+            "moreGraphTitle": "Gráfico grande",
+            "moreHistoryTitle":"Mostrar más historial",
+            "inputErrorTitle":"Data is incorrect",
+            "inputErrorMessage":"No puede estar vacío ni tener un valor inferior a 1.",
+            "showPincodeErrorTitle":"PIN incorrecto",
+            "showPincodeErrorMessage":"El pin debe tener al menos 4 caracteres.",
+            "tableLang":{
+                "typeLabel": "Tipo de transacción",
+                "balanceLabel":"Saldo",
+                "amountLabel":"Importe",
+                "timeLabel":"Tiempo",
+                "searchInputPlaceholder":"Buscar...",
+                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "tableFullLanguage":"Spanish" 
+            }
+        }
     }
 }
