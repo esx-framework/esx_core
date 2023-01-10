@@ -26,10 +26,6 @@ client_scripts {
 	'client/main.lua'
 }
 
-dependencies {
-	'es_extended',
-	'esx_society'
-}
-
+dependency 'es_extended'
 
 export 'GeneratePlate'

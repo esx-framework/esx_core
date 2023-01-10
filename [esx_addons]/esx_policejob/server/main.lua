@@ -5,9 +5,7 @@ if Config.EnableESXService then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'police', TranslateCap('alert_police'), true, true)
-CreateThread(function()
-	exports["esx_society"]:registerSociety('police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
-end)
+TriggerEvent('esx_society:registerSociety', 'police', 'Police', 'society_police', 'society_police', 'society_police', {type = 'public'})
 
 RegisterNetEvent('esx_policejob:confiscatePlayerItem')
 AddEventHandler('esx_policejob:confiscatePlayerItem', function(target, itemType, itemName, amount)

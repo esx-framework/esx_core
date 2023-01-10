@@ -88,7 +88,7 @@ function OpenMechanicActionsMenu()
 
 					ESX.OpenContext("right", elements2, function(menu2,element2)
 						ESX.CloseContext()
-						local vehicleProps = element2.value
+						local vehicleProps = element.value
 
 						ESX.Game.SpawnVehicle(vehicleProps.model, Config.Zones.VehicleSpawnPoint.Pos, 270.0, function(vehicle)
 							ESX.Game.SetVehicleProperties(vehicle, vehicleProps)

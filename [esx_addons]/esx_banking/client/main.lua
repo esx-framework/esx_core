@@ -107,9 +107,9 @@ local function StartThread()
         while PlayerLoaded do
             _PlayerPedId = PlayerPedId()
             _GetEntityCoords = GetEntityCoords(_PlayerPedId)
-            local closestBank = {}
 
             if IsPedOnFoot(PlayerPedId()) then
+                local closestBank = {}
 
                 for i = 1, #Config.AtmModels do
                     local atm = GetClosestObjectOfType(_GetEntityCoords, 8.0, Config.AtmModels[i], false)
@@ -151,9 +151,6 @@ local function StartThread()
                         isInMarker = false
                         ESX.HideUI()
                     end
-                elseif not next(closestBank) and isInMarker then
-                    isInMarker = false
-                    ESX.HideUI()
                 end
 
             end
@@ -202,7 +199,7 @@ end)
 local function loadNPC(index, netID)
     CreateThread(function()
         while not NetworkDoesEntityExistWithNetworkId(netID) do
-            Wait(200)
+            Wait(1)
         end
         local npc = NetworkGetEntityFromNetworkId(netID)
         
@@ -250,7 +247,6 @@ end)
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     RemoveBlips()
-    ESX.HideUI()
     if isInMenu then
         CloseUi()
     end

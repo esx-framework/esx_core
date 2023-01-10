@@ -1,10 +1,7 @@
 local categories, vehicles = {}, {}
-local vehiclesByModel = {}
 
 TriggerEvent('esx_phone:registerNumber', 'cardealer', TranslateCap('dealer_customers'), false, false)
-CreateThread(function()
-	exports["esx_society"]:registerSociety('cardealer', TranslateCap('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
-end)
+TriggerEvent('esx_society:registerSociety', 'cardealer', TranslateCap('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
 
 CreateThread(function()
 	local char = Config.PlateLetters
@@ -28,50 +25,62 @@ end)
 
 function SQLVehiclesAndCategories()
 	categories = MySQL.query.await('SELECT * FROM vehicle_categories')
-	vehicles = MySQL.query.await('SELECT vehicles.*, vehicle_categories.label AS categoryLabel FROM vehicles JOIN vehicle_categories ON vehicles.category = vehicle_categories.name')
+	vehicles = MySQL.query.await('SELECT * FROM vehicles')
 
-	for _, vehicle in pairs(vehicles) do
-		vehiclesByModel[vehicle.model] = vehicle
+	GetVehiclesAndCategories(categories, vehicles)
+end
+
+function GetVehiclesAndCategories(categories, vehicles)
+	for i = 1, #vehicles do
+		local vehicle = vehicles[i]
+		for j = 1, #categories do
+			local category = categories[j]
+			if category.name == vehicle.category then
+				vehicle.categoryLabel = category.label
+				break
+			end
+		end
 	end
 
-	TriggerClientEvent("esx_vehicleshop:updateVehiclesAndCategories", -1, vehicles, categories, vehiclesByModel)
+	-- send information after db has loaded, making sure everyone gets vehicle information
+	TriggerClientEvent('esx_vehicleshop:sendCategories', -1, categories)
+	TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, vehicles)
 end
 
 function getVehicleFromModel(model)
-	return vehiclesByModel[model]
-end
+	for i = 1, #vehicles do
+		local vehicle = vehicles[i]
+		if vehicle.model == model then
+			return vehicle
+		end
+	end
 
-RegisterNetEvent("esx_vehicleshop:getVehiclesAndCategories", function()
-	TriggerClientEvent("esx_vehicleshop:updateVehiclesAndCategories", source, vehicles, categories, vehiclesByModel)
-end)
+	return
+end
 
 RegisterNetEvent('esx_vehicleshop:setVehicleOwnedPlayerId')
 AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId', function(playerId, vehicleProps, model, label)
 	local xPlayer, xTarget = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(playerId)
 
-	if xPlayer.job.name ~= 'cardealer' or not xTarget then
-		return
-	end
+	if xPlayer.job.name == 'cardealer' and xTarget then
+		MySQL.scalar('SELECT id FROM cardealer_vehicles WHERE vehicle = ?', {model},
+		function(id)
+			if id then
+				MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {id},
+				function(rowsChanged)
+					if rowsChanged == 1 then
+						MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xTarget.identifier, vehicleProps.plate, json.encode(vehicleProps)},
+						function(id)
+							xPlayer.showNotification(TranslateCap('vehicle_set_owned', vehicleProps.plate, xTarget.getName()))
+							xTarget.showNotification(TranslateCap('vehicle_belongs', vehicleProps.plate))
+						end)
 
-	MySQL.scalar('SELECT id FROM cardealer_vehicles WHERE vehicle = ?', {model},
-	function(id)
-		if not id then
-			return
-		end
-
-		MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {id},
-		function(rowsChanged)
-			if rowsChanged == 1 then
-				MySQL.insert('INSERT INTO owned_vehicles (owner, plate, vehicle) VALUES (?, ?, ?)', {xTarget.identifier, vehicleProps.plate, json.encode(vehicleProps)},
-				function(id)
-					xPlayer.showNotification(TranslateCap('vehicle_set_owned', vehicleProps.plate, xTarget.getName()))
-					xTarget.showNotification(TranslateCap('vehicle_belongs', vehicleProps.plate))
+						MySQL.insert('INSERT INTO vehicle_sold (client, model, plate, soldby, date) VALUES (?, ?, ?, ?, ?)', {xTarget.getName(), label, vehicleProps.plate, xPlayer.getName(), os.date('%Y-%m-%d %H:%M')})
+					end
 				end)
-
-				MySQL.insert('INSERT INTO vehicle_sold (client, model, plate, soldby, date) VALUES (?, ?, ?, ?, ?)', {xTarget.getName(), label, vehicleProps.plate, xPlayer.getName(), os.date('%Y-%m-%d %H:%M')})
 			end
 		end)
-	end)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getSoldVehicles', function(source, cb)
@@ -84,28 +93,22 @@ RegisterNetEvent('esx_vehicleshop:rentVehicle')
 AddEventHandler('esx_vehicleshop:rentVehicle', function(vehicle, plate, rentPrice, playerId)
 	local xPlayer, xTarget = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(playerId)
 
-	if xPlayer.job.name ~= 'cardealer' or not xTarget then
-		return
-	end
-
-	MySQL.single('SELECT id, price FROM cardealer_vehicles WHERE vehicle = ?', {vehicle},
-	function(result)
-		if not result then
-			return
-		end
-
-		MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {result.id},
-		function(rowsChanged)
-			if rowsChanged ~= 1 then
-				return
+	if xPlayer.job.name == 'cardealer' and xTarget then
+		MySQL.single('SELECT id, price FROM cardealer_vehicles WHERE vehicle = ?', {vehicle},
+		function(result)
+			if result then
+				MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {result.id},
+				function(rowsChanged)
+					if rowsChanged == 1 then
+						MySQL.insert('INSERT INTO rented_vehicles (vehicle, plate, player_name, base_price, rent_price, owner) VALUES (?, ?, ?, ?, ?, ?)', {vehicle, plate, xTarget.getName(), result.price, rentPrice, xTarget.identifier},
+						function(id)
+							xPlayer.showNotification(TranslateCap('vehicle_set_rented', plate, xTarget.getName()))
+						end)
+					end
+				end)
 			end
-
-			MySQL.insert('INSERT INTO rented_vehicles (vehicle, plate, player_name, base_price, rent_price, owner) VALUES (?, ?, ?, ?, ?, ?)', {vehicle, plate, xTarget.getName(), result.price, rentPrice, xTarget.identifier},
-			function(id)
-				xPlayer.showNotification(TranslateCap('vehicle_set_rented', plate, xTarget.getName()))
-			end)
 		end)
-	end)
+	end
 end)
 
 RegisterNetEvent('esx_vehicleshop:getStockItem')
@@ -120,12 +123,13 @@ AddEventHandler('esx_vehicleshop:getStockItem', function(itemName, count)
 		if count > 0 and item.count >= count then
 
 			-- can the player carry the said amount of x item?
-			if not xPlayer.canCarryItem(itemName, count) then
-				return xPlayer.showNotification(TranslateCap('player_cannot_hold'))
+			if xPlayer.canCarryItem(itemName, count) then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				xPlayer.showNotification(TranslateCap('have_withdrawn', count, item.label))
+			else
+				xPlayer.showNotification(TranslateCap('player_cannot_hold'))
 			end
-			inventory.removeItem(itemName, count)
-			xPlayer.addInventoryItem(itemName, count)
-			xPlayer.showNotification(TranslateCap('have_withdrawn', count, item.label))
 		else
 			xPlayer.showNotification(TranslateCap('not_enough_in_society'))
 		end
@@ -148,6 +152,14 @@ AddEventHandler('esx_vehicleshop:putStockItems', function(itemName, count)
 			xPlayer.showNotification(TranslateCap('invalid_amount'))
 		end
 	end)
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:getCategories', function(source, cb)
+	cb(categories)
+end)
+
+ESX.RegisterServerCallback('esx_vehicleshop:getVehicles', function(source, cb)
+	cb(vehicles)
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:buyVehicle', function(source, cb, model, plate)
@@ -182,57 +194,53 @@ end)
 ESX.RegisterServerCallback('esx_vehicleshop:buyCarDealerVehicle', function(source, cb, model)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.job.name ~= 'cardealer' then
-		return cb(false)
-	end
-	local modelPrice = getVehicleFromModel(model).price
+	if xPlayer.job.name == 'cardealer' then
+		local modelPrice = getVehicleFromModel(model).price
 
-	if not modelPrice then
-		return cb(false)
-	end
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
-		if account.money < modelPrice then
-			return cb(false)
+		if modelPrice then
+			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+				if account.money >= modelPrice then
+					account.removeMoney(modelPrice)
+
+					MySQL.insert('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (?, ?)', {model, modelPrice},
+					function(rowsChanged)
+						cb(true)
+					end)
+				else
+					cb(false)
+				end
+			end)
 		end
-
-		account.removeMoney(modelPrice)
-
-		MySQL.insert('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (?, ?)', {model, modelPrice},
-		function(rowsChanged)
-			cb(true)
-		end)
-	end)
+	end
 end)
 
 RegisterNetEvent('esx_vehicleshop:returnProvider')
 AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.job.name ~= 'cardealer' then
-		return
-	end
-	MySQL.single('SELECT id, price FROM cardealer_vehicles WHERE vehicle = ?', {vehicleModel},
-	function(result)
-		if not result then
-			return print(('[^3WARNING^7] Player ^5%s^7 Attempted To Sell Invalid Vehicle - ^5%s^7!'):format(source, vehicleModel))
-		end
+	if xPlayer.job.name == 'cardealer' then
+		MySQL.single('SELECT id, price FROM cardealer_vehicles WHERE vehicle = ?', {vehicleModel},
+		function(result)
+			if result then
+				local id = result.id
 
-		local id = result.id
+				MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {id},
+				function(rowsChanged)
+					if rowsChanged == 1 then
+						TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
+							local price = ESX.Math.Round(result.price * 0.75)
+							local vehicleLabel = getVehicleFromModel(vehicleModel).label
 
-		MySQL.update('DELETE FROM cardealer_vehicles WHERE id = ?', {id},
-		function(rowsChanged)
-			if rowsChanged ~= 1 then
-				return
+							account.addMoney(price)
+							xPlayer.showNotification(TranslateCap('vehicle_sold_for', vehicleLabel, ESX.Math.GroupDigits(price)))
+						end)
+					end
+				end)
+			else
+				print(('[^3WARNING^7] Player ^5%s^7 Attempted To Sell Invalid Vehicle - ^5%s^7!'):format(source, vehicleModel))
 			end
-			TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cardealer', function(account)
-				local price = ESX.Math.Round(result.price * 0.75)
-				local vehicleLabel = getVehicleFromModel(vehicleModel).label
-
-				account.addMoney(price)
-				xPlayer.showNotification(TranslateCap('vehicle_sold_for', vehicleLabel, ESX.Math.GroupDigits(price)))
-			end)
 		end)
-	end)
+	end
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getRentedVehicles', function(source, cb)
@@ -255,17 +263,20 @@ end)
 ESX.RegisterServerCallback('esx_vehicleshop:giveBackVehicle', function(source, cb, plate)
 	MySQL.single('SELECT base_price, vehicle FROM rented_vehicles WHERE plate = ?', {plate},
 	function(result)
-		if not result then
-			return cb(false)
+		if result then
+			local vehicle = result.vehicle
+			local basePrice = result.base_price
+
+			MySQL.update('DELETE FROM rented_vehicles WHERE plate = ?', {plate},
+			function(rowsChanged)
+				MySQL.insert('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (?, ?)', {result.vehicle, result.base_price})
+
+				RemoveOwnedVehicle(plate)
+				cb(true)
+			end)
+		else
+			cb(false)
 		end
-
-		MySQL.update('DELETE FROM rented_vehicles WHERE plate = ?', {plate},
-		function()
-			MySQL.insert('INSERT INTO cardealer_vehicles (vehicle, price) VALUES (?, ?)', {result.vehicle, result.base_price})
-
-			RemoveOwnedVehicle(plate)
-			cb(true)
-		end)
 	end)
 end)
 
@@ -283,34 +294,36 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 
 		if not resellPrice then
 			print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Invalid Vehicle - ^5%s^7!'):format(source, model))
-			return cb(false)
-		end
-		MySQL.single('SELECT * FROM rented_vehicles WHERE plate = ?', {plate},
-		function(result)
-			if result then -- is it a rented vehicle?
-				return cb(false) -- it is, don't let the player sell it since he doesn't own it
-			end
-			MySQL.single('SELECT * FROM owned_vehicles WHERE owner = ? AND plate = ?', {xPlayer.identifier, plate},
+			cb(false)
+		else
+			MySQL.single('SELECT * FROM rented_vehicles WHERE plate = ?', {plate},
 			function(result)
-				if not result then -- does the owner match?
-					return
-				end
-				local vehicle = json.decode(result.vehicle)
+				if result then -- is it a rented vehicle?
+					cb(false) -- it is, don't let the player sell it since he doesn't own it
+				else
+					MySQL.single('SELECT * FROM owned_vehicles WHERE owner = ? AND plate = ?', {xPlayer.identifier, plate},
+					function(result)
+						if result then -- does the owner match?
+							local vehicle = json.decode(result.vehicle)
 
-				if vehicle.model ~= model then
-					print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Model - ^5%s^7!'):format(source, model))
-					return cb(false)
+							if vehicle.model == model then
+								if vehicle.plate == plate then
+									xPlayer.addMoney(resellPrice, "Sold Vehicle")
+									RemoveOwnedVehicle(plate)
+									cb(true)
+								else
+									print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Plate - ^5%s^7!'):format(source, plate))
+									cb(false)
+								end
+							else
+								print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Model - ^5%s^7!'):format(source, model))
+								cb(false)
+							end
+						end
+					end)
 				end
-				if vehicle.plate ~= plate then
-					print(('[^3WARNING^7] Player ^5%s^7 Attempted To Resell Vehicle With Invalid Plate - ^5%s^7!'):format(source, plate))
-					return cb(false)
-				end
-
-				xPlayer.addMoney(resellPrice, "Sold Vehicle")
-				RemoveOwnedVehicle(plate)
-				cb(true)
 			end)
-		end)
+		end
 	end
 end)
 

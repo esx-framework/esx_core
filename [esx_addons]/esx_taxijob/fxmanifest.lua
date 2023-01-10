@@ -22,7 +22,4 @@ server_scripts {
 	'server/main.lua'
 }
 
-dependencies {
-	'es_extended',
-	'esx_society'
-}
+dependency 'es_extended'

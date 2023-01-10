@@ -5,11 +5,9 @@ if Config.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'taxi', TranslateCap('taxi_client'), true, true)
-CreateThread(function()
-	exports["esx_society"]:registerSociety('taxi', 'Taxi', 'society_taxi', 'society_taxi', 'society_taxi', {
-        type = 'public'
-    })
-end)
+TriggerEvent('esx_society:registerSociety', 'taxi', 'Taxi', 'society_taxi', 'society_taxi', 'society_taxi', {
+    type = 'public'
+})
 
 RegisterNetEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()

@@ -1087,10 +1087,6 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
 end
 
 function ESX.ShowInventory()
-    if not Config.EnableDefaultInventory then
-        return
-    end
-
     local playerPed = ESX.PlayerData.ped
     local elements = {
         {unselectable = true, icon = 'fas fa-box', title = 'Player Inventory'}
