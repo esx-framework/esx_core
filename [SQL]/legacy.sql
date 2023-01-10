@@ -849,23 +849,11 @@ ALTER TABLE `vehicle_categories`
   ADD PRIMARY KEY (`name`);
 
 --
--- Indexes for table `vehicle_sold`
---
-ALTER TABLE `vehicle_sold`
- ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `whitelist`
 --
 ALTER TABLE `whitelist`
   ADD PRIMARY KEY (`identifier`);
 
---
--- Indexes for table `vehicle_sold`
---
-ALTER TABLE `vehicle_sold`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-  
 --
 -- AUTO_INCREMENT for table `addon_account_data`
 --
@@ -1041,4 +1029,3 @@ CREATE TABLE IF NOT EXISTS `banking` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `users` ADD COLUMN `pincode` INT NULL;
-

@@ -99,14 +99,14 @@ if not Config.Multichar then
     if identifier then
       if ESX.GetPlayerFromIdentifier(identifier) then
         deferrals.done(
-          ('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s'):format(
+          ('[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s'):format(
             identifier))
       else
         deferrals.done()
       end
     else
       deferrals.done(
-        'There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
+        '[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
     end
   end)
 end
@@ -133,9 +133,9 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
     local index = #userData.accounts + 1
     userData.accounts[index] = {
-      name = account, 
+      name = account,
       money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
-      label = data.label, 
+      label = data.label,
       round = data.round,
       index = index
     }
@@ -299,13 +299,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 
   xPlayer.triggerEvent('esx:playerLoaded',
     {
-      accounts = xPlayer.getAccounts(), 
-      coords = xPlayer.getCoords(), 
-      identifier = xPlayer.getIdentifier(), 
+      accounts = xPlayer.getAccounts(),
+      coords = xPlayer.getCoords(),
+      identifier = xPlayer.getIdentifier(),
       inventory = xPlayer.getInventory(),
-      job = xPlayer.getJob(), 
-      loadout = xPlayer.getLoadout(), 
-      maxWeight = xPlayer.getMaxWeight(), 
+      job = xPlayer.getJob(),
+      loadout = xPlayer.getLoadout(),
+      maxWeight = xPlayer.getMaxWeight(),
       money = xPlayer.getMoney(),
       sex = xPlayer.get("sex") or "m",
 	  firstName = xPlayer.get("firstName") or "John",

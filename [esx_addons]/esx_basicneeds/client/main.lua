@@ -108,7 +108,8 @@ end)
 RegisterNetEvent('esx_basicneeds:onEat')
 AddEventHandler('esx_basicneeds:onEat', function(prop_name)
     local Invoke = GetInvokingResource()
-    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onEat^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/basicneeds^7 for more info!'):format(Invoke))
+
+    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onEat^7, this method is deprecated and should not be used! Refer to ^5https://documentation.esx-framework.org/addons/esx_basicneeds/events/oneat^7 for more info!'):format(Invoke))
 
     if not prop_name then
         prop_name = 'prop_cs_burger_01'
@@ -119,7 +120,9 @@ end)
 RegisterNetEvent('esx_basicneeds:onDrink')
 AddEventHandler('esx_basicneeds:onDrink', function(prop_name)
     local Invoke = GetInvokingResource()
-    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onDrink^7, this method is deprecated and should not be used! Refer to ^5https://docs.esx-framework.org/tutorials/basicneeds^7 for more info!'):format(Invoke))
+
+    print(('[^3WARNING^7] ^5%s^7 used ^5esx_basicneeds:onDrink^7, this method is deprecated and should not be used! Refer to ^5https://documentation.esx-framework.org/addons/esx_basicneeds/events/ondrink^7 for more info!'):format(Invoke))
+
 
     if not prop_name then
         prop_name = 'prop_ld_flow_bottle'

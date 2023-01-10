@@ -1,0 +1,118 @@
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+
+<body>
+	<div class="full-screen">
+		<div class="question-container">
+			<!-- header -->
+			<div class="header">
+				<h1>Autós Iskola</h1>
+			</div>
+			<!-- home -->
+			<div class="body home">
+				<div class="content">
+					<!-- ICI BREVE PRESENTATION -->
+					<center>
+						<img src="dmv.png" class="logo">
+						<br>
+						<p class="bold-text">Üdvözöljük a Los Santos Autosiskolánál!
+						</center>
+						<br>
+						<center>Los Santos összes polgárának meg kell csinálni a KRESZ vizsgát a forgalmi vizsa elött
+							<br>A válaszoknál ne kapkodjon, használja ki a teljes idöt, gondolkodjon jozan ésszel.
+							<br>
+							<br>
+						</center>
+						KRESZ Vizsga
+						<br> - A KRESZ vizsga 1.000$-ba kerül, ami nem visszatéritendö!
+						<br> - Az autosiskola elfogadja a bankkártyás fizetést is de vigyázz, ne kerülj adosságba!
+						<br> - Ha nem sikerülne a teszt, ne aggodjon, ismét megprobálhatja!
+						<br>
+						<br> Forgalmi Vizsga
+						<br> - A Forgalmi vizsga 1.500$-ba kerül, ami szintén nem visszatéritendö összeg!
+						<br> - A Forgalmi vizsgánál figyelj oda, hogy ne okozz balesetet!
+						</p>
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnQuestion">Kezdés</a>
+				</div>
+				<div style="visibility: hidden;" class="barre-progression">
+					<h2>Folyamat</h2>
+					<progress class="progression" value="0" max="10">
+				</div>
+			</div>
+			<!-- Question-->
+			<div class="body questionnaire-container">
+				<div class="content">
+					<h2 id="questionNumero"></h2>
+					<p id="question"></p>
+					<form class="form" id="question-form">
+						<div>
+							<input class="option-input radio" type="radio" name="question" id="answerA" value="A">
+							<label class="answerA"></label>
+						</div>
+						<div>
+							<input class="option-input radio" type="radio" name="question" id="answerB" value="B">
+							<label class="answerB"></label>
+						</div>
+						<div>
+							<input class="option-input radio" type="radio" name="question" id="answerC" value="C">
+							<label class="answerC"></label>
+						</div>
+						<button type="submit" id="submit" class="submit">Következő kérdés</button>
+					</form>
+				</div>
+				<div class="barre-progression">
+					<h2>Folyamat</h2>
+					<progress class="progression" value="0" max="10">
+				</div>
+			</div>
+			<!-- Results -->
+			<div class="body resultGood">
+				<div class="content">
+					<center>
+						<p class="bold-text">Sikeres KRESZ Vizsga!</p>
+						<br>
+						<br>Gratulálok a sikeres KRESZ vizsgához!
+						<br>
+						<br>Most már elkezdheted a vezetést!
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnClose">Bezár</a>
+				</div>
+				<div style="visibility: hidden;" class="barre-progression">
+					<h2>Progress</h2>
+					<progress class="progression" value="10" max="10">
+				</div>
+			</div>
+			<div class="body resultBad">
+				<div class="content">
+					<center>
+						<p class="bold-text">Sajnos nem sikerült a vizsga!</p>
+						<br>
+						<br>Sajnálattal közlöm, de nem sikerült a KRESZ vizsga, kérlek probáld ujra késöbb...
+						<br>
+						<br>
+					</center>
+				</div>
+				<div class="buttonspot">
+					<a href="#" class="button btnKick">Bezár</a>
+				</div>
+				<div style="visibility: hidden;" class="barre-progression">
+					<h2>Folyamat</h2>
+					<progress class="progression" value="10" max="10">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+	<script src="questions.js" type="text/javascript"></script>
+	<script src="scripts.js" type="text/javascript"></script>
+	<script src="debounce.min.js" type="text/javascript"></script>
+
+</body>

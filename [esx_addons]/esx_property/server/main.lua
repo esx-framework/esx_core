@@ -1,6 +1,6 @@
 --[[
       ESX Property - Properties Made Right!
-    Copyright (C) 2022 ESX-Framework
+    Copyright (C) 2023 ESX-Framework
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -147,7 +147,7 @@ CreateThread(function()
 
 		Wait(10)
 		ESX.RefreshJobs()
-		TriggerEvent('esx_society:registerSociety', 'realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
+    exports["esx_society"]:registerSociety('realestateagent', 'realestateagent', 'society_realestateagent', 'society_realestateagent', 'society_realestateagent', {type = 'private'})
 	end
 end)
 
@@ -1125,7 +1125,7 @@ end)
 CreateThread(function()
   while true do
     Wait(60000 * Config.SaveInterval)
-    PropertySave(TranslateCap("interval_save"))
+    PropertySave(TranslateCap("interval_saving"))
   end
 end)
 
