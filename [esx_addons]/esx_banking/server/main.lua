@@ -24,7 +24,7 @@ end)
 
 if Config.EnablePeds then
     AddEventHandler('esx:playerLoaded', function(playerId)
-        TriggerClientEvent('esx_banking:PedHandler', playerId, netIdTable)
+        TriggerClientEvent('esx_banking:pedHandler', playerId, netIdTable)
     end)
 end
 
