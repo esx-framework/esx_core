@@ -4,7 +4,7 @@ AddEventHandler('gameEventTriggered', function(event, data)
 	if not IsPedAPlayer(victim) then return end
 	local player = PlayerId()
 	local playerPed = PlayerPedId()
-	if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and IsPedDeadOrDying(victim, true) then
+	if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim))  then
 		local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
 		local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
 		if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then

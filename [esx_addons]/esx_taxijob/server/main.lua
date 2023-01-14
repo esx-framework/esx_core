@@ -5,9 +5,11 @@ if Config.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'taxi', TranslateCap('taxi_client'), true, true)
-TriggerEvent('esx_society:registerSociety', 'taxi', 'Taxi', 'society_taxi', 'society_taxi', 'society_taxi', {
-    type = 'public'
-})
+CreateThread(function()
+	exports["esx_society"]:registerSociety('taxi', 'Taxi', 'society_taxi', 'society_taxi', 'society_taxi', {
+        type = 'public'
+    })
+end)
 
 RegisterNetEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
@@ -99,12 +101,13 @@ end)
 RegisterNetEvent('esx_taxijob:putStockItems')
 AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
     local xPlayer = ESX.GetPlayerFromId(source)
-
+	local sourceItem = xPlayer.getInventoryItem(itemName)
+		
     if xPlayer.job.name == 'taxi' then
         TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
             local item = inventory.getItem(itemName)
 
-            if item.count > 0 then
+            if sourceItem.count >= count and count > 0 then
                 xPlayer.removeInventoryItem(itemName, count)
                 inventory.addItem(itemName, count)
                 xPlayer.showNotification(TranslateCap('have_deposited', count, item.label))

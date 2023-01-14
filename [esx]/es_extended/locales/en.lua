@@ -108,6 +108,12 @@ Locales['en'] = {
   ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
   ['command_giveammo_weapon'] = 'Weapon name',
   ['command_giveammo_ammo'] = 'Ammo Quantity',
+  ['tpm_nowaypoint'] = 'No Waypoint Set.',
+  ['tpm_success'] = 'Successfully Teleported',
+
+  ['noclip_message'] = 'Noclip has been %s',
+  ['enabled'] = '~g~enabled~s~',
+  ['disabled'] = '~r~disabled~s~',
 
   -- Locale settings
   ['locale_digit_grouping_symbol'] = ',',
@@ -356,8 +362,4 @@ Locales['en'] = {
   ['tint_lspd'] = 'blue skin',
   ['tint_orange'] = 'orange skin',
   ['tint_platinum'] = 'platinum skin',
-  
-  -- Duty related
-  ['stopped_duty'] = 'You\'ve stopped your duty.',
-  ['started_duty'] = 'You\'ve started your duty.',
 }

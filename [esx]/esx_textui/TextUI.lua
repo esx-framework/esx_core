@@ -1,16 +1,19 @@
 Debug = ESX.GetConfig().EnableDebug
-
----@param message any
----@param type string
-local function TextUI(message, type)
+local isShowing = false
+---@param message string
+---@param typ string
+local function TextUI(message, typ)
+    isShowing = true
     SendNUIMessage({
         action = 'show',
-        message = message or 'ESX-TextUI',
-        type = type or 'info'
+        message = message and message or 'ESX-TextUI',
+        type = type(typ) == "string" and typ or 'info'
     })
 end
 
 local function HideUI()
+   if not isShowing then return end
+   isShowing = false
     SendNUIMessage({
         action = 'hide'
     })

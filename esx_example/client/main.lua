@@ -1,6 +1,6 @@
 RegisterNetEvent('esx:playerLoaded') -- Store the players data
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew)
-	print("Player Loaded. New | " .. isNew)
+	print(('Player Loaded. New | %s'):format(isNew))
 	ESX.PlayerData = xPlayer
 	ESX.PlayerLoaded = true
 end)
@@ -23,7 +23,7 @@ end)
 
 function OnPlayerData(key, val, last)
 	if type(val) == 'table' then val = json.encode(val) end
-	print('PlayerData.'..key..' was set to '..val)
+	print(('PlayerData.%s was set to %s'):format(key, val))
 	if key == 'job' then
 		if last.name ~= val.name then
 			print('You are now in a different job')

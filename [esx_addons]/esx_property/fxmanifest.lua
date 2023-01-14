@@ -1,6 +1,6 @@
 --[[
     ESX Property - Properties Made Right!
-    Copyright (C) 2022 ESX-Framework
+    Copyright (C) 2023 ESX-Framework
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ lua54 'yes'
 
 author 'ESX-Framework'
 description 'Official ESX-Legacy Property System'
-version '1.8.5'
+version '1.9.0'
 
 shared_scripts {'@es_extended/imports.lua', '@es_extended/locale.lua', 'locales/*.lua'}
 file "client/html/copy.html"
@@ -42,5 +42,6 @@ client_scripts {
 }
 
 dependencies {
-	'es_extended'
+	'es_extended',
+	'esx_society'
 }

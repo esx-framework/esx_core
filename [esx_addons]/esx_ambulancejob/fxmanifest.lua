@@ -5,7 +5,7 @@ game 'gta5'
 description 'ESX Ambulance Job'
 
 lua54 'yes'
-version '1.8.5'
+version '1.9.0'
 
 shared_scripts { 
 	'@es_extended/imports.lua',
@@ -29,5 +29,6 @@ client_scripts {
 dependencies {
 	'es_extended',
 	'esx_skin',
+	'esx_society',
 	'esx_vehicleshop'
 }

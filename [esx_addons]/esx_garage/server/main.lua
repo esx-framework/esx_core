@@ -38,7 +38,6 @@ AddEventHandler('esx_garage:setImpound', function(Impound, vehicleProps)
 		})
 
 		xPlayer.showNotification(TranslateCap('veh_impounded'))
-	
 end)
 
 

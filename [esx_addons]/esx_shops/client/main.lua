@@ -2,49 +2,39 @@ local hasAlreadyEnteredMarker, lastZone
 local currentAction, currentActionMsg, currentActionData = nil, nil, {}
 
 function OpenShopMenu(zone)
-	local elements = {}
+	local elements = {
+		{unselectable = true, icon = "fas fa-shopping-basket", title = TranslateCap('shop') }
+	}
+
 	for i=1, #Config.Zones[zone].Items, 1 do
 		local item = Config.Zones[zone].Items[i]
 
-		table.insert(elements, {
-			label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, TranslateCap('shop_item', ESX.Math.GroupDigits(item.price))),
+		elements[#elements+1] = {
+			icon = "fas fa-shopping-basket",
+			title = ('%s - <span style="color:green;">%s</span>'):format(item.label, TranslateCap('shop_item', ESX.Math.GroupDigits(item.price))),
 			itemLabel = item.label,
-			item       = item.name,
-			price      = item.price,
-
-			-- menu properties
-			value      = 1,
-			type       = 'slider',
-			min        = 1,
-			max        = 100
-		})
+			item = item.name,
+			price = item.price
+		}
 	end
 
-	ESX.UI.Menu.CloseAll()
+	ESX.OpenContext("right", elements, function(menu,element)
+		local elements2 = {
+			{unselectable = true, icon = "fas fa-shopping-basket", title = element.title},
+			{icon = "fas fa-shopping-basket", title = "Amount", input = true, inputType = "number", inputPlaceholder = "Amount you want to buy", inputMin = 1, inputMax = 25},
+			{icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
+		}
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {
-		title    = TranslateCap('shop'),
-		align    = 'bottom-left',
-		elements = elements
-	}, function(data, menu)
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-			title    = TranslateCap('shop_confirm', data.current.value, data.current.itemLabel, ESX.Math.GroupDigits(data.current.price * data.current.value)),
-			align    = 'bottom-left',
-			elements = {
-				{label = TranslateCap('no'),  value = 'no'},
-				{label = TranslateCap('yes'), value = 'yes'}
-		}}, function(data2, menu2)
-			if data2.current.value == 'yes' then
-				TriggerServerEvent('esx_shops:buyItem', data.current.item, data.current.value, zone)
-			end
-
-			menu2.close()
-		end, function(data2, menu2)
-			menu2.close()
+		ESX.OpenContext("right", elements2, function(menu2,element2)
+			local amount = menu2.eles[2].inputValue
+			ESX.CloseContext()
+			TriggerServerEvent('esx_shops:buyItem', element.item, amount, zone)
+		end, function(menu)
+			currentAction     = 'shop_menu'
+			currentActionMsg  = TranslateCap('press_menu')
+			currentActionData = {zone = zone}
 		end)
-	end, function(data, menu)
-		menu.close()
-
+	end, function(menu)
 		currentAction     = 'shop_menu'
 		currentActionMsg  = TranslateCap('press_menu')
 		currentActionData = {zone = zone}
@@ -59,7 +49,7 @@ end)
 
 AddEventHandler('esx_shops:hasExitedMarker', function(zone)
 	currentAction = nil
-	ESX.UI.Menu.CloseAll()
+	ESX.CloseContext()
 end)
 
 -- Create Blips
