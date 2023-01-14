@@ -145,7 +145,4 @@ Locales['cs'] = {
   ['remove_prop'] = 'stiskni [E] pro odstranění předmětu',
   ['map_blip'] = 'policejní stanice',
   ['unrestrained_timer'] = 'cítíš, že tvé pouta pomalu ztrácejí přilnavost a padají.',
-  -- Notifications
-  ['alert_police'] = 'policejní poplach',
-  ['phone_police'] = 'policie',
 }

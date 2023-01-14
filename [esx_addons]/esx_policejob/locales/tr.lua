@@ -145,7 +145,4 @@ Locales['tr'] = {
 	['remove_prop'] = 'objeyi silmek için [E] tuşuna basın',
 	['map_blip'] = 'polis Karakolu',
 	['unrestrained_timer'] = 'ellerinin yavaşça çözüldüğünü hissediyorsun.',
-	-- Notifications
-	['alert_police'] = 'polis Acil Durum',
-	['phone_police'] = 'polis',
   }

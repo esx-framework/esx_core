@@ -13,6 +13,4 @@ Locales['et'] = {
   ['press_input_context_to_open_menu']  = 'Vajuta [E], et avada panga menüü.',
   ['withdraw']                          = 'Võta välja',
   ['boss_actions']                      = 'Bossi tegevused',
-  ['phone_receive']                     = 'Panga klient',
-  ['phone_label']                       = 'Pank',
 }

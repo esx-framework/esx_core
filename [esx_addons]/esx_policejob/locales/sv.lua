@@ -145,7 +145,4 @@ Locales['sv'] = {
   ['remove_prop'] = 'tryck [E] för att ta bort objektet',
   ['map_blip'] = 'polisstation',
   ['unrestrained_timer'] = 'dina handklovar har försvunnit',
-  -- Notifications
-  ['alert_police'] = 'meddela polisen',
-  ['phone_police'] = 'polisen',
 }

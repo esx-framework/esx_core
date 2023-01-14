@@ -60,8 +60,6 @@ Locales['de'] = {
   ['ems_menu_putincar'] = 'In Fahrzeug stecken',
   ['ems_menu_small'] = 'Kleine Wunden behandeln',
   ['ems_menu_big'] = 'Ernsthafte Verletzungen behandeln',
-  -- Phone
-  ['alert_ambulance'] = 'Rettungsdienst alarmieren',
   -- Death
   ['respawn_available_in'] = 'Respawn in %s Minuten %s Sekundenrfügbar',
   ['respawn_bleedout_in'] = 'Du wirst in %s Minuten %s Sekundensbluten\n',

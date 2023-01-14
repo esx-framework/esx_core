@@ -145,7 +145,4 @@ Locales['de'] = {
   ['remove_prop'] = 'Drücke [E], um das Objekt zu entfernen',
   ['map_blip'] = 'Polizeistation',
   ['unrestrained_timer'] = 'Du spürst, wie die Handschellen langsam ihren Halt verlieren und sich auflösen.',
-  -- Notifications
-  ['alert_police'] = 'Polizei alarmieren',
-  ['phone_police'] = 'Polizei',
 }

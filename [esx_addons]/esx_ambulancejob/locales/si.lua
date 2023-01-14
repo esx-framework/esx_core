@@ -61,8 +61,6 @@ Locales['si'] = {
   ['ems_menu_small'] = 'Heal small wounds',
   ['ems_menu_big'] = 'Treat serious injuries',
   ['ems_menu_search'] = 'Patient not found',
-  -- Telefon
-  ['alert_ambulance'] = 'Alert Ambulance',
   -- Smrt
   ['respawn_available_in'] = 'Ponovna obnova je na voljo čez %s minut %s sekund',
   ['respawn_bleedout_in'] = 'Izkrvavel boš v %s minutah %s sekundah\n',

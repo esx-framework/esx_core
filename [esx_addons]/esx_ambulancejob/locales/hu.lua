@@ -61,8 +61,6 @@ Locales['hu'] = {
   ['ems_menu_small'] = 'Kis sebek meggyógyítása',
   ['ems_menu_big'] = 'Súlyos sérülések kezelése',
   ['ems_menu_search'] = 'Civil megkeresése',
-  -- Phone
-  ['alert_ambulance'] = 'EMS értesités',
   -- Death
   ['respawn_available_in'] = 'Újraéledés: %s',
   ['respawn_bleedout_in'] = 'Elfogsz vérezni  %s perc %s másodperc múlva...\n',

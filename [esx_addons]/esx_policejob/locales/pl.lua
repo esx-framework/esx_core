@@ -145,7 +145,4 @@ Locales['pl'] = {
   ['remove_prop'] = 'naciśnij [E] aby usunąć ten obiekt',
   ['map_blip'] = 'komisariat Policji',
   ['unrestrained_timer'] = 'czujesz, że twoje kajdanki powoli tracą przyczepność i znikają.',
-  -- Notifications
-  ['alert_police'] = 'ostrzeż policję',
-  ['phone_police'] = 'police',
 }

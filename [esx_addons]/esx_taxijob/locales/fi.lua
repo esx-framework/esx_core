@@ -46,7 +46,6 @@ Locales['fi'] = {
   ['have_deposited'] = 'sinä talletit x%s %s',
   ['player_cannot_hold'] = 'sinulla ~r~ei ole enempää vapaata tilaa repussasi!',
   ['blip_taxi'] = 'taxi',
-  ['phone_taxi'] = 'taxi',
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi Stock'
 }

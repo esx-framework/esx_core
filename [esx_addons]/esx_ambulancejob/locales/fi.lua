@@ -61,8 +61,6 @@ Locales['fi'] = {
   ['ems_menu_small'] = 'hoida pieniä haavoja',
   ['ems_menu_big'] = 'hoida isoja haavoja',
   ['ems_menu_search'] = 'potilasta ei löydy',
-  -- Phone
-  ['alert_ambulance'] = 'hälyytys Ensihoidolle',
   -- Death
   ['respawn_available_in'] = 'respawn available in %s minutes %s seconds',
   ['respawn_bleedout_in'] = 'you will bleed out in %s minutes %s seconds\n',

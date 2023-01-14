@@ -60,8 +60,6 @@ Locales['tr'] = {
 	['ems_menu_putincar'] = 'araca koy',
 	['ems_menu_small'] = 'küçük yaraları tedavi et',
 	['ems_menu_big'] = 'ciddi yaraları tedavi et',
-	-- Phone
-	['alert_ambulance'] = 'hastane Acil Durum',
 	-- Death
 	['respawn_available_in'] = 'yeniden canlanmana %s dakika %s saniye kaldı',
 	['respawn_bleedout_in'] = 'kanama %s dakika %s saniye boyunca devam edecek\n',
