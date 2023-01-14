@@ -33,7 +33,7 @@ local playerLoaded, uiActive, inMenu = false, false, false
                         if bankDistance <= 0.7 then
                             bankPoints[#bankPoints+1] = Config.Banks[i].Position.xyz
                         end
-                        if Config.ShowMarker and bankDistance <= Config.DrawMarker then
+                        if Config.ShowMarker and bankDistance <= Config.DrawMarker or 10 then
                             markerPoints[#markerPoints+1] = Config.Banks[i].Position.xyz
                         end
                     end
