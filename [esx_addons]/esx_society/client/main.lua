@@ -33,7 +33,6 @@ AddEventHandler('esx_addonaccount:setMoney', function(society, money)
 end)
 
 function EnableSocietyMoneyHUDElement()
-	local societyMoneyHUDElementTpl = '<div><img src="' .. base64MoneyIcon .. '" style="width:20px; height:20px; vertical-align:middle;">&nbsp;{{money}}</div>'
 	TriggerEvent('esx_society:toggleSocietyHud', true)
 end
 
