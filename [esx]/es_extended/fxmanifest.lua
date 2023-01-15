@@ -63,11 +63,7 @@ files {
 	'html/js/app.js',
 
 	'html/fonts/pdown.ttf',
-	'html/fonts/bankgothic.ttf',
-
-	'html/img/accounts/bank.png',
-	'html/img/accounts/black_money.png',
-	'html/img/accounts/money.png'
+	'html/fonts/bankgothic.ttf'
 }
 
 dependencies {

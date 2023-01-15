@@ -12,19 +12,6 @@ html {
 	overflow: hidden;
 }
 
-#hud {
-	opacity: 0.0;
-	position: absolute;
-	font-family: 'Pricedown';
-	font-size: 35px;
-	color: white;
-	padding: 4px;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-	text-align: right;
-	top: 80;
-	right: 40;
-}
-
 #inventory_notifications {
 	font-family: bankgothic;
 	position: absolute;

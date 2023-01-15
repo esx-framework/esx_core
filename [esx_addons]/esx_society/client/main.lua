@@ -34,31 +34,14 @@ end)
 
 function EnableSocietyMoneyHUDElement()
 	local societyMoneyHUDElementTpl = '<div><img src="' .. base64MoneyIcon .. '" style="width:20px; height:20px; vertical-align:middle;">&nbsp;{{money}}</div>'
-
-	if ESX.GetConfig().EnableHud then
-		ESX.UI.HUD.RegisterElement('society_money', 3, 0, societyMoneyHUDElementTpl, {
-			money = 0
-		})
-	end
-
 	TriggerEvent('esx_society:toggleSocietyHud', true)
 end
 
 function DisableSocietyMoneyHUDElement()
-	if ESX.GetConfig().EnableHud then
-		ESX.UI.HUD.RemoveElement('society_money')
-	end
-
 	TriggerEvent('esx_society:toggleSocietyHud', false)
 end
 
 function UpdateSocietyMoneyHUDElement(money)
-	if ESX.GetConfig().EnableHud then
-		ESX.UI.HUD.UpdateElement('society_money', {
-			money = ESX.Math.GroupDigits(money)
-		})
-	end
-
 	TriggerEvent('esx_society:setSocietyMoney', money)
 end
 
