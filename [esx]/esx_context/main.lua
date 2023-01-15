@@ -1,10 +1,37 @@
 local defaultPosition = "right" -- [ left | center | right ]
-local activeMenu
+local activeMenu, keepControl
 local Debug = ESX.GetConfig().EnableDebug
 
 -- Global functions
 -- [ Post | Open | Closed ]
 
+local function NuiFocus(state, keepInput)
+	SetNuiFocus(state, state)
+	if keepInput then
+		SetNuiFocusKeepInput(state)
+		CreateThread(function()
+			while keepControl do
+				DisableControlAction(0, 1, true)
+				DisableControlAction(0, 2, true)
+				DisableControlAction(0, 4, true)
+				DisableControlAction(0, 6, true)
+				DisableControlAction(0, 12, true)
+				DisableControlAction(0, 13, true)
+				DisableControlAction(0, 24, true)
+				DisableControlAction(0, 25, true)
+				DisableControlAction(0, 66, true)
+				DisableControlAction(0, 67, true)
+				DisableControlAction(0, 69, true)
+				DisableControlAction(0, 70, true)
+				DisableControlAction(0, 91, true)
+				DisableControlAction(0, 92, true)
+				DisableControlAction(0, 95, true)
+				DisableControlAction(0, 98, true)
+				Wait(0)
+			end
+		end)
+	end
+end
 function Post(fn,...)
 	SendNUIMessage({
 		func = fn,
@@ -12,8 +39,9 @@ function Post(fn,...)
 	})
 end
 
-function Open(position,eles,onSelect,onClose,canClose)
+function Open(position,eles,onSelect,onClose,canClose,keepInput)
 	local canClose = canClose == nil and true or canClose
+	keepControl = keepInput == nil and false or keepInput
 	activeMenu = {
 		position = position,
 		eles = eles,
@@ -23,17 +51,18 @@ function Open(position,eles,onSelect,onClose,canClose)
 	}
 
 	LocalPlayer.state:set("context:active",true)
-
+	NuiFocus(true, keepControl)
 	Post("Open",eles,position)
 end
 
 function Closed()
-	SetNuiFocus(false,false)
+	NuiFocus(false, keepControl)
 
 	local menu = activeMenu
 	local cb = menu.onClose
 
 	activeMenu = nil
+	keepControl = nil
 
 	LocalPlayer.state:set("context:active",false)
 
@@ -49,7 +78,6 @@ exports("Preview",Open)
 
 exports("Open",function(...)
 	Open(...)
-	SetNuiFocus(true,true)
 end)
 
 exports("Close",function()
@@ -147,7 +175,7 @@ local function focusPreview()
 		return
 	end
 
-	SetNuiFocus(true,true)
+	NuiFocus(true)
 end
 
 if PREVIEW_KEYBIND then
