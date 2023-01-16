@@ -74,20 +74,19 @@ local playerLoaded, uiActive, inMenu = false, false, false
     -- Handle text ui / Keypress
     function BANK:TextUi(state, atm)
         uiActive = state
-        if state then
-            ESX.TextUI(TranslateCap('press_e_banking'))
-            CreateThread(function()
-                while uiActive do
-                    if IsControlJustReleased(0, 38) then
-                        self:HandleUi(true, atm)
-                        self:TextUi(false)
-                    end
-                    Wait(0)
-                end
-            end)
-        else
-            ESX.HideUI()
+        if not state then
+            return ESX.HideUI()
         end
+        ESX.TextUI(TranslateCap('press_e_banking'))
+        CreateThread(function()
+            while uiActive do
+                if IsControlJustReleased(0, 38) then
+                    self:HandleUi(true, atm)
+                    self:TextUi(false)
+                end
+                Wait(0)
+            end
+        end)
     end
 
     -- Create Blips
@@ -127,36 +126,36 @@ local playerLoaded, uiActive, inMenu = false, false, false
         atm = atm or false
         SetNuiFocus(state, state)
         inMenu = state
-        if state then
-            ESX.TriggerServerCallback('esx_banking:getPlayerData', function(data)
-                SendNUIMessage({
-                    showMenu = true,
-                    openATM = atm,
-                    datas = {
-                        your_money_panel = {
-                            accountsData = {{
-                                name = "cash",
-                                amount = data.money
-                            }, {
-                                name = "bank",
-                                amount = data.bankMoney
-                            }}
-                        },
-                        bankCardData = {
-                            bankName = TranslateCap('bank_name'),
-                            cardNumber = "2232 2222 2222 2222",
-                            createdDate = "08/08",
-                            name = data.playerName
-                        },
-                        transactionsData = data.transactionHistory
-                    }
-                })
-            end)
-        else
+        if not state then
             SendNUIMessage({
                 showMenu = false
             })
+            return
         end
+        ESX.TriggerServerCallback('esx_banking:getPlayerData', function(data)
+            SendNUIMessage({
+                showMenu = true,
+                openATM = atm,
+                datas = {
+                    your_money_panel = {
+                        accountsData = {{
+                            name = "cash",
+                            amount = data.money
+                        }, {
+                            name = "bank",
+                            amount = data.bankMoney
+                        }}
+                    },
+                    bankCardData = {
+                        bankName = TranslateCap('bank_name'),
+                        cardNumber = "2232 2222 2222 2222",
+                        createdDate = "08/08",
+                        name = data.playerName
+                    },
+                    transactionsData = data.transactionHistory
+                }
+            })
+        end)
     end
 
     function BANK:LoadNpc(index, netID)
@@ -229,27 +228,31 @@ RegisterNUICallback('close', function(data, cb)
 end)
 
 RegisterNUICallback('clickButton', function(data, cb)
-    if data ~= nil and inMenu then
-        TriggerServerEvent("esx_banking:doingType", data)
+    if not data or not inMenu then
+        return cb('ok')
     end
+
+    TriggerServerEvent("esx_banking:doingType", data)
     cb('ok')
 end)
 
 RegisterNUICallback('checkPincode', function(data, cb)
-    if data ~= nil and inMenu then
-        ESX.TriggerServerCallback("esx_banking:checkPincode", function(pincode)
-            if pincode then
-                cb({
-                    success = true
-                })
-                ESX.ShowNotification(TranslateCap('pincode_found'), "success")
-
-            else
-                cb({
-                    error = true
-                })
-                ESX.ShowNotification(TranslateCap('pincode_not_found'), "error")
-            end
-        end, data)
+    if not data or not inMenu then
+        return cb('ok')
     end
+
+    ESX.TriggerServerCallback("esx_banking:checkPincode", function(pincode)
+        if pincode then
+            cb({
+                success = true
+            })
+            ESX.ShowNotification(TranslateCap('pincode_found'), "success")
+
+        else
+            cb({
+                error = true
+            })
+            ESX.ShowNotification(TranslateCap('pincode_not_found'), "error")
+        end
+    end, data)
 end)
