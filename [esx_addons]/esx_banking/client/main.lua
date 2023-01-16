@@ -20,7 +20,7 @@ local playerLoaded, uiActive, inMenu = false, false, false
                 data.ped = PlayerPedId()
                 bankPoints, atmPoints, markerPoints = {}, {}, {}
 
-                if IsPedOnFoot(data.ped) and not inMenu then
+                if (IsPedOnFoot(data.ped) and not ESX.PlayerData.dead) and not inMenu then
                     for i = 1, #Config.AtmModels do
                         local atm = GetClosestObjectOfType(data.coord.x, data.coord.y, data.coord.z, 0.7, Config.AtmModels[i], false, false, false)
                         if atm ~= 0 then
@@ -220,6 +220,8 @@ end)
         BANK:RemoveBlips()
         if uiActive then BANK:TextUi(false) end
     end)
+
+    RegisterNetEvent('esx:onPlayerDeath', function() BANK:TextUi(false) end)
 
 -- Nui Callbacks
 RegisterNUICallback('close', function(data, cb)
