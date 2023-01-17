@@ -403,7 +403,7 @@
             {
                 "elementID":"#cpincode",
                 "name":"cpincode",
-                "buttonText":"Applique",
+                "buttonText":"Valider",
                 "inputPlaceholder": "Entrez 4 chiffres...",
                 "title":"CONFIGURATION DU PIN",
                 "description": "Ici vous pouvez définir ou changer votre code PIN.",
@@ -412,7 +412,7 @@
             {
                 "elementID":"#withdraw",
                 "name":"withdraw",
-                "buttonText":"Approuver",
+                "buttonText":"Valider",
                 "inputPlaceholder": "Montant",
                 "title":"RETIRER",
                 "description": "Ici vous pouvez retirer votre argent de la banque.",
@@ -421,7 +421,7 @@
             {
                 "elementID":"#deposit",
                 "name":"deposit",
-                "buttonText":"Approbation",
+                "buttonText":"Valider",
                 "inputPlaceholder": "Montant",
                 "title":"DEPOSIT",
                 "description": "Ici, vous pouvez déposer votre argent à la banque.",
@@ -430,7 +430,7 @@
             {
                 "elementID":"#transfer",
                 "name":"transfer",
-                "buttonText":"Transfert",
+                "buttonText":"Transférer",
                 "inputPlaceholder": "Montant",
                 "inputPlaceholder2": "ID du joueur",
                 "title":"TRANSFERT",
@@ -471,7 +471,7 @@
             "moneyFormat":"$__replaceData__",
             "graphTitle":"Votre solde",
             "moreGraphTitle": "Grand graphique",
-            "moreHistoryTitle":"Afficher plus d'historique",
+            "moreHistoryTitle":"Afficher plus",
             "inputErrorTitle":"Les données sont incorrectes",
             "inputErrorMessage":"Il ne peut pas être vide ou avoir une valeur inférieure à 1",
             "showPincodeErrorTitle":"Code PIN incorrect",
