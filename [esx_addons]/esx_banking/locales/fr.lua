@@ -1,5 +1,5 @@
 Locales['fr'] = {
-    ['invalid_amount'] = "La somme d'argent est invalide.",
+    ['invalid_amount'] = "Le montant est invalide.",
     ['deposit_money']  = 'Tu as déposé $%s',
     ['withdraw_money'] = 'Tu as retiré $%s',
     ['pincode_money'] = 'Tu as défini un nouveau code PIN : %s',
