@@ -1,0 +1,20 @@
+Locales ['vi'] = {
+    ['valid_purchase'] = 'xác thực giao dịch mua này?',
+    ['yes'] = 'có (<span style="color: green;">$%s</span>)',
+    ['no'] = 'không',
+    ['helmet'] = 'mũ bảo hiểm / Mũ',
+    ['glasses'] = 'kính',
+    ['mask'] = 'mặt nạ',
+    ['ears'] = 'phụ kiện đeo tai',
+    ['shop'] = '%s shop',
+    ['set_unset'] = 'mặc vào / cởi ra',
+    ['not_enough_money'] = 'bạn không có đủ tiền',
+    ['press_access'] = 'nhấn [E] để truy cập menu',
+    ['accessories_blip'] = 'phụ kiện',
+    ['no_ears'] = 'bạn không có phụ kiện đeo tai',
+    ['no_glasses'] = 'bạn không có kính',
+    ['no_helmet'] = 'bạn không có mũ bảo hiểm',
+    ['no_mask'] = 'bạn không có mặt nạ',
+    ['you_paid'] = 'bạn đã trả tiền $%s',
+  }
+  

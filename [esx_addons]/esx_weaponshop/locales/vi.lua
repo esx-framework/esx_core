@@ -1,0 +1,16 @@
+Locales ['en'] = {
+  ["license_shop_title"] = "License Shop",
+  ["weapon_shop_menu_title"] = "Cửa hàng vũ khí",
+  ["weapon_shop_menu_description"] = "Mua các loại vũ khí",
+  ["menu_cancel"] = "Hủy bỏ",
+  ['buy_license'] = 'Mua giấy phép sử dụng súng?',
+  ['yes'] = '%s',
+  ['no'] = 'không',
+  ['weapon_bought'] = 'purchased for $%s',
+  ['not_enough_black'] = 'bạn không có đủ tiền bẩn',
+  ['not_enough'] = 'bạn không có đủ tiền',
+  ['already_owned'] = 'bạn đã sở hữu vũ khí này!',
+  ['shop_menu_title'] = 'ammu-Nation',
+  ['shop_menu_prompt'] = 'nhấn [E] để mở menu Ammu-Nation.',
+  ['map_blip'] = 'Ammu-Nation',
+}
