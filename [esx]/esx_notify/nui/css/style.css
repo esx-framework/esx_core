@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Poppins:wght@300;400;500;600;800&display=swap');
+
+:root {
+    --color: #919191;
+}
+
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    color: var(--color);
+    font-weight: 100;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+#root {
+    display: grid;
+    justify-content: center;
+}
+
+#root .notify {
+    display: flex;
+    position: relative;
+    flex: auto;
+    min-width: 20rem;
+    width: fit-content;
+    height: 3.5rem;
+    background: rgba(5,5, 5, 0.9);
+    border-radius: .5rem;
+    margin-top: .5rem;
+    animation: anim 300ms ease-in-out;
+    align-items: center;
+}
+
+#root .innerText {
+    padding-left: .4rem;
+    padding-right: .4rem;
+    width: 100%;
+}
+
+#root .icon {
+    float: left;
+    color: #fff;
+}
+
+#root .text {
+    display: inline-block;
+    margin-left: .5rem;
+}
+
+#root .error {
+    border-bottom: 3px solid #c0392b;
+}
+
+#root .success {
+    border-bottom: 3px solid #2ecc71;
+}
+
+#root .info {
+    border-bottom: 3px solid #2980b9;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+             'FILL' 0,
+             'wght' 400,
+             'GRAD' 0,
+             'opsz' 48
+}
+
+@keyframes anim {
+    0% {
+        transform: scaleY(0);
+    }
+    80% {
+        transform: scaleY(1.1)
+    }
+    100% {
+        transform: scaleY(1)
+    }
+}
