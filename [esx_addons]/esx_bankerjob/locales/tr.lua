@@ -13,7 +13,5 @@ Locales['tr'] = {
     ['press_input_context_to_open_menu']  = 'Banka Menüsünü açmak için [E] tuşuna basın.',
     ['withdraw']                          = 'para çek',
     ['boss_actions']                      = 'patron Hareketleri',
-    ['phone_receive']                     = 'banka Müşterisi',
-    ['phone_label']                       = 'banka',
   }
   

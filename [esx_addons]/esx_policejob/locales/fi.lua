@@ -145,7 +145,4 @@ Locales['fi'] = {
   ['remove_prop'] = 'paina [E] poistaaksesi objektin',
   ['map_blip'] = 'poliisilaitos',
   ['unrestrained_timer'] = 'tunnet kuinka hitaasti käsiraudat alkavat löystyä ja irtoavat',
-  -- Notifications
-  ['alert_police'] = 'hälyytys Poliisi',
-  ['phone_police'] = 'poliisi',
 }

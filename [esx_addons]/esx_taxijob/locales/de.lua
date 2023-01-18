@@ -46,7 +46,6 @@ Locales['de'] = {
   ['have_deposited'] = 'Du hast eingelagert x%s %s',
   ['player_cannot_hold'] = 'Du hast nicht genug Platz im Inventar',
   ['blip_taxi'] = 'taxi',
-  ['phone_taxi'] = 'taxi',
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi lagerbestand'
 }

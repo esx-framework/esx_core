@@ -45,7 +45,6 @@ Locales['si'] = {
   ['have_deposited'] = 'ste deponirali x%s %s',
   ['player_cannot_hold'] = 'v svojem inventarju nimaš dovolj prostora!',
   ['blip_taxi'] = 'podjetje downtown Cab Co.',
-  ['phone_taxi'] = 'downtown Cab Co.',
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi Stock'
 }

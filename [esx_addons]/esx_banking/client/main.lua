@@ -1,227 +1,192 @@
-local ActivateBlips = {}
-local PlayerLoaded = true
-local isInMarker, isInAtmMarker, isInMenu, isMarkerShowed = false, false, false, false
-local _GetEntityCoords, _PlayerPedId
+local BANK = {
+    Data = {}
+}
 
--- Functions
+local activeBlips, bankPoints, atmPoints, markerPoints = {}, {}, {}, {}
+local playerLoaded, uiActive, inMenu = false, false, false
 
--- Listen for keypress while player inside the marker
-local function Listen4Key()
-    CreateThread(function()
-        while (isInMarker or isInAtmMarker) and not isInMenu do
-            if IsControlJustReleased(0, 38) then
-                OpenUi(isInAtmMarker)
-            end
-            Wait(0)
-        end
-    end)
-end
+--Functions
+    -- General data collecting thread
+    function BANK:Thread()
+        self:CreateBlips()
+        local data = self.Data
+        data.ped = PlayerPedId()
+        data.coord = GetEntityCoords(data.Ped)
+        playerLoaded = true
 
--- Create Blips
-local function CreateBlips()
-    local tmpActiveBlips = {}
-    for i = 1, #Config.Banks do
-        if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Enabled then
-            local blip = AddBlipForCoord(Config.Banks[i].Position.xy)
-            SetBlipSprite(blip, Config.Banks[i].Blip.Sprite)
-            SetBlipScale(blip, Config.Banks[i].Blip.Scale)
-            SetBlipColour(blip, Config.Banks[i].Blip.Color)
-            SetBlipAsShortRange(blip, true)
-            BeginTextCommandSetBlipName('STRING')
-            AddTextComponentSubstringPlayerName(Config.Banks[i].Blip.Label)
-            EndTextCommandSetBlipName(blip)
-            tmpActiveBlips[#tmpActiveBlips + 1] = blip
-        end
-    end
+        CreateThread(function ()
+            while playerLoaded do
+                data.coord = GetEntityCoords(data.ped)
+                data.ped = PlayerPedId()
+                bankPoints, atmPoints, markerPoints = {}, {}, {}
 
-    ActivateBlips = tmpActiveBlips
-end
+                if (IsPedOnFoot(data.ped) and not ESX.PlayerData.dead) and not inMenu then
+                    for i = 1, #Config.AtmModels do
+                        local atm = GetClosestObjectOfType(data.coord.x, data.coord.y, data.coord.z, 0.7, Config.AtmModels[i], false, false, false)
+                        if atm ~= 0 then
+                            atmPoints[#atmPoints+1] = GetEntityCoords(atm)
+                        end
+                    end
 
--- Remove blips
-local function RemoveBlips()
-    for i = 1, #ActivateBlips do
-        if DoesBlipExist(ActivateBlips[i]) then
-            RemoveBlip(ActivateBlips[i])
-        end
-    end
-    ActivateBlips = {}
-end
-
-function OpenUi(atm)
-    atm = atm or false
-    isInMenu = true
-    ESX.HideUI()
-    ESX.TriggerServerCallback('esx_banking:getPlayerData', function(data)
-        SendNUIMessage({
-            showMenu = true,
-            openATM = atm,
-            datas = {
-                your_money_panel = {
-                    accountsData = {{
-                        name = "cash",
-                        amount = data.money
-                    }, {
-                        name = "bank",
-                        amount = data.bankMoney
-                    }}
-                },
-                bankCardData = {
-                    bankName = TranslateCap('bank_name'),
-                    cardNumber = "2232 2222 2222 2222",
-                    createdDate = "08/08",
-                    name = data.playerName
-                },
-                transactionsData = data.transactionHistory
-            }
-        })
-    end)
-    SetNuiFocus(true, true)
-end
-
-local function CloseUi()
-    SetNuiFocus(false, false)
-    isInMenu = false
-    SendNUIMessage({
-        showMenu = false
-    })
-
-    if (isInMarker or isInAtmMarker) then
-        ESX.TextUI(TranslateCap('press_e_banking'))
-        Listen4Key()
-    end
-end
-
-local function ShowMarker(coord)
-    CreateThread(function()
-        while isMarkerShowed do
-            DrawMarker(20, coord.x, coord.y, coord.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 187, 255, 0, 255, false, true, 2, false, nil, nil, false)
-            Wait(0)
-        end
-    end)
-end
-
-local function StartThread()
-    CreateThread(function()
-        CreateBlips()
-
-        while PlayerLoaded do
-            _PlayerPedId = PlayerPedId()
-            _GetEntityCoords = GetEntityCoords(_PlayerPedId)
-
-            if IsPedOnFoot(PlayerPedId()) then
-                local closestBank = {}
-
-                for i = 1, #Config.AtmModels do
-                    local atm = GetClosestObjectOfType(_GetEntityCoords, 8.0, Config.AtmModels[i], false)
-                    if atm ~= 0 then
-                        local atmOffset = GetOffsetFromEntityInWorldCoords(atm, 0.0, -0.7, 0.0)
-                        local atmDistance = #(_GetEntityCoords - atmOffset)
-                        if not isInAtmMarker and atmDistance <= 1.5 then
-                            isInAtmMarker = true
-                            ESX.TextUI(TranslateCap('press_e_banking'))
-                            Listen4Key()
-                        elseif isInAtmMarker and atmDistance > 1.5 then
-                            isInAtmMarker = false
-                            ESX.HideUI()
+                    for i = 1, #Config.Banks do
+                        local bankDistance = #(data.coord - Config.Banks[i].Position.xyz)
+                        if bankDistance <= 0.7 then
+                            bankPoints[#bankPoints+1] = Config.Banks[i].Position.xyz
+                        end
+                        if Config.ShowMarker and bankDistance <= (Config.DrawMarker or 10) then
+                            markerPoints[#markerPoints+1] = Config.Banks[i].Position.xyz
                         end
                     end
                 end
 
-                for i = 1, #Config.Banks do
-                    local bankDistance = #(_GetEntityCoords - Config.Banks[i].Position.xyz)
-
-                    if bankDistance <= Config.DrawMarker then
-                        closestBank = {Config.Banks[i].Position, bankDistance}
-                    end
+                if next(bankPoints) and not uiActive then
+                    self:TextUi(true)
                 end
 
-                if not isMarkerShowed and next(closestBank) then
-                    isMarkerShowed = true
-                    ShowMarker(closestBank[1].xyz)
-                elseif isMarkerShowed and not next(closestBank) then
-                    isMarkerShowed = false
+                if next(atmPoints) and not uiActive then
+                    self:TextUi(true, true)
                 end
 
-                if next(closestBank) then
-                    if not isInMarker and closestBank[2] <= 1.0 then
-                        isInMarker = true
-                        ESX.TextUI(TranslateCap('press_e_banking'))
-                        Listen4Key()
-                    elseif isInMarker and closestBank[2] > 1.0 then
-                        isInMarker = false
-                        ESX.HideUI()
-                    end
+                if not next(bankPoints) and not next(atmPoints) and uiActive then
+                    self:TextUi(false)
                 end
 
+                Wait(1000)
             end
-            Wait(1000)
+        end)
+
+        if not Config.ShowMarker then return end
+
+        CreateThread(function()
+            local wait = 1000
+            while playerLoaded do
+                if next(markerPoints) then
+                    for i = 1, #markerPoints do
+                        DrawMarker(20, markerPoints[i].x, markerPoints[i].y, markerPoints[i].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 187, 255, 0, 255, false, true, 2, false, nil, nil, false)
+                    end
+                    wait = 0
+                end
+                Wait(wait)
+            end
+        end)
+    end
+
+    -- Handle text ui / Keypress
+    function BANK:TextUi(state, atm)
+        uiActive = state
+        if not state then
+            return ESX.HideUI()
         end
-    end)
-end
-
--- NuiCallbacks
-RegisterNUICallback('close', function(data, cb)
-    CloseUi()
-    cb('ok')
-end)
-
-RegisterNUICallback('clickButton', function(data, cb)
-    if data ~= nil and isInMenu then
-        TriggerServerEvent("esx_banking:doingType", data)
-    end
-    cb('ok')
-end)
-
-RegisterNUICallback('checkPincode', function(data, cb)
-    if data ~= nil and isInMenu then
-        ESX.TriggerServerCallback("esx_banking:checkPincode", function(pincode)
-            if pincode then
-                cb({
-                    success = true
-                })
-                ESX.ShowNotification(TranslateCap('pincode_found'), "success")
-
-            else
-                cb({
-                    error = true
-                })
-                ESX.ShowNotification(TranslateCap('pincode_not_found'), "error")
+        ESX.TextUI(TranslateCap('press_e_banking'))
+        CreateThread(function()
+            while uiActive do
+                if IsControlJustReleased(0, 38) then
+                    self:HandleUi(true, atm)
+                    self:TextUi(false)
+                end
+                Wait(0)
             end
-        end, data)
+        end)
     end
-end)
+
+    -- Create Blips
+    function BANK:CreateBlips()
+        local tmpActiveBlips = {}
+        for i = 1, #Config.Banks do
+            if type(Config.Banks[i].Blip) == 'table' and Config.Banks[i].Blip.Enabled then
+                local position = Config.Banks[i].Position
+                local bInfo = Config.Banks[i].Blip
+                local blip = AddBlipForCoord(position.x, position.y, position.z)
+                SetBlipSprite(blip, bInfo.Sprite)
+                SetBlipScale(blip, bInfo.Scale)
+                SetBlipColour(blip, bInfo.Color)
+                SetBlipAsShortRange(blip, true)
+                BeginTextCommandSetBlipName('STRING')
+                AddTextComponentSubstringPlayerName(bInfo.Label)
+                EndTextCommandSetBlipName(blip)
+                tmpActiveBlips[#tmpActiveBlips + 1] = blip
+            end
+        end
+
+        activeBlips = tmpActiveBlips
+    end
+
+    -- Remove blips
+    function BANK:RemoveBlips()
+        for i = 1, #activeBlips do
+            if DoesBlipExist(activeBlips[i]) then
+                RemoveBlip(activeBlips[i])
+            end
+        end
+        activeBlips = {}
+    end
+
+    -- Open / Close ui
+    function BANK:HandleUi(state, atm)
+        atm = atm or false
+        SetNuiFocus(state, state)
+        inMenu = state
+        if not state then
+            SendNUIMessage({
+                showMenu = false
+            })
+            return
+        end
+        ESX.TriggerServerCallback('esx_banking:getPlayerData', function(data)
+            SendNUIMessage({
+                showMenu = true,
+                openATM = atm,
+                datas = {
+                    your_money_panel = {
+                        accountsData = {{
+                            name = "cash",
+                            amount = data.money
+                        }, {
+                            name = "bank",
+                            amount = data.bankMoney
+                        }}
+                    },
+                    bankCardData = {
+                        bankName = TranslateCap('bank_name'),
+                        cardNumber = "2232 2222 2222 2222",
+                        createdDate = "08/08",
+                        name = data.playerName
+                    },
+                    transactionsData = data.transactionHistory
+                }
+            })
+        end)
+    end
+
+    function BANK:LoadNpc(index, netID)
+        CreateThread(function()
+            while not NetworkDoesEntityExistWithNetworkId(netID) do
+                Wait(200)
+            end
+            local npc = NetworkGetEntityFromNetworkId(netID)
+            TaskStartScenarioInPlace(npc, Config.Peds[index].Scenario, 0, true)
+            SetEntityProofs(npc, true, true, true, true, true, true, true, true)
+            SetBlockingOfNonTemporaryEvents(npc, true)
+            FreezeEntityPosition(npc, true)
+            SetPedCanRagdollFromPlayerImpact(npc, false)
+            SetPedCanRagdoll(npc, false)
+            SetEntityAsMissionEntity(npc, true, true)
+            SetEntityDynamic(npc, false)
+        end)
+    end
 
 -- Events
 RegisterNetEvent('esx_banking:closebanking', function()
-    CloseUi()
+    BANK:HandleUi(false)
 end)
 
-local function loadNPC(index, netID)
-    CreateThread(function()
-        while not NetworkDoesEntityExistWithNetworkId(netID) do
-            Wait(200)
-        end
-        local npc = NetworkGetEntityFromNetworkId(netID)
-        
-        TaskStartScenarioInPlace(npc, Config.Peds[index].Scenario, 0, true)
-        SetEntityProofs(npc, true, true, true, true, true, true, true, true)
-        SetBlockingOfNonTemporaryEvents(npc, true)
-        FreezeEntityPosition(npc, true)
-        SetPedCanRagdollFromPlayerImpact(npc, false)
-        SetPedCanRagdoll(npc, false)
-        SetEntityAsMissionEntity(npc, true, true)
-        SetEntityDynamic(npc, false)
-    end)
-end
-
-RegisterNetEvent('esx_banking:PedHandler', function(netIdTable)
+RegisterNetEvent('esx_banking:pedHandler', function(netIdTable)
     for i = 1, #netIdTable do
-        loadNPC(i, netIdTable[i])
+        BANK:LoadNpc(i, netIdTable[i])
     end
 end)
 
-RegisterNetEvent('esx_banking:updateMoneyInUI')
-AddEventHandler('esx_banking:updateMoneyInUI', function(doingType, bankMoney, money)
+RegisterNetEvent('esx_banking:updateMoneyInUI', function(doingType, bankMoney, money)
     SendNUIMessage({
         updateData = true,
         data = {
@@ -232,22 +197,64 @@ AddEventHandler('esx_banking:updateMoneyInUI', function(doingType, bankMoney, mo
     })
 end)
 
--- Resource starting
-AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
-    StartThread()
+-- Handlers
+    -- Resource starting
+    AddEventHandler('onResourceStart', function(resource)
+        if resource ~= GetCurrentResourceName() then return end
+        BANK:Thread()
+    end)
+
+    -- Enable the script on player loaded 
+    RegisterNetEvent('esx:playerLoaded', function()
+        BANK:Thread()
+    end)
+
+    -- Disable the script on player logout
+    RegisterNetEvent('esx:onPlayerLogout', function()
+        playerLoaded = false
+    end)
+
+    -- Resource stopping
+    AddEventHandler('onResourceStop', function(resource)
+        if resource ~= GetCurrentResourceName() then return end
+        BANK:RemoveBlips()
+        if uiActive then BANK:TextUi(false) end
+    end)
+
+    RegisterNetEvent('esx:onPlayerDeath', function() BANK:TextUi(false) end)
+
+-- Nui Callbacks
+RegisterNUICallback('close', function(data, cb)
+    BANK:HandleUi(false)
+    cb('ok')
 end)
 
--- Enables it on player loaded 
-RegisterNetEvent('esx:playerLoaded', function()
-    StartThread()
-end)
-
--- Resource stopping
-AddEventHandler('onResourceStop', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
-    RemoveBlips()
-    if isInMenu then
-        CloseUi()
+RegisterNUICallback('clickButton', function(data, cb)
+    if not data or not inMenu then
+        return cb('ok')
     end
+
+    TriggerServerEvent("esx_banking:doingType", data)
+    cb('ok')
+end)
+
+RegisterNUICallback('checkPincode', function(data, cb)
+    if not data or not inMenu then
+        return cb('ok')
+    end
+
+    ESX.TriggerServerCallback("esx_banking:checkPincode", function(pincode)
+        if pincode then
+            cb({
+                success = true
+            })
+            ESX.ShowNotification(TranslateCap('pincode_found'), "success")
+
+        else
+            cb({
+                error = true
+            })
+            ESX.ShowNotification(TranslateCap('pincode_not_found'), "error")
+        end
+    end, data)
 end)

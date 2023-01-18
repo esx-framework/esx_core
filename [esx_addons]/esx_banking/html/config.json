@@ -93,7 +93,7 @@
                 "amountLabel":"Amount",
                 "timeLabel":"Time",
                 "searchInputPlaceholder":"Search ...",
-                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "_comment": "tableFullLanguage options: English, Hungarian, Italian, Spanish, French, you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"English" 
             }
         }
@@ -191,7 +191,7 @@
                 "amountLabel":"Összeg",
                 "timeLabel":"Idő",
                 "searchInputPlaceholder":"Kereső ...",
-                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "_comment": "tableFullLanguage options: English, Hungarian, Italian, Spanish, French, you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"Hungarian" 
             }
         }
@@ -288,7 +288,7 @@
                 "amountLabel":"quantità",
                 "timeLabel":"tempo",
                 "searchInputPlaceholder":"Cerca ...",
-                "_comment": "tabella Opzioni complete della lingua: inglese, ungherese, italiana puoi trovare qui tutte le lingue: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "_comment": "tabella Opzioni complete della lingua: inglese, ungherese, italiana, spagnolo, francese, puoi trovare qui tutte le lingue: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"Italian" 
             }
         }
@@ -385,8 +385,105 @@
                 "amountLabel":"Importe",
                 "timeLabel":"Tiempo",
                 "searchInputPlaceholder":"Buscar...",
-                "_comment": "tableFullLanguage options: English,Hungarian you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "_comment": "tableFullLanguage options: English, Hungarian, Italiano, Spanish, French, you can find here all lang: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
                 "tableFullLanguage":"Spanish" 
+            }
+        }
+    },
+    "FR":{
+        "DYNAMIC_FORM_DATA":[
+            {
+                "componentName":"moreGraph",
+                "elementID":"#wrapper",
+                "title":"",
+                "closeButtonText":"Fermer",
+                "bankTitle":"Banque Fleeca",
+                "mainExitButtonText": "Déconnexion"
+            },
+            {
+                "elementID":"#cpincode",
+                "name":"cpincode",
+                "buttonText":"Valider",
+                "inputPlaceholder": "Entrez 4 chiffres...",
+                "title":"CONFIGURATION DU PIN",
+                "description": "Ici vous pouvez définir ou changer votre code PIN.",
+                "type":"password"
+            },
+            {
+                "elementID":"#withdraw",
+                "name":"withdraw",
+                "buttonText":"Valider",
+                "inputPlaceholder": "Montant",
+                "title":"RETIRER",
+                "description": "Ici vous pouvez retirer votre argent de la banque.",
+                "type":"number"
+            },
+            {
+                "elementID":"#deposit",
+                "name":"deposit",
+                "buttonText":"Valider",
+                "inputPlaceholder": "Montant",
+                "title":"DEPOSIT",
+                "description": "Ici, vous pouvez déposer votre argent à la banque.",
+                "type":"number"
+            },
+            {
+                "elementID":"#transfer",
+                "name":"transfer",
+                "buttonText":"Transférer",
+                "inputPlaceholder": "Montant",
+                "inputPlaceholder2": "ID du joueur",
+                "title":"TRANSFERT",
+                "description": "Ici, vous pouvez transférer votre argent à quelqu'un d'autre."
+            },
+            {
+                "componentName":"trans",
+                "elementID":"#third-column",
+                "title":"HISTORIQUE DES TRANSACTIONS",
+                "description": "Ici, vous pouvez voir votre historique de transactions.",
+                "moreHistoryText": "Afficher plus d'historique",
+                "moreGraphText": "Afficher plus de graphique"
+            },
+            {
+                "componentName":"pincodePanel",
+                "elementID":"#wrapper",
+                "title":"Entrer le code PIN",
+                "deleteButtonText": "<i class='fa-solid fa-ban'></i>",
+                "loginButtonText": "<i class='fa-solid fa-right-to-bracket'></i>",
+                "closeButtonText": "Fermer"
+            },
+            {
+                "componentName":"atmComponent",
+                "elementID":"#wrapper",
+                "title":"Banque Fleeca",
+                "closeButtonText":"Se déconnecter"
+            }
+        ],
+        "LAUNGAGE": {
+            "your_money_title":"Solde",
+            "your_money_desc":"Ici, vous pouvez voir votre solde actuel et votre argent en espèces.",
+            "your_money_cash_label":"Votre argent en espèces",
+            "your_money_bank_label":"Votre solde bancaire",
+            "withdraw":"RETIRER",
+            "deposit":"DÉPOSER",
+            "transfer":"TRANSFERT",
+            "transferReceive":"TRANSFERT REÇU",
+            "moneyFormat":"$__replaceData__",
+            "graphTitle":"Votre solde",
+            "moreGraphTitle": "Grand graphique",
+            "moreHistoryTitle":"Afficher plus",
+            "inputErrorTitle":"Les données sont incorrectes",
+            "inputErrorMessage":"Il ne peut pas être vide ou avoir une valeur inférieure à 1",
+            "showPincodeErrorTitle":"Code PIN incorrect",
+            "showPincodeErrorMessage":"Le code PIN doit avoir au moins 4 caractères!",
+            "tableLang":{
+                "typeLabel": "Type de transaction",
+                "balanceLabel":"Solde",
+                "amountLabel":"Montant",
+                "timeLabel":"Temps",
+                "searchInputPlaceholder":"Rechercher ...",
+                "_comment": "Langue complète: Anglais, Hongrois, Italien, Espagnole Français, vous pouvez trouver ici toutes les langues: https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/",
+                "tableFullLanguage":"French" 
             }
         }
     }

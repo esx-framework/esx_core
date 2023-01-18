@@ -13,6 +13,4 @@ Locales['si'] = {
   ['press_input_context_to_open_menu'] = 'pritisnite [E] za odprtje menija banke Bank.',
   ['withdraw'] = 'umakni',
   ['boss_actions'] = 'boss Actions',
-  ['phone_receive'] = 'bančna stranka',
-  ['phone_label'] = 'bank',
 }

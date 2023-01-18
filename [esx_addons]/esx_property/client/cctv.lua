@@ -1,6 +1,6 @@
 --[[
       ESX Property - Properties Made Right!
-    Copyright (C) 2022 ESX-Framework
+    Copyright (C) 2023 ESX-Framework
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 function CCTV(PropertyID)
   DoScreenFadeOut(500)
   Wait(500)
-  local PlyCoordsBefore = GetEntityCoords(PlayerPedId())
   local Property = Properties[PropertyID]
   local CamTakePic = true
   if Property.cctv.enabled then
@@ -47,41 +46,41 @@ function CCTV(PropertyID)
           if Config.CCTV.PictureWebook ~= "" then
             PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(1)
-            N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Screenshot, true))
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Screenshot, true))
             InstructionButtonMessage(TranslateCap("take_picture"))
             PopScaleformMovieFunctionVoid()
           end
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(2)
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Right, true))
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Left, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Right, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Left, true))
           InstructionButtonMessage(TranslateCap("rot_left_right"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(3)
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Down, true))
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Up, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Down, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Up, true))
           InstructionButtonMessage(TranslateCap("rot_up_down"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(4)
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomOut, true))
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomIn, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomOut, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.ZoomIn, true))
           InstructionButtonMessage(TranslateCap("zoom"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(5)
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.NightVision, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.NightVision, true))
           InstructionButtonMessage(TranslateCap("night_vision"))
           PopScaleformMovieFunctionVoid()
 
           PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
           PushScaleformMovieFunctionParameterInt(0)
-          N_0xe83a3e3557a56640(GetControlInstructionalButton(1, Config.CCTV.Controls.Exit, true))
+          ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(1, Config.CCTV.Controls.Exit, true))
           InstructionButtonMessage(TranslateCap("exit"))
           PopScaleformMovieFunctionVoid()
 
@@ -99,7 +98,6 @@ function CCTV(PropertyID)
         end
         ESX.CloseContext()
         local cctvcam = nil
-        local angleZ = 0.0
         ClearFocus()
         local playerPed = PlayerPedId()
         cctvcam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA",

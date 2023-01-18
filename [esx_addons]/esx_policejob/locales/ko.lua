@@ -145,7 +145,4 @@ Locales['ko'] = {
   ['remove_prop'] = '[E]를 눌러 오브젝트를 삭제하십시오.',
   ['map_blip'] = '경찰서',
   ['unrestrained_timer'] = '당신의 수갑이 천천히 풀리는 것을 느낍니다.',
-  -- Notifications
-  ['alert_police'] = '경찰 경보',
-  ['phone_police'] = '경찰',
 }

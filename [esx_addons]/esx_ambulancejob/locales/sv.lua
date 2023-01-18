@@ -61,8 +61,6 @@ Locales['sv'] = {
   ['ems_menu_small'] = 'behandla mindre skador',
   ['ems_menu_big'] = 'behandla svåra skador',
   ['ems_menu_search'] = 'patienten hittades inte',
-  -- Phone
-  ['alert_ambulance'] = 'ambulanssamtal',
   -- Death
   ['respawn_available_in'] = 'respawn tillgänglig om %s:%s',
   ['respawn_bleedout_in'] = 'du kommer att förblöda om %s:%s\n',

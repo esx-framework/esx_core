@@ -61,8 +61,6 @@ Locales['et'] = {
   ['ems_menu_small'] = 'Ravi väikseid haavi',
   ['ems_menu_big'] = 'Ravi tõsiseid haavu',
   ['ems_menu_search'] = 'Patsienti ei leitud',
-  -- Phone
-  ['alert_ambulance'] = 'Kiirabi teadaanded',
   -- Death
   ['respawn_available_in'] = 'Sul on võimalik haiglas ärgata %s minuti ka %s sekundi pärast',
   ['respawn_bleedout_in'] = 'Sa jooksed verest tühjak %s minuti ja %s sekundi pärast\n',
