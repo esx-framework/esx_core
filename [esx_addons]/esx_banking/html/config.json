@@ -423,7 +423,7 @@
                 "name":"deposit",
                 "buttonText":"Valider",
                 "inputPlaceholder": "Montant",
-                "title":"DEPOSIT",
+                "title":"DÉPOSER",
                 "description": "Ici, vous pouvez déposer votre argent à la banque.",
                 "type":"number"
             },
