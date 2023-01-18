@@ -17,11 +17,13 @@ RegisterServerEvent('esx_service:activateService')
 AddEventHandler('esx_service:activateService', function(name, max)
 	InService[name] = {}
 	MaxInService[name] = max
+	GlobalState[name] = GetInServiceCount(name)
 end)
 
 RegisterServerEvent('esx_service:disableService')
 AddEventHandler('esx_service:disableService', function(name)
 	InService[name][source] = nil
+	GlobalState[name] = GetInServiceCount(name)
 end)
 
 RegisterServerEvent('esx_service:notifyAllInService')
@@ -35,12 +37,13 @@ end)
 
 ESX.RegisterServerCallback('esx_service:enableService', function(source, cb, name)
 	local inServiceCount = GetInServiceCount(name)
-
+	
 	if inServiceCount >= MaxInService[name] then
 		cb(false, MaxInService[name], inServiceCount)
 	else
 		InService[name][source] = true
-		cb(true, MaxInService[name], inServiceCount)
+		GlobalState[name] = GetInServiceCount(name)
+		cb(true, MaxInService[name], inServiceCount)		
 	end
 end)
 
@@ -75,8 +78,10 @@ end)
 
 AddEventHandler('esx:playerDropped', function(playerId, reason)
 	for k,v in pairs(InService) do
-		if v[source] == true then
-			v[source] = nil
+		if v[playerId] == true then
+			v[playerId] = nil
+			GlobalState[k] = GetInServiceCount(k)
 		end
 	end
 end)
+  
