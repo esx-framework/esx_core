@@ -150,7 +150,4 @@ Locales['et'] = {
   ['remove_prop'] = 'Vajuta ~INPUT_CONTEXT~ et kustutada asi sinu ees.',
   ['map_blip'] = 'Politseijaoskond',
   ['unrestrained_timer'] = 'Sa tunned, kuidas käerauad libisevad kätelt.',
-  -- Notifications
-  ['alert_police'] = 'Politsei teavitus',
-  ['phone_police'] = 'Politsei',
 }

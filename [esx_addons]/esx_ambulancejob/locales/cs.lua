@@ -61,8 +61,6 @@ Locales['cs'] = {
   ['ems_menu_small'] = 'ošetřit malé zranění',
   ['ems_menu_big'] = 'ošetřit vážné zranění',
   ['ems_menu_search'] = 'pacient nebyl nalezen',
-  -- Phone
-  ['alert_ambulance'] = 'zdravotnický poplach',
   -- Death
   ['respawn_available_in'] = 'oživení dostupné za %s minut a %s sekund\n',
   ['respawn_bleedout_in'] = 'vykrvácíte za %s minut a %s sekund\n',

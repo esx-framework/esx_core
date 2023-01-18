@@ -145,7 +145,4 @@ Locales['fr'] = {
   ['remove_prop'] = 'appuyez sur [E] pour enlever l\'objet',
   ['map_blip'] = 'Commissariat',
   ['unrestrained_timer'] = 'vous sentez que vos menottes deviennent fragiles.',
-  -- Notifications
-  ['alert_police'] = 'alerte police',
-  ['phone_police'] = 'police',
 }

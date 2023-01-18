@@ -60,8 +60,6 @@ Locales['nl'] = {
   ['ems_menu_putincar'] = 'Zet in voertuig',
   ['ems_menu_small'] = 'Behandel kleine verwondingen',
   ['ems_menu_big'] = 'Behandel grote verwondingen',
-  -- Phone
-  ['alert_ambulance'] = 'alert Ambulance',
   -- Death
   ['respawn_available_in'] = 'Respawn beschikbaar in %s minuten en %s seconden',
   ['respawn_bleedout_in'] = 'Je zal doodbloeden in %s minuten %s seconden\n',

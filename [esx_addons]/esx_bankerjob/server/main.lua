@@ -1,6 +1,5 @@
-TriggerEvent('esx_phone:registerNumber', 'banker', _('phone_receive'), false, false)
 CreateThread(function()
-	exports["esx_society"]:registerSociety('banker', TranslateCap('phone_label'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
+	exports["esx_society"]:registerSociety('banker', TranslateCap('bank'), 'society_banker', 'society_banker', 'society_banker', {type = 'public'})
 end)
 
 RegisterServerEvent('esx_bankerjob:customerDeposit')

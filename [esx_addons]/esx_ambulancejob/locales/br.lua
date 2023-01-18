@@ -61,8 +61,6 @@ Locales['br'] = {
   ['ems_menu_small'] = 'curar pequenas feridas',
   ['ems_menu_big'] = 'tratando lesões graves',
   ['ems_menu_search'] = 'paciente não encontrado',
-  -- Phone
-  ['alert_ambulance'] = 'alerta socorrista',
   -- Death
   ['respawn_available_in'] = 'você irar reviver em %s minutos %s segundos',
   ['respawn_bleedout_in'] = 'você vai sangrar %s minutos %s segundos\n',

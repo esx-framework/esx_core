@@ -46,7 +46,6 @@ Locales['fr'] = {
   ['have_deposited'] = 'vous avez déposé x%s %s',
   ['player_cannot_hold'] = 'vous n\'avez pas assez de place dans votre inventaire!',
   ['blip_taxi'] = 'taxi',
-  ['phone_taxi'] = 'taxi',
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi Stock'
 }

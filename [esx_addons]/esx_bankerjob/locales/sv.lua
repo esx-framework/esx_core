@@ -13,6 +13,4 @@ Locales['sv'] = {
   ['press_input_context_to_open_menu']  = 'Tryck [E] för att öppna Bankmenyn.',
   ['withdraw']                          = 'Ta ut',
   ['boss_actions']                      = 'Chef handlingar',
-  ['phone_receive']                     = 'Bank meddelande mottaget',
-  ['phone_label']                       = 'Bank',
 }

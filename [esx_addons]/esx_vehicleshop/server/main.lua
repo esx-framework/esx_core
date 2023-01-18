@@ -1,7 +1,6 @@
 local categories, vehicles = {}, {}
 local vehiclesByModel = {}
 
-TriggerEvent('esx_phone:registerNumber', 'cardealer', TranslateCap('dealer_customers'), false, false)
 CreateThread(function()
 	exports["esx_society"]:registerSociety('cardealer', TranslateCap('car_dealer'), 'society_cardealer', 'society_cardealer', 'society_cardealer', {type = 'private'})
 end)

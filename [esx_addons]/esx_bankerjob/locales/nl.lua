@@ -13,6 +13,4 @@ Locales['nl'] = {
   ['press_input_context_to_open_menu']  = 'druk op [E] om het Bank Menute openen.',
   ['withdraw']                          = 'opnemen',
   ['boss_actions']                      = 'baas acties',
-  ['phone_receive']                     = 'bank klant',
-  ['phone_label']                       = 'bank',
 }

@@ -13,6 +13,4 @@ Locales['hu'] = {
   ['press_input_context_to_open_menu']  = 'Nyomj [E] hogy megnyisd a bankot.',
   ['withdraw']                          = 'Kivétel',
   ['boss_actions']                      = 'Főnöki menü',
-  ['phone_receive']                     = 'banki ügyfél',
-  ['phone_label']                       = 'bank',
 }

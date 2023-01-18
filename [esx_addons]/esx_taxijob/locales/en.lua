@@ -47,7 +47,6 @@ Locales['en'] = {
   ['have_deposited'] = 'you have deposited x%s %s',
   ['player_cannot_hold'] = 'you do ~r~not have enough free space in your inventory!',
   ['blip_taxi'] = 'downtown Cab Co.',
-  ['phone_taxi'] = 'downtown Cab Co.',
   ['taxi'] = 'taxi',
   ['taxi_stock'] = 'taxi Stock'
 }

@@ -146,7 +146,4 @@ Locales['nl'] = {
     ['remove_prop'] = 'Druk op [E] om dit object te verwijderen.',
     ['map_blip'] = 'Politiebureau',
     ['unrestrained_timer'] = 'Je voelt je handboeien langzaam wegglijden.',
-    -- Notifications
-    ['alert_police'] = 'politie alert',
-    ['phone_police'] = 'politie',
   }

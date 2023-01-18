@@ -13,6 +13,4 @@ Locales['fr'] = {
   ['press_input_context_to_open_menu']  = 'appuyez sur [E] pour ouvrir le menu',
   ['withdraw']                          = 'retrait',
   ['boss_actions']                      = 'action Patron',
-  ['phone_receive']                     = 'client Banque',
-  ['phone_label']                       = 'banque',
 }

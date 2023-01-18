@@ -146,7 +146,4 @@ Locales['si'] = {
 ['remove_prop'] = 'pritisnite [E], da izbrišete predmet',
 ['map_blip'] = 'policijska postaja',
 ['unrestrained_timer'] = 'čutiš, kako se ti izgubljaš oprijem in kako se ti razblinjajo okovi.',
--- obvestila
-['alert_police'] = 'policijski alarm',
-['phone_police'] = 'policija',
 }
