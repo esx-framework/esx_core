@@ -537,10 +537,15 @@ function ESX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPeds(onlyOtherPeds)
-    local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
+    local myPed, pool = ESX.PlayerData.ped, GetGamePool('CPed')
 
+    if not onlyOtherPeds then
+        return pool
+    end
+
+    local peds = {}
     for i = 1, #pool do
-        if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
+        if pool[i] ~= myPed then
             peds[#peds + 1] = pool[i]
         end
     end
