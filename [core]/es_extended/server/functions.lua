@@ -245,11 +245,7 @@ function ESX.GetPlayerFromId(source)
 end
 
 function ESX.GetPlayerFromIdentifier(identifier)
-  for k, v in pairs(ESX.Players) do
-    if v.identifier == identifier then
-      return v
-    end
-  end
+  return Core.playersByIdentifier[identifier]
 end
 
 function ESX.GetIdentifier(playerId)
