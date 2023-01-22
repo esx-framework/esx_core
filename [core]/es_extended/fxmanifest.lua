@@ -27,8 +27,7 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
+	'common/modules/*.lua',
 	'common/functions.lua'
 }
 
@@ -42,8 +41,7 @@ client_scripts {
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
+	'common/modules/*.lua',
 	'common/functions.lua'
 }
 

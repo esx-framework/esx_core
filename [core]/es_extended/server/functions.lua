@@ -4,22 +4,6 @@ function ESX.Trace(msg)
   end
 end
 
-function ESX.SetTimeout(msec, cb)
-  local id = Core.TimeoutCount + 1
-
-  SetTimeout(msec, function()
-    if Core.CancelledTimeouts[id] then
-      Core.CancelledTimeouts[id] = nil
-    else
-      cb()
-    end
-  end)
-
-  Core.TimeoutCount = id
-
-  return id
-end
-
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   if type(name) == 'table' then
     for k, v in ipairs(name) do
@@ -157,10 +141,6 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   else
     ExecuteCommand(('add_ace group.%s command.%s allow'):format(group, name))
   end
-end
-
-function ESX.ClearTimeout(id)
-  Core.CancelledTimeouts[id] = true
 end
 
 function ESX.RegisterServerCallback(name, cb)

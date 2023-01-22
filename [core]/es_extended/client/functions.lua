@@ -4,7 +4,6 @@ ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
-Core.TimeoutCallbacks = {}
 Core.Input = {}
 ESX.UI = {}
 ESX.UI.HUD = {}
@@ -20,18 +19,6 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 ESX.Streaming = {}
-
-function ESX.SetTimeout(msec, cb)
-    table.insert(Core.TimeoutCallbacks, {
-        time = GetGameTimer() + msec,
-        cb = cb
-    })
-    return #Core.TimeoutCallbacks
-end
-
-function ESX.ClearTimeout(i)
-    Core.TimeoutCallbacks[i] = nil
-end
 
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
@@ -1392,22 +1379,4 @@ AddEventHandler('esx:showAdvancedNotification',
 RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
-end)
-
--- SetTimeout
-CreateThread(function()
-    while true do
-        local sleep = 100
-        if #Core.TimeoutCallbacks > 0 then
-            local currTime = GetGameTimer()
-            sleep = 0
-            for i = 1, #Core.TimeoutCallbacks, 1 do
-                if currTime >= Core.TimeoutCallbacks[i].time then
-                    Core.TimeoutCallbacks[i].cb()
-                    Core.TimeoutCallbacks[i] = nil
-                end
-            end
-        end
-        Wait(sleep)
-    end
 end)
