@@ -65,6 +65,9 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 					break
 				end
 			end
+			if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
+				print('[^1ERROR^7] The player could not be seated in the vehicle')
+			end
 		end
 	end)
 end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
