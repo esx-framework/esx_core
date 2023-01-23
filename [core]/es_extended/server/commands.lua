@@ -35,45 +35,45 @@ local upgrades = Config.SpawnVehMaxUpgrades and
     } or {}
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	if xPlayer then
-		local playerPed = GetPlayerPed(xPlayer.source)
-		local playerCoords = GetEntityCoords(playerPed)
-		local playerHeading = GetEntityHeading(playerPed)
-		local playerVehicle = GetVehiclePedIsIn(playerPed)
+	if not xPlayer then
+		return print('[^1ERROR^7] The xPlayer value is nil')
+	end
+	
+	local playerPed = GetPlayerPed(xPlayer.source)
+	local playerCoords = GetEntityCoords(playerPed)
+	local playerHeading = GetEntityHeading(playerPed)
+	local playerVehicle = GetVehiclePedIsIn(playerPed)
 
-		if not args.car or type(args.car) ~= 'string' then
-			args.car = 'adder'
-		end
+	if not args.car or type(args.car) ~= 'string' then
+		args.car = 'adder'
+	end
 
-		if playerVehicle then
-			DeleteEntity(playerVehicle)
-		end
+	if playerVehicle then
+		DeleteEntity(playerVehicle)
+	end
 
-		ESX.DiscordLogFields("UserActions", "/car Triggered", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Vehicle", value = args.car, inline = true}
-		})
+	ESX.DiscordLogFields("UserActions", "/car Triggered", "pink", {
+		{name = "Player", value = xPlayer.name, inline = true},
+		{name = "ID", value = xPlayer.source, inline = true},
+		{name = "Vehicle", value = args.car, inline = true}
+	})
 
-		ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
-			if networkId then
-				local vehicle = NetworkGetEntityFromNetworkId(networkId)
-				for i = 1, 20 do
-					Wait(0)
-					SetPedIntoVehicle(playerPed, vehicle, -1)
+	ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
+		if networkId then
+			local vehicle = NetworkGetEntityFromNetworkId(networkId)
+			for i = 1, 20 do
+				Wait(0)
+				SetPedIntoVehicle(playerPed, vehicle, -1)
 		
-					if GetVehiclePedIsIn(playerPed, false) == vehicle then
-						break
-					end
-				end
-				if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
-					print('[^1ERROR^7] The player could not be seated in the vehicle')
+				if GetVehiclePedIsIn(playerPed, false) == vehicle then
+					break
 				end
 			end
-		end)
-	else
-		print('[^1ERROR^7] The xplayer value is nil')
-	end
+			if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
+				print('[^1ERROR^7] The player could not be seated in the vehicle')
+			end
+		end
+	end)
 end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = TranslateCap('command_car_car'), type = 'string'}
 }}) 
