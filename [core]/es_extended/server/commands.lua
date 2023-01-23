@@ -23,7 +23,7 @@ end, true, {help = TranslateCap('command_setjob'), validate = true, arguments = 
 	{name = 'grade', help = TranslateCap('command_setjob_grade'), type = 'number'}
 }})
 
-local upgrades = Config.MaxAdminVehicles and
+local upgrades = Config.SpawnVehMaxUpgrades and
     {
         plate = "ADMINCAR",
         modEngine = 3,
