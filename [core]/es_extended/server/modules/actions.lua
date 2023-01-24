@@ -15,20 +15,20 @@ if Config.EnableDebug then
         print('esx:playerJumping', source)
     end)
 
-    AddEventHandler('esx:playerEnteringVehicle', function(vehicle, seat, netId)
-        print('esx:playerEnteringVehicle', 'source', source, 'vehicle', vehicle, 'seat', seat, 'netId', netId)
+    AddEventHandler('esx:playerEnteringVehicle', function(vehicle, plate, seat, netId)
+        print('esx:playerEnteringVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
     AddEventHandler('esx:playerEnteringVehicleAborted', function()
         print('esx:playerEnteringVehicleAborted', source)
     end)
 
-    AddEventHandler('esx:playerEnteredVehicle', function(vehicle, seat, displayName, netId)
-        print('esx:playerEnteredVehicle', 'source', source, 'vehicle', vehicle, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:playerEnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:playerEnteredVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
-    AddEventHandler('esx:playerExitedVehicle', function(vehicle, seat, displayName, netId)
-        print('esx:playerExitedVehicle', 'source', source, 'vehicle', vehicle, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:playerExitedVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:playerExitedVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
 end
