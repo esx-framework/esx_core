@@ -402,7 +402,8 @@ CREATE TABLE `users` (
   `disabled` TINYINT(1) NULL DEFAULT '0',
   `last_property` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_seen` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+  `last_seen` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `phone_number` VARCHAR(20) DEFAULT NULL
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
