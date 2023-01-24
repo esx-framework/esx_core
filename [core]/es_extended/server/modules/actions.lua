@@ -1,9 +1,9 @@
 RegisterServerEvent('esx:playerPedChanged')
 RegisterServerEvent('esx:playerJumping')
-RegisterServerEvent('esx:playerEnteringVehicle')
-RegisterServerEvent('esx:playerEnteringVehicleAborted')
-RegisterServerEvent('esx:playerEnteredVehicle')
-RegisterServerEvent('esx:playerExitedVehicle')
+RegisterServerEvent('esx:EnteringVehicle')
+RegisterServerEvent('esx:EnteringVehicleAborted')
+RegisterServerEvent('esx:EnteredVehicle')
+RegisterServerEvent('esx:ExitedVehicle')
 
 if Config.EnableDebug then
 
@@ -15,20 +15,20 @@ if Config.EnableDebug then
         print('esx:playerJumping', source)
     end)
 
-    AddEventHandler('esx:playerEnteringVehicle', function(vehicle, plate, seat, netId)
-        print('esx:playerEnteringVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
+    AddEventHandler('esx:EnteringVehicle', function(vehicle, plate, seat, netId)
+        print('esx:EnteringVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
-    AddEventHandler('esx:playerEnteringVehicleAborted', function()
-        print('esx:playerEnteringVehicleAborted', source)
+    AddEventHandler('esx:EnteringVehicleAborted', function()
+        print('esx:EnteringVehicleAborted', source)
     end)
 
-    AddEventHandler('esx:playerEnteredVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:playerEnteredVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:EnteredVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
-    AddEventHandler('esx:playerExitedVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:playerExitedVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:ExitedVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:ExitedVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
 end
