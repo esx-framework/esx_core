@@ -70,9 +70,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
 		
 		if Config.DisableNPCDrops then
-			local pickups = {`PICKUP_WEAPON_PUMPSHOTGUN`, `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`}
-			for i = 1, #pickups do 
-				ToggleUsePickupsForPlayer(playerId, pickups[i], false) 
+			local weaponPickups = {`PICKUP_WEAPON_PUMPSHOTGUN`, `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`}
+			for i = 1, #weaponPickups do 
+				ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false) 
 			end
 		end
 
