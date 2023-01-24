@@ -1,4 +1,4 @@
-local isInVehicle, isEnteringVehicle, isJumping = false, false, false
+local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
 local currentVehicle, currentSeat = 0, 0
 local playerPed = PlayerPedId()
 
@@ -32,6 +32,15 @@ CreateThread(function()
         elseif not IsPedJumping(playerPed) and isJumping then
             isJumping = false
         end
+
+         if IsPauseMenuActive() and not inPauseMenu then
+            inPauseMenu = true
+            TriggerEvent('esx:pauseMenuActive', inPauseMenu)
+        elseif not IsPauseMenuActive() and inPauseMenu then
+            inPauseMenu = false
+            TriggerEvent('esx:pauseMenuActive', inPauseMenu)
+        end
+
 
         if not isInVehicle and not IsPlayerDead(PlayerId()) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then
