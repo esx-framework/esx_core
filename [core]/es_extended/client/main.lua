@@ -58,28 +58,42 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	CreateThread(function()
+		local playerId = PlayerId()
+		local DisabledComps = {}
+		local ToggleUsePickupsForPlayer = ToggleUsePickupsForPlayer
+		local SetHudComponentPosition = SetHudComponentPosition
 		local SetPlayerHealthRechargeMultiplier = SetPlayerHealthRechargeMultiplier
 		local BlockWeaponWheelThisFrame = BlockWeaponWheelThisFrame
 		local DisableControlAction = DisableControlAction
 		local IsPedArmed = IsPedArmed
 		local SetPlayerLockonRangeOverride = SetPlayerLockonRangeOverride
 		local DisablePlayerVehicleRewards = DisablePlayerVehicleRewards
-		local RemoveAllPickupsOfType = RemoveAllPickupsOfType
-		local HideHudComponentThisFrame = HideHudComponentThisFrame
-		local PlayerId = PlayerId()
-		local DisabledComps = {}
-		for i=1, #(Config.RemoveHudCommonents) do
+		
+		if Config.DisableNPCDrops then
+			local pickups = {`PICKUP_WEAPON_PUMPSHOTGUN`, `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`}
+			for i = 1, #pickups do 
+				ToggleUsePickupsForPlayer(playerId, pickups[i], false) 
+			end
+		end
+
+		for i = 1, #(Config.RemoveHudCommonents) do
 			if Config.RemoveHudCommonents[i] then
 				DisabledComps[#DisabledComps + 1] = i
 			end
 		end
 
+		if #DisabledComps > 0 then
+			for i=1, #(DisabledComps) do
+				SetHudComponentPosition(DisabledComps[i], 999999.0, 999999.0)
+			end
+		end
+		
 		while true do 
 			local Sleep = true
 
 			if Config.DisableHealthRegeneration then
 				Sleep = false
-				SetPlayerHealthRechargeMultiplier(PlayerId, 0.0)
+				SetPlayerHealthRechargeMultiplier(playerId, 0.0)
 			end
 
 			if Config.DisableWeaponWheel then
@@ -91,27 +105,13 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			if Config.DisableAimAssist then
 				Sleep = false
 				if IsPedArmed(ESX.PlayerData.ped, 4) then
-					SetPlayerLockonRangeOverride(PlayerId, 2.0)
+					SetPlayerLockonRangeOverride(playerId, 2.0)
 				end
 			end
 
 			if Config.DisableVehicleRewards then
 				Sleep = false
-				DisablePlayerVehicleRewards(PlayerId)
-			end
-			
-			if Config.DisableNPCDrops then
-				Sleep = false
-				RemoveAllPickupsOfType(0xDF711959)
-				RemoveAllPickupsOfType(0xF9AFB48F)
-				RemoveAllPickupsOfType(0xA9355DCD)
-			end
-
-			if #DisabledComps > 0 then
-				Sleep = false
-				for i=1, #(DisabledComps) do
-					HideHudComponentThisFrame(DisabledComps[i])
-				end
+				DisablePlayerVehicleRewards(playerId)
 			end
 				
 			Wait(Sleep and 1500 or 0)
