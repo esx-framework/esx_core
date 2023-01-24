@@ -28,7 +28,8 @@ server_scripts {
 	'server/commands.lua',
 
 	'common/modules/*.lua',
-	'common/functions.lua'
+	'common/functions.lua',
+	'server/modules/*.lua'
 }
 
 client_scripts {
@@ -36,13 +37,12 @@ client_scripts {
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
-
-	'client/modules/death.lua',
-	'client/modules/scaleform.lua',
-	'client/modules/streaming.lua',
-
+	
 	'common/modules/*.lua',
+	'common/functions.lua',
+
 	'common/functions.lua'
+	'client/modules/*.lua'
 }
 
 ui_page {

@@ -23,29 +23,56 @@ end, true, {help = TranslateCap('command_setjob'), validate = true, arguments = 
 	{name = 'grade', help = TranslateCap('command_setjob_grade'), type = 'number'}
 }})
 
+local upgrades = Config.SpawnVehMaxUpgrades and
+    {
+        plate = "ADMINCAR",
+        modEngine = 3,
+        modBrakes = 2,
+        modTransmission = 2,
+        modSuspension = 3,
+        modArmor = true,
+        windowTint = 1
+    } or {}
+
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
-	if not args.car then args.car = GameBuild >= 2699 and "draugur" or "prototipo" end
+	if not xPlayer then
+		return print('[^1ERROR^7] The xPlayer value is nil')
+	end
+	
+	local playerPed = GetPlayerPed(xPlayer.source)
+	local playerCoords = GetEntityCoords(playerPed)
+	local playerHeading = GetEntityHeading(playerPed)
+	local playerVehicle = GetVehiclePedIsIn(playerPed)
+
+	if not args.car or type(args.car) ~= 'string' then
+		args.car = 'adder'
+	end
+
+	if playerVehicle then
+		DeleteEntity(playerVehicle)
+	end
+
 	ESX.DiscordLogFields("UserActions", "/car Triggered", "pink", {
 		{name = "Player", value = xPlayer.name, inline = true},
 		{name = "ID", value = xPlayer.source, inline = true},
-    {name = "Vehicle", value = args.car, inline = true}
+		{name = "Vehicle", value = args.car, inline = true}
 	})
-	local upgrades = Config.MaxAdminVehicles and {
-		plate = "ADMINCAR", 
-		modEngine = 3,
-		modBrakes = 2,
-		modTransmission = 2,
-		modSuspension = 3,
-		modArmor = true,
-		windowTint = 1,
-	} or {}
-	local coords = xPlayer.getCoords(true)
-	local PlayerPed = GetPlayerPed(xPlayer.source)
-	ESX.OneSync.SpawnVehicle(args.car, coords - vector3(0,0, 0.9), GetEntityHeading(PlayerPed), upgrades, function(networkId)
-		local vehicle = NetworkGetEntityFromNetworkId(networkId)
-		Wait(250)
-		TaskWarpPedIntoVehicle(PlayerPed, vehicle, -1)
+
+	ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
+		if networkId then
+			local vehicle = NetworkGetEntityFromNetworkId(networkId)
+			for i = 1, 20 do
+				Wait(0)
+				SetPedIntoVehicle(playerPed, vehicle, -1)
+		
+				if GetVehiclePedIsIn(playerPed, false) == vehicle then
+					break
+				end
+			end
+			if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
+				print('[^1ERROR^7] The player could not be seated in the vehicle')
+			end
+		end
 	end)
 end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = TranslateCap('command_car_car'), type = 'string'}
