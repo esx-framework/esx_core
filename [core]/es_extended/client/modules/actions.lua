@@ -103,7 +103,7 @@ if Config.EnableDebug then
         print('esx:EnteringVehicleAborted')
     end)
 
-    AddEventHandler('esxEnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+    AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
         print('esx:EnteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
