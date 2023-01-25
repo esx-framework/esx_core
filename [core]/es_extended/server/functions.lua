@@ -359,6 +359,7 @@ function ESX.AddJob(jobObject)
   end
 
   local jobsTable, queries = {}, {}
+  local currentJobs = ESX.GetJobs()
 
   if jobObject.name then
     jobsTable[1] = {
@@ -383,7 +384,7 @@ function ESX.AddJob(jobObject)
       if value == -1 then
         return false, ("invalid_job_%s_parameter"):format(key)
       end
-      if key == "name" and ESX.Jobs[value] then
+      if key == "name" and currentJobs[value] then
         return false, "job_already_exists"
       elseif key == "grades" then
         if type(value) ~= "table" or not next(value) then return false, "invalid_job_grades_object" end
@@ -426,7 +427,7 @@ function ESX.AddJob(jobObject)
     print(('[^2INFO^7] Job ^5"%s"^7 (%s) has been added'):format(jobsTable[index].label, jobsTable[index].name))
   end
 
-  jobObject, jobsTable, queries = nil, nil, nil
+  jobObject, jobsTable, queries, currentJobs = nil, nil, nil, nil
 
   ESX.RefreshJobs()
   return true, "job_added_successfully"
