@@ -355,7 +355,7 @@ end
 
 function ESX.AddJob(jobObject)
   if type(jobObject) ~= "table" then
-    return false, "invalid_job_object"
+    return false, "invalid_job_object_type"
   end
 
   local jobsTable, queries = {}, {}
@@ -378,6 +378,8 @@ function ESX.AddJob(jobObject)
       }
     end
   end
+
+  if not #jobsTable or #jobsTable < 1 then return false, "no_job_object_received" end
 
   for index, jobObj in pairs(jobsTable) do
     for key, value in pairs(jobObj) do
@@ -435,7 +437,7 @@ end
 
 function ESX.UpdateJob(jobObject)
   if type(jobObject) ~= "table" then
-    return false, "invalid_job_object"
+    return false, "invalid_job_object_type"
   end
 
   local jobsTable, queries = {}, {}
@@ -460,6 +462,8 @@ function ESX.UpdateJob(jobObject)
       }
     end
   end
+
+  if not #jobsTable or #jobsTable < 1 then return false, "no_job_object_received" end
 
   for index, jobObj in pairs(jobsTable) do
     for key, value in pairs(jobObj) do
