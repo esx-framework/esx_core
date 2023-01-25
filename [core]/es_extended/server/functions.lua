@@ -364,7 +364,7 @@ function ESX.AddJob(jobObject)
     jobsTable[1] = {
       name = ((jobObject.name and type(jobObject.name) == "string") and jobObject.name) or -1,
       label = ((jobObject.label and type(jobObject.label) == "string") and jobObject.label) or -1,
-      whitelisted = ((jobObject.whitelisted and (type(jobObject.whitelisted) == "number" or type(jobObject.whitelisted) == "boolean")) and jobObject.whitelisted) or -1,
+      whitelisted = ((jobObject.whitelisted ~= nil and (type(jobObject.whitelisted) == "number" or type(jobObject.whitelisted) == "boolean")) and jobObject.whitelisted) or jobObject.whitelisted == nil and -1,
       grades = ((jobObject.grades and type(jobObject.grades) == "table") and jobObject.grades) or -1,
     }
   else
@@ -372,7 +372,7 @@ function ESX.AddJob(jobObject)
       jobsTable[index] = {
         name = ((jobObj.name and type(jobObj.name) == "string") and jobObj.name) or -1,
         label = ((jobObj.label and type(jobObj.label) == "string") and jobObj.label) or -1,
-        whitelisted = ((jobObj.whitelisted and (type(jobObj.whitelisted) == "number" or type(jobObj.whitelisted) == "boolean")) and jobObj.whitelisted) or -1,
+        whitelisted = ((jobObj.whitelisted ~= nil and (type(jobObj.whitelisted) == "number" or type(jobObj.whitelisted) == "boolean")) and jobObj.whitelisted) or jobObj.whitelisted == nil and -1,
         grades = ((jobObj.grades and type(jobObj.grades) == "table") and jobObj.grades) or -1,
       }
     end
@@ -388,10 +388,11 @@ function ESX.AddJob(jobObject)
       elseif key == "grades" then
         if type(value) ~= "table" or not next(value) then return false, "invalid_job_grades_object" end
         for gradeKey, gradeObject in pairs(value) do
-          if type(gradeKey) ~= "string" then return false, "invalid_job_grade_key" end
+          local gradeKeyToNumber = tonumber(gradeKey)
+          if type(gradeKey) ~= "string" and (gradeKeyToNumber and type(gradeKeyToNumber) ~= "number") then return false, "invalid_job_grade_key" end
           if type(gradeObject) ~= "table" then return false, "invalid_job_grade_object" end
           local gradeObj = {
-            grade = ((gradeObject.grade and type(gradeObject.grade) == "number") and gradeObject.grade) or tonumber(gradeKey) or -1,
+            grade = gradeKeyToNumber or -1,
             name = ((gradeObject.name and type(gradeObject.name) == "string") and gradeObject.name) or -1,
             label = ((gradeObject.label and type(gradeObject.label) == "string") and gradeObject.label) or -1,
             salary = ((gradeObject.salary and type(gradeObject.salary) == "number") and gradeObject.salary) or -1,
@@ -407,7 +408,7 @@ function ESX.AddJob(jobObject)
             query = "INSERT INTO `job_grades` SET `job_name` = ?, `grade` = ?, `name` = ?, `label` = ?, `salary` = ?, `skin_male` = ?, `skin_female` = ?",
             values = {jobsTable[index].name, gradeObj.grade, gradeObj.name, gradeObj.label, gradeObj.salary, gradeObj.skin_male, gradeObj.skin_female}
           }
-          gradeObj = nil
+          gradeKeyToNumber, gradeObj = nil, nil
         end
       end
     end
