@@ -567,7 +567,6 @@ function ESX.RemoveJob(jobObject)
   if not MySQL.transaction.await(queries) then
     return false, "error_in_executing_queries"
   end
-  print("jobsTable", ESX.DumpTable(jobsTable), "queries", ESX.DumpTable(queries))
 
   for index in pairs(jobsTable) do
     print(('[^2INFO^7] Job ^5"%s"^7 (%s) has been removed'):format(jobsTable[index].label, jobsTable[index].name))
