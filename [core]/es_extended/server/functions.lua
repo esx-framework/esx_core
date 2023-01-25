@@ -405,7 +405,6 @@ function ESX.AddJob(jobObject)
           end
           queries[#queries+1] = {
             query = "INSERT INTO `job_grades` SET `job_name` = ?, `grade` = ?, `name` = ?, `label` = ?, `salary` = ?, `skin_male` = ?, `skin_female` = ?",
-            ---@diagnostic disable-next-line: param-type-mismatch
             values = {jobsTable[index].name, gradeObj.grade, gradeObj.name, gradeObj.label, gradeObj.salary, gradeObj.skin_male, gradeObj.skin_female}
           }
           gradeObj = nil
