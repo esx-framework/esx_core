@@ -347,10 +347,14 @@ function ESX.RefreshJobs()
 
   if not Jobs then
     -- Fallback data, if no jobs exist
-    ESX.Jobs['unemployed'] = {label = 'Unemployed', grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
+    ESX.Jobs = {
+      ['unemployed'] = {label = 'Unemployed', grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
+    }
   else
     ESX.Jobs = Jobs
   end
+
+  Core.RefreshPlayersJob()
 end
 
 function ESX.AddJob(jobObject)
@@ -682,4 +686,15 @@ function Core.IsPlayerAdmin(playerId)
   end
 
   return false
+end
+
+function Core.RefreshPlayersJob()
+  local xPlayers = ESX.GetExtendedPlayers()
+  for i = 1, #xPlayers do
+    local xPlayer = xPlayers[i]
+    local xPlayerJob = xPlayer.getJob()
+    local doesJobExist = ESX.DoesJobExist(xPlayerJob.name, xPlayerJob.grade)
+    xPlayerJob = {name = not doesJobExist and "unemployed" or xPlayerJob.name, grade = not doesJobExist and 0 or xPlayerJob.grade}
+    xPlayer.setJob(xPlayerJob.name, xPlayerJob.grade)
+  end
 end
