@@ -50,13 +50,13 @@ CreateThread(function()
                 local seat = GetSeatPedIsTryingToEnter(playerPed)
                 local displayName, netId = GetData(vehicle)
                 isEnteringVehicle = true
-                TriggerEvent('esx:EnteringVehicle', vehicle, plate, seat, netId)
-                TriggerServerEvent('esx:EnteringVehicle', vehicle, plate, seat, netId)
+                TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
+                TriggerServerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and
                 not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
-                TriggerEvent('esx:EnteringVehicleAborted')
-                TriggerServerEvent('esx:EnteringVehicleAborted')
+                TriggerEvent('esx:enteringVehicleAborted')
+                TriggerServerEvent('esx:enteringVehicleAborted')
                 isEnteringVehicle = false
             elseif IsPedInAnyVehicle(playerPed, false) then
                 -- suddenly appeared in a vehicle, possible teleport
@@ -66,15 +66,15 @@ CreateThread(function()
                 currentSeat = GetPedVehicleSeat(playerPed, currentVehicle)
                 currentPlate = GetVehicleNumberPlateText(currentVehicle)
                 local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:EnteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:EnteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
                 local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:ExitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:ExitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
                 isInVehicle = false
                 currentVehicle = nil
                 currentSeat = nil
@@ -95,20 +95,20 @@ if Config.EnableDebug then
         print('esx:playerJumping')
     end)
 
-    AddEventHandler('esx:EnteringVehicle', function(vehicle, plate, seat, netId)
-        print('esx:EnteringVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
+    AddEventHandler('esx:enteringVehicle', function(vehicle, plate, seat, netId)
+        print('esx:enteringVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
     AddEventHandler('esx:EnteringVehicleAborted', function()
-        print('esx:EnteringVehicleAborted')
+        print('esx:enteringVehicleAborted')
     end)
 
     AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:EnteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+        print('esx:enteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
     AddEventHandler('esx:ExitedVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:ExitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+        print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
 end

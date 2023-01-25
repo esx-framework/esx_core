@@ -1,9 +1,9 @@
 RegisterServerEvent('esx:playerPedChanged')
 RegisterServerEvent('esx:playerJumping')
-RegisterServerEvent('esx:EnteringVehicle')
-RegisterServerEvent('esx:EnteringVehicleAborted')
-RegisterServerEvent('esx:EnteredVehicle')
-RegisterServerEvent('esx:ExitedVehicle')
+RegisterServerEvent('esx:enteringVehicle')
+RegisterServerEvent('esx:enteringVehicleAborted')
+RegisterServerEvent('esx:enteredVehicle')
+RegisterServerEvent('esx:exitedVehicle')
 
 if Config.EnableDebug then
 
@@ -15,20 +15,20 @@ if Config.EnableDebug then
         print('esx:playerJumping', source)
     end)
 
-    AddEventHandler('esx:EnteringVehicle', function(vehicle, plate, seat, netId)
-        print('esx:EnteringVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
+    AddEventHandler('esx:enteringVehicle', function(vehicle, plate, seat, netId)
+        print('esx:enteringVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
-    AddEventHandler('esx:EnteringVehicleAborted', function()
-        print('esx:EnteringVehicleAborted', source)
+    AddEventHandler('esx:enteringVehicleAborted', function()
+        print('esx:enteringVehicleAborted', source)
     end)
 
-    AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:EnteredVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:enteredVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
-    AddEventHandler('esx:ExitedVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:ExitedVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:exitedVehicle', 'source', source, 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
 end
