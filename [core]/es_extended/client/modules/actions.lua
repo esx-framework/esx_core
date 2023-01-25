@@ -1,5 +1,5 @@
-local isInVehicle, isEnteringVehicle, isJumping = false, false, false
-local currentVehicle, currentSeat = 0, 0
+local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
+local currentVehicle, currentSeat, currentPlate = nil, nil, nil
 local playerPed = PlayerPedId()
 
 local function GetPedVehicleSeat(ped, vehicle)
@@ -33,20 +33,30 @@ CreateThread(function()
             isJumping = false
         end
 
+         if IsPauseMenuActive() and not inPauseMenu then
+            inPauseMenu = true
+            TriggerEvent('esx:pauseMenuActive', inPauseMenu)
+        elseif not IsPauseMenuActive() and inPauseMenu then
+            inPauseMenu = false
+            TriggerEvent('esx:pauseMenuActive', inPauseMenu)
+        end
+
+
         if not isInVehicle and not IsPlayerDead(PlayerId()) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then
                 -- trying to enter a vehicle!
                 local vehicle = GetVehiclePedIsTryingToEnter(playerPed)
+                local plate = GetVehicleNumberPlateText(vehicle)
                 local seat = GetSeatPedIsTryingToEnter(playerPed)
                 local displayName, netId = GetData(vehicle)
                 isEnteringVehicle = true
-                TriggerEvent('esx:playerEnteringVehicle', vehicle, seat, netId)
-                TriggerServerEvent('esx:playerEnteringVehicle', vehicle, seat, netId)
+                TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
+                TriggerServerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and
                 not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
-                TriggerEvent('esx:playerEnteringVehicleAborted')
-                TriggerServerEvent('esx:playerEnteringVehicleAborted')
+                TriggerEvent('esx:enteringVehicleAborted')
+                TriggerServerEvent('esx:enteringVehicleAborted')
                 isEnteringVehicle = false
             elseif IsPedInAnyVehicle(playerPed, false) then
                 -- suddenly appeared in a vehicle, possible teleport
@@ -54,19 +64,21 @@ CreateThread(function()
                 isInVehicle = true
                 currentVehicle = GetVehiclePedIsUsing(playerPed)
                 currentSeat = GetPedVehicleSeat(playerPed, currentVehicle)
+                currentPlate = GetVehicleNumberPlateText(currentVehicle)
                 local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:playerEnteredVehicle', currentVehicle, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:playerEnteredVehicle', currentVehicle, currentSeat, displayName, netId)
+                TriggerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
                 local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:playerExitedVehicle', currentVehicle, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:playerExitedVehicle', currentVehicle, currentSeat, displayName, netId)
+                TriggerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
                 isInVehicle = false
-                currentVehicle = 0
-                currentSeat = 0
+                currentVehicle = nil
+                currentSeat = nil
+                currentPlate = nil
             end
         end
         Wait(200)
@@ -83,20 +95,20 @@ if Config.EnableDebug then
         print('esx:playerJumping')
     end)
 
-    AddEventHandler('esx:playerEnteringVehicle', function(vehicle, seat, netId)
-        print('esx:playerEnteringVehicle', 'vehicle', vehicle, 'seat', seat, 'netId', netId)
+    AddEventHandler('esx:enteringVehicle', function(vehicle, plate, seat, netId)
+        print('esx:enteringVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
-    AddEventHandler('esx:playerEnteringVehicleAborted', function()
-        print('esx:playerEnteringVehicleAborted')
+    AddEventHandler('esx:EnteringVehicleAborted', function()
+        print('esx:enteringVehicleAborted')
     end)
 
-    AddEventHandler('esx:playerEnteredVehicle', function(vehicle, seat, displayName, netId)
-        print('esx:playerEnteredVehicle', 'vehicle', vehicle, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:enteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
-    AddEventHandler('esx:playerExitedVehicle', function(vehicle, seat, displayName, netId)
-        print('esx:playerExitedVehicle', 'vehicle', vehicle, 'seat', seat, 'displayName', displayName, 'netId', netId)
+    AddEventHandler('esx:ExitedVehicle', function(vehicle, plate, seat, displayName, netId)
+        print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
 end
