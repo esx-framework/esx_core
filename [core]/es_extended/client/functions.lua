@@ -6,6 +6,7 @@ Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
 Core.Input = {}
+Core.Markers = {}
 ESX.UI = {}
 ESX.UI.HUD = {}
 ESX.UI.HUD.RegisteredElements = {}
@@ -94,8 +95,7 @@ function ESX.ShowNotification(message, type, length)
 
     print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
 end
-    
-    
+       
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         return exports["esx_textui"]:TextUI(message, type)
@@ -145,6 +145,33 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
     SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
     BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
     EndTextCommandDisplayHelp(2, false, false, -1)
+end
+
+--- Marker Interaction System
+
+function ESX.CreateMarker(name, coords, distance, helpText, settings, key, action)
+    local invoker = GetInvokingResource()
+    if not Core.Markers[invoker] then
+        Core.Markers[invoker] = {}
+    end
+    Core.Markers[invoker][#Core.Markers[invoker] +1] = {name = name, coords = coords, distance = distance, helpText = helpText, settings = settings,key = key, action = action}
+end
+
+function ESX.RemoveMarker(name)
+    local invoker = GetInvokingResource()
+    if not Core.Markers[invoker] then
+        return
+    end
+    for i=1, #Core.Markers[invoker] do
+        if Core.Markers[invoker][i].name == name then
+            if i == 1 then
+                Core.Markers[invoker] = nil
+            else
+                table.remove(Core.Markers[invoker], i)
+            end
+            break
+        end
+    end
 end
 
 ESX.HashString = function(str)

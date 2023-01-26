@@ -713,3 +713,58 @@ for i=1, #DoNotUse do
 		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5"..DoNotUse[i].."^7")
 	end
 end
+
+-- Marker Interaction System
+local DrawingTextUI = false
+CreateThread(function()
+	while not ESX.PlayerLoaded do
+		Wait(0)
+	end
+	while true do
+		local Sleep = 1000
+		local ShowTextUI = false
+		local PlayerCoords = GetEntityCoords(ESX.PlayerData.ped)
+		if ESX.Table.SizeOf(Core.Markers) < 1 then
+			goto thread_end -- skip the entire thread
+		end
+		for k, v in pairs(Core.Markers) do
+			if #v < 1 then
+				goto loop_end -- skip this index
+			end
+			for i = 1, #v do
+				local marker = v[i]
+				local dist = #(PlayerCoords - marker.coords)
+				if dist <= marker.distance then
+					Sleep = 0
+					if marker.show then
+						DrawMarker(marker.settings.sprite, marker.coords, 0, 0, 0, 0.0, 0, 0, marker.settings.scale.x,
+							marker.settings.scale.y, marker.settings.scale.z, marker.settings.colour.r, marker.settings.colour.g,
+							marker.settings.colour.b, marker.settings.colour.a or 255, false, true, 2, false, nil, nil, false)
+					end
+					if dist <= marker.settings.scale.x + 0.5 then
+						ShowTextUI = true
+						if marker.helpText and not DrawingTextUI then
+							DrawingTextUI = true
+							ESX.TextUI(marker.helpText, "info")
+						end
+						if marker.action then
+							if IsControlJustPressed(0, marker.key) then
+								local act = pcall(marker.action)
+								if not act then
+									print("[ERROR] an Error occured during interaction on marker " .. marker.name)
+								end
+							end
+						end
+					end
+				end
+			end
+			::loop_end::
+		end
+		::thread_end::
+		if DrawingTextUI and not ShowTextUI then
+			DrawingTextUI = false
+			ESX.HideUI()
+		end
+		Wait(Sleep)
+	end
+end)
