@@ -736,7 +736,7 @@ CreateThread(function()
 				local dist = #(PlayerCoords - marker.coords)
 				if dist <= marker.distance then
 					Sleep = 0
-					if marker.show then
+					if marker.settings.drawMarker then
 						DrawMarker(marker.settings.sprite, marker.coords, 0, 0, 0, 0.0, 0, 0, marker.settings.scale.x,
 							marker.settings.scale.y, marker.settings.scale.z, marker.settings.colour.r, marker.settings.colour.g,
 							marker.settings.colour.b, marker.settings.colour.a or 255, false, true, 2, false, nil, nil, false)
@@ -748,7 +748,7 @@ CreateThread(function()
 							ESX.TextUI(marker.helpText, "info")
 						end
 						if marker.action then
-							if IsControlJustPressed(0, marker.key) then
+							if IsControlJustPressed(0, marker.settings.key) then
 								local act = pcall(marker.action)
 								if not act then
 									print("[ERROR] an Error occured during interaction on marker " .. marker.name)
