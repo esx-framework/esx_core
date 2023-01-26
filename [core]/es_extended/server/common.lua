@@ -13,6 +13,7 @@ Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
+Core.PlayerFunctions = {}
 
 AddEventHandler("esx:getSharedObject", function()
 	local Invoke = GetInvokingResource()

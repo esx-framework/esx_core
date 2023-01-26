@@ -629,3 +629,14 @@ AddEventHandler('txAdmin:events:serverShuttingDown', function()
   Core.SavePlayers()
 end)
 
+AddEventHandler("onResourceStop", function(resourceName)
+  -- remove functions from stopped resources
+  for name, _function in pairs(Core.PlayerFunctions) do
+      if string.match(_function.__cfx_functionReference, resourceName) then -- Check if function is from the stopped resource
+        Core.PlayerFunctions[name] = nil
+          for id,_ in pairs(ESX.Players) do -- delete function for all players
+              ESX.Players[id][name] = nil
+          end
+      end
+  end
+end)

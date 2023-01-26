@@ -387,6 +387,17 @@ function ESX.SetPlayerFunctionOverride(index)
   Config.PlayerFunctionOverride = index
 end
 
+-- Allows dynamic xPlayer functions, like the overrides but in runtime.
+function ESX.PlayerFunction(name, cb)
+  Core.PlayerFunctions[name] = cb
+
+  for id, xPlayer in pairs(ESX.Players) do
+    ESX.Players[id][name] = function(...)
+          return cb(xPlayer, ...)
+      end
+  end
+end
+
 function ESX.GetItemLabel(item)
   if Config.OxInventory then
     item = exports.ox_inventory:Items(item)
