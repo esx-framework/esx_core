@@ -768,3 +768,10 @@ CreateThread(function()
 		Wait(Sleep)
 	end
 end)
+
+-- remove markers if the resource has stopped.
+AddEventHandler("onResourceStop", function(resourceName)
+    if Core.Markers[resourceName] then
+        Core.Markers[resourceName] = nil
+    end
+end)
