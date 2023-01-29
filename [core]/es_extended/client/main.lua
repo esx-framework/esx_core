@@ -76,11 +76,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	-- DisableVehicleRewards
 	if Config.DisableVehicleRewards then
-		AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
 			CreateThread(function()
 				while true do
 					DisablePlayerVehicleRewards(playerId)
-					if not GetVehiclePedIsIn(ESX.PlayerData.ped, false) then
+					if not IsPedInAnyVehicle(ESX.PlayerData.ped, false) then
 						break
 					end
 						
