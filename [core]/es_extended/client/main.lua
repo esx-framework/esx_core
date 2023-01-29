@@ -118,23 +118,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end
 	end)
 
-	if Config.EnableHud then
-		for i=1, #(ESX.PlayerData.accounts) do
-			local accountTpl = '<div><img src="img/accounts/' .. ESX.PlayerData.accounts[i].name .. '.png"/>&nbsp;{{money}}</div>'
-			ESX.UI.HUD.RegisterElement('account_' .. ESX.PlayerData.accounts[i].name, i, 0, accountTpl, {money = ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money)})
-		end
-
-		local jobTpl = '<div>{{job_label}}{{grade_label}}</div>'
-
-		local gradeLabel = ESX.PlayerData.job.grade_label ~= ESX.PlayerData.job.label and ESX.PlayerData.job.grade_label or ''
-		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
-
-		ESX.UI.HUD.RegisterElement('job', #ESX.PlayerData.accounts, 0, jobTpl, {
-			job_label = ESX.PlayerData.job.label,
-			grade_label = gradeLabel
-		})
-	end
-
 	SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
 	StartServerSyncLoops()
 end)
@@ -142,7 +125,6 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	ESX.PlayerLoaded = false
-	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -227,12 +209,6 @@ AddEventHandler('esx:setAccountMoney', function(account)
 	end
 
 	ESX.SetPlayerData('accounts', ESX.PlayerData.accounts)
-
-	if Config.EnableHud then
-		ESX.UI.HUD.UpdateElement('account_' .. account.name, {
-			money = ESX.Math.GroupDigits(account.money)
-		})
-	end
 end)
 
 if not Config.OxInventory then
@@ -307,14 +283,6 @@ end
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(Job)
-	if Config.EnableHud then
-		local gradeLabel = Job.grade_label ~= Job.label and Job.grade_label or ''
-		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
-		ESX.UI.HUD.UpdateElement('job', {
-			job_label = Job.label,
-			grade_label = gradeLabel
-		})
-	end
 	ESX.SetPlayerData('job', Job)
 end)
 
@@ -376,32 +344,6 @@ if not Config.OxInventory then
 			ESX.Game.DeleteObject(pickups[pickupId].obj)
 			pickups[pickupId] = nil
 		end
-	end)
-end
-
--- Pause menu disables HUD display
-if Config.EnableHud then
-	CreateThread(function()
-		local isPaused = false
-		
-		while true do
-			local time = 500
-			Wait(time)
-
-			if IsPauseMenuActive() and not isPaused then
-				time = 100
-				isPaused = true
-				ESX.UI.HUD.SetDisplay(0.0)
-			elseif not IsPauseMenuActive() and isPaused then
-				time = 100
-				isPaused = false
-				ESX.UI.HUD.SetDisplay(1.0)
-			end
-		end
-	end)
-
-	AddEventHandler('esx:loadingScreenOff', function()
-		ESX.UI.HUD.SetDisplay(1.0)
 	end)
 end
 
