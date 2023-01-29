@@ -99,15 +99,15 @@ if Config.EnableDebug then
         print('esx:enteringVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'netId', netId)
     end)
 
-    AddEventHandler('esx:EnteringVehicleAborted', function()
+    AddEventHandler('esx:enteringVehicleAborted', function()
         print('esx:enteringVehicleAborted')
     end)
 
-    AddEventHandler('esx:EnteredVehicle', function(vehicle, plate, seat, displayName, netId)
+    AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
         print('esx:enteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
-    AddEventHandler('esx:ExitedVehicle', function(vehicle, plate, seat, displayName, netId)
+    AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
         print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
 
