@@ -6,6 +6,10 @@ Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
 Core.Input = {}
+ESX.UI = {}
+ESX.UI.Menu = {}
+ESX.UI.Menu.RegisteredTypes = {}
+ESX.UI.Menu.Opened = {}
 
 ESX.Game = {}
 ESX.Game.Utils = {}
