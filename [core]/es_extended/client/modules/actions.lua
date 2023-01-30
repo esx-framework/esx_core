@@ -51,7 +51,7 @@ CreateThread(function()
                 local displayName, netId = GetData(vehicle)
                 isEnteringVehicle = true
                 TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
-                TriggerServerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
+                TriggerServerEvent('esx:enteringVehicle', plate, seat, netId)
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and
                 not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
@@ -67,14 +67,14 @@ CreateThread(function()
                 currentPlate = GetVehicleNumberPlateText(currentVehicle)
                 local displayName, netId = GetData(currentVehicle)
                 TriggerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:enteredVehicle', currentPlate, currentSeat, displayName, netId)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
                 local displayName, netId = GetData(currentVehicle)
                 TriggerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
+                TriggerServerEvent('esx:exitedVehicle', currentPlate, currentSeat, displayName, netId)
                 isInVehicle = false
                 currentVehicle = nil
                 currentSeat = nil
