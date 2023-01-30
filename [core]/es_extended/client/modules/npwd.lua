@@ -5,7 +5,8 @@ local function checkPhone()
     return
   end
 
-  npwd:setPhoneDisabled((ESX.SearchInventory('phone').count or 0) <= 0)
+  local phoneItem <const> = ESX.SearchInventory('phone')
+  npwd:setPhoneDisabled((phoneItem and phoneItem.count or 0) <= 0)
 end
 RegisterNetEvent('esx:playerLoaded', checkPhone)
 
