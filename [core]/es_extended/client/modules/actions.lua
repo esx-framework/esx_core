@@ -1,6 +1,6 @@
 local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
-local currentVehicle, currentSeat, currentPlate = nil, nil, nil
 local playerPed = PlayerPedId()
+local current = {}
 
 local function GetPedVehicleSeat(ped, vehicle)
     for i = -1, 16 do
@@ -10,7 +10,10 @@ local function GetPedVehicleSeat(ped, vehicle)
 end
 
 local function GetData(vehicle)
-    local model = GetEntityModel(currentVehicle)
+    if not DoesEntityExist(vehicle) then
+        return
+    end
+    local model = GetEntityModel(vehicle)
     local displayName = GetDisplayNameFromVehicleModel(model)
     local netId = VehToNet(vehicle)
     return displayName, netId
@@ -62,23 +65,20 @@ CreateThread(function()
                 -- suddenly appeared in a vehicle, possible teleport
                 isEnteringVehicle = false
                 isInVehicle = true
-                currentVehicle = GetVehiclePedIsUsing(playerPed)
-                currentSeat = GetPedVehicleSeat(playerPed, currentVehicle)
-                currentPlate = GetVehicleNumberPlateText(currentVehicle)
-                local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:enteredVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:enteredVehicle', currentPlate, currentSeat, displayName, netId)
+                current.vehicle = GetVehiclePedIsUsing(playerPed)
+                current.seat = GetPedVehicleSeat(playerPed, current.vehicle)
+                current.plate = GetVehicleNumberPlateText(current.vehicle)
+                current.displayName, current.netId = GetData(current.vehicle)
+                TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
+                TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
-                local displayName, netId = GetData(currentVehicle)
-                TriggerEvent('esx:exitedVehicle', currentVehicle, currentPlate, currentSeat, displayName, netId)
-                TriggerServerEvent('esx:exitedVehicle', currentPlate, currentSeat, displayName, netId)
+                TriggerEvent('esx:exitedVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
+                TriggerServerEvent('esx:exitedVehicle', current.plate, current.seat, current.displayName, current.netId)
                 isInVehicle = false
-                currentVehicle = nil
-                currentSeat = nil
-                currentPlate = nil
+                current = {}
             end
         end
         Wait(200)
