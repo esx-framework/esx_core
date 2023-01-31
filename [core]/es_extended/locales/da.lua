@@ -1,6 +1,6 @@
-Locales['en'] = {
+Locales['da'] = {
     -- Inventory
-    ['inventory'] = 'Inventory ( Vægt %s / %s )',
+    ['inventory'] = 'Inventar ( Vægt %s / %s )',
     ['use'] = 'Brug',
     ['give'] = 'Giv',
     ['remove'] = 'Smid',
