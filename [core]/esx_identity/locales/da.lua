@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['da'] = {
     ['show_active_character'] = 'Vis aktiv karakter',
     ['active_character'] = 'Aktiv karakter: %s',
     ['error_active_character'] = 'Der opstod en fejl under indhentning af dine data.',
