@@ -58,7 +58,7 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 		{name = "Vehicle", value = args.car, inline = true}
 	})
 
-	ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
+	ESX.OneSync.SpawnVehicle(args.car, vector3(playerCoords.x, playerCoords.y, playerCoords.z-1), playerHeading, upgrades, function(networkId)
 		if networkId then
 			local vehicle = NetworkGetEntityFromNetworkId(networkId)
 			for i = 1, 20 do
