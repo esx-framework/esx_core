@@ -181,21 +181,17 @@ end)
 
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	if value then
+		Wait(0)
+		local NetId = value.NetId
+		local Tries = 0
+		while not NetworkDoesNetworkIdExist(NetId) and Tries < 2000 do
 			Wait(0)
-			local NetId = value.NetId
-			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
-			local Tries = 0
-			while Vehicle == 0 do
-				Vehicle = NetworkGetEntityFromNetworkId(NetId)
-				Wait(100)
-				Tries = Tries + 1
-				if Tries > 300 then
-					break
-				end
-			end
-			if NetworkGetEntityOwner(Vehicle) == PlayerId() then
-					ESX.Game.SetVehicleProperties(Vehicle, value)
-			end
+			Tries += 1
+		end
+		local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+		if NetworkGetEntityOwner(Vehicle) == PlayerId() then
+			ESX.Game.SetVehicleProperties(Vehicle, value)
+		end
 	end
 end)
 
