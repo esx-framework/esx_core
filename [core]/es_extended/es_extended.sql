@@ -15,7 +15,7 @@ CREATE TABLE `users` (
 	`job` VARCHAR(20) NULL DEFAULT 'unemployed',
 	`job_grade` INT NULL DEFAULT 0,
 	`loadout` LONGTEXT NULL DEFAULT NULL,
-	`position` longtext NOT NULL,
+	`position` VARCHAR(255) NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
 
 	PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB;
