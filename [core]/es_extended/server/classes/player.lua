@@ -31,6 +31,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	Player(self.source).state:set("job", self.job, true)
 	Player(self.source).state:set("group", self.group, true)
 	Player(self.source).state:set("name", self.name, true)
+	Player(self.source).state:set("inVehicle", false, true)
 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
@@ -571,6 +572,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.showHelpNotification(msg, thisFrame, beep, duration)
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
+	end
+
+	function self.revive()
+		self.triggerEvent('esx:revivePlayer')
 	end
 
 	for fnName,fn in pairs(targetOverrides) do

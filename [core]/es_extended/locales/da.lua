@@ -83,6 +83,7 @@ Locales['da'] = {
     ['command_giveweaponcomponent_missingweapon'] = 'Spilleren har ikke dette våben',
     ['command_goto'] = 'Teleporter dig selv til en spiller',
     ['command_kill'] = 'Dræb en spiller',
+    ['command_revive'] = 'Revive a player',
     ['command_save'] = 'Force save en spillers data',
     ['command_saveall'] = 'Force save alle spillers data',
     ['command_setaccountmoney'] = 'Indstil pengene på en bestemt konto',

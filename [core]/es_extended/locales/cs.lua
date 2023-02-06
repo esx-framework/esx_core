@@ -83,6 +83,7 @@ Locales['cs'] = {
   ['command_giveweaponcomponent_missingweapon'] = 'Hráč nemá tuto zbrań',
   ['command_goto'] = 'Teleportování sebe k hráči',
   ['command_kill'] = 'Zabití hráče',
+  ['command_revive'] = 'Revive a player',
   ['command_save'] = 'Uložení dat hráče',
   ['command_saveall'] = 'Uložení veškerých dat hráče',
   ['command_setaccountmoney'] = 'Nastavení určeného počtu peněz',
