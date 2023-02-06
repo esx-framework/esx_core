@@ -14,7 +14,7 @@ CreateThread(function()
 end)
 
 RegisterNetEvent("esx:requestModel", function(model)
-    ESX.Streaming.RequestModel(model)
+	ESX.Streaming.RequestModel(model)
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -60,7 +60,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	local playerId = PlayerId()
 
 	-- RemoveHudCommonents
-	for i=1, #(Config.RemoveHudCommonents) do
+	for i = 1, #(Config.RemoveHudCommonents) do
 		if Config.RemoveHudCommonents[i] then
 			SetHudComponentPosition(i, 999999.0, 999999.0)
 		end
@@ -68,27 +68,33 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	-- DisableNPCDrops
 	if Config.DisableNPCDrops then
-		local weaponPickups = {`PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN`}
-		for i = 1, #weaponPickups do 
-			ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false) 
+		local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
+		for i = 1, #weaponPickups do
+			ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false)
 		end
 	end
 
 	-- DisableVehicleRewards
 	if Config.DisableVehicleRewards then
+		local inVehicle = false
+
+		local function DisableVehicleRewardsThread()
+			CreateThread(function()
+				while inVehicle do
+					DisablePlayerVehicleRewards(playerId)
+					Wait(0)
+				end
+			end)
+		end
+
 		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
 			if GetVehicleClass(vehicle) == 18 then
-				CreateThread(function()
-					while true do
-						DisablePlayerVehicleRewards(playerId)
-						if not IsPedInAnyVehicle(ESX.PlayerData.ped, false) then
-							break
-						end
-
-						Wait(0)
-					end
-				end)
+				DisableVehicleRewardsThread()
 			end
+		end)
+
+		AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
+			inVehicle = false
 		end)
 	end
 
@@ -128,8 +134,8 @@ RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData("maxWeight", newMaxWeight) end)
 
 local function onPlayerSpawn()
-		ESX.SetPlayerData('ped', PlayerPedId())
-		ESX.SetPlayerData('dead', false)
+	ESX.SetPlayerData('ped', PlayerPedId())
+	ESX.SetPlayerData('dead', false)
 end
 
 AddEventHandler('playerSpawned', onPlayerSpawn)
@@ -154,7 +160,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		local ammoTypes = {}
 		RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-		for k,v in ipairs(ESX.PlayerData.loadout) do
+		for k, v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
 			local weaponHash = joaat(weaponName)
 
@@ -163,7 +169,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 			local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
 
-			for k2,v2 in ipairs(v.components) do
+			for k2, v2 in ipairs(v.components) do
 				local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
 				GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
 			end
@@ -178,27 +184,27 @@ end)
 
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	if value then
-			Wait(0)
-			local NetId = value.NetId
-			local Vehicle = NetworkGetEntityFromNetworkId(NetId)
-			local Tries = 0
-			while Vehicle == 0 do
-				Vehicle = NetworkGetEntityFromNetworkId(NetId)
-				Wait(100)
-				Tries = Tries + 1
-				if Tries > 300 then
-					break
-				end
+		Wait(0)
+		local NetId = value.NetId
+		local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+		local Tries = 0
+		while Vehicle == 0 do
+			Vehicle = NetworkGetEntityFromNetworkId(NetId)
+			Wait(100)
+			Tries = Tries + 1
+			if Tries > 300 then
+				break
 			end
-			if NetworkGetEntityOwner(Vehicle) == PlayerId() then
-					ESX.Game.SetVehicleProperties(Vehicle, value)
-			end
+		end
+		if NetworkGetEntityOwner(Vehicle) == PlayerId() then
+			ESX.Game.SetVehicleProperties(Vehicle, value)
+		end
 	end
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
-	for i=1, #(ESX.PlayerData.accounts) do
+	for i = 1, #(ESX.PlayerData.accounts) do
 		if ESX.PlayerData.accounts[i].name == account.name then
 			ESX.PlayerData.accounts[i] = account
 			break
@@ -211,7 +217,7 @@ end)
 if not Config.OxInventory then
 	RegisterNetEvent('esx:addInventoryItem')
 	AddEventHandler('esx:addInventoryItem', function(item, count, showNotification)
-		for k,v in ipairs(ESX.PlayerData.inventory) do
+		for k, v in ipairs(ESX.PlayerData.inventory) do
 			if v.name == item then
 				ESX.UI.ShowInventoryItemNotification(true, v.label, count - v.count)
 				ESX.PlayerData.inventory[k].count = count
@@ -228,7 +234,7 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:removeInventoryItem')
 	AddEventHandler('esx:removeInventoryItem', function(item, count, showNotification)
-		for k,v in ipairs(ESX.PlayerData.inventory) do
+		for k, v in ipairs(ESX.PlayerData.inventory) do
 			if v.name == item then
 				ESX.UI.ShowInventoryItemNotification(false, v.label, v.count - count)
 				ESX.PlayerData.inventory[k].count = count
@@ -261,7 +267,7 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
-		
+
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
@@ -306,7 +312,7 @@ if not Config.OxInventory then
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
-			for k,v in ipairs(components) do
+			for k, v in ipairs(components) do
 				local component = ESX.GetWeaponComponent(name, v)
 				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 			end
@@ -320,14 +326,15 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:createMissingPickups')
 	AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
-			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0,0, 1.0), pickup.type, pickup.name, pickup.components, pickup.tintIndex)
+			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name
+				, pickup.components, pickup.tintIndex)
 		end
 	end)
 end
 
 RegisterNetEvent('esx:registerSuggestions')
 AddEventHandler('esx:registerSuggestions', function(registeredCommands)
-	for name,command in pairs(registeredCommands) do
+	for name, command in pairs(registeredCommands) do
 		if command.suggestion then
 			TriggerEvent('chat:addSuggestion', ('/%s'):format(name), command.suggestion.help, command.suggestion.arguments)
 		end
@@ -346,32 +353,32 @@ end
 
 function StartServerSyncLoops()
 	if not Config.OxInventory then
-			-- keep track of ammo
+		-- keep track of ammo
 
-			CreateThread(function()
-					local currentWeapon = {Ammo = 0}
-					while ESX.PlayerLoaded do
-						local sleep = 1500
-						if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
-							sleep = 1000
-							local _,weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
-							local weapon = ESX.GetWeaponFromHash(weaponHash) 
-							if weapon then
-								local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-								if weapon.name ~= currentWeapon.name then 
-									currentWeapon.Ammo = ammoCount
-									currentWeapon.name = weapon.name
-								else
-									if ammoCount ~= currentWeapon.Ammo then
-										currentWeapon.Ammo = ammoCount
-										TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
-									end 
-								end   
+		CreateThread(function()
+			local currentWeapon = { Ammo = 0 }
+			while ESX.PlayerLoaded do
+				local sleep = 1500
+				if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
+					sleep = 1000
+					local _, weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
+					local weapon = ESX.GetWeaponFromHash(weaponHash)
+					if weapon then
+						local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
+						if weapon.name ~= currentWeapon.name then
+							currentWeapon.Ammo = ammoCount
+							currentWeapon.name = weapon.name
+						else
+							if ammoCount ~= currentWeapon.Ammo then
+								currentWeapon.Ammo = ammoCount
+								TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
 							end
-						end    
-					Wait(sleep)
+						end
 					end
-			end)
+				end
+				Wait(sleep)
+			end
+		end)
 	end
 end
 
@@ -398,7 +405,7 @@ if not Config.OxInventory then
 			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
-			for pickupId,pickup in pairs(pickups) do
+			for pickupId, pickup in pairs(pickups) do
 				local distance = #(playerCoords - pickup.coords)
 
 				if distance < 5 then
@@ -596,30 +603,30 @@ end)
 
 RegisterNetEvent("esx:killPlayer")
 AddEventHandler("esx:killPlayer", function()
-  SetEntityHealth(ESX.PlayerData.ped, 0)
+	SetEntityHealth(ESX.PlayerData.ped, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
-    local player = PlayerId()
-    if input == 'freeze' then
-        SetEntityCollision(ESX.PlayerData.ped, false)
-        FreezeEntityPosition(ESX.PlayerData.ped, true)
-        SetPlayerInvincible(player, true)
-    elseif input == 'unfreeze' then
-        SetEntityCollision(ESX.PlayerData.ped, true)
+	local player = PlayerId()
+	if input == 'freeze' then
+		SetEntityCollision(ESX.PlayerData.ped, false)
+		FreezeEntityPosition(ESX.PlayerData.ped, true)
+		SetPlayerInvincible(player, true)
+	elseif input == 'unfreeze' then
+		SetEntityCollision(ESX.PlayerData.ped, true)
 		FreezeEntityPosition(ESX.PlayerData.ped, false)
-        SetPlayerInvincible(player, false)
-    end
+		SetPlayerInvincible(player, false)
+	end
 end)
 
 RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
 	if not IsModelInCdimage(Model) then
-      return TriggerServerEvent("esx:ReturnVehicleType", false, Request)
-  end
+		return TriggerServerEvent("esx:ReturnVehicleType", false, Request)
+	end
 
 	if Model == `submersible` or Model == `submersible2` then
-		  return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
+		return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
 	end
 
 	local VehicleType = GetVehicleClassFromName(Model)
@@ -647,8 +654,8 @@ local DoNotUse = {
 	'default_spawnpoint',
 }
 
-for i=1, #DoNotUse do
+for i = 1, #DoNotUse do
 	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
-		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5"..DoNotUse[i].."^7")
+		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
 	end
 end
