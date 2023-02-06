@@ -1,42 +1,35 @@
 (() => {
+  let ESXWrapper = {};
+  ESXWrapper.MessageSize = 1024;
+  ESXWrapper.messageId = 0;
 
-	let ESXWrapper = {};
-	ESXWrapper.MessageSize = 1024;
-	ESXWrapper.messageId = 0;
+  window.SendMessage = function (namespace, type, msg) {
+    ESXWrapper.messageId =
+      ESXWrapper.messageId < 65535 ? ESXWrapper.messageId + 1 : 0;
+    const str = JSON.stringify(msg);
 
-	window.SendMessage = function (namespace, type, msg) {
+    for (let i = 0; i < str.length; i++) {
+      let count = 0;
+      let chunk = "";
 
-		ESXWrapper.messageId = (ESXWrapper.messageId < 65535) ? ESXWrapper.messageId + 1 : 0;
-		const str = JSON.stringify(msg);
+      while (count < ESXWrapper.MessageSize && i < str.length) {
+        chunk += str[i];
 
-		for (let i = 0; i < str.length; i++) {
+        count++;
+        i++;
+      }
 
-			let count = 0;
-			let chunk = '';
+      i--;
 
-			while (count < ESXWrapper.MessageSize && i < str.length) {
+      const data = {
+        __type: type,
+        id: ESXWrapper.messageId,
+        chunk: chunk,
+      };
 
-				chunk += str[i];
+      if (i == str.length - 1) data.end = true;
 
-				count++;
-				i++;
-			}
-
-			i--;
-
-			const data = {
-				__type: type,
-				id: ESXWrapper.messageId,
-				chunk: chunk
-			}
-
-			if (i == str.length - 1)
-				data.end = true;
-
-			$.post('http://' + namespace + '/__chunk', JSON.stringify(data));
-
-		}
-
-	}
-
-})()
+      $.post("http://" + namespace + "/__chunk", JSON.stringify(data));
+    }
+  };
+})();
