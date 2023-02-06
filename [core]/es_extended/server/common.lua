@@ -63,7 +63,7 @@ MySQL.ready(function()
 
   ESX.RefreshJobs()
 
-  print('[^2INFO^7] ESX ^5Legacy 1.9.0^0 initialized!')
+  print(('[^2INFO^7] ESX ^5Legacy %s^0 initialized!'):format(GetResourceMetadata(GetCurrentResourceName(), "version", 0)))
   StartDBSync()
   StartPayCheck()
 end)
