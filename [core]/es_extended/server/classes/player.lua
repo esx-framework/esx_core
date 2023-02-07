@@ -26,11 +26,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
 	
-	Player(self.source).state:set("identifier", self.identifier, true)
-	Player(self.source).state:set("license", self.license, true)
-	Player(self.source).state:set("job", self.job, true)
-	Player(self.source).state:set("group", self.group, true)
-	Player(self.source).state:set("name", self.name, true)
+	local stateBag = Player(self.source).state
+	stateBag:set("identifier", self.identifier, true)
+	stateBag:set("license", self.license, true)
+	stateBag:set("job", self.job, true)
+	stateBag:set("group", self.group, true)
+	stateBag:set("name", self.name, true)
 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
@@ -120,17 +121,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getAccounts(minimal)
-		if minimal then
-			local minimalAccounts = {}
-
-			for i=1, #self.accounts do
-				minimalAccounts[self.accounts[i].name] = self.accounts[i].money
-			end
-
-			return minimalAccounts
-		else
+		if not minimal then
 			return self.accounts
 		end
+
+		local minimalAccounts = {}
+
+		for i=1, #self.accounts do
+			minimalAccounts[self.accounts[i].name] = self.accounts[i].money
+		end
+
+		return minimalAccounts
 	end
 
 	function self.getAccount(account)
@@ -162,32 +163,31 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getLoadout(minimal)
-		if minimal then
-			local minimalLoadout = {}
-
-			for k,v in ipairs(self.loadout) do
-				minimalLoadout[v.name] = {ammo = v.ammo}
-				if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
-
-				if #v.components > 0 then
-					local components = {}
-
-					for k2,component in ipairs(v.components) do
-						if component ~= 'clip_default' then
-							components[#components + 1] = component
-						end
-					end
-
-					if #components > 0 then
-						minimalLoadout[v.name].components = components
-					end
-				end
-			end
-
-			return minimalLoadout
-		else
+		if not minimal then
 			return self.loadout
 		end
+		local minimalLoadout = {}
+
+		for k,v in ipairs(self.loadout) do
+			minimalLoadout[v.name] = {ammo = v.ammo}
+			if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
+
+			if #v.components > 0 then
+				local components = {}
+
+				for k2,component in ipairs(v.components) do
+					if component ~= 'clip_default' then
+						components[#components + 1] = component
+					end
+				end
+
+				if #components > 0 then
+					minimalLoadout[v.name].components = components
+				end
+			end
+		end
+
+		return minimalLoadout
 	end
 
 	function self.getName()

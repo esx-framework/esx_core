@@ -71,11 +71,10 @@ function createESXPlayer(identifier, playerId, data)
     accounts[account] = money
   end
 
+  local defaultGroup = "user"
   if Core.IsPlayerAdmin(playerId) then
     print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
     defaultGroup = "admin"
-  else
-    defaultGroup = "user"
   end
 
   if not Config.Multichar then
@@ -275,6 +274,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job,
     userData.loadout, userData.playerName, userData.coords)
   ESX.Players[playerId] = xPlayer
+  Core.playersByIdentifier[identifier] = xPlayer
 
   if userData.firstname then
     xPlayer.set('firstName', userData.firstname)
@@ -303,10 +303,10 @@ function loadESXPlayer(identifier, playerId, isNew)
       maxWeight = xPlayer.getMaxWeight(),
       money = xPlayer.getMoney(),
       sex = xPlayer.get("sex") or "m",
-	  firstName = xPlayer.get("firstName") or "John",
-	  lastName = xPlayer.get("lastName") or "Doe",
-	  dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
-	  height = xPlayer.get("height") or 120,
+      firstName = xPlayer.get("firstName") or "John",
+      lastName = xPlayer.get("lastName") or "Doe",
+      dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
+      height = xPlayer.get("height") or 120,
       dead = false
     }, isNew,
     userData.skin)
@@ -337,6 +337,7 @@ AddEventHandler('playerDropped', function(reason)
   if xPlayer then
     TriggerEvent('esx:playerDropped', playerId, reason)
 
+    Core.playersByIdentifier[xPlayer.identifier] = nil
     Core.SavePlayer(xPlayer, function()
       ESX.Players[playerId] = nil
     end)
@@ -348,6 +349,7 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
   if xPlayer then
     TriggerEvent('esx:playerDropped', playerId)
 
+    Core.playersByIdentifier[xPlayer.identifier] = nil
     Core.SavePlayer(xPlayer, function()
       ESX.Players[playerId] = nil
       if cb then
