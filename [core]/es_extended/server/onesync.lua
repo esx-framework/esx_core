@@ -109,7 +109,7 @@ function ESX.OneSync.SpawnPed(model, coords, heading, cb)
 	CreateThread(function()
 		local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
-		return entity
+		cb(NetworkGetNetworkIdFromEntity(entity))
 	end)
 end
 
@@ -163,7 +163,7 @@ end
 ---@param maxDistance number
 ---@param modelFilter table models to ignore, where the key is the model hash and the value is true
 ---@return table
-function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter, cb)
+function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter)
 	return getNearbyEntities(GetAllVehicles(), coords, modelFilter, maxDistance)
 end
 
