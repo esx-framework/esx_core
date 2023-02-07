@@ -5,7 +5,7 @@ game 'gta5'
 description 'ES Extended'
 
 lua54 'yes'
-version '1.9.0'
+version '1.9.1'
 
 shared_scripts {
 	'locale.lua',
@@ -62,10 +62,6 @@ files {
 
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf',
-
-	'html/img/accounts/bank.png',
-	'html/img/accounts/black_money.png',
-	'html/img/accounts/money.png'
 }
 
 dependencies {

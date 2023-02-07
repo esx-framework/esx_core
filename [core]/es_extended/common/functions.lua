@@ -39,8 +39,8 @@ function ESX.GetWeaponFromHash(weaponHash)
 	return weaponsByHash[weaponHash]
 end
 
-function ESX.GetWeaponList()
-	return Config.Weapons
+function ESX.GetWeaponList(byHash)
+	return byHash and weaponsByHash or Config.Weapons
 end
 
 function ESX.GetWeaponLabel(weaponName)
