@@ -1,10 +1,9 @@
 ESX.OneSync = {}
 
----@class vector3
----@field x number
----@field y number
----@field z number
-
+---@param source number|vector3
+---@param closest boolean
+---@param distance? number
+---@param ignore? table
 local function getNearbyPlayers(source, closest, distance, ignore)
 	local result = {}
 	local count = 0
@@ -44,14 +43,14 @@ end
 
 ---@param source vector3|number playerId or vector3 coordinates
 ---@param maxDistance number
----@param ignore table playerIds to ignore, where the key is playerId and value is true
+---@param ignore? table playerIds to ignore, where the key is playerId and value is true
 function ESX.OneSync.GetPlayersInArea(source, maxDistance, ignore)
 	return getNearbyPlayers(source, false, maxDistance, ignore)
 end
 
 ---@param source vector3|number playerId or vector3 coordinates
 ---@param maxDistance number
----@param ignore table playerIds to ignore, where the key is playerId and value is true
+---@param ignore? table playerIds to ignore, where the key is playerId and value is true
 function ESX.OneSync.GetClosestPlayer(source, maxDistance, ignore)
 	return getNearbyPlayers(source, true, maxDistance, ignore)
 end
@@ -59,7 +58,7 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param Properties table
+---@param properties table
 ---@param cb function
 function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
 	local vehicleModel = joaat(model)
