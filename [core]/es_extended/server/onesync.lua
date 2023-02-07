@@ -122,7 +122,7 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
 	CreateThread(function()
 		local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
-		return entity
+		cb(NetworkGetNetworkIdFromEntity(entity))
 	end)
 end
 
