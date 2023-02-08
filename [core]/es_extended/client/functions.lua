@@ -680,7 +680,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
         customPrimaryColor = customPrimaryColor,
         customSecondaryColor = customSecondaryColor,
 
-        
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
         
