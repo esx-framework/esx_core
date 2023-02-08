@@ -608,6 +608,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
+    local dashboardColor = GetVehicleDashboardColor(vehicle)
+    local interiorColor = GetVehicleInteriorColour(vehicle)
     local customPrimaryColor = nil
     if hasCustomPrimaryColor then
         customPrimaryColor = {GetVehicleCustomPrimaryColour(vehicle)}
@@ -678,8 +680,12 @@ function ESX.Game.GetVehicleProperties(vehicle)
         customPrimaryColor = customPrimaryColor,
         customSecondaryColor = customSecondaryColor,
 
+        
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
+        
+        dashboardColor = dashboardColor,
+        interiorColor = interiorColor,
 
         wheels = GetVehicleWheelType(vehicle),
         windowTint = GetVehicleWindowTint(vehicle),
@@ -792,6 +798,15 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
+
+    if props.interiorColor ~= nil then
+        SetVehicleInteriorColor(vehicle, props.interiorColor)
+    end
+
+    if props.dashboardColor ~= nil then
+        SetVehicleDashboardColor(vehicle, props.dashboardColor)
+    end
+
     if props.wheelColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
     end
