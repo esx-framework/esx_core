@@ -216,6 +216,12 @@ Locales['cs'] = {
   ['weapon_precisionrifle'] = 'Precision Rifle',
   ['weapon_tactilerifle'] = 'Service Carbine',
 
+  -- Drug Wars DLC
+  ['weapon_candycane'] = 'Candy Cane',
+  ['weapon_acidpackage'] = 'Acid Package',
+  ['weapon_pistolxm3'] = 'WM 29 Pistol',
+  ['weapon_railgunxm3'] = 'Railgun',
+
   -- Thrown
   ['weapon_ball'] = 'Míček',
   ['weapon_bzgas'] = 'Smrtící slzný plyn',
