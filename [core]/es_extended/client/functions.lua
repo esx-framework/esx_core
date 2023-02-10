@@ -2,8 +2,6 @@ ESX = {}
 Core = {}
 ESX.PlayerData = {}
 ESX.PlayerLoaded = false
-Core.CurrentRequestId = 0
-Core.ServerCallbacks = {}
 Core.Input = {}
 ESX.UI = {}
 ESX.UI.Menu = {}
@@ -185,14 +183,6 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
         RegisterCommand("-" .. command_name, on_release)
     end
     RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
-end
-
-function ESX.TriggerServerCallback(name, cb, ...)
-    local Invoke = GetInvokingResource() or "unknown"
-    Core.ServerCallbacks[Core.CurrentRequestId] = cb
-
-    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId,Invoke, ...)
-    Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
 function ESX.UI.Menu.RegisterType(type, open, close)
@@ -1303,15 +1293,6 @@ function ESX.ShowInventory()
         end)
     end)
 end
-
-RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
-    if Core.ServerCallbacks[requestId] then
-        Core.ServerCallbacks[requestId](...)
-        Core.ServerCallbacks[requestId] = nil
-    else 
-        print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
-    end
-end)
 
 RegisterNetEvent('esx:showNotification')
 AddEventHandler('esx:showNotification', function(msg, type, length)

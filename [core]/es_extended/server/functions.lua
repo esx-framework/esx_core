@@ -143,18 +143,6 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   end
 end
 
-function ESX.RegisterServerCallback(name, cb)
-  Core.ServerCallbacks[name] = cb
-end
-
-function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
-  if Core.ServerCallbacks[name] then
-    Core.ServerCallbacks[name](source, cb, ...)
-  else
-    print(('[^1ERROR^7] Server callback ^5"%s"^0 does not exist. Please Check ^5%s^7 for Errors!'):format(name, Invoke))
-  end
-end
-
 function Core.SavePlayer(xPlayer, cb)
   local parameters <const> = {
     json.encode(xPlayer.getAccounts(true)),
