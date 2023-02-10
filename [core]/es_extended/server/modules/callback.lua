@@ -7,8 +7,6 @@ local RequestId = 0
 ---@param callback function
 ESX.RegisterServerCallback = function(eventName, callback)
   serverCallbacks[eventName] = callback
-  
-  print(("[^2DEBUG^0] Callback registered - ^5%s^0 - resource: ^5%s^0"):format(eventName, GetInvokingResource()))
 end
 
 RegisterNetEvent('esx:triggerServerCallback', function(eventName, requestId, invoker, ...)
@@ -29,7 +27,7 @@ end)
 ---@param ... any
 ESX.TriggerClientCallback = function(player, eventName, callback, ...)
   clientRequests[RequestId] = callback
-  
+
   TriggerClientEvent('esx:triggerClientCallback', player, eventName, RequestId, GetInvokingResource() or "unknown", ...)
 
   RequestId = RequestId + 1
