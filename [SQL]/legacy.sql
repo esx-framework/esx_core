@@ -1,3 +1,5 @@
+-- ESX Tables
+
 CREATE TABLE `addon_account` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
