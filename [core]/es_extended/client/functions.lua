@@ -1309,3 +1309,26 @@ RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
+
+---@param model number|string
+---@return string
+function ESX.GetVehicleType(model)
+    model = type(model) == 'string' and joaat(model) or model
+
+	if model == `submersible` or model == `submersible2` then
+        return 'submarine'
+	end
+
+	local vehicleType = GetVehicleClassFromName(model)
+	local types = {
+		[8] = "bike",
+		[11] = "trailer",
+		[13] = "bike",
+		[14] = "boat",
+		[15] = "heli",
+		[16] = "plane",
+		[21] = "train",
+	}
+
+    return types[vehicleType] or "automobile"
+end

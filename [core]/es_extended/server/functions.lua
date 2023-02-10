@@ -246,10 +246,21 @@ function ESX.GetIdentifier(playerId)
   end
 end
 
-function ESX.GetVehicleType(Vehicle, Player, cb)
-  Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
-  Core.ClientCallbacks[Core.CurrentRequestId] = cb
-  TriggerClientEvent("esx:GetVehicleType", Player, Vehicle, Core.CurrentRequestId)
+---@param model string|number
+---@param player number playerId
+---@param cb function
+
+function ESX.GetVehicleType(model, player, cb)
+  model = type(model) == 'string' and joaat(model) or model
+  
+  if Core.vehicleTypesByModel[model] then
+    return cb(Core.vehicleTypesByModel[model])
+  end
+
+  ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
+    Core.vehicleTypesByModel[model] = vehicleType
+    cb(vehicleType)
+  end)
 end
 
 function ESX.DiscordLog(name, title, color, message)

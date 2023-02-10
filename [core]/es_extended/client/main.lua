@@ -615,27 +615,8 @@ AddEventHandler("esx:freezePlayer", function(input)
 	end
 end)
 
-RegisterNetEvent("esx:GetVehicleType", function(Model, Request)
-	if not IsModelInCdimage(Model) then
-		return TriggerServerEvent("esx:ReturnVehicleType", false, Request)
-	end
-
-	if Model == `submersible` or Model == `submersible2` then
-		return TriggerServerEvent("esx:ReturnVehicleType", "submarine", Request)
-	end
-
-	local VehicleType = GetVehicleClassFromName(Model)
-	local types = {
-		[8] = "bike",
-		[11] = "trailer",
-		[13] = "bike",
-		[14] = "boat",
-		[15] = "heli",
-		[16] = "plane",
-		[21] = "train",
-	}
-
-	TriggerServerEvent("esx:ReturnVehicleType", types[VehicleType] or "automobile", Request)
+ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
+	cb(ESX.GetVehicleType(model))
 end)
 
 local DoNotUse = {
