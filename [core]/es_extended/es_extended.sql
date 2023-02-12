@@ -16,6 +16,7 @@ CREATE TABLE `users` (
 	`job_grade` INT NULL DEFAULT 0,
 	`loadout` LONGTEXT NULL DEFAULT NULL,
 	`position` longtext NULL DEFAULT NULL,
+	`is_dead` TINYINT(1) NULL DEFAULT '0',
 
 	PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB;
