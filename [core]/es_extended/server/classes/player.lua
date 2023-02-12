@@ -573,6 +573,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
+	function self.revive()
+		self.triggerEvent('esx:revivePlayer')
+	end
+
 	for fnName,fn in pairs(targetOverrides) do
 		self[fnName] = fn(self)
 	end
