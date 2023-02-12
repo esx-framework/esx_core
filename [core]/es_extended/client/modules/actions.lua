@@ -1,6 +1,7 @@
 local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
 local playerPed = PlayerPedId()
 local current = {}
+local playerState = LocalPlayer.state
 
 local function GetPedVehicleSeat(ped, vehicle)
     for i = -1, 16 do
@@ -71,12 +72,14 @@ CreateThread(function()
                 current.displayName, current.netId = GetData(current.vehicle)
                 TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
+                playerState:set('inVehicle', current.netId, true)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
                 TriggerEvent('esx:exitedVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:exitedVehicle', current.plate, current.seat, current.displayName, current.netId)
+                playerState:set('inVehicle', false, true)
                 isInVehicle = false
                 current = {}
             end

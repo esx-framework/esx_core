@@ -83,6 +83,7 @@ Locales['es'] = {
   ['command_giveweaponcomponent_missingweapon'] = 'El jugador no tiene esa arma',
   ['command_goto'] = 'Teletransporte hacia un jugador',
   ['command_kill'] = 'Matar un jugador',
+  ['command_revive'] = 'Revive a player',
   ['command_save'] = 'Guardar un jugador en la base de datos',
   ['command_saveall'] = 'Guardar todos los jugadores en la base de datos',
   ['command_setaccountmoney'] = 'Establecer el dinero de la cuenta para un jugador',

@@ -128,6 +128,7 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
@@ -135,16 +136,10 @@ AddEventHandler('esx:setMaxWeight', function(newMaxWeight) ESX.SetPlayerData("ma
 
 local function onPlayerSpawn()
 	ESX.SetPlayerData('ped', PlayerPedId())
-	ESX.SetPlayerData('dead', false)
 end
 
 AddEventHandler('playerSpawned', onPlayerSpawn)
 AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
-
-AddEventHandler('esx:onPlayerDeath', function()
-	ESX.SetPlayerData('ped', PlayerPedId())
-	ESX.SetPlayerData('dead', true)
-end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
 	while not ESX.PlayerLoaded do

@@ -274,6 +274,12 @@ end, true, {help = TranslateCap('command_kill'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
 
+ESX.RegisterCommand('revive', "admin", function(xPlayer, args, showError)
+	args.playerId.triggerEvent('esx:revivePlayer')
+end, true, {help = TranslateCap('command_revive'), validate = true, arguments = {
+	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
+}})
+
 ESX.RegisterCommand('freeze', "admin", function(xPlayer, args, showError)
 	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
 end, true, {help = TranslateCap('command_freeze'), validate = true, arguments = {
