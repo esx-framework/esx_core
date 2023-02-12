@@ -42,7 +42,12 @@ end
 
 local function attachCheck()
 	local attached = GetEntityAttachedTo(ESX.PlayerData.ped)
-	return attached ~= 0 and true or false
+	if attached == 0 then return false end
+
+	local entityType = GetEntityType(attached)
+	if entityType ~= 1 then return false end
+
+	return true
 end
 
 local function OnPlayerDeath(data)
@@ -70,6 +75,7 @@ local function OnPlayerDeath(data)
 		local tries = 0
 		while not vehicle and tries < 100 do
 			vehicle = NetToVeh(inVehicle)
+			print(tries)
 			tries += 1
 			Wait(100)
 		end
@@ -114,6 +120,7 @@ function ANIM:play(type)
 	end
 
 	if not type then type = ESX.GetPlayerStateBag('inVehicle') and 'inVehicle' or 'onFoot' end
+	print(type)
 
 	self.current.dict = deadAnims[type].dict
 	self.current.anim = deadAnims[type].anim
