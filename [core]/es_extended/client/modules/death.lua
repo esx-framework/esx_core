@@ -68,6 +68,19 @@ local function OnPlayerDeath(data)
 
 	if inVehicle then
 		local vehicle = NetToVeh(inVehicle)
+
+		local tries = 0
+		while not vehicle and tries < 100 do
+			vehicle = NetToVeh(inVehicle)
+			tries += 1
+			Wait(100)
+		end
+
+		if not vehicle then
+			NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z + 0.5, heading, true, false)
+			return
+		end
+
 		local model = GetEntityModel(vehicle)
 		local vehseats = GetVehicleModelNumberOfSeats(GetHashKey(tostring(model)))
 		for i = -1, vehseats do

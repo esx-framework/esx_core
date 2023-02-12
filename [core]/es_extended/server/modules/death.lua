@@ -4,6 +4,7 @@ RegisterNetEvent('esx:onPlayerRevive')
 local deadPlayers = {}
 
 local function SetDeadStatus(state)
+    if not Config.SaveDeathStatus then return end
     local xPlayer = ESX.GetPlayerFromId(source)
     if not type(state) == 'boolean' then return end
     MySQL.update('UPDATE users SET is_dead = ? WHERE identifier = ?', { state, xPlayer.identifier })
@@ -25,6 +26,7 @@ AddEventHandler('esx:onPlayerRevive', function()
 end)
 
 AddEventHandler('esx:playerLoaded', function (playerId, xPlayer, isNew)
+    if not Config.SaveDeathStatus then return end
     local deadStatus = GetDeadStatus(xPlayer)
     if not deadStatus then return end
     Wait(1000)
