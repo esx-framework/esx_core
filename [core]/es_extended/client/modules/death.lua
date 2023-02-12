@@ -1,4 +1,3 @@
-local playerState = LocalPlayer.state
 local basicneeds_state = GetResourceState('esx_basicneeds'):find('start')
 local esx_basicneeds = basicneeds_state == 1 and true or false
 
@@ -34,7 +33,6 @@ local function SetDeadState(state)
 	local playerPed = PlayerPedId()
 	ESX.SetPlayerData('ped', playerPed)
 	ESX.SetPlayerData('dead', state)
-	playerState:set('dead', state, true)
 
 	SetEntityInvincible(ESX.PlayerData.ped, state)
 	SetEntityMaxHealth(ESX.PlayerData.ped, 200)
@@ -64,7 +62,7 @@ local function OnPlayerDeath(data)
 
 	local coords = GetEntityCoords(ESX.PlayerData.ped)
 	local heading = GetEntityHeading(ESX.PlayerData.ped)
-	local inVehicle = playerState.inVehicle
+	local inVehicle = ESX.GetPlayerStateBag('inVehicle')
 
 	if inVehicle then
 		local vehicle = NetToVeh(inVehicle)
@@ -115,7 +113,7 @@ function ANIM:play(type)
 		self:stop()
 	end
 
-	if not type then type = playerState.inVehicle and 'inVehicle' or 'onFoot' end
+	if not type then type = ESX.GetPlayerStateBag('inVehicle') and 'inVehicle' or 'onFoot' end
 
 	self.current.dict = deadAnims[type].dict
 	self.current.anim = deadAnims[type].anim

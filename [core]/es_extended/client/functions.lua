@@ -64,7 +64,7 @@ function ESX.SetPlayerStateBag(key, val, sync)
 end
 
 ---@param key string
----@param val string
+---@param val any
 function ESX.SetPlayerData(key, val)
     local current = ESX.PlayerData[key]
     ESX.PlayerData[key] = val
