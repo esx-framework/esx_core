@@ -41,8 +41,10 @@ client_scripts {
 	'common/functions.lua',
 
 	-- functions
-	'client/functions/playerdata.lua',
-	'client/functions/statebag.lua',
+	'client/functions/playerData.lua',
+	'client/functions/stateBag.lua',
+	'client/functions/registerInput.lua',
+	'client/functions/isPlayerLoaded.lua',
 
 	-- modules
 	'client/modules/scaleform.lua',
@@ -53,7 +55,8 @@ client_scripts {
 	'client/modules/textui.lua',
 	'client/modules/context.lua',
 	'client/modules/progressbar.lua',
-	'client/modules/notify.lua'
+	'client/modules/notify.lua',
+	'client/modules/ui.lua'
 }
 
 ui_page {

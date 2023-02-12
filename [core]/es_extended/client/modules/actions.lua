@@ -22,7 +22,6 @@ end
 
 CreateThread(function()
     while true do
-
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
             TriggerEvent('esx:playerPedChanged', playerPed)
@@ -37,7 +36,7 @@ CreateThread(function()
             isJumping = false
         end
 
-         if IsPauseMenuActive() and not inPauseMenu then
+        if IsPauseMenuActive() and not inPauseMenu then
             inPauseMenu = true
             TriggerEvent('esx:pauseMenuActive', inPauseMenu)
         elseif not IsPauseMenuActive() and inPauseMenu then
@@ -70,14 +69,16 @@ CreateThread(function()
                 current.seat = GetPedVehicleSeat(playerPed, current.vehicle)
                 current.plate = GetVehicleNumberPlateText(current.vehicle)
                 current.displayName, current.netId = GetData(current.vehicle)
-                TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
+                TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName,
+                    current.netId)
                 TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
                 playerState:set('inVehicle', current.netId, true)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
-                TriggerEvent('esx:exitedVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
+                TriggerEvent('esx:exitedVehicle', current.vehicle, current.plate, current.seat, current.displayName,
+                    current.netId)
                 TriggerServerEvent('esx:exitedVehicle', current.plate, current.seat, current.displayName, current.netId)
                 playerState:set('inVehicle', false, true)
                 isInVehicle = false
@@ -89,7 +90,6 @@ CreateThread(function()
 end)
 
 if Config.EnableDebug then
-
     AddEventHandler('esx:playerPedChanged', function(netId)
         print('esx:playerPedChanged', netId)
     end)
@@ -107,11 +107,12 @@ if Config.EnableDebug then
     end)
 
     AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:enteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+        print('esx:enteredVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId',
+            netId)
     end)
 
     AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
-        print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
+        print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId',
+            netId)
     end)
-
 end

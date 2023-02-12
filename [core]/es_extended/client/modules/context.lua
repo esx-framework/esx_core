@@ -5,21 +5,33 @@ local function throwError()
 end
 
 function ESX.OpenContext(...)
-    if not esx_context then throwError() return end
+    if not esx_context then
+        throwError()
+        return
+    end
     exports["esx_context"]:Open(...)
 end
 
 function ESX.PreviewContext(...)
-    if not esx_context then throwError() return end
+    if not esx_context then
+        throwError()
+        return
+    end
     exports["esx_context"]:Preview(...)
 end
 
 function ESX.CloseContext(...)
-    if not esx_context then throwError() return end
+    if not esx_context then
+        throwError()
+        return
+    end
     exports["esx_context"]:Close(...)
 end
 
 function ESX.RefreshContext(...)
-    if not esx_context then throwError() return end
-   exports["esx_context"]:Refresh(...) 
+    if not esx_context then
+        throwError()
+        return
+    end
+    exports["esx_context"]:Refresh(...)
 end

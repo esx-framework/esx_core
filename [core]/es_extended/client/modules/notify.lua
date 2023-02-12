@@ -40,3 +40,18 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
     BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
     EndTextCommandDisplayHelp(2, false, false, -1)
 end
+
+RegisterNetEvent('esx:showNotification')
+AddEventHandler('esx:showNotification', function(msg, type, length)
+    ESX.ShowNotification(msg, type, length)
+end)
+
+RegisterNetEvent('esx:showAdvancedNotification')
+AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+    ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+end)
+
+RegisterNetEvent('esx:showHelpNotification')
+AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
+    ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
+end)
