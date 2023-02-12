@@ -37,12 +37,23 @@ client_scripts {
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
-	
 	'common/modules/*.lua',
 	'common/functions.lua',
 
-	'common/functions.lua',
-	'client/modules/*.lua'
+	-- functions
+	'client/functions/playerdata.lua',
+	'client/functions/statebag.lua',
+
+	-- modules
+	'client/modules/scaleform.lua',
+	'client/modules/streaming.lua',
+	'client/modules/actions.lua',
+	'client/modules/death.lua',
+	'client/modules/npwd.lua',
+	'client/modules/textui.lua',
+	'client/modules/context.lua',
+	'client/modules/progressbar.lua',
+	'client/modules/notify.lua'
 }
 
 ui_page {
