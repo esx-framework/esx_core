@@ -22,10 +22,6 @@ function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
 end
 
-function ESX.GetPlayerData()
-    return ESX.PlayerData
-end
-
 function ESX.SearchInventory(items, count)
     if type(items) == 'string' then
         items = {items}
@@ -54,14 +50,26 @@ function ESX.SearchInventory(items, count)
     end
 end
 
+function ESX.SetPlayerStateBag(key, val, sync)
+    if not sync then sync = true end
+    LocalPlayer.state:set(key, val, sync)
+end
+
+function ESX.GetPlayerStateBag(key)
+    return LocalPlayer.state[key]
+end
+
 function ESX.SetPlayerData(key, val)
     local current = ESX.PlayerData[key]
     ESX.PlayerData[key] = val
-    if key ~= 'inventory' and key ~= 'loadout' then
-        if type(val) == 'table' or val ~= current then
-            TriggerEvent('esx:setPlayerData', key, val, current)
-        end
-    end
+    if key == 'inventory' or key == 'loadout' then return end
+    ESX.SetPlayerStateBag(key, val)
+    if type(val) ~= 'table' or val == current then return end
+    TriggerEvent('esx:setPlayerData', key, val, current)
+end
+
+function ESX.GetPlayerData()
+    return ESX.PlayerData
 end
 
 function ESX.Progressbar(message, length, Options)

@@ -34,7 +34,6 @@ local function SetDeadState(state)
 	local playerPed = PlayerPedId()
 	ESX.SetPlayerData('ped', playerPed)
 	ESX.SetPlayerData('dead', state)
-	playerState:set('dead', state, true)
 
 	SetEntityInvincible(ESX.PlayerData.ped, state)
 	SetEntityMaxHealth(ESX.PlayerData.ped, 200)
@@ -64,7 +63,7 @@ local function OnPlayerDeath(data)
 
 	local coords = GetEntityCoords(ESX.PlayerData.ped)
 	local heading = GetEntityHeading(ESX.PlayerData.ped)
-	local inVehicle = playerState.inVehicle
+	local inVehicle = ESX.GetPlayerStateBag('inVehicle')
 
 	if inVehicle then
 		local vehicle = NetToVeh(inVehicle)
