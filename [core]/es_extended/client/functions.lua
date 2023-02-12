@@ -1,5 +1,3 @@
-ESX = {}
-Core = {}
 ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0

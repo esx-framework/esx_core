@@ -8,6 +8,9 @@ lua54 'yes'
 version '1.9.1'
 
 shared_scripts {
+	'shared/main.lua',
+	'shared/functions/*.lua',
+	'shared/modules/*.lua',
 	'locale.lua',
 	'locales/*.lua',
 
@@ -26,9 +29,6 @@ server_scripts {
 	'server/paycheck.lua',
 	'server/main.lua',
 	'server/commands.lua',
-
-	'common/modules/*.lua',
-	'common/functions.lua',
 	'server/modules/*.lua'
 }
 
@@ -37,8 +37,6 @@ client_scripts {
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
-	'common/modules/*.lua',
-	'common/functions.lua',
 
 	-- functions
 	'client/functions/playerData.lua',
@@ -56,7 +54,9 @@ client_scripts {
 	'client/modules/context.lua',
 	'client/modules/progressbar.lua',
 	'client/modules/notify.lua',
-	'client/modules/ui.lua'
+	'client/modules/ui.lua',
+	'client/modules/blip.lua',
+	'client/modules/marker.lua'
 }
 
 ui_page {
