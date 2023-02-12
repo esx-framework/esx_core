@@ -29,7 +29,12 @@ server_scripts {
 	'server/paycheck.lua',
 	'server/main.lua',
 	'server/commands.lua',
-	'server/modules/*.lua'
+
+	-- modules
+	'server/modules/actions.lua',
+	'server/modules/blip.lua',
+	'server/modules/npwd.lua',
+	'server/modules/death.lua'
 }
 
 client_scripts {

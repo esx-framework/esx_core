@@ -27,7 +27,8 @@ function Blip:Add(id, coords, label, sprite, size, color, circle, range, tempora
 
     if not coords.z then coords = vec3(coords.x, coords.y, 0.0) end
 
-    local blip = circle and AddBlipForRadius(coords.x, coords.y, coords.z, range or 100.0) or AddBlipForCoord(coords.x, coords.y, coords.z)
+    local blip = circle and AddBlipForRadius(coords.x, coords.y, coords.z, range or 100.0) or
+        AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipColour(blip, color or 1)
     SetBlipAlpha(blip, fadeIn and 0 or 255)
 
@@ -134,3 +135,24 @@ function Blip:Hide(id)
 end
 
 Core.Modules['blip'] = Blip
+
+-- Events
+RegisterNetEvent('esx_blip:Add', function(...)
+    Blip:Add(...)
+end)
+
+RegisterNetEvent('esx_blip:Remove', function(...)
+    Blip:Remove(...)
+end)
+
+RegisterNetEvent('esx_blip:SetWayPoint', function(...)
+    Blip:SetWayPoint(...)
+end)
+
+RegisterNetEvent('esx_blip:Show', function(...)
+    Blip:Show(...)
+end)
+
+RegisterNetEvent('esx_blip:Hide', function(...)
+    Blip:Hide(...)
+end)
