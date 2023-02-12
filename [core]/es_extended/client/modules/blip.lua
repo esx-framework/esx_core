@@ -9,14 +9,14 @@ local Blip = {}
 --- @param circle boolean
 --- @param range number
 --- @param temporary boolean
---- @param fadeIn boolean
-function Blip:Add(id, coords, label, sprite, size, color, circle, range, temporary, fadeIn)
+function Blip:Add(id, coords, label, sprite, size, color, circle, range, temporary)
     if not id then
         print("[^1ERROR^7] ^5ESX Blips^7 ID missing!")
         return
     end
 
     if self:Exist(id) then
+        print("[^1ERROR^7] ^5ESX Blips^7 blip already exist! ID:", id)
         return
     end
 
@@ -30,26 +30,21 @@ function Blip:Add(id, coords, label, sprite, size, color, circle, range, tempora
     local blip = circle and AddBlipForRadius(coords.x, coords.y, coords.z, range or 100.0) or
         AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipColour(blip, color or 1)
-    SetBlipAlpha(blip, fadeIn and 0 or 255)
+    SetBlipAlpha(blip, 255)
 
     if not circle then
         SetBlipSprite(blip, sprite or 1)
         SetBlipScale(blip, size or 0.7)
         SetBlipAsShortRange(blip, true)
         BeginTextCommandSetBlipName('STRING')
-        AddTextComponentSubstringPlayerName(label or ('unknown ' .. id))
+        AddTextComponentSubstringPlayerName(label or (GetInvokingResource() .. ' ' .. id))
         EndTextCommandSetBlipName(blip)
-    end
-
-    if fadeIn then
-        self:Show(id)
     end
 
     ESX.Blips[id] = {
         blip = blip,
         coords = coords,
-        temporary = temporary,
-        hidden = fadeIn and true or false
+        temporary = temporary
     }
 
     TriggerEvent('esx:blipCreated', id)
@@ -57,28 +52,23 @@ function Blip:Add(id, coords, label, sprite, size, color, circle, range, tempora
 end
 
 --- @param id string
---- @param fadeOut boolean
-function Blip:Remove(id, fadeOut)
+function Blip:Remove(id)
     if type(id) == 'table' then
         for _, data in pairs(id) do
             if not self:Exist(data[1]) then
-                print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id)
+                print("[^1ERROR^7] ^5ESX Blips^7 blip not exist! ID:", id)
                 return
             end
 
-            self:Remove(data[1], data[2])
+            self:Remove(data[1])
         end
 
         return
     end
 
-    if not self:Exist(id) then return end
-
-    if fadeOut then
-        self:Hide(id)
-        while not ESX.Blips[id].hidden do
-            Wait(100)
-        end
+    if not self:Exist(id) then
+        print("[^1ERROR^7] ^5ESX Blips^7 blip not exist! ID:", id)
+        return
     end
 
     RemoveBlip(ESX.Blips[id].blip)
@@ -99,39 +89,11 @@ end
 
 --- @param id string
 function Blip:Exist(id)
-    if ESX.Blips[id] then return true end
-    print("[^1ERROR^7] ^5ESX Blips^7 blip not exist! ID:", id)
+    if ESX.Blips[id] then
+        return true
+    end
+
     return false
-end
-
---- @param id string
-function Blip:Show(id)
-    CreateThread(function()
-        local blipAlpha = 0
-        while blipAlpha ~= 2550 do
-            blipAlpha = blipAlpha + 1
-            if blipAlpha > 2550 then break end
-            local alpha = math.floor(blipAlpha / 10)
-            SetBlipAlpha(ESX.Blips[id].blip, alpha)
-            Wait(1)
-        end
-        ESX.Blips[id].hidden = false
-    end)
-end
-
---- @param id string
-function Blip:Hide(id)
-    CreateThread(function()
-        local blipAlpha = 2550
-        while blipAlpha ~= 0 do
-            blipAlpha = blipAlpha - 1
-            if blipAlpha < 0 then break end
-            local alpha = math.floor(blipAlpha / 10)
-            SetBlipAlpha(ESX.Blips[id].blip, alpha)
-            Wait(1)
-        end
-        ESX.Blips[id].hidden = true
-    end)
 end
 
 Core.Modules['blip'] = Blip
@@ -147,12 +109,4 @@ end)
 
 RegisterNetEvent('esx_blip:SetWayPoint', function(...)
     Blip:SetWayPoint(...)
-end)
-
-RegisterNetEvent('esx_blip:Show', function(...)
-    Blip:Show(...)
-end)
-
-RegisterNetEvent('esx_blip:Hide', function(...)
-    Blip:Hide(...)
 end)
