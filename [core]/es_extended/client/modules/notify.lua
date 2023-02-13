@@ -1,3 +1,4 @@
+--#TODO: Modul importálni coreba külső resourceből
 function ESX.ShowNotification(message, type, length)
     if GetResourceState("esx_notify") ~= "missing" then
         return exports["esx_notify"]:Notify(type, length, message)

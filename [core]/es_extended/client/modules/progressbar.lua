@@ -1,3 +1,4 @@
+--#TODO: Modul importálni coreba külső resourceből
 function ESX.Progressbar(message, length, Options)
     if GetResourceState("esx_progressbar") ~= "missing" then
         return exports["esx_progressbar"]:Progressbar(message, length, Options)

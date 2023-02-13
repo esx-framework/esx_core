@@ -12,13 +12,6 @@ Core.PlayerFunctionOverrides = {}
 
 Core.playersByIdentifier = {}
 
-if GetResourceState('ox_inventory') ~= 'missing' then
-  Config.OxInventory = true
-  Config.PlayerFunctionOverride = 'OxInventory'
-  SetConvarReplicated('inventory:framework', 'esx')
-  SetConvarReplicated('inventory:weight', Config.MaxWeight * 1000)
-end
-
 local function StartDBSync()
   CreateThread(function()
     while true do

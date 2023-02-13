@@ -1,3 +1,4 @@
+--- @param length number
 function ESX.GetRandomNumber(length)
     local numbers = "0123456789"
 	math.randomseed(GetGameTimer())
@@ -10,5 +11,5 @@ function ESX.GetRandomNumber(length)
         randomNumber = randomNumber .. string.sub(numbers, rand, rand)
     end
 
-    return randomNumber
+    return tonumber(randomNumber)
 end

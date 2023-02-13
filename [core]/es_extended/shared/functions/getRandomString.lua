@@ -1,8 +1,6 @@
 --- @param length number
 function ESX.GetRandomString(length)
-    local upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    local lowerCase = "abcdefghijklmnopqrstuvwxyz"
-    local characterSet = upperCase .. lowerCase
+    local characterSet = "abcdefghijklmnopqrstuvwxyz"
 	math.randomseed(GetGameTimer())
     local randomString = ''
 

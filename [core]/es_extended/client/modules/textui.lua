@@ -1,3 +1,5 @@
+--#TODO: Modul importálni coreba külső resourceből
+
 ---@param message string
 ---@param type string
 function ESX.TextUI(message, type)

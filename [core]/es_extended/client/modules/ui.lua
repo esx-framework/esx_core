@@ -1,3 +1,5 @@
+--#TODO: Modul importálni coreba külső resourceből
+
 function ESX.UI.Menu.RegisterType(type, open, close)
     ESX.UI.Menu.RegisteredTypes[type] = {
         open = open,

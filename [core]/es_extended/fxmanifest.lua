@@ -7,10 +7,15 @@ description 'ES Extended'
 lua54 'yes'
 version '1.9.1'
 
+--#TODO Mappákat át írni
+
 shared_scripts {
 	'shared/main.lua',
 	'shared/functions/*.lua',
-	'shared/modules/*.lua',
+	'shared/modules/main.lua',
+	'shared/modules/math.lua',
+	'shared/modules/table.lua',
+	'shared/modules/timeout.lua',
 	'locale.lua',
 	'locales/*.lua',
 
