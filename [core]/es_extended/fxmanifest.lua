@@ -10,14 +10,23 @@ version '1.9.1'
 --#TODO Mappákat át írni
 
 shared_scripts {
-	'shared/main.lua',
-	'shared/functions/*.lua',
-	'shared/modules/*.lua',
 	'locale.lua',
 	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
+
+	'shared/main.lua',
+	'shared/modules/main.lua',
+	'shared/modules/math.lua',
+	'shared/modules/table.lua',
+	'shared/modules/timeout.lua',
+	'shared/functions/dumbTable.lua',
+	'shared/functions/getConfig.lua',
+	'shared/functions/getRandomNumber.lua',
+	'shared/functions/getRandomString.lua',
+	'shared/functions/round.lua',
+	'shared/functions/weapon.lua',
 }
 
 server_scripts {
@@ -35,21 +44,42 @@ server_scripts {
 	'server/functions/*.lua',
 
 	-- modules
-	'server/modules/core/*.lua',
-	'server/modules/*.lua',
+	'server/modules/core/actions.lua',
+	'server/modules/core/commands.lua',
+	'server/modules/core/death.lua',
+	'server/modules/blip.lua',
+	'server/modules/debug.lua',
+	'server/modules/marker.lua',
+	'server/modules/paycheck.lua'
 }
 
 client_scripts {
+	'client/common.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
 
 	-- functions
-	'client/functions/*.lua',
+	'client/functions/playerData.lua',
+	'client/functions/stateBag.lua',
+	'client/functions/registerInput.lua',
+	'client/functions/isPlayerLoaded.lua',
 
 	-- modules
-	'client/modules/core/*.lua',
-	'client/modules/*.lua',
+	'client/modules/core/actions.lua',
+	'client/modules/core/npwd.lua',
+	'client/modules/core/scaleform.lua',
+	'client/modules/core/streaming.lua',
+	'client/modules/core/death.lua',
+	'client/modules/textui.lua',
+	'client/modules/context.lua',
+	'client/modules/progressbar.lua',
+	'client/modules/notify.lua',
+	'client/modules/ui.lua',
+	'client/modules/blip.lua',
+	'client/modules/marker.lua'
+
+
 }
 
 ui_page {
