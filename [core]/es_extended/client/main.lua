@@ -1,5 +1,9 @@
 local pickups = {}
 
+if GetResourceState('ox_inventory') ~= 'missing' then
+	Config.OxInventory = true
+end
+
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(0)
