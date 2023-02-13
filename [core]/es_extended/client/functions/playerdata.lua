@@ -1,3 +1,5 @@
+ESX.PlayerData = {}
+
 ---@param key string
 ---@param val any
 function ESX.SetPlayerData(key, val)

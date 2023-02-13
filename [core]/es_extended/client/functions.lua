@@ -1,4 +1,3 @@
-ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
