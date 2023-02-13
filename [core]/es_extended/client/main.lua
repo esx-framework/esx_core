@@ -74,31 +74,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end
 	end
 
-	-- DisableVehicleRewards
-	if Config.DisableVehicleRewards then
-		local inVehicle = false
-
-		local function DisableVehicleRewardsThread()
-			CreateThread(function()
-				while inVehicle do
-					DisablePlayerVehicleRewards(playerId)
-					Wait(0)
-				end
-			end)
-		end
-
-		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat, displayName, netId)
-			if GetVehicleClass(vehicle) == 18 then
-				DisableVehicleRewardsThread()
-			end
-		end)
-
-		AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
-			inVehicle = false
-		end)
-	end
-
-	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist then
+	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
 				if Config.DisableHealthRegeneration then
@@ -114,6 +90,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 					if IsPedArmed(ESX.PlayerData.ped, 4) then
 						SetPlayerLockonRangeOverride(playerId, 2.0)
 					end
+				end
+				
+				if Config.DisableVehicleRewards then
+					DisablePlayerVehicleRewards(playerId)
 				end
 
 				Wait(0)
