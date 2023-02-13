@@ -182,18 +182,23 @@ AddEventHandler('esx:restoreLoadout', function()
 	end
 end)
 
-AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
-	if not value then
-		return
-	end
-
-	local vehicle = GetEntityFromStateBagName(bagName)
-	if not DoesEntityExist(vehicle) then
-		return
-	end
-
-	if NetworkGetEntityOwner(vehicle) == PlayerId() then
-		ESX.Game.SetVehicleProperties(vehicle, value)
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
+	if value then
+		Wait(0)
+		local NetId = value.NetId
+		local Vehicle = NetworkGetEntityFromNetworkId(NetId)
+		local Tries = 0
+		while Vehicle == 0 do
+			Vehicle = NetworkGetEntityFromNetworkId(NetId)
+			Wait(100)
+			Tries = Tries + 1
+			if Tries > 300 then
+				break
+			end
+		end
+		if NetworkGetEntityOwner(Vehicle) == PlayerId() then
+			ESX.Game.SetVehicleProperties(Vehicle, value)
+		end
 	end
 end)
 
