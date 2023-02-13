@@ -96,7 +96,9 @@ MySQL.ready(function()
 
   print('[^2INFO^7] ESX ^5Legacy 1.9.1^0 initialized!')
   StartDBSync()
-  StartPayCheck()
+  if Config.EnablePaycheck then
+		StartPayCheck()
+	end
 end)
 
 RegisterServerEvent('esx:clientLog')
