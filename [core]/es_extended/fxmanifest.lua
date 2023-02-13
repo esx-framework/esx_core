@@ -1,13 +1,10 @@
-fx_version 'adamant'
-
+fx_version 'cerulean'
 game 'gta5'
 
 description 'ES Extended'
 
 lua54 'yes'
-version '1.9.1'
-
---#TODO Mappákat át írni
+version '2.0.0'
 
 shared_scripts {
 	'locale.lua',
@@ -40,8 +37,27 @@ server_scripts {
 	'server/main.lua',
 
 	-- functions
-	'sever/functions/core/*.lua',
-	'server/functions/*.lua',
+	'server/functions/core/isPlayerAdmin.lua',
+	'server/functions/core/savePlayer.lua',
+	'server/functions/core/savePlayers.lua',
+	'server/functions/createPickup.lua',
+	'server/functions/doesJobExist.lua',
+	'server/functions/getExtendedPlayers.lua',
+	'server/functions/getIdentifier.lua',
+	'server/functions/getItemLabel.lua',
+	'server/functions/getJobs.lua',
+	'server/functions/getPlayerFromId.lua',
+	'server/functions/getPlayerFromIdentifier.lua',
+	'server/functions/getPlayers.lua',
+	'server/functions/getUsableItems.lua',
+	'server/functions/getVehicleType.lua',
+	'server/functions/refreshJobs.lua',
+	'server/functions/registerCommand.lua',
+	'server/functions/registerPlayerFunctionOverrides.lua',
+	'server/functions/registerUsableItem.lua',
+	'server/functions/setPlayerFunctionOverride.lua',
+	'server/functions/trace.lua',
+	'server/functions/useItem.lua',
 
 	-- modules
 	'server/modules/core/actions.lua',
@@ -50,14 +66,15 @@ server_scripts {
 	'server/modules/blip.lua',
 	'server/modules/debug.lua',
 	'server/modules/marker.lua',
-	'server/modules/paycheck.lua'
+	'server/modules/paycheck.lua',
+	'server/modules/log.lua'
 }
 
 client_scripts {
+	'client/main.lua',
 	'client/common.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
-	'client/main.lua',
 
 	-- functions
 	'client/functions/playerData.lua',
@@ -78,7 +95,6 @@ client_scripts {
 	'client/modules/ui.lua',
 	'client/modules/blip.lua',
 	'client/modules/marker.lua'
-
 
 }
 
