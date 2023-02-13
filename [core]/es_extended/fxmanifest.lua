@@ -12,10 +12,7 @@ version '1.9.1'
 shared_scripts {
 	'shared/main.lua',
 	'shared/functions/*.lua',
-	'shared/modules/main.lua',
-	'shared/modules/math.lua',
-	'shared/modules/table.lua',
-	'shared/modules/timeout.lua',
+	'shared/modules/*.lua',
 	'locale.lua',
 	'locales/*.lua',
 
@@ -31,43 +28,28 @@ server_scripts {
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/onesync.lua',
-	'server/paycheck.lua',
 	'server/main.lua',
-	'server/commands.lua',
- 
+
+	-- functions
+	'sever/functions/core/*.lua',
+	'server/functions/*.lua',
+
 	-- modules
-	'server/modules/actions.lua',
-	'server/modules/blip.lua',
-	'server/modules/npwd.lua',
-	'server/modules/death.lua',
-	'server/modules/marker.lua'
+	'server/modules/core/*.lua',
+	'server/modules/*.lua',
 }
 
 client_scripts {
-	'client/common.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
 
 	-- functions
-	'client/functions/playerData.lua',
-	'client/functions/stateBag.lua',
-	'client/functions/registerInput.lua',
-	'client/functions/isPlayerLoaded.lua',
+	'client/functions/*.lua',
 
 	-- modules
-	'client/modules/scaleform.lua',
-	'client/modules/streaming.lua',
-	'client/modules/actions.lua',
-	'client/modules/death.lua',
-	'client/modules/npwd.lua',
-	'client/modules/textui.lua',
-	'client/modules/context.lua',
-	'client/modules/progressbar.lua',
-	'client/modules/notify.lua',
-	'client/modules/ui.lua',
-	'client/modules/blip.lua',
-	'client/modules/marker.lua'
+	'client/modules/core/*.lua',
+	'client/modules/*.lua',
 }
 
 ui_page {
