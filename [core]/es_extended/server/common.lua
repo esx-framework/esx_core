@@ -66,7 +66,9 @@ MySQL.ready(function()
   print(('[^2INFO^7] ESX ^5Legacy %s^0 initialized!'):format(GetResourceMetadata(GetCurrentResourceName(), "version", 0)))
     
   StartDBSync()
-  StartPayCheck()
+  if Config.EnablePaycheck then
+		StartPayCheck()
+	end
 end)
 
 RegisterServerEvent('esx:clientLog')
