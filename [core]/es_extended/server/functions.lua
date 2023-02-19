@@ -4,22 +4,6 @@ function ESX.Trace(msg)
   end
 end
 
-function ESX.SetTimeout(msec, cb)
-  local id = Core.TimeoutCount + 1
-
-  SetTimeout(msec, function()
-    if Core.CancelledTimeouts[id] then
-      Core.CancelledTimeouts[id] = nil
-    else
-      cb()
-    end
-  end)
-
-  Core.TimeoutCount = id
-
-  return id
-end
-
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   if type(name) == 'table' then
     for k, v in ipairs(name) do
@@ -159,10 +143,6 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   end
 end
 
-function ESX.ClearTimeout(id)
-  Core.CancelledTimeouts[id] = true
-end
-
 function ESX.RegisterServerCallback(name, cb)
   Core.ServerCallbacks[name] = cb
 end
@@ -176,10 +156,21 @@ function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
 end
 
 function Core.SavePlayer(xPlayer, cb)
+  local parameters <const> = {
+    json.encode(xPlayer.getAccounts(true)),
+    xPlayer.job.name,
+    xPlayer.job.grade, 
+    xPlayer.group,
+    json.encode(xPlayer.getCoords()),
+    json.encode(xPlayer.getInventory(true)), 
+    json.encode(xPlayer.getLoadout(true)),
+    xPlayer.identifier
+  }
+
   MySQL.prepare(
     'UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?',
-    {json.encode(xPlayer.getAccounts(true)), xPlayer.job.name, xPlayer.job.grade, xPlayer.group, json.encode(xPlayer.getCoords()),
-     json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true)), xPlayer.identifier}, function(affectedRows)
+    parameters,
+    function(affectedRows)
       if affectedRows == 1 then
         print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
         TriggerEvent('esx:playerSaved', xPlayer.playerId, xPlayer)
@@ -187,44 +178,50 @@ function Core.SavePlayer(xPlayer, cb)
       if cb then
         cb()
       end
-    end)
+    end
+  )
 end
 
 function Core.SavePlayers(cb)
-  local xPlayers = ESX.GetExtendedPlayers()
-  local count = #xPlayers
-  if count > 0 then
-    local parameters = {}
-    local time = os.time()
-    for i = 1, count do
-      local xPlayer = xPlayers[i]
-      parameters[#parameters + 1] = {json.encode(xPlayer.getAccounts(true)), xPlayer.job.name, xPlayer.job.grade, xPlayer.group,
-                                     json.encode(xPlayer.getCoords()), json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true)),
-                                     xPlayer.identifier}
+  local xPlayers <const> = ESX.Players
+  if not next(xPlayers) then
+    return
+  end
+  
+  local startTime <const> = os.time()
+  local parameters = {}
+
+  for _, xPlayer in pairs(ESX.Players) do
+    parameters[#parameters + 1] = {
+      json.encode(xPlayer.getAccounts(true)),
+      xPlayer.job.name,
+      xPlayer.job.grade,
+      xPlayer.group,
+      json.encode(xPlayer.getCoords()),
+      json.encode(xPlayer.getInventory(true)),
+      json.encode(xPlayer.getLoadout(true)),
+      xPlayer.identifier
+    }
+  end
+
+  MySQL.prepare(
+    "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?",
+    parameters, 
+    function(results)
+      if not results then
+        return
+      end
+
+      if type(cb) == 'function' then
+        return cb()
+      end
+      
+      print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(#parameters, #parameters > 1 and 'players' or 'player', ESX.Math.Round((os.time() - startTime) / 1000000, 2)))
     end
-    MySQL.prepare(
-      "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?",
-      parameters, function(results)
-        if results then
-          if type(cb) == 'function' then
-            cb()
-          else
-            print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(count, count > 1 and 'players' or 'player', ESX.Math.Round((os.time() - time) / 1000000, 2)))
-          end
-        end
-      end)
-  end
+  )
 end
 
-function ESX.GetPlayers()
-  local sources = {}
-
-  for k, v in pairs(ESX.Players) do
-    sources[#sources + 1] = k
-  end
-
-  return sources
-end
+ESX.GetPlayers = GetPlayers
 
 function ESX.GetExtendedPlayers(key, val)
   local xPlayers = {}
@@ -245,11 +242,7 @@ function ESX.GetPlayerFromId(source)
 end
 
 function ESX.GetPlayerFromIdentifier(identifier)
-  for k, v in pairs(ESX.Players) do
-    if v.identifier == identifier then
-      return v
-    end
-  end
+  return Core.playersByIdentifier[identifier]
 end
 
 function ESX.GetIdentifier(playerId)
