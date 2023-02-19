@@ -74,6 +74,16 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end
 	end
 
+	if Config.RadarOnlyInVehicle then
+		CreateThread(function()
+			while true do
+				local playerVehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
+				DisplayRadar(playerVehicle > 0)
+				Wait(500)
+			end
+		end)
+	end
+
 	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
