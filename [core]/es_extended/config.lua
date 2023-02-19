@@ -38,6 +38,7 @@ Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons f
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death
 Config.DisableWeaponWheel         = false -- Disables default weapon wheel
 Config.DisableAimAssist           = false -- disables AIM assist (mainly on controllers)
+Config.RadarOnlyInVehicle         = true -- Disable radar while player is not in vehicle
 Config.RemoveHudCommonents = {
 	[1] = false, --WANTED_STARS,
 	[2] = false, --WEAPON_ICON
