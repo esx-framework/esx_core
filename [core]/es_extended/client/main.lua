@@ -639,3 +639,24 @@ for i = 1, #DoNotUse do
 		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
 	end
 end
+
+--------- PLAYER PED SYNCHRONIZATION --------
+
+CreateThread(function()
+	while true do
+		local PlayerPed = PlayerPedId()
+
+		if ESX.PlayerData.ped ~= PlayerPed then
+			local datas = {
+				player = PlayerId(),
+				oldped = ESX.PlayerData.ped,
+				newped = PlayerPed
+			}
+
+			TriggerEvent('esx:pedChanged', datas)
+			TriggerServerEvent('esx:pedChanged', datas)
+			ESX.SetPlayerData('ped', PlayerPed)
+		end
+		Wait(1000)
+	end
+end)
