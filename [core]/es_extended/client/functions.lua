@@ -4,7 +4,6 @@ ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
-Core.TimeoutCallbacks = {}
 Core.Input = {}
 ESX.UI = {}
 ESX.UI.Menu = {}
@@ -18,18 +17,6 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 ESX.Streaming = {}
-
-function ESX.SetTimeout(msec, cb)
-    table.insert(Core.TimeoutCallbacks, {
-        time = GetGameTimer() + msec,
-        cb = cb
-    })
-    return #Core.TimeoutCallbacks
-end
-
-function ESX.ClearTimeout(i)
-    Core.TimeoutCallbacks[i] = nil
-end
 
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
@@ -471,10 +458,15 @@ function ESX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPeds(onlyOtherPeds)
-    local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
+    local myPed, pool = ESX.PlayerData.ped, GetGamePool('CPed')
 
+    if not onlyOtherPeds then
+        return pool
+    end
+
+    local peds = {}
     for i = 1, #pool do
-        if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
+        if pool[i] ~= myPed then
             peds[#peds + 1] = pool[i]
         end
     end
@@ -608,6 +600,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
+    local dashboardColor = GetVehicleDashboardColor(vehicle)
+    local interiorColor = GetVehicleInteriorColour(vehicle)
     local customPrimaryColor = nil
     if hasCustomPrimaryColor then
         customPrimaryColor = {GetVehicleCustomPrimaryColour(vehicle)}
@@ -680,6 +674,9 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
+        
+        dashboardColor = dashboardColor,
+        interiorColor = interiorColor,
 
         wheels = GetVehicleWheelType(vehicle),
         windowTint = GetVehicleWindowTint(vehicle),
@@ -792,6 +789,15 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
+
+    if props.interiorColor ~= nil then
+        SetVehicleInteriorColor(vehicle, props.interiorColor)
+    end
+
+    if props.dashboardColor ~= nil then
+        SetVehicleDashboardColor(vehicle, props.dashboardColor)
+    end
+
     if props.wheelColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
     end
@@ -1321,22 +1327,4 @@ AddEventHandler('esx:showAdvancedNotification',
 RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
-end)
-
--- SetTimeout
-CreateThread(function()
-    while true do
-        local sleep = 100
-        if #Core.TimeoutCallbacks > 0 then
-            local currTime = GetGameTimer()
-            sleep = 0
-            for i = 1, #Core.TimeoutCallbacks, 1 do
-                if currTime >= Core.TimeoutCallbacks[i].time then
-                    Core.TimeoutCallbacks[i].cb()
-                    Core.TimeoutCallbacks[i] = nil
-                end
-            end
-        end
-        Wait(sleep)
-    end
 end)

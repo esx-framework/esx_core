@@ -20,6 +20,7 @@ Config.StartingAccountMoney 	= {bank = 50000}
 
 Config.DefaultSpawn 			= {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
 
+Config.EnablePaycheck			= true -- enable paycheck
 Config.EnableSocietyPayouts 	= false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight            	= 24   -- the max inventory weight without backpack
 Config.PaycheckInterval         = 7 * 60000 -- how often to recieve pay checks in milliseconds
@@ -31,6 +32,7 @@ Config.EnablePVP                = true -- Allow Player to player combat
 Config.Multichar                = true -- Enable support for esx_multicharacter
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
+
 Config.DisableHealthRegeneration  = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death

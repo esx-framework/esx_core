@@ -30,10 +30,9 @@ local function closeMenu(namespace, name)
 		name = name,
 	})
 
-	if ESX.Table.SizeOf(OpenedMenus) == 0 then
+	if not next(OpenedMenus) then
 		SetNuiFocus(false)
 	end
-
 end
 
 ESX.UI.Menu.RegisterType(MenuType, openMenu, closeMenu)
@@ -77,25 +76,5 @@ AddEventHandler('esx_menu_dialog:message:menu_change', function(data)
 
 	if menu.change ~= nil then
 		menu.change(data, menu)
-	end
-end)
-
-CreateThread(function()
-	while true do
-		Wait(0)
-
-		if ESX.Table.SizeOf(OpenedMenus) > 0 then
-			DisableControlAction(0, 1,   true) -- LookLeftRight
-			DisableControlAction(0, 2,   true) -- LookUpDown
-			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-			DisableControlAction(0, 12, true) -- WeaponWheelUpDown
-			DisableControlAction(0, 14, true) -- WeaponWheelNext
-			DisableControlAction(0, 15, true) -- WeaponWheelPrev
-			DisableControlAction(0, 16, true) -- SelectNextWeapon
-			DisableControlAction(0, 17, true) -- SelectPrevWeapon
-		else
-			Wait(500)
-		end
 	end
 end)

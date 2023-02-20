@@ -1,5 +1,5 @@
 game 'common'
-version '1.9.0'
+version '1.9.2'
 fx_version 'cerulean'
 author 'ESX-Framework'
 lua54 'yes'
