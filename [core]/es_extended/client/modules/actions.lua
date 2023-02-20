@@ -24,6 +24,7 @@ CreateThread(function()
 
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
+            ESX.SetPlayerData('ped', playerPed)
             TriggerEvent('esx:playerPedChanged', playerPed)
             TriggerServerEvent('esx:playerPedChanged', PedToNet(playerPed))
         end
