@@ -591,12 +591,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(index))
 		end
 
-		if type(index) == 'table' then
-			for key, val in pairs(index) do
-				self.setMeta(key, val)
-			end
-
-			return
+		if type(index) ~= "string" then
+			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5string^7!")):format(index)
 		end
 
 		if not value then
@@ -606,7 +602,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local _type = type(value)
 
 		if _type ~= "number" and _type ~= "string" and _type ~= "table" then
-			return print("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5number^7 or ^5string^7 or ^5table^7!")
+			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
 		end
 
 		self.meta[index] = value
