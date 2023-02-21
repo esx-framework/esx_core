@@ -4,7 +4,7 @@ local DoesEntityExist = DoesEntityExist
 local GetEntityCoords = GetEntityCoords
 local GetEntityHeading = GetEntityHeading
 
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, meta)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 	
 	local self = {}
@@ -22,6 +22,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.variables = {}
 	self.weight = weight
 	self.maxWeight = Config.MaxWeight
+	self.meta = meta
 	if Config.Multichar then self.license = 'license'.. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
 
 	ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
@@ -571,6 +572,68 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.showHelpNotification(msg, thisFrame, beep, duration)
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
+	end
+
+	function self.getMeta(index)
+		if index then
+			if self.meta[index] then
+				return self.meta[index]
+			else
+				return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index))
+			end
+		end
+
+		return self.meta
+	end
+
+	function self.setMeta(index, value)
+		if not index then
+			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(index))
+		end
+
+		if type(index) == 'table' then
+			for key, val in pairs(index) do
+				self.setMeta(key, val)
+			end
+
+			return
+		end
+
+		if not value then
+			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(value))
+		end
+
+		local _type = type(value)
+
+		if _type ~= "number" and _type ~= "string" and _type ~= "table" then
+			return print("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5number^7 or ^5string^7 or ^5table^7!")
+		end
+
+		self.meta[index] = value
+		self.triggerEvent('esx:updatePlayerData', 'meta', self.meta)
+		Player(self.source).state:set('meta', self.meta, true)
+	end
+
+	function self.clearMeta(index)
+		if not index then
+			return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 is Missing!"):format(index))
+		end
+
+		if type(index) == 'table' then
+			for _, val in pairs(index) do
+				self.clearMeta(val)
+			end
+
+			return
+		end
+
+		if not self.meta[index] then
+			return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 not exist!"):format(index))
+		end
+
+		self.meta[index] = nil
+		self.triggerEvent('esx:updatePlayerData', 'meta', self.meta)
+		Player(self.source).state:set('meta', self.meta, true)
 	end
 
 	for fnName,fn in pairs(targetOverrides) do
