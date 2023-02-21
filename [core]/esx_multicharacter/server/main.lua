@@ -94,8 +94,12 @@ elseif ESX.GetConfig().Multichar == true then
 		local identifier = GetIdentifier(source)
 
 		if identifier then
-			if ESX.Players[identifier] then
-				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
+			if not ESX.GetConfig().EnableDebug then
+				if ESX.Players[identifier] then
+					deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
+				else
+					deferrals.done()
+				end
 			else
 				deferrals.done()
 			end
