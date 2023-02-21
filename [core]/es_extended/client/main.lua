@@ -646,3 +646,8 @@ for i = 1, #DoNotUse do
 		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
 	end
 end
+
+RegisterNetEvent('esx:updatePlayerData', function(key, val)
+	if GetInvokingResource() ~= 'es_extended' then return end
+	ESX.SetPlayerData(key, val)
+end)
