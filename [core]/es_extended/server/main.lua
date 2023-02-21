@@ -112,8 +112,6 @@ end
 
 function loadESXPlayer(identifier, playerId, isNew)
   local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0, meta = {}}
-
-  print(json.encode(loadPlayer,{indent=true}))
   local result = MySQL.prepare.await(loadPlayer, {identifier})
   local job, grade, jobObject, gradeObject = result.job, tostring(result.job_grade)
   local foundAccounts, foundItems = {}, {}
