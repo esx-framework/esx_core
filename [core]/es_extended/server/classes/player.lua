@@ -33,6 +33,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	stateBag:set("job", self.job, true)
 	stateBag:set("group", self.group, true)
 	stateBag:set("name", self.name, true)
+	stateBag:set("meta", self.meta, true)
 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
