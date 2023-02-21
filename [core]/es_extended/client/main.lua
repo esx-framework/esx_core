@@ -162,6 +162,7 @@ AddEventHandler('esx:restoreLoadout', function()
 	end
 end)
 
+-- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	if not value then 
 		return 
