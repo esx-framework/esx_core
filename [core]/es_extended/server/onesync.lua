@@ -74,7 +74,6 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
 				end
 
 				local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
-				vehicleProperties.NetId = networkId
 				Entity(createdVehicle).state:set('VehicleProperties', vehicleProperties, true)
 				cb(networkId)
 			else 
