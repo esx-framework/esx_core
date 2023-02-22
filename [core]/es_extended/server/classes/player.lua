@@ -575,25 +575,32 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	function self.getMeta(index)
+	function self.getMeta(index, subIndex)
 		if index then
+
 			if self.meta[index] then
+
+				if subIndex and type(self.meta[index]) == "table" and self.meta[index][subIndex] then
+					return self.meta[index][subIndex]
+				end
+
 				return self.meta[index]
 			else
 				return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index))
 			end
+
 		end
 
 		return self.meta
 	end
 
-	function self.setMeta(index, value)
+	function self.setMeta(index, value, subValue)
 		if not index then
 			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(index))
 		end
 
 		if type(index) ~= "string" then
-			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5string^7!")):format(index)
+			return print("[^1ERROR^7] xPlayer.setMeta ^5index^7 should be ^5string^7!")
 		end
 
 		if not value then
@@ -602,11 +609,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		local _type = type(value)
 
-		if _type ~= "number" and _type ~= "string" and _type ~= "table" then
-			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
+		if not subValue then
+
+			if _type ~= "number" and _type ~= "string" and _type ~= "table" then
+				return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
+			end
+
+			self.meta[index] = value
+		else
+
+			if _type ~= "string" then
+				return print(("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
+			end
+
+			self.meta[index][value] = subValue
 		end
 
-		self.meta[index] = value
+
 		self.triggerEvent('esx:updatePlayerData', 'meta', self.meta)
 		Player(self.source).state:set('meta', self.meta, true)
 	end
