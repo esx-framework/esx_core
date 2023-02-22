@@ -578,6 +578,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.getMeta(index, subIndex)
 		if index then
 
+			if type(index) ~= "string" then
+				return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
+			end
+
 			if self.meta[index] then
 
 				if subIndex and type(self.meta[index]) == "table" and self.meta[index][subIndex] then
