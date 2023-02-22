@@ -584,8 +584,30 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if self.meta[index] then
 
-				if subIndex and type(self.meta[index]) == "table" and self.meta[index][subIndex] then
-					return self.meta[index][subIndex]
+				local _type = type(subIndex)
+				if subIndex and type(self.meta[index]) == "table" then
+
+					if _type == "string" then
+						if self.meta[index][subIndex] then
+							return self.meta[index][subIndex]
+						end
+
+						return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex, index))
+					end
+
+					if _type == "table" then
+						local returnValues = {}
+						for i = 1, #subIndex do
+							if self.meta[index][subIndex[i]] then
+								returnValues[subIndex[i]] = self.meta[index][subIndex[i]]
+							else
+								print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex[i], index))
+							end
+						end
+
+						return returnValues
+					end
+
 				end
 
 				return self.meta[index]
