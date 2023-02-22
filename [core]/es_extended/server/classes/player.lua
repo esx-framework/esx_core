@@ -584,8 +584,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if self.meta[index] then
 
-				local _type = type(subIndex)
 				if subIndex and type(self.meta[index]) == "table" then
+					local _type = type(subIndex)
 
 					if _type == "string" then
 						if self.meta[index][subIndex] then
@@ -622,7 +622,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.setMeta(index, value, subValue)
 		if not index then
-			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(index))
+			return print("[^1ERROR^7] xPlayer.setMeta ^5index^7 is Missing!")
 		end
 
 		if type(index) ~= "string" then
