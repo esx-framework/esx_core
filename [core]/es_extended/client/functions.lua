@@ -432,8 +432,13 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
         SetVehRadioStation(vehicle, 'OFF')
 
         RequestCollisionAtCoord(vector.xyz)
+        local tries = 0
         while not HasCollisionLoadedAroundEntity(vehicle) do
-            Wait(0)
+            if tries > 20 then
+                break
+            end
+            tries += 1
+            Wait(50)
         end
 
         if cb then
