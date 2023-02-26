@@ -4,15 +4,14 @@ ESX.Jobs = {}
 ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
-Core.ServerCallbacks = {}
-Core.ClientCallbacks = {}
-Core.CurrentRequestId = 0
 Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
 
 Core.playersByIdentifier = {}
+
+Core.vehicleTypesByModel = {}
 
 AddEventHandler("esx:getSharedObject", function()
 	local Invoke = GetInvokingResource()
@@ -76,15 +75,6 @@ AddEventHandler('esx:clientLog', function(msg)
   if Config.EnableDebug then
     print(('[^2TRACE^7] %s^7'):format(msg))
   end
-end)
-
-RegisterServerEvent('esx:triggerServerCallback')
-AddEventHandler('esx:triggerServerCallback', function(name, requestId,Invoke, ...)
-  local source = source
-
-  ESX.TriggerServerCallback(name, requestId, source,Invoke, function(...)
-    TriggerClientEvent('esx:serverCallback', source, requestId,Invoke, ...)
-  end, ...)
 end)
 
 RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)

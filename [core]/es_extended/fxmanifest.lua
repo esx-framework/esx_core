@@ -19,30 +19,39 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'config.logs.lua',
 	'server/common.lua',
+	'server/modules/callback.lua',
 	'server/classes/player.lua',
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/onesync.lua',
 	'server/paycheck.lua',
+
 	'server/main.lua',
 	'server/commands.lua',
 
 	'common/modules/*.lua',
 	'common/functions.lua',
-	'server/modules/*.lua'
+	'server/modules/actions.lua',
+	'server/modules/npwd.lua'
 }
 
 client_scripts {
 	'client/common.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
+	'client/modules/callback.lua',
+
 	'client/main.lua',
 	
 	'common/modules/*.lua',
 	'common/functions.lua',
 
 	'common/functions.lua',
-	'client/modules/*.lua'
+	'client/modules/actions.lua',
+	'client/modules/death.lua',
+	'client/modules/npwd.lua',
+	'client/modules/scaleform.lua',
+	'client/modules/streaming.lua',
 }
 
 ui_page {
