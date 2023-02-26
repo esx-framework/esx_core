@@ -2,7 +2,7 @@ SetMapName('San Andreas')
 SetGameType('ESX Legacy')
 
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
-local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
+local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `meta`'
 
 if Config.Multichar then
   newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
@@ -111,8 +111,7 @@ if not Config.Multichar then
 end
 
 function loadESXPlayer(identifier, playerId, isNew)
-  local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0}
-
+  local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0, meta = {}}
   local result = MySQL.prepare.await(loadPlayer, {identifier})
   local job, grade, jobObject, gradeObject = result.job, tostring(result.job_grade)
   local foundAccounts, foundItems = {}, {}
@@ -271,8 +270,13 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
   end
 
+  if result.meta and result.meta ~= '' then
+    local meta = json.decode(result.meta)
+    userData.meta = meta
+  end
+
   local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job,
-    userData.loadout, userData.playerName, userData.coords)
+    userData.loadout, userData.playerName, userData.coords, userData.meta)
   ESX.Players[playerId] = xPlayer
   Core.playersByIdentifier[identifier] = xPlayer
 
@@ -307,7 +311,8 @@ function loadESXPlayer(identifier, playerId, isNew)
       lastName = xPlayer.get("lastName") or "Doe",
       dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
       height = xPlayer.get("height") or 120,
-      dead = false
+      dead = false,
+      meta = xPlayer.getMeta()
     }, isNew,
     userData.skin)
 
@@ -579,7 +584,7 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
   local xPlayer = ESX.GetPlayerFromId(source)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
+      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), meta = xPlayer.getMeta()})
 end)
 
 ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
@@ -594,7 +599,7 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
   local xPlayer = ESX.GetPlayerFromId(target)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
+      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), meta = xPlayer.getMeta()})
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
