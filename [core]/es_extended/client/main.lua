@@ -629,6 +629,5 @@ for i = 1, #DoNotUse do
 end
 
 RegisterNetEvent('esx:updatePlayerData', function(key, val)
-	if GetInvokingResource() ~= 'es_extended' then return end
 	ESX.SetPlayerData(key, val)
 end)
