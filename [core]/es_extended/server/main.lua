@@ -1,6 +1,7 @@
 SetMapName('San Andreas')
 SetGameType('ESX Legacy')
 
+local OnesyncState = GetConvar('onesync', 'off')
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `meta`'
 
@@ -95,6 +96,9 @@ if not Config.Multichar then
     local playerId = source
     local identifier = ESX.GetIdentifier(playerId)
 
+    if OnesyncState == "off" or OnesyncState == "legacy" then
+      deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
+    end
     if identifier then
       if ESX.GetPlayerFromIdentifier(identifier) then
         deferrals.done(
