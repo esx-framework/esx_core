@@ -357,7 +357,7 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-    networked = networked == nil and true or networked
+    networked = networked or true
     if networked then 
         ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
             if cb then
@@ -405,7 +405,7 @@ end
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-    networked = networked == nil and true or networked
+    networked = networked or true
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
