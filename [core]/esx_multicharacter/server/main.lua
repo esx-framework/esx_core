@@ -109,7 +109,7 @@ elseif ESX.GetConfig().Multichar then
 		if not DatabaseConnected then
 			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
 		end
-		
+
 		if identifier then
 			
 			if not ESX.GetConfig().EnableDebug then
@@ -159,11 +159,12 @@ elseif ESX.GetConfig().Multichar then
 			local count = 0
 
 			for i = 1, #DB_COLUMNS do
-				local v = DB_COLUMNS[i]
+				local column = DB_COLUMNS[i]
+				DB_TABLES[column.TABLE_NAME] = column.COLUMN_NAME
 
-				if v?.CHARACTER_MAXIMUM_LENGTH ~= length then
+				if column?.CHARACTER_MAXIMUM_LENGTH ~= length then
 					count += 1
-					columns[v.TABLE_NAME] = v.COLUMN_NAME
+					columns[column.TABLE_NAME] = column.COLUMN_NAME
 				end
 			end
 
