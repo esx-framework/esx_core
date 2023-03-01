@@ -7,16 +7,16 @@ Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
 Core.ClientCallbacks = {}
 Core.CurrentRequestId = 0
-Core.TimeoutCount = -1
-Core.CancelledTimeouts = {}
 Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
 
+Core.playersByIdentifier = {}
+
 AddEventHandler("esx:getSharedObject", function()
 	local Invoke = GetInvokingResource()
-	print(("[^1ERROR^7] Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/sharedevent for how to fix!"):format(Invoke))
+	print(("[^1ERROR^7] Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix!"):format(Invoke))
 end)
 
 exports('getSharedObject', function()
@@ -61,42 +61,14 @@ MySQL.ready(function()
     end
   end
 
-  local Jobs = {}
-  local jobs = MySQL.query.await('SELECT * FROM jobs')
+  ESX.RefreshJobs()
 
-  for _, v in ipairs(jobs) do
-    Jobs[v.name] = v
-    Jobs[v.name].grades = {}
-  end
-
-  local jobGrades = MySQL.query.await('SELECT * FROM job_grades')
-
-  for _, v in ipairs(jobGrades) do
-    if Jobs[v.job_name] then
-      Jobs[v.job_name].grades[tostring(v.grade)] = v
-    else
-      print(('[^3WARNING^7] Ignoring job grades for ^5%s^0 due to missing job'):format(v.job_name))
-    end
-  end
-
-  for _, v in pairs(Jobs) do
-    if ESX.Table.SizeOf(v.grades) == 0 then
-      Jobs[v.name] = nil
-      print(('[^3WARNING^7] Ignoring job ^5%s^0 due to no job grades found'):format(v.name))
-    end
-  end
-
-  if not Jobs then
-    -- Fallback data, if no jobs exist
-    ESX.Jobs['unemployed'] = {label = 'Unemployed',
-                              grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
-  else
-    ESX.Jobs = Jobs
-  end
-
-  print('[^2INFO^7] ESX ^5Legacy 1.9.1^0 initialized!')
+  print(('[^2INFO^7] ESX ^5Legacy %s^0 initialized!'):format(GetResourceMetadata(GetCurrentResourceName(), "version", 0)))
+    
   StartDBSync()
-  StartPayCheck()
+  if Config.EnablePaycheck then
+		StartPayCheck()
+	end
 end)
 
 RegisterServerEvent('esx:clientLog')
