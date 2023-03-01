@@ -163,3 +163,7 @@ function ESX.Table.Sort(t, order)
 		end
 	end
 end
+
+function ESX.Table.Insert(t, v)
+	t[#t + 1] = v
+end
