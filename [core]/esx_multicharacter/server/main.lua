@@ -1,6 +1,6 @@
 if not ESX then
 	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
-elseif ESX.GetConfig().Multichar == true then
+elseif ESX.GetConfig().Multichar then
 	local DATABASE do
 		local connectionString = GetConvar('mysql_connection_string', '');
 		if connectionString == '' then
