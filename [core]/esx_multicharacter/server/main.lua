@@ -1,6 +1,10 @@
 if not ESX then
 	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
 elseif ESX.GetConfig().Multichar then
+	local DatabaseConnected = false
+	local DatabaseFound = false
+	local OnesyncState = GetConvar('onesync', 'off')
+
 	local DATABASE do
 		local connectionString = GetConvar('mysql_connection_string', '');
 		if connectionString == '' then
@@ -8,6 +12,7 @@ elseif ESX.GetConfig().Multichar then
 		elseif connectionString:find('mysql://') then
 			connectionString = connectionString:sub(9, -1)
 			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
+			DatabaseFound = true
 		else
 			connectionString = {string.strsplit(';', connectionString)}
 			for i = 1, #connectionString do
@@ -16,6 +21,7 @@ elseif ESX.GetConfig().Multichar then
 					DATABASE = v:sub(10, #v)
 				end
 			end
+			DatabaseFound = true
 		end
 	end
 
@@ -92,11 +98,23 @@ elseif ESX.GetConfig().Multichar then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
+		if OnesyncState == "off" or OnesyncState == "legacy" then
+			return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
+		end
 
+		if not DatabaseFound then
+			deferrals.done(('[ESX Multicharacter] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+		end
+
+		if not DatabaseConnected then
+			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+		end
+		
 		if identifier then
+			
 			if not ESX.GetConfig().EnableDebug then
 				if ESX.Players[identifier] then
-					deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
+					deferrals.done(('[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
 				else
 					deferrals.done()
 				end
@@ -179,6 +197,7 @@ elseif ESX.GetConfig().Multichar then
 			until next(ESX.Jobs)
 
 			FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
+			DatabaseConnected = true
 		end
 	end)
 

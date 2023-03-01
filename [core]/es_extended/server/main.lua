@@ -56,6 +56,7 @@ function onPlayerJoined(playerId)
       if result then
         loadESXPlayer(identifier, playerId, false)
       else
+        
         createESXPlayer(identifier, playerId)
       end
     end
@@ -97,18 +98,23 @@ if not Config.Multichar then
     local identifier = ESX.GetIdentifier(playerId)
 
     if OnesyncState == "off" or OnesyncState == "legacy" then
-      deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
+      return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
     end
+
+    if not Core.DatabaseConnected then
+      return deferrals.done(('[ESX] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+    end
+    
     if identifier then
       if ESX.GetPlayerFromIdentifier(identifier) then
-        deferrals.done(
+        return deferrals.done(
           ('[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s'):format(
             identifier))
       else
-        deferrals.done()
+        return deferrals.done()
       end
     else
-      deferrals.done(
+      return deferrals.done(
         '[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.')
     end
   end)
