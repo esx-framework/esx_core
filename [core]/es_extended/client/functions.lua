@@ -406,6 +406,12 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked or true
+    local player_coords = GetEntityCoords(ESX.PlayerData.ped)
+    local dist = #(player_coords - vector)
+    if dist > 424 then
+        local executing_resource = GetInvokingResource() or "Unknown"
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executing_resource))
+    end
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
