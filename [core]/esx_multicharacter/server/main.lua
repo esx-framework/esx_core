@@ -3,7 +3,7 @@ if not ESX then
 elseif ESX.GetConfig().Multichar then
 	local DatabaseConnected = false
 	local DatabaseFound = false
-	local OnesyncState = GetConvar('onesync', 'off')
+	local oneSyncState = GetConvar('onesync', 'off')
 
 	local DATABASE do
 		local connectionString = GetConvar('mysql_connection_string', '');
