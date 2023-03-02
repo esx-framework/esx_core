@@ -74,7 +74,7 @@ files {
 }
 
 dependencies {
-	'/server:5949',
+	'/native:0x6AE51D4B',
 	'oxmysql',
 	'spawnmanager',
 }
