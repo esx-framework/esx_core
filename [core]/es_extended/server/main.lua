@@ -97,12 +97,12 @@ if not Config.Multichar then
     local playerId = source
     local identifier = ESX.GetIdentifier(playerId)
 
-    if OnesyncState == "off" or OnesyncState == "legacy" then
-      return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
+    if oneSyncState == "off" or oneSyncState == "legacy" then
+      return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(oneSyncState))
     end
 
     if not Core.DatabaseConnected then
-      return deferrals.done(('[ESX] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+      return deferrals.done(('[ESX] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
     end
     
     if identifier then

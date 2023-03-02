@@ -1,8 +1,8 @@
 if not ESX then
 	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
 elseif ESX.GetConfig().Multichar then
-	local DatabaseConnected = false
-	local DatabaseFound = false
+	local databaseConnected = false
+	local databaseFound = false
 	local oneSyncState = GetConvar('onesync', 'off')
 
 	local DATABASE do
@@ -12,7 +12,7 @@ elseif ESX.GetConfig().Multichar then
 		elseif connectionString:find('mysql://') then
 			connectionString = connectionString:sub(9, -1)
 			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
-			DatabaseFound = true
+			databaseFound = true
 		else
 			connectionString = {string.strsplit(';', connectionString)}
 			for i = 1, #connectionString do
@@ -21,7 +21,7 @@ elseif ESX.GetConfig().Multichar then
 					DATABASE = v:sub(10, #v)
 				end
 			end
-			DatabaseFound = true
+			databaseFound = true
 		end
 	end
 
@@ -98,16 +98,16 @@ elseif ESX.GetConfig().Multichar then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
-		if OnesyncState == "off" or OnesyncState == "legacy" then
-			return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(OnesyncState))
+		if oneSyncState == "off" or oneSyncState == "legacy" then
+			return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(oneSyncState))
 		end
 
-		if not DatabaseFound then
-			deferrals.done(('[ESX Multicharacter] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+		if not databaseFound then
+			deferrals.done(('[ESX Multicharacter] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
 		end
 
-		if not DatabaseConnected then
-			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(OnesyncState))
+		if not databaseConnected then
+			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
 		end
 
 		if identifier then
@@ -198,7 +198,7 @@ elseif ESX.GetConfig().Multichar then
 			until next(ESX.Jobs)
 
 			FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
-			DatabaseConnected = true
+			databaseConnected = true
 		end
 	end)
 
