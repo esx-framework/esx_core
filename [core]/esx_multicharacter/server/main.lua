@@ -1,29 +1,26 @@
-if not ESX then
-	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
-elseif ESX.GetConfig().Multichar then
-	local databaseConnected = false
-	local databaseFound = false
-	local oneSyncState = GetConvar('onesync', 'off')
+local databaseConnected = false
+local databaseFound = false
+local oneSyncState = GetConvar('onesync', 'off')
 
-	local DATABASE do
-		local connectionString = GetConvar('mysql_connection_string', '');
-		if connectionString == '' then
-			error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
-		elseif connectionString:find('mysql://') then
-			connectionString = connectionString:sub(9, -1)
-			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
-			databaseFound = true
-		else
-			connectionString = {string.strsplit(';', connectionString)}
-			for i = 1, #connectionString do
-				local v = connectionString[i]
-				if v:match('database') then
-					DATABASE = v:sub(10, #v)
-				end
+local DATABASE do
+	local connectionString = GetConvar('mysql_connection_string', '');
+	if connectionString == '' then
+		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
+	elseif connectionString:find('mysql://') then
+		connectionString = connectionString:sub(9, -1)
+		DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
+		databaseFound = true
+	else
+		connectionString = {string.strsplit(';', connectionString)}
+		for i = 1, #connectionString do
+			local v = connectionString[i]
+			if v:match('database') then
+				DATABASE = v:sub(10, #v)
 			end
-			databaseFound = true
 		end
+		databaseFound = true
 	end
+end
 
 	local DB_TABLES = {users = 'identifier'}
 	local FETCH = nil
@@ -240,7 +237,3 @@ elseif ESX.GetConfig().Multichar then
 		local source = source
 		TriggerEvent('esx:playerLogout', source)
 	end)
-
-	else
-		assert(nil, '^3WARNING: Multicharacter is disabled - please check your ESX configuration^0')
-	end
