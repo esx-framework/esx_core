@@ -304,7 +304,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 					self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
 				end
 			else
-				print(('[^1ERROR^7] Player ID:^5%s Tried remove a Invalid count of name'):format(self.playerId, count))
+				print(('[^1ERROR^7] Player ID:^5%s Tried remove a Invalid count -> %s of %s'):format(self.playerId, count,name))
 			end
 		end
 	end
