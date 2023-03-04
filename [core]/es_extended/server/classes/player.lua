@@ -295,14 +295,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		if item then
 			count = ESX.Math.Round(count)
-			local newCount = item.count - count
+			if count > 0 then
+				local newCount = item.count - count
 
-			if newCount >= 0 then
-				item.count = newCount
-				self.weight = self.weight - (item.weight * count)
+				if newCount >= 0 then
+					item.count = newCount
+					self.weight = self.weight - (item.weight * count)
 
-				TriggerEvent('esx:onRemoveInventoryItem', self.source, item.name, item.count)
-				self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
+					TriggerEvent('esx:onRemoveInventoryItem', self.source, item.name, item.count)
+					self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
+				end
+			else
+				print(('[^1ERROR^7] Player ID:^5%s Tried remove a Invalid count -> %s of %s'):format(self.playerId, count,name))
 			end
 		end
 	end
