@@ -8,7 +8,7 @@ Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
-
+Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
 
 Core.vehicleTypesByModel = {}
@@ -39,6 +39,7 @@ local function StartDBSync()
 end
 
 MySQL.ready(function()
+  Core.DatabaseConnected = true
   if not Config.OxInventory then
     local items = MySQL.query.await('SELECT * FROM items')
     for k, v in ipairs(items) do
