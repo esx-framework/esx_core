@@ -38,6 +38,7 @@ Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons f
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death
 Config.DisableWeaponWheel         = false -- Disables default weapon wheel
 Config.DisableAimAssist           = false -- disables AIM assist (mainly on controllers)
+Config.DisableVehicleSeatShuff	  = false -- Disables vehicle seat shuff
 Config.RemoveHudCommonents = {
 	[1] = false, --WANTED_STARS,
 	[2] = false, --WEAPON_ICON
