@@ -56,6 +56,12 @@ CreateThread(function()
                 isEnteringVehicle = true
                 TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
                 TriggerServerEvent('esx:enteringVehicle', plate, seat, netId)
+				if Config.DisableVehicleSeatShuff then
+					if seat == 0 then
+						SetPedIntoVehicle(playerPed, vehicle, 0)
+						SetPedConfigFlag(playerPed, 184, true)
+					end	
+				end
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and
                 not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
@@ -72,6 +78,12 @@ CreateThread(function()
                 current.displayName, current.netId = GetData(current.vehicle)
                 TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
+				if Config.DisableVehicleSeatShuff then
+					if current.seat == 0 then
+						SetPedIntoVehicle(playerPed, current.vehicle, 0)
+						SetPedConfigFlag(playerPed, 184, true)
+					end	
+				end
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
