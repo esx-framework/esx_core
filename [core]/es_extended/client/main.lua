@@ -2,7 +2,8 @@ local pickups = {}
 
 CreateThread(function()
 	while not Config.Multichar do
-		Wait(0)
+		Wait(100)
+		
 		if NetworkIsPlayerActive(PlayerId()) then
 			exports.spawnmanager:setAutoSpawn(false)
 			DoScreenFadeOut(0)
