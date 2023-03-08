@@ -4,12 +4,13 @@ if ESX.GetConfig().Multichar then
 
 	CreateThread(function()
 		while not ESX.PlayerLoaded do
-			Wait(0)
+			Wait(100)
+			
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
 				while not GetResourceState('esx_context') == 'started' do
-					Wait(0)
+					Wait(100)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
 				break
