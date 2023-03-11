@@ -1,43 +1,46 @@
-$(document).ready(function () {
-  $.post("http://esx_identity/ready", JSON.stringify({}));
+window.addEventListener("message", (event) => {
+  if (event.data.type === "enableui") {
+    document.body.classList[event.data.enable ? "remove" : "add"]("none");
+  }
+});
 
-  window.addEventListener("message", function (event) {
-    if (event.data.type === "enableui") {
-      event.data.enable ? $(document.body).show() : $(document.body).hide();
-    }
+document.querySelector("#register").addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const dofVal = document.querySelector("#dateofbirth").value;
+  if (!dofVal) return;
+
+  const dateCheck = new Date(dofVal);
+
+  const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(
+    dateCheck
+  );
+  const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(
+    dateCheck
+  );
+  const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(
+    dateCheck
+  );
+
+  const formattedDate = `${day}/${month}/${year}`;
+  fetch("http://esx_identity/register", {
+    method: "POST",
+    body: JSON.stringify({
+      firstname: document.querySelector("#firstname").value,
+      lastname: document.querySelector("#lastname").value,
+      dateofbirth: formattedDate,
+      sex: document.querySelector("input[type='radio'][name='sex']:checked")
+        .value,
+      height: document.querySelector("#height").value,
+    }),
   });
 
-  $("#register").submit(function (event) {
-    event.preventDefault();
+  document.querySelector("#register").reset();
+});
 
-    const dofVal = $("#dateofbirth").val();
-    if (!dofVal) return;
-
-    const dateCheck = new Date(dofVal);
-
-    const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(
-      dateCheck
-    );
-    const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(
-      dateCheck
-    );
-    const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(
-      dateCheck
-    );
-
-    const formattedDate = `${day}/${month}/${year}`;
-
-    $.post(
-      "http://esx_identity/register",
-      JSON.stringify({
-        firstname: $("#firstname").val(),
-        lastname: $("#lastname").val(),
-        dateofbirth: formattedDate,
-        sex: $("input[type='radio'][name='sex']:checked").val(),
-        height: $("#height").val(),
-      })
-    );
-
-    $("#register").trigger("reset");
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("http://esx_identity/ready", {
+    method: "POST",
+    body: JSON.stringify({}),
   });
 });
