@@ -63,7 +63,7 @@ Config.RemoveHudCommonents = {
 	[22] = false, --HUD_WEAPONS
 }
 
-Config.EnableGetSharedObjectEvent = false -- This is not recommended, Enables old getSharedObject event.
+Config.EnableGetSharedObjectEvent = false -- Warning: Enabling This WILL massively hurt and decrease your servers performance, use this at your own precaution.
 
 Config.SpawnVehMaxUpgrades = true -- admin vehicles spawn with max vehcle settings
 Config.CustomAIPlates = 'ESX.A111' -- Custom plates for AI vehicles 
