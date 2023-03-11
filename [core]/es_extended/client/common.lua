@@ -11,6 +11,6 @@ AddEventHandler("esx:getSharedObject", function(cb)
 		cb(ESX)
 	else
 		local Invoke = GetInvokingResource()
-		print(("[^1ERROR^7] Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix! Alternativly you can enable the config option for it!"):format(Invoke))
+		print(("[^1ERROR^7] Resource ^5%s^7 Used the ^5getSharedObject^7 Event, This Is NOT Recommended and is very bad for performance! Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent For More details"):format(Invoke))
 	end
 end)
