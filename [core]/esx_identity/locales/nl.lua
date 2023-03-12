@@ -1,4 +1,3 @@
-
 Locales['nl'] = {
   ['show_active_character'] = 'Actieve karakter laten zien',
   ['active_character'] = 'Actief karakter: %s',
@@ -15,7 +14,7 @@ Locales['nl'] = {
   ['debug_xPlayer_get_height'] = 'Stuurt je lengte',
   ['error_debug_xPlayer_get_first_name'] = 'Er was een probleem tijdens het ophalen van je Voornaam.',
   ['error_debug_xPlayer_get_last_name'] = 'Er was een probleem tijdens het ophalen van je achternaam.',
-  ['error_debug_xPlayer_get_full_name'] = 'Er was een probleem tijdens het ophalen van je volledige naam.',
+  ['error_debug_xPlayer_get_full_name'] = 'Er was een probleem tijdens het ophalen van je volle naam.',
   ['error_debug_xPlayer_get_sex'] = 'Er was een probleem tijdens het ophalen van je Geslacht.',
   ['error_debug_xPlayer_get_dob'] = 'Er was een probleem tijdens het ophalen van je Geboortedatum.',
   ['error_debug_xPlayer_get_height'] = 'Er was een probleem tijdens het ophalen van je lengte.',
