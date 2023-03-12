@@ -133,6 +133,25 @@ function ESX.Table.Join(t, sep)
 	return str
 end
 
+-- Credits: https://github.com/JonasDev99/qb-garages/blob/b0335d67cb72a6b9ac60f62a87fb3946f5c2f33d/server/main.lua#L5
+function ESX.Table.TableContains(tab, val)
+    if type(val) == "table" then
+        for _, value in pairs(tab) do
+            if ESX.Table.TableContains(val, value) then
+                return true
+            end
+        end
+        return false
+    else
+        for _, value in pairs(tab) do
+            if value == val then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 -- Credit: https://stackoverflow.com/a/15706820
 -- Description: sort function for pairs
 function ESX.Table.Sort(t, order)

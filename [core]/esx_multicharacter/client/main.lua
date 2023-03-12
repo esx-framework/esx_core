@@ -4,12 +4,13 @@ if ESX.GetConfig().Multichar then
 
 	CreateThread(function()
 		while not ESX.PlayerLoaded do
-			Wait(0)
+			Wait(100)
+			
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
 				while not GetResourceState('esx_context') == 'started' do
-					Wait(0)
+					Wait(100)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
 				break
@@ -95,7 +96,7 @@ if ESX.GetConfig().Multichar then
 	end
 
 	SetupCharacter = function(index)
-		if spawned == false then
+		if not spawned then
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -188,7 +189,7 @@ if ESX.GetConfig().Multichar then
 			if not v.model and v.skin then
 				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 			end
-			if spawned == false then SetupCharacter(Character) end
+			if not spawned then SetupCharacter(Character) end
 			local label = v.firstname..' '..v.lastname
 			if Characters[k].disabled then
 				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
@@ -318,7 +319,7 @@ if ESX.GetConfig().Multichar then
 
 	if Config.Relog then
 		RegisterCommand('relog', function(source, args, rawCommand)
-			if canRelog == true then
+			if canRelog then
 				canRelog = false
 				TriggerServerEvent('esx_multicharacter:relog')
 				ESX.SetTimeout(10000, function()

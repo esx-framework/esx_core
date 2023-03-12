@@ -1,11 +1,11 @@
 @font-face {
-  font-family: 'Pricedown';
-  src: url('../fonts/pdown.ttf');
+  font-family: "Pricedown";
+  src: url("../fonts/pdown.ttf");
 }
 
 @font-face {
-  font-family: 'bankgothic';
-  src: url('../fonts/bankgothic.ttf');
+  font-family: "bankgothic";
+  src: url("../fonts/bankgothic.ttf");
 }
 
 html {
@@ -20,11 +20,12 @@ html {
   font-size: 2em;
   font-weight: bold;
   color: #fff;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 .menu {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   min-width: 400px;
   min-height: 250px;
   color: #fff;
@@ -34,7 +35,7 @@ html {
 }
 
 .menu .head {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 28px;
   padding: 10px;
   background: #1a1a1a;
@@ -51,14 +52,14 @@ html {
 }
 
 .menu .head span {
-  font-family: 'Pricedown';
+  font-family: "Pricedown";
   font-size: 28px;
   padding-left: 15px;
   padding-top: 6px;
 }
 
 .menu .menu-items .menu-item {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 14px;
   height: 40px;
   display: block;
