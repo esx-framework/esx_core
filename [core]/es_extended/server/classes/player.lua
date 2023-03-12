@@ -595,8 +595,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 						if self.metadata[index][subIndex] then
 							return self.metadata[index][subIndex]
 						end
-
-						return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex, index))
+						return
 					end
 
 					if _type == "table" then
