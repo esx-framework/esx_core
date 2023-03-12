@@ -355,12 +355,11 @@ Locales['nl'] = {
   
     -- Weapon Tints
     ['tint_default'] = 'standaard skin',
-    ['tint_green'] = 'groene huid',
-    ['tint_gold'] = 'gouden huid',
-    ['tint_pink'] = 'roze huid',
-    ['tint_army'] = 'legerhuid',
-    ['tint_lspd'] = 'blauwe huid',
-    ['tint_orange'] = 'oranje huid',
-    ['tint_platinum'] = 'platina huid',
+    ['tint_green'] = 'groene skin',
+    ['tint_gold'] = 'goude skin',
+    ['tint_pink'] = 'roze skin',
+    ['tint_army'] = 'legerprint',
+    ['tint_lspd'] = 'blauwe skin',
+    ['tint_orange'] = 'oranje skin',
+    ['tint_platinum'] = 'platina skin',
 }
-  
