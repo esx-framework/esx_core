@@ -98,4 +98,3 @@ Locales['nl'] = {
     ['bodyb_extra'] = 'lichaamsvlekken effect',
     ['bodyb_extra_thickness'] = 'lichaamsvlekken effect zichtbaarheid',
   }
-  
