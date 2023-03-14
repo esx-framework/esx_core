@@ -4,7 +4,7 @@ local DoesEntityExist = DoesEntityExist
 local GetEntityCoords = GetEntityCoords
 local GetEntityHeading = GetEntityHeading
 
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, meta)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 	
 	local self = {}
@@ -22,7 +22,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.variables = {}
 	self.weight = weight
 	self.maxWeight = Config.MaxWeight
-	self.meta = meta
+	self.metadata = metadata
 	if Config.Multichar then self.license = 'license'.. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
 
 	ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
@@ -33,7 +33,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	stateBag:set("job", self.job, true)
 	stateBag:set("group", self.group, true)
 	stateBag:set("name", self.name, true)
-	stateBag:set("meta", self.meta, true)
+	stateBag:set("metadata", self.metadata, true)
 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
@@ -586,24 +586,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
 			end
 
-			if self.meta[index] then
+			if self.metadata[index] then
 
-				if subIndex and type(self.meta[index]) == "table" then
+				if subIndex and type(self.metadata[index]) == "table" then
 					local _type = type(subIndex)
 
 					if _type == "string" then
-						if self.meta[index][subIndex] then
-							return self.meta[index][subIndex]
+						if self.metadata[index][subIndex] then
+							return self.metadata[index][subIndex]
 						end
-
-						return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex, index))
+						return
 					end
 
 					if _type == "table" then
 						local returnValues = {}
 						for i = 1, #subIndex do
-							if self.meta[index][subIndex[i]] then
-								returnValues[subIndex[i]] = self.meta[index][subIndex[i]]
+							if self.metadata[index][subIndex[i]] then
+								returnValues[subIndex[i]] = self.metadata[index][subIndex[i]]
 							else
 								print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex[i], index))
 							end
@@ -614,14 +613,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 				end
 
-				return self.meta[index]
+				return self.metadata[index]
 			else
 				return print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index))
 			end
 
 		end
 
-		return self.meta
+		return self.metadata
 	end
 
 	function self.setMeta(index, value, subValue)
@@ -645,19 +644,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
 			end
 
-			self.meta[index] = value
+			self.metadata[index] = value
 		else
 
 			if _type ~= "string" then
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
 			end
 
-			self.meta[index][value] = subValue
+			self.metadata[index][value] = subValue
 		end
 
 
-		self.triggerEvent('esx:updatePlayerData', 'meta', self.meta)
-		Player(self.source).state:set('meta', self.meta, true)
+		self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
+		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
 	function self.clearMeta(index)
@@ -673,13 +672,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return
 		end
 
-		if not self.meta[index] then
+		if not self.metadata[index] then
 			return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 not exist!"):format(index))
 		end
 
-		self.meta[index] = nil
-		self.triggerEvent('esx:updatePlayerData', 'meta', self.meta)
-		Player(self.source).state:set('meta', self.meta, true)
+		self.metadata[index] = nil
+		self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
+		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
 	for fnName,fn in pairs(targetOverrides) do

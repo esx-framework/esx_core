@@ -3,7 +3,7 @@ SetGameType('ESX Legacy')
 
 local oneSyncState = GetConvar('onesync', 'off')
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
-local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `meta`'
+local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`'
 
 if Config.Multichar then
   newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
@@ -121,7 +121,7 @@ if not Config.Multichar then
 end
 
 function loadESXPlayer(identifier, playerId, isNew)
-  local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0, meta = {}}
+  local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0, metadata = {}}
   local result = MySQL.prepare.await(loadPlayer, {identifier})
   local job, grade, jobObject, gradeObject = result.job, tostring(result.job_grade)
   local foundAccounts, foundItems = {}, {}
@@ -280,13 +280,13 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
   end
 
-  if result.meta and result.meta ~= '' then
-    local meta = json.decode(result.meta)
-    userData.meta = meta
+  if result.metadata and result.metadata ~= '' then
+    local metadata = json.decode(result.metadata)
+    userData.metadata = metadata
   end
 
   local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job,
-    userData.loadout, userData.playerName, userData.coords, userData.meta)
+    userData.loadout, userData.playerName, userData.coords, userData.metadata)
   ESX.Players[playerId] = xPlayer
   Core.playersByIdentifier[identifier] = xPlayer
 
@@ -322,7 +322,7 @@ function loadESXPlayer(identifier, playerId, isNew)
       dateofbirth = xPlayer.get("dateofbirth") or "01/01/2000",
       height = xPlayer.get("height") or 120,
       dead = false,
-      meta = xPlayer.getMeta()
+      metadata = xPlayer.getMeta()
     }, isNew,
     userData.skin)
 
@@ -594,7 +594,7 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
   local xPlayer = ESX.GetPlayerFromId(source)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), meta = xPlayer.getMeta()})
+      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), metadata = xPlayer.getMeta()})
 end)
 
 ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
@@ -609,7 +609,7 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
   local xPlayer = ESX.GetPlayerFromId(target)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), meta = xPlayer.getMeta()})
+      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true), metadata = xPlayer.getMeta()})
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)

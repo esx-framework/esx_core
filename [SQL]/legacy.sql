@@ -389,7 +389,7 @@ CREATE TABLE `users` (
   `job` varchar(20) DEFAULT 'unemployed',
   `job_grade` int(11) DEFAULT 0,
   `loadout` longtext DEFAULT NULL,
-  `meta` LONGTEXT NULL DEFAULT NULL,
+  `metadata` LONGTEXT NULL DEFAULT NULL,
   `position` longtext NULL DEFAULT NULL,
   `firstname` varchar(16) DEFAULT NULL,
   `lastname` varchar(16) DEFAULT NULL,
