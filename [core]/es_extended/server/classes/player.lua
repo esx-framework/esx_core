@@ -22,6 +22,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.variables = {}
 	self.weight = weight
 	self.maxWeight = Config.MaxWeight
+	self.jobDuty = false
 	if Config.Multichar then self.license = 'license'.. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
 
 	ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
@@ -32,6 +33,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	stateBag:set("job", self.job, true)
 	stateBag:set("group", self.group, true)
 	stateBag:set("name", self.name, true)
+	stateBag:set("jobDuty", self.jobDuty, true)
 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
@@ -572,10 +574,20 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.showHelpNotification(msg, thisFrame, beep, duration)
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
+	
+	function self.setJobDuty(bool)
+		if type(bool) ~= 'boolean' then return end
+		self.jobDuty = bool
+		stateBag:set("jobDuty", bool, true)
+	end
+	
+	function self.getJobDuty()
+		return self.jobDuty
+	end
 
 	for fnName,fn in pairs(targetOverrides) do
 		self[fnName] = fn(self)
 	end
-
+		
 	return self
 end
