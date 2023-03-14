@@ -2,7 +2,7 @@ local Jobs = {}
 local LastTime = nil
 
 function RunAt(h, m, cb)
-	table.insert(Jobs, {
+	Jobs[#Jobs + 1] = {
 		h  = h,
 		m  = m,
 		cb = cb
