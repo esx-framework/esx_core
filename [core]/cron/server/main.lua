@@ -6,7 +6,7 @@ function RunAt(h, m, cb)
 		h  = h,
 		m  = m,
 		cb = cb
-	})
+	}
 end
 
 function GetTime()
