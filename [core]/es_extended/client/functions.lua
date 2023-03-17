@@ -356,36 +356,35 @@ function ESX.Game.Teleport(entity, coords, cb)
     end
 end
 
-function ESX.Game.SpawnObject(object, coords, cb, networked)
+---@param object number|string
+---@param coords vector3|table
+---@param networked boolen
+---@param cb function
+function ESX.Game.SpawnObject(object, coords, networked, cb)
     networked = networked or true
-    if networked then 
-        ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
-            if cb then
-                local obj = NetworkGetEntityFromNetworkId(NetworkID)
-                local Tries = 0
-                while not DoesEntityExist(obj) do
-                    obj = NetworkGetEntityFromNetworkId(NetworkID)
-                    Wait(0)
-                    Tries += 1
-                    if Tries > 250 then
-                        break
-                    end
-                end
-                cb(obj)
-            end
-        end, object, coords, 0.0)
-    else 
-        local model = type(object) == 'number' and object or joaat(object)
-        local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-        CreateThread(function()
-            ESX.Streaming.RequestModel(model)
+    local model = type(object) == 'number' and object or joaat(object)
+    local vector = type(coords) == 'vector3' and coords or vec(coords.x, coords.y, coords.z)
+	local Invoke = GetInvokingResource() or "unknown"
 
-            local obj = CreateObject(model, vector.xyz, networked, false, true)
-            if cb then
-                cb(obj)
-            end
-        end)
-    end
+	local function spawnObj()
+		ESX.Streaming.RequestModel(model)
+
+        local obj = CreateObject(model, vector.xyz, networked, false, true)
+        if cb then
+             cb(obj)
+        end
+	end
+
+    CreateThread(function()
+		local success, error = pcall(spawnObj)
+		if not success then
+			if Invoke ~= "unknown" then
+				print('[^1ERROR^7] '..Invoke..' tried spawning an object but failed: '..tostring(error))
+			else
+				print('[^1ERROR^7] Error spawning object ^5'.. tostring(error) ..'^7')
+			end
+		end
+	end)
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
