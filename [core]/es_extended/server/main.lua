@@ -367,6 +367,7 @@ if not Config.OxInventory then
 
     if xPlayer then
       xPlayer.updateWeaponAmmo(weaponName, ammoCount)
+      SetPedAmmo(GetPlayerPed(xPlayer.source), joaat(weaponName), ammoCount)
     end
   end)
 
