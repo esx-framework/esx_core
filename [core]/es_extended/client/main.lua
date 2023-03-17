@@ -342,27 +342,77 @@ function StartServerSyncLoops()
 	if not Config.OxInventory then
 		-- keep track of ammo
 
+		local currentWeapon = {}
+		for k, v in ipairs(ESX.PlayerData.loadout) do
+			currentWeapon[v.name] = {}
+			currentWeapon[v.name].ammo = v.ammo
+			currentWeapon[v.name].name = v.name
+
+			print('Set Weapons on StartServerSyncLoops:', currentWeapon[v.name].name, currentWeapon[v.name].ammo)
+		end
+
 		CreateThread(function()
-			local currentWeapon = { Ammo = 0 }
 			while ESX.PlayerLoaded do
-				local sleep = 1500
-				if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
-					sleep = 1000
-					local _, weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
-					local weapon = ESX.GetWeaponFromHash(weaponHash)
-					if weapon then
-						local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-						if weapon.name ~= currentWeapon.name then
-							currentWeapon.Ammo = ammoCount
-							currentWeapon.name = weapon.name
-						else
-							if ammoCount ~= currentWeapon.Ammo then
-								currentWeapon.Ammo = ammoCount
-								TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
+				local sleep = 0
+
+				if IsPedArmed(ESX.PlayerData.ped, 4) and IsPedShooting(ESX.PlayerData.ped) then
+					local weaponHash = GetSelectedPedWeapon(ESX.PlayerData.ped)
+
+					if weaponHash then
+						local weapon = ESX.GetWeaponFromHash(weaponHash)
+
+						if weapon then
+							if currentWeapon[weapon.name] then
+								currentWeapon[weapon.name].ammo = currentWeapon[weapon.name].ammo - 1
+								TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, currentWeapon[weapon.name].ammo)
+
+								print('Update Weapon while Shooting:', currentWeapon[weapon.name].name, currentWeapon[weapon.name].ammo)
 							end
 						end
 					end
 				end
+
+				Wait(sleep)
+			end
+		end)
+
+		CreateThread(function()			
+			while ESX.PlayerLoaded do
+				local sleep = 1500
+
+				-- Without this Callback the Loadout won't get updated
+				ESX.TriggerServerCallback('esx:getPlayerData', function(data)
+					for k, v in ipairs(data.loadout) do
+						if not currentWeapon[v.name] then
+							currentWeapon[v.name] = {}
+							currentWeapon[v.name].ammo = v.ammo
+							currentWeapon[v.name].name = v.name
+				
+							print('Set Weapons:', currentWeapon[v.name].name, currentWeapon[v.name].ammo)
+						end
+					end
+				end)
+
+				if IsPedArmed(ESX.PlayerData.ped, 4) then
+					sleep = 1000
+					local weaponHash = GetSelectedPedWeapon(ESX.PlayerData.ped)
+
+					if weaponHash then
+						local weapon = ESX.GetWeaponFromHash(weaponHash)
+
+						if weapon then
+							if currentWeapon[weapon.name] then
+								if currentWeapon[weapon.name].ammo ~= GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash) then
+									TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, currentWeapon[weapon.name].ammo)
+
+									print('Update Weapon:', currentWeapon[weapon.name].name, currentWeapon[weapon.name].ammo)
+								end
+							end
+
+						end
+					end
+				end
+
 				Wait(sleep)
 			end
 		end)
