@@ -361,14 +361,23 @@ AddEventHandler('esx:playerLogout', function(playerId, cb)
 end)
 
 if not Config.OxInventory then
-  RegisterNetEvent('esx:updateWeaponAmmo')
-  AddEventHandler('esx:updateWeaponAmmo', function(weaponName, ammoCount)
-    local xPlayer = ESX.GetPlayerFromId(source)
+  AddStateBagChangeHandler('ESX::WeaponUpdate', '', function(player, stateBag, args)
 
-    if xPlayer then
-      xPlayer.updateWeaponAmmo(weaponName, ammoCount)
+    local Player = tonumber((tostring(player):gsub('player:', '')))
+
+    if Player ~= nil and GetPlayerName(Player) then
+
+        local Data = args
+        local xPlayer = ESX.GetPlayerFromId(Player)
+
+        xPlayer.updateWeaponAmmo(Data.name, Data.ammo)
+
+
+    
+         
+     
     end
-  end)
+end)
 
   RegisterNetEvent('esx:giveInventoryItem')
   AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
