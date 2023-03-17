@@ -361,7 +361,7 @@ end
 ---@param networked boolen
 ---@param cb function
 function ESX.Game.SpawnObject(object, coords, networked, cb)
-   	local network = networked ~= false
+   	local networked = networked ~= false
     local model = type(object) == 'number' and object or joaat(object)
     local vector = type(coords) == 'vector3' and coords or vec(coords.x, coords.y, coords.z)
 	local Invoke = GetInvokingResource() or "unknown"
