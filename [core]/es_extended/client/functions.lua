@@ -358,7 +358,7 @@ end
 
 ---@param object number|string
 ---@param coords vector3|table
----@param networked boolen
+---@param networked boolean
 ---@param cb function
 function ESX.Game.SpawnObject(object, coords, networked, cb)
    	local networked = networked ~= false
