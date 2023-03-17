@@ -388,7 +388,7 @@ function ESX.Game.SpawnObject(object, coords, networked, cb)
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
-    ESX.Game.SpawnObject(object, coords, cb, false)
+    ESX.Game.SpawnObject(object, coords, false, cb)
 end
 
 function ESX.Game.DeleteVehicle(vehicle)
