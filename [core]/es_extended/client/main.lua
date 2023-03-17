@@ -358,8 +358,11 @@ function StartServerSyncLoops()
 						else
 							if ammoCount ~= currentWeapon.Ammo then
 								currentWeapon.Ammo = ammoCount
-								TriggerServerEvent('esx:updateWeaponAmmo', weapon.name, ammoCount)
-							end
+                            Player(GetPlayerServerId(PlayerId())).state:set('ESX::WeaponUpdate', {
+								name = weapon.name,
+								ammo = ammoCount, 
+							    Random = GetGameTimer() + math.random(99999999, 999999999)
+						}, true)							end
 						end
 					end
 				end
