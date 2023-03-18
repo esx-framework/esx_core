@@ -11,11 +11,12 @@ end, false, {
 })
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
-    if ESX.DoesJobExist(args.job, args.grade) then
-        args.playerId.setJob(args.job, args.grade)
-    else
-        showError(TranslateCap('command_setjob_invalid'))
+    if not ESX.DoesJobExist(args.job, args.grade) then
+        return showError(TranslateCap('command_setjob_invalid'))
     end
+
+    args.playerId.setJob(args.job, args.grade)
+
     ESX.DiscordLogFields("UserActions", "/setjob Triggered", "pink", {
         { name = "Player", value = xPlayer.name, inline = true },
         { name = "Job",    value = args.job,     inline = true },
@@ -111,11 +112,11 @@ end, false, {
 })
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
-    if args.playerId.getAccount(args.account) then
-        args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
-    else
-        showError(TranslateCap('command_giveaccountmoney_invalid'))
+    if not args.playerId.getAccount(args.account) then
+        return showError(TranslateCap('command_giveaccountmoney_invalid'))
     end
+
+    args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
 end, true, {
     help = TranslateCap('command_setaccountmoney'),
     validate = true,
@@ -127,11 +128,11 @@ end, true, {
 })
 
 ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
-    if args.playerId.getAccount(args.account) then
-        args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
-    else
-        showError(TranslateCap('command_giveaccountmoney_invalid'))
+    if not args.playerId.getAccount(args.account) then
+        return showError(TranslateCap('command_giveaccountmoney_invalid'))
     end
+
+    args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
 end, true, {
     help = TranslateCap('command_giveaccountmoney'),
     validate = true,
@@ -157,10 +158,10 @@ if not Config.OxInventory then
 
     ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
         if args.playerId.hasWeapon(args.weapon) then
-            showError(TranslateCap('command_giveweapon_hasalready'))
-        else
-            args.playerId.addWeapon(args.weapon, args.ammo)
+            return showError(TranslateCap('command_giveweapon_hasalready'))
         end
+
+        args.playerId.addWeapon(args.weapon, args.ammo)
     end, true, {
         help = TranslateCap('command_giveweapon'),
         validate = true,
@@ -172,11 +173,11 @@ if not Config.OxInventory then
     })
 
     ESX.RegisterCommand('giveammo', 'admin', function(xPlayer, args, showError)
-        if args.playerId.hasWeapon(args.weapon) then
-            args.playerId.addWeaponAmmo(args.weapon, args.ammo)
-        else
-            showError(TranslateCap("command_giveammo_noweapon_found"))
+        if not args.playerId.hasWeapon(args.weapon) then
+            return showError(TranslateCap("command_giveammo_noweapon_found"))
         end
+
+        args.playerId.addWeaponAmmo(args.weapon, args.ammo)
     end, true, {
         help = TranslateCap('command_giveweapon'),
         validate = false,
@@ -188,21 +189,21 @@ if not Config.OxInventory then
     })
 
     ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
-        if args.playerId.hasWeapon(args.weaponName) then
-            local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
-
-            if component then
-                if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
-                    showError(TranslateCap('command_giveweaponcomponent_hasalready'))
-                else
-                    args.playerId.addWeaponComponent(args.weaponName, args.componentName)
-                end
-            else
-                showError(TranslateCap('command_giveweaponcomponent_invalid'))
-            end
-        else
-            showError(TranslateCap('command_giveweaponcomponent_missingweapon'))
+        if not args.playerId.hasWeapon(args.weaponName) then
+            return showError(TranslateCap('command_giveweaponcomponent_missingweapon'))
         end
+
+        local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
+
+        if not component then
+            return showError(TranslateCap('command_giveweaponcomponent_invalid'))
+        end
+
+        if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
+            return showError(TranslateCap('command_giveweaponcomponent_hasalready'))
+        end
+
+        args.playerId.addWeaponComponent(args.weaponName, args.componentName)
     end, true, {
         help = TranslateCap('command_giveweaponcomponent'),
         validate = true,
@@ -292,16 +293,11 @@ ESX.RegisterCommand('group', { "user", "admin" }, function(xPlayer, args, showEr
 end, true)
 
 ESX.RegisterCommand('job', { "user", "admin" }, function(xPlayer, args, showError)
-    print(xPlayer.getName() ..
-    ", You are currently: ^5" .. xPlayer.getJob().name .. "^0 - ^5" .. xPlayer.getJob().grade_label .. "^0")
+    print(xPlayer.getName() .. ", You are currently: ^5" .. xPlayer.getJob().name .. "^0 - ^5" .. xPlayer.getJob().grade_label .. "^0")
 end, true)
 
 ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer, args, showError)
-    local job = xPlayer.getJob().name
-    local jobgrade = xPlayer.getJob().grade_name
-    print("^2ID : ^5" ..
-    xPlayer.source ..
-    " ^0| ^2Name:^5" .. xPlayer.getName() .. " ^0 | ^2Group:^5" .. xPlayer.getGroup() .. "^0 | ^2Job:^5" .. job .. "^0")
+    print("^2ID : ^5" .. xPlayer.source .. " ^0| ^2Name:^5" .. xPlayer.getName() .. " ^0 | ^2Group:^5" .. xPlayer.getGroup() .. "^0 | ^2Job:^5" .. xPlayer.getJob().name .. "^0")
 end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
@@ -377,10 +373,6 @@ ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
     print("^5" .. #xPlayers .. " ^2online player(s)^0")
     for i = 1, #xPlayers do
         local xPlayer = xPlayers[i]
-        print("^1[ ^2ID : ^5" ..
-        xPlayer.source ..
-        " ^0| ^2Name : ^5" ..
-        xPlayer.getName() ..
-        " ^0 | ^2Group : ^5" .. xPlayer.getGroup() .. " ^0 | ^2Identifier : ^5" .. xPlayer.identifier .. "^1]^0\n")
+        print("^1[ ^2ID : ^5" .. xPlayer.source .. " ^0| ^2Name : ^5" .. xPlayer.getName() .. " ^0 | ^2Group : ^5" .. xPlayer.getGroup() .. " ^0 | ^2Identifier : ^5" .. xPlayer.identifier .. "^1]^0\n")
     end
 end, true)
