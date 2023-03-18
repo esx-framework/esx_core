@@ -1,19 +1,19 @@
 Locales = {}
 
-function Translate(str, ...)  -- Translate string
-	if Locales[Config.Locale] then
-		if Locales[Config.Locale][str] then
-			return string.format(Locales[Config.Locale][str], ...)
-		elseif Config.Locale ~= 'en' and Locales['en'] and Locales['en'][str] then
-			return string.format(Locales['en'][str], ...)
-		else
-			return 'Translation [' .. Config.Locale .. '][' .. str .. '] does not exist'
-		end
-	elseif Config.Locale ~= 'en' and Locales['en'] and Locales['en'][str] then
-			return string.format(Locales['en'][str], ...)
-	else
-		return 'Locale [' .. Config.Locale .. '] does not exist'
-	end
+function Translate(str, ...) -- Translate string
+    local currentLocale = Locales[Config.Locale]
+    if not currentLocale then
+        print('[^3WARNING^7] Locale [^3' .. Config.Locale .. '^7] does not exist!')
+        return str -- Return string key if nothing is found
+    end
+
+    local translationFound = currentLocale[str]
+    if not translationFound then
+        print('[^3WARNING^7] Translation [^3' .. str .. '^7] does not exist!')
+        return str -- Return string key if nothing is found
+    end
+
+    return (translationFound):format(...)
 end
 
 function TranslateCap(str, ...) -- Translate string first char uppercase

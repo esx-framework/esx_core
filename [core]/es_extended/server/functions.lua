@@ -355,20 +355,19 @@ function ESX.RegisterUsableItem(item, cb)
 end
 
 function ESX.UseItem(source, item, ...)
-    if ESX.Items[item] then
-        local itemCallback = Core.UsableItemsCallbacks[item]
+    if not ESX.Items[item] then
+        return print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(item))
+    end
 
-        if itemCallback then
-            local success, result = pcall(itemCallback, source, item, ...)
+    local itemCallback = Core.UsableItemsCallbacks[item]
 
-            if not success then
-                return result and print(result) or
-                    print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.')
-                        :format(item))
-            end
+    if itemCallback then
+        local success, result = pcall(itemCallback, source, item, ...)
+
+        if not success then
+            return result and print(result) or
+            print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(item))
         end
-    else
-        print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(item))
     end
 end
 
@@ -394,9 +393,9 @@ function ESX.GetItemLabel(item)
 
     if ESX.Items[item] then
         return ESX.Items[item].label
-    else
-        print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
     end
+
+    print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
 end
 
 function ESX.GetJobs()
