@@ -32,16 +32,16 @@ body {
     min-width: 20rem;
     width: fit-content;
     height: 3.5rem;
-    background: rgba(5,5, 5, 0.9);
-    border-radius: .5rem;
-    margin-top: .5rem;
+    background: rgba(5, 5, 5, 0.9);
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
     animation: anim 300ms ease-in-out;
     align-items: center;
 }
 
 #root .innerText {
-    padding-left: .4rem;
-    padding-right: .4rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
     width: 100%;
 }
 
@@ -52,7 +52,7 @@ body {
 
 #root .text {
     display: inline-block;
-    margin-left: .5rem;
+    margin-left: 0.5rem;
 }
 
 #root .error {
@@ -68,11 +68,7 @@ body {
 }
 
 .material-symbols-outlined {
-    font-variation-settings:
-             'FILL' 0,
-             'wght' 400,
-             'GRAD' 0,
-             'opsz' 48
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 
 @keyframes anim {
@@ -80,9 +76,9 @@ body {
         transform: scaleY(0);
     }
     80% {
-        transform: scaleY(1.1)
+        transform: scaleY(1.1);
     }
     100% {
-        transform: scaleY(1)
+        transform: scaleY(1);
     }
 }

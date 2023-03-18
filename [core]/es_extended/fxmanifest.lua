@@ -37,7 +37,7 @@ client_scripts {
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
-	
+
 	'common/modules/*.lua',
 	'common/functions.lua',
 

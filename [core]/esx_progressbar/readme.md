@@ -1,28 +1,29 @@
 ## Use
 
- * ESX Function
+-   ESX Function
+
 ```lua
     ESX.Progressbar("test", 25000,{
-        FreezePlayer = false, 
+        FreezePlayer = false,
         animation ={
             type = "anim",
-            dict = "mini@prostitutes@sexlow_veh", 
-            lib ="low_car_sex_to_prop_p2_player" 
-        }, 
+            dict = "mini@prostitutes@sexlow_veh",
+            lib ="low_car_sex_to_prop_p2_player"
+        },
         onFinish = function()
         --Code here
     end})
 
 ```
 
-* Export
-  
+-   Export
+
 ```lua
     exports["esx_progressbar"]:Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "anim",
-            dict = "anim@mp_player_intmenu@key_fob@", 
+            dict = "anim@mp_player_intmenu@key_fob@",
             lib ="fob_click"
         },
         onFinish = function()
@@ -30,14 +31,14 @@
     end})
 ```
 
-* Cancel
-  
+-   Cancel
+
 ```lua
     ESX.Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "anim",
-            dict = "anim@mp_player_intmenu@key_fob@", 
+            dict = "anim@mp_player_intmenu@key_fob@",
             lib ="fob_click"
         },
         onFinish = function()
@@ -48,14 +49,14 @@
     })
 ```
 
-* Scenario
-  
+-   Scenario
+
 ```lua
     ESX.Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "Scenario",
-            Scenario = "PROP_HUMAN_BUM_BIN", 
+            Scenario = "PROP_HUMAN_BUM_BIN",
         },
         onFinish = function()
         --Code here

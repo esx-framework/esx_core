@@ -24,8 +24,8 @@ body {
     min-width: 15%;
     width: fit-content;
     height: 50px;
-    background: rgba(5,5,5,.9);
-    border-radius: .5rem;
+    background: rgba(5, 5, 5, 0.9);
+    border-radius: 0.5rem;
     animation: growDown 300ms ease-in-out;
     align-items: center;
 }
@@ -43,8 +43,8 @@ body {
 }
 
 .innerText {
-    padding-left: .4rem;
-    padding-right: .4rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
     padding-top: 12.5px;
     width: 100%;
     height: 100%;
@@ -56,27 +56,22 @@ body {
 
 .innerText .text {
     display: inline-block;
-    margin-left: .5rem;
+    margin-left: 0.5rem;
     margin-top: 4px;
 }
-
 
 @keyframes growDown {
     0% {
         transform: scaleY(0);
     }
     80% {
-        transform: scaleY(1.1)
+        transform: scaleY(1.1);
     }
     100% {
-        transform: scaleY(1)
+        transform: scaleY(1);
     }
 }
 
 .material-symbols-outlined {
-    font-variation-settings:
-            'FILL' 0,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 48
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
