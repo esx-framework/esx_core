@@ -36,10 +36,8 @@ Locales['nl'] = {
     ['threw_weapon_already'] = 'Je hebt dit wapen al',
     ['threw_cannot_pickup'] = 'Inventaris is vol, kan niet worden opgehaald!',
     ['threw_pickup_prompt'] = 'Druk op E om op te halen',
-  
     -- Key mapping
     ['keymap_showinventory'] = 'Toon inventaris',
-  
     -- Salary related
     ['received_salary'] = 'U bent betaald: $%s',
     ['received_help'] = 'U heeft uw bijstandsuitkering ontvangen: $%s',
@@ -49,10 +47,8 @@ Locales['nl'] = {
     ['account_bank'] = 'Bank',
     ['account_black_money'] = 'Zwart geld',
     ['account_money'] = 'Geld',
-  
     ['act_imp'] = 'Kan actie niet uitvoeren',
     ['in_vehicle'] = 'Kan actie niet uitvoeren, speler zit in voertuig',
-  
     -- Commands
     ['command_bring'] = 'Breng speler naar je toe',
     ['command_car'] = 'Spawn een voertuig',
@@ -108,13 +104,11 @@ Locales['nl'] = {
     ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
     ['command_giveammo_weapon'] = 'Weapon name',
     ['command_giveammo_ammo'] = 'Ammo Quantity',
-  
     -- Locale settings
     ['locale_digit_grouping_symbol'] = ',',
     ['locale_currency'] = '£%s',
-  
     -- Weapons
-  
+
     -- Melee
     ['weapon_dagger'] = 'Dolk',
     ['weapon_bat'] = 'Knuppel',
@@ -133,7 +127,6 @@ Locales['nl'] = {
     ['weapon_poolcue'] = 'Pool Cue',
     ['weapon_stone_hatchet'] = 'Steenbijl',
     ['weapon_switchblade'] = 'Switchblade',
-  
     -- Handguns
     ['weapon_appistol'] = 'AP-pistool',
     ['weapon_ceramicpistol'] = 'Keramische pistool',
@@ -154,7 +147,6 @@ Locales['nl'] = {
     ['weapon_stungun'] = 'Taser',
     ['weapon_raypistol'] = 'Up-N-Atomizer',
     ['weapon_vintagepistol'] = 'Vintage Pistool',
-  
     -- Shotguns
     ['weapon_assaultshotgun'] = 'Aanvalsgeweer',
     ['weapon_autoshotgun'] = 'Automatisch jachtgeweer',
@@ -166,7 +158,6 @@ Locales['nl'] = {
     ['weapon_pumpshotgun'] = 'Pompgeweer',
     ['weapon_pumpshotgun_mk2'] = 'Pump Shotgun MK2',
     ['weapon_sawnoffshotgun'] = 'Afgezaagd jachtgeweer',
-  
     -- SMG & LMG
     ['weapon_assaultsmg'] = 'Aanval SMG',
     ['weapon_combatmg'] = 'Gevecht MG',
@@ -180,7 +171,6 @@ Locales['nl'] = {
     ['weapon_smg'] = 'SMG',
     ['weapon_smg_mk2'] = 'SMG MK2',
     ['weapon_raycarbine'] = 'Onheilige Hellbringer',
-  
     -- Rifles
     ['weapon_advancedrifle'] = 'Geavanceerd geweer',
     ['weapon_assaultrifle'] = 'Aanvalsgeweer',
@@ -193,14 +183,12 @@ Locales['nl'] = {
     ['weapon_militaryrifle'] = 'Militair geweer',
     ['weapon_specialcarbine'] = 'Speciale karabijn',
     ['weapon_specialcarbine_mk2'] = 'Speciale karabijn MK2',
-  
     -- Sniper
     ['weapon_heavysniper'] = 'Zware sluipschutter',
     ['weapon_heavysniper_mk2'] = 'Zware Sniper MK2',
     ['weapon_marksmanrifle'] = 'Schuttersgeweer',
     ['weapon_marksmanrifle_mk2'] = 'Schuttersgeweer MK2',
     ['weapon_sniperrifle'] = 'Sniper Rifle',
-  
     -- Heavy / Launchers
     ['weapon_compactlauncher'] = 'Compacte Launcher',
     ['weapon_firework'] = 'Vuurwerkstarter',
@@ -210,7 +198,6 @@ Locales['nl'] = {
     ['weapon_railgun'] = 'Spoorgeweer',
     ['weapon_rpg'] = 'Raketwerper',
     ['weapon_rayminigun'] = 'Weduwemaker',
-  
     -- Thrown
     ['weapon_ball'] = 'Honkbal',
     ['weapon_bzgas'] = 'BZ-gas',
@@ -224,7 +211,6 @@ Locales['nl'] = {
     ['weapon_snowball'] = 'Sneeuwbal',
     ['weapon_stickybomb'] = 'Kleefbom',
     ['weapon_smokegrenade'] = 'Traangas',
-  
     -- Special
     ['weapon_firebluser'] = 'Brandblusser',
     ['weapon_digiscanner'] = 'Digitale scanner',
@@ -232,7 +218,6 @@ Locales['nl'] = {
     ['weapon_handcuffs'] = 'Handboeien',
     ['gadget_nightvision'] = 'Nachtzicht',
     ['gadget_parachute'] = 'parachute',
-  
     -- Weapon Components
     ['component_knuckle_base'] = 'basismodel',
     ['component_knuckle_pimp'] = 'de pooier',
@@ -244,16 +229,12 @@ Locales['nl'] = {
     ['component_knuckle_player'] = 'de speler',
     ['component_knuckle_king'] = 'de koning',
     ['component_knuckle_vagos'] = 'de Vagos',
-  
     ['component_luxary_finish'] = 'luxe wapenafwerking',
-  
     ['component_handle_default'] = 'standaard handvat',
     ['component_handle_vip'] = 'VIP-handvat',
     ['component_handle_bodyguard'] = 'bodyguard-handvat',
-  
     ['component_vip_finish'] = 'VIP Finish',
     ['component_bodyguard_finish'] = 'bodyguard Finish',
-  
     ['component_camo_finish'] = 'digitale camouflage',
     ['component_camo_finish2'] = 'penseelstreek camouflage',
     ['component_camo_finish3'] = 'bos camouflage',
@@ -265,7 +246,6 @@ Locales['nl'] = {
     ['component_camo_finish9'] = 'geometrische camouflage',
     ['component_camo_finish10'] = 'boom camouflage',
     ['component_camo_finish11'] = 'patriottische camouflage',
-  
     ['component_camo_slide_finish'] = 'digitale diacamouflage',
     ['component_camo_slide_finish2'] = 'penseelstreek Dia Camo',
     ['component_camo_slide_finish3'] = 'bos Slide camouflage',
@@ -277,12 +257,10 @@ Locales['nl'] = {
     ['component_camo_slide_finish9'] = 'geometrische diacamouflage',
     ['component_camo_slide_finish10'] = 'boom Slide camouflage',
     ['component_camo_slide_finish11'] = 'patriottische diacamouflage',
-  
     ['component_clip_default'] = 'standaard tijdschrift',
     ['component_clip_extended'] = 'uitgebreid tijdschrift',
     ['component_clip_drum'] = 'drummagazine',
     ['component_clip_box'] = 'doos Tijdschrift',
-  
     ['component_scope_holo'] = 'holografisch bereik',
     ['component_scope_small'] = 'klein bereik',
     ['component_scope_medium'] = 'gemiddeld bereik',
@@ -290,10 +268,8 @@ Locales['nl'] = {
     ['component_scope'] = 'gemonteerde scope',
     ['component_scope_advanced'] = 'geavanceerd bereik',
     ['component_ironsights'] = 'ironsights',
-  
     ['component_suppressor'] = 'suppressor',
     ['component_compensator'] = 'compensator',
-  
     ['component_muzzle_flat'] = 'platte mondingsrem',
     ['component_muzzle_tactical'] = 'tactische mondingsrem',
     ['component_muzzle_fat'] = 'fat-end mondingsrem',
@@ -302,26 +278,21 @@ Locales['nl'] = {
     ['component_muzzle_slanted'] = 'schuine mondingsrem',
     ['component_muzzle_split'] = 'gespleten mondingsrem',
     ['component_muzzle_squared'] = 'kwadraat mondingsrem',
-  
     ['component_flashlight'] = 'zaklamp',
     ['component_grip'] = 'grip',
-  
     ['component_barrel_default'] = 'standaard vat',
     ['component_barrel_heavy'] = 'zware vat',
-  
     ['component_ammo_tracer'] = 'tracermunitie',
     ['component_ammo_incendiary'] = 'brandgevaarlijke munitie',
     ['component_ammo_hollowpoint'] = 'hollowpoint munitie',
     ['component_ammo_fmj'] = 'fMJ-munitie',
     ['component_ammo_armor'] = 'pantser piercing munitie',
     ['component_ammo_explosive'] = 'pantserpiercing brandgevaarlijke munitie',
-  
     ['component_shells_default'] = 'standaard shells',
     ['component_shells_incendiary'] = 'draken ademschelpen',
     ['component_shells_armor'] = 'stalen Buckshot Shells',
     ['component_shells_hollowpoint'] = 'flechette schelpen',
     ['component_shells_explosive'] = 'explosieve slakkenhuizen',
-  
     -- Weapon Ammo
     ['ammo_rounds'] = 'ronde(n)',
     ['ammo_shells'] = 'shell(s)',
@@ -341,7 +312,6 @@ Locales['nl'] = {
     ['ammo_snowball'] = 'sneeuwbal(pen)',
     ['ammo_flare'] = 'flare(s)',
     ['ammo_flaregun'] = 'flare(s)',
-  
     -- Weapon Tints
     ['tint_default'] = 'standaard skin',
     ['tint_green'] = 'groene huid',
@@ -351,9 +321,7 @@ Locales['nl'] = {
     ['tint_lspd'] = 'blauwe huid',
     ['tint_orange'] = 'oranje huid',
     ['tint_platinum'] = 'platina huid',
-    
     -- Duty related
     ['stopped_duty'] = 'Je hebt je dienst stopgezet.',
     ['started_duty'] = 'Je bent met je dienst begonnen.',
 }
-  

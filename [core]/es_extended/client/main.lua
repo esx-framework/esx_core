@@ -91,7 +91,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 						SetPlayerLockonRangeOverride(playerId, 2.0)
 					end
 				end
-				
+
 				if Config.DisableVehicleRewards then
 					DisablePlayerVehicleRewards(playerId)
 				end
@@ -164,8 +164,8 @@ end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+	if not value then
+		return
 	end
 
     local netId = bagName:gsub('entity:', '')
@@ -176,7 +176,7 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	        return
 	    end
     end
-	
+
     local vehicle = NetToVeh(tonumber(netId))
     local timer = GetGameTimer()
     while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
@@ -254,7 +254,6 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
-
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')

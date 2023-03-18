@@ -79,8 +79,7 @@ function ESX.ShowNotification(message, type, length)
 
     print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
 end
-    
-    
+
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         return exports["esx_textui"]:TextUI(message, type)
@@ -143,40 +142,39 @@ ESX.HashString = function(str)
     return input_map
 end
 
-if GetResourceState("esx_context") ~= "missing" then
-    function ESX.OpenContext(...)
-        exports["esx_context"]:Open(...)
+local contextAvailable = GetResourceState("esx_context") ~= "missing"
+
+function ESX.OpenContext(...)
+    if not contextAvailable then
+        return print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
 
-    function ESX.PreviewContext(...)
-        exports["esx_context"]:Preview(...)
-    end
-
-    function ESX.CloseContext(...)
-        exports["esx_context"]:Close(...)
-    end
-
-    function ESX.RefreshContext(...)
-       exports["esx_context"]:Refresh(...) 
-    end
-else 
-    function ESX.OpenContext()
-        print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.PreviewContext()
-        print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.CloseContext()
-        print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.RefreshContext()
-        print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
-    end
+    exports["esx_context"]:Open(...)
 end
 
+function ESX.PreviewContext(...)
+    if not contextAvailable then
+        return print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
+    end
+
+    exports["esx_context"]:Preview(...)
+end
+
+function ESX.CloseContext(...)
+    if not contextAvailable then
+        return print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
+    end
+
+    exports["esx_context"]:Close(...)
+end
+
+function ESX.RefreshContext(...)
+    if not contextAvailable then
+        return print("[^1ERROR^7] Tried to ^5refresh^7 context menu, but ^5esx_context^7 is missing!")
+    end
+
+    exports["esx_context"]:Refresh(...)
+end
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
@@ -214,7 +212,6 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
     menu.change = change
 
     menu.close = function()
-
         ESX.UI.Menu.RegisteredTypes[type].close(namespace, name)
 
         for i = 1, #ESX.UI.Menu.Opened, 1 do
@@ -229,11 +226,9 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
         if close then
             close()
         end
-
     end
 
     menu.update = function(query, newData)
-
         for i = 1, #menu.data.elements, 1 do
             local match = true
 
@@ -249,7 +244,6 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
                 end
             end
         end
-
     end
 
     menu.refresh = function()
@@ -368,7 +362,7 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then 
+    if networked then
         ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
             if cb then
                 local obj = NetworkGetEntityFromNetworkId(NetworkID)
@@ -384,7 +378,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 cb(obj)
             end
         end, object, coords, 0.0)
-    else 
+    else
         local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
@@ -495,7 +489,6 @@ function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 
     return players
 end
-
 
 function ESX.Game.GetClosestObject(coords, modelFilter)
     return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter)
@@ -609,10 +602,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
     local hasCustomXenonColor, customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
     local customXenonColor = nil
-    if hasCustomXenonColor then 
+    if hasCustomXenonColor then
         customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
     end
-    
+
     local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
     local customSecondaryColor = nil
     if hasCustomSecondaryColor then
@@ -674,7 +667,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
-        
+
         dashboardColor = dashboardColor,
         interiorColor = interiorColor,
 
@@ -773,12 +766,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
     end
     if props.customPrimaryColor ~= nil then
-        SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2],
-            props.customPrimaryColor[3])
+        SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2], props.customPrimaryColor[3])
     end
     if props.customSecondaryColor ~= nil then
-        SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2],
-            props.customSecondaryColor[3])
+        SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2], props.customSecondaryColor[3])
     end
     if props.color1 ~= nil then
         SetVehicleColours(vehicle, props.color1, colorSecondary)
@@ -789,15 +780,12 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
-
     if props.interiorColor ~= nil then
         SetVehicleInteriorColor(vehicle, props.interiorColor)
     end
-
     if props.dashboardColor ~= nil then
         SetVehicleDashboardColor(vehicle, props.dashboardColor)
     end
-
     if props.wheelColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
     end
@@ -807,20 +795,17 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.windowTint ~= nil then
         SetVehicleWindowTint(vehicle, props.windowTint)
     end
-
     if props.neonEnabled ~= nil then
         SetVehicleNeonLightEnabled(vehicle, 0, props.neonEnabled[1])
         SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
         SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
         SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
     end
-
     if props.extras ~= nil then
         for extraId, enabled in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
         end
     end
-
     if props.neonColor ~= nil then
         SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
     end
@@ -966,12 +951,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.modWindows ~= nil then
         SetVehicleMod(vehicle, 46, props.modWindows, false)
     end
-
     if props.modLivery ~= nil then
         SetVehicleMod(vehicle, 48, props.modLivery, false)
         SetVehicleLivery(vehicle, props.modLivery)
     end
-
     if props.windowsBroken ~= nil then
         for k, v in pairs(props.windowsBroken) do
             if v then
@@ -979,7 +962,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
             end
         end
     end
-
     if props.doorsBroken ~= nil then
         for k, v in pairs(props.doorsBroken) do
             if v then
@@ -987,7 +969,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
             end
         end
     end
-
     if props.tyreBurst ~= nil then
         for k, v in pairs(props.tyreBurst) do
             if v then
@@ -1104,7 +1085,7 @@ function ESX.ShowInventory()
         icon = "fas fa-weight",
         title = "Current Weight: "..currentWeight
     }
- 
+
     ESX.CloseContext()
 
     ESX.OpenContext("right", elements, function(menu,element)
@@ -1308,7 +1289,7 @@ RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
     if Core.ServerCallbacks[requestId] then
         Core.ServerCallbacks[requestId](...)
         Core.ServerCallbacks[requestId] = nil
-    else 
+    else
         print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
     end
 end)
