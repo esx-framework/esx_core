@@ -313,6 +313,25 @@ function ESX.DiscordLogFields(name, title, color, fields)
   })
 end
 
+function ESX.CreateJob(tb)
+  -- tb (array) containing: name (string), label (string) and grades (table)
+  -- grades (table) contains: grade (int), name (string), label (string), salary (int)
+  local job = {}
+  MySQL.Async.execute('INSERT IGNORE INTO jobs (name, label) VALUES (@name, @label)', {['name'] = tb.name, ['label'] = tb.label})
+  job = {name = tb.name, label = tb.label, grades = {}}
+  for k,v in pairs(tb.grades) do
+    job.grades[tostring(v.grade)] = {job_name = tb.name, grade = v.grade, name = v.name, label = v.label, v.salary, skin_male = {}, skin_female = {}}
+    MySQL.Async.execute('INSERT IGNORE INTO job_grades (job_name, grade, name, label, salary) VALUES (@job_name, @grade, @name, @label, @salary)', {
+        ['@job_name'] = tb.name,
+        ['@grade'] = v.grade,
+        ['@name'] = v.name,
+        ['@label'] = v.label,
+        ['@salary'] = v.salary
+    })
+  end
+  ESX.Jobs[tb.name] = job
+end
+
 function ESX.RefreshJobs()
   local Jobs = {}
   local jobs = MySQL.query.await('SELECT * FROM jobs')
