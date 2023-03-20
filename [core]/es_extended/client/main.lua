@@ -75,6 +75,15 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end
 	end
 
+	if Config.DisableVehicleSeatShuff then
+		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat)
+			if seat == 0 then
+				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
+				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
+			end	
+		end)
+	end
+
 	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do

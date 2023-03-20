@@ -72,12 +72,6 @@ CreateThread(function()
                 current.displayName, current.netId = GetData(current.vehicle)
                 TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
-				if Config.DisableVehicleSeatShuff then
-					if current.seat == 0 then
-						SetPedIntoVehicle(playerPed, current.vehicle, 0)
-						SetPedConfigFlag(playerPed, 184, true)
-					end	
-				end
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
