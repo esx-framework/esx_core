@@ -262,7 +262,7 @@ function ESX.GetVehicleType(model, player, cb)
   ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
     Core.vehicleTypesByModel[model] = vehicleType
     cb(vehicleType)
-  end)
+  end, model)
 end
 
 function ESX.DiscordLog(name, title, color, message)
