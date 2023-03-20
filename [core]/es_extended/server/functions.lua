@@ -103,7 +103,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
               end
             end
 
-            if v.validate == false then
+            if not v.validate then
               error = nil
             end
 
@@ -143,32 +143,21 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   end
 end
 
-function ESX.RegisterServerCallback(name, cb)
-  Core.ServerCallbacks[name] = cb
-end
-
-function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
-  if Core.ServerCallbacks[name] then
-    Core.ServerCallbacks[name](source, cb, ...)
-  else
-    print(('[^1ERROR^7] Server callback ^5"%s"^0 does not exist. Please Check ^5%s^7 for Errors!'):format(name, Invoke))
-  end
-end
-
 function Core.SavePlayer(xPlayer, cb)
   local parameters <const> = {
     json.encode(xPlayer.getAccounts(true)),
     xPlayer.job.name,
-    xPlayer.job.grade, 
+    xPlayer.job.grade,
     xPlayer.group,
     json.encode(xPlayer.getCoords()),
     json.encode(xPlayer.getInventory(true)), 
     json.encode(xPlayer.getLoadout(true)),
+    json.encode(xPlayer.getMeta()),
     xPlayer.identifier
   }
 
   MySQL.prepare(
-    'UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?',
+    'UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?',
     parameters,
     function(affectedRows)
       if affectedRows == 1 then
@@ -200,12 +189,13 @@ function Core.SavePlayers(cb)
       json.encode(xPlayer.getCoords()),
       json.encode(xPlayer.getInventory(true)),
       json.encode(xPlayer.getLoadout(true)),
+      json.encode(xPlayer.getMeta()),
       xPlayer.identifier
     }
   end
 
   MySQL.prepare(
-    "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?",
+    "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
     parameters, 
     function(results)
       if not results then
@@ -258,10 +248,21 @@ function ESX.GetIdentifier(playerId)
   end
 end
 
-function ESX.GetVehicleType(Vehicle, Player, cb)
-  Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
-  Core.ClientCallbacks[Core.CurrentRequestId] = cb
-  TriggerClientEvent("esx:GetVehicleType", Player, Vehicle, Core.CurrentRequestId)
+---@param model string|number
+---@param player number playerId
+---@param cb function
+
+function ESX.GetVehicleType(model, player, cb)
+  model = type(model) == 'string' and joaat(model) or model
+  
+  if Core.vehicleTypesByModel[model] then
+    return cb(Core.vehicleTypesByModel[model])
+  end
+
+  ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
+    Core.vehicleTypesByModel[model] = vehicleType
+    cb(vehicleType)
+  end, model)
 end
 
 function ESX.DiscordLog(name, title, color, message)
