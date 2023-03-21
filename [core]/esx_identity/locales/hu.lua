@@ -1,7 +1,7 @@
 Locales["hu"] = {
 	["show_active_character"] = "Aktív karakterek mutatása",
 	["active_character"] = "Aktív karakter: %s",
-	["error_active_character"] = "A név nem megfelelő,
+  ["error_active_character"] = "A név nem megfelelő",
 	["delete_character"] = "Töröld a karaktered és csinálj újat",
 	["deleted_character"] = "A karaktered törölve",
 	["error_delete_character"] = "Hiba történt a karakter törlésekor. Kérjük, lépjen kapcsolatba egy Adminisztrátorral.",
