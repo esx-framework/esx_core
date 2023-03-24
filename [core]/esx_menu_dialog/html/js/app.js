@@ -15,7 +15,7 @@
   ESX_MENU.pos = {};
 
   ESX_MENU.open = function (namespace, name, data) {
-    if (typeof ESX_MENU.opened[namespace] == "undefined") {
+    if (typeof ESX_MENU.opened[namespace] === "undefined") {
       ESX_MENU.opened[namespace] = {};
     }
 
@@ -23,15 +23,15 @@
       ESX_MENU.close(namespace, name);
     }
 
-    if (typeof ESX_MENU.pos[namespace] == "undefined") {
+    if (typeof ESX_MENU.pos[namespace] === "undefined") {
       ESX_MENU.pos[namespace] = {};
     }
 
-    if (typeof data.type == "undefined") {
+    if (typeof data.type === "undefined") {
       data.type = "default";
     }
 
-    if (typeof data.align == "undefined") {
+    if (typeof data.align === "undefined") {
       data.align = "top-left";
     }
 
@@ -65,8 +65,8 @@
 
     for (let i = 0; i < ESX_MENU.focus.length; i++) {
       if (
-        ESX_MENU.focus[i].namespace == namespace &&
-        ESX_MENU.focus[i].name == name
+        ESX_MENU.focus[i].namespace === namespace &&
+        ESX_MENU.focus[i].name === name
       ) {
         ESX_MENU.focus.splice(i, 1);
         break;
