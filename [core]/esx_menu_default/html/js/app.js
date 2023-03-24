@@ -18,7 +18,7 @@
   ESX_MENU.pos = {};
 
   ESX_MENU.open = function (namespace, name, data) {
-    if (typeof ESX_MENU.opened[namespace] == "undefined") {
+    if (typeof ESX_MENU.opened[namespace] === "undefined") {
       ESX_MENU.opened[namespace] = {};
     }
 
@@ -26,12 +26,12 @@
       ESX_MENU.close(namespace, name);
     }
 
-    if (typeof ESX_MENU.pos[namespace] == "undefined") {
+    if (typeof ESX_MENU.pos[namespace] === "undefined") {
       ESX_MENU.pos[namespace] = {};
     }
 
     for (let i = 0; i < data.elements.length; i++) {
-      if (typeof data.elements[i].type == "undefined") {
+      if (typeof data.elements[i].type === "undefined") {
         data.elements[i].type = "default";
       }
     }
@@ -72,8 +72,8 @@
 
     for (let i = 0; i < ESX_MENU.focus.length; i++) {
       if (
-        ESX_MENU.focus[i].namespace == namespace &&
-        ESX_MENU.focus[i].name == name
+        ESX_MENU.focus[i].namespace === namespace &&
+        ESX_MENU.focus[i].name === name
       ) {
         ESX_MENU.focus.splice(i, 1);
         break;
@@ -104,7 +104,7 @@
             case "slider": {
               element.isSlider = true;
               element.sliderLabel =
-                typeof element.options == "undefined"
+                typeof element.options === "undefined"
                   ? element.value
                   : element.options[element.value];
 
@@ -296,7 +296,7 @@
                   break;
 
                 case "slider": {
-                  let min = typeof elem.min == "undefined" ? 0 : elem.min;
+                  let min = typeof elem.min === "undefined" ? 0 : elem.min;
 
                   if (elem.value > min) {
                     elem.value--;
