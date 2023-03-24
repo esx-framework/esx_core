@@ -269,7 +269,7 @@
           }
 
           if (ele.input) {
-            if (ele.inputType == "radio") {
+            if (ele.inputType === "radio") {
               for (let j = 0; j < ele.inputValues.length; j++) {
                 let v = ele.inputValues[j];
                 let container = CreateElement("label", "container", div);
@@ -390,8 +390,8 @@
       });
 
       window.addEventListener("keydown", (e) => {
-        if (e.key == "Escape" || e.key == "Backspace") {
-          if (e.target.tagName.toLowerCase() == "input") {
+        if (e.key === "Escape" || e.key === "Backspace") {
+          if (e.target.tagName.toLowerCase() === "input") {
             return;
           }
 
