@@ -1,4 +1,4 @@
-Locales["en"] = {
+Locales["fi"] = {
 	["male"] = "Mies",
 	["female"] = "Nainen",
 	["select_char"] = "Valitse hahmo",
@@ -17,7 +17,7 @@ Locales["en"] = {
 	["character"] = "Hahmo: %s",
 	["return"] = "Takaisin",
 	["return_description"] = "Palaa hahmojen valintaan.", 
-  ["command_setslots"] = "Määritä pelaajan multicharacter paikkojen määrä", 
+  	["command_setslots"] = "Määritä pelaajan multicharacter paikkojen määrä", 
 	["command_remslots"] = "Vähennä pelaajan multicharacter paikkojen määrää",
 	["command_enablechar"] = "Muuta pelaajan tietty hahmo käyttöön", 
 	["command_disablechar"] = "Muuta pelaajan tietty hahmo pois käytöstä",
@@ -28,6 +28,6 @@ Locales["en"] = {
 	["slotsedit"] = "Olet määrittänyt %s kohteeseen %s",
 	["slotsrem"] = "Poistit paikat kohteesta %s",
 	["charenabled"] = "Otit käyttöön hahmon #%s / %s",
-  ["chardisabled"] = "Poistit hahmon #%s / %s käytöstä",
+  	["chardisabled"] = "Poistit hahmon #%s / %s käytöstä",
 	["charnotfound"] = "Hahmoa #%s / %s ei ole olemassa",
 }
