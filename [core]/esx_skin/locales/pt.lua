@@ -4,4 +4,3 @@ Locales['pt'] = {
     ['skin'] = 'alterar skin',
     ['saveskin'] = 'salvar a skin num ficheiro',
   }
-  
