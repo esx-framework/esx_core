@@ -115,7 +115,7 @@
               break;
           }
 
-          if (i == ESX_MENU.pos[namespace][name]) {
+          if (i === ESX_MENU.pos[namespace][name]) {
             element.selected = true;
           }
         }
@@ -229,7 +229,7 @@
                 menu.elements[ESX_MENU.pos[focused.namespace][focused.name]];
 
               for (let i = 0; i < menu.elements.length; i++) {
-                if (i == ESX_MENU.pos[focused.namespace][focused.name]) {
+                if (i === ESX_MENU.pos[focused.namespace][focused.name]) {
                   menu.elements[i].selected = true;
                 } else {
                   menu.elements[i].selected = false;
@@ -265,7 +265,7 @@
                 menu.elements[ESX_MENU.pos[focused.namespace][focused.name]];
 
               for (let i = 0; i < menu.elements.length; i++) {
-                if (i == ESX_MENU.pos[focused.namespace][focused.name]) {
+                if (i === ESX_MENU.pos[focused.namespace][focused.name]) {
                   menu.elements[i].selected = true;
                 } else {
                   menu.elements[i].selected = false;

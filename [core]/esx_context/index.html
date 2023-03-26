@@ -279,7 +279,7 @@
                 input.type = "radio";
                 input.name = i + 1;
                 input.checked =
-                  (ele.inputValue || ele.inputPlaceholder || -1) == v.value;
+                  (ele.inputValue || ele.inputPlaceholder || -1) === v.value;
 
                 let span = CreateElement("SPAN", "checkmark", container);
 

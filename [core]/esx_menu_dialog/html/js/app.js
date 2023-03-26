@@ -48,10 +48,10 @@
     });
 
     document.onkeyup = function (key) {
-      if (key.which == 27) {
+      if (key.which === 27) {
         // Escape key
         SendMessage(ESX_MENU.ResourceName, "menu_cancel", data);
-      } else if (key.which == 13) {
+      } else if (key.which === 13) {
         // Enter key
         SendMessage(ESX_MENU.ResourceName, "menu_submit", data);
       }
