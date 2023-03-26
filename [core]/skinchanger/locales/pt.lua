@@ -98,4 +98,3 @@ Locales['pt'] = {
     ['bodyb_extra'] = 'extra das manchas no corpo',
     ['bodyb_extra_thickness'] = 'cor do extra das manchas no corpo',
   }
-  
