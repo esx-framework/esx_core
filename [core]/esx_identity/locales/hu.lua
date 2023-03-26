@@ -1,5 +1,5 @@
 Locales["hu"] = {
-    ["show_active_character"] = "Aktív karakterek mutatása",
+	["show_active_character"] = "Aktív karakterek mutatása",
     ["active_character"] = "Aktív karakter: %s",
     ["error_active_character"] = "A név nem megfelelő",
 	["delete_character"] = "Töröld a karaktered és csinálj újat",
