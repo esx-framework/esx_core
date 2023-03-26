@@ -30,9 +30,9 @@ Locales["hu"] = {
 	["missing_identity"] = "Hiba történt a karaktered betöltésekor! \n Hibakód: hiányzik az identitás \n és \nNem úgy tűnik, hogy hiányzik a személyazonosságod, próbálkozz újra.",
 	["deleted_identity"] = "A karaktered törölve",
 	["already_registered"] = "Már regisztráltál.",
-  ["invalid_firstname_format"] = "Érvénytelen formátum (Keresztnév): Próbáld újra.",
-  ["invalid_lastname_format"] = "Érvénytelen formátum (Vezetéknév): Próbáld újra.",
-  ["invalid_dob_format"] = "Érvénytelen formátum (Születési Idő): Próbáld újra.",
-  ["invalid_sex_format"] = "Érvénytelen formátum (Nem): Próbáld újra.",
-  ["invalid_height_format"] = "Érvénytelen formátum (Magasság): Próbáld újra."
+  	["invalid_firstname_format"] = "Érvénytelen formátum (Keresztnév): Próbáld újra.",
+  	["invalid_lastname_format"] = "Érvénytelen formátum (Vezetéknév): Próbáld újra.",
+  	["invalid_dob_format"] = "Érvénytelen formátum (Születési Idő): Próbáld újra.",
+  	["invalid_sex_format"] = "Érvénytelen formátum (Nem): Próbáld újra.",
+  	["invalid_height_format"] = "Érvénytelen formátum (Magasság): Próbáld újra."
 }
