@@ -36,4 +36,3 @@ Locales['pt'] = {
     ['invalid_sex_format'] = 'Formato inválido (Sexo): Porfavor tenta novamente!',
     ['invalid_height_format'] = 'Formato inválido (Altura): Porfavor tenta novamente!'
   }
-  
