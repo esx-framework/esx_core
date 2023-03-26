@@ -1,7 +1,7 @@
 Locales["hu"] = {
 	["show_active_character"] = "Aktív karakterek mutatása",
-    ["active_character"] = "Aktív karakter: %s",
-    ["error_active_character"] = "A név nem megfelelő",
+	["active_character"] = "Aktív karakter: %s",
+  	["error_active_character"] = "A név nem megfelelő",
 	["delete_character"] = "Töröld a karaktered és csinálj újat",
 	["deleted_character"] = "A karaktered törölve",
 	["error_delete_character"] = "Hiba történt a karakter törlésekor. Kérjük, lépjen kapcsolatba egy Adminisztrátorral.",
@@ -30,9 +30,9 @@ Locales["hu"] = {
 	["missing_identity"] = "Hiba történt a karaktered betöltésekor! \n Hibakód: hiányzik az identitás \n és \nNem úgy tűnik, hogy hiányzik a személyazonosságod, próbálkozz újra.",
 	["deleted_identity"] = "A karaktered törölve",
 	["already_registered"] = "Már regisztráltál.",
-    ["invalid_firstname_format"] = "Érvénytelen formátum (Keresztnév): Próbáld újra.",
-    ["invalid_lastname_format"] = "Érvénytelen formátum (Vezetéknév): Próbáld újra.",
-    ["invalid_dob_format"] = "Érvénytelen formátum (Születési Idő): Próbáld újra.",
-    ["invalid_sex_format"] = "Érvénytelen formátum (Nem): Próbáld újra.",
-    ["invalid_height_format"] = "Érvénytelen formátum (Magasság): Próbáld újra."
+  	["invalid_firstname_format"] = "Érvénytelen formátum (Keresztnév): Próbáld újra.",
+  	["invalid_lastname_format"] = "Érvénytelen formátum (Vezetéknév): Próbáld újra.",
+  	["invalid_dob_format"] = "Érvénytelen formátum (Születési Idő): Próbáld újra.",
+  	["invalid_sex_format"] = "Érvénytelen formátum (Nem): Próbáld újra.",
+  	["invalid_height_format"] = "Érvénytelen formátum (Magasság): Próbáld újra."
 }
