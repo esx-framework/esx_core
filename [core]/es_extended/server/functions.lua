@@ -314,21 +314,36 @@ function ESX.DiscordLogFields(name, title, color, fields)
 end
 
 function ESX.CreateJob(tb)
-  -- tb (array) containing: name (string), label (string) and grades (table)
+  -- tb (table) containing: name (string), label (string) and grades (table)
   -- grades (table) contains: grade (int), name (string), label (string), salary (int)
-  local job = {}
-  MySQL.Async.execute('INSERT IGNORE INTO jobs (name, label) VALUES (@name, @label)', {['name'] = tb.name, ['label'] = tb.label})
-  job = {name = tb.name, label = tb.label, grades = {}}
-  for k,v in pairs(tb.grades) do
-    job.grades[tostring(v.grade)] = {job_name = tb.name, grade = v.grade, name = v.name, label = v.label, v.salary, skin_male = {}, skin_female = {}}
-    MySQL.Async.execute('INSERT IGNORE INTO job_grades (job_name, grade, name, label, salary) VALUES (@job_name, @grade, @name, @label, @salary)', {
-        ['@job_name'] = tb.name,
-        ['@grade'] = v.grade,
-        ['@name'] = v.name,
-        ['@label'] = v.label,
-        ['@salary'] = v.salary
-    })
+  
+  if tb == nil or next(tb) == nil then
+      return print('[^3WARNING^7] paramter must be a table.')
   end
+  
+  if tb.name == nil then
+      return print('[^3WARNING^7] table must contain name(string) for the job name')
+  end
+  
+  if tb.label == nil then
+      return print('[^3WARNING^7] table must contain label(string) for the job name label')
+  end
+  
+  if tb.grades == nil or next(tb.grades) == nil then
+      return print('[^3WARNING^7] table must contain grades(table)!')
+  end
+
+  local parameters = {}
+  local job = {name = tb.name, label = tb.label, grades = {}}
+
+  for k,v in pairs(tb.grades) do
+      job.grades[tostring(v.grade)] = {job_name = tb.name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {}}
+      parameters[#parameters + 1] = { tb.name, v.grade, v.name, v.label, v.salary}
+  end
+
+  MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', {tb.name, tb.label})
+  MySQL.prepare('INSERT INTO job_grades (job_name, grade, name, label, salary) VALUES (?, ?, ?, ?, ?)', parameters)
+  
   ESX.Jobs[tb.name] = job
 end
 
