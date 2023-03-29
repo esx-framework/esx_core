@@ -1,6 +1,6 @@
 Locales['es'] = {
-  ['skin_menu'] = 'Menú Aspecto',
+  ['skin_menu'] = 'Menú de apariencia',
   ['use_rotate_view'] = 'Utiliza ~INPUT_FRONTEND_LS~ y ~INPUT_CHARACTER_WHEEL~ para rotar la vista.',
-  ['skin'] = 'cambiar aspecto',
-  ['saveskin'] = 'guardar aspecto en un archivo',
+  ['skin'] = 'Cambiar aspecto',
+  ['saveskin'] = 'Guarda tu aspecto actual',
 }
