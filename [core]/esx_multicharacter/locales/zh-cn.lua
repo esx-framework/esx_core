@@ -1,4 +1,4 @@
-Locales["sc"] = {
+Locales["zh-cn"] = {
 	["male"] = "男性",
 	["female"] = "女性",
 	["select_char"] = "选择角色",
