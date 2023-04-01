@@ -1,4 +1,4 @@
- const translate = new Object();
+const translate = new Object();
 
 translate.name = "我的姓名";
 translate.job = "我的职业";
