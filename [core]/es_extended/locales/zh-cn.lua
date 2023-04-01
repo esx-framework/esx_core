@@ -1,4 +1,4 @@
-Locales['sc'] = {
+Locales['zh-cn'] = {
   -- Inventory
   ['inventory'] = '背包 %s / %s',
   ['use'] = '使用',
