@@ -751,28 +751,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     SetVehicleModKit(vehicle, 0)
-
-    if props.plate ~= nil then
-        SetVehicleNumberPlateText(vehicle, props.plate)
-    end
-    if props.plateIndex ~= nil then
-        SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
-    end
-    if props.bodyHealth ~= nil then
-        SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0)
-    end
-    if props.engineHealth ~= nil then
-        SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0)
-    end
-    if props.tankHealth ~= nil then
-        SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0)
-    end
-    if props.fuelLevel ~= nil then
-        SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
-    end
-    if props.dirtLevel ~= nil then
-        SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
-    end
     if props.customPrimaryColor ~= nil then
         SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2],
             props.customPrimaryColor[3])
@@ -790,15 +768,12 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
-
     if props.interiorColor ~= nil then
         SetVehicleInteriorColor(vehicle, props.interiorColor)
     end
-
     if props.dashboardColor ~= nil then
         SetVehicleDashboardColor(vehicle, props.dashboardColor)
     end
-
     if props.wheelColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
     end
@@ -814,14 +789,12 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         SetVehicleNeonLightEnabled(vehicle, 1, props.neonEnabled[2])
         SetVehicleNeonLightEnabled(vehicle, 2, props.neonEnabled[3])
         SetVehicleNeonLightEnabled(vehicle, 3, props.neonEnabled[4])
-    end
-
+    end 
     if props.extras ~= nil then
         for extraId, enabled in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
         end
     end
-
     if props.neonColor ~= nil then
         SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
     end
@@ -873,6 +846,9 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     end
     if props.modEngine ~= nil then
         SetVehicleMod(vehicle, 11, props.modEngine, false)
+    end
+    if props.engineHealth ~= nil then
+        SetVehicleEngineHealth(vehicle, props.engineHealth + 0.0) 
     end
     if props.modBrakes ~= nil then
         SetVehicleMod(vehicle, 12, props.modBrakes, false)
@@ -995,6 +971,25 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
                 SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0)
             end
         end
+    end
+    
+        if props.plate ~= nil then
+        SetVehicleNumberPlateText(vehicle, props.plate)
+    end
+    if props.plateIndex ~= nil then
+        SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
+    end
+    if props.bodyHealth ~= nil then
+        SetVehicleBodyHealth(vehicle, props.bodyHealth + 0.0)
+    end
+    if props.tankHealth ~= nil then
+        SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0)
+    end
+    if props.fuelLevel ~= nil then
+        SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
+    end
+    if props.dirtLevel ~= nil then
+        SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0)
     end
 end
 
