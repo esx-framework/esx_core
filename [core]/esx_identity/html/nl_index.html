@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="nui://game/ui/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="css/style.css" rel="stylesheet" />
+
+    <title>ESX Identity</title>
+  </head>
+
+  <body onkeydown="TriggeredKey(this)">
+    <div class="dialog">
+      <div class="title"><b>IDENTITEIT</b></div>
+      <form id="register" name="register" action="#">
+        <div
+          style="
+            color: rgb(46, 187, 205);
+            font-size: 12px;
+            font-family: 'Gill Sans', sans-serif;
+          "
+        >
+          Voornaam
+        </div>
+        <input
+          id="firstname"
+          type="text"
+          class=""
+          name="firstname"
+          placeholder="Voornaam"
+          minlength="3"
+          maxlength="8"
+          pattern="[a-zA-Z]*"
+        /><br />
+        <div
+          style="
+            color: rgb(46, 187, 205);
+            font-size: 12px;
+            font-family: 'Gill Sans', sans-serif;
+          "
+        >
+          Achternaam
+        </div>
+        <input
+          id="lastname"
+          type="text"
+          class=""
+          name="lastname"
+          placeholder="Achternaam"
+          minlength="3"
+          maxlength="10"
+          pattern="[a-zA-Z]*"
+        /><br />
+        <div
+          style="
+            color: rgb(46, 187, 205);
+            font-size: 12px;
+            font-family: 'Gill Sans', sans-serif;
+          "
+        >
+          Geboortedatum (MM/DD/YYYY)
+        </div>
+        <input
+          id="dateofbirth"
+          type="date"
+          name="dateofbirth"
+          class=""
+          min="1900-01-01"
+          max="2010-01-01"
+          onfocus="(this.type='date')"
+        /><br />
+        <div
+          style="
+            color: rgb(46, 187, 205);
+            font-size: 12px;
+            font-family: 'Gill Sans', sans-serif;
+          "
+        >
+          Lengte
+        </div>
+        <input
+          id="height"
+          type="number"
+          class=""
+          name="height"
+          min="120"
+          max="220"
+          placeholder="Lengte (cm)"
+        /><br />
+        <center>
+          <div class="radio-toolbar">
+            <input type="radio" id="radiom" name="sex" value="m" checked />
+            <label for="radiom">Man</label>
+
+            <input type="radio" id="radiof" name="sex" value="f" />
+            <label for="radiof">Vrouw</label>
+          </div>
+        </center>
+        <button id="submit" type="submit">
+          <font size="4px">AANMAKEN</font>
+        </button>
+      </form>
+      <center>
+        <font size="1px" color="green"
+          >Als de aanmaak knop niet werkt kijk dan of alles goed is ingevuld.</font
+        >
+      </center>
+    </div>
+    <script>
+      function TriggeredKey(e) {
+        var keycode;
+        if (window.event) keycode = window.event.keyCode;
+        if (window.event.keyCode == 13 || window.event.keyCode == 27)
+          return false;
+      }
+    </script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
