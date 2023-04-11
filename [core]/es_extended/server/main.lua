@@ -102,7 +102,7 @@ if not Config.Multichar then
     end
 
     if not Core.DatabaseConnected then
-      return deferrals.done(('[ESX] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
+      return deferrals.done('[ESX] OxMySQL Was Unable Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
     end
     
     if identifier then
