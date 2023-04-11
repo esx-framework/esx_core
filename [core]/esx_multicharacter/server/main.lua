@@ -104,7 +104,7 @@ end
 		end
 
 		if not databaseConnected then
-			deferrals.done('[ESX] OxMySQL Was Unable Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
+			deferrals.done('[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
 		end
 
 		if identifier then
