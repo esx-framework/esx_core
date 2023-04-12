@@ -185,8 +185,8 @@ Locales['de'] = {
   ['weapon_doubleaction'] = 'double-Action Revolver',
 
   -- Weapon Components
-  ['component_clip_default'] = 'standart Griff',
-  ['component_clip_extended'] = 'erweiterter Griff',
+  ['component_clip_default'] = 'standart Magazin',
+  ['component_clip_extended'] = 'erweiterters Magazin',
   ['component_clip_drum'] = 'Trommelmagazin',
   ['component_clip_box'] = 'Kastenmagazin',
   ['component_flashlight'] = 'Taschenlampe',
