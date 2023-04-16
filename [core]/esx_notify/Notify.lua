@@ -56,4 +56,11 @@ if Debug then
     RegisterCommand("notify3", function()
         ESX.ShowNotification("You Did something ~r~WRONG~s~!", "error", 3000)
     end)
+    
+    RegisterCommand("testnotify", function()
+        ESX.ShowNotification("~g~Done~s~!", "success", 3000)
+        ESX.ShowNotification("~y~INFO~y~", "info", 3000)
+        ESX.ShowNotification("~r~WRONG~s~!", "error", 3000)
+    end)
+    
 end
