@@ -628,7 +628,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
     end
 
     local driftTyresEnabled = false
-    if type(GetDriftTyresEnabled(vehicle) == boolean) and GetDriftTyresEnabled(vehicle) then
+    if type(GetDriftTyresEnabled(vehicle) == "boolean") and GetDriftTyresEnabled(vehicle) then
         driftTyresEnabled = true
     end
 
