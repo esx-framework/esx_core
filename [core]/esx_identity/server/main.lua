@@ -42,7 +42,7 @@ local function checkDOBFormat(str)
         return false
     end
     
-    local d, m, y = string.match(str, '(%d+)/(%d+)/(%d+)')
+    local m, d, y = string.match(str, '(%d+)/(%d+)/(%d+)')
         
     m = tonumber(m)
     d = tonumber(d)
