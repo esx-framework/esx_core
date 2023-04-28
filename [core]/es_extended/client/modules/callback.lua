@@ -3,20 +3,45 @@ local serverRequests = {}
 
 local clientCallbacks = {}
 
----@param eventName string
----@param callback function
----@param ... any
-ESX.TriggerServerCallback = function(eventName, callback, ...)
-  serverRequests[RequestId] = callback
-  
-  TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
+ESX.TriggerServerCallback = setmetatable({
+  ---@param eventName string
+  ---@param ... any
+  Await = function(eventName, ...)
+    assert(type(eventName) == 'string', 'Argument 1 `eventName` is not a string!')
+    local p = promise.new()
 
-  RequestId = RequestId + 1
-end
+    serverRequests[RequestId] = p
+
+    TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
+
+    RequestId = RequestId + 1
+
+    return Citizen.Await(p)
+  end
+}, {
+  ---@param eventName string
+  ---@param callback function
+  ---@param ... any
+  __call = function(_, eventName, callback, ...)
+    assert(type(eventName) == 'string', 'Argument 1 `eventName` is not a string!')
+    assert(type(callback) == 'function', 'Argument 2 `callback` is not a function!')
+
+    serverRequests[RequestId] = callback
+
+    TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
+
+    RequestId = RequestId + 1
+  end
+})
 
 RegisterNetEvent('esx:serverCallback', function(requestId, invoker, ...)
   if not serverRequests[requestId] then
     return print(('[^1ERROR^7] Server Callback with requestId ^5%s^7 Was Called by ^5%s^7 but does not exist.'):format(requestId, invoker))
+  end
+
+  if type(serverRequests[requestId]) == 'table' then
+    serverRequests[requestId]:resolve(...)
+    return
   end
 
   serverRequests[requestId](...)
