@@ -29,6 +29,10 @@ end
 	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
+		local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+		if fxDk == 1 then
+			return "ESX-DEBUG-LICENCE"
+		end
 		local identifier = PRIMARY_IDENTIFIER..':'
 		for _, v in pairs(GetPlayerIdentifiers(source)) do
 			if string.match(v, identifier) then
@@ -100,11 +104,11 @@ end
 		end
 
 		if not databaseFound then
-			deferrals.done(('[ESX Multicharacter] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
+			deferrals.done('[ESX] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg')
 		end
 
 		if not databaseConnected then
-			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
+			deferrals.done('[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
 		end
 
 		if identifier then

@@ -208,11 +208,13 @@ Core.PlayerFunctionOverrides.OxInventory = {
       self.inventory = items
 
       if money then
-        for k, v in pairs(money) do
-          local account = self.getAccount(k)
-          if ESX.Math.Round(account.money) ~= v then
-            account.money = v
+        for accountName, amount in pairs(money) do
+          local account = self.getAccount(accountName)
+
+          if account and ESX.Math.Round(account.money) ~= amount then
+            account.money = amount
             self.triggerEvent('esx:setAccountMoney', account)
+            TriggerEvent('esx:setAccountMoney', self.source, accountName, amount, 'Sync account with item')
           end
         end
       end

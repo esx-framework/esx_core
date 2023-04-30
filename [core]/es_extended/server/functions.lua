@@ -100,6 +100,14 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                 end
               elseif v.type == 'any' then
                 newArgs[v.name] = args[k]
+			  elseif v.type == 'merge' then
+                local lenght = 0
+                for i = 1, k-1 do
+                  lenght = lenght + string.len(args[i]) +1
+                end
+                local merge = table.concat(args, " ")
+
+                newArgs[v.name] = string.sub(merge, lenght)
               end
             end
 
