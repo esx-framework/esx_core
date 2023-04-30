@@ -1,4 +1,3 @@
-
 const translate = new Object();
 
 translate.name = "Ime";
