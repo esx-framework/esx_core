@@ -1,4 +1,3 @@
-
 Locales["sr"] = {
 	["male"] = "Muško",
 	["female"] = "Žensko",
