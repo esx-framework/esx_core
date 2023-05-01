@@ -681,6 +681,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
+    function self.hasMeta(index)
+        if not index then
+            return print(("[^1ERROR^7] xPlayer.hasMeta ^5%s^7 is Missing!"):format(index))
+        end
+
+        if type(index) ~= 'string' then
+            return print("[^1ERROR^7] xPlayer.hasMeta ^5index^7 should be ^5string^7!")
+        end
+
+        return self.metadata[index] ~= nil
+    end
+
 	for fnName,fn in pairs(targetOverrides) do
 		self[fnName] = fn(self)
 	end
