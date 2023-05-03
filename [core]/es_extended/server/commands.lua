@@ -7,15 +7,25 @@ end, false, {help = TranslateCap('command_setcoords'), validate = true, argument
 }})
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
+    if not args.playerId then return end 
 	if ESX.DoesJobExist(args.job, args.grade) then
 		args.playerId.setJob(args.job, args.grade)
 	else
 		showError(TranslateCap('command_setjob_invalid'))
 	end
+	local name 
+    
+	if xPlayer then
+		name = xPlayer.name 
+	else 
+	    name = 'Console'
+	end 
+	
 	ESX.DiscordLogFields("UserActions", "/setjob Triggered", "pink", {
-		{name = "Player", value = xPlayer.name, inline = true},
+		{name = "Executor", value = name, inline = true},
+		{name = "Target", value = args.playerId.name, inline = true}, 
 		{name = "Job", value = args.job, inline = true},
-    {name = "Grade", value = args.grade, inline = true}
+        {name = "Grade", value = args.grade, inline = true}
 	})
 end, true, {help = TranslateCap('command_setjob'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
