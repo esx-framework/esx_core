@@ -3,7 +3,7 @@ local pickups = {}
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(100)
-		
+
 		if NetworkIsPlayerActive(PlayerId()) then
 			exports.spawnmanager:setAutoSpawn(false)
 			DoScreenFadeOut(0)
@@ -80,7 +80,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-			end	
+			end
 		end)
 	end
 
@@ -101,7 +101,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 						SetPlayerLockonRangeOverride(playerId, 2.0)
 					end
 				end
-				
+
 				if Config.DisableVehicleRewards then
 					DisablePlayerVehicleRewards(playerId)
 				end
@@ -173,7 +173,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			'WORLD_VEHICLE_DISTANT_EMPTY_GROUND',
 			'WORLD_HUMAN_PAPARAZZI'
 		}
-		
+
 		for i, v in pairs(scenarios) do
 			SetScenarioTypeEnabled(v, false)
 		end
@@ -242,8 +242,8 @@ end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+	if not value then
+		return
 	end
 
     local netId = bagName:gsub('entity:', '')
@@ -254,7 +254,7 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	        return
 	    end
     end
-	
+
     local vehicle = NetToVeh(tonumber(netId))
     local timer = GetGameTimer()
     while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
@@ -332,14 +332,13 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
-
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
 	AddEventHandler('esx:removeWeapon', function(weapon)
 		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(ESX.PlayerData.ped, joaat(weapon))
-		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
+		RemoveWeaponFromPed(playerPed, joaat(weapon))
+		SetPedAmmo(playerPed, joaat(weapon), 0)
 	end)
 
 	RegisterNetEvent('esx:removeWeaponComponent')
@@ -391,8 +390,7 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:createMissingPickups')
 	AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
-			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name
-				, pickup.components, pickup.tintIndex)
+			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name, pickup.components, pickup.tintIndex)
 		end
 	end)
 end
@@ -510,8 +508,7 @@ if not Config.OxInventory then
 	end)
 end
 
------ Admin commnads from esx_adminplus
-
+-- Admin commnads from esx_adminplus
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
 	local GetEntityCoords = GetEntityCoords
@@ -689,7 +686,7 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 	cb(ESX.GetVehicleType(model))
 end)
 
-local DoNotUse = {
+local incompatibleResources = {
 	'essentialmode',
 	'es_admin2',
 	'basic-gamemode',
@@ -700,9 +697,9 @@ local DoNotUse = {
 	'default_spawnpoint',
 }
 
-for i = 1, #DoNotUse do
-	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
-		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
+for i = 1, #incompatibleResources do
+	if GetResourceState(incompatibleResources[i]) == 'started' or GetResourceState(incompatibleResources[i]) == 'starting' then
+		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. incompatibleResources[i] .. "^7")
 	end
 end
 
