@@ -366,7 +366,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 while not DoesEntityExist(obj) do
                     obj = NetworkGetEntityFromNetworkId(NetworkID)
                     Wait(0)
-                    Tries += 1
+                    Tries = Tries + 1
                     if Tries > 250 then
                         break
                     end

@@ -23,7 +23,7 @@ local function Progressbar(message,length,Options)
     CurrentProgress.length = length or 3000
     while CurrentProgress ~= nil do
         if CurrentProgress.length > 0 then 
-            CurrentProgress.length -= 1000
+            CurrentProgress.length = CurrentProgress.length - 1000
         else
             ClearPedTasks(ESX.PlayerData.ped)
             if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end

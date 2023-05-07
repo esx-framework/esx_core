@@ -26,7 +26,7 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 			if not closest then
 				local dist = #(source - coords)
 				if dist <= distance then
-					count += 1
+					count = count + 1
 					result[count] = {id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist}
 				end
 			else
