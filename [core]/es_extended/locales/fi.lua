@@ -21,7 +21,7 @@ Locales['fi'] = {
   ['received_weapon_ammo'] = 'Sinä sait ~o~%sx %s sinun %s varten henkilöltä %s',
   ['received_weapon_withammo'] = 'Sinä sait 1x %s ammuksella ~o~%sx %s henkilöltä %s',
   ['received_weapon_hasalready'] = '%s yritti antaa sinulle %s, mutta sinulla on jo sellainen',
-  ['received_weapon_noweapon'] = '%s yritti antaa sinulle ammuksia %s:lle, mutta sinulla ei ole sellaista', 
+  ['received_weapon_noweapon'] = '%s yritti antaa sinulle ammuksia %s:lle, mutta sinulla ei ole sellaista',
   ['gave_account_money'] = 'Sinä annoit $%s (%s) henkilölle %s',
   ['received_account_money'] = 'Sinä sait $%s (%s) henkilöltä %s',
   ['amount_invalid'] = 'Virheellinen määrä',
@@ -75,7 +75,7 @@ Locales['fi'] = {
   ['command_giveweapon_hasalready'] = 'Pelaajalla on jo kyseinen ase',
   ['command_giveweaponcomponent'] = 'Anna aseen komponentti',
   ['command_giveweaponcomponent_component'] = 'Komponentin nimi',
-  ['command_giveweaponcomponent_invalid'] = 'Virheellinen aseen komponentti', 
+  ['command_giveweaponcomponent_invalid'] = 'Virheellinen aseen komponentti',
   ['command_giveweaponcomponent_hasalready'] = 'Pelaajalla on jo kyseinen asekomponentti',
   ['command_giveweaponcomponent_missingweapon'] = 'Pelaajalla ei ole kyseistä asetta',
   ['command_save'] = 'Talenna pelaaja tietokantaan',
@@ -105,7 +105,7 @@ Locales['fi'] = {
   ['command_giveammo_ammo'] = 'Ammusten määrä',
 
   -- Locale settings
-  ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_digit_grouping_symbol'] = '',
   ['locale_currency'] = '$%s',
 
   -- Weapons

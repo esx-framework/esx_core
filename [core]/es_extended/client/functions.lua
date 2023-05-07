@@ -155,9 +155,9 @@ if GetResourceState("esx_context") ~= "missing" then
     end
 
     function ESX.RefreshContext(...)
-       exports["esx_context"]:Refresh(...) 
+       exports["esx_context"]:Refresh(...)
     end
-else 
+else
     function ESX.OpenContext()
         print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
@@ -358,7 +358,7 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then 
+    if networked then
         ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
             if cb then
                 local obj = NetworkGetEntityFromNetworkId(NetworkID)
@@ -366,7 +366,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 while not DoesEntityExist(obj) do
                     obj = NetworkGetEntityFromNetworkId(NetworkID)
                     Wait(0)
-                    Tries += 1
+                    Tries = Tries + 1
                     if Tries > 250 then
                         break
                     end
@@ -374,7 +374,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 cb(obj)
             end
         end, object, coords, 0.0)
-    else 
+    else
         local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
@@ -408,13 +408,13 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     networked = networked == nil and true or networked
 
     local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-    if not vector or not playerCoords then 
+    if not vector or not playerCoords then
         return
     end
     local dist = #(playerCoords - vector)
     if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
         local executingResource = GetInvokingResource() or "Unknown"
-        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executing_resource))
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
 
     CreateThread(function()
@@ -482,7 +482,7 @@ end
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
     local players, myPlayer = {}, PlayerId()
 
-    for k, player in ipairs(GetActivePlayers()) do
+    for _, player in ipairs(GetActivePlayers()) do
         local ped = GetPlayerPed(player)
 
         if DoesEntityExist(ped) and ((onlyOtherPlayers and player ~= myPlayer) or not onlyOtherPlayers) then
@@ -560,7 +560,7 @@ function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
     if modelFilter then
         filteredEntities = {}
 
-        for k, entity in pairs(entities) do
+        for _, entity in pairs(entities) do
             if modelFilter[GetEntityModel(entity)] then
                 filteredEntities[#filteredEntities + 1] = entity
             end
@@ -583,7 +583,7 @@ function ESX.Game.GetVehicleInDirection()
     local playerCoords = GetEntityCoords(playerPed)
     local inDirection = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
     local rayHandle = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
-    local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
+    local _, hit, _, _, entityHit = GetShapeTestResult(rayHandle)
 
     if hit == 1 and GetEntityType(entityHit) == 2 then
         local entityCoords = GetEntityCoords(entityHit)
@@ -610,7 +610,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
     local hasCustomXenonColor, customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
     local customXenonColor = nil
-    if hasCustomXenonColor then 
+    if hasCustomXenonColor then
         customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
     end
     
@@ -638,7 +638,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
     }
 
     if TyresIndex[numWheels] then
-        for tyre, idx in pairs(TyresIndex[numWheels]) do
+        for _, idx in pairs(TyresIndex[numWheels]) do
             tyreBurst[tostring(idx)] = IsVehicleTyreBurst(vehicle, idx, false)
         end
     end
@@ -1056,7 +1056,7 @@ function ESX.ShowInventory()
         end
     end
 
-    for k, v in ipairs(ESX.PlayerData.inventory) do
+    for _, v in ipairs(ESX.PlayerData.inventory) do
         if v.count > 0 then
             currentWeight = currentWeight + (v.weight * v.count)
 
@@ -1073,7 +1073,7 @@ function ESX.ShowInventory()
         end
     end
 
-    for k, v in ipairs(Config.Weapons) do
+    for _, v in ipairs(Config.Weapons) do
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1171,7 +1171,7 @@ function ESX.ShowInventory()
                         {unselectable = true, icon = "fas fa-users", title = "Nearby Players"}
                     }
 
-                    for k, playerNearby in ipairs(playersNearby) do
+                    for _, playerNearby in ipairs(playersNearby) do
                         players[GetPlayerServerId(playerNearby)] = true
                     end
 

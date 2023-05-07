@@ -29,7 +29,7 @@ end
 	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
-		local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+		local fxDk = GetConvarInt('sv_fxdkMode', 0)
 		if fxDk == 1 then
 			return "ESX-DEBUG-LICENCE"
 		end
@@ -134,7 +134,7 @@ end
 		local count = 0
 
 		for table, column in pairs(DB_TABLES) do
-			count += 1
+			count = count +  1
 			queries[count] = {query = query:format(table, column), values = {identifier}}
 		end
 
@@ -164,7 +164,7 @@ end
 				DB_TABLES[column.TABLE_NAME] = column.COLUMN_NAME
 
 				if column?.CHARACTER_MAXIMUM_LENGTH ~= length then
-					count += 1
+					count = count + 1
 					columns[column.TABLE_NAME] = column.COLUMN_NAME
 				end
 			end
