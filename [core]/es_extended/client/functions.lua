@@ -414,7 +414,7 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     local dist = #(playerCoords - vector)
     if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
         local executingResource = GetInvokingResource() or "Unknown"
-        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executing_resource))
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
 
     CreateThread(function()
@@ -583,7 +583,7 @@ function ESX.Game.GetVehicleInDirection()
     local playerCoords = GetEntityCoords(playerPed)
     local inDirection = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
     local rayHandle = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
-    local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
+    local _, hit, _, _, entityHit = GetShapeTestResult(rayHandle)
 
     if hit == 1 and GetEntityType(entityHit) == 2 then
         local entityCoords = GetEntityCoords(entityHit)
@@ -638,7 +638,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
     }
 
     if TyresIndex[numWheels] then
-        for tyre, idx in pairs(TyresIndex[numWheels]) do
+        for _, idx in pairs(TyresIndex[numWheels]) do
             tyreBurst[tostring(idx)] = IsVehicleTyreBurst(vehicle, idx, false)
         end
     end
