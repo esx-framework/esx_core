@@ -87,7 +87,7 @@ end)
 RegisterNUICallback("selected",function(data,cb)
 	if not activeMenu
 	or not activeMenu.onSelect
-	or not data.index 
+	or not data.index
 	then
 		return
 	end
@@ -96,7 +96,7 @@ RegisterNUICallback("selected",function(data,cb)
 	local ele = activeMenu.eles[index]
 
 	if not ele
-	or ele.input 
+	or ele.input
 	then
 		return
 	end
@@ -107,7 +107,7 @@ end)
 
 RegisterNUICallback("changed",function(data,cb)
 	if not activeMenu
-	or not data.index 
+	or not data.index
 	or not data.value
 	then
 		return
@@ -117,7 +117,7 @@ RegisterNUICallback("changed",function(data,cb)
 	local ele = activeMenu.eles[index]
 
 	if not ele
-	or not ele.input 
+	or not ele.input
 	then
 		return
 	end
@@ -144,7 +144,7 @@ end)
 
 local function focusPreview()
 	if not activeMenu
-	or not activeMenu.onSelect 
+	or not activeMenu.onSelect
 	then
 		return
 	end

@@ -4,7 +4,7 @@ local function Progressbar(message,length,Options)
         return false
     end
     CurrentProgress = Options or {}
-    if CurrentProgress.animation then 
+    if CurrentProgress.animation then
         if CurrentProgress.animation.type == "anim" then
             ESX.Streaming.RequestAnimDict(CurrentProgress.animation.dict, function()
                 TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
@@ -22,7 +22,7 @@ local function Progressbar(message,length,Options)
     })
     CurrentProgress.length = length or 3000
     while CurrentProgress ~= nil do
-        if CurrentProgress.length > 0 then 
+        if CurrentProgress.length > 0 then
             CurrentProgress.length = CurrentProgress.length - 1000
         else
             ClearPedTasks(ESX.PlayerData.ped)

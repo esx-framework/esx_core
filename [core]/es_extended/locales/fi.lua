@@ -75,7 +75,7 @@ Locales['fi'] = {
   ['command_giveweapon_hasalready'] = 'Pelaajalla on jo kyseinen ase',
   ['command_giveweaponcomponent'] = 'Anna aseen komponentti',
   ['command_giveweaponcomponent_component'] = 'Komponentin nimi',
-  ['command_giveweaponcomponent_invalid'] = 'Virheellinen aseen komponentti', 
+  ['command_giveweaponcomponent_invalid'] = 'Virheellinen aseen komponentti',
   ['command_giveweaponcomponent_hasalready'] = 'Pelaajalla on jo kyseinen asekomponentti',
   ['command_giveweaponcomponent_missingweapon'] = 'Pelaajalla ei ole kyseistä asetta',
   ['command_save'] = 'Talenna pelaaja tietokantaan',
@@ -105,7 +105,7 @@ Locales['fi'] = {
   ['command_giveammo_ammo'] = 'Ammusten määrä',
 
   -- Locale settings
-  ['locale_digit_grouping_symbol'] = ' ',
+  ['locale_digit_grouping_symbol'] = '',
   ['locale_currency'] = '$%s',
 
   -- Weapons

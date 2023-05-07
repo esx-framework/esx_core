@@ -29,7 +29,7 @@ end
 	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
-		local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+		local fxDk = GetConvarInt('sv_fxdkMode', 0)
 		if fxDk == 1 then
 			return "ESX-DEBUG-LICENCE"
 		end

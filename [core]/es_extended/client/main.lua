@@ -80,7 +80,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-			end	
+			end
 		end)
 	end
 
@@ -242,8 +242,8 @@ end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
 AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+	if not value then
+		return
 	end
 
     local netId = bagName:gsub('entity:', '')

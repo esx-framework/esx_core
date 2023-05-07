@@ -158,7 +158,7 @@ function Core.SavePlayer(xPlayer, cb)
     xPlayer.job.grade,
     xPlayer.group,
     json.encode(xPlayer.getCoords()),
-    json.encode(xPlayer.getInventory(true)), 
+    json.encode(xPlayer.getInventory(true)),
     json.encode(xPlayer.getLoadout(true)),
     json.encode(xPlayer.getMeta()),
     xPlayer.identifier
@@ -204,7 +204,7 @@ function Core.SavePlayers(cb)
 
   MySQL.prepare(
     "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `metadata` = ? WHERE `identifier` = ?",
-    parameters, 
+    parameters,
     function(results)
       if not results then
         return
@@ -244,7 +244,7 @@ function ESX.GetPlayerFromIdentifier(identifier)
 end
 
 function ESX.GetIdentifier(playerId)
-  local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+  local fxDk = GetConvarInt('sv_fxdkMode', 0)
   if fxDk == 1 then
     return "ESX-DEBUG-LICENCE"
   end
@@ -306,7 +306,7 @@ function ESX.DiscordLogFields(name, title, color, fields)
           ['text'] = "| ESX Logs | " .. os.date(),
           ['icon_url'] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png"
       },
-      ['fields'] = fields, 
+      ['fields'] = fields,
       ['description'] = "",
       ['author'] = {
           ['name'] = "ESX Framework",

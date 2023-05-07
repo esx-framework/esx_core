@@ -76,7 +76,7 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
 				local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
 				Entity(createdVehicle).state:set('VehicleProperties', vehicleProperties, true)
 				cb(networkId)
-			else 
+			else
 				print(('[^1ERROR^7] Tried to spawn invalid vehicle - ^5%s^7!'):format(model))
 			end
 		end)

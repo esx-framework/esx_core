@@ -155,9 +155,9 @@ if GetResourceState("esx_context") ~= "missing" then
     end
 
     function ESX.RefreshContext(...)
-       exports["esx_context"]:Refresh(...) 
+       exports["esx_context"]:Refresh(...)
     end
-else 
+else
     function ESX.OpenContext()
         print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
     end
@@ -358,7 +358,7 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then 
+    if networked then
         ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
             if cb then
                 local obj = NetworkGetEntityFromNetworkId(NetworkID)
@@ -374,7 +374,7 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
                 cb(obj)
             end
         end, object, coords, 0.0)
-    else 
+    else
         local model = type(object) == 'number' and object or joaat(object)
         local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
         CreateThread(function()
@@ -408,7 +408,7 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     networked = networked == nil and true or networked
 
     local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-    if not vector or not playerCoords then 
+    if not vector or not playerCoords then
         return
     end
     local dist = #(playerCoords - vector)
@@ -610,7 +610,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
     local hasCustomXenonColor, customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
     local customXenonColor = nil
-    if hasCustomXenonColor then 
+    if hasCustomXenonColor then
         customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
     end
     
