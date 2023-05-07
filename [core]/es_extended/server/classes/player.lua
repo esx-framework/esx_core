@@ -148,7 +148,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if minimal then
 			local minimalInventory = {}
 
-			for k, v in ipairs(self.inventory) do
+			for _, v in ipairs(self.inventory) do
 				if v.count > 0 then
 					minimalInventory[v.name] = v.count
 				end
@@ -170,7 +170,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 		local minimalLoadout = {}
 
-		for k,v in ipairs(self.loadout) do
+		for _,v in ipairs(self.loadout) do
 			minimalLoadout[v.name] = {ammo = v.ammo}
 			if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
 
@@ -270,7 +270,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getInventoryItem(name, metadata)
-		for k,v in ipairs(self.inventory) do
+		for _,v in ipairs(self.inventory) do
 			if v.name == name then
 				return v
 			end
@@ -531,7 +531,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
-			for k,v in ipairs(weapon.components) do
+			for _,v in ipairs(weapon.components) do
 				if v == weaponComponent then
 					return true
 				end
@@ -544,7 +544,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasWeapon(weaponName)
-		for k,v in ipairs(self.loadout) do
+		for _,v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				return true
 			end
@@ -554,7 +554,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasItem(item, metadata)
-		for k,v in ipairs(self.inventory) do
+		for _,v in ipairs(self.inventory) do
 			if (v.name == item) and (v.count >= 1) then
 				return v, v.count
 			end

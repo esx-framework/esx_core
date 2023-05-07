@@ -218,7 +218,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		local ammoTypes = {}
 		RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-		for k, v in ipairs(ESX.PlayerData.loadout) do
+		for _, v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
 			local weaponHash = joaat(weaponName)
 
@@ -377,7 +377,7 @@ if not Config.OxInventory then
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
-			for k, v in ipairs(components) do
+			for _, v in ipairs(components) do
 				local component = ESX.GetWeaponComponent(name, v)
 				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 			end

@@ -482,7 +482,7 @@ end
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
     local players, myPlayer = {}, PlayerId()
 
-    for k, player in ipairs(GetActivePlayers()) do
+    for _, player in ipairs(GetActivePlayers()) do
         local ped = GetPlayerPed(player)
 
         if DoesEntityExist(ped) and ((onlyOtherPlayers and player ~= myPlayer) or not onlyOtherPlayers) then
@@ -560,7 +560,7 @@ function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
     if modelFilter then
         filteredEntities = {}
 
-        for k, entity in pairs(entities) do
+        for _, entity in pairs(entities) do
             if modelFilter[GetEntityModel(entity)] then
                 filteredEntities[#filteredEntities + 1] = entity
             end
@@ -1056,7 +1056,7 @@ function ESX.ShowInventory()
         end
     end
 
-    for k, v in ipairs(ESX.PlayerData.inventory) do
+    for _, v in ipairs(ESX.PlayerData.inventory) do
         if v.count > 0 then
             currentWeight = currentWeight + (v.weight * v.count)
 
@@ -1073,7 +1073,7 @@ function ESX.ShowInventory()
         end
     end
 
-    for k, v in ipairs(Config.Weapons) do
+    for _, v in ipairs(Config.Weapons) do
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1171,7 +1171,7 @@ function ESX.ShowInventory()
                         {unselectable = true, icon = "fas fa-users", title = "Nearby Players"}
                     }
 
-                    for k, playerNearby in ipairs(playersNearby) do
+                    for _, playerNearby in ipairs(playersNearby) do
                         players[GetPlayerServerId(playerNearby)] = true
                     end
 
