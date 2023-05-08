@@ -301,7 +301,7 @@ else
 			if not identifier then
                 return deferrals.done(TranslateCap('no_identifier'))
             end
-            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier}, 
+            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', {identifier},
                 function(result)
                     if not result then
                         playerIdentity[identifier] = nil
@@ -393,7 +393,7 @@ else
             		TriggerClientEvent('esx:showNotification',source,TranslateCap('invalid_height_format'), "error")
             		return cb(false)
         	end
-		if xPlayer then	
+		if xPlayer then
 			if alreadyRegistered[xPlayer.identifier] then
 				xPlayer.showNotification(TranslateCap('already_registered'), "error")
 				return cb(false)

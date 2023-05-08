@@ -12,10 +12,12 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	else
 		showError(TranslateCap('command_setjob_invalid'))
 	end
+	
 	ESX.DiscordLogFields("UserActions", "/setjob Triggered", "pink", {
-		{name = "Player", value = xPlayer.name, inline = true},
+		{name = "Executor", value = xPlayer and xPlayer.name or 'Console', inline = true},
+		{name = "Target", value = args.playerId.name, inline = true}, 
 		{name = "Job", value = args.job, inline = true},
-    {name = "Grade", value = args.grade, inline = true}
+        {name = "Grade", value = args.grade, inline = true}
 	})
 end, true, {help = TranslateCap('command_setjob'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
@@ -76,7 +78,7 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	end)
 end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = TranslateCap('command_car_car'), type = 'string'}
-}}) 
+}})
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
 	local PedVehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source), false)
@@ -141,7 +143,7 @@ if not Config.OxInventory then
 
 	ESX.RegisterCommand('giveammo', 'admin', function(xPlayer, args, showError)
 		if args.playerId.hasWeapon(args.weapon) then
-			args.playerId.addWeaponAmmo(args.weapon, args.ammo)   
+			args.playerId.addWeaponAmmo(args.weapon, args.ammo)
 		else
 			showError(TranslateCap("command_giveammo_noweapon_found"))
 		end
