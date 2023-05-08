@@ -185,7 +185,7 @@ if ESX.GetConfig().Multichar then
 	function SelectCharacterMenu(Characters, slots)
 		local Character = next(Characters)
 		local elements = {{title = TranslateCap('select_char') , icon = "fa-solid fa-users", description =  TranslateCap('select_char_description') , unselectable = true}}
-		for k,v in pairs(Characters) do
+		for k, v in pairs(Characters) do
 			if not v.model and v.skin then
 				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 			end

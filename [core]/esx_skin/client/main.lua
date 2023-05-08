@@ -16,11 +16,11 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
         -- Restrict menu
         if restrict == nil then
-            for i=1, #components, 1 do
+            for i = 1, #components, 1 do
                 _components[i] = components[i]
             end
         else
-            for i=1, #components, 1 do
+            for i = 1, #components, 1 do
                 local found = false
 
                 for j=1, #restrict, 1 do
@@ -35,7 +35,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             end
         end
         -- Insert elements
-        for i=1, #_components, 1 do
+        for i = 1, #_components, 1 do
             local value = _components[i].value
             local componentId = _components[i].componentId
 
@@ -54,7 +54,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 type = 'slider'
             }
 
-            for k,v in pairs(maxVals) do
+            for k, v in pairs(maxVals) do
                 if k == _components[i].name then
                     data.max = v
                     break
@@ -104,7 +104,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
                 local newData = {}
 
-                for i=1, #elements, 1 do
+                for i = 1, #elements, 1 do
                     newData = {}
                     newData.max = maxVals[elements[i].name]
 
