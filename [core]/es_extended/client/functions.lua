@@ -77,8 +77,7 @@ function ESX.ShowNotification(message, type, length)
 
     print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
 end
-    
-    
+
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         return exports["esx_textui"]:TextUI(message, type)
@@ -613,7 +612,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
     if hasCustomXenonColor then
         customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
     end
-    
+
     local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
     local customSecondaryColor = nil
     if hasCustomSecondaryColor then
@@ -675,7 +674,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
-        
+
         dashboardColor = dashboardColor,
         interiorColor = interiorColor,
 
@@ -1027,6 +1026,17 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
     ClearDrawOrigin()
 end
 
+---@param account string Account name (money/bank/black_money)
+---@return table|nil
+function ESX.GetAccount(account)
+    for i = 1, #ESX.PlayerData.accounts, 1 do
+        if ESX.PlayerData.accounts[i].name == account then
+            return ESX.PlayerData.accounts[i]
+        end
+    end
+    return nil
+end
+
 function ESX.ShowInventory()
     if not Config.EnableDefaultInventory then
         return
@@ -1038,7 +1048,7 @@ function ESX.ShowInventory()
     }
     local currentWeight = 0
 
-    for i=1, #(ESX.PlayerData.accounts) do
+    for i = 1, #(ESX.PlayerData.accounts) do
         if ESX.PlayerData.accounts[i].money > 0 then
             local formattedMoney = TranslateCap('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.accounts[i].money))
             local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
@@ -1105,7 +1115,7 @@ function ESX.ShowInventory()
         icon = "fas fa-weight",
         title = "Current Weight: "..currentWeight
     }
- 
+
     ESX.CloseContext()
 
     ESX.OpenContext("right", elements, function(menu,element)

@@ -338,7 +338,7 @@ else
 
             local xPlayers = ESX.GetExtendedPlayers()
 
-            for i=1, #(xPlayers) do
+            for i = 1, #(xPlayers) do 
                 if xPlayers[i] then
                     checkIdentity(xPlayers[i])
                 end
