@@ -47,9 +47,7 @@ local function CancelProgressbar()
     CurrentProgress = nil
 end
 
-ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", function()
-    CancelProgressbar()
-end)
+ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", CancelProgressbar)
 
 exports('Progressbar', Progressbar)
 exports('CancelProgressbar', CancelProgressbar)
