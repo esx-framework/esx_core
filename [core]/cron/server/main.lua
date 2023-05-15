@@ -20,7 +20,7 @@ end
 
 function OnTime(d, h, m)
 
-	for i=1, #Jobs, 1 do
+	for i = 1, #Jobs, 1 do
 		if Jobs[i].h == h and Jobs[i].m == m then
 			Jobs[i].cb(d, h, m)
 		end

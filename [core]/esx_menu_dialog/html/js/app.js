@@ -15,7 +15,7 @@
   ESX_MENU.pos = {};
 
   ESX_MENU.open = function (namespace, name, data) {
-    if (typeof ESX_MENU.opened[namespace] == "undefined") {
+    if (typeof ESX_MENU.opened[namespace] === "undefined") {
       ESX_MENU.opened[namespace] = {};
     }
 
@@ -23,15 +23,15 @@
       ESX_MENU.close(namespace, name);
     }
 
-    if (typeof ESX_MENU.pos[namespace] == "undefined") {
+    if (typeof ESX_MENU.pos[namespace] === "undefined") {
       ESX_MENU.pos[namespace] = {};
     }
 
-    if (typeof data.type == "undefined") {
+    if (typeof data.type === "undefined") {
       data.type = "default";
     }
 
-    if (typeof data.align == "undefined") {
+    if (typeof data.align === "undefined") {
       data.align = "top-left";
     }
 
@@ -48,10 +48,10 @@
     });
 
     document.onkeyup = function (key) {
-      if (key.which == 27) {
+      if (key.which === 27) {
         // Escape key
         SendMessage(ESX_MENU.ResourceName, "menu_cancel", data);
-      } else if (key.which == 13) {
+      } else if (key.which === 13) {
         // Enter key
         SendMessage(ESX_MENU.ResourceName, "menu_submit", data);
       }
@@ -65,8 +65,8 @@
 
     for (let i = 0; i < ESX_MENU.focus.length; i++) {
       if (
-        ESX_MENU.focus[i].namespace == namespace &&
-        ESX_MENU.focus[i].name == name
+        ESX_MENU.focus[i].namespace === namespace &&
+        ESX_MENU.focus[i].name === name
       ) {
         ESX_MENU.focus.splice(i, 1);
         break;

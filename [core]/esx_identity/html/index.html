@@ -110,7 +110,7 @@
       function TriggeredKey(e) {
         var keycode;
         if (window.event) keycode = window.event.keyCode;
-        if (window.event.keyCode == 13 || window.event.keyCode == 27)
+        if (window.event.keyCode === 13 || window.event.keyCode === 27)
           return false;
       }
     </script>

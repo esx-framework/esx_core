@@ -1,8 +1,7 @@
 function StartPayCheck()
-  CreateThread(function()
-    while true do
-      Wait(Config.PaycheckInterval)
-
+	CreateThread(function()
+		while true do
+			Wait(Config.PaycheckInterval)
       for player, xPlayer in pairs(ESX.Players) do
         local jobLabel = xPlayer.job.label
         local job = xPlayer.job.grade_name
