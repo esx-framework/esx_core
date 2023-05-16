@@ -34,6 +34,8 @@ Config.Multichar                = GetResourceState("esx_multicharacter") ~= "mis
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
 
+Config.AdminLogging				= false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
+
 Config.DisableHealthRegeneration  = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death
