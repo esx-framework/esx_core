@@ -349,7 +349,7 @@ ESX.RegisterCommand('coords', "admin", function(xPlayer, _, _)
 	print("Coords - Vector4: ^5".. vector4(coords.x, coords.y, coords.z, heading) .. "^0")
 end, true)
 
-ESX.RegisterCommand('tpm', "admin", function(xPlayer, _ _)
+ESX.RegisterCommand('tpm', "admin", function(xPlayer, _, _)
 	xPlayer.triggerEvent("esx:tpm")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /tpm Triggered!", "pink", {
