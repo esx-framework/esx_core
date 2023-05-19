@@ -119,12 +119,11 @@ function ESX.Table.Concat(t1, t2)
 end
 
 function ESX.Table.Join(t, sep)
-	local sep = sep or ','
 	local str = ''
 
 	for i = 1, #t, 1 do
 		if i > 1 then
-			str = str .. sep
+			str = str .. (sep or ',')
 		end
 
 		str = str .. t[i]
