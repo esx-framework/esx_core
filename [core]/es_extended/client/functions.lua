@@ -401,8 +401,8 @@ function ESX.Game.DeleteObject(object)
     DeleteObject(object)
 end
 
-function ESX.Game.SpawnVehicle(model, coords, heading, cb, networked)
-    local model = type(model) == 'number' and model or joaat(model)
+function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
+    local model = type(vehicleModel) == 'number' and vehicleModel or joaat(vehicleModel)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
 
