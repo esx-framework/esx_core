@@ -401,8 +401,8 @@ function ESX.Game.DeleteObject(object)
     DeleteObject(object)
 end
 
-function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
+function ESX.Game.SpawnVehicle(model, coords, heading, cb, networked)
+    local model = type(model) == 'number' and model or joaat(model)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
 
@@ -1087,17 +1087,11 @@ function ESX.ShowInventory()
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
-            local ammo, label = GetAmmoInPedWeapon(playerPed, weaponHash)
-
-            if v.ammo then
-                label = ('%s - %s %s'):format(v.label, ammo, v.ammo.label)
-            else
-                label = v.label
-            end
+            local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 
             elements[#elements+1] = {
                 icon = 'fas fa-gun',
-                title = label,
+                title = v.ammo and ('%s - %s %s'):format(v.label, ammo, v.ammo.label) or v.label,
                 count = 1,
                 type = 'item_weapon',
                 value = v.name,
@@ -1118,10 +1112,10 @@ function ESX.ShowInventory()
 
     ESX.CloseContext()
 
-    ESX.OpenContext("right", elements, function(menu,element)
+    ESX.OpenContext("right", elements, function(_, element)
         local player, distance = ESX.Game.GetClosestPlayer()
 
-        elements2 = {}
+        local elements2 = {}
 
         if element.usable then
             elements2[#elements2+1] = {
@@ -1169,7 +1163,7 @@ function ESX.ShowInventory()
             action = 'return'
         }
 
-        ESX.OpenContext("right", elements2, function(menu2,element2)
+        ESX.OpenContext("right", elements2, function(_, element2)
             local item, type = element2.value, element2.type
 
             if element2.action == "give" then
@@ -1177,7 +1171,7 @@ function ESX.ShowInventory()
 
                 if #playersNearby > 0 then
                     local players = {}
-                    elements3 = {
+                    local elements3 = {
                         {unselectable = true, icon = "fas fa-users", title = "Nearby Players"}
                     }
 
@@ -1194,7 +1188,7 @@ function ESX.ShowInventory()
                             }
                         end
 
-                        ESX.OpenContext("right", elements3, function(menu3,element3)
+                        ESX.OpenContext("right", elements3, function(_, element3)
                             local selectedPlayer, selectedPlayerId = GetPlayerFromServerId(element3.playerId), element3.playerId
                             playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
                             playersNearby = ESX.Table.Set(playersNearby)
@@ -1213,7 +1207,7 @@ function ESX.ShowInventory()
                                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                                         }
 
-                                        ESX.OpenContext("right", elementsG, function(menuG,elementG)
+                                        ESX.OpenContext("right", elementsG, function(menuG, _)
                                             local quantity = tonumber(menuG.eles[2].inputValue)
 
                                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1252,7 +1246,7 @@ function ESX.ShowInventory()
                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                         }
 
-                        ESX.OpenContext("right", elementsR, function(menuR,elementR)
+                        ESX.OpenContext("right", elementsR, function(menuR, _)
                             local quantity = tonumber(menuR.eles[2].inputValue)
 
                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1287,7 +1281,7 @@ function ESX.ShowInventory()
                                 {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                             }
 
-                            ESX.OpenContext("right", elementsGA, function(menuGA,elementGA)
+                            ESX.OpenContext("right", elementsGA, function(menuGA, _)
                                 local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then
