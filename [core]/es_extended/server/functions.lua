@@ -454,7 +454,7 @@ function Core.IsPlayerAdmin(playerId)
 	local xPlayer = ESX.Players[playerId]
 
 	if xPlayer then
-		if xPlayer.group == 'admin' then
+		if Config.AdminGroups[xPlayer.group] then
 			return true
 		end
 	end
