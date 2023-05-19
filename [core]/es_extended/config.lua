@@ -18,6 +18,11 @@ Config.Accounts = {
 
 Config.StartingAccountMoney 	= {bank = 50000}
 
+Config.AdminGroups = {
+	['owner'] = true,
+	['admin'] = true
+}
+
 Config.DefaultSpawn 			= {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
 
 Config.EnablePaycheck			= true -- enable paycheck
