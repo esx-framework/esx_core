@@ -977,7 +977,6 @@ Config.Weapons = {
 				}
 	},
 	{name = 'WEAPON_METALDETECTOR', label = TranslateCap('weapon_metaldetector'), components = {}},
-	,
 	{name = 'WEAPON_PISTOLXM3', label = TranslateCap('weapon_pistolxm3'), ammo = {label = TranslateCap('ammo_rounds'), hash = `AMMO_PISTOL`}, tints = Config.DefaultWeaponTints,
 				components = {
 						{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_PISTOLXM3_CLIP_01`},
