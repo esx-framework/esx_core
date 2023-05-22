@@ -77,7 +77,7 @@ function ESX.DumpTable(table, nb)
 		end
 
 		s = '{\n'
-		for k,v in pairs(table) do
+		for k, v in pairs(table) do
 			if type(k) ~= 'number' then k = '"'..k..'"' end
 			for i = 1, nb, 1 do
 				s = s .. "    "

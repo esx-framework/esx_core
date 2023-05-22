@@ -84,10 +84,10 @@ RegisterNUICallback("closed",function(data,cb)
 	Closed()
 end)
 
-RegisterNUICallback("selected",function(data)
+RegisterNUICallback("selected",function(data,cb)
 	if not activeMenu
 	or not activeMenu.onSelect
-	or not data.index 
+	or not data.index
 	then
 		return
 	end
@@ -96,17 +96,18 @@ RegisterNUICallback("selected",function(data)
 	local ele = activeMenu.eles[index]
 
 	if not ele
-	or ele.input 
+	or ele.input
 	then
 		return
 	end
 
 	activeMenu:onSelect(ele)
+	if cb then cb('ok') end
 end)
 
-RegisterNUICallback("changed",function(data)
+RegisterNUICallback("changed",function(data,cb)
 	if not activeMenu
-	or not data.index 
+	or not data.index
 	or not data.value
 	then
 		return
@@ -116,7 +117,7 @@ RegisterNUICallback("changed",function(data)
 	local ele = activeMenu.eles[index]
 
 	if not ele
-	or not ele.input 
+	or not ele.input
 	then
 		return
 	end
@@ -136,13 +137,14 @@ RegisterNUICallback("changed",function(data)
 	elseif ele.inputType == "radio" then
 		ele.inputValue = data.value
 	end
+	if cb then cb('ok') end
 end)
 
 -- Keybind
 
 local function focusPreview()
 	if not activeMenu
-	or not activeMenu.onSelect 
+	or not activeMenu.onSelect
 	then
 		return
 	end

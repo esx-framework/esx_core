@@ -4,12 +4,13 @@ if ESX.GetConfig().Multichar then
 
 	CreateThread(function()
 		while not ESX.PlayerLoaded do
-			Wait(0)
+			Wait(100)
+			
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
 				while not GetResourceState('esx_context') == 'started' do
-					Wait(0)
+					Wait(100)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
 				break
@@ -95,7 +96,7 @@ if ESX.GetConfig().Multichar then
 	end
 
 	SetupCharacter = function(index)
-		if spawned == false then
+		if not spawned then
 			exports.spawnmanager:spawnPlayer({
 				x = Config.Spawn.x,
 				y = Config.Spawn.y,
@@ -158,9 +159,9 @@ if ESX.GetConfig().Multichar then
 	end
 
 	function CharacterOptions(Characters, slots, SelectedCharacter)
-		local elements = {{title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true}, 
+		local elements = {{title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true},
 		{title = TranslateCap('return'), unselectable = false,icon = "fa-solid fa-arrow-left",description = TranslateCap('return_description'), action = "return"}}
-		if not Characters[SelectedCharacter.value].disabled then 
+		if not Characters[SelectedCharacter.value].disabled then
 			elements[3] = {title = TranslateCap('char_play'), description = TranslateCap('char_play_description'), icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
 		else
 			elements[3] = {title = TranslateCap('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description = TranslateCap('char_disabled_description'),}
@@ -184,11 +185,11 @@ if ESX.GetConfig().Multichar then
 	function SelectCharacterMenu(Characters, slots)
 		local Character = next(Characters)
 		local elements = {{title = TranslateCap('select_char') , icon = "fa-solid fa-users", description =  TranslateCap('select_char_description') , unselectable = true}}
-		for k,v in pairs(Characters) do
+		for k, v in pairs(Characters) do
 			if not v.model and v.skin then
 				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 			end
-			if spawned == false then SetupCharacter(Character) end
+			if not spawned then SetupCharacter(Character) end
 			local label = v.firstname..' '..v.lastname
 			if Characters[k].disabled then
 				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
@@ -318,7 +319,7 @@ if ESX.GetConfig().Multichar then
 
 	if Config.Relog then
 		RegisterCommand('relog', function(source, args, rawCommand)
-			if canRelog == true then
+			if canRelog then
 				canRelog = false
 				TriggerServerEvent('esx_multicharacter:relog')
 				ESX.SetTimeout(10000, function()

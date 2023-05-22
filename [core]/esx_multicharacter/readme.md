@@ -1,13 +1,8 @@
-<h1 align='center'>[ESX] Multi-Character</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+<h1 align='center'>[ESX] Multi-Character</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://documentation.esx-framework.org/'>Documentation</a></b></h5>
 
-A Simple, Easy to Use resource, that allows Players to have multiple Characters, which can be configured to All players with the `Config.Slots` or To each Player personally using the `setslots`, `remslots`, `enablechar` and `disablechar` Commands :)
+A Simplistic system, that allows Players to have multiple Characters, which can be customised for all player with `Config.Slots` or personally set a players character count using `setslots`, `remslots`, `enablechar` and `disablechar` Commands :)
 
-![Preview](https://i.imgur.com/iAlNnM8.png)
-
-## Relogging
-
-- Do not enable this setting if you do not intend to properly set up relog support
-- Requires the latest update for ESX Status (prevents multiple status ticks from running)
+![Preview](https://i.imgur.com/EAHImD0.png)
 
 ## Notes
 
@@ -16,14 +11,17 @@ A Simple, Easy to Use resource, that allows Players to have multiple Characters,
 
 ## Kashacters
 
-- This project is forked from the [kashacters multicharacter resource](https://github.com/FiveEYZ/esx_kashacter)
+- This project is forked from the [Kashacters resource](https://github.com/FiveEYZ/esx_kashacter)
 - Most of the code has been entirely rewritten
 - KASH has given permission for this resource to use his code and the addition of a license
 - The license obviously does not apply to previous versions and KASH has stated his resource is free to be used however
 
-## Notice
+<br>
+<table><tr><td><h4 align='center'>Legal Notices</h4></tr></td>
+<tr><td>
+Official Multi-Character system for ESX Legacy
 
-Copyright © 2023 [Linden](https://github.com/thelindat/), ESX-Framework (fournier Brice & Jérémie N'gadi) and KASH
+Copyright © 2022-2023 Linden, ESX-Framework and KASH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,3 +35,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses>.
+</td></tr></table>

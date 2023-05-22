@@ -1,23 +1,26 @@
-if not ESX then
-	error('\n^1Unable to start Multicharacter - you must be using ESX Legacy^0')
-elseif ESX.GetConfig().Multichar == true then
-	local DATABASE do
-		local connectionString = GetConvar('mysql_connection_string', '');
-		if connectionString == '' then
-			error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
-		elseif connectionString:find('mysql://') then
-			connectionString = connectionString:sub(9, -1)
-			DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
-		else
-			connectionString = {string.strsplit(';', connectionString)}
-			for i = 1, #connectionString do
-				local v = connectionString[i]
-				if v:match('database') then
-					DATABASE = v:sub(10, #v)
-				end
+local databaseConnected = false
+local databaseFound = false
+local oneSyncState = GetConvar('onesync', 'off')
+
+local DATABASE do
+	local connectionString = GetConvar('mysql_connection_string', '');
+	if connectionString == '' then
+		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
+	elseif connectionString:find('mysql://') then
+		connectionString = connectionString:sub(9, -1)
+		DATABASE = connectionString:sub(connectionString:find('/')+1, -1):gsub('[%?]+[%w%p]*$', '')
+		databaseFound = true
+	else
+		connectionString = {string.strsplit(';', connectionString)}
+		for i = 1, #connectionString do
+			local v = connectionString[i]
+			if v:match('database') then
+				DATABASE = v:sub(10, #v)
 			end
 		end
+		databaseFound = true
 	end
+end
 
 	local DB_TABLES = {users = 'identifier'}
 	local FETCH = nil
@@ -26,6 +29,10 @@ elseif ESX.GetConfig().Multichar == true then
 	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
+		local fxDk = GetConvarInt('sv_fxdkMode', 0)
+		if fxDk == 1 then
+			return "ESX-DEBUG-LICENCE"
+		end
 		local identifier = PRIMARY_IDENTIFIER..':'
 		for _, v in pairs(GetPlayerIdentifiers(source)) do
 			if string.match(v, identifier) then
@@ -92,10 +99,26 @@ elseif ESX.GetConfig().Multichar == true then
 	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
+		if oneSyncState == "off" or oneSyncState == "legacy" then
+			return deferrals.done(('[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s'):format(oneSyncState))
+		end
+
+		if not databaseFound then
+			deferrals.done('[ESX] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg')
+		end
+
+		if not databaseConnected then
+			deferrals.done('[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
+		end
 
 		if identifier then
-			if ESX.Players[identifier] then
-				deferrals.done(('A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
+			
+			if not ESX.GetConfig().EnableDebug then
+				if ESX.Players[identifier] then
+					deferrals.done(('[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s'):format(PRIMARY_IDENTIFIER, identifier))
+				else
+					deferrals.done()
+				end
 			else
 				deferrals.done()
 			end
@@ -111,7 +134,7 @@ elseif ESX.GetConfig().Multichar == true then
 		local count = 0
 
 		for table, column in pairs(DB_TABLES) do
-			count += 1
+			count = count +  1
 			queries[count] = {query = query:format(table, column), values = {identifier}}
 		end
 
@@ -137,11 +160,12 @@ elseif ESX.GetConfig().Multichar == true then
 			local count = 0
 
 			for i = 1, #DB_COLUMNS do
-				local v = DB_COLUMNS[i]
+				local column = DB_COLUMNS[i]
+				DB_TABLES[column.TABLE_NAME] = column.COLUMN_NAME
 
-				if v?.CHARACTER_MAXIMUM_LENGTH ~= length then
-					count += 1
-					columns[v.TABLE_NAME] = v.COLUMN_NAME
+				if column?.CHARACTER_MAXIMUM_LENGTH ~= length then
+					count = count + 1
+					columns[column.TABLE_NAME] = column.COLUMN_NAME
 				end
 			end
 
@@ -175,6 +199,7 @@ elseif ESX.GetConfig().Multichar == true then
 			until next(ESX.Jobs)
 
 			FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
+			databaseConnected = true
 		end
 	end)
 
@@ -216,7 +241,3 @@ elseif ESX.GetConfig().Multichar == true then
 		local source = source
 		TriggerEvent('esx:playerLogout', source)
 	end)
-
-	else
-		assert(nil, '^3WARNING: Multicharacter is disabled - please check your ESX configuration^0')
-	end

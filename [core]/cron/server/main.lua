@@ -2,11 +2,11 @@ local Jobs = {}
 local LastTime = nil
 
 function RunAt(h, m, cb)
-	table.insert(Jobs, {
+	Jobs[#Jobs + 1] = {
 		h  = h,
 		m  = m,
 		cb = cb
-	})
+	}
 end
 
 function GetTime()
@@ -20,7 +20,7 @@ end
 
 function OnTime(d, h, m)
 
-	for i=1, #Jobs, 1 do
+	for i = 1, #Jobs, 1 do
 		if Jobs[i].h == h and Jobs[i].m == m then
 			Jobs[i].cb(d, h, m)
 		end
