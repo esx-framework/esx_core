@@ -223,10 +223,10 @@ Locales["hu"] = {
 	["weapon_tactilerifle"] = "Service Carbine",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',
-	['weapon_acidpackage'] = 'Acid Package',
-	['weapon_pistolxm3'] = 'WM 29 Pistol',
-	['weapon_railgunxm3'] = 'Railgun',
+	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun', -- not translated
 
 	-- Thrown
 	["weapon_ball"] = "Baseball",
