@@ -159,9 +159,9 @@ if ESX.GetConfig().Multichar then
 	end
 
 	function CharacterOptions(Characters, slots, SelectedCharacter)
-		local elements = {{title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true}, 
+		local elements = {{title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true},
 		{title = TranslateCap('return'), unselectable = false,icon = "fa-solid fa-arrow-left",description = TranslateCap('return_description'), action = "return"}}
-		if not Characters[SelectedCharacter.value].disabled then 
+		if not Characters[SelectedCharacter.value].disabled then
 			elements[3] = {title = TranslateCap('char_play'), description = TranslateCap('char_play_description'), icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
 		else
 			elements[3] = {title = TranslateCap('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description = TranslateCap('char_disabled_description'),}
@@ -185,7 +185,7 @@ if ESX.GetConfig().Multichar then
 	function SelectCharacterMenu(Characters, slots)
 		local Character = next(Characters)
 		local elements = {{title = TranslateCap('select_char') , icon = "fa-solid fa-users", description =  TranslateCap('select_char_description') , unselectable = true}}
-		for k,v in pairs(Characters) do
+		for k, v in pairs(Characters) do
 			if not v.model and v.skin then
 				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 			end

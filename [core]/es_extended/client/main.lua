@@ -76,11 +76,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	if Config.DisableVehicleSeatShuff then
-		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat)
+		AddEventHandler('esx:enteredVehicle', function(vehicle, _, seat)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-			end	
+			end
 		end)
 	end
 
@@ -174,7 +174,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			'WORLD_HUMAN_PAPARAZZI'
 		}
 		
-		for i, v in pairs(scenarios) do
+		for _, v in pairs(scenarios) do
 			SetScenarioTypeEnabled(v, false)
 		end
 	end
@@ -218,7 +218,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		local ammoTypes = {}
 		RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-		for k, v in ipairs(ESX.PlayerData.loadout) do
+		for _, v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
 			local weaponHash = joaat(weaponName)
 
@@ -227,7 +227,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 			local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
 
-			for k2, v2 in ipairs(v.components) do
+			for _, v2 in ipairs(v.components) do
 				local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
 				GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
 			end
@@ -241,9 +241,9 @@ AddEventHandler('esx:restoreLoadout', function()
 end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
-AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
+	if not value then
+		return
 	end
 
     local netId = bagName:gsub('entity:', '')
@@ -254,12 +254,12 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	        return
 	    end
     end
-	
+
     local vehicle = NetToVeh(tonumber(netId))
-    local timer = GetGameTimer()
+    local timer2 = GetGameTimer()
     while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
         Wait(0)
-	    if GetGameTimer() - timer > 10000 then
+	    if GetGameTimer() - timer2 > 10000 then
 	        return
 	    end
     end
@@ -315,17 +315,17 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
-	AddEventHandler('esx:addWeapon', function(weapon, ammo)
+	AddEventHandler('esx:addWeapon', function()
 		print("[^1ERROR^7] event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:addWeaponComponent')
-	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
+	AddEventHandler('esx:addWeaponComponent', function()
 		print("[^1ERROR^7] event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponAmmo')
-	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
+	AddEventHandler('esx:setWeaponAmmo', function()
 		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
 	end)
 
@@ -338,7 +338,7 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:removeWeapon')
 	AddEventHandler('esx:removeWeapon', function(weapon)
 		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(ESX.PlayerData.ped, joaat(weapon))
+		RemoveWeaponFromPed(playerPed, joaat(weapon))
 		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
 	end)
 
@@ -377,7 +377,7 @@ if not Config.OxInventory then
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
-			for k, v in ipairs(components) do
+			for _, v in ipairs(components) do
 				local component = ESX.GetWeaponComponent(name, v)
 				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 			end
@@ -468,7 +468,7 @@ if not Config.OxInventory then
 		while true do
 			local Sleep = 1500
 			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
+			local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
 			for pickupId, pickup in pairs(pickups) do
 				local distance = #(playerCoords - pickup.coords)
@@ -522,82 +522,82 @@ AddEventHandler("esx:tpm", function()
 	local GetBlipInfoIdCoord = GetBlipInfoIdCoord
 	local GetVehiclePedIsIn = GetVehiclePedIsIn
 
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
-		if not admin then
-			return
-		end
-		local blipMarker = GetFirstBlipInfoId(8)
-		if not DoesBlipExist(blipMarker) then
-			ESX.ShowNotification(TranslateCap('tpm_nowaypoint'), true, false, 140)
-			return 'marker'
+	local admin = ESX.TriggerServerCallback.Await("esx:isUserAdmin")
+	if not admin then
+		return
+	end
+
+	local blipMarker = GetFirstBlipInfoId(8)
+	if not DoesBlipExist(blipMarker) then
+		ESX.ShowNotification(TranslateCap('tpm_nowaypoint'), true, false, 140)
+		return 'marker'
+	end
+
+	-- Fade screen to hide how clients get teleported.
+	DoScreenFadeOut(650)
+	while not IsScreenFadedOut() do
+		Wait(0)
+	end
+
+	local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	local oldCoords = GetEntityCoords(ped)
+
+	-- Unpack coords instead of having to unpack them while iterating.
+	-- 825.0 seems to be the max a player can reach while 0.0 being the lowest.
+	local x, y, groundZ, Z_START = coords['x'], coords['y'], 850.0, 950.0
+	local found = false
+	FreezeEntityPosition(vehicle > 0 and vehicle or ped, true)
+
+	for i = Z_START, 0, -25.0 do
+		local z = i
+		if (i % 2) ~= 0 then
+			z = Z_START - i
 		end
 
-		-- Fade screen to hide how clients get teleported.
-		DoScreenFadeOut(650)
-		while not IsScreenFadedOut() do
+		NewLoadSceneStart(x, y, z, x, y, z, 50.0, 0)
+		local curTime = GetGameTimer()
+		while IsNetworkLoadingScene() do
+			if GetGameTimer() - curTime > 1000 then
+				break
+			end
 			Wait(0)
 		end
+		NewLoadSceneStop()
+		SetPedCoordsKeepVehicle(ped, x, y, z)
 
-		local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
-		local vehicle = GetVehiclePedIsIn(ped, false)
-		local oldCoords = GetEntityCoords(ped)
-
-		-- Unpack coords instead of having to unpack them while iterating.
-		-- 825.0 seems to be the max a player can reach while 0.0 being the lowest.
-		local x, y, groundZ, Z_START = coords['x'], coords['y'], 850.0, 950.0
-		local found = false
-		FreezeEntityPosition(vehicle > 0 and vehicle or ped, true)
-
-		for i = Z_START, 0, -25.0 do
-			local z = i
-			if (i % 2) ~= 0 then
-				z = Z_START - i
-			end
-
-			NewLoadSceneStart(x, y, z, x, y, z, 50.0, 0)
-			local curTime = GetGameTimer()
-			while IsNetworkLoadingScene() do
-				if GetGameTimer() - curTime > 1000 then
-					break
-				end
-				Wait(0)
-			end
-			NewLoadSceneStop()
-			SetPedCoordsKeepVehicle(ped, x, y, z)
-
-			while not HasCollisionLoadedAroundEntity(ped) do
-				RequestCollisionAtCoord(x, y, z)
-				if GetGameTimer() - curTime > 1000 then
-					break
-				end
-				Wait(0)
-			end
-
-			-- Get ground coord. As mentioned in the natives, this only works if the client is in render distance.
-			found, groundZ = GetGroundZFor_3dCoord(x, y, z, false)
-			if found then
-				Wait(0)
-				SetPedCoordsKeepVehicle(ped, x, y, groundZ)
+		while not HasCollisionLoadedAroundEntity(ped) do
+			RequestCollisionAtCoord(x, y, z)
+			if GetGameTimer() - curTime > 1000 then
 				break
 			end
 			Wait(0)
 		end
 
-		-- Remove black screen once the loop has ended.
-		DoScreenFadeIn(650)
-		FreezeEntityPosition(vehicle > 0 and vehicle or ped, false)
-
-		if not found then
-			-- If we can't find the coords, set the coords to the old ones.
-			-- We don't unpack them before since they aren't in a loop and only called once.
-			SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
-			ESX.ShowNotification(TranslateCap('tpm_success'), true, false, 140)
+		-- Get ground coord. As mentioned in the natives, this only works if the client is in render distance.
+		found, groundZ = GetGroundZFor_3dCoord(x, y, z, false)
+		if found then
+			Wait(0)
+			SetPedCoordsKeepVehicle(ped, x, y, groundZ)
+			break
 		end
+		Wait(0)
+	end
 
-		-- If Z coord was found, set coords in found coords.
-		SetPedCoordsKeepVehicle(ped, x, y, groundZ)
+	-- Remove black screen once the loop has ended.
+	DoScreenFadeIn(650)
+	FreezeEntityPosition(vehicle > 0 and vehicle or ped, false)
+
+	if not found then
+		-- If we can't find the coords, set the coords to the old ones.
+		-- We don't unpack them before since they aren't in a loop and only called once.
+		SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
 		ESX.ShowNotification(TranslateCap('tpm_success'), true, false, 140)
-	end)
+	end
+
+	-- If Z coord was found, set coords in found coords.
+	SetPedCoordsKeepVehicle(ped, x, y, groundZ)
+	ESX.ShowNotification(TranslateCap('tpm_success'), true, false, 140)
 end)
 
 local noclip = false
@@ -646,24 +646,23 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip")
-AddEventHandler("esx:noclip", function(input)
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
-		if not admin then
-			return
-		end
+AddEventHandler("esx:noclip", function()
+	local admin = ESX.TriggerServerCallback.Await("esx:isUserAdmin")
+	if not admin then
+		return
+	end
 
-		if not noclip then
-			noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
-			heading = GetEntityHeading(ESX.PlayerData.ped)
-		end
+	if not noclip then
+		noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
+		heading = GetEntityHeading(ESX.PlayerData.ped)
+	end
 
-		noclip = not noclip
-		if noclip then
-			CreateThread(noclipThread)
-		end
+	noclip = not noclip
+	if noclip then
+		CreateThread(noclipThread)
+	end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
-	end)
+	ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
 end)
 
 RegisterNetEvent("esx:killPlayer")
