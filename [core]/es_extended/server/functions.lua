@@ -348,6 +348,14 @@ function ESX.RefreshJobs()
   end
 end
 
+function ESX.RefreshItems()
+  if Config.OxInventory then return end
+  local items = MySQL.query.await('SELECT * FROM items')
+  for k, v in ipairs(items) do
+    ESX.Items[v.name] = {label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove}
+  end 
+end
+
 function ESX.RegisterUsableItem(item, cb)
   Core.UsableItemsCallbacks[item] = cb
 end
