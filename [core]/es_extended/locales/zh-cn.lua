@@ -222,6 +222,12 @@ Locales['zh-cn'] = {
 	['weapon_precisionrifle'] = '精确步枪',
 	['weapon_tactilerifle'] = '制式卡宾步枪',
 
+	-- Drug Wars DLC
+	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun', -- not translated
+
 	-- Thrown
 	['weapon_ball'] = '棒球',
 	['weapon_bzgas'] = '毒气弹',
