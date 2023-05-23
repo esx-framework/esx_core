@@ -222,6 +222,12 @@ Locales['de'] = {
 	['weapon_precisionrifle'] = 'Präzisionsgewehr',
 	['weapon_tactilerifle'] = 'Service Karabiner',
 
+	-- Drug Wars DLC
+	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun', -- not translated
+
 	-- Thrown
 	['weapon_ball'] = 'Baseball',
 	['weapon_bzgas'] = 'BZ Gas',

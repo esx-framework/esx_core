@@ -976,5 +976,18 @@ Config.Weapons = {
 						{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_PRECISIONRIFLE_CLIP_01`},
 				}
 	},
-	{name = 'WEAPON_METALDETECTOR', label = TranslateCap('weapon_metaldetector'), components = {}}
+	{name = 'WEAPON_METALDETECTOR', label = TranslateCap('weapon_metaldetector'), components = {}},
+	{name = 'WEAPON_PISTOLXM3', label = TranslateCap('weapon_pistolxm3'), ammo = {label = TranslateCap('ammo_rounds'), hash = `AMMO_PISTOL`}, tints = Config.DefaultWeaponTints,
+				components = {
+						{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_PISTOLXM3_CLIP_01`},
+						{name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_PISTOLXM3_SUPP`}
+				}
+	},
+	{name = 'WEAPON_ACIDPACKAGE', label = TranslateCap('weapon_acidpackage'), components = {}},
+	{name = 'WEAPON_CANDYCANE', label = TranslateCap('weapon_candycane'), components = {}},
+	{name = 'WEAPON_RAILGUNXM3', label = TranslateCap('weapon_railgunxm3'), ammo = {label = TranslateCap('ammo_rounds'), hash = `AMMO_RAILGUN`}, tints = Config.DefaultWeaponTints, 
+				components = {
+						{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_RAILGUNXM3_CLIP_01`},
+				},
+	},
 }

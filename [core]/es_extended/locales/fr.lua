@@ -196,6 +196,12 @@ Locales['fr'] = {
 	['component_grip'] = 'poignée',
 	['component_luxary_finish'] = 'finition de luxe',
 
+	-- Drug Wars DLC
+	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun', -- not translated
+
 	-- Weapon Ammo
 	['ammo_rounds'] = 'cartouche(s)',
 	['ammo_shells'] = 'obus',
