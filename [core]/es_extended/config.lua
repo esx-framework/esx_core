@@ -19,12 +19,12 @@ Config.Accounts = {
 Config.StartingAccountMoney 	= {bank = 50000}
 
 
-Config.Spawns = { -- Default spawn locations are currently set to locations on San Andreas Avenue near the intersection of Strawberry Avenue at Legion Square
+Config.Spawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
     {x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0},
-    {x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
-    {x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
-    {x = 230.6051, y = -867.1450, z = 30.2922, heading = 1.0},
-    {x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
+    --{x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
+    --{x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
+    --{x = 230.6051, y = -867.1450, z = 30.2922, heading = 1.0},
+    --{x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
 }
 
 Config.AdminGroups = {
