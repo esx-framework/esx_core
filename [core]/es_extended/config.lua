@@ -19,7 +19,7 @@ Config.Accounts = {
 Config.StartingAccountMoney 	= {bank = 50000}
 
 
-Config.Spawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
+Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
     {x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0},
     --{x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
     --{x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
