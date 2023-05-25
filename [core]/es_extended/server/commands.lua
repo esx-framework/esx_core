@@ -159,7 +159,7 @@ ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showE
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_removeaccountmoney_invalid'))
 	end
-	args.playerId.removeaccountmoney(args.account, args.amount, "Government Tax")
+	args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Remove Account Money /removeaccountmoney Triggered!", "pink", {
 			{name = "Player", value = xPlayer.name, inline = true},
