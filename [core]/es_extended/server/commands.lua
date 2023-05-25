@@ -155,6 +155,26 @@ end, true, {help = TranslateCap('command_giveaccountmoney'), validate = true, ar
 	{name = 'amount', help = TranslateCap('command_giveaccountmoney_amount'), type = 'number'}
 }})
 
+ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showError)
+	if not args.playerId.getAccount(args.account) then
+		return showError(TranslateCap('command_removeaccountmoney_invalid'))
+	end
+	args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
+	if Config.AdminLogging then
+		ESX.DiscordLogFields("UserActions", "Remove Account Money /removeaccountmoney Triggered!", "pink", {
+			{name = "Player", value = xPlayer.name, inline = true},
+			{name = "ID", value = xPlayer.source, inline = true},
+			{name = "Target", value = args.playerId.name, inline = true},
+			{name = "Account", value = args.account, inline = true},
+			{name = "Amount", value = args.amount, inline = true},
+		})
+	end
+end, true, {help = TranslateCap('command_removeaccountmoney'), validate = true, arguments = {
+	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
+	{name = 'account', help = TranslateCap('command_removeaccountmoney_account'), type = 'string'},
+	{name = 'amount', help = TranslateCap('command_removeaccountmoney_amount'), type = 'number'}
+}})
+
 if not Config.OxInventory then
 	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, _)
 		args.playerId.addInventoryItem(args.item, args.count)
