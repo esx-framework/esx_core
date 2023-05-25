@@ -18,6 +18,7 @@ Config.Accounts = {
 
 Config.StartingAccountMoney 	= {bank = 50000}
 
+
 Config.Spawns = { -- Default spawn locations are currently set to locations on San Andreas Avenue near the intersection of Strawberry Avenue at Legion Square
     {x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0},
     {x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
@@ -25,6 +26,12 @@ Config.Spawns = { -- Default spawn locations are currently set to locations on S
     {x = 230.6051, y = -867.1450, z = 30.2922, heading = 1.0},
     {x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
 }
+
+Config.AdminGroups = {
+	['owner'] = true,
+	['admin'] = true
+}
+
 
 Config.EnablePaycheck			= true -- enable paycheck
 Config.LogPaycheck				= false -- Logs paychecks to a nominated Discord channel via webhook (default is false)

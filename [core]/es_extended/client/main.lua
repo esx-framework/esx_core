@@ -76,7 +76,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	if Config.DisableVehicleSeatShuff then
-		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat)
+		AddEventHandler('esx:enteredVehicle', function(vehicle, _, seat)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
@@ -241,7 +241,7 @@ AddEventHandler('esx:restoreLoadout', function()
 end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
-AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
 	if not value then
 		return
 	end
@@ -254,12 +254,12 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	        return
 	    end
     end
-	
+
     local vehicle = NetToVeh(tonumber(netId))
-    local timer = GetGameTimer()
+    local timer2 = GetGameTimer()
     while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
         Wait(0)
-	    if GetGameTimer() - timer > 10000 then
+	    if GetGameTimer() - timer2 > 10000 then
 	        return
 	    end
     end
