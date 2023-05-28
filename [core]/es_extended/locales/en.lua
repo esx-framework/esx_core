@@ -112,8 +112,6 @@ Locales['en'] = {
   ['command_giveammo_noweapon_found'] = '%s does not have that weapon',
   ['command_giveammo_weapon'] = 'Weapon name',
   ['command_giveammo_ammo'] = 'Ammo Quantity',
-  ['command_refreshjobs'] = 'Refresh The ESX Jobs Table',
-  ['command_refreshitems'] = 'Refresh The ESX Items Table',
   ['tpm_nowaypoint'] = 'No Waypoint Set.',
   ['tpm_success'] = 'Successfully Teleported',
 
