@@ -356,26 +356,6 @@ function ESX.RefreshJobs()
 	end
 end
 
-function ESX.RefreshItems()
-	if not Config.OxInventory then
-		ESX.Items = {}
-		local items = MySQL.query.await('SELECT * FROM items')
-		for k, v in ipairs(items) do
-			ESX.Items[v.name] = {label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove}
-		end
-	else
-		TriggerEvent('__cfx_export_ox_inventory_Items', function(ref)
-			if ref then
-				ESX.Items = ref()
-			end
-		end)
-
-		AddEventHandler('ox_inventory:itemList', function(items)
-			ESX.Items = items
-		end)
-	end
-end
-
 function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end

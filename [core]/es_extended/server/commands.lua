@@ -281,11 +281,7 @@ end, true, {help = TranslateCap('command_clearall')})
 
 ESX.RegisterCommand("refreshjobs", 'admin', function(xPlayer, _, _)
 	ESX.RefreshJobs()
-end, true, {help = TranslateCap('command_refreshjobs')})
-
-ESX.RegisterCommand("refreshitems", 'admin', function(xPlayer, args, showError)
-	ESX.RefreshItems()
-end, true, {help = TranslateCap('command_refreshitems')})
+end, true, {help = TranslateCap('command_clearall')})
 
 if not Config.OxInventory then
 	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, _)
