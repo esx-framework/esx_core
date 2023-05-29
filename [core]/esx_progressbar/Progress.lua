@@ -1,4 +1,5 @@
 local CurrentProgress = nil
+
 local function Progressbar(message,length,Options)
     if CurrentProgress then
         return false
@@ -34,9 +35,8 @@ local function Progressbar(message,length,Options)
     end
 end
 
-ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", function()
+local function CancelProgressbar()
     if not CurrentProgress then return end
-    if not CurrentProgress.onCancel then return end
     SendNUIMessage({
         type = "Close"
     })
@@ -44,7 +44,10 @@ ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", 
     if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
     CurrentProgress.canceled = true
     CurrentProgress.length = 0
-    CurrentProgress.onCancel()
     CurrentProgress = nil
-end)
+end
+
+ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", CancelProgressbar)
+
 exports('Progressbar', Progressbar)
+exports('CancelProgressbar', CancelProgressbar)
