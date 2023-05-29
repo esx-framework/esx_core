@@ -251,7 +251,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 	end
 
 	-- Position
-	userData.coords = json.decode(result.position) or Config.DefaultSpawn
+	userData.coords = json.decode(result.position) or Config.DefaultSpawns[math.random(#Config.DefaultSpawns)]
 
 	-- Skin
 	if result.skin and result.skin ~= '' then

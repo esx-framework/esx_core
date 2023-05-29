@@ -18,12 +18,20 @@ Config.Accounts = {
 
 Config.StartingAccountMoney 	= {bank = 50000}
 
+
+Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
+    {x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0},
+    --{x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
+    --{x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
+    --{x = 230.6051, y = -867.1450, z = 30.2922, heading = 1.0},
+    --{x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
+}
+
 Config.AdminGroups = {
 	['owner'] = true,
 	['admin'] = true
 }
 
-Config.DefaultSpawn 			= {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
 
 Config.EnablePaycheck			= true -- enable paycheck
 Config.LogPaycheck				= false -- Logs paychecks to a nominated Discord channel via webhook (default is false)
