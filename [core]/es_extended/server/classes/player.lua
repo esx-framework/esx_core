@@ -47,31 +47,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		SetEntityHeading(Ped, vector.w)
 	end
 
-	function self.updateCoords()
-		SetTimeout(1000,function()
-			local Ped = GetPlayerPed(self.source)
-			if DoesEntityExist(Ped) then
-				local coords = GetEntityCoords(Ped)
-				local distance = #(coords - vector3(self.coords.x, self.coords.y, self.coords.z))
-				if distance > 1.5 then
-					local heading = GetEntityHeading(Ped)
-					self.coords = {
-						x = coords.x,
-						y = coords.y, 
-						z = coords.z, 
-						heading = heading or 0.0
-					}
-				end
-			end
-			self.updateCoords()
-		end)
-	end
-
 	function self.getCoords(vector)
+		local ped = GetPlayerPed(self.source)
+		local coords = GetEntityCoords(ped)
+
 		if vector then
-			return vector3(self.coords.x, self.coords.y, self.coords.z)
+			return coords
 		else
-			return self.coords
+			return {
+				x = coords.x,
+				y = coords.y,
+				z = coords.z,
+			}
 		end
 	end
 
