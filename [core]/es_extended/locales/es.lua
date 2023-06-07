@@ -115,6 +115,12 @@ Locales["es"] = {
 
 	-- Weapons
 
+	-- Drug Wars DLC
+	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun', -- not translated
+
 	-- Melee
 	["weapon_dagger"] = "Daga",
 	["weapon_bat"] = "Bate",
