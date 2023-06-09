@@ -76,11 +76,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	if Config.DisableVehicleSeatShuff then
-		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat)
+		AddEventHandler('esx:enteredVehicle', function(vehicle, _, seat)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-			end	
+			end
 		end)
 	end
 
@@ -174,7 +174,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			'WORLD_HUMAN_PAPARAZZI'
 		}
 		
-		for i, v in pairs(scenarios) do
+		for _, v in pairs(scenarios) do
 			SetScenarioTypeEnabled(v, false)
 		end
 	end
@@ -218,7 +218,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		local ammoTypes = {}
 		RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-		for k, v in ipairs(ESX.PlayerData.loadout) do
+		for _, v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
 			local weaponHash = joaat(weaponName)
 
@@ -227,7 +227,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 			local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
 
-			for k2, v2 in ipairs(v.components) do
+			for _, v2 in ipairs(v.components) do
 				local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
 				GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
 			end
@@ -241,9 +241,9 @@ AddEventHandler('esx:restoreLoadout', function()
 end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
-AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
+	if not value then
+		return
 	end
 
     local netId = bagName:gsub('entity:', '')
@@ -254,12 +254,12 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
 	        return
 	    end
     end
-	
+
     local vehicle = NetToVeh(tonumber(netId))
-    local timer = GetGameTimer()
+    local timer2 = GetGameTimer()
     while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
         Wait(0)
-	    if GetGameTimer() - timer > 10000 then
+	    if GetGameTimer() - timer2 > 10000 then
 	        return
 	    end
     end
@@ -315,17 +315,17 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
-	AddEventHandler('esx:addWeapon', function(weapon, ammo)
+	AddEventHandler('esx:addWeapon', function()
 		print("[^1ERROR^7] event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:addWeaponComponent')
-	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
+	AddEventHandler('esx:addWeaponComponent', function()
 		print("[^1ERROR^7] event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponAmmo')
-	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
+	AddEventHandler('esx:setWeaponAmmo', function()
 		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
 	end)
 
@@ -338,7 +338,7 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:removeWeapon')
 	AddEventHandler('esx:removeWeapon', function(weapon)
 		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(ESX.PlayerData.ped, joaat(weapon))
+		RemoveWeaponFromPed(playerPed, joaat(weapon))
 		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
 	end)
 
@@ -377,7 +377,7 @@ if not Config.OxInventory then
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
-			for k, v in ipairs(components) do
+			for _, v in ipairs(components) do
 				local component = ESX.GetWeaponComponent(name, v)
 				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 			end
@@ -468,7 +468,7 @@ if not Config.OxInventory then
 		while true do
 			local Sleep = 1500
 			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
+			local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
 			for pickupId, pickup in pairs(pickups) do
 				local distance = #(playerCoords - pickup.coords)

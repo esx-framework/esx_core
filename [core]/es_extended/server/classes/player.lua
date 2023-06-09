@@ -116,7 +116,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		local minimalAccounts = {}
 
-		for i=1, #self.accounts do
+		for i = 1, #self.accounts do
 			minimalAccounts[self.accounts[i].name] = self.accounts[i].money
 		end
 
@@ -124,18 +124,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getAccount(account)
-		for i=1, #self.accounts do
+		for i = 1, #self.accounts do
 			if self.accounts[i].name == account then
 				return self.accounts[i]
 			end
 		end
+		return nil
 	end
 
 	function self.getInventory(minimal)
 		if minimal then
 			local minimalInventory = {}
 
-			for k, v in ipairs(self.inventory) do
+			for _, v in ipairs(self.inventory) do
 				if v.count > 0 then
 					minimalInventory[v.name] = v.count
 				end
@@ -157,7 +158,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 		local minimalLoadout = {}
 
-		for k,v in ipairs(self.loadout) do
+		for _, v in ipairs(self.loadout) do
 			minimalLoadout[v.name] = {ammo = v.ammo}
 			if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
 
@@ -190,7 +191,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.setAccountMoney(accountName, money, reason)
 		reason = reason or 'unknown'
-		if not tonumber(money) then 
+		if not tonumber(money) then
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 			return
 		end
@@ -203,17 +204,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 				self.triggerEvent('esx:setAccountMoney', account)
 				TriggerEvent('esx:setAccountMoney', self.source, accountName, money, reason)
-			else 
+			else
 				print(('[^1ERROR^7] Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
-		else 
+		else
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 		end
 	end
 
 	function self.addAccountMoney(accountName, money, reason)
 		reason = reason or 'Unknown'
-		if not tonumber(money) then 
+		if not tonumber(money) then
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 			return
 		end
@@ -221,21 +222,21 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			local account = self.getAccount(accountName)
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[account.index].money += money
+				self.accounts[account.index].money = self.accounts[account.index].money + money
 
 				self.triggerEvent('esx:setAccountMoney', account)
 				TriggerEvent('esx:addAccountMoney', self.source, accountName, money, reason)
-			else 
+			else
 				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
-		else 
+		else
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 		end
 	end
 
 	function self.removeAccountMoney(accountName, money, reason)
 		reason = reason or 'Unknown'
-		if not tonumber(money) then 
+		if not tonumber(money) then
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 			return
 		end
@@ -244,20 +245,20 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[account.index].money -= money
+				self.accounts[account.index].money = self.accounts[account.index].money - money
 
 				self.triggerEvent('esx:setAccountMoney', account)
 				TriggerEvent('esx:removeAccountMoney', self.source, accountName, money, reason)
-			else 
+			else
 				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
 			end
-		else 
+		else
 			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
 		end
 	end
 
 	function self.getInventoryItem(name, metadata)
-		for k,v in ipairs(self.inventory) do
+		for _, v in ipairs(self.inventory) do
 			if v.name == name then
 				return v
 			end
@@ -464,7 +465,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeapon(weaponName)
 		local weaponLabel
 
-		for k,v in ipairs(self.loadout) do
+		for k, v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				weaponLabel = v.label
 
@@ -491,7 +492,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if component then
 				if self.hasWeaponComponent(weaponName, weaponComponent) then
-					for k,v in ipairs(self.loadout[loadoutNum].components) do
+					for k, v in ipairs(self.loadout[loadoutNum].components) do
 						if v == weaponComponent then
 							table.remove(self.loadout[loadoutNum].components, k)
 							break
@@ -518,7 +519,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
-			for k,v in ipairs(weapon.components) do
+			for _, v in ipairs(weapon.components) do
 				if v == weaponComponent then
 					return true
 				end
@@ -531,7 +532,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasWeapon(weaponName)
-		for k,v in ipairs(self.loadout) do
+		for _, v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				return true
 			end
@@ -541,7 +542,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.hasItem(item, metadata)
-		for k,v in ipairs(self.inventory) do
+		for _, v in ipairs(self.inventory) do
 			if (v.name == item) and (v.count >= 1) then
 				return v, v.count
 			end
@@ -551,7 +552,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.getWeapon(weaponName)
-		for k,v in ipairs(self.loadout) do
+		for k, v in ipairs(self.loadout) do
 			if v.name == weaponName then
 				return k, v
 			end
