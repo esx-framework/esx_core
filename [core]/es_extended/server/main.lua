@@ -330,6 +330,14 @@ function loadESXPlayer(identifier, playerId, isNew)
     xPlayer.triggerEvent('esx:createMissingPickups', Core.Pickups)
   else
     exports.ox_inventory:setPlayerInventory(xPlayer, userData.inventory)
+
+    if isNew then
+      for account, money in pairs(Config.StartingAccountMoney) do
+        if account == 'money' or account == 'black_money' then
+          exports.ox_inventory:AddItem(playerId, account, money)
+        end
+      end
+    end
   end
   xPlayer.updateCoords()
   xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
