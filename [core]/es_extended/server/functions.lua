@@ -313,38 +313,35 @@ function ESX.DiscordLogFields(name, title, color, fields)
   })
 end
 
-function ESX.CreateJob(tb)
-  -- tb (table) containing: name (string), label (string) and grades (table)
-  -- grades (table) contains: grade (int), name (string), label (string), salary (int)
-  
-  if tb == nil or next(tb) == nil then
-      return print('[^3WARNING^7] paramter must be a table.')
+--- Create Job at Runtime
+--- @param name string
+--- @param label string
+--- @param grades table
+function ESX.CreateJob(name, label, grades)
+  if not name then
+      return print('[^3WARNING^7] missing argument `name(string)` while creating a job')
   end
   
-  if tb.name == nil then
-      return print('[^3WARNING^7] table must contain name(string) for the job name')
+  if not label then
+      return print('[^3WARNING^7] missing argument `label(string)` while creating a job')
   end
   
-  if tb.label == nil then
-      return print('[^3WARNING^7] table must contain label(string) for the job name label')
-  end
-  
-  if tb.grades == nil or next(tb.grades) == nil then
-      return print('[^3WARNING^7] table must contain grades(table)!')
+  if not grades or not next(grades) then
+      return print('[^3WARNING^7] missing argument `grades(table)` while creating a job!')
   end
 
   local parameters = {}
-  local job = {name = tb.name, label = tb.label, grades = {}}
+  local job = {name = name, label = label, grades = {}}
 
-  for k,v in pairs(tb.grades) do
-      job.grades[tostring(v.grade)] = {job_name = tb.name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {}}
-      parameters[#parameters + 1] = { tb.name, v.grade, v.name, v.label, v.salary}
+  for k,v in pairs(grades) do
+      job.grades[tostring(v.grade)] = {job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {}}
+      parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary}
   end
 
-  MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', {tb.name, tb.label})
+  MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', {name, label})
   MySQL.prepare('INSERT INTO job_grades (job_name, grade, name, label, salary) VALUES (?, ?, ?, ?, ?)', parameters)
   
-  ESX.Jobs[tb.name] = job
+  ESX.Jobs[name] = job
 end
 
 function ESX.RefreshJobs()
