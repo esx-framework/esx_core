@@ -596,7 +596,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
             if (_type == "string") then
                 local value = metadata[subIndex]
-                return value or nil
+                return value
             end
 
             if (_type == "table") then
