@@ -604,7 +604,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
                 for i = 1, #subIndex do
                     local key = subIndex[i]
-                    returnValues[key] = self.getMeta(index, key)
+                    if (type(key) == "string") then
+                        returnValues[key] = self.getMeta(index, key)
+                    else
+                        print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7! that contains ^5string^7, received ^5%s^7!, skipping..."):format(type(key)))
+                    end
                 end
 
                 return returnValues
