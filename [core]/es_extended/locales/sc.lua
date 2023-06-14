@@ -1,5 +1,5 @@
 Locales['sc'] = {
-  -- Inventory
+  -- 背包类
   ['inventory'] = '库存 %s / %s',
   ['use'] = '使用',
   ['give'] = '赠送',
@@ -53,7 +53,7 @@ Locales['sc'] = {
   ['act_imp'] = '操作失败',
   ['in_vehicle'] = '请离开载具',
 
-  -- Commands
+  -- 指令代码
   ['command_bring'] = '传送玩家到你身边',
   ['command_car'] = '生成载具',
   ['command_car_car'] = '生成载具的模型名称或哈希值',
