@@ -579,49 +579,43 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	function self.getMeta(index, subIndex)
-		if index then
+    function self.getMeta(index, subIndex)
+        if not (index) then return self.metadata end
 
-			if type(index) ~= "string" then
-				return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
-			end
+        if type(index) ~= "string" then
+            return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
+        end
 
-			if self.metadata[index] then
+        local metadata = self.metadata[index]
+        if (metadata == nil) then
+            return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
+        end
 
-				if subIndex and type(self.metadata[index]) == "table" then
-					local _type = type(subIndex)
+        if (subIndex and type(metadata) == "table") then
+            local _type = type(subIndex)
 
-					if _type == "string" then
-						if self.metadata[index][subIndex] then
-							return self.metadata[index][subIndex]
-						end
-						return
-					end
+            if (_type == "string") then
+                local value = metadata[subIndex]
+                return value or nil
+            end
 
-					if _type == "table" then
-						local returnValues = {}
-						for i = 1, #subIndex do
-							if self.metadata[index][subIndex[i]] then
-								returnValues[subIndex[i]] = self.metadata[index][subIndex[i]]
-							else
-								print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not esxist on ^5%s^7!"):format(subIndex[i], index))
-							end
-						end
+            if (_type == "table") then
+                local returnValues = {}
 
-						return returnValues
-					end
+                for i = 1, #subIndex do
+                    local key = subIndex[i]
+                    returnValues[key] = self.getMeta(index, key)
+                end
 
-				end
+                return returnValues
+            end
 
-				return self.metadata[index]
-			else
-				return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
-			end
+            return print(("[^1ERROR^7] xPlayer.getMeta subIndexshould be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
+        end
 
-		end
+        return metadata
+    end
 
-		return self.metadata
-	end
 
 	function self.setMeta(index, value, subValue)
 		if not index then
