@@ -615,7 +615,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 				return self.metadata[index]
 			else
-				return
+				return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
 			end
 
 		end
