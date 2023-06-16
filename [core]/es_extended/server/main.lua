@@ -161,8 +161,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     if ESX.DoesJobExist(job, grade) then
         jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
     else
-        print(('[^3WARNING^7] Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]'):format(identifier, job,
-            grade))
+        print(('[^3WARNING^7] Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]'):format(identifier, job, grade))
         job, grade = 'unemployed', '0'
         jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
     end
@@ -307,9 +306,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         userData.metadata = metadata
     end
 
-    local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory,
-        userData.weight, userData.job,
-        userData.loadout, userData.playerName, userData.coords, userData.metadata)
+    local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, userData.playerName, userData.coords, userData.metadata)
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
