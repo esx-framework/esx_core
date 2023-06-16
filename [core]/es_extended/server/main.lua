@@ -352,6 +352,8 @@ AddEventHandler('playerDropped', function(reason)
   if xPlayer then
     TriggerEvent('esx:playerDropped', playerId, reason)
 
+	ExecuteCommand(('remove_principal identifier.%s group.%s'):format(xPlayer.identifier, xPlayer.group))
+
     Core.playersByIdentifier[xPlayer.identifier] = nil
     Core.SavePlayer(xPlayer, function()
       ESX.Players[playerId] = nil
