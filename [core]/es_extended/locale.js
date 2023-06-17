@@ -20,7 +20,7 @@ function _U() {
 	}
 
 	// Has the locale file been set?
-	if (locale.length == 0) {
+	if (locale.length === 0) {
 		console.log('locale.js: no locale has been set');
 		return 'locale.js: no locale has been set';
 	}
@@ -32,7 +32,7 @@ function _U() {
 	}
 
 	// Do we need to format the string?
-	if (args.length == 1) {
+	if (args.length === 1) {
 		return capitalize(locale[string]);
 	} else {
 		return formatString(args);
