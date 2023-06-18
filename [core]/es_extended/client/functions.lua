@@ -715,8 +715,9 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modXenon = IsToggleModOn(vehicle, 22),
 
         modFrontWheels = GetVehicleMod(vehicle, 23),
-		modCustomWheels = GetVehicleModVariation(vehicle, 23),
+		modCustomFrontWheels = GetVehicleModVariation(vehicle, 23),
         modBackWheels = GetVehicleMod(vehicle, 24),
+        modCustomBackWheels = GetVehicleModVariation(vehicle, 24),
 
         modPlateHolder = GetVehicleMod(vehicle, 25),
         modVanityPlate = GetVehicleMod(vehicle, 26),
@@ -899,11 +900,14 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.modFrontWheels ~= nil then
         SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
     end
-	if props.modCustomWheels ~= nil then
-         SetVehicleMod(vehicle, 23, props.modFrontWheels, true) 
+	if props.modCustomFrontWheels ~= nil then
+        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false) 
     end
     if props.modBackWheels ~= nil then
         SetVehicleMod(vehicle, 24, props.modBackWheels, false)
+    end
+    if props.modCustomBackWheels ~= nil then
+        SetVehicleMod(vehicle, 24, props.modCustomBackWheels, false)
     end
     if props.modPlateHolder ~= nil then
         SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
