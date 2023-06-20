@@ -632,7 +632,8 @@ ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,vehData)
   local ped = GetPlayerPed(source)
   local vehicle = nil
   local model = vehData.model or `ADDER`
-  local heading = vehData.heading or 0.0
+  local coords = vehData.coords
+  local heading = coords.w or 0.0
   local warp = vehData.warp
   local props = vehData.props or {}
   ESX.OneSync.SpawnVehicle(model, coords, heading, props, function(id)
