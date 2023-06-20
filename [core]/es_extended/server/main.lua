@@ -628,16 +628,21 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
   cb(players)
 end)
 
-ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,model,coords,heading,props,warp)
+ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,vehData)
   local ped = GetPlayerPed(source)
   local vehicle = nil
-  props = props or {}
+  local model = vehData.model or `ADDER`
+  local heading = vehData.heading or 0.0
+  local warp = vehData.warp
+  local props = vehData.props or {}
   ESX.OneSync.SpawnVehicle(model, coords, heading, props, function(id)
     vehicle = NetworkGetEntityFromNetworkId(id)
     if warp then
-      while GetVehiclePedIsIn(ped) ~= vehicle do
+	  local timeout = 0
+      while GetVehiclePedIsIn(ped) ~= vehicle and timeout <= 15 do
         Wait(0)
         TaskWarpPedIntoVehicle(ped, vehicle, -1)
+		timeout += 1
       end
     end
     cb(id)
