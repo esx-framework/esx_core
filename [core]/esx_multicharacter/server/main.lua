@@ -214,8 +214,13 @@ end
 			if isNew then
 				awaitingRegistration[source] = charid
 			else
-				TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
-				ESX.Players[GetIdentifier(source)] = true
+				local identifier = PREFIX..charid .. ':' .. GetIdentifier(source)
+				if not ESX.GetPlayerFromIdentifier(identifier) then
+					TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
+					ESX.Players[GetIdentifier(source)] = true
+				else
+					DropPlayer(source, 'Your identifier '..identifier..' is already on the server!')
+				end
 			end
 		end
 	end)
