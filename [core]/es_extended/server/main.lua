@@ -632,7 +632,7 @@ ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,vehData)
     local ped = GetPlayerPed(sourcec)
     ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
         local vehicle = NetworkGetEntityFromNetworkId(id)
-        if warp then
+        if vehData.warp then
             local timeout = 0
             while GetVehiclePedIsIn(ped) ~= vehicle and timeout <= 15 do
                 Wait(0)
