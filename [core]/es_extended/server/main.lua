@@ -629,7 +629,7 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 end)
 
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,vehData)
-    local ped = GetPlayerPed(sourcec)
+    local ped = GetPlayerPed(source)
     ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
         local vehicle = NetworkGetEntityFromNetworkId(id)
         if vehData.warp then
