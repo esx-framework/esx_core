@@ -14,8 +14,10 @@ end
 
 local function closeMenu(namespace, name)
     CurrentNameSpace = namespace
-    if OpenedMenus < 1 then return end
-    OpenedMenus = OpenedMenus - 1
+    OpenedMenus -= 1
+    if OpenedMenus < 0 then
+        OpenedMenus = 0
+    end
     SendNUIMessage({
         action = 'closeMenu',
         namespace = namespace,
