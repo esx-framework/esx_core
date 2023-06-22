@@ -2,8 +2,7 @@ Locales = {}
 
 function Translate(str, ...)  -- Translate string
 	if not str then
-		local currentResourceName = GetCurrentResourceName()
-		print(("[^1ERROR^7] Resource ^5%s^7 You did not specify a parameter for the Translate function or the value is nil!"):format(currentResourceName))
+		print(("[^1ERROR^7] Resource ^5%s^7 You did not specify a parameter for the Translate function or the value is nil!"):format(GetInvokingResource() or GetCurrentResourceName()))
 		return 'Given translate function parameter is nil!'
 	end
 	if Locales[Config.Locale] then
