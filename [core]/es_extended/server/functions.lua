@@ -378,7 +378,7 @@ function ESX.SetPlayerFunctionOverride(index)
     return print('[^3WARNING^7] No valid index provided.')
   end
 
-	Core.PlayerFunctionOverride = index
+	Config.PlayerFunctionOverride = index
 end
 
 function ESX.GetItemLabel(item)
