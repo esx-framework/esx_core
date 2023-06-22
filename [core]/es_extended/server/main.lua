@@ -656,6 +656,22 @@ ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
 	cb(players)
 end)
 
+ESX.RegisterServerCallback("esx:spawnVehicle", function(source,cb,vehData)
+    local ped = GetPlayerPed(source)
+    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
+        if vehData.warp then
+			local vehicle = NetworkGetEntityFromNetworkId(id)
+            local timeout = 0
+            while GetVehiclePedIsIn(ped) ~= vehicle and timeout <= 15 do
+                Wait(0)
+                TaskWarpPedIntoVehicle(ped, vehicle, -1)
+                timeout += 1
+            end
+        end
+        cb(id)
+    end)
+end)
+
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 	if eventData.secondsRemaining == 60 then
 		CreateThread(function()
