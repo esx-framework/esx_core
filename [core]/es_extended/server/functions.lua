@@ -214,13 +214,11 @@ end
 ESX.GetPlayers = GetPlayers
 
 function ESX.GetExtendedPlayers(key, val)
+  if not key then return ESX.Players end
+
   local xPlayers = {}
   for k, v in pairs(ESX.Players) do
-    if key then
-      if (key == 'job' and v.job.name == val) or v[key] == val then
-        xPlayers[#xPlayers + 1] = v
-      end
-    else
+    if (key == 'job' and v.job.name == val) or v[key] == val then
       xPlayers[#xPlayers + 1] = v
     end
   end
