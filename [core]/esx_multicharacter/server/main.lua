@@ -29,6 +29,10 @@ end
 	local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 	local function GetIdentifier(source)
+		local fxDk = GetConvarInt('sv_fxdkMode', 0)
+		if fxDk == 1 then
+			return "ESX-DEBUG-LICENCE"
+		end
 		local identifier = PRIMARY_IDENTIFIER..':'
 		for _, v in pairs(GetPlayerIdentifiers(source)) do
 			if string.match(v, identifier) then
@@ -100,11 +104,11 @@ end
 		end
 
 		if not databaseFound then
-			deferrals.done(('[ESX Multicharacter] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
+			deferrals.done('[ESX] Cannot Find the servers mysql_connection_string. Please make sure it is correctly configured in your server.cfg')
 		end
 
 		if not databaseConnected then
-			deferrals.done(('[ESX Multicharacter] ESX Cannot Connect to your database. Please make sure it is correctly configured in your server.cfg'):format(oneSyncState))
+			deferrals.done('[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg')
 		end
 
 		if identifier then
@@ -130,7 +134,7 @@ end
 		local count = 0
 
 		for table, column in pairs(DB_TABLES) do
-			count += 1
+			count = count +  1
 			queries[count] = {query = query:format(table, column), values = {identifier}}
 		end
 
@@ -160,7 +164,7 @@ end
 				DB_TABLES[column.TABLE_NAME] = column.COLUMN_NAME
 
 				if column?.CHARACTER_MAXIMUM_LENGTH ~= length then
-					count += 1
+					count = count + 1
 					columns[column.TABLE_NAME] = column.COLUMN_NAME
 				end
 			end
@@ -210,6 +214,14 @@ end
 			if isNew then
 				awaitingRegistration[source] = charid
 			else
+				if not ESX.GetConfig().EnableDebug then
+					local identifier = PREFIX..charid .. ':' .. GetIdentifier(source)
+					if ESX.GetPlayerFromIdentifier(identifier) then
+						DropPlayer(source, 'Your identifier '..identifier..' is already on the server!')
+						return
+					end
+				end
+
 				TriggerEvent('esx:onPlayerJoined', source, PREFIX..charid)
 				ESX.Players[GetIdentifier(source)] = true
 			end

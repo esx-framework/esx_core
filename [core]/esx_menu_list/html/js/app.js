@@ -23,7 +23,7 @@
   ESX_MENU.data = {};
 
   ESX_MENU.open = function (namespace, name, data) {
-    if (typeof ESX_MENU.opened[namespace] == "undefined") {
+    if (typeof ESX_MENU.opened[namespace] === "undefined") {
       ESX_MENU.opened[namespace] = {};
     }
 
@@ -49,8 +49,8 @@
 
     for (let i = 0; i < ESX_MENU.focus.length; i++) {
       if (
-        ESX_MENU.focus[i].namespace == namespace &&
-        ESX_MENU.focus[i].name == name
+        ESX_MENU.focus[i].namespace === namespace &&
+        ESX_MENU.focus[i].name === name
       ) {
         ESX_MENU.focus.splice(i, 1);
         break;
@@ -68,7 +68,7 @@
     $(menuContainer).hide();
 
     for (let namespace in ESX_MENU.opened) {
-      if (typeof ESX_MENU.data[namespace] == "undefined") {
+      if (typeof ESX_MENU.data[namespace] === "undefined") {
         ESX_MENU.data[namespace] = {};
       }
 
@@ -201,7 +201,7 @@
   };
 
   document.onkeyup = function (data) {
-    if (data.which == 27) {
+    if (data.which === 27) {
       let focused = ESX_MENU.getFocused();
       ESX_MENU.cancel(focused.namespace, focused.name);
     }

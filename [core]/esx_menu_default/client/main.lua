@@ -3,7 +3,7 @@ GUI.Time = 0
 
 local function openMenu(namespace, name, data)
     CurrentNameSpace = namespace
-    OpenedMenus += 1
+    OpenedMenus = OpenedMenus + 1
     SendNUIMessage({
         action = 'openMenu',
         namespace = namespace,
@@ -15,6 +15,9 @@ end
 local function closeMenu(namespace, name)
     CurrentNameSpace = namespace
     OpenedMenus -= 1
+    if OpenedMenus < 0 then
+        OpenedMenus = 0
+    end
     SendNUIMessage({
         action = 'closeMenu',
         namespace = namespace,
