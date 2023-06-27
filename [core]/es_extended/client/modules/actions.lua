@@ -52,7 +52,7 @@ CreateThread(function()
                 local vehicle = GetVehiclePedIsTryingToEnter(playerPed)
                 local plate = GetVehicleNumberPlateText(vehicle)
                 local seat = GetSeatPedIsTryingToEnter(playerPed)
-                local displayName, netId = GetData(vehicle)
+                local _, netId = GetData(vehicle)
                 isEnteringVehicle = true
                 TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
                 TriggerServerEvent('esx:enteringVehicle', plate, seat, netId)
