@@ -16,6 +16,7 @@ end, false, {help = TranslateCap('command_setcoords'), validate = true, argument
 }})
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 	if not ESX.DoesJobExist(args.job, args.grade) then
 		return showError(TranslateCap('command_setjob_invalid'))
 	end
@@ -116,6 +117,7 @@ end, false, {help = TranslateCap('command_cardel'), validate = false, arguments 
 }})
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_giveaccountmoney_invalid'))
 	end
@@ -136,6 +138,7 @@ end, true, {help = TranslateCap('command_setaccountmoney'), validate = true, arg
 }})
 
 ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_giveaccountmoney_invalid'))
 	end
@@ -156,6 +159,7 @@ end, true, {help = TranslateCap('command_giveaccountmoney'), validate = true, ar
 }})
 
 ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_removeaccountmoney_invalid'))
 	end
@@ -176,7 +180,9 @@ end, true, {help = TranslateCap('command_removeaccountmoney'), validate = true, 
 }})
 
 if not Config.OxInventory then
-	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args)
+	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 		args.playerId.addInventoryItem(args.item, args.count)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Item /giveitem Triggered!", "pink", {
@@ -194,6 +200,7 @@ if not Config.OxInventory then
 	}})
 
 	ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 		if args.playerId.hasWeapon(args.weapon) then
 			return showError(TranslateCap('command_giveweapon_hasalready'))
 		end
@@ -214,6 +221,7 @@ if not Config.OxInventory then
 	}})
 
 	ESX.RegisterCommand('giveammo', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 		if not args.playerId.hasWeapon(args.weapon) then
 			return showError(TranslateCap("command_giveammo_noweapon_found"))
 		end
@@ -234,6 +242,7 @@ if not Config.OxInventory then
 	}})
 
 	ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
 		if args.playerId.hasWeapon(args.weaponName) then
 			local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
 
@@ -284,7 +293,9 @@ ESX.RegisterCommand("refreshjobs", 'admin', function()
 end, true, {help = TranslateCap('command_clearall')})
 
 if not Config.OxInventory then
-	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args)
+	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 		for _, v in ipairs(args.playerId.inventory) do
 			if v.count > 0 then
 				args.playerId.setInventoryItem(v.name, 0)
@@ -302,7 +313,9 @@ if not Config.OxInventory then
 		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 	}})
 
-	ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args)
+	ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
+		if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 		for i=#args.playerId.loadout, 1, -1 do
 			args.playerId.removeWeapon(args.playerId.loadout[i].name)
 		end
@@ -336,7 +349,9 @@ end, true, {help = TranslateCap('command_setgroup'), validate = true, arguments 
 	{name = 'group', help = TranslateCap('command_setgroup_group'), type = 'string'},
 }})
 
-ESX.RegisterCommand('save', 'admin', function(_, args)
+ESX.RegisterCommand('save', 'admin', function(_, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	Core.SavePlayer(args.playerId)
 	print("[^2Info^0] Saved Player - ^5".. args.playerId.source .. "^0")
 end, true, {help = TranslateCap('command_save'), validate = true, arguments = {
@@ -378,7 +393,9 @@ ESX.RegisterCommand('tpm', "admin", function(xPlayer)
 	end
 end, true)
 
-ESX.RegisterCommand('goto', "admin", function(xPlayer, args)
+ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	local targetCoords = args.playerId.getCoords()
 	xPlayer.setCoords(targetCoords)
 	if Config.AdminLogging then
@@ -393,7 +410,9 @@ end, true, {help = TranslateCap('command_goto'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('bring', "admin", function(xPlayer, args)
+ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	local targetCoords = args.playerId.getCoords()
 	local playerCoords = xPlayer.getCoords()
 	args.playerId.setCoords(playerCoords)
@@ -409,7 +428,9 @@ end, true, {help = TranslateCap('command_bring'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('kill', "admin", function(xPlayer, args)
+ESX.RegisterCommand('kill', "admin", function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	args.playerId.triggerEvent("esx:killPlayer")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Kill Command /kill Triggered!", "pink", {
@@ -422,7 +443,9 @@ end, true, {help = TranslateCap('command_kill'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('freeze', "admin", function(xPlayer, args)
+ESX.RegisterCommand('freeze', "admin", function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Freeze /freeze Triggered!", "pink", {
@@ -435,7 +458,9 @@ end, true, {help = TranslateCap('command_freeze'), validate = true, arguments = 
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args)
+ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args, showError)
+	if not args.playerId then return showError(TranslateCap("commanderror_invalidplayerid")) end
+
 	args.playerId.triggerEvent('esx:freezePlayer', "unfreeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin UnFreeze /unfreeze Triggered!", "pink", {
