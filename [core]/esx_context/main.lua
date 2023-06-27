@@ -1,4 +1,3 @@
-local defaultPosition = "right" -- [ left | center | right ]
 local activeMenu
 local Debug = ESX.GetConfig().EnableDebug
 
@@ -76,7 +75,7 @@ end)
 -- NUI Callbacks
 -- [ closed | selected | changed ]
 
-RegisterNUICallback("closed",function(data,cb)
+RegisterNUICallback("closed",function(_,cb)
 	if not activeMenu or (activeMenu and not activeMenu.canClose) then
 		return cb(false)
 	end
@@ -211,7 +210,7 @@ if Debug then
 		exports["esx_context"]:Close()
 	end
 
-	local function onClose(menu)
+	local function onClose()
 		print("Menu closed.")
 	end
 
