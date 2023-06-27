@@ -221,7 +221,7 @@ end
 
 ESX.GetPlayers = GetPlayers
 
-local function checkTable(key, val, player)
+local function checkTable(key, val, player, xPlayers)
   for valIndex = 1, #val do
     local value = val[valIndex]
     if not xPlayers[value] then
@@ -229,7 +229,7 @@ local function checkTable(key, val, player)
     end
     
     if (key == 'job' and player.job.name == value) or player[key] == value then
-      xPlayers[value][#xPlayers[value] + 1] = v
+      xPlayers[value][#xPlayers[value] + 1] = player
     end
   end
 end
@@ -240,7 +240,7 @@ function ESX.GetExtendedPlayers(key, val)
   local xPlayers = {}
   if type(val) == "table" then
     for k, v in pairs(ESX.Players) do
-      checkTable(key, val, v)
+      checkTable(key, val, v, xPlayers)
     end
   else
     for k, v in pairs(ESX.Players) do
