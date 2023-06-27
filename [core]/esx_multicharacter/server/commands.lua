@@ -24,7 +24,7 @@ end, true, {help = TranslateCap('command_remslots'), validate = true, arguments 
 	{name = 'identifier', help = TranslateCap('command_identifier'), type = 'string'}
 }})
 
-ESX.RegisterCommand('enablechar', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('enablechar', 'admin', function(xPlayer, args)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
@@ -43,7 +43,7 @@ end, true, {help = TranslateCap('command_enablechar'), validate = true, argument
 	{name = 'charslot', help = TranslateCap('command_charslot'), type = 'number'}
 }})
 
-ESX.RegisterCommand('disablechar', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('disablechar', 'admin', function(xPlayer, args)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
@@ -62,6 +62,6 @@ end, true, {help = TranslateCap('command_disablechar'), validate = true, argumen
 	{name = 'charslot', help = TranslateCap('command_charslot'), type = 'number'}
 }})
 
-RegisterCommand('forcelog', function(source, args, rawCommand)
+RegisterCommand('forcelog', function(source)
 	TriggerEvent('esx:playerLogout', source)
 end, true)

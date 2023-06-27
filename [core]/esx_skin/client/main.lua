@@ -1,8 +1,8 @@
 local lastSkin, cam, isCameraActive
-local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
+local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0, false
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+AddEventHandler('esx:playerLoaded', function(_, _, skin)
     TriggerServerEvent('esx_skin:setWeight', skin)
 end)
 
@@ -117,7 +117,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
                 menu.refresh()
             end
-        end, function(data, menu)
+        end, function()
             DeleteSkinCam()
         end)
     end)
@@ -248,7 +248,6 @@ end
 
 AddEventHandler('esx_skin:resetFirstSpawn', function()
     firstSpawn = true
-    skinLoaded = false
     ESX.PlayerLoaded = false
 end)
 
@@ -259,15 +258,13 @@ AddEventHandler('esx_skin:playerRegistered', function()
         end
 
         if firstSpawn then
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
                 if skin == nil then
                     TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
                     Wait(100)
-                    skinLoaded = true
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)
                     Wait(100)
-                    skinLoaded = true
                 end
             end)
 
@@ -277,7 +274,7 @@ AddEventHandler('esx_skin:playerRegistered', function()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+AddEventHandler('esx:playerLoaded', function()
     ESX.PlayerLoaded = true
 end)
 
