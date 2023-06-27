@@ -23,7 +23,7 @@ AddEventHandler('esx:loadingScreenOff', function()
     loadingScreenFinished = true
 end)
 
-RegisterNUICallback('ready', function(data, cb)
+RegisterNUICallback('ready', function(_, cb)
     ready = true
     cb(1)
 end)
@@ -51,7 +51,7 @@ if not Config.UseDeferrals then
         if not ESX.PlayerData.dead then setGuiState(true) end
     end)
 
-    RegisterNUICallback('register', function(data, cb)
+    RegisterNUICallback('register', function(data)
         if not guiEnabled then
             return
         end
