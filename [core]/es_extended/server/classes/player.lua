@@ -439,7 +439,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local loadoutNum, weapon = self.getWeapon(weaponName)
 
 		if weapon then
-			local weaponNum, weaponObject = ESX.GetWeapon(weaponName)
+			local _, weaponObject = ESX.GetWeapon(weaponName)
 
 			if weaponObject.tints and weaponObject.tints[weaponTintIndex] then
 				self.loadout[loadoutNum].tintIndex = weaponTintIndex
