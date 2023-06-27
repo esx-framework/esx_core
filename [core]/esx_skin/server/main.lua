@@ -71,10 +71,10 @@ ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 	end)
 end)
 
-ESX.RegisterCommand('skin', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('skin', 'admin', function(xPlayer)
 	xPlayer.triggerEvent('esx_skin:openSaveableMenu')
 end, false, {help = TranslateCap('skin')})
 
-ESX.RegisterCommand('skinsave', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('skinsave', 'admin', function(xPlayer)
 	xPlayer.triggerEvent('esx_skin:requestSaveSkin')
 end, false, {help = TranslateCap('saveskin')})

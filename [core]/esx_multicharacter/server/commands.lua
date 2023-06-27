@@ -1,28 +1,16 @@
 ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args)
-	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
-		args.identifier
-	})
-
-	if not slots then
-		MySQL.update('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?)', {
+		MySQL.insert('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `slots` = VALUES(`slots`)', {
 			args.identifier,
-			args.slots
+			args.slots,
 		})
 		xPlayer.triggerEvent('esx:showNotification', TranslateCap('slotsadd', args.slots, args.identifier))
-	else
-		MySQL.update('UPDATE `multicharacter_slots` SET `slots` = ? WHERE `identifier` = ?', {
-			args.slots,
-			args.identifier
-		})
-		xPlayer.triggerEvent('esx:showNotification', TranslateCap('slotsedit', args.slots, args.identifier))
-	end
 end, true, {help = TranslateCap('command_setslots'), validate = true, arguments = {
 	{name = 'identifier', help = TranslateCap('command_identifier'), type = 'string'},
 	{name = 'slots', help = TranslateCap('command_slots'), type = 'number'}
 }})
 
 ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args)
-	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
+	local slots = MySQL.scalar.await('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
 
@@ -74,6 +62,6 @@ end, true, {help = TranslateCap('command_disablechar'), validate = true, argumen
 	{name = 'charslot', help = TranslateCap('command_charslot'), type = 'number'}
 }})
 
-RegisterCommand('forcelog', function(source, args, rawCommand)
+RegisterCommand('forcelog', function(source)
 	TriggerEvent('esx:playerLogout', source)
 end, true)

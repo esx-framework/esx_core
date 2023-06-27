@@ -829,7 +829,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         end
     end
 
-    if props.driftTyresEnabled then 
+    if props.driftTyresEnabled then
         SetDriftTyresEnabled(vehicle, true)
     end
 
@@ -910,7 +910,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
     end
 	if props.modCustomFrontWheels ~= nil then
-        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false) 
+        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false)
     end
     if props.modBackWheels ~= nil then
         SetVehicleMod(vehicle, 24, props.modBackWheels, false)

@@ -646,7 +646,7 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip")
-AddEventHandler("esx:noclip", function(input)
+AddEventHandler("esx:noclip", function()
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if not admin then
 			return
