@@ -36,7 +36,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
 		end
 	end,
 
-	getLoadout = function(_)
+	getLoadout = function()
 		return function()
 			return {}
 		end
@@ -144,49 +144,49 @@ Core.PlayerFunctionOverrides.OxInventory = {
 		end
 	end,
 
-	addWeapon = function(_)
+	addWeapon = function()
 		return function() end
 	end,
 
-	addWeaponComponent = function(_)
+	addWeaponComponent = function()
 		return function() end
 	end,
 
-	addWeaponAmmo = function(_)
+	addWeaponAmmo = function()
 		return function() end
 	end,
 
-	updateWeaponAmmo = function(_)
+	updateWeaponAmmo = function()
 		return function() end
 	end,
 
-	setWeaponTint = function(_)
+	setWeaponTint = function()
 		return function() end
 	end,
 
-	getWeaponTint = function(_)
+	getWeaponTint = function()
 		return function() end
 	end,
 
-	removeWeapon = function(_)
+	removeWeapon = function()
 		return function() end
 	end,
 
-	removeWeaponComponent = function(_)
+	removeWeaponComponent = function()
 		return function() end
 	end,
 
-	removeWeaponAmmo = function(_)
+	removeWeaponAmmo = function()
 		return function() end
 	end,
 
-	hasWeaponComponent = function(_)
+	hasWeaponComponent = function()
 		return function()
 			return false
 		end
 	end,
 
-	hasWeapon = function(_)
+	hasWeapon = function()
 		return function()
 			return false
 		end
@@ -198,7 +198,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
 		end
 	end,
 
-	getWeapon = function(_)
+	getWeapon = function()
 		return function() end
 	end,
 

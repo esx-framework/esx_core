@@ -1225,7 +1225,7 @@ function ESX.ShowInventory()
                                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                                         }
 
-                                        ESX.OpenContext("right", elementsG, function(menuG, _)
+                                        ESX.OpenContext("right", elementsG, function(menuG)
                                             local quantity = tonumber(menuG.eles[2].inputValue)
 
                                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1264,7 +1264,7 @@ function ESX.ShowInventory()
                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                         }
 
-                        ESX.OpenContext("right", elementsR, function(menuR, _)
+                        ESX.OpenContext("right", elementsR, function(menuR)
                             local quantity = tonumber(menuR.eles[2].inputValue)
 
                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1299,7 +1299,7 @@ function ESX.ShowInventory()
                                 {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                             }
 
-                            ESX.OpenContext("right", elementsGA, function(menuGA, _)
+                            ESX.OpenContext("right", elementsGA, function(menuGA)
                                 local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then
