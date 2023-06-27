@@ -6,7 +6,7 @@ end
 
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	if type(name) == 'table' then
-		for k, v in ipairs(name) do
+		for _, v in ipairs(name) do
 			ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
 		end
 
@@ -34,7 +34,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 
 	Core.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
 
-	RegisterCommand(name, function(playerId, args, rawCommand)
+	RegisterCommand(name, function(playerId, args)
 		local command = Core.RegisteredCommands[name]
 
 		if not command.allowConsole and playerId == 0 then
@@ -143,7 +143,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end, true)
 
 	if type(group) == 'table' then
-		for k, v in ipairs(group) do
+		for _, v in ipairs(group) do
 			ExecuteCommand(('add_ace group.%s command.%s allow'):format(v, name))
 		end
 	else
@@ -248,7 +248,7 @@ function ESX.GetIdentifier(playerId)
 	if fxDk == 1 then
 		return "ESX-DEBUG-LICENCE"
 	end
-	for k, v in ipairs(GetPlayerIdentifiers(playerId)) do
+	for _, v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
 			local identifier = string.gsub(v, 'license:', '')
 			return identifier
@@ -341,7 +341,7 @@ function ESX.CreateJob(name, label, grades)
   local parameters = {}
   local job = {name = name, label = label, grades = {}}
 
-  for k,v in pairs(grades) do
+  for _,v in pairs(grades) do
       job.grades[tostring(v.grade)] = {job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {}}
       parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary}
   end
