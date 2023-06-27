@@ -221,15 +221,35 @@ end
 
 ESX.GetPlayers = GetPlayers
 
+local function checkTable(key, val, player)
+  for valIndex = 1, #val do
+    local value = val[valIndex]
+    if not xPlayers[value] then
+      xPlayers[value] = {}
+    end
+    
+    if (key == 'job' and player.job.name == value) or player[key] == value then
+      xPlayers[value][#xPlayers[value] + 1] = v
+    end
+  end
+end
+
 function ESX.GetExtendedPlayers(key, val)
   if not key then return ESX.Players end
 
   local xPlayers = {}
-  for k, v in pairs(ESX.Players) do
-    if (key == 'job' and v.job.name == val) or v[key] == val then
-      xPlayers[#xPlayers + 1] = v
+  if type(val) == "table" then
+    for k, v in pairs(ESX.Players) do
+      checkTable(key, val, v)
+    end
+  else
+    for k, v in pairs(ESX.Players) do
+      if (key == 'job' and v.job.name == val) or v[key] == val then
+        xPlayers[#xPlayers + 1] = v
+      end
     end
   end
+
   return xPlayers
 end
 
