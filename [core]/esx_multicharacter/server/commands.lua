@@ -1,4 +1,4 @@
-ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args)
 		MySQL.insert('INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `slots` = VALUES(`slots`)', {
 			args.identifier,
 			args.slots,
@@ -9,7 +9,7 @@ end, true, {help = TranslateCap('command_setslots'), validate = true, arguments 
 	{name = 'slots', help = TranslateCap('command_slots'), type = 'number'}
 }})
 
-ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args)
 	local slots = MySQL.scalar.await('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
