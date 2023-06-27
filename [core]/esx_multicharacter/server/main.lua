@@ -96,7 +96,7 @@ end
 		TriggerClientEvent('esx_multicharacter:SetupUI', source, characters, slots)
 	end
 
-	AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+	AddEventHandler('playerConnecting', function(_, _, deferrals)
 		deferrals.defer()
 		local identifier = GetIdentifier(source)
 		if oneSyncState == "off" or oneSyncState == "legacy" then
@@ -234,7 +234,7 @@ end
 		ESX.Players[GetIdentifier(source)] = true
 	end)
 
-	AddEventHandler('playerDropped', function(reason)
+	AddEventHandler('playerDropped', function()
 		awaitingRegistration[source] = nil
 		ESX.Players[GetIdentifier(source)] = nil
 	end)

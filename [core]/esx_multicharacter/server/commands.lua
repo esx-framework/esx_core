@@ -1,4 +1,4 @@
-ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('setslots', 'admin', function(xPlayer, args)
 	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
@@ -21,7 +21,7 @@ end, true, {help = TranslateCap('command_setslots'), validate = true, arguments 
 	{name = 'slots', help = TranslateCap('command_slots'), type = 'number'}
 }})
 
-ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('remslots', 'admin', function(xPlayer, args)
 	local slots = MySQL.scalar('SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?', {
 		args.identifier
 	})
@@ -36,7 +36,7 @@ end, true, {help = TranslateCap('command_remslots'), validate = true, arguments 
 	{name = 'identifier', help = TranslateCap('command_identifier'), type = 'string'}
 }})
 
-ESX.RegisterCommand('enablechar', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('enablechar', 'admin', function(xPlayer, args)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
@@ -55,7 +55,7 @@ end, true, {help = TranslateCap('command_enablechar'), validate = true, argument
 	{name = 'charslot', help = TranslateCap('command_charslot'), type = 'number'}
 }})
 
-ESX.RegisterCommand('disablechar', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('disablechar', 'admin', function(xPlayer, args)
 
 	local selectedCharacter = 'char'..args.charslot..':'..args.identifier;
  
@@ -74,6 +74,6 @@ end, true, {help = TranslateCap('command_disablechar'), validate = true, argumen
 	{name = 'charslot', help = TranslateCap('command_charslot'), type = 'number'}
 }})
 
-RegisterCommand('forcelog', function(source, args, rawCommand)
+RegisterCommand('forcelog', function(source)
 	TriggerEvent('esx:playerLogout', source)
 end, true)

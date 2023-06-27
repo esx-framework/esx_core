@@ -12,7 +12,7 @@ if ESX.GetConfig().Multichar then
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
-				while not GetResourceState('esx_context') == 'started' do
+				while GetResourceState('esx_context') ~= 'started' do
 					Wait(100)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
@@ -150,7 +150,7 @@ if ESX.GetConfig().Multichar then
 			{title = TranslateCap('return'), unselectable = false, icon = "fa-solid fa-arrow-left", description = TranslateCap('char_delete_no_description'), action = "return"}
 		}
 	
-		ESX.OpenContext("left", elements, function(element, Action)
+		ESX.OpenContext("left", elements, function(_, Action)
 			if Action.action == "delete" then
 				ESX.CloseContext()
 				TriggerServerEvent('esx_multicharacter:DeleteCharacter', Action.value)
@@ -170,7 +170,7 @@ if ESX.GetConfig().Multichar then
 			elements[3] = {title = TranslateCap('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description = TranslateCap('char_disabled_description'),}
 		end
 		if Config.CanDelete then elements[4] = {title = TranslateCap('char_delete'),icon ="fa-solid fa-xmark",description = TranslateCap('char_delete_description'), action = 'delete', value = SelectedCharacter.value} end
-		ESX.OpenContext("left", elements, function(element, Action)
+		ESX.OpenContext("left", elements, function(_, Action)
 			if Action.action == "play" then
 				SendNUIMessage({
 					action = "closeui"
@@ -204,7 +204,7 @@ if ESX.GetConfig().Multichar then
 			elements[#elements+1] = {title = TranslateCap('create_char'), icon = "fa-solid fa-plus", value = (#elements+1), new = true}
 		end
 
-		ESX.OpenContext("left", elements, function(menu, SelectedCharacter)
+		ESX.OpenContext("left", elements, function(_, SelectedCharacter)
 			if SelectedCharacter.new then
 				ESX.CloseContext()
 				local GetSlot = function()
@@ -321,7 +321,7 @@ if ESX.GetConfig().Multichar then
 	end)
 
 	if Config.Relog then
-		RegisterCommand('relog', function(source, args, rawCommand)
+		RegisterCommand('relog', function()
 			if canRelog then
 				canRelog = false
 				TriggerServerEvent('esx_multicharacter:relog')
