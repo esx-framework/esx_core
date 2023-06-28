@@ -131,6 +131,10 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 					xPlayer.showNotification(error)
 				end
 			else
+				if ESX.Table.SizeOf(args) == 0 then
+					xPlayer.showNotification(TranslateCap('commanderror_invalidplayerid'))
+					return
+				end
 				cb(xPlayer or false, args, function(msg)
 					if playerId == 0 then
 						print(('[^3WARNING^7] %s^7'):format(msg))
