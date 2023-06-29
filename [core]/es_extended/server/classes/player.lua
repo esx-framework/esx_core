@@ -36,25 +36,25 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		TriggerClientEvent(eventName, self.source, ...)
 	end
 
-	function self.setCoords(coords)
+	function self.setCoords(coordinates)
 		local Ped = GetPlayerPed(self.source)
-		local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or
-		vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
+		local vector = type(coordinates) == "vector4" and coordinates or type(coordinates) == "vector3" and vector4(coordinates, 0.0) or
+		vec(coordinates.x, coordinates.y, coordinates.z, coordinates.heading or 0.0)
 		SetEntityCoords(Ped, vector.xyz, false, false, false, false)
 		SetEntityHeading(Ped, vector.w)
 	end
 
 	function self.getCoords(vector)
 		local ped = GetPlayerPed(self.source)
-		local coords = GetEntityCoords(ped)
+		local coordinates = GetEntityCoords(ped)
 
 		if vector then
-			return coords
+			return coordinates
 		else
 			return {
-				x = coords.x,
-				y = coords.y,
-				z = coords.z,
+				x = coordinates.x,
+				y = coordinates.y,
+				z = coordinates.z,
 			}
 		end
 	end
@@ -254,16 +254,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.getInventoryItem(name)
+	function self.getInventoryItem(itemName)
 		for _, v in ipairs(self.inventory) do
-			if v.name == name then
+			if v.itemName == itemName then
 				return v
 			end
 		end
 	end
 
-	function self.addInventoryItem(name, count)
-		local item = self.getInventoryItem(name)
+	function self.addInventoryItem(itemName, count)
+		local item = self.getInventoryItem(itemName)
 
 		if item then
 			count = ESX.Math.Round(count)
@@ -275,8 +275,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.removeInventoryItem(name, count)
-		local item = self.getInventoryItem(name)
+	function self.removeInventoryItem(itemName, count)
+		local item = self.getInventoryItem(itemName)
 
 		if item then
 			count = ESX.Math.Round(count)
@@ -291,13 +291,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 					self.triggerEvent('esx:removeInventoryItem', item.name, item.count)
 				end
 			else
-				print(('[^1ERROR^7] Player ID:^5%s Tried remove a Invalid count -> %s of %s'):format(self.playerId, count,name))
+				print(('[^1ERROR^7] Player ID:^5%s Tried remove a Invalid count -> %s of %s'):format(self.playerId, count, itemName))
 			end
 		end
 	end
 
-	function self.setInventoryItem(name, count)
-		local item = self.getInventoryItem(name)
+	function self.setInventoryItem(itemName, count)
+		local item = self.getInventoryItem(itemName)
 
 		if item and count >= 0 then
 			count = ESX.Math.Round(count)
@@ -318,14 +318,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return self.maxWeight
 	end
 
-	function self.canCarryItem(name, count)
-        if ESX.Items[name] then
-            local currentWeight, itemWeight = self.weight, ESX.Items[name].weight
+	function self.canCarryItem(itemName, count)
+        if ESX.Items[itemName] then
+            local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
             local newWeight = currentWeight + (itemWeight * count)
 
             return newWeight <= self.maxWeight
         else
-            print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(name))
+            print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
         end
 	end
 
@@ -348,12 +348,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:setMaxWeight', self.maxWeight)
 	end
 
-	function self.setJob(job, grade)
+	function self.setJob(newJob, grade)
 		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
 
-		if ESX.DoesJobExist(job, grade) then
-			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+		if ESX.DoesJobExist(newJob, grade) then
+			local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
 
 			self.job.id    = jobObject.id
 			self.job.name  = jobObject.name
@@ -575,16 +575,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
         end
 
-        local metadata = self.metadata[index]
-        if (metadata == nil) then
+        local metaData = self.metadata[index]
+        if (metaData == nil) then
             return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
         end
 
-        if (subIndex and type(metadata) == "table") then
+        if (subIndex and type(metaData) == "table") then
             local _type = type(subIndex)
 
             if (_type == "string") then
-                local value = metadata[subIndex]
+                local value = metaData[subIndex]
                 return value
             end
 
@@ -606,7 +606,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             return print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
         end
 
-        return metadata
+        return metaData
     end
 
 
