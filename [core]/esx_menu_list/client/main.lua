@@ -3,7 +3,6 @@ CreateThread(function()
 	local OpenedMenus = {}
 
 	local function openMenu(namespace, name, data)
-
 		OpenedMenus[namespace .. '_' .. name] = true
 
 		SendNUIMessage({
@@ -13,12 +12,11 @@ CreateThread(function()
 			data      = data
 		})
 		SetTimeout(200, function()
-		SetNuiFocus(true, true)
-		 end)
+			SetNuiFocus(true, true)
+		end)
 	end
 
 	local function closeMenu(namespace, name)
-
 		OpenedMenus[namespace .. '_' .. name] = nil
 		local OpenedMenuCount = 0
 
@@ -37,7 +35,6 @@ CreateThread(function()
 		if OpenedMenuCount == 0 then
 			SetNuiFocus(false)
 		end
-
 	end
 
 	ESX.UI.Menu.RegisterType(MenuType, openMenu, closeMenu)
@@ -59,5 +56,4 @@ CreateThread(function()
 
 		cb('OK')
 	end)
-
 end)

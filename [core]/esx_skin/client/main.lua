@@ -23,7 +23,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             for i = 1, #components, 1 do
                 local found = false
 
-                for j=1, #restrict, 1 do
+                for j = 1, #restrict, 1 do
                     if components[i].name == restrict[j] then
                         found = true
                     end
@@ -49,7 +49,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 value = value,
                 min = _components[i].min,
                 textureof = _components[i].textureof,
-                zoomOffset= _components[i].zoomOffset,
+                zoomOffset = _components[i].zoomOffset,
                 camOffset = _components[i].camOffset,
                 type = 'slider'
             }
@@ -112,7 +112,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                         newData.value = 0
                     end
 
-                    menu.update({name = elements[i].name}, newData)
+                    menu.update({ name = elements[i].name }, newData)
                 end
 
                 menu.refresh()
@@ -161,16 +161,16 @@ CreateThread(function()
             DisableControlAction(0, 25, true) -- Input Aim
             DisableControlAction(0, 24, true) -- Input Attack
 
-            local playerPed = PlayerPedId()
-            local coords    = GetEntityCoords(playerPed)
+            local playerPed   = PlayerPedId()
+            local coords      = GetEntityCoords(playerPed)
 
-            local angle = heading * math.pi / 180.0
-            local theta = {
+            local angle       = heading * math.pi / 180.0
+            local theta       = {
                 x = math.cos(angle),
                 y = math.sin(angle)
             }
 
-            local pos = {
+            local pos         = {
                 x = coords.x + (zoomOffset * theta.x),
                 y = coords.y + (zoomOffset * theta.y)
             }
@@ -224,7 +224,7 @@ CreateThread(function()
 
             heading = angle + 0.0
         end
-    Wait(sleep)
+        Wait(sleep)
     end
 end)
 
@@ -242,7 +242,6 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
                 submitCb(data, menu)
             end
         end)
-
     end, cancelCb, restrict)
 end
 
@@ -260,7 +259,7 @@ AddEventHandler('esx_skin:playerRegistered', function()
         if firstSpawn then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
                 if skin == nil then
-                    TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
+                    TriggerEvent('skinchanger:loadSkin', { sex = 0 }, OpenSaveableMenu)
                     Wait(100)
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)

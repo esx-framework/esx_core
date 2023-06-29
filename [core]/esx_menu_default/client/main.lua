@@ -26,7 +26,7 @@ local function closeMenu(namespace, name)
 end
 
 AddEventHandler('onResourceStop', function(resource)
-    if GetCurrentResourceName() == resource and OpenedMenus > 0  then
+    if GetCurrentResourceName() == resource and OpenedMenus > 0 then
         ESX.UI.Menu.CloseAll()
     elseif CurrentNameSpace ~= nil and CurrentNameSpace == resource and OpenedMenus > 0 then
         ESX.UI.Menu.CloseAll()

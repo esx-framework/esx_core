@@ -3,16 +3,12 @@ local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
 
 local function deleteIdentityFromDatabase(xPlayer)
-    MySQL.query.await(
-        'UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?',
-        { nil, nil, nil, nil, nil, nil, xPlayer.identifier })
+    MySQL.query.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?', { nil, nil, nil, nil, nil, nil, xPlayer.identifier })
 
     if Config.FullCharDelete then
-        MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?',
-            { { 'bank_savings', 'caution' }, xPlayer.identifier })
+        MySQL.update.await('UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?', { { 'bank_savings', 'caution' }, xPlayer.identifier })
 
-        MySQL.prepare.await('UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?',
-            { '\'{}\'', { 'user_ears', 'user_glasses', 'user_helmet', 'user_mask' }, xPlayer.identifier })
+        MySQL.prepare.await('UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?', { '\'{}\'', { 'user_ears', 'user_glasses', 'user_helmet', 'user_mask' }, xPlayer.identifier })
     end
 end
 
@@ -31,9 +27,7 @@ local function deleteIdentity(xPlayer)
 end
 
 local function saveIdentityToDatabase(identifier, identity)
-    MySQL.update.await(
-        'UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?',
-        { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier })
+    MySQL.update.await('UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?', { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier })
 end
 
 local function checkDOBFormat(str)
@@ -125,22 +119,21 @@ if Config.UseDeferrals then
         Wait(100)
 
         if identifier then
-            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?',
-                { identifier }, function(result)
-                    if result then
-                        if result.firstname then
-                            playerIdentity[identifier] = {
-                                firstName = result.firstname,
-                                lastName = result.lastname,
-                                dateOfBirth = result.dateofbirth,
-                                sex = result.sex,
-                                height = result.height
-                            }
+            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', { identifier }, function(result)
+                if result then
+                    if result.firstname then
+                        playerIdentity[identifier] = {
+                            firstName = result.firstname,
+                            lastName = result.lastname,
+                            dateOfBirth = result.dateofbirth,
+                            sex = result.sex,
+                            height = result.height
+                        }
 
-                            deferrals.done()
-                        else
-                            deferrals.presentCard(
-                                [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet",
+                        deferrals.done()
+                    else
+                        deferrals.presentCard(
+                            [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet",
                                 "columns":[{"type":"Column","items":[{"type":"Input.Text","placeholder":"First Name",
                                 "id":"firstname","maxLength":15},{"type":"Input.Text","placeholder":"Date of Birth (MM/DD/YYYY)",
                                 "id":"dateofbirth","maxLength":10}],"width":"stretch"},{"type":"Column","width":"stretch",
@@ -150,33 +143,33 @@ if Config.UseDeferrals then
                                 {"title":"Female","value":"f"}],"style":"expanded","id":"sex"}]},{"type": "ActionSet",
                                 "actions": [{"type":"Action.Submit","title":"Submit"}]}],
                                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json","version":"1.0"}]==],
-                                function(data)
-                                    if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex ==
-                                        '' or data.height == '' then
-                                        deferrals.done(TranslateCap('data_incorrect'))
-                                    else
-                                        if checkNameFormat(data.firstname) and checkNameFormat(data.lastname) and
-                                            checkDOBFormat(data.dateofbirth) and checkSexFormat(data.sex) and
-                                            checkHeightFormat(data.height) then
-                                            playerIdentity[identifier] = {
-                                                firstName = formatName(data.firstname),
-                                                lastName = formatName(data.lastname),
-                                                dateOfBirth = data.dateofbirth,
-                                                sex = data.sex,
-                                                height = tonumber(data.height),
-                                                saveToDatabase = true
-                                            }
+                            function(data)
+                                if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex ==
+                                    '' or data.height == '' then
+                                    deferrals.done(TranslateCap('data_incorrect'))
+                                else
+                                    if checkNameFormat(data.firstname) and checkNameFormat(data.lastname) and
+                                        checkDOBFormat(data.dateofbirth) and checkSexFormat(data.sex) and
+                                        checkHeightFormat(data.height) then
+                                        playerIdentity[identifier] = {
+                                            firstName = formatName(data.firstname),
+                                            lastName = formatName(data.lastname),
+                                            dateOfBirth = data.dateofbirth,
+                                            sex = data.sex,
+                                            height = tonumber(data.height),
+                                            saveToDatabase = true
+                                        }
 
-                                            deferrals.done()
-                                        else
-                                            deferrals.done(TranslateCap('invalid_format'))
-                                        end
+                                        deferrals.done()
+                                    else
+                                        deferrals.done(TranslateCap('invalid_format'))
                                     end
-                                end)
-                        end
-                    else
-                        deferrals.presentCard(
-                            [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet","columns":[{
+                                end
+                            end)
+                    end
+                else
+                    deferrals.presentCard(
+                        [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet","columns":[{
                             "type":"Column","items":[{"type":"Input.Text","placeholder":"First Name","id":"firstname",
                             "maxLength":15},{"type":"Input.Text","placeholder":"Date of Birth (MM/DD/YYYY)","id":"dateofbirth",
                             "maxLength":10}],"width":"stretch"},{"type":"Column","width":"stretch","items":[{"type":"Input.Text",
@@ -185,39 +178,39 @@ if Config.UseDeferrals then
                             "placeholder":"Sex","choices":[{"title":"Male","value":"m"},{"title":"Female","value":"f"}],
                             "style":"expanded","id":"sex"}]},{"type": "ActionSet","actions": [{"type":"Action.Submit",
                             "title":"Submit"}]}],"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","version":"1.0"}]==],
-                            function(data)
-                                if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex == '' or data.height == '' then
-                                    return deferrals.done(TranslateCap('data_incorrect'))
-                                end
-                                if not checkNameFormat(data.firstname) then
-                                    return deferrals.done(TranslateCap('invalid_firstname_format'))
-                                end
-                                if not checkNameFormat(data.lastname) then
-                                    return deferrals.done(TranslateCap('invalid_lastname_format'))
-                                end
-                                if not checkDOBFormat(data.dateofbirth) then
-                                    return deferrals.done(TranslateCap('invalid_dob_format'))
-                                end
-                                if not checkSexFormat(data.sex) then
-                                    return deferrals.done(TranslateCap('invalid_sex_format'))
-                                end
-                                if not checkHeightFormat(data.height) then
-                                    return deferrals.done(TranslateCap('invalid_height_format'))
-                                end
+                        function(data)
+                            if data.firstname == '' or data.lastname == '' or data.dateofbirth == '' or data.sex == '' or data.height == '' then
+                                return deferrals.done(TranslateCap('data_incorrect'))
+                            end
+                            if not checkNameFormat(data.firstname) then
+                                return deferrals.done(TranslateCap('invalid_firstname_format'))
+                            end
+                            if not checkNameFormat(data.lastname) then
+                                return deferrals.done(TranslateCap('invalid_lastname_format'))
+                            end
+                            if not checkDOBFormat(data.dateofbirth) then
+                                return deferrals.done(TranslateCap('invalid_dob_format'))
+                            end
+                            if not checkSexFormat(data.sex) then
+                                return deferrals.done(TranslateCap('invalid_sex_format'))
+                            end
+                            if not checkHeightFormat(data.height) then
+                                return deferrals.done(TranslateCap('invalid_height_format'))
+                            end
 
-                                playerIdentity[identifier] = {
-                                    firstName = formatName(data.firstname),
-                                    lastName = formatName(data.lastname),
-                                    dateOfBirth = formatDate(data.dateofbirth),
-                                    sex = data.sex,
-                                    height = tonumber(data.height),
-                                    saveToDatabase = true
-                                }
+                            playerIdentity[identifier] = {
+                                firstName = formatName(data.firstname),
+                                lastName = formatName(data.lastname),
+                                dateOfBirth = formatDate(data.dateofbirth),
+                                sex = data.sex,
+                                height = tonumber(data.height),
+                                saveToDatabase = true
+                            }
 
-                                deferrals.done()
-                            end)
-                    end
-                end)
+                            deferrals.done()
+                        end)
+                end
+            end)
         else
             deferrals.done(TranslateCap('no_identifier'))
         end
@@ -267,29 +260,27 @@ else
     end
 
     local function checkIdentity(xPlayer)
-        MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?',
-            { xPlayer.identifier },
-            function(result)
-                if not result then
-                    return TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-                end
-                if not result.firstname then
-                    playerIdentity[xPlayer.identifier] = nil
-                    alreadyRegistered[xPlayer.identifier] = false
-                    return TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
-                end
-
-                playerIdentity[xPlayer.identifier] = {
-                    firstName = result.firstname,
-                    lastName = result.lastname,
-                    dateOfBirth = result.dateofbirth,
-                    sex = result.sex,
-                    height = result.height
-                }
-
-                alreadyRegistered[xPlayer.identifier] = true
-                setIdentity(xPlayer)
+        MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', { xPlayer.identifier }, function(result)
+            if not result then
+                return TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
             end
+            if not result.firstname then
+                playerIdentity[xPlayer.identifier] = nil
+                alreadyRegistered[xPlayer.identifier] = false
+                return TriggerClientEvent('esx_identity:showRegisterIdentity', xPlayer.source)
+            end
+
+            playerIdentity[xPlayer.identifier] = {
+                firstName = result.firstname,
+                lastName = result.lastname,
+                dateOfBirth = result.dateofbirth,
+                sex = result.sex,
+                height = result.height
+            }
+
+            alreadyRegistered[xPlayer.identifier] = true
+            setIdentity(xPlayer)
+        end
         )
     end
 
@@ -302,32 +293,30 @@ else
             if not identifier then
                 return deferrals.done(TranslateCap('no_identifier'))
             end
-            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?',
-                { identifier },
-                function(result)
-                    if not result then
-                        playerIdentity[identifier] = nil
-                        alreadyRegistered[identifier] = false
-                        return deferrals.done()
-                    end
-                    if not result.firstname then
-                        playerIdentity[identifier] = nil
-                        alreadyRegistered[identifier] = false
-                        return deferrals.done()
-                    end
+            MySQL.single('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?', { identifier }, function(result)
+                if not result then
+                    playerIdentity[identifier] = nil
+                    alreadyRegistered[identifier] = false
+                    return deferrals.done()
+                end
+                if not result.firstname then
+                    playerIdentity[identifier] = nil
+                    alreadyRegistered[identifier] = false
+                    return deferrals.done()
+                end
 
-                    playerIdentity[identifier] = {
-                        firstName = result.firstname,
-                        lastName = result.lastname,
-                        dateOfBirth = result.dateofbirth,
-                        sex = result.sex,
-                        height = result.height
-                    }
+                playerIdentity[identifier] = {
+                    firstName = result.firstname,
+                    lastName = result.lastname,
+                    dateOfBirth = result.dateofbirth,
+                    sex = result.sex,
+                    height = result.height
+                }
 
-                    alreadyRegistered[identifier] = true
+                alreadyRegistered[identifier] = true
 
-                    deferrals.done()
-                end)
+                deferrals.done()
+            end)
         end)
 
         AddEventHandler('onResourceStart', function(resource)

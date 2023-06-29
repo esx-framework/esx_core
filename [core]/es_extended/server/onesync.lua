@@ -27,12 +27,12 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 				local dist = #(source - coords)
 				if dist <= distance then
 					count = count + 1
-					result[count] = {id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist}
+					result[count] = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
 				end
 			else
 				local dist = #(source - coords)
 				if dist <= (result.dist or distance) then
-					result = {id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist}
+					result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
 				end
 			end
 		end
@@ -83,7 +83,6 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
 	end)
 end
 
-
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
@@ -133,7 +132,7 @@ local function getNearbyEntities(entities, coords, modelFilter, maxDistance, isP
 			if not modelFilter or modelFilter[GetEntityModel(entity)] then
 				local entityCoords = GetEntityCoords(entity)
 				if not maxDistance or #(coords - entityCoords) <= maxDistance then
-					nearbyEntities[#nearbyEntities+1] = NetworkGetNetworkIdFromEntity(entity)
+					nearbyEntities[#nearbyEntities + 1] = NetworkGetNetworkIdFromEntity(entity)
 				end
 			end
 		end

@@ -2,7 +2,7 @@ Config = {}
 
 Config.Locale = GetConvar('esx:locale', 'en')
 
-Config.Components = {{
+Config.Components = { {
     label = TranslateCap('sex'),
     name = 'sex',
     value = 0,
@@ -702,4 +702,4 @@ Config.Components = {{
     min = 0,
     zoomOffset = 0.4,
     camOffset = 0.65
-}}
+} }

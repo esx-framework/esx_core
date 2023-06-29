@@ -6,7 +6,6 @@ RegisterServerEvent('esx:enteredVehicle')
 RegisterServerEvent('esx:exitedVehicle')
 
 if Config.EnableDebug then
-
     AddEventHandler('esx:playerPedChanged', function(netId)
         print('esx:playerPedChanged', source, netId)
     end)
@@ -30,5 +29,4 @@ if Config.EnableDebug then
     AddEventHandler('esx:exitedVehicle', function(plate, seat, displayName, netId)
         print('esx:exitedVehicle', 'source', source, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
-
 end

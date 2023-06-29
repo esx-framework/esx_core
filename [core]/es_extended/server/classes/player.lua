@@ -3,7 +3,7 @@ local GetEntityCoords = GetEntityCoords
 
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
-	
+
 	local self = {}
 
 	self.accounts = accounts
@@ -20,10 +20,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	self.weight = weight
 	self.maxWeight = Config.MaxWeight
 	self.metadata = metadata
-	if Config.Multichar then self.license = 'license'.. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:'..identifier end
+	if Config.Multichar then self.license = 'license' .. identifier:sub(identifier:find(':'), identifier:len()) else self.license = 'license:' .. identifier end
 
 	ExecuteCommand(('add_principal identifier.%s group.%s'):format(self.license, self.group))
-	
+
 	local stateBag = Player(self.source).state
 	stateBag:set("identifier", self.identifier, true)
 	stateBag:set("license", self.license, true)
@@ -39,7 +39,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.setCoords(coordinates)
 		local Ped = GetPlayerPed(self.source)
 		local vector = type(coordinates) == "vector4" and coordinates or type(coordinates) == "vector3" and vector4(coordinates, 0.0) or
-		vec(coordinates.x, coordinates.y, coordinates.z, coordinates.heading or 0.0)
+			vec(coordinates.x, coordinates.y, coordinates.z, coordinates.heading or 0.0)
 		SetEntityCoords(Ped, vector.xyz, false, false, false, false)
 		SetEntityHeading(Ped, vector.w)
 	end
@@ -156,7 +156,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local minimalLoadout = {}
 
 		for _, v in ipairs(self.loadout) do
-			minimalLoadout[v.name] = {ammo = v.ammo}
+			minimalLoadout[v.name] = { ammo = v.ammo }
 			if v.tintIndex > 0 then minimalLoadout[v.name].tintIndex = v.tintIndex end
 
 			if #v.components > 0 then
@@ -319,14 +319,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.canCarryItem(itemName, count)
-        if ESX.Items[itemName] then
-            local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
-            local newWeight = currentWeight + (itemWeight * count)
+		if ESX.Items[itemName] then
+			local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
+			local newWeight = currentWeight + (itemWeight * count)
 
-            return newWeight <= self.maxWeight
-        else
-            print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
-        end
+			return newWeight <= self.maxWeight
+		else
+			print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
+		end
 	end
 
 	function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)
@@ -355,14 +355,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		if ESX.DoesJobExist(newJob, grade) then
 			local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
 
-			self.job.id    = jobObject.id
-			self.job.name  = jobObject.name
-			self.job.label = jobObject.label
+			self.job.id                  = jobObject.id
+			self.job.name                = jobObject.name
+			self.job.label               = jobObject.label
 
-			self.job.grade        = tonumber(grade)
-			self.job.grade_name   = gradeObject.name
-			self.job.grade_label  = gradeObject.label
-			self.job.grade_salary = gradeObject.salary
+			self.job.grade               = tonumber(grade)
+			self.job.grade_name          = gradeObject.name
+			self.job.grade_label         = gradeObject.label
+			self.job.grade_salary        = gradeObject.salary
 
 			if gradeObject.skin_male then
 				self.job.skin_male = json.decode(gradeObject.skin_male)
@@ -466,7 +466,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if v.name == weaponName then
 				weaponLabel = v.label
 
-				for _,v2 in ipairs(v.components) do
+				for _, v2 in ipairs(v.components) do
 					self.removeWeaponComponent(weaponName, v2)
 				end
 
@@ -568,47 +568,46 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-    function self.getMeta(index, subIndex)
-        if not (index) then return self.metadata end
+	function self.getMeta(index, subIndex)
+		if not (index) then return self.metadata end
 
-        if type(index) ~= "string" then
-            return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
-        end
+		if type(index) ~= "string" then
+			return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
+		end
 
-        local metaData = self.metadata[index]
-        if (metaData == nil) then
-            return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
-        end
+		local metaData = self.metadata[index]
+		if (metaData == nil) then
+			return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
+		end
 
-        if (subIndex and type(metaData) == "table") then
-            local _type = type(subIndex)
+		if (subIndex and type(metaData) == "table") then
+			local _type = type(subIndex)
 
-            if (_type == "string") then
-                local value = metaData[subIndex]
-                return value
-            end
+			if (_type == "string") then
+				local value = metaData[subIndex]
+				return value
+			end
 
-            if (_type == "table") then
-                local returnValues = {}
+			if (_type == "table") then
+				local returnValues = {}
 
-                for i = 1, #subIndex do
-                    local key = subIndex[i]
-                    if (type(key) == "string") then
-                        returnValues[key] = self.getMeta(index, key)
-                    else
-                        print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7! that contains ^5string^7, received ^5%s^7!, skipping..."):format(type(key)))
-                    end
-                end
+				for i = 1, #subIndex do
+					local key = subIndex[i]
+					if (type(key) == "string") then
+						returnValues[key] = self.getMeta(index, key)
+					else
+						print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7! that contains ^5string^7, received ^5%s^7!, skipping..."):format(type(key)))
+					end
+				end
 
-                return returnValues
-            end
+				return returnValues
+			end
 
-            return print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
-        end
+			return print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
+		end
 
-        return metaData
-    end
-
+		return metaData
+	end
 
 	function self.setMeta(index, value, subValue)
 		if not index then
@@ -626,14 +625,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local _type = type(value)
 
 		if not subValue then
-
 			if _type ~= "number" and _type ~= "string" and _type ~= "table" then
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
 			end
 
 			self.metadata[index] = value
 		else
-
 			if _type ~= "string" then
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
 			end
@@ -668,7 +665,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
-	for fnName,fn in pairs(targetOverrides) do
+	for fnName, fn in pairs(targetOverrides) do
 		self[fnName] = fn(self)
 	end
 

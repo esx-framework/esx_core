@@ -116,10 +116,10 @@ Locales["es"] = {
 	-- Weapons
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_candycane'] = 'Candy Cane',  -- not translated
 	['weapon_acidpackage'] = 'Acid Package', -- not translated
 	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun', -- not translated
+	['weapon_railgunxm3'] = 'Railgun',    -- not translated
 
 	-- Melee
 	["weapon_dagger"] = "Daga",
@@ -357,7 +357,7 @@ Locales["es"] = {
 	["tint_lspd"] = "Skin Azul",
 	["tint_orange"] = "Skin Naranja",
 	["tint_platinum"] = "Skin Plata",
-	
+
 	-- Duty related
 	["stopped_duty"] = "Has salido de servicio.",
 	["started_duty"] = "Has entrado de servicio.",
