@@ -6,11 +6,11 @@ ESX.SetTimeout = function(msec, cb)
 
 	SetTimeout(msec, function()
 		if CancelledTimeouts[id] then
-			CancelledTimeouts[id] = nil
-      		return
-    	end
+     		CancelledTimeouts[id] = nil
+     		return
+		end
 
-    	cb()
+		cb()
 	end)
 
 	TimeoutCount = id

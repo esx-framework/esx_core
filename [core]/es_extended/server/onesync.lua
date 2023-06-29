@@ -167,7 +167,7 @@ function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter)
 end
 
 local function getClosestEntity(entities, coords, modelFilter, isPed)
-	local distance, closestEntity, closestCoords = maxDistance or 100, nil, nil
+	local distance, closestEntity, closestCoords = 100, nil, nil
 	coords = type(coords) == 'number' and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z)
 
 	for _, entity in pairs(entities) do
@@ -205,6 +205,6 @@ function ESX.OneSync.GetClosestVehicle(coords, modelFilter)
 	return getClosestEntity(GetAllVehicles(), coords, modelFilter)
 end
 
-ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(source, cb, model, coords, heading)
+ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(_, cb, model, coords, heading)
 	ESX.OneSync.SpawnObject(model, coords, heading, cb)
 end)

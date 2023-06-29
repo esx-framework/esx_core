@@ -119,9 +119,9 @@ local function formatName(name)
 end
 
 if Config.UseDeferrals then
-    AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+    AddEventHandler('playerConnecting', function(_, _, deferrals)
         deferrals.defer()
-        local playerId, identifier = source, ESX.GetIdentifier(source)
+        local _, identifier = source, ESX.GetIdentifier(source)
         Wait(100)
 
         if identifier then
@@ -224,7 +224,7 @@ if Config.UseDeferrals then
     end)
 
     RegisterNetEvent('esx:playerLoaded')
-    AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+    AddEventHandler('esx:playerLoaded', function(_, xPlayer)
         if not playerIdentity[xPlayer.identifier] then
             return xPlayer.kick(_('missing_identity'))
         end
@@ -293,9 +293,9 @@ else
 	end
 
 	if not multichar then
-		AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+		AddEventHandler('playerConnecting', function(_, _, deferrals)
 			deferrals.defer()
-			local playerId, identifier = source, ESX.GetIdentifier(source)
+			local _, identifier = source, ESX.GetIdentifier(source)
 			Wait(40)
 
 			if not identifier then
@@ -338,14 +338,14 @@ else
 
             local xPlayers = ESX.GetExtendedPlayers()
 
-            for i = 1, #(xPlayers) do 
+            for i = 1, #(xPlayers) do
                 if xPlayers[i] then
                     checkIdentity(xPlayers[i])
                 end
             end
         end)
 
-		RegisterNetEvent('esx:playerLoaded', function(playerId, xPlayer)
+		RegisterNetEvent('esx:playerLoaded', function(_, xPlayer)
 			local currentIdentity = playerIdentity[xPlayer.identifier]
 
             if currentIdentity and alreadyRegistered[xPlayer.identifier] then
@@ -449,7 +449,7 @@ else
 end
 
 if Config.EnableCommands then
-	ESX.RegisterCommand('char', 'user', function(xPlayer, args, showError)
+	ESX.RegisterCommand('char', 'user', function(xPlayer)
         if xPlayer and xPlayer.getName() then
             xPlayer.showNotification(TranslateCap('active_character', xPlayer.getName()))
         else
@@ -457,7 +457,7 @@ if Config.EnableCommands then
         end
     end, false, {help = TranslateCap('show_active_character')})
 
-	ESX.RegisterCommand('chardel', 'user', function(xPlayer, args, showError)
+	ESX.RegisterCommand('chardel', 'user', function(xPlayer)
         if xPlayer and xPlayer.getName() then
             if Config.UseDeferrals then
                 xPlayer.kick(TranslateCap('deleted_identity'))
@@ -480,7 +480,7 @@ if Config.EnableCommands then
 end
 
 if Config.EnableDebugging then
-    ESX.RegisterCommand('xPlayerGetFirstName', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetFirstName', 'user', function(xPlayer)
         if xPlayer and xPlayer.get('firstName') then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_first_name', xPlayer.get('firstName')))
         else
@@ -488,7 +488,7 @@ if Config.EnableDebugging then
         end
     end, false, {help = TranslateCap('debug_xPlayer_get_first_name')})
 
-    ESX.RegisterCommand('xPlayerGetLastName', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetLastName', 'user', function(xPlayer)
         if xPlayer and xPlayer.get('lastName') then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_last_name', xPlayer.get('lastName')))
         else
@@ -496,7 +496,7 @@ if Config.EnableDebugging then
         end
     end, false, {help = TranslateCap('debug_xPlayer_get_last_name')})
 
-    ESX.RegisterCommand('xPlayerGetFullName', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetFullName', 'user', function(xPlayer)
         if xPlayer and xPlayer.getName() then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_full_name', xPlayer.getName()))
         else
@@ -504,7 +504,7 @@ if Config.EnableDebugging then
         end
     end, false, {help = TranslateCap('debug_xPlayer_get_full_name')})
 
-    ESX.RegisterCommand('xPlayerGetSex', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetSex', 'user', function(xPlayer)
         if xPlayer and xPlayer.get('sex') then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_sex', xPlayer.get('sex')))
         else
@@ -512,7 +512,7 @@ if Config.EnableDebugging then
         end
     end, false, {help = TranslateCap('debug_xPlayer_get_sex')})
 
-    ESX.RegisterCommand('xPlayerGetDOB', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetDOB', 'user', function(xPlayer)
         if xPlayer and xPlayer.get('dateofbirth') then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_dob', xPlayer.get('dateofbirth')))
         else
@@ -520,7 +520,7 @@ if Config.EnableDebugging then
         end
     end, false, {help = TranslateCap('debug_xPlayer_get_dob')})
 
-    ESX.RegisterCommand('xPlayerGetHeight', 'user', function(xPlayer, args, showError)
+    ESX.RegisterCommand('xPlayerGetHeight', 'user', function(xPlayer)
         if xPlayer and xPlayer.get('height') then
             xPlayer.showNotification(TranslateCap('return_debug_xPlayer_get_height', xPlayer.get('height')))
         else

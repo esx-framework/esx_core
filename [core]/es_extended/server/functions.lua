@@ -6,7 +6,7 @@ end
 
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	if type(name) == 'table' then
-		for k, v in ipairs(name) do
+		for _, v in ipairs(name) do
 			ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
 		end
 
@@ -34,7 +34,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 
 	Core.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
 
-	RegisterCommand(name, function(playerId, args, rawCommand)
+	RegisterCommand(name, function(playerId, args)
 		local command = Core.RegisteredCommands[name]
 
 		if not command.allowConsole and playerId == 0 then
@@ -131,6 +131,10 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 					xPlayer.showNotification(error)
 				end
 			else
+				if ESX.Table.SizeOf(args) == 0 then
+					xPlayer.showNotification(TranslateCap('commanderror_invalidplayerid'))
+					return
+				end
 				cb(xPlayer or false, args, function(msg)
 					if playerId == 0 then
 						print(('[^3WARNING^7] %s^7'):format(msg))
@@ -143,7 +147,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end, true)
 
 	if type(group) == 'table' then
-		for k, v in ipairs(group) do
+		for _, v in ipairs(group) do
 			ExecuteCommand(('add_ace group.%s command.%s allow'):format(v, name))
 		end
 	else
@@ -221,18 +225,36 @@ end
 
 ESX.GetPlayers = GetPlayers
 
+local function checkTable(key, val, player, xPlayers)
+  for valIndex = 1, #val do
+    local value = val[valIndex]
+    if not xPlayers[value] then
+      xPlayers[value] = {}
+    end
+    
+    if (key == 'job' and player.job.name == value) or player[key] == value then
+      xPlayers[value][#xPlayers[value] + 1] = player
+    end
+  end
+end
+
 function ESX.GetExtendedPlayers(key, val)
-	local xPlayers = {}
-	for k, v in pairs(ESX.Players) do
-		if key then
-			if (key == 'job' and v.job.name == val) or v[key] == val then
-				xPlayers[#xPlayers + 1] = v
-			end
-		else
-			xPlayers[#xPlayers + 1] = v
-		end
-	end
-	return xPlayers
+  if not key then return ESX.Players end
+
+  local xPlayers = {}
+  if type(val) == "table" then
+    for _, v in pairs(ESX.Players) do
+      checkTable(key, val, v, xPlayers)
+    end
+  else
+    for _, v in pairs(ESX.Players) do
+      if (key == 'job' and v.job.name == val) or v[key] == val then
+        xPlayers[#xPlayers + 1] = v
+      end
+    end
+  end
+
+  return xPlayers
 end
 
 function ESX.GetPlayerFromId(source)
@@ -248,7 +270,7 @@ function ESX.GetIdentifier(playerId)
 	if fxDk == 1 then
 		return "ESX-DEBUG-LICENCE"
 	end
-	for k, v in ipairs(GetPlayerIdentifiers(playerId)) do
+	for _, v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
 			local identifier = string.gsub(v, 'license:', '')
 			return identifier
@@ -321,6 +343,37 @@ function ESX.DiscordLogFields(name, title, color, fields)
 	})
 end
 
+--- Create Job at Runtime
+--- @param name string
+--- @param label string
+--- @param grades table
+function ESX.CreateJob(name, label, grades)
+  if not name then
+      return print('[^3WARNING^7] missing argument `name(string)` while creating a job')
+  end
+  
+  if not label then
+      return print('[^3WARNING^7] missing argument `label(string)` while creating a job')
+  end
+  
+  if not grades or not next(grades) then
+      return print('[^3WARNING^7] missing argument `grades(table)` while creating a job!')
+  end
+
+  local parameters = {}
+  local job = {name = name, label = label, grades = {}}
+
+  for _,v in pairs(grades) do
+      job.grades[tostring(v.grade)] = {job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {}}
+      parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary}
+  end
+
+  MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', {name, label})
+  MySQL.prepare('INSERT INTO job_grades (job_name, grade, name, label, salary) VALUES (?, ?, ?, ?, ?)', parameters)
+  
+  ESX.Jobs[name] = job
+end
+
 function ESX.RefreshJobs()
 	local Jobs = {}
 	local jobs = MySQL.query.await('SELECT * FROM jobs')
@@ -352,26 +405,6 @@ function ESX.RefreshJobs()
 		ESX.Jobs['unemployed'] = {label = 'Unemployed', grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
 	else
 		ESX.Jobs = Jobs
-	end
-end
-
-function ESX.RefreshItems()
-	if not Config.OxInventory then
-		ESX.Items = {}
-		local items = MySQL.query.await('SELECT * FROM items')
-		for k, v in ipairs(items) do
-			ESX.Items[v.name] = {label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove}
-		end
-	else
-		TriggerEvent('__cfx_export_ox_inventory_Items', function(ref)
-			if ref then
-				ESX.Items = ref()
-			end
-		end)
-
-		AddEventHandler('ox_inventory:itemList', function(items)
-			ESX.Items = items
-		end)
 	end
 end
 

@@ -626,6 +626,11 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
+    local driftTyresEnabled = false
+    if type(GetDriftTyresEnabled(vehicle) == "boolean") and GetDriftTyresEnabled(vehicle) then
+        driftTyresEnabled = true
+    end
+
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
@@ -688,6 +693,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
         extras = extras,
+        dirftTyresEnabled = driftTyresEnabled,
         tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
         modSpoilers = GetVehicleMod(vehicle, 0),
@@ -714,7 +720,9 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modXenon = IsToggleModOn(vehicle, 22),
 
         modFrontWheels = GetVehicleMod(vehicle, 23),
+		modCustomFrontWheels = GetVehicleModVariation(vehicle, 23),
         modBackWheels = GetVehicleMod(vehicle, 24),
+        modCustomBackWheels = GetVehicleModVariation(vehicle, 24),
 
         modPlateHolder = GetVehicleMod(vehicle, 25),
         modVanityPlate = GetVehicleMod(vehicle, 26),
@@ -821,6 +829,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         end
     end
 
+    if props.driftTyresEnabled then
+        SetDriftTyresEnabled(vehicle, true)
+    end
+
     if props.neonColor ~= nil then
         SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
     end
@@ -897,8 +909,14 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.modFrontWheels ~= nil then
         SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
     end
+	if props.modCustomFrontWheels ~= nil then
+        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false)
+    end
     if props.modBackWheels ~= nil then
         SetVehicleMod(vehicle, 24, props.modBackWheels, false)
+    end
+    if props.modCustomBackWheels ~= nil then
+        SetVehicleMod(vehicle, 24, props.modCustomBackWheels, false)
     end
     if props.modPlateHolder ~= nil then
         SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
@@ -1207,7 +1225,7 @@ function ESX.ShowInventory()
                                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                                         }
 
-                                        ESX.OpenContext("right", elementsG, function(menuG, _)
+                                        ESX.OpenContext("right", elementsG, function(menuG)
                                             local quantity = tonumber(menuG.eles[2].inputValue)
 
                                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1246,7 +1264,7 @@ function ESX.ShowInventory()
                             {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                         }
 
-                        ESX.OpenContext("right", elementsR, function(menuR, _)
+                        ESX.OpenContext("right", elementsR, function(menuR)
                             local quantity = tonumber(menuR.eles[2].inputValue)
 
                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1281,7 +1299,7 @@ function ESX.ShowInventory()
                                 {icon = "fas fa-check-double", title = "Confirm", val = "confirm"}
                             }
 
-                            ESX.OpenContext("right", elementsGA, function(menuGA, _)
+                            ESX.OpenContext("right", elementsGA, function(menuGA)
                                 local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then
