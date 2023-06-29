@@ -392,7 +392,7 @@ if not Config.OxInventory then
 		local targetXPlayer = ESX.GetPlayerFromId(target)
 		local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
 		if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
-			print("[^3WARNING^7] Player Detected Cheating: ^5" .. GetPlayerName(playerId) .. "^7")
+			print(('[^3WARNING^7] Player Detected Cheating: ^5%s^7'):format(GetPlayerName(playerId)))
 			return
 		end
 

@@ -6,9 +6,9 @@ local Debug = ESX.GetConfig().EnableDebug
 local function Notify(notificatonType, length, message)
 
     if Debug then
-        print("1 ".. tostring(notificatonType))
-        print("2 "..tostring(length))
-        print("3 "..message)
+        print(('1 %s'):format(tostring(notificatonType)))
+        print(('2 %s'):format(tostring(length)))
+        print(('3 %s'):format(message))
     end
 
     if type(notificatonType) ~= "string" then
@@ -20,9 +20,9 @@ local function Notify(notificatonType, length, message)
     end
 
     if Debug then
-        print("4 ".. tostring(notificatonType))
-        print("5 "..tostring(length))
-        print("6 "..message)
+        print(('4 %s'):format(tostring(notificatonType)))
+        print(('5 %s'):format(tostring(length)))
+        print(('6 %s'):format(message))
     end
 
     SendNuiMessage(json.encode({

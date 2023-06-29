@@ -342,7 +342,7 @@ end, true, {help = TranslateCap('command_setgroup'), validate = true, arguments 
 
 ESX.RegisterCommand('save', 'admin', function(xPlayer, args, _)
 	Core.SavePlayer(args.playerId)
-	print("[^2Info^0] Saved Player - ^5".. args.playerId.source .. "^0")
+	print(('[^2Info^0] Saved Player - ^5%s^0'):format(args.playerId.source))
 end, true, {help = TranslateCap('command_save'), validate = true, arguments = {
 	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
 }})
@@ -352,25 +352,25 @@ ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, _)
 end, true, {help = TranslateCap('command_saveall')})
 
 ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, _, _)
-	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup() .. "^0")
+	print(('%s, you are currently: ^5%s^0'):format(xPlayer.getName(), xPlayer.getGroup()))
 end, true)
 
 ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, _, _)
-	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label .. "^0")
+	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getJob().name, xPlayer.getJob().grade_label))
 end, true)
 
 ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, _, _)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
-	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."^0")
+	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), job))
 end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer, _, _)
     local ped = GetPlayerPed(xPlayer.source)
 	local coords = GetEntityCoords(ped, false)
 	local heading = GetEntityHeading(ped)
-	print("Coords - Vector3: ^5".. vector3(coords.x,coords.y,coords.z).. "^0")
-	print("Coords - Vector4: ^5".. vector4(coords.x, coords.y, coords.z, heading) .. "^0")
+	print(('Coords - Vector3: ^5%s^0'):format(vector3(coords.x,coords.y,coords.z)))
+	print(('Coords - Vector4: ^5%s^0'):format(vector4(coords.x,coords.y,coords.z, heading)))
 end, true)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer, _, _)
@@ -464,9 +464,9 @@ end, false)
 
 ESX.RegisterCommand('players', "admin", function(xPlayer, _, _)
 	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
-	print("^5"..#xPlayers.." ^2online player(s)^0")
+	print(('^5%s^2 online player(s)^0'):format(#xPlayers))
 	for i = 1, #(xPlayers) do 
 		local xPlayer = xPlayers[i]
-		print("^1[ ^2ID : ^5"..xPlayer.source.." ^0| ^2Name : ^5"..xPlayer.getName().." ^0 | ^2Group : ^5"..xPlayer.getGroup().." ^0 | ^2Identifier : ^5".. xPlayer.identifier .."^1]^0\n")
+		print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
 	end
 end, true)

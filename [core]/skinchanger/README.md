@@ -57,13 +57,13 @@ TriggerEvent('skinchanger:loadSkin', {
 
 -- Get list of components and maxVals
 TriggerEvent('skinchanger:getData', function(components, maxVals)
- print('Components => ' .. json.encode(components))
- print('MaxVals => ' .. json.encode(maxVals))
+ print(('Components => %s'):format(json.encode(components)))
+ print(('MaxVals => %s'):format(json.encode(maxVals)))
 end)
 
 -- Get current skin
 TriggerEvent('skinchanger:getSkin', function(skin)
- print(json.encode(skin))
+ print(('%s'):format(json.encode(skin)))
 end)
 ```
 
