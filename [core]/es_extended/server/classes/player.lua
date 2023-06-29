@@ -256,7 +256,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	function self.getInventoryItem(itemName)
 		for _, v in ipairs(self.inventory) do
-			if v.itemName == itemName then
+			if v.name == itemName then
 				return v
 			end
 		end
