@@ -14,7 +14,7 @@ end
 
 local function closeMenu(namespace, name)
     CurrentNameSpace = namespace
-    OpenedMenus -= 1
+    OpenedMenus = OpenedMenus - 1
     if OpenedMenus < 0 then
         OpenedMenus = 0
     end
