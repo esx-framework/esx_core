@@ -352,7 +352,7 @@ ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, _, _)
 end, true)
 
 ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, _, _)
-	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getJob().name, xPlayer.getJob().grade_label))
+	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getName(), xPlayer.getJob().name, xPlayer.getJob().grade_label))
 end, true)
 
 ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer)
