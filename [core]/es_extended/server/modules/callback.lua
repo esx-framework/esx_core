@@ -35,7 +35,7 @@ end
 
 RegisterNetEvent('esx:clientCallback', function(requestId, invoker, ...)
 	if not clientRequests[requestId] then
-	return print(('[^1ERROR^7] Client Callback with requestId ^5%s^7 Was Called by ^5%s^7 but does not exist.'):format(requestId, invoker))
+		return print(('[^1ERROR^7] Client Callback with requestId ^5%s^7 Was Called by ^5%s^7 but does not exist.'):format(requestId, invoker))
 	end
 
 	clientRequests[requestId](...)

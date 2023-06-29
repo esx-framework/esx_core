@@ -3,7 +3,7 @@ local pickups = {}
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(100)
-		
+
 		if NetworkIsPlayerActive(PlayerId()) then
 			exports.spawnmanager:setAutoSpawn(false)
 			DoScreenFadeOut(0)
@@ -101,7 +101,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 						SetPlayerLockonRangeOverride(playerId, 2.0)
 					end
 				end
-				
+
 				if Config.DisableVehicleRewards then
 					DisablePlayerVehicleRewards(playerId)
 				end
@@ -173,7 +173,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			'WORLD_VEHICLE_DISTANT_EMPTY_GROUND',
 			'WORLD_HUMAN_PAPARAZZI'
 		}
-		
+
 		for _, v in pairs(scenarios) do
 			SetScenarioTypeEnabled(v, false)
 		end
@@ -246,25 +246,25 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
 		return
 	end
 
-    local netId = bagName:gsub('entity:', '')
-    local timer = GetGameTimer()
-    while not NetworkDoesEntityExistWithNetworkId(tonumber(netId)) do
-	    Wait(0)
-	    if GetGameTimer() - timer > 10000 then
-	        return
-	    end
-    end
+	local netId = bagName:gsub('entity:', '')
+	local timer = GetGameTimer()
+	while not NetworkDoesEntityExistWithNetworkId(tonumber(netId)) do
+		Wait(0)
+		if GetGameTimer() - timer > 10000 then
+			return
+		end
+	end
 
-    local vehicle = NetToVeh(tonumber(netId))
-    local timer2 = GetGameTimer()
-    while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
-        Wait(0)
-	    if GetGameTimer() - timer2 > 10000 then
-	        return
-	    end
-    end
+	local vehicle = NetToVeh(tonumber(netId))
+	local timer2 = GetGameTimer()
+	while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
+		Wait(0)
+		if GetGameTimer() - timer2 > 10000 then
+			return
+		end
+	end
 
-    ESX.Game.SetVehicleProperties(vehicle, value)
+	ESX.Game.SetVehicleProperties(vehicle, value)
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
@@ -332,7 +332,6 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
-
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
@@ -392,7 +391,7 @@ if not Config.OxInventory then
 	AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
 			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name
-				, pickup.components, pickup.tintIndex)
+			, pickup.components, pickup.tintIndex)
 		end
 	end)
 end

@@ -21,7 +21,6 @@ end
 
 CreateThread(function()
     while true do
-
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
             ESX.SetPlayerData('ped', playerPed)
@@ -37,7 +36,7 @@ CreateThread(function()
             isJumping = false
         end
 
-         if IsPauseMenuActive() and not inPauseMenu then
+        if IsPauseMenuActive() and not inPauseMenu then
             inPauseMenu = true
             TriggerEvent('esx:pauseMenuActive', inPauseMenu)
         elseif not IsPauseMenuActive() and inPauseMenu then
@@ -87,7 +86,6 @@ CreateThread(function()
 end)
 
 if Config.EnableDebug then
-
     AddEventHandler('esx:playerPedChanged', function(netId)
         print('esx:playerPedChanged', netId)
     end)
@@ -111,5 +109,4 @@ if Config.EnableDebug then
     AddEventHandler('esx:exitedVehicle', function(vehicle, plate, seat, displayName, netId)
         print('esx:exitedVehicle', 'vehicle', vehicle, 'plate', plate, 'seat', seat, 'displayName', displayName, 'netId', netId)
     end)
-
 end

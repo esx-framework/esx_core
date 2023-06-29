@@ -15,7 +15,7 @@ AddEventHandler('onClientResourceStart', function(resource)
 	if resource ~= 'npwd' then
 		return
 	end
-  
+
 	npwd = GetResourceState('npwd'):find('start') and exports.npwd or nil
 
 	if ESX.PlayerLoaded then

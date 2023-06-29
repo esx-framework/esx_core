@@ -6,8 +6,8 @@ ESX.SetTimeout = function(msec, cb)
 
 	SetTimeout(msec, function()
 		if CancelledTimeouts[id] then
-     		CancelledTimeouts[id] = nil
-     		return
+			CancelledTimeouts[id] = nil
+			return
 		end
 
 		cb()

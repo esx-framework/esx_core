@@ -4,7 +4,6 @@ local Debug = ESX.GetConfig().EnableDebug
 ---@param length number the length of the notification
 ---@param message any the message :D
 local function Notify(notificatonType, length, message)
-
     if Debug then
         print(('1 %s'):format(tostring(notificatonType)))
         print(('2 %s'):format(tostring(length)))

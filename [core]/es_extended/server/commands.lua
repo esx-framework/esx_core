@@ -1,19 +1,23 @@
 ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args)
-	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
+	xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Coordinates /setcoords Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "X Coord", value = args.x, inline = true},
-			{name = "Y Coord", value = args.y, inline = true},
-			{name = "Z Coord", value = args.z, inline = true},
+			{ name = "Player",  value = xPlayer.name,   inline = true },
+			{ name = "ID",      value = xPlayer.source, inline = true },
+			{ name = "X Coord", value = args.x,         inline = true },
+			{ name = "Y Coord", value = args.y,         inline = true },
+			{ name = "Z Coord", value = args.z,         inline = true },
 		})
 	end
-end, false, {help = TranslateCap('command_setcoords'), validate = true, arguments = {
-	{name = 'x', help = TranslateCap('command_setcoords_x'), type = 'number'},
-	{name = 'y', help = TranslateCap('command_setcoords_y'), type = 'number'},
-	{name = 'z', help = TranslateCap('command_setcoords_z'), type = 'number'}
-}})
+end, false, {
+	help = TranslateCap('command_setcoords'),
+	validate = true,
+	arguments = {
+		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'number' },
+		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'number' },
+		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'number' }
+	}
+})
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	if not ESX.DoesJobExist(args.job, args.grade) then
@@ -23,35 +27,39 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	args.playerId.setJob(args.job, args.grade)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Job /setjob Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Job", value = args.playerId, inline = true},
-			{name = "Grade", value = args.playerId, inline = true},
+			{ name = "Player", value = xPlayer.name,       inline = true },
+			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Target", value = args.playerId.name, inline = true },
+			{ name = "Job",    value = args.playerId,      inline = true },
+			{ name = "Grade",  value = args.playerId,      inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_setjob'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-	{name = 'job', help = TranslateCap('command_setjob_job'), type = 'string'},
-	{name = 'grade', help = TranslateCap('command_setjob_grade'), type = 'number'}
-}})
+end, true, {
+	help = TranslateCap('command_setjob'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' },
+		{ name = 'job',      help = TranslateCap('command_setjob_job'),      type = 'string' },
+		{ name = 'grade',    help = TranslateCap('command_setjob_grade'),    type = 'number' }
+	}
+})
 
 local upgrades = Config.SpawnVehMaxUpgrades and
-    {
-        plate = "ADMINCAR",
-        modEngine = 3,
-        modBrakes = 2,
-        modTransmission = 2,
-        modSuspension = 3,
-        modArmor = true,
-        windowTint = 1
-    } or {}
+	{
+		plate = "ADMINCAR",
+		modEngine = 3,
+		modBrakes = 2,
+		modTransmission = 2,
+		modSuspension = 3,
+		modArmor = true,
+		windowTint = 1
+	} or {}
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	if not xPlayer then
 		return showError('[^1ERROR^7] The xPlayer value is nil')
 	end
-	
+
 	local playerPed = GetPlayerPed(xPlayer.source)
 	local playerCoords = GetEntityCoords(playerPed)
 	local playerHeading = GetEntityHeading(playerPed)
@@ -67,9 +75,9 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Spawn Car /car Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Vehicle", value = args.car, inline = true}
+			{ name = "Player",  value = xPlayer.name,   inline = true },
+			{ name = "ID",      value = xPlayer.source, inline = true },
+			{ name = "Vehicle", value = args.car,       inline = true }
 		})
 	end
 
@@ -79,7 +87,7 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 			for _ = 1, 20 do
 				Wait(0)
 				SetPedIntoVehicle(playerPed, vehicle, -1)
-		
+
 				if GetVehiclePedIsIn(playerPed, false) == vehicle then
 					break
 				end
@@ -89,11 +97,15 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 			end
 		end
 	end)
-end, false, {help = TranslateCap('command_car'), validate = false, arguments = {
-	{name = 'car',validate = false, help = TranslateCap('command_car_car'), type = 'string'}
-}})
+end, false, {
+	help = TranslateCap('command_car'),
+	validate = false,
+	arguments = {
+		{ name = 'car', validate = false, help = TranslateCap('command_car_car'), type = 'string' }
+	}
+})
 
-ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args)
+ESX.RegisterCommand({ 'cardel', 'dv' }, 'admin', function(xPlayer, args)
 	local PedVehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source), false)
 	if DoesEntityExist(PedVehicle) then
 		DeleteEntity(PedVehicle)
@@ -107,13 +119,17 @@ ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args)
 	end
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Delete Vehicle /dv Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
+			{ name = "Player", value = xPlayer.name,   inline = true },
+			{ name = "ID",     value = xPlayer.source, inline = true },
 		})
 	end
-end, false, {help = TranslateCap('command_cardel'), validate = false, arguments = {
-	{name = 'radius',validate = false, help = TranslateCap('command_cardel_radius'), type = 'number'}
-}})
+end, false, {
+	help = TranslateCap('command_cardel'),
+	validate = false,
+	arguments = {
+		{ name = 'radius', validate = false, help = TranslateCap('command_cardel_radius'), type = 'number' }
+	}
+})
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
@@ -122,18 +138,22 @@ ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showErro
 	args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Account Money /setaccountmoney Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Account", value = args.account, inline = true},
-			{name = "Amount", value = args.amount, inline = true},
+			{ name = "Player",  value = xPlayer.name,       inline = true },
+			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Target",  value = args.playerId.name, inline = true },
+			{ name = "Account", value = args.account,       inline = true },
+			{ name = "Amount",  value = args.amount,        inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_setaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = TranslateCap('command_giveaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = TranslateCap('command_setaccountmoney_amount'), type = 'number'}
-}})
+end, true, {
+	help = TranslateCap('command_setaccountmoney'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'),          type = 'player' },
+		{ name = 'account',  help = TranslateCap('command_giveaccountmoney_account'), type = 'string' },
+		{ name = 'amount',   help = TranslateCap('command_setaccountmoney_amount'),   type = 'number' }
+	}
+})
 
 ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
@@ -142,18 +162,22 @@ ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showErr
 	args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Give Account Money /giveaccountmoney Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Account", value = args.account, inline = true},
-			{name = "Amount", value = args.amount, inline = true},
+			{ name = "Player",  value = xPlayer.name,       inline = true },
+			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Target",  value = args.playerId.name, inline = true },
+			{ name = "Account", value = args.account,       inline = true },
+			{ name = "Amount",  value = args.amount,        inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_giveaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = TranslateCap('command_giveaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = TranslateCap('command_giveaccountmoney_amount'), type = 'number'}
-}})
+end, true, {
+	help = TranslateCap('command_giveaccountmoney'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'),          type = 'player' },
+		{ name = 'account',  help = TranslateCap('command_giveaccountmoney_account'), type = 'string' },
+		{ name = 'amount',   help = TranslateCap('command_giveaccountmoney_amount'),  type = 'number' }
+	}
+})
 
 ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
@@ -162,36 +186,44 @@ ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showE
 	args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Remove Account Money /removeaccountmoney Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Account", value = args.account, inline = true},
-			{name = "Amount", value = args.amount, inline = true},
+			{ name = "Player",  value = xPlayer.name,       inline = true },
+			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Target",  value = args.playerId.name, inline = true },
+			{ name = "Account", value = args.account,       inline = true },
+			{ name = "Amount",  value = args.amount,        inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_removeaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = TranslateCap('command_removeaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = TranslateCap('command_removeaccountmoney_amount'), type = 'number'}
-}})
+end, true, {
+	help = TranslateCap('command_removeaccountmoney'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'),            type = 'player' },
+		{ name = 'account',  help = TranslateCap('command_removeaccountmoney_account'), type = 'string' },
+		{ name = 'amount',   help = TranslateCap('command_removeaccountmoney_amount'),  type = 'number' }
+	}
+})
 
 if not Config.OxInventory then
 	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args)
 		args.playerId.addInventoryItem(args.item, args.count)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Item /giveitem Triggered!", "pink", {
-				{name = "Player", value = xPlayer.name, inline = true},
-				{name = "ID", value = xPlayer.source, inline = true},
-				{name = "Target", value = args.playerId.name, inline = true},
-				{name = "Item", value = args.item, inline = true},
-				{name = "Quantity", value = args.count, inline = true},
+				{ name = "Player",   value = xPlayer.name,       inline = true },
+				{ name = "ID",       value = xPlayer.source,     inline = true },
+				{ name = "Target",   value = args.playerId.name, inline = true },
+				{ name = "Item",     value = args.item,          inline = true },
+				{ name = "Quantity", value = args.count,         inline = true },
 			})
 		end
-	end, true, {help = TranslateCap('command_giveitem'), validate = true, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-		{name = 'item', help = TranslateCap('command_giveitem_item'), type = 'item'},
-		{name = 'count', help = TranslateCap('command_giveitem_count'), type = 'number'}
-	}})
+	end, true, {
+		help = TranslateCap('command_giveitem'),
+		validate = true,
+		arguments = {
+			{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' },
+			{ name = 'item',     help = TranslateCap('command_giveitem_item'),   type = 'item' },
+			{ name = 'count',    help = TranslateCap('command_giveitem_count'),  type = 'number' }
+		}
+	})
 
 	ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
 		if args.playerId.hasWeapon(args.weapon) then
@@ -200,18 +232,22 @@ if not Config.OxInventory then
 		args.playerId.addWeapon(args.weapon, args.ammo)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Weapon /giveweapon Triggered!", "pink", {
-				{name = "Player", value = xPlayer.name, inline = true},
-				{name = "ID", value = xPlayer.source, inline = true},
-				{name = "Target", value = args.playerId.name, inline = true},
-				{name = "Weapon", value = args.weapon, inline = true},
-				{name = "Ammo", value = args.ammo, inline = true},
+				{ name = "Player", value = xPlayer.name,       inline = true },
+				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Target", value = args.playerId.name, inline = true },
+				{ name = "Weapon", value = args.weapon,        inline = true },
+				{ name = "Ammo",   value = args.ammo,          inline = true },
 			})
 		end
-	end, true, {help = TranslateCap('command_giveweapon'), validate = true, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-		{name = 'weapon', help = TranslateCap('command_giveweapon_weapon'), type = 'weapon'},
-		{name = 'ammo', help = TranslateCap('command_giveweapon_ammo'), type = 'number'}
-	}})
+	end, true, {
+		help = TranslateCap('command_giveweapon'),
+		validate = true,
+		arguments = {
+			{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'),   type = 'player' },
+			{ name = 'weapon',   help = TranslateCap('command_giveweapon_weapon'), type = 'weapon' },
+			{ name = 'ammo',     help = TranslateCap('command_giveweapon_ammo'),   type = 'number' }
+		}
+	})
 
 	ESX.RegisterCommand('giveammo', 'admin', function(xPlayer, args, showError)
 		if not args.playerId.hasWeapon(args.weapon) then
@@ -220,18 +256,22 @@ if not Config.OxInventory then
 		args.playerId.addWeaponAmmo(args.weapon, args.ammo)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Ammunition /giveammo Triggered!", "pink", {
-				{name = "Player", value = xPlayer.name, inline = true},
-				{name = "ID", value = xPlayer.source, inline = true},
-				{name = "Target", value = args.playerId.name, inline = true},
-				{name = "Weapon", value = args.weapon, inline = true},
-				{name = "Ammo", value = args.ammo, inline = true},
+				{ name = "Player", value = xPlayer.name,       inline = true },
+				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Target", value = args.playerId.name, inline = true },
+				{ name = "Weapon", value = args.weapon,        inline = true },
+				{ name = "Ammo",   value = args.ammo,          inline = true },
 			})
 		end
-	end, true, {help = TranslateCap('command_giveweapon'), validate = false, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-		{name = 'weapon', help = TranslateCap('command_giveammo_weapon'), type = 'weapon'},
-		{name = 'ammo', help = TranslateCap('command_giveammo_ammo'), type = 'number'}
-	}})
+	end, true, {
+		help = TranslateCap('command_giveweapon'),
+		validate = false,
+		arguments = {
+			{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' },
+			{ name = 'weapon',   help = TranslateCap('command_giveammo_weapon'), type = 'weapon' },
+			{ name = 'ammo',     help = TranslateCap('command_giveammo_ammo'),   type = 'number' }
+		}
+	})
 
 	ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
 		if args.playerId.hasWeapon(args.weaponName) then
@@ -244,11 +284,11 @@ if not Config.OxInventory then
 					args.playerId.addWeaponComponent(args.weaponName, args.componentName)
 					if Config.AdminLogging then
 						ESX.DiscordLogFields("UserActions", "Give Weapon Component /giveweaponcomponent Triggered!", "pink", {
-							{name = "Player", value = xPlayer.name, inline = true},
-							{name = "ID", value = xPlayer.source, inline = true},
-							{name = "Target", value = args.playerId.name, inline = true},
-							{name = "Weapon", value = args.weaponName, inline = true},
-							{name = "Component", value = args.componentName, inline = true},
+							{ name = "Player",    value = xPlayer.name,       inline = true },
+							{ name = "ID",        value = xPlayer.source,     inline = true },
+							{ name = "Target",    value = args.playerId.name, inline = true },
+							{ name = "Weapon",    value = args.weaponName,    inline = true },
+							{ name = "Component", value = args.componentName, inline = true },
 						})
 					end
 				end
@@ -258,30 +298,34 @@ if not Config.OxInventory then
 		else
 			showError(TranslateCap('command_giveweaponcomponent_missingweapon'))
 		end
-	end, true, {help = TranslateCap('command_giveweaponcomponent'), validate = true, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-		{name = 'weaponName', help = TranslateCap('command_giveweapon_weapon'), type = 'weapon'},
-		{name = 'componentName', help = TranslateCap('command_giveweaponcomponent_component'), type = 'string'}
-	}})
+	end, true, {
+		help = TranslateCap('command_giveweaponcomponent'),
+		validate = true,
+		arguments = {
+			{ name = 'playerId',      help = TranslateCap('commandgeneric_playerid'),               type = 'player' },
+			{ name = 'weaponName',    help = TranslateCap('command_giveweapon_weapon'),             type = 'weapon' },
+			{ name = 'componentName', help = TranslateCap('command_giveweaponcomponent_component'), type = 'string' }
+		}
+	})
 end
 
-ESX.RegisterCommand({'clear', 'cls'}, 'user', function(xPlayer)
+ESX.RegisterCommand({ 'clear', 'cls' }, 'user', function(xPlayer)
 	xPlayer.triggerEvent('chat:clear')
-end, false, {help = TranslateCap('command_clear')})
+end, false, { help = TranslateCap('command_clear') })
 
-ESX.RegisterCommand({'clearall', 'clsall'}, 'admin', function(xPlayer)
+ESX.RegisterCommand({ 'clearall', 'clsall' }, 'admin', function(xPlayer)
 	TriggerClientEvent('chat:clear', -1)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Clear Chat /clearall Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
+			{ name = "Player", value = xPlayer.name,   inline = true },
+			{ name = "ID",     value = xPlayer.source, inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_clearall')})
+end, true, { help = TranslateCap('command_clearall') })
 
 ESX.RegisterCommand("refreshjobs", 'admin', function()
 	ESX.RefreshJobs()
-end, true, {help = TranslateCap('command_clearall')})
+end, true, { help = TranslateCap('command_clearall') })
 
 if not Config.OxInventory then
 	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args)
@@ -290,51 +334,66 @@ if not Config.OxInventory then
 				args.playerId.setInventoryItem(v.name, 0)
 			end
 		end
-		TriggerEvent('esx:playerInventoryCleared',args.playerId)
+		TriggerEvent('esx:playerInventoryCleared', args.playerId)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Clear Inventory /clearinventory Triggered!", "pink", {
-				{name = "Player", value = xPlayer.name, inline = true},
-				{name = "ID", value = xPlayer.source, inline = true},
-				{name = "Target", value = args.playerId.name, inline = true},
+				{ name = "Player", value = xPlayer.name,       inline = true },
+				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Target", value = args.playerId.name, inline = true },
 			})
 		end
-	end, true, {help = TranslateCap('command_clearinventory'), validate = true, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-	}})
+	end, true, {
+		help = TranslateCap('command_clearinventory'),
+		validate = true,
+		arguments = {
+			{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+		}
+	})
 
 	ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args)
-		for i=#args.playerId.loadout, 1, -1 do
+		for i = #args.playerId.loadout, 1, -1 do
 			args.playerId.removeWeapon(args.playerId.loadout[i].name)
 		end
-		TriggerEvent('esx:playerLoadoutCleared',args.playerId)
+		TriggerEvent('esx:playerLoadoutCleared', args.playerId)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "/clearloadout Triggered!", "pink", {
-				{name = "Player", value = xPlayer.name, inline = true},
-				{name = "ID", value = xPlayer.source, inline = true},
-				{name = "Target", value = args.playerId.name, inline = true},
+				{ name = "Player", value = xPlayer.name,       inline = true },
+				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Target", value = args.playerId.name, inline = true },
 			})
 		end
-	end, true, {help = TranslateCap('command_clearloadout'), validate = true, arguments = {
-		{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-	}})
+	end, true, {
+		help = TranslateCap('command_clearloadout'),
+		validate = true,
+		arguments = {
+			{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+		}
+	})
 end
 
 ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args)
 	if not args.playerId then args.playerId = xPlayer.source end
-	if args.group == "superadmin" then args.group = "admin" print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7") end
+	if args.group == "superadmin" then
+		args.group = "admin"
+		print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7")
+	end
 	args.playerId.setGroup(args.group)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "/setgroup Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Group", value = args.group, inline = true},
+			{ name = "Player", value = xPlayer.name,       inline = true },
+			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Target", value = args.playerId.name, inline = true },
+			{ name = "Group",  value = args.group,         inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_setgroup'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'},
-	{name = 'group', help = TranslateCap('command_setgroup_group'), type = 'string'},
-}})
+end, true, {
+	help = TranslateCap('command_setgroup'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' },
+		{ name = 'group',    help = TranslateCap('command_setgroup_group'),  type = 'string' },
+	}
+})
 
 ESX.RegisterCommand('save', 'admin', function(_, args)
 	Core.SavePlayer(args.playerId)
@@ -345,7 +404,7 @@ end, true, {help = TranslateCap('command_save'), validate = true, arguments = {
 
 ESX.RegisterCommand('saveall', 'admin', function()
 	Core.SavePlayers()
-end, true, {help = TranslateCap('command_saveall')})
+end, true, { help = TranslateCap('command_saveall') })
 
 ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, _, _)
 	print(('%s, you are currently: ^5%s^0'):format(xPlayer.getName(), xPlayer.getGroup()))
@@ -355,14 +414,14 @@ ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, _, _)
 	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getName(), xPlayer.getJob().name, xPlayer.getJob().grade_label))
 end, true)
 
-ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer)
+ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
 	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), job))
 end, true)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer)
-    local ped = GetPlayerPed(xPlayer.source)
+	local ped = GetPlayerPed(xPlayer.source)
 	local coords = GetEntityCoords(ped, false)
 	local heading = GetEntityHeading(ped)
 	print(('Coords - Vector3: ^5%s^0'):format(vector3(coords.x,coords.y,coords.z)))
@@ -373,8 +432,8 @@ ESX.RegisterCommand('tpm', "admin", function(xPlayer)
 	xPlayer.triggerEvent("esx:tpm")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /tpm Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
+			{ name = "Player", value = xPlayer.name,   inline = true },
+			{ name = "ID",     value = xPlayer.source, inline = true },
 		})
 	end
 end, true)
@@ -384,15 +443,19 @@ ESX.RegisterCommand('goto', "admin", function(xPlayer, args)
 	xPlayer.setCoords(targetCoords)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /goto Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Target Coords", value = targetCoords, inline = true},
+			{ name = "Player",        value = xPlayer.name,       inline = true },
+			{ name = "ID",            value = xPlayer.source,     inline = true },
+			{ name = "Target",        value = args.playerId.name, inline = true },
+			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_goto'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-}})
+end, true, {
+	help = TranslateCap('command_goto'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand('bring', "admin", function(xPlayer, args)
 	local targetCoords = args.playerId.getCoords()
@@ -400,61 +463,77 @@ ESX.RegisterCommand('bring', "admin", function(xPlayer, args)
 	args.playerId.setCoords(playerCoords)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /bring Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
-			{name = "Target Coords", value = targetCoords, inline = true},
+			{ name = "Player",        value = xPlayer.name,       inline = true },
+			{ name = "ID",            value = xPlayer.source,     inline = true },
+			{ name = "Target",        value = args.playerId.name, inline = true },
+			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_bring'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-}})
+end, true, {
+	help = TranslateCap('command_bring'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand('kill', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent("esx:killPlayer")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Kill Command /kill Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
+			{ name = "Player", value = xPlayer.name,       inline = true },
+			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_kill'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-}})
+end, true, {
+	help = TranslateCap('command_kill'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand('freeze', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Freeze /freeze Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
+			{ name = "Player", value = xPlayer.name,       inline = true },
+			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_freeze'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-}})
+end, true, {
+	help = TranslateCap('command_freeze'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent('esx:freezePlayer', "unfreeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin UnFreeze /unfreeze Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
-			{name = "Target", value = args.playerId.name, inline = true},
+			{ name = "Player", value = xPlayer.name,       inline = true },
+			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
-end, true, {help = TranslateCap('command_unfreeze'), validate = true, arguments = {
-	{name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player'}
-}})
+end, true, {
+	help = TranslateCap('command_unfreeze'),
+	validate = true,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand("noclip", 'admin', function(xPlayer)
 	xPlayer.triggerEvent('esx:noclip')
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin NoClip /noclip Triggered!", "pink", {
-			{name = "Player", value = xPlayer.name, inline = true},
-			{name = "ID", value = xPlayer.source, inline = true},
+			{ name = "Player", value = xPlayer.name,   inline = true },
+			{ name = "ID",     value = xPlayer.source, inline = true },
 		})
 	end
 end, false)

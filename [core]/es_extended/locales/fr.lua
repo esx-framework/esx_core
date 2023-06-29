@@ -197,10 +197,10 @@ Locales["fr"] = {
 	["component_luxary_finish"] = "finition de luxe",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane', -- not translated
+	['weapon_candycane'] = 'Candy Cane',  -- not translated
 	['weapon_acidpackage'] = 'Acid Package', -- not translated
 	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun', -- not translated
+	['weapon_railgunxm3'] = 'Railgun',    -- not translated
 
 	-- Weapon Ammo
 	["ammo_rounds"] = "cartouche(s)",
@@ -231,7 +231,7 @@ Locales["fr"] = {
 	["tint_lspd"] = "skin bleu",
 	["tint_orange"] = "skin orange",
 	["tint_platinum"] = "skin platine",
-	
+
 	-- Duty related
 	["stopped_duty"] = "Vous êtes maintenant hors-service.",
 	["started_duty"] = "Vous êtes maintenant en-service.",

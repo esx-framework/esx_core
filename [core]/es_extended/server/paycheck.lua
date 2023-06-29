@@ -1,7 +1,7 @@
 function StartPayCheck()
-	CreateThread(function()
-		while true do
-			Wait(Config.PaycheckInterval)
+  CreateThread(function()
+    while true do
+      Wait(Config.PaycheckInterval)
       for player, xPlayer in pairs(ESX.Players) do
         local jobLabel = xPlayer.job.label
         local job = xPlayer.job.grade_name
@@ -14,23 +14,23 @@ function StartPayCheck()
               'CHAR_BANK_MAZE', 9)
             if Config.LogPaycheck then
               ESX.DiscordLogFields("Paycheck", "Paycheck - Unemployment Benefits", "green", {
-                {name = "Player", value = xPlayer.name, inline = true},
-                {name = "ID", value = xPlayer.source, inline = true},
-                {name = "Amount", value = salary, inline = true}
+                { name = "Player", value = xPlayer.name,   inline = true },
+                { name = "ID",     value = xPlayer.source, inline = true },
+                { name = "Amount", value = salary,         inline = true }
               })
             end
           elseif Config.EnableSocietyPayouts then -- possibly a society
             TriggerEvent('esx_society:getSociety', xPlayer.job.name, function(society)
-              if society ~= nil then -- verified society
+              if society ~= nil then              -- verified society
                 TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function(account)
                   if account.money >= salary then -- does the society money to pay its employees?
                     xPlayer.addAccountMoney('bank', salary, "Paycheck")
                     account.removeMoney(salary)
                     if Config.LogPaycheck then
-                      ESX.DiscordLogFields("Paycheck", "Paycheck - "..jobLabel, "green", {
-                        {name = "Player", value = xPlayer.name, inline = true},
-                        {name = "ID", value = xPlayer.source, inline = true},
-                        {name = "Amount", value = salary, inline = true}
+                      ESX.DiscordLogFields("Paycheck", "Paycheck - " .. jobLabel, "green", {
+                        { name = "Player", value = xPlayer.name,   inline = true },
+                        { name = "ID",     value = xPlayer.source, inline = true },
+                        { name = "Amount", value = salary,         inline = true }
                       })
                     end
 
@@ -43,10 +43,10 @@ function StartPayCheck()
               else -- not a society
                 xPlayer.addAccountMoney('bank', salary, "Paycheck")
                 if Config.LogPaycheck then
-                  ESX.DiscordLogFields("Paycheck", "Paycheck - "..jobLabel, "green", {
-                    {name = "Player", value = xPlayer.name, inline = true},
-                    {name = "ID", value = xPlayer.source, inline = true},
-                    {name = "Amount", value = salary, inline = true}
+                  ESX.DiscordLogFields("Paycheck", "Paycheck - " .. jobLabel, "green", {
+                    { name = "Player", value = xPlayer.name,   inline = true },
+                    { name = "ID",     value = xPlayer.source, inline = true },
+                    { name = "Amount", value = salary,         inline = true }
                   })
                 end
                 TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'), TranslateCap('received_salary', salary),
@@ -57,9 +57,9 @@ function StartPayCheck()
             xPlayer.addAccountMoney('bank', salary, "Paycheck")
             if Config.LogPaycheck then
               ESX.DiscordLogFields("Paycheck", "Paycheck - Generic", "green", {
-                {name = "Player", value = xPlayer.name, inline = true},
-                {name = "ID", value = xPlayer.source, inline = true},
-                {name = "Amount", value = salary, inline = true}
+                { name = "Player", value = xPlayer.name,   inline = true },
+                { name = "ID",     value = xPlayer.source, inline = true },
+                { name = "Amount", value = salary,         inline = true }
               })
             end
             TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'), TranslateCap('received_salary', salary),
