@@ -89,7 +89,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
 
 				if account then
 					money = account.round and ESX.Math.Round(money) or money
-					self.accounts[account.index].money = self.accounts[account.index].mone - money
+					self.accounts[account.index].money = self.accounts[account.index].money - money
 					self.triggerEvent('esx:setAccountMoney', account)
 					TriggerEvent('esx:removeAccountMoney', self.source, accountName, money, reason)
 					if Inventory.accounts[accountName] then
