@@ -401,10 +401,7 @@ function ESX.RefreshJobs()
 
 	if not Jobs then
 		-- Fallback data, if no jobs exist
-		ESX.Jobs['unemployed'] = {
-			label = 'Unemployed',
-			grades = { ['0'] = { grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {} } }
-		}
+		ESX.Jobs['unemployed'] = {label = 'Unemployed', grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
 	else
 		ESX.Jobs = Jobs
 	end
@@ -422,8 +419,7 @@ function ESX.UseItem(source, item, ...)
 			local success, result = pcall(itemCallback, source, item, ...)
 
 			if not success then
-				return result and print(result) or
-					print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(item))
+				return result and print(result) or print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(item))
 			end
 		end
 	else
@@ -454,7 +450,7 @@ function ESX.GetItemLabel(item)
 	if ESX.Items[item] then
 		return ESX.Items[item].label
 	else
-		print('[^3WARNING^7] Attemting to get invalid Item -> ^5' .. item .. "^7")
+		print(('[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7'):format(item))
 	end
 end
 
