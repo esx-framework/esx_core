@@ -1,5 +1,5 @@
 local lastSkin, cam, isCameraActive
-local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0, false
+local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(_, _, skin)
