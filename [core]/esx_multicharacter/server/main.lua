@@ -4,6 +4,7 @@ local oneSyncState = GetConvar('onesync', 'off')
 
 local DATABASE do
 	local connectionString = GetConvar('mysql_connection_string', '');
+
 	if connectionString == '' then
 		error(connectionString..'\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0', 0)
 	elseif connectionString:find('mysql://') then
@@ -12,13 +13,15 @@ local DATABASE do
 		databaseFound = true
 	else
 		connectionString = {string.strsplit(';', connectionString)}
+
 		for i = 1, #connectionString do
 			local v = connectionString[i]
 			if v:match('database') then
 				DATABASE = v:sub(10, #v)
+				databaseFound = true
+				break
 			end
 		end
-		databaseFound = true
 	end
 end
 
