@@ -184,19 +184,10 @@ MySQL.ready(function()
 			end
 		end
 
-		ESX.Jobs = {}
-
-		local function GetJobs()
-			if ESX.GetJobs then
-				return ESX.GetJobs()
-			end
-			return exports.es_extended:getSharedObject().Jobs
+		while not next(ESX.Jobs) do
+			Wait(500)
+			ESX.Jobs = ESX.GetJobs()
 		end
-
-		repeat
-			ESX.Jobs = GetJobs()
-			Wait(50)
-		until next(ESX.Jobs)
 
 		FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
 		databaseConnected = true
