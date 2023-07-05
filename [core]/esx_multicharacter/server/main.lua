@@ -23,7 +23,6 @@ local DATABASE do
 end
 
 local DB_TABLES = {users = 'identifier'}
-local FETCH = nil
 local SLOTS = Config.Slots or 4
 local PREFIX = Config.Prefix or 'char'
 local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
@@ -51,14 +50,15 @@ if next(ESX.Players) then
 else ESX.Players = {} end
 
 local function SetupCharacters(source)
-	while not FETCH do Wait(100) end
+	while not databaseConnected do Wait(100) end
+
 	local identifier = GetIdentifier(source)
 	ESX.Players[identifier] = true
 
 	local slots = MySQL.scalar.await('SELECT slots FROM multicharacter_slots WHERE identifier = ?', { identifier }) or SLOTS
 	identifier = PREFIX..'%:'..identifier
 
-	local result = MySQL.query.await(FETCH, {identifier, slots})
+	local result = MySQL.query.await('SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?', {identifier, slots})
 	local characters
 
 	if result then
@@ -189,7 +189,6 @@ MySQL.ready(function()
 			ESX.Jobs = ESX.GetJobs()
 		end
 
-		FETCH = 'SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?'
 		databaseConnected = true
 	end
 end)
