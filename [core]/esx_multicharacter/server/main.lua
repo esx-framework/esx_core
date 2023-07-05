@@ -184,12 +184,12 @@ MySQL.ready(function()
 			end
 		end
 
+		databaseConnected = true
+
 		while not next(ESX.Jobs) do
 			Wait(500)
 			ESX.Jobs = ESX.GetJobs()
 		end
-
-		databaseConnected = true
 	end
 end)
 
