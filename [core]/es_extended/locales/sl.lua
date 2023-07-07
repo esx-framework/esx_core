@@ -99,6 +99,7 @@ Locales['sl'] = {
 	['command_setgroup_group'] = 'Ime skupine',
 	['commanderror_argumentmismatch'] = 'Neveljavno stetje argumentov (podano %s, zeleno %s)',
 	['commanderror_argumentmismatch_number'] = 'Neveljaven podatkovni tip argumenta #%s (posredovan niz, zeleno stevilo)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Neveljaven element',
 	['commanderror_invalidweapon'] = 'Neveljavno orozje',
 	['commanderror_console'] = 'Ukaza ni mogoce izvesti s konzole',

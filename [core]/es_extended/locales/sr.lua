@@ -99,6 +99,7 @@ Locales['sr'] = {
 	['command_setgroup_group'] = 'Ime grupe',
 	['commanderror_argumentmismatch'] = 'Nevazeci broj argumenata (položio %s, željeno %s)',
 	['commanderror_argumentmismatch_number'] = 'Nevažeći argument #%s tip podataka (položeno, željeno)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Nevažeći item',
 	['commanderror_invalidweapon'] = 'Nevažeće oružje',
 	['commanderror_console'] = 'Komanda se ne može izvršiti iz konzole',

@@ -94,6 +94,7 @@ Locales['fr'] = {
 	['command_setgroup_group'] = 'nom du groupe',
 	['commanderror_argumentmismatch'] = 'argument count mismatch (passed %s, wanted %s)',
 	['commanderror_argumentmismatch_number'] = 'argument #%s type mismatch (passed string, wanted number)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'nom de l\'objet invalide',
 	['commanderror_invalidweapon'] = 'arme invalide',
 	['commanderror_console'] = 'cette commande ne peut pas être utilisée dans la console',

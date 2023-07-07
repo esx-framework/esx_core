@@ -99,6 +99,7 @@ Locales['cs'] = {
 	['command_setgroup_group'] = 'Název skupiny',
 	['commanderror_argumentmismatch'] = 'Chybný počet hodnot (správně %s, potřebných %s)',
 	['commanderror_argumentmismatch_number'] = 'Chybně zadaná hodnot #%s  (správně, špatně)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Špatný předmět',
 	['commanderror_invalidweapon'] = 'Špatná zbraň',
 	['commanderror_console'] = 'příkaz nelze být zpracován v konzoli',

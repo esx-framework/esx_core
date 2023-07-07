@@ -99,6 +99,7 @@ Locales['it'] = {
 	['command_setgroup_group'] = 'Nome del gruppo',
 	['commanderror_argumentmismatch'] = 'Conta argomenti non valida (passati %s, richiesti %s)',
 	['commanderror_argumentmismatch_number'] = 'Argomento #%s di tipologia errata (passato testo, richiesto numero)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Oggetto non valido',
 	['commanderror_invalidweapon'] = 'Arma non valida',
 	['commanderror_console'] = 'Comando non eseguibile dalla console',

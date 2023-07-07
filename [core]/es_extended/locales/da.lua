@@ -99,6 +99,7 @@ Locales['da'] = {
 	['command_setgroup_group'] = 'Navn på gruppe',
 	['commanderror_argumentmismatch'] = 'Antal ugyldige argumenter (bestået %s, ønsket %s)',
 	['commanderror_argumentmismatch_number'] = 'Ugyldigt argument #%s datatype (bestået streng, ønsket nummer)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Ugyldig genstand',
 	['commanderror_invalidweapon'] = 'Ugyldigt våben',
 	['commanderror_console'] = 'Kommandoen kan ikke udføres fra konsollen',

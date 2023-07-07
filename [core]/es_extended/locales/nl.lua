@@ -99,6 +99,7 @@ Locales['nl'] = {
     ['command_setgroup_group'] = 'Naam van groep',
     ['commanderror_argumentmismatch'] = 'Ongeldig aantal argumenten (geslaagd %s, gezocht %s)',
     ['commanderror_argumentmismatch_number'] = 'Ongeldig argument #%s gegevenstype (doorgegeven string, gewenst nummer)',
+    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
     ['commanderror_invaliditem'] = 'Ongeldig item',
     ['commanderror_invalidweapon'] = 'Ongeldig wapen',
     ['commanderror_console'] = 'Command kan niet worden uitgevoerd vanaf console.',

@@ -99,6 +99,7 @@ Locales['es'] = {
 	['command_setgroup_group'] = 'Nombre del grupo',
 	['commanderror_argumentmismatch'] = 'Error en el recuento de argumentos (pasado %s, deseado %s)',
 	['commanderror_argumentmismatch_number'] = 'Argumento #%s tipo no coincide (cadena pasada, número deseado)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Nombre del artículo no válido',
 	['commanderror_invalidweapon'] = 'Arma inválida',
 	['commanderror_console'] = 'Ese comando no se puede ejecutar desde la consola',

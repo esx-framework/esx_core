@@ -99,6 +99,7 @@ Locales['zh-cn'] = {
 	['command_setgroup_group'] = '用户组代码',
 	['commanderror_argumentmismatch'] = '参数计数不匹配 (该类型为 %s, 需要传输 %s)',
 	['commanderror_argumentmismatch_number'] = '参数 #%s 类型不匹配 (该类型为字符串，需要传递数字类型)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = '无效的物品代码',
 	['commanderror_invalidweapon'] = '无效的武器代码',
 	['commanderror_console'] = '控制台无法执行此命令!',

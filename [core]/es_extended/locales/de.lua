@@ -99,6 +99,7 @@ Locales['de'] = {
 	['command_setgroup_group'] = 'Name der Gruppe',
 	['commanderror_argumentmismatch'] = 'Ungültiger Argument (gegeben %s, gewollt %s)',
 	['commanderror_argumentmismatch_number'] = 'Ungültiges Argument #%s daten typ (string gegeben, gewollte nummer)',
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	['commanderror_invaliditem'] = 'Ungültiges Item',
 	['commanderror_invalidweapon'] = 'Ungültige Waffe',
 	['commanderror_console'] = 'Befehl kann nicht von der Konsole aus ausgeführt werden',
