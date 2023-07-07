@@ -8,7 +8,7 @@ local clientCallbacks = {}
 ---@param ... any
 ESX.TriggerServerCallback = function(eventName, callback, ...)
 	serverRequests[RequestId] = callback
-  
+
 	TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
 
 	RequestId = RequestId + 1

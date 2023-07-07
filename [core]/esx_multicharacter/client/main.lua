@@ -4,15 +4,14 @@ local mp_f_freemode_01 = `mp_f_freemode_01`
 local SpawnCoords = Config.Spawn[math.random(#Config.Spawn)]
 
 if ESX.GetConfig().Multichar then
-
 	CreateThread(function()
 		while not ESX.PlayerLoaded do
 			Wait(100)
-			
+
 			if NetworkIsPlayerActive(PlayerId()) then
 				exports.spawnmanager:setAutoSpawn(false)
 				DoScreenFadeOut(0)
-				while not GetResourceState('esx_context') == 'started' do
+				while GetResourceState('esx_context') ~= 'started' do
 					Wait(100)
 				end
 				TriggerEvent("esx_multicharacter:SetupCharacters")
@@ -22,7 +21,7 @@ if ESX.GetConfig().Multichar then
 	end)
 
 	local canRelog, cam, spawned = true, nil, nil
-	local Characters =  {}
+	local Characters = {}
 
 	RegisterNetEvent('esx_multicharacter:SetupCharacters')
 	AddEventHandler('esx_multicharacter:SetupCharacters', function()
@@ -51,7 +50,7 @@ if ESX.GetConfig().Multichar then
 		hidePlayers = true
 		MumbleSetVolumeOverride(PlayerId(), 0.0)
 		CreateThread(function()
-			local keys = {18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109}
+			local keys = { 18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109 }
 			while hidePlayers do
 				DisableAllControlActions(0)
 				for i = 1, #keys do
@@ -118,8 +117,7 @@ if ESX.GetConfig().Multichar then
 				end
 				DoScreenFadeIn(600)
 			end)
-		repeat Wait(200) until not IsScreenFadedOut()
-
+			repeat Wait(200) until not IsScreenFadedOut()
 		elseif Characters[index] and Characters[index].skin then
 			if Characters[spawned] and Characters[spawned].model then
 				RequestModel(Characters[index].model)
@@ -145,12 +143,12 @@ if ESX.GetConfig().Multichar then
 
 	function CharacterDeleteConfirmation(Characters, slots, SelectedCharacter, value)
 		local elements = {
-			{title = TranslateCap('char_delete_confirmation'), icon = "fa-solid fa-users", description = TranslateCap('char_delete_confirmation_description'), unselectable = true},
-			{title = TranslateCap('char_delete'), icon ="fa-solid fa-xmark", description = TranslateCap('char_delete_yes_description'), action = 'delete', value = value},
-			{title = TranslateCap('return'), unselectable = false, icon = "fa-solid fa-arrow-left", description = TranslateCap('char_delete_no_description'), action = "return"}
+			{ title = TranslateCap('char_delete_confirmation'), icon = "fa-solid fa-users", description = TranslateCap('char_delete_confirmation_description'), unselectable = true },
+			{ title = TranslateCap('char_delete'),              icon = "fa-solid fa-xmark", description = TranslateCap('char_delete_yes_description'),          action = 'delete',                                        value = value },
+			{ title = TranslateCap('return'),                   unselectable = false,       icon = "fa-solid fa-arrow-left",                                    description = TranslateCap('char_delete_no_description'), action = "return" }
 		}
-	
-		ESX.OpenContext("left", elements, function(element, Action)
+
+		ESX.OpenContext("left", elements, function(_, Action)
 			if Action.action == "delete" then
 				ESX.CloseContext()
 				TriggerServerEvent('esx_multicharacter:DeleteCharacter', Action.value)
@@ -162,15 +160,15 @@ if ESX.GetConfig().Multichar then
 	end
 
 	function CharacterOptions(Characters, slots, SelectedCharacter)
-		local elements = {{title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " ".. Characters[SelectedCharacter.value].lastname),icon = "fa-regular fa-user", unselectable = true},
-		{title = TranslateCap('return'), unselectable = false,icon = "fa-solid fa-arrow-left",description = TranslateCap('return_description'), action = "return"}}
+		local elements = { { title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " " .. Characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
+			{ title = TranslateCap('return'),                                                                                                         unselectable = false,        icon = "fa-solid fa-arrow-left", description = TranslateCap('return_description'), action = "return" } }
 		if not Characters[SelectedCharacter.value].disabled then
-			elements[3] = {title = TranslateCap('char_play'), description = TranslateCap('char_play_description'), icon ="fa-solid fa-play",action = 'play', value = SelectedCharacter.value}
+			elements[3] = { title = TranslateCap('char_play'), description = TranslateCap('char_play_description'), icon = "fa-solid fa-play", action = 'play', value = SelectedCharacter.value }
 		else
-			elements[3] = {title = TranslateCap('char_disabled'), value = SelectedCharacter.value, icon ="fa-solid fa-xmark", description = TranslateCap('char_disabled_description'),}
+			elements[3] = { title = TranslateCap('char_disabled'), value = SelectedCharacter.value, icon = "fa-solid fa-xmark", description = TranslateCap('char_disabled_description'), }
 		end
-		if Config.CanDelete then elements[4] = {title = TranslateCap('char_delete'),icon ="fa-solid fa-xmark",description = TranslateCap('char_delete_description'), action = 'delete', value = SelectedCharacter.value} end
-		ESX.OpenContext("left", elements, function(element, Action)
+		if Config.CanDelete then elements[4] = { title = TranslateCap('char_delete'), icon = "fa-solid fa-xmark", description = TranslateCap('char_delete_description'), action = 'delete', value = SelectedCharacter.value } end
+		ESX.OpenContext("left", elements, function(_, Action)
 			if Action.action == "play" then
 				SendNUIMessage({
 					action = "closeui"
@@ -187,24 +185,24 @@ if ESX.GetConfig().Multichar then
 
 	function SelectCharacterMenu(Characters, slots)
 		local Character = next(Characters)
-		local elements = {{title = TranslateCap('select_char') , icon = "fa-solid fa-users", description =  TranslateCap('select_char_description') , unselectable = true}}
+		local elements = { { title = TranslateCap('select_char'), icon = "fa-solid fa-users", description = TranslateCap('select_char_description'), unselectable = true } }
 		for k, v in pairs(Characters) do
 			if not v.model and v.skin then
 				if v.skin.model then v.model = v.skin.model elseif v.skin.sex == 1 then v.model = mp_f_freemode_01 else v.model = mp_m_freemode_01 end
 			end
 			if not spawned then SetupCharacter(Character) end
-			local label = v.firstname..' '..v.lastname
+			local label = v.firstname .. ' ' .. v.lastname
 			if Characters[k].disabled then
-				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
+				elements[#elements + 1] = { title = label, icon = "fa-regular fa-user", value = v.id }
 			else
-				elements[#elements+1] = {title = label,icon = "fa-regular fa-user", value = v.id}
+				elements[#elements + 1] = { title = label, icon = "fa-regular fa-user", value = v.id }
 			end
 		end
 		if #elements - 1 < slots then
-			elements[#elements+1] = {title = TranslateCap('create_char'), icon = "fa-solid fa-plus", value = (#elements+1), new = true}
+			elements[#elements + 1] = { title = TranslateCap('create_char'), icon = "fa-solid fa-plus", value = (#elements + 1), new = true }
 		end
 
-		ESX.OpenContext("left", elements, function(menu, SelectedCharacter)
+		ESX.OpenContext("left", elements, function(_, SelectedCharacter)
 			if SelectedCharacter.new then
 				ESX.CloseContext()
 				local GetSlot = function()
@@ -218,13 +216,13 @@ if ESX.GetConfig().Multichar then
 				TriggerServerEvent('esx_multicharacter:CharacterChosen', slot, true)
 				TriggerEvent('esx_identity:showRegisterIdentity')
 				local playerPed = PlayerPedId()
-					SetPedAoBlobRendering(playerPed, false)
-					SetEntityAlpha(playerPed, 0)
-					SendNUIMessage({
-						action = "closeui"
-					})
+				SetPedAoBlobRendering(playerPed, false)
+				SetEntityAlpha(playerPed, 0)
+				SendNUIMessage({
+					action = "closeui"
+				})
 			else
-				CharacterOptions(Characters,slots, SelectedCharacter)
+				CharacterOptions(Characters, slots, SelectedCharacter)
 				SetupCharacter(SelectedCharacter.value)
 				local playerPed = PlayerPedId()
 				SetPedAoBlobRendering(playerPed, true)
@@ -232,6 +230,7 @@ if ESX.GetConfig().Multichar then
 			end
 		end, nil, false)
 	end
+
 	RegisterNetEvent('esx_multicharacter:SetupUI')
 	AddEventHandler('esx_multicharacter:SetupUI', function(data, slots)
 		DoScreenFadeOut(0)
@@ -286,7 +285,9 @@ if ESX.GetConfig().Multichar then
 				SetPedAoBlobRendering(playerPed, true)
 				ResetEntityAlpha(playerPed)
 				TriggerEvent('esx_skin:openSaveableMenu', function()
-					finished = true end, function() finished = true
+					finished = true
+				end, function()
+					finished = true
 				end)
 			end)
 			repeat Wait(200) until finished
@@ -321,7 +322,7 @@ if ESX.GetConfig().Multichar then
 	end)
 
 	if Config.Relog then
-		RegisterCommand('relog', function(source, args, rawCommand)
+		RegisterCommand('relog', function()
 			if canRelog then
 				canRelog = false
 				TriggerServerEvent('esx_multicharacter:relog')
@@ -331,5 +332,4 @@ if ESX.GetConfig().Multichar then
 			end
 		end)
 	end
-
 end

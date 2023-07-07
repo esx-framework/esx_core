@@ -1,6 +1,6 @@
 local CurrentProgress = nil
 
-local function Progressbar(message,length,Options)
+local function Progressbar(message, length, Options)
     if CurrentProgress then
         return false
     end
@@ -8,7 +8,7 @@ local function Progressbar(message,length,Options)
     if CurrentProgress.animation then
         if CurrentProgress.animation.type == "anim" then
             ESX.Streaming.RequestAnimDict(CurrentProgress.animation.dict, function()
-                TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false,false,false)
+                TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false, false, false)
                 RemoveAnimDict(CurrentProgress.animation.dict)
             end)
         elseif CurrentProgress.animation.type == "Scenario" then

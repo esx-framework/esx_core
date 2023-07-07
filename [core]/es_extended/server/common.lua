@@ -42,8 +42,8 @@ MySQL.ready(function()
 	Core.DatabaseConnected = true
 	if not Config.OxInventory then
 		local items = MySQL.query.await('SELECT * FROM items')
-		for k, v in ipairs(items) do
-			ESX.Items[v.name] = {label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove}
+		for _, v in ipairs(items) do
+			ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
 		end
 	else
 		TriggerEvent('__cfx_export_ox_inventory_Items', function(ref)
@@ -64,7 +64,7 @@ MySQL.ready(function()
 	ESX.RefreshJobs()
 
 	print(('[^2INFO^7] ESX ^5Legacy %s^0 initialized!'):format(GetResourceMetadata(GetCurrentResourceName(), "version", 0)))
-		
+
 	StartDBSync()
 	if Config.EnablePaycheck then
 		StartPayCheck()
