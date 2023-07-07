@@ -85,7 +85,12 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 									error = TranslateCap('commanderror_argumentmismatch_number', k)
 								end
 							elseif v.type == 'string' then
-								newArgs[v.name] = args[k]
+								local newArg = tonumber(args[k])
+								if not newArg then
+									newArgs[v.name] = args[k]
+								else
+									error = TranslateCap('commanderror_argumentmismatch_string', k)
+								end
 							elseif v.type == 'item' then
 								if ESX.Items[args[k]] then
 									newArgs[v.name] = args[k]
@@ -110,8 +115,9 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								newArgs[v.name] = string.sub(merge, lenght)
 							end
 						end
-
-						if not v.validate then
+						
+						--backwards compatibility
+						if not v.validate and not v.type then
 							error = nil
 						end
 
@@ -131,10 +137,6 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 					xPlayer.showNotification(error)
 				end
 			else
-				if ESX.Table.SizeOf(args) == 0 then
-					xPlayer.showNotification(TranslateCap('commanderror_invalidplayerid'))
-					return
-				end
 				cb(xPlayer or false, args, function(msg)
 					if playerId == 0 then
 						print(('[^3WARNING^7] %s^7'):format(msg))
