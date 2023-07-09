@@ -642,23 +642,22 @@ end
 
 RegisterNetEvent("esx:noclip")
 AddEventHandler("esx:noclip", function()
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
-		if not admin then
-			return
-		end
+	local admin = ESX.TriggerServerCallback.Await("esx:isUserAdmin")
+	if not admin then
+		return
+	end
 
-		if not noclip then
-			noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
-			heading = GetEntityHeading(ESX.PlayerData.ped)
-		end
+	if not noclip then
+		noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
+		heading = GetEntityHeading(ESX.PlayerData.ped)
+	end
 
-		noclip = not noclip
-		if noclip then
-			CreateThread(noclipThread)
-		end
+	noclip = not noclip
+	if noclip then
+		CreateThread(noclipThread)
+	end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
-	end)
+	ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
 end)
 
 RegisterNetEvent("esx:killPlayer")
