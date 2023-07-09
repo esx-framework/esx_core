@@ -679,16 +679,16 @@ AddEventHandler("esx:repairPedVehicle", function()
 			return
 		end
 		local ped = ESX.PlayerData.ped
-		if IsPedInAnyVehicle(ped, false) then
-			local vehicle = GetVehiclePedIsIn(ped, false)
-			SetVehicleEngineHealth(vehicle, 1000)
-			SetVehicleEngineOn(vehicle, true, true)
-			SetVehicleFixed(vehicle)
-			SetVehicleDirtLevel(vehicle, 0)
-			ESX.ShowNotification(TranslateCap('command_repair_success'), true, false, 140)
-		else
+		local vehicle = GetVehiclePedIsIn(ped, false)
+		if not vehicle or GetPedInVehicleSeat(vehicle, -1) ~= ped  then
 			ESX.ShowNotification(TranslateCap('not_in_vehicle'), true, false, 140)
+			return
 		end
+		SetVehicleEngineHealth(vehicle, 1000)
+		SetVehicleEngineOn(vehicle, true, true)
+		SetVehicleFixed(vehicle)
+		SetVehicleDirtLevel(vehicle, 0)
+		ESX.ShowNotification(TranslateCap('command_repair_success'), true, false, 140)
 	end)
 end)
 
