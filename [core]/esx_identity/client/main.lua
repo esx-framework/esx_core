@@ -56,18 +56,18 @@ if not Config.UseDeferrals then
             return
         end
 
-        ESX.TriggerServerCallback('esx_identity:registerIdentity', function(callback)
-            if not callback then
-                return
-            end
-
-            ESX.ShowNotification(TranslateCap('thank_you_for_registering'))
-            setGuiState(false)
-
-            if not ESX.GetConfig().Multichar then
-                TriggerEvent('esx_skin:playerRegistered')
-            end
-        end, data)
         cb(1)
+
+        local result = ESX.TriggerServerCallback.Await('esx_identity:registerIdentity', data)
+        if not result then
+            return
+        end
+
+        ESX.ShowNotification(TranslateCap('thank_you_for_registering'))
+        setGuiState(false)
+
+        if not ESX.GetConfig().Multichar then
+            TriggerEvent('esx_skin:playerRegistered')
+        end
     end)
 end
