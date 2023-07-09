@@ -51,7 +51,7 @@ if not Config.UseDeferrals then
         if not ESX.PlayerData.dead then setGuiState(true) end
     end)
 
-    RegisterNUICallback('register', function(data)
+    RegisterNUICallback('register', function(data,cb)
         if not guiEnabled then
             return
         end
@@ -68,5 +68,6 @@ if not Config.UseDeferrals then
                 TriggerEvent('esx_skin:playerRegistered')
             end
         end, data)
+        cb(1)
     end)
 end
