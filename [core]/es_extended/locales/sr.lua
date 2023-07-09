@@ -52,6 +52,7 @@ Locales["sr"] = {
 
 	["act_imp"] = "Ne možete izvršiti radnju",
 	["in_vehicle"] = "Ne možete uraditi to dok je igrač u vozilu",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'TP-ajte igrača do Vas',
@@ -59,6 +60,8 @@ Locales["sr"] = {
 	['command_car_car'] = 'Model ili hash vozila',
 	['command_cardel'] = 'Obrišite vozilo u blizini',
 	['command_cardel_radius'] = 'Obrišite sva vozila unutar navedenog radiusa',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = "Successfully repaired vehicle",
 	['command_clear'] = 'Obrišite chat',
 	['command_clearall'] = 'Obrišite chat za sve igrače',
 	['command_clearinventory'] = 'Obrišite sve stvari iz inventara igrača',

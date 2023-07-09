@@ -132,6 +132,10 @@ end, false, {
 	}
 })
 
+ESX.RegisterCommand('repair', 'admin', function(xPlayer, args, showError)
+	xPlayer.triggerEvent("esx:repairPedVehicle")
+end, false, {help = TranslateCap('command_repair'), validate = false}) 
+
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_giveaccountmoney_invalid'))

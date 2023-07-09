@@ -52,6 +52,7 @@ Locales["nl"] = {
 
     ["act_imp"] = "Kan actie niet uitvoeren",
     ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig.",
+    ["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
     -- Commands
     ['command_bring'] = 'Breng speler naar jou',
@@ -59,6 +60,8 @@ Locales["nl"] = {
     ['command_car_car'] = 'Voertuig model of hash',
     ['command_cardel'] = 'Verwijder voertuigen in straal',
     ['command_cardel_radius'] = 'Verwijderd alle voertuigen in gewenste straal',
+    ['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = "Successfully repaired vehicle",
     ['command_clear'] = 'Verwijder chat berichten',
     ['command_clearall'] = 'Verwijder chat berichten voor alle spelers',
     ['command_clearinventory'] = 'Verwijder alle items van een speler zijn inventory',
