@@ -84,7 +84,7 @@ RegisterNUICallback("closed",function(data,cb)
 	Closed()
 end)
 
-RegisterNUICallback("selected",function(data)
+RegisterNUICallback("selected",function(data,cb)
 	if not activeMenu
 	or not activeMenu.onSelect
 	or not data.index 
@@ -102,9 +102,10 @@ RegisterNUICallback("selected",function(data)
 	end
 
 	activeMenu:onSelect(ele)
+	if cb then cb('ok') end
 end)
 
-RegisterNUICallback("changed",function(data)
+RegisterNUICallback("changed",function(data,cb)
 	if not activeMenu
 	or not data.index 
 	or not data.value
@@ -136,6 +137,7 @@ RegisterNUICallback("changed",function(data)
 	elseif ele.inputType == "radio" then
 		ele.inputValue = data.value
 	end
+	if cb then cb('ok') end
 end)
 
 -- Keybind

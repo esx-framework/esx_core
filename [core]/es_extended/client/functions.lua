@@ -2,9 +2,6 @@ ESX = {}
 Core = {}
 ESX.PlayerData = {}
 ESX.PlayerLoaded = false
-Core.CurrentRequestId = 0
-Core.ServerCallbacks = {}
-Core.TimeoutCallbacks = {}
 Core.Input = {}
 ESX.UI = {}
 ESX.UI.Menu = {}
@@ -18,18 +15,6 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 ESX.Streaming = {}
-
-function ESX.SetTimeout(msec, cb)
-    table.insert(Core.TimeoutCallbacks, {
-        time = GetGameTimer() + msec,
-        cb = cb
-    })
-    return #Core.TimeoutCallbacks
-end
-
-function ESX.ClearTimeout(i)
-    Core.TimeoutCallbacks[i] = nil
-end
 
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
@@ -198,14 +183,6 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
         RegisterCommand("-" .. command_name, on_release)
     end
     RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
-end
-
-function ESX.TriggerServerCallback(name, cb, ...)
-    local Invoke = GetInvokingResource() or "unknown"
-    Core.ServerCallbacks[Core.CurrentRequestId] = cb
-
-    TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId,Invoke, ...)
-    Core.CurrentRequestId = Core.CurrentRequestId < 65535 and Core.CurrentRequestId + 1 or 0
 end
 
 function ESX.UI.Menu.RegisterType(type, open, close)
@@ -429,6 +406,17 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
     local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
+
+    local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+    if not vector or not playerCoords then 
+        return
+    end
+    local dist = #(playerCoords - vector)
+    if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
+        local executingResource = GetInvokingResource() or "Unknown"
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executing_resource))
+    end
+
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
@@ -471,10 +459,15 @@ function ESX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPeds(onlyOtherPeds)
-    local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
+    local myPed, pool = ESX.PlayerData.ped, GetGamePool('CPed')
 
+    if not onlyOtherPeds then
+        return pool
+    end
+
+    local peds = {}
     for i = 1, #pool do
-        if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
+        if pool[i] ~= myPed then
             peds[#peds + 1] = pool[i]
         end
     end
@@ -608,6 +601,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
+    local dashboardColor = GetVehicleDashboardColor(vehicle)
+    local interiorColor = GetVehicleInteriorColour(vehicle)
     local customPrimaryColor = nil
     if hasCustomPrimaryColor then
         customPrimaryColor = {GetVehicleCustomPrimaryColour(vehicle)}
@@ -680,6 +675,9 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
+        
+        dashboardColor = dashboardColor,
+        interiorColor = interiorColor,
 
         wheels = GetVehicleWheelType(vehicle),
         windowTint = GetVehicleWindowTint(vehicle),
@@ -792,6 +790,15 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
+
+    if props.interiorColor ~= nil then
+        SetVehicleInteriorColor(vehicle, props.interiorColor)
+    end
+
+    if props.dashboardColor ~= nil then
+        SetVehicleDashboardColor(vehicle, props.dashboardColor)
+    end
+
     if props.wheelColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
     end
@@ -1298,15 +1305,6 @@ function ESX.ShowInventory()
     end)
 end
 
-RegisterNetEvent('esx:serverCallback', function(requestId,invoker, ...)
-    if Core.ServerCallbacks[requestId] then
-        Core.ServerCallbacks[requestId](...)
-        Core.ServerCallbacks[requestId] = nil
-    else 
-        print('[^1ERROR^7] Server Callback with requestId ^5'.. requestId ..'^7 Was Called by ^5'.. invoker .. '^7 but does not exist.')
-    end
-end)
-
 RegisterNetEvent('esx:showNotification')
 AddEventHandler('esx:showNotification', function(msg, type, length)
     ESX.ShowNotification(msg, type, length)
@@ -1323,20 +1321,25 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
--- SetTimeout
-CreateThread(function()
-    while true do
-        local sleep = 100
-        if #Core.TimeoutCallbacks > 0 then
-            local currTime = GetGameTimer()
-            sleep = 0
-            for i = 1, #Core.TimeoutCallbacks, 1 do
-                if currTime >= Core.TimeoutCallbacks[i].time then
-                    Core.TimeoutCallbacks[i].cb()
-                    Core.TimeoutCallbacks[i] = nil
-                end
-            end
-        end
-        Wait(sleep)
-    end
-end)
+---@param model number|string
+---@return string
+function ESX.GetVehicleType(model)
+    model = type(model) == 'string' and joaat(model) or model
+
+	if model == `submersible` or model == `submersible2` then
+        return 'submarine'
+	end
+
+	local vehicleType = GetVehicleClassFromName(model)
+	local types = {
+		[8] = "bike",
+		[11] = "trailer",
+		[13] = "bike",
+		[14] = "boat",
+		[15] = "heli",
+		[16] = "plane",
+		[21] = "train",
+	}
+
+    return types[vehicleType] or "automobile"
+end

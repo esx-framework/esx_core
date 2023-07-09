@@ -18,6 +18,9 @@ Config.Accounts = {
 
 Config.StartingAccountMoney 	= {bank = 50000}
 
+Config.DefaultSpawn 			= {x = -269.4, y = -955.3, z = 31.2, heading = 205.8}
+
+Config.EnablePaycheck			= true -- enable paycheck
 Config.EnableSocietyPayouts 	= false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight            	= 24   -- the max inventory weight without backpack
 Config.PaycheckInterval         = 7 * 60000 -- how often to recieve pay checks in milliseconds
@@ -26,14 +29,18 @@ Config.EnableDefaultInventory   = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
 
-Config.Multichar                = true -- Enable support for esx_multicharacter
+Config.Multichar                = GetResourceState("esx_multicharacter") ~= "missing"
 Config.Identity                 = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive 			= 4.0 -- Max distance when giving items, weapons etc.
+
 Config.DisableHealthRegeneration  = false -- Player will no longer regenerate health
 Config.DisableVehicleRewards      = false -- Disables Player Recieving weapons from vehicles
 Config.DisableNPCDrops            = false -- stops NPCs from dropping weapons on death
+Config.DisableDispatchServices	  = false -- Disable Dispatch services
+Config.DisableScenarios			  = false -- Disable Scenarios
 Config.DisableWeaponWheel         = false -- Disables default weapon wheel
 Config.DisableAimAssist           = false -- disables AIM assist (mainly on controllers)
+Config.DisableVehicleSeatShuff	  = false -- Disables vehicle seat shuff
 Config.RemoveHudCommonents = {
 	[1] = false, --WANTED_STARS,
 	[2] = false, --WEAPON_ICON
