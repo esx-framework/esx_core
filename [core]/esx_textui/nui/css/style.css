@@ -1,77 +1,77 @@
 :root {
-  --color: white;
-  --bgColor: #212121;
+    --color: white;
+    --bgColor: #212121;
 }
 
 * {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
 }
 
 body {
-  color: var(--color);
-  font-family: sans-serif;
+    color: var(--color);
+    font-family: sans-serif;
 }
 
 .notify {
-  display: none;
-  position: absolute;
-  right: 2%;
-  bottom: 50%;
-  flex: auto;
-  min-width: 15%;
-  width: fit-content;
-  height: 50px;
-  background: rgba(5, 5, 5, 0.9);
-  border-radius: 0.5rem;
-  animation: growDown 300ms ease-in-out;
-  align-items: center;
+    display: none;
+    position: absolute;
+    right: 2%;
+    bottom: 50%;
+    flex: auto;
+    min-width: 15%;
+    width: fit-content;
+    height: 50px;
+    background: rgba(5, 5, 5, 0.9);
+    border-radius: 0.5rem;
+    animation: growDown 300ms ease-in-out;
+    align-items: center;
 }
 
 .error {
-  border-left: 5px solid #c0392b;
+    border-left: 5px solid #c0392b;
 }
 
 .success {
-  border-left: 5px solid #2ecc71;
+    border-left: 5px solid #2ecc71;
 }
 
 .info {
-  border-left: 5px solid #2980b9;
+    border-left: 5px solid #2980b9;
 }
 
 .innerText {
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
-  padding-top: 12.5px;
-  width: 100%;
-  height: 100%;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    padding-top: 12.5px;
+    width: 100%;
+    height: 100%;
 }
 
 .innerText .icon {
-  float: left;
+    float: left;
 }
 
 .innerText .text {
-  display: inline-block;
-  margin-left: 0.5rem;
-  margin-top: 4px;
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-top: 4px;
 }
 
 @keyframes growDown {
-  0% {
-    transform: scaleY(0);
-  }
-  80% {
-    transform: scaleY(1.1);
-  }
-  100% {
-    transform: scaleY(1);
-  }
+    0% {
+        transform: scaleY(0);
+    }
+    80% {
+        transform: scaleY(1.1);
+    }
+    100% {
+        transform: scaleY(1);
+    }
 }
 
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
 }
