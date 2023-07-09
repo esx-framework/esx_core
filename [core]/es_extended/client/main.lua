@@ -680,10 +680,6 @@ AddEventHandler("esx:repairPedVehicle", function()
 		end
 		local ped = ESX.PlayerData.ped
 		local vehicle = GetVehiclePedIsIn(ped, false)
-		if not vehicle or GetPedInVehicleSeat(vehicle, -1) ~= ped  then
-			ESX.ShowNotification(TranslateCap('not_in_vehicle'), true, false, 140)
-			return
-		end
 		SetVehicleEngineHealth(vehicle, 1000)
 		SetVehicleEngineOn(vehicle, true, true)
 		SetVehicleFixed(vehicle)
