@@ -11,12 +11,12 @@
 //   This copyright should appear in every part of the project code
 
 document.addEventListener("DOMContentLoaded", () => {
-  const introTag = document.getElementById("esx_intro");
-  const loopTag = document.getElementById("esx_loop");
+    const introTag = document.getElementById("esx_intro");
+    const loopTag = document.getElementById("esx_loop");
 
-  introTag.onended = () => {
-    introTag.style.display = "none";
-    loopTag.loop = true; // true
-    loopTag.play();
-  };
+    introTag.onended = () => {
+        introTag.style.display = "none";
+        loopTag.loop = true; // true
+        loopTag.play();
+    };
 });
