@@ -6,13 +6,25 @@ local clientCallbacks = {}
 ---@param eventName string
 ---@param callback function
 ---@param ... any
-ESX.TriggerServerCallback = function(eventName, callback, ...)
+local triggerServerCallback = function(self, eventName, callback, ...)
 	serverRequests[RequestId] = callback
 
 	TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
 
 	RequestId = RequestId + 1
 end
+
+ESX.TriggerServerCallback = setmetatable({
+	Await = function(eventName, ...)
+		local p = promise.new()
+
+		ESX.TriggerServerCallback(eventName, function(...)
+			p:resolve(...)
+		end, ...)
+
+		return Citizen.Await(p)
+	end
+}, {__call = triggerServerCallback})
 
 RegisterNetEvent('esx:serverCallback', function(requestId, invoker, ...)
 	if not serverRequests[requestId] then
