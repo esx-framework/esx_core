@@ -3,8 +3,8 @@ local LastTime = nil
 
 function RunAt(h, m, cb)
 	Jobs[#Jobs + 1] = {
-		h  = h,
-		m  = m,
+		h = h,
+		m = m,
 		cb = cb
 	}
 end
@@ -15,7 +15,11 @@ function GetTime()
 	local h = tonumber(os.date('%H', timestamp))
 	local m = tonumber(os.date('%M', timestamp))
 
-	return { d = d, h = h, m = m }
+	return {
+		d = d,
+		h = h,
+		m = m
+	}
 end
 
 function OnTime(d, h, m)
