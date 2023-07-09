@@ -136,8 +136,8 @@ ESX.RegisterCommand('repair', 'admin', function(xPlayer, args, showError)
 	local ped = GetPlayerPed(xPlayer.source)
 	local pedVehicle = GetVehiclePedIsIn(ped, false)
 	if not pedVehicle or GetPedInVehicleSeat(pedVehicle, -1) ~= ped then
-		return
 		showError(TranslateCap('not_in_vehicle'))
+		return
 	end
 	xPlayer.triggerEvent("esx:repairPedVehicle")
 end, false, {help = TranslateCap('command_repair'), validate = false}) 
