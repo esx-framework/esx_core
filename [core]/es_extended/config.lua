@@ -18,6 +18,9 @@ Config.Accounts             = {
 
 Config.StartingAccountMoney = { bank = 50000 }
 
+Config.StartingInventoryItems = { -- table/false
+	["water"] = 1,
+}
 
 Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
 	{ x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0 },

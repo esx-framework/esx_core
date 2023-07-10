@@ -9,6 +9,10 @@ if Config.Multichar then
 	newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
 end
 
+if Config.StartingInventoryItems then
+	newPlayer = newPlayer .. ', `inventory` = ?'
+end
+
 if Config.Multichar or Config.Identity then
 	loadPlayer = loadPlayer .. ', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`'
 end
@@ -77,17 +81,21 @@ function createESXPlayer(identifier, playerId, data)
 		print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
 		defaultGroup = "admin"
 	end
-
+	
+	local parameters = {}
 	if not Config.Multichar then
-		MySQL.prepare(newPlayer, { json.encode(accounts), identifier, defaultGroup }, function()
-			loadESXPlayer(identifier, playerId, true)
-		end)
+		parameters = { json.encode(accounts), identifier, defaultGroup }
 	else
-		MySQL.prepare(newPlayer,
-			{ json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height }, function()
-				loadESXPlayer(identifier, playerId, true)
-			end)
+		parameters = { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height }
 	end
+
+	if Config.StartingInventoryItems then
+		table.insert(parameters, json.encode(Config.StartingInventoryItems))
+	end
+
+	MySQL.prepare(newPlayer, parameters, function()
+		loadESXPlayer(identifier, playerId, true)
+	end)
 end
 
 if not Config.Multichar then
