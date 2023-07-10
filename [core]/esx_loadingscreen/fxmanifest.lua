@@ -1,4 +1,5 @@
 game 'common'
+
 version '1.10.1'
 fx_version 'cerulean'
 author 'ESX-Framework'

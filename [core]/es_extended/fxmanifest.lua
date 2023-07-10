@@ -1,9 +1,7 @@
 fx_version 'adamant'
 
 game 'gta5'
-
 description 'ES Extended'
-
 lua54 'yes'
 version '1.10.1'
 

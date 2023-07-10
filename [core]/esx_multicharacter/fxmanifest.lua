@@ -1,4 +1,5 @@
 fx_version 'cerulean'
+
 game 'gta5'
 author 'ESX-Framework - Linden - KASH'
 description 'Official Multicharacter System For ESX Legacy'

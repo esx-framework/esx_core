@@ -1,4 +1,5 @@
 fx_version 'adamant'
+
 game 'gta5'
 author 'ESX-Framework'
 lua54 'yes'
