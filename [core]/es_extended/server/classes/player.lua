@@ -460,7 +460,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	end
 
 	function self.removeWeapon(weaponName)
-		local weaponLabel, weaponHash
+		local weaponLabel = nil
 		local weaponHash = joaat(weaponName)
         local playerPed = GetPlayerPed(self.source)
 
