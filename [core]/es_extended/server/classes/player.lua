@@ -462,6 +462,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeapon(weaponName)
 		local weaponLabel, weaponHash
 		local weaponHash = joaat(weaponName)
+        local playerPed = GetPlayerPed(self.source)
 
 		for k, v in ipairs(self.loadout) do
 			if v.name == weaponName then
@@ -471,8 +472,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 					self.removeWeaponComponent(weaponName, v2)
 				end
 				
-				RemoveWeaponFromPed(GetPlayerPed(self.source), weaponHash)
-				SetPedAmmo(GetPlayerPed(self.source), weaponHash, 0)
+				RemoveWeaponFromPed(playerPed, weaponHash)
+				SetPedAmmo(playerPed, weaponHash, 0)
 
 				table.remove(self.loadout, k)
 				break
