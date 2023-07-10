@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Menu Default'
 lua54 'yes'
-version '1.9.5'
+version '1.10'
 
 client_scripts { '@es_extended/imports.lua', 'client/main.lua' }
 
