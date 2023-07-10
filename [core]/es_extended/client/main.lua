@@ -669,19 +669,12 @@ end)
 RegisterNetEvent("esx:repairPedVehicle")
 AddEventHandler("esx:repairPedVehicle", function()
 	local GetVehiclePedIsIn = GetVehiclePedIsIn
-
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
-		if not admin then
-			return
-		end
-		local ped = ESX.PlayerData.ped
-		local vehicle = GetVehiclePedIsIn(ped, false)
-		SetVehicleEngineHealth(vehicle, 1000)
-		SetVehicleEngineOn(vehicle, true, true)
-		SetVehicleFixed(vehicle)
-		SetVehicleDirtLevel(vehicle, 0)
-		ESX.ShowNotification(TranslateCap('command_repair_success'), true, false, 140)
-	end)
+	local ped = ESX.PlayerData.ped
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	SetVehicleEngineHealth(vehicle, 1000)
+	SetVehicleEngineOn(vehicle, true, true)
+	SetVehicleFixed(vehicle)
+	SetVehicleDirtLevel(vehicle, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")

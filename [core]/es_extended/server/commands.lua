@@ -132,15 +132,22 @@ end, false, {
 	}
 })
 
-ESX.RegisterCommand('repair', 'admin', function(xPlayer, args, showError)
-	local ped = GetPlayerPed(xPlayer.source)
+ESX.RegisterCommand({ 'fix', 'repair' }, 'admin', function(xPlayer, args, showError)
+	local ped = GetPlayerPed(args.playerId.source)
 	local pedVehicle = GetVehiclePedIsIn(ped, false)
 	if not pedVehicle or GetPedInVehicleSeat(pedVehicle, -1) ~= ped then
 		showError(TranslateCap('not_in_vehicle'))
 		return
 	end
-	xPlayer.triggerEvent("esx:repairPedVehicle")
-end, false, {help = TranslateCap('command_repair'), validate = false}) 
+	args.playerId.triggerEvent("esx:repairPedVehicle")
+	xPlayer.showNotification(TranslateCap('command_repair_success'), true, false, 140)
+end, true, {
+	help = TranslateCap('command_repair'),
+	validate = false,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
 
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
