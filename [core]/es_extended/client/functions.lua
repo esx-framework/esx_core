@@ -913,16 +913,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         ToggleVehicleMod(vehicle, 22, props.modXenon)
     end
     if props.modFrontWheels ~= nil then
-        SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
-    end
-    if props.modCustomFrontWheels ~= nil then
-        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false)
+        SetVehicleMod(vehicle, 23, props.modFrontWheels, props.modCustomFrontWheels)
     end
     if props.modBackWheels ~= nil then
-        SetVehicleMod(vehicle, 24, props.modBackWheels, false)
-    end
-    if props.modCustomBackWheels ~= nil then
-        SetVehicleMod(vehicle, 24, props.modCustomBackWheels, false)
+        SetVehicleMod(vehicle, 24, props.modBackWheels, props.modCustomBackWheels)
     end
     if props.modPlateHolder ~= nil then
         SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
