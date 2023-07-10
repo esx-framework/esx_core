@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'ESX Skin'
 
-version '1.9.5'
+version '1.10.1'
 lua54 'yes'
 shared_script '@es_extended/imports.lua'
 
