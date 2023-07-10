@@ -1,10 +1,9 @@
 fx_version 'adamant'
 
 game 'gta5'
-
 description 'ESX Menu Default'
 lua54 'yes'
-version '1.10'
+version '1.10.1'
 
 client_scripts { '@es_extended/imports.lua', 'client/main.lua' }
 
