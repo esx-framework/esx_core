@@ -470,13 +470,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 					self.removeWeaponComponent(weaponName, v2)
 				end
 
+				local weaponHash = joaat(weaponName)
+				
+				RemoveWeaponFromPed(GetPlayerPed(self.source), weaponHash)
+				SetPedAmmo(GetPlayerPed(self.source), weaponHash, 0)
+
 				table.remove(self.loadout, k)
 				break
 			end
 		end
 
 		if weaponLabel then
-			self.triggerEvent('esx:removeWeapon', weaponName)
 			self.triggerEvent('esx:removeInventoryItem', weaponLabel, false, true)
 		end
 	end
