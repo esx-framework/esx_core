@@ -50,7 +50,7 @@ if ESX.GetConfig().Multichar then
 		hidePlayers = true
 		MumbleSetVolumeOverride(PlayerId(), 0.0)
 		CreateThread(function()
-			local keys = { 18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109 }
+			local keys = { 18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109, 209, 19 }
 			while hidePlayers do
 				DisableAllControlActions(0)
 				for i = 1, #keys do
@@ -161,7 +161,7 @@ if ESX.GetConfig().Multichar then
 
 	function CharacterOptions(Characters, slots, SelectedCharacter)
 		local elements = { { title = TranslateCap('character', Characters[SelectedCharacter.value].firstname .. " " .. Characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
-			{ title = TranslateCap('return'),                                                                                                         unselectable = false,        icon = "fa-solid fa-arrow-left", description = TranslateCap('return_description'), action = "return" } }
+			{ title = TranslateCap('return'),                                                                                                          unselectable = false,        icon = "fa-solid fa-arrow-left", description = TranslateCap('return_description'), action = "return" } }
 		if not Characters[SelectedCharacter.value].disabled then
 			elements[3] = { title = TranslateCap('char_play'), description = TranslateCap('char_play_description'), icon = "fa-solid fa-play", action = 'play', value = SelectedCharacter.value }
 		else

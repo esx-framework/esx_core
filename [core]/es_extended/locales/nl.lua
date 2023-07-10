@@ -114,11 +114,11 @@ Locales["nl"] = {
     ['command_giveammo_ammo'] = 'Ammo Hoeveelheid',
     ['tpm_nowaypoint'] = 'Geen waypoint gezet.',
     ['tpm_success'] = 'Successvol geteleporteerd',
-  
+
     ['noclip_message'] = 'Noclip is %s',
     ['enabled'] = '~g~aangezet~s~',
     ['disabled'] = '~r~uitgezet~s~',
-  
+
     -- Locale settings
     ["locale_digit_grouping_symbol"] = ",",
     ["locale_currency"] = "€%s",

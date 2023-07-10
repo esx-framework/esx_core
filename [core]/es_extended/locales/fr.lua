@@ -116,7 +116,7 @@ Locales["fr"] = {
 	["command_giveammo_weapon"] = "Nom de l'arme",
 	["command_giveammo_ammo"] = "Quantité de munitions",
 	["tpm_nowaypoint"] = "Aucun point n'est défini sur la carte",
-  ["tpm_success"] = "Vous avez bien été téléporté",
+	["tpm_success"] = "Vous avez bien été téléporté",
 
 	["noclip_message"] = "Le mode noclip a été %s",
 	["enabled"] = "~g~activé~s~",

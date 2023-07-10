@@ -115,7 +115,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								newArgs[v.name] = string.sub(merge, lenght)
 							end
 						end
-						
+
 						--backwards compatibility
 						if not v.validate and not v.type then
 							error = nil
@@ -403,7 +403,7 @@ function ESX.RefreshJobs()
 
 	if not Jobs then
 		-- Fallback data, if no jobs exist
-		ESX.Jobs['unemployed'] = {label = 'Unemployed', grades = {['0'] = {grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {}}}}
+		ESX.Jobs['unemployed'] = { label = 'Unemployed', grades = { ['0'] = { grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {} } } }
 	else
 		ESX.Jobs = Jobs
 	end

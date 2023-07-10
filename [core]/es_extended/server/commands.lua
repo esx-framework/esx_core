@@ -296,12 +296,12 @@ if not Config.OxInventory then
 					if Config.AdminLogging then
 						ESX.DiscordLogFields("UserActions", "Give Weapon Component /giveweaponcomponent Triggered!",
 							"pink", {
-							{ name = "Player",    value = xPlayer.name,       inline = true },
-							{ name = "ID",        value = xPlayer.source,     inline = true },
-							{ name = "Target",    value = args.playerId.name, inline = true },
-							{ name = "Weapon",    value = args.weaponName,    inline = true },
-							{ name = "Component", value = args.componentName, inline = true },
-						})
+								{ name = "Player",    value = xPlayer.name,       inline = true },
+								{ name = "ID",        value = xPlayer.source,     inline = true },
+								{ name = "Target",    value = args.playerId.name, inline = true },
+								{ name = "Weapon",    value = args.weaponName,    inline = true },
+								{ name = "Component", value = args.componentName, inline = true },
+							})
 					end
 				end
 			else
@@ -562,6 +562,6 @@ ESX.RegisterCommand('players', "admin", function()
 	for i = 1, #(xPlayers) do
 		local xPlayer = xPlayers[i]
 		print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(
-		xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
+			xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
 	end
 end, true)

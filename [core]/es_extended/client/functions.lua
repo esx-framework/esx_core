@@ -614,7 +614,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
     end
 
     local extras = {}
-    for extraId = 0, 12 do
+    for extraId = 0, 20 do
         if DoesExtraExist(vehicle, extraId) then
             extras[tostring(extraId)] = IsVehicleExtraTurnedOn(vehicle, extraId)
         end
@@ -641,7 +641,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
-    for windowId = 0, 7 do -- 13
+    for windowId = 0, 7 do              -- 13
+        RollUpWindow(vehicle, windowId) --fix when you put the car away with the window down
         windowsBroken[tostring(windowId)] = not IsVehicleWindowIntact(vehicle, windowId)
     end
 
@@ -657,6 +658,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         doorsBroken = doorsBroken,
         windowsBroken = windowsBroken,
         tyreBurst = tyreBurst,
+        tyresCanBurst = GetVehicleTyresCanBurst(vehicle),
         plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
         plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
 
@@ -701,6 +703,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modFender = GetVehicleMod(vehicle, 8),
         modRightFender = GetVehicleMod(vehicle, 9),
         modRoof = GetVehicleMod(vehicle, 10),
+        modRoofLivery = GetVehicleRoofLivery(vehicle),
 
         modEngine = GetVehicleMod(vehicle, 11),
         modBrakes = GetVehicleMod(vehicle, 12),
@@ -739,7 +742,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modAerials = GetVehicleMod(vehicle, 43),
         modTrimB = GetVehicleMod(vehicle, 44),
         modTank = GetVehicleMod(vehicle, 45),
-        modDoorR = GetVehicleMod(vehicle, 47),
+        modWindows = GetVehicleMod(vehicle, 46),
         modLivery = GetVehicleMod(vehicle, 48) == -1 and GetVehicleLivery(vehicle) or GetVehicleMod(vehicle, 48),
         modLightbar = GetVehicleMod(vehicle, 49)
     }
@@ -752,6 +755,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     SetVehicleModKit(vehicle, 0)
+
+    if props.tyresCanBurst ~= nil then
+        SetVehicleTyresCanBurst(vehicle, props.tyresCanBurst)
+    end
 
     if props.plate ~= nil then
         SetVehicleNumberPlateText(vehicle, props.plate)
@@ -876,6 +883,11 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.modRoof ~= nil then
         SetVehicleMod(vehicle, 10, props.modRoof, false)
     end
+
+    if props.modRoofLivery ~= nil then
+        SetVehicleRoofLivery(vehicle, props.modRoofLivery)
+    end
+
     if props.modEngine ~= nil then
         SetVehicleMod(vehicle, 11, props.modEngine, false)
     end
@@ -987,7 +999,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.windowsBroken ~= nil then
         for k, v in pairs(props.windowsBroken) do
             if v then
-                SmashVehicleWindow(vehicle, tonumber(k))
+                RemoveVehicleWindow(vehicle, tonumber(k))
             end
         end
     end
@@ -1219,7 +1231,7 @@ function ESX.ShowInventory()
                                             { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                                         }
 
-                                        ESX.OpenContext("right", elementsG, function(menuG)
+                                        ESX.OpenContext("right", elementsG, function(menuG, _)
                                             local quantity = tonumber(menuG.eles[2].inputValue)
 
                                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1258,7 +1270,7 @@ function ESX.ShowInventory()
                             { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                         }
 
-                        ESX.OpenContext("right", elementsR, function(menuR)
+                        ESX.OpenContext("right", elementsR, function(menuR, _)
                             local quantity = tonumber(menuR.eles[2].inputValue)
 
                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1293,7 +1305,7 @@ function ESX.ShowInventory()
                                 { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                             }
 
-                            ESX.OpenContext("right", elementsGA, function(menuGA)
+                            ESX.OpenContext("right", elementsGA, function(menuGA, _)
                                 local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then

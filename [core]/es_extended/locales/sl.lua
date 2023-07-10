@@ -114,11 +114,11 @@ Locales["sl"] = {
 	['command_giveammo_ammo'] = 'Kolicina streliva',
 	['tpm_nowaypoint'] = 'Ni nastavljene poti!.',
 	['tpm_success'] = 'Uspesno teleportiran',
-  
+
 	['noclip_message'] = 'Noclip je bil %s',
 	['enabled'] = '~g~Vkljucen~s~',
 	['disabled'] = '~r~Izkljucen~s~',
-  
+
 	-- Locale settings
 	["locale_digit_grouping_symbol"] = ",",
 	["locale_currency"] = "€%s",
