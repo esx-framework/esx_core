@@ -332,9 +332,7 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:removeWeapon')
 	AddEventHandler('esx:removeWeapon', function(weapon)
-		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(playerPed, joaat(weapon))
-		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
+		print("[^1ERROR^7] event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:removeWeaponComponent')
