@@ -133,22 +133,23 @@ end, false, {
 })
 
 ESX.RegisterCommand({ 'fix', 'repair' }, 'admin', function(xPlayer, args, showError)
-	local ped = GetPlayerPed(args.playerId.source)
+    local xTarget = args.playerId
+	local ped = GetPlayerPed(xTarget.source)
 	local pedVehicle = GetVehiclePedIsIn(ped, false)
 	if not pedVehicle or GetPedInVehicleSeat(pedVehicle, -1) ~= ped then
 		showError(TranslateCap('not_in_vehicle'))
 		return
 	end
-	args.playerId.triggerEvent("esx:repairPedVehicle")
+	xTarget.triggerEvent("esx:repairPedVehicle")
 	xPlayer.showNotification(TranslateCap('command_repair_success'), true, false, 140)
-	if xPlayer.source ~= args.playerId.source then
-		args.playerId.showNotification(TranslateCap('command_repair_success_target'), true, false, 140)
+	if xPlayer.source ~= xTarget.source then
+		xTarget.showNotification(TranslateCap('command_repair_success_target'), true, false, 140)
 	end
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Fix Vehicle /fix Triggered!", "pink", {
 			{ name = "Player", value = xPlayer.name,   inline = true },
 			{ name = "ID",     value = xPlayer.source, inline = true },
-			{ name = "Target",  value = args.playerId.name, inline = true },
+			{ name = "Target",  value = xTarget.name, inline = true },
 		})
 	end
 end, true, {
