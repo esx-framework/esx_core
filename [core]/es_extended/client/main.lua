@@ -666,7 +666,6 @@ end)
 
 RegisterNetEvent("esx:repairPedVehicle")
 AddEventHandler("esx:repairPedVehicle", function()
-	local GetVehiclePedIsIn = GetVehiclePedIsIn
 	local ped = ESX.PlayerData.ped
 	local vehicle = GetVehiclePedIsIn(ped, false)
 	SetVehicleEngineHealth(vehicle, 1000)
