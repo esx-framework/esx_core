@@ -62,6 +62,7 @@ Locales["fr"] = {
 	["command_cardel_radius"] = "Supprime tous les véhicules dans un rayon spécifié",
 	["command_repair"] = "Réparer votre véhicule",
 	["command_repair_success"] = "Véhicule réparé avec succès",
+	["command_repair_success_target"] = "Votre véhicule a été réparé par un membre du staff",
 	["command_clear"] = "Effacer le chat",
 	["command_clearall"] = "Effacer le chat de tous les joueurs",
 	["command_clearinventory"] = "Retirer tous les objets de l'inventaire du joueur",

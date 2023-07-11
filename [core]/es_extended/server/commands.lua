@@ -141,6 +141,9 @@ ESX.RegisterCommand({ 'fix', 'repair' }, 'admin', function(xPlayer, args, showEr
 	end
 	args.playerId.triggerEvent("esx:repairPedVehicle")
 	xPlayer.showNotification(TranslateCap('command_repair_success'), true, false, 140)
+	if xPlayer.source ~= args.playerId.source then
+		args.playerId.showNotification(TranslateCap('command_repair_success_target'), true, false, 140)
+	end
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Fix Vehicle /fix Triggered!", "pink", {
 			{ name = "Player", value = xPlayer.name,   inline = true },

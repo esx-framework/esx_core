@@ -62,6 +62,7 @@ Locales["hu"] = {
 	["command_cardel_radius"] = "Megadott radiusban lévő járművek törlése",
 	["command_repair"] = "Repair your vehicle",
 	["command_repair_success"] = "Successfully repaired vehicle",
+	["command_repair_success_target"] = "An admin repaired your vehicle",
 	["command_clear"] = "Chat ürítése",
 	["command_clearall"] = "Chat ürítése minden játékosnál",
 	["command_clearinventory"] = "Minden tárgy törlése a játékos inventoryból",
