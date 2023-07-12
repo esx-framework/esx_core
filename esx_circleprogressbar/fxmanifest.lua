@@ -6,12 +6,12 @@ version '1.0'
 description 'Circle Progress Bar - Test Version'
 -- Created and Edited by Its_Cehic
 
-client_script 'script.js'
+client_script 'nui/script.js'
 server_script 'progress.lua'
 
-ui_page 'index.html'
+ui_page 'nui/index.html'
 
 files {
-  'index.html',
-  'styles.css'
+  'nui/index.html',
+  'nui/styles.css'
 }
