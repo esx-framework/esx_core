@@ -651,24 +651,48 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
-	function self.clearMeta(index)
+	function self.clearMeta(index, subValues)
 		if not index then
-			return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 is Missing!"):format(index))
+			return print("[^1ERROR^7] xPlayer.clearMeta ^5index^7 is Missing!")
 		end
-
-		if type(index) == 'table' then
-			for _, val in pairs(index) do
-				self.clearMeta(val)
+	
+		if type(index) ~= "string" then
+			return print("[^1ERROR^7] xPlayer.clearMeta ^5index^7 should be ^5string^7!")
+		end
+	
+		local metaData = self.metadata[index]
+		if metaData == nil then
+			return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 does not exist!"):format(index)) or nil
+		end
+	
+		if not subValues then
+			-- If no subValues is provided, we will clear the entire value in the metaData table
+			self.metadata[index] = nil
+		elseif type(subValues) == "string" then
+			-- If subValues is a string, we will clear the specific subValue within the table
+			if type(metaData) == "table" then
+				metaData[subValues] = nil
+			else
+				return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 is not a table! Cannot clear subValue ^5%s^7."):format(index, subValues))
 			end
-
-			return
+		elseif type(subValues) == "table" then
+			-- If subValues is a table, we will clear multiple subValues within the table
+			for i = 1, #subValues do
+				local subValue = subValues[i]
+				if type(subValue) == "string" then
+					if type(metaData) == "table" then
+						metaData[subValue] = nil
+					else
+						print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 is not a table! Cannot clear subValue ^5%s^7."):format(index, subValue))
+					end
+				else
+					print(("[^1ERROR^7] xPlayer.clearMeta subValues should contain ^5string^7, received ^5%s^7, skipping..."):format(type(subValue)))
+				end
+			end
+		else
+			return print(("[^1ERROR^7] xPlayer.clearMeta ^5subValues^7 should be ^5string^7 or ^5table^7, received ^5%s^7!"):format(type(subValues)))
 		end
-
-		if not self.metadata[index] then
-			return print(("[^1ERROR^7] xPlayer.clearMeta ^5%s^7 not exist!"):format(index))
-		end
-
-		self.metadata[index] = nil
+	
 		self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
