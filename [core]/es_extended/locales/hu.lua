@@ -64,7 +64,7 @@ Locales["hu"] = {
 	["command_clearinventory"] = "Minden tárgy törlése a játékos inventoryból",
 	["command_clearloadout"] = "Minden fegyver elvétele a játékostól",
 	["command_freeze"] = "Játékos fagyasztása",
-  ["command_unfreeze"] = "Játékos kiolvasztása",
+	["command_unfreeze"] = "Játékos kiolvasztása",
 	["command_giveaccountmoney"] = "Pénz adás a megadott típusban",
 	["command_giveaccountmoney_account"] = "Típus",
 	["command_giveaccountmoney_amount"] = "Mennyiség",
@@ -82,7 +82,7 @@ Locales["hu"] = {
 	["command_giveweaponcomponent_hasalready"] = "Játékosnak már van ilyen fegyver kiegészítője",
 	["command_giveweaponcomponent_missingweapon"] = "Játékosnak nincs ilyen fegyvere",
 	["command_goto"] = "Teleportálás játékoshoz",
-  ["command_kill"] = "Játékos megölése",
+	["command_kill"] = "Játékos megölése",
 	["command_save"] = "Játékos adatainak mentése",
 	["command_saveall"] = "Összes játékos adatainak mentése",
 	["command_setaccountmoney"] = "Játékos pénzének beállítása megadott típusban",
@@ -99,21 +99,22 @@ Locales["hu"] = {
 	["command_setgroup_group"] = "Csoport neve",
 	["commanderror_argumentmismatch"] = "Érvénytelen argumentumszám (%s megadva, %s szükséges)",
 	["commanderror_argumentmismatch_number"] = "Érvénytelen argumentum #%s adat típus (szöveg megadva, szám szükséges)",
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	["commanderror_invaliditem"] = "Érvénytelen tárgy",
 	["commanderror_invalidweapon"] = "Érvénytelen fegyver",
 	["commanderror_console"] = "Parancs nem használható konzolból",
 	["commanderror_invalidcommand"] = "Érvénytelen parancs - /%s",
 	["commanderror_invalidplayerid"] = "Megadott játékos nem online.",
 	["commandgeneric_playerid"] = "Játékos Szerver Id",
-	['command_giveammo_noweapon_found'] = 'Nincs ilyen fegyvered: %s',
-	['command_giveammo_weapon'] = 'Fegyver név',
-	['command_giveammo_ammo'] = 'Lőszer mennyiség',
-	['tpm_nowaypoint'] = 'Nincs kijelölve pozíció!',
-	['tpm_success'] = 'Sikeres teleportálás',
+	["command_giveammo_noweapon_found"] = "Nincs ilyen fegyvered: %s",
+	["command_giveammo_weapon"] = "Fegyver név",
+	["command_giveammo_ammo"] = "Lőszer mennyiség",
+	["tpm_nowaypoint"] = "Nincs kijelölve pozíció!",
+	["tpm_success"] = "Sikeres teleportálás",
 
-	['noclip_message'] = 'Noclip %s',
-	['enabled'] = '~g~engedélyezve~s~',
-	['disabled'] = '~r~letiltva~s~',
+	["noclip_message"] = "Noclip %s",
+	["enabled"] = "~g~engedélyezve~s~",
+	["disabled"] = "~r~letiltva~s~",
 
 	-- Locale settings
 	["locale_digit_grouping_symbol"] = ",",
@@ -221,6 +222,12 @@ Locales["hu"] = {
 	["weapon_metaldetector"] = "Fémkereső",
 	["weapon_precisionrifle"] = "Precision Rifle",
 	["weapon_tactilerifle"] = "Service Carbine",
+
+	-- Drug Wars DLC
+	['weapon_candycane'] = 'Candy Cane',  -- not translated
+	['weapon_acidpackage'] = 'Acid Package', -- not translated
+	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
+	['weapon_railgunxm3'] = 'Railgun',    -- not translated
 
 	-- Thrown
 	["weapon_ball"] = "Baseball",

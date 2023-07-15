@@ -3,7 +3,7 @@ GUI.Time = 0
 
 local function openMenu(namespace, name, data)
     CurrentNameSpace = namespace
-    OpenedMenus += 1
+    OpenedMenus = OpenedMenus + 1
     SendNUIMessage({
         action = 'openMenu',
         namespace = namespace,
@@ -14,7 +14,10 @@ end
 
 local function closeMenu(namespace, name)
     CurrentNameSpace = namespace
-    OpenedMenus -= 1
+    OpenedMenus = OpenedMenus - 1
+    if OpenedMenus < 0 then
+        OpenedMenus = 0
+    end
     SendNUIMessage({
         action = 'closeMenu',
         namespace = namespace,
@@ -23,7 +26,7 @@ local function closeMenu(namespace, name)
 end
 
 AddEventHandler('onResourceStop', function(resource)
-    if GetCurrentResourceName() == resource and OpenedMenus > 0  then
+    if GetCurrentResourceName() == resource and OpenedMenus > 0 then
         ESX.UI.Menu.CloseAll()
     elseif CurrentNameSpace ~= nil and CurrentNameSpace == resource and OpenedMenus > 0 then
         ESX.UI.Menu.CloseAll()

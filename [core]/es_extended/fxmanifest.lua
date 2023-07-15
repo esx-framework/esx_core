@@ -1,11 +1,9 @@
 fx_version 'adamant'
 
 game 'gta5'
-
 description 'ES Extended'
-
 lua54 'yes'
-version '1.9.4'
+version '1.10.1'
 
 shared_scripts {
 	'locale.lua',
@@ -42,7 +40,7 @@ client_scripts {
 	'client/modules/callback.lua',
 
 	'client/main.lua',
-	
+
 	'common/modules/*.lua',
 	'common/functions.lua',
 

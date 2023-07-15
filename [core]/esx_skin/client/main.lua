@@ -1,8 +1,8 @@
 local lastSkin, cam, isCameraActive
-local firstSpawn, zoomOffset, camOffset, heading, skinLoaded = true, 0.0, 0.0, 90.0, false
+local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+AddEventHandler('esx:playerLoaded', function(_, _, skin)
     TriggerServerEvent('esx_skin:setWeight', skin)
 end)
 
@@ -16,14 +16,14 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
         -- Restrict menu
         if restrict == nil then
-            for i=1, #components, 1 do
+            for i = 1, #components, 1 do
                 _components[i] = components[i]
             end
         else
-            for i=1, #components, 1 do
+            for i = 1, #components, 1 do
                 local found = false
 
-                for j=1, #restrict, 1 do
+                for j = 1, #restrict, 1 do
                     if components[i].name == restrict[j] then
                         found = true
                     end
@@ -35,7 +35,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             end
         end
         -- Insert elements
-        for i=1, #_components, 1 do
+        for i = 1, #_components, 1 do
             local value = _components[i].value
             local componentId = _components[i].componentId
 
@@ -49,12 +49,12 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 value = value,
                 min = _components[i].min,
                 textureof = _components[i].textureof,
-                zoomOffset= _components[i].zoomOffset,
+                zoomOffset = _components[i].zoomOffset,
                 camOffset = _components[i].camOffset,
                 type = 'slider'
             }
 
-            for k,v in pairs(maxVals) do
+            for k, v in pairs(maxVals) do
                 if k == _components[i].name then
                     data.max = v
                     break
@@ -104,7 +104,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
                 local newData = {}
 
-                for i=1, #elements, 1 do
+                for i = 1, #elements, 1 do
                     newData = {}
                     newData.max = maxVals[elements[i].name]
 
@@ -112,12 +112,12 @@ function OpenMenu(submitCb, cancelCb, restrict)
                         newData.value = 0
                     end
 
-                    menu.update({name = elements[i].name}, newData)
+                    menu.update({ name = elements[i].name }, newData)
                 end
 
                 menu.refresh()
             end
-        end, function(data, menu)
+        end, function()
             DeleteSkinCam()
         end)
     end)
@@ -161,16 +161,16 @@ CreateThread(function()
             DisableControlAction(0, 25, true) -- Input Aim
             DisableControlAction(0, 24, true) -- Input Attack
 
-            local playerPed = PlayerPedId()
-            local coords    = GetEntityCoords(playerPed)
+            local playerPed   = PlayerPedId()
+            local coords      = GetEntityCoords(playerPed)
 
-            local angle = heading * math.pi / 180.0
-            local theta = {
+            local angle       = heading * math.pi / 180.0
+            local theta       = {
                 x = math.cos(angle),
                 y = math.sin(angle)
             }
 
-            local pos = {
+            local pos         = {
                 x = coords.x + (zoomOffset * theta.x),
                 y = coords.y + (zoomOffset * theta.y)
             }
@@ -224,7 +224,7 @@ CreateThread(function()
 
             heading = angle + 0.0
         end
-    Wait(sleep)
+        Wait(sleep)
     end
 end)
 
@@ -242,13 +242,11 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
                 submitCb(data, menu)
             end
         end)
-
     end, cancelCb, restrict)
 end
 
 AddEventHandler('esx_skin:resetFirstSpawn', function()
     firstSpawn = true
-    skinLoaded = false
     ESX.PlayerLoaded = false
 end)
 
@@ -259,15 +257,13 @@ AddEventHandler('esx_skin:playerRegistered', function()
         end
 
         if firstSpawn then
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
                 if skin == nil then
-                    TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
+                    TriggerEvent('skinchanger:loadSkin', { sex = 0 }, OpenSaveableMenu)
                     Wait(100)
-                    skinLoaded = true
                 else
                     TriggerEvent('skinchanger:loadSkin', skin)
                     Wait(100)
-                    skinLoaded = true
                 end
             end)
 
@@ -277,7 +273,7 @@ AddEventHandler('esx_skin:playerRegistered', function()
 end)
 
 RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
+AddEventHandler('esx:playerLoaded', function()
     ESX.PlayerLoaded = true
 end)
 

@@ -1,11 +1,12 @@
 CREATE DATABASE IF NOT EXISTS `es_extended`;
 
-
 ALTER DATABASE `es_extended`
 	DEFAULT CHARACTER SET UTF8MB4;
 	
 ALTER DATABASE `es_extended`
 	DEFAULT COLLATE UTF8MB4_UNICODE_CI;
+
+USE `es_extended`;
 
 CREATE TABLE `users` (
 	`identifier` VARCHAR(60) NOT NULL,
@@ -21,7 +22,6 @@ CREATE TABLE `users` (
 	PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE `items` (
 	`name` VARCHAR(50) NOT NULL,
 	`label` VARCHAR(50) NOT NULL,
@@ -31,7 +31,6 @@ CREATE TABLE `items` (
 
 	PRIMARY KEY (`name`)
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE `job_grades` (
 	`id` INT NOT NULL AUTO_INCREMENT,
@@ -46,7 +45,6 @@ CREATE TABLE `job_grades` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-
 INSERT INTO `job_grades` VALUES (1,'unemployed',0,'unemployed','Unemployed',200,'{}','{}');
 
 CREATE TABLE `jobs` (
@@ -55,6 +53,5 @@ CREATE TABLE `jobs` (
 
 	PRIMARY KEY (`name`)
 ) ENGINE=InnoDB;
-
 
 INSERT INTO `jobs` VALUES ('unemployed','Unemployed');
