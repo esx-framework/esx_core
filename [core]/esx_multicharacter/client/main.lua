@@ -292,7 +292,9 @@ if ESX.GetConfig().Multichar then
 			end)
 			repeat Wait(200) until finished
 		end
-		DoScreenFadeOut(100)
+
+        DoScreenFadeOut(750)
+		Wait(750)
 
 		SetCamActive(cam, false)
 		RenderScriptCams(false, false, 0, true, true)
@@ -302,8 +304,11 @@ if ESX.GetConfig().Multichar then
 		SetEntityCoordsNoOffset(playerPed, spawn.x, spawn.y, spawn.z, false, false, false, true)
 		SetEntityHeading(playerPed, spawn.heading)
 		if not isNew then TriggerEvent('skinchanger:loadSkin', skin or Characters[spawned].skin) end
-		Wait(400)
-		DoScreenFadeIn(400)
+        Wait(500)
+
+		DoScreenFadeIn(750)
+		Wait(750)
+
 		repeat Wait(200) until not IsScreenFadedOut()
 		TriggerServerEvent('esx:onPlayerSpawn')
 		TriggerEvent('esx:onPlayerSpawn')
