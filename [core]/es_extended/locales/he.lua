@@ -117,5 +117,97 @@ Locales["he"] = {
   ['tpm_success'] = 'הועברת בהצלחה',
 
   ['noclip_message'] = 'Noclip הופך להיות %s',
-  ['enabled'] = '~g~מאופ
+  ['enabled'] = '~g~מופעל~s~',
+  ['disabled'] = '~r~מבוטל~s~',
+
+  -- Locale settings
+  ["locale_digit_grouping_symbol"] = ",",
+  ["locale_currency"] = "£%s",
+
+  -- Weapons
+
+  -- Melee
+  ["weapon_dagger"] = "סכין",
+  ["weapon_bat"] = "מקל",
+  ["weapon_battleaxe"] = "קרדום לחימה",
+  ["weapon_bottle"] = "בקבוק",
+  ["weapon_crowbar"] = "מפתח עגלה",
+  ["weapon_flashlight"] = "פנס יד",
+  ["weapon_golfclub"] = "מקל גולף",
+  ["weapon_hammer"] = "פטיש",
+  ["weapon_hatchet"] = "קרדום",
+  ["weapon_knife"] = "סכין",
+  ["weapon_knuckle"] = "אגרופים",
+  ["weapon_machete"] = "מאצ'טה",
+  ["weapon_nightstick"] = "מקלון",
+  ["weapon_wrench"] = "מפתח ברגים",
+  ["weapon_poolcue"] = "מקל ביליארד",
+  ["weapon_stone_hatchet"] = "קרדום אבן",
+  ["weapon_switchblade"] = "סכין מתקפלת",
+
+  -- Handguns
+  ["weapon_appistol"] = "אקדח AP",
+  ["weapon_ceramicpistol"] = "אקדח קרמיקה",
+  ["weapon_combatpistol"] = "אקדח לחימה",
+  ["weapon_doubleaction"] = "רבולבר פעולה כפולה",
+  ["weapon_navyrevolver"] = "רבולבר חיל הים",
+  ["weapon_flaregun"] = "אקדח תותחני",
+  ["weapon_gadgetpistol"] = "אקדח גאדג'ט",
+  ["weapon_heavypistol"] = "אקדח כבד",
+  ["weapon_revolver"] = "רבולבר כבד",
+  ["weapon_revolver_mk2"] = "רבולבר כבד MK2",
+  ["weapon_marksmanpistol"] = "אקדח מציין",
+  ["weapon_pistol"] = "אקדח",
+  ["weapon_pistol_mk2"] = "אקדח MK2",
+  ["weapon_pistol50"] = "אקדח .50",
+  ["weapon_snspistol"] = "אקדח SNS",
+  ["weapon_snspistol_mk2"] = "אקדח SNS MK2",
+  ["weapon_stungun"] = "טייזר",
+  ["weapon_raypistol"] = "אקדח קרניים",
+  ["weapon_vintagepistol"] = "אקדח וינטג'",
+
+  -- Shotguns
+  ["weapon_assaultshotgun"] = "רובה תוקף",
+  ["weapon_autoshotgun"] = "רובה אוטומטי",
+  ["weapon_bullpupshotgun"] = "רובה קטלב",
+  ["weapon_combatshotgun"] = "רובה לחימה",
+  ["weapon_dbshotgun"] = "רובה כפול",
+  ["weapon_heavyshotgun"] = "רובה כבד",
+  ["weapon_musket"] = "משקוף",
+  ["weapon_pumpshotgun"] = "רובה משאבה",
+  ["weapon_pumpshotgun_mk2"] = "רובה משאבה MK2",
+  ["weapon_sawnoffshotgun"] = "רובה קצוץ",
+
+  -- SMG & LMG
+  ["weapon_assaultsmg"] = "SMG תוקף",
+  ["weapon_combatmg"] = "MG לחימה",
+  ["weapon_combatmg_mk2"] = "MG לחימה MK2",
+  ["weapon_combatpdw"] = "PDW לחימה",
+  ["weapon_gusenberg"] = "גוזנברג מכשיר",
+  ["weapon_machinepistol"] = "אקדח מכונה",
+  ["weapon_mg"] = "MG",
+  ["weapon_microsmg"] = "SMG מיקרו",
+  ["weapon_minismg"] = "SMG מיני",
+  ["weapon_smg"] = "SMG",
+  ["weapon_smg_mk2"] = "SMG MK2",
+  ["weapon_raycarbine"] = "קרבין הלל הרשע",
+
+  -- Rifles
+  ["weapon_advancedrifle"] = "רובה מתקדם",
+  ["weapon_assaultrifle"] = "רובה תוקף",
+  ["weapon_assaultrifle_mk2"] = "רובה תוקף MK2",
+  ["weapon_bullpuprifle"] = "רובה קטלב",
+  ["weapon_bullpuprifle_mk2"] = "רובה קטלב MK2",
+  ["weapon_carbinerifle"] = "רובה קרבין",
+  ["weapon_carbinerifle_mk2"] = "רובה קרבין MK2",
+  ["weapon_compactrifle"] = "רובה קומפקטי",
+  ["weapon_militaryrifle"] = "רובה צבאי",
+  ["weapon_specialcarbine"] = "קרבין מיוחד",
+  ["weapon_specialcarbine_mk2"] = "קרבין מיוחד MK2",
+
+  -- Sniper
+  ["weapon_heavysniper"] = "צלף כבד",
+  ["weapon_heavysniper_mk2"] = "צלף כבד MK2",
+  ["weapon_marksmanrifle"] = "
+
 
