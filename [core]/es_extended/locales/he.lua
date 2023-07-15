@@ -208,6 +208,167 @@ Locales["he"] = {
   -- Sniper
   ["weapon_heavysniper"] = "צלף כבד",
   ["weapon_heavysniper_mk2"] = "צלף כבד MK2",
-  ["weapon_marksmanrifle"] = "
+    ["weapon_marksmanrifle"] = "רובה צלף",
+  ["weapon_marksmanrifle_mk2"] = "רובה צלף MK2",
+  ["weapon_sniperrifle"] = "רובה צלף",
+
+  -- Heavy / Launchers
+  ["weapon_compactlauncher"] = "משגר קומפקטי",
+  ["weapon_firework"] = "משגר זיקוקים",
+  ["weapon_grenadelauncher"] = "משגר רימונים",
+  ["weapon_hominglauncher"] = "משגר חוקר",
+  ["weapon_minigun"] = "מיניגאן",
+  ["weapon_railgun"] = "רובה מסילות",
+  ["weapon_rpg"] = "משגר רקטות",
+  ["weapon_rayminigun"] = "וידוומייקר",
+
+  -- Criminal Enterprises DLC
+  ["weapon_metaldetector"] = "חיישן מתכת",
+  ["weapon_precisionrifle"] = "רובה מדויק",
+  ["weapon_tactilerifle"] = "רובה טקטי",
+
+  -- Thrown
+  ["weapon_ball"] = "כדור בייסבול",
+  ["weapon_bzgas"] = "גז BZ",
+  ["weapon_flare"] = "זיקוק",
+  ["weapon_grenade"] = "רימון",
+  ["weapon_petrolcan"] = "קנקן דלק",
+  ["weapon_hazardcan"] = "קנקן דלק מסוכן",
+  ["weapon_molotov"] = "קוקטייל מולוטוב",
+  ["weapon_proxmine"] = "מוקש קרבה",
+  ["weapon_pipebomb"] = "פצצת צנרת",
+  ["weapon_snowball"] = "כדור שלג",
+  ["weapon_stickybomb"] = "רימון דביק",
+  ["weapon_smokegrenade"] = "רימון עשן",
+
+  -- Special
+  ["weapon_fireextinguisher"] = "מטף כיבוי",
+  ["weapon_digiscanner"] = "סורק דיגיטלי",
+  ["weapon_garbagebag"] = "שק אשפה",
+  ["weapon_handcuffs"] = "כאסמים",
+  ["gadget_nightvision"] = "משקפי ראיית לילה",
+  ["gadget_parachute"] = "צניחה",
+
+  -- Weapon Components
+  ["component_knuckle_base"] = "דגם בסיס",
+  ["component_knuckle_pimp"] = "הפימפ",
+  ["component_knuckle_ballas"] = "הבאלס",
+  ["component_knuckle_dollar"] = "המרוויח",
+  ["component_knuckle_diamond"] = "האבן",
+  ["component_knuckle_hate"] = "השונא",
+  ["component_knuckle_love"] = "האוהב",
+  ["component_knuckle_player"] = "השחקן",
+  ["component_knuckle_king"] = "המלך",
+  ["component_knuckle_vagos"] = "הוואגוס",
+
+  ["component_luxary_finish"] = "סיום מפואר",
+
+  ["component_handle_default"] = "ידית ברירת מחדל",
+  ["component_handle_vip"] = "ידית VIP",
+  ["component_handle_bodyguard"] = "ידית שומר גוף",
+
+  ["component_vip_finish"] = "סיום VIP",
+  ["component_bodyguard_finish"] = "סיום שומר גוף",
+
+  ["component_camo_finish"] = "סיום דיגיטלי",
+  ["component_camo_finish2"] = "סיום ציור מברשת",
+  ["component_camo_finish3"] = "סיום חורשתי",
+  ["component_camo_finish4"] = "סיום גולגולת",
+  ["component_camo_finish5"] = "סיום ססנטה נובה",
+  ["component_camo_finish6"] = "סיום פרסאוס",
+  ["component_camo_finish7"] = "סיום נמר",
+  ["component_camo_finish8"] = "סיום זברה",
+  ["component_camo_finish9"] = "סיום גיאומטרי",
+  ["component_camo_finish10"] = "סיום פיצוץ",
+  ["component_camo_finish11"] = "סיום פטריוטי",
+
+  ["component_camo_slide_finish"] = "סיום דיגיטלי שקופה",
+  ["component_camo_slide_finish2"] = "סיום ציור מברשת שקופה",
+  ["component_camo_slide_finish3"] = "סיום חורשתי שקופה",
+  ["component_camo_slide_finish4"] = "סיום גולגולת שקופה",
+  ["component_camo_slide_finish5"] = "סיום ססנטה נובה שקופה",
+  ["component_camo_slide_finish6"] = "סיום פרסאוס שקופה",
+  ["component_camo_slide_finish7"] = "סיום נמר שקופה",
+  ["component_camo_slide_finish8"] = "סיום זברה שקופה",
+    ["component_camo_slide_finish9"] = "סיום גיאומטרי שקופה",
+  ["component_camo_slide_finish10"] = "סיום פיצוץ שקופה",
+  ["component_camo_slide_finish11"] = "סיום פטריוטי שקופה",
+
+  ["component_clip_default"] = "מחסנית ברירת מחדל",
+  ["component_clip_extended"] = "מחסנית מורחבת",
+  ["component_clip_drum"] = "מחסנית תוף",
+  ["component_clip_box"] = "מחסנית קופסה",
+
+  ["component_scope_holo"] = "מכ מכוון הולוגרפי",
+  ["component_scope_small"] = "מכוון קטן",
+  ["component_scope_medium"] = "מכוון בינוני",
+  ["component_scope_large"] = "מכוון גדול",
+  ["component_scope"] = "מכוון מותקן",
+  ["component_scope_advanced"] = "מכוון מתקדם",
+  ["component_ironsights"] = "מכוון מתכת",
+
+  ["component_suppressor"] = "משתיק",
+  ["component_compensator"] = "פיצוי",
+
+  ["component_muzzle_flat"] = "קצה חלק",
+  ["component_muzzle_tactical"] = "קצה טקטי",
+  ["component_muzzle_fat"] = "קצה שמני",
+  ["component_muzzle_precision"] = "קצה מדויק",
+  ["component_muzzle_heavy"] = "קצה כבד",
+  ["component_muzzle_slanted"] = "קצה מוטה",
+  ["component_muzzle_split"] = "קצה מחולק",
+  ["component_muzzle_squared"] = "קצה מרובע",
+
+  ["component_flashlight"] = "פנס",
+  ["component_grip"] = "ידית",
+
+  ["component_barrel_default"] = "חילוף ברירת מחדל",
+  ["component_barrel_heavy"] = "חילוף כבד",
+
+  ["component_ammo_tracer"] = "כדורי עקיבה",
+  ["component_ammo_incendiary"] = "כדורי שריפה",
+  ["component_ammo_hollowpoint"] = "כדורי ריק",
+  ["component_ammo_fmj"] = "כדורי FMJ",
+  ["component_ammo_armor"] = "כדורי פריצת שריון",
+  ["component_ammo_explosive"] = "כדורי שריון מבעירים",
+
+  ["component_shells_default"] = "קליעים ברירת מחדל",
+  ["component_shells_incendiary"] = "קליעים של נשיפת הדרקון",
+  ["component_shells_armor"] = "קליעים פלדתיים",
+  ["component_shells_hollowpoint"] = "קליעים של הטילים",
+  ["component_shells_explosive"] = "קליעים מתפצלים",
+
+  -- Weapon Ammo
+  ["ammo_rounds"] = "סיבוב(ים)",
+  ["ammo_shells"] = "קליע(ים)",
+  ["ammo_charge"] = "תשלום",
+  ["ammo_petrol"] = "גלונים של דלק",
+  ["ammo_firework"] = "זיקוק(ים)",
+  ["ammo_rockets"] = "רקטה(ות)",
+  ["ammo_grenadelauncher"] = "רימון(ים)",
+  ["ammo_grenade"] = "רימון(ים)",
+  ["ammo_stickybomb"] = "פצצה(ות)",
+  ["ammo_pipebomb"] = "פצצה(ות)",
+  ["ammo_smokebomb"] = "פצצה(ות)",
+  ["ammo_molotov"] = "קוקטייל(ים)",
+  ["ammo_proxmine"] = "מוקש(ים)",
+  ["ammo_bzgas"] = "פחית(ות)",
+  ["ammo_ball"] = "כדור(ים)",
+  ["ammo_snowball"] = "כדור שלג",
+  ["ammo_flare"] = "זיקוק(ים)",
+  ["ammo_flaregun"] = "זיקוק(ים)",
+
+  -- Weapon Tints
+  ["tint_default"] = "עור ברירת מחדל",
+  ["tint_green"] = "עור ירוק",
+  ["tint_gold"] = "עור זהב",
+  ["tint_pink"] = "עור ורוד",
+  ["tint_army"] = "עור צבאי",
+  ["tint_lspd"] = "עור כחול",
+  ["tint_orange"] = "עור כתום",
+  ["tint_platinum"] = "עור פלטינה",
+}
+
+
 
 
