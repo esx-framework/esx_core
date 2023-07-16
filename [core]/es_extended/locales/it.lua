@@ -200,6 +200,7 @@ Locales["it"] = {
 	["weapon_militaryrifle"] = "Fucile militare",
 	["weapon_specialcarbine"] = "Carabina speciale",
 	["weapon_specialcarbine_mk2"] = "Carabina speciale MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Cecchino pesante",

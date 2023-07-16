@@ -190,6 +190,7 @@ Locales["fi"] = {
 	["gadget_parachute"] = "Laskuvarjo",
 	["weapon_flare"] = "Hätäraketti",
 	["weapon_doubleaction"] = "Double action revolveri",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Weapon Components
 	["component_clip_default"] = "Oletus lipas",

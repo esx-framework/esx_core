@@ -200,6 +200,7 @@ Locales["da"] = {
 	["weapon_militaryrifle"] = "Militær riffel",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Tung snigskytte",

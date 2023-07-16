@@ -200,6 +200,7 @@ Locales["nl"] = {
     ["weapon_militaryrifle"] = "Militair geweer",
     ["weapon_specialcarbine"] = "Speciale karabijn",
     ["weapon_specialcarbine_mk2"] = "Speciale karabijn MK2",
+    ["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
     -- Sniper
     ["weapon_heavysniper"] = "Zware sluipschutter",

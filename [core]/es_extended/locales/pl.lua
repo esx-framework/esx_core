@@ -183,6 +183,7 @@ Locales["pl"] = {
 	["gadget_parachute"] = "spadochron",
 	["weapon_flare"] = "pistolet sygnałowy",
 	["weapon_doubleaction"] = "double-Action Revolver",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Weapon Components
 	["component_clip_default"] = "domyślny tłumik",

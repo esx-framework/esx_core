@@ -200,6 +200,7 @@ Locales["zh-cn"] = {
 	["weapon_militaryrifle"] = "军用步枪",
 	["weapon_specialcarbine"] = "特制卡宾步枪",
 	["weapon_specialcarbine_mk2"] = "特制卡宾步枪-MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "重型狙击步枪",
