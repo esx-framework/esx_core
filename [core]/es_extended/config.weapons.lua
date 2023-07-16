@@ -824,6 +824,19 @@ Config.Weapons = {
 			{ name = 'camo_finish11',    label = TranslateCap('component_camo_finish11'),    hash = `COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01` }
 		}
 	},
+	{
+		name = 'WEAPON_HEAVYRIFLE',
+		label = TranslateCap('weapon_heavyrifle'),
+		ammo = {label = TranslateCap('ammo_rounds'), hash = `AMMO_RIFLE`},
+		tints = Config.DefaultWeaponTints,
+		components = {
+			{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_HEAVYRIFLE_CLIP_01`},
+			{name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_HEAVYRIFLE_CLIP_02`},
+			{name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH_REH`},
+			{name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`},
+			{name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02`}
+		}
+	},
 	-- Sniper
 	{
 		name = 'WEAPON_HEAVYSNIPER',
