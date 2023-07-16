@@ -832,9 +832,11 @@ Config.Weapons = {
 		components = {
 			{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_HEAVYRIFLE_CLIP_01`},
 			{name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_HEAVYRIFLE_CLIP_02`},
-			{name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH_REH`},
-			{name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`},
-			{name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02`}
+			{name = 'scope_holo', label = TranslateCap('component_scope_holo'), hash = `COMPONENT_HEAVYRIFLE_SIGHT_01` },
+			{name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MEDIUM` },
+			{name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH`},
+			{name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP`},
+			{name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`}
 		}
 	},
 	-- Sniper
