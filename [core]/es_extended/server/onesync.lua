@@ -15,7 +15,7 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 			error("Received invalid first argument (source); should be playerId or vector3 coordinates")
 		end
 
-		source = GetEntityCoords(GetPlayerPed(source))
+		source = GetEntityCoords(source)
 	end
 
 	for _, xPlayer in pairs(ESX.Players) do
