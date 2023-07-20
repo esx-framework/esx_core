@@ -140,7 +140,7 @@ ESX.HashString = function(str)
     return input_map
 end
 
-local contextAvailable = GetResourceState("esx_contex") ~= "missing"
+local contextAvailable = GetResourceState("esx_context") ~= "missing"
 
 function ESX.OpenContext(...)
     return contextAvailable and exports["esx_context"]:Open(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
