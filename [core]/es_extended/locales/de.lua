@@ -52,6 +52,7 @@ Locales["de"] = {
 
 	["act_imp"] = "Du kannst diese Aktion nicht ausführen!",
 	["in_vehicle"] = "Du kannst diese Aktion nicht ausführen! Person ist in einem Fahrzeug",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'Person zu dir bringen',
@@ -59,6 +60,9 @@ Locales["de"] = {
 	['command_car_car'] = 'Fahrzeug Model oder Hash',
 	['command_cardel'] = 'Fahrzeuge entfernen',
 	['command_cardel_radius'] = 'Entfernt alle Fahrzeuge in einem bestimmten Radius',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Textchat leeren',
 	['command_clearall'] = 'Textchat leeren für alle Spieler leeren',
 	['command_clearinventory'] = 'Alle Items von dem Inventar eines Spielers entfernen',

@@ -664,6 +664,16 @@ AddEventHandler("esx:killPlayer", function()
 	SetEntityHealth(ESX.PlayerData.ped, 0)
 end)
 
+RegisterNetEvent("esx:repairPedVehicle")
+AddEventHandler("esx:repairPedVehicle", function()
+	local ped = ESX.PlayerData.ped
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	SetVehicleEngineHealth(vehicle, 1000)
+	SetVehicleEngineOn(vehicle, true, true)
+	SetVehicleFixed(vehicle)
+	SetVehicleDirtLevel(vehicle, 0)
+end)
+
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
 	local player = PlayerId()

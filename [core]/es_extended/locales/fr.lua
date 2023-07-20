@@ -52,6 +52,7 @@ Locales["fr"] = {
 
 	["act_imp"] = "Action impossible",
 	["in_vehicle"] = "Action impossible, le joueur est dans un véhicule",
+	["not_in_vehicle"] = "Action impossible, le joueur n'est pas dans un véhicule",
 
 	-- Commands
 	["command_bring"] = "Téléporter un joueur sur vous",
@@ -59,6 +60,9 @@ Locales["fr"] = {
 	["command_car_car"] = "Nom ou hash du véhicule",
 	["command_cardel"] = "Supprimer les véhicules à proximité",
 	["command_cardel_radius"] = "Supprime tous les véhicules dans un rayon spécifié",
+	["command_repair"] = "Réparer votre véhicule",
+	["command_repair_success"] = "Véhicule réparé avec succès",
+	["command_repair_success_target"] = "Votre véhicule a été réparé par un membre du staff",
 	["command_clear"] = "Effacer le chat",
 	["command_clearall"] = "Effacer le chat de tous les joueurs",
 	["command_clearinventory"] = "Retirer tous les objets de l'inventaire du joueur",

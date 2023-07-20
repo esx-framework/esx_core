@@ -52,12 +52,16 @@ Locales["fi"] = {
 
 	["act_imp"] = "Toiminto mahdoton",
 	["in_vehicle"] = "Et voi antaa ajoneuvossa olevalle mitään",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_car'] = 'Luo ajoneuvo',
 	['command_car_car'] = 'Ajoneuvon nimi tai hash',
 	['command_cardel'] = 'Poistaa ajoneuvon läheltä',
 	['command_cardel_radius'] = 'Valinnainen, poista kaikki ajoneuvot määritetyllä säteellä',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Tyhjennä keskustelu',
 	['command_clearall'] = 'Tyhjennä keskustelu kaikilta pelaajilta',
 	['command_clearinventory'] = 'Tyhjennä pelaajan reppu',

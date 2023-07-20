@@ -52,6 +52,7 @@ Locales["it"] = {
 
 	["act_imp"] = "Non puoi farlo",
 	["in_vehicle"] = "Non puoi farlo, il giocatore è in un veicolo",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'Porta il giocatore da te',
@@ -59,6 +60,9 @@ Locales["it"] = {
 	['command_car_car'] = 'Modello o hash veicolo',
 	['command_cardel'] = 'Rimuovi i veicoli nelle prossimità',
 	['command_cardel_radius'] = 'Rimuovi i veicoli nel raggio specificato',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Pulisci la chat testuale',
 	['command_clearall'] = 'Pulisci la chat testuale per tutti i giocatori',
 	['command_clearinventory'] = 'Rimuovi tutti gli oggetti dall\' inventario del giocatore',
