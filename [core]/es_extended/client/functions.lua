@@ -1008,9 +1008,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 
     if props.tyreBurst ~= nil then
         for k, v in pairs(props.tyreBurst) do
-            if v then
-                SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0)
-            end
+            SetVehicleTyreBurst(vehicle, tonumber(k), v, 1000.0)
         end
     end
 end
