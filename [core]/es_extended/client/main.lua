@@ -60,9 +60,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	local playerId = PlayerId()
 
-	-- RemoveHudCommonents
-	for i = 1, #(Config.RemoveHudCommonents) do
-		if Config.RemoveHudCommonents[i] then
+	-- RemoveHudComponents
+	for i = 1, #(Config.RemoveHudComponents) do
+		if Config.RemoveHudComponents[i] then
 			SetHudComponentPosition(i, 999999.0, 999999.0)
 		end
 	end
