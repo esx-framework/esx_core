@@ -347,6 +347,11 @@ AddEventHandler('esx:setJob', function(Job)
 	ESX.SetPlayerData('job', Job)
 end)
 
+RegisterNetEvent('esx:setJob2')
+AddEventHandler('esx:setJob2', function(job2)
+	ESX.SetPlayerData('job2', job2)
+end)
+
 if not Config.OxInventory then
 	RegisterNetEvent('esx:createPickup')
 	AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
