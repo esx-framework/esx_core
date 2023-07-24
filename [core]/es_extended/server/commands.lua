@@ -30,8 +30,8 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 			{ name = "Player", value = xPlayer.name,       inline = true },
 			{ name = "ID",     value = xPlayer.source,     inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
-			{ name = "Job",    value = args.playerId,      inline = true },
-			{ name = "Grade",  value = args.playerId,      inline = true },
+			{ name = "Job",    value = args.job,           inline = true },
+			{ name = "Grade",  value = args.grade,         inline = true },
 		})
 	end
 end, true, {
