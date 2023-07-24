@@ -15,12 +15,14 @@ local function getNearbyPlayers(source, closest, distance, ignore)
         
 		if not source then
 			error("Received invalid first argument (source); should be playerId")
+            return result
 		end
 
 		playerCoords = GetEntityCoords(playerPed)
 
         if not playerCoords then
             error("Received nil value (playerCoords); perhaps source is nil at first place?")
+            return result
         end
 	end
 
