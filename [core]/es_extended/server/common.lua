@@ -31,8 +31,9 @@ end
 
 local function StartDBSync()
 	CreateThread(function()
+		local interval <const> = 10 * 60 * 1000
 		while true do
-			Wait(10 * 60 * 1000)
+			Wait(interval)
 			Core.SavePlayers()
 		end
 	end)
