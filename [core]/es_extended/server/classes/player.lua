@@ -462,7 +462,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeapon(weaponName)
 		local weaponLabel, playerPed = nil, GetPlayerPed(self.source)
 
-		if not playerPed then 
+		if not playerPed then
 			return print("[^1ERROR^7] xPlayer.removeWeapon ^5invalid^7 player ped!")
 		end
 
