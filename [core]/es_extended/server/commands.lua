@@ -451,7 +451,6 @@ end, true)
 
 ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer)
 	local job = xPlayer.getJob().name
-	local jobgrade = xPlayer.getJob().grade_name
 	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(),
 		xPlayer.getGroup(), job))
 end, true)
