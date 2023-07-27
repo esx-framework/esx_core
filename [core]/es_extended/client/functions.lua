@@ -1015,7 +1015,7 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
     local fov = (1 / GetGameplayCamFov()) * 100
     scale = scale * fov
 
-    SetTextScale(0.0 * scale, 0.55 * scale)
+    SetTextScale(0.0, 0.55 * scale)
     SetTextFont(font)
     SetTextProportional(1)
     SetTextColour(255, 255, 255, 215)
