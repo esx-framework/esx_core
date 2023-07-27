@@ -617,7 +617,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return metaData
 	end
 
-	function self.setMeta(index, value, subValue)
+	function self.(index, value, subValue)
 		if not index then
 			return print("[^1ERROR^7] xPlayer.setMeta ^5index^7 is Missing!")
 		end
