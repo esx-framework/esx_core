@@ -504,7 +504,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 						end
 					end
 
-					self.triggerEvent('esx:removeWeaponComponent', weaponName, weaponComponent)
+                    RemoveWeaponComponent(GetPlayerPed(self.source), GetHashKey(weaponName), component)
 					self.triggerEvent('esx:removeInventoryItem', component.label, false, true)
 				end
 			end
