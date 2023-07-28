@@ -191,7 +191,7 @@ function Core.SavePlayers(cb)
 		return
 	end
 
-	local startTime <const> = os.time()
+	local startTime <const> = os.clock()
 	local parameters = {}
 
 	for _, xPlayer in pairs(ESX.Players) do
@@ -220,7 +220,7 @@ function Core.SavePlayers(cb)
 				return cb()
 			end
 
-			print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(#parameters, #parameters > 1 and 'players' or 'player', ESX.Math.Round((os.time() - startTime) / 1000000, 2)))
+			print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(#parameters, #parameters > 1 and 'players' or 'player', ESX.Math.Round((os.clock() - startTime) * 1000, 2)))
 		end
 	)
 end
