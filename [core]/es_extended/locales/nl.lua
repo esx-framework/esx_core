@@ -9,7 +9,7 @@ Locales["nl"] = {
     ["amount"] = "Aantal",
     ["giveammo"] = "Geef munitie",
     ["amountammo"] = "Hoeveelheid munitie",
-    ["noammo"] = "Niet genoeg!",
+    ["noammo"] = "Niet genoeg munitie!",
     ["gave_item"] = "%sx %s gegeven aan %s",
     ["received_item"] = "%sx %s ontvangen van %s",
     ["gave_weapon"] = "%s gegeven aan %s",
@@ -34,7 +34,7 @@ Locales["nl"] = {
     ["threw_weapon"] = "%s weggegooid",
     ["threw_weapon_ammo"] = "%s met ~o~%sx %s weggegooid",
     ["threw_weapon_already"] = "Je hebt dit wapen al !",
-    ["threw_cannot_pickup"] = "Inventoraris is vol, Kan niet oppakken!",
+    ["threw_cannot_pickup"] = "Inventaris is vol, Je kan dit niet oppakken!",
     ["threw_pickup_prompt"] = "Druk op E om op te pakken",
 
     -- Key mapping
@@ -48,7 +48,7 @@ Locales["nl"] = {
     ["bank"] = "Maze Bank",
     ["account_bank"] = "Bank",
     ["account_black_money"] = "Zwart geld",
-    ["account_money"] = "Contant",
+    ["account_money"] = "Contant", 
 
     ["act_imp"] = "Kan actie niet uitvoeren",
     ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig.",
@@ -147,7 +147,7 @@ Locales["nl"] = {
     ["weapon_combatpistol"] = "Gevechtspistool",
     ["weapon_doubleaction"] = "Revolver met dubbele actie",
     ["weapon_navyrevolver"] = "Marine Revolver",
-    ["weapon_flaregun"] = "Alarmpistool",
+    ["weapon_flaregun"] = "Noodsignaalpistool",
     ["weapon_gadgetpistol"] = "Gadgetpistool",
     ["weapon_heavypistol"] = "Zwaar pistool",
     ["weapon_revolver"] = "Zware revolver",
@@ -158,7 +158,7 @@ Locales["nl"] = {
     ["weapon_pistol50"] = "Pistool .50",
     ["weapon_snspistol"] = "SNS-pistool",
     ["weapon_snspistol_mk2"] = "SNS-pistool MK2",
-    ["weapon_stungun"] = "Tazer",
+    ["weapon_stungun"] = "Taser",
     ["weapon_raypistol"] = "Up-N-Atomizer",
     ["weapon_vintagepistol"] = "Vintage Pistool",
 
@@ -225,7 +225,7 @@ Locales["nl"] = {
 
     -- Drug Wars DLC
     ["weapon_candycane"] = "Snoep stok",
-    ["weapon_acidpackage"] = "Giftig Pakketje",
+    ["weapon_acidpackage"] = "LSD pakket",
     ["weapon_pistolxm3"] = "WM 29 Pistool", 
     ["weapon_railgunxm3"] = "Railgun", 
 
