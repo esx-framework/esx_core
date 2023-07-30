@@ -134,14 +134,14 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 				if playerId == 0 then
 					print(('[^3WARNING^7] %s^7'):format(error))
 				else
-					xPlayer.showNotification(error)
+					xPlayer.showNotification(error, "error")
 				end
 			else
 				cb(xPlayer or false, args, function(msg)
 					if playerId == 0 then
 						print(('[^3WARNING^7] %s^7'):format(msg))
 					else
-						xPlayer.showNotification(msg)
+						xPlayer.showNotification(msg, "error")
 					end
 				end)
 			end

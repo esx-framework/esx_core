@@ -57,7 +57,7 @@ local upgrades = Config.SpawnVehMaxUpgrades and
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	if not xPlayer then
-		return showError('[^1ERROR^7] The xPlayer value is nil')
+		return print('[^1ERROR^7] The xPlayer value is nil')
 	end
 
 	local playerPed = GetPlayerPed(xPlayer.source)
@@ -93,7 +93,7 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 				end
 			end
 			if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
-				showError('[^1ERROR^7] The player could not be seated in the vehicle')
+				showError('The player could not be seated in the vehicle')
 			end
 		end
 	end)
