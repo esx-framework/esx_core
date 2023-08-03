@@ -9,7 +9,7 @@ Locales["nl"] = {
     ["amount"] = "Aantal",
     ["giveammo"] = "Geef munitie",
     ["amountammo"] = "Hoeveelheid munitie",
-    ["noammo"] = "Niet genoeg!",
+    ["noammo"] = "Niet genoeg munitie!",
     ["gave_item"] = "%sx %s gegeven aan %s",
     ["received_item"] = "%sx %s ontvangen van %s",
     ["gave_weapon"] = "%s gegeven aan %s",
@@ -34,7 +34,7 @@ Locales["nl"] = {
     ["threw_weapon"] = "%s weggegooid",
     ["threw_weapon_ammo"] = "%s met ~o~%sx %s weggegooid",
     ["threw_weapon_already"] = "Je hebt dit wapen al !",
-    ["threw_cannot_pickup"] = "Inventoraris is vol, Kan niet oppakken!",
+    ["threw_cannot_pickup"] = "Inventaris is vol, je kan dit niet oppakken!",
     ["threw_pickup_prompt"] = "Druk op E om op te pakken",
 
     -- Key mapping
@@ -48,7 +48,7 @@ Locales["nl"] = {
     ["bank"] = "Maze Bank",
     ["account_bank"] = "Bank",
     ["account_black_money"] = "Zwart geld",
-    ["account_money"] = "Cash",
+    ["account_money"] = "Contant", 
 
     ["act_imp"] = "Kan actie niet uitvoeren",
     ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig.",
@@ -74,7 +74,7 @@ Locales["nl"] = {
     ['command_giveitem_count'] = 'Hoeveelheid',
     ['command_giveweapon'] = 'Geef de speler een wapen',
     ['command_giveweapon_weapon'] = 'Wapen naam',
-    ['command_giveweapon_ammo'] = 'Ammo Hoeveelheid',
+    ['command_giveweapon_ammo'] = 'Munitie Hoeveelheid',
     ['command_giveweapon_hasalready'] = 'Speler heeft dit wapen al',
     ['command_giveweaponcomponent'] = 'Geef wapen component aan speler',
     ['command_giveweaponcomponent_component'] = 'Component naam',
@@ -86,7 +86,7 @@ Locales["nl"] = {
     ['command_save'] = 'Slaag een speler zijn spelerdata geforceerd op',
     ['command_saveall'] = 'Slaag iedereen zijn spelerdata geforceerd op',
     ['command_setaccountmoney'] = 'Stel geld in op een account',
-    ['command_setaccountmoney_amount'] = 'Amount',
+    ['command_setaccountmoney_amount'] = 'Hoeveelheid',
     ['command_setcoords'] = 'Telepeer naar coordinaten',
     ['command_setcoords_x'] = 'X waarde',
     ['command_setcoords_y'] = 'Y waarde',
@@ -99,7 +99,7 @@ Locales["nl"] = {
     ['command_setgroup_group'] = 'Naam van groep',
     ['commanderror_argumentmismatch'] = 'Ongeldig aantal argumenten (geslaagd %s, gezocht %s)',
     ['commanderror_argumentmismatch_number'] = 'Ongeldig argument #%s gegevenstype (doorgegeven string, gewenst nummer)',
-    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
+    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (doorgegeven string, gewenst nummer)',
     ['commanderror_invaliditem'] = 'Ongeldig item',
     ['commanderror_invalidweapon'] = 'Ongeldig wapen',
     ['commanderror_console'] = 'Command kan niet worden uitgevoerd vanaf console.',
@@ -108,8 +108,8 @@ Locales["nl"] = {
     ['commandgeneric_playerid'] = 'Speler server id',
     ['command_giveammo_noweapon_found'] = '%s heeft dat wapen niet',
     ['command_giveammo_weapon'] = 'Wapen naam',
-    ['command_giveammo_ammo'] = 'Ammo Hoeveelheid',
-    ['tpm_nowaypoint'] = 'Geen waypoint gezet.',
+    ['command_giveammo_ammo'] = 'Munitie Hoeveelheid',
+    ['tpm_nowaypoint'] = 'Geen navigatie ingesteld.',
     ['tpm_success'] = 'Successvol geteleporteerd',
 
     ['noclip_message'] = 'Noclip is %s',
@@ -133,13 +133,13 @@ Locales["nl"] = {
     ["weapon_hammer"] = "Hamer",
     ["weapon_hatchet"] = "Bijl",
     ["weapon_knife"] = "Mes",
-    ["weapon_knuckle"] = "Knuckledusters",
+    ["weapon_knuckle"] = "Boksbeugel",
     ["weapon_machete"] = "Machete",
-    ["weapon_nightstick"] = "Nightstick",
+    ["weapon_nightstick"] = "Wapenstok",
     ["weapon_wrench"] = "Pijpsleutel",
-    ["weapon_poolcue"] = "Pool Cue",
+    ["weapon_poolcue"] = "Biljart Keu",
     ["weapon_stone_hatchet"] = "Steenbijl",
-    ["weapon_switchblade"] = "Switchblade",
+    ["weapon_switchblade"] = "Stiletto",
 
     -- Handguns
     ["weapon_appistol"] = "AP-pistool",
@@ -147,7 +147,7 @@ Locales["nl"] = {
     ["weapon_combatpistol"] = "Gevechtspistool",
     ["weapon_doubleaction"] = "Revolver met dubbele actie",
     ["weapon_navyrevolver"] = "Marine Revolver",
-    ["weapon_flaregun"] = "Flaregun",
+    ["weapon_flaregun"] = "Noodsignaalpistool",
     ["weapon_gadgetpistol"] = "Gadgetpistool",
     ["weapon_heavypistol"] = "Zwaar pistool",
     ["weapon_revolver"] = "Zware revolver",
@@ -224,10 +224,10 @@ Locales["nl"] = {
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane",     -- not translated
-    ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
-    ["weapon_railgunxm3"] = "Railgun",       -- not translated
+    ["weapon_candycane"] = "Snoep stok",
+    ["weapon_acidpackage"] = "LSD pakket",
+    ["weapon_pistolxm3"] = "WM 29 Pistool", 
+    ["weapon_railgunxm3"] = "Railgun", 
 
     -- Thrown
     ["weapon_ball"] = "Honkbal",
@@ -338,7 +338,7 @@ Locales["nl"] = {
     ["component_shells_incendiary"] = "draken ademschelpen",
     ["component_shells_armor"] = "stalen Buckshot Shells",
     ["component_shells_hollowpoint"] = "flechette schelpen",
-    ["component_shells_explosive"] = "explosieve slakkenhuizen",
+    ["component_shells_explosive"] = "explosieve granaten",
 
     -- Weapon Ammo
     ["ammo_rounds"] = "ronde(n)",
