@@ -1007,3 +1007,8 @@ Config.Weapons = {
 		},
 	},
 }
+
+
+exports('getWeaponConfig', function()
+	return Config.Weapons
+end)
