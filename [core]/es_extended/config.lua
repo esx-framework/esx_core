@@ -38,6 +38,7 @@ Config.LogPaycheck               = false     -- Logs paychecks to a nominated Di
 Config.EnableSocietyPayouts      = false     -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight                 = 24        -- the max inventory weight without backpack
 Config.PaycheckInterval          = 7 * 60000 -- how often to recieve pay checks in milliseconds
+Config.SaveInterval = 60 -- how often should all players be saved in minutes 
 Config.EnableDebug               = false     -- Use Debug options?
 Config.EnableDefaultInventory    = true      -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel         = false     -- Use Normal GTA wanted Level?
