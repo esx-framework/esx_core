@@ -32,7 +32,7 @@ end
 local function StartDBSync()
 	CreateThread(function()
 		while true do
-			Wait(10 * 60 * 1000)
+			Wait(10 * Config.SaveInterval * 1000)
 			Core.SavePlayers()
 		end
 	end)
