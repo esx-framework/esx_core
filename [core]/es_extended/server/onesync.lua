@@ -9,7 +9,9 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 	local count = 0
     local playerPed
     local playerCoords
+
 	if not distance then distance = 100 end
+
 	if type(source) == 'number' then
 		playerPed = GetPlayerPed(source)
         
@@ -21,6 +23,15 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 		playerCoords = GetEntityCoords(playerPed)
 
         if not playerCoords then
+            error("Received nil value (playerCoords); perhaps source is nil at first place?")
+            return result
+        end
+	end
+
+	if type(source) == 'vector3' then
+		playerCoords = source
+
+		if not playerCoords then
             error("Received nil value (playerCoords); perhaps source is nil at first place?")
             return result
         end
