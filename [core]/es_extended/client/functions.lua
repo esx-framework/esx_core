@@ -1326,8 +1326,6 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
----@param model number|string
----@return string
 local mismatchedTypes = {
     [`airtug`] = "automobile",       -- trailer
     [`avisa`] = "submarine",         -- boat
@@ -1364,6 +1362,8 @@ local mismatchedTypes = {
     [`utillitruck3`] = "automobile", -- trailer
 }
 
+---@param model number|string
+---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
 
