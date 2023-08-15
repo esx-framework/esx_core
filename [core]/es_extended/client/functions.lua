@@ -1335,6 +1335,10 @@ function ESX.GetVehicleType(model)
         return 'submarine'
     end
 
+    if model == `blimp` then
+        return 'heli'
+    end
+
     local vehicleType = GetVehicleClassFromName(model)
     local types = {
         [8] = "bike",
