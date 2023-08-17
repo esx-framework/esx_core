@@ -709,7 +709,6 @@ for i = 1, #DoNotUse do
 	end
 end
 
-AddStateBagChangeHandler('metadata', nil, function(bag, key, val)
-    if GetPlayerFromStateBagName(bag) ~= PlayerId() then return end 
-	ESX.SetPlayerData(key, val) 
+AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(bag, key, val) 
+	    ESX.SetPlayerData(key, val) 
 end)
