@@ -4,8 +4,8 @@ on:
   issues:
     types:
       - opened
-  pull_request:
-    types:
+  pull_request_target:
+    types: 
       - opened
 
 jobs:
@@ -15,14 +15,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-      - name: Get event creation date
+      - name: Get current date
         id: date
-        run: |
-          if [[ "${{ github.event_name }}" == "issues" ]]; then
-            echo "date=${{ github.event.issue.created_at }}" >> $GITHUB_ENV
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "date=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
-          fi
+        run: echo "date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Add to project
         uses: actions/add-to-project@v0.5.0
         with:
@@ -35,5 +30,5 @@ jobs:
           project-url: https://github.com/orgs/esx-framework/projects/9
           github-token: ${{ secrets.MY_GITHUB_TOKEN }}
           item-id: ${{ steps.add-project.outputs.itemId }}
-          field-keys: Date
-          field-values: ${{ env.date }},
+          field-keys: Date,Priority
+          field-values: ${{ env.date }},Unrealised
