@@ -709,6 +709,7 @@ for i = 1, #DoNotUse do
 	end
 end
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
-	ESX.SetPlayerData(key, val)
+AddStateBagChangeHandler('metadata', nil, function(bag, key, val)
+    if GetPlayerFromStateBagName(bag) ~= PlayerId() then return end 
+	ESX.SetPlayerData(key, val) 
 end)
