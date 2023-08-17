@@ -462,7 +462,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeapon(weaponName)
 		local weaponLabel, playerPed = nil, GetPlayerPed(self.source)
 
-		if not playerPed then 
+		if not playerPed then
 			return print("[^1ERROR^7] xPlayer.removeWeapon ^5invalid^7 player ped!")
 		end
 
@@ -473,7 +473,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				for _, v2 in ipairs(v.components) do
 					self.removeWeaponComponent(weaponName, v2)
 				end
-				
+
 				local weaponHash = joaat(v.name)
 
 				RemoveWeaponFromPed(playerPed, weaponHash)
@@ -642,11 +642,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			if _type ~= "string" then
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
 			end
-            
-            if not self.metadata[index] then
-				self.metadata[index] = table.create(0, 0)
+
+            if not self.metadata[index] or type(self.metadata[index]) ~= "table" then
+				self.metadata[index] = { }
 			end
-            
+
 			self.metadata[index][value] = subValue
 		end
 
