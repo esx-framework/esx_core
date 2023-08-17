@@ -603,11 +603,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
-    local driftTyresEnabled = false
-    if type(GetDriftTyresEnabled(vehicle) == "boolean") and GetDriftTyresEnabled(vehicle) then
-        driftTyresEnabled = true
-    end
-
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
@@ -672,7 +667,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
         extras = extras,
-        driftTyresEnabled = driftTyresEnabled,
         tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
         modSpoilers = GetVehicleMod(vehicle, 0),
@@ -811,10 +805,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         for extraId, enabled in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
         end
-    end
-
-    if props.driftTyresEnabled then
-        SetDriftTyresEnabled(vehicle, true)
     end
 
     if props.neonColor ~= nil then
@@ -1333,6 +1323,10 @@ function ESX.GetVehicleType(model)
 
     if model == `submersible` or model == `submersible2` then
         return 'submarine'
+    end
+
+    if model == `blimp` then
+        return 'heli'
     end
 
     local vehicleType = GetVehicleClassFromName(model)

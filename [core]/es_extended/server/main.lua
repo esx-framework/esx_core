@@ -82,12 +82,7 @@ function createESXPlayer(identifier, playerId, data)
 		defaultGroup = "admin"
 	end
 	
-	local parameters = {}
-	if not Config.Multichar then
-		parameters = { json.encode(accounts), identifier, defaultGroup }
-	else
-		parameters = { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height }
-	end
+	local parameters = Config.Multichar and { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height } or { json.encode(accounts), identifier, defaultGroup }
 
 	if Config.StartingInventoryItems then
 		table.insert(parameters, json.encode(Config.StartingInventoryItems))

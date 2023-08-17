@@ -655,7 +655,7 @@ AddEventHandler("esx:noclip", function()
 			CreateThread(noclipThread)
 		end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
+		ESX.ShowNotification(TranslateCap('noclip_message', noclip and Translate('enabled') or Translate('disabled')), true, false, 140)
 	end)
 end)
 
@@ -709,6 +709,7 @@ for i = 1, #DoNotUse do
 	end
 end
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
-	ESX.SetPlayerData(key, val)
+AddStateBagChangeHandler('metadata', nil, function(bag, key, val)
+    if GetPlayerFromStateBagName(bag) ~= PlayerId() then return end 
+	ESX.SetPlayerData(key, val) 
 end)

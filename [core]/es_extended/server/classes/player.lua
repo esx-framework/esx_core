@@ -473,7 +473,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				for _, v2 in ipairs(v.components) do
 					self.removeWeaponComponent(weaponName, v2)
 				end
-				
+
 				local weaponHash = joaat(v.name)
 
 				RemoveWeaponFromPed(playerPed, weaponHash)
@@ -643,11 +643,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				return print(("[^1ERROR^7] xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
 			end
 
+			self.metadata[index] = self.metadata[index] or {} 
 			self.metadata[index][value] = subValue
 		end
 
-
-		self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
@@ -693,7 +692,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return print(("[^1ERROR^7] xPlayer.clearMeta ^5subValues^7 should be ^5string^7 or ^5table^7, received ^5%s^7!"):format(type(subValues)))
 		end
 	
-		self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
 		Player(self.source).state:set('metadata', self.metadata, true)
 	end
 
