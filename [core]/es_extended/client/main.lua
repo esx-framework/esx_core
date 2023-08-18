@@ -709,6 +709,6 @@ for i = 1, #DoNotUse do
 	end
 end
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
-	ESX.SetPlayerData(key, val)
+AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(bag, key, val)
+	ESX.SetPlayerData(key, val) 
 end)
