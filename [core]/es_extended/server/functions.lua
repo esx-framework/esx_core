@@ -376,38 +376,39 @@ function ESX.CreateJob(name, label, grades)
 end
 
 function ESX.RefreshJobs()
-	local Jobs = {}
-	local jobs = MySQL.query.await('SELECT * FROM jobs')
+    local result = MySQL.query.await('SELECT * FROM jobs') 
+    local Jobs = {} 
 
-	for _, v in ipairs(jobs) do
-		Jobs[v.name] = v
-		Jobs[v.name].grades = {}
-	end
+    if #result < 1 then 
+        ESX.Jobs['unemployed'] = { label = 'Unemployed', grades = { ['0'] = { grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {} } } }
+        return 
+    end 
+    
+    for i=1, #result do
+        Jobs[result[i].name] = result[i] 
+        Jobs[result[i].name].grades = {} 
+    end 
+    
+    local result = MySQL.query.await('SELECT * FROM job_grades') 
+    
+    for i=1, #result do
+        local count = 0 
+        if Jobs[result[i].job_name] then
+            count += 1 
+            Jobs[result[i].job_name].grades[tostring(result[i].grade)] = result[i] 
+        else 
+            print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(result[i].job_name)) 
+            break 
+        end 
 
-	local jobGrades = MySQL.query.await('SELECT * FROM job_grades')
+        if count < 1 then 
+            print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(result[i].job_name)) 
+            Jobs[result[i].job_name] = nil 
+        end 
+    end 
 
-	for _, v in ipairs(jobGrades) do
-		if Jobs[v.job_name] then
-			Jobs[v.job_name].grades[tostring(v.grade)] = v
-		else
-			print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
-		end
-	end
-
-	for _, v in pairs(Jobs) do
-		if ESX.Table.SizeOf(v.grades) == 0 then
-			Jobs[v.name] = nil
-			print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(v.name))
-		end
-	end
-
-	if not Jobs then
-		-- Fallback data, if no jobs exist
-		ESX.Jobs['unemployed'] = { label = 'Unemployed', grades = { ['0'] = { grade = 0, label = 'Unemployed', salary = 200, skin_male = {}, skin_female = {} } } }
-	else
-		ESX.Jobs = Jobs
-	end
-end
+    ESX.Jobs = Jobs
+end 
 
 function ESX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
