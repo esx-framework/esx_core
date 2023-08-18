@@ -1,4 +1,4 @@
-ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args)
+ESX.RegisterCommand({'setcoords', 'tp'}, 'admin', function(xPlayer, args)
 	xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Coordinates /setcoords Triggered!", "pink", {
@@ -13,9 +13,9 @@ end, false, {
 	help = TranslateCap('command_setcoords'),
 	validate = true,
 	arguments = {
-		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'number' },
-		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'number' },
-		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'number' }
+		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'coordinate' },
+		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'coordinate' },
+		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'coordinate' }
 	}
 })
 
