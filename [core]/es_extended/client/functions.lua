@@ -179,6 +179,7 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
 
     menu.type = type
     menu.namespace = namespace
+    menu.resourceName = (GetInvokingResource() or "Unknown")
     menu.name = name
     menu.data = data
     menu.submit = submit
@@ -1314,6 +1315,17 @@ AddEventHandler('esx:showAdvancedNotification',
 RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
+end)
+
+AddEventHandler('onResourceStop', function(resourceName)
+    for i = 1, #ESX.UI.Menu.Opened, 1 do
+        if ESX.UI.Menu.Opened[i] then
+            if ESX.UI.Menu.Opened[i].resourceName == resourceName or ESX.UI.Menu.Opened[i].namespace == resourceName then
+                ESX.UI.Menu.Opened[i].close()
+                ESX.UI.Menu.Opened[i] = nil
+            end
+        end
+    end
 end)
 
 ---@param model number|string
