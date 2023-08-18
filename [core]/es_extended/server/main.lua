@@ -45,7 +45,9 @@ else
 end
 
 function onPlayerJoined(playerId)
-    local function handleESXPlayer(identifier)
+    local identifier = ESX.GetIdentifier(playerId)
+
+    local function handleESXPlayer()
         local result = MySQL.scalar.await('SELECT 1 FROM users WHERE identifier = ?', {identifier})
         if result then
             loadESXPlayer(identifier, playerId, false)
@@ -54,7 +56,6 @@ function onPlayerJoined(playerId)
         end
     end
 
-    local identifier = ESX.GetIdentifier(playerId)
     if identifier then
         if ESX.GetPlayerFromIdentifier(identifier) then
             if (Config.CheckDuplicateLicense) then
@@ -63,10 +64,10 @@ function onPlayerJoined(playerId)
                         identifier))
             else
                 identifier = string.format("cl2:%s", identifier)
-                handleESXPlayer(identifier)
+                handleESXPlayer()
             end
         else
-            handleESXPlayer(identifier)
+            handleESXPlayer()
         end
     else
         DropPlayer(playerId,
