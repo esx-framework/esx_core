@@ -647,7 +647,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				self.metadata[index] = { }
 			end
 
-			self.metadata[index] = type(self.metadata[index]) == 'table' and self.metadata[index] or {} 
+			self.metadata[index] = type(self.metadata[index]) == 'table' and self.metadata[index] or {}
 			self.metadata[index][value] = subValue
 		end
 
