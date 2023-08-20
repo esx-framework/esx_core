@@ -360,7 +360,7 @@ if not Config.OxInventory then
 				obj = object,
 				label = label,
 				inRange = false,
-				coords = vector3(coords.x, coords.y, coords.z)
+				coords = coords
 			}
 		end
 
