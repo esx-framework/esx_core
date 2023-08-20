@@ -113,11 +113,18 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								local merge = table.concat(args, " ")
 
 								newArgs[v.name] = string.sub(merge, lenght)
-							end
+                            elseif v.type == 'coordinate' then
+                                local coord = tonumber(args[k]:match("(-?%d+%.?%d*)"))
+                                if(not coord) then
+                                    error = TranslateCap('commanderror_argumentmismatch_number', k)
+                                else
+                                    newArgs[v.name] = coord
+                                end
+						    end
 						end
 
 						--backwards compatibility
-						if not v.validate and not v.type then
+						if v.validate ~= nil and not v.validate then
 							error = nil
 						end
 

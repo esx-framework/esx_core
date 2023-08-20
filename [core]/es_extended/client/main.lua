@@ -60,9 +60,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	local playerId = PlayerId()
 
-	-- RemoveHudCommonents
-	for i = 1, #(Config.RemoveHudCommonents) do
-		if Config.RemoveHudCommonents[i] then
+	-- RemoveHudComponents
+	for i = 1, #(Config.RemoveHudComponents) do
+		if Config.RemoveHudComponents[i] then
 			SetHudComponentPosition(i, 999999.0, 999999.0)
 		end
 	end
@@ -84,13 +84,13 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 	end
 
-	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
+	if Config.DisableHealthRegeneration then
+		SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+	end
+
+	if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
-				if Config.DisableHealthRegeneration then
-					SetPlayerHealthRechargeMultiplier(playerId, 0.0)
-				end
-
 				if Config.DisableWeaponWheel then
 					BlockWeaponWheelThisFrame()
 					DisableControlAction(0, 37, true)
@@ -331,7 +331,7 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
-	AddEventHandler('esx:removeWeapon', function(weapon)
+	AddEventHandler('esx:removeWeapon', function()
 		print("[^1ERROR^7] event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
 	end)
 
@@ -655,13 +655,23 @@ AddEventHandler("esx:noclip", function()
 			CreateThread(noclipThread)
 		end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
+		ESX.ShowNotification(TranslateCap('noclip_message', noclip and Translate('enabled') or Translate('disabled')), true, false, 140)
 	end)
 end)
 
 RegisterNetEvent("esx:killPlayer")
 AddEventHandler("esx:killPlayer", function()
 	SetEntityHealth(ESX.PlayerData.ped, 0)
+end)
+
+RegisterNetEvent("esx:repairPedVehicle")
+AddEventHandler("esx:repairPedVehicle", function()
+	local ped = ESX.PlayerData.ped
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	SetVehicleEngineHealth(vehicle, 1000)
+	SetVehicleEngineOn(vehicle, true, true)
+	SetVehicleFixed(vehicle)
+	SetVehicleDirtLevel(vehicle, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
@@ -699,6 +709,6 @@ for i = 1, #DoNotUse do
 	end
 end
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
+AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(_, key, val)
 	ESX.SetPlayerData(key, val)
 end)

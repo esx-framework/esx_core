@@ -1,4 +1,4 @@
-ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args)
+ESX.RegisterCommand({'setcoords', 'tp'}, 'admin', function(xPlayer, args)
 	xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Coordinates /setcoords Triggered!", "pink", {
@@ -13,9 +13,9 @@ end, false, {
 	help = TranslateCap('command_setcoords'),
 	validate = true,
 	arguments = {
-		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'number' },
-		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'number' },
-		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'number' }
+		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'coordinate' },
+		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'coordinate' },
+		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'coordinate' }
 	}
 })
 
@@ -30,8 +30,8 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 			{ name = "Player", value = xPlayer.name,       inline = true },
 			{ name = "ID",     value = xPlayer.source,     inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
-			{ name = "Job",    value = args.playerId,      inline = true },
-			{ name = "Grade",  value = args.playerId,      inline = true },
+			{ name = "Job",    value = args.job,           inline = true },
+			{ name = "Grade",  value = args.grade,         inline = true },
 		})
 	end
 end, true, {
@@ -129,6 +129,34 @@ end, false, {
 	validate = false,
 	arguments = {
 		{ name = 'radius', validate = false, help = TranslateCap('command_cardel_radius'), type = 'number' }
+	}
+})
+
+ESX.RegisterCommand({ 'fix', 'repair' }, 'admin', function(xPlayer, args, showError)
+    local xTarget = args.playerId
+	local ped = GetPlayerPed(xTarget.source)
+	local pedVehicle = GetVehiclePedIsIn(ped, false)
+	if not pedVehicle or GetPedInVehicleSeat(pedVehicle, -1) ~= ped then
+		showError(TranslateCap('not_in_vehicle'))
+		return
+	end
+	xTarget.triggerEvent("esx:repairPedVehicle")
+	xPlayer.showNotification(TranslateCap('command_repair_success'), true, false, 140)
+	if xPlayer.source ~= xTarget.source then
+		xTarget.showNotification(TranslateCap('command_repair_success_target'), true, false, 140)
+	end
+	if Config.AdminLogging then
+		ESX.DiscordLogFields("UserActions", "Fix Vehicle /fix Triggered!", "pink", {
+			{ name = "Player", value = xPlayer.name,   inline = true },
+			{ name = "ID",     value = xPlayer.source, inline = true },
+			{ name = "Target",  value = xTarget.name, inline = true },
+		})
+	end
+end, true, {
+	help = TranslateCap('command_repair'),
+	validate = false,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
 	}
 })
 
@@ -423,7 +451,6 @@ end, true)
 
 ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer)
 	local job = xPlayer.getJob().name
-	local jobgrade = xPlayer.getJob().grade_name
 	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(),
 		xPlayer.getGroup(), job))
 end, true)

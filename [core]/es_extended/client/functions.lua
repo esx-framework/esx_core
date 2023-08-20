@@ -140,40 +140,23 @@ ESX.HashString = function(str)
     return input_map
 end
 
-if GetResourceState("esx_context") ~= "missing" then
-    function ESX.OpenContext(...)
-        exports["esx_context"]:Open(...)
-    end
+local contextAvailable = GetResourceState("esx_context") ~= "missing"
 
-    function ESX.PreviewContext(...)
-        exports["esx_context"]:Preview(...)
-    end
-
-    function ESX.CloseContext(...)
-        exports["esx_context"]:Close(...)
-    end
-
-    function ESX.RefreshContext(...)
-        exports["esx_context"]:Refresh(...)
-    end
-else
-    function ESX.OpenContext()
-        print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.PreviewContext()
-        print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.CloseContext()
-        print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.RefreshContext()
-        print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
-    end
+function ESX.OpenContext(...)
+    return contextAvailable and exports["esx_context"]:Open(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
 end
 
+function ESX.PreviewContext(...)
+    return contextAvailable and exports["esx_context"]:Preview(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
+end
+
+function ESX.CloseContext(...)
+    return contextAvailable and exports["esx_context"]:Close(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
+end
+
+function ESX.RefreshContext(...)
+    return contextAvailable and exports["esx_context"]:Refresh(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
+end
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
@@ -196,6 +179,7 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
 
     menu.type = type
     menu.namespace = namespace
+    menu.resourceName = (GetInvokingResource() or "Unknown")
     menu.name = name
     menu.data = data
     menu.submit = submit
@@ -620,11 +604,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
-    local driftTyresEnabled = false
-    if type(GetDriftTyresEnabled(vehicle) == "boolean") and GetDriftTyresEnabled(vehicle) then
-        driftTyresEnabled = true
-    end
-
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
@@ -689,7 +668,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
         extras = extras,
-        driftTyresEnabled = driftTyresEnabled,
         tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
         modSpoilers = GetVehicleMod(vehicle, 0),
@@ -828,10 +806,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         for extraId, enabled in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
         end
-    end
-
-    if props.driftTyresEnabled then
-        SetDriftTyresEnabled(vehicle, true)
     end
 
     if props.neonColor ~= nil then
@@ -1032,7 +1006,7 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
     local fov = (1 / GetGameplayCamFov()) * 100
     scale = scale * fov
 
-    SetTextScale(0.0 * scale, 0.55 * scale)
+    SetTextScale(0.0, 0.55 * scale)
     SetTextFont(font)
     SetTextProportional(1)
     SetTextColour(255, 255, 255, 215)
@@ -1343,6 +1317,17 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
+AddEventHandler('onResourceStop', function(resourceName)
+    for i = 1, #ESX.UI.Menu.Opened, 1 do
+        if ESX.UI.Menu.Opened[i] then
+            if ESX.UI.Menu.Opened[i].resourceName == resourceName or ESX.UI.Menu.Opened[i].namespace == resourceName then
+                ESX.UI.Menu.Opened[i].close()
+                ESX.UI.Menu.Opened[i] = nil
+            end
+        end
+    end
+end)
+
 ---@param model number|string
 ---@return string
 function ESX.GetVehicleType(model)
@@ -1350,6 +1335,10 @@ function ESX.GetVehicleType(model)
 
     if model == `submersible` or model == `submersible2` then
         return 'submarine'
+    end
+
+    if model == `blimp` then
+        return 'heli'
     end
 
     local vehicleType = GetVehicleClassFromName(model)

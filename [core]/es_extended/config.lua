@@ -18,6 +18,7 @@ Config.Accounts             = {
 
 Config.StartingAccountMoney = { bank = 50000 }
 
+Config.StartingInventoryItems = false -- table/false
 
 Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
 	{ x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0 },
@@ -57,7 +58,7 @@ Config.DisableScenarios          = false -- Disable Scenarios
 Config.DisableWeaponWheel        = false -- Disables default weapon wheel
 Config.DisableAimAssist          = false -- disables AIM assist (mainly on controllers)
 Config.DisableVehicleSeatShuff   = false -- Disables vehicle seat shuff
-Config.RemoveHudCommonents       = {
+Config.RemoveHudComponents       = {
 	[1] = false,                         --WANTED_STARS,
 	[2] = false,                         --WEAPON_ICON
 	[3] = false,                         --CASH
