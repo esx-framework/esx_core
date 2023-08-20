@@ -264,7 +264,8 @@ function ESX.GetNumPlayers(key, val)
         return ESX.Table.SizeOf(ESX.Players)
     end
 
-    local valTable = (type(val) == "table" and val or {val})
+    local isValATable = (type(val) == "table")
+    local valTable = (isValATable and val or {val})
     local numPlayers = {}
     for i, val in ipairs(valTable) do
         numPlayers[val] = 0
@@ -277,7 +278,7 @@ function ESX.GetNumPlayers(key, val)
         end 
     end
 
-    return numPlayers
+    return (isValATable and numPlayers or numPlayers[val])
 end
 
 function ESX.GetPlayerFromId(source)
