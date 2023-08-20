@@ -469,10 +469,10 @@ function ESX.GetUsableItems()
 end
 
 if not Config.OxInventory then
-	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
+	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex, coords)
 		local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
 		local xPlayer = ESX.Players[playerId]
-		local coords = xPlayer.getCoords(true)
+		coords = ( (type(coords) == "vector3" or type(coords) == "vector4") and coords.xyz or xPlayer.getCoords(true))
 
 		Core.Pickups[pickupId] = { type = type, name = name, count = count, label = label, coords = coords }
 
