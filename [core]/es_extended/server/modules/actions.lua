@@ -1,3 +1,5 @@
+if Config.DisableActions then return end
+
 RegisterServerEvent('esx:playerPedChanged')
 RegisterServerEvent('esx:playerJumping')
 RegisterServerEvent('esx:enteringVehicle')

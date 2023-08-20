@@ -1,3 +1,5 @@
+if Config.DisableActions then return end
+
 local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
 local playerPed = PlayerPedId()
 local current = {}
@@ -43,7 +45,6 @@ CreateThread(function()
             inPauseMenu = false
             TriggerEvent('esx:pauseMenuActive', inPauseMenu)
         end
-
 
         if not isInVehicle and not IsPlayerDead(PlayerId()) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then

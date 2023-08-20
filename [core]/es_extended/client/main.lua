@@ -75,13 +75,15 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end
 	end
 
-	if Config.DisableVehicleSeatShuff then
+	if Config.DisableVehicleSeatShuff and not Config.DisableActions then
 		AddEventHandler('esx:enteredVehicle', function(vehicle, _, seat)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
 			end
 		end)
+	elseif Config.DisableActions then
+		print("[^3WARNING^7] The ^5DisableVehicleSeatShuff^7 option cannot be enabled because the ^5DisableActions^7 option is enabled")
 	end
 
 	if Config.DisableHealthRegeneration then
