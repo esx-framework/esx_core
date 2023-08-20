@@ -9,9 +9,9 @@ Locales["nl"] = {
     ["amount"] = "Aantal",
     ["giveammo"] = "Geef munitie",
     ["amountammo"] = "Hoeveelheid munitie",
-    ["noammo"] = "Niet genoeg!",
+    ["noammo"] = "Niet genoeg munitie!",
     ["gave_item"] = "%sx %s gegeven aan %s",
-    ["received_item"] = "%sx %s ontvangen van %s",
+    ["received_item"] = "%sx %s gekregen van %s",
     ["gave_weapon"] = "%s gegeven aan %s",
     ["gave_weapon_ammo"] = "~o~%sx %s gegeven voor een %s aan %s",
     ["gave_weapon_withammo"] = "%s gegeven met ~o~%sx %s aan %s",
@@ -21,111 +21,115 @@ Locales["nl"] = {
     ["received_weapon_ammo"] = "~o~%sx %s ontvangen voor je %s van %s",
     ["received_weapon_withammo"] = "%s ontvangen met ~o~%sx %s van %s",
     ["received_weapon_hasalready"] = "%s heeft geprobeerd je een %s te geven, maar je hebt dat wapen al.",
-    ["received_weapon_noweapon"] = "%s heeft geprobeerd je ammo te geven voor een %s, maar je hebt dit wapen niet",
+    ["received_weapon_noweapon"] = "%s heeft geprobeerd je ammo te geven voor een %s, maar je hebt dit wapen niet.",
     ["gave_account_money"] = "€%s (%s) gegeven aan %s",
-    ["received_account_money"] = "€%s (%s) ontvangen van %s",
+    ["received_account_money"] = "€%s (%s) gekregen van %s",
     ["amount_invalid"] = "Ongeldige hoeveelheid",
     ["players_nearby"] = "Geen spelers in de buurt",
-    ["ex_inv_lim"] = "Kan actie niet uitvoeren, overschrijdt max. gewicht van %s",
-    ["imp_invalid_quantity"] = "Kan actie niet uitvoeren, de hoeveelheid is ongeldig",
-    ["imp_invalid_amount"] = "Kan actie niet uitvoeren, het aantal is ongeldig",
+    ["ex_inv_lim"] = "Actie kan niet uigevoerd worden, overschrijdt max gewicht van %s",
+    ["imp_invalid_quantity"] = "Actie kan niet uitgevoerd worden, de hoeveelheid is ongeldig",
+    ["imp_invalid_amount"] = "Actie kan niet uigevoerd worden, aantal is ongeldig",
     ["threw_standard"] = "%sx %s weggegooid",
     ["threw_account"] = "€%s %s weggegooid",
     ["threw_weapon"] = "%s weggegooid",
     ["threw_weapon_ammo"] = "%s met ~o~%sx %s weggegooid",
-    ["threw_weapon_already"] = "Je hebt dit wapen al !",
-    ["threw_cannot_pickup"] = "Inventoraris is vol, Kan niet oppakken!",
-    ["threw_pickup_prompt"] = "Druk op E om op te pakken",
-
+    ["threw_weapon_already"] = "Je hebt dit wapen al",
+    ["threw_cannot_pickup"] = "Inventoraris is vol, je kan dit niet oppakken!",
+    ["threw_pickup_prompt"] = "Druk op E om op te rapen",
+  
     -- Key mapping
     ["keymap_showinventory"] = "Laat inventaris zien",
-
+  
     -- Salary related
-    ["received_salary"] = "Je bent betaald: €%s",
-    ["received_help"] = "Je hebt je uitkering gekregen: €%s",
-    ["company_nomoney"] = "Het bedrijf waar je bij werkt heeft te weinig geld om je uit te betalen.",
+    ["received_salary"] = "Je hebt je salaris ontvangen: €%s",
+    ["received_help"] = "Je hebt je uitkering ontvangen: €%s",
+    ["company_nomoney"] = "het bedrijf waar je werkt kan je salaris niet uitbetalen.",
     ["received_paycheck"] = "salaris ontvangen",
     ["bank"] = "Maze Bank",
     ["account_bank"] = "Bank",
     ["account_black_money"] = "Zwart geld",
-    ["account_money"] = "Cash",
-
+    ["account_money"] = "Contant",
+  
     ["act_imp"] = "Kan actie niet uitvoeren",
-    ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig.",
-    ["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
-
+    ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig",
+    ["not_in_vehicle"] = "Kan actie niet uitvoeren, de speler zit niet in een voertuig",
+  
     -- Commands
-    ['command_bring'] = 'Breng speler naar jou',
+    ['command_bring'] = 'Breng de speler naar je toe',
     ['command_car'] = 'Spawn een voertuig',
     ['command_car_car'] = 'Voertuig model of hash',
     ['command_cardel'] = 'Verwijder voertuigen in straal',
-    ['command_cardel_radius'] = 'Verwijderd alle voertuigen in gewenste straal',
-    ['command_repair'] = 'Repair your vehicle',
-    ['command_repair_success'] = 'Successfully repaired vehicle',
-    ['command_repair_success_target'] = 'An admin repaired your vehicle',
+    ['command_cardel_radius'] = 'Verwijderd alle voertuigen in opgegeven straal',
+    ['command_repair'] = 'Repareer je voertuig',
+    ['command_repair_success'] = 'Voertuig succesvol gerepareerd',
+    ['command_repair_success_target'] = 'Een beheerder heeft je voertuig gerepareerd',
     ['command_clear'] = 'Verwijder chat berichten',
     ['command_clearall'] = 'Verwijder chat berichten voor alle spelers',
-    ['command_clearinventory'] = 'Verwijder alle items van een speler zijn inventory',
+    ['command_clearinventory'] = 'Verwijder alle items van een speler zijn / haar inventory',
     ['command_clearloadout'] = 'Verwijder alle wapens die een speler heeft',
     ['command_freeze'] = 'Freeze een speler',
     ['command_unfreeze'] = 'Unfreeze een speler',
-    ['command_giveaccountmoney'] = 'Geef geld aan een rekening',
-    ['command_giveaccountmoney_account'] = 'Account om aan toe te voegen',
+    ['command_giveaccountmoney'] = 'Voeg geld toe aan opgegeven rekening',
+    ['command_giveaccountmoney_account'] = 'rekening om aan toe te voegen (money, bank, black_money)',
     ['command_giveaccountmoney_amount'] = 'Bedrag om toe te voegen',
-    ['command_giveaccountmoney_invalid'] = 'Account Naam ongeldig',
+    ['command_giveaccountmoney_invalid'] = 'Rekening naam ongeldig',
+    ['command_removeaccountmoney'] = 'Geld verwijderen van opgegeven rekening',
+    ['command_removeaccountmoney_account'] = 'rekening om van te verwijderen (money, bank, black_money)',
+    ['command_removeaccountmoney_amount'] = 'Bedrag om te verwijderen',
+    ['command_removeaccountmoney_invalid'] = 'Rekening naam ongeldig',
     ['command_giveitem'] = 'Geef speler een item',
     ['command_giveitem_item'] = 'Item naam',
     ['command_giveitem_count'] = 'Hoeveelheid',
-    ['command_giveweapon'] = 'Geef de speler een wapen',
+    ['command_giveweapon'] = 'Geef speler een wapen',
     ['command_giveweapon_weapon'] = 'Wapen naam',
-    ['command_giveweapon_ammo'] = 'Ammo Hoeveelheid',
+    ['command_giveweapon_ammo'] = 'Munitie hoeveelheid',
     ['command_giveweapon_hasalready'] = 'Speler heeft dit wapen al',
     ['command_giveweaponcomponent'] = 'Geef wapen component aan speler',
     ['command_giveweaponcomponent_component'] = 'Component naam',
     ['command_giveweaponcomponent_invalid'] = 'Ongeldig wapen component',
-    ['command_giveweaponcomponent_hasalready'] = 'De speler heeft dit wapen component al',
-    ['command_giveweaponcomponent_missingweapon'] = 'De speler heeft dit wapen niet',
+    ['command_giveweaponcomponent_hasalready'] = 'Speler heeft dit wapen component al',
+    ['command_giveweaponcomponent_missingweapon'] = 'Speler heeft dit wapen niet',
     ['command_goto'] = 'Teleporteer jezelf naar een speler',
     ['command_kill'] = 'Vermoord een speler',
-    ['command_save'] = 'Slaag een speler zijn spelerdata geforceerd op',
-    ['command_saveall'] = 'Slaag iedereen zijn spelerdata geforceerd op',
-    ['command_setaccountmoney'] = 'Stel geld in op een account',
-    ['command_setaccountmoney_amount'] = 'Amount',
-    ['command_setcoords'] = 'Telepeer naar coordinaten',
+    ['command_save'] = 'Sla een speler zijn spelerdata geforceerd op',
+    ['command_saveall'] = 'Sla alle spelers hun data geforceerd op',
+    ['command_setaccountmoney'] = 'Zet het geld binnen een gespecificeerde rekening',
+    ['command_setaccountmoney_amount'] = 'Bedrag',
+    ['command_setcoords'] = 'Teleporteer naar gespecificeerde coördinaten',
     ['command_setcoords_x'] = 'X waarde',
     ['command_setcoords_y'] = 'Y waarde',
     ['command_setcoords_z'] = 'Z waarde',
     ['command_setjob'] = 'Zet een speler zijn / haar job',
     ['command_setjob_job'] = 'Naam',
-    ['command_setjob_grade'] = 'Job grade',
-    ['command_setjob_invalid'] = 'De job, grade of beide zijn ongeldig',
-    ['command_setgroup'] = 'Stel een toestemmingsgroep voor spelers in',
+    ['command_setjob_grade'] = 'Rang',
+    ['command_setjob_invalid'] = 'de job, rang of beide zijn ongeldig',
+    ['command_setgroup'] = 'Zet de groep van een speler',
     ['command_setgroup_group'] = 'Naam van groep',
-    ['commanderror_argumentmismatch'] = 'Ongeldig aantal argumenten (geslaagd %s, gezocht %s)',
+    ['commanderror_argumentmismatch'] = 'Ongeldig aantal argumenten (doorgegeven %s, gezocht %s)',
     ['commanderror_argumentmismatch_number'] = 'Ongeldig argument #%s gegevenstype (doorgegeven string, gewenst nummer)',
-    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
+    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (doorgegeven string, gewenst nummer)',
     ['commanderror_invaliditem'] = 'Ongeldig item',
     ['commanderror_invalidweapon'] = 'Ongeldig wapen',
-    ['commanderror_console'] = 'Command kan niet worden uitgevoerd vanaf console.',
+    ['commanderror_console'] = 'Command kan niet uitgevoerd worden vanaf console',
     ['commanderror_invalidcommand'] = 'Ongeldig commando - /%s',
     ['commanderror_invalidplayerid'] = 'Opgegeven speler is niet online',
-    ['commandgeneric_playerid'] = 'Speler server id',
+    ['commandgeneric_playerid'] = 'Speler zijn / haar server id',
     ['command_giveammo_noweapon_found'] = '%s heeft dat wapen niet',
     ['command_giveammo_weapon'] = 'Wapen naam',
-    ['command_giveammo_ammo'] = 'Ammo Hoeveelheid',
+    ['command_giveammo_ammo'] = 'Ammo hoeveelheid',
     ['tpm_nowaypoint'] = 'Geen waypoint gezet.',
-    ['tpm_success'] = 'Successvol geteleporteerd',
-
+    ['tpm_success'] = 'Succesvol geteleporteerd',
+  
     ['noclip_message'] = 'Noclip is %s',
-    ['enabled'] = '~g~aangezet~s~',
-    ['disabled'] = '~r~uitgezet~s~',
-
+    ['enabled'] = '~g~ingeschakeld~s~',
+    ['disabled'] = '~r~uitgeschakeld~s~',
+  
     -- Locale settings
     ["locale_digit_grouping_symbol"] = ",",
     ["locale_currency"] = "€%s",
-
+  
     -- Weapons
-
+  
     -- Melee
     ["weapon_dagger"] = "Dolk",
     ["weapon_bat"] = "Knuppel",
@@ -137,21 +141,21 @@ Locales["nl"] = {
     ["weapon_hammer"] = "Hamer",
     ["weapon_hatchet"] = "Bijl",
     ["weapon_knife"] = "Mes",
-    ["weapon_knuckle"] = "Knuckledusters",
+    ["weapon_knuckle"] = "Boksbeugel",
     ["weapon_machete"] = "Machete",
-    ["weapon_nightstick"] = "Nightstick",
+    ["weapon_nightstick"] = "Wapenstok",
     ["weapon_wrench"] = "Pijpsleutel",
-    ["weapon_poolcue"] = "Pool Cue",
+    ["weapon_poolcue"] = "Biljart Keu",
     ["weapon_stone_hatchet"] = "Steenbijl",
-    ["weapon_switchblade"] = "Switchblade",
-
+    ["weapon_switchblade"] = "Stiletto",
+  
     -- Handguns
     ["weapon_appistol"] = "AP-pistool",
     ["weapon_ceramicpistol"] = "Keramische pistool",
     ["weapon_combatpistol"] = "Gevechtspistool",
     ["weapon_doubleaction"] = "Revolver met dubbele actie",
     ["weapon_navyrevolver"] = "Marine Revolver",
-    ["weapon_flaregun"] = "Flaregun",
+    ["weapon_flaregun"] = "Noodsignaalpistool",
     ["weapon_gadgetpistol"] = "Gadgetpistool",
     ["weapon_heavypistol"] = "Zwaar pistool",
     ["weapon_revolver"] = "Zware revolver",
@@ -165,7 +169,7 @@ Locales["nl"] = {
     ["weapon_stungun"] = "Taser",
     ["weapon_raypistol"] = "Up-N-Atomizer",
     ["weapon_vintagepistol"] = "Vintage Pistool",
-
+  
     -- Shotguns
     ["weapon_assaultshotgun"] = "Aanvalsgeweer",
     ["weapon_autoshotgun"] = "Automatisch jachtgeweer",
@@ -177,7 +181,7 @@ Locales["nl"] = {
     ["weapon_pumpshotgun"] = "Pompgeweer",
     ["weapon_pumpshotgun_mk2"] = "Pump Shotgun MK2",
     ["weapon_sawnoffshotgun"] = "Afgezaagd jachtgeweer",
-
+  
     -- SMG & LMG
     ["weapon_assaultsmg"] = "Aanval SMG",
     ["weapon_combatmg"] = "Gevecht MG",
@@ -191,7 +195,7 @@ Locales["nl"] = {
     ["weapon_smg"] = "SMG",
     ["weapon_smg_mk2"] = "SMG MK2",
     ["weapon_raycarbine"] = "Onheilige Hellbringer",
-
+  
     -- Rifles
     ["weapon_advancedrifle"] = "Geavanceerd geweer",
     ["weapon_assaultrifle"] = "Aanvalsgeweer",
@@ -204,36 +208,36 @@ Locales["nl"] = {
     ["weapon_militaryrifle"] = "Militair geweer",
     ["weapon_specialcarbine"] = "Speciale karabijn",
     ["weapon_specialcarbine_mk2"] = "Speciale karabijn MK2",
-    ["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
-
+    ["weapon_heavyrifle"] = "Zwaar geweer",
+  
     -- Sniper
     ["weapon_heavysniper"] = "Zware sluipschutter",
     ["weapon_heavysniper_mk2"] = "Zware Sniper MK2",
     ["weapon_marksmanrifle"] = "Schuttersgeweer",
     ["weapon_marksmanrifle_mk2"] = "Schuttersgeweer MK2",
     ["weapon_sniperrifle"] = "Sniper Rifle",
-
+  
     -- Heavy / Launchers
-    ["weapon_compactlauncher"] = "Compacte Launcher",
-    ["weapon_firework"] = "Vuurwerkstarter",
-    ["weapon_grenadelauncher"] = "Granaatwerper",
+    ["weapon_compactlauncher"] = "Compact Launcher",
+    ["weapon_firework"] = "Firework Launcher",
+    ["weapon_grenadelauncher"] = "Grenade Launcher",
     ["weapon_hominglauncher"] = "Homing Launcher",
     ["weapon_minigun"] = "Minigun",
-    ["weapon_railgun"] = "Spoorgeweer",
-    ["weapon_rpg"] = "Raketwerper",
-    ["weapon_rayminigun"] = "Weduwemaker",
-
+    ["weapon_railgun"] = "Railgun",
+    ["weapon_rpg"] = "Rocket Launcher",
+    ["weapon_rayminigun"] = "Widowmaker",
+  
     -- Criminal Enterprises DLC
     ["weapon_metaldetector"] = "Metaal Detector",
     ["weapon_precisionrifle"] = "Precisiegeweer",
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane",     -- not translated
-    ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
-    ["weapon_railgunxm3"] = "Railgun",       -- not translated
-
+    ["weapon_candycane"] = "Snoep stok",
+    ["weapon_acidpackage"] = "LSD pakket",
+    ["weapon_pistolxm3"] = "WM 29 Pistool", 
+    ["weapon_railgunxm3"] = "Railgun", 
+  
     -- Thrown
     ["weapon_ball"] = "Honkbal",
     ["weapon_bzgas"] = "BZ-gas",
@@ -247,7 +251,7 @@ Locales["nl"] = {
     ["weapon_snowball"] = "Sneeuwbal",
     ["weapon_stickybomb"] = "Kleefbom",
     ["weapon_smokegrenade"] = "Traangas",
-
+  
     -- Special
     ["weapon_firebluser"] = "Brandblusser",
     ["weapon_digiscanner"] = "Digitale scanner",
@@ -255,7 +259,7 @@ Locales["nl"] = {
     ["weapon_handcuffs"] = "Handboeien",
     ["gadget_nightvision"] = "Nachtzicht",
     ["gadget_parachute"] = "parachute",
-
+  
     -- Weapon Components
     ["component_knuckle_base"] = "basismodel",
     ["component_knuckle_pimp"] = "de pooier",
@@ -344,7 +348,7 @@ Locales["nl"] = {
     ["component_shells_armor"] = "stalen Buckshot Shells",
     ["component_shells_hollowpoint"] = "flechette schelpen",
     ["component_shells_explosive"] = "explosieve slakkenhuizen",
-
+  
     -- Weapon Ammo
     ["ammo_rounds"] = "ronde(n)",
     ["ammo_shells"] = "huls/(zen)",
@@ -364,7 +368,7 @@ Locales["nl"] = {
     ["ammo_snowball"] = "sneeuwbal(len)",
     ["ammo_flare"] = "flare(s)",
     ["ammo_flaregun"] = "flare(s)",
-
+  
     -- Weapon Tints
     ["tint_default"] = "standaard skin",
     ["tint_green"] = "groene skin",
@@ -374,4 +378,4 @@ Locales["nl"] = {
     ["tint_lspd"] = "blauwe skin",
     ["tint_orange"] = "oranje skin",
     ["tint_platinum"] = "platina skin",
-}
+  }
