@@ -1,6 +1,6 @@
 Locales["nl"] = { 
     -- Inventory
-    ["inventory"] = "Inventory ( Gewicht %s / %s )",
+    ["inventory"] = "Inventaris ( Gewicht %s / %s )",
     ["use"] = "Gebruik",
     ["give"] = "Geef",
     ["remove"] = "Gooi",
