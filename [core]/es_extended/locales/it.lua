@@ -52,7 +52,7 @@ Locales["it"] = {
 
 	["act_imp"] = "Non puoi farlo",
 	["in_vehicle"] = "Non puoi farlo, il giocatore è in un veicolo",
-	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
+	["not_in_vehicle"] = "Non puoi farlo, il player non è in un veicolo",
 
 	-- Commands
 	['command_bring'] = 'Porta il giocatore da te',
@@ -60,9 +60,9 @@ Locales["it"] = {
 	['command_car_car'] = 'Modello o hash veicolo',
 	['command_cardel'] = 'Rimuovi i veicoli nelle prossimità',
 	['command_cardel_radius'] = 'Rimuovi i veicoli nel raggio specificato',
-	['command_repair'] = 'Repair your vehicle',
-	['command_repair_success'] = 'Successfully repaired vehicle',
-	['command_repair_success_target'] = 'An admin repaired your vehicle',
+	['command_repair'] = 'Ripara il tuo veicolo',
+	['command_repair_success'] = 'Hai riparato il veicolo con successo',
+	['command_repair_success_target'] = 'Un admin ha riparato la tua macchina',
 	['command_clear'] = 'Pulisci la chat testuale',
 	['command_clearall'] = 'Pulisci la chat testuale per tutti i giocatori',
 	['command_clearinventory'] = 'Rimuovi tutti gli oggetti dall\' inventario del giocatore',
@@ -73,6 +73,10 @@ Locales["it"] = {
 	['command_giveaccountmoney_account'] = 'Account a cui aggiungere',
 	['command_giveaccountmoney_amount'] = 'Quantità da aggiungere',
 	['command_giveaccountmoney_invalid'] = 'Nome account non valido',
+    ['command_removeaccountmoney'] = 'Rimuovi soldi da un account specifico',
+    ['command_removeaccountmoney_account'] = 'Account a cui togliere',
+    ['command_removeaccountmoney_amount'] = 'Quantità da rimuovere',
+    ['command_removeaccountmoney_invalid'] = 'Nome account non valido',
 	['command_giveitem'] = 'Dai un oggetto ad un giocatore',
 	['command_giveitem_item'] = 'Nome oggetto',
 	['command_giveitem_count'] = 'Quantità',
@@ -204,7 +208,7 @@ Locales["it"] = {
 	["weapon_militaryrifle"] = "Fucile militare",
 	["weapon_specialcarbine"] = "Carabina speciale",
 	["weapon_specialcarbine_mk2"] = "Carabina speciale MK2",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
+	["weapon_heavyrifle"] = "Fucile pesante", 
 
 	-- Sniper
 	["weapon_heavysniper"] = "Cecchino pesante",
@@ -229,10 +233,10 @@ Locales["it"] = {
 	["weapon_tactilerifle"] = "Carabina di servizio",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',  -- not translated
-	['weapon_acidpackage'] = 'Acid Package', -- not translated
-	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun',    -- not translated
+	['weapon_candycane'] = 'Bastoncino di zucchero',  
+	['weapon_acidpackage'] = 'Pacco di acidi', 
+	['weapon_pistolxm3'] = 'Pistola WM 29', 
+	['weapon_railgunxm3'] = 'Railgun',    
 
 	-- Thrown
 	["weapon_ball"] = "Palla",
