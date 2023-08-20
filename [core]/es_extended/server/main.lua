@@ -584,6 +584,12 @@ if not Config.OxInventory then
 		local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
 		if pickup then
+            local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
+            if(playerPickupDistance > 5.0) then
+			    print(('[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7'):format(xPlayer.getIdentifier()))
+                return
+            end
+
 			if pickup.type == 'item_standard' then
 				if xPlayer.canCarryItem(pickup.name, pickup.count) then
 					xPlayer.addInventoryItem(pickup.name, pickup.count)
