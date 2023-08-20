@@ -42,7 +42,7 @@ Locales["nl"] = {
   
     -- Salary related
     ["received_salary"] = "Je hebt je salaris ontvangen: €%s",
-    ["received_help"] = "Je hebt je uitkering ontvangen: $%s",
+    ["received_help"] = "Je hebt je uitkering ontvangen: €%s",
     ["company_nomoney"] = "het bedrijf waar je werkt kan je salaris niet uitbetalen.",
     ["received_paycheck"] = "salaris ontvangen",
     ["bank"] = "Maze Bank",
