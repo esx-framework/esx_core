@@ -34,7 +34,7 @@ Locales["nl"] = {
     ["threw_weapon"] = "%s weggegooid",
     ["threw_weapon_ammo"] = "%s met ~o~%sx %s weggegooid",
     ["threw_weapon_already"] = "Je hebt dit wapen al",
-    ["threw_cannot_pickup"] = "Inventory is vol, je kan dit niet oppakken!",
+    ["threw_cannot_pickup"] = "Inventoraris is vol, je kan dit niet oppakken!",
     ["threw_pickup_prompt"] = "Druk op E om op te rapen",
   
     -- Key mapping
