@@ -259,6 +259,27 @@ function ESX.GetExtendedPlayers(key, val)
 	return xPlayers
 end
 
+function ESX.GetNumPlayers(key, val)
+    if(not key) then
+        return ESX.Table.SizeOf(ESX.Players)
+    end
+
+    local valTable = (type(val) == "table" and val or {val})
+    local numPlayers = {}
+    for i, val in ipairs(valTable) do
+        numPlayers[val] = 0
+    end    
+
+    for i, xPlayer in pairs(ESX.Players) do
+        local value = (key == "job" and xPlayer.job.name or xPlayer[key])
+        if(numPlayers[value]) then
+            numPlayers[value] += 1
+        end 
+    end
+
+    return numPlayers
+end
+
 function ESX.GetPlayerFromId(source)
 	return ESX.Players[tonumber(source)]
 end
