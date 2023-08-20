@@ -204,7 +204,7 @@ Locales["it"] = {
 	["weapon_militaryrifle"] = "Fucile militare",
 	["weapon_specialcarbine"] = "Carabina speciale",
 	["weapon_specialcarbine_mk2"] = "Carabina speciale MK2",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
+	["weapon_heavyrifle"] = "Fucile pesante",
 
 	-- Sniper
 	["weapon_heavysniper"] = "Cecchino pesante",
@@ -229,10 +229,10 @@ Locales["it"] = {
 	["weapon_tactilerifle"] = "Carabina di servizio",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',  -- not translated
-	['weapon_acidpackage'] = 'Acid Package', -- not translated
-	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun',    -- not translated
+	['weapon_candycane'] = 'Bastoncino di zucchero',  
+	['weapon_acidpackage'] = 'Pacco di acidi', 
+	['weapon_pistolxm3'] = 'Pistola WM 29', 
+	['weapon_railgunxm3'] = 'Railgun',    
 
 	-- Thrown
 	["weapon_ball"] = "Palla",
