@@ -232,6 +232,12 @@ Locales["fr"] = {
 	["weapon_precisionrifle"] = "Fusil de précision",
 	["weapon_tactilerifle"] = "Carabine tactique",
 
+	-- Drug wars dlc 
+	["weapon_candycane"] = "Sucre d'orge",
+	["weapon_acidpackage"] = "Paquet d'acide",
+	["weapon_pistolxm3"] = "Pistolet 8 x3m", 
+	["weapon_railgunxm3"] = "Fusil électro-magnétique",
+
 	-- Thrown
 	["weapon_ball"] = "Base-ball",
 	["weapon_bzgas"] = "Gaz BZ",
