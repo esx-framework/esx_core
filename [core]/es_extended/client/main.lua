@@ -688,10 +688,6 @@ AddEventHandler("esx:freezePlayer", function(input)
 	end
 end)
 
-ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
-	cb(ESX.GetVehicleType(model))
-end)
-
 local DoNotUse = {
 	'essentialmode',
 	'es_admin2',
