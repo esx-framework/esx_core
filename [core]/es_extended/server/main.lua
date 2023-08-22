@@ -698,3 +698,28 @@ end)
 AddEventHandler('txAdmin:events:serverShuttingDown', function()
 	Core.SavePlayers()
 end)
+
+local DoNotUse = {
+    ['essentialmode'] = true,
+    ['es_admin2'] = true,
+    ['basic-gamemode'] = true,
+    ['mapmanager'] = true,
+    ['fivem-map-skater'] = true,
+    ['fivem-map-hipster'] = true,
+    ['qb-core'] = true,
+    ['default_spawnpoint'] = true,
+}
+
+for key in pairs(DoNotUse) do 
+    if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
+        print("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. key .. "^7")
+        StopResource(key)
+    end
+end
+
+AddEventHandler('onResourceStart', function(resourceName)
+    if DoNotUse[string.lower(resourceName)] then 
+		StopResource(key)
+        print("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. resourceName .. "^7")  
+    end 
+end 
