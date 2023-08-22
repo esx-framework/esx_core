@@ -52,6 +52,7 @@ Locales["da"] = {
 
 	["act_imp"] = "Kan ikke udføre handling",
 	["in_vehicle"] = "Kan ikke udføre handling, spilleren er i et køretøj",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'Tag en spiller til dig',
@@ -59,6 +60,9 @@ Locales["da"] = {
 	['command_car_car'] = 'Køretøjsmodel eller hash',
 	['command_cardel'] = 'Fjern køretøjer i nærheden',
 	['command_cardel_radius'] = 'Fjerner alle køretøjer inden for den specificerede radius',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Ryd chatten',
 	['command_clearall'] = 'Ryd chatten for alle spillere',
 	['command_clearinventory'] = 'Fjern alle elementer fra spillernes inventar',
@@ -200,6 +204,7 @@ Locales["da"] = {
 	["weapon_militaryrifle"] = "Militær riffel",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Tung snigskytte",

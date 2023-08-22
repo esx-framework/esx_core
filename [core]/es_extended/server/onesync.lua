@@ -7,15 +7,34 @@ ESX.OneSync = {}
 local function getNearbyPlayers(source, closest, distance, ignore)
 	local result = {}
 	local count = 0
-	if not distance then distance = 100 end
-	if type(source) == 'number' then
-		source = GetPlayerPed(source)
+    local playerPed
+    local playerCoords
 
+	if not distance then distance = 100 end
+
+	if type(source) == 'number' then
+		playerPed = GetPlayerPed(source)
+        
 		if not source then
-			error("Received invalid first argument (source); should be playerId or vector3 coordinates")
+			error("Received invalid first argument (source); should be playerId")
+            return result
 		end
 
-		source = GetEntityCoords(GetPlayerPed(source))
+		playerCoords = GetEntityCoords(playerPed)
+
+        if not playerCoords then
+            error("Received nil value (playerCoords); perhaps source is nil at first place?")
+            return result
+        end
+	end
+
+	if type(source) == 'vector3' then
+		playerCoords = source
+
+		if not playerCoords then
+            error("Received nil value (playerCoords); perhaps source is nil at first place?")
+            return result
+        end
 	end
 
 	for _, xPlayer in pairs(ESX.Players) do
@@ -24,16 +43,18 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 			local coords = GetEntityCoords(entity)
 
 			if not closest then
-				local dist = #(source - coords)
+				local dist = #(playerCoords - coords)
 				if dist <= distance then
 					count = count + 1
 					result[count] = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
 				end
 			else
-				local dist = #(source - coords)
-				if dist <= (result.dist or distance) then
-					result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
-				end
+                if xPlayer.source ~= source then
+				    local dist = #(playerCoords - coords)
+				    if dist <= (result.dist or distance) then
+					    result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
+				    end
+                end
 			end
 		end
 	end
