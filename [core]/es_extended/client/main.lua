@@ -692,23 +692,6 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 	cb(ESX.GetVehicleType(model))
 end)
 
-local DoNotUse = {
-	'essentialmode',
-	'es_admin2',
-	'basic-gamemode',
-	'mapmanager',
-	'fivem-map-skater',
-	'fivem-map-hipster',
-	'qb-core',
-	'default_spawnpoint',
-}
-
-for i = 1, #DoNotUse do
-	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
-		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
-	end
-end
-
 AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(_, key, val)
 	ESX.SetPlayerData(key, val)
 end)
