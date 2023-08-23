@@ -21,6 +21,7 @@ end
 
 CreateThread(function()
     while true do
+        ESX.SetPlayerData('coords',GetEntityCoords(playerPed))
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
             ESX.SetPlayerData('ped', playerPed)
