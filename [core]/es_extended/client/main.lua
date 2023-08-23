@@ -503,7 +503,7 @@ if not Config.OxInventory then
 	end)
 end
 
------ Admin commnads from esx_adminplus
+----- Admin commands from esx_adminplus
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
