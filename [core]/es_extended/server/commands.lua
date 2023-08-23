@@ -549,9 +549,7 @@ end, false)
 ESX.RegisterCommand('players', "admin", function()
 	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
 	print(('^5%s^2 online player(s)^0'):format(#xPlayers))
-	for i = 1, #(xPlayers) do
-		local xPlayer = xPlayers[i]
-		print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(
-			xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
+	for _, xPlayer in pairs(xPlayers) do
+		print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
 	end
 end, true)
