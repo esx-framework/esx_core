@@ -412,7 +412,7 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:giveInventoryItem')
-	AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
+	AddEventHandler('esx:giveInventoryItem', function(target, itemType, itemName, itemCount)
 		local playerId = source
 		local sourceXPlayer = ESX.GetPlayerFromId(playerId)
 		local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -422,7 +422,7 @@ if not Config.OxInventory then
 			return
 		end
 
-		if type == 'item_standard' then
+		if itemType == 'item_standard' then
 			local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
 			if itemCount > 0 and sourceItem.count >= itemCount then
@@ -438,7 +438,7 @@ if not Config.OxInventory then
 			else
 				sourceXPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
 			end
-		elseif type == 'item_account' then
+		elseif itemType == 'item_account' then
 			if itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
 				sourceXPlayer.removeAccountMoney(itemName, itemCount, "Gave to " .. targetXPlayer.name)
 				targetXPlayer.addAccountMoney(itemName, itemCount, "Received from " .. sourceXPlayer.name)
@@ -449,7 +449,7 @@ if not Config.OxInventory then
 			else
 				sourceXPlayer.showNotification(TranslateCap('imp_invalid_amount'))
 			end
-		elseif type == 'item_weapon' then
+		elseif itemType == 'item_weapon' then
 			if sourceXPlayer.hasWeapon(itemName) then
 				local weaponLabel = ESX.GetWeaponLabel(itemName)
 				if not targetXPlayer.hasWeapon(itemName) then
@@ -482,7 +482,7 @@ if not Config.OxInventory then
 					targetXPlayer.showNotification(TranslateCap('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
 				end
 			end
-		elseif type == 'item_ammo' then
+		elseif itemType == 'item_ammo' then
 			if sourceXPlayer.hasWeapon(itemName) then
 				local _, weapon = sourceXPlayer.getWeapon(itemName)
 
@@ -509,11 +509,11 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:removeInventoryItem')
-	AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
+	AddEventHandler('esx:removeInventoryItem', function(itemType, itemName, itemCount)
 		local playerId = source
 		local xPlayer = ESX.GetPlayerFromId(playerId)
 
-		if type == 'item_standard' then
+		if itemType == 'item_standard' then
 			if itemCount == nil or itemCount < 1 then
 				xPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
 			else
@@ -528,7 +528,7 @@ if not Config.OxInventory then
 					xPlayer.showNotification(TranslateCap('threw_standard', itemCount, xItem.label))
 				end
 			end
-		elseif type == 'item_account' then
+		elseif itemType == 'item_account' then
 			if itemCount == nil or itemCount < 1 then
 				xPlayer.showNotification(TranslateCap('imp_invalid_amount'))
 			else
@@ -543,7 +543,7 @@ if not Config.OxInventory then
 					xPlayer.showNotification(TranslateCap('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
 				end
 			end
-		elseif type == 'item_weapon' then
+		elseif itemType == 'item_weapon' then
 			itemName = string.upper(itemName)
 
 			if xPlayer.hasWeapon(itemName) then

@@ -349,7 +349,7 @@ end)
 
 if not Config.OxInventory then
 	RegisterNetEvent('esx:createPickup')
-	AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
+	AddEventHandler('esx:createPickup', function(pickupId, label, coords, itemType, name, components, tintIndex)
 		local function setObjectProperties(object)
 			SetEntityAsMissionEntity(object, true, false)
 			PlaceObjectOnGroundProperly(object)
@@ -364,7 +364,7 @@ if not Config.OxInventory then
 			}
 		end
 
-		if type == 'item_weapon' then
+		if itemType == 'item_weapon' then
 			local weaponHash = joaat(name)
 			ESX.Streaming.RequestWeaponAsset(weaponHash)
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
