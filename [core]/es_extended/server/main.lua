@@ -716,13 +716,13 @@ local DoNotUse = {
 for key in pairs(DoNotUse) do 
     if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
 		StopResource(key)
-        print("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. key .. "^7")
+        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end
 end
 
-AddEventHandler('onResourceStart', function(resourceName)
-    if DoNotUse[string.lower(resourceName)] then 
+AddEventHandler('onResourceStart', function(key)
+    if DoNotUse[string.lower(key)] then 
 		StopResource(key)
-        print("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. resourceName .. "^7")  
+        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end 
 end 
