@@ -95,6 +95,11 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 			if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
 				showError('[^1ERROR^7] The player could not be seated in the vehicle')
 			end
+            if not IsVehicleOnAllWheels(vehicle) then
+				local carCoords = GetEntityRotation(vehicle, 2)
+				Citizen.Wait(500)
+				SetEntityRotation(vehicle, carCoords[1], 0, carCoords[3], 2, true)
+			end
 		end
 	end)
 end, false, {
