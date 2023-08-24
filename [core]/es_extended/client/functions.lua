@@ -430,7 +430,11 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
         while not HasCollisionLoadedAroundEntity(vehicle) do
             Wait(0)
         end
-
+        if not IsVehicleOnAllWheels(vehicle) then
+		    local carCoords = GetEntityRotation(vehicle, 2)
+		    Wait(500)
+		    SetEntityRotation(vehicle, carCoords[1], 0, carCoords[3], 2, true)
+		end
         if cb then
             cb(vehicle)
         end
