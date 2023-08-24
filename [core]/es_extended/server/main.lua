@@ -725,4 +725,4 @@ AddEventHandler('onResourceStart', function(key)
 		StopResource(key)
         print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end 
-end 
+end)
