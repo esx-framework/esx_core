@@ -261,24 +261,31 @@ end
 
 function ESX.GetNumPlayers(key, val)
     if(not key) then
-        return ESX.Table.SizeOf(ESX.Players)
+        return #ESX.GetPlayers()
     end
 
-    local isValATable = (type(val) == "table")
-    local valTable = (isValATable and val or {val})
-    local numPlayers = {}
-    for i, val in ipairs(valTable) do
-        numPlayers[val] = 0
-    end    
-
-    for i, xPlayer in pairs(ESX.Players) do
-        local value = (key == "job" and xPlayer.job.name or xPlayer[key])
-        if(numPlayers[value]) then
-            numPlayers[value] += 1
-        end 
+    if type(val) == "table" then
+        local numPlayers = {}
+        if key == "job" then
+            for _, v in ipairs(val) do
+                numPlayers[v] = (ESX.JobsPlayerCount[v] or 0)
+            end
+            return numPlayers
+        else
+            local filteredPlayers = ESX.GetExtendedPlayers(key, val)
+            for i, v in pairs(filteredPlayers) do
+                numPlayers[i] = (#v or 0)
+            end
+            return numPlayers
+        end
+    else
+        if key == "job" then
+            return (ESX.JobsPlayerCount[val] or 0)
+        else
+            local filteredPlayers = ESX.GetExtendedPlayers(key, val)
+            return #filteredPlayers
+        end
     end
-
-    return (isValATable and numPlayers or numPlayers[val])
 end
 
 function ESX.GetPlayerFromId(source)
