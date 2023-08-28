@@ -271,20 +271,21 @@ function ESX.GetNumPlayers(key, val)
                 numPlayers[v] = (ESX.JobsPlayerCount[v] or 0)
             end
             return numPlayers
-        else
-            local filteredPlayers = ESX.GetExtendedPlayers(key, val)
-            for i, v in pairs(filteredPlayers) do
-                numPlayers[i] = (#v or 0)
-            end
-            return numPlayers
         end
-    else
-        if key == "job" then
-            return (ESX.JobsPlayerCount[val] or 0)
-        else
-            local filteredPlayers = ESX.GetExtendedPlayers(key, val)
-            return #filteredPlayers
+
+        local filteredPlayers = ESX.GetExtendedPlayers(key, val)
+        for i, v in pairs(filteredPlayers) do
+            numPlayers[i] = (#v or 0)
         end
+        return numPlayers
+    end
+
+    if key == "job" then
+        return (ESX.JobsPlayerCount[val] or 0)
+    end
+
+    local filteredPlayers = ESX.GetExtendedPlayers(key, val)
+    return #filteredPlayers
     end
 end
 
