@@ -101,6 +101,10 @@ Locales["de"] = {
 	['command_setjob_invalid'] = 'Der Job Grad oder beides sind ungültig',
 	['command_setgroup'] = 'Setzt eine Berechtigungs Gruppe für einen User',
 	['command_setgroup_group'] = 'Name der Gruppe',
+    ['command_removeaccountmoney'] = 'Entfernt Geld von einem bestimmten Account',
+    ['command_removeaccountmoney_account'] = 'Account von wem es entfernt werden soll',
+    ['command_removeaccountmoney_amount'] = 'Anzahl die Entfernt werden soll',
+    ['command_removeaccountmoney_invalid'] = 'Name des Accounts Ungültig',
 	['commanderror_argumentmismatch'] = 'Ungültiger Argument (gegeben %s, gewollt %s)',
 	['commanderror_argumentmismatch_number'] = 'Ungültiges Argument #%s daten typ (string gegeben, gewollte nummer)',
 	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
@@ -204,7 +208,7 @@ Locales["de"] = {
 	["weapon_militaryrifle"] = "Militärgewehr",
 	["weapon_specialcarbine"] = "Spezialkarabiner",
 	["weapon_specialcarbine_mk2"] = "Spezialkarabiner MK2",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
+	["weapon_heavyrifle"] = "Schweres Gewehr",
 
 	-- Sniper
 	["weapon_heavysniper"] = "Schwere Sniper",
@@ -229,10 +233,10 @@ Locales["de"] = {
 	["weapon_tactilerifle"] = "Service Karabiner",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',  -- not translated
-	['weapon_acidpackage'] = 'Acid Package', -- not translated
-	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun',    -- not translated
+	['weapon_candycane'] = 'Zuckerstange', 
+	['weapon_acidpackage'] = 'Säure Paket',
+	['weapon_pistolxm3'] = 'WM 29 Pistole',
+	['weapon_railgunxm3'] = 'Railgun',
 
 	-- Thrown
 	["weapon_ball"] = "Baseball",
