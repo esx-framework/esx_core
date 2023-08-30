@@ -58,6 +58,7 @@ Config.DisableScenarios          = false -- Disable Scenarios
 Config.DisableWeaponWheel        = false -- Disables default weapon wheel
 Config.DisableAimAssist          = false -- disables AIM assist (mainly on controllers)
 Config.DisableVehicleSeatShuff   = false -- Disables vehicle seat shuff
+Config.DisableDisplayAmmo  		 = false -- Disable ammunition display
 Config.RemoveHudComponents       = {
 	[1] = false,                         --WANTED_STARS,
 	[2] = false,                         --WEAPON_ICON
