@@ -99,6 +99,10 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
+				if Config.DisableDisplayAmmo then
+					DisplayAmmoThisFrame(false)
+				end
+
 				if Config.DisableWeaponWheel then
 					BlockWeaponWheelThisFrame()
 					DisableControlAction(0, 37, true)
