@@ -59,6 +59,14 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	local playerId = PlayerId()
+    local metadata = ESX.PlayerData.metadata
+    if metadata.health then
+        SetEntityHealth(ESX.PlayerData.ped, metadata.health)
+    end
+
+    if metadata.armor and metadata.armor > 0 then
+        SetPedArmour(ESX.PlayerData.ped, metadata.armor)
+    end
 
 	-- RemoveHudComponents
 	for i = 1, #(Config.RemoveHudComponents) do

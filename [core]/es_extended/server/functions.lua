@@ -164,7 +164,14 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end
 end
 
+local function updateHealthAndArmorInMetadata(xPlayer)
+    local ped = GetPlayerPed(xPlayer.source)
+    xPlayer.setMeta('health', GetEntityHealth(ped))
+    xPlayer.setMeta('armor',GetPedArmour(ped))
+end
+
 function Core.SavePlayer(xPlayer, cb)
+    updateHealthAndArmorInMetadata(xPlayer)
 	local parameters <const> = {
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
@@ -202,6 +209,7 @@ function Core.SavePlayers(cb)
 	local parameters = {}
 
 	for _, xPlayer in pairs(ESX.Players) do
+        updateHealthAndArmorInMetadata(xPlayer)
 		parameters[#parameters + 1] = {
 			json.encode(xPlayer.getAccounts(true)),
 			xPlayer.job.name,

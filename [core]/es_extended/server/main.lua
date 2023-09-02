@@ -81,7 +81,7 @@ function createESXPlayer(identifier, playerId, data)
 		print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
 		defaultGroup = "admin"
 	end
-	
+
 	local parameters = Config.Multichar and { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height } or { json.encode(accounts), identifier, defaultGroup }
 
 	if Config.StartingInventoryItems then
@@ -325,6 +325,12 @@ function loadESXPlayer(identifier, playerId, isNew)
 			xPlayer.set('height', userData.height)
 		end
 	end
+    --saved player health and armor in metadata
+    local ped = GetPlayerPed(xPlayer.source)
+    if ped then
+        xPlayer.setMeta('health', xPlayer.getMeta('health') or GetEntityHealth(ped))
+        xPlayer.setMeta('armor', xPlayer.getMeta('armor') or GetPedArmour(ped))
+    end
 
 	TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
@@ -719,16 +725,16 @@ local DoNotUse = {
     ['default_spawnpoint'] = true,
 }
 
-for key in pairs(DoNotUse) do 
+for key in pairs(DoNotUse) do
     if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
-		StopResource(key)
+		    StopResource(key)
         print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end
 end
 
 AddEventHandler('onResourceStart', function(key)
-    if DoNotUse[string.lower(key)] then 
-		StopResource(key)
+    if DoNotUse[string.lower(key)] then
+		    StopResource(key)
         print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
-    end 
+    end
 end)
