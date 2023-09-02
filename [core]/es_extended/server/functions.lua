@@ -260,7 +260,7 @@ function ESX.GetExtendedPlayers(key, val)
 end
 
 function ESX.GetNumPlayers(key, val)
-    if(not key) then
+    if not key then
         return #ESX.GetPlayers()
     end
 
