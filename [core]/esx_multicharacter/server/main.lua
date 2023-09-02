@@ -37,13 +37,7 @@ local function GetIdentifier(source)
     end
     
     local identifier = GetPlayerIdentifierByType(source, PRIMARY_IDENTIFIER)
-
-    if not identifier then
-        return
-    end 
-    
-    identifier = identifier:gsub(PRIMARY_IDENTIFIER .. ':', '')
-    return identifier
+    return identifier and identifier:gsub(PRIMARY_IDENTIFIER .. ':', '')
 end
 
 if next(ESX.Players) then
