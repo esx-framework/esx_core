@@ -378,7 +378,7 @@ AddEventHandler('playerDropped', function(reason)
 	if xPlayer then
 		TriggerEvent('esx:playerDropped', playerId, reason)
         local job = xPlayer.getJob().name
-        ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 1) -1
+        ESX.JobsPlayerCount[job] = ((ESX.JobsPlayerCount[job] and ESX.JobsPlayerCount[job] > 0) and ESX.JobsPlayerCount[job] or 1) -1
 
 		Core.playersByIdentifier[xPlayer.identifier] = nil
 		Core.SavePlayer(xPlayer, function()
@@ -393,7 +393,7 @@ AddEventHandler("esx:playerLoaded", function(playerId, xPlayer, isNew)
 end)
 
 AddEventHandler("esx:setJob", function(src, job, lastJob)
-    ESX.JobsPlayerCount[lastJob.name] = (ESX.JobsPlayerCount[lastJob.name] or 1) - 1
+    ESX.JobsPlayerCount[lastJob.name] = ((ESX.JobsPlayerCount[lastJob.name] and ESX.JobsPlayerCount[lastJob.name] > 0) and ESX.JobsPlayerCount[lastJob.name] or 1) -1
     ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
 end)
 
