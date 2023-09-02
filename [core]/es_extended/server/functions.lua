@@ -284,9 +284,7 @@ function ESX.GetNumPlayers(key, val)
         return (ESX.JobsPlayerCount[val] or 0)
     end
 
-    local filteredPlayers = ESX.GetExtendedPlayers(key, val)
-    return #filteredPlayers
-    end
+    return #ESX.GetExtendedPlayers(key, val)
 end
 
 function ESX.GetPlayerFromId(source)
