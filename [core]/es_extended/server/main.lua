@@ -19,6 +19,7 @@ end
 
 loadPlayer = loadPlayer .. ' FROM `users` WHERE identifier = ?'
 
+RegisterNetEvent('esx:onPlayerJoined') 
 if Config.Multichar then
 	AddEventHandler('esx:onPlayerJoined', function(src, char, data)
 		while not next(ESX.Jobs) do
@@ -35,7 +36,6 @@ if Config.Multichar then
 		end
 	end)
 else
-	RegisterNetEvent('esx:onPlayerJoined')
 	AddEventHandler('esx:onPlayerJoined', function()
 		local _source = source
 		while not next(ESX.Jobs) do
