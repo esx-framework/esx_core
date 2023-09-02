@@ -36,8 +36,14 @@ local function GetIdentifier(source)
         return "ESX-DEBUG-LICENCE"
     end
     
-    local identifier = string.gsub(GetPlayerIdentifierByType(source, PRIMARY_IDENTIFIER), PRIMARY_IDENTIFIER .. ':', '')  
-    return identifier 
+    local identifier = GetPlayerIdentifierByType(source, PRIMARY_IDENTIFIER)
+
+    if not identifier then
+        return
+    end 
+    
+    identifier = identifier:gsub(PRIMARY_IDENTIFIER .. ':', '')
+    return identifier
 end
 
 if next(ESX.Players) then
