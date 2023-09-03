@@ -287,12 +287,9 @@ function ESX.GetIdentifier(playerId)
 	if fxDk == 1 then
 		return "ESX-DEBUG-LICENCE"
 	end
-	for _, v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			local identifier = string.gsub(v, 'license:', '')
-			return identifier
-		end
-	end
+
+    local identifier = GetPlayerIdentifierByType(playerId, 'license')
+    return identifier and identifier:gsub('license:', '')
 end
 
 ---@param model string|number
