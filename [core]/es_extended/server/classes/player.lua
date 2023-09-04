@@ -32,6 +32,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	stateBag:set("name", self.name, true)
 	stateBag:set("metadata", self.metadata, true)
 
+	local jobKey = ("%s:count"):format(self.job.name)
+	GlobalState[jobKey] = (GlobalState[jobKey] or 0) + 1
+
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
 	end
@@ -379,6 +382,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
 			self.triggerEvent('esx:setJob', self.job, lastJob)
 			Player(self.source).state:set("job", self.job, true)
+			
+			local lastJobKey = ('%s:count'):format(lastJob.name)
+			local jobKey = ('%s:count'):format(self.job.name)
+			local globalStateLastJob = GlobalState[lastJobKey]
+
+			GlobalState[lastJobKey] = ((globalStateLastJob and globalStateLastJob > 0) and globalStateLastJob or 1) - 1
+			GlobalState[jobKey] = (GlobalState[jobKey] or 0) + 1
 		else
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7'):format(self.source, job))
 		end
