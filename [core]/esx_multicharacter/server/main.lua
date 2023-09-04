@@ -31,17 +31,13 @@ local PREFIX = Config.Prefix or 'char'
 local PRIMARY_IDENTIFIER = ESX.GetConfig().Identifier or GetConvar('sv_lan', '') == 'true' and 'ip' or "license"
 
 local function GetIdentifier(source)
-	local fxDk = GetConvarInt('sv_fxdkMode', 0)
-	if fxDk == 1 then
-		return "ESX-DEBUG-LICENCE"
-	end
-	local identifier = PRIMARY_IDENTIFIER..':'
-	for _, v in pairs(GetPlayerIdentifiers(source)) do
-		if string.match(v, identifier) then
-			identifier = string.gsub(v, identifier, '')
-			return identifier
-		end
-	end
+    local fxDk = GetConvarInt('sv_fxdkMode', 0)
+    if fxDk == 1 then
+        return "ESX-DEBUG-LICENCE"
+    end
+    
+    local identifier = GetPlayerIdentifierByType(source, PRIMARY_IDENTIFIER)
+    return identifier and identifier:gsub(PRIMARY_IDENTIFIER .. ':', '')
 end
 
 if next(ESX.Players) then
