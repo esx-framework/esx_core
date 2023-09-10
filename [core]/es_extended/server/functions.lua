@@ -261,7 +261,7 @@ end
 
 function ESX.GetNumPlayers(key, val)
     if not key then
-        return #ESX.GetPlayers()
+        return #ESX.Players
     end
 
     if type(val) == "table" then
