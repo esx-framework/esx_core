@@ -751,7 +751,7 @@ local DoNotUse = {
 AddEventHandler('onResourceStart', function(key)
     if DoNotUse[string.lower(key)] then
         while GetResourceState(key) ~= 'started' do 
-            Wait()
+            Wait(0)
         end 
         
 		StopResource(key)
