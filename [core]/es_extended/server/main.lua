@@ -748,16 +748,20 @@ local DoNotUse = {
     ['default_spawnpoint'] = true,
 }
 
+AddEventHandler('onResourceStart', function(key)
+    if DoNotUse[string.lower(key)] then
+        while GetResourceState(key) ~= 'started' do 
+            Wait(0)
+        end 
+        
+		StopResource(key)
+        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
+    end 
+end)
+
 for key in pairs(DoNotUse) do
     if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
-		    StopResource(key)
+		StopResource(key)
         print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end
 end
-
-AddEventHandler('onResourceStart', function(key)
-    if DoNotUse[string.lower(key)] then
-		    StopResource(key)
-        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
-    end
-end)
