@@ -90,7 +90,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@return void
 	function self.setMoney(money)
 		_assert(type(money) == "number", "money should be number!")
-		money <const> = ESX.Math.Round(money)
+		money = ESX.Math.Round(money)
 		self.setAccountMoney('money', money)
 	end
 
@@ -111,7 +111,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@param reason string
 	---@return void
 	function self.removeMoney(money, reason)
-		money <const> = ESX.Math.Round(money)
+		money = ESX.Math.Round(money)
 		self.removeAccountMoney('money', money, reason)
 	end
 
