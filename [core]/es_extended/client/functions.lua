@@ -1036,7 +1036,7 @@ function ESX.ShowInventory()
 
     local playerPed = ESX.PlayerData.ped
     local elements = {
-        { unselectable = true, icon = 'fas fa-box', title = 'Player Inventory' }
+        { unselectable = true, icon = 'fas fa-box' }
     }
     local currentWeight = 0
 
@@ -1075,7 +1075,10 @@ function ESX.ShowInventory()
         end
     end
 
-    for _, v in ipairs(Config.Weapons) do
+    elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
+
+    for i=1, #Config.Weapons do
+        local v = Config.Weapons[i] 
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1094,14 +1097,8 @@ function ESX.ShowInventory()
                 canRemove = true
             }
         end
-    end
-
-    elements[#elements + 1] = {
-        unselectable = true,
-        icon = "fas fa-weight",
-        title = "Current Weight: " .. currentWeight
-    }
-
+    end 
+    
     ESX.CloseContext()
 
     ESX.OpenContext("right", elements, function(_, element)
