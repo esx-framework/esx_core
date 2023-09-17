@@ -1077,7 +1077,8 @@ function ESX.ShowInventory()
 
     elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
 
-    for _, v in ipairs(Config.Weapons) do
+    for i=1, #Config.Weapons do
+        local v = Config.Weapons[i] 
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1096,8 +1097,8 @@ function ESX.ShowInventory()
                 canRemove = true
             }
         end
-    end
-
+    end 
+    
     ESX.CloseContext()
 
     ESX.OpenContext("right", elements, function(_, element)
