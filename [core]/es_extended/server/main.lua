@@ -380,7 +380,7 @@ AddEventHandler('playerDropped', function(reason)
         local job = xPlayer.getJob().name
 		local currentJob = ESX.JobsPlayerCount[job]
         ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) -1
-
+		GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
 		Core.playersByIdentifier[xPlayer.identifier] = nil
 		Core.SavePlayer(xPlayer, function()
 			ESX.Players[playerId] = nil
@@ -390,13 +390,22 @@ end)
 
 AddEventHandler("esx:playerLoaded", function(playerId, xPlayer, isNew)
     local job = xPlayer.getJob().name
+	local jobKey = ("%s:count"):format(job)
+	
     ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 0) +1
+	GlobalState[jobKey] = ESX.JobsPlayerCount[job]
 end)
 
 AddEventHandler("esx:setJob", function(src, job, lastJob)
+	local lastJobKey = ('%s:count'):format(lastJob.name)
+	local jobKey = ('%s:count'):format(job.name)
 	local currentLastJob = ESX.JobsPlayerCount[lastJob.name]
+
     ESX.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) -1
     ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
+
+	GlobalState[lastJobKey] = ESX.JobsPlayerCount[lastJob.name]
+	GlobalState[jobKey] = ESX.JobsPlayerCount[job.name]
 end)
 
 AddEventHandler('esx:playerLogout', function(playerId, cb)
