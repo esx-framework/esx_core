@@ -52,6 +52,7 @@ Locales["hu"] = {
 
 	["act_imp"] = "Érvénytelen mennyiség",
 	["in_vehicle"] = "Nem tudod átadni, mivel benne ül a jármüben",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	["command_bring"] = "Játékos magadhoz teleportálása",
@@ -59,6 +60,9 @@ Locales["hu"] = {
 	["command_car_car"] = "Jármű név vagy hash",
 	["command_cardel"] = "Közeli járművek törlése",
 	["command_cardel_radius"] = "Megadott radiusban lévő járművek törlése",
+	["command_repair"] = "Repair your vehicle",
+	["command_repair_success"] = "Successfully repaired vehicle",
+	["command_repair_success_target"] = "An admin repaired your vehicle",
 	["command_clear"] = "Chat ürítése",
 	["command_clearall"] = "Chat ürítése minden játékosnál",
 	["command_clearinventory"] = "Minden tárgy törlése a játékos inventoryból",
@@ -200,6 +204,7 @@ Locales["hu"] = {
 	["weapon_militaryrifle"] = "Military Rifle",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Heavy Sniper",

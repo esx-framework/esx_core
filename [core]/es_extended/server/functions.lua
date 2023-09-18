@@ -113,11 +113,18 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								local merge = table.concat(args, " ")
 
 								newArgs[v.name] = string.sub(merge, lenght)
-							end
+                            elseif v.type == 'coordinate' then
+                                local coord = tonumber(args[k]:match("(-?%d+%.?%d*)"))
+                                if(not coord) then
+                                    error = TranslateCap('commanderror_argumentmismatch_number', k)
+                                else
+                                    newArgs[v.name] = coord
+                                end
+						    end
 						end
 
 						--backwards compatibility
-						if not v.validate and not v.type then
+						if v.validate ~= nil and not v.validate then
 							error = nil
 						end
 
@@ -157,7 +164,14 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end
 end
 
+local function updateHealthAndArmorInMetadata(xPlayer)
+    local ped = GetPlayerPed(xPlayer.source)
+    xPlayer.setMeta('health', GetEntityHealth(ped))
+    xPlayer.setMeta('armor',GetPedArmour(ped))
+end
+
 function Core.SavePlayer(xPlayer, cb)
+    updateHealthAndArmorInMetadata(xPlayer)
 	local parameters <const> = {
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
@@ -195,6 +209,7 @@ function Core.SavePlayers(cb)
 	local parameters = {}
 
 	for _, xPlayer in pairs(ESX.Players) do
+        updateHealthAndArmorInMetadata(xPlayer)
 		parameters[#parameters + 1] = {
 			json.encode(xPlayer.getAccounts(true)),
 			xPlayer.job.name,
@@ -241,8 +256,6 @@ local function checkTable(key, val, player, xPlayers)
 end
 
 function ESX.GetExtendedPlayers(key, val)
-	if not key then return ESX.Players end
-
 	local xPlayers = {}
 	if type(val) == "table" then
 		for _, v in pairs(ESX.Players) do
@@ -250,13 +263,45 @@ function ESX.GetExtendedPlayers(key, val)
 		end
 	else
 		for _, v in pairs(ESX.Players) do
-			if (key == 'job' and v.job.name == val) or v[key] == val then
+			if key then
+				if (key == 'job' and v.job.name == val) or v[key] == val then
+					xPlayers[#xPlayers + 1] = v
+				end
+			else
 				xPlayers[#xPlayers + 1] = v
 			end
 		end
 	end
 
 	return xPlayers
+end
+
+function ESX.GetNumPlayers(key, val)
+    if not key then
+        return #GetPlayers()
+    end
+
+    if type(val) == "table" then
+        local numPlayers = {}
+        if key == "job" then
+            for _, v in ipairs(val) do
+                numPlayers[v] = (ESX.JobsPlayerCount[v] or 0)
+            end
+            return numPlayers
+        end
+
+        local filteredPlayers = ESX.GetExtendedPlayers(key, val)
+        for i, v in pairs(filteredPlayers) do
+            numPlayers[i] = (#v or 0)
+        end
+        return numPlayers
+    end
+
+    if key == "job" then
+        return (ESX.JobsPlayerCount[val] or 0)
+    end
+
+    return #ESX.GetExtendedPlayers(key, val)
 end
 
 function ESX.GetPlayerFromId(source)
@@ -272,12 +317,9 @@ function ESX.GetIdentifier(playerId)
 	if fxDk == 1 then
 		return "ESX-DEBUG-LICENCE"
 	end
-	for _, v in ipairs(GetPlayerIdentifiers(playerId)) do
-		if string.match(v, 'license:') then
-			local identifier = string.gsub(v, 'license:', '')
-			return identifier
-		end
-	end
+
+    local identifier = GetPlayerIdentifierByType(playerId, 'license')
+    return identifier and identifier:gsub('license:', '')
 end
 
 ---@param model string|number
@@ -469,19 +511,19 @@ function ESX.GetUsableItems()
 end
 
 if not Config.OxInventory then
-	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
+	function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
 		local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
 		local xPlayer = ESX.Players[playerId]
-		local coords = xPlayer.getCoords()
+		coords = ( (type(coords) == "vector3" or type(coords) == "vector4") and coords.xyz or xPlayer.getCoords(true))
 
-		Core.Pickups[pickupId] = { type = type, name = name, count = count, label = label, coords = coords }
+		Core.Pickups[pickupId] = { type = itemType, name = name, count = count, label = label, coords = coords }
 
-		if type == 'item_weapon' then
+		if itemType == 'item_weapon' then
 			Core.Pickups[pickupId].components = components
 			Core.Pickups[pickupId].tintIndex = tintIndex
 		end
 
-		TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, type, name, components, tintIndex)
+		TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, itemType, name, components, tintIndex)
 		Core.PickupId = pickupId
 	end
 end
