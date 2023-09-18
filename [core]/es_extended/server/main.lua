@@ -411,7 +411,7 @@ if not Config.OxInventory then
 		end
 	end)
 
-	RegisterNetEvent('esx:giveInventoryItem')
+		RegisterNetEvent('esx:giveInventoryItem')
 	AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCount)
 		local playerId = source
 		local sourceXPlayer = ESX.GetPlayerFromId(playerId)
@@ -425,86 +425,95 @@ if not Config.OxInventory then
 		if type == 'item_standard' then
 			local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
-			if itemCount > 0 and sourceItem.count >= itemCount then
-				if targetXPlayer.canCarryItem(itemName, itemCount) then
-					sourceXPlayer.removeInventoryItem(itemName, itemCount)
-					targetXPlayer.addInventoryItem(itemName, itemCount)
-
-					sourceXPlayer.showNotification(TranslateCap('gave_item', itemCount, sourceItem.label, targetXPlayer.name))
-					targetXPlayer.showNotification(TranslateCap('received_item', itemCount, sourceItem.label, sourceXPlayer.name))
-				else
-					sourceXPlayer.showNotification(TranslateCap('ex_inv_lim', targetXPlayer.name))
-				end
-			else
-				sourceXPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
+			if not itemCount > 0 and sourceItem.count >= itemCount then
+                sourceXPlayer.showNotification(TranslateCap('imp_invalid_quantity'))
+                return
 			end
+
+            if not targetXPlayer.canCarryItem(itemName, itemCount) then
+                sourceXPlayer.showNotification(TranslateCap('ex_inv_lim', targetXPlayer.name))
+                return
+            end
+
+            sourceXPlayer.removeInventoryItem(itemName, itemCount)
+            targetXPlayer.addInventoryItem(itemName, itemCount)
+
+            sourceXPlayer.showNotification(TranslateCap('gave_item', itemCount, sourceItem.label, targetXPlayer.name))
+            targetXPlayer.showNotification(TranslateCap('received_item', itemCount, sourceItem.label, sourceXPlayer.name)) 
 		elseif type == 'item_account' then
-			if itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
-				sourceXPlayer.removeAccountMoney(itemName, itemCount, "Gave to " .. targetXPlayer.name)
-				targetXPlayer.addAccountMoney(itemName, itemCount, "Received from " .. sourceXPlayer.name)
+			if not itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
+                sourceXPlayer.showNotification(TranslateCap('imp_invalid_amount'))
+                return
+            end
 
-				sourceXPlayer.showNotification(TranslateCap('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label, targetXPlayer.name))
-				targetXPlayer.showNotification(TranslateCap('received_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label,
-					sourceXPlayer.name))
-			else
-				sourceXPlayer.showNotification(TranslateCap('imp_invalid_amount'))
-			end
+            sourceXPlayer.removeAccountMoney(itemName, itemCount, "Gave to " .. targetXPlayer.name)
+            targetXPlayer.addAccountMoney(itemName, itemCount, "Received from " .. sourceXPlayer.name)
+
+            sourceXPlayer.showNotification(TranslateCap('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label, targetXPlayer.name))
+            targetXPlayer.showNotification(TranslateCap('received_account_money', ESX.Math.GroupDigits(itemCount), Config.Accounts[itemName].label, sourceXPlayer.name))
 		elseif type == 'item_weapon' then
-			if sourceXPlayer.hasWeapon(itemName) then
-				local weaponLabel = ESX.GetWeaponLabel(itemName)
-				if not targetXPlayer.hasWeapon(itemName) then
-					local _, weapon = sourceXPlayer.getWeapon(itemName)
-					local _, weaponObject = ESX.GetWeapon(itemName)
-					itemCount = weapon.ammo
-					local weaponComponents = ESX.Table.Clone(weapon.components)
-					local weaponTint = weapon.tintIndex
-					if weaponTint then
-						targetXPlayer.setWeaponTint(itemName, weaponTint)
-					end
-					if weaponComponents then
-						for _, v in pairs(weaponComponents) do
-							targetXPlayer.addWeaponComponent(itemName, v)
-						end
-					end
-					sourceXPlayer.removeWeapon(itemName)
-					targetXPlayer.addWeapon(itemName, itemCount)
+			if not sourceXPlayer.hasWeapon(itemName) then
+                return
+            end
 
-					if weaponObject.ammo and itemCount > 0 then
-						local ammoLabel = weaponObject.ammo.label
-						sourceXPlayer.showNotification(TranslateCap('gave_weapon_withammo', weaponLabel, itemCount, ammoLabel, targetXPlayer.name))
-						targetXPlayer.showNotification(TranslateCap('received_weapon_withammo', weaponLabel, itemCount, ammoLabel, sourceXPlayer.name))
-					else
-						sourceXPlayer.showNotification(TranslateCap('gave_weapon', weaponLabel, targetXPlayer.name))
-						targetXPlayer.showNotification(TranslateCap('received_weapon', weaponLabel, sourceXPlayer.name))
-					end
-				else
-					sourceXPlayer.showNotification(TranslateCap('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
-					targetXPlayer.showNotification(TranslateCap('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
-				end
-			end
+            local weaponLabel = ESX.GetWeaponLabel(itemName)
+            if not targetXPlayer.hasWeapon(itemName) then
+                local _, weapon = sourceXPlayer.getWeapon(itemName)
+                local _, weaponObject = ESX.GetWeapon(itemName)
+                itemCount = weapon.ammo
+                local weaponComponents = ESX.Table.Clone(weapon.components)
+                local weaponTint = weapon.tintIndex
+                if weaponTint then
+                    targetXPlayer.setWeaponTint(itemName, weaponTint)
+                end
+                if weaponComponents then
+                    for _, v in pairs(weaponComponents) do
+                        targetXPlayer.addWeaponComponent(itemName, v)
+                    end
+                end
+                sourceXPlayer.removeWeapon(itemName)
+                targetXPlayer.addWeapon(itemName, itemCount)
+
+                if not weaponObject.ammo and itemCount > 0 then
+                    sourceXPlayer.showNotification(TranslateCap('gave_weapon', weaponLabel, targetXPlayer.name))
+                    targetXPlayer.showNotification(TranslateCap('received_weapon', weaponLabel, sourceXPlayer.name))
+                    return
+                end
+
+                local ammoLabel = weaponObject.ammo.label
+                sourceXPlayer.showNotification(TranslateCap('gave_weapon_withammo', weaponLabel, itemCount, ammoLabel, targetXPlayer.name))
+                targetXPlayer.showNotification(TranslateCap('received_weapon_withammo', weaponLabel, itemCount, ammoLabel, sourceXPlayer.name))
+                return
+            end
+
+            sourceXPlayer.showNotification(TranslateCap('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
+            targetXPlayer.showNotification(TranslateCap('received_weapon_hasalready', sourceXPlayer.name, weaponLabel))
 		elseif type == 'item_ammo' then
-			if sourceXPlayer.hasWeapon(itemName) then
-				local _, weapon = sourceXPlayer.getWeapon(itemName)
+			if not sourceXPlayer.hasWeapon(itemName) then
+                return
+            end
 
-				if targetXPlayer.hasWeapon(itemName) then
-					local _, weaponObject = ESX.GetWeapon(itemName)
+            local _, weapon = sourceXPlayer.getWeapon(itemName)
 
-					if weaponObject.ammo then
-						local ammoLabel = weaponObject.ammo.label
+            if not targetXPlayer.hasWeapon(itemName) then
+                sourceXPlayer.showNotification(TranslateCap('gave_weapon_noweapon', targetXPlayer.name))
+                targetXPlayer.showNotification(TranslateCap('received_weapon_noweapon', sourceXPlayer.name, weapon.label))
+                return
+            end
+            
+            local _, weaponObject = ESX.GetWeapon(itemName)
 
-						if weapon.ammo >= itemCount then
-							sourceXPlayer.removeWeaponAmmo(itemName, itemCount)
-							targetXPlayer.addWeaponAmmo(itemName, itemCount)
+            if weaponObject.ammo then
+                local ammoLabel = weaponObject.ammo.label
 
-							sourceXPlayer.showNotification(TranslateCap('gave_weapon_ammo', itemCount, ammoLabel, weapon.label, targetXPlayer.name))
-							targetXPlayer.showNotification(TranslateCap('received_weapon_ammo', itemCount, ammoLabel, weapon.label, sourceXPlayer.name))
-						end
-					end
-				else
-					sourceXPlayer.showNotification(TranslateCap('gave_weapon_noweapon', targetXPlayer.name))
-					targetXPlayer.showNotification(TranslateCap('received_weapon_noweapon', sourceXPlayer.name, weapon.label))
-				end
-			end
+                if weapon.ammo >= itemCount then
+                    sourceXPlayer.removeWeaponAmmo(itemName, itemCount)
+                    targetXPlayer.addWeaponAmmo(itemName, itemCount)
+
+                    sourceXPlayer.showNotification(TranslateCap('gave_weapon_ammo', itemCount, ammoLabel, weapon.label, targetXPlayer.name))
+                    targetXPlayer.showNotification(TranslateCap('received_weapon_ammo', itemCount, ammoLabel, weapon.label, sourceXPlayer.name))
+                end
+            end
 		end
 	end)
 
