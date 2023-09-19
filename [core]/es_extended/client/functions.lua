@@ -1324,7 +1324,7 @@ AddEventHandler('onResourceStop', function(resourceName)
         end
     end
 end)
-
+-- Credits to txAdmin for the list. 
 local mismatchedTypes = {
     [`airtug`] = "automobile",       -- trailer
     [`avisa`] = "submarine",         -- boat
@@ -1365,7 +1365,7 @@ local mismatchedTypes = {
 ---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
-    if not IsModelInCdimage(model) then return end  
+    if not IsModelAVehicle(model) then return end  
     if mismatchedTypes[model] then
         return mismatchedTypes[model]
     end
