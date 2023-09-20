@@ -59,10 +59,18 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	local playerId = PlayerId()
+    local metadata = ESX.PlayerData.metadata
+    if metadata.health then
+        SetEntityHealth(ESX.PlayerData.ped, metadata.health)
+    end
 
-	-- RemoveHudCommonents
-	for i = 1, #(Config.RemoveHudCommonents) do
-		if Config.RemoveHudCommonents[i] then
+    if metadata.armor and metadata.armor > 0 then
+        SetPedArmour(ESX.PlayerData.ped, metadata.armor)
+    end
+
+	-- RemoveHudComponents
+	for i = 1, #(Config.RemoveHudComponents) do
+		if Config.RemoveHudComponents[i] then
 			SetHudComponentPosition(i, 999999.0, 999999.0)
 		end
 	end
@@ -84,11 +92,15 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 	end
 
-	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
+	if Config.DisableHealthRegeneration then
+		SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+	end
+
+	if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
-				if Config.DisableHealthRegeneration then
-					SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+				if Config.DisableDisplayAmmo then
+					DisplayAmmoThisFrame(false)
 				end
 
 				if Config.DisableWeaponWheel then
@@ -331,7 +343,7 @@ if not Config.OxInventory then
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
-	AddEventHandler('esx:removeWeapon', function(weapon)
+	AddEventHandler('esx:removeWeapon', function()
 		print("[^1ERROR^7] event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
 	end)
 
@@ -349,7 +361,7 @@ end)
 
 if not Config.OxInventory then
 	RegisterNetEvent('esx:createPickup')
-	AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
+	AddEventHandler('esx:createPickup', function(pickupId, label, coords, itemType, name, components, tintIndex)
 		local function setObjectProperties(object)
 			SetEntityAsMissionEntity(object, true, false)
 			PlaceObjectOnGroundProperly(object)
@@ -360,11 +372,11 @@ if not Config.OxInventory then
 				obj = object,
 				label = label,
 				inRange = false,
-				coords = vector3(coords.x, coords.y, coords.z)
+				coords = coords
 			}
 		end
 
-		if type == 'item_weapon' then
+		if itemType == 'item_weapon' then
 			local weaponHash = joaat(name)
 			ESX.Streaming.RequestWeaponAsset(weaponHash)
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
@@ -384,7 +396,7 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:createMissingPickups')
 	AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
-			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name
+			TriggerEvent('esx:createPickup', pickupId, pickup.label, vector3(pickup.coords.x, pickup.coords.y, pickup.coords.z - 1.0), pickup.type, pickup.name
 			, pickup.components, pickup.tintIndex)
 		end
 	end)
@@ -503,7 +515,7 @@ if not Config.OxInventory then
 	end)
 end
 
------ Admin commnads from esx_adminplus
+----- Admin commands from esx_adminplus
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
@@ -655,13 +667,23 @@ AddEventHandler("esx:noclip", function()
 			CreateThread(noclipThread)
 		end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
+		ESX.ShowNotification(TranslateCap('noclip_message', noclip and Translate('enabled') or Translate('disabled')), true, false, 140)
 	end)
 end)
 
 RegisterNetEvent("esx:killPlayer")
 AddEventHandler("esx:killPlayer", function()
 	SetEntityHealth(ESX.PlayerData.ped, 0)
+end)
+
+RegisterNetEvent("esx:repairPedVehicle")
+AddEventHandler("esx:repairPedVehicle", function()
+	local ped = ESX.PlayerData.ped
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	SetVehicleEngineHealth(vehicle, 1000)
+	SetVehicleEngineOn(vehicle, true, true)
+	SetVehicleFixed(vehicle)
+	SetVehicleDirtLevel(vehicle, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
@@ -682,23 +704,6 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 	cb(ESX.GetVehicleType(model))
 end)
 
-local DoNotUse = {
-	'essentialmode',
-	'es_admin2',
-	'basic-gamemode',
-	'mapmanager',
-	'fivem-map-skater',
-	'fivem-map-hipster',
-	'qb-core',
-	'default_spawnpoint',
-}
-
-for i = 1, #DoNotUse do
-	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
-		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
-	end
-end
-
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
+AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(_, key, val)
 	ESX.SetPlayerData(key, val)
 end)

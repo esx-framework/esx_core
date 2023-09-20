@@ -52,6 +52,7 @@ Locales["zh-cn"] = {
 
 	["act_imp"] = "操作失败",
 	["in_vehicle"] = "请离开当前载具",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = '传送玩家到您身边',
@@ -59,6 +60,9 @@ Locales["zh-cn"] = {
 	['command_car_car'] = '生成载具的模型名称或哈希值',
 	['command_cardel'] = '删除附近载具',
 	['command_cardel_radius'] = '可选，删除指定半径内的所有载具',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = '清除聊天记录',
 	['command_clearall'] = '清除所有玩家的聊天记录',
 	['command_clearinventory'] = '清除玩家库存',
@@ -200,6 +204,7 @@ Locales["zh-cn"] = {
 	["weapon_militaryrifle"] = "军用步枪",
 	["weapon_specialcarbine"] = "特制卡宾步枪",
 	["weapon_specialcarbine_mk2"] = "特制卡宾步枪-MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "重型狙击步枪",
