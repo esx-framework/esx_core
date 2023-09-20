@@ -1325,20 +1325,34 @@ AddEventHandler('onResourceStop', function(resourceName)
     end
 end)
 
+local mismatchedTypes = {
+    [`avisa`] = "submarine",         -- boat
+    [`blimp`] = "heli",              -- plane
+    [`blimp2`] = "heli",             -- plane
+    [`blimp3`] = "heli",             -- plane
+    [`chimera`] = "automobile",      -- bike
+    [`kosatka`] = "submarine",       -- boat
+    [`policeb`] = "bike",            -- automobile
+    [`rrocket`] = "automobile",      -- bike
+    [`Stryder`] = "automobile",      -- bike
+    [`submersible`] = "submarine",   -- boat
+    [`submersible2`] = "submarine",  -- boat
+    [`thruster`] = "heli",           -- automobile
+    [`trailersmall2`] = "trailer",   -- automobile
+}
+
 ---@param model number|string
 ---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
+    if not IsModelInCdimage(model) then return end  
 
-    if model == `submersible` or model == `submersible2` then
-        return 'submarine'
-    end
-
-    if model == `blimp` then
-        return 'heli'
-    end
+    if mismatchedTypes[model] then 
+    return mismatchedTypes[model]
+    end 
 
     local vehicleType = GetVehicleClassFromName(model)
+
     local types = {
         [8] = "bike",
         [13] = "bike",
