@@ -44,7 +44,7 @@ if not Config.UseDeferrals then
 
     RegisterNetEvent('esx_identity:showRegisterIdentity', function()
         TriggerEvent('esx_skin:resetFirstSpawn')
-        while not ready do
+        while not (ready and loadingScreenFinished) do
             print('Waiting for esx_identity NUI..')
             Wait(100)
         end

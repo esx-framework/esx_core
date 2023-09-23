@@ -51,12 +51,16 @@ Locales["pl"] = {
 	["account_money"] = "pieniądze",
 	["act_imp"] = "działanie niemożliwe",
 	["in_vehicle"] = "nie możesz przekazywać przedmiotów w pojeździe",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_car'] = 'przywołaj pojazd',
 	['command_car_car'] = 'nazwa lub hash przywołanego pojazdu',
 	['command_cardel'] = 'usuń pojazd w pobliżu',
 	['command_cardel_radius'] = 'opcjonalnie usuń każdy pojazd w obszarze',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'wyczyść czat',
 	['command_clearall'] = 'wyczyść czat dla wszystkich graczy',
 	['command_clearinventory'] = 'wyczyść ekwipunek gracza',
@@ -183,6 +187,7 @@ Locales["pl"] = {
 	["gadget_parachute"] = "spadochron",
 	["weapon_flare"] = "pistolet sygnałowy",
 	["weapon_doubleaction"] = "double-Action Revolver",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Weapon Components
 	["component_clip_default"] = "domyślny tłumik",
