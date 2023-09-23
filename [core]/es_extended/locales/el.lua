@@ -215,6 +215,7 @@ Locales["el"] = {
   ["weapon_marksmanrifle"] = "Ρίφλε Επαγγελματία Σκοπευτή",
   ["weapon_marksmanrifle_mk2"] = "Ρίφλε Επαγγελματία Σκοπευτή MK2",
   ["weapon_sniperrifle"] = "Κυνηγετικό Ρίφλε",
+  ["weapon_heavyrifle"] = "βαρύ τουφέκι",
 
   -- Βαριά / Εκτοξευτές
   ["weapon_compactlauncher"] = "Συμπαγής Εκτοξευτής",
@@ -377,5 +378,4 @@ Locales["el"] = {
   ["tint_lspd"] = "μπλε δέρμα",
   ["tint_orange"] = "πορτοκαλί δέρμα",
   ["tint_platinum"] = "πλατίνενο δέρμα",
-
 }
