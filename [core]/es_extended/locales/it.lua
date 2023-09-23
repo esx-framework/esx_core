@@ -73,10 +73,10 @@ Locales["it"] = {
 	['command_giveaccountmoney_account'] = 'Account a cui aggiungere',
 	['command_giveaccountmoney_amount'] = 'Quantità da aggiungere',
 	['command_giveaccountmoney_invalid'] = 'Nome account non valido',
-    ['command_removeaccountmoney'] = 'Rimuovi soldi da un account specifico',
-    ['command_removeaccountmoney_account'] = 'Account a cui togliere',
-    ['command_removeaccountmoney_amount'] = 'Quantità da rimuovere',
-    ['command_removeaccountmoney_invalid'] = 'Nome account non valido',
+	['command_removeaccountmoney'] = 'Rimuovi soldi da un account specifico',
+	['command_removeaccountmoney_account'] = 'Account a cui togliere',
+	['command_removeaccountmoney_amount'] = 'Quantità da rimuovere',
+	['command_removeaccountmoney_invalid'] = 'Nome account non valido',
 	['command_giveitem'] = 'Dai un oggetto ad un giocatore',
 	['command_giveitem_item'] = 'Nome oggetto',
 	['command_giveitem_count'] = 'Quantità',
@@ -208,7 +208,7 @@ Locales["it"] = {
 	["weapon_militaryrifle"] = "Fucile militare",
 	["weapon_specialcarbine"] = "Carabina speciale",
 	["weapon_specialcarbine_mk2"] = "Carabina speciale MK2",
-	["weapon_heavyrifle"] = "Fucile pesante", 
+	["weapon_heavyrifle"] = "Fucile pesante",
 
 	-- Sniper
 	["weapon_heavysniper"] = "Cecchino pesante",
@@ -233,10 +233,10 @@ Locales["it"] = {
 	["weapon_tactilerifle"] = "Carabina di servizio",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Bastoncino di zucchero',  
-	['weapon_acidpackage'] = 'Pacco di acidi', 
-	['weapon_pistolxm3'] = 'Pistola WM 29', 
-	['weapon_railgunxm3'] = 'Railgun',    
+	['weapon_candycane'] = 'Bastoncino di zucchero',
+	['weapon_acidpackage'] = 'Pacco di acidi',
+	['weapon_pistolxm3'] = 'Pistola WM 29',
+	['weapon_railgunxm3'] = 'Railgun',
 
 	-- Thrown
 	["weapon_ball"] = "Palla",

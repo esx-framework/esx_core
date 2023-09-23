@@ -48,7 +48,7 @@ Locales["nl"] = {
   ["bank"] = "Maze Bank",
   ["account_bank"] = "Bank",
   ["account_black_money"] = "Zwart geld",
-  ["account_money"] = "Contant", 
+  ["account_money"] = "Contant",
 
   ["act_imp"] = "Kan actie niet uitvoeren",
   ["in_vehicle"] = "Kan actie niet uitvoeren, de speler zit in een voertuig.",
@@ -226,8 +226,8 @@ Locales["nl"] = {
   -- Drug Wars DLC
   ["weapon_candycane"] = "Snoep stok",
   ["weapon_acidpackage"] = "LSD pakket",
-  ["weapon_pistolxm3"] = "WM 29 Pistool", 
-  ["weapon_railgunxm3"] = "Railgun", 
+  ["weapon_pistolxm3"] = "WM 29 Pistool",
+  ["weapon_railgunxm3"] = "Railgun",
 
   -- Thrown
   ["weapon_ball"] = "Honkbal",
