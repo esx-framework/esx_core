@@ -772,7 +772,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
 		end
 
-		return metaData)
+		return metaData
 	end
 
 	---@param index any
