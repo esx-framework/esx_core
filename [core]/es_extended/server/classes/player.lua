@@ -1,15 +1,15 @@
-local _GetPlayerPed = GetPlayerPed;
-local _GetEntityCoords = GetEntityCoords;
-local _ExecuteCommand = ExecuteCommand;
-local _SetEntityCoords = SetEntityCoords;
-local _SetEntityHeading = SetEntityHeading;
-local _TriggerClientEvent = TriggerClientEvent;
-local _DropPlayer = DropPlayer;
-local _TriggerEvent = TriggerEvent;
-local _GiveWeaponToPed = GiveWeaponToPed;
-local _SetPedAmmo = SetPedAmmo;
-local _RemoveWeaponFromPed = RemoveWeaponFromPed;
-local _assert = assert;
+local _GetPlayerPed = GetPlayerPed
+local _GetEntityCoords = GetEntityCoords
+local _ExecuteCommand = ExecuteCommand
+local _SetEntityCoords = SetEntityCoords
+local _SetEntityHeading = SetEntityHeading
+local _TriggerClientEvent = TriggerClientEvent
+local _DropPlayer = DropPlayer
+local _TriggerEvent = TriggerEvent
+local _GiveWeaponToPed = GiveWeaponToPed
+local _SetPedAmmo = SetPedAmmo
+local _RemoveWeaponFromPed = RemoveWeaponFromPed
+local _assert = assert
 
 ---@param playerId number
 ---@param identifier string
@@ -77,7 +77,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local ped <const> = _GetPlayerPed(self.source)
 		local coordinates <const> = _GetEntityCoords(ped)
 
-		return (vector and coordinates or { x = coordinates.x, y = coordinates.y, z = coordinates.z })
+		return vector and coordinates or { x = coordinates.x, y = coordinates.y, z = coordinates.z }
 
 	end
 
@@ -97,7 +97,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	---@return number
 	function self.getMoney()
-		return (self.getAccount('money').money)
+		return self.getAccount('money').money
 	end
 
 	---@param money number
@@ -118,7 +118,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	---@return string
 	function self.getIdentifier()
-		return (self.identifier)
+		return self.identifier
 	end
 
 	---@param newGroup string
@@ -132,7 +132,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	---@return string
 	function self.getGroup()
-		return (self.group)
+		return self.group
 	end
 
 	---@param k string
@@ -146,14 +146,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@param k string
 	---@return any
 	function self.get(k)
-		return (self.variables[k])
+		return self.variables[k]
 	end
 
 	---@param minimal boolean
 	---@return table
 	function self.getAccounts(minimal)
 		if not (minimal) then
-			return (self.accounts)
+			return self.accounts
 		end
 
 		local minimalAccounts = {}
@@ -162,7 +162,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			minimalAccounts[self.accounts[i].name] = self.accounts[i].money
 		end
 
-		return (minimalAccounts)
+		return minimalAccounts
 	end
 
 	---@param account string
@@ -170,16 +170,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.getAccount(account)
 		for i = 1, #self.accounts do
 			if self.accounts[i].name == account then
-				return (self.accounts[i])
+				return self.accounts[i]
 			end
 		end
-		return (nil)
+		return nil
 	end
 
 	---@param minimal boolean
 	---@return table
 	function self.getInventory(minimal)
-		if (minimal) then
+		if minimal then
 			local minimalInventory = {}
 
 			for _, v in ipairs(self.inventory) do
@@ -188,23 +188,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 				end
 			end
 
-			return (minimalInventory)
+			return minimalInventory
 		end
 
-		return (self.inventory)
+		return self.inventory
 		
 	end
 
 	---@return table
 	function self.getJob()
-		return (self.job)
+		return self.job
 	end
 
 	---@param minimal boolean
 	---@return table
 	function self.getLoadout(minimal)
 		if not (minimal) then
-			return (self.loadout)
+			return self.loadout
 		end
 		local minimalLoadout = {}
 
@@ -227,12 +227,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			end
 		end
 
-		return (minimalLoadout)
+		return minimalLoadout
 	end
 
 	---@return string
 	function self.getName()
-		return (self.name)
+		return self.name
 	end
 
 	---@param newName string
@@ -327,10 +327,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.getInventoryItem(itemName)
 		for _, v in ipairs(self.inventory) do
 			if v.name == itemName then
-				return (v)
+				return v
 			end
 		end
-		return (nil)
+		return nil
 	end
 
 	---@param itemName string
@@ -339,7 +339,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.addInventoryItem(itemName, count)
 		local item = self.getInventoryItem(itemName)
 
-		if (item) then
+		if item then
 			count = ESX.Math.Round(count)
 			item.count = item.count + count
 			self.weight = self.weight + (item.weight * count)
@@ -355,7 +355,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeInventoryItem(itemName, count)
 		local item = self.getInventoryItem(itemName)
 
-		if (item) then
+		if item then
 			count = ESX.Math.Round(count)
 			if count > 0 then
 				local newCount = item.count - count
@@ -379,7 +379,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.setInventoryItem(itemName, count)
 		local item = self.getInventoryItem(itemName)
 
-		if (item and count >= 0) then
+		if item and count >= 0 then
 			count = ESX.Math.Round(count)
 
 			if count > item.count then
@@ -392,12 +392,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 	---@return number
 	function self.getWeight()
-		return (self.weight)
+		return self.weight
 	end
 
 	---@return number
 	function self.getMaxWeight()
-		return (self.maxWeight)
+		return self.maxWeight
 	end
 
 	---@param itemName string
@@ -408,7 +408,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
 			local newWeight = currentWeight + (itemWeight * count)
 
-			return (newWeight <= self.maxWeight)
+			return newWeight <= self.maxWeight
 		else
 			print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
 		end
@@ -427,10 +427,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			local weightWithoutFirstItem = ESX.Math.Round(self.weight - (firstItemObject.weight * firstItemCount))
 			local weightWithTestItem = ESX.Math.Round(weightWithoutFirstItem + (testItemObject.weight * testItemCount))
 
-			return (weightWithTestItem <= self.maxWeight)
+			return weightWithTestItem <= self.maxWeight
 		end
 
-		return (false)
+		return false
 	end
 
 	---@param newWeight number
@@ -505,7 +505,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.addWeaponComponent(weaponName, weaponComponent)
 		local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			local component = ESX.GetWeaponComponent(weaponName, weaponComponent)
 
 			if component then
@@ -525,7 +525,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.addWeaponAmmo(weaponName, ammoCount)
 		local _, weapon = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			weapon.ammo = weapon.ammo + ammoCount
 			_SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
 		end
@@ -537,7 +537,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.updateWeaponAmmo(weaponName, ammoCount)
 		local _, weapon = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			weapon.ammo = ammoCount
 		end
 
@@ -549,7 +549,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.setWeaponTint(weaponName, weaponTintIndex)
 		local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			local _, weaponObject <const> = ESX.GetWeapon(weaponName)
 
 			if weaponObject.tints and weaponObject.tints[weaponTintIndex] then
@@ -565,11 +565,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.getWeaponTint(weaponName)
 		local _, weapon <const> = self.getWeapon(weaponName)
 
-		if (weapon) then
-			return (weapon.tintIndex)
+		if weapon then
+			return weapon.tintIndex
 		end
 
-		return (0)
+		return 0
 		
 	end
 
@@ -579,7 +579,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		local weaponLabel, playerPed <const> = nil, _GetPlayerPed(self.source)
 
 
-		if not (playerPed) then 
+		if not playerPed then 
 
 			return print("[^1ERROR^7] xPlayer.removeWeapon ^5invalid^7 player ped!")
 		end
@@ -601,7 +601,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			end
 		end
 
-		if (weaponLabel) then
+		if weaponLabel then
 			self.triggerEvent('esx:removeInventoryItem', weaponLabel, false, true)
 		end
 	end
@@ -612,11 +612,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeaponComponent(weaponName, weaponComponent)
 		local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			---@type table
 			local component <const> = ESX.GetWeaponComponent(weaponName, weaponComponent)
 
-			if (component) then
+			if component then
 				if self.hasWeaponComponent(weaponName, weaponComponent) then
 					for k, v in ipairs(self.loadout[loadoutNum].components) do
 						if v == weaponComponent then
@@ -638,7 +638,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.removeWeaponAmmo(weaponName, ammoCount)
 		local _, weapon = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			weapon.ammo = weapon.ammo - ammoCount
 			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
 		end
@@ -650,18 +650,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.hasWeaponComponent(weaponName, weaponComponent)
 		local _, weapon <const> = self.getWeapon(weaponName)
 
-		if (weapon) then
+		if weapon then
 			for _, v in ipairs(weapon.components) do
 				if v == weaponComponent then
-					return (true)
+					return true
 				end
 			end
 
-			return (false)
+			return false
 		
 		end
 
-		return (false)
+		return false
 
 	end
 
@@ -670,23 +670,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.hasWeapon(weaponName)
 		for _, v in ipairs(self.loadout) do
 			if v.name == weaponName then
-				return (true)
+				return true
 			end
 		end
 
-		return (false)
+		return false
 	end
 
 	---@param item string
 	---@return table, number | false
 	function self.hasItem(item)
 		for _, v in ipairs(self.inventory) do
-			if (v.name == item) and (v.count >= 1) then
-				return (v), (v.count)
+			if v.name == item and v.count >= 1 then
+				return v, v.count
 			end
 		end
 
-		return (false)
+		return false
 	end
 
 	---@param weaponName string
@@ -698,7 +698,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			end
 		end
 
-		return (nil)
+		return nil
 	end
 
 	---@param msg string
@@ -735,44 +735,44 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@param subIndex any
 	---@return table
 	function self.getMeta(index, subIndex)
-		if not (index) then return (self.metadata) end
+		if not index then return self.metadata end
 
 		if type(index) ~= "string" then
-			return (print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!"))
+			return print("[^1ERROR^7] xPlayer.getMeta ^5index^7 should be ^5string^7!")
 		end
 
 		local metaData = self.metadata[index]
-		if (metaData == nil) then
-			return (Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil)
+		if metaData == nil then
+			return Config.EnableDebug and print(("[^1ERROR^7] xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
 		end
 
-		if (subIndex and type(metaData) == "table") then
+		if subIndex and type(metaData) == "table" then
 			local _type = type(subIndex)
 
-			if (_type == "string") then
+			if _type == "string" then
 				local value = metaData[subIndex]
-				return (value)
+				return value
 			end
 
-			if (_type == "table") then
+			if _type == "table" then
 				local returnValues = {}
 
 				for i = 1, #subIndex do
 					local key = subIndex[i]
-					if (type(key) == "string") then
+					if type(key) == "string" then
 						returnValues[key] = self.getMeta(index, key)
 					else
 						print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7! that contains ^5string^7, received ^5%s^7!, skipping..."):format(type(key)))
 					end
 				end
 
-				return (returnValues)
+				return returnValues
 			end
 
 			return print(("[^1ERROR^7] xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
 		end
 
-		return (metaData)
+		return metaData)
 	end
 
 	---@param index any
@@ -866,6 +866,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self[fnName] = fn(self)
 	end
 
-	return (self)
+	return self
 
 end
