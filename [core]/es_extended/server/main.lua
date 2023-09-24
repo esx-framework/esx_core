@@ -397,7 +397,7 @@ AddEventHandler('playerDropped', function(reason)
 	end
 end)
 
-AddEventHandler("esx:playerLoaded", function()
+AddEventHandler("esx:playerLoaded", function(_, xPlayer)
 	local job = xPlayer.getJob().name
 	local jobKey = ("%s:count"):format(job)
 
