@@ -607,10 +607,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
-    local TyresIndex = {           -- Wheel index list according to the number of vehicle wheels.
-        ['2'] = { 0, 4 },          -- Bike and cycle.
-        ['3'] = { 0, 1, 4, 5 },    -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ['4'] = { 0, 1, 4, 5 },    -- Vehicle with 4 wheels.
+    local TyresIndex = {             -- Wheel index list according to the number of vehicle wheels.
+        ['2'] = { 0, 4 },            -- Bike and cycle.
+        ['3'] = { 0, 1, 4, 5 },      -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+        ['4'] = { 0, 1, 4, 5 },      -- Vehicle with 4 wheels.
         ['6'] = { 0, 1, 2, 3, 4, 5 } -- Vehicle with 6 wheels.
     }
 
@@ -1077,8 +1077,8 @@ function ESX.ShowInventory()
 
     elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
 
-    for i=1, #Config.Weapons do
-        local v = Config.Weapons[i] 
+    for i = 1, #Config.Weapons do
+        local v = Config.Weapons[i]
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1097,8 +1097,8 @@ function ESX.ShowInventory()
                 canRemove = true
             }
         end
-    end 
-    
+    end
+
     ESX.CloseContext()
 
     ESX.OpenContext("right", elements, function(_, element)
@@ -1324,7 +1324,7 @@ AddEventHandler('onResourceStop', function(resourceName)
         end
     end
 end)
--- Credits to txAdmin for the list. 
+-- Credits to txAdmin for the list.
 local mismatchedTypes = {
     [`airtug`] = "automobile",       -- trailer
     [`avisa`] = "submarine",         -- boat
@@ -1365,7 +1365,7 @@ local mismatchedTypes = {
 ---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
-    if not IsModelInCdimage(model) then return end  
+    if not IsModelInCdimage(model) then return end
     if mismatchedTypes[model] then
         return mismatchedTypes[model]
     end
