@@ -336,34 +336,17 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then
-        ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
-            if cb then
-                local obj = NetworkGetEntityFromNetworkId(NetworkID)
-                local Tries = 0
-                while not DoesEntityExist(obj) do
-                    obj = NetworkGetEntityFromNetworkId(NetworkID)
-                    Wait(0)
-                    Tries = Tries + 1
-                    if Tries > 250 then
-                        break
-                    end
-                end
-                cb(obj)
-            end
-        end, object, coords, 0.0)
-    else
-        local model = type(object) == 'number' and object or joaat(object)
-        local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-        CreateThread(function()
-            ESX.Streaming.RequestModel(model)
+    
+    local model = type(object) == 'number' and object or joaat(object)
+    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+    CreateThread(function()
+        ESX.Streaming.RequestModel(model)
 
-            local obj = CreateObject(model, vector.xyz, networked, false, true)
-            if cb then
-                cb(obj)
-            end
-        end)
-    end
+        local obj = CreateObject(model, vector.xyz, networked, false, true)
+        if cb then
+            cb(obj)
+        end
+    end)
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
