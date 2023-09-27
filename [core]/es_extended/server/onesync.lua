@@ -86,8 +86,8 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
 	local vehicleProperties = properties
 
 	CreateThread(function()
-		local players = GetPlayers() 
-		ESX.GetVehicleType(vehicleModel, players[math.random(1, #players)], function(vehicleType)
+		local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
+		ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
 			if vehicleType then
 				local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords, heading)
 				if not DoesEntityExist(createdVehicle) then
