@@ -426,13 +426,14 @@ function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
     local active = GetActivePlayers() 
 
     for i=1, #active do 
-        local ped = GetPlayerPed(active[i]) 
+        local currentPlayer = active[i]
+        local ped = GetPlayerPed(currentPlayer) 
 
-        if DoesEntityExist(ped) and ((onlyOtherPlayers and active[i] ~= myPlayer) or not onlyOtherPlayers) then 
+        if DoesEntityExist(ped) and ((onlyOtherPlayers and currentPlayer ~= myPlayer) or not onlyOtherPlayers) then 
             if returnKeyValue then 
-                players[active[i]] = ped 
+                players[currentPlayer] = ped 
             else 
-                players[#players + 1] = returnPeds and ped or active[i]
+                players[#players + 1] = returnPeds and ped or currentPlayer
             end
         end 
     end 
