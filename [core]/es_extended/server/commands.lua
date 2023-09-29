@@ -447,13 +447,13 @@ end, true)
 ESX.RegisterCommand('job', { "user", "admin" }, function(xPlayer, _, _)
 	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getName(), xPlayer.getJob().name,
 		xPlayer.getJob().grade_label))
-end, true)
+end, false)
 
 ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer)
 	local job = xPlayer.getJob().name
 	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(),
 		xPlayer.getGroup(), job))
-end, true)
+end, false)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer)
 	local ped = GetPlayerPed(xPlayer.source)
@@ -461,7 +461,7 @@ ESX.RegisterCommand('coords', "admin", function(xPlayer)
 	local heading = GetEntityHeading(ped)
 	print(('Coords - Vector3: ^5%s^0'):format(vector3(coords.x, coords.y, coords.z)))
 	print(('Coords - Vector4: ^5%s^0'):format(vector4(coords.x, coords.y, coords.z, heading)))
-end, true)
+end, false)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer)
 	xPlayer.triggerEvent("esx:tpm")
@@ -471,7 +471,7 @@ ESX.RegisterCommand('tpm', "admin", function(xPlayer)
 			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 		})
 	end
-end, true)
+end, false)
 
 ESX.RegisterCommand('goto', "admin", function(xPlayer, args)
 	local targetCoords = args.playerId.getCoords()
@@ -484,7 +484,7 @@ ESX.RegisterCommand('goto', "admin", function(xPlayer, args)
 			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {
+end, false, {
 	help = TranslateCap('command_goto'),
 	validate = true,
 	arguments = {
@@ -504,7 +504,7 @@ ESX.RegisterCommand('bring', "admin", function(xPlayer, args)
 			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {
+end, false, {
 	help = TranslateCap('command_bring'),
 	validate = true,
 	arguments = {

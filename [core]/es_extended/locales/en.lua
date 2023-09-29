@@ -232,12 +232,12 @@ Locales["en"] = {
   ["weapon_precisionrifle"] = "Precision Rifle",
   ["weapon_tactilerifle"] = "Service Carbine",
 
-  -- Drug wars dlc 
+  -- Drug wars dlc
   ["weapon_candycane"] = "Candycane",
   ["weapon_acidpackage"] = "Acid Package",
-  ["weapon_pistolxm3"] = "Pistol8 x3m", 
-  ["weapon_railgunxm3"] = "Railgun", 
-    
+  ["weapon_pistolxm3"] = "Pistol8 x3m",
+  ["weapon_railgunxm3"] = "Railgun",
+
   -- Thrown
   ["weapon_ball"] = "Baseball",
   ["weapon_bzgas"] = "BZ Gas",
