@@ -25,32 +25,19 @@ function ESX.GetPlayerData()
 end
 
 function ESX.SearchInventory(items, count)
-    if type(items) == 'string' then
-        items = { items }
-    end
+    items = type(items) == 'string' and { items } or items
 
-    local returnData = {}
-    local itemCount = #items
+    local data = {} 
+    for i=1, #items do 
+        for c=1, #ESX.PlayerData.inventory do 
+            if ESX.PlayerData.inventory[c].name == items[i] then 
+                data[items[i]] = (count and ESX.PlayerData.inventory[c].count) or ESX.PlayerData.inventory[c]
+            end 
+        end 
+    end 
 
-    for i = 1, itemCount do
-        local itemName = items[i]
-        returnData[itemName] = count and 0
-
-        for _, item in pairs(ESX.PlayerData.inventory) do
-            if item.name == itemName then
-                if count then
-                    returnData[itemName] = returnData[itemName] + item.count
-                else
-                    returnData[itemName] = item
-                end
-            end
-        end
-    end
-
-    if next(returnData) then
-        return itemCount == 1 and returnData[items[1]] or returnData
-    end
-end
+    return #items > 1 and data or data[1]
+end 
 
 function ESX.SetPlayerData(key, val)
     local current = ESX.PlayerData[key]
@@ -372,12 +359,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
     if not vector or not playerCoords then
         return
     end
-    local dist = #(playerCoords - vector)
-    if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
-        local executingResource = GetInvokingResource() or "Unknown"
-        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
-    end
-
+  
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
@@ -420,20 +402,19 @@ function ESX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPeds(onlyOtherPeds)
-    local myPed, pool = ESX.PlayerData.ped, GetGamePool('CPed')
+    local pool = GetGamePool('CPed')
 
-    if not onlyOtherPeds then
-        return pool
-    end
-
-    local peds = {}
-    for i = 1, #pool do
-        if pool[i] ~= myPed then
-            peds[#peds + 1] = pool[i]
+    if onlyOtherPeds then
+        local myPed = ESX.PlayerData.ped 
+        for i = 1, #pool do
+            if pool[i] == myPed then
+                table.remove(pool, i) 
+                break 
+            end
         end
-    end
+    end 
 
-    return peds
+    return pool
 end
 
 function ESX.Game.GetVehicles() -- Leave the function for compatibility
@@ -442,18 +423,19 @@ end
 
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
     local players, myPlayer = {}, PlayerId()
+    local active = GetActivePlayers() 
 
-    for _, player in ipairs(GetActivePlayers()) do
-        local ped = GetPlayerPed(player)
+    for i=1, #active do 
+        local ped = GetPlayerPed(active[i]) 
 
-        if DoesEntityExist(ped) and ((onlyOtherPlayers and player ~= myPlayer) or not onlyOtherPlayers) then
-            if returnKeyValue then
-                players[player] = ped
-            else
+        if DoesEntityExist(ped) and ((onlyOtherPlayers and active[i] ~= myPlayer) or not onlyOther) then 
+            if returnKeyValue then 
+                players[active[i]] = ped 
+            else 
                 players[#players + 1] = returnPeds and ped or player
             end
-        end
-    end
+        end 
+    end 
 
     return players
 end
@@ -978,12 +960,8 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
     local camCoords = GetFinalRenderedCamCoord()
     local distance = #(vector - camCoords)
 
-    if not size then
-        size = 1
-    end
-    if not font then
-        font = 0
-    end
+    size = size or 1
+    font = font or 0 
 
     local scale = (size / distance) * 2
     local fov = (1 / GetGameplayCamFov()) * 100
@@ -1041,8 +1019,9 @@ function ESX.ShowInventory()
         end
     end
 
-    for _, v in ipairs(ESX.PlayerData.inventory) do
-        if v.count > 0 then
+    for i=1, #ESX.PlayerData.inventory do 
+        local v = ESX.PlayerData.inventory[i]
+        if v.count > 0 then 
             currentWeight = currentWeight + (v.weight * v.count)
 
             elements[#elements + 1] = {
@@ -1055,8 +1034,8 @@ function ESX.ShowInventory()
                 rare = v.rare,
                 canRemove = v.canRemove
             }
-        end
-    end
+        end 
+    end 
 
     elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
 
