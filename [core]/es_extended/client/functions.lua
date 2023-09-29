@@ -432,7 +432,7 @@ function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
             if returnKeyValue then 
                 players[active[i]] = ped 
             else 
-                players[#players + 1] = returnPeds and ped or player
+                players[#players + 1] = returnPeds and ped or active[i]
             end
         end 
     end 
