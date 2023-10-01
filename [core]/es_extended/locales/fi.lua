@@ -52,7 +52,7 @@ Locales["fi"] = {
 
 	["act_imp"] = "Toiminto mahdoton",
 	["in_vehicle"] = "Et voi antaa ajoneuvossa olevalle mitään",
-	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
+	["not_in_vehicle"] = "Toimintoa ei voida suorittaa, pelaaja ei ole ajoneuvossa",
 
 	-- Commands
 	['command_car'] = 'Luo ajoneuvo',
@@ -90,10 +90,10 @@ Locales["fi"] = {
 	['command_setcoords_x'] = 'x akseli',
 	['command_setcoords_y'] = 'y akseli',
 	['command_setcoords_z'] = 'z akseli',
-	['command_setjob'] = 'Aseta pelaajalle työ',
-	['command_setjob_job'] = 'Työ',
+	['command_setjob'] = 'Aseta pelaajalle ammatti',
+	['command_setjob_job'] = 'Ammatti',
 	['command_setjob_grade'] = 'Arvo',
-	['command_setjob_invalid'] = 'Työ ja arvo tai molemmat ovat virheellisiä',
+	['command_setjob_invalid'] = 'Ammatti ja arvo tai molemmat ovat virheellisiä',
 	['command_setgroup'] = 'Aseta pelaajan ryhmä',
 	['command_setgroup_group'] = 'Ryhmän nimi',
 	['commanderror_argumentmismatch'] = 'Argumenttien määrä ei täsmää (hyväksytty %s, haluttu %s)',
@@ -111,13 +111,13 @@ Locales["fi"] = {
 
 	-- Locale settings
 	["locale_digit_grouping_symbol"] = "",
-	["locale_currency"] = "$%s",
+	["locale_currency"] = "€%s",
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',  -- not translated
-	['weapon_acidpackage'] = 'Acid Package', -- not translated
-	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun',    -- not translated
+	['weapon_candycane'] = 'Karkkitanko',
+	['weapon_acidpackage'] = 'Happo pakkaus',
+	['weapon_pistolxm3'] = 'WM 29 Pistooli',
+	['weapon_railgunxm3'] = 'Raidetykki',
 
 	-- Weapons
 	["weapon_knife"] = "Veitsi",
@@ -194,7 +194,7 @@ Locales["fi"] = {
 	["gadget_parachute"] = "Laskuvarjo",
 	["weapon_flare"] = "Hätäraketti",
 	["weapon_doubleaction"] = "Double action revolveri",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
+	["weapon_heavyrifle"] = "Raskas kivääri",
 
 	-- Weapon Components
 	["component_clip_default"] = "Oletus lipas",
