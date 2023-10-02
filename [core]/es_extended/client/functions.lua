@@ -359,6 +359,12 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
     if not vector or not playerCoords then
         return
     end
+
+    local dist = #(playerCoords - vector)
+    if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
+        local executingResource = GetInvokingResource() or "Unknown"
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
+    end
   
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
