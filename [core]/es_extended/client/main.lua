@@ -309,13 +309,13 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:removeInventoryItem')
 	AddEventHandler('esx:removeInventoryItem', function(item, count, showNotification)
-		for k, v in ipairs(ESX.PlayerData.inventory) do
-			if v.name == item then
-				ESX.UI.ShowInventoryItemNotification(false, v.label, v.count - count)
-				ESX.PlayerData.inventory[k].count = count
+		for i=1, #ESX.PlayerData.inventory do 
+			if ESX.PlayerData.inventory[i].name == item then 
+				ESX.UI.ShowInventoryItemNotification(false, ESX.PlayerData.inventory[i].label, ESX.PlayerData.inventory[i].count - count)
+				ESX.PlayerData.inventory[i].count = count
 				break
-			end
-		end
+			end 
+		end 
 
 		if showNotification then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
