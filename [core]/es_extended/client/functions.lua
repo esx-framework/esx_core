@@ -36,7 +36,7 @@ function ESX.SearchInventory(items, count)
         end 
     end 
 
-    return #items > 1 and data or data[items[1]]
+    return #items == 1 and data[items[1]] or data
 end 
 
 function ESX.SetPlayerData(key, val)
