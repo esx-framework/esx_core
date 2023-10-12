@@ -317,7 +317,7 @@ Config.Weapons = {
 			{ name = 'grip',          label = TranslateCap('component_grip'),          hash = `COMPONENT_AT_AR_AFGRIP` }
 		}
 	},
-	{ name = 'WEAPON_MUSKET',     label = TranslateCap('weapon_musket'),     tints = Config.DefaultWeaponTints,                               components = {},                   ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SHOTGUN` } },
+	{ name = 'WEAPON_MUSKET',     label = TranslateCap('weapon_musket'),     tints = Config.DefaultWeaponTints,                                 components = {},                   ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SHOTGUN` } },
 	{
 		name = 'WEAPON_PUMPSHOTGUN',
 		label = TranslateCap('weapon_pumpshotgun'),
@@ -824,6 +824,21 @@ Config.Weapons = {
 			{ name = 'camo_finish11',    label = TranslateCap('component_camo_finish11'),    hash = `COMPONENT_SPECIALCARBINE_MK2_CAMO_IND_01` }
 		}
 	},
+	{
+		name = 'WEAPON_HEAVYRIFLE',
+		label = TranslateCap('weapon_heavyrifle'),
+		ammo = {label = TranslateCap('ammo_rounds'), hash = `AMMO_RIFLE`},
+		tints = Config.DefaultWeaponTints,
+		components = {
+			{name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_HEAVYRIFLE_CLIP_01`},
+			{name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_HEAVYRIFLE_CLIP_02`},
+			{name = 'scope_holo', label = TranslateCap('component_scope_holo'), hash = `COMPONENT_HEAVYRIFLE_SIGHT_01` },
+			{name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MEDIUM` },
+			{name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH`},
+			{name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP`},
+			{name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP`}
+		}
+	},
 	-- Sniper
 	{
 		name = 'WEAPON_HEAVYSNIPER',
@@ -937,14 +952,14 @@ Config.Weapons = {
 		}
 	},
 	-- Heavy / Launchers
-	{ name = 'WEAPON_COMPACTLAUNCHER',  label = TranslateCap('weapon_compactlauncher'),  tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_grenadelauncher'), hash = `AMMO_GRENADELAUNCHER` } },
+	{ name = 'WEAPON_COMPACTLAUNCHER',  label = TranslateCap('weapon_compactlauncher'),  tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_grenadelauncher'), hash = `AMMO_GRENADELAUNCHER` } },
 	{ name = 'WEAPON_FIREWORK',         label = TranslateCap('weapon_firework'),         components = {},                   ammo = { label = TranslateCap('ammo_firework'), hash = `AMMO_FIREWORK` } },
-	{ name = 'WEAPON_GRENADELAUNCHER',  label = TranslateCap('weapon_grenadelauncher'),  tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_grenadelauncher'), hash = `AMMO_GRENADELAUNCHER` } },
-	{ name = 'WEAPON_HOMINGLAUNCHER',   label = TranslateCap('weapon_hominglauncher'),   tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_rockets'), hash = `AMMO_HOMINGLAUNCHER` } },
-	{ name = 'WEAPON_MINIGUN',          label = TranslateCap('weapon_minigun'),          tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MINIGUN` } },
-	{ name = 'WEAPON_RAILGUN',          label = TranslateCap('weapon_railgun'),          tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_RAILGUN` } },
-	{ name = 'WEAPON_RPG',              label = TranslateCap('weapon_rpg'),              tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_rockets'), hash = `AMMO_RPG` } },
-	{ name = 'WEAPON_RAYMINIGUN',       label = TranslateCap('weapon_rayminigun'),       tints = Config.DefaultWeaponTints, components = {},                                                             ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MINIGUN` } },
+	{ name = 'WEAPON_GRENADELAUNCHER',  label = TranslateCap('weapon_grenadelauncher'),  tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_grenadelauncher'), hash = `AMMO_GRENADELAUNCHER` } },
+	{ name = 'WEAPON_HOMINGLAUNCHER',   label = TranslateCap('weapon_hominglauncher'),   tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_rockets'), hash = `AMMO_HOMINGLAUNCHER` } },
+	{ name = 'WEAPON_MINIGUN',          label = TranslateCap('weapon_minigun'),          tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MINIGUN` } },
+	{ name = 'WEAPON_RAILGUN',          label = TranslateCap('weapon_railgun'),          tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_RAILGUN` } },
+	{ name = 'WEAPON_RPG',              label = TranslateCap('weapon_rpg'),              tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_rockets'), hash = `AMMO_RPG` } },
+	{ name = 'WEAPON_RAYMINIGUN',       label = TranslateCap('weapon_rayminigun'),       tints = Config.DefaultWeaponTints, components = {},                                                               ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MINIGUN` } },
 	-- Thrown
 	{ name = 'WEAPON_BALL',             label = TranslateCap('weapon_ball'),             components = {},                   ammo = { label = TranslateCap('ammo_ball'), hash = `AMMO_BALL` } },
 	{ name = 'WEAPON_BZGAS',            label = TranslateCap('weapon_bzgas'),            components = {},                   ammo = { label = TranslateCap('ammo_bzgas'), hash = `AMMO_BZGAS` } },

@@ -25,32 +25,19 @@ function ESX.GetPlayerData()
 end
 
 function ESX.SearchInventory(items, count)
-    if type(items) == 'string' then
-        items = { items }
-    end
+    items = type(items) == 'string' and { items } or items
 
-    local returnData = {}
-    local itemCount = #items
+    local data = {} 
+    for i=1, #items do 
+        for c=1, #ESX.PlayerData.inventory do 
+            if ESX.PlayerData.inventory[c].name == items[i] then 
+                data[items[i]] = (count and ESX.PlayerData.inventory[c].count) or ESX.PlayerData.inventory[c]
+            end 
+        end 
+    end 
 
-    for i = 1, itemCount do
-        local itemName = items[i]
-        returnData[itemName] = count and 0
-
-        for _, item in pairs(ESX.PlayerData.inventory) do
-            if item.name == itemName then
-                if count then
-                    returnData[itemName] = returnData[itemName] + item.count
-                else
-                    returnData[itemName] = item
-                end
-            end
-        end
-    end
-
-    if next(returnData) then
-        return itemCount == 1 and returnData[items[1]] or returnData
-    end
-end
+    return #items == 1 and data[items[1]] or data
+end 
 
 function ESX.SetPlayerData(key, val)
     local current = ESX.PlayerData[key]
@@ -70,17 +57,17 @@ function ESX.Progressbar(message, length, Options)
     print("[^1ERROR^7] ^5ESX Progressbar^7 is Missing!")
 end
 
-function ESX.ShowNotification(message, type, length)
+function ESX.ShowNotification(message, notifyType, length)
     if GetResourceState("esx_notify") ~= "missing" then
-        return exports["esx_notify"]:Notify(type, length, message)
+        return exports["esx_notify"]:Notify(notifyType, length, message)
     end
 
     print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
 end
 
-function ESX.TextUI(message, type)
+function ESX.TextUI(message, notifyType)
     if GetResourceState("esx_textui") ~= "missing" then
-        return exports["esx_textui"]:TextUI(message, type)
+        return exports["esx_textui"]:TextUI(message, notifyType)
     end
 
     print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
@@ -140,40 +127,23 @@ ESX.HashString = function(str)
     return input_map
 end
 
-if GetResourceState("esx_context") ~= "missing" then
-    function ESX.OpenContext(...)
-        exports["esx_context"]:Open(...)
-    end
+local contextAvailable = GetResourceState("esx_context") ~= "missing"
 
-    function ESX.PreviewContext(...)
-        exports["esx_context"]:Preview(...)
-    end
-
-    function ESX.CloseContext(...)
-        exports["esx_context"]:Close(...)
-    end
-
-    function ESX.RefreshContext(...)
-        exports["esx_context"]:Refresh(...)
-    end
-else
-    function ESX.OpenContext()
-        print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.PreviewContext()
-        print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.CloseContext()
-        print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
-    end
-
-    function ESX.RefreshContext()
-        print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
-    end
+function ESX.OpenContext(...)
+    return contextAvailable and exports["esx_context"]:Open(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
 end
 
+function ESX.PreviewContext(...)
+    return contextAvailable and exports["esx_context"]:Preview(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
+end
+
+function ESX.CloseContext(...)
+    return contextAvailable and exports["esx_context"]:Close(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
+end
+
+function ESX.RefreshContext(...)
+    return contextAvailable and exports["esx_context"]:Refresh(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
+end
 
 ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
     RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
@@ -184,18 +154,19 @@ ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on
     RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
 end
 
-function ESX.UI.Menu.RegisterType(type, open, close)
-    ESX.UI.Menu.RegisteredTypes[type] = {
+function ESX.UI.Menu.RegisterType(menuType, open, close)
+    ESX.UI.Menu.RegisteredTypes[menuType] = {
         open = open,
         close = close
     }
 end
 
-function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, close)
+function ESX.UI.Menu.Open(menuType, namespace, name, data, submit, cancel, change, close)
     local menu = {}
 
-    menu.type = type
+    menu.type = menuType
     menu.namespace = namespace
+    menu.resourceName = (GetInvokingResource() or "Unknown")
     menu.name = name
     menu.data = data
     menu.submit = submit
@@ -203,11 +174,11 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
     menu.change = change
 
     menu.close = function()
-        ESX.UI.Menu.RegisteredTypes[type].close(namespace, name)
+        ESX.UI.Menu.RegisteredTypes[menuType].close(namespace, name)
 
         for i = 1, #ESX.UI.Menu.Opened, 1 do
             if ESX.UI.Menu.Opened[i] then
-                if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and
+                if ESX.UI.Menu.Opened[i].type == menuType and ESX.UI.Menu.Opened[i].namespace == namespace and
                     ESX.UI.Menu.Opened[i].name == name then
                     ESX.UI.Menu.Opened[i] = nil
                 end
@@ -238,7 +209,7 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
     end
 
     menu.refresh = function()
-        ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
+        ESX.UI.Menu.RegisteredTypes[menuType].open(namespace, name, menu.data)
     end
 
     menu.setElement = function(i, key, val)
@@ -267,15 +238,15 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
     end
 
     ESX.UI.Menu.Opened[#ESX.UI.Menu.Opened + 1] = menu
-    ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
+    ESX.UI.Menu.RegisteredTypes[menuType].open(namespace, name, data)
 
     return menu
 end
 
-function ESX.UI.Menu.Close(type, namespace, name)
+function ESX.UI.Menu.Close(menuType, namespace, name)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
-            if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and
+            if ESX.UI.Menu.Opened[i].type == menuType and ESX.UI.Menu.Opened[i].namespace == namespace and
                 ESX.UI.Menu.Opened[i].name == name then
                 ESX.UI.Menu.Opened[i].close()
                 ESX.UI.Menu.Opened[i] = nil
@@ -293,10 +264,10 @@ function ESX.UI.Menu.CloseAll()
     end
 end
 
-function ESX.UI.Menu.GetOpened(type, namespace, name)
+function ESX.UI.Menu.GetOpened(menuType, namespace, name)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
-            if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and
+            if ESX.UI.Menu.Opened[i].type == menuType and ESX.UI.Menu.Opened[i].namespace == namespace and
                 ESX.UI.Menu.Opened[i].name == name then
                 return ESX.UI.Menu.Opened[i]
             end
@@ -308,8 +279,8 @@ function ESX.UI.Menu.GetOpenedMenus()
     return ESX.UI.Menu.Opened
 end
 
-function ESX.UI.Menu.IsOpen(type, namespace, name)
-    return ESX.UI.Menu.GetOpened(type, namespace, name) ~= nil
+function ESX.UI.Menu.IsOpen(menuType, namespace, name)
+    return ESX.UI.Menu.GetOpened(menuType, namespace, name) ~= nil
 end
 
 function ESX.UI.ShowInventoryItemNotification(add, item, count)
@@ -352,34 +323,17 @@ end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
     networked = networked == nil and true or networked
-    if networked then
-        ESX.TriggerServerCallback('esx:Onesync:SpawnObject', function(NetworkID)
-            if cb then
-                local obj = NetworkGetEntityFromNetworkId(NetworkID)
-                local Tries = 0
-                while not DoesEntityExist(obj) do
-                    obj = NetworkGetEntityFromNetworkId(NetworkID)
-                    Wait(0)
-                    Tries = Tries + 1
-                    if Tries > 250 then
-                        break
-                    end
-                end
-                cb(obj)
-            end
-        end, object, coords, 0.0)
-    else
-        local model = type(object) == 'number' and object or joaat(object)
-        local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-        CreateThread(function()
-            ESX.Streaming.RequestModel(model)
+    
+    local model = type(object) == 'number' and object or joaat(object)
+    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+    CreateThread(function()
+        ESX.Streaming.RequestModel(model)
 
-            local obj = CreateObject(model, vector.xyz, networked, false, true)
-            if cb then
-                cb(obj)
-            end
-        end)
-    end
+        local obj = CreateObject(model, vector.xyz, networked, false, true)
+        if cb then
+            cb(obj)
+        end
+    end)
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
@@ -405,12 +359,13 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
     if not vector or not playerCoords then
         return
     end
+
     local dist = #(playerCoords - vector)
     if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
         local executingResource = GetInvokingResource() or "Unknown"
         return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
-
+  
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
@@ -453,20 +408,19 @@ function ESX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPeds(onlyOtherPeds)
-    local myPed, pool = ESX.PlayerData.ped, GetGamePool('CPed')
+    local pool = GetGamePool('CPed')
 
-    if not onlyOtherPeds then
-        return pool
-    end
-
-    local peds = {}
-    for i = 1, #pool do
-        if pool[i] ~= myPed then
-            peds[#peds + 1] = pool[i]
+    if onlyOtherPeds then
+        local myPed = ESX.PlayerData.ped 
+        for i = 1, #pool do
+            if pool[i] == myPed then
+                table.remove(pool, i) 
+                break 
+            end
         end
-    end
+    end 
 
-    return peds
+    return pool
 end
 
 function ESX.Game.GetVehicles() -- Leave the function for compatibility
@@ -475,18 +429,20 @@ end
 
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
     local players, myPlayer = {}, PlayerId()
+    local active = GetActivePlayers() 
 
-    for _, player in ipairs(GetActivePlayers()) do
-        local ped = GetPlayerPed(player)
+    for i=1, #active do 
+        local currentPlayer = active[i]
+        local ped = GetPlayerPed(currentPlayer) 
 
-        if DoesEntityExist(ped) and ((onlyOtherPlayers and player ~= myPlayer) or not onlyOtherPlayers) then
-            if returnKeyValue then
-                players[player] = ped
-            else
-                players[#players + 1] = returnPeds and ped or player
+        if DoesEntityExist(ped) and ((onlyOtherPlayers and currentPlayer ~= myPlayer) or not onlyOtherPlayers) then 
+            if returnKeyValue then 
+                players[currentPlayer] = ped 
+            else 
+                players[#players + 1] = returnPeds and ped or currentPlayer
             end
-        end
-    end
+        end 
+    end 
 
     return players
 end
@@ -614,24 +570,19 @@ function ESX.Game.GetVehicleProperties(vehicle)
     end
 
     local extras = {}
-    for extraId = 0, 12 do
+    for extraId = 0, 20 do
         if DoesExtraExist(vehicle, extraId) then
             extras[tostring(extraId)] = IsVehicleExtraTurnedOn(vehicle, extraId)
         end
     end
 
-    local driftTyresEnabled = false
-    if type(GetDriftTyresEnabled(vehicle) == "boolean") and GetDriftTyresEnabled(vehicle) then
-        driftTyresEnabled = true
-    end
-
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
-    local TyresIndex = {           -- Wheel index list according to the number of vehicle wheels.
-        ['2'] = { 0, 4 },          -- Bike and cycle.
-        ['3'] = { 0, 1, 4, 5 },    -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ['4'] = { 0, 1, 4, 5 },    -- Vehicle with 4 wheels.
+    local TyresIndex = {             -- Wheel index list according to the number of vehicle wheels.
+        ['2'] = { 0, 4 },            -- Bike and cycle.
+        ['3'] = { 0, 1, 4, 5 },      -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+        ['4'] = { 0, 1, 4, 5 },      -- Vehicle with 4 wheels.
         ['6'] = { 0, 1, 2, 3, 4, 5 } -- Vehicle with 6 wheels.
     }
 
@@ -641,7 +592,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
-    for windowId = 0, 7 do -- 13
+    for windowId = 0, 7 do              -- 13
+        RollUpWindow(vehicle, windowId) --fix when you put the car away with the window down
         windowsBroken[tostring(windowId)] = not IsVehicleWindowIntact(vehicle, windowId)
     end
 
@@ -657,6 +609,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         doorsBroken = doorsBroken,
         windowsBroken = windowsBroken,
         tyreBurst = tyreBurst,
+        tyresCanBurst = GetVehicleTyresCanBurst(vehicle),
         plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
         plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
 
@@ -687,7 +640,6 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
         extras = extras,
-        dirftTyresEnabled = driftTyresEnabled,
         tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
         modSpoilers = GetVehicleMod(vehicle, 0),
@@ -701,6 +653,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modFender = GetVehicleMod(vehicle, 8),
         modRightFender = GetVehicleMod(vehicle, 9),
         modRoof = GetVehicleMod(vehicle, 10),
+        modRoofLivery = GetVehicleRoofLivery(vehicle),
 
         modEngine = GetVehicleMod(vehicle, 11),
         modBrakes = GetVehicleMod(vehicle, 12),
@@ -739,7 +692,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         modAerials = GetVehicleMod(vehicle, 43),
         modTrimB = GetVehicleMod(vehicle, 44),
         modTank = GetVehicleMod(vehicle, 45),
-        modDoorR = GetVehicleMod(vehicle, 47),
+        modWindows = GetVehicleMod(vehicle, 46),
         modLivery = GetVehicleMod(vehicle, 48) == -1 and GetVehicleLivery(vehicle) or GetVehicleMod(vehicle, 48),
         modLightbar = GetVehicleMod(vehicle, 49)
     }
@@ -752,6 +705,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     SetVehicleModKit(vehicle, 0)
+
+    if props.tyresCanBurst ~= nil then
+        SetVehicleTyresCanBurst(vehicle, props.tyresCanBurst)
+    end
 
     if props.plate ~= nil then
         SetVehicleNumberPlateText(vehicle, props.plate)
@@ -823,10 +780,6 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         end
     end
 
-    if props.driftTyresEnabled then
-        SetDriftTyresEnabled(vehicle, true)
-    end
-
     if props.neonColor ~= nil then
         SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
     end
@@ -876,6 +829,11 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.modRoof ~= nil then
         SetVehicleMod(vehicle, 10, props.modRoof, false)
     end
+
+    if props.modRoofLivery ~= nil then
+        SetVehicleRoofLivery(vehicle, props.modRoofLivery)
+    end
+
     if props.modEngine ~= nil then
         SetVehicleMod(vehicle, 11, props.modEngine, false)
     end
@@ -901,16 +859,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
         ToggleVehicleMod(vehicle, 22, props.modXenon)
     end
     if props.modFrontWheels ~= nil then
-        SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
-    end
-    if props.modCustomFrontWheels ~= nil then
-        SetVehicleMod(vehicle, 23, props.modCustomFrontWheels, false)
+        SetVehicleMod(vehicle, 23, props.modFrontWheels, props.modCustomFrontWheels)
     end
     if props.modBackWheels ~= nil then
-        SetVehicleMod(vehicle, 24, props.modBackWheels, false)
-    end
-    if props.modCustomBackWheels ~= nil then
-        SetVehicleMod(vehicle, 24, props.modCustomBackWheels, false)
+        SetVehicleMod(vehicle, 24, props.modBackWheels, props.modCustomBackWheels)
     end
     if props.modPlateHolder ~= nil then
         SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
@@ -987,7 +939,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.windowsBroken ~= nil then
         for k, v in pairs(props.windowsBroken) do
             if v then
-                SmashVehicleWindow(vehicle, tonumber(k))
+                RemoveVehicleWindow(vehicle, tonumber(k))
             end
         end
     end
@@ -1015,18 +967,14 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
     local camCoords = GetFinalRenderedCamCoord()
     local distance = #(vector - camCoords)
 
-    if not size then
-        size = 1
-    end
-    if not font then
-        font = 0
-    end
+    size = size or 1
+    font = font or 0 
 
     local scale = (size / distance) * 2
     local fov = (1 / GetGameplayCamFov()) * 100
     scale = scale * fov
 
-    SetTextScale(0.0 * scale, 0.55 * scale)
+    SetTextScale(0.0, 0.55 * scale)
     SetTextFont(font)
     SetTextProportional(1)
     SetTextColour(255, 255, 255, 215)
@@ -1056,7 +1004,7 @@ function ESX.ShowInventory()
 
     local playerPed = ESX.PlayerData.ped
     local elements = {
-        { unselectable = true, icon = 'fas fa-box', title = 'Player Inventory' }
+        { unselectable = true, icon = 'fas fa-box' }
     }
     local currentWeight = 0
 
@@ -1078,8 +1026,9 @@ function ESX.ShowInventory()
         end
     end
 
-    for _, v in ipairs(ESX.PlayerData.inventory) do
-        if v.count > 0 then
+    for i=1, #ESX.PlayerData.inventory do 
+        local v = ESX.PlayerData.inventory[i]
+        if v.count > 0 then 
             currentWeight = currentWeight + (v.weight * v.count)
 
             elements[#elements + 1] = {
@@ -1092,10 +1041,13 @@ function ESX.ShowInventory()
                 rare = v.rare,
                 canRemove = v.canRemove
             }
-        end
-    end
+        end 
+    end 
 
-    for _, v in ipairs(Config.Weapons) do
+    elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
+
+    for i = 1, #Config.Weapons do
+        local v = Config.Weapons[i]
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1115,12 +1067,6 @@ function ESX.ShowInventory()
             }
         end
     end
-
-    elements[#elements + 1] = {
-        unselectable = true,
-        icon = "fas fa-weight",
-        title = "Current Weight: " .. currentWeight
-    }
 
     ESX.CloseContext()
 
@@ -1176,7 +1122,7 @@ function ESX.ShowInventory()
         }
 
         ESX.OpenContext("right", elements2, function(_, element2)
-            local item, type = element2.value, element2.type
+            local item, itemType = element2.value, element2.type
 
             if element2.action == "give" then
                 local playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
@@ -1209,8 +1155,8 @@ function ESX.ShowInventory()
                                 local selectedPlayerPed = GetPlayerPed(selectedPlayer)
 
                                 if IsPedOnFoot(selectedPlayerPed) and not IsPedFalling(selectedPlayerPed) then
-                                    if type == 'item_weapon' then
-                                        TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, nil)
+                                    if itemType == 'item_weapon' then
+                                        TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, itemType, item, nil)
                                         ESX.CloseContext()
                                     else
                                         local elementsG = {
@@ -1219,11 +1165,11 @@ function ESX.ShowInventory()
                                             { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                                         }
 
-                                        ESX.OpenContext("right", elementsG, function(menuG)
+                                        ESX.OpenContext("right", elementsG, function(menuG, _)
                                             local quantity = tonumber(menuG.eles[2].inputValue)
 
                                             if quantity and quantity > 0 and element.count >= quantity then
-                                                TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
+                                                TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, itemType, item, quantity)
                                                 ESX.CloseContext()
                                             else
                                                 ESX.ShowNotification(TranslateCap('amount_invalid'))
@@ -1245,12 +1191,12 @@ function ESX.ShowInventory()
                     local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
                     ESX.Streaming.RequestAnimDict(dict)
 
-                    if type == 'item_weapon' then
+                    if itemType == 'item_weapon' then
                         ESX.CloseContext()
                         TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                         RemoveAnimDict(dict)
                         Wait(1000)
-                        TriggerServerEvent('esx:removeInventoryItem', type, item)
+                        TriggerServerEvent('esx:removeInventoryItem', itemType, item)
                     else
                         local elementsR = {
                             { unselectable = true,          icon = "fas fa-trash", title = element.title },
@@ -1258,7 +1204,7 @@ function ESX.ShowInventory()
                             { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                         }
 
-                        ESX.OpenContext("right", elementsR, function(menuR)
+                        ESX.OpenContext("right", elementsR, function(menuR, _)
                             local quantity = tonumber(menuR.eles[2].inputValue)
 
                             if quantity and quantity > 0 and element.count >= quantity then
@@ -1266,7 +1212,7 @@ function ESX.ShowInventory()
                                 TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                                 RemoveAnimDict(dict)
                                 Wait(1000)
-                                TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+                                TriggerServerEvent('esx:removeInventoryItem', itemType, item, quantity)
                             else
                                 ESX.ShowNotification(TranslateCap('amount_invalid'))
                             end
@@ -1293,7 +1239,7 @@ function ESX.ShowInventory()
                                 { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" }
                             }
 
-                            ESX.OpenContext("right", elementsGA, function(menuGA)
+                            ESX.OpenContext("right", elementsGA, function(menuGA, _)
                                 local quantity = tonumber(menuGA.eles[2].inputValue)
 
                                 if quantity and quantity > 0 then
@@ -1322,8 +1268,8 @@ function ESX.ShowInventory()
 end
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg, type, length)
-    ESX.ShowNotification(msg, type, length)
+AddEventHandler('esx:showNotification', function(msg, notifyType, length)
+    ESX.ShowNotification(msg, notifyType, length)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
@@ -1337,13 +1283,60 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
     ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
+AddEventHandler('onResourceStop', function(resourceName)
+    for i = 1, #ESX.UI.Menu.Opened, 1 do
+        if ESX.UI.Menu.Opened[i] then
+            if ESX.UI.Menu.Opened[i].resourceName == resourceName or ESX.UI.Menu.Opened[i].namespace == resourceName then
+                ESX.UI.Menu.Opened[i].close()
+                ESX.UI.Menu.Opened[i] = nil
+            end
+        end
+    end
+end)
+-- Credits to txAdmin for the list.
+local mismatchedTypes = {
+    [`airtug`] = "automobile",       -- trailer
+    [`avisa`] = "submarine",         -- boat
+    [`blimp`] = "heli",              -- plane
+    [`blimp2`] = "heli",             -- plane
+    [`blimp3`] = "heli",             -- plane
+    [`caddy`] = "automobile",        -- trailer
+    [`caddy2`] = "automobile",       -- trailer
+    [`caddy3`] = "automobile",       -- trailer
+    [`chimera`] = "automobile",      -- bike
+    [`docktug`] = "automobile",      -- trailer
+    [`forklift`] = "automobile",     -- trailer
+    [`kosatka`] = "submarine",       -- boat
+    [`mower`] = "automobile",        -- trailer
+    [`policeb`] = "bike",            -- automobile
+    [`ripley`] = "automobile",       -- trailer
+    [`rrocket`] = "automobile",      -- bike
+    [`sadler`] = "automobile",       -- trailer
+    [`sadler2`] = "automobile",      -- trailer
+    [`scrap`] = "automobile",        -- trailer
+    [`slamtruck`] = "automobile",    -- trailer
+    [`Stryder`] = "automobile",      -- bike
+    [`submersible`] = "submarine",   -- boat
+    [`submersible2`] = "submarine",  -- boat
+    [`thruster`] = "heli",           -- automobile
+    [`towtruck`] = "automobile",     -- trailer
+    [`towtruck2`] = "automobile",    -- trailer
+    [`tractor`] = "automobile",      -- trailer
+    [`tractor2`] = "automobile",     -- trailer
+    [`tractor3`] = "automobile",     -- trailer
+    [`trailersmall2`] = "trailer",   -- automobile
+    [`utillitruck`] = "automobile",  -- trailer
+    [`utillitruck2`] = "automobile", -- trailer
+    [`utillitruck3`] = "automobile", -- trailer
+}
+
 ---@param model number|string
 ---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
-
-    if model == `submersible` or model == `submersible2` then
-        return 'submarine'
+    if not IsModelInCdimage(model) then return end
+    if mismatchedTypes[model] then
+        return mismatchedTypes[model]
     end
 
     local vehicleType = GetVehicleClassFromName(model)

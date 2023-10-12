@@ -189,9 +189,9 @@ if Debug then
 			return
 		end
 
-		for _, ele in ipairs(menu.eles) do
-			if ele.input then
-				print(ele.name, ele.inputType, ele.inputValue)
+		for _, element in ipairs(menu.eles) do
+			if element.input then
+				print(element.name, element.inputType, element.inputValue)
 			end
 		end
 
@@ -215,7 +215,7 @@ if Debug then
 	end)
 
 	RegisterCommand("ctx:form", function()
-		local eles = {
+		local formMenu = {
 			{
 				unselectable = true,
 				icon = "fas fa-info-circle",
@@ -255,6 +255,6 @@ if Debug then
 			}
 		}
 
-		exports["esx_context"]:Open(position, eles, onSelect, onClose)
+		exports["esx_context"]:Open(position, formMenu, onSelect, onClose)
 	end)
 end

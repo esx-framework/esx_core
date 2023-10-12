@@ -1,5 +1,5 @@
 local lastSkin, cam, isCameraActive
-local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0, false
+local firstSpawn, zoomOffset, camOffset, heading = true, 0.0, 0.0, 90.0
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(_, _, skin)
@@ -147,6 +147,7 @@ function DeleteSkinCam()
 end
 
 CreateThread(function()
+    local customPI <const> = math.pi / 180.0
     while true do
         local sleep = 1500
 
@@ -164,7 +165,7 @@ CreateThread(function()
             local playerPed   = PlayerPedId()
             local coords      = GetEntityCoords(playerPed)
 
-            local angle       = heading * math.pi / 180.0
+            local angle       = heading * customPI
             local theta       = {
                 x = math.cos(angle),
                 y = math.sin(angle)
@@ -182,7 +183,7 @@ CreateThread(function()
                 angleToLook = angleToLook + 360
             end
 
-            angleToLook = angleToLook * math.pi / 180.0
+            angleToLook = angleToLook * customPI
             local thetaToLook = {
                 x = math.cos(angleToLook),
                 y = math.sin(angleToLook)

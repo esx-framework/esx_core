@@ -52,6 +52,7 @@ Locales["hu"] = {
 
 	["act_imp"] = "Érvénytelen mennyiség",
 	["in_vehicle"] = "Nem tudod átadni, mivel benne ül a jármüben",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	["command_bring"] = "Játékos magadhoz teleportálása",
@@ -59,6 +60,9 @@ Locales["hu"] = {
 	["command_car_car"] = "Jármű név vagy hash",
 	["command_cardel"] = "Közeli járművek törlése",
 	["command_cardel_radius"] = "Megadott radiusban lévő járművek törlése",
+	["command_repair"] = "Repair your vehicle",
+	["command_repair_success"] = "Successfully repaired vehicle",
+	["command_repair_success_target"] = "An admin repaired your vehicle",
 	["command_clear"] = "Chat ürítése",
 	["command_clearall"] = "Chat ürítése minden játékosnál",
 	["command_clearinventory"] = "Minden tárgy törlése a játékos inventoryból",
@@ -99,6 +103,7 @@ Locales["hu"] = {
 	["command_setgroup_group"] = "Csoport neve",
 	["commanderror_argumentmismatch"] = "Érvénytelen argumentumszám (%s megadva, %s szükséges)",
 	["commanderror_argumentmismatch_number"] = "Érvénytelen argumentum #%s adat típus (szöveg megadva, szám szükséges)",
+	['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
 	["commanderror_invaliditem"] = "Érvénytelen tárgy",
 	["commanderror_invalidweapon"] = "Érvénytelen fegyver",
 	["commanderror_console"] = "Parancs nem használható konzolból",
@@ -199,6 +204,7 @@ Locales["hu"] = {
 	["weapon_militaryrifle"] = "Military Rifle",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Heavy Sniper",
