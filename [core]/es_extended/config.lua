@@ -42,6 +42,8 @@ Config.EnableDebug               = false    -- Use Debug options?
 Config.EnableDefaultInventory    = true     -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel         = false    -- Use Normal GTA wanted Level?
 Config.EnablePVP                 = true     -- Allow Player to player combat
+Config.EnableConnectLogging		 = true		-- Captures a player's identifiers as and when they connect and store the values in the database (default is true)
+Config.EnableConnectWebhook		 = false	-- Logs players connecting to a nominated Discord channel via a webhook (default is false)
 
 Config.Multichar                 = GetResourceState("esx_multicharacter") ~= "missing"
 Config.Identity                  = true   -- Select a characters identity data before they have loaded in (this happens by default with multichar)

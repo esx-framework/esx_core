@@ -5,7 +5,8 @@ Config.DiscordLogs = {
         Chat = '',
         UserActions = '',
         Resources = '',
-        Paycheck = ''
+        Paycheck = '',
+        Connect = ''
     },
 
     Colors = { -- https://www.spycolor.com/

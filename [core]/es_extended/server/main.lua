@@ -4,6 +4,7 @@ SetGameType('ESX Legacy')
 local oneSyncState = GetConvar('onesync', 'off')
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`'
+local namecache = {}
 
 if Config.Multichar then
 	newPlayer = newPlayer .. ', `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?'
@@ -685,3 +686,44 @@ AddEventHandler('txAdmin:events:serverShuttingDown', function()
 	Core.SavePlayers()
 end)
 
+if Config.EnableConnectLogging then
+	AddEventHandler("playerConnecting", function(name, setKick, def)
+		local identifiers = GetPlayerIdentifiers(source)
+		if #identifiers > 0 and identifiers[1] ~= nil then
+			local playername = GetPlayerName(source)
+			local token = GetPlayerToken(source)
+			local saneplayername = "Adjusted Playername"
+			local steamid  = false
+			local license  = false
+			local timestamp = os.date("%d/%m/%Y at %X")
+			namecache[identifiers[1]] = playername
+			if string.gsub(playername, "[^a-zA-Z0-9]", "") ~= "" then
+				saneplayername = string.gsub(playername, "[^a-zA-Z0-9 ]", "")
+			end
+			local data = {
+				["@name"] = saneplayername,
+				["@token"] = token,
+				["@timestamp"] = os.date("%Y-%m-%d %X")
+			}
+			if Config.EnableConnectWebhook then
+				for k,v in ipairs(identifiers) do
+					data["@"..split(v,":")[1]] = v
+				end
+				for k,v in pairs(GetPlayerIdentifiers(source))do
+					if string.sub(v, 1, string.len("license:")) == "license:" then
+						license = v
+					end
+				end
+				ESX.DiscordLogFields("Connect", "Player Connection Log", "green", {
+					{ name = "User Name",			value = playername,	inline = false },
+					{ name = "Rockstar Identifier",	value = license,	inline = false },
+					{ name = "FiveM Token",			value = token,		inline = false },
+					{ name = "Connect Time",		value = timestamp,	inline = false }
+				})
+			end
+			MySQL.update("INSERT INTO `blackbook` (`license`, `ip`, `name`, `xbl`, `live`, `discord`, `fivem`, `token`, `lastconnect`) VALUES (@license, @ip, @name, @xbl, @live, @discord, @fivem, @token, @timestamp) ON DUPLICATE KEY UPDATE `license`=@license, `ip`=@ip, `name`=@name, `xbl`=@xbl, `live`=@live, `discord`=@discord, `fivem`=@fivem, `token`=@token, `lastconnect`=@timestamp", data)
+		else
+			DropPlayer(source, "[ESX Blackbook] No identifiers were found when connecting, please reconnect.")
+		end
+	end)
+end
