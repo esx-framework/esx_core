@@ -788,7 +788,7 @@ if Config.EnableConnectLogging then
 			}
 			if Config.EnableConnectWebhook then
 				for k,v in ipairs(identifiers) do
-					data["@"..split(v,":")[1]] = v
+					data["@"..ESX.Split(v,":")[1]] = v
 				end
 				for k,v in pairs(GetPlayerIdentifiers(source))do
 					if string.sub(v, 1, string.len("license:")) == "license:" then
