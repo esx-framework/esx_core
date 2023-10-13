@@ -52,6 +52,7 @@ Locales["cs"] = {
 
 	["act_imp"] = "Nelze provést",
 	["in_vehicle"] = "Nelze provést, hráč je v autě",
+	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'Přivolat si hráče k sobě',
@@ -59,6 +60,9 @@ Locales["cs"] = {
 	['command_car_car'] = 'Zadej jméno vozidla nebo spawnname',
 	['command_cardel'] = 'Odstranění vozidla v okolí',
 	['command_cardel_radius'] = 'Odstranění vozidla v určeném dosahu',
+	['command_repair'] = 'Repair your vehicle',
+	['command_repair_success'] = 'Successfully repaired vehicle',
+	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Vymazat text v chatu',
 	['command_clearall'] = 'Vymazat chet pro všechny hráče',
 	['command_clearinventory'] = 'Vymazat všechny věci z invetáře hráče',
@@ -194,6 +198,7 @@ Locales["cs"] = {
 	["weapon_militaryrifle"] = "Military Rifle",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Heavy Sniper",

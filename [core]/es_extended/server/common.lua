@@ -1,6 +1,7 @@
 ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
+ESX.JobsPlayerCount = {}
 ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
@@ -31,8 +32,9 @@ end
 
 local function StartDBSync()
 	CreateThread(function()
+		local interval <const> = 10 * 60 * 1000
 		while true do
-			Wait(10 * 60 * 1000)
+			Wait(interval)
 			Core.SavePlayers()
 		end
 	end)

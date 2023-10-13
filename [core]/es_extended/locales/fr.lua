@@ -52,6 +52,7 @@ Locales["fr"] = {
 
 	["act_imp"] = "Action impossible",
 	["in_vehicle"] = "Action impossible, le joueur est dans un véhicule",
+	["not_in_vehicle"] = "Action impossible, le joueur n'est pas dans un véhicule",
 
 	-- Commands
 	["command_bring"] = "Téléporter un joueur sur vous",
@@ -59,6 +60,9 @@ Locales["fr"] = {
 	["command_car_car"] = "Nom ou hash du véhicule",
 	["command_cardel"] = "Supprimer les véhicules à proximité",
 	["command_cardel_radius"] = "Supprime tous les véhicules dans un rayon spécifié",
+	["command_repair"] = "Réparer votre véhicule",
+	["command_repair_success"] = "Véhicule réparé avec succès",
+	["command_repair_success_target"] = "Votre véhicule a été réparé par un membre du staff",
 	["command_clear"] = "Effacer le chat",
 	["command_clearall"] = "Effacer le chat de tous les joueurs",
 	["command_clearinventory"] = "Retirer tous les objets de l'inventaire du joueur",
@@ -103,6 +107,7 @@ Locales["fr"] = {
 	["command_setgroup_group"] = "Nom du groupe à définir",
 	["commanderror_argumentmismatch"] = "Le nombre d'arguments est invalide (Argument·s donné·s: %s, Argument·s demandé·s: %s)",
 	["commanderror_argumentmismatch_number"] = "Type de données de l'argument #%s invalide (Type donné: texte, Type demandé: nombre)",
+	["commanderror_argumentmismatch_string"] = "Type de données de l'argument #%s invalide (Type donné: nombre, Type demandé: texte)",
 	["commanderror_invaliditem"] = "Le nom de l'objet est invalide",
 	["commanderror_invalidweapon"] = "Le nom de l'arme est invalide",
 	["commanderror_console"] = "Cette commande ne peut pas être éxécutée depuis la console",
@@ -203,6 +208,7 @@ Locales["fr"] = {
 	["weapon_militaryrifle"] = "Fusil militaire",
 	["weapon_specialcarbine"] = "Carabine spéciale",
 	["weapon_specialcarbine_mk2"] = "Carabine spéciale MK2",
+	["weapon_heavyrifle"] = "Fusil lourd",
 
 	-- Sniper
 	["weapon_heavysniper"] = "Sniper lourd",
@@ -225,6 +231,12 @@ Locales["fr"] = {
 	["weapon_metaldetector"] = "Détecteur de métaux",
 	["weapon_precisionrifle"] = "Fusil de précision",
 	["weapon_tactilerifle"] = "Carabine tactique",
+
+	-- Drug wars dlc
+	["weapon_candycane"] = "Sucre d'orge",
+	["weapon_acidpackage"] = "Paquet d'acide",
+	["weapon_pistolxm3"] = "Pistolet 8 x3m",
+	["weapon_railgunxm3"] = "Fusil électro-magnétique",
 
 	-- Thrown
 	["weapon_ball"] = "Base-ball",

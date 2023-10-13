@@ -52,6 +52,7 @@ Locales["en"] = {
 
   ["act_imp"] = "Cannot Perform Action",
   ["in_vehicle"] = "Cannot Perform Action, Player is in a vehicle",
+  ["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
   -- Commands
   ['command_bring'] = 'Bring player to you',
@@ -59,6 +60,9 @@ Locales["en"] = {
   ['command_car_car'] = 'Vehicle model or hash',
   ['command_cardel'] = 'Remove vehicles in proximity',
   ['command_cardel_radius'] = 'Removes all vehicles within the specified radius',
+  ['command_repair'] = 'Repair your vehicle',
+  ['command_repair_success'] = 'Successfully repaired vehicle',
+  ['command_repair_success_target'] = 'An admin repaired your vehicle',
   ['command_clear'] = 'Clear chat Text',
   ['command_clearall'] = 'Clear chat Text for all players',
   ['command_clearinventory'] = 'Remove All items from the Players Inventory',
@@ -204,6 +208,7 @@ Locales["en"] = {
   ["weapon_militaryrifle"] = "Military Rifle",
   ["weapon_specialcarbine"] = "Special Carbine",
   ["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
+  ["weapon_heavyrifle"] = "Heavy Rifle",
 
   -- Sniper
   ["weapon_heavysniper"] = "Heavy Sniper",
@@ -226,6 +231,12 @@ Locales["en"] = {
   ["weapon_metaldetector"] = "Metal Detector",
   ["weapon_precisionrifle"] = "Precision Rifle",
   ["weapon_tactilerifle"] = "Service Carbine",
+
+  -- Drug wars dlc
+  ["weapon_candycane"] = "Candycane",
+  ["weapon_acidpackage"] = "Acid Package",
+  ["weapon_pistolxm3"] = "Pistol8 x3m",
+  ["weapon_railgunxm3"] = "Railgun",
 
   -- Thrown
   ["weapon_ball"] = "Baseball",

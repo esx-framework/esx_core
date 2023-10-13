@@ -1,9 +1,9 @@
-ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args)
+ESX.RegisterCommand({'setcoords', 'tp'}, 'admin', function(xPlayer, args)
 	xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Coordinates /setcoords Triggered!", "pink", {
-			{ name = "Player",  value = xPlayer.name,   inline = true },
-			{ name = "ID",      value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "X Coord", value = args.x,         inline = true },
 			{ name = "Y Coord", value = args.y,         inline = true },
 			{ name = "Z Coord", value = args.z,         inline = true },
@@ -13,9 +13,9 @@ end, false, {
 	help = TranslateCap('command_setcoords'),
 	validate = true,
 	arguments = {
-		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'number' },
-		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'number' },
-		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'number' }
+		{ name = 'x', help = TranslateCap('command_setcoords_x'), type = 'coordinate' },
+		{ name = 'y', help = TranslateCap('command_setcoords_y'), type = 'coordinate' },
+		{ name = 'z', help = TranslateCap('command_setcoords_z'), type = 'coordinate' }
 	}
 })
 
@@ -27,11 +27,11 @@ ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	args.playerId.setJob(args.job, args.grade)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Job /setjob Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,       inline = true },
-			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
-			{ name = "Job",    value = args.playerId,      inline = true },
-			{ name = "Grade",  value = args.playerId,      inline = true },
+			{ name = "Job",    value = args.job,           inline = true },
+			{ name = "Grade",  value = args.grade,         inline = true },
 		})
 	end
 end, true, {
@@ -75,8 +75,8 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Spawn Car /car Triggered!", "pink", {
-			{ name = "Player",  value = xPlayer.name,   inline = true },
-			{ name = "ID",      value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Vehicle", value = args.car,       inline = true }
 		})
 	end
@@ -120,8 +120,8 @@ ESX.RegisterCommand({ 'cardel', 'dv' }, 'admin', function(xPlayer, args)
 	end
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Delete Vehicle /dv Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,   inline = true },
-			{ name = "ID",     value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 		})
 	end
 end, false, {
@@ -132,6 +132,34 @@ end, false, {
 	}
 })
 
+ESX.RegisterCommand({ 'fix', 'repair' }, 'admin', function(xPlayer, args, showError)
+    local xTarget = args.playerId
+	local ped = GetPlayerPed(xTarget.source)
+	local pedVehicle = GetVehiclePedIsIn(ped, false)
+	if not pedVehicle or GetPedInVehicleSeat(pedVehicle, -1) ~= ped then
+		showError(TranslateCap('not_in_vehicle'))
+		return
+	end
+	xTarget.triggerEvent("esx:repairPedVehicle")
+	xPlayer.showNotification(TranslateCap('command_repair_success'), true, false, 140)
+	if xPlayer.source ~= xTarget.source then
+		xTarget.showNotification(TranslateCap('command_repair_success_target'), true, false, 140)
+	end
+	if Config.AdminLogging then
+		ESX.DiscordLogFields("UserActions", "Fix Vehicle /fix Triggered!", "pink", {
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
+			{ name = "Target",  value = xTarget.name, inline = true },
+		})
+	end
+end, true, {
+	help = TranslateCap('command_repair'),
+	validate = false,
+	arguments = {
+		{ name = 'playerId', help = TranslateCap('commandgeneric_playerid'), type = 'player' }
+	}
+})
+
 ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if not args.playerId.getAccount(args.account) then
 		return showError(TranslateCap('command_giveaccountmoney_invalid'))
@@ -139,8 +167,8 @@ ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showErro
 	args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Set Account Money /setaccountmoney Triggered!", "pink", {
-			{ name = "Player",  value = xPlayer.name,       inline = true },
-			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target",  value = args.playerId.name, inline = true },
 			{ name = "Account", value = args.account,       inline = true },
 			{ name = "Amount",  value = args.amount,        inline = true },
@@ -163,8 +191,8 @@ ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showErr
 	args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Give Account Money /giveaccountmoney Triggered!", "pink", {
-			{ name = "Player",  value = xPlayer.name,       inline = true },
-			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target",  value = args.playerId.name, inline = true },
 			{ name = "Account", value = args.account,       inline = true },
 			{ name = "Amount",  value = args.amount,        inline = true },
@@ -187,8 +215,8 @@ ESX.RegisterCommand('removeaccountmoney', 'admin', function(xPlayer, args, showE
 	args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Remove Account Money /removeaccountmoney Triggered!", "pink", {
-			{ name = "Player",  value = xPlayer.name,       inline = true },
-			{ name = "ID",      value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target",  value = args.playerId.name, inline = true },
 			{ name = "Account", value = args.account,       inline = true },
 			{ name = "Amount",  value = args.amount,        inline = true },
@@ -209,8 +237,8 @@ if not Config.OxInventory then
 		args.playerId.addInventoryItem(args.item, args.count)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Item /giveitem Triggered!", "pink", {
-				{ name = "Player",   value = xPlayer.name,       inline = true },
-				{ name = "ID",       value = xPlayer.source,     inline = true },
+				{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+				{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 				{ name = "Target",   value = args.playerId.name, inline = true },
 				{ name = "Item",     value = args.item,          inline = true },
 				{ name = "Quantity", value = args.count,         inline = true },
@@ -233,8 +261,8 @@ if not Config.OxInventory then
 		args.playerId.addWeapon(args.weapon, args.ammo)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Weapon /giveweapon Triggered!", "pink", {
-				{ name = "Player", value = xPlayer.name,       inline = true },
-				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+				{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 				{ name = "Target", value = args.playerId.name, inline = true },
 				{ name = "Weapon", value = args.weapon,        inline = true },
 				{ name = "Ammo",   value = args.ammo,          inline = true },
@@ -257,8 +285,8 @@ if not Config.OxInventory then
 		args.playerId.addWeaponAmmo(args.weapon, args.ammo)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Give Ammunition /giveammo Triggered!", "pink", {
-				{ name = "Player", value = xPlayer.name,       inline = true },
-				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+				{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 				{ name = "Target", value = args.playerId.name, inline = true },
 				{ name = "Weapon", value = args.weapon,        inline = true },
 				{ name = "Ammo",   value = args.ammo,          inline = true },
@@ -286,8 +314,8 @@ if not Config.OxInventory then
 					if Config.AdminLogging then
 						ESX.DiscordLogFields("UserActions", "Give Weapon Component /giveweaponcomponent Triggered!",
 							"pink", {
-								{ name = "Player",    value = xPlayer.name,       inline = true },
-								{ name = "ID",        value = xPlayer.source,     inline = true },
+								{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+								{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 								{ name = "Target",    value = args.playerId.name, inline = true },
 								{ name = "Weapon",    value = args.weaponName,    inline = true },
 								{ name = "Component", value = args.componentName, inline = true },
@@ -319,8 +347,8 @@ ESX.RegisterCommand({ 'clearall', 'clsall' }, 'admin', function(xPlayer)
 	TriggerClientEvent('chat:clear', -1)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Clear Chat /clearall Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,   inline = true },
-			{ name = "ID",     value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 		})
 	end
 end, true, { help = TranslateCap('command_clearall') })
@@ -339,8 +367,8 @@ if not Config.OxInventory then
 		TriggerEvent('esx:playerInventoryCleared', args.playerId)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "Clear Inventory /clearinventory Triggered!", "pink", {
-				{ name = "Player", value = xPlayer.name,       inline = true },
-				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+				{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 				{ name = "Target", value = args.playerId.name, inline = true },
 			})
 		end
@@ -359,8 +387,8 @@ if not Config.OxInventory then
 		TriggerEvent('esx:playerLoadoutCleared', args.playerId)
 		if Config.AdminLogging then
 			ESX.DiscordLogFields("UserActions", "/clearloadout Triggered!", "pink", {
-				{ name = "Player", value = xPlayer.name,       inline = true },
-				{ name = "ID",     value = xPlayer.source,     inline = true },
+				{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+				{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 				{ name = "Target", value = args.playerId.name, inline = true },
 			})
 		end
@@ -382,8 +410,8 @@ ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args)
 	args.playerId.setGroup(args.group)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "/setgroup Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,       inline = true },
-			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
 			{ name = "Group",  value = args.group,         inline = true },
 		})
@@ -419,14 +447,13 @@ end, true)
 ESX.RegisterCommand('job', { "user", "admin" }, function(xPlayer, _, _)
 	print(('%s, your job is: ^5%s^0 - ^5%s^0'):format(xPlayer.getName(), xPlayer.getJob().name,
 		xPlayer.getJob().grade_label))
-end, true)
+end, false)
 
 ESX.RegisterCommand('info', { "user", "admin" }, function(xPlayer)
 	local job = xPlayer.getJob().name
-	local jobgrade = xPlayer.getJob().grade_name
 	print(('^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0'):format(xPlayer.source, xPlayer.getName(),
 		xPlayer.getGroup(), job))
-end, true)
+end, false)
 
 ESX.RegisterCommand('coords', "admin", function(xPlayer)
 	local ped = GetPlayerPed(xPlayer.source)
@@ -434,30 +461,30 @@ ESX.RegisterCommand('coords', "admin", function(xPlayer)
 	local heading = GetEntityHeading(ped)
 	print(('Coords - Vector3: ^5%s^0'):format(vector3(coords.x, coords.y, coords.z)))
 	print(('Coords - Vector4: ^5%s^0'):format(vector4(coords.x, coords.y, coords.z, heading)))
-end, true)
+end, false)
 
 ESX.RegisterCommand('tpm', "admin", function(xPlayer)
 	xPlayer.triggerEvent("esx:tpm")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /tpm Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,   inline = true },
-			{ name = "ID",     value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 		})
 	end
-end, true)
+end, false)
 
 ESX.RegisterCommand('goto', "admin", function(xPlayer, args)
 	local targetCoords = args.playerId.getCoords()
 	xPlayer.setCoords(targetCoords)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /goto Triggered!", "pink", {
-			{ name = "Player",        value = xPlayer.name,       inline = true },
-			{ name = "ID",            value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target",        value = args.playerId.name, inline = true },
 			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {
+end, false, {
 	help = TranslateCap('command_goto'),
 	validate = true,
 	arguments = {
@@ -471,13 +498,13 @@ ESX.RegisterCommand('bring', "admin", function(xPlayer, args)
 	args.playerId.setCoords(playerCoords)
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Teleport /bring Triggered!", "pink", {
-			{ name = "Player",        value = xPlayer.name,       inline = true },
-			{ name = "ID",            value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target",        value = args.playerId.name, inline = true },
 			{ name = "Target Coords", value = targetCoords,       inline = true },
 		})
 	end
-end, true, {
+end, false, {
 	help = TranslateCap('command_bring'),
 	validate = true,
 	arguments = {
@@ -489,8 +516,8 @@ ESX.RegisterCommand('kill', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent("esx:killPlayer")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Kill Command /kill Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,       inline = true },
-			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
@@ -506,8 +533,8 @@ ESX.RegisterCommand('freeze', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent('esx:freezePlayer', "freeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin Freeze /freeze Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,       inline = true },
-			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
@@ -523,8 +550,8 @@ ESX.RegisterCommand('unfreeze', "admin", function(xPlayer, args)
 	args.playerId.triggerEvent('esx:freezePlayer', "unfreeze")
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin UnFreeze /unfreeze Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,       inline = true },
-			{ name = "ID",     value = xPlayer.source,     inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 			{ name = "Target", value = args.playerId.name, inline = true },
 		})
 	end
@@ -540,18 +567,17 @@ ESX.RegisterCommand("noclip", 'admin', function(xPlayer)
 	xPlayer.triggerEvent('esx:noclip')
 	if Config.AdminLogging then
 		ESX.DiscordLogFields("UserActions", "Admin NoClip /noclip Triggered!", "pink", {
-			{ name = "Player", value = xPlayer.name,   inline = true },
-			{ name = "ID",     value = xPlayer.source, inline = true },
+			{ name = "Player",  value = xPlayer and xPlayer.name or "Server Console",   inline = true },
+			{ name = "ID",      value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
 		})
 	end
 end, false)
 
 ESX.RegisterCommand('players', "admin", function()
-	local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
+    local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
 	print(('^5%s^2 online player(s)^0'):format(#xPlayers))
-	for i = 1, #(xPlayers) do
+    for i = 1, #(xPlayers) do
 		local xPlayer = xPlayers[i]
-		print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(
-			xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
-	end
+        print(('^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n'):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))     
+    end
 end, true)
