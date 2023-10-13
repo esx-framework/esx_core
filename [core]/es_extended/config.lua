@@ -34,57 +34,57 @@ Config.AdminGroups = {
 }
 
 
-Config.EnablePaycheck            = true      -- enable paycheck
-Config.LogPaycheck               = false     -- Logs paychecks to a nominated Discord channel via webhook (default is false)
-Config.EnableSocietyPayouts      = false     -- pay from the society account that the player is employed at? Requirement: esx_society
-Config.MaxWeight                 = 24        -- the max inventory weight without backpack
+Config.EnablePaycheck            = true     -- enable paycheck
+Config.LogPaycheck               = false    -- Logs paychecks to a nominated Discord channel via webhook (default is false)
+Config.EnableSocietyPayouts      = false    -- pay from the society account that the player is employed at? Requirement: esx_society
+Config.MaxWeight                 = 24       -- the max inventory weight without backpack
 Config.PaycheckInterval          = 7 * 60000 -- how often to recieve pay checks in milliseconds
 Config.EnableDebug               = false    -- Use Debug options?
 Config.EnableDefaultInventory    = true     -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel         = false    -- Use Normal GTA wanted Level?
 Config.EnablePVP                 = true     -- Allow Player to player combat
-Config.EnableConnectLogging		   = true		-- Captures a player's identifiers as and when they connect and store the values in the database (default is true)
-Config.EnableConnectWebhook      = false	-- Logs players connecting to a nominated Discord channel via a webhook (default is false)
+Config.EnableConnectSQL    		 = true		-- Captures a player's identifiers as and when they connect and store the values in the database (default is true)
+Config.EnableConnectWebhook      = false    -- Logs players connecting to a nominated Discord channel via a webhook (default is false)
 
 
 Config.Multichar                 = GetResourceState("esx_multicharacter") ~= "missing"
-Config.Identity                  = true  -- Select a characters identity data before they have loaded in (this happens by default with multichar)
-Config.DistanceGive              = 4.0   -- Max distance when giving items, weapons etc.
+Config.Identity                  = true     -- Select a characters identity data before they have loaded in (this happens by default with multichar)
+Config.DistanceGive              = 4.0      -- Max distance when giving items, weapons etc.
 
-Config.AdminLogging              = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
+Config.AdminLogging              = false    -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
-Config.DisableHealthRegeneration = false -- Player will no longer regenerate health
-Config.DisableVehicleRewards     = false -- Disables Player Recieving weapons from vehicles
-Config.DisableNPCDrops           = false -- stops NPCs from dropping weapons on death
-Config.DisableDispatchServices   = false -- Disable Dispatch services
-Config.DisableScenarios          = false -- Disable Scenarios
-Config.DisableWeaponWheel        = false -- Disables default weapon wheel
-Config.DisableAimAssist          = false -- disables AIM assist (mainly on controllers)
-Config.DisableVehicleSeatShuff   = false -- Disables vehicle seat shuff
-Config.DisableDisplayAmmo  		   = false -- Disable ammunition display
+Config.DisableHealthRegeneration = false    -- Player will no longer regenerate health
+Config.DisableVehicleRewards     = false    -- Disables Player Recieving weapons from vehicles
+Config.DisableNPCDrops           = false    -- Stops NPCs from dropping weapons on death
+Config.DisableDispatchServices   = false    -- Disable Dispatch services
+Config.DisableScenarios          = false    -- Disable Scenarios
+Config.DisableWeaponWheel        = false    -- Disables default weapon wheel
+Config.DisableAimAssist          = false    -- Disables AIM assist (mainly on controllers)
+Config.DisableVehicleSeatShuff   = false    -- Disables vehicle seat shuff
+Config.DisableDisplayAmmo  		 = false    -- Disable ammunition display
 Config.RemoveHudComponents       = {
-	[1] = false,                         --WANTED_STARS,
-	[2] = false,                         --WEAPON_ICON
-	[3] = false,                         --CASH
-	[4] = false,                         --MP_CASH
-	[5] = false,                         --MP_MESSAGE
-	[6] = false,                         --VEHICLE_NAME
-	[7] = false,                         -- AREA_NAME
-	[8] = false,                         -- VEHICLE_CLASS
-	[9] = false,                         --STREET_NAME
-	[10] = false,                        --HELP_TEXT
-	[11] = false,                        --FLOATING_HELP_TEXT_1
-	[12] = false,                        --FLOATING_HELP_TEXT_2
-	[13] = false,                        --CASH_CHANGE
-	[14] = false,                        --RETICLE
-	[15] = false,                        --SUBTITLE_TEXT
-	[16] = false,                        --RADIO_STATIONS
-	[17] = false,                        --SAVING_GAME,
-	[18] = false,                        --GAME_STREAM
-	[19] = false,                        --WEAPON_WHEEL
-	[20] = false,                        --WEAPON_WHEEL_STATS
-	[21] = false,                        --HUD_COMPONENTS
-	[22] = false,                        --HUD_WEAPONS
+	[1] = false,                            -- WANTED_STARS,
+	[2] = false,                            -- WEAPON_ICON
+	[3] = false,                            -- CASH
+	[4] = false,                            -- MP_CASH
+	[5] = false,                            -- MP_MESSAGE
+	[6] = false,                            -- VEHICLE_NAME
+	[7] = false,                            -- AREA_NAME
+	[8] = false,                            -- VEHICLE_CLASS
+	[9] = false,                            -- STREET_NAME
+	[10] = false,                           -- HELP_TEXT
+	[11] = false,                           -- FLOATING_HELP_TEXT_1
+	[12] = false,                           -- FLOATING_HELP_TEXT_2
+	[13] = false,                           -- CASH_CHANGE
+	[14] = false,                           -- RETICLE
+	[15] = false,                           -- SUBTITLE_TEXT
+	[16] = false,                           -- RADIO_STATIONS
+	[17] = false,                           -- SAVING_GAME,
+	[18] = false,                           -- GAME_STREAM
+	[19] = false,                           -- WEAPON_WHEEL
+	[20] = false,                           -- WEAPON_WHEEL_STATS
+	[21] = false,                           -- HUD_COMPONENTS
+	[22] = false,                           -- HUD_WEAPONS
 }
 
 Config.SpawnVehMaxUpgrades       = true       -- admin vehicles spawn with max vehcle settings
