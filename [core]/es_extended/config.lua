@@ -43,7 +43,7 @@ Config.EnableDebug               = false    -- Use Debug options?
 Config.EnableDefaultInventory    = true     -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel         = false    -- Use Normal GTA wanted Level?
 Config.EnablePVP                 = true     -- Allow Player to player combat
-Config.EnableConnectSQL    		 = true		-- Captures a player's identifiers as and when they connect and store the values in the database (default is true)
+Config.EnableConnectSQL    		 = false	-- Captures a player's identifiers as and when they connect and store the values in the database (default is false)
 Config.EnableConnectWebhook      = false    -- Logs players connecting to a nominated Discord channel via a webhook (default is false)
 
 
