@@ -60,9 +60,9 @@ Locales["es"] = {
 	['command_car_car'] = 'Nombre del vehículo',
 	['command_cardel'] = 'Eliminar vehículos cercanos',
 	['command_cardel_radius'] = 'Opcional, eliminar todos los vehículos en el radio especificado',
-	['command_repair'] = 'Repair your vehicle',
-	['command_repair_success'] = 'Successfully repaired vehicle',
-	['command_repair_success_target'] = 'An admin repaired your vehicle',
+	['command_repair'] = 'Reparar tu vehiculo',
+	['command_repair_success'] = 'Vehiculo reparado correctamente',
+	['command_repair_success_target'] = 'Un administrador reparo tu vehiculo',
 	['command_clear'] = 'Limpiar chat para ti',
 	['command_clearall'] = 'Limpiar chat para todos los jugadores',
 	['command_clearinventory'] = 'Limpiar el inventario del jugador',
@@ -121,10 +121,10 @@ Locales["es"] = {
 	-- Weapons
 
 	-- Drug Wars DLC
-	['weapon_candycane'] = 'Candy Cane',  -- not translated
-	['weapon_acidpackage'] = 'Acid Package', -- not translated
-	['weapon_pistolxm3'] = 'WM 29 Pistol', -- not translated
-	['weapon_railgunxm3'] = 'Railgun',    -- not translated
+	['weapon_candycane'] = 'Hacha de Caramelo ',
+	['weapon_acidpackage'] = 'Paquete de Acido',
+	['weapon_pistolxm3'] = 'Pistola WM 29',
+	['weapon_railgunxm3'] = 'Fusil electromagnético',
 
 	-- Melee
 	["weapon_dagger"] = "Daga",
@@ -162,7 +162,7 @@ Locales["es"] = {
 	["weapon_pistol50"] = "Pistola .50",
 	["weapon_snspistol"] = "Pistola SNS",
 	["weapon_snspistol_mk2"] = "Pistola SNS MK2",
-	["weapon_stungun"] = "Tazer",
+	["weapon_stungun"] = "Taser",
 	["weapon_raypistol"] = "Up-N-Atomizer",
 	["weapon_vintagepistol"] = "Pistola Vintage",
 
@@ -204,7 +204,7 @@ Locales["es"] = {
 	["weapon_militaryrifle"] = "Rifle Militar",
 	["weapon_specialcarbine"] = "Carabina Especial",
 	["weapon_specialcarbine_mk2"] = "Carabina Especial MK2",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
+	["weapon_heavyrifle"] = "Rifle Pesado",
 
 	-- Sniper
 	["weapon_heavysniper"] = "Francotirador Pesado",

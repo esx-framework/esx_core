@@ -325,12 +325,12 @@ function loadESXPlayer(identifier, playerId, isNew)
 			xPlayer.set('height', userData.height)
 		end
 	end
-    --saved player health and armor in metadata
-    local ped = GetPlayerPed(xPlayer.source)
-    if ped then
-        xPlayer.setMeta('health', xPlayer.getMeta('health') or GetEntityHealth(ped))
-        xPlayer.setMeta('armor', xPlayer.getMeta('armor') or GetPedArmour(ped))
-    end
+	--saved player health and armor in metadata
+	local ped = GetPlayerPed(xPlayer.source)
+	if ped then
+		xPlayer.setMeta('health', xPlayer.getMeta('health') or GetEntityHealth(ped))
+		xPlayer.setMeta('armor', xPlayer.getMeta('armor') or GetPedArmour(ped))
+	end
 
 	TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
@@ -386,12 +386,35 @@ AddEventHandler('playerDropped', function(reason)
 
 	if xPlayer then
 		TriggerEvent('esx:playerDropped', playerId, reason)
-
+		local job = xPlayer.getJob().name
+		local currentJob = ESX.JobsPlayerCount[job]
+		ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+		GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
 		Core.playersByIdentifier[xPlayer.identifier] = nil
 		Core.SavePlayer(xPlayer, function()
 			ESX.Players[playerId] = nil
 		end)
 	end
+end)
+
+AddEventHandler("esx:playerLoaded", function(_, xPlayer)
+	local job = xPlayer.getJob().name
+	local jobKey = ("%s:count"):format(job)
+
+	ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 0) + 1
+	GlobalState[jobKey] = ESX.JobsPlayerCount[job]
+end)
+
+AddEventHandler("esx:setJob", function(_, job, lastJob)
+	local lastJobKey = ('%s:count'):format(lastJob.name)
+	local jobKey = ('%s:count'):format(job.name)
+	local currentLastJob = ESX.JobsPlayerCount[lastJob.name]
+
+	ESX.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
+	ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
+
+	GlobalState[lastJobKey] = ESX.JobsPlayerCount[lastJob.name]
+	GlobalState[jobKey] = ESX.JobsPlayerCount[job.name]
 end)
 
 AddEventHandler('esx:playerLogout', function(playerId, cb)
@@ -593,11 +616,11 @@ if not Config.OxInventory then
 		local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
 		if pickup then
-            local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
-            if(playerPickupDistance > 5.0) then
-			    print(('[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7'):format(xPlayer.getIdentifier()))
-                return
-            end
+			local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
+			if (playerPickupDistance > 5.0) then
+				print(('[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7'):format(xPlayer.getIdentifier()))
+				return
+			end
 
 			if pickup.type == 'item_standard' then
 				if xPlayer.canCarryItem(pickup.name, pickup.count) then
@@ -715,26 +738,30 @@ AddEventHandler('txAdmin:events:serverShuttingDown', function()
 end)
 
 local DoNotUse = {
-    ['essentialmode'] = true,
-    ['es_admin2'] = true,
-    ['basic-gamemode'] = true,
-    ['mapmanager'] = true,
-    ['fivem-map-skater'] = true,
-    ['fivem-map-hipster'] = true,
-    ['qb-core'] = true,
-    ['default_spawnpoint'] = true,
+	['essentialmode'] = true,
+	['es_admin2'] = true,
+	['basic-gamemode'] = true,
+	['mapmanager'] = true,
+	['fivem-map-skater'] = true,
+	['fivem-map-hipster'] = true,
+	['qb-core'] = true,
+	['default_spawnpoint'] = true,
 }
 
-for key in pairs(DoNotUse) do
-    if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
-		    StopResource(key)
-        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
-    end
-end
-
 AddEventHandler('onResourceStart', function(key)
-    if DoNotUse[string.lower(key)] then
-		    StopResource(key)
-        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
-    end
+	if DoNotUse[string.lower(key)] then
+		while GetResourceState(key) ~= 'started' do
+			Wait(0)
+		end
+
+		StopResource(key)
+		print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
+	end
 end)
+
+for key in pairs(DoNotUse) do
+	if GetResourceState(key) == 'started' or GetResourceState(key) == 'starting' then
+		StopResource(key)
+		print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
+	end
+end

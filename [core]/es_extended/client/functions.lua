@@ -607,10 +607,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
-    local TyresIndex = {           -- Wheel index list according to the number of vehicle wheels.
-        ['2'] = { 0, 4 },          -- Bike and cycle.
-        ['3'] = { 0, 1, 4, 5 },    -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ['4'] = { 0, 1, 4, 5 },    -- Vehicle with 4 wheels.
+    local TyresIndex = {             -- Wheel index list according to the number of vehicle wheels.
+        ['2'] = { 0, 4 },            -- Bike and cycle.
+        ['3'] = { 0, 1, 4, 5 },      -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+        ['4'] = { 0, 1, 4, 5 },      -- Vehicle with 4 wheels.
         ['6'] = { 0, 1, 2, 3, 4, 5 } -- Vehicle with 6 wheels.
     }
 
@@ -1036,7 +1036,7 @@ function ESX.ShowInventory()
 
     local playerPed = ESX.PlayerData.ped
     local elements = {
-        { unselectable = true, icon = 'fas fa-box', title = 'Player Inventory' }
+        { unselectable = true, icon = 'fas fa-box' }
     }
     local currentWeight = 0
 
@@ -1075,7 +1075,10 @@ function ESX.ShowInventory()
         end
     end
 
-    for _, v in ipairs(Config.Weapons) do
+    elements[1].title = TranslateCap('inventory', currentWeight, Config.MaxWeight)
+
+    for i = 1, #Config.Weapons do
+        local v = Config.Weapons[i]
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -1095,12 +1098,6 @@ function ESX.ShowInventory()
             }
         end
     end
-
-    elements[#elements + 1] = {
-        unselectable = true,
-        icon = "fas fa-weight",
-        title = "Current Weight: " .. currentWeight
-    }
 
     ESX.CloseContext()
 
@@ -1327,23 +1324,56 @@ AddEventHandler('onResourceStop', function(resourceName)
         end
     end
 end)
+-- Credits to txAdmin for the list.
+local mismatchedTypes = {
+    [`airtug`] = "automobile",       -- trailer
+    [`avisa`] = "submarine",         -- boat
+    [`blimp`] = "heli",              -- plane
+    [`blimp2`] = "heli",             -- plane
+    [`blimp3`] = "heli",             -- plane
+    [`caddy`] = "automobile",        -- trailer
+    [`caddy2`] = "automobile",       -- trailer
+    [`caddy3`] = "automobile",       -- trailer
+    [`chimera`] = "automobile",      -- bike
+    [`docktug`] = "automobile",      -- trailer
+    [`forklift`] = "automobile",     -- trailer
+    [`kosatka`] = "submarine",       -- boat
+    [`mower`] = "automobile",        -- trailer
+    [`policeb`] = "bike",            -- automobile
+    [`ripley`] = "automobile",       -- trailer
+    [`rrocket`] = "automobile",      -- bike
+    [`sadler`] = "automobile",       -- trailer
+    [`sadler2`] = "automobile",      -- trailer
+    [`scrap`] = "automobile",        -- trailer
+    [`slamtruck`] = "automobile",    -- trailer
+    [`Stryder`] = "automobile",      -- bike
+    [`submersible`] = "submarine",   -- boat
+    [`submersible2`] = "submarine",  -- boat
+    [`thruster`] = "heli",           -- automobile
+    [`towtruck`] = "automobile",     -- trailer
+    [`towtruck2`] = "automobile",    -- trailer
+    [`tractor`] = "automobile",      -- trailer
+    [`tractor2`] = "automobile",     -- trailer
+    [`tractor3`] = "automobile",     -- trailer
+    [`trailersmall2`] = "trailer",   -- automobile
+    [`utillitruck`] = "automobile",  -- trailer
+    [`utillitruck2`] = "automobile", -- trailer
+    [`utillitruck3`] = "automobile", -- trailer
+}
 
 ---@param model number|string
 ---@return string
 function ESX.GetVehicleType(model)
     model = type(model) == 'string' and joaat(model) or model
-
-    if model == `submersible` or model == `submersible2` then
-        return 'submarine'
-    end
-
-    if model == `blimp` then
-        return 'heli'
+    if not IsModelInCdimage(model) then return end
+    if mismatchedTypes[model] then
+        return mismatchedTypes[model]
     end
 
     local vehicleType = GetVehicleClassFromName(model)
     local types = {
         [8] = "bike",
+        [11] = "trailer",
         [13] = "bike",
         [14] = "boat",
         [15] = "heli",

@@ -15,7 +15,10 @@ local function GetData(vehicle)
     end
     local model = GetEntityModel(vehicle)
     local displayName = GetDisplayNameFromVehicleModel(model)
-    local netId = VehToNet(vehicle)
+    local netId = vehicle
+    if NetworkGetEntityIsNetworked(vehicle) then
+        netId = VehToNet(vehicle)
+    end
     return displayName, netId
 end
 
