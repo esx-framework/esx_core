@@ -802,7 +802,10 @@ if Config.EnableConnectWebhook or Config.EnableConnectSQL then
           end
 
       else
-          DropPlayer(source, "[ESX Blackbook] No identifiers were found when connecting, please reconnect.")
+          if not identifiers and not next(identifiers) then
+            DropPlayer(source, "[ESX Blackbook] No identifiers were found when connecting, please reconnect.")
+            return
+          end
       end
   end)
 end
