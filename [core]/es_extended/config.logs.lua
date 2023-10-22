@@ -3,9 +3,11 @@ Config.DiscordLogs = {
         default = '',
         test = '',
         Chat = '',
-        UserActions = '',
+        UserActions = 'https://discord.com/api/webhooks/1128002948014817450/nc068--kUU-sropH7XfcJUhz6Klj5YCm9klhGRLQepqaWlVgpRud6dqoysLQs_3valqy',
         Resources = '',
-        Paycheck = ''
+        Paycheck = '',
+        TXUnbans = 'https://discord.com/api/webhooks/1139944266047692860/AhwNRPrfs8lSpa3FB1kkG6UJTDdI_I8x0WE6cOFwDJkg8zWiV_Xt7I0h2ZlM3rfMDxoF',
+        Keys = 'https://discord.com/api/webhooks/937401687868604456/xEO7Hj_SEC_Q81Px6dlfQ9C-DNwjveJujzY8wRS0NAJ1nDTmMd6Uq4mZS2hCI_4rYuhx',
     },
 
     Colors = { -- https://www.spycolor.com/

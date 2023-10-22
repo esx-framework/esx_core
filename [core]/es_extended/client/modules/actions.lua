@@ -15,16 +15,12 @@ local function GetData(vehicle)
     end
     local model = GetEntityModel(vehicle)
     local displayName = GetDisplayNameFromVehicleModel(model)
-    local netId = vehicle
-    if NetworkGetEntityIsNetworked(vehicle) then
-        netId = VehToNet(vehicle)
-    end
+    local netId = VehToNet(vehicle)
     return displayName, netId
 end
 
 CreateThread(function()
     while true do
-        ESX.SetPlayerData('coords',GetEntityCoords(playerPed))
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
             ESX.SetPlayerData('ped', playerPed)

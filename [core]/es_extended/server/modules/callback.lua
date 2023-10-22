@@ -41,3 +41,8 @@ RegisterNetEvent('esx:clientCallback', function(requestId, invoker, ...)
 	clientRequests[requestId](...)
 	clientRequests[requestId] = nil
 end)
+
+
+            -- Jobs Creator integration (jobs_creator)
+            ESX.ServerCallbacks = serverCallbacks
+        

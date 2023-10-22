@@ -52,7 +52,6 @@ Locales["sl"] = {
 
 	["act_imp"] = "Dejanja ni mogoče izvesti",
 	["in_vehicle"] = "Dejanja ni mogoče izvesti, Oseba je v vozilu",
-	["not_in_vehicle"] = "Cannot Perform Action, Player isn't in a vehicle",
 
 	-- Commands
 	['command_bring'] = 'Teleportiraj osebo do sebe',
@@ -60,9 +59,6 @@ Locales["sl"] = {
 	['command_car_car'] = 'Koda vozila',
 	['command_cardel'] = 'Odstranite vozila v bližini',
 	['command_cardel_radius'] = 'Odstrani vsa vozila v določenem radiju',
-	['command_repair'] = 'Repair your vehicle',
-	['command_repair_success'] = 'Successfully repaired vehicle',
-	['command_repair_success_target'] = 'An admin repaired your vehicle',
 	['command_clear'] = 'Odstrani vsa sporocila v CHATU',
 	['command_clearall'] = 'Počisti besedilo klepeta za vse igralce',
 	['command_clearinventory'] = 'Vzemi vse stvari iz osebove shrambe',
@@ -204,7 +200,6 @@ Locales["sl"] = {
 	["weapon_militaryrifle"] = "Military Rifle",
 	["weapon_specialcarbine"] = "Special Carbine",
 	["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
-	["weapon_heavyrifle"] = "Heavy Rifle", -- Not Translated
 
 	-- Sniper
 	["weapon_heavysniper"] = "Heavy Sniper",

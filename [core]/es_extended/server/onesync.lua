@@ -7,34 +7,15 @@ ESX.OneSync = {}
 local function getNearbyPlayers(source, closest, distance, ignore)
 	local result = {}
 	local count = 0
-    local playerPed
-    local playerCoords
-
 	if not distance then distance = 100 end
-
 	if type(source) == 'number' then
-		playerPed = GetPlayerPed(source)
-        
+		source = GetPlayerPed(source)
+
 		if not source then
-			error("Received invalid first argument (source); should be playerId")
-            return result
+			error("Received invalid first argument (source); should be playerId or vector3 coordinates")
 		end
 
-		playerCoords = GetEntityCoords(playerPed)
-
-        if not playerCoords then
-            error("Received nil value (playerCoords); perhaps source is nil at first place?")
-            return result
-        end
-	end
-
-	if type(source) == 'vector3' then
-		playerCoords = source
-
-		if not playerCoords then
-            error("Received nil value (playerCoords); perhaps source is nil at first place?")
-            return result
-        end
+		source = GetEntityCoords(GetPlayerPed(source))
 	end
 
 	for _, xPlayer in pairs(ESX.Players) do
@@ -43,18 +24,16 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 			local coords = GetEntityCoords(entity)
 
 			if not closest then
-				local dist = #(playerCoords - coords)
+				local dist = #(source - coords)
 				if dist <= distance then
 					count = count + 1
 					result[count] = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
 				end
 			else
-                if xPlayer.source ~= source then
-				    local dist = #(playerCoords - coords)
-				    if dist <= (result.dist or distance) then
-					    result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
-				    end
-                end
+				local dist = #(source - coords)
+				if dist <= (result.dist or distance) then
+					result = { id = xPlayer.source, ped = NetworkGetNetworkIdFromEntity(entity), coords = coords, dist = dist }
+				end
 			end
 		end
 	end

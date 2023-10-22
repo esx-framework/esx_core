@@ -7,11 +7,11 @@ function StartPayCheck()
         local job = xPlayer.job.grade_name
         local salary = xPlayer.job.grade_salary
 
-        if salary > 0 then
-          if job == 'unemployed' then -- unemployed
+        if salary > 0 and xPlayer.job.type ~= 'fraktion' then
+          if job == 'arbeitslos' then -- unemployed
             xPlayer.addAccountMoney('bank', salary, "Welfare Check")
-            TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'), TranslateCap('received_help', salary),
-              'CHAR_BANK_MAZE', 9)
+            TriggerEvent('okokBanking:AddTransferTransactionFromSocietyToP', salary, "salary", "Salary", xPlayer.identifier, xPlayer.getName())
+            TriggerClientEvent('okokNotify:Alert', xPlayer.source, "Bürgergeld", "Du hast dein Bürgergeld in höhe von "..salary.."$ bekommen. Du kannst jetzt wieder Zigaretten und Alkohol kaufen!", 8000, 'harz4')
             if Config.LogPaycheck then
               ESX.DiscordLogFields("Paycheck", "Paycheck - Unemployment Benefits", "green", {
                 { name = "Player", value = xPlayer.name,   inline = true },
@@ -34,10 +34,10 @@ function StartPayCheck()
                       })
                     end
 
-                    TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'),
-                      TranslateCap('received_salary', salary), 'CHAR_BANK_MAZE', 9)
+                    TriggerEvent('okokBanking:AddTransferTransactionFromSocietyToP', salary, "salary", "Salary", xPlayer.identifier, xPlayer.getName())
+                    TriggerClientEvent('okokNotify:Alert', xPlayer.source, "Gehalt", "Du hast dein Gehalt in höhe von "..salary.."$ erhalten.", 8000, 'payment')
                   else
-                    TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), '', TranslateCap('company_nomoney'), 'CHAR_BANK_MAZE', 1)
+                    TriggerClientEvent('okokNotify:Alert', xPlayer.source, "Gehalt", "Deine Firma hat nicht genug Geld um dich zu bezahlen.", 8000, 'paymentdenied')
                   end
                 end)
               else -- not a society
@@ -49,8 +49,8 @@ function StartPayCheck()
                     { name = "Amount", value = salary,         inline = true }
                   })
                 end
-                TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'), TranslateCap('received_salary', salary),
-                  'CHAR_BANK_MAZE', 9)
+                TriggerEvent('okokBanking:AddTransferTransactionFromSocietyToP', salary, "salary", "Salary", xPlayer.identifier, xPlayer.getName())
+                TriggerClientEvent('okokNotify:Alert', xPlayer.source, "Gehalt", "Du hast dein Gehalt in höhe von "..salary.."$ erhalten.", 8000, 'payment')
               end
             end)
           else -- generic job
@@ -62,8 +62,8 @@ function StartPayCheck()
                 { name = "Amount", value = salary,         inline = true }
               })
             end
-            TriggerClientEvent('esx:showAdvancedNotification', player, TranslateCap('bank'), TranslateCap('received_paycheck'), TranslateCap('received_salary', salary),
-              'CHAR_BANK_MAZE', 9)
+            TriggerEvent('okokBanking:AddTransferTransactionFromSocietyToP', salary, "salary", "Salary", xPlayer.identifier, xPlayer.getName())
+                TriggerClientEvent('okokNotify:Alert', xPlayer.source, "Gehalt", "Du hast dein Gehalt in höhe von "..salary.."$ erhalten.", 8000, 'payment')
           end
         end
       end

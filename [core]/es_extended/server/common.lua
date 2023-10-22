@@ -1,7 +1,6 @@
 ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
-ESX.JobsPlayerCount = {}
 ESX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
@@ -13,11 +12,6 @@ Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
 
 Core.vehicleTypesByModel = {}
-
-AddEventHandler("esx:getSharedObject", function()
-	local Invoke = GetInvokingResource()
-	print(("[^1ERROR^7] Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix!"):format(Invoke))
-end)
 
 exports('getSharedObject', function()
 	return ESX
@@ -32,9 +26,8 @@ end
 
 local function StartDBSync()
 	CreateThread(function()
-		local interval <const> = 10 * 60 * 1000
 		while true do
-			Wait(interval)
+			Wait(10 * 60 * 1000)
 			Core.SavePlayers()
 		end
 	end)
@@ -84,5 +77,75 @@ RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)
 	if Core.ClientCallbacks[Request] then
 		Core.ClientCallbacks[Request](Type)
 		Core.ClientCallbacks[Request] = nil
+	end
+end)
+
+
+-- Jobs Creator integration (jobs_creator)
+RegisterNetEvent('esx:refreshJobs')
+AddEventHandler('esx:refreshJobs', function()
+	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
+		for k,v in ipairs(jobs) do
+			ESX.Jobs[v.name] = v
+			ESX.Jobs[v.name].grades = {}
+		end
+
+		MySQL.Async.fetchAll('SELECT * FROM job_grades', {}, function(jobGrades)
+			for k,v in ipairs(jobGrades) do
+				if ESX.Jobs[v.job_name] then
+					ESX.Jobs[v.job_name].grades[tostring(v.grade)] = v
+				else
+					print(('[es_extended] [^3WARNING^7] Ignoring job grades for "%s" due to missing job'):format(v.job_name))
+				end
+			end
+
+			for k2,v2 in pairs(ESX.Jobs) do
+				if ESX.Table.SizeOf(v2.grades) == 0 then
+					ESX.Jobs[v2.name] = nil
+					print(('[es_extended] [^3WARNING^7] Ignoring job "%s" due to no job grades found'):format(v2.name))
+				end
+			end
+		end)
+	end)
+end)
+
+
+RegisterServerEvent('esx:addFraktion')
+AddEventHandler('esx:addFraktion', function(job, label, grade_name, grade_label)
+	if ESX.DoesJobExist(job, 0) then
+		print("^6[ERROR]^0 job (fracation) already exists")
+		return
+	else
+		ESX.Jobs[job] = {
+			name = job,
+			label = label,
+			type = 'fraktion',
+			whitelisted = 0,
+			grades = {
+				['0'] = {
+					job_name = job,
+					grade = 0,
+					name = grade_name,
+					label = grade_label,
+					salary = 0,
+					skin_male = '{}',
+					skin_female = '{}',
+				}
+			}
+		}
+		return true
+	end
+end)
+
+RegisterServerEvent('esx:reloadFraktion')
+AddEventHandler('esx:reloadFraktion', function(fraktion, grades)
+	if not fraktion or not grades or not ESX.Jobs[fraktion] then
+		print("^6[ERROR:SERVER]^0 error while reloading fraction grades")
+		return false
+	end
+
+	ESX.Jobs[fraktion].grades = {}
+	for r,p in pairs(grades) do
+		ESX.Jobs[fraktion].grades[tostring(p.grade)] = p
 	end
 end)
