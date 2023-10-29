@@ -166,7 +166,7 @@ Locales["he"] = {
   ["weapon_snspistol_mk2"] = "אקדח SNS MK2",
   ["weapon_stungun"] = "טייזר",
   ["weapon_raypistol"] = "Up-N-Atomizer",
-  ["weapon_vintagepistol"] = "אקדח וינטג"",
+  ["weapon_vintagepistol"] = "אקדח וינטג",
 
   -- Shotguns
   ["weapon_assaultshotgun"] = "רובה סטורם",
