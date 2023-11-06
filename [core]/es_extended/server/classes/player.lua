@@ -310,6 +310,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 			if account then
 				money = account.round and ESX.Math.Round(money) or money
+                if self.accounts[account.index].money - money > self.accounts[account.index].money then
+				    print(('[^1ERROR^7] Tried To Underflow Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
+                    return
+                end
 				self.accounts[account.index].money = self.accounts[account.index].money - money
 
 				self.triggerEvent('esx:setAccountMoney', account)
