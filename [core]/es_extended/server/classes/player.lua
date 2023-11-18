@@ -447,41 +447,34 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@param newJob string
 	---@param grade string
 	---@return void
-	function self.setJob(newJob, grade)
-		grade = tostring(grade)
-		local lastJob <const> = json.decode(json.encode(self.job))
+    function self.setJob(newJob, grade)
+        grade = tostring(grade) 
+        local lastJob = self.job
 
-		if ESX.DoesJobExist(newJob, grade) then
-			local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
+        if not ESX.DoesJobExist(newJob, grade) then 
+            return print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7'):format(self.source, job))
+        end 
 
-			self.job.id                  = jobObject.id
-			self.job.name                = jobObject.name
-			self.job.label               = jobObject.label
+        local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
 
-			self.job.grade               = tonumber(grade)
-			self.job.grade_name          = gradeObject.name
-			self.job.grade_label         = gradeObject.label
-			self.job.grade_salary        = gradeObject.salary
+        self.job = {
+            id = jobObject.id, 
+            name = jobObject.name, 
+            label = jobObject.label,
+         
+            grade = tonumber(grade), 
+            grade_name = gradeObject.name, 
+            grade_label = gradeObject.label, 
+            grade_salary = gradeObject.salary, 
 
-			if gradeObject.skin_male then
-				self.job.skin_male = json.decode(gradeObject.skin_male)
-			else
-				self.job.skin_male = {}
-			end
+            skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {}, 
+            skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {} 
+        }
 
-			if gradeObject.skin_female then
-				self.job.skin_female = json.decode(gradeObject.skin_female)
-			else
-				self.job.skin_female = {}
-			end
-
-			_TriggerEvent('esx:setJob', self.source, self.job, lastJob)
-			self.triggerEvent('esx:setJob', self.job, lastJob)
-			Player(self.source).state:set("job", self.job, true)
-		else
-			print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7'):format(self.source, job))
-		end
-	end
+        TriggerEvent('esx:setJob', self.source, self.job, lastJob)
+        self.triggerEvent('esx:setJob', self.job, lastJob)
+        Player(self.source).state:set("job", self.job, true)
+    end
 
 	---@param weaponName string
 	---@param ammo number
