@@ -449,10 +449,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	---@return void
     function self.setJob(newJob, grade)
         grade = tostring(grade) 
-        local lastJob = self.job
 
         if not ESX.DoesJobExist(newJob, grade) then 
-            return print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7'):format(self.source, job))
+            return print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7, Grade: ^5%s^7'):format(self.source, newJob, grade))
         end 
 
         local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
@@ -471,8 +470,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {} 
         }
 
-        TriggerEvent('esx:setJob', self.source, self.job, lastJob)
-        self.triggerEvent('esx:setJob', self.job, lastJob)
+        TriggerEvent('esx:setJob', self.source, self.job, self?.job)
+        self.triggerEvent('esx:setJob', self.job, self?.job)
         Player(self.source).state:set("job", self.job, true)
     end
 
