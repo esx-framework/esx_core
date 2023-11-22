@@ -1,5 +1,24 @@
+local GetPedInVehicleSeat = GetPedInVehicleSeat
+local DoesEntityExist = DoesEntityExist
+local GetEntityModel = GetEntityModel
+local GetDisplayNameFromVehicleModel = GetDisplayNameFromVehicleModel
+local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
+local PlayerPedId = PlayerPedId
+local TriggerEvent = TriggerEvent
+local TriggerServerEvent = TriggerServerEvent
+local IsPedJumping = IsPedJumping
+local IsPauseMenuActive = IsPauseMenuActive
+local IsPlayerDead = IsPlayerDead
+local PlayerId = PlayerId
+local GetVehiclePedIsTryingToEnter = GetVehiclePedIsTryingToEnter
+local GetVehicleNumberPlateText = GetVehicleNumberPlateText
+local GetSeatPedIsTryingToEnter = GetSeatPedIsTryingToEnter
+local GetVehiclePedIsUsing = GetVehiclePedIsUsing
+local IsPedInAnyVehicle = IsPedInAnyVehicle
+local Wait = Wait
+
 local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
-local playerPed = PlayerPedId()
+local playerPed, playerId = PlayerPedId(), PlayerId()
 local current = {}
 
 local function GetPedVehicleSeat(ped, vehicle)
@@ -13,27 +32,39 @@ local function GetData(vehicle)
     if not DoesEntityExist(vehicle) then
         return
     end
+
     local model = GetEntityModel(vehicle)
     local displayName = GetDisplayNameFromVehicleModel(model)
     local netId = vehicle
+
     if NetworkGetEntityIsNetworked(vehicle) then
         netId = VehToNet(vehicle)
     end
+
     return displayName, netId
 end
 
 CreateThread(function()
     while true do
-        ESX.SetPlayerData('coords',GetEntityCoords(playerPed))
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
+
             ESX.SetPlayerData('ped', playerPed)
             TriggerEvent('esx:playerPedChanged', playerPed)
             TriggerServerEvent('esx:playerPedChanged', PedToNet(playerPed))
         end
 
+        if playerId ~= PlayerId() then
+            playerId = PlayerId()
+
+            ESX.SetPlayerData('player', playerId)
+        end
+
+        ESX.SetPlayerData('coords', GetEntityCoords(playerPed))
+
         if IsPedJumping(playerPed) and not isJumping then
             isJumping = true
+
             TriggerEvent('esx:playerJumping')
             TriggerServerEvent('esx:playerJumping')
         elseif not IsPedJumping(playerPed) and isJumping then
@@ -42,29 +73,31 @@ CreateThread(function()
 
         if IsPauseMenuActive() and not inPauseMenu then
             inPauseMenu = true
+
             TriggerEvent('esx:pauseMenuActive', inPauseMenu)
         elseif not IsPauseMenuActive() and inPauseMenu then
             inPauseMenu = false
+
             TriggerEvent('esx:pauseMenuActive', inPauseMenu)
         end
 
-
-        if not isInVehicle and not IsPlayerDead(PlayerId()) then
+        if not isInVehicle and (not IsPlayerDead(playerId) and not ESX.PlayerData.dead) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then
                 -- trying to enter a vehicle!
+                isEnteringVehicle = true
                 local vehicle = GetVehiclePedIsTryingToEnter(playerPed)
                 local plate = GetVehicleNumberPlateText(vehicle)
                 local seat = GetSeatPedIsTryingToEnter(playerPed)
                 local _, netId = GetData(vehicle)
-                isEnteringVehicle = true
+
                 TriggerEvent('esx:enteringVehicle', vehicle, plate, seat, netId)
                 TriggerServerEvent('esx:enteringVehicle', plate, seat, netId)
-            elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and
-                not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
+            elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
+                isEnteringVehicle = false
+
                 TriggerEvent('esx:enteringVehicleAborted')
                 TriggerServerEvent('esx:enteringVehicleAborted')
-                isEnteringVehicle = false
             elseif IsPedInAnyVehicle(playerPed, false) then
                 -- suddenly appeared in a vehicle, possible teleport
                 isEnteringVehicle = false
@@ -73,11 +106,12 @@ CreateThread(function()
                 current.seat = GetPedVehicleSeat(playerPed, current.vehicle)
                 current.plate = GetVehicleNumberPlateText(current.vehicle)
                 current.displayName, current.netId = GetData(current.vehicle)
+
                 TriggerEvent('esx:enteredVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:enteredVehicle', current.plate, current.seat, current.displayName, current.netId)
             end
         elseif isInVehicle then
-            if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
+            if not IsPedInAnyVehicle(playerPed, false) or (not IsPlayerDead(playerId) and not ESX.PlayerData.dead) then
                 -- bye, vehicle
                 TriggerEvent('esx:exitedVehicle', current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent('esx:exitedVehicle', current.plate, current.seat, current.displayName, current.netId)
@@ -85,6 +119,7 @@ CreateThread(function()
                 current = {}
             end
         end
+
         Wait(200)
     end
 end)

@@ -1,6 +1,6 @@
+---@diagnostic disable: duplicate-set-field
 local RequestId = 0
 local serverRequests = {}
-
 local clientCallbacks = {}
 
 ---@param eventName string
@@ -9,9 +9,9 @@ local clientCallbacks = {}
 ESX.TriggerServerCallback = function(eventName, callback, ...)
 	serverRequests[RequestId] = callback
 
-	TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or "unknown", ...)
+	TriggerServerEvent('esx:triggerServerCallback', eventName, RequestId, GetInvokingResource() or 'UNKOWN', ...)
 
-	RequestId = RequestId + 1
+	RequestId += 1
 end
 
 RegisterNetEvent('esx:serverCallback', function(requestId, invoker, ...)

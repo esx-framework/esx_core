@@ -1,5 +1,6 @@
+---@diagnostic disable: duplicate-set-field
+local TriggerClientEvent = TriggerClientEvent
 local serverCallbacks = {}
-
 local clientRequests = {}
 local RequestId = 0
 
@@ -13,8 +14,6 @@ RegisterNetEvent('esx:triggerServerCallback', function(eventName, requestId, inv
 	if not serverCallbacks[eventName] then
 		return print(('[^1ERROR^7] Server Callback not registered, name: ^5%s^7, invoker resource: ^5%s^7'):format(eventName, invoker))
 	end
-
-	local source = source
 
 	serverCallbacks[eventName](source, function(...)
 		TriggerClientEvent('esx:serverCallback', source, requestId, invoker, ...)
@@ -30,7 +29,7 @@ ESX.TriggerClientCallback = function(player, eventName, callback, ...)
 
 	TriggerClientEvent('esx:triggerClientCallback', player, eventName, RequestId, GetInvokingResource() or "unknown", ...)
 
-	RequestId = RequestId + 1
+	RequestId += 1
 end
 
 RegisterNetEvent('esx:clientCallback', function(requestId, invoker, ...)

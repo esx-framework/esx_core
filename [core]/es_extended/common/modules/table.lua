@@ -1,3 +1,4 @@
+---@diagnostic disable: duplicate-set-field
 ESX.Table = {}
 
 -- nil proof alternative to #table
@@ -13,7 +14,11 @@ end
 
 function ESX.Table.Set(t)
 	local set = {}
-	for _, v in ipairs(t) do set[v] = true end
+
+	for _, v in ipairs(t) do
+		set[v] = true
+	end
+
 	return set
 end
 
@@ -44,7 +49,7 @@ function ESX.Table.Find(t, cb)
 		end
 	end
 
-	return nil
+	return
 end
 
 function ESX.Table.FindIndex(t, cb)
@@ -62,7 +67,7 @@ function ESX.Table.Filter(t, cb)
 
 	for i = 1, #t, 1 do
 		if cb(t[i]) then
-			table.insert(newTable, t[i])
+			newTable[#newTable + 1] = t[i]
 		end
 	end
 
@@ -83,14 +88,16 @@ function ESX.Table.Reverse(t)
 	local newTable = {}
 
 	for i = #t, 1, -1 do
-		table.insert(newTable, t[i])
+		newTable[#newTable + 1] = t[i]
 	end
 
 	return newTable
 end
 
 function ESX.Table.Clone(t)
-	if type(t) ~= 'table' then return t end
+	if type(t) ~= 'table' then
+		return t
+	end
 
 	local meta = getmetatable(t)
 	local target = {}
@@ -112,7 +119,7 @@ function ESX.Table.Concat(t1, t2)
 	local t3 = ESX.Table.Clone(t1)
 
 	for i = 1, #t2, 1 do
-		table.insert(t3, t2[i])
+		t3[#t3 + 1] = t2[i]
 	end
 
 	return t3
@@ -134,21 +141,17 @@ end
 
 -- Credits: https://github.com/JonasDev99/qb-garages/blob/b0335d67cb72a6b9ac60f62a87fb3946f5c2f33d/server/main.lua#L5
 function ESX.Table.TableContains(tab, val)
-	if type(val) == "table" then
+	if type(val) == 'table' then
 		for _, value in pairs(tab) do
 			if ESX.Table.TableContains(val, value) then
 				return true
 			end
 		end
+
 		return false
-	else
-		for _, value in pairs(tab) do
-			if value == val then
-				return true
-			end
-		end
 	end
-	return false
+
+	return not not tab[val]
 end
 
 -- Credit: https://stackoverflow.com/a/15706820
@@ -175,7 +178,7 @@ function ESX.Table.Sort(t, order)
 	local i = 0
 
 	return function()
-		i = i + 1
+		i += 1
 		if keys[i] then
 			return keys[i], t[keys[i]]
 		end

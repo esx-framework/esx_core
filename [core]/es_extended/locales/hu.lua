@@ -95,6 +95,7 @@ Locales["hu"] = {
 	["command_setcoords_x"] = "X érték",
 	["command_setcoords_y"] = "Y érték",
 	["command_setcoords_z"] = "Z érték",
+	['command_setcoords_h'] = 'Heading value',
 	["command_setjob"] = "Játékos munkájának beállítása",
 	["command_setjob_job"] = "Munka neve",
 	["command_setjob_grade"] = "Rang",

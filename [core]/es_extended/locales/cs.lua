@@ -95,6 +95,7 @@ Locales["cs"] = {
 	['command_setcoords_x'] = 'Hodnota X',
 	['command_setcoords_y'] = 'Hodnota Y',
 	['command_setcoords_z'] = 'Hodnota Z',
+	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Nastavit práci hráči',
 	['command_setjob_job'] = 'Název práce',
 	['command_setjob_grade'] = 'Pozice ve firmě',

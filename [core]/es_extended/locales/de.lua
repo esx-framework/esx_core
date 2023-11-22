@@ -95,6 +95,7 @@ Locales["de"] = {
 	['command_setcoords_x'] = 'X Koordinate',
 	['command_setcoords_y'] = 'Y Koordinate',
 	['command_setcoords_z'] = 'Z Koordinate',
+	['command_setcoords_h'] = 'Heading Koordinate',
 	['command_setjob'] = 'Job eines Spielers setzen',
 	['command_setjob_job'] = 'Name',
 	['command_setjob_grade'] = 'Job Grad',

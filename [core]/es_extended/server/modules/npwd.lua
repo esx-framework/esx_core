@@ -1,11 +1,12 @@
-local npwd = GetResourceState('npwd'):find('start') and exports.npwd or nil
+---@diagnostic disable: need-check-nil, undefined-field
+local npwd = GetResourceState('npwd'):find('start') and exports?.npwd
 
 AddEventHandler('onServerResourceStart', function(resource)
 	if resource ~= 'npwd' then
 		return
 	end
 
-	npwd = GetResourceState('npwd'):find('start') and exports.npwd or nil
+	npwd = GetResourceState('npwd'):find('start') and exports?.npwd or nil
 
 	for _, xPlayer in pairs(ESX.Players) do
 		npwd:newPlayer({
@@ -23,6 +24,12 @@ AddEventHandler('onServerResourceStop', function(resource)
 	end
 end)
 
+AddEventHandler('onResourceStop', function(resource)
+	if resource == 'npwd' then
+		npwd = nil
+	end
+end)
+
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	if not npwd then
 		return
@@ -35,8 +42,8 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 	npwd:newPlayer({
 		source = playerId,
 		identifier = xPlayer.identifier,
-		firstname = xPlayer.get('firstName'),
-		lastname = xPlayer.get('lastName')
+		firstname = xPlayer.variables.firstName,
+		lastname = xPlayer.variables.lastName
 	})
 end)
 

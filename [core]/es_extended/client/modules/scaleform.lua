@@ -1,3 +1,13 @@
+---@diagnostic disable: duplicate-set-field
+local BeginScaleformMovieMethod = BeginScaleformMovieMethod
+local ScaleformMovieMethodAddParamTextureNameString = ScaleformMovieMethodAddParamTextureNameString
+local EndScaleformMovieMethod = EndScaleformMovieMethod
+local DrawScaleformMovieFullscreen = DrawScaleformMovieFullscreen
+local SetScaleformMovieAsNoLongerNeeded = SetScaleformMovieAsNoLongerNeeded
+local ScaleformMovieMethodAddParamFloat = ScaleformMovieMethodAddParamFloat
+local ScaleformMovieMethodAddParamBool = ScaleformMovieMethodAddParamBool
+local HasScaleformMovieLoaded = HasScaleformMovieLoaded
+
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 
@@ -7,10 +17,10 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(0)
 		sec = sec - 0.01
 
-		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, -1)
+		Wait(0)
 	end
 
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -38,10 +48,10 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(0)
 		sec = sec - 0.01
 
-		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, -1)
+		Wait(0)
 	end
 
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -61,10 +71,10 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(0)
 		sec = sec - 0.01
 
-		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, -1)
+		Wait(0)
 	end
 
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -74,14 +84,13 @@ function ESX.Scaleform.ShowTrafficMovie(sec)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('TRAFFIC_CAM')
 
 	BeginScaleformMovieMethod(scaleform, 'PLAY_CAM_MOVIE')
-
 	EndScaleformMovieMethod()
 
 	while sec > 0 do
-		Wait(0)
 		sec = sec - 0.01
 
-		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+		DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, -1)
+		Wait(0)
 	end
 
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -91,7 +100,7 @@ function ESX.Scaleform.Utils.RequestScaleformMovie(movie)
 	local scaleform = RequestScaleformMovie(movie)
 
 	while not HasScaleformMovieLoaded(scaleform) do
-		Wait(0)
+		Wait(100)
 	end
 
 	return scaleform

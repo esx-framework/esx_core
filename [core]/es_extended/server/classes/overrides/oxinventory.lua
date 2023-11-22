@@ -1,3 +1,4 @@
+local TriggerEvent = TriggerEvent
 local Inventory
 
 if Config.OxInventory then

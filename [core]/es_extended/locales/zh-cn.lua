@@ -95,6 +95,7 @@ Locales["zh-cn"] = {
 	['command_setcoords_x'] = 'X 轴',
 	['command_setcoords_y'] = 'Y 轴',
 	['command_setcoords_z'] = 'Z 轴',
+	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = '配置该玩家职业',
 	['command_setjob_job'] = '职业代码',
 	['command_setjob_grade'] = '职业等级',
