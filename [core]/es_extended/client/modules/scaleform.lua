@@ -1,5 +1,15 @@
+local function requestScaleformMovie(movie)
+    local scaleform = RequestScaleformMovie(movie)
+
+    while not HasScaleformMovieLoaded(scaleform) do
+        Wait(0)
+    end
+
+    return scaleform
+end
+
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
-	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
+	local scaleform = requestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_SHARD_WASTED_MP_MESSAGE')
 	ScaleformMovieMethodAddParamTextureNameString(title)
@@ -17,7 +27,7 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 end
 
 function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
-	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('BREAKING_NEWS')
+	local scaleform = requestScaleformMovie('BREAKING_NEWS')
 
 	BeginScaleformMovieMethod(scaleform, 'SET_TEXT')
 	ScaleformMovieMethodAddParamTextureNameString(msg)
@@ -48,7 +58,7 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
-	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('POPUP_WARNING')
+	local scaleform = requestScaleformMovie('POPUP_WARNING')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_POPUP_WARNING')
 
@@ -71,7 +81,7 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowTrafficMovie(sec)
-	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('TRAFFIC_CAM')
+	local scaleform = requestScaleformMovie('TRAFFIC_CAM')
 
 	BeginScaleformMovieMethod(scaleform, 'PLAY_CAM_MOVIE')
 
@@ -85,14 +95,4 @@ function ESX.Scaleform.ShowTrafficMovie(sec)
 	end
 
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
-end
-
-function ESX.Scaleform.Utils.RequestScaleformMovie(movie)
-	local scaleform = RequestScaleformMovie(movie)
-
-	while not HasScaleformMovieLoaded(scaleform) do
-		Wait(0)
-	end
-
-	return scaleform
 end

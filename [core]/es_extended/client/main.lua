@@ -309,13 +309,13 @@ if not Config.OxInventory then
 
 	RegisterNetEvent('esx:removeInventoryItem')
 	AddEventHandler('esx:removeInventoryItem', function(item, count, showNotification)
-		for i=1, #ESX.PlayerData.inventory do 
-			if ESX.PlayerData.inventory[i].name == item then 
+		for i=1, #ESX.PlayerData.inventory do
+			if ESX.PlayerData.inventory[i].name == item then
 				ESX.UI.ShowInventoryItemNotification(false, ESX.PlayerData.inventory[i].label, ESX.PlayerData.inventory[i].count - count)
 				ESX.PlayerData.inventory[i].count = count
 				break
-			end 
-		end 
+			end
+		end
 
 		if showNotification then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
@@ -501,7 +501,7 @@ if not Config.OxInventory then
 						label = ('%s~n~%s'):format(label, TranslateCap('threw_pickup_prompt'))
 					end
 
-					ESX.Game.Utils.DrawText3D({
+					ESX.Game.DrawText3D({
 						x = pickup.coords.x,
 						y = pickup.coords.y,
 						z = pickup.coords.z + 0.25
