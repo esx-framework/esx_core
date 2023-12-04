@@ -637,7 +637,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
 		if weapon then
 			weapon.ammo = weapon.ammo - ammoCount
-			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
+            _SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
 		end
 	end
 
