@@ -765,3 +765,47 @@ for key in pairs(DoNotUse) do
 		print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
 	end
 end
+
+if Config.EnableConnectWebhook or Config.EnableConnectSQL then
+  AddEventHandler('playerConnecting', function(name, setKick, def)
+      local identifiers = GetPlayerIdentifiers(source)
+
+      if #identifiers > 0 and identifiers[1] then
+          local token = GetPlayerToken(source)
+          local playerName = GetPlayerName(source)
+          local temp = string.gsub(playerName, "[^a-zA-Z0-9]", "")
+          local timestamp = os.date("%d/%m/%Y at %X")
+
+          playerName = temp ~= "" and temp or playerName
+
+          local data = {
+              ['@name'] = playerName,
+              ['@token'] = token,
+              ["@timestamp"] = os.date("%Y-%m-%d %X")
+          }
+
+          for i=1, #identifiers do
+              data["@"..ESX.Split(identifiers[i],":")[1]] = identifiers[i]
+          end
+
+          if Config.EnableConnectWebhook then
+              ESX.DiscordLogFields("Connect", "Player Connection", "green", {
+                  { name = "Username",            value = playerName,       inline = false },
+                  { name = "Rockstar Identifier", value = data['@license'], inline = false },
+                  { name = "FiveM Token",         value = token,            inline = false },
+                  { name = "Connect Time",        value = timestamp,        inline = false }
+              })
+          end
+
+          if Config.EnableConnectSQL then
+              MySQL.update("INSERT INTO `blackbook` (`license`, `ip`, `name`, `xbl`, `live`, `discord`, `fivem`, `token`, `lastconnect`) VALUES (@license, @ip, @name, @xbl, @live, @discord, @fivem, @token, @timestamp) ON DUPLICATE KEY UPDATE `license`=@license, `ip`=@ip, `name`=@name, `xbl`=@xbl, `live`=@live, `discord`=@discord, `fivem`=@fivem, `token`=@token, `lastconnect`=@timestamp", data)
+          end
+
+      else
+          if not identifiers and not next(identifiers) then
+            DropPlayer(source, "[ESX Blackbook] No identifiers were found when connecting, please reconnect.")
+            return
+          end
+      end
+  end)
+end
