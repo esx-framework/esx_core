@@ -785,8 +785,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			return print("[^1ERROR^7] xPlayer.setMeta ^5index^7 should be ^5string^7!")
 		end
 
-		if not value then
-			return print(("[^1ERROR^7] xPlayer.setMeta ^5%s^7 is Missing!"):format(value))
+		if value == nil then
+            return print("[^1ERROR^7] xPlayer.setMeta value is missing!") 
 		end
 
 		local _type = type(value)
