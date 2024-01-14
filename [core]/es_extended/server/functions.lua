@@ -417,6 +417,17 @@ function ESX.CreateJob(name, label, grades)
 	ESX.Jobs[name] = job
 end
 
+--- Delete Job at Runtime
+function ESX.DeleteJob(name)
+    --- @param name string
+	if not name then
+		return print('[^3WARNING^7] missing argument `name(string)` while deleting a job')
+	end
+	MySQL.update('DELETE FROM jobs WHERE name = ?', {name})
+	MySQL.update('DELETE FROM job_grades WHERE job_name = ?', {name})
+	ESX.Jobs[name] = nil
+end
+
 function ESX.RefreshJobs()
 	local Jobs = {}
 	local jobs = MySQL.query.await('SELECT * FROM jobs')
