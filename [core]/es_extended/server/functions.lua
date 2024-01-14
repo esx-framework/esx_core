@@ -407,7 +407,7 @@ function ESX.CreateJob(name, label, grades)
 	local job = { name = name, label = label, grades = {} }
 
 	for _, v in pairs(grades) do
-		job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or {}, skin_female = v.skin_female or {} }
+		job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or '{}', skin_female = v.skin_female or '{}' }
 		parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary, v.skin_male or '{}', v.skin_female or '{}'}
 	end
 
