@@ -407,12 +407,12 @@ function ESX.CreateJob(name, label, grades)
 	local job = { name = name, label = label, grades = {} }
 
 	for _, v in pairs(grades) do
-		job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {} }
-		parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary }
+		job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or {}, skin_female = v.skin_female or {} }
+		parameters[#parameters + 1] = { name, v.grade, v.name, v.label, v.salary, v.skin_male or '{}', v.skin_female or '{}'}
 	end
 
 	MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', { name, label })
-	MySQL.prepare('INSERT INTO job_grades (job_name, grade, name, label, salary) VALUES (?, ?, ?, ?, ?)', parameters)
+	MySQL.prepare('INSERT INTO job_grades (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?, ?, ?, ?, ?, ?)', parameters)
 
 	ESX.Jobs[name] = job
 end
