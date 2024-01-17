@@ -1,0 +1,14 @@
+name: Add issue or pull request to project board
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request_target:
+    types: 
+      - opened
+
+jobs:
+  auto-move-project-cards:
+    uses: esx-framework/.github/.github/workflows/automatic-add-issue-to-board.yml@main
+    secrets: inherit
