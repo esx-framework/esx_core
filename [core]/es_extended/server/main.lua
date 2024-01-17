@@ -138,6 +138,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		skin = { sex = 'm' }, 
         sex = 'm', 
 		group = 'user',
+        identifier = identifier, 
 		dead = false
     } 
 
