@@ -138,7 +138,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		skin = { sex = 'm' }, 
         sex = 'm', 
 		group = 'user',
-		dead = true 
+		dead = false
     } 
 
     local result = MySQL.prepare.await(loadPlayer, { identifier })
