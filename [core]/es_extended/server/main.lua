@@ -131,14 +131,14 @@ function loadESXPlayer(identifier, playerId, isNew)
         weight = 0, 
 		metadata = {}, 
 
-		firstname = 'John', 
-		lastname = 'Doe', 
+		firstName = 'John', 
+		lastName = 'Doe', 
 		dateofbirth = '01/01/2000', 
 		height = 120, 
 		skin = { sex = 'm' }, 
         sex = 'm', 
-		group = 'user', 
-		dead = false,
+		group = 'user',
+		dead = true 
     } 
 
     local result = MySQL.prepare.await(loadPlayer, { identifier })
@@ -273,13 +273,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     -- Identity
 	if result.firstname and result.firstname ~= '' then 
-		userData.firstname = result.firstname
-		userData.lastname = result.lastname
+		userData.firstName = result.firstname
+		userData.lastName = result.lastname
 
         xPlayer.set('firstName', result.firstname)
 		xPlayer.set('lastName', result.lastname)
 
-		userData.playerName = userData.firstname .. ' ' .. userData.lastname
+		userData.playerName = userData.firstName .. ' ' .. userData.lastName
         xPlayer.name = userData.playerName
 
 		if result.dateofbirth then
@@ -305,10 +305,9 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
-	userData.maxWeight = xPlayer.getMaxWeight() 
-	userData.money = xPlayer.getMoney(), 
-
-    xPlayer.triggerEvent('esx:playerLoaded', userData, isNew, userData.skin)
+	userData.maxWeight = xPlayer.getMaxWeight()
+	money = xPlayer.getMoney()
+	xPlayer.triggerEvent('esx:playerLoaded',userData, isNew, userData.skin)
 
     if not Config.OxInventory then
 		xPlayer.triggerEvent('esx:createMissingPickups', Core.Pickups)
