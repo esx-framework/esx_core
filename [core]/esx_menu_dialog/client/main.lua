@@ -1,7 +1,7 @@
 local Timeouts, OpenedMenus, MenuType = {}, {}, 'dialog'
 
 local function openMenu(namespace, name, data)
-	for i=1, #Timeouts, 1 do
+	for i = 1, #Timeouts, 1 do
 		ESX.ClearTimeout(Timeouts[i])
 	end
 

@@ -3,7 +3,7 @@ local pickups = {}
 CreateThread(function()
 	while not Config.Multichar do
 		Wait(100)
-		
+
 		if NetworkIsPlayerActive(PlayerId()) then
 			exports.spawnmanager:setAutoSpawn(false)
 			DoScreenFadeOut(0)
@@ -59,10 +59,18 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	local playerId = PlayerId()
+    local metadata = ESX.PlayerData.metadata
+    if metadata.health then
+        SetEntityHealth(ESX.PlayerData.ped, metadata.health)
+    end
 
-	-- RemoveHudCommonents
-	for i = 1, #(Config.RemoveHudCommonents) do
-		if Config.RemoveHudCommonents[i] then
+    if metadata.armor and metadata.armor > 0 then
+        SetPedArmour(ESX.PlayerData.ped, metadata.armor)
+    end
+
+	-- RemoveHudComponents
+	for i = 1, #(Config.RemoveHudComponents) do
+		if Config.RemoveHudComponents[i] then
 			SetHudComponentPosition(i, 999999.0, 999999.0)
 		end
 	end
@@ -76,19 +84,23 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 
 	if Config.DisableVehicleSeatShuff then
-		AddEventHandler('esx:enteredVehicle', function(vehicle, plate, seat)
+		AddEventHandler('esx:enteredVehicle', function(vehicle, _, seat)
 			if seat == 0 then
 				SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
 				SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-			end	
+			end
 		end)
 	end
 
-	if Config.DisableHealthRegeneration or Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
+	if Config.DisableHealthRegeneration then
+		SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+	end
+
+	if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
 		CreateThread(function()
 			while true do
-				if Config.DisableHealthRegeneration then
-					SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+				if Config.DisableDisplayAmmo then
+					DisplayAmmoThisFrame(false)
 				end
 
 				if Config.DisableWeaponWheel then
@@ -101,7 +113,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 						SetPlayerLockonRangeOverride(playerId, 2.0)
 					end
 				end
-				
+
 				if Config.DisableVehicleRewards then
 					DisablePlayerVehicleRewards(playerId)
 				end
@@ -173,8 +185,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			'WORLD_VEHICLE_DISTANT_EMPTY_GROUND',
 			'WORLD_HUMAN_PAPARAZZI'
 		}
-		
-		for i, v in pairs(scenarios) do
+
+		for _, v in pairs(scenarios) do
 			SetScenarioTypeEnabled(v, false)
 		end
 	end
@@ -218,7 +230,7 @@ AddEventHandler('esx:restoreLoadout', function()
 		local ammoTypes = {}
 		RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-		for k, v in ipairs(ESX.PlayerData.loadout) do
+		for _, v in ipairs(ESX.PlayerData.loadout) do
 			local weaponName = v.name
 			local weaponHash = joaat(weaponName)
 
@@ -227,7 +239,7 @@ AddEventHandler('esx:restoreLoadout', function()
 
 			local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
 
-			for k2, v2 in ipairs(v.components) do
+			for _, v2 in ipairs(v.components) do
 				local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
 				GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
 			end
@@ -241,30 +253,30 @@ AddEventHandler('esx:restoreLoadout', function()
 end)
 
 -- Credit: https://github.com/LukeWasTakenn, https://github.com/LukeWasTakenn/luke_garages/blob/master/client/client.lua#L331-L352
-AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, key, value)
-	if not value then 
-		return 
+AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
+	if not value then
+		return
 	end
 
-    local netId = bagName:gsub('entity:', '')
-    local timer = GetGameTimer()
-    while not NetworkDoesEntityExistWithNetworkId(tonumber(netId)) do
-	    Wait(0)
-	    if GetGameTimer() - timer > 10000 then
-	        return
-	    end
-    end
-	
-    local vehicle = NetToVeh(tonumber(netId))
-    local timer = GetGameTimer()
-    while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
-        Wait(0)
-	    if GetGameTimer() - timer > 10000 then
-	        return
-	    end
-    end
+	local netId = bagName:gsub('entity:', '')
+	local timer = GetGameTimer()
+	while not NetworkDoesEntityExistWithNetworkId(tonumber(netId)) do
+		Wait(0)
+		if GetGameTimer() - timer > 10000 then
+			return
+		end
+	end
 
-    ESX.Game.SetVehicleProperties(vehicle, value)
+	local vehicle = NetToVeh(tonumber(netId))
+	local timer2 = GetGameTimer()
+	while NetworkGetEntityOwner(vehicle) ~= PlayerId() do
+		Wait(0)
+		if GetGameTimer() - timer2 > 10000 then
+			return
+		end
+	end
+
+	ESX.Game.SetVehicleProperties(vehicle, value)
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
@@ -293,53 +305,46 @@ if not Config.OxInventory then
 		if showNotification then
 			ESX.UI.ShowInventoryItemNotification(true, item, count)
 		end
-
-		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:removeInventoryItem')
 	AddEventHandler('esx:removeInventoryItem', function(item, count, showNotification)
-		for k, v in ipairs(ESX.PlayerData.inventory) do
-			if v.name == item then
-				ESX.UI.ShowInventoryItemNotification(false, v.label, v.count - count)
-				ESX.PlayerData.inventory[k].count = count
+		for i=1, #ESX.PlayerData.inventory do 
+			if ESX.PlayerData.inventory[i].name == item then 
+				ESX.UI.ShowInventoryItemNotification(false, ESX.PlayerData.inventory[i].label, ESX.PlayerData.inventory[i].count - count)
+				ESX.PlayerData.inventory[i].count = count
 				break
-			end
-		end
+			end 
+		end 
 
 		if showNotification then
 			ESX.UI.ShowInventoryItemNotification(false, item, count)
 		end
-
-		ESX.ShowInventory()
 	end)
 
 	RegisterNetEvent('esx:addWeapon')
-	AddEventHandler('esx:addWeapon', function(weapon, ammo)
+	AddEventHandler('esx:addWeapon', function()
 		print("[^1ERROR^7] event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:addWeaponComponent')
-	AddEventHandler('esx:addWeaponComponent', function(weapon, weaponComponent)
+	AddEventHandler('esx:addWeaponComponent', function()
 		print("[^1ERROR^7] event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponAmmo')
-	AddEventHandler('esx:setWeaponAmmo', function(weapon, weaponAmmo)
+	AddEventHandler('esx:setWeaponAmmo', function()
 		print("[^1ERROR^7] event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:setWeaponTint')
 	AddEventHandler('esx:setWeaponTint', function(weapon, weaponTintIndex)
 		SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
-
 	end)
 
 	RegisterNetEvent('esx:removeWeapon')
-	AddEventHandler('esx:removeWeapon', function(weapon)
-		local playerPed = ESX.PlayerData.ped
-		RemoveWeaponFromPed(ESX.PlayerData.ped, joaat(weapon))
-		SetPedAmmo(ESX.PlayerData.ped, joaat(weapon), 0)
+	AddEventHandler('esx:removeWeapon', function()
+		print("[^1ERROR^7] event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
 	end)
 
 	RegisterNetEvent('esx:removeWeaponComponent')
@@ -356,7 +361,7 @@ end)
 
 if not Config.OxInventory then
 	RegisterNetEvent('esx:createPickup')
-	AddEventHandler('esx:createPickup', function(pickupId, label, coords, type, name, components, tintIndex)
+	AddEventHandler('esx:createPickup', function(pickupId, label, coords, itemType, name, components, tintIndex)
 		local function setObjectProperties(object)
 			SetEntityAsMissionEntity(object, true, false)
 			PlaceObjectOnGroundProperly(object)
@@ -367,17 +372,17 @@ if not Config.OxInventory then
 				obj = object,
 				label = label,
 				inRange = false,
-				coords = vector3(coords.x, coords.y, coords.z)
+				coords = coords
 			}
 		end
 
-		if type == 'item_weapon' then
+		if itemType == 'item_weapon' then
 			local weaponHash = joaat(name)
 			ESX.Streaming.RequestWeaponAsset(weaponHash)
 			local pickupObject = CreateWeaponObject(weaponHash, 50, coords.x, coords.y, coords.z, true, 1.0, 0)
 			SetWeaponObjectTintIndex(pickupObject, tintIndex)
 
-			for k, v in ipairs(components) do
+			for _, v in ipairs(components) do
 				local component = ESX.GetWeaponComponent(name, v)
 				GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
 			end
@@ -391,8 +396,8 @@ if not Config.OxInventory then
 	RegisterNetEvent('esx:createMissingPickups')
 	AddEventHandler('esx:createMissingPickups', function(missingPickups)
 		for pickupId, pickup in pairs(missingPickups) do
-			TriggerEvent('esx:createPickup', pickupId, pickup.label, pickup.coords - vector3(0, 0, 1.0), pickup.type, pickup.name
-				, pickup.components, pickup.tintIndex)
+			TriggerEvent('esx:createPickup', pickupId, pickup.label, vector3(pickup.coords.x, pickup.coords.y, pickup.coords.z - 1.0), pickup.type, pickup.name
+			, pickup.components, pickup.tintIndex)
 		end
 	end)
 end
@@ -448,13 +453,11 @@ function StartServerSyncLoops()
 end
 
 if not Config.OxInventory and Config.EnableDefaultInventory then
-	RegisterCommand('showinv', function()
+	ESX.RegisterInput('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2', function()
 		if not ESX.PlayerData.dead then
 			ESX.ShowInventory()
 		end
 	end)
-
-	RegisterKeyMapping('showinv', TranslateCap('keymap_showinventory'), 'keyboard', 'F2')
 end
 
 -- disable wanted level
@@ -468,7 +471,7 @@ if not Config.OxInventory then
 		while true do
 			local Sleep = 1500
 			local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
+			local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
 			for pickupId, pickup in pairs(pickups) do
 				local distance = #(playerCoords - pickup.coords)
@@ -510,7 +513,7 @@ if not Config.OxInventory then
 	end)
 end
 
------ Admin commnads from esx_adminplus
+----- Admin commands from esx_adminplus
 
 RegisterNetEvent("esx:tpm")
 AddEventHandler("esx:tpm", function()
@@ -646,7 +649,7 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip")
-AddEventHandler("esx:noclip", function(input)
+AddEventHandler("esx:noclip", function()
 	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if not admin then
 			return
@@ -662,13 +665,23 @@ AddEventHandler("esx:noclip", function(input)
 			CreateThread(noclipThread)
 		end
 
-		ESX.ShowNotification(TranslateCap('noclip_message', noclip and "enabled" or "disabled"), true, false, 140)
+		ESX.ShowNotification(TranslateCap('noclip_message', noclip and Translate('enabled') or Translate('disabled')), true, false, 140)
 	end)
 end)
 
 RegisterNetEvent("esx:killPlayer")
 AddEventHandler("esx:killPlayer", function()
 	SetEntityHealth(ESX.PlayerData.ped, 0)
+end)
+
+RegisterNetEvent("esx:repairPedVehicle")
+AddEventHandler("esx:repairPedVehicle", function()
+	local ped = ESX.PlayerData.ped
+	local vehicle = GetVehiclePedIsIn(ped, false)
+	SetVehicleEngineHealth(vehicle, 1000)
+	SetVehicleEngineOn(vehicle, true, true)
+	SetVehicleFixed(vehicle)
+	SetVehicleDirtLevel(vehicle, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
@@ -689,23 +702,6 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 	cb(ESX.GetVehicleType(model))
 end)
 
-local DoNotUse = {
-	'essentialmode',
-	'es_admin2',
-	'basic-gamemode',
-	'mapmanager',
-	'fivem-map-skater',
-	'fivem-map-hipster',
-	'qb-core',
-	'default_spawnpoint',
-}
-
-for i = 1, #DoNotUse do
-	if GetResourceState(DoNotUse[i]) == 'started' or GetResourceState(DoNotUse[i]) == 'starting' then
-		print("[^1ERROR^7] YOU ARE USING A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5" .. DoNotUse[i] .. "^7")
-	end
-end
-
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
+AddStateBagChangeHandler('metadata', 'player:' .. tostring(GetPlayerServerId(PlayerId())), function(_, key, val)
 	ESX.SetPlayerData(key, val)
 end)

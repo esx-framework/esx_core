@@ -12,8 +12,8 @@ local function TextUI(message, typ)
 end
 
 local function HideUI()
-   if not isShowing then return end
-   isShowing = false
+    if not isShowing then return end
+    isShowing = false
     SendNUIMessage({
         action = 'hide'
     })

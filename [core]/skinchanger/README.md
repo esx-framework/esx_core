@@ -1,4 +1,4 @@
-<h1 align='center'>[ESX] SkinChanger</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+<h1 align='center'>[ESX] SkinChanger</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://documentation.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
 skinchanger is a resource used to both Set and Get Players clothing, accessories and Model - It supports the freemode peds `mp_m_freemode_01` and `mp_f_freemode_01` as well as all Ped Features.
 
@@ -57,13 +57,13 @@ TriggerEvent('skinchanger:loadSkin', {
 
 -- Get list of components and maxVals
 TriggerEvent('skinchanger:getData', function(components, maxVals)
- print('Components => ' .. json.encode(components))
- print('MaxVals => ' .. json.encode(maxVals))
+ print(('Components => %s'):format(json.encode(components)))
+ print(('MaxVals => %s'):format(json.encode(maxVals)))
 end)
 
 -- Get current skin
 TriggerEvent('skinchanger:getSkin', function(skin)
- print(json.encode(skin))
+ print(('%s'):format(json.encode(skin)))
 end)
 ```
 
