@@ -99,7 +99,6 @@ Locales["fr"] = {
 	["command_setcoords_x"] = "Valeur de l'axe X",
 	["command_setcoords_y"] = "Valeur de l'axe Y",
 	["command_setcoords_z"] = "Valeur de l'axe Z",
-	['command_setcoords_h'] = 'Heading value',
 	["command_setjob"] = "Définir le métier d'un joueur",
 	["command_setjob_job"] = "Nom du métier à définir",
 	["command_setjob_grade"] = "Grade du métier",

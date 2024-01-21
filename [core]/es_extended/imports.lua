@@ -1,13 +1,12 @@
----@diagnostic disable: missing-fields
 ESX = exports['es_extended']:getSharedObject()
 
 if not IsDuplicityVersion() then -- Only register this event for the client
     AddEventHandler('esx:setPlayerData', function(key, val, last)
         if GetInvokingResource() == 'es_extended' then
             ESX.PlayerData[key] = val
-            -- if OnPlayerData then not used?
-            --     OnPlayerData(key, val, last)
-            -- end
+            if OnPlayerData then
+                OnPlayerData(key, val, last)
+            end
         end
     end)
 

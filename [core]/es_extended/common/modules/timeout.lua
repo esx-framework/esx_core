@@ -1,4 +1,3 @@
----@diagnostic disable: duplicate-set-field
 local TimeoutCount = 0
 local CancelledTimeouts = {}
 

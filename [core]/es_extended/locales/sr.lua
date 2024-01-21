@@ -95,7 +95,6 @@ Locales["sr"] = {
 	['command_setcoords_x'] = 'X',
 	['command_setcoords_y'] = 'Y',
 	['command_setcoords_z'] = 'Z',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Postavite posao igraču',
 	['command_setjob_job'] = 'Ime',
 	['command_setjob_grade'] = 'Stepen posla',

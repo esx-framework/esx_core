@@ -1,5 +1,4 @@
-local GetResourceState = GetResourceState
-local npwd = GetResourceState('npwd'):find('start') and exports?.npwd
+local npwd = GetResourceState('npwd'):find('start') and exports.npwd or nil
 
 local function checkPhone()
 	if not npwd then
@@ -17,7 +16,7 @@ AddEventHandler('onClientResourceStart', function(resource)
 		return
 	end
 
-	npwd = GetResourceState('npwd'):find('start') and exports?.npwd
+	npwd = GetResourceState('npwd'):find('start') and exports.npwd or nil
 
 	if ESX.PlayerLoaded then
 		checkPhone()
@@ -25,12 +24,6 @@ AddEventHandler('onClientResourceStart', function(resource)
 end)
 
 AddEventHandler('onClientResourceStop', function(resource)
-	if resource == 'npwd' then
-		npwd = nil
-	end
-end)
-
-AddEventHandler('onResourceStop', function(resource)
 	if resource == 'npwd' then
 		npwd = nil
 	end

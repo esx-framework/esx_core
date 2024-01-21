@@ -95,7 +95,6 @@ Locales["es"] = {
 	['command_setcoords_x'] = 'Eje X',
 	['command_setcoords_y'] = 'Eje Y',
 	['command_setcoords_z'] = 'Eje Z',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Dar un trabajo a un jugador',
 	['command_setjob_job'] = 'Nombre del trabajo',
 	['command_setjob_grade'] = 'Rango del trabajo',

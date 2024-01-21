@@ -95,7 +95,6 @@ Locales["he"] = {
   ['command_setcoords_x'] = 'ערך X',
   ['command_setcoords_y'] = 'ערך Y',
   ['command_setcoords_z'] = 'ערך Z',
-  ['command_setcoords_h'] = 'Heading value',
   ['command_setjob'] = 'הגדר את העבודה של השחקן',
   ['command_setjob_job'] = 'שם',
   ['command_setjob_grade'] = 'דרגת עבודה',

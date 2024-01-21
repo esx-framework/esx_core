@@ -99,7 +99,6 @@ Locales["it"] = {
 	['command_setcoords_x'] = 'Valore X',
 	['command_setcoords_y'] = 'Valore Y',
 	['command_setcoords_z'] = 'Valore Z',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Setta lavoro ad un giocatore',
 	['command_setjob_job'] = 'Nome',
 	['command_setjob_grade'] = 'Grado lavoro',

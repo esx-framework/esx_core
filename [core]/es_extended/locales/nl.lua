@@ -91,7 +91,6 @@ Locales["nl"] = {
   ['command_setcoords_x'] = 'X waarde',
   ['command_setcoords_y'] = 'Y waarde',
   ['command_setcoords_z'] = 'Z waarde',
-  ['command_setcoords_h'] = 'Heading value',
   ['command_setjob'] = 'Zet een speler zijn / haar job',
   ['command_setjob_job'] = 'Naam',
   ['command_setjob_grade'] = 'Job grade',

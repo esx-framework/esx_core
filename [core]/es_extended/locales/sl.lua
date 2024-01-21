@@ -95,7 +95,6 @@ Locales["sl"] = {
 	['command_setcoords_x'] = 'Vrednost X',
 	['command_setcoords_y'] = 'Vrednost Y',
 	['command_setcoords_z'] = 'Z vrednost',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Nastavi opravilo igralca',
 	['command_setjob_job'] = 'Ime',
 	['command_setjob_grade'] = 'Delovna ocena',

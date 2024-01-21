@@ -1,4 +1,3 @@
----@diagnostic disable: duplicate-set-field
 ESX.Math = {}
 
 function ESX.Math.Round(value, numDecimalPlaces)
@@ -21,6 +20,6 @@ function ESX.Math.Trim(value)
 	if value then
 		return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
 	else
-		return ''
+		return nil
 	end
 end

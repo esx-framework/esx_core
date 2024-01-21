@@ -1,9 +1,9 @@
-RegisterNetEvent('esx:playerPedChanged')
-RegisterNetEvent('esx:playerJumping')
-RegisterNetEvent('esx:enteringVehicle')
-RegisterNetEvent('esx:enteringVehicleAborted')
-RegisterNetEvent('esx:enteredVehicle')
-RegisterNetEvent('esx:exitedVehicle')
+RegisterServerEvent('esx:playerPedChanged')
+RegisterServerEvent('esx:playerJumping')
+RegisterServerEvent('esx:enteringVehicle')
+RegisterServerEvent('esx:enteringVehicleAborted')
+RegisterServerEvent('esx:enteredVehicle')
+RegisterServerEvent('esx:exitedVehicle')
 
 if Config.EnableDebug then
     AddEventHandler('esx:playerPedChanged', function(netId)

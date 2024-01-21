@@ -89,7 +89,6 @@ Locales["pl"] = {
 	['command_setcoords_x'] = 'x axis',
 	['command_setcoords_y'] = 'y axis',
 	['command_setcoords_z'] = 'z axis',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'ustaw prace dla gracza',
 	['command_setjob_job'] = 'nazwa pracy',
 	['command_setjob_grade'] = 'stanowisko w pracy',

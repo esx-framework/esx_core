@@ -99,7 +99,6 @@ Locales["el"] = {
   ['command_setcoords_x'] = 'Τιμή X',
   ['command_setcoords_y'] = 'Τιμή Y',
   ['command_setcoords_z'] = 'Τιμή Z',
-  ['command_setcoords_h'] = 'Heading value',
   ['command_setjob'] = 'Ορίστε το επάγγελμα ενός παίκτη',
   ['command_setjob_job'] = 'Όνομα',
   ['command_setjob_grade'] = 'Βαθμός επαγγέλματος',

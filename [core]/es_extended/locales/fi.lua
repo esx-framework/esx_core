@@ -90,7 +90,6 @@ Locales["fi"] = {
 	['command_setcoords_x'] = 'x akseli',
 	['command_setcoords_y'] = 'y akseli',
 	['command_setcoords_z'] = 'z akseli',
-	['command_setcoords_h'] = 'Heading value',
 	['command_setjob'] = 'Aseta pelaajalle työ',
 	['command_setjob_job'] = 'Työ',
 	['command_setjob_grade'] = 'Arvo',

@@ -1,18 +1,3 @@
----@diagnostic disable: duplicate-set-field
-local HasModelLoaded = HasModelLoaded
-local IsModelInCdimage = IsModelInCdimage
-local RequestModel = RequestModel
-local HasStreamedTextureDictLoaded = HasStreamedTextureDictLoaded
-local RequestStreamedTextureDict = RequestStreamedTextureDict
-local HasNamedPtfxAssetLoaded = HasNamedPtfxAssetLoaded
-local RequestNamedPtfxAsset = RequestNamedPtfxAsset
-local HasAnimSetLoaded = HasAnimSetLoaded
-local RequestAnimSet = RequestAnimSet
-local HasAnimDictLoaded = HasAnimDictLoaded
-local RequestAnimDict = RequestAnimDict
-local HasWeaponAssetLoaded = HasWeaponAssetLoaded
-local RequestWeaponAsset = RequestWeaponAsset
-
 function ESX.Streaming.RequestModel(modelHash, cb)
 	modelHash = (type(modelHash) == 'number' and modelHash or joaat(modelHash))
 
@@ -20,25 +5,25 @@ function ESX.Streaming.RequestModel(modelHash, cb)
 		RequestModel(modelHash)
 
 		while not HasModelLoaded(modelHash) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
 
 function ESX.Streaming.RequestStreamedTextureDict(textureDict, cb)
 	if not HasStreamedTextureDictLoaded(textureDict) then
-		RequestStreamedTextureDict(textureDict, true)
+		RequestStreamedTextureDict(textureDict)
 
 		while not HasStreamedTextureDictLoaded(textureDict) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
@@ -48,11 +33,11 @@ function ESX.Streaming.RequestNamedPtfxAsset(assetName, cb)
 		RequestNamedPtfxAsset(assetName)
 
 		while not HasNamedPtfxAssetLoaded(assetName) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
@@ -62,11 +47,11 @@ function ESX.Streaming.RequestAnimSet(animSet, cb)
 		RequestAnimSet(animSet)
 
 		while not HasAnimSetLoaded(animSet) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
@@ -76,25 +61,25 @@ function ESX.Streaming.RequestAnimDict(animDict, cb)
 		RequestAnimDict(animDict)
 
 		while not HasAnimDictLoaded(animDict) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
 
 function ESX.Streaming.RequestWeaponAsset(weaponHash, cb)
 	if not HasWeaponAssetLoaded(weaponHash) then
-		RequestWeaponAsset(weaponHash, 31, 0)
+		RequestWeaponAsset(weaponHash)
 
 		while not HasWeaponAssetLoaded(weaponHash) do
-			Wait(100)
+			Wait(0)
 		end
 	end
 
-	if cb then
+	if cb ~= nil then
 		cb()
 	end
 end
