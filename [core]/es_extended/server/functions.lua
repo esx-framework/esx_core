@@ -35,8 +35,9 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	Core.RegisteredCommands[name] = { group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion }
 
 	RegisterCommand(name, function(playerId, args)
-		local command = Core.RegisteredCommands[name]
+		TriggerEvent('esx:onCommand', playerId, name, args)
 
+		local command = Core.RegisteredCommands[name]
 		if not command.allowConsole and playerId == 0 then
 			print(('[^3WARNING^7] ^5%s'):format(TranslateCap('commanderror_console')))
 		else
