@@ -1,0 +1,30 @@
+name: Simple Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionNumber:
+        description: 'Version Number'
+        required: false
+        default: ''
+      zipName:
+        description: 'Zip Name'
+        required: true
+        default: 'esx_core'
+      web:
+        description: 'Web'
+        required: false
+        default: 'false'
+      excludeOptions:
+          type: string
+          description: Separate the files or folders that you do not want to see in the release with a comma. 
+          required: false
+
+jobs:
+  simple-create-release:
+    uses: esx-framework/.github/.github/workflows/simple-release.yml@main
+    with:
+      zipName: ${{ github.event.inputs.zipName }}
+      web: ${{ github.event.inputs.web }}
+      versionNumber: ${{ github.event.inputs.versionNumber }}
+      excludeOptions: ${{ github.event.inputs.excludeOptions }}
