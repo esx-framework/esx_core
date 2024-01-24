@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 description 'ESX Skin'
-version '1.10.2'
+version '1.10.3'
 lua54 'yes'
 
 shared_script '@es_extended/imports.lua'

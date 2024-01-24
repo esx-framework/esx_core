@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 author 'ESX-Framework'
 lua54 'yes'
-version '1.10.2'
+version '1.10.3'
 description 'ESX Progressbar'
 
 client_scripts { 'Progress.lua' }
