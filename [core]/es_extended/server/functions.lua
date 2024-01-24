@@ -171,6 +171,10 @@ local function updateHealthAndArmorInMetadata(xPlayer)
 end
 
 function Core.SavePlayer(xPlayer, cb)
+	if not xPlayer.spawned then 
+        return cb and cb() 
+    end 
+	
     updateHealthAndArmorInMetadata(xPlayer)
 	local parameters <const> = {
 		json.encode(xPlayer.getAccounts(true)),
