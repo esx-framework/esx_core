@@ -36,10 +36,10 @@ Locales["sv"] = {
     ["threw_weapon_already"] = "Du har redan detta vapen",
     ["threw_cannot_pickup"] = "Inventoryt är fullt, kan inte plocka upp!",
     ["threw_pickup_prompt"] = "Tryck E för att plocka upp",
-  
+
     -- Key mapping
     ["keymap_showinventory"] = "Öppna inventory",
-  
+
     -- Salary related
     ["received_salary"] = "Du har fått ditt bidrag: %skr",
     ["received_help"] = "Du har fått betalt: %skr",
@@ -49,87 +49,87 @@ Locales["sv"] = {
     ["account_bank"] = "Bank",
     ["account_black_money"] = "Svarta pengar",
     ["account_money"] = "Kontanter",
-  
+
     ["act_imp"] = "Kan inte utföra",
     ["in_vehicle"] = "Kan inte utföra, spelaren är i ett fordon",
     ["not_in_vehicle"] = "Kan inte utföra, spelaren är inte i ett fordon",
-  
+
     -- Commands
-    ['command_bring'] = 'Ta en spelare till dig',
-    ['command_car'] = 'Ta fram ett fordon',
-    ['command_car_car'] = 'modell',
-    ['command_cardel'] = 'Raderar fordon inom en specifik radie',
-    ['command_cardel_radius'] = 'Raderar fordon inom en specifik radie',
-    ['command_repair'] = 'Reparera ditt fordon',
-    ['command_repair_success'] = 'Fordon reparerat',
-    ['command_repair_success_target'] = 'En admin har reparerat ditt fordon',
-    ['command_clear'] = 'Rensa chatt',
-    ['command_clearall'] = 'Rensa chatt för alla',
-    ['command_clearinventory'] = 'Raderar alla föremål från en spelares inventory',
-    ['command_clearloadout'] = 'Raderar alla vapen från en spelares inventory',
-    ['command_freeze'] = 'Frys en spelare',
-    ['command_unfreeze'] = 'Ta bort frysningen från en spelare',
-    ['command_giveaccountmoney'] = 'Ge pengar till ett specifikt konto',
-    ['command_giveaccountmoney_account'] = 'Konto',
-    ['command_giveaccountmoney_amount'] = 'Summa',
-    ['command_giveaccountmoney_invalid'] = 'Ogiltigt kontonamn',
-    ['command_removeaccountmoney'] = 'Radera pengar från ett specifikt konto',
-    ['command_removeaccountmoney_account'] = 'Konto',
-    ['command_removeaccountmoney_amount'] = 'Summa',
-    ['command_removeaccountmoney_invalid'] = 'Ogiltigt kontonamn',
-    ['command_giveitem'] = 'Ge föremål till en spelare',
-    ['command_giveitem_item'] = 'Namn',
-    ['command_giveitem_count'] = 'Antal',
-    ['command_giveweapon'] = 'Ge ett vapen till en spelare',
-    ['command_giveweapon_weapon'] = 'Vapen',
-    ['command_giveweapon_ammo'] = 'Antal skott',
-    ['command_giveweapon_hasalready'] = 'Spelaren har redan detta vapen',
-    ['command_giveweaponcomponent'] = 'Ge komponent till en spelare',
-    ['command_giveweaponcomponent_component'] = 'Komponent',
-    ['command_giveweaponcomponent_invalid'] = 'Ogiltig komponent',
-    ['command_giveweaponcomponent_hasalready'] = 'Spelaren har redan denna komponent',
-    ['command_giveweaponcomponent_missingweapon'] = 'Spelaren har inte vapen för komponenten',
-    ['command_goto'] = 'Teleportera till en spelare',
-    ['command_kill'] = 'Döda en spelare',
-    ['command_save'] = 'Spara en spelares data',
-    ['command_saveall'] = 'Spara alla spelares data',
-    ['command_setaccountmoney'] = 'Sätt pengar på ett specifikt konto',
-    ['command_setaccountmoney_amount'] = 'Summa',
-    ['command_setcoords'] = 'Teleportera till koordinater',
-    ['command_setcoords_x'] = 'X value',
-    ['command_setcoords_y'] = 'Y value',
-    ['command_setcoords_z'] = 'Z value',
-    ['command_setjob'] = 'Sätt jobb för en spelare',
-    ['command_setjob_job'] = 'Namn',
-    ['command_setjob_grade'] = 'Grad',
-    ['command_setjob_invalid'] = 'Jobbet, graden eller båda är ogiltiga',
-    ['command_setgroup'] = 'Sätt en spelares grupp',
-    ['command_setgroup_group'] = 'Grupp',
-    ['commanderror_argumentmismatch'] = 'Invalid Argument Count (passed %s, wanted %s)',
-    ['commanderror_argumentmismatch_number'] = 'Invalid Argument #%s data type (passed string, wanted number)',
-    ['commanderror_argumentmismatch_string'] = 'Invalid Argument #%s data type (passed number, wanted string)',
-    ['commanderror_invaliditem'] = 'Ogiltigt föremål',
-    ['commanderror_invalidweapon'] = 'Ogiltigt vapen',
-    ['commanderror_console'] = 'Kommandot kan inte användas i konsolen',
-    ['commanderror_invalidcommand'] = 'Ogiltigt kommand - /%s',
-    ['commanderror_invalidplayerid'] = 'Spelaren är inte online',
-    ['commandgeneric_playerid'] = 'Spelares ID',
-    ['command_giveammo_noweapon_found'] = '%s har inte detta vapen',
-    ['command_giveammo_weapon'] = 'Vapen namn',
-    ['command_giveammo_ammo'] = 'Antal ammo',
-    ['tpm_nowaypoint'] = 'Ingen markör sutten.',
-    ['tpm_success'] = 'Du har teleporterat',
-  
-    ['noclip_message'] = 'Noclip har %s',
-    ['enabled'] = '~g~aktiverats~s~',
-    ['disabled'] = '~r~avaktiverats~s~',
-  
+    ["command_bring"] = "Ta en spelare till dig",
+    ["command_car"] = "Ta fram ett fordon",
+    ["command_car_car"] = "modell",
+    ["command_cardel"] = "Raderar fordon inom en specifik radie",
+    ["command_cardel_radius"] = "Raderar fordon inom en specifik radie",
+    ["command_repair"] = "Reparera ditt fordon",
+    ["command_repair_success"] = "Fordon reparerat",
+    ["command_repair_success_target"] = "En admin har reparerat ditt fordon",
+    ["command_clear"] = "Rensa chatt",
+    ["command_clearall"] = "Rensa chatt för alla",
+    ["command_clearinventory"] = "Raderar alla föremål från en spelares inventory",
+    ["command_clearloadout"] = "Raderar alla vapen från en spelares inventory",
+    ["command_freeze"] = "Frys en spelare",
+    ["command_unfreeze"] = "Ta bort frysningen från en spelare",
+    ["command_giveaccountmoney"] = "Ge pengar till ett specifikt konto",
+    ["command_giveaccountmoney_account"] = "Konto",
+    ["command_giveaccountmoney_amount"] = "Summa",
+    ["command_giveaccountmoney_invalid"] = "Ogiltigt kontonamn",
+    ["command_removeaccountmoney"] = "Radera pengar från ett specifikt konto",
+    ["command_removeaccountmoney_account"] = "Konto",
+    ["command_removeaccountmoney_amount"] = "Summa",
+    ["command_removeaccountmoney_invalid"] = "Ogiltigt kontonamn",
+    ["command_giveitem"] = "Ge föremål till en spelare",
+    ["command_giveitem_item"] = "Namn",
+    ["command_giveitem_count"] = "Antal",
+    ["command_giveweapon"] = "Ge ett vapen till en spelare",
+    ["command_giveweapon_weapon"] = "Vapen",
+    ["command_giveweapon_ammo"] = "Antal skott",
+    ["command_giveweapon_hasalready"] = "Spelaren har redan detta vapen",
+    ["command_giveweaponcomponent"] = "Ge komponent till en spelare",
+    ["command_giveweaponcomponent_component"] = "Komponent",
+    ["command_giveweaponcomponent_invalid"] = "Ogiltig komponent",
+    ["command_giveweaponcomponent_hasalready"] = "Spelaren har redan denna komponent",
+    ["command_giveweaponcomponent_missingweapon"] = "Spelaren har inte vapen för komponenten",
+    ["command_goto"] = "Teleportera till en spelare",
+    ["command_kill"] = "Döda en spelare",
+    ["command_save"] = "Spara en spelares data",
+    ["command_saveall"] = "Spara alla spelares data",
+    ["command_setaccountmoney"] = "Sätt pengar på ett specifikt konto",
+    ["command_setaccountmoney_amount"] = "Summa",
+    ["command_setcoords"] = "Teleportera till koordinater",
+    ["command_setcoords_x"] = "X value",
+    ["command_setcoords_y"] = "Y value",
+    ["command_setcoords_z"] = "Z value",
+    ["command_setjob"] = "Sätt jobb för en spelare",
+    ["command_setjob_job"] = "Namn",
+    ["command_setjob_grade"] = "Grad",
+    ["command_setjob_invalid"] = "Jobbet, graden eller båda är ogiltiga",
+    ["command_setgroup"] = "Sätt en spelares grupp",
+    ["command_setgroup_group"] = "Grupp",
+    ["commanderror_argumentmismatch"] = "Invalid Argument Count (passed %s, wanted %s)",
+    ["commanderror_argumentmismatch_number"] = "Invalid Argument #%s data type (passed string, wanted number)",
+    ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_invaliditem"] = "Ogiltigt föremål",
+    ["commanderror_invalidweapon"] = "Ogiltigt vapen",
+    ["commanderror_console"] = "Kommandot kan inte användas i konsolen",
+    ["commanderror_invalidcommand"] = "Ogiltigt kommand - /%s",
+    ["commanderror_invalidplayerid"] = "Spelaren är inte online",
+    ["commandgeneric_playerid"] = "Spelares ID",
+    ["command_giveammo_noweapon_found"] = "%s har inte detta vapen",
+    ["command_giveammo_weapon"] = "Vapen namn",
+    ["command_giveammo_ammo"] = "Antal ammo",
+    ["tpm_nowaypoint"] = "Ingen markör sutten.",
+    ["tpm_success"] = "Du har teleporterat",
+
+    ["noclip_message"] = "Noclip har %s",
+    ["enabled"] = "~g~aktiverats~s~",
+    ["disabled"] = "~r~avaktiverats~s~",
+
     -- Locale settings
     ["locale_digit_grouping_symbol"] = ",",
     ["locale_currency"] = "%skr",
-  
+
     -- Weapons
-  
+
     -- Melee
     ["weapon_dagger"] = "Dolk",
     ["weapon_bat"] = "Baseballträd",
@@ -148,7 +148,7 @@ Locales["sv"] = {
     ["weapon_poolcue"] = "Biljardkö",
     ["weapon_stone_hatchet"] = "Stenyxa",
     ["weapon_switchblade"] = "Fickkniv",
-  
+
     -- Handguns
     ["weapon_appistol"] = "AP Pistol",
     ["weapon_ceramicpistol"] = "Ceramic Pistol",
@@ -169,7 +169,7 @@ Locales["sv"] = {
     ["weapon_stungun"] = "Taser",
     ["weapon_raypistol"] = "Up-N-Atomizer",
     ["weapon_vintagepistol"] = "Vintage Pistol",
-  
+
     -- Shotguns
     ["weapon_assaultshotgun"] = "Assault Shotgun",
     ["weapon_autoshotgun"] = "Auto Shotgun",
@@ -181,7 +181,7 @@ Locales["sv"] = {
     ["weapon_pumpshotgun"] = "Pump Shotgun",
     ["weapon_pumpshotgun_mk2"] = "Pump Shotgun MK2",
     ["weapon_sawnoffshotgun"] = "Sawed Off Shotgun",
-  
+
     -- SMG & LMG
     ["weapon_assaultsmg"] = "Assault SMG",
     ["weapon_combatmg"] = "Combat MG",
@@ -195,7 +195,7 @@ Locales["sv"] = {
     ["weapon_smg"] = "SMG",
     ["weapon_smg_mk2"] = "SMG MK2",
     ["weapon_raycarbine"] = "Unholy Hellbringer",
-  
+
     -- Rifles
     ["weapon_advancedrifle"] = "Advanced Rifle",
     ["weapon_assaultrifle"] = "Assault Rifle",
@@ -209,14 +209,14 @@ Locales["sv"] = {
     ["weapon_specialcarbine"] = "Special Carbine",
     ["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
     ["weapon_heavyrifle"] = "Heavy Rifle",
-  
+
     -- Sniper
     ["weapon_heavysniper"] = "Heavy Sniper",
     ["weapon_heavysniper_mk2"] = "Heavy Sniper MK2",
     ["weapon_marksmanrifle"] = "Marksman Rifle",
     ["weapon_marksmanrifle_mk2"] = "Marksman Rifle MK2",
     ["weapon_sniperrifle"] = "Sniper Rifle",
-  
+
     -- Heavy / Launchers
     ["weapon_compactlauncher"] = "Compact Launcher",
     ["weapon_firework"] = "Firework Launcher",
@@ -226,18 +226,18 @@ Locales["sv"] = {
     ["weapon_railgun"] = "Railgun",
     ["weapon_rpg"] = "Rocket Launcher",
     ["weapon_rayminigun"] = "Widowmaker",
-  
+
     -- Criminal Enterprises DLC
     ["weapon_metaldetector"] = "Metal Detector",
     ["weapon_precisionrifle"] = "Precision Rifle",
     ["weapon_tactilerifle"] = "Service Carbine",
-  
+
     -- Drug wars dlc
     ["weapon_candycane"] = "Candycane",
     ["weapon_acidpackage"] = "Acid Package",
     ["weapon_pistolxm3"] = "Pistol8 x3m",
     ["weapon_railgunxm3"] = "Railgun",
-  
+
     -- Thrown
     ["weapon_ball"] = "Baseball",
     ["weapon_bzgas"] = "BZ Gas",
@@ -251,7 +251,7 @@ Locales["sv"] = {
     ["weapon_snowball"] = "Snöboll",
     ["weapon_stickybomb"] = "Sticky Bomb",
     ["weapon_smokegrenade"] = "Tårgas",
-  
+
     -- Special
     ["weapon_fireextinguisher"] = "Brandsläckare",
     ["weapon_digiscanner"] = "Digital Scanner",
@@ -259,7 +259,7 @@ Locales["sv"] = {
     ["weapon_handcuffs"] = "Handklovar",
     ["gadget_nightvision"] = "Night Vision",
     ["gadget_parachute"] = "Fallskärm",
-  
+
     -- Weapon Components
     ["component_knuckle_base"] = "base Model",
     ["component_knuckle_pimp"] = "the Pimp",
@@ -271,16 +271,16 @@ Locales["sv"] = {
     ["component_knuckle_player"] = "the Player",
     ["component_knuckle_king"] = "the King",
     ["component_knuckle_vagos"] = "the Vagos",
-  
+
     ["component_luxary_finish"] = "luxary Weapon Finish",
-  
+
     ["component_handle_default"] = "default Handle",
     ["component_handle_vip"] = "vIP Handle",
     ["component_handle_bodyguard"] = "bodyguard Handle",
-  
+
     ["component_vip_finish"] = "vIP Finish",
     ["component_bodyguard_finish"] = "bodyguard Finish",
-  
+
     ["component_camo_finish"] = "digital Camo",
     ["component_camo_finish2"] = "brushstroke Camo",
     ["component_camo_finish3"] = "woodland Camo",
@@ -292,7 +292,7 @@ Locales["sv"] = {
     ["component_camo_finish9"] = "geometric Camo",
     ["component_camo_finish10"] = "boom Camo",
     ["component_camo_finish11"] = "patriotic Camo",
-  
+
     ["component_camo_slide_finish"] = "digital Slide Camo",
     ["component_camo_slide_finish2"] = "brushstroke Slide Camo",
     ["component_camo_slide_finish3"] = "woodland Slide Camo",
@@ -304,12 +304,12 @@ Locales["sv"] = {
     ["component_camo_slide_finish9"] = "geometric Slide Camo",
     ["component_camo_slide_finish10"] = "boom Slide Camo",
     ["component_camo_slide_finish11"] = "patriotic Slide Camo",
-  
+
     ["component_clip_default"] = "default Magazine",
     ["component_clip_extended"] = "extended Magazine",
     ["component_clip_drum"] = "drum Magazine",
     ["component_clip_box"] = "box Magazine",
-  
+
     ["component_scope_holo"] = "holographic Scope",
     ["component_scope_small"] = "small Scope",
     ["component_scope_medium"] = "medium Scope",
@@ -317,10 +317,10 @@ Locales["sv"] = {
     ["component_scope"] = "mounted Scope",
     ["component_scope_advanced"] = "advanced Scope",
     ["component_ironsights"] = "ironsights",
-  
+
     ["component_suppressor"] = "ljuddämpare",
     ["component_compensator"] = "compensator",
-  
+
     ["component_muzzle_flat"] = "flat Muzzle Brake",
     ["component_muzzle_tactical"] = "tactical Muzzle Brake",
     ["component_muzzle_fat"] = "fat-End Muzzle Brake",
@@ -329,26 +329,26 @@ Locales["sv"] = {
     ["component_muzzle_slanted"] = "slanted Muzzle Brake",
     ["component_muzzle_split"] = "split-End Muzzle Brake",
     ["component_muzzle_squared"] = "squared Muzzle Brake",
-  
+
     ["component_flashlight"] = "Ficklampa",
     ["component_grip"] = "grepp",
-  
+
     ["component_barrel_default"] = "default Barrel",
     ["component_barrel_heavy"] = "heavy Barrel",
-  
+
     ["component_ammo_tracer"] = "tracer Ammo",
     ["component_ammo_incendiary"] = "incendiary Ammo",
     ["component_ammo_hollowpoint"] = "hollowpoint Ammo",
     ["component_ammo_fmj"] = "fMJ Ammo",
     ["component_ammo_armor"] = "armor Piercing Ammo",
     ["component_ammo_explosive"] = "armor Piercing Incendiary Ammo",
-  
+
     ["component_shells_default"] = "default Shells",
     ["component_shells_incendiary"] = "dragons Breath Shells",
     ["component_shells_armor"] = "steel Buckshot Shells",
     ["component_shells_hollowpoint"] = "flechette Shells",
     ["component_shells_explosive"] = "explosive Slug Shells",
-  
+
     -- Weapon Ammo
     ["ammo_rounds"] = "round(s)",
     ["ammo_shells"] = "shell(s)",
@@ -368,7 +368,7 @@ Locales["sv"] = {
     ["ammo_snowball"] = "snowball(s)",
     ["ammo_flare"] = "flare(s)",
     ["ammo_flaregun"] = "flare(s)",
-  
+
     -- Weapon Tints
     ["tint_default"] = "default skin",
     ["tint_green"] = "green skin",
@@ -378,5 +378,4 @@ Locales["sv"] = {
     ["tint_lspd"] = "blue skin",
     ["tint_orange"] = "orange skin",
     ["tint_platinum"] = "platinum skin",
-  }
-  
+}

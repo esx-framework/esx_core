@@ -97,4 +97,4 @@ Locales["sv"] = {
     ["bodyb_size"] = "Kroppsfläckar tjocklek",
     ["bodyb_extra"] = "Fläckar kroppseffekt",
     ["bodyb_extra_thickness"] = "Fläckar kroppseffekt tjocklek",
-  }
+}
