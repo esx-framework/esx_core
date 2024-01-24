@@ -52,7 +52,9 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
 
 	while ESX.PlayerData.ped == nil do Wait(20) end
-
+        
+    while not HasCollisionLoadedAroundEntity(ESX.PlayerData.ped) do Wait(0) end
+        
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
 		NetworkSetFriendlyFireOption(true)
