@@ -5,24 +5,26 @@ local isShowing = false
 local function TextUI(message, typ)
     isShowing = true
     SendNUIMessage({
-        action = 'show',
-        message = message and message or 'ESX-TextUI',
-        type = type(typ) == "string" and typ or 'info'
+        action = "show",
+        message = message and message or "ESX-TextUI",
+        type = type(typ) == "string" and typ or "info",
     })
 end
 
 local function HideUI()
-    if not isShowing then return end
+    if not isShowing then
+        return
+    end
     isShowing = false
     SendNUIMessage({
-        action = 'hide'
+        action = "hide",
     })
 end
 
-exports('TextUI', TextUI)
-exports('HideUI', HideUI)
-RegisterNetEvent('ESX:TextUI', TextUI)
-RegisterNetEvent('ESX:HideUI', HideUI)
+exports("TextUI", TextUI)
+exports("HideUI", HideUI)
+RegisterNetEvent("ESX:TextUI", TextUI)
+RegisterNetEvent("ESX:HideUI", HideUI)
 
 if Debug then
     RegisterCommand("textui:error", function()

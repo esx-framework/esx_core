@@ -15,11 +15,13 @@ local function Progressbar(message, length, Options)
             TaskStartScenarioInPlace(ESX.PlayerData.ped, CurrentProgress.animation.Scenario, 0, true)
         end
     end
-    if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), CurrentProgress.FreezePlayer) end
+    if CurrentProgress.FreezePlayer then
+        FreezeEntityPosition(PlayerPedId(), CurrentProgress.FreezePlayer)
+    end
     SendNUIMessage({
         type = "Progressbar",
         length = length or 3000,
-        message = message or "ESX-Framework"
+        message = message or "ESX-Framework",
     })
     CurrentProgress.length = length or 3000
     while CurrentProgress ~= nil do
@@ -27,8 +29,12 @@ local function Progressbar(message, length, Options)
             CurrentProgress.length = CurrentProgress.length - 1000
         else
             ClearPedTasks(ESX.PlayerData.ped)
-            if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
-            if CurrentProgress.onFinish then CurrentProgress.onFinish() end
+            if CurrentProgress.FreezePlayer then
+                FreezeEntityPosition(PlayerPedId(), false)
+            end
+            if CurrentProgress.onFinish then
+                CurrentProgress.onFinish()
+            end
             CurrentProgress = nil
         end
         Wait(1000)
@@ -36,12 +42,19 @@ local function Progressbar(message, length, Options)
 end
 
 local function CancelProgressbar()
-    if not CurrentProgress then return end
+    if not CurrentProgress then
+        return
+    end
     SendNUIMessage({
-        type = "Close"
+        type = "Close",
     })
     ClearPedTasks(ESX.PlayerData.ped)
-    if CurrentProgress.FreezePlayer then FreezeEntityPosition(PlayerPedId(), false) end
+    if CurrentProgress.FreezePlayer then
+        FreezeEntityPosition(PlayerPedId(), false)
+    end
+    if CurrentProgress.onCancel then
+        CurrentProgress.onCancel()
+    end
     CurrentProgress.canceled = true
     CurrentProgress.length = 0
     CurrentProgress = nil
@@ -49,5 +62,5 @@ end
 
 ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", CancelProgressbar)
 
-exports('Progressbar', Progressbar)
-exports('CancelProgressbar', CancelProgressbar)
+exports("Progressbar", Progressbar)
+exports("CancelProgressbar", CancelProgressbar)

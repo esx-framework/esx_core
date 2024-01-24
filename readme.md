@@ -24,7 +24,7 @@ Interested in helping us? [Take a look at our patreon](https://www.patreon.com/e
 <tr><td>
 ESX Core (ESX-legacy)
 
- Copyright (C) 2015-2023 [ESX-Framework](https://github.com/esx-framework)
+ Copyright (C) 2015-2024 [ESX-Framework](https://github.com/esx-framework)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

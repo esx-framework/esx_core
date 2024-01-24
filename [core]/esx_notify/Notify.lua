@@ -5,9 +5,9 @@ local Debug = ESX.GetConfig().EnableDebug
 ---@param message any the message :D
 local function Notify(notificatonType, length, message)
     if Debug then
-        print(('1 %s'):format(tostring(notificatonType)))
-        print(('2 %s'):format(tostring(length)))
-        print(('3 %s'):format(message))
+        print(("1 %s"):format(tostring(notificatonType)))
+        print(("2 %s"):format(tostring(length)))
+        print(("3 %s"):format(message))
     end
 
     if type(notificatonType) ~= "string" then
@@ -19,25 +19,24 @@ local function Notify(notificatonType, length, message)
     end
 
     if Debug then
-        print(('4 %s'):format(tostring(notificatonType)))
-        print(('5 %s'):format(tostring(length)))
-        print(('6 %s'):format(message))
+        print(("4 %s"):format(tostring(notificatonType)))
+        print(("5 %s"):format(tostring(length)))
+        print(("6 %s"):format(message))
     end
 
     SendNuiMessage(json.encode({
         type = notificatonType or "info",
         length = length or 3000,
-        message = message or "ESX-Notify"
+        message = message or "ESX-Notify",
     }))
 end
 
-
-exports('Notify', Notify)
+exports("Notify", Notify)
 RegisterNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()
-        ESX.ShowNotification('No Waypoint Set.', true, false, 140)
+        ESX.ShowNotification("No Waypoint Set.", true, false, 140)
     end)
 
     RegisterCommand("notify", function()
