@@ -1,6 +1,8 @@
 Config = {}
 Config.Locale = GetConvar("esx:locale", "en")
 
+Config.OxInventory = GetResourceState("ox_inventory") ~= 'missing' 
+
 Config.Accounts = {
     bank = {
         label = TranslateCap("account_bank"),

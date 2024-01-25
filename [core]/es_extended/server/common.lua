@@ -27,8 +27,7 @@ exports("getSharedObject", function()
     return ESX
 end)
 
-if GetResourceState("ox_inventory") ~= 'missing' then
-    Config.OxInventory = true
+if Config.OxInventory then
     Config.PlayerFunctionOverride = "OxInventory"
     SetConvarReplicated("inventory:framework", "esx")
     SetConvarReplicated("inventory:weight", Config.MaxWeight * 1000)
