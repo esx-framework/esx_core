@@ -2,7 +2,7 @@ exports("getSharedObject", function()
     return ESX
 end)
 
-Config.OxInventory = GetResourceState("ox_inventory"):find("start") and true
+Config.OxInventory = GetResourceState("ox_inventory") ~= 'missing'
 
 AddEventHandler("esx:getSharedObject", function()
     local Invoke = GetInvokingResource()
