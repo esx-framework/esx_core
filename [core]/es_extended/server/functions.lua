@@ -549,15 +549,7 @@ if not Config.OxInventory then
 end
 
 function ESX.DoesJobExist(job, grade)
-    grade = tostring(grade)
-
-    if job and grade then
-        if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
-            return true
-        end
-    end
-
-    return false
+    return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false 
 end
 
 function Core.IsPlayerAdmin(playerId)
