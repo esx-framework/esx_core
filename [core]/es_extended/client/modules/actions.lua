@@ -25,6 +25,7 @@ local function GetData(vehicle)
 end
 
 CreateThread(function()
+    while not ESX.PlayerLoaded do Wait(200) end
     while true do
         ESX.SetPlayerData("coords", GetEntityCoords(playerPed))
         if playerPed ~= PlayerPedId() then
