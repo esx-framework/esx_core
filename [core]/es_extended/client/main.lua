@@ -102,9 +102,9 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, isNew, skin)
         end)
     end
 
-    --if Config.DisableHealthRegeneration then
-        --SetPlayerHealthRechargeMultiplier(playerId, 0.0)
-    --end
+    if Config.DisableHealthRegeneration then
+        SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+    end
 
     if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
         CreateThread(function()
