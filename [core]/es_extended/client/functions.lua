@@ -24,8 +24,15 @@ function ESX.GetPlayerData()
     return ESX.PlayerData
 end
 
+local addonResourcesState = {
+    ['esx_progressbar'] = GetResourceState('esx_progressbar') ~= 'missing',
+    ['esx_notify'] = GetResourceState('esx_notify') ~= 'missing',
+    ['esx_textui'] = GetResourceState('esx_textui') ~= 'missing',
+    ['esx_context'] = GetResourceState('esx_context') ~= 'missing'
+}
+
 local function IsResourceFound(resource)
-	return GetResourceState(resource) ~= 'missing' or print(('[^1ERROR^7] ^5%s^7 is Missing!'):format(resource))
+	return addonResourcesState[resource] or print(('[^1ERROR^7] ^5%s^7 is Missing!'):format(resource))
 end
 
 function ESX.SearchInventory(items, count)
