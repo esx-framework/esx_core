@@ -24,19 +24,31 @@ function ESX.GetPlayerData()
     return ESX.PlayerData
 end
 
+local function IsResourceFound(resource)
+	return GetResourceState(resource) ~= 'missing' or print(('[^1ERROR^7] ^5%s^7 is Missing!'):format(resource))
+end
+
 function ESX.SearchInventory(items, count)
-    items = type(items) == "string" and { items } or items
+    local item
+    if type(items) == 'string' then
+        item, items = items, {items}
+    end
 
     local data = {}
-    for i = 1, #items do
-        for c = 1, #ESX.PlayerData.inventory do
-            if ESX.PlayerData.inventory[c].name == items[i] then
-                data[items[i]] = (count and ESX.PlayerData.inventory[c].count) or ESX.PlayerData.inventory[c]
+    for i = 1, #ESX.PlayerData.inventory do
+        local e = ESX.PlayerData.inventory[i]
+        for ii = 1, #items do
+            if e.name == items[ii] then
+                data[table.remove(items, ii)] = count and e.count or e
+                break
             end
+        end
+        if #items == 0 then
+            break
         end
     end
 
-    return #items == 1 and data[items[1]] or data
+    return not item and data or data[item]
 end
 
 function ESX.SetPlayerData(key, val)
@@ -49,62 +61,39 @@ function ESX.SetPlayerData(key, val)
     end
 end
 
-function ESX.Progressbar(message, length, Options)
-    if GetResourceState("esx_progressbar") ~= "missing" then
-        return exports["esx_progressbar"]:Progressbar(message, length, Options)
-    end
-
-    print("[^1ERROR^7] ^5ESX Progressbar^7 is Missing!")
+function ESX.Progressbar(...)
+	return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(...)
 end
 
 function ESX.ShowNotification(message, notifyType, length)
-    if GetResourceState("esx_notify") ~= "missing" then
-        return exports["esx_notify"]:Notify(notifyType, length, message)
-    end
-
-    print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
+	return IsResourceFound('esx_notify') and exports['esx_notify']:Notify(notifyType, length, message)
 end
 
-function ESX.TextUI(message, notifyType)
-    if GetResourceState("esx_textui") ~= "missing" then
-        return exports["esx_textui"]:TextUI(message, notifyType)
-    end
-
-    print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
+function ESX.TextUI(...)
+	return IsResourceFound('esx_textui') and exports['esx_textui']:TextUI(...)
 end
 
 function ESX.HideUI()
-    if GetResourceState("esx_textui") ~= "missing" then
-        return exports["esx_textui"]:HideUI()
-    end
-
-    print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
+	return IsResourceFound('esx_textui') and exports['esx_textui']:HideUI()
 end
 
 function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-    if saveToBrief == nil then
-        saveToBrief = true
-    end
     AddTextEntry("esxAdvancedNotification", msg)
     BeginTextCommandThefeedPost("esxAdvancedNotification")
     if hudColorIndex then
         ThefeedSetNextPostBackgroundColor(hudColorIndex)
     end
     EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
-    EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+    EndTextCommandThefeedPostTicker(flash, saveToBrief == nil or saveToBrief)
 end
 
 function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
     AddTextEntry("esxHelpNotification", msg)
-
     if thisFrame then
-        DisplayHelpTextThisFrame("esxHelpNotification", false)
+        DisplayHelpTextThisFrame("esxHelpNotification")
     else
-        if beep == nil then
-            beep = true
-        end
         BeginTextCommandDisplayHelp("esxHelpNotification")
-        EndTextCommandDisplayHelp(0, false, beep, duration or -1)
+        EndTextCommandDisplayHelp(0, false, beep == nil or beep, duration or -1)
     end
 end
 
@@ -116,42 +105,40 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
     EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
-ESX.HashString = function(str)
-    local format = string.format
-    local upper = string.upper
-    local gsub = string.gsub
-    local hash = joaat(str)
-    local input_map = format("~INPUT_%s~", upper(format("%x", hash)))
-    input_map = gsub(input_map, "FFFFFFFF", "")
-
-    return input_map
+function ESX.DrawMissionText(msg, time)
+    ClearPrints()
+    BeginTextCommandPrint('STRING')
+    AddTextComponentSubstringPlayerName(msg)
+    EndTextCommandPrint(time, true)
 end
 
-local contextAvailable = GetResourceState("esx_context") ~= "missing"
+function ESX.HashString(str)
+    return ('~INPUT_%s~'):format(('%x'):format(joaat(str)):upper())
+end
 
 function ESX.OpenContext(...)
-    return contextAvailable and exports["esx_context"]:Open(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5open^7 context menu, but ^5esx_context^7 is missing!")
+    return IsResourceFound('esx_context') and exports['esx_context']:Open(...)
 end
 
 function ESX.PreviewContext(...)
-    return contextAvailable and exports["esx_context"]:Preview(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5preview^7 context menu, but ^5esx_context^7 is missing!")
+    return IsResourceFound('esx_context') and exports['esx_context']:Preview(...)
 end
 
 function ESX.CloseContext(...)
-    return contextAvailable and exports["esx_context"]:Close(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5close^7 context menu, but ^5esx_context^7 is missing!")
+    return IsResourceFound('esx_context') and exports['esx_context']:Close(...)
 end
 
 function ESX.RefreshContext(...)
-    return contextAvailable and exports["esx_context"]:Refresh(...) or not contextAvailable and print("[^1ERROR^7] Tried to ^5Refresh^7 context menu, but ^5esx_context^7 is missing!")
+    return IsResourceFound('esx_context') and exports['esx_context']:Refresh(...)
 end
 
-ESX.RegisterInput = function(command_name, label, input_group, key, on_press, on_release)
-    RegisterCommand(on_release ~= nil and "+" .. command_name or command_name, on_press)
-    Core.Input[command_name] = on_release ~= nil and ESX.HashString("+" .. command_name) or ESX.HashString(command_name)
+function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
+    RegisterCommand("+" .. command_name, on_press)
+    Core.Input[command_name] = ESX.HashString("+" .. command_name)
     if on_release then
         RegisterCommand("-" .. command_name, on_release)
     end
-    RegisterKeyMapping(on_release ~= nil and "+" .. command_name or command_name, label, input_group, key)
+    RegisterKeyMapping("+" .. command_name, label or '', input_group or 'keyboard', key or '')
 end
 
 function ESX.UI.Menu.RegisterType(menuType, open, close)
@@ -276,9 +263,7 @@ function ESX.UI.Menu.GetOpenedMenus()
     return ESX.UI.Menu.Opened
 end
 
-function ESX.UI.Menu.IsOpen(menuType, namespace, name)
-    return ESX.UI.Menu.GetOpened(menuType, namespace, name) ~= nil
-end
+ESX.UI.Menu.IsOpen = ESX.UI.Menu.GetOpened
 
 function ESX.UI.ShowInventoryItemNotification(add, item, count)
     SendNUIMessage({
@@ -321,18 +306,8 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-    networked = networked == nil and true or networked
-
-    local model = type(object) == "number" and object or joaat(object)
-    local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
-    CreateThread(function()
-        ESX.Streaming.RequestModel(model)
-
-        local obj = CreateObject(model, vector.xyz, networked, false, true)
-        if cb then
-            cb(obj)
-        end
-    end)
+	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y. coords.z, networked == nil or networked, false, true)
+	return cb and cb(obj) or obj
 end
 
 function ESX.Game.SpawnLocalObject(object, coords, cb)
@@ -396,10 +371,7 @@ function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
 end
 
 function ESX.Game.IsVehicleEmpty(vehicle)
-    local passengers = GetVehicleNumberOfPassengers(vehicle)
-    local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
-
-    return passengers == 0 and driverSeatFree
+    return GetVehicleNumberOfPassengers(vehicle) == 0 and IsVehicleSeatFree(vehicle, -1)
 end
 
 function ESX.Game.GetObjects() -- Leave the function for compatibility
@@ -495,6 +467,19 @@ function ESX.Game.IsSpawnPointClear(coords, maxDistance)
     return #ESX.Game.GetVehiclesInArea(coords, maxDistance) == 0
 end
 
+function ESX.Game.GetShapeTestResultSync(shape)
+	local handle, hit, coords, normal, material, entity
+	repeat handle, hit, coords, normal, material, entity = GetShapeTestResultIncludingMaterial(shape)
+	until handle ~= 1 or Wait()
+	return hit, coords, normal, material, entity
+end
+
+function ESX.Game.RaycastScreen(depth, ...)
+	local world, normal = GetWorldCoordFromScreenCoord(.5, .5)
+	local target = world + normal * depth
+	return target, ESX.Game.GetShapeTestResultAsync(StartShapeTestLosProbe(world + normal, target, ...))
+end
+
 function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
     local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
@@ -527,18 +512,10 @@ function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
 end
 
 function ESX.Game.GetVehicleInDirection()
-    local playerPed = ESX.PlayerData.ped
-    local playerCoords = GetEntityCoords(playerPed)
-    local inDirection = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
-    local rayHandle = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
-    local _, hit, _, _, entityHit = GetShapeTestResult(rayHandle)
-
-    if hit == 1 and GetEntityType(entityHit) == 2 then
-        local entityCoords = GetEntityCoords(entityHit)
-        return entityHit, entityCoords
+    local _, hit, coords, _, _, entity = ESX.Game.RaycastScreen(5, 10, ESX.PlayerData.ped)
+    if hit and IsEntityAVehicle(entity) then
+        return entity, coords
     end
-
-    return nil
 end
 
 function ESX.Game.GetVehicleProperties(vehicle)
@@ -1262,20 +1239,11 @@ function ESX.ShowInventory()
     end)
 end
 
-RegisterNetEvent("esx:showNotification")
-AddEventHandler("esx:showNotification", function(msg, notifyType, length)
-    ESX.ShowNotification(msg, notifyType, length)
-end)
+RegisterNetEvent('esx:showNotification', ESX.ShowNotification)
 
-RegisterNetEvent("esx:showAdvancedNotification")
-AddEventHandler("esx:showAdvancedNotification", function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-    ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-end)
+RegisterNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
 
-RegisterNetEvent("esx:showHelpNotification")
-AddEventHandler("esx:showHelpNotification", function(msg, thisFrame, beep, duration)
-    ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
-end)
+RegisterNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
 
 AddEventHandler("onResourceStop", function(resourceName)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
