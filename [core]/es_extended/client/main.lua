@@ -33,7 +33,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
         Wait(0) 
     end
     FreezeEntityPosition(playerPed, false)
-    NetworkResurrectLocalPlayer(spawn.x, spawn.y, spawn.z, spawn.heading, true, true, false)
+    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, true, false)
     cb()
 end 
 
