@@ -19,6 +19,11 @@ on:
           type: string
           description: Separate the files or folders that you do not want to see in the release with a comma. 
           required: false
+          default: 'node_modules,package.json,package-lock.json'
+      neededNewBranch:
+          type: string
+          description: Specify true or false if you want to create a new branch.
+          required: false
 
 jobs:
   simple-create-release:
@@ -28,3 +33,4 @@ jobs:
       web: ${{ github.event.inputs.web }}
       versionNumber: ${{ github.event.inputs.versionNumber }}
       excludeOptions: ${{ github.event.inputs.excludeOptions }}
+      neededNewBranch: ${{ github.event.inputs.neededNewBranch }}
