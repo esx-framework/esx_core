@@ -19,26 +19,26 @@ RegisterNetEvent("esx:requestModel", function(model)
 end)
 
 function ESX.SpawnPlayer(skin, coords, cb)
-    local p = promise.new() 
+    local p = promise.new()
     TriggerEvent("skinchanger:loadSkin", skin, function()
         p:resolve()
     end)
-    Citizen.Await(p) 
+    Citizen.Await(p)
 
     local playerPed = PlayerPedId()
     FreezeEntityPosition(playerPed, true)
-    SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, false, true) 
+    SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
     SetEntityHeading(playerPed, coords.heading)
     while not HasCollisionLoadedAroundEntity(playerPed) do
-        Wait(0) 
+        Wait(0)
     end
     FreezeEntityPosition(playerPed, false)
     NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, true, false)
     cb()
-end 
+end
 
 RegisterNetEvent("esx:playerLoaded")
-AddEventHandler("esx:playerLoaded", function(xPlayer, isNew, skin)
+AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     ESX.PlayerData = xPlayer
 
     if not Config.Multichar then
@@ -69,7 +69,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, isNew, skin)
     end
 
     local timer = GetGameTimer()
-    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do 
+    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
         Wait(0)
     end 
 
@@ -202,9 +202,9 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, isNew, skin)
         end
     end
 
-    if IsScreenFadedOut() then 
+    if IsScreenFadedOut() then
         DoScreenFadeIn(500)
-    end 
+    end
 
     SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
     StartServerSyncLoops()
