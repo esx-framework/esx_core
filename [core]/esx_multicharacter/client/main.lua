@@ -9,6 +9,7 @@ if ESX.GetConfig().Multichar then
             Wait(100)
 
             if NetworkIsPlayerActive(PlayerId()) then
+                exports.spawnmanager:setAutoSpawn(false)
                 DoScreenFadeOut(0)
                 while GetResourceState("esx_context") ~= "started" do
                     Wait(100)
