@@ -674,6 +674,7 @@ local DoNotUse = {
     ["fivem-map-hipster"] = true,
     ["qb-core"] = true,
     ["default_spawnpoint"] = true,
+    ["spawnmanager"] = true
 }
 
 AddEventHandler("onResourceStart", function(key)

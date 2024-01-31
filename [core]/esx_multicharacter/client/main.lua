@@ -9,7 +9,6 @@ if ESX.GetConfig().Multichar then
             Wait(100)
 
             if NetworkIsPlayerActive(PlayerId()) then
-                exports.spawnmanager:setAutoSpawn(false)
                 DoScreenFadeOut(0)
                 while GetResourceState("esx_context") ~= "started" do
                     Wait(100)
@@ -99,28 +98,17 @@ if ESX.GetConfig().Multichar then
 
     SetupCharacter = function(index)
         if not spawned then
-            exports.spawnmanager:spawnPlayer({
-                x = SpawnCoords.x,
-                y = SpawnCoords.y,
-                z = SpawnCoords.z,
-                heading = SpawnCoords.w,
-                model = Characters[index].model or mp_m_freemode_01,
-                skipFade = true,
-            }, function()
+            local skin = Characters[index] and Characters[index].skin or Characters[index] and Config.Default
+
+            if Characters[index] and not Characters[index].model then
+                skin.sex = Characters[index].sex == TranslateCap('female') and 1 or 0
+            end
+
+            ESX.SpawnPlayer(skin, {x = SpawnCoords.x, y = SpawnCoords.y, z = SpawnCoords.z}, function()
                 canRelog = false
-                if Characters[index] then
-                    local skin = Characters[index].skin or Config.Default
-                    if not Characters[index].model then
-                        if Characters[index].sex == TranslateCap("female") then
-                            skin.sex = 1
-                        else
-                            skin.sex = 0
-                        end
-                    end
-                    TriggerEvent("skinchanger:loadSkin", skin)
-                end
                 DoScreenFadeIn(600)
             end)
+
             repeat
                 Wait(200)
             until not IsScreenFadedOut()
@@ -255,28 +243,20 @@ if ESX.GetConfig().Multichar then
         Characters = data
         slots = slots
         local Character = next(Characters)
-        exports.spawnmanager:forceRespawn()
 
         if not Character then
             SendNUIMessage({
                 action = "closeui",
             })
-            exports.spawnmanager:spawnPlayer({
-                x = SpawnCoords.x,
-                y = SpawnCoords.y,
-                z = SpawnCoords.z,
-                heading = SpawnCoords.w,
-                model = mp_m_freemode_01,
-                skipFade = true,
-            }, function()
+            ESX.SpawnPlayer({model = mp_m_freemode_01}, {x = SpawnCoords.x, y = SpawnCoords.y, z = SpawnCoords.z}, function()
                 canRelog = false
                 DoScreenFadeIn(400)
                 Wait(400)
-                local playerPed = PlayerPedId()
-                SetPedAoBlobRendering(playerPed, false)
-                SetEntityAlpha(playerPed, 0)
-                TriggerServerEvent("esx_multicharacter:CharacterChosen", 1, true)
-                TriggerEvent("esx_identity:showRegisterIdentity")
+                local ped = PlayerPedId()
+                SetPedAoBlobRendering(ped, false)
+                SetEntityAlpha(ped, 0)
+                TriggerServerEvent('esx_multicharacter:CharacterChosen', 1, true)
+                TriggerEvent('esx_identity:showRegisterIdentity')
             end)
         else
             SelectCharacterMenu(Characters, slots)
