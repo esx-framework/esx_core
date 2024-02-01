@@ -26,17 +26,12 @@ if Config.Multichar then
         end
 
         if not ESX.Players[src] then
-            local identifier = char .. ":" .. ESX.GetIdentifier(src)
-            if data then
-                createESXPlayer(identifier, src, data)
-            else
-                loadESXPlayer(identifier, src, false)
-            end
+            local identifier = ('%s:%s'):format(char, ESX.GetIdentifier(src))
+            return data and createESXPlayer(identifier, src, data) or loadESXPlayer(identifier, src, false)
         end
     end)
 else
-    RegisterNetEvent("esx:onPlayerJoined")
-    AddEventHandler("esx:onPlayerJoined", function()
+    RegisterNetEvent("esx:onPlayerJoined", function()
         local _source = source
         while not next(ESX.Jobs) do
             Wait(50)
@@ -50,25 +45,17 @@ end
 
 function onPlayerJoined(playerId)
     local identifier = ESX.GetIdentifier(playerId)
-    if identifier then
-        if ESX.GetPlayerFromIdentifier(identifier) then
-            DropPlayer(
-                playerId,
-                ("there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(
-                    identifier
-                )
-            )
-        else
-            local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
-            if result then
-                loadESXPlayer(identifier, playerId, false)
-            else
-                createESXPlayer(identifier, playerId)
-            end
-        end
-    else
-        DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
+
+    if not identifier then
+        return DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
     end
+
+    if ESX.GetPlayerFromIdentifier(identifier) then
+        return DropPlayer(playerId, ("there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(identifier))
+    end
+
+    local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
+    return result and loadESXPlayer(identifier, playerId, false) or createESXPlayer(identifier, playerId)
 end
 
 function createESXPlayer(identifier, playerId, data)
@@ -110,13 +97,7 @@ if not Config.Multichar then
         end
 
         if identifier then
-            if ESX.GetPlayerFromIdentifier(identifier) then
-                return deferrals.done(
-                    ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
-                )
-            else
-                return deferrals.done()
-            end
+            return ESX.GetPlayerFromIdentifier(identifier) and deferrals.done(("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)) or deferrals.done()
         else
             return deferrals.done("[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
         end
@@ -140,8 +121,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     local result = MySQL.prepare.await(loadPlayer, { identifier })
 
     -- Accounts
-    local accounts = result.accounts
-    accounts = (accounts and accounts ~= "") and json.decode(accounts) or {}
+    local accounts = (result.accounts and result.accounts ~= "") and json.decode(result.accounts) or {}
 
     for account, data in pairs(Config.Accounts) do
         data.round = data.round or data.round == nil
@@ -164,7 +144,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         job, grade = "unemployed", "0"
     end
 
-    jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
     userData.job = {
         id = jobObject.id,
@@ -296,6 +276,7 @@ function loadESXPlayer(identifier, playerId, isNew)
             end
         end
     end
+
     xPlayer.triggerEvent("esx:registerSuggestions", Core.RegisteredCommands)
     print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
@@ -363,24 +344,20 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
 end)
 
 if not Config.OxInventory then
-    RegisterNetEvent("esx:updateWeaponAmmo")
-    AddEventHandler("esx:updateWeaponAmmo", function(weaponName, ammoCount)
+    RegisterNetEvent("esx:updateWeaponAmmo", function(weaponName, ammoCount)
         local xPlayer = ESX.GetPlayerFromId(source)
 
-        if xPlayer then
-            xPlayer.updateWeaponAmmo(weaponName, ammoCount)
-        end
+        return xPlayer and xPlayer.updateWeaponAmmo(weaponName, ammoCount)
     end)
 
-    RegisterNetEvent("esx:giveInventoryItem")
-    AddEventHandler("esx:giveInventoryItem", function(target, itemType, itemName, itemCount)
+    RegisterNetEvent("esx:giveInventoryItem", function(target, itemType, itemName, itemCount)
         local playerId = source
         local sourceXPlayer = ESX.GetPlayerFromId(playerId)
         local targetXPlayer = ESX.GetPlayerFromId(target)
         local distance = #(GetEntityCoords(GetPlayerPed(playerId)) - GetEntityCoords(GetPlayerPed(target)))
+
         if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
-            print(("[^3WARNING^7] Player Detected Cheating: ^5%s^7"):format(GetPlayerName(playerId)))
-            return
+            return print(("[^3WARNING^7] Player Detected Cheating: ^5%s^7"):format(GetPlayerName(playerId)))
         end
 
         if itemType == "item_standard" then
@@ -526,58 +503,51 @@ if not Config.OxInventory then
         end
     end)
 
-    RegisterNetEvent("esx:useItem")
-    AddEventHandler("esx:useItem", function(itemName)
+    RegisterNetEvent("esx:useItem", function(itemName)
         local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
         local count = xPlayer.getInventoryItem(itemName).count
 
-        if count > 0 then
-            ESX.UseItem(source, itemName)
-        else
-            xPlayer.showNotification(TranslateCap("act_imp"))
-        end
+        return count > 0 and ESX.UseItem(source, itemName) or xPlayer.showNotification(TranslateCap('act_imp'))
     end)
 
-    RegisterNetEvent("esx:onPickup")
-    AddEventHandler("esx:onPickup", function(pickupId)
+    RegisterNetEvent("esx:onPickup", function(pickupId)
         local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
-        if pickup then
-            local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
-            if playerPickupDistance > 5.0 then
-                print(("[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7"):format(xPlayer.getIdentifier()))
-                return
-            end
+        if not pickup then return end
 
-            if pickup.type == "item_standard" then
-                if xPlayer.canCarryItem(pickup.name, pickup.count) then
-                    xPlayer.addInventoryItem(pickup.name, pickup.count)
-                    success = true
-                else
-                    xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
-                end
-            elseif pickup.type == "item_account" then
+        local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
+        if playerPickupDistance > 5.0 then
+            return print(("[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7"):format(xPlayer.getIdentifier()))
+        end
+
+        if pickup.type == "item_standard" then
+            if xPlayer.canCarryItem(pickup.name, pickup.count) then
+                xPlayer.addInventoryItem(pickup.name, pickup.count)
                 success = true
-                xPlayer.addAccountMoney(pickup.name, pickup.count, "Picked up")
-            elseif pickup.type == "item_weapon" then
-                if xPlayer.hasWeapon(pickup.name) then
-                    xPlayer.showNotification(TranslateCap("threw_weapon_already"))
-                else
-                    success = true
-                    xPlayer.addWeapon(pickup.name, pickup.count)
-                    xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
+            else
+                xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
+            end
+        elseif pickup.type == "item_account" then
+            success = true
+            xPlayer.addAccountMoney(pickup.name, pickup.count, "Picked up")
+        elseif pickup.type == "item_weapon" then
+            if xPlayer.hasWeapon(pickup.name) then
+                xPlayer.showNotification(TranslateCap("threw_weapon_already"))
+            else
+                success = true
+                xPlayer.addWeapon(pickup.name, pickup.count)
+                xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
 
-                    for _, v in ipairs(pickup.components) do
-                        xPlayer.addWeaponComponent(pickup.name, v)
-                    end
+                for _, v in ipairs(pickup.components) do
+                    xPlayer.addWeaponComponent(pickup.name, v)
                 end
             end
+        end
 
-            if success then
-                Core.Pickups[pickupId] = nil
-                TriggerClientEvent("esx:removePickup", -1, pickupId)
-            end
+        if success then
+            Core.Pickups[pickupId] = nil
+            TriggerClientEvent("esx:removePickup", -1, pickupId)
         end
     end)
 end
@@ -602,7 +572,7 @@ ESX.RegisterServerCallback("esx:isUserAdmin", function(source, cb)
 end)
 
 ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
-    cb(tonumber(GetConvar("sv_enforceGameBuild", 1604)))
+    cb(tonumber(GetConvarInt("sv_enforceGameBuild", 1604)))
 end)
 
 ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
@@ -626,11 +596,7 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     for playerId, _ in pairs(players) do
         local xPlayer = ESX.GetPlayerFromId(playerId)
 
-        if xPlayer then
-            players[playerId] = xPlayer.getName()
-        else
-            players[playerId] = nil
-        end
+        players[playerId] = xPlayer and xPlayer.getName() or nil
     end
 
     cb(players)
@@ -648,24 +614,23 @@ ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
                 timeout += 1
             end
         end
+
         cb(id)
     end)
 end)
 
 AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)
-    if eventData.secondsRemaining == 60 then
-        CreateThread(function()
-            Wait(50000)
-            Core.SavePlayers()
-        end)
-    end
+    if eventData.secondsRemaining ~= 60 then return end
+
+    CreateThread(function()
+        Wait(50000)
+        Core.SavePlayers()
+    end)
 end)
 
-AddEventHandler("txAdmin:events:serverShuttingDown", function()
-    Core.SavePlayers()
-end)
+AddEventHandler("txAdmin:events:serverShuttingDown", Core.SavePlayers)
 
-local DoNotUse = {
+local doNotUse = {
     ["essentialmode"] = true,
     ["es_admin2"] = true,
     ["basic-gamemode"] = true,
@@ -673,11 +638,11 @@ local DoNotUse = {
     ["fivem-map-skater"] = true,
     ["fivem-map-hipster"] = true,
     ["qb-core"] = true,
-    ["default_spawnpoint"] = true
+    ["default_spawnpoint"] = true,
 }
 
 AddEventHandler("onResourceStart", function(key)
-    if DoNotUse[string.lower(key)] then
+    if doNotUse[string.lower(key)] then
         while GetResourceState(key) ~= "started" do
             Wait(0)
         end
@@ -687,7 +652,7 @@ AddEventHandler("onResourceStart", function(key)
     end
 end)
 
-for key in pairs(DoNotUse) do
+for key in pairs(doNotUse) do
     if GetResourceState(key) == "started" or GetResourceState(key) == "starting" then
         StopResource(key)
         print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
