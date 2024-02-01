@@ -238,25 +238,25 @@ AddEventHandler("esx:restoreLoadout", function()
         local ammoTypes = {}
         RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
-        for _, v in ipairs(ESX.PlayerData.loadout) do
-            local weaponName = v.name
-            local weaponHash = joaat(weaponName)
+        for i=1, #ESX.PlayerData.loadout do
+            local v = ESX.PlayerData.loadout[i] 
+            local weaponName = v.name 
+            local weaponHash = joaat(weaponName) 
+            
+            GiveWeaponToPed(ESX.PlayerData.ped, weaponHash, 0, false, false) 
+            SetPedWeaponTintIndex(ESX.PlayerData.ped, weaponHash, v.tintIndex) 
 
-            GiveWeaponToPed(ESX.PlayerData.ped, weaponHash, 0, false, false)
-            SetPedWeaponTintIndex(ESX.PlayerData.ped, weaponHash, v.tintIndex)
-
-            local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
-
-            for _, v2 in ipairs(v.components) do
-                local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
-                GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
+            for j=1, #v.components do
+                local componentHash = ESX.GetWeaponComponent(weaponName, v.components[j]).hash
+                GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)    
+            end 
+            
+            local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash) 
+            if not ammoTypes[ammoType] then 
+                AddAmmoToPed(ESX.PlayerData.ped, weaponHash, v.ammo) 
+                ammoTypes[ammoType] = true 
             end
-
-            if not ammoTypes[ammoType] then
-                AddAmmoToPed(ESX.PlayerData.ped, weaponHash, v.ammo)
-                ammoTypes[ammoType] = true
-            end
-        end
+        end 
     end
 end)
 
