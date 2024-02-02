@@ -508,71 +508,73 @@ RegisterNetEvent("esx:tpm", function()
     local GetBlipInfoIdCoord = GetBlipInfoIdCoord
     local GetVehiclePedIsIn = GetVehiclePedIsIn
 
-    if not ESX.TriggerServerCallback.Await('esx:isUserAdmin') then return end
+    ESX.TriggerServerCallback('esx:isUserAdmin', function(isAdmin)
+        if not isAdmin then return end
 
-    local blipMarker = GetFirstBlipInfoId(8)
-    if not DoesBlipExist(blipMarker) then
-        ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), true, false, 140)
-        return "marker"
-    end
-
-    DoScreenFadeOut(650)
-    while not IsScreenFadedOut() do
-        Wait(0)
-    end
-
-    local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
-    local vehicle = GetVehiclePedIsIn(ped, false)
-    local oldCoords = GetEntityCoords(ped)
-
-    local x, y, groundZ, Z_START = coords["x"], coords["y"], 850.0, 950.0
-    local found = false
-    FreezeEntityPosition(vehicle > 0 and vehicle or ped, true)
-
-    for i = Z_START, 0, -25.0 do
-        local z = i
-        if (i % 2) ~= 0 then
-            z = Z_START - i
+        local blipMarker = GetFirstBlipInfoId(8)
+        if not DoesBlipExist(blipMarker) then
+            ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), true, false, 140)
+            return "marker"
         end
 
-        NewLoadSceneStart(x, y, z, x, y, z, 50.0, 0)
-        local curTime = GetGameTimer()
-        while IsNetworkLoadingScene() do
-            if GetGameTimer() - curTime > 1000 then
+        DoScreenFadeOut(650)
+        while not IsScreenFadedOut() do
+            Wait(0)
+        end
+
+        local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
+        local vehicle = GetVehiclePedIsIn(ped, false)
+        local oldCoords = GetEntityCoords(ped)
+
+        local x, y, groundZ, Z_START = coords["x"], coords["y"], 850.0, 950.0
+        local found = false
+        FreezeEntityPosition(vehicle > 0 and vehicle or ped, true)
+
+        for i = Z_START, 0, -25.0 do
+            local z = i
+            if (i % 2) ~= 0 then
+                z = Z_START - i
+            end
+
+            NewLoadSceneStart(x, y, z, x, y, z, 50.0, 0)
+            local curTime = GetGameTimer()
+            while IsNetworkLoadingScene() do
+                if GetGameTimer() - curTime > 1000 then
+                    break
+                end
+                Wait(0)
+            end
+            NewLoadSceneStop()
+            SetPedCoordsKeepVehicle(ped, x, y, z)
+
+            while not HasCollisionLoadedAroundEntity(ped) do
+                RequestCollisionAtCoord(x, y, z)
+                if GetGameTimer() - curTime > 1000 then
+                    break
+                end
+                Wait(0)
+            end
+
+            found, groundZ = GetGroundZFor_3dCoord(x, y, z, false)
+            if found then
+                Wait(0)
+                SetPedCoordsKeepVehicle(ped, x, y, groundZ)
                 break
             end
             Wait(0)
         end
-        NewLoadSceneStop()
-        SetPedCoordsKeepVehicle(ped, x, y, z)
 
-        while not HasCollisionLoadedAroundEntity(ped) do
-            RequestCollisionAtCoord(x, y, z)
-            if GetGameTimer() - curTime > 1000 then
-                break
-            end
-            Wait(0)
+        DoScreenFadeIn(650)
+        FreezeEntityPosition(vehicle > 0 and vehicle or ped, false)
+
+        if not found then
+            SetPedCoordsKeepVehicle(ped, oldCoords["x"], oldCoords["y"], oldCoords["z"] - 1.0)
+            ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
         end
 
-        found, groundZ = GetGroundZFor_3dCoord(x, y, z, false)
-        if found then
-            Wait(0)
-            SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-            break
-        end
-        Wait(0)
-    end
-
-    DoScreenFadeIn(650)
-    FreezeEntityPosition(vehicle > 0 and vehicle or ped, false)
-
-    if not found then
-        SetPedCoordsKeepVehicle(ped, oldCoords["x"], oldCoords["y"], oldCoords["z"] - 1.0)
+        SetPedCoordsKeepVehicle(ped, x, y, groundZ)
         ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
-    end
-
-    SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-    ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
+    end)
 end)
 
 local noclip = false
@@ -621,19 +623,21 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip", function()
-    if not ESX.TriggerServerCallback.Await('esx:isUserAdmin') then return end
+    ESX.TriggerServerCallback('esx:isUserAdmin', function(isAdmin)
+        if not isAdmin then return end
 
-    if not noclip then
-        noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
-        heading = GetEntityHeading(ESX.PlayerData.ped)
-    end
+        if not noclip then
+            noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
+            heading = GetEntityHeading(ESX.PlayerData.ped)
+        end
 
-    noclip = not noclip
-    if noclip then
-        CreateThread(noclipThread)
-    end
+        noclip = not noclip
+        if noclip then
+            CreateThread(noclipThread)
+        end
 
-    ESX.ShowNotification(TranslateCap("noclip_message", noclip and Translate("enabled") or Translate("disabled")), true, false, 140)
+        ESX.ShowNotification(TranslateCap("noclip_message", noclip and Translate("enabled") or Translate("disabled")), true, false, 140)
+    end)
 end)
 
 RegisterNetEvent("esx:killPlayer", function()
