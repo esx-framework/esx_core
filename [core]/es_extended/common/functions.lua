@@ -106,3 +106,25 @@ end
 function ESX.Round(value, numDecimalPlaces)
     return ESX.Math.Round(value, numDecimalPlaces)
 end
+
+function ESX.TypeCheck(value, ...)
+    local types = { ... }
+
+    if (#types == 0) then return true end
+
+    local mapType = {}
+    for i = 1, #types, 1 do
+        mapType[types[i]] = true
+    end
+
+    local valueType = type(value)
+    local requireTypes = table.concat(types, " or ")
+    local errorMessage = ("bad value (%s expected, got %s)"):format(requireTypes, valueType)
+    local matches = mapType[valueType] ~= nil
+
+    -- Need feedback on this one, should we assert or return false and error message?
+    -- i prefer assert, but i'm open to suggestions
+    assert(matches, errorMessage)
+
+    return matches, errorMessage
+end
