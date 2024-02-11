@@ -4,7 +4,7 @@ lua54 'yes'
 game 'gta5'
 version '1.10.4'
 author 'ESX-Framework'
-description 'Official NUI Notification system for ESX'
+description 'A beautiful and simple NUI notification system for ESX'
 
 shared_script '@es_extended/imports.lua'
 

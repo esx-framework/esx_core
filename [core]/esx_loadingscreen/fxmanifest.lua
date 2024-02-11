@@ -1,8 +1,9 @@
 game 'common'
 
-version '1.10.4'
 fx_version 'cerulean'
 author 'ESX-Framework'
+description 'A simple but beautiful Loading Screen for your server!'
+
 lua54 'yes'
 loadscreen 'index.html'
 
