@@ -4,7 +4,7 @@ game 'gta5'
 author 'ESX-Framework'
 lua54 'yes'
 version '1.10.4'
-description 'ESX Progressbar'
+description 'a beautiful and simple NUI progress bar for ESX'
 
 client_scripts { 'Progress.lua' }
 shared_script '@es_extended/imports.lua'
