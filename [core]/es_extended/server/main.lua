@@ -3,7 +3,7 @@ SetGameType("ESX Legacy")
 
 local oneSyncState = GetConvar("onesync", "off")
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?"
-local loadPlayer = "SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
+local loadPlayer = "SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`, `id`"
 
 if Config.Multichar then
     newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"
@@ -260,7 +260,8 @@ function loadESXPlayer(identifier, playerId, isNew)
         xPlayer.set("firstName", result.firstname)
         xPlayer.set("lastName", result.lastname)
         xPlayer.setName(("%s %s"):format(result.firstname, result.lastname))
-
+        
+        xPlayer.set("permID", result.id)
         if result.dateofbirth then
             userData.dateofbirth = result.dateofbirth
             xPlayer.set("dateofbirth", result.dateofbirth)
@@ -594,6 +595,7 @@ ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
         money = xPlayer.getMoney(),
         position = xPlayer.getCoords(true),
         metadata = xPlayer.getMeta(),
+        permID = xPlayer.id
     })
 end)
 
