@@ -24,6 +24,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
         p:resolve()
     end)
     Citizen.Await(p)
+    TriggerEvent('playerSpawned', coords)
 
     local playerPed = PlayerPedId()
     FreezeEntityPosition(playerPed, true)
