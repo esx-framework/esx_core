@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 author 'ESX-Framework'
-version '1.10.4'
+version '1.10.5'
 description 'ESX TextUI'
 lua54 'yes'
 
