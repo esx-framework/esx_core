@@ -9,15 +9,15 @@
 
     <body class="none" onkeydown="TriggeredKey(this)">
         <div class="dialog">
-            <div class="title"><b>REGISTRATION</b></div>
+            <div class="title"><b>IDENTITY</b></div>
             <form id="register" name="register" action="#">
-                <div id="fieldLabel">First Name and/or Middle Name</div>
-                <input id="firstname" type="text" class="" name="firstname" placeholder="First Name and/or Middle Name" minlength="3" maxlength="32" pattern="^[a-zA-Z]+(?: [a-zA-Z]+)?$" /><br />
-                <div id="fieldLabel">Last Name</div>
-                <input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" minlength="3" maxlength="16" pattern="[a-zA-Z]*" /><br />
-                <div id="fieldLabel">Date of Birth (MM/DD/YYYY)</div>
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">First Name</div>
+                <input id="firstname" type="text" class="" name="firstname" placeholder="First Name" minlength="3" maxlength="32" pattern="^[a-zA-Z]+(?: [a-zA-Z]+)?$" /><br />
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Last Name</div>
+                <input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" minlength="3" maxlength="10" pattern="[a-zA-Z]*" /><br />
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Date of Birth (MM/DD/YYYY)</div>
                 <input id="dateofbirth" type="date" name="dateofbirth" class="" min="1900-01-01" max="2010-01-01" onfocus="(this.type='date')" /><br />
-                <div id="fieldLabel">Height</div>
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Height</div>
                 <input id="height" type="number" class="" name="height" min="120" max="220" placeholder="Height (cm)" /><br />
                 <center>
                     <div class="radio-toolbar">
@@ -33,7 +33,7 @@
                 </button>
             </form>
             <center>
-                <font size="1px" color="white">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font>
+                <font size="1px" color="green">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font>
             </center>
         </div>
 
