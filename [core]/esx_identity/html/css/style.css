@@ -20,10 +20,10 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #1e1e1e; /* Darker background color for the dialog */
+    background-color: #1e1e1e; 
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Adjusted box-shadow for depth */
-    border: 1px solid #333333; /* Border color */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
+    border: 1px solid #333333; 
     color: #ffffff;
 }
 
@@ -44,7 +44,7 @@ input {
     padding: 12px;
     font-family: 'Montserratt', sans-serif;
     color: #ffffff;
-    background-color: #333333; /* Darker input background color */
+    background-color: #333333; 
     transition: border-color 0.3s;
 }
 
@@ -53,7 +53,7 @@ input:focus {
 }
 
 ::placeholder {
-    color: #666666; /* Adjusted placeholder text color */
+    color: #666666; 
     text-align: center;
 }
 
