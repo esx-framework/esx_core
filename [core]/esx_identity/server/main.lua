@@ -70,6 +70,13 @@ local function formatDate(str)
     return date
 end
 
+local function hasMiddleName(name)
+    local firstName, middleName = string.match(name, "(%S+)%s(%S+)")
+    if firstName and middleName then
+        return firstName, middleName
+    end
+    return false
+end
 local function checkAlphanumeric(str)
     return (string.match(str, "%W"))
 end
@@ -79,10 +86,22 @@ local function checkForNumbers(str)
 end
 
 local function checkNameFormat(name)
-    if not checkAlphanumeric(name) and not checkForNumbers(name) then
-        local stringLength = string.len(name)
-        return stringLength > 0 and stringLength < Config.MaxNameLength
+    if not hasMiddleName(name) then
+        if not checkAlphanumeric(name) and not checkForNumbers(name) then
+            local stringLength = string.len(name)
+            return stringLength > 0 and stringLength < Config.MaxNameLength
+        end
+        return false
     end
+    local firstName, middleName = hasMiddleName(name)
+    if not checkAlphanumeric(firstName) and not checkForNumbers(firstName) then
+        if not checkAlphanumeric(middleName) and not checkForNumbers(middleName) then
+            local firstNameLength = string.len(firstName)
+            local middleNameLength = string.len(middleName)
+            return firstNameLength > 0 and firstNameLength < Config.MaxNameLength and middleNameLength > 0 and middleNameLength < Config.MaxNameLength
+        end
+    end
+
 
     return false
 end
@@ -364,6 +383,7 @@ else
 
     ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
         local xPlayer = ESX.GetPlayerFromId(source)
+        print(data.firstname)
         if not checkNameFormat(data.firstname) then
             TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
             return cb(false)
