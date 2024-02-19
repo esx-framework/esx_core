@@ -1,9 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserratt&display=swap");
 
 body {
-    font-family: sans-serif;
+    font-family: 'Montserratt', sans-serif;
     overflow: hidden;
-    background-color: transparent;
+    margin: 0;
+    background-color: none;
+    background: none;
 }
 
 .none {
@@ -11,143 +13,103 @@ body {
 }
 
 .dialog {
-    width: 332px;
+    width: 400px;
     opacity: 0.95;
-    padding: 20px;
+    padding: 40px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #152029;
+    background-color: #1e1e1e; /* Darker background color for the dialog */
     border-radius: 10px;
-    box-shadow: 0 -5px 3px -3px #21303d, 0 5px 3px -3px #21303d;
-    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Adjusted box-shadow for depth */
+    border: 1px solid #333333; /* Border color */
     color: #ffffff;
 }
 
 .title {
-    font-family: "Oswald", sans-serif;
-    font-size: 22px;
+    font-family: 'Montserratt', sans-serif;
+    font-size: 28px;
     text-align: center;
-    padding: 5px;
     margin-bottom: 20px;
+    color: #ffffff;
 }
 
 input {
     margin-bottom: 15px;
-    border: none;
-    border-bottom: 2px solid #58636c;
+    border: 1px solid #333333;
+    border-radius: 5px;
     width: 100%;
     outline: none;
-    padding: 10px;
-    padding-left: 0;
-    font-family: "Oswald", sans-serif;
+    padding: 12px;
+    font-family: 'Montserratt', sans-serif;
     color: #ffffff;
-    text-align: left;
-    background-color: #152029;
+    background-color: #333333; /* Darker input background color */
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #4c7faf;
 }
 
 ::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: rgba(84, 97, 105, 255);
-    font-family: "Oswald", sans-serif;
-    font-weight: 200;
-    opacity: 1;
-    /* Firefox */
+    color: #666666; /* Adjusted placeholder text color */
+    text-align: center;
 }
 
 .radio-toolbar input[type="radio"] {
-    opacity: 0;
-    position: absolute;
-    width: 36%;
+    display: none;
 }
 
 .radio-toolbar label {
     display: inline-block;
-    margin-top: 5px;
-    background-color: rgba(15, 15, 15, 0.9);
-    padding: 10px 20px;
-    font-family: "Oswald", sans-serif;
+    margin: 5px 10px;
+    padding: 12px 20px;
+    font-family: 'Montserratt', sans-serif;
     font-weight: 500;
     font-size: 16px;
     color: #ffffff;
-    border: none;
     border-radius: 5px;
-    width: 36%;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.radio-toolbar input[type="radio"]:checked + label {
-    width: 36%;
-    background-color: rgba(15, 15, 15, 0.9);
-    border: none;
-    border-bottom: 1px solid #93a3b6;
-    border-radius: 5px;
-    color: #ffffff;
-}
-
-.radio-toolbar input[type="radio"]:focus + label {
-    background-color: rgba(15, 15, 15, 0.9);
-    border: none;
-    border-bottom: 1px solid #93a3b6;
-    border-radius: 5px;
-    color: #ffffff;
-}
-
+.radio-toolbar input[type="radio"]:checked + label,
 .radio-toolbar label:hover {
-    background-color: rgba(28, 24, 24, 0.931);
-    width: 36%;
+    background-color: #4c7faf;
     color: #ffffff;
 }
 
 button {
     display: block;
-    margin-top: 35px;
-    /*padding: 10px;*/
-    background-color: #4569c6;
-    outline: none;
-    border: 2px double rgba(40, 40, 40, 0.9);
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #4c7faf;
+    border: none;
+    border-radius: 5px;
     color: #ffffff;
-    height: 30px;
+    cursor: pointer;
+    font-size: 18px;
     width: 100%;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
 }
 
 h1 {
-    display: block;
-    margin-top: 5px;
-    margin-right: 5px;
-    padding: 10px;
-    background-color: rgba(15, 15, 15, 0.9);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #4c7faf;
     color: #ffffff;
-    width: 93%;
+    border-radius: 5px;
     text-align: center;
 }
 
-.range-wrap {
-    position: relative;
-    margin: 0 auto 3rem;
-}
-
-.range {
-    width: 100%;
-}
-
-.bubble {
-    background: rgba(15, 15, 15, 0.9);
-    color: #ffffff;
-    padding: 4px 12px;
-    position: absolute;
-    border-radius: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.bubble::after {
-    content: "";
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: rgba(15, 15, 15, 0.9);
-    color: black;
-    top: -1px;
-    left: 50%;
+#fieldLabel {
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    font-family: 'Gill Sans', sans-serif
 }
