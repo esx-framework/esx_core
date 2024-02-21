@@ -22,7 +22,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
         p:resolve()
     end)
     Citizen.Await(p)
-
+    
     local playerPed = PlayerPedId()
     FreezeEntityPosition(playerPed, true)
     SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
@@ -32,6 +32,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
     end
     FreezeEntityPosition(playerPed, false)
     NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, true, false)
+    TriggerEvent('playerSpawned', coords)
     cb()
 end
 
