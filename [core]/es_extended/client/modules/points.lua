@@ -1,10 +1,10 @@
-local Points = {}
+local Markers = {}
 
 ---@func fun(coords: vector3, radius: number, data?: any)
-function ESX.CreatePoint(data) 
+function ESX.CreateMarker(data) 
     local Index = #Points+1
-    Points[Index] = data
-    return Points[Index]
+    Markers[Index] = data
+    return Markers[Index]
 end
 
 CreateThread(function()
@@ -12,24 +12,24 @@ CreateThread(function()
         Wait(0)
         local InPoint = false
         local Coords = GetEntityCoords(ESX.PlayerData.Ped)
-        for i = 1, #Points do
-            local Point = Points[i]
-            Point.distance = #(Coords - Point.Coords) 
-            if Point.distance < Point.radius then 
-                if Point.status and Point.Inside then 
-                    Point:Inside()
+        for i = 1, #Markers do
+            local Marker = Markers[i]
+            Marker.distance = #(Coords - Marker.Coords) 
+            if Marker.distance < Marker.radius then 
+                if Marker.status and Marker.Inside then 
+                    Marker:Inside()
                     InPoint = true 
-                elseif Point.Inside and not Point.inside then 
-                    Point.status = true
+                elseif Marker.Inside and not Marker.status then 
+                    Marker.status = true
                     InPoint = true 
-                    if Point.Entered then 
-                        Point:Entered()
+                    if Marker.Entered then 
+                        Marker:Entered()
                     end
                 end 
-            elseif Point.inside then 
-                Point.inside = false 
-                if Point.Exited then 
-                    Point:Exited()
+            elseif Marker.inside then 
+                Marker.status = false 
+                if Marker.Exited then 
+                    Marker:Exited()
                 end
                 InPoint = false 
             end
@@ -41,20 +41,20 @@ CreateThread(function()
 end)
 
 
-local Point = ESX.CreatePoint({coords = vec(1,1,1), radius = 5})
+local Marker = ESX.CreateMarker({coords = vec(1,1,1), radius = 5})
 
-function Point:Inside() 
+function Marker:Inside() 
     -- Loops
     print(json.encode(self)) -- coords, radius, inside, distance
 
 end 
 
-function Point:Exited()
+function Marker:Exited()
     -- Tick
     print(json.encode(self)) -- coords, radius, inside, distance
 end 
 
-function Point:Entered()
+function Marker:Entered()
     -- Tick
     print(json.encode(self)) -- coords, radius, inside, distance
 end
