@@ -498,9 +498,7 @@ end
 function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
     local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
-    if coords then
-        coords = vector3(coords.x, coords.y, coords.z)
-    else
+    if not coords then
         local playerPed = ESX.PlayerData.ped
         coords = GetEntityCoords(playerPed)
     end
