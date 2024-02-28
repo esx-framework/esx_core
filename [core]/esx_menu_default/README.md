@@ -1,13 +1,13 @@
 <h1 align='center'>[ESX] Menu Defualt</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://documentation.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
 
-A defualt List type menu for ESX.
+A default List type menu for ESX.
 
 ![Preview_1](https://cdn.discordapp.com/attachments/944789399852417096/997882867336101948/Screenshot_52.png)
 ![Preview_2](https://cdn.discordapp.com/attachments/944789399852417096/997882867688411176/Screenshot_53.png)
 
 ## Legal
 
-esx_menu_defualt - Default Menu!
+esx_menu_default - Default Menu!
 
 Copyright (C) 2015-2023 Jérémie N'gadi
 

@@ -25,8 +25,8 @@ local function Notify(notificatonType, length, message)
     end
 
     SendNuiMessage(json.encode({
-        type = notificatonType or "info",
-        length = length or 3000,
+        type = notificatonType,
+        length = length,
         message = message or "ESX-Notify",
     }))
 end

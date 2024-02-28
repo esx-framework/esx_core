@@ -2,7 +2,8 @@ fx_version 'cerulean'
 
 game 'gta5'
 author 'ESX-Framework - Linden - KASH'
-description 'Official Multicharacter System For ESX Legacy'
+
+description 'Allows players to have multiple characters on the same account.'
 version '1.10.5'
 lua54 'yes'
 
