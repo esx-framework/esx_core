@@ -576,19 +576,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
     end
 
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
-    local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
-
-    local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
-        ["2"] = { 0, 4 }, -- Bike and cycle.
-        ["3"] = { 0, 1, 4, 5 }, -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ["4"] = { 0, 1, 4, 5 }, -- Vehicle with 4 wheels.
-        ["6"] = { 0, 1, 2, 3, 4, 5 }, -- Vehicle with 6 wheels.
-    }
-
-    if TyresIndex[numWheels] then
-        for _, idx in pairs(TyresIndex[numWheels]) do
-            tyreBurst[tostring(idx)] = IsVehicleTyreBurst(vehicle, idx, false)
-        end
+    
+    local wheel_count = GetVehicleNumberOfWheels(vehicle);
+    for wheel_index = 0, wheel_count - 1 do
+        tyreBurst[tostring(wheel_index)] = IsVehicleTyreBurst(vehicle, wheel_index, false)
     end
 
     for windowId = 0, 7 do -- 13
