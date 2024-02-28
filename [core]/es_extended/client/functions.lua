@@ -496,29 +496,29 @@ function ESX.Game.IsSpawnPointClear(coords, maxDistance)
 end
 
 function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
-    local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
+    local closestEntity, closestEntityDistance = -1, -1
 
     if not coords then
-        local playerPed = ESX.PlayerData.ped
-        coords = GetEntityCoords(playerPed)
+        local playerPed = ESX.PlayerData.ped;
+        coords = GetEntityCoords(playerPed);
     end
 
-    if modelFilter then
-        filteredEntities = {}
+    for current_entity_index = 1, #entities do
+        local current_entity = entities[current_entity_index];
 
-        for _, entity in pairs(entities) do
-            if modelFilter[GetEntityModel(entity)] then
-                filteredEntities[#filteredEntities + 1] = entity
-            end
+        -- if model filter is used and entity is not in the filter, skip it
+        if ( modelFilter and ( not modelFilter[GetEntityModel(current_entity)] ) ) then
+            goto continue
         end
-    end
 
-    for k, entity in pairs(filteredEntities or entities) do
-        local distance = #(coords - GetEntityCoords(entity))
 
+        local distance = #(coords - GetEntityCoords(current_entity));
+        
         if closestEntityDistance == -1 or distance < closestEntityDistance then
-            closestEntity, closestEntityDistance = isPlayerEntities and k or entity, distance
+            closestEntity, closestEntityDistance = isPlayerEntities and current_entity_index or current_entity, distance;
         end
+
+        ::continue::
     end
 
     return closestEntity, closestEntityDistance
