@@ -52,7 +52,7 @@ function Markers:Run(index)
             Marker:Inside()
         end 
     end)
-end x
+end 
 
 CreateThread(function()
     while true do 
