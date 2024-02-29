@@ -1,7 +1,7 @@
-local Markers = {}
+local markers = {}
 
 ---@func fun(coords: vector3, radius: number, data?: any)
-function ESX.CreateMarker(data) 
+function ESX.createMarker(data) 
     local coords = data.coords
 
     if type(coords) ~= 'vector3' then 
@@ -12,90 +12,88 @@ function ESX.CreateMarker(data)
         end
     end
 
-    local Index = #Markers+1
-    Markers[Index] = data
-    return Markers[Index]
+    local index = #markers+1
+    markers[index] = data
+    return markers[index]
 end
 
-function ESX.GetNearestMarker()
-    local Nearest
-    local Distance = 9999
-    for i = 1, #Markers do 
-        local Marker = Markers[i]
-        local dist = Marker.distance
-        if dist < Distance then 
-            Distance = dist
-            Nearest = Marker
+function ESX.getNearestMarker()
+    local nearest
+    local distance = 9999
+    for i = 1, #markers do 
+        local marker = markers[i]
+        local dist = marker.distance
+        if dist < distance then 
+            distance = dist
+            nearest = marker
         end 
     end 
-    return Nearest, Distance
+    return nearest, distance
 end 
 
-function ESX.GetMarkersInRange(min, max)
-    local List = {}    
-    for i = 1, #Markers do 
-        local Marker = Markers[i]
-        local Distance = Marker.distance
-        if Distance >= min and Distance <= max then 
-            List[#List+1] = Marker
+function ESX.getMarkersInRange(min, max)
+    local list = {}    
+    for i = 1, #markers do 
+        local marker = markers[i]
+        local distance = marker.distance
+        if distance >= min and distance <= max then 
+            list[#list+1] = marker
         end
     end 
 
-    return List
+    return list
 end
 
-function Markers:Run(index)
-    CreateThread(function()
-        local Marker = self[index]
-        while Marker.running do 
-            Wait(0)
-            Marker:Inside()
-        end 
-    end)
+function markers:run(index)
+    local marker = self[index]
+    while marker.running do 
+        Wait(0)
+        marker:inside()
+    end 
 end 
 
 CreateThread(function()
     while true do 
         Wait(1500)
-        local Coords = GetEntityCoords(ESX.PlayerData.Ped)
-        for i = 1, #Markers do
-            local Marker = Markers[i]
-            Marker.distance = #(Coords - Marker.coords) 
-            if Marker.distance < Marker.radius then 
-                if Marker.status and Marker.Inside and not Marker.running then 
-                    Marker.running = true
-                    Markers:Run(i)
-                elseif not Marker.status then 
-                    Marker.status = true
-                    if Marker.Entered then 
-                        Marker:Entered()
+        local coords = GetEntityCoords(ESX.PlayerData.Ped)
+        for i = 1, #markers do
+            local marker = markers[i]
+            marker.distance = #(coords - marker.coords) 
+            if marker.distance < marker.radius then 
+                if marker.status and marker.inside and not marker.running then 
+                    marker.running = true
+                    markers:run(i)
+                elseif not marker.status then 
+                    marker.status = true
+                    if marker.entered then 
+                        marker:Entered()
                     end
                 end 
-            elseif Marker.status then 
-                Marker.status = false 
-                if Marker.Exited then 
-                    Marker:Exited()
+            elseif marker.status then 
+                marker.status = false 
+                if marker.exited then 
+                    marker:Exited()
                 end
-                Marker.running = false
+                marker.running = false
             end
         end 
     end
 end)
 
-local Marker = ESX.CreateMarker({coords = vec(1,1,1), radius = 5})
+local marker = ESX.createMarker({coords = vec(1,1,1), radius = 5})
 
-function Marker:Inside() 
+function marker:inside() 
     -- Loops
     print(json.encode(self)) -- coords, radius, inside, distance
 
 end 
 
-function Marker:Exited()
+function marker:exited()
     -- Tick
     print(json.encode(self)) -- coords, radius, inside, distance
 end 
 
-function Marker:Entered()
+function marker:entered()
     -- Tick
     print(json.encode(self)) -- coords, radius, inside, distance
 end
