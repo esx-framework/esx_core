@@ -1,7 +1,7 @@
 fx_version 'adamant'
 
 game 'gta5'
-description 'ESX Menu Dialog'
+description 'A basic input dialog for ESX Legacy.'
 lua54 'yes'
 version '1.10.5'
 

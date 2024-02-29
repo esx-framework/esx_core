@@ -2,9 +2,9 @@ fx_version 'adamant'
 
 game 'gta5'
 author 'ESX-Framework'
-lua54 'yes'
+description 'A beautiful and simple NUI progress bar for ESX'
 version '1.10.5'
-description 'ESX Progressbar'
+lua54 'yes'
 
 client_scripts { 'Progress.lua' }
 shared_script '@es_extended/imports.lua'
