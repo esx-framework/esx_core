@@ -2,9 +2,10 @@ game 'common'
 
 fx_version 'cerulean'
 author 'ESX-Framework'
-description 'A simple but beautiful Loading Screen for your server!'
-
+description 'Allows resources to Run tasks at specific intervals.'
+version '1.10.5'
 lua54 'yes'
+
 loadscreen 'index.html'
 
 shared_script 'config.lua'
