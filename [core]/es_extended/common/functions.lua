@@ -109,7 +109,7 @@ end
 
 function ESX.ValidateType(value, ...)
     local types = { ... }
-    if (#types == 0) then return true end
+    if #types == 0 then return true end
 
     local mapType = {}
     for i = 1, #types, 1 do
@@ -120,9 +120,9 @@ function ESX.ValidateType(value, ...)
 
     local valueType = type(value)
 
-    local matches = (mapType[valueType] ~= nil)
+    local matches = mapType[valueType] ~= nil
 
-    if not (matches) then
+    if not matches then
         local requireTypes = table.concat(types, " or ")
         local errorMessage = ("bad value (%s expected, got %s)"):format(requireTypes, valueType)
 
