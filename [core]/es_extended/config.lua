@@ -38,21 +38,21 @@ Config.AdminGroups = {
 Config.EnablePaycheck = true -- enable paycheck
 Config.LogPaycheck = false -- Logs paychecks to a nominated Discord channel via webhook (default is false)
 Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
-Config.MaxWeight = 24 -- the max inventory weight without backpack
-Config.PaycheckInterval = 7 * 60000 -- how often to recieve pay checks in milliseconds
+Config.MaxWeight = 24 -- the max inventory weight without a backpack
+Config.PaycheckInterval = 7 * 60000 -- how often to receive paychecks in milliseconds
 Config.EnableDebug = false -- Use Debug options?
 Config.EnableDefaultInventory = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
 Config.EnablePVP = true -- Allow Player to player combat
 
 Config.Multichar = GetResourceState("esx_multicharacter") ~= "missing"
-Config.Identity = true -- Select a characters identity data before they have loaded in (this happens by default with multichar)
+Config.Identity = true -- Select a character identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
 Config.DisableHealthRegeneration = false -- Player will no longer regenerate health
-Config.DisableVehicleRewards = false -- Disables Player Recieving weapons from vehicles
+Config.DisableVehicleRewards = false -- Disables Player Receiving weapons from vehicles
 Config.DisableNPCDrops = false -- stops NPCs from dropping weapons on death
 Config.DisableDispatchServices = false -- Disable Dispatch services
 Config.DisableScenarios = false -- Disable Scenarios
@@ -85,12 +85,12 @@ Config.RemoveHudComponents = {
     [22] = false, --HUD_WEAPONS
 }
 
-Config.SpawnVehMaxUpgrades = true -- admin vehicles spawn with max vehcle settings
+Config.SpawnVehMaxUpgrades = true -- admin vehicles spawn with max vehicle settings
 Config.CustomAIPlates = "........" -- Custom plates for AI vehicles
 -- Pattern string format
 --1 will lead to a random number from 0-9.
 --A will lead to a random letter from A-Z.
--- . will lead to a random letter or number, with 50% probability of being either.
+-- . will lead to a random letter or number, with a 50% probability of being either.
 --^1 will lead to a literal 1 being emitted.
 --^A will lead to a literal A being emitted.
 --Any other character will lead to said character being emitted.

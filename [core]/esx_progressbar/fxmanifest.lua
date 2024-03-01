@@ -2,6 +2,8 @@ fx_version 'adamant'
 
 game 'gta5'
 author 'ESX-Framework'
+description 'A beautiful and simple NUI progress bar for ESX'
+version '1.10.5'
 lua54 'yes'
 version '1.10.5'
 description 'ESX Progressbar'
