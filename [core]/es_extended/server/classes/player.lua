@@ -83,7 +83,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         local coordinates <const> = _GetEntityCoords(ped)
         local heading <const> = _GetEntityHeading(ped)
 
-        return vector and vector4(coordinates, heading) or { x = coordinates.x, y = coordinates.y, z = coordinates.z, heading = heading }
+        return vector and vector4(coordinates.xyz, heading) or { x = coordinates.x, y = coordinates.y, z = coordinates.z, heading = heading }
     end
 
     ---@param reason string
