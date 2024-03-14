@@ -508,9 +508,9 @@ function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
     if modelFilter then
         filteredEntities = {}
     
-        for current_entity_index = 1, #entities do
-            if modelFilter[GetEntityModel(entities[current_entity_index])] then
-                filteredEntities[#filteredEntities + 1] = entities[current_entity_index]
+        for currentEntityIndex = 1, #entities do
+            if modelFilter[GetEntityModel(entities[currentEntityIndex])] then
+                filteredEntities[#filteredEntities + 1] = entities[currentEntityIndex]
             end
         end
     end
@@ -1128,8 +1128,8 @@ function ESX.ShowInventory()
                         { unselectable = true, icon = "fas fa-users", title = "Nearby Players" },
                     }
 
-                    for current_nearby_player_index = 1, #playersNearby do
-                        players[GetPlayerServerId(playersNearby[current_nearby_player_index])] = true
+                    for currentNearbyPlayerIndex = 1, #playersNearby do
+                        players[GetPlayerServerId(playersNearby[currentNearbyPlayerIndex])] = true
                     end
 
                     ESX.TriggerServerCallback("esx:getPlayerNames", function(returnedPlayers)
