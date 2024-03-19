@@ -1,5 +1,6 @@
 game 'common'
 
+version '1.10.5'
 fx_version 'cerulean'
 author 'ESX-Framework'
 description 'Allows resources to Run tasks at specific intervals.'
