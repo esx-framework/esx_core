@@ -1,5 +1,6 @@
 local _GetPlayerPed = GetPlayerPed
 local _GetEntityCoords = GetEntityCoords
+local _GetEntityHeading = GetEntityHeading
 local _ExecuteCommand = ExecuteCommand
 local _SetEntityCoords = SetEntityCoords
 local _SetEntityHeading = SetEntityHeading
@@ -80,8 +81,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.getCoords(vector)
         local ped <const> = _GetPlayerPed(self.source)
         local coordinates <const> = _GetEntityCoords(ped)
+        local heading <const> = _GetEntityHeading(ped)
 
-        return vector and coordinates or { x = coordinates.x, y = coordinates.y, z = coordinates.z }
+        return vector and vector4(coordinates.xyz, heading) or { x = coordinates.x, y = coordinates.y, z = coordinates.z, heading = heading }
     end
 
     ---@param reason string
