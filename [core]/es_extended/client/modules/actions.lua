@@ -64,11 +64,15 @@ CreateThread(function()
                 isEnteringVehicle = true
                 TriggerEvent("esx:enteringVehicle", vehicle, plate, seat, netId)
                 TriggerServerEvent("esx:enteringVehicle", plate, seat, netId)
+                ESX.SetPlayerData("vehicle", vehicle)
+                ESX.SetPlayerData("seat", seat)
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
                 TriggerEvent("esx:enteringVehicleAborted")
                 TriggerServerEvent("esx:enteringVehicleAborted")
                 isEnteringVehicle = false
+                ESX.SetPlayerData("vehicle", false)
+                ESX.SetPlayerData("seat", false)
             elseif IsPedInAnyVehicle(playerPed, false) then
                 -- suddenly appeared in a vehicle, possible teleport
                 isEnteringVehicle = false
@@ -79,6 +83,8 @@ CreateThread(function()
                 current.displayName, current.netId = GetData(current.vehicle)
                 TriggerEvent("esx:enteredVehicle", current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent("esx:enteredVehicle", current.plate, current.seat, current.displayName, current.netId)
+                ESX.SetPlayerData("vehicle", vehicle)
+                ESX.SetPlayerData("seat", seat)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
@@ -87,6 +93,8 @@ CreateThread(function()
                 TriggerServerEvent("esx:exitedVehicle", current.plate, current.seat, current.displayName, current.netId)
                 isInVehicle = false
                 current = {}
+                ESX.SetPlayerData("vehicle", false)
+                ESX.SetPlayerData("seat", false)
             end
         end
         Wait(200)
