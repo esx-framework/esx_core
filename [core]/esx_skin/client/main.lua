@@ -7,11 +7,10 @@ AddEventHandler("esx:playerLoaded", function(_, _, skin)
 end)
 
 function OpenMenu(submitCb, cancelCb, restrict)
-    local playerPed = PlayerPedId()
-
     TriggerEvent("skinchanger:getSkin", function(skin)
         lastSkin = skin
     end)
+
     TriggerEvent("skinchanger:getData", function(components, maxVals)
         local elements = {}
         local _components = {}
@@ -42,7 +41,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             local componentId = _components[i].componentId
 
             if componentId == 0 then
-                value = GetPedPropIndex(playerPed, _components[i].componentId)
+                value = GetPedPropIndex(ESX.PlayerData.ped, _components[i].componentId)
             end
 
             local data = {
@@ -134,7 +133,7 @@ function CreateSkinCam()
         cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
     end
 
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     SetCamActive(cam, true)
     RenderScriptCams(true, true, 500, true, true)
@@ -168,8 +167,7 @@ CreateThread(function()
             DisableControlAction(0, 25, true) -- Input Aim
             DisableControlAction(0, 24, true) -- Input Attack
 
-            local playerPed = PlayerPedId()
-            local coords = GetEntityCoords(playerPed)
+            local coords = GetEntityCoords(ESX.PlayerData.ped)
 
             local angle = heading * customPI
             local theta = {

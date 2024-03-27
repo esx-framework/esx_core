@@ -427,7 +427,7 @@ function ESX.Game.GetVehicles() -- Leave the function for compatibility
 end
 
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
-    local players, myPlayer = {}, PlayerId()
+    local players, myPlayer = {}, ESX.PlayerData.id
     local active = GetActivePlayers()
 
     for i = 1, #active do

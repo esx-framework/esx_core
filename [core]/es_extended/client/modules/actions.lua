@@ -1,5 +1,5 @@
 local isInVehicle, isEnteringVehicle, isJumping, inPauseMenu = false, false, false, false
-local playerPed = PlayerPedId()
+local playerId, playerPed = PlayerId(), PlayerPedId()
 local current = {}
 
 local function GetPedVehicleSeat(ped, vehicle)
@@ -28,13 +28,19 @@ CreateThread(function()
     while not ESX.PlayerLoaded do Wait(200) end
     while true do
         ESX.SetPlayerData("coords", GetEntityCoords(playerPed))
+        if playerId ~= PlayerId() then
+            playerId = PlayerId()
+
+            ESX.SetPlayerData("id", playerId)
+        end
+
         if playerPed ~= PlayerPedId() then
             playerPed = PlayerPedId()
             ESX.SetPlayerData("ped", playerPed)
             TriggerEvent("esx:playerPedChanged", playerPed)
             TriggerServerEvent("esx:playerPedChanged", PedToNet(playerPed))
             if Config.DisableHealthRegeneration then
-                SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+                SetPlayerHealthRechargeMultiplier(playerId, 0.0)
             end
         end
 
@@ -54,7 +60,7 @@ CreateThread(function()
             TriggerEvent("esx:pauseMenuActive", inPauseMenu)
         end
 
-        if not isInVehicle and not IsPlayerDead(PlayerId()) then
+        if not isInVehicle and not IsPlayerDead(playerId) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then
                 -- trying to enter a vehicle!
                 local vehicle = GetVehiclePedIsTryingToEnter(playerPed)
@@ -81,7 +87,7 @@ CreateThread(function()
                 TriggerServerEvent("esx:enteredVehicle", current.plate, current.seat, current.displayName, current.netId)
             end
         elseif isInVehicle then
-            if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
+            if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(playerId) then
                 -- bye, vehicle
                 TriggerEvent("esx:exitedVehicle", current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent("esx:exitedVehicle", current.plate, current.seat, current.displayName, current.netId)

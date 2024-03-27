@@ -79,7 +79,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
         NetworkSetFriendlyFireOption(true)
     end
 
-    local playerId = PlayerId()
+    local playerId = ESX.PlayerData.id
     -- RemoveHudComponents
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
@@ -688,15 +688,14 @@ end)
 
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
-    local player = PlayerId()
     if input == "freeze" then
         SetEntityCollision(ESX.PlayerData.ped, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
-        SetPlayerInvincible(player, true)
+        SetPlayerInvincible(ESX.PlayerData.id, true)
     elseif input == "unfreeze" then
         SetEntityCollision(ESX.PlayerData.ped, true)
         FreezeEntityPosition(ESX.PlayerData.ped, false)
-        SetPlayerInvincible(player, false)
+        SetPlayerInvincible(ESX.PlayerData.id, false)
     end
 end)
 
