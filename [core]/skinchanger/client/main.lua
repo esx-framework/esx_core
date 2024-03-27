@@ -9,7 +9,6 @@ for i = 1, #Components, 1 do
 end
 
 function LoadDefaultModel(malePed, cb)
-    local playerPed = PlayerPedId()
     local characterModel
 
     if malePed then
@@ -27,8 +26,8 @@ function LoadDefaultModel(malePed, cb)
         end
 
         if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
-            SetPlayerModel(PlayerId(), characterModel)
-            SetPedDefaultComponentVariation(playerPed)
+            SetPlayerModel(ESX.PlayerData.id, characterModel)
+            SetPedDefaultComponentVariation(ESX.PlayerData.ped)
         end
 
         SetModelAsNoLongerNeeded(characterModel)
@@ -42,7 +41,7 @@ function LoadDefaultModel(malePed, cb)
 end
 
 function GetMaxVals()
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     local data = {
         sex = 1,
@@ -147,7 +146,7 @@ function GetMaxVals()
 end
 
 function ApplySkin(skin, clothes)
-    local playerPed = PlayerPedId()
+    local playerPed = ESX.PlayerData.ped
 
     for k, v in pairs(skin) do
         Character[k] = v
@@ -362,7 +361,7 @@ AddEventHandler("skinchanger:getSkin", function(cb)
 end)
 
 AddEventHandler("skinchanger:modelLoaded", function()
-    ClearPedProp(PlayerPedId(), 0)
+    ClearPedProp(ESX.PlayerData.ped, 0)
 
     if LoadSkin ~= nil then
         ApplySkin(LoadSkin)

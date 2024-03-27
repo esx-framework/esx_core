@@ -29,7 +29,7 @@ if ESX.GetConfig().Multichar then
         ESX.PlayerData = {}
         spawned = false
         cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         SetEntityCoords(playerPed, SpawnCoords.x, SpawnCoords.y, SpawnCoords.z, true, false, false, false)
         SetEntityHeading(playerPed, SpawnCoords.w)
         local offset = GetOffsetFromEntityInWorldCoords(playerPed, 0, 1.7, 0.4)
@@ -48,7 +48,7 @@ if ESX.GetConfig().Multichar then
 
     StartLoop = function()
         hidePlayers = true
-        MumbleSetVolumeOverride(PlayerId(), 0.0)
+        MumbleSetVolumeOverride(ESX.PlayerData.id, 0.0)
         CreateThread(function()
             local keys = { 18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109, 209, 19 }
             while hidePlayers do
@@ -56,9 +56,9 @@ if ESX.GetConfig().Multichar then
                 for i = 1, #keys do
                     EnableControlAction(0, keys[i], true)
                 end
-                SetEntityVisible(PlayerPedId(), 0, 0)
+                SetEntityVisible(ESX.PlayerData.ped, 0, 0)
                 SetLocalPlayerVisibleLocally(1)
-                SetPlayerInvincible(PlayerId(), 1)
+                SetPlayerInvincible(ESX.PlayerData.id, 1)
                 ThefeedHideThisFrame()
                 HideHudComponentThisFrame(11)
                 HideHudComponentThisFrame(12)
@@ -70,7 +70,7 @@ if ESX.GetConfig().Multichar then
                     SetEntityLocallyInvisible(vehicles[i])
                 end
             end
-            local playerId, playerPed = PlayerId(), PlayerPedId()
+            local playerId, playerPed = ESX.PlayerData.id, ESX.PlayerData.ped
             MumbleSetVolumeOverride(playerId, -1.0)
             SetEntityVisible(playerPed, 1, 0)
             SetPlayerInvincible(playerId, 0)
@@ -84,7 +84,7 @@ if ESX.GetConfig().Multichar then
                 local players = GetActivePlayers()
                 for i = 1, #players do
                     local player = players[i]
-                    if player ~= PlayerId() and not playerPool[player] then
+                    if player ~= ESX.PlayerData.id and not playerPool[player] then
                         playerPool[player] = true
                         NetworkConcealPlayer(player, true, true)
                     end
@@ -131,14 +131,14 @@ if ESX.GetConfig().Multichar then
                     RequestModel(Characters[index].model)
                     Wait(0)
                 end
-                SetPlayerModel(PlayerId(), Characters[index].model)
+                SetPlayerModel(ESX.PlayerData.id, Characters[index].model)
                 SetModelAsNoLongerNeeded(Characters[index].model)
             end
             TriggerEvent("skinchanger:loadSkin", Characters[index].skin)
         end
         spawned = index
-        local playerPed = PlayerPedId()
-        FreezeEntityPosition(PlayerPedId(), true)
+        local playerPed = ESX.PlayerData.ped
+        FreezeEntityPosition(playerPed, true)
         SetPedAoBlobRendering(playerPed, true)
         SetEntityAlpha(playerPed, 255)
         SendNUIMessage({
@@ -233,7 +233,7 @@ if ESX.GetConfig().Multichar then
                 local slot = GetSlot()
                 TriggerServerEvent("esx_multicharacter:CharacterChosen", slot, true)
                 TriggerEvent("esx_identity:showRegisterIdentity")
-                local playerPed = PlayerPedId()
+                local playerPed = ESX.PlayerData.ped
                 SetPedAoBlobRendering(playerPed, false)
                 SetEntityAlpha(playerPed, 0)
                 SendNUIMessage({
@@ -242,7 +242,7 @@ if ESX.GetConfig().Multichar then
             else
                 CharacterOptions(Characters, slots, SelectedCharacter)
                 SetupCharacter(SelectedCharacter.value)
-                local playerPed = PlayerPedId()
+                local playerPed = ESX.PlayerData.ped
                 SetPedAoBlobRendering(playerPed, true)
                 ResetEntityAlpha(playerPed)
             end
@@ -272,7 +272,7 @@ if ESX.GetConfig().Multichar then
                 canRelog = false
                 DoScreenFadeIn(400)
                 Wait(400)
-                local playerPed = PlayerPedId()
+                local playerPed = ESX.PlayerData.ped
                 SetPedAoBlobRendering(playerPed, false)
                 SetEntityAlpha(playerPed, 0)
                 TriggerServerEvent("esx_multicharacter:CharacterChosen", 1, true)
@@ -296,10 +296,10 @@ if ESX.GetConfig().Multichar then
                 RequestModel(model)
                 Wait(0)
             end
-            SetPlayerModel(PlayerId(), model)
+            SetPlayerModel(ESX.PlayerData.id, model)
             SetModelAsNoLongerNeeded(model)
             TriggerEvent("skinchanger:loadSkin", skin, function()
-                local playerPed = PlayerPedId()
+                local playerPed = ESX.PlayerData.ped
                 SetPedAoBlobRendering(playerPed, true)
                 ResetEntityAlpha(playerPed)
                 TriggerEvent("esx_skin:openSaveableMenu", function()
@@ -319,7 +319,7 @@ if ESX.GetConfig().Multichar then
         SetCamActive(cam, false)
         RenderScriptCams(false, false, 0, true, true)
         cam = nil
-        local playerPed = PlayerPedId()
+        local playerPed = ESX.PlayerData.ped
         FreezeEntityPosition(playerPed, true)
         SetEntityCoordsNoOffset(playerPed, spawn.x, spawn.y, spawn.z, false, false, false, true)
         SetEntityHeading(playerPed, spawn.heading)

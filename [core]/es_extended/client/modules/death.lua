@@ -6,9 +6,8 @@ AddEventHandler("gameEventTriggered", function(event, data)
     if not IsPedAPlayer(victim) then
         return
     end
-    local player = PlayerId()
-    local playerPed = PlayerPedId()
-    if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)) then
+    local playerPed = ESX.PlayerData.ped
+    if victimDied and NetworkGetPlayerIndexFromPed(victim) == ESX.PlayerData.id and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)) then
         local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
         local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
         if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
@@ -20,7 +19,7 @@ AddEventHandler("gameEventTriggered", function(event, data)
 end)
 
 function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
-    local victimCoords = GetEntityCoords(PlayerPedId())
+    local victimCoords = GetEntityCoords(ESX.PlayerData.ped)
     local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
     local distance = #(victimCoords - killerCoords)
 
@@ -41,8 +40,7 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
 end
 
 function PlayerKilled(deathCause)
-    local playerPed = PlayerPedId()
-    local victimCoords = GetEntityCoords(playerPed)
+    local victimCoords = GetEntityCoords(ESX.PlayerData.ped)
 
     local data = {
         victimCoords = { x = ESX.Math.Round(victimCoords.x, 1), y = ESX.Math.Round(victimCoords.y, 1), z = ESX.Math.Round(victimCoords.z, 1) },
