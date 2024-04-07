@@ -14,11 +14,11 @@ function ESX.TriggerClientEvent(eventName, playerIds, ...)
         return
     end
 
-    local Payload = msgpack.pack_args(...)
-    local payloadLength = #Payload
+    local payload = msgpack.pack_args(...)
+    local payloadLength = #payload
 
     for i = 1, #playerIds do
-        TriggerClientEventInternal(eventName, playerIds[i], Payload, payloadLength)
+        TriggerClientEventInternal(eventName, playerIds[i], payload, payloadLength)
     end
 end
 
