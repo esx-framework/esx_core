@@ -140,7 +140,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
         return function(newWeight)
             self.maxWeight = newWeight
             self.triggerEvent("esx:setMaxWeight", self.maxWeight)
-            return Inventory.Set(self.source, "maxWeight", newWeight)
+            return Inventory.SetMaxWeight(self.source, newWeight)
         end
     end,
 
