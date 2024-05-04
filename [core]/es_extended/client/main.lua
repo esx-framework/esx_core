@@ -24,7 +24,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
         p:resolve()
     end)
     Citizen.Await(p)
-    
+
     local playerPed = PlayerPedId()
     FreezeEntityPosition(playerPed, true)
     SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
@@ -56,7 +56,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     while not DoesEntityExist(ESX.PlayerData.ped) do
         Wait(20)
     end
-    
+
     ESX.PlayerLoaded = true
 
     local metadata = ESX.PlayerData.metadata
@@ -72,7 +72,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     local timer = GetGameTimer()
     while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
         Wait(0)
-    end 
+    end
 
     if Config.EnablePVP then
         SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
@@ -376,6 +376,11 @@ end
 RegisterNetEvent("esx:setJob")
 AddEventHandler("esx:setJob", function(Job)
     ESX.SetPlayerData("job", Job)
+end)
+
+RegisterNetEvent("esx:setGroup")
+AddEventHandler("esx:setGroup", function(group)
+    ESX.SetPlayerData("group", group)
 end)
 
 if not Config.OxInventory then
