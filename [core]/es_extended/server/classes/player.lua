@@ -11,6 +11,7 @@ local _SetPedAmmo = SetPedAmmo
 local _RemoveWeaponFromPed = RemoveWeaponFromPed
 local _assert = assert
 
+---@param uniqueId number
 ---@param playerId number
 ---@param identifier string
 ---@param group string
@@ -22,11 +23,12 @@ local _assert = assert
 ---@param name string
 ---@param coords table | vector4
 ---@param metadata table
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+function CreateExtendedPlayer(uniqueId,playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 
     local self = {}
 
+    self.uniqueId = uniqueId
     self.accounts = accounts
     self.coords = coords
     self.group = group
@@ -122,6 +124,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return string
     function self.getIdentifier()
         return self.identifier
+    end
+
+    ---@return number
+    function self.getUniqueId()
+        return self.uniqueId
     end
 
     ---@param newGroup string
