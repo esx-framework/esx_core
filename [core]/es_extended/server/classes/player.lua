@@ -127,8 +127,8 @@ function CreateExtendedPlayer(esxId, playerId, identifier, group, accounts, inve
     end
 
     ---@return number
-    function self.getUniqueId()
-        return self.uniqueId
+    function self.getEsxId()
+        return self.esxId
     end
 
     ---@param newGroup string
