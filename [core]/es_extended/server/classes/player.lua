@@ -53,6 +53,7 @@ function CreateExtendedPlayer(playerId, identifier, esxId, group, accounts, inve
     _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
+    stateBag:set("esxid", self.esxId, true)
     stateBag:set("identifier", self.identifier, true)
     stateBag:set("license", self.license, true)
     stateBag:set("job", self.job, true)
