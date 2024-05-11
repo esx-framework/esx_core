@@ -165,7 +165,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         job, grade = "unemployed", "0"
     end
 
-    jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
     userData.job = {
         id = jobObject.id,
@@ -252,10 +252,9 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.esxId = result.id
 
     -- xPlayer Creation
-    local xPlayer = CreateExtendedPlayer(userData.esxId, playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
+    local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.esxId ,userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
     ESX.Players[playerId] = xPlayer
-    Core.playersByIdentifier[identifier] = xPlayer
-    Core.playersByEsxId[userData.esxId] = xPlayer
+    Core.globalPlayer[userData.esxId] = xPlayer
 
     -- Identity
     if result.firstname and result.firstname ~= "" then
@@ -324,8 +323,7 @@ AddEventHandler("playerDropped", function(reason)
         local currentJob = ESX.JobsPlayerCount[job]
         ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
         GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
-        Core.playersByIdentifier[xPlayer.identifier] = nil
-        Core.playersByEsxId[xPlayer.esxId] = nil
+        Core.globalPlayer[xPlayer.esxId] = nil
         Core.SavePlayer(xPlayer, function()
             ESX.Players[playerId] = nil
         end)
@@ -356,8 +354,7 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
     local xPlayer = ESX.GetPlayerFromId(playerId)
     if xPlayer then
         TriggerEvent("esx:playerDropped", playerId)
-        Core.playersByIdentifier[xPlayer.identifier] = nil
-        Core.playersByEsxId[xPlayer.esxId] = nil
+        Core.globalPlayer[xPlayer.esxId] = nil
         Core.SavePlayer(xPlayer, function()
             ESX.Players[playerId] = nil
             if cb then
@@ -592,6 +589,7 @@ ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     cb({
+        esxId = xPlayer.esxId,
         identifier = xPlayer.identifier,
         accounts = xPlayer.getAccounts(),
         inventory = xPlayer.getInventory(),
@@ -615,6 +613,7 @@ ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
 
     cb({
+        esxId = xPlayer.esxId,
         identifier = xPlayer.identifier,
         accounts = xPlayer.getAccounts(),
         inventory = xPlayer.getInventory(),

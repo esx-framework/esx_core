@@ -312,12 +312,16 @@ function ESX.GetPlayerFromId(source)
     return ESX.Players[tonumber(source)]
 end
 
-function ESX.GetPlayerFromIdentifier(identifier)
-    return Core.playersByIdentifier[identifier]
+function ESX.GetPlayerFromEsxId(esxId)
+    return Core.globalPlayer[tonumber(esxId)]
 end
 
-function ESX.GetPlayerFromEsxId(esxId)
-    return Core.playersByEsxId[esxId]
+function ESX.GetPlayerFromIdentifier(identifier)
+    for _,xPlayer in pairs(Core.globalPlayer) do
+        if (xPlayer.identifier == identifier) then
+            return xPlayer
+        end
+    end
 end
 
 function ESX.GetIdentifier(playerId)
