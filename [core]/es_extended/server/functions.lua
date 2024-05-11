@@ -316,6 +316,10 @@ function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
 
+function ESX.GetPlayerFromEsxId(esxId)
+    return Core.playersByEsxId[esxId]
+end
+
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
