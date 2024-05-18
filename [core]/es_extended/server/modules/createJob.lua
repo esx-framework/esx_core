@@ -6,15 +6,17 @@ local NOTIFY_TYPES = {
 }
 
 local function doesJobAndGradesExist(name, grades)
-    local jobExists = false
-    for _, grade in ipairs(grades) do
-        if ESX.DoesJobExist(name, grade.grade) then
-            jobExists = true
-            break
-        end
+    if not ESX.Jobs[name] then 
+       return false
     end
 
-    return jobExists
+   for _, grade in ipairs(grades) do
+       if not ESX.DoesJobExist(name, grade.grade) then
+           return false
+       end
+   end
+
+   return true
 end
 
 local function generateTransactionQueries(name,grades)
