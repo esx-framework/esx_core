@@ -129,9 +129,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param newGroup string
     ---@return void
     function self.setGroup(newGroup)
+        local lastGroup = self.group
+
         _ExecuteCommand(("remove_principal identifier.%s group.%s"):format(self.license, self.group))
+
         self.group = newGroup
+
+        _TriggerEvent("esx:setGroup", self.source, self.group, lastGroup)
+        self.triggerEvent("esx:setGroup", self.group, lastGroup)
         Player(self.source).state:set("group", self.group, true)
+
         _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
     end
 
@@ -477,7 +484,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
         }
 
-        TriggerEvent("esx:setJob", self.source, self.job, lastJob)
+        _TriggerEvent("esx:setJob", self.source, self.job, lastJob)
         self.triggerEvent("esx:setJob", self.job, lastJob)
         Player(self.source).state:set("job", self.job, true)
     end
