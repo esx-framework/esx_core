@@ -62,7 +62,7 @@
         });
 
         ESX_MENU.render();
-        $("#menu_" + namespace + "_" + name)
+        $(document.getElementById("menu_" + namespace + "_" + name))
             .find(".menu-item.selected")[0]
             .scrollIntoView();
     };
@@ -121,7 +121,7 @@
         }
 
         if (typeof focused != "undefined") {
-            $("#menu_" + focused.namespace + "_" + focused.name).show();
+            $(document.getElementById("menu_" + focused.namespace + "_" + focused.name)).show();
         }
 
         $(menuContainer).show();
@@ -231,7 +231,7 @@
                             ESX_MENU.change(focused.namespace, focused.name, elem);
                             ESX_MENU.render();
 
-                            $("#menu_" + focused.namespace + "_" + focused.name)
+                            $(document.getElementById("menu_" + focused.namespace + "_" + focused.name))
                                 .find(".menu-item.selected")[0]
                                 .scrollIntoView();
                         }
@@ -266,7 +266,7 @@
                             ESX_MENU.change(focused.namespace, focused.name, elem);
                             ESX_MENU.render();
 
-                            $("#menu_" + focused.namespace + "_" + focused.name)
+                            $(document.getElementById("menu_" + focused.namespace + "_" + focused.name))
                                 .find(".menu-item.selected")[0]
                                 .scrollIntoView();
                         }
@@ -302,7 +302,7 @@
                                     break;
                             }
 
-                            $("#menu_" + focused.namespace + "_" + focused.name)
+                            $(document.getElementById("menu_" + focused.namespace + "_" + focused.name))
                                 .find(".menu-item.selected")[0]
                                 .scrollIntoView();
                         }
@@ -341,7 +341,7 @@
                                     break;
                             }
 
-                            $("#menu_" + focused.namespace + "_" + focused.name)
+                            $(document.getElementById("menu_" + focused.namespace + "_" + focused.name))
                                 .find(".menu-item.selected")[0]
                                 .scrollIntoView();
                         }
