@@ -509,20 +509,20 @@ if not Config.OxInventory then
             if xPlayer.hasWeapon(itemName) then
                 local _, weapon = xPlayer.getWeapon(itemName)
                 local _, weaponObject = ESX.GetWeapon(itemName)
-                local pickupLabel = ""
+                local weaponPickupLabel = ""
                 local components = ESX.Table.Clone(weapon.components)
                 xPlayer.removeWeapon(itemName)
 
                 if weaponObject.ammo and weapon.ammo > 0 then
                     local ammoLabel = weaponObject.ammo.label
-                    pickupLabel = ("%s [%s %s]"):format(weapon.label, weapon.ammo, ammoLabel)
+                    weaponPickupLabel = ("%s [%s %s]"):format(weapon.label, weapon.ammo, ammoLabel)
                     xPlayer.showNotification(TranslateCap("threw_weapon_ammo", weapon.label, weapon.ammo, ammoLabel))
                 else
-                    pickupLabel = ("%s"):format(weapon.label)
+                    weaponPickupLabel = ("%s"):format(weapon.label)
                     xPlayer.showNotification(TranslateCap("threw_weapon", weapon.label))
                 end
 
-                ESX.CreatePickup("item_weapon", itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
+                ESX.CreatePickup("item_weapon", itemName, weapon.ammo, weaponPickupLabel, playerId, components, weapon.tintIndex)
             end
         end
     end)

@@ -25,4 +25,5 @@ function TranslateCap(str, ...) -- Translate string first char uppercase
 end
 
 _ = Translate
+-- luacheck: ignore _U
 _U = TranslateCap
