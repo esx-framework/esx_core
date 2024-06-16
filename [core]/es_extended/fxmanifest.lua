@@ -12,8 +12,9 @@ shared_scripts {
 	'config.lua',
 	'config.weapons.lua',
 
-	'common/modules/*.lua',
+	'common/functions.lua', 
 	'common/*.lua',
+	'common/modules/*.lua',
 }
 
 server_scripts {
