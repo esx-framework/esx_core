@@ -1,3 +1,4 @@
+ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
 ESX.JobsPlayerCount = {}
