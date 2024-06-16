@@ -1,6 +1,5 @@
-ESX = {}
-
 local Charset = {}
+
 for i = 48, 57 do
     table.insert(Charset, string.char(i))
 end
