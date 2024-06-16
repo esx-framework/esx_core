@@ -167,7 +167,7 @@ if ESX.GetConfig().Multichar then
 
     function CharacterOptions(characters, slots, SelectedCharacter)
         local elements = {
-            { title = TranslateCap("character", characters[SelectedCharacter.value].firstname .. " " .. Characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
+            { title = TranslateCap("character", characters[SelectedCharacter.value].firstname .. " " .. characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
             { title = TranslateCap("return"), unselectable = false, icon = "fa-solid fa-arrow-left", description = TranslateCap("return_description"), action = "return" },
         }
         if not characters[SelectedCharacter.value].disabled then
