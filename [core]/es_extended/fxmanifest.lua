@@ -11,9 +11,6 @@ shared_scripts {
 
 	'config.lua',
 	'config.weapons.lua',
-
-	'common/modules/*.lua',
-	'common/*.lua',
 }
 
 server_scripts {
@@ -30,6 +27,8 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
+	'common/modules/*.lua',
+	'common/functions.lua',
 	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
 	'server/modules/createJob.lua'
@@ -42,6 +41,9 @@ client_scripts {
 	'client/modules/callback.lua',
 
 	'client/main.lua',
+
+	'common/modules/*.lua',
+	'common/functions.lua',
 
 	'common/functions.lua',
 	'client/modules/actions.lua',
