@@ -6,7 +6,7 @@ local NOTIFY_TYPES = {
 }
 
 local function doesJobAndGradesExist(name, grades)
-    if not ESX.Jobs[name] then 
+    if not ESX.Jobs[name] then
        return false
     end
 
@@ -79,7 +79,7 @@ function ESX.CreateJob(name, label, grades)
     end
 
     MySQL.insert('INSERT IGNORE INTO jobs (name, label) VALUES (?, ?)', {name, label}, function(jobId)
-        if not jobId == 0 then
+        if jobId == nil or jobId == 0 then
             notify("ERROR",currentResourceName, 'Failed to insert job: `%s`', name)
             return
         end

@@ -24,8 +24,8 @@ local function GetData(vehicle)
     return displayName, netId
 end
 
-local function ToggleVehicleStatus(isInVehicle, seat) 
-    ESX.SetPlayerData("vehicle", isInVehicle)
+local function ToggleVehicleStatus(inVehicle, seat)
+    ESX.SetPlayerData("vehicle", inVehicle)
     ESX.SetPlayerData("seat", seat)
 end
 

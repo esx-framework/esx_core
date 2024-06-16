@@ -278,9 +278,9 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
 
     local netId = bagName:gsub("entity:", "")
     local vehicle = NetToVeh(tonumber(netId))
-        
+
     ESX.Game.SetVehicleProperties(vehicle, value)
-end) 
+end)
 
 RegisterNetEvent("esx:setAccountMoney")
 AddEventHandler("esx:setAccountMoney", function(account)
