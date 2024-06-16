@@ -1,7 +1,7 @@
 fx_version 'adamant'
 
 game 'gta5'
-description 'ESX Skin'
+description 'Allows players to customise their character\'s appearance'
 version '1.10.5'
 lua54 'yes'
 

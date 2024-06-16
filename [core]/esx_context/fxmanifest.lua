@@ -2,7 +2,7 @@ fx_version 'bodacious'
 
 game 'gta5'
 author 'ESX-Framework & Brayden'
-description 'Offical ESX Legacy Context Menu'
+description 'A simplistic context menu for ESX.'
 lua54 'yes'
 version '1.10.5'
 
