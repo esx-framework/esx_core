@@ -90,7 +90,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 cancelCb(data, menu)
             end
         end, function(data, menu)
-            local skin, components, maxVals
+            local skin, maxVals
 
             TriggerEvent("skinchanger:getSkin", function(getSkin)
                 skin = getSkin
@@ -105,7 +105,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
                 -- Update max values
                 TriggerEvent("skinchanger:getData", function(comp, max)
-                    components, maxVals = comp, max
+                    maxVals = max
                 end)
 
                 local newData = {}

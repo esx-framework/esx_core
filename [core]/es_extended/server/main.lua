@@ -164,7 +164,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         job, grade = "unemployed", "0"
     end
 
-    jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
     userData.job = {
         id = jobObject.id,
@@ -509,7 +509,8 @@ if not Config.OxInventory then
             if xPlayer.hasWeapon(itemName) then
                 local _, weapon = xPlayer.getWeapon(itemName)
                 local _, weaponObject = ESX.GetWeapon(itemName)
-                local components, pickupLabel = ESX.Table.Clone(weapon.components)
+                local pickupLabel = ""
+                local components = ESX.Table.Clone(weapon.components)
                 xPlayer.removeWeapon(itemName)
 
                 if weaponObject.ammo and weapon.ammo > 0 then
