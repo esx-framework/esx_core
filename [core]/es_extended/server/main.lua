@@ -509,6 +509,7 @@ if not Config.OxInventory then
             if xPlayer.hasWeapon(itemName) then
                 local _, weapon = xPlayer.getWeapon(itemName)
                 local _, weaponObject = ESX.GetWeapon(itemName)
+                -- luacheck: ignore weaponPickupLabel
                 local weaponPickupLabel = ""
                 local components = ESX.Table.Clone(weapon.components)
                 xPlayer.removeWeapon(itemName)
