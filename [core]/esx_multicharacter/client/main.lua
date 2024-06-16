@@ -21,7 +21,7 @@ if ESX.GetConfig().Multichar then
     end)
 
     local canRelog, cam, spawned = true, nil, nil
-    local Characters = {}
+    local Characters , hidePlayers = {} , false
 
     RegisterNetEvent("esx_multicharacter:SetupCharacters")
     AddEventHandler("esx_multicharacter:SetupCharacters", function()
@@ -147,7 +147,7 @@ if ESX.GetConfig().Multichar then
         })
     end
 
-    function CharacterDeleteConfirmation(Characters, slots, SelectedCharacter, value)
+    function CharacterDeleteConfirmation(characters, slots, SelectedCharacter, value)
         local elements = {
             { title = TranslateCap("char_delete_confirmation"), icon = "fa-solid fa-users", description = TranslateCap("char_delete_confirmation_description"), unselectable = true },
             { title = TranslateCap("char_delete"), icon = "fa-solid fa-xmark", description = TranslateCap("char_delete_yes_description"), action = "delete", value = value },
@@ -160,17 +160,17 @@ if ESX.GetConfig().Multichar then
                 TriggerServerEvent("esx_multicharacter:DeleteCharacter", Action.value)
                 spawned = false
             elseif Action.action == "return" then
-                CharacterOptions(Characters, slots, SelectedCharacter)
+                CharacterOptions(characters, slots, SelectedCharacter)
             end
         end, nil, false)
     end
 
-    function CharacterOptions(Characters, slots, SelectedCharacter)
+    function CharacterOptions(characters, slots, SelectedCharacter)
         local elements = {
-            { title = TranslateCap("character", Characters[SelectedCharacter.value].firstname .. " " .. Characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
+            { title = TranslateCap("character", characters[SelectedCharacter.value].firstname .. " " .. characters[SelectedCharacter.value].lastname), icon = "fa-regular fa-user", unselectable = true },
             { title = TranslateCap("return"), unselectable = false, icon = "fa-solid fa-arrow-left", description = TranslateCap("return_description"), action = "return" },
         }
-        if not Characters[SelectedCharacter.value].disabled then
+        if not characters[SelectedCharacter.value].disabled then
             elements[3] = { title = TranslateCap("char_play"), description = TranslateCap("char_play_description"), icon = "fa-solid fa-play", action = "play", value = SelectedCharacter.value }
         else
             elements[3] = { title = TranslateCap("char_disabled"), value = SelectedCharacter.value, icon = "fa-solid fa-xmark", description = TranslateCap("char_disabled_description") }
@@ -186,17 +186,17 @@ if ESX.GetConfig().Multichar then
                 ESX.CloseContext()
                 TriggerServerEvent("esx_multicharacter:CharacterChosen", Action.value, false)
             elseif Action.action == "delete" then
-                CharacterDeleteConfirmation(Characters, slots, SelectedCharacter, Action.value)
+                CharacterDeleteConfirmation(characters, slots, SelectedCharacter, Action.value)
             elseif Action.action == "return" then
-                SelectCharacterMenu(Characters, slots)
+                SelectCharacterMenu(characters, slots)
             end
         end, nil, false)
     end
 
-    function SelectCharacterMenu(Characters, slots)
-        local Character = next(Characters)
+    function SelectCharacterMenu(characters, slots)
+        local Character = next(characters)
         local elements = { { title = TranslateCap("select_char"), icon = "fa-solid fa-users", description = TranslateCap("select_char_description"), unselectable = true } }
-        for k, v in pairs(Characters) do
+        for k, v in pairs(characters) do
             if not v.model and v.skin then
                 if v.skin.model then
                     v.model = v.skin.model
@@ -210,7 +210,7 @@ if ESX.GetConfig().Multichar then
                 SetupCharacter(Character)
             end
             local label = v.firstname .. " " .. v.lastname
-            if Characters[k].disabled then
+            if characters[k].disabled then
                 elements[#elements + 1] = { title = label, icon = "fa-regular fa-user", value = v.id }
             else
                 elements[#elements + 1] = { title = label, icon = "fa-regular fa-user", value = v.id }
@@ -225,7 +225,7 @@ if ESX.GetConfig().Multichar then
                 ESX.CloseContext()
                 local GetSlot = function()
                     for i = 1, slots do
-                        if not Characters[i] then
+                        if not characters[i] then
                             return i
                         end
                     end
@@ -240,7 +240,7 @@ if ESX.GetConfig().Multichar then
                     action = "closeui",
                 })
             else
-                CharacterOptions(Characters, slots, SelectedCharacter)
+                CharacterOptions(characters, slots, SelectedCharacter)
                 SetupCharacter(SelectedCharacter.value)
                 local playerPed = PlayerPedId()
                 SetPedAoBlobRendering(playerPed, true)
@@ -359,6 +359,6 @@ if ESX.GetConfig().Multichar then
                     canRelog = true
                 end)
             end
-        end)
+        end,false)
     end
 end

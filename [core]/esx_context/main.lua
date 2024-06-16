@@ -12,11 +12,11 @@ function Post(fn, ...)
 end
 
 function Open(position, eles, onSelect, onClose, canClose)
-    local canClose = canClose == nil and true or canClose
+    local canCloseMenu = canClose == nil and true or canClose
     activeMenu = {
         position = position,
         eles = eles,
-        canClose = canClose,
+        canClose = canCloseMenu,
         onSelect = onSelect,
         onClose = onClose,
     }
