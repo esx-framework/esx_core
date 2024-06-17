@@ -546,7 +546,7 @@ if not Config.OxInventory then
         local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
         if pickup then
-            local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
+            local playerPickupDistance = #(pickup.coords.xyz - xPlayer.getCoords(true).xyz)
             if playerPickupDistance > 5.0 then
                 print(("[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7"):format(xPlayer.getIdentifier()))
                 return
