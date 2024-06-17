@@ -481,7 +481,7 @@ if not Config.OxInventory then
             local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
             for pickupId, pickup in pairs(pickups) do
-                local distance = #(playerCoords - pickup.coords)
+                local distance = #(playerCoords - pickup.coords.xyz)
 
                 if distance < 5 then
                     Sleep = 0
