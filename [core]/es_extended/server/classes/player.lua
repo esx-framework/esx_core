@@ -77,13 +77,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param vector boolean
-    ---@return vector3 | table
-    function self.getCoords(vector)
-        local ped <const> = _GetPlayerPed(self.source)
-        local coordinates <const> = _GetEntityCoords(ped)
-        local heading <const> = _GetEntityHeading(ped)
+    --- @param heading boolean  
+    ---@return vector3 | vector4 | table
+    function self.getCoords(vector, heading)
+        local ped <const> = _GetPlayerPed(self.source) 
+        local coords <const> = _GetEntityCoords(ped) 
 
-        return vector and vector4(coordinates.xyz, heading) or { x = coordinates.x, y = coordinates.y, z = coordinates.z, heading = heading }
+        local coordinates
+        if vector then
+            coordinates = (heading and vector4(coords.xyz, _GetEntityHeading(ped)) or coords)
+        else 
+            coordinates = { x = coords.x, y = coords.y, z = coords.z } 
+            if heading then 
+                coordinates.heading = _GetEntityHeading(ped)
+            end
+        end
+
+        return coordinates 
     end
 
     ---@param reason string
