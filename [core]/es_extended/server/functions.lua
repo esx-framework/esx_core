@@ -199,7 +199,7 @@ function Core.SavePlayer(xPlayer, cb)
         xPlayer.job.name,
         xPlayer.job.grade,
         xPlayer.group,
-        json.encode(xPlayer.getCoords()),
+        json.encode(xPlayer.getCoords(false, true)),
         json.encode(xPlayer.getInventory(true)),
         json.encode(xPlayer.getLoadout(true)),
         json.encode(xPlayer.getMeta()),

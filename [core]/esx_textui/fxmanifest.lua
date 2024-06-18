@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 author 'ESX-Framework'
 description 'A beautiful and simple Persistent Notification system for ESX.'
-version '1.10.6'
+version '1.10.7'
 lua54 'yes'
 
 client_scripts { 'TextUI.lua' }
