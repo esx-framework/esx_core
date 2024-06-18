@@ -44,8 +44,7 @@ client_scripts {
 
 	'common/modules/*.lua',
 	'common/functions.lua',
-
-	'common/functions.lua',
+	
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
 	'client/modules/npwd.lua',
