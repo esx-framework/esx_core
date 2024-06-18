@@ -77,7 +77,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param vector boolean
-    --- @param heading boolean  
+    ---@param heading boolean  
     ---@return vector3 | vector4 | table
     function self.getCoords(vector, heading)
         local ped <const> = _GetPlayerPed(self.source) 
