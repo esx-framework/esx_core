@@ -77,7 +77,7 @@ ESX.RegisterCommand(
         local playerPed = GetPlayerPed(xPlayer.source)
         local playerCoords = GetEntityCoords(playerPed)
         local playerHeading = GetEntityHeading(playerPed)
-        local playerVehicle = GetVehiclePedIsIn(playerPed)
+        local playerVehicle = GetVehiclePedIsIn(playerPed, false)
 
         if not args.car or type(args.car) ~= "string" then
             args.car = "adder"

@@ -12,6 +12,7 @@ local _SetPedAmmo = SetPedAmmo
 local _RemoveWeaponFromPed = RemoveWeaponFromPed
 local _assert = assert
 
+---@param esxId number
 ---@param playerId number
 ---@param identifier string
 ---@param group string
@@ -23,11 +24,12 @@ local _assert = assert
 ---@param name string
 ---@param coords table | vector4
 ---@param metadata table
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+function CreateExtendedPlayer(playerId, identifier, esxId, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 
     local self = {}
 
+    self.esxId = esxId
     self.accounts = accounts
     self.coords = coords
     self.group = group
@@ -52,6 +54,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
+    stateBag:set("esxid", self.esxId, true)
     stateBag:set("identifier", self.identifier, true)
     stateBag:set("license", self.license, true)
     stateBag:set("job", self.job, true)
@@ -135,6 +138,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return string
     function self.getIdentifier()
         return self.identifier
+    end
+
+    ---@return number
+    function self.getEsxId()
+        return self.esxId
     end
 
     ---@param newGroup string
