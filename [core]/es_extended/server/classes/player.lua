@@ -191,8 +191,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param account string
     ---@return table | nil
     function self.getAccount(account)
+        account = string.lower(account)
         for i = 1, #self.accounts do
-            if self.accounts[i].name == account then
+            local accountName = string.lower(self.accounts[i].name)
+            if accountName == account then
                 return self.accounts[i]
             end
         end
