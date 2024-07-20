@@ -136,7 +136,7 @@ end)
 
 local function DeleteCharacter(source, charid)
     local identifier = ("%s%s:%s"):format(PREFIX, charid, GetIdentifier(source))
-    local query = "DELETE FROM %s WHERE %s = ?"
+    local query = "DELETE FROM `%s` WHERE %s = ?"
     local queries = {}
     local count = 0
 

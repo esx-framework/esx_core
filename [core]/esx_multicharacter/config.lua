@@ -16,7 +16,7 @@ else
     -- Sets the location for the character selection scene
     -- To set the spawn location for new characters, modify the default value in the users SQL table
     Config.Spawn = {
-        { x = -284.2856, y = 562.4627, z = 172.9182, heading = 19.9895 },
+        { x = -284.2856, y = 562.4627, z = 172.9182, w = 19.9895 },
     }
     --------------------
 

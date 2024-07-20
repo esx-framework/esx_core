@@ -90,7 +90,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
                 cancelCb(data, menu)
             end
         end, function(data, menu)
-            local skin, components, maxVals
+            local skin, tempMaxVals
 
             TriggerEvent("skinchanger:getSkin", function(getSkin)
                 skin = getSkin
@@ -105,14 +105,13 @@ function OpenMenu(submitCb, cancelCb, restrict)
 
                 -- Update max values
                 TriggerEvent("skinchanger:getData", function(comp, max)
-                    components, maxVals = comp, max
+                    tempMaxVals = max
                 end)
 
                 local newData = {}
 
                 for i = 1, #elements, 1 do
-                    newData = {}
-                    newData.max = maxVals[elements[i].name]
+                    newData.max = tempMaxVals[elements[i].name]
 
                     if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
                         newData.value = 0

@@ -1,9 +1,9 @@
 fx_version 'cerulean'
 
 game 'gta5'
-description 'ES Extended'
+description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '1.10.5'
+version '1.10.7'
 
 shared_scripts {
 	'locale.lua',
@@ -30,7 +30,8 @@ server_scripts {
 	'common/modules/*.lua',
 	'common/functions.lua',
 	'server/modules/actions.lua',
-	'server/modules/npwd.lua'
+	'server/modules/npwd.lua',
+	'server/modules/createJob.lua'
 }
 
 client_scripts {
@@ -44,7 +45,6 @@ client_scripts {
 	'common/modules/*.lua',
 	'common/functions.lua',
 
-	'common/functions.lua',
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
 	'client/modules/npwd.lua',

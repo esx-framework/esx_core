@@ -1,9 +1,9 @@
 fx_version 'adamant'
 
 game 'gta5'
-description 'ESX Identity'
+description 'Allows the player to Pick their characters: Name, Gender, Height and Date-of-birth.'
 lua54 'yes'
-version '1.10.5'
+version '1.10.7'
 
 shared_scripts {
 	'@es_extended/imports.lua',

@@ -24,6 +24,11 @@ local function GetData(vehicle)
     return displayName, netId
 end
 
+local function ToggleVehicleStatus(inVehicle, seat)
+    ESX.SetPlayerData("vehicle", inVehicle)
+    ESX.SetPlayerData("seat", seat)
+end
+
 CreateThread(function()
     while not ESX.PlayerLoaded do Wait(200) end
     while true do
@@ -64,11 +69,13 @@ CreateThread(function()
                 isEnteringVehicle = true
                 TriggerEvent("esx:enteringVehicle", vehicle, plate, seat, netId)
                 TriggerServerEvent("esx:enteringVehicle", plate, seat, netId)
+                ToggleVehicleStatus(vehicle, seat)
             elseif not DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not IsPedInAnyVehicle(playerPed, true) and isEnteringVehicle then
                 -- vehicle entering aborted
                 TriggerEvent("esx:enteringVehicleAborted")
                 TriggerServerEvent("esx:enteringVehicleAborted")
                 isEnteringVehicle = false
+                ToggleVehicleStatus(false, false)
             elseif IsPedInAnyVehicle(playerPed, false) then
                 -- suddenly appeared in a vehicle, possible teleport
                 isEnteringVehicle = false
@@ -79,6 +86,7 @@ CreateThread(function()
                 current.displayName, current.netId = GetData(current.vehicle)
                 TriggerEvent("esx:enteredVehicle", current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent("esx:enteredVehicle", current.plate, current.seat, current.displayName, current.netId)
+                ToggleVehicleStatus(current.vehicle, current.seat)
             end
         elseif isInVehicle then
             if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) then
@@ -87,6 +95,7 @@ CreateThread(function()
                 TriggerServerEvent("esx:exitedVehicle", current.plate, current.seat, current.displayName, current.netId)
                 isInVehicle = false
                 current = {}
+                ToggleVehicleStatus(false,false)
             end
         end
         Wait(200)
