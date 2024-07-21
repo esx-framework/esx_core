@@ -305,7 +305,7 @@ Locales["de"] = {
     ["component_camo_slide_finish10"] = "BOOM Rutschen Camouflage",
     ["component_camo_slide_finish11"] = "Patriotisch Rutschen Camouflage",
 
-    ["component_clip_default"] = "Standart Magazin",
+    ["component_clip_default"] = "Standard Magazin",
     ["component_clip_extended"] = "Erweiterters Magazin",
     ["component_clip_drum"] = "Trommelmagazin",
     ["component_clip_box"] = "Kastenmagazin",
