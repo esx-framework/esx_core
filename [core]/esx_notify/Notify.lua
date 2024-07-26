@@ -36,6 +36,7 @@ RegisterNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()
+        ---@diagnostic disable-next-line
         ESX.ShowNotification("No Waypoint Set.", true, false, 140)
     end)
 
