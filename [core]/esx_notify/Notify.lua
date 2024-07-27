@@ -1,6 +1,6 @@
 local Debug = ESX.GetConfig().EnableDebug
 
----@param type string the notification type
+---@param notificatonType string the notification type
 ---@param length number the length of the notification
 ---@param message any the message :D
 local function Notify(notificatonType, length, message)
@@ -36,6 +36,7 @@ RegisterNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()
+        ---@diagnostic disable-next-line
         ESX.ShowNotification("No Waypoint Set.", true, false, 140)
     end)
 
