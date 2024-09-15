@@ -145,6 +145,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
         for i = 1, 15 do
             EnableDispatchService(i, false)
         end
+        SetAudioFlag('PoliceScannerDisabled', true)
     end
 
     -- Disable Scenarios
