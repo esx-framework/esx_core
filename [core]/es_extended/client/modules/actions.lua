@@ -58,8 +58,7 @@ CreateThread(function()
             inPauseMenu = false
             TriggerEvent("esx:pauseMenuActive", inPauseMenu)
         end
-
-        local tempVehicle = GetVehiclePedIsUsing(playerPed)
+            
         if not isInVehicle and not IsPlayerDead(PlayerId()) then
             if DoesEntityExist(GetVehiclePedIsTryingToEnter(playerPed)) and not isEnteringVehicle then
                 -- trying to enter a vehicle!
@@ -81,7 +80,7 @@ CreateThread(function()
                 -- suddenly appeared in a vehicle, possible teleport
                 isEnteringVehicle = false
                 isInVehicle = true
-                current.vehicle = tempVehicle
+                current.vehicle = GetVehiclePedIsUsing(playerPed)
                 current.seat = GetPedVehicleSeat(playerPed, current.vehicle)
                 current.plate = GetVehicleNumberPlateText(current.vehicle)
                 current.displayName, current.netId = GetData(current.vehicle)
@@ -89,8 +88,8 @@ CreateThread(function()
                 TriggerServerEvent("esx:enteredVehicle", current.plate, current.seat, current.displayName, current.netId)
                 ToggleVehicleStatus(current.vehicle, current.seat)
             end
-        elseif isInVehicle or (current.vehicle ~= tempVehicle) then
-            if not IsPedInAnyVehicle(playerPed, false) or IsPlayerDead(PlayerId()) or (current.vehicle ~= tempVehicle) then
+        elseif isInVehicle then
+            if (current.vehicle ~= GetVehiclePedIsUsing(playerPed)) or IsPlayerDead(PlayerId()) then
                 -- bye, vehicle
                 TriggerEvent("esx:exitedVehicle", current.vehicle, current.plate, current.seat, current.displayName, current.netId)
                 TriggerServerEvent("esx:exitedVehicle", current.plate, current.seat, current.displayName, current.netId)
