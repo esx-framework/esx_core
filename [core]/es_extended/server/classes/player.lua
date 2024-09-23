@@ -476,7 +476,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         local lastJob = self.job
 
         if not ESX.DoesJobExist(newJob, grade) then
-            return print(("[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7"):format(self.source, job))
+            return print(("[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7"):format(self.source, newJob))
         end
 
         local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
