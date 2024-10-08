@@ -52,12 +52,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
-    stateBag:set("identifier", self.identifier, true)
-    stateBag:set("license", self.license, true)
+    stateBag:set("identifier", self.identifier, false)
+    stateBag:set("license", self.license, false)
     stateBag:set("job", self.job, true)
     stateBag:set("group", self.group, true)
     stateBag:set("name", self.name, true)
-    stateBag:set("metadata", self.metadata, true)
 
     ---@param eventName string
     ---@param ... any
@@ -77,7 +76,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param vector boolean
-    ---@param heading boolean  
+    ---@param heading boolean
     ---@return vector3 | vector4 | table
     function self.getCoords(vector, heading)
         local ped <const> = _GetPlayerPed(self.source)
@@ -163,7 +162,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return void
     function self.set(k, v)
         self.variables[k] = v
-        Player(self.source).state:set(k, v, true)
     end
 
     ---@param k string
@@ -829,8 +827,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             self.metadata[index] = type(self.metadata[index]) == "table" and self.metadata[index] or {}
             self.metadata[index][value] = subValue
         end
-
-        Player(self.source).state:set("metadata", self.metadata, true)
     end
 
     function self.clearMeta(index, subValues)
@@ -875,7 +871,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             return print(("[^1ERROR^7] xPlayer.clearMeta ^5subValues^7 should be ^5string^7 or ^5table^7, received ^5%s^7!"):format(type(subValues)))
         end
 
-        Player(self.source).state:set("metadata", self.metadata, true)
     end
 
     for fnName, fn in pairs(targetOverrides) do

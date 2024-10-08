@@ -708,7 +708,3 @@ end)
 ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
     cb(ESX.GetVehicleType(model))
 end)
-
-AddStateBagChangeHandler("metadata", "player:" .. tostring(GetPlayerServerId(PlayerId())), function(_, key, val)
-    ESX.SetPlayerData(key, val)
-end)
