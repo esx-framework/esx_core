@@ -708,3 +708,7 @@ end)
 ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
     cb(ESX.GetVehicleType(model))
 end)
+
+RegisterNetEvent('esx:updatePlayerData', function(key, val)
+	ESX.SetPlayerData(key, val)
+end)
