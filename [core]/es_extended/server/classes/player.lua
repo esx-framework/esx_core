@@ -827,6 +827,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             self.metadata[index] = type(self.metadata[index]) == "table" and self.metadata[index] or {}
             self.metadata[index][value] = subValue
         end
+        self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
     function self.clearMeta(index, subValues)
@@ -870,7 +871,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         else
             return print(("[^1ERROR^7] xPlayer.clearMeta ^5subValues^7 should be ^5string^7 or ^5table^7, received ^5%s^7!"):format(type(subValues)))
         end
-
+        self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
     for fnName, fn in pairs(targetOverrides) do
