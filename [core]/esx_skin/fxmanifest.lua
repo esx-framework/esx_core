@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 description 'Allows players to customise their character\'s appearance'
-version '1.10.7'
+version '1.10.8'
 lua54 'yes'
 
 shared_script '@es_extended/imports.lua'
