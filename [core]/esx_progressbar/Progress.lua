@@ -16,7 +16,7 @@ local function Progressbar(message, length, Options)
         end
     end
     if CurrentProgress.FreezePlayer then
-        FreezeEntityPosition(PlayerPedId(), CurrentProgress.FreezePlayer)
+        FreezeEntityPosition(ESX.PlayerData.ped, CurrentProgress.FreezePlayer)
     end
     SendNUIMessage({
         type = "Progressbar",
@@ -30,7 +30,7 @@ local function Progressbar(message, length, Options)
         else
             ClearPedTasks(ESX.PlayerData.ped)
             if CurrentProgress.FreezePlayer then
-                FreezeEntityPosition(PlayerPedId(), false)
+                FreezeEntityPosition(ESX.PlayerData.ped, false)
             end
             if CurrentProgress.onFinish then
                 CurrentProgress.onFinish()
@@ -50,7 +50,7 @@ local function CancelProgressbar()
     })
     ClearPedTasks(ESX.PlayerData.ped)
     if CurrentProgress.FreezePlayer then
-        FreezeEntityPosition(PlayerPedId(), false)
+        FreezeEntityPosition(ESX.PlayerData.ped, false)
     end
     if CurrentProgress.onCancel then
         CurrentProgress.onCancel()

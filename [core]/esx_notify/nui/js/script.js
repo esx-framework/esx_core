@@ -60,7 +60,7 @@ notification = (data) => {
     const notification = $(`
         <div class="notify ${data.type}">
             <div class="innerText">
-                <span class="material-symbols-outlined icon">${types[data.type]["icon"]}</span>
+                <span class="material-symbols-outlined icon">${types[data.type] ? types[data.type]["icon"] : types["info"]["icon"]}</span>
                 <p class="text">${data["message"]}</p>
             </div>
         </div>
