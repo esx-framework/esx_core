@@ -236,21 +236,29 @@ function ESX.UI.Menu.Open(menuType, namespace, name, data, submit, cancel, chang
     return menu
 end
 
-function ESX.UI.Menu.Close(menuType, namespace, name)
+function ESX.UI.Menu.Close(menuType, namespace, name, cancel)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
             if ESX.UI.Menu.Opened[i].type == menuType and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-                ESX.UI.Menu.Opened[i].close()
+                if not cancel then
+                    ESX.UI.Menu.Opened[i].close()
+                else
+                    ESX.UI.Menu.Opened[i].cancel()
+                end
                 ESX.UI.Menu.Opened[i] = nil
             end
         end
     end
 end
 
-function ESX.UI.Menu.CloseAll()
+function ESX.UI.Menu.CloseAll(cancel)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
-            ESX.UI.Menu.Opened[i].close()
+            if not cancel then
+                ESX.UI.Menu.Opened[i].close()
+            else
+                ESX.UI.Menu.Opened[i].cancel()
+            end
             ESX.UI.Menu.Opened[i] = nil
         end
     end
