@@ -39,3 +39,4 @@ jobs:
       versionNumber: ${{ github.event.inputs.versionNumber }}
       excludeOptions: ${{ github.event.inputs.excludeOptions }}
       neededNewBranch: ${{ github.event.inputs.neededNewBranch }}
+      fxmanifestPath: ${{ github.events.inputs.fxmanifestPath }}
