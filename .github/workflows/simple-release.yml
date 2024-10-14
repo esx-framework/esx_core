@@ -24,6 +24,11 @@ on:
           type: string
           description: Specify true or false if you want to create a new branch.
           required: false
+      fxmanifestPath:
+          type: string
+          description: Specify fxmanifest path if fxmanifest is not in the root folder.
+          required: false
+          default: 'fxmanifest.lua'
 
 jobs:
   simple-create-release:
@@ -34,3 +39,4 @@ jobs:
       versionNumber: ${{ github.event.inputs.versionNumber }}
       excludeOptions: ${{ github.event.inputs.excludeOptions }}
       neededNewBranch: ${{ github.event.inputs.neededNewBranch }}
+      fxmanifestPath: ${{ github.events.inputs.fxmanifestPath }}
