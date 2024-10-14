@@ -120,7 +120,7 @@ function ESX.DrawMissionText(msg, time)
 end
 
 function ESX.HashString(str)
-    return ('~INPUT_%s~'):format(('%x'):format(joaat(str)):upper())
+    return ('~INPUT_%s~'):format(('%x'):format(joaat(str) & 0x7fffffff + 2 ^ 31):upper())
 end
 
 function ESX.OpenContext(...)
@@ -140,12 +140,12 @@ function ESX.RefreshContext(...)
 end
 
 function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
-    RegisterCommand("+" .. command_name, on_press)
-    Core.Input[command_name] = ESX.HashString("+" .. command_name)
+    RegisterCommand(on_release and '+' .. command_name or command_name, on_press)
+    Core.Input[command_name] = ESX.HashString(command_name)
     if on_release then
-        RegisterCommand("-" .. command_name, on_release)
+        RegisterCommand('-' .. command_name, on_release)
     end
-    RegisterKeyMapping("+" .. command_name, label or '', input_group or 'keyboard', key or '')
+    RegisterKeyMapping(command_name, label or '', input_group or 'keyboard', key or '')
 end
 
 function ESX.UI.Menu.RegisterType(menuType, open, close)
@@ -236,21 +236,29 @@ function ESX.UI.Menu.Open(menuType, namespace, name, data, submit, cancel, chang
     return menu
 end
 
-function ESX.UI.Menu.Close(menuType, namespace, name)
+function ESX.UI.Menu.Close(menuType, namespace, name, cancel)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
             if ESX.UI.Menu.Opened[i].type == menuType and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-                ESX.UI.Menu.Opened[i].close()
+                if not cancel then
+                    ESX.UI.Menu.Opened[i].close()
+                else
+                    ESX.UI.Menu.Opened[i].cancel()
+                end
                 ESX.UI.Menu.Opened[i] = nil
             end
         end
     end
 end
 
-function ESX.UI.Menu.CloseAll()
+function ESX.UI.Menu.CloseAll(cancel)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
         if ESX.UI.Menu.Opened[i] then
-            ESX.UI.Menu.Opened[i].close()
+            if not cancel then
+                ESX.UI.Menu.Opened[i].close()
+            else
+                ESX.UI.Menu.Opened[i].cancel()
+            end
             ESX.UI.Menu.Opened[i] = nil
         end
     end
