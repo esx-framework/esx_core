@@ -140,12 +140,13 @@ function ESX.RefreshContext(...)
 end
 
 function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
-    RegisterCommand(on_release and '+' .. command_name or command_name, on_press)
-    Core.Input[command_name] = ESX.HashString(command_name)
+	local command = on_release and '+' .. command_name or command_name
+    RegisterCommand(command, on_press)
+    Core.Input[command_name] = ESX.HashString(command)
     if on_release then
         RegisterCommand('-' .. command_name, on_release)
     end
-    RegisterKeyMapping(command_name, label or '', input_group or 'keyboard', key or '')
+    RegisterKeyMapping(command, label or '', input_group or 'keyboard', key or '')
 end
 
 function ESX.UI.Menu.RegisterType(menuType, open, close)
@@ -321,7 +322,7 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y. coords.z, networked == nil or networked, false, true)
+	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y, coords.z, networked == nil or networked, false, true)
 	return cb and cb(obj) or obj
 end
 
@@ -491,8 +492,9 @@ end
 
 function ESX.Game.RaycastScreen(depth, ...)
 	local world, normal = GetWorldCoordFromScreenCoord(.5, .5)
+	local origin = world + normal
 	local target = world + normal * depth
-	return target, ESX.Game.GetShapeTestResultAsync(StartShapeTestLosProbe(world + normal, target, ...))
+	return target, ESX.Game.GetShapeTestResultSync(StartShapeTestLosProbe(origin.x, origin.y, origin.z, target.x, target.y, target.z, ...))
 end
 
 function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
