@@ -321,7 +321,7 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y. coords.z, networked == nil or networked, false, true)
+	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y, coords.z, networked == nil or networked, false, true)
 	return cb and cb(obj) or obj
 end
 
