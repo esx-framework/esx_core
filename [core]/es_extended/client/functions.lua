@@ -140,12 +140,13 @@ function ESX.RefreshContext(...)
 end
 
 function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
-    RegisterCommand(on_release and '+' .. command_name or command_name, on_press)
-    Core.Input[command_name] = ESX.HashString(command_name)
+	local command = on_release and '+' .. command_name or command_name
+    RegisterCommand(command, on_press)
+    Core.Input[command_name] = ESX.HashString(command)
     if on_release then
         RegisterCommand('-' .. command_name, on_release)
     end
-    RegisterKeyMapping(command_name, label or '', input_group or 'keyboard', key or '')
+    RegisterKeyMapping(command, label or '', input_group or 'keyboard', key or '')
 end
 
 function ESX.UI.Menu.RegisterType(menuType, open, close)
