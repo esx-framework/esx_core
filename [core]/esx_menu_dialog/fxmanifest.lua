@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 description 'A basic input dialog for ESX Legacy.'
 lua54 'yes'
-version '1.10.8'
+version '1.10.9'
 
 client_scripts {
 	'@es_extended/imports.lua',
