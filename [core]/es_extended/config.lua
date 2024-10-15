@@ -3,7 +3,7 @@ Config = {}
 local txAdminLocale = GetConvar("txAdmin-locale", "en")
 local esxLocale = GetConvar("esx:locale", "none")
 
-Config.Locale = esxLocale == "none" and txAdminLocale or esxLocale
+Config.Locale = (esxLocale == "none" and txAdminLocale ~= "custom") and txAdminLocale or esxLocale
 
 Config.OxInventory = GetResourceState("ox_inventory") ~= 'missing'
 
