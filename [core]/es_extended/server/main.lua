@@ -260,7 +260,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 
         local name = ("%s %s"):format(result.firstname, result.lastname)
         userData.name = name
-        
+
         xPlayer.set("firstName", result.firstname)
         xPlayer.set("lastName", result.lastname)
         xPlayer.setName(name)
@@ -689,13 +689,13 @@ AddEventHandler("onResourceStart", function(key)
         end
 
         StopResource(key)
-        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
+        error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end
 end)
 
 for key in pairs(DoNotUse) do
     if GetResourceState(key) == "started" or GetResourceState(key) == "starting" then
         StopResource(key)
-        print(("[^1ERROR^7] WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
+        error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^7, PLEASE REMOVE ^5%s^7"):format(key))
     end
 end

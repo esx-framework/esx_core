@@ -11,7 +11,7 @@ end
 
 RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
     if not serverCallbacks[eventName] then
-        return print(("[^1ERROR^7] Server Callback not registered, name: ^5%s^7, invoker resource: ^5%s^7"):format(eventName, invoker))
+        return error(("Server Callback not registered, name: ^5%s^7, invoker resource: ^5%s^7"):format(eventName, invoker))
     end
 
     local source = source
@@ -35,7 +35,7 @@ end
 
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
     if not clientRequests[requestId] then
-        return print(("[^1ERROR^7] Client Callback with requestId ^5%s^7 Was Called by ^5%s^7 but does not exist."):format(requestId, invoker))
+        return error(("Client Callback with requestId ^5%s^7 Was Called by ^5%s^7 but does not exist."):format(requestId, invoker))
     end
 
     clientRequests[requestId](...)
