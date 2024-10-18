@@ -1,13 +1,9 @@
 Config = {}
 
 local txAdminLocale = GetConvar("txAdmin-locale", "en")
-local esxLocale = GetConvar("esx:locale", "none")
+local esxLocale = GetConvar("esx:locale", "invalid")
 
-if esxLocale == "none" then
-    Config.Locale = txAdminLocale ~= "custom" and txAdminLocale or "en"
-else
-    Config.Locale = esxLocale
-end
+Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
 
 Config.OxInventory = GetResourceState("ox_inventory") ~= 'missing'
 
