@@ -1,4 +1,4 @@
-let devMode = true
+let devMode = false
 
 window.addEventListener("message", (event) => {
     if (devMode) {
