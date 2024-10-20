@@ -17,6 +17,3 @@ Interested in helping us? [Take a look at our patreon](https://www.patreon.com/e
 | Kyle McShea - Artin - Mathias Christoffersen - Jaylan Yilmaz - Callum |
 | CONGRESS KW - Michael Hein - Smery sitbon - daZepelin - CMF Community |
 ------
-
-<br>
-Powered by [Oxygenserv](https://www.oxygenserv.com/en/)
