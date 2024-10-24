@@ -169,8 +169,8 @@ local function ApplyConfig()
 
     if Config.DisableVehicleSeatShuff then
         AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
-            if seat == 0 then
-                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
+            if seat > -1 then
+                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, seat)
                 SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
             end
         end)
