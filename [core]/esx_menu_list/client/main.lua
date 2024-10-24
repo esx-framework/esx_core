@@ -33,7 +33,7 @@ CreateThread(function()
         end
 
         if OpenedMenuCount == 0 then
-            SetNuiFocus(false)
+            SetNuiFocus(false, false)
         end
     end
 
