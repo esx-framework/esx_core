@@ -22,7 +22,7 @@ end
 local function generateNewJobTable(name, label, grades)
     local job = { name = name, label = label, grades = {} }
     for _, v in pairs(grades) do
-        job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = {}, skin_female = {} }
+        job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or '{}', skin_female = v.skin_female or '{}' }
     end
 
     return job
