@@ -308,6 +308,7 @@ AddEventHandler("esx:restoreLoadout", function()
     end
 end)
 
+---@diagnostic disable-next-line: param-type-mismatch
 AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
     if not value then
         return
@@ -665,7 +666,7 @@ local heading = 0
 
 local function noclipThread()
     while noclip do
-        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, false, false, true)
 
         if IsControlPressed(1, 34) then
             heading = heading + 1.5
@@ -721,7 +722,11 @@ AddEventHandler("esx:noclip", function()
             CreateThread(noclipThread)
         end
 
-        ESX.ShowNotification(TranslateCap("noclip_message", noclip and Translate("enabled") or Translate("disabled")), true, false, 140)
+        if noclip then
+            ESX.ShowNotification(TranslateCap("noclip_message", Translate("enabled")), "success")
+        else
+            ESX.ShowNotification(TranslateCap("noclip_message", Translate("disabled")), "error")
+        end
     end)
 end)
 
@@ -735,7 +740,7 @@ AddEventHandler("esx:repairPedVehicle", function()
     local ped = ESX.PlayerData.ped
     local vehicle = GetVehiclePedIsIn(ped, false)
     SetVehicleEngineHealth(vehicle, 1000)
-    SetVehicleEngineOn(vehicle, true, true)
+    SetVehicleEngineOn(vehicle, true, true, false)
     SetVehicleFixed(vehicle)
     SetVehicleDirtLevel(vehicle, 0)
 end)
@@ -744,11 +749,11 @@ RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
     local player = PlayerId()
     if input == "freeze" then
-        SetEntityCollision(ESX.PlayerData.ped, false)
+        SetEntityCollision(ESX.PlayerData.ped, false, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
         SetPlayerInvincible(player, true)
     elseif input == "unfreeze" then
-        SetEntityCollision(ESX.PlayerData.ped, true)
+        SetEntityCollision(ESX.PlayerData.ped, true, true)
         FreezeEntityPosition(ESX.PlayerData.ped, false)
         SetPlayerInvincible(player, false)
     end
