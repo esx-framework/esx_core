@@ -1352,11 +1352,11 @@ local mismatchedTypes = {
 }
 
 ---@param model number|string
----@return string
+---@return string | boolean
 function ESX.GetVehicleTypeClient(model)
     model = type(model) == "string" and joaat(model) or model
     if not IsModelInCdimage(model) then
-        return
+        return false
     end
     if mismatchedTypes[model] then
         return mismatchedTypes[model]
