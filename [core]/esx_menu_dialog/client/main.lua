@@ -41,6 +41,10 @@ AddEventHandler("esx_menu_dialog:message:menu_submit", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
     local cancel = false
 
+    if not menu then
+        return
+    end
+
     if menu.submit then
         -- is the submitted data a number?
         if tonumber(data.value) then
@@ -66,6 +70,10 @@ end)
 AddEventHandler("esx_menu_dialog:message:menu_cancel", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
+    if not menu then
+        return
+    end
+
     if menu.cancel ~= nil then
         menu.cancel(data, menu)
     end
@@ -73,6 +81,10 @@ end)
 
 AddEventHandler("esx_menu_dialog:message:menu_change", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+
+    if not menu then
+        return
+    end
 
     if menu.change ~= nil then
         menu.change(data, menu)

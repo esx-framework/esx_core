@@ -501,11 +501,8 @@ if not Config.OxInventory then
                         label = ("%s~n~%s"):format(label, TranslateCap("threw_pickup_prompt"))
                     end
 
-                    ESX.Game.Utils.DrawText3D({
-                        x = pickup.coords.x,
-                        y = pickup.coords.y,
-                        z = pickup.coords.z + 0.25,
-                    }, label, 1.2, 1)
+                    local textCoords = pickup.coords + vector3(0.0, 0.0, 0.25)
+                    ESX.Game.Utils.DrawText3D(textCoords, label, 1.2, 1)
                 elseif pickup.inRange then
                     pickup.inRange = false
                 end
