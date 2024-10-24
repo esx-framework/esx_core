@@ -313,8 +313,20 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    local netId = bagName:gsub("entity:", "")
-    local vehicle = NetToVeh(tonumber(netId))
+    local netId = tonumber(bagName:gsub("entity:", ""))
+    if not netId then
+        error("Tried to set vehicle properties with invalid netId")
+        return
+    end
+    local vehicle = NetToVeh(netId)
+    if not DoesEntityExist(vehicle) then
+        error("Tried to set vehicle properties with invalid vehicle")
+        return
+    end
+
+    if not NetworkGetEntityOwner(vehicle) == PlayerId() then
+        return
+    end
 
     ESX.Game.SetVehicleProperties(vehicle, value)
 end)
