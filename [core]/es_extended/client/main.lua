@@ -151,7 +151,6 @@ local function ApplyConfig()
     -- RemoveHudComponents
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
-            print(GetHudComponentName(i))
             SetHudComponentSize(i, 0.0, 0.0)
         end
     end
