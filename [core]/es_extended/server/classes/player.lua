@@ -653,7 +653,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
         if weapon then
-            ---@type table
             local component <const> = ESX.GetWeaponComponent(weaponName, weaponComponent)
 
             if component then

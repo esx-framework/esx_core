@@ -6,6 +6,7 @@ local clientCallbacks = {}
 ---@param eventName string
 ---@param callback function
 ---@param ... any
+---@return nil
 ESX.TriggerServerCallback = function(eventName, callback, ...)
     serverRequests[RequestId] = callback
 
@@ -25,6 +26,7 @@ end)
 
 ---@param eventName string
 ---@param callback function
+---@return nil
 ESX.RegisterClientCallback = function(eventName, callback)
     clientCallbacks[eventName] = callback
 end

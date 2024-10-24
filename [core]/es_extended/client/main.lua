@@ -387,7 +387,9 @@ if not Config.OxInventory then
 
             for _, v in ipairs(components) do
                 local component = ESX.GetWeaponComponent(name, v)
-                GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+                if component then
+                    GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+                end
             end
 
             setObjectProperties(pickupObject)
