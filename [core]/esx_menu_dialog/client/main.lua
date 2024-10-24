@@ -31,7 +31,7 @@ local function closeMenu(namespace, name)
     })
 
     if not next(OpenedMenus) then
-        SetNuiFocus(false)
+        SetNuiFocus(false, false)
     end
 end
 
