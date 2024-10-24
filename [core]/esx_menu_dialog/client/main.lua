@@ -47,8 +47,9 @@ AddEventHandler("esx_menu_dialog:message:menu_submit", function(data)
 
     if menu.submit then
         -- is the submitted data a number?
-        if tonumber(data.value) then
-            data.value = ESX.Math.Round(tonumber(data.value))
+        local value = tonumber(data.value)
+        if value then
+            data.value = ESX.Math.Round(value)
 
             -- check for negative value
             if tonumber(data.value) <= 0 then

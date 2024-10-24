@@ -21,9 +21,10 @@ function ESX.Math.GroupDigits(value)
     return left .. (num:reverse():gsub("(%d%d%d)", "%1" .. TranslateCap("locale_digit_grouping_symbol")):reverse()) .. right
 end
 
----@param value string
+---@param value string | number
 ---@return string | nil
 function ESX.Math.Trim(value)
+    value = tostring(value)
     return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
 end
 
