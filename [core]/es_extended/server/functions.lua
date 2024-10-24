@@ -348,7 +348,7 @@ end
 ---@param model string|number
 ---@param player number playerId
 ---@param cb function
-
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetVehicleType(model, player, cb)
     model = type(model) == "string" and joaat(model) or model
 
@@ -381,7 +381,9 @@ function ESX.DiscordLog(name, title, color, message)
     }
     PerformHttpRequest(
         webHook,
-        nil,
+        function ()
+            return
+        end,
         "POST",
         json.encode({
             username = "Logs",
@@ -413,7 +415,9 @@ function ESX.DiscordLogFields(name, title, color, fields)
     }
     PerformHttpRequest(
         webHook,
-        nil,
+        function ()
+            return
+        end,
         "POST",
         json.encode({
             username = "Logs",

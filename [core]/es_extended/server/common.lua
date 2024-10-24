@@ -20,7 +20,7 @@ end)
 if Config.OxInventory then
     Config.PlayerFunctionOverride = "OxInventory"
     SetConvarReplicated("inventory:framework", "esx")
-    SetConvarReplicated("inventory:weight", Config.MaxWeight * 1000)
+    SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
 end
 
 local function StartDBSync()

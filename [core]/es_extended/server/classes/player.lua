@@ -1,16 +1,21 @@
-local _GetPlayerPed = GetPlayerPed
-local _GetEntityCoords = GetEntityCoords
-local _GetEntityHeading = GetEntityHeading
-local _ExecuteCommand = ExecuteCommand
-local _SetEntityCoords = SetEntityCoords
-local _SetEntityHeading = SetEntityHeading
-local _TriggerClientEvent = TriggerClientEvent
-local _DropPlayer = DropPlayer
-local _TriggerEvent = TriggerEvent
-local _GiveWeaponToPed = GiveWeaponToPed
-local _SetPedAmmo = SetPedAmmo
-local _RemoveWeaponFromPed = RemoveWeaponFromPed
-local _assert = assert
+---@class xPlayer
+---@field accounts table
+---@field coords table
+---@field group string
+---@field identifier string
+---@field inventory table
+---@field job table
+---@field loadout table
+---@field name string
+---@field playerId number
+---@field source number
+---@field variables table
+---@field weight number
+---@field maxWeight number
+---@field metadata table
+---@field lastPlaytime number
+---@field admin boolean
+---@field license string
 
 ---@param playerId number
 ---@param identifier string
@@ -26,6 +31,7 @@ local _assert = assert
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
 
+    ---@class xPlayer
     local self = {}
 
     self.accounts = accounts
@@ -45,12 +51,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     self.lastPlaytime = self.metadata.lastPlaytime or 0
     self.admin = Core.IsPlayerAdmin(playerId)
     if Config.Multichar then
-        self.license = "license" .. identifier:sub(identifier:find(":"), identifier:len())
+        local startIndex = identifier:find(":", 1)
+        if startIndex then
+            self.license = ("license%s"):format(identifier:sub(startIndex, identifier:len()))
+        end
     else
-        self.license = "license:" .. identifier
+        self.license = ("license:%s"):format(identifier)
     end
 
-    _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
+    ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
     stateBag:set("identifier", self.identifier, false)
@@ -61,33 +70,33 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param eventName string
     ---@param ... any
-    ---@return void
+    ---@return nil
     function self.triggerEvent(eventName, ...)
-        _assert(type(eventName) == "string", "eventName should be string!")
-        _TriggerClientEvent(eventName, self.source, ...)
+        assert(type(eventName) == "string", "eventName should be string!")
+        TriggerClientEvent(eventName, self.source, ...)
     end
 
     ---@param coordinates vector4 | vector3 | table
-    ---@return void
+    ---@return nil
     function self.setCoords(coordinates)
-        local ped <const> = _GetPlayerPed(self.source)
-        local vector = type(coordinates) == "vector4" and coordinates or type(coordinates) == "vector3" and vector4(coordinates, 0.0) or vec(coordinates.x, coordinates.y, coordinates.z, coordinates.heading or 0.0)
-        _SetEntityCoords(ped, vector.xyz, false, false, false, false)
-        _SetEntityHeading(ped, vector.w)
+        local ped <const> = GetPlayerPed(self.source)
+
+        SetEntityCoords(ped, coordinates.x, coordinates.y, coordinates.z, false, false, false, false)
+        SetEntityHeading(ped, coordinates.w or coordinates.heading or 0.0)
     end
 
     ---@param vector boolean
     ---@param heading boolean
     ---@return vector3 | vector4 | table
     function self.getCoords(vector, heading)
-        local ped <const> = _GetPlayerPed(self.source)
-        local entityCoords <const> = _GetEntityCoords(ped)
-        local entityHeading <const> = _GetEntityHeading(ped)
+        local ped <const> = GetPlayerPed(self.source)
+        local entityCoords <const> = GetEntityCoords(ped)
+        local entityHeading <const> = GetEntityHeading(ped)
 
         local coordinates = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z }
 
         if vector then
-            coordinates = (heading and vector4(entityCoords.xyz, entityHeading) or entityCoords)
+            coordinates = (heading and vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading) or entityCoords)
         else
             if heading then
                 coordinates.heading = entityHeading
@@ -98,9 +107,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param reason string
-    ---@return void
+    ---@return nil
     function self.kick(reason)
-        _DropPlayer(self.source, reason)
+        local source <const> = tostring(self.source)
+        DropPlayer(source, reason)
     end
 
       ---@return number
@@ -109,9 +119,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param money number
-    ---@return void
+    ---@return nil
     function self.setMoney(money)
-        _assert(type(money) == "number", "money should be number!")
+        assert(type(money) == "number", "money should be number!")
         money = ESX.Math.Round(money)
         self.setAccountMoney("money", money)
     end
@@ -123,7 +133,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param money number
     ---@param reason string
-    ---@return void
+    ---@return nil
     function self.addMoney(money, reason)
         money = ESX.Math.Round(money)
         self.addAccountMoney("money", money, reason)
@@ -131,7 +141,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param money number
     ---@param reason string
-    ---@return void
+    ---@return nil
     function self.removeMoney(money, reason)
         money = ESX.Math.Round(money)
         self.removeAccountMoney("money", money, reason)
@@ -143,19 +153,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param newGroup string
-    ---@return void
+    ---@return nil
     function self.setGroup(newGroup)
         local lastGroup = self.group
 
-        _ExecuteCommand(("remove_principal identifier.%s group.%s"):format(self.license, self.group))
+        ExecuteCommand(("remove_principal identifier.%s group.%s"):format(self.license, self.group))
 
         self.group = newGroup
 
-        _TriggerEvent("esx:setGroup", self.source, self.group, lastGroup)
+        TriggerEvent("esx:setGroup", self.source, self.group, lastGroup)
         self.triggerEvent("esx:setGroup", self.group, lastGroup)
         Player(self.source).state:set("group", self.group, true)
 
-        _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
+        ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
     end
 
     ---@return string
@@ -165,7 +175,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param k string
     ---@param v any
-    ---@return void
+    ---@return nil
     function self.set(k, v)
         self.variables[k] = v
     end
@@ -266,7 +276,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param newName string
-    ---@return void
+    ---@return nil
     function self.setName(newName)
         self.name = newName
         Player(self.source).state:set("name", self.name, true)
@@ -274,8 +284,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param accountName string
     ---@param money number
-    ---@param reason string
-    ---@return void
+    ---@param reason string | nil
+    ---@return nil
     function self.setAccountMoney(accountName, money, reason)
         reason = reason or "unknown"
         if not tonumber(money) then
@@ -290,7 +300,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.accounts[account.index].money = money
 
                 self.triggerEvent("esx:setAccountMoney", account)
-                _TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
+                TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
             else
                 error(("Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
             end
@@ -301,8 +311,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param accountName string
     ---@param money number
-    ---@param reason string
-    ---@return void
+    ---@param reason string | nil
+    ---@return nil
     function self.addAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
@@ -316,7 +326,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.accounts[account.index].money = self.accounts[account.index].money + money
 
                 self.triggerEvent("esx:setAccountMoney", account)
-                _TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+                TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
             end
@@ -327,8 +337,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param accountName string
     ---@param money number
-    ---@param reason string
-    ---@return void
+    ---@param reason string | nil
+    ---@return nil
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
@@ -347,7 +357,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.accounts[account.index].money = self.accounts[account.index].money - money
 
                 self.triggerEvent("esx:setAccountMoney", account)
-                _TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+                TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
             end
@@ -369,7 +379,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param itemName string
     ---@param count number
-    ---@return void
+    ---@return nil
     function self.addInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -378,14 +388,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             item.count = item.count + count
             self.weight = self.weight + (item.weight * count)
 
-            _TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
+            TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
             self.triggerEvent("esx:addInventoryItem", item.name, item.count)
         end
     end
 
     ---@param itemName string
     ---@param count number
-    ---@return void
+    ---@return nil
     function self.removeInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -398,7 +408,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                     item.count = newCount
                     self.weight = self.weight - (item.weight * count)
 
-                    _TriggerEvent("esx:onRemoveInventoryItem", self.source, item.name, item.count)
+                    TriggerEvent("esx:onRemoveInventoryItem", self.source, item.name, item.count)
                     self.triggerEvent("esx:removeInventoryItem", item.name, item.count)
                 end
             else
@@ -409,7 +419,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param itemName string
     ---@param count number
-    ---@return void
+    ---@return nil
     function self.setInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -445,6 +455,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             return newWeight <= self.maxWeight
         else
             print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
+            return false
         end
     end
 
@@ -455,7 +466,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return boolean
     function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)
         local firstItemObject = self.getInventoryItem(firstItem)
+        if not firstItemObject then
+            return false
+        end
         local testItemObject = self.getInventoryItem(testItem)
+        if not testItemObject then
+            return false
+        end
 
         if firstItemObject.count >= firstItemCount then
             local weightWithoutFirstItem = ESX.Math.Round(self.weight - (firstItemObject.weight * firstItemCount))
@@ -468,7 +485,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param newWeight number
-    ---@return void
+    ---@return nil
     function self.setMaxWeight(newWeight)
         self.maxWeight = newWeight
         self.triggerEvent("esx:setMaxWeight", self.maxWeight)
@@ -476,13 +493,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param newJob string
     ---@param grade string
-    ---@return void
+    ---@return nil
     function self.setJob(newJob, grade)
         grade = tostring(grade)
         local lastJob = self.job
 
         if not ESX.DoesJobExist(newJob, grade) then
-            return print(("[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7"):format(self.source, newJob))
+            return print(("[ESX] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7"):format(self.source, newJob))
         end
 
         local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
@@ -501,14 +518,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
         }
 
-        _TriggerEvent("esx:setJob", self.source, self.job, lastJob)
+        TriggerEvent("esx:setJob", self.source, self.job, lastJob)
         self.triggerEvent("esx:setJob", self.job, lastJob)
         Player(self.source).state:set("job", self.job, true)
     end
 
     ---@param weaponName string
     ---@param ammo number
-    ---@return void
+    ---@return nil
     function self.addWeapon(weaponName, ammo)
         if not self.hasWeapon(weaponName) then
             local weaponLabel <const> = ESX.GetWeaponLabel(weaponName)
@@ -521,14 +538,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 tintIndex = 0,
             })
 
-            _GiveWeaponToPed(_GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
+            GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
             self.triggerEvent("esx:addInventoryItem", weaponLabel, false, true)
         end
     end
 
     ---@param weaponName string
     ---@param weaponComponent string
-    ---@return void
+    ---@return nil
     function self.addWeaponComponent(weaponName, weaponComponent)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -548,19 +565,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param weaponName string
     ---@param ammoCount number
-    ---@return void
+    ---@return nil
     function self.addWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
         if weapon then
             weapon.ammo = weapon.ammo + ammoCount
-            _SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
         end
     end
 
     ---@param weaponName string
     ---@param ammoCount number
-    ---@return void
+    ---@return nil
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
@@ -571,7 +588,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param weaponName string
     ---@param weaponTintIndex number
-    ---@return void
+    ---@return nil
     function self.setWeaponTint(weaponName, weaponTintIndex)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -599,9 +616,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param weaponName string
-    ---@return void
+    ---@return nil
     function self.removeWeapon(weaponName)
-        local weaponLabel, playerPed <const> = nil, _GetPlayerPed(self.source)
+        local weaponLabel, playerPed <const> = nil, GetPlayerPed(self.source)
 
         if not playerPed then
             return error("xPlayer.removeWeapon ^5invalid^7 player ped!")
@@ -616,8 +633,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 end
 
                 local weaponHash = joaat(v.name)
-                _RemoveWeaponFromPed(playerPed, weaponHash)
-                _SetPedAmmo(playerPed, weaponHash, 0)
+                RemoveWeaponFromPed(playerPed, weaponHash)
+                SetPedAmmo(playerPed, weaponHash, 0)
 
                 table.remove(self.loadout, k)
                 break
@@ -631,7 +648,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param weaponName string
     ---@param weaponComponent string
-    ---@return void
+    ---@return nil
     function self.removeWeaponComponent(weaponName, weaponComponent)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -657,13 +674,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param weaponName string
     ---@param ammoCount number
-    ---@return void
+    ---@return nil
     function self.removeWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
         if weapon then
             weapon.ammo = weapon.ammo - ammoCount
-            _SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
         end
     end
 
@@ -699,7 +716,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param item string
-    ---@return table, number | false
+    ---@return table | false, number | nil
     function self.hasItem(item)
         for _, v in ipairs(self.inventory) do
             if v.name == item and v.count >= 1 then
@@ -711,7 +728,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     ---@param weaponName string
-    ---@return number, table | nil
+    ---@return number | nil, table | nil
     function self.getWeapon(weaponName)
         for k, v in ipairs(self.loadout) do
             if v.name == weaponName then
@@ -719,13 +736,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             end
         end
 
-        return nil
+        return nil, nil
     end
 
     ---@param msg string
-    ---@param type string
+    ---@param notifyType string
     ---@param length number
-    ---@return void
+    ---@return nil
     function self.showNotification(msg, notifyType, length)
         self.triggerEvent("esx:showNotification", msg, notifyType, length)
     end
@@ -738,7 +755,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param flash boolean
     ---@param saveToBrief boolean
     ---@param hudColorIndex number
-    ---@return void
+    ---@return nil
     function self.showAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
         self.triggerEvent("esx:showAdvancedNotification", sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
     end
@@ -747,21 +764,22 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param thisFrame boolean
     ---@param beep boolean
     ---@param duration number
-    ---@return void
+    ---@return nil
     function self.showHelpNotification(msg, thisFrame, beep, duration)
         self.triggerEvent("esx:showHelpNotification", msg, thisFrame, beep, duration)
     end
 
     ---@param index any
     ---@param subIndex any
-    ---@return table
+    ---@return table | nil
     function self.getMeta(index, subIndex)
         if not index then
             return self.metadata
         end
 
         if type(index) ~= "string" then
-            return error("xPlayer.getMeta ^5index^7 should be ^5string^7!")
+            error("xPlayer.getMeta ^5index^7 should be ^5string^7!")
+            return
         end
 
         local metaData = self.metadata[index]
@@ -792,7 +810,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 return returnValues
             end
 
-            return error(("xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
+            error(("xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
+            return
         end
 
         return metaData
@@ -801,7 +820,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param index any
     ---@param value any
     ---@param subValue any
-    ---@return void
+    ---@return nil
     function self.setMeta(index, value, subValue)
         if not index then
             return error("xPlayer.setMeta ^5index^7 is Missing!")

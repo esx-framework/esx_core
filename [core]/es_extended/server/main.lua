@@ -19,6 +19,54 @@ end
 
 loadPlayer = loadPlayer .. " FROM `users` WHERE identifier = ?"
 
+local function createESXPlayer(identifier, playerId, data)
+    local accounts = {}
+
+    for account, money in pairs(Config.StartingAccountMoney) do
+        accounts[account] = money
+    end
+
+    local defaultGroup = "user"
+    if Core.IsPlayerAdmin(playerId) then
+        print(("[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7."):format(playerId))
+        defaultGroup = "admin"
+    end
+
+    local parameters = Config.Multichar and { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height } or { json.encode(accounts), identifier, defaultGroup }
+
+    if Config.StartingInventoryItems then
+        table.insert(parameters, json.encode(Config.StartingInventoryItems))
+    end
+
+    MySQL.prepare(newPlayer, parameters, function()
+        loadESXPlayer(identifier, playerId, true)
+    end)
+end
+
+
+local function onPlayerJoined(playerId)
+    local identifier = ESX.GetIdentifier(playerId)
+    if identifier then
+        if ESX.GetPlayerFromIdentifier(identifier) then
+            DropPlayer(
+                playerId,
+                ("there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(
+                    identifier
+                )
+            )
+        else
+            local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
+            if result then
+                loadESXPlayer(identifier, playerId, false)
+            else
+                createESXPlayer(identifier, playerId)
+            end
+        end
+    else
+        DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
+    end
+end
+
 if Config.Multichar then
     AddEventHandler("esx:onPlayerJoined", function(src, char, data)
         while not next(ESX.Jobs) do
@@ -45,53 +93,6 @@ else
         if not ESX.Players[_source] then
             onPlayerJoined(_source)
         end
-    end)
-end
-
-function onPlayerJoined(playerId)
-    local identifier = ESX.GetIdentifier(playerId)
-    if identifier then
-        if ESX.GetPlayerFromIdentifier(identifier) then
-            DropPlayer(
-                playerId,
-                ("there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(
-                    identifier
-                )
-            )
-        else
-            local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
-            if result then
-                loadESXPlayer(identifier, playerId, false)
-            else
-                createESXPlayer(identifier, playerId)
-            end
-        end
-    else
-        DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
-    end
-end
-
-function createESXPlayer(identifier, playerId, data)
-    local accounts = {}
-
-    for account, money in pairs(Config.StartingAccountMoney) do
-        accounts[account] = money
-    end
-
-    local defaultGroup = "user"
-    if Core.IsPlayerAdmin(playerId) then
-        print(("[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7."):format(playerId))
-        defaultGroup = "admin"
-    end
-
-    local parameters = Config.Multichar and { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height } or { json.encode(accounts), identifier, defaultGroup }
-
-    if Config.StartingInventoryItems then
-        table.insert(parameters, json.encode(Config.StartingInventoryItems))
-    end
-
-    MySQL.prepare(newPlayer, parameters, function()
-        loadESXPlayer(identifier, playerId, true)
     end)
 end
 
@@ -613,7 +614,7 @@ ESX.RegisterServerCallback("esx:isUserAdmin", function(source, cb)
 end)
 
 ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
-    cb(tonumber(GetConvar("sv_enforceGameBuild", 1604)))
+    cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
 ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
@@ -653,7 +654,7 @@ ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
         if vehData.warp then
             local vehicle = NetworkGetEntityFromNetworkId(id)
             local timeout = 0
-            while GetVehiclePedIsIn(ped) ~= vehicle and timeout <= 15 do
+            while GetVehiclePedIsIn(ped, false) ~= vehicle and timeout <= 15 do
                 Wait(0)
                 TaskWarpPedIntoVehicle(ped, vehicle, -1)
                 timeout += 1

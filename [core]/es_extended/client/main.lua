@@ -4,7 +4,6 @@ RegisterNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-
 local function EnablePvP()
     if Config.EnablePVP then
         SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
