@@ -48,7 +48,7 @@ end
 function Multicharacter:ResetHideActivePlayer()
     self.playerPed = PlayerPedId()
 
-    MumbleSetVolumeOverride(ESX.PlayerData.playerId, -1.0)
+    MumbleSetVolumeOverride(ESX.playerId, -1.0)
     SetEntityVisible(self.playerPed, true, false)
     SetPlayerInvincible(self.playerPed, true)
     FreezeEntityPosition(self.playerPed, false)
@@ -66,7 +66,7 @@ function Multicharacter:HideActivePlayerLoop()
 
             SetEntityVisible(self.playerPed, false, false)
             SetLocalPlayerVisibleLocally(true)
-            SetPlayerInvincible(ESX.PlayerData.playerId, true)
+            SetPlayerInvincible(ESX.playerId, true)
 
             HideComponents()
 
@@ -93,7 +93,7 @@ function Multicharacter:ConcealLoop()
 
             for i = 1, #players do
                 local player = players[i]
-                if player ~= ESX.PlayerData.playerId and not playerPool[player] then
+                if player ~= ESX.playerId and not playerPool[player] then
                     playerPool[player] = true
                     NetworkConcealPlayer(player, true, true)
                 end
@@ -112,7 +112,7 @@ end
 function Multicharacter:StartLoops()
     self.hidePlayers = true
 
-    MumbleSetVolumeOverride(ESX.PlayerData.playerId, 0.0)
+    MumbleSetVolumeOverride(ESX.playerId, 0.0)
     self:HideActivePlayerLoop()
     self:ConcealLoop()
 end
@@ -120,8 +120,6 @@ end
 function Multicharacter:SetupCharacters()
     ESX.PlayerLoaded = false
     ESX.PlayerData = {}
-    ESX.PlayerData.playerId = PlayerId()
-    ESX.PlayerData.serverId = GetPlayerServerId(ESX.PlayerData.playerId)
 
     self.spawned = false
     self.cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
@@ -169,11 +167,11 @@ end
 function Multicharacter:ChangeExistingPed()
     local newCharacter = self.Characters[self.tempIndex]
     local spawnedCharacter = self.Characters[self.spawned]
-    
+
     if spawnedCharacter and spawnedCharacter.model then
         local model = ESX.Streaming.RequestModel(newCharacter.model)
         if model then
-            SetPlayerModel(ESX.PlayerData.playerId, newCharacter.model)
+            SetPlayerModel(ESX.playerId, newCharacter.model)
             SetModelAsNoLongerNeeded(newCharacter.model)
         end
     end
@@ -265,7 +263,7 @@ function Multicharacter:SetDefaultSkin(playerData)
         return
     end
 
-    SetPlayerModel(ESX.PlayerData.playerId, model)
+    SetPlayerModel(ESX.playerId, model)
     SetModelAsNoLongerNeeded(model)
     self.playerPed = PlayerPedId()
 

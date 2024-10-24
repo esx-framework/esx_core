@@ -1,5 +1,7 @@
 Core = {}
 ESX.PlayerData = {}
+ESX.playerId = PlayerId()
+ESX.serverId = GetPlayerServerId(PlayerId())
 ESX.PlayerLoaded = false
 Core.Input = {}
 ESX.UI = {}
@@ -19,7 +21,7 @@ CreateThread(function()
     while not Config.Multichar do
         Wait(100)
 
-        if NetworkIsPlayerActive(PlayerId()) then
+        if NetworkIsPlayerActive(ESX.playerId) then
             exports.spawnmanager:setAutoSpawn(false)
             DoScreenFadeOut(0)
             Wait(500)

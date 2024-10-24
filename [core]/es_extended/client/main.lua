@@ -108,7 +108,6 @@ local function DisableAmmoOrVehicleRewards(playerId)
 end
 
 local function ApplyConfig()
-    local playerId = PlayerId()
     -- RemoveHudComponents
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
@@ -117,14 +116,14 @@ local function ApplyConfig()
     end
 
     if Config.DisableAimAssist then
-        SetPlayerLockon(playerId, false)
+        SetPlayerLockon(ESX.playerId, false)
     end
 
     -- DisableNPCDrops
     if Config.DisableNPCDrops then
         local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
         for i = 1, #weaponPickups do
-            ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false)
+            ToggleUsePickupsForPlayer(ESX.playerId, weaponPickups[i], false)
         end
     end
 
@@ -138,11 +137,11 @@ local function ApplyConfig()
     end
 
     if Config.DisableHealthRegeneration then
-        SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+        SetPlayerHealthRechargeMultiplier(ESX.playerId, 0.0)
     end
 
     if Config.DisableDisplayAmmo or Config.DisableVehicleRewards then
-        DisableAmmoOrVehicleRewards(playerId)
+        DisableAmmoOrVehicleRewards(ESX.playerId)
     end
 
     EnablePvP()
@@ -270,7 +269,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    if not NetworkGetEntityOwner(vehicle) == PlayerId() then
+    if not NetworkGetEntityOwner(vehicle) == ESX.playerId then
         return
     end
 
@@ -466,7 +465,7 @@ end
 
 -- disable wanted level
 if not Config.EnableWantedLevel then
-    ClearPlayerWantedLevel(PlayerId())
+    ClearPlayerWantedLevel(ESX.playerId)
     SetMaxWantedLevel(0)
 end
 
@@ -691,15 +690,14 @@ end)
 
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
-    local player = PlayerId()
     if input == "freeze" then
         SetEntityCollision(ESX.PlayerData.ped, false, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
-        SetPlayerInvincible(player, true)
+        SetPlayerInvincible(ESX.playerId, true)
     elseif input == "unfreeze" then
         SetEntityCollision(ESX.PlayerData.ped, true, true)
         FreezeEntityPosition(ESX.PlayerData.ped, false)
-        SetPlayerInvincible(player, false)
+        SetPlayerInvincible(ESX.playerId, false)
     end
 end)
 

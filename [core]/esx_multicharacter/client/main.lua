@@ -19,7 +19,7 @@ CreateThread(function()
     while not ESX.PlayerLoaded do
         Wait(100)
 
-        if NetworkIsPlayerActive(ESX.PlayerData.playerId) then
+        if NetworkIsPlayerActive(ESX.playerId) then
             DisableSpawnManager()
             DoScreenFadeOut(0)
 

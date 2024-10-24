@@ -6,7 +6,7 @@ AddEventHandler("gameEventTriggered", function(event, data)
     if not IsPedAPlayer(victim) then
         return
     end
-    local player = PlayerId()
+    local player = ESX.playerId
     local playerPed = PlayerPedId()
     if victimDied and NetworkGetPlayerIndexFromPed(victim) == player and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)) then
         local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)

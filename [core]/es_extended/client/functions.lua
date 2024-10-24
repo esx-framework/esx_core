@@ -60,9 +60,8 @@ end
 ---@param freeze boolean Whether to freeze the player
 ---@return nil
 function Core.FreezePlayer(freeze)
-    local player = PlayerId()
     local ped = PlayerPedId()
-    SetPlayerControl(player, not freeze, 0)
+    SetPlayerControl(ESX.playerId, not freeze, 0)
 
     if freeze then
         SetEntityCollision(ped, false, false)
@@ -571,14 +570,14 @@ end
 ---@param returnPeds? boolean Whether to return the peds
 ---@return table
 function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
-    local players, myPlayer = {}, PlayerId()
+    local players = {}
     local active = GetActivePlayers()
 
     for i = 1, #active do
         local currentPlayer = active[i]
         local ped = GetPlayerPed(currentPlayer)
 
-        if DoesEntityExist(ped) and ((onlyOtherPlayers and currentPlayer ~= myPlayer) or not onlyOtherPlayers) then
+        if DoesEntityExist(ped) and ((onlyOtherPlayers and currentPlayer ~= ESX.playerId) or not onlyOtherPlayers) then
             if returnKeyValue then
                 players[currentPlayer] = ped
             else
