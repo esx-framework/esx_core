@@ -97,7 +97,7 @@ end
 function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
     AddTextEntry("esxHelpNotification", msg)
     if thisFrame then
-        DisplayHelpTextThisFrame("esxHelpNotification")
+        DisplayHelpTextThisFrame("esxHelpNotification", false)
     else
         BeginTextCommandDisplayHelp("esxHelpNotification")
         EndTextCommandDisplayHelp(0, false, beep == nil or beep, duration or -1)
@@ -106,7 +106,7 @@ end
 
 function ESX.ShowFloatingHelpNotification(msg, coords)
     AddTextEntry("esxFloatingHelpNotification", msg)
-    SetFloatingHelpTextWorldPosition(1, coords)
+    SetFloatingHelpTextWorldPosition(1, coords.x, coords.y, coords.z)
     SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
     BeginTextCommandDisplayHelp("esxFloatingHelpNotification")
     EndTextCommandDisplayHelp(2, false, false, -1)
@@ -141,10 +141,10 @@ end
 
 function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
 	local command = on_release and '+' .. command_name or command_name
-    RegisterCommand(command, on_press)
+    RegisterCommand(command, on_press, false)
     Core.Input[command_name] = ESX.HashString(command)
     if on_release then
-        RegisterCommand('-' .. command_name, on_release)
+        RegisterCommand('-' .. command_name, on_release, false)
     end
     RegisterKeyMapping(command, label or '', input_group or 'keyboard', key or '')
 end
@@ -307,12 +307,12 @@ function ESX.Game.Teleport(entity, coords, cb)
     local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
 
     if DoesEntityExist(entity) then
-        RequestCollisionAtCoord(vector.xyz)
+        RequestCollisionAtCoord(vector.x, vector.y, vector.z)
         while not HasCollisionLoadedAroundEntity(entity) do
             Wait(0)
         end
 
-        SetEntityCoords(entity, vector.xyz, false, false, false, false)
+        SetEntityCoords(entity, vector.x, vector.y, vector.z, false, false, false, false)
         SetEntityHeading(entity, vector.w)
     end
 
@@ -322,7 +322,11 @@ function ESX.Game.Teleport(entity, coords, cb)
 end
 
 function ESX.Game.SpawnObject(object, coords, cb, networked)
-	local obj = CreateObject(ESX.Streaming.RequestModel(object), coords.x, coords.y, coords.z, networked == nil or networked, false, true)
+    local model = type(object) == "number" and object or joaat(object)
+
+    ESX.Streaming.RequestModel(model)
+
+	local obj = CreateObject(model, coords.x, coords.y, coords.z, networked == nil or networked, false, true)
 	return cb and cb(obj) or obj
 end
 
@@ -359,7 +363,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
-        local vehicle = CreateVehicle(model, vector.xyz, heading, networked, true)
+        local vehicle = CreateVehicle(model, vector.x, vector.y, vector.z, heading, networked, true)
 
         if networked then
             local id = NetworkGetNetworkIdFromEntity(vehicle)
@@ -371,7 +375,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
         SetModelAsNoLongerNeeded(model)
         SetVehRadioStation(vehicle, "OFF")
 
-        RequestCollisionAtCoord(vector.xyz)
+        RequestCollisionAtCoord(vector.x, vector.y, vector.z)
         while not HasCollisionLoadedAroundEntity(vehicle) do
             Wait(0)
         end
@@ -485,8 +489,10 @@ end
 
 function ESX.Game.GetShapeTestResultSync(shape)
 	local handle, hit, coords, normal, material, entity
-	repeat handle, hit, coords, normal, material, entity = GetShapeTestResultIncludingMaterial(shape)
-	until handle ~= 1 or Wait()
+	repeat
+        handle, hit, coords, normal, material, entity = GetShapeTestResultIncludingMaterial(shape)
+        Wait(0)
+	until handle ~= 1
 	return hit, coords, normal, material, entity
 end
 
@@ -766,7 +772,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 
     if props.extras ~= nil then
         for extraId, enabled in pairs(props.extras) do
-            SetVehicleExtra(vehicle, tonumber(extraId), enabled and 0 or 1)
+            extraId = tonumber(extraId)
+            if extraId then
+                SetVehicleExtra(vehicle, extraId, enabled)
+            end
         end
     end
 
@@ -928,7 +937,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.windowsBroken ~= nil then
         for k, v in pairs(props.windowsBroken) do
             if v then
-                RemoveVehicleWindow(vehicle, tonumber(k))
+                k = tonumber(k)
+                if k then
+                    RemoveVehicleWindow(vehicle, k)
+                end
             end
         end
     end
@@ -936,7 +948,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.doorsBroken ~= nil then
         for k, v in pairs(props.doorsBroken) do
             if v then
-                SetVehicleDoorBroken(vehicle, tonumber(k), true)
+                k = tonumber(k)
+                if k then
+                    SetVehicleDoorBroken(vehicle, k, true)
+                end
             end
         end
     end
@@ -944,7 +959,10 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.tyreBurst ~= nil then
         for k, v in pairs(props.tyreBurst) do
             if v then
-                SetVehicleTyreBurst(vehicle, tonumber(k), true, 1000.0)
+                k = tonumber(k)
+                if k then
+                    SetVehicleTyreBurst(vehicle, k, true, 1000.0)
+                end
             end
         end
     end
@@ -965,12 +983,12 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
 
     SetTextScale(0.0, 0.55 * scale)
     SetTextFont(font)
-    SetTextProportional(1)
+    SetTextProportional(true)
     SetTextColour(255, 255, 255, 215)
     BeginTextCommandDisplayText("STRING")
     SetTextCentre(true)
     AddTextComponentSubstringPlayerName(text)
-    SetDrawOrigin(vector.xyz, 0)
+    SetDrawOrigin(vector.x, vector.y, vector.z, 0)
     EndTextCommandDisplayText(0.0, 0.0)
     ClearDrawOrigin()
 end
@@ -1311,7 +1329,7 @@ local mismatchedTypes = {
 
 ---@param model number|string
 ---@return string
-function ESX.GetVehicleType(model)
+function ESX.GetVehicleTypeClient(model)
     model = type(model) == "string" and joaat(model) or model
     if not IsModelInCdimage(model) then
         return
@@ -1333,3 +1351,5 @@ function ESX.GetVehicleType(model)
 
     return types[vehicleType] or "automobile"
 end
+
+ESX.GetVehicleType = ESX.GetVehicleTypeClient

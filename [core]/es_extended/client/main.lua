@@ -760,7 +760,7 @@ AddEventHandler("esx:freezePlayer", function(input)
 end)
 
 ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
-    cb(ESX.GetVehicleType(model))
+    cb(ESX.GetVehicleTypeClient(model))
 end)
 
 RegisterNetEvent('esx:updatePlayerData', function(key, val)
