@@ -587,7 +587,7 @@ AddEventHandler("esx:tpm", function()
         end
         local blipMarker = GetFirstBlipInfoId(8)
         if not DoesBlipExist(blipMarker) then
-            ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), true, false, 140)
+            ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), "error")
             return "marker"
         end
 
@@ -650,12 +650,12 @@ AddEventHandler("esx:tpm", function()
             -- If we can't find the coords, set the coords to the old ones.
             -- We don't unpack them before since they aren't in a loop and only called once.
             SetPedCoordsKeepVehicle(ped, oldCoords["x"], oldCoords["y"], oldCoords["z"] - 1.0)
-            ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
+            ESX.ShowNotification(TranslateCap("tpm_success"), "success")
         end
 
         -- If Z coord was found, set coords in found coords.
         SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-        ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
+        ESX.ShowNotification(TranslateCap("tpm_success"), "success")
     end)
 end)
 
