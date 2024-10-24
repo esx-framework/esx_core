@@ -268,12 +268,12 @@ function ApplySkin(skin, clothes)
     SetPedHeadOverlayColor(playerPed, 4, 2, Character["makeup_3"], Character["makeup_4"]) -- Makeup Color
     SetPedHeadOverlayColor(playerPed, 8, 1, Character["lipstick_3"], Character["lipstick_4"]) -- Lipstick Color
     SetPedHeadOverlay(playerPed, 5, Character["blush_1"], (Character["blush_2"] / 10) + 0.0) -- Blush + opacity
-    SetPedHeadOverlayColor(playerPed, 5, 2, Character["blush_3"]) -- Blush Color
+    SetPedHeadOverlayColor(playerPed, 5, 2, Character["blush_3"], 0) -- Blush Color
     SetPedHeadOverlay(playerPed, 6, Character["complexion_1"], (Character["complexion_2"] / 10) + 0.0) -- Complexion + opacity
     SetPedHeadOverlay(playerPed, 7, Character["sun_1"], (Character["sun_2"] / 10) + 0.0) -- Sun Damage + opacity
     SetPedHeadOverlay(playerPed, 9, Character["moles_1"], (Character["moles_2"] / 10) + 0.0) -- Moles/Freckles + opacity
     SetPedHeadOverlay(playerPed, 10, Character["chest_1"], (Character["chest_2"] / 10) + 0.0) -- Chest Hair + opacity
-    SetPedHeadOverlayColor(playerPed, 10, 1, Character["chest_3"]) -- Torso Color
+    SetPedHeadOverlayColor(playerPed, 10, 1, Character["chest_3"], 0) -- Torso Color
 
     if Character["bodyb_1"] == -1 then
         SetPedHeadOverlay(playerPed, 11, 255, (Character["bodyb_2"] / 10) + 0.0) -- Body Blemishes + opacity
@@ -290,7 +290,7 @@ function ApplySkin(skin, clothes)
     if Character["ears_1"] == -1 then
         ClearPedProp(playerPed, 2)
     else
-        SetPedPropIndex(playerPed, 2, Character["ears_1"], Character["ears_2"], 2) -- Ears Accessories
+        SetPedPropIndex(playerPed, 2, Character["ears_1"], Character["ears_2"], true) -- Ears Accessories
     end
 
     SetPedComponentVariation(playerPed, 8, Character["tshirt_1"], Character["tshirt_2"], 2) -- Tshirt
@@ -307,25 +307,25 @@ function ApplySkin(skin, clothes)
     if Character["helmet_1"] == -1 then
         ClearPedProp(playerPed, 0)
     else
-        SetPedPropIndex(playerPed, 0, Character["helmet_1"], Character["helmet_2"], 2) -- Helmet
+        SetPedPropIndex(playerPed, 0, Character["helmet_1"], Character["helmet_2"], true) -- Helmet
     end
 
     if Character["glasses_1"] == -1 then
         ClearPedProp(playerPed, 1)
     else
-        SetPedPropIndex(playerPed, 1, Character["glasses_1"], Character["glasses_2"], 2) -- Glasses
+        SetPedPropIndex(playerPed, 1, Character["glasses_1"], Character["glasses_2"], true) -- Glasses
     end
 
     if Character["watches_1"] == -1 then
         ClearPedProp(playerPed, 6)
     else
-        SetPedPropIndex(playerPed, 6, Character["watches_1"], Character["watches_2"], 2) -- Watches
+        SetPedPropIndex(playerPed, 6, Character["watches_1"], Character["watches_2"], true) -- Watches
     end
 
     if Character["bracelets_1"] == -1 then
         ClearPedProp(playerPed, 7)
     else
-        SetPedPropIndex(playerPed, 7, Character["bracelets_1"], Character["bracelets_2"], 2) -- Bracelets
+        SetPedPropIndex(playerPed, 7, Character["bracelets_1"], Character["bracelets_2"], true) -- Bracelets
     end
 end
 
