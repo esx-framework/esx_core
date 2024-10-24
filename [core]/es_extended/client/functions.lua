@@ -1,21 +1,3 @@
-ESX = {}
-Core = {}
-ESX.PlayerData = {}
-ESX.PlayerLoaded = false
-Core.Input = {}
-ESX.UI = {}
-ESX.UI.Menu = {}
-ESX.UI.Menu.RegisteredTypes = {}
-ESX.UI.Menu.Opened = {}
-
-ESX.Game = {}
-ESX.Game.Utils = {}
-
-ESX.Scaleform = {}
-ESX.Scaleform.Utils = {}
-
-ESX.Streaming = {}
-
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
 end
@@ -67,6 +49,48 @@ function ESX.SetPlayerData(key, val)
         end
     end
 end
+
+function Core.FreezePlayer(freeze)
+    local player = PlayerId()
+    local ped = PlayerPedId()
+    SetPlayerControl(player, not freeze, 0)
+
+    if freeze then
+        SetEntityCollision(ped, false, false)
+        FreezeEntityPosition(ped, true)
+    else
+        SetEntityCollision(ped, true, true)
+        FreezeEntityPosition(ped, false)
+    end
+end
+
+
+function ESX.SpawnPlayer(skin, coords, cb)
+    local p = promise.new()
+    TriggerEvent("skinchanger:loadSkin", skin, function()
+        p:resolve()
+    end)
+    Citizen.Await(p)
+
+    RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+
+    local playerPed = PlayerPedId()
+    local timer = GetGameTimer()
+
+    Core.FreezePlayer(true)
+    SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, true)
+    SetEntityHeading(playerPed, coords.heading)
+
+    RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+    while not HasCollisionLoadedAroundEntity(playerPed) and (GetGameTimer() - timer) < 5000 do
+        Wait(0)
+    end
+
+    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, 0, true)
+    TriggerEvent('playerSpawned', coords)
+    cb()
+end
+
 
 function ESX.Progressbar(...)
 	return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(...)

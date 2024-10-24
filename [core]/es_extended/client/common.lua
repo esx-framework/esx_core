@@ -1,8 +1,30 @@
-exports("getSharedObject", function()
-    return ESX
-end)
+Core = {}
+ESX.PlayerData = {}
+ESX.PlayerLoaded = false
+Core.Input = {}
+ESX.UI = {}
+ESX.UI.Menu = {}
+ESX.UI.Menu.RegisteredTypes = {}
+ESX.UI.Menu.Opened = {}
 
-AddEventHandler("esx:getSharedObject", function()
-    local Invoke = GetInvokingResource()
-    error(("Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix!"):format(Invoke))
+ESX.Game = {}
+ESX.Game.Utils = {}
+
+ESX.Scaleform = {}
+ESX.Scaleform.Utils = {}
+
+ESX.Streaming = {}
+
+CreateThread(function()
+    while not Config.Multichar do
+        Wait(100)
+
+        if NetworkIsPlayerActive(PlayerId()) then
+            exports.spawnmanager:setAutoSpawn(false)
+            DoScreenFadeOut(0)
+            Wait(500)
+            TriggerServerEvent("esx:onPlayerJoined")
+            break
+        end
+    end
 end)

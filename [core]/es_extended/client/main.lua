@@ -1,63 +1,9 @@
 local pickups = {}
 
-CreateThread(function()
-    while not Config.Multichar do
-        Wait(100)
-
-        if NetworkIsPlayerActive(PlayerId()) then
-            exports.spawnmanager:setAutoSpawn(false)
-            DoScreenFadeOut(0)
-            Wait(500)
-            TriggerServerEvent("esx:onPlayerJoined")
-            break
-        end
-    end
-end)
-
 RegisterNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-local function freezePlayer(freeze)
-    local player = PlayerId()
-    local ped = PlayerPedId()
-    SetPlayerControl(player, not freeze, 0)
-
-    if freeze then
-        SetEntityCollision(ped, false, false)
-        FreezeEntityPosition(ped, true)
-    else
-        SetEntityCollision(ped, true, true)
-        FreezeEntityPosition(ped, false)
-    end
-end
-
-
-function ESX.SpawnPlayer(skin, coords, cb)
-    local p = promise.new()
-    TriggerEvent("skinchanger:loadSkin", skin, function()
-        p:resolve()
-    end)
-    Citizen.Await(p)
-
-    RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-
-    local playerPed = PlayerPedId()
-    local timer = GetGameTimer()
-
-    freezePlayer(true)
-    SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, true)
-    SetEntityHeading(playerPed, coords.heading)
-
-    RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-    while not HasCollisionLoadedAroundEntity(playerPed) and (GetGameTimer() - timer) < 5000 do
-        Wait(0)
-    end
-
-    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, 0, true)
-    TriggerEvent('playerSpawned', coords)
-    cb()
-end
 
 local function EnablePvP()
     if Config.EnablePVP then
@@ -237,7 +183,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     ClearPedTasksImmediately(ESX.PlayerData.ped)
 
     if not Config.Multichar then
-        freezePlayer(false)
+        Core.FreezePlayer(false)
     end
 
     if IsScreenFadedOut() then
