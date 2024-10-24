@@ -56,9 +56,9 @@ if ESX.GetConfig().Multichar then
                 for i = 1, #keys do
                     EnableControlAction(0, keys[i], true)
                 end
-                SetEntityVisible(PlayerPedId(), 0, 0)
-                SetLocalPlayerVisibleLocally(1)
-                SetPlayerInvincible(PlayerId(), 1)
+                SetEntityVisible(PlayerPedId(), false, false)
+                SetLocalPlayerVisibleLocally(true)
+                SetPlayerInvincible(PlayerId(), true)
                 ThefeedHideThisFrame()
                 HideHudComponentThisFrame(11)
                 HideHudComponentThisFrame(12)
@@ -72,8 +72,8 @@ if ESX.GetConfig().Multichar then
             end
             local playerId, playerPed = PlayerId(), PlayerPedId()
             MumbleSetVolumeOverride(playerId, -1.0)
-            SetEntityVisible(playerPed, 1, 0)
-            SetPlayerInvincible(playerId, 0)
+            SetEntityVisible(playerPed, true, false)
+            SetPlayerInvincible(playerId, true)
             FreezeEntityPosition(playerPed, false)
             Wait(10000)
             canRelog = true
@@ -140,7 +140,7 @@ if ESX.GetConfig().Multichar then
         local playerPed = PlayerPedId()
         FreezeEntityPosition(PlayerPedId(), true)
         SetPedAoBlobRendering(playerPed, true)
-        SetEntityAlpha(playerPed, 255)
+        SetEntityAlpha(playerPed, 255, false)
         SendNUIMessage({
             action = "openui",
             character = Characters[spawned],
@@ -235,7 +235,7 @@ if ESX.GetConfig().Multichar then
                 TriggerEvent("esx_identity:showRegisterIdentity")
                 local playerPed = PlayerPedId()
                 SetPedAoBlobRendering(playerPed, false)
-                SetEntityAlpha(playerPed, 0)
+                SetEntityAlpha(playerPed, 0, false)
                 SendNUIMessage({
                     action = "closeui",
                 })
@@ -274,7 +274,7 @@ if ESX.GetConfig().Multichar then
                 Wait(400)
                 local playerPed = PlayerPedId()
                 SetPedAoBlobRendering(playerPed, false)
-                SetEntityAlpha(playerPed, 0)
+                SetEntityAlpha(playerPed, 0, false)
                 TriggerServerEvent("esx_multicharacter:CharacterChosen", 1, true)
                 TriggerEvent("esx_identity:showRegisterIdentity")
             end)
@@ -316,12 +316,15 @@ if ESX.GetConfig().Multichar then
         DoScreenFadeOut(750)
         Wait(750)
 
-        SetCamActive(cam, false)
-        RenderScriptCams(false, false, 0, true, true)
-        cam = nil
+        if cam then
+            SetCamActive(cam, false)
+            RenderScriptCams(false, false, 0, true, true)
+            cam = nil
+        end
+
         local playerPed = PlayerPedId()
         FreezeEntityPosition(playerPed, true)
-        SetEntityCoordsNoOffset(playerPed, spawn.x, spawn.y, spawn.z, false, false, false, true)
+        SetEntityCoordsNoOffset(playerPed, spawn.x, spawn.y, spawn.z, false, false, false)
         SetEntityHeading(playerPed, spawn.heading)
         if not isNew then
             TriggerEvent("skinchanger:loadSkin", skin or Characters[spawned].skin)
