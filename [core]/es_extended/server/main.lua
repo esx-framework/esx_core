@@ -98,8 +98,13 @@ end
 if not Config.Multichar then
     AddEventHandler("playerConnecting", function(_, _, deferrals)
         deferrals.defer()
+        Wait(0) -- Required
         local playerId = source
         local identifier = ESX.GetIdentifier(playerId)
+
+        if not GetPlayerTimeOnline then
+            return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 9515, Please update your server."):format(oneSyncState))
+        end
 
         if oneSyncState == "off" or oneSyncState == "legacy" then
             return deferrals.done(("[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s"):format(oneSyncState))

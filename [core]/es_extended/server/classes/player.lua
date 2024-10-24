@@ -42,6 +42,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     self.weight = weight
     self.maxWeight = Config.MaxWeight
     self.metadata = metadata
+    self.lastPlaytime = self.metadata.lastPlaytime or 0
     self.admin = Core.IsPlayerAdmin(playerId)
     if Config.Multichar then
         self.license = "license" .. identifier:sub(identifier:find(":"), identifier:len())
@@ -100,6 +101,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return void
     function self.kick(reason)
         _DropPlayer(self.source, reason)
+    end
+
+      ---@return number
+    function self.getPlayTime()
+        return self.lastPlaytime + GetPlayerTimeOnline(self.source)
     end
 
     ---@param money number
