@@ -43,29 +43,14 @@ function ESX.SpawnPlayer(skin, coords, cb)
     cb()
 end
 
-RegisterNetEvent("esx:playerLoaded")
-AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
-    ESX.PlayerData = xPlayer
-
-    if not Config.Multichar then
-        ESX.SpawnPlayer(skin, ESX.PlayerData.coords, function()
-            TriggerEvent("esx:onPlayerSpawn")
-            TriggerEvent("esx:restoreLoadout")
-            TriggerServerEvent("esx:onPlayerSpawn")
-            TriggerEvent("esx:loadingScreenOff")
-            ShutdownLoadingScreen()
-            ShutdownLoadingScreenNui()
-        end)
+local function EnablePvP()
+    if Config.EnablePVP then
+        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
+        NetworkSetFriendlyFireOption(true)
     end
+end
 
-    while not DoesEntityExist(ESX.PlayerData.ped) do
-        Wait(20)
-    end
-
-    ESX.PlayerLoaded = true
-
-    local metadata = ESX.PlayerData.metadata
-
+local function ApplyMetadata(metadata)
     if metadata.health then
         SetEntityHealth(ESX.PlayerData.ped, metadata.health)
     end
@@ -73,74 +58,10 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     if metadata.armor and metadata.armor > 0 then
         SetPedArmour(ESX.PlayerData.ped, metadata.armor)
     end
+end
 
-    local timer = GetGameTimer()
-    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
-        Wait(0)
-    end
-
-    if Config.EnablePVP then
-        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
-        NetworkSetFriendlyFireOption(true)
-    end
-
-    local playerId = PlayerId()
-    -- RemoveHudComponents
-    for i = 1, #Config.RemoveHudComponents do
-        if Config.RemoveHudComponents[i] then
-            SetHudComponentPosition(i, 999999.0, 999999.0)
-        end
-    end
-
-    -- DisableNPCDrops
-    if Config.DisableNPCDrops then
-        local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
-        for i = 1, #weaponPickups do
-            ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false)
-        end
-    end
-
-    if Config.DisableVehicleSeatShuff then
-        AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
-            if seat == 0 then
-                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
-                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-            end
-        end)
-    end
-
-    if Config.DisableHealthRegeneration then
-        SetPlayerHealthRechargeMultiplier(playerId, 0.0)
-    end
-
-    if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
-        CreateThread(function()
-            while true do
-                if Config.DisableDisplayAmmo then
-                    DisplayAmmoThisFrame(false)
-                end
-
-                if Config.DisableWeaponWheel then
-                    BlockWeaponWheelThisFrame()
-                    DisableControlAction(0, 37, true)
-                end
-
-                if Config.DisableAimAssist then
-                    if IsPedArmed(ESX.PlayerData.ped, 4) then
-                        SetPlayerLockonRangeOverride(playerId, 2.0)
-                    end
-                end
-
-                if Config.DisableVehicleRewards then
-                    DisablePlayerVehicleRewards(playerId)
-                end
-
-                Wait(0)
-            end
-        end)
-    end
-
-    -- Disable Dispatch services
+local function DisableNPCs()
+        -- Disable Dispatch services
     if Config.DisableDispatchServices then
         for i = 1, 15 do
             EnableDispatchService(i, false)
@@ -148,7 +69,6 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
         SetAudioFlag('PoliceScannerDisabled', true)
     end
 
-    -- Disable Scenarios
     if Config.DisableScenarios then
         local scenarios = {
             "WORLD_VEHICLE_ATTRACTOR",
@@ -208,6 +128,101 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
             SetScenarioTypeEnabled(v, false)
         end
     end
+end
+
+local function DisableAmmoOrVehicleRewards(playerId)
+    CreateThread(function()
+        while true do
+            if Config.DisableDisplayAmmo then
+                DisplayAmmoThisFrame(false)
+            end
+
+            if Config.DisableVehicleRewards then
+                DisablePlayerVehicleRewards(playerId)
+            end
+
+            Wait(0)
+        end
+    end)
+end
+
+local function ApplyConfig()
+    local playerId = PlayerId()
+    -- RemoveHudComponents
+    for i = 1, #Config.RemoveHudComponents do
+        if Config.RemoveHudComponents[i] then
+            print(GetHudComponentName(i))
+            SetHudComponentSize(i, 0.0, 0.0)
+        end
+    end
+
+    if Config.DisableAimAssist then
+        SetPlayerLockon(playerId, false)
+    end
+
+    -- DisableNPCDrops
+    if Config.DisableNPCDrops then
+        local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
+        for i = 1, #weaponPickups do
+            ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false)
+        end
+    end
+
+    if Config.DisableVehicleSeatShuff then
+        AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
+            if seat == 0 then
+                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
+                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
+            end
+        end)
+    end
+
+    if Config.DisableHealthRegeneration then
+        SetPlayerHealthRechargeMultiplier(playerId, 0.0)
+    end
+
+    if Config.DisableDisplayAmmo or Config.DisableVehicleRewards then
+        DisableAmmoOrVehicleRewards(playerId)
+    end
+
+    EnablePvP()
+    DisableNPCs()
+end
+
+RegisterNetEvent("esx:playerLoaded")
+AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
+    ESX.PlayerData = xPlayer
+
+    if not Config.Multichar then
+        ESX.SpawnPlayer(skin, ESX.PlayerData.coords, function()
+            TriggerEvent("esx:onPlayerSpawn")
+            TriggerEvent("esx:restoreLoadout")
+            TriggerServerEvent("esx:onPlayerSpawn")
+            TriggerEvent("esx:loadingScreenOff")
+            ShutdownLoadingScreen()
+            ShutdownLoadingScreenNui()
+        end)
+    end
+
+    while not DoesEntityExist(ESX.PlayerData.ped) do
+        Wait(20)
+    end
+
+    ESX.PlayerLoaded = true
+
+    ApplyMetadata(ESX.PlayerData.metadata)
+
+    local timer = GetGameTimer()
+    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
+        Wait(0)
+    end
+
+    if Config.EnablePVP then
+        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
+        NetworkSetFriendlyFireOption(true)
+    end
+
+    ApplyConfig()
 
     if not Config.Multichar then
         FreezeEntityPosition(ESX.PlayerData.ped, false)
