@@ -134,13 +134,14 @@ function CreateSkinCam()
     end
 
     local playerPed = PlayerPedId()
+    local coords = GetEntityCoords(playerPed)
 
     SetCamActive(cam, true)
     RenderScriptCams(true, true, 500, true, true)
 
     isCameraActive = true
-    SetCamCoord(cam, GetEntityCoords(playerPed))
-    SetCamRot(cam, 0.0, 0.0, 270.0, true)
+    SetCamCoord(cam, coords.x, coords.y, coords.z)
+    SetCamRot(cam, 0.0, 0.0, 270.0, 2)
     SetEntityHeading(playerPed, 0.0)
 end
 

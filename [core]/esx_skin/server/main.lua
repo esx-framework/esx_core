@@ -40,8 +40,12 @@ AddEventHandler("esx_skin:responseSaveSkin", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if xPlayer.getGroup() == "admin" then
-        local file = io.open("resources/[esx]/esx_skin/skins.txt", "a")
-
+        print("[^3WARNING^7] /saveskin is a debug command and should not be used in production")
+        local path = GetResourcePath(GetCurrentResourceName())
+        local file = io.open(("%s/skins.txt"):format(path), "a")
+        if not file then
+            return
+        end
         file:write(json.encode(skin) .. "\n\n")
         file:flush()
         file:close()
@@ -56,7 +60,7 @@ ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
     MySQL.query("SELECT skin FROM users WHERE identifier = @identifier", {
         ["@identifier"] = xPlayer.identifier,
     }, function(users)
-        local user, skin = users[1]
+        local user, skin = users[1], nil
 
         local jobSkin = {
             skin_male = xPlayer.job.skin_male,
