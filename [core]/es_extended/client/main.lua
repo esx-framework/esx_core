@@ -322,17 +322,17 @@ if not Config.OxInventory then
 
     RegisterNetEvent("esx:addWeapon")
     AddEventHandler("esx:addWeapon", function()
-        error("event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
+        error("event ^5'esx:addWeapon'^1 Has Been Removed. Please use ^5xPlayer.addWeapon^1 Instead!")
     end)
 
     RegisterNetEvent("esx:addWeaponComponent")
     AddEventHandler("esx:addWeaponComponent", function()
-        error("event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
+        error("event ^5'esx:addWeaponComponent'^1 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^1 Instead!")
     end)
 
     RegisterNetEvent("esx:setWeaponAmmo")
     AddEventHandler("esx:setWeaponAmmo", function()
-        error("event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
+        error("event ^5'esx:setWeaponAmmo'^1 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^1 Instead!")
     end)
 
     RegisterNetEvent("esx:setWeaponTint")
@@ -342,7 +342,7 @@ if not Config.OxInventory then
 
     RegisterNetEvent("esx:removeWeapon")
     AddEventHandler("esx:removeWeapon", function()
-        error("event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
+        error("event ^5'esx:removeWeapon'^1 Has Been Removed. Please use ^5xPlayer.removeWeapon^1 Instead!")
     end)
 
     RegisterNetEvent("esx:removeWeaponComponent")

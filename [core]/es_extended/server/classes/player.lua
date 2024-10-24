@@ -289,7 +289,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.setAccountMoney(accountName, money, reason)
         reason = reason or "unknown"
         if not tonumber(money) then
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
         if money >= 0 then
@@ -302,10 +302,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
             else
-                error(("Tried To Set Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
+                error(("Tried To Set Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
         else
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
         end
     end
 
@@ -316,7 +316,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.addAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
         if money > 0 then
@@ -328,10 +328,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
             else
-                error(("Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
+                error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
         else
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
         end
     end
 
@@ -342,7 +342,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
         if money > 0 then
@@ -351,7 +351,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             if account then
                 money = account.round and ESX.Math.Round(money) or money
                 if self.accounts[account.index].money - money > self.accounts[account.index].money then
-                    error(("Tried To Underflow Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
+                    error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
                     return
                 end
                 self.accounts[account.index].money = self.accounts[account.index].money - money
@@ -359,10 +359,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
             else
-                error(("Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!"):format(accountName, self.playerId))
+                error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
         else
-            error(("Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7"):format(accountName, self.playerId, money))
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
         end
     end
 
@@ -621,7 +621,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         local weaponLabel, playerPed <const> = nil, GetPlayerPed(self.source)
 
         if not playerPed then
-            return error("xPlayer.removeWeapon ^5invalid^7 player ped!")
+            return error("xPlayer.removeWeapon ^5invalid^1 player ped!")
         end
 
         for k, v in ipairs(self.loadout) do
@@ -778,13 +778,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
 
         if type(index) ~= "string" then
-            error("xPlayer.getMeta ^5index^7 should be ^5string^7!")
+            error("xPlayer.getMeta ^5index^1 should be ^5string^1!")
             return
         end
 
         local metaData = self.metadata[index]
         if metaData == nil then
-            return Config.EnableDebug and error(("xPlayer.getMeta ^5%s^7 not exist!"):format(index)) or nil
+            return Config.EnableDebug and error(("xPlayer.getMeta ^5%s^1 not exist!"):format(index)) or nil
         end
 
         if subIndex and type(metaData) == "table" then
@@ -803,14 +803,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                     if type(key) == "string" then
                         returnValues[key] = self.getMeta(index, key)
                     else
-                        error(("xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7! that contains ^5string^7, received ^5%s^7!, skipping..."):format(type(key)))
+                        error(("xPlayer.getMeta subIndex should be ^5string^1 or ^5table^1! that contains ^5string^1, received ^5%s^1!, skipping..."):format(type(key)))
                     end
                 end
 
                 return returnValues
             end
 
-            error(("xPlayer.getMeta subIndex should be ^5string^7 or ^5table^7!, received ^5%s^7!"):format(_type))
+            error(("xPlayer.getMeta subIndex should be ^5string^1 or ^5table^1!, received ^5%s^1!"):format(_type))
             return
         end
 
@@ -823,11 +823,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return nil
     function self.setMeta(index, value, subValue)
         if not index then
-            return error("xPlayer.setMeta ^5index^7 is Missing!")
+            return error("xPlayer.setMeta ^5index^1 is Missing!")
         end
 
         if type(index) ~= "string" then
-            return error("xPlayer.setMeta ^5index^7 should be ^5string^7!")
+            return error("xPlayer.setMeta ^5index^1 should be ^5string^1!")
         end
 
         if value == nil then
@@ -838,13 +838,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
         if not subValue then
             if _type ~= "number" and _type ~= "string" and _type ~= "table" then
-                return error(("xPlayer.setMeta ^5%s^7 should be ^5number^7 or ^5string^7 or ^5table^7!"):format(value))
+                return error(("xPlayer.setMeta ^5%s^1 should be ^5number^1 or ^5string^1 or ^5table^1!"):format(value))
             end
 
             self.metadata[index] = value
         else
             if _type ~= "string" then
-                return error(("xPlayer.setMeta ^5value^7 should be ^5string^7 as a subIndex!"):format(value))
+                return error(("xPlayer.setMeta ^5value^1 should be ^5string^1 as a subIndex!"):format(value))
             end
 
             if not self.metadata[index] or type(self.metadata[index]) ~= "table" then
@@ -859,16 +859,16 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     function self.clearMeta(index, subValues)
         if not index then
-            return error("xPlayer.clearMeta ^5index^7 is Missing!")
+            return error("xPlayer.clearMeta ^5index^1 is Missing!")
         end
 
         if type(index) ~= "string" then
-            return error("xPlayer.clearMeta ^5index^7 should be ^5string^7!")
+            return error("xPlayer.clearMeta ^5index^1 should be ^5string^1!")
         end
 
         local metaData = self.metadata[index]
         if metaData == nil then
-            return Config.EnableDebug and error(("xPlayer.clearMeta ^5%s^7 does not exist!"):format(index)) or nil
+            return Config.EnableDebug and error(("xPlayer.clearMeta ^5%s^1 does not exist!"):format(index)) or nil
         end
 
         if not subValues then
@@ -879,7 +879,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             if type(metaData) == "table" then
                 metaData[subValues] = nil
             else
-                return error(("xPlayer.clearMeta ^5%s^7 is not a table! Cannot clear subValue ^5%s^7."):format(index, subValues))
+                return error(("xPlayer.clearMeta ^5%s^1 is not a table! Cannot clear subValue ^5%s^1."):format(index, subValues))
             end
         elseif type(subValues) == "table" then
             -- If subValues is a table, we will clear multiple subValues within the table
@@ -889,14 +889,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                     if type(metaData) == "table" then
                         metaData[subValue] = nil
                     else
-                        error(("xPlayer.clearMeta ^5%s^7 is not a table! Cannot clear subValue ^5%s^7."):format(index, subValue))
+                        error(("xPlayer.clearMeta ^5%s^1 is not a table! Cannot clear subValue ^5%s^1."):format(index, subValue))
                     end
                 else
-                    error(("xPlayer.clearMeta subValues should contain ^5string^7, received ^5%s^7, skipping..."):format(type(subValue)))
+                    error(("xPlayer.clearMeta subValues should contain ^5string^1, received ^5%s^1, skipping..."):format(type(subValue)))
                 end
             end
         else
-            return error(("xPlayer.clearMeta ^5subValues^7 should be ^5string^7 or ^5table^7, received ^5%s^7!"):format(type(subValues)))
+            return error(("xPlayer.clearMeta ^5subValues^1 should be ^5string^1 or ^5table^1, received ^5%s^1!"):format(type(subValues)))
         end
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end

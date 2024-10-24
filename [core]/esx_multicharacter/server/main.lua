@@ -7,7 +7,7 @@ do
     local connectionString = GetConvar("mysql_connection_string", "")
 
     if connectionString == "" then
-        error(connectionString .. "\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0", 0)
+        error(connectionString .. "\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^1", 0)
     elseif connectionString:find("mysql://") then
         connectionString = connectionString:sub(9, -1)
         DATABASE = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
@@ -151,7 +151,7 @@ local function DeleteCharacter(source, charid)
             Wait(50)
             SetupCharacters(source)
         else
-            error("\n^1Transaction failed while trying to delete " .. identifier .. "^0")
+            error("\n^1Transaction failed while trying to delete " .. identifier .. "^1")
         end
     end)
 end

@@ -10,11 +10,11 @@ local addonResourcesState = {
     ['esx_progressbar'] = GetResourceState('esx_progressbar') ~= 'missing',
     ['esx_notify'] = GetResourceState('esx_notify') ~= 'missing',
     ['esx_textui'] = GetResourceState('esx_textui') ~= 'missing',
-    ['esx_context'] = GetResourceState('esx_context') ~= 'missing'
+    ['esx_context'] = GetResourceState('esx_context') ~= 'missing',
 }
 
 local function IsResourceFound(resource)
-	return addonResourcesState[resource] or print(('[^1ERROR^7] ^5%s^7 is Missing!'):format(resource))
+	return addonResourcesState[resource] or error(('Resource [^5%s^1] is Missing!'):format(resource))
 end
 
 function ESX.SearchInventory(items, count)
@@ -381,7 +381,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
     local dist = #(playerCoords - vector)
     if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
         local executingResource = GetInvokingResource() or "Unknown"
-        return error(("Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
+        return error(("Resource ^5%s^1 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
 
     CreateThread(function()
