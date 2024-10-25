@@ -144,7 +144,7 @@ local function focusPreview()
 end
 
 if PREVIEW_KEYBIND then
-    RegisterCommand("previewContext", focusPreview)
+    RegisterCommand("previewContext", focusPreview, false)
 
     RegisterKeyMapping("previewContext", "Preview Active Context", "keyboard", PREVIEW_KEYBIND)
 end
@@ -208,15 +208,15 @@ if Debug then
 
     RegisterCommand("ctx:preview", function()
         exports["esx_context"]:Preview(position, eles)
-    end)
+    end, false)
 
     RegisterCommand("ctx:open", function()
         exports["esx_context"]:Open(position, eles, onSelect, onClose)
-    end)
+    end, false)
 
     RegisterCommand("ctx:close", function()
         exports["esx_context"]:Close()
-    end)
+    end, false)
 
     RegisterCommand("ctx:form", function()
         local formMenu = {
@@ -260,5 +260,5 @@ if Debug then
         }
 
         exports["esx_context"]:Open(position, formMenu, onSelect, onClose)
-    end)
+    end, false)
 end

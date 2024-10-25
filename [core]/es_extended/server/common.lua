@@ -1,4 +1,3 @@
-ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
 ESX.JobsPlayerCount = {}
@@ -18,19 +17,10 @@ RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
 end)
 
-AddEventHandler("esx:getSharedObject", function()
-    local Invoke = GetInvokingResource()
-    error(("Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix!"):format(Invoke))
-end)
-
-exports("getSharedObject", function()
-    return ESX
-end)
-
 if Config.OxInventory then
     Config.PlayerFunctionOverride = "OxInventory"
     SetConvarReplicated("inventory:framework", "esx")
-    SetConvarReplicated("inventory:weight", Config.MaxWeight * 1000)
+    SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
 end
 
 local function StartDBSync()

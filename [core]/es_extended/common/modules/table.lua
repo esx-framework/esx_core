@@ -1,6 +1,8 @@
 ESX.Table = {}
 
 -- nil proof alternative to #table
+---@param t table
+---@return number
 function ESX.Table.SizeOf(t)
     local count = 0
 
@@ -11,6 +13,8 @@ function ESX.Table.SizeOf(t)
     return count
 end
 
+---@param t table
+---@return table
 function ESX.Table.Set(t)
     local set = {}
     for _, v in ipairs(t) do
@@ -19,6 +23,9 @@ function ESX.Table.Set(t)
     return set
 end
 
+---@param t table
+---@param value any
+---@return number
 function ESX.Table.IndexOf(t, value)
     for i = 1, #t, 1 do
         if t[i] == value then
@@ -29,6 +36,9 @@ function ESX.Table.IndexOf(t, value)
     return -1
 end
 
+---@param t table
+---@param value any
+---@return number
 function ESX.Table.LastIndexOf(t, value)
     for i = #t, 1, -1 do
         if t[i] == value then
@@ -39,6 +49,9 @@ function ESX.Table.LastIndexOf(t, value)
     return -1
 end
 
+---@param t table
+---@param cb function
+---@return any
 function ESX.Table.Find(t, cb)
     for i = 1, #t, 1 do
         if cb(t[i]) then
@@ -49,6 +62,9 @@ function ESX.Table.Find(t, cb)
     return nil
 end
 
+---@param t table
+---@param cb function
+---@return number
 function ESX.Table.FindIndex(t, cb)
     for i = 1, #t, 1 do
         if cb(t[i]) then
@@ -59,18 +75,24 @@ function ESX.Table.FindIndex(t, cb)
     return -1
 end
 
+---@param t table
+---@param cb function
+---@return table
 function ESX.Table.Filter(t, cb)
     local newTable = {}
 
     for i = 1, #t, 1 do
         if cb(t[i]) then
-            table.insert(newTable, t[i])
+            newTable[#newTable + 1] = t[i]
         end
     end
 
     return newTable
 end
 
+---@param t table
+---@param cb function
+---@return table
 function ESX.Table.Map(t, cb)
     local newTable = {}
 
@@ -81,6 +103,8 @@ function ESX.Table.Map(t, cb)
     return newTable
 end
 
+---@param t table
+---@return table
 function ESX.Table.Reverse(t)
     local newTable = {}
 
@@ -91,6 +115,8 @@ function ESX.Table.Reverse(t)
     return newTable
 end
 
+---@param t table
+---@return table
 function ESX.Table.Clone(t)
     if type(t) ~= "table" then
         return t
@@ -112,6 +138,9 @@ function ESX.Table.Clone(t)
     return target
 end
 
+---@param t1 table
+---@param t2 table
+---@return table
 function ESX.Table.Concat(t1, t2)
     local t3 = ESX.Table.Clone(t1)
 
@@ -122,6 +151,9 @@ function ESX.Table.Concat(t1, t2)
     return t3
 end
 
+---@param t table
+---@param sep string
+---@return string
 function ESX.Table.Join(t, sep)
     local str = ""
 
@@ -137,6 +169,9 @@ function ESX.Table.Join(t, sep)
 end
 
 -- Credits: https://github.com/JonasDev99/qb-garages/blob/b0335d67cb72a6b9ac60f62a87fb3946f5c2f33d/server/main.lua#L5
+---@param tab table
+---@param val any
+---@return boolean
 function ESX.Table.TableContains(tab, val)
     if type(val) == "table" then
         for _, value in pairs(tab) do
@@ -157,6 +192,9 @@ end
 
 -- Credit: https://stackoverflow.com/a/15706820
 -- Description: sort function for pairs
+---@param t table
+---@param order function
+---@return function
 function ESX.Table.Sort(t, order)
     -- collect the keys
     local keys = {}
