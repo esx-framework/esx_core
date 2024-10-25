@@ -1,7 +1,6 @@
 ---@diagnostic disable: duplicate-set-field
 
 Callbacks = {}
-Callbacks.__index = Callbacks
 
 Callbacks.requests = {}
 Callbacks.storage = {}
@@ -55,7 +54,7 @@ function Callbacks:RecieveClient(requestId, invoker, ...)
     local callback = self.requests[self.currentId]
 
     self:Execute(callback, ...)
-    self.requests[self.currentId] = nil
+    self.requests[requestId] = nil
 end
 
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)

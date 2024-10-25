@@ -1,7 +1,6 @@
 ---@diagnostic disable: duplicate-set-field
 
 Callbacks = {}
-Callbacks.__index = Callbacks
 
 Callbacks.requests = {}
 Callbacks.storage = {}
@@ -35,7 +34,7 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     local callback = self.requests[self.currentId]
 
     Callbacks:Execute(callback, ...)
-    self.requests[self.currentId] = nil
+    self.requests[requestId] = nil
 end
 
 function Callbacks:Register(name, cb)
