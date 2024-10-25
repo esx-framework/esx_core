@@ -1,3 +1,5 @@
+---@diagnostic disable: duplicate-set-field
+
 Callbacks = {}
 Callbacks.__index = Callbacks
 
@@ -16,7 +18,7 @@ function Callbacks:Execute(cb, ...)
     local success, errorString = pcall(cb, ...)
 
     if not success then
-        error(("Failed to execute Callback with RequestId: ^5%s^1"):format(self.currentId ))
+        print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(self.currentId))
         error(errorString)
         return
     end
@@ -33,13 +35,14 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     local callback = self.requests[self.currentId]
 
     Callbacks:Execute(callback, ...)
+    self.requests[self.currentId] = nil
 end
 
 function Callbacks:Register(name, cb)
     self.storage[name] = cb
 end
 
-function Callbacks:RecieveClient(eventName, requestId, invoker, ...)
+function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     self.currentId = requestId
 
     if not self.storage[eventName] then
@@ -47,7 +50,7 @@ function Callbacks:RecieveClient(eventName, requestId, invoker, ...)
     end
 
     local returnCb = function(...)
-        TriggerServerEvent("esx:clientCallback", self.currentId, invoker, ...)
+        TriggerServerEvent("esx:clientCallback", requestId, invoker, ...)
     end
     local callback = self.storage[eventName]
 
@@ -77,5 +80,5 @@ ESX.RegisterClientCallback = function(eventName, callback)
 end
 
 RegisterNetEvent("esx:triggerClientCallback", function(...)
-    Callbacks:RecieveClient(...)
+    Callbacks:ClientRecieve(...)
 end)
