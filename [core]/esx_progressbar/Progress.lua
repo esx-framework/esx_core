@@ -31,6 +31,7 @@ end
 ---@param message string
 ---@param length? number Timeout in milliseconds
 ---@param Options? ProgressBarOptions
+---@return boolean Success
 local function Progressbar(message, length, Options)
     if CurrentProgress then
         return false
