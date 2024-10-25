@@ -36,85 +36,33 @@ function Multicharacter:DestoryCamera()
     end
 end
 
-local function HideComponents()
+local HiddenCompents = {}
+
+local function HideComponents(hide)
     local components = {11, 12, 21}
     for i = 1, #components do
-        HideHudComponentThisFrame(components[i])
+        if hide then
+            local size = GetHudComponentSize(components[i])
+            if size.x > 0 or size.y > 0 then
+                HiddenCompents[components[i]] = size
+                SetHudComponentSize(components[i], 0.0, 0.0)
+            end
+        else
+            if HiddenCompents[components[i]] then
+                local size = HiddenCompents[components[i]]
+                SetHudComponentSize(components[i], size.x, size.z)
+                HiddenCompents[components[i]] = nil
+            end
+        end
     end
-    ThefeedHideThisFrame()
-    HideHudAndRadarThisFrame()
+    DisplayRadar(not hide)
 end
 
-function Multicharacter:ResetHideActivePlayer()
-    self.playerPed = PlayerPedId()
-
-    MumbleSetVolumeOverride(ESX.playerId, -1.0)
-    SetEntityVisible(self.playerPed, true, false)
-    SetPlayerInvincible(self.playerPed, true)
-    FreezeEntityPosition(self.playerPed, false)
-end
-
-function Multicharacter:HideActivePlayerLoop()
-    CreateThread(function()
-        local keys = { 18, 27, 172, 173, 174, 175, 176, 177, 187, 188, 191, 201, 108, 109, 209, 19 }
-        while self.hidePlayers do
-
-            DisableAllControlActions(0)
-            for i = 1, #keys do
-                EnableControlAction(0, keys[i], true)
-            end
-
-            SetEntityVisible(self.playerPed, false, false)
-            SetLocalPlayerVisibleLocally(true)
-            SetPlayerInvincible(ESX.playerId, true)
-
-            HideComponents()
-
-            local vehicles = GetGamePool("CVehicle")
-            for i = 1, #vehicles do
-                SetEntityLocallyInvisible(vehicles[i])
-            end
-
-            Wait(0)
-        end
-        self:ResetHideActivePlayer()
-
-        SetTimeout(10000, function()
-            self.canRelog = true
-        end)
-    end)
-end
-
-function Multicharacter:ConcealLoop()
-    CreateThread(function()
-        local playerPool = {}
-        while self.hidePlayers do
-            local players = GetActivePlayers()
-
-            for i = 1, #players do
-                local player = players[i]
-                if player ~= ESX.playerId and not playerPool[player] then
-                    playerPool[player] = true
-                    NetworkConcealPlayer(player, true, true)
-                end
-            end
-
-            Wait(500)
-        end
-
-        for k in pairs(playerPool) do
-            NetworkConcealPlayer(k, false, false)
-        end
-
-    end)
-end
-
-function Multicharacter:StartLoops()
+function Multicharacter:HideHud(hide)
     self.hidePlayers = true
 
-    MumbleSetVolumeOverride(ESX.playerId, 0.0)
-    self:HideActivePlayerLoop()
-    self:ConcealLoop()
+    MumbleSetVolumeOverride(ESX.PlayerId, 0.0)
+    HideComponents(hide)
 end
 
 function Multicharacter:SetupCharacters()
@@ -130,8 +78,9 @@ function Multicharacter:SetupCharacters()
     SetEntityCoords(self.playerPed, self.spawnCoords.x, self.spawnCoords.y, self.spawnCoords.z, true, false, false, false)
     SetEntityHeading(self.playerPed, self.spawnCoords.w)
 
+    SetPlayerControl(ESX.PlayerId, false, 0)
     self:SetupCamera()
-    self:StartLoops()
+    self:HideHud(true)
 
     ShutdownLoadingScreen()
     ShutdownLoadingScreenNui()
@@ -276,11 +225,13 @@ function Multicharacter:Reset()
     self.playerPed = PlayerPedId()
     self.hidePlayers = false
     self.slots = nil
+
+    SetTimeout(10000, function()
+        self.canRelog = true
+    end)
 end
 
-function Multicharacter:Spawn()
-    local esxSpawns = ESX.GetConfig().DefaultSpawns
-    local spawn = esxSpawns[math.random(1, #esxSpawns)]
+function Multicharacter:Spawn(spawn)
 
     RequestCollisionAtCoord(spawn.x, spawn.y, spawn.z)
 
@@ -292,12 +243,15 @@ function Multicharacter:Spawn()
         Wait(0)
     end
 
-    NetworkResurrectLocalPlayer(spawn.x, spawn.y, spawn.z, spawn.heading, 0, true)
+    NetworkResurrectLocalPlayer(spawn.x, spawn.y, spawn.z, spawn.heading or spawn.w or 0.0, 0, true)
 end
 
 function Multicharacter:PlayerLoaded(playerData, isNew, skin)
     DoScreenFadeOut(750)
     self:AwaitFadeOut()
+
+    local esxSpawns = ESX.GetConfig().DefaultSpawns
+    local spawn = esxSpawns[math.random(1, #esxSpawns)]
 
     if not isNew and playerData.coords then
         spawn = playerData.coords
@@ -319,8 +273,12 @@ function Multicharacter:PlayerLoaded(playerData, isNew, skin)
     end
 
     self:DestoryCamera()
-    self:Spawn()
+    self:Spawn(spawn)
     Wait(500)
+
+    self:HideHud(false)
+    SetPlayerControl(ESX.playerId, true, 0)
+    FreezeEntityPosition(self.playerPed, false)
 
     DoScreenFadeIn(750)
     self:AwaitFadeIn()

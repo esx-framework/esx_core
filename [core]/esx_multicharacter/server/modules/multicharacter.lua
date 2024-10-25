@@ -5,6 +5,7 @@ Multicharacter._index = Multicharacter
 Multicharacter.awaitingRegistration = {}
 
 function Multicharacter:SetupCharacters(source)
+    SetPlayerRoutingBucket(source, source)
     while not Database.connected do
         Wait(100)
     end
@@ -67,6 +68,7 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
     if isNew then
         self.awaitingRegistration[source] = charid
     else
+        SetPlayerRoutingBucket(source, 0)
         if not ESX.GetConfig().EnableDebug then
             local identifier = ("%s%s:%s"):format(Server.prefix, charid, Server:GetIdentifier(source))
 
@@ -86,6 +88,7 @@ function Multicharacter:RegistrationComplete(source, data)
     self.awaitingRegistration[source] = nil
     ESX.Players[Server:GetIdentifier(source)] = true
 
+    SetPlayerRoutingBucket(source, 0)
     TriggerEvent("esx:onPlayerJoined", source, ("%s%s"):format(Server.prefix, charId), data)
 end
 
