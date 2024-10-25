@@ -37,7 +37,7 @@ function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
     end
 
     local returnCb = function(...)
-        TriggerClientEvent("esx:serverCallback", player, self.currentId, invoker, ...)
+        TriggerClientEvent("esx:serverCallback", player, requestId, invoker, ...)
     end
     local callback = self.storage[event]
 
