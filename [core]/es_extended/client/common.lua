@@ -1,7 +1,7 @@
 Core = {}
 ESX.PlayerData = {}
 ESX.playerId = PlayerId()
-ESX.serverId = GetPlayerServerId(PlayerId())
+ESX.serverId = GetPlayerServerId(ESX.playerId)
 ESX.PlayerLoaded = false
 Core.Input = {}
 ESX.UI = {}
@@ -22,7 +22,7 @@ CreateThread(function()
         Wait(100)
 
         if NetworkIsPlayerActive(ESX.playerId) then
-            exports.spawnmanager:setAutoSpawn(false)
+            ESX.DisableSpawnManager()
             DoScreenFadeOut(0)
             Wait(500)
             TriggerServerEvent("esx:onPlayerJoined")

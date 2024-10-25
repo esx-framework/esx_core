@@ -74,5 +74,4 @@ dependencies {
 	'/native:0x6AE51D4B',
     '/native:0xA61C8FC6',
 	'oxmysql',
-	'spawnmanager',
 }

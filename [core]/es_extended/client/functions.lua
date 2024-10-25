@@ -17,6 +17,11 @@ local function IsResourceFound(resource)
 	return addonResourcesState[resource] or error(('Resource [^5%s^1] is Missing!'):format(resource))
 end
 
+function ESX.DisableSpawnManager()
+    if GetResourceState("spawnmanager") == "started" then
+        exports.spawnmanager:setAutoSpawn(false)
+    end
+end
 
 ---@param items string | table The item(s) to search for
 ---@param count? boolean Whether to return the count of the item as well

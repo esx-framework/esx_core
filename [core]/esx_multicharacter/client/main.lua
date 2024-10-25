@@ -8,19 +8,13 @@ local function AwaitContext()
     return true
 end
 
-local function DisableSpawnManager()
-    if GetResourceState("spawnmanager") == "started" then
-        exports.spawnmanager:setAutoSpawn(false)
-    end
-end
-
 CreateThread(function()
 
     while not ESX.PlayerLoaded do
         Wait(100)
 
         if NetworkIsPlayerActive(ESX.playerId) then
-            DisableSpawnManager()
+            ESX.DisableSpawnManager()
             DoScreenFadeOut(0)
 
             local ready = AwaitContext()
