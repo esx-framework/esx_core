@@ -84,23 +84,28 @@ end
 ---@param properties table
 ---@param cb function
 function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
-    local vehicleModel = type(model) == "string" and joaat(model) or model
+    local vehicleModel = joaat(model)
     local vehicleProperties = properties
 
     CreateThread(function()
         local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
             if vehicleType then
-                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
-                if not DoesEntityExist(createdVehicle) then
-                    return error("Unable to spawn vehicle")
+                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords, heading)
+                local tries = 0
+                while not DoesEntityExist(createdVehicle) do
+                    Wait(200)
+                    tries = tries + 1
+                    if tries > 10 then
+                        return print("[^1ERROR^7] Unfortunately, this vehicle has not spawned")
+                    end
                 end
 
                 local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
                 Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
                 cb(networkId)
             else
-                return error(("Unable to get vehicle type: ^5%s^1"):format(model))
+                print(("[^1ERROR^7] Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
             end
         end)
     end)
@@ -114,9 +119,9 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
-    local spawnCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
+    local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
     CreateThread(function()
-        local entity = CreateObject(model, spawnCoords.x, spawnCoords.y, spawnCoords.z, true, true, false)
+        local entity = CreateObject(model, objectCoords, true, true)
         while not DoesEntityExist(entity) do
             Wait(50)
         end
