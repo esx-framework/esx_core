@@ -7,7 +7,7 @@ Callbacks.storage = {}
 Callbacks.id = 0
 
 function Callbacks:Trigger(event, cb, invoker, ...)
-    self.requests[event] = cb
+    self.requests[self.id] = cb
     TriggerServerEvent("esx:triggerServerCallback", event, self.id, invoker, ...)
 
     self.id += 1
@@ -26,7 +26,6 @@ end
 
 function Callbacks:ServerRecieve(requestId, invoker, ...)
     self.currentId = requestId
-
     if not self.requests[self.currentId] then
         return error(("Server Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(self.currentId, invoker))
     end
