@@ -188,6 +188,7 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
         DoScreenFadeIn(500)
     end
 
+    Actions:Init()
     SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
     StartServerSyncLoops()
 end)
