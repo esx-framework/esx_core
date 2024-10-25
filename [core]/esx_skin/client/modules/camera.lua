@@ -77,6 +77,7 @@ function Camera:Destroy()
         return
     end
 
+    ESX.HideUI()
     RenderScriptCams(false, true, 500, true, true)
     DestroyCam(self.cam, true)
     self.cam = nil
