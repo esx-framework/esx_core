@@ -107,8 +107,16 @@ function ESX.SpawnPlayer(skin, coords, cb)
     cb()
 end
 
-function ESX.Progressbar(...)
-	return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(...)
+---@param message string
+---@param length? number Timeout in milliseconds
+---@param options? ProgressBarOptions
+---@return boolean Success Whether the progress bar was successfully created or not
+function ESX.Progressbar(message, length, options)
+	return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(message, length, options)
+end
+
+function ESX.CancelProgressbar()
+    return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:CancelProgressbar()
 end
 
 ---@param message string The message to show
