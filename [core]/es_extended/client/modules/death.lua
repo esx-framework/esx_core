@@ -46,7 +46,11 @@ function Death:Natual()
 end
 
 function Death:Damaged(victim, victimDied)
-    if not IsPedAPlayer(victim) then
+    if not IsEntityAPed(victim) then
+        return
+    end
+
+    if IsPedAPlayer(victim) then
         return
     end
 
@@ -74,5 +78,5 @@ AddEventHandler("gameEventTriggered", function(event, data)
     if event ~= "CEventNetworkEntityDamage" then
         return
     end
-    Death:Damaged(data[3], data[4])
+    Death:Damaged(data[1], data[4])
 end)
