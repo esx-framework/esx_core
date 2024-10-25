@@ -1,5 +1,4 @@
-RegisterServerEvent("esx_skin:save")
-AddEventHandler("esx_skin:save", function(skin)
+RegisterNetEvent("esx_skin:save", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not ESX.GetConfig().OxInventory then
@@ -19,8 +18,7 @@ AddEventHandler("esx_skin:save", function(skin)
     })
 end)
 
-RegisterServerEvent("esx_skin:setWeight")
-AddEventHandler("esx_skin:setWeight", function(skin)
+RegisterServerEvent("esx_skin:setWeight", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not ESX.GetConfig().OxInventory then
@@ -32,25 +30,6 @@ AddEventHandler("esx_skin:setWeight", function(skin)
         else
             xPlayer.setMaxWeight(defaultMaxWeight)
         end
-    end
-end)
-
-RegisterServerEvent("esx_skin:responseSaveSkin")
-AddEventHandler("esx_skin:responseSaveSkin", function(skin)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if xPlayer.getGroup() == "admin" then
-        print("[^3WARNING^7] /saveskin is a debug command and should not be used in production")
-        local path = GetResourcePath(GetCurrentResourceName())
-        local file = io.open(("%s/skins.txt"):format(path), "a")
-        if not file then
-            return
-        end
-        file:write(json.encode(skin) .. "\n\n")
-        file:flush()
-        file:close()
-    else
-        print(("[^2INFO^7] ^5%s^7 attempted saving skin to file"):format(xPlayer.getIdentifier()))
     end
 end)
 
@@ -78,7 +57,3 @@ end)
 ESX.RegisterCommand("skin", "admin", function(xPlayer)
     xPlayer.triggerEvent("esx_skin:openSaveableMenu")
 end, false, { help = TranslateCap("skin") })
-
-ESX.RegisterCommand("skinsave", "admin", function(xPlayer)
-    xPlayer.triggerEvent("esx_skin:requestSaveSkin")
-end, false, { help = TranslateCap("saveskin") })
