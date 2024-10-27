@@ -47,6 +47,7 @@ client_scripts {
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
 	'client/modules/npwd.lua',
+    'client/modules/interactions.lua',
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 }
