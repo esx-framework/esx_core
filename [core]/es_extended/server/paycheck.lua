@@ -6,8 +6,9 @@ function StartPayCheck()
                 local jobLabel = xPlayer.job.label
                 local job = xPlayer.job.grade_name
                 local salary = xPlayer.job.grade_salary
+                local givePaycheck = xPlayer.paycheck or true
 
-                if salary > 0 then
+                if salary > 0 and givePaycheck then
                     if job == "unemployed" then -- unemployed
                         xPlayer.addAccountMoney("bank", salary, "Welfare Check")
                         TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_help", salary), "CHAR_BANK_MAZE", 9)
