@@ -1,8 +1,7 @@
-RegisterServerEvent("esx_skin:save")
-AddEventHandler("esx_skin:save", function(skin)
+RegisterServerEvent("esx_skin:save", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
@@ -19,11 +18,10 @@ AddEventHandler("esx_skin:save", function(skin)
     })
 end)
 
-RegisterServerEvent("esx_skin:setWeight")
-AddEventHandler("esx_skin:setWeight", function(skin)
+RegisterServerEvent("esx_skin:setWeight", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
@@ -35,19 +33,18 @@ AddEventHandler("esx_skin:setWeight", function(skin)
     end
 end)
 
-RegisterServerEvent("esx_skin:responseSaveSkin")
-AddEventHandler("esx_skin:responseSaveSkin", function(skin)
+RegisterServerEvent("esx_skin:responseSaveSkin", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if xPlayer.getGroup() == "admin" then
-        local file = io.open("resources/[esx]/esx_skin/skins.txt", "a")
+    if xPlayer.getGroup() ~= "admin" then
+        return print(("[^2INFO^7] ^5%s^7 attempted saving skin to file"):format(xPlayer.getIdentifier()))
+    end 
 
-        file:write(json.encode(skin) .. "\n\n")
-        file:flush()
-        file:close()
-    else
-        print(("[^2INFO^7] ^5%s^7 attempted saving skin to file"):format(xPlayer.getIdentifier()))
-    end
+    local file = io.open("resources/[esx]/esx_skin/skins.txt", "a")
+
+    file:write(json.encode(skin) .. "\n\n")
+    file:flush()
+    file:close()
 end)
 
 ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)

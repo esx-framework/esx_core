@@ -491,13 +491,6 @@ function ESX.SetPlayerFunctionOverride(index)
 end
 
 function ESX.GetItemLabel(item)
-    if Config.OxInventory then
-        item = exports.ox_inventory:Items(item)
-        if item then
-            return item.label
-        end
-    end
-
     if ESX.Items[item] then
         return ESX.Items[item].label
     else
@@ -517,7 +510,7 @@ function ESX.GetUsableItems()
     return Usables
 end
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
         local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
         local xPlayer = ESX.Players[playerId]

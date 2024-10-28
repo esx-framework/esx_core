@@ -5,7 +5,7 @@ local esxLocale = GetConvar("esx:locale", "invalid")
 
 Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
 
-Config.OxInventory = GetResourceState("ox_inventory") ~= 'missing'
+Config.CustomInventory = false
 
 Config.Accounts = {
     bank = {

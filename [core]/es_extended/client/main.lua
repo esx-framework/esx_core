@@ -218,7 +218,10 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     end
 
     SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
-    StartServerSyncLoops()
+
+    if not Config.CustomInventory then 
+        StartServerSyncLoops()
+    end
 end)
 
 
@@ -255,7 +258,7 @@ end)
 AddEventHandler("esx:restoreLoadout", function()
     ESX.SetPlayerData("ped", PlayerPedId())
 
-    if not Config.OxInventory then
+    if not Config.CustomInventory then
         local ammoTypes = {}
         RemoveAllPedWeapons(ESX.PlayerData.ped, true)
 
@@ -304,7 +307,7 @@ AddEventHandler("esx:setAccountMoney", function(account)
     ESX.SetPlayerData("accounts", ESX.PlayerData.accounts)
 end)
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     RegisterNetEvent("esx:addInventoryItem")
     AddEventHandler("esx:addInventoryItem", function(item, count, showNotification)
         for k, v in ipairs(ESX.PlayerData.inventory) do
@@ -377,7 +380,7 @@ AddEventHandler("esx:setGroup", function(group)
     ESX.SetPlayerData("group", group)
 end)
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     RegisterNetEvent("esx:createPickup")
     AddEventHandler("esx:createPickup", function(pickupId, label, coords, itemType, name, components, tintIndex)
         local function setObjectProperties(object)
@@ -428,7 +431,7 @@ AddEventHandler("esx:registerSuggestions", function(registeredCommands)
     end
 end)
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     RegisterNetEvent("esx:removePickup")
     AddEventHandler("esx:removePickup", function(pickupId)
         if pickups[pickupId] and pickups[pickupId].obj then
@@ -438,10 +441,9 @@ if not Config.OxInventory then
     end)
 end
 
+if not Config.CustomInventory then
 function StartServerSyncLoops()
-    if not Config.OxInventory then
         -- keep track of ammo
-
         CreateThread(function()
             local currentWeapon = { Ammo = 0 }
             while ESX.PlayerLoaded do
@@ -466,10 +468,10 @@ function StartServerSyncLoops()
                 Wait(sleep)
             end
         end)
-    end
+end
 end
 
-if not Config.OxInventory and Config.EnableDefaultInventory then
+if not Config.CustomInventory and Config.EnableDefaultInventory then
     ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "F2", function()
         if not ESX.PlayerData.dead then
             ESX.ShowInventory()
@@ -483,7 +485,7 @@ if not Config.EnableWantedLevel then
     SetMaxWantedLevel(0)
 end
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     CreateThread(function()
         while true do
             local Sleep = 1500

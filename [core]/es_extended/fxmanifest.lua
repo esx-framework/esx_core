@@ -31,7 +31,8 @@ server_scripts {
 	'common/functions.lua',
 	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
-	'server/modules/createJob.lua'
+	'server/modules/createJob.lua', 
+	'server/bridge/*.lua'
 }
 
 client_scripts {
