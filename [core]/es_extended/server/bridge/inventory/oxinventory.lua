@@ -1,4 +1,4 @@
-if not Config.CustomInventory then return end 
+if Config.CustomInventory ~= "ox" then return end 
 
 MySQL.ready(function()
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)

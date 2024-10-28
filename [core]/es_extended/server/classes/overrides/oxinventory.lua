@@ -1,11 +1,11 @@
-if not Config.CustomInventory then return end 
+if Config.CustomInventory ~= "ox" then return end 
 local Inventory
 
 AddEventHandler("ox_inventory:loadInventory", function(module)
     Inventory = module
 end)
 
-Core.PlayerFunctionOverrides.Inventory = {
+Core.PlayerFunctionOverrides.OxInventory = {
     getInventory = function(self)
         return function(minimal)
             if minimal then

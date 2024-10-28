@@ -15,7 +15,7 @@ Core.playersByIdentifier = {}
 Core.vehicleTypesByModel = {}
 
 -- Compatibility, DO NOT CHANGE
-Config.OxInventory = Config.CustomInventory
+Config.OxInventory = Config.CustomInventory == "ox"
 
 RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
