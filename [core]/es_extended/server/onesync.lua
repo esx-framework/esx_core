@@ -91,7 +91,7 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
         local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
             if vehicleType then
-                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords, heading)
+                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
                 local tries = 0
                 while not DoesEntityExist(createdVehicle) do
                     Wait(200)
@@ -121,7 +121,7 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     end
     local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
     CreateThread(function()
-        local entity = CreateObject(model, objectCoords, true, true)
+        local entity = CreateObject(model, objectCoords.x, objectCoords.y, objectCoords.z, true, true, false)
         while not DoesEntityExist(entity) do
             Wait(50)
         end

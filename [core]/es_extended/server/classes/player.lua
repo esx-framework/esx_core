@@ -49,6 +49,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     self.maxWeight = Config.MaxWeight
     self.metadata = metadata
     self.lastPlaytime = self.metadata.lastPlaytime or 0
+    self.paycheckEnabled = true
     self.admin = Core.IsPlayerAdmin(playerId)
     if Config.Multichar then
         local startIndex = identifier:find(":", 1)
@@ -74,6 +75,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
         TriggerClientEvent(eventName, self.source, ...)
+    end
+
+    ---@param toggle boolean
+    ---@return nil
+    function self.togglePaycheck(toggle)
+        self.paycheckEnabled = toggle
+    end
+
+    ---@return boolean
+    function self.isPaycheckEnabled()
+        return self.paycheckEnabled
     end
 
     ---@param coordinates vector4 | vector3 | table
