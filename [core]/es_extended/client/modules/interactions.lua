@@ -6,7 +6,7 @@ function ESX.RemoveInteraction(name)
     interactions[name] = nil
 end
 
-ESX.ReigsterInteraction = function(name, onPress, condition)
+ESX.RegisterInteraction = function(name, onPress, condition)
     interactions[name] = {
         condition = condition or function() return true end,
         onPress = onPress,
