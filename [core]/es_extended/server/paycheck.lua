@@ -1,8 +1,10 @@
 function StartPayCheck()
     local disabledPaycheckUsers = {}
 
-    function ESX.SetPaycheckState(source, state)
+    function ESX.SetPaycheckDisabled(source, state)
         local source = tostring(source)
+
+        if type(state) ~= "boolean" then state = false end
         if type(disabledPaycheckUsers[source]) == "nil" then disabledPaycheckUsers[source] = false end
         disabledPaycheckUsers[source] = state -- true: paycheck disabled | false: paycheck enabled
     end
