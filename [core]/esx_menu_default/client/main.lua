@@ -37,6 +37,11 @@ ESX.UI.Menu.RegisterType(MenuType, openMenu, closeMenu)
 
 RegisterNUICallback("menu_submit", function(data, cb)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+
+    if not menu then
+        return
+    end
+
     if menu.submit ~= nil then
         menu.submit(data, menu)
     end
@@ -46,6 +51,10 @@ end)
 RegisterNUICallback("menu_cancel", function(data, cb)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
+    if not menu then
+        return
+    end
+
     if menu.cancel ~= nil then
         menu.cancel(data, menu)
     end
@@ -54,6 +63,10 @@ end)
 
 RegisterNUICallback("menu_change", function(data, cb)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+
+    if not menu then
+        return
+    end
 
     for i = 1, #data.elements, 1 do
         menu.setElement(i, "value", data.elements[i].value)

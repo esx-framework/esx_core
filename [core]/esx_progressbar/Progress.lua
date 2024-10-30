@@ -1,5 +1,37 @@
+---@class ProgressBarAnimation
+---@field public type "anim" | "Scenario"
+---@field public dict? string
+---@field public lib? string
+
+---@class ProgressBarOptions
+---@field public animation ProgressBarAnimation
+---@field public FreezePlayer? boolean
+---@field public onFinish? function
+
 local CurrentProgress = nil
 
+local function startProcessing()
+    while (CurrentProgress ~= nil) do
+        if CurrentProgress.length > 0 then
+            CurrentProgress.length = CurrentProgress.length - 1000
+        else
+            ClearPedTasks(ESX.PlayerData.ped)
+            if CurrentProgress.FreezePlayer then
+                FreezeEntityPosition(ESX.PlayerData.ped, false)
+            end
+            if CurrentProgress.onFinish then
+                CurrentProgress.onFinish()
+            end
+            CurrentProgress = nil
+        end
+        Wait(1000)
+    end
+end
+
+---@param message string
+---@param length? number Timeout in milliseconds
+---@param Options? ProgressBarOptions
+---@return boolean Success
 local function Progressbar(message, length, Options)
     if CurrentProgress then
         return false
@@ -24,21 +56,8 @@ local function Progressbar(message, length, Options)
         message = message or "ESX-Framework",
     })
     CurrentProgress.length = length or 3000
-    while CurrentProgress ~= nil do
-        if CurrentProgress.length > 0 then
-            CurrentProgress.length = CurrentProgress.length - 1000
-        else
-            ClearPedTasks(ESX.PlayerData.ped)
-            if CurrentProgress.FreezePlayer then
-                FreezeEntityPosition(ESX.PlayerData.ped, false)
-            end
-            if CurrentProgress.onFinish then
-                CurrentProgress.onFinish()
-            end
-            CurrentProgress = nil
-        end
-        Wait(1000)
-    end
+    CreateThread(startProcessing);
+    return true;
 end
 
 local function CancelProgressbar()

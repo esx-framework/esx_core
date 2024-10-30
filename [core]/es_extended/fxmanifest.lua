@@ -11,6 +11,10 @@ shared_scripts {
 
 	'config.lua',
 	'config.weapons.lua',
+
+    'common/main.lua',
+    'common/functions.lua',
+    'common/modules/*.lua',
 }
 
 server_scripts {
@@ -27,8 +31,6 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
-	'common/modules/*.lua',
-	'common/functions.lua',
 	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
 	'server/modules/createJob.lua', 
@@ -36,19 +38,17 @@ server_scripts {
 }
 
 client_scripts {
-	'client/common.lua',
+    'client/common.lua',
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/modules/callback.lua',
 
 	'client/main.lua',
 
-	'common/modules/*.lua',
-	'common/functions.lua',
-
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
 	'client/modules/npwd.lua',
+    'client/modules/interactions.lua',
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 }
@@ -76,5 +76,4 @@ dependencies {
 	'/native:0x6AE51D4B',
     '/native:0xA61C8FC6',
 	'oxmysql',
-	'spawnmanager',
 }

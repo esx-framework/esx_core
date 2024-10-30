@@ -2,10 +2,7 @@ ESX.RegisterCommand(
     "setslots",
     "admin",
     function(xPlayer, args)
-        MySQL.insert("INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `slots` = VALUES(`slots`)", {
-            args.identifier,
-            args.slots,
-        })
+        Database:SetSlots(args.identifier, args.slots)
         xPlayer.triggerEvent("esx:showNotification", TranslateCap("slotsadd", args.slots, args.identifier))
     end,
     true,
@@ -23,14 +20,9 @@ ESX.RegisterCommand(
     "remslots",
     "admin",
     function(xPlayer, args)
-        local slots = MySQL.scalar.await("SELECT `slots` FROM `multicharacter_slots` WHERE identifier = ?", {
-            args.identifier,
-        })
+        local removed = Database:RemoveSlots(args.identifier)
 
-        if slots then
-            MySQL.update("DELETE FROM `multicharacter_slots` WHERE `identifier` = ?", {
-                args.identifier,
-            })
+        if removed then
             xPlayer.triggerEvent("esx:showNotification", TranslateCap("slotsrem", args.identifier))
         end
     end,
@@ -48,17 +40,12 @@ ESX.RegisterCommand(
     "enablechar",
     "admin",
     function(xPlayer, args)
-        local selectedCharacter = "char" .. args.charslot .. ":" .. args.identifier
-
-        MySQL.update("UPDATE `users` SET `disabled` = 0 WHERE identifier = ?", {
-            selectedCharacter,
-        }, function(result)
-            if result > 0 then
-                xPlayer.triggerEvent("esx:showNotification", TranslateCap("charenabled", args.charslot, args.identifier))
-            else
-                xPlayer.triggerEvent("esx:showNotification", TranslateCap("charnotfound", args.charslot, args.identifier))
-            end
-        end)
+        local enabled = Database:EnableSlot(args.identifier, args.charslot)
+        if enabled then
+            xPlayer.triggerEvent("esx:showNotification", TranslateCap("charenabled", args.charslot, args.identifier))
+        else
+            xPlayer.triggerEvent("esx:showNotification", TranslateCap("charnotfound", args.charslot, args.identifier))
+        end
     end,
     true,
     {
@@ -75,17 +62,12 @@ ESX.RegisterCommand(
     "disablechar",
     "admin",
     function(xPlayer, args)
-        local selectedCharacter = "char" .. args.charslot .. ":" .. args.identifier
-
-        MySQL.update("UPDATE `users` SET `disabled` = 1 WHERE identifier = ?", {
-            selectedCharacter,
-        }, function(result)
-            if result > 0 then
-                xPlayer.triggerEvent("esx:showNotification", TranslateCap("chardisabled", args.charslot, args.identifier))
-            else
-                xPlayer.triggerEvent("esx:showNotification", TranslateCap("charnotfound", args.charslot, args.identifier))
-            end
-        end)
+        local disabled = Database:DisableSlot(args.identifier, args.charslot)
+        if disabled then
+            xPlayer.triggerEvent("esx:showNotification", TranslateCap("chardisabled", args.charslot, args.identifier))
+        else
+            xPlayer.triggerEvent("esx:showNotification", TranslateCap("charnotfound", args.charslot, args.identifier))
+        end
     end,
     true,
     {

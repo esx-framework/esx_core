@@ -7,6 +7,9 @@ AddEventHandler("onServerResourceStart", function(resource)
 
     npwd = GetResourceState("npwd"):find("start") and exports.npwd or nil
 
+    if not npwd then
+        return
+    end
     for _, xPlayer in pairs(ESX.Players) do
         npwd:newPlayer({
             source = xPlayer.source,
