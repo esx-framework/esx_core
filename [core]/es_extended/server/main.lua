@@ -649,8 +649,12 @@ ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
 end)
 
 AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)
-    Wait(eventData.secondsRemaining * 1000) 
-    Core.SavePlayers()
+    if eventData.secondsRemaining == 60 then
+        CreateThread(function()
+            Wait(50000)
+            Core.SavePlayers()
+        end)
+    end
 end)
 
 AddEventHandler("txAdmin:events:serverShuttingDown", function()
