@@ -49,6 +49,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.license = "license:" .. identifier
     end
 
+    if type(metadata.jobduty) ~= "boolean" then
+        self.job.duty = self.job.name ~= "unemployed" and Config.DefaultJobDuty or false
+    else
+        self.job.duty = metadata.jobduty
+    end
+
     _ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
@@ -485,6 +491,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             id = jobObject.id,
             name = jobObject.name,
             label = jobObject.label,
+            duty = jobObject.name ~= "unemployed" and Config.DefaultJobDuty or false,
 
             grade = tonumber(grade),
             grade_name = gradeObject.name,
@@ -495,7 +502,29 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
         }
 
+        self.metadata["jobduty"] = self.job.duty
+
         _TriggerEvent("esx:setJob", self.source, self.job, lastJob)
+        self.triggerEvent("esx:setJob", self.job, lastJob)
+        Player(self.source).state:set("job", self.job, true)
+    end
+
+    ---@param newDuty boolean
+    ---@return nil
+    function self.setJobDuty(newDuty)
+        if type(newDuty) ~= "boolean" then
+            return print(("[ESX] [^3WARNING^7] Ignoring invalid ^5.setJobDuty()^7 usage for ID: ^5%s^7, Duty: ^5%s^7"):format(self.source, newDuty))
+        end
+
+        if self.job.name == "unemployed" then
+            return
+        end
+
+        local lastJob = ESX.Table.Clone(self.job)
+        self.job.duty = newDuty
+        self.metadata["jobduty"] = newDuty
+
+        TriggerEvent("esx:setJob", self.source, self.job, lastJob)
         self.triggerEvent("esx:setJob", self.job, lastJob)
         Player(self.source).state:set("job", self.job, true)
     end
