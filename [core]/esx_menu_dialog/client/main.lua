@@ -31,7 +31,7 @@ local function closeMenu(namespace, name)
     })
 
     if not next(OpenedMenus) then
-        SetNuiFocus(false)
+        SetNuiFocus(false, false)
     end
 end
 
@@ -41,10 +41,15 @@ AddEventHandler("esx_menu_dialog:message:menu_submit", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
     local cancel = false
 
+    if not menu then
+        return
+    end
+
     if menu.submit then
         -- is the submitted data a number?
-        if tonumber(data.value) then
-            data.value = ESX.Math.Round(tonumber(data.value))
+        local value = tonumber(data.value)
+        if value then
+            data.value = ESX.Math.Round(value)
 
             -- check for negative value
             if tonumber(data.value) <= 0 then
@@ -66,6 +71,10 @@ end)
 AddEventHandler("esx_menu_dialog:message:menu_cancel", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
+    if not menu then
+        return
+    end
+
     if menu.cancel ~= nil then
         menu.cancel(data, menu)
     end
@@ -73,6 +82,10 @@ end)
 
 AddEventHandler("esx_menu_dialog:message:menu_change", function(data)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+
+    if not menu then
+        return
+    end
 
     if menu.change ~= nil then
         menu.change(data, menu)

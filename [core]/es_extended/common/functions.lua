@@ -20,16 +20,21 @@ CreateThread(function()
     end
 end)
 
+---@param length number
+---@return string
 function ESX.GetRandomString(length)
     math.randomseed(GetGameTimer())
 
     return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
 end
 
+---@return table
 function ESX.GetConfig()
     return Config
 end
 
+---@param weaponName string
+---@return number, table
 function ESX.GetWeapon(weaponName)
     weaponName = string.upper(weaponName)
 
@@ -39,16 +44,22 @@ function ESX.GetWeapon(weaponName)
     return index, Config.Weapons[index]
 end
 
+---@param weaponHash number
+---@return table
 function ESX.GetWeaponFromHash(weaponHash)
     weaponHash = type(weaponHash) == "string" and joaat(weaponHash) or weaponHash
 
     return weaponsByHash[weaponHash]
 end
 
+---@param byHash boolean
+---@return table
 function ESX.GetWeaponList(byHash)
     return byHash and weaponsByHash or Config.Weapons
 end
 
+---@param weaponName string
+---@return string
 function ESX.GetWeaponLabel(weaponName)
     weaponName = string.upper(weaponName)
 
@@ -58,6 +69,9 @@ function ESX.GetWeaponLabel(weaponName)
     return Config.Weapons[index].label or ""
 end
 
+---@param weaponName string
+---@param weaponComponent string
+---@return table | nil
 function ESX.GetWeaponComponent(weaponName, weaponComponent)
     weaponName = string.upper(weaponName)
 
@@ -71,6 +85,9 @@ function ESX.GetWeaponComponent(weaponName, weaponComponent)
     end
 end
 
+---@param table table
+---@param nb? number
+---@return string
 function ESX.DumpTable(table, nb)
     if nb == nil then
         nb = 0
@@ -103,10 +120,16 @@ function ESX.DumpTable(table, nb)
     end
 end
 
+---@param value any
+---@param numDecimalPlaces? number
+---@return number
 function ESX.Round(value, numDecimalPlaces)
     return ESX.Math.Round(value, numDecimalPlaces)
 end
 
+---@param value string
+---@param ... any
+---@return boolean, string?
 function ESX.ValidateType(value, ...)
     local types = { ... }
     if #types == 0 then return true end
@@ -132,6 +155,8 @@ function ESX.ValidateType(value, ...)
     return true
 end
 
+---@param ... any
+---@return boolean
 function ESX.AssertType(...)
     local matches, errorMessage = ESX.ValidateType(...)
 

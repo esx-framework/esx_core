@@ -1,71 +1,17 @@
 local pickups = {}
 
-CreateThread(function()
-    while not Config.Multichar do
-        Wait(100)
-
-        if NetworkIsPlayerActive(PlayerId()) then
-            exports.spawnmanager:setAutoSpawn(false)
-            DoScreenFadeOut(0)
-            Wait(500)
-            TriggerServerEvent("esx:onPlayerJoined")
-            break
-        end
-    end
-end)
-
 RegisterNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-function ESX.SpawnPlayer(skin, coords, cb)
-    local p = promise.new()
-    TriggerEvent("skinchanger:loadSkin", skin, function()
-        p:resolve()
-    end)
-    Citizen.Await(p)
-
-    RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-
-    local playerPed = PlayerPedId()
-    local timer = GetGameTimer()
-
-    FreezeEntityPosition(playerPed, true)
-    SetEntityCoordsNoOffset(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
-    SetEntityHeading(playerPed, coords.heading)
-
-    while not HasCollisionLoadedAroundEntity(playerPed) and (GetGameTimer() - timer) < 5000 do
-        Wait(0)
+local function EnablePvP()
+    if Config.EnablePVP then
+        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
+        NetworkSetFriendlyFireOption(true)
     end
-
-    NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, coords.heading, true, true, false)
-    TriggerEvent('playerSpawned', coords)
-    cb()
 end
 
-RegisterNetEvent("esx:playerLoaded")
-AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
-    ESX.PlayerData = xPlayer
-
-    if not Config.Multichar then
-        ESX.SpawnPlayer(skin, ESX.PlayerData.coords, function()
-            TriggerEvent("esx:onPlayerSpawn")
-            TriggerEvent("esx:restoreLoadout")
-            TriggerServerEvent("esx:onPlayerSpawn")
-            TriggerEvent("esx:loadingScreenOff")
-            ShutdownLoadingScreen()
-            ShutdownLoadingScreenNui()
-        end)
-    end
-
-    while not DoesEntityExist(ESX.PlayerData.ped) do
-        Wait(20)
-    end
-
-    ESX.PlayerLoaded = true
-
-    local metadata = ESX.PlayerData.metadata
-
+local function ApplyMetadata(metadata)
     if metadata.health then
         SetEntityHealth(ESX.PlayerData.ped, metadata.health)
     end
@@ -73,74 +19,10 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
     if metadata.armor and metadata.armor > 0 then
         SetPedArmour(ESX.PlayerData.ped, metadata.armor)
     end
+end
 
-    local timer = GetGameTimer()
-    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
-        Wait(0)
-    end
-
-    if Config.EnablePVP then
-        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
-        NetworkSetFriendlyFireOption(true)
-    end
-
-    local playerId = PlayerId()
-    -- RemoveHudComponents
-    for i = 1, #Config.RemoveHudComponents do
-        if Config.RemoveHudComponents[i] then
-            SetHudComponentPosition(i, 999999.0, 999999.0)
-        end
-    end
-
-    -- DisableNPCDrops
-    if Config.DisableNPCDrops then
-        local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
-        for i = 1, #weaponPickups do
-            ToggleUsePickupsForPlayer(playerId, weaponPickups[i], false)
-        end
-    end
-
-    if Config.DisableVehicleSeatShuff then
-        AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
-            if seat == 0 then
-                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, 0)
-                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-            end
-        end)
-    end
-
-    if Config.DisableHealthRegeneration then
-        SetPlayerHealthRechargeMultiplier(playerId, 0.0)
-    end
-
-    if Config.DisableWeaponWheel or Config.DisableAimAssist or Config.DisableVehicleRewards then
-        CreateThread(function()
-            while true do
-                if Config.DisableDisplayAmmo then
-                    DisplayAmmoThisFrame(false)
-                end
-
-                if Config.DisableWeaponWheel then
-                    BlockWeaponWheelThisFrame()
-                    DisableControlAction(0, 37, true)
-                end
-
-                if Config.DisableAimAssist then
-                    if IsPedArmed(ESX.PlayerData.ped, 4) then
-                        SetPlayerLockonRangeOverride(playerId, 2.0)
-                    end
-                end
-
-                if Config.DisableVehicleRewards then
-                    DisablePlayerVehicleRewards(playerId)
-                end
-
-                Wait(0)
-            end
-        end)
-    end
-
-    -- Disable Dispatch services
+local function DisableNPCs()
+        -- Disable Dispatch services
     if Config.DisableDispatchServices then
         for i = 1, 15 do
             EnableDispatchService(i, false)
@@ -148,7 +30,6 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
         SetAudioFlag('PoliceScannerDisabled', true)
     end
 
-    -- Disable Scenarios
     if Config.DisableScenarios then
         local scenarios = {
             "WORLD_VEHICLE_ATTRACTOR",
@@ -208,15 +89,106 @@ AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
             SetScenarioTypeEnabled(v, false)
         end
     end
+end
+
+local function DisableAmmoOrVehicleRewards(playerId)
+    CreateThread(function()
+        while true do
+            if Config.DisableDisplayAmmo then
+                DisplayAmmoThisFrame(false)
+            end
+
+            if Config.DisableVehicleRewards then
+                DisablePlayerVehicleRewards(playerId)
+            end
+
+            Wait(0)
+        end
+    end)
+end
+
+local function ApplyConfig()
+    -- RemoveHudComponents
+    for i = 1, #Config.RemoveHudComponents do
+        if Config.RemoveHudComponents[i] then
+            SetHudComponentSize(i, 0.0, 0.0)
+        end
+    end
+
+    if Config.DisableAimAssist then
+        SetPlayerLockon(ESX.playerId, false)
+    end
+
+    -- DisableNPCDrops
+    if Config.DisableNPCDrops then
+        local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
+        for i = 1, #weaponPickups do
+            ToggleUsePickupsForPlayer(ESX.playerId, weaponPickups[i], false)
+        end
+    end
+
+    if Config.DisableVehicleSeatShuff then
+        AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
+            if seat > -1 then
+                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, seat)
+                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
+            end
+        end)
+    end
+
+    if Config.DisableHealthRegeneration then
+        SetPlayerHealthRechargeMultiplier(ESX.playerId, 0.0)
+    end
+
+    if Config.DisableDisplayAmmo or Config.DisableVehicleRewards then
+        DisableAmmoOrVehicleRewards(ESX.playerId)
+    end
+
+    EnablePvP()
+    DisableNPCs()
+end
+
+RegisterNetEvent("esx:playerLoaded")
+AddEventHandler("esx:playerLoaded", function(xPlayer, _, skin)
+    ESX.PlayerData = xPlayer
 
     if not Config.Multichar then
-        FreezeEntityPosition(ESX.PlayerData.ped, false)
+        ESX.SpawnPlayer(skin, ESX.PlayerData.coords, function()
+            TriggerEvent("esx:onPlayerSpawn")
+            TriggerEvent("esx:restoreLoadout")
+            TriggerServerEvent("esx:onPlayerSpawn")
+            TriggerEvent("esx:loadingScreenOff")
+            ShutdownLoadingScreen()
+            ShutdownLoadingScreenNui()
+        end)
+    end
+
+    while not DoesEntityExist(ESX.PlayerData.ped) do
+        Wait(20)
+    end
+
+    ESX.PlayerLoaded = true
+
+    ApplyMetadata(ESX.PlayerData.metadata)
+
+    local timer = GetGameTimer()
+    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
+        Wait(0)
+    end
+
+    ApplyConfig()
+
+    ClearPedTasksImmediately(ESX.PlayerData.ped)
+
+    if not Config.Multichar then
+        Core.FreezePlayer(false)
     end
 
     if IsScreenFadedOut() then
         DoScreenFadeIn(500)
     end
 
+    Actions:Init()
     SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
     StartServerSyncLoops()
 end)
@@ -281,13 +253,26 @@ AddEventHandler("esx:restoreLoadout", function()
     end
 end)
 
+---@diagnostic disable-next-line: param-type-mismatch
 AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
     if not value then
         return
     end
 
-    local netId = bagName:gsub("entity:", "")
-    local vehicle = NetToVeh(tonumber(netId))
+    local netId = tonumber(bagName:gsub("entity:", ""))
+    if not netId then
+        error("Tried to set vehicle properties with invalid netId")
+        return
+    end
+    local vehicle = NetToVeh(netId)
+    if not DoesEntityExist(vehicle) then
+        error("Tried to set vehicle properties with invalid vehicle")
+        return
+    end
+
+    if not NetworkGetEntityOwner(vehicle) == ESX.playerId then
+        return
+    end
 
     ESX.Game.SetVehicleProperties(vehicle, value)
 end)
@@ -337,17 +322,17 @@ if not Config.OxInventory then
 
     RegisterNetEvent("esx:addWeapon")
     AddEventHandler("esx:addWeapon", function()
-        error("event ^5'esx:addWeapon'^7 Has Been Removed. Please use ^5xPlayer.addWeapon^7 Instead!")
+        error("event ^5'esx:addWeapon'^1 Has Been Removed. Please use ^5xPlayer.addWeapon^1 Instead!")
     end)
 
     RegisterNetEvent("esx:addWeaponComponent")
     AddEventHandler("esx:addWeaponComponent", function()
-        error("event ^5'esx:addWeaponComponent'^7 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^7 Instead!")
+        error("event ^5'esx:addWeaponComponent'^1 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^1 Instead!")
     end)
 
     RegisterNetEvent("esx:setWeaponAmmo")
     AddEventHandler("esx:setWeaponAmmo", function()
-        error("event ^5'esx:setWeaponAmmo'^7 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^7 Instead!")
+        error("event ^5'esx:setWeaponAmmo'^1 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^1 Instead!")
     end)
 
     RegisterNetEvent("esx:setWeaponTint")
@@ -357,7 +342,7 @@ if not Config.OxInventory then
 
     RegisterNetEvent("esx:removeWeapon")
     AddEventHandler("esx:removeWeapon", function()
-        error("event ^5'esx:removeWeapon'^7 Has Been Removed. Please use ^5xPlayer.removeWeapon^7 Instead!")
+        error("event ^5'esx:removeWeapon'^1 Has Been Removed. Please use ^5xPlayer.removeWeapon^1 Instead!")
     end)
 
     RegisterNetEvent("esx:removeWeaponComponent")
@@ -402,7 +387,9 @@ if not Config.OxInventory then
 
             for _, v in ipairs(components) do
                 local component = ESX.GetWeaponComponent(name, v)
-                GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+                if component then
+                    GiveWeaponComponentToWeaponObject(pickupObject, component.hash)
+                end
             end
 
             setObjectProperties(pickupObject)
@@ -479,7 +466,7 @@ end
 
 -- disable wanted level
 if not Config.EnableWantedLevel then
-    ClearPlayerWantedLevel(PlayerId())
+    ClearPlayerWantedLevel(ESX.playerId)
     SetMaxWantedLevel(0)
 end
 
@@ -516,11 +503,8 @@ if not Config.OxInventory then
                         label = ("%s~n~%s"):format(label, TranslateCap("threw_pickup_prompt"))
                     end
 
-                    ESX.Game.Utils.DrawText3D({
-                        x = pickup.coords.x,
-                        y = pickup.coords.y,
-                        z = pickup.coords.z + 0.25,
-                    }, label, 1.2, 1)
+                    local textCoords = pickup.coords + vector3(0.0, 0.0, 0.25)
+                    ESX.Game.Utils.DrawText3D(textCoords, label, 1.2, 1)
                 elseif pickup.inRange then
                     pickup.inRange = false
                 end
@@ -548,7 +532,7 @@ AddEventHandler("esx:tpm", function()
         end
         local blipMarker = GetFirstBlipInfoId(8)
         if not DoesBlipExist(blipMarker) then
-            ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), true, false, 140)
+            ESX.ShowNotification(TranslateCap("tpm_nowaypoint"), "error")
             return "marker"
         end
 
@@ -611,12 +595,12 @@ AddEventHandler("esx:tpm", function()
             -- If we can't find the coords, set the coords to the old ones.
             -- We don't unpack them before since they aren't in a loop and only called once.
             SetPedCoordsKeepVehicle(ped, oldCoords["x"], oldCoords["y"], oldCoords["z"] - 1.0)
-            ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
+            ESX.ShowNotification(TranslateCap("tpm_success"), "success")
         end
 
         -- If Z coord was found, set coords in found coords.
         SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-        ESX.ShowNotification(TranslateCap("tpm_success"), true, false, 140)
+        ESX.ShowNotification(TranslateCap("tpm_success"), "success")
     end)
 end)
 
@@ -626,7 +610,7 @@ local heading = 0
 
 local function noclipThread()
     while noclip do
-        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, false, false, true)
 
         if IsControlPressed(1, 34) then
             heading = heading + 1.5
@@ -682,7 +666,11 @@ AddEventHandler("esx:noclip", function()
             CreateThread(noclipThread)
         end
 
-        ESX.ShowNotification(TranslateCap("noclip_message", noclip and Translate("enabled") or Translate("disabled")), true, false, 140)
+        if noclip then
+            ESX.ShowNotification(TranslateCap("noclip_message", Translate("enabled")), "success")
+        else
+            ESX.ShowNotification(TranslateCap("noclip_message", Translate("disabled")), "error")
+        end
     end)
 end)
 
@@ -696,27 +684,26 @@ AddEventHandler("esx:repairPedVehicle", function()
     local ped = ESX.PlayerData.ped
     local vehicle = GetVehiclePedIsIn(ped, false)
     SetVehicleEngineHealth(vehicle, 1000)
-    SetVehicleEngineOn(vehicle, true, true)
+    SetVehicleEngineOn(vehicle, true, true, false)
     SetVehicleFixed(vehicle)
     SetVehicleDirtLevel(vehicle, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
-    local player = PlayerId()
     if input == "freeze" then
-        SetEntityCollision(ESX.PlayerData.ped, false)
+        SetEntityCollision(ESX.PlayerData.ped, false, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
-        SetPlayerInvincible(player, true)
+        SetPlayerInvincible(ESX.playerId, true)
     elseif input == "unfreeze" then
-        SetEntityCollision(ESX.PlayerData.ped, true)
+        SetEntityCollision(ESX.PlayerData.ped, true, true)
         FreezeEntityPosition(ESX.PlayerData.ped, false)
-        SetPlayerInvincible(player, false)
+        SetPlayerInvincible(ESX.playerId, false)
     end
 end)
 
 ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
-    cb(ESX.GetVehicleType(model))
+    cb(ESX.GetVehicleTypeClient(model))
 end)
 
 RegisterNetEvent('esx:updatePlayerData', function(key, val)
