@@ -1,4 +1,4 @@
-RegisterServerEvent("esx_skin:save", function(skin)
+RegisterNetEvent("esx_skin:save", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not ESX.GetConfig().CustomInventory then
@@ -18,7 +18,7 @@ RegisterServerEvent("esx_skin:save", function(skin)
     })
 end)
 
-RegisterServerEvent("esx_skin:setWeight", function(skin)
+RegisterNetEvent("esx_skin:setWeight", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not ESX.GetConfig().CustomInventory then
