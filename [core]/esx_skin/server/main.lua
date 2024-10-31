@@ -33,20 +33,6 @@ RegisterServerEvent("esx_skin:setWeight", function(skin)
     end
 end)
 
-RegisterServerEvent("esx_skin:responseSaveSkin", function(skin)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if xPlayer.getGroup() ~= "admin" then
-        return print(("[^2INFO^7] ^5%s^7 attempted saving skin to file"):format(xPlayer.getIdentifier()))
-    end 
-
-    local file = io.open("resources/[esx]/esx_skin/skins.txt", "a")
-
-    file:write(json.encode(skin) .. "\n\n")
-    file:flush()
-    file:close()
-end)
-
 ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -71,7 +57,3 @@ end)
 ESX.RegisterCommand("skin", "admin", function(xPlayer)
     xPlayer.triggerEvent("esx_skin:openSaveableMenu")
 end, false, { help = TranslateCap("skin") })
-
-ESX.RegisterCommand("skinsave", "admin", function(xPlayer)
-    xPlayer.triggerEvent("esx_skin:requestSaveSkin")
-end, false, { help = TranslateCap("saveskin") })
