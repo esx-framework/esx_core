@@ -29,8 +29,6 @@
 ---@param coords table | vector4
 ---@param metadata table
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
-    local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
-
     ---@class xPlayer
     local self = {}
 
@@ -912,9 +910,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
-    for fnName, fn in pairs(targetOverrides) do
-        self[fnName] = fn(self)
-    end
+    for _, funcs in pairs(Core.PlayerFunctionOverrides) do 
+        for fnName, fn in pairs(funcs) do 
+            self[fnName] = fn(self)
+        end  
+    end 
 
     return self
 end

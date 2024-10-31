@@ -17,8 +17,7 @@ RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
 end)
 
-if Config.OxInventory then
-    Config.PlayerFunctionOverride = "OxInventory"
+if Config.CustomInventory then
     SetConvarReplicated("inventory:framework", "esx")
     SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
 end
@@ -35,24 +34,10 @@ end
 
 MySQL.ready(function()
     Core.DatabaseConnected = true
-    if not Config.OxInventory then
+    if not Config.CustomInventory then
         local items = MySQL.query.await("SELECT * FROM items")
         for _, v in ipairs(items) do
             ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
-        end
-    else
-        TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
-            if ref then
-                ESX.Items = ref()
-            end
-        end)
-
-        AddEventHandler("ox_inventory:itemList", function(items)
-            ESX.Items = items
-        end)
-
-        while not next(ESX.Items) do
-            Wait(0)
         end
     end
 
@@ -66,8 +51,7 @@ MySQL.ready(function()
     end
 end)
 
-RegisterServerEvent("esx:clientLog")
-AddEventHandler("esx:clientLog", function(msg)
+RegisterNetEvent("esx:clientLog", function(msg)
     if Config.EnableDebug then
         print(("[^2TRACE^7] %s^7"):format(msg))
     end

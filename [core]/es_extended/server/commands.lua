@@ -282,7 +282,7 @@ ESX.RegisterCommand(
     }
 )
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     ESX.RegisterCommand(
         "giveitem",
         "admin",
@@ -430,7 +430,7 @@ ESX.RegisterCommand("refreshjobs", "admin", function()
     ESX.RefreshJobs()
 end, true, { help = TranslateCap("command_clearall") })
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     ESX.RegisterCommand(
         "clearinventory",
         "admin",

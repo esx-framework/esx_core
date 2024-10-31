@@ -1,7 +1,7 @@
 RegisterNetEvent("esx_skin:save", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
@@ -18,10 +18,10 @@ RegisterNetEvent("esx_skin:save", function(skin)
     })
 end)
 
-RegisterServerEvent("esx_skin:setWeight", function(skin)
+RegisterNetEvent("esx_skin:setWeight", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
