@@ -546,13 +546,6 @@ end
 ---@param item string
 ---@return string?
 function ESX.GetItemLabel(item)
-    if Config.OxInventory then
-        item = exports.ox_inventory:Items(item)
-        if item then
-            return item.label
-        end
-    end
-
     if ESX.Items[item] then
         return ESX.Items[item].label
     else
@@ -574,7 +567,7 @@ function ESX.GetUsableItems()
     return Usables
 end
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     ---@param itemType string
     ---@param name string
     ---@param count integer
@@ -612,17 +605,10 @@ end
 ---@return boolean
 function Core.IsPlayerAdmin(playerId)
     playerId = tostring(playerId)
-    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") and true or false then
+    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") then
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]
-
-    if xPlayer then
-        if Config.AdminGroups[xPlayer.group] then
-            return true
-        end
-    end
-
-    return false
+    local xPlayer = ESX.Players[playerId]    
+    return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end

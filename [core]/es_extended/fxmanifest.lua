@@ -31,6 +31,7 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
+	'server/bridge/**/*.lua', 
 	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
 	'server/modules/createJob.lua'
