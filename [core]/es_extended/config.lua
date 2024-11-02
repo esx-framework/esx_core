@@ -47,6 +47,7 @@ Config.EnableDebug = false -- Use Debug options?
 Config.EnableDefaultInventory = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
 Config.EnablePVP = true -- Allow Player to player combat
+Config.DefaultJobDuty = true -- A players default duty status when changing jobs
 
 Config.Multichar = GetResourceState("esx_multicharacter") ~= "missing"
 Config.Identity = true -- Select a character identity data before they have loaded in (this happens by default with multichar)
