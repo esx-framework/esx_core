@@ -58,6 +58,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.license = ("license:%s"):format(identifier)
     end
 
+    if type(self.metadata.jobDuty) ~= "boolean" then
+        self.metadata.jobDuty = self.job.name ~= "unemployed" and Config.DefaultJobDuty or false
+    end
+    job.onDuty = self.metadata.jobDuty
+
     ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
 
     local stateBag = Player(self.source).state
@@ -503,13 +508,22 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     ---@param newJob string
     ---@param grade string
+    ---@param onDuty? boolean
     ---@return nil
-    function self.setJob(newJob, grade)
+    function self.setJob(newJob, grade, onDuty)
         grade = tostring(grade)
         local lastJob = self.job
 
         if not ESX.DoesJobExist(newJob, grade) then
             return print(("[ESX] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7"):format(self.source, newJob))
+        end
+
+        if newJob == "unemployed" then
+            onDuty = false
+        end
+
+        if type(onDuty) ~= "boolean" then
+            onDuty = Config.DefaultJobDuty
         end
 
         local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
@@ -518,6 +532,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             id = jobObject.id,
             name = jobObject.name,
             label = jobObject.label,
+            onDuty = onDuty,
 
             grade = tonumber(grade),
             grade_name = gradeObject.name,
@@ -528,6 +543,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
         }
 
+        self.metadata.jobDuty = onDuty
         TriggerEvent("esx:setJob", self.source, self.job, lastJob)
         self.triggerEvent("esx:setJob", self.job, lastJob)
         Player(self.source).state:set("job", self.job, true)
