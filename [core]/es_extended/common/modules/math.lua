@@ -36,3 +36,15 @@ function ESX.Math.Random(minRange, maxRange)
     return math.random(minRange or 1, maxRange or 10)
 end
 
+---@param origin vector
+---@param target vector
+---@return number
+function ESX.Math.GetHeadingFromCoords(origin, target)
+	local dx = origin.x - target.x
+    local dy = origin.y - target.y
+
+    local heading = math.deg(math.atan(dy, dx)) + 90
+
+    return (heading + 360) % 360
+end
+
