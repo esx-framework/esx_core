@@ -32,7 +32,7 @@ local function Notify(notificatonType, length, message)
 end
 
 exports("Notify", Notify)
-RegisterNetEvent("ESX:Notify", Notify)
+ESX.SecureNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()

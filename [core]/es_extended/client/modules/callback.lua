@@ -66,7 +66,7 @@ ESX.TriggerServerCallback = function(eventName, callback, ...)
     Callbacks:Trigger(eventName, callback, invoker, ...)
 end
 
-RegisterNetEvent("esx:serverCallback", function(...)
+ESX.SecureNetEvent("esx:serverCallback", function(...)
     Callbacks:ServerRecieve(...)
 end)
 
@@ -77,6 +77,6 @@ ESX.RegisterClientCallback = function(eventName, callback)
     Callbacks:Register(eventName, callback)
 end
 
-RegisterNetEvent("esx:triggerClientCallback", function(...)
+ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
     Callbacks:ClientRecieve(...)
 end)

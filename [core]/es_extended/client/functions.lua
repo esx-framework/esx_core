@@ -1,9 +1,27 @@
+---@return boolean
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
 end
 
+---@return table
 function ESX.GetPlayerData()
     return ESX.PlayerData
+end
+
+---@param name string
+---@param func function
+---@return nil
+function ESX.SecureNetEvent(name, func)
+    RegisterNetEvent(name, function()
+        if source == '' then
+            return
+        end
+
+        local success, result = pcall(func)
+        if not success then
+            error(("%s"):format(result))
+        end
+    end)
 end
 
 local addonResourcesState = {
@@ -1485,11 +1503,11 @@ function ESX.ShowInventory()
     end)
 end
 
-RegisterNetEvent('esx:showNotification', ESX.ShowNotification)
+ESX.SecureNetEvent('esx:showNotification', ESX.ShowNotification)
 
-RegisterNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
+ESX.SecureNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
 
-RegisterNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
+ESX.SecureNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
 
 AddEventHandler("onResourceStop", function(resourceName)
     for i = 1, #ESX.UI.Menu.Opened, 1 do

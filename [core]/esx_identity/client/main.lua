@@ -3,14 +3,14 @@ local ready = false
 local guiEnabled = false
 local timecycleModifier = "hud_def_blur"
 
-RegisterNetEvent("esx_identity:alreadyRegistered", function()
+ESX.SecureNetEvent("esx_identity:alreadyRegistered", function()
     while not loadingScreenFinished do
         Wait(100)
     end
     TriggerEvent("esx_skin:playerRegistered")
 end)
 
-RegisterNetEvent("esx_identity:setPlayerData", function(data)
+ESX.SecureNetEvent("esx_identity:setPlayerData", function(data)
     SetTimeout(1, function()
         ESX.SetPlayerData("name", ("%s %s"):format(data.firstName, data.lastName))
         ESX.SetPlayerData("firstName", data.firstName)
@@ -44,7 +44,7 @@ if not Config.UseDeferrals then
         SendNUIMessage({ type = "enableui", enable = state })
     end
 
-    RegisterNetEvent("esx_identity:showRegisterIdentity", function()
+    ESX.SecureNetEvent("esx_identity:showRegisterIdentity", function()
         TriggerEvent("esx_skin:resetFirstSpawn")
         while not (ready and loadingScreenFinished) do
             print("Waiting for esx_identity NUI..")

@@ -31,7 +31,7 @@ function Skin:CalcuatePosition(coords)
     }
 
     local angleToLook = self:CalcualteHeading(self.heading - 140.0)
-   
+
     local thetaToLook = {
         x = math.cos(angleToLook),
         y = math.sin(angleToLook),
@@ -70,7 +70,7 @@ AddEventHandler("esx_skin:playerRegistered", function()
     end)
 end)
 
-RegisterNetEvent("esx:playerLoaded", function(_, _, skin)
+ESX.SecureNetEvent("esx:playerLoaded", function(_, _, skin)
     ESX.PlayerLoaded = true
     TriggerServerEvent("esx_skin:setWeight", skin)
 end)

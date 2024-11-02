@@ -9,7 +9,7 @@ local function checkPhone()
     npwd:setPhoneDisabled((phoneItem and phoneItem.count or 0) <= 0)
 end
 
-RegisterNetEvent("esx:playerLoaded", checkPhone)
+ESX.SecureNetEvent("esx:playerLoaded", checkPhone)
 
 AddEventHandler("onClientResourceStart", function(resource)
     if resource ~= "npwd" then
@@ -29,7 +29,7 @@ AddEventHandler("onClientResourceStop", function(resource)
     end
 end)
 
-RegisterNetEvent("esx:onPlayerLogout", function()
+ESX.SecureNetEvent("esx:onPlayerLogout", function()
     if not npwd then
         return
     end
@@ -38,7 +38,7 @@ RegisterNetEvent("esx:onPlayerLogout", function()
     npwd:setPhoneDisabled(true)
 end)
 
-RegisterNetEvent("esx:removeInventoryItem", function(item, count)
+ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count)
     if not npwd then
         return
     end
@@ -48,7 +48,7 @@ RegisterNetEvent("esx:removeInventoryItem", function(item, count)
     end
 end)
 
-RegisterNetEvent("esx:addInventoryItem", function(item)
+ESX.SecureNetEvent("esx:addInventoryItem", function(item)
     if not npwd or item ~= "phone" then
         return
     end

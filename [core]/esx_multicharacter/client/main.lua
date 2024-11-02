@@ -29,15 +29,15 @@ end)
 
 -- Events
 
-RegisterNetEvent("esx_multicharacter:SetupUI", function(data, slots)
+ESX.SecureNetEvent("esx_multicharacter:SetupUI", function(data, slots)
     Multicharacter:SetupUI(data, slots)
 end)
 
-RegisterNetEvent('esx:playerLoaded', function(playerData, isNew, skin)
+ESX.SecureNetEvent('esx:playerLoaded', function(playerData, isNew, skin)
     Multicharacter:PlayerLoaded(playerData, isNew, skin)
 end)
 
-RegisterNetEvent('esx:onPlayerLogout', function()
+ESX.SecureNetEvent('esx:onPlayerLogout', function()
     DoScreenFadeOut(500)
     Wait(5000)
 

@@ -23,8 +23,8 @@ end
 
 exports("TextUI", TextUI)
 exports("HideUI", HideUI)
-RegisterNetEvent("ESX:TextUI", TextUI)
-RegisterNetEvent("ESX:HideUI", HideUI)
+ESX.SecureNetEvent("ESX:TextUI", TextUI)
+ESX.SecureNetEvent("ESX:HideUI", HideUI)
 
 if Debug then
     RegisterCommand("textui:error", function()

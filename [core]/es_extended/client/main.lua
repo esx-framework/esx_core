@@ -1,6 +1,6 @@
 local pickups = {}
 
-RegisterNetEvent("esx:requestModel", function(model)
+ESX.SecureNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
@@ -148,7 +148,7 @@ local function ApplyConfig()
     DisableNPCs()
 end
 
-RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
+ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     ESX.PlayerData = xPlayer
 
     if not Config.Multichar then
@@ -192,11 +192,11 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     StartServerSyncLoops()
 end)
 
-RegisterNetEvent("esx:onPlayerLogout", function()
+ESX.SecureNetEvent("esx:onPlayerLogout", function()
     ESX.PlayerLoaded = false
 end)
 
-RegisterNetEvent("esx:setMaxWeight", function(newMaxWeight)
+ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
     ESX.SetPlayerData("maxWeight", newMaxWeight)
 end)
 
@@ -273,7 +273,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
     ESX.Game.SetVehicleProperties(vehicle, value)
 end)
 
-RegisterNetEvent("esx:setAccountMoney", function(account)
+ESX.SecureNetEvent("esx:setAccountMoney", function(account)
     for i = 1, #ESX.PlayerData.accounts do
         if ESX.PlayerData.accounts[i].name == account.name then
             ESX.PlayerData.accounts[i] = account
@@ -285,7 +285,7 @@ RegisterNetEvent("esx:setAccountMoney", function(account)
 end)
 
 if not Config.CustomInventory then
-    RegisterNetEvent("esx:addInventoryItem", function(item, count, showNotification)
+    ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
         for k, v in ipairs(ESX.PlayerData.inventory) do
             if v.name == item then
                 ESX.UI.ShowInventoryItemNotification(true, v.label, count - v.count)
@@ -299,7 +299,7 @@ if not Config.CustomInventory then
         end
     end)
 
-    RegisterNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
+    ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
         for i = 1, #ESX.PlayerData.inventory do
             if ESX.PlayerData.inventory[i].name == item then
                 ESX.UI.ShowInventoryItemNotification(false, ESX.PlayerData.inventory[i].label, ESX.PlayerData.inventory[i].count - count)
@@ -326,7 +326,7 @@ if not Config.CustomInventory then
         error("event ^5'esx:setWeaponAmmo'^1 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^1 Instead!")
     end)
 
-    RegisterNetEvent("esx:setWeaponTint", function(weapon, weaponTintIndex)
+    ESX.SecureNetEvent("esx:setWeaponTint", function(weapon, weaponTintIndex)
         SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
     end)
 
@@ -334,22 +334,22 @@ if not Config.CustomInventory then
         error("event ^5'esx:removeWeapon'^1 Has Been Removed. Please use ^5xPlayer.removeWeapon^1 Instead!")
     end)
 
-    RegisterNetEvent("esx:removeWeaponComponent", function(weapon, weaponComponent)
+    ESX.SecureNetEvent("esx:removeWeaponComponent", function(weapon, weaponComponent)
         local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
         RemoveWeaponComponentFromPed(ESX.PlayerData.ped, joaat(weapon), componentHash)
     end)
 end
 
-RegisterNetEvent("esx:setJob", function(Job)
+ESX.SecureNetEvent("esx:setJob", function(Job)
     ESX.SetPlayerData("job", Job)
 end)
 
-RegisterNetEvent("esx:setGroup", function(group)
+ESX.SecureNetEvent("esx:setGroup", function(group)
     ESX.SetPlayerData("group", group)
 end)
 
 if not Config.CustomInventory then
-    RegisterNetEvent("esx:createPickup", function(pickupId, label, coords, itemType, name, components, tintIndex)
+    ESX.SecureNetEvent("esx:createPickup", function(pickupId, label, coords, itemType, name, components, tintIndex)
         local function setObjectProperties(object)
             SetEntityAsMissionEntity(object, true, false)
             PlaceObjectOnGroundProperly(object)
@@ -383,14 +383,14 @@ if not Config.CustomInventory then
         end
     end)
 
-    RegisterNetEvent("esx:createMissingPickups", function(missingPickups)
+    ESX.SecureNetEvent("esx:createMissingPickups", function(missingPickups)
         for pickupId, pickup in pairs(missingPickups) do
             TriggerEvent("esx:createPickup", pickupId, pickup.label, vector3(pickup.coords.x, pickup.coords.y, pickup.coords.z - 1.0), pickup.type, pickup.name, pickup.components, pickup.tintIndex)
         end
     end)
 end
 
-RegisterNetEvent("esx:registerSuggestions", function(registeredCommands)
+ESX.SecureNetEvent("esx:registerSuggestions", function(registeredCommands)
     for name, command in pairs(registeredCommands) do
         if command.suggestion then
             TriggerEvent("chat:addSuggestion", ("/%s"):format(name), command.suggestion.help, command.suggestion.arguments)
@@ -399,7 +399,7 @@ RegisterNetEvent("esx:registerSuggestions", function(registeredCommands)
 end)
 
 if not Config.CustomInventory then
-    RegisterNetEvent("esx:removePickup", function(pickupId)
+    ESX.SecureNetEvent("esx:removePickup", function(pickupId)
         if pickups[pickupId] and pickups[pickupId].obj then
             ESX.Game.DeleteObject(pickups[pickupId].obj)
             pickups[pickupId] = nil
@@ -408,7 +408,7 @@ if not Config.CustomInventory then
 end
 
 function StartServerSyncLoops()
-    if Config.CustomInventory then return end 
+    if Config.CustomInventory then return end
     -- keep track of ammo
     CreateThread(function()
         local currentWeapon = { Ammo = 0 }
@@ -495,7 +495,7 @@ if not Config.CustomInventory then
 end
 
 ----- Admin commands from esx_adminplus
-RegisterNetEvent("esx:tpm", function()
+ESX.SecureNetEvent("esx:tpm", function()
     local GetEntityCoords = GetEntityCoords
     local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
     local GetFirstBlipInfoId = GetFirstBlipInfoId
@@ -627,7 +627,7 @@ local function noclipThread()
     end
 end
 
-RegisterNetEvent("esx:noclip", function()
+ESX.SecureNetEvent("esx:noclip", function()
     ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
         if not admin then
             return
@@ -651,11 +651,11 @@ RegisterNetEvent("esx:noclip", function()
     end)
 end)
 
-RegisterNetEvent("esx:killPlayer", function()
+ESX.SecureNetEvent("esx:killPlayer", function()
     SetEntityHealth(ESX.PlayerData.ped, 0)
 end)
 
-RegisterNetEvent("esx:repairPedVehicle", function()
+ESX.SecureNetEvent("esx:repairPedVehicle", function()
     local ped = ESX.PlayerData.ped
     local vehicle = GetVehiclePedIsIn(ped, false)
     SetVehicleEngineHealth(vehicle, 1000)
@@ -664,7 +664,7 @@ RegisterNetEvent("esx:repairPedVehicle", function()
     SetVehicleDirtLevel(vehicle, 0)
 end)
 
-RegisterNetEvent("esx:freezePlayer", function(input)
+ESX.SecureNetEvent("esx:freezePlayer", function(input)
     if input == "freeze" then
         SetEntityCollision(ESX.PlayerData.ped, false, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
@@ -680,6 +680,6 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
     cb(ESX.GetVehicleTypeClient(model))
 end)
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
+ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
 	ESX.SetPlayerData(key, val)
 end)
