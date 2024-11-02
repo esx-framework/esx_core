@@ -12,12 +12,12 @@ end
 ---@param func function
 ---@return nil
 function ESX.SecureNetEvent(name, func)
-    RegisterNetEvent(name, function()
+    RegisterNetEvent(name, function(...)
         if source == '' then
             return
         end
 
-        local success, result = pcall(func)
+        local success, result = pcall(func, ...)
         if not success then
             error(("%s"):format(result))
         end
