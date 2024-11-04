@@ -683,3 +683,11 @@ end)
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
 	ESX.SetPlayerData(key, val)
 end)
+
+AddEventHandler("onResourceStop", function(resource)
+    if Core.Events[resource] then
+        for i = 1, #Core.Events[resource] do
+            RemoveEventHandler(Core.Events[resource][i])
+        end
+    end
+end)

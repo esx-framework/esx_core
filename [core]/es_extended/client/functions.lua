@@ -12,7 +12,17 @@ end
 ---@param func function
 ---@return nil
 function ESX.SecureNetEvent(name, func)
-    RegisterNetEvent(name, function(...)
+    local invoker = GetInvokingResource()
+    local invokingResource = invoker and invoker ~= 'unknown' and invoker or 'es_extended'
+    if not invokingResource then
+        return
+    end
+
+    if not Core.Events[invokingResource] then
+        Core.Events[invokingResource] = {}
+    end
+
+    local event = RegisterNetEvent(name, function(...)
         if source == '' then
             return
         end
@@ -22,6 +32,8 @@ function ESX.SecureNetEvent(name, func)
             error(("%s"):format(result))
         end
     end)
+    local eventIndex = #Core.Events[invokingResource] + 1
+    Core.Events[invokingResource][eventIndex] = event
 end
 
 local addonResourcesState = {

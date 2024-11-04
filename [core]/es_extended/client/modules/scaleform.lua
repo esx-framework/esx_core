@@ -1,3 +1,6 @@
+ESX.Scaleform = {}
+ESX.Scaleform.Utils = {}
+
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
     local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
 

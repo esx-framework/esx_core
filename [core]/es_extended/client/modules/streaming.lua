@@ -1,3 +1,5 @@
+ESX.Streaming = {}
+
 ---@param modelHash number | string
 ---@param cb? function
 ---@return number | nil
