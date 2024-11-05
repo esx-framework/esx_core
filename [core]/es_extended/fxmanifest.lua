@@ -25,13 +25,13 @@ server_scripts {
 	'server/classes/player.lua',
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
-	'server/onesync.lua',
+	'server/modules/onesync.lua',
 	'server/paycheck.lua',
 
 	'server/main.lua',
 	'server/commands.lua',
 
-	'server/bridge/**/*.lua', 
+	'server/bridge/**/*.lua',
 	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
 	'server/modules/createJob.lua'
