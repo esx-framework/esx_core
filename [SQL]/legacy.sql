@@ -427,12 +427,10 @@ CREATE TABLE `user_licenses` (
 --
 
 CREATE TABLE `vehicles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `model` varchar(60) NOT NULL,
   `price` int(11) NOT NULL,
-  `category` varchar(60) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `category` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB;
 
 --
@@ -822,6 +820,13 @@ ALTER TABLE `licenses`
 --
 ALTER TABLE `owned_vehicles`
   ADD PRIMARY KEY (`plate`);
+
+--
+--
+-- Indexes for table `vehicles`
+--
+ALTER TABLE `vehicles`
+  ADD PRIMARY KEY (`model`);
 
 --
 -- Indexes for table `rented_vehicles`
