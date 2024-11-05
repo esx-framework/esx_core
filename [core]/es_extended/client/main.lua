@@ -260,10 +260,16 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         error("Tried to set vehicle properties with invalid netId")
         return
     end
+
     local vehicle = NetToVeh(netId)
-    if not DoesEntityExist(vehicle) then
-        error("Tried to set vehicle properties with invalid vehicle")
-        return
+
+    local tries = 0
+    while not NetworkDoesEntityExistWithNetworkId(vehicle) do
+        Wait(200)
+        tries = tries + 1
+        if tries > 20 then
+            return error(("Invalid entity - ^5%s^7!"):format(netId))
+        end
     end
 
     if not NetworkGetEntityOwner(vehicle) == ESX.playerId then

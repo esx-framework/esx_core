@@ -46,9 +46,9 @@ end
 
 local function onPlayerJoined(playerId)
     local identifier = ESX.GetIdentifier(playerId)
-    if not identifier then 
+    if not identifier then
         return DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
-    end 
+    end
 
     if ESX.GetPlayerFromIdentifier(identifier) then
         DropPlayer(
@@ -102,8 +102,9 @@ if not Config.Multichar then
         local playerId = source
         local identifier = ESX.GetIdentifier(playerId)
 
-        if not GetPlayerTimeOnline then
-            return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 9515, Please update your server."):format(oneSyncState))
+
+        if not SetEntityOrphanMode then
+            return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."):format(oneSyncState))
         end
 
         if oneSyncState == "off" or oneSyncState == "legacy" then
@@ -226,8 +227,8 @@ function loadESXPlayer(identifier, playerId, isNew)
     -- Loadout
     if not Config.CustomInventory then
         if not result.loadout or result.loadout == "" then
-            return 
-        end 
+            return
+        end
 
         local loadout = json.decode(result.loadout)
         for name, weapon in pairs(loadout) do
@@ -292,8 +293,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     if not Config.CustomInventory then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)
-    elseif setPlayerInventory then 
-        setPlayerInventory(playerId, xPlayer, userData.inventory, isNew) 
+    elseif setPlayerInventory then
+        setPlayerInventory(playerId, xPlayer, userData.inventory, isNew)
     end
 
     xPlayer.triggerEvent("esx:registerSuggestions", Core.RegisteredCommands)
@@ -384,13 +385,13 @@ if not Config.CustomInventory then
         if itemType == "item_standard" then
             local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
-            if itemCount < 1 or sourceItem.count < itemCount then 
+            if itemCount < 1 or sourceItem.count < itemCount then
                 return sourceXPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
             end
 
-            if not targetXPlayer.canCarryItem(itemName, itemCount) then 
+            if not targetXPlayer.canCarryItem(itemName, itemCount) then
                 return sourceXPlayer.showNotification(TranslateCap("ex_inv_lim", targetXPlayer.name))
-            end 
+            end
 
             sourceXPlayer.removeInventoryItem(itemName, itemCount)
             targetXPlayer.addInventoryItem(itemName, itemCount)
@@ -398,9 +399,9 @@ if not Config.CustomInventory then
             sourceXPlayer.showNotification(TranslateCap("gave_item", itemCount, sourceItem.label, targetXPlayer.name))
             targetXPlayer.showNotification(TranslateCap("received_item", itemCount, sourceItem.label, sourceXPlayer.name))
         elseif itemType == "item_account" then
-            if itemCount < 1 or sourceXPlayer.getAccount(itemName).money < itemCount then 
+            if itemCount < 1 or sourceXPlayer.getAccount(itemName).money < itemCount then
                 return sourceXPlayer.showNotification(TranslateCap("imp_invalid_amount"))
-            end 
+            end
 
             sourceXPlayer.removeAccountMoney(itemName, itemCount, "Gave to " .. targetXPlayer.name)
             targetXPlayer.addAccountMoney(itemName, itemCount, "Received from " .. sourceXPlayer.name)
@@ -416,8 +417,8 @@ if not Config.CustomInventory then
             if targetXPlayer.hasWeapon(itemName) then
                 sourceXPlayer.showNotification(TranslateCap("gave_weapon_hasalready", targetXPlayer.name, weaponLabel))
                 targetXPlayer.showNotification(TranslateCap("received_weapon_hasalready", sourceXPlayer.name, weaponLabel))
-                return 
-            end 
+                return
+            end
 
             local _, weapon = sourceXPlayer.getWeapon(itemName)
             local _, weaponObject = ESX.GetWeapon(itemName)
@@ -448,7 +449,7 @@ if not Config.CustomInventory then
             end
         elseif itemType == "item_ammo" then
             if not sourceXPlayer.hasWeapon(itemName) then
-                return 
+                return
             end
 
             local _, weapon = sourceXPlayer.getWeapon(itemName)
@@ -456,11 +457,11 @@ if not Config.CustomInventory then
             if not targetXPlayer.hasWeapon(itemName) then
                 sourceXPlayer.showNotification(TranslateCap("gave_weapon_noweapon", targetXPlayer.name))
                 targetXPlayer.showNotification(TranslateCap("received_weapon_noweapon", sourceXPlayer.name, weapon.label))
-            end 
+            end
 
             local _, weaponObject = ESX.GetWeapon(itemName)
 
-            if not weaponObject.ammo then return end 
+            if not weaponObject.ammo then return end
 
             local ammoLabel = weaponObject.ammo.label
             if weapon.ammo >= itemCount then
@@ -486,7 +487,7 @@ if not Config.CustomInventory then
 
             if itemCount > xItem.count or xItem.count < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
-            end 
+            end
 
             xPlayer.removeInventoryItem(itemName, itemCount)
             local pickupLabel = ("%s [%s]"):format(xItem.label, itemCount)
@@ -509,7 +510,7 @@ if not Config.CustomInventory then
         elseif itemType == "item_weapon" then
             itemName = string.upper(itemName)
 
-            if not xPlayer.hasWeapon(itemName) then return end 
+            if not xPlayer.hasWeapon(itemName) then return end
 
             local _, weapon = xPlayer.getWeapon(itemName)
             local _, weaponObject = ESX.GetWeapon(itemName)
@@ -536,9 +537,9 @@ if not Config.CustomInventory then
         local xPlayer = ESX.GetPlayerFromId(source)
         local count = xPlayer.getInventoryItem(itemName).count
 
-        if count < 1 then 
-            return xPlayer.showNotification(TranslateCap("act_imp")) 
-        end 
+        if count < 1 then
+            return xPlayer.showNotification(TranslateCap("act_imp"))
+        end
 
         ESX.UseItem(source, itemName)
     end)
@@ -556,8 +557,8 @@ if not Config.CustomInventory then
 
         if pickup.type == "item_standard" then
             if not xPlayer.canCarryItem(pickup.name, pickup.count) then
-                return xPlayer.showNotification(TranslateCap("threw_cannot_pickup")) 
-            end 
+                return xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
+            end
 
             xPlayer.addInventoryItem(pickup.name, pickup.count)
             success = true

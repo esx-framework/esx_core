@@ -93,19 +93,21 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
             if vehicleType then
                 local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
                 local tries = 0
-                while not DoesEntityExist(createdVehicle) do
+
+                while not createdVehicle or createdVehicle == 0 or not GetEntityCoords(createdVehicle) do
                     Wait(200)
                     tries = tries + 1
-                    if tries > 10 then
-                        return print("[^1ERROR^7] Unfortunately, this vehicle has not spawned")
+                    if tries > 20 then
+                        return  error(("Could not spawn vehicle - ^5%s^7!"):format(model))
                     end
                 end
 
+                SetEntityOrphanMode(createdVehicle, 2)
                 local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
                 Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
                 cb(networkId)
             else
-                print(("[^1ERROR^7] Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+                error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
             end
         end)
     end)
