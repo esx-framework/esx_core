@@ -104,7 +104,7 @@ if not Config.Multichar then
 
 
         if not SetEntityOrphanMode then
-            return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."):format(oneSyncState))
+            return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
 
         if oneSyncState == "off" or oneSyncState == "legacy" then
@@ -688,6 +688,15 @@ AddEventHandler("onResourceStart", function(key)
 
         StopResource(key)
         error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^1, PLEASE REMOVE ^5%s^1"):format(key))
+    end
+
+    if not SetEntityOrphanMode then
+        CreateThread(function()
+            while true do
+                error("ESX Requires a minimum Artifact version of 10188, Please update your server.")
+                Wait(60 * 1000)
+            end
+        end)
     end
 end)
 

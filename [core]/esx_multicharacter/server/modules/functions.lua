@@ -26,8 +26,8 @@ function Server:OnConnecting(source, deferrals)
     Wait(0) -- Required
     local identifier = self:GetIdentifier(source)
 
-    if not GetPlayerTimeOnline then
-        return deferrals.done(("[ESX Multicharacter] ESX Requires a minimum Artifact version of 9515, Please update your server."))
+    if not SetEntityOrphanMode then
+        return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
     end
 
     if Server.oneSync == "off" or Server.oneSync == "legacy" then
