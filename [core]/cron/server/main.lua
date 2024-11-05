@@ -17,15 +17,16 @@ function OnTime(time)
     for i = 1, #Jobs, 1 do
         local scheduledTimestamp = os.time({
             hour = Jobs[i].h,
-            minute = Jobs[i].m,
-            second = 0, -- Assuming tasks run at the start of the minute
+            min = Jobs[i].m,
+            sec = 0, -- Assuming tasks run at the start of the minute
             day = os.date("%d", time),
             month = os.date("%m", time),
             year = os.date("%Y", time),
         })
 
         if time >= scheduledTimestamp and (not LastTime or LastTime < scheduledTimestamp) then
-            Jobs[i].cb(Jobs[i].h, Jobs[i].m)
+            local d = os.date('*t', scheduledTimestamp).wday
+            Jobs[i].cb(d, Jobs[i].h, Jobs[i].m)
         end
     end
 end
