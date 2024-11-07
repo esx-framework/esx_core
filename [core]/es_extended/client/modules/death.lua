@@ -25,7 +25,6 @@ function Death:ByPlayer()
         killerClientId = self.killerId,
     }
 
-    self:ResetValues()
     TriggerEvent("esx:onPlayerDeath", data)
     TriggerServerEvent("esx:onPlayerDeath", data)
 end
@@ -40,23 +39,26 @@ function Death:Natual()
         deathCause = self.deathCause,
     }
 
-    self:ResetValues()
     TriggerEvent("esx:onPlayerDeath", data)
     TriggerServerEvent("esx:onPlayerDeath", data)
 end
 
 function Death:Damaged(victim, victimDied)
+    if not victimDied then
+        return
+    end
+
     if not IsEntityAPed(victim) then
         return
     end
 
-    if IsPedAPlayer(victim) then
+    if not IsPedAPlayer(victim) then
         return
     end
 
     local victimId = NetworkGetPlayerIndexFromPed(victim)
     local isDead = IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)
-    if not victimDied or victimId ~= ESX.playerId or not isDead then
+    if victimId ~= ESX.playerId or not isDead then
         return
     end
 
@@ -72,6 +74,8 @@ function Death:Damaged(victim, victimDied)
     else
         self:Natual()
     end
+
+    self:ResetValues()
 end
 
 AddEventHandler("gameEventTriggered", function(event, data)
