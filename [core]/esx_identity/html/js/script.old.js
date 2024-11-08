@@ -1,4 +1,4 @@
-let devMode = false
+let devMode = true
 
 window.addEventListener("message", (event) => {
     if (devMode) {
@@ -12,11 +12,16 @@ window.addEventListener("message", (event) => {
 document.querySelector("#register").addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const dofVal = document.querySelector("#dob").value;
+    const dofVal = document.querySelector("#dateofbirth").value;
     if (!dofVal) return;
 
-    const formattedDate = dofVal;
+    const dateCheck = new Date(dofVal);
 
+    const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(dateCheck);
+    const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(dateCheck);
+    const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(dateCheck);
+
+    const formattedDate = `${day}/${month}/${year}`;
     if (!devMode) {
         fetch("http://esx_identity/register", {
             method: "POST",
@@ -24,7 +29,7 @@ document.querySelector("#register").addEventListener("submit", (event) => {
                 firstname: document.querySelector("#firstname").value,
                 lastname: document.querySelector("#lastname").value,
                 dateofbirth: formattedDate,
-                sex: document.querySelector("input[type='radio'][name='gender']:checked").value,
+                sex: document.querySelector("input[type='radio'][name='sex']:checked").value,
                 height: document.querySelector("#height").value,
             }),
         });
