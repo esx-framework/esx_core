@@ -42,7 +42,7 @@ server_scripts {
 client_scripts {
     'client/common.lua',
 	'client/functions.lua',
-	'client/wrapper.lua',
+	'client/modules/wrapper.lua',
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
 
