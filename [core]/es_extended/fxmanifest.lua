@@ -9,18 +9,18 @@ shared_scripts {
 	'locale.lua',
 	'locales/*.lua',
 
-	'common/config/config.lua',
-    'common/config/weapons.lua',
-    'common/config/adjustments.lua',
+	'shared/config/config.lua',
+    'shared/config/weapons.lua',
+    'shared/config/adjustments.lua',
 
-    'common/main.lua',
-    'common/functions.lua',
-    'common/modules/*.lua',
+    'shared/main.lua',
+    'shared/functions.lua',
+    'shared/modules/*.lua',
 }
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-    'common/config/logs.lua',
+    'shared/config/logs.lua',
 
 	'server/common.lua',
 	'server/modules/callback.lua',
