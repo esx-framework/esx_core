@@ -56,3 +56,6 @@ Config.AdminLogging = false -- Logs the usage of certain commands by those with 
 
 -- Do NOT change the following unless you know what you are doing
 Config.EnableDefaultInventory = not Config.CustomInventory -- Display the default Inventory ( F2 )
+if GetResourceState("ox_inventory") ~= "missing" then
+    Config.CustomInventory = "ox"
+end
