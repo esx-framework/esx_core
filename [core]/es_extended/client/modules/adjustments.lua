@@ -208,6 +208,13 @@ function Adjustments:DiscordPresence()
     end
 end
 
+function Adjustments:WantedLevel()
+    if not Config.EnableWantedLevel then
+        ClearPlayerWantedLevel(ESX.playerId)
+        SetMaxWantedLevel(0)
+    end
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -220,4 +227,5 @@ function Adjustments:Load()
     self:NPCScenarios()
     self:LicensePlates()
     self:DiscordPresence()
+    self:WantedLevel()
 end

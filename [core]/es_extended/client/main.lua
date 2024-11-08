@@ -4,13 +4,6 @@ ESX.SecureNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-local function EnablePvP()
-    if Config.EnablePVP then
-        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
-        NetworkSetFriendlyFireOption(true)
-    end
-end
-
 local function ApplyMetadata(metadata)
     if metadata.health then
         SetEntityHealth(ESX.PlayerData.ped, metadata.health)
@@ -19,87 +12,6 @@ local function ApplyMetadata(metadata)
     if metadata.armor and metadata.armor > 0 then
         SetPedArmour(ESX.PlayerData.ped, metadata.armor)
     end
-end
-
-local function DisableNPCs()
-        -- Disable Dispatch services
-    if Config.DisableDispatchServices then
-        for i = 1, 15 do
-            EnableDispatchService(i, false)
-        end
-        SetAudioFlag('PoliceScannerDisabled', true)
-    end
-
-    if Config.DisableScenarios then
-        local scenarios = {
-            "WORLD_VEHICLE_ATTRACTOR",
-            "WORLD_VEHICLE_AMBULANCE",
-            "WORLD_VEHICLE_BICYCLE_BMX",
-            "WORLD_VEHICLE_BICYCLE_BMX_BALLAS",
-            "WORLD_VEHICLE_BICYCLE_BMX_FAMILY",
-            "WORLD_VEHICLE_BICYCLE_BMX_HARMONY",
-            "WORLD_VEHICLE_BICYCLE_BMX_VAGOS",
-            "WORLD_VEHICLE_BICYCLE_MOUNTAIN",
-            "WORLD_VEHICLE_BICYCLE_ROAD",
-            "WORLD_VEHICLE_BIKE_OFF_ROAD_RACE",
-            "WORLD_VEHICLE_BIKER",
-            "WORLD_VEHICLE_BOAT_IDLE",
-            "WORLD_VEHICLE_BOAT_IDLE_ALAMO",
-            "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
-            "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
-            "WORLD_VEHICLE_BROKEN_DOWN",
-            "WORLD_VEHICLE_BUSINESSMEN",
-            "WORLD_VEHICLE_HELI_LIFEGUARD",
-            "WORLD_VEHICLE_CLUCKIN_BELL_TRAILER",
-            "WORLD_VEHICLE_CONSTRUCTION_SOLO",
-            "WORLD_VEHICLE_CONSTRUCTION_PASSENGERS",
-            "WORLD_VEHICLE_DRIVE_PASSENGERS",
-            "WORLD_VEHICLE_DRIVE_PASSENGERS_LIMITED",
-            "WORLD_VEHICLE_DRIVE_SOLO",
-            "WORLD_VEHICLE_FIRE_TRUCK",
-            "WORLD_VEHICLE_EMPTY",
-            "WORLD_VEHICLE_MARIACHI",
-            "WORLD_VEHICLE_MECHANIC",
-            "WORLD_VEHICLE_MILITARY_PLANES_BIG",
-            "WORLD_VEHICLE_MILITARY_PLANES_SMALL",
-            "WORLD_VEHICLE_PARK_PARALLEL",
-            "WORLD_VEHICLE_PARK_PERPENDICULAR_NOSE_IN",
-            "WORLD_VEHICLE_PASSENGER_EXIT",
-            "WORLD_VEHICLE_POLICE_BIKE",
-            "WORLD_VEHICLE_POLICE_CAR",
-            "WORLD_VEHICLE_POLICE",
-            "WORLD_VEHICLE_POLICE_NEXT_TO_CAR",
-            "WORLD_VEHICLE_QUARRY",
-            "WORLD_VEHICLE_SALTON",
-            "WORLD_VEHICLE_SALTON_DIRT_BIKE",
-            "WORLD_VEHICLE_SECURITY_CAR",
-            "WORLD_VEHICLE_STREETRACE",
-            "WORLD_VEHICLE_TOURBUS",
-            "WORLD_VEHICLE_TOURIST",
-            "WORLD_VEHICLE_TANDL",
-            "WORLD_VEHICLE_TRACTOR",
-            "WORLD_VEHICLE_TRACTOR_BEACH",
-            "WORLD_VEHICLE_TRUCK_LOGS",
-            "WORLD_VEHICLE_TRUCKS_TRAILERS",
-            "WORLD_VEHICLE_DISTANT_EMPTY_GROUND",
-            "WORLD_HUMAN_PAPARAZZI",
-        }
-
-        for _, v in pairs(scenarios) do
-            SetScenarioTypeEnabled(v, false)
-        end
-    end
-end
-
-local function DisableAmmoOrVehicleRewards(playerId)
-
-end
-
-local function ApplyConfig()
-    -- RemoveHudComponents
-
-    EnablePvP()
-    DisableNPCs()
 end
 
 ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
@@ -142,7 +54,7 @@ ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     end
 
     Actions:Init()
-    SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
+
     StartServerSyncLoops()
 end)
 
@@ -402,12 +314,6 @@ if not Config.CustomInventory and Config.EnableDefaultInventory then
             ESX.ShowInventory()
         end
     end)
-end
-
--- disable wanted level
-if not Config.EnableWantedLevel then
-    ClearPlayerWantedLevel(ESX.playerId)
-    SetMaxWantedLevel(0)
 end
 
 if not Config.CustomInventory then

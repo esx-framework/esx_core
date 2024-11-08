@@ -3,10 +3,11 @@ Config.DisableVehicleRewards = false -- Disables Player Receiving weapons from v
 Config.DisableNPCDrops = false -- stops NPCs from dropping weapons on death
 Config.DisableDispatchServices = true -- Disable Dispatch services
 Config.DisableScenarios = true -- Disable Scenarios
-Config.DisableWeaponWheel = false -- Disables default weapon wheel
 Config.DisableAimAssist = false -- disables AIM assist (mainly on controllers)
 Config.DisableVehicleSeatShuff = false -- Disables vehicle seat shuff
 Config.DisableDisplayAmmo = false -- Disable ammunition display
+Config.EnablePVP = true -- Allow Player to player combat
+Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
 
 Config.RemoveHudComponents = {
     [1] = false, --WANTED_STARS,
