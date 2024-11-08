@@ -28,10 +28,10 @@ server_scripts {
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/modules/onesync.lua',
-	'server/paycheck.lua',
+	'server/modules/paycheck.lua',
 
 	'server/main.lua',
-	'server/commands.lua',
+	'server/modules/commands.lua',
 
 	'server/bridge/**/*.lua',
 	'server/modules/actions.lua',
