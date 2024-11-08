@@ -1,9 +1,5 @@
 Config = {}
 
-local txAdminLocale = GetConvar("txAdmin-locale", "en")
-local esxLocale = GetConvar("esx:locale", "invalid")
-
-Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
 Config.CustomInventory = false
 
 Config.Accounts = {
@@ -54,8 +50,15 @@ Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
--- Do NOT change the following unless you know what you are doing
+--------------------------------------------------------------------
+-- DO NOT CHANGE BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
+--------------------------------------------------------------------
 Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
 if GetResourceState("ox_inventory") ~= "missing" then
     Config.CustomInventory = "ox"
 end
+
+local txAdminLocale = GetConvar("txAdmin-locale", "en")
+local esxLocale = GetConvar("esx:locale", "invalid")
+
+Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
