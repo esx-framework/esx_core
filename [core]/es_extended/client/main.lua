@@ -92,57 +92,11 @@ local function DisableNPCs()
 end
 
 local function DisableAmmoOrVehicleRewards(playerId)
-    CreateThread(function()
-        while true do
-            if Config.DisableDisplayAmmo then
-                DisplayAmmoThisFrame(false)
-            end
 
-            if Config.DisableVehicleRewards then
-                DisablePlayerVehicleRewards(playerId)
-            end
-
-            Wait(0)
-        end
-    end)
 end
 
 local function ApplyConfig()
     -- RemoveHudComponents
-    for i = 1, #Config.RemoveHudComponents do
-        if Config.RemoveHudComponents[i] then
-            SetHudComponentSize(i, 0.0, 0.0)
-        end
-    end
-
-    if Config.DisableAimAssist then
-        SetPlayerLockon(ESX.playerId, false)
-    end
-
-    -- DisableNPCDrops
-    if Config.DisableNPCDrops then
-        local weaponPickups = { `PICKUP_WEAPON_CARBINERIFLE`, `PICKUP_WEAPON_PISTOL`, `PICKUP_WEAPON_PUMPSHOTGUN` }
-        for i = 1, #weaponPickups do
-            ToggleUsePickupsForPlayer(ESX.playerId, weaponPickups[i], false)
-        end
-    end
-
-    if Config.DisableVehicleSeatShuff then
-        AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
-            if seat > -1 then
-                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, seat)
-                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
-            end
-        end)
-    end
-
-    if Config.DisableHealthRegeneration then
-        SetPlayerHealthRechargeMultiplier(ESX.playerId, 0.0)
-    end
-
-    if Config.DisableDisplayAmmo or Config.DisableVehicleRewards then
-        DisableAmmoOrVehicleRewards(ESX.playerId)
-    end
 
     EnablePvP()
     DisableNPCs()
@@ -175,7 +129,7 @@ ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
         Wait(0)
     end
 
-    ApplyConfig()
+    Adjustments:Load()
 
     ClearPedTasksImmediately(ESX.PlayerData.ped)
 
