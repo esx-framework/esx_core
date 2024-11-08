@@ -43,3 +43,27 @@ Config.RemoveHudComponents = {
 -- A string shorter than 8 characters will be padded on the right.
 Config.CustomAIPlates = "........" -- Custom plates for AI vehicles
 
+--[[
+    PlaceHolders:
+    {server_name} - Server Display Name
+    {server_endpoint} - Server IP:Server Port
+    {server_players} - Current Player Count
+    {server_maxplayers} - Max Player Count
+
+    {player_name} - Player Name
+    {player_rp_name} - Player RP Name
+    {player_id} - Player ID
+    {player_street} - Player Street Name
+]]
+
+Config.DiscordActivity = {
+    appId = 0, -- Discord Application ID,
+    assetName = "LargeIcon", --image name for the "large" icon.
+    assetText = "{server_name}", -- Text to display on the asset
+    buttons = {
+        { label = "Join Server", url = "fivem://connect/{server_endpoint}" },
+        { label = "Discord", url = "https://discord.esx-framework.org" },
+    },
+    presence = "{player_name} [{player_id}] | {server_players}/{server_maxplayers}",
+    refresh = 1 * 60 * 1000, -- 1 minute
+}

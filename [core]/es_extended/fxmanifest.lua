@@ -44,6 +44,7 @@ client_scripts {
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/modules/callback.lua',
+    'client/modules/adjustments.lua',
 
 	'client/main.lua',
 

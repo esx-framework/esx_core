@@ -257,6 +257,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     -- xPlayer Creation
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
+
+    GlobalState["playerCount"] = GlobalState["playerCount"] + 1
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
@@ -319,9 +321,12 @@ AddEventHandler("playerDropped", function(reason)
         local job = xPlayer.getJob().name
         local currentJob = ESX.JobsPlayerCount[job]
         ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+
         GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
         Core.playersByIdentifier[xPlayer.identifier] = nil
+
         Core.SavePlayer(xPlayer, function()
+            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
             ESX.Players[playerId] = nil
         end)
     end
@@ -354,6 +359,7 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
 
         Core.playersByIdentifier[xPlayer.identifier] = nil
         Core.SavePlayer(xPlayer, function()
+            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
             ESX.Players[playerId] = nil
             if cb then
                 cb()

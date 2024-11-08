@@ -138,6 +138,76 @@ function Adjustments:LicensePlates()
     SetDefaultVehicleNumberPlateTextPattern(-1, Config.CustomAIPlates)
 end
 
+local placeHolders = {
+    server_name = function()
+        return GetConvar("sv_projectName", "ESX-Framework")
+    end,
+    server_endpoint = function()
+        return GetCurrentServerEndpoint() or "localhost:30120"
+    end,
+    server_players = function()
+        return GlobalState.PlayerCount
+    end,
+    server_maxplayers = function()
+        return GetConvarInt("sv_maxClients", 48)
+    end,
+    player_name = function()
+        return GetPlayerName(ESX.playerId)
+    end,
+    player_rp_name = function()
+        return ESX.PlayerData.name or "John Doe"
+    end,
+    player_id = function()
+        return ESX.serverId
+    end,
+    player_street = function()
+        if not ESX.PlayerData.ped then return "Unknown" end
+
+        local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+        local streetHash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
+
+        return GetStreetNameFromHashKey(streetHash) or "Unknown"
+    end,
+}
+
+function Adjustments:PresencePlaceholders()
+    local presence = Config.DiscordActivity.presence
+
+    for placeholder, cb in pairs(placeHolders) do
+        local success, result = pcall(cb)
+
+        if not success then
+            error(("Failed to execute presence placeholder: ^5%s^7"):format(placeholder))
+            error(result)
+            return "Unknown"
+        end
+
+        presence = presence:gsub(("{%s}"):format(placeholder), result)
+    end
+
+    return presence
+end
+
+function Adjustments:DiscordPresence()
+    if Config.DiscordActivity.appId ~= 0 then
+        CreateThread(function()
+            while true do
+                SetDiscordAppId(Config.DiscordActivity.appId)
+                SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
+                SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
+
+                for i = 1, #Config.DiscordActivity.buttons do
+                    local button = Config.DiscordActivity.buttons[i]
+                    SetDiscordRichPresenceAction(i - 1, button.label, button.url)
+                end
+
+                SetRichPresence(self:PresencePlaceholders())
+                Wait(Config.DiscordActivity.refresh)
+            end
+        end)
+    end
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -149,4 +219,5 @@ function Adjustments:Load()
     self:DispatchServices()
     self:NPCScenarios()
     self:LicensePlates()
+    self:DiscordPresence()
 end
