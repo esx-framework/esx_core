@@ -55,7 +55,7 @@ Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
 -- Do NOT change the following unless you know what you are doing
-Config.EnableDefaultInventory = not Config.CustomInventory -- Display the default Inventory ( F2 )
+Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
 if GetResourceState("ox_inventory") ~= "missing" then
     Config.CustomInventory = "ox"
 end
