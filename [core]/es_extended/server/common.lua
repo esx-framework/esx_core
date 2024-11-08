@@ -63,3 +63,5 @@ RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)
         Core.ClientCallbacks[Request] = nil
     end
 end)
+
+GlobalState.playerCount = 0

@@ -146,7 +146,7 @@ local placeHolders = {
         return GetCurrentServerEndpoint() or "localhost:30120"
     end,
     server_players = function()
-        return GlobalState.PlayerCount
+        return GlobalState.playerCount or 0
     end,
     server_maxplayers = function()
         return GetConvarInt("sv_maxClients", 48)
