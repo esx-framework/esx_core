@@ -44,7 +44,6 @@ Config.EnableSocietyPayouts = false -- pay from the society account that the pla
 Config.MaxWeight = 24 -- the max inventory weight without a backpack
 Config.PaycheckInterval = 7 * 60000 -- how often to receive paychecks in milliseconds
 Config.EnableDebug = false -- Use Debug options?
-Config.EnableDefaultInventory = true -- Display the default Inventory ( F2 )
 Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
 Config.EnablePVP = true -- Allow Player to player combat
 Config.DefaultJobDuty = true -- A players default duty status when changing jobs
@@ -99,3 +98,6 @@ Config.CustomAIPlates = "........" -- Custom plates for AI vehicles
 --^A will lead to a literal A being emitted.
 --Any other character will lead to said character being emitted.
 -- A string shorter than 8 characters will be padded on the right.
+
+-- Do NOT change the following unless you know what you are doing
+Config.EnableDefaultInventory = not Config.CustomInventory -- Display the default Inventory ( F2 )
