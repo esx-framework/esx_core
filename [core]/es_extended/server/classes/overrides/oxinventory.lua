@@ -1,6 +1,6 @@
 local Inventory
 
-if Config.OxInventory ~= "ox" then end
+if Config.CustomInventory ~= "ox" then return end
 
 AddEventHandler("ox_inventory:loadInventory", function(module)
     Inventory = module
@@ -9,9 +9,9 @@ end)
 Core.PlayerFunctionOverrides.OxInventory = {
     getInventory = function(self)
         return function(minimal)
-            if not minimal then 
-                return self.inventory 
-            end 
+            if not minimal then
+                return self.inventory
+            end
 
             local minimalInventory = {}
 
@@ -45,10 +45,10 @@ Core.PlayerFunctionOverrides.OxInventory = {
     setAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money < 0 then return end 
+            if money < 0 then return end
             local account = self.getAccount(accountName)
 
-            if not account then return end 
+            if not account then return end
 
             money = account.round and ESX.Math.Round(money) or money
             self.accounts[account.index].money = money
@@ -67,7 +67,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
             if money < 1 then return end
 
             local account = self.getAccount(accountName)
-            if not account then return end 
+            if not account then return end
 
             money = account.round and ESX.Math.Round(money) or money
             self.accounts[account.index].money = self.accounts[account.index].money + money
@@ -82,10 +82,10 @@ Core.PlayerFunctionOverrides.OxInventory = {
     removeAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money < 1 then return end 
+            if money < 1 then return end
 
             local account = self.getAccount(accountName)
-            if not account then return end 
+            if not account then return end
 
             money = account.round and ESX.Math.Round(money) or money
             self.accounts[account.index].money = self.accounts[account.index].money - money
@@ -204,7 +204,7 @@ Core.PlayerFunctionOverrides.OxInventory = {
             self.weight, self.maxWeight = weight, maxWeight
             self.inventory = items
 
-            if not money then return end 
+            if not money then return end
             for accountName, amount in pairs(money) do
                 local account = self.getAccount(accountName)
 

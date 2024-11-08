@@ -545,6 +545,7 @@ end
 
 ---@param item string
 ---@return string?
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetItemLabel(item)
     if ESX.Items[item] then
         return ESX.Items[item].label
@@ -609,6 +610,6 @@ function Core.IsPlayerAdmin(playerId)
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]    
+    local xPlayer = ESX.Players[playerId]
     return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end

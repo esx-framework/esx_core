@@ -1,4 +1,4 @@
-if Config.CustomInventory ~= "ox" then return end 
+if Config.CustomInventory ~= "ox" then return end
 
 MySQL.ready(function()
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
@@ -12,14 +12,15 @@ MySQL.ready(function()
     end)
 end)
 
-function ESX.GetItemLabel(item)
+---@diagnostic disable-next-line: duplicate-set-field
+ESX.GetItemLabel = function(item)
     item = exports.ox_inventory:Items(item)
     if item then
         return item.label
     end
 end
 
-function setPlayerInventory(playerId, xPlayer, inventory, isNew) 
+function setPlayerInventory(playerId, xPlayer, inventory, isNew)
     exports.ox_inventory:setPlayerInventory(xPlayer, inventory)
     if isNew then
         local shared = json.decode(GetConvar("inventory:accounts", '["money"]'))
