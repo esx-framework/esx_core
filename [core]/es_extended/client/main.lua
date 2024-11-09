@@ -121,7 +121,8 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    local netId = tonumber(bagName:gsub("entity:", ""))
+    bagName = bagName:gsub("entity:", "")
+    local netId = tonumber(bagName)
     if not netId then
         error("Tried to set vehicle properties with invalid netId")
         return
