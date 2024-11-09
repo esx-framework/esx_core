@@ -54,6 +54,9 @@ ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
     end)
 end)
 
-ESX.RegisterCommand("skin", "admin", function(xPlayer)
-    xPlayer.triggerEvent("esx_skin:openSaveableMenu")
-end, false, { help = TranslateCap("skin") })
+ESX.RegisterCommand("skin", "admin", function(xPlayer, args)
+    if not args.playerId then
+        args.playerId = xPlayer
+    end
+    args.playerId.triggerEvent("esx_skin:openSaveableMenu")
+end, false, { help = TranslateCap("skin"), arguments = { { name = "playerId", help = TranslateCap("skin"), type = "player" }} })
