@@ -1,4 +1,3 @@
-ESX = {}
 ESX.Players = {}
 ESX.Jobs = {}
 ESX.JobsPlayerCount = {}
@@ -18,19 +17,9 @@ RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
 end)
 
-AddEventHandler("esx:getSharedObject", function()
-    local Invoke = GetInvokingResource()
-    error(("Resource ^5%s^7 Used the ^5getSharedObject^7 Event, this event ^1no longer exists!^7 Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent for how to fix!"):format(Invoke))
-end)
-
-exports("getSharedObject", function()
-    return ESX
-end)
-
-if Config.OxInventory then
-    Config.PlayerFunctionOverride = "OxInventory"
+if Config.CustomInventory then
     SetConvarReplicated("inventory:framework", "esx")
-    SetConvarReplicated("inventory:weight", Config.MaxWeight * 1000)
+    SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
 end
 
 local function StartDBSync()
@@ -45,24 +34,10 @@ end
 
 MySQL.ready(function()
     Core.DatabaseConnected = true
-    if not Config.OxInventory then
+    if not Config.CustomInventory then
         local items = MySQL.query.await("SELECT * FROM items")
         for _, v in ipairs(items) do
             ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
-        end
-    else
-        TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
-            if ref then
-                ESX.Items = ref()
-            end
-        end)
-
-        AddEventHandler("ox_inventory:itemList", function(items)
-            ESX.Items = items
-        end)
-
-        while not next(ESX.Items) do
-            Wait(0)
         end
     end
 
@@ -76,8 +51,7 @@ MySQL.ready(function()
     end
 end)
 
-RegisterServerEvent("esx:clientLog")
-AddEventHandler("esx:clientLog", function(msg)
+RegisterNetEvent("esx:clientLog", function(msg)
     if Config.EnableDebug then
         print(("[^2TRACE^7] %s^7"):format(msg))
     end
@@ -89,3 +63,5 @@ RegisterNetEvent("esx:ReturnVehicleType", function(Type, Request)
         Core.ClientCallbacks[Request] = nil
     end
 end)
+
+GlobalState.playerCount = 0

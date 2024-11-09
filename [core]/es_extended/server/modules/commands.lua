@@ -77,7 +77,7 @@ ESX.RegisterCommand(
         local playerPed = GetPlayerPed(xPlayer.source)
         local playerCoords = GetEntityCoords(playerPed)
         local playerHeading = GetEntityHeading(playerPed)
-        local playerVehicle = GetVehiclePedIsIn(playerPed)
+        local playerVehicle = GetVehiclePedIsIn(playerPed, false)
 
         if not args.car or type(args.car) ~= "string" then
             args.car = "adder"
@@ -126,11 +126,15 @@ ESX.RegisterCommand(
     { "cardel", "dv" },
     "admin",
     function(xPlayer, args)
-        local PedVehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source), false)
-        if DoesEntityExist(PedVehicle) then
-            DeleteEntity(PedVehicle)
+        local ped = GetPlayerPed(xPlayer.source)
+        local pedVehicle = GetVehiclePedIsIn(ped, false)
+
+        if DoesEntityExist(pedVehicle) then
+            DeleteEntity(pedVehicle)
         end
-        local Vehicles = ESX.OneSync.GetVehiclesInArea(GetEntityCoords(GetPlayerPed(xPlayer.source)), tonumber(args.radius) or 5.0)
+
+        local coords = GetEntityCoords(ped)
+        local Vehicles = ESX.OneSync.GetVehiclesInArea(coords, tonumber(args.radius) or 5.0)
         for i = 1, #Vehicles do
             local Vehicle = NetworkGetEntityFromNetworkId(Vehicles[i])
             if DoesEntityExist(Vehicle) then
@@ -278,7 +282,7 @@ ESX.RegisterCommand(
     }
 )
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     ESX.RegisterCommand(
         "giveitem",
         "admin",
@@ -426,7 +430,7 @@ ESX.RegisterCommand("refreshjobs", "admin", function()
     ESX.RefreshJobs()
 end, true, { help = TranslateCap("command_clearall") })
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
     ESX.RegisterCommand(
         "clearinventory",
         "admin",
@@ -540,12 +544,22 @@ ESX.RegisterCommand("group", { "user", "admin" }, function(xPlayer, _, _)
 end, true)
 
 ESX.RegisterCommand("job", { "user", "admin" }, function(xPlayer, _, _)
-    print(("%s, your job is: ^5%s^0 - ^5%s^0"):format(xPlayer.getName(), xPlayer.getJob().name, xPlayer.getJob().grade_label))
+	local job = xPlayer.getJob()
+
+    print(("%s, your job is: ^5%s^0 - ^5%s^0 - ^5%s^0"):format(xPlayer.getName(), job.name, job.grade_label, job.onDuty and "On Duty" or "Off Duty"))
 end, false)
 
 ESX.RegisterCommand("info", { "user", "admin" }, function(xPlayer)
     local job = xPlayer.getJob().name
     print(("^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0"):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), job))
+end, false)
+
+ESX.RegisterCommand("playtime", { "user", "admin" }, function(xPlayer)
+    local playtime = xPlayer.getPlayTime()
+    local days = math.floor(playtime / 86400)
+    local hours = math.floor((playtime % 86400) / 3600)
+    local minutes = math.floor((playtime % 3600) / 60)
+    print(("Playtime: ^5%s^0 Days | ^5%s^0 Hours | ^5%s^0 Minutes"):format(days, hours, minutes))
 end, false)
 
 ESX.RegisterCommand("coords", "admin", function(xPlayer)

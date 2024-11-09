@@ -1,3 +1,6 @@
+ESX.Scaleform = {}
+ESX.Scaleform.Utils = {}
+
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
     local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
 
@@ -10,7 +13,7 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
         Wait(0)
         sec = sec - 0.01
 
-        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -41,7 +44,7 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
         Wait(0)
         sec = sec - 0.01
 
-        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -64,7 +67,7 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
         Wait(0)
         sec = sec - 0.01
 
-        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)
@@ -81,7 +84,7 @@ function ESX.Scaleform.ShowTrafficMovie(sec)
         Wait(0)
         sec = sec - 0.01
 
-        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)

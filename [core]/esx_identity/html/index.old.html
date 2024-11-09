@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+        <link href="css/style.css" rel="stylesheet" />
+
+        <title>ESX Identity</title>
+    </head>
+
+    <body class="none" onkeydown="TriggeredKey(this)">
+        <div class="dialog">
+            <div class="title"><b>IDENTITY</b></div>
+            <form id="register" name="register" action="#">
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">First Name</div>
+                <input id="firstname" type="text" class="" name="firstname" placeholder="First Name" minlength="3" maxlength="8" pattern="[a-zA-Z]*" /><br />
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Last Name</div>
+                <input id="lastname" type="text" class="" name="lastname" placeholder="Last Name" minlength="3" maxlength="10" pattern="[a-zA-Z]*" /><br />
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Date of Birth (MM/DD/YYYY)</div>
+                <input id="dateofbirth" type="date" name="dateofbirth" class="" min="1900-01-01" max="2010-01-01" onfocus="(this.type='date')" /><br />
+                <div style="color: rgb(46, 187, 205); font-size: 12px; font-family: 'Gill Sans', sans-serif">Height</div>
+                <input id="height" type="number" class="" name="height" min="120" max="220" placeholder="Height (cm)" /><br />
+                <center>
+                    <div class="radio-toolbar">
+                        <input type="radio" id="radiom" name="sex" value="m" checked />
+                        <label for="radiom">Male</label>
+
+                        <input type="radio" id="radiof" name="sex" value="f" />
+                        <label for="radiof">Female</label>
+                    </div>
+                </center>
+                <button id="submit" type="submit">
+                    <font size="4px">CREATE</font>
+                </button>
+            </form>
+            <center>
+                <font size="1px" color="green">If the submit button doesn't work, please ensure that you've entered the fields correctly.</font>
+            </center>
+        </div>
+
+        <script>
+            function TriggeredKey(e) {
+                var keycode;
+                if (window.event) keycode = window.event.keyCode;
+                if (window.event.keyCode === 13 || window.event.keyCode === 27) return false;
+            }
+        </script>
+        <script src="js/script.js" defer></script>
+    </body>
+</html>

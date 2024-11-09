@@ -3,14 +3,14 @@ local ready = false
 local guiEnabled = false
 local timecycleModifier = "hud_def_blur"
 
-RegisterNetEvent("esx_identity:alreadyRegistered", function()
+ESX.SecureNetEvent("esx_identity:alreadyRegistered", function()
     while not loadingScreenFinished do
         Wait(100)
     end
     TriggerEvent("esx_skin:playerRegistered")
 end)
 
-RegisterNetEvent("esx_identity:setPlayerData", function(data)
+ESX.SecureNetEvent("esx_identity:setPlayerData", function(data)
     SetTimeout(1, function()
         ESX.SetPlayerData("name", ("%s %s"):format(data.firstName, data.lastName))
         ESX.SetPlayerData("firstName", data.firstName)
@@ -30,8 +30,7 @@ RegisterNUICallback("ready", function(_, cb)
     cb(1)
 end)
 
-if not Config.UseDeferrals then
-    function setGuiState(state)
+function setGuiState(state)
         SetNuiFocus(state, state)
         guiEnabled = state
 
@@ -42,9 +41,9 @@ if not Config.UseDeferrals then
         end
 
         SendNUIMessage({ type = "enableui", enable = state })
-    end
+end
 
-    RegisterNetEvent("esx_identity:showRegisterIdentity", function()
+RegisterNetEvent("esx_identity:showRegisterIdentity", function()
         TriggerEvent("esx_skin:resetFirstSpawn")
         while not (ready and loadingScreenFinished) do
             print("Waiting for esx_identity NUI..")
@@ -53,9 +52,9 @@ if not Config.UseDeferrals then
         if not ESX.PlayerData.dead then
             setGuiState(true)
         end
-    end)
+end)
 
-    RegisterNUICallback("register", function(data, cb)
+RegisterNUICallback("register", function(data, cb)
         if not guiEnabled then
             return
         end
@@ -73,5 +72,4 @@ if not Config.UseDeferrals then
             end
         end, data)
         cb(1)
-    end)
-end
+end)

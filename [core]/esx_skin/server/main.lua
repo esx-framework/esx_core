@@ -1,8 +1,7 @@
-RegisterServerEvent("esx_skin:save")
-AddEventHandler("esx_skin:save", function(skin)
+RegisterNetEvent("esx_skin:save", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
@@ -19,11 +18,10 @@ AddEventHandler("esx_skin:save", function(skin)
     })
 end)
 
-RegisterServerEvent("esx_skin:setWeight")
-AddEventHandler("esx_skin:setWeight", function(skin)
+RegisterNetEvent("esx_skin:setWeight", function(skin)
     local xPlayer = ESX.GetPlayerFromId(source)
 
-    if not ESX.GetConfig().OxInventory then
+    if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
         local backpackModifier = Config.BackpackWeight[skin.bags_1]
 
@@ -35,28 +33,13 @@ AddEventHandler("esx_skin:setWeight", function(skin)
     end
 end)
 
-RegisterServerEvent("esx_skin:responseSaveSkin")
-AddEventHandler("esx_skin:responseSaveSkin", function(skin)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if xPlayer.getGroup() == "admin" then
-        local file = io.open("resources/[esx]/esx_skin/skins.txt", "a")
-
-        file:write(json.encode(skin) .. "\n\n")
-        file:flush()
-        file:close()
-    else
-        print(("[^2INFO^7] ^5%s^7 attempted saving skin to file"):format(xPlayer.getIdentifier()))
-    end
-end)
-
 ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     MySQL.query("SELECT skin FROM users WHERE identifier = @identifier", {
         ["@identifier"] = xPlayer.identifier,
     }, function(users)
-        local user, skin = users[1]
+        local user, skin = users[1], nil
 
         local jobSkin = {
             skin_male = xPlayer.job.skin_male,
@@ -71,10 +54,9 @@ ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
     end)
 end)
 
-ESX.RegisterCommand("skin", "admin", function(xPlayer)
-    xPlayer.triggerEvent("esx_skin:openSaveableMenu")
-end, false, { help = TranslateCap("skin") })
-
-ESX.RegisterCommand("skinsave", "admin", function(xPlayer)
-    xPlayer.triggerEvent("esx_skin:requestSaveSkin")
-end, false, { help = TranslateCap("saveskin") })
+ESX.RegisterCommand("skin", "admin", function(xPlayer, args)
+    if not args.playerId then
+        args.playerId = xPlayer
+    end
+    args.playerId.triggerEvent("esx_skin:openSaveableMenu")
+end, false, { help = TranslateCap("skin"), arguments = { { name = "playerId", help = TranslateCap("skin"), type = "player" }} })

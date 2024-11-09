@@ -32,27 +32,27 @@ local function Notify(notificatonType, length, message)
 end
 
 exports("Notify", Notify)
-RegisterNetEvent("ESX:Notify", Notify)
+ESX.SecureNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()
         ---@diagnostic disable-next-line
         ESX.ShowNotification("No Waypoint Set.", true, false, 140)
-    end)
+    end, false)
 
     RegisterCommand("notify", function()
         ESX.ShowNotification("You Recived ~br~ 1x ball~s~!", "success", 3000)
-    end)
+    end, false)
 
     RegisterCommand("notify1", function()
         ESX.ShowNotification("Well ~g~Done~s~!", "success", 3000)
-    end)
+    end, false)
 
     RegisterCommand("notify2", function()
         ESX.ShowNotification("Information Recived", "info", 3000)
-    end)
+    end, false)
 
     RegisterCommand("notify3", function()
         ESX.ShowNotification("You Did something ~r~WRONG~s~!", "error", 3000)
-    end)
+    end, false)
 end

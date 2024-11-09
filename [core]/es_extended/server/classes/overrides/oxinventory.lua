@@ -1,38 +1,38 @@
 local Inventory
 
-if Config.OxInventory then
-    AddEventHandler("ox_inventory:loadInventory", function(module)
-        Inventory = module
-    end)
-end
+if Config.CustomInventory ~= "ox" then return end
+
+AddEventHandler("ox_inventory:loadInventory", function(module)
+    Inventory = module
+end)
 
 Core.PlayerFunctionOverrides.OxInventory = {
     getInventory = function(self)
         return function(minimal)
-            if minimal then
-                local minimalInventory = {}
-
-                for k, v in pairs(self.inventory) do
-                    if v.count and v.count > 0 then
-                        local metadata = v.metadata
-
-                        if v.metadata and next(v.metadata) == nil then
-                            metadata = nil
-                        end
-
-                        minimalInventory[#minimalInventory + 1] = {
-                            name = v.name,
-                            count = v.count,
-                            slot = k,
-                            metadata = metadata,
-                        }
-                    end
-                end
-
-                return minimalInventory
+            if not minimal then
+                return self.inventory
             end
 
-            return self.inventory
+            local minimalInventory = {}
+
+            for k, v in pairs(self.inventory) do
+                if v.count and v.count > 0 then
+                    local metadata = v.metadata
+
+                    if v.metadata and next(v.metadata) == nil then
+                        metadata = nil
+                    end
+
+                    minimalInventory[#minimalInventory + 1] = {
+                        name = v.name,
+                        count = v.count,
+                        slot = k,
+                        metadata = metadata,
+                    }
+                end
+            end
+
+            return minimalInventory
         end
     end,
 
@@ -45,19 +45,18 @@ Core.PlayerFunctionOverrides.OxInventory = {
     setAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money >= 0 then
-                local account = self.getAccount(accountName)
+            if money < 0 then return end
+            local account = self.getAccount(accountName)
 
-                if account then
-                    money = account.round and ESX.Math.Round(money) or money
-                    self.accounts[account.index].money = money
+            if not account then return end
 
-                    self.triggerEvent("esx:setAccountMoney", account)
-                    TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
-                    if Inventory.accounts[accountName] then
-                        Inventory.SetItem(self.source, accountName, money)
-                    end
-                end
+            money = account.round and ESX.Math.Round(money) or money
+            self.accounts[account.index].money = money
+
+            self.triggerEvent("esx:setAccountMoney", account)
+            TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
+            if Inventory.accounts[accountName] then
+                Inventory.SetItem(self.source, accountName, money)
             end
         end
     end,
@@ -65,18 +64,17 @@ Core.PlayerFunctionOverrides.OxInventory = {
     addAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money > 0 then
-                local account = self.getAccount(accountName)
+            if money < 1 then return end
 
-                if account then
-                    money = account.round and ESX.Math.Round(money) or money
-                    self.accounts[account.index].money = self.accounts[account.index].money + money
-                    self.triggerEvent("esx:setAccountMoney", account)
-                    TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
-                    if Inventory.accounts[accountName] then
-                        Inventory.AddItem(self.source, accountName, money)
-                    end
-                end
+            local account = self.getAccount(accountName)
+            if not account then return end
+
+            money = account.round and ESX.Math.Round(money) or money
+            self.accounts[account.index].money = self.accounts[account.index].money + money
+            self.triggerEvent("esx:setAccountMoney", account)
+            TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+            if Inventory.accounts[accountName] then
+                Inventory.AddItem(self.source, accountName, money)
             end
         end
     end,
@@ -84,18 +82,17 @@ Core.PlayerFunctionOverrides.OxInventory = {
     removeAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money > 0 then
-                local account = self.getAccount(accountName)
+            if money < 1 then return end
 
-                if account then
-                    money = account.round and ESX.Math.Round(money) or money
-                    self.accounts[account.index].money = self.accounts[account.index].money - money
-                    self.triggerEvent("esx:setAccountMoney", account)
-                    TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
-                    if Inventory.accounts[accountName] then
-                        Inventory.RemoveItem(self.source, accountName, money)
-                    end
-                end
+            local account = self.getAccount(accountName)
+            if not account then return end
+
+            money = account.round and ESX.Math.Round(money) or money
+            self.accounts[account.index].money = self.accounts[account.index].money - money
+            self.triggerEvent("esx:setAccountMoney", account)
+            TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+            if Inventory.accounts[accountName] then
+                Inventory.RemoveItem(self.source, accountName, money)
             end
         end
     end,
@@ -207,15 +204,14 @@ Core.PlayerFunctionOverrides.OxInventory = {
             self.weight, self.maxWeight = weight, maxWeight
             self.inventory = items
 
-            if money then
-                for accountName, amount in pairs(money) do
-                    local account = self.getAccount(accountName)
+            if not money then return end
+            for accountName, amount in pairs(money) do
+                local account = self.getAccount(accountName)
 
-                    if account and ESX.Math.Round(account.money) ~= amount then
-                        account.money = amount
-                        self.triggerEvent("esx:setAccountMoney", account)
-                        TriggerEvent("esx:setAccountMoney", self.source, accountName, amount, "Sync account with item")
-                    end
+                if account and ESX.Math.Round(account.money) ~= amount then
+                    account.money = amount
+                    self.triggerEvent("esx:setAccountMoney", account)
+                    TriggerEvent("esx:setAccountMoney", self.source, accountName, amount, "Sync account with item")
                 end
             end
         end

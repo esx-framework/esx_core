@@ -10,14 +10,16 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 1,
     },
     {
         label = TranslateCap("mom"),
         name = "mom",
-        value = 21,
-        min = 21,
+        value = 0,
+        min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 45,
     },
     {
         label = TranslateCap("dad"),
@@ -26,6 +28,16 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 44,
+    },
+    {
+        label = TranslateCap("grandparents"),
+        name = "grandparents",
+        value = 0,
+        min = 0,
+        zoomOffset = 0.6,
+        camOffset = 0.65,
+        max = 45,
     },
     {
         label = TranslateCap("resemblance"),
@@ -34,6 +46,16 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 100,
+    },
+    {
+        label = TranslateCap("resemblance_g"),
+        name = "face_g_weight",
+        value = 0,
+        min = 0,
+        zoomOffset = 0.6,
+        camOffset = 0.65,
+        max = 100,
     },
     {
         label = TranslateCap("skin_tone"),
@@ -42,6 +64,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 100,
     },
     {
         label = TranslateCap("nose_1"),
@@ -50,6 +73,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("nose_2"),
@@ -58,6 +82,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("nose_3"),
@@ -66,6 +91,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("nose_4"),
@@ -74,6 +100,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("nose_5"),
@@ -82,6 +109,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("nose_6"),
@@ -90,6 +118,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("cheeks_1"),
@@ -98,6 +127,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("cheeks_2"),
@@ -106,6 +136,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("cheeks_3"),
@@ -114,6 +145,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("lip_fullness"),
@@ -122,6 +154,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("jaw_bone_width"),
@@ -130,6 +163,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("jaw_bone_length"),
@@ -138,6 +172,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("chin_height"),
@@ -146,6 +181,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("chin_length"),
@@ -154,6 +190,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("chin_width"),
@@ -162,6 +199,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("chin_hole"),
@@ -170,6 +208,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("neck_thickness"),
@@ -178,6 +217,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("hair_1"),
@@ -186,6 +226,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 2) - 1
+        end
     },
     {
         label = TranslateCap("hair_2"),
@@ -194,6 +237,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 2, Character["hair_1"]) - 1
+        end
     },
     {
         label = TranslateCap("hair_color_1"),
@@ -202,6 +248,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("hair_color_2"),
@@ -210,6 +259,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("tshirt_1"),
@@ -219,6 +271,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 8,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 8) - 1
+        end
     },
     {
         label = TranslateCap("tshirt_2"),
@@ -228,6 +283,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "tshirt_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 8, Character["tshirt_1"]) - 1
+        end
     },
     {
         label = TranslateCap("torso_1"),
@@ -237,6 +295,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 11,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 11) - 1
+        end
     },
     {
         label = TranslateCap("torso_2"),
@@ -246,6 +307,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "torso_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 11, Character["torso_1"]) - 1
+        end
     },
     {
         label = TranslateCap("decals_1"),
@@ -255,6 +319,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 10,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 10) - 1
+        end
     },
     {
         label = TranslateCap("decals_2"),
@@ -264,6 +331,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "decals_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 10, Character["decals_1"]) - 1
+        end
     },
     {
         label = TranslateCap("arms"),
@@ -272,6 +342,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 3) - 1
+        end
     },
     {
         label = TranslateCap("arms_2"),
@@ -280,6 +353,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = 10,
     },
     {
         label = TranslateCap("pants_1"),
@@ -289,6 +363,9 @@ Config.Components = {
         zoomOffset = 0.8,
         camOffset = -0.5,
         componentId = 4,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 4) - 1
+        end
     },
     {
         label = TranslateCap("pants_2"),
@@ -298,6 +375,9 @@ Config.Components = {
         zoomOffset = 0.8,
         camOffset = -0.5,
         textureof = "pants_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 4, Character["pants_1"]) - 1
+        end
     },
     {
         label = TranslateCap("shoes_1"),
@@ -307,6 +387,9 @@ Config.Components = {
         zoomOffset = 0.8,
         camOffset = -0.8,
         componentId = 6,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 6) - 1
+        end
     },
     {
         label = TranslateCap("shoes_2"),
@@ -316,6 +399,9 @@ Config.Components = {
         zoomOffset = 0.8,
         camOffset = -0.8,
         textureof = "shoes_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 6, Character["shoes_1"]) - 1
+        end
     },
     {
         label = TranslateCap("mask_1"),
@@ -325,6 +411,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         componentId = 1,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 1) - 1
+        end
     },
     {
         label = TranslateCap("mask_2"),
@@ -334,6 +423,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         textureof = "mask_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 1, Character["mask_1"]) - 1
+        end
     },
     {
         label = TranslateCap("bproof_1"),
@@ -343,6 +435,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 9,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 9) - 1
+        end
     },
     {
         label = TranslateCap("bproof_2"),
@@ -352,6 +447,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "bproof_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 9, Character["bproof_1"]) - 1
+        end
     },
     {
         label = TranslateCap("chain_1"),
@@ -361,6 +459,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         componentId = 7,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 7) - 1
+        end
     },
     {
         label = TranslateCap("chain_2"),
@@ -370,6 +471,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         textureof = "chain_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 7, Character["chain_1"]) - 1
+        end
     },
     {
         label = TranslateCap("helmet_1"),
@@ -379,6 +483,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         componentId = 0,
+        max = function(playerPed)
+            return GetNumberOfPedPropDrawableVariations(playerPed, 0) - 1
+        end
     },
     {
         label = TranslateCap("helmet_2"),
@@ -388,6 +495,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         textureof = "helmet_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedPropTextureVariations(playerPed, 0, Character["helmet_1"]) - 1
+        end
     },
     {
         label = TranslateCap("glasses_1"),
@@ -397,6 +507,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         componentId = 1,
+        max = function(playerPed)
+            return GetNumberOfPedPropDrawableVariations(playerPed, 1) - 1
+        end
     },
     {
         label = TranslateCap("glasses_2"),
@@ -406,6 +519,9 @@ Config.Components = {
         zoomOffset = 0.6,
         camOffset = 0.65,
         textureof = "glasses_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedPropTextureVariations(playerPed, 1, Character["glasses_1"]) - 1
+        end
     },
     {
         label = TranslateCap("watches_1"),
@@ -415,6 +531,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 6,
+        max = function(playerPed)
+            return GetNumberOfPedPropDrawableVariations(playerPed, 6) - 1
+        end
     },
     {
         label = TranslateCap("watches_2"),
@@ -424,6 +543,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "watches_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedPropTextureVariations(playerPed, 6, Character["watches_1"]) - 1
+        end
     },
     {
         label = TranslateCap("bracelets_1"),
@@ -433,6 +555,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 7,
+        max = function(playerPed)
+            return GetNumberOfPedPropDrawableVariations(playerPed, 7) - 1
+        end
     },
     {
         label = TranslateCap("bracelets_2"),
@@ -442,6 +567,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "bracelets_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedPropTextureVariations(playerPed, 7, Character["bracelets_1"]) - 1
+        end
     },
     {
         label = TranslateCap("bag"),
@@ -451,6 +579,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         componentId = 5,
+        max = function(playerPed)
+            return GetNumberOfPedDrawableVariations(playerPed, 5) - 1
+        end
     },
     {
         label = TranslateCap("bag_color"),
@@ -460,6 +591,9 @@ Config.Components = {
         zoomOffset = 0.75,
         camOffset = 0.15,
         textureof = "bags_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedTextureVariations(playerPed, 5, Character["bags_1"]) - 1
+        end
     },
     {
         label = TranslateCap("eye_color"),
@@ -468,6 +602,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 31,
     },
     {
         label = TranslateCap("eye_squint"),
@@ -476,6 +611,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("eyebrow_size"),
@@ -484,6 +620,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("eyebrow_type"),
@@ -492,6 +629,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(2) - 1
+        end
     },
     {
         label = TranslateCap("eyebrow_color_1"),
@@ -500,6 +640,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("eyebrow_color_2"),
@@ -508,6 +651,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("eyebrow_height"),
@@ -516,6 +662,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("eyebrow_depth"),
@@ -524,6 +671,7 @@ Config.Components = {
         min = -10,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("makeup_type"),
@@ -532,6 +680,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(4) - 1
+        end
     },
     {
         label = TranslateCap("makeup_thickness"),
@@ -540,6 +691,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("makeup_color_1"),
@@ -548,6 +700,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("makeup_color_2"),
@@ -556,6 +711,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("lipstick_type"),
@@ -564,6 +722,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(8) - 1
+        end
     },
     {
         label = TranslateCap("lipstick_thickness"),
@@ -572,6 +733,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("lipstick_color_1"),
@@ -580,6 +742,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("lipstick_color_2"),
@@ -588,6 +753,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("ear_accessories"),
@@ -597,6 +765,9 @@ Config.Components = {
         zoomOffset = 0.4,
         camOffset = 0.65,
         componentId = 2,
+        max = function(playerPed)
+            return GetNumberOfPedPropDrawableVariations(playerPed, 2) - 1
+        end
     },
     {
         label = TranslateCap("ear_accessories_color"),
@@ -606,6 +777,9 @@ Config.Components = {
         zoomOffset = 0.4,
         camOffset = 0.65,
         textureof = "ears_1",
+        max = function(playerPed, Character)
+            return GetNumberOfPedPropTextureVariations(playerPed, 2, Character["ears_1"]) - 1
+        end
     },
     {
         label = TranslateCap("chest_hair"),
@@ -614,6 +788,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = function()
+            return GetPedHeadOverlayNum(10) - 1
+        end
     },
     {
         label = TranslateCap("chest_hair_1"),
@@ -622,6 +799,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = 10,
     },
     {
         label = TranslateCap("chest_color"),
@@ -630,6 +808,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("bodyb"),
@@ -638,6 +819,9 @@ Config.Components = {
         min = -1,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = function()
+            return GetPedHeadOverlayNum(11) - 1
+        end
     },
     {
         label = TranslateCap("bodyb_size"),
@@ -646,6 +830,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.75,
         camOffset = 0.15,
+        max = 10,
     },
     {
         label = TranslateCap("bodyb_extra"),
@@ -654,6 +839,9 @@ Config.Components = {
         min = -1,
         zoomOffset = 0.4,
         camOffset = 0.15,
+        max = function()
+            return GetPedHeadOverlayNum(12) - 1
+        end
     },
     {
         label = TranslateCap("bodyb_extra_thickness"),
@@ -662,6 +850,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.15,
+        max = 10,
     },
     {
         label = TranslateCap("wrinkles"),
@@ -670,6 +859,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(3) - 1
+        end
     },
     {
         label = TranslateCap("wrinkle_thickness"),
@@ -678,6 +870,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("blemishes"),
@@ -686,6 +879,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(0) - 1
+        end
     },
     {
         label = TranslateCap("blemishes_size"),
@@ -694,6 +890,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("blush"),
@@ -702,6 +899,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(5) - 1
+        end
     },
     {
         label = TranslateCap("blush_1"),
@@ -710,6 +910,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("blush_color"),
@@ -718,6 +919,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("complexion"),
@@ -726,6 +930,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(6) - 1
+        end
     },
     {
         label = TranslateCap("complexion_1"),
@@ -734,6 +941,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("sun"),
@@ -742,6 +950,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(7) - 1
+        end
     },
     {
         label = TranslateCap("sun_1"),
@@ -750,6 +961,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("freckles"),
@@ -758,6 +970,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(9) - 1
+        end
     },
     {
         label = TranslateCap("freckles_1"),
@@ -766,6 +981,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("beard_type"),
@@ -774,6 +990,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetPedHeadOverlayNum(1) - 1
+        end
     },
     {
         label = TranslateCap("beard_size"),
@@ -782,6 +1001,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = 10,
     },
     {
         label = TranslateCap("beard_color_1"),
@@ -790,6 +1010,9 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
     {
         label = TranslateCap("beard_color_2"),
@@ -798,5 +1021,8 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.4,
         camOffset = 0.65,
+        max = function()
+            return GetNumHairColors() - 1
+        end
     },
 }

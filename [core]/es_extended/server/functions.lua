@@ -1,3 +1,5 @@
+---@param msg string
+---@return nil
 function ESX.Trace(msg)
     if Config.EnableDebug then
         print(("[^2TRACE^7] %s^7"):format(msg))
@@ -22,12 +24,16 @@ function ESX.TriggerClientEvent(eventName, playerIds, ...)
     end
 end
 
+---@param name string | table
+---@param group string | table
+---@param cb function
+---@param allowConsole? boolean
+---@param suggestion? table
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     if type(name) == "table" then
         for _, v in ipairs(name) do
             ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
         end
-
         return
     end
 
@@ -186,8 +192,12 @@ local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
     xPlayer.setMeta("health", GetEntityHealth(ped))
     xPlayer.setMeta("armor", GetPedArmour(ped))
+    xPlayer.setMeta("lastPlaytime", xPlayer.getPlayTime())
 end
 
+---@param xPlayer table
+---@param cb? function
+---@return nil
 function Core.SavePlayer(xPlayer, cb)
     if not xPlayer.spawned then
         return cb and cb()
@@ -221,6 +231,8 @@ function Core.SavePlayer(xPlayer, cb)
     )
 end
 
+---@param cb? function
+---@return nil
 function Core.SavePlayers(cb)
     local xPlayers <const> = ESX.Players
     if not next(xPlayers) then
@@ -237,7 +249,7 @@ function Core.SavePlayers(cb)
             xPlayer.job.name,
             xPlayer.job.grade,
             xPlayer.group,
-            json.encode(xPlayer.getCoords()),
+            json.encode(xPlayer.getCoords(false, true)),
             json.encode(xPlayer.getInventory(true)),
             json.encode(xPlayer.getLoadout(true)),
             json.encode(xPlayer.getMeta()),
@@ -277,6 +289,9 @@ local function checkTable(key, val, player, xPlayers)
     end
 end
 
+---@param key? string
+---@param val? string|table
+---@return table
 function ESX.GetExtendedPlayers(key, val)
     local xPlayers = {}
     if type(val) == "table" then
@@ -298,6 +313,9 @@ function ESX.GetExtendedPlayers(key, val)
     return xPlayers
 end
 
+---@param key? string
+---@param val? string|table
+---@return number | table
 function ESX.GetNumPlayers(key, val)
     if not key then
         return #GetPlayers()
@@ -326,28 +344,36 @@ function ESX.GetNumPlayers(key, val)
     return #ESX.GetExtendedPlayers(key, val)
 end
 
+---@param source number
+---@return table
 function ESX.GetPlayerFromId(source)
     return ESX.Players[tonumber(source)]
 end
 
+---@param identifier string
+---@return table
 function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
 
+---@param playerId number | string
+---@return string
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
         return "ESX-DEBUG-LICENCE"
     end
 
+    playerId = tostring(playerId)
+
     local identifier = GetPlayerIdentifierByType(playerId, "license")
     return identifier and identifier:gsub("license:", "")
 end
 
 ---@param model string|number
----@param player number playerId
+---@param player number
 ---@param cb function
-
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetVehicleType(model, player, cb)
     model = type(model) == "string" and joaat(model) or model
 
@@ -361,6 +387,11 @@ function ESX.GetVehicleType(model, player, cb)
     end, model)
 end
 
+---@param name string
+---@param title string
+---@param color string
+---@param message string
+---@return nil
 function ESX.DiscordLog(name, title, color, message)
     local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
     local embedData = {
@@ -380,7 +411,9 @@ function ESX.DiscordLog(name, title, color, message)
     }
     PerformHttpRequest(
         webHook,
-        nil,
+        function ()
+            return
+        end,
         "POST",
         json.encode({
             username = "Logs",
@@ -392,6 +425,11 @@ function ESX.DiscordLog(name, title, color, message)
     )
 end
 
+---@param name string
+---@param title string
+---@param color string
+---@param fields table
+---@return nil
 function ESX.DiscordLogFields(name, title, color, fields)
     local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
     local embedData = {
@@ -412,7 +450,9 @@ function ESX.DiscordLogFields(name, title, color, fields)
     }
     PerformHttpRequest(
         webHook,
-        nil,
+        function ()
+            return
+        end,
         "POST",
         json.encode({
             username = "Logs",
@@ -424,6 +464,7 @@ function ESX.DiscordLogFields(name, title, color, fields)
     )
 end
 
+---@return nil
 function ESX.RefreshJobs()
     local Jobs = {}
     local jobs = MySQL.query.await("SELECT * FROM jobs")
@@ -458,10 +499,17 @@ function ESX.RefreshJobs()
     end
 end
 
+---@param item string
+---@param cb function
+---@return nil
 function ESX.RegisterUsableItem(item, cb)
     Core.UsableItemsCallbacks[item] = cb
 end
 
+---@param source number
+---@param item string
+---@param ... any
+---@return nil
 function ESX.UseItem(source, item, ...)
     if ESX.Items[item] then
         local itemCallback = Core.UsableItemsCallbacks[item]
@@ -478,10 +526,15 @@ function ESX.UseItem(source, item, ...)
     end
 end
 
+---@param index string
+---@param overrides table
+---@return nil
 function ESX.RegisterPlayerFunctionOverrides(index, overrides)
     Core.PlayerFunctionOverrides[index] = overrides
 end
 
+---@param index string
+---@return nil
 function ESX.SetPlayerFunctionOverride(index)
     if not index or not Core.PlayerFunctionOverrides[index] then
         return print("[^3WARNING^7] No valid index provided.")
@@ -490,14 +543,10 @@ function ESX.SetPlayerFunctionOverride(index)
     Config.PlayerFunctionOverride = index
 end
 
+---@param item string
+---@return string?
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetItemLabel(item)
-    if Config.OxInventory then
-        item = exports.ox_inventory:Items(item)
-        if item then
-            return item.label
-        end
-    end
-
     if ESX.Items[item] then
         return ESX.Items[item].label
     else
@@ -505,10 +554,12 @@ function ESX.GetItemLabel(item)
     end
 end
 
+---@return table
 function ESX.GetJobs()
     return ESX.Jobs
 end
 
+---@return table
 function ESX.GetUsableItems()
     local Usables = {}
     for k in pairs(Core.UsableItemsCallbacks) do
@@ -517,7 +568,16 @@ function ESX.GetUsableItems()
     return Usables
 end
 
-if not Config.OxInventory then
+if not Config.CustomInventory then
+    ---@param itemType string
+    ---@param name string
+    ---@param count integer
+    ---@param label string
+    ---@param playerId number
+    ---@param components? string | table
+    ---@param tintIndex? integer
+    ---@param coords? table | vector3
+    ---@return nil
     function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
         local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
         local xPlayer = ESX.Players[playerId]
@@ -535,22 +595,21 @@ if not Config.OxInventory then
     end
 end
 
+---@param job string
+---@param grade string
+---@return boolean
 function ESX.DoesJobExist(job, grade)
     return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
+---@param playerId string | number
+---@return boolean
 function Core.IsPlayerAdmin(playerId)
-    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") and true or false then
+    playerId = tostring(playerId)
+    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") then
         return true
     end
 
     local xPlayer = ESX.Players[playerId]
-
-    if xPlayer then
-        if Config.AdminGroups[xPlayer.group] then
-            return true
-        end
-    end
-
-    return false
+    return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end

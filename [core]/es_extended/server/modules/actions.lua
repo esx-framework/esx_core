@@ -10,10 +10,6 @@ if Config.EnableDebug then
         print("esx:playerPedChanged", source, netId)
     end)
 
-    AddEventHandler("esx:playerJumping", function()
-        print("esx:playerJumping", source)
-    end)
-
     AddEventHandler("esx:enteringVehicle", function(plate, seat, netId)
         print("esx:enteringVehicle", "source", source, "plate", plate, "seat", seat, "netId", netId)
     end)

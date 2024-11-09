@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 body {
     font-family: sans-serif;
@@ -11,21 +11,166 @@ body {
 }
 
 .dialog {
-    width: 332px;
-    opacity: 0.95;
-    padding: 20px;
+    width: 477px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #152029;
-    border-radius: 10px;
-    box-shadow: 0 -5px 3px -3px #21303d, 0 5px 3px -3px #21303d;
+    background-color: #080808;
+    border-radius: 8px;
     border: none;
     color: #ffffff;
+    font-family: "Poppins", sans-serif;
 }
 
-.title {
+.dialog__header {
+    background-color: #040404;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.dialog__header h1 {
+    font-weight: 700;
+    margin-bottom: 0;
+    font-size: 30px;
+}
+
+.dialog__header span {
+    color: #FD9800;
+}
+
+.dialog__body {
+    padding-block: 20px;
+    padding-inline: 65px;
+}
+
+.dialog__body-hint {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dialog__body-form {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.dialog__form-submit {
+    border:none;
+    background-color: #FD9800;
+    color: #fff;
+    font-size: 18px;
+    font-weight:bold;
+    border-radius: 4px;
+    padding-block: 5px;
+}
+
+.dialog__form-submit i {
+    margin-right: 5px;
+}
+
+.dialog__form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    background-color: #040404;
+    position: relative;
+}
+
+.dialog__form-group--radio {
+    gap: 0;
+}
+
+.dialog__form-group label {
+    text-align: center;
+    flex-grow: 1; /* Label will expand to fill available space */
+    flex-shrink: 1; /* Allows the label to shrink if necessary */
+    padding-inline: 20px; /* Horizontal padding */
+}
+
+.dialog__form-group input {
+    background-color: transparent;
+    border: none;
+    height: 30px;
+    width: 180px; /* Fixed width for input */
+    flex-shrink: 0; /* Prevent input from shrinking */
+    color: white;
+}
+
+
+.dialog__form-group input:focus {
+    background-color: rgba(15, 15, 15, 0.9);
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;
+}
+
+.dialog__form-validation {
+    position: relative;
+}
+
+.dialog__form-validation i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.dialog__form-radio {
+    display: flex;
+    align-items: center;
+}
+
+.dialog__form-radio input {
+    display: none;
+}
+
+.dialog__form-radio label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.dialog__form-radio input + label {
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.dialog__form-radio input:checked + label {
+    color: #30A1FD;
+    height: 30px;
+}
+
+.dialog__form-message {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    font-size: 9px;
+}
+
+.dialog__form-message--error {
+    color: #733838;
+}
+
+#male:checked + label {
+    color: #30A1FD; /* Blue color */
+}
+
+/* For the female radio button */
+#female:checked + label {
+    color: #FF69B4; /* Pink color */
+}
+
+/* .title {
     font-family: "Oswald", sans-serif;
     font-size: 22px;
     text-align: center;
@@ -48,12 +193,10 @@ input {
 }
 
 ::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: rgba(84, 97, 105, 255);
     font-family: "Oswald", sans-serif;
     font-weight: 200;
     opacity: 1;
-    /* Firefox */
 }
 
 .radio-toolbar input[type="radio"] {
@@ -102,7 +245,6 @@ input {
 button {
     display: block;
     margin-top: 35px;
-    /*padding: 10px;*/
     background-color: #4569c6;
     outline: none;
     border: 2px double rgba(40, 40, 40, 0.9);
@@ -150,4 +292,4 @@ h1 {
     color: black;
     top: -1px;
     left: 50%;
-}
+} */

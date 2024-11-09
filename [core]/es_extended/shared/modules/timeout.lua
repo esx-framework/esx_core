@@ -1,6 +1,9 @@
 local TimeoutCount = 0
 local CancelledTimeouts = {}
 
+---@param msec number
+---@param cb function
+---@return number
 ESX.SetTimeout = function(msec, cb)
     local id <const> = TimeoutCount + 1
 
@@ -18,6 +21,8 @@ ESX.SetTimeout = function(msec, cb)
     return id
 end
 
+---@param id number
+---@return nil
 ESX.ClearTimeout = function(id)
     CancelledTimeouts[id] = true
 end

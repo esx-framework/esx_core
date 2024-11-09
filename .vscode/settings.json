@@ -1,0 +1,7 @@
+{
+    "Lua.diagnostics.globals": [
+        "MySQL",
+        "GetPlayerTimeOnline",
+        "SetEntityOrphanMode"
+    ]
+}

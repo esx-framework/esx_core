@@ -91,11 +91,18 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
         local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
             if vehicleType then
-                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords, heading)
-                if not DoesEntityExist(createdVehicle) then
-                    return error("Unfortunately, this vehicle has not spawned")
+                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
+                local tries = 0
+
+                while not createdVehicle or createdVehicle == 0 or not GetEntityCoords(createdVehicle) do
+                    Wait(200)
+                    tries = tries + 1
+                    if tries > 20 then
+                        return  error(("Could not spawn vehicle - ^5%s^7!"):format(model))
+                    end
                 end
 
+                SetEntityOrphanMode(createdVehicle, 2)
                 local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
                 Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
                 cb(networkId)
@@ -116,7 +123,7 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     end
     local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
     CreateThread(function()
-        local entity = CreateObject(model, objectCoords, true, true)
+        local entity = CreateObject(model, objectCoords.x, objectCoords.y, objectCoords.z, true, true, false)
         while not DoesEntityExist(entity) do
             Wait(50)
         end
@@ -194,14 +201,14 @@ end
 
 ---@param coords vector3
 ---@param maxDistance number
----@param modelFilter table models to ignore, where the key is the model hash and the value is true
+---@param modelFilter table | nil models to ignore, where the key is the model hash and the value is true
 ---@return table
 function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter)
     return getNearbyEntities(GetAllVehicles(), coords, modelFilter, maxDistance)
 end
 
 local function getClosestEntity(entities, coords, modelFilter, isPed)
-    local distance, closestEntity, closestCoords = 100, nil, nil
+    local distance, closestEntity, closestCoords = 100, 0, vector3(0, 0, 0)
     coords = type(coords) == "number" and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z)
 
     for _, entity in pairs(entities) do
@@ -215,6 +222,7 @@ local function getClosestEntity(entities, coords, modelFilter, isPed)
             end
         end
     end
+
     return NetworkGetNetworkIdFromEntity(closestEntity), distance, closestCoords
 end
 
