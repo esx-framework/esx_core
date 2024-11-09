@@ -82,12 +82,13 @@ function Menu:Change(data, menu)
 
     if skin[data.current.name] ~= data.current.value then
         -- Change skin element
-        TriggerEvent("skinchanger:change", data.current.name, data.current.value)
-
+        exports["skinchanger"]:Change(data.current.name, data.current.value)
+        skin = exports["skinchanger"]:GetSkin()
         local newData = {}
 
         for i = 1, #self.elements, 1 do
             local component = self.components[i]
+
             newData.max = type(component.max) == "function" and component.max(PlayerPedId(), skin) or component.max
 
             if self.elements[i].textureof ~= nil and data.current.name == self.elements[i].textureof then
