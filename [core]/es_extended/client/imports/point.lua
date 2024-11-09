@@ -6,7 +6,7 @@ function Point:constructor(properties)
 	self.inside = properties.inside or function() end
 	self.enter = properties.enter or function() end
 	self.leave = properties.leave or function() end
-	self.handle = ESX.CreatePointIntenal(properties.coords, properties.distance, properties.hidden, function()
+	self.handle = ESX.CreatePointInternal(properties.coords, properties.distance, properties.hidden, function()
 		self.nearby = true
 		if self.enter then
 			self:enter()

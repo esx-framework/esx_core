@@ -1,6 +1,6 @@
 local points = {}
 
-function ESX.CreatePointIntenal(coords, distance, hidden, enter, leave)
+function ESX.CreatePointInternal(coords, distance, hidden, enter, leave)
 	local point = {
 		coords = coords,
 		distance = distance,
