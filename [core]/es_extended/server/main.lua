@@ -97,9 +97,9 @@ end
 
 if not Config.Multichar then
     AddEventHandler("playerConnecting", function(_, _, deferrals)
+        local playerId = source
         deferrals.defer()
         Wait(0) -- Required
-        local playerId = source
         local identifier = ESX.GetIdentifier(playerId)
 
 
