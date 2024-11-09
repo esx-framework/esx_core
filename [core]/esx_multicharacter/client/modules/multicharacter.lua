@@ -261,10 +261,13 @@ function Multicharacter:PlayerLoaded(playerData, isNew, skin)
     ESX.SpawnPlayer(skin, spawn, function()
         self:HideHud(false)
         SetPlayerControl(ESX.playerId, true, 0)
+
+        self.playerPed = PlayerPedId()
         FreezeEntityPosition(self.playerPed, false)
+        SetEntityCollision(self.playerPed, true, true)
 
         DoScreenFadeIn(750)
-        print("fading in")
+
         self:AwaitFadeIn()
 
         TriggerServerEvent("esx:onPlayerSpawn")
