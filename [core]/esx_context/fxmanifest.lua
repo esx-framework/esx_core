@@ -4,7 +4,7 @@ game 'gta5'
 author 'ESX-Framework & Brayden'
 description 'A simplistic context menu for ESX.'
 lua54 'yes'
-version '1.10.10'
+version '1.11.0'
 
 ui_page 'index.html'
 
