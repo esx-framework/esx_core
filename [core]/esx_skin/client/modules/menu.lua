@@ -49,7 +49,7 @@ function Menu:InsertElements()
         local data = self.components[i]
         data.value = value
         data.type = "slider"
-        data.max = type(data.max) == "function" and data.max() or data.max
+        data.max = self.maxValues[self.components[i].name]
 
         if not self.elements then
             self.elements = {}
@@ -83,7 +83,8 @@ function Menu:Change(data, menu)
     if skin[data.current.name] ~= data.current.value then
         -- Change skin element
         exports["skinchanger"]:Change(data.current.name, data.current.value)
-        skin = exports["skinchanger"]:GetSkin()
+        skin[data.current.name] = data.current.value
+
         local newData = {}
 
         for i = 1, #self.elements, 1 do
@@ -115,7 +116,6 @@ function Menu:Open(submit, cancel, restrict)
     Skin.last = exports["skinchanger"]:GetSkin()
 
     self.components, self.maxValues = exports["skinchanger"]:GetData()
-
     if restrict then
         self.components = self:Restrict()
     end
