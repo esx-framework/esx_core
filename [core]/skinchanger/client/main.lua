@@ -116,7 +116,7 @@ function SkinChanger:SetHead()
     if not self.character["grandparents"] then
         self.character["grandparents"] = 0
     end
-
+   
     SetPedHeadBlendData(self.playerPed,
     self.character["mom"], self.character["dad"], self.character["grandparents"] , self.character["mom"],
     self.character["dad"], self.character["grandparents"], face_weight, skin_weight, third_weight, false)
@@ -243,6 +243,19 @@ function SkinChanger:Init()
     end
 end
 
+function SkinChanger:GetData(noMax)
+    local components = SkinChanger.components
+    for k, v in pairs(SkinChanger.character) do
+        for i = 1, #components, 1 do
+            if k == components[i].name then
+                components[i].value = v
+            end
+        end
+    end
+
+    return components, noMax and nil or self:MaxValues()
+end
+
 --- exports
 
 exports("GetSkin", function()
@@ -255,6 +268,10 @@ end)
 
 exports("LoadSkin", function(skin)
     return SkinChanger:LoadSkin(skin)
+end)
+
+exports("GetData", function(noMax)
+    return SkinChanger:GetData(noMax)
 end)
 
 exports("LoadClothes", function(playerSkin, clothesSkin)
@@ -292,16 +309,7 @@ AddEventHandler("skinchanger:modelLoaded", function()
 end)
 
 AddEventHandler("skinchanger:getData", function(cb)
-    local components = SkinChanger.components
-    for k, v in pairs(SkinChanger.character) do
-        for i = 1, #components, 1 do
-            if k == components[i].name then
-                components[i].value = v
-            end
-        end
-    end
-
-    cb(components, SkinChanger:MaxValues())
+    cb(SkinChanger:GetData())
 end)
 
 SkinChanger:Init()

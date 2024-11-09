@@ -1,8 +1,10 @@
 Locales["en"] = {
     ["sex"] = "sex",
-    ["mom"] = "mom's face",
-    ["dad"] = "dad's face",
-    ["resemblance"] = "resemblance",
+    ["mom"] = "Face 1",
+    ["dad"] = "Face 2",
+    ["grandparents"] = "Face 3",
+    ["resemblance"] = "Face 1/2 Mix",
+    ["resemblance_g"] = "Face 3 Mix",
     ["skin_tone"] = "skin tone",
     ["nose_1"] = "nose width",
     ["nose_2"] = "nose peak height",
