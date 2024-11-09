@@ -1,4 +1,4 @@
-local Debug = ESX.GetConfig().EnableDebug
+local Debug = true
 
 ---@param notificatonType string the notification type
 ---@param length number the length of the notification

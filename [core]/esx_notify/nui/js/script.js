@@ -15,15 +15,15 @@ const types = {
 
 // the color codes example `i ~r~love~s~ donuts`
 const codes = {
-    "~r~": "red",
+    "~r~": "#c0392b",
     "~b~": "#378cbf",
-    "~g~": "green",
+    "~g~": "#2ecc71",
     "~y~": "yellow",
     "~p~": "purple",
     "~c~": "grey",
     "~m~": "#212121",
     "~u~": "black",
-    "~o~": "orange",
+    "~o~": "#fb9b04",
 };
 
 w.addEventListener("message", (event) => {
@@ -67,8 +67,8 @@ notification = (data) => {
     `).appendTo(`#root`);
 
     setTimeout(() => {
-        notification.fadeOut(700);
-    }, data.length);
+        notification.fadeOut(70);
+    }, 10000);
 
     return notification;
 };
