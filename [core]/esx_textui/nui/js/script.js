@@ -20,15 +20,15 @@ const types = {
 
 // the color codes example `i ~r~love~s~ donuts`
 const codes = {
-    "~r~": "red",
+    "~r~": "#c0392b",
     "~b~": "#378cbf",
-    "~g~": "green",
+    "~g~": "#2ecc71",
     "~y~": "yellow",
     "~p~": "purple",
     "~c~": "grey",
     "~m~": "#212121",
     "~u~": "black",
-    "~o~": "orange",
+    "~o~": "#fb9b04",
 };
 
 w.addEventListener("message", (event) => {
@@ -47,7 +47,11 @@ w.addEventListener("message", (event) => {
         }
     } else if (event.data.action === "hide") {
         if (lastType !== "") {
-            doc.getElementById(lastType).style.display = "none";
+            doc.getElementById(lastType).classList.add("fadeOut");
+            setTimeout(() => {
+                doc.getElementById(lastType).classList.remove("fadeOut");
+                doc.getElementById(lastType).style.display = "none";
+            }, 300);
         } else {
             console.log("There isn't a textUI displaying!?");
         }
@@ -78,6 +82,10 @@ notification = (data) => {
     }
 
     doc.getElementById(types[data.type]["id"]).style.display = "block";
-    lastType = types[data.type]["id"];
-    doc.getElementById(types[data.type]["message"]).innerHTML = data["message"];
+    doc.getElementById(types[data.type]["id"]).classList.add("fadeIn");
+    setTimeout(() => {
+        doc.getElementById(types[data.type]["id"]).classList.remove("fadeIn");
+        lastType = types[data.type]["id"];
+        doc.getElementById(types[data.type]["message"]).innerHTML = data["message"];
+    }, 300);
 };
