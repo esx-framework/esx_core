@@ -226,22 +226,21 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     -- Loadout
     if not Config.CustomInventory then
-        if not result.loadout or result.loadout == "" then
-            return
-        end
+        if result.loadout and result.loadout ~= "" then
 
-        local loadout = json.decode(result.loadout)
-        for name, weapon in pairs(loadout) do
-            local label = ESX.GetWeaponLabel(name)
+            local loadout = json.decode(result.loadout)
+            for name, weapon in pairs(loadout) do
+                local label = ESX.GetWeaponLabel(name)
 
-            if label then
-                userData.loadout[#userData.loadout + 1] = {
-                    name = name,
-                    ammo = weapon.ammo,
-                    label = label,
-                    components = weapon.components or {},
-                    tintIndex = weapon.tintIndex or 0,
-                }
+                if label then
+                    userData.loadout[#userData.loadout + 1] = {
+                        name = name,
+                        ammo = weapon.ammo,
+                        label = label,
+                        components = weapon.components or {},
+                        tintIndex = weapon.tintIndex or 0,
+                    }
+                end
             end
         end
     end
