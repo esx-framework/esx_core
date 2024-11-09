@@ -70,7 +70,6 @@ function Multicharacter:SetupCharacters()
     ESX.PlayerData = {}
 
     self.spawned = false
-    self.cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 
     self.playerPed = PlayerPedId()
     self.spawnCoords = Config.Spawn[ESX.Math.Random(1,#Config.Spawn)]
@@ -231,21 +230,6 @@ function Multicharacter:Reset()
     end)
 end
 
-function Multicharacter:Spawn(spawn)
-
-    RequestCollisionAtCoord(spawn.x, spawn.y, spawn.z)
-
-    FreezeEntityPosition(self.playerPed, true)
-    SetEntityCoordsNoOffset(self.playerPed, spawn.x, spawn.y, spawn.z, false, false, true)
-    SetEntityHeading(self.playerPed, spawn.heading or spawn.w or 0.0)
-
-    while not HasCollisionLoadedAroundEntity(self.playerPed) do
-        Wait(0)
-    end
-
-    NetworkResurrectLocalPlayer(spawn.x, spawn.y, spawn.z, spawn.heading or spawn.w or 0.0, 0, true)
-end
-
 function Multicharacter:PlayerLoaded(playerData, isNew, skin)
     DoScreenFadeOut(750)
     self:AwaitFadeOut()
@@ -265,6 +249,7 @@ function Multicharacter:PlayerLoaded(playerData, isNew, skin)
             Wait(200)
         end
 
+        skin = exports["skinchanger"]:GetSkin()
         DoScreenFadeOut(500)
         self:AwaitFadeOut()
 
@@ -273,20 +258,20 @@ function Multicharacter:PlayerLoaded(playerData, isNew, skin)
     end
 
     self:DestoryCamera()
-    self:Spawn(spawn)
-    Wait(500)
+    ESX.SpawnPlayer(skin, spawn, function()
+        self:HideHud(false)
+        SetPlayerControl(ESX.playerId, true, 0)
+        FreezeEntityPosition(self.playerPed, false)
 
-    self:HideHud(false)
-    SetPlayerControl(ESX.playerId, true, 0)
-    FreezeEntityPosition(self.playerPed, false)
+        DoScreenFadeIn(750)
+        print("fading in")
+        self:AwaitFadeIn()
 
-    DoScreenFadeIn(750)
-    self:AwaitFadeIn()
+        TriggerServerEvent("esx:onPlayerSpawn")
+        TriggerEvent("esx:onPlayerSpawn")
+        TriggerEvent("playerSpawned")
+        TriggerEvent("esx:restoreLoadout")
 
-    TriggerServerEvent("esx:onPlayerSpawn")
-    TriggerEvent("esx:onPlayerSpawn")
-    TriggerEvent("playerSpawned")
-    TriggerEvent("esx:restoreLoadout")
-
-    self:Reset()
+        self:Reset()
+    end)
 end
