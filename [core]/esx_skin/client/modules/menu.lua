@@ -88,7 +88,7 @@ function Menu:Change(data, menu)
 
         for i = 1, #self.elements, 1 do
             local component = self.components[i]
-            newData.max = type(component.max) == "function" and component.max() or component.max
+            newData.max = type(component.max) == "function" and component.max(PlayerPedId(), skin) or component.max
 
             if self.elements[i].textureof ~= nil and data.current.name == self.elements[i].textureof then
                 newData.value = 0
