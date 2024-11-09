@@ -1,6 +1,6 @@
 local points = {}
 
-function ESX.CreatePointIntenal(coords, distance, hidden, enter, leave)
+function ESX.CreatePointInternal(coords, distance, hidden, enter, leave)
 	local point = {
 		coords = coords,
 		distance = distance,
@@ -28,8 +28,7 @@ function StartPointsLoop()
     CreateThread(function()
         while true do
             local coords = GetEntityCoords(ESX.PlayerData.ped)
-            for i=1, #points do
-                local point = points[i]
+            for i, point in pairs(points) do
                 local distance = #(coords - point.coords)
 				
                 if not point.hidden and distance <= point.distance then
@@ -50,9 +49,9 @@ end
 
 
 AddEventHandler('onResourceStop', function(resource)
-	for i=1, #points do
-		if points[i].resource == resource then
-			points[i] = nil
-		end
-	end
+    for i, point in pairs(points) do
+        if point.resource == resource then
+            points[i] = nil
+        end
+    end
 end)
