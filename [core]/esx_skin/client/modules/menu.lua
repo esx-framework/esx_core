@@ -32,6 +32,7 @@ function Menu:Restrict()
             _components[#_components + 1] = self.components[i]
         end
     end
+    return _components
 end
 
 function Menu:InsertElements()

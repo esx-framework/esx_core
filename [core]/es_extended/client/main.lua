@@ -139,7 +139,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         end
     end
 
-    if not NetworkGetEntityOwner(vehicle) == ESX.playerId then
+    if NetworkGetEntityOwner(vehicle) ~= ESX.playerId then
         return
     end
 

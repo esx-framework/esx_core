@@ -926,11 +926,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
-    for _, funcs in pairs(Core.PlayerFunctionOverrides) do 
-        for fnName, fn in pairs(funcs) do 
+    for _, funcs in pairs(Core.PlayerFunctionOverrides) do
+        for fnName, fn in pairs(funcs) do
             self[fnName] = fn(self)
-        end  
-    end 
+        end
+    end
 
     return self
 end
