@@ -396,8 +396,4 @@ Locales["es"] = {
     ["tint_metallic_blue"] = "azul metálico",
     ["tint_metallic_white_aqua"] = "blanco aqua metálico",
     ["tint_metallic_red_yellow"] = "rojo amarillo metálico",
-
-    -- Duty related
-    ["stopped_duty"] = "Has salido de servicio.",
-    ["started_duty"] = "Has entrado de servicio.",
 }
