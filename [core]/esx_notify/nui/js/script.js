@@ -57,8 +57,9 @@ notification = (data) => {
         }
     }
 
+    const id = Math.floor(Math.random() * Math.random());
     const notification = $(`
-        <div class="notify ${data.type}">
+        <div id="${id}" class="notify ${data.type} fadeIn">
             <div class="innerText">
                 <span class="material-symbols-outlined icon">${types[data.type] ? types[data.type]["icon"] : types["info"]["icon"]}</span>
                 <p class="text">${data["message"]}</p>
@@ -67,8 +68,16 @@ notification = (data) => {
     `).appendTo(`#root`);
 
     setTimeout(() => {
-        notification.fadeOut(70);
-    }, 10000);
+        document.getElementById(id).classList.remove("fadeIn");
+    }, 300);
+
+    setTimeout(() => {
+        document.getElementById(id).classList.add("fadeOut");
+
+        setTimeout(() => {
+            document.getElementById(id).remove();
+        }, 400);
+    },data.length);
 
     return notification;
 };
