@@ -1,4 +1,7 @@
 RegisterNetEvent("esx_skin:save", function(skin)
+    if not skin or type(skin) ~= "table" then
+        return
+    end
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not ESX.GetConfig().CustomInventory then
