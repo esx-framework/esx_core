@@ -462,6 +462,7 @@ if not Config.CustomInventory then
             if not targetXPlayer.hasWeapon(itemName) then
                 sourceXPlayer.showNotification(TranslateCap("gave_weapon_noweapon", targetXPlayer.name))
                 targetXPlayer.showNotification(TranslateCap("received_weapon_noweapon", sourceXPlayer.name, weapon.label))
+                return
             end
 
             local _, weaponObject = ESX.GetWeapon(itemName)
@@ -502,7 +503,8 @@ if not Config.CustomInventory then
             if itemCount == nil or itemCount < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_amount"))
             end
-                local account = xPlayer.getAccount(itemName)
+
+            local account = xPlayer.getAccount(itemName)
 
             if itemCount > account.money or account.money < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_amount"))
