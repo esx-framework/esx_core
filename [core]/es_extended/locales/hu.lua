@@ -407,8 +407,4 @@ Locales["hu"] = {
     ["tint_metallic_blue"] = "metál kék",
     ["tint_metallic_white_aqua"] = "metál fehér aqua",
     ["tint_metallic_red_yellow"] = "metál piros sárga",
-
-    -- Duty related
-    ["stopped_duty"] = "Leadtad a szolgálatot.",
-    ["started_duty"] = "Szolgálatba álltál.",
 }
