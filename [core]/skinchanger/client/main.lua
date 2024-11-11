@@ -44,7 +44,7 @@ function SkinChanger:DefaultModel(male, cb)
     local model = self:RequestModel(characterModel)
 
     SetPlayerModel(PlayerId(), model)
-    SetPedDefaultComponentVariation(playerPed)
+    SetPedDefaultComponentVariation(PlayerPedId())
 
     SetModelAsNoLongerNeeded(model)
 

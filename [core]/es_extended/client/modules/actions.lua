@@ -145,8 +145,18 @@ function Actions:SlowLoop()
     end)
 end
 
+function Actions:PedTrackingLoop()
+    CreateThread(function()
+        while ESX.PlayerLoaded do
+            self:TrackPed()
+            Wait(0)
+        end
+    end)
+end
+
 function Actions:Init()
     self:SlowLoop()
+    self:PedTrackingLoop()
 end
 
 Actions:Init()
