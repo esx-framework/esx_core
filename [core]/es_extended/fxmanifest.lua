@@ -45,6 +45,7 @@ client_scripts {
 	'client/modules/wrapper.lua',
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
+	'client/modules/points.lua',
 
 	'client/main.lua',
 
@@ -73,6 +74,7 @@ files {
 
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf',
+    "client/imports/*.lua",
 }
 
 dependencies {

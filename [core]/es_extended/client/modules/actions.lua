@@ -153,7 +153,6 @@ function Actions:PedLoop()
     end)
 end
 
-
 function Actions:Init()
     self:SlowLoop()
     self:PedLoop()
