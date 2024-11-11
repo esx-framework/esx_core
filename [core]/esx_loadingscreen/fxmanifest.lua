@@ -3,7 +3,7 @@ game 'common'
 fx_version 'cerulean'
 author 'ESX-Framework'
 description 'Allows resources to Run tasks at specific intervals.'
-version '1.11.1'
+version '1.11.2'
 lua54 'yes'
 
 loadscreen 'index.html'
