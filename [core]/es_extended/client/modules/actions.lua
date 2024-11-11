@@ -48,7 +48,6 @@ function Actions:TrackPed()
         ESX.SetPlayerData("ped", playerPed)
 
         TriggerEvent("esx:playerPedChanged", playerPed)
-        TriggerServerEvent("esx:playerPedChanged", PedToNet(playerPed))
     end
 end
 
