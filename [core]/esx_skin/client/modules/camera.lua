@@ -36,7 +36,7 @@ function Camera:PositionLoop()
         while self.cam do
             self:DisableContols()
 
-            local ped = ESX.PlayerData.ped or PlayerPedId()
+            local ped = PlayerPedId()
             local coords = GetEntityCoords(ped)
 
             local pos, posToLook = Skin:CalcuatePosition(coords)
@@ -59,7 +59,7 @@ function Camera:Create()
         return
     end
 
-    local playerPed = ESX.PlayerData.ped or PlayerPedId()
+    local playerPed = PlayerPedId()
     local playerCoords = GetEntityCoords(playerPed)
 
     self.cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)

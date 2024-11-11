@@ -36,7 +36,7 @@ function Menu:Restrict()
 end
 
 function Menu:InsertElements()
-    local playerPed = ESX.PlayerData.ped or PlayerPedId()
+    local playerPed = PlayerPedId()
 
     for i = 1, #self.components, 1 do
         local value = self.components[i].value
