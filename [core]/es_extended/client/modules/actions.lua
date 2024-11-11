@@ -136,7 +136,6 @@ end
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
-            self:TrackPed()
             self:TrackPedCoords()
             self:TrackPauseMenu()
             self:TrackVehicle()
@@ -145,8 +144,19 @@ function Actions:SlowLoop()
     end)
 end
 
+function Actions:PedLoop()
+    CreateThread(function()
+        while ESX.PlayerLoaded do
+            self:TrackPed()
+            Wait(0)
+        end
+    end)
+end
+
+
 function Actions:Init()
     self:SlowLoop()
+    self:PedLoop()
 end
 
 Actions:Init()
