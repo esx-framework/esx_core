@@ -126,129 +126,7 @@ local function formatName(name)
     return convertFirstLetterToUpper(loweredName)
 end
 
-if Config.UseDeferrals then
-    AddEventHandler("playerConnecting", function(_, _, deferrals)
-        deferrals.defer()
-        local _, identifier = source, ESX.GetIdentifier(source)
-        Wait(100)
-
-        if identifier then
-            MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { identifier }, function(result)
-                if result then
-                    if result.firstname then
-                        playerIdentity[identifier] = {
-                            firstName = result.firstname,
-                            lastName = result.lastname,
-                            dateOfBirth = result.dateofbirth,
-                            sex = result.sex,
-                            height = result.height,
-                        }
-
-                        deferrals.done()
-                    else
-                        deferrals.presentCard(
-                            [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet",
-                                "columns":[{"type":"Column","items":[{"type":"Input.Text","placeholder":"First Name",
-                                "id":"firstname","maxLength":15},{"type":"Input.Text","placeholder":"Date of Birth (MM/DD/YYYY)",
-                                "id":"dateofbirth","maxLength":10}],"width":"stretch"},{"type":"Column","width":"stretch",
-                                "items":[{"type":"Input.Text","placeholder":"Last Name","id":"lastname","maxLength":15},
-                                {"type":"Input.Text","placeholder":"Height (48-96 inches)","id":"height","maxLength":2}]}]},
-                                {"type":"Input.ChoiceSet","placeholder":"Sex","choices":[{"title":"Male","value":"m"},
-                                {"title":"Female","value":"f"}],"style":"expanded","id":"sex"}]},{"type": "ActionSet",
-                                "actions": [{"type":"Action.Submit","title":"Submit"}]}],
-                                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json","version":"1.0"}]==],
-                            function(data)
-                                if data.firstname == "" or data.lastname == "" or data.dateofbirth == "" or data.sex == "" or data.height == "" then
-                                    deferrals.done(TranslateCap("data_incorrect"))
-                                else
-                                    if checkNameFormat(data.firstname) and checkNameFormat(data.lastname) and checkDOBFormat(data.dateofbirth) and checkSexFormat(data.sex) and checkHeightFormat(data.height) then
-                                        playerIdentity[identifier] = {
-                                            firstName = formatName(data.firstname),
-                                            lastName = formatName(data.lastname),
-                                            dateOfBirth = data.dateofbirth,
-                                            sex = data.sex,
-                                            height = tonumber(data.height),
-                                            saveToDatabase = true,
-                                        }
-
-                                        deferrals.done()
-                                    else
-                                        deferrals.done(TranslateCap("invalid_format"))
-                                    end
-                                end
-                            end
-                        )
-                    end
-                else
-                    deferrals.presentCard(
-                        [==[{"type": "AdaptiveCard","body":[{"type":"Container","items":[{"type":"ColumnSet","columns":[{
-                            "type":"Column","items":[{"type":"Input.Text","placeholder":"First Name","id":"firstname",
-                            "maxLength":15},{"type":"Input.Text","placeholder":"Date of Birth (MM/DD/YYYY)","id":"dateofbirth",
-                            "maxLength":10}],"width":"stretch"},{"type":"Column","width":"stretch","items":[{"type":"Input.Text",
-                            "placeholder":"Last Name","id":"lastname","maxLength":15},{"type":"Input.Text",
-                            "placeholder":"Height (48-96 inches)","id":"height","maxLength":2}]}]},{"type":"Input.ChoiceSet",
-                            "placeholder":"Sex","choices":[{"title":"Male","value":"m"},{"title":"Female","value":"f"}],
-                            "style":"expanded","id":"sex"}]},{"type": "ActionSet","actions": [{"type":"Action.Submit",
-                            "title":"Submit"}]}],"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","version":"1.0"}]==],
-                        function(data)
-                            if data.firstname == "" or data.lastname == "" or data.dateofbirth == "" or data.sex == "" or data.height == "" then
-                                return deferrals.done(TranslateCap("data_incorrect"))
-                            end
-                            if not checkNameFormat(data.firstname) then
-                                return deferrals.done(TranslateCap("invalid_firstname_format"))
-                            end
-                            if not checkNameFormat(data.lastname) then
-                                return deferrals.done(TranslateCap("invalid_lastname_format"))
-                            end
-                            if not checkDOBFormat(data.dateofbirth) then
-                                return deferrals.done(TranslateCap("invalid_dob_format"))
-                            end
-                            if not checkSexFormat(data.sex) then
-                                return deferrals.done(TranslateCap("invalid_sex_format"))
-                            end
-                            if not checkHeightFormat(data.height) then
-                                return deferrals.done(TranslateCap("invalid_height_format"))
-                            end
-
-                            playerIdentity[identifier] = {
-                                firstName = formatName(data.firstname),
-                                lastName = formatName(data.lastname),
-                                dateOfBirth = formatDate(data.dateofbirth),
-                                sex = data.sex,
-                                height = tonumber(data.height),
-                                saveToDatabase = true,
-                            }
-
-                            deferrals.done()
-                        end
-                    )
-                end
-            end)
-        else
-            deferrals.done(TranslateCap("no_identifier"))
-        end
-    end)
-
-    RegisterNetEvent("esx:playerLoaded")
-    AddEventHandler("esx:playerLoaded", function(_, xPlayer)
-        if not playerIdentity[xPlayer.identifier] then
-            return xPlayer.kick(_("missing_identity"))
-        end
-
-        local currentIdentity = playerIdentity[xPlayer.identifier]
-        SetPlayerData(xPlayer, currentIdentity)
-
-        if currentIdentity.saveToDatabase then
-            saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
-        end
-
-        Wait(0)
-        alreadyRegistered[xPlayer.identifier] = true
-        TriggerClientEvent("esx_identity:alreadyRegistered", xPlayer.source)
-        playerIdentity[xPlayer.identifier] = nil
-    end)
-else
-    local function setIdentity(xPlayer)
+local function setIdentity(xPlayer)
         if not alreadyRegistered[xPlayer.identifier] then
             return
         end
@@ -261,7 +139,7 @@ else
         end
 
         playerIdentity[xPlayer.identifier] = nil
-    end
+end
 
     local function checkIdentity(xPlayer)
         MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { xPlayer.identifier }, function(result)
@@ -434,7 +312,6 @@ else
         TriggerClientEvent("esx_identity:setPlayerData", source, Identity)
         cb(true)
     end)
-end
 
 if Config.EnableCommands then
     ESX.RegisterCommand("char", "user", function(xPlayer)

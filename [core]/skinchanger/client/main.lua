@@ -35,7 +35,6 @@ function SkinChanger:ModelLoaded()
 end
 
 function SkinChanger:DefaultModel(male, cb)
-    local playerPed = PlayerPedId()
     local characterModel = male and `mp_m_freemode_01` or `mp_f_freemode_01`
 
     if not IsModelInCdimage(characterModel) or not IsModelValid(characterModel) then
