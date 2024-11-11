@@ -23,12 +23,11 @@ client_scripts {
 	'client/main.lua'
 }
 
-ui_page 'html/index.html'
+files ({
+	'dist/assets/**',
+	'dist/**',
+})
 
-files {
-	'html/index.html',
-	'html/js/script.js',
-	'html/css/style.css',
-}
+ui_page 'dist/index.html'
 
 dependency 'es_extended'
