@@ -96,7 +96,6 @@ body {
 }
 
 .dialog__form-group label {
-    text-align: center;
     flex-grow: 1; /* Label will expand to fill available space */
     flex-shrink: 1; /* Allows the label to shrink if necessary */
     padding-inline: 20px; /* Horizontal padding */
@@ -187,4 +186,10 @@ body {
 ::placeholder {
     color: #242424;
     font-weight: 600;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
 }
