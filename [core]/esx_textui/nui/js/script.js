@@ -1,6 +1,6 @@
 const w = window;
 const doc = document;
-let lastType = "";
+let lastType = {};
 
 // Gets the current icon it needs to use.
 const types = {
@@ -33,8 +33,8 @@ const codes = {
 
 w.addEventListener("message", (event) => {
     if (event.data.action === "show") {
-        if (lastType) {
-            doc.getElementById(lastType).style.display = "none";
+        if (lastType.id !== undefined) {
+            doc.getElementById(lastType["id"]).style.display = "none";
             notification({
                 type: event.data.type,
                 message: event.data.message,
@@ -47,10 +47,11 @@ w.addEventListener("message", (event) => {
         }
     } else if (event.data.action === "hide") {
         if (lastType !== "") {
-            doc.getElementById(lastType).classList.add("fadeOut");
+            doc.getElementById(lastType["id"]).classList.add("fadeOut");
             setTimeout(() => {
-                doc.getElementById(lastType).classList.remove("fadeOut");
-                doc.getElementById(lastType).style.display = "none";
+                doc.getElementById(lastType["id"]).classList.remove("fadeOut");
+                doc.getElementById(lastType["id"]).style.display = "none";
+                doc.getElementById(lastType["message"]).innerHTML = "";
             }, 300);
         } else {
             console.log("There isn't a textUI displaying!?");
@@ -85,7 +86,7 @@ notification = (data) => {
     doc.getElementById(types[data.type]["id"]).classList.add("fadeIn");
     setTimeout(() => {
         doc.getElementById(types[data.type]["id"]).classList.remove("fadeIn");
-        lastType = types[data.type]["id"];
+        lastType = types[data.type];
         doc.getElementById(types[data.type]["message"]).innerHTML = data["message"];
     }, 300);
 };
