@@ -20,10 +20,7 @@ const onSubmit = (values) => {
 const schema = yup.object({
     firstname: yup.string().required('Firstname is required').min(3, 'Firstname must be at least 3 characters'),
     lastname: yup.string().required('Lastname is required').min(3, 'Lastname must be at least 3 characters'),
-    dob: yup.date().required('Date of Birth is required').transform((value, originalValue) => {
-        const parsedDate = moment(originalValue, 'DD/MM/YYYY', true);
-        return parsedDate.isValid() ? parsedDate.toDate() : new Date('');
-    }).typeError('Date must be in mm/dd/yyyy format'),
+    dob: yup.date().required('Date of Birth is required').min("01-01-1900", "Date is too early").max(moment().format("DD-MM-YYYY"), "You cant be older than today"),
     gender: yup.string().required('Gender is required'),
     height: yup.number().required('Height is required').min(120, 'Minimum height is 120cm').max(220, 'Maximum height is 220cm').typeError('Amount must be a number'),
 })
@@ -42,7 +39,6 @@ const schema = yup.object({
                     <label for="firstname">Firstname</label>
                     <div class="dialog__form-validation">
                         <Field id="firstname" type="text" name="firstname" placeholder="Firstname" validateOnInput />
-                        <!-- <i class="fas fa-check-circle" style="color: #478444;"></i> -->
                     </div>
                     <ErrorMessage name="firstname" class="dialog__form-message dialog__form-message--error" />
                 </div>
@@ -50,13 +46,12 @@ const schema = yup.object({
                     <label for="lastname">Lastname</label>
                     <div class="dialog__form-validation">
                         <Field id="lastname" type="text" name="lastname" placeholder="Lastname" validateOnInput />
-                        <!-- <i class="fas fa-times-circle" style="color: #733838;"></i> -->
                     </div>
                     <ErrorMessage name="lastname" class="dialog__form-message dialog__form-message--error" />
                 </div>
                 <div class="dialog__form-group">
                     <label for="dob">Date of birth</label>
-                    <Field id="dob" type="text" name="dob" placeholder="mm/dd/yyyy" validateOnInput />
+                    <Field id="dob" type="date" name="dob" placeholder="mm/dd/yyyy" validateOnInput />
                     <ErrorMessage name="dob" class="dialog__form-message dialog__form-message--error" />
                 </div>
                 <div class="dialog__form-group">
