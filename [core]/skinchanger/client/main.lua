@@ -35,7 +35,6 @@ function SkinChanger:ModelLoaded()
 end
 
 function SkinChanger:DefaultModel(male, cb)
-    local playerPed = PlayerPedId()
     local characterModel = male and `mp_m_freemode_01` or `mp_f_freemode_01`
 
     if not IsModelInCdimage(characterModel) or not IsModelValid(characterModel) then
@@ -44,7 +43,7 @@ function SkinChanger:DefaultModel(male, cb)
     local model = self:RequestModel(characterModel)
 
     SetPlayerModel(PlayerId(), model)
-    SetPedDefaultComponentVariation(playerPed)
+    SetPedDefaultComponentVariation(PlayerPedId())
 
     SetModelAsNoLongerNeeded(model)
 
