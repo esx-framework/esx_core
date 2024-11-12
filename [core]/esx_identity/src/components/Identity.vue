@@ -20,10 +20,7 @@ const onSubmit = (values) => {
 const schema = yup.object({
     firstname: yup.string().required('Firstname is required').min(3, 'Firstname must be at least 3 characters'),
     lastname: yup.string().required('Lastname is required').min(3, 'Lastname must be at least 3 characters'),
-    dob: yup.date().required('Date of Birth is required').transform((value, originalValue) => {
-        const parsedDate = moment(originalValue, 'DD/MM/YYYY', true);
-        return parsedDate.isValid() ? parsedDate.toDate() : new Date('');
-    }).typeError('Date must be in mm/dd/yyyy format'),
+    dob: yup.date().required('Date of Birth is required').typeError('Date must be in dd/mm/yyyy format'),
     gender: yup.string().required('Gender is required'),
     height: yup.number().required('Height is required').min(120, 'Minimum height is 120cm').max(220, 'Maximum height is 220cm').typeError('Amount must be a number'),
 })
@@ -56,7 +53,7 @@ const schema = yup.object({
                 </div>
                 <div class="dialog__form-group">
                     <label for="dob">Date of birth</label>
-                    <Field id="dob" type="text" name="dob" placeholder="mm/dd/yyyy" validateOnInput />
+                    <Field id="dob" type="date" name="dob" placeholder="dd/mm/yyyy" validateOnInput />
                     <ErrorMessage name="dob" class="dialog__form-message dialog__form-message--error" />
                 </div>
                 <div class="dialog__form-group">
