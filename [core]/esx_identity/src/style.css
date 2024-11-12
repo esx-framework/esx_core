@@ -1,18 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-/* body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-} */
- 
-/* REMOVE LATER, ADD SCSS */
+
+*, html, h1 {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-    font-family: sans-serif;
+    font-family: "Poppins", sans-serif;
     overflow: hidden;
     background-color: transparent;
+    color: white;
+    display: grid;
+    place-items: center;
+    height: 100vh;
 }
 
 .none {
@@ -21,18 +22,11 @@ body {
 
 .dialog {
     width: 477px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: #080808;
     border-radius: 8px;
-    border: none;
-    color: #ffffff;
-    font-family: "Poppins", sans-serif;
 }
 
-.dialog__header {
+.dialog-header {
     background-color: #040404;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -40,27 +34,25 @@ body {
     text-align: center;
 }
 
-.dialog__header h1 {
+.dialog-header h1 {
     font-weight: 700;
-    margin-bottom: 0;
     font-size: 30px;
 }
 
-.dialog__header span {
+.dialog-header span {
     color: #FD9800;
 }
 
-.dialog__body {
-    padding-block: 20px;
-    padding-inline: 65px;
+.dialog-body {
+    padding: 20px 65px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
-.dialog__body-hint {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.dialog__body-form {
+.dialog-body-form {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 35px;
@@ -68,111 +60,93 @@ body {
     font-size: 15px;
 }
 
-.dialog__form-submit {
-    border:none;
-    background-color: #FD9800;
-    color: #fff;
-    font-size: 18px;
-    font-weight:bold;
-    border-radius: 4px;
-    padding-block: 5px;
-}
-
-.dialog__form-submit i {
-    margin-right: 5px;
-}
-
-.dialog__form-group {
+.dialog-form-group {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
     background-color: #040404;
-    position: relative;
 }
 
-.dialog__form-group--radio {
-    gap: 0;
+.dialog-form-group label {
+    padding-left: 20px;
 }
 
-.dialog__form-group label {
-    text-align: center;
-    flex-grow: 1; /* Label will expand to fill available space */
-    flex-shrink: 1; /* Allows the label to shrink if necessary */
-    padding-inline: 20px; /* Horizontal padding */
-}
-
-.dialog__form-group input {
+.dialog-form-group input {
     background-color: transparent;
     border: none;
-    height: 30px;
-    width: 180px; /* Fixed width for input */
-    flex-shrink: 0; /* Prevent input from shrinking */
+    padding: 4px 10px;
     color: white;
 }
 
-
-.dialog__form-group input:focus {
+.dialog-form-group input:focus {
     background-color: rgba(15, 15, 15, 0.9);
-    border: none;
     border-radius: 5px;
     color: #ffffff;
     outline: none;
-    box-shadow: none;
 }
 
-.dialog__form-validation {
-    position: relative;
+.dialog-form-group-radio {
+    display: flex;
+    padding: 0 10px;
+    gap: 10px;
 }
 
-.dialog__form-validation i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translate(0, -50%);
-}
-
-.dialog__form-radio {
+.dialog-form-radio {
     display: flex;
     align-items: center;
 }
 
-.dialog__form-radio input {
+.dialog-form-radio input {
     display: none;
 }
 
-.dialog__form-radio label {
+.dialog-form-radio label {
+    padding: 4px 10px;
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
 }
 
-.dialog__form-radio input + label {
+.dialog-form-radio input + label {
     height: 30px;
     display: flex;
     align-items: center;
 }
 
-.dialog__form-radio input:checked + label {
+.dialog-form-radio input:checked + label {
     color: #30A1FD;
     height: 30px;
 }
 
-.dialog__form-radio input:not(:checked) + label {
+.dialog-form-radio input:not(:checked) + label {
     color: #242424;
     height: 30px;
 }
 
-.dialog__form-message {
+.dialog-form-message {
     position: absolute;
     top: 35px;
     right: 0;
     font-size: 9px;
 }
 
-.dialog__form-message--error {
+.dialog-form-message-error {
     color: #733838;
+}
+
+.dialog-form-submit {
+    border: none;
+    background-color: #FD9800;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    padding-block: 5px;
+}
+
+.dialog-form-submit i {
+    margin-right: 5px;
 }
 
 #male:checked + label {
@@ -185,6 +159,6 @@ body {
 }
 
 ::placeholder {
-    color: #242424;
+    color: #444444;
     font-weight: 600;
 }
