@@ -20,24 +20,17 @@ shared_scripts {
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-    'shared/config/logs.lua',
 
-	'server/common.lua',
-	'server/modules/callback.lua',
+    'server/modules/utils/*.lua',
+    'shared/config/logs.lua',
+    'server/modules/*.lua',
+
 	'server/classes/player.lua',
 	'server/classes/overrides/*.lua',
-	'server/functions.lua',
-	'server/modules/onesync.lua',
-	'server/modules/paycheck.lua',
 
-	'server/main.lua',
-	'server/modules/commands.lua',
-
-	'server/bridge/**/*.lua',
-	'server/modules/actions.lua',
-	'server/modules/npwd.lua',
-	'server/modules/createJob.lua'
+    'server/bridge/**/*.lua',
 }
+
 
 client_scripts {
     'client/common.lua',
