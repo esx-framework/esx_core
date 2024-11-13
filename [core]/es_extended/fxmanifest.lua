@@ -40,21 +40,11 @@ server_scripts {
 }
 
 client_scripts {
-    'client/common.lua',
+    'client/main.lua',
 	'client/functions.lua',
-	'client/modules/wrapper.lua',
-	'client/modules/callback.lua',
-    'client/modules/adjustments.lua',
-	'client/modules/points.lua',
-
-	'client/main.lua',
-
-	'client/modules/actions.lua',
-	'client/modules/death.lua',
-	'client/modules/npwd.lua',
-    'client/modules/interactions.lua',
-	'client/modules/scaleform.lua',
-	'client/modules/streaming.lua',
+	'client/modules/utils/*.lua',
+	'client/modules/*.lua',
+	'client/events.lua',
 }
 
 ui_page {

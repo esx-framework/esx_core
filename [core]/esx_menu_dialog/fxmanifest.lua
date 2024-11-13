@@ -7,7 +7,7 @@ version '1.11.2'
 
 client_scripts {
 	'@es_extended/imports.lua',
-	'@es_extended/client/modules/wrapper.lua',
+	'@es_extended/client/modules/utils/wrapper.lua',
 	'client/main.lua'
 }
 

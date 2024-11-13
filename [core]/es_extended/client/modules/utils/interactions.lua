@@ -23,6 +23,22 @@ function ESX.GetInteractKey()
     return GetControlInstructionalButton(0, hash, true):sub(3)
 end
 
+---@param command_name string The command name
+---@param label string The label to show
+---@param input_group string The input group
+---@param key string The key to bind
+---@param on_press function The function to call on press
+---@param on_release? function The function to call on release
+function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
+	local command = on_release and '+' .. command_name or command_name
+    RegisterCommand(command, on_press, false)
+    Core.Input[command_name] = ESX.HashString(command)
+    if on_release then
+        RegisterCommand('-' .. command_name, on_release, false)
+    end
+    RegisterKeyMapping(command, label or '', input_group or 'keyboard', key or '')
+end
+
 ESX.RegisterInput("esx_interact", "Interact", "keyboard", "e", function()
     for _, interaction in pairs(interactions) do
         local success, result = pcall(interaction.condition)
