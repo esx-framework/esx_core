@@ -58,7 +58,7 @@ Config.CustomAIPlates = "........" -- Custom plates for AI vehicles
 ]]
 
 Config.DiscordActivity = {
-    appId = 0, -- Discord Application ID,
+    appId = "", -- Discord Application ID,
     assetName = "LargeIcon", --image name for the "large" icon.
     assetText = "{server_name}", -- Text to display on the asset
     buttons = {
