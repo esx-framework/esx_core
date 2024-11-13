@@ -44,9 +44,24 @@ local function saveIdentityToDatabase(identifier, identity)
     MySQL.update.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?", { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier })
 end
 
+local function formatDate(str)
+    local d, m, y = string.match(str, "(%d+)/(%d+)/(%d+)")
+    local date = str
+
+    if Config.DateFormat == "MM/DD/YYYY" then
+        date = m .. "/" .. d .. "/" .. y
+    elseif Config.DateFormat == "YYYY/MM/DD" then
+        date = y .. "/" .. m .. "/" .. d
+    end
+
+    return date
+end
+
 local function checkDOBFormat(str)
     str = tostring(str)
-    if not string.match(str, "(%d%d)/(%d%d)/(%d%d%d%d)") then
+    local format = string.match(str, "(%d+)/(%d+)/(%d+)")
+
+    if not format then
         return false
     end
 
@@ -55,6 +70,18 @@ local function checkDOBFormat(str)
     m = tonumber(m)
     d = tonumber(d)
     y = tonumber(y)
+
+    if Config.DateFormat == "MM/DD/YYYY" then
+        local month = m
+        local day = d
+        m = day
+        d = month
+    elseif Config.DateFormat == "YYYY/MM/DD" then
+        local year = y
+        local day = d
+        y = day
+        d = year
+    end
 
     if ((d <= 0) or (d > 31)) or ((m <= 0) or (m > 12)) or ((y <= Config.LowestYear) or (y > Config.HighestYear)) then
         return false
@@ -69,19 +96,6 @@ local function checkDOBFormat(str)
     else
         return d <= 31
     end
-end
-
-local function formatDate(str)
-    local d, m, y = string.match(str, "(%d+)/(%d+)/(%d+)")
-    local date = str
-
-    if Config.DateFormat == "MM/DD/YYYY" then
-        date = m .. "/" .. d .. "/" .. y
-    elseif Config.DateFormat == "YYYY/MM/DD" then
-        date = y .. "/" .. m .. "/" .. d
-    end
-
-    return date
 end
 
 local function checkAlphanumeric(str)
