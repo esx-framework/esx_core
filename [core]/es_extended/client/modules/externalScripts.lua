@@ -53,3 +53,5 @@ end
 function ESX.RefreshContext(...)
     return IsResourceFound('esx_context') and exports['esx_context']:Refresh(...)
 end
+
+ESX.SecureNetEvent('esx:showNotification', ESX.ShowNotification)

@@ -54,9 +54,6 @@ function ESX.DrawMissionText(msg, time)
     EndTextCommandPrint(time, true)
 end
 
-
-ESX.SecureNetEvent('esx:showNotification', ESX.ShowNotification)
-
 ESX.SecureNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
 
 ESX.SecureNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
