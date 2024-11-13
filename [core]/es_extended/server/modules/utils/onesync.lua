@@ -78,6 +78,23 @@ function ESX.OneSync.GetClosestPlayer(source, maxDistance, ignore)
     return getNearbyPlayers(source, true, maxDistance, ignore)
 end
 
+---@param model string|number
+---@param player number
+---@param cb function
+---@diagnostic disable-next-line: duplicate-set-field
+function ESX.GetVehicleType(model, player, cb)
+    model = type(model) == "string" and joaat(model) or model
+
+    if Core.vehicleTypesByModel[model] then
+        return cb(Core.vehicleTypesByModel[model])
+    end
+
+    ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
+        Core.vehicleTypesByModel[model] = vehicleType
+        cb(vehicleType)
+    end, model)
+end
+
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
