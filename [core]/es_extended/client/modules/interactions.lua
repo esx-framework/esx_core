@@ -1,11 +1,15 @@
 local interactions = {}
 local pressedInteractions = {}
 
+---@param name string
 function ESX.RemoveInteraction(name)
     if not interactions[name] then return end
     interactions[name] = nil
 end
 
+---@param name string
+---@param onPress fun():nil
+---@param condition fun():boolean
 ESX.RegisterInteraction = function(name, onPress, condition)
     interactions[name] = {
         condition = condition or function() return true end,
