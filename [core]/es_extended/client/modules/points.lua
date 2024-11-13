@@ -1,5 +1,11 @@
 local points = {}
 
+---@param coords vector3
+---@param distance number
+---@param hidden boolean
+---@param enter fun():nil
+---@param leave fun():nil
+---@return number
 function ESX.CreatePointInternal(coords, distance, hidden, enter, leave)
 	local point = {
 		coords = coords,
@@ -14,10 +20,13 @@ function ESX.CreatePointInternal(coords, distance, hidden, enter, leave)
 	return handle
 end
 
+---@param handle number
 function ESX.RemovePointInternal(handle)
 	points[handle] = nil
 end
 
+---@param handle number
+---@param hidden boolean
 function ESX.HidePointInternal(handle, hidden)
 	if points[handle] then
 		points[handle].hidden = hidden
@@ -30,7 +39,7 @@ function StartPointsLoop()
             local coords = GetEntityCoords(ESX.PlayerData.ped)
             for i, point in pairs(points) do
                 local distance = #(coords - point.coords)
-				
+
                 if not point.hidden and distance <= point.distance then
                     if not point.nearby then
                         points[i].nearby = true

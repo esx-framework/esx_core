@@ -1,5 +1,21 @@
+---@class Point
+---@field coords vector3
+---@field hidden boolean
+---@field inside fun():nil
+---@field enter fun():nil
+---@field leave fun():nil
+---@field distance number
+---@field handle number
+---@field nearby boolean
+---@field currDistance number
+---@field toggle fun(hidden: boolean):nil
+---@field delete fun():nil
+---@field constructor fun(properties: Point):nil
+
+
 Point = ESX.Class()
 
+---@param properties Point
 function Point:constructor(properties)
 	self.coords = properties.coords
 	self.hidden = properties.hidden or false
@@ -33,6 +49,7 @@ function Point:delete()
 	ESX.RemovePointInternal(self.handle)
 end
 
+---@param hidden boolean
 function Point:toggle(hidden)
 	if hidden == nil then
 		hidden = not self.hidden
