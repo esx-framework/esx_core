@@ -421,27 +421,49 @@ function Core.CreatePlayer(identifier, playerId, data)
     end)
 end
 
-function Core.PlayerJoined(playerId)
-    local identifier = ESX.GetIdentifier(playerId)
-    if not identifier then
-        return DropPlayer(playerId, "[ESX] there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
-    end
-
-    if ESX.GetPlayerFromIdentifier(identifier) then
-        DropPlayer(
-            playerId,
-            ("[ESX] there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(
-                identifier
-            )
-        )
-    else
-        local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
-        if result then
-            Core.LoadPlayer(identifier, playerId, false)
-        else
-            Core.CreatePlayer(identifier, playerId)
-        end
-    end
-end
-
 ESX.GetPlayers = GetPlayers
+
+AddEventHandler("esx:playerLoaded", function(_, xPlayer)
+    local job = xPlayer.getJob().name
+    local jobKey = ("%s:count"):format(job)
+
+    ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 0) + 1
+    GlobalState[jobKey] = ESX.JobsPlayerCount[job]
+end)
+
+AddEventHandler("esx:playerLogout", function(playerId, cb)
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+    if xPlayer then
+        TriggerEvent("esx:playerDropped", playerId)
+
+        Core.playersByIdentifier[xPlayer.identifier] = nil
+        Core.SavePlayer(xPlayer, function()
+            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
+            ESX.Players[playerId] = nil
+            if cb then
+                cb()
+            end
+        end)
+    end
+    TriggerClientEvent("esx:onPlayerLogout", playerId)
+end)
+
+AddEventHandler("playerDropped", function(reason)
+    local playerId = source
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+
+    if xPlayer then
+        TriggerEvent("esx:playerDropped", playerId, reason)
+        local job = xPlayer.getJob().name
+        local currentJob = ESX.JobsPlayerCount[job]
+        ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+
+        GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
+        Core.playersByIdentifier[xPlayer.identifier] = nil
+
+        Core.SavePlayer(xPlayer, function()
+            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
+            ESX.Players[playerId] = nil
+        end)
+    end
+end)

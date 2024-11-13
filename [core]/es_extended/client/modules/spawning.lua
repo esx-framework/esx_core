@@ -1,4 +1,6 @@
 ESX.PlayerLoaded = false
+ESX.playerId = PlayerId()
+ESX.serverId = GetPlayerServerId(ESX.playerId)
 
 ---@return boolean
 function ESX.IsPlayerLoaded()

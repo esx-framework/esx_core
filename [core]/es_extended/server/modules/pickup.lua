@@ -1,3 +1,6 @@
+Core.Pickups = {}
+Core.PickupId = 0
+
 if not Config.CustomInventory then
     ---@param itemType string
     ---@param name string

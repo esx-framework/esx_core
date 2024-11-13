@@ -1,4 +1,5 @@
 ESX.OneSync = {}
+Core.vehicleTypesByModel = {}
 
 ---@param source number|vector3
 ---@param closest boolean

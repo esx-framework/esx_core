@@ -51,3 +51,4 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
 
     cb(players)
 end)
+

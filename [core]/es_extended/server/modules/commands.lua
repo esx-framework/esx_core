@@ -164,6 +164,15 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     end
 end
 
+AddEventHandler("chatMessage", function(playerId, _, message)
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+    if xPlayer and message:sub(1, 1) == "/" and playerId > 0 then
+        CancelEvent()
+        local commandName = message:sub(1):gmatch("%w+")()
+        xPlayer.showNotification(TranslateCap("commanderror_invalidcommand", commandName))
+    end
+end)
+
 ESX.RegisterCommand(
     { "setcoords", "tp" },
     "admin",

@@ -47,3 +47,15 @@ function ESX.RefreshJobs()
         ESX.Jobs = Jobs
     end
 end
+
+AddEventHandler("esx:setJob", function(_, job, lastJob)
+    local lastJobKey = ("%s:count"):format(lastJob.name)
+    local jobKey = ("%s:count"):format(job.name)
+    local currentLastJob = ESX.JobsPlayerCount[lastJob.name]
+
+    ESX.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
+    ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
+
+    GlobalState[lastJobKey] = ESX.JobsPlayerCount[lastJob.name]
+    GlobalState[jobKey] = ESX.JobsPlayerCount[job.name]
+end)
