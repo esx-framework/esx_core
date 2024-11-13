@@ -18,6 +18,18 @@ function ESX.SetPlayerData(key, val)
     end
 end
 
+---@param account string Account name (money/bank/black_money)
+---@return table|nil
+function ESX.GetAccount(account)
+    for i = 1, #ESX.PlayerData.accounts, 1 do
+        if ESX.PlayerData.accounts[i].name == account then
+            return ESX.PlayerData.accounts[i]
+        end
+    end
+    return nil
+end
+
+
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
 	ESX.SetPlayerData(key, val)
 end)
@@ -43,4 +55,33 @@ end)
 
 ESX.SecureNetEvent("esx:setGroup", function(group)
     ESX.SetPlayerData("group", group)
+end)
+
+AddEventHandler("esx:restoreLoadout", function()
+    ESX.SetPlayerData("ped", PlayerPedId())
+
+    if not Config.CustomInventory then
+        local ammoTypes = {}
+        RemoveAllPedWeapons(ESX.PlayerData.ped, true)
+
+        for _, v in ipairs(ESX.PlayerData.loadout) do
+            local weaponName = v.name
+            local weaponHash = joaat(weaponName)
+
+            GiveWeaponToPed(ESX.PlayerData.ped, weaponHash, 0, false, false)
+            SetPedWeaponTintIndex(ESX.PlayerData.ped, weaponHash, v.tintIndex)
+
+            local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
+
+            for _, v2 in ipairs(v.components) do
+                local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
+                GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
+            end
+
+            if not ammoTypes[ammoType] then
+                AddAmmoToPed(ESX.PlayerData.ped, weaponHash, v.ammo)
+                ammoTypes[ammoType] = true
+            end
+        end
+    end
 end)

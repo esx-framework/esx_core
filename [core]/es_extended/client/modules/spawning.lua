@@ -156,3 +156,15 @@ AddEventHandler("skinchanger:modelLoaded", function()
         TriggerEvent("esx:restoreLoadout")
     end)
 end)
+
+ESX.SecureNetEvent("esx:onPlayerLogout", function()
+    ESX.PlayerLoaded = false
+end)
+
+ESX.SecureNetEvent("esx:registerSuggestions", function(registeredCommands)
+    for name, command in pairs(registeredCommands) do
+        if command.suggestion then
+            TriggerEvent("chat:addSuggestion", ("/%s"):format(name), command.suggestion.help, command.suggestion.arguments)
+        end
+    end
+end)

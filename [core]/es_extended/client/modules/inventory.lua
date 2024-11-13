@@ -28,6 +28,7 @@ if not Config.EnableDefaultInventory then
     function ESX.ShowInventory()
         error("Default Inventory is disabled.")
     end
+    -- Dont continue if the default inventory is disabled
     return
 end
 
@@ -306,4 +307,58 @@ ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "
     if not ESX.PlayerData.dead then
         ESX.ShowInventory()
     end
+end)
+
+ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
+    for k, v in ipairs(ESX.PlayerData.inventory) do
+        if v.name == item then
+            ESX.UI.ShowInventoryItemNotification(true, v.label, count - v.count)
+            ESX.PlayerData.inventory[k].count = count
+            break
+        end
+    end
+
+    if showNotification then
+        ESX.UI.ShowInventoryItemNotification(true, item, count)
+    end
+end)
+
+ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
+    for i = 1, #ESX.PlayerData.inventory do
+        if ESX.PlayerData.inventory[i].name == item then
+            ESX.UI.ShowInventoryItemNotification(false, ESX.PlayerData.inventory[i].label, ESX.PlayerData.inventory[i].count - count)
+            ESX.PlayerData.inventory[i].count = count
+            break
+        end
+    end
+
+    if showNotification then
+        ESX.UI.ShowInventoryItemNotification(false, item, count)
+    end
+end)
+
+RegisterNetEvent("esx:addWeapon", function()
+    error("event ^5'esx:addWeapon'^1 Has Been Removed. Please use ^5xPlayer.addWeapon^1 Instead!")
+end)
+
+
+RegisterNetEvent("esx:addWeaponComponent", function()
+    error("event ^5'esx:addWeaponComponent'^1 Has Been Removed. Please use ^5xPlayer.addWeaponComponent^1 Instead!")
+end)
+
+RegisterNetEvent("esx:setWeaponAmmo", function()
+    error("event ^5'esx:setWeaponAmmo'^1 Has Been Removed. Please use ^5xPlayer.addWeaponAmmo^1 Instead!")
+end)
+
+ESX.SecureNetEvent("esx:setWeaponTint", function(weapon, weaponTintIndex)
+    SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
+end)
+
+RegisterNetEvent("esx:removeWeapon", function()
+    error("event ^5'esx:removeWeapon'^1 Has Been Removed. Please use ^5xPlayer.removeWeapon^1 Instead!")
+end)
+
+ESX.SecureNetEvent("esx:removeWeaponComponent", function(weapon, weaponComponent)
+    local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
+    RemoveWeaponComponentFromPed(ESX.PlayerData.ped, joaat(weapon), componentHash)
 end)

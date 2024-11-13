@@ -68,3 +68,7 @@ function ESX.Streaming.RequestWeaponAsset(weaponHash, cb)
 
 	return cb and cb(weaponHash) or weaponHash
 end
+
+ESX.SecureNetEvent("esx:requestModel", function(model)
+    ESX.Streaming.RequestModel(model)
+end)

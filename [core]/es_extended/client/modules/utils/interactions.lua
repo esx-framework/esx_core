@@ -23,6 +23,12 @@ function ESX.GetInteractKey()
     return GetControlInstructionalButton(0, hash, true):sub(3)
 end
 
+---@param str string The string to hash
+---@return string The hashed string
+function ESX.HashString(str)
+    return ('~INPUT_%s~'):format(('%x'):format(joaat(str) & 0x7fffffff + 2 ^ 31):upper())
+end
+
 ---@param command_name string The command name
 ---@param label string The label to show
 ---@param input_group string The input group
