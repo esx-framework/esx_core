@@ -20,6 +20,7 @@ const onSubmit = (values) => {
 const schema = yup.object({
     firstname: yup.string().required('Firstname is required').min(3, 'Firstname must be at least 3 characters'),
     lastname: yup.string().required('Lastname is required').min(3, 'Lastname must be at least 3 characters'),
+    dob: yup.date().required('Date of Birth is required'),
     gender: yup.string().required('Gender is required'),
     height: yup.number().required('Height is required').min(120, 'Minimum height is 120cm').max(220, 'Maximum height is 220cm').typeError('Amount must be a number'),
 })
@@ -50,9 +51,8 @@ const schema = yup.object({
                 </div>
                 <div class="dialog__form-group">
                     <label for="dob">Date of birth</label>
-                    <input type="date" id="dob" name="dob">
-                    <!-- <Field id="dob" type="date" name="dob" placeholder="dd/mm/yyyy" validateOnInput /> -->
-                    <!-- <ErrorMessage name="dob" class="dialog__form-message dialog__form-message--error" /> -->
+                    <Field id="dob" type="date" name="dob" placeholder="dd/mm/yyyy" validateOnInput />
+                    <ErrorMessage name="dob" class="dialog__form-message dialog__form-message--error" />
                 </div>
                 <div class="dialog__form-group">
                     <label for="gender">Gender</label>
