@@ -29,7 +29,6 @@ server_scripts {
 	'server/classes/overrides/*.lua',
 
     'server/bridge/**/*.lua',
-	'server/events.lua',
 }
 
 client_scripts {
