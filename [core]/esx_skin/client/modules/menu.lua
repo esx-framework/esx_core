@@ -38,6 +38,10 @@ end
 function Menu:InsertElements()
     local playerPed = PlayerPedId()
 
+    if not self.elements then
+        self.elements = {}
+    end
+
     for i = 1, #self.components, 1 do
         local value = self.components[i].value
         local componentId = self.components[i].componentId
@@ -51,9 +55,6 @@ function Menu:InsertElements()
         data.type = "slider"
         data.max = self.maxValues[self.components[i].name]
 
-        if not self.elements then
-            self.elements = {}
-        end
         self.elements[#self.elements + 1] = data
     end
 end
