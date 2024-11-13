@@ -1,3 +1,5 @@
+Core.Events = {}
+
 ---@param name string
 ---@param func function
 ---@return nil

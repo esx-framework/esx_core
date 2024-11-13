@@ -168,3 +168,19 @@ ESX.SecureNetEvent("esx:registerSuggestions", function(registeredCommands)
         end
     end
 end)
+
+if not Config.Multichar then
+    CreateThread(function()
+        while true do
+            Wait(100)
+
+            if NetworkIsPlayerActive(ESX.playerId) then
+                ESX.DisableSpawnManager()
+                DoScreenFadeOut(0)
+                Wait(500)
+                TriggerServerEvent("esx:onPlayerJoined")
+                break
+            end
+        end
+    end)
+end
