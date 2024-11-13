@@ -10,7 +10,8 @@ end
 
 function Adjustments:DisableAimAssist()
     if Config.DisableAimAssist then
-        SetPlayerLockon(ESX.playerId, false)
+        SetPlayerTargetingMode(3)
+        SetPlayerLockonRangeOverride(ESX.playerId, 0.0)
     end
 end
 
