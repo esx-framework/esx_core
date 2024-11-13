@@ -8,6 +8,11 @@ function Death:ResetValues()
     self.killerServerId = nil
 end
 
+function Death:SetPlayerData()
+    ESX.SetPlayerData("ped", PlayerPedId())
+    ESX.SetPlayerData("dead", true)
+end
+
 function Death:ByPlayer()
     local victimCoords = GetEntityCoords(ESX.PlayerData.ped)
     local killerCoords = GetEntityCoords(self.killerEntity)
@@ -83,4 +88,8 @@ AddEventHandler("gameEventTriggered", function(event, data)
         return
     end
     Death:Damaged(data[1], data[4])
+end)
+
+AddEventHandler("esx:onPlayerDeath", function()
+    Death:SetPlayerData()
 end)

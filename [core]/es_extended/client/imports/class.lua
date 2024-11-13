@@ -1,3 +1,9 @@
+---@class class
+---@field new function
+---@field __index table
+---@field constructor function
+
+---@class class
 local class = {}
 class.__index = class
 

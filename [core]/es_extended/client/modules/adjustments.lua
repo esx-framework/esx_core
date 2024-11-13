@@ -189,7 +189,7 @@ function Adjustments:PresencePlaceholders()
 end
 
 function Adjustments:DiscordPresence()
-    if Config.DiscordActivity.appId ~= 0 then
+    if Config.DiscordActivity.appId ~= "" then
         CreateThread(function()
             while true do
                 SetDiscordAppId(Config.DiscordActivity.appId)
