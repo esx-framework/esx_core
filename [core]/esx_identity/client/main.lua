@@ -54,27 +54,11 @@ RegisterNetEvent("esx_identity:showRegisterIdentity", function()
         end
 end)
 
-local function formatDate(str)
-    local d, m, y = string.match(str, "(%d+)/(%d+)/(%d+)")
-    local date = str
-
-    if Config.DateFormat == "MM/DD/YYYY" then
-        date = m .. "/" .. d .. "/" .. y
-    elseif Config.DateFormat == "YYYY/MM/DD" then
-        date = y .. "/" .. m .. "/" .. d
-    end
-
-    return date
-end
-
 RegisterNUICallback("register", function(data, cb)
         if not guiEnabled then
             return
         end
 
-        if data.dateofbirth then
-            data.dateofbirth = formatDate(data.dateofbirth)
-        end
         ESX.TriggerServerCallback("esx_identity:registerIdentity", function(callback)
             if not callback then
                 return
