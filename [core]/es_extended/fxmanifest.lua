@@ -20,23 +20,19 @@ shared_scripts {
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-    'shared/config/logs.lua',
-
-	'server/common.lua',
-	'server/modules/callback.lua',
-	'server/classes/player.lua',
-	'server/classes/overrides/*.lua',
-	'server/functions.lua',
-	'server/modules/onesync.lua',
-	'server/modules/paycheck.lua',
 
 	'server/main.lua',
-	'server/modules/commands.lua',
+    'server/functions.lua',
 
-	'server/bridge/**/*.lua',
-	'server/modules/actions.lua',
-	'server/modules/npwd.lua',
-	'server/modules/createJob.lua'
+    'server/modules/utils/*.lua',
+    'shared/config/logs.lua',
+    'server/modules/*.lua',
+
+	'server/classes/player.lua',
+	'server/classes/overrides/*.lua',
+
+    'server/bridge/**/*.lua',
+	'server/events.lua',
 }
 
 client_scripts {
@@ -53,6 +49,8 @@ ui_page {
 
 files {
 	'imports.lua',
+    "client/imports/*.lua",
+
 	'locale.js',
 	'html/ui.html',
 
@@ -64,11 +62,8 @@ files {
 
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf',
-    "client/imports/*.lua",
 }
 
 dependencies {
-	'/native:0x6AE51D4B',
-    '/native:0xA61C8FC6',
 	'oxmysql',
 }
