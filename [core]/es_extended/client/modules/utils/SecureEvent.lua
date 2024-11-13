@@ -20,8 +20,7 @@ function ESX.SecureNetEvent(name, func)
 
         local success, result = pcall(func, ...)
         if not success then
-            result = result or ("Unknown error occurred in event ^5%s^1"):format(name)
-            error(result)
+            error(("Event ^5%s^1: %s"):format(name, result))
         end
     end)
 
