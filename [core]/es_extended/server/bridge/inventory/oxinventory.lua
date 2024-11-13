@@ -1,5 +1,8 @@
 if Config.CustomInventory ~= "ox" then return end
 
+SetConvarReplicated("inventory:framework", "esx")
+SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
+
 MySQL.ready(function()
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
         if ref then

@@ -17,11 +17,6 @@ RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
 end)
 
-if Config.CustomInventory then
-    SetConvarReplicated("inventory:framework", "esx")
-    SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
-end
-
 local function StartDBSync()
     CreateThread(function()
         local interval <const> = 10 * 60 * 1000
