@@ -10,7 +10,7 @@ const onSubmit = (values) => {
             body: JSON.stringify({
                 firstname: values.firstname,
                 lastname: values.lastname,
-                dateofbirth: values.dob,
+                dateofbirth: moment(values.dob).format("DD/MM/YYYY"),
                 sex: values.gender,
                 height: values.height,
             }),
