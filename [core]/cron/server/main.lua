@@ -1,6 +1,16 @@
-local Jobs = {}
-local LastTime = nil
+---@class CronJob
+---@field h number
+---@field m number
+---@field cb function
 
+---@type CronJob[]
+local Jobs = {}
+---@type number|false
+local LastTime = false
+
+---@param h number
+---@param m number
+---@param cb function
 function RunAt(h, m, cb)
     Jobs[#Jobs + 1] = {
         h = h,
@@ -9,10 +19,12 @@ function RunAt(h, m, cb)
     }
 end
 
+---@return number
 function GetUnixTimestamp()
     return os.time()
 end
 
+---@param time number
 function OnTime(time)
     for i = 1, #Jobs, 1 do
         local scheduledTimestamp = os.time({
@@ -31,6 +43,7 @@ function OnTime(time)
     end
 end
 
+---@return nil
 function Tick()
     local time = GetUnixTimestamp()
 
@@ -43,7 +56,6 @@ function Tick()
 end
 
 LastTime = GetUnixTimestamp()
-
 Tick()
 
 AddEventHandler("cron:runAt", function(h, m, cb)
