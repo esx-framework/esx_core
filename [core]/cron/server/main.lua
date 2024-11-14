@@ -47,5 +47,9 @@ LastTime = GetUnixTimestamp()
 Tick()
 
 AddEventHandler("cron:runAt", function(h, m, cb)
+    assert(type(h) == "number", ("Expected number for h, got %s"):format(type(h)))
+    assert(type(m) == "number", ("Expected number for m, got %s"):format(type(m)))
+    assert(type(cb) == "function", ("Expected function for cb, got %s"):format(type(cb)))
+
     RunAt(h, m, cb)
 end)
