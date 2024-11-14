@@ -1,4 +1,11 @@
-if Config.CustomInventory ~= "ox" then return end
+if Config.CustomInventory ~= "ox" then
+    if GetResourceState("ox_inventory") ~= "missing" then
+        Config.CustomInventory = "ox"
+        Config.OxInventory = true
+    else
+        return
+    end
+end
 
 SetConvarReplicated("inventory:framework", "esx")
 SetConvarReplicated("inventory:weight", tostring(Config.MaxWeight * 1000))
