@@ -1,7 +1,7 @@
 ---@class CronJob
 ---@field h number
 ---@field m number
----@field cb function
+---@field cb function|table
 
 ---@type CronJob[]
 local cronJobs = {}
@@ -10,7 +10,7 @@ local lastTimestamp = false
 
 ---@param h number
 ---@param m number
----@param cb function
+---@param cb function|table
 function RunAt(h, m, cb)
     cronJobs[#cronJobs + 1] = {
         h = h,
@@ -60,11 +60,16 @@ Tick()
 
 ---@param h number
 ---@param m number
----@param cb function
+---@param cb function|table
 AddEventHandler("cron:runAt", function(h, m, cb)
-    assert(type(h) == "number", ("Expected number for h, got %s"):format(type(h)))
-    assert(type(m) == "number", ("Expected number for m, got %s"):format(type(m)))
-    assert(type(cb) == "function", ("Expected function for cb, got %s"):format(type(cb)))
+    local invokingResource = GetInvokingResource() or "Unknown"
+    local typeH = type(h)
+    local typeM = type(m)
+    local typeCb = type(cb)
+
+    assert(typeH == "number", ("Expected number for h, got %s. Invoking Resource: '%s'"):format(typeH, invokingResource))
+    assert(typeM == "number", ("Expected number for m, got %s. Invoking Resource: '%s'"):format(typeM, invokingResource))
+    assert(typeCb == "function" or (typeCb == "table" and type(getmetatable(cb)?.__call) == "function"), ("Expected function for cb, got %s. Invoking Resource: '%s'"):format(typeCb, invokingResource))
 
     RunAt(h, m, cb)
 end)
