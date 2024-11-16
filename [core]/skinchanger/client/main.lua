@@ -104,7 +104,7 @@ function SkinChanger:ValidClothes(key)
     ["blemishes_2"] = true, ["blemishes_3"] = true, ["blush_1"] = true, ["blush_2"] = true, ["blush_3"] = true, ["complexion_1"] = true, ["complexion_2"] = true,
     ["sun_1"] = true, ["sun_2"] = true, ["moles_1"] = true, ["moles_2"] = true, ["chest_1"] = true, ["chest_2"] = true, ["chest_3"] = true, ["bodyb_1"] = true,
     ["bodyb_2"] = true, ["bodyb_3"] = true, ["bodyb_4"] = true}
-    return keys[key] ~= nil
+    return keys[key] == nil
 end
 
 local function Normalise(weight, divison)
