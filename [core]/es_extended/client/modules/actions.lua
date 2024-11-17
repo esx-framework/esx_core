@@ -45,9 +45,9 @@ function Actions:TrackPed()
 
     if playerPed ~= newPed then
         ESX.PlayerData.ped = newPed
-        ESX.SetPlayerData("ped", playerPed)
+        ESX.SetPlayerData("ped", newPed)
 
-        TriggerEvent("esx:playerPedChanged", playerPed)
+        TriggerEvent("esx:playerPedChanged", newPed)
     end
 end
 
