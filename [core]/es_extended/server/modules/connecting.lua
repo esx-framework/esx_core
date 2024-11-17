@@ -54,7 +54,7 @@ else
         Wait(0) -- Required
         local identifier = ESX.GetIdentifier(playerId)
 
-
+        -- luacheck: ignore
         if not SetEntityOrphanMode then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end

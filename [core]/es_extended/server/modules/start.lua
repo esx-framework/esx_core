@@ -22,6 +22,7 @@ AddEventHandler("onResourceStart", function(key)
         error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^1, PLEASE REMOVE ^5%s^1"):format(key))
     end
 
+    -- luacheck: ignore
     if not SetEntityOrphanMode then
         CreateThread(function()
             while true do
