@@ -290,7 +290,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     TriggerEvent("esx:playerLoaded", playerId, xPlayer, isNew)
     userData.money = xPlayer.getMoney()
     userData.maxWeight = xPlayer.getMaxWeight()
-    xPlayer.triggerEvent("esx:playerLoaded", userData, isNew, userData.skin)
+    xPlayer.triggerEvent("esx:playerLoaded:internal", userData, isNew, userData.skin)
 
     if not Config.CustomInventory then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)

@@ -12,9 +12,11 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         end
     end)
 
-    ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer)
+    ESX.SecureNetEvent("esx:playerLoaded:internal", function(xPlayer, isNew, playerSkin)
         ESX.PlayerData = xPlayer
         ESX.PlayerLoaded = true
+
+        TriggerEvent("esx:playerLoaded", xPlayer, isNew, playerSkin)
     end)
 
     ESX.SecureNetEvent("esx:onPlayerLogout", function()
