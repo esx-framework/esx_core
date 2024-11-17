@@ -9,12 +9,12 @@ shared_scripts {
 	'locale.lua',
 	'locales/*.lua',
 
+    'shared/main.lua',
+
 	'shared/config/main.lua',
     'shared/config/weapons.lua',
     'shared/config/adjustments.lua',
 
-    'shared/main.lua',
-    'shared/functions.lua',
     'shared/modules/*.lua',
 }
 
