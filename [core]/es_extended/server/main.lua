@@ -102,7 +102,7 @@ if not Config.Multichar then
         Wait(0) -- Required
         local identifier = ESX.GetIdentifier(playerId)
 
-
+        -- luacheck: ignore
         if not SetEntityOrphanMode then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
@@ -696,7 +696,7 @@ AddEventHandler("onResourceStart", function(key)
         StopResource(key)
         error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^1, PLEASE REMOVE ^5%s^1"):format(key))
     end
-
+    -- luacheck: ignore
     if not SetEntityOrphanMode then
         CreateThread(function()
             while true do
