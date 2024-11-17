@@ -7,10 +7,18 @@ Callbacks.storage = {}
 Callbacks.id = 0
 
 function Callbacks:Trigger(event, cb, invoker, ...)
-    self.requests[self.id] = cb
+
+    self.requests[self.id] = {
+        await = type(cb) == "boolean",
+        cb = cb or promise:new()
+    }
+    local table = self.requests[self.id]
+
     TriggerServerEvent("esx:triggerServerCallback", event, self.id, invoker, ...)
 
     self.id += 1
+
+    return table.cb
 end
 
 function Callbacks:Execute(cb, ...)
@@ -32,7 +40,12 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
 
     local callback = self.requests[self.currentId]
 
-    Callbacks:Execute(callback, ...)
+    if callback.await then
+        return callback.cb:resolve({...})
+    else
+        Callbacks:Execute(callback.cb, ...)
+    end
+
     self.requests[requestId] = nil
 end
 
@@ -64,6 +77,28 @@ ESX.TriggerServerCallback = function(eventName, callback, ...)
     local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
     Callbacks:Trigger(eventName, callback, invoker, ...)
+end
+
+---@param eventName string
+---@param ... any
+---@return any
+ESX.AwaitServerCallback = function(eventName, ...)
+    local invokingResource = GetInvokingResource()
+    local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
+
+    local p = Callbacks:Trigger(eventName, false, invoker, ...)
+    if not p then return end
+
+    -- if the server callback takes longer than 15 seconds to respond, reject the promise
+    SetTimeout(15000, function()
+        if p.state == "pending" then
+            p:reject("Server Callback Timed Out")
+        end
+    end)
+
+    Citizen.Await(p)
+
+    return table.unpack(p.value)
 end
 
 ESX.SecureNetEvent("esx:serverCallback", function(...)
