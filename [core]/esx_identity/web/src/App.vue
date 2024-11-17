@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
-import HelloWorld from './components/HelloWorld.vue'
+import Identity from './components/Identity.vue'
 
 onMounted(() => {
   fetch("http://esx_identity/ready", {
@@ -18,7 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <HelloWorld/>
+  <Identity/>
 </template>
 
 <style scoped>
