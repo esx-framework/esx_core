@@ -21,32 +21,30 @@ function Callbacks:Trigger(event, cb, invoker, ...)
     return table.cb
 end
 
-function Callbacks:Execute(cb, ...)
+function Callbacks:Execute(cb, id, ...)
     local success, errorString = pcall(cb, ...)
 
     if not success then
-        print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(self.currentId))
+        print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(id))
         error(errorString)
         return
     end
-    self.currentId = nil
 end
 
 function Callbacks:ServerRecieve(requestId, invoker, ...)
-    self.currentId = requestId
-    if not self.requests[self.currentId] then
-        return error(("Server Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(self.currentId, invoker))
+    if not self.requests[requestId] then
+        return error(("Server Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(requestId, invoker))
     end
 
-    local callback = self.requests[self.currentId]
+    local callback = self.requests[requestId]
+
+    self.requests[requestId] = nil
 
     if callback.await then
         callback.cb:resolve({...})
     else
-        self:Execute(callback.cb, ...)
+        self:Execute(callback.cb, requestId, ...)
     end
-
-    self.requests[requestId] = nil
 end
 
 function Callbacks:Register(name, cb)
@@ -54,7 +52,6 @@ function Callbacks:Register(name, cb)
 end
 
 function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
-    self.currentId = requestId
 
     if not self.storage[eventName] then
         return error(("Client Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(eventName, invoker))
@@ -65,7 +62,7 @@ function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     end
     local callback = self.storage[eventName]
 
-    self:Execute(callback, returnCb, ...)
+    self:Execute(callback, requestId, returnCb, ...)
 end
 
 ---@param eventName string
