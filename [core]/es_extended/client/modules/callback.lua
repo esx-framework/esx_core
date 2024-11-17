@@ -41,7 +41,7 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     local callback = self.requests[self.currentId]
 
     if callback.await then
-        return callback.cb:resolve({...})
+        callback.cb:resolve({...})
     else
         self:Execute(callback.cb, ...)
     end
