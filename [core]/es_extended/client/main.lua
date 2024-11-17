@@ -14,7 +14,7 @@ local function ApplyMetadata(metadata)
     end
 end
 
-ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
+RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     ESX.PlayerData = xPlayer
 
     if not Config.Multichar then

@@ -33,7 +33,7 @@ ESX.SecureNetEvent("esx_multicharacter:SetupUI", function(data, slots)
     Multicharacter:SetupUI(data, slots)
 end)
 
-ESX.SecureNetEvent('esx:playerLoaded', function(playerData, isNew, skin)
+RegisterNetEvent('esx:playerLoaded', function(playerData, isNew, skin)
     Multicharacter:PlayerLoaded(playerData, isNew, skin)
 end)
 
