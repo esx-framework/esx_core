@@ -43,7 +43,7 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     if callback.await then
         return callback.cb:resolve({...})
     else
-        Callbacks:Execute(callback.cb, ...)
+        self:Execute(callback.cb, ...)
     end
 
     self.requests[requestId] = nil
@@ -65,7 +65,7 @@ function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     end
     local callback = self.storage[eventName]
 
-    Callbacks:Execute(callback, returnCb, ...)
+    self:Execute(callback, returnCb, ...)
 end
 
 ---@param eventName string
