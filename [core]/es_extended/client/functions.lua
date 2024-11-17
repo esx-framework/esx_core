@@ -389,7 +389,12 @@ function ESX.UI.Menu.Close(menuType, namespace, name, cancel)
                 if not cancel then
                     ESX.UI.Menu.Opened[i].close()
                 else
-                    ESX.UI.Menu.Opened[i].cancel()
+                    local menu = ESX.UI.Menu.Opened[i]
+                    ESX.UI.Menu.RegisteredTypes[menu.type].close(menu.namespace, menu.name)
+    
+                    if type(menu.cancel) ~= "nil" then
+                        menu.cancel(menu.data, menu)
+                    end
                 end
                 ESX.UI.Menu.Opened[i] = nil
             end
@@ -405,7 +410,12 @@ function ESX.UI.Menu.CloseAll(cancel)
             if not cancel then
                 ESX.UI.Menu.Opened[i].close()
             else
-                ESX.UI.Menu.Opened[i].cancel()
+                local menu = ESX.UI.Menu.Opened[i]
+                ESX.UI.Menu.RegisteredTypes[menu.type].close(menu.namespace, menu.name)
+    
+                if type(menu.cancel) ~= "nil" then
+                    menu.cancel(menu.data, menu)
+                end
             end
             ESX.UI.Menu.Opened[i] = nil
         end

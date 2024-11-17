@@ -119,7 +119,7 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
                         return  error(("Could not spawn vehicle - ^5%s^7!"):format(model))
                     end
                 end
-
+                -- luacheck: ignore
                 SetEntityOrphanMode(createdVehicle, 2)
                 local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
                 Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
