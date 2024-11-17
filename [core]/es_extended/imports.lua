@@ -12,7 +12,7 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         end
     end)
 
-    ESX.SecureNetEvent("esx:playerLoaded", function(xPlayer)
+    RegisterNetEvent("esx:playerLoaded", function(xPlayer)
         ESX.PlayerData = xPlayer
         ESX.PlayerLoaded = true
     end)
