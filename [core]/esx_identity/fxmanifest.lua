@@ -24,10 +24,10 @@ client_scripts {
 }
 
 files ({
-	'dist/assets/**',
-	'dist/**',
+	'web/dist/assets/**',
+	'web/dist/**',
 })
 
-ui_page 'dist/index.html'
+ui_page 'web/dist/index.html'
 
 dependency 'es_extended'
