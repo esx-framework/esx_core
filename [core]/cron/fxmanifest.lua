@@ -4,6 +4,6 @@ game 'gta5'
 author 'ESX-Framework'
 description 'Allows resources to Run tasks at specific intervals.'
 lua54 'yes'
-version '1.11.2'
+version '1.11.3'
 
 server_script 'server/main.lua'

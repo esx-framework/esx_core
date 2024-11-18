@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 game 'gta5'
 description 'Saves/loads character appearances for ESX Legacy.'
-version '1.11.2'
+version '1.11.3'
 lua54 'yes'
 
 client_scripts {

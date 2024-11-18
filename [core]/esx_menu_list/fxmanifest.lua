@@ -3,7 +3,7 @@ fx_version 'adamant'
 game 'gta5'
 description 'A basic table-based menu system for ESX Legacy.'
 lua54 'yes'
-version '1.11.2'
+version '1.11.3'
 
 
 client_scripts {
