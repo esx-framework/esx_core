@@ -70,7 +70,7 @@ AddEventHandler("esx_skin:playerRegistered", function()
     end)
 end)
 
-ESX.SecureNetEvent("esx:playerLoaded", function(_, _, skin)
+RegisterNetEvent("esx:playerLoaded", function(_, _, skin)
     ESX.PlayerLoaded = true
     TriggerServerEvent("esx_skin:setWeight", skin)
 end)

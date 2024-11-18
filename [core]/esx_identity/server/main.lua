@@ -243,6 +243,8 @@ end
 
     ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
         local xPlayer = ESX.GetPlayerFromId(source)
+        data.dateofbirth = formatDate(data.dateofbirth)
+
         if not checkNameFormat(data.firstname) then
             TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
             return cb(false)
@@ -272,7 +274,7 @@ end
             playerIdentity[xPlayer.identifier] = {
                 firstName = formatName(data.firstname),
                 lastName = formatName(data.lastname),
-                dateOfBirth = formatDate(data.dateofbirth),
+                dateOfBirth = data.dateofbirth,
                 sex = data.sex,
                 height = data.height,
             }

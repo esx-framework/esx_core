@@ -104,7 +104,7 @@ function SkinChanger:ValidClothes(key)
     ["blemishes_2"] = true, ["blemishes_3"] = true, ["blush_1"] = true, ["blush_2"] = true, ["blush_3"] = true, ["complexion_1"] = true, ["complexion_2"] = true,
     ["sun_1"] = true, ["sun_2"] = true, ["moles_1"] = true, ["moles_2"] = true, ["chest_1"] = true, ["chest_2"] = true, ["chest_3"] = true, ["bodyb_1"] = true,
     ["bodyb_2"] = true, ["bodyb_3"] = true, ["bodyb_4"] = true}
-    return keys[key] ~= nil
+    return keys[key] == nil
 end
 
 local function Normalise(weight, divison)
@@ -140,7 +140,7 @@ function SkinChanger:SetFace()
 end
 
 function SkinChanger:SetHeadOverlay()
-    local features = {{"age_1", "age_2"}, {"blemishes_1", "blemishes_2"}, {"beard_1", "beard_2"}, {"eyebrows_1", "eyebrows_2"}, {"makeup_1", "makeup_2"}, {"lipstick_1", "lipstick_2"}, {"blush_1", "blush_2"}, {"complexion_1", "complexion_2"}, {"sun_1", "sun_2"}, {"moles_1", "moles_2"}, {"chest_1", "chest_2"}}
+    local features = {{"blemishes_1", "blemishes_2"}, {"beard_1", "beard_2"}, {"eyebrows_1", "eyebrows_2"}, {"age_1", "age_2"}, {"makeup_1", "makeup_2"}, {"blush_1", "blush_2"}, {"complexion_1", "complexion_2"}, {"sun_1", "sun_2"}, {"lipstick_1", "lipstick_2"}, {"moles_1", "moles_2"}, {"chest_1", "chest_2"}}
     for i = 1, #features, 1 do
         local feature = features[i]
         SetPedHeadOverlay(self.playerPed, i - 1, self.character[feature[1]], Normalise(self.character[feature[2]], 10))
@@ -148,10 +148,9 @@ function SkinChanger:SetHeadOverlay()
 end
 
 function SkinChanger:SetHeadOverlayColour()
-    local features = {{"beard_3", "beard_4"}, {"eyebrows_3", "eyebrows_4"}, {"makeup_3", "makeup_4"}, {"lipstick_3", "lipstick_4"}, {"blush_3", 0}, {"chest_3", 0}}
-    for i = 1, #features, 1 do
-        local feature = features[i]
-        SetPedHeadOverlayColor(self.playerPed, i - 1, 1, self.character[feature[1]], self.character[feature[2]])
+    local features = {[1] = {"beard_3", "beard_4"}, [2] = {"eyebrows_3", "eyebrows_4"}, [4] = {"makeup_3", "makeup_4"}, [5] = {"blush_3", 0}, [8] = {"lipstick_3", "lipstick_4"}, [10] = {"chest_3", 0}}
+    for i, feature in pairs(features) do
+        SetPedHeadOverlayColor(self.playerPed, i, 1, self.character[feature[1]], self.character[feature[2]])
     end
     if self.character["bodyb_1"] == -1 then
         SetPedHeadOverlay(self.playerPed, 11, 255, (self.character["bodyb_2"] / 10) + 0.0) -- Body Blemishes + opacity
