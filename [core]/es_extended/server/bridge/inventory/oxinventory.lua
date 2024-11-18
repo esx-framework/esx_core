@@ -1,3 +1,10 @@
+if Config.CustomInventory == "auto" and GetResourceState("ox_inventory") ~= "missing" then 
+    Config.OxInventory = true 
+    Config.CustomInventory = "ox"
+    SetConvarReplicated("inventory:framework", "esx")
+    SetConvarReplicated("inventory:weight", Config.MaxWeight * 1000)
+end
+
 if Config.CustomInventory ~= "ox" then return end
 
 MySQL.ready(function()
