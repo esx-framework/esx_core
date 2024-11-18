@@ -80,7 +80,7 @@ RegisterNetEvent("esx_skin:openMenu", function(submitCb, cancelCb)
 end)
 
 RegisterNetEvent("esx_skin:openRestrictedMenu", function(submitCb, cancelCb, restrict)
-    Menu:Open(submitCb, cancelCb, nil)
+    Menu:Open(submitCb, cancelCb, restrict)
 end)
 
 RegisterNetEvent("esx_skin:openSaveableMenu", function(submitCb, cancelCb)
