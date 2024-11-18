@@ -70,7 +70,7 @@ AddEventHandler("esx_skin:playerRegistered", function()
     end)
 end)
 
-ESX.SecureNetEvent("esx:playerLoaded", function(_, _, skin)
+RegisterNetEvent("esx:playerLoaded", function(_, _, skin)
     ESX.PlayerLoaded = true
     TriggerServerEvent("esx_skin:setWeight", skin)
 end)
@@ -80,7 +80,7 @@ RegisterNetEvent("esx_skin:openMenu", function(submitCb, cancelCb)
 end)
 
 RegisterNetEvent("esx_skin:openRestrictedMenu", function(submitCb, cancelCb, restrict)
-    Menu:Open(submitCb, cancelCb, nil)
+    Menu:Open(submitCb, cancelCb, restrict)
 end)
 
 RegisterNetEvent("esx_skin:openSaveableMenu", function(submitCb, cancelCb)
