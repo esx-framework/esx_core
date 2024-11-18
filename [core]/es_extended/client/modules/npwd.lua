@@ -9,7 +9,7 @@ local function checkPhone()
     npwd:setPhoneDisabled((phoneItem and phoneItem.count or 0) <= 0)
 end
 
-ESX.SecureNetEvent("esx:playerLoaded", checkPhone)
+RegisterNetEvent("esx:playerLoaded", checkPhone)
 
 AddEventHandler("onClientResourceStart", function(resource)
     if resource ~= "npwd" then
