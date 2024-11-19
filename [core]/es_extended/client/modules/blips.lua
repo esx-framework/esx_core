@@ -1,6 +1,8 @@
 local blips = {}
 
 function ESX.CreateBlipInternal(coords, sprite, colour, label, scale, display, shortRange, resource)
+    local handle = ESX.Table.SizeOf(blips) + 1
+
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
 
     SetBlipSprite(blip, sprite)
@@ -8,17 +10,20 @@ function ESX.CreateBlipInternal(coords, sprite, colour, label, scale, display, s
     SetBlipScale(blip, scale)
     SetBlipDisplay(blip, display)
     SetBlipAsShortRange(blip, shortRange)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(label)
+
+    local TEXT_ENTRY = ("ESX_BLIP_%s"):format(handle)
+
+    AddTextEntry(TEXT_ENTRY, label)
+
+    BeginTextCommandSetBlipName(TEXT_ENTRY)
     EndTextCommandSetBlipName(blip)
 
-    local handle = ESX.Table.SizeOf(blips) + 1
-	blips[handle] = {
+    blips[handle] = {
         blip = blip,
         resource = resource
     }
 
-    return id
+    return handle
 end
 
 function ESX.RemoveBlip(id)
@@ -34,15 +39,23 @@ end
 function ESX.SetBlipCoords(id, coords)
     local blipData = blips[id]
 
-    if blipData then 
+    if blipData then
         SetBlipCoords(blipData.blip, coords.xyz)
+    end
+end
+
+function ESX.SetBlipSprite(id, sprite)
+    local blipData = blips[id]
+
+    if blipData then
+        SetBlipSprite(blipData.blip, sprite)
     end
 end
 
 function ESX.SetBlipColour(id, colour)
     local blipData = blips[id]
 
-    if blipData then 
+    if blipData then
         SetBlipColour(blipData.blip, colour)
     end
 end
@@ -50,9 +63,12 @@ end
 function ESX.SetBlipLabel(id, label)
     local blipData = blips[id]
 
-    if blipData then 
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(label)
+    if blipData then
+        local TEXT_ENTRY = ("ESX_BLIP_%s"):format(blipData.id)
+
+        AddTextEntry(TEXT_ENTRY, label)
+
+        BeginTextCommandSetBlipName(TEXT_ENTRY)
         EndTextCommandSetBlipName(blipData.blip)
     end
 end
@@ -60,7 +76,7 @@ end
 function ESX.SetBlipScale(id, scale)
     local blipData = blips[id]
 
-    if blipData then 
+    if blipData then
         SetBlipScale(blipData.blip, scale)
     end
 end
@@ -68,7 +84,7 @@ end
 function ESX.SetBlipDisplay(id, display)
     local blipData = blips[id]
 
-    if blipData then 
+    if blipData then
         SetBlipDisplay(blipData.blip, display)
     end
 end
@@ -76,7 +92,7 @@ end
 function ESX.SetBlipShortRange(id, shortRange)
     local blipData = blips[id]
 
-    if blipData then 
+    if blipData then
         SetBlipAsShortRange(blipData.blip, shortRange)
     end
 end
