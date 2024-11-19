@@ -46,6 +46,7 @@ client_scripts {
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
 	'client/modules/points.lua',
+	'client/modules/blips.lua',
 
 	'client/main.lua',
 
