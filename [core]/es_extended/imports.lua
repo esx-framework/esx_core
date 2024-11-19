@@ -29,7 +29,7 @@ if not IsDuplicityVersion() then -- Only register this event for the client
 
         local file = LoadResourceFile("es_extended", path)
         if file then
-            local fn, err = load(file, ('@es_extended/%s'):format(path))
+            local fn, err = load(file, ('@@es_extended/%s'):format(path))
 
             if not fn or err then
                 return error(('\n^1Error importing module (%s)'):format(external[i]))
