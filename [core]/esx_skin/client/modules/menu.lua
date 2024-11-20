@@ -120,8 +120,8 @@ function Menu:Open(submit, cancel, restrict)
 
     self:InsertElements()
 
-    self.zoomOffset = self.components[1].zoomOffset
-    self.camOffset = self.components[1].camOffset
+    Skin.zoomOffset = self.components[1].zoomOffset
+    Skin.camOffset = self.components[1].camOffset
     Camera:Create()
 
     self:ESXMenu()
