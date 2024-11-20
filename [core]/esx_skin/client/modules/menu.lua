@@ -37,7 +37,8 @@ end
 
 function Menu:InsertElements()
     local playerPed = PlayerPedId()
-
+    
+    self.elements = {}
     for i = 1, #self.components, 1 do
         local value = self.components[i].value
         local componentId = self.components[i].componentId
