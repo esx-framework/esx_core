@@ -59,7 +59,7 @@ function Menu:InsertElements()
 end
 
 function Menu:Submit(data, menu)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
     self.submitCb(data, menu)
     Camera:Destroy()
 end
@@ -67,7 +67,7 @@ end
 function Menu:Cancel(data, menu)
     menu.close()
     Camera:Destroy()
-    TriggerEvent("skinchanger:loadSkin", Skin.last)
+    TriggerEvent("skinchanger:loadSkin", Skin.Last)
 
     if self.cancelCb then
         self.cancelCb(data, menu)
@@ -113,7 +113,7 @@ function Menu:Open(submit, cancel, restrict)
     self.submitCb = submit
     self.cancelCb = cancel
     self.restricted = restrict
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self.components, self.maxValues = exports["skinchanger"]:GetData()
     if restrict then
@@ -130,7 +130,7 @@ function Menu:Open(submit, cancel, restrict)
 end
 
 function Menu:Saveable(submitCb, cancelCb, restrict)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self:Open(function(data, menu)
         menu.close()
