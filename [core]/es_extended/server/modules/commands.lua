@@ -95,10 +95,17 @@ ESX.RegisterCommand(
             })
         end
 
+        local xRoutingBucket = GetPlayerRoutingBucket(xPlayer.source)
+
         ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
             if networkId then
                 local vehicle = NetworkGetEntityFromNetworkId(networkId)
-                for _ = 1, 20 do
+
+                if xRoutingBucket ~= 0 then
+                    SetEntityRoutingBucket(vehicle, xRoutingBucket)
+                end
+
+                for _ = 1, 100 do
                     Wait(0)
                     SetPedIntoVehicle(playerPed, vehicle, -1)
 
@@ -106,6 +113,7 @@ ESX.RegisterCommand(
                         break
                     end
                 end
+
                 if GetVehiclePedIsIn(playerPed, false) ~= vehicle then
                     showError("[^1ERROR^7] The player could not be seated in the vehicle")
                 end

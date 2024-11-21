@@ -25,7 +25,8 @@ function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
     local identifier = self:GetIdentifier(source)
-
+    
+    -- luacheck: ignore
     if not SetEntityOrphanMode then
         return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
     end

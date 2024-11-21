@@ -54,7 +54,7 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     end
 
     Actions:Init()
-
+    StartPointsLoop()
     StartServerSyncLoops()
 end)
 
