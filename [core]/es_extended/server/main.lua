@@ -320,6 +320,7 @@ AddEventHandler("playerDropped", function(reason)
         local job = xPlayer.getJob().name
         local currentJob = ESX.JobsPlayerCount[job]
         ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+        ESX.JobsPlayers[job][playerId] = nil
 
         GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
         Core.playersByIdentifier[xPlayer.identifier] = nil
@@ -337,15 +338,22 @@ AddEventHandler("esx:playerLoaded", function(_, xPlayer)
 
     ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 0) + 1
     GlobalState[jobKey] = ESX.JobsPlayerCount[job]
+
+    ESX.JobsPlayers[job] = ESX.JobsPlayers[job] or {}
+    ESX.JobsPlayers[job][xPlayer.source] = true
 end)
 
-AddEventHandler("esx:setJob", function(_, job, lastJob)
+AddEventHandler("esx:setJob", function(src, job, lastJob)
     local lastJobKey = ("%s:count"):format(lastJob.name)
     local jobKey = ("%s:count"):format(job.name)
     local currentLastJob = ESX.JobsPlayerCount[lastJob.name]
 
     ESX.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
     ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
+
+    ESX.JobsPlayers[lastJob.name][src] = nil
+    ESX.JobsPlayers[job.name] = ESX.JobsPlayers[job.name] or {}
+    ESX.JobsPlayers[job.name][src] = true
 
     GlobalState[lastJobKey] = ESX.JobsPlayerCount[lastJob.name]
     GlobalState[jobKey] = ESX.JobsPlayerCount[job.name]
