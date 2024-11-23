@@ -276,7 +276,7 @@ end
 
 ESX.GetPlayers = GetPlayers
 
-local function checkTable(key, val, xPlayer, xPlayers)
+local function checkTable(key, val, xPlayer, xPlayers, minimal)
     for valIndex = 1, #val do
         local value = val[valIndex]
         if not xPlayers[value] then
@@ -284,16 +284,21 @@ local function checkTable(key, val, xPlayer, xPlayers)
         end
 
         if xPlayer[key] == value then
-            xPlayers[value][#xPlayers[value] + 1] = xPlayer
+            xPlayers[value][#xPlayers[value] + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 end
 
-local function getExtendedPlayersByJob(job, xPlayers)
+local function getExtendedPlayersByJob(job, xPlayers, minimal)
     local isValTable = type(job) == "table"
 
     if not isValTable then
         if not ESX.JobPlayers[job] then
+            return
+        end
+
+        if minimal then
+            xPlayers = ESX.Table.ToArray(ESX.JobPlayers[job])
             return
         end
 
@@ -310,9 +315,13 @@ local function getExtendedPlayersByJob(job, xPlayers)
         if ESX.JobPlayers[currentJob] then
             xPlayers[currentJob] = {}
 
-            for j, src in pairs(ESX.JobPlayers[currentJob]) do
-                if ESX.Players[src] then
-                    xPlayers[#xPlayers + 1] = ESX.Players[src]
+            if minimal then
+                xPlayers[currentJob] = ESX.Table.ToArray(ESX.JobPlayers[currentJob])
+            else
+                for j, src in pairs(ESX.JobPlayers[currentJob]) do
+                    if ESX.Players[src] then
+                        xPlayers[#xPlayers + 1] = ESX.Players[src]
+                    end
                 end
             end
         end
@@ -321,8 +330,9 @@ end
 
 ---@param key? string
 ---@param val? string|table
+---@param minimal? boolean
 ---@return table
-function ESX.GetExtendedPlayers(key, val)
+function ESX.GetExtendedPlayers(key, val, minimal)
     if not key then
         return ESX.Table.ToArray(ESX.Players)
     end
@@ -330,7 +340,7 @@ function ESX.GetExtendedPlayers(key, val)
     local xPlayers = {}
 
     if key == "job" then
-        getExtendedPlayersByJob(val, xPlayers)
+        getExtendedPlayersByJob(val, xPlayers, minimal)
 
         return xPlayers
     end
@@ -338,7 +348,7 @@ function ESX.GetExtendedPlayers(key, val)
     local isValTable = type(val) == "table"
     if isValTable then
         for i, xPlayer in pairs(ESX.Players) do
-            checkTable(key, val, xPlayer, xPlayers)
+            checkTable(key, val, xPlayer, xPlayers, minimal)
         end
 
         return xPlayers
@@ -346,7 +356,7 @@ function ESX.GetExtendedPlayers(key, val)
 
     for i, xPlayer in pairs(ESX.Players) do
         if xPlayer[key] == val then
-            xPlayers[#xPlayers + 1] = xPlayer
+            xPlayers[#xPlayers + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 
