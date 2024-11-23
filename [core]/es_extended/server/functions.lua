@@ -283,8 +283,38 @@ local function checkTable(key, val, xPlayer, xPlayers)
             xPlayers[value] = {}
         end
 
-        if (key == "job" and xPlayer.job.name == value) or xPlayer[key] == value then
+        if xPlayer[key] == value then
             xPlayers[value][#xPlayers[value] + 1] = xPlayer
+        end
+    end
+end
+
+local function getExtendedPlayersByJob(job, xPlayers)
+    local isValTable = type(job) == "table"
+
+    if not isValTable then
+        if not ESX.JobPlayers[job] then
+            return
+        end
+
+        for i, src in pairs(ESX.JobPlayers[job]) do
+            if ESX.Players[src] then
+                xPlayers[#xPlayers + 1] = ESX.Players[src]
+            end
+        end
+
+        return
+    end
+
+    for i, currentJob in ipairs(job) do
+        if ESX.JobPlayers[currentJob] then
+            xPlayers[currentJob] = {}
+
+            for j, src in pairs(ESX.JobPlayers[currentJob]) do
+                if ESX.Players[src] then
+                    xPlayers[#xPlayers + 1] = ESX.Players[src]
+                end
+            end
         end
     end
 end
@@ -298,7 +328,15 @@ function ESX.GetExtendedPlayers(key, val)
     end
 
     local xPlayers = {}
-    if type(val) == "table" then
+
+    if key == "job" then
+        getExtendedPlayersByJob(val, xPlayers)
+
+        return xPlayers
+    end
+
+    local isValTable = type(val) == "table"
+    if isValTable then
         for i, xPlayer in pairs(ESX.Players) do
             checkTable(key, val, xPlayer, xPlayers)
         end
@@ -307,7 +345,7 @@ function ESX.GetExtendedPlayers(key, val)
     end
 
     for i, xPlayer in pairs(ESX.Players) do
-        if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
+        if xPlayer[key] == val then
             xPlayers[#xPlayers + 1] = xPlayer
         end
     end
