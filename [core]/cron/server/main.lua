@@ -42,7 +42,7 @@ function OnTime(timestamp)
             sec = 0, -- Assuming tasks run at the start of the minute
             day = currentDay,
             month = currentMonth,
-            year = currentYear,v
+            year = currentYear
         })
 
         if timestamp >= scheduledTimestamp and (not lastTimestamp or lastTimestamp < scheduledTimestamp) then
