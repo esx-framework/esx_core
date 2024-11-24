@@ -78,6 +78,7 @@ ESX.RegisterCommand(
         local playerCoords = GetEntityCoords(playerPed)
         local playerHeading = GetEntityHeading(playerPed)
         local playerVehicle = GetVehiclePedIsIn(playerPed, false)
+        local sourceBucket = GetPlayerRoutingBucket(xPlayer.source)
 
         if not args.car or type(args.car) ~= "string" then
             args.car = "adder"
@@ -98,6 +99,8 @@ ESX.RegisterCommand(
         ESX.OneSync.SpawnVehicle(args.car, playerCoords, playerHeading, upgrades, function(networkId)
             if networkId then
                 local vehicle = NetworkGetEntityFromNetworkId(networkId)
+                SetEntityRoutingBucket(vehicle, sourceBucket)
+
                 for _ = 1, 20 do
                     Wait(0)
                     SetPedIntoVehicle(playerPed, vehicle, -1)
