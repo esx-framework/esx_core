@@ -4,6 +4,7 @@ function Adjustments:RemoveHudComponents()
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
             SetHudComponentSize(i, 0.0, 0.0)
+            SetHudComponentPosition(i, 900, 900)
         end
     end
 end
