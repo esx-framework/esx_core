@@ -10,20 +10,27 @@ function Database:GetConnection()
         error(connectionString .. "\n^1Unable to start Multicharacter - unable to determine database from mysql_connection_string^0", 0)
     elseif connectionString:find("mysql://") then
         connectionString = connectionString:sub(9, -1)
-
-        self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
-        self.found = true
+        local slashPos = connectionString:find("/")
+        if slashPos then
+            self.name = connectionString:sub(slashPos + 1, -1):gsub("[%?]+[%w%p]*$", "")
+            self.found = true
+        else
+            error("\n^1Invalid connection string format. '/' not found in the connection string.^0")
+        end
     else
         local connectionExtracted = { string.strsplit(";", connectionString) }
-
-        for i = 1, #connectionExtracted do
-            local v = connectionExtracted[i]
-            if v:match("database") then
-                self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
+        
+        for _, v in ipairs(connectionExtracted) do
+            if v:match("database=") then
+                self.name = v:sub(10)
                 self.found = true
                 break
             end
         end
+    end
+
+    if not self.name then
+        error("\n^1Unable to extract database name from connection string^0")
     end
 end
 
