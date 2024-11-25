@@ -80,7 +80,18 @@ end
 
 ---@param eventName string
 ---@param callback function
-ESX.RegisterServerCallback = function(eventName, callback)
+function ESX.RegisterServerCallback(eventName, callback)
     Callbacks:Register(eventName, callback)
 end
 
+---@param eventName string
+---@return boolean
+function ESX.DoesServerCallbackExist(eventName)
+    return Callbacks.storage[eventName] ~= nil
+end
+
+---@param eventName string
+---@return table | nil
+function ESX.GetCallbackInfo(eventName)
+    return Callbacks.storage[eventName]
+end
