@@ -370,6 +370,63 @@ function ESX.GetIdentifier(playerId)
     return identifier and identifier:gsub("license:", "")
 end
 
+---@param plate string
+---@param entity number
+---@param model string|number
+---@param props table
+---@param owner string
+---@return VehicleClass
+function ESX.CreateExtendedVehicle(plate, entity, model, props, owner)
+    assert(type(plate) == "string", "Expected 'plate' to be a string")
+    assert(type(entity) == "number", "Expected 'entity' to be a number")
+    assert(type(model) == "string" or type(model) == "number", "Expected 'model' to be a string or number")
+    assert(type(props) == "table", "Expected 'props' to be a table")
+    assert(type(owner) == "string", "Expected 'owner' to be a string")
+    assert(DoesEntityExist(entity) == true, "Entity does not exist")
+    assert(GetEntityType(entity) == 2, "Entity is not a vehicle")
+
+    if Core.vehicles[plate] then
+        local obj = table.clone(Core.vehicleClass)
+        obj.plate = plate
+        return obj
+    end
+
+    if type(model) ~= "number" then
+        model = GetHashKey(model)
+    end
+
+    local netId = NetworkGetNetworkIdFromEntity(entity)
+    ---@type VehicleData
+    local vehicle = {
+        plate = plate,
+        entity = entity,
+        netId = netId,
+        modelHash = model,
+        props = props,
+        owner = owner,
+    }
+    Core.vehicles[netId] = vehicle
+
+    local obj = table.clone(Core.vehicleClass)
+    obj.plate = plate
+    TriggerEvent("esx:vehicleSpawned", obj)
+    MySQL.prepare("UPDATE `owned_vehicles` SET `stored` = 0 WHERE `plate` = ?", plate)
+
+    return obj
+end
+
+---@param plate string
+---@return VehicleClass|nil
+function ESX.GetVehicleFromPlate(plate)
+    assert(type(plate) == "string", "Expected 'plate' to be a string")
+
+    if Core.vehicles[plate] then
+        local obj = table.clone(Core.vehicleClass)
+        obj.plate = plate
+        return obj
+    end
+end
+
 ---@param model string|number
 ---@param player number
 ---@param cb function

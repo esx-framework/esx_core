@@ -12,6 +12,8 @@ Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
 
 Core.vehicleTypesByModel = {}
+---@type table<number, VehicleData>
+Core.vehicles = {}
 
 RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
