@@ -32,8 +32,8 @@ body {
     min-width: 20rem;
     width: fit-content;
     height: 3.5rem;
-    background: rgba(5, 5, 5, 0.9);
-    border-radius: 0.5rem;
+    background: rgba(15, 15, 15, 0.9);
+    border-radius: 0.4rem;
     margin-top: 0.5rem;
     animation: anim 300ms ease-in-out;
     align-items: center;
@@ -47,24 +47,27 @@ body {
 
 #root .icon {
     float: left;
-    color: #fff;
 }
 
 #root .text {
     display: inline-block;
+    color: #fff;
     margin-left: 0.5rem;
 }
 
 #root .error {
-    border-bottom: 3px solid #c0392b;
+    color: #c0392b;
+    border: 2px solid #c0392b;
 }
 
 #root .success {
-    border-bottom: 3px solid #2ecc71;
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
 }
 
 #root .info {
-    border-bottom: 3px solid #2980b9;
+    color: #fb9b04;
+    border: 2px solid #fb9b04;
 }
 
 .material-symbols-outlined {
