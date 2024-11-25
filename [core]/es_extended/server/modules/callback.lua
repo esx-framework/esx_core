@@ -92,6 +92,6 @@ end
 
 ---@param eventName string
 ---@return table | nil
-function ESX.GetCallbackInfo(eventName)
+function ESX.GetServerCallbackInfo(eventName)
     return Callbacks.storage[eventName]
 end
