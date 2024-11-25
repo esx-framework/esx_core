@@ -6,6 +6,10 @@ Callbacks.requests = {}
 Callbacks.storage = {}
 Callbacks.id = 0
 
+-- =============================================
+-- MARK: Internal Functions
+-- =============================================
+
 function Callbacks:Trigger(event, cb, invoker, ...)
 
     self.requests[self.id] = {
@@ -65,11 +69,24 @@ function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     self:Execute(callback, requestId, returnCb, ...)
 end
 
+ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
+    Callbacks:ClientRecieve(...)
+end)
+
+
+ESX.SecureNetEvent("esx:serverCallback", function(...)
+    Callbacks:ServerRecieve(...)
+end)
+
+-- =============================================
+-- MARK: ESX Functions
+-- =============================================
+
 ---@param eventName string
 ---@param callback function
 ---@param ... any
 ---@return nil
-ESX.TriggerServerCallback = function(eventName, callback, ...)
+function ESX.TriggerServerCallback(eventName, callback, ...)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
@@ -79,7 +96,7 @@ end
 ---@param eventName string
 ---@param ... any
 ---@return any
-ESX.AwaitServerCallback = function(eventName, ...)
+function ESX.AwaitServerCallback(eventName, ...)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
@@ -98,17 +115,21 @@ ESX.AwaitServerCallback = function(eventName, ...)
     return table.unpack(p.value)
 end
 
-ESX.SecureNetEvent("esx:serverCallback", function(...)
-    Callbacks:ServerRecieve(...)
-end)
-
 ---@param eventName string
 ---@param callback function
 ---@return nil
-ESX.RegisterClientCallback = function(eventName, callback)
+function ESX.RegisterClientCallback(eventName, callback)
     Callbacks:Register(eventName, callback)
 end
 
-ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
-    Callbacks:ClientRecieve(...)
-end)
+---@param eventName string
+---@return boolean
+function ESX.DoesClientCallbackExist(eventName)
+    return Callbacks.storage[eventName] ~= nil
+end
+
+---@param eventName string
+---@return table | nil
+function ESX.GetClientCallbackInfo(eventName)
+    return Callbacks.storage[eventName]
+end
