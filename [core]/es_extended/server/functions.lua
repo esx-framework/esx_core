@@ -405,7 +405,7 @@ function ESX.CreateExtendedVehicle(plate, entity, model, props, owner)
         props = props,
         owner = owner,
     }
-    Core.vehicles[netId] = vehicle
+    Core.vehicles[plate] = vehicle
 
     local obj = table.clone(Core.vehicleClass)
     obj.plate = plate
