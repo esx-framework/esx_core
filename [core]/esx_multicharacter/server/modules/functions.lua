@@ -1,3 +1,5 @@
+local debug = require("modules.utility.shared.debug")
+
 function Server:GetIdentifier(source)
 	local fxDk = GetConvarInt("sv_fxdkMode", 0)
 	if fxDk == 1 then
@@ -51,6 +53,7 @@ function Server:OnConnecting(source, deferrals)
 	end
 
 	if not identifier then
+		debug("(onConnecting) identifier not found, calling deferrals.done()")
 		return deferrals.done(
 			("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(
 				Server.identifierType
@@ -59,10 +62,12 @@ function Server:OnConnecting(source, deferrals)
 	end
 
 	if ESX.GetConfig().EnableDebug then
+		debug("(onConnecting) Debug is enabled, calling deferrals.done()")
 		return deferrals.done()
 	end
 
 	if not ESX.Players[identifier] then
+		debug("(onConnecting) Identifier not found in ESX.Players, calling deferrals.done()")
 		return deferrals.done()
 	end
 
