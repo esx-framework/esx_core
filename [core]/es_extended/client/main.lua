@@ -46,8 +46,10 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     StartServerSyncLoops()
 end)
 
+local isFirstSpawn = true
 ESX.SecureNetEvent("esx:onPlayerLogout", function()
     ESX.PlayerLoaded = false
+    isFirstSpawn = true
 end)
 
 ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
@@ -59,7 +61,6 @@ local function onPlayerSpawn()
     ESX.SetPlayerData("dead", false)
 end
 
-local isFirstSpawn = true
 AddEventHandler("playerSpawned", onPlayerSpawn)
 AddEventHandler("esx:onPlayerSpawn", function()
     onPlayerSpawn()
