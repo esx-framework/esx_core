@@ -68,7 +68,7 @@ AddEventHandler("esx:onPlayerSpawn", function()
     if isFirstSpawn then
         isFirstSpawn = false
 
-        if ESX.PlayerData.metadata.health then
+        if ESX.PlayerData.metadata.health and (ESX.PlayerData.metadata.health > 0 or Config.SaveDeathStatus) then
             SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
         end
 
