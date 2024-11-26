@@ -13,7 +13,7 @@ function Multicharacter:SetupCharacters(source)
     local identifier = Server:GetIdentifier(source)
     ESX.Players[identifier] = true
 
-    local slots = Database:GetPlayerSlots()
+    local slots = Database:GetPlayerSlots(identifier)
     identifier = Server.prefix .. "%:" .. identifier
 
     local rawCharacters = Database:GetPlayerInfo(identifier, slots)
