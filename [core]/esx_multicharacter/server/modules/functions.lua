@@ -51,17 +51,15 @@ function Server:OnConnecting(source, deferrals)
 	end
 
 	if not identifier then
-		deferrals.done(
+		return deferrals.done(
 			("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(
 				Server.identifierType
 			)
 		)
-		return
 	end
 
 	if ESX.GetConfig().EnableDebug then
-		deferrals.done()
-		return
+		return deferrals.done()
 	end
 
 	if not ESX.Players[identifier] then
