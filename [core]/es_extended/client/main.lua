@@ -59,16 +59,21 @@ local function onPlayerSpawn()
     ESX.SetPlayerData("dead", false)
 end
 
+local isFirstSpawn = true
 AddEventHandler("playerSpawned", onPlayerSpawn)
 AddEventHandler("esx:onPlayerSpawn", function()
     onPlayerSpawn()
 
-    if ESX.PlayerData.metadata.health then
-        SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
-    end
+    if isFirstSpawn then
+        isFirstSpawn = false
 
-    if ESX.PlayerData.metadata.armor and ESX.PlayerData.metadata.armor > 0 then
-        SetPedArmour(ESX.PlayerData.ped, ESX.PlayerData.metadata.armor)
+        if ESX.PlayerData.metadata.health then
+            SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
+        end
+
+        if ESX.PlayerData.metadata.armor and ESX.PlayerData.metadata.armor > 0 then
+            SetPedArmour(ESX.PlayerData.ped, ESX.PlayerData.metadata.armor)
+        end
     end
 end)
 
