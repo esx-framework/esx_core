@@ -98,7 +98,7 @@ function Menu:Change(data, menu)
         if element.textureof == data.current.name then
             local component = self.components[i]
 
-            if (ESX.IsFunctionReference(component.max)) then
+            if ESX.IsFunctionReference(component.max) then
                 self.elements[i].max = component.max(PlayerPedId(), skin)
             end
             self.elements[i].value = 0
