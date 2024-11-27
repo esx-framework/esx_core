@@ -103,6 +103,10 @@ function Menu:Change(data, menu)
             end
             self.elements[i].value = 0
 
+            -- Change skin element
+            exports["skinchanger"]:Change(element.name, 0)
+            skin[element.name] = data.current.value
+
             menu.update({ name = self.elements[i].name }, self.elements[i])
             menu.refresh()
             break
