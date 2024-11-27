@@ -237,6 +237,7 @@ Config.Components = {
         min = 0,
         zoomOffset = 0.6,
         camOffset = 0.65,
+        textureof = "hair_1",
         max = function(playerPed, Character)
             return GetNumberOfPedTextureVariations(playerPed, 2, Character["hair_1"]) - 1
         end
