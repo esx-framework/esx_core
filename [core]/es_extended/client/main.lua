@@ -4,16 +4,6 @@ ESX.SecureNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-local function ApplyMetadata(metadata)
-    if metadata.health then
-        SetEntityHealth(ESX.PlayerData.ped, metadata.health)
-    end
-
-    if metadata.armor and metadata.armor > 0 then
-        SetPedArmour(ESX.PlayerData.ped, metadata.armor)
-    end
-end
-
 RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     ESX.PlayerData = xPlayer
 
@@ -33,8 +23,6 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     end
 
     ESX.PlayerLoaded = true
-
-    ApplyMetadata(ESX.PlayerData.metadata)
 
     local timer = GetGameTimer()
     while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
@@ -58,8 +46,10 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     StartServerSyncLoops()
 end)
 
+local isFirstSpawn = true
 ESX.SecureNetEvent("esx:onPlayerLogout", function()
     ESX.PlayerLoaded = false
+    isFirstSpawn = true
 end)
 
 ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
@@ -72,7 +62,21 @@ local function onPlayerSpawn()
 end
 
 AddEventHandler("playerSpawned", onPlayerSpawn)
-AddEventHandler("esx:onPlayerSpawn", onPlayerSpawn)
+AddEventHandler("esx:onPlayerSpawn", function()
+    onPlayerSpawn()
+
+    if isFirstSpawn then
+        isFirstSpawn = false
+
+        if ESX.PlayerData.metadata.health and (ESX.PlayerData.metadata.health > 0 or Config.SaveDeathStatus) then
+            SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
+        end
+
+        if ESX.PlayerData.metadata.armor and ESX.PlayerData.metadata.armor > 0 then
+            SetPedArmour(ESX.PlayerData.ped, ESX.PlayerData.metadata.armor)
+        end
+    end
+end)
 
 AddEventHandler("esx:onPlayerDeath", function()
     ESX.SetPlayerData("ped", PlayerPedId())

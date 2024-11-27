@@ -272,7 +272,6 @@ function Multicharacter:PlayerLoaded(playerData, isNew, skin)
 
         TriggerServerEvent("esx:onPlayerSpawn")
         TriggerEvent("esx:onPlayerSpawn")
-        TriggerEvent("playerSpawned")
         TriggerEvent("esx:restoreLoadout")
 
         self:Reset()
