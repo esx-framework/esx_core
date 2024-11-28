@@ -44,12 +44,6 @@ function Death:Natural()
 end
 
 function Death:Damaged(victim)
-    local victimId = NetworkGetPlayerIndexFromPed(victim)
-    local isDead = IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)
-    if victimId ~= ESX.playerId or not isDead then
-        return
-    end
-
     self.killerEntity = GetPedSourceOfDeath(ESX.PlayerData.ped)
     self.deathCause = GetPedCauseOfDeath(ESX.PlayerData.ped)
     self.killerId = NetworkGetPlayerIndexFromPed(self.killerEntity)
@@ -69,7 +63,7 @@ end
 AddEventHandler("esx:onPlayerSpawn", function()
     Citizen.CreateThreadNow(function()
         while not ESX.PlayerData.dead do
-            if IsPedDeadOrDying(ESX.PlayerData.ped, true) then
+            if IsPedDeadOrDying(ESX.PlayerData.ped, true) or IsPedFatallyInjured(ESX.PlayerData.ped) then
                 Death:Damaged(ESX.PlayerData.ped)
                 break
             end
