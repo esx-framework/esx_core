@@ -43,7 +43,7 @@ function Death:Natural()
     TriggerServerEvent("esx:onPlayerDeath", data)
 end
 
-function Death:Damaged()
+function Death:Died()
     self.killerEntity = GetPedSourceOfDeath(ESX.PlayerData.ped)
     self.deathCause = GetPedCauseOfDeath(ESX.PlayerData.ped)
     self.killerId = NetworkGetPlayerIndexFromPed(self.killerEntity)
@@ -64,7 +64,7 @@ AddEventHandler("esx:onPlayerSpawn", function()
     Citizen.CreateThreadNow(function()
         while not ESX.PlayerData.dead do
             if IsPedDeadOrDying(ESX.PlayerData.ped, true) or IsPedFatallyInjured(ESX.PlayerData.ped) then
-                Death:Damaged()
+                Death:Died()
                 break
             end
             Citizen.Wait(250)
