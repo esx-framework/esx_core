@@ -43,19 +43,7 @@ function Death:Natual()
     TriggerServerEvent("esx:onPlayerDeath", data)
 end
 
-function Death:Damaged(victim, victimDied)
-    if not victimDied then
-        return
-    end
-
-    if not IsEntityAPed(victim) then
-        return
-    end
-
-    if not IsPedAPlayer(victim) then
-        return
-    end
-
+function Death:Damaged(victim)
     local victimId = NetworkGetPlayerIndexFromPed(victim)
     local isDead = IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)
     if victimId ~= ESX.playerId or not isDead then
@@ -78,9 +66,14 @@ function Death:Damaged(victim, victimDied)
     self:ResetValues()
 end
 
-AddEventHandler("gameEventTriggered", function(event, data)
-    if event ~= "CEventNetworkEntityDamage" then
-        return
-    end
-    Death:Damaged(data[1], data[4])
+AddEventHandler("esx:onPlayerSpawn", function()
+    Citizen.CreateThreadNow(function()
+        while not ESX.PlayerData.dead do
+            if IsPedDeadOrDying(ESX.PlayerData.ped, true) then
+                Death:Damaged(ESX.PlayerData.ped)
+                break
+            end
+            Citizen.Wait(250)
+        end
+    end)
 end)
