@@ -29,7 +29,7 @@ function Death:ByPlayer()
     TriggerServerEvent("esx:onPlayerDeath", data)
 end
 
-function Death:Natual()
+function Death:Natural()
     local coords = GetEntityCoords(ESX.PlayerData.ped)
 
     local data = {
@@ -60,7 +60,7 @@ function Death:Damaged(victim)
     if self.killerEntity ~= ESX.PlayerData.ped and self.killerId and isActive then
         self:ByPlayer()
     else
-        self:Natual()
+        self:Natural()
     end
 
     self:ResetValues()
