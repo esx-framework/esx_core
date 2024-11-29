@@ -38,6 +38,7 @@ end
 function Menu:InsertElements()
     local playerPed = PlayerPedId()
 
+    self.elements = {}
     for i = 1, #self.components, 1 do
         local value = self.components[i].value
         local componentId = self.components[i].componentId
@@ -46,20 +47,17 @@ function Menu:InsertElements()
             value = GetPedPropIndex(playerPed, self.components[i].componentId)
         end
 
-        local data = self.components[i]
+        local data = table.clone(self.components[i])
         data.value = value
         data.type = "slider"
         data.max = self.maxValues[self.components[i].name]
 
-        if not self.elements then
-            self.elements = {}
-        end
         self.elements[#self.elements + 1] = data
     end
 end
 
 function Menu:Submit(data, menu)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
     self.submitCb(data, menu)
     Camera:Destroy()
 end
@@ -67,7 +65,7 @@ end
 function Menu:Cancel(data, menu)
     menu.close()
     Camera:Destroy()
-    TriggerEvent("skinchanger:loadSkin", Skin.last)
+    TriggerEvent("skinchanger:loadSkin", Skin.Last)
 
     if self.cancelCb then
         self.cancelCb(data, menu)
@@ -80,27 +78,39 @@ function Menu:Change(data, menu)
     Skin.zoomOffset = data.current.zoomOffset
     Skin.camOffset = data.current.camOffset
 
-    if skin[data.current.name] ~= data.current.value then
-        -- Change skin element
-        exports["skinchanger"]:Change(data.current.name, data.current.value)
-        skin[data.current.name] = data.current.value
+    if skin[data.current.name] == data.current.value then
+        return
+    end
 
-        local newData = {}
+    -- Change skin element
+    exports["skinchanger"]:Change(data.current.name, data.current.value)
+    skin[data.current.name] = data.current.value
 
-        for i = 1, #self.elements, 1 do
+    -- Texture variation changed. We don't have to update anything.
+    if data.current.textureof then
+        return
+    end
+
+    -- Texture changed. Update variation max value.
+    for i = 1, #self.elements, 1 do
+        local element = self.elements[i]
+
+        if element.textureof == data.current.name then
             local component = self.components[i]
 
-            newData.max = type(component.max) == "function" and component.max(PlayerPedId(), skin) or component.max
-
-            if self.elements[i].textureof ~= nil and data.current.name == self.elements[i].textureof then
-                newData.value = 0
+            if ESX.IsFunctionReference(component.max) then
+                self.elements[i].max = component.max(PlayerPedId(), skin)
             end
+            self.elements[i].value = 0
 
-            menu.update({ name = self.elements[i].name }, newData)
+            -- Change skin element
+            exports["skinchanger"]:Change(element.name, 0)
+            skin[element.name] = data.current.value
+
+            menu.update({ name = self.elements[i].name }, self.elements[i])
+            menu.refresh()
+            break
         end
-
-        self.elements = newData
-        menu.refresh()
     end
 end
 
@@ -113,7 +123,7 @@ function Menu:Open(submit, cancel, restrict)
     self.submitCb = submit
     self.cancelCb = cancel
     self.restricted = restrict
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self.components, self.maxValues = exports["skinchanger"]:GetData()
     if restrict then
@@ -122,15 +132,15 @@ function Menu:Open(submit, cancel, restrict)
 
     self:InsertElements()
 
-    self.zoomOffset = self.components[1].zoomOffset
-    self.camOffset = self.components[1].camOffset
+    Skin.zoomOffset = self.components[1].zoomOffset
+    Skin.camOffset = self.components[1].camOffset
     Camera:Create()
 
     self:ESXMenu()
 end
 
 function Menu:Saveable(submitCb, cancelCb, restrict)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self:Open(function(data, menu)
         menu.close()
