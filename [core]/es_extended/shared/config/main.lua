@@ -1,5 +1,8 @@
 Config = {}
 
+-- Identifier type for the player (e.g., license, steam, discord). See https://docs.fivem.net/docs/scripting-reference/runtimes/lua/functions/GetPlayerIdentifiers/ for more details.
+Config.Identifier = "license"
+
 -- for ox inventory, use Config.CustomInventory = "ox", for others, set to "resource_name"
 Config.CustomInventory = false
 
