@@ -13,17 +13,11 @@ function Database:GetConnection()
 
         self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
         self.found = true
+    elseif connectionString:find("database=") then
+        self.name = connectionString:match("database=([^;?]+)"):gsub("[%?]+[%w%p]*$", "")
+        self.found = true
     else
-        local connectionExtracted = { string.strsplit(";", connectionString) }
-
-        for i = 1, #connectionExtracted do
-            local v = connectionExtracted[i]
-            if v:match("database") then
-                self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
-                self.found = true
-                break
-            end
-        end
+        error(connectionString .. "\n^1Unable to start Multicharacter - unable to get database name from mysql_connection_string^0", 0)
     end
 end
 
