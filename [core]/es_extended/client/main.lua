@@ -286,29 +286,32 @@ end
 
 function StartServerSyncLoops()
     if Config.CustomInventory then return end
-    -- keep track of ammo
+
     CreateThread(function()
-        local currentWeapon = { ammo = 0 }
+        local currentWeapon = {
+            ---@type number
+            ---@diagnostic disable-next-line: assign-type-mismatch
+            hash = `WEAPON_UNARMED`,
+            ammo = 0,
+        }
+
         while ESX.PlayerLoaded do
-            local sleep = 1500
-            if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
-                sleep = 1000
-                local _, weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
-                local weapon = ESX.GetWeaponFromHash(weaponHash)
-                if weapon then
-                    local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-                    if weapon.name ~= currentWeapon.name then
-                        currentWeapon.ammo = ammoCount
-                        currentWeapon.name = weapon.name
-                    else
-                        if ammoCount ~= currentWeapon.ammo then
-                            currentWeapon.ammo = ammoCount
-                            TriggerServerEvent("esx:updateWeaponAmmo", weapon.name, ammoCount)
-                        end
+            currentWeapon.hash = GetSelectedPedWeapon(ESX.PlayerData.ped)
+
+            if currentWeapon.hash ~= `WEAPON_UNARMED` then
+                local weaponConfig = ESX.GetWeaponFromHash(currentWeapon.hash)
+
+                if weaponConfig then
+                    currentWeapon.ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+                    while (GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash) do Citizen.Wait(500) end
+
+                    local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+                    if newAmmo ~= currentWeapon.ammo then
+                        TriggerServerEvent("esx:updateWeaponAmmo", weaponConfig.name, newAmmo)
                     end
                 end
             end
-            Wait(sleep)
+            Wait(250)
         end
     end)
 end
