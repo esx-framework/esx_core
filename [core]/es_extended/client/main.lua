@@ -288,7 +288,7 @@ function StartServerSyncLoops()
     if Config.CustomInventory then return end
     -- keep track of ammo
     CreateThread(function()
-        local currentWeapon = { Ammo = 0 }
+        local currentWeapon = { ammo = 0 }
         while ESX.PlayerLoaded do
             local sleep = 1500
             if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
@@ -298,11 +298,11 @@ function StartServerSyncLoops()
                 if weapon then
                     local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
                     if weapon.name ~= currentWeapon.name then
-                        currentWeapon.Ammo = ammoCount
+                        currentWeapon.ammo = ammoCount
                         currentWeapon.name = weapon.name
                     else
-                        if ammoCount ~= currentWeapon.Ammo then
-                            currentWeapon.Ammo = ammoCount
+                        if ammoCount ~= currentWeapon.ammo then
+                            currentWeapon.ammo = ammoCount
                             TriggerServerEvent("esx:updateWeaponAmmo", weapon.name, ammoCount)
                         end
                     end
