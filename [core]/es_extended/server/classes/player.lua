@@ -615,7 +615,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         weapon.ammo = ammoCount
 
         if weapon.ammo <= 0 then
-            local index, weaponConfig = ESX.GetWeapon(weaponName)
+            local _, weaponConfig = ESX.GetWeapon(weaponName)
             if weaponConfig.throwable then
                 self.removeWeapon(weaponName)
             end
