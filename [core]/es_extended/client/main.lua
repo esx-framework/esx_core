@@ -323,9 +323,9 @@ function StartServerSyncLoops()
             local parachuteState = GetPedParachuteState(ESX.PlayerData.ped)
 
             if parachuteState == PARACHUTE_OPENING or parachuteState == PARACHUTE_OPEN then
-                while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
-
                 TriggerServerEvent("esx:updateWeaponAmmo", "GADGET_PARACHUTE", 0)
+
+                while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
             end
             Wait(500)
         end
