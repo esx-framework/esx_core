@@ -303,7 +303,7 @@ function StartServerSyncLoops()
 
                 if weaponConfig then
                     currentWeapon.ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
-                    while (GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash) do Citizen.Wait(500) end
+                    while GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash do Wait(500) end
 
                     local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
                     if newAmmo ~= currentWeapon.ammo then
@@ -312,6 +312,22 @@ function StartServerSyncLoops()
                 end
             end
             Wait(250)
+        end
+    end)
+
+    CreateThread(function()
+        local PARACHUTE_OPENING <const> = 1
+        local PARACHUTE_OPEN <const> = 2
+
+        while ESX.PlayerLoaded do
+            local parachuteState = GetPedParachuteState(ESX.PlayerData.ped)
+
+            if parachuteState == PARACHUTE_OPENING or parachuteState == PARACHUTE_OPEN then
+                while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
+
+                TriggerServerEvent("esx:updateWeaponAmmo", "GADGET_PARACHUTE", 0)
+            end
+            Wait(500)
         end
     end)
 end
