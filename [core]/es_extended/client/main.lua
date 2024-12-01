@@ -287,14 +287,23 @@ end
 function StartServerSyncLoops()
     if Config.CustomInventory then return end
 
-    CreateThread(function()
-        local currentWeapon = {
-            ---@type number
-            ---@diagnostic disable-next-line: assign-type-mismatch
-            hash = `WEAPON_UNARMED`,
-            ammo = 0,
-        }
+    local currentWeapon = {
+        ---@type number
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        hash = `WEAPON_UNARMED`,
+        ammo = 0,
+    }
 
+    local function updateCurrentWeaponAmmo(weaponName)
+        local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+
+        if newAmmo ~= currentWeapon.ammo then
+            currentWeapon.ammo = newAmmo
+            TriggerServerEvent("esx:updateWeaponAmmo", weaponName, newAmmo)
+        end
+    end
+
+    CreateThread(function()
         while ESX.PlayerLoaded do
             currentWeapon.hash = GetSelectedPedWeapon(ESX.PlayerData.ped)
 
@@ -303,12 +312,13 @@ function StartServerSyncLoops()
 
                 if weaponConfig then
                     currentWeapon.ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
-                    while GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash do Wait(500) end
 
-                    local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
-                    if newAmmo ~= currentWeapon.ammo then
-                        TriggerServerEvent("esx:updateWeaponAmmo", weaponConfig.name, newAmmo)
+                    while GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash do
+                        updateCurrentWeaponAmmo(weaponConfig.name)
+                        Wait(1000)
                     end
+
+                    updateCurrentWeaponAmmo(weaponConfig.name)
                 end
             end
             Wait(250)
