@@ -72,15 +72,6 @@ function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     self:Execute(callback, requestId, returnCb, ...)
 end
 
-ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
-    Callbacks:ClientRecieve(...)
-end)
-
-
-ESX.SecureNetEvent("esx:serverCallback", function(...)
-    Callbacks:ServerRecieve(...)
-end)
-
 -- =============================================
 -- MARK: ESX Functions
 -- =============================================
@@ -127,6 +118,10 @@ end
 
 ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
     Callbacks:ClientRecieve(...)
+end)
+
+ESX.SecureNetEvent("esx:serverCallback", function(...)
+    Callbacks:ServerRecieve(...)
 end)
 
 ---@param eventName string
