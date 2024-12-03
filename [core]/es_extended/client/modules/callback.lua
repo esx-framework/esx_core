@@ -135,12 +135,6 @@ function ESX.DoesClientCallbackExist(eventName)
     return Callbacks.storage[eventName] ~= nil
 end
 
----@param eventName string
----@return table | nil
-function ESX.GetClientCallbackInfo(eventName)
-    return Callbacks.storage[eventName]
-end
-
 AddEventHandler("onResourceStop", function(resource)
     for k, v in pairs(Callbacks.storage) do
         if v.resource == resource then
