@@ -4,16 +4,6 @@ ESX.SecureNetEvent("esx:requestModel", function(model)
     ESX.Streaming.RequestModel(model)
 end)
 
-local function ApplyMetadata(metadata)
-    if metadata.health then
-        SetEntityHealth(ESX.PlayerData.ped, metadata.health)
-    end
-
-    if metadata.armor and metadata.armor > 0 then
-        SetPedArmour(ESX.PlayerData.ped, metadata.armor)
-    end
-end
-
 RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     ESX.PlayerData = xPlayer
 
@@ -33,8 +23,6 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     end
 
     ESX.PlayerLoaded = true
-
-    ApplyMetadata(ESX.PlayerData.metadata)
 
     local timer = GetGameTimer()
     while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
@@ -56,10 +44,13 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     Actions:Init()
     StartPointsLoop()
     StartServerSyncLoops()
+    NetworkSetLocalPlayerSyncLookAt(true)
 end)
 
+local isFirstSpawn = true
 ESX.SecureNetEvent("esx:onPlayerLogout", function()
     ESX.PlayerLoaded = false
+    isFirstSpawn = true
 end)
 
 ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
@@ -72,7 +63,21 @@ local function onPlayerSpawn()
 end
 
 AddEventHandler("playerSpawned", onPlayerSpawn)
-AddEventHandler("esx:onPlayerSpawn", onPlayerSpawn)
+AddEventHandler("esx:onPlayerSpawn", function()
+    onPlayerSpawn()
+
+    if isFirstSpawn then
+        isFirstSpawn = false
+
+        if ESX.PlayerData.metadata.health and (ESX.PlayerData.metadata.health > 0 or Config.SaveDeathStatus) then
+            SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
+        end
+
+        if ESX.PlayerData.metadata.armor and ESX.PlayerData.metadata.armor > 0 then
+            SetPedArmour(ESX.PlayerData.ped, ESX.PlayerData.metadata.armor)
+        end
+    end
+end)
 
 AddEventHandler("esx:onPlayerDeath", function()
     ESX.SetPlayerData("ped", PlayerPedId())
@@ -282,29 +287,58 @@ end
 
 function StartServerSyncLoops()
     if Config.CustomInventory then return end
-    -- keep track of ammo
+
+    local currentWeapon = {
+        ---@type number
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        hash = `WEAPON_UNARMED`,
+        ammo = 0,
+    }
+
+    local function updateCurrentWeaponAmmo(weaponName)
+        local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+
+        if newAmmo ~= currentWeapon.ammo then
+            currentWeapon.ammo = newAmmo
+            TriggerServerEvent("esx:updateWeaponAmmo", weaponName, newAmmo)
+        end
+    end
+
     CreateThread(function()
-        local currentWeapon = { Ammo = 0 }
         while ESX.PlayerLoaded do
-            local sleep = 1500
-            if GetSelectedPedWeapon(ESX.PlayerData.ped) ~= -1569615261 then
-                sleep = 1000
-                local _, weaponHash = GetCurrentPedWeapon(ESX.PlayerData.ped, true)
-                local weapon = ESX.GetWeaponFromHash(weaponHash)
-                if weapon then
-                    local ammoCount = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-                    if weapon.name ~= currentWeapon.name then
-                        currentWeapon.Ammo = ammoCount
-                        currentWeapon.name = weapon.name
-                    else
-                        if ammoCount ~= currentWeapon.Ammo then
-                            currentWeapon.Ammo = ammoCount
-                            TriggerServerEvent("esx:updateWeaponAmmo", weapon.name, ammoCount)
-                        end
+            currentWeapon.hash = GetSelectedPedWeapon(ESX.PlayerData.ped)
+
+            if currentWeapon.hash ~= `WEAPON_UNARMED` then
+                local weaponConfig = ESX.GetWeaponFromHash(currentWeapon.hash)
+
+                if weaponConfig then
+                    currentWeapon.ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+
+                    while GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash do
+                        updateCurrentWeaponAmmo(weaponConfig.name)
+                        Wait(1000)
                     end
+
+                    updateCurrentWeaponAmmo(weaponConfig.name)
                 end
             end
-            Wait(sleep)
+            Wait(250)
+        end
+    end)
+
+    CreateThread(function()
+        local PARACHUTE_OPENING <const> = 1
+        local PARACHUTE_OPEN <const> = 2
+
+        while ESX.PlayerLoaded do
+            local parachuteState = GetPedParachuteState(ESX.PlayerData.ped)
+
+            if parachuteState == PARACHUTE_OPENING or parachuteState == PARACHUTE_OPEN then
+                TriggerServerEvent("esx:updateWeaponAmmo", "GADGET_PARACHUTE", 0)
+
+                while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
+            end
+            Wait(500)
         end
     end)
 end

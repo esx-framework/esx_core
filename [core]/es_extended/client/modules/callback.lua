@@ -51,8 +51,11 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     end
 end
 
-function Callbacks:Register(name, cb)
-    self.storage[name] = cb
+function Callbacks:Register(name, resource, cb)
+    self.storage[name] = {
+        resource = resource,
+        cb = cb
+    }
 end
 
 function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
@@ -64,7 +67,7 @@ function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
     local returnCb = function(...)
         TriggerServerEvent("esx:clientCallback", requestId, invoker, ...)
     end
-    local callback = self.storage[eventName]
+    local callback = self.storage[eventName].cb
 
     self:Execute(callback, requestId, returnCb, ...)
 end
@@ -115,12 +118,16 @@ function ESX.AwaitServerCallback(eventName, ...)
     return table.unpack(p.value)
 end
 
----@param eventName string
----@param callback function
----@return nil
-function ESX.RegisterClientCallback(eventName, callback)
-    Callbacks:Register(eventName, callback)
+ESX.RegisterClientCallback = function(eventName, callback)
+    local invokingResource = GetInvokingResource()
+    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+
+    Callbacks:Register(eventName, invoker, callback)
 end
+
+ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
+    Callbacks:ClientRecieve(...)
+end)
 
 ---@param eventName string
 ---@return boolean
@@ -133,3 +140,11 @@ end
 function ESX.GetClientCallbackInfo(eventName)
     return Callbacks.storage[eventName]
 end
+
+AddEventHandler("onResourceStop", function(resource)
+    for k, v in pairs(Callbacks.storage) do
+        if v.resource == resource then
+            Callbacks.storage[k] = nil
+        end
+    end
+end)
