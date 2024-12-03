@@ -44,6 +44,7 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
     Actions:Init()
     StartPointsLoop()
     StartServerSyncLoops()
+    NetworkSetLocalPlayerSyncLookAt(true)
 end)
 
 local isFirstSpawn = true
