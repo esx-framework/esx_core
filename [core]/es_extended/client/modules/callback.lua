@@ -109,12 +109,22 @@ function ESX.AwaitServerCallback(eventName, ...)
     return table.unpack(p.value)
 end
 
-ESX.RegisterClientCallback = function(eventName, callback)
+function ESX.RegisterClientCallback(eventName, callback)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
 
     Callbacks:Register(eventName, invoker, callback)
 end
+
+---@param eventName string
+---@return boolean
+function ESX.DoesClientCallbackExist(eventName)
+    return Callbacks.storage[eventName] ~= nil
+end
+
+-- =============================================
+-- MARK: Events
+-- =============================================
 
 ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
     Callbacks:ClientRecieve(...)
@@ -123,12 +133,6 @@ end)
 ESX.SecureNetEvent("esx:serverCallback", function(...)
     Callbacks:ServerRecieve(...)
 end)
-
----@param eventName string
----@return boolean
-function ESX.DoesClientCallbackExist(eventName)
-    return Callbacks.storage[eventName] ~= nil
-end
 
 AddEventHandler("onResourceStop", function(resource)
     for k, v in pairs(Callbacks.storage) do
