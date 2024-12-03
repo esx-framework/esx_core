@@ -1,10 +1,18 @@
 ---@diagnostic disable: duplicate-set-field
 
+-- =============================================
+-- MARK: Variables
+-- =============================================
+
 Callbacks = {}
 
 Callbacks.requests = {}
 Callbacks.storage = {}
 Callbacks.id = 0
+
+-- =============================================
+-- MARK: Internal Functions
+-- =============================================
 
 function Callbacks:Register(name, resource, cb)
     self.storage[name] = {
@@ -60,15 +68,9 @@ function Callbacks:RecieveClient(requestId, invoker, ...)
     self.requests[requestId] = nil
 end
 
-RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
-    Callbacks:RecieveClient(requestId, invoker, ...)
-end)
-
-RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
-    local source = source
-    Callbacks:ServerRecieve(source, eventName, requestId, invoker, ...)
-end)
-
+-- =============================================
+-- MARK: ESX Functions
+-- =============================================
 
 ---@param player number playerId
 ---@param eventName string
@@ -84,7 +86,7 @@ end
 ---@param eventName string
 ---@param callback function
 ---@return nil
-ESX.RegisterServerCallback = function(eventName, callback)
+function ESX.RegisterServerCallback(eventName, callback)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
 
@@ -96,6 +98,19 @@ end
 function ESX.DoesServerCallbackExist(eventName)
     return Callbacks.storage[eventName] ~= nil
 end
+
+-- =============================================
+-- MARK: Events
+-- =============================================
+
+RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
+    Callbacks:RecieveClient(requestId, invoker, ...)
+end)
+
+RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
+    local source = source
+    Callbacks:ServerRecieve(source, eventName, requestId, invoker, ...)
+end)
 
 AddEventHandler("onResourceStop", function(resource)
     for k, v in pairs(Callbacks.storage) do

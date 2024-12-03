@@ -1,5 +1,9 @@
 ---@diagnostic disable: duplicate-set-field
 
+-- =============================================
+-- MARK: Variables
+-- =============================================
+
 Callbacks = {}
 
 Callbacks.requests = {}
