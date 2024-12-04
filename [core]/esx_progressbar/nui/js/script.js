@@ -1,13 +1,13 @@
 const codes = {
-    "~r~": "red",
+    "~r~": "#c0392b",
     "~b~": "#378cbf",
-    "~g~": "green",
+    "~g~": "#2ecc71",
     "~y~": "yellow",
     "~p~": "purple",
     "~c~": "grey",
     "~m~": "#212121",
     "~u~": "black",
-    "~o~": "orange",
+    "~o~": "#fb9b04",
 };
 
 const elems = {
