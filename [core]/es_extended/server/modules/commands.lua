@@ -593,6 +593,9 @@ ESX.RegisterCommand(
     "admin",
     function(xPlayer, args)
         local targetCoords = args.playerId.getCoords()
+        local targetDim = GetPlayerRoutingBucket(args.playerId.source)
+
+        SetPlayerRoutingBucket(xPlayer.source, targetDim)
         xPlayer.setCoords(targetCoords)
         if Config.AdminLogging then
             ESX.DiscordLogFields("UserActions", "Admin Teleport /goto Triggered!", "pink", {
@@ -619,6 +622,9 @@ ESX.RegisterCommand(
     function(xPlayer, args)
         local targetCoords = args.playerId.getCoords()
         local playerCoords = xPlayer.getCoords()
+        local srcDim = GetPlayerRoutingBucket(xPlayer.source)
+
+        SetPlayerRoutingBucket(args.playerId.source, srcDim)
         args.playerId.setCoords(playerCoords)
         if Config.AdminLogging then
             ESX.DiscordLogFields("UserActions", "Admin Teleport /bring Triggered!", "pink", {
