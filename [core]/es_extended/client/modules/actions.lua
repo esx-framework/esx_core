@@ -4,6 +4,7 @@ Actions._index = Actions
 Actions.inVehicle = false
 Actions.enteringVehicle = false
 Actions.inPauseMenu = false
+Actions.currentWeapon = false
 
 function Actions:GetSeatPedIsIn()
     for i = -1, 16 do
@@ -132,12 +133,24 @@ function Actions:TrackVehicle()
     end
 end
 
+function Actions:TrackWeapon()
+    ---@type number|false
+    local newWeapon = GetSelectedPedWeapon(ESX.PlayerData.ped)
+    newWeapon = newWeapon ~= `WEAPON_UNARMED` and newWeapon or false
+
+    if newWeapon ~= self.currentWeapon then
+        self.currentWeapon = newWeapon
+        TriggerEvent("esx:weaponChanged", self.currentWeapon)
+    end
+end
+
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
             self:TrackPedCoords()
             self:TrackPauseMenu()
             self:TrackVehicle()
+            self:TrackWeapon()
             Wait(500)
         end
     end)
