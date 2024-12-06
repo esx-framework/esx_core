@@ -114,9 +114,11 @@ Locales["de"] = {
     ["commanderror_invalidcommand"] = "Ungültiger Befehl - /%s",
     ["commanderror_invalidplayerid"] = "Angegebener Spieler ist nicht online!",
     ["commandgeneric_playerid"] = "Spieler ID",
+    ["commandgeneric_dimension"] = "Ziel Dimension",
     ["command_giveammo_noweapon_found"] = "%s besitzt diese Waffe nicht!",
     ["command_giveammo_weapon"] = "Waffenname",
     ["command_giveammo_ammo"] = "Munitionsanzahl",
+    ["command_setdim"] = "Setzt Spielerdimension!",
     ["tpm_nowaypoint"] = "Kein Wegpunkt gesetzt!",
     ["tpm_success"] = "Erfolgreich teleportiert.",
 
