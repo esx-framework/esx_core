@@ -118,7 +118,7 @@ Locales["de"] = {
     ["command_giveammo_noweapon_found"] = "%s besitzt diese Waffe nicht!",
     ["command_giveammo_weapon"] = "Waffenname",
     ["command_giveammo_ammo"] = "Munitionsanzahl",
-    ["command_setdim"] = "Setzt Spielerdimension!",
+    ["command_setdim"] = "Setzt Spieler Dimension!",
     ["tpm_nowaypoint"] = "Kein Wegpunkt gesetzt!",
     ["tpm_success"] = "Erfolgreich teleportiert.",
 
