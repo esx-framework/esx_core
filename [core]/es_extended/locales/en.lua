@@ -114,9 +114,11 @@ Locales["en"] = {
     ["commanderror_invalidcommand"] = "Invalid Command - /%s",
     ["commanderror_invalidplayerid"] = "Specified Player is not online",
     ["commandgeneric_playerid"] = "Player`s Server Id",
+    ["commandgeneric_dimension"] = "Target Dimension",
     ["command_giveammo_noweapon_found"] = "%s does not have that weapon",
     ["command_giveammo_weapon"] = "Weapon name",
     ["command_giveammo_ammo"] = "Ammo Quantity",
+    ["command_setdim"] = "Set a players dimension",
     ["tpm_nowaypoint"] = "No Waypoint Set.",
     ["tpm_success"] = "Successfully Teleported",
 
