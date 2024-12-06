@@ -299,14 +299,14 @@ function ESX.GetExtendedPlayers(key, val)
 
     local xPlayers = {}
     if type(val) == "table" then
-        for i, xPlayer in pairs(ESX.Players) do
+        for _, xPlayer in pairs(ESX.Players) do
             checkTable(key, val, xPlayer, xPlayers)
         end
 
         return xPlayers
     end
 
-    for i, xPlayer in pairs(ESX.Players) do
+    for _, xPlayer in pairs(ESX.Players) do
         if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
             xPlayers[#xPlayers + 1] = xPlayer
         end
