@@ -732,3 +732,28 @@ ESX.RegisterCommand("players", "admin", function()
         print(("^1[^2ID: ^5%s^0 | ^2Name : ^5%s^0 | ^2Group : ^5%s^0 | ^2Identifier : ^5%s^1]^0\n"):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), xPlayer.identifier))
     end
 end, true)
+
+ESX.RegisterCommand(
+    {"setdim", "setbucket"},
+    "admin",
+    function(xPlayer, args)
+        SetPlayerRoutingBucket(args.playerId.source, args.dimension)
+        if Config.AdminLogging then
+            ESX.DiscordLogFields("UserActions", "Admin Set Dim /setdim Triggered!", "pink", {
+                { name = "Player", value = xPlayer and xPlayer.name or "Server Console", inline = true },
+                { name = "ID", value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
+                { name = "Target", value = args.playerId.name, inline = true },
+                { name = "Dimension", value = args.dimension, inline = true },
+            })
+        end
+    end,
+    true,
+    {
+        help = TranslateCap("command_setdim"),
+        validate = true,
+        arguments = {
+            { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
+            { name = "dimension", help = TranslateCap("commandgeneric_dimension"), type = "number" },
+        },
+    }
+)
