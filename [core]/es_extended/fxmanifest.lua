@@ -25,6 +25,7 @@ server_scripts {
 	'server/common.lua',
 	'server/modules/callback.lua',
 	'server/classes/player.lua',
+	'server/classes/vehicle.lua',
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/modules/onesync.lua',
