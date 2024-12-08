@@ -36,7 +36,7 @@ function Server:OnConnecting(source, deferrals)
     if identifier then
         if not ESX.GetConfig().EnableDebug then
             if ESX.Players[identifier] then
-                deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
+                deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(ESX.identifierType, identifier))
             else
                 deferrals.done()
             end
@@ -44,7 +44,7 @@ function Server:OnConnecting(source, deferrals)
             deferrals.done()
         end
     else
-        deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType))
+        deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(ESX.identifierType))
     end
 end
 
