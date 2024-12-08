@@ -130,6 +130,20 @@ function Actions:TrackVehicle()
         end
     elseif self.inVehicle then
         self:ExitVehicle()
+        self:TrackSeat()
+    end
+end
+
+function Actions:TrackSeat()
+    if not self.inVehicle then
+        return
+    end
+
+    local newSeat = self:GetSeatPedIsIn()
+    if newSeat ~= self.seat then
+        self.seat = newSeat
+        ESX.SetPlayerData("seat", self.seat)
+        TriggerEvent("esx:vehicleSeatChanged", self.seat)
     end
 end
 
