@@ -1,20 +1,10 @@
-function Server:GetIdentifier(source)
-    local fxDk = GetConvarInt("sv_fxdkMode", 0)
-    if fxDk == 1 then
-        return "ESX-DEBUG-LICENCE"
-    end
-
-    local identifier = GetPlayerIdentifierByType(source, self.identifierType)
-    return identifier and identifier:gsub(self.identifierType .. ":", "")
-end
-
 function Server:ResetPlayers()
     if next(ESX.Players) then
         local players = table.clone(ESX.Players)
         table.wipe(ESX.Players)
 
         for _, v in pairs(players) do
-            ESX.Players[self:GetIdentifier(v.source)] = true
+            ESX.Players[ESX.GetIdentifier(v.source)] = true
         end
     else
         ESX.Players = {}
@@ -24,8 +14,8 @@ end
 function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
-    local identifier = self:GetIdentifier(source)
-    
+    local identifier = ESX.GetIdentifier(source)
+
     -- luacheck: ignore
     if not SetEntityOrphanMode then
         return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))

@@ -10,7 +10,7 @@ function Multicharacter:SetupCharacters(source)
         Wait(100)
     end
 
-    local identifier = Server:GetIdentifier(source)
+    local identifier = ESX.GetIdentifier(source)
     ESX.Players[identifier] = true
 
     local slots = Database:GetPlayerSlots(identifier)
@@ -69,24 +69,25 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
         self.awaitingRegistration[source] = charid
     else
         SetPlayerRoutingBucket(source, 0)
+        local identifier = ESX.GetIdentifier(source)
         if not ESX.GetConfig().EnableDebug then
-            local identifier = ("%s%s:%s"):format(Server.prefix, charid, Server:GetIdentifier(source))
+            local formattedIdentifier = ("%s%s:%s"):format(Server.prefix, charid, identifier)
 
-            if ESX.GetPlayerFromIdentifier(identifier) then
-                DropPlayer(source, "[ESX Multicharacter] Your identifier " .. identifier .. " is already on the server!")
+            if ESX.GetPlayerFromIdentifier(formattedIdentifier) then
+                DropPlayer(source, "[ESX Multicharacter] Your identifier " .. formattedIdentifier .. " is already on the server!")
                 return
             end
         end
 
         TriggerEvent("esx:onPlayerJoined", source, ("%s%s"):format(Server.prefix, charid))
-        ESX.Players[Server:GetIdentifier(source)] = true
+        ESX.Players[identifier] = true
     end
 end
 
 function Multicharacter:RegistrationComplete(source, data)
     local charId = self.awaitingRegistration[source]
     self.awaitingRegistration[source] = nil
-    ESX.Players[Server:GetIdentifier(source)] = true
+    ESX.Players[ESX.GetIdentifier(source)] = true
 
     SetPlayerRoutingBucket(source, 0)
     TriggerEvent("esx:onPlayerJoined", source, ("%s%s"):format(Server.prefix, charId), data)
@@ -94,5 +95,5 @@ end
 
 function Multicharacter:PlayerDropped(player)
     self.awaitingRegistration[player] = nil
-    ESX.Players[Server:GetIdentifier(player)] = nil
+    ESX.Players[ESX.GetIdentifier(player)] = nil
 end
