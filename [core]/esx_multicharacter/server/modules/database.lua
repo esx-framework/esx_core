@@ -14,12 +14,12 @@ function Database:GetConnection()
         self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
         self.found = true
     else
-        local connectionExtracted = { string.strsplit(";", connectionString) }
+        connectionString = { string.strsplit(";", connectionString) }
 
-        for i = 1, #connectionExtracted do
-            local v = connectionExtracted[i]
+        for i = 1, #connectionString do
+            local v = connectionString[i]
             if v:match("database") then
-                self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
+                self.name = v:sub(10, #v)
                 self.found = true
                 break
             end
