@@ -154,6 +154,7 @@ function Actions:TrackWeapon()
 
     if newWeapon ~= self.currentWeapon then
         self.currentWeapon = newWeapon
+        ESX.SetPlayerData("weapon", self.currentWeapon)
         TriggerEvent("esx:weaponChanged", self.currentWeapon)
     end
 end
