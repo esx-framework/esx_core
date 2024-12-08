@@ -72,7 +72,7 @@ MySQL.ready(function()
 end)
 
 function Database:DeleteCharacter(source, charid)
-    local identifier = ("%s%s:%s"):format(Server.prefix, charid, Server:GetIdentifier(source))
+    local identifier = ("%s%s:%s"):format(Server.prefix, charid, ESX.GetIdentifier(source))
     local query = "DELETE FROM `%s` WHERE %s = ?"
     local queries = {}
     local count = 0
