@@ -13,6 +13,8 @@ Core.playersByIdentifier = {}
 
 Core.vehicleTypesByModel = {}
 
+ESX.identifierType = GetConvar("esx:useFiveMId", "false") == "true" and "fivem" or "license"
+
 RegisterNetEvent("esx:onPlayerSpawn", function()
     ESX.Players[source].spawned = true
 end)
