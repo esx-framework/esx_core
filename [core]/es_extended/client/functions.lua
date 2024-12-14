@@ -530,10 +530,14 @@ end
 ---@param vehicleModel integer | string The vehicle to spawn
 ---@param coords table | vector3 The coords to spawn the vehicle at
 ---@param heading number The heading of the vehicle
----@param cb? function The callback function
+---@param cb? fun(vehicle: number) The callback function
 ---@param networked? boolean Whether the vehicle should be networked
----@return nil
+---@return number? vehicle
 function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
+    if cb and not ESX.IsFunctionReference(cb) then
+        error("Invalid callback function")
+    end
+
     local model = type(vehicleModel) == "number" and vehicleModel or joaat(vehicleModel)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     local isNetworked = networked == nil or networked
@@ -549,8 +553,15 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
         return error(("Resource ^5%s^1 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
 
+    local promise = not cb and promise.new()
     CreateThread(function()
-        ESX.Streaming.RequestModel(model)
+        local modelHash = ESX.Streaming.RequestModel(model)
+        if not modelHash then
+            if promise then
+                return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+            end
+           error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+        end
 
         local vehicle = CreateVehicle(model, vector.x, vector.y, vector.z, heading, isNetworked, true)
 
@@ -569,10 +580,16 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
             Wait(0)
         end
 
-        if cb then
+        if promise then
+            promise:resolve(vehicle)
+        elseif cb then
             cb(vehicle)
         end
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param vehicle integer The vehicle to spawn

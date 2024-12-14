@@ -82,35 +82,57 @@ end
 ---@param coords vector3|table
 ---@param heading number
 ---@param properties table
----@param cb function
+---@param cb? fun(netId: number)
+---@return number? netId
 function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
+    if cb and not ESX.IsFunctionReference(cb) then
+        error("Invalid callback function")
+    end
+
+
     local vehicleModel = joaat(model)
     local vehicleProperties = properties
 
+    local promise = not cb and promise.new()
     CreateThread(function()
         local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
-            if vehicleType then
-                local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
-                local tries = 0
-
-                while not createdVehicle or createdVehicle == 0 or not GetEntityCoords(createdVehicle) do
-                    Wait(200)
-                    tries = tries + 1
-                    if tries > 20 then
-                        return  error(("Could not spawn vehicle - ^5%s^7!"):format(model))
-                    end
+            if not vehicleType then
+                if (promise) then
+                    return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
                 end
-                -- luacheck: ignore
-                SetEntityOrphanMode(createdVehicle, 2)
-                local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
-                Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
-                cb(networkId)
-            else
                 error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+            end
+
+            local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
+            local tries = 0
+
+            while not createdVehicle or createdVehicle == 0 or not GetEntityCoords(createdVehicle) do
+                Wait(200)
+                tries = tries + 1
+                if tries > 20 then
+                    if promise then
+                        return promise:reject(("Could not spawn vehicle - ^5%s^7!"):format(model))
+                    end
+                    error(("Could not spawn vehicle - ^5%s^7!"):format(model))
+                end
+            end
+
+            -- luacheck: ignore
+            SetEntityOrphanMode(createdVehicle, 2)
+            local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
+            Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
+            if promise then
+                promise:resolve(networkId)
+            elseif cb then
+                cb(networkId)
             end
         end)
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param model number|string
