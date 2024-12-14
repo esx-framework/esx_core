@@ -83,7 +83,7 @@ end
 ---@param heading number
 ---@param properties table
 ---@param cb? fun(netId: number)
----@return number|nil netId
+---@return number? netId
 function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
     if cb and not ESX.IsFunctionReference(cb) then
         error("Invalid callback function")
