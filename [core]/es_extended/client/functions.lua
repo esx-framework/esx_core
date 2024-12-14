@@ -530,10 +530,14 @@ end
 ---@param vehicleModel integer | string The vehicle to spawn
 ---@param coords table | vector3 The coords to spawn the vehicle at
 ---@param heading number The heading of the vehicle
----@param cb? function The callback function
+---@param cb? fun(vehicle: number) The callback function
 ---@param networked? boolean Whether the vehicle should be networked
 ---@return number? vehicle
 function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
+    if cb and not ESX.IsFunctionReference(cb) then
+        error("Invalid callback function")
+    end
+
     local model = type(vehicleModel) == "number" and vehicleModel or joaat(vehicleModel)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     local isNetworked = networked == nil or networked

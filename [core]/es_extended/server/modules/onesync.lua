@@ -123,9 +123,9 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
             local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
             Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
             if promise then
-                return promise:resolve(networkId)
+                promise:resolve(networkId)
             elseif cb then
-                return cb(networkId)
+                cb(networkId)
             end
         end)
     end)
