@@ -549,6 +549,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
         return error(("Resource ^5%s^1 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
     end
 
+    local promise = not cb and promise.new()
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
@@ -569,10 +570,16 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
             Wait(0)
         end
 
-        if cb then
+        if promise then
+            promise:resolve(vehicle)
+        elseif cb then
             cb(vehicle)
         end
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param vehicle integer The vehicle to spawn
