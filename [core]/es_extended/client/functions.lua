@@ -551,7 +551,13 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
 
     local promise = not cb and promise.new()
     CreateThread(function()
-        ESX.Streaming.RequestModel(model)
+        local modelHash = ESX.Streaming.RequestModel(model)
+        if not modelHash then
+            if promise then
+                return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+            end
+           error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+        end
 
         local vehicle = CreateVehicle(model, vector.x, vector.y, vector.z, heading, isNetworked, true)
 
