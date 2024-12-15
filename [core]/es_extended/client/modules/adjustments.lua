@@ -70,7 +70,7 @@ end
 function Adjustments:StopPoint()
     RequestTaskMoveNetworkStateTransition(ESX.PlayerData.ped, 'Stop')
     ClearPedSecondaryTask(ESX.PlayerData.ped)
-    if not IsPedInAnyVehicle(ESX.PlayerData.ped, false) then
+    if not ESX.PlayerData.vehicle then
         SetPedCurrentWeaponVisible(ESX.PlayerData.ped, true, true, true, true)
     end
 end
