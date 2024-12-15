@@ -23,13 +23,6 @@ function ESX.GetConfig()
     return Config
 end
 
----@param value any
----@param numDecimalPlaces? number
----@return number
-function ESX.Round(value, numDecimalPlaces)
-    return ESX.Math.Round(value, numDecimalPlaces)
-end
-
 ---@param value string
 ---@param ... any
 ---@return boolean, string?
