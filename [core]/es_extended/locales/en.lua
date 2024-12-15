@@ -413,4 +413,6 @@ Locales["en"] = {
     ["tint_metallic_blue"] = "metallic blue",
     ["tint_metallic_white_aqua"] = "metallic white-aqua",
     ["tint_metallic_red_yellow"] = "metallic red-yellow",
+
+    ["pointing"] = "Pointing"
 }

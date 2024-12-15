@@ -81,7 +81,7 @@ function Adjustments:Point()
     end
     self.isPointing = false
 
-    ESX.RegisterInput("esx:pointing", "Point", "keyboard", "b", function()
+    ESX.RegisterInput("esx:pointing", Translate("pointing"), "keyboard", "b", function()
         self.isPointing = not self.isPointing
         if self.isPointing then
             ESX.RequestAnimDict("anim@mp_point")
