@@ -351,4 +351,5 @@ function Adjustments:Load()
     self:DiscordPresence()
     self:WantedLevel()
     self:DisableRadio()
+    self:Point()
 end
