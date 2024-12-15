@@ -305,9 +305,14 @@ function Adjustments:DiscordPresence()
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
                 SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
 
-                for i = 1, math.min(2, #Config.DiscordActivity.buttons) do
-                    local button = Config.DiscordActivity.buttons[i]
-                    SetDiscordRichPresenceAction(i - 1, button.label, button.url)
+                local buttons = Config.DiscordActivity.buttons
+                if buttons[1] then
+                    local button = buttons[1]
+                    SetDiscordRichPresenceAction(0, button.label, button.url)
+                end
+                if buttons[2] then
+                    local button = buttons[2]
+                    SetDiscordRichPresenceAction(1, button.label, button.url)
                 end
 
                 SetRichPresence(self:PresencePlaceholders())
