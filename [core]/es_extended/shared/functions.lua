@@ -189,18 +189,16 @@ ESX.Await = function(conditionFunc, errorMessage, timeout)
         error('Condition Function should be a function reference.')
     end
 
+    -- since errorMessage is optional, we only validate it if the user provided it.
+    if errorMessage then
+        ESX.AssertType(errorMessage, 'string', 'errorMessage should be a string.')
+    end
+
     local startTime = GetGameTimer()
     local prefix = ('[%s] -> '):format(GetInvokingResource())
 
     while GetGameTimer() - startTime < timeout do
-        local success, result = pcall(conditionFunc)
-
-        if not success then
-            local conditionErrorMessage = ('%s Error while calling conditionFunc! Result: %s'):format(prefix, result)
-            print(conditionErrorMessage)
-            local elapsedTime = GetGameTimer() - startTime
-            return false, elapsedTime
-        end
+        local result = conditionFunc()
 
         if result then
             local elapsedTime = GetGameTimer() - startTime
@@ -211,10 +209,8 @@ ESX.Await = function(conditionFunc, errorMessage, timeout)
     end
 
     if errorMessage then
-        ESX.AssertType(errorMessage, 'string', 'errorMessage should be a string.')
-
         local formattedErrorMessage = ('%s %s'):format(prefix, errorMessage)
-        print(formattedErrorMessage)
+        error(formattedErrorMessage)
     end
 
     return false, timeout
