@@ -47,7 +47,7 @@ client_scripts {
     'client/modules/adjustments.lua',
 	'client/modules/points.lua',
 
-	'client/events.lua',
+	'client/modules/events.lua',
 
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
