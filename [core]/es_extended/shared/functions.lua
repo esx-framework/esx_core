@@ -192,6 +192,7 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
         ESX.AssertType(errorMessage, "string", "errorMessage should be a string.")
     end
 
+    local invokingResource = GetInvokingResource()
     local startTimeMs = GetGameTimer()
     while GetGameTimer() - startTimeMs < timeoutMs do
         local result = conditionFunc()
@@ -204,7 +205,7 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
     end
 
     if errorMessage then
-        error(("[%s] -> %s"):format(GetInvokingResource(), errorMessage))
+        error(("[%s] -> %s"):format(invokingResource, errorMessage))
     end
 
     return false
