@@ -1,6 +1,6 @@
 Config = {}
 
--- for ox inventory, use Config.CustomInventory = "ox", for others, set to "resource_name"
+-- for ox inventory, this will automatically be adjusted, do not change! for other inventories, change to "resource_name"
 Config.CustomInventory = false
 
 Config.Accounts = {
