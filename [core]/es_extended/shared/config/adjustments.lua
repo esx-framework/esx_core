@@ -9,6 +9,20 @@ Config.DisableDisplayAmmo = false -- Disable ammunition display
 Config.EnablePVP = true -- Allow Player to player combat
 Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
 
+Config.NPCPopulation = {
+    -- Vehicles
+    ambientVehicles = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+    parkedVehicles = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+    randomVehicles = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+    vehicles = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+
+    -- Peds
+    ambientPeds = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+    scenarioPeds = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+    peds = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
+}
+
+
 Config.RemoveHudComponents = {
     [1] = false, --WANTED_STARS,
     [2] = false, --WEAPON_ICON

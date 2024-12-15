@@ -41,7 +41,25 @@ function Adjustments:HealthRegeneration()
     end
 end
 
-function Adjustments:AmmoAndVehicleRewards()
+
+function Adjustments:ShouldChangeNPCPopulation()
+    for _, value in pairs(Config.NPCPopulation) do
+        if value ~= 0.9 then
+            return true
+        end
+    end
+    if Config.DisableDisplayAmmo then
+        return true
+    end
+    if Config.DisableVehicleRewards then
+        return true
+    end
+end
+
+
+function Adjustments:TickLoop()
+    if not self:ShouldChangeNPCPopulation() then return end
+    local NPC = Config.NPCPopulation
     CreateThread(function()
         while true do
             if Config.DisableDisplayAmmo then
@@ -50,6 +68,34 @@ function Adjustments:AmmoAndVehicleRewards()
 
             if Config.DisableVehicleRewards then
                 DisablePlayerVehicleRewards(ESX.playerId)
+            end
+
+            if NPC.ambientVehicles ~= 0.9 then
+                SetAmbientVehicleRangeMultiplierThisFrame(NPC.ambientVehicles)
+            end
+
+            if NPC.parkedVehicles ~= 0.9 then
+                SetParkedVehicleDensityMultiplierThisFrame(NPC.parkedVehicles)
+            end
+
+            if NPC.randomVehicles ~= 0.9 then
+                SetRandomVehicleDensityMultiplierThisFrame(NPC.randomVehicles)
+            end
+
+            if NPC.vehicles ~= 0.9 then
+                SetVehicleDensityMultiplierThisFrame(NPC.vehicles)
+            end
+
+            if NPC.ambientPeds ~= 0.9 then
+                SetPedDensityMultiplierThisFrame(NPC.ambientPeds)
+            end
+
+            if NPC.scenarioPeds ~= 0.9 then
+                SetScenarioPedDensityMultiplierThisFrame(NPC.scenarioPeds, NPC.scenarioPeds)
+            end
+
+            if NPC.peds ~= 0.9 then
+                SetPedDensityMultiplierThisFrame(NPC.peds)
             end
 
             Wait(0)
@@ -231,7 +277,7 @@ function Adjustments:Load()
     self:DisableNPCDrops()
     self:SeatShuffle()
     self:HealthRegeneration()
-    self:AmmoAndVehicleRewards()
+    self:TickLoop()
     self:EnablePvP()
     self:DispatchServices()
     self:NPCScenarios()
