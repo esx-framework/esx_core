@@ -172,46 +172,40 @@ function ESX.IsFunctionReference(val)
     return typeVal == "function" or (typeVal == "table" and type(getmetatable(val)?.__call) == "function")
 end
 
----@param conditionFunc function A function that returns a boolean indicating whether the condition is met.
----@param errorMessage? string The error message to print if the condition is not met within the timeout period.
----@param timeout? number The maximum time (in milliseconds) to wait for the condition to be met.
----@return boolean, number: Returns success status and the time taken
-ESX.Await = function(conditionFunc, errorMessage, timeout)
-    timeout = timeout or 1000
-    
-    if timeout < 0 then
-        error('Timeout should be a positive number.')
+---@param conditionFunc function A function that is repeatedly called until it returns a truthy value or the timeout is exceeded.
+---@param errorMessage? string Optional. If set, an error will be thrown with this message if the condition is not met within the timeout. If not set, no error will be thrown.
+---@param timeoutMs? number Optional. The maximum time to wait (in milliseconds) for the condition to be met. Defaults to 1000ms.
+---@return boolean, any: Returns success status and the returned value of the condition function.
+function ESX.Await(conditionFunc, errorMessage, timeoutMs)
+    timeoutMs = timeoutMs or 1000
+
+    if timeoutMs < 0 then
+        error("Timeout should be a positive number.")
     end
 
-    local isFunctionReference = ESX.IsFunctionReference(conditionFunc)
-
-    if not isFunctionReference then
-        error('Condition Function should be a function reference.')
+    if not ESX.IsFunctionReference(conditionFunc) then
+        error("Condition Function should be a function reference.")
     end
 
     -- since errorMessage is optional, we only validate it if the user provided it.
     if errorMessage then
-        ESX.AssertType(errorMessage, 'string', 'errorMessage should be a string.')
+        ESX.AssertType(errorMessage, "string", "errorMessage should be a string.")
     end
 
-    local startTime = GetGameTimer()
-    local prefix = ('[%s] -> '):format(GetInvokingResource())
-
-    while GetGameTimer() - startTime < timeout do
+    local startTimeMs = GetGameTimer()
+    while GetGameTimer() - startTimeMs < timeoutMs do
         local result = conditionFunc()
 
         if result then
-            local elapsedTime = GetGameTimer() - startTime
-            return true, elapsedTime
+            return true, result
         end
 
         Wait(0)
     end
 
     if errorMessage then
-        local formattedErrorMessage = ('%s %s'):format(prefix, errorMessage)
-        error(formattedErrorMessage)
+        error(("[%s] -> %s"):format(GetInvokingResource(), errorMessage))
     end
 
-    return false, timeout
+    return false
 end
