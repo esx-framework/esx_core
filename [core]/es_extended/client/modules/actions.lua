@@ -49,6 +49,10 @@ function Actions:TrackPed()
         ESX.SetPlayerData("ped", newPed)
 
         TriggerEvent("esx:playerPedChanged", newPed)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Player ped changed:", newPed)
+        end
     end
 end
 
@@ -58,6 +62,10 @@ function Actions:TrackPauseMenu()
     if isActive ~= self.inPauseMenu then
         self.inPauseMenu = isActive
         TriggerEvent("esx:pauseMenuActive", isActive)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Pause menu active:", isActive)
+        end
     end
 end
 
@@ -71,6 +79,10 @@ function Actions:EnterVehicle()
     TriggerServerEvent("esx:enteringVehicle", plate, self.seat, netId)
 
     self:SetVehicleStatus()
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entering vehicle:", self.vehicle, plate, self.seat, netId)
+    end
 end
 
 function Actions:ResetVehicleData()
@@ -87,6 +99,10 @@ function Actions:EnterAborted()
 
     TriggerEvent("esx:enteringVehicleAborted")
     TriggerServerEvent("esx:enteringVehicleAborted")
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entering vehicle aborted")
+    end
 end
 
 function Actions:WarpEnter()
@@ -100,6 +116,10 @@ function Actions:WarpEnter()
     self:SetVehicleStatus()
     TriggerEvent("esx:enteredVehicle", self.vehicle, plate, self.seat, displayName, netId)
     TriggerServerEvent("esx:enteredVehicle", plate, self.seat, displayName, netId)
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entered vehicle:", self.vehicle, plate, self.seat, displayName, netId)
+    end
 end
 
 function Actions:ExitVehicle()
@@ -110,6 +130,10 @@ function Actions:ExitVehicle()
 
         TriggerEvent("esx:exitedVehicle", self.vehicle, plate, self.seat, displayName, netId)
         TriggerServerEvent("esx:exitedVehicle", plate, self.seat, displayName, netId)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Exited vehicle:", self.vehicle, plate, self.seat, displayName, netId)
+        end
 
         self:ResetVehicleData()
     end
@@ -144,6 +168,10 @@ function Actions:TrackSeat()
         self.seat = newSeat
         ESX.SetPlayerData("seat", self.seat)
         TriggerEvent("esx:vehicleSeatChanged", self.seat)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Vehicle seat changed:", self.seat)
+        end
     end
 end
 
@@ -156,6 +184,10 @@ function Actions:TrackWeapon()
         self.currentWeapon = newWeapon
         ESX.SetPlayerData("weapon", self.currentWeapon)
         TriggerEvent("esx:weaponChanged", self.currentWeapon)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Weapon changed:", self.currentWeapon)
+        end
     end
 end
 
