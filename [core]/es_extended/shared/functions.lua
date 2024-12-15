@@ -1,13 +1,13 @@
-local Charset = {}
+ESX.Charset = {}
 
 for i = 48, 57 do
-    table.insert(Charset, string.char(i))
+    ESX.Charset[#ESX.Charset + 1] = string.char(i)
 end
 for i = 65, 90 do
-    table.insert(Charset, string.char(i))
+    ESX.Charset[#ESX.Charset + 1] = string.char(i)
 end
 for i = 97, 122 do
-    table.insert(Charset, string.char(i))
+    ESX.Charset[#ESX.Charset + 1] = string.char(i)
 end
 
 local weaponsByName = {}
@@ -25,7 +25,7 @@ end)
 function ESX.GetRandomString(length)
     math.randomseed(GetGameTimer())
 
-    return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
+    return length > 0 and ESX.GetRandomString(length - 1) .. ESX.Charset[math.random(1, #ESX.Charset)] or ""
 end
 
 ---@return table
