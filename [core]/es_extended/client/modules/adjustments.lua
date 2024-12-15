@@ -73,7 +73,6 @@ function Adjustments:StopPoint()
     if not IsPedInAnyVehicle(ESX.PlayerData.ped, false) then
         SetPedCurrentWeaponVisible(ESX.PlayerData.ped, true, true, true, true)
     end
-    SetPedConfigFlag(ESX.PlayerData.ped, 36, false)
 end
 
 function Adjustments:Point()
@@ -87,7 +86,6 @@ function Adjustments:Point()
         if self.isPointing then
             ESX.RequestAnimDict("anim@mp_point")
             SetPedCurrentWeaponVisible(ESX.PlayerData.ped, false, true, true, true)
-            SetPedConfigFlag(ESX.PlayerData.ped, 36, true)
             TaskMoveNetworkByName(ESX.PlayerData.ped, 'task_mp_pointing', 0.5, false, 'anim@mp_point', 24)
             RemoveAnimDict("anim@mp_point")
 
