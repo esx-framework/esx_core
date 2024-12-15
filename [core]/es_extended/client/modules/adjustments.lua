@@ -42,7 +42,7 @@ function Adjustments:HealthRegeneration()
 end
 
 
-function Adjustments:ShouldChangeNPCPopulation()
+function Adjustments:ShouldLoop()
     for _, value in pairs(Config.NPCPopulation) do
         if value ~= 0.9 then
             return true
@@ -56,9 +56,8 @@ function Adjustments:ShouldChangeNPCPopulation()
     end
 end
 
-
 function Adjustments:TickLoop()
-    if not self:ShouldChangeNPCPopulation() then return end
+    if not self:ShouldLoop() then return end
     local NPC = Config.NPCPopulation
     CreateThread(function()
         while true do
