@@ -1,6 +1,3 @@
-Core.Input = {}
-Core.Events = {}
-
 ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 ESX.playerId = PlayerId()

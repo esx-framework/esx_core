@@ -1,3 +1,5 @@
+Core.Input = {}
+
 local interactions = {}
 local pressedInteractions = {}
 
