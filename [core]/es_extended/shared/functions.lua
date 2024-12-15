@@ -173,15 +173,20 @@ function ESX.IsFunctionReference(val)
 end
 
 ---@param conditionFunc function A function that returns a boolean indicating whether the condition is met.
----@param timeout number The maximum time (in milliseconds) to wait for the condition to be met.
 ---@param errorMessage? string The error message to print if the condition is not met within the timeout period.
----@return boolean: Returns true if the condition is met within the timeout, otherwise returns `false`.
----@return number: The time (in milliseconds) it took to meet the condition, or the timeout time if not met.
-ESX.Await = function(conditionFunc, timeout, errorMessage)
+---@param timeout? number The maximum time (in milliseconds) to wait for the condition to be met.
+---@return boolean, number: Returns success status and the time taken
+ESX.Await = function(conditionFunc, errorMessage, timeout)
     timeout = timeout or 1000
     
     if timeout < 0 then
         error('Timeout should be a positive number.')
+    end
+
+    local isFunctionReference = ESX.IsFunctionReference(conditionFunc)
+
+    if not isFunctionReference then
+        error('Condition Function should be a function reference.')
     end
 
     local startTime = GetGameTimer()
@@ -191,7 +196,8 @@ ESX.Await = function(conditionFunc, timeout, errorMessage)
         local success, result = pcall(conditionFunc)
 
         if not success then
-            print(prefix .. 'Error while calling conditionFunc! Result: ' .. result)
+            local conditionErrorMessage = ('%s Error while calling conditionFunc! Result: %s'):format(prefix, result)
+            print(conditionErrorMessage)
             local elapsedTime = GetGameTimer() - startTime
             return false, elapsedTime
         end
@@ -201,11 +207,14 @@ ESX.Await = function(conditionFunc, timeout, errorMessage)
             return true, elapsedTime
         end
 
-        Wait(10)
+        Wait(0)
     end
 
     if errorMessage then
-        print(prefix .. errorMessage) 
+        ESX.AssertType(errorMessage, 'string', 'errorMessage should be a string.')
+
+        local formattedErrorMessage = ('%s %s'):format(prefix, errorMessage)
+        print(formattedErrorMessage)
     end
 
     return false, timeout
