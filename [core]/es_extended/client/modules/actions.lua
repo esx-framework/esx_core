@@ -65,7 +65,7 @@ function Actions:EnterVehicle()
 
     local _, netId, plate = self:GetVehicleData()
 
-    self.isEnteringVehicle = true
+    self.enteringVehicle = true
     TriggerEvent("esx:enteringVehicle", self.vehicle, plate, self.seat, netId)
     TriggerServerEvent("esx:enteringVehicle", plate, self.seat, netId)
 
