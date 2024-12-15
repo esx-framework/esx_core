@@ -1,4 +1,3 @@
-Core = {}
 Core.Input = {}
 Core.Events = {}
 

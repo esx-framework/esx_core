@@ -1,4 +1,5 @@
 ESX = {}
+Core = {}
 
 exports("getSharedObject", function()
     return ESX
@@ -12,5 +13,5 @@ AddEventHandler("esx:getSharedObject", function(cb)
     print(("^3[WARNING]^0 Resource ^5%s^0 used the ^5getSharedObject^0 event. This is not the recommended way to import ESX. Visit https://documentation.esx-framework.org/tutorials/tutorials-esx/sharedevent to find out why."):format(invokingResource))
 end)
 
--- backwards compatibility (DO NOT TOUCH !) 
+-- backwards compatibility (DO NOT TOUCH !)
 Config.OxInventory = Config.CustomInventory == "ox"
