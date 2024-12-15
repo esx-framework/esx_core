@@ -171,3 +171,42 @@ function ESX.IsFunctionReference(val)
 
     return typeVal == "function" or (typeVal == "table" and type(getmetatable(val)?.__call) == "function")
 end
+
+---@param conditionFunc function A function that returns a boolean indicating whether the condition is met.
+---@param timeout number The maximum time (in milliseconds) to wait for the condition to be met.
+---@param errorMessage? string The error message to print if the condition is not met within the timeout period.
+---@return boolean: Returns true if the condition is met within the timeout, otherwise returns `false`.
+---@return number: The time (in milliseconds) it took to meet the condition, or the timeout time if not met.
+ESX.Await = function(conditionFunc, timeout, errorMessage)
+    timeout = timeout or 1000
+    
+    if timeout < 0 then
+        error('Timeout should be a positive number.')
+    end
+
+    local startTime = GetGameTimer()
+    local prefix = ('[%s] -> '):format(GetInvokingResource())
+
+    while GetGameTimer() - startTime < timeout do
+        local success, result = pcall(conditionFunc)
+
+        if not success then
+            print(prefix .. 'Error while calling conditionFunc! Result: ' .. result)
+            local elapsedTime = GetGameTimer() - startTime
+            return false, elapsedTime
+        end
+
+        if result then
+            local elapsedTime = GetGameTimer() - startTime
+            return true, elapsedTime
+        end
+
+        Wait(10)
+    end
+
+    if errorMessage then
+        print(prefix .. errorMessage) 
+    end
+
+    return false, timeout
+end
