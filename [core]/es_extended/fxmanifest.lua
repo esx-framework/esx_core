@@ -40,14 +40,14 @@ server_scripts {
 }
 
 client_scripts {
-    'client/common.lua',
+    'client/main.lua',
 	'client/functions.lua',
 	'client/modules/wrapper.lua',
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
 	'client/modules/points.lua',
 
-	'client/main.lua',
+	'client/events.lua',
 
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
