@@ -22,6 +22,11 @@ Config.NPCPopulation = {
     peds = 0.9, -- min: 0.0, max: 1.0 (default: 0.9)
 }
 
+Config.Pointing = {
+    enable = true, -- Enable Pointing
+    HoldKey = true, -- Require holding key to point, disable to have it toggle
+}
+
 
 Config.RemoveHudComponents = {
     [1] = false, --WANTED_STARS,

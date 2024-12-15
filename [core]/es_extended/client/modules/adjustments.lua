@@ -41,6 +41,69 @@ function Adjustments:HealthRegeneration()
     end
 end
 
+function Adjustments:PointLoop()
+    CreateThread(function()
+        while self.isPointing do
+            local camPitch = GetGameplayCamRelativePitch()
+            local camHeading = GetGameplayCamRelativeHeading()
+            local cosCamHeading = Cos(camHeading)
+            local sinCamHeading = Sin(camHeading)
+
+            camPitch = math.max(-70.0, math.min(42.0, camPitch))
+            camPitch = (camPitch + 70.0) / 112.0
+            camHeading = math.max(-180.0, math.min(180.0, camHeading))
+            camHeading = (camHeading + 180.0) / 360.0
+
+            local coords = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, (cosCamHeading * -0.2) - (sinCamHeading * (0.4 * camHeading + 0.3)), (sinCamHeading * -0.2) + (cosCamHeading * (0.4 * camHeading + 0.3)), 0.6)
+            local ray = StartShapeTestCapsule(coords.x, coords.y, coords.z - 0.2, coords.x, coords.y, coords.z + 0.2, 0.4, 95, ESX.PlayerData.ped, 7)
+            local _, blocked = GetRaycastResult(ray)
+
+            SetTaskMoveNetworkSignalFloat(ESX.PlayerData.ped, "Pitch", camPitch)
+            SetTaskMoveNetworkSignalFloat(ESX.PlayerData.ped, "Heading", camHeading * -1.0 + 1.0)
+            SetTaskMoveNetworkSignalBool(ESX.PlayerData.ped, "isBlocked", blocked)
+            SetTaskMoveNetworkSignalBool(ESX.PlayerData.ped, "isFirstPerson", GetCamViewModeForContext(GetCamActiveViewModeContext()) == 4)
+            Wait(0)
+        end
+    end)
+end
+
+function Adjustments:StopPoint()
+    RequestTaskMoveNetworkStateTransition(ESX.PlayerData.ped, 'Stop')
+    ClearPedSecondaryTask(ESX.PlayerData.ped)
+    if not IsPedInAnyVehicle(ESX.PlayerData.ped, false) then
+        SetPedCurrentWeaponVisible(ESX.PlayerData.ped, true, true, true, true)
+    end
+    SetPedConfigFlag(ESX.PlayerData.ped, 36, false)
+end
+
+function Adjustments:Point()
+    if not Config.Pointing.Enable then
+        return
+    end
+    self.isPointing = false
+
+    ESX.RegisterInput("esx:poiting", "Point", "keyboard", "b", function()
+        self.isPointing = not self.isPointing
+        if self.isPointing then
+            ESX.RequestAnimDict("anim@mp_point")
+            SetPedCurrentWeaponVisible(ESX.PlayerData.ped, false, true, true, true)
+            SetPedConfigFlag(ESX.PlayerData.ped, 36, true)
+            TaskMoveNetworkByName(ESX.PlayerData.ped, 'task_mp_pointing', 0.5, false, 'anim@mp_point', 24)
+            RemoveAnimDict("anim@mp_point")
+
+            self:PointLoop()
+        else
+            self:StopPoint()
+        end
+    end, function()
+        if not Config.Pointing.HoldKey then
+            return
+        end
+
+        self:StopPoint()
+    end)
+end
+
 
 function Adjustments:ShouldLoop()
     for _, value in pairs(Config.NPCPopulation) do
