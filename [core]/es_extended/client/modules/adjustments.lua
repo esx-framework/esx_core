@@ -100,6 +100,7 @@ function Adjustments:Point()
             return
         end
 
+        self.isPointing = false
         self:StopPoint()
     end)
 end
