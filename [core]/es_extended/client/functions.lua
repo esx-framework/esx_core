@@ -1525,11 +1525,11 @@ function ESX.ShowInventory()
     end)
 end
 
-ESX.SecureNetEvent('esx:showNotification', ESX.ShowNotification)
+RegisterNetEvent('esx:showNotification', ESX.ShowNotification)
 
-ESX.SecureNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
+RegisterNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
 
-ESX.SecureNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
+RegisterNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
 
 AddEventHandler("onResourceStop", function(resourceName)
     for i = 1, #ESX.UI.Menu.Opened, 1 do
