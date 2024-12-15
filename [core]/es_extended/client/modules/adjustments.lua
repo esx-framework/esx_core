@@ -301,7 +301,7 @@ function Adjustments:DiscordPresence()
     if Config.DiscordActivity.appId ~= 0 then
         CreateThread(function()
             while true do
-                SetDiscordAppId(Config.DiscordActivity.appId)
+                SetDiscordAppId(tostring(Config.DiscordActivity.appId))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
                 SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
 
