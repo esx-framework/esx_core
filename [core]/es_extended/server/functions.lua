@@ -610,6 +610,6 @@ function Core.IsPlayerAdmin(playerId)
         return true
     end
 
-    local xPlayer = ESX.Players[tonumber(playerId)]
-    return xPlayer and Config.AdminGroups[xPlayer.group] or false
+    local xPlayer = ESX.Players[playerId]
+    return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end
