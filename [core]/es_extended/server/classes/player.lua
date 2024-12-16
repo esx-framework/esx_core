@@ -130,6 +130,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
       ---@return number
     function self.getPlayTime()
+        -- luacheck: ignore
         return self.lastPlaytime + GetPlayerTimeOnline(self.source)
     end
 
@@ -607,8 +608,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
-        if weapon then
-            weapon.ammo = ammoCount
+        if not weapon then
+            return
+        end
+
+        weapon.ammo = ammoCount
+
+        if weapon.ammo <= 0 then
+            local _, weaponConfig = ESX.GetWeapon(weaponName)
+            if weaponConfig.throwable then
+                self.removeWeapon(weaponName)
+            end
         end
     end
 

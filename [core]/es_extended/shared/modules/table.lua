@@ -223,3 +223,11 @@ function ESX.Table.Sort(t, order)
         end
     end
 end
+
+function ESX.Table.ToArray(table)
+    local array = {}
+    for _, v in pairs(table) do
+        array[#array + 1] = v
+    end
+    return array
+end

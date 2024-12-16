@@ -38,6 +38,7 @@ end
 function Menu:InsertElements()
     local playerPed = PlayerPedId()
 
+    self.elements = {}
     for i = 1, #self.components, 1 do
         local value = self.components[i].value
         local componentId = self.components[i].componentId
@@ -51,15 +52,12 @@ function Menu:InsertElements()
         data.type = "slider"
         data.max = self.maxValues[self.components[i].name]
 
-        if not self.elements then
-            self.elements = {}
-        end
         self.elements[#self.elements + 1] = data
     end
 end
 
 function Menu:Submit(data, menu)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
     self.submitCb(data, menu)
     Camera:Destroy()
 end
@@ -67,7 +65,7 @@ end
 function Menu:Cancel(data, menu)
     menu.close()
     Camera:Destroy()
-    TriggerEvent("skinchanger:loadSkin", Skin.last)
+    TriggerEvent("skinchanger:loadSkin", Skin.Last)
 
     if self.cancelCb then
         self.cancelCb(data, menu)
@@ -125,7 +123,7 @@ function Menu:Open(submit, cancel, restrict)
     self.submitCb = submit
     self.cancelCb = cancel
     self.restricted = restrict
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self.components, self.maxValues = exports["skinchanger"]:GetData()
     if restrict then
@@ -134,15 +132,15 @@ function Menu:Open(submit, cancel, restrict)
 
     self:InsertElements()
 
-    self.zoomOffset = self.components[1].zoomOffset
-    self.camOffset = self.components[1].camOffset
+    Skin.zoomOffset = self.components[1].zoomOffset
+    Skin.camOffset = self.components[1].camOffset
     Camera:Create()
 
     self:ESXMenu()
 end
 
 function Menu:Saveable(submitCb, cancelCb, restrict)
-    Skin.last = exports["skinchanger"]:GetSkin()
+    Skin.Last = exports["skinchanger"]:GetSkin()
 
     self:Open(function(data, menu)
         menu.close()
