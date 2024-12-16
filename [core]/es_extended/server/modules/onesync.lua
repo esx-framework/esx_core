@@ -107,10 +107,10 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
             local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
             local tries = 0
 
-            while not createdVehicle or createdVehicle == 0 or not GetEntityCoords(createdVehicle) do
+            while not createdVehicle or createdVehicle == 0 or NetworkGetEntityOwner(createdVehicle) == -1 do
                 Wait(200)
                 tries = tries + 1
-                if tries > 20 then
+                if tries > 40 then
                     if promise then
                         return promise:reject(("Could not spawn vehicle - ^5%s^7!"):format(model))
                     end
@@ -122,6 +122,7 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
             SetEntityOrphanMode(createdVehicle, 2)
             local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
             Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
+
             if promise then
                 promise:resolve(networkId)
             elseif cb then
