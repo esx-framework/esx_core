@@ -12,6 +12,8 @@ function ESX.Math.Round(value, numDecimalPlaces)
     end
 end
 
+ESX.Round = ESX.Math.Round
+
 -- credit http://richard.warburton.it
 ---@param value number
 ---@return string
