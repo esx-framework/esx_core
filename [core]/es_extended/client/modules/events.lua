@@ -1,3 +1,5 @@
+Core.Events = {}
+
 local pickups = {}
 
 ESX.SecureNetEvent("esx:requestModel", function(model)
