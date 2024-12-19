@@ -25,33 +25,30 @@ function ESX.HidePointInternal(handle, hidden)
 end
 
 function StartPointsLoop()
-    CreateThread(function()
-        while true do
-            local coords = GetEntityCoords(ESX.PlayerData.ped)
-            for i, point in pairs(points) do
-                local distance = #(coords - point.coords)
-				
-                if not point.hidden and distance <= point.distance then
-                    if not point.nearby then
-                        points[i].nearby = true
-                        points[i].enter()
-                    end
-					point.currentDistance = distance
-                elseif point.nearby then
-                    points[i].nearby = false
-                    points[i].leave()
-                end
-            end
-            Wait(500)
-        end
-    end)
+	CreateThread(function()
+		while true do
+			local coords = GetEntityCoords(ESX.PlayerData.ped)
+			for handle, point in pairs(points) do
+				if not point.hidden and #(coords - point.coords) <= point.distance then
+					if not point.nearby then
+						points[handle].nearby = true
+						points[handle].enter()
+					end
+				elseif point.nearby then
+					points[handle].nearby = false
+					points[handle].leave()
+				end
+			end
+			Wait(500)
+		end
+	end)
 end
 
 
 AddEventHandler('onResourceStop', function(resource)
-    for i, point in pairs(points) do
-        if point.resource == resource then
-            points[i] = nil
-        end
-    end
+	for handle, point in pairs(points) do
+		if point.resource == resource then
+			points[handle] = nil
+		end
+	end
 end)
