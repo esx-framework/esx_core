@@ -1,13 +1,3 @@
----@class DbVehicle
----@field owner string
----@field plate string
----@field vehicle string
----@field type string
----@field job? string
----@field stored boolean
----@field parking? string
----@field pound? string
-
 ---@class VehicleData
 ---@field plate string
 ---@field netId number
@@ -42,12 +32,12 @@ Core.vehicleClass = {
 			return xVehicle
 		end
 
-		local dbVehicle = MySQL.single.await("SELECT * FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ?", { owner, plate }) --[[@as DbVehicle]]
-		if not dbVehicle then
+		local vehicleProps = MySQL.scalar.await("SELECT `vehicle` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
+		if not vehicleProps then
 			return
 		end
+		vehicleProps = json.decode(vehicleProps.vehicle)
 
-		local vehicleProps = json.decode(dbVehicle.vehicle)
 		if type(vehicleProps.model) ~= "number" then
 			model = joaat(model)
 		end
