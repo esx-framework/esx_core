@@ -629,9 +629,5 @@ end
 function ESX.GetExtendedVehicleFromPlate(plate)
     assert(type(plate) == "string", "Expected 'plate' to be a string")
 
-    if Core.vehicles[plate] then
-        local obj = table.clone(Core.vehicleClass)
-        obj.plate = plate
-        return obj
-    end
+   return Core.vehicleClass.getFromPlate(plate)
 end

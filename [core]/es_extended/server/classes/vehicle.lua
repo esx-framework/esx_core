@@ -19,6 +19,7 @@
 ---@field plate string
 ---@field isValid fun(self:VehicleClass):boolean
 ---@field new fun(owner:string, plate:string, coords:vector4): VehicleClass?
+---@field getFromPlate fun(plate:string):VehicleClass?
 ---@field getPlate fun(self:VehicleClass):string?
 ---@field getNetId fun(self:VehicleClass):number?
 ---@field getEntity fun(self:VehicleClass):number?
@@ -36,13 +37,9 @@ Core.vehicleClass = {
 		assert(type(plate) == "string", "Expected 'plate' to be a string")
 		assert(type(coords) == "vector4", "Expected 'coords' to be a vector4")
 
-		if Core.vehicles[plate] then
-			local obj = table.clone(Core.vehicleClass)
-			obj.plate = plate
-
-			if obj:isValid() then
-				return obj
-			end
+		local xVehicle = Core.vehicleClass.getFromPlate(plate)
+		if xVehicle then
+			return xVehicle
 		end
 
 		local dbVehicle = MySQL.single.await("SELECT * FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ?", { owner, plate }) --[[@as DbVehicle]]
@@ -83,6 +80,16 @@ Core.vehicleClass = {
 		TriggerEvent("esx:createdExtendedVehicle", obj)
 
 		return obj
+	end,
+	getFromPlate = function(plate)
+		if Core.vehicles[plate] then
+			local obj = table.clone(Core.vehicleClass)
+			obj.plate = plate
+
+			if obj:isValid() then
+				return obj
+			end
+		end
 	end,
 	isValid = function(self)
 		local xVehicle = Core.vehicles[self.plate]
