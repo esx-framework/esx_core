@@ -615,3 +615,23 @@ function Core.IsPlayerAdmin(playerId)
     local xPlayer = ESX.Players[playerId]
     return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end
+
+---@param owner string
+---@param plate string
+---@param coords vector4
+---@return VehicleClass?
+function ESX.CreateExtendedVehicle(owner, plate, coords)
+    return Core.vehicleClass.new(owner, plate, coords)
+end
+
+---@param plate string
+---@return VehicleClass?
+function ESX.GetExtendedVehicleFromPlate(plate)
+    assert(type(plate) == "string", "Expected 'plate' to be a string")
+
+    if Core.vehicles[plate] then
+        local obj = table.clone(Core.vehicleClass)
+        obj.plate = plate
+        return obj
+    end
+end
