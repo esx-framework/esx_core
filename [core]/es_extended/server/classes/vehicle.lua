@@ -14,7 +14,6 @@
 ---@field getNetId fun(self:VehicleClass):number?
 ---@field getEntity fun(self:VehicleClass):number?
 ---@field getModelHash fun(self:VehicleClass):number?
----@field getProps fun(self:VehicleClass):table?
 ---@field getOwner fun(self:VehicleClass):string?
 ---@field setPlate fun(self:VehicleClass, plate:string):boolean
 ---@field setProps fun(self:VehicleClass, props:table):boolean
@@ -51,7 +50,6 @@ Core.vehicleClass = {
 		if entity <= 0 then
 			return
 		end
-
 		Entity(entity).state:set("owner", owner, false)
 
 		local vehicle = {
@@ -130,13 +128,6 @@ Core.vehicleClass = {
 		end
 
 		return Core.vehicles[self.plate].modelHash
-	end,
-	getProps = function(self)
-		if not self:isValid() then
-			return
-		end
-
-		return Core.vehicles[self.plate].props
 	end,
 	getOwner = function(self)
 		if not self:isValid() then
