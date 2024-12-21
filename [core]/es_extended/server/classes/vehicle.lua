@@ -138,9 +138,12 @@ Core.vehicleClass = {
 		assert(type(plate) == "string", "Expected 'plate' to be a string")
 
 		local xVehicle = Core.vehicles[self.plate]
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
+		if affectedRows <= 0 then
+			return false
+		end
 		Entity(xVehicle.entity).state:set("plate", plate, false)
 		SetVehicleNumberPlateText(xVehicle.entity, plate)
-		MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
 		xVehicle.plate = plate
 
 		return true
@@ -152,8 +155,11 @@ Core.vehicleClass = {
 		assert(type(props) == "table", "Expected 'props' to be a table")
 
 		local xVehicle = Core.vehicles[self.plate]
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(props), xVehicle.plate, xVehicle.owner)
+		if affectedRows <= 0 then
+			return false
+		end
 		Entity(xVehicle.entity).state:set("VehicleProperties", props, true)
-		MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(props), xVehicle.plate, xVehicle.owner)
 
 		return true
 	end,
@@ -168,9 +174,12 @@ Core.vehicleClass = {
 			return true
 		end
 
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { owner, xVehicle.owner, xVehicle.plate })
+		if affectedRows <= 0 then
+			return false
+		end
 		Entity(xVehicle.entity).state:set("owner", owner, false)
 		xVehicle.owner = owner
-		MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE `plate` = ?", { owner, xVehicle.plate })
 
 		return true
 	end,
