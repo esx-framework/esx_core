@@ -53,14 +53,14 @@ Core.vehicleClass = {
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
 
-		local vehicle = {
+		local vehicleData = {
 			plate = plate,
 			entity = entity,
 			netId = netId,
 			modelHash = vehicleProps.model,
 			owner = owner,
 		}
-		Core.vehicles[plate] = vehicle
+		Core.vehicles[plate] = vehicleData
 
 		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 0 WHERE `owner` = ? AND `plate` = ?", { owner, plate })
 
@@ -142,6 +142,7 @@ Core.vehicleClass = {
 		if affectedRows <= 0 then
 			return false
 		end
+
 		Entity(xVehicle.entity).state:set("plate", plate, false)
 		SetVehicleNumberPlateText(xVehicle.entity, plate)
 		xVehicle.plate = plate
@@ -159,6 +160,7 @@ Core.vehicleClass = {
 		if affectedRows <= 0 then
 			return false
 		end
+
 		Entity(xVehicle.entity).state:set("VehicleProperties", props, true)
 
 		return true
@@ -178,6 +180,7 @@ Core.vehicleClass = {
 		if affectedRows <= 0 then
 			return false
 		end
+
 		Entity(xVehicle.entity).state:set("owner", owner, false)
 		xVehicle.owner = owner
 
