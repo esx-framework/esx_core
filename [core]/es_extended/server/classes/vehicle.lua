@@ -140,8 +140,8 @@ Core.vehicleClass = {
 		local xVehicle = Core.vehicles[self.plate]
 		Entity(xVehicle.entity).state:set("plate", plate, false)
 		SetVehicleNumberPlateText(xVehicle.entity, plate)
-		xVehicle.plate = plate
 		MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
+		xVehicle.plate = plate
 
 		return true
 	end,
