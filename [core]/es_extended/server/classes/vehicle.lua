@@ -38,10 +38,10 @@ Core.vehicleClass = {
 		vehicleProps = json.decode(vehicleProps)
 
 		if type(vehicleProps.model) ~= "number" then
-			model = joaat(model)
+			vehicleProps.model = joaat(vehicleProps.model)
 		end
 
-		local netId = ESX.OneSync.SpawnVehicle(model, coords.xyz, coords.w, vehicleProps)
+		local netId = ESX.OneSync.SpawnVehicle(vehicleProps.model, coords.xyz, coords.w, vehicleProps)
 		if not netId then
 			return
 		end
@@ -56,7 +56,7 @@ Core.vehicleClass = {
 			plate = plate,
 			entity = entity,
 			netId = netId,
-			modelHash = model,
+			modelHash = vehicleProps.model,
 			owner = owner,
 		}
 		Core.vehicles[plate] = vehicle
