@@ -35,7 +35,7 @@ Core.vehicleClass = {
 		if not vehicleProps then
 			return
 		end
-		vehicleProps = json.decode(vehicleProps.vehicle)
+		vehicleProps = json.decode(vehicleProps)
 
 		if type(vehicleProps.model) ~= "number" then
 			model = joaat(model)
