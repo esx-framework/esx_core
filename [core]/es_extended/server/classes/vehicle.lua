@@ -209,7 +209,7 @@ Core.vehicleClass = {
 			DeleteEntity(xVehicle.entity)
 		end
 
-		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 1 WHERE `plate` = ?", { xVehicle.plate })
+		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 1 WHERE `plate` = ? AND `owner` = ?", { xVehicle.plate, xVehicle.owner })
 		TriggerEvent("esx:deletedExtendedVehicle", self)
 
 		Core.vehicles[self.plate] = nil
