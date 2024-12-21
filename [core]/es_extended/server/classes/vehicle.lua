@@ -71,6 +71,8 @@ Core.vehicleClass = {
 		return obj
 	end,
 	getFromPlate = function(plate)
+		assert(type(plate) == "string", "Expected 'plate' to be a string")
+
 		if Core.vehicles[plate] then
 			local obj = table.clone(Core.vehicleClass)
 			obj.plate = plate
