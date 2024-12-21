@@ -51,6 +51,7 @@ Core.vehicleClass = {
 			return
 		end
 		Entity(entity).state:set("owner", owner, false)
+		Entity(entity).state:set("plate", plate, false)
 
 		local vehicle = {
 			plate = plate,
@@ -86,13 +87,7 @@ Core.vehicleClass = {
 		end
 
 		local entity = NetworkGetEntityFromNetworkId(xVehicle.netId)
-		if entity <= 0 or Entity(entity).state.owner ~= xVehicle.owner then
-			self:delete()
-			return false
-		end
-
-		local plate = ESX.Math.Trim(GetVehicleNumberPlateText(entity))
-		if plate ~= xVehicle.plate then
+		if entity <= 0 or Entity(entity).state.owner ~= xVehicle.owner or Entity(entity).state.plate ~= xVehicle.plate then
 			self:delete()
 			return false
 		end
@@ -143,6 +138,7 @@ Core.vehicleClass = {
 		assert(type(plate) == "string", "Expected 'plate' to be a string")
 
 		local xVehicle = Core.vehicles[self.plate]
+		Entity(xVehicle.entity).state:set("plate", plate, false)
 		SetVehicleNumberPlateText(xVehicle.entity, plate)
 		xVehicle.plate = plate
 		MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
