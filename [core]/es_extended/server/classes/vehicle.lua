@@ -147,7 +147,14 @@ Core.vehicleClass = {
 
 		Entity(xVehicle.entity).state:set("plate", plate, false)
 		SetVehicleNumberPlateText(xVehicle.entity, plate)
+
+		local oldPlate = xVehicle.plate
 		xVehicle.plate = plate
+		Core.vehicles[plate] = table.clone(xVehicle)
+		Core.vehicles[self.plate] = nil
+
+		TriggerEvent("esx:changedExtendedVehiclePlate", xVehicle.plate, oldPlate)
+		Wait(0)
 
 		return true
 	end,
