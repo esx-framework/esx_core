@@ -73,6 +73,10 @@ files {
 
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf',
+
+	-- Dynamic Modules
+	'client/dynamicModules/*.lua',
+	'server/dynamicModules/*.lua'
 }
 
 dependencies {
