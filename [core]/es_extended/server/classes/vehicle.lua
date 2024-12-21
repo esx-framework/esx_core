@@ -15,10 +15,10 @@
 ---@field getEntity fun(self:VehicleClass):number?
 ---@field getModelHash fun(self:VehicleClass):number?
 ---@field getOwner fun(self:VehicleClass):string?
----@field setPlate fun(self:VehicleClass, plate:string):boolean
+---@field setPlate fun(self:VehicleClass, newPlate:string):boolean
 ---@field setProps fun(self:VehicleClass, props:table):boolean
----@field setOwner fun(self:VehicleClass, owner:string):boolean
----@field delete fun(self:VehicleClass, garageName:string?, impound:boolean?):nil
+---@field setOwner fun(self:VehicleClass, newOwner:string):boolean
+---@field delete fun(self:VehicleClass, garageName:string?, isImpound:boolean?):nil
 Core.vehicleClass = {
 	plate = "",
 	new = function(owner, plate, coords)
@@ -133,26 +133,26 @@ Core.vehicleClass = {
 
 		return Core.vehicles[self.plate].owner
 	end,
-	setPlate = function(self, plate)
+	setPlate = function(self, newPlate)
 		if not self:isValid() then
 			return false
 		end
-		assert(type(plate) == "string", "Expected 'plate' to be a string")
+		assert(type(newPlate) == "string", "Expected 'plate' to be a string")
 
 		local xVehicle = Core.vehicles[self.plate]
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { newPlate, xVehicle.plate, xVehicle.owner })
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("plate", plate, false)
-		SetVehicleNumberPlateText(xVehicle.entity, plate)
+		Entity(xVehicle.entity).state:set("plate", newPlate, false)
+		SetVehicleNumberPlateText(xVehicle.entity, newPlate)
 
 		local oldPlate = xVehicle.plate
-		xVehicle.plate = plate
-		Core.vehicles[plate] = table.clone(xVehicle)
-		Core.vehicles[self.plate] = nil
+		xVehicle.plate = newPlate
+		Core.vehicles[newPlate] = table.clone(xVehicle)
+		Core.vehicles[oldPlate] = nil
 
 		TriggerEvent("esx:changedExtendedVehiclePlate", xVehicle.plate, oldPlate)
 		Wait(0)
@@ -176,34 +176,34 @@ Core.vehicleClass = {
 
 		return true
 	end,
-	setOwner = function(self, owner)
+	setOwner = function(self, newOwner)
 		if not self:isValid() then
 			return false
 		end
-		assert(type(owner) == "string", "Expected 'owner' to be a string")
+		assert(type(newOwner) == "string", "Expected 'owner' to be a string")
 
 		local xVehicle = Core.vehicles[self.plate]
-		if xVehicle.owner == owner then
+		if xVehicle.owner == newOwner then
 			return true
 		end
 
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { owner, xVehicle.owner, xVehicle.plate })
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { newOwner, xVehicle.owner, xVehicle.plate })
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("owner", owner, false)
-		xVehicle.owner = owner
+		Entity(xVehicle.entity).state:set("owner", newOwner, false)
+		xVehicle.owner = newOwner
 
 		return true
 	end,
-	delete = function(self, garageName, impound)
+	delete = function(self, garageName, isImpound)
 		if type(garageName) ~= "string" then
 			garageName = nil
 		end
-		if type(impound) ~= "boolean" then
-			impound = false
+		if type(isImpound) ~= "boolean" then
+			isImpound = false
 		end
 
 		local xVehicle = Core.vehicles[self.plate]
@@ -219,7 +219,7 @@ Core.vehicleClass = {
 		local query = "UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?"
 		local queryParams = { xVehicle.plate, xVehicle.owner }
 		if garageName then
-			if impound then
+			if isImpound then
 				query = "UPDATE `owned_vehicles` SET `stored` = true, `parking` = NULL, `pound` = ? WHERE `plate` = ? AND `owner` = ?"
 			else
 				query = "UPDATE `owned_vehicles` SET `stored` = true, `pound` = NULL, `parking` = ? WHERE `plate` = ? AND `owner` = ?"
