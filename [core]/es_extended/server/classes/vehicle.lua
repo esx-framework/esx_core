@@ -18,7 +18,7 @@
 ---@field setPlate fun(self:VehicleClass, plate:string):boolean
 ---@field setProps fun(self:VehicleClass, props:table):boolean
 ---@field setOwner fun(self:VehicleClass, owner:string):boolean
----@field delete fun(self:VehicleClass):nil
+---@field delete fun(self:VehicleClass, garageName:string?, impound:boolean?):nil
 Core.vehicleClass = {
 	plate = "",
 	new = function(owner, plate, coords)
@@ -198,7 +198,14 @@ Core.vehicleClass = {
 
 		return true
 	end,
-	delete = function(self)
+	delete = function(self, garageName, impound)
+		if type(garageName) ~= "string" then
+			garageName = nil
+		end
+		if type(impound) ~= "boolean" then
+			impound = false
+		end
+
 		local xVehicle = Core.vehicles[self.plate]
 		if not xVehicle then
 			return
@@ -209,7 +216,19 @@ Core.vehicleClass = {
 			DeleteEntity(xVehicle.entity)
 		end
 
-		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 1 WHERE `plate` = ? AND `owner` = ?", { xVehicle.plate, xVehicle.owner })
+		local query = "UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?"
+		local queryParams = { xVehicle.plate, xVehicle.owner }
+		if garageName then
+			if impound then
+				query = "UPDATE `owned_vehicles` SET `stored` = true, `parking` = NULL, `pound` = ? WHERE `plate` = ? AND `owner` = ?"
+			else
+				query = "UPDATE `owned_vehicles` SET `stored` = true, `pound` = NULL, `parking` = ? WHERE `plate` = ? AND `owner` = ?"
+			end
+
+			queryParams = { garageName, xVehicle.plate, xVehicle.owner }
+		end
+
+		MySQL.update.await(query, queryParams)
 		TriggerEvent("esx:deletedExtendedVehicle", self)
 
 		Core.vehicles[self.plate] = nil
