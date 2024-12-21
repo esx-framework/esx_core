@@ -142,6 +142,7 @@ Core.vehicleClass = {
 		local xVehicle = Core.vehicles[self.plate]
 		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { plate, xVehicle.plate, xVehicle.owner })
 		if affectedRows <= 0 then
+			self:delete()
 			return false
 		end
 
@@ -167,6 +168,7 @@ Core.vehicleClass = {
 		local xVehicle = Core.vehicles[self.plate]
 		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(props), xVehicle.plate, xVehicle.owner)
 		if affectedRows <= 0 then
+			self:delete()
 			return false
 		end
 
@@ -187,6 +189,7 @@ Core.vehicleClass = {
 
 		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { owner, xVehicle.owner, xVehicle.plate })
 		if affectedRows <= 0 then
+			self:delete()
 			return false
 		end
 
