@@ -63,7 +63,7 @@ Core.vehicleClass = {
 		}
 		Core.vehicles[plate] = vehicleData
 
-		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 0 WHERE `owner` = ? AND `plate` = ?", { owner, plate })
+		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = false WHERE `owner` = ? AND `plate` = ?", { owner, plate })
 
 		local obj = table.clone(Core.vehicleClass)
 		obj.plate = plate
