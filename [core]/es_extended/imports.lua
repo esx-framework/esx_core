@@ -14,6 +14,7 @@ if not IsDuplicityVersion() then -- Only register this event for the client
 
     RegisterNetEvent("esx:playerLoaded", function(xPlayer)
         ESX.PlayerData = xPlayer
+        while not ESX.PlayerData.ped or not DoesEntityExist(ESX.PlayerData.ped) do Wait(0) end
         ESX.PlayerLoaded = true
     end)
 
