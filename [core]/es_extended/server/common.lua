@@ -11,7 +11,7 @@ Core.PlayerFunctionOverrides = {}
 Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
 
----@type table<string, VehicleData>
+---@type table<string, CVehicleData>
 Core.vehicles = {}
 Core.vehicleTypesByModel = {}
 

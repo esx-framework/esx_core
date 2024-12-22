@@ -1,24 +1,24 @@
----@class VehicleData
+---@class CVehicleData
 ---@field plate string
 ---@field netId number
 ---@field entity number
 ---@field modelHash number
 ---@field owner string
 
----@class VehicleClass
+---@class CExtendedVehicle
 ---@field plate string
----@field isValid fun(self:VehicleClass):boolean
----@field new fun(owner:string, plate:string, coords:vector4): VehicleClass?
----@field getFromPlate fun(plate:string):VehicleClass?
----@field getPlate fun(self:VehicleClass):string?
----@field getNetId fun(self:VehicleClass):number?
----@field getEntity fun(self:VehicleClass):number?
----@field getModelHash fun(self:VehicleClass):number?
----@field getOwner fun(self:VehicleClass):string?
----@field setPlate fun(self:VehicleClass, newPlate:string):boolean
----@field setProps fun(self:VehicleClass, props:table):boolean
----@field setOwner fun(self:VehicleClass, newOwner:string):boolean
----@field delete fun(self:VehicleClass, garageName:string?, isImpound:boolean?):nil
+---@field isValid fun(self:CExtendedVehicle):boolean
+---@field new fun(owner:string, plate:string, coords:vector4): CExtendedVehicle?
+---@field getFromPlate fun(plate:string):CExtendedVehicle?
+---@field getPlate fun(self:CExtendedVehicle):string?
+---@field getNetId fun(self:CExtendedVehicle):number?
+---@field getEntity fun(self:CExtendedVehicle):number?
+---@field getModelHash fun(self:CExtendedVehicle):number?
+---@field getOwner fun(self:CExtendedVehicle):string?
+---@field setPlate fun(self:CExtendedVehicle, newPlate:string):boolean
+---@field setProps fun(self:CExtendedVehicle, newProps:table):boolean
+---@field setOwner fun(self:CExtendedVehicle, newOwner:string):boolean
+---@field delete fun(self:CExtendedVehicle, garageName:string?, isImpound:boolean?):nil
 Core.vehicleClass = {
 	plate = "",
 	new = function(owner, plate, coords)
@@ -159,20 +159,20 @@ Core.vehicleClass = {
 
 		return true
 	end,
-	setProps = function(self, props)
+	setProps = function(self, newProps)
 		if not self:isValid() then
 			return false
 		end
-		assert(type(props) == "table", "Expected 'props' to be a table")
+		assert(type(newProps) == "table", "Expected 'props' to be a table")
 
 		local xVehicle = Core.vehicles[self.plate]
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(props), xVehicle.plate, xVehicle.owner)
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(newProps), xVehicle.plate, xVehicle.owner)
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("VehicleProperties", props, true)
+		Entity(xVehicle.entity).state:set("VehicleProperties", newProps, true)
 
 		return true
 	end,
