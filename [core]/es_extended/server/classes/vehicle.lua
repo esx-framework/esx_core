@@ -84,18 +84,18 @@ Core.vehicleClass = {
 		end
 	end,
 	isValid = function(self)
-		local xVehicle = Core.vehicles[self.plate]
-		if not xVehicle then
+		local vehicleData = Core.vehicles[self.plate]
+		if not vehicleData then
 			return false
 		end
 
-		local entity = NetworkGetEntityFromNetworkId(xVehicle.netId)
-		if entity <= 0 or Entity(entity).state.owner ~= xVehicle.owner or Entity(entity).state.plate ~= xVehicle.plate then
+		local entity = NetworkGetEntityFromNetworkId(vehicleData.netId)
+		if entity <= 0 or Entity(entity).state.owner ~= vehicleData.owner or Entity(entity).state.plate ~= vehicleData.plate then
 			self:delete()
 			return false
 		end
 
-		xVehicle.entity = entity
+		vehicleData.entity = entity
 
 		return true
 	end,
@@ -140,22 +140,22 @@ Core.vehicleClass = {
 		end
 		assert(type(newPlate) == "string", "Expected 'plate' to be a string")
 
-		local xVehicle = Core.vehicles[self.plate]
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { newPlate, xVehicle.plate, xVehicle.owner })
+		local vehicleData = Core.vehicles[self.plate]
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `plate` = ? WHERE `plate` = ? AND `owner` = ?", { newPlate, vehicleData.plate, vehicleData.owner })
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("plate", newPlate, false)
-		SetVehicleNumberPlateText(xVehicle.entity, newPlate)
+		Entity(vehicleData.entity).state:set("plate", newPlate, false)
+		SetVehicleNumberPlateText(vehicleData.entity, newPlate)
 
-		local oldPlate = xVehicle.plate
-		xVehicle.plate = newPlate
-		Core.vehicles[newPlate] = table.clone(xVehicle)
+		local oldPlate = vehicleData.plate
+		vehicleData.plate = newPlate
+		Core.vehicles[newPlate] = table.clone(vehicleData)
 		Core.vehicles[oldPlate] = nil
 
-		TriggerEvent("esx:changedExtendedVehiclePlate", xVehicle.plate, oldPlate)
+		TriggerEvent("esx:changedExtendedVehiclePlate", vehicleData.plate, oldPlate)
 		Wait(0)
 
 		return true
@@ -166,14 +166,14 @@ Core.vehicleClass = {
 		end
 		assert(type(newProps) == "table", "Expected 'props' to be a table")
 
-		local xVehicle = Core.vehicles[self.plate]
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(newProps), xVehicle.plate, xVehicle.owner)
+		local vehicleData = Core.vehicles[self.plate]
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(newProps), vehicleData.plate, vehicleData.owner)
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("VehicleProperties", newProps, true)
+		Entity(vehicleData.entity).state:set("VehicleProperties", newProps, true)
 
 		return true
 	end,
@@ -183,19 +183,19 @@ Core.vehicleClass = {
 		end
 		assert(type(newOwner) == "string", "Expected 'owner' to be a string")
 
-		local xVehicle = Core.vehicles[self.plate]
-		if xVehicle.owner == newOwner then
+		local vehicleData = Core.vehicles[self.plate]
+		if vehicleData.owner == newOwner then
 			return true
 		end
 
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { newOwner, xVehicle.owner, xVehicle.plate })
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `owner` = ? WHERE owner = ? AND `plate` = ?", { newOwner, vehicleData.owner, vehicleData.plate })
 		if affectedRows <= 0 then
 			self:delete()
 			return false
 		end
 
-		Entity(xVehicle.entity).state:set("owner", newOwner, false)
-		xVehicle.owner = newOwner
+		Entity(vehicleData.entity).state:set("owner", newOwner, false)
+		vehicleData.owner = newOwner
 
 		return true
 	end,
@@ -207,18 +207,18 @@ Core.vehicleClass = {
 			isImpound = false
 		end
 
-		local xVehicle = Core.vehicles[self.plate]
-		if not xVehicle then
+		local vehicleData = Core.vehicles[self.plate]
+		if not vehicleData then
 			return
 		end
 
-		local entity = NetworkGetEntityFromNetworkId(xVehicle.netId)
-		if entity >= 0 and Entity(entity).state.owner == xVehicle.owner then
-			DeleteEntity(xVehicle.entity)
+		local entity = NetworkGetEntityFromNetworkId(vehicleData.netId)
+		if entity >= 0 and Entity(entity).state.owner == vehicleData.owner then
+			DeleteEntity(vehicleData.entity)
 		end
 
 		local query = "UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?"
-		local queryParams = { xVehicle.plate, xVehicle.owner }
+		local queryParams = { vehicleData.plate, vehicleData.owner }
 		if garageName then
 			if isImpound then
 				query = "UPDATE `owned_vehicles` SET `stored` = true, `parking` = NULL, `pound` = ? WHERE `plate` = ? AND `owner` = ?"
@@ -226,7 +226,7 @@ Core.vehicleClass = {
 				query = "UPDATE `owned_vehicles` SET `stored` = true, `pound` = NULL, `parking` = ? WHERE `plate` = ? AND `owner` = ?"
 			end
 
-			queryParams = { garageName, xVehicle.plate, xVehicle.owner }
+			queryParams = { garageName, vehicleData.plate, vehicleData.owner }
 		end
 
 		MySQL.update.await(query, queryParams)
