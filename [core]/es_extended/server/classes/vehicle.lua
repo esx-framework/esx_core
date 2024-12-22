@@ -53,6 +53,7 @@ Core.vehicleClass = {
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
 
+		---@type CVehicleData
 		local vehicleData = {
 			plate = plate,
 			entity = entity,
