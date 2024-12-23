@@ -63,7 +63,7 @@ end
 AddEventHandler("esx:onPlayerSpawn", function()
     Citizen.CreateThreadNow(function()
         while ESX.PlayerLoaded and not ESX.PlayerData.dead do
-            if IsPedDeadOrDying(ESX.PlayerData.ped, true) or IsPedFatallyInjured(ESX.PlayerData.ped) then
+            if DoesEntityExist(ESX.PlayerData.ped) and (IsPedDeadOrDying(ESX.PlayerData.ped, true) or IsPedFatallyInjured(ESX.PlayerData.ped)) then
                 Death:Died()
                 break
             end
