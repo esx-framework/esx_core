@@ -114,9 +114,11 @@ Locales["fr"] = {
     ["commanderror_invalidcommand"] = "Commande invalide - /%s",
     ["commanderror_invalidplayerid"] = "Le joueur spécifié n'est pas connecté",
     ["commandgeneric_playerid"] = "Identifiant serveur du joueur",
+    ["commandgeneric_dimension"] = "Dimension de la cible",
     ["command_giveammo_noweapon_found"] = "%s n'a pas cette arme",
     ["command_giveammo_weapon"] = "Nom de l'arme",
     ["command_giveammo_ammo"] = "Quantité de munitions",
+    ["command_setdim"] = "Définir la dimension d'un joueur",
     ["tpm_nowaypoint"] = "Aucun point n'est défini sur la carte",
     ["tpm_success"] = "Vous avez bien été téléporté",
 
