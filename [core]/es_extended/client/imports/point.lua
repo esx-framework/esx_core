@@ -1,30 +1,39 @@
-Point = ESX.Class()
+local Point = ESX.Class()
+
+local nearby, loop = {}
 
 function Point:constructor(properties)
 	self.coords = properties.coords
-	self.hidden = properties.hidden or false
-	self.inside = properties.inside or function() end
-	self.enter = properties.enter or function() end
-	self.leave = properties.leave or function() end
+	self.hidden = properties.hidden
+	self.enter = properties.enter
+	self.leave = properties.leave
+	self.inside = properties.inside
 	self.handle = ESX.CreatePointInternal(properties.coords, properties.distance, properties.hidden, function()
-		self.nearby = true
+		nearby[self.handle] = self
 		if self.enter then
 			self:enter()
 		end
-		if self.inside then
+		if not loop then
+			loop = true
 			CreateThread(function()
-				while self.nearby do
+				while loop do
 					local coords = GetEntityCoords(ESX.PlayerData.ped)
-					self.currDistance = #(coords - self.coords)
-					self:inside()
-					Wait(0)
+					for handle, point in pairs(nearby) do
+						if point.inside then
+							point:inside(#(coords - point.coords))
+						end
+					end
+					Wait()
 				end
 			end)
 		end
 	end, function()
-		self.nearby = false
+		nearby[self.handle] = nil
 		if self.leave then
 			self:leave()
+		end
+		if #nearby == 0 then
+			loop = false
 		end
 	end)
 end
