@@ -289,6 +289,7 @@ Config.Weapons = {
         },
     },
     { name = "WEAPON_STUNGUN", label = TranslateCap("weapon_stungun"), tints = Config.DefaultWeaponTints, components = {} },
+    { name = "WEAPON_STUNROD", label = TranslateCap("weapon_stunrod"), tints = Config.DefaultWeaponTints, components = {} },
     { name = "WEAPON_RAYPISTOL", label = TranslateCap("weapon_raypistol"), tints = Config.DefaultWeaponTints, components = {} },
     {
         name = "WEAPON_VINTAGEPISTOL",
