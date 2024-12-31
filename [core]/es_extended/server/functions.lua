@@ -116,7 +116,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                     error = TranslateCap("commanderror_argumentmismatch_string", k)
                                 end
                             elseif v.type == "item" then
-                                if ESX.Items[args[k]] then
+                                if Core.Items[args[k]] then
                                     newArgs[v.name] = args[k]
                                 else
                                     error = TranslateCap("commanderror_invaliditem")
@@ -513,7 +513,7 @@ end
 ---@param ... any
 ---@return nil
 function ESX.UseItem(source, item, ...)
-    if ESX.Items[item] then
+    if Core.Items[item] then
         local itemCallback = Core.UsableItemsCallbacks[item]
 
         if itemCallback then
@@ -549,8 +549,8 @@ end
 ---@return string?
 ---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetItemLabel(item)
-    if ESX.Items[item] then
-        return ESX.Items[item].label
+    if Core.Items[item] then
+        return Core.Items[item].label
     else
         print(("[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7"):format(item))
     end

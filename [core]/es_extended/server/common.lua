@@ -1,6 +1,6 @@
 ESX.Players = {}
-ESX.Items = {}
 Core = {}
+Core.Items = {}
 Core.Jobs = {}
 Core.JobsPlayerCount = {}
 Core.UsableItemsCallbacks = {}
@@ -37,7 +37,7 @@ MySQL.ready(function()
     if not Config.CustomInventory then
         local items = MySQL.query.await("SELECT * FROM items")
         for _, v in ipairs(items) do
-            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
+            Core.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
         end
     end
 

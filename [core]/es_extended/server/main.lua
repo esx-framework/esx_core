@@ -191,7 +191,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     if not Config.CustomInventory then
         local inventory = (result.inventory and result.inventory ~= "") and json.decode(result.inventory) or {}
 
-        for name, item in pairs(ESX.Items) do
+        for name, item in pairs(Core.Items) do
             local count = inventory[name] or 0
             userData.weight += (count * item.weight)
 
