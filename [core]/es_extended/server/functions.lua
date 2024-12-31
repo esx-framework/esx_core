@@ -64,7 +64,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         if not command.allowConsole and playerId == 0 then
             print(("[^3WARNING^7] ^5%s"):format(TranslateCap("commanderror_console")))
         else
-            local xPlayer, error = ESX.Players[playerId], nil
+            local xPlayer, error = Core.Players[playerId], nil
 
             if command.suggestion then
                 if command.suggestion.validate then
@@ -234,7 +234,7 @@ end
 ---@param cb? function
 ---@return nil
 function Core.SavePlayers(cb)
-    local xPlayers <const> = ESX.Players
+    local xPlayers <const> = Core.Players
     if not next(xPlayers) then
         return
     end
@@ -242,7 +242,7 @@ function Core.SavePlayers(cb)
     local startTime <const> = os.time()
     local parameters = {}
 
-    for _, xPlayer in pairs(ESX.Players) do
+    for _, xPlayer in pairs(Core.Players) do
         updateHealthAndArmorInMetadata(xPlayer)
         parameters[#parameters + 1] = {
             json.encode(xPlayer.getAccounts(true)),
@@ -294,19 +294,19 @@ end
 ---@return table
 function ESX.GetExtendedPlayers(key, val)
     if not key then
-        return ESX.Table.ToArray(ESX.Players)
+        return ESX.Table.ToArray(Core.Players)
     end
 
     local xPlayers = {}
     if type(val) == "table" then
-        for _, xPlayer in pairs(ESX.Players) do
+        for _, xPlayer in pairs(Core.Players) do
             checkTable(key, val, xPlayer, xPlayers)
         end
 
         return xPlayers
     end
 
-    for _, xPlayer in pairs(ESX.Players) do
+    for _, xPlayer in pairs(Core.Players) do
         if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
             xPlayers[#xPlayers + 1] = xPlayer
         end
@@ -349,7 +349,7 @@ end
 ---@param source number
 ---@return table
 function ESX.GetPlayerFromId(source)
-    return ESX.Players[tonumber(source)]
+    return Core.Players[tonumber(source)]
 end
 
 ---@param identifier string
@@ -582,7 +582,7 @@ if not Config.CustomInventory then
     ---@return nil
     function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
         local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-        local xPlayer = ESX.Players[playerId]
+        local xPlayer = Core.Players[playerId]
         coords = ((type(coords) == "vector3" or type(coords) == "vector4") and coords.xyz or xPlayer.getCoords(true))
 
         Core.Pickups[pickupId] = { type = itemType, name = name, count = count, label = label, coords = coords }
@@ -612,6 +612,6 @@ function Core.IsPlayerAdmin(playerId)
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]
+    local xPlayer = Core.Players[playerId]
     return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end

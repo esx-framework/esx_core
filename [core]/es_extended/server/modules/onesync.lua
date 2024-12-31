@@ -39,7 +39,7 @@ local function getNearbyPlayers(source, closest, distance, ignore)
         end
     end
 
-    for _, xPlayer in pairs(ESX.Players) do
+    for _, xPlayer in pairs(Core.Players) do
         if not ignore or not ignore[xPlayer.source] then
             local entity = GetPlayerPed(xPlayer.source)
             local coords = GetEntityCoords(entity)

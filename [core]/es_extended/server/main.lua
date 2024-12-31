@@ -73,7 +73,7 @@ if Config.Multichar then
             Wait(50)
         end
 
-        if not ESX.Players[src] then
+        if not Core.Players[src] then
             local identifier = char .. ":" .. ESX.GetIdentifier(src)
             if data then
                 createESXPlayer(identifier, src, data)
@@ -89,7 +89,7 @@ else
             Wait(50)
         end
 
-        if not ESX.Players[_source] then
+        if not Core.Players[_source] then
             onPlayerJoined(_source)
         end
     end)
@@ -258,7 +258,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
 
     GlobalState["playerCount"] = GlobalState["playerCount"] + 1
-    ESX.Players[playerId] = xPlayer
+    Core.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
     -- Identity
@@ -326,7 +326,7 @@ AddEventHandler("playerDropped", function(reason)
 
         Core.SavePlayer(xPlayer, function()
             GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-            ESX.Players[playerId] = nil
+            Core.Players[playerId] = nil
         end)
     end
 end)
@@ -359,7 +359,7 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
         Core.playersByIdentifier[xPlayer.identifier] = nil
         Core.SavePlayer(xPlayer, function()
             GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-            ESX.Players[playerId] = nil
+            Core.Players[playerId] = nil
             if cb then
                 cb()
             end
