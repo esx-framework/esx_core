@@ -211,6 +211,7 @@ Locales["en"] = {
     ["weapon_specialcarbine"] = "Special Carbine",
     ["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
     ["weapon_heavyrifle"] = "Heavy Rifle",
+    ["weapon_battlerifle"] = "Battle Rifle",
 
     -- Sniper
     ["weapon_heavysniper"] = "Heavy Sniper",
@@ -239,6 +240,11 @@ Locales["en"] = {
     ["weapon_acidpackage"] = "Acid Package",
     ["weapon_pistolxm3"] = "Pistol8 x3m",
     ["weapon_railgunxm3"] = "Railgun",
+
+    -- Chop Shop DLC
+    ["weapon_snowlauncher"] = "Snow Launcher",
+    ["weapon_hackingdevice"] = "Hacking Device",
+
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
