@@ -245,6 +245,8 @@ Locales["en"] = {
     ["weapon_snowlauncher"] = "Snow Launcher",
     ["weapon_hackingdevice"] = "Hacking Device",
 
+    -- Bottom Dollar Bounties DLC
+    ["weapon_stunrod"] = "The Shocker",
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
