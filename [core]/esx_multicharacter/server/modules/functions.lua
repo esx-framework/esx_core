@@ -1,3 +1,5 @@
+ESX.Players = {}
+
 function Server:GetIdentifier(source)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
