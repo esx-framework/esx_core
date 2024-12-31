@@ -3,12 +3,12 @@ if Config.CustomInventory ~= "ox" then return end
 MySQL.ready(function()
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
         if ref then
-            ESX.Items = ref()
+            Core.Items = ref()
         end
     end)
 
     AddEventHandler("ox_inventory:itemList", function(items)
-        ESX.Items = items
+        Core.Items = items
     end)
 end)
 
