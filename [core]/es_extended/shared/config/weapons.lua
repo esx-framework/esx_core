@@ -1038,6 +1038,30 @@ Config.Weapons = {
         },
     },
     {
+        name = "WEAPON_BATTLERIFLE",
+        label = TranslateCap("weapon_battlerifle"),
+        ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
+        tints = Config.DefaultWeaponTints,
+        components = {
+            { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_BATTLERIFLE_CLIP_01` },
+            { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_BATTLERIFLE_CLIP_02` },
+            { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_AT_AR_SUPP` },
+        },
+    },
+    {
+        name = "WEAPON_SNOWLAUNCHER",
+        label = TranslateCap("weapon_snowlauncher"),
+        ammo = { label = TranslateCap("ammo_snowball"), hash = `AMMO_SNOWLAUNCHER` },
+        tints = Config.DefaultWeaponTints,
+        components = {},
+    },
+    {
+        name = "WEAPON_HACKINGDEVICE",
+        label = TranslateCap("weapon_hackingdevice"),
+        tints = Config.DefaultWeaponTints,
+        components = {},
+    },
+    {
         name = "WEAPON_PRECISIONRIFLE",
         label = TranslateCap("weapon_precisionrifle"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SNIPER` },
