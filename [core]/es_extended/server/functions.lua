@@ -327,7 +327,7 @@ function ESX.GetNumPlayers(key, val)
         local numPlayers = {}
         if key == "job" then
             for _, v in ipairs(val) do
-                numPlayers[v] = (ESX.JobsPlayerCount[v] or 0)
+                numPlayers[v] = (Core.JobsPlayerCount[v] or 0)
             end
             return numPlayers
         end
@@ -340,7 +340,7 @@ function ESX.GetNumPlayers(key, val)
     end
 
     if key == "job" then
-        return (ESX.JobsPlayerCount[val] or 0)
+        return (Core.JobsPlayerCount[val] or 0)
     end
 
     return #ESX.GetExtendedPlayers(key, val)

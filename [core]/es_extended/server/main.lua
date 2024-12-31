@@ -318,10 +318,10 @@ AddEventHandler("playerDropped", function(reason)
     if xPlayer then
         TriggerEvent("esx:playerDropped", playerId, reason)
         local job = xPlayer.getJob().name
-        local currentJob = ESX.JobsPlayerCount[job]
-        ESX.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+        local currentJob = Core.JobsPlayerCount[job]
+        Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
 
-        GlobalState[("%s:count"):format(job)] = ESX.JobsPlayerCount[job]
+        GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
         Core.playersByIdentifier[xPlayer.identifier] = nil
 
         Core.SavePlayer(xPlayer, function()
@@ -335,20 +335,20 @@ AddEventHandler("esx:playerLoaded", function(_, xPlayer)
     local job = xPlayer.getJob().name
     local jobKey = ("%s:count"):format(job)
 
-    ESX.JobsPlayerCount[job] = (ESX.JobsPlayerCount[job] or 0) + 1
-    GlobalState[jobKey] = ESX.JobsPlayerCount[job]
+    Core.JobsPlayerCount[job] = (Core.JobsPlayerCount[job] or 0) + 1
+    GlobalState[jobKey] = Core.JobsPlayerCount[job]
 end)
 
 AddEventHandler("esx:setJob", function(_, job, lastJob)
     local lastJobKey = ("%s:count"):format(lastJob.name)
     local jobKey = ("%s:count"):format(job.name)
-    local currentLastJob = ESX.JobsPlayerCount[lastJob.name]
+    local currentLastJob = Core.JobsPlayerCount[lastJob.name]
 
-    ESX.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
-    ESX.JobsPlayerCount[job.name] = (ESX.JobsPlayerCount[job.name] or 0) + 1
+    Core.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
+    Core.JobsPlayerCount[job.name] = (Core.JobsPlayerCount[job.name] or 0) + 1
 
-    GlobalState[lastJobKey] = ESX.JobsPlayerCount[lastJob.name]
-    GlobalState[jobKey] = ESX.JobsPlayerCount[job.name]
+    GlobalState[lastJobKey] = Core.JobsPlayerCount[lastJob.name]
+    GlobalState[jobKey] = Core.JobsPlayerCount[job.name]
 end)
 
 AddEventHandler("esx:playerLogout", function(playerId, cb)
