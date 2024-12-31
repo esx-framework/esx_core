@@ -197,6 +197,7 @@ Locales["en"] = {
     ["weapon_smg"] = "SMG",
     ["weapon_smg_mk2"] = "SMG MK2",
     ["weapon_raycarbine"] = "Unholy Hellbringer",
+    ["weapon_tecpistol"] = "Tactical SMG",
 
     -- Rifles
     ["weapon_advancedrifle"] = "Advanced Rifle",

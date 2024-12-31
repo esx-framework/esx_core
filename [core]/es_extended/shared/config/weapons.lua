@@ -558,6 +558,18 @@ Config.Weapons = {
         },
     },
     {
+        name = "WEAPON_TECPISTOL",
+        label = TranslateCap("weapon_tecpistol"),
+        ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SMG` },
+        tints = Config.DefaultWeaponTints,
+        components = {
+            { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_TECPISTOL_CLIP_01` },
+            { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_TECPISTOL_CLIP_02` },
+            { name = "scope", label = TranslateCap("component_scope"), hash = `COMPONENT_AT_SCOPE_MACRO` },
+            { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_AT_AR_SUPP_02` },
+        },
+    },
+    {
         name = "WEAPON_SMG_MK2",
         label = TranslateCap("weapon_smg_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SMG` },
