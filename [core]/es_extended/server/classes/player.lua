@@ -527,7 +527,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             onDuty = Config.DefaultJobDuty
         end
 
-        local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
+        local jobObject, gradeObject = Core.Jobs[newJob], Core.Jobs[newJob].grades[grade]
 
         self.job = {
             id = jobObject.id,

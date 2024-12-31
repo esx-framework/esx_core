@@ -495,9 +495,9 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        Core.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
-        ESX.Jobs = Jobs
+        Core.Jobs = Jobs
     end
 end
 
@@ -558,7 +558,7 @@ end
 
 ---@return table
 function ESX.GetJobs()
-    return ESX.Jobs
+    return Core.Jobs
 end
 
 ---@return table
@@ -601,7 +601,7 @@ end
 ---@param grade string
 ---@return boolean
 function ESX.DoesJobExist(job, grade)
-    return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
+    return (Core.Jobs[job] and Core.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
 ---@param playerId string | number
