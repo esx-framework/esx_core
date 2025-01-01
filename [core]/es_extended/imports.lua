@@ -44,65 +44,69 @@ if not IsDuplicityVersion() then -- Only register this event for the client
     end
 end
 
-local cachedModules = {} ---@type table<string, any>
-local loadingModules = {} ---@type table<string, true?>
+if not lib?.require then
+    local cachedModules = {} ---@type table<string, any>
+    local loadingModules = {} ---@type table<string, true?>
 
----@param modulePath string
----@return string
-local function getResourceNameFromModulePath(modulePath)
-    local externalResourceName = modulePath:match("^@(.-)%.")
-    if externalResourceName then
-        return externalResourceName
+    ---@param modulePath string
+    ---@return string
+    local function getResourceNameFromModulePath(modulePath)
+        local externalResourceName = modulePath:match("^@(.-)%.")
+        if externalResourceName then
+            return externalResourceName
+        end
+
+        return _resourceName
     end
 
-    return _resourceName
-end
+    ---@param modulePath string
+    ---@return string, number
+    local function getModuleFilePath(modulePath)
+        if modulePath:sub(1, 1) == "@" then
+            modulePath = modulePath:sub(modulePath:find("%.") + 1)
+        end
 
----@param modulePath string
----@return string, number
-local function getModuleFilePath(modulePath)
-    if modulePath:sub(1, 1) == "@" then
-        modulePath = modulePath:sub(modulePath:find("%.") + 1)
+        return modulePath:gsub("%.", "/")
     end
 
-    return modulePath:gsub("%.", "/")
-end
+    ---@param modulePath string
+    ---@return any
+    function require(modulePath)
+        assert(type(modulePath) == "string", "Module path must be a string")
 
----@param modulePath string
----@return any
-function require(modulePath)
-    assert(type(modulePath) == "string", "Module path must be a string")
+        if loadingModules[modulePath] then
+            error(("Circular dependency detected for module '%s'."):format(modulePath))
+        end
 
-    if loadingModules[modulePath] then
-        error(("Circular dependency detected for module '%s'."):format(modulePath))
-    end
+        if cachedModules[modulePath] then
+            return cachedModules[modulePath]
+        end
 
-    if cachedModules[modulePath] then
-        return cachedModules[modulePath]
-    end
+        loadingModules[modulePath] = true
 
-    loadingModules[modulePath] = true
+        local resourceName = getResourceNameFromModulePath(modulePath)
+        local moduleFilePath = getModuleFilePath(modulePath)
+        local moduleFileContent = LoadResourceFile(resourceName, moduleFilePath .. ".lua")
 
-    local resourceName = getResourceNameFromModulePath(modulePath)
-    local moduleFilePath = getModuleFilePath(modulePath)
-    local moduleFileContent = LoadResourceFile(resourceName, moduleFilePath .. ".lua")
+        if not moduleFileContent then
+            loadingModules[modulePath] = nil
+            error(("Module '%s' not found in resource '%s'."):format(moduleFilePath, resourceName))
+        end
 
-    if not moduleFileContent then
+        local chunk, err = load(moduleFileContent, ("@%s/%s"):format(resourceName, moduleFilePath), "t")
+
+        if not chunk then
+            loadingModules[modulePath] = nil
+            error(("Failed to load module '%s': %s"):format(moduleFilePath, err))
+        end
+
+        local result = chunk()
+
+        cachedModules[modulePath] = result ~= nil and result or true
         loadingModules[modulePath] = nil
-        error(("Module '%s' not found in resource '%s'."):format(moduleFilePath, resourceName))
+
+        return result
     end
-
-    local chunk, err = load(moduleFileContent, ("@%s/%s"):format(resourceName, moduleFilePath), "t")
-
-    if not chunk then
-        loadingModules[modulePath] = nil
-        error(("Failed to load module '%s': %s"):format(moduleFilePath, err))
-    end
-
-    local result = chunk()
-
-    cachedModules[modulePath] = result ~= nil and result or true
-    loadingModules[modulePath] = nil
-
-    return result
+else
+    print("LIB LOADED")
 end
