@@ -107,6 +107,4 @@ if not lib?.require then
 
         return result
     end
-else
-    print("LIB LOADED")
 end
