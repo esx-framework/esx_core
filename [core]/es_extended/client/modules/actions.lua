@@ -4,6 +4,7 @@ Actions._index = Actions
 Actions.inVehicle = false
 Actions.enteringVehicle = false
 Actions.inPauseMenu = false
+Actions.currentWeapon = false
 
 function Actions:GetSeatPedIsIn()
     for i = -1, 16 do
@@ -44,10 +45,13 @@ function Actions:TrackPed()
     local newPed = PlayerPedId()
 
     if playerPed ~= newPed then
-        ESX.PlayerData.ped = newPed
         ESX.SetPlayerData("ped", newPed)
 
         TriggerEvent("esx:playerPedChanged", newPed)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Player ped changed:", newPed)
+        end
     end
 end
 
@@ -57,6 +61,10 @@ function Actions:TrackPauseMenu()
     if isActive ~= self.inPauseMenu then
         self.inPauseMenu = isActive
         TriggerEvent("esx:pauseMenuActive", isActive)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Pause menu active:", isActive)
+        end
     end
 end
 
@@ -65,11 +73,15 @@ function Actions:EnterVehicle()
 
     local _, netId, plate = self:GetVehicleData()
 
-    self.isEnteringVehicle = true
+    self.enteringVehicle = true
     TriggerEvent("esx:enteringVehicle", self.vehicle, plate, self.seat, netId)
     TriggerServerEvent("esx:enteringVehicle", plate, self.seat, netId)
 
     self:SetVehicleStatus()
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entering vehicle:", self.vehicle, plate, self.seat, netId)
+    end
 end
 
 function Actions:ResetVehicleData()
@@ -86,6 +98,10 @@ function Actions:EnterAborted()
 
     TriggerEvent("esx:enteringVehicleAborted")
     TriggerServerEvent("esx:enteringVehicleAborted")
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entering vehicle aborted")
+    end
 end
 
 function Actions:WarpEnter()
@@ -99,6 +115,10 @@ function Actions:WarpEnter()
     self:SetVehicleStatus()
     TriggerEvent("esx:enteredVehicle", self.vehicle, plate, self.seat, displayName, netId)
     TriggerServerEvent("esx:enteredVehicle", plate, self.seat, displayName, netId)
+
+    if Config.EnableDebug then
+        print("[DEBUG] Entered vehicle:", self.vehicle, plate, self.seat, displayName, netId)
+    end
 end
 
 function Actions:ExitVehicle()
@@ -109,6 +129,10 @@ function Actions:ExitVehicle()
 
         TriggerEvent("esx:exitedVehicle", self.vehicle, plate, self.seat, displayName, netId)
         TriggerServerEvent("esx:exitedVehicle", plate, self.seat, displayName, netId)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Exited vehicle:", self.vehicle, plate, self.seat, displayName, netId)
+        end
 
         self:ResetVehicleData()
     end
@@ -129,6 +153,40 @@ function Actions:TrackVehicle()
         end
     elseif self.inVehicle then
         self:ExitVehicle()
+        self:TrackSeat()
+    end
+end
+
+function Actions:TrackSeat()
+    if not self.inVehicle then
+        return
+    end
+
+    local newSeat = self:GetSeatPedIsIn()
+    if newSeat ~= self.seat then
+        self.seat = newSeat
+        ESX.SetPlayerData("seat", self.seat)
+        TriggerEvent("esx:vehicleSeatChanged", self.seat)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Vehicle seat changed:", self.seat)
+        end
+    end
+end
+
+function Actions:TrackWeapon()
+    ---@type number|false
+    local newWeapon = GetSelectedPedWeapon(ESX.PlayerData.ped)
+    newWeapon = newWeapon ~= `WEAPON_UNARMED` and newWeapon or false
+
+    if newWeapon ~= self.currentWeapon then
+        self.currentWeapon = newWeapon
+        ESX.SetPlayerData("weapon", self.currentWeapon)
+        TriggerEvent("esx:weaponChanged", self.currentWeapon)
+
+        if Config.EnableDebug then
+            print("[DEBUG] Weapon changed:", self.currentWeapon)
+        end
     end
 end
 
@@ -138,6 +196,7 @@ function Actions:SlowLoop()
             self:TrackPedCoords()
             self:TrackPauseMenu()
             self:TrackVehicle()
+            self:TrackWeapon()
             Wait(500)
         end
     end)
@@ -151,7 +210,6 @@ function Actions:PedLoop()
         end
     end)
 end
-
 
 function Actions:Init()
     self:SlowLoop()

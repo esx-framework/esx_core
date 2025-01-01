@@ -1,13 +1,24 @@
 ---@diagnostic disable: duplicate-set-field
 
+-- =============================================
+-- MARK: Variables
+-- =============================================
+
 Callbacks = {}
 
 Callbacks.requests = {}
 Callbacks.storage = {}
 Callbacks.id = 0
 
-function Callbacks:Register(name, cb)
-    self.storage[name] = cb
+-- =============================================
+-- MARK: Internal Functions
+-- =============================================
+
+function Callbacks:Register(name, resource, cb)
+    self.storage[name] = {
+        resource = resource,
+        cb = cb
+    }
 end
 
 function Callbacks:Execute(cb, ...)
@@ -39,7 +50,7 @@ function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
     local returnCb = function(...)
         TriggerClientEvent("esx:serverCallback", player, requestId, invoker, ...)
     end
-    local callback = self.storage[event]
+    local callback = self.storage[event].cb
 
     self:Execute(callback, player, returnCb, ...)
 end
@@ -57,6 +68,41 @@ function Callbacks:RecieveClient(requestId, invoker, ...)
     self.requests[requestId] = nil
 end
 
+-- =============================================
+-- MARK: ESX Functions
+-- =============================================
+
+---@param player number playerId
+---@param eventName string
+---@param callback function
+---@param ... any
+function ESX.TriggerClientCallback(player, eventName, callback, ...)
+    local invokingResource = GetInvokingResource()
+    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+
+    Callbacks:Trigger(player, eventName, callback, invoker, ...)
+end
+
+---@param eventName string
+---@param callback function
+---@return nil
+function ESX.RegisterServerCallback(eventName, callback)
+    local invokingResource = GetInvokingResource()
+    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+
+    Callbacks:Register(eventName, invoker, callback)
+end
+
+---@param eventName string
+---@return boolean
+function ESX.DoesServerCallbackExist(eventName)
+    return Callbacks.storage[eventName] ~= nil
+end
+
+-- =============================================
+-- MARK: Events
+-- =============================================
+
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
     Callbacks:RecieveClient(requestId, invoker, ...)
 end)
@@ -66,21 +112,10 @@ RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, inv
     Callbacks:ServerRecieve(source, eventName, requestId, invoker, ...)
 end)
 
-
----@param player number playerId
----@param eventName string
----@param callback function
----@param ... any
-function ESX.TriggerClientCallback(player, eventName, callback, ...)
-    local invokingResource = GetInvokingResource()
-    local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
-
-    Callbacks:Trigger(player, eventName, callback, invoker, ...)
-end
-
----@param eventName string
----@param callback function
-ESX.RegisterServerCallback = function(eventName, callback)
-    Callbacks:Register(eventName, callback)
-end
-
+AddEventHandler("onResourceStop", function(resource)
+    for k, v in pairs(Callbacks.storage) do
+        if v.resource == resource then
+            Callbacks.storage[k] = nil
+        end
+    end
+end)

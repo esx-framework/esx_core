@@ -1,6 +1,6 @@
 Config = {}
 
--- for ox inventory, use Config.CustomInventory = "ox", for others, set to "resource_name"
+-- for ox inventory, this will automatically be adjusted, do not change! for other inventories, change to "resource_name"
 Config.CustomInventory = false
 
 Config.Accounts = {
@@ -44,6 +44,7 @@ Config.SaveDeathStatus = true -- Save the death status of a player
 Config.EnableDebug = false -- Use Debug options?
 
 Config.DefaultJobDuty = true -- A players default duty status when changing jobs
+Config.OffDutyPaycheckMultiplier = 0.5 -- The multiplier for off duty paychecks. 0.5 = 50% of the on duty paycheck
 
 Config.Multichar = GetResourceState("esx_multicharacter") ~= "missing"
 Config.Identity = true -- Select a character identity data before they have loaded in (this happens by default with multichar)
@@ -51,9 +52,13 @@ Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
---------------------------------------------------------------------
--- DO NOT CHANGE BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
---------------------------------------------------------------------
+-------------------------------------
+-- DO NOT CHANGE BELOW THIS LINE !!!
+-------------------------------------
+if GetResourceState("ox_inventory") ~= "missing" then
+    Config.CustomInventory = "ox"
+end
+
 Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
 
 local txAdminLocale = GetConvar("txAdmin-locale", "en")

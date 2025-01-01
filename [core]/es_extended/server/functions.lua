@@ -64,7 +64,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         if not command.allowConsole and playerId == 0 then
             print(("[^3WARNING^7] ^5%s"):format(TranslateCap("commanderror_console")))
         else
-            local xPlayer, error = ESX.Players[playerId], nil
+            local xPlayer, error = Core.Players[playerId], nil
 
             if command.suggestion then
                 if command.suggestion.validate then
@@ -116,7 +116,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                     error = TranslateCap("commanderror_argumentmismatch_string", k)
                                 end
                             elseif v.type == "item" then
-                                if ESX.Items[args[k]] then
+                                if Core.Items[args[k]] then
                                     newArgs[v.name] = args[k]
                                 else
                                     error = TranslateCap("commanderror_invaliditem")
@@ -234,7 +234,7 @@ end
 ---@param cb? function
 ---@return nil
 function Core.SavePlayers(cb)
-    local xPlayers <const> = ESX.Players
+    local xPlayers <const> = Core.Players
     if not next(xPlayers) then
         return
     end
@@ -242,7 +242,7 @@ function Core.SavePlayers(cb)
     local startTime <const> = os.time()
     local parameters = {}
 
-    for _, xPlayer in pairs(ESX.Players) do
+    for _, xPlayer in pairs(Core.Players) do
         updateHealthAndArmorInMetadata(xPlayer)
         parameters[#parameters + 1] = {
             json.encode(xPlayer.getAccounts(true)),
@@ -276,15 +276,15 @@ end
 
 ESX.GetPlayers = GetPlayers
 
-local function checkTable(key, val, player, xPlayers)
+local function checkTable(key, val, xPlayer, xPlayers)
     for valIndex = 1, #val do
         local value = val[valIndex]
         if not xPlayers[value] then
             xPlayers[value] = {}
         end
 
-        if (key == "job" and player.job.name == value) or player[key] == value then
-            xPlayers[value][#xPlayers[value] + 1] = player
+        if (key == "job" and xPlayer.job.name == value) or xPlayer[key] == value then
+            xPlayers[value][#xPlayers[value] + 1] = xPlayer
         end
     end
 end
@@ -293,20 +293,22 @@ end
 ---@param val? string|table
 ---@return table
 function ESX.GetExtendedPlayers(key, val)
+    if not key then
+        return ESX.Table.ToArray(Core.Players)
+    end
+
     local xPlayers = {}
     if type(val) == "table" then
-        for _, v in pairs(ESX.Players) do
-            checkTable(key, val, v, xPlayers)
+        for _, xPlayer in pairs(Core.Players) do
+            checkTable(key, val, xPlayer, xPlayers)
         end
-    else
-        for _, v in pairs(ESX.Players) do
-            if key then
-                if (key == "job" and v.job.name == val) or v[key] == val then
-                    xPlayers[#xPlayers + 1] = v
-                end
-            else
-                xPlayers[#xPlayers + 1] = v
-            end
+
+        return xPlayers
+    end
+
+    for _, xPlayer in pairs(Core.Players) do
+        if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
+            xPlayers[#xPlayers + 1] = xPlayer
         end
     end
 
@@ -325,7 +327,7 @@ function ESX.GetNumPlayers(key, val)
         local numPlayers = {}
         if key == "job" then
             for _, v in ipairs(val) do
-                numPlayers[v] = (ESX.JobsPlayerCount[v] or 0)
+                numPlayers[v] = (Core.JobsPlayerCount[v] or 0)
             end
             return numPlayers
         end
@@ -338,7 +340,7 @@ function ESX.GetNumPlayers(key, val)
     end
 
     if key == "job" then
-        return (ESX.JobsPlayerCount[val] or 0)
+        return (Core.JobsPlayerCount[val] or 0)
     end
 
     return #ESX.GetExtendedPlayers(key, val)
@@ -347,7 +349,7 @@ end
 ---@param source number
 ---@return table
 function ESX.GetPlayerFromId(source)
-    return ESX.Players[tonumber(source)]
+    return Core.Players[tonumber(source)]
 end
 
 ---@param identifier string
@@ -493,9 +495,9 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        Core.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
-        ESX.Jobs = Jobs
+        Core.Jobs = Jobs
     end
 end
 
@@ -511,7 +513,7 @@ end
 ---@param ... any
 ---@return nil
 function ESX.UseItem(source, item, ...)
-    if ESX.Items[item] then
+    if Core.Items[item] then
         local itemCallback = Core.UsableItemsCallbacks[item]
 
         if itemCallback then
@@ -547,8 +549,8 @@ end
 ---@return string?
 ---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetItemLabel(item)
-    if ESX.Items[item] then
-        return ESX.Items[item].label
+    if Core.Items[item] then
+        return Core.Items[item].label
     else
         print(("[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7"):format(item))
     end
@@ -556,7 +558,7 @@ end
 
 ---@return table
 function ESX.GetJobs()
-    return ESX.Jobs
+    return Core.Jobs
 end
 
 ---@return table
@@ -580,7 +582,7 @@ if not Config.CustomInventory then
     ---@return nil
     function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
         local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-        local xPlayer = ESX.Players[playerId]
+        local xPlayer = Core.Players[playerId]
         coords = ((type(coords) == "vector3" or type(coords) == "vector4") and coords.xyz or xPlayer.getCoords(true))
 
         Core.Pickups[pickupId] = { type = itemType, name = name, count = count, label = label, coords = coords }
@@ -599,7 +601,7 @@ end
 ---@param grade string
 ---@return boolean
 function ESX.DoesJobExist(job, grade)
-    return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
+    return (Core.Jobs[job] and Core.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
 ---@param playerId string | number
@@ -610,6 +612,6 @@ function Core.IsPlayerAdmin(playerId)
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]
+    local xPlayer = Core.Players[playerId]
     return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end

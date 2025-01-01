@@ -171,3 +171,42 @@ function ESX.IsFunctionReference(val)
 
     return typeVal == "function" or (typeVal == "table" and type(getmetatable(val)?.__call) == "function")
 end
+
+---@param conditionFunc function A function that is repeatedly called until it returns a truthy value or the timeout is exceeded.
+---@param errorMessage? string Optional. If set, an error will be thrown with this message if the condition is not met within the timeout. If not set, no error will be thrown.
+---@param timeoutMs? number Optional. The maximum time to wait (in milliseconds) for the condition to be met. Defaults to 1000ms.
+---@return boolean, any: Returns success status and the returned value of the condition function.
+function ESX.Await(conditionFunc, errorMessage, timeoutMs)
+    timeoutMs = timeoutMs or 1000
+
+    if timeoutMs < 0 then
+        error("Timeout should be a positive number.")
+    end
+
+    if not ESX.IsFunctionReference(conditionFunc) then
+        error("Condition Function should be a function reference.")
+    end
+
+    -- since errorMessage is optional, we only validate it if the user provided it.
+    if errorMessage then
+        ESX.AssertType(errorMessage, "string", "errorMessage should be a string.")
+    end
+
+    local invokingResource = GetInvokingResource()
+    local startTimeMs = GetGameTimer()
+    while GetGameTimer() - startTimeMs < timeoutMs do
+        local result = conditionFunc()
+
+        if result then
+            return true, result
+        end
+
+        Wait(0)
+    end
+
+    if errorMessage then
+        error(("[%s] -> %s"):format(invokingResource, errorMessage))
+    end
+
+    return false
+end

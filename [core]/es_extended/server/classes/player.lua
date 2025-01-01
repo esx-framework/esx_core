@@ -130,6 +130,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
       ---@return number
     function self.getPlayTime()
+        -- luacheck: ignore
         return self.lastPlaytime + GetPlayerTimeOnline(self.source)
     end
 
@@ -463,8 +464,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param count number
     ---@return boolean
     function self.canCarryItem(itemName, count)
-        if ESX.Items[itemName] then
-            local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
+        if Core.Items[itemName] then
+            local currentWeight, itemWeight = self.weight, Core.Items[itemName].weight
             local newWeight = currentWeight + (itemWeight * count)
 
             return newWeight <= self.maxWeight
@@ -526,7 +527,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             onDuty = Config.DefaultJobDuty
         end
 
-        local jobObject, gradeObject = ESX.Jobs[newJob], ESX.Jobs[newJob].grades[grade]
+        local jobObject, gradeObject = Core.Jobs[newJob], Core.Jobs[newJob].grades[grade]
 
         self.job = {
             id = jobObject.id,
@@ -607,8 +608,17 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
-        if weapon then
-            weapon.ammo = ammoCount
+        if not weapon then
+            return
+        end
+
+        weapon.ammo = ammoCount
+
+        if weapon.ammo <= 0 then
+            local _, weaponConfig = ESX.GetWeapon(weaponName)
+            if weaponConfig.throwable then
+                self.removeWeapon(weaponName)
+            end
         end
     end
 

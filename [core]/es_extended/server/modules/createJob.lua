@@ -6,7 +6,7 @@ local NOTIFY_TYPES = {
 }
 
 local function doesJobAndGradesExist(name, grades)
-    if not ESX.Jobs[name] then
+    if not Core.Jobs[name] then
        return false
     end
 
@@ -86,7 +86,7 @@ function ESX.CreateJob(name, label, grades)
         return success
     end
 
-    ESX.Jobs[name] = generateNewJobTable(name, label, grades)
+    Core.Jobs[name] = generateNewJobTable(name, label, grades)
 
     notify("SUCCESS", currentResourceName, 'Job created successfully: `%s`', name)
 

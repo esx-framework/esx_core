@@ -4,6 +4,7 @@ function Adjustments:RemoveHudComponents()
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
             SetHudComponentSize(i, 0.0, 0.0)
+            SetHudComponentPosition(i, 900, 900)
         end
     end
 end
@@ -215,6 +216,15 @@ function Adjustments:WantedLevel()
     end
 end
 
+function Adjustments:DisableRadio()
+    if Config.RemoveHudComponents[16] then
+        AddEventHandler("esx:enteredVehicle", function(vehicle, plate, seat, displayName, netId)
+            SetVehRadioStation(vehicle,"OFF")
+            SetUserRadioControlEnabled(false)
+        end)
+    end
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -228,4 +238,5 @@ function Adjustments:Load()
     self:LicensePlates()
     self:DiscordPresence()
     self:WantedLevel()
+    self:DisableRadio()
 end

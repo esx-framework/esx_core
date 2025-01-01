@@ -8,6 +8,41 @@ Config.DefaultWeaponTints = {
     [6] = TranslateCap("tint_orange"),
     [7] = TranslateCap("tint_platinum"),
 }
+Config.MK2WeaponTints = {
+    [0]  = TranslateCap('tint_classic_black'),
+    [1]  = TranslateCap('tint_classic_gray'),
+    [2]  = TranslateCap('tint_classic_two_tone'),
+    [3]  = TranslateCap('tint_classic_white'),
+    [4]  = TranslateCap('tint_classic_beige'),
+    [5]  = TranslateCap('tint_classic_green'),
+    [6]  = TranslateCap('tint_classic_blue'),
+    [7]  = TranslateCap('tint_classic_earth'),
+    [8]  = TranslateCap('tint_classic_brown_black'),
+    [9]  = TranslateCap('tint_contrast_red'),
+    [10] = TranslateCap('tint_contrast_blue'),
+    [11] = TranslateCap('tint_contrast_yellow'),
+    [12] = TranslateCap('tint_contrast_orange'),
+    [13] = TranslateCap('tint_bold_pink'),
+    [14] = TranslateCap('tint_bold_purple_yellow'),
+    [15] = TranslateCap('tint_bold_orange'),
+    [16] = TranslateCap('tint_bold_green_purple'),
+    [17] = TranslateCap('tint_bold_red_feat'),
+    [18] = TranslateCap('tint_bold_green_feat'),
+    [19] = TranslateCap('tint_bold_cyan_feat'),
+    [20] = TranslateCap('tint_bold_yellow_feat'),
+    [21] = TranslateCap('tint_bold_red_white'),
+    [22] = TranslateCap('tint_bold_blue_white'),
+    [23] = TranslateCap('tint_metallic_gold'),
+    [24] = TranslateCap('tint_metallic_platinum'),
+    [25] = TranslateCap('tint_metallic_gray_lilac'),
+    [26] = TranslateCap('tint_metallic_purple_lime'),
+    [27] = TranslateCap('tint_metallic_red'),
+    [28] = TranslateCap('tint_metallic_green'),
+    [29] = TranslateCap('tint_metallic_blue'),
+    [30] = TranslateCap('tint_metallic_white_aqua'),
+    [31] = TranslateCap('tint_metallic_orange_yellow'),
+    [32] = TranslateCap('tint_metallic_red_yellow')
+}
 
 Config.Weapons = {
     -- Melee
@@ -111,7 +146,7 @@ Config.Weapons = {
         name = "WEAPON_REVOLVER_MK2",
         label = TranslateCap("weapon_revolver_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_PISTOL` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_REVOLVER_MK2_CLIP_01` },
             { name = "ammo_tracer", label = TranslateCap("component_ammo_tracer"), hash = `COMPONENT_REVOLVER_MK2_CLIP_TRACER` },
@@ -153,7 +188,7 @@ Config.Weapons = {
         name = "WEAPON_PISTOL_MK2",
         label = TranslateCap("weapon_pistol_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_PISTOL` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_PISTOL_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_PISTOL_MK2_CLIP_02` },
@@ -217,7 +252,7 @@ Config.Weapons = {
         name = "WEAPON_SNSPISTOL_MK2",
         label = TranslateCap("weapon_snspistol_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_PISTOL` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_SNSPISTOL_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_SNSPISTOL_MK2_CLIP_02` },
@@ -254,6 +289,7 @@ Config.Weapons = {
         },
     },
     { name = "WEAPON_STUNGUN", label = TranslateCap("weapon_stungun"), tints = Config.DefaultWeaponTints, components = {} },
+    { name = "WEAPON_STUNROD", label = TranslateCap("weapon_stunrod"), tints = Config.DefaultWeaponTints, components = {} },
     { name = "WEAPON_RAYPISTOL", label = TranslateCap("weapon_raypistol"), tints = Config.DefaultWeaponTints, components = {} },
     {
         name = "WEAPON_VINTAGEPISTOL",
@@ -333,7 +369,7 @@ Config.Weapons = {
         name = "WEAPON_PUMPSHOTGUN_MK2",
         label = TranslateCap("weapon_pumpshotgun_mk2"),
         ammo = { label = TranslateCap("ammo_shells"), hash = `AMMO_SHOTGUN` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "shells_default", label = TranslateCap("component_shells_default"), hash = `COMPONENT_PUMPSHOTGUN_MK2_CLIP_01` },
             { name = "shells_incendiary", label = TranslateCap("component_shells_incendiary"), hash = `COMPONENT_PUMPSHOTGUN_MK2_CLIP_INCENDIARY` },
@@ -400,7 +436,7 @@ Config.Weapons = {
         name = "WEAPON_COMBATMG_MK2",
         label = TranslateCap("weapon_combatmg_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_MG` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_COMBATMG_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_COMBATMG_MK2_CLIP_02` },
@@ -522,10 +558,22 @@ Config.Weapons = {
         },
     },
     {
+        name = "WEAPON_TECPISTOL",
+        label = TranslateCap("weapon_tecpistol"),
+        ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SMG` },
+        tints = Config.DefaultWeaponTints,
+        components = {
+            { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_TECPISTOL_CLIP_01` },
+            { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_TECPISTOL_CLIP_02` },
+            { name = "scope", label = TranslateCap("component_scope"), hash = `COMPONENT_AT_SCOPE_MACRO` },
+            { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_AT_AR_SUPP_02` },
+        },
+    },
+    {
         name = "WEAPON_SMG_MK2",
         label = TranslateCap("weapon_smg_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SMG` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_SMG_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_SMG_MK2_CLIP_02` },
@@ -596,7 +644,7 @@ Config.Weapons = {
         name = "WEAPON_ASSAULTRIFLE_MK2",
         label = TranslateCap("weapon_assaultrifle_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_ASSAULTRIFLE_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_ASSAULTRIFLE_MK2_CLIP_02` },
@@ -651,7 +699,7 @@ Config.Weapons = {
         name = "WEAPON_BULLPUPRIFLE_MK2",
         label = TranslateCap("weapon_bullpuprifle_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_BULLPUPRIFLE_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_BULLPUPRIFLE_MK2_CLIP_02` },
@@ -707,7 +755,7 @@ Config.Weapons = {
         name = "WEAPON_CARBINERIFLE_MK2",
         label = TranslateCap("weapon_carbinerifle_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_CARBINERIFLE_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_CARBINERIFLE_MK2_CLIP_02` },
@@ -788,7 +836,7 @@ Config.Weapons = {
         name = "WEAPON_SPECIALCARBINE_MK2",
         label = TranslateCap("weapon_specialcarbine_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_SPECIALCARBINE_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_SPECIALCARBINE_MK2_CLIP_02` },
@@ -854,7 +902,7 @@ Config.Weapons = {
         name = "WEAPON_HEAVYSNIPER_MK2",
         label = TranslateCap("weapon_heavysniper_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SNIPER` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_HEAVYSNIPER_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_HEAVYSNIPER_MK2_CLIP_02` },
@@ -903,7 +951,7 @@ Config.Weapons = {
         name = "WEAPON_MARKSMANRIFLE_MK2",
         label = TranslateCap("weapon_marksmanrifle_mk2"),
         ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_SNIPER` },
-        tints = Config.DefaultWeaponTints,
+        tints = Config.MK2WeaponTints,
         components = {
             { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_MARKSMANRIFLE_MK2_CLIP_01` },
             { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_MARKSMANRIFLE_MK2_CLIP_02` },
@@ -973,22 +1021,22 @@ Config.Weapons = {
     { name = "WEAPON_RPG", label = TranslateCap("weapon_rpg"), tints = Config.DefaultWeaponTints, components = {}, ammo = { label = TranslateCap("ammo_rockets"), hash = `AMMO_RPG` } },
     { name = "WEAPON_RAYMINIGUN", label = TranslateCap("weapon_rayminigun"), tints = Config.DefaultWeaponTints, components = {}, ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_MINIGUN` } },
     -- Thrown
-    { name = "WEAPON_BALL", label = TranslateCap("weapon_ball"), components = {}, ammo = { label = TranslateCap("ammo_ball"), hash = `AMMO_BALL` } },
-    { name = "WEAPON_BZGAS", label = TranslateCap("weapon_bzgas"), components = {}, ammo = { label = TranslateCap("ammo_bzgas"), hash = `AMMO_BZGAS` } },
-    { name = "WEAPON_FLARE", label = TranslateCap("weapon_flare"), components = {}, ammo = { label = TranslateCap("ammo_flare"), hash = `AMMO_FLARE` } },
-    { name = "WEAPON_GRENADE", label = TranslateCap("weapon_grenade"), components = {}, ammo = { label = TranslateCap("ammo_grenade"), hash = `AMMO_GRENADE` } },
-    { name = "WEAPON_PETROLCAN", label = TranslateCap("weapon_petrolcan"), components = {}, ammo = { label = TranslateCap("ammo_petrol"), hash = `AMMO_PETROLCAN` } },
-    { name = "WEAPON_HAZARDCAN", label = TranslateCap("weapon_hazardcan"), components = {}, ammo = { label = TranslateCap("ammo_petrol"), hash = `AMMO_PETROLCAN` } },
-    { name = "WEAPON_MOLOTOV", label = TranslateCap("weapon_molotov"), components = {}, ammo = { label = TranslateCap("ammo_molotov"), hash = `AMMO_MOLOTOV` } },
-    { name = "WEAPON_PROXMINE", label = TranslateCap("weapon_proxmine"), components = {}, ammo = { label = TranslateCap("ammo_proxmine"), hash = `AMMO_PROXMINE` } },
-    { name = "WEAPON_PIPEBOMB", label = TranslateCap("weapon_pipebomb"), components = {}, ammo = { label = TranslateCap("ammo_pipebomb"), hash = `AMMO_PIPEBOMB` } },
-    { name = "WEAPON_SNOWBALL", label = TranslateCap("weapon_snowball"), components = {}, ammo = { label = TranslateCap("ammo_snowball"), hash = `AMMO_SNOWBALL` } },
-    { name = "WEAPON_STICKYBOMB", label = TranslateCap("weapon_stickybomb"), components = {}, ammo = { label = TranslateCap("ammo_stickybomb"), hash = `AMMO_STICKYBOMB` } },
-    { name = "WEAPON_SMOKEGRENADE", label = TranslateCap("weapon_smokegrenade"), components = {}, ammo = { label = TranslateCap("ammo_smokebomb"), hash = `AMMO_SMOKEGRENADE` } },
+    { name = "WEAPON_BALL", label = TranslateCap("weapon_ball"), components = {}, ammo = { label = TranslateCap("ammo_ball"), hash = `AMMO_BALL` }, throwable = true },
+    { name = "WEAPON_BZGAS", label = TranslateCap("weapon_bzgas"), components = {}, ammo = { label = TranslateCap("ammo_bzgas"), hash = `AMMO_BZGAS` }, throwable = true },
+    { name = "WEAPON_FLARE", label = TranslateCap("weapon_flare"), components = {}, ammo = { label = TranslateCap("ammo_flare"), hash = `AMMO_FLARE` }, throwable = true },
+    { name = "WEAPON_GRENADE", label = TranslateCap("weapon_grenade"), components = {}, ammo = { label = TranslateCap("ammo_grenade"), hash = `AMMO_GRENADE` }, throwable = true },
+    { name = "WEAPON_PETROLCAN", label = TranslateCap("weapon_petrolcan"), components = {}, ammo = { label = TranslateCap("ammo_petrol"), hash = `AMMO_PETROLCAN` }, throwable = true },
+    { name = "WEAPON_HAZARDCAN", label = TranslateCap("weapon_hazardcan"), components = {}, ammo = { label = TranslateCap("ammo_petrol"), hash = `AMMO_PETROLCAN` }, throwable = true },
+    { name = "WEAPON_MOLOTOV", label = TranslateCap("weapon_molotov"), components = {}, ammo = { label = TranslateCap("ammo_molotov"), hash = `AMMO_MOLOTOV` }, throwable = true },
+    { name = "WEAPON_PROXMINE", label = TranslateCap("weapon_proxmine"), components = {}, ammo = { label = TranslateCap("ammo_proxmine"), hash = `AMMO_PROXMINE` }, throwable = true },
+    { name = "WEAPON_PIPEBOMB", label = TranslateCap("weapon_pipebomb"), components = {}, ammo = { label = TranslateCap("ammo_pipebomb"), hash = `AMMO_PIPEBOMB` }, throwable = true },
+    { name = "WEAPON_SNOWBALL", label = TranslateCap("weapon_snowball"), components = {}, ammo = { label = TranslateCap("ammo_snowball"), hash = `AMMO_SNOWBALL` }, throwable = true },
+    { name = "WEAPON_STICKYBOMB", label = TranslateCap("weapon_stickybomb"), components = {}, ammo = { label = TranslateCap("ammo_stickybomb"), hash = `AMMO_STICKYBOMB` }, throwable = true },
+    { name = "WEAPON_SMOKEGRENADE", label = TranslateCap("weapon_smokegrenade"), components = {}, ammo = { label = TranslateCap("ammo_smokebomb"), hash = `AMMO_SMOKEGRENADE` }, throwable = true },
     -- Tools
     { name = "WEAPON_FIREEXTINGUISHER", label = TranslateCap("weapon_fireextinguisher"), components = {}, ammo = { label = TranslateCap("ammo_charge"), hash = `AMMO_FIREEXTINGUISHER` } },
     { name = "WEAPON_DIGISCANNER", label = TranslateCap("weapon_digiscanner"), components = {} },
-    { name = "GADGET_PARACHUTE", label = TranslateCap("gadget_parachute"), components = {} },
+    { name = "GADGET_PARACHUTE", label = TranslateCap("gadget_parachute"), components = {}, throwable = true },
     {
         name = "WEAPON_TACTICALRIFLE",
         label = TranslateCap("weapon_tactilerifle"),
@@ -1001,6 +1049,30 @@ Config.Weapons = {
             { name = "grip", label = TranslateCap("component_grip"), hash = `COMPONENT_AT_AR_AFGRIP` },
             { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_AT_AR_SUPP_02` },
         },
+    },
+    {
+        name = "WEAPON_BATTLERIFLE",
+        label = TranslateCap("weapon_battlerifle"),
+        ammo = { label = TranslateCap("ammo_rounds"), hash = `AMMO_RIFLE` },
+        tints = Config.DefaultWeaponTints,
+        components = {
+            { name = "clip_default", label = TranslateCap("component_clip_default"), hash = `COMPONENT_BATTLERIFLE_CLIP_01` },
+            { name = "clip_extended", label = TranslateCap("component_clip_extended"), hash = `COMPONENT_BATTLERIFLE_CLIP_02` },
+            { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_AT_AR_SUPP` },
+        },
+    },
+    {
+        name = "WEAPON_SNOWLAUNCHER",
+        label = TranslateCap("weapon_snowlauncher"),
+        ammo = { label = TranslateCap("ammo_snowball"), hash = `AMMO_SNOWLAUNCHER` },
+        tints = Config.DefaultWeaponTints,
+        components = {},
+    },
+    {
+        name = "WEAPON_HACKINGDEVICE",
+        label = TranslateCap("weapon_hackingdevice"),
+        tints = Config.DefaultWeaponTints,
+        components = {},
     },
     {
         name = "WEAPON_PRECISIONRIFLE",
@@ -1022,7 +1094,7 @@ Config.Weapons = {
             { name = "suppressor", label = TranslateCap("component_suppressor"), hash = `COMPONENT_PISTOLXM3_SUPP` },
         },
     },
-    { name = "WEAPON_ACIDPACKAGE", label = TranslateCap("weapon_acidpackage"), components = {} },
+    { name = "WEAPON_ACIDPACKAGE", label = TranslateCap("weapon_acidpackage"), components = {}, throwable = true },
     { name = "WEAPON_CANDYCANE", label = TranslateCap("weapon_candycane"), components = {} },
     {
         name = "WEAPON_RAILGUNXM3",

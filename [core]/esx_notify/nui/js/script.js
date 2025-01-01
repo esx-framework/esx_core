@@ -15,15 +15,15 @@ const types = {
 
 // the color codes example `i ~r~love~s~ donuts`
 const codes = {
-    "~r~": "red",
+    "~r~": "#c0392b",
     "~b~": "#378cbf",
-    "~g~": "green",
+    "~g~": "#2ecc71",
     "~y~": "yellow",
     "~p~": "purple",
     "~c~": "grey",
     "~m~": "#212121",
     "~u~": "black",
-    "~o~": "orange",
+    "~o~": "#fb9b04",
 };
 
 w.addEventListener("message", (event) => {
@@ -57,8 +57,9 @@ notification = (data) => {
         }
     }
 
+    const id = Math.floor(Math.random() * Math.random());
     const notification = $(`
-        <div class="notify ${data.type}">
+        <div id="${id}" class="notify ${data.type} fadeIn">
             <div class="innerText">
                 <span class="material-symbols-outlined icon">${types[data.type] ? types[data.type]["icon"] : types["info"]["icon"]}</span>
                 <p class="text">${data["message"]}</p>
@@ -67,8 +68,16 @@ notification = (data) => {
     `).appendTo(`#root`);
 
     setTimeout(() => {
-        notification.fadeOut(700);
-    }, data.length);
+        document.getElementById(id).classList.remove("fadeIn");
+    }, 300);
+
+    setTimeout(() => {
+        document.getElementById(id).classList.add("fadeOut");
+
+        setTimeout(() => {
+            document.getElementById(id).remove();
+        }, 400);
+    },data.length);
 
     return notification;
 };
