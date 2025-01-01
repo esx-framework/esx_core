@@ -71,7 +71,7 @@ end
 ---@param modulePath string
 ---@return any
 function require(modulePath)
-    assert(type(modulePath) == "string", "Module name must be a string")
+    assert(type(modulePath) == "string", "Module path must be a string")
 
     if loadingModules[modulePath] then
         error(("Circular dependency detected for module '%s'."):format(modulePath))
