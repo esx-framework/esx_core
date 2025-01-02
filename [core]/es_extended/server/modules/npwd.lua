@@ -10,7 +10,7 @@ AddEventHandler("onServerResourceStart", function(resource)
     if not npwd then
         return
     end
-    for _, xPlayer in pairs(Core.Players) do
+    for _, xPlayer in pairs(ESX.Players) do
         npwd:newPlayer({
             source = xPlayer.source,
             identifier = xPlayer.identifier,

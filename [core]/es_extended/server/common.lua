@@ -1,5 +1,5 @@
+ESX.Players = {}
 Core = {}
-Core.Players = {}
 Core.Items = {}
 Core.Jobs = {}
 Core.JobsPlayerCount = {}
@@ -14,7 +14,7 @@ Core.playersByIdentifier = {}
 Core.vehicleTypesByModel = {}
 
 RegisterNetEvent("esx:onPlayerSpawn", function()
-    Core.Players[source].spawned = true
+    ESX.Players[source].spawned = true
 end)
 
 if Config.CustomInventory then
