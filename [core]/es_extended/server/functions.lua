@@ -562,6 +562,11 @@ function ESX.GetJobs()
 end
 
 ---@return table
+function ESX.GetItems()
+    return Core.Items
+end
+
+---@return table
 function ESX.GetUsableItems()
     local Usables = {}
     for k in pairs(Core.UsableItemsCallbacks) do
