@@ -1,7 +1,7 @@
+ESX.Players = {}
+ESX.Jobs = {}
+ESX.Items = {}
 Core = {}
-Core.Players = {}
-Core.Items = {}
-Core.Jobs = {}
 Core.JobsPlayerCount = {}
 Core.UsableItemsCallbacks = {}
 Core.RegisteredCommands = {}
@@ -14,7 +14,7 @@ Core.playersByIdentifier = {}
 Core.vehicleTypesByModel = {}
 
 RegisterNetEvent("esx:onPlayerSpawn", function()
-    Core.Players[source].spawned = true
+    ESX.Players[source].spawned = true
 end)
 
 if Config.CustomInventory then
@@ -37,7 +37,7 @@ MySQL.ready(function()
     if not Config.CustomInventory then
         local items = MySQL.query.await("SELECT * FROM items")
         for _, v in ipairs(items) do
-            Core.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
+            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
         end
     end
 
