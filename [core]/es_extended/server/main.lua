@@ -69,7 +69,7 @@ end
 
 if Config.Multichar then
     AddEventHandler("esx:onPlayerJoined", function(src, char, data)
-        while not next(Core.Jobs) do
+        while not next(ESX.Jobs) do
             Wait(50)
         end
 
@@ -85,7 +85,7 @@ if Config.Multichar then
 else
     RegisterNetEvent("esx:onPlayerJoined", function()
         local _source = source
-        while not next(Core.Jobs) do
+        while not next(ESX.Jobs) do
             Wait(50)
         end
 
@@ -171,7 +171,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         job, grade = "unemployed", "0"
     end
 
-    local jobObject, gradeObject = Core.Jobs[job], Core.Jobs[job].grades[grade]
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
     userData.job = {
         id = jobObject.id,
