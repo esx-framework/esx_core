@@ -69,11 +69,11 @@ end
 
 if Config.Multichar then
     AddEventHandler("esx:onPlayerJoined", function(src, char, data)
-        while not next(Core.Jobs) do
+        while not next(ESX.Jobs) do
             Wait(50)
         end
 
-        if not Core.Players[src] then
+        if not ESX.Players[src] then
             local identifier = char .. ":" .. ESX.GetIdentifier(src)
             if data then
                 createESXPlayer(identifier, src, data)
@@ -85,11 +85,11 @@ if Config.Multichar then
 else
     RegisterNetEvent("esx:onPlayerJoined", function()
         local _source = source
-        while not next(Core.Jobs) do
+        while not next(ESX.Jobs) do
             Wait(50)
         end
 
-        if not Core.Players[_source] then
+        if not ESX.Players[_source] then
             onPlayerJoined(_source)
         end
     end)
@@ -171,7 +171,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         job, grade = "unemployed", "0"
     end
 
-    local jobObject, gradeObject = Core.Jobs[job], Core.Jobs[job].grades[grade]
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
     userData.job = {
         id = jobObject.id,
@@ -191,7 +191,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     if not Config.CustomInventory then
         local inventory = (result.inventory and result.inventory ~= "") and json.decode(result.inventory) or {}
 
-        for name, item in pairs(Core.Items) do
+        for name, item in pairs(ESX.Items) do
             local count = inventory[name] or 0
             userData.weight += (count * item.weight)
 
@@ -258,7 +258,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
 
     GlobalState["playerCount"] = GlobalState["playerCount"] + 1
-    Core.Players[playerId] = xPlayer
+    ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
     -- Identity
@@ -326,7 +326,7 @@ AddEventHandler("playerDropped", function(reason)
 
         Core.SavePlayer(xPlayer, function()
             GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-            Core.Players[playerId] = nil
+            ESX.Players[playerId] = nil
         end)
     end
 end)
@@ -359,7 +359,7 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
         Core.playersByIdentifier[xPlayer.identifier] = nil
         Core.SavePlayer(xPlayer, function()
             GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-            Core.Players[playerId] = nil
+            ESX.Players[playerId] = nil
             if cb then
                 cb()
             end

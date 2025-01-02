@@ -64,7 +64,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         if not command.allowConsole and playerId == 0 then
             print(("[^3WARNING^7] ^5%s"):format(TranslateCap("commanderror_console")))
         else
-            local xPlayer, error = Core.Players[playerId], nil
+            local xPlayer, error = ESX.Players[playerId], nil
 
             if command.suggestion then
                 if command.suggestion.validate then
@@ -116,7 +116,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                     error = TranslateCap("commanderror_argumentmismatch_string", k)
                                 end
                             elseif v.type == "item" then
-                                if Core.Items[args[k]] then
+                                if ESX.Items[args[k]] then
                                     newArgs[v.name] = args[k]
                                 else
                                     error = TranslateCap("commanderror_invaliditem")
@@ -234,7 +234,7 @@ end
 ---@param cb? function
 ---@return nil
 function Core.SavePlayers(cb)
-    local xPlayers <const> = Core.Players
+    local xPlayers <const> = ESX.Players
     if not next(xPlayers) then
         return
     end
@@ -242,7 +242,7 @@ function Core.SavePlayers(cb)
     local startTime <const> = os.time()
     local parameters = {}
 
-    for _, xPlayer in pairs(Core.Players) do
+    for _, xPlayer in pairs(ESX.Players) do
         updateHealthAndArmorInMetadata(xPlayer)
         parameters[#parameters + 1] = {
             json.encode(xPlayer.getAccounts(true)),
@@ -294,19 +294,19 @@ end
 ---@return table
 function ESX.GetExtendedPlayers(key, val)
     if not key then
-        return ESX.Table.ToArray(Core.Players)
+        return ESX.Table.ToArray(ESX.Players)
     end
 
     local xPlayers = {}
     if type(val) == "table" then
-        for _, xPlayer in pairs(Core.Players) do
+        for _, xPlayer in pairs(ESX.Players) do
             checkTable(key, val, xPlayer, xPlayers)
         end
 
         return xPlayers
     end
 
-    for _, xPlayer in pairs(Core.Players) do
+    for _, xPlayer in pairs(ESX.Players) do
         if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
             xPlayers[#xPlayers + 1] = xPlayer
         end
@@ -349,7 +349,7 @@ end
 ---@param source number
 ---@return table
 function ESX.GetPlayerFromId(source)
-    return Core.Players[tonumber(source)]
+    return ESX.Players[tonumber(source)]
 end
 
 ---@param identifier string
@@ -495,9 +495,9 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        Core.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        ESX.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
-        Core.Jobs = Jobs
+        ESX.Jobs = Jobs
     end
 end
 
@@ -513,7 +513,7 @@ end
 ---@param ... any
 ---@return nil
 function ESX.UseItem(source, item, ...)
-    if Core.Items[item] then
+    if ESX.Items[item] then
         local itemCallback = Core.UsableItemsCallbacks[item]
 
         if itemCallback then
@@ -549,8 +549,8 @@ end
 ---@return string?
 ---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetItemLabel(item)
-    if Core.Items[item] then
-        return Core.Items[item].label
+    if ESX.Items[item] then
+        return ESX.Items[item].label
     else
         print(("[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7"):format(item))
     end
@@ -558,7 +558,7 @@ end
 
 ---@return table
 function ESX.GetJobs()
-    return Core.Jobs
+    return ESX.Jobs
 end
 
 ---@return table
@@ -587,7 +587,7 @@ if not Config.CustomInventory then
     ---@return nil
     function ESX.CreatePickup(itemType, name, count, label, playerId, components, tintIndex, coords)
         local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-        local xPlayer = Core.Players[playerId]
+        local xPlayer = ESX.Players[playerId]
         coords = ((type(coords) == "vector3" or type(coords) == "vector4") and coords.xyz or xPlayer.getCoords(true))
 
         Core.Pickups[pickupId] = { type = itemType, name = name, count = count, label = label, coords = coords }
@@ -606,7 +606,7 @@ end
 ---@param grade string
 ---@return boolean
 function ESX.DoesJobExist(job, grade)
-    return (Core.Jobs[job] and Core.Jobs[job].grades[tostring(grade)] ~= nil) or false
+    return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
 ---@param playerId string | number
@@ -617,6 +617,6 @@ function Core.IsPlayerAdmin(playerId)
         return true
     end
 
-    local xPlayer = Core.Players[playerId]
+    local xPlayer = ESX.Players[playerId]
     return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
 end
