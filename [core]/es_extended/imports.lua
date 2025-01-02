@@ -44,7 +44,7 @@ if not IsDuplicityVersion() then -- Only register this event for the client
     end
 end
 
-if not lib?.require then
+if not lib or not lib.require then
     local cachedModules = {} ---@type table<string, any>
     local loadingModules = {} ---@type table<string, true?>
 
