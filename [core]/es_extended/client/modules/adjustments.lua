@@ -41,7 +41,86 @@ function Adjustments:HealthRegeneration()
     end
 end
 
-function Adjustments:AmmoAndVehicleRewards()
+function Adjustments:PointLoop()
+    CreateThread(function()
+        while self.isPointing do
+            local camPitch = GetGameplayCamRelativePitch()
+            local camHeading = GetGameplayCamRelativeHeading()
+            local cosCamHeading = Cos(camHeading)
+            local sinCamHeading = Sin(camHeading)
+
+            camPitch = math.max(-70.0, math.min(42.0, camPitch))
+            camPitch = (camPitch + 70.0) / 112.0
+            camHeading = math.max(-180.0, math.min(180.0, camHeading))
+            camHeading = (camHeading + 180.0) / 360.0
+
+            local coords = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, (cosCamHeading * -0.2) - (sinCamHeading * (0.4 * camHeading + 0.3)), (sinCamHeading * -0.2) + (cosCamHeading * (0.4 * camHeading + 0.3)), 0.6)
+            local ray = StartShapeTestCapsule(coords.x, coords.y, coords.z - 0.2, coords.x, coords.y, coords.z + 0.2, 0.4, 95, ESX.PlayerData.ped, 7)
+            local _, blocked = GetRaycastResult(ray)
+
+            SetTaskMoveNetworkSignalFloat(ESX.PlayerData.ped, "Pitch", camPitch)
+            SetTaskMoveNetworkSignalFloat(ESX.PlayerData.ped, "Heading", camHeading * -1.0 + 1.0)
+            SetTaskMoveNetworkSignalBool(ESX.PlayerData.ped, "isBlocked", blocked)
+            SetTaskMoveNetworkSignalBool(ESX.PlayerData.ped, "isFirstPerson", GetCamViewModeForContext(GetCamActiveViewModeContext()) == 4)
+            Wait(0)
+        end
+    end)
+end
+
+function Adjustments:StopPoint()
+    RequestTaskMoveNetworkStateTransition(ESX.PlayerData.ped, 'Stop')
+    ClearPedSecondaryTask(ESX.PlayerData.ped)
+    if not ESX.PlayerData.vehicle then
+        SetPedCurrentWeaponVisible(ESX.PlayerData.ped, true, true, true, true)
+    end
+end
+
+function Adjustments:Point()
+    if not Config.Pointing.Enable then
+        return
+    end
+    self.isPointing = false
+
+    ESX.RegisterInput("esx:pointing", Translate("pointing"), "keyboard", "b", function()
+        self.isPointing = not self.isPointing
+        if self.isPointing then
+            ESX.RequestAnimDict("anim@mp_point")
+            SetPedCurrentWeaponVisible(ESX.PlayerData.ped, false, true, true, true)
+            TaskMoveNetworkByName(ESX.PlayerData.ped, 'task_mp_pointing', 0.5, false, 'anim@mp_point', 24)
+            RemoveAnimDict("anim@mp_point")
+
+            self:PointLoop()
+        else
+            self:StopPoint()
+        end
+    end, function()
+        if not Config.Pointing.HoldKey then
+            return
+        end
+
+        self.isPointing = false
+        self:StopPoint()
+    end)
+end
+
+
+function Adjustments:ShouldLoop()
+    for _, value in pairs(Config.NPCPopulation) do
+        if value ~= 0.9 then
+            return true
+        end
+    end
+    if Config.DisableDisplayAmmo then
+        return true
+    end
+    if Config.DisableVehicleRewards then
+        return true
+    end
+end
+
+function Adjustments:TickLoop()
+    if not self:ShouldLoop() then return end
+    local NPC = Config.NPCPopulation
     CreateThread(function()
         while true do
             if Config.DisableDisplayAmmo then
@@ -50,6 +129,34 @@ function Adjustments:AmmoAndVehicleRewards()
 
             if Config.DisableVehicleRewards then
                 DisablePlayerVehicleRewards(ESX.playerId)
+            end
+
+            if NPC.ambientVehicles ~= 0.9 then
+                SetAmbientVehicleRangeMultiplierThisFrame(NPC.ambientVehicles)
+            end
+
+            if NPC.parkedVehicles ~= 0.9 then
+                SetParkedVehicleDensityMultiplierThisFrame(NPC.parkedVehicles)
+            end
+
+            if NPC.randomVehicles ~= 0.9 then
+                SetRandomVehicleDensityMultiplierThisFrame(NPC.randomVehicles)
+            end
+
+            if NPC.vehicles ~= 0.9 then
+                SetVehicleDensityMultiplierThisFrame(NPC.vehicles)
+            end
+
+            if NPC.ambientPeds ~= 0.9 then
+                SetPedDensityMultiplierThisFrame(NPC.ambientPeds)
+            end
+
+            if NPC.scenarioPeds ~= 0.9 then
+                SetScenarioPedDensityMultiplierThisFrame(NPC.scenarioPeds, NPC.scenarioPeds)
+            end
+
+            if NPC.peds ~= 0.9 then
+                SetPedDensityMultiplierThisFrame(NPC.peds)
             end
 
             Wait(0)
@@ -193,13 +300,18 @@ function Adjustments:DiscordPresence()
     if Config.DiscordActivity.appId ~= 0 then
         CreateThread(function()
             while true do
-                SetDiscordAppId(Config.DiscordActivity.appId)
+                SetDiscordAppId(tostring(Config.DiscordActivity.appId))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
                 SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
 
-                for i = 1, #Config.DiscordActivity.buttons do
-                    local button = Config.DiscordActivity.buttons[i]
-                    SetDiscordRichPresenceAction(i - 1, button.label, button.url)
+                local buttons = Config.DiscordActivity.buttons
+                if buttons[1] then
+                    local button = buttons[1]
+                    SetDiscordRichPresenceAction(0, button.label, button.url)
+                end
+                if buttons[2] then
+                    local button = buttons[2]
+                    SetDiscordRichPresenceAction(1, button.label, button.url)
                 end
 
                 SetRichPresence(self:PresencePlaceholders())
@@ -231,7 +343,7 @@ function Adjustments:Load()
     self:DisableNPCDrops()
     self:SeatShuffle()
     self:HealthRegeneration()
-    self:AmmoAndVehicleRewards()
+    self:TickLoop()
     self:EnablePvP()
     self:DispatchServices()
     self:NPCScenarios()
@@ -239,4 +351,5 @@ function Adjustments:Load()
     self:DiscordPresence()
     self:WantedLevel()
     self:DisableRadio()
+    self:Point()
 end
