@@ -11,6 +11,8 @@ Core.PlayerFunctionOverrides = {}
 Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
 
+---@type table<string, CVehicleData>
+Core.vehicles = {}
 Core.vehicleTypesByModel = {}
 
 RegisterNetEvent("esx:onPlayerSpawn", function()
