@@ -2,12 +2,7 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
-
-    BeginScaleformMovieMethod(scaleform, "SHOW_SHARD_WASTED_MP_MESSAGE")
-    ScaleformMovieMethodAddParamTextureNameString(title)
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    EndScaleformMovieMethod()
+    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("MP_BIG_MESSAGE_FREEMODE", "SHOW_SHARD_WASTED_MP_MESSAGE", false, title, msg)
 
     while sec > 0 do
         Wait(0)
