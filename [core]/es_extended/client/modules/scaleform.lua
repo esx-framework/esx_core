@@ -30,17 +30,7 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("POPUP_WARNING")
-
-    BeginScaleformMovieMethod(scaleform, "SHOW_POPUP_WARNING")
-
-    ScaleformMovieMethodAddParamFloat(500.0) -- black background
-    ScaleformMovieMethodAddParamTextureNameString(title)
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    ScaleformMovieMethodAddParamTextureNameString(bottom)
-    ScaleformMovieMethodAddParamBool(true)
-
-    EndScaleformMovieMethod()
+    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("POPUP_WARNING", "SHOW_POPUP_WARNING", false, 500.0, title, msg, bottom, true)
 
     while sec > 0 do
         Wait(0)
