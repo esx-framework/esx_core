@@ -99,3 +99,40 @@ function ESX.Scaleform.Utils.RequestScaleformMovie(movie)
 
     return scaleform
 end
+
+--- Executes a method on a scaleform movie with optional arguments and return value.
+--- The caller is responsible for disposing of the scaleform using `SetScaleformMovieAsNoLongerNeeded`.
+---@param scaleform number|string # Scaleform handle or name to request the scaleform movie
+---@param methodName string # The method name to call on the scaleform
+---@param returnValue? boolean # Whether to return the value from the method
+---@param ... number|string|boolean # Arguments to pass to the method
+---@return number, number? # The scaleform handle, and the return value if `returnValue` is true
+function ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, methodName, returnValue, ...)
+    scaleform = type(scaleform) == "number" and scaleform or ESX.Scaleform.Utils.RequestScaleformMovie(scaleform)
+    BeginScaleformMovieMethod(scaleform, methodName)
+
+    local args = { ... }
+    for i, arg in ipairs(args) do
+        local typeArg = type(arg)
+
+        if typeArg == "number" then
+            if math.type(arg) == "float" then
+                ScaleformMovieMethodAddParamFloat(arg)
+            else
+                ScaleformMovieMethodAddParamInt(arg)
+            end
+        elseif typeArg == "string" then
+            ScaleformMovieMethodAddParamTextureNameString(arg)
+        elseif typeArg == "boolean" then
+            ScaleformMovieMethodAddParamBool(arg)
+        end
+    end
+
+    if returnValue then
+        return scaleform, EndScaleformMovieMethodReturnValue()
+    end
+
+    EndScaleformMovieMethod()
+
+    return scaleform
+end
