@@ -43,11 +43,7 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowTrafficMovie(sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("TRAFFIC_CAM")
-
-    BeginScaleformMovieMethod(scaleform, "PLAY_CAM_MOVIE")
-
-    EndScaleformMovieMethod()
+    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("TRAFFIC_CAM", "PLAY_CAM_MOVIE", false)
 
     while sec > 0 do
         Wait(0)
