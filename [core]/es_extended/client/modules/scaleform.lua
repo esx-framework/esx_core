@@ -2,7 +2,7 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
-    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("MP_BIG_MESSAGE_FREEMODE", "SHOW_SHARD_WASTED_MP_MESSAGE", false, title, msg)
+    local scaleform = ESX.Scaleform.Utils.RunMethod("MP_BIG_MESSAGE_FREEMODE", "SHOW_SHARD_WASTED_MP_MESSAGE", false, title, msg)
 
     while sec > 0 do
         Wait(0)
@@ -15,9 +15,9 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 end
 
 function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("BREAKING_NEWS", "SET_TEXT", false, msg, bottom)
-    ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, "SET_SCROLL_TEXT", false, 0, 0, title)
-    ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, "DISPLAY_SCROLL_TEXT", false, 0, 0)
+    local scaleform = ESX.Scaleform.Utils.RunMethod("BREAKING_NEWS", "SET_TEXT", false, msg, bottom)
+    ESX.Scaleform.Utils.RunMethod(scaleform, "SET_SCROLL_TEXT", false, 0, 0, title)
+    ESX.Scaleform.Utils.RunMethod(scaleform, "DISPLAY_SCROLL_TEXT", false, 0, 0)
 
     while sec > 0 do
         Wait(0)
@@ -30,7 +30,7 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("POPUP_WARNING", "SHOW_POPUP_WARNING", false, 500.0, title, msg, bottom, true)
+    local scaleform = ESX.Scaleform.Utils.RunMethod("POPUP_WARNING", "SHOW_POPUP_WARNING", false, 500.0, title, msg, bottom, true)
 
     while sec > 0 do
         Wait(0)
@@ -43,7 +43,7 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowTrafficMovie(sec)
-    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("TRAFFIC_CAM", "PLAY_CAM_MOVIE", false)
+    local scaleform = ESX.Scaleform.Utils.RunMethod("TRAFFIC_CAM", "PLAY_CAM_MOVIE", false)
 
     while sec > 0 do
         Wait(0)
@@ -72,7 +72,7 @@ end
 ---@param returnValue? boolean # Whether to return the value from the method
 ---@param ... number|string|boolean # Arguments to pass to the method
 ---@return number, number? # The scaleform handle, and the return value if `returnValue` is true
-function ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, methodName, returnValue, ...)
+function ESX.Scaleform.Utils.RunMethod(scaleform, methodName, returnValue, ...)
     scaleform = type(scaleform) == "number" and scaleform or ESX.Scaleform.Utils.RequestScaleformMovie(scaleform)
     BeginScaleformMovieMethod(scaleform, methodName)
 
