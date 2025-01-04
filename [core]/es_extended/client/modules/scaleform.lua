@@ -15,25 +15,9 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 end
 
 function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("BREAKING_NEWS")
-
-    BeginScaleformMovieMethod(scaleform, "SET_TEXT")
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    ScaleformMovieMethodAddParamTextureNameString(bottom)
-    EndScaleformMovieMethod()
-
-    BeginScaleformMovieMethod(scaleform, "SET_SCROLL_TEXT")
-    ScaleformMovieMethodAddParamInt(0) -- top ticker
-    ScaleformMovieMethodAddParamInt(0) -- Since this is the first string, start at 0
-    ScaleformMovieMethodAddParamTextureNameString(title)
-
-    EndScaleformMovieMethod()
-
-    BeginScaleformMovieMethod(scaleform, "DISPLAY_SCROLL_TEXT")
-    ScaleformMovieMethodAddParamInt(0) -- Top ticker
-    ScaleformMovieMethodAddParamInt(0) -- Index of string
-
-    EndScaleformMovieMethod()
+    local scaleform = ESX.Scaleform.Utils.RunScaleformMovieMethod("BREAKING_NEWS", "SET_TEXT", false, msg, bottom)
+    ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, "SET_SCROLL_TEXT", false, 0, 0, title)
+    ESX.Scaleform.Utils.RunScaleformMovieMethod(scaleform, "DISPLAY_SCROLL_TEXT", false, 0, 0)
 
     while sec > 0 do
         Wait(0)
