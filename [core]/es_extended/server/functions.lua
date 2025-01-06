@@ -563,7 +563,7 @@ end
 
 ---@return table
 function ESX.GetItems()
-    return ESX.Items
+    return Core.Items
 end
 
 ---@return table
