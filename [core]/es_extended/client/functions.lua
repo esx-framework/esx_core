@@ -870,6 +870,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         tyresCanBurst = GetVehicleTyresCanBurst(vehicle),
         plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
         plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
+        type = GetVehicleType(vehicle),
 
         bodyHealth = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
         engineHealth = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
