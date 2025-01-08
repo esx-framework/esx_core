@@ -43,7 +43,7 @@ ESX.TextUI("i ~r~love~s~ donuts", "error")
 
 esx_textui - Persistent Notifications
 
-Copyright (C) 2022-2024 ESX Framework
+Copyright (C) 2022-2025 ESX Framework
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 

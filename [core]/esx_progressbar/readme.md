@@ -3,12 +3,12 @@
  * ESX Function
 ```lua
     ESX.Progressbar("test", 25000,{
-        FreezePlayer = false, 
+        FreezePlayer = false,
         animation ={
             type = "anim",
-            dict = "mini@prostitutes@sexlow_veh", 
-            lib ="low_car_sex_to_prop_p2_player" 
-        }, 
+            dict = "mini@prostitutes@sexlow_veh",
+            lib ="low_car_sex_to_prop_p2_player"
+        },
         onFinish = function()
         --Code here
     end})
@@ -16,13 +16,13 @@
 ```
 
 * Export
-  
+
 ```lua
     exports["esx_progressbar"]:Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "anim",
-            dict = "anim@mp_player_intmenu@key_fob@", 
+            dict = "anim@mp_player_intmenu@key_fob@",
             lib ="fob_click"
         },
         onFinish = function()
@@ -31,13 +31,13 @@
 ```
 
 * Cancel
-  
+
 ```lua
     ESX.Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "anim",
-            dict = "anim@mp_player_intmenu@key_fob@", 
+            dict = "anim@mp_player_intmenu@key_fob@",
             lib ="fob_click"
         },
         onFinish = function()
@@ -49,13 +49,13 @@
 ```
 
 * Scenario
-  
+
 ```lua
     ESX.Progressbar("Unlocking Storage", 3000,{
-        FreezePlayer = true, 
+        FreezePlayer = true,
         animation ={
             type = "Scenario",
-            Scenario = "PROP_HUMAN_BUM_BIN", 
+            Scenario = "PROP_HUMAN_BUM_BIN",
         },
         onFinish = function()
         --Code here
@@ -69,7 +69,7 @@
 
 esx_progressbar
 
-Copyright (C) 2022-2024 ESX-Framework
+Copyright (C) 2022-2025 ESX-Framework
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
