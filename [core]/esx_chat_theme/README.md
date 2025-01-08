@@ -6,7 +6,7 @@ A ESX-Based Chat-theme for your server
 
 esx_chat_theme - ESX Chat Theme
 
-Copyright (C) 2025 Jérémie N'gadi
+Copyright (C) 2024 Jérémie N'gadi
 
 This program Is free software: you can redistribute it And/Or modify it under the terms Of the GNU General Public License As published by the Free Software Foundation, either version 3 Of the License, Or (at your option) any later version.
 
