@@ -21,7 +21,7 @@ A Simplistic system, that allows Players to have multiple Characters, which can 
 <tr><td>
 Official Multi-Character system for ESX Legacy
 
-Copyright © 2022-2024 Linden, ESX-Framework and KASH
+Copyright © 2022-2025 Linden, ESX-Framework and KASH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
