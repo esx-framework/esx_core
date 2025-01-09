@@ -208,7 +208,7 @@ function Core.SavePlayer(xPlayer, cb)
         json.encode(xPlayer.getCoords(false, true)),
         json.encode(xPlayer.getInventory(true)),
         json.encode(xPlayer.getLoadout(true)),
-        json.encode(xPlayer.getMeta()),
+        json.encode(xPlayer.metadata),
         xPlayer.identifier,
     }
 
@@ -254,7 +254,7 @@ function Core.SavePlayers(cb)
             json.encode({x = playerCoords.x, y = playerCoords.y, z = playerCoords.z, heading = playerHeading}),
             json.encode(xPlayer.getInventory(true)),
             json.encode(xPlayer.getLoadout(true)),
-            json.encode(xPlayer.getMeta()),
+            json.encode(xPlayer.metadata),
             xPlayer.identifier,
         }
     end
