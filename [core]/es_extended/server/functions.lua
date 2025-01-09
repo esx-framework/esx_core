@@ -188,12 +188,6 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     end
 end
 
-local function updateHealthAndArmorInMetadata(xPlayer)
-    local ped = GetPlayerPed(xPlayer.source)
-    xPlayer.setMeta("health", GetEntityHealth(ped))
-    xPlayer.setMeta("armor", GetPedArmour(ped))
-end
-
 ---@param xPlayer table
 ---@param cb? function
 ---@return nil
@@ -202,7 +196,10 @@ function Core.SavePlayer(xPlayer, cb)
         return cb and cb()
     end
 
-    updateHealthAndArmorInMetadata(xPlayer)
+    local playerPed = GetPlayerPed(xPlayer.source)
+    xPlayer.metadata.health = GetEntityHealth(playerPed)
+    xPlayer.metadata.armor = GetPedArmour(playerPed)
+
     local parameters <const> = {
         json.encode(xPlayer.getAccounts(true)),
         xPlayer.job.name,
@@ -242,7 +239,10 @@ function Core.SavePlayers(cb)
     local parameters = {}
 
     for _, xPlayer in pairs(ESX.Players) do
-        updateHealthAndArmorInMetadata(xPlayer)
+        local playerPed = GetPlayerPed(xPlayer.source)
+        xPlayer.metadata.health = GetEntityHealth(playerPed)
+        xPlayer.metadata.armor = GetPedArmour(playerPed)
+
         parameters[#parameters + 1] = {
             json.encode(xPlayer.getAccounts(true)),
             xPlayer.job.name,
