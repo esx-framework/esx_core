@@ -200,12 +200,15 @@ function Core.SavePlayer(xPlayer, cb)
     xPlayer.metadata.health = GetEntityHealth(playerPed)
     xPlayer.metadata.armor = GetPedArmour(playerPed)
 
+    local playerCoords = GetEntityCoords(playerPed)
+    local playerHeading = GetEntityHeading(playerPed)
+
     local parameters <const> = {
         json.encode(xPlayer.getAccounts(true)),
         xPlayer.job.name,
         xPlayer.job.grade,
         xPlayer.group,
-        json.encode(xPlayer.getCoords(false, true)),
+        json.encode({x = playerCoords.x, y = playerCoords.y, z = playerCoords.z, heading = playerHeading}),
         json.encode(xPlayer.getInventory(true)),
         json.encode(xPlayer.getLoadout(true)),
         json.encode(xPlayer.metadata),
