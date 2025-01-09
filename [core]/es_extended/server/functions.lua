@@ -192,7 +192,6 @@ local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
     xPlayer.setMeta("health", GetEntityHealth(ped))
     xPlayer.setMeta("armor", GetPedArmour(ped))
-    xPlayer.setMeta("lastPlaytime", xPlayer.getPlayTime())
 end
 
 ---@param xPlayer table
