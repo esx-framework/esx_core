@@ -1,5 +1,5 @@
 Config.Compat = {
-	-- Use them v1.13.0 Core.SavePlayers function.
+	-- Use the v1.13.0 Core.SavePlayers function.
 	-- The new Core.SavePlayers function introduces significant performance improvements by avoiding native calls,
 	-- reducing thread hitches commonly experienced on larger servers during player saves.
 	--
