@@ -1,5 +1,5 @@
 Config.Compat = {
-	-- Use the <= v1.12 Core.SavePlayers function.
+	-- Use them v1.13.0 Core.SavePlayers function.
 	-- The new Core.SavePlayers function introduces significant performance improvements by avoiding native calls,
 	-- reducing thread hitches commonly experienced on larger servers during player saves.
 	--
@@ -13,6 +13,6 @@ Config.Compat = {
 	-- For larger servers, the performance benefits might outweigh these risks,
 	-- especially if frequent thread hitches are an issue.
 	--
-	-- Note: Do not disable this setting unless you fully understand the implications.
-	useV12SavePlayers = true,
+	-- Note: Do not enable this setting unless you fully understand the implications.
+	useV13SavePlayers = false,
 }
