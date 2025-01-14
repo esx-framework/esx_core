@@ -210,3 +210,31 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
 
     return false
 end
+
+---@param switchValue any The value that matches the case to execute.
+---@param caseTable table A table mapping values to function references (cases).
+---@param defaultFunction? function|nil Optional. default function to execute if no case matches.
+---@param ... any Optional. Additional parameters to pass to the matched function (or default function)
+---@return any: Result of the executed function (case or default).
+function ESX.Switch(switchValue, caseTable, defaultFunction, ...)
+    assert(switchValue ~= nil, "'switchValue' parameter cannot be nil!")
+    ESX.AssertType(caseTable, "table")
+
+    if defaultFunction then
+        assert(ESX.IsFunctionReference(defaultFunction), "'defaultFunction' must be a function reference!")
+    end
+
+    local caseFunction = caseTable[switchValue]
+
+    if caseFunction and ESX.IsFunctionReference(caseFunction) then
+        local success, result = pcall(caseFunction, ...)
+        assert(success, ("Error executing case for value '%s': %s"):format(tostring(switchValue), result))
+        return result
+    elseif defaultFunction then
+        local success, result = pcall(defaultFunction, ...)
+        assert(success, ("Error executing default function: %s"):format(result))
+        return result
+    else
+        return false
+    end
+end
