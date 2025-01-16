@@ -213,8 +213,7 @@ if not Config.CustomInventory then
     end)
 
     ESX.SecureNetEvent("esx:removeWeaponComponent", function(weapon, weaponComponent)
-        local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
-        RemoveWeaponComponentFromPed(ESX.PlayerData.ped, joaat(weapon), componentHash)
+        error("event ^5'esx:removeWeaponComponent'^1 Has Been Removed. Please use ^5xPlayer.removeWeaponComponent^1 Instead!")
     end)
 end
 
@@ -582,7 +581,7 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 end)
 
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
-	ESX.SetPlayerData(key, val)
+    ESX.SetPlayerData(key, val)
 end)
 
 AddEventHandler("onResourceStop", function(resource)

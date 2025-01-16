@@ -687,6 +687,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return nil
     function self.removeWeaponComponent(weaponName, weaponComponent)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
+        local playerPed <const> = GetPlayerPed(self.source)
+
+        if not playerPed then
+            return error("xPlayer.removeWeapon ^5invalid^1 player ped!")
+        end
 
         if weapon then
             local component <const> = ESX.GetWeaponComponent(weaponName, weaponComponent)
@@ -700,8 +705,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
                         end
                     end
 
-                    self.triggerEvent("esx:removeWeaponComponent", weaponName, weaponComponent)
                     self.triggerEvent("esx:removeInventoryItem", component.label, false, true)
+
+                    local componentHash = component.hash
+                    RemoveWeaponComponentFromPed(playerPed, joaat(weapon.name), componentHash)
                 end
             end
         end
