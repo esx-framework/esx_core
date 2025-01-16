@@ -690,7 +690,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         local playerPed <const> = GetPlayerPed(self.source)
 
         if not playerPed then
-            return error("xPlayer.removeWeapon ^5invalid^1 player ped!")
+            return error("xPlayer.removeWeaponComponent ^5invalid^1 player ped!")
         end
 
         if weapon then
