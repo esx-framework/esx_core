@@ -1,4 +1,4 @@
-Locales["tr"] = {
+return {
     -- Inventory
     ["inventory"] = "Envanter ( Ağırlık %s / %s )",
     ["use"] = "Kullan",
@@ -36,10 +36,10 @@ Locales["tr"] = {
     ["threw_weapon_already"] = "Bu Silaha Zaten Sahipsiniz",
     ["threw_cannot_pickup"] = "Envanter Dolu, Alınamaz!",
     ["threw_pickup_prompt"] = "Almak İçin E'ye Basın",
-    
+
     -- Key mapping
     ["keymap_showinventory"] = "Envanteri Göster",
-    
+
     -- Salary related
     ["received_salary"] = "Maaşınız Ödendi: $%s",
     ["received_help"] = "Yardım Çekiniz Ödendi: $%s",
@@ -49,11 +49,11 @@ Locales["tr"] = {
     ["account_bank"] = "Banka",
     ["account_black_money"] = "Kirli Para",
     ["account_money"] = "Nakit",
-    
+
     ["act_imp"] = "İşlem Yapılamaz",
     ["in_vehicle"] = "İşlem Yapılamaz, Oyuncu Araçta",
     ["not_in_vehicle"] = "İşlem Yapılamaz, Oyuncu Araçta Değil",
-    
+
     -- Commands
     ["command_bring"] = "Oyuncuyu Yanınıza Getir",
     ["command_car"] = "Araç Spawn Et",
@@ -119,14 +119,14 @@ Locales["tr"] = {
     ["command_giveammo_ammo"] = "Mermi Miktarı",
     ["tpm_nowaypoint"] = "Hiçbir Yol İşareti Ayarlanmadı.",
     ["tpm_success"] = "Başarıyla Teleport Edildi",
-    
+
     ["noclip_message"] = "Noclip %s Yapıldı",
     ["enabled"] = "~g~Aktif Edildi~s~",
     ["disabled"] = "~r~Pasif Edildi~s~",
-    
+
     -- Locale settings
     ["locale_digit_grouping_symbol"] = ",",
-    ["locale_currency"] = "£%s",    
+    ["locale_currency"] = "£%s",
 
     -- Silahlar
 

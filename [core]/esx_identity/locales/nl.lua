@@ -1,4 +1,4 @@
-Locales["nl"] = {
+return {
     ["show_active_character"] = "Actieve karakter laten zien",
     ["active_character"] = "Actief karakter: %s",
     ["error_active_character"] = "Er is een probleem opgetreden tijdens het verzamelen van uw data.",

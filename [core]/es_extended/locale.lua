@@ -5,14 +5,24 @@ function Translate(str, ...) -- Translate string
         error(("Resource ^5%s^1 You did not specify a parameter for the Translate function or the value is nil!"):format(GetInvokingResource() or GetCurrentResourceName()))
     end
 
+    --- Load the locale file if it hasn't been loaded yet
+    if Locales[Config.Locale] == nil then
+        local success, result = pcall(function()
+            return assert(load(LoadResourceFile(GetCurrentResourceName(), ("locales/%s.lua"):format(Config.Locale))))()
+        end)
+
+        Locales[Config.Locale] = success and result or false
+    end
+
     local translations = Locales[Config.Locale]
     if not translations then
-        -- Fall back to English translation if the current locale is not found
-        if Locales.en and Locales.en[str] then
-            return Locales.en[str]:format(...)
+        if Config.Locale == "en" then
+            return "Locale [en] does not exist"
         end
 
-        return ("Locale [%s] does not exist"):format(Config.Locale)
+        -- Fall back to English translation if the current locale is not found
+        Config.Locale = "en"
+        return Translate(str, ...)
     end
 
     if translations[str] then
