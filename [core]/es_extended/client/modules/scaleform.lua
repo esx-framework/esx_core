@@ -4,8 +4,8 @@ ESX.Scaleform.Utils = {}
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
     local scaleform = ESX.Scaleform.Utils.RunMethod("MP_BIG_MESSAGE_FREEMODE", "SHOW_SHARD_WASTED_MP_MESSAGE", false, title, msg)
     
-    local startTimer = GetGameTimer()
-    while GetGameTimer() - startTimer < sec * 1000 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
@@ -18,8 +18,8 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
     ESX.Scaleform.Utils.RunMethod(scaleform, "SET_SCROLL_TEXT", false, 0, 0, title)
     ESX.Scaleform.Utils.RunMethod(scaleform, "DISPLAY_SCROLL_TEXT", false, 0, 0)
 
-    local startTimer = GetGameTimer()
-    while GetGameTimer() - startTimer < sec * 1000 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
@@ -30,8 +30,8 @@ end
 function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
     local scaleform = ESX.Scaleform.Utils.RunMethod("POPUP_WARNING", "SHOW_POPUP_WARNING", false, 500.0, title, msg, bottom, true)
 
-    local startTimer = GetGameTimer()
-    while GetGameTimer() - startTimer < sec * 1000 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
@@ -42,8 +42,8 @@ end
 function ESX.Scaleform.ShowTrafficMovie(sec)
     local scaleform = ESX.Scaleform.Utils.RunMethod("TRAFFIC_CAM", "PLAY_CAM_MOVIE", false)
 
-    local startTimer = GetGameTimer()
-    while GetGameTimer() - startTimer < sec * 1000 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
