@@ -7,7 +7,6 @@ version '1.12.2'
 
 shared_scripts {
 	'locale.lua',
-	'locales/*.lua',
 
 	'shared/config/main.lua',
     'shared/config/weapons.lua',
@@ -63,6 +62,7 @@ ui_page {
 
 files {
 	'imports.lua',
+	'locales/*.lua',
 	'locale.js',
 	'html/ui.html',
 
