@@ -91,6 +91,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return self.paycheckEnabled
     end
 
+    ---@return boolean
+    function self.isAdmin()
+        return Core.IsPlayerAdmin(self.source)
+    end
+
     ---@param coordinates vector4 | vector3 | table
     ---@return nil
     function self.setCoords(coordinates)
