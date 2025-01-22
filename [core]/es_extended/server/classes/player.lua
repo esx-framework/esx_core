@@ -951,6 +951,10 @@ local function runStaticPlayerMethod(src, method, ...)
         return
     end
 
+    if not ESX.IsFunctionReference(xPlayer[method]) then
+        error(("Attempted to call invalid method on playerId %s: %s"):format(src, method))
+    end
+
     return xPlayer[method](...)
 end
 exports("RunStaticPlayerMethod", runStaticPlayerMethod)
