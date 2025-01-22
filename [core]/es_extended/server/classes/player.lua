@@ -464,6 +464,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     function self.getSource()
         return self.source
     end
+    self.getPlayerId = self.getSource
 
     ---@return number
     function self.getMaxWeight()
