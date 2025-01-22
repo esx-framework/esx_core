@@ -944,3 +944,13 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     return self
 end
+
+local function runStaticPlayerMethod(src, method, ...)
+    local xPlayer = ESX.Players[src]
+    if not xPlayer then
+        return
+    end
+
+    return xPlayer[method](...)
+end
+exports("RunStaticPlayerMethod", runStaticPlayerMethod)

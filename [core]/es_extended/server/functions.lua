@@ -358,6 +358,12 @@ function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
 
+---@param source number
+---@return boolean
+function ESX.IsPlayerLoaded(source)
+    return ESX.Players[source] ~= nil
+end
+
 ---@param playerId number | string
 ---@return string
 function ESX.GetIdentifier(playerId)

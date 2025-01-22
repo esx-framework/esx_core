@@ -42,6 +42,19 @@ if not IsDuplicityVersion() then -- Only register this event for the client
             return error(('\n^1Error loading module (%s)'):format(external[i]))
         end
     end
+else
+    ESX.Player = setmetatable({}, {
+        __call = function(_, src)
+            if not ESX.IsPlayerLoaded(src) then return end
+            return setmetatable({src = src}, {
+                __index = function(self, method)
+                    return function(...)
+                        return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
+                    end
+                end
+            })
+        end
+    })
 end
 
 if GetResourceState("ox_lib") == "missing" then
