@@ -47,7 +47,9 @@ else
         __call = function(_, src)
             if type(src) ~= "number" then
                 src = ESX.GetPlayerIdFromIdentifier(src)
-                if not src then return end
+                if not src then
+                    return
+                end
             elseif not ESX.IsPlayerLoaded(src) then
                 return
             end
