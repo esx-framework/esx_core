@@ -2,7 +2,7 @@ fx_version 'adamant'
 
 lua54 'yes'
 game 'gta5'
-version '1.12.3'
+version '1.12.4'
 author 'ESX-Framework'
 description 'A beautiful and simple NUI notification system for ESX'
 
