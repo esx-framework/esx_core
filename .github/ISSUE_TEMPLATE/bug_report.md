@@ -3,9 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: "[Bug] - esx_script - Issue"
 labels: bug
-assignees:
-  - TheFantomas
-  - Gellipapa
+assignees: Arctos2win, Kenshiin13
 
 ---
 

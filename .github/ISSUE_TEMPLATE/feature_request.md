@@ -3,9 +3,7 @@ name: Feature Request
 about: Help us improve esx with your ideas
 title: "[Feature Request] - esx_script - Add better configuration"
 labels: enhancement
-assignees:
-  - TheFantomas
-  - Gellipapa
+assignees: Arctos2win, Kenshiin13
 
 ---
 
