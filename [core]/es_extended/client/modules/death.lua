@@ -1,6 +1,40 @@
 Death = {}
 Death._index = Death
 
+AddEventHandler("gameEventTriggered", function(event, data)
+    if event ~= "CEventNetworkEntityDamage" then
+        return
+    end
+
+    local victim, victimDied = data[1], data[4]
+    if not IsPedAPlayer(victim) then
+        return
+    end
+
+    local playerPed = PlayerPedId()
+    local player = PlayerId()
+
+    if victim and NetworkGetPlayerIndexFromPed(victim) == player and (IsPedDeadOrDying(victim, true) or IsPedFatallyInjured(victim)) then
+        local killerEntity = GetPedSourceOfDeath(playerPed)
+        local deathCause = GetPedCauseOfDeath(playerPed)
+        local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
+        local killerServerId = GetPlayerServerId(killerClientId)
+
+        Death.killerEntity = killerEntity
+        Death.deathCause = deathCause
+        Death.killerId = killerClientId
+        Death.killerServerId = killerServerId
+
+        if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
+            Death:ByPlayer()
+        else
+            Death:Natural()
+        end
+
+        Death:ResetValues()
+    end
+end)
+
 function Death:ResetValues()
     self.killerEntity = nil
     self.deathCause = nil
