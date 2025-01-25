@@ -445,6 +445,11 @@ end
 ---@param fields table
 ---@return nil
 function ESX.DiscordLogFields(name, title, color, fields)
+    for i = 1, #fields do
+        local field = fields[i]
+        field.value = tostring(field.value)
+    end
+
     local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
     local embedData = {
         {
