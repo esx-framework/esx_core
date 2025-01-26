@@ -12,7 +12,7 @@ function StartPayCheck()
                     if salary > 0 then
                         if job == "unemployed" then -- unemployed
                             xPlayer.addAccountMoney("bank", salary, "Welfare Check")
-                            TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_help", salary), "CHAR_BANK_MAZE", 9)
+                            TriggerClientEvent("esx:showNotification", player, TranslateCap("received_help", salary))
                             if Config.LogPaycheck then
                                 ESX.DiscordLogFields("Paycheck", "Paycheck - Unemployment Benefits", "green", {
                                     { name = "Player", value = xPlayer.name, inline = true },
@@ -34,10 +34,9 @@ function StartPayCheck()
                                                     { name = "Amount", value = salary, inline = true },
                                                 })
                                             end
-
-                                            TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+                                            TriggerClientEvent("esx:showNotification", player, TranslateCap("received_salary", salary))
                                         else
-                                            TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), "", TranslateCap("company_nomoney"), "CHAR_BANK_MAZE", 1)
+                                            TriggerClientEvent("esx:showNotification", player, TranslateCap("company_nomoney"))
                                         end
                                     end)
                                 else -- not a society
@@ -49,7 +48,7 @@ function StartPayCheck()
                                             { name = "Amount", value = salary, inline = true },
                                         })
                                     end
-                                    TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+                                    TriggerClientEvent("esx:showNotification", player, TranslateCap("received_salary", salary))
                                 end
                             end)
                         else -- generic job
@@ -61,7 +60,7 @@ function StartPayCheck()
                                     { name = "Amount", value = salary, inline = true },
                                 })
                             end
-                            TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+                            TriggerClientEvent("esx:showNotification", player, TranslateCap("received_salary", salary))
                         end
                     end
                 end
