@@ -8,7 +8,6 @@ AddEventHandler("esx:getSharedObject", function(cb)
     if ESX.IsFunctionReference(cb) then
         cb(ESX)
     end
-    local invokingResource = GetInvokingResource()
 end)
 
 -- backwards compatibility (DO NOT TOUCH !)
