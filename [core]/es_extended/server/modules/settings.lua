@@ -49,10 +49,18 @@ function SettingsHandler:RegisterSetting(resource, key, name, category, value)
     end
 end
 
+---@param key string
+---@param name string
+---@param category string
+---@param value any
+---@return nil
 function ESX.RegisterSetting(key, name, category, value)
     SettingsHandler:RegisterSetting(GetInvokingResource() or "es_extended", key,name, category, value)
 end
 
+---@param key string
+---@param value any
+---@return nil
 function ESX.SetSetting(key, value)
     SettingsHandler:Set(GetInvokingResource() or "es_extended", key, value)
 end

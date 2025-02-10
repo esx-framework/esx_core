@@ -14,7 +14,6 @@ function Settings:Set(resource, key, value)
 end
 
 ESX.SecureNetEvent("es_extended:internal:SettingChanged", function(resource, category, key, value)
-    print("internal setting changed", resource, key, value)
     Settings:Set(resource, key, value)
     TriggerEvent("es_extended:settingChanged", resource, category, key, value)
 end)

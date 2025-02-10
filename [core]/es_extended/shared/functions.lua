@@ -33,11 +33,16 @@ function ESX.GetConfig()
     return Config
 end
 
+---@param key string
+---@return any
 function ESX.GetSetting(key)
     local resource = GetInvokingResource() or "es_extended"
     return ESX.GetResourceSetting(resource, key)
 end
 
+---@param resource string
+---@param key string
+---@return any
 function ESX.GetResourceSetting(resource, key)
     local isServer = IsDuplicityVersion()
     if isServer then
