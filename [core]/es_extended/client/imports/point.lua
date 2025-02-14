@@ -25,7 +25,7 @@ function Point:constructor(properties)
         mainThread = true
         CreateThread(function()
             while mainThread do Wait(500)
-                local coords = PlayerObject:GetCoords()
+                local coords = GetEntityCoords(ESX.PlayerData.ped)
                 for handle, point in pairs(points) do
                     if not point.hidden and #(coords - point.coords) <= point.distance then
                         if not nearbyPoints[handle] then
@@ -37,7 +37,7 @@ function Point:constructor(properties)
                                 nearbyThread = true
                                 CreateThread(function()
                                     while nearbyThread do Wait()
-                                        coords = PlayerObject:GetCoords()
+                                        coords = GetEntityCoords(ESX.PlayerData.ped)
                                         for handle, point in pairs(nearbyPoints) do
                                             if point.inside then
                                                 point:inside(#(coords - point.coords))
