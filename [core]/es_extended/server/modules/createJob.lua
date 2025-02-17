@@ -72,10 +72,10 @@ function ESX.CreateJob(name, label, grades)
         { query = 'INSERT INTO jobs (name, label) VALUES (?, ?)', values = { name, label } }
     }
 
-    for _, grade in ipairs(grades) do
+    for _, grade in pairs(grades) do
         queries[#queries + 1] = {
             query = 'INSERT INTO job_grades (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            values = { name, grade.grade, grade.name, grade.label, grade.salary, '{}', '{}' }
+            values = { name, grade.grade, grade.name, grade.label, grade.salary, json.encode(grade.skin_male) or '{}', json.encode(grade.skin_female) or '{}' }
         }
     end
 
