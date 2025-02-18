@@ -90,5 +90,7 @@ function ESX.CreateJob(name, label, grades)
 
     notify("SUCCESS", currentResourceName, 'Job created successfully: `%s`', name)
 
+    TriggerEvent('esx:jobCreated', name, ESX.Jobs[name])
+
     return success
 end
