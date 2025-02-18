@@ -70,7 +70,7 @@ function Point:toggle(hidden)
     if hidden == nil then
         hidden = not self.hidden
     end
-    self.hidden = hidden 
+    self.hidden = hidden
 end
 
 return Point
