@@ -19,7 +19,7 @@ function Point:constructor(properties)
     self.enter = properties.enter
     self.leave = properties.leave
     self.inside = properties.inside
-    self.handle = table.sizeOf(points) + 1
+    self.handle = ESX.Table.SizeOf(points) + 1
     points[self.handle] = self
     if not mainThread then
         mainThread = true
@@ -36,11 +36,11 @@ function Point:constructor(properties)
                             if not nearbyThread then
                                 nearbyThread = true
                                 CreateThread(function()
-                                    while nearbyThread do Wait()
+                                    while nearbyThread do Wait(0)
                                         coords = GetEntityCoords(ESX.PlayerData.ped)
-                                        for handle, point in pairs(nearbyPoints) do
-                                            if point.inside then
-                                                point:inside(#(coords - point.coords))
+                                        for _, nearbyPoint in pairs(nearbyPoints) do
+                                            if nearbyPoint.inside then
+                                                nearbyPoint:inside(#(coords - nearbyPoint.coords))
                                             end
                                         end
                                     end
