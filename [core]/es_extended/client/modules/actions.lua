@@ -190,6 +190,26 @@ function Actions:TrackWeapon()
     end
 end
 
+function Actions:TrackJumping()
+    local isJumping = IsPedJumping(ESX.PlayerData.ped)
+    
+    if isJumping and not self.isJumping then
+        self.isJumping = true
+        TriggerEvent("esx:playerJumping")
+        TriggerServerEvent("esx:playerJumping")
+        
+        if Config.EnableDebug then
+            print("[DEBUG] Player started jumping")
+        end
+    elseif not isJumping and self.isJumping then
+        self.isJumping = false
+        
+        if Config.EnableDebug then
+            print("[DEBUG] Player stopped jumping")
+        end
+    end
+end
+
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
@@ -197,6 +217,7 @@ function Actions:SlowLoop()
             self:TrackPauseMenu()
             self:TrackVehicle()
             self:TrackWeapon()
+            self:TrackJumping()
             Wait(500)
         end
     end)
