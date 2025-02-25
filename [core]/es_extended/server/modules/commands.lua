@@ -307,9 +307,9 @@ if not Config.CustomInventory then
         "giveitem",
         "admin",
         function(xPlayer, args)
-            local MAX_AMOUNT = 1.79769e+308
-            if args.amount > MAX_AMOUNT then
-                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
+            local MAX_COUNT = 1.79769e+308
+            if args.count > MAX_COUNT then
+                return showError(("Count must be between 1 and %s"):format(MAX_COUNT))
             end
             args.playerId.addInventoryItem(args.item, args.count)
             if Config.AdminLogging then
@@ -338,12 +338,12 @@ if not Config.CustomInventory then
         "giveweapon",
         "admin",
         function(xPlayer, args, showError)
-            local MAX_AMOUNT = 1.79769e+308
+            local MAX_AMMO = 1.79769e+308
             if args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveweapon_hasalready"))
             end
-            if args.amount > MAX_AMOUNT then
-                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
+            if args.ammo > MAX_AMMO then
+                return showError(("Ammo must be between 1 and %s"):format(MAX_AMMO))
             end
             args.playerId.addWeapon(args.weapon, args.ammo)
             if Config.AdminLogging then
@@ -372,12 +372,12 @@ if not Config.CustomInventory then
         "giveammo",
         "admin",
         function(xPlayer, args, showError)
-            local MAX_AMOUNT = 1.79769e+308
+            local MAX_AMMO = 1.79769e+308
             if not args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveammo_noweapon_found"))
             end
-            if args.amount > MAX_AMOUNT then
-                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
+            if args.ammo > MAX_AMMO then
+                return showError(("Ammo must be between 1 and %s"):format(MAX_AMMO))
             end
             args.playerId.addWeaponAmmo(args.weapon, args.ammo)
             if Config.AdminLogging then
