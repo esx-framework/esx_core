@@ -307,6 +307,10 @@ if not Config.CustomInventory then
         "giveitem",
         "admin",
         function(xPlayer, args)
+            local MAX_AMOUNT = 1.79769e+308
+            if args.amount > MAX_AMOUNT then
+                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
+            end
             args.playerId.addInventoryItem(args.item, args.count)
             if Config.AdminLogging then
                 ESX.DiscordLogFields("UserActions", "Give Item /giveitem Triggered!", "pink", {
@@ -334,8 +338,12 @@ if not Config.CustomInventory then
         "giveweapon",
         "admin",
         function(xPlayer, args, showError)
+            local MAX_AMOUNT = 1.79769e+308
             if args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveweapon_hasalready"))
+            end
+            if args.amount > MAX_AMOUNT then
+                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
             end
             args.playerId.addWeapon(args.weapon, args.ammo)
             if Config.AdminLogging then
@@ -364,8 +372,12 @@ if not Config.CustomInventory then
         "giveammo",
         "admin",
         function(xPlayer, args, showError)
+            local MAX_AMOUNT = 1.79769e+308
             if not args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveammo_noweapon_found"))
+            end
+            if args.amount > MAX_AMOUNT then
+                return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
             end
             args.playerId.addWeaponAmmo(args.weapon, args.ammo)
             if Config.AdminLogging then
