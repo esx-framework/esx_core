@@ -272,8 +272,12 @@ ESX.RegisterCommand(
     "removeaccountmoney",
     "admin",
     function(xPlayer, args, showError)
+        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_removeaccountmoney_invalid"))
+        end
+        if args.amount > MAX_AMOUNT then
+            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
         if Config.AdminLogging then
