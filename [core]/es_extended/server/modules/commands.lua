@@ -204,8 +204,12 @@ ESX.RegisterCommand(
     "setaccountmoney",
     "admin",
     function(xPlayer, args, showError)
+        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
+        end
+        if args.amount > MAX_AMOUNT then
+            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
         if Config.AdminLogging then
@@ -234,8 +238,12 @@ ESX.RegisterCommand(
     "giveaccountmoney",
     "admin",
     function(xPlayer, args, showError)
+        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
+        end
+        if args.amount > MAX_AMOUNT then
+            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
         if Config.AdminLogging then
