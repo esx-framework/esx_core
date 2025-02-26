@@ -31,6 +31,7 @@
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     ---@class xPlayer
     local self = {}
+    local MAX_AMOUNT = 1.79769e+308
 
     self.accounts = accounts
     self.coords = coords
@@ -313,6 +314,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
+        money = money <= MAX_AMOUNT and money or MAX_AMOUNT
         if money >= 0 then
             local account = self.getAccount(accountName)
 
@@ -340,6 +342,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
+        money = money <= MAX_AMOUNT and money or MAX_AMOUNT
         if money > 0 then
             local account = self.getAccount(accountName)
             if account then
@@ -366,6 +369,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
+        money = money <= MAX_AMOUNT and money or MAX_AMOUNT
         if money > 0 then
             local account = self.getAccount(accountName)
 
