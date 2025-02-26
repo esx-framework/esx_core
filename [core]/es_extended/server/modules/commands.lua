@@ -204,12 +204,8 @@ ESX.RegisterCommand(
     "setaccountmoney",
     "admin",
     function(xPlayer, args, showError)
-        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
-        end
-        if args.amount > MAX_AMOUNT then
-            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
         if Config.AdminLogging then
@@ -238,12 +234,8 @@ ESX.RegisterCommand(
     "giveaccountmoney",
     "admin",
     function(xPlayer, args, showError)
-        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
-        end
-        if args.amount > MAX_AMOUNT then
-            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
         if Config.AdminLogging then
@@ -272,12 +264,8 @@ ESX.RegisterCommand(
     "removeaccountmoney",
     "admin",
     function(xPlayer, args, showError)
-        local MAX_AMOUNT = 1.79769e+308
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_removeaccountmoney_invalid"))
-        end
-        if args.amount > MAX_AMOUNT then
-            return showError(("Amount must be between 1 and %s"):format(MAX_AMOUNT))
         end
         args.playerId.removeAccountMoney(args.account, args.amount, "Government Tax")
         if Config.AdminLogging then
@@ -307,10 +295,6 @@ if not Config.CustomInventory then
         "giveitem",
         "admin",
         function(xPlayer, args)
-            local MAX_COUNT = 1.79769e+308
-            if args.count > MAX_COUNT then
-                return showError(("Count must be between 1 and %s"):format(MAX_COUNT))
-            end
             args.playerId.addInventoryItem(args.item, args.count)
             if Config.AdminLogging then
                 ESX.DiscordLogFields("UserActions", "Give Item /giveitem Triggered!", "pink", {
@@ -338,12 +322,8 @@ if not Config.CustomInventory then
         "giveweapon",
         "admin",
         function(xPlayer, args, showError)
-            local MAX_AMMO = 1.79769e+308
             if args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveweapon_hasalready"))
-            end
-            if args.ammo > MAX_AMMO then
-                return showError(("Ammo must be between 1 and %s"):format(MAX_AMMO))
             end
             args.playerId.addWeapon(args.weapon, args.ammo)
             if Config.AdminLogging then
@@ -372,12 +352,8 @@ if not Config.CustomInventory then
         "giveammo",
         "admin",
         function(xPlayer, args, showError)
-            local MAX_AMMO = 1.79769e+308
             if not args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveammo_noweapon_found"))
-            end
-            if args.ammo > MAX_AMMO then
-                return showError(("Ammo must be between 1 and %s"):format(MAX_AMMO))
             end
             args.playerId.addWeaponAmmo(args.weapon, args.ammo)
             if Config.AdminLogging then
