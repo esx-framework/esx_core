@@ -407,15 +407,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return nil
     function self.addInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
+        if not item then return end
 
-        if item then
-            count = ESX.Math.Round(count)
-            item.count = item.count + count
-            self.weight = self.weight + (item.weight * count)
+        count += item.count
+        item.count = (count <= MAX_AMOUNT and count) or MAX_AMOUNT
+        self.weight += (item.weight * count)
 
-            TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
-            self.triggerEvent("esx:addInventoryItem", item.name, item.count)
-        end
+        TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
+        self.triggerEvent("esx:addInventoryItem", item.name, item.count)
     end
 
     ---@param itemName string
