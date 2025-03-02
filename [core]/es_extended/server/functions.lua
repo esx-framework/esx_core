@@ -612,11 +612,14 @@ end
 ---@param playerId string | number
 ---@return boolean
 function Core.IsPlayerAdmin(playerId)
-    playerId = tostring(playerId)
-    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") then
+    local playerSrc = tostring(playerId)
+
+    if IsPlayerAceAllowed(playerSrc, "command") or GetConvar("sv_lan", "") == "true" then
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]
-    return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
+    local xPlayer = ESX.GetPlayerFromId(tonumber(playerId))
+    if not xPlayer then return false end
+
+    return Config.AdminGroups[xPlayer.getGroup()] or false
 end
