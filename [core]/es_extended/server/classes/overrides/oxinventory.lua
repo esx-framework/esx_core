@@ -1,5 +1,4 @@
 local Inventory
-local MAX_AMOUNT = 1.79769e+308
 
 if Config.CustomInventory ~= "ox" then return end
 
@@ -46,7 +45,6 @@ Core.PlayerFunctionOverrides.OxInventory = {
     setAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            money = money <= MAX_AMOUNT and money or MAX_AMOUNT
             if money < 0 then return end
             local account = self.getAccount(accountName)
 
@@ -66,7 +64,6 @@ Core.PlayerFunctionOverrides.OxInventory = {
     addAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            money = money <= MAX_AMOUNT and money or MAX_AMOUNT
             if money < 1 then return end
 
             local account = self.getAccount(accountName)
@@ -85,7 +82,6 @@ Core.PlayerFunctionOverrides.OxInventory = {
     removeAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            money = money <= MAX_AMOUNT and money or MAX_AMOUNT
             if money < 1 then return end
 
             local account = self.getAccount(accountName)
