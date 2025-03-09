@@ -1,4 +1,4 @@
-Locales["sv"] = {
+return {
     ["show_active_character"] = "Visa aktiv karaktär",
     ["active_character"] = "Aktiv karaktär: %s",
     ["error_active_character"] = "Det blev ett fel med att ta din data.",

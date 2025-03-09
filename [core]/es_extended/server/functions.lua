@@ -358,6 +358,18 @@ function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
 
+---@param identifier string
+---@return number playerId
+function ESX.GetPlayerIdFromIdentifier(identifier)
+    return Core.playersByIdentifier[identifier]?.source
+end
+
+---@param source number
+---@return boolean
+function ESX.IsPlayerLoaded(source)
+    return ESX.Players[source] ~= nil
+end
+
 ---@param playerId number | string
 ---@return string
 function ESX.GetIdentifier(playerId)
@@ -433,6 +445,11 @@ end
 ---@param fields table
 ---@return nil
 function ESX.DiscordLogFields(name, title, color, fields)
+    for i = 1, #fields do
+        local field = fields[i]
+        field.value = tostring(field.value)
+    end
+
     local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
     local embedData = {
         {
@@ -495,7 +512,7 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
         ESX.Jobs = Jobs
     end
@@ -622,4 +639,18 @@ function Core.IsPlayerAdmin(playerSrc)
 
     local xPlayer = ESX.GetPlayerFromId(playerSrc)
     return xPlayer and Config.AdminGroups[xPlayer.getGroup()] or false
+end
+
+---@param owner string
+---@param plate string
+---@param coords vector4
+---@return CExtendedVehicle?
+function ESX.CreateExtendedVehicle(owner, plate, coords)
+    return Core.vehicleClass.new(owner, plate, coords)
+end
+
+---@param plate string
+---@return CExtendedVehicle?
+function ESX.GetExtendedVehicleFromPlate(plate)
+   return Core.vehicleClass.getFromPlate(plate)
 end

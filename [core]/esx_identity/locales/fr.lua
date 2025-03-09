@@ -1,4 +1,4 @@
-Locales["fr"] = {
+return {
     ["show_active_character"] = "Afficher le personnage actif",
     ["active_character"] = "Personnage actif: %s",
     ["error_active_character"] = "Une erreur s'est produite lors de l'obtention de vos données.",
