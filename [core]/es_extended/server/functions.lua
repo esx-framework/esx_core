@@ -609,15 +609,21 @@ function ESX.DoesJobExist(job, grade)
     return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
----@param playerId string | number
+---@param playerSrc number
 ---@return boolean
-function Core.IsPlayerAdmin(playerId)
-    if IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true" then
+function Core.IsPlayerAdmin(playerSrc)
+    if type(playerSrc) ~= "number" then
+        return false
+    end
+
+    if IsPlayerAceAllowed(tostring(playerSrc), "command") or GetConvar("sv_lan", "") == "true" then
         return true
     end
 
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-    if not xPlayer then return false end
+    local xPlayer = ESX.GetPlayerFromId(playerSrc)
+    if not xPlayer then
+        return false
+    end
 
     return Config.AdminGroups[xPlayer.getGroup()] or false
 end
