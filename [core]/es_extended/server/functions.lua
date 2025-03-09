@@ -633,7 +633,7 @@ function Core.IsPlayerAdmin(playerSrc)
         return false
     end
 
-    if IsPlayerAceAllowed(tostring(playerSrc), "command") or GetConvar("sv_lan", "") == "true" then
+    if IsPlayerAceAllowed(playerSrc --[[@as string]], "command") or GetConvar("sv_lan", "") == "true" then
         return true
     end
 
