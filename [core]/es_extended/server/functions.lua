@@ -621,9 +621,5 @@ function Core.IsPlayerAdmin(playerSrc)
     end
 
     local xPlayer = ESX.GetPlayerFromId(playerSrc)
-    if not xPlayer then
-        return false
-    end
-
-    return Config.AdminGroups[xPlayer.getGroup()] or false
+    return xPlayer and Config.AdminGroups[xPlayer.getGroup()] or false
 end
