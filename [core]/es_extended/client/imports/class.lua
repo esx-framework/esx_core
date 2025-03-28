@@ -1,6 +1,7 @@
 local class = {}
 class.__index = class
 
+---@deprecated Use lib.class instead!
 function class:new(...)
 	local instance = setmetatable({}, self)
 	if instance.constructor then

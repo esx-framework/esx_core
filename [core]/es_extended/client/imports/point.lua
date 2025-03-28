@@ -2,6 +2,7 @@ local Point = ESX.Class()
 
 local nearby, loop = {}
 
+---@deprecated Use lib.points instead!
 function Point:constructor(properties)
 	self.coords = properties.coords
 	self.hidden = properties.hidden
