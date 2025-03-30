@@ -58,7 +58,6 @@ ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
 end)
 
 local function onPlayerSpawn()
-    ESX.SetPlayerData("ped", PlayerPedId())
     ESX.SetPlayerData("dead", false)
 end
 
@@ -80,7 +79,6 @@ AddEventHandler("esx:onPlayerSpawn", function()
 end)
 
 AddEventHandler("esx:onPlayerDeath", function()
-    ESX.SetPlayerData("ped", PlayerPedId())
     ESX.SetPlayerData("dead", true)
 end)
 
@@ -92,8 +90,6 @@ AddEventHandler("skinchanger:modelLoaded", function()
 end)
 
 AddEventHandler("esx:restoreLoadout", function()
-    ESX.SetPlayerData("ped", PlayerPedId())
-
     if not Config.CustomInventory then
         local ammoTypes = {}
         RemoveAllPedWeapons(ESX.PlayerData.ped, true)
@@ -582,7 +578,7 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 end)
 
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
-	ESX.SetPlayerData(key, val)
+    ESX.SetPlayerData(key, val)
 end)
 
 AddEventHandler("onResourceStop", function(resource)

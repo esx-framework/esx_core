@@ -6,7 +6,10 @@ version '1.12.2'
 author 'ESX-Framework'
 description 'A beautiful and simple NUI notification system for ESX'
 
-shared_script '@es_extended/imports.lua'
+shared_scripts {
+    '@ox_lib/init.lua',
+    '@es_extended/imports.lua'
+}
 
 client_scripts { 'Notify.lua' }
 

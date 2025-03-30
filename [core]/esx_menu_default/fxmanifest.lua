@@ -5,7 +5,11 @@ description 'A basic menu system for ESX Legacy.'
 lua54 'yes'
 version '1.12.2'
 
-client_scripts { '@es_extended/imports.lua', 'client/main.lua' }
+client_scripts {
+	'@ox_lib/init.lua',
+	'@es_extended/imports.lua',
+	'client/main.lua'
+}
 
 ui_page { 'html/ui.html' }
 

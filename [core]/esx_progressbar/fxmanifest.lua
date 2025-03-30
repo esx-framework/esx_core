@@ -7,7 +7,10 @@ version '1.12.2'
 lua54 'yes'
 
 client_scripts { 'Progress.lua' }
-shared_script '@es_extended/imports.lua'
+shared_scripts {
+    '@ox_lib/init.lua',
+    '@es_extended/imports.lua'
+}
 ui_page 'nui/index.html'
 
 files {

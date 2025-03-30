@@ -7,6 +7,7 @@ version '1.12.2'
 
 
 client_scripts {
+	'@ox_lib/init.lua',
 	'@es_extended/imports.lua',
 	'@es_extended/client/modules/wrapper.lua',
 	'client/main.lua'

@@ -1,7 +1,7 @@
 ESX = exports["es_extended"]:getSharedObject()
 ESX.currentResourceName = GetCurrentResourceName()
 
-OnPlayerData = function (key, val, last) end
+OnPlayerData = function(key, val, last) end
 
 if not IsDuplicityVersion() then -- Only register this event for the client
     AddEventHandler("esx:setPlayerData", function(key, val, last)
@@ -15,8 +15,30 @@ if not IsDuplicityVersion() then -- Only register this event for the client
 
     RegisterNetEvent("esx:playerLoaded", function(xPlayer)
         ESX.PlayerData = xPlayer
-        while not ESX.PlayerData.ped or not DoesEntityExist(ESX.PlayerData.ped) do Wait(0) end
+        ESX.PlayerData.coords = nil
+        while not cache.ped or not DoesEntityExist(cache.ped) do Wait(0) end
         ESX.PlayerLoaded = true
+
+        local playerDataCache = { ped = true, weapon = true, vehicle = true, seat = true }
+        setmetatable(ESX.PlayerData, {
+            __index = function(t, k)
+                if playerDataCache[k] then
+                    return cache[k]
+                end
+
+                if k == "coords" then
+                    local coords = GetEntityCoords(cache.ped)
+                    return {
+                        x = coords.x,
+                        y = coords.y,
+                        z = coords.z,
+                        heading = GetEntityHeading(cache.ped)
+                    }
+                end
+
+                return rawget(t, k)
+            end
+        })
     end)
 
     ESX.SecureNetEvent("esx:onPlayerLogout", function()
@@ -24,8 +46,8 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerData = {}
     end)
 
-    local external = {{"Class", "class.lua"}, {"Point", "point.lua"}}
-    for i=1, #external do
+    local external = { { "Class", "class.lua" }, { "Point", "point.lua" } }
+    for i = 1, #external do
         local module = external[i]
         local path = string.format("client/imports/%s", module[2])
 
@@ -54,7 +76,7 @@ else
                 return
             end
 
-            return setmetatable({src = src}, {
+            return setmetatable({ src = src }, {
                 __index = function(self, method)
                     return function(...)
                         return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
