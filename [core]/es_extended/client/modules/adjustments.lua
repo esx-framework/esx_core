@@ -28,8 +28,8 @@ function Adjustments:SeatShuffle()
     if Config.DisableVehicleSeatShuff then
         AddEventHandler("esx:enteredVehicle", function(vehicle, _, seat)
             if seat > -1 then
-                SetPedIntoVehicle(ESX.PlayerData.ped, vehicle, seat)
-                SetPedConfigFlag(ESX.PlayerData.ped, 184, true)
+                SetPedIntoVehicle(cache.ped, vehicle, seat)
+                SetPedConfigFlag(cache.ped, 184, true)
             end
         end)
     end
@@ -59,7 +59,7 @@ end
 
 function Adjustments:EnablePvP()
     if Config.EnablePVP then
-        SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
+        SetCanAttackFriendly(cache.ped, true, false)
         NetworkSetFriendlyFireOption(true)
     end
 end
@@ -129,7 +129,7 @@ function Adjustments:NPCScenarios()
             "WORLD_HUMAN_PAPARAZZI",
         }
 
-        for i=1, #scenarios do
+        for i = 1, #scenarios do
             SetScenarioTypeEnabled(scenarios[i], false)
         end
     end
@@ -162,9 +162,9 @@ local placeHolders = {
         return ESX.serverId
     end,
     player_street = function()
-        if not ESX.PlayerData.ped then return "Unknown" end
+        if not cache.ped then return "Unknown" end
 
-        local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+        local playerCoords = GetEntityCoords(cache.ped)
         local streetHash = GetStreetNameAtCoord(playerCoords.x, playerCoords.y, playerCoords.z)
 
         return GetStreetNameFromHashKey(streetHash) or "Unknown"
@@ -219,7 +219,7 @@ end
 function Adjustments:DisableRadio()
     if Config.RemoveHudComponents[16] then
         AddEventHandler("esx:enteredVehicle", function(vehicle, plate, seat, displayName, netId)
-            SetVehRadioStation(vehicle,"OFF")
+            SetVehRadioStation(vehicle, "OFF")
             SetUserRadioControlEnabled(false)
         end)
     end

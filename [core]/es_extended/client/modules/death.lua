@@ -9,7 +9,7 @@ function Death:ResetValues()
 end
 
 function Death:ByPlayer()
-    local victimCoords = GetEntityCoords(ESX.PlayerData.ped)
+    local victimCoords = GetEntityCoords(cache.ped)
     local killerCoords = GetEntityCoords(self.killerEntity)
     local distance = #(victimCoords - killerCoords)
 
@@ -30,7 +30,7 @@ function Death:ByPlayer()
 end
 
 function Death:Natural()
-    local coords = GetEntityCoords(ESX.PlayerData.ped)
+    local coords = GetEntityCoords(cache.ped)
 
     local data = {
         victimCoords = { x = ESX.Math.Round(coords.x, 1), y = ESX.Math.Round(coords.y, 1), z = ESX.Math.Round(coords.z, 1) },
@@ -44,14 +44,14 @@ function Death:Natural()
 end
 
 function Death:Died()
-    self.killerEntity = GetPedSourceOfDeath(ESX.PlayerData.ped)
-    self.deathCause = GetPedCauseOfDeath(ESX.PlayerData.ped)
+    self.killerEntity = GetPedSourceOfDeath(cache.ped)
+    self.deathCause = GetPedCauseOfDeath(cache.ped)
     self.killerId = NetworkGetPlayerIndexFromPed(self.killerEntity)
     self.killerServerId = GetPlayerServerId(self.killerId)
 
     local isActive = NetworkIsPlayerActive(self.killerId)
 
-    if self.killerEntity ~= ESX.PlayerData.ped and self.killerId and isActive then
+    if self.killerEntity ~= cache.ped and self.killerId and isActive then
         self:ByPlayer()
     else
         self:Natural()
@@ -65,7 +65,7 @@ AddEventHandler("esx:onPlayerSpawn", function()
         while not ESX.PlayerLoaded do Wait(0) end
 
         while ESX.PlayerLoaded and not ESX.PlayerData.dead do
-            if DoesEntityExist(ESX.PlayerData.ped) and (IsPedDeadOrDying(ESX.PlayerData.ped, true) or IsPedFatallyInjured(ESX.PlayerData.ped)) then
+            if DoesEntityExist(cache.ped) and (IsPedDeadOrDying(cache.ped, true) or IsPedFatallyInjured(cache.ped)) then
                 Death:Died()
                 break
             end

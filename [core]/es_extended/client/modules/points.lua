@@ -27,7 +27,7 @@ end
 function StartPointsLoop()
 	CreateThread(function()
 		while true do
-			local coords = GetEntityCoords(ESX.PlayerData.ped)
+			local coords = GetEntityCoords(cache.ped)
 			for handle, point in pairs(points) do
 				if not point.hidden and #(coords - point.coords) <= point.distance then
 					if not point.nearby then
@@ -43,7 +43,6 @@ function StartPointsLoop()
 		end
 	end)
 end
-
 
 AddEventHandler('onResourceStop', function(resource)
 	for handle, point in pairs(points) do

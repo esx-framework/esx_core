@@ -44,7 +44,7 @@ local addonResourcesState = {
 }
 
 local function IsResourceFound(resource)
-	return addonResourcesState[resource] or error(('Resource [^5%s^1] is Missing!'):format(resource))
+    return addonResourcesState[resource] or error(('Resource [^5%s^1] is Missing!'):format(resource))
 end
 
 function ESX.DisableSpawnManager()
@@ -59,7 +59,7 @@ end
 function ESX.SearchInventory(items, count)
     local item
     if type(items) == 'string' then
-        item, items = items, {items}
+        item, items = items, { items }
     end
 
     local data = {}
@@ -95,7 +95,7 @@ end
 ---@param freeze boolean Whether to freeze the player
 ---@return nil
 function Core.FreezePlayer(freeze)
-    local ped = PlayerPedId()
+    local ped = cache.ped
     SetPlayerControl(ESX.playerId, not freeze, 0)
 
     if freeze then
@@ -120,7 +120,7 @@ function ESX.SpawnPlayer(skin, coords, cb)
 
     RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 
-    local playerPed = PlayerPedId()
+    local playerPed = cache.ped
     local timer = GetGameTimer()
 
     Core.FreezePlayer(true)
@@ -142,7 +142,7 @@ end
 ---@param options? ProgressBarOptions
 ---@return boolean Success Whether the progress bar was successfully created or not
 function ESX.Progressbar(message, length, options)
-	return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(message, length, options)
+    return IsResourceFound('esx_progressbar') and exports['esx_progressbar']:Progressbar(message, length, options)
 end
 
 function ESX.CancelProgressbar()
@@ -154,16 +154,16 @@ end
 ---@param length? number The length of the notification
 ---@return nil
 function ESX.ShowNotification(message, notifyType, length)
-	return IsResourceFound('esx_notify') and exports['esx_notify']:Notify(notifyType, length, message)
+    return IsResourceFound('esx_notify') and exports['esx_notify']:Notify(notifyType, length, message)
 end
 
 function ESX.TextUI(...)
-	return IsResourceFound('esx_textui') and exports['esx_textui']:TextUI(...)
+    return IsResourceFound('esx_textui') and exports['esx_textui']:TextUI(...)
 end
 
 ---@return nil
 function ESX.HideUI()
-	return IsResourceFound('esx_textui') and exports['esx_textui']:HideUI()
+    return IsResourceFound('esx_textui') and exports['esx_textui']:HideUI()
 end
 
 ---@param sender string
@@ -250,7 +250,7 @@ end
 ---@param on_press function The function to call on press
 ---@param on_release? function The function to call on release
 function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
-	local command = on_release and '+' .. command_name or command_name
+    local command = on_release and '+' .. command_name or command_name
     RegisterCommand(command, on_press, false)
     Core.Input[command_name] = ESX.HashString(command)
     if on_release then
@@ -475,7 +475,6 @@ end
 ---@param coords table | vector3 | vector4 The coords to teleport the entity to
 ---@param cb? function The callback function
 function ESX.Game.Teleport(entity, coords, cb)
-
     if DoesEntityExist(entity) then
         RequestCollisionAtCoord(coords.x, coords.y, coords.z)
         while not HasCollisionLoadedAroundEntity(entity) do
@@ -501,8 +500,8 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
 
     ESX.Streaming.RequestModel(model)
 
-	local obj = CreateObject(model, coords.x, coords.y, coords.z, networked == nil or networked, false, true)
-	return cb and cb(obj) or obj
+    local obj = CreateObject(model, coords.x, coords.y, coords.z, networked == nil or networked, false, true)
+    return cb and cb(obj) or obj
 end
 
 ---@param object integer | string The object to spawn
@@ -560,7 +559,7 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
             if promise then
                 return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
             end
-           error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+            error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
         end
 
         local vehicle = CreateVehicle(model, vector.x, vector.y, vector.z, heading, isNetworked, true)
@@ -736,22 +735,22 @@ end
 ---@param shape integer The shape to get the test result from
 ---@return boolean, table, table, integer, integer
 function ESX.Game.GetShapeTestResultSync(shape)
-	local handle, hit, coords, normal, material, entity
-	repeat
+    local handle, hit, coords, normal, material, entity
+    repeat
         handle, hit, coords, normal, material, entity = GetShapeTestResultIncludingMaterial(shape)
         Wait(0)
-	until handle ~= 1
-	return hit, coords, normal, material, entity
+    until handle ~= 1
+    return hit, coords, normal, material, entity
 end
 
 ---@param depth number The depth to raycast
 ---@vararg any The arguments to pass to the shape test
 ---@return table, boolean, table, table, integer, integer
 function ESX.Game.RaycastScreen(depth, ...)
-	local world, normal = GetWorldCoordFromScreenCoord(.5, .5)
-	local origin = world + normal
-	local target = world + normal * depth
-	return target, ESX.Game.GetShapeTestResultSync(StartShapeTestLosProbe(origin.x, origin.y, origin.z, target.x, target.y, target.z, ...))
+    local world, normal = GetWorldCoordFromScreenCoord(.5, .5)
+    local origin = world + normal
+    local target = world + normal * depth
+    return target, ESX.Game.GetShapeTestResultSync(StartShapeTestLosProbe(origin.x, origin.y, origin.z, target.x, target.y, target.z, ...))
 end
 
 ---@param entities table The entities to search through
@@ -837,10 +836,10 @@ function ESX.Game.GetVehicleProperties(vehicle)
     local doorsBroken, windowsBroken, tyreBurst = {}, {}, {}
     local numWheels = tostring(GetVehicleNumberOfWheels(vehicle))
 
-    local TyresIndex = { -- Wheel index list according to the number of vehicle wheels.
-        ["2"] = { 0, 4 }, -- Bike and cycle.
-        ["3"] = { 0, 1, 4, 5 }, -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
-        ["4"] = { 0, 1, 4, 5 }, -- Vehicle with 4 wheels.
+    local TyresIndex = {              -- Wheel index list according to the number of vehicle wheels.
+        ["2"] = { 0, 4 },             -- Bike and cycle.
+        ["3"] = { 0, 1, 4, 5 },       -- Vehicle with 3 wheels (get for wheels because some 3 wheels vehicles have 2 wheels on front and one rear or the reverse).
+        ["4"] = { 0, 1, 4, 5 },       -- Vehicle with 4 wheels.
         ["6"] = { 0, 1, 2, 3, 4, 5 }, -- Vehicle with 6 wheels.
     }
 
@@ -850,7 +849,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
         end
     end
 
-    for windowId = 0, 7 do -- 13
+    for windowId = 0, 7 do              -- 13
         RollUpWindow(vehicle, windowId) --fix when you put the car away with the window down
         windowsBroken[tostring(windowId)] = not IsVehicleWindowIntact(vehicle, windowId)
     end
@@ -1435,9 +1434,9 @@ function ESX.ShowInventory()
                                         ESX.CloseContext()
                                     else
                                         local elementsG = {
-                                            { unselectable = true, icon = "fas fa-trash", title = element.title },
-                                            { icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000 },
-                                            { icon = "fas fa-check-double", title = "Confirm", val = "confirm" },
+                                            { unselectable = true,          icon = "fas fa-trash", title = element.title },
+                                            { icon = "fas fa-tally",        title = "Amount.",     input = true,         inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000 },
+                                            { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" },
                                         }
 
                                         ESX.OpenContext("right", elementsG, function(menuG, _)
@@ -1474,9 +1473,9 @@ function ESX.ShowInventory()
                         TriggerServerEvent("esx:removeInventoryItem", itemType, item)
                     else
                         local elementsR = {
-                            { unselectable = true, icon = "fas fa-trash", title = element.title },
-                            { icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to remove..", inputMin = 1, inputMax = 1000 },
-                            { icon = "fas fa-check-double", title = "Confirm", val = "confirm" },
+                            { unselectable = true,          icon = "fas fa-trash", title = element.title },
+                            { icon = "fas fa-tally",        title = "Amount.",     input = true,         inputType = "number", inputPlaceholder = "Amount to remove..", inputMin = 1, inputMax = 1000 },
+                            { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" },
                         }
 
                         ESX.OpenContext("right", elementsR, function(menuR, _)
@@ -1509,9 +1508,9 @@ function ESX.ShowInventory()
                     if closestPlayer ~= -1 and closestDistance < 3.0 then
                         if pedAmmo > 0 then
                             local elementsGA = {
-                                { unselectable = true, icon = "fas fa-trash", title = element.title },
-                                { icon = "fas fa-tally", title = "Amount.", input = true, inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000 },
-                                { icon = "fas fa-check-double", title = "Confirm", val = "confirm" },
+                                { unselectable = true,          icon = "fas fa-trash", title = element.title },
+                                { icon = "fas fa-tally",        title = "Amount.",     input = true,         inputType = "number", inputPlaceholder = "Amount to give..", inputMin = 1, inputMax = 1000 },
+                                { icon = "fas fa-check-double", title = "Confirm",     val = "confirm" },
                             }
 
                             ESX.OpenContext("right", elementsGA, function(menuGA, _)
@@ -1560,37 +1559,37 @@ AddEventHandler("onResourceStop", function(resourceName)
 end)
 -- Credits to txAdmin for the list.
 local mismatchedTypes = {
-    [`airtug`] = "automobile", -- trailer
-    [`avisa`] = "submarine", -- boat
-    [`blimp`] = "heli", -- plane
-    [`blimp2`] = "heli", -- plane
-    [`blimp3`] = "heli", -- plane
-    [`caddy`] = "automobile", -- trailer
-    [`caddy2`] = "automobile", -- trailer
-    [`caddy3`] = "automobile", -- trailer
-    [`chimera`] = "automobile", -- bike
-    [`docktug`] = "automobile", -- trailer
-    [`forklift`] = "automobile", -- trailer
-    [`kosatka`] = "submarine", -- boat
-    [`mower`] = "automobile", -- trailer
-    [`policeb`] = "bike", -- automobile
-    [`ripley`] = "automobile", -- trailer
-    [`rrocket`] = "automobile", -- bike
-    [`sadler`] = "automobile", -- trailer
-    [`sadler2`] = "automobile", -- trailer
-    [`scrap`] = "automobile", -- trailer
-    [`slamtruck`] = "automobile", -- trailer
-    [`Stryder`] = "automobile", -- bike
-    [`submersible`] = "submarine", -- boat
-    [`submersible2`] = "submarine", -- boat
-    [`thruster`] = "heli", -- automobile
-    [`towtruck`] = "automobile", -- trailer
-    [`towtruck2`] = "automobile", -- trailer
-    [`tractor`] = "automobile", -- trailer
-    [`tractor2`] = "automobile", -- trailer
-    [`tractor3`] = "automobile", -- trailer
-    [`trailersmall2`] = "trailer", -- automobile
-    [`utillitruck`] = "automobile", -- trailer
+    [`airtug`] = "automobile",       -- trailer
+    [`avisa`] = "submarine",         -- boat
+    [`blimp`] = "heli",              -- plane
+    [`blimp2`] = "heli",             -- plane
+    [`blimp3`] = "heli",             -- plane
+    [`caddy`] = "automobile",        -- trailer
+    [`caddy2`] = "automobile",       -- trailer
+    [`caddy3`] = "automobile",       -- trailer
+    [`chimera`] = "automobile",      -- bike
+    [`docktug`] = "automobile",      -- trailer
+    [`forklift`] = "automobile",     -- trailer
+    [`kosatka`] = "submarine",       -- boat
+    [`mower`] = "automobile",        -- trailer
+    [`policeb`] = "bike",            -- automobile
+    [`ripley`] = "automobile",       -- trailer
+    [`rrocket`] = "automobile",      -- bike
+    [`sadler`] = "automobile",       -- trailer
+    [`sadler2`] = "automobile",      -- trailer
+    [`scrap`] = "automobile",        -- trailer
+    [`slamtruck`] = "automobile",    -- trailer
+    [`Stryder`] = "automobile",      -- bike
+    [`submersible`] = "submarine",   -- boat
+    [`submersible2`] = "submarine",  -- boat
+    [`thruster`] = "heli",           -- automobile
+    [`towtruck`] = "automobile",     -- trailer
+    [`towtruck2`] = "automobile",    -- trailer
+    [`tractor`] = "automobile",      -- trailer
+    [`tractor2`] = "automobile",     -- trailer
+    [`tractor3`] = "automobile",     -- trailer
+    [`trailersmall2`] = "trailer",   -- automobile
+    [`utillitruck`] = "automobile",  -- trailer
     [`utillitruck2`] = "automobile", -- trailer
     [`utillitruck3`] = "automobile", -- trailer
 }

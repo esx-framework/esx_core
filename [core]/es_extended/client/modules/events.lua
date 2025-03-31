@@ -18,20 +18,20 @@ RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
         end)
     end
 
-    while not DoesEntityExist(ESX.PlayerData.ped) do
+    while not DoesEntityExist(cache.ped) do
         Wait(20)
     end
 
     ESX.PlayerLoaded = true
 
     local timer = GetGameTimer()
-    while not HaveAllStreamingRequestsCompleted(ESX.PlayerData.ped) and (GetGameTimer() - timer) < 2000 do
+    while not HaveAllStreamingRequestsCompleted(cache.ped) and (GetGameTimer() - timer) < 2000 do
         Wait(0)
     end
 
     Adjustments:Load()
 
-    ClearPedTasksImmediately(ESX.PlayerData.ped)
+    ClearPedTasksImmediately(cache.ped)
 
     if not Config.Multichar then
         Core.FreezePlayer(false)
@@ -69,11 +69,11 @@ AddEventHandler("esx:onPlayerSpawn", function()
         isFirstSpawn = false
 
         if ESX.PlayerData.metadata.health and (ESX.PlayerData.metadata.health > 0 or Config.SaveDeathStatus) then
-            SetEntityHealth(ESX.PlayerData.ped, ESX.PlayerData.metadata.health)
+            SetEntityHealth(cache.ped, ESX.PlayerData.metadata.health)
         end
 
         if ESX.PlayerData.metadata.armor and ESX.PlayerData.metadata.armor > 0 then
-            SetPedArmour(ESX.PlayerData.ped, ESX.PlayerData.metadata.armor)
+            SetPedArmour(cache.ped, ESX.PlayerData.metadata.armor)
         end
     end
 end)
@@ -92,24 +92,24 @@ end)
 AddEventHandler("esx:restoreLoadout", function()
     if not Config.CustomInventory then
         local ammoTypes = {}
-        RemoveAllPedWeapons(ESX.PlayerData.ped, true)
+        RemoveAllPedWeapons(cache.ped, true)
 
         for _, v in ipairs(ESX.PlayerData.loadout) do
             local weaponName = v.name
             local weaponHash = joaat(weaponName)
 
-            GiveWeaponToPed(ESX.PlayerData.ped, weaponHash, 0, false, false)
-            SetPedWeaponTintIndex(ESX.PlayerData.ped, weaponHash, v.tintIndex)
+            GiveWeaponToPed(cache.ped, weaponHash, 0, false, false)
+            SetPedWeaponTintIndex(cache.ped, weaponHash, v.tintIndex)
 
-            local ammoType = GetPedAmmoTypeFromWeapon(ESX.PlayerData.ped, weaponHash)
+            local ammoType = GetPedAmmoTypeFromWeapon(cache.ped, weaponHash)
 
             for _, v2 in ipairs(v.components) do
                 local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
-                GiveWeaponComponentToPed(ESX.PlayerData.ped, weaponHash, componentHash)
+                GiveWeaponComponentToPed(cache.ped, weaponHash, componentHash)
             end
 
             if not ammoTypes[ammoType] then
-                AddAmmoToPed(ESX.PlayerData.ped, weaponHash, v.ammo)
+                AddAmmoToPed(cache.ped, weaponHash, v.ammo)
                 ammoTypes[ammoType] = true
             end
         end
@@ -201,7 +201,7 @@ if not Config.CustomInventory then
     end)
 
     ESX.SecureNetEvent("esx:setWeaponTint", function(weapon, weaponTintIndex)
-        SetPedWeaponTintIndex(ESX.PlayerData.ped, joaat(weapon), weaponTintIndex)
+        SetPedWeaponTintIndex(cache.ped, joaat(weapon), weaponTintIndex)
     end)
 
     RegisterNetEvent("esx:removeWeapon", function()
@@ -210,7 +210,7 @@ if not Config.CustomInventory then
 
     ESX.SecureNetEvent("esx:removeWeaponComponent", function(weapon, weaponComponent)
         local componentHash = ESX.GetWeaponComponent(weapon, weaponComponent).hash
-        RemoveWeaponComponentFromPed(ESX.PlayerData.ped, joaat(weapon), componentHash)
+        RemoveWeaponComponentFromPed(cache.ped, joaat(weapon), componentHash)
     end)
 end
 
@@ -292,7 +292,7 @@ function StartServerSyncLoops()
     }
 
     local function updateCurrentWeaponAmmo(weaponName)
-        local newAmmo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+        local newAmmo = GetAmmoInPedWeapon(cache.ped, currentWeapon.hash)
 
         if newAmmo ~= currentWeapon.ammo then
             currentWeapon.ammo = newAmmo
@@ -302,15 +302,15 @@ function StartServerSyncLoops()
 
     CreateThread(function()
         while ESX.PlayerLoaded do
-            currentWeapon.hash = GetSelectedPedWeapon(ESX.PlayerData.ped)
+            currentWeapon.hash = GetSelectedPedWeapon(cache.ped)
 
             if currentWeapon.hash ~= `WEAPON_UNARMED` then
                 local weaponConfig = ESX.GetWeaponFromHash(currentWeapon.hash)
 
                 if weaponConfig then
-                    currentWeapon.ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, currentWeapon.hash)
+                    currentWeapon.ammo = GetAmmoInPedWeapon(cache.ped, currentWeapon.hash)
 
-                    while GetSelectedPedWeapon(ESX.PlayerData.ped) == currentWeapon.hash do
+                    while GetSelectedPedWeapon(cache.ped) == currentWeapon.hash do
                         updateCurrentWeaponAmmo(weaponConfig.name)
                         Wait(1000)
                     end
@@ -327,12 +327,12 @@ function StartServerSyncLoops()
         local PARACHUTE_OPEN <const> = 2
 
         while ESX.PlayerLoaded do
-            local parachuteState = GetPedParachuteState(ESX.PlayerData.ped)
+            local parachuteState = GetPedParachuteState(cache.ped)
 
             if parachuteState == PARACHUTE_OPENING or parachuteState == PARACHUTE_OPEN then
                 TriggerServerEvent("esx:updateWeaponAmmo", "GADGET_PARACHUTE", 0)
 
-                while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
+                while GetPedParachuteState(cache.ped) ~= -1 do Wait(1000) end
             end
             Wait(500)
         end
@@ -351,7 +351,7 @@ if not Config.CustomInventory then
     CreateThread(function()
         while true do
             local Sleep = 1500
-            local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+            local playerCoords = GetEntityCoords(cache.ped)
             local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
             for pickupId, pickup in pairs(pickups) do
@@ -363,12 +363,12 @@ if not Config.CustomInventory then
 
                     if distance < 1 then
                         if IsControlJustReleased(0, 38) then
-                            if IsPedOnFoot(ESX.PlayerData.ped) and (closestDistance == -1 or closestDistance > 3) and not pickup.inRange then
+                            if IsPedOnFoot(cache.ped) and (closestDistance == -1 or closestDistance > 3) and not pickup.inRange then
                                 pickup.inRange = true
 
                                 local dict, anim = "weapons@first_person@aim_rng@generic@projectile@sticky_bomb@", "plant_floor"
                                 ESX.Streaming.RequestAnimDict(dict)
-                                TaskPlayAnim(ESX.PlayerData.ped, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+                                TaskPlayAnim(cache.ped, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
                                 RemoveAnimDict(dict)
                                 Wait(1000)
 
@@ -417,7 +417,7 @@ ESX.SecureNetEvent("esx:tpm", function()
             Wait(0)
         end
 
-        local ped, coords = ESX.PlayerData.ped, GetBlipInfoIdCoord(blipMarker)
+        local ped, coords = cache.ped, GetBlipInfoIdCoord(blipMarker)
         local vehicle = GetVehiclePedIsIn(ped, false)
         local oldCoords = GetEntityCoords(ped)
 
@@ -485,7 +485,7 @@ local heading = 0
 
 local function noclipThread()
     while noclip do
-        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, false, false, true)
+        SetEntityCoordsNoOffset(cache.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, false, false, true)
 
         if IsControlPressed(1, 34) then
             heading = heading + 1.5
@@ -493,7 +493,7 @@ local function noclipThread()
                 heading = 0
             end
 
-            SetEntityHeading(ESX.PlayerData.ped, heading)
+            SetEntityHeading(cache.ped, heading)
         end
 
         if IsControlPressed(1, 9) then
@@ -502,23 +502,23 @@ local function noclipThread()
                 heading = 360
             end
 
-            SetEntityHeading(ESX.PlayerData.ped, heading)
+            SetEntityHeading(cache.ped, heading)
         end
 
         if IsControlPressed(1, 8) then
-            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 1.0, 0.0)
+            noclip_pos = GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 1.0, 0.0)
         end
 
         if IsControlPressed(1, 32) then
-            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0)
+            noclip_pos = GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, -1.0, 0.0)
         end
 
         if IsControlPressed(1, 27) then
-            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, 1.0)
+            noclip_pos = GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 0.0, 1.0)
         end
 
         if IsControlPressed(1, 173) then
-            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0)
+            noclip_pos = GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 0.0, -1.0)
         end
         Wait(0)
     end
@@ -531,8 +531,8 @@ ESX.SecureNetEvent("esx:noclip", function()
         end
 
         if not noclip then
-            noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
-            heading = GetEntityHeading(ESX.PlayerData.ped)
+            noclip_pos = GetEntityCoords(cache.ped, false)
+            heading = GetEntityHeading(cache.ped)
         end
 
         noclip = not noclip
@@ -549,11 +549,11 @@ ESX.SecureNetEvent("esx:noclip", function()
 end)
 
 ESX.SecureNetEvent("esx:killPlayer", function()
-    SetEntityHealth(ESX.PlayerData.ped, 0)
+    SetEntityHealth(cache.ped, 0)
 end)
 
 ESX.SecureNetEvent("esx:repairPedVehicle", function()
-    local ped = ESX.PlayerData.ped
+    local ped = cache.ped
     local vehicle = GetVehiclePedIsIn(ped, false)
     SetVehicleEngineHealth(vehicle, 1000)
     SetVehicleEngineOn(vehicle, true, true, false)
@@ -563,12 +563,12 @@ end)
 
 ESX.SecureNetEvent("esx:freezePlayer", function(input)
     if input == "freeze" then
-        SetEntityCollision(ESX.PlayerData.ped, false, false)
-        FreezeEntityPosition(ESX.PlayerData.ped, true)
+        SetEntityCollision(cache.ped, false, false)
+        FreezeEntityPosition(cache.ped, true)
         SetPlayerInvincible(ESX.playerId, true)
     elseif input == "unfreeze" then
-        SetEntityCollision(ESX.PlayerData.ped, true, true)
-        FreezeEntityPosition(ESX.PlayerData.ped, false)
+        SetEntityCollision(cache.ped, true, true)
+        FreezeEntityPosition(cache.ped, false)
         SetPlayerInvincible(ESX.playerId, false)
     end
 end)
