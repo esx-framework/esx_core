@@ -84,16 +84,35 @@ local function formatDate(str)
     return date
 end
 
-local function checkAlphanumeric(str)
-    return (string.match(str, "%W"))
-end
+local function checkValidCharacter(str)
+    for _, code in utf8.codes(str) do
 
-local function checkForNumbers(str)
-    return (string.match(str, "%d"))
+        local isBasicLatin = (code >= 0x0041 and code <= 0x005A) or (code >= 0x0061 and code <= 0x007A)
+        local isSpaceOrDash = (code == 0x0020 or code == 0x002D)
+        local isLatinExtended = (code >= 0x00C0 and code <= 0x02AF)
+        local isGreek = (code >= 0x0370 and code <= 0x03FF)
+        local isCyrillic = (code >= 0x0400 and code <= 0x04FF)
+        local isHebrew = (code >= 0x05D0 and code <= 0x05EA)
+        local isArabic =
+            (code >= 0x0620 and code <= 0x063F) or
+            (code >= 0x0641 and code <= 0x064A) or
+            (code >= 0x066E and code <= 0x066F) or
+            (code >= 0x0671 and code <= 0x06D3) or
+            (code == 0x06D5) or
+            (code >= 0x0750 and code <= 0x077F) or
+            (code >= 0x08A0 and code <= 0x08BD)
+        local isCJK = (code >= 0x4E00 and code <= 0x9FFF)
+
+        if not (isBasicLatin or isSpaceOrDash or isLatinExtended or isGreek or isCyrillic or isHebrew or isArabic or isCJK) then
+            return false
+        end
+    end
+
+    return true
 end
 
 local function checkNameFormat(name)
-    if not checkAlphanumeric(name) and not checkForNumbers(name) then
+    if checkValidCharacter(name) then
         local stringLength = string.len(name)
         return stringLength > 0 and stringLength < Config.MaxNameLength
     end
