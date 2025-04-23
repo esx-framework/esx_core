@@ -14,8 +14,25 @@ Callbacks.id = 0
 -- MARK: Internal Functions
 -- =============================================
 
-function Callbacks:Trigger(event, cb, invoker, ...)
 
+function Callbacks:Register(name, resource, cb)
+    self.storage[name] = {
+        resource = resource,
+        cb = cb
+    }
+end
+
+function Callbacks:Execute(cb, id, ...)
+    local success, errorString = pcall(cb, ...)
+
+    if not success then
+        print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(id))
+        error(errorString)
+        return
+    end
+end
+
+function Callbacks:Trigger(event, cb, invoker, ...)
     self.requests[self.id] = {
         await = type(cb) == "boolean",
         cb = cb or promise:new()
@@ -29,16 +46,6 @@ function Callbacks:Trigger(event, cb, invoker, ...)
     return table.cb
 end
 
-function Callbacks:Execute(cb, id, ...)
-    local success, errorString = pcall(cb, ...)
-
-    if not success then
-        print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(id))
-        error(errorString)
-        return
-    end
-end
-
 function Callbacks:ServerRecieve(requestId, invoker, ...)
     if not self.requests[requestId] then
         return error(("Server Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(requestId, invoker))
@@ -49,21 +56,13 @@ function Callbacks:ServerRecieve(requestId, invoker, ...)
     self.requests[requestId] = nil
 
     if callback.await then
-        callback.cb:resolve({...})
+        callback.cb:resolve({ ... })
     else
         self:Execute(callback.cb, requestId, ...)
     end
 end
 
-function Callbacks:Register(name, resource, cb)
-    self.storage[name] = {
-        resource = resource,
-        cb = cb
-    }
-end
-
 function Callbacks:ClientRecieve(eventName, requestId, invoker, ...)
-
     if not self.storage[eventName] then
         return error(("Client Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(eventName, invoker))
     end
@@ -130,12 +129,12 @@ end
 -- MARK: Events
 -- =============================================
 
-ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
-    Callbacks:ClientRecieve(...)
-end)
-
 ESX.SecureNetEvent("esx:serverCallback", function(...)
     Callbacks:ServerRecieve(...)
+end)
+
+ESX.SecureNetEvent("esx:triggerClientCallback", function(...)
+    Callbacks:ClientRecieve(...)
 end)
 
 AddEventHandler("onResourceStop", function(resource)
