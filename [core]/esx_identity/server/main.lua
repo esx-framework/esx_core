@@ -83,11 +83,7 @@ local function checkDOBFormat(dob)
     if month < 1 or month > 12 then return false end
 
     -- Days in each month (starting from January.)
-    local daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
-    if month == 2 and isLeapYear(year) then
-        daysInMonth[2] = 29
-    end
-
+    local daysInMonth = { 31, isLeapYear(year) and 29 or 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
     return day >= 1 and day <= daysInMonth[month]
 end
 
