@@ -68,13 +68,13 @@ local function checkDOBFormat(dob)
     local currentDate = os.date("*t")
     local currentYear = currentDate.year
     local minYear = currentYear - Config.MaxAge
-    local maxYear = currentYear - Config.MinAge
+    local maxYear = currentYear - 18
 
-    if year < minYear or year > maxYear or year > currentYear then
+    if year < minYear or year > maxYear or year > currentYear  then
         return false
     end
 
-    if year == maxYear then
+    if year == currentYear then
         if month > currentDate.month or (month == currentDate.month and day > currentDate.day) then
             return false
         end
@@ -259,7 +259,6 @@ end
 
     ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
         local xPlayer = ESX.GetPlayerFromId(source)
-        data.dateofbirth = formatDate(data.dateofbirth)
 
         if not checkNameFormat(data.firstname) then
             TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
@@ -281,6 +280,7 @@ end
             TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_height_format"), "error")
             return cb(false)
         end
+
         if xPlayer then
             if alreadyRegistered[xPlayer.identifier] then
                 xPlayer.showNotification(TranslateCap("already_registered"), "error")
@@ -290,7 +290,7 @@ end
             playerIdentity[xPlayer.identifier] = {
                 firstName = formatName(data.firstname),
                 lastName = formatName(data.lastname),
-                dateOfBirth = data.dateofbirth,
+                dateOfBirth = formatDate(data.dateofbirth),
                 sex = data.sex,
                 height = data.height,
             }
