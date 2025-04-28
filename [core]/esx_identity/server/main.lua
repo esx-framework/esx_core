@@ -55,7 +55,7 @@ end
 local function checkDOBFormat(dob)
     dob = tostring(dob)
 
-    local dayStr, monthStr, yearStr = dob:match('^(%d%d?)/(%d%d?)/(%d%d%d%d)$')
+    local dayStr, monthStr, yearStr = dob:match("^(%d%d?)/(%d%d?)/(%d%d%d%d)$")
     if not dayStr or not monthStr or not yearStr then
         return false
     end
