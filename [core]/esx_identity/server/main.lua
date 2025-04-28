@@ -44,31 +44,51 @@ local function saveIdentityToDatabase(identifier, identity)
     MySQL.update.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?", { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier })
 end
 
-local function checkDOBFormat(str)
-    str = tostring(str)
-    if not string.match(str, "(%d%d)/(%d%d)/(%d%d%d%d)") then
+---@param year number Year
+---@return boolean: true if the year is a leap year, false otherwise
+local function isLeapYear(year)
+    return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
+end
+
+---@param dob string Date of Birth in the format DD/MM/YYYY
+---@return boolean: true if the date is valid, false otherwise
+local function checkDOBFormat(dob)
+    dob = tostring(dob)
+
+    local dayStr, monthStr, yearStr = dob:match('^(%d%d?)/(%d%d?)/(%d%d%d%d)$')
+    if not dayStr or not monthStr or not yearStr then
         return false
     end
 
-    local d, m, y = string.match(str, "(%d+)/(%d+)/(%d+)")
-
-    m = tonumber(m)
-    d = tonumber(d)
-    y = tonumber(y)
-
-    if ((d <= 0) or (d > 31)) or ((m <= 0) or (m > 12)) or ((y <= Config.LowestYear) or (y > Config.HighestYear)) then
+    local day, month, year = tonumber(dayStr), tonumber(monthStr), tonumber(yearStr)
+    if not day or not month or not year then
         return false
-    elseif m == 4 or m == 6 or m == 9 or m == 11 then
-        return d <= 30
-    elseif m == 2 then
-        if y % 400 == 0 or (y % 100 ~= 0 and y % 4 == 0) then
-            return d <= 29
-        else
-            return d <= 28
+    end
+
+    local currentDate = os.date("*t")
+    local currentYear = currentDate.year
+    local minYear = currentYear - Config.MaxAge
+    local maxYear = currentYear - Config.MinAge
+
+    if year < minYear or year > maxYear or year > currentYear then
+        return false
+    end
+
+    if year == maxYear then
+        if month > currentDate.month or (month == currentDate.month and day > currentDate.day) then
+            return false
         end
-    else
-        return d <= 31
     end
+
+    if month < 1 or month > 12 then return false end
+
+    -- Days in each month (starting from January.)
+    local daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+    if month == 2 and isLeapYear(year) then
+        daysInMonth[2] = 29
+    end
+
+    return day >= 1 and day <= daysInMonth[month]
 end
 
 local function formatDate(str)
