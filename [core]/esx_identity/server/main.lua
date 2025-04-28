@@ -65,8 +65,7 @@ local function checkDOBFormat(dob)
         return false
     end
 
-    local currentDate = os.date("*t")
-    local currentYear = currentDate.year
+    local currentYear = os.date("*t").year
     local minYear = currentYear - Config.MaxAge
     local maxYear = currentYear - 18
 
