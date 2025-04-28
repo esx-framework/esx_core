@@ -70,7 +70,7 @@ local function checkDOBFormat(dob)
     local minYear = currentYear - Config.MaxAge
     local maxYear = currentYear - 18
 
-    if year < minYear or year > maxYear or year > currentYear  then
+    if year < minYear or year > maxYear  then
         return false
     end
 
