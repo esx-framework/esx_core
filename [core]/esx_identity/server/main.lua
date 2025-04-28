@@ -70,16 +70,7 @@ local function checkDOBFormat(dob)
     local minYear = currentYear - Config.MaxAge
     local maxYear = currentYear - 18
 
-    if year < minYear or year > maxYear  then
-        return false
-    end
-
-    if year == currentYear then
-        if month > currentDate.month or (month == currentDate.month and day > currentDate.day) then
-            return false
-        end
-    end
-
+    if year < minYear or year > maxYear  then return false end
     if month < 1 or month > 12 then return false end
 
     -- Days in each month (starting from January.)
