@@ -1,33 +1,48 @@
-<h1 align='center'>[ESX] Notify</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-legacy.com/legacy/installation'>Documentation</a></b></h5>
+`<h1 align='center'>`[ESX] Notify`</a>``</h1>``<p align='center'>``<b>``<a href='https://discord.esx-framework.org/'>`Discord`</a>` - `<a href='https://esx-framework.org/'>`Website`</a>` - `<a href='https://docs.esx-legacy.com/legacy/installation'>`Documentation`</a>``</b>``</h5>`
 
 A beautiful and simple NUI notification system for ESX
 
 # Example Code
 
-<h3>Change style and time</h3>
+`<h3>`Change style and time`</h3>`
 
 ```lua
 ---usage: message/type/length
 ESX.ShowNotification("message here", "error", 3000)
 ESX.ShowNotification("message here", "success", 3000)
 ESX.ShowNotification("message here", "info", 3000)
+ESX.ShowNotification("message here", "warning", 3000)
 
 ESX.ShowNotification("text here") -- Default will time and type will be info/3000
+
+-- With title (optional 4th parameter)
+ESX.ShowNotification("message here", "success", 3000, "Achievement")
 ```
 
-<h3>Export Usage</h3>
+`<h3>`Export Usage`</h3>`
 
 ```lua
+-- Basic usage
 exports["esx_notify"]:Notify("info", 3000, "message here")
+
+-- With title
+exports["esx_notify"]:Notify("success", 3000, "Item purchased!", "Shop")
+
+-- With line break
+exports["esx_notify"]:Notify("warning", 4000, "Inventory full!~br~Some items were dropped.", "Warning")
 ```
 
-<h3>Event Usage</h3>
+`<h3>`Event Usage`</h3>`
 
 ```lua
+-- Basic usage
 TriggerEvent("ESX:Notify", "info", 3000, "message here")
+
+-- With title
+TriggerEvent("ESX:Notify", "error", 5000, "You don't have enough money!", "Transaction Failed")
 ```
 
-<h3>Color Code Usage</h3>
+`<h3>`Color Code Usage`</h3>`
 
 ```lua
 ~r~ = Red
@@ -41,15 +56,14 @@ TriggerEvent("ESX:Notify", "info", 3000, "message here")
 ~o~ = Orange
 
 ESX.ShowNotification("I i ~r~love~s~ donuts", "success", 3000)
+
+-- Line break example
+ESX.ShowNotification("You received ~br~1x ~g~ball~s~!", "success", 3000, "Item Received")
 ```
 
 # Previews
 
-![Preview_1](https://cdn.discordapp.com/attachments/944789399852417096/997890963445927977/unknown.png)
-
-![Preview_2_zoom](https://cdn.discordapp.com/attachments/944789399852417096/997892214053163148/unknown.png)
-
-![Preview_2](https://cdn.discordapp.com/attachments/944789399852417096/997891726326898909/unknown.png)
+![Preview 1](https://r2.fivemanage.com/gWoWHGuKZdsK8PFzaVuGC/image_2025-05-05_194204916.png)
 
 ## Legal
 
@@ -61,4 +75,4 @@ This program Is free software: you can redistribute it And/Or modify it under th
 
 This program Is distributed In the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty Of MERCHANTABILITY Or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License For more details.
 
-You should have received a copy Of the GNU General Public License along with this program. If Not, see <http://www.gnu.org/licenses/>.
+You should have received a copy Of the GNU General Public License along with this program. If Not, see `<http://www.gnu.org/licenses/>`.
