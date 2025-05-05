@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import Stats from "./Stats.vue";
 import { userConfig } from '../userConfig';
 import { fetchNui } from '../fetchNui';
@@ -75,33 +75,20 @@ interface User {
   stats: UserStats;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "Users",
   components: {
     Stats
   },
-  data() {
-    return {
-      activeUser: '',
-      showStats: false,
-      users: [] as User[],
-      playIcon: require('../assets/users/play.svg'),
-      infoIcon: require('../assets/users/information.svg'),
-      createIcon: require('../assets/users/create.svg'),
-    };
-  },
-  created() {
-    this.initializeUsers();
-  },
-  methods: {
-    initializeUsers(): void {
-      this.users = userConfig.map(user => ({
-        ...user,
-        ...this.getUserImages(user.id)
-      }));
-      this.activeUser = this.users[0]?.id || '';
-    },
-    getUserImages(userId: string): { activeImage: string; inactiveImage: string } {
+  setup() {
+    const activeUser = ref('');
+    const showStats = ref(false);
+    const users = ref<User[]>([]);
+    const playIcon = require('../assets/users/play.svg');
+    const infoIcon = require('../assets/users/information.svg');
+    const createIcon = require('../assets/users/create.svg');
+
+    const getUserImages = (userId: string): { activeImage: string; inactiveImage: string } => {
       const imageMap: Record<string, { active: string; inactive: string }> = {
         peter: {
           active: require('../assets/user1.svg'),
@@ -126,17 +113,27 @@ export default Vue.extend({
         activeImage: images.active,
         inactiveImage: images.inactive
       };
-    },
-    async handleCreateCharacter(): Promise<void> {
+    };
+
+    const initializeUsers = (): void => {
+      users.value = userConfig.map(user => ({
+        ...user,
+        ...getUserImages(user.id)
+      }));
+      activeUser.value = users.value[0]?.id || '';
+    };
+
+    const handleCreateCharacter = async (): Promise<void> => {
       try {
         await fetchNui('createCharacter');
       } catch (error) {
         console.error('Failed to create character:', error);
       }
-    },
-    async setActiveUser(userId: string): Promise<void> {
-      this.activeUser = userId;
-      const user = this.users.find(u => u.id === userId);
+    };
+
+    const setActiveUser = async (userId: string): Promise<void> => {
+      activeUser.value = userId;
+      const user = users.value.find((u: User) => u.id === userId);
       if (user) {
         try {
           await fetchNui('selectCharacter', {
@@ -149,30 +146,49 @@ export default Vue.extend({
           console.error('Failed to select character:', error);
         }
       }
-    },
-    toggleStats(): void {
-      this.showStats = !this.showStats;
-    },
-    getUserPosition(index: number): { top: string } {
+    };
+
+    const toggleStats = (): void => {
+      showStats.value = !showStats.value;
+    };
+
+    const getUserPosition = (index: number): { top: string } => {
       const baseSpacing = 87;
       const statsHeight = 280;
       const statsGap = 20;
-      const activeIndex = this.users.findIndex(user => user.id === this.activeUser);
+      const activeIndex = users.value.findIndex((user: User) => user.id === activeUser.value);
       
       let position = index * baseSpacing;
       
-      if (index > activeIndex && this.showStats) {
+      if (index > activeIndex && showStats.value) {
         position += statsHeight + statsGap;
       }
       
       return { top: `${position}px` };
-    }
-  },
-  computed: {
-    activeUserStats(): UserStats {
-      const user = this.users.find(u => u.id === this.activeUser);
+    };
+
+    const activeUserStats = computed((): UserStats => {
+      const user = users.value.find((u: User) => u.id === activeUser.value);
       return user ? user.stats : {};
-    }
+    });
+
+    onMounted(() => {
+      initializeUsers();
+    });
+
+    return {
+      activeUser,
+      showStats,
+      users,
+      playIcon,
+      infoIcon,
+      createIcon,
+      handleCreateCharacter,
+      setActiveUser,
+      toggleStats,
+      getUserPosition,
+      activeUserStats
+    };
   }
 });
 </script>
