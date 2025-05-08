@@ -1,4 +1,4 @@
-Locales["hu"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventory ( Súly %s / %s )",
     ["use"] = "Használ",
@@ -229,10 +229,10 @@ Locales["hu"] = {
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
