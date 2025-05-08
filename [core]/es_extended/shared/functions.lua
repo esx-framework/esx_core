@@ -244,11 +244,7 @@ function ESX.IsValidLocaleString(str)
         ["zh-cn"] ={ {0x4E00, 0x9FFF} } -- CJK
     }
 
-    local validRanges = {}
-
-    for i = 1, #defaultRanges do
-        validRanges[#validRanges + 1] = defaultRanges[i]
-    end
+    local validRanges = { table.unpack(defaultRanges) }
 
     if localeRanges[locale] then
         for i = 1, #localeRanges[locale] do
