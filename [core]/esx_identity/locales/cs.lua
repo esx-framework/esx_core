@@ -1,4 +1,4 @@
-Locales["cs"] = {
+return {
     ["show_registration"] = "zobrazit registracni menu",
     ["show_active_character"] = "zobrazit aktivni postavy",
     ["delete_character"] = "smazat svou stavajici postavu a vytvorit novou",

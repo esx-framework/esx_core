@@ -1,5 +1,9 @@
 Config = {}
 
+local txAdminLocale = GetConvar("txAdmin-locale", "en")
+local esxLocale = GetConvar("esx:locale", "invalid")
+Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
+
 -- for ox inventory, this will automatically be adjusted, do not change! for other inventories, change to "resource_name"
 Config.CustomInventory = false
 
@@ -60,8 +64,3 @@ if GetResourceState("ox_inventory") ~= "missing" then
 end
 
 Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
-
-local txAdminLocale = GetConvar("txAdmin-locale", "en")
-local esxLocale = GetConvar("esx:locale", "invalid")
-
-Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
