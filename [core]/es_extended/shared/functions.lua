@@ -212,8 +212,9 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
 end
 
 ---@param str string
+---@param allowDigits boolean? Allow numbers if necessary
 ---@return boolean
-function ESX.IsValidLocaleString(str)
+function ESX.IsValidLocaleString(str, allowDigits)
     if not ESX.ValidateType(str, 'string') then
         return false
     end
@@ -227,6 +228,10 @@ function ESX.IsValidLocaleString(str)
         {0x002D, 0x002D}, -- Dash
         {0x00C0, 0x02AF}  -- Latin Extended
     }
+
+    if allowDigits then
+        defaultRanges[#defaultRanges + 1] = {0x0030, 0x0039} -- 0-9 Numbers
+    end
 
     local localeRanges = {
         ["el"] = { {0x0370, 0x03FF} }, -- Greek
