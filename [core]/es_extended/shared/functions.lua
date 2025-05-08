@@ -214,6 +214,10 @@ end
 ---@param str string
 ---@return boolean
 function ESX.IsValidLocaleString(str)
+    if not ESX.ValidateType(str, 'string') then
+        return false
+    end
+
     local locale = string.lower(Config.Locale)
 
     local defaultRanges ={
@@ -265,7 +269,8 @@ function ESX.IsValidLocaleString(str)
     for _, code in utf8.codes(str) do
         local isValid = false
 
-        for _, range in ipairs(validRanges) do
+        for i = 1, #validRanges do
+            local range = validRanges[i]
             if code >= range[1] and code <= range[2] then
                 isValid = true
                 break
