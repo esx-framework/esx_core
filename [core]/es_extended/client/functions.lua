@@ -805,25 +805,26 @@ function ESX.Game.GetVehicleProperties(vehicle)
         return
     end
 
-    local colorPrimary, colorSecondary = GetVehicleColours(vehicle) ---@type number | number[], number | number[]
+    local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
     local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
-    local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
     local dashboardColor = GetVehicleDashboardColor(vehicle)
     local interiorColor = GetVehicleInteriorColour(vehicle)
-    
+    local customPrimaryColor = nil
     if hasCustomPrimaryColor then
-        colorPrimary = { GetVehicleCustomPrimaryColour(vehicle) }
-    end
-
-    if hasCustomSecondaryColor then
-        colorSecondary = { GetVehicleCustomSecondaryColour(vehicle) }
+        customPrimaryColor = { GetVehicleCustomPrimaryColour(vehicle) }
     end
 
     local hasCustomXenonColor, customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
     local customXenonColor = nil
     if hasCustomXenonColor then
         customXenonColor = { customXenonColorR, customXenonColorG, customXenonColorB }
+    end
+
+    local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
+    local customSecondaryColor = nil
+    if hasCustomSecondaryColor then
+        customSecondaryColor = { GetVehicleCustomSecondaryColour(vehicle) }
     end
 
     local extras = {}
@@ -878,6 +879,8 @@ function ESX.Game.GetVehicleProperties(vehicle)
         dirtLevel = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
         color1 = colorPrimary,
         color2 = colorSecondary,
+        customPrimaryColor = customPrimaryColor,
+        customSecondaryColor = customSecondaryColor,
 
         pearlescentColor = pearlescentColor,
         wheelColor = wheelColor,
