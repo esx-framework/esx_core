@@ -84,16 +84,8 @@ local function formatDate(str)
     return date
 end
 
-local function checkAlphanumeric(str)
-    return (string.match(str, "%W"))
-end
-
-local function checkForNumbers(str)
-    return (string.match(str, "%d"))
-end
-
 local function checkNameFormat(name)
-    if not checkAlphanumeric(name) and not checkForNumbers(name) then
+    if ESX.IsValidLocaleString(name) then
         local stringLength = string.len(name)
         return stringLength > 0 and stringLength < Config.MaxNameLength
     end
