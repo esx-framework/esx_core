@@ -997,12 +997,23 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
     if props.customSecondaryColor ~= nil then
         SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2], props.customSecondaryColor[3])
     end
+    
     if props.color1 ~= nil then
-        SetVehicleColours(vehicle, props.color1, colorSecondary)
+        if type(props.color1) == "table" then
+            SetVehicleCustomPrimaryColour(vehicle, props.color1[1], props.color1[2], props.color1[3])
+        else
+            SetVehicleColours(vehicle, props.color1, colorSecondary)
+        end
     end
+
     if props.color2 ~= nil then
-        SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2)
+        if type(props.color2) == "table" then
+            SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
+        else
+            SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2)
+        end
     end
+
     if props.pearlescentColor ~= nil then
         SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
     end
