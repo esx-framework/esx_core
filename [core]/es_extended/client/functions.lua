@@ -66,7 +66,7 @@ function ESX.SearchInventory(items, count)
     for i = 1, #ESX.PlayerData.inventory do
         local e = ESX.PlayerData.inventory[i]
         for ii = 1, #items do
-            if e.name == items[ii] then
+            if e and e.name == items[ii] then
                 data[table.remove(items, ii)] = count and e.count or e
                 break
             end
