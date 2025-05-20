@@ -27,7 +27,7 @@ function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
     local identifier = self:GetIdentifier(source)
-    
+
     -- luacheck: ignore
     if not SetEntityOrphanMode then
         return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
@@ -47,7 +47,7 @@ function Server:OnConnecting(source, deferrals)
 
     if identifier then
         if not ESX.GetConfig().EnableDebug then
-            if ESX.Players[identifier] then
+            if not source and ESX.Players[identifier] then
                 deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
             else
                 deferrals.done()
