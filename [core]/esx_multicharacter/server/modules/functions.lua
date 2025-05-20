@@ -47,8 +47,16 @@ function Server:OnConnecting(source, deferrals)
 
     if identifier then
         if not ESX.GetConfig().EnableDebug then
-            if not source and ESX.Players[identifier] then
-                deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
+            if ESX.Players[identifier] then
+                local identifierExist = ESX.GetPlayerFromIdentifier(identifier)
+
+                if not identifierExist then -- no player found
+                    ESX.Players[identifier] = nil
+                    print(('[ESX Multicharacter] no player found for identifier (%s), removing from ESX.Players'):format(identifier))
+                    deferrals.done()
+                else -- player found
+                    deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
+                end
             else
                 deferrals.done()
             end
