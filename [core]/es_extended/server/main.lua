@@ -50,7 +50,7 @@ local function onPlayerJoined(playerId)
         return DropPlayer(playerId, "there was an error loading your character!\nError code: identifier-missing-ingame\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
     end
 
-    if not playerId and ESX.GetPlayerFromIdentifier(identifier) then
+    if ESX.GetPlayerFromIdentifier(identifier) then
         DropPlayer(
             playerId,
             ("there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s"):format(
