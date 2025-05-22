@@ -115,17 +115,15 @@ if not Config.Multichar then
             return deferrals.done("[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg")
         end
 
-        if identifier then
-            if not playerId and ESX.GetPlayerFromIdentifier(identifier) then
-                return deferrals.done(
-                    ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
-                )
-            else
-                return deferrals.done()
-            end
-        else
+        if not identifier then
             return deferrals.done("[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
         end
+
+        TriggerEvent('esx:playerCrashed', identifier, function()
+            deferrals.update(("[ESX] Cleaning old Player entry for [%s] (player invalid)"):format(identifier))
+        end)
+
+        return deferrals.done()
     end)
 end
 
