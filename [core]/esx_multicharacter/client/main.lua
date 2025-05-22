@@ -1,13 +1,3 @@
-
--- Connection Logic
-
-local function AwaitContext()
-    while GetResourceState("esx_context") ~= "started" do
-        Wait(100)
-    end
-    return true
-end
-
 CreateThread(function()
 
     while not ESX.PlayerLoaded do
@@ -16,13 +6,8 @@ CreateThread(function()
         if NetworkIsPlayerActive(ESX.playerId) then
             ESX.DisableSpawnManager()
             DoScreenFadeOut(0)
-
-            local ready = AwaitContext()
-            if ready then
-
-                Multicharacter:SetupCharacters()
-                break
-            end
+            Multicharacter:SetupCharacters()
+            break
         end
     end
 end)

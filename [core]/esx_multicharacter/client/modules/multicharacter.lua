@@ -12,8 +12,8 @@ function Multicharacter:SetupCamera()
 
     local offset = GetOffsetFromEntityInWorldCoords(self.playerPed, 0, 1.7, 0.4)
 
-    SetCamCoord(self.cam, offset.x, offset.y, offset.z)
-    PointCamAtCoord(self.cam, self.spawnCoords.x, self.spawnCoords.y, self.spawnCoords.z + 1.3)
+    SetCamCoord(self.cam, offset.x + 0.7, offset.y , offset.z)
+    PointCamAtCoord(self.cam, self.spawnCoords.x + 0.4, self.spawnCoords.y, self.spawnCoords.z + 1.3)
 end
 
 function Multicharacter:AwaitFadeIn()
@@ -116,6 +116,10 @@ function Multicharacter:ChangeExistingPed()
     local newCharacter = self.Characters[self.tempIndex]
     local spawnedCharacter = self.Characters[self.spawned]
 
+    if not newCharacter.model then
+        newCharacter.model = newCharacter.sex == TranslateCap("male") and `mp_m_freemode_01` or `mp_f_freemode_01`
+    end
+
     if spawnedCharacter and spawnedCharacter.model then
         local model = ESX.Streaming.RequestModel(newCharacter.model)
         if model then
@@ -123,7 +127,6 @@ function Multicharacter:ChangeExistingPed()
             SetModelAsNoLongerNeeded(newCharacter.model)
         end
     end
-
     TriggerEvent("skinchanger:loadSkin", newCharacter.skin)
 end
 
@@ -135,8 +138,12 @@ end
 
 function Multicharacter:CloseUI()
     SendNUIMessage({
-        action = "closeui",
+        action = "ToggleMulticharacter",
+        data = {
+            show = false
+        }
     })
+    SetNuiFocus(false, false)
 end
 
 function Multicharacter:SetupCharacter(index)
@@ -152,10 +159,6 @@ function Multicharacter:SetupCharacter(index)
     self.spawned = index
     self.playerPed = PlayerPedId()
     self:PrepForUI()
-    SendNUIMessage({
-        action = "openui",
-        character = character,
-    })
 end
 
 function Multicharacter:SetupUI(characters, slots)
@@ -180,7 +183,7 @@ function Multicharacter:SetupUI(characters, slots)
             TriggerEvent("esx_identity:showRegisterIdentity")
         end)
     else
-        Menu:SelectCharacter()
+        Menu:InitCharacter()
     end
 end
 

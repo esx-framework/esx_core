@@ -7,7 +7,7 @@ Config.CanDelete = true
 if IsDuplicityVersion() then
     -- This is the default number of slots for EVERY player
     -- If you want to manage extra slots for specific players you can do it by using '/setslots' and '/remslots' commands
-    Config.Slots = 4
+    Config.Slots = 3
     --------------------
 
     -- Text to prepend to each character (char#:identifier) - keep it short
