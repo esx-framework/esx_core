@@ -368,6 +368,25 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
     TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
 
+AddEventHandler('esx:playerCrashed', function(identifier, cb)
+    local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+
+    if xPlayer then
+        local playerId = xPlayer.playerId
+        local isExist = DoesPlayerExist(playerId --[[@as string]])
+
+        if playerId and isExist ~= 0 then
+            TriggerEvent('esx:playerDropped', playerId)
+            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
+            Core.playersByIdentifier[identifier] = nil
+            ESX.Players[playerId] = nil
+            if cb then
+                cb()
+            end
+        end
+    end
+end)
+
 if not Config.CustomInventory then
     RegisterNetEvent("esx:updateWeaponAmmo", function(weaponName, ammoCount)
         local xPlayer = ESX.GetPlayerFromId(source)
