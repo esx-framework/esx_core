@@ -20,7 +20,6 @@ client_scripts {
    'client/*.lua'
 }
 
---ui_page 'web/build/index.html'
-ui_page 'http://localhost:5173/'
+ui_page 'web/build/index.html'
 
 files { 'web/build/index.html', 'web/build/**/*.*'}
