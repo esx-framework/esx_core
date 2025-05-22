@@ -45,19 +45,17 @@ function Server:OnConnecting(source, deferrals)
         deferrals.done("[ESX Multicharacter] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg")
     end
 
-    if identifier then
-        if not ESX.GetConfig().EnableDebug then
-            if not source and ESX.Players[identifier] then
-                deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
-            else
-                deferrals.done()
-            end
-        else
-            deferrals.done()
-        end
-    else
-        deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType))
-    end
+    if not identifier then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
+
+    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then deferrals.done() end
+
+    TriggerEvent('esx:playerCrashed', identifier, function()
+        ESX.Players[identifier] = nil
+        deferrals.update(('[ESX] Cleaning old Player entry for [%s] (player invalid)'):format(identifier))
+    end)
+
+    deferrals.done() -- proceed
 end
+
 
 Server:ResetPlayers()
