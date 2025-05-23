@@ -62,7 +62,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         local command = Core.RegisteredCommands[name]
 
         if not command.allowConsole and playerId == 0 then
-            print(("[^3WARNING^7] ^5%s"):format(TranslateCap("commanderror_console")))
+            print(("[^3WARNING^7] ^5%s^0"):format(TranslateCap("commanderror_console")))
         else
             local xPlayer, error = ESX.Players[playerId], nil
 
