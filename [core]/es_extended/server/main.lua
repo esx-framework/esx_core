@@ -1,6 +1,7 @@
 SetMapName("San Andreas")
 SetGameType("ESX Legacy")
 
+local oxmysql = exports.oxmysql
 local oneSyncState = GetConvar("onesync", "off")
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
@@ -331,15 +332,113 @@ AddEventHandler("playerDropped", function(reason)
     end
 end)
 
-AddEventHandler("esx:playerLoaded", function(_, xPlayer)
-    local job = xPlayer.getJob().name
-    local jobKey = ("%s:count"):format(job)
+AddEventHandler("esx:playerDropped", function(playerId, reason)
+    -- Remove Player From Job GlobalState
 
-    Core.JobsPlayerCount[job] = (Core.JobsPlayerCount[job] or 0) + 1
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+
+    if not xPlayer then
+        return
+    end
+
+    local job = xPlayer.job
+    local jobName = job.name
+    local jobLabel = job.label
+    local jobGrade = job.grade
+
+    if not jobName or not jobLabel or not jobGrade then
+        return
+    end
+
+    local jobState = GlobalState[("job:%s"):format(jobName)]
+
+    if not jobState then
+        local jobTable = {
+            jobName = jobName,
+            jobLabel = jobLabel,
+            jobRoster = {},
+            jobCount = 0,
+        }
+
+        GlobalState[("job:%s"):format(jobName)] = jobTable
+        return
+    end
+
+    local myIndex
+
+    for index, value in ipairs(jobState.jobRoster) do
+        if value == playerId then
+            myIndex = index
+            break
+        end
+    end
+
+    if not myIndex then 
+        return
+    end
+
+    if jobState.jobRoster[myIndex] ~= playerId then
+        local counter = 1
+
+        repeat
+            for index, value in ipairs(jobState.jobRoster) do
+                if value == playerId then
+                    myIndex = index
+                    break
+                end
+            end
+
+            counter = counter + 1
+        until jobState.jobRoster[myIndex] == playerId or counter >= 5
+    end
+
+    table.remove(jobState.jobRoster, myIndex)
+    jobState.jobCount = #jobState.jobRoster
+    GlobalState[("job:%s"):format(jobName)] = jobState
+end)
+
+AddEventHandler("esx:playerLoaded", function(_, xPlayer)
+    local job = xPlayer.job
+    local jobName = job.name
+    local jobLabel = job.label
+    local jobGrade = job.grade
+    local jobKey = ("%s:count"):format(jobName)
+
+    -- Original ESX GlobalState
+
+    Core.JobsPlayerCount[jobName] = (Core.JobsPlayerCount[jobName] or 0) + 1
     GlobalState[jobKey] = Core.JobsPlayerCount[job]
+
+    -- Modified
+
+    if not jobName or not jobLabel or not jobGrade then
+        return
+    end
+
+    local jobState = GlobalState[("job:%s"):format(jobName)]
+
+    if not jobState then
+        local jobTable = {
+            jobName = jobName,
+            jobLabel = jobLabel,
+            jobRoster = { playerId, },
+        }
+
+        jobTable.jobCount = #jobTable.jobRoster
+
+        GlobalState[("job:%s"):format(jobName)] = jobTable
+        return
+    end
+
+    table.insert(jobState.jobRoster, playerId)
+    jobState.jobCount = #jobState.jobRoster
+    Core.JobsPlayerCount[jobName] = jobState.jobCount
+    GlobalState[("job:%s"):format(jobName)] = jobState
 end)
 
 AddEventHandler("esx:setJob", function(_, job, lastJob)
+    -- Original ESX GlobalState
+
     local lastJobKey = ("%s:count"):format(lastJob.name)
     local jobKey = ("%s:count"):format(job.name)
     local currentLastJob = Core.JobsPlayerCount[lastJob.name]
@@ -349,6 +448,77 @@ AddEventHandler("esx:setJob", function(_, job, lastJob)
 
     GlobalState[lastJobKey] = Core.JobsPlayerCount[lastJob.name]
     GlobalState[jobKey] = Core.JobsPlayerCount[job.name]
+
+    -- Modified
+
+    local job = job
+    local jobName = job.name
+    local jobLabel = job.label
+    local jobGrade = job.grade
+    local lastJobName = lastJob.name
+
+    if not jobName or not jobLabel or not jobGrade or not lastJobName then
+        return
+    end
+
+    local jobState = GlobalState[("job:%s"):format(jobName)]
+
+    if not jobState then
+        local jobTable = {
+            jobName = jobName,
+            jobLabel = jobLabel,
+            jobRoster = { playerId, },
+        }
+
+        jobTable.jobCount = #jobTable.jobRoster
+
+        GlobalState[("job:%s"):format(jobName)] = jobTable
+        return
+    end
+
+    table.insert(jobState.jobRoster, playerId)
+    jobState.jobCount = #jobState.jobRoster
+    Core.JobsPlayerCount[jobName] = jobState.jobCount
+    GlobalState[("job:%s"):format(jobName)] = jobState
+
+    local lastJobState = GlobalState[("job:%s"):format(lastJobName)]
+
+    if not lastJobState then
+        return
+    end
+
+    local myIndex
+
+    for index, value in ipairs(lastJobState.jobRoster) do
+        if value == playerId then
+            myIndex = index
+            break
+        end
+    end
+
+    if not myIndex then
+        return
+    end
+
+    if lastJobState.jobRoster[myIndex] ~= playerId then
+        local counter = 1
+
+        repeat
+            for index, value in ipairs(lastJobState.jobRoster) do
+                if value == playerId then
+                    myIndex = index
+                    break
+                end
+            end
+
+            counter = counter + 1
+        until lastJobState.jobRoster[myIndex] == playerId or counter >= 5
+    end
+
+    table.remove(lastJobState.jobRoster, myIndex)
+    lastJobState.jobCount = #lastJobState.jobRoster
+    Core.JobsPlayerCount[lastJobName] = lastJobState.jobCount
+    GlobalState[("job:%s"):format(lastJobName)] = lastJobState
 end)
 
 AddEventHandler("esx:playerLogout", function(playerId, cb)
@@ -713,3 +883,49 @@ for key in pairs(DoNotUse) do
         error(("WE STOPPED A RESOURCE THAT WILL BREAK ^1ESX^1, PLEASE REMOVE ^5%s^1"):format(key))
     end
 end
+
+-- [{ Added }]
+
+-- Load All Jobs Into GlobalState
+xpcall(function()
+    local jobs = oxmysql:query_async('SELECT `name`, `label` FROM `jobs`')
+
+    if not jobs or type(jobs) ~= "table" or #jobs <= 0 then
+        return
+    end
+
+    for index, value in ipairs(jobs) do
+        local jobTable = {
+            jobName = value.name,
+            jobLabel = value.label,
+            jobRoster = {},
+            jobCount = 0,
+        }
+
+        GlobalState[("job:%s"):format(value.name)] = jobTable
+    end
+end, function(err) error(err))
+
+-- Load Job Grades Into GlobalState
+xpcall(function()
+    local jobData = {}
+    local jobs = oxmysql:query_async('SELECT `name` FROM `jobs`', {})
+
+    for index, job in ipairs(jobs) do
+        jobData[job.name] = {}
+    end
+
+    for job, data in pairs(jobData) do
+        local jobQuery = oxmysql:query_async('SELECT `job_name`, `grade`, `name`, `label` FROM `job_grades` WHERE `job_name` = ?', { job })
+        local count = -1
+
+        for index, value in ipairs(jobQuery) do
+            data[value.grade] = { grade_name = value.name, grade_label = value.label }
+            count = count + 1
+        end
+
+        data["highest"] = count
+    end
+
+    GlobalState["jobInfo"] = jobData
+end, function(err) error(err) end)
