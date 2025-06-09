@@ -89,11 +89,11 @@ function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
         error("Invalid callback function")
     end
 
-
     local vehicleModel = joaat(model)
     local vehicleProperties = properties
 
     local promise = not cb and promise.new()
+    
     CreateThread(function()
         local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
@@ -144,15 +144,31 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
     local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
+
     CreateThread(function()
         local entity = CreateObject(model, objectCoords.x, objectCoords.y, objectCoords.z, true, true, false)
+
         while not DoesEntityExist(entity) do
             Wait(50)
         end
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+
         SetEntityHeading(entity, heading)
-        cb(NetworkGetNetworkIdFromEntity(entity))
+
+        if promise then
+            promise:resolve(networkId)
+        else
+            cb(networkId)
+        end
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param model number|string
@@ -163,13 +179,28 @@ function ESX.OneSync.SpawnPed(model, coords, heading, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
+
     CreateThread(function()
         local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
+
         while not DoesEntityExist(entity) do
             Wait(50)
         end
-        cb(NetworkGetNetworkIdFromEntity(entity))
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+
+        if promise then
+            promise:resolve(networkId)
+        else
+            cb(networkId)
+        end
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param model number|string
@@ -180,13 +211,28 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
+
     CreateThread(function()
         local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
+
         while not DoesEntityExist(entity) do
             Wait(50)
         end
-        cb(NetworkGetNetworkIdFromEntity(entity))
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+
+        if promise then
+            promise:resolve(networkId)
+        else
+            cb(networkId)
+        end
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 local function getNearbyEntities(entities, coords, modelFilter, maxDistance, isPed)
