@@ -40,6 +40,28 @@ function Actions:TrackPedCoords()
     ESX.SetPlayerData("coords", coords)
 end
 
+function Actions:TrackPedCoordsOnce()
+    CreateThread(function()
+        while not ESX.IsPlayerLoaded() then
+            Wait(250)
+        end
+
+        ESX.PlayerData.coords = nil
+
+        setmetatable(ESX.PlayerData, {
+            __index = function(self, key)
+                if key ~= "coords" then
+                    return
+                end
+
+                local coords = GetEntityCoords(ESX.PlayerData.ped)
+
+                return { x = coords.x, y = coords.y, z = coords.z }
+            end
+        })
+    end)
+end
+
 function Actions:TrackPed()
     local playerPed = ESX.PlayerData.ped
     local newPed = PlayerPedId()
@@ -193,7 +215,7 @@ end
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
-            self:TrackPedCoords()
+            -- self:TrackPedCoords()
             self:TrackPauseMenu()
             self:TrackVehicle()
             self:TrackWeapon()
@@ -217,3 +239,4 @@ function Actions:Init()
 end
 
 Actions:Init()
+Actions:TrackPedCoordsOnce()
