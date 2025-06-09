@@ -42,7 +42,7 @@ end
 
 function Actions:TrackPedCoordsOnce()
     CreateThread(function()
-        while not ESX.IsPlayerLoaded() then
+        while not ESX.IsPlayerLoaded() do
             Wait(250)
         end
 
