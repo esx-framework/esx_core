@@ -146,6 +146,7 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     end
 
     local promise = not cb and promise.new()
+    local startTime = GetGameTimer()
     local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
 
     CreateThread(function()
@@ -153,6 +154,10 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 
         while not DoesEntityExist(entity) do
             Wait(50)
+
+            if promise and (GetGameTimer() - startTime) >= 10000 then
+                return promise:reject(("Could not spawn object - ^5%s^7!"):format(model))
+            end
         end
 
         local networkId = NetworkGetNetworkIdFromEntity(entity)
@@ -181,12 +186,17 @@ function ESX.OneSync.SpawnPed(model, coords, heading, cb)
     end
 
     local promise = not cb and promise.new()
+    local startTime = GetGameTimer()
 
     CreateThread(function()
         local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
 
         while not DoesEntityExist(entity) do
             Wait(50)
+
+            if promise and (GetGameTimer() - startTime) >= 10000 then
+                return promise:reject(("Could not spawn ped - ^5%s^7!"):format(model))
+            end
         end
 
         local networkId = NetworkGetNetworkIdFromEntity(entity)
@@ -213,12 +223,17 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
     end
 
     local promise = not cb and promise.new()
+    local startTime = GetGameTimer()
 
     CreateThread(function()
         local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
 
         while not DoesEntityExist(entity) do
             Wait(50)
+
+            if promise and (GetGameTimer() - startTime) >= 10000 then
+                return promise:reject(("Could not spawn ped - ^5%s^7!"):format(model))
+            end
         end
 
         local networkId = NetworkGetNetworkIdFromEntity(entity)
