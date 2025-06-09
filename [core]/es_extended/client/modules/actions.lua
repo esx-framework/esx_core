@@ -56,7 +56,7 @@ function Actions:TrackPedCoordsOnce()
 
                 local coords = GetEntityCoords(ESX.PlayerData.ped)
 
-                return { x = coords.x, y = coords.y, z = coords.z }
+                return coords
             end
         })
     end)
