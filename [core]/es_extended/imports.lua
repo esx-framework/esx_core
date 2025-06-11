@@ -20,8 +20,13 @@ local function TrackPedCoordsOnce()
 end
 
 if not IsDuplicityVersion() then -- Only register this event for the client
-    -- On Resource Start
-    local OnStart = (function()
+    -- On Resource Restarts
+    local OnResourceRestart = (function()
+        if not ESX.PlayerLoaded or not ESX.PlayerData then
+            -- Player hasn't loaded yet
+            return
+        end
+
         TrackPedCoordsOnce()
     end)()
 
