@@ -1,5 +1,4 @@
 fx_version 'cerulean'
-
 game 'gta5'
 author 'ESX-Framework - Linden - KASH'
 description 'Allows players to have multiple characters on the same account.'
@@ -21,6 +20,6 @@ client_scripts {
    'client/*.lua'
 }
 
-ui_page { 'html/ui.html' }
+ui_page 'web/build/index.html'
 
-files { 'html/ui.html', 'html/css/main.css', 'html/js/app.js', 'html/locales/*.js' }
+files { 'web/build/index.html', 'web/build/**/*.*'}
