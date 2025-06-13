@@ -8,6 +8,7 @@ Config.DisableVehicleSeatShuff = false -- Disables vehicle seat shuff
 Config.DisableDisplayAmmo = false -- Disable ammunition display
 Config.EnablePVP = true -- Allow Player to player combat
 Config.EnableWantedLevel = false -- Use Normal GTA wanted Level?
+Config.MakeNPCFriendly = false -- Makes NPCs friendly towards players
 
 Config.RemoveHudComponents = {
     [1] = false, --WANTED_STARS,

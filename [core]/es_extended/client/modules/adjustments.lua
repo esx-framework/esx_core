@@ -225,6 +225,26 @@ function Adjustments:DisableRadio()
     end
 end
 
+function Adjustments:MakeNPCFriendly()
+    if Config.MakeNPCFriendly then
+        local hash = GetHashKey("PLAYER")
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_LOST"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_SALVA"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_HILLBILLY"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_BALLAS"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_MEXICAN"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_FAMILY"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_MARABUNTE"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("GANG_1"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("GANG_1"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("GANG_9"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("GANG_10"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("FIREMAN"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("MEDIC"), hash)
+        SetRelationshipBetweenGroups(1, GetHashKey("COP"), hash)
+    end
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -239,4 +259,5 @@ function Adjustments:Load()
     self:DiscordPresence()
     self:WantedLevel()
     self:DisableRadio()
+    self:MakeNPCFriendly()
 end
