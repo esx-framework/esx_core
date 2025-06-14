@@ -387,15 +387,14 @@ end
 ---@param model string|number
 ---@param player number
 ---@param cb function?
----@diagnostic disable-next-line: duplicate-set-field
 ---@return string?
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetVehicleType(model, player, cb)
     if cb and not ESX.IsFunctionReference(cb) then
         error("Invalid callback function")
     end
 
     local promise = not cb and promise.new()
-
     local function resolve(result)
         if promise then
             promise:resolve(result)
