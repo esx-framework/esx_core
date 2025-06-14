@@ -155,11 +155,7 @@ if not Config.Multichar then
         end
 
         deferrals.update(("[ESX] Cleaning stale player entry..."):format(identifier))
-        TriggerEvent('esx:playerDropped', xPlayer.source)
-        ESX.Players[xPlayer.source] = nil
-        Core.playersByIdentifier[identifier] = nil
-        GlobalState['playerCount'] = GlobalState['playerCount'] - 1
-
+        onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
     end)
 end
 
