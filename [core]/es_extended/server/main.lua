@@ -69,6 +69,7 @@ end
 
 ---@param playerId number
 ---@param reason string
+---@param cb function?
 local function onPlayerDropped(playerId, reason, cb)
     local xPlayer = ESX.GetPlayerFromId(playerId)
 
@@ -84,15 +85,27 @@ local function onPlayerDropped(playerId, reason, cb)
     GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
     Core.playersByIdentifier[xPlayer.identifier] = nil
 
-    local p = promise:new()
+    local p = not cb and promise:new()
+    local function resolve()
+        if cb then
+            return cb()
+        elseif(p) then
+            return p:resolve()
+        end
+    end
+
     Core.SavePlayer(xPlayer, function()
         GlobalState["playerCount"] = GlobalState["playerCount"] - 1
         ESX.Players[playerId] = nil
-        p:resolve()
+        resolve()
     end)
 
-    return Citizen.Await(p)
+    if p then
+        return Citizen.Await(p)
+    end
 end
+AddEventHandler("esx:onPlayerDropped", onPlayerDropped)
+
 
 if Config.Multichar then
     AddEventHandler("esx:onPlayerJoined", function(src, char, data)
@@ -147,7 +160,6 @@ if not Config.Multichar then
         end
 
         local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
-
         if not xPlayer then
             return deferrals.done()
         end
