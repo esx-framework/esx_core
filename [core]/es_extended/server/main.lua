@@ -121,7 +121,7 @@ if not Config.Multichar then
 
         local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
 
-        if xPlayer and ESX.Players[xPlayer.playerId] then
+        if xPlayer then
             local xPlayerId = xPlayer.playerId
             local isExist = DoesPlayerExist(xPlayerId --[[@as string]])
 
