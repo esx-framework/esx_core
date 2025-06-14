@@ -110,24 +110,21 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
     end
 
     CreateThread(function()
-        local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
-        if not vehicleType then
-            if not xPlayer then
-                return reject("No players found nearby to check vehicle type!")
-            end
-            vehicleType = ESX.GetVehicleType(vehicleModel, xPlayer.id)
-        end
+        local closestPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
+        local closestPlayerFound = next(closestPlayer) ~= nil
+
+        vehicleType = vehicleType or (closestPlayerFound and ESX.GetVehicleType(vehicleModel, closestPlayer.id) or nil)
 
         if not vehicleType then
-            return reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(vehicleModel))
+            return reject("No players found nearby to check vehicle type! Alternatively, you can specify the vehicle type manually.")
         end
 
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
         local tries = 0
 
         while not createdVehicle or createdVehicle == 0
-        or (xPlayer and NetworkGetEntityOwner(createdVehicle) == -1)
-        or (not xPlayer and not DoesEntityExist(createdVehicle)) do
+            or (closestPlayerFound and NetworkGetEntityOwner(createdVehicle) == -1)
+            or (not closestPlayerFound and not DoesEntityExist(createdVehicle)) do
             Wait(200)
             tries = tries + 1
             if tries > 40 then
