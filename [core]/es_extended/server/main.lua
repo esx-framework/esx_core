@@ -69,7 +69,7 @@ end
 
 ---@param playerId number
 ---@param reason string
-local function onPlayerDropped(playerId, reason)
+local function onPlayerDropped(playerId, reason, cb)
     local xPlayer = ESX.GetPlayerFromId(playerId)
 
     if not xPlayer then
@@ -84,10 +84,14 @@ local function onPlayerDropped(playerId, reason)
     GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
     Core.playersByIdentifier[xPlayer.identifier] = nil
 
+    local p = promise:new()
     Core.SavePlayer(xPlayer, function()
         GlobalState["playerCount"] = GlobalState["playerCount"] - 1
         ESX.Players[playerId] = nil
+        p:resolve()
     end)
+
+    return Citizen.Await(p)
 end
 
 if Config.Multichar then
@@ -156,6 +160,7 @@ if not Config.Multichar then
 
         deferrals.update(("[ESX] Cleaning stale player entry..."):format(identifier))
         onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
+        deferrals.done()
     end)
 end
 
