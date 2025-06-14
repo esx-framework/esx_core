@@ -67,6 +67,29 @@ local function onPlayerJoined(playerId)
     end
 end
 
+---@param playerId number
+---@param reason string
+local function onPlayerDropped(playerId, reason)
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+
+    if not xPlayer then
+        return
+    end
+
+    TriggerEvent("esx:playerDropped", playerId, reason)
+    local job = xPlayer.getJob().name
+    local currentJob = Core.JobsPlayerCount[job]
+    Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+
+    GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
+    Core.playersByIdentifier[xPlayer.identifier] = nil
+
+    Core.SavePlayer(xPlayer, function()
+        GlobalState["playerCount"] = GlobalState["playerCount"] - 1
+        ESX.Players[playerId] = nil
+    end)
+end
+
 if Config.Multichar then
     AddEventHandler("esx:onPlayerJoined", function(src, char, data)
         while not next(ESX.Jobs) do
@@ -322,24 +345,9 @@ AddEventHandler("chatMessage", function(playerId, _, message)
     end
 end)
 
+---@param reason string
 AddEventHandler("playerDropped", function(reason)
-    local playerId = source
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-
-    if xPlayer then
-        TriggerEvent("esx:playerDropped", playerId, reason)
-        local job = xPlayer.getJob().name
-        local currentJob = Core.JobsPlayerCount[job]
-        Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
-
-        GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
-        Core.playersByIdentifier[xPlayer.identifier] = nil
-
-        Core.SavePlayer(xPlayer, function()
-            GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-            ESX.Players[playerId] = nil
-        end)
-    end
+    onPlayerDropped(source --[[@as number]], reason)
 end)
 
 AddEventHandler("esx:playerLoaded", function(_, xPlayer)
