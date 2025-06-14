@@ -125,20 +125,17 @@ if not Config.Multichar then
             return deferrals.done()
         end
 
-        local xPlayerId = xPlayer.playerId
-        local isExist = DoesPlayerExist(xPlayerId --[[@as string]])
-
-        if isExist ~= 0 then
-            deferrals.update(("[ESX] Cleaning old Player entry for [%s] (player invalid)"):format(identifier))
-            TriggerEvent('esx:playerDropped', xPlayerId)
-            ESX.Players[xPlayerId] = nil
-            Core.playersByIdentifier[identifier] = nil
-            GlobalState['playerCount'] = GlobalState['playerCount'] - 1
-        else
+        if DoesPlayerExist(xPlayer.source --[[@as string]]) then
             return deferrals.done(
-                    ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
-                )
+                ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+            )
         end
+
+        deferrals.update(("[ESX] Cleaning stale player entry..."):format(identifier))
+        TriggerEvent('esx:playerDropped', xPlayer.source)
+        ESX.Players[xPlayer.source] = nil
+        Core.playersByIdentifier[identifier] = nil
+        GlobalState['playerCount'] = GlobalState['playerCount'] - 1
 
     end)
 end
