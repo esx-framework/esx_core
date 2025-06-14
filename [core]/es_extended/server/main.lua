@@ -121,24 +121,25 @@ if not Config.Multichar then
 
         local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
 
-        if xPlayer then
-            local xPlayerId = xPlayer.playerId
-            local isExist = DoesPlayerExist(xPlayerId --[[@as string]])
-
-            if isExist ~= 0 then
-                deferrals.update(("[ESX] Cleaning old Player entry for [%s] (player invalid)"):format(identifier))
-                TriggerEvent('esx:playerDropped', xPlayerId)
-                ESX.Players[xPlayerId] = nil
-                Core.playersByIdentifier[identifier] = nil
-                GlobalState['playerCount'] = GlobalState['playerCount'] - 1
-            else
-                return deferrals.done(
-                        ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
-                    )
-            end
+        if not xPlayer then
+            return deferrals.done()
         end
 
-        return deferrals.done()
+        local xPlayerId = xPlayer.playerId
+        local isExist = DoesPlayerExist(xPlayerId --[[@as string]])
+
+        if isExist ~= 0 then
+            deferrals.update(("[ESX] Cleaning old Player entry for [%s] (player invalid)"):format(identifier))
+            TriggerEvent('esx:playerDropped', xPlayerId)
+            ESX.Players[xPlayerId] = nil
+            Core.playersByIdentifier[identifier] = nil
+            GlobalState['playerCount'] = GlobalState['playerCount'] - 1
+        else
+            return deferrals.done(
+                    ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+                )
+        end
+
     end)
 end
 
