@@ -110,8 +110,8 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
     end
 
     CreateThread(function()
+        local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
         if not vehicleType then
-            local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
             if not xPlayer then
                 return reject("No players found nearby to check vehicle type!")
             end
@@ -125,7 +125,9 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
         local tries = 0
 
-        while not createdVehicle or createdVehicle == 0 or NetworkGetEntityOwner(createdVehicle) == -1 do
+        while not createdVehicle or createdVehicle == 0
+        or (xPlayer and NetworkGetEntityOwner(createdVehicle) == -1)
+        or (not xPlayer and not DoesEntityExist(createdVehicle)) do
             Wait(200)
             tries = tries + 1
             if tries > 40 then
