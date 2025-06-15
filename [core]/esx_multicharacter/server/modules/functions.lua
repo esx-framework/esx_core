@@ -68,6 +68,7 @@ function Server:OnConnecting(source, deferrals)
 
     deferrals.update(("[ESX Multicharacter] Cleaning stale player entry..."):format(identifier))
     TriggerEvent("esx:onPlayerDropped", xPlayer.source, "esx_stale_player_obj", function()
+        ESX.Players[identifier] = true
         deferrals.done()
     end)
 end
