@@ -13,6 +13,7 @@
 ---@field scale number
 ---@field colour number
 ---@field display number
+---@field handle number
 ---@field shortRange boolean
 ---@field label string
 ---@field position  vector3 | number | vector4 | table
