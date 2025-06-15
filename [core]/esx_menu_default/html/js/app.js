@@ -1,21 +1,31 @@
 (function () {
     let MenuTpl =
-        '<div id="menu_{{_namespace}}_{{_name}}" class="menu{{#align}} align-{{align}}{{/align}}">' +
+        '<div id="menu_{{_namespace}}_{{_name}}" class="menu-container{{#align}} align-{{align}}{{/align}}" style="transform: scale({{scale}});">' +
+        '<div class="menu">' +
         '<div class="head"><span>{{{title}}}</span></div>' +
         '<div class="menu-items">' +
         "{{#elements}}" +
         '<div class="menu-item {{#selected}}selected{{/selected}}">' +
-        "{{{label}}}{{#isSlider}} : &lt;{{{sliderLabel}}}&gt;{{/isSlider}}" +
+        '{{#icon}}<div class="menu-item-icon"><i class="fas fa-{{icon}}"></i></div>{{/icon}}' +
+        '<div class="menu-item-label">{{{label}}}{{#isSlider}} : &lt;{{{sliderLabel}}}&gt;{{/isSlider}}</div>' +
         "</div>" +
         "{{/elements}}" +
         "</div>" +
-        "</div>" +
+        '</div>' +
+        '<div class="menu-buttons">' +
+        '<div class="menu-button backspace-btn"><i class="fa-solid fa-delete-left"></i> {{locales.backspace}}</div>' +
+        '<div class="menu-button close-btn"><i class="fa-solid fa-right-to-bracket"></i> {{locales.select}}</div>' +
+        '</div>' +
         "</div>";
     window.ESX_MENU = {};
     ESX_MENU.ResourceName = "esx_menu_default";
     ESX_MENU.opened = {};
     ESX_MENU.focus = [];
     ESX_MENU.pos = {};
+    ESX_MENU.locales = {
+        backspace: "BACK",
+        select: "SELECT"
+    };
 
     ESX_MENU.open = function (namespace, name, data) {
         if (typeof ESX_MENU.opened[namespace] === "undefined") {
@@ -30,6 +40,12 @@
             ESX_MENU.pos[namespace] = {};
         }
 
+        if (data.locales) {
+            ESX_MENU.locales = data.locales;
+        }
+
+        data.scale = data.scale || 1;
+
         for (let i = 0; i < data.elements.length; i++) {
             if (typeof data.elements[i].type === "undefined") {
                 data.elements[i].type = "default";
@@ -39,6 +55,7 @@
         data._index = ESX_MENU.focus.length;
         data._namespace = namespace;
         data._name = name;
+        data.locales = ESX_MENU.locales;
 
         for (let i = 0; i < data.elements.length; i++) {
             data.elements[i]._namespace = namespace;
@@ -361,6 +378,22 @@
     window.onload = function (e) {
         window.addEventListener("message", (event) => {
             onData(event.data);
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.backspace-btn')) {
+                let focused = ESX_MENU.getFocused();
+                if (typeof focused != "undefined") {
+                    ESX_MENU.cancel(focused.namespace, focused.name);
+                }
+            }
+            
+            if (event.target.closest('.close-btn')) {
+                let focused = ESX_MENU.getFocused();
+                if (typeof focused != "undefined") {
+                    ESX_MENU.close(focused.namespace, focused.name);
+                }
+            }
         });
     };
 })();

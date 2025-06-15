@@ -62,7 +62,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         local command = Core.RegisteredCommands[name]
 
         if not command.allowConsole and playerId == 0 then
-            print(("[^3WARNING^7] ^5%s"):format(TranslateCap("commanderror_console")))
+            print(("[^3WARNING^7] ^5%s^0"):format(TranslateCap("commanderror_console")))
         else
             local xPlayer, error = ESX.Players[playerId], nil
 
@@ -358,6 +358,18 @@ function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
 
+---@param identifier string
+---@return number playerId
+function ESX.GetPlayerIdFromIdentifier(identifier)
+    return Core.playersByIdentifier[identifier]?.source
+end
+
+---@param source number
+---@return boolean
+function ESX.IsPlayerLoaded(source)
+    return ESX.Players[source] ~= nil
+end
+
 ---@param playerId number | string
 ---@return string
 function ESX.GetIdentifier(playerId)
@@ -374,19 +386,37 @@ end
 
 ---@param model string|number
 ---@param player number
----@param cb function
+---@param cb function?
+---@return string?
 ---@diagnostic disable-next-line: duplicate-set-field
 function ESX.GetVehicleType(model, player, cb)
+    if cb and not ESX.IsFunctionReference(cb) then
+        error("Invalid callback function")
+    end
+
+    local promise = not cb and promise.new()
+    local function resolve(result)
+        if promise then
+            promise:resolve(result)
+        elseif cb then
+            cb(result)
+        end
+    end
+
     model = type(model) == "string" and joaat(model) or model
 
     if Core.vehicleTypesByModel[model] then
-        return cb(Core.vehicleTypesByModel[model])
+        return resolve(Core.vehicleTypesByModel[model])
     end
 
     ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
         Core.vehicleTypesByModel[model] = vehicleType
-        cb(vehicleType)
+        resolve(vehicleType)
     end, model)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param name string
@@ -433,6 +463,11 @@ end
 ---@param fields table
 ---@return nil
 function ESX.DiscordLogFields(name, title, color, fields)
+    for i = 1, #fields do
+        local field = fields[i]
+        field.value = tostring(field.value)
+    end
+
     local webHook = Config.DiscordLogs.Webhooks[name] or Config.DiscordLogs.Webhooks.default
     local embedData = {
         {
@@ -495,7 +530,7 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { label = "Unemployed", grades = { ["0"] = { grade = 0, label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
         ESX.Jobs = Jobs
     end
@@ -609,14 +644,31 @@ function ESX.DoesJobExist(job, grade)
     return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
----@param playerId string | number
+---@param playerSrc number
 ---@return boolean
-function Core.IsPlayerAdmin(playerId)
-    playerId = tostring(playerId)
-    if (IsPlayerAceAllowed(playerId, "command") or GetConvar("sv_lan", "") == "true") then
+function Core.IsPlayerAdmin(playerSrc)
+    if type(playerSrc) ~= "number" then
+        return false
+    end
+
+    if IsPlayerAceAllowed(playerSrc --[[@as string]], "command") or GetConvar("sv_lan", "") == "true" then
         return true
     end
 
-    local xPlayer = ESX.Players[playerId]
-    return (xPlayer and Config.AdminGroups[xPlayer.group] and true) or false
+    local xPlayer = ESX.GetPlayerFromId(playerSrc)
+    return xPlayer and Config.AdminGroups[xPlayer.getGroup()] or false
+end
+
+---@param owner string
+---@param plate string
+---@param coords vector4
+---@return CExtendedVehicle?
+function ESX.CreateExtendedVehicle(owner, plate, coords)
+    return Core.vehicleClass.new(owner, plate, coords)
+end
+
+---@param plate string
+---@return CExtendedVehicle?
+function ESX.GetExtendedVehicleFromPlate(plate)
+   return Core.vehicleClass.getFromPlate(plate)
 end

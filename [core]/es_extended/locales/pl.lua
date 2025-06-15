@@ -1,4 +1,4 @@
-Locales["pl"] = {
+return {
     -- Inventory
     ["inventory"] = "ekwipunek %s / %s",
     ["use"] = "użyj",
@@ -202,10 +202,10 @@ Locales["pl"] = {
     ["component_luxary_finish"] = "luksusowe wykończenie broni",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Weapon Ammo
     ["ammo_rounds"] = "nabój/oi",

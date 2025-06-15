@@ -1,4 +1,4 @@
-Locales["fi"] = {
+return {
     -- Inventory
     ["inventory"] = "Reppu %s / %s",
     ["use"] = "Käytä",

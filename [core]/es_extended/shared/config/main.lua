@@ -1,5 +1,9 @@
 Config = {}
 
+local txAdminLocale = GetConvar("txAdmin-locale", "en")
+local esxLocale = GetConvar("esx:locale", "invalid")
+Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
+
 -- for ox inventory, this will automatically be adjusted, do not change! for other inventories, change to "resource_name"
 Config.CustomInventory = false
 
@@ -35,6 +39,14 @@ Config.AdminGroups = {
     ["admin"] = true,
 }
 
+Config.ValidCharacterSets = { -- Only enable additional charsets if your server is multilingual. By default everything is false.
+    ['el'] = false, -- Greek
+    ['sr'] = false, -- Cyrillic
+    ['he'] = false, -- Hebrew
+    ['ar'] = false, -- Arabic
+    ['zh-cn'] = false -- Chinese, Japanese, Korean
+}
+
 Config.EnablePaycheck = true -- enable paycheck
 Config.LogPaycheck = false -- Logs paychecks to a nominated Discord channel via webhook (default is false)
 Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
@@ -60,8 +72,3 @@ if GetResourceState("ox_inventory") ~= "missing" then
 end
 
 Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
-
-local txAdminLocale = GetConvar("txAdmin-locale", "en")
-local esxLocale = GetConvar("esx:locale", "invalid")
-
-Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"

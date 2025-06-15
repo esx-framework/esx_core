@@ -33,11 +33,17 @@ function Callbacks:Execute(cb, ...)
 end
 
 function Callbacks:Trigger(player, event, cb, invoker, ...)
-    self.requests[self.id] = cb
+    self.requests[self.id] = {
+        await = type(cb) == "boolean",
+        cb = cb or promise:new()
+    }
+    local table = self.requests[self.id]
 
     TriggerClientEvent("esx:triggerClientCallback", player, event, self.id, invoker, ...)
 
     self.id += 1
+
+    return table.cb
 end
 
 function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
@@ -64,8 +70,12 @@ function Callbacks:RecieveClient(requestId, invoker, ...)
 
     local callback = self.requests[self.currentId]
 
-    self:Execute(callback, ...)
     self.requests[requestId] = nil
+    if callback.await then
+        callback.cb:resolve({ ... })
+    else
+        self:Execute(callback.cb, ...)
+    end
 end
 
 -- =============================================
@@ -81,6 +91,28 @@ function ESX.TriggerClientCallback(player, eventName, callback, ...)
     local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
 
     Callbacks:Trigger(player, eventName, callback, invoker, ...)
+end
+
+---@param player number playerId
+---@param eventName string
+---@param ... any
+---@return any
+function ESX.AwaitClientCallback(player, eventName, ...)
+    local invokingResource = GetInvokingResource()
+    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+
+    local p = Callbacks:Trigger(player, eventName, false, invoker, ...)
+    if not p then return end
+
+    SetTimeout(15000, function()
+        if p.state == "pending" then
+            p:reject("Server Callback Timed Out")
+        end
+    end)
+
+    Citizen.Await(p)
+
+    return table.unpack(p.value)
 end
 
 ---@param eventName string

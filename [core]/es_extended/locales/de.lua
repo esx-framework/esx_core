@@ -1,4 +1,4 @@
-Locales["de"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventar ( Gewicht %s / %s )",
     ["use"] = "Benutzen",
