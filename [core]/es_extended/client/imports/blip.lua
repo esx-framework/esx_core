@@ -19,6 +19,13 @@ function Blip:setColour(colour)
 	SetBlipColour(self.handle, self.colour)
 end
 
+---@param display? number
+function Blip:setDisplay(display)
+	self.display = display or 2
+	SetBlipDisplay(self.handle, self.display)
+end
+
+
 ---@param shortRange? boolean
 function Blip:setShortRange(shortRange)
 	self.shortRange = shortRange ~= nil and shortRange or true
@@ -50,7 +57,8 @@ end
 ---@param scale? number
 ---@param colour? number
 ---@param shortRange? boolean
-function Blip:new(position, label, sprite, scale, colour, shortRange)
+---@param display? number
+function Blip:new(position, label, sprite, scale, colour, shortRange, display)
 	return setmetatable({
 		position = position,
 		label = label,
@@ -58,6 +66,7 @@ function Blip:new(position, label, sprite, scale, colour, shortRange)
 		scale = scale,
 		colour = colour,
 		shortRange = shortRange,
+		display = display
 	}, Blip)
 end
 
@@ -82,6 +91,7 @@ function Blip:create()
 	self:setColour(self.colour)
 	self:setShortRange(self.shortRange)
 	self:setLabel(self.label)
+	self:setDisplay(self.display)
 end
 
 function Blip:delete()
