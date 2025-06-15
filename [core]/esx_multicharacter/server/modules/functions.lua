@@ -16,7 +16,7 @@ function Server:ResetPlayers()
         table.wipe(ESX.Players)
 
         for _, v in pairs(players) do
-            ESX.Players[self:GetIdentifier(v.source)] = true
+            ESX.Players[self:GetIdentifier(v.source)] = v.identifier
         end
     else
         ESX.Players = {}
@@ -27,10 +27,10 @@ function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
     local identifier = self:GetIdentifier(source)
-    
+
     -- luacheck: ignore
     if not SetEntityOrphanMode then
-        return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
+        return deferrals.done(("[ESX Multicharacter] ESX Requires a minimum Artifact version of 10188, Please update your server."))
     end
 
     if Server.oneSync == "off" or Server.oneSync == "legacy" then
@@ -45,19 +45,37 @@ function Server:OnConnecting(source, deferrals)
         deferrals.done("[ESX Multicharacter] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg")
     end
 
-    if identifier then
-        if not ESX.GetConfig().EnableDebug then
-            if ESX.Players[identifier] then
-                deferrals.done(("[ESX Multicharacter] A player is already connected to the server with this identifier.\nYour identifier: %s:%s"):format(Server.identifierType, identifier))
-            else
-                deferrals.done()
-            end
-        else
-            deferrals.done()
-        end
-    else
-        deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType))
+    if not identifier then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
+
+    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then 
+        ESX.Players[identifier] = true
+        return deferrals.done()
     end
+
+    if ESX.Players[identifier] == true then
+        return deferrals.done(
+            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+        )
+    end
+
+    local xPlayer = ESX.GetPlayerFromIdentifier(("%s:%s"):format(ESX.Players[identifier], identifier))
+    if not xPlayer then
+        ESX.Players[identifier] = true
+        return deferrals.done()
+    end
+
+    if DoesPlayerExist(xPlayer.source --[[@as string]]) then
+        return deferrals.done(
+            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+        )
+    end
+
+    deferrals.update(("[ESX Multicharacter] Cleaning stale player entry..."):format(identifier))
+    TriggerEvent("esx:onPlayerDropped", xPlayer.source, "esx_stale_player_obj", function()
+        ESX.Players[identifier] = true
+        deferrals.done()
+    end)
 end
+
 
 Server:ResetPlayers()

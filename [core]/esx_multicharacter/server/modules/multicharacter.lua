@@ -78,18 +78,20 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
             end
         end
 
-        TriggerEvent("esx:onPlayerJoined", source, ("%s%s"):format(Server.prefix, charid))
-        ESX.Players[Server:GetIdentifier(source)] = true
+        local charIdentifier = ("%s%s"):format(Server.prefix, charid)
+        TriggerEvent("esx:onPlayerJoined", source, charIdentifier)
+        ESX.Players[Server:GetIdentifier(source)] = charIdentifier
     end
 end
 
 function Multicharacter:RegistrationComplete(source, data)
     local charId = self.awaitingRegistration[source]
+    local charIdentifier = ("%s%s"):format(Server.prefix, charId)
     self.awaitingRegistration[source] = nil
-    ESX.Players[Server:GetIdentifier(source)] = true
+    ESX.Players[Server:GetIdentifier(source)] = charIdentifier
 
     SetPlayerRoutingBucket(source, 0)
-    TriggerEvent("esx:onPlayerJoined", source, ("%s%s"):format(Server.prefix, charId), data)
+    TriggerEvent("esx:onPlayerJoined", source, charIdentifier, data)
 end
 
 function Multicharacter:PlayerDropped(player)
