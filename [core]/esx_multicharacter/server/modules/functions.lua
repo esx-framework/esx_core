@@ -47,7 +47,10 @@ function Server:OnConnecting(source, deferrals)
 
     if not identifier then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
 
-    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then deferrals.done() end
+    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then 
+        ESX.Players[identifier] = true
+        return deferrals.done()
+    end
 
     if ESX.Players[identifier] == true then
         return deferrals.done(
@@ -55,8 +58,9 @@ function Server:OnConnecting(source, deferrals)
         )
     end
 
-    local xPlayer = ESX.GetPlayerFromIdentifier(ESX.Players[identifier])
+    local xPlayer = ESX.GetPlayerFromIdentifier(("%s:%s"):format(ESX.Players[identifier], identifier))
     if not xPlayer then
+        ESX.Players[identifier] = true
         return deferrals.done()
     end
 
