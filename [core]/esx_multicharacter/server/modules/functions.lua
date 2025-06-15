@@ -30,7 +30,7 @@ function Server:OnConnecting(source, deferrals)
 
     -- luacheck: ignore
     if not SetEntityOrphanMode then
-        return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
+        return deferrals.done(("[ESX Multicharacter] ESX Requires a minimum Artifact version of 10188, Please update your server."))
     end
 
     if Server.oneSync == "off" or Server.oneSync == "legacy" then
@@ -56,11 +56,11 @@ function Server:OnConnecting(source, deferrals)
 
     if DoesPlayerExist(xPlayer.source --[[@as string]]) then
         return deferrals.done(
-            ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
         )
     end
 
-    deferrals.update(("[ESX] Cleaning stale player entry..."):format(identifier))
+    deferrals.update(("[ESX Multicharacter] Cleaning stale player entry..."):format(identifier))
     TriggerEvent("esx:onPlayerDropped", xPlayer.source, "esx_stale_player_obj", function()
         deferrals.done()
     end)
