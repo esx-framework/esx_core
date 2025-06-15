@@ -16,7 +16,7 @@ function Server:ResetPlayers()
         table.wipe(ESX.Players)
 
         for _, v in pairs(players) do
-            ESX.Players[self:GetIdentifier(v.source)] = true
+            ESX.Players[self:GetIdentifier(v.source)] = v.identifier
         end
     else
         ESX.Players = {}
@@ -49,7 +49,13 @@ function Server:OnConnecting(source, deferrals)
 
     if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then deferrals.done() end
 
-    local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+    if ESX.Players[identifier] == true then
+        return deferrals.done(
+            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+        )
+    end
+
+    local xPlayer = ESX.GetPlayerFromIdentifier(ESX.Players[identifier])
     if not xPlayer then
         return deferrals.done()
     end
