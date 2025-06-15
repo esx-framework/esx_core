@@ -1,3 +1,21 @@
+---@class Blip
+---@field setSprite function
+---@field setScale function
+---@field setColour function
+---@field setDisplay function
+---@field setShortRange function
+---@field setLabel function
+---@field setPosition function
+---@field new function
+---@field create function
+---@field delete function
+---@field sprite number
+---@field scale number
+---@field colour number
+---@field display number
+---@field shortRange boolean
+---@field label string
+---@field position  vector3 | number | vector4 | table
 local Blip = {}
 Blip.__gc = Blip.delete
 
@@ -25,7 +43,6 @@ function Blip:setDisplay(display)
 	SetBlipDisplay(self.handle, self.display)
 end
 
-
 ---@param shortRange? boolean
 function Blip:setShortRange(shortRange)
 	self.shortRange = shortRange ~= nil and shortRange or true
@@ -51,13 +68,14 @@ function Blip:setPosition(position)
 	end
 end
 
----@param position vector3 | number
+---@param position  vector3 | number | vector4 | table
 ---@param label? string
 ---@param sprite? number
 ---@param scale? number
 ---@param colour? number
 ---@param shortRange? boolean
 ---@param display? number
+---@return Blip blipCLass
 function Blip:new(position, label, sprite, scale, colour, shortRange, display)
 	return setmetatable({
 		position = position,
