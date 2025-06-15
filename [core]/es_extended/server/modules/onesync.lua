@@ -78,57 +78,66 @@ function ESX.OneSync.GetClosestPlayer(source, maxDistance, ignore)
     return getNearbyPlayers(source, true, maxDistance, ignore)
 end
 
----@param model number|string
+---@param vehicleModel number|string
 ---@param coords vector3|table
 ---@param heading number
----@param properties table
+---@param vehicleProperties table
 ---@param cb? fun(netId: number)
+---@param vehicleType string?
 ---@return number? netId
-function ESX.OneSync.SpawnVehicle(model, coords, heading, properties, cb)
+function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperties, cb, vehicleType)
     if cb and not ESX.IsFunctionReference(cb) then
         error("Invalid callback function")
     end
 
-
-    local vehicleModel = joaat(model)
-    local vehicleProperties = properties
+    vehicleModel = joaat(vehicleModel)
 
     local promise = not cb and promise.new()
+
+    local function resolve(result)
+        if promise then
+            promise:resolve(result)
+        elseif cb then
+            cb(result)
+        end
+    end
+
+    local function reject(err)
+        if promise then
+            promise:reject(err)
+        end
+        error(err)
+    end
+
     CreateThread(function()
-        local xPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
-        ESX.GetVehicleType(vehicleModel, xPlayer.id, function(vehicleType)
-            if not vehicleType then
-                if (promise) then
-                    return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
-                end
-                error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+        local closestPlayer = ESX.OneSync.GetClosestPlayer(coords, 300)
+        local closestPlayerFound = next(closestPlayer) ~= nil
+
+        vehicleType = vehicleType or (closestPlayerFound and ESX.GetVehicleType(vehicleModel, closestPlayer.id) or nil)
+
+        if not vehicleType then
+            return reject("No players found nearby to check vehicle type! Alternatively, you can specify the vehicle type manually.")
+        end
+
+        local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
+        local tries = 0
+
+        while not createdVehicle or createdVehicle == 0
+            or (closestPlayerFound and NetworkGetEntityOwner(createdVehicle) == -1)
+            or (not closestPlayerFound and not DoesEntityExist(createdVehicle)) do
+            Wait(200)
+            tries = tries + 1
+            if tries > 40 then
+                return reject(("Could not spawn vehicle - ^5%s^7!"):format(vehicleModel))
             end
+        end
 
-            local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
-            local tries = 0
+        -- luacheck: ignore
+        SetEntityOrphanMode(createdVehicle, 2)
+        local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
+        Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
 
-            while not createdVehicle or createdVehicle == 0 or NetworkGetEntityOwner(createdVehicle) == -1 do
-                Wait(200)
-                tries = tries + 1
-                if tries > 40 then
-                    if promise then
-                        return promise:reject(("Could not spawn vehicle - ^5%s^7!"):format(model))
-                    end
-                    error(("Could not spawn vehicle - ^5%s^7!"):format(model))
-                end
-            end
-
-            -- luacheck: ignore
-            SetEntityOrphanMode(createdVehicle, 2)
-            local networkId = NetworkGetNetworkIdFromEntity(createdVehicle)
-            Entity(createdVehicle).state:set("VehicleProperties", vehicleProperties, true)
-
-            if promise then
-                promise:resolve(networkId)
-            elseif cb then
-                cb(networkId)
-            end
-        end)
+        resolve(networkId)
     end)
 
     if promise then
