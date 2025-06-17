@@ -585,7 +585,7 @@ ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
 	ESX.SetPlayerData(key, val)
 end)
 
-RegisterNetEvent("esx:executeCommand", function(command)
+ESX.SecureNetEvent("esx:executeCommand", function(command)
     -- Triggered From Another Client Script?
     if GetInvokingResource() then
         return
