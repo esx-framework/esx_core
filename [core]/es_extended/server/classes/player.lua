@@ -936,6 +936,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
+    function self.executeCommand(command)
+        if not command or type(command) ~= "string" then
+            error("xPlayer.executeCommand must be of type string!")
+            return
+        end
+
+        self.triggerEvent("esx:executeCommand", command)
+    end
+
     for _, funcs in pairs(Core.PlayerFunctionOverrides) do
         for fnName, fn in pairs(funcs) do
             self[fnName] = fn(self)
