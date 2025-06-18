@@ -937,7 +937,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     end
 
     function self.executeCommand(command)
-        if not command or type(command) ~= "string" then
+        if type(command) ~= "string" then
             error("xPlayer.executeCommand must be of type string!")
             return
         end
