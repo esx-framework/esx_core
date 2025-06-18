@@ -1549,9 +1549,7 @@ function ESX.FaceEntity(entity1, entity2)
     -- Credits to Havoc
     local ent1 = GetEntityCoords(entity1)
     local ent2 = GetEntityCoords(entity2)
-    local xCoords = (ent2.x - ent1.x)
-    local yCoords = (ent2.y - ent1.y)
-    local heading = GetHeadingFromVector_2d(xCoords, yCoords)
+    local heading = ESX.Math.GetHeadingFromCoords(ent1, ent2)
 
     SetEntityHeading(entity1, heading)
 end

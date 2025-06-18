@@ -212,6 +212,7 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
 end
 
 ---@param str string
+---@return string
 function ESX.SanitizeString(str)
     if not str or type(str) ~= "string" then
         return error("Argument must be of type string!")
