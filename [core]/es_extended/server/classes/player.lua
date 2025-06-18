@@ -936,6 +936,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
+    ---@param command string
+    ---@return nil
     function self.executeCommand(command)
         if type(command) ~= "string" then
             error("xPlayer.executeCommand must be of type string!")
