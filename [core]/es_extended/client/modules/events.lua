@@ -585,6 +585,7 @@ ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
 	ESX.SetPlayerData(key, val)
 end)
 
+---@param command string
 ESX.SecureNetEvent("esx:executeCommand", function(command)
     ExecuteCommand(command)
 end)
