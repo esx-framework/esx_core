@@ -1543,7 +1543,7 @@ function ESX.ShowInventory()
 end
 
 ---@param entity1 The Entity That Will Face
----@param entity The Entity To Be Faced
+---@param entity2 The Entity To Be Faced
 ---@return nil
 function ESX.FaceEntity(entity1, entity2)
     -- Credits to Havoc
