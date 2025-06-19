@@ -199,6 +199,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return nil
     function self.set(k, v)
         self.variables[k] = v
+        
+        self.triggerEvent('esx:updatePlayerData', 'variables', self.variables)
     end
 
     ---@param k string
