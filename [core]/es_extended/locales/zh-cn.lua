@@ -59,7 +59,7 @@ return {
     ["command_car"] = "生成指定载具",
     ["command_car_car"] = "载具模型名称或哈希值",
     ["command_cardel"] = "删除邻近载具",
-    ["command_cardel_radius"] = "删除半径%s米内的所有载具",
+    ["command_cardel_radius"] = "删除半径内的所有载具",
     ["command_repair"] = "修复当前载具",
     ["command_repair_success"] = "载具已修复完毕",
     ["command_repair_success_target"] = "管理员已修复您的载具",
