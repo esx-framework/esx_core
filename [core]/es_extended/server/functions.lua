@@ -401,6 +401,8 @@ function ESX.GetVehicleType(model, player, cb)
         elseif cb then
             cb(result)
         end
+
+        return result
     end
 
     model = type(model) == "string" and joaat(model) or model
