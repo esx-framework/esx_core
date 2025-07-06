@@ -1542,6 +1542,18 @@ function ESX.ShowInventory()
     end)
 end
 
+---@param entity1 The Entity That Will Face
+---@param entity2 The Entity To Be Faced
+---@return nil
+function ESX.FaceEntity(entity1, entity2)
+    -- Credits to Havoc
+    local ent1 = GetEntityCoords(entity1)
+    local ent2 = GetEntityCoords(entity2)
+    local heading = ESX.Math.GetHeadingFromCoords(ent1, ent2)
+
+    SetEntityHeading(entity1, heading)
+end
+
 ESX.SecureNetEvent('esx:showNotification', ESX.ShowNotification)
 
 ESX.SecureNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)

@@ -210,3 +210,21 @@ function ESX.Await(conditionFunc, errorMessage, timeoutMs)
 
     return false
 end
+
+---@param str string
+---@return string
+function ESX.SanitizeString(str)
+    if not str or type(str) ~= "string" then
+        return error("Argument must be of type string!")
+    end
+
+    str = string.gsub(str, "[%c]", "")
+
+    str = string.gsub(str, "[<>]", "")
+
+    str = string.gsub(str, "[\"'%%;%$%&%*%(%)%[%]{}]", "")
+
+    str = string.gsub(str, "^%s*(.-)%s*$", "%1")
+
+    return str
+end
