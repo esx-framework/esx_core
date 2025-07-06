@@ -4,6 +4,10 @@ ESX.currentResourceName = GetCurrentResourceName()
 OnPlayerData = function (key, val, last) end
 
 local function TrackPedCoordsOnce() 
+    if not ESX or not ESX.PlayerData then
+        return
+    end
+
     ESX.PlayerData.coords = nil
 
     setmetatable(ESX.PlayerData, {
@@ -36,6 +40,8 @@ if not IsDuplicityVersion() then -- Only register this event for the client
 
         TrackPedCoordsOnce()
     end)
+
+    TrackPedCoordsOnce()
 
     ESX.SecureNetEvent("esx:onPlayerLogout", function()
         ESX.PlayerLoaded = false
