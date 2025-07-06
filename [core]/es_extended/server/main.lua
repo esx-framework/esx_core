@@ -95,6 +95,8 @@ local function onPlayerDropped(playerId, reason, cb)
     Core.SavePlayer(xPlayer, function()
         GlobalState["playerCount"] = GlobalState["playerCount"] - 1
         ESX.Players[playerId] = nil
+        Core.playersByIdentifier[xPlayer.identifier] = nil
+
         resolve()
     end)
 
