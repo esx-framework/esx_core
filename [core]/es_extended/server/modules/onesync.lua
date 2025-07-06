@@ -4,11 +4,13 @@ ESX.OneSync = {}
 ---@param closest boolean
 ---@param distance? number
 ---@param ignore? table
-local function getNearbyPlayers(source, closest, distance, ignore)
+---@param routingBucket? number
+local function getNearbyPlayers(source, closest, distance, ignore, routingBucket)
     local result = {}
     local count = 0
     local playerPed
     local playerCoords
+    ignore = ignore or {}
 
     if not distance then
         distance = 100
@@ -19,14 +21,12 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 
         if not source then
             error("Received invalid first argument (source); should be playerId")
-            return result
         end
 
         playerCoords = GetEntityCoords(playerPed)
 
         if not playerCoords then
             error("Received nil value (playerCoords); perhaps source is nil at first place?")
-            return result
         end
     end
 
@@ -35,12 +35,11 @@ local function getNearbyPlayers(source, closest, distance, ignore)
 
         if not playerCoords then
             error("Received nil value (playerCoords); perhaps source is nil at first place?")
-            return result
         end
     end
 
     for _, xPlayer in pairs(ESX.Players) do
-        if not ignore or not ignore[xPlayer.source] then
+        if not ignore[xPlayer.source] and (not routingBucket or GetPlayerRoutingBucket(xPlayer.source) == routingBucket) then
             local entity = GetPlayerPed(xPlayer.source)
             local coords = GetEntityCoords(entity)
 
@@ -67,15 +66,17 @@ end
 ---@param source vector3|number playerId or vector3 coordinates
 ---@param maxDistance number
 ---@param ignore? table playerIds to ignore, where the key is playerId and value is true
-function ESX.OneSync.GetPlayersInArea(source, maxDistance, ignore)
-    return getNearbyPlayers(source, false, maxDistance, ignore)
+---@param routingBucket? number
+function ESX.OneSync.GetPlayersInArea(source, maxDistance, ignore, routingBucket)
+    return getNearbyPlayers(source, false, maxDistance, ignore, routingBucket)
 end
 
 ---@param source vector3|number playerId or vector3 coordinates
 ---@param maxDistance number
 ---@param ignore? table playerIds to ignore, where the key is playerId and value is true
-function ESX.OneSync.GetClosestPlayer(source, maxDistance, ignore)
-    return getNearbyPlayers(source, true, maxDistance, ignore)
+---@param routingBucket? number
+function ESX.OneSync.GetClosestPlayer(source, maxDistance, ignore, routingBucket)
+    return getNearbyPlayers(source, true, maxDistance, ignore, routingBucket)
 end
 
 ---@param vehicleModel number|string
@@ -124,9 +125,12 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
         local tries = 0
 
+        local closestNetOwner = ESX.OneSync.GetClosestPlayer(coords, 300, nil, 0)
+        local closestNetOwnerFound = next(closestNetOwner) ~= nil
+
         while not createdVehicle or createdVehicle == 0
-            or (closestPlayerFound and NetworkGetEntityOwner(createdVehicle) == -1)
-            or (not closestPlayerFound and not DoesEntityExist(createdVehicle)) do
+            or (closestNetOwnerFound and NetworkGetEntityOwner(createdVehicle) == -1)
+            or (not closestNetOwnerFound and not DoesEntityExist(createdVehicle)) do
             Wait(200)
             tries = tries + 1
             if tries > 40 then
