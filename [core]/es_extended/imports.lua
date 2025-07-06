@@ -3,6 +3,26 @@ ESX.currentResourceName = GetCurrentResourceName()
 
 OnPlayerData = function (key, val, last) end
 
+local function TrackPedCoordsOnce() 
+    if not ESX or not ESX.PlayerData then
+        return
+    end
+
+    ESX.PlayerData.coords = nil
+
+    setmetatable(ESX.PlayerData, {
+        __index = function(self, key)
+            if key ~= "coords" then
+                return
+            end
+
+            local coords = GetEntityCoords(ESX.PlayerData.ped)
+
+            return coords
+        end
+    })
+end
+
 if not IsDuplicityVersion() then -- Only register this event for the client
     AddEventHandler("esx:setPlayerData", function(key, val, last)
         if GetInvokingResource() == "es_extended" then
@@ -17,7 +37,11 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerData = xPlayer
         while not ESX.PlayerData.ped or not DoesEntityExist(ESX.PlayerData.ped) do Wait(0) end
         ESX.PlayerLoaded = true
+
+        TrackPedCoordsOnce()
     end)
+
+    TrackPedCoordsOnce()
 
     ESX.SecureNetEvent("esx:onPlayerLogout", function()
         ESX.PlayerLoaded = false
