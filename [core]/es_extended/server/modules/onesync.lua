@@ -148,54 +148,154 @@ end
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param cb function
+---@param cb? fun(netId: number)
+---@return number? netId
 function ESX.OneSync.SpawnObject(model, coords, heading, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
     local objectCoords = type(coords) == "vector3" and coords or vector3(coords.x, coords.y, coords.z)
+
+    local function resolve(result)
+        if promise then
+            promise:resolve(result)
+        elseif cb then
+            cb(result)
+        end
+    end
+
+    local function reject(err)
+        if promise then
+            promise:reject(err)
+        end
+        error(err)
+    end
+
     CreateThread(function()
         local entity = CreateObject(model, objectCoords.x, objectCoords.y, objectCoords.z, true, true, false)
+        local tries = 0
+
         while not DoesEntityExist(entity) do
-            Wait(50)
+            Wait(200)
+            
+            tries = tries + 1
+
+            if tries > 40 then
+                return reject(("Could not spawn object - ^5%s^7!"):format(entity))
+            end
         end
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+
         SetEntityHeading(entity, heading)
-        cb(NetworkGetNetworkIdFromEntity(entity))
+        resolve(networkId)
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param model number|string
 ---@param coords vector3|table
 ---@param heading number
----@param cb function
+---@param cb? fun(netId: number)
+---@return number? netId
 function ESX.OneSync.SpawnPed(model, coords, heading, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
+
+    local function resolve(result)
+        if promise then
+            promise:resolve(result)
+        elseif cb then
+            cb(result)
+        end
+    end
+
+    local function reject(err)
+        if promise then
+            promise:reject(err)
+        end
+        error(err)
+    end
+
     CreateThread(function()
         local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
+        local tries = 0
+
         while not DoesEntityExist(entity) do
-            Wait(50)
+            Wait(200)
+
+            tries = tries + 1
+
+            if tries > 40 then
+                return reject(("Could not spawn ped - ^5%s^7!"):format(model))
+            end
         end
-        cb(NetworkGetNetworkIdFromEntity(entity))
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+        resolve(networkId)
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 ---@param model number|string
 ---@param vehicle number entityId
 ---@param seat number
----@param cb function
+---@param cb? fun(netId: number)
+---@return number? netId
 function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
     if type(model) == "string" then
         model = joaat(model)
     end
+
+    local promise = not cb and promise.new()
+
+    local function resolve(result)
+        if promise then
+            promise:resolve(result)
+        elseif cb then
+            cb(result)
+        end
+    end
+
+    local function reject(err)
+        if promise then
+            promise:reject(err)
+        end
+        error(err)
+    end
+
     CreateThread(function()
         local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
+        local tries = 0
+
         while not DoesEntityExist(entity) do
-            Wait(50)
+            Wait(200)
+
+            tries = tries + 1
+
+            if tries > 40 then
+                reject(("Could not spawn ped - ^5%s^7!"):format(model))
+            end
         end
-        cb(NetworkGetNetworkIdFromEntity(entity))
+
+        local networkId = NetworkGetNetworkIdFromEntity(entity)
+        resolve(networkId)
     end)
+
+    if promise then
+        return Citizen.Await(promise)
+    end
 end
 
 local function getNearbyEntities(entities, coords, modelFilter, maxDistance, isPed)
