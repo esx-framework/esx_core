@@ -1,7 +1,8 @@
 import CharacterSelection from './components/CharacterSelection';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNuiEvent } from './utils/useNuiEvent'
 import { Character, Locale } from './types/Character';
+import { fetchNui } from './utils/fetchNui';
 
 function App() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -10,6 +11,9 @@ function App() {
   const [MaxAllowedSlot, setMaxAllowedSlot] = useState<number>(0);
   const [locale, setLocale] = useState<Locale>({ char_info_title: '', play: '', title: '' });
 
+  useEffect(() => {
+    fetchNui('nuiReady')
+  }, [])
 
   useNuiEvent('ToggleMulticharacter', (data:any) => {
     if (data.show) {
