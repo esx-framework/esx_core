@@ -114,8 +114,8 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
 
     CreateThread(function()
         if not vehicleType then
-            for src, xPlayer in pairs(ESX.GetExtendedPlayers()) do
-                if(GetPlayerPing(src) > 0) then
+            for i, xPlayer in ipairs(ESX.GetExtendedPlayers()) do
+                if(GetPlayerPing(xPlayer.source) > 0) then
                     vehicleType = ESX.GetVehicleType(vehicleModel, xPlayer.source)
                     break
                 end
