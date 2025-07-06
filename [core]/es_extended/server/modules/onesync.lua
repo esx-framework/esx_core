@@ -129,7 +129,7 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
         local tries = 0
 
-        local hasNetOwner = next(ESX.OneSync.GetClosestPlayer(coords, 300, nil, 0)) ~= nil
+        local hasNetOwner = next(ESX.OneSync.GetClosestPlayer(coords, 300, nil, 0) or {}) ~= nil
 
         while not createdVehicle or createdVehicle == 0
             or (hasNetOwner and NetworkGetEntityOwner(createdVehicle) == -1)
