@@ -70,7 +70,7 @@ function Server:OnConnecting(source, deferrals)
 
     local plyRef = ESX.Players[identifier] ---@type number|string If player has not chosen character yet, plyRef = source, otherwise plyRef = identifier prefix ("char1", "char2", etc.)
     if type(plyRef) == "number" then
-        if DoesPlayerExist(plyRef --[[@as string]]) then
+        if GetPlayerPing(plyRef --[[@as string]]) > 0 then
             return reject()
         end
 
@@ -83,7 +83,7 @@ function Server:OnConnecting(source, deferrals)
         return deferrals.done()
     end
 
-    if DoesPlayerExist(xPlayer.source --[[@as string]]) then
+    if GetPlayerPing(xPlayer.source --[[@as string]]) > 0 then
         return reject()
     end
 
