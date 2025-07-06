@@ -1,5 +1,6 @@
-CreateThread(function()
+local NuiReady = false
 
+CreateThread(function()
     while not ESX.PlayerLoaded do
         Wait(100)
 
@@ -15,6 +16,12 @@ end)
 -- Events
 
 ESX.SecureNetEvent("esx_multicharacter:SetupUI", function(data, slots)
+    if not NuiReady then
+        print('[WARNING]', 'NUI not ready yet, awaiting...')
+        ESX.Await(function()
+            return NuiReady == true
+        end, 'NUI Failed to load after 3000ms', 3000)
+    end
     Multicharacter:SetupUI(data, slots)
 end)
 
@@ -43,7 +50,11 @@ if Config.Relog then
             ESX.SetTimeout(10000, function()
                 Multicharacter.canRelog = true
             end)
-
         end
-    end,false)
+    end, false)
 end
+
+RegisterNuiCallback('nuiReady', function(_, cb)
+    NuiReady = true
+    cb(1)
+end)
