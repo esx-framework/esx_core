@@ -133,9 +133,8 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    local vehicle = NetToVeh(netId)
-
     local tries = 0
+    
     while not NetworkDoesEntityExistWithNetworkId(netId) do
         Wait(200)
         tries = tries + 1
@@ -143,6 +142,8 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
             return error(("Invalid entity - ^5%s^7!"):format(netId))
         end
     end
+
+    local vehicle = NetToVeh(netId)
 
     if NetworkGetEntityOwner(vehicle) ~= ESX.playerId then
         return
