@@ -100,6 +100,8 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
         elseif cb then
             cb(result)
         end
+
+        return result
     end
 
     local function reject(err)
