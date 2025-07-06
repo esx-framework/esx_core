@@ -28,9 +28,10 @@ function ESX.GetRandomString(length)
     return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
 end
 
----@return table
-function ESX.GetConfig()
-    return Config
+---@param key? string Key pair to get specific value of config
+---@return table | any Returns the whole config if no key is passed, or a specific value
+function ESX.GetConfig(key)
+    return key and Config[key] or Config
 end
 
 ---@param weaponName string
@@ -221,32 +222,32 @@ function ESX.IsValidLocaleString(str, allowDigits)
 
     local locale = string.lower(Config.Locale)
 
-    local defaultRanges ={
-        {0x0041, 0x005A}, -- Basic Latin uppercase
-        {0x0061, 0x007A}, -- Basic Latin lowercase
-        {0x0020, 0x0020}, -- Space
-        {0x002D, 0x002D}, -- Dash
-        {0x00C0, 0x02AF}  -- Latin Extended
+    local defaultRanges = {
+        { 0x0041, 0x005A }, -- Basic Latin uppercase
+        { 0x0061, 0x007A }, -- Basic Latin lowercase
+        { 0x0020, 0x0020 }, -- Space
+        { 0x002D, 0x002D }, -- Dash
+        { 0x00C0, 0x02AF } -- Latin Extended
     }
 
     if allowDigits then
-        defaultRanges[#defaultRanges + 1] = {0x0030, 0x0039} -- 0-9 Numbers
+        defaultRanges[#defaultRanges + 1] = { 0x0030, 0x0039 } -- 0-9 Numbers
     end
 
     local localeRanges = {
-        ["el"] = { {0x0370, 0x03FF} }, -- Greek
-        ["sr"] ={ {0x0400, 0x04FF} }, -- Cyrillic
-        ["he"] ={ {0x05D0, 0x05EA} }, -- Hebrew letters
+        ["el"] = { { 0x0370, 0x03FF } }, -- Greek
+        ["sr"] = { { 0x0400, 0x04FF } }, -- Cyrillic
+        ["he"] = { { 0x05D0, 0x05EA } }, -- Hebrew letters
         ["ar"] = {
-            {0x0620, 0x063F}, -- Arabic
-            {0x0641, 0x064A},
-            {0x066E, 0x066F},
-            {0x0671, 0x06D3},
-            {0x06D5, 0x06D5},
-            {0x0750, 0x077F},
-            {0x08A0, 0x08BD}
+            { 0x0620, 0x063F },        -- Arabic
+            { 0x0641, 0x064A },
+            { 0x066E, 0x066F },
+            { 0x0671, 0x06D3 },
+            { 0x06D5, 0x06D5 },
+            { 0x0750, 0x077F },
+            { 0x08A0, 0x08BD }
         },
-        ["zh-cn"] ={ {0x4E00, 0x9FFF} } -- CJK
+        ["zh-cn"] = { { 0x4E00, 0x9FFF } } -- CJK
     }
 
     local validRanges = { table.unpack(defaultRanges) }
