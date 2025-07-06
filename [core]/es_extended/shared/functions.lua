@@ -28,9 +28,10 @@ function ESX.GetRandomString(length)
     return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
 end
 
----@return table
-function ESX.GetConfig()
-    return Config
+---@param key? string Key pair to get specific value of config
+---@return unknown Returns the whole config if no key is passed, or a specific value
+function ESX.GetConfig(key)
+    return key and Config[key] or Config
 end
 
 ---@param weaponName string
