@@ -337,6 +337,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     TriggerEvent("esx:playerLoaded", playerId, xPlayer, isNew)
     userData.money = xPlayer.getMoney()
     userData.maxWeight = xPlayer.getMaxWeight()
+    userData.variables = xPlayer.variables or {}
     xPlayer.triggerEvent("esx:playerLoaded", userData, isNew, userData.skin)
 
     if not Config.CustomInventory then
