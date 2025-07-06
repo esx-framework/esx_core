@@ -47,34 +47,47 @@ function Server:OnConnecting(source, deferrals)
 
     if not identifier then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
 
-    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then 
-        ESX.Players[identifier] = true
+    if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then
+        ESX.Players[identifier] = source
         return deferrals.done()
     end
 
-    if ESX.Players[identifier] == true then
+    ---@param staleSrc number
+    local function cleanupStalePlayer(staleSrc)
+        deferrals.update(("[ESX Multicharacter] Cleaning stale player entry..."):format(identifier))
+        TriggerEvent("esx:onPlayerDropped", staleSrc, "esx_stale_player_obj", function()
+            ESX.Players[identifier] = source
+            deferrals.done()
+        end)
+    end
+
+    local function reject()
         return deferrals.done(
-            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
+            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(
+                identifier)
         )
     end
 
-    local xPlayer = ESX.GetPlayerFromIdentifier(("%s:%s"):format(ESX.Players[identifier], identifier))
+    local plyRef = ESX.Players[identifier] ---@type number|string If player has not chosen character yet, plyRef = source, otherwise plyRef = identifier prefix ("char1", "char2", etc.)
+    if type(plyRef) == "number" then
+        if GetPlayerPing(plyRef --[[@as string]]) > 0 then
+            return reject()
+        end
+
+        return cleanupStalePlayer(plyRef)
+    end
+
+    local xPlayer = ESX.GetPlayerFromIdentifier(("%s:%s"):format(plyRef, identifier))
     if not xPlayer then
-        ESX.Players[identifier] = true
+        ESX.Players[identifier] = source
         return deferrals.done()
     end
 
-    if DoesPlayerExist(xPlayer.source --[[@as string]]) then
-        return deferrals.done(
-            ("[ESX Multicharacter] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
-        )
+    if GetPlayerPing(xPlayer.source --[[@as string]]) > 0 then
+        return reject()
     end
 
-    deferrals.update(("[ESX Multicharacter] Cleaning stale player entry..."):format(identifier))
-    TriggerEvent("esx:onPlayerDropped", xPlayer.source, "esx_stale_player_obj", function()
-        ESX.Players[identifier] = true
-        deferrals.done()
-    end)
+    return cleanupStalePlayer(xPlayer.source)
 end
 
 

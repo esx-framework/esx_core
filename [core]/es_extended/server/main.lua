@@ -71,20 +71,6 @@ end
 ---@param reason string
 ---@param cb function?
 local function onPlayerDropped(playerId, reason, cb)
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-
-    if not xPlayer then
-        return
-    end
-
-    TriggerEvent("esx:playerDropped", playerId, reason)
-    local job = xPlayer.getJob().name
-    local currentJob = Core.JobsPlayerCount[job]
-    Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
-
-    GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
-    Core.playersByIdentifier[xPlayer.identifier] = nil
-
     local p = not cb and promise:new()
     local function resolve()
         if cb then
@@ -94,9 +80,23 @@ local function onPlayerDropped(playerId, reason, cb)
         end
     end
 
+    local xPlayer = ESX.GetPlayerFromId(playerId)
+    if not xPlayer then
+        return resolve()
+    end
+
+    TriggerEvent("esx:playerDropped", playerId, reason)
+    local job = xPlayer.getJob().name
+    local currentJob = Core.JobsPlayerCount[job]
+    Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
+
+    GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
+
     Core.SavePlayer(xPlayer, function()
         GlobalState["playerCount"] = GlobalState["playerCount"] - 1
         ESX.Players[playerId] = nil
+        Core.playersByIdentifier[xPlayer.identifier] = nil
+
         resolve()
     end)
 
@@ -164,7 +164,7 @@ if not Config.Multichar then
             return deferrals.done()
         end
 
-        if DoesPlayerExist(xPlayer.source --[[@as string]]) then
+        if GetPlayerPing(xPlayer.source --[[@as string]]) > 0 then
             return deferrals.done(
                 ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
             )
