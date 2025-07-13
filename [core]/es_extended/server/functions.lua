@@ -675,42 +675,70 @@ if not Config.CustomInventory then
        refreshPlayerInventories()
     end
 
-    ---@param name string
-    ---@param label string
-    ---@param weight number?
-    ---@param rare boolean?
-    ---@param canRemove boolean?
-    function ESX.AddItem(name, label, weight, rare, canRemove)
-        assert(type(name) == "string", "Item name must be a string")
-        assert(type(label) == "string", "Item label must be a string")
-        assert(type(weight) == "number" or weight == nil, "Item weight must be a number or nil")
-        assert(type(rare) == "boolean" or rare == nil, "Item rare must be a boolean or nil")
-        assert(type(canRemove) == "boolean" or canRemove == nil, "Item canRemove must be a boolean or nil")
+    ---@param items { name: string, label: string, weight?: number, rare?: boolean, canRemove?: boolean }[]
+    function ESX.AddItems(items)
+        local toInsert = {}
 
-        weight = weight or 1
-        rare = rare or false
-        canRemove = canRemove ~= false
+        for _, item in ipairs(items) do
+            local name = item.name
+            local label = item.label
+            local weight = item.weight or 1
+            local rare = item.rare or false
+            local canRemove = item.canRemove ~= false
 
-        if ESX.Items[name] then
-            return
+            if type(name) ~= "string" then
+                print(("^1[AddItems]^0 Invalid item name: %s"):format(name))
+                goto continue
+            end
+
+            if type(label) ~= "string" then
+                print(("^1[AddItems]^0 Invalid label for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(weight) ~= "number" then
+                print(("^1[AddItems]^0 Invalid weight for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(rare) ~= "boolean" then
+                print(("^1[AddItems]^0 Invalid rare flag for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(canRemove) ~= "boolean" then
+                print(("^1[AddItems]^0 Invalid canRemove flag for item '%s'"):format(name))
+                goto continue
+            end
+
+            if not ESX.Items[name] then
+                toInsert[#toInsert + 1] = {
+                    name,
+                    label,
+                    weight,
+                    rare,
+                    canRemove,
+                }
+            end
+
+            ::continue::
         end
 
-        MySQL.insert.await("INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", {
-            name,
-            label,
-            weight,
-            rare,
-            canRemove,
-        })
+        if #toInsert > 0 then
+            MySQL.prepare("INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", toInsert)
 
-        ESX.Items[name] = {
-            label = label,
-            weight = weight,
-            rare = rare,
-            canRemove = canRemove,
-        }
+            for _, row in ipairs(toInsert) do
+                local name, label, weight, rare, canRemove = table.unpack(row)
+                ESX.Items[name] = {
+                    label = label,
+                    weight = weight,
+                    rare = rare,
+                    canRemove = canRemove,
+                }
+            end
 
-        refreshPlayerInventories()
+            refreshPlayerInventories()
+        end
     end
 end
 
