@@ -635,6 +635,79 @@ if not Config.CustomInventory then
         TriggerClientEvent("esx:createPickup", -1, pickupId, label, coords, itemType, name, components, tintIndex)
         Core.PickupId = pickupId
     end
+
+    local function refreshPlayerInventories()
+        for i, xPlayer in ipairs(ESX.GetExtendedPlayers()) do
+            local minimalInv = xPlayer.getInventory(true)
+
+            for itemName, itemCount in pairs(minimalInv) do
+                if not ESX.Items[itemName] then
+                    xPlayer.setInventoryItem(itemName, 0)
+                    minimalInv[itemName] = nil
+                end
+            end
+
+            xPlayer.inventory = {}
+            for itemName, itemData in pairs(ESX.Items) do
+                xPlayer.inventory[#xPlayer.inventory+1] = {
+                    name = itemName,
+                    count = minimalInv[itemName] or 0,
+                    label = itemData.label,
+                    weight = itemData.weight,
+                    usable = Core.UsableItemsCallbacks[itemName] ~= nil,
+                    rare = itemData.rare,
+                    canRemove = itemData.canRemove,
+                }
+            end
+
+            TriggerClientEvent("esx:setInventory", xPlayer.source, xPlayer.inventory)
+        end
+    end
+
+    function ESX.RefreshItems()
+        ESX.Items = {}
+
+        local items = MySQL.query.await("SELECT * FROM items")
+        for _, v in ipairs(items) do
+            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
+        end
+
+       refreshPlayerInventories()
+    end
+
+    ---@param name string
+    ---@param label string
+    ---@param weight number
+    ---@param rare boolean?
+    ---@param canRemove boolean?
+    function ESX.AddItem(name, label, weight, rare, canRemove)
+        assert(type(name) == "string", "Item name must be a string")
+        assert(type(label) == "string", "Item label must be a string")
+        assert(type(weight) == "number", "Item weight must be a number")
+        assert(type(rare) == "boolean" or rare == nil, "Item rare must be a boolean or nil")
+        assert(type(canRemove) == "boolean" or canRemove == nil, "Item canRemove must be a boolean or nil")
+
+        if ESX.Items[name] then
+            return
+        end
+
+        MySQL.insert.await("INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", {
+            name,
+            label,
+            weight,
+            rare or false,
+            canRemove or false,
+        })
+
+        ESX.Items[name] = {
+            label = label,
+            weight = weight,
+            rare = rare or false,
+            canRemove = canRemove or false,
+        }
+
+        refreshPlayerInventories()
+    end
 end
 
 ---@param job string
