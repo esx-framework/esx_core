@@ -225,6 +225,20 @@ function Adjustments:DisableRadio()
     end
 end
 
+function Adjustments:Multipliers()
+    CreateThread(function()
+        while true do
+            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
+            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
+            SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
+            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
+            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
+            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
+            Wait(0)
+        end
+    end)
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -239,4 +253,5 @@ function Adjustments:Load()
     self:DiscordPresence()
     self:WantedLevel()
     self:DisableRadio()
+    self:Multipliers()
 end
