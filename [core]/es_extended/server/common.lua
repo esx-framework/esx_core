@@ -36,11 +36,9 @@ end
 
 MySQL.ready(function()
     Core.DatabaseConnected = true
+
     if not Config.CustomInventory then
-        local items = MySQL.query.await("SELECT * FROM items")
-        for _, v in ipairs(items) do
-            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
-        end
+        ESX.RefreshItems()
     end
 
     ESX.RefreshJobs()

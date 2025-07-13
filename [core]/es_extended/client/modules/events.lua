@@ -57,6 +57,10 @@ ESX.SecureNetEvent("esx:setMaxWeight", function(newMaxWeight)
     ESX.SetPlayerData("maxWeight", newMaxWeight)
 end)
 
+ESX.SecureNetEvent("esx:setInventory", function(newInventory)
+    ESX.SetPlayerData("inventory", newInventory)
+end)
+
 local function onPlayerSpawn()
     ESX.SetPlayerData("ped", PlayerPedId())
     ESX.SetPlayerData("dead", false)

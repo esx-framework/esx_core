@@ -637,6 +637,111 @@ if not Config.CustomInventory then
         TriggerClientEvent("esx:createPickup", -1, pickupId, label, coords, itemType, name, components, tintIndex)
         Core.PickupId = pickupId
     end
+
+    local function refreshPlayerInventories()
+        for i, xPlayer in ipairs(ESX.GetExtendedPlayers()) do
+            local minimalInv = xPlayer.getInventory(true)
+
+            for itemName, itemCount in pairs(minimalInv) do
+                if not ESX.Items[itemName] then
+                    xPlayer.setInventoryItem(itemName, 0)
+                    minimalInv[itemName] = nil
+                end
+            end
+
+            xPlayer.inventory = {}
+            for itemName, itemData in pairs(ESX.Items) do
+                xPlayer.inventory[#xPlayer.inventory+1] = {
+                    name = itemName,
+                    count = minimalInv[itemName] or 0,
+                    label = itemData.label,
+                    weight = itemData.weight,
+                    usable = Core.UsableItemsCallbacks[itemName] ~= nil,
+                    rare = itemData.rare,
+                    canRemove = itemData.canRemove,
+                }
+            end
+
+            TriggerClientEvent("esx:setInventory", xPlayer.source, xPlayer.inventory)
+        end
+    end
+
+    function ESX.RefreshItems()
+        ESX.Items = {}
+
+        local items = MySQL.query.await("SELECT * FROM items")
+        for _, v in ipairs(items) do
+            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
+        end
+
+       refreshPlayerInventories()
+    end
+
+    ---@param items { name: string, label: string, weight?: number, rare?: boolean, canRemove?: boolean }[]
+    function ESX.AddItems(items)
+        local toInsert = {}
+
+        for _, item in ipairs(items) do
+            local name = item.name
+            local label = item.label
+            local weight = item.weight or 1
+            local rare = item.rare or false
+            local canRemove = item.canRemove ~= false
+
+            if type(name) ~= "string" then
+                print(("^1[AddItems]^0 Invalid item name: %s"):format(name))
+                goto continue
+            end
+
+            if type(label) ~= "string" then
+                print(("^1[AddItems]^0 Invalid label for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(weight) ~= "number" then
+                print(("^1[AddItems]^0 Invalid weight for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(rare) ~= "boolean" then
+                print(("^1[AddItems]^0 Invalid rare flag for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(canRemove) ~= "boolean" then
+                print(("^1[AddItems]^0 Invalid canRemove flag for item '%s'"):format(name))
+                goto continue
+            end
+
+            if not ESX.Items[name] then
+                toInsert[#toInsert + 1] = {
+                    name,
+                    label,
+                    weight,
+                    rare,
+                    canRemove,
+                }
+            end
+
+            ::continue::
+        end
+
+        if #toInsert > 0 then
+            MySQL.prepare("INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", toInsert)
+
+            for _, row in ipairs(toInsert) do
+                local name, label, weight, rare, canRemove = table.unpack(row)
+                ESX.Items[name] = {
+                    label = label,
+                    weight = weight,
+                    rare = rare,
+                    canRemove = canRemove,
+                }
+            end
+
+            refreshPlayerInventories()
+        end
+    end
 end
 
 ---@param job string
