@@ -677,15 +677,19 @@ if not Config.CustomInventory then
 
     ---@param name string
     ---@param label string
-    ---@param weight number
+    ---@param weight number?
     ---@param rare boolean?
     ---@param canRemove boolean?
     function ESX.AddItem(name, label, weight, rare, canRemove)
         assert(type(name) == "string", "Item name must be a string")
         assert(type(label) == "string", "Item label must be a string")
-        assert(type(weight) == "number", "Item weight must be a number")
+        assert(type(weight) == "number" or weight == nil, "Item weight must be a number or nil")
         assert(type(rare) == "boolean" or rare == nil, "Item rare must be a boolean or nil")
         assert(type(canRemove) == "boolean" or canRemove == nil, "Item canRemove must be a boolean or nil")
+
+        weight = weight or 1
+        rare = rare or false
+        canRemove = canRemove ~= false
 
         if ESX.Items[name] then
             return
@@ -695,15 +699,15 @@ if not Config.CustomInventory then
             name,
             label,
             weight,
-            rare or false,
-            canRemove or false,
+            rare,
+            canRemove,
         })
 
         ESX.Items[name] = {
             label = label,
             weight = weight,
-            rare = rare or false,
-            canRemove = canRemove or false,
+            rare = rare,
+            canRemove = canRemove,
         }
 
         refreshPlayerInventories()
