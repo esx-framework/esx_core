@@ -570,6 +570,31 @@ ESX.RegisterCommand("playtime", { "user", "admin" }, function(xPlayer)
     print(("Playtime: ^5%s^0 Days | ^5%s^0 Hours | ^5%s^0 Minutes"):format(days, hours, minutes))
 end, false)
 
+ESX.RegisterCommand(
+    "setplaytime",
+    "admin",
+    function(xPlayer, args, showError)
+        local playtimeInHours = args.playtime
+        local playtimeInSeconds = playtimeInHours * 3600
+        local days = math.floor(playtimeInHours / 24)
+        local hours = playtimeInHours % 24
+        local minutes = math.floor((playtimeInSeconds % 3600) / 60)
+        
+        args.playerId.setPlayTime(playtimeInSeconds)
+        xPlayer.showNotification(("Set %s's playtime to %d days, %d hours, %d minutes"):format(args.playerId.getName(), days, hours, minutes))
+        args.playerId.showNotification(("Your playtime has been set to %d days, %d hours, %d minutes by %s"):format(days, hours, minutes, xPlayer.getName()))
+    end,
+    true,
+    {
+        help = TranslateCap("command_setpt"),
+        validate = true,
+        arguments = {
+            { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
+            { name = "playtime", help = TranslateCap("command_setpt_playtime"), type = "number" },
+        },
+    }
+)
+
 ESX.RegisterCommand("coords", "admin", function(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
     local coords = GetEntityCoords(ped, false)
