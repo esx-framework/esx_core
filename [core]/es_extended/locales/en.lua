@@ -126,6 +126,9 @@ Locales["en"] = {
     ["enabled"] = "~g~enabled~s~",
     ["disabled"] = "~r~disabled~s~",
 
+    ["command_setpt"] = "Set a player's playtime (in hours)",
+    ["command_setpt_playtime"] = "Playtime (hours)",
+
     -- Locale settings
     ["locale_digit_grouping_symbol"] = ",",
     ["locale_currency"] = "£%s",
