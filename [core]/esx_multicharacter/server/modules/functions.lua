@@ -6,7 +6,7 @@ function Server:ResetPlayers()
         table.wipe(ESX.Players)
 
         for _, v in pairs(players) do
-            ESX.Players[self:GetIdentifier(v.source)] = v.identifier
+            ESX.Players[ESX.GetIdentifier(v.source)] = v.identifier
         end
     else
         ESX.Players = {}
@@ -16,7 +16,7 @@ end
 function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
-    local identifier = self:GetIdentifier(source)
+    local identifier = ESX.GetIdentifier(source)
 
     -- luacheck: ignore
     if not SetEntityOrphanMode then
