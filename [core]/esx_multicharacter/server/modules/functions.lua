@@ -1,15 +1,5 @@
 ESX.Players = {}
 
-function Server:GetIdentifier(source)
-    local fxDk = GetConvarInt("sv_fxdkMode", 0)
-    if fxDk == 1 then
-        return "ESX-DEBUG-LICENCE"
-    end
-
-    local identifier = GetPlayerIdentifierByType(source, self.identifierType)
-    return identifier and identifier:gsub(self.identifierType .. ":", "")
-end
-
 function Server:ResetPlayers()
     if next(ESX.Players) then
         local players = table.clone(ESX.Players)
