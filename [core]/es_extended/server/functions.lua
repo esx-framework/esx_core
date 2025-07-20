@@ -380,8 +380,9 @@ function ESX.GetIdentifier(playerId)
 
     playerId = tostring(playerId)
 
-    local identifier = GetPlayerIdentifierByType(playerId, "license")
-    return identifier and identifier:gsub("license:", "")
+    local identifierType = Config.Identifier
+    local identifier = GetPlayerIdentifierByType(playerId, identifierType)
+    return identifier and identifier:gsub(("%s:"):format(identifierType), "")
 end
 
 ---@param model string|number
