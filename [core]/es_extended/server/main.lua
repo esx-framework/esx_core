@@ -386,11 +386,16 @@ end)
 
 AddEventHandler("esx:playerLogout", function(playerId, cb)
     local xPlayer = ESX.GetPlayerFromId(playerId)
+
+    if not xPlayer then
+        return
+    end
+
     local job = xPlayer.getJob().name
 
     Core.JobsPlayerCount[job] = Core.JobsPlayerCount[job] - 1
     GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
-        
+
     if xPlayer then
         TriggerEvent("esx:playerDropped", playerId)
 
