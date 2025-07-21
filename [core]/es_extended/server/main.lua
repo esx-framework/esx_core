@@ -391,21 +391,7 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
         return
     end
 
-    local job = xPlayer.getJob().name
-
-    Core.JobsPlayerCount[job] = Core.JobsPlayerCount[job] - 1
-    GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
-
-    TriggerEvent("esx:playerDropped", playerId)
-
-    Core.playersByIdentifier[xPlayer.identifier] = nil
-    Core.SavePlayer(xPlayer, function()
-        GlobalState["playerCount"] = GlobalState["playerCount"] - 1
-        ESX.Players[playerId] = nil
-        if cb then
-            cb()
-        end
-    end)
+    onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
     TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
 
