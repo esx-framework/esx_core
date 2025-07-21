@@ -387,11 +387,7 @@ end)
 AddEventHandler("esx:playerLogout", function(playerId, cb)
     local xPlayer = ESX.GetPlayerFromId(playerId)
 
-    if not xPlayer then
-        return
-    end
-
-    onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
+    onPlayerDropped(xPlayer.source, "esx_player_logout")
     TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
 
