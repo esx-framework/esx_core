@@ -26,9 +26,11 @@ function Callbacks:Execute(cb, ...)
 
     if not success then
         print(("[^1ERROR^7] Failed to execute Callback with RequestId: ^5%s^7"):format(self.currentId))
-        error(errorString)
+        print("^3Callback Error:^7 " .. tostring(errorString))  -- just log, don't throw
+        self.currentId = nil
         return
     end
+
     self.currentId = nil
 end
 
