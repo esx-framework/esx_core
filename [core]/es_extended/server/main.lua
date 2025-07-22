@@ -385,8 +385,6 @@ AddEventHandler("esx:setJob", function(_, job, lastJob)
 end)
 
 AddEventHandler("esx:playerLogout", function(playerId, cb)
-    local xPlayer = ESX.GetPlayerFromId(playerId)
-
     onPlayerDropped(xPlayer.source, "esx_player_logout")
     TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
