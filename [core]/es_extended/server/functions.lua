@@ -556,6 +556,17 @@ function ESX.GetItemLabel(item)
     end
 end
 
+---@param job string
+---@return string?
+function ESX.GetJobLabel(job)
+    if ESX.Jobs[job] then
+        return ESX.Jobs[job].label
+    else
+        print(("[^3WARNING^7] Attempting to get invalid job label -> ^5%s^7"):format(job))
+        return nil
+    end
+end
+
 ---@return table
 function ESX.GetJobs()
     return ESX.Jobs
