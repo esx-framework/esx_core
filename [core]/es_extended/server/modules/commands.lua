@@ -439,9 +439,11 @@ ESX.RegisterCommand("refreshjobs", "admin", function()
 end, true, { help = TranslateCap("command_clearall") })
 
 if not Config.CustomInventory then
-    ESX.RegisterCommand("refreshitems", "admin", function()
+    ESX.RegisterCommand("refreshitems", "admin", function(xPlayer)
         ESX.RefreshItems()
-    end, true, { help = TranslateCap("command_clearall") })
+
+        xPlayer.showNotification(TranslateCap("command_refreshitems_success", #ESX.Items), true, false, 140)
+    end, true, { help = TranslateCap("command_refreshitems") })
 
     ESX.RegisterCommand(
         "clearinventory",

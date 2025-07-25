@@ -637,7 +637,9 @@ if not Config.CustomInventory then
     end
 
     local function refreshPlayerInventories()
-        for i, xPlayer in ipairs(ESX.GetExtendedPlayers()) do
+        local xPlayers = ESX.GetExtendedPlayers()
+        for i = 1, #xPlayers do
+            local xPlayer = xPlayers[i]
             local minimalInv = xPlayer.getInventory(true)
 
             for itemName, itemCount in pairs(minimalInv) do
@@ -648,8 +650,9 @@ if not Config.CustomInventory then
             end
 
             xPlayer.inventory = {}
+            local playerInvIndex = 1
             for itemName, itemData in pairs(ESX.Items) do
-                xPlayer.inventory[#xPlayer.inventory+1] = {
+                xPlayer.inventory[playerInvIndex] = {
                     name = itemName,
                     count = minimalInv[itemName] or 0,
                     label = itemData.label,
@@ -658,6 +661,7 @@ if not Config.CustomInventory then
                     rare = itemData.rare,
                     canRemove = itemData.canRemove,
                 }
+                playerInvIndex += 1
             end
 
             TriggerClientEvent("esx:setInventory", xPlayer.source, xPlayer.inventory)
@@ -668,16 +672,17 @@ if not Config.CustomInventory then
         ESX.Items = {}
 
         local items = MySQL.query.await("SELECT * FROM items")
-        for _, v in ipairs(items) do
-            ESX.Items[v.name] = { label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove }
+        for i = 1, #items do
+            local item = items[i]
+            ESX.Items[item.name] = { label = item.label, weight = item.weight, rare = item.rare, canRemove = item.can_remove }
         end
-
-       refreshPlayerInventories()
+        refreshPlayerInventories()
     end
 
     ---@param items { name: string, label: string, weight?: number, rare?: boolean, canRemove?: boolean }[]
     function ESX.AddItems(items)
         local toInsert = {}
+        local toInsertIndex = 1
 
         for _, item in ipairs(items) do
             local name = item.name
@@ -688,6 +693,10 @@ if not Config.CustomInventory then
 
             if type(name) ~= "string" then
                 print(("^1[AddItems]^0 Invalid item name: %s"):format(name))
+                goto continue
+            end
+
+            if ESX.Items[name] then
                 goto continue
             end
 
@@ -711,29 +720,28 @@ if not Config.CustomInventory then
                 goto continue
             end
 
-            if not ESX.Items[name] then
-                toInsert[#toInsert + 1] = {
-                    name,
-                    label,
-                    weight,
-                    rare,
-                    canRemove,
-                }
-            end
+            toInsert[toInsertIndex] = {
+                name = name,
+                label = label,
+                weight = weight,
+                rare = rare,
+                canRemove = canRemove,
+            }
+            toInsertIndex += 1
 
             ::continue::
         end
 
         if #toInsert > 0 then
-            MySQL.prepare("INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", toInsert)
+            MySQL.prepare.await("INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", toInsert)
 
-            for _, row in ipairs(toInsert) do
-                local name, label, weight, rare, canRemove = table.unpack(row)
-                ESX.Items[name] = {
-                    label = label,
-                    weight = weight,
-                    rare = rare,
-                    canRemove = canRemove,
+            for i = 1, #toInsert do
+                local row = toInsert[i]
+                ESX.Items[row.name] = {
+                    label = row.label,
+                    weight = row.weight,
+                    rare = row.rare,
+                    canRemove = row.canRemove,
                 }
             end
 
