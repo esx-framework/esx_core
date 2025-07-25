@@ -684,7 +684,8 @@ if not Config.CustomInventory then
         local toInsert = {}
         local toInsertIndex = 1
 
-        for _, item in ipairs(items) do
+        for i = 1, #items do
+            local item = items[i]
             local name = item.name
             local label = item.label
             local weight = item.weight or 1
