@@ -561,6 +561,18 @@ function ESX.GetJobs()
     return ESX.Jobs
 end
 
+---@param jobName string
+---@return table|nil
+function ESX.GetJob(jobName)
+    local job = ESX.Jobs[jobName]
+    if job then
+        return job
+    else
+        print(("[^3WARNING^7] Attempting to get invalid job: ^5%s^7"):format(jobName))
+        return nil
+    end
+end
+
 ---@return table
 function ESX.GetItems()
     return ESX.Items
