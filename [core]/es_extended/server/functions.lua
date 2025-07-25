@@ -668,15 +668,19 @@ if not Config.CustomInventory then
         end
     end
 
+    ---@return number newItemCount
     function ESX.RefreshItems()
         ESX.Items = {}
 
         local items = MySQL.query.await("SELECT * FROM items")
-        for i = 1, #items do
+        local itemCount = #items
+        for i = 1, itemCount do
             local item = items[i]
             ESX.Items[item.name] = { label = item.label, weight = item.weight, rare = item.rare, canRemove = item.can_remove }
         end
         refreshPlayerInventories()
+
+        return itemCount
     end
 
     ---@param items { name: string, label: string, weight?: number, rare?: boolean, canRemove?: boolean }[]
