@@ -442,7 +442,7 @@ if not Config.CustomInventory then
     ESX.RegisterCommand("refreshitems", "admin", function(xPlayer)
         ESX.RefreshItems()
 
-        xPlayer.showNotification(TranslateCap("command_refreshitems_success", #ESX.Items), true, false, 140)
+        xPlayer.showNotification(Translate("command_refreshitems_success", #ESX.Items), true, false, 140)
     end, true, { help = TranslateCap("command_refreshitems") })
 
     ESX.RegisterCommand(
