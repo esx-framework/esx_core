@@ -3,7 +3,7 @@ fx_version 'cerulean'
 game 'gta5'
 description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '13.13.0'
+version '1.13.0'
 
 shared_scripts {
 	'locale.lua',
