@@ -574,15 +574,25 @@ ESX.RegisterCommand(
     "setplaytime",
     "admin",
     function(xPlayer, args, showError)
-        local playtimeInHours = args.playtime
-        local playtimeInSeconds = playtimeInHours * 3600
-        local days = math.floor(playtimeInHours / 24)
-        local hours = playtimeInHours % 24
-        local minutes = math.floor((playtimeInSeconds % 3600) / 60)
+        local days = args.days or 0
+        local hours = args.hours or 0
+        local minutes = args.minutes or 0
+        local seconds = args.seconds or 0
+        
+        local playtimeInSeconds = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds
         
         args.playerId.setPlayTime(playtimeInSeconds)
-        xPlayer.showNotification(("Set %s's playtime to %d days, %d hours, %d minutes"):format(args.playerId.getName(), days, hours, minutes))
-        args.playerId.showNotification(("Your playtime has been set to %d days, %d hours, %d minutes by %s"):format(days, hours, minutes, xPlayer.getName()))
+        
+        local timeString = ""
+        if days > 0 then timeString = timeString .. ("%d days, "):format(days) end
+        if hours > 0 then timeString = timeString .. ("%d hours, "):format(hours) end
+        if minutes > 0 then timeString = timeString .. ("%d minutes, "):format(minutes) end
+        if seconds > 0 then timeString = timeString .. ("%d seconds"):format(seconds) end
+        
+        timeString = timeString:gsub(", $", "")
+        
+        xPlayer.showNotification(("Set %s's playtime to %s"):format(args.playerId.getName(), timeString))
+        args.playerId.showNotification(("Your playtime has been set to %s by %s"):format(timeString, xPlayer.getName()))
     end,
     true,
     {
@@ -590,11 +600,13 @@ ESX.RegisterCommand(
         validate = true,
         arguments = {
             { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
-            { name = "playtime", help = TranslateCap("command_setpt_playtime"), type = "number" },
+            { name = "days", help = "Days", type = "number" },
+            { name = "hours", help = "Hours", type = "number" },
+            { name = "minutes", help = "Minutes", type = "number" },
+            { name = "seconds", help = "Seconds", type = "number" },
         },
     }
 )
-
 ESX.RegisterCommand("coords", "admin", function(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
     local coords = GetEntityCoords(ped, false)
