@@ -371,7 +371,7 @@ function ESX.IsPlayerLoaded(source)
 end
 
 ---@param playerId number | string
----@return string
+---@return string?
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
