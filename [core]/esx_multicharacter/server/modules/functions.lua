@@ -6,10 +6,7 @@ function Server:ResetPlayers()
         table.wipe(ESX.Players)
 
         for _, v in pairs(players) do
-            local identifier = ESX.GetIdentifier(v.source)
-            if identifier then
-                ESX.Players[identifier] = v.identifier
-            end
+            ESX.Players[ESX.GetIdentifier(v.source)] = v.identifier
         end
     else
         ESX.Players = {}
