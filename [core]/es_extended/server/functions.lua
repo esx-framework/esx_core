@@ -371,7 +371,7 @@ function ESX.IsPlayerLoaded(source)
 end
 
 ---@param playerId number | string
----@return string?
+---@return string
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
@@ -382,7 +382,10 @@ function ESX.GetIdentifier(playerId)
 
     local identifierType = Config.Identifier
     local identifier = GetPlayerIdentifierByType(playerId, identifierType)
-    return identifier and identifier:gsub(("%s:"):format(identifierType), "")
+
+    assert(identifier, ("[ESX] GetIdentifier failed: no identifier found for playerId %s with type '%s'"):format(playerId, identifierType))
+
+    return identifier:gsub(("%s:"):format(identifierType), "")
 end
 
 ---@param model string|number
