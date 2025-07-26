@@ -10,7 +10,7 @@ function Multicharacter:SetupCharacters(source)
         Wait(100)
     end
 
-    local identifier = Server:GetIdentifier(source)
+    local identifier = ESX.GetIdentifier(source)
     ESX.Players[identifier] = source
 
     local slots = Database:GetPlayerSlots(identifier)
