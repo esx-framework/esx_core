@@ -73,14 +73,7 @@ MySQL.ready(function()
 end)
 
 function Database:DeleteCharacter(source, charid)
-    local playerIdentifier = ESX.GetIdentifier(source)
-    if not playerIdentifier then
-        local name = GetPlayerName(source) or "Unknown"
-        print(("[^1ERROR^7] Failed to delete character for ^5%s %s^7: invalid or missing identifier"):format(name, source))
-        return
-    end
-    
-    local identifier = ("%s%s:%s"):format(Server.prefix, charid, playerIdentifier)
+    local identifier = ("%s%s:%s"):format(Server.prefix, charid, ESX.GetIdentifier(source))
     local query = "DELETE FROM `%s` WHERE %s = ?"
     local queries = {}
     local count = 0
