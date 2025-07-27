@@ -4,7 +4,7 @@ local txAdminLocale = GetConvar("txAdmin-locale", "en")
 local esxLocale = GetConvar("esx:locale", "invalid")
 Config.Locale = (esxLocale ~= "invalid") and esxLocale or (txAdminLocale ~= "custom" and txAdminLocale) or "en"
 
--- for ox inventory, this will automatically be adjusted, do not change! for other inventories, change to "resource_name"
+-- For ox inventory, this will automatically be adjusted, do not change! For other inventories, leave as false unless specifically instructed to change.
 Config.CustomInventory = false
 
 Config.Accounts = {
