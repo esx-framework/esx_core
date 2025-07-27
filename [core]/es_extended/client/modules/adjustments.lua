@@ -90,7 +90,6 @@ function Adjustments:NPCScenarios()
             "WORLD_VEHICLE_BOAT_IDLE",
             "WORLD_VEHICLE_BOAT_IDLE_ALAMO",
             "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
-            "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
             "WORLD_VEHICLE_BROKEN_DOWN",
             "WORLD_VEHICLE_BUSINESSMEN",
             "WORLD_VEHICLE_HELI_LIFEGUARD",
