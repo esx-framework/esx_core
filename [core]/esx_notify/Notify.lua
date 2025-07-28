@@ -1,5 +1,6 @@
 local Debug = ESX.GetConfig().EnableDebug
 
+
 ---@param notificatonType string the notification type
 ---@param length number the length of the notification
 ---@param message any the message :D
@@ -35,7 +36,8 @@ local function Notify(notificatonType, length, message, title)
         type = notificatonType or "info",
         length = length or 5000,
         message = message or "ESX-Notify",
-        title = title or "New Notification"
+        title = title or "New Notification",
+        notificationSoundEnabled = Config.notificationSoundEnabled
     }))
 end
 
