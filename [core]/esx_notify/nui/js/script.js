@@ -83,6 +83,7 @@ w.addEventListener("message", (event) => {
     title: event.data.title || "New Notification",
     message: event.data.message,
     length: event.data.length,
+    NotificationSoundEnabled: event.data.NotificationSoundEnabled,
   })
 })
 
@@ -173,7 +174,10 @@ const notification = (data) => {
     width: "0%",
   })
 
-  playNotificationSound(data.type)
+  if (data.NotificationSoundEnabled) {
+    playNotificationSound(data.type)
+  }
+  
 
   setTimeout(() => {
     $(`#${id} .notify-progress`).css("width", "100%")
