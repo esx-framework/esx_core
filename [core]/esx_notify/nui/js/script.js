@@ -83,7 +83,7 @@ w.addEventListener("message", (event) => {
     title: event.data.title || "New Notification",
     message: event.data.message,
     length: event.data.length,
-    NotificationSoundEnabled: event.data.NotificationSoundEnabled,
+    notificationSoundEnabled: event.data.notificationSoundEnabled,
   })
 })
 
@@ -174,7 +174,7 @@ const notification = (data) => {
     width: "0%",
   })
 
-  if (data.NotificationSoundEnabled) {
+  if (data.notificationSoundEnabled) {
     playNotificationSound(data.type)
   }
   

@@ -8,7 +8,7 @@ description 'A beautiful and simple NUI notification system for ESX'
 
 shared_script '@es_extended/imports.lua'
 
-client_scripts { 'Notify.lua' }
+client_scripts { 'Notify.lua', 'Config.lua'}
 
 ui_page 'nui/index.html'
 
