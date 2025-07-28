@@ -445,7 +445,7 @@ function ESX.DiscordLog(name, title, color, message)
     }
     PerformHttpRequest(
         webHook,
-        function ()
+        function()
             return
         end,
         "POST",
@@ -489,7 +489,7 @@ function ESX.DiscordLogFields(name, title, color, fields)
     }
     PerformHttpRequest(
         webHook,
-        function ()
+        function()
             return
         end,
         "POST",
@@ -536,6 +536,8 @@ function ESX.RefreshJobs()
     else
         ESX.Jobs = Jobs
     end
+
+    TriggerEvent("esx:jobsLoaded")
 end
 
 ---@param item string
@@ -790,5 +792,5 @@ end
 ---@param plate string
 ---@return CExtendedVehicle?
 function ESX.GetExtendedVehicleFromPlate(plate)
-   return Core.vehicleClass.getFromPlate(plate)
+    return Core.vehicleClass.getFromPlate(plate)
 end

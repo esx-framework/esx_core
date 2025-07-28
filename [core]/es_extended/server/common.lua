@@ -1,6 +1,7 @@
 ESX.Players = {}
 ESX.Jobs = {}
 ESX.Items = {}
+ESX.JobsLoaded = false
 Core = {}
 Core.JobsPlayerCount = {}
 Core.UsableItemsCallbacks = {}
