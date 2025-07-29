@@ -505,9 +505,7 @@ end
 
 ---@return nil
 function ESX.RefreshJobs()
-    if Core.JobsLoaded.value then
-        Core.JobsLoaded = promise:new()
-    end
+    Core.JobsLoaded = false
 
     local Jobs = {}
     local jobs = MySQL.query.await("SELECT * FROM jobs")
@@ -542,7 +540,7 @@ function ESX.RefreshJobs()
     end
 
     TriggerEvent("esx:jobsLoaded")
-    Core.JobsLoaded:resolve(true)
+    Core.JobsLoaded = true
 end
 
 ---@param item string
@@ -602,7 +600,7 @@ end
 
 ---@return table
 function ESX.GetJobs()
-    while not Core.JobsLoaded.value do
+    while not Core.JobsLoaded do
         print("Waiting for ESX Jobs to Load")
         Citizen.Wait(200)
     end
@@ -773,7 +771,7 @@ end
 ---@param grade string
 ---@return boolean
 function ESX.DoesJobExist(job, grade)
-    while not Core.JobsLoaded.value do
+    while not Core.JobsLoaded do
         print("Waiting for ESX Jobs to Load")
         Citizen.Wait(200)
     end
