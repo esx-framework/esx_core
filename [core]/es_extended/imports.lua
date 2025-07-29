@@ -87,11 +87,6 @@ else
             })
         end
     })
-
-
-    AddEventHandler("esx:jobsLoaded", function()
-        ESX.JobsLoaded = true
-    end)
 end
 
 if GetResourceState("ox_lib") == "missing" then

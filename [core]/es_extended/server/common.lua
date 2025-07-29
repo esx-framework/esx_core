@@ -1,7 +1,6 @@
 ESX.Players = {}
 ESX.Jobs = {}
 ESX.Items = {}
-ESX.JobsLoaded = false
 Core = {}
 Core.JobsPlayerCount = {}
 Core.UsableItemsCallbacks = {}
@@ -11,6 +10,7 @@ Core.PickupId = 0
 Core.PlayerFunctionOverrides = {}
 Core.DatabaseConnected = false
 Core.playersByIdentifier = {}
+Core.JobsLoaded = promise:new()
 
 ---@type table<string, CVehicleData>
 Core.vehicles = {}
