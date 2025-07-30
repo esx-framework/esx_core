@@ -488,7 +488,7 @@ INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES
 ('Cognoscenti Cabrio', 'cogcabrio', 55000, 'coupes'),
 ('Cognoscenti', 'cognoscenti', 55000, 'sedans'),
 ('Comet', 'comet2', 65000, 'sports'),
-('Comet 5', 'comet5', 1145000, 'sports'),
+('Comet SR', 'comet5', 1145000, 'sports'),
 ('Contender', 'contender', 70000, 'suvs'),
 ('Coquette', 'coquette', 65000, 'sports'),
 ('Coquette Classic', 'coquette2', 40000, 'sportsclassics'),
