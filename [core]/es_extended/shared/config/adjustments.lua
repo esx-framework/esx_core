@@ -37,10 +37,10 @@ Config.RemoveHudComponents = {
 Config.Multipliers = {
     pedDensity = 1.0,
     scenarioPedDensityInterior = 0.0,
-    scenarioPedDensityExterior = 0.0,
+    scenarioPedDensityExterior = 1.0,
     ambientVehicleRange = 1.0,
     parkedVehicleDensity = 1.0,
-    randomVehicleDensity = 0.0,
+    randomVehicleDensity = 1.0,
     vehicleDensity = 1.0
 }
 
