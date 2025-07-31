@@ -269,7 +269,8 @@ function Core.SavePlayers(cb)
                 return cb()
             end
 
-            print(("[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms"):format(#parameters, #parameters > 1 and "players" or "player", ESX.Math.Round((os.time() - startTime) / 1000000, 2)))
+            print(("[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms"):format(#parameters,
+                #parameters > 1 and "players" or "player", ESX.Math.Round((os.time() - startTime) / 1000000, 2)))
         end
     )
 end
@@ -434,7 +435,8 @@ function ESX.DiscordLog(name, title, color, message)
             ["color"] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
             ["footer"] = {
                 ["text"] = "| ESX Logs | " .. os.date(),
-                ["icon_url"] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png",
+                ["icon_url"] =
+                "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png",
             },
             ["description"] = message,
             ["author"] = {
@@ -445,7 +447,7 @@ function ESX.DiscordLog(name, title, color, message)
     }
     PerformHttpRequest(
         webHook,
-        function ()
+        function()
             return
         end,
         "POST",
@@ -477,7 +479,8 @@ function ESX.DiscordLogFields(name, title, color, fields)
             ["color"] = Config.DiscordLogs.Colors[color] or Config.DiscordLogs.Colors.default,
             ["footer"] = {
                 ["text"] = "| ESX Logs | " .. os.date(),
-                ["icon_url"] = "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png",
+                ["icon_url"] =
+                "https://cdn.discordapp.com/attachments/944789399852417096/1020099828266586193/blanc-800x800.png",
             },
             ["fields"] = fields,
             ["description"] = "",
@@ -489,7 +492,7 @@ function ESX.DiscordLogFields(name, title, color, fields)
     }
     PerformHttpRequest(
         webHook,
-        function ()
+        function()
             return
         end,
         "POST",
@@ -505,6 +508,8 @@ end
 
 ---@return nil
 function ESX.RefreshJobs()
+    Core.JobsLoaded = false
+
     local Jobs = {}
     local jobs = MySQL.query.await("SELECT * FROM jobs")
 
@@ -536,6 +541,9 @@ function ESX.RefreshJobs()
     else
         ESX.Jobs = Jobs
     end
+
+    TriggerEvent("esx:jobsRefreshed")
+    Core.JobsLoaded = true
 end
 
 ---@param item string
@@ -557,7 +565,9 @@ function ESX.UseItem(source, item, ...)
             local success, result = pcall(itemCallback, source, item, ...)
 
             if not success then
-                return result and print(result) or print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(item))
+                return result and print(result) or
+                print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(
+                item))
             end
         end
     else
@@ -595,6 +605,10 @@ end
 
 ---@return table
 function ESX.GetJobs()
+    while not Core.JobsLoaded do
+        Citizen.Wait(200)
+    end
+
     return ESX.Jobs
 end
 
@@ -678,7 +692,8 @@ if not Config.CustomInventory then
         local itemCount = #items
         for i = 1, itemCount do
             local item = items[i]
-            ESX.Items[item.name] = { label = item.label, weight = item.weight, rare = item.rare, canRemove = item.can_remove }
+            ESX.Items[item.name] = { label = item.label, weight = item.weight, rare = item.rare, canRemove = item
+            .can_remove }
         end
         refreshPlayerInventories()
 
@@ -740,7 +755,9 @@ if not Config.CustomInventory then
         end
 
         if #toInsert > 0 then
-            MySQL.prepare.await("INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)", toInsert)
+            MySQL.prepare.await(
+            "INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)",
+                toInsert)
 
             for i = 1, #toInsert do
                 local row = toInsert[i]
@@ -761,6 +778,10 @@ end
 ---@param grade string
 ---@return boolean
 function ESX.DoesJobExist(job, grade)
+    while not Core.JobsLoaded do
+        Citizen.Wait(200)
+    end
+
     return (ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] ~= nil) or false
 end
 
@@ -790,5 +811,5 @@ end
 ---@param plate string
 ---@return CExtendedVehicle?
 function ESX.GetExtendedVehicleFromPlate(plate)
-   return Core.vehicleClass.getFromPlate(plate)
+    return Core.vehicleClass.getFromPlate(plate)
 end

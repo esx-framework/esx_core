@@ -1,9 +1,9 @@
 ESX = exports["es_extended"]:getSharedObject()
 ESX.currentResourceName = GetCurrentResourceName()
 
-OnPlayerData = function (key, val, last) end
+OnPlayerData = function(key, val, last) end
 
-local function TrackPedCoordsOnce() 
+local function TrackPedCoordsOnce()
     if not ESX or not ESX.PlayerData then
         return
     end
@@ -48,8 +48,8 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerData = {}
     end)
 
-    local external = {{"Class", "class.lua"}, {"Point", "point.lua"}}
-    for i=1, #external do
+    local external = { { "Class", "class.lua" }, { "Point", "point.lua" } }
+    for i = 1, #external do
         local module = external[i]
         local path = string.format("client/imports/%s", module[2])
 
@@ -78,7 +78,7 @@ else
                 return
             end
 
-            return setmetatable({src = src}, {
+            return setmetatable({ src = src }, {
                 __index = function(self, method)
                     return function(...)
                         return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
