@@ -140,7 +140,10 @@ if not Config.Multichar then
         local playerId = source
         deferrals.defer()
         Wait(0) -- Required
-        local identifier = ESX.GetIdentifier(playerId)
+        local identifier
+        local correctLicense, _ = pcall(function ()
+            identifier = ESX.GetIdentifier(playerId)
+        end)
 
         -- luacheck: ignore
         if not SetEntityOrphanMode then
@@ -155,11 +158,14 @@ if not Config.Multichar then
             return deferrals.done("[ESX] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg")
         end
 
-        if not identifier then
-            return deferrals.done("[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
+        if not identifier or not correctLicense then
+            if GetResourceState("esx_identity") ~= "started" then
+                return deferrals.done("[ESX] There was an error loading your character!\nError code: identifier-missing\n\nThe cause of this error is not known, your identifier could not be found. Please come back later or report this problem to the server administration team.")
+            end
         end
 
         local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
+
         if not xPlayer then
             return deferrals.done()
         end

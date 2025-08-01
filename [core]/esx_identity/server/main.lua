@@ -166,10 +166,15 @@ end
     if not multichar then
         AddEventHandler("playerConnecting", function(_, _, deferrals)
             deferrals.defer()
-            local _, identifier = source, ESX.GetIdentifier(source)
+            local _, identifier = source, nil
+
+            local correctLicense, _ = pcall(function()
+                identifier = ESX.GetIdentifier(source)
+            end)
+            
             Wait(40)
 
-            if not identifier then
+            if not identifier or not correctLicense then
                 return deferrals.done(TranslateCap("no_identifier"))
             end
             MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { identifier }, function(result)

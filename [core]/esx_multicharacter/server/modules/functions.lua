@@ -16,7 +16,10 @@ end
 function Server:OnConnecting(source, deferrals)
     deferrals.defer()
     Wait(0) -- Required
-    local identifier = ESX.GetIdentifier(source)
+    local identifier
+    local correctLicense, _ = pcall(function()
+        identifier = ESX.GetIdentifier(source)
+    end)
 
     -- luacheck: ignore
     if not SetEntityOrphanMode then
@@ -35,7 +38,7 @@ function Server:OnConnecting(source, deferrals)
         deferrals.done("[ESX Multicharacter] OxMySQL Was Unable To Connect to your database. Please make sure it is turned on and correctly configured in your server.cfg")
     end
 
-    if not identifier then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
+    if not identifier or not correctLicense then return deferrals.done(("[ESX Multicharacter] Unable to retrieve player identifier.\nIdentifier type: %s"):format(Server.identifierType)) end
 
     if ESX.GetConfig().EnableDebug or not ESX.Players[identifier] then
         ESX.Players[identifier] = source
