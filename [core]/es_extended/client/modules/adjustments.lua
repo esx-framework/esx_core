@@ -175,8 +175,7 @@ function Adjustments:ReplacePlaceholders(text)
         local success, result = pcall(cb)
 
         if not success then
-            error(("Failed to execute placeholder: ^5%s^7"):format(placeholder))
-            error(result)
+            error(("Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
             result = "Unknown"
         end
 
