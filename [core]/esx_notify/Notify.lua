@@ -37,7 +37,8 @@ local function Notify(notificatonType, length, message, title)
         length = length or 5000,
         message = message or "ESX-Notify",
         title = title or "New Notification",
-        notificationSoundEnabled = Config.notificationSoundEnabled
+        position = Config.position or "middle-right",
+        notificationSoundEnabled = Config.notificationSoundEnabled or false
     }))
 end
 
