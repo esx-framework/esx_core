@@ -184,17 +184,12 @@ function Adjustments:ReplacePlaceholders(text)
     return text
 end
 
-function Adjustments:PresencePlaceholders()
-    local presence = self:ReplacePlaceholders(Config.DiscordActivity.presence)
-    return presence
-end
-
 function Adjustments:DiscordPresence()
     if Config.DiscordActivity.appId ~= 0 then
         CreateThread(function()
             while true do
                 SetDiscordAppId(Config.DiscordActivity.appId)
-                SetRichPresence(self:PresencePlaceholders())
+                SetRichPresence(self:ReplacePlaceholders(Config.DiscordActivity.presence))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
                 SetDiscordRichPresenceAssetText(self:ReplacePlaceholders(Config.DiscordActivity.assetText))
 
