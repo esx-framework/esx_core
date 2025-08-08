@@ -1,16 +1,28 @@
 local Debug = ESX.GetConfig().EnableDebug
 
+local possiblePosition = {
+    ["top-right"] = true,
+    ["top-left"] = true,
+    ["top-middle"] = true,
+    ["bottom-right"] = true,
+    ["bottom-left"] = true,
+    ["bottom-middle"] = true,
+    ["middle-left"] = true,
+    ["middle-right"] = true
+}
 
 ---@param notificatonType string the notification type
 ---@param length number the length of the notification
 ---@param message any the message :D
 ---@param title string optional title for the notification
-local function Notify(notificatonType, length, message, title)
+---@param position string optional position for the notification
+local function Notify(notificatonType, length, message, title, position)
     if Debug then
         print("1 ".. tostring(notificatonType))
         print("2 "..tostring(length))
         print("3 "..message)
         print("4 "..tostring(title))
+        print("5 "..tostring(position))
     end
 
     if type(notificatonType) ~= "string" then
@@ -21,11 +33,16 @@ local function Notify(notificatonType, length, message, title)
         length = 3000
     end
 
+    if not possiblePosition[position] then
+        position = Config.position or "middle-right"
+    end
+
     if Debug then
-        print("5 ".. tostring(notificatonType))
-        print("6 "..tostring(length))
-        print("7 "..message)
-        print("8 "..tostring(title))
+        print("6 ".. tostring(notificatonType))
+        print("7 "..tostring(length))
+        print("8 "..message)
+        print("9 "..tostring(title))
+        print("10 "..tostring(position))
     end
 
     if type(message) == "string" then
@@ -37,7 +54,7 @@ local function Notify(notificatonType, length, message, title)
         length = length or 5000,
         message = message or "ESX-Notify",
         title = title or "New Notification",
-        position = Config.position or "middle-right",
+        position = position,
         notificationSoundEnabled = Config.notificationSoundEnabled or false
     }))
 end
