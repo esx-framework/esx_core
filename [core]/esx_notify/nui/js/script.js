@@ -1,4 +1,4 @@
-const w = window
+const w = window;
 
 const types = {
   ["success"]: {
@@ -29,7 +29,7 @@ const types = {
     ["color"]: "#f39c12",
     ["borderColor"]: "#d35400",
   },
-}
+};
 
 // the color codes example `i ~r~love~s~ donuts`
 const codes = {
@@ -42,39 +42,39 @@ const codes = {
   "~m~": "#212121",
   "~u~": "black",
   "~o~": "#fb9b04",
-}
+};
 
 // Audio context for sound effects
-let audioContext
+let audioContext;
 
 // Initialize audio context on user interaction
-document.addEventListener("click", initAudioContext, { once: true })
-document.addEventListener("keydown", initAudioContext, { once: true })
+document.addEventListener("click", initAudioContext, { once: true });
+document.addEventListener("keydown", initAudioContext, { once: true });
 
 function initAudioContext() {
   if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
 }
 
 function playNotificationSound(type) {
-  if (!audioContext) initAudioContext()
+  if (!audioContext) initAudioContext();
 
-  const typeConfig = types[type] || types["info"]
-  const oscillator = audioContext.createOscillator()
-  const gainNode = audioContext.createGain()
+  const typeConfig = types[type] || types["info"];
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
 
-  oscillator.type = "sine"
-  oscillator.frequency.setValueAtTime(typeConfig.frequency, audioContext.currentTime)
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(typeConfig.frequency, audioContext.currentTime);
 
-  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + typeConfig.duration / 1000)
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + typeConfig.duration / 1000);
 
-  oscillator.connect(gainNode)
-  gainNode.connect(audioContext.destination)
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
 
-  oscillator.start()
-  oscillator.stop(audioContext.currentTime + typeConfig.duration / 1000)
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + typeConfig.duration / 1000);
 }
 
 w.addEventListener("message", (event) => {
@@ -83,76 +83,81 @@ w.addEventListener("message", (event) => {
     title: event.data.title || "New Notification",
     message: event.data.message,
     length: event.data.length,
+    position: event.data.position,
     notificationSoundEnabled: event.data.notificationSoundEnabled,
-  })
-})
+  });
+});
 
 const replaceColors = (str, obj) => {
-  let strToReplace = str
+  let strToReplace = str;
 
   for (const id in obj) {
-    strToReplace = strToReplace.replace(new RegExp(id, "g"), obj[id])
+    strToReplace = strToReplace.replace(new RegExp(id, "g"), obj[id]);
   }
 
-  return strToReplace
-}
+  return strToReplace;
+};
 
 const sanitizeHTML = (str) => {
-  const temp = document.createElement("div")
-  temp.textContent = str
-  return temp.innerHTML
-}
+  const temp = document.createElement("div");
+  temp.textContent = str;
+  return temp.innerHTML;
+};
 
 const processLineBreaks = (str) => {
   // Replace <br> tags with actual line breaks
-  return str.replace(/&lt;br&gt;/g, "<br>")
-}
+  return str.replace(/&lt;br&gt;/g, "<br>");
+};
 
 const notification = (data) => {
   if (typeof $ === "undefined") {
-    console.error("jQuery is not loaded. Please ensure jQuery is included in your project.")
-    return
+    console.error("jQuery is not loaded. Please ensure jQuery is included in your project.");
+    return;
   }
 
   if (data.message) {
     // Remove any standalone ~s~ tags (not preceded by a color code)
-    data.message = data.message.replace(/~s~/g, "")
+    data.message = data.message.replace(/~s~/g, "");
   }
 
   if (data.title) {
     // Remove any standalone ~s~ tags (not preceded by a color code)
-    data.title = data.title.replace(/~s~/g, "")
+    data.title = data.title.replace(/~s~/g, "");
   }
 
-  let sanitizedTitle = data.title ? sanitizeHTML(data.title) : ""
-  let sanitizedMessage = data.message ? sanitizeHTML(data.message) : ""
+  let sanitizedTitle = data.title ? sanitizeHTML(data.title) : "";
+  let sanitizedMessage = data.message ? sanitizeHTML(data.message) : "";
 
   if (data.title) {
     for (const color in codes) {
       if (sanitizedTitle.includes(color)) {
-        const objArr = {}
-        objArr[color] = `<span style="color: ${codes[color]}">`
-        objArr["~s~"] = "</span>"
-        sanitizedTitle = replaceColors(sanitizedTitle, objArr)
+        const objArr = {};
+        objArr[color] = `<span style="color: ${codes[color]}">`;
+        objArr["~s~"] = "</span>";
+        sanitizedTitle = replaceColors(sanitizedTitle, objArr);
       }
     }
   }
 
   for (const color in codes) {
     if (sanitizedMessage.includes(color)) {
-      const objArr = {}
-      objArr[color] = `<span style="color: ${codes[color]}">`
-      objArr["~s~"] = "</span>"
-      sanitizedMessage = replaceColors(sanitizedMessage, objArr)
+      const objArr = {};
+      objArr[color] = `<span style="color: ${codes[color]}">`;
+      objArr["~s~"] = "</span>";
+      sanitizedMessage = replaceColors(sanitizedMessage, objArr);
     }
   }
 
-  sanitizedMessage = processLineBreaks(sanitizedMessage)
-  sanitizedTitle = processLineBreaks(sanitizedTitle)
+  sanitizedMessage = processLineBreaks(sanitizedMessage);
+  sanitizedTitle = processLineBreaks(sanitizedTitle);
 
-  const id = Math.floor(Math.random() * 100000)
-  const typeInfo = types[data.type] || types["info"]
-  const duration = data.length || 3000
+  const id = Math.floor(Math.random() * 100000);
+  const typeInfo = types[data.type] || types["info"];
+  const duration = data.length || 3000;
+
+  $("#root")
+    .removeClass()
+    .addClass(data.position || "middle-right");
 
   const notificationElement = $(`
     <div id="${id}" class="notify notify-${data.type} fadeIn">
@@ -167,28 +172,27 @@ const notification = (data) => {
         <div class="notify-progress" style="background-color: ${typeInfo.color}"></div>
       </div>
     </div>
-  `).appendTo(`#root`)
+  `).appendTo(`#root`);
 
   $(`#${id} .notify-progress`).css({
     transition: `width ${duration}ms linear`,
     width: "0%",
-  })
+  });
 
   if (data.notificationSoundEnabled) {
-    playNotificationSound(data.type)
+    playNotificationSound(data.type);
   }
-  
 
   setTimeout(() => {
-    $(`#${id} .notify-progress`).css("width", "100%")
-  }, 10)
+    $(`#${id} .notify-progress`).css("width", "100%");
+  }, 10);
 
   setTimeout(() => {
-    $(`#${id}`).removeClass("fadeIn").addClass("fadeOut")
+    $(`#${id}`).removeClass("fadeIn").addClass("fadeOut");
     setTimeout(() => {
-      $(`#${id}`).remove()
-    }, 500)
-  }, duration)
+      $(`#${id}`).remove();
+    }, 500);
+  }, duration);
 
-  return notificationElement
-}
+  return notificationElement;
+};
