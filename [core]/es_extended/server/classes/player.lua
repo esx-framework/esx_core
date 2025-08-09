@@ -790,9 +790,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@param msg string
     ---@param notifyType string
     ---@param length number
+    ---@param position string
     ---@return nil
-    function self.showNotification(msg, notifyType, length)
-        self.triggerEvent("esx:showNotification", msg, notifyType, length)
+    function self.showNotification(msg, notifyType, length, position)
+        self.triggerEvent("esx:showNotification", msg, notifyType, length, position)
     end
 
     ---@param sender string
