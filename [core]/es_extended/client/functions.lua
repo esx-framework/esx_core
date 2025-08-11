@@ -22,18 +22,19 @@ function ESX.SecureNetEvent(name, func)
         Core.Events[invokingResource] = {}
     end
 
-    local event = RegisterNetEvent(name, function(...)
-        if source == '' then
+    RegisterNetEvent(name)
+    AddEventHandler(name, function(...)
+        if not source or source == 0 then
             return
         end
 
         local success, result = pcall(func, ...)
         if not success then
-            error(("%s"):format(result))
+            print(('[ESX.SecureNetEvent] Error in event "%s": %s'):format(name, result))
         end
     end)
     local eventIndex = #Core.Events[invokingResource] + 1
-    Core.Events[invokingResource][eventIndex] = event
+    Core.Events[invokingResource][eventIndex] = name
 end
 
 local addonResourcesState = {
