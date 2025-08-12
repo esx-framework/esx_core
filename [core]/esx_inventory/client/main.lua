@@ -46,21 +46,23 @@ end
 ---@return number
 local function appendItems(elements)
     local weight = 0
-    for _, v in ipairs(ESX.PlayerData.inventory) do
-        if v.count > 0 then
-            weight = weight + (v.weight * v.count)
+    for i = 1, #ESX.PlayerData.inventory do
+        local item = ESX.PlayerData.inventory[i]
+        if item.count > 0 then
+            weight = weight + (item.weight * item.count)
             elements[#elements + 1] = {
                 type = "item_standard",
-                label = ("%s x%s"):format(v.label, v.count),
+                label = ("%s x%s"):format(item.label, item.count),
                 icon = "fas fa-box",
-                count = v.count,
-                value = v.name,
-                usable = v.usable,
-                rare = v.rare,
-                canRemove = v.canRemove
+                count = item.count,
+                value = item.name,
+                usable = item.usable,
+                rare = item.rare,
+                canRemove = item.canRemove
             }
         end
     end
+
     return weight
 end
 
@@ -68,25 +70,27 @@ end
 ---@return number
 local function appendLoadout(elements)
     local weight = 0
-    for _, weapon in ipairs(ESX.GetConfig("Weapons")) do
+    local playerPed = ESX.PlayerData.ped
+
+    for i = 1, #ESX.PlayerData.loadout do
+        local weapon = ESX.PlayerData.loadout[i]
         local weaponHash = joaat(weapon.name)
-        if HasPedGotWeapon(ESX.PlayerData.ped, weaponHash, false) then
-            local ammo = GetAmmoInPedWeapon(ESX.PlayerData.ped, weaponHash)
-            local label = weapon.ammo and ("%s - %s %s"):format(weapon.label, ammo, weapon.ammo.label) or weapon.label
-            elements[#elements + 1] = {
-                type = "item_weapon",
-                label = label,
-                icon = "fas fa-gun",
-                count = 1,
-                value = weapon.name,
-                usable = false,
-                rare = false,
-                ammo = ammo,
-                canGiveAmmo = (weapon.ammo ~= nil),
-                canRemove = true
-            }
-        end
+        local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+        local label = weapon.ammo and ("%s - %s %s"):format(weapon.label, ammo, weapon.ammo.label) or weapon.label
+        elements[#elements + 1] = {
+            type = "item_weapon",
+            label = label,
+            icon = "fas fa-gun",
+            count = 1,
+            value = weapon.name,
+            usable = false,
+            rare = false,
+            ammo = ammo,
+            canGiveAmmo = (weapon.ammo ~= nil),
+            canRemove = true
+        }
     end
+
     return weight
 end
 
@@ -173,6 +177,7 @@ local function handleInventoryAction(action, selected, closestPlayer)
     elseif action == "give_ammo" then
         local pedAmmo = GetAmmoInPedWeapon(playerPed, joaat(itemName))
         local qty = openQuantityDialog(TranslateCap("amount"), pedAmmo)
+        if not qty then return end
         TriggerServerEvent("esx:giveInventoryItem", GetPlayerServerId(closestPlayer), "item_ammo", itemName, qty)
     end
 end
