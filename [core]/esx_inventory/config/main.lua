@@ -1,0 +1,3 @@
+Config = {
+    Locale = "en",
+}

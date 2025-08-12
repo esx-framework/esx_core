@@ -348,14 +348,6 @@ function StartServerSyncLoops()
     end)
 end
 
-if not Config.CustomInventory and Config.EnableDefaultInventory then
-    ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "F2", function()
-        if not ESX.PlayerData.dead then
-            ESX.ShowInventory()
-        end
-    end)
-end
-
 if not Config.CustomInventory then
     CreateThread(function()
         while true do
