@@ -1,3 +1,3 @@
 Config = {
-    Locale = "en",
+    Locale = GetConvar("esx:locale", "en"),
 }
