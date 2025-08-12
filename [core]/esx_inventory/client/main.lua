@@ -179,7 +179,7 @@ local function showInventory()
     ESX.PlayerData = ESX.GetPlayerData()
     local elements, totalWeight = buildInventoryElements()
     ESX.UI.Menu.Open("default", ESX.currentResourceName, "esx_inventory_main", {
-        title = TranslateCap("inventory", totalWeight, ESX.GetConfig("MaxWeight")),
+        title = TranslateCap("inventory", totalWeight, ESX.PlayerData.maxWeight),
         elements = elements,
     }, function(data, menu)
         local selected = data.current --[[@as InventoryElement]]
