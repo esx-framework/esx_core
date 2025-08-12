@@ -133,19 +133,26 @@ end
 
 ---@param title string
 ---@param maxCount number
----@param cb function
-local function openQuantityDialog(title, maxCount, cb)
-    ESX.UI.Menu.Open("dialog", ESX.currentResourceName, "esx_quantity_dialog", {
+---@return number?
+local function openQuantityDialog(title, maxCount)
+    local p = promise:new()
+    ESX.UI.Menu.Open("dialog", ESX.currentResourceName, "esx_inventory_quantity", {
         title = title
     }, function(data, menu)
         local qty = tonumber(data.value)
         if not qty or qty <= 0 or qty > maxCount then
             ESX.ShowNotification(TranslateCap("amount_invalid"))
+            p:resolve(nil)
         else
             menu.close()
-            cb(qty)
+            p:resolve(qty)
         end
-    end, function(_, menu) menu.close() end)
+    end, function(_, menu)
+        menu.close()
+        p:resolve(nil)
+    end)
+
+    return Citizen.Await(p)
 end
 
 ---@param action InventoryAction
@@ -154,20 +161,19 @@ end
 local function handleInventoryAction(action, selected, closestPlayer)
     local itemType, itemName, playerPed = selected.type, selected.value, ESX.PlayerData.ped
     if action == "give" then
-        openQuantityDialog(TranslateCap("amount"), selected.count, function(qty)
-            TriggerServerEvent("esx:giveInventoryItem", GetPlayerServerId(closestPlayer), itemType, itemName, qty)
-        end)
+        local qty = openQuantityDialog(TranslateCap("amount"), selected.count)
+        if not qty then return end
+        TriggerServerEvent("esx:giveInventoryItem", GetPlayerServerId(closestPlayer), itemType, itemName, qty)
     elseif action == "remove" then
-        openQuantityDialog(TranslateCap("amount"), selected.count, function(qty)
-            TriggerServerEvent("esx:removeInventoryItem", itemType, itemName, qty)
-        end)
+        local qty = openQuantityDialog(TranslateCap("amount"), selected.count)
+        if not qty then return end
+        TriggerServerEvent("esx:removeInventoryItem", itemType, itemName, qty)
     elseif action == "use" then
         TriggerServerEvent("esx:useItem", itemName)
     elseif action == "give_ammo" then
         local pedAmmo = GetAmmoInPedWeapon(playerPed, joaat(itemName))
-        openQuantityDialog(TranslateCap("amount"), pedAmmo, function(qty)
-            TriggerServerEvent("esx:giveInventoryItem", GetPlayerServerId(closestPlayer), "item_ammo", itemName, qty)
-        end)
+        local qty = openQuantityDialog(TranslateCap("amount"), pedAmmo)
+        TriggerServerEvent("esx:giveInventoryItem", GetPlayerServerId(closestPlayer), "item_ammo", itemName, qty)
     end
 end
 
@@ -212,7 +218,7 @@ end)
 local function refreshInventory()
     if not ESX.UI.Menu.IsOpen("default", ESX.currentResourceName, "esx_inventory_main") and
         not ESX.UI.Menu.IsOpen("default", ESX.currentResourceName, "esx_inventory_actions") and
-        not ESX.UI.Menu.IsOpen("dialog", ESX.currentResourceName, "esx_quantity_dialog") then
+        not ESX.UI.Menu.IsOpen("dialog", ESX.currentResourceName, "esx_inventory_quantity") then
         return
     end
     Citizen.Wait(0)
