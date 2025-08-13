@@ -580,6 +580,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
             GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
             self.triggerEvent("esx:addInventoryItem", weaponLabel, false, true)
+            self.triggerEvent("esx:addLoadoutItem", weaponName, weaponLabel, ammo)
         end
     end
 
@@ -692,6 +693,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
         if weaponLabel then
             self.triggerEvent("esx:removeInventoryItem", weaponLabel, false, true)
+            self.triggerEvent("esx:removeLoadoutItem", weaponName, weaponLabel)
         end
     end
 

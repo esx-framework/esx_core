@@ -48,6 +48,45 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerData = {}
     end)
 
+    if not ESX.GetConfig("CustomInventory") then
+        ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
+            for i = 1, #ESX.PlayerData.inventory do
+                if ESX.PlayerData.inventory[i].name == item then
+                    ESX.PlayerData.inventory[i].count = count
+                    break
+                end
+            end
+        end)
+
+        ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
+            for i = 1, #ESX.PlayerData.inventory do
+                if ESX.PlayerData.inventory[i].name == item then
+                    ESX.PlayerData.inventory[i].count = count
+                    break
+                end
+            end
+        end)
+
+        ESX.SecureNetEvent("esx:addLoadoutItem", function(weaponName, weaponLabel, ammo)
+            table.insert(ESX.PlayerData.loadout, {
+                name = weaponName,
+                ammo = ammo,
+                label = weaponLabel,
+                components = {},
+                tintIndex = 0,
+            })
+        end)
+
+        ESX.SecureNetEvent("esx:removeLoadoutItem", function(weaponName, weaponLabel)
+            for i = 1, #ESX.PlayerData.loadout do
+                if ESX.PlayerData.loadout[i].name == weaponName then
+                    table.remove(ESX.PlayerData.loadout, i)
+                    break
+                end
+            end
+        end)
+    end
+
     local external = { { "Class", "class.lua" }, { "Point", "point.lua" } }
     for i = 1, #external do
         local module = external[i]
