@@ -139,6 +139,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return self.lastPlaytime + GetPlayerTimeOnline(self.source)
     end
 
+    ---@param playtime number
+    ---@return nil
+    function self.setPlayTime(playtime)
+        assert(type(playtime) == "number", "playtime should be number!")
+        playtime = ESX.Math.Round(playtime)
+        self.lastPlaytime = playtime
+        self.setMeta("lastPlaytime", playtime)
+    end
+
     ---@param money number
     ---@return nil
     function self.setMoney(money)
