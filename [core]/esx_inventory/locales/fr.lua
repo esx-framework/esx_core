@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Appuyez sur E pour ramasser",
     ["keymap_showinventory"] = "Afficher l'inventaire",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

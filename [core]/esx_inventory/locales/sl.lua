@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Pritisni E da poberes",
     ["keymap_showinventory"] = "Pokazi Shrambo",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

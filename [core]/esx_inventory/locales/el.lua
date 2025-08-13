@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Πατήστε E για να σηκώσετε",
     ["keymap_showinventory"] = "Εμφάνιση Αποθήκης",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

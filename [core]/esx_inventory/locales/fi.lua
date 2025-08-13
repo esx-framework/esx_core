@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Paina E kerätäksesi",
     ["keymap_showinventory"] = "Avaa reppu",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

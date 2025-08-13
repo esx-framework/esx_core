@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Press E to Pickup",
     ["keymap_showinventory"] = "Show Inventory",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

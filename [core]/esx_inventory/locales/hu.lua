@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "E hogy felvedd",
     ["keymap_showinventory"] = "Leltár mutatása",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

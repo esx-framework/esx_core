@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "לחץ E כדי לאסוף",
     ["keymap_showinventory"] = "הצג מלאי",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

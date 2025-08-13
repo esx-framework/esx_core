@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Tekan E untuk Mengambil",
     ["keymap_showinventory"] = "Buka Inventaris",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

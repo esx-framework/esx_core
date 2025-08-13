@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Tryck E för att plocka upp",
     ["keymap_showinventory"] = "Öppna inventory",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

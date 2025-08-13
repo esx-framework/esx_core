@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Drücke [E] zum aufheben",
     ["keymap_showinventory"] = "Inventar Anzeigen",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

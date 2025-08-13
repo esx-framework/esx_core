@@ -76,7 +76,7 @@ local function appendLoadout(elements)
         local weapon = ESX.PlayerData.loadout[i]
         local weaponHash = joaat(weapon.name)
         local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-        local label = weapon.ammo and ("%s - %s %s"):format(weapon.label, ammo, weapon.ammo.label) or weapon.label
+        local label = weapon.ammo and ("%s - %s %s"):format(weapon.label, weapon.ammo, TranslateCap("ammo_rounds")) or weapon.label
         elements[#elements + 1] = {
             type = "item_weapon",
             label = label,

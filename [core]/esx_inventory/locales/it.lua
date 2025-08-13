@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Premi E per raccogliere",
     ["keymap_showinventory"] = "Apri inventario",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

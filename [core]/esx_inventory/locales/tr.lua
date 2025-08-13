@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Almak İçin E'ye Basın",
     ["keymap_showinventory"] = "Envanteri Göster",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

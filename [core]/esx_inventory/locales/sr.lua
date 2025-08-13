@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Pritisni E da pokupiš",
     ["keymap_showinventory"] = "Otvaranje inventara",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

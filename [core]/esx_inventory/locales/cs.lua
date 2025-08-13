@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Zmáčkni E pro sebrání!",
     ["keymap_showinventory"] = "Otevřít inventář",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

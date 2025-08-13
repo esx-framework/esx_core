@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "键下 [E] 拾取",
     ["keymap_showinventory"] = "显示物品栏",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

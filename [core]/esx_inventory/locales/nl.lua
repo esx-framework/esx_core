@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Druk op E om op te pakken",
     ["keymap_showinventory"] = "Laat inventaris zien",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }

@@ -37,4 +37,5 @@ return {
     ["threw_pickup_prompt"] = "Pulsa E para recoger",
     ["keymap_showinventory"] = "Mostrar inventario",
     ["locale_currency"] = "$%s",
+    ["ammo_rounds"] = "Rounds"
 }
