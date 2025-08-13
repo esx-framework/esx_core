@@ -50,9 +50,9 @@ if not IsDuplicityVersion() then -- Only register this event for the client
 
     if not ESX.GetConfig("CustomInventory") then
         ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
-            for k, v in ipairs(ESX.PlayerData.inventory) do
-                if v.name == item then
-                    ESX.PlayerData.inventory[k].count = count
+            for i = 1, #ESX.PlayerData.inventory do
+                if ESX.PlayerData.inventory[i].name == item then
+                    ESX.PlayerData.inventory[i].count = count
                     break
                 end
             end
