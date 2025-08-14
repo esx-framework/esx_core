@@ -245,7 +245,7 @@ end
     end
 
     ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
-        local xPlayer = ESX.GetPlayerFromId(source)
+        local xPlayer = ESX.Player(source)
 
         if not checkNameFormat(data.firstname) then
             TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
@@ -269,12 +269,12 @@ end
         end
 
         if xPlayer then
-            if alreadyRegistered[xPlayer.identifier] then
+            if alreadyRegistered[xPlayer.getIdentifier()] then
                 xPlayer.showNotification(TranslateCap("already_registered"), "error")
                 return cb(false)
             end
 
-            playerIdentity[xPlayer.identifier] = {
+            playerIdentity[xPlayer.getIdentifier()] = {
                 firstName = formatName(data.firstname),
                 lastName = formatName(data.lastname),
                 dateOfBirth = formatDate(data.dateofbirth),
@@ -282,14 +282,14 @@ end
                 height = data.height,
             }
 
-            local currentIdentity = playerIdentity[xPlayer.identifier]
+            local currentIdentity = playerIdentity[xPlayer.getIdentifier()]
 
             SetPlayerData(xPlayer, currentIdentity)
 
-            TriggerClientEvent("esx_identity:setPlayerData", xPlayer.source, currentIdentity)
-            saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
-            alreadyRegistered[xPlayer.identifier] = true
-            playerIdentity[xPlayer.identifier] = nil
+            TriggerClientEvent("esx_identity:setPlayerData", xPlayer.src, currentIdentity)
+            saveIdentityToDatabase(xPlayer.getIdentifier(), currentIdentity)
+            alreadyRegistered[xPlayer.getIdentifier()] = true
+            playerIdentity[xPlayer.getIdentifier()] = nil
             return cb(true)
         end
 
@@ -334,13 +334,13 @@ if Config.EnableCommands then
                 Wait(1500)
                 deleteIdentity(xPlayer)
                 xPlayer.showNotification(TranslateCap("deleted_character"))
-                playerIdentity[xPlayer.identifier] = nil
-                alreadyRegistered[xPlayer.identifier] = false
+                playerIdentity[xPlayer.getIdentifier()] = nil
+                alreadyRegistered[xPlayer.getIdentifier()] = false
             else
                 deleteIdentity(xPlayer)
                 xPlayer.showNotification(TranslateCap("deleted_character"))
-                playerIdentity[xPlayer.identifier] = nil
-                alreadyRegistered[xPlayer.identifier] = false
+                playerIdentity[xPlayer.getIdentifier()] = nil
+                alreadyRegistered[xPlayer.getIdentifier()] = false
                 TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.source)
             end
         else
