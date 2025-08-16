@@ -292,7 +292,7 @@ end
 
 ---@param key? string
 ---@param val? string|table
----@return table
+---@return xPlayer[]|table<any, xPlayer[]>
 function ESX.GetExtendedPlayers(key, val)
     if not key then
         return ESX.Table.ToArray(ESX.Players)
