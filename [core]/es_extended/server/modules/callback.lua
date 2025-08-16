@@ -98,7 +98,7 @@ end
 ---@param player number playerId
 ---@param eventName string
 ---@param ... any
----@return any
+---@return ...
 function ESX.AwaitClientCallback(player, eventName, ...)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
