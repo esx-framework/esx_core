@@ -218,9 +218,10 @@ if GetResourceState("ox_lib") == "missing" then
         return nil, err or 'unknown error'
     end
 
+    ---@diagnostic disable-next-line: duplicate-doc-alias
     ---@alias PackageSearcher
     ---| fun(modName: string): function loader
-    ---| fun(modName: string): nil, string errmsg
+    ---| fun(modName: string): nil|false, string errmsg
 
     ---@type PackageSearcher[]
     package.searchers = {

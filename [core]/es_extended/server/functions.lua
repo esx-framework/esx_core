@@ -367,16 +367,17 @@ end
 
 ---@param source number
 ---@return boolean
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.IsPlayerLoaded(source)
     return ESX.Players[source] ~= nil
 end
 
 ---@param playerId number | string
----@return string
+---@return string, number
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
-        return "ESX-DEBUG-LICENCE"
+        return "ESX-DEBUG-LICENCE", 0
     end
 
     playerId = tostring(playerId)
