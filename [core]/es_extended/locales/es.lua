@@ -86,7 +86,7 @@ return {
     ["disabled"] = "~r~desactivado~s~",
 
     -- Locale settings
-    ["locale_digit_grouping_symbol"] = ".", 
+    ["locale_digit_grouping_symbol"] = ".",
     ["locale_currency"] = "%s€",
 
     -- Weapons
