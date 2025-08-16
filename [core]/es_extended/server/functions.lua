@@ -662,7 +662,7 @@ if not Config.CustomInventory then
             local xPlayer = xPlayers[i]
             local minimalInv = xPlayer.getInventory(true)
 
-            for itemName, itemCount in pairs(minimalInv) do
+            for itemName, _ in pairs(minimalInv) do
                 if not ESX.Items[itemName] then
                     xPlayer.setInventoryItem(itemName, 0)
                     minimalInv[itemName] = nil
