@@ -385,6 +385,7 @@ CREATE TABLE `society_moneywash` (
 
 CREATE TABLE `users` (
   `identifier` varchar(60) NOT NULL,
+	`ssn` VARCHAR(11) NOT NULL,
   `accounts` longtext DEFAULT NULL,
   `group` varchar(50) DEFAULT 'user',
   `inventory` longtext DEFAULT NULL,
@@ -846,6 +847,9 @@ ALTER TABLE `society_moneywash`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`identifier`),
   ADD UNIQUE KEY `id` (`id`);
+
+ALTER TABLE `users`
+  ADD UNIQUE KEY `unique_ssn` (`ssn`);
 
 --
 -- Indexes for table `user_licenses`

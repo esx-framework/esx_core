@@ -10,6 +10,7 @@ USE `es_extended`;
 
 CREATE TABLE `users` (
 	`identifier` VARCHAR(60) NOT NULL,
+	`ssn` VARCHAR(11) NOT NULL,
 	`accounts` LONGTEXT NULL DEFAULT NULL,
 	`group` VARCHAR(50) NULL DEFAULT 'user',
 	`inventory` LONGTEXT NULL DEFAULT NULL,
@@ -19,7 +20,8 @@ CREATE TABLE `users` (
 	`metadata` LONGTEXT NULL DEFAULT NULL,
 	`position` longtext NULL DEFAULT NULL,
 
-	PRIMARY KEY (`identifier`)
+	PRIMARY KEY (`identifier`),
+	UNIQUE KEY `unique_ssn` (`ssn`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `items` (

@@ -19,6 +19,7 @@
 
 ---@param playerId number
 ---@param identifier string
+---@param ssn string
 ---@param group string
 ---@param accounts table
 ---@param inventory table
@@ -28,7 +29,7 @@
 ---@param name string
 ---@param coords table | vector4
 ---@param metadata table
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     ---@class xPlayer
     local self = {}
 
@@ -36,6 +37,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     self.coords = coords
     self.group = group
     self.identifier = identifier
+    self.ssn = ssn
     self.inventory = inventory
     self.job = job
     self.loadout = loadout
@@ -171,6 +173,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     ---@return string
     function self.getIdentifier()
         return self.identifier
+    end
+
+    ---@return string
+    function self.getSSN()
+        return self.ssn
     end
 
     ---@param newGroup string
