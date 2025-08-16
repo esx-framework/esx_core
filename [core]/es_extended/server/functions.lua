@@ -348,13 +348,13 @@ function ESX.GetNumPlayers(key, val)
 end
 
 ---@param source number
----@return xPlayer
+---@return xPlayer?
 function ESX.GetPlayerFromId(source)
     return ESX.Players[tonumber(source)]
 end
 
 ---@param identifier string
----@return xPlayer
+---@return xPlayer?
 function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end

@@ -522,6 +522,10 @@ if not Config.CustomInventory then
         local playerId = source
         local xPlayer = ESX.GetPlayerFromId(playerId)
 
+        if not xPlayer then
+            return
+        end
+
         if itemType == "item_standard" then
             if not itemCount or itemCount < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
@@ -590,6 +594,11 @@ if not Config.CustomInventory then
     RegisterNetEvent("esx:useItem", function(itemName)
         local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
+
+        if not xPlayer then
+            return
+        end
+
         local count = xPlayer.getInventoryItem(itemName).count
 
         if count < 1 then
@@ -601,6 +610,10 @@ if not Config.CustomInventory then
 
     RegisterNetEvent("esx:onPickup", function(pickupId)
         local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
+
+        if not xPlayer then
+            return
+        end
 
         if not pickup then return end
 
@@ -644,6 +657,10 @@ end
 ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
+    if not xPlayer then
+        return
+    end
+
     cb({
         identifier = xPlayer.identifier,
         accounts = xPlayer.getAccounts(),
@@ -666,6 +683,10 @@ end)
 
 ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
+
+    if not xPlayer then
+        return
+    end
 
     cb({
         identifier = xPlayer.identifier,
