@@ -106,26 +106,56 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         end
     end
 else
-    ESX.Player = setmetatable({}, {
-        __call = function(_, src)
-            if type(src) ~= "number" then
-                src = ESX.GetPlayerIdFromIdentifier(src)
-                if not src then
-                    return
+    ---@param src number
+    ---@return StaticPlayer
+    local function createStaticPlayer(src)
+        return setmetatable({ src = src }, {
+            __index = function(self, method)
+                return function(...)
+                    return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
                 end
-            elseif not ESX.IsPlayerLoaded(src) then
-                return
             end
+        })
+    end
 
-            return setmetatable({ src = src }, {
-                __index = function(self, method)
-                    return function(...)
-                        return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
-                    end
-                end
-            })
+    ---@param src number|string
+    ---@return StaticPlayer?
+    function ESX.Player(src)
+        if type(src) ~= "number" then
+            src = ESX.GetPlayerIdFromIdentifier(src)
+            if not src then return end
+        elseif not ESX.IsPlayerLoaded(src) then
+            return
         end
-    })
+
+        return createStaticPlayer(src)
+    end
+
+    ---@param key? string
+    ---@param val? string|string[]
+    ---@return StaticPlayer[] | table<any, StaticPlayer[]>
+    function ESX.ExtendedPlayers(key, val)
+        local playerIds = ESX.GetExtendedPlayers(key, val, true)
+
+        if key and type(val) == "table" then
+            ---@cast playerIds table<any, number[]>
+            local retVal = {}
+            for group, ids in pairs(playerIds) do
+                retVal[group] = {}
+                for i = 1, #ids do
+                    retVal[group][i] = createStaticPlayer(ids[i])
+                end
+            end
+            return retVal
+        else
+            ---@cast playerIds number[]
+            local retVal = {}
+            for i = 1, #playerIds do
+                retVal[i] = createStaticPlayer(playerIds[i])
+            end
+            return retVal
+        end
+    end
 end
 
 if GetResourceState("ox_lib") == "missing" then
