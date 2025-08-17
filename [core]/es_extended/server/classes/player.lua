@@ -48,6 +48,7 @@
 ---@field coords table              # Player's coordinates {x, y, z, heading}.
 ---@field group string              # Player permission group.
 ---@field identifier string         # Unique identifier (usually Steam or license).
+---@field ssn string                # Player's social security number.
 ---@field license string            # Player license string.
 ---@field inventory ESXInventoryItem[] # Player's inventory items.
 ---@field job ESXJob                # Player's current job.
@@ -105,6 +106,7 @@
 ---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
 --- Player State Functions
 ---@field getIdentifier fun(): string                              # Get player's unique identifier.
+---@field getSSN fun(): string                                      # Get player's social security number.
 ---@field getSource fun(): number                                  # Get player source/server ID.
 ---@field getPlayerId fun(): number                                # Alias for getSource.
 ---@field getName fun(): string                                     # Get player's name.
@@ -263,11 +265,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         return self.identifier
     end
 
-    ---@return string
     function self.getSSN()
         return self.ssn
     end
-  
+
     function self.setGroup(newGroup)
         local lastGroup = self.group
 
