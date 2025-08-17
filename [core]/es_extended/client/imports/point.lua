@@ -1,6 +1,6 @@
 local Point = ESX.Class()
 
-local nearby, loop = {}
+local nearby, loop = {}, nil
 
 function Point:constructor(properties)
 	self.coords = properties.coords
@@ -23,7 +23,7 @@ function Point:constructor(properties)
 							point:inside(#(coords - point.coords))
 						end
 					end
-					Wait()
+					Wait(0)
 				end
 			end)
 		end

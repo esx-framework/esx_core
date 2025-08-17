@@ -292,7 +292,7 @@ end
 
 ---@param key? string
 ---@param val? string|table
----@return table
+---@return xPlayer[]|table<any, xPlayer[]>
 function ESX.GetExtendedPlayers(key, val)
     if not key then
         return ESX.Table.ToArray(ESX.Players)
@@ -348,13 +348,13 @@ function ESX.GetNumPlayers(key, val)
 end
 
 ---@param source number
----@return table
+---@return xPlayer?
 function ESX.GetPlayerFromId(source)
     return ESX.Players[tonumber(source)]
 end
 
 ---@param identifier string
----@return table
+---@return xPlayer?
 function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
@@ -367,16 +367,17 @@ end
 
 ---@param source number
 ---@return boolean
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.IsPlayerLoaded(source)
     return ESX.Players[source] ~= nil
 end
 
 ---@param playerId number | string
----@return string
+---@return string, number
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
-        return "ESX-DEBUG-LICENCE"
+        return "ESX-DEBUG-LICENCE", 0
     end
 
     playerId = tostring(playerId)
