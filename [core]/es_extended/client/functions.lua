@@ -1,4 +1,5 @@
 ---@return boolean
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.IsPlayerLoaded()
     return ESX.PlayerLoaded
 end
@@ -559,7 +560,8 @@ function ESX.Game.SpawnVehicle(vehicleModel, coords, heading, cb, networked)
         local modelHash = ESX.Streaming.RequestModel(model)
         if not modelHash then
             if promise then
-                return promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+                promise:reject(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
+                return
             end
            error(("Tried to spawn invalid vehicle - ^5%s^7!"):format(model))
         end

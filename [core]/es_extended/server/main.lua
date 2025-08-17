@@ -421,6 +421,10 @@ if not Config.CustomInventory then
         if itemType == "item_standard" then
             local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
+            if not sourceItem then
+                return
+            end
+
             if itemCount < 1 or sourceItem.count < itemCount then
                 return sourceXPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
             end
@@ -457,6 +461,10 @@ if not Config.CustomInventory then
             end
 
             local _, weapon = sourceXPlayer.getWeapon(itemName)
+            if not weapon then
+                return
+            end
+
             local _, weaponObject = ESX.GetWeapon(itemName)
             itemCount = weapon.ammo
             local weaponComponents = ESX.Table.Clone(weapon.components)
@@ -489,6 +497,9 @@ if not Config.CustomInventory then
             end
 
             local _, weapon = sourceXPlayer.getWeapon(itemName)
+            if not weapon then
+                return
+            end
 
             if not targetXPlayer.hasWeapon(itemName) then
                 sourceXPlayer.showNotification(TranslateCap("gave_weapon_noweapon", targetXPlayer.name))
@@ -515,12 +526,19 @@ if not Config.CustomInventory then
         local playerId = source
         local xPlayer = ESX.GetPlayerFromId(playerId)
 
+        if not xPlayer then
+            return
+        end
+
         if itemType == "item_standard" then
             if not itemCount or itemCount < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
             end
 
             local xItem = xPlayer.getInventoryItem(itemName)
+            if not xItem then
+                return
+            end
 
             if itemCount > xItem.count or xItem.count < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
@@ -536,6 +554,9 @@ if not Config.CustomInventory then
             end
 
             local account = xPlayer.getAccount(itemName)
+            if not account then
+                return
+            end
 
             if itemCount > account.money or account.money < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_amount"))
@@ -551,6 +572,10 @@ if not Config.CustomInventory then
             if not xPlayer.hasWeapon(itemName) then return end
 
             local _, weapon = xPlayer.getWeapon(itemName)
+            if not weapon then
+                return
+            end
+
             local _, weaponObject = ESX.GetWeapon(itemName)
             -- luacheck: ignore weaponPickupLabel
             local weaponPickupLabel = ""
@@ -573,6 +598,11 @@ if not Config.CustomInventory then
     RegisterNetEvent("esx:useItem", function(itemName)
         local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
+
+        if not xPlayer then
+            return
+        end
+
         local count = xPlayer.getInventoryItem(itemName).count
 
         if count < 1 then
@@ -584,6 +614,10 @@ if not Config.CustomInventory then
 
     RegisterNetEvent("esx:onPickup", function(pickupId)
         local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
+
+        if not xPlayer then
+            return
+        end
 
         if not pickup then return end
 
@@ -627,6 +661,10 @@ end
 ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
+    if not xPlayer then
+        return
+    end
+
     cb({
         identifier = xPlayer.identifier,
         accounts = xPlayer.getAccounts(),
@@ -649,6 +687,10 @@ end)
 
 ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
+
+    if not xPlayer then
+        return
+    end
 
     cb({
         identifier = xPlayer.identifier,

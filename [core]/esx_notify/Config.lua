@@ -1,3 +1,3 @@
 Config = {}
 
-Config.notificationSoundEnabled = true 
+Config.notificationSoundEnabled = true

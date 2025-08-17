@@ -76,7 +76,7 @@ end
 
 ---@param weaponName string
 ---@param weaponComponent string
----@return table | nil
+---@return ESXWeaponComponent?
 function ESX.GetWeaponComponent(weaponName, weaponComponent)
     weaponName = string.upper(weaponName)
 
@@ -84,6 +84,7 @@ function ESX.GetWeaponComponent(weaponName, weaponComponent)
     local weapon = Config.Weapons[weaponsByName[weaponName]]
 
     for _, component in ipairs(weapon.components) do
+        ---@cast component ESXWeaponComponent
         if component.name == weaponComponent then
             return component
         end

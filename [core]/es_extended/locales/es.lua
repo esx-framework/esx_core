@@ -4,7 +4,7 @@ return {
     ["received_help"] = "Has cobrado tu subsidio: $%s",
     ["company_nomoney"] = "La empresa para la que trabajas es demasiado pobre para pagarte el sueldo",
     ["received_paycheck"] = "Nómina recibida",
-    ["bank"] = "Maze Bank", 
+    ["bank"] = "Maze Bank",
     ["account_bank"] = "Banco",
     ["account_black_money"] = "Dinero negro",
     ["account_money"] = "Efectivo",
@@ -86,7 +86,7 @@ return {
     ["disabled"] = "~r~desactivado~s~",
 
     -- Locale settings
-    ["locale_digit_grouping_symbol"] = ".", 
+    ["locale_digit_grouping_symbol"] = ".",
     ["locale_currency"] = "%s€",
 
     -- Weapons
@@ -128,7 +128,7 @@ return {
     ["weapon_snspistol"] = "Pistola SNS",
     ["weapon_snspistol_mk2"] = "Pistola SNS Mk2",
     ["weapon_stungun"] = "Pistola eléctrica",
-    ["weapon_raypistol"] = "Pistola de Rayos", 
+    ["weapon_raypistol"] = "Pistola de Rayos",
     ["weapon_vintagepistol"] = "Pistola vintage",
 
     -- Shotguns
@@ -156,7 +156,7 @@ return {
     ["weapon_smg"] = "Subfusil",
     ["weapon_smg_mk2"] = "Subfusil Mk2",
     ["weapon_raycarbine"] = "Carabina de Rayos",
-    ["weapon_tecpistol"] = "Subfusil táctico", 
+    ["weapon_tecpistol"] = "Subfusil táctico",
 
     -- Rifles
     ["weapon_advancedrifle"] = "Fusil avanzado",
@@ -196,9 +196,9 @@ return {
     ["weapon_tactilerifle"] = "Carabina de servicio",
 
     -- Drug wars dlc
-    ["weapon_candycane"] = "Bastón de caramelo", 
-    ["weapon_acidpackage"] = "Paquete de ácido", 
-    ["weapon_pistolxm3"] = "Pistola WM 29", 
+    ["weapon_candycane"] = "Bastón de caramelo",
+    ["weapon_acidpackage"] = "Paquete de ácido",
+    ["weapon_pistolxm3"] = "Pistola WM 29",
     ["weapon_railgunxm3"] = "Cañón de riel",
 
     -- Chop Shop DLC
@@ -220,7 +220,7 @@ return {
     ["weapon_pipebomb"] = "Bomba casera",
     ["weapon_snowball"] = "Bola de nieve",
     ["weapon_stickybomb"] = "Bomba lapa",
-    ["weapon_smokegrenade"] = "Granada de humo", 
+    ["weapon_smokegrenade"] = "Granada de humo",
 
     -- Special
     ["weapon_fireextinguisher"] = "Extintor",
@@ -309,7 +309,7 @@ return {
     ["component_ammo_tracer"] = "Munición trazadora",
     ["component_ammo_incendiary"] = "Munición incendiaria",
     ["component_ammo_hollowpoint"] = "Munición de punta hueca",
-    ["component_ammo_fmj"] = "Munición FMJ", 
+    ["component_ammo_fmj"] = "Munición FMJ",
     ["component_ammo_armor"] = "Munición perforante",
     ["component_ammo_explosive"] = "Munición explosiva perforante",
 

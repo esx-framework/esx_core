@@ -73,7 +73,7 @@ function ESX.Scaleform.Utils.RunMethod(scaleform, methodName, returnValue, ...)
     BeginScaleformMovieMethod(scaleform, methodName)
 
     local args = { ... }
-    for i, arg in ipairs(args) do
+    for _, arg in ipairs(args) do
         local typeArg = type(arg)
 
         if typeArg == "number" then
