@@ -277,7 +277,7 @@ end
 
 ESX.GetPlayers = GetPlayers
 
-local function checkTable(key, val, xPlayer, xPlayers)
+local function checkTable(key, val, xPlayer, xPlayers, minimal)
     for valIndex = 1, #val do
         local value = val[valIndex]
         if not xPlayers[value] then
@@ -285,23 +285,35 @@ local function checkTable(key, val, xPlayer, xPlayers)
         end
 
         if (key == "job" and xPlayer.job.name == value) or xPlayer[key] == value then
-            xPlayers[value][#xPlayers[value] + 1] = xPlayer
+            xPlayers[value][#xPlayers[value] + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 end
 
 ---@param key? string
 ---@param val? string|table
----@return xPlayer[]|table<any, xPlayer[]>
-function ESX.GetExtendedPlayers(key, val)
+---@param minimal? boolean
+---@return xPlayer[]|number[]|table<any, xPlayer[]>|table<any, number[]>
+function ESX.GetExtendedPlayers(key, val, minimal)
     if not key then
-        return ESX.Table.ToArray(ESX.Players)
+        if not minimal then
+            return ESX.Table.ToArray(ESX.Players)
+        end
+
+        local xPlayers = {}
+        local index = 1
+        for src, _ in pairs(ESX.Players) do
+            xPlayers[index] = src
+            index += 1
+        end
+
+        return xPlayers
     end
 
     local xPlayers = {}
     if type(val) == "table" then
         for _, xPlayer in pairs(ESX.Players) do
-            checkTable(key, val, xPlayer, xPlayers)
+            checkTable(key, val, xPlayer, xPlayers, minimal)
         end
 
         return xPlayers
@@ -309,7 +321,7 @@ function ESX.GetExtendedPlayers(key, val)
 
     for _, xPlayer in pairs(ESX.Players) do
         if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
-            xPlayers[#xPlayers + 1] = xPlayer
+            xPlayers[#xPlayers + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 

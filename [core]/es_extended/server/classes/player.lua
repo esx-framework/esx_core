@@ -42,27 +42,7 @@
 ---@field label string              # Component display name.
 ---@field hash string|number        # Component hash or identifier.
 
----@class xPlayer
---- Properties
----@field accounts ESXAccount[]     # Array of the player's accounts.
----@field coords table              # Player's coordinates {x, y, z, heading}.
----@field group string              # Player permission group.
----@field identifier string         # Unique identifier (usually Steam or license).
----@field ssn string                # Player's social security number.
----@field license string            # Player license string.
----@field inventory ESXInventoryItem[] # Player's inventory items.
----@field job ESXJob                # Player's current job.
----@field loadout ESXInventoryWeapon[] # Player's current weapons.
----@field name string               # Player's display name.
----@field playerId number           # Player's ID (server ID).
----@field source number             # Player's source (alias for playerId).
----@field variables table           # Custom player variables.
----@field weight number             # Current carried weight.
----@field maxWeight number          # Maximum carry weight.
----@field metadata table            # Custom metadata table.
----@field lastPlaytime number       # Last recorded playtime in seconds.
----@field paycheckEnabled boolean   # Whether paycheck is enabled.
----@field admin boolean             # Whether the player is an admin.
+---@class StaticPlayer
 --- Money Functions
 ---@field setMoney fun(money: number)                             # Set player's cash balance.
 ---@field getMoney fun(): number                                   # Get player's current cash balance.
@@ -131,6 +111,28 @@
 ---@field isPaycheckEnabled fun(): boolean       # Check if paycheck is enabled.
 ---@field executeCommand fun(command: string)    # Execute a server command.
 ---@field triggerEvent fun(eventName: string, ...) # Trigger client event for this player.
+
+
+---@class xPlayer:StaticPlayer
+--- Properties
+---@field accounts ESXAccount[]     # Array of the player's accounts.
+---@field coords table              # Player's coordinates {x, y, z, heading}.
+---@field group string              # Player permission group.
+---@field identifier string         # Unique identifier (usually Steam or license).
+---@field license string            # Player license string.
+---@field inventory ESXInventoryItem[] # Player's inventory items.
+---@field job ESXJob                # Player's current job.
+---@field loadout ESXInventoryWeapon[] # Player's current weapons.
+---@field name string               # Player's display name.
+---@field playerId number           # Player's ID (server ID).
+---@field source number             # Player's source (alias for playerId).
+---@field variables table           # Custom player variables.
+---@field weight number             # Current carried weight.
+---@field maxWeight number          # Maximum carry weight.
+---@field metadata table            # Custom metadata table.
+---@field lastPlaytime number       # Last recorded playtime in seconds.
+---@field paycheckEnabled boolean   # Whether paycheck is enabled.
+---@field admin boolean             # Whether the player is an admin.
 
 ---@param playerId number
 ---@param identifier string
