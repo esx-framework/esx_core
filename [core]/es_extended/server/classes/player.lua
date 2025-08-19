@@ -86,6 +86,7 @@
 ---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
 --- Player State Functions
 ---@field getIdentifier fun(): string                              # Get player's unique identifier.
+---@field getSSN fun(): string                                      # Get player's social security number.
 ---@field getSource fun(): number                                  # Get player source/server ID.
 ---@field getPlayerId fun(): number                                # Alias for getSource.
 ---@field getName fun(): string                                     # Get player's name.
@@ -135,6 +136,7 @@
 
 ---@param playerId number
 ---@param identifier string
+---@param ssn string
 ---@param group string
 ---@param accounts ESXAccount[]
 ---@param inventory table
@@ -145,7 +147,7 @@
 ---@param coords vector4|{x: number, y: number, z: number, heading: number}
 ---@param metadata table
 ---@return xPlayer
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
     ---@diagnostic disable-next-line: missing-fields
     local self = {} ---@type xPlayer
 
@@ -153,6 +155,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     self.coords = coords
     self.group = group
     self.identifier = identifier
+    self.ssn = ssn
     self.inventory = inventory
     self.job = job
     self.loadout = loadout
@@ -262,6 +265,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
     function self.getIdentifier()
         return self.identifier
+    end
+
+    function self.getSSN()
+        return self.ssn
     end
 
     function self.setGroup(newGroup)

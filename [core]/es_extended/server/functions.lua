@@ -817,6 +817,51 @@ function Core.IsPlayerAdmin(playerSrc)
     return xPlayer and Config.AdminGroups[xPlayer.getGroup()] or false
 end
 
+-- Generates a unique 9-digit SSN in dashed format (XXX-XX-XXXX).
+---@return string
+function Core.generateSSN()
+    local reservedSSNs = {
+        ["078-05-1120"] = true,
+        ["219-09-9999"] = true,
+        ["123-45-6789"] = true
+    }
+
+    while true do
+        -- Generate the first part (area number)
+        local area = math.random(1, 899)
+
+        -- 666 is never assigned
+        if area == 666 then
+            goto continue
+        end
+
+        -- Generate the second part (group number)
+        local group = math.random(1, 99)
+
+        -- Generate the last part (serial number)
+        local serial = math.random(1, 9999)
+
+        -- Skip reserved SSN range (987-65-4320..4329)
+        if area == 987 and group == 65 and serial >= 4320 and serial <= 4329 then
+            goto continue
+        end
+
+        local candidate = string.format("%03d-%02d-%04d", area, group, serial)
+
+        if reservedSSNs[candidate] then
+            goto continue
+        end
+
+        local exists = MySQL.scalar.await("SELECT 1 FROM `users` WHERE `ssn` = ? LIMIT 1", { candidate })
+
+        if not exists then
+            return candidate
+        end
+
+        ::continue::
+    end
+end
+
 ---@param owner string
 ---@param plate string
 ---@param coords vector4
