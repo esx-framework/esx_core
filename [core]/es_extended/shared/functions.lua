@@ -31,7 +31,11 @@ end
 ---@param key? string Key pair to get specific value of config
 ---@return unknown Returns the whole config if no key is passed, or a specific value
 function ESX.GetConfig(key)
-    return key and Config[key] or Config
+    if key then
+        return Config[key]
+    end
+
+    return Config
 end
 
 ---@param weaponName string
@@ -72,7 +76,7 @@ end
 
 ---@param weaponName string
 ---@param weaponComponent string
----@return table | nil
+---@return ESXWeaponComponent?
 function ESX.GetWeaponComponent(weaponName, weaponComponent)
     weaponName = string.upper(weaponName)
 
@@ -80,6 +84,7 @@ function ESX.GetWeaponComponent(weaponName, weaponComponent)
     local weapon = Config.Weapons[weaponsByName[weaponName]]
 
     for _, component in ipairs(weapon.components) do
+        ---@cast component ESXWeaponComponent
         if component.name == weaponComponent then
             return component
         end

@@ -48,6 +48,45 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         ESX.PlayerData = {}
     end)
 
+    if not ESX.GetConfig("CustomInventory") then
+        ESX.SecureNetEvent("esx:addInventoryItem", function(item, count, showNotification)
+            for i = 1, #ESX.PlayerData.inventory do
+                if ESX.PlayerData.inventory[i].name == item then
+                    ESX.PlayerData.inventory[i].count = count
+                    break
+                end
+            end
+        end)
+
+        ESX.SecureNetEvent("esx:removeInventoryItem", function(item, count, showNotification)
+            for i = 1, #ESX.PlayerData.inventory do
+                if ESX.PlayerData.inventory[i].name == item then
+                    ESX.PlayerData.inventory[i].count = count
+                    break
+                end
+            end
+        end)
+
+        ESX.SecureNetEvent("esx:addLoadoutItem", function(weaponName, weaponLabel, ammo)
+            table.insert(ESX.PlayerData.loadout, {
+                name = weaponName,
+                ammo = ammo,
+                label = weaponLabel,
+                components = {},
+                tintIndex = 0,
+            })
+        end)
+
+        ESX.SecureNetEvent("esx:removeLoadoutItem", function(weaponName, weaponLabel)
+            for i = 1, #ESX.PlayerData.loadout do
+                if ESX.PlayerData.loadout[i].name == weaponName then
+                    table.remove(ESX.PlayerData.loadout, i)
+                    break
+                end
+            end
+        end)
+    end
+
     local external = { { "Class", "class.lua" }, { "Point", "point.lua" } }
     for i = 1, #external do
         local module = external[i]
@@ -67,26 +106,56 @@ if not IsDuplicityVersion() then -- Only register this event for the client
         end
     end
 else
-    ESX.Player = setmetatable({}, {
-        __call = function(_, src)
-            if type(src) ~= "number" then
-                src = ESX.GetPlayerIdFromIdentifier(src)
-                if not src then
-                    return
+    ---@param src number
+    ---@return StaticPlayer
+    local function createStaticPlayer(src)
+        return setmetatable({ src = src }, {
+            __index = function(self, method)
+                return function(...)
+                    return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
                 end
-            elseif not ESX.IsPlayerLoaded(src) then
-                return
             end
+        })
+    end
 
-            return setmetatable({ src = src }, {
-                __index = function(self, method)
-                    return function(...)
-                        return exports.es_extended:RunStaticPlayerMethod(self.src, method, ...)
-                    end
-                end
-            })
+    ---@param src number|string
+    ---@return StaticPlayer?
+    function ESX.Player(src)
+        if type(src) ~= "number" then
+            src = ESX.GetPlayerIdFromIdentifier(src)
+            if not src then return end
+        elseif not ESX.IsPlayerLoaded(src) then
+            return
         end
-    })
+
+        return createStaticPlayer(src)
+    end
+
+    ---@param key? string
+    ---@param val? string|string[]
+    ---@return StaticPlayer[] | table<any, StaticPlayer[]>
+    function ESX.ExtendedPlayers(key, val)
+        local playerIds = ESX.GetExtendedPlayers(key, val, true)
+
+        if key and type(val) == "table" then
+            ---@cast playerIds table<any, number[]>
+            local retVal = {}
+            for group, ids in pairs(playerIds) do
+                retVal[group] = {}
+                for i = 1, #ids do
+                    retVal[group][i] = createStaticPlayer(ids[i])
+                end
+            end
+            return retVal
+        else
+            ---@cast playerIds number[]
+            local retVal = {}
+            for i = 1, #playerIds do
+                retVal[i] = createStaticPlayer(playerIds[i])
+            end
+            return retVal
+        end
+    end
 end
 
 if GetResourceState("ox_lib") == "missing" then
@@ -179,9 +248,10 @@ if GetResourceState("ox_lib") == "missing" then
         return nil, err or 'unknown error'
     end
 
+    ---@diagnostic disable-next-line: duplicate-doc-alias
     ---@alias PackageSearcher
     ---| fun(modName: string): function loader
-    ---| fun(modName: string): nil, string errmsg
+    ---| fun(modName: string): nil|false, string errmsg
 
     ---@type PackageSearcher[]
     package.searchers = {

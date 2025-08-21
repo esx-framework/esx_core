@@ -277,7 +277,7 @@ end
 
 ESX.GetPlayers = GetPlayers
 
-local function checkTable(key, val, xPlayer, xPlayers)
+local function checkTable(key, val, xPlayer, xPlayers, minimal)
     for valIndex = 1, #val do
         local value = val[valIndex]
         if not xPlayers[value] then
@@ -285,23 +285,35 @@ local function checkTable(key, val, xPlayer, xPlayers)
         end
 
         if (key == "job" and xPlayer.job.name == value) or xPlayer[key] == value then
-            xPlayers[value][#xPlayers[value] + 1] = xPlayer
+            xPlayers[value][#xPlayers[value] + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 end
 
 ---@param key? string
 ---@param val? string|table
----@return table
-function ESX.GetExtendedPlayers(key, val)
+---@param minimal? boolean
+---@return xPlayer[]|number[]|table<any, xPlayer[]>|table<any, number[]>
+function ESX.GetExtendedPlayers(key, val, minimal)
     if not key then
-        return ESX.Table.ToArray(ESX.Players)
+        if not minimal then
+            return ESX.Table.ToArray(ESX.Players)
+        end
+
+        local xPlayers = {}
+        local index = 1
+        for src, _ in pairs(ESX.Players) do
+            xPlayers[index] = src
+            index += 1
+        end
+
+        return xPlayers
     end
 
     local xPlayers = {}
     if type(val) == "table" then
         for _, xPlayer in pairs(ESX.Players) do
-            checkTable(key, val, xPlayer, xPlayers)
+            checkTable(key, val, xPlayer, xPlayers, minimal)
         end
 
         return xPlayers
@@ -309,7 +321,7 @@ function ESX.GetExtendedPlayers(key, val)
 
     for _, xPlayer in pairs(ESX.Players) do
         if (key == "job" and xPlayer.job.name == val) or xPlayer[key] == val then
-            xPlayers[#xPlayers + 1] = xPlayer
+            xPlayers[#xPlayers + 1] = (minimal and xPlayer.source or xPlayer)
         end
     end
 
@@ -348,13 +360,13 @@ function ESX.GetNumPlayers(key, val)
 end
 
 ---@param source number
----@return table
+---@return xPlayer?
 function ESX.GetPlayerFromId(source)
     return ESX.Players[tonumber(source)]
 end
 
 ---@param identifier string
----@return table
+---@return xPlayer?
 function ESX.GetPlayerFromIdentifier(identifier)
     return Core.playersByIdentifier[identifier]
 end
@@ -367,16 +379,17 @@ end
 
 ---@param source number
 ---@return boolean
+---@diagnostic disable-next-line: duplicate-set-field
 function ESX.IsPlayerLoaded(source)
     return ESX.Players[source] ~= nil
 end
 
 ---@param playerId number | string
----@return string
+---@return string, number
 function ESX.GetIdentifier(playerId)
     local fxDk = GetConvarInt("sv_fxdkMode", 0)
     if fxDk == 1 then
-        return "ESX-DEBUG-LICENCE"
+        return "ESX-DEBUG-LICENCE", 0
     end
 
     playerId = tostring(playerId)
@@ -662,7 +675,7 @@ if not Config.CustomInventory then
             local xPlayer = xPlayers[i]
             local minimalInv = xPlayer.getInventory(true)
 
-            for itemName, itemCount in pairs(minimalInv) do
+            for itemName, _ in pairs(minimalInv) do
                 if not ESX.Items[itemName] then
                     xPlayer.setInventoryItem(itemName, 0)
                     minimalInv[itemName] = nil
@@ -802,6 +815,51 @@ function Core.IsPlayerAdmin(playerSrc)
 
     local xPlayer = ESX.GetPlayerFromId(playerSrc)
     return xPlayer and Config.AdminGroups[xPlayer.getGroup()] or false
+end
+
+-- Generates a unique 9-digit SSN in dashed format (XXX-XX-XXXX).
+---@return string
+function Core.generateSSN()
+    local reservedSSNs = {
+        ["078-05-1120"] = true,
+        ["219-09-9999"] = true,
+        ["123-45-6789"] = true
+    }
+
+    while true do
+        -- Generate the first part (area number)
+        local area = math.random(1, 899)
+
+        -- 666 is never assigned
+        if area == 666 then
+            goto continue
+        end
+
+        -- Generate the second part (group number)
+        local group = math.random(1, 99)
+
+        -- Generate the last part (serial number)
+        local serial = math.random(1, 9999)
+
+        -- Skip reserved SSN range (987-65-4320..4329)
+        if area == 987 and group == 65 and serial >= 4320 and serial <= 4329 then
+            goto continue
+        end
+
+        local candidate = string.format("%03d-%02d-%04d", area, group, serial)
+
+        if reservedSSNs[candidate] then
+            goto continue
+        end
+
+        local exists = MySQL.scalar.await("SELECT 1 FROM `users` WHERE `ssn` = ? LIMIT 1", { candidate })
+
+        if not exists then
+            return candidate
+        end
+
+        ::continue::
+    end
 end
 
 ---@param owner string

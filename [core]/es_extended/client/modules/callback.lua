@@ -92,7 +92,7 @@ end
 
 ---@param eventName string
 ---@param ... any
----@return any
+---@return ...
 function ESX.AwaitServerCallback(eventName, ...)
     local invokingResource = GetInvokingResource()
     local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"

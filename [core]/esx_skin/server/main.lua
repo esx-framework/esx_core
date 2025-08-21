@@ -2,7 +2,7 @@ RegisterNetEvent("esx_skin:save", function(skin)
     if not skin or type(skin) ~= "table" then
         return
     end
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local xPlayer = ESX.Player(source)
 
     if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
@@ -17,12 +17,12 @@ RegisterNetEvent("esx_skin:save", function(skin)
 
     MySQL.update("UPDATE users SET skin = @skin WHERE identifier = @identifier", {
         ["@skin"] = json.encode(skin),
-        ["@identifier"] = xPlayer.identifier,
+        ["@identifier"] = xPlayer.getIdentifier(),
     })
 end)
 
 RegisterNetEvent("esx_skin:setWeight", function(skin)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local xPlayer = ESX.Player(source)
 
     if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
@@ -37,16 +37,16 @@ RegisterNetEvent("esx_skin:setWeight", function(skin)
 end)
 
 ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local xPlayer = ESX.Player(source)
 
     MySQL.query("SELECT skin FROM users WHERE identifier = @identifier", {
-        ["@identifier"] = xPlayer.identifier,
+        ["@identifier"] = xPlayer.getIdentifier(),
     }, function(users)
         local user, skin = users[1], nil
 
         local jobSkin = {
-            skin_male = xPlayer.job.skin_male,
-            skin_female = xPlayer.job.skin_female,
+            skin_male = xPlayer.getJob().skin_male,
+            skin_female = xPlayer.getJob().skin_female,
         }
 
         if user.skin then

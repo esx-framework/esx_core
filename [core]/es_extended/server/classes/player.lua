@@ -1,41 +1,161 @@
----@class xPlayer
----@field accounts table
----@field coords table
----@field group string
----@field identifier string
----@field inventory table
----@field job table
----@field loadout table
----@field name string
----@field playerId number
----@field source number
----@field variables table
----@field weight number
----@field maxWeight number
----@field metadata table
----@field lastPlaytime number
----@field admin boolean
----@field license string
+---@class ESXAccount
+---@field name string               # Account name (e.g., "bank", "money").
+---@field money number              # Current balance in this account.
+---@field label string              # Human-readable label for the account.
+---@field round boolean             # Whether amounts are rounded for display.
+---@field index number              # Index of the account in the player's accounts list.
+
+---@class ESXItem
+---@field name string               # Item identifier (internal name).
+---@field label string              # Display name of the item.
+---@field weight number             # Weight of a single unit of the item.
+---@field usable boolean            # Whether the item can be used.
+---@field rare boolean              # Whether the item is rare.
+---@field canRemove boolean         # Whether the item can be removed from inventory.
+
+---@class ESXInventoryItem:ESXItem
+---@field count number              # Number of this item in the player's inventory.
+
+---@class ESXJob
+---@field id number                 # Job ID.
+---@field name string               # Job internal name.
+---@field label string              # Job display label.
+---@field grade number              # Current grade/rank number.
+---@field grade_name string         # Name of the current grade.
+---@field grade_label string        # Label of the current grade.
+---@field grade_salary number       # Salary for the current grade.
+---@field skin_male table           # Skin configuration for male characters.
+---@field skin_female table         # Skin configuration for female characters.
+---@field onDuty boolean?           # Whether the player is currently on duty.
+
+---@class ESXWeapon
+---@field name string               # Weapon identifier (internal name).
+---@field label string              # Weapon display name.
+
+---@class ESXInventoryWeapon:ESXWeapon
+---@field ammo number               # Amount of ammo in the weapon.
+---@field components string[]       # List of components attached to the weapon.
+---@field tintIndex number          # Current weapon tint index.
+
+---@class ESXWeaponComponent
+---@field name string               # Component identifier (internal name).
+---@field label string              # Component display name.
+---@field hash string|number        # Component hash or identifier.
+
+---@class StaticPlayer
+--- Money Functions
+---@field setMoney fun(money: number)                             # Set player's cash balance.
+---@field getMoney fun(): number                                   # Get player's current cash balance.
+---@field addMoney fun(money: number, reason: string)             # Add money to the player's cash balance.
+---@field removeMoney fun(money: number, reason: string)          # Remove money from the player's cash balance.
+---@field setAccountMoney fun(accountName: string, money: number, reason?: string)  # Set specific account balance.
+---@field addAccountMoney fun(accountName: string, money: number, reason?: string)  # Add money to an account.
+---@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
+---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
+---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
+--- Inventory Functions
+---@field getInventory fun(minimal?: boolean): ESXInventoryItem[]|table<string,number>  # Get inventory, optionally minimal.
+---@field getInventoryItem fun(itemName: string): ESXInventoryItem? # Get a specific item from inventory.
+---@field addInventoryItem fun(itemName: string, count: number)     # Add items to inventory.
+---@field removeInventoryItem fun(itemName: string, count: number)  # Remove items from inventory.
+---@field setInventoryItem fun(itemName: string, count: number)     # Set item count in inventory.
+---@field getWeight fun(): number                                   # Get current carried weight.
+---@field getMaxWeight fun(): number                                # Get maximum carry weight.
+---@field setMaxWeight fun(newWeight: number)                       # Set maximum carry weight.
+---@field canCarryItem fun(itemName: string, count: number): boolean # Check if player can carry more of an item.
+---@field canSwapItem fun(firstItem: string, firstItemCount: number, testItem: string, testItemCount: number): boolean # Check if items can be swapped.
+---@field hasItem fun(item: string): ESXInventoryItem|false, number? # Check if player has an item.
+---@field getLoadout fun(minimal?: boolean): ESXInventoryWeapon[]|table<string, {ammo:number, tintIndex?:number, components?:string[]}> # Get player's weapon loadout.
+--- Job Functions
+---@field getJob fun(): ESXJob                                         # Get player's current job.
+---@field setJob fun(newJob: string, grade: string, onDuty?: boolean)  # Set player's job and grade.
+---@field setGroup fun(newGroup: string)                               # Set player's permission group.
+---@field getGroup fun(): string                                       # Get player's permission group.
+--- Weapon Functions
+---@field addWeapon fun(weaponName: string, ammo: number)                 # Give player a weapon.
+---@field removeWeapon fun(weaponName: string)                             # Remove weapon from player.
+---@field hasWeapon fun(weaponName: string): boolean                       # Check if player has a weapon.
+---@field getWeapon fun(weaponName: string): number?, table?               # Get weapon ammo & components.
+---@field addWeaponAmmo fun(weaponName: string, ammoCount: number)        # Add ammo to a weapon.
+---@field removeWeaponAmmo fun(weaponName: string, ammoCount: number)     # Remove ammo from a weapon.
+---@field updateWeaponAmmo fun(weaponName: string, ammoCount: number)     # Update ammo count for a weapon.
+---@field addWeaponComponent fun(weaponName: string, weaponComponent: string)    # Add component to weapon.
+---@field removeWeaponComponent fun(weaponName: string, weaponComponent: string) # Remove component from weapon.
+---@field hasWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Check if weapon has component.
+---@field setWeaponTint fun(weaponName: string, weaponTintIndex: number) # Set weapon tint.
+---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
+--- Player State Functions
+---@field getIdentifier fun(): string                              # Get player's unique identifier.
+---@field getSSN fun(): string                                      # Get player's social security number.
+---@field getSource fun(): number                                  # Get player source/server ID.
+---@field getPlayerId fun(): number                                # Alias for getSource.
+---@field getName fun(): string                                     # Get player's name.
+---@field setName fun(newName: string)                              # Set player's name.
+---@field setCoords fun(coordinates: vector4|vector3|table)        # Teleport player to coordinates.
+---@field getCoords fun(vector?: boolean, heading?: boolean): vector3|vector4|table # Get player's coordinates.
+---@field isAdmin fun(): boolean                                    # Check if player is admin.
+---@field kick fun(reason: string)                                  # Kick player from server.
+---@field getPlayTime fun(): number                                  # Get total playtime in seconds.
+---@field set fun(k: string, v: any)                                # Set custom variable.
+---@field get fun(k: string): any                                    # Get custom variable.
+--- Metadata Functions
+---@field getMeta fun(index?: string, subIndex?: string|table): any   # Get metadata value(s).
+---@field setMeta fun(index: string, value: any, subValue?: any)      # Set metadata value(s).
+---@field clearMeta fun(index: string, subValues?: string|table)      # Clear metadata value(s).
+--- Notification Functions
+---@field showNotification fun(msg: string, notifyType?: string, length?: number, title?: string, position?: string) # Show a simple notification.
+---@field showAdvancedNotification fun(sender: string, subject: string, msg: string, textureDict: string, iconType: string, flash: boolean, saveToBrief: boolean, hudColorIndex: number) # Show advanced notification.
+---@field showHelpNotification fun(msg: string, thisFrame?: boolean, beep?: boolean, duration?: number) # Show help notification.
+--- Misc Functions
+---@field togglePaycheck fun(toggle: boolean)     # Enable/disable paycheck.
+---@field isPaycheckEnabled fun(): boolean       # Check if paycheck is enabled.
+---@field executeCommand fun(command: string)    # Execute a server command.
+---@field triggerEvent fun(eventName: string, ...) # Trigger client event for this player.
+
+
+---@class xPlayer:StaticPlayer
+--- Properties
+---@field accounts ESXAccount[]     # Array of the player's accounts.
+---@field coords table              # Player's coordinates {x, y, z, heading}.
+---@field group string              # Player permission group.
+---@field identifier string         # Unique identifier (usually Steam or license).
+---@field license string            # Player license string.
+---@field inventory ESXInventoryItem[] # Player's inventory items.
+---@field job ESXJob                # Player's current job.
+---@field loadout ESXInventoryWeapon[] # Player's current weapons.
+---@field name string               # Player's display name.
+---@field playerId number           # Player's ID (server ID).
+---@field source number             # Player's source (alias for playerId).
+---@field variables table           # Custom player variables.
+---@field weight number             # Current carried weight.
+---@field maxWeight number          # Maximum carry weight.
+---@field metadata table            # Custom metadata table.
+---@field lastPlaytime number       # Last recorded playtime in seconds.
+---@field paycheckEnabled boolean   # Whether paycheck is enabled.
+---@field admin boolean             # Whether the player is an admin.
 
 ---@param playerId number
 ---@param identifier string
+---@param ssn string
 ---@param group string
----@param accounts table
+---@param accounts ESXAccount[]
 ---@param inventory table
 ---@param weight number
----@param job table
----@param loadout table
+---@param job ESXJob
+---@param loadout ESXInventoryWeapon[]
 ---@param name string
----@param coords table | vector4
+---@param coords vector4|{x: number, y: number, z: number, heading: number}
 ---@param metadata table
-function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
-    ---@class xPlayer
-    local self = {}
+---@return xPlayer
+function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+    ---@diagnostic disable-next-line: missing-fields
+    local self = {} ---@type xPlayer
 
     self.accounts = accounts
     self.coords = coords
     self.group = group
     self.identifier = identifier
+    self.ssn = ssn
     self.inventory = inventory
     self.job = job
     self.loadout = loadout
@@ -72,32 +192,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
     stateBag:set("group", self.group, true)
     stateBag:set("name", self.name, true)
 
-    ---@param eventName string
-    ---@param ... any
-    ---@return nil
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
         TriggerClientEvent(eventName, self.source, ...)
     end
 
-    ---@param toggle boolean
-    ---@return nil
     function self.togglePaycheck(toggle)
         self.paycheckEnabled = toggle
     end
 
-    ---@return boolean
     function self.isPaycheckEnabled()
         return self.paycheckEnabled
     end
 
-    ---@return boolean
     function self.isAdmin()
         return Core.IsPlayerAdmin(self.source)
     end
 
-    ---@param coordinates vector4 | vector3 | table
-    ---@return nil
     function self.setCoords(coordinates)
         local ped <const> = GetPlayerPed(self.source)
 
@@ -105,9 +216,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         SetEntityHeading(ped, coordinates.w or coordinates.heading or 0.0)
     end
 
-    ---@param vector boolean
-    ---@param heading boolean
-    ---@return vector3 | vector4 | table
     function self.getCoords(vector, heading)
         local ped <const> = GetPlayerPed(self.source)
         local entityCoords <const> = GetEntityCoords(ped)
@@ -126,55 +234,43 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return coordinates
     end
 
-    ---@param reason string
-    ---@return nil
     function self.kick(reason)
-        local source <const> = tostring(self.source)
-        DropPlayer(source, reason)
+        DropPlayer(self.source --[[@as string]], reason)
     end
 
-      ---@return number
     function self.getPlayTime()
         -- luacheck: ignore
-        return self.lastPlaytime + GetPlayerTimeOnline(self.source)
+        return self.lastPlaytime + GetPlayerTimeOnline(self.source --[[@as string]])
     end
 
-    ---@param money number
-    ---@return nil
     function self.setMoney(money)
         assert(type(money) == "number", "money should be number!")
         money = ESX.Math.Round(money)
         self.setAccountMoney("money", money)
     end
 
-    ---@return number
     function self.getMoney()
         return self.getAccount("money").money
     end
 
-    ---@param money number
-    ---@param reason string
-    ---@return nil
     function self.addMoney(money, reason)
         money = ESX.Math.Round(money)
         self.addAccountMoney("money", money, reason)
     end
 
-    ---@param money number
-    ---@param reason string
-    ---@return nil
     function self.removeMoney(money, reason)
         money = ESX.Math.Round(money)
         self.removeAccountMoney("money", money, reason)
     end
 
-    ---@return string
     function self.getIdentifier()
         return self.identifier
     end
 
-    ---@param newGroup string
-    ---@return nil
+    function self.getSSN()
+        return self.ssn
+    end
+
     function self.setGroup(newGroup)
         local lastGroup = self.group
 
@@ -189,28 +285,20 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
     end
 
-    ---@return string
     function self.getGroup()
         return self.group
     end
 
-    ---@param k string
-    ---@param v any
-    ---@return nil
     function self.set(k, v)
         self.variables[k] = v
-        
+
         self.triggerEvent('esx:updatePlayerData', 'variables', self.variables)
     end
 
-    ---@param k string
-    ---@return any
     function self.get(k)
         return self.variables[k]
     end
 
-    ---@param minimal boolean
-    ---@return table
     function self.getAccounts(minimal)
         if not minimal then
             return self.accounts
@@ -225,8 +313,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return minimalAccounts
     end
 
-    ---@param account string
-    ---@return table | nil
     function self.getAccount(account)
         account = string.lower(account)
         for i = 1, #self.accounts do
@@ -238,8 +324,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return nil
     end
 
-    ---@param minimal boolean
-    ---@return table
     function self.getInventory(minimal)
         if minimal then
             local minimalInventory = {}
@@ -256,13 +340,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return self.inventory
     end
 
-    ---@return table
     function self.getJob()
         return self.job
     end
 
-    ---@param minimal boolean
-    ---@return table
     function self.getLoadout(minimal)
         if not minimal then
             return self.loadout
@@ -293,22 +374,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return minimalLoadout
     end
 
-    ---@return string
     function self.getName()
         return self.name
     end
 
-    ---@param newName string
-    ---@return nil
     function self.setName(newName)
         self.name = newName
         Player(self.source).state:set("name", self.name, true)
     end
 
-    ---@param accountName string
-    ---@param money number
-    ---@param reason string | nil
-    ---@return nil
     function self.setAccountMoney(accountName, money, reason)
         reason = reason or "unknown"
         if not tonumber(money) then
@@ -332,10 +406,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param accountName string
-    ---@param money number
-    ---@param reason string | nil
-    ---@return nil
     function self.addAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
@@ -358,10 +428,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param accountName string
-    ---@param money number
-    ---@param reason string | nil
-    ---@return nil
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
         if not tonumber(money) then
@@ -389,8 +455,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param itemName string
-    ---@return table | nil
     function self.getInventoryItem(itemName)
         for _, v in ipairs(self.inventory) do
             if v.name == itemName then
@@ -400,9 +464,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return nil
     end
 
-    ---@param itemName string
-    ---@param count number
-    ---@return nil
     function self.addInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -416,9 +477,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param itemName string
-    ---@param count number
-    ---@return nil
     function self.removeInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -440,9 +498,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param itemName string
-    ---@param count number
-    ---@return nil
     function self.setInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
@@ -457,25 +512,19 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@return number
     function self.getWeight()
         return self.weight
     end
 
-    ---@return number
     function self.getSource()
         return self.source
     end
     self.getPlayerId = self.getSource
 
-    ---@return number
     function self.getMaxWeight()
         return self.maxWeight
     end
 
-    ---@param itemName string
-    ---@param count number
-    ---@return boolean
     function self.canCarryItem(itemName, count)
         if ESX.Items[itemName] then
             local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
@@ -488,11 +537,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param firstItem string
-    ---@param firstItemCount number
-    ---@param testItem string
-    ---@param testItemCount number
-    ---@return boolean
     function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)
         local firstItemObject = self.getInventoryItem(firstItem)
         if not firstItemObject then
@@ -513,17 +557,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return false
     end
 
-    ---@param newWeight number
-    ---@return nil
     function self.setMaxWeight(newWeight)
         self.maxWeight = newWeight
         self.triggerEvent("esx:setMaxWeight", self.maxWeight)
     end
 
-    ---@param newJob string
-    ---@param grade string
-    ---@param onDuty? boolean
-    ---@return nil
     function self.setJob(newJob, grade, onDuty)
         grade = tostring(grade)
         local lastJob = self.job
@@ -548,7 +586,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
             label = jobObject.label,
             onDuty = onDuty,
 
-            grade = tonumber(grade),
+            grade = tonumber(grade) or 0,
             grade_name = gradeObject.name,
             grade_label = gradeObject.label,
             grade_salary = gradeObject.salary,
@@ -563,9 +601,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         Player(self.source).state:set("job", self.job, true)
     end
 
-    ---@param weaponName string
-    ---@param ammo number
-    ---@return nil
     function self.addWeapon(weaponName, ammo)
         if not self.hasWeapon(weaponName) then
             local weaponLabel <const> = ESX.GetWeaponLabel(weaponName)
@@ -580,12 +615,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
             GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
             self.triggerEvent("esx:addInventoryItem", weaponLabel, false, true)
+            self.triggerEvent("esx:addLoadoutItem", weaponName, weaponLabel, ammo)
         end
     end
 
-    ---@param weaponName string
-    ---@param weaponComponent string
-    ---@return nil
     function self.addWeaponComponent(weaponName, weaponComponent)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -603,9 +636,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@param ammoCount number
-    ---@return nil
     function self.addWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
@@ -615,9 +645,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@param ammoCount number
-    ---@return nil
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
@@ -635,9 +662,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@param weaponTintIndex number
-    ---@return nil
     function self.setWeaponTint(weaponName, weaponTintIndex)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -652,8 +676,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@return number
     function self.getWeaponTint(weaponName)
         local _, weapon <const> = self.getWeapon(weaponName)
 
@@ -664,8 +686,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return 0
     end
 
-    ---@param weaponName string
-    ---@return nil
     function self.removeWeapon(weaponName)
         local weaponLabel, playerPed <const> = nil, GetPlayerPed(self.source)
 
@@ -692,12 +712,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
         if weaponLabel then
             self.triggerEvent("esx:removeInventoryItem", weaponLabel, false, true)
+            self.triggerEvent("esx:removeLoadoutItem", weaponName, weaponLabel)
         end
     end
 
-    ---@param weaponName string
-    ---@param weaponComponent string
-    ---@return nil
     function self.removeWeaponComponent(weaponName, weaponComponent)
         local loadoutNum <const>, weapon <const> = self.getWeapon(weaponName)
 
@@ -720,9 +738,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@param ammoCount number
-    ---@return nil
     function self.removeWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
@@ -732,9 +747,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         end
     end
 
-    ---@param weaponName string
-    ---@param weaponComponent string
-    ---@return boolean
     function self.hasWeaponComponent(weaponName, weaponComponent)
         local _, weapon <const> = self.getWeapon(weaponName)
 
@@ -751,8 +763,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return false
     end
 
-    ---@param weaponName string
-    ---@return boolean
     function self.hasWeapon(weaponName)
         for _, v in ipairs(self.loadout) do
             if v.name == weaponName then
@@ -763,8 +773,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return false
     end
 
-    ---@param item string
-    ---@return table | false, number | nil
     function self.hasItem(item)
         for _, v in ipairs(self.inventory) do
             if v.name == item and v.count >= 1 then
@@ -775,8 +783,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return false
     end
 
-    ---@param weaponName string
-    ---@return number | nil, table | nil
     function self.getWeapon(weaponName)
         for k, v in ipairs(self.loadout) do
             if v.name == weaponName then
@@ -787,41 +793,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return nil, nil
     end
 
-    ---@param msg string
-    ---@param notifyType string
-    ---@param length number
-    ---@param title string
-    ---@param position string
-    ---@return nil
     function self.showNotification(msg, notifyType, length, title, position)
         self.triggerEvent("esx:showNotification", msg, notifyType, length, title, position)
     end
 
-    ---@param sender string
-    ---@param subject string
-    ---@param msg string
-    ---@param textureDict string
-    ---@param iconType string
-    ---@param flash boolean
-    ---@param saveToBrief boolean
-    ---@param hudColorIndex number
-    ---@return nil
     function self.showAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
         self.triggerEvent("esx:showAdvancedNotification", sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
     end
 
-    ---@param msg string
-    ---@param thisFrame boolean
-    ---@param beep boolean
-    ---@param duration number
-    ---@return nil
     function self.showHelpNotification(msg, thisFrame, beep, duration)
         self.triggerEvent("esx:showHelpNotification", msg, thisFrame, beep, duration)
     end
 
-    ---@param index any
-    ---@param subIndex any
-    ---@return table | nil
     function self.getMeta(index, subIndex)
         if not index then
             return self.metadata
@@ -867,10 +850,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return metaData
     end
 
-    ---@param index any
-    ---@param value any
-    ---@param subValue any
-    ---@return nil
     function self.setMeta(index, value, subValue)
         if not index then
             return error("xPlayer.setMeta ^5index^1 is Missing!")
@@ -918,7 +897,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 
         local metaData = self.metadata[index]
         if metaData == nil then
-            return Config.EnableDebug and error(("xPlayer.clearMeta ^5%s^1 does not exist!"):format(index)) or nil
+            if Config.EnableDebug then
+                error(("xPlayer.clearMeta ^5%s^1 does not exist!"):format(index))
+            end
+
+            return
         end
 
         if not subValues then
@@ -951,8 +934,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
     end
 
-    ---@param command string
-    ---@return nil
     function self.executeCommand(command)
         if type(command) ~= "string" then
             error("xPlayer.executeCommand must be of type string!")

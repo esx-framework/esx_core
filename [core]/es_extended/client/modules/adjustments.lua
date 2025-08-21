@@ -170,22 +170,18 @@ local placeHolders = {
     end,
 }
 
-function Adjustments:PresencePlaceholders()
-    local presence = Config.DiscordActivity.presence
-
+function Adjustments:ReplacePlaceholders(text)
     for placeholder, cb in pairs(placeHolders) do
         local success, result = pcall(cb)
 
         if not success then
-            error(("Failed to execute presence placeholder: ^5%s^7"):format(placeholder))
-            error(result)
-            return "Unknown"
+            error(("Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
+            result = "Unknown"
         end
 
-        presence = presence:gsub(("{%s}"):format(placeholder), result)
+        text = text:gsub(("{%s}"):format(placeholder), tostring(result))
     end
-
-    return presence
+    return text
 end
 
 function Adjustments:DiscordPresence()
@@ -193,15 +189,16 @@ function Adjustments:DiscordPresence()
         CreateThread(function()
             while true do
                 SetDiscordAppId(Config.DiscordActivity.appId)
+                SetRichPresence(self:ReplacePlaceholders(Config.DiscordActivity.presence))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
-                SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
+                SetDiscordRichPresenceAssetText(self:ReplacePlaceholders(Config.DiscordActivity.assetText))
 
                 for i = 1, #Config.DiscordActivity.buttons do
                     local button = Config.DiscordActivity.buttons[i]
-                    SetDiscordRichPresenceAction(i - 1, button.label, button.url)
+                    local buttonUrl = self:ReplacePlaceholders(button.url)
+                    SetDiscordRichPresenceAction(i - 1, button.label, buttonUrl)
                 end
 
-                SetRichPresence(self:PresencePlaceholders())
                 Wait(Config.DiscordActivity.refresh)
             end
         end)

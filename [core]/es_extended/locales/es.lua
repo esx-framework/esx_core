@@ -1,51 +1,10 @@
 return {
-    -- Inventory
-    ["inventory"] = "Inventario (Peso %s / %s)",
-    ["use"] = "Usar",
-    ["give"] = "Dar",
-    ["remove"] = "Tirar",
-    ["return"] = "Devolver",
-    ["give_to"] = "Dar a",
-    ["amount"] = "Cantidad",
-    ["giveammo"] = "Dar munición",
-    ["amountammo"] = "Cantidad de munición",
-    ["noammo"] = "¡Insuficiente!",
-    ["gave_item"] = "Dando %sx %s a %s",
-    ["received_item"] = "Recibido %sx %s de %s",
-    ["gave_weapon"] = "Dando %s a %s",
-    ["gave_weapon_ammo"] = "Dando ~o~%sx %s para %s a %s",
-    ["gave_weapon_withammo"] = "Dando %s con ~o~%sx %s a %s",
-    ["gave_weapon_hasalready"] = "%s ya tiene un %s",
-    ["gave_weapon_noweapon"] = "%s no tiene esa arma",
-    ["received_weapon"] = "Recibido %s de %s",
-    ["received_weapon_ammo"] = "Recibido ~o~%sx %s para tu %s de %s",
-    ["received_weapon_withammo"] = "Recibido %s con ~o~%sx %s de %s",
-    ["received_weapon_hasalready"] = "%s ha intentado darte un %s, pero ya tienes esta arma",
-    ["received_weapon_noweapon"] = "%s ha intentado darte munición para un %s, pero no tienes esta arma",
-    ["gave_account_money"] = "Dando $%s (%s) a %s",
-    ["received_account_money"] = "Recibido $%s (%s) de %s",
-    ["amount_invalid"] = "Cantidad inválida",
-    ["players_nearby"] = "No hay jugadores cerca",
-    ["ex_inv_lim"] = "No se puede realizar la acción, se excede el peso máximo de %s",
-    ["imp_invalid_quantity"] = "No se puede realizar la acción, la cantidad es inválida",
-    ["imp_invalid_amount"] = "No se puede realizar la acción, la cantidad es inválida",
-    ["threw_standard"] = "Tirando %sx %s",
-    ["threw_account"] = "Tirando $%s %s",
-    ["threw_weapon"] = "Tirando %s",
-    ["threw_weapon_ammo"] = "Tirando %s con ~o~%sx %s",
-    ["threw_weapon_already"] = "Ya tienes esta arma",
-    ["threw_cannot_pickup"] = "¡Inventario lleno, no se puede recoger!",
-    ["threw_pickup_prompt"] = "Pulsa E para recoger",
-
-    -- Key mapping
-    ["keymap_showinventory"] = "Mostrar inventario",
-
     -- Salary related
     ["received_salary"] = "Has cobrado: $%s",
     ["received_help"] = "Has cobrado tu subsidio: $%s",
     ["company_nomoney"] = "La empresa para la que trabajas es demasiado pobre para pagarte el sueldo",
     ["received_paycheck"] = "Nómina recibida",
-    ["bank"] = "Maze Bank", 
+    ["bank"] = "Maze Bank",
     ["account_bank"] = "Banco",
     ["account_black_money"] = "Dinero negro",
     ["account_money"] = "Efectivo",
@@ -127,7 +86,7 @@ return {
     ["disabled"] = "~r~desactivado~s~",
 
     -- Locale settings
-    ["locale_digit_grouping_symbol"] = ".", 
+    ["locale_digit_grouping_symbol"] = ".",
     ["locale_currency"] = "%s€",
 
     -- Weapons
@@ -169,7 +128,7 @@ return {
     ["weapon_snspistol"] = "Pistola SNS",
     ["weapon_snspistol_mk2"] = "Pistola SNS Mk2",
     ["weapon_stungun"] = "Pistola eléctrica",
-    ["weapon_raypistol"] = "Pistola de Rayos", 
+    ["weapon_raypistol"] = "Pistola de Rayos",
     ["weapon_vintagepistol"] = "Pistola vintage",
 
     -- Shotguns
@@ -197,7 +156,7 @@ return {
     ["weapon_smg"] = "Subfusil",
     ["weapon_smg_mk2"] = "Subfusil Mk2",
     ["weapon_raycarbine"] = "Carabina de Rayos",
-    ["weapon_tecpistol"] = "Subfusil táctico", 
+    ["weapon_tecpistol"] = "Subfusil táctico",
 
     -- Rifles
     ["weapon_advancedrifle"] = "Fusil avanzado",
@@ -237,9 +196,9 @@ return {
     ["weapon_tactilerifle"] = "Carabina de servicio",
 
     -- Drug wars dlc
-    ["weapon_candycane"] = "Bastón de caramelo", 
-    ["weapon_acidpackage"] = "Paquete de ácido", 
-    ["weapon_pistolxm3"] = "Pistola WM 29", 
+    ["weapon_candycane"] = "Bastón de caramelo",
+    ["weapon_acidpackage"] = "Paquete de ácido",
+    ["weapon_pistolxm3"] = "Pistola WM 29",
     ["weapon_railgunxm3"] = "Cañón de riel",
 
     -- Chop Shop DLC
@@ -261,7 +220,7 @@ return {
     ["weapon_pipebomb"] = "Bomba casera",
     ["weapon_snowball"] = "Bola de nieve",
     ["weapon_stickybomb"] = "Bomba lapa",
-    ["weapon_smokegrenade"] = "Granada de humo", 
+    ["weapon_smokegrenade"] = "Granada de humo",
 
     -- Special
     ["weapon_fireextinguisher"] = "Extintor",
@@ -350,7 +309,7 @@ return {
     ["component_ammo_tracer"] = "Munición trazadora",
     ["component_ammo_incendiary"] = "Munición incendiaria",
     ["component_ammo_hollowpoint"] = "Munición de punta hueca",
-    ["component_ammo_fmj"] = "Munición FMJ", 
+    ["component_ammo_fmj"] = "Munición FMJ",
     ["component_ammo_armor"] = "Munición perforante",
     ["component_ammo_explosive"] = "Munición explosiva perforante",
 

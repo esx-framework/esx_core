@@ -196,6 +196,25 @@ if not Config.CustomInventory then
         end
     end)
 
+    ESX.SecureNetEvent("esx:addLoadoutItem", function(weaponName, weaponLabel, ammo)
+        table.insert(ESX.PlayerData.loadout, {
+            name = weaponName,
+            ammo = ammo,
+            label = weaponLabel,
+            components = {},
+            tintIndex = 0,
+        })
+    end)
+
+    ESX.SecureNetEvent("esx:removeLoadoutItem", function(weaponName, weaponLabel)
+        for i = 1, #ESX.PlayerData.loadout do
+            if ESX.PlayerData.loadout[i].name == weaponName then
+                table.remove(ESX.PlayerData.loadout, i)
+                break
+            end
+        end
+    end)
+
     RegisterNetEvent("esx:addWeapon", function()
         error("event ^5'esx:addWeapon'^1 Has Been Removed. Please use ^5xPlayer.addWeapon^1 Instead!")
     end)
@@ -344,14 +363,6 @@ function StartServerSyncLoops()
                 while GetPedParachuteState(ESX.PlayerData.ped) ~= -1 do Wait(1000) end
             end
             Wait(500)
-        end
-    end)
-end
-
-if not Config.CustomInventory and Config.EnableDefaultInventory then
-    ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "F2", function()
-        if not ESX.PlayerData.dead then
-            ESX.ShowInventory()
         end
     end)
 end

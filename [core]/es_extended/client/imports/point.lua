@@ -1,6 +1,6 @@
 local Point = ESX.Class()
 
-local nearby, loop = {}
+local nearby, loop = {}, nil
 
 function Point:constructor(properties)
 	self.coords = properties.coords
@@ -18,12 +18,12 @@ function Point:constructor(properties)
 			CreateThread(function()
 				while loop do
 					local coords = GetEntityCoords(ESX.PlayerData.ped)
-					for handle, point in pairs(nearby) do
+					for _, point in pairs(nearby) do
 						if point.inside then
 							point:inside(#(coords - point.coords))
 						end
 					end
-					Wait()
+					Wait(0)
 				end
 			end)
 		end
