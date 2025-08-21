@@ -213,7 +213,7 @@ end
                 Wait(0)
             end
 
-            local xPlayers = ESX.GetExtendedPlayers()
+            local xPlayers = ESX.ExtendedPlayers()
 
             for i = 1, #xPlayers do
                 if xPlayers[i] then
