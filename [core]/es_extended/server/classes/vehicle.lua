@@ -38,6 +38,7 @@ Core.vehicleClass = {
 			return
 		end
 		local vehicleProps = json.decode(vehicleData.vehicle)
+		---@type string?
 		local vin = vehicleData.vin
 
 		if type(vehicleProps.model) ~= "number" then
@@ -110,6 +111,10 @@ Core.vehicleClass = {
 		end
 
 		vehicleData.entity = entity
+
+		if not vehicleData.vin and Entity(entity).state.vin then
+			vehicleData.vin = Entity(entity).state.vin
+		end
 
 		return true
 	end,
