@@ -888,3 +888,13 @@ end
 function ESX.GetExtendedVehicleFromPlate(plate)
     return Core.vehicleClass.getFromPlate(plate)
 end
+
+---@param vin string
+---@return CExtendedVehicle?
+function ESX.GetExtendedVehicleFromVIN(vin)
+    for plate, vehicleData in pairs(Core.vehicles) do
+        if vehicleData.vin == vin then
+            return Core.vehicleClass.getFromPlate(plate)
+        end
+    end
+end
