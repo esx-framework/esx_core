@@ -85,5 +85,5 @@ if Debug then
 
     RegisterCommand("notify4", function()
         ESX.ShowNotification("You Did something ~r~WRONG~s~!", "warning", 3000, "~y~Warning~s~")
-    end)
+    end)   
 end

@@ -17,6 +17,20 @@ ESX.ShowNotification("text here") -- Default will time and type will be info/300
 
 -- With title (optional 4th parameter)
 ESX.ShowNotification("message here", "success", 3000, "Achievement")
+
+--[[
+With position (optional 5th parameter)
+Possible positions:
+    "top-right"
+    "top-left"
+    "top-middle"
+    "bottom-right"
+    "bottom-left"
+    "bottom-middle"
+    "middle-left"
+    "middle-right"
+]]
+ESX.ShowNotification("Your message here", "info", 3000, "Info Title", "top-right")
 ```
 
 `<h3>`Export Usage`</h3>`
@@ -27,6 +41,9 @@ exports["esx_notify"]:Notify("info", 3000, "message here")
 
 -- With title
 exports["esx_notify"]:Notify("success", 3000, "Item purchased!", "Shop")
+
+-- With position
+exports["esx_notify"]:Notify("warning", 4000, "Inventory full!", "Warning", "bottom-left")
 
 -- With line break
 exports["esx_notify"]:Notify("warning", 4000, "Inventory full!~br~Some items were dropped.", "Warning")
@@ -40,6 +57,9 @@ TriggerEvent("ESX:Notify", "info", 3000, "message here")
 
 -- With title
 TriggerEvent("ESX:Notify", "error", 5000, "You don't have enough money!", "Transaction Failed")
+
+-- With position
+TriggerEvent("ESX:Notify", "success", 4000, "Welcome!", "Greetings", "top-middle")
 ```
 
 `<h3>`Color Code Usage`</h3>`
