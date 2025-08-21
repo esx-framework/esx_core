@@ -33,11 +33,11 @@ Core.vehicleClass = {
 			return xVehicle
 		end
 
-		local vehicleProps = MySQL.scalar.await("SELECT `vehicle` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
-		if not vehicleProps then
+		local vehicleData = MySQL.single.await("SELECT `vehicle`, `vin` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
+		if not vehicleData then
 			return
 		end
-		vehicleProps = json.decode(vehicleProps)
+		local vehicleProps = json.decode(vehicleData.vehicle)
 
 		if type(vehicleProps.model) ~= "number" then
 			vehicleProps.model = joaat(vehicleProps.model)
