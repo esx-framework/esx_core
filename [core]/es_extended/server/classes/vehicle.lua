@@ -1,5 +1,6 @@
 ---@class CVehicleData
 ---@field plate string
+---@field vin string
 ---@field netId number
 ---@field entity number
 ---@field modelHash number
@@ -11,6 +12,7 @@
 ---@field new fun(owner:string, plate:string, coords:vector4): CExtendedVehicle?
 ---@field getFromPlate fun(plate:string):CExtendedVehicle?
 ---@field getPlate fun(self:CExtendedVehicle):string?
+---@field getVin fun(self:CExtendedVehicle):string?
 ---@field getNetId fun(self:CExtendedVehicle):number?
 ---@field getEntity fun(self:CExtendedVehicle):number?
 ---@field getModelHash fun(self:CExtendedVehicle):number?
