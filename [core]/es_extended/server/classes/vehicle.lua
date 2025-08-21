@@ -124,6 +124,13 @@ Core.vehicleClass = {
 
 		return Core.vehicles[self.plate].plate
 	end,
+	getVin = function(self)
+		if not self:isValid() then
+			return
+		end
+
+		return Core.vehicles[self.plate].vin
+	end,
 	getModelHash = function(self)
 		if not self:isValid() then
 			return
