@@ -769,3 +769,33 @@ ESX.RegisterCommand(
         },
     }
 )
+
+ESX.RegisterCommand(
+    "getvehiclevin",
+    "admin",
+    function(xPlayer, args)
+        local xVehicle = ESX.GetExtendedVehicleFromPlate(args.plate)
+        if xVehicle then
+            local vin = xVehicle:getVin()
+            xPlayer.showNotification(("Vehicle VIN: ~g~%s~s~"):format(vin or "No VIN"))
+            if Config.AdminLogging then
+                ESX.DiscordLogFields("UserActions", "Get Vehicle VIN /getvehiclevin Triggered!", "pink", {
+                    { name = "Player", value = xPlayer and xPlayer.name or "Server Console", inline = true },
+                    { name = "ID", value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
+                    { name = "Plate", value = args.plate, inline = true },
+                    { name = "VIN", value = vin or "No VIN", inline = true },
+                })
+            end
+        else
+            xPlayer.showNotification("~r~Vehicle not found")
+        end
+    end,
+    false,
+    {
+        help = "Get vehicle VIN by plate",
+        validate = true,
+        arguments = {
+            { name = "plate", help = "Vehicle plate", type = "string" },
+        },
+    }
+)
