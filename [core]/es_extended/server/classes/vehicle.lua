@@ -38,9 +38,15 @@ Core.vehicleClass = {
 			return
 		end
 		local vehicleProps = json.decode(vehicleData.vehicle)
+		local vin = vehicleData.vin
 
 		if type(vehicleProps.model) ~= "number" then
 			vehicleProps.model = joaat(vehicleProps.model)
+		end
+
+		if not vin then
+			vin = ESX.GenerateVIN()
+			MySQL.update.await("UPDATE `owned_vehicles` SET `vin` = ? WHERE `owner` = ? AND `plate` = ?", { vin, owner, plate })
 		end
 
 		local netId = ESX.OneSync.SpawnVehicle(vehicleProps.model, coords.xyz, coords.w, vehicleProps)
@@ -54,12 +60,12 @@ Core.vehicleClass = {
 		end
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
-		Entity(entity).state:set("vin", vehicleData.vin, false)
+		Entity(entity).state:set("vin", vin, false)
 
 		---@type CVehicleData
 		local vehicleDataObj = {
 			plate = plate,
-			vin = vehicleData.vin,
+			vin = vin,
 			entity = entity,
 			netId = netId,
 			modelHash = vehicleProps.model,
