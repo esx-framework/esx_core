@@ -54,16 +54,18 @@ Core.vehicleClass = {
 		end
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
+		Entity(entity).state:set("vin", vehicleData.vin, false)
 
 		---@type CVehicleData
-		local vehicleData = {
+		local vehicleDataObj = {
 			plate = plate,
+			vin = vehicleData.vin,
 			entity = entity,
 			netId = netId,
 			modelHash = vehicleProps.model,
 			owner = owner,
 		}
-		Core.vehicles[plate] = vehicleData
+		Core.vehicles[plate] = vehicleDataObj
 
 		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = false WHERE `owner` = ? AND `plate` = ?", { owner, plate })
 
