@@ -862,6 +862,19 @@ function Core.generateSSN()
     end
 end
 
+---@return string
+function ESX.GenerateVIN()
+    local charset = "ABCDEFGHJKLMNPRSTUVWXYZ0123456789"
+    local vin = ""
+    
+    for i = 1, 17 do
+        local rand = math.random(1, #charset)
+        vin = vin .. charset:sub(rand, rand)
+    end
+    
+    return vin
+end
+
 ---@param owner string
 ---@param plate string
 ---@param coords vector4
