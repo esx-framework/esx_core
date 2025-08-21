@@ -45,7 +45,11 @@ Core.vehicleClass = {
 		end
 
 		if not vin then
-			vin = ESX.GenerateVIN()
+			repeat
+				vin = ESX.GenerateVIN()
+				local existingVin = MySQL.scalar.await("SELECT 1 FROM `owned_vehicles` WHERE `vin` = ? LIMIT 1", { vin })
+			until not existingVin
+			
 			MySQL.update.await("UPDATE `owned_vehicles` SET `vin` = ? WHERE `owner` = ? AND `plate` = ?", { vin, owner, plate })
 		end
 
