@@ -343,6 +343,7 @@ INSERT INTO `licenses` (`type`, `label`) VALUES
 CREATE TABLE `owned_vehicles` (
   `owner` varchar(60) DEFAULT NULL,
   `plate` varchar(12) NOT NULL,
+  `vin` varchar(17) UNIQUE DEFAULT NULL,
   `vehicle` longtext DEFAULT NULL,
   `type` varchar(20) NOT NULL DEFAULT 'car',
   `job` varchar(20) DEFAULT NULL,
@@ -820,7 +821,8 @@ ALTER TABLE `licenses`
 -- Indexes for table `owned_vehicles`
 --
 ALTER TABLE `owned_vehicles`
-  ADD PRIMARY KEY (`plate`);
+  ADD PRIMARY KEY (`plate`),
+  ADD INDEX `idx_vin` (`vin`);
 
 --
 --
