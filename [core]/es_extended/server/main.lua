@@ -331,12 +331,13 @@ AddEventHandler("playerDropped", function(reason)
     end
 end)
 
-AddEventHandler("esx:playerLoaded", function(_, xPlayer)
+AddEventHandler("esx:playerLoaded", function(_, xPlayer, isNew)
     local job = xPlayer.getJob().name
     local jobKey = ("%s:count"):format(job)
 
     Core.JobsPlayerCount[job] = (Core.JobsPlayerCount[job] or 0) + 1
     GlobalState[jobKey] = Core.JobsPlayerCount[job]
+    Player(xPlayer.source).state:set('isNew', isNew, true)
 end)
 
 AddEventHandler("esx:setJob", function(_, job, lastJob)
