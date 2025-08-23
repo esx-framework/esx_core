@@ -103,7 +103,7 @@
 ---@field setMeta fun(index: string, value: any, subValue?: any)      # Set metadata value(s).
 ---@field clearMeta fun(index: string, subValues?: string|table)      # Clear metadata value(s).
 --- Notification Functions
----@field showNotification fun(msg: string, notifyType?: string, length?: number) # Show a simple notification.
+---@field showNotification fun(msg: string, notifyType?: string, length?: number, title?: string, position?: string) # Show a simple notification.
 ---@field showAdvancedNotification fun(sender: string, subject: string, msg: string, textureDict: string, iconType: string, flash: boolean, saveToBrief: boolean, hudColorIndex: number) # Show advanced notification.
 ---@field showHelpNotification fun(msg: string, thisFrame?: boolean, beep?: boolean, duration?: number) # Show help notification.
 --- Misc Functions
@@ -793,10 +793,9 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         return nil, nil
     end
 
-    function self.showNotification(msg, notifyType, length)
-        self.triggerEvent("esx:showNotification", msg, notifyType, length)
+    function self.showNotification(msg, notifyType, length, title, position)
+        self.triggerEvent("esx:showNotification", msg, notifyType, length, title, position)
     end
-
 
     function self.showAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
         self.triggerEvent("esx:showAdvancedNotification", sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
