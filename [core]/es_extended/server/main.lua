@@ -337,7 +337,9 @@ AddEventHandler("esx:playerLoaded", function(_, xPlayer, isNew)
 
     Core.JobsPlayerCount[job] = (Core.JobsPlayerCount[job] or 0) + 1
     GlobalState[jobKey] = Core.JobsPlayerCount[job]
-    Player(xPlayer.source).state:set('isNew', isNew, false)
+    if isNew then
+        Player(xPlayer.source).state:set('isNew', true, false)
+    end
 end)
 
 AddEventHandler("esx:setJob", function(_, job, lastJob)
