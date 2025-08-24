@@ -16,18 +16,20 @@ for esxVersion, migrations in pairs(Core.Migrations or {}) do
 	---@cast esxVersion string
 	---@cast migrations table<string, function>
 
-	print(("^4[INFO]^7 Running migrations for ESX version %s"):format(esxVersion))
+	if GetResourceKvpInt(("esx_migration:%s"):format(esxVersion)) ~= 1 then
+		print(("^4[INFO]^7 Running migrations for ESX version %s"):format(esxVersion))
 
-	for migrationName, migration in pairs(migrations) do
-		local success, err = pcall(migration)
-		if not success then
-			error(("^1[ERROR]^7 Failed migration ^4['%s.%s']^7: %s"):format(esxVersion, migrationName, err))
+		for migrationName, migration in pairs(migrations) do
+			local success, err = pcall(migration)
+			if not success then
+				error(("^1[ERROR]^7 Failed migration ^4['%s.%s']^7: %s"):format(esxVersion, migrationName, err))
+			end
 		end
-	end
 
-	SetResourceKvpInt(("esx_migration:%s"):format(esxVersion), 1)
-	print(("^2[SUCCESS]^7 Successfully completed migrations for ESX version %s"):format(esxVersion))
-	migrationsRan += 1
+		SetResourceKvpInt(("esx_migration:%s"):format(esxVersion), 1)
+		print(("^2[SUCCESS]^7 Successfully completed migrations for ESX version %s"):format(esxVersion))
+		migrationsRan += 1
+	end
 end
 
 if migrationsRan > 0 then
