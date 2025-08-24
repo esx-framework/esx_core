@@ -35,7 +35,9 @@ server_scripts {
 
 	'server/bridge/**/*.lua',
 	'server/modules/npwd.lua',
-	'server/modules/createJob.lua'
+	'server/modules/createJob.lua',
+	'server/migration/**/main.lua',
+	'server/migration/main.lua',
 }
 
 client_scripts {
