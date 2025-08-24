@@ -4,7 +4,7 @@ RegisterCommand("resetmigrations", function(src)
 		return
 	end
 
-	for version, _ in pairs(Migrations or {}) do
+	for version, _ in pairs(Core.Migrations or {}) do
 		DeleteResourceKvp(("esx_migration:%s"):format(version))
 	end
 	print("^2[SUCCESS]^7 Reset all migrations. This will re-run all migrations on the next server start.")
@@ -12,7 +12,7 @@ end)
 
 local migrationsRan = 0
 
-for esxVersion, migrations in pairs(Migrations or {}) do
+for esxVersion, migrations in pairs(Core.Migrations or {}) do
 	---@cast esxVersion string
 	---@cast migrations table<string, function>
 

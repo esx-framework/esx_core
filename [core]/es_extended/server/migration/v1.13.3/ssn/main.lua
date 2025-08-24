@@ -1,7 +1,7 @@
-Migrations = Migrations or {}
-Migrations["v1.13.3"] = Migrations["v1.13.3"] or {}
+Core.Migrations = Core.Migrations or {}
+Core.Migrations["v1.13.3"] = Core.Migrations["v1.13.3"] or {}
 
-Migrations["v1.13.3"].ssn = function()
+Core.Migrations["v1.13.3"].ssn = function()
   print("^4[esx_migration:v.1.13.3:ssn]^7 Adding SSN column to users table.")
   local col = MySQL.scalar.await([[
     SELECT COUNT(*)
