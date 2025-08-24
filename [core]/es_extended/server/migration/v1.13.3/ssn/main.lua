@@ -1,13 +1,7 @@
-local esxVersion = "v1.13.3"
-
-if GetResourceKvpInt(("esx_migration:%s"):format(esxVersion)) == 1 then
-  return
-end
-
 Core.Migrations = Core.Migrations or {}
-Core.Migrations[esxVersion] = Core.Migrations[esxVersion] or {}
+Core.Migrations["v1.13.3"] = Core.Migrations["v1.13.3"] or {}
 
-Core.Migrations[esxVersion].ssn = function()
+Core.Migrations["v1.13.3"].ssn = function()
   print("^4[esx_migration:v.1.13.3:ssn]^7 Adding SSN column to users table.")
   local col = MySQL.scalar.await([[
     SELECT COUNT(*)
