@@ -16,7 +16,7 @@ for esxVersion, migrations in pairs(Core.Migrations or {}) do
 	---@cast esxVersion string
 	---@cast migrations table<string, function>
 
-	if GetResourceKvpInt(("esx_migration:%s"):format(esxVersion)) ~= 1 then
+	if ESX.Table.SizeOf(migrations) > 0 then
 		print(("^4[INFO]^7 Running migrations for ESX version %s"):format(esxVersion))
 
 		for migrationName, migration in pairs(migrations) do
