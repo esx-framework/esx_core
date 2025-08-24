@@ -10,6 +10,8 @@ RegisterCommand("resetmigrations", function(src)
 	print("^2[SUCCESS]^7 Reset all migrations. This will re-run all migrations on the next server start.")
 end)
 
+local migrationsRan = 0
+
 for esxVersion, migrations in pairs(Migrations or {}) do
 	---@cast esxVersion string
 	---@cast migrations table<string, function>
@@ -26,5 +28,13 @@ for esxVersion, migrations in pairs(Migrations or {}) do
 
 		SetResourceKvpInt(("esx_migration:%s"):format(esxVersion), 1)
 		print(("^2[SUCCESS]^7 Successfully completed migrations for ESX version %s"):format(esxVersion))
+		migrationsRan += 1
+	end
+end
+
+if migrationsRan > 0 then
+	while true do
+		print(("^4[INFO]^7 Ran migrations for %d ESX version(s). ^1Server restart required!^7"):format(migrationsRan))
+		Wait(500)
 	end
 end
