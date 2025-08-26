@@ -1,14 +1,14 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 
 game 'gta5'
 description 'A basic menu system for ESX Legacy.'
 lua54 'yes'
-version '1.13.3'
+version '1.13.0'
 
 client_scripts { '@es_extended/imports.lua', 'client/main.lua' }
 
-ui_page { 'html/ui.html' }
+ui_page 'web/build/index.html'
 
-files { 'html/ui.html', 'html/css/app.css', 'html/js/mustache.min.js', 'html/js/app.js' }
+files { 'web/build/index.html', 'web/build/**/*' }
 
 dependencies { 'es_extended' }
