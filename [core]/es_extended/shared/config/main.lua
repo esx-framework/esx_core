@@ -64,6 +64,8 @@ Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 
+Config.EnableVehicleVIN = true -- Enable auto-generation of Vehicle Identification Numbers (VIN) for spawned vehicles
+
 -------------------------------------
 -- DO NOT CHANGE BELOW THIS LINE !!!
 -------------------------------------

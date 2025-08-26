@@ -40,17 +40,19 @@ Core.vehicleClass = {
 		local vehicleProps = json.decode(vehicleData.vehicle)
 		---@type string?
 		local vin = vehicleData.vin
+		local modelName = nil
 
 		if type(vehicleProps.model) ~= "number" then
+			modelName = vehicleProps.model
 			vehicleProps.model = joaat(vehicleProps.model)
 		end
 
-		if not vin then
-			repeat
-				vin = ESX.GenerateVIN()
-				local existingVin = MySQL.scalar.await("SELECT 1 FROM `owned_vehicles` WHERE `vin` = ? LIMIT 1", { vin })
-			until not existingVin
-			
+		if not vin and Config.EnableVehicleVIN then
+			local vehicleType = ESX.GetVehicleType(vehicleProps.model, owner)
+			vin = ESX.GenerateVIN({ 
+				model = modelName,
+				vehicleType = vehicleType 
+			})
 			MySQL.update.await("UPDATE `owned_vehicles` SET `vin` = ? WHERE `owner` = ? AND `plate` = ?", { vin, owner, plate })
 		end
 
