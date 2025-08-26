@@ -862,15 +862,71 @@ function Core.generateSSN()
     end
 end
 
+---@param vehicleData? table
 ---@return string
-function ESX.GenerateVIN()
-    local charset = "ABCDEFGHJKLMNPRSTUVWXYZ0123456789"
-    local vin = ""
-    
-    for i = 1, 17 do
-        local rand = math.random(1, #charset)
-        vin = vin .. charset:sub(rand, rand)
+function ESX.GenerateVIN(vehicleData)
+    local function generateRandomString(length, useNumbers)
+        local charset = useNumbers and "ABCDEFGHJKLMNPRSTUVWXYZ0123456789" or "ABCDEFGHJKLMNPRSTUVWXYZ"
+        local str = ""
+        for i = 1, length do
+            local rand = math.random(1, #charset)
+            str = str .. charset:sub(rand, rand)
+        end
+        return str
     end
+    
+    local vin
+    repeat
+        -- VIN Format: MMMM-TTTTT-XXXXXXXX
+        -- M = Model (4 chars)
+        -- T = Type + timestamp (5 chars)
+        -- X = Random (8 chars)
+        local modelPart = ""
+        local typePart = ""
+        
+        if vehicleData and vehicleData.model then
+            local modelName = type(vehicleData.model) == "string" and vehicleData.model:upper() or "UNKN"
+            modelPart = modelName:sub(1, 4)
+            if #modelPart < 4 then
+                modelPart = modelPart .. generateRandomString(4 - #modelPart, false)
+            end
+        else
+            modelPart = generateRandomString(4, false)
+        end
+        
+        if vehicleData and vehicleData.vehicleType then
+            -- Vehicle type mapping:
+            -- B=bike
+            -- C=car
+            -- T=truck
+            -- P=plane
+            -- H=heli
+            -- B=boat (S for sea)
+            -- U=unknown
+            local typeMap = {
+                ["bike"] = "B",
+                ["automobile"] = "C",
+                ["car"] = "C",
+                ["truck"] = "T",
+                ["plane"] = "P",
+                ["helicopter"] = "H",
+                ["heli"] = "H",
+                ["boat"] = "S",
+            }
+            typePart = typeMap[vehicleData.vehicleType:lower()] or "U"
+        else
+            typePart = "U"
+        end
+        
+        local timestamp = tostring(os.time()):sub(-4)
+        typePart = typePart .. timestamp
+        
+        local randomPart = generateRandomString(8, true)
+        
+        vin = modelPart .. typePart .. randomPart
+        
+        local existingVin = MySQL.scalar.await("SELECT 1 FROM `owned_vehicles` WHERE `vin` = ? LIMIT 1", { vin })
+    until not existingVin
     
     return vin
 end
