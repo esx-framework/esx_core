@@ -921,9 +921,9 @@ function ESX.GenerateVIN(vehicleData)
         local timestamp = tostring(os.time()):sub(-4)
         typePart = typePart .. timestamp
         
-        local randomPart = generateRandomString(8, true)
+        local randomPart = generateRandomString(6, true)
         
-        vin = modelPart .. typePart .. randomPart
+        vin = modelPart .. "-" .. typePart .. "-" .. randomPart
         
         local existingVin = MySQL.scalar.await("SELECT 1 FROM `owned_vehicles` WHERE `vin` = ? LIMIT 1", { vin })
     until not existingVin
