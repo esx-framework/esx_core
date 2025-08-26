@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState, useRef, useEffect } from "react";
 import { fetchNui } from "@/utils/fetchNui";
 import { useControls } from "@/hooks/useControls";
 import { MenuData } from "@/app/App";
@@ -13,6 +13,8 @@ interface Props {
 const Menu: React.FC<Props> = ({ data }) => {
   const [position, setPosition] = useState(0);
   const [, forceRender] = useReducer((v) => v + 1, 0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const elements = data.elements;
 
   const payload = () => ({
@@ -51,31 +53,57 @@ const Menu: React.FC<Props> = ({ data }) => {
     changeRight: () => stepSelectedSlider(1),
   });
 
+  useEffect(() => {
+    const el = itemRefs.current[position];
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    }
+  }, [position]);
+
   return (
     <div className={`absolute ${GetPosition(data.align)}`}>
-      <div className="w-[26rem] h-fit bg-[#161616] p-4 rounded-[10px] flex flex-col gap-4">
-        <h1
-          className="font-bold uppercase text-xl my-2 text-neutral-100"
-          dangerouslySetInnerHTML={{ __html: data.title }}
-        />
-        {elements.map((element, index) => {
-          const isSelected = index === position;
-          return element.type === "slider" ? (
-            <MenuSlider
-              key={`slider-${element.name || element.label}-${index}`}
-              element={element}
-              isSelected={isSelected}
-            />
-          ) : (
-            <MenuButton
-              key={`button-${element.name || element.label}-${index}`}
-              label={element.label}
-              description={element.description}
-              icon={element.icon}
-              isSelected={isSelected}
-            />
-          );
-        })}
+      <div className="w-[26rem] h-fit max-h-[42rem] bg-[#161616] p-4 rounded-[10px] flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <h1
+            className="font-bold uppercase text-xl my-2 text-neutral-100"
+            dangerouslySetInnerHTML={{ __html: data.title }}
+          />
+          <img
+            className="h-10"
+            src="https://media.discordapp.net/attachments/1370464258382368918/1409914889174257724/esxLogo-sNwPFb_p.png?ex=68af1d10&is=68adcb90&hm=5ce71e8e56c92753b9718188e2c930fb1682d1debae6a63d7ff6b255d2c6ce55&=&format=webp&quality=lossless&width=350&height=350"
+            alt=""
+          />
+        </div>
+
+        <div className="overflow-y-auto h-full flex flex-col gap-4">
+          {elements.map((element, index) => {
+            const isSelected = index === position;
+
+            return (
+              <div
+                key={`wrapper-${element.name || element.label}-${index}`}
+                ref={(el: HTMLDivElement | null) => {
+                  itemRefs.current[index] = el;
+                }}
+              >
+                {element.type === "slider" ? (
+                  <MenuSlider element={element} isSelected={isSelected} />
+                ) : (
+                  <MenuButton
+                    label={element.label}
+                    description={element.description}
+                    icon={element.icon}
+                    isSelected={isSelected}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

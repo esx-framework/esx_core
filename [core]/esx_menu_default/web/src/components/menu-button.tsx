@@ -15,8 +15,7 @@ const MenuButton: React.FC<Props> = ({
   icon,
   isSelected,
 }) => {
-  const base =
-    "rounded-[4px] flex items-center p-4 gap-4 justify-between transition-all";
+  const base = "rounded-[4px] flex items-center p-4 gap-4 justify-between";
   const sel = isSelected
     ? "bg-[#FB9B041A] border border-[#FB9B04]"
     : "bg-[#252525] border border-transparent";
