@@ -32,10 +32,22 @@ const Menu: React.FC<Props> = ({ data }) => {
   const stepSelectedSlider = (delta: number) => {
     const el = elements[position];
     if (el?.type !== "slider") return;
-    const min = el.min ?? 0;
-    const max = el.max ?? 0;
+
+    const options = (el as any).options as string[] | undefined;
+
+    const min = options ? 0 : el.min ?? 0;
+    const max = options ? Math.max(0, options.length - 1) : el.max ?? 0;
+
     const cur = (el.value ?? min) + delta;
-    el.value = Math.min(max, Math.max(min, cur));
+
+    if (cur > max) {
+      el.value = min;
+    } else if (cur < min) {
+      el.value = max;
+    } else {
+      el.value = cur;
+    }
+
     forceRender();
     change();
   };

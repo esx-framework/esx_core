@@ -13,6 +13,7 @@ export interface Element {
   type?: "slider";
   min: number;
   max: number;
+  options?: string[];
   unselectable?: boolean;
 }
 

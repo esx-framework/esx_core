@@ -8,14 +8,15 @@ interface Props {
 }
 
 const MenuSlider: React.FC<Props> = ({ element, isSelected }) => {
-  const {
-    min = element.min,
-    max = element.max,
-    label,
-    description,
-    icon,
-  } = element;
-  const value = element.value ?? min;
+  const { label, description, icon } = element;
+
+  const options = (element as Element).options as string[] | undefined;
+
+  const min = options ? 0 : element.min ?? 0;
+  const max = options ? Math.max(0, options.length - 1) : element.max ?? 0;
+
+  const rawValue = element.value ?? min;
+  const value = Math.min(max, Math.max(min, rawValue));
 
   const base = "rounded-[4px] flex items-center p-4 gap-4 justify-between";
   const sel = isSelected
@@ -58,7 +59,14 @@ const MenuSlider: React.FC<Props> = ({ element, isSelected }) => {
 
       <div className="flex items-center gap-2 select-none">
         <ChevronLeft color={isSelected ? "#FB9B04" : "white"} />
-        <span className={`${text} w-6 text-center`}>{value}</span>
+        {options ? (
+          <span
+            className={`${text} whitespace-nowrap overflow-hidden text-ellipsis`}
+            dangerouslySetInnerHTML={{ __html: options[value] ?? "" }}
+          />
+        ) : (
+          <span className={`${text} w-6 text-center`}>{value}</span>
+        )}
         <ChevronRight color={isSelected ? "#FB9B04" : "white"} />
       </div>
     </div>
