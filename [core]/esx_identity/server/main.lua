@@ -142,8 +142,8 @@ local function setIdentity(xPlayer)
 end
 
 local function checkIdentity(xPlayer)
+    local source = xPlayer.src
     local identifier = xPlayer.getIdentifier()
-    local source = xPlayer.getSource()
     MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { identifier }, function(result)
         if not result then
             return TriggerClientEvent("esx_identity:showRegisterIdentity", source)
