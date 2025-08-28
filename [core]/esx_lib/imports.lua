@@ -16,6 +16,7 @@ local LIB_NAME<const> = 'esx_lib'
 ---@field name string
 ---@field side 'server' | 'client'
 
+---@alias Module table | function
 
 -------------------------------------------------
 --- Core functions for modules
@@ -27,6 +28,7 @@ local function noop() end
 ---Loads a module into memory
 ---@param self xLib
 ---@param name string -- module name
+---@return Module | nil
 local function loadModule(self, name)
     local directory = ('imports/%s'):format(name)
     local chunk = LoadResourceFile(LIB_NAME, ('%s/%s.lua'):format(directory, CONTEXT)) -- returns a raw lua code as a string (SERVER/CLIENT side)
@@ -38,7 +40,7 @@ local function loadModule(self, name)
 
     if not chunk then
         -- Early exit if the code doesn't exist 
-        return false
+        return 
     end
 
     -- Second argument is a chunk name
@@ -58,12 +60,17 @@ local function loadModule(self, name)
         end
     end
 
+    local result = fn()
+    self[name] = result or noop
+
+    return self[name]
 end
 
 ---Function that is responsible for lazy loading
 ---@param self xLib
 ---@param index string -- name of the function/key that is called
 ---@param ... unknown -- function params
+---@return Module
 local function call(self, index, ...)
     local module = rawget(self, index) -- uses rawget not to trigger any metamethods
 
@@ -74,7 +81,7 @@ local function call(self, index, ...)
         module = loadModule(self, index)
 
         if not module then
-            error(('[%s] Tried to access an invalid module - %s!'):format(LIB_NAME, index))
+            return error(('[%s] Tried to access an invalid module - %s!'):format(LIB_NAME, index))
         end
     end
 
