@@ -21,7 +21,7 @@ local LIB_NAME<const> = 'esx_lib'
 --- Core functions for modules
 -------------------------------------------------
 
-
+--- Function that returns nothing
 local function noop() end
 
 ---Loads a module into memory
@@ -41,9 +41,8 @@ local function loadModule(self, name)
         return false
     end
 
-    -- Uses @@ to specify that it comes from fivem resource instead of "normal lua script"
     -- Second argument is a chunk name
-    local fn, err = load(chunk, ('@@%s/imports/%s/%s.lua'):format(LIB_NAME, name, CONTEXT))
+    local fn, err = load(chunk, ('@%s/imports/%s/%s.lua'):format(LIB_NAME, name, CONTEXT))
 
     if not fn or err then
         if shared_chunk then
@@ -51,7 +50,7 @@ local function loadModule(self, name)
                 name, LIB_NAME))
 
             -- Tries to load only shared.lua
-            fn, err = load(shared_chunk, ('@@%s/imports/%s/%s.lua'):format(LIB_NAME, name, 'shared'))
+            fn, err = load(shared_chunk, ('@%s/imports/%s/%s.lua'):format(LIB_NAME, name, 'shared'))
         end
 
         if not fn or err then
