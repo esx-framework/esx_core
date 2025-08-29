@@ -78,3 +78,14 @@ Config.DiscordActivity = {
     presence = "{player_name} [{player_id}] | {server_players}/{server_maxplayers}",
     refresh = 1 * 60 * 1000, -- 1 minute
 }
+
+
+-- Must be either a FALSE or
+-- Config.WeakerWoman = { 
+--     stamina = float, 
+--     strength = float
+-- }
+Config.WeakerWoman = { 
+    stamina = 0.9, -- Must be a float from 0.0 to 1.0 (1.0 is 100%)
+    strength = 0.8 -- Must be a float from 0.0 to 1.0 (1.0 is 100%) - modifies weapon_unarmed strength
+}
