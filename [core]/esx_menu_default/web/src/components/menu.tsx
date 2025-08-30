@@ -24,13 +24,27 @@ const Menu: React.FC<Props> = ({ data }) => {
     elements,
   });
 
-  const submit = () => fetchNui("menu_submit", payload());
+  const submit = () => {
+    const el = elements[position];
+    if (el?.usable === false) return;
+
+    fetchNui("menu_submit", payload());
+  };
+
   const cancel = () =>
     fetchNui("menu_cancel", { _namespace: data.namespace, _name: data.name });
-  const change = () => fetchNui("menu_change", payload());
+
+  const change = () => {
+    const el = elements[position];
+    if (el?.usable === false) return;
+
+    fetchNui("menu_change", payload());
+  };
 
   const stepSelectedSlider = (delta: number) => {
     const el = elements[position];
+
+    if (el?.usable === false) return;
     if (el?.type !== "slider") return;
 
     const options = (el as any).options as string[] | undefined;
@@ -53,7 +67,7 @@ const Menu: React.FC<Props> = ({ data }) => {
   };
 
   useControls({
-    length: elements.length,
+    elements,
     position,
     setPosition: (updater) => {
       setPosition(updater);
@@ -75,6 +89,13 @@ const Menu: React.FC<Props> = ({ data }) => {
       });
     }
   }, [position]);
+
+  useEffect(() => {
+    if (elements[position]?.unselectable) {
+      const firstSelectable = elements.findIndex((el) => !el.unselectable);
+      if (firstSelectable !== -1) setPosition(firstSelectable);
+    }
+  }, []);
 
   return (
     <div className={`absolute ${GetPosition(data.align)}`}>
@@ -105,12 +126,7 @@ const Menu: React.FC<Props> = ({ data }) => {
                 {element.type === "slider" ? (
                   <MenuSlider element={element} isSelected={isSelected} />
                 ) : (
-                  <MenuButton
-                    label={element.label}
-                    description={element.description}
-                    icon={element.icon}
-                    isSelected={isSelected}
-                  />
+                  <MenuButton element={element} isSelected={isSelected} />
                 )}
               </div>
             );

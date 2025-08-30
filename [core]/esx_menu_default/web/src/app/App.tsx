@@ -14,7 +14,9 @@ export interface Element {
   min: number;
   max: number;
   options?: string[];
+  usable?: boolean;
   unselectable?: boolean;
+  disableRightArrow?: boolean;
 }
 
 export interface MenuData {
@@ -62,6 +64,8 @@ const App: React.FC = () => {
         [data.namespace]: [...list, data],
       };
     });
+
+    console.log(JSON.stringify(data))
 
     setCurrentMenu(data);
   });

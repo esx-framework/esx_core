@@ -1,27 +1,24 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ArrowRight } from "lucide-react";
+import { Element } from "@/app/App";
 
 interface Props {
-  label: string;
-  description?: string;
-  icon?: IconProp;
+  element: Element;
   isSelected?: boolean;
 }
 
-const MenuButton: React.FC<Props> = ({
-  label,
-  description,
-  icon,
-  isSelected,
-}) => {
+const MenuButton: React.FC<Props> = ({ element, isSelected }) => {
+  const { label, description, icon, usable, disableRightArrow, unselectable } =
+    element;
   const base = "rounded-[4px] flex items-center p-4 gap-4 justify-between";
   const sel = isSelected
     ? "bg-[#FB9B041A] border border-[#FB9B04]"
     : "bg-[#252525] border border-transparent";
 
+  const unSelectable = unselectable ? "opacity-80" : "";
+
   return (
-    <div className={`${base} ${sel}`}>
+    <div className={`${base} ${sel} ${unSelectable}`}>
       <div className="flex items-center gap-4">
         {icon && (
           <FontAwesomeIcon
@@ -58,7 +55,11 @@ const MenuButton: React.FC<Props> = ({
         </div>
       </div>
 
-      <ArrowRight color={isSelected ? "#FB9B04" : "white"} size="1.6rem" />
+      {usable !== false &&
+        disableRightArrow !== true &&
+        unselectable !== true && (
+          <ArrowRight color={isSelected ? "#FB9B04" : "white"} size="1.6rem" />
+        )}
     </div>
   );
 };
