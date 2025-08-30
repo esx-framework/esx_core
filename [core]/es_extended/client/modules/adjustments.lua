@@ -233,29 +233,22 @@ function Adjustments:Multipliers()
             Wait(0)
         end
     end)
-end
 
-function Adjustments:WeakerWoman()
-    if Config.WeakerWoman then
-        AddEventHandler("esx:PlayerLoaded",function (_, skin)
-            if not skin or skin.sex == nil then
-                return -- Early Exit
-            end
+    AddEventHandler("esx:playerLoaded",function (xPlayer)
+        if not xPlayer or xPlayer.get("sex") == nil then
+            return -- Early Exit
+        end
 
-            if skin.sex ~= 1 then
-                return -- Early Exit
-            end
+        local multipliers = xPlayer.get("sex") == "m" and Config.Multipliers.man or Config.Multipliers.woman
 
-            SetWeaponDamageModifier(`WEAPON_UNARMED`, Config.WeakerWoman.strength)
+        if multipliers.strength ~= 1.0 then
+            SetWeaponDamageModifier(`WEAPON_UNARMED`, man.strength)
+        end
+
+        if multipliers.stamina ~= 1.0 then
             SetPlayerStamina(PlayerId(), Config.WeakerWoman.stamina)
-        end)
-
-        -- Removes multiplayers - in case of the logout/relog
-        ESX.SecureNetEvent("esx:onPlayerLogout", function()
-            SetWeaponDamageModifier(`WEAPON_UNARMED`, 1.0)
-            SetPlayerStamina(PlayerId(), 1.0)
-        end)
-    end
+        end
+    end)
 end
 
 function Adjustments:Load()
@@ -273,5 +266,4 @@ function Adjustments:Load()
     self:WantedLevel()
     self:DisableRadio()
     self:Multipliers()
-    self:WeakerWoman()
 end

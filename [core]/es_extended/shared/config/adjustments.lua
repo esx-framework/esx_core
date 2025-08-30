@@ -41,7 +41,16 @@ Config.Multipliers = {
     ambientVehicleRange = 1.0,
     parkedVehicleDensity = 1.0,
     randomVehicleDensity = 1.0,
-    vehicleDensity = 1.0
+    vehicleDensity = 1.0,
+    --- Won't update when set to 1.0
+    man = {
+        strength = 1.0,
+        stamina = 1.0,
+    },
+    woman = {
+        strength = 1.0,
+        stamina = 1.0,
+    }
 }
 
 -- Pattern string format
@@ -77,15 +86,4 @@ Config.DiscordActivity = {
     },
     presence = "{player_name} [{player_id}] | {server_players}/{server_maxplayers}",
     refresh = 1 * 60 * 1000, -- 1 minute
-}
-
-
--- Must be either a FALSE or
--- Config.WeakerWoman = { 
---     stamina = float, 
---     strength = float
--- }
-Config.WeakerWoman = { 
-    stamina = 0.9, -- Must be a float from 0.0 to 1.0 (1.0 is 100%)
-    strength = 0.8 -- Must be a float from 0.0 to 1.0 (1.0 is 100%) - modifies weapon_unarmed strength
 }
