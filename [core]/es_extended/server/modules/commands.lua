@@ -313,7 +313,9 @@ if not Config.CustomInventory then
             arguments = {
                 { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
                 { name = "item", help = TranslateCap("command_giveitem_item"), type = "item" },
-                { name = "count", help = TranslateCap("command_giveitem_count"), type = "number" },
+                { name = "count", help = TranslateCap("command_giveitem_count"), type = "number", isValid = function (countValue)
+                    return countValue > 0
+                end },
             },
         }
     )
