@@ -21,7 +21,7 @@ function SetPlayerData(xPlayer, data)
     xPlayer.set("sex", data.sex)
     xPlayer.set("height", data.height)
 
-    local state = Player(xPlayer.source).state
+    local state = Player(xPlayer.src).state
     state:set("name", name, true)
     state:set("firstName", data.firstName, true)
     state:set("lastName", data.lastName, true)
