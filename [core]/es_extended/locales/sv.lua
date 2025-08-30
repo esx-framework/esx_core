@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "Invalid Argument Count (passed %s, wanted %s)",
     ["commanderror_argumentmismatch_number"] = "Invalid Argument #%s data type (passed string, wanted number)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Ogiltigt argument #%s datatyp (skickade negativt/noll, ville ha positivt tal)",
     ["commanderror_invaliditem"] = "Ogiltigt föremål",
     ["commanderror_invalidweapon"] = "Ogiltigt vapen",
     ["commanderror_console"] = "Kommandot kan inte användas i konsolen",

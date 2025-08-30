@@ -315,7 +315,7 @@ if not Config.CustomInventory then
                 { name = "item", help = TranslateCap("command_giveitem_item"), type = "item" },
                 { name = "count", help = TranslateCap("command_giveitem_count"), type = "number", isValid = function (countValue)
                     return countValue > 0
-                end },
+                end, error = TranslateCap("commanderror_argumentmismatch_positive_number", "count")},
             },
         }
     )

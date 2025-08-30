@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "Jumlah Argument Salah (passed %s, wanted %s)",
     ["commanderror_argumentmismatch_number"] = "Argument #%s salah tipe data (passed string, wanted number)",
     ["commanderror_argumentmismatch_string"] = "Argument #%s salah tipe data (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Argument #%s salah tipe data (diberikan negatif/nol, diinginkan angka positif)",
     ["commanderror_invaliditem"] = "Barang salah",
     ["commanderror_invalidweapon"] = "Senjata salah",
     ["commanderror_console"] = "Perintah tidak dapat dieksekusi dari console",

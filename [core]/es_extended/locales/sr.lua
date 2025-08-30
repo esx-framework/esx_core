@@ -63,6 +63,7 @@ return {
     ["commanderror_argumentmismatch"] = "Nevazeci broj argumenata (položio %s, željeno %s)",
     ["commanderror_argumentmismatch_number"] = "Nevažeći argument #%s tip podataka (položeno, željeno)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Nevaljan argument #%s tip podataka (prosleđen negativan/nula, potreban pozitivan broj)",
     ["commanderror_invaliditem"] = "Nevažeći item",
     ["commanderror_invalidweapon"] = "Nevažeće oružje",
     ["commanderror_console"] = "Komanda se ne može izvršiti iz konzole",

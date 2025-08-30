@@ -59,6 +59,7 @@ return {
     ["commanderror_argumentmismatch"] = "Ongeldig aantal argumenten (geslaagd %s, gezocht %s)",
     ["commanderror_argumentmismatch_number"] = "Ongeldig argument #%s gegevenstype (doorgegeven string, gewenst nummer)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (doorgegeven string, gewenst nummer)",
+    ["commanderror_argumentmismatch_positive_number"] = "Ongeldig Argument #%s gegevenstype (doorgegeven negatief/nul, gewenst positief getal)",
     ["commanderror_invaliditem"] = "Ongeldig item",
     ["commanderror_invalidweapon"] = "Ongeldig wapen",
     ["commanderror_console"] = "Command kan niet worden uitgevoerd vanaf console.",

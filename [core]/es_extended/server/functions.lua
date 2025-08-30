@@ -151,7 +151,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                             local candidate = newArgs[v.name]
                             local ok, res = pcall(v.isValid, candidate)
                             if not ok or res ~= true then
-                                error = v.error or TranslateCap("commanderror_argumentmismatch_" .. (v.name or tostring(k)), k)
+                                error = v.error or TranslateCap("commanderror_argumentmismatch")
                             end
                         end
 

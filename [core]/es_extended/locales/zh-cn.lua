@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "参数数量错误 (需%s个, 输入%s个)",
     ["commanderror_argumentmismatch_number"] = "参数#%s类型不符 (需数字类型)",
     ["commanderror_argumentmismatch_string"] = "参数#%s类型不符 (需文本类型)",
+    ["commanderror_argumentmismatch_positive_number"] = "参数#%s类型不符 (传入负数/零，需要正数)",
     ["commanderror_invaliditem"] = "错误: 无效物品标识",
     ["commanderror_invalidweapon"] = "错误: 无效武器标识",
     ["commanderror_console"] = "控制台无法执行此指令",

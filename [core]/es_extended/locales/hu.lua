@@ -63,6 +63,7 @@ return {
     ["commanderror_argumentmismatch"] = "Érvénytelen argumentumszám (%s megadva, %s szükséges)",
     ["commanderror_argumentmismatch_number"] = "Érvénytelen argumentum #%s adat típus (szöveg megadva, szám szükséges)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Érvénytelen argumentum #%s adattípus (negatív/nulla átadva, pozitív szám szükséges)",
     ["commanderror_invaliditem"] = "Érvénytelen tárgy",
     ["commanderror_invalidweapon"] = "Érvénytelen fegyver",
     ["commanderror_console"] = "Parancs nem használható konzolból",
