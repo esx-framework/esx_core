@@ -8,7 +8,7 @@ interface Props {
 }
 
 const MenuSlider: React.FC<Props> = ({ element, isSelected }) => {
-  const { label, description, icon } = element;
+  const { label, description, icon, unselectable } = element;
 
   const options = (element as Element).options as string[] | undefined;
 
@@ -24,8 +24,10 @@ const MenuSlider: React.FC<Props> = ({ element, isSelected }) => {
     : "bg-[#252525] border border-transparent";
   const text = isSelected ? "text-[#FB9B04]" : "text-neutral-100";
 
+  const unSelectable = unselectable ? "opacity-50" : ""
+
   return (
-    <div className={`${base} ${sel}`}>
+    <div className={`${base} ${sel} ${unSelectable}`}>
       <div className="flex items-center gap-4">
         {icon && (
           <FontAwesomeIcon

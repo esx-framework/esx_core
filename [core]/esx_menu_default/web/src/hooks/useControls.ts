@@ -1,12 +1,11 @@
-// hooks/useControls.ts
 import { useEffect } from "react";
 
 export type Control = "TOP" | "DOWN" | "ENTER" | "BACKSPACE" | "LEFT" | "RIGHT";
 
 interface Props {
-  length: number;
+  elements: any[];
   position: number;
-  setPosition: (p: number | ((prev: number) => number)) => void; // you'll wrap this to call change()
+  setPosition: (p: number | ((prev: number) => number)) => void;
   submit: () => void;
   cancel: () => void;
   changeLeft: () => void;
@@ -14,7 +13,7 @@ interface Props {
 }
 
 export const useControls = ({
-  length,
+  elements,
   position,
   setPosition,
   submit,
@@ -28,15 +27,31 @@ export const useControls = ({
     ) => {
       if (ev.data.action !== "controlPressed") return;
 
+      const skipUp = (p: number) => {
+        let next = p === 0 ? elements.length - 1 : p - 1;
+        while (elements[next]?.unselectable) {
+          next = next === 0 ? elements.length - 1 : next - 1;
+        }
+        return next;
+      };
+
+      const skipDown = (p: number) => {
+        let next = p === elements.length - 1 ? 0 : p + 1;
+        while (elements[next]?.unselectable) {
+          next = next === elements.length - 1 ? 0 : next + 1;
+        }
+        return next;
+      };
+
       switch (ev.data.control) {
         case "TOP":
-          setPosition((p) => (p === 0 ? length - 1 : p - 1));
+          setPosition((p) => skipUp(typeof p === "number" ? p : position));
           break;
         case "DOWN":
-          setPosition((p) => (p === length - 1 ? 0 : p + 1));
+          setPosition((p) => skipDown(typeof p === "number" ? p : position));
           break;
         case "ENTER":
-          submit();
+          if (!elements[position]?.unselectable) submit();
           break;
         case "BACKSPACE":
           cancel();
@@ -52,5 +67,13 @@ export const useControls = ({
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [length, position, setPosition, submit, cancel, changeLeft, changeRight]);
+  }, [
+    elements,
+    position,
+    setPosition,
+    submit,
+    cancel,
+    changeLeft,
+    changeRight,
+  ]);
 };
