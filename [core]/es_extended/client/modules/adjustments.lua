@@ -242,11 +242,11 @@ function Adjustments:Multipliers()
         local multipliers = xPlayer.get("sex") == "m" and Config.Multipliers.man or Config.Multipliers.woman
 
         if multipliers.strength ~= 1.0 then
-            SetWeaponDamageModifier(`WEAPON_UNARMED`, man.strength)
+            SetWeaponDamageModifier(`WEAPON_UNARMED`, multipliers.strength)
         end
 
         if multipliers.stamina ~= 1.0 then
-            SetPlayerStamina(PlayerId(), Config.WeakerWoman.stamina)
+            SetPlayerStamina(PlayerId(), multipliers.stamina)
         end
     end)
 end
