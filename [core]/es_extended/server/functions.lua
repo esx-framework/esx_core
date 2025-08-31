@@ -818,8 +818,9 @@ function Core.IsPlayerAdmin(playerSrc)
 end
 
 -- Generates a unique 9-digit SSN in dashed format (XXX-XX-XXXX).
+---@param skipUniqueCheck boolean?
 ---@return string
-function Core.generateSSN()
+function Core.generateSSN(skipUniqueCheck)
     local reservedSSNs = {
         ["078-05-1120"] = true,
         ["219-09-9999"] = true,
@@ -850,6 +851,10 @@ function Core.generateSSN()
 
         if reservedSSNs[candidate] then
             goto continue
+        end
+
+        if skipUniqueCheck then
+            return candidate
         end
 
         local exists = MySQL.scalar.await("SELECT 1 FROM `users` WHERE `ssn` = ? LIMIT 1", { candidate })
