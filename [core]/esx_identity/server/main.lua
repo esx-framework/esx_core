@@ -12,7 +12,7 @@ local function deleteIdentityFromDatabase(xPlayer)
     end
 end
 
----@param xPlayer StaticPlayer
+---@param xPlayer StaticPlayer|xPlayer
 ---@param data {firstName:string?, lastName:string?, dateOfBirth:string?, height:number?, sex:"m"|"f"?}
 function SetPlayerData(xPlayer, data)
     local name = ("%s %s"):format(data.firstName, data.lastName)
@@ -23,7 +23,7 @@ function SetPlayerData(xPlayer, data)
     xPlayer.set("sex", data.sex)
     xPlayer.set("height", data.height)
 
-    local state = Player(xPlayer.src).state
+    local state = Player(xPlayer.getSource()).state
     state:set("name", name, true)
     state:set("firstName", data.firstName, true)
     state:set("lastName", data.lastName, true)
@@ -127,33 +127,37 @@ local function formatName(name)
     return convertFirstLetterToUpper(loweredName)
 end
 
+---@param xPlayer StaticPlayer
 local function setIdentity(xPlayer)
-    if not alreadyRegistered[xPlayer.identifier] then
+    local playerIdentifier = xPlayer.getIdentifier()
+    if not alreadyRegistered[playerIdentifier] then
         return
     end
-    local currentIdentity = playerIdentity[xPlayer.identifier]
+    local currentIdentity = playerIdentity[playerIdentifier]
     SetPlayerData(xPlayer, currentIdentity)
 
-    TriggerClientEvent("esx_identity:setPlayerData", xPlayer.source, currentIdentity)
+    TriggerClientEvent("esx_identity:setPlayerData", xPlayer.src, currentIdentity)
     if currentIdentity.saveToDatabase then
-        saveIdentityToDatabase(xPlayer.identifier, currentIdentity)
+        saveIdentityToDatabase(playerIdentifier, currentIdentity)
     end
 
-    playerIdentity[xPlayer.identifier] = nil
+    playerIdentity[playerIdentifier] = nil
 end
 
+---@param xPlayer StaticPlayer
 local function checkIdentity(xPlayer)
-    MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { xPlayer.identifier }, function(result)
+    local playerIdentifier = xPlayer.getIdentifier()
+    MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { playerIdentifier }, function(result)
         if not result then
-            return TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.source)
+            return TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.src)
         end
         if not result.firstname then
-            playerIdentity[xPlayer.identifier] = nil
-            alreadyRegistered[xPlayer.identifier] = false
-            return TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.source)
+            playerIdentity[playerIdentifier] = nil
+            alreadyRegistered[playerIdentifier] = false
+            return TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.src)
         end
 
-        playerIdentity[xPlayer.identifier] = {
+        playerIdentity[playerIdentifier] = {
             firstName = result.firstname,
             lastName = result.lastname,
             dateOfBirth = result.dateofbirth,
@@ -161,7 +165,7 @@ local function checkIdentity(xPlayer)
             height = result.height,
         }
 
-        alreadyRegistered[xPlayer.identifier] = true
+        alreadyRegistered[playerIdentifier] = true
         setIdentity(xPlayer)
     end)
 end
@@ -216,7 +220,7 @@ if not multichar then
             Wait(0)
         end
 
-        local xPlayers = ESX.GetExtendedPlayers()
+        local xPlayers = ESX.ExtendedPlayers() --[=[@as StaticPlayer[]]=]
 
         for i = 1, #xPlayers do
             if xPlayers[i] then
