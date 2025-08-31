@@ -64,16 +64,16 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         if not command.allowConsole and playerId == 0 then
             print(("[^3WARNING^7] ^5%s^0"):format(TranslateCap("commanderror_console")))
         else
-            local xPlayer, error = ESX.Players[playerId], nil
+            local xPlayer, err = ESX.Players[playerId], nil
 
             if command.suggestion then
                 if command.suggestion.validate then
                     if #args ~= #command.suggestion.arguments then
-                        error = TranslateCap("commanderror_argumentmismatch", #args, #command.suggestion.arguments)
+                        err = TranslateCap("commanderror_argumentmismatch", #args, #command.suggestion.arguments)
                     end
                 end
 
-                if not error and command.suggestion.arguments then
+                if not err and command.suggestion.arguments then
                     local newArgs = {}
 
                     for k, v in ipairs(command.suggestion.arguments) do
@@ -84,7 +84,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                 if newArg then
                                     newArgs[v.name] = newArg
                                 else
-                                    error = TranslateCap("commanderror_argumentmismatch_number", k)
+                                    err = TranslateCap("commanderror_argumentmismatch_number", k)
                                 end
                             elseif v.type == "player" or v.type == "playerId" then
                                 local targetPlayer = tonumber(args[k])
@@ -103,29 +103,29 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                             newArgs[v.name] = targetPlayer
                                         end
                                     else
-                                        error = TranslateCap("commanderror_invalidplayerid")
+                                        err = TranslateCap("commanderror_invalidplayerid")
                                     end
                                 else
-                                    error = TranslateCap("commanderror_argumentmismatch_number", k)
+                                    err = TranslateCap("commanderror_argumentmismatch_number", k)
                                 end
                             elseif v.type == "string" then
                                 local newArg = tonumber(args[k])
                                 if not newArg then
                                     newArgs[v.name] = args[k]
                                 else
-                                    error = TranslateCap("commanderror_argumentmismatch_string", k)
+                                    err = TranslateCap("commanderror_argumentmismatch_string", k)
                                 end
                             elseif v.type == "item" then
                                 if ESX.Items[args[k]] then
                                     newArgs[v.name] = args[k]
                                 else
-                                    error = TranslateCap("commanderror_invaliditem")
+                                    err = TranslateCap("commanderror_invaliditem")
                                 end
                             elseif v.type == "weapon" then
                                 if ESX.GetWeapon(args[k]) then
                                     newArgs[v.name] = string.upper(args[k])
                                 else
-                                    error = TranslateCap("commanderror_invalidweapon")
+                                    err = TranslateCap("commanderror_invalidweapon")
                                 end
                             elseif v.type == "any" then
                                 newArgs[v.name] = args[k]
@@ -140,27 +140,27 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                             elseif v.type == "coordinate" then
                                 local coord = tonumber(args[k]:match("(-?%d+%.?%d*)"))
                                 if not coord then
-                                    error = TranslateCap("commanderror_argumentmismatch_number", k)
+                                    err = TranslateCap("commanderror_argumentmismatch_number", k)
                                 else
                                     newArgs[v.name] = coord
                                 end
                             end
                         end
                         
-                        if v.isValid and not error then
+                        if v.isValid and not err then
                             local candidate = newArgs[v.name]
                             local ok, res = pcall(v.isValid, candidate)
                             if not ok or res ~= true then
-                                error = v.err or TranslateCap("commanderror_argumentmismatch")
+                                err = v.err or TranslateCap("commanderror_argumentmismatch")
                             end
                         end
 
                         --backwards compatibility
                         if v.validate ~= nil and not v.validate then
-                            error = nil
+                            err = nil
                         end
 
-                        if error then
+                        if err then
                             break
                         end
                     end
@@ -169,11 +169,11 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                 end
             end
 
-            if error then
+            if err then
                 if playerId == 0 then
-                    print(("[^3WARNING^7] %s^7"):format(error))
+                    print(("[^3WARNING^7] %s^7"):format(err))
                 else
-                    xPlayer.showNotification(error)
+                    xPlayer.showNotification(err)
                 end
             else
                 cb(xPlayer or false, args, function(msg)
