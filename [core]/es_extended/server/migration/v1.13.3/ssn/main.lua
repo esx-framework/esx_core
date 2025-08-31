@@ -7,6 +7,7 @@ if GetResourceKvpInt(("esx_migration:%s"):format(esxVersion)) == 1 then
   return
 end
 
+---@return boolean restartRequired
 Core.Migrations[esxVersion].ssn = function()
   print("^4[esx_migration:v.1.13.3:ssn]^7 Adding SSN column to users table.")
   local col = MySQL.scalar.await([[
@@ -41,7 +42,7 @@ Core.Migrations[esxVersion].ssn = function()
   local Result = MySQL.query.await("SELECT `identifier` FROM `users` WHERE `ssn` IS NULL")
   if #Result == 0 then
     print("^4[esx_migration:v.1.13.3:ssn]^7 No users found without SSN, migration not needed.")
-    return
+    return false
   end
 
   print("^4[esx_migration:v.1.13.3:ssn]^7 Generating SSN for existing users.")
@@ -64,4 +65,6 @@ Core.Migrations[esxVersion].ssn = function()
   MySQL.update.await("ALTER TABLE `users` MODIFY `ssn` VARCHAR(11) NOT NULL")
 
   print(("^4[esx_migration:v.1.13.3:ssn]^7 Successfully migrated %d users."):format(#Parameters))
+
+  return true
 end
