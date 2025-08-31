@@ -313,7 +313,10 @@ if not Config.CustomInventory then
             arguments = {
                 { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
                 { name = "item", help = TranslateCap("command_giveitem_item"), type = "item" },
-                { name = "count", help = TranslateCap("command_giveitem_count"), type = "number" },
+                { name = "count", help = TranslateCap("command_giveitem_count"), type = "number", Validator = {
+                    validate = function(x) return x > 0 end,
+                    err = TranslateCap("commanderror_argumentmismatch_positive_number", "count")
+                }},
             },
         }
     )

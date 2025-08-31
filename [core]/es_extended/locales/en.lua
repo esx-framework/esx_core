@@ -69,6 +69,7 @@ return {
     ["commanderror_argumentmismatch"] = "Invalid Argument Count (passed %s, wanted %s)",
     ["commanderror_argumentmismatch_number"] = "Invalid Argument #%s data type (passed string, wanted number)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Invalid Argument #%s data type (passed negative/zero, wanted positive number)",
     ["commanderror_invaliditem"] = "Invalid item",
     ["commanderror_invalidweapon"] = "Invalid weapon",
     ["commanderror_console"] = "Command Cannot be executed from console",

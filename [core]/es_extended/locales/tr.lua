@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "Geçersiz Argüman Sayısı (Verilen %s, İstenen %s)",
     ["commanderror_argumentmismatch_number"] = "Geçersiz Argüman #%s Veri Tipi (Verilen Metin, İstenen Sayı)",
     ["commanderror_argumentmismatch_string"] = "Geçersiz Argüman #%s Veri Tipi (Verilen Sayı, İstenen Metin)",
+    ["commanderror_argumentmismatch_positive_number"] = "Geçersiz Argüman #%s Veri Tipi (Verilen Negatif/Sıfır, İstenen Pozitif Sayı)",
     ["commanderror_invaliditem"] = "Geçersiz Eşya",
     ["commanderror_invalidweapon"] = "Geçersiz Silah",
     ["commanderror_console"] = "Komut Konsoldan Çalıştırılamaz",

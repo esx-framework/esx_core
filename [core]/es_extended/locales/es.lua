@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "Número de argumentos inválido (pasados %s, esperados %s)",
     ["commanderror_argumentmismatch_number"] = "Tipo de datos del argumento #%s inválido (pasado string, esperado número)",
     ["commanderror_argumentmismatch_string"] = "Tipo de datos del argumento #%s inválido (pasado número, esperado string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Argumento inválido #%s tipo de datos (pasado negativo/cero, se requiere número positivo)",
     ["commanderror_invaliditem"] = "Objeto inválido",
     ["commanderror_invalidweapon"] = "Arma inválida",
     ["commanderror_console"] = "El comando no se puede ejecutar desde la consola",

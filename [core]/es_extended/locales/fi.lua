@@ -58,6 +58,7 @@ return {
     ["commanderror_argumentmismatch"] = "Argumenttien määrä ei täsmää (hyväksytty %s, haluttu %s)",
     ["commanderror_argumentmismatch_number"] = "Argumentin #%s tyyppi ei täsmää (syötetty merkkijono, haluttu numero)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Virheellinen argumentti #%s tietotyyppi (annettu negatiivinen/nolla, haluttu positiivinen luku)",
     ["commanderror_invaliditem"] = "Virheellinen esineen nimi",
     ["commanderror_invalidweapon"] = "Virheellinen ase",
     ["commanderror_console"] = "Komentoa ei voi suorittaa konsolissa",

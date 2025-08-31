@@ -57,6 +57,7 @@ return {
     ["commanderror_argumentmismatch"] = "nieprawiłowa ilość argumentów (przeszło %s, wymagane %s)",
     ["commanderror_argumentmismatch_number"] = "nieprawidłowy typ argumentu #%s (przeszedł tekst, wymagany numer)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Nieprawidłowy argument #%s typ danych (przekazano ujemny/zero, oczekiwano liczby dodatniej)",
     ["commanderror_invaliditem"] = "nieprawidłowa nazwa przedmiotu",
     ["commanderror_invalidweapon"] = "nieprawidłowa broń",
     ["commanderror_console"] = "podana komenda nie może zostać uruchomiona przez konsole",
