@@ -43,6 +43,7 @@
 ---@field hash string|number        # Component hash or identifier.
 
 ---@class StaticPlayer
+---@field src number                                              # Player's server ID.
 --- Money Functions
 ---@field setMoney fun(money: number)                             # Set player's cash balance.
 ---@field getMoney fun(): number                                   # Get player's current cash balance.

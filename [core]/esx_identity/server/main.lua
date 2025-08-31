@@ -12,6 +12,8 @@ local function deleteIdentityFromDatabase(xPlayer)
     end
 end
 
+---@param xPlayer StaticPlayer
+---@param data {firstName:string?, lastName:string?, dateOfBirth:string?, height:number?, sex:"m"|"f"?}
 function SetPlayerData(xPlayer, data)
     local name = ("%s %s"):format(data.firstName, data.lastName)
     xPlayer.setName(name)
@@ -21,7 +23,7 @@ function SetPlayerData(xPlayer, data)
     xPlayer.set("sex", data.sex)
     xPlayer.set("height", data.height)
 
-    local state = Player(xPlayer.source).state
+    local state = Player(xPlayer.src).state
     state:set("name", name, true)
     state:set("firstName", data.firstName, true)
     state:set("lastName", data.lastName, true)
@@ -30,6 +32,7 @@ function SetPlayerData(xPlayer, data)
     state:set("height", data.height, true)
 end
 
+---@param xPlayer xPlayer
 local function deleteIdentity(xPlayer)
     if not alreadyRegistered[xPlayer.identifier] then
         return
