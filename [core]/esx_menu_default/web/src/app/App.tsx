@@ -58,8 +58,6 @@ const App: React.FC = () => {
             };
         });
 
-        console.log(JSON.stringify(data));
-
         setCurrentMenu(data);
     });
 
