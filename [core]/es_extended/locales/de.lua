@@ -67,6 +67,7 @@ return {
     ["commanderror_argumentmismatch"] = "Ungültiges Argument (gegeben %s, gewollt %s)",
     ["commanderror_argumentmismatch_number"] = "Ungültiges Argument #%s Datentyp (String gegeben, Nummer gefordert)",
     ["commanderror_argumentmismatch_string"] = "Ungültiges Argument #%s Datentyp (Nummer gegeben, String gefordert)",
+    ["commanderror_argumentmismatch_positive_number"] = "Ungültiges Argument #%s Datentyp (negativ/null übergeben, positive Zahl gewünscht)",
     ["commanderror_invaliditem"] = "Ungültiger Gegenstand",
     ["commanderror_invalidweapon"] = "Ungültige Waffe",
     ["commanderror_console"] = "Befehl kann nicht von der Konsole aus ausgeführt werden!",
