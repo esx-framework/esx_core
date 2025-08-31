@@ -11,6 +11,7 @@ RegisterCommand("resetmigrations", function(src)
 end)
 
 local migrationsRan = 0
+local restartRequired = false
 
 for esxVersion, migrations in pairs(Core.Migrations or {}) do
 	---@cast esxVersion string
@@ -20,9 +21,16 @@ for esxVersion, migrations in pairs(Core.Migrations or {}) do
 		print(("^4[INFO]^7 Running migrations for ESX version %s"):format(esxVersion))
 
 		for migrationName, migration in pairs(migrations) do
-			local success, err = pcall(migration)
+			local success, result = pcall(migration)
 			if not success then
+				local err = result --[[@as string]]
 				error(("^1[ERROR]^7 Failed migration ^4['%s.%s']^7: %s"):format(esxVersion, migrationName, err))
+			end
+
+			local migrationRequiresRestart = result --[[@as boolean]]
+
+			if not restartRequired and migrationRequiresRestart then
+				restartRequired = true
 			end
 		end
 
@@ -32,9 +40,7 @@ for esxVersion, migrations in pairs(Core.Migrations or {}) do
 	end
 end
 
-if migrationsRan > 0 then
-	while true do
-		print(("^4[INFO]^7 Ran migrations for %d ESX version(s). ^1Server restart required!^7"):format(migrationsRan))
-		Wait(500)
-	end
+while restartRequired do
+	print(("^4[INFO]^7 Ran migrations for %d ESX version(s). ^1Server restart required!^7"):format(migrationsRan))
+	Wait(500)
 end
