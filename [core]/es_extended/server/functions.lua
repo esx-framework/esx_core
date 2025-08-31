@@ -147,11 +147,11 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                             end
                         end
                         
-                        if v.isValid and not err then
+                        if ESX.IsFunctionReference(v.Validator?.validate) and not err then
                             local candidate = newArgs[v.name]
-                            local ok, res = pcall(v.isValid, candidate)
+                            local ok, res = pcall(v.Validator.validate, candidate)
                             if not ok or res ~= true then
-                                err = v.err or TranslateCap("commanderror_argumentmismatch")
+                                err = v.Validator.err or TranslateCap("commanderror_argumentmismatch")
                             end
                         end
 
