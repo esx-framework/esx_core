@@ -105,7 +105,7 @@ local function buildInventoryElements()
     elements[#elements + 1] = {
         label = "Current Weight: " .. totalWeight,
         icon = "fas fa-box",
-        unselectable = true
+        usable = false
     }
     return elements, totalWeight
 end
@@ -131,7 +131,7 @@ local function buildItemActionMenu(selected, playerNearby)
     if selected.type == "item_weapon" and selected.canGiveAmmo and selected.ammo > 0 and playerNearby then
         elements2[#elements2 + 1] = { action = "give_ammo", label = TranslateCap("giveammo"), icon = "fas fa-gun", type = selected.type, value = selected.value }
     end
-    elements2[#elements2 + 1] = { action = "return", label = TranslateCap("return"), icon = "fas fa-arrow-left" }
+    elements2[#elements2 + 1] = { action = "return", label = TranslateCap("return"), icon = "fas fa-arrow-left", disableRightArrow = true }
     return elements2
 end
 
