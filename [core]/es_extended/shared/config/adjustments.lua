@@ -41,7 +41,16 @@ Config.Multipliers = {
     ambientVehicleRange = 1.0,
     parkedVehicleDensity = 1.0,
     randomVehicleDensity = 1.0,
-    vehicleDensity = 1.0
+    vehicleDensity = 1.0,
+    --- Won't update when set to 1.0
+    man = {
+        strength = 1.0,
+        stamina = 1.0,
+    },
+    woman = {
+        strength = 1.0,
+        stamina = 1.0,
+    }
 }
 
 -- Pattern string format
