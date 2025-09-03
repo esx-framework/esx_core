@@ -888,3 +888,40 @@ end
 function ESX.GetExtendedVehicleFromPlate(plate)
     return Core.vehicleClass.getFromPlate(plate)
 end
+
+---@param vin string
+---@return CExtendedVehicle?
+function ESX.GetExtendedVehicleFromVIN(vin)
+    return Core.vehicleClass.getFromVIN(vin)
+end
+
+---@param modelHash number? Optional vehicle model hash
+---@param owner string? Optional owner identifier
+---@return string? Generated VIN
+function ESX.GenerateVehicleVIN(modelHash, owner)
+    if not ESX.VIN then
+        print("^1[ESX] VIN module not loaded^0")
+        return nil
+    end
+    return ESX.VIN.generateUnique(modelHash, owner)
+end
+
+---@param vin string
+---@return boolean
+function ESX.ValidateVehicleVIN(vin)
+    if not ESX.VIN then
+        print("^1[ESX] VIN module not loaded^0")
+        return false
+    end
+    return ESX.VIN.validate(vin)
+end
+
+---@param vin string
+---@return table VIN decode information
+function ESX.DecodeVehicleVIN(vin)
+    if not ESX.VIN then
+        print("^1[ESX] VIN module not loaded^0")
+        return {}
+    end
+    return ESX.VIN.decode(vin)
+end
