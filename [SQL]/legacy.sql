@@ -235,6 +235,7 @@ INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
 CREATE TABLE `jobs` (
   `name` varchar(50) NOT NULL,
   `label` varchar(50) DEFAULT NULL,
+  `type` varchar(50) NOT NULL DEFAULT 'civ',
   `whitelisted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
@@ -242,20 +243,20 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`name`, `label`, `whitelisted`) VALUES
-('ambulance', 'EMS', 0),
-('cardealer', 'Cardealer', 0),
-('fisherman', 'Fisherman', 0),
-('fueler', 'Fueler', 0),
-('lumberjack', 'Lumberjack', 0),
-('mechanic', 'Mechanic', 0),
-('miner', 'Miner', 0),
-('police', 'LSPD', 0),
-('reporter', 'Reporter', 0),
-('slaughterer', 'Butcher', 0),
-('tailor', 'Tailor', 0),
-('taxi', 'Taxi', 0),
-('unemployed', 'Unemployed', 0);
+INSERT INTO `jobs` (`name`, `label`, `type`, `whitelisted`) VALUES
+('ambulance', 'EMS', 'ems', 0),
+('cardealer', 'Cardealer', 'civ', 0),
+('fisherman', 'Fisherman', 'civ', 0),
+('fueler', 'Fueler', 'civ', 0),
+('lumberjack', 'Lumberjack', 'civ', 0),
+('mechanic', 'Mechanic', 'mechanic', 0),
+('miner', 'Miner', 'civ', 0),
+('police', 'LSPD', 'leo', 0),
+('reporter', 'Reporter', 'civ', 0),
+('slaughterer', 'Butcher', 'civ', 0),
+('tailor', 'Tailor', 'civ', 0),
+('taxi', 'Taxi', 'civ', 0),
+('unemployed', 'Unemployed', 'civ', 0);
 
 -- --------------------------------------------------------
 
