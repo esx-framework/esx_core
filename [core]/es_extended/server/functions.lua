@@ -562,7 +562,7 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", type = "civ", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
     else
         ESX.Jobs = Jobs
     end
@@ -628,13 +628,32 @@ function ESX.GetItemLabel(item)
     end
 end
 
+---@param jobType string|string[]?
 ---@return table
-function ESX.GetJobs()
+function ESX.GetJobs(jobType)
     while not Core.JobsLoaded do
         Citizen.Wait(200)
     end
 
-    return ESX.Jobs
+    if not jobType then
+        return ESX.Jobs
+    end
+
+    jobType = type(jobType) == "string" and { jobType } or jobType
+
+    local jobTypeLookup = {}
+    for i = 1, #jobType do
+        jobTypeLookup[jobType[i]] = true
+    end
+
+    local filteredJobs = {}
+    for jobName, jobObject in pairs(ESX.Jobs) do
+        if jobTypeLookup[jobObject.type] then
+            filteredJobs[jobName] = jobObject
+        end
+    end
+
+    return filteredJobs
 end
 
 ---@return table
