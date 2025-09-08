@@ -63,7 +63,7 @@ function ESX.CreateJob(name, label, grades, jobType)
     end
 
     if type(jobType) ~= "string" then
-        jobType  "civ"
+        jobType = "civ"
     end
 
     local currentJobExist = doesJobAndGradesExist(name, grades)
