@@ -1,5 +1,5 @@
 ---@class ESXAccount
----@field name string               # Account name (e.g., 'bank', 'money').
+---@field name string               # Account name (e.g., "bank", "money").
 ---@field money number              # Current balance in this account.
 ---@field label string              # Human-readable label for the account.
 ---@field round boolean             # Whether amounts are rounded for display.
@@ -43,47 +43,48 @@
 ---@field hash string|number        # Component hash or identifier.
 
 ---@class StaticPlayer
+---@field src number                                              # Player's server ID.
 --- Money Functions
----@field setMoney { __call: fun(self: StaticPlayer, money: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                             # Set player's cash balance.
----@field getMoney { (__call: fun(self: StaticPlayer): number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                                   # Get player's current cash balance.
----@field addMoney { __call: fun(self: StaticPlayer, money: number, reason: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }             # Add money to the player's cash balance.
----@field removeMoney { __call: fun(self: StaticPlayer, money: number, reason: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }          # Remove money from the player's cash balance.
----@field setAccountMoney { __call: fun(self: StaticPlayer, accountName: string, money: number, reason?: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }  # Set specific account balance.
----@field addAccountMoney { __call: fun(self: StaticPlayer, accountName: string, money: number, reason?: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }  # Add money to an account.
----@field removeAccountMoney { __call: fun(self: StaticPlayer, accountName: string, money: number, reason?: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Remove money from an account.
----@field getAccount { (__call: fun(self: StaticPlayer, account: string): ESXAccount?), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }            # Get account data by name.
----@field getAccounts { (__call: fun(self: StaticPlayer, minimal?: boolean): ESXAccount[]|table<string,number>), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }  # Get all accounts, optionally minimal.
+---@field setMoney fun(money: number)                             # Set player's cash balance.
+---@field getMoney fun(): number                                   # Get player's current cash balance.
+---@field addMoney fun(money: number, reason: string)             # Add money to the player's cash balance.
+---@field removeMoney fun(money: number, reason: string)          # Remove money from the player's cash balance.
+---@field setAccountMoney fun(accountName: string, money: number, reason?: string)  # Set specific account balance.
+---@field addAccountMoney fun(accountName: string, money: number, reason?: string)  # Add money to an account.
+---@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
+---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
+---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
 --- Inventory Functions
----@field getInventory { (__call: fun(self: StaticPlayer, minimal?: boolean): ESXInventoryItem[]|table<string,number>), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }  # Get inventory, optionally minimal.
----@field getInventoryItem { (__call: fun(self: StaticPlayer, itemName: string): ESXInventoryItem?), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Get a specific item from inventory.
----@field addInventoryItem { __call: fun(self: StaticPlayer, itemName: string, count: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }     # Add items to inventory.
----@field removeInventoryItem { __call: fun(self: StaticPlayer, itemName: string, count: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }  # Remove items from inventory.
----@field setInventoryItem { __call: fun(self: StaticPlayer, itemName: string, count: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }     # Set item count in inventory.
----@field getWeight { (__call: fun(self: StaticPlayer): number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                                   # Get current carried weight.
----@field getMaxWeight { (__call: fun(self: StaticPlayer): number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                                # Get maximum carry weight.
----@field setMaxWeight { __call: fun(self: StaticPlayer, newWeight: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                       # Set maximum carry weight.
----@field canCarryItem { (__call: fun(self: StaticPlayer, itemName: string, count: number): boolean), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Check if player can carry more of an item.
----@field canSwapItem { (__call: fun(self: StaticPlayer, firstItem: string, firstItemCount: number, testItem: string, testItemCount: number): boolean), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Check if items can be swapped.
----@field hasItem { (__call: fun(self: StaticPlayer, item: string): ESXInventoryItem|false, number?), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Check if player has an item.
----@field getLoadout { (__call: fun(self: StaticPlayer, minimal?: boolean): ESXInventoryWeapon[]|table<string, {ammo:number, tintIndex?:number, components?:string[]}>), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Get player's weapon loadout.
+---@field getInventory fun(minimal?: boolean): ESXInventoryItem[]|table<string,number>  # Get inventory, optionally minimal.
+---@field getInventoryItem fun(itemName: string): ESXInventoryItem? # Get a specific item from inventory.
+---@field addInventoryItem fun(itemName: string, count: number)     # Add items to inventory.
+---@field removeInventoryItem fun(itemName: string, count: number)  # Remove items from inventory.
+---@field setInventoryItem fun(itemName: string, count: number)     # Set item count in inventory.
+---@field getWeight fun(): number                                   # Get current carried weight.
+---@field getMaxWeight fun(): number                                # Get maximum carry weight.
+---@field setMaxWeight fun(newWeight: number)                       # Set maximum carry weight.
+---@field canCarryItem fun(itemName: string, count: number): boolean # Check if player can carry more of an item.
+---@field canSwapItem fun(firstItem: string, firstItemCount: number, testItem: string, testItemCount: number): boolean # Check if items can be swapped.
+---@field hasItem fun(item: string): ESXInventoryItem|false, number? # Check if player has an item.
+---@field getLoadout fun(minimal?: boolean): ESXInventoryWeapon[]|table<string, {ammo:number, tintIndex?:number, components?:string[]}> # Get player's weapon loadout.
 --- Job Functions
 ---@field getJob fun(): ESXJob                                         # Get player's current job.
 ---@field setJob fun(newJob: string, grade: string, onDuty?: boolean)  # Set player's job and grade.
 ---@field setGroup fun(newGroup: string)                               # Set player's permission group.
 ---@field getGroup fun(): string                                       # Get player's permission group.
 --- Weapon Functions
----@field addWeapon { __call: fun(self: StaticPlayer, weaponName: string, ammo: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                 # Give player a weapon.
----@field removeWeapon { __call: fun(self: StaticPlayer, weaponName: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                             # Remove weapon from player.
----@field hasWeapon { (__call: fun(self: StaticPlayer, weaponName: string): boolean), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                       # Check if player has a weapon.
----@field getWeapon { (__call: fun(self: StaticPlayer, weaponName: string): number?, table?), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }               # Get weapon ammo & components.
----@field addWeaponAmmo { __call: fun(self: StaticPlayer, weaponName: string, ammoCount: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }        # Add ammo to a weapon.
----@field removeWeaponAmmo { __call: fun(self: StaticPlayer, weaponName: string, ammoCount: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }     # Remove ammo from a weapon.
----@field updateWeaponAmmo { __call: fun(self: StaticPlayer, weaponName: string, ammoCount: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }     # Update ammo count for a weapon.
----@field addWeaponComponent { __call: fun(self: StaticPlayer, weaponName: string, weaponComponent: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }    # Add component to weapon.
----@field removeWeaponComponent { __call: fun(self: StaticPlayer, weaponName: string, weaponComponent: string), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Remove component from weapon.
----@field hasWeaponComponent { (__call: fun(self: StaticPlayer, weaponName: string, weaponComponent: string): boolean), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Check if weapon has component.
----@field setWeaponTint { __call: fun(self: StaticPlayer, weaponName: string, weaponTintIndex: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Set weapon tint.
----@field getWeaponTint { (__call: fun(self: StaticPlayer, weaponName: string): number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) }                  # Get weapon tint.
+---@field addWeapon fun(weaponName: string, ammo: number)                 # Give player a weapon.
+---@field removeWeapon fun(weaponName: string)                             # Remove weapon from player.
+---@field hasWeapon fun(weaponName: string): boolean                       # Check if player has a weapon.
+---@field getWeapon fun(weaponName: string): number?, table?               # Get weapon ammo & components.
+---@field addWeaponAmmo fun(weaponName: string, ammoCount: number)        # Add ammo to a weapon.
+---@field removeWeaponAmmo fun(weaponName: string, ammoCount: number)     # Remove ammo from a weapon.
+---@field updateWeaponAmmo fun(weaponName: string, ammoCount: number)     # Update ammo count for a weapon.
+---@field addWeaponComponent fun(weaponName: string, weaponComponent: string)    # Add component to weapon.
+---@field removeWeaponComponent fun(weaponName: string, weaponComponent: string) # Remove component from weapon.
+---@field hasWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Check if weapon has component.
+---@field setWeaponTint fun(weaponName: string, weaponTintIndex: number) # Set weapon tint.
+---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
 --- Player State Functions
 ---@field getIdentifier fun(): string                              # Get player's unique identifier.
 ---@field getSSN fun(): string                                      # Get player's social security number.
@@ -103,9 +104,9 @@
 ---@field setMeta fun(index: string, value: any, subValue?: any)      # Set metadata value(s).
 ---@field clearMeta fun(index: string, subValues?: string|table)      # Clear metadata value(s).
 --- Notification Functions
----@field showNotification { __call: fun(self: StaticPlayer, msg: string, notifyType?: string, length?: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Show a simple notification.
----@field showAdvancedNotification { __call: fun(self: StaticPlayer, sender: string, subject: string, msg: string, textureDict: string, iconType: string, flash: boolean, saveToBrief: boolean, hudColorIndex: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Show advanced notification.
----@field showHelpNotification { __call: fun(self: StaticPlayer, msg: string, thisFrame?: boolean, beep?: boolean, duration?: number), set: fun(self: StaticPlayer, isJustAddition: boolean, fn: function) } # Show help notification.
+---@field showNotification fun(msg: string, notifyType?: string, length?: number, title?: string, position?: string) # Show a simple notification.
+---@field showAdvancedNotification fun(sender: string, subject: string, msg: string, textureDict: string, iconType: string, flash: boolean, saveToBrief: boolean, hudColorIndex: number) # Show advanced notification.
+---@field showHelpNotification fun(msg: string, thisFrame?: boolean, beep?: boolean, duration?: number) # Show help notification.
 --- Misc Functions
 ---@field togglePaycheck fun(toggle: boolean)     # Enable/disable paycheck.
 ---@field isPaycheckEnabled fun(): boolean       # Check if paycheck is enabled.
@@ -134,8 +135,9 @@
 ---@field admin boolean             # Whether the player is an admin.
 
 ---@class xPlayerClass:xPlayer
----@field hooks { functionName: string, isJustAddition: boolean, functionReference: fun(xPlayer: xPlayer, ...: any): any }[]
----@field __removeHook fun(self: xPlayerClass, hookId: integer): boolean Returns success status
+---@field hooks { hookId: string, functionName: string, invokerRes: string, isJustAddition: boolean, functionReference: fun(xPlayer: xPlayer, ...: any): any }[]
+---@field addHook fun(self: xPlayerClass, functionName: string, isJustAddition: boolean, functionReference: fun(xPlayer: xPlayer, ...: any): any): string Returns the hookId of the created hook
+---@field removeHook fun(self: xPlayerClass, hookId: string): boolean Returns success status
 ---@field kick function
 ---@field setMoney function
 ---@field getMoney function
@@ -171,4 +173,4 @@
 ---@field showHelpNotification function
 ---@field __index fun(self: xPlayerClass, k: string): any
 ---@field __newindex fun(self: xPlayerClass, k: string, v: any)
----@field __call fun(self: xPlayerClass, playerId: integer, data: { identifier: string, ssn: string, group: string, accounts: ESXAccount[], inventory: table, weight: number, job: ESXJob, loadout: ESXInventoryWeapon[], steamName: string, coords: vector4|{x: number, y: number, z: number, heading: number}, metadata: table }): xPlayer?
+---@field __call fun(self: xPlayerClass, xPlayer: xPlayer, functionName): fun(...: any): any Function to convert each function from the xPlayer class to actual xPlayer function (only available to call from es_extended)

@@ -685,7 +685,7 @@ if not Config.CustomInventory then
 
             for itemName, _ in pairs(minimalInv) do
                 if not ESX.Items[itemName] then
-                    xPlayer.setInventoryItem(itemName, 0)
+                    xPlayer.setInventoryItem(itemName --[[@as string]], 0)
                     minimalInv[itemName] = nil
                 end
             end
@@ -695,7 +695,7 @@ if not Config.CustomInventory then
             for itemName, itemData in pairs(ESX.Items) do
                 xPlayer.inventory[playerInvIndex] = {
                     name = itemName,
-                    count = minimalInv[itemName] or 0,
+                    count = minimalInv[itemName].count or 0,
                     label = itemData.label,
                     weight = itemData.weight,
                     usable = Core.UsableItemsCallbacks[itemName] ~= nil,
