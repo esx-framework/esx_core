@@ -278,7 +278,7 @@ exports("LoadSkin", function(skin)
 end)
 
 exports("GetData", function(noMax)
-    return SkinChanger:GetData(noMax)
+    return SkinChanger:GetData(noMax) ---@diagnostic disable-line: redundant-return-value
 end)
 
 exports("LoadClothes", function(playerSkin, clothesSkin)
