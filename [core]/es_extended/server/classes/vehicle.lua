@@ -1,5 +1,6 @@
 ---@class CVehicleData
 ---@field plate string
+---@field vin string
 ---@field netId number
 ---@field entity number
 ---@field modelHash number
@@ -11,6 +12,7 @@
 ---@field new fun(owner:string, plate:string, coords:vector4): CExtendedVehicle?
 ---@field getFromPlate fun(plate:string):CExtendedVehicle?
 ---@field getPlate fun(self:CExtendedVehicle):string?
+---@field getVin fun(self:CExtendedVehicle):string?
 ---@field getNetId fun(self:CExtendedVehicle):number?
 ---@field getEntity fun(self:CExtendedVehicle):number?
 ---@field getModelHash fun(self:CExtendedVehicle):number?
@@ -31,14 +33,27 @@ Core.vehicleClass = {
 			return xVehicle
 		end
 
-		local vehicleProps = MySQL.scalar.await("SELECT `vehicle` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
-		if not vehicleProps then
+		local vehicleData = MySQL.single.await("SELECT `vehicle`, `vin` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
+		if not vehicleData then
 			return
 		end
-		vehicleProps = json.decode(vehicleProps)
+		local vehicleProps = json.decode(vehicleData.vehicle)
+		---@type string?
+		local vin = vehicleData.vin
+		local modelName = nil
 
 		if type(vehicleProps.model) ~= "number" then
+			modelName = vehicleProps.model
 			vehicleProps.model = joaat(vehicleProps.model)
+		end
+
+		if not vin and Config.EnableVehicleVIN then
+			local vehicleType = ESX.GetVehicleType(vehicleProps.model, owner)
+			vin = ESX.GenerateVIN({ 
+				model = modelName,
+				vehicleType = vehicleType 
+			})
+			MySQL.update.await("UPDATE `owned_vehicles` SET `vin` = ? WHERE `owner` = ? AND `plate` = ?", { vin, owner, plate })
 		end
 
 		local netId = ESX.OneSync.SpawnVehicle(vehicleProps.model, coords.xyz, coords.w, vehicleProps)
@@ -52,16 +67,18 @@ Core.vehicleClass = {
 		end
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
+		Entity(entity).state:set("vin", vin, false)
 
 		---@type CVehicleData
-		local vehicleData = {
+		local vehicleDataObj = {
 			plate = plate,
+			vin = vin,
 			entity = entity,
 			netId = netId,
 			modelHash = vehicleProps.model,
 			owner = owner,
 		}
-		Core.vehicles[plate] = vehicleData
+		Core.vehicles[plate] = vehicleDataObj
 
 		MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = false WHERE `owner` = ? AND `plate` = ?", { owner, plate })
 
@@ -97,6 +114,10 @@ Core.vehicleClass = {
 
 		vehicleData.entity = entity
 
+		if not vehicleData.vin and Entity(entity).state.vin then
+			vehicleData.vin = Entity(entity).state.vin
+		end
+
 		return true
 	end,
 	getNetId = function(self)
@@ -119,6 +140,13 @@ Core.vehicleClass = {
 		end
 
 		return Core.vehicles[self.plate].plate
+	end,
+	getVin = function(self)
+		if not self:isValid() then
+			return
+		end
+
+		return Core.vehicles[self.plate].vin
 	end,
 	getModelHash = function(self)
 		if not self:isValid() then

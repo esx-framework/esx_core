@@ -894,6 +894,115 @@ function Core.generateSSN(skipUniqueCheck)
     end
 end
 
+---@param vehicleData? table
+---@return string
+function ESX.GenerateVIN(vehicleData)
+    local function generateRandomString(length, excludeConfusing)
+        local charset = excludeConfusing and "ABCDEFGHJKLMNPRSTUVWXYZ123456789" or "ABCDEFGHJKLMNPRSTUVWXYZ"
+        local str = ""
+        for i = 1, length do
+            local rand = math.random(1, #charset)
+            str = str .. charset:sub(rand, rand)
+        end
+        return str
+    end
+    
+    local vin
+    local attempts = 0
+    local maxAttempts = 10
+    
+    repeat
+        attempts = attempts + 1
+        if attempts > maxAttempts then
+            print("^1[ESX] Failed to generate unique VIN after " .. maxAttempts .. " attempts^7")
+            return "XXXXXXXXXXXXXXXXX"
+        end
+        
+        -- VIN Format (17 chars total):
+        -- Position 1: World Manufacturer Identifier (W for custom)
+        -- Position 2-5: Model identifier (4 chars)
+        -- Position 6: Vehicle type
+        -- Position 7-10: Timestamp last 4 digits
+        -- Position 11-17: Random serial number (7 chars)
+        
+        local wmi = "W"
+        
+        local modelPart = ""
+        if vehicleData and vehicleData.model and type(vehicleData.model) == "string" then
+            local modelName = vehicleData.model:upper():gsub("[^A-Z0-9]", "")
+            modelPart = modelName:sub(1, 4)
+        end
+        if #modelPart < 4 then
+            modelPart = modelPart .. generateRandomString(4 - #modelPart, false)
+        end
+        
+        local typePart = "U"
+        if vehicleData and vehicleData.vehicleType then
+            local typeMap = {
+                ["bike"] = "B",
+                ["automobile"] = "C",
+                ["trailer"] = "T",
+                ["boat"] = "S",
+                ["heli"] = "H",
+                ["plane"] = "P", 
+                ["submarine"] = "U",
+                ["train"] = "R",
+                ["quadbike"] = "Q",
+                ["amphibious_automobile"] = "A",
+                ["amphibious_quadbike"] = "A",
+                ["submersible"] = "U",
+                ["submarinecar"] = "U"
+            }
+            typePart = typeMap[vehicleData.vehicleType:lower()] or "X"
+        end
+        
+        local timestamp = string.format("%04d", os.time() % 10000)
+        
+        local serial = generateRandomString(7, true)
+        
+        vin = wmi .. modelPart .. typePart .. timestamp .. serial
+        
+        if #vin ~= 17 then
+            print("^1[ESX] VIN generation error: incorrect length " .. #vin .. "^7")
+            vin = "XXXXXXXXXXXXXXXXX"
+        end
+        
+        local existingVin = MySQL.scalar.await("SELECT 1 FROM `owned_vehicles` WHERE `vin` = ? LIMIT 1", { vin })
+    until not existingVin
+    
+    return vin
+end
+
+---@param vin string
+---@return table?
+function ESX.ParseVIN(vin)
+    if type(vin) ~= "string" or #vin ~= 17 then
+        return nil
+    end
+    
+    local typeMap = {
+        ["B"] = "bike",
+        ["C"] = "automobile",
+        ["T"] = "trailer",
+        ["S"] = "boat",
+        ["H"] = "heli",
+        ["P"] = "plane",
+        ["R"] = "train",
+        ["U"] = "submarine",
+        ["Q"] = "quadbike",
+        ["A"] = "amphibious",
+        ["X"] = "unknown"
+    }
+    
+    return {
+        manufacturer = vin:sub(1, 1),
+        model = vin:sub(2, 5),
+        vehicleType = typeMap[vin:sub(6, 6)] or "unknown",
+        timestamp = vin:sub(7, 10),
+        serial = vin:sub(11, 17)
+    }
+end
+
 ---@param owner string
 ---@param plate string
 ---@param coords vector4
@@ -906,4 +1015,14 @@ end
 ---@return CExtendedVehicle?
 function ESX.GetExtendedVehicleFromPlate(plate)
     return Core.vehicleClass.getFromPlate(plate)
+end
+
+---@param vin string
+---@return CExtendedVehicle?
+function ESX.GetExtendedVehicleFromVIN(vin)
+    for plate, vehicleData in pairs(Core.vehicles) do
+        if vehicleData.vin == vin then
+            return Core.vehicleClass.getFromPlate(plate)
+        end
+    end
 end
