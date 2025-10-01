@@ -233,6 +233,22 @@ function Adjustments:Multipliers()
             Wait(0)
         end
     end)
+
+    AddEventHandler("esx:playerLoaded",function (xPlayer)
+        if not xPlayer or xPlayer.get("sex") == nil then
+            return -- Early Exit
+        end
+
+        local multipliers = xPlayer.get("sex") == "m" and Config.Multipliers.man or Config.Multipliers.woman
+
+        if multipliers.strength ~= 1.0 then
+            SetWeaponDamageModifier(`WEAPON_UNARMED`, multipliers.strength)
+        end
+
+        if multipliers.stamina ~= 1.0 then
+            SetPlayerStamina(PlayerId(), multipliers.stamina)
+        end
+    end)
 end
 
 function Adjustments:Load()
