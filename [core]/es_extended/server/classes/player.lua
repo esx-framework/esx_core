@@ -54,6 +54,7 @@
 ---@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
 ---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
 ---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
+---@field getAccountMoney fun(account: string): number           # Get the amount of money in a specific account.
 --- Inventory Functions
 ---@field getInventory fun(minimal?: boolean): ESXInventoryItem[]|table<string,number>  # Get inventory, optionally minimal.
 ---@field getInventoryItem fun(itemName: string): ESXInventoryItem? # Get a specific item from inventory.
@@ -323,6 +324,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             end
         end
         return nil
+    end
+
+    function self.getAccountMoney(account)
+        return self.getAccount(account)?.money or 0
     end
 
     function self.getInventory(minimal)
