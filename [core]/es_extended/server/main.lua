@@ -44,6 +44,12 @@ local function createESXPlayer(identifier, playerId, data)
     end)
 end
 
+    local function ensureJobCounter(jobName)
+      if type(jobName) == 'string' and jobName ~= '' then
+        Core.JobsPlayerCount[jobName] = Core.JobsPlayerCount[jobName] or 0
+    end
+end
+
 
 local function onPlayerJoined(playerId)
     local identifier = ESX.GetIdentifier(playerId)
@@ -182,12 +188,6 @@ if not Config.Multichar then
         onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
         deferrals.done()
     end)
-end
-
-    local function ensureJobCounter(jobName)
-      if type(jobName) == 'string' and jobName ~= '' then
-        Core.JobsPlayerCount[jobName] = Core.JobsPlayerCount[jobName] or 0
-    end
 end
 
 function loadESXPlayer(identifier, playerId, isNew)
@@ -735,9 +735,7 @@ end)
 
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
     local ped = GetPlayerPed(source)
-    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, spawnCoords, heading, vehData.props or {}, function(id)
-    local spawnCoords = vehData.coords or GetEntityCoords(ped)
-    local heading = (vehData.coords and vehData.coords.w) or 0.0
+    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
         if vehData.warp then
             local vehicle = NetworkGetEntityFromNetworkId(id)
             local timeout = 0
