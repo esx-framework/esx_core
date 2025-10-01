@@ -72,10 +72,10 @@ function ESX.CreateJob(name, label, grades)
         { query = 'INSERT INTO jobs (name, label) VALUES (?, ?)', values = { name, label } }
     }
 
-    for _, grade in ipairs(grades) do
+    for _, grade in pairs(grades) do
         queries[#queries + 1] = {
             query = 'INSERT INTO job_grades (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            values = { name, grade.grade, grade.name, grade.label, grade.salary, '{}', '{}' }
+            values = { name, grade.grade, grade.name, grade.label, grade.salary, grade.skin_male and json.encode(grade.skin_male) or '{}', grade.skin_female and json.encode(grade.skin_female) or '{}' }
         }
     end
 
@@ -89,6 +89,8 @@ function ESX.CreateJob(name, label, grades)
     ESX.Jobs[name] = generateNewJobTable(name, label, grades)
 
     notify("SUCCESS", currentResourceName, 'Job created successfully: `%s`', name)
+
+    TriggerEvent('esx:jobCreated', name, ESX.Jobs[name])
 
     return success
 end

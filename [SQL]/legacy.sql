@@ -385,6 +385,7 @@ CREATE TABLE `society_moneywash` (
 
 CREATE TABLE `users` (
   `identifier` varchar(60) NOT NULL,
+	`ssn` VARCHAR(11) NOT NULL,
   `accounts` longtext DEFAULT NULL,
   `group` varchar(50) DEFAULT 'user',
   `inventory` longtext DEFAULT NULL,
@@ -488,7 +489,7 @@ INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES
 ('Cognoscenti Cabrio', 'cogcabrio', 55000, 'coupes'),
 ('Cognoscenti', 'cognoscenti', 55000, 'sedans'),
 ('Comet', 'comet2', 65000, 'sports'),
-('Comet 5', 'comet5', 1145000, 'sports'),
+('Comet SR', 'comet5', 1145000, 'sports'),
 ('Contender', 'contender', 70000, 'suvs'),
 ('Coquette', 'coquette', 65000, 'sports'),
 ('Coquette Classic', 'coquette2', 40000, 'sportsclassics'),
@@ -822,6 +823,13 @@ ALTER TABLE `owned_vehicles`
   ADD PRIMARY KEY (`plate`);
 
 --
+--
+-- Indexes for table `vehicles`
+--
+ALTER TABLE `vehicles`
+  ADD PRIMARY KEY (`model`);
+
+--
 -- Indexes for table `rented_vehicles`
 --
 ALTER TABLE `rented_vehicles`
@@ -839,6 +847,9 @@ ALTER TABLE `society_moneywash`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`identifier`),
   ADD UNIQUE KEY `id` (`id`);
+
+ALTER TABLE `users`
+  ADD UNIQUE KEY `unique_ssn` (`ssn`);
 
 --
 -- Indexes for table `user_licenses`

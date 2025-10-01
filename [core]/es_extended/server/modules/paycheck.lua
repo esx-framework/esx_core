@@ -5,7 +5,8 @@ function StartPayCheck()
             for player, xPlayer in pairs(ESX.Players) do
                 local jobLabel = xPlayer.job.label
                 local job = xPlayer.job.grade_name
-                local salary = xPlayer.job.grade_salary
+                local onDuty = xPlayer.job.onDuty
+                local salary = (job == "unemployed" or onDuty) and xPlayer.job.grade_salary or ESX.Math.Round(xPlayer.job.grade_salary * Config.OffDutyPaycheckMultiplier)
 
                 if xPlayer.paycheckEnabled then
                     if salary > 0 then

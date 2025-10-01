@@ -1,4 +1,4 @@
-Locales["pt"] = {
+return {
     ["show_active_character"] = "Mostrar personagem ativa",
     ["active_character"] = "Personagem ativa: %s",
     ["error_active_character"] = "Houve um erro a obter os teus dados.",

@@ -1,4 +1,4 @@
-Locales["sl"] = {
+return {
     ["show_active_character"] = "Prikaži aktivnega lika",
     ["active_character"] = "Aktivni lik: %s",
     ["error_active_character"] = "Prišlo je do napake pri pridobivanju podatkov.",

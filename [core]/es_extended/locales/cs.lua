@@ -1,4 +1,4 @@
-Locales["cs"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventář ( Váha %s / %s )",
     ["use"] = "Použít",
@@ -103,6 +103,7 @@ Locales["cs"] = {
     ["command_setgroup_group"] = "Název skupiny",
     ["commanderror_argumentmismatch"] = "Chybný počet hodnot (správně %s, potřebných %s)",
     ["commanderror_argumentmismatch_number"] = "Chybně zadaná hodnot #%s  (správně, špatně)",
+    ["commanderror_argumentmismatch_positive_number"] = "Chybně zadaná hodnota #%s (zadáno záporné/nula, požadováno kladné číslo)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
     ["commanderror_invaliditem"] = "Špatný předmět",
     ["commanderror_invalidweapon"] = "Špatná zbraň",
@@ -223,10 +224,10 @@ Locales["cs"] = {
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Thrown
     ["weapon_ball"] = "Míček",
@@ -368,4 +369,36 @@ Locales["cs"] = {
     ["tint_lspd"] = "blue skin",
     ["tint_orange"] = "orange skin",
     ["tint_platinum"] = "platinum skin",
+    -- MK2 Weapon Tints
+    ["tint_classic_gray"] = "klasická šedá",
+    ["tint_classic_two_tone"] = "klasická dvoutónová",
+    ["tint_classic_white"] = "klasická bílá",
+    ["tint_classic_beige"] = "klasická béžová",
+    ["tint_classic_green"] = "klasická zelená",
+    ["tint_classic_blue"] = "klasická modrá",
+    ["tint_classic_earth"] = "klasická hnědá",
+    ["tint_classic_brown_black"] = "klasická hnědá-černá",
+    ["tint_contrast_red"] = "kontrastní červená",
+    ["tint_contrast_blue"] = "kontrastní modrá",
+    ["tint_contrast_yellow"] = "kontrastní žlutá",
+    ["tint_contrast_orange"] = "kontrastní oranžová",
+    ["tint_bold_pink"] = "odvážná růžová",
+    ["tint_bold_purple_yellow"] = "odvážná fialovo-žlutá",
+    ["tint_bold_orange"] = "odvážná oranžová",
+    ["tint_bold_green_purple"] = "odvážná zeleno-fialová",
+    ["tint_bold_red_feat"] = "odvážná červená feat",
+    ["tint_bold_green_feat"] = "odvážná zelená feat",
+    ["tint_bold_cyan_feat"] = "odvážná azurová feat",
+    ["tint_bold_yellow_feat"] = "odvážná žlutá feat",
+    ["tint_bold_red_white"] = "odvážná červená bílá",
+    ["tint_bold_blue_white"] = "odvážná modrá bílá",
+    ["tint_metallic_gold"] = "metalická zlatá",
+    ["tint_metallic_platinum"] = "metalická platina",
+    ["tint_metallic_gray_lilac"] = "metalická šedá lila",
+    ["tint_metallic_purple_lime"] = "metalická fialová limetka",
+    ["tint_metallic_red"] = "metalická červená",
+    ["tint_metallic_green"] = "metalická zelená",
+    ["tint_metallic_blue"] = "metalická modrá",
+    ["tint_metallic_white_aqua"] = "metalická bílá aqua",
+    ["tint_metallic_red_yellow"] = "metalická červená žlutá",
 }

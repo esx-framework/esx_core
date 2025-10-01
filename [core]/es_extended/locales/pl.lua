@@ -1,4 +1,4 @@
-Locales["pl"] = {
+return {
     -- Inventory
     ["inventory"] = "ekwipunek %s / %s",
     ["use"] = "użyj",
@@ -98,6 +98,7 @@ Locales["pl"] = {
     ["commanderror_argumentmismatch"] = "nieprawiłowa ilość argumentów (przeszło %s, wymagane %s)",
     ["commanderror_argumentmismatch_number"] = "nieprawidłowy typ argumentu #%s (przeszedł tekst, wymagany numer)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Nieprawidłowy argument #%s typ danych (przekazano ujemny/zero, oczekiwano liczby dodatniej)",
     ["commanderror_invaliditem"] = "nieprawidłowa nazwa przedmiotu",
     ["commanderror_invalidweapon"] = "nieprawidłowa broń",
     ["commanderror_console"] = "podana komenda nie może zostać uruchomiona przez konsole",
@@ -202,10 +203,10 @@ Locales["pl"] = {
     ["component_luxary_finish"] = "luksusowe wykończenie broni",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Weapon Ammo
     ["ammo_rounds"] = "nabój/oi",
@@ -236,4 +237,37 @@ Locales["pl"] = {
     ["tint_lspd"] = "niebieski skin",
     ["tint_orange"] = "pomarańczowy skin",
     ["tint_platinum"] = "platynowy skin",
+    -- MK2 Weapon Tints
+    ["tint_classic_black"] = "klasyczna czerń",
+    ["tint_classic_gray"] = "klasyczny szary",
+    ["tint_classic_two_tone"] = "klasyczny dwutonowy",
+    ["tint_classic_white"] = "klasyczna biel",
+    ["tint_classic_beige"] = "klasyczny beż",
+    ["tint_classic_green"] = "klasyczna zieleń",
+    ["tint_classic_blue"] = "klasyczny niebieski",
+    ["tint_classic_earth"] = "klasyczna ziemia",
+    ["tint_classic_brown_black"] = "klasyczny brązowo-czarny",
+    ["tint_contrast_red"] = "kontrastowy czerwony",
+    ["tint_contrast_blue"] = "kontrastowy niebieski",
+    ["tint_contrast_yellow"] = "kontrastowy żółty",
+    ["tint_contrast_orange"] = "kontrastowy pomarańczowy",
+    ["tint_bold_pink"] = "odważny różowy",
+    ["tint_bold_purple_yellow"] = "odważny fioletowo-żółty",
+    ["tint_bold_orange"] = "odważny pomarańczowy",
+    ["tint_bold_green_purple"] = "odważny zielono-fioletowy",
+    ["tint_bold_red_feat"] = "odważny czerwony feat",
+    ["tint_bold_green_feat"] = "odważny zielony feat",
+    ["tint_bold_cyan_feat"] = "odważny cyjan feat",
+    ["tint_bold_yellow_feat"] = "odważny żółty feat",
+    ["tint_bold_red_white"] = "odważny czerwony biały",
+    ["tint_bold_blue_white"] = "odważny niebieski biały",
+    ["tint_metallic_gold"] = "złoto metaliczne",
+    ["tint_metallic_platinum"] = "platyna metaliczna",
+    ["tint_metallic_gray_lilac"] = "szaro-liliowe metaliczne",
+    ["tint_metallic_purple_lime"] = "fioletowo-limonkowe metaliczne",
+    ["tint_metallic_red"] = "czerwony metaliczny",
+    ["tint_metallic_green"] = "zielony metaliczny",
+    ["tint_metallic_blue"] = "niebieski metaliczny",
+    ["tint_metallic_white_aqua"] = "białe aqua metaliczne",
+    ["tint_metallic_red_yellow"] = "czerwono-żółte metaliczne",
 }

@@ -1,4 +1,4 @@
-Locales["de"] = {
+return {
   ["show_active_character"] = "Aktiven Charakter anzeigen",
   ["active_character"] = "Aktiver Charakter: %s",
   ["error_active_character"] = "Beim Abrufen deiner Daten ist ein Fehler aufgetreten",

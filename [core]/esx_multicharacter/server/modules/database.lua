@@ -14,12 +14,12 @@ function Database:GetConnection()
         self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
         self.found = true
     else
-        local connectionExtracted = { string.strsplit(";", connectionString) }
-
-        for i = 1, #connectionExtracted do
-            local v = connectionExtracted[i]
-            if v:match("database") then
-                self.name = connectionString:sub(connectionString:find("/") + 1, -1):gsub("[%?]+[%w%p]*$", "")
+        local confPairs = { string.strsplit(";", connectionString) }
+        for i = 1, #confPairs do
+            local confPair = confPairs[i]
+            local key, value = confPair:match("^%s*(.-)%s*=%s*(.-)%s*$")
+            if key == "database" then
+                self.name = value
                 self.found = true
                 break
             end
@@ -64,6 +64,7 @@ MySQL.ready(function()
 
         Database.connected = true
 
+        ESX.Jobs = ESX.GetJobs()
         while not next(ESX.Jobs) do
             Wait(500)
             ESX.Jobs = ESX.GetJobs()
@@ -72,7 +73,7 @@ MySQL.ready(function()
 end)
 
 function Database:DeleteCharacter(source, charid)
-    local identifier = ("%s%s:%s"):format(Server.prefix, charid, Server:GetIdentifier(source))
+    local identifier = ("%s%s:%s"):format(Server.prefix, charid, ESX.GetIdentifier(source))
     local query = "DELETE FROM `%s` WHERE %s = ?"
     local queries = {}
     local count = 0

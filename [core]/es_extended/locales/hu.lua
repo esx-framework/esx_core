@@ -1,4 +1,4 @@
-Locales["hu"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventory ( Súly %s / %s )",
     ["use"] = "Használ",
@@ -104,6 +104,7 @@ Locales["hu"] = {
     ["commanderror_argumentmismatch"] = "Érvénytelen argumentumszám (%s megadva, %s szükséges)",
     ["commanderror_argumentmismatch_number"] = "Érvénytelen argumentum #%s adat típus (szöveg megadva, szám szükséges)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Érvénytelen argumentum #%s adattípus (negatív/nulla átadva, pozitív szám szükséges)",
     ["commanderror_invaliditem"] = "Érvénytelen tárgy",
     ["commanderror_invalidweapon"] = "Érvénytelen fegyver",
     ["commanderror_console"] = "Parancs nem használható konzolból",
@@ -229,10 +230,10 @@ Locales["hu"] = {
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
@@ -374,8 +375,37 @@ Locales["hu"] = {
     ["tint_lspd"] = "blue skin",
     ["tint_orange"] = "orange skin",
     ["tint_platinum"] = "platinum skin",
-
-    -- Duty related
-    ["stopped_duty"] = "Leadtad a szolgálatot.",
-    ["started_duty"] = "Szolgálatba álltál.",
+    -- MK2 Weapon Tints
+    ["tint_classic_black"] = "klasszikus fekete",
+    ["tint_classic_gray"] = "klasszikus szürke",
+    ["tint_classic_two_tone"] = "klasszikus két szín",
+    ["tint_classic_white"] = "klasszikus fehér",
+    ["tint_classic_beige"] = "klasszikus bézs",
+    ["tint_classic_green"] = "klasszikus zöld",
+    ["tint_classic_blue"] = "klasszikus kék",
+    ["tint_classic_earth"] = "klasszikus föld",
+    ["tint_classic_brown_black"] = "klasszikus barna-fekete",
+    ["tint_contrast_red"] = "kontraszt piros",
+    ["tint_contrast_blue"] = "kontraszt kék",
+    ["tint_contrast_yellow"] = "kontraszt sárga",
+    ["tint_contrast_orange"] = "kontraszt narancs",
+    ["tint_bold_pink"] = "merész rózsaszín",
+    ["tint_bold_purple_yellow"] = "merész lila-sárga",
+    ["tint_bold_orange"] = "merész narancs",
+    ["tint_bold_green_purple"] = "merész zöld-lila",
+    ["tint_bold_red_feat"] = "merész piros feat",
+    ["tint_bold_green_feat"] = "merész zöld feat",
+    ["tint_bold_cyan_feat"] = "merész cián feat",
+    ["tint_bold_yellow_feat"] = "merész sárga feat",
+    ["tint_bold_red_white"] = "merész piros fehér",
+    ["tint_bold_blue_white"] = "merész kék fehér",
+    ["tint_metallic_gold"] = "metál arany",
+    ["tint_metallic_platinum"] = "metál platina",
+    ["tint_metallic_gray_lilac"] = "metál szürke lila",
+    ["tint_metallic_purple_lime"] = "metál lila lime",
+    ["tint_metallic_red"] = "metál piros",
+    ["tint_metallic_green"] = "metál zöld",
+    ["tint_metallic_blue"] = "metál kék",
+    ["tint_metallic_white_aqua"] = "metál fehér aqua",
+    ["tint_metallic_red_yellow"] = "metál piros sárga",
 }

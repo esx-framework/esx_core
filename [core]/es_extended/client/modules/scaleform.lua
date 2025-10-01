@@ -2,17 +2,11 @@ ESX.Scaleform = {}
 ESX.Scaleform.Utils = {}
 
 function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
-
-    BeginScaleformMovieMethod(scaleform, "SHOW_SHARD_WASTED_MP_MESSAGE")
-    ScaleformMovieMethodAddParamTextureNameString(title)
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    EndScaleformMovieMethod()
-
-    while sec > 0 do
+    local scaleform = ESX.Scaleform.Utils.RunMethod("MP_BIG_MESSAGE_FREEMODE", "SHOW_SHARD_WASTED_MP_MESSAGE", false, title, msg)
+    
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
-        sec = sec - 0.01
-
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
@@ -20,30 +14,13 @@ function ESX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 end
 
 function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("BREAKING_NEWS")
+    local scaleform = ESX.Scaleform.Utils.RunMethod("BREAKING_NEWS", "SET_TEXT", false, msg, bottom)
+    ESX.Scaleform.Utils.RunMethod(scaleform, "SET_SCROLL_TEXT", false, 0, 0, title)
+    ESX.Scaleform.Utils.RunMethod(scaleform, "DISPLAY_SCROLL_TEXT", false, 0, 0)
 
-    BeginScaleformMovieMethod(scaleform, "SET_TEXT")
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    ScaleformMovieMethodAddParamTextureNameString(bottom)
-    EndScaleformMovieMethod()
-
-    BeginScaleformMovieMethod(scaleform, "SET_SCROLL_TEXT")
-    ScaleformMovieMethodAddParamInt(0) -- top ticker
-    ScaleformMovieMethodAddParamInt(0) -- Since this is the first string, start at 0
-    ScaleformMovieMethodAddParamTextureNameString(title)
-
-    EndScaleformMovieMethod()
-
-    BeginScaleformMovieMethod(scaleform, "DISPLAY_SCROLL_TEXT")
-    ScaleformMovieMethodAddParamInt(0) -- Top ticker
-    ScaleformMovieMethodAddParamInt(0) -- Index of string
-
-    EndScaleformMovieMethod()
-
-    while sec > 0 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
-        sec = sec - 0.01
-
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
@@ -51,22 +28,11 @@ function ESX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("POPUP_WARNING")
+    local scaleform = ESX.Scaleform.Utils.RunMethod("POPUP_WARNING", "SHOW_POPUP_WARNING", false, 500.0, title, msg, bottom, true)
 
-    BeginScaleformMovieMethod(scaleform, "SHOW_POPUP_WARNING")
-
-    ScaleformMovieMethodAddParamFloat(500.0) -- black background
-    ScaleformMovieMethodAddParamTextureNameString(title)
-    ScaleformMovieMethodAddParamTextureNameString(msg)
-    ScaleformMovieMethodAddParamTextureNameString(bottom)
-    ScaleformMovieMethodAddParamBool(true)
-
-    EndScaleformMovieMethod()
-
-    while sec > 0 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
-        sec = sec - 0.01
-
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
@@ -74,16 +40,11 @@ function ESX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 end
 
 function ESX.Scaleform.ShowTrafficMovie(sec)
-    local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie("TRAFFIC_CAM")
+    local scaleform = ESX.Scaleform.Utils.RunMethod("TRAFFIC_CAM", "PLAY_CAM_MOVIE", false)
 
-    BeginScaleformMovieMethod(scaleform, "PLAY_CAM_MOVIE")
-
-    EndScaleformMovieMethod()
-
-    while sec > 0 do
+    local endTime = GetGameTimer() + (sec * 1000)
+    while GetGameTimer() < endTime do
         Wait(0)
-        sec = sec - 0.01
-
         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
     end
 
@@ -96,6 +57,43 @@ function ESX.Scaleform.Utils.RequestScaleformMovie(movie)
     while not HasScaleformMovieLoaded(scaleform) do
         Wait(0)
     end
+
+    return scaleform
+end
+
+--- Executes a method on a scaleform movie with optional arguments and return value.
+--- The caller is responsible for disposing of the scaleform using `SetScaleformMovieAsNoLongerNeeded`.
+---@param scaleform number|string # Scaleform handle or name to request the scaleform movie
+---@param methodName string # The method name to call on the scaleform
+---@param returnValue? boolean # Whether to return the value from the method
+---@param ... number|string|boolean # Arguments to pass to the method
+---@return number, number? # The scaleform handle, and the return value if `returnValue` is true
+function ESX.Scaleform.Utils.RunMethod(scaleform, methodName, returnValue, ...)
+    scaleform = type(scaleform) == "number" and scaleform or ESX.Scaleform.Utils.RequestScaleformMovie(scaleform)
+    BeginScaleformMovieMethod(scaleform, methodName)
+
+    local args = { ... }
+    for _, arg in ipairs(args) do
+        local typeArg = type(arg)
+
+        if typeArg == "number" then
+            if math.type(arg) == "float" then
+                ScaleformMovieMethodAddParamFloat(arg)
+            else
+                ScaleformMovieMethodAddParamInt(arg)
+            end
+        elseif typeArg == "string" then
+            ScaleformMovieMethodAddParamTextureNameString(arg)
+        elseif typeArg == "boolean" then
+            ScaleformMovieMethodAddParamBool(arg)
+        end
+    end
+
+    if returnValue then
+        return scaleform, EndScaleformMovieMethodReturnValue()
+    end
+
+    EndScaleformMovieMethod()
 
     return scaleform
 end

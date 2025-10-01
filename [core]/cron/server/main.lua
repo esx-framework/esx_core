@@ -1,51 +1,75 @@
-local Jobs = {}
-local LastTime = nil
+---@class CronJob
+---@field h number
+---@field m number
+---@field cb function|table
 
+---@type CronJob[]
+local cronJobs = {}
+---@type number|false
+local lastTimestamp = false
+
+---@param h number
+---@param m number
+---@param cb function|table
 function RunAt(h, m, cb)
-    Jobs[#Jobs + 1] = {
+    cronJobs[#cronJobs + 1] = {
         h = h,
         m = m,
         cb = cb,
     }
 end
 
+---@return number
 function GetUnixTimestamp()
     return os.time()
 end
 
-function OnTime(time)
-    for i = 1, #Jobs, 1 do
+---@param timestamp number
+function OnTime(timestamp)
+    for i = 1, #cronJobs, 1 do
         local scheduledTimestamp = os.time({
-            hour = Jobs[i].h,
-            min = Jobs[i].m,
+            hour = cronJobs[i].h,
+            min = cronJobs[i].m,
             sec = 0, -- Assuming tasks run at the start of the minute
-            day = os.date("%d", time),
-            month = os.date("%m", time),
-            year = os.date("%Y", time),
+            day = os.date("%d", timestamp),
+            month = os.date("%m", timestamp),
+            year = os.date("%Y", timestamp),
         })
 
-        if time >= scheduledTimestamp and (not LastTime or LastTime < scheduledTimestamp) then
+        if timestamp >= scheduledTimestamp and (not lastTimestamp or lastTimestamp < scheduledTimestamp) then
             local d = os.date('*t', scheduledTimestamp).wday
-            Jobs[i].cb(d, Jobs[i].h, Jobs[i].m)
+            cronJobs[i].cb(d, cronJobs[i].h, cronJobs[i].m)
         end
     end
 end
 
+---@return nil
 function Tick()
-    local time = GetUnixTimestamp()
+    local timestamp = GetUnixTimestamp()
 
-    if not LastTime or os.date("%M", time) ~= os.date("%M", LastTime) then
-        OnTime(time)
-        LastTime = time
+    if not lastTimestamp or os.date("%M", timestamp) ~= os.date("%M", lastTimestamp) then
+        OnTime(timestamp)
+        lastTimestamp = timestamp
     end
 
     SetTimeout(60000, Tick)
 end
 
-LastTime = GetUnixTimestamp()
-
+lastTimestamp = GetUnixTimestamp()
 Tick()
 
+---@param h number
+---@param m number
+---@param cb function|table
 AddEventHandler("cron:runAt", function(h, m, cb)
+    local invokingResource = GetInvokingResource() or "Unknown"
+    local typeH = type(h)
+    local typeM = type(m)
+    local typeCb = type(cb)
+
+    assert(typeH == "number", ("Expected number for h, got %s. Invoking Resource: '%s'"):format(typeH, invokingResource))
+    assert(typeM == "number", ("Expected number for m, got %s. Invoking Resource: '%s'"):format(typeM, invokingResource))
+    assert(typeCb == "function" or (typeCb == "table" and type(getmetatable(cb)?.__call) == "function"), ("Expected function for cb, got %s. Invoking Resource: '%s'"):format(typeCb, invokingResource))
+
     RunAt(h, m, cb)
 end)

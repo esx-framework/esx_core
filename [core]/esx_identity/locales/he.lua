@@ -1,4 +1,4 @@
-Locales["he"] = {
+return {
     ["show_active_character"] = "הצג דמות פעילה",
     ["active_character"] = "דמות פעילה: %s",
     ["error_active_character"] = "אירעה שגיאה בקבלת הנתונים שלך.",

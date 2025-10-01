@@ -1,4 +1,4 @@
-Locales["sr"] = {
+return {
     ["show_active_character"] = "Prikazi karaktere",
     ["active_character"] = "Karakteri: %s",
     ["error_active_character"] = "Imamo problem sa ucitavanjem karaktera.",

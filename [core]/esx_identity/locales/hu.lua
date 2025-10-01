@@ -1,4 +1,4 @@
-Locales["hu"] = {
+return {
     ["show_active_character"] = "Aktív karakterek mutatása",
     ["active_character"] = "Aktív karakter: %s",
     ["error_active_character"] = "A név nem megfelelő",

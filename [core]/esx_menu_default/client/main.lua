@@ -4,11 +4,13 @@ GUI.Time = 0
 local function openMenu(namespace, name, data)
     CurrentNameSpace = namespace
     OpenedMenus = OpenedMenus + 1
+
+    data.namespace = namespace
+    data.name = name
+
     SendNUIMessage({
         action = "openMenu",
-        namespace = namespace,
-        name = name,
-        data = data,
+        data = data
     })
 end
 
@@ -18,10 +20,13 @@ local function closeMenu(namespace, name)
     if OpenedMenus < 0 then
         OpenedMenus = 0
     end
+
     SendNUIMessage({
         action = "closeMenu",
-        namespace = namespace,
-        name = name,
+        data = {
+            namespace = namespace,
+            name = name,
+        }
     })
 end
 
@@ -45,6 +50,7 @@ RegisterNUICallback("menu_submit", function(data, cb)
     if menu.submit ~= nil then
         menu.submit(data, menu)
     end
+
     cb("OK")
 end)
 
@@ -58,6 +64,7 @@ RegisterNUICallback("menu_cancel", function(data, cb)
     if menu.cancel ~= nil then
         menu.cancel(data, menu)
     end
+
     cb("OK")
 end)
 
@@ -84,7 +91,7 @@ RegisterNUICallback("menu_change", function(data, cb)
     cb("OK")
 end)
 
-ESX.RegisterInput("menu_default_enter", "Submit menu item", "keyboard", "RETURN", function()
+ESX.RegisterInput("menu_default_enter", "Submit menu item", "KEYBOARD", "RETURN", function()
     if OpenedMenus > 0 and (GetGameTimer() - GUI.Time) > 200 then
         SendNUIMessage({
             action = "controlPressed",
@@ -94,7 +101,7 @@ ESX.RegisterInput("menu_default_enter", "Submit menu item", "keyboard", "RETURN"
     end
 end)
 
-ESX.RegisterInput("menu_default_backspace", "Close menu", "keyboard", "BACK", function()
+ESX.RegisterInput("menu_default_backspace", "Close menu", "KEYBOARD", "BACK", function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -104,7 +111,7 @@ ESX.RegisterInput("menu_default_backspace", "Close menu", "keyboard", "BACK", fu
     end
 end)
 
-ESX.RegisterInput("menu_default_top", "Change menu focus to top item", "keyboard", "UP", function()
+ESX.RegisterInput("menu_default_top", "Change menu focus to top item", "KEYBOARD", "UP", function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -114,7 +121,7 @@ ESX.RegisterInput("menu_default_top", "Change menu focus to top item", "keyboard
     end
 end)
 
-ESX.RegisterInput("menu_default_down", "Change menu focus to down item", "keyboard", "DOWN", function()
+ESX.RegisterInput("menu_default_down", "Change menu focus to down item", "KEYBOARD", "DOWN", function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -124,7 +131,7 @@ ESX.RegisterInput("menu_default_down", "Change menu focus to down item", "keyboa
     end
 end)
 
-ESX.RegisterInput("menu_default_left", "Change menu slider to left", "keyboard", "LEFT", function()
+ESX.RegisterInput("menu_default_left", "Change menu slider to left", "KEYBOARD", "LEFT", function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",
@@ -134,7 +141,7 @@ ESX.RegisterInput("menu_default_left", "Change menu slider to left", "keyboard",
     end
 end)
 
-ESX.RegisterInput("menu_default_right", "Change menu slider to right", "keyboard", "RIGHT", function()
+ESX.RegisterInput("menu_default_right", "Change menu slider to right", "KEYBOARD", "RIGHT", function()
     if OpenedMenus > 0 then
         SendNUIMessage({
             action = "controlPressed",

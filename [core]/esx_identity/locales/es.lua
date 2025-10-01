@@ -1,4 +1,4 @@
-Locales["es"] = {
+return {
     ["show_active_character"] = "Mostrar personaje actual",
     ["active_character"] = "Personaje actual: %s",
     ["error_active_character"] = "Se produjo un error al recuperar tu nombre. Por favor contacta con un administrador",

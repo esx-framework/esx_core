@@ -1,4 +1,4 @@
-Locales["fi"] = {
+return {
     ["show_active_character"] = "Näytä nykyinen hahmosi",
     ["active_character"] = "Nykyinen hahmosi: %s",
     ["error_active_character"] = "Hahmosi hakemisessa ilmeni ongelma. Ota yhteyttä ylläpitoon.",

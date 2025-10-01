@@ -1,4 +1,4 @@
-Locales["en"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventory ( Weight %s / %s )",
     ["use"] = "Use",
@@ -65,6 +65,8 @@ Locales["en"] = {
     ["command_repair_success_target"] = "An admin repaired your vehicle",
     ["command_clear"] = "Clear chat Text",
     ["command_clearall"] = "Clear chat Text for all players",
+    ["command_refreshitems"] = "Reload all items from the database.",
+    ["command_refreshitems_success"] = "Successfully reloaded %d items.",
     ["command_clearinventory"] = "Remove All items from the Players Inventory",
     ["command_clearloadout"] = "Remove All weapons from the Players Loadout",
     ["command_freeze"] = "Freeze a player",
@@ -108,15 +110,18 @@ Locales["en"] = {
     ["commanderror_argumentmismatch"] = "Invalid Argument Count (passed %s, wanted %s)",
     ["commanderror_argumentmismatch_number"] = "Invalid Argument #%s data type (passed string, wanted number)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Invalid Argument #%s data type (passed negative/zero, wanted positive number)",
     ["commanderror_invaliditem"] = "Invalid item",
     ["commanderror_invalidweapon"] = "Invalid weapon",
     ["commanderror_console"] = "Command Cannot be executed from console",
     ["commanderror_invalidcommand"] = "Invalid Command - /%s",
     ["commanderror_invalidplayerid"] = "Specified Player is not online",
     ["commandgeneric_playerid"] = "Player`s Server Id",
+    ["commandgeneric_dimension"] = "Target Dimension",
     ["command_giveammo_noweapon_found"] = "%s does not have that weapon",
     ["command_giveammo_weapon"] = "Weapon name",
     ["command_giveammo_ammo"] = "Ammo Quantity",
+    ["command_setdim"] = "Set a players dimension",
     ["tpm_nowaypoint"] = "No Waypoint Set.",
     ["tpm_success"] = "Successfully Teleported",
 
@@ -195,6 +200,7 @@ Locales["en"] = {
     ["weapon_smg"] = "SMG",
     ["weapon_smg_mk2"] = "SMG MK2",
     ["weapon_raycarbine"] = "Unholy Hellbringer",
+    ["weapon_tecpistol"] = "Tactical SMG",
 
     -- Rifles
     ["weapon_advancedrifle"] = "Advanced Rifle",
@@ -209,6 +215,7 @@ Locales["en"] = {
     ["weapon_specialcarbine"] = "Special Carbine",
     ["weapon_specialcarbine_mk2"] = "Special Carbine MK2",
     ["weapon_heavyrifle"] = "Heavy Rifle",
+    ["weapon_battlerifle"] = "Battle Rifle",
 
     -- Sniper
     ["weapon_heavysniper"] = "Heavy Sniper",
@@ -237,6 +244,13 @@ Locales["en"] = {
     ["weapon_acidpackage"] = "Acid Package",
     ["weapon_pistolxm3"] = "Pistol8 x3m",
     ["weapon_railgunxm3"] = "Railgun",
+
+    -- Chop Shop DLC
+    ["weapon_snowlauncher"] = "Snow Launcher",
+    ["weapon_hackingdevice"] = "Hacking Device",
+
+    -- Bottom Dollar Bounties DLC
+    ["weapon_stunrod"] = "The Shocker",
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
@@ -378,4 +392,37 @@ Locales["en"] = {
     ["tint_lspd"] = "blue skin",
     ["tint_orange"] = "orange skin",
     ["tint_platinum"] = "platinum skin",
+    -- MK2 Weapon Tints
+    ["tint_classic_black"] = "classic black",
+    ["tint_classic_gray"] = "classic gray",
+    ["tint_classic_two_tone"] = "classic two-tone",
+    ["tint_classic_white"] = "classic white",
+    ["tint_classic_beige"] = "classic beige",
+    ["tint_classic_green"] = "classic green",
+    ["tint_classic_blue"] = "classic blue",
+    ["tint_classic_earth"] = "classic earth",
+    ["tint_classic_brown_black"] = "classic brown-black",
+    ["tint_contrast_red"] = "contrast red",
+    ["tint_contrast_blue"] = "contrast blue",
+    ["tint_contrast_yellow"] = "contrast yellow",
+    ["tint_contrast_orange"] = "contrast orange",
+    ["tint_bold_pink"] = "bold pink",
+    ["tint_bold_purple_yellow"] = "bold purple-yellow",
+    ["tint_bold_orange"] = "bold orange",
+    ["tint_bold_green_purple"] = "bold green-purple",
+    ["tint_bold_red_feat"] = "bold red feat",
+    ["tint_bold_green_feat"] = "bold green feat",
+    ["tint_bold_cyan_feat"] = "bold cyan feat",
+    ["tint_bold_yellow_feat"] = "bold yellow feat",
+    ["tint_bold_red_white"] = "bold red-white",
+    ["tint_bold_blue_white"] = "bold blue-white",
+    ["tint_metallic_gold"] = "metallic gold",
+    ["tint_metallic_platinum"] = "metallic platinum",
+    ["tint_metallic_gray_lilac"] = "metallic gray-lilac",
+    ["tint_metallic_purple_lime"] = "metallic purple-lime",
+    ["tint_metallic_red"] = "metallic red",
+    ["tint_metallic_green"] = "metallic green",
+    ["tint_metallic_blue"] = "metallic blue",
+    ["tint_metallic_white_aqua"] = "metallic white-aqua",
+    ["tint_metallic_red_yellow"] = "metallic red-yellow",
 }

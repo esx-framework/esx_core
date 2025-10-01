@@ -3,21 +3,33 @@ Locales = {}
 function Translate(str, ...) -- Translate string
     if not str then
         error(("Resource ^5%s^1 You did not specify a parameter for the Translate function or the value is nil!"):format(GetInvokingResource() or GetCurrentResourceName()))
-        return "Given translate function parameter is nil!"
     end
-    if Locales[Config.Locale] then
-        if Locales[Config.Locale][str] then
-            return string.format(Locales[Config.Locale][str], ...)
-        elseif Config.Locale ~= "en" and Locales["en"] and Locales["en"][str] then
-            return string.format(Locales["en"][str], ...)
-        else
-            return "Translation [" .. Config.Locale .. "][" .. str .. "] does not exist"
+
+    --- Load the locale file if it hasn't been loaded yet
+    if Locales[Config.Locale] == nil then
+        local success, result = pcall(function()
+            return assert(load(LoadResourceFile(GetCurrentResourceName(), ("locales/%s.lua"):format(Config.Locale))))()
+        end)
+
+        Locales[Config.Locale] = success and result or false
+    end
+
+    local translations = Locales[Config.Locale]
+    if not translations then
+        if Config.Locale == "en" then
+            return "Locale [en] does not exist"
         end
-    elseif Config.Locale ~= "en" and Locales["en"] and Locales["en"][str] then
-        return string.format(Locales["en"][str], ...)
-    else
-        return "Locale [" .. Config.Locale .. "] does not exist"
+
+        -- Fall back to English translation if the current locale is not found
+        Config.Locale = "en"
+        return Translate(str, ...)
     end
+
+    if translations[str] then
+        return translations[str]:format(...)
+    end
+
+    return ("Translation [%s][%s] does not exist"):format(Config.Locale, str)
 end
 
 function TranslateCap(str, ...) -- Translate string first char uppercase

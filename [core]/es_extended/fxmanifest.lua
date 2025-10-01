@@ -3,11 +3,10 @@ fx_version 'cerulean'
 game 'gta5'
 description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '1.11.4'
+version '1.13.4'
 
 shared_scripts {
 	'locale.lua',
-	'locales/*.lua',
 
 	'shared/config/main.lua',
     'shared/config/weapons.lua',
@@ -25,6 +24,7 @@ server_scripts {
 	'server/common.lua',
 	'server/modules/callback.lua',
 	'server/classes/player.lua',
+	'server/classes/vehicle.lua',
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
 	'server/modules/onesync.lua',
@@ -34,19 +34,21 @@ server_scripts {
 	'server/modules/commands.lua',
 
 	'server/bridge/**/*.lua',
-	'server/modules/actions.lua',
 	'server/modules/npwd.lua',
-	'server/modules/createJob.lua'
+	'server/modules/createJob.lua',
+	'server/migration/**/main.lua',
+	'server/migration/main.lua',
 }
 
 client_scripts {
-    'client/common.lua',
+    'client/main.lua',
 	'client/functions.lua',
 	'client/modules/wrapper.lua',
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
+	'client/modules/points.lua',
 
-	'client/main.lua',
+	'client/modules/events.lua',
 
 	'client/modules/actions.lua',
 	'client/modules/death.lua',
@@ -62,6 +64,7 @@ ui_page {
 
 files {
 	'imports.lua',
+	'locales/*.lua',
 	'locale.js',
 	'html/ui.html',
 
@@ -73,6 +76,7 @@ files {
 
 	'html/fonts/pdown.ttf',
 	'html/fonts/bankgothic.ttf',
+    "client/imports/*.lua",
 }
 
 dependencies {

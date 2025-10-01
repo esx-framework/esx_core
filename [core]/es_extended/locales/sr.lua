@@ -1,4 +1,4 @@
-Locales["sr"] = {
+return {
     -- Inventory
     ["inventory"] = "Inventar ( Težina %s / %s )",
     ["use"] = "Koristi",
@@ -104,6 +104,7 @@ Locales["sr"] = {
     ["commanderror_argumentmismatch"] = "Nevazeci broj argumenata (položio %s, željeno %s)",
     ["commanderror_argumentmismatch_number"] = "Nevažeći argument #%s tip podataka (položeno, željeno)",
     ["commanderror_argumentmismatch_string"] = "Invalid Argument #%s data type (passed number, wanted string)",
+    ["commanderror_argumentmismatch_positive_number"] = "Nevaljan argument #%s tip podataka (prosleđen negativan/nula, potreban pozitivan broj)",
     ["commanderror_invaliditem"] = "Nevažeći item",
     ["commanderror_invalidweapon"] = "Nevažeće oružje",
     ["commanderror_console"] = "Komanda se ne može izvršiti iz konzole",
@@ -229,10 +230,10 @@ Locales["sr"] = {
     ["weapon_tactilerifle"] = "Service Carbine",
 
     -- Drug Wars DLC
-    ["weapon_candycane"] = "Candy Cane", -- not translated
+    ["weapon_candycane"] = "Candy Cane",     -- not translated
     ["weapon_acidpackage"] = "Acid Package", -- not translated
-    ["weapon_pistolxm3"] = "WM 29 Pistol", -- not translated
-    ["weapon_railgunxm3"] = "Railgun", -- not translated
+    ["weapon_pistolxm3"] = "WM 29 Pistol",   -- not translated
+    ["weapon_railgunxm3"] = "Railgun",       -- not translated
 
     -- Thrown
     ["weapon_ball"] = "Baseball",
@@ -374,4 +375,37 @@ Locales["sr"] = {
     ["tint_lspd"] = "blue skin",
     ["tint_orange"] = "orange skin",
     ["tint_platinum"] = "platinum skin",
+    -- MK2 Weapon Tints
+    ["tint_classic_black"] = "klasična crna",
+    ["tint_classic_gray"] = "klasična siva",
+    ["tint_classic_two_tone"] = "klasična dvo-tonska",
+    ["tint_classic_white"] = "klasična bela",
+    ["tint_classic_beige"] = "klasična bež",
+    ["tint_classic_green"] = "klasična zelena",
+    ["tint_classic_blue"] = "klasična plava",
+    ["tint_classic_earth"] = "klasična zemlja",
+    ["tint_classic_brown_black"] = "klasična braon-crna",
+    ["tint_contrast_red"] = "kontrastna crvena",
+    ["tint_contrast_blue"] = "kontrastna plava",
+    ["tint_contrast_yellow"] = "kontrastna žuta",
+    ["tint_contrast_orange"] = "kontrastna narandžasta",
+    ["tint_bold_pink"] = "drska roze",
+    ["tint_bold_purple_yellow"] = "drska ljubičasto-žuta",
+    ["tint_bold_orange"] = "drska narandžasta",
+    ["tint_bold_green_purple"] = "drska zelena-ljubičasta",
+    ["tint_bold_red_feat"] = "drska crvena feat",
+    ["tint_bold_green_feat"] = "drska zelena feat",
+    ["tint_bold_cyan_feat"] = "drska cijan feat",
+    ["tint_bold_yellow_feat"] = "drska žuta feat",
+    ["tint_bold_red_white"] = "drska crvena bela",
+    ["tint_bold_blue_white"] = "drska plava bela",
+    ["tint_metallic_gold"] = "metalik zlatna",
+    ["tint_metallic_platinum"] = "metalik platina",
+    ["tint_metallic_gray_lilac"] = "metalik siva lila",
+    ["tint_metallic_purple_lime"] = "metalik ljubičasta limeta",
+    ["tint_metallic_red"] = "metalik crvena",
+    ["tint_metallic_green"] = "metalik zelena",
+    ["tint_metallic_blue"] = "metalik plava",
+    ["tint_metallic_white_aqua"] = "metalik bela aqua",
+    ["tint_metallic_red_yellow"] = "metalik crvena-žuta",
 }

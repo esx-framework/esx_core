@@ -223,3 +223,19 @@ function ESX.Table.Sort(t, order)
         end
     end
 end
+
+---@param t table
+---@return any[]
+function ESX.Table.ToArray(t)
+    local array = {}
+    for _, v in pairs(t) do
+        array[#array + 1] = v
+    end
+    return array
+end
+
+---@param t table
+---@return table
+function ESX.Table.Wipe(t)
+    return table.wipe(t)
+end

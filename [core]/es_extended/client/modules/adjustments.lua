@@ -4,6 +4,7 @@ function Adjustments:RemoveHudComponents()
     for i = 1, #Config.RemoveHudComponents do
         if Config.RemoveHudComponents[i] then
             SetHudComponentSize(i, 0.0, 0.0)
+            SetHudComponentPosition(i, 900.0, 900.0)
         end
     end
 end
@@ -89,7 +90,6 @@ function Adjustments:NPCScenarios()
             "WORLD_VEHICLE_BOAT_IDLE",
             "WORLD_VEHICLE_BOAT_IDLE_ALAMO",
             "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
-            "WORLD_VEHICLE_BOAT_IDLE_MARQUIS",
             "WORLD_VEHICLE_BROKEN_DOWN",
             "WORLD_VEHICLE_BUSINESSMEN",
             "WORLD_VEHICLE_HELI_LIFEGUARD",
@@ -170,22 +170,18 @@ local placeHolders = {
     end,
 }
 
-function Adjustments:PresencePlaceholders()
-    local presence = Config.DiscordActivity.presence
-
+function Adjustments:ReplacePlaceholders(text)
     for placeholder, cb in pairs(placeHolders) do
         local success, result = pcall(cb)
 
         if not success then
-            error(("Failed to execute presence placeholder: ^5%s^7"):format(placeholder))
-            error(result)
-            return "Unknown"
+            error(("Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
+            result = "Unknown"
         end
 
-        presence = presence:gsub(("{%s}"):format(placeholder), result)
+        text = text:gsub(("{%s}"):format(placeholder), tostring(result))
     end
-
-    return presence
+    return text
 end
 
 function Adjustments:DiscordPresence()
@@ -193,15 +189,16 @@ function Adjustments:DiscordPresence()
         CreateThread(function()
             while true do
                 SetDiscordAppId(Config.DiscordActivity.appId)
+                SetRichPresence(self:ReplacePlaceholders(Config.DiscordActivity.presence))
                 SetDiscordRichPresenceAsset(Config.DiscordActivity.assetName)
-                SetDiscordRichPresenceAssetText(Config.DiscordActivity.assetText)
+                SetDiscordRichPresenceAssetText(self:ReplacePlaceholders(Config.DiscordActivity.assetText))
 
                 for i = 1, #Config.DiscordActivity.buttons do
                     local button = Config.DiscordActivity.buttons[i]
-                    SetDiscordRichPresenceAction(i - 1, button.label, button.url)
+                    local buttonUrl = self:ReplacePlaceholders(button.url)
+                    SetDiscordRichPresenceAction(i - 1, button.label, buttonUrl)
                 end
 
-                SetRichPresence(self:PresencePlaceholders())
                 Wait(Config.DiscordActivity.refresh)
             end
         end)
@@ -213,6 +210,29 @@ function Adjustments:WantedLevel()
         ClearPlayerWantedLevel(ESX.playerId)
         SetMaxWantedLevel(0)
     end
+end
+
+function Adjustments:DisableRadio()
+    if Config.RemoveHudComponents[16] then
+        AddEventHandler("esx:enteredVehicle", function(vehicle, plate, seat, displayName, netId)
+            SetVehRadioStation(vehicle,"OFF")
+            SetUserRadioControlEnabled(false)
+        end)
+    end
+end
+
+function Adjustments:Multipliers()
+    CreateThread(function()
+        while true do
+            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
+            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
+            SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
+            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
+            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
+            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
+            Wait(0)
+        end
+    end)
 end
 
 function Adjustments:Load()
@@ -228,4 +248,6 @@ function Adjustments:Load()
     self:LicensePlates()
     self:DiscordPresence()
     self:WantedLevel()
+    self:DisableRadio()
+    self:Multipliers()
 end

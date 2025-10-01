@@ -34,6 +34,16 @@ Config.RemoveHudComponents = {
     [22] = false, --HUD_WEAPONS
 }
 
+Config.Multipliers = {
+    pedDensity = 1.0,
+    scenarioPedDensityInterior = 0.0,
+    scenarioPedDensityExterior = 1.0,
+    ambientVehicleRange = 1.0,
+    parkedVehicleDensity = 1.0,
+    randomVehicleDensity = 1.0,
+    vehicleDensity = 1.0
+}
+
 -- Pattern string format
 --1 will lead to a random number from 0-9.
 --A will lead to a random letter from A-Z.
