@@ -234,6 +234,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         id = jobObject.id,
         name = jobObject.name,
         label = jobObject.label,
+        type = jobObject.type,
 
         grade = tonumber(grade),
         grade_name = gradeObject.name,
