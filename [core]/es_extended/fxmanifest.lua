@@ -7,14 +7,13 @@ version '1.13.4'
 
 shared_scripts {
 	'locale.lua',
-
-	'shared/config/main.lua',
-    'shared/config/weapons.lua',
+    'shared/config/main.lua',
     'shared/config/adjustments.lua',
-
+    'shared/config/logs.lua',
+    'shared/config/weapons.lua',
     'shared/main.lua',
+	'shared/modules/*',
     'shared/functions.lua',
-    'shared/modules/*.lua',
 }
 
 server_scripts {
@@ -23,21 +22,19 @@ server_scripts {
 
 	'server/common.lua',
 	'server/modules/callback.lua',
-	'server/classes/player.lua',
-	'server/classes/vehicle.lua',
-	'server/classes/overrides/*.lua',
+	'server/classes/*.*',
+	'server/classes/xPlayer/main.lua',
 	'server/functions.lua',
 	'server/modules/onesync.lua',
 	'server/modules/paycheck.lua',
+	'server/modules/getXPlayer.lua',
 
 	'server/main.lua',
 	'server/modules/commands.lua',
 
 	'server/bridge/**/*.lua',
 	'server/modules/npwd.lua',
-	'server/modules/createJob.lua',
-	'server/migration/**/main.lua',
-	'server/migration/main.lua',
+	'server/modules/createJob.lua'
 }
 
 client_scripts {
@@ -67,16 +64,8 @@ files {
 	'locales/*.lua',
 	'locale.js',
 	'html/ui.html',
-
-	'html/css/app.css',
-
-	'html/js/mustache.min.js',
-	'html/js/wrapper.js',
-	'html/js/app.js',
-
-	'html/fonts/pdown.ttf',
-	'html/fonts/bankgothic.ttf',
-    "client/imports/*.lua",
+	'html/**/*',
+    'client/imports/*.lua',
 }
 
 dependencies {
