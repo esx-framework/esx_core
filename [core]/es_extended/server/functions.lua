@@ -562,7 +562,7 @@ function ESX.RefreshJobs()
 
     if not Jobs then
         -- Fallback data, if no jobs exist
-        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", type = "civ", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
+        ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = '[]', skin_female = '[]' } } }
     else
         ESX.Jobs = Jobs
     end
@@ -704,7 +704,7 @@ if not Config.CustomInventory then
 
             for itemName, _ in pairs(minimalInv) do
                 if not ESX.Items[itemName] then
-                    xPlayer.setInventoryItem(itemName, 0)
+                    xPlayer.setInventoryItem(itemName --[[@as string]], 0)
                     minimalInv[itemName] = nil
                 end
             end
@@ -714,7 +714,7 @@ if not Config.CustomInventory then
             for itemName, itemData in pairs(ESX.Items) do
                 xPlayer.inventory[playerInvIndex] = {
                     name = itemName,
-                    count = minimalInv[itemName] or 0,
+                    count = minimalInv[itemName].count or 0,
                     label = itemData.label,
                     weight = itemData.weight,
                     usable = Core.UsableItemsCallbacks[itemName] ~= nil,

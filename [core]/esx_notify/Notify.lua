@@ -64,26 +64,26 @@ RegisterNetEvent("ESX:Notify", Notify)
 
 if Debug then
     RegisterCommand("oldnotify", function()
-        ESX.ShowNotification('No Waypoint Set.', true, false, 140)
-    end)
+        ESX.ShowNotification('No Waypoint Set.', true, false, 140) ---@diagnostic disable-line: param-type-mismatch
+    end, false)
 
     RegisterCommand("notify", function()
         ESX.ShowNotification("You Received <br>1x ball!", "success", 3000)
-    end)
+    end, false)
 
     RegisterCommand("notify1", function()
         ESX.ShowNotification("Well ~g~Done~s~!", "success", 3000, "Achievement")
-    end)
+    end, false)
 
     RegisterCommand("notify2", function()
         ESX.ShowNotification("Information Received", "info", 3000, "System Info")
-    end)
+    end, false)
 
     RegisterCommand("notify3", function()
         ESX.ShowNotification("You Did something ~r~WRONG~s~!", "error", 3000, "Error")
-    end)
+    end, false)
 
     RegisterCommand("notify4", function()
         ESX.ShowNotification("You Did something ~r~WRONG~s~!", "warning", 3000, "~y~Warning~s~")
-    end)   
+    end, false)
 end
