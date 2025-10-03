@@ -225,7 +225,7 @@ function ESX.Table.Sort(t, order)
 end
 
 ---@param t table
----@return any[]
+---@return Array
 function ESX.Table.ToArray(t)
     local array = {}
     for _, v in pairs(t) do

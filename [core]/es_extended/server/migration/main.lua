@@ -8,7 +8,7 @@ RegisterCommand("resetmigrations", function(src)
 		DeleteResourceKvp(("esx_migration:%s"):format(version))
 	end
 	print("^2[SUCCESS]^7 Reset all migrations. This will re-run all migrations on the next server start.")
-end, false)
+end)
 
 local migrationsRan = 0
 local restartRequired = false
