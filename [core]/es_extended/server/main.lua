@@ -40,7 +40,7 @@ local function createESXPlayer(identifier, playerId, data)
     end
 
     MySQL.prepare(newPlayer, parameters, function()
-        LoadESXPlayer(identifier, playerId, true)
+        loadESXPlayer(identifier, playerId, true)
     end)
 end
 
@@ -61,7 +61,7 @@ local function onPlayerJoined(playerId)
     else
         local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
         if result then
-            LoadESXPlayer(identifier, playerId, false)
+            loadESXPlayer(identifier, playerId, false)
         else
             createESXPlayer(identifier, playerId)
         end
@@ -119,7 +119,7 @@ if Config.Multichar then
             if data then
                 createESXPlayer(identifier, src, data)
             else
-                LoadESXPlayer(identifier, src, false)
+                loadESXPlayer(identifier, src, false)
             end
         end
     end)
@@ -183,57 +183,76 @@ if not Config.Multichar then
     end)
 end
 
-function LoadESXPlayer(identifier, playerId, isNew)
-    local result <const> = MySQL.prepare.await(loadPlayer, { identifier })
-    result.accounts = type(result.accounts) == 'string' and json.decode(result.accounts) or {}
-
-    local job <const> = ESX.Jobs[result.job] or ESX.Jobs['unemployed']
-    local grade <const> = job.grades[tostring(result.job_grade)] or job.grades['0']
-    local userData <const> = {
-        steamName = GetPlayerName(playerId),
-        name = ('%s %s'):format(result.firstname, result.lastname),
-        identifier = identifier,
+function loadESXPlayer(identifier, playerId, isNew)
+    local userData = {
         accounts = {},
         inventory = {},
         loadout = {},
-        ssn = result.ssn,
         weight = 0,
-        job = {
-            id = job.id,
-            name = job.name,
-            label = job.label,
-            grade = tonumber(grade),
-            grade_name = grade.name,
-            grade_label = grade.label,
-            grade_salary = grade.salary,
-            skin_male = json.decode(grade.skin_male or '[]'),
-            skin_female = json.decode(grade.skin_female or '[]'),
-        },
-        group = result.group == 'superadmin' and 'admin' or result.group and result.group or 'user',
-        coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)],
-        skin = (result.skin and result.skin ~= '') and json.decode(result.skin) or { sex = 0 },
-        metadata = (result.metadata and result.metadata ~= '') and json.decode(result.metadata) or {}
+        name = GetPlayerName(playerId),
+        identifier = identifier,
+        firstName = "John",
+        lastName = "Doe",
+        dateofbirth = "01/01/2000",
+        height = 120,
+        dead = false,
     }
 
-    for k,v in pairs(Config.Accounts) do
-        v.round = v.round or v.round == nil
-        local index <const> = #userData.accounts + 1
+    local result = MySQL.prepare.await(loadPlayer, { identifier })
+
+    -- Accounts
+    local accounts = result.accounts
+    accounts = (accounts and accounts ~= "") and json.decode(accounts) or {}
+
+    for account, data in pairs(Config.Accounts) do
+        data.round = data.round or data.round == nil
+
+        local index = #userData.accounts + 1
         userData.accounts[index] = {
-            name = k,
-            money = result.accounts[k] or Config.StartingAccountMoney[k] or 0,
-            label = v.label,
-            round = v.round,
+            name = account,
+            money = accounts[account] or Config.StartingAccountMoney[account] or 0,
+            label = data.label,
+            round = data.round,
             index = index,
         }
     end
 
-    if not Config.CustomInventory then
-        -- Inventory
+    -- SSN
+    userData.ssn = result.ssn
 
-        local inventory <const> = (result.inventory and result.inventory ~= '') and json.decode(result.inventory) or {}
+    -- Job
+    local job, grade = result.job, tostring(result.job_grade)
+
+    if not ESX.DoesJobExist(job, grade) then
+        print(("[^3WARNING^7] Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]"):format(identifier, job, grade))
+        job, grade = "unemployed", "0"
+    end
+
+    local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+
+    userData.job = {
+        id = jobObject.id,
+        name = jobObject.name,
+        label = jobObject.label,
+        type = jobObject.type,
+
+        grade = tonumber(grade),
+        grade_name = gradeObject.name,
+        grade_label = gradeObject.label,
+        grade_salary = gradeObject.salary,
+
+        skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {},
+        skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
+    }
+
+    -- Inventory
+    if not Config.CustomInventory then
+        local inventory = (result.inventory and result.inventory ~= "") and json.decode(result.inventory) or {}
+
         for name, item in pairs(ESX.Items) do
-            local count <const> = inventory[name] or 0
+            local count = inventory[name] or 0
             userData.weight += (count * item.weight)
+
             userData.inventory[#userData.inventory + 1] = {
                 name = name,
                 count = count,
@@ -244,16 +263,33 @@ function LoadESXPlayer(identifier, playerId, isNew)
                 canRemove = item.canRemove,
             }
         end
-
         table.sort(userData.inventory, function(a, b)
             return a.label < b.label
         end)
+    elseif result.inventory and result.inventory ~= "" then
+        userData.inventory = json.decode(result.inventory)
+    end
 
-        -- Loadout
+    -- Group
+    if result.group then
+        if result.group == "superadmin" then
+            userData.group = "admin"
+            print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7")
+        else
+            userData.group = result.group
+        end
+    else
+        userData.group = "user"
+    end
 
-        if result.loadout and result.loadout ~= '' then
-            for name, weapon in pairs(json.decode(result.loadout)) do
-                local label <const> = ESX.GetWeaponLabel(name)
+    -- Loadout
+    if not Config.CustomInventory then
+        if result.loadout and result.loadout ~= "" then
+
+            local loadout = json.decode(result.loadout)
+            for name, weapon in pairs(loadout) do
+                local label = ESX.GetWeaponLabel(name)
+
                 if label then
                     userData.loadout[#userData.loadout + 1] = {
                         name = name,
@@ -265,14 +301,21 @@ function LoadESXPlayer(identifier, playerId, isNew)
                 end
             end
         end
-    elseif result.inventory and result.inventory ~= '' then
-        userData.inventory = json.decode(result.inventory)
     end
 
-    -- xPlayer Creation
-    local xPlayer <const> = GetXPlayer(playerId, userData)
+    -- Position
+    userData.coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)]
 
-    GlobalState.playerCount += 1
+    -- Skin
+    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = userData.sex == "f" and 1 or 0 }
+
+    -- Metadata
+    userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}
+
+    -- xPlayer Creation
+    local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.ssn, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
+
+    GlobalState["playerCount"] = GlobalState["playerCount"] + 1
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
@@ -302,12 +345,10 @@ function LoadESXPlayer(identifier, playerId, isNew)
         end
     end
 
+    TriggerEvent("esx:playerLoaded", playerId, xPlayer, isNew)
     userData.money = xPlayer.getMoney()
     userData.maxWeight = xPlayer.getMaxWeight()
     userData.variables = xPlayer.variables or {}
-
-    TriggerEvent("esx:playerLoaded", playerId, xPlayer, isNew)
-    xPlayer.triggerEvent("esx:registerSuggestions", Core.RegisteredCommands)
     xPlayer.triggerEvent("esx:playerLoaded", userData, isNew, userData.skin)
 
     if not Config.CustomInventory then
@@ -316,10 +357,7 @@ function LoadESXPlayer(identifier, playerId, isNew)
         setPlayerInventory(playerId, xPlayer, userData.inventory, isNew)
     end
 
-    if not ESX.DoesJobExist(result.job.name, tostring(result.job_grade) == 'NULL' and '0' or result.job_grade) then
-        warn(('^7Ignoring invalid job for ^5%s^7 [job: ^5%s^7, grade: ^5%s^7]'):format(identifier, result.job, result.grade))
-    end
-
+    xPlayer.triggerEvent("esx:registerSuggestions", Core.RegisteredCommands)
     print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
 
