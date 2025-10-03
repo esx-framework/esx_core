@@ -19,8 +19,8 @@ local function doesJobAndGradesExist(name, grades)
    return true
 end
 
-local function generateNewJobTable(name, label, grades, jobType)
-    local job = { name = name, label = label, type = jobType, grades = {} }
+local function generateNewJobTable(name, label, grades)
+    local job = { name = name, label = label, grades = {} }
     for _, v in pairs(grades) do
         job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or '{}', skin_female = v.skin_female or '{}' }
     end
@@ -42,8 +42,7 @@ end
 --- @param name string
 --- @param label string
 --- @param grades table
---- @param jobType string
-function ESX.CreateJob(name, label, grades, jobType)
+function ESX.CreateJob(name, label, grades)
     local currentResourceName = GetInvokingResource()
     local success = false
 
@@ -62,10 +61,6 @@ function ESX.CreateJob(name, label, grades, jobType)
         return success
     end
 
-    if type(jobType) ~= "string" then
-        jobType = "civ"
-    end
-
     local currentJobExist = doesJobAndGradesExist(name, grades)
 
     if currentJobExist then
@@ -74,7 +69,7 @@ function ESX.CreateJob(name, label, grades, jobType)
     end
 
     local queries = {
-        { query = 'INSERT INTO `jobs` (`name`, `label`, `type`) VALUES (?, ?, ?)', values = { name, label, jobType } }
+        { query = 'INSERT INTO jobs (name, label) VALUES (?, ?)', values = { name, label } }
     }
 
     for _, grade in pairs(grades) do
@@ -91,7 +86,7 @@ function ESX.CreateJob(name, label, grades, jobType)
         return success
     end
 
-    ESX.Jobs[name] = generateNewJobTable(name, label, grades, jobType)
+    ESX.Jobs[name] = generateNewJobTable(name, label, grades)
 
     notify("SUCCESS", currentResourceName, 'Job created successfully: `%s`', name)
 

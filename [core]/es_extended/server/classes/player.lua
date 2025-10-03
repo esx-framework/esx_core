@@ -585,7 +585,6 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             id = jobObject.id,
             name = jobObject.name,
             label = jobObject.label,
-            type = jobObject.type,
             onDuty = onDuty,
 
             grade = tonumber(grade) or 0,
