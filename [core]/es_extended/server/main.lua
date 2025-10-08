@@ -44,6 +44,12 @@ local function createESXPlayer(identifier, playerId, data)
     end)
 end
 
+    local function ensureJobCounter(jobName)
+      if type(jobName) == 'string' and jobName ~= '' then
+        Core.JobsPlayerCount[jobName] = Core.JobsPlayerCount[jobName] or 0
+    end
+end
+
 
 local function onPlayerJoined(playerId)
     local identifier = ESX.GetIdentifier(playerId)
@@ -89,12 +95,13 @@ local function onPlayerDropped(playerId, reason, cb)
     TriggerEvent("esx:playerDropped", playerId, reason)
     local job = xPlayer.getJob().name
     local currentJob = Core.JobsPlayerCount[job]
+    ensureJobCounter(job)
     Core.JobsPlayerCount[job] = ((currentJob and currentJob > 0) and currentJob or 1) - 1
 
     GlobalState[("%s:count"):format(job)] = Core.JobsPlayerCount[job]
 
     Core.SavePlayer(xPlayer, function()
-        GlobalState["playerCount"] = GlobalState["playerCount"] - 1
+        GlobalState["playerCount"] = math.max((GlobalState["playerCount"] or 1) - 1, 0)
         ESX.Players[playerId] = nil
         Core.playersByIdentifier[xPlayer.identifier] = nil
 
@@ -176,8 +183,8 @@ if not Config.Multichar then
                 ("[ESX] There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s"):format(identifier)
             )
         end
-
-        deferrals.update(("[ESX] Cleaning stale player entry..."):format(identifier))
+   
+        deferrals.update(("[ESX] Cleaning stale player entry for %s..."):format(identifier))
         onPlayerDropped(xPlayer.source, "esx_stale_player_obj")
         deferrals.done()
     end)
@@ -315,7 +322,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     -- xPlayer Creation
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.ssn, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
 
-    GlobalState["playerCount"] = GlobalState["playerCount"] + 1
+    GlobalState["playerCount"] = (GlobalState["playerCount"] or 0) + 1
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
@@ -379,7 +386,8 @@ AddEventHandler("esx:playerLoaded", function(_, xPlayer, isNew)
     local job = xPlayer.getJob().name
     local jobKey = ("%s:count"):format(job)
 
-    Core.JobsPlayerCount[job] = (Core.JobsPlayerCount[job] or 0) + 1
+    ensureJobCounter(job)
+    Core.JobsPlayerCount[job] = Core.JobsPlayerCount[job] + 1
     GlobalState[jobKey] = Core.JobsPlayerCount[job]
     if isNew then
         Player(xPlayer.source).state:set('isNew', true, false)
@@ -390,9 +398,11 @@ AddEventHandler("esx:setJob", function(_, job, lastJob)
     local lastJobKey = ("%s:count"):format(lastJob.name)
     local jobKey = ("%s:count"):format(job.name)
     local currentLastJob = Core.JobsPlayerCount[lastJob.name]
+    ensureJobCounter(lastJob.name)
+    ensureJobCounter(job.name)
 
     Core.JobsPlayerCount[lastJob.name] = ((currentLastJob and currentLastJob > 0) and currentLastJob or 1) - 1
-    Core.JobsPlayerCount[job.name] = (Core.JobsPlayerCount[job.name] or 0) + 1
+    Core.JobsPlayerCount[job.name] = Core.JobsPlayerCount[job.name] + 1
 
     GlobalState[lastJobKey] = Core.JobsPlayerCount[lastJob.name]
     GlobalState[jobKey] = Core.JobsPlayerCount[job.name]
@@ -666,7 +676,7 @@ ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not xPlayer then
-        return
+        return cb(nil)
     end
 
     cb({
@@ -693,7 +703,7 @@ ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
-        return
+        return cb(nil)
     end
 
     cb({
@@ -721,7 +731,7 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
         end
     end
 
-    cb(players)
+    cb(players or {})
 end)
 
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
