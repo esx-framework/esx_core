@@ -118,8 +118,6 @@ return {
     ["tpm_success"] = "Uspesno teleportiran",
 
     ["noclip_message"] = "Noclip je bil %s",
-    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
-    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~Vkljucen~s~",
     ["disabled"] = "~r~Izkljucen~s~",
 

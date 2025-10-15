@@ -124,8 +124,6 @@ return {
     ["tpm_success"] = "路径点传送完成",
 
     ["noclip_message"] = "飞行模式 %s",
-    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
-    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~已激活~s~",
     ["disabled"] = "~r~已禁用~s~",
 

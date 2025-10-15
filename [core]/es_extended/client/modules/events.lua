@@ -138,7 +138,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
     end
 
     local tries = 0
-
+    
     while not NetworkDoesEntityExistWithNetworkId(netId) do
         Wait(200)
         tries = tries + 1
@@ -499,132 +499,49 @@ RegisterNetEvent("esx:tpm", function()
     end)
 end)
 
-local noclipActive = false
-local noclipEntity = nil
-local followCamMode = true
-local speedIndex = 1
-local currentSpeed = 0.2
-local yOffset, zOffset, hOffset = 0.5, 0.2, 3
-
--- cached config values
-local controls = Config.Noclip.controls
-local speedOptions = Config.Noclip.speeds
-
---- Toggles noclip state for the given entity
----@param entity number? Entity handle to apply noclip settings to
----@param isActive boolean Whether noclip should be enabled or disabled
-local function toggleNoclip(entity, isActive)
-    if not entity or not DoesEntityExist(entity) then return end
-
-    SetEntityAlpha(entity, isActive and 102 or 255, false)
-    SetEntityCollision(entity, not isActive, not isActive)
-    FreezeEntityPosition(entity, isActive)
-    SetEntityInvincible(entity, isActive)
-    SetEntityVisible(entity, not isActive, isActive)
-
-    local ped = ESX.PlayerData.ped
-    SetEveryoneIgnorePlayer(ped, isActive)
-    SetPoliceIgnorePlayer(ped, isActive)
-    LocalPlayer.state:set('inNoclip', isActive, true)
-end
-
-local function cycleSpeed()
-    if not noclipActive then return end
-
-    speedIndex = speedIndex % #speedOptions + 1
-    currentSpeed = speedOptions[speedIndex]
-    ESX.ShowNotification(TranslateCap("noclip_new_speed", currentSpeed))
-end
-
-local function handleMovement()
-    if not noclipEntity or not DoesEntityExist(noclipEntity) then return end
-
-    local yMove, zMove = 0.0, 0.0
-    local isForward = false
-    local hasMovement = false
-
-    if IsDisabledControlPressed(0, controls.forward) then
-        yMove = yOffset
-        isForward = true
-        hasMovement = true
-    elseif IsDisabledControlPressed(0, controls.backward) then
-        yMove = -yOffset
-        hasMovement = true
-    end
-
-    if not followCamMode then
-        if IsDisabledControlPressed(0, controls.up) then
-            zMove = zOffset
-            hasMovement = true
-        elseif IsDisabledControlPressed(0, controls.down) then
-            zMove = -zOffset
-            hasMovement = true
-        end
-
-        if IsDisabledControlPressed(0, controls.left) then
-            SetEntityHeading(noclipEntity, GetEntityHeading(noclipEntity) + hOffset)
-        elseif IsDisabledControlPressed(0, controls.right) then
-            SetEntityHeading(noclipEntity, GetEntityHeading(noclipEntity) - hOffset)
-        end
-    else
-        if hasMovement then
-            local pitch = GetGameplayCamRelativePitch()
-            zMove = isForward and (pitch * 0.01) or (pitch * -0.01)
-        end
-    end
-
-    if not hasMovement then return end
-
-    local speedMult = currentSpeed + 0.3
-
-    local heading = GetEntityHeading(noclipEntity)
-    local newPos = GetOffsetFromEntityInWorldCoords(noclipEntity, 0.0, yMove * speedMult, zMove * speedMult)
-
-    SetEntityVelocity(noclipEntity, 0.0, 0.0, 0.0)
-    SetEntityRotation(noclipEntity, 0.0, 0.0, 0.0, 0, false)
-
-    if followCamMode then
-        SetEntityHeading(noclipEntity, GetGameplayCamRelativeHeading())
-    else
-        SetEntityHeading(noclipEntity, heading)
-    end
-
-    SetEntityCoordsNoOffset(noclipEntity, newPos.x, newPos.y, newPos.z, true, true, true)
-end
+local noclip = false
+local noclip_pos = vector3(0, 0, 70)
+local heading = 0
 
 local function noclipThread()
-    CreateThread(function()
-        local allowedKeys = Config.Noclip.allowedKeys
-        local switchKey = Config.Noclip.controls.switchMode
-        local lastToggleTime = 0
+    while noclip do
+        SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, false, false, true)
 
-        while noclipActive do
-            local currentTime = GetGameTimer()
-
-            DisableAllControlActions(0)
-            
-            for i = 1, #allowedKeys do
-                local key = allowedKeys[i]
-                EnableControlAction(key[1], key[2], true)
+        if IsControlPressed(1, 34) then
+            heading = heading + 1.5
+            if heading > 360 then
+                heading = 0
             end
 
-            if IsDisabledControlJustPressed(0, switchKey) then
-                followCamMode = not followCamMode
-                ESX.ShowNotification(TranslateCap("noclip_mode_toggled", followCamMode and Translate("enabled") or Translate("disabled")))
-                Wait(100)
-            end
-
-            SetLocalPlayerVisibleLocally(true);
-            handleMovement()
-
-            if currentTime - lastToggleTime >= 1000 then
-                toggleNoclip(noclipEntity, true)
-                lastToggleTime = currentTime
-            end
-
-            Wait(0)
+            SetEntityHeading(ESX.PlayerData.ped, heading)
         end
-    end)
+
+        if IsControlPressed(1, 9) then
+            heading = heading - 1.5
+            if heading < 0 then
+                heading = 360
+            end
+
+            SetEntityHeading(ESX.PlayerData.ped, heading)
+        end
+
+        if IsControlPressed(1, 8) then
+            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 1.0, 0.0)
+        end
+
+        if IsControlPressed(1, 32) then
+            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0)
+        end
+
+        if IsControlPressed(1, 27) then
+            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, 1.0)
+        end
+
+        if IsControlPressed(1, 173) then
+            noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0)
+        end
+        Wait(0)
+    end
 end
 
 RegisterNetEvent("esx:noclip", function()
@@ -633,27 +550,23 @@ RegisterNetEvent("esx:noclip", function()
             return
         end
 
-        if noclipActive then
-            noclipActive = false
-            toggleNoclip(noclipEntity, false)
-            return
+        if not noclip then
+            noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
+            heading = GetEntityHeading(ESX.PlayerData.ped)
         end
 
-        noclipActive = true
-        noclipEntity = ESX.PlayerData.vehicle or ESX.PlayerData.ped
-        toggleNoclip(noclipEntity, true)
-        noclipThread()
+        noclip = not noclip
+        if noclip then
+            CreateThread(noclipThread)
+        end
 
-        if noclipActive then
+        if noclip then
             ESX.ShowNotification(TranslateCap("noclip_message", Translate("enabled")), "success")
         else
             ESX.ShowNotification(TranslateCap("noclip_message", Translate("disabled")), "error")
         end
     end)
 end)
-
--- cycling speed
-ESX.RegisterInput('cyclenoclipspeed', 'Cycle Noclip Speed', 'keyboard', Config.Noclip.controls.cycleNoclipSpeed, cycleSpeed)
 
 RegisterNetEvent("esx:killPlayer", function()
     SetEntityHealth(ESX.PlayerData.ped, 0)
@@ -685,7 +598,7 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
 end)
 
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
-    ESX.SetPlayerData(key, val)
+	ESX.SetPlayerData(key, val)
 end)
 
 ---@param command string

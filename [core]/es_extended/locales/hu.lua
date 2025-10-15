@@ -118,8 +118,6 @@ return {
     ["tpm_success"] = "Sikeres teleportálás",
 
     ["noclip_message"] = "Noclip %s",
-    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
-    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~engedélyezve~s~",
     ["disabled"] = "~r~letiltva~s~",
 

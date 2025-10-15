@@ -122,8 +122,6 @@ return {
     ["tpm_success"] = "Επιτυχής τηλεμεταφορά",
 
     ["noclip_message"] = "Το Noclip έχει %s",
-    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
-    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~ενεργοποιήθηκε~s~",
     ["disabled"] = "~r~απενεργοποιήθηκε~s~",
 

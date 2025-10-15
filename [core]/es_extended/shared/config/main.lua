@@ -26,7 +26,7 @@ Config.StartingAccountMoney = { bank = 50000 }
 
 Config.StartingInventoryItems = false -- table/false
 
-Config.DefaultSpawns = {              -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
+Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
     { x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0 },
     --{x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
     --{x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
@@ -40,49 +40,29 @@ Config.AdminGroups = {
 }
 
 Config.ValidCharacterSets = { -- Only enable additional charsets if your server is multilingual. By default everything is false.
-    ['el'] = false,           -- Greek
-    ['sr'] = false,           -- Cyrillic
-    ['he'] = false,           -- Hebrew
-    ['ar'] = false,           -- Arabic
-    ['zh-cn'] = false         -- Chinese, Japanese, Korean
+    ['el'] = false, -- Greek
+    ['sr'] = false, -- Cyrillic
+    ['he'] = false, -- Hebrew
+    ['ar'] = false, -- Arabic
+    ['zh-cn'] = false -- Chinese, Japanese, Korean
 }
 
-Config.EnablePaycheck = true           -- enable paycheck
-Config.LogPaycheck = false             -- Logs paychecks to a nominated Discord channel via webhook (default is false)
-Config.EnableSocietyPayouts = false    -- pay from the society account that the player is employed at? Requirement: esx_society
-Config.MaxWeight = 24                  -- the max inventory weight without a backpack
-Config.PaycheckInterval = 7 * 60000    -- how often to receive paychecks in milliseconds
-Config.SaveDeathStatus = true          -- Save the death status of a player
-Config.EnableDebug = false             -- Use Debug options?
+Config.EnablePaycheck = true -- enable paycheck
+Config.LogPaycheck = false -- Logs paychecks to a nominated Discord channel via webhook (default is false)
+Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
+Config.MaxWeight = 24 -- the max inventory weight without a backpack
+Config.PaycheckInterval = 7 * 60000 -- how often to receive paychecks in milliseconds
+Config.SaveDeathStatus = true -- Save the death status of a player
+Config.EnableDebug = false -- Use Debug options?
 
-Config.DefaultJobDuty = true           -- A players default duty status when changing jobs
+Config.DefaultJobDuty = true -- A players default duty status when changing jobs
 Config.OffDutyPaycheckMultiplier = 0.5 -- The multiplier for off duty paychecks. 0.5 = 50% of the on duty paycheck
 
 Config.Multichar = GetResourceState("esx_multicharacter") ~= "missing"
-Config.Identity = true      -- Select a character identity data before they have loaded in (this happens by default with multichar)
-Config.DistanceGive = 4.0   -- Max distance when giving items, weapons etc.
+Config.Identity = true -- Select a character identity data before they have loaded in (this happens by default with multichar)
+Config.DistanceGive = 4.0 -- Max distance when giving items, weapons etc.
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
-
-Config.Noclip = {
-    allowedKeys = {
-        { 0, 1 },        -- MOUSE RIGHT
-        { 0, 2 },        --  MOUSE DOWN
-        { 0, 245 }       -- T (for chat)
-    },
-    controls = {         -- https://docs.fivem.net/docs/game-references/controls/
-        switchMode = 38, -- E
-        forward = 32,    -- W
-        backward = 33,   -- S
-        up = 85,         -- Q
-        down = 210,      -- LEFT CTRL
-        left = 34,       -- A
-        right = 35,       -- D
-        cycleNoclipSpeed = 'LSHIFT' -- changing noclip speed
-    },
-    speeds = { 0.2, 0.5, 2, 5, 10, 15, 20, 30 },
-    defaultSpeedIndex = 1,
-}
 
 -------------------------------------
 -- DO NOT CHANGE BELOW THIS LINE !!!

@@ -114,8 +114,6 @@ return {
     ["tpm_success"] = "Successvol geteleporteerd",
 
     ["noclip_message"] = "Noclip is %s",
-    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
-    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~aangezet~s~",
     ["disabled"] = "~r~uitgezet~s~",
 
