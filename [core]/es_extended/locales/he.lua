@@ -121,6 +121,8 @@ return {
     ["tpm_success"] = "הועברת בהצלחה",
 
     ["noclip_message"] = "מצב Noclip %s",
+    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
+    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~מאופשר~s~",
     ["disabled"] = "~r~מנוטרל~s~",
 

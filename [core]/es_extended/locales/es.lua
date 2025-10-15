@@ -124,6 +124,8 @@ return {
     ["tpm_success"] = "Teletransportado con éxito",
 
     ["noclip_message"] = "Noclip ha sido %s",
+    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
+    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~activado~s~",
     ["disabled"] = "~r~desactivado~s~",
 
