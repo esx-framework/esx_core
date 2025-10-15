@@ -118,6 +118,8 @@ return {
     ["tpm_success"] = "Teleportovani ste na lokaciju",
 
     ["noclip_message"] = "Noclip %s",
+    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
+    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~upaljen~s~",
     ["disabled"] = "~r~ugašen~s~",
 
