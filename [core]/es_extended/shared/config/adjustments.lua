@@ -44,6 +44,20 @@ Config.Multipliers = {
     vehicleDensity = 1.0
 }
 
+Config.PlayerStatsByGender = {
+    enabled = true,
+    debugMode = true,
+    useCharacterData = true, -- true: uses ESX.PlayerData.sex | false: uses ped model/skin
+    male = {
+        stamina = 1.0,
+        strength = 1.0
+    },
+    female = {
+        stamina = 1.15,
+        strength = 0.85
+    }
+}
+
 -- Pattern string format
 --1 will lead to a random number from 0-9.
 --A will lead to a random letter from A-Z.

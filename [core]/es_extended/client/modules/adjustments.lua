@@ -235,6 +235,73 @@ function Adjustments:Multipliers()
     end)
 end
 
+function Adjustments:ApplyPlayerStats()
+    if not Config.PlayerStatsByGender.enabled then return end
+
+    local gender = self:GetPlayerGender()
+    if not gender then return end
+
+    local stats = Config.PlayerStatsByGender[gender]
+    if not stats then return end
+
+
+    SetPlayerMaxStamina(ESX.playerId, 100.0)
+    RestorePlayerStamina(ESX.playerId, 100.0)
+    SetRunSprintMultiplierForPlayer(ESX.playerId, stats.stamina)
+    SetSwimMultiplierForPlayer(ESX.playerId, stats.stamina)
+
+    SetPedMoveRateOverride(ESX.PlayerData.ped, stats.stamina)
+
+    SetPlayerMeleeWeaponDamageModifier(ESX.playerId, stats.strength)
+    SetPlayerWeaponDamageModifier(ESX.playerId, stats.strength)
+end
+
+function Adjustments:GetPlayerGender()
+    if not ESX.PlayerLoaded then return end
+
+    if Config.PlayerStatsByGender.useCharacterData then
+        if ESX.PlayerData.sex then
+            return ESX.PlayerData.sex == 'm' and 'male' or 'female'
+        end
+
+        if ESX.PlayerData.gender then
+            return ESX.PlayerData.gender == 0 and 'male' or 'female'
+        end
+    else
+        local model = GetEntityModel(ESX.PlayerData.ped)
+        if model == `mp_m_freemode_01` then
+            return 'male'
+        elseif model == `mp_f_freemode_01` then
+            return 'female'
+        end
+
+        if IsPedMale(ESX.PlayerData.ped) then
+            return 'male'
+        else
+            return 'female'
+        end
+    end
+
+    return nil
+end
+
+function Adjustments:RefreshPlayerStats()
+    if not Config.PlayerStatsByGender.enabled then return end
+
+    local gender = self:GetPlayerGender()
+    if not gender then return end
+
+    local stats = Config.PlayerStatsByGender[gender]
+    if not stats then return end
+
+    SetRunSprintMultiplierForPlayer(ESX.playerId, stats.stamina)
+    SetSwimMultiplierForPlayer(ESX.playerId, stats.stamina)
+    SetPedMoveRateOverride(ESX.PlayerData.ped, stats.stamina)
+
+    SetPlayerMeleeWeaponDamageModifier(ESX.playerId, stats.strength)
+    SetPlayerWeaponDamageModifier(ESX.playerId, stats.strength)
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -250,4 +317,16 @@ function Adjustments:Load()
     self:WantedLevel()
     self:DisableRadio()
     self:Multipliers()
+
+    AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+        self:ApplyPlayerStats()
+    end)
+
+    AddEventHandler('skinchanger:modelLoaded', function()
+        self:RefreshPlayerStats()
+    end)
+
+    AddEventHandler('esx:onPlayerSpawn', function()
+        self:RefreshPlayerStats()
+    end)
 end
