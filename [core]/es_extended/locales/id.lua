@@ -122,6 +122,8 @@ return {
     ["tpm_success"] = "Berhasil Teleportasi",
 
     ["noclip_message"] = "Noclip telah %s",
+    ["noclip_mode_toggled"] = "Noclip Camera Mode: %s",
+    ["noclip_new_speed"] = "New speed: %s",
     ["enabled"] = "~g~diaktifkan~s~",
     ["disabled"] = "~r~dimatikan~s~",
 
