@@ -287,23 +287,6 @@ function Adjustments:ApplyPlayerStats()
         end
     end
 
-    -- ADD NEW STATS HERE
-    -- ========================================================================
-    -- 1. Find your native: https://docs.fivem.net/natives/
-    -- 2. Uncomment template below (remove --)
-    -- 3. Replace "statName" with your stat name
-    -- 4. Replace "YourNative" with native from docs
-    -- 5. Add same stat to Config file
-    -- 6. Debug print is OPTIONAL (can be removed)
-    -- ========================================================================
-
-    -- if stats.statName then
-    --     YourNative(ESX.playerId, stats.statName)
-    --     if Config.EnableDebug then
-    --         print('[^2adjustments^7] statName: ' .. tostring(stats.statName))
-    --     end
-    -- end
-
     if Config.EnableDebug then
         print('[^2adjustments^7] stats applied for gender: ' .. gender)
     end
