@@ -26,9 +26,9 @@ end
 
 ---@param name string | table
 ---@param group string | table
----@param cb function
+---@param cb fun(xPlayer : xPlayer|false, args : table, showError :function )
 ---@param allowConsole? boolean
----@param suggestion? table
+---@param suggestion? {help:string, validate:boolean, arguments:{name:string, validate:boolean, help:string, type:'number'|'string'|'player'|'coordinate'|'playerId'|'item'|'weapon'|'any'|'merge'}[]}
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     if type(name) == "table" then
         for _, v in ipairs(name) do
