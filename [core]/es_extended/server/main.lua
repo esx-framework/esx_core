@@ -354,6 +354,11 @@ function loadESXPlayer(identifier, playerId, isNew)
     if not Config.CustomInventory then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)
     elseif setPlayerInventory then
+        if not Config.Multichar and isNew and not xPlayer.get("firstName") and not xPlayer.get("lastName") then
+			while not xPlayer.get("firstName") and not xPlayer.get("lastName") do
+				Wait(3000)
+			end
+		end
         setPlayerInventory(playerId, xPlayer, userData.inventory, isNew)
     end
 
