@@ -354,6 +354,22 @@ function loadESXPlayer(identifier, playerId, isNew)
     if not Config.CustomInventory then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)
     elseif setPlayerInventory then
+        -- Wait for identity to be set before loading inventory (for non-multichar)
+        if not Config.Multichar and isNew and not xPlayer.get("firstName") then
+            local sleep = 5000
+            local registrationTimeout = 120 * 1000 -- 2 minutes
+
+            while not xPlayer.get("firstName") do
+                registrationTimeout = registrationTimeout - sleep
+
+                if registrationTimeout <= 0 then
+                    print(('[^3WARNING^7] Player ^5"%s"^7 Registration Timeout Reached (Loading Inventory Anyway).'):format(xPlayer.getName()))
+                    break
+                end
+
+                Wait(sleep)
+            end
+        end
         setPlayerInventory(playerId, xPlayer, userData.inventory, isNew)
     end
 
