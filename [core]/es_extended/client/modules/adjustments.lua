@@ -235,6 +235,107 @@ function Adjustments:Multipliers()
     end)
 end
 
+function Adjustments:ApplyPlayerStats()
+    if not Config.PlayerStatsByGender.enabled then return end
+
+    if Config.EnableDebug then
+        print('[^3adjustments^7] applying player stats...')
+    end
+
+    local gender = self:GetPlayerGender()
+    if not gender then
+        if Config.EnableDebug then
+            print('[^1adjustments^7] failed to detect gender')
+        end
+        return
+    end
+
+    local stats = Config.PlayerStatsByGender[gender]
+    if not stats then
+        if Config.EnableDebug then
+            print('[^1adjustments^7] no stats found for gender: ' .. gender)
+        end
+        return
+    end
+
+    if stats.stamina then
+        SetRunSprintMultiplierForPlayer(ESX.playerId, stats.stamina)
+    end
+
+    if stats.strength then
+        SetPlayerMeleeWeaponDamageModifier(ESX.playerId, stats.strength)
+    end
+
+    if stats.swimSpeed then
+        SetSwimMultiplierForPlayer(ESX.playerId, stats.swimSpeed)
+    end
+
+    -- moveSpeed requires continuous loop
+    if stats.moveSpeed then
+        self.currentMoveSpeed = stats.moveSpeed
+        if not self.moveSpeedThreadRunning then
+            self.moveSpeedThreadRunning = true
+            CreateThread(function()
+                while Config.PlayerStatsByGender.enabled and self.currentMoveSpeed do
+                    if ESX.PlayerData.ped then
+                        SetPedMoveRateOverride(ESX.PlayerData.ped, self.currentMoveSpeed)
+                    end
+                    Wait(0)
+                end
+                self.moveSpeedThreadRunning = false
+            end)
+        end
+    end
+
+    if Config.EnableDebug then
+        print('[^2adjustments^7] stats applied for gender: ' .. gender)
+    end
+end
+
+function Adjustments:GetPlayerGender()
+    if not ESX.PlayerLoaded then
+        if Config.EnableDebug then
+            print('[^1adjustments^7] player not loaded yet')
+        end
+        return
+    end
+
+    if Config.EnableDebug then
+        print('[^3adjustments^7] detecting gender using: ' .. (Config.PlayerStatsByGender.useCharacterData and 'character data' or 'ped model'))
+    end
+
+    if Config.PlayerStatsByGender.useCharacterData then
+        -- Option 1: character data
+        if ESX.PlayerData.sex then
+            return ESX.PlayerData.sex == 'm' and 'male' or 'female'
+        end
+    else
+        -- Option 2: ped model
+        local model = GetEntityModel(ESX.PlayerData.ped)
+
+        for i = 1, #Config.PlayerStatsByGender.malePeds do
+            if model == Config.PlayerStatsByGender.malePeds[i] then
+                return 'male'
+            end
+        end
+
+        for i = 1, #Config.PlayerStatsByGender.femalePeds do
+            if model == Config.PlayerStatsByGender.femalePeds[i] then
+                return 'female'
+            end
+        end
+
+        -- Native fallback
+        if IsPedMale(ESX.PlayerData.ped) then
+            return 'male'
+        else
+            return 'female'
+        end
+    end
+
+    return nil
+end
+
 function Adjustments:Load()
     self:RemoveHudComponents()
     self:DisableAimAssist()
@@ -250,4 +351,25 @@ function Adjustments:Load()
     self:WantedLevel()
     self:DisableRadio()
     self:Multipliers()
+
+    AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
+        self:ApplyPlayerStats()
+    end)
+
+    if not Config.PlayerStatsByGender.useCharacterData then
+        AddEventHandler('skinchanger:modelLoaded', function()
+            self:ApplyPlayerStats()
+        end)
+    end
+
+    AddEventHandler('esx:onPlayerSpawn', function()
+        self:ApplyPlayerStats()
+    end)
+
+    if Config.PlayerStatsByGender.enabled and Config.EnableDebug then
+        print('[^2adjustments^7] player stats by gender loaded')
+        print('[^3adjustments^7] enabled: ' .. tostring(Config.PlayerStatsByGender.enabled))
+        print('[^3adjustments^7] use character data: ' .. tostring(Config.PlayerStatsByGender.useCharacterData))
+        print('[^3adjustments^7] debug mode: active')
+    end
 end

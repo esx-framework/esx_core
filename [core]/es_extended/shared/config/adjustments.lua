@@ -44,6 +44,37 @@ Config.Multipliers = {
     vehicleDensity = 1.0
 }
 
+
+Config.PlayerStatsByGender = {
+    enabled = true,
+    debugMode = true,
+    useCharacterData = true, -- true: uses ESX.PlayerData.sex | false: uses ped model/skin
+    malePeds = {
+        `mp_m_freemode_01`,
+    },
+    femalePeds = {
+        `mp_f_freemode_01`,
+    },
+    male = {
+        stamina = 1.0,
+        strength = 1.0,
+        swimSpeed = 1.25,
+        moveSpeed = 1.0,
+
+        -- ADD NEW STATS HERE
+        -- 1. Uncomment line below (remove --)
+        -- 2. Change value: 1.0 = normal, 1.5 = +50%, 0.5 = -50%
+        -- 3. Find natives: https://docs.fivem.net/natives/
+        -- statName = 1.0,
+    },
+   female = {
+        stamina = 1.15,
+        strength = 0.85,
+        swimSpeed = 1.25,
+        moveSpeed = 7.00,
+    }
+}
+
 -- Pattern string format
 --1 will lead to a random number from 0-9.
 --A will lead to a random letter from A-Z.
