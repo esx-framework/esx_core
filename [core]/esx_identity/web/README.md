@@ -1,5 +1,8 @@
 ## Install Dependencies
 `npm install`
 
-## Development Watch
-`npm run dev` 
+## Development Build in Watch Mode
+`npm run watch` 
+
+## Development
+`npm run dev`
