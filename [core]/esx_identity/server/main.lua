@@ -274,6 +274,7 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_height_format"), "error")
         return cb(false)
     end
+    -- TODO: Implement Nationalities
 
     if xPlayer then
         local identifier = xPlayer.getIdentifier()

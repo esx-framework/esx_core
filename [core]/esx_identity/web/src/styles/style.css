@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--color-primary: #FB9B04;
+		--color-dark: #FB9B0440;
+		--color-lightgray: #969696;
+		--color-black: #161616;
+		--color-white: #F2F2F2;
+		--color-submit-hover: #e08900;
+
+		--body-background: #161616;
+
+		/*
+			Pixel measurements are based on a 1920x1080 resolution.
+			View width (vw) and view height (vh) calculations are based on that resolution.
+		*/
+
+		--ui-background: rgba(37,37,37,0.25);
+		--ui-border: rgba(56,56,56,0.5);
+		--ui-width: 17.29vw; /* 332px - 1920px */
+		--ui-height: 55.56vh; /* 600px - 1080px */
+		--ui-padding: 2.14vw; /* 41px */
+
+		--header-font-size: 1.15vw; /* 22px */
+
+		--input-background: #383838;
+		--input-font-size: 0.52vw; /* 10px */
+		--input-height: 3.70vh; /* 40px */
+		--input-margin-top: 0.93vh; /* 10px */
+		--input-value-right: 0.57vw; /* 11px */
+		--input-padding: 0.57vw; /* 11px */
+		--input-box-xy: 0.78vw; /* 15px */
+		--input-box-unchecked-background: #4A4A4A;
+
+		--label-margin-left: 0.26vw; /* 5px */
+		--label-margin-bottom: 0.19vh; /* 2px */
+
+		--box-border-radius: 0.21vw; /* 4px */
+
+		--select-background: #2b2b2b;
+		--select-border: #3a3a3a;
+		--select-hover: #3a3a3a;
+		--select-padding: 3.24vh; /* 35px */
+	}
+}
+
+body {
+	overflow: hidden;
+	background-color: var(--body-background);
+}
+
+.none {
+  	display: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+
+/* Fonts */
+.font-poppins {
+	font-family: 'Poppins', sans-serif;
+}
+
+.poppins-input {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 400;
+	font-style: Medium;
+	font-size: 0.63vw; /* 12px */
+	line-height: 100%;
+	letter-spacing: 0%;
+	vertical-align: middle;
+	text-transform: capitalize;
+}
+
+.font-emoji {
+	font-family: "Twemoji Country Flags", serif;
+}
+
+
+/* Text Checkbox */
+.checkbox-toggle {
+	box-shadow: 0px 0px 15px 0px var(--color-dark);
+	cursor: pointer;
+}
+
+
+/* Date Input */
+.date-clear {
+	box-shadow: 0px 0px 15px 0px var(--color-black);
+}
+
+
+/* Range Slider */
+input.range-sm {
+	height: 1.67vh; /* 18px */
+
+	-webkit-appearance: none;
+	appearance: none;
+
+	background: linear-gradient(to right,
+			var(--color-primary) 0%,
+			var(--color-primary) calc((var(--val, 180) - var(--range-min, 120)) * 100% / (var(--range-max, 220) - var(--range-min, 120))),
+			var(--color-lightgray) 0);
+	background-repeat: no-repeat;
+	background-size: 100% 0.28vh; /* 3px */
+	background-position: center;
+	border-radius: 9999px;
+}
+
+input.range-sm::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+
+	width: 0.52vw; /* 10px */
+	height: 0.93vh; /* 10px */
+	border-radius: 9999px;
+	background: var(--color-primary);
+	border: none;
+	cursor: pointer;
+}
