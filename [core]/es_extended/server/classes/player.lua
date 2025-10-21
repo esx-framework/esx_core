@@ -433,34 +433,35 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         reason = reason or "Unknown"
         if not tonumber(money) then
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
-            return false
+            return
         end
-        if money <= 0 then
-            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
-            return false
-        end
-        local account = self.getAccount(accountName)
-        if not account then
-            error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
-            return false
-        end
-        money = account.round and ESX.Math.Round(money) or money
-        if self.accounts[account.index].money - money > self.accounts[account.index].money then
-            error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
-            return false
-        end
+        if money > 0 then
+            local account = self.getAccount(accountName)
 
-        if Config.CustomInventory == "ox" and Inventory and Inventory.accounts and Inventory.accounts[accountName] then
-            local removed = Inventory.RemoveItem(self.source, accountName, money)
-            if not removed then
-                return false, 0
+            if account then
+                money = account.round and ESX.Math.Round(money) or money
+                if self.accounts[account.index].money - money > self.accounts[account.index].money then
+                    error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
+                    return
+                end
+
+                if Config.CustomInventory == "ox" and Inventory and Inventory.accounts and Inventory.accounts[accountName] then
+                    local removed = Inventory.RemoveItem(self.source, accountName, money)
+                    if not removed then
+                        return
+                    end
+                end
+
+                self.accounts[account.index].money = self.accounts[account.index].money - money
+
+                self.triggerEvent("esx:setAccountMoney", account)
+                TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+            else
+                error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
+        else
+            error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
         end
-
-        self.accounts[account.index].money = self.accounts[account.index].money - money
-        self.triggerEvent("esx:setAccountMoney", account)
-        TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
-        return true, money
     end
 
     function self.getInventoryItem(itemName)
