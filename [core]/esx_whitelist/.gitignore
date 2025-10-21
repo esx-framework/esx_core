@@ -1,5 +1,5 @@
 # Node modules
-node_modules/
+web/node_modules/
 
 # Logs
 *.log
