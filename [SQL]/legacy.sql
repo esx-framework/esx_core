@@ -400,6 +400,7 @@ CREATE TABLE `users` (
   `dateofbirth` varchar(10) DEFAULT NULL,
   `sex` varchar(1) DEFAULT NULL,
   `height` int(11) DEFAULT NULL,
+  `nationality` varchar(30) DEFAULT NULL,
   `skin` longtext DEFAULT NULL,
   `status` longtext DEFAULT NULL,
   `is_dead` tinyint(1) DEFAULT 0,

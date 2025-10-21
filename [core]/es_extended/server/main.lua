@@ -6,7 +6,7 @@ local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ss
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
 if Config.Multichar then
-    newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"
+    newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?, `nationality` = ?"
 end
 
 if Config.StartingInventoryItems then
@@ -14,7 +14,7 @@ if Config.StartingInventoryItems then
 end
 
 if Config.Multichar or Config.Identity then
-    loadPlayer = loadPlayer .. ", `firstname`, `lastname`, `dateofbirth`, `sex`, `height`"
+    loadPlayer = loadPlayer .. ", `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `nationality`"
 end
 
 loadPlayer = loadPlayer .. " FROM `users` WHERE identifier = ?"
@@ -32,7 +32,7 @@ local function createESXPlayer(identifier, playerId, data)
         defaultGroup = "admin"
     end
     local parameters = Config.Multichar and
-        { json.encode(accounts), identifier, Core.generateSSN(), defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height }
+        { json.encode(accounts), identifier, Core.generateSSN(), defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height, data.nationality }
         or { json.encode(accounts), identifier, Core.generateSSN(), defaultGroup }
 
     if Config.StartingInventoryItems then
@@ -195,6 +195,7 @@ function loadESXPlayer(identifier, playerId, isNew)
         lastName = "Doe",
         dateofbirth = "01/01/2000",
         height = 120,
+        nationality = "United States",
         dead = false,
     }
 
@@ -342,6 +343,10 @@ function loadESXPlayer(identifier, playerId, isNew)
         if result.height then
             userData.height = result.height
             xPlayer.set("height", result.height)
+        end
+        if result.nationality then
+            userData.nationality = result.nationality
+            xPlayer.set("nationality", result.nationality)
         end
     end
 
