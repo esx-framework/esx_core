@@ -57,6 +57,12 @@ function AppContent() {
 			method: "POST",
 			body: JSON.stringify(data),
 		});
+
+		setFirstName('');
+		setLastName('');
+		setBirthDate('//');
+		setHeight(config?.MinHeight ? Math.floor((config.MinHeight + (config.MaxHeight || config.MinHeight)) / 2) : 180);
+		setNationality('United States');
 	}
 
 	useEffect(() => {
