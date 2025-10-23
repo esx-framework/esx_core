@@ -71,16 +71,18 @@ function AppContent() {
 		fetch("http://esx_identity/ready", {
 			method: "POST",
 			body: JSON.stringify({}),
+		}).then(async (res) => {
+			const response = await res.json();
+			if (response.config) {
+				setConfig(response.config);
+				setHeight(response.config.MaxHeight ? Math.floor((response.config.MinHeight + response.config.MaxHeight) / 2) : 180);
+			}
 		});
 
 		const handleMessage = (event) => {
 			switch (event.data.type) {
 				case "enableui":
 					document.body.classList[event.data.enable ? "remove" : "add"]("none");
-					break;
-				case "config":
-					setHeight(event.data.data.MaxHeight ? Math.floor((event.data.data.MinHeight + event.data.data.MaxHeight) / 2) : 180);
-					setConfig(event.data.data);
 					break;
 			};
 		}
@@ -89,6 +91,7 @@ function AppContent() {
 
 		return () => window.removeEventListener("message", handleMessage);
 	}, []);
+
 
 	return (
 		<div className={'w-screen h-screen'}>

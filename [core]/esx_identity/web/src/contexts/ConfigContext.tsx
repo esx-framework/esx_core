@@ -7,6 +7,7 @@ interface Config {
 	MinHeight: number;
 	MaxHeight: number;
 	MaxAge: number;
+	countryList: { value: string, label: string, flag: string }[];
 }
 
 interface ConfigContextType {

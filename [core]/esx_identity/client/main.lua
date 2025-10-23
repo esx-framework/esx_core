@@ -27,8 +27,7 @@ end)
 
 RegisterNUICallback("ready", function(_, cb)
     ready = true
-    SendNUIMessage({ type = "config", data = Config })
-    cb(1)
+    cb({ config = Config })
 end)
 
 function setGuiState(state)

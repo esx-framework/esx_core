@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import Nationalities from '../utils/Nationalities';
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import { useConfig } from '../contexts/ConfigContext';
 
 interface NationalitySelectProps {
 	label: string;
@@ -10,6 +10,10 @@ interface NationalitySelectProps {
 
 
 export function NationalitySelect({ label, value, onChange }: NationalitySelectProps) {
+	const { config } = useConfig();
+
+	const nationalities = useMemo(() => config?.countryList ?? [], [config]);
+
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [open, setOpen] = useState(false);
 	const [highlight, setHighlight] = useState(0);
@@ -20,17 +24,17 @@ export function NationalitySelect({ label, value, onChange }: NationalitySelectP
 
 	// Get selected option/index from current value
 	const selectedIndex = useMemo(
-		() => Nationalities.findIndex((o) => o.value.toLowerCase() === (value || '').toLowerCase()),
-		[value]
+		() => nationalities.findIndex((o) => o.value.toLowerCase() === (value || '').toLowerCase()),
+		[value, nationalities]
 	);
-	const selected = selectedIndex >= 0 ? Nationalities[selectedIndex] : null;
+	const selected = selectedIndex >= 0 ? nationalities[selectedIndex] : null;
 
 	// Filter search only when typing -> otherwise show all
 	const filtered = useMemo(() => {
-		if (!typing || search.trim() === '') return Nationalities;
+		if (!typing || search.trim() === '') return nationalities;
 		const q = search.toLowerCase();
-		return Nationalities.filter((o) => o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q));
-	}, [typing, search]);
+		return nationalities.filter((o) => o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q));
+	}, [typing, search, nationalities]);
 
 	// When search changes -> reset highlight
 	useEffect(() => {
