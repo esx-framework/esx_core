@@ -142,7 +142,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                 if not coord then
                                     err = TranslateCap("commanderror_argumentmismatch_number", k)
                                 else
-                                    newArgs[v.name] = coord
+                                    newArgs[v.name] = coord * 1.0
                                 end
                             end
                         end
