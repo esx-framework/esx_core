@@ -1,5 +1,6 @@
 ---@class CVehicleData
 ---@field plate string
+---@field vin string?
 ---@field netId number
 ---@field entity number
 ---@field modelHash number
@@ -10,7 +11,9 @@
 ---@field isValid fun(self:CExtendedVehicle):boolean
 ---@field new fun(owner:string, plate:string, coords:vector4): CExtendedVehicle?
 ---@field getFromPlate fun(plate:string):CExtendedVehicle?
+---@field getFromVIN fun(vin:string):CExtendedVehicle?
 ---@field getPlate fun(self:CExtendedVehicle):string?
+---@field getVIN fun(self:CExtendedVehicle):string?
 ---@field getNetId fun(self:CExtendedVehicle):number?
 ---@field getEntity fun(self:CExtendedVehicle):number?
 ---@field getModelHash fun(self:CExtendedVehicle):number?
@@ -31,14 +34,27 @@ Core.vehicleClass = {
 			return xVehicle
 		end
 
-		local vehicleProps = MySQL.scalar.await("SELECT `vehicle` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
-		if not vehicleProps then
+		local vehicleData = MySQL.single.await("SELECT `vehicle`, `vin` FROM `owned_vehicles` WHERE `stored` = true AND `owner` = ? AND `plate` = ? LIMIT 1", { owner, plate })
+		if not vehicleData then
 			return
 		end
-		vehicleProps = json.decode(vehicleProps)
+		local vehicleProps = json.decode(vehicleData.vehicle)
+		local vin = vehicleData.vin
 
 		if type(vehicleProps.model) ~= "number" then
 			vehicleProps.model = joaat(vehicleProps.model)
+		end
+
+		-- Generate VIN if it doesn't exist
+		if not vin or vin == "" then
+			if not ESX.VIN then
+				print("^1[ESX] VIN module not loaded^0")
+				return
+			end
+			vin = ESX.VIN.generateUnique(vehicleProps.model, owner)
+			if vin then
+				MySQL.update.await("UPDATE `owned_vehicles` SET `vin` = ? WHERE `owner` = ? AND `plate` = ?", { vin, owner, plate })
+			end
 		end
 
 		local netId = ESX.OneSync.SpawnVehicle(vehicleProps.model, coords.xyz, coords.w, vehicleProps)
@@ -52,10 +68,14 @@ Core.vehicleClass = {
 		end
 		Entity(entity).state:set("owner", owner, false)
 		Entity(entity).state:set("plate", plate, false)
+		if vin then
+			Entity(entity).state:set("vin", vin, false)
+		end
 
 		---@type CVehicleData
 		local vehicleData = {
 			plate = plate,
+			vin = vin,
 			entity = entity,
 			netId = netId,
 			modelHash = vehicleProps.model,
@@ -80,6 +100,22 @@ Core.vehicleClass = {
 
 			if obj:isValid() then
 				return obj
+			end
+		end
+	end,
+	getFromVIN = function(vin)
+		assert(type(vin) == "string", "Expected 'vin' to be a string")
+
+		-- Find vehicle by VIN in Core.vehicles
+		for plate, vehicleData in pairs(Core.vehicles) do
+			if vehicleData.vin == vin then
+				local obj = table.clone(Core.vehicleClass)
+				obj.plate = plate
+
+				if obj:isValid() then
+					return obj
+				end
+				break
 			end
 		end
 	end,
@@ -120,6 +156,13 @@ Core.vehicleClass = {
 
 		return Core.vehicles[self.plate].plate
 	end,
+	getVIN = function(self)
+		if not self:isValid() then
+			return
+		end
+
+		return Core.vehicles[self.plate].vin
+	end,
 	getModelHash = function(self)
 		if not self:isValid() then
 			return
@@ -154,6 +197,9 @@ Core.vehicleClass = {
 		vehicleData.plate = newPlate
 		Core.vehicles[newPlate] = table.clone(vehicleData)
 		Core.vehicles[oldPlate] = nil
+		
+		-- Update self.plate to reflect the change
+		self.plate = newPlate
 
 		TriggerEvent("esx:changedExtendedVehiclePlate", vehicleData.plate, oldPlate)
 		Wait(0)
