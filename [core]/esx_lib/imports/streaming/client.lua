@@ -1,7 +1,9 @@
+xLib.streaming = {}
+
 ---@param modelHash number | string
 ---@param cb? function
 ---@return number | nil
-xLib.requestModel = function(modelHash, cb)
+xLib.streaming.requestModel = function(modelHash, cb)
     modelHash = type(modelHash) == "number" and modelHash or joaat(modelHash)
 
     if not IsModelInCdimage(modelHash) then return end
@@ -15,7 +17,7 @@ end
 ---@param textureDict string
 ---@param cb? function
 ---@return string | nil
-xLib.requestStreamedTextureDict = function(textureDict, cb)
+xLib.streaming.requestStreamedTextureDict = function(textureDict, cb)
 	RequestStreamedTextureDict(textureDict, false)
 
 	while not HasStreamedTextureDictLoaded(textureDict) do Wait(500) end
@@ -26,7 +28,7 @@ end
 ---@param assetName string
 ---@param cb? function
 ---@return string | nil
-xLib.requestNamedPtfxAsset = function(assetName, cb)
+xLib.streaming.requestNamedPtfxAsset = function(assetName, cb)
 	RequestNamedPtfxAsset(assetName)
 
 	while not HasNamedPtfxAssetLoaded(assetName) do Wait(500) end
@@ -37,7 +39,7 @@ end
 ---@param animSet string
 ---@param cb? function
 ---@return string | nil
-xLib.requestAnimSet = function(animSet, cb)
+xLib.streaming.requestAnimSet = function(animSet, cb)
 	RequestAnimSet(animSet)
 
 	while not HasAnimSetLoaded(animSet) do Wait(500) end
@@ -48,7 +50,7 @@ end
 ---@param animDict string
 ---@param cb? function
 ---@return string | nil
-xLib.requestAnimDict = function(animDict, cb)
+xLib.streaming.requestAnimDict = function(animDict, cb)
 	RequestAnimDict(animDict)
 
 	while not HasAnimDictLoaded(animDict) do Wait(500) end
@@ -59,7 +61,7 @@ end
 ---@param weaponHash number | string
 ---@param cb? function
 ---@return string | number | nil
-xLib.requestWeaponAsset = function(weaponHash, cb)
+xLib.streaming.requestWeaponAsset = function(weaponHash, cb)
 	RequestWeaponAsset(weaponHash, 31, 0)
 
 	while not HasWeaponAssetLoaded(weaponHash) do Wait(500) end
@@ -70,10 +72,13 @@ end
 ---@param bankName string
 ---@param cb? function
 ---@return string | nil
-xLib.requestAudioBank = function(bankName, cb)
+xLib.streaming.requestAudioBank = function(bankName, cb)
     RequestAudioBank(bankName, false) 
 
     while not RequestScriptAudioBank(bankName, false) do Wait(500) end
 
     return cb and cb(bankName) or bankName
 end
+
+
+return xLib.streaming
