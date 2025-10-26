@@ -10,13 +10,11 @@ xLib.waitFor = function(conditionFunc, errorMessage, timeoutMs)
         error("Timeout should be a positive number.")
     end
 
-    if not ESX.IsFunctionReference(conditionFunc) then
-        error("Condition Function should be a function reference.")
-    end
+    xLib.verify(conditionFunc, "function", true)
 
     -- since errorMessage is optional, we only validate it if the user provided it.
     if errorMessage then
-        ESX.AssertType(errorMessage, "string", "errorMessage should be a string.")
+        xLib.verify(errorMessage, "string", true)
     end
 
     local invokingResource = GetInvokingResource()
