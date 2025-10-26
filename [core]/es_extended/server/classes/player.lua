@@ -99,6 +99,7 @@
 ---@field getPlayTime fun(): number                                  # Get total playtime in seconds.
 ---@field set fun(k: string, v: any)                                # Set custom variable.
 ---@field get fun(k: string): any                                    # Get custom variable.
+---@field updatePlayerData fun(key: string, value: any)              # Update player data
 --- Metadata Functions
 ---@field getMeta fun(index?: string, subIndex?: string|table): any   # Get metadata value(s).
 ---@field setMeta fun(index: string, value: any, subValue?: any)      # Set metadata value(s).
@@ -293,11 +294,15 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     function self.set(k, v)
         self.variables[k] = v
 
-        self.triggerEvent('esx:updatePlayerData', 'variables', self.variables)
+        self.updatePlayerData("variables", self.variables)
     end
 
     function self.get(k)
         return self.variables[k]
+    end
+
+    function self.updatePlayerData(key, value)
+        self.triggerEvent("esx:updatePlayerData", key, value)
     end
 
     function self.getAccounts(minimal)
@@ -885,7 +890,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             self.metadata[index] = type(self.metadata[index]) == "table" and self.metadata[index] or {}
             self.metadata[index][value] = subValue
         end
-        self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
+
+        self.updatePlayerData("metadata", self.metadata)
     end
 
     function self.clearMeta(index, subValues)
@@ -933,7 +939,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         else
             return error(("xPlayer.clearMeta ^5subValues^1 should be ^5string^1 or ^5table^1, received ^5%s^1!"):format(type(subValues)))
         end
-        self.triggerEvent('esx:updatePlayerData', 'metadata', self.metadata)
+
+        self.updatePlayerData("metadata", self.metadata)
     end
 
     function self.executeCommand(command)
