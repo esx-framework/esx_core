@@ -1,1 +1,2 @@
---All server-side functions outsourced from the Core to the lib will be stored here for compatability, e.g:
+--[[ All server-side functions outsourced from the Core to the lib will be stored here for compatability, e.g:
+--]]
