@@ -6,6 +6,3 @@ ESX.Streaming.RequestNamedPtfxAsset = xLib.streaming.requestNamedPtfxAsset
 ESX.Streaming.RequestAnimSet = xLib.streaming.requestAnimSet
 ESX.Streaming.RequestAnimDict = xLib.streaming.requestAnimDict
 ESX.Streaming.RequestWeaponAsset = xLib.streaming.requestWeaponAsset
-ESX.SetTimeout = xLib.timeout.setTimeout
-ESX.ClearTimeout = xLib.timeout.clearTimeout
-ESX.Await = xLib.waitFor

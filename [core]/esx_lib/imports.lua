@@ -82,7 +82,7 @@ local function call(self, index, ...)
 
         if not module then
             local function method(...) 
-               return exports[index](nil, ...)
+               return exports[LIB_NAME][index](nil, ...)
             end
                 
             if not ... then
