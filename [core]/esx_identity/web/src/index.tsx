@@ -66,7 +66,7 @@ function AppContent() {
 	}
 
 	useEffect(() => {
-		document.body.classList.add("none");
+		//document.body.classList.add("none");
 
 		fetch("http://esx_identity/ready", {
 			method: "POST",
@@ -122,57 +122,61 @@ function AppContent() {
 			</div>
 
 			<div className={'absolute z-20 w-screen h-screen flex justify-center items-center'}>
-				<div className={'w-[--ui-width] h-[--ui-height] bg-[--ui-background] border-[1px] border-[--ui-border] px-[--ui-padding] pb-[--ui-padding] rounded-[20px] backdrop-blur-[5px] font-poppins'}>
-					<h1 className={'mt-[33px] font-bold text-[length:--header-font-size] uppercase text-center text-white tracking-[0%] mb-[30px]'}>Character <span className={'text-[--color-primary]'}>Identity</span></h1>
+				<div className={'w-[--ui-width] bg-[--ui-background] border-[1px] border-[--ui-border] rounded-[20px] backdrop-blur-[5px] font-poppins flex flex-col'}>
+					<h1 className={'mt-[33px] px-[--ui-padding] font-bold text-[length:--header-font-size] uppercase text-center text-white tracking-[0%] mb-[30px] flex-shrink-0'}>Character <span className={'text-[--color-primary]'}>Identity</span></h1>
 
-					<TextInput
-						label="First Name"
-						value={firstName}
-						onValueChange={setFirstName}
-					/>
+					<div className={'px-[--ui-padding]'}>
+						<TextInput
+							label="First Name"
+							value={firstName}
+							onValueChange={setFirstName}
+						/>
 
-					<TextInput
-						label="Last Name"
-						value={lastName}
-						onValueChange={setLastName}
-					/>
+						<TextInput
+							label="Last Name"
+							value={lastName}
+							onValueChange={setLastName}
+						/>
 
-					<DateInput
-						label="Birth Date"
-						value={birthDate}
-						onValueChange={setBirthDate}
-						onValidityChange={setIsBirthDateValid}
-					/>
+						<DateInput
+							label="Birth Date"
+							value={birthDate}
+							onValueChange={setBirthDate}
+							onValidityChange={setIsBirthDateValid}
+						/>
 
-					<HeightInput
-						label="Height (CM)"
-						value={height}
-						onChange={setHeight}
-					/>
+						<HeightInput
+							label="Height (CM)"
+							value={height}
+							onChange={setHeight}
+						/>
 
-					<NationalitySelect
-						label="Nationality"
-						value={nationality}
-						onChange={setNationality}
-					/>
+						<NationalitySelect
+							label="Nationality"
+							value={nationality}
+							onChange={setNationality}
+						/>
 
-					<GenderSelect
-						label="Gender"
-						value={gender}
-						onChange={setGender}
-					/>
+						<GenderSelect
+							label="Gender"
+							value={gender}
+							onChange={setGender}
+						/>
+					</div>
 
-					<button
-						onClick={onSubmit}
-						disabled={!canSubmit}
-						className={
-							'bg-[--color-primary] h-[--input-height] w-full mt-[31px] uppercase rounded-[--box-border-radius] text-[13px] font-poppins font-[600] text-[--color-black] ' +
-							'hover:bg-[--color-submit-hover] active:scale-95 transition-all duration-150 ' +
-							'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[--color-primary] disabled:active:scale-100'
-						}
-					>
-						Create My Character
-					</button>
+					<div className={'px-[--ui-padding] pb-[--ui-padding] pt-[15px] flex-shrink-0'}>
+						<button
+							onClick={onSubmit}
+							disabled={!canSubmit}
+							className={
+								'bg-[--color-primary] h-[--input-height] w-full uppercase rounded-[--box-border-radius] text-[13px] font-poppins font-[600] text-[--color-black] ' +
+								'hover:bg-[--color-submit-hover] active:scale-95 transition-all duration-150 ' +
+								'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[--color-primary] disabled:active:scale-100'
+							}
+						>
+							Create My Character
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
