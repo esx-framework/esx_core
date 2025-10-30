@@ -14,7 +14,7 @@ interface HeightInputProps {
 export function HeightInput({ label, value, onChange }: HeightInputProps) {
 	const { config } = useConfig();
 	const inputRef = useRef<HTMLInputElement>(null);
-	
+
 	const min = config?.MinHeight || 120;
 	const max = config?.MaxHeight || 220;
 	const step = 1;
@@ -48,7 +48,7 @@ export function HeightInput({ label, value, onChange }: HeightInputProps) {
 					}}
 					className={'w-full bg-transparent focus:outline-none range-sm'}
 				/>
-				<div className={'absolute right-[--input-value-right] top-1/2 -translate-y-1/2 text-[--color-black] bg-[--color-primary] flex justify-center items-center rounded-[--box-border-radius] h-[18px] w-[26px] font-poppins font-bold text-[12px]'}>
+				<div className={'absolute right-[--input-value-right] top-1/2 -translate-y-1/2 text-[--color-black] bg-[--color-primary] flex justify-center items-center rounded-[--box-border-radius] h-[18px] w-[26px] font-poppins font-bold text-[length:--button-font-size]'}>
 					{value}
 				</div>
 			</div>

@@ -169,7 +169,7 @@ function AppContent() {
 							onClick={onSubmit}
 							disabled={!canSubmit}
 							className={
-								'bg-[--color-primary] h-[--input-height] w-full uppercase rounded-[--box-border-radius] text-[13px] font-poppins font-[600] text-[--color-black] ' +
+								'bg-[--color-primary] h-[--button-height] w-full uppercase rounded-[--box-border-radius] text-[length:--button-font-size] font-poppins font-[600] text-[--color-black] ' +
 								'hover:bg-[--color-submit-hover] active:scale-95 transition-all duration-150 ' +
 								'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[--color-primary] disabled:active:scale-100'
 							}
