@@ -26,11 +26,11 @@ end
 
 ---Supports multiple overloads:
 ---1. ESX.RegisterCommand(name, group, cb, allowConsole?, suggestion?)
----2. ESX.RegisterCommand(name, cb, allowConsole?, suggestion?) -- without group
+---2. ESX.RegisterCommand(name, false, cb, allowConsole?, suggestion?) -- Looks up group in Config.CommandPermissions
 ---@param name string | string[]
----@param group? string | string[] | fun(xPlayer: xPlayer|false, args: table, showError: function)
----@param cb? fun(xPlayer: xPlayer|false, args: table, showError: function) | boolean
----@param allowConsole? boolean | {help?: string, validate?: boolean, arguments?: {name: string, validate?: boolean, help?: string, type: 'number'|'string'|'player'|'coordinate'|'playerId'|'item'|'weapon'|'any'|'merge'}[]}
+---@param group false | string | string[] -- Use false to lookup in Config.CommandPermissions
+---@param cb fun(xPlayer: xPlayer|false, args: table, showError: function)
+---@param allowConsole? boolean
 ---@param suggestion? {help?: string, validate?: boolean, arguments?: {name: string, validate?: boolean, help?: string, type: 'number'|'string'|'player'|'coordinate'|'playerId'|'item'|'weapon'|'any'|'merge'}[]}
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     if type(name) == "table" then
@@ -40,25 +40,9 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         return
     end
 
-    local commandGroup, commandCb, commandAllowConsole, commandSuggestion
+    local commandGroup = group
 
-    -- Check if this is the new API without group parameter.
-    if type(group) == "function" then
-        commandCb = group
-        commandAllowConsole = cb
-        commandSuggestion = allowConsole
-        commandGroup = nil
-    elseif type(group) == "string" or type(group) == "table" then
-        commandGroup = group
-        commandCb = cb
-        commandAllowConsole = allowConsole
-        commandSuggestion = suggestion
-    else
-        error(("Invalid arguments provided to ESX.RegisterCommand for command '%s'"):format(name))
-        return
-    end
-
-    if not commandGroup then
+    if group == false then
         local permGroups = Config.CommandPermissions[name]
 
         if permGroups and type(permGroups) == "table" then
@@ -66,6 +50,9 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         else
             commandGroup = "user"
         end
+    elseif type(group) ~= "string" and type(group) ~= "table" then
+        error(("Invalid group provided to ESX.RegisterCommand for command '%s'"):format(name))
+        return
     end
 
     if Core.RegisteredCommands[name] then
@@ -76,18 +63,18 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         end
     end
 
-    if commandSuggestion then
-        if not commandSuggestion.arguments then
-            commandSuggestion.arguments = {}
+    if suggestion then
+        if not suggestion.arguments then
+            suggestion.arguments = {}
         end
-        if not commandSuggestion.help then
-            commandSuggestion.help = ""
+        if not suggestion.help then
+            suggestion.help = ""
         end
 
-        TriggerClientEvent("chat:addSuggestion", -1, ("/%s"):format(name), commandSuggestion.help, commandSuggestion.arguments)
+        TriggerClientEvent("chat:addSuggestion", -1, ("/%s"):format(name), suggestion.help, suggestion.arguments)
     end
 
-    Core.RegisteredCommands[name] = { group = commandGroup, cb = commandCb, allowConsole = commandAllowConsole, suggestion = commandSuggestion }
+    Core.RegisteredCommands[name] = { group = commandGroup, cb = cb, allowConsole = allowConsole, suggestion = suggestion }
 
     RegisterCommand(name, function(playerId, args)
         local command = Core.RegisteredCommands[name]
@@ -207,7 +194,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                     xPlayer.showNotification(err)
                 end
             else
-                commandCb(xPlayer or false, args, function(msg)
+                cb(xPlayer or false, args, function(msg)
                     if playerId == 0 then
                         print(("[^3WARNING^7] %s^7"):format(msg))
                     else
