@@ -64,36 +64,54 @@ Core.PlayerFunctionOverrides.OxInventory = {
     addAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money < 1 then return end
+            if money < 1 then return false end
 
             local account = self.getAccount(accountName)
-            if not account then return end
+            if not account then return false end
 
             money = account.round and ESX.Math.Round(money) or money
-            self.accounts[account.index].money = self.accounts[account.index].money + money
-            self.triggerEvent("esx:setAccountMoney", account)
-            TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+
             if Inventory.accounts[accountName] then
-                Inventory.AddItem(self.source, accountName, money)
+                local added = Inventory.AddItem(self.source, accountName, money)
+                if not added then
+                    return false
+                end
+                self.triggerEvent("esx:setAccountMoney", account)
+                TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+            else
+                self.accounts[account.index].money = self.accounts[account.index].money + money
+                self.triggerEvent("esx:setAccountMoney", account)
+                TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
             end
+
+            return true
         end
     end,
 
     removeAccountMoney = function(self)
         return function(accountName, money, reason)
             reason = reason or "unknown"
-            if money < 1 then return end
+            if money < 1 then return false end
 
             local account = self.getAccount(accountName)
-            if not account then return end
+            if not account then return false end
 
             money = account.round and ESX.Math.Round(money) or money
-            self.accounts[account.index].money = self.accounts[account.index].money - money
-            self.triggerEvent("esx:setAccountMoney", account)
-            TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+
             if Inventory.accounts[accountName] then
-                Inventory.RemoveItem(self.source, accountName, money)
+                local removed = Inventory.RemoveItem(self.source, accountName, money)
+                if not removed then
+                    return false
+                end
+                self.triggerEvent("esx:setAccountMoney", account)
+                TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+            else
+                self.accounts[account.index].money = self.accounts[account.index].money - money
+                self.triggerEvent("esx:setAccountMoney", account)
+                TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
             end
+
+            return true
         end
     end,
 
