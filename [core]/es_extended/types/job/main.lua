@@ -1,0 +1,11 @@
+---@class ESXJob
+---@field id number                 # Job ID.
+---@field name string               # Job internal name.
+---@field label string              # Job display label.
+---@field grade number              # Current grade/rank number.
+---@field grade_name string         # Name of the current grade.
+---@field grade_label string        # Label of the current grade.
+---@field grade_salary number       # Salary for the current grade.
+---@field skin_male table           # Skin configuration for male characters.
+---@field skin_female table         # Skin configuration for female characters.
+---@field onDuty boolean?           # Whether the player is currently on duty.
