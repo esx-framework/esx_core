@@ -39,16 +39,16 @@ function Callbacks:Trigger(player, event, cb, invoker, ...)
         await = type(cb) == "boolean",
         cb = cb or promise:new()
     }
-    local table = self.requests[self.id]
+    local request = self.requests[self.id]
 
     TriggerClientEvent("esx:triggerClientCallback", player, event, self.id, invoker, ...)
 
     self.id += 1
 
-    return table.cb
+    return request.cb
 end
 
-function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
+function Callbacks:ServerReceive(player, event, requestId, invoker, ...)
     self.currentId = requestId
 
     if not self.storage[event] then
@@ -63,7 +63,7 @@ function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
     self:Execute(callback, player, returnCb, ...)
 end
 
-function Callbacks:RecieveClient(requestId, invoker, ...)
+function Callbacks:ReceiveClient(requestId, invoker, ...)
     self.currentId = requestId
 
     if not self.requests[self.currentId] then
@@ -90,7 +90,7 @@ end
 ---@param ... any
 function ESX.TriggerClientCallback(player, eventName, callback, ...)
     local invokingResource = GetInvokingResource()
-    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+    local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
     Callbacks:Trigger(player, eventName, callback, invoker, ...)
 end
@@ -101,7 +101,7 @@ end
 ---@return ...
 function ESX.AwaitClientCallback(player, eventName, ...)
     local invokingResource = GetInvokingResource()
-    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+    local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
     local p = Callbacks:Trigger(player, eventName, false, invoker, ...)
     if not p then return end
@@ -114,7 +114,7 @@ function ESX.AwaitClientCallback(player, eventName, ...)
 
     Citizen.Await(p)
 
-    return table.unpack(p.value)
+    return table.unpack(p.value or {})
 end
 
 ---@param eventName string
@@ -122,7 +122,7 @@ end
 ---@return nil
 function ESX.RegisterServerCallback(eventName, callback)
     local invokingResource = GetInvokingResource()
-    local invoker = (invokingResource and invokingResource ~= "Unknown") and invokingResource or "es_extended"
+    local invoker = (invokingResource and invokingResource ~= "unknown") and invokingResource or "es_extended"
 
     Callbacks:Register(eventName, invoker, callback)
 end
@@ -138,12 +138,12 @@ end
 -- =============================================
 
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
-    Callbacks:RecieveClient(requestId, invoker, ...)
+    Callbacks:ReceiveClient(requestId, invoker, ...)
 end)
 
 RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
     local source = source
-    Callbacks:ServerRecieve(source, eventName, requestId, invoker, ...)
+    Callbacks:ServerReceive(source, eventName, requestId, invoker, ...)
 end)
 
 AddEventHandler("onResourceStop", function(resource)
