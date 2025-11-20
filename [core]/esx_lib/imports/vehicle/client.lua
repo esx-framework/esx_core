@@ -572,7 +572,7 @@ function xLib.vehicle.Spawn(vehicleModel, coords, heading, cb, networked)
     return vehicle
 end
 
-function xLib.vehicle.SpawnLocalVehicle(vehicleModel, coords, heading, cb)
+function xLib.vehicle.SpawnLocal(vehicleModel, coords, heading, cb)
     return xLib.vehicle.Spawn(vehicleModel, coords, heading, cb, false)
 end
 
