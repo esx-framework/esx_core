@@ -25,31 +25,23 @@ function xLib.vehicle.IsEmpty(vehicle)
     return false
 end
 
----@param coords? table | vector3 The coords to get the closest vehicle to
+---@param coords? vector3 The coords to get the closest vehicle to
 ---@param modelFilter? table The model filter
----@return integer, integer
+---@return integer, number
 function xLib.vehicle.Closest(coords, modelFilter)
     local closestVehicle = nil
     local closestDistance = -1
-    local playerCoords = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
+    coords = coords or GetEntityCoords(PlayerPedId())
 
     local vehicles = GetGamePool("CVehicle")
-    local filteredVehicles = vehicles
-    if modelFilter then
-        filteredVehicles = {}
 
-        for currentVehicleIndex = 1, #vehicles do
-            if modelFilter[GetEntityModel(vehicles[currentVehicleIndex])] then
-                filteredVehicles[#filteredVehicles + 1] = vehicles[currentVehicleIndex]
+    for _, vehicle in pairs(vehicles) do
+        if not modelFilter or modelFilter[GetEntityModel(vehicle)] then
+            local distance = #(coords - GetEntityCoords(vehicle))
+            if closestDistance == -1 or distance < closestDistance then
+                closestVehicle = vehicle
+                closestDistance = distance
             end
-        end
-    end
-
-    for k, vehicle in pairs(filteredVehicles or vehicles) do
-        local distance = #(playerCoords - GetEntityCoords(vehicle))
-
-        if closestDistance == -1 or distance < closestDistance then
-            closestVehicle, closestDistance = vehicle, distance
         end
     end
 
@@ -578,6 +570,10 @@ function xLib.vehicle.Spawn(vehicleModel, coords, heading, cb, networked)
     end)
 
     return vehicle
+end
+
+function xLib.vehicle.SpawnLocalVehicle(vehicleModel, coords, heading, cb)
+    return xLib.vehicle.Spawn(vehicleModel, coords, heading, cb, false)
 end
 
 return xLib.vehicle

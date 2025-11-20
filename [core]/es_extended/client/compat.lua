@@ -29,7 +29,7 @@ ESX.Game.Teleport = xLib.entity.Teleport
 
 ESX.Game.DeleteVehicle  = xLib.vehicle.Delete
 ESX.Game.SpawnVehicle = xLib.vehicle.Spawn
-ESX.Game.SpawnLocalVehicle = xLib.vehicle.Spawn(vehicle, coords, heading, cb, false)
+ESX.Game.SpawnLocalVehicle = xLib.vehicle.SpawnLocalVehicle
 ESX.Game.IsVehicleEmpty = xLib.vehicle.IsEmpty
 ESX.Game.GetClosestVehicle = xLib.vehicle.Closest
 ESX.Game.GetVehiclesInArea = xLib.vehicle.EnumerateWithinDistance
