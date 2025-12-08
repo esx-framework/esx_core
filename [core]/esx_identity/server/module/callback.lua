@@ -47,6 +47,13 @@ function Callback.RegisterIdentity(source, cb, data)
         local formattedIdentity = getFormattedIdentity(data)
 
         Modules.Identity.SetPlayerData(xPlayer, formattedIdentity)
+
+        data.firstname = formattedIdentity.firstName
+        data.lastname = formattedIdentity.lastName
+        data.dateofbirth = formattedIdentity.dateOfBirth
+
+        TriggerEvent("esx_identity:completedRegistration", source, data)
+
         TriggerClientEvent("esx_identity:setPlayerData", xPlayer.src, formattedIdentity)
         Modules.Database.SaveIdentity(identifier, formattedIdentity)
         Modules.Identity.MarkAsRegistered(identifier)
@@ -72,4 +79,3 @@ end
 
 Modules.Callback = Callback
 return Callback
-
