@@ -29,6 +29,15 @@ local function getFormattedIdentity(data)
     }
 end
 
+local function completeRegistration(source, data, formattedIdentity)
+    data.firstname = formattedIdentity.firstName
+    data.lastname = formattedIdentity.lastName
+    data.dateofbirth = formattedIdentity.dateOfBirth
+
+    TriggerEvent("esx_identity:completedRegistration", source, data)
+    TriggerClientEvent("esx_identity:setPlayerData", source, formattedIdentity)
+end
+
 function Callback.RegisterIdentity(source, cb, data)
     local xPlayer = ESX.Player(source)
 
@@ -47,14 +56,8 @@ function Callback.RegisterIdentity(source, cb, data)
         local formattedIdentity = getFormattedIdentity(data)
 
         Modules.Identity.SetPlayerData(xPlayer, formattedIdentity)
+        completeRegistration(source, data, formattedIdentity)
 
-        data.firstname = formattedIdentity.firstName
-        data.lastname = formattedIdentity.lastName
-        data.dateofbirth = formattedIdentity.dateOfBirth
-
-        TriggerEvent("esx_identity:completedRegistration", source, data)
-
-        TriggerClientEvent("esx_identity:setPlayerData", xPlayer.src, formattedIdentity)
         Modules.Database.SaveIdentity(identifier, formattedIdentity)
         Modules.Identity.MarkAsRegistered(identifier)
         Modules.Identity.ClearPlayerIdentity(identifier)
@@ -68,12 +71,8 @@ function Callback.RegisterIdentity(source, cb, data)
 
     local formattedIdentity = getFormattedIdentity(data)
 
-    data.firstname = formattedIdentity.firstName
-    data.lastname = formattedIdentity.lastName
-    data.dateofbirth = formattedIdentity.dateOfBirth
+    completeRegistration(source, data, formattedIdentity)
 
-    TriggerEvent("esx_identity:completedRegistration", source, data)
-    TriggerClientEvent("esx_identity:setPlayerData", source, formattedIdentity)
     cb(true)
 end
 
