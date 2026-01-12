@@ -91,5 +91,9 @@ if GetResourceState("ox_inventory") ~= "missing" then
     Config.CustomInventory = "ox"
 end
 
+if GetResourceState("tgiann-inventory") ~= "missing" then
+    Config.CustomInventory = "tgianninventory"
+end
+
 Config.EnableDefaultInventory = Config.CustomInventory == false -- Display the default Inventory ( F2 )
 Config.Identifier = GetConvar("esx:identifier", "license")
