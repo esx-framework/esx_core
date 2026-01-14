@@ -457,26 +457,6 @@ function ESX.Game.GetPedMugshot(ped, transparent)
     return mugshot, GetPedheadshotTxdString(mugshot)
 end
 
----@param entity integer The entity to get the coords of
----@param coords table | vector3 | vector4 The coords to teleport the entity to
----@param cb? function The callback function
-function ESX.Game.Teleport(entity, coords, cb)
-
-    if DoesEntityExist(entity) then
-        RequestCollisionAtCoord(coords.x, coords.y, coords.z)
-        while not HasCollisionLoadedAroundEntity(entity) do
-            Wait(0)
-        end
-
-        SetEntityCoords(entity, coords.x, coords.y, coords.z, false, false, false, false)
-        SetEntityHeading(entity, coords.w or coords.heading or 0.0)
-    end
-
-    if cb then
-        cb()
-    end
-end
-
 ---@param object integer | string The object to spawn
 ---@param coords table | vector3 The coords to spawn the object at
 ---@param cb? function The callback function
@@ -673,32 +653,6 @@ function ESX.Game.GetClosestVehicle(coords, modelFilter)
     return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter)
 end
 
----@param entities table The entities to search through
----@param isPlayerEntities boolean Whether the entities are players
----@param coords table | vector3 The coords to search from
----@param maxDistance number The max distance to search within
----@return table
-local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coords, maxDistance)
-    local nearbyEntities = {}
-
-    if coords then
-        coords = vector3(coords.x, coords.y, coords.z)
-    else
-        local playerPed = ESX.PlayerData.ped
-        coords = GetEntityCoords(playerPed)
-    end
-
-    for k, entity in pairs(entities) do
-        local distance = #(coords - GetEntityCoords(entity))
-
-        if distance <= maxDistance then
-            nearbyEntities[#nearbyEntities + 1] = isPlayerEntities and k or entity
-        end
-    end
-
-    return nearbyEntities
-end
-
 ---@param coords table | vector3 The coords to search from
 ---@param maxDistance number The max distance to search within
 ---@return table
@@ -718,63 +672,6 @@ end
 ---@return boolean
 function ESX.Game.IsSpawnPointClear(coords, maxDistance)
     return #ESX.Game.GetVehiclesInArea(coords, maxDistance) == 0
-end
-
----@param shape integer The shape to get the test result from
----@return boolean, table, table, integer, integer
-function ESX.Game.GetShapeTestResultSync(shape)
-	local handle, hit, coords, normal, material, entity
-	repeat
-        handle, hit, coords, normal, material, entity = GetShapeTestResultIncludingMaterial(shape)
-        Wait(0)
-	until handle ~= 1
-	return hit, coords, normal, material, entity
-end
-
----@param depth number The depth to raycast
----@vararg any The arguments to pass to the shape test
----@return table, boolean, table, table, integer, integer
-function ESX.Game.RaycastScreen(depth, ...)
-	local world, normal = GetWorldCoordFromScreenCoord(.5, .5)
-	local origin = world + normal
-	local target = world + normal * depth
-	return target, ESX.Game.GetShapeTestResultSync(StartShapeTestLosProbe(origin.x, origin.y, origin.z, target.x, target.y, target.z, ...))
-end
-
----@param entities table The entities to search through
----@param isPlayerEntities boolean Whether the entities are players
----@param coords? table | vector3 The coords to search from
----@param modelFilter? table The model filter
----@return integer, integer
-function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
-    local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
-
-    if coords then
-        coords = vector3(coords.x, coords.y, coords.z)
-    else
-        local playerPed = ESX.PlayerData.ped
-        coords = GetEntityCoords(playerPed)
-    end
-
-    if modelFilter then
-        filteredEntities = {}
-
-        for currentEntityIndex = 1, #entities do
-            if modelFilter[GetEntityModel(entities[currentEntityIndex])] then
-                filteredEntities[#filteredEntities + 1] = entities[currentEntityIndex]
-            end
-        end
-    end
-
-    for k, entity in pairs(filteredEntities or entities) do
-        local distance = #(coords - GetEntityCoords(entity))
-
-        if closestEntityDistance == -1 or distance < closestEntityDistance then
-            closestEntity, closestEntityDistance = isPlayerEntities and k or entity, distance
-        end
-    end
-
-    return closestEntity, closestEntityDistance
 end
 
 ---@return integer | nil, vector3 | nil
