@@ -6,6 +6,7 @@ lua54 'yes'
 version '1.13.3'
 
 shared_scripts {
+	'@esx_lib/imports.lua',
 	'locale.lua',
 
 	'shared/config/main.lua',
@@ -44,6 +45,7 @@ server_scripts {
 client_scripts {
     'client/main.lua',
 	'client/functions.lua',
+	'client/compat.lua',
 	'client/modules/wrapper.lua',
 	'client/modules/callback.lua',
     'client/modules/adjustments.lua',
@@ -57,8 +59,6 @@ client_scripts {
     'client/modules/interactions.lua',
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
-
-	'shared/compat.lua'
 }
 
 ui_page {

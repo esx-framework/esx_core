@@ -245,22 +245,6 @@ function ESX.RefreshContext(...)
     return IsResourceFound('esx_context') and exports['esx_context']:Refresh(...)
 end
 
----@param command_name string The command name
----@param label string The label to show
----@param input_group string The input group
----@param key string The key to bind
----@param on_press function The function to call on press
----@param on_release? function The function to call on release
-function ESX.RegisterInput(command_name, label, input_group, key, on_press, on_release)
-	local command = on_release and '+' .. command_name or command_name
-    RegisterCommand(command, on_press, false)
-    Core.Input[command_name] = ESX.HashString(command)
-    if on_release then
-        RegisterCommand('-' .. command_name, on_release, false)
-    end
-    RegisterKeyMapping(command, label or '', input_group or 'keyboard', key or '')
-end
-
 ---@param menuType string
 ---@param open function The function to call on open
 ---@param close function The function to call on close
