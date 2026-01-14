@@ -20,6 +20,7 @@ shared_scripts {
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
     'shared/config/logs.lua',
+    'server/config/commandperms.lua',
 
 	'server/common.lua',
 	'server/modules/callback.lua',

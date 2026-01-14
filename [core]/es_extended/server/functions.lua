@@ -24,16 +24,34 @@ function ESX.TriggerClientEvent(eventName, playerIds, ...)
     end
 end
 
----@param name string | table
----@param group string | table
----@param cb fun(xPlayer : xPlayer|false, args : table, showError :function )
+---Supports multiple overloads:
+---1. ESX.RegisterCommand(name, group, cb, allowConsole?, suggestion?)
+---2. ESX.RegisterCommand(name, false, cb, allowConsole?, suggestion?) -- Looks up group in Config.CommandPermissions
+---@param name string | string[]
+---@param group false | string | string[] -- Use false to lookup in Config.CommandPermissions
+---@param cb fun(xPlayer: xPlayer|false, args: table, showError: function)
 ---@param allowConsole? boolean
----@param suggestion? {help:string, validate:boolean, arguments:{name:string, validate:boolean, help:string, type:'number'|'string'|'player'|'coordinate'|'playerId'|'item'|'weapon'|'any'|'merge'}[]}
+---@param suggestion? {help?: string, validate?: boolean, arguments?: {name: string, validate?: boolean, help?: string, type: 'number'|'string'|'player'|'coordinate'|'playerId'|'item'|'weapon'|'any'|'merge'}[]}
 function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     if type(name) == "table" then
         for _, v in ipairs(name) do
             ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
         end
+        return
+    end
+
+    local commandGroup = group
+
+    if group == false then
+        local permGroups = Config.CommandPermissions[name]
+
+        if permGroups and type(permGroups) == "table" then
+            commandGroup = #permGroups == 1 and permGroups[1] or permGroups
+        else
+            commandGroup = "user"
+        end
+    elseif type(group) ~= "string" and type(group) ~= "table" then
+        error(("Invalid group provided to ESX.RegisterCommand for command '%s'"):format(name))
         return
     end
 
@@ -56,7 +74,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         TriggerClientEvent("chat:addSuggestion", -1, ("/%s"):format(name), suggestion.help, suggestion.arguments)
     end
 
-    Core.RegisteredCommands[name] = { group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion }
+    Core.RegisteredCommands[name] = { group = commandGroup, cb = cb, allowConsole = allowConsole, suggestion = suggestion }
 
     RegisterCommand(name, function(playerId, args)
         local command = Core.RegisteredCommands[name]
@@ -146,7 +164,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                 end
                             end
                         end
-                        
+
                         if ESX.IsFunctionReference(v.Validator?.validate) and not err then
                             local candidate = newArgs[v.name]
                             local ok, res = pcall(v.Validator.validate, candidate)
@@ -187,12 +205,12 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
         end
     end, true)
 
-    if type(group) == "table" then
-        for _, v in ipairs(group) do
+    if type(commandGroup) == "table" then
+        for _, v in ipairs(commandGroup) do
             ExecuteCommand(("add_ace group.%s command.%s allow"):format(v, name))
         end
     else
-        ExecuteCommand(("add_ace group.%s command.%s allow"):format(group, name))
+        ExecuteCommand(("add_ace group.%s command.%s allow"):format(commandGroup, name))
     end
 end
 
