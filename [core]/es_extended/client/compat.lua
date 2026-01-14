@@ -37,3 +37,14 @@ end
 ESX.Game.GetClosestEntity = xLib.entity.closest
 EnumerateEntitiesWithinDistance = xLib.entity.EnumerateWithinDistance
 ESX.Game.Teleport = xLib.entity.Teleport
+
+ESX.Game.DeleteVehicle  = xLib.vehicle.Delete
+ESX.Game.SpawnVehicle = xLib.vehicle.Spawn
+ESX.Game.SpawnLocalVehicle = xLib.vehicle.SpawnLocal
+ESX.Game.IsVehicleEmpty = xLib.vehicle.IsEmpty
+ESX.Game.GetClosestVehicle = xLib.vehicle.Closest
+ESX.Game.GetVehiclesInArea = xLib.vehicle.EnumerateWithinDistance
+ESX.Game.IsSpawnPointClear = xLib.vehicle.IsSpawnPointClear
+ESX.Game.GetVehicleInDirection = xLib.vehicle.GetInDirection
+ESX.Game.GetVehicleProperties = xLib.vehicle.GetProperties
+ESX.Game.SetVehicleProperties = xLib.vehicle.SetProperties
