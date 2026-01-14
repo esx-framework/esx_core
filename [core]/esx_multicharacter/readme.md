@@ -1,4 +1,4 @@
-<h1 align='center'>[ESX] Multi-Character</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-legacy.com/'>Documentation</a></b></h5>
+<h1 align='center'>[ESX] Multi-Character</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/en/esx_core/esx_multicharacter'>Documentation</a></b></h5>
 
 A Simplistic system, that allows Players to have multiple Characters, which can be customised for all player with `Config.Slots` or personally set a players character count using `setslots`, `remslots`, `enablechar` and `disablechar` Commands :)
 

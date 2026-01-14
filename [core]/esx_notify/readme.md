@@ -1,10 +1,10 @@
-`<h1 align='center'>`[ESX] Notify`</a>``</h1>``<p align='center'>``<b>``<a href='https://discord.esx-framework.org/'>`Discord`</a>` - `<a href='https://esx-framework.org/'>`Website`</a>` - `<a href='https://docs.esx-legacy.com/legacy/installation'>`Documentation`</a>``</b>``</h5>`
+<h1 align='center'>[ESX] Notify</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://docs.esx-framework.org/en/esx_core/esx_notify'>Documentation</a></b></h5>
 
 A beautiful and simple NUI notification system for ESX
 
 # Example Code
 
-`<h3>`Change style and time`</h3>`
+<h3>Change style and time</h3>
 
 ```lua
 ---usage: message/type/length
@@ -33,7 +33,7 @@ Possible positions:
 ESX.ShowNotification("Your message here", "info", 3000, "Info Title", "top-right")
 ```
 
-`<h3>`Export Usage`</h3>`
+<h3>Export Usage</h3>
 
 ```lua
 -- Basic usage
@@ -49,7 +49,7 @@ exports["esx_notify"]:Notify("warning", 4000, "Inventory full!", "Warning", "bot
 exports["esx_notify"]:Notify("warning", 4000, "Inventory full!~br~Some items were dropped.", "Warning")
 ```
 
-`<h3>`Event Usage`</h3>`
+<h3>Event Usage</h3>
 
 ```lua
 -- Basic usage
@@ -62,7 +62,7 @@ TriggerEvent("ESX:Notify", "error", 5000, "You don't have enough money!", "Trans
 TriggerEvent("ESX:Notify", "success", 4000, "Welcome!", "Greetings", "top-middle")
 ```
 
-`<h3>`Color Code Usage`</h3>`
+<h3>Color Code Usage</h3>
 
 ```lua
 ~r~ = Red

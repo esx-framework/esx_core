@@ -1,4 +1,4 @@
-<h1 align='center'>es_extended</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://docs.esx-legacy.com/legacy/installation'>Documentation</a></b></h5>
+<h1 align='center'>es_extended</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://docs.esx-framework.org/en/esx_core/es_extended'>Documentation</a></b></h5>
 
 ## Legal
 
