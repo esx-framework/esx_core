@@ -8,24 +8,24 @@ version '1.13.4'
 shared_scripts {
 	'@es_extended/imports.lua',
 	'@es_extended/locale.lua',
+	'config.lua',
+	'countries.lua',
 }
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'locales/*.lua',
-	'config.lua',
 	'server/main.lua'
 }
 
 client_scripts {
 	'locales/*.lua',
-	'config.lua',
 	'client/main.lua'
 }
 
 files ({
 	'web/dist/assets/**',
-	'web/dist/**',
+	'web/dist/**'
 })
 
 ui_page 'web/dist/index.html'

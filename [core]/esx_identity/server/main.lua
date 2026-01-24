@@ -3,7 +3,7 @@ local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
 
 local function deleteIdentityFromDatabase(xPlayer)
-    MySQL.query.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?", { nil, nil, nil, nil, nil, nil, xPlayer.identifier })
+    MySQL.query.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, nationality = ?, skin = ? WHERE identifier = ?", { nil, nil, nil, nil, nil, nil, nil, xPlayer.identifier })
 
     if Config.FullCharDelete then
         MySQL.update.await("UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?", { { "bank_savings", "caution" }, xPlayer.identifier })
@@ -13,7 +13,7 @@ local function deleteIdentityFromDatabase(xPlayer)
 end
 
 ---@param xPlayer StaticPlayer|xPlayer
----@param data {firstName:string?, lastName:string?, dateOfBirth:string?, height:number?, sex:"m"|"f"?}
+---@param data {firstName:string?, lastName:string?, dateOfBirth:string?, height:number?, nationality:string?, sex:"m"|"f"?}
 function SetPlayerData(xPlayer, data)
     local name = ("%s %s"):format(data.firstName, data.lastName)
     xPlayer.setName(name)
@@ -22,6 +22,7 @@ function SetPlayerData(xPlayer, data)
     xPlayer.set("dateofbirth", data.dateOfBirth)
     xPlayer.set("sex", data.sex)
     xPlayer.set("height", data.height)
+    xPlayer.setNationality(data.nationality)
 
     local state = Player(xPlayer.getSource()).state
     state:set("name", name, true)
@@ -38,13 +39,13 @@ local function deleteIdentity(xPlayer)
         return
     end
 
-    SetPlayerData(xPlayer, { firstName = nil, lastName = nil, dateOfBirth = nil, sex = nil, height = nil })
+    SetPlayerData(xPlayer, { firstName = nil, lastName = nil, dateOfBirth = nil, sex = nil, height = nil, nationality = nil })
     deleteIdentityFromDatabase(xPlayer)
 end
 
 
 local function saveIdentityToDatabase(identifier, identity)
-    MySQL.update.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ? WHERE identifier = ?", { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identifier })
+    MySQL.update.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, nationality = ? WHERE identifier = ?", { identity.firstName, identity.lastName, identity.dateOfBirth, identity.sex, identity.height, identity.nationality, identifier })
 end
 
 ---@param year number Year
@@ -114,6 +115,28 @@ local function checkHeightFormat(height)
     return numHeight >= Config.MinHeight and numHeight <= Config.MaxHeight
 end
 
+---@param nationality string
+---@return boolean true if the nationality format is valid, false otherwise
+local function checkNationalityFormat(nationality)
+    if ESX.IsValidLocaleString(nationality) then
+        return true
+    end
+    return false
+end
+
+---@param nationality string
+---@return boolean true if the nationality is in the country list, false otherwise
+local function isValidNationality(nationality)
+    local normalizedNationality = string.lower(nationality)
+    for i = 1, #Config.countryList do
+        local country = Config.countryList[i]
+        if string.lower(country.value) == normalizedNationality then
+            return true
+        end
+    end
+    return false
+end
+
 local function convertToLowerCase(str)
     return string.lower(str)
 end
@@ -147,7 +170,7 @@ end
 ---@param xPlayer StaticPlayer
 local function checkIdentity(xPlayer)
     local playerIdentifier = xPlayer.getIdentifier()
-    MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { playerIdentifier }, function(result)
+    MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height, nationality FROM users WHERE identifier = ?", { playerIdentifier }, function(result)
         if not result then
             return TriggerClientEvent("esx_identity:showRegisterIdentity", xPlayer.src)
         end
@@ -163,6 +186,7 @@ local function checkIdentity(xPlayer)
             dateOfBirth = result.dateofbirth,
             sex = result.sex,
             height = result.height,
+            nationality = result.nationality,
         }
 
         alreadyRegistered[playerIdentifier] = true
@@ -184,7 +208,7 @@ if not multichar then
         if not identifier or not correctLicense then
             return deferrals.done(TranslateCap("no_identifier"))
         end
-        MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE identifier = ?", { identifier }, function(result)
+        MySQL.single("SELECT firstname, lastname, dateofbirth, sex, height, nationality FROM users WHERE identifier = ?", { identifier }, function(result)
             if not result then
                 playerIdentity[identifier] = nil
                 alreadyRegistered[identifier] = false
@@ -202,6 +226,7 @@ if not multichar then
                 dateOfBirth = result.dateofbirth,
                 sex = result.sex,
                 height = result.height,
+                nationality = result.nationality,
             }
 
             alreadyRegistered[identifier] = true
@@ -274,6 +299,15 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_height_format"), "error")
         return cb(false)
     end
+    if not checkNationalityFormat(data.nationality) then
+        TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_nationality_format"), "error")
+        return cb(false)
+    end
+
+    if not isValidNationality(data.nationality) then
+        TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_nationality_format"), "error")
+        return cb(false)
+    end
 
     if xPlayer then
         local identifier = xPlayer.getIdentifier()
@@ -288,6 +322,7 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
             dateOfBirth = formatDate(data.dateofbirth),
             sex = data.sex,
             height = data.height,
+            nationality = data.nationality,
         }
 
         local currentIdentity = playerIdentity[identifier]
@@ -319,6 +354,7 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
         dateOfBirth = formattedDate,
         sex = data.sex,
         height = data.height,
+        nationality = data.nationality,
     }
 
     TriggerEvent("esx_identity:completedRegistration", source, data)
@@ -406,4 +442,11 @@ if Config.EnableDebugging then
             xPlayer.showNotification(TranslateCap("error_debug_xPlayer_get_height"))
         end
     end, false, { help = TranslateCap("debug_xPlayer_get_height") })
+    ESX.RegisterCommand("xPlayerGetNationality", "user", function(xPlayer)
+        if xPlayer and xPlayer.getNationality() then
+            xPlayer.showNotification(TranslateCap("return_debug_xPlayer_get_nationality", xPlayer.getNationality()))
+        else
+            xPlayer.showNotification(TranslateCap("error_debug_xPlayer_get_nationality"))
+        end
+    end, false, { help = TranslateCap("debug_xPlayer_get_nationality") })
 end

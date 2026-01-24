@@ -35,4 +35,8 @@ return {
     ["invalid_dob_format"] = "Invalid Format (DOB): Please try again.",
     ["invalid_sex_format"] = "Invalid Format (Sex): Please try again.",
     ["invalid_height_format"] = "Invalid Format (Height): Please try again.",
+    ["invalid_nationality_format"] = "Invalid Format (Nationality): Please try again.",
+    ["return_debug_xPlayer_get_nationality"] = "Nationality: %s",
+    ["error_debug_xPlayer_get_nationality"] = "There was an issue while obtaining",
+    ["debug_xPlayer_get_nationality"] = "Returns Your Nationality",
 }

@@ -100,6 +100,8 @@
 ---@field set fun(k: string, v: any)                                # Set custom variable.
 ---@field get fun(k: string): any                                    # Get custom variable.
 ---@field updatePlayerData fun(key: string, value: any)              # Update player data
+---@field getNationality fun(): string                               # Get player's nationality
+---@field setNationality fun(nationality: string)                     # Set player's nationality
 --- Metadata Functions
 ---@field getMeta fun(index?: string, subIndex?: string|table): any   # Get metadata value(s).
 ---@field setMeta fun(index: string, value: any, subValue?: any)      # Set metadata value(s).
@@ -135,6 +137,7 @@
 ---@field lastPlaytime number       # Last recorded playtime in seconds.
 ---@field paycheckEnabled boolean   # Whether paycheck is enabled.
 ---@field admin boolean             # Whether the player is an admin.
+---@field nationality string        # Player's nationality
 
 ---@param playerId number
 ---@param identifier string
@@ -148,8 +151,9 @@
 ---@param name string
 ---@param coords vector4|{x: number, y: number, z: number, heading: number}
 ---@param metadata table
+---@param nationality string
 ---@return xPlayer
-function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
+function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, inventory, weight, job, loadout, name, coords, metadata, nationality)
     ---@diagnostic disable-next-line: missing-fields
     local self = {} ---@type xPlayer
 
@@ -165,6 +169,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     self.playerId = playerId
     self.source = playerId
     self.variables = {}
+    self.nationality = nationality
     self.weight = weight
     self.maxWeight = Config.MaxWeight
     self.metadata = metadata
@@ -303,6 +308,15 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.updatePlayerData(key, value)
         self.triggerEvent("esx:updatePlayerData", key, value)
+    end
+
+    function self.setNationality(nationality)
+        self.nationality = nationality
+        self.updatePlayerData("nationality", nationality)
+    end
+
+    function self.getNationality()
+        return self.nationality
     end
 
     function self.getAccounts(minimal)
