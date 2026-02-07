@@ -116,12 +116,12 @@
 
 ---@class xPlayer:StaticPlayer
 --- Properties
----@field accounts ESXAccount[]     # Array of the player's accounts.
+---@field accounts table<string, ESXAccount>     # Map of the player's accounts.
 ---@field coords table              # Player's coordinates {x, y, z, heading}.
 ---@field group string              # Player permission group.
 ---@field identifier string         # Unique identifier (usually Steam or license).
 ---@field license string            # Player license string.
----@field inventory ESXInventoryItem[] # Player's inventory items.
+---@field inventory table<string, ESXInventoryItem> # Player's inventory items (Map).
 ---@field job ESXJob                # Player's current job.
 ---@field loadout ESXInventoryWeapon[] # Player's current weapons.
 ---@field name string               # Player's display name.
@@ -135,11 +135,20 @@
 ---@field paycheckEnabled boolean   # Whether paycheck is enabled.
 ---@field admin boolean             # Whether the player is an admin.
 
+local function SafeStateSet(state, key, value)
+    local payload = json.encode(value)
+    if #payload > 60000 then -- 60KB Safety Limit
+        print(("[^1ERROR^7] State Bag Payload Too Large for key ^5%s^7! Size: ^5%s^7 bytes. Replication Blocked to prevent overflow."):format(key, #payload))
+        return
+    end
+    state:set(key, value, true)
+end
+
 ---@param playerId number
 ---@param identifier string
 ---@param ssn string
 ---@param group string
----@param accounts ESXAccount[]
+---@param accounts table
 ---@param inventory table
 ---@param weight number
 ---@param job ESXJob
@@ -152,12 +161,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     ---@diagnostic disable-next-line: missing-fields
     local self = {} ---@type xPlayer
 
-    self.accounts = accounts
+    self.accounts = accounts -- Expecting O(1) Map
     self.coords = coords
     self.group = group
     self.identifier = identifier
     self.ssn = ssn
-    self.inventory = inventory
+    self.inventory = inventory -- Expecting O(1) Map
     self.job = job
     self.loadout = loadout
     self.name = name
@@ -189,9 +198,14 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     local stateBag = Player(self.source).state
     stateBag:set("identifier", self.identifier, false)
     stateBag:set("license", self.license, false)
-    stateBag:set("job", self.job, true)
+    SafeStateSet(stateBag, "job", self.job)
     stateBag:set("group", self.group, true)
     stateBag:set("name", self.name, true)
+    SafeStateSet(stateBag, "accounts", self.accounts)
+    SafeStateSet(stateBag, "inventory", self.inventory)
+    
+    -- Mark as loaded at the END of creation (or handled in main.lua)
+    stateBag:set("esx_loaded", true, true)
 
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
@@ -279,8 +293,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
         self.group = newGroup
 
+        -- Bridge Compatibility
         TriggerEvent("esx:setGroup", self.source, self.group, lastGroup)
         self.triggerEvent("esx:setGroup", self.group, lastGroup)
+        
         Player(self.source).state:set("group", self.group, true)
 
         ExecuteCommand(("add_principal identifier.%s group.%s"):format(self.license, self.group))
@@ -301,14 +317,19 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.getAccounts(minimal)
+        -- Transform O(1) Map to Array for Legacy Return
         if not minimal then
-            return self.accounts
+            local accountsArray = {}
+            for _, account in pairs(self.accounts) do
+                table.insert(accountsArray, account)
+            end
+            table.sort(accountsArray, function(a, b) return a.name < b.name end)
+            return accountsArray
         end
 
         local minimalAccounts = {}
-
-        for i = 1, #self.accounts do
-            minimalAccounts[self.accounts[i].name] = self.accounts[i].money
+        for name, account in pairs(self.accounts) do
+            minimalAccounts[name] = account.money
         end
 
         return minimalAccounts
@@ -316,29 +337,30 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.getAccount(account)
         account = string.lower(account)
-        for i = 1, #self.accounts do
-            local accountName = string.lower(self.accounts[i].name)
-            if accountName == account then
-                return self.accounts[i]
-            end
-        end
-        return nil
+        return self.accounts[account] -- O(1) Lookup
     end
 
     function self.getInventory(minimal)
         if minimal then
             local minimalInventory = {}
-
-            for _, v in ipairs(self.inventory) do
+            for name, v in pairs(self.inventory) do
                 if v.count > 0 then
-                    minimalInventory[v.name] = v.count
+                    minimalInventory[name] = v.count
                 end
             end
-
             return minimalInventory
         end
 
-        return self.inventory
+        -- Return Array for Legacy Compatibility
+        local inventoryArray = {}
+        for _, v in pairs(self.inventory) do
+            table.insert(inventoryArray, v)
+        end
+        -- Sort by label for consistent UI
+        table.sort(inventoryArray, function(a, b)
+             return (a.label or a.name) < (b.label or b.name)
+        end)
+        return inventoryArray
     end
 
     function self.getJob()
@@ -395,9 +417,13 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
             if account then
                 money = account.round and ESX.Math.Round(money) or money
-                self.accounts[account.index].money = money
+                self.accounts[accountName].money = money
 
-                self.triggerEvent("esx:setAccountMoney", account)
+                -- Sync via State Bag
+                SafeStateSet(Player(self.source).state, "accounts", self.accounts)
+
+                -- Legacy Events (Optional: Bridge handles client, but Server events might be needed for other scripts)
+                self.triggerEvent("esx:setAccountMoney", account) -- Bridge will also fire this on client
                 TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
             else
                 error(("Tried To Set Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
@@ -417,7 +443,9 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             local account = self.getAccount(accountName)
             if account then
                 money = account.round and ESX.Math.Round(money) or money
-                self.accounts[account.index].money = self.accounts[account.index].money + money
+                self.accounts[accountName].money = self.accounts[accountName].money + money
+
+                SafeStateSet(Player(self.source).state, "accounts", self.accounts)
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
@@ -440,11 +468,13 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
             if account then
                 money = account.round and ESX.Math.Round(money) or money
-                if self.accounts[account.index].money - money > self.accounts[account.index].money then
+                if self.accounts[accountName].money - money > self.accounts[accountName].money then
                     error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
                     return
                 end
-                self.accounts[account.index].money = self.accounts[account.index].money - money
+                self.accounts[accountName].money = self.accounts[accountName].money - money
+
+                SafeStateSet(Player(self.source).state, "accounts", self.accounts)
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
@@ -457,12 +487,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.getInventoryItem(itemName)
-        for _, v in ipairs(self.inventory) do
-            if v.name == itemName then
-                return v
-            end
-        end
-        return nil
+        return self.inventory[itemName]
     end
 
     function self.addInventoryItem(itemName, count)
@@ -473,8 +498,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             item.count = item.count + count
             self.weight = self.weight + (item.weight * count)
 
+            -- Sync State Bag
+            SafeStateSet(Player(self.source).state, "inventory", self.inventory)
+
             TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
-            self.triggerEvent("esx:addInventoryItem", item.name, item.count)
+            -- Removed direct TriggerClientEvent, Bridge handles it.
+            -- self.triggerEvent("esx:addInventoryItem", item.name, item.count) 
         end
     end
 
@@ -490,8 +519,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                     item.count = newCount
                     self.weight = self.weight - (item.weight * count)
 
+                    SafeStateSet(Player(self.source).state, "inventory", self.inventory)
+
                     TriggerEvent("esx:onRemoveInventoryItem", self.source, item.name, item.count)
-                    self.triggerEvent("esx:removeInventoryItem", item.name, item.count)
+                    -- Removed direct TriggerClientEvent, Bridge handles it.
+                    -- self.triggerEvent("esx:removeInventoryItem", item.name, item.count)
                 end
             else
                 error(("Player ID:^5%s Tried remove a Invalid count -> %s of %s"):format(self.playerId, count, itemName))
@@ -599,8 +631,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
         self.metadata.jobDuty = onDuty
         TriggerEvent("esx:setJob", self.source, self.job, lastJob)
-        self.triggerEvent("esx:setJob", self.job, lastJob)
-        Player(self.source).state:set("job", self.job, true)
+        
+        -- Removed Client Trigger, Bridge handles it.
+        -- self.triggerEvent("esx:setJob", self.job, lastJob)
+        
+        SafeStateSet(Player(self.source).state, "job", self.job)
     end
 
     function self.addWeapon(weaponName, ammo)
@@ -776,12 +811,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.hasItem(item)
-        for _, v in ipairs(self.inventory) do
-            if v.name == item and v.count >= 1 then
-                return v, v.count
-            end
+        -- O(1) Check
+        local v = self.inventory[item]
+        if v and v.count >= 1 then
+            return v, v.count
         end
-
         return false
     end
 

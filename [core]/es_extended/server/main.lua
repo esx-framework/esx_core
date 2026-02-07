@@ -207,13 +207,13 @@ function loadESXPlayer(identifier, playerId, isNew)
     for account, data in pairs(Config.Accounts) do
         data.round = data.round or data.round == nil
 
-        local index = #userData.accounts + 1
-        userData.accounts[index] = {
+        -- O(1) Map Structure for Accounts
+        userData.accounts[account] = {
             name = account,
             money = accounts[account] or Config.StartingAccountMoney[account] or 0,
             label = data.label,
             round = data.round,
-            index = index,
+            index = 0, -- Index deprecated in Map, handled by sorting on demand
         }
     end
 
@@ -245,15 +245,17 @@ function loadESXPlayer(identifier, playerId, isNew)
         skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
     }
 
-    -- Inventory
+    -- Inventory (O(1) Map Construction)
     if not Config.CustomInventory then
         local inventory = (result.inventory and result.inventory ~= "") and json.decode(result.inventory) or {}
 
         for name, item in pairs(ESX.Items) do
             local count = inventory[name] or 0
-            userData.weight += (count * item.weight)
+            if count > 0 then
+                userData.weight = userData.weight + (count * item.weight)
+            end
 
-            userData.inventory[#userData.inventory + 1] = {
+            userData.inventory[name] = {
                 name = name,
                 count = count,
                 label = item.label,
@@ -263,9 +265,6 @@ function loadESXPlayer(identifier, playerId, isNew)
                 canRemove = item.canRemove,
             }
         end
-        table.sort(userData.inventory, function(a, b)
-            return a.label < b.label
-        end)
     elseif result.inventory and result.inventory ~= "" then
         userData.inventory = json.decode(result.inventory)
     end
@@ -312,7 +311,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     -- Metadata
     userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}
 
-    -- xPlayer Creation
+    -- xPlayer Creation (Uses O(1) Maps)
     local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.ssn, userData.group, userData.accounts, userData.inventory, userData.weight, userData.job, userData.loadout, GetPlayerName(playerId), userData.coords, userData.metadata)
 
     GlobalState["playerCount"] = GlobalState["playerCount"] + 1
@@ -345,11 +344,29 @@ function loadESXPlayer(identifier, playerId, isNew)
         end
     end
 
+    -- Legacy Payload Construction (Convert Maps to Arrays)
+    local legacyUserData = ESX.Table.Clone(userData)
+    
+    legacyUserData.accounts = {}
+    for _, account in pairs(userData.accounts) do
+        table.insert(legacyUserData.accounts, account)
+    end
+    table.sort(legacyUserData.accounts, function(a, b) return a.name < b.name end)
+
+    legacyUserData.inventory = {}
+    for _, item in pairs(userData.inventory) do
+        table.insert(legacyUserData.inventory, item)
+    end
+    table.sort(legacyUserData.inventory, function(a, b) return a.label < b.label end)
+
+    -- Trigger Events
     TriggerEvent("esx:playerLoaded", playerId, xPlayer, isNew)
-    userData.money = xPlayer.getMoney()
-    userData.maxWeight = xPlayer.getMaxWeight()
-    userData.variables = xPlayer.variables or {}
-    xPlayer.triggerEvent("esx:playerLoaded", userData, isNew, userData.skin)
+    
+    legacyUserData.money = xPlayer.getMoney()
+    legacyUserData.maxWeight = xPlayer.getMaxWeight()
+    legacyUserData.variables = xPlayer.variables or {}
+    
+    xPlayer.triggerEvent("esx:playerLoaded", legacyUserData, isNew, userData.skin)
 
     if not Config.CustomInventory then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)

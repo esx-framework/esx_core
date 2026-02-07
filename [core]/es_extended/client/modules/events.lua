@@ -5,6 +5,7 @@ RegisterNetEvent("esx:requestModel", function(model)
 end)
 
 RegisterNetEvent("esx:playerLoaded", function(xPlayer, _, skin)
+    while not LocalPlayer.state.esx_loaded do Wait(10) end
     ESX.PlayerData = xPlayer
 
     if not Config.Multichar then
