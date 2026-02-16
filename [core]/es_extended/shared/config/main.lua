@@ -22,16 +22,15 @@ Config.Accounts = {
     },
 }
 
-Config.StartingAccountMoney = { bank = 50000 }
+Config.StartingAccountMoney = { bank = 500 } -- 70s era starting cash (~$500 in 1975)
 
 Config.StartingInventoryItems = false -- table/false
 
-Config.DefaultSpawns = { -- If you want to have more spawn positions and select them randomly uncomment commented code or add more locations
-    { x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0 },
-    --{x = 224.9865, y = -865.0871, z = 30.2922, heading = 1.0},
-    --{x = 227.8436, y = -866.0400, z = 30.2922, heading = 1.0},
-    --{x = 230.6051, y = -867.1450, z = 30.2922, heading = 1.0},
-    --{x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
+Config.DefaultSpawns = { -- TrickEm City spawn points - iconic 70s locations
+    { x = 222.2027, y = -864.0162, z = 30.2922, heading = 1.0 }, -- Legion Square
+    { x = -1388.0, y = -586.0, z = 30.0, heading = 120.0 },     -- Near Disco Inferno
+    { x = 134.0, y = -1280.0, z = 29.0, heading = 260.0 },      -- Near Studio 54
+    { x = 895.0, y = -179.0, z = 74.0, heading = 240.0 },       -- Cab Co.
 }
 
 Config.AdminGroups = {
@@ -51,7 +50,7 @@ Config.EnablePaycheck = true -- enable paycheck
 Config.LogPaycheck = false -- Logs paychecks to a nominated Discord channel via webhook (default is false)
 Config.EnableSocietyPayouts = false -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight = 24 -- the max inventory weight without a backpack
-Config.PaycheckInterval = 7 * 60000 -- how often to receive paychecks in milliseconds
+Config.PaycheckInterval = 10 * 60000 -- how often to receive paychecks (every 10 min for 70s pacing)
 Config.SaveDeathStatus = true -- Save the death status of a player
 Config.EnableDebug = false -- Use Debug options?
 

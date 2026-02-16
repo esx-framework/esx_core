@@ -62,9 +62,9 @@
 }
 
 .chat-input > div {
-    background-color: rgba(30, 30, 30, 0.7) !important;
-    border: calc(0.24vh / 2) solid #fb9c04ce;
-    outline: calc(0.24vh / 2) solid #fb9c04ce; /* to replace margin-background */
+    background-color: rgba(26, 10, 46, 0.8) !important;
+    border: calc(0.24vh / 2) solid #ff6b35ce;
+    outline: calc(0.24vh / 2) solid #ff6b35ce;
     padding: calc(0.2vh / 2);
     border-radius: 5px;
     filter: url(#svgDropShadowFilter);
@@ -84,12 +84,12 @@
 
 .chat-input .prefix.any:before {
     content: '[';
-    color: #fb9b04;
+    color: #ff6b35;
 }
 
 .chat-input .prefix.any:after {
     content: ']';
-    color: #fb9b04;
+    color: #ff6b35;
     margin-right: 1%;
 }
 

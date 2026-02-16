@@ -1,0 +1,240 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Righteous', cursive;
+}
+
+#hud-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#hud-container.hidden {
+    opacity: 0;
+}
+
+/* Status bars - bottom left */
+#status-bars {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bar-icon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    text-shadow: 0 0 8px currentColor;
+}
+
+#health-bar .bar-icon {
+    color: #e94560;
+}
+
+#armor-bar .bar-icon {
+    color: #4ecdc4;
+}
+
+.bar-track {
+    width: 160px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.health-fill {
+    background: linear-gradient(90deg, #e94560, #ff6b6b);
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+}
+
+.armor-fill {
+    background: linear-gradient(90deg, #4ecdc4, #44bdb5);
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+}
+
+/* Money display - top right */
+#money-display {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    text-align: right;
+}
+
+.money-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 4px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.money-label {
+    font-size: 11px;
+    color: rgba(255, 215, 0, 0.6);
+    letter-spacing: 2px;
+}
+
+.money-value {
+    font-family: 'Russo One', sans-serif;
+    font-size: 18px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    min-width: 80px;
+    text-align: right;
+}
+
+#bank-display .money-value {
+    color: #4ecdc4;
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+}
+
+#bank-display .money-label {
+    color: rgba(78, 205, 196, 0.6);
+}
+
+#bank-display {
+    border-color: rgba(78, 205, 196, 0.15);
+}
+
+/* Job display - top left */
+#job-display {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    border-left: 3px solid #ff6b35;
+}
+
+.job-label {
+    font-size: 16px;
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+    display: block;
+}
+
+.job-grade {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+}
+
+/* Location display - bottom right */
+#location-display {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    text-align: right;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+}
+
+.location-time {
+    font-family: 'Russo One', sans-serif;
+    font-size: 22px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.location-street {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+}
+
+/* Vehicle HUD - bottom center */
+#vehicle-hud {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 24px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    transition: opacity 0.3s ease;
+}
+
+#vehicle-hud.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.speedo-container {
+    text-align: center;
+}
+
+.speedo-value {
+    font-family: 'Russo One', sans-serif;
+    font-size: 36px;
+    color: #ff6b35;
+    text-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+    line-height: 1;
+}
+
+.speedo-unit {
+    font-size: 11px;
+    color: rgba(255, 107, 53, 0.6);
+    letter-spacing: 3px;
+}
+
+.fuel-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fuel-icon {
+    font-size: 16px;
+    color: #ffd700;
+}
+
+.fuel-track {
+    width: 80px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.fuel-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e94560, #ffd700);
+    border-radius: 3px;
+    transition: width 1s ease;
+}

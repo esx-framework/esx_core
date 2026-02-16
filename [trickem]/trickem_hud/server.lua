@@ -1,0 +1,2 @@
+-- Server-side HUD resource (placeholder for future server-side HUD logic)
+-- Currently the HUD is fully client-side with ESX data
