@@ -1,24 +1,3 @@
----@class CVehicleData
----@field plate string
----@field netId number
----@field entity number
----@field modelHash number
----@field owner string
-
----@class CExtendedVehicle
----@field plate string
----@field isValid fun(self:CExtendedVehicle):boolean
----@field new fun(owner:string, plate:string, coords:vector4): CExtendedVehicle?
----@field getFromPlate fun(plate:string):CExtendedVehicle?
----@field getPlate fun(self:CExtendedVehicle):string?
----@field getNetId fun(self:CExtendedVehicle):number?
----@field getEntity fun(self:CExtendedVehicle):number?
----@field getModelHash fun(self:CExtendedVehicle):number?
----@field getOwner fun(self:CExtendedVehicle):string?
----@field setPlate fun(self:CExtendedVehicle, newPlate:string):boolean
----@field setProps fun(self:CExtendedVehicle, newProps:table):boolean
----@field setOwner fun(self:CExtendedVehicle, newOwner:string):boolean
----@field delete fun(self:CExtendedVehicle, garageName:string?, isImpound:boolean?):nil
 Core.vehicleClass = {
 	plate = "",
 	new = function(owner, plate, coords)

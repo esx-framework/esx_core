@@ -272,23 +272,6 @@ function ESX.UI.Menu.RegisterType(menuType, open, close)
     }
 end
 
----@class ESXMenu
----@field type string
----@field namespace string
----@field resourceName string
----@field name string
----@field data table
----@field submit? function
----@field cancel? function
----@field change? function
----@field close function
----@field update function
----@field refresh function
----@field setElement function
----@field setElements function
----@field setTitle function
----@field removeElement function
-
 ---@param menuType string
 ---@param namespace string
 ---@param name string

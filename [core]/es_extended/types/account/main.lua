@@ -1,0 +1,6 @@
+---@class ESXAccount
+---@field name string               # Account name (e.g., "bank", "money").
+---@field money number              # Current balance in this account.
+---@field label string              # Human-readable label for the account.
+---@field round boolean             # Whether amounts are rounded for display.
+---@field index number              # Index of the account in the player's accounts list.
