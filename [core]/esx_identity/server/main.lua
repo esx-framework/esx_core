@@ -296,6 +296,8 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
 
         TriggerClientEvent("esx_identity:setPlayerData", xPlayer.src, currentIdentity)
         saveIdentityToDatabase(identifier, currentIdentity)
+        TriggerEvent("esx_identity:completedRegistration", source, data)
+
         alreadyRegistered[identifier] = true
         playerIdentity[identifier] = nil
         return cb(true)
