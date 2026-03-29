@@ -27,7 +27,7 @@ end)
 
 RegisterNUICallback("ready", function(_, cb)
     ready = true
-    cb(1)
+    cb({ config = Config })
 end)
 
 function setGuiState(state)
