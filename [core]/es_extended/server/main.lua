@@ -271,16 +271,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
 
     -- Group
-    if result.group then
-        if result.group == "superadmin" then
-            userData.group = "admin"
-            print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7")
-        else
-            userData.group = result.group
-        end
-    else
-        userData.group = "user"
-    end
+    userData.group = result.group or "user"
 
     -- Loadout
     if not Config.CustomInventory then
