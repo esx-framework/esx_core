@@ -661,6 +661,16 @@ function ESX.GetItems()
     return ESX.Items
 end
 
+local function getItemLimit(item)
+    local itemLimit = tonumber(item.limit)
+
+    if itemLimit == nil then
+        return -1
+    end
+
+    return math.floor(itemLimit)
+end
+
 ---@return table
 function ESX.GetUsableItems()
     local Usables = {}
@@ -712,15 +722,16 @@ if not Config.CustomInventory then
             xPlayer.inventory = {}
             local playerInvIndex = 1
             for itemName, itemData in pairs(ESX.Items) do
-                xPlayer.inventory[playerInvIndex] = {
-                    name = itemName,
-                    count = minimalInv[itemName] or 0,
-                    label = itemData.label,
-                    weight = itemData.weight,
-                    usable = Core.UsableItemsCallbacks[itemName] ~= nil,
-                    rare = itemData.rare,
-                    canRemove = itemData.canRemove,
-                }
+            xPlayer.inventory[playerInvIndex] = {
+                name = itemName,
+                count = minimalInv[itemName] or 0,
+                label = itemData.label,
+                limit = getItemLimit(itemData),
+                weight = itemData.weight,
+                usable = Core.UsableItemsCallbacks[itemName] ~= nil,
+                rare = itemData.rare,
+                canRemove = itemData.canRemove,
+            }
                 playerInvIndex += 1
             end
 
@@ -736,15 +747,20 @@ if not Config.CustomInventory then
         local itemCount = #items
         for i = 1, itemCount do
             local item = items[i]
-            ESX.Items[item.name] = { label = item.label, weight = item.weight, rare = item.rare, canRemove = item
-            .can_remove }
+            ESX.Items[item.name] = {
+                label = item.label,
+                limit = getItemLimit(item),
+                weight = item.weight,
+                rare = item.rare,
+                canRemove = item.can_remove,
+            }
         end
         refreshPlayerInventories()
 
         return itemCount
     end
 
-    ---@param items { name: string, label: string, weight?: number, rare?: boolean, canRemove?: boolean }[]
+    ---@param items { name: string, label: string, limit?: number, weight?: number, rare?: boolean, canRemove?: boolean }[]
     function ESX.AddItems(items)
         local toInsert = {}
         local toInsertIndex = 1
@@ -753,6 +769,7 @@ if not Config.CustomInventory then
             local item = items[i]
             local name = item.name
             local label = item.label
+            local limit = item.limit ~= nil and math.floor(item.limit) or -1
             local weight = item.weight or 1
             local rare = item.rare or false
             local canRemove = item.canRemove ~= false
@@ -768,6 +785,11 @@ if not Config.CustomInventory then
 
             if type(label) ~= "string" then
                 print(("^1[AddItems]^0 Invalid label for item '%s'"):format(name))
+                goto continue
+            end
+
+            if type(limit) ~= "number" then
+                print(("^1[AddItems]^0 Invalid limit for item '%s'"):format(name))
                 goto continue
             end
 
@@ -789,6 +811,7 @@ if not Config.CustomInventory then
             toInsert[toInsertIndex] = {
                 name = name,
                 label = label,
+                limit = limit,
                 weight = weight,
                 rare = rare,
                 canRemove = canRemove,
@@ -800,13 +823,14 @@ if not Config.CustomInventory then
 
         if #toInsert > 0 then
             MySQL.prepare.await(
-            "INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)",
+            "INSERT IGNORE INTO `items` (`name`, `label`, `limit`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?, ?)",
                 toInsert)
 
             for i = 1, #toInsert do
                 local row = toInsert[i]
                 ESX.Items[row.name] = {
                     label = row.label,
+                    limit = row.limit,
                     weight = row.weight,
                     rare = row.rare,
                     canRemove = row.canRemove,

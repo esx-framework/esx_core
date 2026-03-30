@@ -337,6 +337,14 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
         if item then
             count = ESX.Math.Round(count)
+            if count <= 0 then
+                return
+            end
+
+            if not self.canCarryItem(itemName, count) then
+                return
+            end
+
             item.count = item.count + count
             self.weight = self.weight + (item.weight * count)
 
@@ -394,15 +402,33 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.canCarryItem(itemName, count)
-        if ESX.Items[itemName] then
-            local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
-            local newWeight = currentWeight + (itemWeight * count)
-
-            return newWeight <= self.maxWeight
-        else
+        local item = ESX.Items[itemName]
+        if not item then
             print(('[^3WARNING^7] Item ^5"%s"^7 was used but does not exist!'):format(itemName))
             return false
         end
+
+        count = ESX.Math.Round(count)
+        if count <= 0 then
+            return false
+        end
+
+        if Config.InventoryMode == "limit" then
+            local inventoryItem = self.getInventoryItem(itemName)
+            local itemLimit = tonumber(item.limit) or -1
+
+            if itemLimit < 0 then
+                return true
+            end
+
+            local currentCount = inventoryItem and inventoryItem.count or 0
+            return currentCount + count <= itemLimit
+        end
+
+        local currentWeight, itemWeight = self.weight, item.weight
+        local newWeight = currentWeight + (itemWeight * count)
+
+        return newWeight <= self.maxWeight
     end
 
     function self.canSwapItem(firstItem, firstItemCount, testItem, testItemCount)
@@ -416,6 +442,17 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         end
 
         if firstItemObject.count >= firstItemCount then
+            if Config.InventoryMode == "limit" then
+                local itemLimit = tonumber(testItemObject.limit) or -1
+
+                if itemLimit < 0 then
+                    return true
+                end
+
+                local newCount = testItemObject.count + testItemCount
+                return newCount <= itemLimit
+            end
+
             local weightWithoutFirstItem = ESX.Math.Round(self.weight - (firstItemObject.weight * firstItemCount))
             local weightWithTestItem = ESX.Math.Round(weightWithoutFirstItem + (testItemObject.weight * testItemCount))
 

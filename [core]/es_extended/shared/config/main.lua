@@ -51,6 +51,7 @@ Config.EnablePaycheck = true           -- enable paycheck
 Config.LogPaycheck = false             -- Logs paychecks to a nominated Discord channel via webhook (default is false)
 Config.EnableSocietyPayouts = false    -- pay from the society account that the player is employed at? Requirement: esx_society
 Config.MaxWeight = 24                  -- the max inventory weight without a backpack
+Config.InventoryMode = "weight"       -- "weight" or "limit"
 Config.PaycheckInterval = 7 * 60000    -- how often to receive paychecks in milliseconds
 Config.SaveDeathStatus = true          -- Save the death status of a player
 Config.EnableDebug = false             -- Use Debug options?
