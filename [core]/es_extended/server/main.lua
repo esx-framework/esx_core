@@ -257,6 +257,7 @@ function loadESXPlayer(identifier, playerId, isNew)
                 name = name,
                 count = count,
                 label = item.label,
+                limit = item.limit,
                 weight = item.weight,
                 usable = Core.UsableItemsCallbacks[name] ~= nil,
                 rare = item.rare,

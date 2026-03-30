@@ -2,6 +2,7 @@
 ---@field name string               # Item identifier (internal name).
 ---@field label string              # Display name of the item.
 ---@field weight number             # Weight of a single unit of the item.
+---@field limit number              # Maximum allowed count of this item.
 ---@field usable boolean            # Whether the item can be used.
 ---@field rare boolean              # Whether the item is rare.
 ---@field canRemove boolean         # Whether the item can be removed from inventory.
