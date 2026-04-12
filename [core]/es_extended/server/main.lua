@@ -419,8 +419,61 @@ AddEventHandler("esx:playerLogout", function(playerId, cb)
     TriggerClientEvent("esx:onPlayerLogout", playerId)
 end)
 
+local EventRateLimit = {}
+
+local function IsRateLimited(playerId, eventName, maxRequests, windowMs)
+    local now = GetGameTimer()
+    local playerEvents = EventRateLimit[playerId]
+
+    if not playerEvents then
+        playerEvents = {}
+        EventRateLimit[playerId] = playerEvents
+    end
+
+    local data = playerEvents[eventName]
+    if not data or now - data.windowStart > windowMs then
+        playerEvents[eventName] = {
+            count = 1,
+            windowStart = now,
+            logged = false,
+        }
+        return false
+    end
+
+    data.count = data.count + 1
+
+    if data.count > maxRequests and not data.logged then
+        data.logged = true
+
+        local xPlayer = ESX.GetPlayerFromId(playerId)
+        local playerName = xPlayer and xPlayer.name or GetPlayerName(playerId) or "Unknown"
+        local identifier = xPlayer and xPlayer.identifier or "Unknown"
+
+        ESX.DiscordLogFields("RateLimit", "Rate Limit erreicht", "orange", {
+            { name = "Player", value = playerName, inline = true },
+            { name = "ID", value = playerId, inline = true },
+            { name = "Identifier", value = identifier, inline = false },
+            { name = "Event", value = eventName, inline = true },
+            { name = "Requests", value = data.count, inline = true },
+            { name = "Window (ms)", value = windowMs, inline = true },
+        })
+    end
+
+    return data.count > maxRequests
+end
+
+AddEventHandler("playerDropped", function()
+    EventRateLimit[source] = nil
+end)
+
 if not Config.CustomInventory then
     RegisterNetEvent("esx:updateWeaponAmmo", function(weaponName, ammoCount)
+        if Config.EnableRateLimit then
+            if IsRateLimited(source, "esx:updateWeaponAmmo", 25, 1000) then
+                return
+            end
+        end
+
         local xPlayer = ESX.GetPlayerFromId(source)
 
         if xPlayer then
@@ -429,6 +482,12 @@ if not Config.CustomInventory then
     end)
 
     RegisterNetEvent("esx:giveInventoryItem", function(target, itemType, itemName, itemCount)
+        if Config.EnableRateLimit then
+            if IsRateLimited(source, "esx:giveInventoryItem", 8, 1000) then
+                return
+            end
+        end
+
         local playerId = source
         local sourceXPlayer = ESX.GetPlayerFromId(playerId)
         local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -543,6 +602,12 @@ if not Config.CustomInventory then
     end)
 
     RegisterNetEvent("esx:removeInventoryItem", function(itemType, itemName, itemCount)
+        if Config.EnableRateLimit then
+            if IsRateLimited(source, "esx:removeInventoryItem", 8, 1000) then
+                return
+            end
+        end
+
         local playerId = source
         local xPlayer = ESX.GetPlayerFromId(playerId)
 
@@ -616,6 +681,12 @@ if not Config.CustomInventory then
     end)
 
     RegisterNetEvent("esx:useItem", function(itemName)
+        if Config.EnableRateLimit then
+            if IsRateLimited(source, "esx:useItem", 12, 1000) then
+                return
+            end
+        end
+
         local source = source
         local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -633,6 +704,12 @@ if not Config.CustomInventory then
     end)
 
     RegisterNetEvent("esx:onPickup", function(pickupId)
+        if Config.EnableRateLimit then
+            if IsRateLimited(source, "esx:onPickup", 8, 1000) then
+                return
+            end
+        end
+
         local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
         if not xPlayer then

@@ -6,6 +6,7 @@ Config.DiscordLogs = {
         UserActions = "",
         Resources = "",
         Paycheck = "",
+        RateLimit = "",
     },
 
     Colors = { -- https://www.spycolor.com/
