@@ -449,7 +449,7 @@ local function IsRateLimited(playerId, eventName, maxRequests, windowMs)
         local playerName = xPlayer and xPlayer.name or GetPlayerName(playerId) or "Unknown"
         local identifier = xPlayer and xPlayer.identifier or "Unknown"
 
-        ESX.DiscordLogFields("RateLimit", "Rate Limit erreicht", "orange", {
+        ESX.DiscordLogFields("RateLimit", "Rate Limit Exceeded", "orange", {
             { name = "Player", value = playerName, inline = true },
             { name = "ID", value = playerId, inline = true },
             { name = "Identifier", value = identifier, inline = false },
