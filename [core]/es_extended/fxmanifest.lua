@@ -21,12 +21,13 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
     'shared/config/logs.lua',
 
+	'server/core.lua',
+	'server/functions.lua',
 	'server/common.lua',
 	'server/modules/callback.lua',
 	'server/classes/player.lua',
 	'server/classes/vehicle.lua',
 	'server/classes/overrides/*.lua',
-	'server/functions.lua',
 	'server/modules/onesync.lua',
 	'server/modules/paycheck.lua',
 
