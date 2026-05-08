@@ -628,6 +628,18 @@ function ESX.GetItemLabel(item)
     end
 end
 
+---@param item string
+---@return boolean
+function ESX.DoesItemExist(item)
+    return ESX.Items[item] ~= nil
+end
+
+---@param account string
+---@return boolean
+function ESX.DoesAccountExist(account)
+    return Config.Accounts[account] ~= nil
+end
+
 ---@param jobType string|string[]?
 ---@return table
 function ESX.GetJobs(jobType)
