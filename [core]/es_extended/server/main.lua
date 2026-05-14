@@ -414,12 +414,13 @@ AddEventHandler("esx:setJob", function(_, job, lastJob)
     GlobalState[jobKey] = Core.JobsPlayerCount[job.name]
 end)
 
+local EventRateLimit = {}
+
 AddEventHandler("esx:playerLogout", function(playerId, cb)
     onPlayerDropped(playerId, "esx_player_logout", cb)
     TriggerClientEvent("esx:onPlayerLogout", playerId)
+    EventRateLimit[playerId] = nil
 end)
-
-local EventRateLimit = {}
 
 local function IsRateLimited(playerId, eventName, maxRequests, windowMs)
     local now = GetGameTimer()
