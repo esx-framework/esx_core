@@ -32,8 +32,12 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+	justify-content: flex-end;
 	gap: 10px;
-	max-height: 80vh;
+	height: 55vh;
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 100%);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 16px, #000 100%);
 	z-index: 1000;
 }
 
@@ -92,6 +96,7 @@ body {
 	padding: 12px;
 	align-items: center;
 	border-left: 4px solid #555;
+	flex-shrink: 0;
 }
 
 .notify-success {

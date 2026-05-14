@@ -1,4 +1,34 @@
 Adjustments = {}
+local frameLoopRunning = false
+
+function Adjustments:FrameAdjustments()
+    if frameLoopRunning then
+        return
+    end
+
+    frameLoopRunning = true
+
+    CreateThread(function()
+        while true do
+            if Config.DisableDisplayAmmo then
+                DisplayAmmoThisFrame(false)
+            end
+
+            if Config.DisableVehicleRewards then
+                DisablePlayerVehicleRewards(ESX.playerId)
+            end
+
+            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
+            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
+            SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
+            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
+            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
+            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
+
+            Wait(0)
+        end
+    end)
+end
 
 function Adjustments:RemoveHudComponents()
     for i = 1, #Config.RemoveHudComponents do
@@ -42,19 +72,7 @@ function Adjustments:HealthRegeneration()
 end
 
 function Adjustments:AmmoAndVehicleRewards()
-    CreateThread(function()
-        while true do
-            if Config.DisableDisplayAmmo then
-                DisplayAmmoThisFrame(false)
-            end
-
-            if Config.DisableVehicleRewards then
-                DisablePlayerVehicleRewards(ESX.playerId)
-            end
-
-            Wait(0)
-        end
-    end)
+    self:FrameAdjustments()
 end
 
 function Adjustments:EnablePvP()
@@ -222,17 +240,7 @@ function Adjustments:DisableRadio()
 end
 
 function Adjustments:Multipliers()
-    CreateThread(function()
-        while true do
-            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
-            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
-            SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
-            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
-            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
-            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
-            Wait(0)
-        end
-    end)
+    self:FrameAdjustments()
 end
 
 function Adjustments:ApplyPlayerStats()
