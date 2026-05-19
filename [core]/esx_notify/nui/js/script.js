@@ -115,16 +115,6 @@ const notification = (data) => {
 		return;
 	}
 
-	if (data.message) {
-		// Remove any standalone ~s~ tags (not preceded by a color code)
-		data.message = data.message.replace(/~s~/g, "");
-	}
-
-	if (data.title) {
-		// Remove any standalone ~s~ tags (not preceded by a color code)
-		data.title = data.title.replace(/~s~/g, "");
-	}
-
 	let sanitizedTitle = data.title ? sanitizeHTML(data.title) : "";
 	let sanitizedMessage = data.message ? sanitizeHTML(data.message) : "";
 
@@ -137,6 +127,7 @@ const notification = (data) => {
 				sanitizedTitle = replaceColors(sanitizedTitle, objArr);
 			}
 		}
+		sanitizedTitle = sanitizedTitle.replace(/~s~/g, "");
 	}
 
 	for (const color in codes) {
@@ -147,6 +138,7 @@ const notification = (data) => {
 			sanitizedMessage = replaceColors(sanitizedMessage, objArr);
 		}
 	}
+	sanitizedMessage = sanitizedMessage.replace(/~s~/g, "");
 
 	sanitizedMessage = processLineBreaks(sanitizedMessage);
 	sanitizedTitle = processLineBreaks(sanitizedTitle);
