@@ -247,7 +247,8 @@ function Core.SavePlayers(cb)
         return
     end
 
-    local startTime <const> = os.time()
+    -- Fix: use GetGameTimer() (millisecond resolution) instead of os.time() (seconds), which made the duration log always read ~0.00
+    local startTime <const> = GetGameTimer()
     local parameters = {}
 
     for _, xPlayer in pairs(ESX.Players) do
@@ -278,7 +279,7 @@ function Core.SavePlayers(cb)
             end
 
             print(("[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms"):format(#parameters,
-                #parameters > 1 and "players" or "player", ESX.Math.Round((os.time() - startTime) / 1000000, 2)))
+                #parameters > 1 and "players" or "player", ESX.Math.Round(GetGameTimer() - startTime, 2)))
         end
     )
 end
@@ -560,11 +561,12 @@ function ESX.RefreshJobs()
         end
     end
 
-    if not Jobs then
-        -- Fallback data, if no jobs exist
+    ESX.Jobs = Jobs
+
+    -- Fix: `Jobs` is always a table, so the previous `if not Jobs` fallback was unreachable; ensure an 'unemployed' job always exists (player loading depends on it) when missing or invalid.
+    if not ESX.Jobs["unemployed"] then
+        print('[^3WARNING^7] No valid ^5"unemployed"^0 job found, inserting default fallback')
         ESX.Jobs["unemployed"] = { name = "unemployed", label = "Unemployed", type = "civ", whitelisted = false, grades = { ["0"] = { grade = 0, name = "unemployed", label = "Unemployed", salary = 200, skin_male = {}, skin_female = {} } } }
-    else
-        ESX.Jobs = Jobs
     end
 
     TriggerEvent("esx:jobsRefreshed")

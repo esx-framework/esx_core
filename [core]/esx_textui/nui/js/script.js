@@ -69,7 +69,16 @@ const replaceColors = (str, obj) => {
     return strToReplace;
 };
 
+// Fix: escape HTML special chars so player-supplied text cannot inject markup/scripts.
+// The color codes (~r~ ... ~s~) are applied AFTER escaping, so intentional color
+// formatting still renders while raw HTML in the message is neutralised.
+const escapeHtml = (str) =>
+    String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
 notification = (data) => {
+    // Fix: neutralise any HTML in the message before color codes are turned into <span> markup.
+    data["message"] = escapeHtml(data["message"]);
+
     for (color in codes) {
         if (data["message"].includes(color)) {
             let objArr = {};

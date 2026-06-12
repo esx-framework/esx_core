@@ -38,7 +38,11 @@ function OnTime(timestamp)
 
         if timestamp >= scheduledTimestamp and (not lastTimestamp or lastTimestamp < scheduledTimestamp) then
             local d = os.date('*t', scheduledTimestamp).wday
-            cronJobs[i].cb(d, cronJobs[i].h, cronJobs[i].m)
+            -- Fix: wrap the callback in pcall so one failing job does not interrupt the remaining ones.
+            local ok, err = pcall(cronJobs[i].cb, d, cronJobs[i].h, cronJobs[i].m)
+            if not ok then
+                print(("[^1ERROR^7] cron job (%02d:%02d) raised an error: %s"):format(cronJobs[i].h, cronJobs[i].m, tostring(err)))
+            end
         end
     end
 end

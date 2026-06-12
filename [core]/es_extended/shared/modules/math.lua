@@ -1,5 +1,9 @@
 ESX.Math = {}
 
+-- Fix: seed the PRNG once at module load instead of on every ESX.Math.Random call,
+-- which reset the sequence and produced poorly-randomized output.
+math.randomseed(GetGameTimer())
+
 ---@param value number
 ---@param numDecimalPlaces? number
 ---@return number
@@ -32,7 +36,7 @@ end
 ---@param maxRange number
 ---@return number
 function ESX.Math.Random(minRange, maxRange)
-    math.randomseed(GetGameTimer())
+    -- Fix: removed per-call math.randomseed; the PRNG is now seeded once at module load
     return math.random(minRange or 1, maxRange or 10)
 end
 

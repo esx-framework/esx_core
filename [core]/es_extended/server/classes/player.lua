@@ -307,7 +307,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
             if account then
                 money = account.round and ESX.Math.Round(money) or money
-                if self.accounts[account.index].money - money > self.accounts[account.index].money then
+                -- Fix: previous guard `balance - money > balance` was always false for money > 0, allowing negative balances. Refuse withdrawals when funds are insufficient.
+                if money > self.accounts[account.index].money then
                     error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
                     return
                 end
@@ -335,7 +336,9 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     function self.addInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
-        if item then
+        -- Fix: validate count is a positive number before mutating inventory/weight
+        count = tonumber(count)
+        if item and count and count > 0 then
             count = ESX.Math.Round(count)
             item.count = item.count + count
             self.weight = self.weight + (item.weight * count)
@@ -369,7 +372,9 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     function self.setInventoryItem(itemName, count)
         local item = self.getInventoryItem(itemName)
 
-        if item and count >= 0 then
+        -- Fix: coerce count to a number and reject negative/invalid values
+        count = tonumber(count)
+        if item and count and count >= 0 then
             count = ESX.Math.Round(count)
 
             if count > item.count then
@@ -426,6 +431,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.setMaxWeight(newWeight)
+        -- Fix: validate newWeight is a non-negative number before applying
+        newWeight = tonumber(newWeight)
+        if not newWeight or newWeight < 0 then
+            return print(("[ESX] [^3WARNING^7] Ignoring invalid ^5.setMaxWeight()^7 usage for ID: ^5%s^7, Weight: ^5%s^7"):format(self.source, tostring(newWeight)))
+        end
         self.maxWeight = newWeight
         self.triggerEvent("esx:setMaxWeight", self.maxWeight)
     end

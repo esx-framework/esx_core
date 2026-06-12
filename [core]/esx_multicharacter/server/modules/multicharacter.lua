@@ -68,9 +68,30 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
     if isNew then
         self.awaitingRegistration[source] = charid
     else
+        local license = ESX.GetIdentifier(source)
+
+        -- Fix (IDOR): the chosen charid comes from the client. Validate it is within the player's
+        -- own slot count and that the matching character actually exists for this license and is
+        -- not disabled, before loading it. Without this a client could load an arbitrary slot or a
+        -- character disabled via `disablechar`.
+        local slots = Database:GetPlayerSlots(("%s%%:%s"):format(Server.prefix, license))
+        if charid < 1 or charid > slots then
+            return
+        end
+
+        local fullIdentifier = ("%s%s:%s"):format(Server.prefix, charid, license)
+        local character = MySQL.single.await("SELECT `disabled` FROM `users` WHERE `identifier` = ?", { fullIdentifier })
+        if not character then
+            return
+        end
+
+        if character.disabled == 1 or character.disabled == true then
+            return
+        end
+
         SetPlayerRoutingBucket(source, 0)
         if not ESX.GetConfig().EnableDebug then
-            local identifier = ("%s%s:%s"):format(Server.prefix, charid, ESX.GetIdentifier(source))
+            local identifier = fullIdentifier
 
             if ESX.GetPlayerFromIdentifier(identifier) then
                 DropPlayer(source, "[ESX Multicharacter] Your identifier " .. identifier .. " is already on the server!")

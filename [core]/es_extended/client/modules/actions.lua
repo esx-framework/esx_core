@@ -226,6 +226,13 @@ function Actions:PedLoop()
 end
 
 function Actions:Init()
+    -- Fix: guard against the double Init() (module load + esx:playerLoaded) that spawned
+    -- a redundant TrackPedCoordsOnce thread and duplicate loops. Init is now idempotent.
+    if self.initialized then
+        return
+    end
+    self.initialized = true
+
     self:SlowLoop()
     self:PedLoop()
     self:TrackPedCoordsOnce()

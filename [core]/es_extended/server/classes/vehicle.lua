@@ -192,8 +192,9 @@ Core.vehicleClass = {
 		end
 
 		local entity = NetworkGetEntityFromNetworkId(vehicleData.netId)
-		if entity >= 0 and Entity(entity).state.owner == vehicleData.owner then
-			DeleteEntity(vehicleData.entity)
+		-- Fix: `entity >= 0` accepts 0 (no entity); require the entity to actually exist and be a vehicle before deleting, and delete the resolved entity.
+		if entity and entity > 0 and DoesEntityExist(entity) and GetEntityType(entity) == 2 and Entity(entity).state.owner == vehicleData.owner then
+			DeleteEntity(entity)
 		end
 
 		local query = "UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?"

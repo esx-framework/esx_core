@@ -1,3 +1,12 @@
+-- Fix: precompute the highest configured backpack modifier so client-supplied bags_1 can never
+-- raise the player's max weight beyond what the server config actually permits.
+local MaxBackpackModifier = 0
+for _, modifier in pairs(Config.BackpackWeight) do
+    if type(modifier) == "number" and modifier > MaxBackpackModifier then
+        MaxBackpackModifier = modifier
+    end
+end
+
 RegisterNetEvent("esx_skin:save", function(skin)
     if not skin or type(skin) ~= "table" then
         return
@@ -6,10 +15,13 @@ RegisterNetEvent("esx_skin:save", function(skin)
 
     if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
-        local backpackModifier = Config.BackpackWeight[skin.bags_1]
+        -- Fix: the skin (and bags_1) come from the client; only accept a numeric key that maps to a
+        -- configured backpack and bound the modifier to the highest configured value so a crafted
+        -- value can never inflate the player's max weight beyond what the config allows.
+        local backpackModifier = type(skin.bags_1) == "number" and Config.BackpackWeight[skin.bags_1] or nil
 
         if backpackModifier then
-            xPlayer.setMaxWeight(defaultMaxWeight + backpackModifier)
+            xPlayer.setMaxWeight(defaultMaxWeight + math.min(backpackModifier, MaxBackpackModifier))
         else
             xPlayer.setMaxWeight(defaultMaxWeight)
         end
@@ -22,14 +34,21 @@ RegisterNetEvent("esx_skin:save", function(skin)
 end)
 
 RegisterNetEvent("esx_skin:setWeight", function(skin)
+    -- Fix: guard against a missing/invalid skin payload (this handler lacked the type check the
+    -- save handler already has) before indexing it.
+    if type(skin) ~= "table" then
+        return
+    end
     local xPlayer = ESX.Player(source)
 
     if not ESX.GetConfig().CustomInventory then
         local defaultMaxWeight = ESX.GetConfig().MaxWeight
-        local backpackModifier = Config.BackpackWeight[skin.bags_1]
+        -- Fix: do not trust the client bags_1 value for max weight; require a numeric key and bound
+        -- the resulting modifier to the highest configured backpack value.
+        local backpackModifier = type(skin.bags_1) == "number" and Config.BackpackWeight[skin.bags_1] or nil
 
         if backpackModifier then
-            xPlayer.setMaxWeight(defaultMaxWeight + backpackModifier)
+            xPlayer.setMaxWeight(defaultMaxWeight + math.min(backpackModifier, MaxBackpackModifier))
         else
             xPlayer.setMaxWeight(defaultMaxWeight)
         end

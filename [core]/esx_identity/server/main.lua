@@ -254,6 +254,11 @@ end
 ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb, data)
     local xPlayer = ESX.Player(source)
 
+    -- Fix: data comes from the client; guard its type before indexing fields.
+    if type(data) ~= "table" then
+        return cb(false)
+    end
+
     if not checkNameFormat(data.firstname) then
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
         return cb(false)
@@ -286,7 +291,8 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
             firstName = formatName(data.firstname),
             lastName = formatName(data.lastname),
             dateOfBirth = formatDate(data.dateofbirth),
-            sex = data.sex,
+            -- Fix: normalise case and restrict to 'm'/'f' so downstream comparisons stay consistent.
+            sex = string.lower(data.sex) == "f" and "f" or "m",
             height = data.height,
         }
 
@@ -310,14 +316,18 @@ ESX.RegisterServerCallback("esx_identity:registerIdentity", function(source, cb,
     local formattedLastName = formatName(data.lastname)
     local formattedDate = formatDate(data.dateofbirth)
 
+    -- Fix: normalise sex to 'm'/'f' (same as the single-character path) before it is persisted.
+    local normalizedSex = string.lower(data.sex) == "f" and "f" or "m"
+
     data.firstname = formattedFirstName
     data.lastname = formattedLastName
     data.dateofbirth = formattedDate
+    data.sex = normalizedSex
     local Identity = {
         firstName = formattedFirstName,
         lastName = formattedLastName,
         dateOfBirth = formattedDate,
-        sex = data.sex,
+        sex = normalizedSex,
         height = data.height,
     }
 
