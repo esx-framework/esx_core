@@ -76,6 +76,8 @@ end
 --- @param round boolean|nil Round to nearest integer
 --- @return table Vector table
 function xLib.math.toVector(input, min, max, round)
+    xLib.verify(input, { 'table', 'string', 'number' }, true)
+
     local results = {}
     local inputType = type(input)
 
@@ -83,12 +85,10 @@ function xLib.math.toVector(input, min, max, round)
         for _, val in ipairs(input) do
             results[#results + 1] = xLib.math.toNumber(val, min, max, round)
         end
-    elseif inputType == "string" or inputType == "number" then
+    else
         for val in tostring(input):gmatch(SCALAR_PATTERN) do
             results[#results + 1] = xLib.math.toNumber(val, min, max, round)
         end
-    else
-        error(("Invalid input type for toVector: %s"):format(inputType), 2)
     end
 
     return results
@@ -98,6 +98,7 @@ end
 --- @param normal table {x, y, z} Normal vector components
 --- @return table {pitch, yaw, roll} Rotation in degrees
 function xLib.math.normalToRotation(normal)
+    xLib.verify(normal, 'table', true)
     local x, y, z = toNumber(normal.x, "normalToRotation"), toNumber(normal.y, "normalToRotation"), toNumber(normal.z, "normalToRotation")
     local pitch = math_asin(-z) * (180 / math_pi)
     local yaw = math_atan(y, x) * (180 / math_pi) 
@@ -222,7 +223,9 @@ end
 ---@param numDecimalPlaces? number
 ---@return number
 function xLib.math.Round(value, numDecimalPlaces)
+    xLib.verify(value, 'number', true)
     if numDecimalPlaces then
+        xLib.verify(numDecimalPlaces, 'number', true)
         local power = 10 ^ numDecimalPlaces
         return math.floor((value * power) + 0.5) / power
     else
@@ -234,7 +237,8 @@ end
 ---@param value number
 ---@return string
 function xLib.math.GroupDigits(value)
-    local left, num, right = string.match(value, "^([^%d]*%d)(%d*)(.-)$")
+    xLib.verify(value, { 'string', 'number' }, true)
+    local left, num, right = string.match(tostring(value), "^([^%d]*%d)(%d*)(.-)$")
 
     return left .. (num:reverse():gsub("(%d%d%d)", "%1" .. TranslateCap("locale_digit_grouping_symbol")):reverse()) .. right
 end
@@ -258,7 +262,9 @@ end
 ---@param target vector
 ---@return number
 function xLib.math.GetHeadingFromCoords(origin, target)
-	local dx = origin.x - target.x
+    xLib.verify(origin, 'table', true)
+    xLib.verify(target, 'table', true)
+    local dx = origin.x - target.x
     local dy = origin.y - target.y
 
     local heading = math.deg(math.atan(dy, dx)) + 90
