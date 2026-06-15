@@ -217,9 +217,6 @@ function xLib.math.remap(value, inMin, inMax, outMin, outMax)
     return xLib.math.lerp(outMin, outMax, t)
 end
 
-----------------------------------------------------------------------------------------------
-
-
 -- Rounds a number to the nearest integer or specified decimal places.
 ---@param value number
 ---@param numDecimalPlaces? number
