@@ -190,8 +190,11 @@ end
 
 local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
-    xPlayer.setMeta("health", GetEntityHealth(ped))
-    xPlayer.setMeta("armor", GetPedArmour(ped))
+    -- Fix: only read health/armor from a valid ped; otherwise keep the last saved metadata.
+    if ped ~= 0 and DoesEntityExist(ped) then
+        xPlayer.setMeta("health", GetEntityHealth(ped))
+        xPlayer.setMeta("armor", GetPedArmour(ped))
+    end
     xPlayer.setMeta("lastPlaytime", xPlayer.getPlayTime())
 end
 
