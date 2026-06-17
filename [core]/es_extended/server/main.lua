@@ -446,6 +446,14 @@ if not Config.CustomInventory then
             return
         end
 
+        if itemType ~= "item_weapon" then
+            itemCount = tonumber(itemCount)
+            if not itemCount or itemCount < 1 then
+                return sourceXPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
+            end
+            itemCount = math.floor(itemCount)
+        end
+
         if itemType == "item_standard" then
             local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
