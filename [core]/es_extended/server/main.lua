@@ -738,14 +738,14 @@ ESX.RegisterServerCallback("esx:getOtherPlayerData", function(source, cb, target
         return
     end
 
-    -- Fix: server-side proximity guard to block mass remote exfiltration of other players' data (IDOR).
-    -- The target is client-controlled, so verify source and target peds are valid and close (~10.0 units) before disclosing data.
+    -- Only disclose another player's data when the requester is near the target; the target id is not trusted.
+    -- Range is bounded by Config.DistanceGetOtherPlayerData (default 10.0); out of range returns nil.
     local sourcePed = GetPlayerPed(source)
     local targetPed = GetPlayerPed(target)
     if sourcePed == 0 or targetPed == 0 then
         return cb(nil)
     end
-    if #(GetEntityCoords(sourcePed) - GetEntityCoords(targetPed)) > 10.0 then
+    if #(GetEntityCoords(sourcePed) - GetEntityCoords(targetPed)) > (Config.DistanceGetOtherPlayerData or 10.0) then
         return cb(nil)
     end
 
