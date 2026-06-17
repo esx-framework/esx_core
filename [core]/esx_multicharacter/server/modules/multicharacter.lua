@@ -3,6 +3,8 @@
 Multicharacter = {}
 Multicharacter._index = Multicharacter
 Multicharacter.awaitingRegistration = {}
+Multicharacter.ownedSlots = {}
+Multicharacter.selecting = {}
 
 function Multicharacter:SetupCharacters(source)
     SetPlayerRoutingBucket(source, source)
@@ -12,6 +14,9 @@ function Multicharacter:SetupCharacters(source)
 
     local identifier = ESX.GetIdentifier(source)
     ESX.Players[identifier] = source
+
+    self.selecting[source] = nil
+    self.ownedSlots[source] = {}
 
     local slots = Database:GetPlayerSlots(identifier)
     identifier = Server.prefix .. "%:" .. identifier
@@ -40,6 +45,7 @@ function Multicharacter:SetupCharacters(source)
             local idString = string.sub(v.identifier, #Server.prefix + 1, string.find(v.identifier, ":") - 1)
             local id = tonumber(idString)
             if id then
+                self.ownedSlots[source][id] = { disabled = v.disabled == 1 or v.disabled == true }
                 characters[id] = {
                     id = id,
                     bank = accounts.bank,
@@ -68,33 +74,32 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
     if isNew then
         self.awaitingRegistration[source] = charid
     else
+        if self.selecting[source] then
+            return
+        end
+
+        local ownedSlots = self.ownedSlots[source]
+        local slot = ownedSlots and ownedSlots[charid]
+        if not slot or slot.disabled then
+            return
+        end
+
+        local token = {}
+        self.selecting[source] = token
+
+        SetTimeout(30000, function()
+            if self.selecting[source] == token then
+                self.selecting[source] = nil
+            end
+        end)
+
         local license = ESX.GetIdentifier(source)
-
-        -- Fix (IDOR): the chosen charid comes from the client. Validate it is within the player's
-        -- own slot count and that the matching character actually exists for this license and is
-        -- not disabled, before loading it. Without this a client could load an arbitrary slot or a
-        -- character disabled via `disablechar`.
-        local slots = Database:GetPlayerSlots(("%s%%:%s"):format(Server.prefix, license))
-        if charid < 1 or charid > slots then
-            return
-        end
-
         local fullIdentifier = ("%s%s:%s"):format(Server.prefix, charid, license)
-        local character = MySQL.single.await("SELECT `disabled` FROM `users` WHERE `identifier` = ?", { fullIdentifier })
-        if not character then
-            return
-        end
-
-        if character.disabled == 1 or character.disabled == true then
-            return
-        end
 
         SetPlayerRoutingBucket(source, 0)
         if not ESX.GetConfig().EnableDebug then
-            local identifier = fullIdentifier
-
-            if ESX.GetPlayerFromIdentifier(identifier) then
-                DropPlayer(source, "[ESX Multicharacter] Your identifier " .. identifier .. " is already on the server!")
+            if ESX.GetPlayerFromIdentifier(fullIdentifier) then
+                DropPlayer(source, "[ESX Multicharacter] Your identifier " .. fullIdentifier .. " is already on the server!")
                 return
             end
         end
@@ -102,6 +107,8 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
         local charIdentifier = ("%s%s"):format(Server.prefix, charid)
         TriggerEvent("esx:onPlayerJoined", source, charIdentifier)
         ESX.Players[ESX.GetIdentifier(source)] = charIdentifier
+
+        self.selecting[source] = nil
     end
 end
 
@@ -117,5 +124,7 @@ end
 
 function Multicharacter:PlayerDropped(player)
     self.awaitingRegistration[player] = nil
+    self.ownedSlots[player] = nil
+    self.selecting[player] = nil
     ESX.Players[ESX.GetIdentifier(player)] = nil
 end
