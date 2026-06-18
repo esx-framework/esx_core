@@ -190,8 +190,8 @@ end
 
 local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
-    -- Fix: only read health/armor from a valid ped; otherwise keep the last saved metadata.
-    if ped ~= 0 and DoesEntityExist(ped) then
+    -- Fix: only read health/armor from a valid ped, and skip while the player is dead so a persisted health of 0 isn't overwritten with the live ped's HP.
+    if ped ~= 0 and DoesEntityExist(ped) and not Player(xPlayer.source).state.isDead then
         xPlayer.setMeta("health", GetEntityHealth(ped))
         xPlayer.setMeta("armor", GetPedArmour(ped))
     end
