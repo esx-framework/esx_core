@@ -42,6 +42,12 @@ function Adjustments:HealthRegeneration()
 end
 
 function Adjustments:AmmoAndVehicleRewards()
+    -- Both natives only affect the current frame, so the per-frame loop is required when
+    -- either feature is on. When both are off, don't spawn an idle Wait(0) thread at all.
+    if not Config.DisableDisplayAmmo and not Config.DisableVehicleRewards then
+        return
+    end
+
     CreateThread(function()
         while true do
             if Config.DisableDisplayAmmo then
@@ -222,14 +228,15 @@ function Adjustments:DisableRadio()
 end
 
 function Adjustments:Multipliers()
+    local multipliers = Config.Multipliers
     CreateThread(function()
         while true do
-            SetPedDensityMultiplierThisFrame(Config.Multipliers.pedDensity)
-            SetScenarioPedDensityMultiplierThisFrame(Config.Multipliers.scenarioPedDensityInterior, Config.Multipliers.scenarioPedDensityExterior)
-            SetAmbientVehicleRangeMultiplierThisFrame(Config.Multipliers.ambientVehicleRange)
-            SetParkedVehicleDensityMultiplierThisFrame(Config.Multipliers.parkedVehicleDensity)
-            SetRandomVehicleDensityMultiplierThisFrame(Config.Multipliers.randomVehicleDensity)
-            SetVehicleDensityMultiplierThisFrame(Config.Multipliers.vehicleDensity)
+            SetPedDensityMultiplierThisFrame(multipliers.pedDensity)
+            SetScenarioPedDensityMultiplierThisFrame(multipliers.scenarioPedDensityInterior, multipliers.scenarioPedDensityExterior)
+            SetAmbientVehicleRangeMultiplierThisFrame(multipliers.ambientVehicleRange)
+            SetParkedVehicleDensityMultiplierThisFrame(multipliers.parkedVehicleDensity)
+            SetRandomVehicleDensityMultiplierThisFrame(multipliers.randomVehicleDensity)
+            SetVehicleDensityMultiplierThisFrame(multipliers.vehicleDensity)
             Wait(0)
         end
     end)
