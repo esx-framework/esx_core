@@ -37,15 +37,16 @@ end
 function Callbacks:Trigger(player, event, cb, invoker, ...)
     self.requests[self.id] = {
         await = type(cb) == "boolean",
-        cb = cb or promise:new()
+        cb = cb or promise:new(),
+        player = player
     }
-    local table = self.requests[self.id]
+    local request = self.requests[self.id]
 
     TriggerClientEvent("esx:triggerClientCallback", player, event, self.id, invoker, ...)
 
     self.id += 1
 
-    return table.cb
+    return request.cb
 end
 
 function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
@@ -63,20 +64,27 @@ function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
     self:Execute(callback, player, returnCb, ...)
 end
 
-function Callbacks:RecieveClient(requestId, invoker, ...)
-    self.currentId = requestId
+function Callbacks:RecieveClient(player, requestId, invoker, ...)
+    local request = self.requests[requestId]
 
-    if not self.requests[self.currentId] then
-        return error(("Client Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(self.currentId, invoker))
+    if not request then
+        -- Benign (timeout/late response) or a forged id: drop quietly so a client cannot flood logs.
+        return
     end
 
-    local callback = self.requests[self.currentId]
+    -- A request is addressed to a single player; reject a response coming from anyone else so a
+    -- client cannot resolve another player's pending callback by guessing the sequential requestId.
+    if request.player ~= player then
+        return print(("[^3WARNING^7] Player ^5%s^7 tried to answer callback ^5%s^7 addressed to player ^5%s^7"):format(player, requestId, request.player))
+    end
 
+    self.currentId = requestId
     self.requests[requestId] = nil
-    if callback.await then
-        callback.cb:resolve({ ... })
+
+    if request.await then
+        request.cb:resolve({ ... })
     else
-        self:Execute(callback.cb, ...)
+        self:Execute(request.cb, ...)
     end
 end
 
@@ -138,7 +146,7 @@ end
 -- =============================================
 
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
-    Callbacks:RecieveClient(requestId, invoker, ...)
+    Callbacks:RecieveClient(source, requestId, invoker, ...)
 end)
 
 RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
