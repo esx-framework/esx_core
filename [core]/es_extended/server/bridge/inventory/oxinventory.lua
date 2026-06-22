@@ -32,5 +32,11 @@ function setPlayerInventory(playerId, xPlayer, inventory, isNew)
                 exports.ox_inventory:AddItem(playerId, name, account)
             end
         end
+
+        if Config.StartingInventoryItems then
+            for name, count in pairs(Config.StartingInventoryItems) do
+                exports.ox_inventory:AddItem(playerId, name, count)
+            end
+        end
     end
 end
