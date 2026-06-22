@@ -20,7 +20,7 @@ local function Notify(notificatonType, length, message, title, position)
     if Debug then
         print("1 ".. tostring(notificatonType))
         print("2 "..tostring(length))
-        print("3 "..message)
+        print("3 "..tostring(message)) -- Fix: guard nil/non-string message to avoid a concat error.
         print("4 "..tostring(title))
         print("5 "..tostring(position))
     end
@@ -40,7 +40,7 @@ local function Notify(notificatonType, length, message, title, position)
     if Debug then
         print("6 ".. tostring(notificatonType))
         print("7 "..tostring(length))
-        print("8 "..message)
+        print("8 "..tostring(message)) -- Fix: guard nil/non-string message to avoid a concat error.
         print("9 "..tostring(title))
         print("10 "..tostring(position))
     end

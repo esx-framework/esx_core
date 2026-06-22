@@ -10,6 +10,10 @@ for i = 97, 122 do
     table.insert(Charset, string.char(i))
 end
 
+-- Fix: seed the PRNG once at module load instead of on every call/character,
+-- which produced poorly-randomized output (reseeding with GetGameTimer() reset the sequence).
+math.randomseed(GetGameTimer())
+
 local weaponsByName = {}
 local weaponsByHash = {}
 
@@ -23,8 +27,7 @@ end)
 ---@param length number
 ---@return string
 function ESX.GetRandomString(length)
-    math.randomseed(GetGameTimer())
-
+    -- Fix: removed per-call/per-character math.randomseed; the PRNG is now seeded once at module load
     return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
 end
 

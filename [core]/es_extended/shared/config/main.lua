@@ -61,6 +61,7 @@ Config.OffDutyPaycheckMultiplier = 0.5 -- The multiplier for off duty paychecks.
 Config.Multichar = GetResourceState("esx_multicharacter") ~= "missing"
 Config.Identity = true      -- Select a character identity data before they have loaded in (this happens by default with multichar)
 Config.DistanceGive = 4.0   -- Max distance when giving items, weapons etc.
+Config.DistanceGetOtherPlayerData = 10.0 -- Max distance (units) a player must be within to read another player's data
 
 Config.AdminLogging = false -- Logs the usage of certain commands by those with group.admin ace permissions (default is false)
 

@@ -130,6 +130,11 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
+    -- Fix: validate the state bag payload type before use to avoid acting on malformed data
+    if type(value) ~= "table" then
+        return
+    end
+
     bagName = bagName:gsub("entity:", "")
     local netId = tonumber(bagName)
     if not netId then
@@ -371,10 +376,13 @@ if not Config.CustomInventory then
     CreateThread(function()
         while true do
             local Sleep = 1500
-            local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-            local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
-            for pickupId, pickup in pairs(pickups) do
+            -- Fix: skip the per-tick work (incl. GetClosestPlayer) when there are no active pickups
+            if next(pickups) then
+                local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+                local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
+
+                for pickupId, pickup in pairs(pickups) do
                 local distance = #(playerCoords - pickup.coords)
 
                 if distance < 5 then
@@ -404,6 +412,7 @@ if not Config.CustomInventory then
                     ESX.Game.Utils.DrawText3D(textCoords, label, 1.2, 1)
                 elseif pickup.inRange then
                     pickup.inRange = false
+                end
                 end
             end
             Wait(Sleep)
@@ -662,6 +671,10 @@ end)
 RegisterNetEvent("esx:repairPedVehicle", function()
     local ped = ESX.PlayerData.ped
     local vehicle = GetVehiclePedIsIn(ped, false)
+    -- Fix: only act when the player is actually in a vehicle (defensive guard)
+    if not vehicle or vehicle == 0 then
+        return
+    end
     SetVehicleEngineHealth(vehicle, 1000)
     SetVehicleEngineOn(vehicle, true, true, false)
     SetVehicleFixed(vehicle)
@@ -669,6 +682,10 @@ RegisterNetEvent("esx:repairPedVehicle", function()
 end)
 
 RegisterNetEvent("esx:freezePlayer", function(input)
+    -- Fix: validate argument type for this server->client event
+    if type(input) ~= "string" then
+        return
+    end
     if input == "freeze" then
         SetEntityCollision(ESX.PlayerData.ped, false, false)
         FreezeEntityPosition(ESX.PlayerData.ped, true)
@@ -690,6 +707,10 @@ end)
 
 ---@param command string
 ESX.SecureNetEvent("esx:executeCommand", function(command)
+    -- Fix: only execute when the argument is a non-empty string (defensive validation)
+    if type(command) ~= "string" or command == "" then
+        return
+    end
     ExecuteCommand(command)
 end)
 

@@ -423,8 +423,16 @@ if not Config.CustomInventory then
     RegisterNetEvent("esx:updateWeaponAmmo", function(weaponName, ammoCount)
         local xPlayer = ESX.GetPlayerFromId(source)
 
-        if xPlayer then
-            xPlayer.updateWeaponAmmo(weaponName, ammoCount)
+        -- Fix: validate and clamp client-supplied ammo before persisting (>= 0 and within a sane bound).
+        ammoCount = tonumber(ammoCount)
+        if ammoCount then
+            ammoCount = math.floor(ammoCount)
+            if ammoCount < 0 then ammoCount = 0 end
+            if ammoCount > 9999 then ammoCount = 9999 end
+
+            if xPlayer then
+                xPlayer.updateWeaponAmmo(weaponName, ammoCount)
+            end
         end
     end)
 
@@ -436,6 +444,14 @@ if not Config.CustomInventory then
         if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
             print(("[^3WARNING^7] Player Detected Cheating: ^5%s^7"):format(GetPlayerName(playerId)))
             return
+        end
+
+        if itemType ~= "item_weapon" then
+            itemCount = tonumber(itemCount)
+            if not itemCount or itemCount < 1 then
+                return sourceXPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
+            end
+            itemCount = math.floor(itemCount)
         end
 
         if itemType == "item_standard" then
@@ -459,7 +475,13 @@ if not Config.CustomInventory then
             sourceXPlayer.showNotification(TranslateCap("gave_item", itemCount, sourceItem.label, targetXPlayer.name))
             targetXPlayer.showNotification(TranslateCap("received_item", itemCount, sourceItem.label, sourceXPlayer.name))
         elseif itemType == "item_account" then
-            if itemCount < 1 or sourceXPlayer.getAccount(itemName).money < itemCount then
+            -- Fix: nil-guard the account name and verify the account actually exists for the player before dereferencing (itemName is client-controlled).
+            local sourceAccount = itemName and sourceXPlayer.getAccount(itemName)
+            if not sourceAccount or not Config.Accounts[itemName] then
+                return
+            end
+
+            if itemCount < 1 or sourceAccount.money < itemCount then
                 return sourceXPlayer.showNotification(TranslateCap("imp_invalid_amount"))
             end
 
@@ -623,9 +645,13 @@ if not Config.CustomInventory then
             return
         end
 
-        local count = xPlayer.getInventoryItem(itemName).count
+        -- Fix: nil-guard the inventory item before dereferencing .count (itemName is client-controlled).
+        local item = xPlayer.getInventoryItem(itemName)
+        if not item then
+            return
+        end
 
-        if count < 1 then
+        if item.count < 1 then
             return xPlayer.showNotification(TranslateCap("act_imp"))
         end
 
@@ -705,11 +731,22 @@ ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
+ESX.RegisterServerCallback("esx:getOtherPlayerData", function(source, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
         return
+    end
+
+    -- Only disclose another player's data when the requester is near the target; the target id is not trusted.
+    -- Range is bounded by Config.DistanceGetOtherPlayerData (default 10.0); out of range returns nil.
+    local sourcePed = GetPlayerPed(source)
+    local targetPed = GetPlayerPed(target)
+    if sourcePed == 0 or targetPed == 0 then
+        return cb(nil)
+    end
+    if #(GetEntityCoords(sourcePed) - GetEntityCoords(targetPed)) > (Config.DistanceGetOtherPlayerData or 10.0) then
+        return cb(nil)
     end
 
     cb({
@@ -741,8 +778,24 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
 end)
 
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
+    -- Fix: defensive validation of client-supplied arguments (no permission gate, to avoid breaking legitimate resource usage).
+    vehData = type(vehData) == "table" and vehData or {}
     local ped = GetPlayerPed(source)
-    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
+
+    local model = vehData.model
+    if type(model) ~= "string" and type(model) ~= "number" then
+        model = `ADDER`
+    end
+
+    local coords = vehData.coords
+    if type(coords) ~= "table" and type(coords) ~= "vector3" and type(coords) ~= "vector4" then
+        coords = GetEntityCoords(ped)
+    end
+
+    local heading = tonumber(coords.w) or 0.0
+    local props = type(vehData.props) == "table" and vehData.props or {}
+
+    ESX.OneSync.SpawnVehicle(model, coords, heading, props, function(id)
         if vehData.warp then
             local vehicle = NetworkGetEntityFromNetworkId(id)
             local timeout = 0
