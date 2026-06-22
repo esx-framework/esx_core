@@ -251,7 +251,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     end
 
     function self.getMoney()
-        return self.getAccount("money").money
+        local account = self.getAccount("money")
+        return account and account.money or 0
     end
 
     function self.addMoney(money, reason)
