@@ -201,6 +201,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     local result = MySQL.prepare.await(loadPlayer, { identifier })
 
+    if not result then
+        print(("[^1ERROR^7] esx_core could not load data for identifier ^5%s^7"):format(identifier))
+        return DropPlayer(playerId --[[@as string]], "There was an error loading your character!\nError code: data-load-failed\n\nYour character data could not be retrieved. Please reconnect, and contact the server administration team if this keeps happening.")
+    end
+
     -- Accounts
     local accounts = result.accounts
     accounts = (accounts and accounts ~= "") and json.decode(accounts) or {}
