@@ -27,16 +27,18 @@ end
 function StartPointsLoop()
 	CreateThread(function()
 		while true do
-			local coords = GetEntityCoords(ESX.PlayerData.ped)
-			for handle, point in pairs(points) do
-				if not point.hidden and #(coords - point.coords) <= point.distance then
-					if not point.nearby then
-						points[handle].nearby = true
-						points[handle].enter()
+			if next(points) ~= nil then
+				local coords = GetEntityCoords(ESX.PlayerData.ped)
+				for handle, point in pairs(points) do
+					if not point.hidden and #(coords - point.coords) <= point.distance then
+						if not point.nearby then
+							points[handle].nearby = true
+							points[handle].enter()
+						end
+					elseif point.nearby then
+						points[handle].nearby = false
+						points[handle].leave()
 					end
-				elseif point.nearby then
-					points[handle].nearby = false
-					points[handle].leave()
 				end
 			end
 			Wait(500)

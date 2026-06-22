@@ -208,6 +208,10 @@ end
 function Actions:SlowLoop()
     CreateThread(function()
         while ESX.PlayerLoaded do
+            -- TrackPed first so ESX.PlayerData.ped is fresh before the vehicle/weapon
+            -- trackers read it. The ped handle rarely changes (spawn/death set it via their
+            -- own events), so folding it here at 500ms removes a dedicated per-frame thread.
+            self:TrackPed()
             self:TrackPauseMenu()
             self:TrackVehicle()
             self:TrackWeapon()
@@ -216,18 +220,8 @@ function Actions:SlowLoop()
     end)
 end
 
-function Actions:PedLoop()
-    CreateThread(function()
-        while ESX.PlayerLoaded do
-            self:TrackPed()
-            Wait(0)
-        end
-    end)
-end
-
 function Actions:Init()
     self:SlowLoop()
-    self:PedLoop()
     self:TrackPedCoordsOnce()
 end
 

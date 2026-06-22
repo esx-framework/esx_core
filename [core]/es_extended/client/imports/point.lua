@@ -32,7 +32,7 @@ function Point:constructor(properties)
 		if self.leave then
 			self:leave()
 		end
-		if #nearby == 0 then
+		if next(nearby) == nil then
 			loop = false
 		end
 	end)

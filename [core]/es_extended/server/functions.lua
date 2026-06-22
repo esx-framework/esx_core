@@ -198,9 +198,12 @@ end
 
 local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
-    xPlayer.setMeta("health", GetEntityHealth(ped))
-    xPlayer.setMeta("armor", GetPedArmour(ped))
-    xPlayer.setMeta("lastPlaytime", xPlayer.getPlayTime())
+    -- Write directly to metadata instead of setMeta: this only runs on save, and the
+    -- client is the source of truth for health/armor (lastPlaytime is server-only), so
+    -- echoing the full metadata table back to the owning client here is pure waste.
+    xPlayer.metadata.health = GetEntityHealth(ped)
+    xPlayer.metadata.armor = GetPedArmour(ped)
+    xPlayer.metadata.lastPlaytime = xPlayer.getPlayTime()
 end
 
 ---@param xPlayer table
