@@ -19,6 +19,9 @@ end
 
 loadPlayer = loadPlayer .. " FROM `users` WHERE identifier = ?"
 
+-- Tracks players whose load is in-flight so a re-triggered join event cannot start a second load.
+local playersLoading = {}
+
 local function createESXPlayer(identifier, playerId, data)
     local accounts = {}
 
@@ -72,6 +75,8 @@ end
 ---@param reason string
 ---@param cb function?
 local function onPlayerDropped(playerId, reason, cb)
+    playersLoading[playerId] = nil
+
     local p = not cb and promise:new()
     local function resolve()
         if cb then
@@ -126,6 +131,11 @@ if Config.Multichar then
 else
     RegisterNetEvent("esx:onPlayerJoined", function()
         local _source = source
+        if ESX.Players[_source] or playersLoading[_source] then
+            return
+        end
+        playersLoading[_source] = true
+
         while not next(ESX.Jobs) do
             Wait(50)
         end
@@ -133,6 +143,8 @@ else
         if not ESX.Players[_source] then
             onPlayerJoined(_source)
         end
+        -- Flag is cleared by loadESXPlayer on success (incl. the async new-player path) or by
+        -- onPlayerDropped on failure; clearing it here would reopen the race before the async load lands.
     end)
 end
 
@@ -318,6 +330,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     GlobalState["playerCount"] = GlobalState["playerCount"] + 1
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
+    playersLoading[playerId] = nil
 
     -- Identity
     if result.firstname and result.firstname ~= "" then
@@ -423,6 +436,18 @@ if not Config.CustomInventory then
     RegisterNetEvent("esx:updateWeaponAmmo", function(weaponName, ammoCount)
         local xPlayer = ESX.GetPlayerFromId(source)
 
+        ammoCount = tonumber(ammoCount)
+        if not ammoCount then
+            return
+        end
+
+        ammoCount = math.floor(ammoCount)
+        if ammoCount < 0 then
+            ammoCount = 0
+        elseif ammoCount > 9999 then
+            ammoCount = 9999
+        end
+
         if xPlayer then
             xPlayer.updateWeaponAmmo(weaponName, ammoCount)
         end
@@ -436,6 +461,15 @@ if not Config.CustomInventory then
         if not sourceXPlayer or not targetXPlayer or distance > Config.DistanceGive then
             print(("[^3WARNING^7] Player Detected Cheating: ^5%s^7"):format(GetPlayerName(playerId)))
             return
+        end
+
+        -- itemCount is client-controlled; weapon transfers derive their own count from the loadout.
+        if itemType ~= "item_weapon" then
+            itemCount = tonumber(itemCount)
+            if not itemCount or itemCount < 1 then
+                return sourceXPlayer.showNotification(TranslateCap("imp_invalid_quantity"))
+            end
+            itemCount = math.floor(itemCount)
         end
 
         if itemType == "item_standard" then
@@ -459,7 +493,12 @@ if not Config.CustomInventory then
             sourceXPlayer.showNotification(TranslateCap("gave_item", itemCount, sourceItem.label, targetXPlayer.name))
             targetXPlayer.showNotification(TranslateCap("received_item", itemCount, sourceItem.label, sourceXPlayer.name))
         elseif itemType == "item_account" then
-            if itemCount < 1 or sourceXPlayer.getAccount(itemName).money < itemCount then
+            local sourceAccount = itemName and sourceXPlayer.getAccount(itemName)
+            if not sourceAccount or not Config.Accounts[itemName] then
+                return
+            end
+
+            if itemCount < 1 or sourceAccount.money < itemCount then
                 return sourceXPlayer.showNotification(TranslateCap("imp_invalid_amount"))
             end
 
@@ -623,9 +662,12 @@ if not Config.CustomInventory then
             return
         end
 
-        local count = xPlayer.getInventoryItem(itemName).count
+        local item = xPlayer.getInventoryItem(itemName)
+        if not item then
+            return
+        end
 
-        if count < 1 then
+        if item.count < 1 then
             return xPlayer.showNotification(TranslateCap("act_imp"))
         end
 
@@ -705,22 +747,44 @@ ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
+ESX.RegisterServerCallback("esx:getOtherPlayerData", function(source, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
-        return
+        return cb(nil)
+    end
+
+    -- Admins (server-side ACE) get the full record at any distance, for admin tooling.
+    if Core.IsPlayerAdmin(source) then
+        return cb({
+            identifier = xPlayer.identifier,
+            accounts = xPlayer.getAccounts(),
+            inventory = xPlayer.getInventory(),
+            job = xPlayer.getJob(),
+            loadout = xPlayer.getLoadout(),
+            money = xPlayer.getMoney(),
+            position = xPlayer.getCoords(true),
+            metadata = xPlayer.getMeta(),
+        })
+    end
+
+    -- Non-admins: target is client-supplied and untrusted. Expose only a reduced, non-sensitive
+    -- record (no identifier/economy/inventory/metadata) and only when actually near the target,
+    -- bounded by Config.DistanceGetOtherPlayerData.
+    local sourcePed = GetPlayerPed(source)
+    local targetPed = GetPlayerPed(target)
+    if sourcePed == 0 or targetPed == 0 then
+        return cb(nil)
+    end
+
+    if #(GetEntityCoords(sourcePed) - GetEntityCoords(targetPed)) > (Config.DistanceGetOtherPlayerData or 10.0) then
+        return cb(nil)
     end
 
     cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
+        playerId = target,
+        name = xPlayer.getName(),
         job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
     })
 end)
 
@@ -741,9 +805,19 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
 end)
 
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
+    vehData = type(vehData) == "table" and vehData or {}
+
     local ped = GetPlayerPed(source)
-    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
-        if vehData.warp then
+    local model = (type(vehData.model) == "string" or type(vehData.model) == "number") and vehData.model or `ADDER`
+    local coords = vehData.coords
+    if type(coords) ~= "table" and type(coords) ~= "vector3" and type(coords) ~= "vector4" then
+        coords = GetEntityCoords(ped)
+    end
+    local heading = coords.w or 0.0
+    local props = type(vehData.props) == "table" and vehData.props or {}
+
+    ESX.OneSync.SpawnVehicle(model, coords, heading, props, function(id)
+        if vehData.warp and id then
             local vehicle = NetworkGetEntityFromNetworkId(id)
             local timeout = 0
             while GetVehiclePedIsIn(ped, false) ~= vehicle and timeout <= 15 do
