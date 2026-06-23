@@ -45,21 +45,21 @@
 ---@class StaticPlayer
 ---@field src number                                              # Player's server ID.
 --- Money Functions
----@field setMoney fun(money: number)                             # Set player's cash balance.
+---@field setMoney fun(money: number): boolean                    # Set player's cash balance.
 ---@field getMoney fun(): number                                   # Get player's current cash balance.
----@field addMoney fun(money: number, reason: string)             # Add money to the player's cash balance.
----@field removeMoney fun(money: number, reason: string)          # Remove money from the player's cash balance.
----@field setAccountMoney fun(accountName: string, money: number, reason?: string)  # Set specific account balance.
----@field addAccountMoney fun(accountName: string, money: number, reason?: string)  # Add money to an account.
----@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
+---@field addMoney fun(money: number, reason: string): boolean    # Add money to the player's cash balance.
+---@field removeMoney fun(money: number, reason: string): boolean # Remove money from the player's cash balance.
+---@field setAccountMoney fun(accountName: string, money: number, reason?: string): boolean # Set specific account balance.
+---@field addAccountMoney fun(accountName: string, money: number, reason?: string): boolean # Add money to an account.
+---@field removeAccountMoney fun(accountName: string, money: number, reason?: string): boolean # Remove money from an account.
 ---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
 ---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
 --- Inventory Functions
 ---@field getInventory fun(minimal?: boolean): ESXInventoryItem[]|table<string,number>  # Get inventory, optionally minimal.
 ---@field getInventoryItem fun(itemName: string): ESXInventoryItem? # Get a specific item from inventory.
----@field addInventoryItem fun(itemName: string, count: number)     # Add items to inventory.
----@field removeInventoryItem fun(itemName: string, count: number)  # Remove items from inventory.
----@field setInventoryItem fun(itemName: string, count: number)     # Set item count in inventory.
+---@field addInventoryItem fun(itemName: string, count: number): boolean # Add items to inventory.
+---@field removeInventoryItem fun(itemName: string, count: number): boolean # Remove items from inventory.
+---@field setInventoryItem fun(itemName: string, count: number): boolean # Set item count in inventory.
 ---@field getWeight fun(): number                                   # Get current carried weight.
 ---@field getMaxWeight fun(): number                                # Get maximum carry weight.
 ---@field setMaxWeight fun(newWeight: number)                       # Set maximum carry weight.
@@ -73,17 +73,17 @@
 ---@field setGroup fun(newGroup: string)                               # Set player's permission group.
 ---@field getGroup fun(): string                                       # Get player's permission group.
 --- Weapon Functions
----@field addWeapon fun(weaponName: string, ammo: number)                 # Give player a weapon.
----@field removeWeapon fun(weaponName: string)                             # Remove weapon from player.
+---@field addWeapon fun(weaponName: string, ammo: number): boolean         # Give player a weapon.
+---@field removeWeapon fun(weaponName: string): boolean                    # Remove weapon from player.
 ---@field hasWeapon fun(weaponName: string): boolean                       # Check if player has a weapon.
 ---@field getWeapon fun(weaponName: string): number?, table?               # Get weapon ammo & components.
----@field addWeaponAmmo fun(weaponName: string, ammoCount: number)        # Add ammo to a weapon.
----@field removeWeaponAmmo fun(weaponName: string, ammoCount: number)     # Remove ammo from a weapon.
----@field updateWeaponAmmo fun(weaponName: string, ammoCount: number)     # Update ammo count for a weapon.
----@field addWeaponComponent fun(weaponName: string, weaponComponent: string)    # Add component to weapon.
----@field removeWeaponComponent fun(weaponName: string, weaponComponent: string) # Remove component from weapon.
+---@field addWeaponAmmo fun(weaponName: string, ammoCount: number): boolean # Add ammo to a weapon.
+---@field removeWeaponAmmo fun(weaponName: string, ammoCount: number): boolean # Remove ammo from a weapon.
+---@field updateWeaponAmmo fun(weaponName: string, ammoCount: number): boolean # Update ammo count for a weapon.
+---@field addWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Add component to weapon.
+---@field removeWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Remove component from weapon.
 ---@field hasWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Check if weapon has component.
----@field setWeaponTint fun(weaponName: string, weaponTintIndex: number) # Set weapon tint.
+---@field setWeaponTint fun(weaponName: string, weaponTintIndex: number): boolean # Set weapon tint.
 ---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
 --- Player State Functions
 ---@field getIdentifier fun(): string                              # Get player's unique identifier.
@@ -247,7 +247,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     function self.setMoney(money)
         assert(type(money) == "number", "money should be number!")
         money = ESX.Math.Round(money)
-        self.setAccountMoney("money", money)
+        return self.setAccountMoney("money", money)
     end
 
     function self.getMoney()
@@ -256,12 +256,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.addMoney(money, reason)
         money = ESX.Math.Round(money)
-        self.addAccountMoney("money", money, reason)
+        return self.addAccountMoney("money", money, reason)
     end
 
     function self.removeMoney(money, reason)
         money = ESX.Math.Round(money)
-        self.removeAccountMoney("money", money, reason)
+        return self.removeAccountMoney("money", money, reason)
     end
 
     function self.getIdentifier()
@@ -399,6 +399,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -421,6 +422,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -448,6 +450,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -475,7 +478,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
             TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
             self.triggerEvent("esx:addInventoryItem", item.name, item.count)
+            return true
         end
+
+        return false
     end
 
     function self.removeInventoryItem(itemName, count)
@@ -492,11 +498,16 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                     TriggerEvent("esx:onRemoveInventoryItem", self.source, item.name, item.count)
                     self.triggerEvent("esx:removeInventoryItem", item.name, item.count)
+                    return true
                 end
+
+                return false
             else
                 error(("Player ID:^5%s Tried remove a Invalid count -> %s of %s"):format(self.playerId, count, itemName))
             end
         end
+
+        return false
     end
 
     function self.setInventoryItem(itemName, count)
@@ -510,11 +521,13 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             end
 
             if count > item.count then
-                self.addInventoryItem(item.name, count - item.count)
+                return self.addInventoryItem(item.name, count - item.count)
             else
-                self.removeInventoryItem(item.name, item.count - count)
+                return self.removeInventoryItem(item.name, item.count - count)
             end
         end
+
+        return false
     end
 
     function self.getWeight()
@@ -622,7 +635,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
             self.triggerEvent("esx:addInventoryItem", weaponLabel, false, true)
             self.triggerEvent("esx:addLoadoutItem", weaponName, weaponLabel, ammo)
+            return true
         end
+
+        return false
     end
 
     function self.addWeaponComponent(weaponName, weaponComponent)
@@ -637,9 +653,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                     local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
                     GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(weaponName), componentHash)
                     self.triggerEvent("esx:addInventoryItem", component.label, false, true)
+                    return true
                 end
             end
         end
+
+        return false
     end
 
     function self.addWeaponAmmo(weaponName, ammoCount)
@@ -648,14 +667,17 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weapon then
             weapon.ammo = weapon.ammo + ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            return true
         end
+
+        return false
     end
 
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
         if not weapon then
-            return
+            return false
         end
 
         weapon.ammo = ammoCount
@@ -666,6 +688,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                 self.removeWeapon(weaponName)
             end
         end
+
+        return true
     end
 
     function self.setWeaponTint(weaponName, weaponTintIndex)
@@ -678,8 +702,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                 self.loadout[loadoutNum].tintIndex = weaponTintIndex
                 self.triggerEvent("esx:setWeaponTint", weaponName, weaponTintIndex)
                 self.triggerEvent("esx:addInventoryItem", weaponObject.tints[weaponTintIndex], false, true)
+                return true
             end
         end
+
+        return false
     end
 
     function self.getWeaponTint(weaponName)
@@ -696,7 +723,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         local weaponLabel, playerPed <const> = nil, GetPlayerPed(self.source)
 
         if not playerPed then
-            return error("xPlayer.removeWeapon ^5invalid^1 player ped!")
+            error("xPlayer.removeWeapon ^5invalid^1 player ped!")
         end
 
         for k, v in ipairs(self.loadout) do
@@ -719,7 +746,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weaponLabel then
             self.triggerEvent("esx:removeInventoryItem", weaponLabel, false, true)
             self.triggerEvent("esx:removeLoadoutItem", weaponName, weaponLabel)
+            return true
         end
+
+        return false
     end
 
     function self.removeWeaponComponent(weaponName, weaponComponent)
@@ -739,9 +769,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                     self.triggerEvent("esx:removeWeaponComponent", weaponName, weaponComponent)
                     self.triggerEvent("esx:removeInventoryItem", component.label, false, true)
+                    return true
                 end
             end
         end
+
+        return false
     end
 
     function self.removeWeaponAmmo(weaponName, ammoCount)
@@ -750,7 +783,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weapon then
             weapon.ammo = weapon.ammo - ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            return true
         end
+
+        return false
     end
 
     function self.hasWeaponComponent(weaponName, weaponComponent)
