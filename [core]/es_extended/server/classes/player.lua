@@ -270,7 +270,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.getPlayTime()
         -- luacheck: ignore
-        return self.lastPlaytime + GetPlayerTimeOnline(self.source --[[@as string]])
+        return (self.lastPlaytime or 0) + (GetPlayerTimeOnline(self.source --[[@as string]]) or 0)
     end
 
     function self.setMoney(money)
