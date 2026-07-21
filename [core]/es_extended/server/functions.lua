@@ -190,8 +190,11 @@ end
 
 local function updateHealthAndArmorInMetadata(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
-    xPlayer.setMeta("health", GetEntityHealth(ped))
-    xPlayer.setMeta("armor", GetPedArmour(ped))
+    -- Fix: only read health/armor from a valid ped, and skip while the player is dead so a persisted health of 0 isn't overwritten with the live ped's HP.
+    if ped ~= 0 and DoesEntityExist(ped) and not Player(xPlayer.source).state.isDead then
+        xPlayer.setMeta("health", GetEntityHealth(ped))
+        xPlayer.setMeta("armor", GetPedArmour(ped))
+    end
     xPlayer.setMeta("lastPlaytime", xPlayer.getPlayTime())
 end
 
@@ -199,10 +202,6 @@ end
 ---@param cb? function
 ---@return nil
 function Core.SavePlayer(xPlayer, cb)
-    if not xPlayer.spawned then
-        return cb and cb()
-    end
-
     updateHealthAndArmorInMetadata(xPlayer)
     local parameters <const> = {
         json.encode(xPlayer.getAccounts(true)),

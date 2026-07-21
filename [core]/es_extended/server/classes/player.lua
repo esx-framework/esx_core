@@ -152,7 +152,9 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     local self = {} ---@type xPlayer
 
     self.accounts = accounts
-    self.coords = coords
+    -- Fix: normalise the cached position to a canonical, mutable {x, y, z, heading} table once,
+    -- so getCoords can refresh it in-place (no per-call allocation) and fall back to it when a live read isn't available.
+    self.coords = { x = coords.x, y = coords.y, z = coords.z, heading = coords.heading or coords.w or 0.0 }
     self.group = group
     self.identifier = identifier
     self.ssn = ssn
@@ -218,17 +220,45 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.getCoords(vector, heading)
         local ped <const> = GetPlayerPed(self.source)
-        local entityCoords <const> = GetEntityCoords(ped)
-        local entityHeading <const> = GetEntityHeading(ped)
 
-        local coordinates = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z }
+        if ped ~= 0 and DoesEntityExist(ped) then
+            local entityCoords <const> = GetEntityCoords(ped)
+            local entityHeading <const> = GetEntityHeading(ped)
 
-        if vector then
-            coordinates = (heading and vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading) or entityCoords)
-        else
-            if heading then
-                coordinates.heading = entityHeading
+            -- Fix: refresh the cached position in-place (no allocation on this hot path).
+            -- type() guard self-heals if external code reassigned coords to a vector (non-mutable).
+            if type(self.coords) ~= "table" then
+                self.coords = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z, heading = entityHeading }
+            else
+                self.coords.x, self.coords.y, self.coords.z, self.coords.heading =
+                    entityCoords.x, entityCoords.y, entityCoords.z, entityHeading
             end
+
+            local coordinates = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z }
+
+            if vector then
+                coordinates = (heading and vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading) or entityCoords)
+            else
+                if heading then
+                    coordinates.heading = entityHeading
+                end
+            end
+
+            return coordinates
+        end
+
+        -- Fix: no valid ped -> fall back to the last cached position instead of reading a null entity.
+        local c <const> = self.coords
+        local ch <const> = c.heading or c.w or 0.0
+
+        -- Mirror of the ped-valid return shapes above: both branches must stay in sync.
+        if vector then
+            return heading and vector4(c.x, c.y, c.z, ch) or vector3(c.x, c.y, c.z)
+        end
+
+        local coordinates = { x = c.x, y = c.y, z = c.z }
+        if heading then
+            coordinates.heading = ch
         end
 
         return coordinates
@@ -240,7 +270,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
     function self.getPlayTime()
         -- luacheck: ignore
-        return self.lastPlaytime + GetPlayerTimeOnline(self.source --[[@as string]])
+        return (self.lastPlaytime or 0) + (GetPlayerTimeOnline(self.source --[[@as string]]) or 0)
     end
 
     function self.setMoney(money)
