@@ -250,7 +250,7 @@ ESX.SecureNetEvent("esx:setGroup", function(group)
     ESX.SetPlayerData("group", group)
 end)
 
-if not Config.CustomInventory then
+if not Config.CustomInventory and Config.EnablePickup then
     ESX.SecureNetEvent("esx:createPickup", function(pickupId, label, coords, itemType, name, components, tintIndex)
         local function setObjectProperties(object)
             SetEntityAsMissionEntity(object, true, false)
@@ -300,7 +300,7 @@ ESX.SecureNetEvent("esx:registerSuggestions", function(registeredCommands)
     end
 end)
 
-if not Config.CustomInventory then
+if not Config.CustomInventory and Config.EnablePickup then
     ESX.SecureNetEvent("esx:removePickup", function(pickupId)
         if pickups[pickupId] and pickups[pickupId].obj then
             ESX.Game.DeleteObject(pickups[pickupId].obj)
@@ -367,7 +367,7 @@ function StartServerSyncLoops()
     end)
 end
 
-if not Config.CustomInventory then
+if not Config.CustomInventory and Config.EnablePickup then
     CreateThread(function()
         while true do
             local Sleep = 1500
@@ -602,7 +602,7 @@ local function noclipThread()
             local currentTime = GetGameTimer()
 
             DisableAllControlActions(0)
-            
+
             for i = 1, #allowedKeys do
                 local key = allowedKeys[i]
                 EnableControlAction(key[1], key[2], true)

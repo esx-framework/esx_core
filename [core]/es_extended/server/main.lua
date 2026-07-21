@@ -356,7 +356,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.variables = xPlayer.variables or {}
     xPlayer.triggerEvent("esx:playerLoaded", userData, isNew, userData.skin)
 
-    if not Config.CustomInventory then
+    if not Config.CustomInventory and Config.EnablePickup then
         xPlayer.triggerEvent("esx:createMissingPickups", Core.Pickups)
     elseif setPlayerInventory then
         -- Wait for identity to be set before loading inventory (for non-multichar)
@@ -570,9 +570,12 @@ if not Config.CustomInventory then
             end
 
             xPlayer.removeInventoryItem(itemName, itemCount)
-            local pickupLabel = ("%s [%s]"):format(xItem.label, itemCount)
-            ESX.CreatePickup("item_standard", itemName, itemCount, pickupLabel, playerId)
-            xPlayer.showNotification(TranslateCap("threw_standard", itemCount, xItem.label))
+
+            if Config.EnablePickup then
+                local pickupLabel = ("%s [%s]"):format(xItem.label, itemCount)
+                ESX.CreatePickup("item_standard", itemName, itemCount, pickupLabel, playerId)
+                xPlayer.showNotification(TranslateCap("threw_standard", itemCount, xItem.label))
+            end
         elseif itemType == "item_account" then
             if itemCount == nil or itemCount < 1 then
                 return xPlayer.showNotification(TranslateCap("imp_invalid_amount"))
@@ -588,9 +591,12 @@ if not Config.CustomInventory then
             end
 
             xPlayer.removeAccountMoney(itemName, itemCount, "Threw away")
-            local pickupLabel = ("%s [%s]"):format(account.label, TranslateCap("locale_currency", ESX.Math.GroupDigits(itemCount)))
-            ESX.CreatePickup("item_account", itemName, itemCount, pickupLabel, playerId)
-            xPlayer.showNotification(TranslateCap("threw_account", ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+
+            if Config.EnablePickup then
+                local pickupLabel = ("%s [%s]"):format(account.label, TranslateCap("locale_currency", ESX.Math.GroupDigits(itemCount)))
+                ESX.CreatePickup("item_account", itemName, itemCount, pickupLabel, playerId)
+                xPlayer.showNotification(TranslateCap("threw_account", ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+            end
         elseif itemType == "item_weapon" then
             itemName = string.upper(itemName)
 
@@ -607,16 +613,18 @@ if not Config.CustomInventory then
             local components = ESX.Table.Clone(weapon.components)
             xPlayer.removeWeapon(itemName)
 
-            if weaponObject.ammo and weapon.ammo > 0 then
-                local ammoLabel = weaponObject.ammo.label
-                weaponPickupLabel = ("%s [%s %s]"):format(weapon.label, weapon.ammo, ammoLabel)
-                xPlayer.showNotification(TranslateCap("threw_weapon_ammo", weapon.label, weapon.ammo, ammoLabel))
-            else
-                weaponPickupLabel = ("%s"):format(weapon.label)
-                xPlayer.showNotification(TranslateCap("threw_weapon", weapon.label))
-            end
+            if Config.EnablePickup then
+                if weaponObject.ammo and weapon.ammo > 0 then
+                    local ammoLabel = weaponObject.ammo.label
+                    weaponPickupLabel = ("%s [%s %s]"):format(weapon.label, weapon.ammo, ammoLabel)
+                    xPlayer.showNotification(TranslateCap("threw_weapon_ammo", weapon.label, weapon.ammo, ammoLabel))
+                else
+                    weaponPickupLabel = ("%s"):format(weapon.label)
+                    xPlayer.showNotification(TranslateCap("threw_weapon", weapon.label))
+                end
 
-            ESX.CreatePickup("item_weapon", itemName, weapon.ammo, weaponPickupLabel, playerId, components, weapon.tintIndex)
+                ESX.CreatePickup("item_weapon", itemName, weapon.ammo, weaponPickupLabel, playerId, components, weapon.tintIndex)
+            end
         end
     end)
 
@@ -637,50 +645,52 @@ if not Config.CustomInventory then
         ESX.UseItem(source, itemName)
     end)
 
-    RegisterNetEvent("esx:onPickup", function(pickupId)
-        local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
+    if Config.EnablePickup then
+        RegisterNetEvent("esx:onPickup", function(pickupId)
+            local pickup, xPlayer, success = Core.Pickups[pickupId], ESX.GetPlayerFromId(source)
 
-        if not xPlayer then
-            return
-        end
-
-        if not pickup then return end
-
-        local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
-        if playerPickupDistance > 5.0 then
-            print(("[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7"):format(xPlayer.getIdentifier()))
-            return
-        end
-
-        if pickup.type == "item_standard" then
-            if not xPlayer.canCarryItem(pickup.name, pickup.count) then
-                return xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
+            if not xPlayer then
+                return
             end
 
-            xPlayer.addInventoryItem(pickup.name, pickup.count)
-            success = true
-        elseif pickup.type == "item_account" then
-            success = true
-            xPlayer.addAccountMoney(pickup.name, pickup.count, "Picked up")
-        elseif pickup.type == "item_weapon" then
-            if xPlayer.hasWeapon(pickup.name) then
-                return xPlayer.showNotification(TranslateCap("threw_weapon_already"))
+            if not pickup then return end
+
+            local playerPickupDistance = #(pickup.coords - xPlayer.getCoords(true))
+            if playerPickupDistance > 5.0 then
+                print(("[^3WARNING^7] Player Detected Cheating (Out of range pickup): ^5%s^7"):format(xPlayer.getIdentifier()))
+                return
             end
 
-            success = true
-            xPlayer.addWeapon(pickup.name, pickup.count)
-            xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
+            if pickup.type == "item_standard" then
+                if not xPlayer.canCarryItem(pickup.name, pickup.count) then
+                    return xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
+                end
 
-            for _, v in ipairs(pickup.components) do
-                xPlayer.addWeaponComponent(pickup.name, v)
+                xPlayer.addInventoryItem(pickup.name, pickup.count)
+                success = true
+            elseif pickup.type == "item_account" then
+                success = true
+                xPlayer.addAccountMoney(pickup.name, pickup.count, "Picked up")
+            elseif pickup.type == "item_weapon" then
+                if xPlayer.hasWeapon(pickup.name) then
+                    return xPlayer.showNotification(TranslateCap("threw_weapon_already"))
+                end
+
+                success = true
+                xPlayer.addWeapon(pickup.name, pickup.count)
+                xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
+
+                for _, v in ipairs(pickup.components) do
+                    xPlayer.addWeaponComponent(pickup.name, v)
+                end
             end
-        end
 
-        if success then
-            Core.Pickups[pickupId] = nil
-            TriggerClientEvent("esx:removePickup", -1, pickupId)
-        end
-    end)
+            if success then
+                Core.Pickups[pickupId] = nil
+                TriggerClientEvent("esx:removePickup", -1, pickupId)
+            end
+        end)
+    end
 end
 
 ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
