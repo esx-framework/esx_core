@@ -151,7 +151,7 @@ if not Config.Multichar then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
 
-        if oneSyncState == "off" or oneSyncState == "legacy" then
+        if not ESX.IsEnhanced and (oneSyncState == "off" or oneSyncState == "legacy") then
             return deferrals.done(("[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s"):format(oneSyncState))
         end
 

@@ -14,6 +14,7 @@ shared_scripts {
     'shared/config/adjustments.lua',
 
     'shared/main.lua',
+    'shared/enhanced.lua',
     'shared/functions.lua',
     'shared/modules/*.lua',
 	'shared/compat.lua'
