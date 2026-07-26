@@ -1,6 +1,6 @@
 ---@diagnostic disable: lowercase-global
 xLib = setmetatable({
-    name = 'xLib',
+    name = 'esx_lib',
     side = IsDuplicityVersion() and 'server' or 'client'
 }, {
     __newindex = function(self, key, fn)
