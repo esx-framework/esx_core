@@ -9,11 +9,12 @@
 ---@field public onFinish? function
 
 local CurrentProgress = nil
+local progressCount = 0
 
-local function startProcessing()
-    while (CurrentProgress ~= nil) do
-        if CurrentProgress.length > 0 then
-            CurrentProgress.length = CurrentProgress.length - 1000
+local function startProcessing(id)
+    while CurrentProgress ~= nil and CurrentProgress.id == id do
+        if GetGameTimer() < CurrentProgress.finishAt then
+            Wait(50)
         else
             ClearPedTasks(ESX.PlayerData.ped)
             if CurrentProgress.FreezePlayer then
@@ -24,7 +25,6 @@ local function startProcessing()
             end
             CurrentProgress = nil
         end
-        Wait(1000)
     end
 end
 
@@ -55,8 +55,15 @@ local function Progressbar(message, length, Options)
         length = length or 3000,
         message = message or "ESX-Framework",
     })
+    progressCount = progressCount + 1
+    CurrentProgress.id = progressCount
     CurrentProgress.length = length or 3000
-    CreateThread(startProcessing);
+    CurrentProgress.finishAt = GetGameTimer() + CurrentProgress.length
+
+    local id = progressCount
+    CreateThread(function()
+        startProcessing(id)
+    end)
     return true;
 end
 
