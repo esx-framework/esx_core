@@ -799,9 +799,15 @@ if not Config.CustomInventory then
         end
 
         if #toInsert > 0 then
+            local parameters = {}
+            for i = 1, #toInsert do
+                local row = toInsert[i]
+                parameters[i] = { row.name, row.label, row.weight, row.rare, row.canRemove }
+            end
+
             MySQL.prepare.await(
             "INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)",
-                toInsert)
+                parameters)
 
             for i = 1, #toInsert do
                 local row = toInsert[i]
