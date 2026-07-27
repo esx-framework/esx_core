@@ -107,7 +107,7 @@ function ESX.AwaitClientCallback(player, eventName, ...)
     if not p then return end
 
     SetTimeout(15000, function()
-        if p.state == "pending" then
+        if p.state == 0 then
             p:reject("Server Callback Timed Out")
         end
     end)
