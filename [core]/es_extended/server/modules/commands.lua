@@ -178,9 +178,11 @@ ESX.RegisterCommand(
             return
         end
         xTarget.triggerEvent("esx:repairPedVehicle")
-        xPlayer.showNotification(TranslateCap("command_repair_success"), true, false, 140)
-        if xPlayer.source ~= xTarget.source then
-            xTarget.showNotification(TranslateCap("command_repair_success_target"), true, false, 140)
+        if xPlayer then
+            xPlayer.showNotification(TranslateCap("command_repair_success"))
+        end
+        if not xPlayer or xPlayer.source ~= xTarget.source then
+            xTarget.showNotification(TranslateCap("command_repair_success_target"))
         end
         if Config.AdminLogging then
             ESX.DiscordLogFields("UserActions", "Fix Vehicle /fix Triggered!", "pink", {
@@ -445,7 +447,11 @@ if not Config.CustomInventory then
     ESX.RegisterCommand("refreshitems", "admin", function(xPlayer)
         local itemCount = ESX.RefreshItems()
 
-        xPlayer.showNotification(Translate("command_refreshitems_success", itemCount), true, false, 140)
+        if xPlayer then
+            xPlayer.showNotification(Translate("command_refreshitems_success", itemCount))
+        else
+            print(("[^2INFO^7] %s^7"):format(Translate("command_refreshitems_success", itemCount)))
+        end
     end, true, { help = TranslateCap("command_refreshitems") })
 
     ESX.RegisterCommand(
@@ -558,7 +564,7 @@ end, true, { help = TranslateCap("command_saveall") })
 
 ESX.RegisterCommand("group", { "user", "admin" }, function(xPlayer, _, _)
     print(("%s, you are currently: ^5%s^0"):format(xPlayer.getName(), xPlayer.getGroup()))
-end, true)
+end, false)
 
 ESX.RegisterCommand("job", { "user", "admin" }, function(xPlayer, _, _)
 	local job = xPlayer.getJob()
