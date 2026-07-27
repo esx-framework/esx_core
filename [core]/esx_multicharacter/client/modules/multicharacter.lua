@@ -59,9 +59,9 @@ local function HideComponents(hide)
 end
 
 function Multicharacter:HideHud(hide)
-    self.hidePlayers = true
+    self.hidePlayers = hide
 
-    MumbleSetVolumeOverride(ESX.PlayerId, 0.0)
+    MumbleSetVolumeOverride(ESX.playerId, hide and 0.0 or -1.0)
     HideComponents(hide)
 end
 
@@ -77,7 +77,7 @@ function Multicharacter:SetupCharacters()
     SetEntityCoords(self.playerPed, self.spawnCoords.x, self.spawnCoords.y, self.spawnCoords.z, true, false, false, false)
     SetEntityHeading(self.playerPed, self.spawnCoords.w)
 
-    SetPlayerControl(ESX.PlayerId, false, 0)
+    SetPlayerControl(ESX.playerId, false, 0)
     self:SetupCamera()
     self:HideHud(true)
 
