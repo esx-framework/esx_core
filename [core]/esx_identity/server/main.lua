@@ -96,7 +96,7 @@ end
 local function checkNameFormat(name)
     if ESX.IsValidLocaleString(name) then
         local stringLength = string.len(name)
-        return stringLength > 0 and stringLength < Config.MaxNameLength
+        return stringLength > 0 and stringLength <= Config.MaxNameLength
     end
 
     return false
