@@ -122,7 +122,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                     err = TranslateCap("commanderror_invaliditem")
                                 end
                             elseif v.type == "weapon" then
-                                if ESX.GetWeapon(args[k]) then
+                                if pcall(ESX.GetWeapon, args[k]) then
                                     newArgs[v.name] = string.upper(args[k])
                                 else
                                     err = TranslateCap("commanderror_invalidweapon")
