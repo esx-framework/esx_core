@@ -175,11 +175,11 @@ function Adjustments:ReplacePlaceholders(text)
         local success, result = pcall(cb)
 
         if not success then
-            error(("Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
+            print(("[^1ERROR^7] Failed to execute placeholder: ^5%s^7\n%s"):format(placeholder, result))
             result = "Unknown"
         end
 
-        text = text:gsub(("{%s}"):format(placeholder), tostring(result))
+        text = text:gsub(("{%s}"):format(placeholder), (tostring(result):gsub("%%", "%%%%")))
     end
     return text
 end
