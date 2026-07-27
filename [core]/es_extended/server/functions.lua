@@ -136,7 +136,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                 end
                                 local merge = table.concat(args, " ")
 
-                                newArgs[v.name] = string.sub(merge, length)
+                                newArgs[v.name] = string.sub(merge, length + 1)
                             elseif v.type == "coordinate" then
                                 local coord = tonumber(args[k]:match("(-?%d+%.?%d*)"))
                                 if not coord then
