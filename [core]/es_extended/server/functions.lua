@@ -283,6 +283,32 @@ function Core.SavePlayers(cb)
     )
 end
 
+function Core.StoreVehicles(cb)
+    if not next(Core.vehicles) then
+        return type(cb) == "function" and cb()
+    end
+
+    local parameters = {}
+
+    for plate, vehicleData in pairs(Core.vehicles) do
+        parameters[#parameters + 1] = { plate, vehicleData.owner }
+    end
+
+    MySQL.prepare("UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?", parameters,
+        function(results)
+            if not results then
+                return
+            end
+
+            if type(cb) == "function" then
+                return cb()
+            end
+
+            print(("[^2INFO^7] Stored ^5%s^7 %s"):format(#parameters, #parameters > 1 and "vehicles" or "vehicle"))
+        end
+    )
+end
+
 ESX.GetPlayers = GetPlayers
 
 local function checkTable(key, val, xPlayer, xPlayers, minimal)

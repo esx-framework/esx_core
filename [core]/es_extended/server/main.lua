@@ -745,12 +745,14 @@ AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)
         CreateThread(function()
             Wait(50000)
             Core.SavePlayers()
+            Core.StoreVehicles()
         end)
     end
 end)
 
 AddEventHandler("txAdmin:events:serverShuttingDown", function()
     Core.SavePlayers()
+    Core.StoreVehicles()
 end)
 
 local DoNotUse = {
