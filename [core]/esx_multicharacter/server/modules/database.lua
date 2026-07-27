@@ -101,9 +101,17 @@ function Database:GetPlayerSlots(identifier)
 end
 
 function Database:GetPlayerInfo(identifier, slots)
+    local placeholders = {}
+    local identifiers = {}
+
+    for i = 1, slots do
+        placeholders[i] = "?"
+        identifiers[i] = ("%s%s:%s"):format(Server.prefix, i, identifier)
+    end
+
     return MySQL.query.await(
-        "SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier LIKE ? LIMIT ?",
-        { identifier, slots })
+        ("SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier IN (%s)"):format(table.concat(placeholders, ", ")),
+        identifiers)
 end
 
 function Database:SetSlots(identifier, slots)
