@@ -14,13 +14,9 @@ function xLib.table.isArray(tbl)
         end
 
         count, maxIndex = count + 1, math.max(maxIndex, k)
-
-        if count > maxIndex then
-            return false
-        end
     end
 
-    return true
+    return count == maxIndex
 end
 
 ---@param tbl table
