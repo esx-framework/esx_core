@@ -32,7 +32,6 @@ end
 ---@param maxRange number
 ---@return number
 function ESX.Math.Random(minRange, maxRange)
-    math.randomseed(GetGameTimer())
     return math.random(minRange or 1, maxRange or 10)
 end
 
