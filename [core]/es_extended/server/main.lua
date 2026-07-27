@@ -293,9 +293,9 @@ function loadESXPlayer(identifier, playerId, isNew)
 
             local loadout = json.decode(result.loadout)
             for name, weapon in pairs(loadout) do
-                local label = ESX.GetWeaponLabel(name)
+                local found, label = pcall(ESX.GetWeaponLabel, name)
 
-                if label then
+                if found and label then
                     userData.loadout[#userData.loadout + 1] = {
                         name = name,
                         ammo = weapon.ammo,
