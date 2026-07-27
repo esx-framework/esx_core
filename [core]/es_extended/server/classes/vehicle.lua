@@ -167,7 +167,7 @@ Core.vehicleClass = {
 		assert(type(newProps) == "table", "Expected 'props' to be a table")
 
 		local vehicleData = Core.vehicles[self.plate]
-		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", json.encode(newProps), vehicleData.plate, vehicleData.owner)
+		local affectedRows = MySQL.update.await("UPDATE `owned_vehicles` SET `vehicle` = ? WHERE `plate` = ? AND `owner` = ?", { json.encode(newProps), vehicleData.plate, vehicleData.owner })
 		if affectedRows <= 0 then
 			self:delete()
 			return false
