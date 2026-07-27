@@ -146,7 +146,6 @@ local function openQuantityDialog(title, maxCount)
         local qty = tonumber(data.value)
         if not qty or qty <= 0 or qty > maxCount then
             ESX.ShowNotification(TranslateCap("amount_invalid"))
-            p:resolve(nil)
         else
             menu.close()
             p:resolve(qty)
