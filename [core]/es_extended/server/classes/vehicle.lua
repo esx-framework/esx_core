@@ -154,6 +154,7 @@ Core.vehicleClass = {
 		vehicleData.plate = newPlate
 		Core.vehicles[newPlate] = table.clone(vehicleData)
 		Core.vehicles[oldPlate] = nil
+		self.plate = newPlate
 
 		TriggerEvent("esx:changedExtendedVehiclePlate", vehicleData.plate, oldPlate)
 		Wait(0)
