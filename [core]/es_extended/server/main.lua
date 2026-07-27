@@ -474,6 +474,9 @@ if not Config.CustomInventory then
             local weaponComponents = ESX.Table.Clone(weapon.components)
             local weaponTint = weapon.tintIndex
 
+            sourceXPlayer.removeWeapon(itemName)
+            targetXPlayer.addWeapon(itemName, itemCount)
+
             if weaponTint then
                 targetXPlayer.setWeaponTint(itemName, weaponTint)
             end
@@ -483,9 +486,6 @@ if not Config.CustomInventory then
                     targetXPlayer.addWeaponComponent(itemName, v)
                 end
             end
-
-            sourceXPlayer.removeWeapon(itemName)
-            targetXPlayer.addWeapon(itemName, itemCount)
 
             if weaponObject.ammo and itemCount > 0 then
                 local ammoLabel = weaponObject.ammo.label
