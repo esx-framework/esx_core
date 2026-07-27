@@ -10,7 +10,7 @@ Config.EnableCommands = ESX.GetConfig().EnableDebug
 Config.DateFormat = "DD/MM/YYYY"
 
 -- These values are for the second input validation in server/main.lua
-Config.MaxNameLength = 16 -- Max Name Length. Must not exceed the firstname/lastname column width in the database.
+Config.MaxNameLength = 16 -- Max Name Length. Raising it widens the firstname and lastname columns on the next start.
 Config.MinHeight = 120 -- 120 cm lowest height
 Config.MaxHeight = 220 -- 220 cm max height.
 Config.MaxAge = 100 -- 100 years old is the oldest you can be.

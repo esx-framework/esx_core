@@ -2,6 +2,33 @@ local playerIdentity = {}
 local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
 
+MySQL.ready(function()
+    local maxNameLength <const> = Config.MaxNameLength
+
+    local columns = MySQL.query.await([[
+        SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME IN ('firstname', 'lastname')
+    ]])
+
+    local changes = {}
+
+    for i = 1, #columns do
+        if columns[i].CHARACTER_MAXIMUM_LENGTH < maxNameLength then
+            changes[#changes + 1] = ("MODIFY COLUMN `%s` VARCHAR(%d)"):format(columns[i].COLUMN_NAME, maxNameLength)
+        end
+    end
+
+    if #changes == 0 then
+        return
+    end
+
+    if not pcall(MySQL.update.await, ("ALTER TABLE `users` %s"):format(table.concat(changes, ", "))) then
+        return print(("[^1ERROR^7] Could not widen ^5firstname^7 and ^5lastname^7 to ^5%d^7 characters, longer names will be rejected by the database"):format(maxNameLength))
+    end
+
+    ESX.Trace(("Widened firstname and lastname to %d characters"):format(maxNameLength))
+end)
+
 local function deleteIdentityFromDatabase(xPlayer)
     MySQL.query.await("UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ?, sex = ?, height = ?, skin = ? WHERE identifier = ?", { nil, nil, nil, nil, nil, nil, xPlayer.identifier })
 
