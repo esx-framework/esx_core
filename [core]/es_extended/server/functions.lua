@@ -251,18 +251,24 @@ function Core.SavePlayers(cb)
     local parameters = {}
 
     for _, xPlayer in pairs(ESX.Players) do
-        updateHealthAndArmorInMetadata(xPlayer)
-        parameters[#parameters + 1] = {
-            json.encode(xPlayer.getAccounts(true)),
-            xPlayer.job.name,
-            xPlayer.job.grade,
-            xPlayer.group,
-            json.encode(xPlayer.getCoords(false, true)),
-            json.encode(xPlayer.getInventory(true)),
-            json.encode(xPlayer.getLoadout(true)),
-            json.encode(xPlayer.getMeta()),
-            xPlayer.identifier,
-        }
+        if xPlayer.spawned then
+            updateHealthAndArmorInMetadata(xPlayer)
+            parameters[#parameters + 1] = {
+                json.encode(xPlayer.getAccounts(true)),
+                xPlayer.job.name,
+                xPlayer.job.grade,
+                xPlayer.group,
+                json.encode(xPlayer.getCoords(false, true)),
+                json.encode(xPlayer.getInventory(true)),
+                json.encode(xPlayer.getLoadout(true)),
+                json.encode(xPlayer.getMeta()),
+                xPlayer.identifier,
+            }
+        end
+    end
+
+    if not parameters[1] then
+        return cb and cb()
     end
 
     MySQL.prepare(
