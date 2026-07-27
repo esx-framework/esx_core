@@ -14,6 +14,15 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'locales/*.lua',
 	'config.lua',
+	'server/module/registry.lua',
+	'server/module/validation.lua',
+	'server/module/util.lua',
+	'server/module/database.lua',
+	'server/module/identity.lua',
+	'server/module/multichar.lua',
+	'server/module/callback.lua',
+	'server/module/commands.lua',
+	'server/module/debugging.lua',
 	'server/main.lua'
 }
 
