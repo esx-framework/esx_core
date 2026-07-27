@@ -15,7 +15,9 @@ local function openMenu(namespace, name, data)
     })
 
     local timeoutId = ESX.SetTimeout(200, function()
-        SetNuiFocus(true, true)
+        if next(OpenedMenus) then
+            SetNuiFocus(true, true)
+        end
     end)
 
     table.insert(Timeouts, timeoutId)
