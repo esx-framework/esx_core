@@ -4,6 +4,7 @@ xLib.points = {}
 local points = {}
 local insidePoints = {}
 local handleCount = 0
+local loopStarted = false
 
 ---@param coords vector3
 ---@param distance number
@@ -44,6 +45,12 @@ function xLib.points.hide(handle, hidden)
 end
 
 function xLib.points.startLoop()
+    if loopStarted then
+        return
+    end
+
+    loopStarted = true
+
     CreateThread(function()
         local lastScan = 0
 
