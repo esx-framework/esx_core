@@ -71,7 +71,7 @@ Config.PlayerStatsByGender = {
         stamina = 1.15,
         strength = 0.85,
         swimSpeed = 1.25,
-        moveSpeed = 7.00,
+        moveSpeed = 1.0,
     }
 }
 
