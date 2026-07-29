@@ -35,13 +35,6 @@ function xLib.table.searchForKey(tbl, item)
 end
 
 ---@param tbl table
----@param item any
----@return boolean
-function xLib.table.contains(tbl, item)
-    return xLib.table.searchForKey(tbl, item) ~= nil
-end
-
----@param tbl table
 ---@param filter fun(value:any, key:any):boolean
 ---@return table
 function xLib.table.filter(tbl, filter)
@@ -118,7 +111,7 @@ function xLib.table.dump(tbl)
         local s = '{ '
         for k,v in pairs(tbl) do
            if type(k) ~= 'number' then k = '"'..k..'"' end
-           s = s .. '['..k..'] = ' .. tbl(v) .. ','
+           s = s .. '['..k..'] = ' .. xLib.table.dump(v) .. ','
         end
         return s .. '} '
      else
