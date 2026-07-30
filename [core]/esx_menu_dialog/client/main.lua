@@ -1,10 +1,6 @@
-local Timeouts, OpenedMenus, MenuType = {}, {}, "dialog"
+local OpenedMenus, MenuType = {}, "dialog"
 
 local function openMenu(namespace, name, data)
-    for i = 1, #Timeouts, 1 do
-        ESX.ClearTimeout(Timeouts[i])
-    end
-
     OpenedMenus[namespace .. "_" .. name] = true
 
     SendNUIMessage({
@@ -14,13 +10,11 @@ local function openMenu(namespace, name, data)
         data = data,
     })
 
-    local timeoutId = ESX.SetTimeout(200, function()
+    ESX.SetTimeout(200, function()
         if next(OpenedMenus) then
             SetNuiFocus(true, true)
         end
     end)
-
-    table.insert(Timeouts, timeoutId)
 end
 
 local function closeMenu(namespace, name)
