@@ -2,6 +2,7 @@ SetMapName("San Andreas")
 SetGameType("ESX Legacy")
 
 local oneSyncState = GetConvar("onesync", "off")
+local isEnhanced = xLib.isEnhanced()
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
@@ -151,7 +152,7 @@ if not Config.Multichar then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
 
-        if oneSyncState == "off" or oneSyncState == "legacy" then
+        if not isEnhanced and (oneSyncState == "off" or oneSyncState == "legacy") then
             return deferrals.done(("[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s"):format(oneSyncState))
         end
 
