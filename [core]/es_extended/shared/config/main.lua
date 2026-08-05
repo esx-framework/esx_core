@@ -39,6 +39,44 @@ Config.AdminGroups = {
     ["admin"] = true,
 }
 
+Config.CommandPermissions = {
+    ["setcoords"]           = { "owner", "admin" }, -- /setcoords, /tp
+    ["setjob"]              = { "owner", "admin" },
+    ["car"]                 = { "owner", "admin" },
+    ["cardel"]              = { "owner", "admin" }, -- /cardel, /dv
+    ["fix"]                 = { "owner", "admin" }, -- /fix, /repair
+    ["setaccountmoney"]     = { "owner", "admin" },
+    ["giveaccountmoney"]    = { "owner", "admin" },
+    ["removeaccountmoney"]  = { "owner", "admin" },
+    ["giveitem"]            = { "owner", "admin" },
+    ["giveweapon"]          = { "owner", "admin" },
+    ["giveammo"]            = { "owner", "admin" },
+    ["giveweaponcomponent"] = { "owner", "admin" },
+    ["clearall"]            = { "owner", "admin" }, -- /clearall, /clsall
+    ["refreshjobs"]         = { "owner", "admin" },
+    ["refreshitems"]        = { "owner", "admin" },
+    ["clearinventory"]      = { "owner", "admin" },
+    ["clearloadout"]        = { "owner", "admin" },
+    ["setgroup"]            = { "owner", "admin" },
+    ["save"]                = { "owner", "admin" },
+    ["saveall"]             = { "owner", "admin" },
+    ["goto"]                = { "owner", "admin" },
+    ["bring"]               = { "owner", "admin" },
+    ["kill"]                = { "owner", "admin" },
+    ["freeze"]              = { "owner", "admin" },
+    ["unfreeze"]            = { "owner", "admin" },
+    ["setdim"]              = { "owner", "admin" }, -- /setdim, /setbucket
+    ["players"]             = { "owner", "admin" },
+    ["noclip"]              = { "owner", "admin" },
+    ["tpm"]                 = { "owner", "admin" },
+    ["coords"]              = { "owner", "admin" },
+    ["clear"]               = { "user", "admin", "owner" }, -- /clear, /cls
+    ["group"]               = { "user", "admin", "owner" },
+    ["job"]                 = { "user", "admin", "owner" },
+    ["info"]                = { "user", "admin", "owner" },
+    ["playtime"]            = { "user", "admin", "owner" },
+}
+
 Config.ValidCharacterSets = { -- Only enable additional charsets if your server is multilingual. By default everything is false.
     ['el'] = false, -- Greek
     ['sr'] = false, -- Cyrillic
