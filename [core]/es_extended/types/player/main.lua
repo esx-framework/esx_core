@@ -1,21 +1,21 @@
 ---@class StaticPlayer
 ---@field src number                                              # Player's server ID.
 --- Money Functions
----@field setMoney fun(money: number)                             # Set player's cash balance.
+---@field setMoney fun(money: number): boolean                           # Set player's cash balance.
 ---@field getMoney fun(): number                                   # Get player's current cash balance.
----@field addMoney fun(money: number, reason: string)             # Add money to the player's cash balance.
----@field removeMoney fun(money: number, reason: string)          # Remove money from the player's cash balance.
----@field setAccountMoney fun(accountName: string, money: number, reason?: string)  # Set specific account balance.
----@field addAccountMoney fun(accountName: string, money: number, reason?: string)  # Add money to an account.
----@field removeAccountMoney fun(accountName: string, money: number, reason?: string) # Remove money from an account.
+---@field addMoney fun(money: number, reason: string): boolean           # Add money to the player's cash balance.
+---@field removeMoney fun(money: number, reason: string): boolean        # Remove money from the player's cash balance.
+---@field setAccountMoney fun(accountName: string, money: number, reason?: string): boolean# Set specific account balance.
+---@field addAccountMoney fun(accountName: string, money: number, reason?: string): boolean# Add money to an account.
+---@field removeAccountMoney fun(accountName: string, money: number, reason?: string): boolean# Remove money from an account.
 ---@field getAccount fun(account: string): ESXAccount?            # Get account data by name.
 ---@field getAccounts fun(minimal?: boolean): ESXAccount[]|table<string,number>  # Get all accounts, optionally minimal.
 --- Inventory Functions
 ---@field getInventory fun(minimal?: boolean): ESXInventoryItem[]|table<string,number>  # Get inventory, optionally minimal.
 ---@field getInventoryItem fun(itemName: string): ESXInventoryItem? # Get a specific item from inventory.
----@field addInventoryItem fun(itemName: string, count: number)     # Add items to inventory.
----@field removeInventoryItem fun(itemName: string, count: number)  # Remove items from inventory.
----@field setInventoryItem fun(itemName: string, count: number)     # Set item count in inventory.
+---@field addInventoryItem fun(itemName: string, count: number): boolean   # Add items to inventory.
+---@field removeInventoryItem fun(itemName: string, count: number): boolean# Remove items from inventory.
+---@field setInventoryItem fun(itemName: string, count: number): boolean   # Set item count in inventory.
 ---@field getWeight fun(): number                                   # Get current carried weight.
 ---@field getMaxWeight fun(): number                                # Get maximum carry weight.
 ---@field setMaxWeight fun(newWeight: number)                       # Set maximum carry weight.
@@ -29,17 +29,17 @@
 ---@field setGroup fun(newGroup: string)                               # Set player's permission group.
 ---@field getGroup fun(): string                                       # Get player's permission group.
 --- Weapon Functions
----@field addWeapon fun(weaponName: string, ammo: number)                 # Give player a weapon.
----@field removeWeapon fun(weaponName: string)                             # Remove weapon from player.
+---@field addWeapon fun(weaponName: string, ammo: number): boolean               # Give player a weapon.
+---@field removeWeapon fun(weaponName: string): boolean                           # Remove weapon from player.
 ---@field hasWeapon fun(weaponName: string): boolean                       # Check if player has a weapon.
 ---@field getWeapon fun(weaponName: string): number?, table?               # Get weapon ammo & components.
----@field addWeaponAmmo fun(weaponName: string, ammoCount: number)        # Add ammo to a weapon.
----@field removeWeaponAmmo fun(weaponName: string, ammoCount: number)     # Remove ammo from a weapon.
----@field updateWeaponAmmo fun(weaponName: string, ammoCount: number)     # Update ammo count for a weapon.
----@field addWeaponComponent fun(weaponName: string, weaponComponent: string)    # Add component to weapon.
----@field removeWeaponComponent fun(weaponName: string, weaponComponent: string) # Remove component from weapon.
+---@field addWeaponAmmo fun(weaponName: string, ammoCount: number): boolean      # Add ammo to a weapon.
+---@field removeWeaponAmmo fun(weaponName: string, ammoCount: number): boolean   # Remove ammo from a weapon.
+---@field updateWeaponAmmo fun(weaponName: string, ammoCount: number): boolean   # Update ammo count for a weapon.
+---@field addWeaponComponent fun(weaponName: string, weaponComponent: string): boolean  # Add component to weapon.
+---@field removeWeaponComponent fun(weaponName: string, weaponComponent: string): boolean# Remove component from weapon.
 ---@field hasWeaponComponent fun(weaponName: string, weaponComponent: string): boolean # Check if weapon has component.
----@field setWeaponTint fun(weaponName: string, weaponTintIndex: number) # Set weapon tint.
+---@field setWeaponTint fun(weaponName: string, weaponTintIndex: number): boolean# Set weapon tint.
 ---@field getWeaponTint fun(weaponName: string): number                  # Get weapon tint.
 --- Player State Functions
 ---@field getIdentifier fun(): string                              # Get player's unique identifier.

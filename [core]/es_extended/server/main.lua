@@ -200,6 +200,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     local result = MySQL.prepare.await(loadPlayer, { identifier })
 
+    if not result then
+        print(("[^1ERROR^7] esx_core could not load data for identifier ^5%s^7"):format(identifier))
+        return DropPlayer(playerId --[[@as string]], "There was an error loading your character!\nError code: data-load-failed\n\nYour character data could not be retrieved. Please reconnect, and contact the server administration team if this keeps happening.")
+    end
+
     -- Accounts
     local accounts = result.accounts
     accounts = (accounts and accounts ~= "") and json.decode(accounts) or {}
@@ -816,22 +821,6 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     end
 
     cb(players)
-end)
-
-ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
-    local ped = GetPlayerPed(source)
-    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
-        if vehData.warp then
-            local vehicle = NetworkGetEntityFromNetworkId(id)
-            local timeout = 0
-            while GetVehiclePedIsIn(ped, false) ~= vehicle and timeout <= 15 do
-                Wait(0)
-                TaskWarpPedIntoVehicle(ped, vehicle, -1)
-                timeout += 1
-            end
-        end
-        cb(id)
-    end)
 end)
 
 AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)

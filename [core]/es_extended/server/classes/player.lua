@@ -110,21 +110,22 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     function self.setMoney(money)
         assert(type(money) == "number", "money should be number!")
         money = ESX.Math.Round(money)
-        self.setAccountMoney("money", money)
+        return self.setAccountMoney("money", money)
     end
 
     function self.getMoney()
-        return self.getAccount("money").money
+        local account = self.getAccount("money")
+        return account and account.money or 0
     end
 
     function self.addMoney(money, reason)
         money = ESX.Math.Round(money)
-        self.addAccountMoney("money", money, reason)
+        return self.addAccountMoney("money", money, reason)
     end
 
     function self.removeMoney(money, reason)
         money = ESX.Math.Round(money)
-        self.removeAccountMoney("money", money, reason)
+        return self.removeAccountMoney("money", money, reason)
     end
 
     function self.getIdentifier()
@@ -266,6 +267,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:setAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -288,6 +290,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:addAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -315,6 +318,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                 self.triggerEvent("esx:setAccountMoney", account)
                 TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+                return true
             else
                 error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
@@ -342,7 +346,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
             TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
             self.triggerEvent("esx:addInventoryItem", item.name, item.count)
+            return true
         end
+
+        return false
     end
 
     function self.removeInventoryItem(itemName, count)
@@ -359,11 +366,16 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                     TriggerEvent("esx:onRemoveInventoryItem", self.source, item.name, item.count)
                     self.triggerEvent("esx:removeInventoryItem", item.name, item.count)
+                    return true
                 end
+
+                return false
             else
                 error(("Player ID:^5%s Tried remove a Invalid count -> %s of %s"):format(self.playerId, count, itemName))
             end
         end
+
+        return false
     end
 
     function self.setInventoryItem(itemName, count)
@@ -373,11 +385,13 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             count = ESX.Math.Round(count)
 
             if count > item.count then
-                self.addInventoryItem(item.name, count - item.count)
+                return self.addInventoryItem(item.name, count - item.count)
             else
-                self.removeInventoryItem(item.name, item.count - count)
+                return self.removeInventoryItem(item.name, item.count - count)
             end
         end
+
+        return false
     end
 
     function self.getWeight()
@@ -485,7 +499,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             GiveWeaponToPed(GetPlayerPed(self.source), joaat(weaponName), ammo, false, false)
             self.triggerEvent("esx:addInventoryItem", weaponLabel, false, true)
             self.triggerEvent("esx:addLoadoutItem", weaponName, weaponLabel, ammo)
+            return true
         end
+
+        return false
     end
 
     function self.addWeaponComponent(weaponName, weaponComponent)
@@ -500,9 +517,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                     local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
                     GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(weaponName), componentHash)
                     self.triggerEvent("esx:addInventoryItem", component.label, false, true)
+                    return true
                 end
             end
         end
+
+        return false
     end
 
     function self.addWeaponAmmo(weaponName, ammoCount)
@@ -511,14 +531,17 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weapon then
             weapon.ammo = weapon.ammo + ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            return true
         end
+
+        return false
     end
 
     function self.updateWeaponAmmo(weaponName, ammoCount)
         local _, weapon = self.getWeapon(weaponName)
 
         if not weapon then
-            return
+            return false
         end
 
         weapon.ammo = ammoCount
@@ -529,6 +552,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                 self.removeWeapon(weaponName)
             end
         end
+
+        return true
     end
 
     function self.setWeaponTint(weaponName, weaponTintIndex)
@@ -541,8 +566,11 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
                 self.loadout[loadoutNum].tintIndex = weaponTintIndex
                 self.triggerEvent("esx:setWeaponTint", weaponName, weaponTintIndex)
                 self.triggerEvent("esx:addInventoryItem", weaponObject.tints[weaponTintIndex], false, true)
+                return true
             end
         end
+
+        return false
     end
 
     function self.getWeaponTint(weaponName)
@@ -559,7 +587,7 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         local weaponLabel, playerPed <const> = nil, GetPlayerPed(self.source)
 
         if not playerPed then
-            return error("xPlayer.removeWeapon ^5invalid^1 player ped!")
+            error("xPlayer.removeWeapon ^5invalid^1 player ped!")
         end
 
         for k, v in ipairs(self.loadout) do
@@ -582,7 +610,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weaponLabel then
             self.triggerEvent("esx:removeInventoryItem", weaponLabel, false, true)
             self.triggerEvent("esx:removeLoadoutItem", weaponName, weaponLabel)
+            return true
         end
+
+        return false
     end
 
     function self.removeWeaponComponent(weaponName, weaponComponent)
@@ -602,9 +633,12 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
 
                     self.triggerEvent("esx:removeWeaponComponent", weaponName, weaponComponent)
                     self.triggerEvent("esx:removeInventoryItem", component.label, false, true)
+                    return true
                 end
             end
         end
+
+        return false
     end
 
     function self.removeWeaponAmmo(weaponName, ammoCount)
@@ -613,7 +647,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if weapon then
             weapon.ammo = weapon.ammo - ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            return true
         end
+
+        return false
     end
 
     function self.hasWeaponComponent(weaponName, weaponComponent)

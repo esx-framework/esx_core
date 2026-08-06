@@ -591,7 +591,7 @@ function ESX.UseItem(source, item, ...)
 
             if not success then
                 return result and print(result) or
-                print(('[^3WARNING^7] An error occured when using item ^5"%s"^7! This was not caused by ESX.'):format(
+                print(('[^3WARNING^7] An error occurred when using item ^5"%s"^7! This was not caused by ESX.'):format(
                 item))
             end
         end

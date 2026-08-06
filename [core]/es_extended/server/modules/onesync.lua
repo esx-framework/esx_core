@@ -114,25 +114,27 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
 
     CreateThread(function()
         if not vehicleType then
-            local xPlayer = ESX.GetExtendedPlayers()[1]
-            if xPlayer then
-                vehicleType = ESX.GetVehicleType(vehicleModel, xPlayer.source)
+            local playerId = next(ESX.Players)
+            if playerId then
+                vehicleType = ESX.GetVehicleType(vehicleModel, playerId)
             end
         end
 
         if not vehicleType then
-            return reject("No players found nearby to check vehicle type! Alternatively, you can specify the vehicle type manually.")
+            return reject("No players online to check vehicle type! Alternatively, you can specify the vehicle type manually.")
         end
 
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)
+
+        if not createdVehicle or createdVehicle == 0 then
+            return reject(("Could not spawn vehicle - ^5%s^7!"):format(vehicleModel))
+        end
+
+        -- the server owns the entity right after creation regardless of players
+        -- in scope, so a plain existence check is enough to know it is ready
         local tries = 0
-
-        local hasNetOwner = next(ESX.OneSync.GetClosestPlayer(coords, 300, nil, 0) or {}) ~= nil
-
-        while not createdVehicle or createdVehicle == 0
-            or (hasNetOwner and NetworkGetEntityOwner(createdVehicle) == -1)
-            or (not hasNetOwner and not DoesEntityExist(createdVehicle)) do
-            Wait(200)
+        while not DoesEntityExist(createdVehicle) do
+            Wait(50)
             tries = tries + 1
             if tries > 40 then
                 return reject(("Could not spawn vehicle - ^5%s^7!"):format(vehicleModel))
