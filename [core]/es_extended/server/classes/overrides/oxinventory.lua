@@ -4,12 +4,31 @@ if Config.CustomInventory ~= "ox" then
     return
 end
 
+local requiredMethods = {
+    "GetItem",
+    "AddItem",
+    "RemoveItem",
+    "SetItem",
+    "CanCarryItem",
+    "CanSwapItem",
+    "SetMaxWeight",
+}
+
 ---Stores the reference to the internal ox_inventory module.
 ---@param module table
 ---@return boolean
+---@return string? error
 local function setOxInventory(module)
     if type(module) ~= "table" then
-        return false
+        return false, "module is not a table"
+    end
+
+    for i = 1, #requiredMethods do
+        local method = requiredMethods[i]
+
+        if type(module[method]) ~= "function" then
+            return false, ("missing method %s"):format(method)
+        end
     end
 
     OxInventory = module
@@ -46,9 +65,11 @@ local function getOxInventory()
         )
     end
 
-    if not setOxInventory(module) then
+    local ok, err = setOxInventory(module)
+    if not ok then
         error(
-            "[es_extended] The Inventory export from ox_inventory returned an invalid module.",
+            ("[es_extended] The Inventory export from ox_inventory returned an invalid module: %s")
+                :format(err),
             2
         )
     end
@@ -58,8 +79,9 @@ end
 
 -- Standard method used when ox_inventory finishes loading..
 AddEventHandler("ox_inventory:loadInventory", function(module)
-    if not setOxInventory(module) then
-        print("^1[es_extended] ox_inventory:loadInventory returned an invalid module.^7")
+    local ok, err = setOxInventory(module)
+    if not ok then
+        print(("^1[es_extended] ox_inventory:loadInventory returned an invalid module: %s^7"):format(err))
     end
 end)
 
@@ -315,11 +337,17 @@ Core.PlayerFunctionOverrides.OxInventory = {
 
     hasItem = function(self)
         return function(name, metadata)
-            return getOxInventory().GetItem(
+            local item = getOxInventory().GetItem(
                 self.source,
                 name,
                 metadata
             )
+
+            if not item or not item.count or item.count < 1 then
+                return false
+            end
+
+            return item, item.count
         end
     end,
 
