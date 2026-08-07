@@ -1,13 +1,7 @@
 local CommandPermissions = Config.CommandPermissions or {}
 
 local function FilterGroups(groups)
-    local filtered = {}
-    for _, group in ipairs(groups or {}) do
-        if Config.AdminGroups[group] ~= false then 
-            filtered[#filtered + 1] = group
-        end
-    end
-    return #filtered > 0 and filtered or { "admin" }
+    return (groups and #groups > 0) and groups or { "user" }
 end
 
 ESX.RegisterCommand(

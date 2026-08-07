@@ -34,6 +34,9 @@ Config.DefaultSpawns = { -- If you want to have more spawn positions and select 
     --{x = 233.5459, y = -868.2626, z = 30.2922, heading = 1.0}
 }
 
+---@deprecated Use `Config.CommandPermissions` as the single source of truth for command ACLs.
+--- Kept temporarily for backwards compatibility with external resources that still read `Config.AdminGroups`.
+--- Will be removed in ESX 1.15.
 Config.AdminGroups = {
     ["owner"] = true,
     ["admin"] = true,
