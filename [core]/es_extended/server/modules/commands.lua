@@ -1,6 +1,12 @@
+local CommandPermissions = Config.CommandPermissions or {}
+
+local function FilterGroups(groups)
+    return (groups and #groups > 0) and groups or { "user" }
+end
+
 ESX.RegisterCommand(
     { "setcoords", "tp" },
-    "admin",
+    FilterGroups(CommandPermissions.setcoords),
     function(xPlayer, args)
         xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
         if Config.AdminLogging then
@@ -27,7 +33,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "setjob",
-    "admin",
+    FilterGroups(CommandPermissions.setjob),
     function(xPlayer, args, showError)
         if not ESX.DoesJobExist(args.job, args.grade) then
             return showError(TranslateCap("command_setjob_invalid"))
@@ -68,7 +74,7 @@ local upgrades = Config.SpawnVehMaxUpgrades and {
 
 ESX.RegisterCommand(
     "car",
-    "admin",
+    FilterGroups(CommandPermissions.car),
     function(xPlayer, args, showError)
         if not xPlayer then
             return showError("[^1ERROR^7] The xPlayer value is nil")
@@ -132,7 +138,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     { "cardel", "dv" },
-    "admin",
+    FilterGroups(CommandPermissions.cardel),
     function(xPlayer, args)
         local ped = GetPlayerPed(xPlayer.source)
         local pedVehicle = GetVehiclePedIsIn(ped, false)
@@ -168,7 +174,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     { "fix", "repair" },
-    "admin",
+    FilterGroups(CommandPermissions.fix),
     function(xPlayer, args, showError)
         local xTarget = args.playerId
         local ped = GetPlayerPed(xTarget.source)
@@ -202,7 +208,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "setaccountmoney",
-    "admin",
+    FilterGroups(CommandPermissions.setaccountmoney),
     function(xPlayer, args, showError)
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
@@ -232,7 +238,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "giveaccountmoney",
-    "admin",
+    FilterGroups(CommandPermissions.giveaccountmoney),
     function(xPlayer, args, showError)
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_giveaccountmoney_invalid"))
@@ -262,7 +268,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "removeaccountmoney",
-    "admin",
+    FilterGroups(CommandPermissions.removeaccountmoney),
     function(xPlayer, args, showError)
         if not args.playerId.getAccount(args.account) then
             return showError(TranslateCap("command_removeaccountmoney_invalid"))
@@ -293,7 +299,7 @@ ESX.RegisterCommand(
 if not Config.CustomInventory then
     ESX.RegisterCommand(
         "giveitem",
-        "admin",
+        FilterGroups(CommandPermissions.giveitem),
         function(xPlayer, args)
             args.playerId.addInventoryItem(args.item, args.count)
             if Config.AdminLogging then
@@ -323,7 +329,7 @@ if not Config.CustomInventory then
 
     ESX.RegisterCommand(
         "giveweapon",
-        "admin",
+        FilterGroups(CommandPermissions.giveweapon),
         function(xPlayer, args, showError)
             if args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveweapon_hasalready"))
@@ -353,7 +359,7 @@ if not Config.CustomInventory then
 
     ESX.RegisterCommand(
         "giveammo",
-        "admin",
+        FilterGroups(CommandPermissions.giveammo),
         function(xPlayer, args, showError)
             if not args.playerId.hasWeapon(args.weapon) then
                 return showError(TranslateCap("command_giveammo_noweapon_found"))
@@ -383,7 +389,7 @@ if not Config.CustomInventory then
 
     ESX.RegisterCommand(
         "giveweaponcomponent",
-        "admin",
+        FilterGroups(CommandPermissions.giveweaponcomponent),
         function(xPlayer, args, showError)
             if args.playerId.hasWeapon(args.weaponName) then
                 local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
@@ -423,11 +429,11 @@ if not Config.CustomInventory then
     )
 end
 
-ESX.RegisterCommand({ "clear", "cls" }, "user", function(xPlayer)
+ESX.RegisterCommand({ "clear", "cls" }, FilterGroups(CommandPermissions.clear), function(xPlayer)
     xPlayer.triggerEvent("chat:clear")
 end, false, { help = TranslateCap("command_clear") })
 
-ESX.RegisterCommand({ "clearall", "clsall" }, "admin", function(xPlayer)
+ESX.RegisterCommand({ "clearall", "clsall" }, FilterGroups(CommandPermissions.clearall), function(xPlayer)
     TriggerClientEvent("chat:clear", -1)
     if Config.AdminLogging then
         ESX.DiscordLogFields("UserActions", "Clear Chat /clearall Triggered!", "pink", {
@@ -437,12 +443,12 @@ ESX.RegisterCommand({ "clearall", "clsall" }, "admin", function(xPlayer)
     end
 end, true, { help = TranslateCap("command_clearall") })
 
-ESX.RegisterCommand("refreshjobs", "admin", function()
+ESX.RegisterCommand("refreshjobs", FilterGroups(CommandPermissions.refreshjobs), function()
     ESX.RefreshJobs()
 end, true, { help = TranslateCap("command_clearall") })
 
 if not Config.CustomInventory then
-    ESX.RegisterCommand("refreshitems", "admin", function(xPlayer)
+    ESX.RegisterCommand("refreshitems", FilterGroups(CommandPermissions.refreshitems), function(xPlayer)
         local itemCount = ESX.RefreshItems()
 
         xPlayer.showNotification(Translate("command_refreshitems_success", itemCount), true, false, 140)
@@ -450,7 +456,7 @@ if not Config.CustomInventory then
 
     ESX.RegisterCommand(
         "clearinventory",
-        "admin",
+        FilterGroups(CommandPermissions.clearinventory),
         function(xPlayer, args)
             for _, v in ipairs(args.playerId.inventory) do
                 if v.count > 0 then
@@ -478,7 +484,7 @@ if not Config.CustomInventory then
 
     ESX.RegisterCommand(
         "clearloadout",
-        "admin",
+        FilterGroups(CommandPermissions.clearloadout),
         function(xPlayer, args)
             for i = #args.playerId.loadout, 1, -1 do
                 args.playerId.removeWeapon(args.playerId.loadout[i].name)
@@ -505,7 +511,7 @@ end
 
 ESX.RegisterCommand(
     "setgroup",
-    "admin",
+    FilterGroups(CommandPermissions.setgroup),
     function(xPlayer, args)
         if not args.playerId then
             args.playerId = xPlayer.source
@@ -537,7 +543,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "save",
-    "admin",
+    FilterGroups(CommandPermissions.save),
     function(_, args)
         Core.SavePlayer(args.playerId)
         print(("[^2Info^0] Saved Player - ^5%s^0"):format(args.playerId.source))
@@ -552,26 +558,26 @@ ESX.RegisterCommand(
     }
 )
 
-ESX.RegisterCommand("saveall", "admin", function()
+ESX.RegisterCommand("saveall", FilterGroups(CommandPermissions.saveall), function()
     Core.SavePlayers()
 end, true, { help = TranslateCap("command_saveall") })
 
-ESX.RegisterCommand("group", { "user", "admin" }, function(xPlayer, _, _)
+ESX.RegisterCommand("group", FilterGroups(CommandPermissions.group), function(xPlayer, _, _)
     print(("%s, you are currently: ^5%s^0"):format(xPlayer.getName(), xPlayer.getGroup()))
 end, true)
 
-ESX.RegisterCommand("job", { "user", "admin" }, function(xPlayer, _, _)
+ESX.RegisterCommand("job", FilterGroups(CommandPermissions.job), function(xPlayer, _, _)
 	local job = xPlayer.getJob()
 
     print(("%s, your job is: ^5%s^0 - ^5%s^0 - ^5%s^0"):format(xPlayer.getName(), job.name, job.grade_label, job.onDuty and "On Duty" or "Off Duty"))
 end, false)
 
-ESX.RegisterCommand("info", { "user", "admin" }, function(xPlayer)
+ESX.RegisterCommand("info", FilterGroups(CommandPermissions.info), function(xPlayer)
     local job = xPlayer.getJob().name
     print(("^2ID: ^5%s^0 | ^2Name: ^5%s^0 | ^2Group: ^5%s^0 | ^2Job: ^5%s^0"):format(xPlayer.source, xPlayer.getName(), xPlayer.getGroup(), job))
 end, false)
 
-ESX.RegisterCommand("playtime", { "user", "admin" }, function(xPlayer)
+ESX.RegisterCommand("playtime", FilterGroups(CommandPermissions.playtime), function(xPlayer)
     local playtime = xPlayer.getPlayTime()
     local days = math.floor(playtime / 86400)
     local hours = math.floor((playtime % 86400) / 3600)
@@ -579,7 +585,7 @@ ESX.RegisterCommand("playtime", { "user", "admin" }, function(xPlayer)
     print(("Playtime: ^5%s^0 Days | ^5%s^0 Hours | ^5%s^0 Minutes"):format(days, hours, minutes))
 end, false)
 
-ESX.RegisterCommand("coords", "admin", function(xPlayer)
+ESX.RegisterCommand("coords", FilterGroups(CommandPermissions.coords), function(xPlayer)
     local ped = GetPlayerPed(xPlayer.source)
     local coords = GetEntityCoords(ped, false)
     local heading = GetEntityHeading(ped)
@@ -587,7 +593,7 @@ ESX.RegisterCommand("coords", "admin", function(xPlayer)
     print(("Coords - Vector4: ^5%s^0"):format(vector4(coords.x, coords.y, coords.z, heading)))
 end, false)
 
-ESX.RegisterCommand("tpm", "admin", function(xPlayer)
+ESX.RegisterCommand("tpm", FilterGroups(CommandPermissions.tpm), function(xPlayer)
     xPlayer.triggerEvent("esx:tpm")
     if Config.AdminLogging then
         ESX.DiscordLogFields("UserActions", "Admin Teleport /tpm Triggered!", "pink", {
@@ -599,7 +605,7 @@ end, false)
 
 ESX.RegisterCommand(
     "goto",
-    "admin",
+    FilterGroups(CommandPermissions["goto"]),
     function(xPlayer, args)
         local targetCoords = args.playerId.getCoords()
         local srcDim = GetPlayerRoutingBucket(xPlayer.source)
@@ -630,7 +636,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "bring",
-    "admin",
+    FilterGroups(CommandPermissions.bring),
     function(xPlayer, args)
         local targetCoords = args.playerId.getCoords()
         local playerCoords = xPlayer.getCoords()
@@ -662,7 +668,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "kill",
-    "admin",
+    FilterGroups(CommandPermissions.kill),
     function(xPlayer, args)
         args.playerId.triggerEvent("esx:killPlayer")
         if Config.AdminLogging then
@@ -685,7 +691,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "freeze",
-    "admin",
+    FilterGroups(CommandPermissions.freeze),
     function(xPlayer, args)
         args.playerId.triggerEvent("esx:freezePlayer", "freeze")
         if Config.AdminLogging then
@@ -708,7 +714,7 @@ ESX.RegisterCommand(
 
 ESX.RegisterCommand(
     "unfreeze",
-    "admin",
+    FilterGroups(CommandPermissions.unfreeze),
     function(xPlayer, args)
         args.playerId.triggerEvent("esx:freezePlayer", "unfreeze")
         if Config.AdminLogging then
@@ -729,7 +735,7 @@ ESX.RegisterCommand(
     }
 )
 
-ESX.RegisterCommand("noclip", "admin", function(xPlayer)
+ESX.RegisterCommand("noclip", FilterGroups(CommandPermissions.noclip), function(xPlayer)
     xPlayer.triggerEvent("esx:noclip")
     if Config.AdminLogging then
         ESX.DiscordLogFields("UserActions", "Admin NoClip /noclip Triggered!", "pink", {
@@ -739,7 +745,7 @@ ESX.RegisterCommand("noclip", "admin", function(xPlayer)
     end
 end, false)
 
-ESX.RegisterCommand("players", "admin", function()
+ESX.RegisterCommand("players", FilterGroups(CommandPermissions.players), function()
     local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
     print(("^5%s^2 online player(s)^0"):format(#xPlayers))
     for i = 1, #xPlayers do
@@ -750,7 +756,7 @@ end, true)
 
 ESX.RegisterCommand(
     {"setdim", "setbucket"},
-    "admin",
+    FilterGroups(CommandPermissions.setdim),
     function(xPlayer, args)
         SetPlayerRoutingBucket(args.playerId.source, args.dimension)
         if Config.AdminLogging then
