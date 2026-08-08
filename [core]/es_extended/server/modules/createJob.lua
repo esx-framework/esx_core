@@ -8,7 +8,7 @@ local NOTIFY_TYPES = {
 local function generateNewJobTable(name, label, grades, jobType)
     local job = ESX.Jobs[name] or { name = name, label = label, type = jobType, grades = {} }
     for _, v in pairs(grades) do
-        job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male or '{}', skin_female = v.skin_female or '{}' }
+        job.grades[tostring(v.grade)] = { job_name = name, grade = v.grade, name = v.name, label = v.label, salary = v.salary, skin_male = v.skin_male, skin_female = v.skin_female }
     end
 
     return job
@@ -79,10 +79,13 @@ function ESX.CreateJob(name, label, grades, jobType)
 
     for _, grade in pairs(grades) do
         if not existingGrades[tostring(grade.grade)] then
-            newGrades[#newGrades + 1] = grade
+            local skinMale = grade.skin_male and json.encode(grade.skin_male) or '{}'
+            local skinFemale = grade.skin_female and json.encode(grade.skin_female) or '{}'
+
+            newGrades[#newGrades + 1] = { grade = grade.grade, name = grade.name, label = grade.label, salary = grade.salary, skin_male = skinMale, skin_female = skinFemale }
             queries[#queries + 1] = {
                 query = 'INSERT INTO job_grades (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                values = { name, grade.grade, grade.name, grade.label, grade.salary, grade.skin_male and json.encode(grade.skin_male) or '{}', grade.skin_female and json.encode(grade.skin_female) or '{}' }
+                values = { name, grade.grade, grade.name, grade.label, grade.salary, skinMale, skinFemale }
             }
         end
     end
