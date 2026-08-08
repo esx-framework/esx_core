@@ -52,14 +52,17 @@ function ESX.CreateJob(name, label, grades, jobType)
         jobType = "civ"
     end
 
-    local jobExists = MySQL.scalar.await('SELECT 1 FROM `jobs` WHERE `name` = ?', { name }) ~= nil
+    local existingJob = MySQL.single.await('SELECT `label`, `type` FROM `jobs` WHERE `name` = ?', { name })
+    local jobExists = existingJob ~= nil
     local existingGrades = {}
 
     if jobExists then
+        label, jobType = existingJob.label, existingJob.type
+
         local rows = MySQL.query.await('SELECT `grade` FROM `job_grades` WHERE `job_name` = ?', { name })
 
         for i = 1, #(rows or {}) do
-            existingGrades[rows[i].grade] = true
+            existingGrades[tostring(rows[i].grade)] = true
         end
     end
 
@@ -72,8 +75,11 @@ function ESX.CreateJob(name, label, grades, jobType)
         }
     end
 
+    local newGrades = {}
+
     for _, grade in pairs(grades) do
-        if not existingGrades[grade.grade] then
+        if not existingGrades[tostring(grade.grade)] then
+            newGrades[#newGrades + 1] = grade
             queries[#queries + 1] = {
                 query = 'INSERT INTO job_grades (job_name, grade, name, label, salary, skin_male, skin_female) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 values = { name, grade.grade, grade.name, grade.label, grade.salary, grade.skin_male and json.encode(grade.skin_male) or '{}', grade.skin_female and json.encode(grade.skin_female) or '{}' }
@@ -93,7 +99,7 @@ function ESX.CreateJob(name, label, grades, jobType)
         return success
     end
 
-    ESX.Jobs[name] = generateNewJobTable(name, label, grades, jobType)
+    ESX.Jobs[name] = generateNewJobTable(name, label, newGrades, jobType)
 
     notify("SUCCESS", currentResourceName, 'Job created successfully: `%s`', name)
 
