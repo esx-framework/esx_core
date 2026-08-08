@@ -2,7 +2,6 @@
 xLib.interactions = {}
 
 local interactions = {}
-local pressedInteractions = {}
 
 ---@param name string
 function xLib.interactions.remove(name)
@@ -36,7 +35,6 @@ xLib.addKeybind({
         for _, interaction in pairs(interactions) do
             local success, result = pcall(interaction.condition)
             if success and result then
-                pressedInteractions[#pressedInteractions + 1] = interaction
                 interaction.onPress()
             end
         end
