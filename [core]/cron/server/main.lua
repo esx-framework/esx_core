@@ -26,17 +26,25 @@ end
 
 ---@param timestamp number
 function OnTime(timestamp)
-    for i = 1, #cronJobs, 1 do
-        local scheduledTimestamp = os.time({
-            hour = cronJobs[i].h,
-            min = cronJobs[i].m,
+    local function scheduledAt(job, dayOffset)
+        return os.time({
+            hour = job.h,
+            min = job.m,
             sec = 0, -- Assuming tasks run at the start of the minute
-            day = os.date("%d", timestamp),
+            day = os.date("%d", timestamp) + dayOffset,
             month = os.date("%m", timestamp),
             year = os.date("%Y", timestamp),
         })
+    end
 
-        if timestamp >= scheduledTimestamp and (not lastTimestamp or lastTimestamp < scheduledTimestamp) then
+    for i = 1, #cronJobs, 1 do
+        local scheduledTimestamp = scheduledAt(cronJobs[i], 0)
+
+        if scheduledTimestamp > timestamp then
+            scheduledTimestamp = scheduledAt(cronJobs[i], -1)
+        end
+
+        if not lastTimestamp or lastTimestamp < scheduledTimestamp then
             local d = os.date('*t', scheduledTimestamp).wday
             cronJobs[i].cb(d, cronJobs[i].h, cronJobs[i].m)
         end
