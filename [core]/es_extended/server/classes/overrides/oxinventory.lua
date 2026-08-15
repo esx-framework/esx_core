@@ -14,29 +14,107 @@ local requiredMethods = {
     "SetMaxWeight",
 }
 
----Stores the reference to the internal ox_inventory module.
----@param module table
----@return boolean
----@return string? error
-local function setOxInventory(module)
-    if type(module) ~= "table" then
-        return false, "module is not a table"
+---Parses the inventory:accounts convar to build a lookup table.
+---Uses the same default and JSON format as ox_inventory.
+---@return table<string, boolean>
+local function getAccountList()
+    local convar = GetConvar("inventory:accounts", '["money"]')
+    local ok, list = pcall(json.decode, convar)
+
+    if not ok or type(list) ~= "table" then
+        error(
+            ("[es_extended] Invalid inventory:accounts convar: %s")
+                :format(tostring(convar)),
+            2
+        )
     end
 
-    for i = 1, #requiredMethods do
-        local method = requiredMethods[i]
+    local accounts = {}
 
-        if type(module[method]) ~= "function" then
-            return false, ("missing method %s"):format(method)
+    for i = 1, #list do
+        local account = list[i]
+
+        if type(account) == "string" and account ~= "" then
+            accounts[account] = true
         end
     end
 
-    OxInventory = module
+    return accounts
+end
+
+---Safely resolves an ox_inventory export without executing it.
+---@param resourceExports table
+---@param method string
+---@return function
+local function resolveExport(resourceExports, method)
+    local ok, exportFn = pcall(function()
+        return resourceExports[method]
+    end)
+
+    if not ok then
+        error(
+            ("[es_extended] Missing required ox_inventory export '%s': %s")
+                :format(method, tostring(exportFn)),
+            2
+        )
+    end
+
+    if type(exportFn) ~= "function" then
+        error(
+            ("[es_extended] Invalid ox_inventory export '%s' (expected function, got %s)")
+                :format(method, type(exportFn)),
+            2
+        )
+    end
+
+    return exportFn
+end
+
+---Creates a proxy table that routes method calls to public ox_inventory exports.
+---@return table
+local function createOxInventoryProxy()
+    local proxy = {}
+    local resourceExports = exports.ox_inventory
+
+    print("^3[es_extended] ox_inventory: using direct export proxy (Inventory() interface unavailable or incomplete)^7")
+
+    for i = 1, #requiredMethods do
+        local method = requiredMethods[i]
+        local exportFn = resolveExport(resourceExports, method)
+
+        proxy[method] = function(...)
+            return exportFn(resourceExports, ...)
+        end
+    end
+
+    proxy.accounts = getAccountList()
+
+    return proxy
+end
+
+---Checks if an Inventory() module provides everything ESX requires.
+---@param module table
+---@return boolean
+local function isValidModule(module)
+    if type(module) ~= "table" then
+        return false
+    end
+
+    for i = 1, #requiredMethods do
+        if type(module[requiredMethods[i]]) ~= "function" then
+            return false
+        end
+    end
+
+    if type(module.accounts) ~= "table" then
+        return false
+    end
+
     return true
 end
 
----Returns the internal ox_inventory module.
----If es_extended missed the load event, it will attempt to retrieve it via the export.
+---Returns the ox_inventory interface.
+---Uses Inventory() when available, otherwise falls back to public exports.
 ---@return table
 local function getOxInventory()
     if OxInventory then
@@ -57,31 +135,21 @@ local function getOxInventory()
         return exports.ox_inventory:Inventory()
     end)
 
-    if not success then
-        error(
-            ("[es_extended] Failed to execute exports.ox_inventory:Inventory(): %s")
-                :format(tostring(module)),
-            2
-        )
-    end
-
-    local ok, err = setOxInventory(module)
-    if not ok then
-        error(
-            ("[es_extended] The Inventory export from ox_inventory returned an invalid module: %s")
-                :format(err),
-            2
-        )
+    if success and isValidModule(module) then
+        OxInventory = module
+    else
+        OxInventory = createOxInventoryProxy()
     end
 
     return OxInventory
 end
 
--- Standard method used when ox_inventory finishes loading..
+-- Standard method used when ox_inventory finishes loading.
 AddEventHandler("ox_inventory:loadInventory", function(module)
-    local ok, err = setOxInventory(module)
-    if not ok then
-        print(("^1[es_extended] ox_inventory:loadInventory returned an invalid module: %s^7"):format(err))
+    if isValidModule(module) then
+        OxInventory = module
+    else
+        OxInventory = createOxInventoryProxy()
     end
 end)
 
