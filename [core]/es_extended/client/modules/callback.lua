@@ -102,7 +102,7 @@ function ESX.AwaitServerCallback(eventName, ...)
 
     -- if the server callback takes longer than 15 seconds to respond, reject the promise
     SetTimeout(15000, function()
-        if p.state == "pending" then
+        if p.state == 0 then
             p:reject("Server Callback Timed Out")
         end
     end)
