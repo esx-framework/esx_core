@@ -34,8 +34,9 @@ end
 
 ---@param modelHash number | string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return number | nil
-xLib.streaming.requestModel = function(modelHash, cb)
+xLib.streaming.requestModel = function(modelHash, cb, timeout)
     modelHash = type(modelHash) == "number" and modelHash or joaat(modelHash)
 
     if not IsModelInCdimage(modelHash) then return end
@@ -46,7 +47,7 @@ xLib.streaming.requestModel = function(modelHash, cb)
 
 	RequestModel(modelHash)
 
-	if not waitForLoaded(function() return HasModelLoaded(modelHash) end) then
+	if not waitForLoaded(function() return HasModelLoaded(modelHash) end, timeout) then
 		return
 	end
 
@@ -55,15 +56,16 @@ end
 
 ---@param textureDict string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestStreamedTextureDict = function(textureDict, cb)
+xLib.streaming.requestStreamedTextureDict = function(textureDict, cb, timeout)
 	if HasStreamedTextureDictLoaded(textureDict) then
 		return ret(cb, textureDict)
 	end
 
 	RequestStreamedTextureDict(textureDict, false)
 
-	if not waitForLoaded(function() return HasStreamedTextureDictLoaded(textureDict) end) then
+	if not waitForLoaded(function() return HasStreamedTextureDictLoaded(textureDict) end, timeout) then
 		return
 	end
 
@@ -72,15 +74,16 @@ end
 
 ---@param assetName string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestNamedPtfxAsset = function(assetName, cb)
+xLib.streaming.requestNamedPtfxAsset = function(assetName, cb, timeout)
 	if HasNamedPtfxAssetLoaded(assetName) then
 		return ret(cb, assetName)
 	end
 
 	RequestNamedPtfxAsset(assetName)
 
-	if not waitForLoaded(function() return HasNamedPtfxAssetLoaded(assetName) end) then
+	if not waitForLoaded(function() return HasNamedPtfxAssetLoaded(assetName) end, timeout) then
 		return
 	end
 
@@ -89,15 +92,16 @@ end
 
 ---@param animSet string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAnimSet = function(animSet, cb)
+xLib.streaming.requestAnimSet = function(animSet, cb, timeout)
 	if HasAnimSetLoaded(animSet) then
 		return ret(cb, animSet)
 	end
 
 	RequestAnimSet(animSet)
 
-	if not waitForLoaded(function() return HasAnimSetLoaded(animSet) end) then
+	if not waitForLoaded(function() return HasAnimSetLoaded(animSet) end, timeout) then
 		return
 	end
 
@@ -106,15 +110,16 @@ end
 
 ---@param animDict string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAnimDict = function(animDict, cb)
+xLib.streaming.requestAnimDict = function(animDict, cb, timeout)
 	if HasAnimDictLoaded(animDict) then
 		return ret(cb, animDict)
 	end
 
 	RequestAnimDict(animDict)
 
-	if not waitForLoaded(function() return HasAnimDictLoaded(animDict) end) then
+	if not waitForLoaded(function() return HasAnimDictLoaded(animDict) end, timeout) then
 		return
 	end
 
@@ -123,15 +128,16 @@ end
 
 ---@param weaponHash number | string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | number | nil
-xLib.streaming.requestWeaponAsset = function(weaponHash, cb)
+xLib.streaming.requestWeaponAsset = function(weaponHash, cb, timeout)
 	if HasWeaponAssetLoaded(weaponHash) then
 		return ret(cb, weaponHash)
 	end
 
 	RequestWeaponAsset(weaponHash, 31, 0)
 
-	if not waitForLoaded(function() return HasWeaponAssetLoaded(weaponHash) end) then
+	if not waitForLoaded(function() return HasWeaponAssetLoaded(weaponHash) end, timeout) then
 		return
 	end
 
@@ -140,11 +146,12 @@ end
 
 ---@param bankName string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAudioBank = function(bankName, cb)
+xLib.streaming.requestAudioBank = function(bankName, cb, timeout)
     RequestAudioBank(bankName, false)
 
-    if not waitForLoaded(function() return RequestScriptAudioBank(bankName, false) end) then
+    if not waitForLoaded(function() return RequestScriptAudioBank(bankName, false) end, timeout) then
         return
     end
 
