@@ -50,7 +50,7 @@ local function HideComponents(hide)
         else
             if HiddenCompents[components[i]] then
                 local size = HiddenCompents[components[i]]
-                SetHudComponentSize(components[i], size.x, size.z)
+                SetHudComponentSize(components[i], size.x, size.y)
                 HiddenCompents[components[i]] = nil
             end
         end
