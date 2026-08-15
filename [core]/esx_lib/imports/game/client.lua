@@ -462,7 +462,7 @@ function xLib.game.setVehicleProperties(vehicle, props)
         if type(props.color2) == "table" then
             SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
         else
-            SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2)
+            SetVehicleColours(vehicle, type(props.color1) == "number" and props.color1 or colorPrimary, props.color2)
         end
     end
     if props.pearlescentColor ~= nil then
