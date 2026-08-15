@@ -186,6 +186,10 @@ function ESX.IsValidLocaleString(str, allowDigits)
         return false
     end
 
+    if not utf8.len(str) then
+        return false
+    end
+
     local locale = string.lower(Config.Locale)
 
     local defaultRanges ={
