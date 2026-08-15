@@ -4,7 +4,8 @@
 ---@field icon string
 ---@field count number
 ---@field value string
----@field usable boolean
+---@field canUse boolean?
+---@field usable boolean?
 ---@field rare boolean
 ---@field canRemove boolean
 ---@field unselectable boolean?
@@ -34,7 +35,6 @@ local function appendAccounts(elements)
                 icon = "fas fa-money-bill-wave",
                 count = account.money,
                 value = account.name,
-                usable = false,
                 rare = false,
                 canRemove = canDrop
             }
@@ -56,7 +56,7 @@ local function appendItems(elements)
                 icon = "fas fa-box",
                 count = item.count,
                 value = item.name,
-                usable = item.usable,
+                canUse = item.usable,
                 rare = item.rare,
                 canRemove = item.canRemove
             }
@@ -83,7 +83,6 @@ local function appendLoadout(elements)
             icon = "fas fa-gun",
             count = 1,
             value = weapon.name,
-            usable = false,
             rare = false,
             ammo = ammo,
             canGiveAmmo = (weapon.ammo ~= nil),
@@ -119,7 +118,7 @@ end
 ---@return table
 local function buildItemActionMenu(selected, playerNearby)
     local elements2 = {}
-    if selected.usable then
+    if selected.canUse then
         elements2[#elements2 + 1] = { action = "use", label = TranslateCap("use"), icon = "fas fa-utensils", type = selected.type, value = selected.value }
     end
     if selected.canRemove then
