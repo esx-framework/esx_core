@@ -1,84 +1,161 @@
 ---@class streaminglib
 xLib.streaming = {}
 
+local StreamTimeoutMs = 5000
+local StreamWaitStepMs = 50
+
+---@param cond fun():boolean
+---@param timeout? number
+---@param step? number
+---@return boolean loaded false on timeout
+local function waitForLoaded(cond, timeout, step)
+	local start = GetGameTimer()
+	local limit = timeout or StreamTimeoutMs
+	local step_ = step or StreamWaitStepMs
+
+	while not cond() do
+		if GetGameTimer() - start >= limit then
+			return false
+		end
+
+		Wait(step_)
+	end
+
+	return true
+end
+
+---@generic T
+---@param cb? fun(val: T): any
+---@param val T
+---@return T | any
+local function ret(cb, val)
+	return cb and cb(val) or val
+end
+
 ---@param modelHash number | string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return number | nil
-xLib.streaming.requestModel = function(modelHash, cb)
+xLib.streaming.requestModel = function(modelHash, cb, timeout)
     modelHash = type(modelHash) == "number" and modelHash or joaat(modelHash)
 
     if not IsModelInCdimage(modelHash) then return end
 
-	RequestModel(modelHash)
-	while not HasModelLoaded(modelHash) do Wait(500) end
+	if HasModelLoaded(modelHash) then
+		return ret(cb, modelHash)
+	end
 
-	return cb and cb(modelHash) or modelHash
+	RequestModel(modelHash)
+
+	if not waitForLoaded(function() return HasModelLoaded(modelHash) end, timeout) then
+		return
+	end
+
+	return ret(cb, modelHash)
 end
 
 ---@param textureDict string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestStreamedTextureDict = function(textureDict, cb)
+xLib.streaming.requestStreamedTextureDict = function(textureDict, cb, timeout)
+	if HasStreamedTextureDictLoaded(textureDict) then
+		return ret(cb, textureDict)
+	end
+
 	RequestStreamedTextureDict(textureDict, false)
 
-	while not HasStreamedTextureDictLoaded(textureDict) do Wait(500) end
+	if not waitForLoaded(function() return HasStreamedTextureDictLoaded(textureDict) end, timeout) then
+		return
+	end
 
-	return cb and cb(textureDict) or textureDict
+	return ret(cb, textureDict)
 end
 
 ---@param assetName string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestNamedPtfxAsset = function(assetName, cb)
+xLib.streaming.requestNamedPtfxAsset = function(assetName, cb, timeout)
+	if HasNamedPtfxAssetLoaded(assetName) then
+		return ret(cb, assetName)
+	end
+
 	RequestNamedPtfxAsset(assetName)
 
-	while not HasNamedPtfxAssetLoaded(assetName) do Wait(500) end
+	if not waitForLoaded(function() return HasNamedPtfxAssetLoaded(assetName) end, timeout) then
+		return
+	end
 
-	return cb and cb(assetName) or assetName
+	return ret(cb, assetName)
 end
 
 ---@param animSet string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAnimSet = function(animSet, cb)
+xLib.streaming.requestAnimSet = function(animSet, cb, timeout)
+	if HasAnimSetLoaded(animSet) then
+		return ret(cb, animSet)
+	end
+
 	RequestAnimSet(animSet)
 
-	while not HasAnimSetLoaded(animSet) do Wait(500) end
+	if not waitForLoaded(function() return HasAnimSetLoaded(animSet) end, timeout) then
+		return
+	end
 
-	return cb and cb(animSet) or animSet
+	return ret(cb, animSet)
 end
 
 ---@param animDict string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAnimDict = function(animDict, cb)
+xLib.streaming.requestAnimDict = function(animDict, cb, timeout)
+	if HasAnimDictLoaded(animDict) then
+		return ret(cb, animDict)
+	end
+
 	RequestAnimDict(animDict)
 
-	while not HasAnimDictLoaded(animDict) do Wait(500) end
+	if not waitForLoaded(function() return HasAnimDictLoaded(animDict) end, timeout) then
+		return
+	end
 
-	return cb and cb(animDict) or animDict
+	return ret(cb, animDict)
 end
 
 ---@param weaponHash number | string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | number | nil
-xLib.streaming.requestWeaponAsset = function(weaponHash, cb)
+xLib.streaming.requestWeaponAsset = function(weaponHash, cb, timeout)
+	if HasWeaponAssetLoaded(weaponHash) then
+		return ret(cb, weaponHash)
+	end
+
 	RequestWeaponAsset(weaponHash, 31, 0)
 
-	while not HasWeaponAssetLoaded(weaponHash) do Wait(500) end
+	if not waitForLoaded(function() return HasWeaponAssetLoaded(weaponHash) end, timeout) then
+		return
+	end
 
-	return cb and cb(weaponHash) or weaponHash
+	return ret(cb, weaponHash)
 end
 
 ---@param bankName string
 ---@param cb? function
+---@param timeout? number milliseconds to wait, defaults to 5000
 ---@return string | nil
-xLib.streaming.requestAudioBank = function(bankName, cb)
-    RequestAudioBank(bankName, false) 
+xLib.streaming.requestAudioBank = function(bankName, cb, timeout)
+    RequestAudioBank(bankName, false)
 
-    while not RequestScriptAudioBank(bankName, false) do Wait(500) end
+    if not waitForLoaded(function() return RequestScriptAudioBank(bankName, false) end, timeout) then
+        return
+    end
 
-    return cb and cb(bankName) or bankName
+    return ret(cb, bankName)
 end
 
 
