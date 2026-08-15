@@ -750,7 +750,8 @@ ALTER TABLE `addon_account`
 ALTER TABLE `addon_account_data`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `index_addon_account_data_account_name_owner` (`account_name`,`owner`),
-  ADD KEY `index_addon_account_data_account_name` (`account_name`);
+  ADD KEY `index_addon_account_data_account_name` (`account_name`),
+  ADD KEY `esx_addon_account_data_owner` (`owner`);
 
 --
 -- Indexes for table `addon_inventory`
@@ -765,13 +766,15 @@ ALTER TABLE `addon_inventory_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `index_addon_inventory_items_inventory_name_name` (`inventory_name`,`name`),
   ADD KEY `index_addon_inventory_items_inventory_name_name_owner` (`inventory_name`,`name`,`owner`),
-  ADD KEY `index_addon_inventory_inventory_name` (`inventory_name`);
+  ADD KEY `index_addon_inventory_inventory_name` (`inventory_name`),
+  ADD KEY `esx_addon_inventory_items_owner` (`owner`);
 
 --
 -- Indexes for table `billing`
 --
 ALTER TABLE `billing`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_billing_identifier` (`identifier`);
 
 --
 -- Indexes for table `cardealer_vehicles`
@@ -791,7 +794,8 @@ ALTER TABLE `datastore`
 ALTER TABLE `datastore_data`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `index_datastore_data_name_owner` (`name`,`owner`),
-  ADD KEY `index_datastore_data_name` (`name`);
+  ADD KEY `index_datastore_data_name` (`name`),
+  ADD KEY `esx_datastore_data_owner` (`owner`);
 
 --
 -- Indexes for table `items`
@@ -822,7 +826,8 @@ ALTER TABLE `licenses`
 -- Indexes for table `owned_vehicles`
 --
 ALTER TABLE `owned_vehicles`
-  ADD PRIMARY KEY (`plate`);
+  ADD PRIMARY KEY (`plate`),
+  ADD KEY `esx_owned_vehicles_owner` (`owner`);
 
 --
 --
@@ -841,7 +846,8 @@ ALTER TABLE `rented_vehicles`
 -- Indexes for table `society_moneywash`
 --
 ALTER TABLE `society_moneywash`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_society_moneywash_identifier` (`identifier`);
 
 --
 -- Indexes for table `users`
@@ -857,7 +863,8 @@ ALTER TABLE `users`
 -- Indexes for table `user_licenses`
 --
 ALTER TABLE `user_licenses`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_user_licenses_owner` (`owner`);
 
 --
 -- Indexes for table `vehicle_categories`
