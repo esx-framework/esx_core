@@ -372,7 +372,6 @@ if not Config.CustomInventory then
         while true do
             local Sleep = 1500
             local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
-            local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
 
             for pickupId, pickup in pairs(pickups) do
                 local distance = #(playerCoords - pickup.coords)
@@ -383,6 +382,8 @@ if not Config.CustomInventory then
 
                     if distance < 1 then
                         if IsControlJustReleased(0, 38) then
+                            local _, closestDistance = ESX.Game.GetClosestPlayer(playerCoords)
+
                             if IsPedOnFoot(ESX.PlayerData.ped) and (closestDistance == -1 or closestDistance > 3) and not pickup.inRange then
                                 pickup.inRange = true
 

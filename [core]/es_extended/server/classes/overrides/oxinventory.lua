@@ -15,57 +15,84 @@ local requiredMethods = {
 }
 
 ---Parses the inventory:accounts convar to build a lookup table.
----Uses the same default as ox_inventory: '["money"]'
+---Uses the same default and JSON format as ox_inventory.
 ---@return table<string, boolean>
 local function getAccountList()
-    local accounts = {}
     local convar = GetConvar("inventory:accounts", '["money"]')
     local ok, list = pcall(json.decode, convar)
 
-    if ok and type(list) == "table" then
-        for i = 1, #list do
-            accounts[list[i]] = true
-        end
-    else
-        -- Fallback for non-JSON formats (e.g. "money" or "money black_money")
-        for account in convar:gmatch("[%w_]+") do
-            if account ~= "[]" then
-                accounts[account] = true
-            end
+    if not ok or type(list) ~= "table" then
+        error(
+            ("[es_extended] Invalid inventory:accounts convar: %s")
+                :format(tostring(convar)),
+            2
+        )
+    end
+
+    local accounts = {}
+
+    for i = 1, #list do
+        local account = list[i]
+
+        if type(account) == "string" and account ~= "" then
+            accounts[account] = true
         end
     end
 
     return accounts
 end
 
----Creates a proxy table that routes method calls to ox_inventory exports.
+---Safely resolves an ox_inventory export without executing it.
+---@param resourceExports table
+---@param method string
+---@return function
+local function resolveExport(resourceExports, method)
+    local ok, exportFn = pcall(function()
+        return resourceExports[method]
+    end)
+
+    if not ok then
+        error(
+            ("[es_extended] Missing required ox_inventory export '%s': %s")
+                :format(method, tostring(exportFn)),
+            2
+        )
+    end
+
+    if type(exportFn) ~= "function" then
+        error(
+            ("[es_extended] Invalid ox_inventory export '%s' (expected function, got %s)")
+                :format(method, type(exportFn)),
+            2
+        )
+    end
+
+    return exportFn
+end
+
+---Creates a proxy table that routes method calls to public ox_inventory exports.
 ---@return table
 local function createOxInventoryProxy()
     local proxy = {}
-    local accounts = getAccountList()
+    local resourceExports = exports.ox_inventory
 
-    print("^3[es_extended] ox_inventory: using direct export proxy (Inventory() module unavailable)^7")
+    print("^3[es_extended] ox_inventory: using direct export proxy (Inventory() interface unavailable or incomplete)^7")
 
     for i = 1, #requiredMethods do
         local method = requiredMethods[i]
-        local ok, err = pcall(function()
-            exports.ox_inventory[method](exports.ox_inventory, 0, "test", 0)
-        end)
-
-        if not ok and tostring(err):find("No such export") then
-            print(("^1[es_extended] CRITICAL: exports.ox_inventory.%s is missing^7"):format(method))
-        end
+        local exportFn = resolveExport(resourceExports, method)
 
         proxy[method] = function(...)
-            return exports.ox_inventory[method](exports.ox_inventory, ...)
+            return exportFn(resourceExports, ...)
         end
     end
 
-    proxy.accounts = accounts
+    proxy.accounts = getAccountList()
+
     return proxy
 end
 
----Checks if a module table contains all required methods.
+---Checks if an Inventory() module provides everything ESX requires.
 ---@param module table
 ---@return boolean
 local function isValidModule(module)
@@ -79,12 +106,15 @@ local function isValidModule(module)
         end
     end
 
+    if type(module.accounts) ~= "table" then
+        return false
+    end
+
     return true
 end
 
 ---Returns the ox_inventory interface.
----Tries the legacy Inventory() export first for backward compatibility,
----then falls back to direct export calls.
+---Uses Inventory() when available, otherwise falls back to public exports.
 ---@return table
 local function getOxInventory()
     if OxInventory then

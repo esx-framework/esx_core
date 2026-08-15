@@ -81,7 +81,7 @@ local function verifyType(value, valid_type)
     elseif valid_type == 'float' then
         return math.type(value) == 'float'
     elseif valid_type == 'uint' then
-        return math.type(value) == 'int' and value >= 0    
+        return math.type(value) == 'integer' and value >= 0
     elseif valid_type == 'char' then 
         return type(value) == 'string' and #value == 1
     elseif valid_type == 'ped' then 

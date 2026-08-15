@@ -2,6 +2,7 @@ SetMapName("San Andreas")
 SetGameType("ESX Legacy")
 
 local oneSyncState = GetConvar("onesync", "off")
+local isEnhanced = xLib.isEnhanced()
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
@@ -151,7 +152,7 @@ if not Config.Multichar then
             return deferrals.done(("[ESX] ESX Requires a minimum Artifact version of 10188, Please update your server."))
         end
 
-        if oneSyncState == "off" or oneSyncState == "legacy" then
+        if not isEnhanced and (oneSyncState == "off" or oneSyncState == "legacy") then
             return deferrals.done(("[ESX] ESX Requires Onesync Infinity to work. This server currently has Onesync set to: %s"):format(oneSyncState))
         end
 
@@ -288,9 +289,9 @@ function loadESXPlayer(identifier, playerId, isNew)
 
             local loadout = json.decode(result.loadout)
             for name, weapon in pairs(loadout) do
-                local label = ESX.GetWeaponLabel(name)
+                local found, label = pcall(ESX.GetWeaponLabel, name)
 
-                if label then
+                if found and label then
                     userData.loadout[#userData.loadout + 1] = {
                         name = name,
                         ammo = weapon.ammo,
@@ -307,7 +308,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)]
 
     -- Skin
-    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = userData.sex == "f" and 1 or 0 }
+    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = result.sex == "f" and 1 or 0 }
 
     -- Metadata
     userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}
@@ -474,6 +475,9 @@ if not Config.CustomInventory then
             local weaponComponents = ESX.Table.Clone(weapon.components)
             local weaponTint = weapon.tintIndex
 
+            sourceXPlayer.removeWeapon(itemName)
+            targetXPlayer.addWeapon(itemName, itemCount)
+
             if weaponTint then
                 targetXPlayer.setWeaponTint(itemName, weaponTint)
             end
@@ -483,9 +487,6 @@ if not Config.CustomInventory then
                     targetXPlayer.addWeaponComponent(itemName, v)
                 end
             end
-
-            sourceXPlayer.removeWeapon(itemName)
-            targetXPlayer.addWeapon(itemName, itemCount)
 
             if weaponObject.ammo and itemCount > 0 then
                 local ammoLabel = weaponObject.ammo.label

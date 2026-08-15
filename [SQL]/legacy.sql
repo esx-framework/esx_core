@@ -16,7 +16,8 @@ INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 ('society_cardealer', 'Cardealer', 1),
 ('society_mechanic', 'Mechanic', 1),
 ('society_police', 'Police', 1),
-('society_taxi', 'Taxi', 1);
+('society_taxi', 'Taxi', 1),
+('bank_savings','Savings account',0);
 
 -- --------------------------------------------------------
 
@@ -89,7 +90,7 @@ CREATE TABLE `billing` (
   `identifier` varchar(60) NOT NULL,
   `sender` varchar(60) NOT NULL,
   `target_type` varchar(50) NOT NULL,
-  `target` varchar(40) NOT NULL,
+  `target` varchar(60) NOT NULL,
   `label` varchar(255) NOT NULL,
   `amount` int(11) NOT NULL
 ) ENGINE=InnoDB;
@@ -364,7 +365,7 @@ CREATE TABLE `rented_vehicles` (
   `player_name` varchar(255) NOT NULL,
   `base_price` int(11) NOT NULL,
   `rent_price` int(11) NOT NULL,
-  `owner` varchar(22) NOT NULL
+  `owner` varchar(60) NOT NULL
 ) ENGINE=InnoDB;
 
 --
@@ -749,7 +750,8 @@ ALTER TABLE `addon_account`
 ALTER TABLE `addon_account_data`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `index_addon_account_data_account_name_owner` (`account_name`,`owner`),
-  ADD KEY `index_addon_account_data_account_name` (`account_name`);
+  ADD KEY `index_addon_account_data_account_name` (`account_name`),
+  ADD KEY `esx_addon_account_data_owner` (`owner`);
 
 --
 -- Indexes for table `addon_inventory`
@@ -764,13 +766,15 @@ ALTER TABLE `addon_inventory_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `index_addon_inventory_items_inventory_name_name` (`inventory_name`,`name`),
   ADD KEY `index_addon_inventory_items_inventory_name_name_owner` (`inventory_name`,`name`,`owner`),
-  ADD KEY `index_addon_inventory_inventory_name` (`inventory_name`);
+  ADD KEY `index_addon_inventory_inventory_name` (`inventory_name`),
+  ADD KEY `esx_addon_inventory_items_owner` (`owner`);
 
 --
 -- Indexes for table `billing`
 --
 ALTER TABLE `billing`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_billing_identifier` (`identifier`);
 
 --
 -- Indexes for table `cardealer_vehicles`
@@ -790,7 +794,8 @@ ALTER TABLE `datastore`
 ALTER TABLE `datastore_data`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `index_datastore_data_name_owner` (`name`,`owner`),
-  ADD KEY `index_datastore_data_name` (`name`);
+  ADD KEY `index_datastore_data_name` (`name`),
+  ADD KEY `esx_datastore_data_owner` (`owner`);
 
 --
 -- Indexes for table `items`
@@ -821,7 +826,8 @@ ALTER TABLE `licenses`
 -- Indexes for table `owned_vehicles`
 --
 ALTER TABLE `owned_vehicles`
-  ADD PRIMARY KEY (`plate`);
+  ADD PRIMARY KEY (`plate`),
+  ADD KEY `esx_owned_vehicles_owner` (`owner`);
 
 --
 --
@@ -840,7 +846,8 @@ ALTER TABLE `rented_vehicles`
 -- Indexes for table `society_moneywash`
 --
 ALTER TABLE `society_moneywash`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_society_moneywash_identifier` (`identifier`);
 
 --
 -- Indexes for table `users`
@@ -856,7 +863,8 @@ ALTER TABLE `users`
 -- Indexes for table `user_licenses`
 --
 ALTER TABLE `user_licenses`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `esx_user_licenses_owner` (`owner`);
 
 --
 -- Indexes for table `vehicle_categories`
@@ -990,27 +998,6 @@ INSERT INTO `fine_types` (label, amount, category) VALUES
 	('Involuntary manslaughter', 1800, 3),
 	('Fraud', 2000, 2);
 
-
---
--- ESX Bankerjob
---
-
-INSERT INTO `addon_account` (name, label, shared) VALUES
-	('society_banker','Bank',1),
-	('bank_savings','Savings account',0)
-;
-
-INSERT INTO `jobs` (name, label) VALUES
-	('banker','Banker')
-;
-
-INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
-	('banker',0,'advisor','Consultant',10,'{}','{}'),
-	('banker',1,'banker','Banker',20,'{}','{}'),
-	('banker',2,'business_banker',"Investment banker",30,'{}','{}'),
-	('banker',3,'trader','Broker',40,'{}','{}'),
-	('banker',4,'boss','Boss',0,'{}','{}')
-;
 
 --
 -- ESX Banking

@@ -136,7 +136,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                                 end
                                 local merge = table.concat(args, " ")
 
-                                newArgs[v.name] = string.sub(merge, length)
+                                newArgs[v.name] = string.sub(merge, length + 1)
                             elseif v.type == "coordinate" then
                                 local coord = tonumber(args[k]:match("(-?%d+%.?%d*)"))
                                 if not coord then
@@ -251,18 +251,24 @@ function Core.SavePlayers(cb)
     local parameters = {}
 
     for _, xPlayer in pairs(ESX.Players) do
-        updateHealthAndArmorInMetadata(xPlayer)
-        parameters[#parameters + 1] = {
-            json.encode(xPlayer.getAccounts(true)),
-            xPlayer.job.name,
-            xPlayer.job.grade,
-            xPlayer.group,
-            json.encode(xPlayer.getCoords(false, true)),
-            json.encode(xPlayer.getInventory(true)),
-            json.encode(xPlayer.getLoadout(true)),
-            json.encode(xPlayer.getMeta()),
-            xPlayer.identifier,
-        }
+        if xPlayer.spawned then
+            updateHealthAndArmorInMetadata(xPlayer)
+            parameters[#parameters + 1] = {
+                json.encode(xPlayer.getAccounts(true)),
+                xPlayer.job.name,
+                xPlayer.job.grade,
+                xPlayer.group,
+                json.encode(xPlayer.getCoords(false, true)),
+                json.encode(xPlayer.getInventory(true)),
+                json.encode(xPlayer.getLoadout(true)),
+                json.encode(xPlayer.getMeta()),
+                xPlayer.identifier,
+            }
+        end
+    end
+
+    if not parameters[1] then
+        return cb and cb()
     end
 
     MySQL.prepare(
@@ -799,9 +805,15 @@ if not Config.CustomInventory then
         end
 
         if #toInsert > 0 then
+            local parameters = {}
+            for i = 1, #toInsert do
+                local row = toInsert[i]
+                parameters[i] = { row.name, row.label, row.weight, row.rare, row.canRemove }
+            end
+
             MySQL.prepare.await(
             "INSERT IGNORE INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES (?, ?, ?, ?, ?)",
-                toInsert)
+                parameters)
 
             for i = 1, #toInsert do
                 local row = toInsert[i]
