@@ -15,11 +15,11 @@ local requiredMethods = {
 }
 
 ---Parses the inventory:accounts convar to build a lookup table.
----Handles both JSON array format (["money"]) and plain text.
+---Uses the same default as ox_inventory: '["money"]'
 ---@return table<string, boolean>
 local function getAccountList()
     local accounts = {}
-    local convar = GetConvar("inventory:accounts", "[]")
+    local convar = GetConvar("inventory:accounts", '["money"]')
     local ok, list = pcall(json.decode, convar)
 
     if ok and type(list) == "table" then
@@ -44,20 +44,21 @@ local function createOxInventoryProxy()
     local proxy = {}
     local accounts = getAccountList()
 
-    -- Validate that the exports actually exist before wrapping them
+    print("^3[es_extended] ox_inventory: using direct export proxy (Inventory() module unavailable)^7")
+
     for i = 1, #requiredMethods do
         local method = requiredMethods[i]
-        if exports.ox_inventory[method] == nil then
-            print(("^3[es_extended] WARNING: exports.ox_inventory.%s is missing — ox_inventory integration may be broken^7"):format(method))
+        local ok, err = pcall(function()
+            exports.ox_inventory[method](exports.ox_inventory, 0, "test", 0)
+        end)
+
+        if not ok and tostring(err):find("No such export") then
+            print(("^1[es_extended] CRITICAL: exports.ox_inventory.%s is missing^7"):format(method))
         end
-        
+
         proxy[method] = function(...)
             return exports.ox_inventory[method](exports.ox_inventory, ...)
         end
-    end
-
-    if not OxInventory then
-        print("^2[es_extended] ox_inventory: using direct export proxy (Inventory() module unavailable)^7")
     end
 
     proxy.accounts = accounts
