@@ -346,7 +346,7 @@ function ESX.UI.Menu.Open(menuType, namespace, name, data, submit, cancel, chang
     end
 
     menu.removeElement = function(query)
-        for i = 1, #menu.data.elements, 1 do
+        for i = #menu.data.elements, 1, -1 do
             for k, v in pairs(query) do
                 if menu.data.elements[i] then
                     if menu.data.elements[i][k] == v then
