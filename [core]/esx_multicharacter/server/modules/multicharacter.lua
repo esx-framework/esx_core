@@ -14,7 +14,6 @@ function Multicharacter:SetupCharacters(source)
     ESX.Players[identifier] = source
 
     local slots = Database:GetPlayerSlots(identifier)
-    identifier = Server.prefix .. "%:" .. identifier
 
     local rawCharacters = Database:GetPlayerInfo(identifier, slots)
     local characters

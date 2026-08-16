@@ -505,6 +505,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         if item and count >= 0 then
             count = ESX.Math.Round(count)
 
+            if count == item.count then
+                return
+            end
+
             if count > item.count then
                 self.addInventoryItem(item.name, count - item.count)
             else

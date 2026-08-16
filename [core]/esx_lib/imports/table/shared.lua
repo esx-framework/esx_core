@@ -14,13 +14,9 @@ function xLib.table.isArray(tbl)
         end
 
         count, maxIndex = count + 1, math.max(maxIndex, k)
-
-        if count > maxIndex then
-            return false
-        end
     end
 
-    return true
+    return count == maxIndex
 end
 
 ---@param tbl table
@@ -36,13 +32,6 @@ function xLib.table.searchForKey(tbl, item)
     end
 
     return nil
-end
-
----@param tbl table
----@param item any
----@return boolean
-function xLib.table.contains(tbl, item)
-    return xLib.table.searchForKey(tbl, item) ~= nil
 end
 
 ---@param tbl table
@@ -122,7 +111,7 @@ function xLib.table.dump(tbl)
         local s = '{ '
         for k,v in pairs(tbl) do
            if type(k) ~= 'number' then k = '"'..k..'"' end
-           s = s .. '['..k..'] = ' .. tbl(v) .. ','
+           s = s .. '['..k..'] = ' .. xLib.table.dump(v) .. ','
         end
         return s .. '} '
      else

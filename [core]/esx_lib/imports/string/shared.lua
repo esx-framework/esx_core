@@ -47,7 +47,7 @@ end
 function xLib.string.toPascal(s)
     xLib.verify(s, 'string', true)
 
-    local res = s:gsub("(%a)([%w_]*)", function(first, rest)
+    local res = s:gsub("(%a)([%w]*)", function(first, rest)
         return first:upper() .. rest:lower()
     end):gsub("_", "")
 
@@ -113,6 +113,10 @@ end
 ---@return string
 function xLib.string.replace(s, old, new)
     xLib.verify(s, 'string', true)
+
+    if type(new) == "string" then
+        new = new:gsub("%%", "%%%%")
+    end
 
     local result = s:gsub(xLib.string.escapePattern(old), new)
 

@@ -4,6 +4,7 @@ xLib.points = {}
 local points = {}
 local insidePoints = {}
 local handleCount = 0
+local loopStarted = false
 
 ---@param coords vector3
 ---@param distance number
@@ -44,14 +45,23 @@ function xLib.points.hide(handle, hidden)
 end
 
 function xLib.points.startLoop()
+    if loopStarted then
+        return
+    end
+
+    loopStarted = true
+
     CreateThread(function()
         local lastScan = 0
 
         while true do
             local coords = GetEntityCoords(PlayerPedId())
 
-            for _, point in pairs(insidePoints) do
-                point.inside(#(coords - point.coords))
+            for handle, point in pairs(insidePoints) do
+                if not pcall(point.inside, #(coords - point.coords)) then
+                    insidePoints[handle] = nil
+                    print(("[^1ERROR^7] point ^5%s^7 from ^5%s^7 errored on inside"):format(handle, point.resource))
+                end
             end
 
             local now = GetGameTimer()
@@ -63,8 +73,8 @@ function xLib.points.startLoop()
                         if not point.nearby then
                             point.nearby = true
 
-                            if point.enter then
-                                point.enter()
+                            if point.enter and not pcall(point.enter) then
+                                print(("[^1ERROR^7] point ^5%s^7 from ^5%s^7 errored on enter"):format(handle, point.resource))
                             end
 
                             if point.inside then
@@ -74,8 +84,8 @@ function xLib.points.startLoop()
                     elseif point.nearby then
                         point.nearby = false
 
-                        if point.leave then
-                            point.leave()
+                        if point.leave and not pcall(point.leave) then
+                            print(("[^1ERROR^7] point ^5%s^7 from ^5%s^7 errored on leave"):format(handle, point.resource))
                         end
 
                         insidePoints[handle] = nil
