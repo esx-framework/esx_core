@@ -15,10 +15,10 @@ local requiredMethods = {
 }
 
 ---Parses the inventory:accounts convar to build a lookup table.
----Uses the same default and JSON format as ox_inventory.
+---Uses the same default and JSON format as ox_inventory ["money", "black_money"].
 ---@return table<string, boolean>
 local function getAccountList()
-    local convar = GetConvar("inventory:accounts", '["money"]')
+    local convar = GetConvar("inventory:accounts", '["money", "black_money"]')
     local ok, list = pcall(json.decode, convar)
 
     if not ok or type(list) ~= "table" then
