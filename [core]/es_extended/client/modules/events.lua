@@ -153,7 +153,7 @@ AddStateBagChangeHandler("VehicleProperties", nil, function(bagName, _, value)
         return
     end
 
-    ESX.Game.SetVehicleProperties(vehicle, value)
+    xLib.game.setVehicleProperties(vehicle, value)
 end)
 
 ESX.SecureNetEvent("esx:setAccountMoney", function(account)
