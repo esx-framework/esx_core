@@ -145,4 +145,29 @@ function xLib.callback.register(name, cb)
     end)
 end
 
+---@param name string
+---@param cb function
+---Registers a callback using the old ESX client callback signature: function(cb, ...).
+function xLib.callback.registerCompat(name, cb)
+    return xLib.callback.register(name, function(...)
+        local response = promise.new()
+        local responded = false
+
+        local function reply(...)
+            local values = { ... }
+
+            if not responded then
+                responded = true
+                response:resolve(values)
+            end
+
+            return table.unpack(values)
+        end
+
+        cb(reply, ...)
+
+        return table.unpack(Citizen.Await(response))
+    end)
+end
+
 return xLib.callback

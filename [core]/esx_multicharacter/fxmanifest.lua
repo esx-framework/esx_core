@@ -5,6 +5,7 @@ description 'Allows players to have multiple characters on the same account.'
 version '1.14.1'
 lua54 'yes'
 
+shared_script '@esx_lib/imports.lua'
 dependencies { 'es_extended', 'esx_context', 'esx_identity', 'esx_skin' }
 
 shared_scripts { '@es_extended/imports.lua', '@es_extended/locale.lua', 'locales/*.lua', 'config.lua' }

@@ -32,7 +32,7 @@ function xLib.setValidCallback(callbackName, isValid)
 
     if callbackResource then
         if not isValid then
-            callbackResource[callbackName] = nil
+            registeredCallbacks[callbackName] = nil
             return
         end
 
@@ -56,7 +56,7 @@ function xLib.setValidCallback(callbackName, isValid)
 end
 
 function xLib.isCallbackValid(callbackName)
-    return registeredCallbacks[callbackName] == GetInvokingResource() or resource_name
+    return registeredCallbacks[callbackName] ~= nil
 end
 
 local cbEvent = '__xLib_cb_%s'

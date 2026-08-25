@@ -472,7 +472,7 @@ if not Config.CustomInventory then
 
             local _, weaponObject = ESX.GetWeapon(itemName)
             itemCount = weapon.ammo
-            local weaponComponents = ESX.Table.Clone(weapon.components)
+            local weaponComponents = xLib.table.clone(weapon.components)
             local weaponTint = weapon.tintIndex
 
             sourceXPlayer.removeWeapon(itemName)
@@ -584,7 +584,7 @@ if not Config.CustomInventory then
             local _, weaponObject = ESX.GetWeapon(itemName)
             -- luacheck: ignore weaponPickupLabel
             local weaponPickupLabel = ""
-            local components = ESX.Table.Clone(weapon.components)
+            local components = xLib.table.clone(weapon.components)
             xPlayer.removeWeapon(itemName)
 
             if weaponObject.ammo and weapon.ammo > 0 then
@@ -663,7 +663,7 @@ if not Config.CustomInventory then
     end)
 end
 
-ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
+xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not xPlayer then
@@ -682,15 +682,15 @@ ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
     })
 end)
 
-ESX.RegisterServerCallback("esx:isUserAdmin", function(source, cb)
+xLib.callback.registerCompat("esx:isUserAdmin", function(source, cb)
     cb(Core.IsPlayerAdmin(source))
 end)
 
-ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
+xLib.callback.registerCompat("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
+xLib.callback.registerCompat("esx:getOtherPlayerData", function(_, cb, target)
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
@@ -709,7 +709,7 @@ ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
     })
 end)
 
-ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
+xLib.callback.registerCompat("esx:getPlayerNames", function(source, cb, players)
     players[source] = nil
 
     for playerId, _ in pairs(players) do
@@ -725,7 +725,7 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     cb(players)
 end)
 
-ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
+xLib.callback.registerCompat("esx:spawnVehicle", function(source, cb, vehData)
     local ped = GetPlayerPed(source)
     ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
         if vehData.warp then

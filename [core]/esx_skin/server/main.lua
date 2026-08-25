@@ -36,7 +36,7 @@ RegisterNetEvent("esx_skin:setWeight", function(skin)
     end
 end)
 
-ESX.RegisterServerCallback("esx_skin:getPlayerSkin", function(source, cb)
+xLib.callback.registerCompat("esx_skin:getPlayerSkin", function(source, cb)
     local xPlayer = ESX.Player(source)
 
     MySQL.query("SELECT skin FROM users WHERE identifier = @identifier", {

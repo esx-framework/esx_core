@@ -311,7 +311,7 @@ end
 function ESX.GetExtendedPlayers(key, val, minimal)
     if not key then
         if not minimal then
-            return ESX.Table.ToArray(ESX.Players)
+            return xLib.table.toArray(ESX.Players)
         end
 
         local xPlayers = {}
@@ -443,7 +443,7 @@ function ESX.GetVehicleType(model, player, cb)
         return resolve(Core.vehicleTypesByModel[model])
     end
 
-    ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
+    xLib.callback("esx:GetVehicleType", player, function(vehicleType)
         Core.vehicleTypesByModel[model] = vehicleType
         resolve(vehicleType)
     end, model)
@@ -560,7 +560,7 @@ function ESX.RefreshJobs()
     end
 
     for _, v in pairs(Jobs) do
-        if ESX.Table.SizeOf(v.grades) == 0 then
+        if xLib.table.sizeOf(v.grades) == 0 then
             Jobs[v.name] = nil
             print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(v.name))
         end

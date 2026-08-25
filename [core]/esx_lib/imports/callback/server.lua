@@ -115,12 +115,37 @@ local pcall = pcall
 ---Registers an event handler and callback function to respond to client requests.
 ---@diagnostic disable-next-line: duplicate-set-field
 function xLib.callback.register(name, cb)
-    event = cbEvent:format(name)
+    local event = cbEvent:format(name)
 
     xLib.setValidCallback(name, true)
 
     RegisterNetEvent(event, function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
+    end)
+end
+
+---@param name string
+---@param cb function
+---Registers a callback using the old ESX server callback signature: function(source, cb, ...).
+function xLib.callback.registerCompat(name, cb)
+    return xLib.callback.register(name, function(source, ...)
+        local response = promise.new()
+        local responded = false
+
+        local function reply(...)
+            local values = { ... }
+
+            if not responded then
+                responded = true
+                response:resolve(values)
+            end
+
+            return table.unpack(values)
+        end
+
+        cb(source, reply, ...)
+
+        return table.unpack(Citizen.Await(response))
     end)
 end
 

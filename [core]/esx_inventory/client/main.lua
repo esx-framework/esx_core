@@ -193,7 +193,7 @@ local function showInventory()
         local selected = data.current --[[@as InventoryElement]]
         if selected.unselectable then return end
 
-        local closestPlayer, dist = ESX.Game.GetClosestPlayer()
+        local closestPlayer, dist = xLib.game.getClosestPlayer()
         local playerNearby = closestPlayer ~= -1 and dist <= 3.0
 
         ESX.UI.Menu.Open("default", ESX.currentResourceName, "esx_inventory_actions", {
@@ -211,11 +211,17 @@ local function showInventory()
 end
 exports("ShowInventory", showInventory)
 
-ESX.RegisterInput("showinv", TranslateCap("keymap_showinventory"), "keyboard", "F2", function()
+xLib.addKeybind({
+    name = "showinv",
+    description = TranslateCap("keymap_showinventory"),
+    defaultMapper = "keyboard",
+    defaultKey = "F2",
+    onPressed = function()
     if not ESX.PlayerData.dead then
         showInventory()
     end
-end)
+end,
+})
 
 local function refreshInventory()
     if not ESX.UI.Menu.IsOpen("default", ESX.currentResourceName, "esx_inventory_main") and

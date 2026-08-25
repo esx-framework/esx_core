@@ -7,6 +7,7 @@ use_fxv2_oal "yes"
 version '1.14.1'
 
 shared_scripts {
+    '@esx_lib/imports.lua',
     "/config/main.lua",
     "@es_extended/imports.lua",
     "@es_extended/locale.lua",

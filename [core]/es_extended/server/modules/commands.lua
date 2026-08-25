@@ -148,7 +148,7 @@ ESX.RegisterCommand(
         end
 
         local coords = GetEntityCoords(ped)
-        local Vehicles = ESX.OneSync.GetVehiclesInArea(coords, tonumber(args.radius) or 5.0)
+        local Vehicles = xLib.onesync.getVehiclesInArea(coords, tonumber(args.radius) or 5.0)
         for i = 1, #Vehicles do
             local Vehicle = NetworkGetEntityFromNetworkId(Vehicles[i])
             if DoesEntityExist(Vehicle) then
