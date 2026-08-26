@@ -53,6 +53,7 @@ CreateThread(function()
             exposeVersion(name)
         end
     end
+    exposeVersion(SELF)
 end)
 
 AddEventHandler('onResourceStart', function(resourceName)
