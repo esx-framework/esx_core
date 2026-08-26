@@ -32,10 +32,10 @@ local function exposeVersion(name)
     local value
 
     if hasVersion and hasLegacyVersion then
-        value = ('{ legacyVersion: %s, version: %s }'):format(
-            legacyVersion,
-            version
-        )
+        value = json.encode({
+            legacyVersion = legacyVersion,
+            version = version
+        })
     else
         value = hasVersion and version or legacyVersion
     end
