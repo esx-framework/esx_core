@@ -5,8 +5,9 @@ use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 
 author 'ESX Team'
-version '0.01'
 description 'Official ESX library'
+version '0.01'
+legacyversion '1.14.2'
 
 ui_page 'html/medal.html'
 
