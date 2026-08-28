@@ -663,14 +663,8 @@ if not Config.CustomInventory then
     end)
 end
 
-xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if not xPlayer then
-        return
-    end
-
-    cb({
+local function getPlayerData(xPlayer)
+    return {
         identifier = xPlayer.identifier,
         accounts = xPlayer.getAccounts(),
         inventory = xPlayer.getInventory(),
@@ -679,7 +673,17 @@ xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
         money = xPlayer.getMoney(),
         position = xPlayer.getCoords(true),
         metadata = xPlayer.getMeta(),
-    })
+    }
+end
+
+xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if not xPlayer then
+        return
+    end
+
+    cb(getPlayerData(xPlayer))
 end)
 
 xLib.callback.registerCompat("esx:isUserAdmin", function(source, cb)
@@ -690,23 +694,18 @@ xLib.callback.registerCompat("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-xLib.callback.registerCompat("esx:getOtherPlayerData", function(_, cb, target)
+xLib.callback.registerCompat("esx:getOtherPlayerData", function(source, cb, target)
+    if not Core.IsPlayerAdmin(source) then
+        return cb(nil)
+    end
+
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
-        return
+        return cb(nil)
     end
 
-    cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
-        job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
-    })
+    cb(getPlayerData(xPlayer))
 end)
 
 xLib.callback.registerCompat("esx:getPlayerNames", function(source, cb, players)
