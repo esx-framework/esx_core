@@ -114,6 +114,13 @@ function Database:GetPlayerInfo(identifier, slots)
         identifiers)
 end
 
+function Database:GetCharacter(identifier, slot)
+    local selectedCharacter = ("%s%s:%s"):format(Server.prefix, slot, identifier)
+    local result = MySQL.query.await("SELECT identifier, disabled FROM users WHERE identifier = ? LIMIT 1", { selectedCharacter })
+
+    return result and result[1]
+end
+
 function Database:SetSlots(identifier, slots)
     MySQL.insert("INSERT INTO `multicharacter_slots` (`identifier`, `slots`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `slots` = VALUES(`slots`)", {
         identifier,
