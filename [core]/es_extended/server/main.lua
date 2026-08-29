@@ -725,33 +725,22 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     cb(players)
 end)
 
----@deprecated
----This callback is deprecated and will be removed in a future ESX version.
----It allowed arbitrary client-controlled vehicle spawning without contextual authorization. 
----@param source number
----@param cb fun(netId: number|nil)
----@param vehData? any
 ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if not xPlayer then
-        cb(nil)
-        return
-    end
-
-    if vehData ~= nil and type(vehData) ~= "table" then
-        cb(nil)
-        return
-    end
-
-    print(("[^3WARNING^7] Deprecated callback ^5esx:spawnVehicle^7 invoked by ^5%s^7 (%s). "):format(
-        source, xPlayer.getName()
-    ))
-
-    -- Intentionally refuse to spawn. The old implementation permitted
-    -- arbitrary client-controlled spawning (model, coords, props, warp)
-    -- with no resource-specific authorization.
-    cb(nil)
+    print('[^3WARNING^7] esx:spawnVehicle callback is deprecated and will be removed in a future update.')
+    
+    local ped = GetPlayerPed(source)
+    ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
+        if vehData.warp then
+            local vehicle = NetworkGetEntityFromNetworkId(id)
+            local timeout = 0
+            while GetVehiclePedIsIn(ped, false) ~= vehicle and timeout <= 15 do
+                Wait(0)
+                TaskWarpPedIntoVehicle(ped, vehicle, -1)
+                timeout += 1
+            end
+        end
+        cb(id)
+    end)
 end)
 
 AddEventHandler("txAdmin:events:scheduledRestart", function(eventData)
