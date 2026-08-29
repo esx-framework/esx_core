@@ -577,6 +577,46 @@ function ESX.RefreshJobs()
     Core.JobsLoaded = true
 end
 
+---@param jobName string
+---@return boolean
+function ESX.RefreshJob(jobName)
+    if type(jobName) ~= "string" or jobName == "" then
+        return false
+    end
+
+    local job = MySQL.single.await("SELECT * FROM jobs WHERE name = ?", { jobName })
+
+    if not job then
+        print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to missing job'):format(jobName))
+        return false
+    end
+
+    local jobGrades = MySQL.query.await("SELECT * FROM job_grades WHERE job_name = ?", { jobName })
+
+    if #jobGrades == 0 then
+        print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to no job grades found'):format(jobName))
+        return false
+    end
+
+    job.grades = {}
+
+    for i = 1, #jobGrades do
+        job.grades[tostring(jobGrades[i].grade)] = jobGrades[i]
+    end
+
+    ESX.Jobs[jobName] = job
+
+    for _, xPlayer in pairs(ESX.Players) do
+        if xPlayer.job.name == jobName then
+            xPlayer.refreshJob()
+        end
+    end
+
+    TriggerEvent("esx:jobRefreshed", jobName, job)
+
+    return true
+end
+
 ---@param item string
 ---@param cb function
 ---@return nil

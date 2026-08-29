@@ -70,6 +70,7 @@
 --- Job Functions
 ---@field getJob fun(): ESXJob                                         # Get player's current job.
 ---@field setJob fun(newJob: string, grade: string, onDuty?: boolean)  # Set player's job and grade.
+---@field refreshJob fun()                                            # Reload the current job and grade from ESX.Jobs.
 ---@field setGroup fun(newGroup: string)                               # Set player's permission group.
 ---@field getGroup fun(): string                                       # Get player's permission group.
 --- Weapon Functions
@@ -619,6 +620,29 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         TriggerEvent("esx:setJob", self.source, self.job, lastJob)
         self.triggerEvent("esx:setJob", self.job, lastJob)
         Player(self.source).state:set("job", self.job, true)
+    end
+
+    function self.refreshJob()
+        local jobObject = ESX.Jobs[self.job.name]
+        local gradeObject = jobObject and jobObject.grades[tostring(self.job.grade)]
+
+        if not gradeObject then
+            return self.setJob("unemployed", 0, false)
+        end
+
+        local job = self.job
+
+        job.id = jobObject.id
+        job.label = jobObject.label
+        job.type = jobObject.type
+        job.grade_name = gradeObject.name
+        job.grade_label = gradeObject.label
+        job.grade_salary = gradeObject.salary
+        job.skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {}
+        job.skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {}
+
+        self.triggerEvent("esx:setJob", job, job)
+        Player(self.source).state:set("job", job, true)
     end
 
     function self.addWeapon(weaponName, ammo)
