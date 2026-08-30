@@ -23,6 +23,12 @@ client_scripts {
 	'client/modules/*.lua'
 }
 
+ui_page 'web/dist/index.html'
+
+files {
+	'web/dist/**/*'
+}
+
 dependencies {
 	'es_extended',
 	'skinchanger'
