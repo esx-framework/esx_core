@@ -40,6 +40,18 @@ button {
   width: calc(var(--rail-width) + var(--panel-width));
   height: 100vh;
   color: #f7f7f7;
+  animation: shell-in 260ms ease;
+}
+
+@keyframes shell-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .skin-shell::after {
@@ -111,6 +123,18 @@ button {
   gap: 8px;
   border-radius: 5px;
   background: var(--panel-bg);
+  animation: subgroup-in 180ms ease;
+}
+
+@keyframes subgroup-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 .rail-subgroup .subcategory-button {
@@ -143,7 +167,7 @@ button {
   color: #ffffff;
   background: transparent;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+  transition: background 220ms ease, color 220ms ease, transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
 }
 
 .rail-stack button:hover,
@@ -154,9 +178,19 @@ button {
   background: var(--skin-orange);
 }
 
+.rail-stack button:focus-visible,
+.camera-dock button:focus-visible {
+  outline: 2px solid var(--skin-orange);
+  outline-offset: 2px;
+}
+
 .rail-stack button:active,
 .camera-dock button:active {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.96);
+}
+
+.camera-trigger.active {
+  box-shadow: 0 0 0 3px rgba(246, 160, 0, 0.25);
 }
 
 .camera-popover {
@@ -171,10 +205,30 @@ button {
   background: var(--panel-bg);
   transform: translateX(-50%);
   transform-origin: bottom center;
+  animation: popover-in 160ms ease;
 }
 
 .camera-popover .camera-action {
   height: 42px;
+}
+
+.camera-popover .camera-action:hover,
+.camera-popover .camera-action.active,
+.camera-dock .camera-popover .camera-action:hover,
+.camera-dock .camera-popover .camera-action.active {
+  color: var(--skin-orange);
+  background: transparent;
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 }
 
 .asset-icon {
@@ -186,6 +240,7 @@ button {
   background: currentColor;
   mask: var(--icon-url) center / contain no-repeat;
   -webkit-mask: var(--icon-url) center / contain no-repeat;
+  transition: color 220ms ease, transform 220ms ease;
 }
 
 .asset-icon.chevron {
@@ -221,6 +276,18 @@ button {
 .field-block {
   width: 100%;
   margin: 0 0 26px;
+  animation: field-in 220ms ease both;
+}
+
+@keyframes field-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .field-block h2 {
@@ -254,7 +321,7 @@ button {
   color: #ffffff;
   background: var(--control-bg);
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+  transition: background 220ms ease, color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
 
 .gender-toggle button.active,
@@ -267,11 +334,12 @@ button {
 .submit-button:hover {
   background: #f4f4f4;
   color: #303030;
+  box-shadow: 0 0 0 2px var(--skin-orange);
 }
 
 .gender-toggle button:active,
 .submit-button:active {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.98);
 }
 
 .stepper {
@@ -283,11 +351,12 @@ button {
   border-radius: 5px;
   background: var(--control-bg);
   outline: 1px solid transparent;
-  transition: outline-color 120ms ease, background 120ms ease;
+  transition: outline-color 220ms ease, background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
 
 .stepper.focused {
   outline-color: rgba(246, 160, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(246, 160, 0, 0.15);
 }
 
 .step-icon,
@@ -299,11 +368,16 @@ button {
   color: #ffffff;
   background: transparent;
   cursor: pointer;
+  transition: color 220ms ease, background 220ms ease, transform 220ms ease;
 }
 
 .step-icon {
   color: #3a3a3a;
   background: #ffffff;
+}
+
+.step-icon:hover {
+  background: var(--skin-orange);
 }
 
 .step-arrow {
@@ -313,19 +387,50 @@ button {
 
 .step-arrow:hover {
   color: var(--skin-orange);
+  background: rgba(246, 160, 0, 0.12);
+}
+
+.step-arrow:active {
+  transform: scale(0.9);
 }
 
 .step-value {
   display: grid;
   place-items: center;
   min-width: 0;
+  width: 100%;
   overflow: hidden;
+  border: 0;
+  outline: 0;
   color: #ffffff;
+  background: transparent;
+  font: inherit;
   font-size: 16px;
   line-height: 1;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.step-value::-webkit-inner-spin-button,
+.step-value::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.step-value::-moz-appearance {
+  -moz-appearance: textfield;
+}
+
+.step-value:hover {
+  color: var(--skin-orange);
+}
+
+.step-value:focus {
+  color: #111111;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 2px var(--skin-orange);
 }
 
 .skin-footer {
