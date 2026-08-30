@@ -22,7 +22,7 @@
           class:active={action.preset === selectedPreset}
           title={action.title}
           aria-label={action.title}
-          on:click={() => onAction(action)}
+          onclick={() => onAction(action)}
         >
           <AssetIcon source={action.icon} flip={action.flip ?? false} />
         </button>
@@ -37,7 +37,7 @@
     title="Camera"
     aria-label="Camera"
     aria-expanded={open}
-    on:click={onToggle}
+    onclick={onToggle}
   >
     <AssetIcon source={cameraIcon} />
   </button>

@@ -46,7 +46,7 @@ export type VisibleCategory = SkinCategory & {
   children: VisibleSubcategory[]
 }
 
-export type CameraPreset = 'face' | 'torso' | 'legs' | 'shoes'
+export type CameraPreset = 'full' | 'face' | 'torso' | 'legs' | 'shoes'
 
 export type CameraAction = {
   id: string

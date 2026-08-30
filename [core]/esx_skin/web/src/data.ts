@@ -3,6 +3,7 @@ import type { CameraAction, SkinCategory, SkinElement } from './types'
 import logoEsx from './assets/icons/logo-esx.png'
 import actionCamera from './assets/icons/action-camera.png'
 import actionReset from './assets/icons/action-reset.svg'
+import actionFullBody from './assets/icons/action-full-body.svg'
 import actionRotate from './assets/icons/action-rotate.png'
 import actionRotateLeft from './assets/icons/action-rotate-left.png'
 import categoryAccessories from './assets/icons/category-accessories.png'
@@ -64,6 +65,7 @@ export const icon = {
   reset: actionReset,
   rotateLeft: actionRotateLeft,
   rotateRight: actionRotate,
+  fullBody: actionFullBody,
   camera: actionCamera
 }
 
@@ -224,9 +226,10 @@ export const categories: SkinCategory[] = [
   }
 ]
 
-export const cameraPresets = ['face', 'torso', 'legs', 'shoes'] as const
+export const cameraPresets = ['full', 'face', 'torso', 'legs', 'shoes'] as const
 
 export const cameraActions: CameraAction[] = [
+  { id: 'cam-full', title: 'Full body camera', icon: icon.fullBody, preset: 'full' },
   { id: 'cam-face', title: 'Face camera', icon: icon.faceDetail, preset: 'face' },
   { id: 'cam-torso', title: 'Torso camera', icon: icon.shirt, preset: 'torso' },
   { id: 'cam-legs', title: 'Legs camera', icon: icon.pants, preset: 'legs' },

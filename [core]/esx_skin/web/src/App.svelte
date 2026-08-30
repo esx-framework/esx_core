@@ -1,13 +1,11 @@
 <script lang="ts">
   import './styles.css'
   import CategoryRail from './components/CategoryRail.svelte'
-  import CameraDock from './components/CameraDock.svelte'
   import Stepper from './components/Stepper.svelte'
   import type {
     CameraAction,
     CameraPreset,
     ControlSelector,
-    SkinCategory,
     SkinElement,
     SkinPayload,
     VisibleCategory
@@ -21,13 +19,18 @@
     }
   }
 
-  let visible = typeof window.invokeNative !== 'function'
-  let title = 'Appearance'
-  let submitLabel = 'CREATE CHARACTER'
-  let activeName = 'sex'
-  let elements: SkinElement[] = visible ? demoElements : []
-  let cameraPreset = 0
-  let cameraMenuOpen = false
+  let visible = $state(false)
+  let title = $state('Appearance')
+  let submitLabel = $state('CREATE CHARACTER')
+  let activeName = $state('sex')
+  let elements = $state<SkinElement[]>([])
+  let cameraPreset = $state(0)
+  let cameraMenuOpen = $state(false)
+
+  if (typeof window.invokeNative !== 'function') {
+    visible = true
+    elements = demoElements
+  }
 
   const resource = window.GetParentResourceName?.() ?? 'esx_skin'
 
@@ -71,22 +74,24 @@
     return category.children[0]?.controls[0] ?? category.controls[0]
   }
 
-  $: activeElement = elements.find((element) => element.name === activeName) ?? elements[0]
-  $: visibleCategories = categories
-    .map((category): VisibleCategory => {
-      const children = (category.children ?? [])
-        .map((child) => ({ ...child, controls: controlsFor(child) }))
-        .filter((child) => child.controls.length > 0)
-      const controls = uniqueControls([controlsFor(category), ...children.map((child) => child.controls)])
+  const activeElement = $derived(elements.find((element) => element.name === activeName) ?? elements[0])
+  const visibleCategories = $derived(
+    categories
+      .map((category): VisibleCategory => {
+        const children = (category.children ?? [])
+          .map((child) => ({ ...child, controls: controlsFor(child) }))
+          .filter((child) => child.controls.length > 0)
+        const controls = uniqueControls([controlsFor(category), ...children.map((child) => child.controls)])
 
-      return { ...category, controls, children }
-    })
-    .filter((category) => category.controls.length > 0)
-  $: activeCategory = visibleCategories.find((category) => category.controls.some((element) => element.name === activeName)) ?? visibleCategories[0]
-  $: activeSubcategory = activeCategory?.children.find((child) => child.controls.some((element) => element.name === activeName)) ?? activeCategory?.children[0]
-  $: categoryControls = (activeSubcategory?.controls ?? activeCategory?.controls ?? []).filter((element) => element.name !== 'sex')
-  $: gender = elements.find((element) => element.name === 'sex')
-  $: selectedCameraPreset = cameraPresets[cameraPreset] ?? 'face'
+        return { ...category, controls, children }
+      })
+      .filter((category) => category.controls.length > 0)
+  )
+  const activeCategory = $derived(visibleCategories.find((category) => category.controls.some((element) => element.name === activeName)) ?? visibleCategories[0])
+  const activeSubcategory = $derived(activeCategory?.children.find((child) => child.controls.some((element) => element.name === activeName)) ?? activeCategory?.children[0])
+  const categoryControls = $derived((activeSubcategory?.controls ?? activeCategory?.controls ?? []).filter((element) => element.name !== 'sex'))
+  const gender = $derived(elements.find((element) => element.name === 'sex'))
+  const selectedCameraPreset = $derived(cameraPresets[cameraPreset] ?? 'face')
 
   function displayLabel(element: SkinElement) {
     return labelMap[element.name] ?? (element.label ?? element.name).replace(/_/g, ' ').toUpperCase()
@@ -215,13 +220,12 @@
       const presetIndex = cameraPresets.indexOf(action.preset)
       if (presetIndex >= 0) cameraPreset = presetIndex
       send('skinMenu:camera', { preset: action.preset })
+      cameraMenuOpen = false
     } else if (action.direction) {
       rotate(action.direction)
     } else if (action.reset) {
       reset()
     }
-
-    cameraMenuOpen = false
   }
 
   function onMessage(event: MessageEvent<SkinPayload>) {
@@ -253,9 +257,6 @@
     } else if (event.key === 'Escape') {
       event.preventDefault()
       cancel()
-    } else if (event.key === 'Enter') {
-      event.preventDefault()
-      submit()
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault()
       setValue(activeElement, activeElement.value - 1)
@@ -290,8 +291,8 @@
           <section class="field-block gender-block">
             <h2>GENDER</h2>
             <div class="gender-toggle">
-              <button type="button" class:active={gender.value === 0} on:click={() => setValue(gender, 0)}>MALE</button>
-              <button type="button" class:active={gender.value === 1} on:click={() => setValue(gender, 1)}>FEMALE</button>
+              <button type="button" class:active={gender.value === 0} onclick={() => setValue(gender, 0)}>MALE</button>
+              <button type="button" class:active={gender.value === 1} onclick={() => setValue(gender, 1)}>FEMALE</button>
             </div>
           </section>
         {/if}
@@ -312,7 +313,7 @@
       </div>
 
       <div class="skin-footer">
-        <button type="button" class="submit-button" on:click={submit}>{submitLabel}</button>
+        <button type="button" class="submit-button" onclick={submit}>{submitLabel}</button>
       </div>
     </section>
   </main>

@@ -347,8 +347,8 @@ function Menu:SetCameraPreset(preset)
         Skin.zoomOffset = 0.75
         Skin.camOffset = 0.15
     else
-        Skin.zoomOffset = 1.05
-        Skin.camOffset = 0.2
+        Skin.zoomOffset = 1.5
+        Skin.camOffset = 0.1
     end
 end
 
@@ -421,7 +421,7 @@ RegisterNUICallback("skinMenu:cancel", function(data, cb)
 end)
 
 RegisterNUICallback("skinMenu:reset", function(_, cb)
-    Menu:Reset()
+    Camera:Reset()
     cb({ ok = true })
 end)
 

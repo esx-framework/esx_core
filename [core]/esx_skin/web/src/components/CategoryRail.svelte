@@ -31,7 +31,7 @@
           title={category.title}
           aria-label={category.title}
           aria-expanded={category.children.length > 0 ? activeCategoryId === category.id : undefined}
-          on:click={() => onSelectCategory(category.id)}
+          onclick={() => onSelectCategory(category.id)}
         >
           <AssetIcon source={category.icon} />
         </button>
@@ -45,7 +45,7 @@
                 class:active={activeSubcategoryId === subcategory.id}
                 title={subcategory.title}
                 aria-label={subcategory.title}
-                on:click={() => onSelectSubcategory(category.id, subcategory.id)}
+                onclick={() => onSelectSubcategory(category.id, subcategory.id)}
               >
                 <AssetIcon source={subcategory.icon} />
               </button>

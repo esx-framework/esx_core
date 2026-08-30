@@ -48,13 +48,12 @@
   class:focused={focused}
   role="group"
   aria-label={label}
-  on:mouseenter={onFocus}
 >
-  <button class="step-icon" type="button" aria-label={label} on:click={onFocus}>
+  <button class="step-icon" type="button" aria-label={label} onclick={onFocus}>
     <AssetIcon source={icon} />
   </button>
 
-  <button class="step-arrow" type="button" aria-label="Previous" on:click={() => onChange(element.value - 1)}>
+  <button class="step-arrow" type="button" aria-label="Previous" onclick={() => onChange(element.value - 1)}>
     <AssetIcon source={chevronLeftSrc} chevron={true} />
   </button>
 
@@ -65,13 +64,13 @@
     max={element.max}
     value={editing ? draft : element.value}
     aria-label={label}
-    on:focus={startEditing}
-    on:input={handleInput}
-    on:keydown={handleKeydown}
-    on:blur={commitEdit}
+    onfocus={startEditing}
+    oninput={handleInput}
+    onkeydown={handleKeydown}
+    onblur={commitEdit}
   />
 
-  <button class="step-arrow" type="button" aria-label="Next" on:click={() => onChange(element.value + 1)}>
+  <button class="step-arrow" type="button" aria-label="Next" onclick={() => onChange(element.value + 1)}>
     <AssetIcon source={chevronRightSrc} chevron={true} />
   </button>
 </div>
