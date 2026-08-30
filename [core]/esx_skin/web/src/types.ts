@@ -16,6 +16,7 @@ export type SkinPayload = {
   active?: string
   elements?: SkinElement[]
   saveable?: boolean
+  creating?: boolean
   restricted?: boolean
 }
 

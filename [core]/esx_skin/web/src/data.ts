@@ -4,6 +4,8 @@ import logoEsx from './assets/icons/logo-esx.png'
 import actionCamera from './assets/icons/action-camera.png'
 import actionReset from './assets/icons/action-reset.svg'
 import actionFullBody from './assets/icons/action-full-body.svg'
+import actionExport from './assets/icons/action-export.svg'
+import actionImport from './assets/icons/action-import.svg'
 import actionRotate from './assets/icons/action-rotate.png'
 import actionRotateLeft from './assets/icons/action-rotate-left.png'
 import categoryAccessories from './assets/icons/category-accessories.png'
@@ -66,6 +68,8 @@ export const icon = {
   rotateLeft: actionRotateLeft,
   rotateRight: actionRotate,
   fullBody: actionFullBody,
+  export: actionExport,
+  import: actionImport,
   camera: actionCamera
 }
 

@@ -2,7 +2,7 @@
   import AssetIcon from './AssetIcon.svelte'
   import CameraDock from './CameraDock.svelte'
   import type { CameraAction, CameraPreset, VisibleCategory } from '../types'
-  import { logoEsxSrc } from '../data'
+  import { icon, logoEsxSrc } from '../data'
 
   export let categories: VisibleCategory[]
   export let activeCategoryId: string | undefined
@@ -14,6 +14,8 @@
   export let onSelectSubcategory: (categoryId: string, subcategoryId: string) => void = () => {}
   export let onToggleCamera: () => void = () => {}
   export let onCameraAction: (action: CameraAction) => void = () => {}
+  export let onExport: () => void = () => {}
+  export let onImport: () => void = () => {}
 
   export let cameraIcon: string
 </script>
@@ -55,6 +57,15 @@
       </div>
     {/each}
   </nav>
+
+  <div class="io-tools" aria-label="Configuration tools">
+    <button type="button" class="rail-button io-button" title="Export JSON" aria-label="Export JSON" onclick={onExport}>
+      <AssetIcon source={icon.export} />
+    </button>
+    <button type="button" class="rail-button io-button" title="Import JSON" aria-label="Import JSON" onclick={onImport}>
+      <AssetIcon source={icon.import} />
+    </button>
+  </div>
 
   <CameraDock
     open={cameraMenuOpen}

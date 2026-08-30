@@ -1,5 +1,6 @@
 <script lang="ts">
   import './styles.css'
+  import AssetIcon from './components/AssetIcon.svelte'
   import CategoryRail from './components/CategoryRail.svelte'
   import Stepper from './components/Stepper.svelte'
   import type {
@@ -26,6 +27,12 @@
   let elements = $state<SkinElement[]>([])
   let cameraPreset = $state(0)
   let cameraMenuOpen = $state(false)
+  let exportOpen = $state(false)
+  let exportSelected = $state<Record<string, boolean>>({})
+  let importOpen = $state(false)
+  let importText = $state('')
+  let importBusy = $state(false)
+  let importStatus = $state('')
 
   if (typeof window.invokeNative !== 'function') {
     visible = true
@@ -228,12 +235,154 @@
     }
   }
 
+  function categoryElementNames(category: VisibleCategory) {
+    const names: string[] = []
+    for (const child of category.children ?? []) {
+      for (const control of child.controls) names.push(control.name)
+    }
+    return names
+  }
+
+  function exportCount(category: VisibleCategory) {
+    const names = categoryElementNames(category)
+    return {
+      selected: names.filter((name) => exportSelected[name] !== false).length,
+      total: names.length
+    }
+  }
+
+  function openExport() {
+    const selected: Record<string, boolean> = {}
+    for (const element of elements) selected[element.name] = true
+    exportSelected = selected
+    exportOpen = true
+  }
+
+  function toggleExportCategory(category: VisibleCategory) {
+    const names = categoryElementNames(category)
+    const allSelected = names.every((name) => exportSelected[name] !== false)
+    const next = { ...exportSelected }
+    for (const name of names) next[name] = !allSelected
+    exportSelected = next
+  }
+
+  function toggleExportElement(name: string) {
+    exportSelected = { ...exportSelected, [name]: !(exportSelected[name] ?? true) }
+  }
+
+  function selectAllExport() {
+    const next = { ...exportSelected }
+    for (const name of Object.keys(next)) next[name] = true
+    exportSelected = next
+  }
+
+  function clearExport() {
+    const next = { ...exportSelected }
+    for (const name of Object.keys(next)) next[name] = false
+    exportSelected = next
+  }
+
+  function exportJson() {
+    const values: Record<string, number> = {}
+    const scopes: string[] = []
+
+    for (const category of visibleCategories) {
+      const selectedNames = categoryElementNames(category).filter((name) => exportSelected[name] !== false)
+      if (selectedNames.length > 0) scopes.push(category.id)
+      for (const element of elements) {
+        if (selectedNames.includes(element.name)) values[element.name] = element.value
+      }
+    }
+
+    const payload = {
+      version: 1,
+      type: 'esx_skin',
+      scopes,
+      skin: values
+    }
+
+    exportOpen = false
+    copyToClipboard(JSON.stringify(payload, null, 2))
+  }
+
+  function copyToClipboard(text: string) {
+    let ok = false
+
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    textarea.style.top = '0'
+    textarea.style.left = '0'
+    textarea.style.opacity = '0'
+    textarea.setAttribute('readonly', '')
+    document.body.appendChild(textarea)
+    textarea.focus()
+    textarea.select()
+    textarea.setSelectionRange(0, text.length)
+    try {
+      ok = document.execCommand('copy')
+    } catch {
+      ok = false
+    }
+    textarea.remove()
+
+    importStatus = ok ? 'Copied to clipboard' : 'Copy failed'
+    window.setTimeout(() => (importStatus = ''), 4000)
+  }
+
+  async function importFromText() {
+    const text = importText.trim()
+    if (!text) {
+      importStatus = 'Paste a JSON first'
+      window.setTimeout(() => (importStatus = ''), 4000)
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(text) as Record<string, unknown>
+      const source =
+        parsed && typeof parsed === 'object' && typeof (parsed as { skin?: unknown }).skin === 'object'
+          ? (parsed as { skin: Record<string, unknown> }).skin
+          : parsed
+
+      const values: Record<string, number> = {}
+      for (const [name, value] of Object.entries(source)) {
+        const element = elements.find((entry) => entry.name === name)
+        if (element && typeof value === 'number' && Number.isFinite(value)) {
+          values[name] = value
+        }
+      }
+
+      const count = Object.keys(values).length
+      if (count === 0) throw new Error('no-match')
+
+      importBusy = true
+      await send('skinMenu:apply', { values })
+      importBusy = false
+      importOpen = false
+      importText = ''
+      importStatus = `Imported ${count} values`
+    } catch {
+      importBusy = false
+      importStatus = 'Invalid or empty JSON'
+    }
+
+    window.setTimeout(() => (importStatus = ''), 4000)
+  }
+
+  function openImport() {
+    importOpen = true
+    importText = ''
+  }
+
   function onMessage(event: MessageEvent<SkinPayload>) {
     const data = event.data
     if (!data || typeof data.action !== 'string') return
 
     if (data.action === 'skinMenu:close') {
       cameraMenuOpen = false
+      exportOpen = false
+      importOpen = false
       visible = false
       return
     }
@@ -283,6 +432,8 @@
       onSelectSubcategory={setSubcategory}
       onToggleCamera={toggleCameraMenu}
       onCameraAction={runCameraAction}
+      onExport={openExport}
+      onImport={openImport}
     />
 
     <section class="skin-panel">
@@ -317,4 +468,100 @@
       </div>
     </section>
   </main>
+
+  {#if importStatus}
+    <div class="import-toast">{importStatus}</div>
+  {/if}
+
+  {#if importOpen}
+    <div class="modal-overlay" onclick={() => (importOpen = false)}>
+      <section
+        class="export-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Import configuration"
+        onclick={(event) => event.stopPropagation()}
+      >
+        <h2>IMPORT CONFIGURATION</h2>
+        <p class="export-hint">Paste your JSON below and click Apply.</p>
+
+        <textarea
+          class="import-textarea"
+          placeholder={'{"face": 4, "torso_1": 15}'}
+          bind:value={importText}
+          spellcheck="false"
+        ></textarea>
+
+        <div class="export-footer">
+          <button type="button" class="footer-button" onclick={() => (importOpen = false)}>CANCEL</button>
+          <button type="button" class="submit-button" onclick={importFromText} disabled={importBusy}>
+            {importBusy ? 'APPLYING...' : 'APPLY'}
+          </button>
+        </div>
+      </section>
+    </div>
+  {/if}
+
+  {#if exportOpen}
+    <div class="modal-overlay" onclick={() => (exportOpen = false)}>
+      <section
+        class="export-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Export configuration"
+        onclick={(event) => event.stopPropagation()}
+      >
+        <h2>EXPORT CONFIGURATION</h2>
+        <p class="export-hint">Select what to include in the JSON.</p>
+
+        <div class="export-tools">
+          <button type="button" onclick={selectAllExport}>SELECT ALL</button>
+          <button type="button" onclick={clearExport}>CLEAR</button>
+        </div>
+
+        <div class="export-groups">
+          {#each visibleCategories as category}
+            <div class="export-group">
+              <label class="export-group-head">
+                <input
+                  type="checkbox"
+                  checked={exportCount(category).selected === exportCount(category).total}
+                  onclick={() => toggleExportCategory(category)}
+                />
+                <AssetIcon source={category.icon} />
+                <span>{category.title}</span>
+                <span class="export-count">
+                  {exportCount(category).selected}/{exportCount(category).total}
+                </span>
+              </label>
+
+              {#each category.children as child}
+                {#if child.controls.length > 0}
+                  <div class="export-subgroup">
+                    <span class="export-subgroup-title">{child.title}</span>
+                    {#each child.controls as element}
+                      <label class="export-item">
+                        <input
+                          type="checkbox"
+                          checked={exportSelected[element.name] !== false}
+                          onclick={() => toggleExportElement(element.name)}
+                        />
+                        <span>{displayLabel(element)}</span>
+                        <span class="export-item-name">{element.name}</span>
+                      </label>
+                    {/each}
+                  </div>
+                {/if}
+              {/each}
+            </div>
+          {/each}
+        </div>
+
+        <div class="export-footer">
+          <button type="button" class="footer-button" onclick={() => (exportOpen = false)}>CANCEL</button>
+          <button type="button" class="submit-button" onclick={exportJson}>COPY TO CLIPBOARD</button>
+        </div>
+      </section>
+    </div>
+  {/if}
 {/if}

@@ -53,6 +53,35 @@ local function safeMax(max)
     return round(max)
 end
 
+local blockedControls = {
+    [32] = true, -- Move up only (W)
+    [33] = true, -- Move down (S)
+    [36] = true, -- Sprint / Multiplayer info
+    [21] = true, -- Sprint (alt)
+    [37] = true, -- Jump
+    [44] = true, -- Cover / duck
+    [25] = true, -- Aim
+    [24] = true, -- Attack
+    [47] = true, -- Switch weapon
+    [45] = true, -- Reload
+    [14] = true, -- Dodge
+    [75] = true, -- Detail
+    [73] = true, -- Enter vehicle
+    [72] = true, -- Leave vehicle
+    [289] = true, -- Secondary interaction
+}
+
+local function blockInputThread()
+    while Menu.isOpen do
+        for control, _ in pairs(blockedControls) do
+            DisableControlAction(0, control, true)
+            DisableControlAction(1, control, true)
+            DisableControlAction(2, control, true)
+        end
+        Wait(0)
+    end
+end
+
 local function createMenuHandle()
     return {
         close = function()
@@ -144,7 +173,7 @@ end
 function Menu:BuildPayload(activeName)
     local submitLabel = "CONFIRM"
 
-    if self.saveable and not self.restricted then
+    if self.saveable and self.creating then
         submitLabel = "CREATE CHARACTER"
     elseif self.saveable then
         submitLabel = "SAVE CHANGES"
@@ -157,6 +186,7 @@ function Menu:BuildPayload(activeName)
         active = activeName or (self.elements[1] and self.elements[1].name) or nil,
         elements = self.elements or {},
         saveable = self.saveable == true,
+        creating = self.creating == true,
         restricted = self.restricted ~= nil
     }
 end
@@ -256,7 +286,13 @@ function Menu:UpdateTextureLimits(changedName, skin)
                 element.max = safeMax(component.max(PlayerPedId(), skin))
             end
 
-            element.value = wrapValue(element.min or 0, element.min or 0, element.max or 0)
+            local current = element.value
+
+            if current == nil or current < (element.min or 0) or current > element.max or (element.max or 0) < (element.min or 0) then
+                current = wrapValue(element.min or 0, element.min or 0, element.max or 0)
+            end
+
+            element.value = current
             exports["skinchanger"]:Change(element.name, element.value)
             skin[element.name] = element.value
         end
@@ -274,6 +310,54 @@ function Menu:Focus(data)
     local element = self.elements[index]
     Skin.zoomOffset = normalizeNumber(element.zoomOffset, Skin.zoomOffset)
     Skin.camOffset = normalizeNumber(element.camOffset, Skin.camOffset)
+end
+
+function Menu:Apply(values)
+    if not self.isOpen or type(values) ~= "table" then
+        return
+    end
+
+    local skin = exports["skinchanger"]:GetSkin()
+    local changedNames = {}
+
+    for name, value in pairs(values) do
+        if type(name) == "string" and type(value) == "number" and value == value then
+            local element = self:GetElement(name)
+
+            if element then
+                local normalized = wrapValue(value, element.min or 0, element.max or 0)
+                element.value = normalized
+
+                if skin[name] ~= normalized then
+                    exports["skinchanger"]:Change(name, normalized)
+                    skin[name] = normalized
+                    changedNames[#changedNames + 1] = name
+                end
+            end
+        end
+    end
+
+    if #changedNames < 1 then
+        return
+    end
+
+    local changedSex = false
+    for i = 1, #changedNames, 1 do
+        if changedNames[i] == "sex" then
+            changedSex = true
+            break
+        end
+    end
+
+    if changedSex then
+        self:RebuildAfterModelChange(self.elements[1] and self.elements[1].name or nil)
+    else
+        for i = 1, #changedNames, 1 do
+            self:UpdateTextureLimits(changedNames[i], skin)
+        end
+
+        self:Refresh(self.elements[1] and self.elements[1].name or nil)
+    end
 end
 
 function Menu:Change(data)
@@ -357,6 +441,7 @@ function Menu:Open(submit, cancel, restrict)
     self.cancelCb = cancel
     self.restricted = restrict
     self.saveable = false
+    self.creating = false
     self.focusIndex = 1
     Skin.Last = exports["skinchanger"]:GetSkin()
 
@@ -377,11 +462,12 @@ function Menu:Open(submit, cancel, restrict)
 
     self.isOpen = true
     SetNuiFocus(true, true)
-    SetNuiFocusKeepInput(true)
+    SetNuiFocusKeepInput(false)
+    CreateThread(blockInputThread)
     SendNUIMessage(self:BuildPayload(self.elements[1].name))
 end
 
-function Menu:Saveable(submitCb, cancelCb, restrict)
+function Menu:Saveable(submitCb, cancelCb, restrict, creating)
     Skin.Last = exports["skinchanger"]:GetSkin()
 
     self:Open(function(data, menu)
@@ -397,6 +483,7 @@ function Menu:Saveable(submitCb, cancelCb, restrict)
     end, cancelCb, restrict)
 
     self.saveable = true
+    self.creating = creating == true
     self:Refresh(self.elements and self.elements[1] and self.elements[1].name or nil)
 end
 
@@ -432,5 +519,10 @@ end)
 
 RegisterNUICallback("skinMenu:camera", function(data, cb)
     Menu:SetCameraPreset(type(data) == "table" and data.preset or "full")
+    cb({ ok = true })
+end)
+
+RegisterNUICallback("skinMenu:apply", function(data, cb)
+    Menu:Apply(type(data) == "table" and data.values or {})
     cb({ ok = true })
 end)
