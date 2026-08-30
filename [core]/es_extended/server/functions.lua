@@ -577,6 +577,24 @@ function ESX.RefreshJobs()
     Core.JobsLoaded = true
 end
 
+local function removeStaleJob(jobName, reason)
+    ESX.Jobs[jobName] = nil
+    print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to %s'):format(jobName, reason))
+
+    if jobName == "unemployed" or not ESX.DoesJobExist("unemployed", 0) then
+        return false
+    end
+
+    for _, xPlayer in pairs(ESX.Players) do
+        if xPlayer.job.name == jobName then
+            xPlayer.setJob("unemployed", 0, false)
+        end
+    end
+
+    TriggerEvent("esx:jobRemoved", jobName, reason)
+    return false
+end
+
 ---@param jobName string
 ---@return boolean
 function ESX.RefreshJob(jobName)
@@ -587,15 +605,13 @@ function ESX.RefreshJob(jobName)
     local job = MySQL.single.await("SELECT * FROM jobs WHERE name = ?", { jobName })
 
     if not job then
-        print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to missing job'):format(jobName))
-        return false
+        return removeStaleJob(jobName, "missing job")
     end
 
     local jobGrades = MySQL.query.await("SELECT * FROM job_grades WHERE job_name = ?", { jobName })
 
     if #jobGrades == 0 then
-        print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to no job grades found'):format(jobName))
-        return false
+        return removeStaleJob(jobName, "no job grades found")
     end
 
     job.grades = {}

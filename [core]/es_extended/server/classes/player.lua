@@ -136,6 +136,33 @@
 ---@field paycheckEnabled boolean   # Whether paycheck is enabled.
 ---@field admin boolean             # Whether the player is an admin.
 
+local function copyJob(job)
+    local copiedJob = {}
+
+    for key, value in pairs(job) do
+        copiedJob[key] = value
+    end
+
+    return copiedJob
+end
+
+local function decodeJobSkin(value)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return {}
+    end
+
+    local ok, decoded = pcall(json.decode, value)
+    if not ok or type(decoded) ~= "table" then
+        return {}
+    end
+
+    return decoded
+end
+
 ---@param playerId number
 ---@param identifier string
 ---@param ssn string
@@ -612,8 +639,8 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
             grade_label = gradeObject.label,
             grade_salary = gradeObject.salary,
 
-            skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {},
-            skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
+            skin_male = decodeJobSkin(gradeObject.skin_male),
+            skin_female = decodeJobSkin(gradeObject.skin_female),
         }
 
         self.metadata.jobDuty = onDuty
@@ -627,22 +654,33 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
         local gradeObject = jobObject and jobObject.grades[tostring(self.job.grade)]
 
         if not gradeObject then
-            return self.setJob("unemployed", 0, false)
+            self.setJob("unemployed", 0, false)
+            return false
         end
 
-        local job = self.job
+        local lastJob = copyJob(self.job)
 
-        job.id = jobObject.id
-        job.label = jobObject.label
-        job.type = jobObject.type
-        job.grade_name = gradeObject.name
-        job.grade_label = gradeObject.label
-        job.grade_salary = gradeObject.salary
-        job.skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {}
-        job.skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {}
+        self.job = {
+            id = jobObject.id,
+            name = jobObject.name,
+            label = jobObject.label,
+            type = jobObject.type,
+            onDuty = lastJob.onDuty,
 
-        self.triggerEvent("esx:setJob", job, job)
-        Player(self.source).state:set("job", job, true)
+            grade = lastJob.grade,
+            grade_name = gradeObject.name,
+            grade_label = gradeObject.label,
+            grade_salary = gradeObject.salary,
+
+            skin_male = decodeJobSkin(gradeObject.skin_male),
+            skin_female = decodeJobSkin(gradeObject.skin_female),
+        }
+
+        TriggerEvent("esx:jobDataRefreshed", self.source, self.job, lastJob)
+        self.triggerEvent("esx:jobDataRefreshed", self.job, lastJob)
+        Player(self.source).state:set("job", self.job, true)
+
+        return true
     end
 
     function self.addWeapon(weaponName, ammo)

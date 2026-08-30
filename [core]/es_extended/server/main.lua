@@ -6,6 +6,23 @@ local isEnhanced = xLib.isEnhanced()
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
+local function decodeJsonObject(value, fallback)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return fallback
+    end
+
+    local ok, decoded = pcall(json.decode, value)
+    if not ok or type(decoded) ~= "table" then
+        return fallback
+    end
+
+    return decoded
+end
+
 if Config.Multichar then
     newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"
 end
@@ -247,8 +264,8 @@ function loadESXPlayer(identifier, playerId, isNew)
         grade_label = gradeObject.label,
         grade_salary = gradeObject.salary,
 
-        skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {},
-        skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
+        skin_male = decodeJsonObject(gradeObject.skin_male, {}),
+        skin_female = decodeJsonObject(gradeObject.skin_female, {}),
     }
 
     -- Inventory
@@ -313,7 +330,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)]
 
     -- Skin
-    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = result.sex == "f" and 1 or 0 }
+    userData.skin = decodeJsonObject(result.skin, { sex = result.sex == "f" and 1 or 0 })
 
     -- Metadata
     userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}

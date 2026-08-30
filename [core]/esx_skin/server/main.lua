@@ -1,3 +1,20 @@
+local function decodeSkin(value)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return nil
+    end
+
+    local ok, decoded = pcall(json.decode, value)
+    if not ok or type(decoded) ~= "table" then
+        return nil
+    end
+
+    return decoded
+end
+
 RegisterNetEvent("esx_skin:save", function(skin)
     if not skin or type(skin) ~= "table" then
         return
@@ -49,9 +66,7 @@ xLib.callback.registerCompat("esx_skin:getPlayerSkin", function(source, cb)
             skin_female = xPlayer.getJob().skin_female,
         }
 
-        if user.skin then
-            skin = json.decode(user.skin)
-        end
+        skin = decodeSkin(user.skin)
 
         cb(skin, jobSkin)
     end)
