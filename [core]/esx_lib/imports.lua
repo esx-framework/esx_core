@@ -116,4 +116,3 @@ local xLib = setmetatable({
 -- Allows to xLib to be accessible in resource that imports a lib
 _ENV.xLib = xLib
 _ENV.require = xLib.require
-_ENV.math = xLib.math
