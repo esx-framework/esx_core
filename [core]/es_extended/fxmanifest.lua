@@ -15,7 +15,6 @@ shared_scripts {
 
     'shared/main.lua',
     'shared/functions.lua',
-    'shared/modules/*.lua',
 	'shared/compat.lua'
 }
 

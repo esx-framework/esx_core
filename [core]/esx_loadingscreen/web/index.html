@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESX Loading Screen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="background">
+            <div class="gradient-overlay"></div>
+            <div class="particles" id="particles"></div>
+        </div>
+
+        <div class="content">
+            <div class="logo-section">
+                <img src="logo.png" alt="ESX Logo" class="logo-img">
+            </div>
+
+            <div class="loading-section">
+                <div class="loading-text" id="loadingText">Initializing...</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-info">
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                    <span class="progress-status" id="progressStatus">Connecting</span>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <div class="tip-label">DID YOU KNOW?</div>
+                <div class="tip-text" id="tipText">Press F1 to open the help menu</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
