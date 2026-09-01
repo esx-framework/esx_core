@@ -1,4 +1,4 @@
-version '1.14.1'
+version '1.15.0'
 author 'ESX-Framework'
 description 'A ESX Stylised theme for the chat resource.'
 

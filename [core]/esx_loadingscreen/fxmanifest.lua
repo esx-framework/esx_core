@@ -2,9 +2,15 @@ fx_version "cerulean"
 game "gta5"
 lua54 "yes"
 
-description "ESX Loading Screen"
-author "ESX Team"
-version "1.0.0"
+fx_version 'cerulean'
+author 'ESX-Framework'
+description 'Allows resources to Run tasks at specific intervals.'
+version '1.15.0'
+lua54 'yes'
+
+loadscreen 'index.html'
+
+shared_script 'config.lua'
 
 loadscreen "web/index.html"
 loadscreen_manual_shutdown "yes"
