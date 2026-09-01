@@ -8,10 +8,6 @@ description 'Allows resources to Run tasks at specific intervals.'
 version '1.15.0'
 lua54 'yes'
 
-loadscreen 'index.html'
-
-shared_script 'config.lua'
-
 loadscreen "web/index.html"
 loadscreen_manual_shutdown "yes"
 
