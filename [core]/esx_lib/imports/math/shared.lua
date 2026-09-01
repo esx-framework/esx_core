@@ -1,5 +1,4 @@
-xLib = xLib or {}
-xLib.math = xLib.math or {}
+xLib.math = {}
 
 local math_max = math.max
 local math_min = math.min
