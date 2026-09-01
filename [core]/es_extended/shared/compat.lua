@@ -1,6 +1,7 @@
 --All shared functions outsourced from the Core to the lib will be stored here for compatability, e.g:
 
 ESX.Table = {}
+ESX.Math = {}
 
 ESX.SetTimeout = xLib.timeout.setTimeout
 ESX.ClearTimeout = xLib.timeout.clearTimeout
@@ -21,3 +22,9 @@ ESX.Table.TableContains = xLib.table.contains
 ESX.Table.Sort = xLib.table.sort
 ESX.Table.ToArray = xLib.table.toArray
 ESX.Table.Wipe = xLib.table.wipe
+
+ESX.Math.Round = xLib.math.Round
+ESX.Math.GroupDigits = xLib.math.GroupDigits
+ESX.Math.Trim = xLib.math.Trim
+ESX.Math.Random = xLib.math.Random
+ESX.Math.GetHeadingFromCoords = xLib.math.GetHeadingFromCoords

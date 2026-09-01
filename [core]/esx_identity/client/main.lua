@@ -59,7 +59,7 @@ RegisterNUICallback("register", function(data, cb)
             return
         end
 
-        ESX.TriggerServerCallback("esx_identity:registerIdentity", function(callback)
+        xLib.callback("esx_identity:registerIdentity", false, function(callback)
             if not callback then
                 return
             end

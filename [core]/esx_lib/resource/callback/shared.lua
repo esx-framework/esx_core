@@ -9,6 +9,7 @@
 local registeredCallbacks = {}
 local resource_name = GetCurrentResourceName() --TODO: Add cache
 local IS_DEBUG <const> = GetConvar("xLib:debug", "false") == "true"
+local VALIDATION_GRACE_MS <const> = GetConvarInt("xLib:callbackValidationGrace", 1000)
 
 
 AddEventHandler('onResourceStop', function(resourceName)
@@ -32,7 +33,7 @@ function xLib.setValidCallback(callbackName, isValid)
 
     if callbackResource then
         if not isValid then
-            callbackResource[callbackName] = nil
+            registeredCallbacks[callbackName] = nil
             return
         end
 
@@ -56,7 +57,7 @@ function xLib.setValidCallback(callbackName, isValid)
 end
 
 function xLib.isCallbackValid(callbackName)
-    return registeredCallbacks[callbackName] == GetInvokingResource() or resource_name
+    return registeredCallbacks[callbackName] ~= nil
 end
 
 local cbEvent = '__xLib_cb_%s'
@@ -64,11 +65,24 @@ local cbEvent = '__xLib_cb_%s'
 RegisterNetEvent('xLib:validateCallback', function(callbackName, invokingResource, key)
     if registeredCallbacks[callbackName] then return end
 
-    local event = cbEvent:format(invokingResource)
+    local source = source
 
-    if GetGameName() == 'fxserver' then
-        return TriggerClientEvent(event, source, key, 'cb_invalid')
+    local function rejectInvalidCallback()
+        if registeredCallbacks[callbackName] then return end
+
+        local event = cbEvent:format(invokingResource)
+
+        if GetGameName() == 'fxserver' then
+            return TriggerClientEvent(event, source, key, 'cb_invalid')
+        end
+
+        TriggerServerEvent(event, key, 'cb_invalid')
     end
 
-    TriggerServerEvent(event, key, 'cb_invalid')
+    if VALIDATION_GRACE_MS > 0 then
+        SetTimeout(VALIDATION_GRACE_MS, rejectInvalidCallback)
+        return
+    end
+
+    rejectInvalidCallback()
 end)

@@ -39,7 +39,7 @@ local function Progressbar(message, length, Options)
     CurrentProgress = Options or {}
     if CurrentProgress.animation then
         if CurrentProgress.animation.type == "anim" then
-            ESX.Streaming.RequestAnimDict(CurrentProgress.animation.dict, function()
+            xLib.streaming.requestAnimDict(CurrentProgress.animation.dict, function()
                 TaskPlayAnim(ESX.PlayerData.ped, CurrentProgress.animation.dict, CurrentProgress.animation.lib, 1.0, 1.0, length, 1, 1.0, false, false, false)
                 RemoveAnimDict(CurrentProgress.animation.dict)
             end)
@@ -86,7 +86,13 @@ local function CancelProgressbar()
     CurrentProgress = nil
 end
 
-ESX.RegisterInput("cancelprog", "[ProgressBar] Cancel Progressbar", "keyboard", "BACK", CancelProgressbar)
+xLib.addKeybind({
+    name = "cancelprog",
+    description = "[ProgressBar] Cancel Progressbar",
+    defaultMapper = "keyboard",
+    defaultKey = "BACK",
+    onPressed = CancelProgressbar,
+})
 
 exports("Progressbar", Progressbar)
 exports("CancelProgressbar", CancelProgressbar)

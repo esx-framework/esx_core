@@ -311,7 +311,7 @@ end
 function ESX.GetExtendedPlayers(key, val, minimal)
     if not key then
         if not minimal then
-            return ESX.Table.ToArray(ESX.Players)
+            return xLib.table.toArray(ESX.Players)
         end
 
         local xPlayers = {}
@@ -443,7 +443,7 @@ function ESX.GetVehicleType(model, player, cb)
         return resolve(Core.vehicleTypesByModel[model])
     end
 
-    ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
+    xLib.callback("esx:GetVehicleType", player, function(vehicleType)
         Core.vehicleTypesByModel[model] = vehicleType
         resolve(vehicleType)
     end, model)
@@ -560,7 +560,7 @@ function ESX.RefreshJobs()
     end
 
     for _, v in pairs(Jobs) do
-        if ESX.Table.SizeOf(v.grades) == 0 then
+        if xLib.table.sizeOf(v.grades) == 0 then
             Jobs[v.name] = nil
             print(('[^3WARNING^7] Ignoring job ^5"%s"^0 due to no job grades found'):format(v.name))
         end
@@ -575,6 +575,62 @@ function ESX.RefreshJobs()
 
     TriggerEvent("esx:jobsRefreshed")
     Core.JobsLoaded = true
+end
+
+local function removeStaleJob(jobName, reason)
+    ESX.Jobs[jobName] = nil
+    print(('[^3WARNING^7] Ignoring refresh of job ^5"%s"^0 due to %s'):format(jobName, reason))
+
+    if jobName == "unemployed" or not ESX.DoesJobExist("unemployed", 0) then
+        return false
+    end
+
+    for _, xPlayer in pairs(ESX.Players) do
+        if xPlayer.job.name == jobName then
+            xPlayer.setJob("unemployed", 0, false)
+        end
+    end
+
+    TriggerEvent("esx:jobRemoved", jobName, reason)
+    return false
+end
+
+---@param jobName string
+---@return boolean
+function ESX.RefreshJob(jobName)
+    if type(jobName) ~= "string" or jobName == "" then
+        return false
+    end
+
+    local job = MySQL.single.await("SELECT * FROM jobs WHERE name = ?", { jobName })
+
+    if not job then
+        return removeStaleJob(jobName, "missing job")
+    end
+
+    local jobGrades = MySQL.query.await("SELECT * FROM job_grades WHERE job_name = ?", { jobName })
+
+    if #jobGrades == 0 then
+        return removeStaleJob(jobName, "no job grades found")
+    end
+
+    job.grades = {}
+
+    for i = 1, #jobGrades do
+        job.grades[tostring(jobGrades[i].grade)] = jobGrades[i]
+    end
+
+    ESX.Jobs[jobName] = job
+
+    for _, xPlayer in pairs(ESX.Players) do
+        if xPlayer.job.name == jobName then
+            xPlayer.refreshJob()
+        end
+    end
+
+    TriggerEvent("esx:jobRefreshed", jobName, job)
+
+    return true
 end
 
 ---@param item string
