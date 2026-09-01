@@ -6,6 +6,23 @@ local isEnhanced = xLib.isEnhanced()
 local newPlayer = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
 local loadPlayer = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
+local function decodeJsonObject(value, fallback)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return fallback
+    end
+
+    local ok, decoded = pcall(json.decode, value)
+    if not ok or type(decoded) ~= "table" then
+        return fallback
+    end
+
+    return decoded
+end
+
 if Config.Multichar then
     newPlayer = newPlayer .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"
 end
@@ -201,6 +218,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 
     local result = MySQL.prepare.await(loadPlayer, { identifier })
 
+    if not result then
+        print(("[^1ERROR^7] esx_core could not load data for identifier ^5%s^7"):format(identifier))
+        return DropPlayer(playerId --[[@as string]], "There was an error loading your character!\nError code: data-load-failed\n\nYour character data could not be retrieved. Please reconnect, and contact the server administration team if this keeps happening.")
+    end
+
     -- Accounts
     local accounts = result.accounts
     accounts = (accounts and accounts ~= "") and json.decode(accounts) or {}
@@ -242,8 +264,8 @@ function loadESXPlayer(identifier, playerId, isNew)
         grade_label = gradeObject.label,
         grade_salary = gradeObject.salary,
 
-        skin_male = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {},
-        skin_female = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {},
+        skin_male = decodeJsonObject(gradeObject.skin_male, {}),
+        skin_female = decodeJsonObject(gradeObject.skin_female, {}),
     }
 
     -- Inventory
@@ -308,7 +330,7 @@ function loadESXPlayer(identifier, playerId, isNew)
     userData.coords = json.decode(result.position) or Config.DefaultSpawns[ESX.Math.Random(1,#Config.DefaultSpawns)]
 
     -- Skin
-    userData.skin = (result.skin and result.skin ~= "") and json.decode(result.skin) or { sex = result.sex == "f" and 1 or 0 }
+    userData.skin = decodeJsonObject(result.skin, { sex = result.sex == "f" and 1 or 0 })
 
     -- Metadata
     userData.metadata = (result.metadata and result.metadata ~= "") and json.decode(result.metadata) or {}
@@ -472,7 +494,7 @@ if not Config.CustomInventory then
 
             local _, weaponObject = ESX.GetWeapon(itemName)
             itemCount = weapon.ammo
-            local weaponComponents = ESX.Table.Clone(weapon.components)
+            local weaponComponents = xLib.table.clone(weapon.components)
             local weaponTint = weapon.tintIndex
 
             sourceXPlayer.removeWeapon(itemName)
@@ -584,7 +606,7 @@ if not Config.CustomInventory then
             local _, weaponObject = ESX.GetWeapon(itemName)
             -- luacheck: ignore weaponPickupLabel
             local weaponPickupLabel = ""
-            local components = ESX.Table.Clone(weapon.components)
+            local components = xLib.table.clone(weapon.components)
             xPlayer.removeWeapon(itemName)
 
             if weaponObject.ammo and weapon.ammo > 0 then
@@ -663,53 +685,52 @@ if not Config.CustomInventory then
     end)
 end
 
-ESX.RegisterServerCallback("esx:getPlayerData", function(source, cb)
+local function getPlayerData(xPlayer)
+    return {
+        identifier = xPlayer.identifier,
+        accounts = xPlayer.getAccounts(),
+        inventory = xPlayer.getInventory(),
+        job = xPlayer.getJob(),
+        loadout = xPlayer.getLoadout(),
+        money = xPlayer.getMoney(),
+        position = xPlayer.getCoords(true),
+        metadata = xPlayer.getMeta(),
+    }
+end
+
+xLib.callback.registerCompat("esx:getPlayerData", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
     if not xPlayer then
         return
     end
 
-    cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
-        job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
-    })
+    cb(getPlayerData(xPlayer))
 end)
 
-ESX.RegisterServerCallback("esx:isUserAdmin", function(source, cb)
+xLib.callback.registerCompat("esx:isUserAdmin", function(source, cb)
     cb(Core.IsPlayerAdmin(source))
 end)
 
-ESX.RegisterServerCallback("esx:getGameBuild", function(_, cb)
+xLib.callback.registerCompat("esx:getGameBuild", function(_, cb)
     cb(tonumber(GetConvar("sv_enforceGameBuild", "1604")))
 end)
 
-ESX.RegisterServerCallback("esx:getOtherPlayerData", function(_, cb, target)
+xLib.callback.registerCompat("esx:getOtherPlayerData", function(source, cb, target)
+    if not Core.IsPlayerAdmin(source) then
+        return cb(nil)
+    end
+
     local xPlayer = ESX.GetPlayerFromId(target)
 
     if not xPlayer then
-        return
+        return cb(nil)
     end
 
-    cb({
-        identifier = xPlayer.identifier,
-        accounts = xPlayer.getAccounts(),
-        inventory = xPlayer.getInventory(),
-        job = xPlayer.getJob(),
-        loadout = xPlayer.getLoadout(),
-        money = xPlayer.getMoney(),
-        position = xPlayer.getCoords(true),
-        metadata = xPlayer.getMeta(),
-    })
+    cb(getPlayerData(xPlayer))
 end)
 
-ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
+xLib.callback.registerCompat("esx:getPlayerNames", function(source, cb, players)
     players[source] = nil
 
     for playerId, _ in pairs(players) do
@@ -725,7 +746,9 @@ ESX.RegisterServerCallback("esx:getPlayerNames", function(source, cb, players)
     cb(players)
 end)
 
-ESX.RegisterServerCallback("esx:spawnVehicle", function(source, cb, vehData)
+xLib.callback.registerCompat("esx:spawnVehicle", function(source, cb, vehData)
+    print('[^3WARNING^7] esx:spawnVehicle callback is deprecated and will be removed in a future update.')
+
     local ped = GetPlayerPed(source)
     ESX.OneSync.SpawnVehicle(vehData.model or `ADDER`, vehData.coords or GetEntityCoords(ped), vehData.coords.w or 0.0, vehData.props or {}, function(id)
         if vehData.warp then

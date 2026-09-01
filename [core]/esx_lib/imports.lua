@@ -81,8 +81,8 @@ local function call(self, index, ...)
         module = loadModule(self, index)
 
         if not module then
-            local function method(...) 
-               return exports[LIB_NAME][index](nil, ...)
+            local function method(...)
+               return exports[LIB_NAME][index](...)
             end
                 
             if not ... then

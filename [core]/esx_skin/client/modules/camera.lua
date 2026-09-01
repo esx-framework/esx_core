@@ -3,25 +3,26 @@ Camera._index = Camera
 
 function Camera:AngleLoop()
     CreateThread(function()
-        local angle = 90
-
         while self.cam do
             if IsDisabledControlPressed(0, 44) then
-                angle = angle - 1
+                Skin.heading = Skin.heading - 1
             elseif IsDisabledControlPressed(0, 38) then
-                angle = angle + 1
+                Skin.heading = Skin.heading + 1
             end
 
-            if angle > 360 then
-                angle = angle - 360
-            elseif angle < 0 then
-                angle = angle + 360
+            if Skin.heading > 360 then
+                Skin.heading = Skin.heading - 360
+            elseif Skin.heading < 0 then
+                Skin.heading = Skin.heading + 360
             end
 
-            Skin.heading = angle + 0.0
             Wait(0)
         end
     end)
+end
+
+function Camera:Reset()
+    Skin.heading = 90.0
 end
 
 function Camera:DisableContols()

@@ -2,10 +2,11 @@ fx_version 'adamant'
 
 game 'gta5'
 description 'Allows players to customise their character\'s appearance'
-version '1.14.1'
+version '1.15.0'
 lua54 'yes'
 
 shared_scripts {
+	'@esx_lib/imports.lua',
 	'@es_extended/locale.lua',
 	'locales/*.lua',
 	'@es_extended/imports.lua',
@@ -20,6 +21,12 @@ server_scripts {
 client_scripts {
 	'client/main.lua',
 	'client/modules/*.lua'
+}
+
+ui_page 'web/dist/index.html'
+
+files {
+	'web/dist/**/*'
 }
 
 dependencies {

@@ -3,9 +3,10 @@ fx_version 'adamant'
 game 'gta5'
 description 'Allows the player to Pick their characters: Name, Gender, Height and Date-of-birth.'
 lua54 'yes'
-version '1.14.1'
+version '1.15.0'
 
 shared_scripts {
+	'@esx_lib/imports.lua',
 	'@es_extended/imports.lua',
 	'@es_extended/locale.lua',
 }

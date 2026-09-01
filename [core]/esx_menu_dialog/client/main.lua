@@ -10,7 +10,7 @@ local function openMenu(namespace, name, data)
         data = data,
     })
 
-    ESX.SetTimeout(200, function()
+    xLib.timeout.setTimeout(200, function()
         if next(OpenedMenus) then
             SetNuiFocus(true, true)
         end

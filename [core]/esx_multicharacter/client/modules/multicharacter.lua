@@ -121,7 +121,7 @@ function Multicharacter:ChangeExistingPed()
     end
 
     if spawnedCharacter and spawnedCharacter.model then
-        local model = ESX.Streaming.RequestModel(newCharacter.model)
+        local model = xLib.streaming.requestModel(newCharacter.model)
         if model then
             SetPlayerModel(ESX.playerId, newCharacter.model)
             SetModelAsNoLongerNeeded(newCharacter.model)
@@ -208,7 +208,7 @@ function Multicharacter:SetDefaultSkin(playerData)
 
     local model = skin.sex == 0 and `mp_m_freemode_01` or `mp_f_freemode_01`
     ---@diagnostic disable-next-line: cast-local-type
-    model = ESX.Streaming.RequestModel(model)
+    model = xLib.streaming.requestModel(model)
 
     if not model then
         return

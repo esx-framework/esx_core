@@ -7,10 +7,37 @@
 ]]
 
 local pendingCallbacks = {}
+local registeredCallbackNames = {}
 local timers = {}
 local cbEvent = '__xLib_cb_%s'
 local callbackTimeout = GetConvarInt('xLib:callbackTimeout', 300000)
 local resource_name = GetCurrentResourceName() --TODO: Add cache
+
+local function publishValidCallback(name)
+    local ok = pcall(function()
+        xLib.setValidCallback(name, true)
+    end)
+
+    if not ok then
+        SetTimeout(1000, function()
+            if registeredCallbackNames[name] then
+                publishValidCallback(name)
+            end
+        end)
+    end
+end
+
+local function republishValidCallbacks()
+    for name in pairs(registeredCallbackNames) do
+        publishValidCallback(name)
+    end
+end
+
+AddEventHandler('onClientResourceStart', function(resource)
+    if resource == 'esx_lib' then
+        SetTimeout(0, republishValidCallbacks)
+    end
+end)
 
 RegisterNetEvent(cbEvent:format(resource_name), function(key, ...)
     if source == '' then return end
@@ -57,9 +84,6 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         key = ('%s:%s'):format(event, math.random(0, 100000))
     until not pendingCallbacks[key]
 
-    TriggerServerEvent('xLib:validateCallback', event, resource_name, key)
-    TriggerServerEvent(cbEvent:format(event), resource_name, key, ...)
-
     ---@type promise | false
     local promise = not cb and promise.new()
 
@@ -81,6 +105,9 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         end
     end
 
+    TriggerServerEvent('xLib:validateCallback', event, resource_name, key)
+    TriggerServerEvent(cbEvent:format(event), resource_name, key, ...)
+
     if promise then
         SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
 
@@ -101,7 +128,7 @@ xLib.callback = setmetatable({}, {
                 cbType = 'function'
             end
 
-            xLib.verify(cbType, 'function', true)
+            xLib.verify(cb, 'function', true)
         end
 
         return triggerServerCallback(_, event, delay, cb, ...)
@@ -137,11 +164,37 @@ local pcall = pcall
 ---@diagnostic disable-next-line: duplicate-set-field
 function xLib.callback.register(name, cb)
     local event = cbEvent:format(name)
-    
-    xLib.setValidCallback(name, true)
+
+    registeredCallbackNames[name] = true
+    publishValidCallback(name)
 
     RegisterNetEvent(event, function(resource, key, ...)
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
+    end)
+end
+
+---@param name string
+---@param cb function
+---Registers a callback using the old ESX client callback signature: function(cb, ...).
+function xLib.callback.registerCompat(name, cb)
+    return xLib.callback.register(name, function(...)
+        local response = promise.new()
+        local responded = false
+
+        local function reply(...)
+            local values = { ... }
+
+            if not responded then
+                responded = true
+                response:resolve(values)
+            end
+
+            return table.unpack(values)
+        end
+
+        cb(reply, ...)
+
+        return table.unpack(Citizen.Await(response))
     end)
 end
 

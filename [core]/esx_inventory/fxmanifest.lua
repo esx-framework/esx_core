@@ -4,9 +4,10 @@ game "gta5"
 description "Inventory for the ESX framework"
 lua54 "yes"
 use_fxv2_oal "yes"
-version '1.14.1'
+version '1.15.0'
 
 shared_scripts {
+    '@esx_lib/imports.lua',
     "/config/main.lua",
     "@es_extended/imports.lua",
     "@es_extended/locale.lua",

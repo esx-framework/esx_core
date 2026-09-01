@@ -241,7 +241,7 @@ if GetResourceState("ox_lib") == "missing" then
             local file = tempData[1]
             local resource = tempData[2]
 
-            ESX.Table.Wipe(tempData)
+            xLib.table.wipe(tempData)
             return assert(load(file, ('@@%s/%s'):format(resource, fileName), 't', env or _ENV))
         end
 
