@@ -226,6 +226,8 @@ return {
     ["weapon_compactlauncher"] = "Lanzagranadas compacto",
     ["weapon_firework"] = "Lanzador de pirotecnia",
     ["weapon_grenadelauncher"] = "Lanzagranadas",
+    ["weapon_grenadelauncher_smoke"] = "Lanzagranadas de gas lacrimógeno",
+    ["weapon_emplauncher"] = "Lanzador EMP",
     ["weapon_hominglauncher"] = "Lanzacohetes teledirigido",
     ["weapon_minigun"] = "Minigun",
     ["weapon_railgun"] = "Cañón de riel",

@@ -222,6 +222,8 @@ return {
     ["weapon_compactlauncher"] = "Συμπαγής Εκτοξευτής",
     ["weapon_firework"] = "Εκτοξευτής Πυροτεχνημάτων",
     ["weapon_grenadelauncher"] = "Εκτοξευτής Γρανατών",
+    ["weapon_grenadelauncher_smoke"] = "Εκτοξευτής Δακρυγόνων",
+    ["weapon_emplauncher"] = "Εκτοξευτής EMP",
     ["weapon_hominglauncher"] = "Εκτοξευτής Εξόρυξης",
     ["weapon_minigun"] = "Minigun",
     ["weapon_railgun"] = "Railgun",

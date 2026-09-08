@@ -224,6 +224,8 @@ return {
     ["weapon_compactlauncher"] = "Kompaktlauncher",
     ["weapon_firework"] = "Feuerwerklauncher",
     ["weapon_grenadelauncher"] = "Granatwerfer",
+    ["weapon_grenadelauncher_smoke"] = "Tränengaswerfer",
+    ["weapon_emplauncher"] = "EMP Werfer",
     ["weapon_hominglauncher"] = "Lenkraketenwerfer",
     ["weapon_minigun"] = "Minigun",
     ["weapon_railgun"] = "Railgun",
