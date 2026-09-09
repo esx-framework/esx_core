@@ -107,8 +107,13 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            cb(false)
+        end
+
         error(err)
     end
 
@@ -177,8 +182,13 @@ function ESX.OneSync.SpawnObject(model, coords, heading, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            cb(false)
+        end
+
         error(err)
     end
 
@@ -229,8 +239,13 @@ function ESX.OneSync.SpawnPed(model, coords, heading, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            cb(false)
+        end
+
         error(err)
     end
 
@@ -279,8 +294,13 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
 
     local function reject(err)
         if promise then
-            promise:reject(err)
+            return promise:reject(err)
         end
+
+        if cb then
+            cb(false)
+        end
+
         error(err)
     end
 
@@ -294,7 +314,7 @@ function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
             tries = tries + 1
 
             if tries > 40 then
-                reject(("Could not spawn ped - ^5%s^7!"):format(model))
+                return reject(("Could not spawn ped - ^5%s^7!"):format(model))
             end
         end
 
