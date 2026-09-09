@@ -684,6 +684,21 @@ ESX.RegisterClientCallback("esx:GetVehicleType", function(cb, model)
     cb(ESX.GetVehicleTypeClient(model))
 end)
 
+ESX.RegisterClientCallback("esx:GetVehicleTypes", function(cb)
+    local models = GetAllVehicleModels()
+    local types = {}
+
+    for i = 1, #models do
+        local vehicleType = ESX.GetVehicleTypeClient(models[i])
+
+        if vehicleType then
+            types[models[i]] = vehicleType
+        end
+    end
+
+    cb(types)
+end)
+
 ESX.SecureNetEvent('esx:updatePlayerData', function(key, val)
     ESX.SetPlayerData(key, val)
 end)

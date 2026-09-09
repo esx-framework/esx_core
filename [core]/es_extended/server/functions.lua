@@ -411,7 +411,7 @@ function ESX.GetIdentifier(playerId)
 end
 
 ---@param model string|number
----@param player number
+---@param player? number
 ---@param cb function?
 ---@return string?
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -437,8 +437,12 @@ function ESX.GetVehicleType(model, player, cb)
         return resolve(Core.vehicleTypesByModel[model])
     end
 
+    if not player then
+        return resolve(nil)
+    end
+
     ESX.TriggerClientCallback(player, "esx:GetVehicleType", function(vehicleType)
-        Core.vehicleTypesByModel[model] = vehicleType
+        Core.CacheVehicleType(model, vehicleType)
         resolve(vehicleType)
     end, model)
 

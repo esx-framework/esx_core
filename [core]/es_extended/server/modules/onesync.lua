@@ -114,14 +114,11 @@ function ESX.OneSync.SpawnVehicle(vehicleModel, coords, heading, vehicleProperti
 
     CreateThread(function()
         if not vehicleType then
-            local playerId = next(ESX.Players)
-            if playerId then
-                vehicleType = ESX.GetVehicleType(vehicleModel, playerId)
-            end
+            vehicleType = ESX.GetVehicleType(vehicleModel, next(ESX.Players))
         end
 
         if not vehicleType then
-            return reject("No players online to check vehicle type! Alternatively, you can specify the vehicle type manually.")
+            return reject(("Could not resolve the type of vehicle ^5%s^7! The model is unknown and no player is online to check it, you can also specify the vehicle type manually."):format(vehicleModel))
         end
 
         local createdVehicle = CreateVehicleServerSetter(vehicleModel, vehicleType, coords.x, coords.y, coords.z, heading)

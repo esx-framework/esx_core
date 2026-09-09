@@ -27,6 +27,7 @@ server_scripts {
 	'server/classes/vehicle.lua',
 	'server/classes/overrides/*.lua',
 	'server/functions.lua',
+	'server/modules/vehicleTypes.lua',
 	'server/modules/onesync.lua',
 	'server/modules/paycheck.lua',
 
