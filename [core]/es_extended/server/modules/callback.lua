@@ -10,6 +10,11 @@ Callbacks.requests = {}
 Callbacks.storage = {}
 Callbacks.id = 0
 
+local PENDING <const> = 0
+local TIMEOUT <const> = GetConvarInt("esx:callbackTimeout", 15000)
+
+SetConvarReplicated("esx:callbackTimeout", tostring(TIMEOUT))
+
 -- =============================================
 -- MARK: Internal Functions
 -- =============================================
@@ -34,18 +39,39 @@ function Callbacks:Execute(cb, ...)
     self.currentId = nil
 end
 
+function Callbacks:Expire(requestId, reason)
+    local request = self.requests[requestId]
+
+    if not request then
+        return
+    end
+
+    self.requests[requestId] = nil
+
+    if request.await and request.cb.state == PENDING then
+        request.cb:reject(reason or "Server Callback Timed Out")
+    end
+end
+
 function Callbacks:Trigger(player, event, cb, invoker, ...)
-    self.requests[self.id] = {
+    local requestId = self.id
+    local request = {
+        player = player,
         await = type(cb) == "boolean",
         cb = cb or promise:new()
     }
-    local table = self.requests[self.id]
 
-    TriggerClientEvent("esx:triggerClientCallback", player, event, self.id, invoker, ...)
+    self.requests[requestId] = request
+
+    TriggerClientEvent("esx:triggerClientCallback", player, event, requestId, invoker, ...)
 
     self.id += 1
 
-    return table.cb
+    SetTimeout(TIMEOUT, function()
+        self:Expire(requestId)
+    end)
+
+    return request.cb
 end
 
 function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
@@ -63,20 +89,20 @@ function Callbacks:ServerRecieve(player, event, requestId, invoker, ...)
     self:Execute(callback, player, returnCb, ...)
 end
 
-function Callbacks:RecieveClient(requestId, invoker, ...)
-    self.currentId = requestId
+function Callbacks:RecieveClient(player, requestId, invoker, ...)
+    local request = self.requests[requestId]
 
-    if not self.requests[self.currentId] then
-        return error(("Client Callback with requestId ^5%s^1 Was Called by ^5%s^1 but does not exist."):format(self.currentId, invoker))
+    if not request or tonumber(request.player) ~= player then
+        return ESX.Trace(("Dropped a stale client callback with requestId ^5%s^7 from ^5%s^7."):format(requestId, invoker))
     end
 
-    local callback = self.requests[self.currentId]
-
+    self.currentId = requestId
     self.requests[requestId] = nil
-    if callback.await then
-        callback.cb:resolve({ ... })
+
+    if request.await then
+        request.cb:resolve({ ... })
     else
-        self:Execute(callback.cb, ...)
+        self:Execute(request.cb, ...)
     end
 end
 
@@ -106,12 +132,6 @@ function ESX.AwaitClientCallback(player, eventName, ...)
     local p = Callbacks:Trigger(player, eventName, false, invoker, ...)
     if not p then return end
 
-    SetTimeout(15000, function()
-        if p.state == "pending" then
-            p:reject("Server Callback Timed Out")
-        end
-    end)
-
     Citizen.Await(p)
 
     return table.unpack(p.value)
@@ -138,12 +158,23 @@ end
 -- =============================================
 
 RegisterNetEvent("esx:clientCallback", function(requestId, invoker, ...)
-    Callbacks:RecieveClient(requestId, invoker, ...)
+    local source = source
+    Callbacks:RecieveClient(source, requestId, invoker, ...)
 end)
 
 RegisterNetEvent("esx:triggerServerCallback", function(eventName, requestId, invoker, ...)
     local source = source
     Callbacks:ServerRecieve(source, eventName, requestId, invoker, ...)
+end)
+
+AddEventHandler("playerDropped", function()
+    local player = source
+
+    for requestId, request in pairs(Callbacks.requests) do
+        if tonumber(request.player) == player then
+            Callbacks:Expire(requestId, "Player Dropped")
+        end
+    end
 end)
 
 AddEventHandler("onResourceStop", function(resource)
