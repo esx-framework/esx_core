@@ -13,6 +13,10 @@ end
 local weaponsByName = {}
 local weaponsByHash = {}
 
+-- Seed the RNG once, not on every call, so GetRandomString does not draw the
+-- same character repeatedly when called multiple times within the same frame.
+math.randomseed(GetGameTimer())
+
 CreateThread(function()
     for index, weapon in pairs(Config.Weapons) do
         weaponsByName[weapon.name] = index
@@ -23,9 +27,16 @@ end)
 ---@param length number
 ---@return string
 function ESX.GetRandomString(length)
-    math.randomseed(GetGameTimer())
+    if length <= 0 then
+        return ""
+    end
 
-    return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
+    local result = {}
+    for i = 1, length do
+        result[i] = Charset[math.random(1, #Charset)]
+    end
+
+    return table.concat(result)
 end
 
 ---@param key? string Key pair to get specific value of config
