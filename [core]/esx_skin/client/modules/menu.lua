@@ -137,6 +137,7 @@ function Menu:Open(submit, cancel, restrict)
     Camera:Create()
 
     self:ESXMenu()
+    SetNuiFocusKeepInput(true)
 end
 
 function Menu:Saveable(submitCb, cancelCb, restrict)
