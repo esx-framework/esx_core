@@ -1,9 +1,10 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-fx_version 'adamant'
+fx_version 'cerulean'
 
 game 'gta5'
+author 'ESX-Framework'
 description 'Allows the player to Pick their characters: Name, Gender, Height and Date-of-birth.'
 lua54 'yes'
 version '1.16.0'

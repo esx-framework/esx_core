@@ -4,6 +4,7 @@
 fx_version "cerulean"
 
 game "gta5"
+author "ESX-Framework"
 description "Inventory for the ESX framework"
 lua54 "yes"
 use_fxv2_oal "yes"

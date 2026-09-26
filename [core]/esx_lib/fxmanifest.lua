@@ -7,9 +7,9 @@ game 'gta5'
 use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 
-author 'ESX Team'
+author 'ESX-Framework'
 description 'Official ESX library'
-version '0.01'
+version '1.0.0'
 legacyversion '1.16.0'
 
 ui_page 'html/medal.html'

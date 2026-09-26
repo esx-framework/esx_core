@@ -4,6 +4,7 @@
 fx_version 'cerulean'
 
 game 'gta5'
+author 'ESX-Framework'
 description 'A basic menu system for ESX Legacy.'
 lua54 'yes'
 version '1.16.0'
