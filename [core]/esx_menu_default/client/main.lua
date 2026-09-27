@@ -47,6 +47,7 @@ xLib.nui.register("menu_submit", function(data, reply)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
     if not menu then
+        reply("OK")
         return xLib.nui.defer
     end
 
@@ -62,6 +63,7 @@ xLib.nui.register("menu_cancel", function(data, reply)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
     if not menu then
+        reply("OK")
         return xLib.nui.defer
     end
 
@@ -77,6 +79,7 @@ xLib.nui.register("menu_change", function(data, reply)
     local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
 
     if not menu then
+        reply("OK")
         return xLib.nui.defer
     end
 
