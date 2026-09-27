@@ -14,6 +14,7 @@ end)
 
 AddEventHandler("playerConnecting", function(playerName, setKickReason, deferrals)
     local playerSource = source
+    local sessionId = Connection.BeginSession(playerSource)
 
     local ok, err = xpcall(function()
         Connection.Verify(
@@ -21,11 +22,13 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
             playerName,
             setKickReason,
             deferrals,
-            State.translations
+            State.translations,
+            sessionId
         )
     end, debug.traceback)
 
     if not ok then
+        Connection.EndSession(playerSource, sessionId)
         if Config.Debug then
             print("^1[esx_whitelist] Connection error:^7 " .. tostring(err))
         end
@@ -43,11 +46,19 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
 end)
 
 AddEventHandler("playerJoining", function(previousPlayerId)
-    Whitelist.OnPlayerJoining(source, previousPlayerId)
+    local playerSource = source
+    local previousSource = tonumber(previousPlayerId)
+    if previousSource and previousSource > 0 and previousSource ~= playerSource then
+        Connection.EndSession(previousSource)
+    end
+    Connection.BeginSession(playerSource)
+    Whitelist.OnPlayerJoining(playerSource, previousPlayerId)
 end)
 
 AddEventHandler("playerDropped", function(reason)
-    Whitelist.OnPlayerDropped(source, reason)
+    local playerSource = source
+    Whitelist.OnPlayerDropped(playerSource, reason)
+    Connection.EndSession(playerSource)
 end)
 
 AddEventHandler("esx:playerLoaded", function(playerId, xPlayer)

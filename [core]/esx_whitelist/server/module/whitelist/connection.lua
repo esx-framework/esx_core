@@ -13,6 +13,41 @@ local Util <const> = xLib.require "@esx_whitelist.server.module.whitelist.util"
 local Connection = {}
 local GRACE_MIN <const>, GRACE_MAX <const> = 0, 600
 local KICK_CHUNK <const> = 25
+local sessionSequence = 0
+local playerSessions = {}
+
+local function ensureSession(source)
+    if playerSessions[source] then return playerSessions[source] end
+    sessionSequence = sessionSequence + 1
+    playerSessions[source] = sessionSequence
+    return sessionSequence
+end
+
+local function isCurrentSession(source, sessionId)
+    return sessionId ~= nil and playerSessions[source] == sessionId
+end
+
+function Connection.BeginSession(source)
+    source = tonumber(source)
+    if not source or source <= 0 then return nil end
+    sessionSequence = sessionSequence + 1
+    playerSessions[source] = sessionSequence
+    return sessionSequence
+end
+
+function Connection.GetSessionId(source)
+    source = tonumber(source)
+    if not source or source <= 0 then return nil end
+    return ensureSession(source)
+end
+
+function Connection.EndSession(source, sessionId)
+    source = tonumber(source)
+    if not source or (sessionId and playerSessions[source] ~= sessionId) then return end
+    playerSessions[source] = nil
+    State.gracePlayers[source] = nil
+    Auth.Clear(source)
+end
 
 local function redactIdentifier(identifier)
     local idType, value = tostring(identifier):match("^([^:]+):(.+)$")
@@ -77,11 +112,13 @@ local function whenDatabaseReady(callback)
     end)
 end
 
-local function enforce(source, translations, useGrace)
+local function enforce(source, translations, useGrace, sessionId)
     source = tonumber(source)
     if not source or source <= 0 then return end
+    sessionId = sessionId or ensureSession(source)
 
     Connection.Authorize(source, function(allow)
+        if not isCurrentSession(source, sessionId) then return end
         if allow then
             if State.gracePlayers[source] then
                 State.gracePlayers[source] = nil
@@ -93,9 +130,9 @@ local function enforce(source, translations, useGrace)
         if State.config.kickConnected or useGrace == false then
             DropPlayer(tostring(source), Util.Translate(translations or State.translations, "kick_message"))
         else
-            Connection.StartGrace(source, GetPlayerName(source) or "Unknown", translations or State.translations)
+            Connection.StartGrace(source, GetPlayerName(source) or "Unknown", translations or State.translations, sessionId)
         end
-    end)
+    end, nil, sessionId)
 end
 
 local function identifiersFor(source)
@@ -104,13 +141,15 @@ local function identifiersFor(source)
     return identifiers
 end
 
-local function persistAccess(source, identifiers, addedBy, callback)
+local function persistAccess(source, identifiers, addedBy, callback, sessionId)
     local function persist()
+        if not isCurrentSession(source, sessionId) then return end
         Database.EnsureWhitelisted(
             GetPlayerName(source) or "Unknown",
             identifiers,
             addedBy,
             function(saved, err, whitelistId)
+                if not isCurrentSession(source, sessionId) then return end
                 if saved and whitelistId then
                     TriggerEvent("esx_whitelist:notifyEntryChanged", whitelistId)
                 end
@@ -120,17 +159,19 @@ local function persistAccess(source, identifiers, addedBy, callback)
     end
 
     whenDatabaseReady(function(ready)
+        if not isCurrentSession(source, sessionId) then return end
         if not ready then return callback(false, "database_unavailable") end
         persist()
     end)
 end
 
-local function checkDiscord(source, callback)
+local function checkDiscord(source, callback, sessionId)
     local discordIdentifier = GetPlayerIdentifierByType(source, "discord")
     if not discordIdentifier then return callback(false, "missing_discord") end
 
     local discordId = discordIdentifier:gsub("^discord:", "")
     Discord.CheckRole(discordId, function(hasRole, err)
+        if not isCurrentSession(source, sessionId) then return end
         if err then return callback(false, "discord_error") end
         callback(hasRole == true, hasRole and "discord" or "not_whitelisted")
     end)
@@ -142,10 +183,17 @@ end
 ---@param source number The player source ID
 ---@param callback fun(allow: boolean, reason: string?)
 ---@param currentIdentifiers string[]? Identifiers captured for this connection attempt
-function Connection.Authorize(source, callback, currentIdentifiers)
+---@param sessionId number? The player session generation
+function Connection.Authorize(source, callback, currentIdentifiers, sessionId)
     source = tonumber(source)
     if not source or source <= 0 then return callback(false, "invalid_source") end
-    if not State.config.enabled then return callback(true, "whitelist_disabled") end
+    sessionId = sessionId or ensureSession(source)
+
+    local function respond(allow, reason)
+        if isCurrentSession(source, sessionId) then callback(allow, reason) end
+    end
+
+    if not State.config.enabled then return respond(true, "whitelist_disabled") end
 
     local identifiers = currentIdentifiers
     if type(identifiers) ~= "table" then
@@ -166,32 +214,32 @@ function Connection.Authorize(source, callback, currentIdentifiers)
     if Config.Debug then
         print(("^3[esx_whitelist] Configured identifier match: %s^7"):format(tostring(configuredMatch)))
     end
-    if configuredMatch then
-        return callback(true, "configured_identifier")
-    end
+    if configuredMatch then return respond(true, "configured_identifier") end
 
     local function checkWhitelist()
         if State.config.authorizationMethod == "discord" then
             return checkDiscord(source, function(hasRole, reason)
                 if not hasRole then
-                    return callback(false, reason or "not_whitelisted")
+                    return respond(false, reason or "not_whitelisted")
                 end
 
+                if Cache.IsWhitelisted(identifiers) then return respond(true, "discord") end
                 persistAccess(source, identifiers, "system:discord", function(saved, err)
-                    callback(saved, saved and "discord" or (err or "discord_persist_failed"))
-                end)
-            end)
+                    respond(saved, saved and "discord" or (err or "discord_persist_failed"))
+                end, sessionId)
+            end, sessionId)
         end
 
         local whitelisted = Cache.IsWhitelisted(identifiers)
-        callback(whitelisted == true, whitelisted and "identifier" or "not_whitelisted")
+        respond(whitelisted == true, whitelisted and "identifier" or "not_whitelisted")
     end
 
     local localAdmin = Auth.IsAdmin(source)
-    if localAdmin then return callback(true, "admin") end
+    if localAdmin then return respond(true, "admin") end
     if State.databaseReady then return checkWhitelist() end
 
     whenDatabaseReady(function(ready)
+        if not isCurrentSession(source, sessionId) then return end
         if not ready then return callback(false, "database_unavailable") end
         checkWhitelist()
     end)
@@ -201,10 +249,13 @@ end
 ---@param source number The player source ID
 ---@param playerName string The player display name
 ---@param translations table Locale translation strings
-function Connection.StartGrace(source, playerName, translations)
+---@param sessionId number? The player session generation
+function Connection.StartGrace(source, playerName, translations, sessionId)
     source = tonumber(source)
     translations = translations or State.translations
     if not source or source <= 0 then return end
+    sessionId = sessionId or ensureSession(source)
+    if not isCurrentSession(source, sessionId) then return end
 
     local seconds = math.max(GRACE_MIN, math.min(GRACE_MAX, tonumber(State.config.gracePeriod) or 0))
     if seconds <= 0 then
@@ -214,13 +265,15 @@ function Connection.StartGrace(source, playerName, translations)
 
     State.gracePlayers[source] = {
         endTime = GetGameTimer() + seconds * 1000,
-        playerName = playerName or "Unknown"
+        playerName = playerName or "Unknown",
+        sessionId = sessionId
     }
     TriggerClientEvent("esx_whitelist:startGracePeriod", source, seconds)
 
     SetTimeout(seconds * 1000, function()
-        if not State.gracePlayers[source] then return end
-        enforce(source, translations, false)
+        local grace = State.gracePlayers[source]
+        if not grace or grace.sessionId ~= sessionId or not isCurrentSession(source, sessionId) then return end
+        enforce(source, translations, false, sessionId)
     end)
 end
 
@@ -232,7 +285,7 @@ function Connection.KickNonWhitelisted(translations)
         for i = 1, #players do
             local source = tonumber(players[i])
             if source and not State.gracePlayers[source] then
-                enforce(source, translations)
+                enforce(source, translations, nil, Connection.GetSessionId(source))
             end
             if i % KICK_CHUNK == 0 then Wait(0) end
         end
@@ -245,20 +298,24 @@ end
 ---@param setKickReason fun(reason: string)
 ---@param deferrals table Connection deferral object
 ---@param translations table Locale translation strings
-function Connection.Verify(playerSource, playerName, setKickReason, deferrals, translations)
+---@param sessionId number? The player session generation
+function Connection.Verify(playerSource, playerName, setKickReason, deferrals, translations, sessionId)
     local source = tonumber(playerSource)
     if not source or source <= 0 then
         return finish(deferrals, false, "Invalid player connection.")
     end
+    sessionId = sessionId or Connection.BeginSession(source)
 
     deferrals.defer()
     Wait(0)
     deferrals.update(Util.Translate(translations, "checking_whitelist"))
+    Wait(0)
 
     local finished = false
     local function finishOnce(allow, reason)
-        if finished then return end
+        if finished or not isCurrentSession(source, sessionId) then return end
         finished = true
+        if not allow then Connection.EndSession(source, sessionId) end
         finish(deferrals, allow, reason)
     end
 
@@ -268,6 +325,7 @@ function Connection.Verify(playerSource, playerName, setKickReason, deferrals, t
 
     local identifiers = Util.GetPlayerIdentifiersFiltered(source)
     Connection.Authorize(source, function(allow, reason)
+        if not isCurrentSession(source, sessionId) then return end
         if allow then
             State.gracePlayers[source] = nil
             return finishOnce(true)
@@ -281,7 +339,7 @@ function Connection.Verify(playerSource, playerName, setKickReason, deferrals, t
         end
 
         finishOnce(false, Util.Translate(translations, "kick_message"))
-    end, identifiers)
+    end, identifiers, sessionId)
 end
 
 ---@description Forces enforcement of whitelist rules on a player (public alias for local enforce).

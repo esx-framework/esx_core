@@ -43,13 +43,13 @@ local function openUI()
 end
 
 local function registerEvents()
-    RegisterNetEvent("esx_whitelist:startGracePeriod", function(seconds) ui:startGracePeriod(seconds) end)
-    RegisterNetEvent("esx_whitelist:cancelGracePeriod", function() ui:cancelGracePeriod() end)
-    RegisterNetEvent("esx_whitelist:stateChanged", function(enabled)
+    ESX.SecureNetEvent("esx_whitelist:startGracePeriod", function(seconds) ui:startGracePeriod(seconds) end)
+    ESX.SecureNetEvent("esx_whitelist:cancelGracePeriod", function() ui:cancelGracePeriod() end)
+    ESX.SecureNetEvent("esx_whitelist:stateChanged", function(enabled)
         ui.config.whitelistEnabled = enabled == true
         sendUiMessage("whitelistStateChanged", { whitelistEnabled = ui.config.whitelistEnabled })
     end)
-    RegisterNetEvent("esx_whitelist:entryChanged", function()
+    ESX.SecureNetEvent("esx_whitelist:entryChanged", function()
         sendUiMessage("whitelistEntryChanged")
     end)
 end

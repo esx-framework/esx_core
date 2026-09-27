@@ -18,6 +18,8 @@ local Util <const> = xLib.require "@esx_whitelist.server.module.whitelist.util"
 ---@description Main entry point for the ESX whitelist system.
 local Whitelist = {}
 local RECONCILE_CHUNK_SIZE <const> = 50
+local reconcilingOnline = false
+local pendingOnlineChanges = {}
 
 local function applyStateChanged(enabled, manual, adminName)
     if manual then
@@ -39,36 +41,56 @@ end
 
 local function reconcileOnline()
     CreateThread(function()
-        Wait(2000)
+        reconcilingOnline = true
+        pendingOnlineChanges = {}
         State.onlinePlayerCount = 0
         State.onlineAdminCount = 0
         State.onlineSources = {}
         State.adminSources = {}
         State.playerIdentifiers = {}
         State.onlineIdentifierSources = {}
+        Wait(2000)
 
+        local snapshot = {}
         local players = ESX.GetExtendedPlayers()
         for i = 1, #players do
             local player = players[i]
             local source = player and tonumber(player.source)
-            if source then
-                State.onlineSources[source] = true
-                Cache.SetIdentifiers(source, Util.GetPlayerIdentifiersFiltered(source))
-                State.onlinePlayerCount = State.onlinePlayerCount + 1
-                if Auth.IsAdmin(source) then
-                    State.onlineAdminCount = State.onlineAdminCount + 1
-                    Database.EnsureWhitelisted(
-                        GetPlayerName(source) or "Admin",
-                        Cache.GetIdentifiers(source),
-                        "system:admin",
-                        function(saved, _, whitelistId)
-                            if saved then TriggerEvent("esx_whitelist:notifyEntryChanged", whitelistId) end
-                        end
-                    )
-                end
+            if source and GetPlayerName(source) then
+                Connection.GetSessionId(source)
+                snapshot[source] = {
+                    identifiers = Util.GetPlayerIdentifiersFiltered(source),
+                    isAdmin = Auth.IsAdmin(source)
+                }
             end
             if i % RECONCILE_CHUNK_SIZE == 0 then Wait(0) end
         end
+
+        for source, isOnline in pairs(pendingOnlineChanges) do
+            if not isOnline or not GetPlayerName(source) then
+                snapshot[source] = nil
+            else
+                Connection.GetSessionId(source)
+                snapshot[source] = {
+                    identifiers = Util.GetPlayerIdentifiersFiltered(source),
+                    isAdmin = Auth.IsAdmin(source)
+                }
+            end
+        end
+
+        State.onlineSources = {}
+        State.adminSources = {}
+        for source, player in pairs(snapshot) do
+            State.onlineSources[source] = true
+            State.adminSources[source] = player.isAdmin
+            Cache.SetIdentifiers(source, player.identifiers)
+            State.onlinePlayerCount = State.onlinePlayerCount + 1
+            if player.isAdmin then State.onlineAdminCount = State.onlineAdminCount + 1 end
+        end
+
+        reconcilingOnline = false
+        pendingOnlineChanges = {}
+        Rules.EvaluateAndApply(applyStateChanged)
     end)
 end
 
@@ -130,6 +152,10 @@ end
 function Whitelist.OnPlayerLoaded(playerId)
     local source = tonumber(playerId)
     if not source or source <= 0 or State.onlineSources[source] then return end
+    if reconcilingOnline then
+        pendingOnlineChanges[source] = true
+        return
+    end
     State.onlineSources[source] = true
     Cache.SetIdentifiers(source, Util.GetPlayerIdentifiersFiltered(source))
     State.onlinePlayerCount = State.onlinePlayerCount + 1
@@ -146,6 +172,7 @@ function Whitelist.OnPlayerJoining(playerId, previousPlayerId)
 
     previousPlayerId = tonumber(previousPlayerId)
     if previousPlayerId and previousPlayerId > 0 and previousPlayerId ~= source then
+        if reconcilingOnline then pendingOnlineChanges[previousPlayerId] = false end
         Cache.ClearIdentifiers(previousPlayerId)
         State.gracePlayers[previousPlayerId] = nil
         Auth.Clear(previousPlayerId)
@@ -162,10 +189,14 @@ function Whitelist.OnPlayerDropped(playerId)
     if not source or source <= 0 then return end
     Cache.ClearIdentifiers(source)
     State.gracePlayers[source] = nil
+    Auth.Clear(source)
+    if reconcilingOnline then
+        pendingOnlineChanges[source] = false
+        return
+    end
     if State.onlineSources[source] then
         State.onlineSources[source] = nil
         if State.adminSources[source] then State.onlineAdminCount = math.max(0, State.onlineAdminCount - 1) end
-        Auth.Clear(source)
         State.onlinePlayerCount = math.max(0, State.onlinePlayerCount - 1)
         Rules.EvaluateAndApply(applyStateChanged)
     end

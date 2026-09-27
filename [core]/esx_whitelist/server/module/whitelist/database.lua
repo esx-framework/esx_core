@@ -39,32 +39,30 @@ local function rawIdentifiers(clean)
 end
 
 local function identifierInsertQueries(id, clean)
-    local queries = {}
+    local placeholders, values = {}, {}
     for i = 1, #clean do
-        queries[#queries + 1] = {
-            query = "INSERT INTO whitelist_identifiers (whitelist_id, type, identifier) VALUES (?, ?, ?)",
-            values = { id, clean[i].type, clean[i].identifier }
-        }
+        placeholders[#placeholders + 1] = "(?, ?, ?)"
+        values[#values + 1] = id
+        values[#values + 1] = clean[i].type
+        values[#values + 1] = clean[i].identifier
     end
-    return queries
+    if #placeholders == 0 then return {} end
+    return {{
+        query = "INSERT INTO esx_whitelist_identifier (whitelist_id, type, identifier) VALUES " .. table.concat(placeholders, ", "),
+        values = values
+    }}
+end
+
+local function insertIdentifiers(id, clean, callback)
+    if #clean == 0 then return callback(true) end
+    MySQL.transaction(identifierInsertQueries(id, clean), function(success)
+        callback(success == true)
+    end)
 end
 
 local function normalizeWhitelisted(value)
     if value == true or tostring(value):lower() == "true" then return 1 end
     return tonumber(value) == 1 and 1 or 0
-end
-
-local function ensurePlayerNameIndex(callback)
-    MySQL.query("SHOW INDEX FROM `whitelist` WHERE `Key_name` = 'idx_whitelist_name_id'", {}, function(rows)
-        if rows ~= false and #(rows or {}) > 0 then return callback() end
-
-        MySQL.query("ALTER TABLE `whitelist` ADD INDEX `idx_whitelist_name_id` (`player_name`(180), `id`)", {}, function(result)
-            if result == false and Config.Debug then
-                print("^3[esx_whitelist] Could not add the optional player-name search index.^7")
-            end
-            callback()
-        end)
-    end)
 end
 
 local function escapeLikePrefix(value)
@@ -93,7 +91,11 @@ function Database.Init(cb)
 
     local function runStatement(index)
         if index > #statements then
-            return ensurePlayerNameIndex(function() cb(true) end)
+            return MySQL.update("UPDATE `esx_whitelist` SET `whitelisted` = 0 WHERE `whitelisted` = 1 AND `added_by` = ?", {
+                "system:admin"
+            }, function(result)
+                cb(result ~= false)
+            end)
         end
 
         MySQL.query(statements[index], {}, function(result)
@@ -116,8 +118,8 @@ function Database.RefreshCache(cb)
     cb = cb or noop
     local generation = Cache.BeginWhitelistRefresh()
     MySQL.query([[SELECT w.id, wi.identifier
-        FROM whitelist w
-        INNER JOIN whitelist_identifiers wi ON wi.whitelist_id = w.id
+        FROM esx_whitelist w
+        INNER JOIN esx_whitelist_identifier wi ON wi.whitelist_id = w.id
         WHERE w.whitelisted = 1]], {}, function(rows)
         if rows == false then return cb(false) end
 
@@ -127,8 +129,7 @@ function Database.RefreshCache(cb)
             local identifier = canonicalIdentifier(rows[i].identifier)
             if id and type(identifier) == "string" then cache[identifier] = id end
         end
-        Cache.ReplaceWhitelist(cache, generation)
-        cb(true)
+        cb(Cache.ReplaceWhitelist(cache, generation))
     end)
 end
 
@@ -143,8 +144,8 @@ function Database.FindByIdentifier(identifier, cb)
     identifier = normalizedIdentifier
 
     MySQL.query([[SELECT w.id, w.player_name, w.whitelisted
-        FROM whitelist w
-        INNER JOIN whitelist_identifiers wi ON wi.whitelist_id = w.id
+        FROM esx_whitelist w
+        INNER JOIN esx_whitelist_identifier wi ON wi.whitelist_id = w.id
         WHERE wi.identifier = ? LIMIT 1]], { identifier }, function(rows)
         cb(rows ~= false and rows[1] or nil)
     end)
@@ -165,8 +166,8 @@ function Database.FindByIdentifiers(identifiers, cb)
     end
 
     MySQL.query(([[SELECT w.id, w.player_name, w.whitelisted
-        FROM whitelist w
-        INNER JOIN whitelist_identifiers wi ON wi.whitelist_id = w.id
+        FROM esx_whitelist w
+        INNER JOIN esx_whitelist_identifier wi ON wi.whitelist_id = w.id
         WHERE wi.identifier IN (%s)
         ORDER BY w.id ASC LIMIT 1]]):format(table.concat(placeholders, ",")), params, function(rows)
         cb(rows ~= false and rows[1] or nil)
@@ -184,8 +185,8 @@ local function findIdentifierOwners(identifiers, cb)
     end
 
     MySQL.query(([[SELECT w.id, w.player_name, w.whitelisted, wi.identifier
-        FROM whitelist w
-        INNER JOIN whitelist_identifiers wi ON wi.whitelist_id = w.id
+        FROM esx_whitelist w
+        INNER JOIN esx_whitelist_identifier wi ON wi.whitelist_id = w.id
         WHERE wi.identifier IN (%s)
         ORDER BY w.id ASC]]):format(table.concat(placeholders, ",")), params, function(rows)
         cb(rows ~= false and (rows or {}) or nil)
@@ -211,7 +212,7 @@ function Database.FindConflicts(whitelistId, identifiers, cb)
     params[#params + 1] = whitelistId
 
     MySQL.query(([[SELECT wi.identifier, wi.whitelist_id
-        FROM whitelist_identifiers wi
+        FROM esx_whitelist_identifier wi
         WHERE wi.identifier IN (%s) AND wi.whitelist_id <> ?]]):format(table.concat(placeholders, ",")),
         params, function(rows)
             cb(rows ~= false and rows or {})
@@ -226,7 +227,7 @@ function Database.GetIdentifiers(whitelistId, cb)
     whitelistId = tonumber(whitelistId)
     if not whitelistId then return cb({}) end
 
-    MySQL.query("SELECT identifier FROM whitelist_identifiers WHERE whitelist_id = ? ORDER BY id ASC", { whitelistId }, function(rows)
+    MySQL.query("SELECT identifier FROM esx_whitelist_identifier WHERE whitelist_id = ? ORDER BY id ASC", { whitelistId }, function(rows)
         rows = rows ~= false and rows or {}
         for i = 1, #rows do
             rows[i].identifier = canonicalIdentifier(rows[i].identifier)
@@ -262,7 +263,7 @@ function Database.InsertPlayer(playerName, identifiers, whitelisted, addedBy, cb
     Database.FindByIdentifiers(identifiersOnly, function(existing)
         if existing then return cb(nil, "identifier_already_exists", existing) end
 
-        MySQL.insert("INSERT INTO whitelist (player_name, whitelisted, added_by) VALUES (?, ?, ?)", {
+        MySQL.insert("INSERT INTO esx_whitelist (player_name, whitelisted, added_by) VALUES (?, ?, ?)", {
             tostring(playerName or "Unknown"):sub(1, 255),
             whitelisted and 1 or 0,
             tostring(addedBy or "Unknown"):sub(1, 255)
@@ -272,7 +273,7 @@ function Database.InsertPlayer(playerName, identifiers, whitelisted, addedBy, cb
 
             MySQL.transaction(identifierInsertQueries(id, clean), function(success)
                 if not success then
-                    return MySQL.update("DELETE FROM whitelist WHERE id = ?", { id }, function()
+                    return MySQL.update("DELETE FROM esx_whitelist WHERE id = ?", { id }, function()
                         Database.FindByIdentifiers(identifiersOnly, function(racedEntry)
                             if racedEntry then
                                 return cb(nil, "identifier_already_exists", racedEntry)
@@ -300,13 +301,19 @@ function Database.SetStatus(id, status, addedBy, cb)
 
     local query, params
     if addedBy then
-        query = "UPDATE whitelist SET whitelisted = ?, added_by = ? WHERE id = ?"
+        query = "UPDATE esx_whitelist SET whitelisted = ?, added_by = ? WHERE id = ?"
         params = { status, tostring(addedBy):sub(1, 255), id }
     else
-        query = "UPDATE whitelist SET whitelisted = ? WHERE id = ?"
+        query = "UPDATE esx_whitelist SET whitelisted = ? WHERE id = ?"
         params = { status, id }
     end
-    MySQL.update(query, params, cb)
+    MySQL.update(query, params, function(affected)
+        if affected and tonumber(affected) > 0 then return cb(affected) end
+        MySQL.query("SELECT whitelisted FROM esx_whitelist WHERE id = ? LIMIT 1", { id }, function(rows)
+            local alreadySet = rows ~= false and rows[1] and tonumber(rows[1].whitelisted) == status
+            cb(alreadySet and 1 or 0)
+        end)
+    end)
 end
 
 ---@description Ensures a player is whitelisted, inserting if needed and adding missing identifiers.
@@ -332,13 +339,13 @@ function Database.EnsureWhitelisted(playerName, identifiers, addedBy, cb, retryC
     local function enable(id)
         if tonumber(existing and existing.whitelisted) == 1 then return cacheAndFinish(id) end
 
-        MySQL.update("UPDATE whitelist SET whitelisted = 1, added_by = ? WHERE id = ?", {
+        MySQL.update("UPDATE esx_whitelist SET whitelisted = 1, added_by = ? WHERE id = ?", {
             tostring(addedBy or "system:admin"):sub(1, 255),
             id
         }, function(affected)
             if affected and tonumber(affected) > 0 then return cacheAndFinish(id) end
 
-            MySQL.query("SELECT whitelisted FROM whitelist WHERE id = ? LIMIT 1", { id }, function(rows)
+            MySQL.query("SELECT whitelisted FROM esx_whitelist WHERE id = ? LIMIT 1", { id }, function(rows)
                 local enabled = rows ~= false and rows[1] and tonumber(rows[1].whitelisted) == 1
                 if not enabled then return cb(false, "verify_failed", id) end
                 cacheAndFinish(id)
@@ -448,7 +455,7 @@ function Database.EnsureWhitelisted(playerName, identifiers, addedBy, cb, retryC
                     if not conflicting[missing[i]] then safe[#safe + 1] = missing[i] end
                 end
 
-                Database.AddIdentifiers(id, safe, function(success)
+                insertIdentifiers(id, safe, function(success)
                     if not success then
                         if retryCount < 2 then
                             return Database.EnsureWhitelisted(playerName, identifiersOnly, addedBy, cb, retryCount + 1)
@@ -491,9 +498,7 @@ function Database.AddIdentifiers(id, identifiers, cb)
         Database.FindConflicts(id, missing, function(conflicts)
             if #(conflicts or {}) > 0 then return cb(false, "identifier_already_exists", conflicts) end
 
-            MySQL.transaction(identifierInsertQueries(id, missing), function(success)
-                cb(success == true)
-            end)
+            insertIdentifiers(id, missing, cb)
         end)
     end)
 end
@@ -517,12 +522,12 @@ function Database.Search(request, cb)
     local exactIdentifier = idType and idValue and (idType .. ":" .. idValue) or nil
 
     if exactIdentifier then
-        join = " INNER JOIN `whitelist_identifiers` wi ON wi.whitelist_id = w.id"
+        join = " INNER JOIN `esx_whitelist_identifier` wi ON wi.whitelist_id = w.id"
         where[#where + 1] = "wi.identifier = ?"
         params[#params + 1] = exactIdentifier
     elseif search ~= "" and search:match("^%w+:") then
         where[#where + 1] = [[EXISTS (
-            SELECT 1 FROM `whitelist_identifiers` wi
+            SELECT 1 FROM `esx_whitelist_identifier` wi
             WHERE wi.whitelist_id = w.id AND wi.identifier LIKE ? ESCAPE '='
         )]]
         params[#params + 1] = escapeLikePrefix(search:lower())
@@ -546,7 +551,7 @@ function Database.Search(request, cb)
     pageParams[#pageParams + 1] = limit + 1
 
     MySQL.query(([[SELECT w.id, w.player_name, w.whitelisted
-        FROM `whitelist` w%s%s
+        FROM `esx_whitelist` w%s%s
         ORDER BY w.id DESC
         LIMIT ?]]):format(join, clause), pageParams, function(rows)
         if rows == false then
@@ -577,7 +582,7 @@ function Database.Search(request, cb)
         local identifierParams = {}
         for i = 1, #ids do identifierParams[#identifierParams + 1] = ids[i] end
         MySQL.query(([[SELECT whitelist_id, identifier
-            FROM whitelist_identifiers
+            FROM esx_whitelist_identifier
             WHERE whitelist_id IN (%s)
             ORDER BY whitelist_id, id ASC]]):format(table.concat(identifierParams, ",")), identifierParams, function(identifierRows)
             local identifiersById = {}
