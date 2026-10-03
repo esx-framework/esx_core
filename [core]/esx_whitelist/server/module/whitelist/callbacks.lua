@@ -91,12 +91,16 @@ end
 function Callbacks.register(translations, onStateChanged)
     RegisterNetEvent("esx_whitelist:subscribeUpdates", function()
         local subscriber = tonumber(source)
-        if subscriber and allowed(subscriber) then uiSubscribers[subscriber] = true end
+        if subscriber and allowed(subscriber) and callbackLimiter:consume(subscriber) then
+            uiSubscribers[subscriber] = true
+        end
     end)
 
     RegisterNetEvent("esx_whitelist:unsubscribeUpdates", function()
         local subscriber = tonumber(source)
-        if subscriber then uiSubscribers[subscriber] = nil end
+        if subscriber and callbackLimiter:consume(subscriber) then
+            uiSubscribers[subscriber] = nil
+        end
     end)
 
     AddEventHandler("playerDropped", function()

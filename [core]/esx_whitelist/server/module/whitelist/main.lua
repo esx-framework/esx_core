@@ -18,6 +18,7 @@ local Util <const> = xLib.require "@esx_whitelist.server.module.whitelist.util"
 ---@description Main entry point for the ESX whitelist system.
 local Whitelist = {}
 local RECONCILE_CHUNK_SIZE <const> = 50
+local KICK_CHUNK <const> = 25
 local reconcilingOnline = false
 local pendingOnlineChanges = {}
 
@@ -30,10 +31,16 @@ local function applyStateChanged(enabled, manual, adminName)
     end
 
     if not enabled then
-        for source in pairs(State.gracePlayers) do
-            State.gracePlayers[source] = nil
-            TriggerClientEvent("esx_whitelist:cancelGracePeriod", source)
-        end
+        local graceSources = {}
+        for source in pairs(State.gracePlayers) do graceSources[#graceSources + 1] = source end
+        CreateThread(function()
+            for i = 1, #graceSources do
+                local source = graceSources[i]
+                State.gracePlayers[source] = nil
+                TriggerClientEvent("esx_whitelist:cancelGracePeriod", source)
+                if i % KICK_CHUNK == 0 then Wait(0) end
+            end
+        end)
     else
         Connection.kickNonWhitelisted(State.translations)
     end

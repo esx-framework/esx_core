@@ -71,6 +71,7 @@ end
 
 ---@description Clears admin tracking state for a player.
 ---@param source number The player source ID
+---@description Clears admin tracking state for a player.
 function Auth.clear(source)
     source = tonumber(source)
     if source then State.adminSources[source] = nil end

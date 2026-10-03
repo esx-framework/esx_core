@@ -16,6 +16,17 @@ local KICK_CHUNK <const> = 25
 local sessionSequence = 0
 local playerSessions = {}
 local sessionAuthorized = {}
+local lastGoodDiscordAuth = {}
+local DISCORD_LAST_GOOD_TTL_MS <const> = 10 * 60 * 1000
+
+---@description Helper function.
+local function isCurrentDiscordPolicyTrusted(policy)
+    if type(policy) ~= "table" then return false end
+    return policy.method == "discord"
+        and policy.guildId == State.config.discordGuildId
+        and policy.roleId == State.config.discordRoleId
+        and (GetGameTimer() - policy.at) <= DISCORD_LAST_GOOD_TTL_MS
+end
 
 ---@description Helper function.
 local function ensureSession(source)
@@ -30,30 +41,38 @@ local function isCurrentSession(source, sessionId)
     return sessionId ~= nil and playerSessions[source] == sessionId
 end
 
+---@description Begins or replaces the current session for a player source.
 function Connection.beginSession(source)
     source = tonumber(source)
     if not source or source <= 0 then return nil end
     local previous = playerSessions[source]
-    if previous then sessionAuthorized[previous] = nil end
+    if previous then
+        sessionAuthorized[previous] = nil
+        lastGoodDiscordAuth[previous] = nil
+    end
     sessionSequence = sessionSequence + 1
     playerSessions[source] = sessionSequence
     return sessionSequence
 end
 
 ---@description Helper function.
+---@description Returns the current, or lazily creates a new, session ID for a source.
 function Connection.getSessionId(source)
     source = tonumber(source)
     if not source or source <= 0 then return nil end
     return ensureSession(source)
 end
 
----@description Helper function.
+---@description Ends the player session and clears session-bound caches.
 function Connection.endSession(source, sessionId)
     source = tonumber(source)
     if not source then return end
     local currentSession = playerSessions[source]
     if sessionId and currentSession ~= sessionId then return end
-    if currentSession then sessionAuthorized[currentSession] = nil end
+    if currentSession then
+        sessionAuthorized[currentSession] = nil
+        lastGoodDiscordAuth[currentSession] = nil
+    end
     playerSessions[source] = nil
     State.gracePlayers[source] = nil
     Auth.clear(source)
@@ -162,24 +181,51 @@ local function identifiersFor(source)
 end
 
 ---@description Helper function.
+local persistenceTasks = {}
+local activePersistenceTasks = 0
+local MAX_CONCURRENT_PERSISTENCE <const> = 12
+
+---@description Helper function.
+local function runNextPersistenceTasks()
+    while activePersistenceTasks < MAX_CONCURRENT_PERSISTENCE and #persistenceTasks > 0 do
+        local task = table.remove(persistenceTasks, 1)
+        activePersistenceTasks = activePersistenceTasks + 1
+        task(function()
+            activePersistenceTasks = activePersistenceTasks - 1
+            runNextPersistenceTasks()
+        end)
+    end
+end
+
+---@description Helper function.
+local function queuePersistence(task)
+    persistenceTasks[#persistenceTasks + 1] = task
+    runNextPersistenceTasks()
+end
+
+---@description Helper function.
 local function persistAccessAsync(source, identifiers, addedBy, sessionId)
-    whenDatabaseReady(function(ready)
-        if not isCurrentSession(source, sessionId) or not ready then return end
-        Database.ensureWhitelisted(
-            GetPlayerName(source) or "Unknown",
-            identifiers,
-            addedBy,
-            function(saved, err, whitelistId)
-                if not isCurrentSession(source, sessionId) then return end
-                if saved and whitelistId then
-                    TriggerEvent("esx_whitelist:notifyEntryChanged", whitelistId)
+    local task = function(done)
+        whenDatabaseReady(function(ready)
+            if not isCurrentSession(source, sessionId) or not ready then return done() end
+            Database.ensureWhitelisted(
+                GetPlayerName(source) or "Unknown",
+                identifiers,
+                addedBy,
+                function(saved, err, whitelistId)
+                    if not isCurrentSession(source, sessionId) then return done() end
+                    if saved and whitelistId then
+                        TriggerEvent("esx_whitelist:notifyEntryChanged", whitelistId)
+                    end
+                    if not saved and Config.Debug then
+                        print(("^3[esx_whitelist] Async Discord access persistence notice: %s^7"):format(err or "unknown"))
+                    end
+                    done()
                 end
-                if not saved and Config.Debug then
-                    print(("^3[esx_whitelist] Async Discord access persistence notice: %s^7"):format(err or "unknown"))
-                end
-            end
-        )
-    end)
+            )
+        end)
+    end
+    queuePersistence(task)
 end
 
 ---@description Helper function.
@@ -190,7 +236,21 @@ local function checkDiscord(source, callback, sessionId)
     local discordId = discordIdentifier:gsub("^discord:", "")
     Discord.checkRole(discordId, function(hasRole, err)
         if not isCurrentSession(source, sessionId) then return end
-        if err then return callback(false, "discord_error") end
+        local lastKnown = lastGoodDiscordAuth[sessionId]
+        if err then
+            if isCurrentDiscordPolicyTrusted(lastKnown) then
+                return callback(true, "discord_last_known_good")
+            end
+            return callback(false, "discord_error")
+        end
+        if hasRole then
+            lastGoodDiscordAuth[sessionId] = {
+                at = GetGameTimer(),
+                method = State.config.authorizationMethod,
+                guildId = State.config.discordGuildId,
+                roleId = State.config.discordRoleId
+            }
+        end
         callback(hasRole == true, hasRole and "discord" or "not_whitelisted")
     end)
 end
@@ -251,13 +311,12 @@ function Connection.authorize(source, callback, currentIdentifiers, sessionId)
                 end
 
                 -- Immediately allow player into server without blocking deferrals on MySQL
-                respond(true, "discord")
+                respond(true, reason)
 
-                -- Optimistically register in cache
-                Cache.setWhitelistBatch(identifiers, true)
-
-                -- Decoupled background async persistence
-                persistAccessAsync(source, identifiers, "system:discord", sessionId)
+                -- Only queue persistence for live Discord approvals, never for last-known-good trust.
+                if reason == "discord" then
+                    persistAccessAsync(source, identifiers, "system:discord", sessionId)
+                end
             end, sessionId)
         end
 

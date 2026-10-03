@@ -59,8 +59,11 @@ end
 ---@description Helper function.
 local function insertIdentifiers(id, clean, callback)
     if #clean == 0 then return callback(true) end
-    MySQL.transaction(identifierInsertQueries(id, clean), function(success)
-        callback(success == true)
+    local statements = identifierInsertQueries(id, clean)
+    local statement = statements[1]
+    if not statement then return callback(true) end
+    MySQL.insert(statement.query, statement.values, function(result)
+        callback(result ~= nil and result ~= false)
     end)
 end
 
