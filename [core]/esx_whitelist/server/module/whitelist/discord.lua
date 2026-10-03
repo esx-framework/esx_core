@@ -225,7 +225,8 @@ end
 ---@description Checks if a Discord user has the configured role, with caching and deduplication.
 ---@param discordId string Discord user ID
 ---@param callback fun(hasRole: boolean, error?: string)
-function Discord.checkRole(discordId, callback)
+---@param opts table? Optional { isAlive = function(): boolean }
+function Discord.checkRole(discordId, callback, opts)
     if not configured() then
         return callback(false, "not_configured")
     end
@@ -253,7 +254,7 @@ function Discord.checkRole(discordId, callback)
         return callback(false, "discord_queue_full")
     end
 
-    local request = { callbacks = { callback }, settled = false, attempts = 0 }
+    local request = { callbacks = { callback }, settled = false, attempts = 0, opts = opts }
     pending[cacheKey] = request
 
     ---@description Helper function.
@@ -290,6 +291,10 @@ function Discord.checkRole(discordId, callback)
             request.active = false
             activeRequests = math.max(0, activeRequests - 1)
             return pump()
+        end
+
+        if request.opts and request.opts.isAlive and not request.opts.isAlive() then
+            return finish(false, "session_disconnect")
         end
 
         request.attempts = request.attempts + 1

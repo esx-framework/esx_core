@@ -182,25 +182,42 @@ end
 
 ---@description Helper function.
 local persistenceTasks = {}
+local persistenceHead, persistenceTail, persistenceCount = 1, 0, 0
 local activePersistenceTasks = 0
 local MAX_CONCURRENT_PERSISTENCE <const> = 12
+local MAX_PERSISTENCE_QUEUE <const> = 2048
 
 ---@description Helper function.
 local function runNextPersistenceTasks()
-    while activePersistenceTasks < MAX_CONCURRENT_PERSISTENCE and #persistenceTasks > 0 do
-        local task = table.remove(persistenceTasks, 1)
+    while activePersistenceTasks < MAX_CONCURRENT_PERSISTENCE and persistenceCount > 0 do
+        local task = persistenceTasks[persistenceHead]
+        persistenceTasks[persistenceHead] = nil
+        persistenceHead = persistenceHead + 1
+        persistenceCount = persistenceCount - 1
+        if persistenceCount == 0 then
+            persistenceTasks = {}
+            persistenceHead, persistenceTail = 1, 0
+        end
+
         activePersistenceTasks = activePersistenceTasks + 1
         task(function()
             activePersistenceTasks = activePersistenceTasks - 1
-            runNextPersistenceTasks()
+            -- Run the queue in a new frame to avoid recursive synchronous completions.
+            SetTimeout(0, runNextPersistenceTasks)
         end)
     end
 end
 
 ---@description Helper function.
 local function queuePersistence(task)
-    persistenceTasks[#persistenceTasks + 1] = task
+    if persistenceCount >= MAX_PERSISTENCE_QUEUE then
+        return false
+    end
+    persistenceTail = persistenceTail + 1
+    persistenceTasks[persistenceTail] = task
+    persistenceCount = persistenceCount + 1
     runNextPersistenceTasks()
+    return true
 end
 
 ---@description Helper function.
@@ -225,7 +242,9 @@ local function persistAccessAsync(source, identifiers, addedBy, sessionId)
             )
         end)
     end
-    queuePersistence(task)
+    if not queuePersistence(task) and Config.Debug then
+        print("^3[esx_whitelist] Persistence queue is full; skipping async whitelist persistence for this Discord grant.^7")
+    end
 end
 
 ---@description Helper function.
@@ -252,7 +271,7 @@ local function checkDiscord(source, callback, sessionId)
             }
         end
         callback(hasRole == true, hasRole and "discord" or "not_whitelisted")
-    end)
+    end, { isAlive = function() return isCurrentSession(source, sessionId) end })
 end
 
 -- The configured method is authoritative. Identifier and Discord checks are

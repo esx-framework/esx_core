@@ -91,7 +91,7 @@ end
 function Callbacks.register(translations, onStateChanged)
     RegisterNetEvent("esx_whitelist:subscribeUpdates", function()
         local subscriber = tonumber(source)
-        if subscriber and allowed(subscriber) and callbackLimiter:consume(subscriber) then
+        if subscriber and callbackLimiter:consume(subscriber) and allowed(subscriber) then
             uiSubscribers[subscriber] = true
         end
     end)

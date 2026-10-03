@@ -14,7 +14,7 @@ local function canonicalIdentifier(identifier)
     if type(identifier) ~= "string" then return nil end
     local idType, value = Util.normalizeIdentifier(identifier)
     if idType and value then return idType .. ":" .. value end
-    return identifier:lower()
+    return nil
 end
 
 ---@description Helper function.

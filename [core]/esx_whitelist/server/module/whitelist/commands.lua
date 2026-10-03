@@ -136,10 +136,16 @@ function Commands.register()
         if not ok then return xPlayer.showNotification("~r~" .. Util.translate(State.translations, "failed_to_save_state")) end
         xPlayer.showNotification("~g~" .. Util.translate(State.translations, "whitelist_disabled_notification"))
         TriggerClientEvent("esx_whitelist:stateChanged", -1, false)
-        for source in pairs(State.gracePlayers) do
-            State.gracePlayers[source] = nil
-            TriggerClientEvent("esx_whitelist:cancelGracePeriod", source)
-        end
+        local graceSources = {}
+        for source in pairs(State.gracePlayers) do graceSources[#graceSources + 1] = source end
+        CreateThread(function()
+            for i = 1, #graceSources do
+                local source = graceSources[i]
+                State.gracePlayers[source] = nil
+                TriggerClientEvent("esx_whitelist:cancelGracePeriod", source)
+                if i % 25 == 0 then Wait(0) end
+            end
+        end)
     end, false, { help = "Disable whitelist" })
 
     ESX.RegisterCommand(Config.Commands.Sync, Auth.groups(), function(xPlayer)

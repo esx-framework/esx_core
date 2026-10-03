@@ -26,7 +26,7 @@ Config.AuthorizationIdentifierTypes = {
 Config.RuleStateChangeCooldown = 60
 
 -- Deferral timeout in milliseconds for identifier authorization mode
-Config.IdentifierDeferralTimeout = 5000
+Config.IdentifierDeferralTimeout = 15000
 
 -- Discord role verification settings
 Config.DiscordCacheTTL = 300
