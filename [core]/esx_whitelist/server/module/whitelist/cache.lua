@@ -35,6 +35,7 @@ end
 ---@param identifiers string[] List of identifier strings
 function Cache.RemoveWhitelistBatch(identifiers)
     bumpWhitelistGeneration()
+    State.authorizationGeneration = State.authorizationGeneration + 1
     for i = 1, #(identifiers or {}) do
         State.whitelistCache[identifiers[i]] = nil
     end
@@ -95,6 +96,7 @@ end
 function Cache.ReplaceWhitelist(newCache, generation)
     if generation and generation ~= whitelistGeneration then return false end
     State.whitelistCache = newCache or {}
+    State.authorizationGeneration = State.authorizationGeneration + 1
     return true
 end
 

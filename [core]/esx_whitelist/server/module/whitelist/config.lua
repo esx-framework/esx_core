@@ -126,6 +126,7 @@ local function adoptConfig(config, persist)
     local token = State.config.discordBotToken
     State.config = cloneConfig(config)
     State.config.discordBotToken = token or ""
+    State.authorizationGeneration = State.authorizationGeneration + 1
 
     if not persist then
         local encoded = encodeConfig(State.config)
@@ -158,6 +159,7 @@ function ConfigService.CommitCandidate(candidate)
     if not ok then return false, writeErr end
 
     State.config = cloneConfig(candidate)
+    State.authorizationGeneration = State.authorizationGeneration + 1
     ConfigService.RebuildRules()
     return true
 end
@@ -209,7 +211,7 @@ function ConfigService.Load()
         State.configErrorMessage = nil
         if Config.Debug then
             print(("^3[esx_whitelist] Loaded saved configuration - enabled=%s - method=%s^7"):format(
-                tostring(normalized.whitelistEnabled),
+                tostring(normalized.enabled),
                 tostring(normalized.authorizationMethod)
             ))
         end
@@ -252,7 +254,7 @@ function ConfigService.Apply(data)
 
     local oldEnabled = State.config.enabled
     local candidate = cloneConfig(State.config)
-    candidate.enabled = normalized.whitelistEnabled
+    candidate.enabled = normalized.enabled
     candidate.gracePeriod = normalized.gracePeriod
     candidate.kickConnected = normalized.kickConnected
     candidate.discordWebhook = normalized.discordWebhook

@@ -123,7 +123,10 @@ function Validation.Config(data, current)
     if type(data) ~= "table" then return nil, "invalid config" end
 
     local out = {}
-    out.whitelistEnabled = data.whitelistEnabled == true
+    -- `whitelistEnabled` is the NUI/JSON boundary representation; `enabled`
+    -- is the single internal runtime model used everywhere else.
+    local enabledRaw = data.whitelistEnabled ~= nil and data.whitelistEnabled or data.enabled
+    out.enabled = enabledRaw == true
     out.gracePeriod = math.max(0, math.min(600, math.floor(tonumber(data.gracePeriod) or current.gracePeriod or 60)))
     out.kickConnected = data.kickConnected == true
     out.discordEnabled = data.discordEnabled == true

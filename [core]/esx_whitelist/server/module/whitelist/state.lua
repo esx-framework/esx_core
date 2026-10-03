@@ -31,6 +31,11 @@ State.onlineAdminCount = 0
 
 State.ruleEvaluationPending = false
 State.lastRuleStateChangeAt = 0
+
+-- Bumped whenever configuration or whitelist data changes in a way that can
+-- invalidate previously recorded authorization decisions. Sessions record the
+-- generation under which they were authorized; stale generations are ignored.
+State.authorizationGeneration = 1
 State.configError = false
 State.configErrorMessage = nil
 State.databaseReady = false

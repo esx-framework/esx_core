@@ -596,12 +596,12 @@ function Database.Search(request, cb)
             end
         end
 
-        local identifierParams = {}
-        for i = 1, #ids do identifierParams[#identifierParams + 1] = ids[i] end
+        local placeholders = {}
+        for i = 1, #ids do placeholders[#placeholders + 1] = "?" end
         MySQL.query(([[SELECT whitelist_id, identifier
             FROM esx_whitelist_identifier
             WHERE whitelist_id IN (%s)
-            ORDER BY whitelist_id, id ASC]]):format(table.concat(identifierParams, ",")), identifierParams, function(identifierRows)
+            ORDER BY whitelist_id, id ASC]]):format(table.concat(placeholders, ",")), ids, function(identifierRows)
             local identifiersById = {}
             for i = 1, #(identifierRows or {}) do
                 local row = identifierRows[i]

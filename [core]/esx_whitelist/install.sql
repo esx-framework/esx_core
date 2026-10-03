@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS `esx_whitelist` (
 CREATE TABLE IF NOT EXISTS `esx_whitelist_identifier` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `whitelist_id` INT UNSIGNED NOT NULL,
-    `type` VARCHAR(32) NOT NULL,
-    `identifier` VARCHAR(255) NOT NULL COLLATE utf8mb4_bin,
+    `type` VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    `identifier` VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `unique_esx_whitelist_identifier` (`identifier`),
     KEY `idx_esx_whitelist_identifier_whitelist_id` (`whitelist_id`),

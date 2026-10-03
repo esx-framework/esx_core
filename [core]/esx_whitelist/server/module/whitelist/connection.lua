@@ -31,6 +31,8 @@ end
 function Connection.BeginSession(source)
     source = tonumber(source)
     if not source or source <= 0 then return nil end
+    local previous = playerSessions[source]
+    if previous then sessionAuthorized[previous] = nil end
     sessionSequence = sessionSequence + 1
     playerSessions[source] = sessionSequence
     return sessionSequence
@@ -44,8 +46,10 @@ end
 
 function Connection.EndSession(source, sessionId)
     source = tonumber(source)
-    if not source or (sessionId and playerSessions[source] ~= sessionId) then return end
-    if sessionId then sessionAuthorized[sessionId] = nil end
+    if not source then return end
+    local currentSession = playerSessions[source]
+    if sessionId and currentSession ~= sessionId then return end
+    if currentSession then sessionAuthorized[currentSession] = nil end
     playerSessions[source] = nil
     State.gracePlayers[source] = nil
     Auth.Clear(source)
@@ -119,7 +123,7 @@ local function enforce(source, translations, useGrace, sessionId, isMassEnforcem
     if not source or source <= 0 then return end
     sessionId = sessionId or ensureSession(source)
 
-    if isMassEnforcement and sessionAuthorized[sessionId] then
+    if isMassEnforcement and sessionAuthorized[sessionId] == State.authorizationGeneration then
         return
     end
 
@@ -193,7 +197,7 @@ function Connection.Authorize(source, callback, currentIdentifiers, sessionId)
 
     local function respond(allow, reason)
         if isCurrentSession(source, sessionId) then
-            if allow then sessionAuthorized[sessionId] = true end
+            if allow then sessionAuthorized[sessionId] = State.authorizationGeneration end
             callback(allow, reason)
         end
     end
@@ -258,6 +262,8 @@ function Connection.Authorize(source, callback, currentIdentifiers, sessionId)
     end)
 end
 
+local ensureGraceThread -- forward declaration: assigned by the grace scheduler below
+
 ---@description Starts a grace period for a non-whitelisted connected player before kicking them.
 ---@param source number The player source ID
 ---@param playerName string The player display name
@@ -279,19 +285,47 @@ function Connection.StartGrace(source, playerName, translations, sessionId)
     State.gracePlayers[source] = {
         endTime = GetGameTimer() + seconds * 1000,
         playerName = playerName or "Unknown",
-        sessionId = sessionId
+        sessionId = sessionId,
+        translations = translations
     }
     TriggerClientEvent("esx_whitelist:startGracePeriod", source, seconds)
-
-    SetTimeout(seconds * 1000, function()
-        local grace = State.gracePlayers[source]
-        if not grace or grace.sessionId ~= sessionId or not isCurrentSession(source, sessionId) then return end
-        enforce(source, translations, false, sessionId)
-    end)
+    ensureGraceThread()
 end
 
 local enforcementRunning = false
 local enforcementRequested = false
+
+-- Single scheduler for all grace expirations. Instead of one SetTimeout per
+-- player (which creates a thundering herd when many players expire together),
+-- one loop checks expired entries and processes them in bounded batches.
+local GRACE_TICK_MS <const> = 250
+local GRACE_BATCH <const> = 50
+local graceThreadRunning = false
+
+ensureGraceThread = function()
+    if graceThreadRunning then return end
+    graceThreadRunning = true
+    CreateThread(function()
+        while true do
+            Wait(GRACE_TICK_MS)
+            local now = GetGameTimer()
+            local due = {}
+            for source, grace in pairs(State.gracePlayers) do
+                if type(grace) == "table" and grace.endTime and grace.endTime <= now then
+                    due[#due + 1] = source
+                end
+            end
+            for i = 1, math.min(#due, GRACE_BATCH) do
+                local source = due[i]
+                local grace = State.gracePlayers[source]
+                if grace and grace.endTime and grace.endTime <= now
+                    and isCurrentSession(source, grace.sessionId) then
+                    enforce(source, grace.translations or State.translations, false, grace.sessionId)
+                end
+            end
+        end
+    end)
+end
 
 ---@description Kicks all connected players who are not whitelisted.
 ---@param translations table Locale translation strings
