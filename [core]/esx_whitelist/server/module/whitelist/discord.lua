@@ -29,9 +29,12 @@ local globalRetryAt = 0
 local nextRequestAt = 0
 local pumpTimerScheduled = false
 local pump
+local pendingTimeouts = {}
+local timeoutSweeperRunning = false
 
 State.config.discordBotToken = ServerConfig.DiscordBotToken or ""
 
+---@description Helper function.
 local function compactQueue()
     local compacted = {}
     for index = queueHead, queueTail do
@@ -47,6 +50,7 @@ local function compactQueue()
     queuedCount = queueTail
 end
 
+---@description Helper function.
 local function removeQueued(request)
     if not request.queued then return end
     requestQueue[request.queueIndex] = nil
@@ -59,6 +63,7 @@ local function removeQueued(request)
     end
 end
 
+---@description Helper function.
 local function takeQueued()
     while queueHead <= queueTail do
         local request = requestQueue[queueHead]
@@ -82,6 +87,34 @@ local function takeQueued()
     return nil
 end
 
+---@description Helper function.
+local function sweepQueueTimeouts()
+    while true do
+        Wait(500)
+        local now = GetGameTimer()
+        local remaining = {}
+        for i = 1, #pendingTimeouts do
+            local request = pendingTimeouts[i]
+            if request and request.queued and not request.settled then
+                if now >= request.queueDeadline then
+                    request.finish(false, "discord_queue_timeout")
+                else
+                    remaining[#remaining + 1] = request
+                end
+            end
+        end
+        pendingTimeouts = remaining
+    end
+end
+
+---@description Helper function.
+local function ensureTimeoutSweeper()
+    if timeoutSweeperRunning then return end
+    timeoutSweeperRunning = true
+    CreateThread(sweepQueueTimeouts)
+end
+
+---@description Helper function.
 local function schedulePump(delay)
     if pumpTimerScheduled then return end
     pumpTimerScheduled = true
@@ -91,6 +124,7 @@ local function schedulePump(delay)
     end)
 end
 
+---@description Helper function.
 local function enqueue(request)
     if request.settled or request.queued or request.active then return end
     if queuedCount >= MAX_QUEUED_REQUESTS then return false end
@@ -101,11 +135,8 @@ local function enqueue(request)
     request.queued = true
     request.queueDeadline = GetGameTimer() + QUEUE_TIMEOUT
     queuedCount = queuedCount + 1
-    SetTimeout(QUEUE_TIMEOUT, function()
-        if request.queued and GetGameTimer() >= request.queueDeadline then
-            request.finish(false, "discord_queue_timeout")
-        end
-    end)
+    pendingTimeouts[#pendingTimeouts + 1] = request
+    ensureTimeoutSweeper()
     pump()
     return true
 end
@@ -133,6 +164,7 @@ pump = function()
     end
 end
 
+---@description Helper function.
 local function retryDelay(headers, data, attempts)
     local retryAfter
     if type(headers) == "table" then
@@ -157,6 +189,7 @@ local function retryDelay(headers, data, attempts)
     return RETRY_DELAY * attempts
 end
 
+---@description Helper function.
 local function isGlobalRateLimit(headers, data)
     if type(headers) == "table" then
         for name, value in pairs(headers) do
@@ -175,23 +208,24 @@ local function isGlobalRateLimit(headers, data)
     return false
 end
 
+---@description Helper function.
 local function configured()
     return State.config.discordEnabled
         and State.config.discordGuildId ~= ""
         and State.config.discordRoleId ~= ""
-        and Util.IsValidBotToken(State.config.discordBotToken)
+        and Util.isValidBotToken(State.config.discordBotToken)
 end
 
 ---@description Checks if the Discord bot token is valid.
 ---@return boolean valid
-function Discord.HasValidToken()
-    return Util.IsValidBotToken(State.config.discordBotToken)
+function Discord.hasValidToken()
+    return Util.isValidBotToken(State.config.discordBotToken)
 end
 
 ---@description Checks if a Discord user has the configured role, with caching and deduplication.
 ---@param discordId string Discord user ID
 ---@param callback fun(hasRole: boolean, error?: string)
-function Discord.CheckRole(discordId, callback)
+function Discord.checkRole(discordId, callback)
     if not configured() then
         return callback(false, "not_configured")
     end
@@ -222,6 +256,7 @@ function Discord.CheckRole(discordId, callback)
     local request = { callbacks = { callback }, settled = false, attempts = 0 }
     pending[cacheKey] = request
 
+    ---@description Helper function.
     local function finish(hasRole, err)
         if request.settled then return end
         request.settled = true
@@ -334,7 +369,7 @@ end
 ---@param color number Discord embed color
 ---@param translations table Locale strings
 ---@return boolean sent
-function Discord.SendLog(message, color, translations)
+function Discord.sendLog(message, color, translations)
     local webhook = State.config.discordWebhook
     if type(webhook) ~= "string" or webhook == "" or webhook == "***CONFIGURED***" then return false end
 
@@ -343,7 +378,7 @@ function Discord.SendLog(message, color, translations)
     webhookCooldownUntil = now + 5000
 
     local payload = json.encode({ embeds = {{
-        title = Util.Translate(translations, "discord_title"),
+        title = Util.translate(translations, "discord_title"),
         description = tostring(message or ""):sub(1, 1800),
         color = color or Enum.DiscordEmbedColor.PRIMARY,
         timestamp = os.date("!%Y-%m-%dT%H:%M:%S")
@@ -355,7 +390,8 @@ function Discord.SendLog(message, color, translations)
     return true
 end
 
-function Discord.Sweep()
+---@description Helper function.
+function Discord.sweep()
     local now = os.time()
     for id, entry in pairs(cache) do
         if entry.expires <= now then cache[id] = nil end
@@ -364,7 +400,7 @@ end
 
 ---@description Returns the HTTP timeout duration in milliseconds.
 ---@return number timeoutMs
-function Discord.DeferralTimeout()
+function Discord.deferralTimeout()
     return QUEUE_TIMEOUT + TIMEOUT + 5000
 end
 

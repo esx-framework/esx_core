@@ -21,7 +21,7 @@ if token == "" then
     if Config.Debug then
         print("^3[esx_whitelist] Discord bot token is not configured. Discord role verification will be unavailable until discord:botToken is set.^7")
     end
-elseif not Util.IsValidBotToken(token) then
+elseif not Util.isValidBotToken(token) then
     if Config.Debug then
         print("^1[esx_whitelist] discord:botToken does not have a valid token format.^7")
     end

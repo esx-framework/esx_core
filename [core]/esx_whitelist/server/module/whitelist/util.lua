@@ -33,7 +33,7 @@ local IDENTIFIER_TYPES <const> = {
 ---@description Validates a Discord bot token format.
 ---@param token string The bot token
 ---@return boolean valid
-function Util.IsValidBotToken(token)
+function Util.isValidBotToken(token)
     if type(token) ~= "string" or token == "" or #token < 50 or token:find("[%s%c]") then
         return false
     end
@@ -44,10 +44,12 @@ function Util.IsValidBotToken(token)
     return prefix ~= nil
 end
 
+---@description Helper function.
 local function stripWhitespace(value)
     return value:gsub("%s+", "")
 end
 
+---@description Helper function.
 local function validateValue(idType, value)
     if not VALID_TYPES[idType] or type(value) ~= "string" or value == "" then
         return false
@@ -70,6 +72,7 @@ local function validateValue(idType, value)
     return false
 end
 
+---@description Helper function.
 local function detectIdentifierType(value)
     if type(value) ~= "string" or value == "" then
         return nil
@@ -92,6 +95,7 @@ local function detectIdentifierType(value)
     return nil
 end
 
+---@description Helper function.
 local function normalizeIdentifier(rawValue)
     if type(rawValue) ~= "string" then
         return nil, nil
@@ -124,6 +128,7 @@ local function normalizeIdentifier(rawValue)
     return detected, clean
 end
 
+---@description Helper function.
 local function getPlayerIdentifiersFiltered(playerId)
     local identifiers = {}
     for i = 1, #IDENTIFIER_TYPES do
@@ -140,6 +145,7 @@ local function getPlayerIdentifiersFiltered(playerId)
     return identifiers
 end
 
+---@description Helper function.
 local function loadLocale(localeName)
     local raw = LoadResourceFile(GetCurrentResourceName(), ("locales/%s.json"):format(localeName))
         or LoadResourceFile(GetCurrentResourceName(), "locales/en.json")
@@ -149,6 +155,7 @@ local function loadLocale(localeName)
     return ok and type(decoded) == "table" and decoded or {}
 end
 
+---@description Helper function.
 local function translate(translations, key, ...)
     if not translations then return key end
     local template = translations[key] or key
@@ -158,19 +165,19 @@ local function translate(translations, key, ...)
 end
 
 ---@description Normalizes a raw identifier string into type and value components.
-Util.NormalizeIdentifier = normalizeIdentifier
+Util.normalizeIdentifier = normalizeIdentifier
 ---@description Gets filtered player identifiers by supported types.
 ---@param playerId number The player source ID
 ---@return string[] identifiers
-Util.GetPlayerIdentifiersFiltered = getPlayerIdentifiersFiltered
+Util.getPlayerIdentifiersFiltered = getPlayerIdentifiersFiltered
 ---@description Loads a locale file from the resources directory.
 ---@param localeName string Locale file name
 ---@return table translations
-Util.LoadLocale = loadLocale
+Util.loadLocale = loadLocale
 ---@description Translates a locale key with optional format arguments.
 ---@param translations table Locale string map
 ---@param key string Translation key
 ---@return string result
-Util.Translate = translate
+Util.translate = translate
 
 return Util

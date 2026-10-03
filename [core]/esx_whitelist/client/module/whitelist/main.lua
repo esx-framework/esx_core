@@ -15,25 +15,29 @@ local theme = {
     logoUrl = GetConvar("esx:ui:logoUrl", "")
 }
 
+---@description Helper function.
 local function triggerServerCallback(action, data, callback)
     ESX.TriggerServerCallback(action, callback, type(data) == "table" and data or {})
 end
 
+---@description Helper function.
 local function sendUiMessage(action, data)
-    if ui.isVisible then SendNUIMessage({ action = action, data = data }) end
+    if ui.is_visible then SendNUIMessage({ action = action, data = data }) end
 end
 
+---@description Helper function.
 local function setUpdatesSubscribed(subscribed)
     if updatesSubscribed == subscribed then return end
     updatesSubscribed = subscribed
     TriggerServerEvent(subscribed and "esx_whitelist:subscribeUpdates" or "esx_whitelist:unsubscribeUpdates")
 end
 
+---@description Helper function.
 local function openUI()
-    if ui.isVisible then return end
+    if ui.is_visible then return end
     triggerServerCallback("esx_whitelist:getConfig", nil, function(config)
         if not config then
-            ESX.ShowNotification("~r~" .. Util.Translate(ui.translations, "no_permission"))
+            ESX.ShowNotification("~r~" .. Util.translate(ui.translations, "no_permission"))
             return
         end
         config.theme = theme
@@ -42,6 +46,7 @@ local function openUI()
     end)
 end
 
+---@description Helper function.
 local function registerEvents()
     ESX.SecureNetEvent("esx_whitelist:startGracePeriod", function(seconds) ui:startGracePeriod(seconds) end)
     ESX.SecureNetEvent("esx_whitelist:cancelGracePeriod", function() ui:cancelGracePeriod() end)
@@ -54,6 +59,7 @@ local function registerEvents()
     end)
 end
 
+---@description Helper function.
 local function registerNui()
     RegisterNUICallback("closeUI", function(_, cb)
         setUpdatesSubscribed(false)
@@ -71,7 +77,7 @@ local function registerNui()
     end)
     RegisterNUICallback("testWebhook", function(_, cb)
         triggerServerCallback("esx_whitelist:testWebhook", nil, function(success)
-            if success then ESX.ShowNotification("~g~" .. Util.Translate(ui.translations, "webhook_sent")) end
+            if success then ESX.ShowNotification("~g~" .. Util.translate(ui.translations, "webhook_sent")) end
             cb(success == true)
         end)
     end)
@@ -96,7 +102,8 @@ local function registerNui()
     end)
 end
 
-function Service.Init()
+---@description Helper function.
+function Service.init()
     registerEvents()
     registerNui()
 

@@ -15,7 +15,7 @@ end
 
 ---@description Starts a whitelist refresh cycle and returns the new generation number.
 ---@return number generation
-function Cache.BeginWhitelistRefresh()
+function Cache.beginWhitelistRefresh()
     whitelistGeneration = whitelistGeneration + 1
     return whitelistGeneration
 end
@@ -23,9 +23,10 @@ end
 ---@description Sets multiple whitelist identifiers to the same whitelist ID.
 ---@param identifiers string[] List of identifier strings
 ---@param id number The whitelist database ID
-function Cache.SetWhitelistBatch(identifiers, id)
+function Cache.setWhitelistBatch(identifiers, id)
     if not id then return end
     bumpWhitelistGeneration()
+    State.authorizationGeneration = State.authorizationGeneration + 1
     for i = 1, #(identifiers or {}) do
         State.whitelistCache[identifiers[i]] = id
     end
@@ -33,7 +34,7 @@ end
 
 ---@description Removes multiple whitelist identifier mappings.
 ---@param identifiers string[] List of identifier strings
-function Cache.RemoveWhitelistBatch(identifiers)
+function Cache.removeWhitelistBatch(identifiers)
     bumpWhitelistGeneration()
     State.authorizationGeneration = State.authorizationGeneration + 1
     for i = 1, #(identifiers or {}) do
@@ -45,11 +46,11 @@ end
 ---@param source number The player source ID
 ---@param identifiers string[] List of identifier strings
 ---@return string[] identifiers
-function Cache.SetIdentifiers(source, identifiers)
+function Cache.setIdentifiers(source, identifiers)
     source = tonumber(source)
     identifiers = identifiers or {}
     if not source or source <= 0 then return identifiers end
-    Cache.ClearIdentifiers(source)
+    Cache.clearIdentifiers(source)
     State.playerIdentifiers[source] = identifiers
     for i = 1, #identifiers do
         State.onlineIdentifierSources[identifiers[i]] = source
@@ -60,15 +61,15 @@ end
 ---@description Gets a player's identifiers, fetching them if not cached.
 ---@param source number The player source ID
 ---@return string[] identifiers
-function Cache.GetIdentifiers(source)
+function Cache.getIdentifiers(source)
     source = tonumber(source)
     if not source or source <= 0 then return {} end
-    return State.playerIdentifiers[source] or Cache.SetIdentifiers(source, Util.GetPlayerIdentifiersFiltered(source))
+    return State.playerIdentifiers[source] or Cache.setIdentifiers(source, Util.getPlayerIdentifiersFiltered(source))
 end
 
 ---@description Clears a player's cached identifiers and online index.
 ---@param source number The player source ID
-function Cache.ClearIdentifiers(source)
+function Cache.clearIdentifiers(source)
     source = tonumber(source)
     if not source then return end
     local identifiers = State.playerIdentifiers[source]
@@ -85,7 +86,7 @@ end
 ---@description Finds which online player owns an identifier.
 ---@param identifier string The identifier string
 ---@return number? onlineSource
-function Cache.FindOnline(identifier)
+function Cache.findOnline(identifier)
     return State.onlineIdentifierSources[identifier]
 end
 
@@ -93,13 +94,14 @@ end
 ---@param newCache table New whitelist cache
 ---@param generation number Expected generation
 ---@return boolean success
-function Cache.ReplaceWhitelist(newCache, generation)
+function Cache.replaceWhitelist(newCache, generation)
     if generation and generation ~= whitelistGeneration then return false end
     State.whitelistCache = newCache or {}
     State.authorizationGeneration = State.authorizationGeneration + 1
     return true
 end
 
+---@description Helper function.
 local function buildTypeSet(types)
     if type(types) ~= "table" then return nil end
     local set = {}
@@ -121,7 +123,7 @@ end
 
 ---@description Sets or overrides the allowed identifier types for whitelist authorization.
 ---@param types string[]? Table of allowed identifier type strings, or nil to allow all
-function Cache.SetAllowedAuthTypes(types)
+function Cache.setAllowedAuthTypes(types)
     allowedAuthTypes = buildTypeSet(types)
 end
 
@@ -130,7 +132,7 @@ end
 ---@param allowedTypes? table<string, boolean> Optional set of allowed identifier types to restrict check
 ---@return boolean isWhitelisted
 ---@return number? whitelistId
-function Cache.IsWhitelisted(identifiers, allowedTypes)
+function Cache.isWhitelisted(identifiers, allowedTypes)
     local filter = allowedTypes or allowedAuthTypes
     for i = 1, #(identifiers or {}) do
         local identifier = identifiers[i]

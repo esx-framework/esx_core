@@ -15,7 +15,7 @@ end
 
 local configuredIdentifiers = {}
 for i = 1, #(ServerConfig.AllowedIdentifiers or {}) do
-    local idType, value = Util.NormalizeIdentifier(ServerConfig.AllowedIdentifiers[i])
+    local idType, value = Util.normalizeIdentifier(ServerConfig.AllowedIdentifiers[i])
     if idType and value then configuredIdentifiers[idType .. ":" .. value] = true end
 end
 
@@ -23,6 +23,7 @@ if Config.Debug then
     print(("^3[esx_whitelist] Loaded %d configured identifier exceptions.^7"):format(#(ServerConfig.AllowedIdentifiers or {})))
 end
 
+---@description Helper function.
 local function aceAdmin(source)
     source = tonumber(source)
     if not source or source <= 0 then return false end
@@ -38,7 +39,7 @@ end
 ---@description Checks if any of the player's identifiers match the configured allowlist.
 ---@param identifiers string[] List of identifier strings
 ---@return boolean hasMatch
-function Auth.HasConfiguredIdentifier(identifiers)
+function Auth.hasConfiguredIdentifier(identifiers)
     for i = 1, #(identifiers or {}) do
         if configuredIdentifiers[identifiers[i]] then return true end
     end
@@ -48,7 +49,7 @@ end
 ---@description Checks if a player is an admin via ESX group or ACE permission.
 ---@param source number The player source ID
 ---@return boolean isAdmin
-function Auth.IsAdmin(source)
+function Auth.isAdmin(source)
     local id = tonumber(source)
     if not id then return false end
     if id <= 0 then
@@ -70,13 +71,13 @@ end
 
 ---@description Clears admin tracking state for a player.
 ---@param source number The player source ID
-function Auth.Clear(source)
+function Auth.clear(source)
     source = tonumber(source)
     if source then State.adminSources[source] = nil end
 end
 
 ---@description Returns the configured admin group list.
 ---@return string[]
-function Auth.Groups() return Config.AdminGroups or {} end
+function Auth.groups() return Config.AdminGroups or {} end
 
 return Auth

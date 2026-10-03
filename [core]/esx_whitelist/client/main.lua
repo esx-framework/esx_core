@@ -6,7 +6,7 @@ local ok, result = pcall(function()
 end)
 
 if not ok then return end
-result.Init()
+result.init()
 
 AddEventHandler("onResourceStop", function(resourceName)
     if GetCurrentResourceName() == resourceName then

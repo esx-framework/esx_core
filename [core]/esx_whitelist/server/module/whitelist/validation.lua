@@ -16,6 +16,7 @@ local RULE_TYPES <const> = {
 local OPERATORS <const> = { ["<"] = true, [">"] = true, ["<="] = true, [">="] = true, ["=="] = true }
 local ACTIONS <const> = { enable = true, disable = true }
 
+---@description Helper function.
 local function trim(value, max)
     if type(value) ~= "string" then return nil end
     value = value:gsub("^%s+", ""):gsub("%s+$", "")
@@ -23,6 +24,7 @@ local function trim(value, max)
     return value
 end
 
+---@description Helper function.
 local function validDiscordId(value)
     value = trim(value, 20)
     if not value or #value < 15 or value:match("^%d+$") == nil then return nil end
@@ -32,7 +34,7 @@ end
 ---@description Validates a Discord webhook URL format and host.
 ---@param url string The webhook URL to validate
 ---@return boolean valid
-function Validation.Webhook(url)
+function Validation.webhook(url)
     if url == "" then return true end
     if type(url) ~= "string" or #url > 250 then return false end
 
@@ -47,8 +49,8 @@ end
 ---@return string? fullIdentifier
 ---@return string? idType
 ---@return string? value
-function Validation.Identifier(raw)
-    local idType, value = Util.NormalizeIdentifier(raw)
+function Validation.identifier(raw)
+    local idType, value = Util.normalizeIdentifier(raw)
     if not idType or not value then return nil end
     return idType .. ":" .. value, idType, value
 end
@@ -58,7 +60,7 @@ end
 ---@param index number Rule index for error reporting
 ---@return table? normalized
 ---@return string? error
-function Validation.Rule(rule, index)
+function Validation.rule(rule, index)
     if type(rule) ~= "table" then return nil, "rule " .. index .. " is invalid" end
     if not RULE_TYPES[rule.type] then return nil, "rule " .. index .. " has an invalid type" end
     if rule.operator ~= nil and not OPERATORS[rule.operator] then return nil, "rule " .. index .. " has an invalid operator" end
@@ -85,6 +87,7 @@ function Validation.Rule(rule, index)
         end
     else
         normalized.action = normalized.action or "enable"
+        ---@description Helper function.
         local function validTime(value)
             if type(value) ~= "string" then return false end
             local hour, minute = value:match("^(%d%d?):(%d%d?)$")
@@ -103,11 +106,11 @@ end
 ---@param rules table[] List of rule tables
 ---@return table? normalizedRules
 ---@return string? error
-function Validation.Rules(rules)
+function Validation.rules(rules)
     if type(rules) ~= "table" or #rules > 50 then return nil, "invalid rules" end
     local output = {}
     for i = 1, #rules do
-        local rule, err = Validation.Rule(rules[i], i)
+        local rule, err = Validation.rule(rules[i], i)
         if not rule then return nil, err end
         output[#output + 1] = rule
     end
@@ -119,7 +122,7 @@ end
 ---@param current table Current/fallback config
 ---@return table? normalized
 ---@return string? error
-function Validation.Config(data, current)
+function Validation.config(data, current)
     if type(data) ~= "table" then return nil, "invalid config" end
 
     local out = {}
@@ -141,10 +144,10 @@ function Validation.Config(data, current)
 
     local webhook = trim(data.discordWebhook or "", 250)
     if webhook == "***CONFIGURED***" then webhook = current.discordWebhook end
-    if not Validation.Webhook(webhook) then return nil, "Invalid Discord webhook URL" end
+    if not Validation.webhook(webhook) then return nil, "Invalid Discord webhook URL" end
     out.discordWebhook = webhook
 
-    local rules, err = Validation.Rules(data.rules or current.rules)
+    local rules, err = Validation.rules(data.rules or current.rules)
     if not rules then return nil, err end
     out.rules = rules
 

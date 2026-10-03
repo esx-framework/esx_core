@@ -10,7 +10,7 @@ local Rules = {}
 
 ---@description Evaluates all compiled rules and returns the desired whitelist state.
 ---@return boolean desiredState
-function Rules.Evaluate()
+function Rules.evaluate()
     local currentTime = os.date("*t")
     local currentMinutes = (tonumber(currentTime.hour) or 0) * 60 + (tonumber(currentTime.min) or 0)
     for i = 1, #(State.compiledRules or {}) do
@@ -27,10 +27,10 @@ end
 ---@description Evaluates rules and applies state changes if conditions are met.
 ---@param onChanged fun(newState: boolean)
 ---@return boolean changed
-function Rules.EvaluateAndApply(onChanged)
+function Rules.evaluateAndApply(onChanged)
     if State.ruleEvaluationPending then return false end
 
-    local newState = Rules.Evaluate()
+    local newState = Rules.evaluate()
     local changed = newState ~= State.config.enabled
     if not changed then return false end
 
@@ -47,7 +47,7 @@ function Rules.EvaluateAndApply(onChanged)
 
     State.ruleEvaluationPending = true
 
-    local ok, err = ConfigService.SetEnabled(newState)
+    local ok, err = ConfigService.setEnabled(newState)
     if not ok then
         if Config.Debug then
             print(("^1[esx_whitelist] Automatic state save failed (%s); keeping current state.^7"):format(err or "unknown error"))

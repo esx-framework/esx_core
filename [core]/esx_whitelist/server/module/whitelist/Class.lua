@@ -18,6 +18,7 @@ local function parseTime(value)
     return h * 60 + m
 end
 
+---@description Helper function.
 local function compare(count, operator, target)
     if operator == "<" then return count < target end
     if operator == ">" then return count > target end
@@ -42,8 +43,8 @@ function WhitelistRule.new(data)
     self.action = data.action == Enum.RuleAction.DISABLE and Enum.RuleAction.DISABLE or Enum.RuleAction.ENABLE
     self.startTime = data.startTime or "00:00"
     self.endTime = data.endTime or "23:59"
-    self.startMinutes = parseTime(self.startTime)
-    self.endMinutes = parseTime(self.endTime)
+    self.start_minutes = parseTime(self.startTime)
+    self.end_minutes = parseTime(self.endTime)
     return self
 end
 
@@ -53,6 +54,7 @@ end
 ---@param currentMinutes? number Current time in minutes from midnight
 ---@return boolean applicable
 ---@return boolean? enable
+---@description Helper function.
 function WhitelistRule:evaluate(onlineCount, adminCount, currentMinutes)
     if not self.enabled then return false, nil end
 
@@ -67,10 +69,10 @@ function WhitelistRule:evaluate(onlineCount, adminCount, currentMinutes)
     elseif self.type == Enum.RuleType.SCHEDULED then
         currentMinutes = currentMinutes or ((tonumber(os.date("%H")) or 0) * 60 + (tonumber(os.date("%M")) or 0))
         local inRange
-        if self.startMinutes <= self.endMinutes then
-            inRange = currentMinutes >= self.startMinutes and currentMinutes <= self.endMinutes
+        if self.start_minutes <= self.end_minutes then
+            inRange = currentMinutes >= self.start_minutes and currentMinutes <= self.end_minutes
         else
-            inRange = currentMinutes >= self.startMinutes or currentMinutes <= self.endMinutes
+            inRange = currentMinutes >= self.start_minutes or currentMinutes <= self.end_minutes
         end
         if inRange then
             return true, self.action == Enum.RuleAction.ENABLE

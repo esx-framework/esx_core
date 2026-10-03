@@ -24,6 +24,7 @@ local callbackLimiter = xLib.rateLimiter({
     interval = 1000
 })
 
+---@description Helper function.
 local function sameRules(first, second)
     if #(first or {}) ~= #(second or {}) then return false end
     for i = 1, #(first or {}) do
@@ -35,6 +36,7 @@ local function sameRules(first, second)
     return true
 end
 
+---@description Helper function.
 local function authorizationConfigChanged(previous, current)
     return previous.enabled ~= current.enabled
         or previous.kickConnected ~= current.kickConnected
@@ -44,43 +46,49 @@ local function authorizationConfigChanged(previous, current)
         or previous.discordRoleId ~= current.discordRoleId
 end
 
+    ---@description Helper function.
     local function rulesChanged(previous, current)
         return not sameRules(previous.rules, current.rules)
     end
 
+---@description Helper function.
 local function allowed(source)
     source = tonumber(source)
-    return source and source > 0 and Auth.IsAdmin(source) or false
+    return source and source > 0 and Auth.isAdmin(source) or false
 end
 
+---@description Helper function.
 local function callbackAllowed(source)
     source = tonumber(source)
     if not source or source <= 0 then return false end
     if not callbackLimiter:consume(source) then return false end
-    return Auth.IsAdmin(source)
+    return Auth.isAdmin(source)
 end
 
+---@description Helper function.
 local function adminName(source)
     local xPlayer = ESX.GetPlayerFromId(source)
     return xPlayer and xPlayer.getName() or GetPlayerName(source) or "Admin"
 end
 
+---@description Helper function.
 local function getAllIdentifiers(identifier, cb)
-    local online = Cache.FindOnline(identifier)
+    local online = Cache.findOnline(identifier)
     if online then
         local xPlayer = ESX.GetPlayerFromId(online)
-        return cb(Cache.GetIdentifiers(online), GetPlayerName(online) or (xPlayer and xPlayer.getName()) or "Unknown", true, online)
+        return cb(Cache.getIdentifiers(online), GetPlayerName(online) or (xPlayer and xPlayer.getName()) or "Unknown", true, online)
     end
 
-    Database.FindByIdentifier(identifier, function(row)
+    Database.findByIdentifier(identifier, function(row)
         if not row then return cb({ identifier }, nil, false, nil) end
-        Database.GetIdentifierList(row.id, function(identifiers)
+        Database.getIdentifierList(row.id, function(identifiers)
             cb(identifiers, row.player_name, false, nil)
         end)
     end)
 end
 
-function Callbacks.Register(translations, onStateChanged)
+---@description Helper function.
+function Callbacks.register(translations, onStateChanged)
     RegisterNetEvent("esx_whitelist:subscribeUpdates", function()
         local subscriber = tonumber(source)
         if subscriber and allowed(subscriber) then uiSubscribers[subscriber] = true end
@@ -120,7 +128,7 @@ function Callbacks.Register(translations, onStateChanged)
             rules = State.config.rules,
             locale = Config.Locale,
             translations = translations,
-            hasBotToken = State.config.discordEnabled and Discord.HasValidToken()
+            hasBotToken = State.config.discordEnabled and Discord.hasValidToken()
         })
     end)
 
@@ -128,21 +136,21 @@ function Callbacks.Register(translations, onStateChanged)
         if not callbackAllowed(source) then
             return cb({ entries = {}, cursor = nil, nextCursor = nil, hasMore = false, limit = 50 })
         end
-        Database.Search(type(request) == "table" and request or {}, cb)
+        Database.search(type(request) == "table" and request or {}, cb)
     end)
 
     ESX.RegisterServerCallback("esx_whitelist:updateConfig", function(source, cb, data)
         if not callbackAllowed(source) or type(data) ~= "table" then return cb(false) end
 
-        if (data.authorizationMethod == "discord" or data.discordEnabled) and not Discord.HasValidToken() then
-            TriggerClientEvent("esx:showNotification", source, "~r~" .. Util.Translate(translations, "discord_no_token"))
+        if (data.authorizationMethod == "discord" or data.discordEnabled) and not Discord.hasValidToken() then
+            TriggerClientEvent("esx:showNotification", source, "~r~" .. Util.translate(translations, "discord_no_token"))
             return cb(false)
         end
 
         local previousConfig = State.config
-        local ok, err, oldEnabled = ConfigService.Apply(data)
+        local ok, err, oldEnabled = ConfigService.apply(data)
         if not ok then
-            TriggerClientEvent("esx:showNotification", source, "~r~" .. (err or Util.Translate(translations, "invalid_configuration")))
+            TriggerClientEvent("esx:showNotification", source, "~r~" .. (err or Util.translate(translations, "invalid_configuration")))
             return cb(false)
         end
 
@@ -151,67 +159,68 @@ function Callbacks.Register(translations, onStateChanged)
         if State.config.enabled ~= oldEnabled then
             onStateChanged(State.config.enabled, true, adminName(source))
         elseif changedRules then
-            local stateChangedByRules = Rules.EvaluateAndApply(onStateChanged)
+            local stateChangedByRules = Rules.evaluateAndApply(onStateChanged)
             if not stateChangedByRules and authorizationChanged then
                 TriggerClientEvent("esx_whitelist:stateChanged", -1, State.config.enabled)
-                if State.config.enabled then Connection.KickNonWhitelisted(State.translations) end
+                if State.config.enabled then Connection.kickNonWhitelisted(State.translations) end
             end
         elseif authorizationChanged then
             TriggerClientEvent("esx_whitelist:stateChanged", -1, State.config.enabled)
             if State.config.enabled then
-                Connection.KickNonWhitelisted(State.translations)
+                Connection.kickNonWhitelisted(State.translations)
             end
         end
 
-        TriggerClientEvent("esx:showNotification", source, "~g~" .. Util.Translate(translations, "config_saved"))
+        TriggerClientEvent("esx:showNotification", source, "~g~" .. Util.translate(translations, "config_saved"))
         cb(true)
     end)
 
     ESX.RegisterServerCallback("esx_whitelist:testWebhook", function(source, cb)
         if not callbackAllowed(source) then return cb(false) end
-        cb(Discord.SendLog(Util.Translate(translations, "webhook_test", adminName(source)), Enum.DiscordEmbedColor.PRIMARY, translations))
+        cb(Discord.sendLog(Util.translate(translations, "webhook_test", adminName(source)), Enum.DiscordEmbedColor.PRIMARY, translations))
     end)
 
     ESX.RegisterServerCallback("esx_whitelist:managePlayer", function(source, cb, data)
-        if not callbackAllowed(source) or type(data) ~= "table" then return cb(false, Util.Translate(translations, "invalid_request")) end
-        if data.action ~= "add" and data.action ~= "remove" then return cb(false, Util.Translate(translations, "invalid_request")) end
+        if not callbackAllowed(source) or type(data) ~= "table" then return cb(false, Util.translate(translations, "invalid_request")) end
+        if data.action ~= "add" and data.action ~= "remove" then return cb(false, Util.translate(translations, "invalid_request")) end
 
-        local fullIdentifier = Validation.Identifier(data.identifier)
-        if not fullIdentifier then return cb(false, Util.Translate(translations, "invalid_identifier")) end
+        local fullIdentifier = Validation.identifier(data.identifier)
+        if not fullIdentifier then return cb(false, Util.translate(translations, "invalid_identifier")) end
 
         local xPlayer = ESX.GetPlayerFromId(source)
-        if not xPlayer then return cb(false, Util.Translate(translations, "error_getting_admin_data")) end
+        if not xPlayer then return cb(false, Util.translate(translations, "error_getting_admin_data")) end
 
         if data.action == "add" then
             getAllIdentifiers(fullIdentifier, function(allIdentifiers, existingName, isOnline, onlineSource)
                 local targetName = existingName or "Pending..."
-                Database.FindByIdentifier(fullIdentifier, function(existing)
+                Database.findByIdentifier(fullIdentifier, function(existing)
+                    ---@description Helper function.
                     local function complete(id)
-                        if not id then return cb(false, Util.Translate(translations, "failed_to_update")) end
-                        Cache.SetWhitelistBatch(allIdentifiers, id)
+                        if not id then return cb(false, Util.translate(translations, "failed_to_update")) end
+                        Cache.setWhitelistBatch(allIdentifiers, id)
                         if isOnline and onlineSource and State.gracePlayers[onlineSource] then
                             State.gracePlayers[onlineSource] = nil
                             TriggerClientEvent("esx_whitelist:cancelGracePeriod", onlineSource)
                         end
-                        cb(true, Util.Translate(translations, "player_added_success"))
+                        cb(true, Util.translate(translations, "player_added_success"))
                     end
 
                     if existing then
-                        if tonumber(existing.whitelisted) == 1 then return cb(false, Util.Translate(translations, "player_already_wl")) end
-                        Database.AddIdentifiers(existing.id, allIdentifiers, function(success)
-                            if not success then return cb(false, Util.Translate(translations, "identifier_conflict")) end
-                            Database.SetStatus(existing.id, 1, xPlayer.getIdentifier(), function(affected)
-                                if not affected or affected < 1 then return cb(false, Util.Translate(translations, "failed_to_update")) end
+                        if tonumber(existing.whitelisted) == 1 then return cb(false, Util.translate(translations, "player_already_wl")) end
+                        Database.addIdentifiers(existing.id, allIdentifiers, function(success)
+                            if not success then return cb(false, Util.translate(translations, "identifier_conflict")) end
+                            Database.setStatus(existing.id, 1, xPlayer.getIdentifier(), function(affected)
+                                if not affected or affected < 1 then return cb(false, Util.translate(translations, "failed_to_update")) end
                                 complete(existing.id)
                             end)
                         end)
                     else
-                        Database.InsertPlayer(targetName, allIdentifiers, true, xPlayer.getIdentifier(), function(id, err)
+                        Database.insertPlayer(targetName, allIdentifiers, true, xPlayer.getIdentifier(), function(id, err)
                             if not id then
                                 if err == "identifier_already_exists" then
-                                    return cb(false, Util.Translate(translations, "identifier_conflict"))
+                                    return cb(false, Util.translate(translations, "identifier_conflict"))
                                 end
-                                return cb(false, Util.Translate(translations, "failed_to_update"))
+                                return cb(false, Util.translate(translations, "failed_to_update"))
                             end
                             complete(id)
                         end)
@@ -219,14 +228,14 @@ function Callbacks.Register(translations, onStateChanged)
                 end)
             end)
         else
-            Database.FindByIdentifier(fullIdentifier, function(existing)
-                if not existing or tonumber(existing.whitelisted) ~= 1 then return cb(false, Util.Translate(translations, "player_not_in_wl")) end
+            Database.findByIdentifier(fullIdentifier, function(existing)
+                if not existing or tonumber(existing.whitelisted) ~= 1 then return cb(false, Util.translate(translations, "player_not_in_wl")) end
 
-                Database.GetIdentifierList(existing.id, function(identifiers)
-                    Database.SetStatus(existing.id, 0, xPlayer.getIdentifier(), function(affected)
-                        if not affected or affected < 1 then return cb(false, Util.Translate(translations, "failed_to_update")) end
-                        Cache.RemoveWhitelistBatch(identifiers)
-                        cb(true, Util.Translate(translations, "player_removed_success"))
+                Database.getIdentifierList(existing.id, function(identifiers)
+                    Database.setStatus(existing.id, 0, xPlayer.getIdentifier(), function(affected)
+                        if not affected or affected < 1 then return cb(false, Util.translate(translations, "failed_to_update")) end
+                        Cache.removeWhitelistBatch(identifiers)
+                        cb(true, Util.translate(translations, "player_removed_success"))
                     end)
                 end)
             end)
@@ -238,23 +247,23 @@ function Callbacks.Register(translations, onStateChanged)
         local id, status = tonumber(data.id), tonumber(data.status)
         if not id or (status ~= 0 and status ~= 1) then return cb(false) end
 
-        Database.GetIdentifierList(id, function(identifiers)
+        Database.getIdentifierList(id, function(identifiers)
             if #identifiers == 0 then return cb(false) end
-            Database.SetStatus(id, status, adminName(source), function(affected)
+            Database.setStatus(id, status, adminName(source), function(affected)
                 if not affected or affected < 1 then return cb(false) end
 
                 if status == 1 then
-                    Cache.SetWhitelistBatch(identifiers, id)
+                    Cache.setWhitelistBatch(identifiers, id)
                 else
-                    Cache.RemoveWhitelistBatch(identifiers)
+                    Cache.removeWhitelistBatch(identifiers)
                 end
 
                 if status == 0 then
                     -- If this entry belongs to an online player, immediately re-evaluate.
                     for i = 1, #identifiers do
-                        local onlineSource = Cache.FindOnline(identifiers[i])
+                        local onlineSource = Cache.findOnline(identifiers[i])
                         if onlineSource then
-                            Connection.Enforce(onlineSource, translations)
+                            Connection.enforce(onlineSource, translations)
                             break
                         end
                     end

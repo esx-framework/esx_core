@@ -13,6 +13,7 @@ local PATH <const> = "whitelist_config.json"
 local lastEncoded = nil
 local saveInProgress = false
 
+---@description Helper function.
 local function cloneRules(rules)
     local result = {}
     for i = 1, #(rules or {}) do
@@ -23,6 +24,7 @@ local function cloneRules(rules)
     return result
 end
 
+---@description Helper function.
 local function cloneConfig(config)
     local result = {}
     for key, value in pairs(config or {}) do
@@ -31,6 +33,7 @@ local function cloneConfig(config)
     return result
 end
 
+---@description Helper function.
 local function defaults()
     return {
         enabled = false,
@@ -46,6 +49,7 @@ local function defaults()
     }
 end
 
+---@description Helper function.
 local function encodeConfig(config)
     local payload = {
         whitelistEnabled = config.enabled,
@@ -69,6 +73,7 @@ local function encodeConfig(config)
     return encoded
 end
 
+---@description Helper function.
 local function writeEncoded(encoded)
     if lastEncoded == encoded then return true end
     if saveInProgress then return false, "save_in_progress" end
@@ -122,6 +127,7 @@ local function writeEncoded(encoded)
     return false, "state_save_failed"
 end
 
+---@description Helper function.
 local function adoptConfig(config, persist)
     local token = State.config.discordBotToken
     State.config = cloneConfig(config)
@@ -131,14 +137,15 @@ local function adoptConfig(config, persist)
     if not persist then
         local encoded = encodeConfig(State.config)
         lastEncoded = encoded
-        ConfigService.RebuildRules()
+        ConfigService.rebuildRules()
         return encoded ~= nil
     end
 
-    return ConfigService.CommitCandidate(State.config)
+    return ConfigService.commitCandidate(State.config)
 end
 
-function ConfigService.RebuildRules()
+---@description Helper function.
+function ConfigService.rebuildRules()
     State.compiledRules = {}
     for i = 1, #(State.config.rules or {}) do
         if State.config.rules[i].enabled then
@@ -151,7 +158,8 @@ function ConfigService.RebuildRules()
     end)
 end
 
-function ConfigService.CommitCandidate(candidate)
+---@description Helper function.
+function ConfigService.commitCandidate(candidate)
     local encoded, err = encodeConfig(candidate)
     if not encoded then return false, err end
 
@@ -160,21 +168,23 @@ function ConfigService.CommitCandidate(candidate)
 
     State.config = cloneConfig(candidate)
     State.authorizationGeneration = State.authorizationGeneration + 1
-    ConfigService.RebuildRules()
+    ConfigService.rebuildRules()
     return true
 end
 
+---@description Helper function.
 local function tryParseAndValidate(raw, fallback)
     if type(raw) ~= "string" or raw:match("^%s*$") then return nil, "empty" end
     local ok, parsed = pcall(json.decode, raw)
     if not ok or type(parsed) ~= "table" then return nil, "json_syntax_error" end
-    local normalized, err = Validation.Config(parsed, fallback)
+    local normalized, err = Validation.config(parsed, fallback)
     if not normalized then return nil, err or "validation_failed" end
     return normalized
 end
 
-function ConfigService.Load()
-    State.translations = Util.LoadLocale(Config.Locale)
+---@description Helper function.
+function ConfigService.load()
+    State.translations = Util.loadLocale(Config.Locale)
     local fallback = defaults()
     local resourceName = GetCurrentResourceName()
     local raw = LoadResourceFile(resourceName, PATH)
@@ -248,8 +258,9 @@ function ConfigService.Load()
     print("^1========================================================================^7")
 end
 
-function ConfigService.Apply(data)
-    local normalized, err = Validation.Config(data, State.config)
+---@description Helper function.
+function ConfigService.apply(data)
+    local normalized, err = Validation.config(data, State.config)
     if not normalized then return false, err end
 
     local oldEnabled = State.config.enabled
@@ -264,19 +275,20 @@ function ConfigService.Apply(data)
     candidate.authorizationMethod = normalized.authorizationMethod
     candidate.rules = normalized.rules
 
-    local ok, saveErr = ConfigService.CommitCandidate(candidate)
+    local ok, saveErr = ConfigService.commitCandidate(candidate)
     if not ok then return false, saveErr, oldEnabled end
     State.configError = false
     State.configErrorMessage = nil
     return true, nil, oldEnabled
 end
 
-function ConfigService.SetEnabled(enabled)
+---@description Helper function.
+function ConfigService.setEnabled(enabled)
     local oldEnabled = State.config.enabled
     local candidate = cloneConfig(State.config)
     candidate.enabled = enabled == true
 
-    local ok, saveErr = ConfigService.CommitCandidate(candidate)
+    local ok, saveErr = ConfigService.commitCandidate(candidate)
     if not ok then return false, saveErr, oldEnabled end
     State.configError = false
     State.configErrorMessage = nil
