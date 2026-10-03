@@ -1,0 +1,349 @@
+:root {
+  --color-brand: #FB9B04;
+  --color-brand-hover: #FFAE2B;
+  --color-brand-active: #E58A00;
+  --color-darkest: #161616;
+  --color-dark: #252525;
+  --color-mid: #383838;
+  --color-light: #969696;
+  --color-lightest: #F2F2F2;
+
+  --color-danger: #DE3B3B;
+  --color-danger-hover: #F95555;
+  --color-danger-active: #C62222;
+
+  --color-warning: #E0A92C;
+  --color-warning-hover: #FABC4B;
+  --color-warning-active: #C89013;
+
+  --color-success: #19AA59;
+  --color-success-hover: #33C473;
+  --color-success-active: #009140;
+
+  --color-info: #0A78F5;
+  --color-info-hover: #2492FF;
+  --color-info-active: #005EDB;
+
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  font-family: var(--font-family);
+}
+
+body {
+  background: transparent;
+  color: var(--color-lightest);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.is-browser {
+  background: radial-gradient(circle at center, #232328 0%, #0d0d0f 100%);
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+h5 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+h6 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+p,
+span,
+label,
+input,
+select,
+button {
+  font-size: 14px;
+}
+
+/* Base Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-brand {
+  background: var(--color-brand);
+  color: #121212;
+}
+
+.btn-brand:hover {
+  background: var(--color-brand-hover);
+  box-shadow: 0 0 12px rgba(251, 155, 4, 0.4);
+}
+
+.btn-brand:active {
+  background: var(--color-brand-active);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #FFFFFF;
+}
+
+.btn-danger:hover {
+  background: var(--color-danger-hover);
+  box-shadow: 0 0 12px rgba(222, 59, 59, 0.4);
+}
+
+.btn-danger:active {
+  background: var(--color-danger-active);
+}
+
+.btn-warning {
+  background: var(--color-warning);
+  color: #121212;
+}
+
+.btn-warning:hover {
+  background: var(--color-warning-hover);
+  box-shadow: 0 0 12px rgba(224, 169, 44, 0.4);
+}
+
+.btn-warning:active {
+  background: var(--color-warning-active);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: #FFFFFF;
+}
+
+.btn-success:hover {
+  background: var(--color-success-hover);
+  box-shadow: 0 0 12px rgba(25, 170, 89, 0.4);
+}
+
+.btn-success:active {
+  background: var(--color-success-active);
+}
+
+.btn-info {
+  background: var(--color-info);
+  color: #FFFFFF;
+}
+
+.btn-info:hover {
+  background: var(--color-info-hover);
+  box-shadow: 0 0 12px rgba(10, 120, 245, 0.4);
+}
+
+.btn-info:active {
+  background: var(--color-info-active);
+}
+
+.btn-secondary {
+  background: var(--color-mid);
+  color: var(--color-lightest);
+}
+
+.btn-secondary:hover {
+  background: #4a4a4a;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-light);
+  border: 1px solid var(--color-mid);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-lightest);
+  border-color: var(--color-light);
+}
+
+/* Inputs & Form Controls */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-light);
+}
+
+.text-input,
+.select-input {
+  background: #1e1e1e;
+  border: 1px solid var(--color-mid);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  color: var(--color-lightest);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.text-input:focus,
+.select-input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 2px rgba(251, 155, 4, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-mid);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-light);
+}
+
+/* Switch Toggle Component */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  min-width: 44px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--color-mid);
+  transition: 0.25s;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.25s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background-color: var(--color-brand);
+}
+
+input:checked+.slider:before {
+  transform: translateX(20px);
+}
+
+.no-scroll {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background: rgba(25, 170, 89, 0.18);
+  color: #33C473;
+  border: 1px solid rgba(25, 170, 89, 0.35);
+}
+
+.badge-danger {
+  background: rgba(222, 59, 59, 0.18);
+  color: #F95555;
+  border: 1px solid rgba(222, 59, 59, 0.35);
+}
+
+.badge-warning {
+  background: rgba(224, 169, 44, 0.18);
+  color: #FABC4B;
+  border: 1px solid rgba(224, 169, 44, 0.35);
+}
