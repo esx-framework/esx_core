@@ -55,7 +55,9 @@ end
 
 local function callbackAllowed(source)
     source = tonumber(source)
-    return source and source > 0 and Auth.IsAdmin(source) and callbackLimiter:consume(source) or false
+    if not source or source <= 0 then return false end
+    if not callbackLimiter:consume(source) then return false end
+    return Auth.IsAdmin(source)
 end
 
 local function adminName(source)

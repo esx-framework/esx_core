@@ -91,11 +91,7 @@ function Database.Init(cb)
 
     local function runStatement(index)
         if index > #statements then
-            return MySQL.update("UPDATE `esx_whitelist` SET `whitelisted` = 0 WHERE `whitelisted` = 1 AND `added_by` = ?", {
-                "system:admin"
-            }, function(result)
-                cb(result ~= false)
-            end)
+            return cb(true)
         end
 
         MySQL.query(statements[index], {}, function(result)
@@ -248,7 +244,30 @@ function Database.GetIdentifierList(whitelistId, cb)
     end)
 end
 
----@description Inserts a new player with identifiers into the database.
+local function buildAtomicInsertQueries(playerName, whitelisted, addedBy, clean)
+    local queries = {}
+    queries[1] = {
+        query = "INSERT INTO esx_whitelist (player_name, whitelisted, added_by) VALUES (?, ?, ?)",
+        values = {
+            tostring(playerName or "Unknown"):sub(1, 255),
+            whitelisted and 1 or 0,
+            tostring(addedBy or "Unknown"):sub(1, 255)
+        }
+    }
+    local placeholders, values = {}, {}
+    for i = 1, #clean do
+        placeholders[#placeholders + 1] = "(LAST_INSERT_ID(), ?, ?)"
+        values[#values + 1] = clean[i].type
+        values[#values + 1] = clean[i].identifier
+    end
+    queries[2] = {
+        query = "INSERT INTO esx_whitelist_identifier (whitelist_id, type, identifier) VALUES " .. table.concat(placeholders, ", "),
+        values = values
+    }
+    return queries
+end
+
+---@description Inserts a new player with identifiers into the database atomically.
 ---@param playerName string Player display name
 ---@param identifiers string[] Player identifiers
 ---@param whitelisted boolean Initial whitelist status
@@ -263,26 +282,24 @@ function Database.InsertPlayer(playerName, identifiers, whitelisted, addedBy, cb
     Database.FindByIdentifiers(identifiersOnly, function(existing)
         if existing then return cb(nil, "identifier_already_exists", existing) end
 
-        MySQL.insert("INSERT INTO esx_whitelist (player_name, whitelisted, added_by) VALUES (?, ?, ?)", {
-            tostring(playerName or "Unknown"):sub(1, 255),
-            whitelisted and 1 or 0,
-            tostring(addedBy or "Unknown"):sub(1, 255)
-        }, function(id)
-            id = tonumber(id)
-            if not id then return cb(nil, "insert_failed") end
+        local queries = buildAtomicInsertQueries(playerName, whitelisted, addedBy, clean)
+        MySQL.transaction(queries, function(success)
+            if not success then
+                return Database.FindByIdentifiers(identifiersOnly, function(racedEntry)
+                    if racedEntry then
+                        return cb(nil, "identifier_already_exists", racedEntry)
+                    end
+                    cb(nil, "identifier_insert_failed")
+                end)
+            end
 
-            MySQL.transaction(identifierInsertQueries(id, clean), function(success)
-                if not success then
-                    return MySQL.update("DELETE FROM esx_whitelist WHERE id = ?", { id }, function()
-                        Database.FindByIdentifiers(identifiersOnly, function(racedEntry)
-                            if racedEntry then
-                                return cb(nil, "identifier_already_exists", racedEntry)
-                            end
-                            cb(nil, "identifier_insert_failed")
-                        end)
-                    end)
+            Database.FindByIdentifiers(identifiersOnly, function(createdEntry)
+                local id = createdEntry and tonumber(createdEntry.id)
+                if id then
+                    cb(id)
+                else
+                    cb(nil, "insert_verification_failed")
                 end
-                cb(id)
             end)
         end)
     end)

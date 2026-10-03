@@ -98,14 +98,49 @@ function Cache.ReplaceWhitelist(newCache, generation)
     return true
 end
 
+local function buildTypeSet(types)
+    if type(types) ~= "table" then return nil end
+    local set = {}
+    local count = 0
+    for i = 1, #types do
+        local t = types[i]
+        if type(t) == "string" and t ~= "" then
+            set[t:lower()] = true
+            count = count + 1
+        end
+    end
+    return count > 0 and set or nil
+end
+
+local allowedAuthTypes = nil
+if Config and Config.AuthorizationIdentifierTypes then
+    allowedAuthTypes = buildTypeSet(Config.AuthorizationIdentifierTypes)
+end
+
+---@description Sets or overrides the allowed identifier types for whitelist authorization.
+---@param types string[]? Table of allowed identifier type strings, or nil to allow all
+function Cache.SetAllowedAuthTypes(types)
+    allowedAuthTypes = buildTypeSet(types)
+end
+
 ---@description Checks if any identifier is in the whitelist cache.
 ---@param identifiers string[] List of identifier strings
+---@param allowedTypes? table<string, boolean> Optional set of allowed identifier types to restrict check
 ---@return boolean isWhitelisted
 ---@return number? whitelistId
-function Cache.IsWhitelisted(identifiers)
+function Cache.IsWhitelisted(identifiers, allowedTypes)
+    local filter = allowedTypes or allowedAuthTypes
     for i = 1, #(identifiers or {}) do
-        local id = State.whitelistCache[identifiers[i]]
-        if id then return true, id end
+        local identifier = identifiers[i]
+        local allow = true
+        if filter then
+            local idType = type(identifier) == "string" and identifier:match("^(%w+):")
+            allow = idType ~= nil and filter[idType:lower()] == true
+        end
+        if allow then
+            local id = State.whitelistCache[identifier]
+            if id then return true, id end
+        end
     end
     return false, nil
 end

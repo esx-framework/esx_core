@@ -29,26 +29,40 @@ end
 ---@return boolean changed
 function Rules.EvaluateAndApply(onChanged)
     if State.ruleEvaluationPending then return false end
-    State.ruleEvaluationPending = true
 
     local newState = Rules.Evaluate()
     local changed = newState ~= State.config.enabled
-    if changed then
-        local ok, err = ConfigService.SetEnabled(newState)
-        if not ok then
-            if Config.Debug then
-                print(("^1[esx_whitelist] Automatic state save failed (%s); keeping current state.^7"):format(err or "unknown error"))
-            end
-            State.ruleEvaluationPending = false
-            return false
+    if not changed then return false end
+
+    local cooldownMs = math.max(10, math.floor(tonumber(Config.RuleStateChangeCooldown) or 60)) * 1000
+    local now = GetGameTimer()
+    if State.lastRuleStateChangeAt and State.lastRuleStateChangeAt > 0 and (now - State.lastRuleStateChangeAt) < cooldownMs then
+        if Config.Debug then
+            print(("^3[esx_whitelist] Automatic state change suppressed by anti-flapping cooldown (%d ms remaining).^7"):format(
+                cooldownMs - (now - State.lastRuleStateChangeAt)
+            ))
         end
-        if onChanged then onChanged(newState, false, nil) end
+        return false
     end
+
+    State.ruleEvaluationPending = true
+
+    local ok, err = ConfigService.SetEnabled(newState)
+    if not ok then
+        if Config.Debug then
+            print(("^1[esx_whitelist] Automatic state save failed (%s); keeping current state.^7"):format(err or "unknown error"))
+        end
+        State.ruleEvaluationPending = false
+        return false
+    end
+
+    State.lastRuleStateChangeAt = math.max(1, now)
+    if onChanged then onChanged(newState, false, nil) end
 
     SetTimeout(1000, function()
         State.ruleEvaluationPending = false
     end)
-    return changed
+    return true
 end
 
 return Rules

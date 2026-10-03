@@ -30,6 +30,9 @@ State.onlinePlayerCount = 0
 State.onlineAdminCount = 0
 
 State.ruleEvaluationPending = false
+State.lastRuleStateChangeAt = 0
+State.configError = false
+State.configErrorMessage = nil
 State.databaseReady = false
 State.initializing = false
 

@@ -116,5 +116,6 @@
     "not_authorized": "NOT AUTHORIZED",
     "player_removed_success": "Player removed successfully",
     "player_added_success": "Player added successfully",
-    "error_getting_admin_data": "Error getting admin data"
+    "error_getting_admin_data": "Error getting admin data",
+    "config_error": "Server configuration error: Whitelist is in safe-lock mode. Please contact server administration."
 }

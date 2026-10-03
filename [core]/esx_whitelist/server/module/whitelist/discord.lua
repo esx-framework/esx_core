@@ -10,7 +10,7 @@ local State <const> = xLib.require "@esx_whitelist.server.module.whitelist.state
 ---@description Discord integration for role verification, webhook logging, and API communication with retry logic.
 local Discord = {}
 
-local POSITIVE_TTL <const> = 60
+local POSITIVE_TTL <const> = math.max(60, math.min(3600, math.floor(tonumber(Config.DiscordCacheTTL) or 300)))
 local NEGATIVE_TTL <const> = 30
 local MAX_ATTEMPTS <const> = 3
 local RETRY_DELAY <const> = 1000

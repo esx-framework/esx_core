@@ -13,12 +13,23 @@ Config.AdminGroups = {
     "mod"
 }
 
--- ACE permissions used while a player is still connecting, before ESX has
--- created an xPlayer. Grant this dedicated permission in server.cfg.
 Config.AdminAcePermissions = {
     "esx_whitelist.admin"
 }
 
+Config.AuthorizationIdentifierTypes = {
+    "license2",
+    "license"
+}
+
+-- Anti-flapping cooldown in seconds between automatic rule state transitions
+Config.RuleStateChangeCooldown = 60
+
+-- Deferral timeout in milliseconds for identifier authorization mode
+Config.IdentifierDeferralTimeout = 5000
+
+-- Discord role verification settings
+Config.DiscordCacheTTL = 300
 Config.DiscordMaxConcurrentRequests = 8
 Config.DiscordMaxQueuedRequests = 2048
 Config.DiscordRequestIntervalMs = 25

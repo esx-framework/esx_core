@@ -76,6 +76,15 @@ local function writeEncoded(encoded)
     saveInProgress = true
     local resourceName = GetCurrentResourceName()
     local previous = LoadResourceFile(resourceName, PATH)
+
+    -- Preserve a known-good backup snapshot before overwriting
+    if type(previous) == "string" and #previous > 0 then
+        local okParse, parsed = pcall(json.decode, previous)
+        if okParse and type(parsed) == "table" then
+            pcall(SaveResourceFile, resourceName, PATH .. ".bak", previous, #previous)
+        end
+    end
+
     local okTemp, tempResult = pcall(SaveResourceFile, resourceName, PATH .. ".tmp", encoded, #encoded)
 
     if okTemp and tempResult ~= false then
@@ -153,15 +162,38 @@ function ConfigService.CommitCandidate(candidate)
     return true
 end
 
+local function tryParseAndValidate(raw, fallback)
+    if type(raw) ~= "string" or raw:match("^%s*$") then return nil, "empty" end
+    local ok, parsed = pcall(json.decode, raw)
+    if not ok or type(parsed) ~= "table" then return nil, "json_syntax_error" end
+    local normalized, err = Validation.Config(parsed, fallback)
+    if not normalized then return nil, err or "validation_failed" end
+    return normalized
+end
+
 function ConfigService.Load()
     State.translations = Util.LoadLocale(Config.Locale)
     local fallback = defaults()
-    local raw = LoadResourceFile(GetCurrentResourceName(), PATH)
+    local resourceName = GetCurrentResourceName()
+    local raw = LoadResourceFile(resourceName, PATH)
 
-    if not raw then
+    -- Case 1: Primary file does not exist. Check if a backup snapshot exists.
+    if not raw or raw:match("^%s*$") then
+        local bak = LoadResourceFile(resourceName, PATH .. ".bak")
+        local recoveredFromBak = tryParseAndValidate(bak, fallback)
+        if recoveredFromBak then
+            print("^3[esx_whitelist] No primary configuration found; restored from backup snapshot (whitelist_config.json.bak).^7")
+            State.configError = false
+            State.configErrorMessage = nil
+            adoptConfig(recoveredFromBak, true)
+            return
+        end
+
         if Config.Debug then
             print("^3[esx_whitelist] No saved configuration found at whitelist_config.json; writing safe defaults.^7")
         end
+        State.configError = false
+        State.configErrorMessage = nil
         adoptConfig(fallback, true)
         return
     end
@@ -170,31 +202,48 @@ function ConfigService.Load()
         print("^3[esx_whitelist] Reading saved whitelist configuration.^7")
     end
 
-    local ok, parsed = pcall(json.decode, raw)
-    if not ok or type(parsed) ~= "table" then
+    -- Case 2: Primary file exists and validates.
+    local normalized, parseErr = tryParseAndValidate(raw, fallback)
+    if normalized then
+        State.configError = false
+        State.configErrorMessage = nil
         if Config.Debug then
-            print("^1[esx_whitelist] Invalid whitelist_config.json; writing safe defaults.^7")
+            print(("^3[esx_whitelist] Loaded saved configuration - enabled=%s - method=%s^7"):format(
+                tostring(normalized.whitelistEnabled),
+                tostring(normalized.authorizationMethod)
+            ))
         end
-        adoptConfig(fallback, true)
+        adoptConfig(normalized, false)
         return
     end
 
-    local normalized, err = Validation.Config(parsed, fallback)
-    if not normalized then
-        if Config.Debug then
-            print(("^1[esx_whitelist] Invalid saved config (%s); writing safe defaults.^7"):format(err or "unknown error"))
-        end
-        adoptConfig(fallback, true)
+    -- Case 3: Primary file is corrupt. Attempt recovery from backup snapshot.
+    local bak = LoadResourceFile(resourceName, PATH .. ".bak")
+    local recoveredFromBak = tryParseAndValidate(bak, fallback)
+    if recoveredFromBak then
+        print(("^3[esx_whitelist] WARNING: Corrupted whitelist_config.json (%s)! Restored from whitelist_config.json.bak.^7"):format(tostring(parseErr)))
+        State.configError = false
+        State.configErrorMessage = nil
+        adoptConfig(recoveredFromBak, true)
         return
     end
 
-    if Config.Debug then
-        print(("^3[esx_whitelist] Loaded saved configuration - enabled=%s - method=%s^7"):format(
-        tostring(normalized.whitelistEnabled),
-        tostring(normalized.authorizationMethod)
-    ))
-    end
-    adoptConfig(normalized, false)
+    -- Case 4: FAIL-CLOSED SECURITY LOCKDOWN.
+    -- An existing configuration was corrupted and no valid backup exists.
+    -- Do NOT disable whitelist. Keep whitelist active in lockdown mode and alert admins.
+    State.configError = true
+    State.configErrorMessage = parseErr or "corrupted_config"
+    local lockdownConfig = cloneConfig(fallback)
+    lockdownConfig.enabled = true
+    adoptConfig(lockdownConfig, false)
+
+    print("^1========================================================================^7")
+    print("^1[esx_whitelist] CRITICAL CONFIGURATION ERROR: whitelist_config.json is CORRUPT!^7")
+    print(("^1[esx_whitelist] Error details: %s^7"):format(tostring(parseErr)))
+    print("^1[esx_whitelist] FAIL-CLOSED PROTECTION ACTIVATED: Whitelist is in safe-lock mode.^7")
+    print("^1[esx_whitelist] Normal player connections are BLOCKED until configuration is repaired.^7")
+    print("^1[esx_whitelist] The corrupted file was NOT overwritten so administrators can recover it.^7")
+    print("^1========================================================================^7")
 end
 
 function ConfigService.Apply(data)
@@ -215,6 +264,8 @@ function ConfigService.Apply(data)
 
     local ok, saveErr = ConfigService.CommitCandidate(candidate)
     if not ok then return false, saveErr, oldEnabled end
+    State.configError = false
+    State.configErrorMessage = nil
     return true, nil, oldEnabled
 end
 
@@ -225,6 +276,8 @@ function ConfigService.SetEnabled(enabled)
 
     local ok, saveErr = ConfigService.CommitCandidate(candidate)
     if not ok then return false, saveErr, oldEnabled end
+    State.configError = false
+    State.configErrorMessage = nil
     return true, nil, oldEnabled
 end
 

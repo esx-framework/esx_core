@@ -62,7 +62,7 @@ local function validateValue(idType, value)
     elseif idType == Enum.IdentifierType.XBL then
         return value:match("^%d+$") ~= nil and #value == 16
     elseif idType == Enum.IdentifierType.FIVEM then
-        return value:match("^%d+$") ~= nil and #value >= 6 and #value <= 8
+        return value:match("^%d+$") ~= nil and #value >= 1 and #value <= 20
     elseif idType == Enum.IdentifierType.STEAM then
         return value:match("^[0-9a-fA-F]+$") ~= nil and #value >= 15 and #value <= 17
     end

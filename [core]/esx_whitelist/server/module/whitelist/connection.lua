@@ -15,6 +15,7 @@ local GRACE_MIN <const>, GRACE_MAX <const> = 0, 600
 local KICK_CHUNK <const> = 25
 local sessionSequence = 0
 local playerSessions = {}
+local sessionAuthorized = {}
 
 local function ensureSession(source)
     if playerSessions[source] then return playerSessions[source] end
@@ -44,6 +45,7 @@ end
 function Connection.EndSession(source, sessionId)
     source = tonumber(source)
     if not source or (sessionId and playerSessions[source] ~= sessionId) then return end
+    if sessionId then sessionAuthorized[sessionId] = nil end
     playerSessions[source] = nil
     State.gracePlayers[source] = nil
     Auth.Clear(source)
@@ -112,10 +114,14 @@ local function whenDatabaseReady(callback)
     end)
 end
 
-local function enforce(source, translations, useGrace, sessionId)
+local function enforce(source, translations, useGrace, sessionId, isMassEnforcement)
     source = tonumber(source)
     if not source or source <= 0 then return end
     sessionId = sessionId or ensureSession(source)
+
+    if isMassEnforcement and sessionAuthorized[sessionId] then
+        return
+    end
 
     Connection.Authorize(source, function(allow)
         if not isCurrentSession(source, sessionId) then return end
@@ -141,9 +147,9 @@ local function identifiersFor(source)
     return identifiers
 end
 
-local function persistAccess(source, identifiers, addedBy, callback, sessionId)
-    local function persist()
-        if not isCurrentSession(source, sessionId) then return end
+local function persistAccessAsync(source, identifiers, addedBy, sessionId)
+    whenDatabaseReady(function(ready)
+        if not isCurrentSession(source, sessionId) or not ready then return end
         Database.EnsureWhitelisted(
             GetPlayerName(source) or "Unknown",
             identifiers,
@@ -153,15 +159,11 @@ local function persistAccess(source, identifiers, addedBy, callback, sessionId)
                 if saved and whitelistId then
                     TriggerEvent("esx_whitelist:notifyEntryChanged", whitelistId)
                 end
-                callback(saved == true, err, whitelistId)
+                if not saved and Config.Debug then
+                    print(("^3[esx_whitelist] Async Discord access persistence notice: %s^7"):format(err or "unknown"))
+                end
             end
         )
-    end
-
-    whenDatabaseReady(function(ready)
-        if not isCurrentSession(source, sessionId) then return end
-        if not ready then return callback(false, "database_unavailable") end
-        persist()
     end)
 end
 
@@ -190,7 +192,14 @@ function Connection.Authorize(source, callback, currentIdentifiers, sessionId)
     sessionId = sessionId or ensureSession(source)
 
     local function respond(allow, reason)
-        if isCurrentSession(source, sessionId) then callback(allow, reason) end
+        if isCurrentSession(source, sessionId) then
+            if allow then sessionAuthorized[sessionId] = true end
+            callback(allow, reason)
+        end
+    end
+
+    if State.configError then
+        return respond(false, "config_error")
     end
 
     if not State.config.enabled then return respond(true, "whitelist_disabled") end
@@ -223,10 +232,14 @@ function Connection.Authorize(source, callback, currentIdentifiers, sessionId)
                     return respond(false, reason or "not_whitelisted")
                 end
 
-                if Cache.IsWhitelisted(identifiers) then return respond(true, "discord") end
-                persistAccess(source, identifiers, "system:discord", function(saved, err)
-                    respond(saved, saved and "discord" or (err or "discord_persist_failed"))
-                end, sessionId)
+                -- Immediately allow player into server without blocking deferrals on MySQL
+                respond(true, "discord")
+
+                -- Optimistically register in cache
+                Cache.SetWhitelistBatch(identifiers, true)
+
+                -- Decoupled background async persistence
+                persistAccessAsync(source, identifiers, "system:discord", sessionId)
             end, sessionId)
         end
 
@@ -277,18 +290,32 @@ function Connection.StartGrace(source, playerName, translations, sessionId)
     end)
 end
 
+local enforcementRunning = false
+local enforcementRequested = false
+
 ---@description Kicks all connected players who are not whitelisted.
 ---@param translations table Locale translation strings
 function Connection.KickNonWhitelisted(translations)
+    if enforcementRunning then
+        enforcementRequested = true
+        return
+    end
+
+    enforcementRunning = true
     CreateThread(function()
-        local players = GetPlayers()
-        for i = 1, #players do
-            local source = tonumber(players[i])
-            if source and not State.gracePlayers[source] then
-                enforce(source, translations, nil, Connection.GetSessionId(source))
+        while true do
+            enforcementRequested = false
+            local players = GetPlayers()
+            for i = 1, #players do
+                local source = tonumber(players[i])
+                if source and not State.gracePlayers[source] then
+                    enforce(source, translations or State.translations, nil, Connection.GetSessionId(source), true)
+                end
+                if i % KICK_CHUNK == 0 then Wait(0) end
             end
-            if i % KICK_CHUNK == 0 then Wait(0) end
+            if not enforcementRequested then break end
         end
+        enforcementRunning = false
     end)
 end
 
@@ -319,7 +346,14 @@ function Connection.Verify(playerSource, playerName, setKickReason, deferrals, t
         finish(deferrals, allow, reason)
     end
 
-    SetTimeout(Discord.DeferralTimeout() + 500, function()
+    local timeoutMs
+    if State.config.authorizationMethod == "discord" then
+        timeoutMs = Discord.DeferralTimeout() + 500
+    else
+        timeoutMs = tonumber(Config.IdentifierDeferralTimeout) or 5000
+    end
+
+    SetTimeout(timeoutMs, function()
         finishOnce(false, Util.Translate(translations, "kick_message"))
     end)
 
@@ -336,6 +370,8 @@ function Connection.Verify(playerSource, playerName, setKickReason, deferrals, t
         end
         if reason == "discord_error" then
             return finishOnce(false, Util.Translate(translations, "discord_check_failed"))
+        elseif reason == "config_error" then
+            return finishOnce(false, Util.Translate(translations, "config_error") or "Server configuration error: Whitelist is in safe-lock mode.")
         end
 
         finishOnce(false, Util.Translate(translations, "kick_message"))
