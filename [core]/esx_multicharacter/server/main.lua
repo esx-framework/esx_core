@@ -9,6 +9,8 @@ Server.slots = Config.Slots or 4
 Server.prefix = Config.Prefix or "char"
 Server.identifierType = ESX.GetConfig("Identifier") or GetConvar("sv_lan", "") == "true" and "ip" or "license"
 
+ESXCatalog.awaitReady()
+
 AddEventHandler("playerConnecting", function(_, _, deferrals)
    local source = source
    Server:OnConnecting(source, deferrals)

@@ -47,24 +47,24 @@ function Skin:CalcuatePosition(coords)
     return pos, posToLook
 end
 
-AddEventHandler("esx_skin:resetFirstSpawn", function()
+AddEventHandler('esx_skin:resetFirstSpawn', function()
     Skin.firstSpawn = true
     ESX.PlayerLoaded = false
 end)
 
-AddEventHandler("esx_skin:playerRegistered", function()
+AddEventHandler('esx_skin:playerRegistered', function()
     CreateThread(function()
         while not ESX.PlayerLoaded do
             Wait(100)
         end
 
         if Skin.firstSpawn then
-            xLib.callback("esx_skin:getPlayerSkin", false, function(skin)
+            xLib.callback('esx_skin:getPlayerSkin', false, function(skin)
                 if skin == nil then
-                    exports["skinchanger"]:LoadSkin({ sex = 0 })
+                    exports['skinchanger']:LoadSkin({ sex = 0 })
                     Menu:Saveable(nil, nil, nil, true)
                 else
-                    exports["skinchanger"]:LoadSkin(skin)
+                    exports['skinchanger']:LoadSkin(skin)
                 end
             end)
 
@@ -73,31 +73,35 @@ AddEventHandler("esx_skin:playerRegistered", function()
     end)
 end)
 
-RegisterNetEvent("esx:playerLoaded", function(_, _, skin)
+RegisterNetEvent('esx:playerLoaded', function(_, _, skin)
     ESX.PlayerLoaded = true
-    TriggerServerEvent("esx_skin:setWeight", skin)
+    TriggerServerEvent('esx_skin:setWeight', skin)
 end)
 
-RegisterNetEvent("esx_skin:openMenu", function(submitCb, cancelCb)
+RegisterNetEvent('esx_skin:openMenu', function(submitCb, cancelCb)
     Menu:Open(submitCb, cancelCb, nil)
 end)
 
-RegisterNetEvent("esx_skin:openRestrictedMenu", function(submitCb, cancelCb, restrict)
+RegisterNetEvent('esx_skin:openRestrictedMenu', function(submitCb, cancelCb, restrict)
     Menu:Open(submitCb, cancelCb, restrict)
 end)
 
-RegisterNetEvent("esx_skin:openSaveableMenu", function(submitCb, cancelCb)
+RegisterNetEvent('esx_skin:openSaveableMenu', function(submitCb, cancelCb)
     Menu:Saveable(submitCb, cancelCb, nil)
 end)
 
-RegisterNetEvent("esx_skin:openSaveableRestrictedMenu", function(submitCb, cancelCb, restrict)
+RegisterNetEvent('esx_skin:openSaveableRestrictedMenu', function(submitCb, cancelCb, restrict)
     Menu:Saveable(submitCb, cancelCb, restrict)
 end)
 
-AddEventHandler("esx_skin:getLastSkin", function(cb)
+AddEventHandler('esx_skin:getLastSkin', function(cb)
     cb(Skin.Last)
 end)
 
-AddEventHandler("esx_skin:setLastSkin", function(skin)
+AddEventHandler('esx_skin:setLastSkin', function(skin)
     Skin.Last = skin
+end)
+
+RegisterNetEvent('esx_skin:saveFailed', function()
+    ESX.ShowNotification(TranslateCap('skin_save_failed'))
 end)

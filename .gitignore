@@ -1,1 +1,31 @@
+# Local operating system files.
 .DS_Store
+Thumbs.db
+Desktop.ini
+
+# Install dependencies from the committed lockfiles.
+node_modules/
+.npm-cache/
+.pnpm-store/
+
+# Local validation runtimes, caches and generated reports.
+.joblisting-qa/
+.cache/
+coverage/
+test-results/
+playwright-report/
+
+# Logs and temporary editor files.
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Local credentials; keep reusable configuration examples.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+!.env.*.example

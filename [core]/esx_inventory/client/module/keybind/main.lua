@@ -4,10 +4,10 @@
 local Inventory = ESXInventory
 
 xLib.addKeybind({
-    name = "showinv",
-    description = TranslateCap("keymap_showinventory"),
-    defaultMapper = "keyboard",
-    defaultKey = "F2",
+    name = 'showinv',
+    description = TranslateCap('keymap_showinventory'),
+    defaultMapper = 'keyboard',
+    defaultKey = 'F2',
     onPressed = function()
         if Inventory.isOpen then
             Inventory.close(false)
@@ -19,24 +19,24 @@ xLib.addKeybind({
 
 for i = 1, Config.HotbarSlots do
     xLib.addKeybind({
-        name = ("hotbar%s"):format(i),
-        description = TranslateCap("keymap_hotbar", i),
-        defaultMapper = "keyboard",
-        defaultKey = "",
+        name = ('hotbar%s'):format(i),
+        description = TranslateCap('keymap_hotbar', i),
+        defaultMapper = 'keyboard',
+        defaultKey = tostring(i),
         onPressed = function()
-            if Inventory.isOpen or not ESX.PlayerLoaded or ESX.PlayerData.dead then
+            if Inventory.isOpen then
+                return
+            end
+
+            if not ESX.PlayerLoaded or ESX.PlayerData.dead then
                 return
             end
 
             local targetSlot = i - 1
+            local item = Inventory.getItemInSlot(targetSlot)
 
-            for j = 1, #(ESX.PlayerData.inventory or {}) do
-                local item = ESX.PlayerData.inventory[j]
-
-                if item.count > 0 and item.usable and Inventory.getSlot(Inventory.itemKey("item_standard", item.name)) == targetSlot then
-                    TriggerServerEvent("esx:useItem", item.name)
-                    return
-                end
+            if item then
+                Inventory.useItem(item.type, item.name)
             end
         end,
     })

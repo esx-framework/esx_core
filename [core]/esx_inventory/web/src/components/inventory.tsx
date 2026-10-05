@@ -110,7 +110,11 @@ export default function Inventory({
               isSelected={item !== null && itemKey(item) === selectedItem}
               onSelect={() => item && setSelectedItem(itemKey(item) === selectedItem ? null : itemKey(item))}
               onPointerDown={(e) => item && onSlotPointerDown(item, panel, e)}
-              onUse={item && onUseItem && item.type === "item_standard" ? () => onUseItem(item) : undefined}
+              onUse={
+                item && onUseItem && item.usable
+                  ? () => onUseItem(item)
+                  : undefined
+              }
               onGive={item && onGiveItem ? () => onGiveItem(item) : undefined}
               onDropItem={item && onDropItem && (!canDropItem || canDropItem(item)) ? () => onDropItem(item) : undefined}
               useLabel={useLabel}
