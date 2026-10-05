@@ -34,14 +34,17 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
         return RuntimeConfig:Get().Discord
     end
 
-    ---Resolves the bot token. Convar wins; the Lua value is a fallback.
+    ---Resolves the bot token. Convar wins; any server-only fallback is optional.
     ---@return string
     local function resolveToken()
         local fromConvar = Util.Trim(GetConvar("discord:botToken", ""))
         if fromConvar ~= "" then
             return fromConvar
         end
-        return Util.Trim(discordConfig().BotToken or "")
+
+        local cfg = discordConfig()
+        local fallback = cfg and cfg.BotToken or ""
+        return Util.Trim(fallback)
     end
 
     ---Whether a bot token is available (without revealing it).

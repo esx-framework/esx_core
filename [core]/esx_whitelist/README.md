@@ -31,8 +31,7 @@
    ensure esx_whitelist
    ```
 3. Open `config/main.lua` and set your Discord `GuildId`, `AllowedRoles`, and optionally static `AllowedIdentifiers`.
-
-> `set` convars stay on the server; The theme convars MUST use `setr`, the secrets MUST use `set`.
+> `set` convars stay on the server; the theme convars MUST use `setr`, and the secrets MUST use `set`.
 
 ## 2. Discord bot setup
 
@@ -40,7 +39,8 @@
 2. Enable **Server Members Intent** is NOT required for `GET /guilds/{id}/members/{userId}`, but the bot must be **a member of the guild**.
 3. Invite the bot with the `bot` scope (no special permissions needed; role reads work via the member endpoint).
 4. Put the token in `server.cfg` as shown above. Never put it in `config/main.lua` on a shared repository, and never in any client/NUI file.
-5. Copy your guild ID and role IDs (Discord → Settings → Advanced → Developer Mode, then right-click → Copy ID) into the config or the in-game panel.
+5. For webhook logging, set `set whitelist:webhook "https://discord.com/api/webhooks/..."` in `server.cfg`;
+6. Copy your guild ID and role IDs (Discord → Settings → Advanced → Developer Mode, then right-click → Copy ID) into the config or the in-game panel.
 
 If the token is missing or invalid, the resource prints a clear startup error and Discord-based checks fail closed (deny) without crashing anything.
 

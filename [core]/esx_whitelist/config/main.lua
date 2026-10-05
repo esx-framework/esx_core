@@ -55,14 +55,6 @@ Config.Discord = {
         --"123456789012345678",
     },
 
-    --[[
-        Fallback only. Prefer the `discord:botToken` server convar.
-        Leave empty. If both are empty and Discord verification is
-        required, the resource logs a configuration error and denies
-        Discord-based authorization without crashing.
-    ]]
-    BotToken = "",
-
     -- Per-request HTTP timeout in milliseconds.
     Timeout = 5000,
 
@@ -134,13 +126,12 @@ Config.Bypass = {
 
 --[[
     Discord webhook logging (optional).
+
+    The webhook is NOT configured here. Add to server.cfg:
+        set whitelist:webhook "https://discord.com/api/webhooks/..."
 ]]
 Config.Logging = {
     Enabled = true,
-
-    -- Prefer the server convar:  set whitelist:webhook "https://discord.com/api/webhooks/..."
-    -- This Lua value is only a fallback.
-    Webhook = "",
 
     MinInterval = 1200, -- ms between webhook requests
     BatchSize = 5,      -- events drained per cycle

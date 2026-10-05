@@ -23,7 +23,10 @@ return function(Util, LoggerUtil, RuntimeConfig)
         if fromConvar ~= "" then
             return fromConvar
         end
-        return Util.Trim(loggingConfig().Webhook or "")
+
+        local cfg = loggingConfig()
+        local fallback = cfg and cfg.Webhook or ""
+        return Util.Trim(fallback)
     end
 
     ---Console output with level gating. Debug messages are suppressed
