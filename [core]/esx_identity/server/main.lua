@@ -338,7 +338,7 @@ if Config.EnableCommands then
         end
     end, false, { help = TranslateCap("show_active_character") })
 
-    ESX.RegisterCommand("chardel", "user", function(xPlayer)
+    ESX.RegisterCommand("chardel", "admin", function(xPlayer)
         if xPlayer and xPlayer.getName() then
             local identifier = xPlayer.getIdentifier()
             if Config.UseDeferrals then
