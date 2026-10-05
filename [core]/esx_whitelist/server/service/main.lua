@@ -1,16 +1,21 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
----Player-facing messages. 
+---@return string
+local function T(key, ...)
+    return _(key, ...)
+end
+
+---Player-facing messages.
 local MESSAGES <const> = {
-    admin_only = "This server is currently restricted to administrators.",
-    not_whitelisted = "You are not whitelisted on this server.",
-    discord_missing = "A linked Discord account is required to join this server.",
-    discord_role = "You lack the required Discord role to join this server.",
-    discord_guild = "You must be a member of our Discord server to join.",
-    discord_unavailable = "Verification is temporarily unavailable. Please try again shortly.",
-    timeout = "Verification timed out. Please try again.",
-    error = "An internal error occurred during verification. Please try again.",
+    admin_only = T("admin_only"),
+    not_whitelisted = T("not_whitelisted"),
+    discord_missing = T("discord_required"),
+    discord_role = T("discord_role_required"),
+    discord_guild = T("discord_server_required"),
+    discord_unavailable = T("discord_unavailable"),
+    timeout = T("verification_timeout"),
+    error = T("verification_error"),
 }
 
 ---@param Util table

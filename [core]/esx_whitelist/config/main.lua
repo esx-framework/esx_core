@@ -2,6 +2,7 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 Config = {}
+Config.Locale = GetConvar("esx:locale", "en")
 
 --[[
     When false, every player is allowed to connect and all

@@ -40,6 +40,10 @@ return function(deps)
         end
     end
 
+    local function locale(key, ...)
+        return _(key, ...)
+    end
+
     ---@param source number
     local function cmdStatus(source)
         local cfg = RuntimeConfig:Get()
@@ -47,18 +51,18 @@ return function(deps)
         local discordStats = Discord:GetStats()
         local configured, problem = Discord:IsConfigured()
 
-        reply(source, ("Whitelist: %s | mode=%s (%s) | admin-only=%s"):format(
+        reply(source, locale("command_status",
             cfg.Whitelist.Enabled and "ENABLED" or "DISABLED",
             cfg.Whitelist.Mode,
             cfg.Whitelist.CombinationMode,
             cfg.AdminOnly.Enabled and "ON" or "off"
         ))
-        reply(source, ("Discord: %s | requests=%d cacheHits=%d shared=%d rateLimits=%d errors=%d"):format(
+        reply(source, locale("command_status_discord",
             configured and "ready" or ("NOT READY (" .. tostring(problem) .. ")"),
             discordStats.requests, discordStats.cacheHits, discordStats.shared,
             discordStats.rateLimits, discordStats.errors
         ))
-        reply(source, ("Decisions: total=%d allowed=%d denied=%d | adminCache=%d entries"):format(
+        reply(source, locale("command_status_decisions",
             serviceStats.total, serviceStats.allowed, serviceStats.denied, AdminCache:GetCount()
         ))
     end
@@ -68,7 +72,7 @@ return function(deps)
         local ok = RuntimeConfig:Load()
         Identifier:Rebuild()
         Discord:LoadCache()
-        reply(source, ok and "Runtime configuration reloaded." or "Runtime configuration file was corrupted; defaults restored.")
+        reply(source, ok and locale("runtime_reloaded") or locale("runtime_reloaded_fallback"))
         Logger:Event("security", "Configuration reloaded via command", {
             { name = "Source", value = source == 0 and "console" or tostring(GetPlayerName(source)), inline = true },
         })
@@ -80,12 +84,12 @@ return function(deps)
         local sub = args[2]
         if sub == "clear" then
             Discord:ClearCache()
-            reply(source, "Discord verification cache cleared.")
+            reply(source, locale("discord_cache_cleared"))
             return
         end
 
         local discordStats = Discord:GetStats()
-        reply(source, ("Discord cache: %d entries | admin cache: %d entries | queue: %d (active %d)"):format(
+        reply(source, locale("command_cache_stats",
             discordStats.cachedEntries, AdminCache:GetCount(), discordStats.queueLength, discordStats.activeRequests
         ))
     end
@@ -95,11 +99,11 @@ return function(deps)
     local function cmdTest(source, args)
         local target = tonumber(args[2] or "")
         if not target then
-            reply(source, "Usage: whitelist test <serverId>")
+            reply(source, locale("command_usage_test"))
             return
         end
         if not GetPlayerName(target) then
-            reply(source, ("No online player with server id %d."):format(target))
+            reply(source, locale("no_online_player", target))
             return
         end
 
@@ -107,10 +111,10 @@ return function(deps)
         CreateThread(function()
             local result = Service:CheckPlayer(target)
             if not result then
-                reply(source, "Player left before the check completed.")
+                reply(source, locale("player_left_before_check"))
                 return
             end
-            reply(source, ("Test for %s [%d]: %s | method=%s | reason=%s | identifier=%s"):format(
+            reply(source, locale("command_test_result",
                 tostring(GetPlayerName(target)),
                 target,
                 result.allowed and "ALLOWED" or "DENIED",
@@ -126,7 +130,7 @@ return function(deps)
     ---@param args string[]
     function Command:Execute(source, args)
         if source ~= 0 and not IsAdmin(source) then
-            reply(source, "You do not have permission to use this command.")
+            reply(source, locale("command_no_permission"))
             Logger:Event("security", "Unauthorized command attempt", {
                 { name = "Source", value = tostring(source), inline = true },
                 { name = "Command", value = table.concat(args, " "), inline = true },
@@ -137,7 +141,7 @@ return function(deps)
         local sub = args[1]
         if sub == nil or sub == "" or sub == "panel" then
             if source == 0 then
-                reply(0, "The panel can only be opened in-game.")
+                reply(0, locale("panel_only_in_game"))
                 return
             end
             TriggerClientEvent(EVENT_PREFIX .. "cl:requestOpen", source)
@@ -150,7 +154,7 @@ return function(deps)
         elseif sub == "test" then
             cmdTest(source, args)
         else
-            reply(source, "Usage: whitelist [panel|status|reload|cache [clear]|test <id>]")
+            reply(source, locale("command_usage"))
         end
     end
 

@@ -49,7 +49,7 @@ RegisterNetEvent(EVENT_PREFIX .. "cl:notify", function(message)
     TriggerEvent("chat:addMessage", {
         color = { 251, 155, 4 },
         multiline = false,
-        args = { "Whitelist", message },
+        args = { _("whitelist_title"), message },
     })
 end)
 

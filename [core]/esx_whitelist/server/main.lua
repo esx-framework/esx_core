@@ -148,7 +148,7 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
     deferrals.defer()
     Wait(0) 
 
-    deferrals.update("Checking whitelist...")
+    deferrals.update(_("checking_whitelist"))
 
     local ok, result = pcall(function()
         local rawIdentifiers = GetPlayerIdentifiers(source)
@@ -158,7 +158,7 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
                 method = Enum.AuthMethod.DENIED,
                 reason = Enum.Reason.ERROR,
                 identifier = nil,
-                playerMessage = "Your identifiers could not be read. Please restart FiveM and try again.",
+                playerMessage = _("verification_error"),
             }
         end
 
@@ -174,7 +174,7 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
             method = Enum.AuthMethod.DENIED,
             reason = Enum.Reason.ERROR,
             identifier = nil,
-            playerMessage = "An internal error occurred during verification. Please try again.",
+            playerMessage = _("verification_error"),
         }
     end
 
@@ -184,7 +184,7 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
     if result.allowed then
         deferrals.done() 
     else
-        deferrals.done(result.playerMessage or "You are not whitelisted on this server.")
+        deferrals.done(result.playerMessage or _("not_whitelisted"))
     end
 end)
 
