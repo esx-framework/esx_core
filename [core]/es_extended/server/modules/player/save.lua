@@ -17,7 +17,11 @@ local function updateHealthAndArmorInMetadata(xPlayer)
 
     local metadata = xPlayer.getMeta()
 
-    if ped ~= 0 then
+    if
+        ped ~= 0
+        and DoesEntityExist(ped)
+        and not Player(xPlayer.source).state.isDead
+    then
         metadata.health = GetEntityHealth(ped)
         metadata.armor = GetPedArmour(ped)
     end

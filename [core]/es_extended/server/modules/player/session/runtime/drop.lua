@@ -2,6 +2,8 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 function Core.PlayerSession.OnPlayerDropped(playerId, reason, cb)
+    Core.PlayerSession.CancelPlayerLoad(playerId)
+
     local p = not cb and promise:new()
 
     local function resolve()

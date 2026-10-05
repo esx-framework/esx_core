@@ -3,6 +3,18 @@
 
 Core.PlayerClass = Core.PlayerClass or {}
 
+local function getCoordinateHeading(coordinates)
+    local coordinateType = type(coordinates)
+
+    if coordinateType == "vector4" then
+        return coordinates.w
+    elseif coordinateType == "table" then
+        return coordinates.w or coordinates.heading or 0.0
+    end
+
+    return 0.0
+end
+
 function Core.PlayerClass.AttachBase(self)
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
@@ -22,25 +34,67 @@ function Core.PlayerClass.AttachBase(self)
     end
 
     function self.setCoords(coordinates)
-        local ped <const> = GetPlayerPed(self.source)
+        local ped <const> = ESX.Players[self.source] == self and GetPlayerPed(self.source) or 0
 
-        SetEntityCoords(ped, coordinates.x, coordinates.y, coordinates.z, false, false, false, false)
-        SetEntityHeading(ped, coordinates.w or coordinates.heading or 0.0)
+        if ped == 0 or not DoesEntityExist(ped) then
+            return false
+        end
+
+        local entityHeading = getCoordinateHeading(coordinates)
+
+        SetEntityCoords(
+            ped,
+            coordinates.x,
+            coordinates.y,
+            coordinates.z,
+            false,
+            false,
+            false,
+            false
+        )
+        SetEntityHeading(ped, entityHeading)
+
+        self.coords = {
+            x = coordinates.x,
+            y = coordinates.y,
+            z = coordinates.z,
+            heading = entityHeading,
+        }
     end
 
     function self.getCoords(vector, heading)
-        local ped <const> = GetPlayerPed(self.source)
-        local entityCoords <const> = GetEntityCoords(ped)
-        local entityHeading <const> = GetEntityHeading(ped)
+        local ped = ESX.Players[self.source] == self and GetPlayerPed(self.source) or 0
 
-        local coordinates = { x = entityCoords.x, y = entityCoords.y, z = entityCoords.z }
+        if ped ~= 0 and DoesEntityExist(ped) then
+            local entityCoords = GetEntityCoords(ped)
+
+            self.coords = {
+                x = entityCoords.x,
+                y = entityCoords.y,
+                z = entityCoords.z,
+                heading = GetEntityHeading(ped),
+            }
+        end
+
+        local entityCoords = self.coords
+        local entityHeading = getCoordinateHeading(entityCoords)
 
         if vector then
-            coordinates = (heading and vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading) or entityCoords)
-        else
             if heading then
-                coordinates.heading = entityHeading
+                return vector4(entityCoords.x, entityCoords.y, entityCoords.z, entityHeading)
             end
+
+            return vector3(entityCoords.x, entityCoords.y, entityCoords.z)
+        end
+
+        local coordinates = {
+            x = entityCoords.x,
+            y = entityCoords.y,
+            z = entityCoords.z,
+        }
+
+        if heading then
+            coordinates.heading = entityHeading
         end
 
         return coordinates
@@ -52,7 +106,20 @@ function Core.PlayerClass.AttachBase(self)
 
     function self.getPlayTime()
         -- luacheck: ignore
-        return self.lastPlaytime + GetPlayerTimeOnline(self.source --[[@as string]])
+        local lastPlaytime = tonumber(self.lastPlaytime) or 0
+        local onlineTime
+
+        if ESX.Players[self.source] == self then
+            onlineTime = tonumber(GetPlayerTimeOnline(self.source --[[@as string]]))
+        end
+
+        if onlineTime then
+            return lastPlaytime + onlineTime
+        end
+
+        local savedPlaytime = self.metadata and tonumber(self.metadata.lastPlaytime)
+
+        return savedPlaytime or lastPlaytime
     end
 
 

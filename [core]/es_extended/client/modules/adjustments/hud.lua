@@ -11,6 +11,10 @@ function Adjustments:RemoveHudComponents()
 end
 
 function Adjustments:AmmoAndVehicleRewards()
+    if not Config.DisableDisplayAmmo and not Config.DisableVehicleRewards then
+        return
+    end
+
     CreateThread(function()
         while ESX.PlayerLoaded do
             if Config.DisableDisplayAmmo then

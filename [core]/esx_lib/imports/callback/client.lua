@@ -21,7 +21,12 @@ local resource_name = GetCurrentResourceName() --TODO: Add cache
 local function getConfiguredTimeout()
     local value = tonumber(GetConvar('xLib:callbackTimeout', GetConvar('esx:callbackTimeout', '')))
 
-    if value and value < math.huge then
+    if
+        value
+        and value == value
+        and value > -math.huge
+        and value < math.huge
+    then
         return math.max(math.floor(value), 0)
     end
 end
@@ -144,7 +149,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         end
     end
 
-    local timeout = promise and awaitTimeout or configuredTimeout
+    local timeout = awaitTimeout
 
     if timeout and timeout > 0 then
         SetTimeout(timeout, function()
@@ -254,8 +259,8 @@ function xLib.callback.registerCompat(name, cb, owner)
             return table.unpack(values)
         end
 
-        if configuredTimeout and configuredTimeout > 0 then
-            SetTimeout(configuredTimeout, function()
+        if awaitTimeout > 0 then
+            SetTimeout(awaitTimeout, function()
                 if not responded then
                     responded = true
                     response:reject(("compat callback '%s' timed out"):format(name))
