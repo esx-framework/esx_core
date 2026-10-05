@@ -15,6 +15,20 @@ local function getCoordinateHeading(coordinates)
     return 0.0
 end
 
+local function updateCachedCoordinates(player, x, y, z, heading)
+    if type(player.coords) ~= "table" then
+        player.coords = {}
+    end
+
+    local coordinates = player.coords
+
+    coordinates.x = x
+    coordinates.y = y
+    coordinates.z = z
+    coordinates.heading = heading
+    coordinates.w = nil
+end
+
 function Core.PlayerClass.AttachBase(self)
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
@@ -54,12 +68,13 @@ function Core.PlayerClass.AttachBase(self)
         )
         SetEntityHeading(ped, entityHeading)
 
-        self.coords = {
-            x = coordinates.x,
-            y = coordinates.y,
-            z = coordinates.z,
-            heading = entityHeading,
-        }
+        updateCachedCoordinates(
+            self,
+            coordinates.x,
+            coordinates.y,
+            coordinates.z,
+            entityHeading
+        )
     end
 
     function self.getCoords(vector, heading)
@@ -68,12 +83,13 @@ function Core.PlayerClass.AttachBase(self)
         if ped ~= 0 and DoesEntityExist(ped) then
             local entityCoords = GetEntityCoords(ped)
 
-            self.coords = {
-                x = entityCoords.x,
-                y = entityCoords.y,
-                z = entityCoords.z,
-                heading = GetEntityHeading(ped),
-            }
+            updateCachedCoordinates(
+                self,
+                entityCoords.x,
+                entityCoords.y,
+                entityCoords.z,
+                GetEntityHeading(ped)
+            )
         end
 
         local entityCoords = self.coords

@@ -18,7 +18,5 @@ end
 ---@param length number
 ---@return string
 function ESX.GetRandomString(length)
-    math.randomseed(GetGameTimer())
-
     return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
 end

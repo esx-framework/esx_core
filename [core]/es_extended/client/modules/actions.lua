@@ -41,20 +41,30 @@ function Actions:SetVehicleStatus()
 end
 
 function Actions:TrackPedCoordsOnce()
+    local playerData = ESX.PlayerData
+
     CreateThread(function()
         while not ESX.IsPlayerLoaded() do
+            if ESX.PlayerData ~= playerData then
+                return
+            end
+
             Wait(250)
         end
 
-        ESX.PlayerData.coords = nil
+        if ESX.PlayerData ~= playerData then
+            return
+        end
 
-        setmetatable(ESX.PlayerData, {
+        playerData.coords = nil
+
+        setmetatable(playerData, {
             __index = function(_, key)
                 if key ~= "coords" then
                     return
                 end
 
-                local coords = GetEntityCoords(ESX.PlayerData.ped)
+                local coords = GetEntityCoords(playerData.ped)
 
                 return coords
             end
@@ -182,8 +192,10 @@ function Actions:TrackSeat()
 end
 
 function Actions:SlowLoop()
+    local playerData = ESX.PlayerData
+
     CreateThread(function()
-        while ESX.PlayerLoaded do
+        while ESX.PlayerLoaded and ESX.PlayerData == playerData do
             self:TrackPauseMenu()
             self:TrackVehicle()
             Wait(500)
@@ -196,6 +208,12 @@ function Actions:Init()
     -- registered once at file load so a relogin never stacks duplicate handlers.
     ESX.SetPlayerData("ped", xLib.cache.ped)
     ESX.SetPlayerData("weapon", xLib.cache.weapon)
+
+    if not ESX.PlayerLoaded or self.playerData == ESX.PlayerData then
+        return
+    end
+
+    self.playerData = ESX.PlayerData
 
     self:SlowLoop()
     self:TrackPedCoordsOnce()
