@@ -145,9 +145,9 @@ xLib.callback.registerCompat('esx:spawnVehicle', function(source, cb, vehData)
                     and GetVehiclePedIsIn(ped, false) ~= vehicle
                     and timeout <= 15
                 do
-                    Wait(0)
                     TaskWarpPedIntoVehicle(ped, vehicle, -1)
                     timeout += 1
+                    Wait(0)
                 end
             end
 
