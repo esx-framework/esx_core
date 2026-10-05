@@ -255,6 +255,10 @@ if not multichar then
 end
 
 xLib.callback.registerCompat("esx_identity:registerIdentity", function(source, cb, data)
+    if type(data) ~= "table" then
+        return cb(false)
+    end
+
     local xPlayer = ESX.Player(source)
 
     if not checkNameFormat(data.firstname) then

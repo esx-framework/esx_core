@@ -100,7 +100,8 @@ function Core.PlayerClass.AttachAccounts(self)
 
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or "Unknown"
-        if not tonumber(money) then
+        money = tonumber(money)
+        if not money then
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))
             return
         end
@@ -109,9 +110,8 @@ function Core.PlayerClass.AttachAccounts(self)
 
             if account then
                 money = account.round and ESX.Math.Round(money) or money
-                if self.accounts[account.index].money - money > self.accounts[account.index].money then
-                    error(("Tried To Underflow Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
-                    return
+                if self.accounts[account.index].money - money < 0 then
+                    return false
                 end
                 self.accounts[account.index].money = self.accounts[account.index].money - money
 
@@ -119,7 +119,7 @@ function Core.PlayerClass.AttachAccounts(self)
                 TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
                 return true
             else
-                error(("Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
+                error(("Tried To Remove From Invalid Account ^5%s^1 For Player ^5%s^1!"):format(accountName, self.playerId))
             end
         else
             error(("Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1"):format(accountName, self.playerId, money))

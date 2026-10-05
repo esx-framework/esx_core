@@ -119,6 +119,7 @@ return {
     ["commanderror_invalidplayerid"] = "El jugador especificado no está en línea",
     ["commandgeneric_playerid"] = "ID del servidor del jugador",
     ["commandgeneric_dimension"] = "Dimensión de destino",
+    ["command_giveammo"] = "Dar munición a un jugador",
     ["command_giveammo_noweapon_found"] = "%s no tiene esa arma",
     ["command_giveammo_weapon"] = "Nombre del arma",
     ["command_giveammo_ammo"] = "Cantidad de munición",
