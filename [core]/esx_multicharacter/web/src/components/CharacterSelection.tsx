@@ -3,7 +3,7 @@
  * Copyright (C) 2022-2026 ESX Framework
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Character, Locale } from '../types/Character';
 import CharacterCard from './CharacterCard';
@@ -21,12 +21,46 @@ interface CharacterSelectionProps {
 const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacters, Candelete, MaxAllowedSlot, locale }) => {
   const [characters, setCharacters] = useState<Character[]>(initialCharacters);
   const [showInfo, setShowInfo] = useState<string | null>(null);
+  const pending = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
     characters.find(char => char.isActive) || null
   );
 
-  const handleSelectCharacter = (id: string) => {
-    if (selectedCharacter?.id === id) return;
+  useEffect(() => {
+    setCharacters(initialCharacters);
+    setSelectedCharacter(initialCharacters.find(char => char.isActive) || initialCharacters[0] || null);
+    setShowInfo(null);
+  }, [initialCharacters]);
+
+  const runAction = async (event: string, id?: string) => {
+    if (pending.current) return false;
+    pending.current = true;
+    setBusy(true);
+    setError(null);
+    try {
+      const result = await fetchNui<{ success: boolean }>(event, id ? { id } : {});
+
+      if (!result?.success) {
+        setError(locale.action_failed || 'The action could not be completed. Please try again.');
+        return false;
+      }
+
+      return true;
+    } catch {
+      setError(locale.action_failed || 'The action could not be completed. Please try again.');
+      
+      return false;
+    } finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  };
+
+  const handleSelectCharacter = async (id: string) => {
+    if (pending.current || selectedCharacter?.id === id) return;
+    if (!await runAction('SelectCharacter', id)) return;
 
     const updatedCharacters = characters.map(char => ({
       ...char,
@@ -36,7 +70,6 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
     setCharacters(updatedCharacters);
     setSelectedCharacter(updatedCharacters.find(char => char.id === id) || null);
     setShowInfo(null);
-    fetchNui('SelectCharacter', {id : id})
   };
 
   const toggleInfo = (id: string) => {
@@ -44,35 +77,18 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
   };
 
   const PlayCharacter = () => {
-    fetchNui('PlayCharacter')
+    if (selectedCharacter && !selectedCharacter.disabled) {
+      void runAction('PlayCharacter', selectedCharacter.id);
+    }
   }
 
   const handleCreateCharacter = () => {
-    fetchNui('CreateCharacter')
+    void runAction('CreateCharacter');
   }
 
   const handleDeleteCharacter = () => {
-    if (!selectedCharacter) return;
-
-    const updatedCharactersRaw = characters.filter(char => char.id !== selectedCharacter.id);
-
-    fetchNui('DeleteCharacter');
-
-    if (updatedCharactersRaw.length > 0) {
-      const updatedCharacters = updatedCharactersRaw.map((char, index) => ({
-        ...char,
-        isActive: index === 0
-      }));
-
-      setCharacters(updatedCharacters);
-      setSelectedCharacter(updatedCharacters[0]);
-      setShowInfo(null);
-    } else {
-      setCharacters([]);
-      setSelectedCharacter(null);
-      setShowInfo(null);
-      handleCreateCharacter();
-    }
+    if (!selectedCharacter || !Candelete) return;
+    void runAction('DeleteCharacter', selectedCharacter.id);
   };
 
   return (
@@ -84,6 +100,8 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
         </div>
         
         <div className="space-y-2">
+          {busy && <p role="status" className="text-gray-300 text-sm">{locale.action_pending || 'Please wait...'}</p>}
+          {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
           {characters.map(character => (
             <div key={character.id}>
               <CharacterCard 
@@ -92,6 +110,7 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
                 onInfoClick={toggleInfo}
                 showInfo={showInfo === character.id}
                 PlayCharacter={PlayCharacter}
+                busy={busy}
               />
               {character.isActive && showInfo === character.id && (
                 <CharacterInfo 
@@ -101,6 +120,7 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
                   PlayCharacter={PlayCharacter}
                   handleDelete={handleDeleteCharacter}
                   locale={locale}
+                  busy={busy}
                 />
               )}
             </div>
@@ -112,7 +132,7 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
         <button 
           className={`w-full h-[70px] ${characters.length >= MaxAllowedSlot ? 'bg-gray-500' : 'bg-[#FB9B04] cursor-pointer hover:bg-orange-600'} text-[#383838] p-3 rounded flex items-center justify-center transition-colors`}
           onClick={handleCreateCharacter}
-          disabled={characters.length >= MaxAllowedSlot}  
+          disabled={busy || characters.length >= MaxAllowedSlot}
         >
           <Plus size={24} />
         </button>

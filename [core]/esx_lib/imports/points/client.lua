@@ -59,7 +59,7 @@ function xLib.points.startLoop()
     CreateThread(function()
         local lastScan = 0
 
-        while true do
+        while next(points) do
             local coords = GetEntityCoords(PlayerPedId())
 
             for handle, point in pairs(insidePoints) do
@@ -100,6 +100,8 @@ function xLib.points.startLoop()
 
             Wait(next(insidePoints) and 0 or 500)
         end
+
+        loopStarted = false
     end)
 end
 

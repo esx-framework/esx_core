@@ -54,11 +54,11 @@ local function consumeInvalidValidation()
 end
 
 
-AddEventHandler('onResourceStop', function(resourceName)
+AddEventHandler(IsDuplicityVersion() and 'onResourceStop' or 'onClientResourceStop', function(resourceName)
     if resource_name == resourceName then return end
 
     for callbackName, resource in pairs(registeredCallbacks) do
-        if resource == resourceName then
+        if resource.resource == resourceName or resource.owner == resourceName then
             registeredCallbacks[callbackName] = nil
         end
     end
@@ -69,35 +69,46 @@ end)
 ---being overwritten. Any unknown callbacks will return an error to the caller.
 ---@param callbackName string
 ---@param isValid boolean
-function xLib.setValidCallback(callbackName, isValid)
+---@param owner? string Logical owner when ESX hosts the handler for another resource.
+---@return boolean accepted
+function xLib.setValidCallback(callbackName, isValid, owner)
     local resourceName = GetInvokingResource() or resource_name
+    owner = owner or resourceName
+
+    if type(callbackName) ~= 'string' or callbackName == '' or #callbackName > MAX_CALLBACK_NAME_LEN
+        or type(owner) ~= 'string' or owner == '' or #owner > MAX_RESOURCE_NAME_LEN then
+        return false
+    end
+
     local callbackResource = registeredCallbacks[callbackName]
 
     if not isValid then
-        if callbackResource == resourceName then
+        if callbackResource and callbackResource.resource == resourceName and callbackResource.owner == owner then
             registeredCallbacks[callbackName] = nil
+            return true
         end
-        return
+        return callbackResource == nil
     end
 
     if callbackResource then
-        if callbackResource == resourceName then return end
+        if callbackResource.resource == resourceName and callbackResource.owner == owner then return true end
 
         if IS_DEBUG then
-            local errMessage = ("^1resource '%s' attempted to overwrite callback '%s' owned by resource '%s'^0"):format(resourceName, callbackName, callbackResource)
+            local errMessage = ("^1resource '%s' attempted to overwrite callback '%s' owned by resource '%s'^0"):format(resourceName, callbackName, callbackResource.owner)
 
             print(('^1SCRIPT ERROR: %s^0\n%s'):format(errMessage,
                 Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString()) or ''))
         end
 
-        return
+        return false
     end
 
     if IS_DEBUG then
         print(("set valid callback '%s' for resource '%s'"):format(callbackName, resourceName))
     end
 
-    registeredCallbacks[callbackName] = resourceName
+    registeredCallbacks[callbackName] = { resource = resourceName, owner = owner }
+    return true
 end
 
 function xLib.isCallbackValid(callbackName)

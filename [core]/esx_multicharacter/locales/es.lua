@@ -21,5 +21,7 @@ Locales["es"] = {
         ["title"] = "SELECCIÓN DE PERSONAJE",
         ["char_info_title"] = "Información del personaje",
         ["play"] = "JUGAR",
+        ["action_failed"] = "No se pudo completar la acción. Vuelve a intentarlo.",
+        ["action_pending"] = "Espera un momento...",
     }
 }

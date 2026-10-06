@@ -23,7 +23,7 @@ local function Notify(notificatonType, length, message, title, position)
     if Debug then
         print("1 ".. tostring(notificatonType))
         print("2 "..tostring(length))
-        print("3 "..message)
+        print("3 "..tostring(message))
         print("4 "..tostring(title))
         print("5 "..tostring(position))
     end
@@ -32,7 +32,12 @@ local function Notify(notificatonType, length, message, title, position)
         notificatonType = "info"
     end
 
-    if type(length) ~= "number" then
+    if
+        type(length) ~= "number"
+        or length ~= length
+        or length < 0
+        or length == math.huge
+    then
         length = 3000
     end
 
@@ -43,12 +48,13 @@ local function Notify(notificatonType, length, message, title, position)
     if Debug then
         print("6 ".. tostring(notificatonType))
         print("7 "..tostring(length))
-        print("8 "..message)
+        print("8 "..tostring(message))
         print("9 "..tostring(title))
         print("10 "..tostring(position))
     end
 
-    if type(message) == "string" then
+    if message ~= nil then
+        message = tostring(message)
         message = message:gsub("~br~", "<br>")
     end
 

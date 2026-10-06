@@ -2,6 +2,7 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 Core.PlayerSession = Core.PlayerSession or {}
+Core.PlayerSession.loadingPlayers = {}
 Core.PlayerSession.oneSyncState = GetConvar("onesync", "off")
 Core.PlayerSession.isEnhanced = xLib.isEnhanced()
 Core.PlayerSession.newPlayerQuery = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
@@ -21,10 +22,33 @@ end
 
 Core.PlayerSession.loadPlayerQuery = Core.PlayerSession.loadPlayerQuery .. " FROM `users` WHERE identifier = ?"
 
-function Core.PlayerSession.WaitForJobs()
+function Core.PlayerSession.WaitForJobs(playerId, loading)
     while not Core.JobsLoaded do
+        if loading and not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+            return false
+        end
+
         Wait(50)
     end
+
+    return true
+end
+
+function Core.PlayerSession.IsPlayerLoadActive(playerId, loading)
+    if not GetPlayerName(playerId) then
+        return false
+    end
+
+    if not loading then
+        return true
+    end
+
+    return Core.PlayerSession.loadingPlayers[playerId] == loading
+        and Core.PlayerSession.GetPlayerIdentifier(playerId) == loading.identifier
+end
+
+function Core.PlayerSession.CancelPlayerLoad(playerId)
+    Core.PlayerSession.loadingPlayers[playerId] = nil
 end
 
 function Core.PlayerSession.SetJobCount(jobName, count)

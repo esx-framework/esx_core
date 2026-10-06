@@ -9,7 +9,7 @@ local hasCountSnapshot = false
 local refreshScheduled = false
 
 local function ensureInventory()
-    if type(ESX.PlayerData.inventory) ~= "table" then
+    if type(ESX.PlayerData.inventory) ~= 'table' then
         ESX.PlayerData.inventory = {}
     end
 
@@ -17,7 +17,7 @@ local function ensureInventory()
 end
 
 local function buildEntry(name, count, itemData)
-    itemData = type(itemData) == "table" and itemData or {}
+    itemData = type(itemData) == 'table' and itemData or {}
 
     return {
         name = name,
@@ -31,9 +31,11 @@ local function buildEntry(name, count, itemData)
 end
 
 local function setInventoryItem(name, count, itemData)
-    if type(name) ~= "string" or type(count) ~= "number" then
+    if type(name) ~= 'string' or type(count) ~= 'number' then
         return
     end
+
+    Inventory.invalidateItems()
 
     local inventory = ensureInventory()
 
@@ -42,7 +44,7 @@ local function setInventoryItem(name, count, itemData)
             if count > 0 then
                 inventory[i].count = count
 
-                if type(itemData) == "table" then
+                if type(itemData) == 'table' then
                     inventory[i].label = itemData.label or inventory[i].label
                     inventory[i].weight = itemData.weight or inventory[i].weight
                     inventory[i].usable = itemData.usable == true
@@ -63,13 +65,14 @@ local function setInventoryItem(name, count, itemData)
 end
 
 local function replaceInventory(newInventory)
-    ESX.PlayerData.inventory = type(newInventory) == "table" and newInventory or {}
+    ESX.PlayerData.inventory = type(newInventory) == 'table' and newInventory or {}
+    Inventory.invalidateItems()
 end
 
 ---@param name any
 ---@param label any
 local function rememberLabel(name, label)
-    if type(name) == "string" and type(label) == "string" and label ~= "" then
+    if type(name) == 'string' and type(label) == 'string' and label ~= '' then
         itemLabels[name] = label
     end
 end
@@ -104,7 +107,7 @@ end
 ---@param added boolean
 local function notifyItemChange(name, delta, added)
     xLib.nui.send({
-        action = "notify",
+        action = 'notify',
         added = added,
         amount = delta,
         item = {
@@ -161,6 +164,8 @@ local function refreshAndNotify()
 end
 
 local function scheduleRefresh()
+    Inventory.invalidateItems()
+
     if refreshScheduled then
         return
     end
@@ -173,19 +178,19 @@ local function scheduleRefresh()
     end)
 end
 
-RegisterNetEvent("esx:setInventory", function(newInventory)
+RegisterNetEvent('esx:setInventory', function(newInventory)
     replaceInventory(newInventory)
     scheduleRefresh()
 end)
 
-RegisterNetEvent("esx:addInventoryItem", function(item, count, _, itemData)
-    if type(item) ~= "string" or type(count) ~= "number" then
+RegisterNetEvent('esx:addInventoryItem', function(item, count, _, itemData)
+    if type(item) ~= 'string' or type(count) ~= 'number' then
         return
     end
 
     ensureCountSnapshot()
 
-    if type(itemData) == "table" then
+    if type(itemData) == 'table' then
         rememberLabel(item, itemData.label)
     end
 
@@ -197,8 +202,8 @@ RegisterNetEvent("esx:addInventoryItem", function(item, count, _, itemData)
     end
 end)
 
-RegisterNetEvent("esx:removeInventoryItem", function(item, count)
-    if type(item) ~= "string" or type(count) ~= "number" then
+RegisterNetEvent('esx:removeInventoryItem', function(item, count)
+    if type(item) ~= 'string' or type(count) ~= 'number' then
         return
     end
 
@@ -211,13 +216,15 @@ RegisterNetEvent("esx:removeInventoryItem", function(item, count)
     end
 end)
 
-RegisterNetEvent("esx:addLoadoutItem", scheduleRefresh)
-RegisterNetEvent("esx:removeLoadoutItem", scheduleRefresh)
+RegisterNetEvent('esx:addLoadoutItem', scheduleRefresh)
+RegisterNetEvent('esx:removeLoadoutItem', scheduleRefresh)
 
-RegisterNetEvent("esx:setAccountMoney", function(account)
-    if type(account) ~= "table" or type(account.name) ~= "string" then
+RegisterNetEvent('esx:setAccountMoney', function(account)
+    if type(account) ~= 'table' or type(account.name) ~= 'string' then
         return
     end
+
+    Inventory.invalidateItems()
 
     for i = 1, #(ESX.PlayerData.accounts or {}) do
         if ESX.PlayerData.accounts[i].name == account.name then
@@ -232,19 +239,24 @@ RegisterNetEvent("esx:setAccountMoney", function(account)
 end)
 
 OnPlayerData = function(key)
-    if key == "inventory" or key == "loadout" then
+    if key == 'inventory' or key == 'loadout' then
         scheduleRefresh()
-    elseif Inventory.isOpen and key == "accounts" then
-        Inventory.pushState()
+    elseif key == 'accounts' then
+        Inventory.invalidateItems()
+
+        if Inventory.isOpen then
+            Inventory.pushState()
+        end
     end
 end
 
-RegisterNetEvent("esx:playerLoaded", function()
+RegisterNetEvent('esx:playerLoaded', function()
+    Inventory.invalidateItems()
     hasCountSnapshot = true
     lastCounts = snapshotCounts()
 end)
 
-RegisterNetEvent("esx:onPlayerDeath", function()
+RegisterNetEvent('esx:onPlayerDeath', function()
     Inventory.close(false)
 end)
 

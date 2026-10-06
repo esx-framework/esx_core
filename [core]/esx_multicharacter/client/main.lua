@@ -34,7 +34,7 @@ end)
 
 ESX.SecureNetEvent('esx:onPlayerLogout', function()
     DoScreenFadeOut(500)
-    Wait(5000)
+    Wait(500)
 
     Multicharacter.spawned = false
 
@@ -45,14 +45,21 @@ end)
 -- Relog
 
 if Config.Relog then
+    local relogPending = false
+    
     RegisterCommand("relog", function()
-        if Multicharacter.canRelog then
+        if ESX.PlayerLoaded and not relogPending then
+            relogPending = true
             Multicharacter.canRelog = false
-            TriggerServerEvent("esx_multicharacter:relog")
 
-            xLib.timeout.setTimeout(10000, function()
+            local ok, result = pcall(xLib.callback.await, 'esx_multicharacter:relog', false)
+            relogPending = false
+
+            if not ok or type(result) ~= 'table' or not result.success then
                 Multicharacter.canRelog = true
-            end)
+                local locale = Locales[Config.Locale] or Locales.en
+                ESX.ShowNotification(locale.UI.action_failed or Locales.en.UI.action_failed)
+            end
         end
     end, false)
 end

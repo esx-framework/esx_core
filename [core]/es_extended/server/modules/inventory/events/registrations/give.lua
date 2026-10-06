@@ -6,6 +6,10 @@ if Config.CustomInventory then
 end
 
 RegisterNetEvent("esx:giveInventoryItem", function(target, itemType, itemName, itemCount)
+    if type(itemName) ~= "string" or itemName == "" or #itemName > 100 then
+        return
+    end
+    
     local playerId = source
 
     if not Core.InventoryEvents.ConsumeRate("give", playerId) then

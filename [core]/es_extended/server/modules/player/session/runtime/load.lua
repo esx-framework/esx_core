@@ -18,7 +18,11 @@ local function decodeJsonObject(value, fallback)
     return decoded
 end
 
-function loadESXPlayer(identifier, playerId, isNew)
+function loadESXPlayer(identifier, playerId, isNew, loading)
+    if not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+        return
+    end
+
     local userData = {
         accounts = {},
         inventory = {},
@@ -34,6 +38,10 @@ function loadESXPlayer(identifier, playerId, isNew)
     }
 
     local result = MySQL.prepare.await(Core.PlayerSession.loadPlayerQuery, { identifier })
+
+    if not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+        return
+    end
 
     if not result then
         print(("[^1ERROR^7] esx_core could not load data for identifier ^5%s^7"):format(identifier))

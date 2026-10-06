@@ -29,6 +29,8 @@ local function StartDBSync()
 end
 
 MySQL.ready(function()
+    ESXCatalog.awaitReady()
+
     Core.DatabaseConnected = true
 
     if not Config.CustomInventory then
