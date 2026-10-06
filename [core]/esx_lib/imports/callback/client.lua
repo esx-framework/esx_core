@@ -66,7 +66,9 @@ end
 local function claimCallback(name, cb, owner)
     owner = owner or resource_name
     assert(type(name) == 'string' and name ~= '' and #name <= 200, 'invalid callback name')
-    assert(type(cb) == 'function', 'callback must be a function')
+    
+    local mt = type(cb) == 'table' and getmetatable(cb)
+    assert(type(cb) == 'function' or (type(mt) == 'table' and type(mt.__call) == 'function'), 'callback must be a function')
     assert(type(owner) == 'string' and owner ~= '' and #owner <= 100, 'invalid callback owner')
 
     local previous = registeredCallbackNames[name]

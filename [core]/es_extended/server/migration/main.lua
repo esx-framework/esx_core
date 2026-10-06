@@ -9,6 +9,7 @@ RegisterCommand('resetmigrations', function(src)
 
     for version, _ in pairs(Core.Migrations or {}) do
         DeleteResourceKvp(('esx_migration:%s'):format(version))
+        DeleteResourceKvp(('esx_migration:%s:success_logged'):format(version))
     end
 
     print(
@@ -58,7 +59,12 @@ for _, esxVersion in ipairs(versions) do
     ---@cast migrations table<string, function>
 
     if xLib.table.sizeOf(migrations) > 0 then
-        print(('^4[INFO]^7 Running migrations for ESX version %s'):format(esxVersion))
+        local logKey = ('esx_migration:%s:success_logged'):format(esxVersion)
+        local logSuccess = GetResourceKvpInt(logKey) ~= 1
+
+        if logSuccess then
+            print(('^4[INFO]^7 Running migrations for ESX version %s'):format(esxVersion))
+        end
 
         local names = {}
 
@@ -91,11 +97,14 @@ for _, esxVersion in ipairs(versions) do
         end
 
         SetResourceKvpInt(('esx_migration:%s'):format(esxVersion), 1)
-        print(
-            ('^2[SUCCESS]^7 Successfully completed migrations for ESX version %s'):format(
-                esxVersion
+        if logSuccess then
+            print(
+                ('^2[SUCCESS]^7 Successfully completed migrations for ESX version %s'):format(
+                    esxVersion
+                )
             )
-        )
+            SetResourceKvpInt(logKey, 1)
+        end
         migrationsRan = migrationsRan + 1
     end
 end

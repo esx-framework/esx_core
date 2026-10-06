@@ -116,11 +116,16 @@ CreateThread(function()
         return
     end
 
-    print(
-        ('[%s] SQL catalog 1.16.0 ready (%s): %d missing record(s) prepared'):format(
-            resource,
-            result.locale,
-            result.imported
+    local logKey = ('esx_sql_catalog:1.16.0:ready:%s'):format(result.locale)
+
+    if GetResourceKvpInt(logKey) ~= 1 then
+        print(
+            ('[%s] SQL catalog 1.16.0 ready (%s): %d missing record(s) prepared'):format(
+                resource,
+                result.locale,
+                result.imported
+            )
         )
-    )
+        SetResourceKvpInt(logKey, 1)
+    end
 end)

@@ -83,7 +83,11 @@ MySQL.ready(function()
     end
 
     Database.connected = true
-    print('[esx_multicharacter] 1.16.0 schema ready')
+    local logKey = 'esx_multicharacter:1.16.0:schema_ready'
+    if GetResourceKvpInt(logKey) ~= 1 then
+        print('[esx_multicharacter] 1.16.0 schema ready')
+        SetResourceKvpInt(logKey, 1)
+    end
     ESX.Jobs = ESX.GetJobs()
 
     while not next(ESX.Jobs) do
