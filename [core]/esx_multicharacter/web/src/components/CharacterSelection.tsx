@@ -41,13 +41,16 @@ const CharacterSelection: React.FC<CharacterSelectionProps> = ({ initialCharacte
     setError(null);
     try {
       const result = await fetchNui<{ success: boolean }>(event, id ? { id } : {});
+
       if (!result?.success) {
         setError(locale.action_failed || 'The action could not be completed. Please try again.');
         return false;
       }
+
       return true;
     } catch {
       setError(locale.action_failed || 'The action could not be completed. Please try again.');
+      
       return false;
     } finally {
       pending.current = false;
