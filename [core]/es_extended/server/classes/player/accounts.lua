@@ -205,13 +205,8 @@ function Core.PlayerClass.AttachAccounts(self)
 
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or 'Unknown'
-
-        -- Mantiene la compatibilidad introducida por v1.16.0:
-        -- permite valores numéricos convertibles como "100".
         money = tonumber(money)
 
-        -- Conserva las protecciones adicionales de la rama 1.16.0:
-        -- NaN, infinito y valores fuera del rango entero seguro.
         if not validMoney(money) then
             error(
                 ('Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1'):format(
