@@ -121,6 +121,7 @@ return {
     ["commanderror_invalidplayerid"] = "Specified Player is not online",
     ["commandgeneric_playerid"] = "Player`s Server Id",
     ["commandgeneric_dimension"] = "Target Dimension",
+    ["command_giveammo"] = "Give ammo to a player",
     ["command_giveammo_noweapon_found"] = "%s does not have that weapon",
     ["command_giveammo_weapon"] = "Weapon name",
     ["command_giveammo_ammo"] = "Ammo Quantity",
