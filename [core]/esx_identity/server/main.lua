@@ -13,7 +13,7 @@ local function deleteIdentityFromDatabase(xPlayer)
     if Config.FullCharDelete then
         MySQL.update.await("UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?", { { "bank_savings", "caution" }, xPlayer.identifier })
 
-        MySQL.prepare.await("UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?", { "'{}'", { "user_ears", "user_glasses", "user_helmet", "user_mask" }, xPlayer.identifier })
+        MySQL.prepare.await("UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?", { "{}", { "user_ears", "user_glasses", "user_helmet", "user_mask" }, xPlayer.identifier })
     end
 end
 
