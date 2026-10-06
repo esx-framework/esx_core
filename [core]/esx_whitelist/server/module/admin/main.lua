@@ -1,18 +1,24 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-local CACHE_FILE <const> = "data/admin_cache.json"
-
 ---@param Util table
 ---@param RuntimeConfig table
 ---@param Log fun(level: string, message: string, context: table?)
-return function(Util, RuntimeConfig, Log)
+---@param Database table? database module
+return function(Util, RuntimeConfig, Log, Database)
     local AdminCache = {}
 
-    ---@type table<string, { group: string, updatedAt: integer }>
+    ---@type table<string, { group: string }>
     local entries = {}
-    local dirty = false
+    ---@type table<string, { group: string }>
+    local dirtyEntries = {}
     local flushScheduled = false
+
+    local function debugLog(level, message)
+        if Config.Debug then
+            Log(level, message)
+        end
+    end
 
     local function adminConfig()
         return RuntimeConfig:Get().Admin
@@ -22,8 +28,19 @@ return function(Util, RuntimeConfig, Log)
         return RuntimeConfig:Get().Admin.Cache
     end
 
+    local function persistentGroupLookup()
+        local cfg = RuntimeConfig:Get()
+        local groups = {}
+        for group, enabled in pairs(cfg.Admin.Groups or {}) do
+            if enabled then groups[group] = true end
+        end
+        for group, enabled in pairs(cfg.AdminOnly.Groups or {}) do
+            if enabled then groups[group] = true end
+        end
+        return groups
+    end
     ---Schedules a debounced flush. Bursts of group updates collapse into
-    ---a single disk write.
+    ---a single non-blocking database write.
     local function scheduleFlush()
         if flushScheduled then
             return
@@ -31,60 +48,58 @@ return function(Util, RuntimeConfig, Log)
         flushScheduled = true
         SetTimeout(cacheConfig().SaveDelay, function()
             flushScheduled = false
-            if not dirty then
+            if not next(dirtyEntries) then
                 return
             end
-            dirty = false
-            local payload = json.encode(entries)
-            if type(payload) == "string" then
-                SaveResourceFile(GetCurrentResourceName(), CACHE_FILE, payload, -1)
+            local batch = {}
+            for k, v in pairs(dirtyEntries) do
+                batch[#batch + 1] = { identifier = k, group = v.group }
+            end
+            dirtyEntries = {}
+            if Database and Database.ready then
+                Database:SaveAdminBatch(batch, false)
             end
         end)
     end
 
-    ---Loads and validates the cache file. Corruption resets the cache
-    ---safely; expired entries are pruned.
+    ---Loads and validates the cache from database.
+    ---Cache entries persist until explicitly updated or removed.
     function AdminCache:Load()
-        local raw = LoadResourceFile(GetCurrentResourceName(), CACHE_FILE)
-        if not raw or raw == "" then
+        if not Database or not Database.ready then
             return
         end
-
-        local ok, decoded = pcall(json.decode, raw)
-        if not ok or type(decoded) ~= "table" then
-            Log("warning", "Admin cache file is corrupted; starting with an empty cache")
-            SaveResourceFile(GetCurrentResourceName(), CACHE_FILE .. ".broken", raw or "", -1)
-            return
-        end
-
-        local now = Util.Now()
-        local expiry = cacheConfig().Expiry
-        local loaded = 0
-        for identifier, entry in pairs(decoded) do
-            local validIdentifier = Util.ValidateIdentifier(identifier)
-            if validIdentifier
-                and type(entry) == "table"
-                and type(entry.group) == "string"
-                and #entry.group <= 32
-                and type(entry.updatedAt) == "number"
-                and (now - entry.updatedAt) < expiry
-            then
-                entries[identifier] = { group = entry.group, updatedAt = entry.updatedAt }
-                loaded = loaded + 1
+        local persistentGroups = persistentGroupLookup()
+        local loaded = Database:LoadAdminCache(persistentGroups)
+        local count = 0
+        if loaded then
+            for identifier, entry in pairs(loaded) do
+                local validIdentifier = Util.ValidateIdentifier(identifier)
+                if validIdentifier
+                    and type(entry) == "table"
+                    and type(entry.group) == "string"
+                    and #entry.group <= 32
+                    and persistentGroups[entry.group]
+                then
+                    entries[identifier] = { group = entry.group }
+                    count = count + 1
+                end
             end
         end
-        Log("info", ("Admin group cache loaded (%d valid entries)"):format(loaded))
+        debugLog("info", ("Admin group cache loaded from database (%d valid entries)"):format(count))
     end
 
-    ---Immediately writes pending changes (used on resource shutdown).
+    ---Immediately writes pending changes to the database.
     function AdminCache:Flush()
-        if not dirty then
+        if not next(dirtyEntries) then
             return
         end
-        dirty = false
-        local payload = json.encode(entries)
-        if type(payload) == "string" then
-            SaveResourceFile(GetCurrentResourceName(), CACHE_FILE, payload, -1)
+        local batch = {}
+        for k, v in pairs(dirtyEntries) do
+            batch[#batch + 1] = { identifier = k, group = v.group }
+        end
+        dirtyEntries = {}
+        if Database and Database.ready then
+            Database:SaveAdminBatch(batch, true)
         end
     end
 
@@ -106,62 +121,84 @@ return function(Util, RuntimeConfig, Log)
             return nil
         end
 
-        local existing = entries[key]
-        if existing and existing.group == group then
-            existing.updatedAt = Util.Now()
-            dirty = true
-            scheduleFlush()
+        if not persistentGroupLookup()[group] then
+            local wasCached = entries[key] ~= nil or dirtyEntries[key] ~= nil
+            entries[key] = nil
+            dirtyEntries[key] = nil
+            if wasCached and Database and Database.ready then
+                Database:RemoveAdminCache(key)
+            end
             return key
         end
 
-        entries[key] = { group = group, updatedAt = Util.Now() }
-        dirty = true
+        local existing = entries[key]
+        if existing and existing.group == group then
+            return key
+        end
+
+        local newEntry = { group = group }
+        entries[key] = newEntry
+        dirtyEntries[key] = newEntry
         scheduleFlush()
-        Log("info", ("Admin cache updated: %s -> group '%s'"):format(Util.MaskIdentifier(key), group))
+        debugLog("info", ("Admin cache updated: %s -> group '%s'"):format(Util.MaskIdentifier(key), group))
         return key
     end
 
     ---Looks up the cached group for a connecting player.
+    ---When admin-only groups are supplied, falls back to ESX's users table on a cold cache.
     ---@param identifiers string[]
+    ---@param allowedGroups table<string, boolean>?
     ---@return string? group
     ---@return string? cacheKey
-    function AdminCache:GetGroup(identifiers)
-        if not cacheConfig().Enabled then
-            return nil, nil
-        end
-
+    function AdminCache:GetGroup(identifiers, allowedGroups)
         local key = Util.PickStableIdentifier(identifiers, adminConfig().IdentifierPriority)
         if not key then
             return nil, nil
         end
 
+        local function isAllowed(group)
+            return group and (not allowedGroups or allowedGroups[group])
+        end
+
         local entry = entries[key]
-        if not entry then
-            return nil, nil
+        if entry and isAllowed(entry.group) then
+            return entry.group, key
         end
 
-        if (Util.Now() - entry.updatedAt) >= cacheConfig().Expiry then
-            entries[key] = nil
-            dirty = true
-            scheduleFlush()
-            return nil, nil
+        if Database and Database.ready then
+            if not allowedGroups then
+                local row = Database:GetAdminCache(identifiers)
+                if row and row.group_name then
+                    entries[row.identifier] = { group = row.group_name }
+                    return row.group_name, row.identifier
+                end
+            else
+                local group = Database:GetESXAdminGroup(identifiers, allowedGroups)
+                if group then
+                    self:UpdateFromPlayer(identifiers, group)
+                    return group, key
+                end
+            end
         end
 
-        return entry.group, key
+        return nil, nil
     end
-
+    
     ---Removes a cache entry (used by diagnostics commands).
     ---@param identifier string
     ---@return boolean removed
     function AdminCache:Remove(identifier)
         local normalized = Util.NormalizeIdentifier(identifier)
+        local removed = false
         if entries[normalized] then
             entries[normalized] = nil
-            dirty = true
-            scheduleFlush()
-            return true
+            removed = true
         end
-        return false
+        dirtyEntries[normalized] = nil
+        if Database and Database.ready then
+            Database:RemoveAdminCache(normalized)
+        end
+        return removed
     end
 
     ---@return integer

@@ -62,14 +62,11 @@ const DEV_STATE: PanelState = {
     guildId: "123456789012345678",
     allowedRoles: ["234567890123456789"],
     timeout: 5000,
-    cacheDuration: 300,
-    negativeCacheDuration: 60,
     maxRetries: 2,
   },
   admin: {
     groups: { admin: true, superadmin: true, owner: true },
     cacheEnabled: true,
-    cacheExpiry: 2592000,
     cacheSaveDelay: 5000,
   },
   adminOnly: {
@@ -79,7 +76,7 @@ const DEV_STATE: PanelState = {
   },
   bypass: { allowedIdentifiers: [] },
   logging: { enabled: true, minInterval: 1200, batchSize: 5 },
-  performance: { discordConcurrency: 5, discordQueueLimit: 512, verificationTimeout: 10000 },
+  performance: { discordConcurrency: 10, discordQueueLimit: 4096, verificationTimeout: 120000 },
   meta: {
     version: "1.0.0",
     botTokenConfigured: true,
@@ -128,9 +125,6 @@ onBeforeUnmount(() => {
   <Transition name="panel">
     <div v-if="panel.visible" class="panel-backdrop">
       <div class="panel-shell">
-        <div v-if="!isNui" class="dev-banner">
-          Browser preview — changes are not sent to a server.
-        </div>
         <AppHeader :version="panel.state?.meta?.version ?? '1.0.0'" />
         <div class="panel-body">
           <Tabs :tabs="tabs" default-tab="dashboard">

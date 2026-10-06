@@ -1,11 +1,10 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-local RUNTIME_FILE <const> = "data/runtime_config.json"
-
 ---@param Util table
 ---@param Log fun(level: string, message: string, context: table?) console/logger sink
-return function(Util, Log)
+---@param Database table? database module
+return function(Util, Log, Database)
     local RuntimeConfig = {}
 
     --[[
@@ -134,12 +133,9 @@ return function(Util, Log)
         ["Discord.GuildId"] = validateGuildId,
         ["Discord.AllowedRoles"] = makeSnowflakeArrayValidator(64),
         ["Discord.Timeout"] = makeIntRangeValidator(1000, 15000),
-        ["Discord.CacheDuration"] = makeIntRangeValidator(30, 86400),
-        ["Discord.NegativeCacheDuration"] = makeIntRangeValidator(10, 3600),
         ["Discord.MaxRetries"] = makeIntRangeValidator(0, 5),
         ["Admin.Groups"] = validateGroupMap,
         ["Admin.Cache.Enabled"] = validateBoolean,
-        ["Admin.Cache.Expiry"] = makeIntRangeValidator(3600, 31536000),
         ["Admin.Cache.SaveDelay"] = makeIntRangeValidator(1000, 60000),
         ["AdminOnly.Enabled"] = validateBoolean,
         ["AdminOnly.Groups"] = validateGroupMap,
@@ -149,8 +145,8 @@ return function(Util, Log)
         ["Logging.MinInterval"] = makeIntRangeValidator(500, 10000),
         ["Logging.BatchSize"] = makeIntRangeValidator(1, 10),
         ["Performance.DiscordConcurrency"] = makeIntRangeValidator(1, 25),
-        ["Performance.DiscordQueueLimit"] = makeIntRangeValidator(64, 4096),
-        ["Performance.VerificationTimeout"] = makeIntRangeValidator(2000, 30000),
+        ["Performance.DiscordQueueLimit"] = makeIntRangeValidator(64, 8192),
+        ["Performance.VerificationTimeout"] = makeIntRangeValidator(2000, 180000),
     }
 
     local defaults = Config -- set by the shared config script
@@ -209,56 +205,31 @@ return function(Util, Log)
         effective = Util.MergeOverrides(defaults, overrides)
     end
 
-    ---Persists overrides to disk. Debounced: callers mark dirty, the actual
-    ---write happens once after the configured save delay, coalescing bursts.
-    local function scheduleFlush()
-        if flushScheduled then
-            return
-        end
-        flushScheduled = true
-        SetTimeout(2000, function()
-            flushScheduled = false
-            if not dirty then
-                return
-            end
-            dirty = false
-            local payload = json.encode(overrides)
-            if type(payload) ~= "string" then
-                Log("error", "Failed to encode runtime configuration")
-                return
-            end
-            SaveResourceFile(GetCurrentResourceName(), RUNTIME_FILE, payload, -1)
-        end)
-    end
-
-    ---Loads and validates persisted overrides. A corrupted file is
-    ---quarantined (renamed via a .broken copy) and ignored safely.
+    ---Loads and validates persisted overrides from database.
     function RuntimeConfig:Load()
-        local raw = LoadResourceFile(GetCurrentResourceName(), RUNTIME_FILE)
-        if not raw or raw == "" then
+        if not Database or not Database.ready then
             rebuild()
             return true
         end
 
-        local ok, decoded = pcall(json.decode, raw)
-        if not ok or type(decoded) ~= "table" then
-            Log("error", "Runtime configuration file is corrupted; starting from defaults")
-            SaveResourceFile(GetCurrentResourceName(), RUNTIME_FILE .. ".broken", raw, -1)
-            overrides = {}
+        local stored = Database:LoadConfig()
+        if not stored or next(stored) == nil then
             rebuild()
-            return false
+            return true
         end
 
         -- Re-validate every persisted value against the schema so an
-        -- edited or outdated file can never inject invalid state.
+        -- edited or outdated record can never inject invalid state.
         local sanitized = {}
         for path, validator in pairs(Schema) do
-            local parts = splitPath(path)
-            local stored = parts and getPath(decoded, parts) or nil
-            if stored ~= nil then
-                local valid, valueOrError = validator(stored)
+            local val = stored[path]
+            if val ~= nil then
+                local valid, valueOrError = validator(val)
                 if valid then
-                    setPath(sanitized, parts, valueOrError)
+                    local parts = splitPath(path)
+                    if parts then
+                        setPath(sanitized, parts, valueOrError)
+                    end
                 else
                     Log("warning", ("Ignoring invalid persisted setting %s (%s)"):format(path, tostring(valueOrError)))
                 end
@@ -267,6 +238,7 @@ return function(Util, Log)
 
         overrides = sanitized
         rebuild()
+        Log("info", "Runtime configuration loaded from database.")
         return true
     end
 
@@ -277,7 +249,7 @@ return function(Util, Log)
         return effective
     end
 
-    ---Applies a single runtime change after schema validation.
+    ---Applies a single runtime change after schema validation and persists to database.
     ---@param path string dotted path, must exist in the schema
     ---@param value any
     ---@return boolean ok
@@ -301,8 +273,10 @@ return function(Util, Log)
         setPath(overrides, parts, valueOrError)
         rebuild()
 
-        dirty = true
-        scheduleFlush()
+        if Database and Database.ready then
+            Database:SaveConfig(path, json.encode(valueOrError))
+        end
+
         return true, nil
     end
 
@@ -312,12 +286,13 @@ return function(Util, Log)
         return Util.MergeOverrides(overrides, nil)
     end
 
-    ---Removes all overrides (back to file defaults).
+    ---Removes all overrides (back to file defaults) and clears database settings.
     function RuntimeConfig:Reset()
         overrides = {}
         rebuild()
-        dirty = true
-        scheduleFlush()
+        if Database and Database.ready then
+            Database:ResetConfig()
+        end
     end
 
     ---Builds the NUI-facing state projection. Contains only values the
@@ -338,14 +313,11 @@ return function(Util, Log)
                 guildId = cfg.Discord.GuildId,
                 allowedRoles = Util.SanitizeStringArray(cfg.Discord.AllowedRoles),
                 timeout = cfg.Discord.Timeout,
-                cacheDuration = cfg.Discord.CacheDuration,
-                negativeCacheDuration = cfg.Discord.NegativeCacheDuration,
                 maxRetries = cfg.Discord.MaxRetries,
             },
             admin = {
                 groups = cfg.Admin.Groups,
                 cacheEnabled = cfg.Admin.Cache.Enabled,
-                cacheExpiry = cfg.Admin.Cache.Expiry,
                 cacheSaveDelay = cfg.Admin.Cache.SaveDelay,
             },
             adminOnly = {

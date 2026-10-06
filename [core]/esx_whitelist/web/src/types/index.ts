@@ -18,15 +18,12 @@ export interface DiscordState {
   guildId: string
   allowedRoles: string[]
   timeout: number
-  cacheDuration: number
-  negativeCacheDuration: number
   maxRetries: number
 }
 
 export interface AdminState {
   groups: Record<string, boolean>
   cacheEnabled: boolean
-  cacheExpiry: number
   cacheSaveDelay: number
 }
 

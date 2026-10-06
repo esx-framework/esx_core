@@ -38,7 +38,7 @@ function validateSnowflake(value: string): string | null {
   <div v-if="state" class="page-stack">
     <Alert :variant="state.meta?.botTokenConfigured ? 'info' : 'warning'">
       Discord Bot Token: {{ state.meta?.botTokenConfigured ? "Configured" : "Not configured" }}.
-      Set it via <code>set discord:botToken "..."</code> in server.cfg — it is never exposed here.
+      Set it via <code>set discord:botToken "..."</code> in server.cfg.
     </Alert>
 
     <Card variant="bordered">
@@ -84,7 +84,7 @@ function validateSnowflake(value: string): string | null {
 
     <Card variant="bordered">
       <CardHeader>
-        <CardTitle>Request &amp; cache tuning</CardTitle>
+        <CardTitle>Request tuning</CardTitle>
       </CardHeader>
       <CardContent>
         <div class="field-grid">
@@ -95,22 +95,6 @@ function validateSnowflake(value: string): string | null {
             hint="1000 - 15000"
             :min="1000"
             :max="15000"
-          />
-          <NumberField
-            config-key="Discord.CacheDuration"
-            :value="state.discord.cacheDuration"
-            label="Positive cache (s)"
-            hint="How long an allowed result is reused."
-            :min="30"
-            :max="86400"
-          />
-          <NumberField
-            config-key="Discord.NegativeCacheDuration"
-            :value="state.discord.negativeCacheDuration"
-            label="Negative cache (s)"
-            hint="How long a denial is reused. Keep short."
-            :min="10"
-            :max="3600"
           />
           <NumberField
             config-key="Discord.MaxRetries"
@@ -126,7 +110,7 @@ function validateSnowflake(value: string): string | null {
             API requests: {{ state.stats?.discord.requests ?? 0 }}
           </Badge>
           <Badge variant="default" style="margin-left: 8px">
-            Cache entries: {{ state.stats?.discord.cachedEntries ?? 0 }}
+            Entries: {{ state.stats?.discord.cachedEntries ?? 0 }}
           </Badge>
           <Badge variant="warning" style="margin-left: 8px" v-if="state.stats?.discord.rateLimited">
             Rate limited

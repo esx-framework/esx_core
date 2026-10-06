@@ -12,10 +12,14 @@ version "1.16.0"
 
 shared_scripts {
     "@esx_lib/imports.lua",
+    "@es_extended/imports.lua",
+    "@es_extended/locale.lua",
+    "locales/*.lua",
     "config/main.lua"
 }
 
 server_scripts {
+    "@oxmysql/lib/MySQL.lua",
     "server/main.lua"
 }
 
@@ -32,6 +36,7 @@ files {
 }
 
 dependencies {
+    "oxmysql",
     "esx_lib",
     "es_extended",
 }

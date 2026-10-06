@@ -179,7 +179,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
             if Identifier:MatchAdminOnly(identifiers) then
                 return buildResult(true, Method.ADMIN_IDENTIFIER, Reason.ADMIN_ONLY_GRANTED, stableIdentifier)
             end
-            local cachedGroup = AdminCache:GetGroup(identifiers)
+            local cachedGroup = AdminCache:GetGroup(identifiers, cfg.AdminOnly.Groups)
             if cachedGroup and cfg.AdminOnly.Groups[cachedGroup] then
                 return buildResult(true, Method.ADMIN_GROUP, Reason.ADMIN_ONLY_GRANTED, stableIdentifier)
             end

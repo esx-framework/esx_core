@@ -44,7 +44,7 @@ return function(deps)
     ---Builds the full sanitized panel state for one admin.
     ---@return table
     local function buildState()
-        return RuntimeConfig:BuildPanelState({
+        local state = RuntimeConfig:BuildPanelState({
             meta = {
                 version = GetResourceMetadata(GetCurrentResourceName(), "version", 0) or "1.0.0",
                 botTokenConfigured = Discord:HasToken(),
@@ -60,6 +60,12 @@ return function(deps)
                 identifierCounts = Identifier:GetCounts(),
             },
         })
+        if Identifier then
+            state.whitelist.allowedIdentifiers = Identifier:GetList("whitelist")
+            state.adminOnly.allowedIdentifiers = Identifier:GetList("admin_only")
+            state.bypass.allowedIdentifiers = Identifier:GetList("bypass")
+        end
+        return state
     end
 
     ---Guards a management event: admin permission + rate limit.
@@ -133,6 +139,15 @@ return function(deps)
             -- Identifier lists feed hash lookups; rebuild them so the
             -- change is effective for the very next connection.
             if key:find("Identifiers", 1, true) then
+                if deps.Database and deps.Database.ready then
+                    local idType = "whitelist"
+                    if key:find("AdminOnly", 1, true) then
+                        idType = "admin_only"
+                    elseif key:find("Bypass", 1, true) then
+                        idType = "bypass"
+                    end
+                    deps.Database:SyncIdentifiers(idType, value)
+                end
                 Identifier:Rebuild()
             end
 

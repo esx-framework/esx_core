@@ -17,7 +17,7 @@ Config.Whitelist = {
             "identifier" -> static identifier list only
             "both"       -> identifier + discord, combined via CombinationMode
     ]]
-    Mode = "discord", -- "discord", "identifier", or "both"
+    Mode = "identifier", -- "discord", "identifier", or "both"
 
     --[[
         How "both" mode combines the two mechanisms:
@@ -53,18 +53,11 @@ Config.Discord = {
 
     -- Role IDs; the member needs at least ONE of them.
     AllowedRoles = {
-        --"123456789012345678",
+        -- "123456789012345678",
     },
 
     -- Per-request HTTP timeout in milliseconds.
     Timeout = 5000,
-
-    -- How long (seconds) a POSITIVE result (member with role) is cached.
-    CacheDuration = 300,
-
-    -- How long (seconds) a NEGATIVE result (deny / not in guild) is cached.
-    -- Short on purpose: players who just received a role should not wait long.
-    NegativeCacheDuration = 60,
 
     -- Retry policy for transient failures (timeout, 5xx, network errors).
     MaxRetries = 2,
@@ -86,11 +79,9 @@ Config.Admin = {
     ]]
     IdentifierPriority = { "license2", "license", "fivem" },
 
-    -- Persistent cache behavior (stored at data/admin_cache.json).
     Cache = {
         Enabled = true,
-        Expiry = 2592000, -- seconds an entry stays valid (30 days)
-        SaveDelay = 5000, -- ms debounce before dirty entries hit the disk
+        SaveDelay = 5000, -- ms debounce before dirty admin entries hit the database
     },
 }
 
@@ -100,7 +91,7 @@ Config.Admin = {
     AdminOnly identifier may connect; all other mechanisms are skipped.
 ]]
 Config.AdminOnly = {
-    Enabled = true,
+    Enabled = false,
 
     Groups = {
         admin = true,
@@ -149,14 +140,14 @@ Config.Logging = {
 
 Config.Performance = {
     -- Max simultaneous outbound Discord API requests.
-    DiscordConcurrency = 5,
+    DiscordConcurrency = 10,
 
     -- Bounded queue for pending Discord verifications.
-    DiscordQueueLimit = 512,
+    DiscordQueueLimit = 4096,
 
     -- Hard upper bound (ms) for the whole verification of one connection.
-    -- Players are never left hanging in deferrals longer than this.
-    VerificationTimeout = 10000,
+    -- Keeps a slot-scale join burst in the queue instead of failing early.
+    VerificationTimeout = 120000,
 
     -- Client -> server management event rate limit.
     PanelRateLimit = 10,     -- actions ...
@@ -164,10 +155,20 @@ Config.Performance = {
 }
 
 --[[
-    In-game panel.
+    Commands and subcommands for the in-game admin panel and console.
 ]]
 Config.Panel = {
     Command = "whitelist", -- /whitelist opens the panel (admins only)
+    Subcommands = {
+        Panel = "panel",
+        Status = "status",
+        Reload = "reload",
+        Cache = "cache",
+        CacheClear = "clear",
+        Test = "test",
+        Add = "add",
+        Remove = "remove",
+    },
 }
 
 --[[

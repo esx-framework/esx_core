@@ -11,7 +11,7 @@ const state = computed(() => panel.state)
   <div v-if="state" class="page-stack">
     <Alert variant="info">
       The webhook URL is a secret and stays in server.cfg
-      (<code>set whitelist:webhook "..."</code>). Only operational switches are editable here.
+      (<code>set whitelist:webhook "..."</code>).
     </Alert>
 
     <Card variant="bordered">
@@ -71,17 +71,17 @@ const state = computed(() => panel.state)
             config-key="Performance.DiscordQueueLimit"
             :value="state.performance.discordQueueLimit"
             label="Queue limit"
-            hint="Bounded queue; a full queue fails closed fast."
+            hint="Bounded pending Discord checks."
             :min="64"
-            :max="4096"
+            :max="8192"
           />
           <NumberField
             config-key="Performance.VerificationTimeout"
             :value="state.performance.verificationTimeout"
             label="Verification deadline (ms)"
-            hint="Hard upper bound per connection; players never hang."
+            hint="Maximum wait for a rate-limited Discord check."
             :min="2000"
-            :max="30000"
+            :max="180000"
           />
         </div>
       </CardContent>

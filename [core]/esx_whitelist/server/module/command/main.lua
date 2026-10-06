@@ -7,6 +7,8 @@
     Subcommands:
         whitelist                -> open the panel (in-game admins)
         whitelist panel          -> same
+        whitelist add <id> [type]    -> add identifier to whitelist/admin/bypass
+        whitelist remove <id> [type] -> remove identifier from whitelist/admin/bypass
         whitelist status         -> state + counters
         whitelist reload         -> reload runtime config, rebuild lookups
         whitelist cache          -> cache statistics
@@ -81,8 +83,9 @@ return function(deps)
     ---@param source number
     ---@param args string[]
     local function cmdCache(source, args)
+        local subcommands = RuntimeConfig:Get().Panel.Subcommands
         local sub = args[2]
-        if sub == "clear" then
+        if sub == subcommands.CacheClear then
             Discord:ClearCache()
             reply(source, locale("discord_cache_cleared"))
             return
@@ -99,7 +102,8 @@ return function(deps)
     local function cmdTest(source, args)
         local target = tonumber(args[2] or "")
         if not target then
-            reply(source, locale("command_usage_test"))
+            local cfg = RuntimeConfig:Get()
+            reply(source, locale("command_usage_test", cfg.Panel.Command, cfg.Panel.Subcommands.Test))
             return
         end
         if not GetPlayerName(target) then
@@ -138,34 +142,78 @@ return function(deps)
             return
         end
 
+        local subcommands = RuntimeConfig:Get().Panel.Subcommands
         local sub = args[1]
-        if sub == nil or sub == "" or sub == "panel" then
+        if sub == nil or sub == "" or sub == subcommands.Panel then
             if source == 0 then
                 reply(0, locale("panel_only_in_game"))
                 return
             end
             TriggerClientEvent(EVENT_PREFIX .. "cl:requestOpen", source)
-        elseif sub == "status" then
+        elseif sub == subcommands.Status then
             cmdStatus(source)
-        elseif sub == "reload" then
+        elseif sub == subcommands.Reload then
             cmdReload(source)
-        elseif sub == "cache" then
+        elseif sub == subcommands.Cache then
             cmdCache(source, args)
-        elseif sub == "test" then
+        elseif sub == subcommands.Test then
             cmdTest(source, args)
+        elseif sub == subcommands.Add then
+            local identifier = args[2]
+            local idType = args[3] or "whitelist"
+            if not identifier or (idType ~= "whitelist" and idType ~= "admin_only" and idType ~= "bypass") then
+                local cfg = RuntimeConfig:Get()
+                reply(source, locale("command_usage_add", cfg.Panel.Command, cfg.Panel.Subcommands.Add))
+                return
+            end
+            local ok, err = Identifier:Add(identifier, idType)
+            if ok then
+                reply(source, locale("command_identifier_added", identifier, idType))
+                Logger:Event("security", "Identifier added via command", {
+                    { name = "Identifier", value = identifier, inline = true },
+                    { name = "Type", value = idType, inline = true },
+                    { name = "Admin", value = source == 0 and "console" or tostring(GetPlayerName(source)), inline = true },
+                })
+            else
+                reply(source, locale("command_invalid_identifier", identifier))
+            end
+        elseif sub == subcommands.Remove then
+            local identifier = args[2]
+            local idType = args[3] or "whitelist"
+            if not identifier then
+                local cfg = RuntimeConfig:Get()
+                reply(source, locale("command_usage_remove", cfg.Panel.Command, cfg.Panel.Subcommands.Remove))
+                return
+            end
+            Identifier:Remove(identifier, idType)
+            reply(source, locale("command_identifier_removed", identifier, idType))
+            Logger:Event("security", "Identifier removed via command", {
+                { name = "Identifier", value = identifier, inline = true },
+                { name = "Type", value = idType, inline = true },
+                { name = "Admin", value = source == 0 and "console" or tostring(GetPlayerName(source)), inline = true },
+            })
         else
-            reply(source, locale("command_usage"))
+            reply(source, locale("command_usage",
+                RuntimeConfig:Get().Panel.Command,
+                subcommands.Panel,
+                subcommands.Status,
+                subcommands.Reload,
+                subcommands.Cache,
+                subcommands.CacheClear,
+                subcommands.Test,
+                subcommands.Add,
+                subcommands.Remove
+            ))
         end
     end
 
-    ---Registers the server-side command. Player executions are ignored
-    ---here (the client bridge forwards them as an event), so each
-    ---invocation is handled exactly once.
+    ---Registers the server console command.
     function Command:Register()
-        local commandName = RuntimeConfig:Get().Panel.Command
+        local cfg = RuntimeConfig:Get()
+        local commandName = cfg.Panel.Command
+
         RegisterCommand(commandName, function(source, args)
-            -- Player executions arrive twice (client bridge + this handler
-            -- via the shared command name); only the console is served here.
+            -- Player input is handled by the client bridge below.
             if source ~= 0 then
                 return
             end

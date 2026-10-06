@@ -1,7 +1,6 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-local CACHE_FILE <const> = "data/discord_cache.json"
 local API_BASE <const> = "https://discord.com/api/v10"
 local FAILURE_CACHE_TTL <const> = 15 -- seconds; blunts reconnect loops during outages
 
@@ -9,15 +8,17 @@ local FAILURE_CACHE_TTL <const> = 15 -- seconds; blunts reconnect loops during o
 ---@param DiscordUtil table
 ---@param RuntimeConfig table
 ---@param Log fun(level: string, message: string, context: table?)
-return function(Util, DiscordUtil, RuntimeConfig, Log)
+---@param Database table? database module
+return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
     local Discord = {}
 
-    local cache = {}       ---@type table<string, { allowed: boolean, status: string, expiresAt: integer }>
+    local cache = {}       ---@type table<string, { allowed: boolean, status: string }>
+    local dirtyCache = {}  ---@type table<string, { allowed: boolean, status: string }>
     local inFlight = {}    ---@type table<string, any> userId -> shared promise
     local queue = {}       ---@type string[] FIFO of userIds waiting for a worker slot
     local activeCount = 0
+    local queueResumeScheduled = false
     local rateLimitedUntil = 0 -- GetGameTimer() ms timestamp
-    local cacheDirty = false
     local cacheFlushScheduled = false
 
     local stats = {
@@ -74,7 +75,7 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
     end
 
     --[[
-        Cache persistence (debounced, same pattern as the admin cache).
+        Cache persistence 
     ]]
 
     local function scheduleCacheFlush()
@@ -84,81 +85,48 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
         cacheFlushScheduled = true
         SetTimeout(2000, function()
             cacheFlushScheduled = false
-            if not cacheDirty then
+            if not next(dirtyCache) then
                 return
             end
-            cacheDirty = false
-            local payload = json.encode(cache)
-            if type(payload) == "string" then
-                SaveResourceFile(GetCurrentResourceName(), CACHE_FILE, payload, -1)
+            local batch = {}
+            for k, v in pairs(dirtyCache) do
+                batch[#batch + 1] = { userId = k, allowed = v.allowed, status = v.status }
+            end
+            dirtyCache = {}
+            if Database and Database.ready then
+                Database:SaveDiscordBatch(batch, false)
             end
         end)
     end
 
-    ---Loads the persisted cache, dropping expired or malformed entries.
+    ---Persistent decisions are informational only; always recheck Discord on connection.
     function Discord:LoadCache()
-        local raw = LoadResourceFile(GetCurrentResourceName(), CACHE_FILE)
-        if not raw or raw == "" then
-            return
-        end
-
-        local ok, decoded = pcall(json.decode, raw)
-        if not ok or type(decoded) ~= "table" then
-            Log("warning", "Discord cache file is corrupted; starting with an empty cache")
-            return
-        end
-
-        local now = Util.Now()
-        local loaded = 0
-        for userId, entry in pairs(decoded) do
-            if type(userId) == "string"
-                and Util.IsSnowflake(userId)
-                and type(entry) == "table"
-                and type(entry.allowed) == "boolean"
-                and type(entry.status) == "string"
-                and type(entry.expiresAt) == "number"
-                and entry.expiresAt > now
-            then
-                cache[userId] = entry
-                loaded = loaded + 1
-            end
-        end
-        Log("info", ("Discord cache loaded (%d valid entries)"):format(loaded))
+        -- Deliberately do not load old decisions into the authorization cache.
     end
 
     ---Flushes pending cache writes immediately (resource shutdown).
     function Discord:FlushCache()
-        if cacheDirty then
-            cacheDirty = false
-            local payload = json.encode(cache)
-            if type(payload) == "string" then
-                SaveResourceFile(GetCurrentResourceName(), CACHE_FILE, payload, -1)
-            end
+        if not next(dirtyCache) then
+            return
+        end
+        local batch = {}
+        for k, v in pairs(dirtyCache) do
+            batch[#batch + 1] = { userId = k, allowed = v.allowed, status = v.status }
+        end
+        dirtyCache = {}
+        if Database and Database.ready then
+            Database:SaveDiscordBatch(batch, true)
         end
     end
 
     ---@param userId string
     ---@param result { allowed: boolean, status: string }
     local function storeResult(userId, result)
-        local cfg = discordConfig()
-        local ttl
-        if result.allowed then
-            ttl = cfg.CacheDuration
-        elseif result.status == "role_missing" or result.status == "not_in_guild" then
-            ttl = cfg.NegativeCacheDuration
-        else
-            ttl = FAILURE_CACHE_TTL
-        end
-
-        cache[userId] = {
-            allowed = result.allowed,
-            status = result.status,
-            expiresAt = Util.Now() + ttl,
-        }
-        cacheDirty = true
+        local entry = { allowed = result.allowed, status = result.status }
+        cache[userId] = entry
+        dirtyCache[userId] = entry
         scheduleCacheFlush()
     end
-
     --[[
         HTTP layer. Every request races PerformHttpRequest against a
         SetTimeout so a stuck connection can never hang a verification.
@@ -286,8 +254,14 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
 
             local now = GetGameTimer()
             if rateLimitedUntil > now then
-                local waitMs = rateLimitedUntil - now + 25
-                SetTimeout(waitMs, processQueue)
+                if not queueResumeScheduled then
+                    queueResumeScheduled = true
+                    local waitMs = rateLimitedUntil - now + 25
+                    SetTimeout(waitMs, function()
+                        queueResumeScheduled = false
+                        processQueue()
+                    end)
+                end
                 return
             end
 
@@ -318,13 +292,7 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
     ---@param userId string Discord snowflake (validated by caller)
     ---@return { allowed: boolean, status: string, fromCache: boolean? }
     function Discord:Verify(userId)
-        local now = Util.Now()
-        local cached = cache[userId]
-        if cached and cached.expiresAt > now then
-            stats.cacheHits = stats.cacheHits + 1
-            return { allowed = cached.allowed, status = cached.status, fromCache = true }
-        end
-
+        -- Always query Discord so role changes are reflected on the next connection.
         -- Deduplication: a concurrent verification for the same user
         -- awaits the already running request instead of starting a new one.
         local existing = inFlight[userId]
@@ -363,8 +331,10 @@ return function(Util, DiscordUtil, RuntimeConfig, Log)
     ---Drops all cached results (panel/command "cache clear").
     function Discord:ClearCache()
         cache = {}
-        cacheDirty = true
-        scheduleCacheFlush()
+        dirtyCache = {}
+        if Database and Database.ready then
+            Database:ClearDiscordCache()
+        end
     end
 
     ---@return table

@@ -1,7 +1,7 @@
 # esx_whitelist
 
 - Discord guild + role whitelist 
-- ESX admin-group authorization via a persistent identifier→group cache
+- ESX admin-group authorization 
 - Admin-only mode and emergency bypass
 - Discord webhook logging 
 - In-game admin panel
@@ -10,14 +10,15 @@
 
 ## 1. Installation
 
-1. The in-game panel ships **prebuilt** in `web/dist/` — no build step is required to run the resource.
+1. Import `whitelist.sql` into your database (the resource also automatically creates any missing tables and indexes).
+2. The in-game panel ships **prebuilt** in `web/dist/` — no build step is required to run the resource.
    To rebuild the panel after changing `web/src/`:
    ```bash
    cd /esx_whitelist/web
    npm install
    npm run build
    ```
-2. Add to your `server.cfg` (order matters — the resource must start **after** `es_extended`):
+3. Add to your `server.cfg` (order matters — the resource must start **after** `oxmysql` and `es_extended`):
 
    ```cfg
    # Secrets (server-only)
@@ -26,11 +27,12 @@
 
    setr esx:ui:logoUrl "https://example.com/logo.png"             # optional; defaults to the ESX logo
 
+   ensure oxmysql
    ensure esx_lib
    ensure es_extended
    ensure esx_whitelist
    ```
-3. Open `config/main.lua` and set your Discord `GuildId`, `AllowedRoles`, and optionally static `AllowedIdentifiers`.
+4. Open `config/main.lua` and set your Discord `GuildId`, `AllowedRoles`, and optionally static `AllowedIdentifiers`.
 > `set` convars stay on the server; the theme convars MUST use `setr`, and the secrets MUST use `set`.
 
 ## 2. Discord bot setup
@@ -49,7 +51,7 @@ If the token is missing or invalid, the resource prints a clear startup error an
 | Mode | Behavior |
 |---|---|
 | `discord` | Player must be a guild member with at least one allowed role. |
-| `identifier` | One of the player's FiveM identifiers must be in `AllowedIdentifiers`. |
+| `identifier` | One of the player's FiveM identifiers must be in `esx_whitelist_identifiers` or `AllowedIdentifiers`. |
 | `both` + `"or"` | Identifier match **or** Discord verification |
 | `both` + `"and"` | Identifier match **and** Discord verification |
 
@@ -75,10 +77,11 @@ Regardless of mode, the evaluation order is always:
 |---|---|
 | `/whitelist` | Open the admin panel |
 | `whitelist status` | Modes, Discord readiness, decision counters (chat/console) |
-| `whitelist reload` | Reload runtime config + caches from disk |
+| `whitelist reload` | Reload runtime config + caches from database |
 | `whitelist cache` | Cache/queue statistics |
 | `whitelist cache clear` | Clear the Discord verification cache |
 | `whitelist test <serverId>` | Run the full pipeline against an online player |
+| `whitelist add <identifier> [type]` | Add identifier to database (`whitelist`, `admin_only`, or `bypass`) |
+| `whitelist remove <identifier> [type]` | Remove identifier from database |
 
-All commands work in the server console as well. Permission is always checked server-side against the ESX group.
-
+All commands work in the server console as well.

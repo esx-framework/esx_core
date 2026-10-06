@@ -16,10 +16,10 @@ const cards = computed(() => {
     { label: "Denied", value: stats.service.denied },
     { label: "Discord API requests", value: stats.discord.requests },
     { label: "Cache hits", value: stats.discord.cacheHits },
-    { label: "Shared (deduped)", value: stats.discord.shared },
+    { label: "Shared", value: stats.discord.shared },
     { label: "Rate-limit events", value: stats.discord.rateLimits },
-    { label: "Admin cache entries", value: stats.adminCacheEntries },
-    { label: "Discord cache entries", value: stats.discord.cachedEntries },
+    { label: "Admin entries", value: stats.adminCacheEntries },
+    { label: "Discord entries", value: stats.discord.cachedEntries },
     { label: "Webhook events sent", value: stats.logger.sent },
   ]
 })

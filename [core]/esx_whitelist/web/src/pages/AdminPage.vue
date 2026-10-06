@@ -27,8 +27,7 @@ function validateIdentifier(value: string): string | null {
       <CardContent>
         <p class="section-hint">
           Players whose cached ESX group is enabled here pass the whitelist via
-          <code>admin_group</code> and can open this panel. The cache fills from live
-          ESX player objects — never from client input.
+          <code>admin_group</code> and can open this panel.
         </p>
         <GroupEditor
           config-key="Admin.Groups"
@@ -46,8 +45,8 @@ function validateIdentifier(value: string): string | null {
       <CardContent>
         <div class="field-row">
           <div>
-            <div class="field-label">Persistent cache enabled</div>
-            <div class="field-description">Survives restarts (data/admin_cache.json).</div>
+            <div class="field-label">Persistent cache</div>
+            <div class="field-description">Entries remain until updated or removed.</div>
           </div>
           <Toggle
             :model-value="state.admin.cacheEnabled"
@@ -56,14 +55,6 @@ function validateIdentifier(value: string): string | null {
           />
         </div>
         <div class="field-grid" style="margin-top: 14px">
-          <NumberField
-            config-key="Admin.Cache.Expiry"
-            :value="state.admin.cacheExpiry"
-            label="Entry expiry (s)"
-            hint="Default 2592000 = 30 days."
-            :min="3600"
-            :max="31536000"
-          />
           <NumberField
             config-key="Admin.Cache.SaveDelay"
             :value="state.admin.cacheSaveDelay"
@@ -110,7 +101,7 @@ function validateIdentifier(value: string): string | null {
             :items="state.adminOnly.allowedIdentifiers"
             label="Add admin identifier"
             placeholder="license2:1234567890abcdef..."
-            hint="Explicit identifiers that may connect while admin-only mode is on (cold-cache rescue)."
+            hint="Explicit identifiers that may connect while admin-only mode is on."
             :validate="validateIdentifier"
           />
         </div>
