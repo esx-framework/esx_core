@@ -45,17 +45,50 @@ local function createCallbackKey(event)
 end
 
 local function publishValidCallback(name)
-    local ok = pcall(function()
-        xLib.setValidCallback(name, true)
-    end)
+    local registration = registeredCallbackNames[name]
+
+    if not registration then return false end
+
+    local ok, accepted = pcall(xLib.setValidCallback, name, true, registration.owner)
+    registration.active = ok and accepted == true
 
     if not ok then
         SetTimeout(1000, function()
-            if registeredCallbackNames[name] then
+            if registeredCallbackNames[name] == registration then
                 publishValidCallback(name)
             end
         end)
     end
+
+    return registration.active
+end
+
+local function claimCallback(name, cb, owner)
+    owner = owner or resource_name
+    assert(type(name) == 'string' and name ~= '' and #name <= 200, 'invalid callback name')
+    assert(type(cb) == 'function', 'callback must be a function')
+    assert(type(owner) == 'string' and owner ~= '' and #owner <= 100, 'invalid callback owner')
+
+    local previous = registeredCallbackNames[name]
+    if previous and previous.owner ~= owner then
+        error(("callback '%s' is already owned by resource '%s'"):format(name, previous.owner), 3)
+    end
+
+    local ok, accepted = pcall(xLib.setValidCallback, name, true, owner)
+    if not ok or accepted ~= true then
+        error(("unable to claim callback '%s': %s"):format(name, ok and 'name already owned' or tostring(accepted)), 3)
+    end
+
+    if previous then
+        previous.active = false
+        RemoveEventHandler(previous.handler)
+    end
+
+    compatCallbacks[name] = nil
+    local registration = { owner = owner, active = true }
+    registeredCallbackNames[name] = registration
+
+    return registration
 end
 
 local function republishValidCallbacks()
@@ -73,15 +106,16 @@ end)
 -- Compat callbacks (via ESX.Register*) belong to another resource while their
 -- handlers live here, so they must be removed manually when that resource stops.
 AddEventHandler('onClientResourceStop', function(resource)
-    for name, registration in pairs(compatCallbacks) do
-        if registration.owner == resource then
-            RemoveEventHandler(registration.handler)
+    for name, registration in pairs(registeredCallbackNames) do
+        if resource == 'esx_lib' then registration.active = false end
 
+        if registration.owner == resource then
+            registration.active = false
+            RemoveEventHandler(registration.handler)
             compatCallbacks[name] = nil
             registeredCallbackNames[name] = nil
-
             if GetResourceState('esx_lib') == 'started' then
-                xLib.setValidCallback(name, false)
+                xLib.setValidCallback(name, false, registration.owner)
             end
         end
     end
@@ -228,10 +262,11 @@ local pcall = pcall
 function xLib.callback.register(name, cb)
     local event = cbEvent:format(name)
 
-    registeredCallbackNames[name] = true
-    publishValidCallback(name)
-
-    RegisterNetEvent(event, function(resource, key, ...)
+    local registration = claimCallback(name, cb)
+    RegisterNetEvent(event)
+    
+    registration.handler = AddEventHandler(event, function(resource, key, ...)
+        if not registration.active then return end
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
     end)
 end
@@ -273,22 +308,13 @@ function xLib.callback.registerCompat(name, cb, owner)
         return table.unpack(Citizen.Await(response))
     end
 
-    local previous = compatCallbacks[name]
-    if previous then
-        RemoveEventHandler(previous.handler)
-    end
-
+    local registration = claimCallback(name, cb, owner)
     RegisterNetEvent(event)
-    local handler = AddEventHandler(event, function(resource, key, ...)
+    registration.handler = AddEventHandler(event, function(resource, key, ...)
+        if not registration.active then return end
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(compatCb, ...)))
     end)
-
-    registeredCallbackNames[name] = true
-    compatCallbacks[name] = {
-        owner = owner or resource_name,
-        handler = handler
-    }
-    publishValidCallback(name)
+    compatCallbacks[name] = registration
 end
 
 return xLib.callback

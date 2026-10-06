@@ -92,7 +92,7 @@ MySQL.ready(function()
     end
 end)
 
-function Database:DeleteCharacter(source, charid)
+function Database:DeleteCharacter(source, charid, session)
     local identifier = ('%s%s:%s'):format(Server.prefix, charid, ESX.GetIdentifier(source))
     local query = 'DELETE FROM `%s` WHERE %s = ?'
     local queries = {}
@@ -104,6 +104,7 @@ function Database:DeleteCharacter(source, charid)
     end
 
     MySQL.transaction(queries, function(result)
+        if Multicharacter.sessions[source] ~= session or ESX.GetIdentifier(source) ~= session.identifier then return end
         if result then
             local name = GetPlayerName(source)
             print(
@@ -114,9 +115,10 @@ function Database:DeleteCharacter(source, charid)
                 )
             )
             Wait(50)
-            Multicharacter:SetupCharacters(source)
+            Multicharacter:SetupCharacters(source, session)
         else
-            error('\n^1Transaction failed while trying to delete ' .. identifier .. '^0')
+            session.phase = 'ready'
+            print('[esx_multicharacter] Delete transaction failed for ' .. identifier)
         end
     end)
 end

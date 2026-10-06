@@ -7,11 +7,19 @@ Multicharacter = {}
 Multicharacter._index = Multicharacter
 Multicharacter.awaitingRegistration = {}
 Multicharacter.sessions = {}
+local setupLimiter = xLib.rateLimiter({ capacity = 1, refill = 1, interval = 5000 })
+local actionLimiter = xLib.rateLimiter({ capacity = 2, refill = 1, interval = 2000 })
+
+local function isCurrent(source, session)
+    return Multicharacter.sessions[source] == session
+        and ESX.GetIdentifier(source) == session.identifier
+        and not ESX.GetPlayerFromId(source)
+end
 
 local function normalizeCharacterSlot(charid)
     charid = tonumber(charid)
 
-    if not charid or charid < 1 or charid ~= math.floor(charid) then
+    if not charid or charid ~= charid or charid == math.huge or charid < 1 or charid ~= math.floor(charid) then
         return nil
     end
 
@@ -22,22 +30,25 @@ local function isCharacterDisabled(character)
     return character and (character.disabled == true or character.disabled == 1 or character.disabled == "1")
 end
 
-function Multicharacter:SetupCharacters(source)
-    SetPlayerRoutingBucket(source, source)
+local function loadCharacters(self, source, session)
+    local deadline = GetGameTimer() + 15000
+
     while not Database.connected do
+        if not isCurrent(source, session) or GetGameTimer() >= deadline then return false end
         Wait(100)
     end
 
-    local identifier = ESX.GetIdentifier(source)
-    ESX.Players[identifier] = source
+    if not isCurrent(source, session) then return false end
+    local identifier = session.identifier
 
     local slots = tonumber(Database:GetPlayerSlots(identifier)) or tonumber(Server.slots) or 1
-    slots = math.floor(slots)
-    if slots < 1 then
-        slots = tonumber(Server.slots) or 1
-    end
+    if slots ~= slots or slots == math.huge or slots == -math.huge then slots = 1 end
+    slots = math.max(1, math.min(100, math.floor(slots)))
 
+    if not isCurrent(source, session) then return false end
     local rawCharacters = Database:GetPlayerInfo(identifier, slots)
+    if not isCurrent(source, session) then return false end
+
     local characters = {}
 
     if rawCharacters then
@@ -79,13 +90,43 @@ function Multicharacter:SetupCharacters(source)
     end
 
     self.awaitingRegistration[source] = nil
-    self.sessions[source] = {
-        identifier = identifier,
-        slots = slots,
-        characters = characters,
-    }
-
+    session.slots = slots
+    session.characters = characters
+    session.phase = 'ready'
+    ESX.Players[identifier] = source
+    SetPlayerRoutingBucket(source, source)
     TriggerClientEvent("esx_multicharacter:SetupUI", source, characters, slots)
+    return true
+end
+
+function Multicharacter:SetupCharacters(source, refreshSession)
+    local closing = self.sessions[source]
+    if closing and closing.phase == 'logout' and closing.identifier == ESX.GetIdentifier(source) then
+        closing.setupRequested = true
+        return false
+    end
+
+    if ESX.GetPlayerFromId(source) then return false end
+
+    if refreshSession then
+        if not isCurrent(source, refreshSession) or refreshSession.phase ~= 'deleting' then return false end
+    elseif self.sessions[source] or not setupLimiter:consume(source) then
+        return false
+    end
+
+    local identifier = ESX.GetIdentifier(source)
+    if type(identifier) ~= 'string' or identifier == '' then return false end
+
+    local session = { identifier = identifier, phase = 'loading' }
+    self.sessions[source] = session
+    local ok, ready = pcall(loadCharacters, self, source, session)
+
+    if not ok or not ready then
+        if self.sessions[source] == session then self.sessions[source] = nil end
+        if not ok then print(('[esx_multicharacter] Setup failed: %s'):format(tostring(ready))) end
+        return false
+    end
+    return true
 end
 
 function Multicharacter:CharacterChosen(source, charid, isNew)
@@ -98,18 +139,26 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
     local identifier = ESX.GetIdentifier(source)
     local session = self.sessions[source]
 
-    if not identifier or not session or session.identifier ~= identifier or charid > session.slots then
+    if not identifier or not session or session.phase ~= 'ready' or not isCurrent(source, session)
+        or charid > session.slots or not actionLimiter:consume(source) then
         return
     end
 
     local character = session.characters and session.characters[charid]
-    local databaseCharacter = Database:GetCharacter(identifier, charid)
+    session.phase = 'choosing'
+
+    local ok, databaseCharacter = pcall(Database.GetCharacter, Database, identifier, charid)
+    if not isCurrent(source, session) then return end
+    session.phase = 'ready'
+
+    if not ok then return end
 
     if isNew then
         if character or databaseCharacter then
             return
         end
 
+        session.phase = 'registering'
         self.awaitingRegistration[source] = charid
     else
         if not character or not databaseCharacter or isCharacterDisabled(character) or isCharacterDisabled(databaseCharacter) then
@@ -127,9 +176,9 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
         end
 
         local charIdentifier = ("%s%s"):format(Server.prefix, charid)
+        session.phase = 'joining'
+        ESX.Players[identifier] = charIdentifier
         TriggerEvent("esx:onPlayerJoined", source, charIdentifier)
-        ESX.Players[ESX.GetIdentifier(source)] = charIdentifier
-        self.sessions[source] = nil
     end
 end
 
@@ -140,13 +189,20 @@ function Multicharacter:RegistrationComplete(source, data)
 
     self.awaitingRegistration[source] = nil
 
-    if not charId or not identifier or not session or session.identifier ~= identifier or charId > session.slots or session.characters[charId] or Database:GetCharacter(identifier, charId) then
+    if not charId or not identifier or not session or session.phase ~= 'registering' or not isCurrent(source, session)
+        or charId > session.slots or session.characters[charId] then
         return
     end
 
+    session.phase = 'joining'
+
+    local ok, existing = pcall(Database.GetCharacter, Database, identifier, charId)
+    if not ok or existing or not isCurrent(source, session) then
+        if self.sessions[source] == session then self.sessions[source] = nil end
+        return
+    end
     local charIdentifier = ("%s%s"):format(Server.prefix, charId)
     ESX.Players[ESX.GetIdentifier(source)] = charIdentifier
-    self.sessions[source] = nil
 
     SetPlayerRoutingBucket(source, 0)
     TriggerEvent("esx:onPlayerJoined", source, charIdentifier, data)
@@ -162,15 +218,46 @@ function Multicharacter:DeleteCharacter(source, charid)
     local identifier = ESX.GetIdentifier(source)
     local session = self.sessions[source]
 
-    if not charid or not identifier or not session or session.identifier ~= identifier or charid > session.slots or not session.characters[charid] then
+    if not charid or not identifier or not session or session.phase ~= 'ready' or not isCurrent(source, session)
+        or charid > session.slots or not session.characters[charid] or not actionLimiter:consume(source) then
         return
     end
 
-    Database:DeleteCharacter(source, charid)
+    session.phase = 'deleting'
+    local ok, err = pcall(Database.DeleteCharacter, Database, source, charid, session)
+    if not ok and self.sessions[source] == session then
+        session.phase = 'ready'
+        print(('[esx_multicharacter] Delete failed: %s'):format(tostring(err)))
+    end
 end
 
 function Multicharacter:PlayerDropped(player)
     self.awaitingRegistration[player] = nil
     self.sessions[player] = nil
-    ESX.Players[ESX.GetIdentifier(player)] = nil
+
+    local identifier = ESX.GetIdentifier(player)
+    if identifier then ESX.Players[identifier] = nil end
+
+    setupLimiter:reset(player)
+    actionLimiter:reset(player)
 end
+
+function Multicharacter:Relog(source)
+    if not Config.Relog or self.sessions[source] or not ESX.GetPlayerFromId(source)
+        or not actionLimiter:consume(source) then return end
+
+    local session = { identifier = ESX.GetIdentifier(source), phase = 'logout' }
+    self.sessions[source] = session
+    
+    TriggerEvent('esx:playerLogout', source, function()
+        if self.sessions[source] == session then
+            self.sessions[source] = nil
+            if session.setupRequested then self:SetupCharacters(source) end
+        end
+    end)
+end
+
+AddEventHandler('esx:playerLoaded', function(playerId)
+    Multicharacter.sessions[playerId] = nil
+    Multicharacter.awaitingRegistration[playerId] = nil
+end)

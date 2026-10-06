@@ -6,6 +6,9 @@ ESXCatalog.awaitReady()
 local cache = {}
 local writes = {}
 local reads = {}
+local editSessions = {}
+local beginSkinEdit
+local getPlayerSkin
 local saveLimiter = xLib.rateLimiter({
     capacity = 2,
     refill = 1,
@@ -52,7 +55,7 @@ local function validateSkin(skin)
 
     local ok, encoded = pcall(json.encode, skin)
 
-    if not ok or #encoded > Config.SkinMaxBytes then
+    if not ok or type(encoded) ~= 'string' or #encoded > Config.SkinMaxBytes then
         return nil
     end
 
@@ -125,6 +128,7 @@ AddEventHandler('esx:playerLoaded', function(playerId)
         end
 
         applyBackpackWeight(playerId, player.identifier, skin)
+        beginSkinEdit(playerId, true)
     end
 end)
 
@@ -188,6 +192,7 @@ dispatchSave = function(identifier, queue)
         local current = ESX.GetPlayerFromId(request.playerId)
 
         if success and current == request.player then
+            editSessions[request.playerId] = nil
             cache[identifier] = {
                 skin = request.skin,
                 encoded = request.encoded,
@@ -276,26 +281,117 @@ local function saveSkin(playerId, skin, callback)
     return true
 end
 
+local function readStoredSkin(playerId)
+    local player = ESX.GetPlayerFromId(playerId)
+
+    if not player then return nil, false end
+
+    local skin
+    getPlayerSkin(playerId, function(value) skin = value end)
+    local entry = cache[player.identifier]
+
+    if ESX.GetPlayerFromId(playerId) ~= player or not entry or entry.expires < GetGameTimer() then return nil, false end
+
+    return skin, true
+end
+
+beginSkinEdit = function(playerId, initialOnly)
+    local player = ESX.GetPlayerFromId(playerId)
+    if not player or (editSessions[playerId] and editSessions[playerId].inFlight) then return false end
+
+    local _, ready = readStoredSkin(playerId)
+    if not ready or ESX.GetPlayerFromId(playerId) ~= player then return false end
+
+    local entry = cache[player.identifier]
+    if initialOnly and entry.encoded ~= nil and entry.encoded ~= '' then return false end
+    editSessions[playerId] = { player = player, expires = GetGameTimer() + Config.SkinEditSessionTTL }
+
+    return true
+end
+
+local function saveClientSkin(playerId, skin, callback)
+    local session = editSessions[playerId]
+
+    if not session or session.player ~= ESX.GetPlayerFromId(playerId)
+        or session.expires <= GetGameTimer() or session.inFlight then
+        reply(callback, false)
+        return false
+    end
+
+    session.inFlight = true
+
+    return saveSkin(playerId, skin, function(success)
+        if editSessions[playerId] == session then
+            if success then editSessions[playerId] = nil else session.inFlight = false end
+        end
+        reply(callback, success)
+    end)
+end
+
+local function saveScopedSkin(playerId, skin, callback, scope)
+    if not scope then return saveSkin(playerId, skin, callback) end
+
+    local fields = Config.SkinEditFields[scope]
+    if not fields or not validateSkin(skin) then reply(callback, false) return false end
+
+    local player = ESX.GetPlayerFromId(playerId)
+    local stored, ready = readStoredSkin(playerId)
+    if not ready or not stored or ESX.GetPlayerFromId(playerId) ~= player then reply(callback, false) return false end
+
+    for name, value in pairs(stored) do
+        if not fields[name] and skin[name] ~= value then reply(callback, false) return false end
+    end
+
+    for name, value in pairs(skin) do
+        if not fields[name] and value ~= stored[name] then reply(callback, false) return false end
+    end
+
+    return saveSkin(playerId, skin, callback)
+end
+
 RegisterNetEvent('esx_skin:save', function(skin)
     local playerId = source
     local player = ESX.GetPlayerFromId(playerId)
-
-    saveSkin(playerId, skin, function(success)
+    saveClientSkin(playerId, skin, function(success)
         if not success and player and ESX.GetPlayerFromId(playerId) == player then
             TriggerClientEvent('esx_skin:saveFailed', playerId)
         end
     end)
 end)
 
-xLib.callback.registerCompat('esx_skin:save', function(source, cb, skin)
-    saveSkin(source, skin, cb)
+xLib.callback.registerCompat('esx_skin:save', function(playerId, callback, skin)
+    return saveClientSkin(playerId, skin, callback)
 end)
 
-exports('SaveSkin', saveSkin)
+exports('SaveSkin', saveScopedSkin)
+exports('GetSkin', readStoredSkin)
+exports('BeginSkinEdit', function(playerId) return beginSkinEdit(playerId, false) end)
+
+exports('ValidateSkin', function(skin)
+    local encoded = validateSkin(skin)
+    return encoded and decodeSkin(encoded) or nil
+end)
+
+exports('SaveOutfit', function(playerId, clothes, callback)
+    if type(clothes) ~= 'table' then reply(callback, false) return false end
+
+    local player = ESX.GetPlayerFromId(playerId)
+    local stored, ready = readStoredSkin(playerId)
+    if not ready or not stored or ESX.GetPlayerFromId(playerId) ~= player then reply(callback, false) return false end
+
+    local skin = decodeSkin(json.encode(stored))
+    for name in pairs(Config.SkinEditFields.outfit) do
+        if clothes[name] ~= nil then skin[name] = clothes[name] end
+    end
+
+    return saveSkin(playerId, skin, function(saved)
+        if callback then callback(saved, saved and skin or nil) end
+    end)
+end)
 
 RegisterNetEvent('esx_skin:setWeight', function() end)
 
-xLib.callback.registerCompat('esx_skin:getPlayerSkin', function(source, cb)
+getPlayerSkin = function(source, cb)
     local player = ESX.GetPlayerFromId(source)
 
     if not player then
@@ -359,9 +455,12 @@ xLib.callback.registerCompat('esx_skin:getPlayerSkin', function(source, cb)
 
     local job = player.getJob()
     cb(entry and entry.skin, { skin_male = job.skin_male, skin_female = job.skin_female })
-end)
+end
+
+xLib.callback.registerCompat('esx_skin:getPlayerSkin', getPlayerSkin)
 
 AddEventHandler('esx:playerDropped', function(playerId)
+    editSessions[playerId] = nil
     local player = ESX.GetPlayerFromId(playerId)
 
     if player then
@@ -372,6 +471,11 @@ end)
 CreateThread(function()
     while true do
         Wait(30000)
+        for playerId, session in pairs(editSessions) do
+            if session.expires <= GetGameTimer() or ESX.GetPlayerFromId(playerId) ~= session.player then
+                editSessions[playerId] = nil
+            end
+        end
 
         for identifier, entry in pairs(cache) do
             if
@@ -392,7 +496,11 @@ ESX.RegisterCommand(
         if not args.playerId then
             args.playerId = xPlayer
         end
-        args.playerId.triggerEvent('esx_skin:openSaveableMenu')
+        
+        local playerId = args.playerId.source or args.playerId.getSource()
+        if beginSkinEdit(playerId, false) then
+            args.playerId.triggerEvent('esx_skin:openSaveableMenu')
+        end
     end,
     false,
     {
