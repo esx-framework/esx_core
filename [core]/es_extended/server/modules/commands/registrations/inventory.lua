@@ -84,12 +84,20 @@ if not Config.CustomInventory then
         end,
         true,
         {
-            help = TranslateCap("command_giveweapon"),
-            validate = false,
+            help = TranslateCap("command_giveammo"),
+            validate = true,
             arguments = {
                 { name = "playerId", help = TranslateCap("commandgeneric_playerid"), type = "player" },
                 { name = "weapon", help = TranslateCap("command_giveammo_weapon"), type = "weapon" },
-                { name = "ammo", help = TranslateCap("command_giveammo_ammo"), type = "number" },
+                {
+                    name = "ammo",
+                    help = TranslateCap("command_giveammo_ammo"),
+                    type = "number",
+                    Validator = {
+                        validate = function(x) return x > 0 end,
+                        err = TranslateCap("commanderror_argumentmismatch_positive_number", "ammo")
+                    }
+                },
             },
         }
     )

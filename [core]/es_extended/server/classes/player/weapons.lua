@@ -81,6 +81,7 @@ function Core.PlayerClass.AttachWeapons(self)
         if weapon then
             weapon.ammo = weapon.ammo + ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            self.triggerEvent("esx:updateWeaponAmmo", weaponName, weapon.ammo)
             return true
         end
 
@@ -95,6 +96,7 @@ function Core.PlayerClass.AttachWeapons(self)
         end
 
         weapon.ammo = ammoCount
+        self.triggerEvent("esx:updateWeaponAmmo", weaponName, weapon.ammo)
 
         if weapon.ammo <= 0 then
             local _, weaponConfig = ESX.GetWeapon(weaponName)
@@ -197,6 +199,7 @@ function Core.PlayerClass.AttachWeapons(self)
         if weapon then
             weapon.ammo = weapon.ammo - ammoCount
             SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+            self.triggerEvent("esx:updateWeaponAmmo", weaponName, weapon.ammo)
             return true
         end
 

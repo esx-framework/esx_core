@@ -6,13 +6,18 @@ if Config.CustomInventory then
 end
 
 RegisterNetEvent("esx:onPickup", function(pickupId)
+    pickupId = tonumber(pickupId)
+    if not pickupId then
+        return
+    end
+
     if not Core.InventoryEvents.ConsumeRate("pickup", source) then
         return
     end
 
     local pickup = Core.Pickups[pickupId]
 
-    if not pickup then
+    if not pickup or pickup.claimed then
         return
     end
 
@@ -32,10 +37,12 @@ RegisterNetEvent("esx:onPickup", function(pickupId)
         return
     end
 
+    pickup.claimed = true
     local success = false
 
     if pickup.type == "item_standard" then
         if not xPlayer.canCarryItem(pickup.name, pickup.count) then
+            pickup.claimed = nil
             return xPlayer.showNotification(TranslateCap("threw_cannot_pickup"))
         end
 
@@ -46,6 +53,7 @@ RegisterNetEvent("esx:onPickup", function(pickupId)
         success = true
     elseif pickup.type == "item_weapon" then
         if xPlayer.hasWeapon(pickup.name) then
+            pickup.claimed = nil
             return xPlayer.showNotification(TranslateCap("threw_weapon_already"))
         end
 
@@ -63,5 +71,7 @@ RegisterNetEvent("esx:onPickup", function(pickupId)
         local targets = Core.GetPickupTargets(pickup.coords, pickup.bucket)
 
         Core.RemovePickup(pickupId, targets)
+    else
+        pickup.claimed = nil
     end
 end)

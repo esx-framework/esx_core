@@ -30,14 +30,13 @@ end
 ---@param timestamp number
 function OnTime(timestamp)
     local function scheduledAt(job, dayOffset)
-        return os.time({
-            hour = job.h,
-            min = job.m,
-            sec = 0, -- Assuming tasks run at the start of the minute
-            day = os.date("%d", timestamp) + dayOffset,
-            month = os.date("%m", timestamp),
-            year = os.date("%Y", timestamp),
-        })
+        local dateTable = os.date("*t", timestamp)
+        dateTable.hour = job.h
+        dateTable.min = job.m
+        dateTable.sec = 0
+        dateTable.day = dateTable.day + dayOffset
+
+        return os.time(dateTable)
     end
 
     for i = 1, #cronJobs, 1 do
@@ -74,7 +73,10 @@ function Tick()
         lastTimestamp = timestamp
     end
 
-    SetTimeout(60000, Tick)
+    local seconds = tonumber(os.date("%S", timestamp)) or 0
+    local msToNextMinute = math.max(1000, (60 - seconds) * 1000)
+
+    SetTimeout(msToNextMinute, Tick)
 end
 
 lastTimestamp = GetUnixTimestamp()

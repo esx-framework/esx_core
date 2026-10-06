@@ -29,27 +29,33 @@ function Core.PlayerClass.AttachAccounts(self)
     end
 
     local function validMoney(value)
-        return type(value) == 'number' and value == value and math.abs(value) <= 9007199254740991
+        return type(value) == 'number'
+            and value == value
+            and math.abs(value) <= 9007199254740991
     end
 
     function self.setMoney(money)
         assert(type(money) == 'number', 'money should be number!')
         money = ESX.Math.Round(money)
+
         return self.setAccountMoney('money', money)
     end
 
     function self.getMoney()
         local account = self.getAccount('money')
+
         return account and account.money or 0
     end
 
     function self.addMoney(money, reason)
         money = ESX.Math.Round(money)
+
         return self.addAccountMoney('money', money, reason)
     end
 
     function self.removeMoney(money, reason)
         money = ESX.Math.Round(money)
+
         return self.removeAccountMoney('money', money, reason)
     end
 
@@ -73,12 +79,15 @@ function Core.PlayerClass.AttachAccounts(self)
         end
 
         account = string.lower(account)
+
         for i = 1, #self.accounts do
             local accountName = string.lower(self.accounts[i].name)
+
             if accountName == account then
                 return self.accounts[i]
             end
         end
+
         return nil
     end
 
@@ -93,6 +102,7 @@ function Core.PlayerClass.AttachAccounts(self)
                     money
                 )
             )
+
             return
         end
 
@@ -104,7 +114,14 @@ function Core.PlayerClass.AttachAccounts(self)
                 self.accounts[account.index].money = money
 
                 self.triggerEvent('esx:setAccountMoney', account)
-                TriggerEvent('esx:setAccountMoney', self.source, accountName, money, reason)
+                TriggerEvent(
+                    'esx:setAccountMoney',
+                    self.source,
+                    accountName,
+                    money,
+                    reason
+                )
+
                 return true
             else
                 error(
@@ -136,23 +153,36 @@ function Core.PlayerClass.AttachAccounts(self)
                     money
                 )
             )
+
             return
         end
 
         if money > 0 then
             local account = self.getAccount(accountName)
+
             if account then
                 money = account.round and ESX.Math.Round(money) or money
+
                 local balance = self.accounts[account.index].money + money
 
-                if not validMoney(balance) or balance < self.accounts[account.index].money then
+                if
+                    not validMoney(balance)
+                    or balance < self.accounts[account.index].money
+                then
                     return false
                 end
 
-                self.accounts[account.index].money = self.accounts[account.index].money + money
+                self.accounts[account.index].money = balance
 
                 self.triggerEvent('esx:setAccountMoney', account)
-                TriggerEvent('esx:addAccountMoney', self.source, accountName, money, reason)
+                TriggerEvent(
+                    'esx:addAccountMoney',
+                    self.source,
+                    accountName,
+                    money,
+                    reason
+                )
+
                 return true
             else
                 error(
@@ -176,6 +206,12 @@ function Core.PlayerClass.AttachAccounts(self)
     function self.removeAccountMoney(accountName, money, reason)
         reason = reason or 'Unknown'
 
+        -- Mantiene la compatibilidad introducida por v1.16.0:
+        -- permite valores numéricos convertibles como "100".
+        money = tonumber(money)
+
+        -- Conserva las protecciones adicionales de la rama 1.16.0:
+        -- NaN, infinito y valores fuera del rango entero seguro.
         if not validMoney(money) then
             error(
                 ('Tried To Set Account ^5%s^1 For Player ^5%s^1 To An Invalid Number -> ^5%s^1'):format(
@@ -184,6 +220,7 @@ function Core.PlayerClass.AttachAccounts(self)
                     money
                 )
             )
+
             return
         end
 
@@ -193,29 +230,40 @@ function Core.PlayerClass.AttachAccounts(self)
             if account then
                 money = account.round and ESX.Math.Round(money) or money
 
-                if money <= 0 or self.accounts[account.index].money < money then
+                -- El redondeo podría convertir una cantidad pequeña en 0.
+                if money <= 0 then
                     return false
                 end
 
-                if
-                    self.accounts[account.index].money - money > self.accounts[account.index].money
-                then
-                    error(
-                        ('Tried To Underflow Account ^5%s^1 For Player ^5%s^1!'):format(
-                            accountName,
-                            self.playerId
-                        )
-                    )
-                    return
+                local currentBalance = self.accounts[account.index].money
+                local newBalance = currentBalance - money
+
+                -- No permitir saldo negativo.
+                if newBalance < 0 then
+                    return false
                 end
-                self.accounts[account.index].money = self.accounts[account.index].money - money
+
+                -- Protección adicional por si el estado de la cuenta
+                -- contiene un número inválido.
+                if not validMoney(newBalance) then
+                    return false
+                end
+
+                self.accounts[account.index].money = newBalance
 
                 self.triggerEvent('esx:setAccountMoney', account)
-                TriggerEvent('esx:removeAccountMoney', self.source, accountName, money, reason)
+                TriggerEvent(
+                    'esx:removeAccountMoney',
+                    self.source,
+                    accountName,
+                    money,
+                    reason
+                )
+
                 return true
             else
                 error(
-                    ('Tried To Set Add To Invalid Account ^5%s^1 For Player ^5%s^1!'):format(
+                    ('Tried To Remove From Invalid Account ^5%s^1 For Player ^5%s^1!'):format(
                         accountName,
                         self.playerId
                     )
@@ -231,5 +279,4 @@ function Core.PlayerClass.AttachAccounts(self)
             )
         end
     end
-
 end
