@@ -7,6 +7,7 @@ local Enum = {}
 Enum.AuthMethod = {
     DISCORD = "discord",
     IDENTIFIER = "identifier",
+    BOTH = "both",
     ADMIN_GROUP = "admin_group",
     ADMIN_IDENTIFIER = "admin_identifier",
     BYPASS = "bypass",

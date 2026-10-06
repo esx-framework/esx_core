@@ -102,7 +102,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
         end
 
         if progress then
-            progress("Checking Discord membership...")
+            progress(_("checking_discord_membership"))
         end
 
         -- Race the verification against the global deadline.
@@ -128,7 +128,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
 
         local verification = Citizen.Await(race)
         if progress then
-            progress("Verifying authorization...")
+            progress(_("verifying_authorization"))
         end
         if not verification then
             return buildResult(false, Method.DENIED, Reason.TIMEOUT, discordIdentifier, MESSAGES.timeout)
@@ -223,7 +223,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
             end
             local discordResult = checkDiscord(identifiers, progress)
             if discordResult.allowed then
-                return buildResult(true, "both", Reason.IDENTIFIER_MATCH, match)
+                return buildResult(true, Method.BOTH, Reason.IDENTIFIER_MATCH, match)
             end
             return discordResult
         end

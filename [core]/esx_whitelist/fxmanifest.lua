@@ -33,6 +33,8 @@ files {
     "web/dist/index.html",
     "web/dist/assets/*",
     "client/module/**/*.lua",
+    "server/module/**/*.lua",
+    "server/service/**/*.lua",
 }
 
 dependencies {
