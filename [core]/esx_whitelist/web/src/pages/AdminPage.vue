@@ -4,17 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, Toggle } from 'esx-ui-kit-vue
 import { panel, updateConfig } from '../composables/usePanel'
 import GroupEditor from '../components/GroupEditor.vue'
 import ListEditor from '../components/ListEditor.vue'
-import NumberField from '../components/NumberField.vue'
+import { validateAccessIdentifier } from '../services/identifier'
 
 const state = computed(() => panel.state)
 
-const IDENTIFIER_PATTERN = /^[a-z0-9]+:[\w._-]+$/i
-
 function validateIdentifier(value: string): string | null {
-    if (value.length > 128 || !IDENTIFIER_PATTERN.test(value)) {
-        return 'Expected format "prefix:value", e.g. license2:abc...'
-    }
-    return null
+    return validateAccessIdentifier(value, state.value?.whitelist.identifierTypes ?? [])
 }
 </script>
 
@@ -26,7 +21,7 @@ function validateIdentifier(value: string): string | null {
             </CardHeader>
             <CardContent>
                 <p class="section-hint">
-                    Players whose cached ESX group is enabled here pass the whitelist via
+                    Players whose current ESX group is enabled here pass the whitelist via
                     <code>admin_group</code> and can open this panel.
                 </p>
                 <GroupEditor
@@ -40,14 +35,14 @@ function validateIdentifier(value: string): string | null {
 
         <Card variant="bordered">
             <CardHeader>
-                <CardTitle>Admin group cache</CardTitle>
+                <CardTitle>Admin group access</CardTitle>
             </CardHeader>
             <CardContent>
                 <div class="field-row">
                     <div>
-                        <div class="field-label">Persistent cache</div>
+                        <div class="field-label">Allow access by ESX group</div>
                         <div class="field-description">
-                            Entries remain until updated or removed.
+                            The current ESX group is verified before access is granted.
                         </div>
                     </div>
                     <Toggle
@@ -58,18 +53,8 @@ function validateIdentifier(value: string): string | null {
                         "
                     />
                 </div>
-                <div class="field-grid" style="margin-top: 14px">
-                    <NumberField
-                        config-key="Admin.Cache.SaveDelay"
-                        :value="state.admin.cacheSaveDelay"
-                        label="Save debounce (ms)"
-                        hint="Writes are batched; never per-event."
-                        :min="1000"
-                        :max="60000"
-                    />
-                </div>
                 <p class="section-hint" style="margin-top: 10px">
-                    Cached entries: {{ state.stats?.adminCacheEntries ?? 0 }}
+                    Discovered administrators: {{ state.stats?.adminCacheEntries ?? 0 }}
                 </p>
             </CardContent>
         </Card>

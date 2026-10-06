@@ -54,6 +54,7 @@ const DEV_STATE: PanelState = {
     whitelist: {
         enabled: true,
         mode: 'discord',
+        identifierTypes: ['license2', 'license', 'fivem'],
         combinationMode: 'or',
         allowedIdentifiers: ['license2:0123456789abcdef0123456789abcdef01234567'],
     },
@@ -80,6 +81,7 @@ const DEV_STATE: PanelState = {
     meta: {
         version: '1.0.0',
         botTokenConfigured: true,
+        discordReady: true,
         webhookConfigured: false,
         resourceName: 'esx_whitelist',
     },

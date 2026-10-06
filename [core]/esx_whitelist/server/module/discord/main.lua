@@ -2,63 +2,46 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 local API_BASE <const> = 'https://discord.com/api/v10'
-local FAILURE_CACHE_TTL <const> = 15 -- seconds; blunts reconnect loops during outages
 
----@param Util table
----@param DiscordUtil table
----@param RuntimeConfig table
----@param Log fun(level: string, message: string, context: table?)
----@param Database table? database module
 return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
     local Discord = {}
-
-    local cache = {} ---@type table<string, { allowed: boolean, status: string }>
-    local dirtyCache = {} ---@type table<string, { allowed: boolean, status: string }>
-    local inFlight = {} ---@type table<string, any> userId -> shared promise
-    local queue = {} ---@type string[] FIFO of userIds waiting for a worker slot
-    local activeCount = 0
+    local latency = Util.NewLatencyMetrics()
+    local cache, inFlight = {}, {}
+    local cacheCount = 0
+    local cacheHead, cacheTail
+    local queueHead, queueTail
+    local queueCount, activeCount = 0, 0
     local queueResumeScheduled = false
-    local rateLimitedUntil = 0 -- GetGameTimer() ms timestamp
-    local cacheFlushScheduled = false
-
+    local rateLimitedUntil = 0
+    local nextRequestAt = 0
+    local generation = 0
+    local policyKey
+    local gcScheduled = false
     local stats = {
-        requests = 0, -- actual outbound HTTP requests
-        cacheHits = 0, -- served from cache
-        shared = 0, -- served by in-flight deduplication
-        rateLimits = 0, -- 429 responses seen
-        errors = 0, -- transient/fatal failures
-        denied = 0, -- verified but not allowed
-        allowed = 0, -- verified and allowed
+        requests = 0,
+        cacheHits = 0,
+        shared = 0,
+        rateLimits = 0,
+        errors = 0,
+        denied = 0,
+        allowed = 0,
+        cancelled = 0,
     }
 
     local function discordConfig()
         return RuntimeConfig:Get().Discord
     end
 
-    ---Resolves the bot token. Convar wins; any server-only fallback is optional.
-    ---@return string
     local function resolveToken()
-        local fromConvar = Util.Trim(GetConvar('discord:botToken', ''))
+        local token = Util.Trim(GetConvar('discord:botToken', ''))
 
-        if fromConvar ~= '' then
-            return fromConvar
-        end
-
-        local cfg = discordConfig()
-        local fallback = cfg and cfg.BotToken or ''
-
-        return Util.Trim(fallback)
+        return token ~= '' and token or Util.Trim(discordConfig().BotToken or '')
     end
 
-    ---Whether a bot token is available (without revealing it).
-    ---@return boolean
     function Discord:HasToken()
         return resolveToken() ~= ''
     end
 
-    ---Whether Discord verification can run at all right now.
-    ---@return boolean ok
-    ---@return string? problem
     function Discord:IsConfigured()
         local cfg = discordConfig()
 
@@ -78,83 +61,157 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
             return false, 'no allowed roles configured'
         end
 
-        return true, nil
+        return true
     end
 
-    --[[
-        Cache persistence
-    ]]
+    local function removeCache(entry)
+        if entry.previous then
+            entry.previous.next = entry.next
+        else
+            cacheHead = entry.next
+        end
 
-    local function scheduleCacheFlush()
-        if cacheFlushScheduled then
+        if entry.next then
+            entry.next.previous = entry.previous
+        else
+            cacheTail = entry.previous
+        end
+
+        cache[entry.userId] = nil
+        cacheCount = cacheCount - 1
+    end
+
+    local function sweepCache()
+        local now = GetGameTimer()
+        local entry = cacheHead
+
+        while entry do
+            local nextEntry = entry.next
+
+            if entry.expiresAt <= now then
+                removeCache(entry)
+            end
+
+            entry = nextEntry
+        end
+    end
+
+    local function scheduleGC()
+        if gcScheduled then
             return
         end
 
-        cacheFlushScheduled = true
-        SetTimeout(2000, function()
-            cacheFlushScheduled = false
+        gcScheduled = true
+        SetTimeout(30000, function()
+            gcScheduled = false
+            sweepCache()
 
-            if not next(dirtyCache) then
-                return
-            end
-
-            local batch = {}
-
-            for k, v in pairs(dirtyCache) do
-                batch[#batch + 1] = { userId = k, allowed = v.allowed, status = v.status }
-            end
-
-            dirtyCache = {}
-
-            if Database and Database.ready then
-                Database:SaveDiscordBatch(batch, false)
+            if cacheCount > 0 then
+                scheduleGC()
             end
         end)
     end
 
-    ---Persistent decisions are informational only; always recheck Discord on connection.
-    function Discord:LoadCache()
-        -- Deliberately do not load old decisions into the authorization cache.
-    end
-
-    ---Flushes pending cache writes immediately (resource shutdown).
-    function Discord:FlushCache()
-        if not next(dirtyCache) then
+    local function storeResult(job, result)
+        if job.generation ~= generation or result.status == 'cancelled' then
             return
         end
 
-        local batch = {}
+        local cfg = job.config
+        local verified = result.status == 'ok'
+            or result.status == 'role_missing'
+            or result.status == 'not_in_guild'
+        local ttl = verified and (cfg.CacheTTL or 60) or 15
 
-        for k, v in pairs(dirtyCache) do
-            batch[#batch + 1] = { userId = k, allowed = v.allowed, status = v.status }
+        if ttl <= 0 then
+            return
         end
 
-        dirtyCache = {}
+        local old = cache[job.userId]
 
-        if Database and Database.ready then
-            Database:SaveDiscordBatch(batch, true)
+        if old then
+            removeCache(old)
+        end
+
+        local limit = math.max(1, cfg.CacheMaxEntries or 10000)
+
+        while cacheCount >= limit do
+            removeCache(cacheHead)
+        end
+
+        local entry = {
+            userId = job.userId,
+            allowed = result.allowed,
+            status = result.status,
+            expiresAt = GetGameTimer() + ttl * 1000,
+            previous = cacheTail,
+        }
+
+        if cacheTail then
+            cacheTail.next = entry
+        else
+            cacheHead = entry
+        end
+
+        cacheTail = entry
+        cache[job.userId] = entry
+        cacheCount = cacheCount + 1
+        scheduleGC()
+    end
+
+    ---A doubly linked FIFO permits both dequeue and cancellation in O(1).
+    local function unlink(job)
+        if not job.queued then
+            return
+        end
+
+        if job.previous then
+            job.previous.next = job.next
+        else
+            queueHead = job.next
+        end
+
+        if job.next then
+            job.next.previous = job.previous
+        else
+            queueTail = job.previous
+        end
+
+        job.previous, job.next, job.queued = nil, nil, false
+        queueCount = queueCount - 1
+    end
+
+    local function alive(job)
+        return job.waiterCount > 0 and job.generation == generation and not job.cancelled
+    end
+
+    ---Retries never hold a worker for a departed consumer's entire delay.
+    local function pause(job, delay)
+        local untilAt = GetGameTimer() + delay
+
+        while alive(job) and GetGameTimer() < untilAt do
+            Wait(math.min(100, untilAt - GetGameTimer()))
         end
     end
 
-    ---@param userId string
-    ---@param result { allowed: boolean, status: string }
-    local function storeResult(userId, result)
-        local entry = { allowed = result.allowed, status = result.status }
-        cache[userId] = entry
-        dirtyCache[userId] = entry
-        scheduleCacheFlush()
-    end
-    --[[
-        HTTP layer. Every request races PerformHttpRequest against a
-        SetTimeout so a stuck connection can never hang a verification.
-    ]]
+    local function waitForBudget(job)
+        while alive(job) do
+            local untilAt = math.max(rateLimitedUntil, nextRequestAt)
 
-    ---@param guildId string
-    ---@param userId string
-    ---@param token string
-    ---@param timeoutMs number
-    ---@return { status: number, body: string?, headers: table?, timedOut: boolean? }
-    local function httpGetMember(guildId, userId, token, timeoutMs)
+            if GetGameTimer() >= untilAt then
+                local perSecond = math.max(1, job.config.RequestsPerSecond or 40)
+                nextRequestAt = GetGameTimer() + math.ceil(1000 / perSecond)
+
+                return true
+            end
+
+            pause(job, untilAt - GetGameTimer())
+        end
+
+        return false
+    end
+
+    local function httpGetMember(guildId, userId, token, timeoutMs, job)
         local requestPromise = promise.new()
         local settled = false
 
@@ -182,6 +239,17 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
             }
         )
 
+        job.cancelHttp = function()
+            if not settled then
+                settled = true
+                requestPromise:resolve({ status = 0, cancelled = true })
+            end
+        end
+
+        if not alive(job) then
+            job.cancelHttp()
+        end
+
         SetTimeout(timeoutMs, function()
             if settled then
                 return
@@ -192,26 +260,35 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
             requestPromise:resolve({ status = 0, timedOut = true })
         end)
 
-        return Citizen.Await(requestPromise)
+        local result = Citizen.Await(requestPromise)
+        job.cancelHttp = nil
+
+        return result
     end
 
-    --[[
-        Verification worker. Must run inside a coroutine.
-    ]]
-
-    ---@param userId string
-    ---@return { allowed: boolean, status: string }
-    local function executeVerification(userId)
-        local cfg = discordConfig()
-        local token = resolveToken()
+    local function executeVerification(job)
+        local cfg = job.config
+        local token = job.token
         local allowedRoles = Util.ToSet(cfg.AllowedRoles)
 
         local attempts = cfg.MaxRetries + 1
         local delay = cfg.RetryBaseDelay
 
         for attempt = 1, attempts do
-            local response = httpGetMember(cfg.GuildId, userId, token, cfg.Timeout)
+            if not alive(job) then
+                return { allowed = false, status = 'cancelled' }
+            end
+
+            if not waitForBudget(job) then
+                return { allowed = false, status = 'cancelled' }
+            end
+
             stats.requests = stats.requests + 1
+            local response = httpGetMember(cfg.GuildId, job.userId, token, cfg.Timeout, job)
+
+            if not alive(job) or response.cancelled then
+                return { allowed = false, status = 'cancelled' }
+            end
             local status = response.status
 
             -- Proactive rate-limit awareness: if Discord reports an empty
@@ -219,7 +296,7 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
             local remaining, resetAfterMs = DiscordUtil.GetBudgetHint(response.headers)
 
             if remaining == 0 and resetAfterMs then
-                rateLimitedUntil = GetGameTimer() + resetAfterMs
+                rateLimitedUntil = math.max(rateLimitedUntil, GetGameTimer() + resetAfterMs)
             end
 
             if status == 200 then
@@ -262,18 +339,20 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
                 stats.rateLimits = stats.rateLimits + 1
                 local waitMs =
                     DiscordUtil.GetRateLimitWait(status, response.body, response.headers, 2000)
-                rateLimitedUntil = GetGameTimer() + waitMs
+                rateLimitedUntil = math.max(rateLimitedUntil, GetGameTimer() + waitMs)
                 Log(
                     'warning',
                     ('Discord rate limit hit; pausing outbound requests for %d ms'):format(waitMs)
                 )
-                Wait(waitMs)
+                if attempt < attempts then
+                    pause(job, waitMs)
+                end
             else
                 -- Timeout (status 0), network error or 5xx: transient.
                 stats.errors = stats.errors + 1
 
                 if attempt < attempts then
-                    Wait(delay)
+                    pause(job, delay)
                     delay = math.min(delay * 2, cfg.RetryMaxDelay)
                 end
             end
@@ -282,26 +361,47 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
         return { allowed = false, status = 'unavailable' }
     end
 
-    --[[
-        Queue draining. Event-driven: the queue is only touched when a
-        request is enqueued or a worker finishes; there is no polling loop.
-    ]]
+    local processQueue
 
-    local function processQueue()
-        while #queue > 0 do
+    local function release(job, waiter, result)
+        if waiter.done then
+            return
+        end
+
+        latency:Observe(GetGameTimer() - waiter.startedAt)
+        waiter.done = true
+        job.waiters[waiter] = nil
+        job.waiterCount = job.waiterCount - 1
+        local pending = waiter.promise
+        waiter.job, waiter.promise = nil, nil
+        pending:resolve(result)
+
+        if job.waiterCount == 0 then
+            job.cancelled = true
+            unlink(job)
+
+            if inFlight[job.userId] == job then
+                inFlight[job.userId] = nil
+            end
+
+            if job.cancelHttp then
+                job.cancelHttp()
+            end
+        end
+    end
+
+    processQueue = function()
+        while queueHead do
             local limit = RuntimeConfig:Get().Performance.DiscordConcurrency
 
             if activeCount >= limit then
                 return
             end
 
-            local now = GetGameTimer()
-
-            if rateLimitedUntil > now then
+            if rateLimitedUntil > GetGameTimer() then
                 if not queueResumeScheduled then
                     queueResumeScheduled = true
-                    local waitMs = rateLimitedUntil - now + 25
-                    SetTimeout(waitMs, function()
+                    SetTimeout(rateLimitedUntil - GetGameTimer() + 25, function()
                         queueResumeScheduled = false
                         processQueue()
                     end)
@@ -310,87 +410,174 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
                 return
             end
 
-            local userId = table.remove(queue, 1)
-            activeCount = activeCount + 1
+            local job = queueHead
+            unlink(job)
 
-            CreateThread(function()
-                local result = executeVerification(userId)
-                activeCount = activeCount - 1
+            if alive(job) then
+                activeCount = activeCount + 1
+                job.running = true
 
-                local waiter = inFlight[userId]
-                inFlight[userId] = nil
+                CreateThread(function()
+                    local ok, result = pcall(executeVerification, job)
+                    activeCount = activeCount - 1
 
-                if waiter then
-                    waiter:resolve(result)
-                end
+                    if not ok then
+                        stats.errors = stats.errors + 1
+                        Log('error', 'Discord worker failed: ' .. tostring(result))
+                        result = { allowed = false, status = 'unavailable' }
+                    end
 
-                processQueue()
-            end)
+                    if alive(job) then
+                        storeResult(job, result)
+                    end
+
+                    if inFlight[job.userId] == job then
+                        inFlight[job.userId] = nil
+                    end
+
+                    for waiter in pairs(job.waiters) do
+                        release(job, waiter, result)
+                    end
+
+                    processQueue()
+                end)
+            end
         end
     end
 
-    --[[
-        Public API
-    ]]
+    function Discord:ClearCache()
+        generation = generation + 1
+        cache, cacheHead, cacheTail, cacheCount = {}, nil, nil, 0
+        local jobs = inFlight
+        inFlight = {}
 
-    ---Verifies a Discord user. Yields until a result is available; callers
-    ---needing a hard deadline should use Discord:VerifyAsync + a race.
-    ---@param userId string Discord snowflake (validated by caller)
-    ---@return { allowed: boolean, status: string, fromCache: boolean? }
-    function Discord:Verify(userId)
-        -- Always query Discord so role changes are reflected on the next connection.
-        -- Deduplication: a concurrent verification for the same user
-        -- awaits the already running request instead of starting a new one.
-        local existing = inFlight[userId]
-
-        if existing then
-            stats.shared = stats.shared + 1
-
-            return Citizen.Await(existing)
+        for _, job in pairs(jobs) do
+            for waiter in pairs(job.waiters) do
+                release(job, waiter, { allowed = false, status = 'cancelled' })
+            end
         end
 
-        if #queue >= RuntimeConfig:Get().Performance.DiscordQueueLimit then
-            stats.errors = stats.errors + 1
-
-            return { allowed = false, status = 'unavailable' }
-        end
-
-        local requestPromise = promise.new()
-        inFlight[userId] = requestPromise
-        queue[#queue + 1] = userId
-        processQueue()
-
-        local result = Citizen.Await(requestPromise)
-        storeResult(userId, result)
-
-        return result
+        return true
     end
 
-    ---Fire-and-await wrapper returning a promise, so the service can race
-    ---the verification against Config.Performance.VerificationTimeout.
-    ---@param userId string
-    ---@return any promise
-    function Discord:VerifyAsync(userId)
+    function Discord:LoadCache()
+        self:ClearCache()
+    end
+
+    function Discord:FlushCache()
+        -- Decisions are bounded, short-lived RAM data; no SQL per verification.
+    end
+
+    ---Every consumer has its own deadline and cancellation handle.
+    function Discord:VerifyAsync(userId, timeoutMs)
         local outer = promise.new()
-        CreateThread(function()
-            outer:resolve(self:Verify(userId))
+        local function immediate(result)
+            outer:resolve(result)
+
+            return outer, function() end
+        end
+
+        if not Util.IsSnowflake(userId) or not self:IsConfigured() then
+            return immediate({ allowed = false, status = 'misconfigured' })
+        end
+
+        local cfg = discordConfig()
+        local token = resolveToken()
+        local key = tostring(cfg.Enabled)
+            .. ':'
+            .. cfg.GuildId
+            .. ':'
+            .. table.concat(cfg.AllowedRoles, ',')
+            .. ':'
+            .. token
+
+        if key ~= policyKey then
+            self:ClearCache()
+            policyKey = key
+        end
+
+        local cached = cache[userId]
+
+        if cached and cached.expiresAt > GetGameTimer() then
+            stats.cacheHits = stats.cacheHits + 1
+
+            return immediate({ allowed = cached.allowed, status = cached.status, fromCache = true })
+        elseif cached then
+            removeCache(cached)
+        end
+
+        local job = inFlight[userId]
+
+        if job then
+            stats.shared = stats.shared + 1
+        else
+            if queueCount >= RuntimeConfig:Get().Performance.DiscordQueueLimit then
+                stats.errors = stats.errors + 1
+
+                return immediate({ allowed = false, status = 'unavailable' })
+            end
+
+            job = {
+                userId = userId,
+                generation = generation,
+                config = Util.DeepCopy(cfg),
+                token = token,
+                waiters = {},
+                waiterCount = 0,
+                queued = true,
+                previous = queueTail,
+            }
+
+            if queueTail then
+                queueTail.next = job
+            else
+                queueHead = job
+            end
+
+            queueTail = job
+            queueCount = queueCount + 1
+            inFlight[userId] = job
+        end
+
+        local waiter = { job = job, promise = outer, startedAt = GetGameTimer() }
+        job.waiters[waiter] = true
+        job.waiterCount = job.waiterCount + 1
+        local deadline = timeoutMs or RuntimeConfig:Get().Performance.VerificationTimeout
+
+        SetTimeout(deadline, function()
+            local currentJob = waiter.job
+
+            if currentJob then
+                stats.cancelled = stats.cancelled + 1
+                release(currentJob, waiter, { allowed = false, status = 'timeout' })
+                processQueue()
+            end
         end)
 
-        return outer
-    end
+        local function cancel()
+            local currentJob = waiter.job
 
-    ---Drops all cached results (panel/command "cache clear").
-    function Discord:ClearCache()
-        cache = {}
-        dirtyCache = {}
-
-        if Database and Database.ready then
-            Database:ClearDiscordCache()
+            if currentJob then
+                stats.cancelled = stats.cancelled + 1
+                release(currentJob, waiter, { allowed = false, status = 'cancelled' })
+                processQueue()
+            end
         end
+
+        processQueue()
+
+        return outer, cancel
     end
 
-    ---@return table
+    function Discord:Verify(userId)
+        local pending = self:VerifyAsync(userId)
+
+        return Citizen.Await(pending)
+    end
+
     function Discord:GetStats()
+        sweepCache()
+
         return {
             requests = stats.requests,
             cacheHits = stats.cacheHits,
@@ -399,17 +586,11 @@ return function(Util, DiscordUtil, RuntimeConfig, Log, Database)
             errors = stats.errors,
             allowed = stats.allowed,
             denied = stats.denied,
-            queueLength = #queue,
+            cancelled = stats.cancelled,
+            queueLength = queueCount,
             activeRequests = activeCount,
-            cachedEntries = (function()
-                local count = 0
-
-                for _ in pairs(cache) do
-                    count = count + 1
-                end
-
-                return count
-            end)(),
+            latencyMs = latency:Get(),
+            cachedEntries = cacheCount,
             rateLimited = rateLimitedUntil > GetGameTimer(),
         }
     end

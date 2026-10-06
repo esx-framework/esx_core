@@ -6,8 +6,9 @@
     "description": "In-game administration panel for the esx_whitelist",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
+        "build": "vue-tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "typecheck": "vue-tsc --noEmit"
     },
     "dependencies": {
         "esx-ui-kit-vue": "^0.1.1",
@@ -16,6 +17,7 @@
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",
         "typescript": "^5.8.3",
-        "vite": "^8.3.2"
+        "vite": "^8.3.2",
+        "vue-tsc": "^3.3.12"
     }
 }

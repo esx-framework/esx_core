@@ -6,7 +6,7 @@ local RESOURCE_NAME <const> = GetCurrentResourceName()
 ---@param level string
 ---@param message string
 local function bootLog(level, message)
-    if not Config.Debug then
+    if not Config.Debug and level ~= 'error' and level ~= 'warning' then
         return
     end
 
@@ -125,11 +125,20 @@ local Command = xLib.require('@esx_whitelist.server.module.command.main')({
 Command:Register()
 
 local isReady = false
+local liveIdentifiers = {}
 
 Database:Init(function()
-    RuntimeConfig:Load()
-    Identifier:Rebuild()
-    AdminCache:Load()
+    if not RuntimeConfig:Load() then
+        bootLog('error', 'Whitelist configuration could not be loaded; connections remain blocked.')
+
+        return
+    end
+
+    if not AdminCache:Load() then
+        bootLog('error', 'Administrator discovery failed; connections remain blocked.')
+
+        return
+    end
     Discord:LoadCache()
     isReady = true
 
@@ -191,8 +200,36 @@ Database:Init(function()
     end)
 end)
 
+local connections = {}
+
+AddEventHandler('playerDropped', function()
+    local context = connections[source]
+
+    if context then
+        context.cancelled = true
+
+        if context.cancel then
+            context.cancel()
+        end
+
+        connections[source] = nil
+    end
+end)
+
 AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
     local source = source
+    local context = { cancelled = false }
+    local previous = connections[source]
+
+    if previous then
+        previous.cancelled = true
+
+        if previous.cancel then
+            previous.cancel()
+        end
+    end
+
+    connections[source] = context
 
     deferrals.defer()
     Wait(0)
@@ -202,12 +239,17 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
     -- Hold deferral until database is ready
     local maxWait = GetGameTimer() + 15000
 
-    while not isReady and GetGameTimer() < maxWait do
+    while not isReady and not context.cancelled and GetGameTimer() < maxWait do
         deferrals.update(_('checking_whitelist'))
         Wait(200)
     end
 
+    if context.cancelled then
+        return
+    end
+
     if not isReady then
+        connections[source] = nil
         bootLog(
             'error',
             'Database initialization timed out while checking connection for '
@@ -232,8 +274,10 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
         end
 
         return Service:CheckConnection(rawIdentifiers, function(stage)
-            deferrals.update(stage)
-        end)
+            if not context.cancelled then
+                deferrals.update(stage)
+            end
+        end, context)
     end)
 
     if not ok then
@@ -251,6 +295,14 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
             identifier = nil,
             playerMessage = _('verification_error'),
         }
+    end
+
+    if connections[source] == context then
+        connections[source] = nil
+    end
+
+    if context.cancelled then
+        return
     end
 
     Service:Record(result)
@@ -292,7 +344,24 @@ AddEventHandler('esx:playerLoaded', function(playerId)
         normalized[i] = Util.NormalizeIdentifier(rawIdentifiers[i])
     end
 
+    liveIdentifiers[pid] = normalized
     AdminCache:UpdateFromPlayer(normalized, xPlayer.getGroup())
+end)
+
+AddEventHandler('playerDropped', function()
+    AdminCache:ForgetPlayer(liveIdentifiers[source] or GetPlayerIdentifiers(source) or {})
+    liveIdentifiers[source] = nil
+end)
+
+AddEventHandler('esx:setGroup', function(playerId)
+    local pid = tonumber(playerId)
+    local xPlayer = pid and ESX and ESX.GetPlayerFromId(pid)
+
+    if xPlayer then
+        local identifiers = GetPlayerIdentifiers(pid) or {}
+        liveIdentifiers[pid] = identifiers
+        AdminCache:UpdateFromPlayer(identifiers, xPlayer.getGroup())
+    end
 end)
 
 AddEventHandler('onResourceStop', function(resourceName)

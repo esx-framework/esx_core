@@ -73,7 +73,7 @@ return function(Util, Log, Database)
             for i = 1, #value do
                 local entry = value[i]
 
-                if not Util.ValidateIdentifier(entry) then
+                if not Util.ValidateAccessIdentifier(entry) then
                     return false, ('invalid identifier at position %d'):format(i)
                 end
 
@@ -158,7 +158,7 @@ return function(Util, Log, Database)
         ['Whitelist.Enabled'] = validateBoolean,
         ['Whitelist.Mode'] = makeEnumValidator('discord', 'identifier', 'both'),
         ['Whitelist.CombinationMode'] = makeEnumValidator('or', 'and'),
-        ['Whitelist.AllowedIdentifiers'] = makeIdentifierArrayValidator(1024),
+        ['Whitelist.AllowedIdentifiers'] = makeIdentifierArrayValidator(20000),
         ['Discord.Enabled'] = validateBoolean,
         ['Discord.GuildId'] = validateGuildId,
         ['Discord.AllowedRoles'] = makeSnowflakeArrayValidator(64),
@@ -182,8 +182,36 @@ return function(Util, Log, Database)
     local defaults = Config -- set by the shared config script
     local overrides = {}
     local effective = Util.MergeOverrides(defaults, nil)
-    local dirty = false
-    local flushScheduled = false
+    local writeBusy = false
+    local Identifier
+    local categories = {
+        ['Whitelist.AllowedIdentifiers'] = 'whitelist',
+        ['AdminOnly.AllowedIdentifiers'] = 'admin_only',
+        ['Bypass.AllowedIdentifiers'] = 'bypass',
+    }
+
+    function RuntimeConfig:BindIdentifiers(module)
+        Identifier = module
+    end
+
+    ---Serialize administrative writes across panel, console and reload.
+    function RuntimeConfig:WithWriteLock(action)
+        if writeBusy then
+            return false, 'another whitelist change is in progress; retry'
+        end
+
+        writeBusy = true
+        local ok, result, err = pcall(action)
+        writeBusy = false
+
+        if not ok then
+            Log('error', 'Whitelist change failed: ' .. tostring(result))
+
+            return false, 'whitelist change failed'
+        end
+
+        return result, err
+    end
 
     ---Splits "Discord.GuildId" into { "Discord", "GuildId" }.
     ---@param path string
@@ -243,57 +271,80 @@ return function(Util, Log, Database)
 
     local function rebuild()
         effective = Util.MergeOverrides(defaults, overrides)
+
+        -- Group maps are complete policies; an empty map revokes every group.
+        for _, path in ipairs({ 'Admin.Groups', 'AdminOnly.Groups' }) do
+            local parts = splitPath(path)
+            local value = getPath(overrides, parts)
+
+            if value ~= nil then
+                setPath(effective, parts, Util.DeepCopy(value))
+            end
+        end
+
+        if Identifier then
+            for key, category in pairs(categories) do
+                local section = key:match('^([^.]+)')
+                effective[section].AllowedIdentifiers = Identifier:GetList(category)
+            end
+        end
+    end
+
+    function RuntimeConfig:RefreshIdentifierProjection()
+        rebuild()
     end
 
     ---Loads and validates persisted overrides from database.
     function RuntimeConfig:Load()
-        if not Database or not Database.ready then
-            rebuild()
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready or not Identifier then
+                return false, 'whitelist storage unavailable'
+            end
 
-            return true
-        end
+            local stored, err = Database:LoadConfig()
 
-        local stored = Database:LoadConfig()
+            if not stored then
+                return false, err
+            end
 
-        if not stored or next(stored) == nil then
-            rebuild()
+            local migrated, migrationError = Database:InitializeIdentifiers(defaults, stored)
 
-            return true
-        end
+            if not migrated then
+                Log('error', 'Identifier migration failed: ' .. tostring(migrationError))
 
-        -- Re-validate every persisted value against the schema so an
-        -- edited or outdated record can never inject invalid state.
-        local sanitized = {}
+                return false, migrationError
+            end
 
-        for path, validator in pairs(Schema) do
-            local val = stored[path]
+            local rows, loadError = Database:LoadIdentifiers()
 
-            if val ~= nil then
-                local valid, valueOrError = validator(val)
+            if not rows then
+                return false, loadError
+            end
 
-                if valid then
-                    local parts = splitPath(path)
+            local sanitized = {}
 
-                    if parts then
-                        setPath(sanitized, parts, valueOrError)
+            for path, validator in pairs(Schema) do
+                local val = stored[path]
+
+                if val ~= nil and not categories[path] then
+                    local valid, valueOrError = validator(val)
+
+                    if not valid then
+                        Log('error', 'Invalid persisted whitelist setting: ' .. path)
+
+                        return false, tostring(valueOrError)
                     end
-                else
-                    Log(
-                        'warning',
-                        ('Ignoring invalid persisted setting %s (%s)'):format(
-                            path,
-                            tostring(valueOrError)
-                        )
-                    )
+
+                    setPath(sanitized, splitPath(path), valueOrError)
                 end
             end
-        end
 
-        overrides = sanitized
-        rebuild()
-        Log('info', 'Runtime configuration loaded from database.')
+            Identifier:ReplaceFromRows(rows)
+            overrides = sanitized
+            rebuild()
 
-        return true
+            return true
+        end)
     end
 
     ---Returns the effective configuration table. Rebuilt only when a
@@ -327,14 +378,31 @@ return function(Util, Log, Database)
             return false, 'invalid setting path'
         end
 
-        setPath(overrides, parts, valueOrError)
-        rebuild()
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready or not Identifier or not Identifier.ready then
+                return false, 'whitelist storage unavailable'
+            end
 
-        if Database and Database.ready then
-            Database:SaveConfig(path, json.encode(valueOrError))
-        end
+            local ok, err
 
-        return true, nil
+            if categories[path] then
+                ok, err = Identifier:Sync(categories[path], valueOrError)
+            else
+                ok, err = Database:SaveConfig(path, json.encode(valueOrError))
+            end
+
+            if not ok then
+                return false, err
+            end
+
+            if not categories[path] then
+                setPath(overrides, parts, valueOrError)
+            end
+
+            rebuild()
+
+            return true
+        end)
     end
 
     ---Returns a copy of the raw overrides (for diagnostics).
@@ -345,12 +413,22 @@ return function(Util, Log, Database)
 
     ---Removes all overrides (back to file defaults) and clears database settings.
     function RuntimeConfig:Reset()
-        overrides = {}
-        rebuild()
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready then
+                return false, 'whitelist storage unavailable'
+            end
 
-        if Database and Database.ready then
-            Database:ResetConfig()
-        end
+            local ok, err = Database:ResetConfig()
+
+            if not ok then
+                return false, err
+            end
+
+            overrides = {}
+            rebuild()
+
+            return true
+        end)
     end
 
     ---Builds the NUI-facing state projection. Contains only values the
@@ -364,6 +442,19 @@ return function(Util, Log, Database)
                 enabled = cfg.Whitelist.Enabled,
                 mode = cfg.Whitelist.Mode,
                 combinationMode = cfg.Whitelist.CombinationMode,
+                identifierTypes = (function()
+                    local types = {}
+
+                    for prefix, enabled in pairs(cfg.IdentifierTypes) do
+                        if enabled and prefix ~= 'ip' then
+                            types[#types + 1] = prefix
+                        end
+                    end
+
+                    table.sort(types)
+
+                    return types
+                end)(),
                 allowedIdentifiers = Util.SanitizeStringArray(cfg.Whitelist.AllowedIdentifiers),
             },
             discord = {

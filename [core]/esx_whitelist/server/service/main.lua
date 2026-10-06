@@ -27,6 +27,7 @@ local MESSAGES <const> = {
 ---@param Log fun(level: string, message: string, context: table?)
 return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
     local Service = {}
+    local latency = Util.NewLatencyMetrics()
 
     local Method <const> = Enum.AuthMethod
     local Reason <const> = Enum.Reason
@@ -78,7 +79,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
     ---@param identifiers string[]
     ---@param progress fun(stage: string)? optional deferral progress sink
     ---@return table result
-    local function checkDiscord(identifiers, progress)
+    local function checkDiscord(identifiers, progress, context)
         local cfg = RuntimeConfig:Get()
         local discordIdentifier = nil
 
@@ -129,36 +130,27 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
             progress('Checking Discord membership...')
         end
 
-        -- Race the verification against the global deadline.
-        local timeoutMs = cfg.Performance.VerificationTimeout
-        local race = promise.new()
-        local settled = false
+        local pending, cancel = Discord:VerifyAsync(userId, cfg.Performance.VerificationTimeout)
 
-        Discord:VerifyAsync(userId):next(function(result)
-            if settled then
-                return
+        if context then
+            context.cancel = cancel
+
+            if context.cancelled then
+                cancel()
             end
+        end
 
-            settled = true
-            race:resolve(result)
-        end)
+        local verification = Citizen.Await(pending)
 
-        SetTimeout(timeoutMs, function()
-            if settled then
-                return
-            end
-
-            settled = true
-            race:resolve(nil)
-        end)
-
-        local verification = Citizen.Await(race)
+        if context then
+            context.cancel = nil
+        end
 
         if progress then
             progress('Verifying authorization...')
         end
 
-        if not verification then
+        if not verification or verification.status == 'timeout' then
             return buildResult(
                 false,
                 Method.DENIED,
@@ -214,7 +206,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
     ---@param rawIdentifiers string[] identifiers from GetPlayerIdentifiers
     ---@param progress fun(stage: string)? optional deferral progress sink
     ---@return table result
-    function Service:CheckConnection(rawIdentifiers, progress)
+    local function checkConnection(rawIdentifiers, progress, context)
         local cfg = RuntimeConfig:Get()
 
         -- Normalize once; every downstream check reuses this array.
@@ -270,8 +262,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
             )
         end
 
-        -- 3. Persistent admin group cache (admins are never locked out of
-        --    their own server by the public whitelist mechanisms).
+        -- 3. Discovered administrators must pass a current ESX group check.
         local cachedGroup = AdminCache:GetGroup(identifiers)
 
         if cachedGroup and cfg.Admin.Groups[cachedGroup] then
@@ -298,7 +289,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
         end
 
         if mode == 'discord' then
-            return checkDiscord(identifiers, progress)
+            return checkDiscord(identifiers, progress, context)
         end
 
         if mode == 'both' then
@@ -309,7 +300,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
                     return buildResult(true, Method.IDENTIFIER, Reason.IDENTIFIER_MATCH, match)
                 end
 
-                return checkDiscord(identifiers, progress)
+                return checkDiscord(identifiers, progress, context)
             end
 
             -- "and": fail fast on the cheap local check before spending a
@@ -324,7 +315,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
                 )
             end
 
-            local discordResult = checkDiscord(identifiers, progress)
+            local discordResult = checkDiscord(identifiers, progress, context)
 
             if discordResult.allowed then
                 return buildResult(true, 'both', Reason.IDENTIFIER_MATCH, match)
@@ -337,6 +328,31 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
         Log('error', ("Unknown whitelist mode '%s'; failing closed"):format(tostring(mode)))
 
         return buildResult(false, Method.DENIED, Reason.ERROR, stableIdentifier, MESSAGES.error)
+    end
+
+    function Service:CheckConnection(rawIdentifiers, progress, context)
+        local snapshot = RuntimeConfig:Get()
+        local startedAt = GetGameTimer()
+        local ok, result = pcall(checkConnection, rawIdentifiers, progress, context)
+        latency:Observe(GetGameTimer() - startedAt)
+
+        if not ok then
+            error(result)
+        end
+
+        if
+            result.allowed and (snapshot ~= RuntimeConfig:Get() or (context and context.cancelled))
+        then
+            return buildResult(
+                false,
+                Method.DENIED,
+                Reason.ERROR,
+                result.identifier,
+                MESSAGES.error
+            )
+        end
+
+        return result
     end
 
     ---Checks an ONLINE player (diagnostic command). Identifiers come from
@@ -368,6 +384,7 @@ return function(Util, Enum, RuntimeConfig, Identifier, AdminCache, Discord, Log)
             allowed = stats.allowed,
             denied = stats.denied,
             byMethod = stats.byMethod,
+            latencyMs = latency:Get(),
         }
     end
 

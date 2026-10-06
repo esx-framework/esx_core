@@ -90,9 +90,15 @@ return function(deps)
     ---@param source number
     local function cmdReload(source)
         local ok = RuntimeConfig:Load()
-        Identifier:Rebuild()
-        Discord:LoadCache()
-        reply(source, ok and locale('runtime_reloaded') or locale('runtime_reloaded_fallback'))
+        if ok then
+            AdminCache:Load()
+            Discord:ClearCache()
+        end
+        reply(
+            source,
+            ok and locale('runtime_reloaded')
+                or 'Reload failed; the previous configuration was preserved.'
+        )
         Logger:Event('security', 'Configuration reloaded via command', {
             {
                 name = 'Source',
@@ -238,7 +244,7 @@ return function(deps)
                     },
                 })
             else
-                reply(source, locale('command_invalid_identifier', identifier))
+                reply(source, 'Identifier change rejected: ' .. tostring(err))
             end
         elseif sub == subcommands.Remove then
             local identifier = args[2]
@@ -254,7 +260,14 @@ return function(deps)
                 return
             end
 
-            Identifier:Remove(identifier, idType)
+            local ok, err = Identifier:Remove(identifier, idType)
+
+            if not ok then
+                reply(source, 'Identifier change rejected: ' .. tostring(err))
+
+                return
+            end
+
             reply(source, locale('command_identifier_removed', identifier, idType))
             Logger:Event('security', 'Identifier removed via command', {
                 { name = 'Identifier', value = identifier, inline = true },

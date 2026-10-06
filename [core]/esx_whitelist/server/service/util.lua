@@ -59,6 +59,15 @@ function Util.ValidateIdentifier(identifier)
     return true, prefix, value
 end
 
+---Only explicitly approved credential types may grant access.
+---Discord IDs still parse structurally, but cannot bypass role verification.
+function Util.ValidateAccessIdentifier(identifier)
+    local valid, prefix = Util.ValidateIdentifier(identifier)
+    local allowed = Config.IdentifierTypes or { license2 = true, license = true, fivem = true }
+
+    return valid and prefix ~= 'ip' and allowed[prefix] == true
+end
+
 ---Extracts the raw Discord user ID from a "discord:<snowflake>" identifier.
 ---@param identifier string
 ---@return string? userId
@@ -276,6 +285,76 @@ function Util.MergeOverrides(base, override)
     end
 
     return result
+end
+
+---Approximate latency percentiles (upper histogram bucket bounds, milliseconds).
+function Util.NewLatencyMetrics()
+    local bounds = {
+        1,
+        2,
+        5,
+        10,
+        25,
+        50,
+        100,
+        250,
+        500,
+        1000,
+        2500,
+        5000,
+        15000,
+        30000,
+        60000,
+        120000,
+        180000,
+    }
+    local buckets = {}
+    local count, maximum = 0, 0
+    local metrics = {}
+
+    function metrics:Observe(value)
+        value = math.max(0, value)
+        count = count + 1
+        maximum = math.max(maximum, value)
+        local bucket = #bounds + 1
+
+        for i = 1, #bounds do
+            if value <= bounds[i] then
+                bucket = i
+                break
+            end
+        end
+
+        buckets[bucket] = (buckets[bucket] or 0) + 1
+    end
+
+    function metrics:Get()
+        local function percentile(fraction)
+            local target, total = math.ceil(count * fraction), 0
+
+            if count == 0 then
+                return 0
+            end
+
+            for i = 1, #bounds + 1 do
+                total = total + (buckets[i] or 0)
+
+                if total >= target then
+                    return bounds[i] or maximum
+                end
+            end
+        end
+
+        return {
+            samples = count,
+            p50 = percentile(0.5),
+            p95 = percentile(0.95),
+            p99 = percentile(0.99),
+            maximum = maximum,
+        }
+    end
+
+    return metrics
 end
 
 return Util

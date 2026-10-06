@@ -3,19 +3,12 @@ import { computed } from 'vue'
 import { Card, CardContent, CardHeader, CardTitle, Radio, Toggle } from 'esx-ui-kit-vue'
 import { panel, updateConfig } from '../composables/usePanel'
 import ListEditor from '../components/ListEditor.vue'
+import { validateAccessIdentifier } from '../services/identifier'
 
 const state = computed(() => panel.state)
 
-const IDENTIFIER_PATTERN = /^[a-z0-9]+:[\w._-]+$/i
-
 function validateIdentifier(value: string): string | null {
-    if (value.length > 128) {
-        return 'Too long (max 128 characters)'
-    }
-    if (!IDENTIFIER_PATTERN.test(value)) {
-        return 'Expected format "prefix:value", e.g. license2:abc...'
-    }
-    return null
+    return validateAccessIdentifier(value, state.value?.whitelist.identifierTypes ?? [])
 }
 </script>
 

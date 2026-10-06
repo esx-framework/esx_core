@@ -58,6 +58,7 @@ return function(deps)
             },
             stats = {
                 service = Service:GetStats(),
+                database = deps.Database:GetStats(),
                 discord = Discord:GetStats(),
                 logger = Logger:GetStats(),
                 adminCacheEntries = AdminCache:GetCount(),
@@ -167,22 +168,12 @@ return function(deps)
         local ok, err = RuntimeConfig:Set(key, value)
 
         if ok then
-            -- Identifier lists feed hash lookups; rebuild them so the
-            -- change is effective for the very next connection.
-            if key:find('Identifiers', 1, true) then
-                if deps.Database and deps.Database.ready then
-                    local idType = 'whitelist'
+            if key:sub(1, 8) == 'Discord.' then
+                Discord:ClearCache()
+            end
 
-                    if key:find('AdminOnly', 1, true) then
-                        idType = 'admin_only'
-                    elseif key:find('Bypass', 1, true) then
-                        idType = 'bypass'
-                    end
-
-                    deps.Database:SyncIdentifiers(idType, value)
-                end
-
-                Identifier:Rebuild()
+            if key == 'Admin.Groups' or key == 'AdminOnly.Groups' then
+                AdminCache:Load()
             end
 
             Logger:Event('security', 'Configuration changed via panel', {

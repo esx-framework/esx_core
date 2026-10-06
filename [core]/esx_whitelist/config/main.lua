@@ -4,6 +4,9 @@
 Config = {}
 Config.Locale = GetConvar('esx:locale', 'en')
 
+-- Server-file policy for access credentials. IP identifiers are never accepted.
+Config.IdentifierTypes = { license2 = true, license = true, fivem = true }
+
 --[[
     When false, every player is allowed to connect and all
     verification work is skipped.
@@ -14,7 +17,7 @@ Config.Whitelist = {
     --[[
         Active verification mechanism(s):
             "discord"    -> Discord guild membership + role only
-            "identifier" -> static identifier list only
+            "identifier" -> database identifier list only
             "both"       -> identifier + discord, combined via CombinationMode
     ]]
     Mode = 'identifier', -- "discord", "identifier", or "both"
@@ -27,13 +30,11 @@ Config.Whitelist = {
     CombinationMode = 'or', -- "or" or "and"
 
     --[[
-        Static identifier whitelist. Any ONE matching identifier grants
+        Initial identifier list, imported once into MySQL. Any ONE matching identifier grants
         access.
         Examples:
             "license2:1234567890abcdef1234567890abcdef12345678",
             "license:1234567890abcdef1234567890abcdef1234567890",
-            "discord:123456789012345678",
-            "steam:110000100000000",
     ]]
     AllowedIdentifiers = {},
 }
@@ -59,6 +60,13 @@ Config.Discord = {
     -- Per-request HTTP timeout in milliseconds.
     Timeout = 5000,
 
+    -- Verified roles may be reused for at most this many seconds (0 disables reuse).
+    CacheTTL = 60,
+    CacheMaxEntries = 10000,
+
+    -- Smooth outbound traffic in addition to honoring Discord rate-limit headers.
+    RequestsPerSecond = 40,
+
     -- Retry policy for transient failures (timeout, 5xx, network errors).
     MaxRetries = 2,
     RetryBaseDelay = 750, -- ms, doubled after each failed attempt (max RetryMaxDelay)
@@ -81,13 +89,13 @@ Config.Admin = {
 
     Cache = {
         Enabled = true,
-        SaveDelay = 5000, -- ms debounce before dirty admin entries hit the database
+        SaveDelay = 5000, -- retained for panel compatibility; administrator decisions are not persisted
     },
 }
 
 --[[
     Administrator-only mode. When enabled, ONLY players that match an
-    AdminOnly group (via the persistent admin cache) or an explicit
+    AdminOnly group (after checking the current ESX users record) or an explicit
     AdminOnly identifier may connect; all other mechanisms are skipped.
 ]]
 Config.AdminOnly = {

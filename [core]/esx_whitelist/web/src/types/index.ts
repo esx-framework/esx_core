@@ -9,6 +9,7 @@ export interface Theme {
 export interface WhitelistState {
     enabled: boolean
     mode: 'discord' | 'identifier' | 'both'
+    identifierTypes: string[]
     combinationMode: 'or' | 'and'
     allowedIdentifiers: string[]
 }

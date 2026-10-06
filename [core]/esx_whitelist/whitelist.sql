@@ -13,20 +13,5 @@ CREATE TABLE IF NOT EXISTS `esx_whitelist_identifiers` (
   `type` VARCHAR(32) NOT NULL DEFAULT 'whitelist',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`identifier`, `type`),
-  KEY `idx_type` (`type`),
-  KEY `idx_identifier` (`identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `esx_whitelist_admin` (
-  `identifier` VARCHAR(128) NOT NULL,
-  `group_name` VARCHAR(32) NOT NULL,
-  PRIMARY KEY (`identifier`),
-  KEY `idx_group_name` (`group_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `esx_whitelist_discord` (
-  `user_id` VARCHAR(32) NOT NULL,
-  `allowed` TINYINT(1) NOT NULL,
-  `status` VARCHAR(32) NOT NULL,
-  PRIMARY KEY (`user_id`)
+  KEY `idx_type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

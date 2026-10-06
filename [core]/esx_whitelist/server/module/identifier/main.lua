@@ -1,209 +1,140 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
----@param Util table
----@param IdentifierUtil table
----@param RuntimeConfig table
----@param Log fun(level: string, message: string, context: table?)
----@param Database table? database module
 return function(Util, IdentifierUtil, RuntimeConfig, Log, Database)
-    local Identifier = {}
+    local Identifier = { ready = false }
+    local lookups = { whitelist = {}, admin_only = {}, bypass = {} }
 
-    local whitelistLookup = {}
-    local adminOnlyLookup = {}
-    local bypassLookup = {}
+    function Identifier:ReplaceFromRows(rows)
+        local replacement = { whitelist = {}, admin_only = {}, bypass = {} }
 
-    local function buildFromList(list, label)
-        return Util.BuildIdentifierLookup(list, function(entry)
-            Log('warning', ('Ignoring invalid identifier in %s: %s'):format(label, tostring(entry)))
+        for i = 1, #rows do
+            local row = rows[i]
+
+            if replacement[row.type] and Util.ValidateAccessIdentifier(row.identifier) then
+                replacement[row.type][Util.NormalizeIdentifier(row.identifier)] = true
+            else
+                Log(
+                    'warning',
+                    'Ignoring invalid persisted access identifier: '
+                        .. Util.MaskIdentifier(row.identifier)
+                )
+            end
+        end
+
+        lookups = replacement
+        self.ready = true
+    end
+
+    function Identifier:Rebuild()
+        return RuntimeConfig:WithWriteLock(function()
+            if not Database or not Database.ready then
+                return false, 'database unavailable'
+            end
+
+            local rows, err = Database:LoadIdentifiers()
+
+            if not rows then
+                return false, err
+            end
+
+            self:ReplaceFromRows(rows)
+            RuntimeConfig:RefreshIdentifierProjection()
+
+            return true
         end)
     end
 
-    ---Rebuilds all lookups from effective configuration and database records.
-    ---Called at startup and after every accepted change.
-    function Identifier:Rebuild()
-        local cfg = RuntimeConfig:Get()
-        whitelistLookup =
-            buildFromList(cfg.Whitelist.AllowedIdentifiers, 'Whitelist.AllowedIdentifiers')
-        adminOnlyLookup =
-            buildFromList(cfg.AdminOnly.AllowedIdentifiers, 'AdminOnly.AllowedIdentifiers')
-        bypassLookup = buildFromList(cfg.Bypass.AllowedIdentifiers, 'Bypass.AllowedIdentifiers')
-
-        -- Load database stored identifiers
-        if Database and Database.ready then
-            local dbEntries = Database:LoadIdentifiers()
-
-            if dbEntries then
-                for i = 1, #dbEntries do
-                    local row = dbEntries[i]
-                    local normalized = Util.NormalizeIdentifier(row.identifier)
-
-                    if Util.ValidateIdentifier(normalized) then
-                        if row.type == 'whitelist' then
-                            whitelistLookup[normalized] = true
-                        elseif row.type == 'admin_only' then
-                            adminOnlyLookup[normalized] = true
-                        elseif row.type == 'bypass' then
-                            bypassLookup[normalized] = true
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    ---Matches player identifiers against the whitelist.
-    ---@param identifiers string[] raw identifiers of the connecting player
-    ---@return string? matchedIdentifier
     function Identifier:MatchWhitelist(identifiers)
-        local match = Util.MatchAnyIdentifier(identifiers, whitelistLookup)
-
-        if match then
-            return match
-        end
-
-        if Database and Database.ready then
-            local found = Database:MatchIdentifier(identifiers, 'whitelist')
-
-            if found then
-                whitelistLookup[found] = true
-
-                return found
-            end
-        end
-
-        return nil
+        return Util.MatchAnyIdentifier(identifiers, lookups.whitelist)
     end
 
-    ---Matches player identifiers against admin-only list.
-    ---@param identifiers string[]
-    ---@return string? matchedIdentifier
     function Identifier:MatchAdminOnly(identifiers)
-        local match = Util.MatchAnyIdentifier(identifiers, adminOnlyLookup)
-
-        if match then
-            return match
-        end
-
-        if Database and Database.ready then
-            local found = Database:MatchIdentifier(identifiers, 'admin_only')
-
-            if found then
-                adminOnlyLookup[found] = true
-
-                return found
-            end
-        end
-
-        return nil
+        return Util.MatchAnyIdentifier(identifiers, lookups.admin_only)
     end
 
-    ---Matches player identifiers against bypass list.
-    ---@param identifiers string[]
-    ---@return string? matchedIdentifier
     function Identifier:MatchBypass(identifiers)
-        local match = Util.MatchAnyIdentifier(identifiers, bypassLookup)
-
-        if match then
-            return match
-        end
-
-        if Database and Database.ready then
-            local found = Database:MatchIdentifier(identifiers, 'bypass')
-
-            if found then
-                bypassLookup[found] = true
-
-                return found
-            end
-        end
-
-        return nil
+        return Util.MatchAnyIdentifier(identifiers, lookups.bypass)
     end
 
-    ---Returns array of all allowed identifiers for a specific category
-    ---@param idType string "whitelist"|"admin_only"|"bypass"
-    ---@return string[]
     function Identifier:GetList(idType)
-        local lookup
-
-        if idType == 'whitelist' then
-            lookup = whitelistLookup
-        elseif idType == 'admin_only' then
-            lookup = adminOnlyLookup
-        elseif idType == 'bypass' then
-            lookup = bypassLookup
-        end
-
         local list = {}
 
-        if lookup then
-            for id in pairs(lookup) do
-                list[#list + 1] = id
-            end
-
-            table.sort(list)
+        for identifier in pairs(lookups[idType] or {}) do
+            list[#list + 1] = identifier
         end
+
+        table.sort(list)
 
         return list
     end
 
-    ---Adds an identifier to database and lookup table
-    ---@param identifier string
-    ---@param idType string?
-    ---@return boolean, string?
-    function Identifier:Add(identifier, idType)
-        idType = idType or 'whitelist'
-        local normalized = Util.NormalizeIdentifier(identifier)
-
-        if not Util.ValidateIdentifier(normalized) then
-            return false, 'invalid identifier format'
+    ---Called under RuntimeConfig's shared write lock, after schema validation.
+    function Identifier:Sync(idType, list)
+        if not self.ready or not Database or not Database.ready then
+            return false, 'identifier storage unavailable'
         end
 
-        if Database and Database.ready then
-            local ok, err = Database:AddIdentifier(normalized, idType)
+        local ok, err = Database:SyncIdentifiers(idType, list)
 
-            if not ok then
-                return false, err
-            end
+        if not ok then
+            return false, err
         end
 
-        if idType == 'whitelist' then
-            whitelistLookup[normalized] = true
-        elseif idType == 'admin_only' then
-            adminOnlyLookup[normalized] = true
-        elseif idType == 'bypass' then
-            bypassLookup[normalized] = true
-        end
-
-        return true, nil
-    end
-
-    ---Removes an identifier from database and lookup table
-    ---@param identifier string
-    ---@param idType string?
-    ---@return boolean
-    function Identifier:Remove(identifier, idType)
-        idType = idType or 'whitelist'
-        local normalized = Util.NormalizeIdentifier(identifier)
-
-        if Database and Database.ready then
-            Database:RemoveIdentifier(normalized, idType)
-        end
-
-        if idType == 'whitelist' then
-            whitelistLookup[normalized] = nil
-        elseif idType == 'admin_only' then
-            adminOnlyLookup[normalized] = nil
-        elseif idType == 'bypass' then
-            bypassLookup[normalized] = nil
-        end
+        lookups[idType] = Util.BuildIdentifierLookup(list)
 
         return true
     end
 
-    ---Counts for diagnostics.
-    ---@return { whitelist: integer, adminOnly: integer, bypass: integer }
+    local function mutate(identifier, idType, adding)
+        idType = idType or 'whitelist'
+
+        if not lookups[idType] then
+            return false, 'invalid identifier category'
+        end
+
+        -- Unsafe legacy credentials may still be removed by administrators.
+        if
+            not Util.ValidateIdentifier(identifier)
+            or (adding and not Util.ValidateAccessIdentifier(identifier))
+        then
+            return false, 'invalid or disallowed access identifier'
+        end
+
+        if not Identifier.ready or not Database or not Database.ready then
+            return false, 'identifier storage unavailable'
+        end
+
+        local normalized = Util.NormalizeIdentifier(identifier)
+
+        return RuntimeConfig:WithWriteLock(function()
+            local ok, err
+
+            if adding then
+                ok, err = Database:AddIdentifier(normalized, idType)
+            else
+                ok, err = Database:RemoveIdentifier(normalized, idType)
+            end
+
+            if not ok then
+                return false, err
+            end
+
+            lookups[idType][normalized] = adding and true or nil
+            RuntimeConfig:RefreshIdentifierProjection()
+
+            return true
+        end)
+    end
+
+    function Identifier:Add(identifier, idType)
+        return mutate(identifier, idType, true)
+    end
+
+    function Identifier:Remove(identifier, idType)
+        return mutate(identifier, idType, false)
+    end
+
     function Identifier:GetCounts()
         local function count(lookup)
             local n = 0
@@ -216,11 +147,13 @@ return function(Util, IdentifierUtil, RuntimeConfig, Log, Database)
         end
 
         return {
-            whitelist = count(whitelistLookup),
-            adminOnly = count(adminOnlyLookup),
-            bypass = count(bypassLookup),
+            whitelist = count(lookups.whitelist),
+            adminOnly = count(lookups.admin_only),
+            bypass = count(lookups.bypass),
         }
     end
+
+    RuntimeConfig:BindIdentifiers(Identifier)
 
     return Identifier
 end
