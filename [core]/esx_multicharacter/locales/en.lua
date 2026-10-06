@@ -21,5 +21,7 @@ Locales["en"] = {
         ["title"] = "CHARACTER SELECTION",
         ["char_info_title"] = "Character Info",
         ["play"] = "PLAY",
+        ["action_failed"] = "The action could not be completed. Please try again.",
+        ["action_pending"] = "Please wait...",
     }
 }

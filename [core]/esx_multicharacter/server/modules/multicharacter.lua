@@ -10,6 +10,10 @@ Multicharacter.sessions = {}
 local setupLimiter = xLib.rateLimiter({ capacity = 1, refill = 1, interval = 5000 })
 local actionLimiter = xLib.rateLimiter({ capacity = 2, refill = 1, interval = 2000 })
 
+local function rejected(reason)
+    return { success = false, error = reason }
+end
+
 local function isCurrent(source, session)
     return Multicharacter.sessions[source] == session
         and ESX.GetIdentifier(source) == session.identifier
@@ -133,36 +137,43 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
     charid = normalizeCharacterSlot(charid)
 
     if not charid or type(isNew) ~= "boolean" then
-        return
+        return rejected('invalid_character')
     end
 
     local identifier = ESX.GetIdentifier(source)
     local session = self.sessions[source]
 
     if not identifier or not session or session.phase ~= 'ready' or not isCurrent(source, session)
-        or charid > session.slots or not actionLimiter:consume(source) then
-        return
+        or charid > session.slots then
+        return rejected('busy')
     end
+
+    if not actionLimiter:consume(source) then return rejected('rate_limited') end
 
     local character = session.characters and session.characters[charid]
     session.phase = 'choosing'
 
     local ok, databaseCharacter = pcall(Database.GetCharacter, Database, identifier, charid)
-    if not isCurrent(source, session) then return end
+
+    if not isCurrent(source, session) then return rejected('stale_session') end
+
     session.phase = 'ready'
 
-    if not ok then return end
+    if not ok then
+        print(('[esx_multicharacter] Selection failed: %s'):format(tostring(databaseCharacter)))
+        return rejected('database_error')
+    end
 
     if isNew then
         if character or databaseCharacter then
-            return
+            return rejected('invalid_character')
         end
 
         session.phase = 'registering'
         self.awaitingRegistration[source] = charid
     else
         if not character or not databaseCharacter or isCharacterDisabled(character) or isCharacterDisabled(databaseCharacter) then
-            return
+            return rejected('invalid_character')
         end
 
         SetPlayerRoutingBucket(source, 0)
@@ -171,7 +182,7 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
 
             if ESX.GetPlayerFromIdentifier(identifier) then
                 DropPlayer(source, "[ESX Multicharacter] Your identifier " .. identifier .. " is already on the server!")
-                return
+                return rejected('already_loaded')
             end
         end
 
@@ -180,6 +191,7 @@ function Multicharacter:CharacterChosen(source, charid, isNew)
         ESX.Players[identifier] = charIdentifier
         TriggerEvent("esx:onPlayerJoined", source, charIdentifier)
     end
+    return { success = true }
 end
 
 function Multicharacter:RegistrationComplete(source, data)
@@ -210,7 +222,7 @@ end
 
 function Multicharacter:DeleteCharacter(source, charid)
     if not Config.CanDelete then
-        return
+        return rejected('delete_disabled')
     end
 
     charid = normalizeCharacterSlot(charid)
@@ -219,16 +231,30 @@ function Multicharacter:DeleteCharacter(source, charid)
     local session = self.sessions[source]
 
     if not charid or not identifier or not session or session.phase ~= 'ready' or not isCurrent(source, session)
-        or charid > session.slots or not session.characters[charid] or not actionLimiter:consume(source) then
-        return
+        or charid > session.slots or not session.characters[charid] then
+        return rejected('invalid_character')
     end
 
+    if not actionLimiter:consume(source) then return rejected('rate_limited') end
+
     session.phase = 'deleting'
-    local ok, err = pcall(Database.DeleteCharacter, Database, source, charid, session)
-    if not ok and self.sessions[source] == session then
+    local ok, deleted = pcall(Database.DeleteCharacter, Database, source, charid, session)
+
+    if not isCurrent(source, session) then return rejected('stale_session') end
+
+    if not ok or not deleted then
         session.phase = 'ready'
-        print(('[esx_multicharacter] Delete failed: %s'):format(tostring(err)))
+        print(('[esx_multicharacter] Delete failed: %s'):format(tostring(deleted)))
+        return rejected('database_error')
     end
+
+    print(('[esx_multicharacter] Player %s deleted character %s%s'):format(source, Server.prefix, charid))
+    session.characters[charid] = nil
+
+    local refreshed = self:SetupCharacters(source, session)
+    if not refreshed then return rejected('refresh_failed') end
+
+    return { success = true }
 end
 
 function Multicharacter:PlayerDropped(player)
@@ -243,21 +269,35 @@ function Multicharacter:PlayerDropped(player)
 end
 
 function Multicharacter:Relog(source)
-    if not Config.Relog or self.sessions[source] or not ESX.GetPlayerFromId(source)
-        or not actionLimiter:consume(source) then return end
+    if not Config.Relog or not ESX.GetPlayerFromId(source) then return rejected('not_loaded') end
+
+    local previous = self.sessions[source]
+    if previous and previous.phase == 'logout' then return rejected('busy') end
+
+    if not actionLimiter:consume(source) then return rejected('rate_limited') end
 
     local session = { identifier = ESX.GetIdentifier(source), phase = 'logout' }
     self.sessions[source] = session
+    self.awaitingRegistration[source] = nil
+    
+    local finished = promise.new()
     
     TriggerEvent('esx:playerLogout', source, function()
-        if self.sessions[source] == session then
+        if self.sessions[source] == session and ESX.GetIdentifier(source) == session.identifier then
             self.sessions[source] = nil
+            setupLimiter:reset(source)
             if session.setupRequested then self:SetupCharacters(source) end
+            finished:resolve({ success = true })
+        else
+            finished:resolve(rejected('stale_session'))
         end
     end)
+    return Citizen.Await(finished)
 end
 
 AddEventHandler('esx:playerLoaded', function(playerId)
     Multicharacter.sessions[playerId] = nil
     Multicharacter.awaitingRegistration[playerId] = nil
+    setupLimiter:reset(playerId)
+    actionLimiter:reset(playerId)
 end)

@@ -5,6 +5,28 @@ Database = {}
 Database.connected = false
 Database.found = false
 Database.tables = { users = 'identifier' }
+Database.characterColumns = { users = { identifier = true } }
+
+local function ensureDeletionIndex(tableName, columnName)
+    local function indexed()
+        local count = MySQL.scalar.await([[
+            SELECT COUNT(*) FROM information_schema.STATISTICS
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?
+                AND SEQ_IN_INDEX = 1 AND SUB_PART IS NULL
+        ]], { tableName, columnName })
+        assert(count ~= nil, 'Unable to inspect character deletion index')
+        return tonumber(count) > 0
+    end
+
+    if indexed() then return end
+
+    local quote = xLib.schema.identifier
+    local indexName = 'esx_char_' .. columnName
+    local ok, err = pcall(MySQL.query.await,
+        ('CREATE INDEX %s ON %s (%s)'):format(quote(indexName), quote(tableName), quote(columnName)))
+
+    if not ok and not indexed() then error(err, 0) end
+end
 
 function Database:GetConnection()
     local connectionString = GetConvar('mysql_connection_string', '')
@@ -55,6 +77,8 @@ function Database:MigrateSchema()
                IS_NULLABLE, COLUMN_DEFAULT, COLLATION_NAME, EXTRA
         FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = DATABASE() AND DATA_TYPE = 'varchar' AND COLUMN_NAME IN (?)
+            AND TABLE_NAME IN (SELECT TABLE_NAME FROM information_schema.TABLES
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_TYPE = 'BASE TABLE')
     ]],
         { { 'identifier', 'owner' } }
     )
@@ -64,7 +88,13 @@ function Database:MigrateSchema()
     for i = 1, #columns do
         local column = columns[i]
         self.tables[column.TABLE_NAME] = column.COLUMN_NAME
+
+        local characterColumns = self.characterColumns[column.TABLE_NAME] or {}
+        self.characterColumns[column.TABLE_NAME] = characterColumns
+        characterColumns[column.COLUMN_NAME] = true
+
         xLib.schema.widenVarchar(column.TABLE_NAME, column.COLUMN_NAME, length, column)
+        ensureDeletionIndex(column.TABLE_NAME, column.COLUMN_NAME)
     end
 end
 
@@ -97,34 +127,31 @@ MySQL.ready(function()
 end)
 
 function Database:DeleteCharacter(source, charid, session)
-    local identifier = ('%s%s:%s'):format(Server.prefix, charid, ESX.GetIdentifier(source))
-    local query = 'DELETE FROM `%s` WHERE %s = ?'
+    local identifier = ('%s%s:%s'):format(Server.prefix, charid, session.identifier)
     local queries = {}
-    local count = 0
-
-    for table, column in pairs(self.tables) do
-        count = count + 1
-        queries[count] = { query = query:format(table, column), values = { identifier } }
+    local tables = {}
+    for tableName in pairs(self.tables) do
+        if tableName ~= 'users' then tables[#tables + 1] = tableName end
     end
 
-    MySQL.transaction(queries, function(result)
-        if Multicharacter.sessions[source] ~= session or ESX.GetIdentifier(source) ~= session.identifier then return end
-        if result then
-            local name = GetPlayerName(source)
-            print(
-                ('[^2INFO^7] Player ^5%s %s^7 has deleted a character ^5(%s)^7'):format(
-                    name,
-                    source,
-                    identifier
-                )
-            )
-            Wait(50)
-            Multicharacter:SetupCharacters(source, session)
-        else
-            session.phase = 'ready'
-            print('[esx_multicharacter] Delete transaction failed for ' .. identifier)
+    table.sort(tables)
+    tables[#tables + 1] = 'users'
+    
+    for _, tableName in ipairs(tables) do
+        local columns = {}
+        for columnName in pairs(self.characterColumns[tableName] or { [self.tables[tableName]] = true }) do
+            columns[#columns + 1] = columnName
         end
-    end)
+        table.sort(columns)
+        for _, columnName in ipairs(columns) do
+            queries[#queries + 1] = {
+                query = ('DELETE FROM %s WHERE %s = ?'):format(
+                    xLib.schema.identifier(tableName), xLib.schema.identifier(columnName)),
+                values = { identifier },
+            }
+        end
+    end
+    return MySQL.transaction.await(queries) == true
 end
 
 function Database:GetPlayerSlots(identifier)

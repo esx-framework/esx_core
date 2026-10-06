@@ -17,4 +17,6 @@ export interface Locale {
   char_info_title: string;
   play : string;
   title : string;
+  action_failed?: string;
+  action_pending?: string;
 }
