@@ -90,15 +90,15 @@ return function(deps)
     ---@param source number
     local function cmdReload(source)
         local ok = RuntimeConfig:Load()
+        local failure = 'Reload failed; the previous configuration was preserved.'
+
         if ok then
-            AdminCache:Load()
+            ok = AdminCache:Load()
+            failure = 'Reload failed; administrator discovery could not be refreshed.'
             Discord:ClearCache()
         end
-        reply(
-            source,
-            ok and locale('runtime_reloaded')
-                or 'Reload failed; the previous configuration was preserved.'
-        )
+
+        reply(source, ok and locale('runtime_reloaded') or failure)
         Logger:Event('security', 'Configuration reloaded via command', {
             {
                 name = 'Source',

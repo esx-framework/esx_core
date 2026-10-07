@@ -49,11 +49,11 @@ function SkinChanger:DefaultModel(male, cb)
 
     SetModelAsNoLongerNeeded(model)
 
+    self:ModelLoaded()
+
     if cb then
         cb()
     end
-
-    self:ModelLoaded()
 end
 
 function SkinChanger:MaxValues()
@@ -448,8 +448,9 @@ end
 function SkinChanger:GetSkin()
     local skin = {}
 
-    for name, value in pairs(self.character) do
-        skin[name] = value
+    for i = 1, #self.components do
+        local name = self.components[i].name
+        skin[name] = self.character[name]
     end
 
     return skin

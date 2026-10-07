@@ -172,7 +172,11 @@ return function(deps)
                 Discord:ClearCache()
             end
 
-            if key == 'Admin.Groups' or key == 'AdminOnly.Groups' then
+            if
+                key == 'Admin.Groups'
+                or key == 'AdminOnly.Groups'
+                or key == 'Admin.Cache.Enabled'
+            then
                 AdminCache:Load()
             end
 

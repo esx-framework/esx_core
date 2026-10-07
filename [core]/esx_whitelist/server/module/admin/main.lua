@@ -6,7 +6,6 @@ return function(Util, RuntimeConfig, Log, Database)
     local AdminCache = {}
     local entries = {}
     local liveGroups = {}
-    local refreshScheduled = false
 
     local function groups()
         local cfg = RuntimeConfig:Get()
@@ -32,19 +31,18 @@ return function(Util, RuntimeConfig, Log, Database)
     end
 
     function AdminCache:Load()
-        if not refreshScheduled then
-            refreshScheduled = true
-            SetTimeout(30000, function()
-                refreshScheduled = false
-                self:Load()
-            end)
+        if not RuntimeConfig:Get().Admin.Cache.Enabled then
+            entries = {}
+
+            return true
         end
 
         if not Database or not Database.ready then
             return false
         end
 
-        local rows = Database:LoadAdminCandidates(groups())
+        local allowed = groups()
+        local rows = Database:LoadAdminCandidates(allowed)
 
         if not rows then
             -- Discovery failure cannot leave an obsolete privilege snapshot.
@@ -61,11 +59,16 @@ return function(Util, RuntimeConfig, Log, Database)
             local key = Util.NormalizeIdentifier(prefix .. identifier)
 
             if Util.ValidateAccessIdentifier(key) then
-                replacement[key] = { group = rows[i].group, expiresAt = Util.Now() + 30 }
+                replacement[key] = { group = rows[i].group }
             end
         end
 
-        entries = replacement
+        -- Player events can arrive while discovery awaits SQL. Keep their current groups.
+        for key, group in pairs(liveGroups) do
+            replacement[key] = allowed[group] and { group = group } or nil
+        end
+
+        entries = RuntimeConfig:Get().Admin.Cache.Enabled and replacement or {}
 
         return true
     end
@@ -75,7 +78,10 @@ return function(Util, RuntimeConfig, Log, Database)
 
         if key then
             liveGroups[key] = group
-            entries[key] = groups()[group] and { group = group, expiresAt = Util.Now() + 30 } or nil
+            entries[key] = RuntimeConfig:Get().Admin.Cache.Enabled
+                    and groups()[group]
+                    and { group = group }
+                or nil
         end
 
         return key
@@ -94,10 +100,11 @@ return function(Util, RuntimeConfig, Log, Database)
             return nil
         end
 
-        if not candidate or candidate.expiresAt <= Util.Now() then
+        if not candidate then
             return nil
         end
 
+        -- Discovery is only a hint; each administrator connection checks ESX again.
         local group = Database:GetESXAdminGroup(identifiers, allowed)
 
         if not group then
@@ -129,14 +136,14 @@ return function(Util, RuntimeConfig, Log, Database)
     end
 
     function AdminCache:GetCount()
+        if not RuntimeConfig:Get().Admin.Cache.Enabled then
+            return 0
+        end
+
         local count = 0
 
-        for key, entry in pairs(entries) do
-            if entry.expiresAt > Util.Now() then
-                count = count + 1
-            else
-                entries[key] = nil
-            end
+        for _ in pairs(entries) do
+            count = count + 1
         end
 
         return count

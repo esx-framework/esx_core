@@ -511,10 +511,11 @@ function Menu:Saveable(submitCb, cancelCb, restrict, creating)
         local skin = exports['skinchanger']:GetSkin()
         self.saving = true
 
-        xLib.callback('esx_skin:save', false, function(saved)
+        xLib.callback('esx_skin:save', false, function(saved, reason)
             self.saving = false
 
             if saved ~= true then
+                print(('[esx_skin] Appearance save failed: %s'):format(reason or 'unknown'))
                 ESX.ShowNotification(TranslateCap('skin_save_failed'))
                 return
             end

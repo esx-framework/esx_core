@@ -30,6 +30,10 @@ local function updateCachedCoordinates(player, x, y, z, heading)
 end
 
 function Core.PlayerClass.AttachBase(self)
+    function self.isCurrent()
+        return ESX.Players[self.source] == self
+    end
+
     function self.triggerEvent(eventName, ...)
         assert(type(eventName) == "string", "eventName should be string!")
         TriggerClientEvent(eventName, self.source, ...)
