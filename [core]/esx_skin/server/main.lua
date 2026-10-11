@@ -412,28 +412,54 @@ local function saveScopedSkin(playerId, skin, callback, scope)
     end
 
     local fields = Config.SkinEditFields[scope]
-    if not fields or not validateSkin(skin) then
-        reply(callback, false)
+
+    if not fields then
+        reply(callback, false, 'invalid_edit_scope')
+        return false
+    end
+
+    local encoded, reason = validateSkin(skin)
+
+    if not encoded then
+        reply(callback, false, reason)
         return false
     end
 
     local player = ESX.GetPlayerFromId(playerId)
     local stored, ready = readStoredSkin(playerId)
+
     if not ready or not stored or not isCurrentPlayer(playerId, player) then
-        reply(callback, false)
+        reply(callback, false, 'appearance_unavailable')
         return false
+    end
+
+    if scope == 'barber' then
+        if skin.sex ~= stored.sex then
+            reply(callback, false, 'appearance_scope_mismatch:sex')
+            return false
+        end
+
+        local appearance = decodeSkin(json.encode(stored))
+
+        for name in pairs(fields) do
+            if skin[name] ~= nil then
+                appearance[name] = skin[name]
+            end
+        end
+
+        return saveSkin(playerId, appearance, callback)
     end
 
     for name, value in pairs(stored) do
         if not fields[name] and skin[name] ~= value then
-            reply(callback, false)
+            reply(callback, false, 'appearance_scope_mismatch:' .. name)
             return false
         end
     end
 
     for name, value in pairs(skin) do
         if not fields[name] and value ~= stored[name] then
-            reply(callback, false)
+            reply(callback, false, 'appearance_scope_mismatch:' .. name)
             return false
         end
     end
