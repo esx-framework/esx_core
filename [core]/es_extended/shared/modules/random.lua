@@ -18,7 +18,20 @@ end
 ---@param length number
 ---@return string
 function ESX.GetRandomString(length)
-    math.randomseed(GetGameTimer())
+    if not (length > 0) then
+        return ""
+    end
 
-    return length > 0 and ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)] or ""
+    if length == math.huge then
+        error("length must be finite", 2)
+    end
+
+    local characterCount = math.ceil(length)
+    local result = {}
+
+    for i = 1, characterCount do
+        result[i] = Charset[math.random(1, #Charset)]
+    end
+
+    return table.concat(result)
 end

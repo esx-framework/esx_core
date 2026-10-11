@@ -409,7 +409,7 @@ CREATE TABLE `users` (
   `is_dead` tinyint(1) DEFAULT 0,
   `id` int(11) NOT NULL,
   `disabled` TINYINT(1) NULL DEFAULT '0',
-  `last_property` varchar(255) DEFAULT NULL,
+  `last_property` longtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `last_seen` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `phone_number` VARCHAR(20) DEFAULT NULL
@@ -867,7 +867,7 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_licenses`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `esx_user_licenses_owner` (`owner`);
+  ADD UNIQUE KEY `uq_user_licenses_owner_type` (`owner`,`type`);
 
 --
 -- Indexes for table `vehicle_categories`
@@ -1014,7 +1014,9 @@ CREATE TABLE IF NOT EXISTS `banking` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `balance` int(11) DEFAULT 0,
   `label` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `idx_banking_identifier_time` (`identifier`,`time`),
+  KEY `idx_banking_time` (`time`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `users` ADD COLUMN `pincode` INT NULL;

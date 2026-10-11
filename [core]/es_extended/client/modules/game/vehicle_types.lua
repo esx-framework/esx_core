@@ -38,6 +38,16 @@ local mismatchedTypes = {
     [`utillitruck3`] = "automobile", -- trailer
 }
 
+local classTypes = {
+    [8] = "bike",
+    [11] = "trailer",
+    [13] = "bike",
+    [14] = "boat",
+    [15] = "heli",
+    [16] = "plane",
+    [21] = "train",
+}
+
 ---@param model number|string
 ---@return string | boolean
 function ESX.GetVehicleTypeClient(model)
@@ -55,17 +65,7 @@ function ESX.GetVehicleTypeClient(model)
     end
 
     local vehicleType = GetVehicleClassFromName(model)
-    local types = {
-        [8] = "bike",
-        [11] = "trailer",
-        [13] = "bike",
-        [14] = "boat",
-        [15] = "heli",
-        [16] = "plane",
-        [21] = "train",
-    }
-
-    return types[vehicleType] or "automobile"
+    return classTypes[vehicleType] or "automobile"
 end
 
 ESX.GetVehicleType = ESX.GetVehicleTypeClient

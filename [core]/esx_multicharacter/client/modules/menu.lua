@@ -3,6 +3,22 @@
 
 Menu = {}
 
+local function requestAction(event, ...)
+    if Menu.pendingAction then return { success = false, error = 'busy' } end
+
+    Menu.pendingAction = true
+
+    local ok, result = pcall(xLib.callback.await, event, false, ...)
+
+    Menu.pendingAction = false
+
+    if not ok or type(result) ~= 'table' then
+        return { success = false, error = 'database_error' }
+    end
+
+    return result
+end
+
 function Menu:CheckModel(character)
     if not character.model and character.skin then
         if character.skin.model then
@@ -25,8 +41,10 @@ end
 
 function Menu:NewCharacter()
     local slot = GetSlot()
+    if not slot then return { success = false, error = 'invalid_character' } end
 
-    TriggerServerEvent("esx_multicharacter:CharacterChosen", slot, true)
+    local result = requestAction('esx_multicharacter:chooseCharacter', slot, true)
+    if not result.success then return result end
     TriggerEvent("esx_identity:showRegisterIdentity")
 
     local playerPed = PlayerPedId()
@@ -35,12 +53,18 @@ function Menu:NewCharacter()
     SetEntityAlpha(playerPed, 0, false)
 
     Multicharacter:CloseUI()
+    return result
 end
 
 
 function Menu:InitCharacter()
     local Characters = Multicharacter.Characters
-    local Character = next(Characters)
+    local Character
+    for i = 1, Multicharacter.slots do
+        if Characters[i] then Character = i break end
+    end
+
+    Multicharacter.spawned = false
     self:CheckModel(Characters[Character])
 
     if not Multicharacter.spawned then
@@ -63,18 +87,40 @@ function Menu:InitCharacter()
 end
 
 function Menu:SelectCharacter(index)
+    if self.pendingAction or not Multicharacter.Characters[index] then
+        return { success = false, error = 'busy' }
+    end
+
     Multicharacter:SetupCharacter(index)
+
     local playerPed = PlayerPedId()
     SetPedAoBlobRendering(playerPed, true)
     ResetEntityAlpha(playerPed)
+
+    return { success = true }
 end
 
-function Menu:PlayCharacter()
+function Menu:PlayCharacter(index)
+    index = tonumber(index) or Multicharacter.spawned
+    if not index or not Multicharacter.Characters[index] then
+        return { success = false, error = 'invalid_character' }
+    end
+
+    local result = requestAction('esx_multicharacter:chooseCharacter', index, false)
+    if not result.success then return result end
+
+    Multicharacter.spawned = index
     Multicharacter:CloseUI()
-    TriggerServerEvent("esx_multicharacter:CharacterChosen", Multicharacter.spawned, false)
+
+    return result
 end
 
-function Menu:DeleteCharacter()
-    TriggerServerEvent("esx_multicharacter:DeleteCharacter", Multicharacter.spawned)
-    Multicharacter.spawned = false
+function Menu:DeleteCharacter(index)
+    index = tonumber(index) or Multicharacter.spawned
+
+    if not index or not Multicharacter.Characters[index] then
+        return { success = false, error = 'invalid_character' }
+    end
+    
+    return requestAction('esx_multicharacter:deleteCharacter', index)
 end

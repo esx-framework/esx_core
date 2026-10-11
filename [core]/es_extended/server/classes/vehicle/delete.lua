@@ -17,8 +17,13 @@ function Core.vehicleClass.delete(self, garageName, isImpound)
     end
 
     local entity = NetworkGetEntityFromNetworkId(vehicleData.netId)
-    if entity >= 0 and Entity(entity).state.owner == vehicleData.owner then
-        DeleteEntity(vehicleData.entity)
+    if
+        entity ~= 0
+        and DoesEntityExist(entity)
+        and GetEntityType(entity) == 2
+        and Entity(entity).state.owner == vehicleData.owner
+    then
+        DeleteEntity(entity)
     end
 
     local query = "UPDATE `owned_vehicles` SET `stored` = true WHERE `plate` = ? AND `owner` = ?"

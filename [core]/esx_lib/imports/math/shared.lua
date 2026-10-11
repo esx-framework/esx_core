@@ -308,7 +308,6 @@ end
 ---@param maxRange number
 ---@return number
 function xLib.math.Random(minRange, maxRange)
-    math.randomseed(GetGameTimer())
     return math.random(minRange or 1, maxRange or 10)
 end
 

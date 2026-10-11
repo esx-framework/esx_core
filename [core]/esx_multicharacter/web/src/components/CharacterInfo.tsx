@@ -15,9 +15,10 @@ interface CharacterInfoProps {
   PlayCharacter : () => void;
   handleDelete: () => void;
   locale: Locale;
+  busy?: boolean;
 }
 
-const CharacterInfo: React.FC<CharacterInfoProps> = ({ character, onClose, isAllowedtoDelete , PlayCharacter, handleDelete, locale}) => {
+const CharacterInfo: React.FC<CharacterInfoProps> = ({ character, isAllowedtoDelete , PlayCharacter, handleDelete, locale, busy}) => {
   if (!character) return null;
 
   return (
@@ -54,7 +55,7 @@ const CharacterInfo: React.FC<CharacterInfoProps> = ({ character, onClose, isAll
           <button
             className={`flex-1 ${character.disabled ? 'bg-gray-500' : 'bg-neutral-800 hover:bg-[#FFA31A] hover:text-[#383838]'} text-white py-2 px-4 font-semibold text-[16px] rounded-[5px] flex items-center justify-center transition-colors`}
             onClick={PlayCharacter}
-            disabled={character.disabled}
+            disabled={busy || character.disabled}
           >
             <Icon icon="flowbite:play-solid" width={23} height={23} className="mr-2" />
             {locale.play}
@@ -63,6 +64,7 @@ const CharacterInfo: React.FC<CharacterInfoProps> = ({ character, onClose, isAll
             <button
               className="bg-neutral-800 text-white p-2 rounded hover:bg-red-900 transition-colors"
               onClick={handleDelete}
+              disabled={busy}
             >
               <Trash2 size={18} />
             </button>

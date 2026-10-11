@@ -3,11 +3,63 @@
 
 local Inventory = ESXInventory
 
+local activeWeaponControls = {}
+local suppressingWeaponControls = false
+local weaponControls = {
+    ['1'] = 157,
+    ['2'] = 158,
+    ['3'] = 160,
+    ['4'] = 164,
+    ['5'] = 165,
+    ['6'] = 159,
+    ['7'] = 161,
+    ['8'] = 162,
+    ['9'] = 163,
+}
+
+local function suppressWeaponShortcut(keybind)
+    local control = weaponControls[keybind.currentKey]
+
+    if not control then
+        return
+    end
+
+    activeWeaponControls[keybind] = control
+    DisableControlAction(0, control, true)
+
+    if suppressingWeaponControls then
+        return
+    end
+
+    suppressingWeaponControls = true
+    CreateThread(function()
+        while next(activeWeaponControls) do
+            for binding, weaponControl in pairs(activeWeaponControls) do
+                DisableControlAction(0, weaponControl, true)
+
+                if not binding:isControlPressed()
+                    or binding.disabled
+                    or not ESX.PlayerLoaded
+                    or ESX.PlayerData.dead
+                    or Inventory.isOpen
+                    or IsPauseMenuActive()
+                then
+                    activeWeaponControls[binding] = nil
+                end
+            end
+
+            Wait(0)
+        end
+
+        suppressingWeaponControls = false
+    end)
+end
+
 xLib.addKeybind({
-    name = "showinv",
-    description = TranslateCap("keymap_showinventory"),
-    defaultMapper = "keyboard",
-    defaultKey = "F2",
+    name = 'showinv',
+    description = TranslateCap('keymap_showinventory'),
+    defaultMapper = 'keyboard',
+    defaultKey = 'F2',
     onPressed = function()
         if Inventory.isOpen then
             Inventory.close(false)
@@ -19,24 +71,33 @@ xLib.addKeybind({
 
 for i = 1, Config.HotbarSlots do
     xLib.addKeybind({
-        name = ("hotbar%s"):format(i),
-        description = TranslateCap("keymap_hotbar", i),
-        defaultMapper = "keyboard",
-        defaultKey = "",
-        onPressed = function()
-            if Inventory.isOpen or not ESX.PlayerLoaded or ESX.PlayerData.dead then
+        name = ('hotbar%s'):format(i),
+        description = TranslateCap('keymap_hotbar', i),
+        defaultMapper = 'keyboard',
+        defaultKey = tostring(i),
+        onPressed = function(self)
+            if Inventory.isOpen then
                 return
             end
 
+            if not ESX.PlayerLoaded or ESX.PlayerData.dead then
+                return
+            end
+
+            suppressWeaponShortcut(self)
+
             local targetSlot = i - 1
+            local item = Inventory.getItemInSlot(targetSlot)
 
-            for j = 1, #(ESX.PlayerData.inventory or {}) do
-                local item = ESX.PlayerData.inventory[j]
+            if item then
+                Inventory.useItem(item.type, item.name)
+            end
+        end,
+        onReleased = function(self)
+            local control = activeWeaponControls[self]
 
-                if item.count > 0 and item.usable and Inventory.getSlot(Inventory.itemKey("item_standard", item.name)) == targetSlot then
-                    TriggerServerEvent("esx:useItem", item.name)
-                    return
-                end
+            if control then
+                DisableControlAction(0, control, true)
             end
         end,
     })

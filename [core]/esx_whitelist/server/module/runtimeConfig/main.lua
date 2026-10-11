@@ -14,161 +14,223 @@ return function(Util, Log, Database)
     ]]
 
     local function validateBoolean(value)
-        if type(value) == "boolean" then
+        if type(value) == 'boolean' then
             return true, value
         end
-        return false, "expected boolean"
+
+        return false, 'expected boolean'
     end
 
     local function makeEnumValidator(...)
         local allowed = { ... }
+
         return function(value)
             for i = 1, #allowed do
                 if value == allowed[i] then
                     return true, value
                 end
             end
-            return false, "expected one of: " .. table.concat(allowed, ", ")
+
+            return false, 'expected one of: ' .. table.concat(allowed, ', ')
         end
     end
 
     local function makeIntRangeValidator(minValue, maxValue)
         return function(value)
-            if type(value) ~= "number" or value ~= math.floor(value) then
-                return false, "expected integer"
+            if type(value) ~= 'number' or value ~= math.floor(value) then
+                return false, 'expected integer'
             end
+
             if value < minValue or value > maxValue then
-                return false, ("expected integer between %d and %d"):format(minValue, maxValue)
+                return false, ('expected integer between %d and %d'):format(minValue, maxValue)
             end
+
             return true, value
         end
     end
 
     local function validateGuildId(value)
-        if value == "" or Util.IsSnowflake(value) then
+        if value == '' or Util.IsSnowflake(value) then
             return true, value
         end
-        return false, "expected a Discord snowflake or empty string"
+
+        return false, 'expected a Discord snowflake or empty string'
     end
 
     local function makeIdentifierArrayValidator(maxEntries)
         return function(value)
-            if type(value) ~= "table" then
-                return false, "expected a list of identifiers"
+            if type(value) ~= 'table' then
+                return false, 'expected a list of identifiers'
             end
+
             if #value > maxEntries then
-                return false, ("too many entries (max %d)"):format(maxEntries)
+                return false, ('too many entries (max %d)'):format(maxEntries)
             end
+
             local out = {}
             local seen = {}
+
             for i = 1, #value do
                 local entry = value[i]
-                if not Util.ValidateIdentifier(entry) then
-                    return false, ("invalid identifier at position %d"):format(i)
+
+                if not Util.ValidateAccessIdentifier(entry) then
+                    return false, ('invalid identifier at position %d'):format(i)
                 end
+
                 local normalized = Util.NormalizeIdentifier(entry)
+
                 if not seen[normalized] then
                     seen[normalized] = true
                     out[#out + 1] = normalized
                 end
             end
+
             return true, out
         end
     end
 
     local function makeSnowflakeArrayValidator(maxEntries)
         return function(value)
-            if type(value) ~= "table" then
-                return false, "expected a list of Discord IDs"
+            if type(value) ~= 'table' then
+                return false, 'expected a list of Discord IDs'
             end
+
             if #value > maxEntries then
-                return false, ("too many entries (max %d)"):format(maxEntries)
+                return false, ('too many entries (max %d)'):format(maxEntries)
             end
+
             local out = {}
             local seen = {}
+
             for i = 1, #value do
                 local entry = value[i]
+
                 if not Util.IsSnowflake(entry) then
-                    return false, ("invalid Discord ID at position %d"):format(i)
+                    return false, ('invalid Discord ID at position %d'):format(i)
                 end
+
                 if not seen[entry] then
                     seen[entry] = true
                     out[#out + 1] = entry
                 end
             end
+
             return true, out
         end
     end
 
     local function validateGroupMap(value)
-        if type(value) ~= "table" then
-            return false, "expected a map of group name -> boolean"
+        if type(value) ~= 'table' then
+            return false, 'expected a map of group name -> boolean'
         end
+
         local out = {}
         local count = 0
+
         for groupName, enabled in pairs(value) do
-            if type(groupName) ~= "string" or not groupName:match("^[%w_]+$") or #groupName > 32 then
-                return false, "invalid group name: " .. tostring(groupName)
+            if
+                type(groupName) ~= 'string'
+                or not groupName:match('^[%w_]+$')
+                or #groupName > 32
+            then
+                return false, 'invalid group name: ' .. tostring(groupName)
             end
-            if type(enabled) ~= "boolean" then
-                return false, "group values must be boolean"
+
+            if type(enabled) ~= 'boolean' then
+                return false, 'group values must be boolean'
             end
+
             count = count + 1
+
             if count > 64 then
-                return false, "too many groups (max 64)"
+                return false, 'too many groups (max 64)'
             end
+
             out[groupName] = enabled
         end
+
         return true, out
     end
 
     -- Dotted-path schema of everything the panel is allowed to touch.
     -- Absence from this table means "server-file only".
     local Schema <const> = {
-        ["Whitelist.Enabled"] = validateBoolean,
-        ["Whitelist.Mode"] = makeEnumValidator("discord", "identifier", "both"),
-        ["Whitelist.CombinationMode"] = makeEnumValidator("or", "and"),
-        ["Whitelist.AllowedIdentifiers"] = makeIdentifierArrayValidator(1024),
-        ["Discord.Enabled"] = validateBoolean,
-        ["Discord.GuildId"] = validateGuildId,
-        ["Discord.AllowedRoles"] = makeSnowflakeArrayValidator(64),
-        ["Discord.Timeout"] = makeIntRangeValidator(1000, 15000),
-        ["Discord.MaxRetries"] = makeIntRangeValidator(0, 5),
-        ["Admin.Groups"] = validateGroupMap,
-        ["Admin.Cache.Enabled"] = validateBoolean,
-        ["Admin.Cache.SaveDelay"] = makeIntRangeValidator(1000, 60000),
-        ["AdminOnly.Enabled"] = validateBoolean,
-        ["AdminOnly.Groups"] = validateGroupMap,
-        ["AdminOnly.AllowedIdentifiers"] = makeIdentifierArrayValidator(256),
-        ["Bypass.AllowedIdentifiers"] = makeIdentifierArrayValidator(64),
-        ["Logging.Enabled"] = validateBoolean,
-        ["Logging.MinInterval"] = makeIntRangeValidator(500, 10000),
-        ["Logging.BatchSize"] = makeIntRangeValidator(1, 10),
-        ["Performance.DiscordConcurrency"] = makeIntRangeValidator(1, 25),
-        ["Performance.DiscordQueueLimit"] = makeIntRangeValidator(64, 8192),
-        ["Performance.VerificationTimeout"] = makeIntRangeValidator(2000, 180000),
+        ['Whitelist.Enabled'] = validateBoolean,
+        ['Whitelist.Mode'] = makeEnumValidator('discord', 'identifier', 'both'),
+        ['Whitelist.CombinationMode'] = makeEnumValidator('or', 'and'),
+        ['Whitelist.AllowedIdentifiers'] = makeIdentifierArrayValidator(20000),
+        ['Discord.Enabled'] = validateBoolean,
+        ['Discord.GuildId'] = validateGuildId,
+        ['Discord.AllowedRoles'] = makeSnowflakeArrayValidator(64),
+        ['Discord.Timeout'] = makeIntRangeValidator(1000, 15000),
+        ['Discord.MaxRetries'] = makeIntRangeValidator(0, 5),
+        ['Admin.Groups'] = validateGroupMap,
+        ['Admin.Cache.Enabled'] = validateBoolean,
+        ['Admin.Cache.SaveDelay'] = makeIntRangeValidator(1000, 60000),
+        ['AdminOnly.Enabled'] = validateBoolean,
+        ['AdminOnly.Groups'] = validateGroupMap,
+        ['AdminOnly.AllowedIdentifiers'] = makeIdentifierArrayValidator(256),
+        ['Bypass.AllowedIdentifiers'] = makeIdentifierArrayValidator(64),
+        ['Logging.Enabled'] = validateBoolean,
+        ['Logging.MinInterval'] = makeIntRangeValidator(500, 10000),
+        ['Logging.BatchSize'] = makeIntRangeValidator(1, 10),
+        ['Performance.DiscordConcurrency'] = makeIntRangeValidator(1, 25),
+        ['Performance.DiscordQueueLimit'] = makeIntRangeValidator(64, 8192),
+        ['Performance.VerificationTimeout'] = makeIntRangeValidator(2000, 180000),
     }
 
     local defaults = Config -- set by the shared config script
     local overrides = {}
     local effective = Util.MergeOverrides(defaults, nil)
-    local dirty = false
-    local flushScheduled = false
+    local writeBusy = false
+    local Identifier
+    local categories = {
+        ['Whitelist.AllowedIdentifiers'] = 'whitelist',
+        ['AdminOnly.AllowedIdentifiers'] = 'admin_only',
+        ['Bypass.AllowedIdentifiers'] = 'bypass',
+    }
+
+    function RuntimeConfig:BindIdentifiers(module)
+        Identifier = module
+    end
+
+    ---Serialize administrative writes across panel, console and reload.
+    function RuntimeConfig:WithWriteLock(action)
+        if writeBusy then
+            return false, 'another whitelist change is in progress; retry'
+        end
+
+        writeBusy = true
+        local ok, result, err = pcall(action)
+        writeBusy = false
+
+        if not ok then
+            Log('error', 'Whitelist change failed: ' .. tostring(result))
+
+            return false, 'whitelist change failed'
+        end
+
+        return result, err
+    end
 
     ---Splits "Discord.GuildId" into { "Discord", "GuildId" }.
     ---@param path string
     ---@return string[]?
     local function splitPath(path)
-        if type(path) ~= "string" or #path > 64 then
+        if type(path) ~= 'string' or #path > 64 then
             return nil
         end
+
         local parts = {}
-        for part in path:gmatch("[^%.]+") do
+
+        for part in path:gmatch('[^%.]+') do
             parts[#parts + 1] = part
         end
+
         if #parts == 0 then
             return nil
         end
+
         return parts
     end
 
@@ -178,12 +240,15 @@ return function(Util, Log, Database)
     ---@param value any
     local function setPath(root, parts, value)
         local node = root
+
         for i = 1, #parts - 1 do
-            if type(node[parts[i]]) ~= "table" then
+            if type(node[parts[i]]) ~= 'table' then
                 node[parts[i]] = {}
             end
+
             node = node[parts[i]]
         end
+
         node[parts[#parts]] = value
     end
 
@@ -192,54 +257,94 @@ return function(Util, Log, Database)
     ---@return any
     local function getPath(root, parts)
         local node = root
+
         for i = 1, #parts do
-            if type(node) ~= "table" then
+            if type(node) ~= 'table' then
                 return nil
             end
+
             node = node[parts[i]]
         end
+
         return node
     end
 
     local function rebuild()
         effective = Util.MergeOverrides(defaults, overrides)
+
+        -- Group maps are complete policies; an empty map revokes every group.
+        for _, path in ipairs({ 'Admin.Groups', 'AdminOnly.Groups' }) do
+            local parts = splitPath(path)
+            local value = getPath(overrides, parts)
+
+            if value ~= nil then
+                setPath(effective, parts, Util.DeepCopy(value))
+            end
+        end
+
+        if Identifier then
+            for key, category in pairs(categories) do
+                local section = key:match('^([^.]+)')
+                effective[section].AllowedIdentifiers = Identifier:GetList(category)
+            end
+        end
+    end
+
+    function RuntimeConfig:RefreshIdentifierProjection()
+        rebuild()
     end
 
     ---Loads and validates persisted overrides from database.
     function RuntimeConfig:Load()
-        if not Database or not Database.ready then
-            rebuild()
-            return true
-        end
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready or not Identifier then
+                return false, 'whitelist storage unavailable'
+            end
 
-        local stored = Database:LoadConfig()
-        if not stored or next(stored) == nil then
-            rebuild()
-            return true
-        end
+            local stored, err = Database:LoadConfig()
 
-        -- Re-validate every persisted value against the schema so an
-        -- edited or outdated record can never inject invalid state.
-        local sanitized = {}
-        for path, validator in pairs(Schema) do
-            local val = stored[path]
-            if val ~= nil then
-                local valid, valueOrError = validator(val)
-                if valid then
-                    local parts = splitPath(path)
-                    if parts then
-                        setPath(sanitized, parts, valueOrError)
+            if not stored then
+                return false, err
+            end
+
+            local migrated, migrationError = Database:InitializeIdentifiers(defaults, stored)
+
+            if not migrated then
+                Log('error', 'Identifier migration failed: ' .. tostring(migrationError))
+
+                return false, migrationError
+            end
+
+            local rows, loadError = Database:LoadIdentifiers()
+
+            if not rows then
+                return false, loadError
+            end
+
+            local sanitized = {}
+
+            for path, validator in pairs(Schema) do
+                local val = stored[path]
+
+                if val ~= nil and not categories[path] then
+                    local valid, valueOrError = validator(val)
+
+                    if not valid then
+                        Log('error', 'Invalid persisted whitelist setting: ' .. path)
+
+                        return false, tostring(valueOrError)
                     end
-                else
-                    Log("warning", ("Ignoring invalid persisted setting %s (%s)"):format(path, tostring(valueOrError)))
+
+                    setPath(sanitized, splitPath(path), valueOrError)
                 end
             end
-        end
 
-        overrides = sanitized
-        rebuild()
-        Log("info", "Runtime configuration loaded from database.")
-        return true
+            Identifier:ReplaceFromRows(rows)
+            overrides = sanitized
+            rebuild()
+
+            return true
+        end)
     end
 
     ---Returns the effective configuration table. Rebuilt only when a
@@ -256,28 +361,48 @@ return function(Util, Log, Database)
     ---@return string? errorMessage
     function RuntimeConfig:Set(path, value)
         local validator = Schema[path]
+
         if not validator then
-            return false, "setting is not runtime-configurable"
+            return false, 'setting is not runtime-configurable'
         end
 
         local valid, valueOrError = validator(value)
+
         if not valid then
             return false, tostring(valueOrError)
         end
 
         local parts = splitPath(path)
+
         if not parts then
-            return false, "invalid setting path"
+            return false, 'invalid setting path'
         end
 
-        setPath(overrides, parts, valueOrError)
-        rebuild()
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready or not Identifier or not Identifier.ready then
+                return false, 'whitelist storage unavailable'
+            end
 
-        if Database and Database.ready then
-            Database:SaveConfig(path, json.encode(valueOrError))
-        end
+            local ok, err
 
-        return true, nil
+            if categories[path] then
+                ok, err = Identifier:Sync(categories[path], valueOrError)
+            else
+                ok, err = Database:SaveConfig(path, json.encode(valueOrError))
+            end
+
+            if not ok then
+                return false, err
+            end
+
+            if not categories[path] then
+                setPath(overrides, parts, valueOrError)
+            end
+
+            rebuild()
+
+            return true
+        end)
     end
 
     ---Returns a copy of the raw overrides (for diagnostics).
@@ -288,11 +413,22 @@ return function(Util, Log, Database)
 
     ---Removes all overrides (back to file defaults) and clears database settings.
     function RuntimeConfig:Reset()
-        overrides = {}
-        rebuild()
-        if Database and Database.ready then
-            Database:ResetConfig()
-        end
+        return self:WithWriteLock(function()
+            if not Database or not Database.ready then
+                return false, 'whitelist storage unavailable'
+            end
+
+            local ok, err = Database:ResetConfig()
+
+            if not ok then
+                return false, err
+            end
+
+            overrides = {}
+            rebuild()
+
+            return true
+        end)
     end
 
     ---Builds the NUI-facing state projection. Contains only values the
@@ -306,6 +442,19 @@ return function(Util, Log, Database)
                 enabled = cfg.Whitelist.Enabled,
                 mode = cfg.Whitelist.Mode,
                 combinationMode = cfg.Whitelist.CombinationMode,
+                identifierTypes = (function()
+                    local types = {}
+
+                    for prefix, enabled in pairs(cfg.IdentifierTypes) do
+                        if enabled and prefix ~= 'ip' then
+                            types[#types + 1] = prefix
+                        end
+                    end
+
+                    table.sort(types)
+
+                    return types
+                end)(),
                 allowedIdentifiers = Util.SanitizeStringArray(cfg.Whitelist.AllowedIdentifiers),
             },
             discord = {
@@ -340,7 +489,7 @@ return function(Util, Log, Database)
             },
         }
 
-        if type(extra) == "table" then
+        if type(extra) == 'table' then
             for key, value in pairs(extra) do
                 state[key] = value
             end

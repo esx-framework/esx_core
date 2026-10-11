@@ -29,6 +29,8 @@ AddEventHandler("esx:setJob", function(_, job, lastJob)
 end)
 
 AddEventHandler("esx:playerLogout", function(playerId, cb)
-    Core.PlayerSession.OnPlayerDropped(playerId, "esx_player_logout", cb)
-    TriggerClientEvent("esx:onPlayerLogout", playerId)
+    Core.PlayerSession.OnPlayerDropped(playerId, "esx_player_logout", function()
+        TriggerClientEvent("esx:onPlayerLogout", playerId)
+        if cb then cb() end
+    end)
 end)

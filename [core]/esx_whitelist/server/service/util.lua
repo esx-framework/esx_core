@@ -14,23 +14,25 @@ local osTime = os.time
 ---@param value any
 ---@return string
 function Util.Trim(value)
-    if type(value) ~= "string" then
-        return ""
+    if type(value) ~= 'string' then
+        return ''
     end
-    return (value:gsub("^%s+", ""):gsub("%s+$", ""))
+
+    return (value:gsub('^%s+', ''):gsub('%s+$', ''))
 end
 
 ---Normalizes an identifier for comparison: trimmed and lowercased.
 ---@param identifier any
 ---@return string
 function Util.NormalizeIdentifier(identifier)
-    if type(identifier) ~= "string" then
-        return ""
+    if type(identifier) ~= 'string' then
+        return ''
     end
+
     return stringLower(Util.Trim(identifier))
 end
 
-local IDENTIFIER_PATTERN <const> = "^([a-z0-9]+):([%w%._%-]+)$"
+local IDENTIFIER_PATTERN <const> = '^([a-z0-9]+):([%w%._%-]+)$'
 
 ---Validates the structural format "prefix:value".
 ---@param identifier any
@@ -38,16 +40,18 @@ local IDENTIFIER_PATTERN <const> = "^([a-z0-9]+):([%w%._%-]+)$"
 ---@return string? prefix
 ---@return string? value
 function Util.ValidateIdentifier(identifier)
-    if type(identifier) ~= "string" then
+    if type(identifier) ~= 'string' then
         return false, nil, nil
     end
 
     local normalized = Util.NormalizeIdentifier(identifier)
+
     if stringLen(normalized) < 3 or stringLen(normalized) > 128 then
         return false, nil, nil
     end
 
     local prefix, value = stringMatch(normalized, IDENTIFIER_PATTERN)
+
     if not prefix then
         return false, nil, nil
     end
@@ -55,17 +59,29 @@ function Util.ValidateIdentifier(identifier)
     return true, prefix, value
 end
 
+---Only explicitly approved credential types may grant access.
+---Discord IDs still parse structurally, but cannot bypass role verification.
+function Util.ValidateAccessIdentifier(identifier)
+    local valid, prefix = Util.ValidateIdentifier(identifier)
+    local allowed = Config.IdentifierTypes or { license2 = true, license = true, fivem = true }
+
+    return valid and prefix ~= 'ip' and allowed[prefix] == true
+end
+
 ---Extracts the raw Discord user ID from a "discord:<snowflake>" identifier.
 ---@param identifier string
 ---@return string? userId
 function Util.ExtractDiscordId(identifier)
     local valid, prefix, value = Util.ValidateIdentifier(identifier)
-    if not valid or prefix ~= "discord" then
+
+    if not valid or prefix ~= 'discord' then
         return nil
     end
+
     if not Util.IsSnowflake(value) then
         return nil
     end
+
     return value
 end
 
@@ -73,10 +89,7 @@ end
 ---@param value any
 ---@return boolean
 function Util.IsSnowflake(value)
-    return type(value) == "string"
-        and #value >= 17
-        and #value <= 20
-        and value:match("^%d+$") ~= nil
+    return type(value) == 'string' and #value >= 17 and #value <= 20 and value:match('^%d+$') ~= nil
 end
 
 ---Masks an identifier for logs: keeps prefix, head and tail only.
@@ -84,21 +97,23 @@ end
 ---@param identifier any
 ---@return string
 function Util.MaskIdentifier(identifier)
-    if type(identifier) ~= "string" or identifier == "" then
-        return "unknown"
+    if type(identifier) ~= 'string' or identifier == '' then
+        return 'unknown'
     end
 
-    local prefix, value = identifier:match("^([a-z0-9]+):(.*)$")
+    local prefix, value = identifier:match('^([a-z0-9]+):(.*)$')
+
     if not prefix then
-        return "invalid"
+        return 'invalid'
     end
 
     local valueLength = stringLen(value)
+
     if valueLength <= 10 then
-        return stringFormat("%s:%s...", prefix, stringSub(value, 1, 2))
+        return stringFormat('%s:%s...', prefix, stringSub(value, 1, 2))
     end
 
-    return stringFormat("%s:%s...%s", prefix, stringSub(value, 1, 6), stringSub(value, -4))
+    return stringFormat('%s:%s...%s', prefix, stringSub(value, 1, 6), stringSub(value, -4))
 end
 
 ---Invalid entries are skipped and reported to the optional sink.
@@ -107,12 +122,14 @@ end
 ---@return table<string, true>
 function Util.BuildIdentifierLookup(list, onInvalid)
     local lookup = {}
-    if type(list) ~= "table" then
+
+    if type(list) ~= 'table' then
         return lookup
     end
 
     for i = 1, #list do
         local entry = list[i]
+
         if Util.ValidateIdentifier(entry) then
             lookup[Util.NormalizeIdentifier(entry)] = true
         elseif onInvalid then
@@ -129,12 +146,15 @@ end
 ---@return table<any, true>
 function Util.ToSet(list)
     local set = {}
-    if type(list) ~= "table" then
+
+    if type(list) ~= 'table' then
         return set
     end
+
     for i = 1, #list do
         set[list[i]] = true
     end
+
     return set
 end
 
@@ -145,10 +165,12 @@ end
 function Util.MatchAnyIdentifier(identifiers, lookup)
     for i = 1, #identifiers do
         local normalized = Util.NormalizeIdentifier(identifiers[i])
+
         if lookup[normalized] then
             return normalized
         end
     end
+
     return nil
 end
 
@@ -159,15 +181,18 @@ end
 function Util.PickStableIdentifier(identifiers, priority)
     for p = 1, #priority do
         local wanted = priority[p]
-        local prefixWithColon = wanted .. ":"
+        local prefixWithColon = wanted .. ':'
         local prefixLength = #prefixWithColon
+
         for i = 1, #identifiers do
             local identifier = Util.NormalizeIdentifier(identifiers[i])
+
             if stringSub(identifier, 1, prefixLength) == prefixWithColon then
                 return identifier
             end
         end
     end
+
     return nil
 end
 
@@ -182,14 +207,17 @@ end
 ---@return string[]
 function Util.SanitizeStringArray(list)
     local out = {}
-    if type(list) ~= "table" then
+
+    if type(list) ~= 'table' then
         return out
     end
+
     for i = 1, #list do
-        if type(list[i]) == "string" then
+        if type(list[i]) == 'string' then
             out[#out + 1] = list[i]
         end
     end
+
     return out
 end
 
@@ -198,20 +226,23 @@ end
 ---@param value T
 ---@return T
 function Util.DeepCopy(value)
-    if type(value) ~= "table" then
+    if type(value) ~= 'table' then
         return value
     end
+
     local copy = {}
+
     for key, item in pairs(value) do
         copy[key] = Util.DeepCopy(item)
     end
+
     return copy
 end
 
 ---@param value any
 ---@return boolean
 local function isList(value)
-    return type(value) == "table" and (next(value) == nil or value[1] ~= nil)
+    return type(value) == 'table' and (next(value) == nil or value[1] ~= nil)
 end
 
 ---Merges runtime overrides onto a deep copy of the defaults.
@@ -227,27 +258,103 @@ end
 ---@param override any
 ---@return table
 function Util.MergeOverrides(base, override)
-    if type(override) ~= "table" then
+    if type(override) ~= 'table' then
         if override ~= nil then
             return Util.DeepCopy(override)
         end
+
         return Util.DeepCopy(base)
     end
-    if type(base) ~= "table" then
+
+    if type(base) ~= 'table' then
         return Util.DeepCopy(override)
     end
+
     if next(override) == nil then
         return Util.DeepCopy(base)
     end
+
     if isList(base) or isList(override) then
         return Util.DeepCopy(override)
     end
 
     local result = Util.DeepCopy(base)
+
     for key, overrideValue in pairs(override) do
         result[key] = Util.MergeOverrides(result[key], overrideValue)
     end
+
     return result
+end
+
+---Approximate latency percentiles (upper histogram bucket bounds, milliseconds).
+function Util.NewLatencyMetrics()
+    local bounds = {
+        1,
+        2,
+        5,
+        10,
+        25,
+        50,
+        100,
+        250,
+        500,
+        1000,
+        2500,
+        5000,
+        15000,
+        30000,
+        60000,
+        120000,
+        180000,
+    }
+    local buckets = {}
+    local count, maximum = 0, 0
+    local metrics = {}
+
+    function metrics:Observe(value)
+        value = math.max(0, value)
+        count = count + 1
+        maximum = math.max(maximum, value)
+        local bucket = #bounds + 1
+
+        for i = 1, #bounds do
+            if value <= bounds[i] then
+                bucket = i
+                break
+            end
+        end
+
+        buckets[bucket] = (buckets[bucket] or 0) + 1
+    end
+
+    function metrics:Get()
+        local function percentile(fraction)
+            local target, total = math.ceil(count * fraction), 0
+
+            if count == 0 then
+                return 0
+            end
+
+            for i = 1, #bounds + 1 do
+                total = total + (buckets[i] or 0)
+
+                if total >= target then
+                    return bounds[i] or maximum
+                end
+            end
+        end
+
+        return {
+            samples = count,
+            p50 = percentile(0.5),
+            p95 = percentile(0.95),
+            p99 = percentile(0.99),
+            maximum = maximum,
+        }
+    end
+
+    return metrics
 end
 
 return Util

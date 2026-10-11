@@ -8,6 +8,10 @@ end
 RegisterNetEvent("esx:removeInventoryItem", function(itemType, itemName, itemCount)
     local playerId = source
 
+    if type(itemName) ~= "string" or itemName == "" or #itemName > 100 then
+        return
+    end
+
     if not Core.InventoryEvents.ConsumeRate("remove", playerId) then
         return
     end

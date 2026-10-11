@@ -9,6 +9,8 @@ Server.slots = Config.Slots or 4
 Server.prefix = Config.Prefix or "char"
 Server.identifierType = ESX.GetConfig("Identifier") or GetConvar("sv_lan", "") == "true" and "ip" or "license"
 
+ESXCatalog.awaitReady()
+
 AddEventHandler("playerConnecting", function(_, _, deferrals)
    local source = source
    Server:OnConnecting(source, deferrals)
@@ -40,5 +42,15 @@ end)
 
 RegisterNetEvent("esx_multicharacter:relog", function()
     local source = source
-    TriggerEvent("esx:playerLogout", source)
+    Multicharacter:Relog(source)
+end)
+
+xLib.callback.register('esx_multicharacter:chooseCharacter', function(source, charid, isNew)
+    return Multicharacter:CharacterChosen(source, charid, isNew)
+end)
+xLib.callback.register('esx_multicharacter:deleteCharacter', function(source, charid)
+    return Multicharacter:DeleteCharacter(source, charid)
+end)
+xLib.callback.register('esx_multicharacter:relog', function(source)
+    return Multicharacter:Relog(source)
 end)

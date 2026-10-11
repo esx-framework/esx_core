@@ -98,6 +98,7 @@
 ---@field setCoords fun(coordinates: vector4|vector3|table)        # Teleport player to coordinates.
 ---@field getCoords fun(vector?: boolean, heading?: boolean): vector3|vector4|table # Get player's coordinates.
 ---@field isAdmin fun(): boolean                                    # Check if player is admin.
+---@field isCurrent fun(): boolean                                  # Check if this player session is still active.
 ---@field kick fun(reason: string)                                  # Kick player from server.
 ---@field getPlayTime fun(): number                                  # Get total playtime in seconds.
 ---@field set fun(k: string, v: any)                                # Set custom variable.

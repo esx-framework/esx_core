@@ -1,9 +1,9 @@
 # esx_whitelist
 
-- Discord guild + role whitelist 
-- ESX admin-group authorization 
+- Discord guild + role whitelist
+- ESX admin-group authorization
 - Admin-only mode and emergency bypass
-- Discord webhook logging 
+- Discord webhook logging
 - In-game admin panel
 
 ---
@@ -70,6 +70,7 @@ Regardless of mode, the evaluation order is always:
 
 - Open with `/whitelist` (admins only).
 - Tabs: Dashboard, Whitelist, Discord, Admins, Logging & Performance.
+- The panel rejects changes to Admin groups that disable or remove your current ESX group, preventing accidental loss of your own panel access. Other groups remain editable.
 
 ## 5. Commands
 

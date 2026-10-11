@@ -2,25 +2,23 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 RegisterNuiCallback('SelectCharacter', function (data, cb)
-    local selectedIndex = tonumber(data.id)
+    local selectedIndex = type(data) == 'table' and tonumber(data.id)
     
     if selectedIndex then
-        Menu:SelectCharacter(selectedIndex)
+        cb(Menu:SelectCharacter(selectedIndex))
+        return
     end
-    cb('ok')
+    cb({ success = false, error = 'invalid_character' })
 end)
 
 RegisterNuiCallback('PlayCharacter', function (data, cb)
-    Menu:PlayCharacter()
-    cb('ok')
+    cb(Menu:PlayCharacter(type(data) == 'table' and data.id))
 end)
 
 RegisterNuiCallback('DeleteCharacter', function (data, cb)
-    Menu:DeleteCharacter()
-    cb('ok')
+    cb(Menu:DeleteCharacter(type(data) == 'table' and data.id))
 end)
 
 RegisterNuiCallback('CreateCharacter', function (data, cb)
-    Menu:NewCharacter()
-    cb('ok')
+    cb(Menu:NewCharacter())
 end)

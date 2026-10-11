@@ -19,13 +19,15 @@ return function(Util, LoggerUtil, RuntimeConfig)
 
     ---@return string
     local function resolveWebhook()
-        local fromConvar = Util.Trim(GetConvar("whitelist:webhook", ""))
-        if fromConvar ~= "" then
+        local fromConvar = Util.Trim(GetConvar('whitelist:webhook', ''))
+
+        if fromConvar ~= '' then
             return fromConvar
         end
 
         local cfg = loggingConfig()
-        local fallback = cfg and cfg.Webhook or ""
+        local fallback = cfg and cfg.Webhook or ''
+
         return Util.Trim(fallback)
     end
 
@@ -34,10 +36,11 @@ return function(Util, LoggerUtil, RuntimeConfig)
     ---@param level string
     ---@param message string
     function Logger:Console(level, message)
-        if level == "debug" and not RuntimeConfig:Get().Debug then
+        if level == 'debug' and not RuntimeConfig:Get().Debug then
             return
         end
-        print(("[esx_whitelist] [%s] %s"):format(level:upper(), message))
+
+        print(('[esx_whitelist] [%s] %s'):format(level:upper(), message))
     end
 
     ---Whether a severity should hit the webhook.
@@ -45,16 +48,21 @@ return function(Util, LoggerUtil, RuntimeConfig)
     ---@return boolean
     local function levelEnabled(level)
         local cfg = loggingConfig()
+
         if not cfg.Enabled then
             return false
         end
-        if resolveWebhook() == "" then
+
+        if resolveWebhook() == '' then
             return false
         end
+
         local levels = cfg.Levels
-        if type(levels) ~= "table" then
+
+        if type(levels) ~= 'table' then
             return true
         end
+
         return levels[level] == true
     end
 
@@ -62,51 +70,66 @@ return function(Util, LoggerUtil, RuntimeConfig)
     ---@param events table[]
     local function deliverBatch(events)
         local webhook = resolveWebhook()
-        if webhook == "" then
+
+        if webhook == '' then
             return
         end
 
         local embeds = {}
+
         for i = 1, #events do
             embeds[i] = LoggerUtil.BuildEmbed(events[i])
         end
 
         local payload = json.encode({
-            username = "ESX Whitelist",
+            username = 'ESX Whitelist',
             embeds = embeds,
         })
-        if type(payload) ~= "string" then
+
+        if type(payload) ~= 'string' then
             failed = failed + 1
+
             return
         end
 
         PerformHttpRequest(webhook, function(statusCode)
             local status = tonumber(statusCode) or 0
+
             if status >= 200 and status < 300 then
                 sent = sent + #events
             else
                 failed = failed + #events
-                Logger:Console("warning", ("Webhook delivery failed (HTTP %d), %d event(s) dropped"):format(status, #events))
+                Logger:Console(
+                    'warning',
+                    ('Webhook delivery failed (HTTP %d), %d event(s) dropped'):format(
+                        status,
+                        #events
+                    )
+                )
             end
-        end, "POST", payload, { ["Content-Type"] = "application/json" })
+        end, 'POST', payload, { ['Content-Type'] = 'application/json' })
     end
 
     local function scheduleDrain()
         if drainScheduled then
             return
         end
+
         drainScheduled = true
         SetTimeout(loggingConfig().MinInterval, function()
             drainScheduled = false
+
             if #queue == 0 then
                 return
             end
 
             local batchSize = loggingConfig().BatchSize
             local batch = {}
+
             for i = 1, math.min(batchSize, #queue) do
                 batch[i] = table.remove(queue, 1)
             end
+
             deliverBatch(batch)
 
             if #queue > 0 then
@@ -143,19 +166,32 @@ return function(Util, LoggerUtil, RuntimeConfig)
     ---@param playerName string
     ---@param source number|string
     function Logger:LogDecision(result, playerName, source)
-        local level = result.allowed and "info" or "warning"
-        if result.method == "bypass" or result.method == "admin_identifier" then
-            level = "security"
+        local level = result.allowed and 'info' or 'warning'
+
+        if result.method == 'bypass' or result.method == 'admin_identifier' then
+            level = 'security'
         end
 
-        local title = result.allowed and "Connection accepted" or "Connection denied"
+        local title = result.allowed and 'Connection accepted' or 'Connection denied'
         self:Event(level, title, {
-            { name = "Player", value = tostring(playerName), inline = true },
-            { name = "Method", value = tostring(result.method), inline = true },
-            { name = "Reason", value = tostring(result.reason), inline = true },
-            { name = "Identifier", value = Util.MaskIdentifier(result.identifier or ""), inline = true },
+            { name = 'Player', value = tostring(playerName), inline = true },
+            { name = 'Method', value = tostring(result.method), inline = true },
+            { name = 'Reason', value = tostring(result.reason), inline = true },
+            {
+                name = 'Identifier',
+                value = Util.MaskIdentifier(result.identifier or ''),
+                inline = true,
+            },
         })
-        self:Console("debug", ("%s for %s (method=%s reason=%s)"):format(title, tostring(playerName), tostring(result.method), tostring(result.reason)))
+        self:Console(
+            'debug',
+            ('%s for %s (method=%s reason=%s)'):format(
+                title,
+                tostring(playerName),
+                tostring(result.method),
+                tostring(result.reason)
+            )
+        )
     end
 
     ---@return table
@@ -165,7 +201,7 @@ return function(Util, LoggerUtil, RuntimeConfig)
             sent = sent,
             failed = failed,
             dropped = dropped,
-            webhookConfigured = resolveWebhook() ~= "",
+            webhookConfigured = resolveWebhook() ~= '',
         }
     end
 

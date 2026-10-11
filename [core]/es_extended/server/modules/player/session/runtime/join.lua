@@ -1,7 +1,7 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-function Core.PlayerSession.OnPlayerJoined(playerId)
+function Core.PlayerSession.OnPlayerJoined(playerId, loading)
     local identifier = Core.PlayerSession.GetPlayerIdentifier(playerId)
 
     if not identifier then
@@ -17,53 +17,72 @@ function Core.PlayerSession.OnPlayerJoined(playerId)
 
     local result = MySQL.scalar.await("SELECT 1 FROM users WHERE identifier = ?", { identifier })
 
+    if not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+        return
+    end
+
     if result then
-        loadESXPlayer(identifier, playerId, false)
+        loadESXPlayer(identifier, playerId, false, loading)
     else
-        Core.PlayerSession.CreateESXPlayer(identifier, playerId)
+        Core.PlayerSession.CreateESXPlayer(identifier, playerId, nil, loading)
+    end
+end
+
+local function joinPlayer(playerId, char, data)
+    if
+        ESX.Players[playerId]
+        or Core.PlayerSession.loadingPlayers[playerId]
+        or not GetPlayerName(playerId)
+    then
+        return
+    end
+
+    local loading = {
+        identifier = Core.PlayerSession.GetPlayerIdentifier(playerId),
+    }
+
+    if not loading.identifier then
+        return DropPlayer(playerId, "There was an error loading your character: identifier missing.")
+    end
+
+    Core.PlayerSession.loadingPlayers[playerId] = loading
+
+    local ok, err = pcall(function()
+        if not Core.PlayerSession.WaitForJobs(playerId, loading) then
+            return
+        end
+
+        if not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+            return
+        end
+
+        if Config.Multichar then
+            local identifier = ("%s:%s"):format(char, loading.identifier)
+
+            if data then
+                Core.PlayerSession.CreateESXPlayer(identifier, playerId, data, loading)
+            else
+                loadESXPlayer(identifier, playerId, false, loading)
+            end
+        else
+            Core.PlayerSession.OnPlayerJoined(playerId, loading)
+        end
+    end)
+
+    if Core.PlayerSession.loadingPlayers[playerId] == loading then
+        Core.PlayerSession.CancelPlayerLoad(playerId)
+    end
+
+    if not ok then
+        error(err)
     end
 end
 
 if Config.Multichar then
-    AddEventHandler("esx:onPlayerJoined", function(src, char, data)
-        Core.PlayerSession.WaitForJobs()
-
-        if not ESX.Players[src] then
-            local identifier = ("%s:%s"):format(char, ESX.GetIdentifier(src))
-            if data then
-                Core.PlayerSession.CreateESXPlayer(identifier, src, data)
-            else
-                loadESXPlayer(identifier, src, false)
-            end
-        end
-    end)
+    AddEventHandler("esx:onPlayerJoined", joinPlayer)
 else
-    local joiningPlayers = {}
-
     RegisterNetEvent("esx:onPlayerJoined", function()
-        local playerId = source
-
-        if joiningPlayers[playerId] or ESX.Players[playerId] then
-            return
-        end
-
-        joiningPlayers[playerId] = true
-        Core.PlayerSession.WaitForJobs()
-
-        local ok, err = true, nil
-        if not ESX.Players[playerId] then
-            ok, err = pcall(Core.PlayerSession.OnPlayerJoined, playerId)
-        end
-
-        joiningPlayers[playerId] = nil
-
-        if not ok then
-            error(err)
-        end
-    end)
-
-    AddEventHandler("playerDropped", function()
-        joiningPlayers[source] = nil
+        joinPlayer(source)
     end)
 end
 

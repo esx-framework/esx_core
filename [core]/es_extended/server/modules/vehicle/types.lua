@@ -4,6 +4,10 @@
 local KVP_KEY <const> = "esx_vehicleTypes"
 local KVP_VERSION <const> = 2
 local CONFIRMATIONS_REQUIRED <const> = 2
+local PRELOAD_PAGE_SIZE <const> = 256
+local PRELOAD_MAX_MODELS <const> = 10000
+local PRELOAD_MAX_MODEL_LENGTH <const> = 64
+local PRELOAD_TIMEOUT <const> = 10000
 
 local validTypes <const> = {
     automobile = true,
@@ -20,6 +24,12 @@ local storedTypes = {}
 local reports = {}
 local askedPlayers = {}
 local persistQueued = false
+local preloadReporters = {}
+local preloadReporterCount = 0
+local preloadAttempts = setmetatable({}, { __mode = "k" })
+local preloadSession
+local preloadSequence = 0
+local preloadGeneration = 0
 
 local function persistVehicleTypes()
     if persistQueued then
@@ -56,12 +66,24 @@ local function countVotes(modelReports, vehicleType)
 end
 
 local function askPlayer(model, playerId, cb)
+    local player = ESX.Players[playerId]
+    local reporter = getReporterKey(playerId)
     local asked = askedPlayers[model] or {}
     askedPlayers[model] = asked
-    asked[getReporterKey(playerId)] = true
+    asked[reporter] = true
 
     xLib.callback("esx:GetVehicleType", playerId, function(vehicleType)
-        Core.CacheVehicleType(model, vehicleType, playerId)
+        if ESX.Players[playerId] ~= player or getReporterKey(playerId) ~= reporter then
+            if cb then
+                cb(false)
+            end
+
+            return
+        end
+
+        if askedPlayers[model] == asked then
+            Core.CacheVehicleType(model, vehicleType, playerId)
+        end
 
         if cb then
             cb(validTypes[vehicleType] and vehicleType or false)
@@ -83,7 +105,7 @@ end
 ---@param vehicleType string|false|nil
 ---@param playerId? number
 ---@return nil
-function Core.CacheVehicleType(model, vehicleType, playerId)
+function Core.CacheVehicleType(model, vehicleType, playerId, skipConfirmation)
     model = type(model) == "string" and joaat(model) or model
 
     if type(model) ~= "number" then
@@ -91,7 +113,7 @@ function Core.CacheVehicleType(model, vehicleType, playerId)
     end
 
     if not validTypes[vehicleType] then
-        if playerId and reports[model] then
+        if playerId and not skipConfirmation and reports[model] then
             requestConfirmation(model)
         end
 
@@ -128,7 +150,7 @@ function Core.CacheVehicleType(model, vehicleType, playerId)
         Core.vehicleTypesByModel[model] = vehicleType
     end
 
-    if playerId then
+    if playerId and not skipConfirmation then
         requestConfirmation(model)
     end
 end
@@ -155,6 +177,192 @@ local function restoreVehicleTypes()
         end
     end
 end
+
+local startNextPreload
+
+local function isCurrentPreload(session)
+    return preloadSession == session
+        and ESX.Players[session.playerId] == session.player
+        and getReporterKey(session.playerId) == session.reporter
+end
+
+local function finishPreload(session, success)
+    if preloadSession ~= session then
+        return
+    end
+
+    preloadSession = nil
+
+    if success and session.count > 0 and not preloadReporters[session.reporter] then
+        preloadReporters[session.reporter] = true
+        preloadReporterCount = preloadReporterCount + 1
+    end
+
+    local generation = preloadGeneration
+
+    SetTimeout(0, function()
+        if generation == preloadGeneration then
+            startNextPreload()
+        end
+    end)
+end
+
+local function normalizePreloadPage(session, page)
+    if type(page) ~= "table" or type(page.types) ~= "table" then
+        return
+    end
+
+    local total = page.total
+
+    if
+        type(total) ~= "number"
+        or total ~= math.floor(total)
+        or total < session.offset
+        or total > PRELOAD_MAX_MODELS
+        or (session.total and session.total ~= total)
+    then
+        return
+    end
+
+    local last = math.min(session.offset + PRELOAD_PAGE_SIZE, total)
+    local nextOffset = last < total and last or nil
+
+    if page.nextOffset ~= nextOffset then
+        return
+    end
+
+    local types = {}
+    local count = 0
+
+    for modelName, vehicleType in pairs(page.types) do
+        count = count + 1
+
+        if
+            count > last - session.offset
+            or type(modelName) ~= "string"
+            or #modelName == 0
+            or #modelName > PRELOAD_MAX_MODEL_LENGTH
+            or not validTypes[vehicleType]
+        then
+            return
+        end
+
+        local model = joaat(modelName:lower())
+
+        if types[model] or session.models[model] then
+            return
+        end
+
+        types[model] = vehicleType
+    end
+
+    return types, count, total, nextOffset
+end
+
+local function requestPreloadPage(session)
+    if not isCurrentPreload(session) then
+        return finishPreload(session, false)
+    end
+
+    local request = {}
+    session.request = request
+
+    SetTimeout(PRELOAD_TIMEOUT, function()
+        if preloadSession == session and session.request == request then
+            finishPreload(session, false)
+        end
+    end)
+
+    local ok = pcall(
+        xLib.callback,
+        "esx:GetVehicleTypes",
+        session.playerId,
+        function(page)
+            if preloadSession ~= session or session.request ~= request then
+                return
+            end
+
+            if not isCurrentPreload(session) then
+                return finishPreload(session, false)
+            end
+
+            local types, count, total, nextOffset = normalizePreloadPage(session, page)
+
+            if not types then
+                return finishPreload(session, false)
+            end
+
+            session.request = nil
+            session.total = total
+            session.count = session.count + count
+
+            for model, vehicleType in pairs(types) do
+                session.models[model] = true
+
+                if not storedTypes[tostring(model)] then
+                    local asked = askedPlayers[model] or {}
+                    askedPlayers[model] = asked
+                    asked[session.reporter] = true
+
+                    Core.CacheVehicleType(model, vehicleType, session.playerId, true)
+                end
+            end
+
+            if not nextOffset then
+                return finishPreload(session, true)
+            end
+
+            session.offset = nextOffset
+
+            SetTimeout(50, function()
+                requestPreloadPage(session)
+            end)
+        end,
+        session.offset,
+        session.id
+    )
+
+    if not ok then
+        finishPreload(session, false)
+    end
+end
+
+startNextPreload = function()
+    if preloadSession or preloadReporterCount >= CONFIRMATIONS_REQUIRED then
+        return
+    end
+
+    for playerId, player in pairs(ESX.Players) do
+        local reporter = GetPlayerIdentifierByType(tostring(playerId), "license")
+
+        if reporter and not preloadReporters[reporter] and not preloadAttempts[player] then
+            preloadAttempts[player] = true
+            preloadSequence = preloadSequence + 1
+            preloadSession = {
+                id = preloadSequence,
+                playerId = playerId,
+                player = player,
+                reporter = reporter,
+                offset = 0,
+                count = 0,
+                models = {},
+            }
+
+            requestPreloadPage(preloadSession)
+            return
+        end
+    end
+end
+
+AddEventHandler("esx:playerLoaded", function()
+    startNextPreload()
+end)
+
+AddEventHandler("esx:playerDropped", function(playerId)
+    if preloadSession and preloadSession.playerId == playerId then
+        finishPreload(preloadSession, false)
+    end
+end)
 
 ---@param model string|number
 ---@param player? number
@@ -216,6 +424,11 @@ RegisterCommand("clearvehicletypes", function(src)
     storedTypes = {}
     reports = {}
     askedPlayers = {}
+    preloadReporters = {}
+    preloadReporterCount = 0
+    preloadAttempts = setmetatable({}, { __mode = "k" })
+    preloadSession = nil
+    preloadGeneration = preloadGeneration + 1
     Core.vehicleTypesByModel = {}
     DeleteResourceKvp(KVP_KEY)
 

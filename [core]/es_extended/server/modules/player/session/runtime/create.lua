@@ -1,7 +1,11 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
-function Core.PlayerSession.CreateESXPlayer(identifier, playerId, data)
+function Core.PlayerSession.CreateESXPlayer(identifier, playerId, data, loading)
+    if not Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+        return
+    end
+
     local accounts = {}
 
     for account, money in pairs(Config.StartingAccountMoney) do
@@ -35,7 +39,9 @@ function Core.PlayerSession.CreateESXPlayer(identifier, playerId, data)
         parameters[#parameters + 1] = json.encode(Config.StartingInventoryItems)
     end
 
-    MySQL.prepare(Core.PlayerSession.newPlayerQuery, parameters, function()
-        loadESXPlayer(identifier, playerId, true)
-    end)
+    MySQL.prepare.await(Core.PlayerSession.newPlayerQuery, parameters)
+
+    if Core.PlayerSession.IsPlayerLoadActive(playerId, loading) then
+        loadESXPlayer(identifier, playerId, true, loading)
+    end
 end

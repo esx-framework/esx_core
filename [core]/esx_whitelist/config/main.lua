@@ -2,7 +2,10 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 Config = {}
-Config.Locale = GetConvar("esx:locale", "en")
+Config.Locale = GetConvar('esx:locale', 'en')
+
+-- Server-file policy for access credentials. IP identifiers are never accepted.
+Config.IdentifierTypes = { license2 = true, license = true, fivem = true }
 
 --[[
     When false, every player is allowed to connect and all
@@ -14,26 +17,24 @@ Config.Whitelist = {
     --[[
         Active verification mechanism(s):
             "discord"    -> Discord guild membership + role only
-            "identifier" -> static identifier list only
+            "identifier" -> database identifier list only
             "both"       -> identifier + discord, combined via CombinationMode
     ]]
-    Mode = "identifier", -- "discord", "identifier", or "both"
+    Mode = 'identifier', -- "discord", "identifier", or "both"
 
     --[[
         How "both" mode combines the two mechanisms:
             "or"  -> identifier whitelist OR Discord whitelist (recommended)
             "and" -> identifier whitelist AND Discord whitelist
     ]]
-    CombinationMode = "or", -- "or" or "and"
+    CombinationMode = 'or', -- "or" or "and"
 
     --[[
-        Static identifier whitelist. Any ONE matching identifier grants
-        access. 
+        Initial identifier list, imported once into MySQL. Any ONE matching identifier grants
+        access.
         Examples:
             "license2:1234567890abcdef1234567890abcdef12345678",
             "license:1234567890abcdef1234567890abcdef1234567890",
-            "discord:123456789012345678",
-            "steam:110000100000000",
     ]]
     AllowedIdentifiers = {},
 }
@@ -49,7 +50,7 @@ Config.Discord = {
     Enabled = false,
 
     -- Discord guild (server) ID the player must be a member of.
-    GuildId = "",
+    GuildId = '',
 
     -- Role IDs; the member needs at least ONE of them.
     AllowedRoles = {
@@ -58,6 +59,13 @@ Config.Discord = {
 
     -- Per-request HTTP timeout in milliseconds.
     Timeout = 5000,
+
+    -- Verified roles may be reused for at most this many seconds (0 disables reuse).
+    CacheTTL = 60,
+    CacheMaxEntries = 10000,
+
+    -- Smooth outbound traffic in addition to honoring Discord rate-limit headers.
+    RequestsPerSecond = 40,
 
     -- Retry policy for transient failures (timeout, 5xx, network errors).
     MaxRetries = 2,
@@ -77,17 +85,17 @@ Config.Admin = {
         Ordered preference for the stable identifier used as cache key.
         The first identifier type present for the player wins.
     ]]
-    IdentifierPriority = { "license2", "license", "fivem" },
+    IdentifierPriority = { 'license2', 'license', 'fivem' },
 
     Cache = {
         Enabled = true,
-        SaveDelay = 5000, -- ms debounce before dirty admin entries hit the database
+        SaveDelay = 5000, -- retained for panel compatibility; administrator decisions are not persisted
     },
 }
 
 --[[
     Administrator-only mode. When enabled, ONLY players that match an
-    AdminOnly group (via the persistent admin cache) or an explicit
+    AdminOnly group (after checking the current ESX users record) or an explicit
     AdminOnly identifier may connect; all other mechanisms are skipped.
 ]]
 Config.AdminOnly = {
@@ -126,8 +134,8 @@ Config.Logging = {
     Enabled = true,
 
     MinInterval = 1200, -- ms between webhook requests
-    BatchSize = 5,      -- events drained per cycle
-    QueueLimit = 250,   -- oldest events are dropped beyond this
+    BatchSize = 5, -- events drained per cycle
+    QueueLimit = 250, -- oldest events are dropped beyond this
 
     -- Which event severities are sent: "info", "warning", "error", "security"
     Levels = {
@@ -150,24 +158,24 @@ Config.Performance = {
     VerificationTimeout = 120000,
 
     -- Client -> server management event rate limit.
-    PanelRateLimit = 10,     -- actions ...
-    PanelRateWindow = 5000,  -- ... per window (ms)
+    PanelRateLimit = 10, -- actions ...
+    PanelRateWindow = 5000, -- ... per window (ms)
 }
 
 --[[
     Commands and subcommands for the in-game admin panel and console.
 ]]
 Config.Panel = {
-    Command = "whitelist", -- /whitelist opens the panel (admins only)
+    Command = 'whitelist', -- /whitelist opens the panel (admins only)
     Subcommands = {
-        Panel = "panel",
-        Status = "status",
-        Reload = "reload",
-        Cache = "cache",
-        CacheClear = "clear",
-        Test = "test",
-        Add = "add",
-        Remove = "remove",
+        Panel = 'panel',
+        Status = 'status',
+        Reload = 'reload',
+        Cache = 'cache',
+        CacheClear = 'clear',
+        Test = 'test',
+        Add = 'add',
+        Remove = 'remove',
     },
 }
 

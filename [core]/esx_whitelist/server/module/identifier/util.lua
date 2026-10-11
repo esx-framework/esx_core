@@ -21,7 +21,8 @@ IdentifierUtil.KNOWN_PREFIXES = {
 ---@return string? prefix
 ---@return string? value
 function IdentifierUtil.Split(identifier)
-    local prefix, value = identifier:match("^([a-z0-9]+):(.+)$")
+    local prefix, value = identifier:match('^([a-z0-9]+):(.+)$')
+
     return prefix, value
 end
 
@@ -30,14 +31,17 @@ end
 ---@param prefix string e.g. "discord"
 ---@return string? identifier
 function IdentifierUtil.FindByPrefix(identifiers, prefix)
-    local needle = prefix .. ":"
+    local needle = prefix .. ':'
     local needleLength = #needle
+
     for i = 1, #identifiers do
         local identifier = identifiers[i]
+
         if identifier:sub(1, needleLength) == needle then
             return identifier
         end
     end
+
     return nil
 end
 

@@ -13,6 +13,7 @@ interface CharacterCardProps {
   onInfoClick: (id: string) => void;
   showInfo: boolean;
   PlayCharacter: () => void;
+  busy?: boolean;
 }
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ 
@@ -20,7 +21,8 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
   onSelect, 
   onInfoClick,
   showInfo,
-  PlayCharacter
+  PlayCharacter,
+  busy
 }) => {
   return (
     <>
@@ -32,7 +34,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
               ? ''
               : 'cursor-pointer rounded-[5px] overflow-hidden bg-[#38383880] border-2 border-[#ffffff50] hover:border-[#FFFFFF] hover:bg-[#38383840'}
           `}
-          onClick={() => onSelect(character.id)}
+          onClick={() => !busy && onSelect(character.id)}
         >
           <div 
             className={`
@@ -72,7 +74,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
                     e.stopPropagation();
                     PlayCharacter();
                   }}
-                  disabled={character.disabled}
+                  disabled={busy || character.disabled}
                 >
                   <Icon
                     icon="si:play-fill"

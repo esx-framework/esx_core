@@ -89,7 +89,7 @@ local function logPaycheck(title, xPlayer, salary)
     })
 end
 
-local function payPlayer(xPlayer, societyAccounts)
+local function payPlayer(xPlayer, societyAccounts, bankTitle, receivedPaycheck)
     local player = xPlayer.source
 
     if ESX.GetPlayerFromId(player) ~= xPlayer then
@@ -107,7 +107,15 @@ local function payPlayer(xPlayer, societyAccounts)
 
     if job == "unemployed" then
         xPlayer.addAccountMoney("bank", salary, "Welfare Check")
-        TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_help", salary), "CHAR_BANK_MAZE", 9)
+        TriggerClientEvent(
+            "esx:showAdvancedNotification",
+            player,
+            bankTitle,
+            receivedPaycheck,
+            TranslateCap("received_help", salary),
+            "CHAR_BANK_MAZE",
+            9
+        )
         logPaycheck("Paycheck - Unemployment Benefits", xPlayer, salary)
         return
     end
@@ -120,23 +128,55 @@ local function payPlayer(xPlayer, societyAccounts)
                 societyEntry.available -= salary
                 societyEntry.pendingDebit += salary
                 xPlayer.addAccountMoney("bank", salary, "Paycheck")
-                TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+                TriggerClientEvent(
+                    "esx:showAdvancedNotification",
+                    player,
+                    bankTitle,
+                    receivedPaycheck,
+                    TranslateCap("received_salary", salary),
+                    "CHAR_BANK_MAZE",
+                    9
+                )
                 logPaycheck("Paycheck - " .. jobLabel, xPlayer, salary)
             else
-                TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), "", TranslateCap("company_nomoney"), "CHAR_BANK_MAZE", 1)
+                TriggerClientEvent(
+                    "esx:showAdvancedNotification",
+                    player,
+                    bankTitle,
+                    "",
+                    TranslateCap("company_nomoney"),
+                    "CHAR_BANK_MAZE",
+                    1
+                )
             end
 
             return
         end
 
         xPlayer.addAccountMoney("bank", salary, "Paycheck")
-        TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+        TriggerClientEvent(
+            "esx:showAdvancedNotification",
+            player,
+            bankTitle,
+            receivedPaycheck,
+            TranslateCap("received_salary", salary),
+            "CHAR_BANK_MAZE",
+            9
+        )
         logPaycheck("Paycheck - " .. jobLabel, xPlayer, salary)
         return
     end
 
     xPlayer.addAccountMoney("bank", salary, "Paycheck")
-    TriggerClientEvent("esx:showAdvancedNotification", player, TranslateCap("bank"), TranslateCap("received_paycheck"), TranslateCap("received_salary", salary), "CHAR_BANK_MAZE", 9)
+    TriggerClientEvent(
+        "esx:showAdvancedNotification",
+        player,
+        bankTitle,
+        receivedPaycheck,
+        TranslateCap("received_salary", salary),
+        "CHAR_BANK_MAZE",
+        9
+    )
     logPaycheck("Paycheck - Generic", xPlayer, salary)
 end
 
@@ -154,9 +194,11 @@ function StartPayCheck()
             local societyAccounts = resolveSocietyAccounts(xPlayers)
             local batchSize = getPaycheckBatchSize()
             local batchDelay = getPaycheckBatchDelay()
+            local bankTitle = TranslateCap("bank")
+            local receivedPaycheck = TranslateCap("received_paycheck")
 
             for i = 1, #xPlayers do
-                payPlayer(xPlayers[i], societyAccounts)
+                payPlayer(xPlayers[i], societyAccounts, bankTitle, receivedPaycheck)
 
                 if i % batchSize == 0 then
                     flushSocietyDebits(societyAccounts)

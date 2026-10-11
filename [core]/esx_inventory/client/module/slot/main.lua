@@ -3,9 +3,10 @@
 
 local Inventory = ESXInventory
 
-local SLOT_KVP <const> = "esx_inventory:slots"
+local SLOT_KVP <const> = 'esx_inventory:slots'
 
 local slotMap = {} ---@type table<string, number>
+local slotsChanged = false
 
 do
     local stored = GetResourceKvpString(SLOT_KVP)
@@ -13,7 +14,7 @@ do
     if stored then
         local decoded = json.decode(stored)
 
-        if type(decoded) == "table" then
+        if type(decoded) == 'table' then
             slotMap = decoded
         end
     end
@@ -23,11 +24,16 @@ end
 ---@param name string
 ---@return string
 function Inventory.itemKey(itemType, name)
-    return itemType .. ":" .. name
+    return itemType .. ':' .. name
 end
 
 function Inventory.saveSlotMap()
+    if not slotsChanged then
+        return
+    end
+
     SetResourceKvp(SLOT_KVP, json.encode(slotMap))
+    slotsChanged = false
 end
 
 ---@param key string
@@ -39,7 +45,16 @@ end
 ---@param key string
 ---@param slot number
 function Inventory.setSlot(key, slot)
+    if slotMap[key] == slot then
+        return
+    end
+
     slotMap[key] = slot
+    slotsChanged = true
+
+    if Inventory.invalidateItems then
+        Inventory.invalidateItems()
+    end
 end
 
 ---@param items NuiInventoryItem[]
@@ -68,7 +83,7 @@ function Inventory.assignSlots(items)
 
             item.slot = nextFree
             used[nextFree] = true
-            slotMap[Inventory.itemKey(item.type, item.name)] = nextFree
+            Inventory.setSlot(Inventory.itemKey(item.type, item.name), nextFree)
         end
     end
 end

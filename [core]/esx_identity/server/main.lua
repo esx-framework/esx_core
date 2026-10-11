@@ -1,6 +1,8 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
+ESXCatalog.awaitReady()
+
 local playerIdentity = {}
 local alreadyRegistered = {}
 local multichar = ESX.GetConfig().Multichar
@@ -11,7 +13,7 @@ local function deleteIdentityFromDatabase(xPlayer)
     if Config.FullCharDelete then
         MySQL.update.await("UPDATE addon_account_data SET money = 0 WHERE account_name IN (?) AND owner = ?", { { "bank_savings", "caution" }, xPlayer.identifier })
 
-        MySQL.prepare.await("UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?", { "'{}'", { "user_ears", "user_glasses", "user_helmet", "user_mask" }, xPlayer.identifier })
+        MySQL.prepare.await("UPDATE datastore_data SET data = ? WHERE name IN (?) AND owner = ?", { "{}", { "user_ears", "user_glasses", "user_helmet", "user_mask" }, xPlayer.identifier })
     end
 end
 
@@ -97,7 +99,7 @@ local function formatDate(str)
 end
 
 local function checkNameFormat(name)
-    if ESX.IsValidLocaleString(name) then
+    if type(name) == "string" and ESX.IsValidLocaleString(name) then
         local stringLength = string.len(name)
         return stringLength > 0 and stringLength < Config.MaxNameLength
     end
@@ -113,8 +115,18 @@ local function checkSexFormat(sex)
 end
 
 local function checkHeightFormat(height)
-    local numHeight = tonumber(height) or 0
-    return numHeight >= Config.MinHeight and numHeight <= Config.MaxHeight
+    if type(height) ~= "number" and type(height) ~= "string" then
+        return false
+    end
+
+    local numHeight = tonumber(height)
+
+    return numHeight ~= nil
+        and numHeight == numHeight
+        and numHeight > -math.huge
+        and numHeight < math.huge
+        and numHeight >= Config.MinHeight
+        and numHeight <= Config.MaxHeight
 end
 
 local function convertToLowerCase(str)
@@ -261,6 +273,10 @@ xLib.callback.registerCompat("esx_identity:registerIdentity", function(source, c
 
     local xPlayer = ESX.Player(source)
 
+    if type(data) ~= "table" then
+        return cb(false)
+    end
+
     if not checkNameFormat(data.firstname) then
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_firstname_format"), "error")
         return cb(false)
@@ -273,7 +289,7 @@ xLib.callback.registerCompat("esx_identity:registerIdentity", function(source, c
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_sex_format"), "error")
         return cb(false)
     end
-    if not checkDOBFormat(data.dateofbirth) then
+    if type(data.dateofbirth) ~= "string" or not checkDOBFormat(data.dateofbirth) then
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_dob_format"), "error")
         return cb(false)
     end
@@ -281,6 +297,9 @@ xLib.callback.registerCompat("esx_identity:registerIdentity", function(source, c
         TriggerClientEvent("esx:showNotification", source, TranslateCap("invalid_height_format"), "error")
         return cb(false)
     end
+
+    data.sex = string.lower(data.sex)
+    data.height = tonumber(data.height)
 
     if xPlayer then
         local identifier = xPlayer.getIdentifier()

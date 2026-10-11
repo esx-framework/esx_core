@@ -30,28 +30,33 @@ function ESX.RefreshJobs()
         end
     end
 
-    if not next(Jobs) then
-        ESX.Jobs = {
-            unemployed = {
-                name = "unemployed",
-                label = "Unemployed",
-                type = "civ",
-                whitelisted = false,
-                grades = {
-                    ["0"] = {
-                        grade = 0,
-                        name = "unemployed",
-                        label = "Unemployed",
-                        salary = 200,
-                        skin_male = "{}",
-                        skin_female = "{}",
-                    },
-                },
-            },
+    local unemployed = Jobs["unemployed"]
+
+    if not unemployed then
+        unemployed = {
+            name = "unemployed",
+            label = "Unemployed",
+            type = "civ",
+            whitelisted = false,
+            grades = {},
         }
-    else
-        ESX.Jobs = Jobs
+        Jobs["unemployed"] = unemployed
     end
+
+    if not unemployed.grades["0"] then
+        unemployed.grades["0"] = {
+            grade = 0,
+            name = "unemployed",
+            label = "Unemployed",
+            salary = 200,
+            skin_male = "{}",
+            skin_female = "{}",
+        }
+
+        print('[^3WARNING^7] Missing unemployed grade 0, using the default fallback')
+    end
+
+    ESX.Jobs = Jobs
 
     TriggerEvent("esx:jobsRefreshed")
     Core.JobsLoaded = true

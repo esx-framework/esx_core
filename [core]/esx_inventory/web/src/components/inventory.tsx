@@ -83,7 +83,7 @@ export default function Inventory({
         </div>
         <div className="h-3 bg-darkest rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-brand to-brand/80 transition-all duration-300 shadow-lg shadow-brand/30"
+            className="h-full rounded-full bg-brand transition-all duration-300"
             style={{ width: `${weightPercentage}%` }}
           />
         </div>
@@ -110,7 +110,11 @@ export default function Inventory({
               isSelected={item !== null && itemKey(item) === selectedItem}
               onSelect={() => item && setSelectedItem(itemKey(item) === selectedItem ? null : itemKey(item))}
               onPointerDown={(e) => item && onSlotPointerDown(item, panel, e)}
-              onUse={item && onUseItem && item.type === "item_standard" ? () => onUseItem(item) : undefined}
+              onUse={
+                item && onUseItem && item.usable
+                  ? () => onUseItem(item)
+                  : undefined
+              }
               onGive={item && onGiveItem ? () => onGiveItem(item) : undefined}
               onDropItem={item && onDropItem && (!canDropItem || canDropItem(item)) ? () => onDropItem(item) : undefined}
               useLabel={useLabel}

@@ -4,6 +4,8 @@
 if Config.CustomInventory ~= "ox" then return end
 
 MySQL.ready(function()
+    ESXCatalog.awaitReady()
+
     TriggerEvent("__cfx_export_ox_inventory_Items", function(ref)
         if ref then
             ESX.Items = ref()

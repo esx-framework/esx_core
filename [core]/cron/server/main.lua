@@ -49,8 +49,16 @@ function OnTime(timestamp)
         if not lastTimestamp or lastTimestamp < scheduledTimestamp then
             local d = os.date('*t', scheduledTimestamp).wday
 
-            if not pcall(cronJobs[i].cb, d, cronJobs[i].h, cronJobs[i].m) then
-                print(("[^1ERROR^7] cron job at ^5%02d:%02d^7 errored, skipping it"):format(cronJobs[i].h, cronJobs[i].m))
+            local ok, err = pcall(cronJobs[i].cb, d, cronJobs[i].h, cronJobs[i].m)
+
+            if not ok then
+                print(
+                    ("[^1ERROR^7] cron job at ^5%02d:%02d^7 errored, skipping it: %s"):format(
+                        cronJobs[i].h,
+                        cronJobs[i].m,
+                        tostring(err)
+                    )
+                )
             end
         end
     end

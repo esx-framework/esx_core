@@ -7,7 +7,17 @@ end)
 
 RegisterNetEvent("esx:repairPedVehicle", function()
     local ped = ESX.PlayerData.ped
+
+    if not ped or ped == 0 or not DoesEntityExist(ped) then
+        return
+    end
+
     local vehicle = GetVehiclePedIsIn(ped, false)
+
+    if vehicle == 0 or not DoesEntityExist(vehicle) then
+        return
+    end
+
     SetVehicleEngineHealth(vehicle, 1000)
     SetVehicleEngineOn(vehicle, true, true, false)
     SetVehicleFixed(vehicle)
@@ -28,5 +38,9 @@ end)
 
 ---@param command string
 ESX.SecureNetEvent("esx:executeCommand", function(command)
+    if type(command) ~= "string" or not command:find("%S") then
+        return
+    end
+
     ExecuteCommand(command)
 end)
