@@ -6,6 +6,7 @@ local SAVE_QUERY <const> =
 local SAVE_BATCH_SIZE <const> = 25
 local SAVE_BATCH_INTERVAL <const> = 50
 local saveQueues = {}
+local persistenceLocks = {}
 local savedFingerprints = setmetatable({}, { __mode = 'k' })
 local savingAll = false
 local allSaveCallbacks = {}
@@ -17,11 +18,7 @@ local function updateHealthAndArmorInMetadata(xPlayer)
 
     local metadata = xPlayer.getMeta()
 
-    if
-        ped ~= 0
-        and DoesEntityExist(ped)
-        and not Player(xPlayer.source).state.isDead
-    then
+    if ped ~= 0 and DoesEntityExist(ped) and not Player(xPlayer.source).state.isDead then
         metadata.health = GetEntityHealth(ped)
         metadata.armor = GetPedArmour(ped)
     end
@@ -76,12 +73,7 @@ local function executePlayerSave(xPlayer, cb, force)
     })
     local previous = savedFingerprints[xPlayer]
 
-    if
-        not force
-        and previous
-        and previous.value == fingerprint
-        and GetGameTimer() - previous.time < 60000
-    then
+    if not force and previous and previous.value == fingerprint and GetGameTimer() - previous.time < 60000 then
         return cb(true)
     end
 
@@ -105,14 +97,9 @@ local function executePlayerSave(xPlayer, cb, force)
 
     MySQL.prepare(SAVE_QUERY, parameters, function(affectedRows)
         if affectedRows == 0 then
-            local ok = pcall(
-                MySQL.scalar,
-                'SELECT COUNT(*) FROM users WHERE identifier = ?',
-                { xPlayer.identifier },
-                function(count)
-                    confirmed(tonumber(count) == 1 and 0 or nil)
-                end
-            )
+            local ok = pcall(MySQL.scalar, 'SELECT COUNT(*) FROM users WHERE identifier = ?', { xPlayer.identifier }, function(count)
+                confirmed(tonumber(count) == 1 and 0 or nil)
+            end)
 
             if not ok then
                 confirmed(nil)
@@ -124,11 +111,12 @@ local function executePlayerSave(xPlayer, cb, force)
 end
 
 local function pumpSave(identifier, queue)
-    if queue.busy or not queue.pending then
+    if queue.busy or not queue.pending or persistenceLocks[identifier] then
         return
     end
 
     local request = queue.pending
+
     queue.pending = nil
     queue.busy = true
 
@@ -165,6 +153,66 @@ local function pumpSave(identifier, queue)
     end
 end
 
+-- Coordinate offline writes, session loading and whole-player saves in one place.
+function Core.WithPlayerPersistence(identifier, action, failClosed)
+    while persistenceLocks[identifier] do
+        Wait(0)
+    end
+
+    persistenceLocks[identifier] = true
+
+    local player
+    local operation = false
+
+    local ok, result, detail = pcall(function()
+        while saveQueues[identifier] and saveQueues[identifier].busy do
+            Wait(0)
+        end
+
+        player = ESX.GetPlayerFromIdentifier(identifier)
+
+        if player and player.beginAccountOperation then
+            operation = player.beginAccountOperation()
+
+            if not operation then
+                return false, 'session_closing'
+            end
+        end
+
+        return action(player)
+    end)
+
+    if not ok and failClosed then
+        print(('[es_extended] Unresolved economic operation for %s; persistence remains locked: %s'):format(identifier, tostring(result)))
+        error(result)
+    end
+
+    if operation then
+        player.endAccountOperation()
+    end
+
+    if player then
+        savedFingerprints[player] = nil
+    end
+
+    persistenceLocks[identifier] = nil
+
+    local queue = saveQueues[identifier]
+
+    if queue then
+        pumpSave(identifier, queue)
+    end
+
+    if not ok then
+        print(('[es_extended] Persistence operation failed: %s'):format(tostring(result)))
+        return false, result
+    end
+
+    return result, detail
+end
+
+exports('WithPlayerPersistence', Core.WithPlayerPersistence)
+
 function Core.SavePlayer(xPlayer, cb, force)
     if not xPlayer then
         return cb and cb(false)
@@ -172,6 +220,7 @@ function Core.SavePlayer(xPlayer, cb, force)
 
     local identifier = xPlayer.identifier
     local queue = saveQueues[identifier] or {}
+
     saveQueues[identifier] = queue
     queue.pending = queue.pending or {
         player = xPlayer,
@@ -204,6 +253,7 @@ function Core.SavePlayers(cb)
     end
 
     savingAll = true
+
     local allSucceeded = true
 
     local function complete()
@@ -219,8 +269,11 @@ function Core.SavePlayers(cb)
         end
 
         local callbacks = allSaveCallbacks
+
         allSaveCallbacks = {}
+
         local succeeded = allSaveSucceeded
+
         allSaveSucceeded = true
 
         for i = 1, #callbacks do
@@ -277,13 +330,7 @@ function Core.SavePlayers(cb)
                 done = true
 
                 complete()
-                print(
-                    ('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(
-                        savedCount,
-                        savedCount > 1 and 'players' or 'player',
-                        GetGameTimer() - startTime
-                    )
-                )
+                print(('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(savedCount, savedCount > 1 and 'players' or 'player', GetGameTimer() - startTime))
             end
         end
 

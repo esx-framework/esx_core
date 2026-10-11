@@ -123,7 +123,7 @@
       ]
     },
     "banking": {
-      "sql": "CREATE TABLE IF NOT EXISTS `banking` (\r\n  `identifier` varchar(46) DEFAULT NULL,\r\n  `type` varchar(50) DEFAULT NULL,\r\n  `amount` int(64) DEFAULT NULL,\r\n  `time` bigint(20) DEFAULT NULL,\r\n  `ID` int(11) NOT NULL AUTO_INCREMENT,\r\n  `balance` int(11) DEFAULT 0,\r\n  `label` varchar(255) DEFAULT NULL,\r\n  PRIMARY KEY (`ID`),\r\n  KEY `idx_banking_identifier_time` (`identifier`, `time`),\r\n  KEY `idx_banking_time` (`time`)\r\n) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4",
+      "sql": "CREATE TABLE IF NOT EXISTS `banking` (\r\n  `identifier` varchar(60) DEFAULT NULL,\r\n  `type` varchar(50) DEFAULT NULL,\r\n  `amount` int DEFAULT NULL,\r\n  `time` bigint(20) DEFAULT NULL,\r\n  `ID` int(11) NOT NULL AUTO_INCREMENT,\r\n  `balance` int(11) DEFAULT 0,\r\n  `label` varchar(255) DEFAULT NULL,\r\n  PRIMARY KEY (`ID`),\r\n  KEY `idx_banking_identifier_time` (`identifier`, `time`),\r\n  KEY `idx_banking_time` (`time`)\r\n) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4",
       "fields": [
         "identifier",
         "type",
@@ -205,7 +205,7 @@
       ]
     },
     "vehicle_sold": {
-      "sql": "CREATE TABLE IF NOT EXISTS `vehicle_sold` (\r\n\t`client` VARCHAR(50) NOT NULL,\r\n\t`model` VARCHAR(50) NOT NULL,\r\n\t`plate` VARCHAR(50) NOT NULL,\r\n\t`soldby` VARCHAR(50) NOT NULL,\r\n\t`date` VARCHAR(50) NOT NULL,\r\n\r\n\tPRIMARY KEY (`plate`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+      "sql": "CREATE TABLE IF NOT EXISTS `vehicle_sold` (\r\n\t`client` VARCHAR(50) NOT NULL,\r\n\t`model` VARCHAR(50) NOT NULL,\r\n\t`plate` VARCHAR(50) NOT NULL,\r\n\t`soldby` VARCHAR(50) NOT NULL,\r\n\t`date` DATETIME NOT NULL,\r\n\r\n\tPRIMARY KEY (`plate`),\r\n\tKEY `idx_vehicle_sold_date_plate` (`date`, `plate`)\r\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
       "fields": [
         "client",
         "model",
